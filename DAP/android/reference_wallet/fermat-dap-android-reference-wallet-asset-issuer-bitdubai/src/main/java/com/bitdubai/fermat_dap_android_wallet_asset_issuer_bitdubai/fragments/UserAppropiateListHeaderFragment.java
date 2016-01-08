@@ -25,26 +25,26 @@ import java.io.ByteArrayInputStream;
 import java.lang.ref.WeakReference;
 
 /**
- * Created by frank on 12/23/15.
+ * Created by Jinmy on 01/06/16.
  */
-public class UserDeliveryListHeaderFragment extends AbstractFermatFragment {
+public class UserAppropiateListHeaderFragment extends AbstractFermatFragment {
     private AssetIssuerSession assetIssuerSession;
     private AssetIssuerWalletSupAppModuleManager moduleManager;
 
     private View rootView;
     private Toolbar toolbar;
-    private ImageView assetImageUserDeliveryList;
-    private FermatTextView assetNameUserDeliveryListText;
-    private FermatTextView assetsRemainingUserDeliveryListText;
+    private ImageView assetImageUserAppropiateList;
+    private FermatTextView assetNameUserAppropiateListText;
+    private FermatTextView assetsRemainingUserAppropiateListText;
 
     private DigitalAsset digitalAsset;
 
-    public UserDeliveryListHeaderFragment() {
+    public UserAppropiateListHeaderFragment() {
 
     }
 
-    public static UserDeliveryListHeaderFragment newInstance() {
-        return new UserDeliveryListHeaderFragment();
+    public static UserAppropiateListHeaderFragment newInstance() {
+        return new UserAppropiateListHeaderFragment();
     }
 
     @Override
@@ -60,7 +60,7 @@ public class UserDeliveryListHeaderFragment extends AbstractFermatFragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        rootView = inflater.inflate(R.layout.dap_wallet_asset_issuer_user_delivery_list_header, container, false);
+        rootView = inflater.inflate(R.layout.dap_wallet_asset_issuer_user_appropiate_list_header, container, false);
 
         setupUI();
         setupUIData();
@@ -71,22 +71,22 @@ public class UserDeliveryListHeaderFragment extends AbstractFermatFragment {
     private void setupUI() {
         setupBackgroundBitmap();
 
-        assetImageUserDeliveryList = (ImageView) rootView.findViewById(R.id.assetImageUserDeliveryList);
-        assetNameUserDeliveryListText = (FermatTextView) rootView.findViewById(R.id.assetNameUserDeliveryListText);
-        assetsRemainingUserDeliveryListText = (FermatTextView) rootView.findViewById(R.id.assetsRemainingUserDeliveryListText);
+        assetImageUserAppropiateList = (ImageView) rootView.findViewById(R.id.assetImageUserAppropiateList);
+        assetNameUserAppropiateListText = (FermatTextView) rootView.findViewById(R.id.assetNameUserAppropiateListText);
+        assetsRemainingUserAppropiateListText = (FermatTextView) rootView.findViewById(R.id.assetsRemainingUserAppropiateListText);
     }
 
     private void setupUIData() {
         digitalAsset = (DigitalAsset) appSession.getData("asset_data");
 
         if (digitalAsset.getImage() != null) {
-            assetImageUserDeliveryList.setImageBitmap(BitmapFactory.decodeStream(new ByteArrayInputStream(digitalAsset.getImage())));
+            assetImageUserAppropiateList.setImageBitmap(BitmapFactory.decodeStream(new ByteArrayInputStream(digitalAsset.getImage())));
         } else {
-            assetImageUserDeliveryList.setImageDrawable(rootView.getResources().getDrawable(R.drawable.img_asset_without_image));
+            assetImageUserAppropiateList.setImageDrawable(rootView.getResources().getDrawable(R.drawable.img_asset_without_image));
         }
 
-        assetNameUserDeliveryListText.setText(digitalAsset.getName());
-        assetsRemainingUserDeliveryListText.setText(digitalAsset.getAvailableBalance() + " Assets Remaining");
+        assetNameUserAppropiateListText.setText(digitalAsset.getName());
+        assetsRemainingUserAppropiateListText.setText(digitalAsset.getAvailableBalance() + " Assets Remaining");
     }
 
     private void configureToolbar() {

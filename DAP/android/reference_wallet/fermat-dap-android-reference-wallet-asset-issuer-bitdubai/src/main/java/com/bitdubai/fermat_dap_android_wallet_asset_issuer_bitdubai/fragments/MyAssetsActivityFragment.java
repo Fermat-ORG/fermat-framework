@@ -29,6 +29,7 @@ import com.bitdubai.fermat_dap_android_wallet_asset_issuer_bitdubai.models.Data;
 import com.bitdubai.fermat_dap_android_wallet_asset_issuer_bitdubai.models.DigitalAsset;
 import com.bitdubai.fermat_dap_android_wallet_asset_issuer_bitdubai.sessions.AssetIssuerSession;
 import com.bitdubai.fermat_dap_android_wallet_asset_issuer_bitdubai.util.CommonLogger;
+import com.bitdubai.fermat_dap_api.layer.dap_identity.asset_issuer.interfaces.IdentityAssetIssuer;
 import com.bitdubai.fermat_dap_api.layer.dap_module.wallet_asset_issuer.interfaces.AssetIssuerWalletSupAppModuleManager;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedWalletExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
@@ -52,6 +53,7 @@ public class MyAssetsActivityFragment extends FermatWalletListFragment<DigitalAs
 
     // Data
     private List<DigitalAsset> digitalAssets;
+    private IdentityAssetIssuer identity;
 
     //UI
     private View noAssetsView;
@@ -69,6 +71,7 @@ public class MyAssetsActivityFragment extends FermatWalletListFragment<DigitalAs
             errorManager = appSession.getErrorManager();
 
             digitalAssets = (List) getMoreDataAsync(FermatRefreshTypes.NEW, 0);
+            identity = moduleManager.getActiveAssetIssuerIdentity();
         } catch (Exception ex) {
             CommonLogger.exception(TAG, ex.getMessage(), ex);
             if (errorManager != null)
@@ -81,13 +84,14 @@ public class MyAssetsActivityFragment extends FermatWalletListFragment<DigitalAs
     protected void initViews(View layout) {
         super.initViews(layout);
 
-        setupBackgroundBitmap(layout);
-
-        configureToolbar();
-
-        noAssetsView = layout.findViewById(R.id.dap_wallet_asset_issuer_no_assets);
-
-        showOrHideNoAssetsView(digitalAssets.isEmpty());
+        if (identity != null) {
+            setupBackgroundBitmap(layout);
+            configureToolbar();
+            noAssetsView = layout.findViewById(R.id.dap_wallet_asset_issuer_no_assets);
+            showOrHideNoAssetsView(digitalAssets.isEmpty());
+        } else {
+            changeActivity(Activities.DAP_SUB_APP_ASSET_ISSUER_IDENTITY, appSession.getAppPublicKey());
+        }
     }
 
     @Override

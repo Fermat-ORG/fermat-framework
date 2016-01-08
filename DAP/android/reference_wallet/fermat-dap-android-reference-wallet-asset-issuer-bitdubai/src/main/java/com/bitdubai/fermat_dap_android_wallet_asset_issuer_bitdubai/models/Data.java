@@ -3,10 +3,13 @@ package com.bitdubai.fermat_dap_android_wallet_asset_issuer_bitdubai.models;
 import com.bitdubai.fermat_api.layer.all_definition.resources_structure.Resource;
 import com.bitdubai.fermat_dap_api.layer.all_definition.enums.AssetCurrentStatus;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.exceptions.CantGetAssetUserActorsException;
+import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.exceptions.CantGetAssetUserGroupException;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.interfaces.ActorAssetUser;
+import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.interfaces.ActorAssetUserGroup;
 import com.bitdubai.fermat_dap_api.layer.dap_middleware.dap_asset_factory.interfaces.AssetFactory;
 import com.bitdubai.fermat_dap_api.layer.dap_module.wallet_asset_issuer.exceptions.CantGetAssetStatisticException;
 import com.bitdubai.fermat_dap_api.layer.dap_module.wallet_asset_issuer.interfaces.AssetIssuerWalletSupAppModuleManager;
+import com.bitdubai.fermat_dap_api.layer.dap_module.wallet_asset_issuer.interfaces.AssetStatistic;
 import com.bitdubai.fermat_dap_api.layer.dap_wallet.asset_issuer_wallet.interfaces.AssetIssuerWalletList;
 import com.bitdubai.fermat_dap_api.layer.dap_wallet.common.exceptions.CantLoadWalletException;
 
@@ -44,24 +47,32 @@ public class Data {
         return digitalAssets;
     }
 
-    public static List<UserDelivery> getUserDeliveryList(AssetIssuerWalletSupAppModuleManager moduleManager) throws Exception {
+    public static List<UserDelivery> getUserDeliveryList(String walletPublicKey, DigitalAsset digitalAsset, AssetIssuerWalletSupAppModuleManager moduleManager) throws Exception {
         //TODO get from database
+//        List<UserDelivery> users = new ArrayList<>();
+//        UserDelivery userDelivery = new UserDelivery();
+//        userDelivery.setUserName("Janet Williams");
+//        userDelivery.setDeliveryDate(new Timestamp(Calendar.getInstance().getTimeInMillis()));
+//        userDelivery.setDeliveryStatus("Redeemed");
+//        users.add(userDelivery);
+//        userDelivery = new UserDelivery();
+//        userDelivery.setUserName("Amanda Hood");
+//        userDelivery.setDeliveryDate(new Timestamp(Calendar.getInstance().getTimeInMillis()));
+//        userDelivery.setDeliveryStatus("Appropriated");
+//        users.add(userDelivery);
+//        userDelivery = new UserDelivery();
+//        userDelivery.setUserName("Tom Snow");
+//        userDelivery.setDeliveryDate(new Timestamp(Calendar.getInstance().getTimeInMillis()));
+//        userDelivery.setDeliveryStatus("Unused");
+//        users.add(userDelivery);
         List<UserDelivery> users = new ArrayList<>();
-        UserDelivery userDelivery = new UserDelivery();
-        userDelivery.setUserName("Janet Williams");
-        userDelivery.setDeliveryDate(new Timestamp(Calendar.getInstance().getTimeInMillis()));
-        userDelivery.setDeliveryStatus("Redeemed");
-        users.add(userDelivery);
-        userDelivery = new UserDelivery();
-        userDelivery.setUserName("Amanda Hood");
-        userDelivery.setDeliveryDate(new Timestamp(Calendar.getInstance().getTimeInMillis()));
-        userDelivery.setDeliveryStatus("Appropriated");
-        users.add(userDelivery);
-        userDelivery = new UserDelivery();
-        userDelivery.setUserName("Tom Snow");
-        userDelivery.setDeliveryDate(new Timestamp(Calendar.getInstance().getTimeInMillis()));
-        userDelivery.setDeliveryStatus("Unused");
-        users.add(userDelivery);
+        UserDelivery userDelivery;
+        List<AssetStatistic> stats = moduleManager.getWalletStatisticsByAsset(walletPublicKey, digitalAsset.getName());
+        for (AssetStatistic stat :
+                stats) {
+            userDelivery = new UserDelivery(stat.getRedeemPoint().getName(), new Timestamp(stat.getDistributionDate().getTime()), stat.getStatus().getCode());
+            users.add(userDelivery);
+        }
         return users;
     }
 
@@ -80,6 +91,18 @@ public class Data {
             users.add(newUser);
         }
         return users;
+    }
+
+    public static List<Group> getGroups(AssetIssuerWalletSupAppModuleManager moduleManager, List<Group> groupsSelected) throws CantGetAssetUserGroupException {
+        List<Group> groups = new ArrayList<>();
+        List<ActorAssetUserGroup> actorAssetUserGroups = moduleManager.getAssetUserGroupsList();
+        for (ActorAssetUserGroup actorAssetUserGroup:actorAssetUserGroups) {
+            Group newUser = new Group(actorAssetUserGroup.getGroupName(), actorAssetUserGroup);
+//            int index = usersSelected.indexOf(newUser);
+//            if (index > 0) newUser.setSelected(usersSelected.get(index).isSelected());
+            groups.add(newUser);
+        }
+        return groups;
     }
 
     public static void setStatistics(String walletPublicKey, DigitalAsset digitalAsset, AssetIssuerWalletSupAppModuleManager moduleManager) throws CantGetAssetStatisticException, CantLoadWalletException {
