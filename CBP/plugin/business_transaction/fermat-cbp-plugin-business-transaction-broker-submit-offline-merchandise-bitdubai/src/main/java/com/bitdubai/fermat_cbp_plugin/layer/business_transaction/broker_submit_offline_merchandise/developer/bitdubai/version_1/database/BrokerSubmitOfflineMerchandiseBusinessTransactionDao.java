@@ -277,7 +277,7 @@ public class BrokerSubmitOfflineMerchandiseBusinessTransactionDao {
             long amount,
             String cbpWalletPublicKey,
             BigDecimal referencePrice,
-            //FiatCurrency merchandiseType,
+            FiatCurrency merchandiseType,
             CurrencyType currencyType)
             throws CantInsertRecordException {
 
@@ -290,7 +290,7 @@ public class BrokerSubmitOfflineMerchandiseBusinessTransactionDao {
                 amount,
                 cbpWalletPublicKey,
                 referencePrice,
-                //merchandiseType,
+                merchandiseType,
                 currencyType
         );
         databaseTable.insertRecord(databaseTableRecord);
@@ -311,7 +311,7 @@ public class BrokerSubmitOfflineMerchandiseBusinessTransactionDao {
             long amount,
             String cbpWalletPublicKey,
             BigDecimal referencePrice,
-            //FiatCurrency merchandiseType,
+            FiatCurrency merchandiseType,
             CurrencyType currencyType) {
 
         UUID transactionId=UUID.randomUUID();
@@ -346,8 +346,12 @@ public class BrokerSubmitOfflineMerchandiseBusinessTransactionDao {
                 referencePrice.doubleValue()
         );
         record.setStringValue(
-                BrokerSubmitOfflineMerchandiseBusinessTransactionDatabaseConstants.SUBMIT_OFFLINE_MERCHANDISE_CURRENCY_TYPE_COLUMN_NAME,
+                BrokerSubmitOfflineMerchandiseBusinessTransactionDatabaseConstants.SUBMIT_OFFLINE_MERCHANDISE_PAYMENT_TYPE_COLUMN_NAME,
                 currencyType.getCode()
+        );
+        record.setStringValue(
+                BrokerSubmitOfflineMerchandiseBusinessTransactionDatabaseConstants.SUBMIT_OFFLINE_MERCHANDISE_CURRENCY_TYPE_COLUMN_NAME,
+                merchandiseType.getCode()
         );
         return record;
     }
@@ -451,7 +455,7 @@ public class BrokerSubmitOfflineMerchandiseBusinessTransactionDao {
             String cryptoAddressString;
             BigDecimal referencePrice;
             CurrencyType merchandiseType;
-            //FiatCurrency currencyType;
+            FiatCurrency currencyType;
             double referencePriceFromDatabase;
             BusinessTransactionRecord businessTransactionRecord =new BusinessTransactionRecord();
             databaseTable.addStringFilter(
@@ -507,18 +511,18 @@ public class BrokerSubmitOfflineMerchandiseBusinessTransactionDao {
             businessTransactionRecord.setPriceReference(
                     referencePrice
             );
-            /*String paymentTypeString=record.getStringValue(
-                    BrokerSubmitOfflineMerchandiseBusinessTransactionDatabaseConstants.
-                            SUBMIT_OFFLINE_MERCHANDISE_PAYMENT_TYPE_COLUMN_NAME);
-            paymentType = CurrencyType.getByCode(
+            String paymentTypeString=record.getStringValue(
+                    BrokerSubmitOfflineMerchandiseBusinessTransactionDatabaseConstants.SUBMIT_OFFLINE_MERCHANDISE_CURRENCY_TYPE_COLUMN_NAME
+                            );
+            currencyType = FiatCurrency.getByCode(
                     paymentTypeString
                     );
-            businessTransactionRecord.setPaymentType(
-                    paymentType
-            );*/
+            businessTransactionRecord.setCurrencyType(
+                    currencyType
+            );
             String currencyTypeCode=record.getStringValue(
-                    BrokerSubmitOfflineMerchandiseBusinessTransactionDatabaseConstants.
-                            SUBMIT_OFFLINE_MERCHANDISE_CURRENCY_TYPE_COLUMN_NAME);
+                    BrokerSubmitOfflineMerchandiseBusinessTransactionDatabaseConstants.SUBMIT_OFFLINE_MERCHANDISE_PAYMENT_TYPE_COLUMN_NAME
+                            );
             merchandiseType = CurrencyType.getByCode(
                     currencyTypeCode
                     );
@@ -568,6 +572,8 @@ public class BrokerSubmitOfflineMerchandiseBusinessTransactionDao {
     private DatabaseTableRecord buildDatabaseTableRecord(
             DatabaseTableRecord record,
             BusinessTransactionRecord businessTransactionRecord){
+        BigDecimal referencePrice;
+        double doubleReferencePrice;
         record.setStringValue(
                 BrokerSubmitOfflineMerchandiseBusinessTransactionDatabaseConstants.SUBMIT_OFFLINE_MERCHANDISE_BROKER_PUBLIC_KEY_COLUMN_NAME,
                 businessTransactionRecord.getBrokerPublicKey());
@@ -593,9 +599,14 @@ public class BrokerSubmitOfflineMerchandiseBusinessTransactionDao {
         record.setStringValue(
                 BrokerSubmitOfflineMerchandiseBusinessTransactionDatabaseConstants.SUBMIT_OFFLINE_MERCHANDISE_WALLET_PUBLIC_KEY_COLUMN_NAME,
                 businessTransactionRecord.getExternalWalletPublicKey());
+        /**
+         * Transform BigDecimal Object to double, this version of database plugin not support BigDecimal.
+         */
+        referencePrice=businessTransactionRecord.getPriceReference();
+        doubleReferencePrice=referencePrice.doubleValue();
         record.setDoubleValue(
                 BrokerSubmitOfflineMerchandiseBusinessTransactionDatabaseConstants.SUBMIT_OFFLINE_MERCHANDISE_REFERENCE_PRICE_COLUMN_NAME,
-                businessTransactionRecord.getCryptoAmount()
+                doubleReferencePrice
         );
         record.setStringValue(
                 BrokerSubmitOfflineMerchandiseBusinessTransactionDatabaseConstants.SUBMIT_OFFLINE_MERCHANDISE_CBP_WALLET_PUBLIC_KEY_COLUMN_NAME,
