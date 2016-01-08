@@ -2,6 +2,7 @@ package com.bitdubai.fermat_cht_api.layer.middleware.interfaces;
 
 import java.sql.Date;
 import java.util.List;
+import java.util.UUID;
 
 /**
  * Created by miguel payarez (miguel_payarez@hotmail.com) on 29/12/15.
@@ -10,37 +11,22 @@ import java.util.List;
 public interface ChatManager {
 
     //Todo: create a chat record or chat wrapper to clean this method, please, use english to name objects.
-    void newChat (
-            Integer chatId, //Why this id is an integer? you can use UUID
-            Integer objectId, //This must be a String, this field can be an UUID or publicKey
-            String localActorType,
-            String localActorPublicKey,
-            String remoteActorType,
-            String remoteActorPublicKey,
-            String chatName,
-            boolean status, //Why this argument is a boolean?
-            Date date,
-            Date lastMessageDate
-    );
 
-    List<Object> chatList(
-            Integer chatId, //Why this id is an integer? you can use UUID
-            Integer objectId //This must be a String, this field can be an UUID or publicKey
-    );
+    List<Chat> getChats();
 
-    List<Object> chatDetails(
-            Integer chatId, //Why this id is an integer? you can use UUID
-            Integer objectId //This must be a String, this field can be an UUID or publicKey
-                              );
+    Chat getChatByChatId(UUID chatId);
 
-    List<Object> sendMessage(
-            Integer messageId, //Why this id is an integer? you can use UUID
-            Integer chatId, //Why this id is an integer? you can use UUID
-            String message,
-            Integer status, //Why this argument is an integer?
-            Boolean type,
-            Date messageDate
-    );
+    void saveChat(Chat chat);
 
+    void deleteChat(Chat chat);
 
+    List<Message> getMessages();
+
+    Message getMessageByChatId(UUID chatId);
+
+    Message getMessageByMessageId(UUID messageId);
+
+    void saveMessage(Message message);
+
+    void deleteMessage(Message message);
 }
