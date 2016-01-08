@@ -671,7 +671,7 @@ public class WsCommunicationsCloudClientConnection implements CommunicationsClie
              * Validate are the  type NETWORK_SERVICE
              */
             if (applicantNetworkService.getPlatformComponentType() != PlatformComponentType.NETWORK_SERVICE){
-                throw new IllegalArgumentException("All the PlatformComponentProfile has to be NETWORK_SERVICE ");
+                throw new IllegalArgumentException("The PlatformComponentProfile of the applicantNetworkService has to be NETWORK_SERVICE ");
             }
 
             /*
@@ -702,10 +702,9 @@ public class WsCommunicationsCloudClientConnection implements CommunicationsClie
             wsCommunicationsCloudClientChannel.send(FermatPacketEncoder.encode(fermatPacketRespond));
 
         }catch (Exception e){
-
+            e.printStackTrace();
             CantEstablishConnectionException pluginStartException = new CantEstablishConnectionException(CantEstablishConnectionException.DEFAULT_MESSAGE, e, e.getLocalizedMessage(), e.getLocalizedMessage());
             throw pluginStartException;
-
         }
 
     }
