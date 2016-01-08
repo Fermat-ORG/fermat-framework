@@ -86,6 +86,9 @@ public final class AssetVerification {
     private static CryptoTransaction getCryptoTransactionFromCryptoNetwork(BitcoinNetworkManager bitcoinNetworkManager, String genesisTransaction) throws DAPException, CantGetCryptoTransactionException {
         List<CryptoTransaction> cryptoTransactionList =
                 bitcoinNetworkManager.getCryptoTransaction(genesisTransaction);
+        if (cryptoTransactionList.isEmpty()) {
+            cryptoTransactionList = bitcoinNetworkManager.getChildCryptoTransaction(genesisTransaction);
+        }
         for (CryptoTransaction cryptoTransaction : cryptoTransactionList) {
             if (cryptoTransaction.getTransactionHash().equals(genesisTransaction)) {
                 return cryptoTransaction;
@@ -135,6 +138,6 @@ public final class AssetVerification {
         //For now, we going to check, only, the expiration date
         ContractProperty contractProperty = digitalAssetContract.getContractProperty(DigitalAssetContractPropertiesConstants.EXPIRATION_DATE);
         Timestamp expirationDate = (Timestamp) contractProperty.getValue();
-        return expirationDate.after(new Timestamp(System.currentTimeMillis()));
+        return (expirationDate == null || new Timestamp(System.currentTimeMillis()).before(expirationDate));
     }
 }
