@@ -4,8 +4,8 @@ import com.bitdubai.fermat_api.CantStartPluginException;
 import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.abstract_classes.AbstractPlugin;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.annotations.NeededAddonReference;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.FermatManager;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.PluginVersionReference;
-import com.bitdubai.fermat_api.layer.all_definition.crypto.asymmetric.ECCKeyPair;
 import com.bitdubai.fermat_api.layer.all_definition.developer.DatabaseManagerForDevelopers;
 import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperDatabase;
 import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperDatabaseTable;
@@ -13,36 +13,26 @@ import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperDatabaseT
 import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperObjectFactory;
 import com.bitdubai.fermat_api.layer.all_definition.developer.LogManagerForDevelopers;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Addons;
-import com.bitdubai.fermat_api.layer.all_definition.enums.DeviceDirectory;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Layers;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
-import com.bitdubai.fermat_api.layer.actor_connection.common.enums.ConnectionState;
 import com.bitdubai.fermat_api.layer.all_definition.util.Version;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
-import com.bitdubai.fermat_api.layer.osa_android.file_system.FileLifeSpan;
-import com.bitdubai.fermat_api.layer.osa_android.file_system.FilePrivacy;
-import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginBinaryFile;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
-import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginTextFile;
-import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantCreateFileException;
-import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantPersistFileException;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogLevel;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogManager;
 import com.bitdubai.fermat_cbp_api.layer.actor.crypto_customer.exceptions.CantCreateCryptoCustomerActorException;
 import com.bitdubai.fermat_cbp_api.layer.actor.crypto_customer.exceptions.CantCreateCustomerIdentiyWalletRelationshipException;
+import com.bitdubai.fermat_cbp_api.layer.actor.crypto_customer.exceptions.CantDeleteCustomerIdentiyWalletRelationshipException;
 import com.bitdubai.fermat_cbp_api.layer.actor.crypto_customer.exceptions.CantGetCryptoCustomerActorException;
 import com.bitdubai.fermat_cbp_api.layer.actor.crypto_customer.exceptions.CantGetCustomerIdentiyWalletRelationshipException;
 import com.bitdubai.fermat_cbp_api.layer.actor.crypto_customer.exceptions.CantUpdateCustomerIdentiyWalletRelationshipException;
 import com.bitdubai.fermat_cbp_api.layer.actor.crypto_customer.interfaces.CryptoCustomerActor;
-import com.bitdubai.fermat_cbp_api.layer.actor.crypto_customer.interfaces.CryptoCustomerActorManager;
 import com.bitdubai.fermat_cbp_api.layer.actor.crypto_customer.interfaces.CryptoCustomerIdentityWalletRelationshipRecord;
 import com.bitdubai.fermat_cbp_plugin.layer.actor.crypto_customer.developer.bitdubai.version_1.database.CryptoCustomerActorDatabaseDao;
 import com.bitdubai.fermat_cbp_plugin.layer.actor.crypto_customer.developer.bitdubai.version_1.database.CryptoCustomerActorDeveloperDatabaseFactory;
 import com.bitdubai.fermat_cbp_plugin.layer.actor.crypto_customer.developer.bitdubai.version_1.exceptions.CantInitializeCryptoCustomerActorDatabaseException;
-import com.bitdubai.fermat_cbp_plugin.layer.actor.crypto_customer.developer.bitdubai.version_1.exceptions.CantPersistPrivateKeyException;
-import com.bitdubai.fermat_cbp_plugin.layer.actor.crypto_customer.developer.bitdubai.version_1.exceptions.CantPersistProfileImageException;
-import com.bitdubai.fermat_cbp_plugin.layer.actor.crypto_customer.developer.bitdubai.version_1.exceptions.CantRegisterCryptoCustomerActorException;
+import com.bitdubai.fermat_cbp_plugin.layer.actor.crypto_customer.developer.bitdubai.version_1.structure.CryptoCustomerActorManagerImpl;
 import com.bitdubai.fermat_cbp_plugin.layer.actor.crypto_customer.developer.bitdubai.version_1.structure.CryptoCustomerIdentityWalletRelationshipImpl;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedPluginExceptionSeverity;
@@ -66,7 +56,6 @@ import java.util.regex.Pattern;
  * Updated by Yordin Alayn (y.alayn@gmail.com) on 21.11.2015.
  */
 public class CryptoCustomerActorPluginRoot extends AbstractPlugin implements
-        CryptoCustomerActorManager,
         LogManagerForDevelopers,
         DatabaseManagerForDevelopers {
 
@@ -82,9 +71,11 @@ public class CryptoCustomerActorPluginRoot extends AbstractPlugin implements
     @NeededAddonReference(platform = Platforms.OPERATIVE_SYSTEM_API,    layer = Layers.SYSTEM,              addon = Addons.PLUGIN_FILE_SYSTEM)
     private PluginFileSystem pluginFileSystem;
 
-    private CryptoCustomerActorDatabaseDao databaseDao;
+    private CryptoCustomerActorDatabaseDao                  databaseDao;
 
-    private CryptoCustomerIdentityWalletRelationshipImpl cryptoCustomerIdentityWalletRelationshipImpl;
+    private CryptoCustomerActorManagerImpl                  cryptoCustomerActorManagerImpl;
+
+    private CryptoCustomerIdentityWalletRelationshipImpl    cryptoCustomerIdentityWalletRelationshipImpl;
 
     static Map<String, LogLevel> newLoggingLevel = new HashMap<String, LogLevel>();
 
@@ -102,14 +93,27 @@ public class CryptoCustomerActorPluginRoot extends AbstractPlugin implements
             databaseDao = new CryptoCustomerActorDatabaseDao(pluginDatabaseSystem, pluginFileSystem, pluginId);
             databaseDao.initialize();
 
+            //Initialize manager
+            cryptoCustomerActorManagerImpl = new CryptoCustomerActorManagerImpl(
+                errorManager,
+                logManager,
+                pluginFileSystem,
+                pluginId,
+                databaseDao
+            );
+
             //IDENTITY WALLET RELATIONSHIP
             cryptoCustomerIdentityWalletRelationshipImpl = new CryptoCustomerIdentityWalletRelationshipImpl(databaseDao);
 
+            //TEST ACTOR
+            /*createNewCryptoCustomerActorTest(false);
+            getCryptoCustomerActorTest(false);*/
+
             //TEST IDENTITY WALLET RELATIONSHIP
-            createCustomerIdentityWalletRelationshipTest(true);
-            updateCustomerIdentityWalletRelationshipTest(true);
-            getAllCustomerIdentityWalletRelationshipsTest(true);
-            getCustomerIdentityWalletRelationshipsTest(true);
+            /*createCustomerIdentityWalletRelationshipTest(false);
+            updateCustomerIdentityWalletRelationshipTest(false);
+            getAllCustomerIdentityWalletRelationshipsTest(false);
+            getCustomerIdentityWalletRelationshipsTest(false);*/
 
             this.serviceStatus = ServiceStatus.STARTED;
         } catch (final CantInitializeCryptoCustomerActorDatabaseException e) {
@@ -117,62 +121,10 @@ public class CryptoCustomerActorPluginRoot extends AbstractPlugin implements
             throw new CantStartPluginException(e, "pluginDatabaseSystem=" + pluginDatabaseSystem + "pluginId=" + pluginId, "Cannot initialize Crypto Customer Actor Database.");
         }
     }
+
+    @Override
+    public FermatManager getManager() { return cryptoCustomerActorManagerImpl; }
     /*END IMPLEMENTATION service*/
-
-    /*IMPLEMENTATION CryptoCustomerActorManager*/
-    @Override
-    public CryptoCustomerActor createNewCryptoCustomerActor(String actorLoggedInPublicKey, String actorName, byte[] actorPhoto) throws CantCreateCryptoCustomerActorException {
-
-        logManager.log(CryptoCustomerActorPluginRoot.getLogLevelByClass(this.getClass().getName()), "Creating Crypto Customer...", null, null);
-
-        ECCKeyPair keyPair = new ECCKeyPair();
-        String actorPublicKey = keyPair.getPublicKey();
-        String actorPrivateKey = keyPair.getPrivateKey();
-        CryptoCustomerActor actor = null;
-
-        try {
-
-            persistPrivateKey(actorPrivateKey, actorPublicKey);
-
-            if(actorPhoto!=null) persistNewCryptoCustomerActorProfileImage(actorPublicKey, actorPhoto);
-
-            actor = databaseDao.createRegisterCryptoCustomerActor(actorLoggedInPublicKey, actorPublicKey, actorPrivateKey, actorName, actorPhoto, ConnectionState.CONNECTED);
-
-        } catch (CantRegisterCryptoCustomerActorException e){
-            errorManager.reportUnexpectedPluginException(this.getPluginVersionReference(), UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
-            throw new CantCreateCryptoCustomerActorException("CRYPTO CUSTOMER ACTOR", e, "CAN'T CREATE NEW CRYPTO CUSTOMER ACTOR", "");
-        } catch (Exception e){
-            errorManager.reportUnexpectedPluginException(this.getPluginVersionReference(), UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
-            throw new CantCreateCryptoCustomerActorException("CRYPTO CUSTOMER ACTOR", e, "CAN'T CREATE NEW CRYPTO CUSTOMER ACTOR", "");
-        }
-        logManager.log(CryptoCustomerActorPluginRoot.getLogLevelByClass(this.getClass().getName()), "Crypto Customer Created Successfully", null, null);
-
-        return actor;
-    }
-
-    @Override
-    public CryptoCustomerActor getCryptoCustomerActor(String actorLoggedInPublicKey, String actorPublicKey) throws CantGetCryptoCustomerActorException {
-        logManager.log(CryptoCustomerActorPluginRoot.getLogLevelByClass(this.getClass().getName()), "Trying to get an specific crypto customer...", null, null);
-
-        CryptoCustomerActor actor = null;
-
-        try {
-
-            actor = this.databaseDao.getRegisterCryptoCustomerActor(actorLoggedInPublicKey, actorPublicKey);
-            if(actor == null)
-                throw new CantGetCryptoCustomerActorException("", null, ".","Intra User not found");
-
-        } catch (CantRegisterCryptoCustomerActorException e){
-            errorManager.reportUnexpectedPluginException(this.getPluginVersionReference(), UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
-            throw new CantGetCryptoCustomerActorException("CRYPTO CUSTOMER ACTOR", e, "CAN'T GET CRYPTO CUSTOMER ACTOR", "");
-        } catch (Exception e){
-            errorManager.reportUnexpectedPluginException(this.getPluginVersionReference(), UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
-            throw new CantGetCryptoCustomerActorException("CRYPTO CUSTOMER ACTOR", e, "CAN'T GET CRYPTO CUSTOMER ACTOR", "");
-        }
-
-        return actor;
-    }
-    /*END IMPLEMENTATION CryptoCustomerActorManager*/
 
     /*IMPLEMENTATION DatabaseManagerForDevelopers,*/
     @Override
@@ -232,44 +184,52 @@ public class CryptoCustomerActorPluginRoot extends AbstractPlugin implements
     }
     /*END IMPLEMENTATION LogManagerForDevelopers*/
 
-    /*PRIVATE METHOD*/
-    private void persistPrivateKey(String privateKey, String publicKey) throws CantPersistPrivateKeyException {
-        try {
-            PluginTextFile file = this.pluginFileSystem.createTextFile(
-                    pluginId,
-                    DeviceDirectory.LOCAL_USERS.getName() + "/" + CryptoCustomerActorPluginRoot.ACTOR_CRYPTO_CUSTOMER_PRIVATE_KEYS_DIRECTORY_NAME,
-                    publicKey,
-                    FilePrivacy.PRIVATE,
-                    FileLifeSpan.PERMANENT
-            );
-            file.setContent(privateKey);
-            file.persistToMedia();
-        } catch (CantPersistFileException | CantCreateFileException e) {
-            throw new CantPersistPrivateKeyException(CantPersistPrivateKeyException.DEFAULT_MESSAGE, e, "Error creating or persisting file.", null);
-        } catch (Exception e) {
-            throw new CantPersistPrivateKeyException(CantPersistPrivateKeyException.DEFAULT_MESSAGE, FermatException.wrapException(e), "", "");
+
+    /*TEST MOCK ACTOR*/
+    private void createNewCryptoCustomerActorTest(boolean sw){
+
+        if(sw) {
+            try {
+                System.out.print("\n**** MOCK CRYPTO CUSTOMER ACTOR. CREATE ACTOR ****\n");
+                CryptoCustomerActor cryptoCustomerActor = null;
+                cryptoCustomerActor = cryptoCustomerActorManagerImpl.createNewCryptoCustomerActor("identityPublicKey", "actorName", null);
+                System.out.print("\n- ACTOR DATE " +
+                                "\n- PublicKey: " + cryptoCustomerActor.getActorPublicKey() +
+                                "\n- Name: " + cryptoCustomerActor.getActorName() +
+                                "\n- Type : " + cryptoCustomerActor.getActorType().getCode()
+                );
+
+            } catch (CantCreateCryptoCustomerActorException e){
+                System.out.print("\n**** MOCK CRYPTO CUSTOMER ACTOR. CREATE ACTOR. ERROR CREATE REGISTER. ****\n");
+            }
+        }else{
+            System.out.print("\n**** MOCK CRYPTO CUSTOMER ACTOR. CREATE ACTOR. OFF****\n");
+        }
+
+    }
+
+    private void getCryptoCustomerActorTest(boolean sw){
+        if(sw) {
+
+            try{
+                System.out.print("\n**** MOCK CRYPTO CUSTOMER ACTOR. GET ACTOR ****\n");
+                CryptoCustomerActor cryptoCustomerActor = null;
+                cryptoCustomerActor = cryptoCustomerActorManagerImpl.getCryptoCustomerActor("045B933DF69E8422D8BA29928156A2DE1F9302A5C52B8F0ABC62B3473C460366C4D97D08480F2136390F6BF5B90873ED01DF2A6293221D10E5911692A6B4E65E92");
+                if(cryptoCustomerActor != null){
+                    System.out.print("\n- ACTOR DATE " +
+                                    "\n- PublicKey: " + cryptoCustomerActor.getActorPublicKey() +
+                                    "\n- Name: " + cryptoCustomerActor.getActorName() +
+                                    "\n- Type : " + cryptoCustomerActor.getActorType().getCode()
+                    );
+                }else{ System.out.print("\n**** MOCK CRYPTO CUSTOMER ACTOR. GET ACTOR. ERROR GET REGISTER IS NULL. ****\n"); }
+            } catch (CantGetCryptoCustomerActorException e){
+                System.out.print("\n**** MOCK CRYPTO CUSTOMER ACTOR. GET ACTOR. ERROR GET REGISTER. ****\n");
+            }
+        }else{
+            System.out.print("\n**** MOCK CRYPTO CUSTOMER ACTOR. GET ACTOR. OFF****\n");
         }
     }
 
-    private void  persistNewCryptoCustomerActorProfileImage(String publicKey,byte[] profileImage) throws CantPersistProfileImageException {
-        try {
-            PluginBinaryFile file = this.pluginFileSystem.createBinaryFile(pluginId,
-                    DeviceDirectory.LOCAL_USERS.getName(),
-                    CryptoCustomerActorPluginRoot.ACTOR_CRYPTO_CUSTOMER_PROFILE_IMAGE_DIRECTORY_NAME + "_" + publicKey,
-                    FilePrivacy.PRIVATE,
-                    FileLifeSpan.PERMANENT
-            );
-            file.setContent(profileImage);
-            file.persistToMedia();
-        } catch (CantPersistFileException e) {
-            throw new CantPersistProfileImageException("CAN'T PERSIST PROFILE IMAGE ", e, "Error persist file.", null);
-        } catch (CantCreateFileException e) {
-            throw new CantPersistProfileImageException("CAN'T PERSIST PROFILE IMAGE ", e, "Error creating file.", null);
-        } catch (Exception e) {
-            throw  new CantPersistProfileImageException("CAN'T PERSIST PROFILE IMAGE ",FermatException.wrapException(e),"", "");
-        }
-    }
-    /*END PRIVATE METHOD*/
 
     /*TEST MOCK RELATIONSHIP*/
     private void createCustomerIdentityWalletRelationshipTest(boolean sw){
@@ -281,7 +241,7 @@ public class CryptoCustomerActorPluginRoot extends AbstractPlugin implements
 
                 CryptoCustomerIdentityWalletRelationshipRecord relationshipRecord = null;
 
-                relationshipRecord = cryptoCustomerIdentityWalletRelationshipImpl.createCustomerIdentityWalletRelationship("walletPublicKey", "identityPublicKey");
+                relationshipRecord = cryptoCustomerIdentityWalletRelationshipImpl.createCustomerIdentityWalletRelationship("walletPublicKey23", "identityPublicKey23");
                 System.out.print("\n- RELATIONSHIP DATE " +
                                 "\n- ID: " + relationshipRecord.getRelationship() +
                                 "\n- WalletPublicKey: " + relationshipRecord.getWalletPublicKey() +
@@ -292,7 +252,7 @@ public class CryptoCustomerActorPluginRoot extends AbstractPlugin implements
                 System.out.print("\n**** MOCK CRYPTO CUSTOMER ACTOR. CREATE RELATIONSHIP. ERROR CREATE REGISTER. ****\n");
             }
         }else{
-            System.out.print("\n**** MOCK CRYPTO CUSTOMER ACTOR. CREATE RELATIONSHIP. ERROR CREATE REGISTER. OFF****\n");
+            System.out.print("\n**** MOCK CRYPTO CUSTOMER ACTOR. CREATE RELATIONSHIP. OFF****\n");
         }
 
     }
@@ -323,6 +283,37 @@ public class CryptoCustomerActorPluginRoot extends AbstractPlugin implements
             System.out.print("\n**** MOCK CRYPTO CUSTOMER ACTOR. UPDATE RELATIONSHIP. OFF****\n");
         }
         
+    }
+
+    private void deleteCustomerIdentityWalletRelationshipTest(String sId){
+
+        if(sId != null) {
+            try {
+
+                System.out.print("\n**** MOCK CRYPTO CUSTOMER ACTOR. DELETE RELATIONSHIP ****\n");
+
+                CryptoCustomerIdentityWalletRelationshipRecord relationshipRecord = null;
+
+                UUID id = UUID.fromString(sId);
+
+                cryptoCustomerIdentityWalletRelationshipImpl.deleteCustomerIdentityWalletRelationship(id);
+
+                if(cryptoCustomerIdentityWalletRelationshipImpl.getCustomerIdentityWalletRelationships(id) == null){
+
+                    System.out.print("\n**** MOCK CRYPTO CUSTOMER ACTOR. DELETE RELATIONSHIP. REGISTER " + sId + " DELETE. ****\n");
+
+                }
+
+            } catch (CantDeleteCustomerIdentiyWalletRelationshipException e){
+                System.out.print("\n**** MOCK CRYPTO CUSTOMER ACTOR. UPDATE RELATIONSHIP. ERROR UPDATE REGISTER. ****\n");
+            }catch (CantGetCustomerIdentiyWalletRelationshipException e){
+                System.out.print("\n**** MOCK CRYPTO CUSTOMER ACTOR. GET RELATIONSHIP OF DELETE. ERROR GET REGISTER OF DELETE. ****\n");
+            }
+
+        }else{
+            System.out.print("\n**** MOCK CRYPTO CUSTOMER ACTOR. UPDATE RELATIONSHIP. OFF****\n");
+        }
+
     }
     
     private void getAllCustomerIdentityWalletRelationshipsTest(boolean sw){

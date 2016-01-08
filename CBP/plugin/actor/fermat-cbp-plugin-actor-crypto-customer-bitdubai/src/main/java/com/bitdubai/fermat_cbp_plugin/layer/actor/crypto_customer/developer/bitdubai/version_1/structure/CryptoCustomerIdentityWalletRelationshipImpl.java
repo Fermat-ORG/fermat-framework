@@ -93,7 +93,7 @@ public class CryptoCustomerIdentityWalletRelationshipImpl implements CryptoCusto
     @Override
     public CryptoCustomerIdentityWalletRelationshipRecord getCustomerIdentityWalletRelationshipsByWallet(String walletPublicKey) throws CantGetCustomerIdentiyWalletRelationshipException{
         try {
-            return databaseDao.getRegisterCustomerIdentityWalletRelationshipsByIdentity(walletPublicKey);
+            return databaseDao.getRegisterCustomerIdentityWalletRelationshipsByWallet(walletPublicKey);
         } catch (CantRegisterCryptoCustomerIdentityWalletRelationshipException e){
             throw new CantGetCustomerIdentiyWalletRelationshipException("CRYPTO CUSTOMER ACTOR", e, "CAN'T GET RELATIONSHIP IDENTITY WALLET CRYPTO CUSTOMER ACTOR", "");
         } catch (Exception e){
