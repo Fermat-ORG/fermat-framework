@@ -14,32 +14,36 @@
         android:id="@+id/fragment_container2"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="#1173aa"
+        android:background="@drawable/search_contacts_container"
+        android:layout_marginRight="10dp"
+        android:layout_marginLeft="10dp"
+        android:layout_marginTop="15dp"
         android:orientation="horizontal"
         >
 
         <ImageView
-            android:layout_width="35dp"
-            android:layout_height="35dp"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
             android:src="@drawable/ic_contact_search"
-            android:paddingTop="10dp"
             android:layout_marginLeft="10dp"
-            android:layout_marginTop="10dp" />
+            android:paddingTop="3dp"
+            android:paddingBottom="3dp"
+            android:layout_gravity="center_vertical"/>
 
         <EditText
-
             android:id="@+id/search_view"
-            android:layout_width="fill_parent"
-            android:layout_height="50dp"
-            android:layout_margin="6dp"
+            android:layout_width="match_parent"
+            android:layout_height="35dp"
             android:layout_toLeftOf="@+id/clear_search_image_button"
             android:layout_toStartOf="@+id/clear_search_image_button"
+            android:paddingLeft="20dp"
             android:hint="@string/search_hint"
             android:textColorHint="#fff"
             android:textSize="14sp"
             android:textColor="#ffffff"
+            android:layout_gravity="center"
             android:singleLine="true"
-            android:backgroundTint="#fff"
+            android:background="@null"
             />
 
         <ImageButton
