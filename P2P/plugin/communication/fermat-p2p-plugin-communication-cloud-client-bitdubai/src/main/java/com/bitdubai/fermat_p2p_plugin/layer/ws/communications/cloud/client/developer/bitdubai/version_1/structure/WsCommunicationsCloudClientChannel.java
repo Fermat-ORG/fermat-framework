@@ -283,8 +283,13 @@ public class WsCommunicationsCloudClientChannel extends WebSocketClient {
                     break;
 
                 default:
-                        raiseClientConnectionCloseNotificationEvent();
-                        setIsRegister(Boolean.FALSE);
+
+                        if (reason.contains("ENETUNREACH")){
+                            raiseClientConnectionLooseNotificationEvent();
+                        }else{
+                            raiseClientConnectionCloseNotificationEvent();
+                            setIsRegister(Boolean.FALSE);
+                        }
 
                     break;
             }

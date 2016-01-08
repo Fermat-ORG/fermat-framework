@@ -217,8 +217,6 @@ public class WsCommunicationVPNClient extends WebSocketClient implements Communi
                     try {
                         wsCommunicationVPNClientManagerAgent.riseVpnConnectionLooseNotificationEvent(remoteParticipantNetworkService.getNetworkServiceType(), remoteParticipant);
                         System.out.println(" WsCommunicationVPNClient - Connection loose,  trying to reconnect");
-                        getConnection().closeConnection(code, reason);
-                        reconnect();
                     }catch (Exception e){
                         e.printStackTrace();
                     }

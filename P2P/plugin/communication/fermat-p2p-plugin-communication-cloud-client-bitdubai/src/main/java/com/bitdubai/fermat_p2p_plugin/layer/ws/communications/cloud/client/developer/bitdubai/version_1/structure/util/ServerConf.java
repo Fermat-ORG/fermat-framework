@@ -29,7 +29,7 @@ public class ServerConf {
     /**
      * Represent the SERVER_IP in the local environment
      */
-    public static final String SERVER_IP_DEVELOPER_LOCAL = "192.168.1.3";
+    public static final String SERVER_IP_DEVELOPER_LOCAL = "192.168.1.2";
 
     /**
      * Represents the value of DISABLE_CLIENT
@@ -50,8 +50,7 @@ public class ServerConf {
      * Represent the HTTP_PROTOCOL
      */
     public static final String HTTP_PROTOCOL = "http://";
-
-
+    
     /**
      * Represent the DEFAULT_PORT
      */
