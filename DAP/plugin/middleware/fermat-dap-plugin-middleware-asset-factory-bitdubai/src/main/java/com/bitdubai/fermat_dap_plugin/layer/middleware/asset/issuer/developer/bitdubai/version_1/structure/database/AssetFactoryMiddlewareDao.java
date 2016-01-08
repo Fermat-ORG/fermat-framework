@@ -376,7 +376,7 @@ public class AssetFactoryMiddlewareDao {
             DatabaseTableRecord assetFactoryRecord = getAssetFactoryProjectRecord(assetFactory);
             DatabaseTableFilter filter = table.getEmptyTableFilter();
             filter.setType(DatabaseFilterType.EQUAL);
-            filter.setValue(assetFactory.getAssetPublicKey());
+            filter.setValue(assetFactory.getFactoryId());
             filter.setColumn(AssertFactoryMiddlewareDatabaseConstant.ASSET_FACTORY_ID_COLUMN);
 
             if (isNewRecord(table, filter))
