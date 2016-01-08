@@ -234,8 +234,8 @@ public class BrokerSubmitOfflineMerchandisePluginRoot extends AbstractPlugin imp
              * Init the plugin manager
              */
         //TODO: the following two lines is only for testing, please, comment them when the testing is over.
-            customerBrokerContractSaleManager=new CustomerBrokerContractSaleManagerMock();
-            customerBrokerSaleNegotiationManager=new SaleNegotiationManagerMock();
+            //customerBrokerContractSaleManager=new CustomerBrokerContractSaleManagerMock();
+            //customerBrokerSaleNegotiationManager=new SaleNegotiationManagerMock();
             this.brokerSubmitOfflineMerchandiseTransactionManager=new BrokerSubmitOfflineMerchandiseTransactionManager(
                     brokerSubmitOfflineMerchandiseBusinessTransactionDao,
                     this.customerBrokerContractSaleManager,
@@ -271,7 +271,7 @@ public class BrokerSubmitOfflineMerchandisePluginRoot extends AbstractPlugin imp
 
             this.serviceStatus = ServiceStatus.STARTED;
             //System.out.println("Broker submit offline merchandise starting");
-            testSubmit();
+            //testSubmit();
         } catch (CantInitializeBrokerSubmitOfflineMerchandiseBusinessTransactionDatabaseException exception) {
             throw new CantStartPluginException(
                     FermatException.wrapException(exception),
