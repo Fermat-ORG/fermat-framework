@@ -96,4 +96,7 @@
     <string name="ccw_bank_name">Bank Name</string>
     <string name="ccw_account_number">Account Number</string>
     <string name="ccw_account_alias">Account Alias</string>
+    <string name="ccw_settings_locations_description">You must have at least one location to make your transactions</string>
+    <string name="ccw_settings_locations_title">Manage Your Locations</string>
+    <string name="ccw_save">Save</string>
 </resources>

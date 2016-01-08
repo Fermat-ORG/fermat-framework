@@ -122,4 +122,7 @@
     <string name="cbw_wizard_stock_merchandise_title">Choose Stock Merchandises</string>
     <string name="cbw_wizard_stock_merchandise_description">You must select a Wallet that work as Merchandise and the spread applied to them</string>
     <string name="cbw_select_stock_merchandise">Select a Stock Merchandise</string>
+    <string name="cbw_settings_locations_description">You must have at least one location to make your transactions</string>
+    <string name="cbw_settings_locations_title">Manage Your Locations</string>
+    <string name="cbw_save">Save</string>
 </resources>
