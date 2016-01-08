@@ -336,9 +336,9 @@ public class IntraWalletUserActorPluginRoot extends AbstractPlugin implements
              * if intra user exist on table
              * return error
              */
-            if (intraWalletUserActorDao.intraUserRequestExists(intraUserToAddPublicKey, ConnectionState.PENDING_LOCALLY_ACCEPTANCE)) {
+            if (intraWalletUserActorDao.intraUserRequestExists(intraUserToAddPublicKey)) {
 
-                throw new RequestAlreadySendException("CAN'T INSERT INTRA USER", null, "", "The request already sent to actor.");
+                throw new RequestAlreadySendException("CAN'T INSERT INTRA USER", null, "", "The request already sent by actor.");
 
                 //this.updateConnectionState(intraUserLoggedInPublicKey, intraUserToAddPublicKey, contactState);
 
@@ -413,11 +413,11 @@ public class IntraWalletUserActorPluginRoot extends AbstractPlugin implements
         }
         catch(CantGetIntraWalletUserActorException e)
         {
-            throw new CantGetIntraUserException("CAN'T GET INTRA USER ACTOR", FermatException.wrapException(e), "", "unknown error");
+            throw new CantGetIntraUserException("CAN'T GET INTRA USER ACTOR", e, "", "database error");
         }
         catch(Exception e)
         {
-            throw new CantGetIntraUserException("CAN'T GET INTRA USER ACTOR", e, "", "");
+            throw new CantGetIntraUserException("CAN'T GET INTRA USER ACTOR", FermatException.wrapException(e), "", "unknown error");
         }
 
 
@@ -432,7 +432,11 @@ public class IntraWalletUserActorPluginRoot extends AbstractPlugin implements
     @Override
     public boolean isActorConnected(String publicKey) throws CantCreateNewDeveloperException {
 
-        return  intraWalletUserActorDao.intraUserRequestExists(publicKey, ConnectionState.CONNECTED) ;
+        try {
+            return  intraWalletUserActorDao.intraUserRequestExists(publicKey, ConnectionState.CONNECTED) ;
+        } catch (CantGetIntraWalletUserActorException e) {
+            throw new CantCreateNewDeveloperException("CAN'T GET INTRA USER ACTOR IS CONNECTED", e, "", "database error");
+        }
 
 
     }

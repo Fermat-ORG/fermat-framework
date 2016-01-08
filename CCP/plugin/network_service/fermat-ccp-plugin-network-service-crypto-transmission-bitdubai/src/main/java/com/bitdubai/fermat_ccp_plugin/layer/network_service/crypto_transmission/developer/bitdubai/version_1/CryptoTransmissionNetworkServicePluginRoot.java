@@ -1371,6 +1371,15 @@ public class CryptoTransmissionNetworkServicePluginRoot extends AbstractNetworkS
                 cryptoTransmissionMetadataDAO.changeState(record.getTransactionId(), CryptoTransmissionStates.PRE_PROCESSING_SEND);
             }
 
+            //not sent message -
+            lstCryptoTransmissionMetadata = cryptoTransmissionMetadataDAO.getNotSentRecord();
+
+            for(CryptoTransmissionMetadata record : lstCryptoTransmissionMetadata) {
+
+                     cryptoTransmissionMetadataDAO.changeState(record.getTransactionId(), CryptoTransmissionStates.PRE_PROCESSING_SEND);
+
+            }
+
 
         } catch (CantUpdateRecordDataBaseException | CantReadRecordDataBaseException e) {
             System.out.print("CRYPTO TRANSMISSION EXCEPCION REPROCESANDO WAIT MESSAGE");
