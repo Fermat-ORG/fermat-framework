@@ -245,7 +245,7 @@ public class CustomerAckOfflineMerchandisePluginRoot extends AbstractPlugin impl
              * Initialize plugin manager
              */
         //TODO: the following line is for testing, please, comment it when finish with the testing process
-            customerBrokerContractPurchaseManager=new CustomerBrokerContractPurchaseManagerMock();
+            //customerBrokerContractPurchaseManager=new CustomerBrokerContractPurchaseManagerMock();
             this.customerAckOfflineMerchandiseTransactionManager = new CustomerAckOfflineMerchandiseTransactionManager(
                     customerAckOfflineMerchandiseBusinessTransactionDao,
                     customerBrokerContractPurchaseManager,
@@ -253,7 +253,7 @@ public class CustomerAckOfflineMerchandisePluginRoot extends AbstractPlugin impl
             this.serviceStatus = ServiceStatus.STARTED;
             //System.out.println("Customer Ack Offline Merchandise Starting");
             //testing method
-            testAck();
+            //testAck();
         } catch (CantInitializeCustomerAckOfflineMerchandiseBusinessTransactionDatabaseException exception) {
             throw new CantStartPluginException(
                     FermatException.wrapException(exception),
