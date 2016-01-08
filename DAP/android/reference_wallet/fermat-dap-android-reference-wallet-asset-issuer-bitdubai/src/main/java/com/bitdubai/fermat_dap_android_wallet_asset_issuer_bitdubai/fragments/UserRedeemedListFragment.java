@@ -57,9 +57,9 @@ public class UserRedeemedListFragment extends FermatWalletListFragment<UserDeliv
     //UI
     private View noUsersView;
     private View rootView;
-    private FermatTextView assetDeliveryListNameText;
-    private FermatTextView assetDeliveryListRemainingText;
-    private ImageView assetDeliveryListImage;
+    private FermatTextView assetRedeemedListNameText;
+    private FermatTextView assetRedeemedListRemainingText;
+    private ImageView assetRedeemedListImage;
 
 
     public static UserRedeemedListFragment newInstance() {
@@ -136,22 +136,22 @@ public class UserRedeemedListFragment extends FermatWalletListFragment<UserDeliv
     }
 
     private void setupUI() {
-        assetDeliveryListImage = (ImageView) rootView.findViewById(R.id.assetDeliveryListImage);
-        assetDeliveryListNameText = (FermatTextView) rootView.findViewById(R.id.assetDeliveryListNameText);
-        assetDeliveryListRemainingText = (FermatTextView) rootView.findViewById(R.id.assetDeliveryListRemainingText);
+        assetRedeemedListImage = (ImageView) rootView.findViewById(R.id.assetRedeemedListImage);
+        assetRedeemedListNameText = (FermatTextView) rootView.findViewById(R.id.assetRedeemedListNameText);
+        assetRedeemedListRemainingText = (FermatTextView) rootView.findViewById(R.id.assetRedeemedListRemainingText);
     }
 
     private void setupUIData() {
         digitalAsset = (DigitalAsset) appSession.getData("asset_data");
 
         if (digitalAsset.getImage() != null) {
-            assetDeliveryListImage.setImageBitmap(BitmapFactory.decodeStream(new ByteArrayInputStream(digitalAsset.getImage())));
+            assetRedeemedListImage.setImageBitmap(BitmapFactory.decodeStream(new ByteArrayInputStream(digitalAsset.getImage())));
         } else {
-            assetDeliveryListImage.setImageDrawable(rootView.getResources().getDrawable(R.drawable.img_asset_without_image));
+            assetRedeemedListImage.setImageDrawable(rootView.getResources().getDrawable(R.drawable.img_asset_without_image));
         }
 
-        assetDeliveryListNameText.setText(digitalAsset.getName());
-        assetDeliveryListRemainingText.setText(digitalAsset.getAvailableBalanceQuantity() + " Assets Remaining");
+        assetRedeemedListNameText.setText(digitalAsset.getName());
+        assetRedeemedListRemainingText.setText(digitalAsset.getAvailableBalanceQuantity() + " Assets Remaining");
     }
 
     private void setupBackgroundBitmap(final View rootView) {
@@ -206,7 +206,7 @@ public class UserRedeemedListFragment extends FermatWalletListFragment<UserDeliv
 
     @Override
     protected int getRecyclerLayoutId() {
-        return R.id.dap_wallet_asset_issuer_user_delivery_list_activity_recycler_view;
+        return R.id.dap_wallet_asset_issuer_user_redeemed_list_activity_recycler_view;
     }
 
     @Override
