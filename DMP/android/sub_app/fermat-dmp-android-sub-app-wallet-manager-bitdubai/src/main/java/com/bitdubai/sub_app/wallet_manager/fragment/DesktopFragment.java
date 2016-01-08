@@ -436,14 +436,6 @@ public class DesktopFragment extends AbstractFermatFragment implements SearchVie
             lstItemsWithIcon.add(item);
 
             //subApps
-            // Chat
-            InstalledSubApp installedSubApp = new InstalledSubApp(SubApps.CHT_CHAT,null,null,"chat_sub_app","Identity","public_key_cht_chat","chat_sub_app",new Version(1,0,0));
-            Item item2 = new Item(installedSubApp);
-            item2.setIconResource(R.drawable.chat);
-            item2.setPosition(1);
-            lstItemsWithIcon.add(item2);
-
-            //subApps
 //            InstalledSubApp installedSubApp = new InstalledSubApp(SubApps.CWP_INTRA_USER_IDENTITY,null,null,"intra_user_identity_sub_app","Identity","public_key_ccp_intra_user_identity","intra_user_identity_sub_app",new Version(1,0,0));
 //            Item item2 = new Item(installedSubApp);
 //            item2.setIconResource(R.drawable.intra_user_image);
