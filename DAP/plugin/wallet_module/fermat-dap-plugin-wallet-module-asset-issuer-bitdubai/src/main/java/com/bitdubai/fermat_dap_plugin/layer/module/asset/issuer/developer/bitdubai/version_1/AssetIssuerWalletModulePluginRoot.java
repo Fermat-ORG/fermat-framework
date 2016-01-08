@@ -289,11 +289,13 @@ public class AssetIssuerWalletModulePluginRoot extends AbstractPlugin implements
 
     @Override
     public ActiveActorIdentityInformation getSelectedActorIdentity() throws CantGetSelectedActorIdentityException, ActorIdentityNotSelectedException {
-//        try {
-            return assetIssuerWalletModuleManager.getActiveIdentities().get(0);
-//        } catch (Exception e) {
-//            throw new CantGetSelectedActorIdentityException("Can't get Actor Identity", e, "Asset Issuer Wallet", "Identity must be created");
-//        }
+        try {
+            List<IdentityAssetIssuer> identities = assetIssuerWalletModuleManager.getActiveIdentities();
+            return (identities == null || identities.isEmpty()) ? null : assetIssuerWalletModuleManager.getActiveIdentities().get(0);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
     }
 
     @Override

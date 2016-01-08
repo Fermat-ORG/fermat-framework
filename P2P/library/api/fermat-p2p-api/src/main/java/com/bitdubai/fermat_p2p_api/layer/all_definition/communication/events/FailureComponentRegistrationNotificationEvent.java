@@ -31,6 +31,11 @@ public class FailureComponentRegistrationNotificationEvent extends AbstractP2PFe
     private PlatformComponentProfile platformComponentProfile;
 
     /**
+     * Represent the errorMsj
+     */
+    private String errorMsj;
+
+    /**
      * Constructor with parameter
      * @param p2pEventType
      */
@@ -69,5 +74,13 @@ public class FailureComponentRegistrationNotificationEvent extends AbstractP2PFe
      */
     public void setPlatformComponentProfile(PlatformComponentProfile platformComponentProfile) {
         this.platformComponentProfile = platformComponentProfile;
+    }
+
+    public String getErrorMsj() {
+        return errorMsj;
+    }
+
+    public void setErrorMsj(String errorMsj) {
+        this.errorMsj = errorMsj;
     }
 }
