@@ -13,6 +13,9 @@ import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
@@ -23,6 +26,7 @@ import com.bitdubai.fermat_android_api.ui.fragments.FermatWalletListFragment;
 import com.bitdubai.fermat_android_api.ui.interfaces.FermatListItemListeners;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Wallets;
+import com.bitdubai.fermat_api.layer.modules.common_classes.ActiveActorIdentityInformation;
 import com.bitdubai.fermat_dap_android_wallet_asset_issuer_bitdubai.R;
 import com.bitdubai.fermat_dap_android_wallet_asset_issuer_bitdubai.common.adapters.MyAssetsAdapter;
 import com.bitdubai.fermat_dap_android_wallet_asset_issuer_bitdubai.models.Data;
@@ -37,6 +41,9 @@ import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfac
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.List;
+
+import static android.widget.Toast.LENGTH_SHORT;
+import static android.widget.Toast.makeText;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -53,7 +60,6 @@ public class MyAssetsActivityFragment extends FermatWalletListFragment<DigitalAs
 
     // Data
     private List<DigitalAsset> digitalAssets;
-    private IdentityAssetIssuer identity;
 
     //UI
     private View noAssetsView;
@@ -66,45 +72,41 @@ public class MyAssetsActivityFragment extends FermatWalletListFragment<DigitalAs
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        try {
-            moduleManager = ((AssetIssuerSession) appSession).getModuleManager();
-            errorManager = appSession.getErrorManager();
+        moduleManager = ((AssetIssuerSession) appSession).getModuleManager();
+        errorManager = appSession.getErrorManager();
 
-            digitalAssets = (List) getMoreDataAsync(FermatRefreshTypes.NEW, 0);
-            identity = moduleManager.getActiveAssetIssuerIdentity();
-        } catch (Exception ex) {
-            CommonLogger.exception(TAG, ex.getMessage(), ex);
-            if (errorManager != null)
-                errorManager.reportUnexpectedWalletException(Wallets.DAP_ASSET_ISSUER_WALLET,
-                        UnexpectedWalletExceptionSeverity.DISABLES_THIS_FRAGMENT, ex);
-        }
+        digitalAssets = (List) getMoreDataAsync(FermatRefreshTypes.NEW, 0);
     }
 
     @Override
     protected void initViews(View layout) {
         super.initViews(layout);
 
-        if (identity != null) {
-            setupBackgroundBitmap(layout);
-            configureToolbar();
-            noAssetsView = layout.findViewById(R.id.dap_wallet_asset_issuer_no_assets);
-            showOrHideNoAssetsView(digitalAssets.isEmpty());
-        } else {
-            changeActivity(Activities.DAP_SUB_APP_ASSET_ISSUER_IDENTITY, appSession.getAppPublicKey());
-        }
+        setupBackgroundBitmap(layout);
+        configureToolbar();
+        noAssetsView = layout.findViewById(R.id.dap_wallet_asset_issuer_no_assets);
+        showOrHideNoAssetsView(digitalAssets.isEmpty());
     }
 
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
-//        try {
-//            IssuerWalletNavigationViewPainter navigationViewPainter = new IssuerWalletNavigationViewPainter(getActivity(), null);
-//            getPaintActivtyFeactures().addNavigationView(navigationViewPainter);
-//        } catch (Exception e) {
-//            makeText(getActivity(), "Oops! recovering from system error", Toast.LENGTH_SHORT).show();
-//            errorManager.reportUnexpectedUIException(UISource.VIEW, UnexpectedUIExceptionSeverity.CRASH, e);
-//        }
+        checkIdentity();
+    }
+
+    private void checkIdentity() {
+        ActiveActorIdentityInformation identity = null;
+        try {
+            identity = moduleManager.getSelectedActorIdentity();
+        } catch(Exception e) {
+            e.printStackTrace();
+        }
+        if (identity == null) {
+            makeText(getActivity(), "Identity must be created",
+                    LENGTH_SHORT).show();
+            getActivity().onBackPressed();
+        }
     }
 
     private void configureToolbar() {
