@@ -22,6 +22,12 @@ import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEven
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEventHandler;
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEventListener;
 import com.bitdubai.fermat_api.layer.all_definition.util.Version;
+import com.bitdubai.fermat_api.layer.osa_android.file_system.FileLifeSpan;
+import com.bitdubai.fermat_api.layer.osa_android.file_system.FilePrivacy;
+import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
+import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginTextFile;
+import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantCreateFileException;
+import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.FileNotFoundException;
 import com.bitdubai.fermat_api.layer.osa_android.location_system.LocationManager;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.enums.P2pEventType;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.WsCommunicationsCloudClientManager;
@@ -63,6 +69,9 @@ public class WsCommunicationsCloudClientPluginRoot extends AbstractPlugin implem
     @NeededAddonReference(platform = Platforms.OPERATIVE_SYSTEM_API, layer = Layers.SYSTEM, addon = Addons.DEVICE_LOCATION)
     private LocationManager locationManager;
 
+    @NeededAddonReference(platform = Platforms.OPERATIVE_SYSTEM_API, layer = Layers.SYSTEM, addon = Addons.PLUGIN_FILE_SYSTEM)
+    protected PluginFileSystem pluginFileSystem;
+
     /**
      * Represent the SERVER_IP
      */
@@ -99,8 +108,6 @@ public class WsCommunicationsCloudClientPluginRoot extends AbstractPlugin implem
     public WsCommunicationsCloudClientPluginRoot(){
         super(new PluginVersionReference(new Version()));
         this.disableClientFlag = ServerConf.ENABLE_CLIENT;
-        this.clientIdentity = new ECCKeyPair();
-
     }
 
     /**
@@ -116,12 +123,14 @@ public class WsCommunicationsCloudClientPluginRoot extends AbstractPlugin implem
          */
         if (eventManager    == null ||
             locationManager == null ||
-            errorManager    == null ) {
+            errorManager    == null ||
+            pluginFileSystem == null) {
 
             String context = "Plugin ID: "       + pluginId        + CantStartPluginException.CONTEXT_CONTENT_SEPARATOR +
                              "eventManager: "    + eventManager    + CantStartPluginException.CONTEXT_CONTENT_SEPARATOR +
                              "locationManager: " + locationManager + CantStartPluginException.CONTEXT_CONTENT_SEPARATOR +
-                             "errorManager: "    + errorManager;
+                             "errorManager: "    + errorManager    + CantStartPluginException.CONTEXT_CONTENT_SEPARATOR +
+                             "pluginFileSystem: " + pluginFileSystem;
 
             CantStartPluginException pluginStartException = new CantStartPluginException(context, "No all required resource are injected");
 
@@ -154,6 +163,8 @@ public class WsCommunicationsCloudClientPluginRoot extends AbstractPlugin implem
 
             System.out.println("WsCommunicationsCloudClientPluginRoot - Starting plugin");
 
+            initializeClientIdentity();
+
             WebSocketImpl.DEBUG = false;
 
             uri = new URI(ServerConf.WS_PROTOCOL + WsCommunicationsCloudClientPluginRoot.SERVER_IP + ":" + ServerConf.DEFAULT_PORT);
@@ -168,7 +179,7 @@ public class WsCommunicationsCloudClientPluginRoot extends AbstractPlugin implem
             fermatEventListener.setEventHandler(new FermatEventHandler() {
                 @Override
                 public void handleEvent(FermatEvent fermatEvent) throws FermatException {
-                    handleConnectionLoose();
+                    reconnect();
                 }
             });
             eventManager.addListener(fermatEventListener);
@@ -208,7 +219,7 @@ public class WsCommunicationsCloudClientPluginRoot extends AbstractPlugin implem
         listenersAdded.clear();
 
         /*
-         * Change the estatus
+         * Change the status
          */
         this.serviceStatus = ServiceStatus.STOPPED;
 
@@ -255,11 +266,11 @@ public class WsCommunicationsCloudClientPluginRoot extends AbstractPlugin implem
     /**
      * Handle de connection Loose event to try to reconnect
      */
-    public void handleConnectionLoose(){
+    public void reconnect(){
 
         try {
 
-            System.out.println("WsCommunicationsCloudClientPluginRoot - handleConnectionLoose trying to reconnect");
+            System.out.println("WsCommunicationsCloudClientPluginRoot - reconnect trying to reconnect");
             wsCommunicationsCloudClientConnection = new WsCommunicationsCloudClientConnection(uri,eventManager, locationManager, clientIdentity);
             wsCommunicationsCloudClientConnection.initializeAndConnect();
 
@@ -270,11 +281,74 @@ public class WsCommunicationsCloudClientPluginRoot extends AbstractPlugin implem
             new Timer().schedule(new TimerTask() {
                                @Override
                                public void run() {
-                                   handleConnectionLoose();
+                                   reconnect();
                                }
-                           },
-                    40000
-            );
+                           }, 40000);
+
+        }
+
+    }
+
+
+    /**
+     * Initialize the clientIdentity of this plugin
+     */
+    private void initializeClientIdentity() throws CantStartPluginException {
+
+        System.out.println("Calling the method - initializeClientIdentity() ");
+
+        try {
+
+            System.out.println("Loading clientIdentity");
+
+         /*
+          * Load the file with the clientIdentity
+          */
+            PluginTextFile pluginTextFile = pluginFileSystem.getTextFile(pluginId, "private", "clientIdentity", FilePrivacy.PRIVATE, FileLifeSpan.PERMANENT);
+            String content = pluginTextFile.getContent();
+
+            //System.out.println("content = "+content);
+
+            clientIdentity = new ECCKeyPair(content);
+
+        } catch (FileNotFoundException e) {
+
+            /*
+             * The file no exist may be the first time the plugin is running on this device,
+             * We need to create the new clientIdentity
+             */
+            try {
+
+                System.out.println("No previous clientIdentity finder - Proceed to create new one");
+
+                /*
+                 * Create the new clientIdentity
+                 */
+                clientIdentity = new ECCKeyPair();
+
+                /*
+                 * save into the file
+                 */
+                PluginTextFile pluginTextFile = pluginFileSystem.createTextFile(pluginId, "private", "clientIdentity", FilePrivacy.PRIVATE, FileLifeSpan.PERMANENT);
+                pluginTextFile.setContent(clientIdentity.getPrivateKey());
+                pluginTextFile.persistToMedia();
+
+            } catch (Exception exception) {
+                /*
+                 * The file cannot be created. I can not handle this situation.
+                 */
+                errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_WS_COMMUNICATION_CLIENT_CHANNEL, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, exception);
+                throw new CantStartPluginException(exception.getLocalizedMessage());
+            }
+
+
+        } catch (CantCreateFileException cantCreateFileException) {
+
+            /*
+             * The file cannot be load. I can not handle this situation.
+             */
+            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_WS_COMMUNICATION_CLIENT_CHANNEL, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, cantCreateFileException);
+            throw new CantStartPluginException(cantCreateFileException.getLocalizedMessage());
 
         }
 
