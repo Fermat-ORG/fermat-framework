@@ -1,6 +1,9 @@
 package com.bidbubai.fermat_dap_plugin.layer.digital_asset_transaction.issuer_redemption.bitdubai.version_1.structure.database;
 
+import com.bidbubai.fermat_dap_plugin.layer.digital_asset_transaction.issuer_redemption.bitdubai.version_1.exceptions.CantLoadIssuerRedemptionEventListException;
 import com.bitdubai.fermat_api.FermatException;
+import com.bitdubai.fermat_api.layer.all_definition.events.EventSource;
+import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseFilterOrder;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseFilterType;
@@ -80,34 +83,64 @@ public class IssuerRedemptionDao {
     }
 
 
-    private String getStringFieldByEventId(String columnName, String id) throws RecordsNotFoundException, CantLoadTableToMemoryException {
+    private String getStringFieldByEventId(String columnName, String id) throws RecordsNotFoundException, CantLoadIssuerRedemptionEventListException {
         String context = "Column Name: " + columnName + " - Id: " + id;
         DatabaseTable databaseTable;
         databaseTable = database.getTable(IssuerRedemptionDatabaseConstants.ASSET_ISSUER_REDEMPTION_EVENTS_RECORDED_TABLE_NAME);
         databaseTable.addStringFilter(IssuerRedemptionDatabaseConstants.ASSET_ISSUER_REDEMPTION_EVENTS_RECORDED_ID_COLUMN_NAME, id, DatabaseFilterType.EQUAL);
         databaseTable.addFilterOrder(IssuerRedemptionDatabaseConstants.ASSET_ISSUER_REDEMPTION_EVENTS_RECORDED_TIMESTAMP_COLUMN_NAME, DatabaseFilterOrder.ASCENDING);
-        databaseTable.loadToMemory();
-
-        for (DatabaseTableRecord record : databaseTable.getRecords()) {
-            return record.getStringValue(columnName);
+        try {
+            databaseTable.loadToMemory();
+        } catch (CantLoadTableToMemoryException e) {
+            throw new CantLoadIssuerRedemptionEventListException(e, context, null);
         }
-        throw new RecordsNotFoundException(null, context, "");
-
+        if (databaseTable.getRecords().isEmpty()) {
+            throw new RecordsNotFoundException(null, context, "");
+        }
+        return databaseTable.getRecords().get(0).getStringValue(columnName);
     }
 
-    private List<String> getPendingEventsByType(EventType eventType) throws Exception {
+    private List<String> getPendingDAPEventsByType(EventType eventType) throws CantLoadIssuerRedemptionEventListException {
+        String context = "Event Type: " + eventType.getCode();
+
         DatabaseTable eventsRecordedTable;
         eventsRecordedTable = database.getTable(IssuerRedemptionDatabaseConstants.ASSET_ISSUER_REDEMPTION_EVENTS_RECORDED_TABLE_NAME);
         eventsRecordedTable.addStringFilter(IssuerRedemptionDatabaseConstants.ASSET_ISSUER_REDEMPTION_EVENTS_RECORDED_EVENT_COLUMN_NAME, eventType.getCode(), DatabaseFilterType.EQUAL);
         eventsRecordedTable.addStringFilter(IssuerRedemptionDatabaseConstants.ASSET_ISSUER_REDEMPTION_EVENTS_RECORDED_STATUS_COLUMN_NAME, EventStatus.PENDING.getCode(), DatabaseFilterType.EQUAL);
         eventsRecordedTable.addFilterOrder(IssuerRedemptionDatabaseConstants.ASSET_ISSUER_REDEMPTION_EVENTS_RECORDED_TIMESTAMP_COLUMN_NAME, DatabaseFilterOrder.ASCENDING);
 
-        eventsRecordedTable.loadToMemory();
+        try {
+            eventsRecordedTable.loadToMemory();
+        } catch (CantLoadTableToMemoryException e) {
+            throw new CantLoadIssuerRedemptionEventListException(e, context, null);
+        }
         List<String> eventIdList = new ArrayList<>();
         for (DatabaseTableRecord record : eventsRecordedTable.getRecords()) {
             eventIdList.add(record.getStringValue(IssuerRedemptionDatabaseConstants.ASSET_ISSUER_REDEMPTION_EVENTS_RECORDED_ID_COLUMN_NAME));
         }
         return eventIdList;
+    }
+
+
+    private List<String> getPendingEventsBySource(EventSource eventSource) throws CantLoadIssuerRedemptionEventListException {
+        try {
+            DatabaseTable eventsRecordedTable;
+            eventsRecordedTable = database.getTable(IssuerRedemptionDatabaseConstants.ASSET_ISSUER_REDEMPTION_EVENTS_RECORDED_TABLE_NAME);
+            eventsRecordedTable.addStringFilter(IssuerRedemptionDatabaseConstants.ASSET_ISSUER_REDEMPTION_EVENTS_RECORDED_SOURCE_COLUMN_NAME, eventSource.getCode(), DatabaseFilterType.EQUAL);
+            eventsRecordedTable.addStringFilter(IssuerRedemptionDatabaseConstants.ASSET_ISSUER_REDEMPTION_EVENTS_RECORDED_STATUS_COLUMN_NAME, EventStatus.PENDING.getCode(), DatabaseFilterType.EQUAL);
+            eventsRecordedTable.addFilterOrder(IssuerRedemptionDatabaseConstants.ASSET_ISSUER_REDEMPTION_EVENTS_RECORDED_TIMESTAMP_COLUMN_NAME, DatabaseFilterOrder.ASCENDING);
+
+            eventsRecordedTable.loadToMemory();
+            List<String> eventIdList = new ArrayList<>();
+            for (DatabaseTableRecord record : eventsRecordedTable.getRecords()) {
+                eventIdList.add(record.getStringValue(IssuerRedemptionDatabaseConstants.ASSET_ISSUER_REDEMPTION_EVENTS_RECORDED_ID_COLUMN_NAME));
+            }
+            return eventIdList;
+        } catch (CantLoadTableToMemoryException exception) {
+            throw new CantLoadIssuerRedemptionEventListException(exception, "Getting pending events.", "Cannot load table to memory.");
+        } catch (Exception exception) {
+            throw new CantLoadIssuerRedemptionEventListException(FermatException.wrapException(exception), "Getting pending events.", "Unexpected exception");
+        }
     }
 
 
@@ -128,8 +161,17 @@ public class IssuerRedemptionDao {
 
     //GETTER AND SETTERS
 
-    public List<String> getPendingNewReceiveMessageActorEvents() throws Exception {
-        return getPendingEventsByType(EventType.NEW_RECEIVE_MESSAGE_ACTOR);
+    public List<String> getPendingCryptoRouterEvents() throws CantLoadIssuerRedemptionEventListException {
+        return getPendingEventsBySource(EventSource.CRYPTO_ROUTER);
+    }
+
+
+    public com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.enums.EventType getEventTypeById(String id) throws CantLoadIssuerRedemptionEventListException, InvalidParameterException, RecordsNotFoundException {
+        return com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.enums.EventType.getByCode(getStringFieldByEventId(IssuerRedemptionDatabaseConstants.ASSET_ISSUER_REDEMPTION_EVENTS_RECORDED_EVENT_COLUMN_NAME, id));
+    }
+
+    public List<String> getPendingNewReceiveMessageActorEvents() throws CantLoadIssuerRedemptionEventListException {
+        return getPendingDAPEventsByType(EventType.NEW_RECEIVE_MESSAGE_ACTOR);
     }
     //INNER CLASSES
 }

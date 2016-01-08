@@ -5,7 +5,9 @@ import android.view.View;
 
 import com.bitdubai.fermat_android_api.ui.adapters.FermatAdapter;
 import com.bitdubai.fermat_dap_android_wallet_asset_issuer_bitdubai.R;
+import com.bitdubai.fermat_dap_android_wallet_asset_issuer_bitdubai.holders.AssetDeliverySelectGroupsHolder;
 import com.bitdubai.fermat_dap_android_wallet_asset_issuer_bitdubai.holders.AssetDeliverySelectUsersHolder;
+import com.bitdubai.fermat_dap_android_wallet_asset_issuer_bitdubai.models.Group;
 import com.bitdubai.fermat_dap_android_wallet_asset_issuer_bitdubai.models.User;
 import com.bitdubai.fermat_dap_api.layer.dap_module.wallet_asset_issuer.interfaces.AssetIssuerWalletSupAppModuleManager;
 
@@ -14,18 +16,18 @@ import java.util.List;
 /**
  * Created by frank on 12/8/15.
  */
-public class AssetDeliverySelectGroupsAdapter extends FermatAdapter<User, AssetDeliverySelectUsersHolder> {
+public class AssetDeliverySelectGroupsAdapter extends FermatAdapter<Group, AssetDeliverySelectGroupsHolder> {
 
     private AssetIssuerWalletSupAppModuleManager manager;
 
-    public AssetDeliverySelectGroupsAdapter(Context context, List<User> users, AssetIssuerWalletSupAppModuleManager manager) {
+    public AssetDeliverySelectGroupsAdapter(Context context, List<Group> users, AssetIssuerWalletSupAppModuleManager manager) {
         super(context, users);
         this.manager = manager;
     }
 
     @Override
-    protected AssetDeliverySelectUsersHolder createHolder(View itemView, int type) {
-        return new AssetDeliverySelectUsersHolder(itemView, manager, context);
+    protected AssetDeliverySelectGroupsHolder createHolder(View itemView, int type) {
+        return new AssetDeliverySelectGroupsHolder(itemView, manager, context);
     }
 
     @Override
@@ -34,7 +36,7 @@ public class AssetDeliverySelectGroupsAdapter extends FermatAdapter<User, AssetD
     }
 
     @Override
-    protected void bindHolder(AssetDeliverySelectUsersHolder holder, User data, int position) {
+    protected void bindHolder(AssetDeliverySelectGroupsHolder holder, Group data, int position) {
         holder.bind(data);
     }
 }

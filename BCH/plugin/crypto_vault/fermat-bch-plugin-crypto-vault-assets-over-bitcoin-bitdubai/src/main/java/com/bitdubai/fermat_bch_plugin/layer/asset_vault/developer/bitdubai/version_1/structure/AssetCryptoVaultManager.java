@@ -12,6 +12,7 @@ import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.BitcoinNetworkSe
 import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.exceptions.CantBroadcastTransactionException;
 import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.exceptions.CantStoreBitcoinTransactionException;
 import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.interfaces.BitcoinNetworkManager;
+import com.bitdubai.fermat_bch_api.layer.crypto_vault.asset_vault.exceptions.CantGetActiveRedeemPointAddressesException;
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.asset_vault.exceptions.CantGetExtendedPublicKeyException;
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.asset_vault.exceptions.CantSendAssetBitcoinsToUserException;
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.classes.HierarchyAccount.*;
@@ -43,6 +44,7 @@ import org.bitcoinj.crypto.MnemonicException;
 import org.bitcoinj.wallet.DeterministicSeed;
 import org.bitcoinj.wallet.WalletTransaction;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 import java.util.concurrent.ExecutionException;
@@ -550,4 +552,67 @@ public class AssetCryptoVaultManager  {
             return false;
         }
     }
+
+    /**
+     * If the redeem point keys are initialized, will return all the generated addresses
+     * @param redeemPointPublicKey
+     * @return
+     * @throws CantGetActiveRedeemPointAddressesException
+     */
+    public List<CryptoAddress> getActiveRedeemPointAddresses(String redeemPointPublicKey) throws CantGetActiveRedeemPointAddressesException {
+        /**
+         * will get the hierarchy account for this public key
+         */
+        HierarchyAccount hierarchyAccount = null;
+        try {
+            hierarchyAccount = getDao().getHierarchyAccount(redeemPointPublicKey);
+
+            if (hierarchyAccount == null)
+                throw new CantGetActiveRedeemPointAddressesException(CantGetActiveRedeemPointAddressesException.DEFAULT_MESSAGE, null, "the specified public key does not exists: " + redeemPointPublicKey, null);
+
+            if (hierarchyAccount.getHierarchyAccountType() != HierarchyAccountType.REDEEMPOINT_ACCOUNT)
+                throw new CantGetActiveRedeemPointAddressesException(CantGetActiveRedeemPointAddressesException.DEFAULT_MESSAGE, null, "the specified public key " + redeemPointPublicKey + " is not from a Redeem Point account", null);
+
+        } catch (CantExecuteDatabaseOperationException e) {
+            throw new CantGetActiveRedeemPointAddressesException(CantGetActiveRedeemPointAddressesException.DEFAULT_MESSAGE, e, "Error getting hierarchy account from database.", "database error");
+        }
+
+        /**
+         * will get the current amount of generated keys
+         */
+        int generatedKeys;
+        try {
+            generatedKeys = getDao().getCurrentGeneratedKeys(hierarchyAccount.getId());
+        } catch (CantExecuteDatabaseOperationException e) {
+            generatedKeys = 0;
+        }
+
+        /**
+         * Will derive all keys and return them
+         */
+        List<CryptoAddress> cryptoAddresses = new ArrayList<>();
+        for (int i=1; i<generatedKeys; i++){
+            try {
+                cryptoAddresses.add(this.getCryptoAddressFromRedemPoint(hierarchyAccount, i));
+            } catch (GetNewCryptoAddressException e) {
+                return cryptoAddresses;
+            }
+        }
+
+        return cryptoAddresses;
+    }
+
+    /**
+     * Will get the CryptoAddress for the given account at the passed position.
+     * the difference of getting the address from a redeem point is that it won't mark the address as used.
+     * @param hierarchyAccount
+     * @param position
+     * @return
+     */
+    private CryptoAddress getCryptoAddressFromRedemPoint(HierarchyAccount hierarchyAccount, int position) throws GetNewCryptoAddressException {
+        return vaultKeyHierarchyGenerator.getVaultKeyHierarchy().getRedeemPointBitcoinAddress(hierarchyAccount, position);
+
+    }
+
+
 }

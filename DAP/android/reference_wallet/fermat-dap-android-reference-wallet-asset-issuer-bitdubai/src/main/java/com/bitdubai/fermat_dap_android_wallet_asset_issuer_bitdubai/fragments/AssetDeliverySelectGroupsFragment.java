@@ -9,9 +9,6 @@ import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.widget.Toast;
 
@@ -19,11 +16,12 @@ import com.bitdubai.fermat_android_api.ui.adapters.FermatAdapter;
 import com.bitdubai.fermat_android_api.ui.enums.FermatRefreshTypes;
 import com.bitdubai.fermat_android_api.ui.fragments.FermatWalletListFragment;
 import com.bitdubai.fermat_android_api.ui.interfaces.FermatListItemListeners;
-import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Wallets;
 import com.bitdubai.fermat_dap_android_wallet_asset_issuer_bitdubai.R;
+import com.bitdubai.fermat_dap_android_wallet_asset_issuer_bitdubai.common.adapters.AssetDeliverySelectGroupsAdapter;
 import com.bitdubai.fermat_dap_android_wallet_asset_issuer_bitdubai.common.adapters.AssetDeliverySelectUsersAdapter;
 import com.bitdubai.fermat_dap_android_wallet_asset_issuer_bitdubai.models.Data;
+import com.bitdubai.fermat_dap_android_wallet_asset_issuer_bitdubai.models.Group;
 import com.bitdubai.fermat_dap_android_wallet_asset_issuer_bitdubai.models.User;
 import com.bitdubai.fermat_dap_android_wallet_asset_issuer_bitdubai.sessions.AssetIssuerSession;
 import com.bitdubai.fermat_dap_android_wallet_asset_issuer_bitdubai.util.CommonLogger;
@@ -37,8 +35,8 @@ import java.util.List;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class AssetDeliverySelectGroupsFragment extends FermatWalletListFragment<User>
-        implements FermatListItemListeners<User> {
+public class AssetDeliverySelectGroupsFragment extends FermatWalletListFragment<Group>
+        implements FermatListItemListeners<Group> {
 
     // Constants
     private static final String TAG = "AssetDeliverySelectGroupsFragment";
@@ -48,7 +46,7 @@ public class AssetDeliverySelectGroupsFragment extends FermatWalletListFragment<
     private ErrorManager errorManager;
 
     // Data
-    private List<User> users;
+    private List<Group> groups;
 
     //UI
     private View noUsersView;
@@ -65,7 +63,7 @@ public class AssetDeliverySelectGroupsFragment extends FermatWalletListFragment<
             moduleManager = ((AssetIssuerSession) appSession).getModuleManager();
             errorManager = appSession.getErrorManager();
 
-            users = (List) getMoreDataAsync(FermatRefreshTypes.NEW, 0);
+            groups = (List) getMoreDataAsync(FermatRefreshTypes.NEW, 0);
         } catch (Exception ex) {
             CommonLogger.exception(TAG, ex.getMessage(), ex);
             if (errorManager != null)
@@ -82,7 +80,7 @@ public class AssetDeliverySelectGroupsFragment extends FermatWalletListFragment<
 
         noUsersView = layout.findViewById(R.id.dap_wallet_asset_issuer_delivery_no_groups);
 
-        showOrHideNoAssetsView(users.isEmpty());
+        showOrHideNoAssetsView(groups.isEmpty());
     }
 
     @Override
@@ -150,11 +148,11 @@ public class AssetDeliverySelectGroupsFragment extends FermatWalletListFragment<
         if (isAttached) {
             swipeRefreshLayout.setRefreshing(false);
             if (result != null && result.length > 0) {
-                users = (ArrayList) result[0];
+                groups = (ArrayList) result[0];
                 if (adapter != null)
-                    adapter.changeDataSet(users);
+                    adapter.changeDataSet(groups);
 
-                showOrHideNoAssetsView(users.isEmpty());
+                showOrHideNoAssetsView(groups.isEmpty());
             }
         }
     }
@@ -171,7 +169,7 @@ public class AssetDeliverySelectGroupsFragment extends FermatWalletListFragment<
     @Override
     public FermatAdapter getAdapter() {
         if (adapter == null) {
-            adapter = new AssetDeliverySelectUsersAdapter(getActivity(), users, moduleManager);
+            adapter = new AssetDeliverySelectGroupsAdapter(getActivity(), groups, moduleManager);
             adapter.setFermatListEventListener(this);
         }
         return adapter;
@@ -186,24 +184,13 @@ public class AssetDeliverySelectGroupsFragment extends FermatWalletListFragment<
     }
 
     @Override
-    public void onItemClickListener(User data, int position) {
-        //TODO select user
-//        appSession.setData("asset_data", data);
-//        changeActivity(Activities.DAP_ASSET_ISSUER_WALLET_ASSET_DETAIL, appSession.getAppPublicKey());
-    }
-
-    @Override
-    public void onLongItemClickListener(User data, int position) {
-    }
-
-    @Override
-    public List<User> getMoreDataAsync(FermatRefreshTypes refreshType, int pos) {
-        List<User> users = new ArrayList<>();
+    public List<Group> getMoreDataAsync(FermatRefreshTypes refreshType, int pos) {
+        List<Group> groups = new ArrayList<>();
         if (moduleManager != null) {
             try {
-                users = Data.getConnectedUsers(moduleManager, users);
+                groups = Data.getGroups(moduleManager, groups);
 
-                appSession.setData("groups", users);
+                appSession.setData("groups", groups);
 
             } catch (Exception ex) {
                 CommonLogger.exception(TAG, ex.getMessage(), ex);
@@ -219,7 +206,7 @@ public class AssetDeliverySelectGroupsFragment extends FermatWalletListFragment<
                     Toast.LENGTH_SHORT).
                     show();
         }
-        return users;
+        return groups;
     }
 
     private void showOrHideNoAssetsView(boolean show) {
@@ -230,6 +217,16 @@ public class AssetDeliverySelectGroupsFragment extends FermatWalletListFragment<
             recyclerView.setVisibility(View.VISIBLE);
             noUsersView.setVisibility(View.GONE);
         }
+    }
+
+    @Override
+    public void onItemClickListener(Group data, int position) {
+
+    }
+
+    @Override
+    public void onLongItemClickListener(Group data, int position) {
+
     }
 }
 
