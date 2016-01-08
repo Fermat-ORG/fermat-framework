@@ -1,6 +1,6 @@
 package com.bitdubai.fermat_cht_plugin.layer.middleware.chat.developer.bitdubai.version_1.exceptions;
 
-        import com.bitdubai.fermat_api.FermatException;
+import com.bitdubai.fermat_api.FermatException;
 /**
  * The Class <code>package com.bitdubai.fermat_cht_plugin.layer.middleware.chat.version_1.exceptions.CantInitializeChatMiddlewareDatabaseException</code>
  * is thrown when an error occurs initializing database
