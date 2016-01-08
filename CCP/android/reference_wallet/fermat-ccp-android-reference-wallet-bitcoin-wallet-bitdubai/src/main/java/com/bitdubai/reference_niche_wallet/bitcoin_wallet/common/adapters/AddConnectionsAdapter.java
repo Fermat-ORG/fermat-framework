@@ -5,6 +5,7 @@ import android.animation.ObjectAnimator;
 import android.content.Context;
 import android.graphics.Color;
 import android.graphics.drawable.TransitionDrawable;
+import android.os.Build;
 import android.support.v4.graphics.drawable.RoundedBitmapDrawable;
 import android.view.View;
 
@@ -81,7 +82,7 @@ public class AddConnectionsAdapter extends FermatAdapter<CryptoWalletIntraUserAc
                     addConnectionCallback.addMenuEnabled();
 
                 }else {
-                    ObjectAnimator animator = ObjectAnimator.ofInt(v, "backgroundColor", Color.parseColor("#dcf6f7"), Color.WHITE).setDuration(1500);
+                    ObjectAnimator animator = ObjectAnimator.ofInt(v, "backgroundColor", Color.parseColor("#dcf6f7"), Color.TRANSPARENT).setDuration(1500);
                     animator.setEvaluator(new ArgbEvaluator());
                     animator.start();
                     holder.getCheckbox_connection().setChecked(false);
@@ -97,11 +98,16 @@ public class AddConnectionsAdapter extends FermatAdapter<CryptoWalletIntraUserAc
             }
         });
         if(data.isSelected()){
-            holder.getContainer_data().setBackground(context.getDrawable(R.drawable.add_connection_rounded_rectangle_shape));
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                holder.getContainer_data().setBackground(context.getDrawable(R.drawable.add_connection_rounded_rectangle_shape));
+            }
         }else{
             holder.getContainer_data().setBackgroundColor(Color.parseColor("#ffffff"));
 
         }
+
+        holder.getCheckbox_connection().setChecked(false);
+        holder.getCheckbox_connection().setEnabled(false);
     }
 
 }

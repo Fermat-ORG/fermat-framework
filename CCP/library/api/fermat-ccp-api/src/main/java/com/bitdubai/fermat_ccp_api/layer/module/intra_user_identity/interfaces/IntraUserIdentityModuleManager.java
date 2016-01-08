@@ -84,9 +84,6 @@ public interface IntraUserIdentityModuleManager extends ModuleManager<FermatSett
      */
     void  deleteIntraUserIdentity(String identityPublicKey) throws CantDeleteIntraUserIdentityException;
 
-    /**
-     *The method <code>registerIdentities</code> register a intra user identity on Cloud Server
-     */
-    void registerIdentities();
+
 
 }

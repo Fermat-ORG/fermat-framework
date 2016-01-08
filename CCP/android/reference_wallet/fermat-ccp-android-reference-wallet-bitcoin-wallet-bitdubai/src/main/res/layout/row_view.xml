@@ -41,7 +41,7 @@
             android:layout_marginLeft="10dp"
             android:singleLine="true"
             android:textSize="14sp"
-            android:textColor="#292929"
+            android:textColor="#fff"
             tools:text="Nelson Alfonso Ramirez Noguera"
             android:fontFamily="roboto"
             />
