@@ -1,22 +1,19 @@
-package com.bitdubai.fermat_cht_plugin.layer.middleware.chat.version_1.database;
+package com.bitdubai.fermat_cht_plugin.layer.middleware.chat.developer.bitdubai.version_1.database;
 
 import com.bitdubai.fermat_api.FermatException;
-import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseFilterType;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTable;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTableRecord;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
-import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantUpdateRecordException;
-import com.bitdubai.fermat_cht_plugin.layer.middleware.chat.version_1.exceptions.CantAddContact;
-import com.bitdubai.fermat_cht_plugin.layer.middleware.chat.version_1.exceptions.CantInitializeChatMiddlewareDaoException;
-import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.DatabaseNotFoundException;
-import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantDeleteRecordException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantInsertRecordException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantLoadTableToMemoryException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantOpenDatabaseException;
-import com.bitdubai.fermat_cht_plugin.layer.middleware.chat.version_1.exceptions.UnexpectedResultReturnedFromDatabaseException;
-import com.bitdubai.fermat_cht_plugin.layer.middleware.chat.version_1.structure.chtmiddlewaremanager;
+import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantUpdateRecordException;
+import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.DatabaseNotFoundException;
+import com.bitdubai.fermat_cht_api.all_definition.exceptions.CHTException;
+import com.bitdubai.fermat_cht_api.all_definition.exceptions.UnexpectedResultReturnedFromDatabaseException;
+import com.bitdubai.fermat_cht_plugin.layer.middleware.chat.developer.bitdubai.version_1.exceptions.CantInitializeChatMiddlewareDaoException;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -50,10 +47,11 @@ public class ChatMiddlewareDatabaseDao {
         }
     }
 
+    //TODO: Added CHTException, CantAddContact exception does not exists
     public void addContact(String idContact,String remoteName,String remoteActorPubKey,String remoteActorType,
                            String alias,
                            String creationDate
-    ) throws CantAddContact {
+    ) throws CHTException {
         try {
             DatabaseTable table = this.database.getTable(ChatMiddlewareDatabaseConstants.CONTACTS_TABLE_NAME);
             DatabaseTableRecord record = table.getEmptyRecord();
@@ -66,17 +64,17 @@ public class ChatMiddlewareDatabaseDao {
             table.insertRecord(record);
             database.closeDatabase();
         } catch (CantInsertRecordException e) {
-            throw new CantAddContact(CantAddContact.DEFAULT_MESSAGE, e, "Cant Add Contact Exception", "Cant Insert Record Exception");
+            throw new CHTException(CHTException.DEFAULT_MESSAGE, e, "Cant Add Contact Exception", "Cant Insert Record Exception");
         }
     }
 
     public List<String> getContactDetail(String idChat) throws CantLoadTableToMemoryException {
         List<String> field = new ArrayList<>();
-        DatabaseTable chattable =this.database.getTable(ChatMiddlewareDatabaseConstants.CHATS_TABLE_NAME);
-        chattable.addStringFilter(ChatMiddlewareDatabaseConstants.CHATS_ID_CHAT_COLUMN_NAME, idChat, DatabaseFilterType.EQUAL);
-        chattable.loadToMemory();
-        List<DatabaseTableRecord> records = chattable.getRecords();
-        chattable.clearAllFilters();
+        DatabaseTable chatDatabaseTable =this.database.getTable(ChatMiddlewareDatabaseConstants.CHATS_TABLE_NAME);
+        chatDatabaseTable.addStringFilter(ChatMiddlewareDatabaseConstants.CHATS_ID_CHAT_COLUMN_NAME, idChat, DatabaseFilterType.EQUAL);
+        chatDatabaseTable.loadToMemory();
+        List<DatabaseTableRecord> records = chatDatabaseTable.getRecords();
+        chatDatabaseTable.clearAllFilters();
 
         for (DatabaseTableRecord record : records) {
             field.add(record.getStringValue(ChatMiddlewareDatabaseConstants.CHATS_CHAT_NAME_COLUMN_NAME));
@@ -107,7 +105,7 @@ public class ChatMiddlewareDatabaseDao {
                     ChatMiddlewareDatabaseConstants.MESSAGE_ID_CHAT_COLUMN_NAME,
                     idChat,
                     DatabaseFilterType.EQUAL);
-            databaseTable.addStringFilter(ChatMiddlewareDatabaseConstants.MESSAGE_ID_MENSAJE_COLUMN_NAME,
+            databaseTable.addStringFilter(ChatMiddlewareDatabaseConstants.MESSAGE_ID_MESSAGE_COLUMN_NAME,
                     idMessage,
                     DatabaseFilterType.EQUAL);
             databaseTable.loadToMemory();
@@ -138,8 +136,5 @@ public class ChatMiddlewareDatabaseDao {
             throw new UnexpectedResultReturnedFromDatabaseException("I excepted "+VALID_RESULTS_NUMBER+", but I got "+recordsSize);
         }
     }
-
-
-
 
 }

@@ -1,13 +1,13 @@
-package com.bitdubai.fermat_cht_plugin.layer.middleware.chat.version_1.exceptions;
+package com.bitdubai.fermat_cht_plugin.layer.middleware.chat.developer.bitdubai.version_1.exceptions;
 
-import com.bitdubai.fermat_api.FermatException;
+import com.bitdubai.fermat_cht_api.all_definition.exceptions.CHTException;
 
 /**
- * Created by eze on 2015.09.21..
+ * Created by Miguel Payarez on 07/01/2016..
  */
-public class CantInitializeChatMiddlewareDaoException extends FermatException {
+public class CantInitializeChatMiddlewareDaoException extends CHTException {
 
-    public static final String DEFAULT_MESSAGE = "CAN'T INITIALIZE CUSTOMERS MIDDLEWARE DATABASE EXCEPTION";
+    public static final String DEFAULT_MESSAGE = "CAN'T INITIALIZE CHAT MIDDLEWARE DATABASE EXCEPTION";
 
     /**
      * This is the constructor that every inherited FermatException must implement
