@@ -16,6 +16,8 @@ public interface ChatManager {
 
     Chat getChatByChatId(UUID chatId);
 
+    Chat newEmptyInstanceChat();
+
     void saveChat(Chat chat);
 
     void deleteChat(Chat chat);
@@ -25,6 +27,8 @@ public interface ChatManager {
     Message getMessageByChatId(UUID chatId);
 
     Message getMessageByMessageId(UUID messageId);
+
+    Chat newEmptyInstanceMessage();
 
     void saveMessage(Message message);
 

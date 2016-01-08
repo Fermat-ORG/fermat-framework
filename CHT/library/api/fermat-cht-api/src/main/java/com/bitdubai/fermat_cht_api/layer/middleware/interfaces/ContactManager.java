@@ -17,6 +17,8 @@ public interface ContactManager {
 
     Contact getContactByContactId(UUID contactId);
 
+    Contact newEmptyInstanceContact();
+
     void saveContact(Contact contact);
 
     void deleteContact(Contact contact);
