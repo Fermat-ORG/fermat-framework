@@ -22,10 +22,10 @@ import com.bitdubai.fermat_android_api.ui.enums.FermatRefreshTypes;
 import com.bitdubai.fermat_android_api.ui.fragments.FermatWalletListFragment;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Wallets;
 import com.bitdubai.fermat_dap_android_wallet_asset_issuer_bitdubai.R;
-import com.bitdubai.fermat_dap_android_wallet_asset_issuer_bitdubai.common.adapters.UserDeliveryListAdapter;
+import com.bitdubai.fermat_dap_android_wallet_asset_issuer_bitdubai.common.adapters.UserRedeemedListAdapter;
 import com.bitdubai.fermat_dap_android_wallet_asset_issuer_bitdubai.models.Data;
 import com.bitdubai.fermat_dap_android_wallet_asset_issuer_bitdubai.models.DigitalAsset;
-import com.bitdubai.fermat_dap_android_wallet_asset_issuer_bitdubai.models.UserDelivery;
+import com.bitdubai.fermat_dap_android_wallet_asset_issuer_bitdubai.models.UserRedeemed;
 import com.bitdubai.fermat_dap_android_wallet_asset_issuer_bitdubai.sessions.AssetIssuerSession;
 import com.bitdubai.fermat_dap_android_wallet_asset_issuer_bitdubai.util.CommonLogger;
 import com.bitdubai.fermat_dap_api.layer.dap_module.wallet_asset_issuer.interfaces.AssetIssuerWalletSupAppModuleManager;
@@ -40,7 +40,7 @@ import java.util.List;
 /**
  * Created by Penelope Quintero on 01/06/16.
  */
-public class UserRedeemedListFragment extends FermatWalletListFragment<UserDelivery> {
+public class UserRedeemedListFragment extends FermatWalletListFragment<UserRedeemed> {
 
     // Constants
     private static final String TAG = "UserRedeemedListFragment";
@@ -50,7 +50,7 @@ public class UserRedeemedListFragment extends FermatWalletListFragment<UserDeliv
     private ErrorManager errorManager;
 
     // Data
-    private List<UserDelivery> users;
+    private List<UserRedeemed> users;
     private DigitalAsset digitalAsset;
 
 
@@ -241,7 +241,7 @@ public class UserRedeemedListFragment extends FermatWalletListFragment<UserDeliv
     @Override
     public FermatAdapter getAdapter() {
         if (adapter == null) {
-            adapter = new UserDeliveryListAdapter(getActivity(), users, moduleManager);
+            adapter = new UserRedeemedListAdapter(getActivity(), users, moduleManager);
         }
         return adapter;
     }
@@ -265,11 +265,11 @@ public class UserRedeemedListFragment extends FermatWalletListFragment<UserDeliv
     }
 
     @Override
-    public List<UserDelivery> getMoreDataAsync(FermatRefreshTypes refreshType, int pos) {
-        List<UserDelivery> users = new ArrayList<>();
+    public List<UserRedeemed> getMoreDataAsync(FermatRefreshTypes refreshType, int pos) {
+        List<UserRedeemed> users = new ArrayList<>();
         if (moduleManager != null) {
             try {
-                users = Data.getUserDeliveryList(appSession.getAppPublicKey(), digitalAsset, moduleManager);
+                users = Data.getUserRedeemedList(appSession.getAppPublicKey(), digitalAsset, moduleManager);
 
             } catch (Exception ex) {
                 CommonLogger.exception(TAG, ex.getMessage(), ex);
