@@ -15,6 +15,7 @@ import com.bitdubai.fermat_android_api.ui.enums.FermatRefreshTypes;
 import com.bitdubai.fermat_android_api.ui.fragments.FermatWalletListFragment;
 import com.bitdubai.fermat_android_api.ui.interfaces.FermatListItemListeners;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Wallets;
+import com.bitdubai.fermat_api.layer.modules.common_classes.ActiveActorIdentityInformation;
 import com.bitdubai.fermat_dap_android_wallet_redeem_point_bitdubai.R;
 import com.bitdubai.fermat_dap_android_wallet_redeem_point_bitdubai.adapters.MyAssetsAdapter;
 import com.bitdubai.fermat_dap_android_wallet_redeem_point_bitdubai.models.Data;
@@ -27,6 +28,9 @@ import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfac
 
 import java.util.ArrayList;
 import java.util.List;
+
+import static android.widget.Toast.LENGTH_SHORT;
+import static android.widget.Toast.makeText;
 
 /**
  * Created by frank on 12/14/15.
@@ -82,6 +86,7 @@ public class MyAssetsActivityFragment extends FermatWalletListFragment<DigitalAs
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
+        checkIdentity();
 
 //        try {
 //            IssuerWalletNavigationViewPainter navigationViewPainter = new IssuerWalletNavigationViewPainter(getActivity(), null);
@@ -90,6 +95,20 @@ public class MyAssetsActivityFragment extends FermatWalletListFragment<DigitalAs
 //            makeText(getActivity(), "Oops! recovering from system error", Toast.LENGTH_SHORT).show();
 //            errorManager.reportUnexpectedUIException(UISource.VIEW, UnexpectedUIExceptionSeverity.CRASH, e);
 //        }
+    }
+
+    private void checkIdentity() {
+        ActiveActorIdentityInformation identity = null;
+        try {
+            identity = moduleManager.getSelectedActorIdentity();
+        } catch(Exception e) {
+            e.printStackTrace();
+        }
+        if (identity == null) {
+            makeText(getActivity(), "Identity must be created",
+                    LENGTH_SHORT).show();
+            getActivity().onBackPressed();
+        }
     }
 
     private void configureToolbar() {
