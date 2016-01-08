@@ -206,7 +206,7 @@ public class ProviderBitcoinVenezuelaPluginRoot extends AbstractPlugin implement
             throw new UnsupportedCurrencyPairException();
 
         ExchangeRate requiredExchangeRate = null;
-        String requiredDate = DateHelper.getDateStringFromTimestamp(timestamp);
+        long stdTimestamp = DateHelper.getStandarizedTimestampFromTimestamp(timestamp);
 
         //Try to find ExchangeRate in database
         try{
@@ -214,9 +214,7 @@ public class ProviderBitcoinVenezuelaPluginRoot extends AbstractPlugin implement
             return requiredExchangeRate;
         }catch(CantGetExchangeRateException e) {
 
-            //Get complete ExchangeRate history, iterate trough it to:
-            //Build a list of ExchangeRates to send to dao for insertion into database
-            //Get required ExchangeRate
+            //IF ExchangeRate not in database
 
             //Determine cryptoCurrency base
             Currency currencyFrom, currencyTo;
@@ -233,41 +231,23 @@ public class ProviderBitcoinVenezuelaPluginRoot extends AbstractPlugin implement
             }
 
             //Query API
-            JSONObject json;
             List<ExchangeRate> exchangeRates = new ArrayList<>();
             List<ExchangeRate> inverseExchangeRates = new ArrayList<>();
-            try {
-                json = new JSONObject(HttpReader.getHTTPContent("http://api.bitcoinvenezuela.com/historical/?pair=" + currencyFrom.getCode() + currencyTo.getCode()));
-                json = json.getJSONObject(currencyTo.getCode() + "_" + currencyFrom.getCode());
+            queryBitcoinVenezuelaExchangeRateHistoryAPI(exchangeRates, inverseExchangeRates, currencyFrom, currencyTo);
 
-                Iterator<?> keys = json.keys();
-                while( keys.hasNext() ) {
-                    String key = (String)keys.next();
-                    double value = Double.parseDouble(json.get(key).toString());
-
-                    if(requiredDate.equals(key))
-                    {
-                        if(invertExchange)
-                            requiredExchangeRate = new ExchangeRateImpl(currencyPair.getFrom(), currencyPair.getTo(), 1/value, 1/value, timestamp);
-                        else
-                            requiredExchangeRate = new ExchangeRateImpl(currencyPair.getFrom(), currencyPair.getTo(), value, value, timestamp);
-                    }
-
-                    try{
-                        long time = DateHelper.getTimestampFromDateString(key);
-                        exchangeRates.add(new ExchangeRateImpl(currencyFrom, currencyTo, value, value, time));
-                        inverseExchangeRates.add(new ExchangeRateImpl(currencyTo, currencyFrom, 1/value, 1/value, time));      //Add inverse as well
-                    } catch(ParseException ex) {}
-                }
-            } catch (JSONException ex) {
-                errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_CER_PROVIDER_BITCOINVENEZUELA, UnexpectedPluginExceptionSeverity.NOT_IMPORTANT, e);
+            //Find requiredExchangeRate
+            List<ExchangeRate> aux = (invertExchange ? exchangeRates : inverseExchangeRates);
+            for(ExchangeRate er : aux) {
+                if (er.getTimestamp() == stdTimestamp)
+                    requiredExchangeRate = er;
             }
 
+            //Update database
             try {
                 dao.updateDailyExchangeRateTable(new CurrencyPairImpl(currencyFrom, currencyTo), exchangeRates);
                 dao.updateDailyExchangeRateTable(new CurrencyPairImpl(currencyTo, currencyFrom), inverseExchangeRates);
             } catch (CantSaveExchangeRateException eex) {
-                errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_CER_PROVIDER_BITCOINVENEZUELA, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+                errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_CER_PROVIDER_BITCOINVENEZUELA, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, eex);
             }
         }
         return requiredExchangeRate;
@@ -284,14 +264,53 @@ public class ProviderBitcoinVenezuelaPluginRoot extends AbstractPlugin implement
 
         long stdStartTimestamp = DateHelper.getStandarizedTimestampFromTimestamp(startTimestamp);
         long stdEndTimestamp = DateHelper.getStandarizedTimestampFromTimestamp(endTimestamp);
-
-        String startDate = DateHelper.getDateStringFromTimestamp(startTimestamp);
-        String endDate = DateHelper.getDateStringFromTimestamp(endTimestamp);
+        List<ExchangeRate> requiredExchangeRates = new ArrayList<>();
         int requiredNumberOfDays = DateHelper.calculateDaysBetweenTimestamps(startTimestamp, endTimestamp);
 
-        return dao.getDailyExchangeRatesForPeriod(currencyPair, stdStartTimestamp, stdEndTimestamp);
+        //Try to find ExchangeRates in database
+        try{
+            requiredExchangeRates = dao.getDailyExchangeRatesForPeriod(currencyPair, stdStartTimestamp, stdEndTimestamp);
+            if(requiredExchangeRates.size() == requiredNumberOfDays)
+                return requiredExchangeRates;
+        }catch(CantGetExchangeRateException e) {/*Cant get them, continue*/}
 
-        //TODO: falta query al API if db == null
+        //IF ExchangeRate not in database
+
+        //Determine cryptoCurrency base
+        Currency currencyFrom, currencyTo;
+        boolean invertExchange;
+
+        if (CryptoCurrency.codeExists(currencyPair.getFrom().getCode())) {
+            currencyFrom = currencyPair.getFrom();
+            currencyTo = currencyPair.getTo();
+            invertExchange = false;
+        } else {
+            currencyFrom = currencyPair.getTo();
+            currencyTo = currencyPair.getFrom();
+            invertExchange = true;
+        }
+
+        //Query API
+        List<ExchangeRate> exchangeRates = new ArrayList<>();
+        List<ExchangeRate> inverseExchangeRates = new ArrayList<>();
+        queryBitcoinVenezuelaExchangeRateHistoryAPI(exchangeRates, inverseExchangeRates, currencyFrom, currencyTo);
+
+        //Find requiredExchangeRate
+        List<ExchangeRate> aux = (invertExchange ? exchangeRates : inverseExchangeRates);
+        for(ExchangeRate er : aux) {
+            if (er.getTimestamp() >= stdStartTimestamp && er.getTimestamp() <= stdEndTimestamp)
+                requiredExchangeRates.add(er);
+        }
+
+        //Update database
+        try {
+            dao.updateDailyExchangeRateTable(new CurrencyPairImpl(currencyFrom, currencyTo), exchangeRates);
+            dao.updateDailyExchangeRateTable(new CurrencyPairImpl(currencyTo, currencyFrom), inverseExchangeRates);
+        } catch (CantSaveExchangeRateException eex) {
+            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_CER_PROVIDER_BITCOINVENEZUELA, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, eex);
+        }
+
+        return requiredExchangeRates;
     }
 
 
@@ -300,6 +319,48 @@ public class ProviderBitcoinVenezuelaPluginRoot extends AbstractPlugin implement
     public Collection<ExchangeRate> getQueriedExchangeRates(CurrencyPair currencyPair) throws UnsupportedCurrencyPairException, CantGetExchangeRateException {
         return dao.getQueriedExchangeRateHistory(currencyPair);
     }
+
+
+
+
+
+
+
+    /* INTERNAL FUNCTIONS */
+    private void queryBitcoinVenezuelaExchangeRateHistoryAPI(List<ExchangeRate> exchangeRates, List<ExchangeRate> inverseExchangeRates,
+                                                             Currency currencyFrom, Currency currencyTo) {
+
+        JSONObject json;
+
+        try {
+            json = new JSONObject(HttpReader.getHTTPContent("http://api.bitcoinvenezuela.com/historical/?pair=" + currencyFrom.getCode() + currencyTo.getCode()));
+            json = json.getJSONObject(currencyTo.getCode() + "_" + currencyFrom.getCode());
+
+            Iterator<?> keys = json.keys();
+            while( keys.hasNext() ) {
+                String key = (String)keys.next();
+                double value = Double.parseDouble(json.get(key).toString());
+
+                try{
+                    long time = DateHelper.getTimestampFromDateString(key);
+                    exchangeRates.add(new ExchangeRateImpl(currencyFrom, currencyTo, value, value, time));
+                    inverseExchangeRates.add(new ExchangeRateImpl(currencyTo, currencyFrom, 1/value, 1/value, time));      //Add inverse as well
+                } catch(ParseException ex) {}
+            }
+        } catch (JSONException ex) {
+            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_CER_PROVIDER_BITCOINVENEZUELA, UnexpectedPluginExceptionSeverity.NOT_IMPORTANT, ex);
+        }
+    }
+
+
+
+
+
+
+
+
+
+
 
 
     /*

@@ -7,6 +7,7 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseFilterType;
+import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseRecord;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTable;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTableFilter;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTableRecord;
@@ -31,7 +32,10 @@ import com.bitdubai.fermat_cer_plugin.layer.provider.bitcoinvenezuela.developer.
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedPluginExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 
+import org.apache.commons.lang.StringUtils;
+
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.UUID;
 
@@ -171,7 +175,45 @@ public class BitcoinVenezuelaProviderDao {
 
     public List<ExchangeRate> getDailyExchangeRatesForPeriod(CurrencyPair currencyPair, long startTimestamp, long endTimestamp) throws CantGetExchangeRateException
     {
-        return null;
+        List<ExchangeRate> exchangeRates = new ArrayList<>();
+
+
+        String query = "SELECT * FROM " +
+                BitcoinVenezuelaProviderDatabaseConstants.DAILY_EXCHANGE_RATES_TABLE_NAME +
+                " WHERE " +
+                BitcoinVenezuelaProviderDatabaseConstants.DAILY_EXCHANGE_RATES_FROM_CURRENCY_COLUMN_NAME +
+                " = '" +
+                currencyPair.getFrom().getCode() +
+                "' AND " +
+                BitcoinVenezuelaProviderDatabaseConstants.DAILY_EXCHANGE_RATES_TO_CURRENCY_COLUMN_NAME +
+                " = '" +
+                currencyPair.getTo().getCode() +
+                "' " +
+                " AND " +
+                BitcoinVenezuelaProviderDatabaseConstants.DAILY_EXCHANGE_RATES_TIMESTAMP_COLUMN_NAME +
+                " >= " +
+                startTimestamp +
+                " AND " +
+                BitcoinVenezuelaProviderDatabaseConstants.DAILY_EXCHANGE_RATES_TIMESTAMP_COLUMN_NAME +
+                " <= " +
+                endTimestamp +
+                " ORDER BY " +
+                BitcoinVenezuelaProviderDatabaseConstants.DAILY_EXCHANGE_RATES_TIMESTAMP_COLUMN_NAME +
+                " ASC ";
+
+
+        DatabaseTable table = this.database.getTable(BitcoinVenezuelaProviderDatabaseConstants.DAILY_EXCHANGE_RATES_TABLE_NAME);
+
+        try {
+            for (DatabaseTableRecord record : table.customQuery(query, false))
+                exchangeRates.add(constructExchangeRateFromRecord(record));
+        } catch (CantLoadTableToMemoryException e) {
+            throw new CantGetExchangeRateException(CantGetExchangeRateException.DEFAULT_MESSAGE, e, "Failed to get daily exchange rates for period: " + startTimestamp + " to " + endTimestamp, "Couldn't load table to memory");
+        }catch (CantCreateExchangeRateException e) {
+            throw new CantGetExchangeRateException(CantGetExchangeRateException.DEFAULT_MESSAGE, e, "Failed to get daily exchange rates for period: " + startTimestamp + " to " + endTimestamp, "Couldn't create ExchangeRate object");
+        }
+
+        return exchangeRates;
     }
 
 

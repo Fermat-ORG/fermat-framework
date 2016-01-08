@@ -22,6 +22,7 @@ import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogManager;
 import com.bitdubai.fermat_cer_api.all_definition.interfaces.CurrencyPair;
 import com.bitdubai.fermat_cer_api.all_definition.interfaces.ExchangeRate;
 import com.bitdubai.fermat_cer_api.layer.provider.interfaces.CurrencyExchangeRateProviderManager;
+import com.bitdubai.fermat_cer_api.layer.provider.utils.DateHelper;
 import com.bitdubai.fermat_cer_api.layer.search.interfaces.CurrencyExchangeProviderFilterManager;
 import com.bitdubai.fermat_csh_api.all_definition.enums.BalanceType;
 import com.bitdubai.fermat_csh_api.all_definition.enums.TransactionType;
@@ -285,8 +286,13 @@ public class CashMoneyWalletModulePluginRoot extends AbstractPlugin implements L
                         for(CurrencyPair p : btcVzlaProvider.getSupportedCurrencyPairs()){
                             p = new CurrencyPairImpl(p.getTo(), p.getFrom());
                             System.out.println("BVP    Supported CurrencyPair! From: " + p.getFrom().getCode() + " To: " + p.getTo().getCode());
-                            System.out.println("    Exchange: " + btcVzlaProvider.getCurrentExchangeRate(p).getPurchasePrice());
-                            System.out.println("BVP    Exchange for 2015-09-01: " + btcVzlaProvider.getExchangeRateFromDate(p, 1441065600).getPurchasePrice());
+                            //System.out.println("    Exchange: " + btcVzlaProvider.getCurrentExchangeRate(p).getPurchasePrice());
+                            //System.out.println("BVP    Exchange for 2015-09-01: " + btcVzlaProvider.getExchangeRateFromDate(p, 1441065600).getPurchasePrice());
+                            System.out.println("BVP    Getting daily exchange rates for period 2015-09-01 - 2015-10-07 ");
+                            for( ExchangeRate exr : btcVzlaProvider.getDailyExchangeRatesForPeriod(p, 1441065600, 1444176000))
+                            {
+                                System.out.println("BVP  Day:" + DateHelper.getDateStringFromTimestamp(exr.getTimestamp()) + " Price: " + exr.getPurchasePrice());
+                            }
                         }
 
 
