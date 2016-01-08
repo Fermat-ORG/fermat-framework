@@ -388,7 +388,7 @@ public class BrokerSubmitOfflineMerchandiseMonitorAgent implements
                     bankMoneyDeStockRecord.getOriginTransaction()
             );
             pendingToDeStockTransaction.setContractTransactionStatus(
-                    ContractTransactionStatus.PENDING_SUBMIT_OFFLINE_MERCHANDISE);
+                    ContractTransactionStatus.PENDING_SUBMIT_OFFLINE_MERCHANDISE_NOTIFICATION);
             brokerSubmitOfflineMerchandiseBusinessTransactionDao.updateBusinessTransactionRecord(
                     pendingToDeStockTransaction);
         }
@@ -411,7 +411,7 @@ public class BrokerSubmitOfflineMerchandiseMonitorAgent implements
                     cashMoneyDeStockRecord.getOriginTransaction()
             );
             pendingToDeStockTransaction.setContractTransactionStatus(
-                    ContractTransactionStatus.PENDING_SUBMIT_OFFLINE_MERCHANDISE);
+                    ContractTransactionStatus.PENDING_SUBMIT_OFFLINE_MERCHANDISE_NOTIFICATION);
             brokerSubmitOfflineMerchandiseBusinessTransactionDao.updateBusinessTransactionRecord(
                     pendingToDeStockTransaction);
         }

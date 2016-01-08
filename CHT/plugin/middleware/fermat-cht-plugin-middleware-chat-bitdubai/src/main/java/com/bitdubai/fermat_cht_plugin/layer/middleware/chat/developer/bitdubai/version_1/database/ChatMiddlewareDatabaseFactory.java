@@ -1,4 +1,4 @@
-package com.bitdubai.fermat_cht_plugin.layer.middleware.chat.version_1.database;
+package com.bitdubai.fermat_cht_plugin.layer.middleware.chat.developer.bitdubai.version_1.database;
 
         import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
         import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseDataType;
@@ -67,7 +67,7 @@ public class ChatMiddlewareDatabaseFactory implements DealsWithPluginDatabaseSys
             table = databaseFactory.newTableFactory(ownerId, ChatMiddlewareDatabaseConstants.CHATS_TABLE_NAME);
 
             table.addColumn(ChatMiddlewareDatabaseConstants.CHATS_ID_CHAT_COLUMN_NAME, DatabaseDataType.INTEGER, 1000, Boolean.TRUE);
-            table.addColumn(ChatMiddlewareDatabaseConstants.CHATS_ID_OBJETO_COLUMN_NAME, DatabaseDataType.INTEGER, 1000, Boolean.FALSE);
+            table.addColumn(ChatMiddlewareDatabaseConstants.CHATS_ID_OBJECT_COLUMN_NAME, DatabaseDataType.INTEGER, 1000, Boolean.FALSE);
             table.addColumn(ChatMiddlewareDatabaseConstants.CHATS_LOCAL_ACTOR_TYPE_COLUMN_NAME, DatabaseDataType.STRING, 100, Boolean.FALSE);
             table.addColumn(ChatMiddlewareDatabaseConstants.CHATS_LOCAL_ACTOR_PUB_KEY_COLUMN_NAME, DatabaseDataType.STRING, 100, Boolean.FALSE);
             table.addColumn(ChatMiddlewareDatabaseConstants.CHATS_REMOTE_ACTOR_TYPE_COLUMN_NAME, DatabaseDataType.STRING, 100, Boolean.FALSE);
@@ -89,7 +89,7 @@ public class ChatMiddlewareDatabaseFactory implements DealsWithPluginDatabaseSys
              */
             table = databaseFactory.newTableFactory(ownerId, ChatMiddlewareDatabaseConstants.MESSAGE_TABLE_NAME);
 
-            table.addColumn(ChatMiddlewareDatabaseConstants.MESSAGE_ID_MENSAJE_COLUMN_NAME, DatabaseDataType.INTEGER, 1000, Boolean.TRUE);
+            table.addColumn(ChatMiddlewareDatabaseConstants.MESSAGE_ID_MESSAGE_COLUMN_NAME, DatabaseDataType.INTEGER, 1000, Boolean.TRUE);
             table.addColumn(ChatMiddlewareDatabaseConstants.MESSAGE_ID_CHAT_COLUMN_NAME, DatabaseDataType.INTEGER, 1000, Boolean.FALSE);
             table.addColumn(ChatMiddlewareDatabaseConstants.MESSAGE_TEXT_MESSAGE_COLUMN_NAME, DatabaseDataType.STRING, 100, Boolean.FALSE);
             table.addColumn(ChatMiddlewareDatabaseConstants.MESSAGE_STATUS_COLUMN_NAME, DatabaseDataType.INTEGER, 3, Boolean.FALSE);

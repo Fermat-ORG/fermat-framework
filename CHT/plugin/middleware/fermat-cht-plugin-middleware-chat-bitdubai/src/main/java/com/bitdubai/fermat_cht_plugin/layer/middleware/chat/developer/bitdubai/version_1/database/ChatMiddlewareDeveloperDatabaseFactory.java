@@ -1,24 +1,27 @@
-package com.bitdubai.fermat_cht_plugin.layer.middleware.chat.version_1.database;
+package com.bitdubai.fermat_cht_plugin.layer.middleware.chat.developer.bitdubai.version_1.database;
 
-        import com.bitdubai.fermat_api.DealsWithPluginIdentity;
-        import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperDatabase;
-        import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperDatabaseTable;
-        import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperDatabaseTableRecord;
-        import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperObjectFactory;
-        import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
-        import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseRecord;
-        import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTable;
-        import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTableRecord;
-        import com.bitdubai.fermat_api.layer.osa_android.database_system.DealsWithPluginDatabaseSystem;
-        import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
-        import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantCreateDatabaseException;
-        import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantLoadTableToMemoryException;
-        import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.DatabaseNotFoundException;
-        import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantOpenDatabaseException;
-        import com.bitdubai.fermat_cht_plugin.layer.middleware.chat.version_1.exceptions.CantInitializeChatMiddlewareDatabaseException;
-        import java.util.ArrayList;
-        import java.util.List;
-        import java.util.UUID;
+
+
+import com.bitdubai.fermat_api.DealsWithPluginIdentity;
+import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperDatabase;
+import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperDatabaseTable;
+import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperDatabaseTableRecord;
+import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperObjectFactory;
+import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
+import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseRecord;
+import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTable;
+import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTableRecord;
+import com.bitdubai.fermat_api.layer.osa_android.database_system.DealsWithPluginDatabaseSystem;
+import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
+import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantCreateDatabaseException;
+import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantLoadTableToMemoryException;
+import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantOpenDatabaseException;
+import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.DatabaseNotFoundException;
+import com.bitdubai.fermat_cht_plugin.layer.middleware.chat.developer.bitdubai.version_1.exceptions.CantInitializeChatMiddlewareDatabaseException;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.UUID;
 /**
  * The Class <code>com.bitdubai.fermat_cht_plugin.layer.middleware.chat.version_1.database.ChatMiddlewareDeveloperDatabaseFactory</code> have
  * contains the methods that the Developer Database Tools uses to show the information.
@@ -100,7 +103,7 @@ public class ChatMiddlewareDeveloperDatabaseFactory implements DealsWithPluginDa
         List<String> chatsColumns = new ArrayList<String>();
 
         chatsColumns.add(ChatMiddlewareDatabaseConstants.CHATS_ID_CHAT_COLUMN_NAME);
-        chatsColumns.add(ChatMiddlewareDatabaseConstants.CHATS_ID_OBJETO_COLUMN_NAME);
+        chatsColumns.add(ChatMiddlewareDatabaseConstants.CHATS_ID_OBJECT_COLUMN_NAME);
         chatsColumns.add(ChatMiddlewareDatabaseConstants.CHATS_LOCAL_ACTOR_TYPE_COLUMN_NAME);
         chatsColumns.add(ChatMiddlewareDatabaseConstants.CHATS_LOCAL_ACTOR_PUB_KEY_COLUMN_NAME);
         chatsColumns.add(ChatMiddlewareDatabaseConstants.CHATS_REMOTE_ACTOR_TYPE_COLUMN_NAME);
@@ -120,7 +123,7 @@ public class ChatMiddlewareDeveloperDatabaseFactory implements DealsWithPluginDa
          */
         List<String> messageColumns = new ArrayList<String>();
 
-        messageColumns.add(ChatMiddlewareDatabaseConstants.MESSAGE_ID_MENSAJE_COLUMN_NAME);
+        messageColumns.add(ChatMiddlewareDatabaseConstants.MESSAGE_ID_MESSAGE_COLUMN_NAME);
         messageColumns.add(ChatMiddlewareDatabaseConstants.MESSAGE_ID_CHAT_COLUMN_NAME);
         messageColumns.add(ChatMiddlewareDatabaseConstants.MESSAGE_TEXT_MESSAGE_COLUMN_NAME);
         messageColumns.add(ChatMiddlewareDatabaseConstants.MESSAGE_STATUS_COLUMN_NAME);
