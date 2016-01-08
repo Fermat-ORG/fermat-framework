@@ -9,7 +9,7 @@ import java.util.Map;
 /**
  * Created by Matias Furszyfer on 2015.09.16..
  */
-public interface DesktopObject {
+public interface DesktopObject{
 
 
     /**

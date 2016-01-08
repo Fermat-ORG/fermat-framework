@@ -366,19 +366,10 @@ public class IntraWalletUserIdentityPluginRoot extends AbstractPlugin
         }
     }
 
-    private SettingsManager<FermatSettings> settingsManager;
 
     @Override
     public SettingsManager<FermatSettings> getSettingsManager() {
-        if (this.settingsManager != null)
-            return this.settingsManager;
-
-        this.settingsManager = new SettingsManager<>(
-                pluginFileSystem,
-                pluginId
-        );
-
-        return this.settingsManager;
+        return null;
     }
 
     @Override

@@ -19,10 +19,12 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
 import com.bitdubai.fermat_api.layer.all_definition.util.Version;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
+import com.bitdubai.fermat_api.layer.world.interfaces.Currency;
 import com.bitdubai.fermat_cer_api.all_definition.enums.TimeUnit;
 import com.bitdubai.fermat_cer_api.all_definition.utils.CurrencyPairImpl;
 import com.bitdubai.fermat_cer_api.all_definition.utils.ExchangeRateImpl;
-import com.bitdubai.fermat_cer_api.all_definition.utils.HttpReader;
+import com.bitdubai.fermat_cer_api.layer.provider.utils.CurrencyPairHelper;
+import com.bitdubai.fermat_cer_api.layer.provider.utils.HttpReader;
 import com.bitdubai.fermat_cer_api.layer.provider.exceptions.CantGetExchangeRateException;
 import com.bitdubai.fermat_cer_api.layer.provider.exceptions.CantGetProviderInfoException;
 import com.bitdubai.fermat_cer_api.layer.provider.exceptions.CantSaveExchangeRateException;
@@ -82,14 +84,21 @@ public class ProviderEuropeanCentralBankPluginRoot extends AbstractPlugin implem
     public void start() throws CantStartPluginException {
         System.out.println("PROVIDEREUROPEAN_CENTRAL_BANK - PluginRoot START");
 
-        //EuropeanCentralBank Provider supports all FiatCurrencies
-        //TODO: WRONG!!! No soporta VEF, no soporta otras monedas. CHECK THIS!!!!!!!!!!!!!!!!!!!!!
-        for(FiatCurrency i : FiatCurrency.values()){
-            for(FiatCurrency j : FiatCurrency.values()){
-                if(!i.equals(j))
-                    supportedCurrencyPairs.add(new CurrencyPairImpl(i,j));
-            }
-        }
+        //EuropeanCentralBank Provider supports most FiatCurrencies
+        List<Currency> supported = new ArrayList<>();
+        supported.add(FiatCurrency.AUSTRALIAN_DOLLAR);
+        supported.add(FiatCurrency.BRAZILIAN_REAL);
+        supported.add(FiatCurrency.BRITISH_POUND);
+        supported.add(FiatCurrency.CANADIAN_DOLLAR);
+        supported.add(FiatCurrency.CHINESE_YUAN);
+        supported.add(FiatCurrency.EURO);
+        supported.add(FiatCurrency.JAPANESE_YEN);
+        supported.add(FiatCurrency.MEXICAN_PESO);
+        supported.add(FiatCurrency.NEW_ZEALAND_DOLLAR);
+        supported.add(FiatCurrency.SWISS_FRANC);
+        supported.add(FiatCurrency.US_DOLLAR);
+
+        supportedCurrencyPairs = CurrencyPairHelper.permuteCurrencyList(supported);
 
         try {
             dao = new EuropeanCentralBankProviderDao(pluginDatabaseSystem, pluginId, errorManager);
@@ -169,17 +178,18 @@ public class ProviderEuropeanCentralBankPluginRoot extends AbstractPlugin implem
             throw new UnsupportedCurrencyPairException();
 
         //TODO:
-        return null;
+        throw new CantGetExchangeRateException("Not currently supported but coming soon ASAP");
     }
 
     @Override
-    public Collection<ExchangeRate> getExchangeRatesFromPeriod(CurrencyPair currencyPair, TimeUnit timeUnit, int max, int offset) throws UnsupportedCurrencyPairException, CantGetExchangeRateException {
+    public Collection<ExchangeRate> getDailyExchangeRatesForPeriod(CurrencyPair currencyPair, long startTimestamp, long endTimestamp) throws UnsupportedCurrencyPairException, CantGetExchangeRateException {
         if(!isCurrencyPairSupported(currencyPair))
             throw new UnsupportedCurrencyPairException();
 
         //TODO:
-        return null;
+        throw new CantGetExchangeRateException("Not currently supported but coming soon ASAP");
     }
+
 
     @Override
     public Collection<ExchangeRate> getQueriedExchangeRates(CurrencyPair currencyPair) throws UnsupportedCurrencyPairException, CantGetExchangeRateException {

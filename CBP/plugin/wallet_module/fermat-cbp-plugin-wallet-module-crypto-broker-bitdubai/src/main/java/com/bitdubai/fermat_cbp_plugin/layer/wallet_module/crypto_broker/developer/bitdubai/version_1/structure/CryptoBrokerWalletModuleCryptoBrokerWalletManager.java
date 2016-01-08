@@ -1063,17 +1063,17 @@ public class CryptoBrokerWalletModuleCryptoBrokerWalletManager implements Crypto
     }
 
     /**
-     * Given a TimeUnit (Days,weeks,months) and a currencyPair, returns a list of max ExchangeRates, starting from the given offset
+     * Given a start and end timestamp and a currencyPair, returns a list of DAILY ExchangeRates
      *
      * @param currencyFrom
      * @param currencyTo
-     * @param timeUnit
-     * @param max
-     * @param offset
+     * @param startTimestamp
+     * @param endTimestamp
+     * @param providerId
      * @return a list of exchangeRate objects
      */
     @Override
-    public Collection<ExchangeRate> getExchangeRatesFromPeriod(final Currency currencyFrom, final Currency currencyTo, TimeUnit timeUnit, int max, int offset, UUID providerId) throws UnsupportedCurrencyPairException, CantGetExchangeRateException, CantGetProviderException {
+    public Collection<ExchangeRate> getDailyExchangeRatesForPeriod(final Currency currencyFrom, final Currency currencyTo, long startTimestamp, long endTimestamp, UUID providerId) throws UnsupportedCurrencyPairException, CantGetExchangeRateException, CantGetProviderException {
         CurrencyPair currencyPair = new CurrencyPair() {
             @Override
             public Currency getFrom() {
@@ -1085,7 +1085,7 @@ public class CryptoBrokerWalletModuleCryptoBrokerWalletManager implements Crypto
                 return currencyTo;
             }
         };
-        return currencyExchangeProviderFilterManager.getProviderReference(providerId).getExchangeRatesFromPeriod(currencyPair, timeUnit, max, offset);
+        return currencyExchangeProviderFilterManager.getProviderReference(providerId).getDailyExchangeRatesForPeriod(currencyPair, startTimestamp, endTimestamp);
     }
 
 
