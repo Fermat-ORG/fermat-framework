@@ -2422,7 +2422,7 @@ public class WalletRuntimeEnginePluginRoot extends AbstractPlugin implements
 
         final String statusBarColor = "#990c75";
         final String titleBarLabelColor = "#ffffff";
-        final int titleBarLabelSize = 16;
+        final int titleBarLabelSize = 20;
 
 
         runtimeWalletNavigationStructure = new WalletNavigationStructure();
@@ -2432,11 +2432,24 @@ public class WalletRuntimeEnginePluginRoot extends AbstractPlugin implements
 
         // Side Menu
         runtimeSideMenu = new SideMenu();
+        runtimeSideMenu.setBackgroundColor("#e2e4e6");
 
         runtimeMenuItem = new MenuItem();
         runtimeMenuItem.setLabel("My Assets");
-        runtimeMenuItem.setLinkToActivity(Activities.DAP_WALLET_ASSET_ISSUER_MAIN_ACTIVITY);
         runtimeMenuItem.setAppLinkPublicKey(publicKey);
+        runtimeMenuItem.setLinkToActivity(Activities.DAP_WALLET_ASSET_ISSUER_MAIN_ACTIVITY);
+        runtimeSideMenu.addMenuItem(runtimeMenuItem);
+
+        runtimeMenuItem = new MenuItem();
+        runtimeMenuItem.setLabel("History");
+        runtimeMenuItem.setLinkToActivity(Activities.DAP_WALLET_ASSET_ISSUER_HISTORY_ACTIVITY);
+        runtimeMenuItem.setAppLinkPublicKey(publicKey);
+        runtimeSideMenu.addMenuItem(runtimeMenuItem);
+
+        runtimeMenuItem = new MenuItem();
+        runtimeMenuItem.setLabel("Stadistics");
+        runtimeMenuItem.setAppLinkPublicKey(publicKey);
+        runtimeMenuItem.setLinkToActivity(Activities.DAP_WALLET_ASSET_ISSUER_STADISTICS_ACTIVITY);
         runtimeSideMenu.addMenuItem(runtimeMenuItem);
 
         // Activity: Home
@@ -2451,23 +2464,117 @@ public class WalletRuntimeEnginePluginRoot extends AbstractPlugin implements
         runtimeTitleBar = new TitleBar();
         runtimeTitleBar.setLabel("My Assets");
         runtimeTitleBar.setLabelSize(titleBarLabelSize);
-//        runtimeTitleBar.setTitleColor(titleBarLabelColor);
+        runtimeTitleBar.setTitleColor("#ffffff");
 //        runtimeTitleBar.setIsTitleTextStatic(true);
+        runtimeTitleBar.setColor("#e2e4e6");
         runtimeActivity.setTitleBar(runtimeTitleBar);
 
 //        runtimeStatusBar = new StatusBar();
 //        runtimeStatusBar.setColor(statusBarColor);
 //        runtimeActivity.setStatusBar(runtimeStatusBar);
 
-//        runtimeHeader = new Header();
-//        runtimeHeader.setLabel("Header");
-//        runtimeActivity.setHeader(runtimeHeader);
-
         runtimeFragment = new Fragment();
         runtimeFragment.setType(Fragments.DAP_WALLET_ASSET_ISSUER_MAIN_ACTIVITY.getKey());
         runtimeActivity.addFragment(Fragments.DAP_WALLET_ASSET_ISSUER_MAIN_ACTIVITY.getKey(), runtimeFragment);
         runtimeActivity.setStartFragment(Fragments.DAP_WALLET_ASSET_ISSUER_MAIN_ACTIVITY.getKey());
 
+        // Activity: History
+        runtimeActivity = new Activity();
+        runtimeActivity.setType(Activities.DAP_WALLET_ASSET_ISSUER_HISTORY_ACTIVITY);
+        runtimeActivity.setActivityType(Activities.DAP_WALLET_ASSET_ISSUER_HISTORY_ACTIVITY.getCode());
+//        runtimeActivity.setColor("#627284");
+        runtimeActivity.setSideMenu(runtimeSideMenu);
+        runtimeWalletNavigationStructure.addActivity(runtimeActivity);
+//        runtimeWalletNavigationStructure.setStartActivity(Activities.DAP_WALLET_ASSET_ISSUER_HISTORY_ACTIVITY);
+
+        runtimeTitleBar = new TitleBar();
+        runtimeTitleBar.setLabel("History");
+        runtimeTitleBar.setLabelSize(titleBarLabelSize);
+        runtimeTitleBar.setTitleColor("#ffffff");
+//        runtimeTitleBar.setIsTitleTextStatic(true);
+        runtimeTitleBar.setColor("#e2e4e6");
+        runtimeActivity.setTitleBar(runtimeTitleBar);
+
+//        runtimeStatusBar = new StatusBar();
+//        runtimeStatusBar.setColor(statusBarColor);
+//        runtimeActivity.setStatusBar(runtimeStatusBar);
+
+        // Side Menu
+        runtimeSideMenu = new SideMenu();
+        runtimeSideMenu.setBackgroundColor("#e2e4e6");
+
+        runtimeMenuItem = new MenuItem();
+        runtimeMenuItem.setLabel("My Assets");
+        runtimeMenuItem.setAppLinkPublicKey(publicKey);
+        runtimeMenuItem.setLinkToActivity(Activities.DAP_WALLET_ASSET_ISSUER_MAIN_ACTIVITY);
+        runtimeSideMenu.addMenuItem(runtimeMenuItem);
+
+        runtimeMenuItem = new MenuItem();
+        runtimeMenuItem.setLabel("History");
+        runtimeMenuItem.setLinkToActivity(Activities.DAP_WALLET_ASSET_ISSUER_HISTORY_ACTIVITY);
+        runtimeMenuItem.setAppLinkPublicKey(publicKey);
+        runtimeSideMenu.addMenuItem(runtimeMenuItem);
+
+        runtimeMenuItem = new MenuItem();
+        runtimeMenuItem.setLabel("Stadistics");
+        runtimeMenuItem.setAppLinkPublicKey(publicKey);
+        runtimeMenuItem.setLinkToActivity(Activities.DAP_WALLET_ASSET_ISSUER_STADISTICS_ACTIVITY);
+        runtimeSideMenu.addMenuItem(runtimeMenuItem);
+
+        runtimeFragment = new Fragment();
+        runtimeFragment.setType(Fragments.DAP_WALLET_ASSET_ISSUER_HISTORY_ACTIVITY.getKey());
+        runtimeActivity.addFragment(Fragments.DAP_WALLET_ASSET_ISSUER_HISTORY_ACTIVITY.getKey(), runtimeFragment);
+        runtimeActivity.setStartFragment(Fragments.DAP_WALLET_ASSET_ISSUER_HISTORY_ACTIVITY.getKey());
+
+        // Activity: Stadistics
+        runtimeActivity = new Activity();
+        runtimeActivity.setType(Activities.DAP_WALLET_ASSET_ISSUER_STADISTICS_ACTIVITY);
+        runtimeActivity.setActivityType(Activities.DAP_WALLET_ASSET_ISSUER_STADISTICS_ACTIVITY.getCode());
+//        runtimeActivity.setColor("#627284");
+        runtimeActivity.setSideMenu(runtimeSideMenu);
+        runtimeWalletNavigationStructure.addActivity(runtimeActivity);
+//        runtimeWalletNavigationStructure.setStartActivity(Activities.DAP_WALLET_ASSET_ISSUER_STADISTICS_ACTIVITY);
+
+        runtimeTitleBar = new TitleBar();
+        runtimeTitleBar.setLabel("Stadistics");
+        runtimeTitleBar.setLabelSize(titleBarLabelSize);
+        runtimeTitleBar.setTitleColor("#ffffff");
+//        runtimeTitleBar.setIsTitleTextStatic(true);
+        runtimeTitleBar.setColor("#e2e4e6");
+        runtimeActivity.setTitleBar(runtimeTitleBar);
+
+//        runtimeStatusBar = new StatusBar();
+//        runtimeStatusBar.setColor(statusBarColor);
+//        runtimeActivity.setStatusBar(runtimeStatusBar);
+
+        // Side Menu
+        runtimeSideMenu = new SideMenu();
+        runtimeSideMenu.setBackgroundColor("#e2e4e6");
+
+        runtimeMenuItem = new MenuItem();
+        runtimeMenuItem.setLabel("My Assets");
+        runtimeMenuItem.setAppLinkPublicKey(publicKey);
+        runtimeMenuItem.setLinkToActivity(Activities.DAP_WALLET_ASSET_ISSUER_MAIN_ACTIVITY);
+        runtimeSideMenu.addMenuItem(runtimeMenuItem);
+
+        runtimeMenuItem = new MenuItem();
+        runtimeMenuItem.setLabel("History");
+        runtimeMenuItem.setAppLinkPublicKey(publicKey);
+        runtimeMenuItem.setLinkToActivity(Activities.DAP_WALLET_ASSET_ISSUER_HISTORY_ACTIVITY);
+        runtimeSideMenu.addMenuItem(runtimeMenuItem);
+
+        runtimeMenuItem = new MenuItem();
+        runtimeMenuItem.setLabel("Stadistics");
+        runtimeMenuItem.setAppLinkPublicKey(publicKey);
+        runtimeMenuItem.setLinkToActivity(Activities.DAP_WALLET_ASSET_ISSUER_STADISTICS_ACTIVITY);
+        runtimeSideMenu.addMenuItem(runtimeMenuItem);
+
+        runtimeFragment = new Fragment();
+        runtimeFragment.setType(Fragments.DAP_WALLET_ASSET_ISSUER_STADISTICS_ACTIVITY.getKey());
+        runtimeActivity.addFragment(Fragments.DAP_WALLET_ASSET_ISSUER_STADISTICS_ACTIVITY.getKey(), runtimeFragment);
+        runtimeActivity.setStartFragment(Fragments.DAP_WALLET_ASSET_ISSUER_STADISTICS_ACTIVITY.getKey());
+
+        // Activity: Detail
         runtimeActivity = new Activity();
         runtimeActivity.setType(Activities.DAP_ASSET_ISSUER_WALLET_ASSET_DETAIL);
         runtimeActivity.setActivityType(Activities.DAP_ASSET_ISSUER_WALLET_ASSET_DETAIL.getCode());
