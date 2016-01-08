@@ -369,12 +369,11 @@ public class AssetIssuerActorPluginRoot extends AbstractPlugin implements
                  * Once I send back the ExtendedPublicKey, I will wait until the keys are generated and
                  * register them in the address book.
                  */
-                List<CryptoAddress> cryptoAddresses;
+                List<CryptoAddress> cryptoAddresses = null;
                 try {
-                    cryptoAddresses = assetVaultManager.getActiveRedeemPointAddresses(redeemPoint.getActorPublicKey());
-
                     while (cryptoAddresses == null){
-                        //wait until I got the address
+                        cryptoAddresses = assetVaultManager.getActiveRedeemPointAddresses(redeemPoint.getActorPublicKey());
+                        Thread.sleep(5000);
                     }
 
                     /**
@@ -383,6 +382,8 @@ public class AssetIssuerActorPluginRoot extends AbstractPlugin implements
                     registerRedeemPointAddresses(cryptoAddresses, issuer.getActorPublicKey(), redeemPoint.getActorPublicKey());
 
                 } catch (CantGetActiveRedeemPointAddressesException e) {
+                    e.printStackTrace();
+                } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
             } catch (CantSetObjectException e) {
