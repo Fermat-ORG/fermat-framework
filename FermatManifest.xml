@@ -6242,11 +6242,7 @@
 					type="start"
 					title="Start step"
 					description="This is the first step"
-					platform=""
-					superlayer=""
-					component=""
-					layer=""
-					name="">
+					platform="CCP" superlayer="" component="Plugin" layer="Network Service" name="Crypto Payment Request">
 					<next>
 						<step id="1" type="direct call"></step>
 					</next>
@@ -6255,11 +6251,7 @@
 					type="activity"
 					title="Next step"
 					description="This is the first step, this one has a bifurcation, which can be parallel process or an 'if'"
-					platform=""
-					superlayer=""
-					component=""
-					layer=""
-					name="">
+					platform="CCP" superlayer="" component="Plugin" layer="Network Service" name="Crypto Payment Request">
 					<next>
 						<step id="2" type="direct call"></step>
 						<step id="3" type="direct call"></step>
@@ -6269,11 +6261,7 @@
 					type="activity"
 					title="True state"
 					description="This step is executed if the sentence is true"
-					platform=""
-					superlayer=""
-					component=""
-					layer=""
-					name="">
+					platform="CCP" superlayer="" component="Plugin" layer="Network Service" name="Crypto Payment Request">
 					<next>
 						<step id="4" type="direct call"></step>
 					</next>
@@ -6282,11 +6270,7 @@
 					type="activity"
 					title="False state"
 					description="This step is executed if the sentence is false, it loops back"
-					platform=""
-					superlayer=""
-					component=""
-					layer=""
-					name="">
+					platform="CCP" superlayer="" component="Plugin" layer="Network Service" name="Crypto Payment Request">
 					<next>
 						<step id="1" type="direct call"></step>
 					</next>
@@ -6295,11 +6279,7 @@
 					type="end"
 					title="Out of loop"
 					description="This is out of the loop"
-					platform=""
-					superlayer=""
-					component=""
-					layer=""
-					name="">
+					platform="CCP" superlayer="" component="Plugin" layer="Network Service" name="Crypto Payment Request">
 					<next>
 					</next>
 				</step>
