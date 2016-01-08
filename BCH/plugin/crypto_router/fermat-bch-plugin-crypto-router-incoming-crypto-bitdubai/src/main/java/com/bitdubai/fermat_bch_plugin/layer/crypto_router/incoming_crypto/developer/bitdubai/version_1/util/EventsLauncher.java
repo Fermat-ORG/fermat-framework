@@ -173,16 +173,16 @@ public class EventsLauncher implements DealsWithEvents {
             case ASSET_REDEMPTION_SPECIALIST:
                 switch (cryptoStatus) {
                     case ON_CRYPTO_NETWORK:
-                        raiseEvent(EventType.INCOMING_ASSET_ON_CRYPTO_NETWORK_WAITING_TRANSFERENCE_REDEEM_POINT);
+                        raiseEvent(EventType.INCOMING_ASSET_ON_CRYPTO_NETWORK_WAITING_TRANSFERENCE_REDEMPTION);
                         break;
                     case ON_BLOCKCHAIN:
-                        raiseEvent(EventType.INCOMING_ASSET_ON_BLOCKCHAIN_WAITING_TRANSFERENCE_REDEEM_POINT);
+                        raiseEvent(EventType.INCOMING_ASSET_ON_BLOCKCHAIN_WAITING_TRANSFERENCE_REDEMPTION);
                         break;
                     case REVERSED_ON_CRYPTO_NETWORK:
-                        raiseEvent(EventType.INCOMING_ASSET_REVERSED_ON_CRYPTO_NETWORK_WAITING_TRANSFERENCE_REDEEM_POINT);
+                        raiseEvent(EventType.INCOMING_ASSET_REVERSED_ON_CRYPTO_NETWORK_WAITING_TRANSFERENCE_REDEMPTION);
                         break;
                     case REVERSED_ON_BLOCKCHAIN:
-                        raiseEvent(EventType.INCOMING_ASSET_REVERSED_ON_BLOCKCHAIN_WAITING_TRANSFERENCE_REDEEM_POINT);
+                        raiseEvent(EventType.INCOMING_ASSET_REVERSED_ON_BLOCKCHAIN_WAITING_TRANSFERENCE_REDEMPTION);
                         break;
                     case IRREVERSIBLE:
                         //define what to do.
