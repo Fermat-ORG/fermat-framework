@@ -300,7 +300,7 @@ ls
 * To implement the server, you must run the following command:
 ```Shell
 
-java -jar $NOMBRE_DEL_ARCHIVO_OBTENIDO_EN_EL_PASO_ANTERIOR -jar
+java -jar $FILE_NAME_OBTAINED_IN_THE_PREVIOUS_STEP -jar
 ```
 * When the server is running must observe the messages printed on the console, including the IP address you are using the local print server, this address should be copied and used to configure the local client communications. The local communications client is in **_com.bitdubai.fermat_p2p_plugin.layer.ws.communications.cloud.client.developer.bitdubai.version_1.structure.util.ServerConf_**.
 * The IP address obtained in the previous step should be used in the following configuration variable:
