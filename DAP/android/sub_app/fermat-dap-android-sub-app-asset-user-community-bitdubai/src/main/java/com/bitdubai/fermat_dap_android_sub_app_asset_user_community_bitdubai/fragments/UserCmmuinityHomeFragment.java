@@ -83,7 +83,7 @@ public class UserCmmuinityHomeFragment extends AbstractFermatFragment implements
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
         rootView = inflater.inflate(R.layout.home_fragment, container, false);
-        initViews(rootView);
+//        initViews(rootView);
         recyclerView = (RecyclerView) rootView.findViewById(R.id.gridView);
         recyclerView.setHasFixedSize(true);
         layoutManager = new GridLayoutManager(getActivity(), 3, LinearLayoutManager.VERTICAL, false);

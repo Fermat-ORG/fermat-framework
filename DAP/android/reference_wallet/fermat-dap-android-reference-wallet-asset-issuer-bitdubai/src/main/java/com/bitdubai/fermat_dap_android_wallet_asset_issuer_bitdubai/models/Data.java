@@ -76,6 +76,36 @@ public class Data {
         return users;
     }
 
+    public static List<UserRedeemed> getUserRedeemedList(String walletPublicKey, DigitalAsset digitalAsset, AssetIssuerWalletSupAppModuleManager moduleManager) throws Exception {
+        //TODO get from database
+        List<UserRedeemed> users = new ArrayList<>();
+        UserRedeemed UserRedeemed;
+        List<AssetStatistic> stats = moduleManager.getWalletStatisticsByAsset(walletPublicKey, digitalAsset.getName());
+        for (AssetStatistic stat :
+                stats) {
+            if (stat.getStatus().equals(AssetCurrentStatus.ASSET_REDEEMED)) {
+                UserRedeemed = new UserRedeemed(stat.getRedeemPoint().getName(), new Timestamp(stat.getDistributionDate().getTime()), stat.getStatus().getCode());
+                users.add(UserRedeemed);
+            }
+        }
+        return users;
+    }
+
+    public static List<UserAppropiate> getUserAppropiateList(String walletPublicKey, DigitalAsset digitalAsset, AssetIssuerWalletSupAppModuleManager moduleManager) throws Exception {
+        //TODO get from database
+        List<UserAppropiate> users = new ArrayList<>();
+        UserAppropiate UserAppropiate;
+        List<AssetStatistic> stats = moduleManager.getWalletStatisticsByAsset(walletPublicKey, digitalAsset.getName());
+        for (AssetStatistic stat :
+                stats) {
+            if (stat.getStatus().equals(AssetCurrentStatus.ASSET_APPROPRIATED)) {
+                UserAppropiate = new UserAppropiate(stat.getRedeemPoint().getName(), new Timestamp(stat.getDistributionDate().getTime()), stat.getStatus().getCode());
+                users.add(UserAppropiate);
+            }
+        }
+        return users;
+    }
+
     public static List<User> getConnectedUsers(AssetIssuerWalletSupAppModuleManager moduleManager, List<User> usersSelected) throws CantGetAssetUserActorsException {
 //        List<User> users = new ArrayList<>();
 //        users.add(new User("Frank Contreras"));
