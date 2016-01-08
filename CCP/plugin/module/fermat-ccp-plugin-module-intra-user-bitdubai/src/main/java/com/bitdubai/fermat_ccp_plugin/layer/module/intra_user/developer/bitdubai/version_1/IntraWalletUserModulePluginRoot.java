@@ -367,7 +367,15 @@ public class IntraWalletUserModulePluginRoot extends AbstractPlugin implements
              *Call Network Service Intra User to add request connection
              */
 
-            this.intraUserNertwokServiceManager.askIntraUserForAcceptance(identityPublicKey, identityAlias, Actors.INTRA_USER, intraUserToAddName,intraUserToAddPhrase, intraUserToAddPublicKey, Actors.INTRA_USER, profileImage);
+            if (  this.intraWalletUserManager.getIntraUsersConnectionStatus(intraUserToAddPublicKey)!= ConnectionState.CONNECTED){
+                System.out.println("The User you are trying to connect with is not connected" +
+                        "so we send the message to the intraUserNetworkService");
+                this.intraUserNertwokServiceManager.askIntraUserForAcceptance(identityPublicKey, identityAlias, Actors.INTRA_USER, intraUserToAddName,intraUserToAddPhrase, intraUserToAddPublicKey, Actors.INTRA_USER, profileImage);
+            }else{
+                this.intraUserNertwokServiceManager.acceptIntraUser(identityPublicKey, intraUserToAddPublicKey);
+                System.out.println("The user is connected");
+            }
+
         } catch (CantCreateIntraWalletUserException e) {
             throw new CantStartRequestException("", e, "", "");
         } catch (RequestAlreadySendException e) {

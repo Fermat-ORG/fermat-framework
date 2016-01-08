@@ -159,9 +159,12 @@ public class IntraWalletUserActorPluginRoot extends AbstractPlugin implements
 
                 throw new RequestAlreadySendException("CAN'T INSERT INTRA USER", null, "", "The request already sent to actor.");
 
-            } else {
-                this.intraWalletUserActorDao.createNewIntraWalletUser(intraUserLoggedInPublicKey, intraUserToAddName, intraUserToAddPublicKey, profileImage, ConnectionState.PENDING_REMOTELY_ACCEPTANCE,intraUserPhrase);
+            } else if (intraWalletUserActorDao.intraUserRequestExists(intraUserToAddPublicKey, ConnectionState.PENDING_LOCALLY_ACCEPTANCE)){
 
+                this.intraWalletUserActorDao.updateConnectionState(intraUserLoggedInPublicKey, intraUserToAddPublicKey, ConnectionState.CONNECTED);
+
+            }else{
+                this.intraWalletUserActorDao.createNewIntraWalletUser(intraUserLoggedInPublicKey, intraUserToAddName, intraUserToAddPublicKey, profileImage, ConnectionState.PENDING_REMOTELY_ACCEPTANCE,intraUserPhrase);
             }
         } catch (CantAddPendingIntraWalletUserException e) {
             throw new CantCreateIntraWalletUserException("CAN'T ADD NEW INTRA USER CONNECTION", e, "", "");
@@ -342,10 +345,16 @@ public class IntraWalletUserActorPluginRoot extends AbstractPlugin implements
 
                 //this.updateConnectionState(intraUserLoggedInPublicKey, intraUserToAddPublicKey, contactState);
 
-            } else {
-                this.intraWalletUserActorDao.createNewIntraWalletUser(intraUserLoggedInPublicKey, intraUserToAddName, intraUserToAddPublicKey, profileImage, ConnectionState.PENDING_LOCALLY_ACCEPTANCE,intraUserPhrase);
+            } else if (intraWalletUserActorDao.intraUserRequestExists(intraUserToAddPublicKey, ConnectionState.PENDING_REMOTELY_ACCEPTANCE)){
 
+                    this.intraWalletUserActorDao.updateConnectionState(intraUserLoggedInPublicKey, intraUserToAddPublicKey, ConnectionState.CONNECTED);
+
+                }else{
+                this.intraWalletUserActorDao.createNewIntraWalletUser(intraUserLoggedInPublicKey, intraUserToAddName, intraUserToAddPublicKey, profileImage, ConnectionState.PENDING_LOCALLY_ACCEPTANCE,intraUserPhrase);
             }
+
+
+
          } catch (CantAddPendingIntraWalletUserException e) {
             throw new CantCreateIntraWalletUserException("CAN'T ADD NEW INTRA USER REQUEST CONNECTION", e, "", "");
 
