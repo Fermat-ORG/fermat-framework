@@ -70,7 +70,7 @@ public class AssetIssuerWalletDao {
 
 
     /*
-     * getBookBalance must get actual Book Balance global of Asset Issuer wallet, select record from balances table
+     * getBalance must get actual Book Balance global of Asset Issuer wallet, select record from balances table
      */
     public long getBookBalance() throws CantCalculateBalanceException {
         try {
@@ -84,7 +84,7 @@ public class AssetIssuerWalletDao {
     }
 
     /*
-     * getBookBalance must get actual Book Balance global of Asset Issuer wallet, select record from balances table
+     * getBalance must get actual Book Balance global of Asset Issuer wallet, select record from balances table
      */
     public List<AssetIssuerWalletList> getBalanceByAssets() throws CantCalculateBalanceException {
         try {
@@ -98,7 +98,7 @@ public class AssetIssuerWalletDao {
     }
 
     /*
-    * getBookBalance must get actual Book Balance global of Asset Issuer wallet, select record from balances table
+    * getBalance must get actual Book Balance global of Asset Issuer wallet, select record from balances table
     */
     public long getAvailableBalance() throws CantCalculateBalanceException {
         try {
@@ -595,7 +595,9 @@ public class AssetIssuerWalletDao {
     public void assetRedeemed(String assetPublicKey, String userPublicKey, String redeemPointPublicKey) throws RecordsNotFoundException, CantGetAssetStatisticException {
         updateStringFieldByAssetPublicKey(AssetWalletIssuerDatabaseConstant.ASSET_STATISTIC_ASSET_CURRENT_STATUS_COLUMN_NAME, AssetCurrentStatus.ASSET_REDEEMED.getCode(), assetPublicKey);
         updateStringFieldByAssetPublicKey(AssetWalletIssuerDatabaseConstant.ASSET_STATISTIC_REDEEM_POINT_PUBLIC_KEY_COLUMN_NAME, redeemPointPublicKey, assetPublicKey);
-        updateStringFieldByAssetPublicKey(AssetWalletIssuerDatabaseConstant.ASSET_STATISTIC_ACTOR_USER_PUBLIC_KEY_COLUMN_NAME, userPublicKey, assetPublicKey);
+        if (userPublicKey != null) {
+            updateStringFieldByAssetPublicKey(AssetWalletIssuerDatabaseConstant.ASSET_STATISTIC_ACTOR_USER_PUBLIC_KEY_COLUMN_NAME, userPublicKey, assetPublicKey);
+        }
         updateLongFieldByAssetPublicKey(AssetWalletIssuerDatabaseConstant.ASSET_STATISTIC_ASSET_USAGE_DATE_COLUMN_NAME, System.currentTimeMillis(), assetPublicKey);
     }
 
