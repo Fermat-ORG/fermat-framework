@@ -68,9 +68,18 @@ public class SettingsActivityFragment extends AbstractFermatFragment {
         mylocationsBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                changeActivity(Activities.CBP_CRYPTO_BROKER_WALLET_SETTINGS_MY_LOCATIONS,appSession.getAppPublicKey());
+                changeActivity(Activities.CBP_CRYPTO_BROKER_WALLET_SETTINGS_MY_LOCATIONS, appSession.getAppPublicKey());
             }
         });
+
+        View bankButton = layout.findViewById(R.id.settings_bank_account);
+        bankButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                changeActivity(Activities.CBP_CRYPTO_BROKER_WALLET_SETTINGS_BANK_ACCOUNT, appSession.getAppPublicKey());
+            }
+        });
+
 
         return layout;
     }
