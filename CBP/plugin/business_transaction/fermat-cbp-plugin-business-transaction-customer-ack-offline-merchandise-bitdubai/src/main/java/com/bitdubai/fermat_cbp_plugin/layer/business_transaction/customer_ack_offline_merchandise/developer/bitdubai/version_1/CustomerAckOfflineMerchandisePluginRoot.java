@@ -30,6 +30,7 @@ import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogManager;
 import com.bitdubai.fermat_cbp_api.all_definition.exceptions.CantInitializeDatabaseException;
 import com.bitdubai.fermat_cbp_api.all_definition.exceptions.CantSetObjectException;
 import com.bitdubai.fermat_cbp_api.all_definition.exceptions.CantStartServiceException;
+import com.bitdubai.fermat_cbp_api.layer.business_transaction.common.mocks.CustomerBrokerContractPurchaseManagerMock;
 import com.bitdubai.fermat_cbp_api.layer.contract.customer_broker_purchase.interfaces.CustomerBrokerContractPurchaseManager;
 import com.bitdubai.fermat_cbp_api.layer.contract.customer_broker_sale.interfaces.CustomerBrokerContractSaleManager;
 import com.bitdubai.fermat_cbp_api.layer.negotiation.customer_broker_purchase.interfaces.CustomerBrokerPurchaseNegotiationManager;
@@ -243,12 +244,16 @@ public class CustomerAckOfflineMerchandisePluginRoot extends AbstractPlugin impl
             /**
              * Initialize plugin manager
              */
+        //TODO: the following line is for testing, please, comment it when finish with the testing process
+            customerBrokerContractPurchaseManager=new CustomerBrokerContractPurchaseManagerMock();
             this.customerAckOfflineMerchandiseTransactionManager = new CustomerAckOfflineMerchandiseTransactionManager(
                     customerAckOfflineMerchandiseBusinessTransactionDao,
                     customerBrokerContractPurchaseManager,
                     errorManager);
             this.serviceStatus = ServiceStatus.STARTED;
             //System.out.println("Customer Ack Offline Merchandise Starting");
+            //testing method
+            testAck();
         } catch (CantInitializeCustomerAckOfflineMerchandiseBusinessTransactionDatabaseException exception) {
             throw new CantStartPluginException(
                     FermatException.wrapException(exception),
@@ -294,17 +299,17 @@ public class CustomerAckOfflineMerchandisePluginRoot extends AbstractPlugin impl
 
     @Override
     public List<DeveloperDatabase> getDatabaseList(DeveloperObjectFactory developerObjectFactory) {
-        return null;
+        return customerAckOfflineMerchandiseBusinessTransactionDeveloperDatabaseFactory.getDatabaseList(developerObjectFactory);
     }
 
     @Override
     public List<DeveloperDatabaseTable> getDatabaseTableList(DeveloperObjectFactory developerObjectFactory, DeveloperDatabase developerDatabase) {
-        return null;
+        return customerAckOfflineMerchandiseBusinessTransactionDeveloperDatabaseFactory.getDatabaseTableList(developerObjectFactory);
     }
 
     @Override
     public List<DeveloperDatabaseTableRecord> getDatabaseTableContent(DeveloperObjectFactory developerObjectFactory, DeveloperDatabase developerDatabase, DeveloperDatabaseTable developerDatabaseTable) {
-        return null;
+        return customerAckOfflineMerchandiseBusinessTransactionDeveloperDatabaseFactory.getDatabaseTableContent(developerObjectFactory,developerDatabaseTable);
     }
 
     public static LogLevel getLogLevelByClass(String className) {
@@ -317,5 +322,12 @@ public class CustomerAckOfflineMerchandisePluginRoot extends AbstractPlugin impl
         }
     }
 
+    private void testAck(){
+        try{
+            this.customerAckOfflineMerchandiseTransactionManager.ackMerchandise("888052D7D718420BD197B647F3BB04128C9B71BC99DBB7BC60E78BDAC4DFC6E2");
+        } catch(Exception e){
+            System.out.println("Exception in Customer Ack Offline Merchandise");
+        }
+    }
 
 }

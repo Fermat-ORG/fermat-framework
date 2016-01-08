@@ -138,6 +138,12 @@ public class BrokerSubmitOfflineMerchandiseTransactionManager implements BrokerS
         return customerBrokerSaleNegotiation;
     }
 
+    /**
+     * This method gets the Merchandise type from Negotiation Clauses.
+     * @param customerBrokerSaleNegotiation
+     * @return
+     * @throws CantGetBrokerMerchandiseException
+     */
     private CurrencyType getMerchandiseType(
             CustomerBrokerSaleNegotiation customerBrokerSaleNegotiation) throws CantGetBrokerMerchandiseException {
         try{
@@ -169,7 +175,12 @@ public class BrokerSubmitOfflineMerchandiseTransactionManager implements BrokerS
             }
     }
 
-    //TODO: GET FIAT CURRENCY
+    /**
+     * This method gets the currency type from Negotiation Clauses.
+     * @param customerBrokerSaleNegotiation
+     * @return
+     * @throws CantGetBrokerMerchandiseException
+     */
     private FiatCurrency getFiatCurrency(
             CustomerBrokerSaleNegotiation customerBrokerSaleNegotiation) throws CantGetBrokerMerchandiseException {
         try{

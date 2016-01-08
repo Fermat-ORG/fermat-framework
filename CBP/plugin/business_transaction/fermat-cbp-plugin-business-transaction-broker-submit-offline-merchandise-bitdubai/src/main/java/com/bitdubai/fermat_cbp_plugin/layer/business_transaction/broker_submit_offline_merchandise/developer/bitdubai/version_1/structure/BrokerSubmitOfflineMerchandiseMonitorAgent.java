@@ -296,19 +296,16 @@ public class BrokerSubmitOfflineMerchandiseMonitorAgent implements
                             break;
                     }
                 }
-
-                //TODO: finish this
-
                 /**
-                 * Check contract status to send.
+                 * Check contract status to send. Broker Side
                  */
                 List<BusinessTransactionRecord> pendingToSubmitNotificationList=
                         brokerSubmitOfflineMerchandiseBusinessTransactionDao.getPendingToSubmitNotificationList();
                 for(BusinessTransactionRecord pendingToSubmitNotificationRecord : pendingToSubmitNotificationList){
                     contractHash=pendingToSubmitNotificationRecord.getTransactionHash();
                     transactionTransmissionManager.sendContractStatusNotificationToCryptoBroker(
-                            pendingToSubmitNotificationRecord.getCustomerPublicKey(),
                             pendingToSubmitNotificationRecord.getBrokerPublicKey(),
+                            pendingToSubmitNotificationRecord.getCustomerPublicKey(),
                             contractHash,
                             pendingToSubmitNotificationRecord.getTransactionId(),
                             ContractTransactionStatus.OFFLINE_PAYMENT_SUBMITTED
