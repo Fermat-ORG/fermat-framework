@@ -4,19 +4,33 @@ import java.util.List;
 import java.sql.Date;
 /**
  * Created by miguel payarez (miguel_payarez@hotmail.com)  on 29/12/15.
+ * Update by Manuel Perez on 08/01/2016 (fix naming conventions)
  */
 public interface ContactManager {
 
-    List<Object> ContactDetail(Integer Id_Contact, String Remote_Name,String Alias,
-                                String Remote_Actor_Type, String Remote_Actor_Pub_key,
-                                Date Creation_Date);
+    //Todo: create a contact record or contact wrapper to clean this method
+    //Please, check the observations on ChatManager
+    List<Object> contactDetail(
+            Integer contactId,
+            String remoteName,
+            String alias,
+            String remoteActorType,
+            String remoteActorPublicKey,
+            Date creationDate
+    );
 
-    void ContactEdit(Integer Id_Contact, String Remote_Name,
-                      String Remote_Actor_Type, String Remote_Actor_Pub_key);
+    void contactEdit(
+            Integer contactId,
+            String remoteName,
+            String remoteActorType,
+            String remoteActorPublicKey);
 
 
-    void DeleteContact(Integer Id_Contact, String Remote_Name,
-                        String Remote_Actor_Type, String Remote_Actor_Pub_key);
+    void deleteContact(
+            Integer contactId,
+            String remoteName,
+            String remoteActorType,
+            String remoteActorPublicKey);
 
 
 

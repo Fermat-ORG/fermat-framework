@@ -5,19 +5,42 @@ import java.util.List;
 
 /**
  * Created by miguel payarez (miguel_payarez@hotmail.com) on 29/12/15.
+ * Update by Manuel Perez on 08/01/2016 (fix naming conventions)
  */
 public interface ChatManager {
-    void NewChat (Integer Id_Chat,Integer Id_Objeto,String Local_Actor_Type,
-                  String Local_Actor_Pub_key,String Remote_Actor_Type,
-                  String Remote_Actor_Pub_key, String Chat_Name,boolean Status,
-                  Date Date, Date Last_Message_Date);
 
-    List<Object> ChatList(Integer Id_Chat,Integer Id_Objeto);
+    //Todo: create a chat record or chat wrapper to clean this method, please, use english to name objects.
+    void newChat (
+            Integer chatId, //Why this id is an integer? you can use UUID
+            Integer objectId, //This must be a String, this field can be an UUID or publicKey
+            String localActorType,
+            String localActorPublicKey,
+            String remoteActorType,
+            String remoteActorPublicKey,
+            String chatName,
+            boolean status, //Why this argument is a boolean?
+            Date date,
+            Date lastMessageDate
+    );
 
-    List<Object> ChatDetails(Integer Id_Chat,Integer Id_Objeto);
+    List<Object> chatList(
+            Integer chatId, //Why this id is an integer? you can use UUID
+            Integer objectId //This must be a String, this field can be an UUID or publicKey
+    );
 
-    List<Object> SendMessage(Integer Id_Message,Integer Id_Chat,String Message,
-                         Integer Status,Boolean Type,Date Message_Date);
+    List<Object> chatDetails(
+            Integer chatId, //Why this id is an integer? you can use UUID
+            Integer objectId //This must be a String, this field can be an UUID or publicKey
+                              );
+
+    List<Object> sendMessage(
+            Integer messageId, //Why this id is an integer? you can use UUID
+            Integer chatId, //Why this id is an integer? you can use UUID
+            String message,
+            Integer status, //Why this argument is an integer?
+            Boolean type,
+            Date messageDate
+    );
 
 
 }
