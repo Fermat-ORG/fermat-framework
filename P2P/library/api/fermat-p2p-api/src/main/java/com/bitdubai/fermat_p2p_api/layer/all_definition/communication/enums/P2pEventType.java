@@ -9,6 +9,7 @@ import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEven
 import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterException;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.events.ClientConnectionCloseNotificationEvent;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.events.ClientConnectionLooseNotificationEvent;
+import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.events.ClientSuccessReconnectNotificationEvent;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.events.CompleteClientComponentRegistrationNotificationEvent;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.events.CompleteComponentConnectionRequestNotificationEvent;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.events.CompleteComponentRegistrationNotificationEvent;
@@ -22,6 +23,7 @@ import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.events.New
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.events.NewNetworkServiceMessageSentNotificationEvent;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.events.VPNConnectionCloseNotificationEvent;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.events.VPNConnectionLooseNotificationEvent;
+import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.events.VpnSuccessReconnectNotificationEvent;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.listeners.CompleteClientComponentRegistrationNotificationEventListener;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.listeners.CompleteComponentConnectionRequestNotificationEventListener;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.listeners.CompleteComponentRegistrationNotificationEventListener;
@@ -140,6 +142,12 @@ public enum P2pEventType implements FermatEventEnum {
         }
     },
 
+    CLIENT_SUCCESS_RECONNECT("CSC"){
+        public FermatEvent getNewEvent() {
+            return new ClientSuccessReconnectNotificationEvent(this);
+        }
+    },
+
     VPN_CONNECTION_CLOSE("VCC"){
         public FermatEvent getNewEvent() {
             return new VPNConnectionCloseNotificationEvent(this);
@@ -150,7 +158,14 @@ public enum P2pEventType implements FermatEventEnum {
         public FermatEvent getNewEvent() {
             return new VPNConnectionLooseNotificationEvent(this);
         }
+    },
+
+    VPN_SUCCESS_RECONNECT("VSR"){
+        public FermatEvent getNewEvent() {
+            return new VpnSuccessReconnectNotificationEvent(this);
+        }
     }
+
     ;
 
     /**
