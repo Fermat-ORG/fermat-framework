@@ -85,6 +85,7 @@ import com.bitdubai.fermat_ccp_plugin.layer.network_service.intra_user.developer
 import com.bitdubai.fermat_ccp_plugin.layer.network_service.intra_user.developer.bitdubai.version_1.event_handlers.communication.CompleteComponentConnectionRequestNotificationEventHandler;
 import com.bitdubai.fermat_ccp_plugin.layer.network_service.intra_user.developer.bitdubai.version_1.event_handlers.communication.CompleteComponentRegistrationNotificationEventHandler;
 import com.bitdubai.fermat_ccp_plugin.layer.network_service.intra_user.developer.bitdubai.version_1.event_handlers.communication.CompleteRequestListComponentRegisteredNotificationEventHandler;
+import com.bitdubai.fermat_ccp_plugin.layer.network_service.intra_user.developer.bitdubai.version_1.event_handlers.communication.CompleteUpdateActorNotificationEventHandler;
 import com.bitdubai.fermat_ccp_plugin.layer.network_service.intra_user.developer.bitdubai.version_1.event_handlers.communication.FailureComponentConnectionRequestNotificationEventHandler;
 import com.bitdubai.fermat_ccp_plugin.layer.network_service.intra_user.developer.bitdubai.version_1.event_handlers.communication.NewReceiveMessagesNotificationEventHandler;
 import com.bitdubai.fermat_ccp_plugin.layer.network_service.intra_user.developer.bitdubai.version_1.event_handlers.communication.NewSentMessageNotificationEventHandler;
@@ -440,6 +441,16 @@ public class IntraActorNetworkServicePluginRoot extends AbstractPlugin implement
          */
         fermatEventListener = eventManager.getNewListener(P2pEventType.CLIENT_SUCCESS_RECONNECT);
         fermatEventListener.setEventHandler(new ClientSuccessfullReconnectNotificationEventHandler(this));
+        eventManager.addListener(fermatEventListener);
+        listenersAdded.add(fermatEventListener);
+
+
+
+         /*
+         * Listen and handle Complete Update Actor Profile Notification Event
+         */
+        fermatEventListener = eventManager.getNewListener(P2pEventType.COMPLETE_UPDATE_ACTOR_NOTIFICATION);
+        fermatEventListener.setEventHandler(new CompleteUpdateActorNotificationEventHandler(this));
         eventManager.addListener(fermatEventListener);
         listenersAdded.add(fermatEventListener);
 
@@ -1284,6 +1295,13 @@ public class IntraActorNetworkServicePluginRoot extends AbstractPlugin implement
 
         if(communicationNetworkServiceConnectionManager != null)
             communicationNetworkServiceConnectionManager.restart();
+
+    }
+
+    public void handleCompleteUpdateActorNotificationEvent(PlatformComponentProfile platformComponentProfile){
+        /*
+         * Recieve Notification that Actor was update sucessfully
+         */
 
     }
 
