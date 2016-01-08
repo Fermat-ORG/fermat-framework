@@ -1359,20 +1359,11 @@ public class CryptoTransmissionNetworkServicePluginRoot extends AbstractNetworkS
     {
         try {
 
-            Map<String, Object> filters = new HashMap<>();
-            filters.put(CryptoTransmissionNetworkServiceDatabaseConstants.CRYPTO_TRANSMISSION_METADATA_STATUS_COLUMN_NAME, CryptoTransmissionStates.WAITING_RESPONSE.getCode());
-                    /*
-         * Read all pending CryptoTransmissionMetadata from database
+         /*
+         * Read all pending CryptoTransmissionMetadata message from database
          */
-            List<CryptoTransmissionMetadata> lstCryptoTransmissionMetadata = cryptoTransmissionMetadataDAO.findAll(filters);
+            List<CryptoTransmissionMetadata> lstCryptoTransmissionMetadata = cryptoTransmissionMetadataDAO.getNotSentRecord();
 
-            for(CryptoTransmissionMetadata record : lstCryptoTransmissionMetadata) {
-
-                cryptoTransmissionMetadataDAO.changeState(record.getTransactionId(), CryptoTransmissionStates.PRE_PROCESSING_SEND);
-            }
-
-            //not sent message -
-            lstCryptoTransmissionMetadata = cryptoTransmissionMetadataDAO.getNotSentRecord();
 
             for(CryptoTransmissionMetadata record : lstCryptoTransmissionMetadata) {
 
@@ -1381,7 +1372,10 @@ public class CryptoTransmissionNetworkServicePluginRoot extends AbstractNetworkS
             }
 
 
-        } catch (CantUpdateRecordDataBaseException | CantReadRecordDataBaseException e) {
+        } catch (CantUpdateRecordDataBaseException  e) {
+            System.out.print("CRYPTO TRANSMISSION EXCEPCION REPROCESANDO WAIT MESSAGE");
+            e.printStackTrace();
+        } catch (Exception  e) {
             System.out.print("CRYPTO TRANSMISSION EXCEPCION REPROCESANDO WAIT MESSAGE");
             e.printStackTrace();
         }
