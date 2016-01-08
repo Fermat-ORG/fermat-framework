@@ -61,6 +61,8 @@ import com.bitdubai.fermat_wpd_api.layer.wpd_network_service.wallet_store.interf
 import com.bitdubai.fermat_wpd_plugin.layer.network_service.wallet_resources.developer.bitdubai.version_1.database.NetworkServicesWalletResourcesDAO;
 import com.bitdubai.fermat_wpd_plugin.layer.network_service.wallet_resources.developer.bitdubai.version_1.database.NetworkserviceswalletresourcesDatabaseConstants;
 import com.bitdubai.fermat_wpd_plugin.layer.network_service.wallet_resources.developer.bitdubai.version_1.event_handlers.BegunWalletInstallationEventHandler;
+import com.bitdubai.fermat_wpd_plugin.layer.network_service.wallet_resources.developer.bitdubai.version_1.event_handlers.ClientConnectionLooseNotificationEventHandler;
+import com.bitdubai.fermat_wpd_plugin.layer.network_service.wallet_resources.developer.bitdubai.version_1.event_handlers.ClientSuccessfullReconnectNotificationEventHandler;
 import com.bitdubai.fermat_wpd_plugin.layer.network_service.wallet_resources.developer.bitdubai.version_1.exceptions.CantDeleteLayouts;
 import com.bitdubai.fermat_wpd_plugin.layer.network_service.wallet_resources.developer.bitdubai.version_1.exceptions.CantDeleteRepositoryException;
 import com.bitdubai.fermat_wpd_plugin.layer.network_service.wallet_resources.developer.bitdubai.version_1.exceptions.CantDeleteResource;
@@ -221,6 +223,23 @@ public class WalletResourcesNetworkServicePluginRoot extends AbstractPlugin impl
             //  fermatEventListener.setEventHandler(new ClientConnectionCloseNotificationEventHandler(this));
             //  eventManager.addListener(fermatEventListener);
             //  listenersAdded.add(fermatEventListener);
+
+              /*
+         * Listen and handle Client Connection Loose Notification Event
+         */
+//            fermatEventListener = eventManager.getNewListener(P2pEventType.CLIENT_CONNECTION_LOOSE);
+//            fermatEventListener.setEventHandler(new ClientConnectionLooseNotificationEventHandler(this));
+//            eventManager.addListener(fermatEventListener);
+//            listenersAdded.add(fermatEventListener);
+
+
+        /*
+         * Listen and handle Client Connection Success Reconnect Notification Event
+         */
+//            fermatEventListener = eventManager.getNewListener(P2pEventType.CLIENT_SUCCESS_RECONNECT);
+//            fermatEventListener.setEventHandler(new ClientSuccessfullReconnectNotificationEventHandler(this));
+//            eventManager.addListener(fermatEventListener);
+//            listenersAdded.add(fermatEventListener);
 
             /**
              *  Create repository in database
