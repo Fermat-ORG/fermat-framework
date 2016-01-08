@@ -9,20 +9,26 @@ import android.view.View;
 import android.view.Window;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.Toast;
 
+import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatButton;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView;
 import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.enums.FiatCurrency;
 import com.bitdubai.fermat_api.layer.all_definition.enums.UISource;
+import com.bitdubai.fermat_api.layer.all_definition.settings.exceptions.CantGetSettingsException;
+import com.bitdubai.fermat_api.layer.all_definition.settings.exceptions.SettingsNotFoundException;
+import com.bitdubai.fermat_api.layer.all_definition.settings.structure.SettingsManager;
 import com.bitdubai.fermat_csh_api.all_definition.enums.TransactionType;
 import com.bitdubai.fermat_csh_api.all_definition.exceptions.CashMoneyWalletInsufficientFundsException;
 import com.bitdubai.fermat_csh_api.layer.csh_cash_money_transaction.deposit.exceptions.CantCreateDepositTransactionException;
 import com.bitdubai.fermat_csh_api.layer.csh_cash_money_transaction.deposit.interfaces.CashDepositTransactionParameters;
 import com.bitdubai.fermat_csh_api.layer.csh_cash_money_transaction.withdrawal.exceptions.CantCreateWithdrawalTransactionException;
 import com.bitdubai.fermat_csh_api.layer.csh_cash_money_transaction.withdrawal.interfaces.CashWithdrawalTransactionParameters;
+import com.bitdubai.fermat_csh_api.layer.csh_wallet_module.CashMoneyWalletPreferenceSettings;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedUIExceptionSeverity;
 import com.bitdubai.fermat_wpd_api.layer.wpd_network_service.wallet_resources.interfaces.WalletResourcesProviderManager;
 import com.bitdubai.reference_wallet.cash_money_wallet.R;
@@ -48,25 +54,27 @@ public class HomeTutorialFragmentDialog extends Dialog implements
      * Resources
      */
     private WalletResourcesProviderManager walletResourcesProviderManager;
-    private CashMoneyWalletSession cashMoneyWalletSession;
+    private CashMoneyWalletSession walletSession;
+    private SettingsManager<CashMoneyWalletPreferenceSettings> settingsManager;
     private Resources resources;
+
+    /**
+     * Data
+     */
+    boolean isHomeTutorialDialogEnabled = true;
 
     /**
      *  UI components
      */
-    FermatTextView dialogTitle;
-    LinearLayout dialogTitleLayout;
-    EditText amountText;
-    AutoCompleteTextView memoText;
-    Button applyBtn;
-    Button cancelBtn;
-
+    CheckBox dontShowCheckbox;
+    FermatButton dismissButton;
 
     public HomeTutorialFragmentDialog(Activity a, CashMoneyWalletSession cashMoneyWalletSession, Resources resources) {
         super(a);
         // TODO Auto-generated constructor stub
         this.activity = a;
-        this.cashMoneyWalletSession = cashMoneyWalletSession;
+        this.walletSession = cashMoneyWalletSession;
+        this.settingsManager = cashMoneyWalletSession.getModuleManager().getSettingsManager();
         this.resources = resources;
     }
 
@@ -82,25 +90,21 @@ public class HomeTutorialFragmentDialog extends Dialog implements
 
         try {
             requestWindowFeature(Window.FEATURE_NO_TITLE);
-            setContentView(R.layout.csh_create_transaction_dialog);
+            setContentView(R.layout.csh_tutorial_home_dialog);
 
+            dontShowCheckbox = (CheckBox) findViewById(R.id.csh_dont_show_again_checkbox);
+            dismissButton = (FermatButton) findViewById(R.id.csh_dismiss_button);
 
-            dialogTitleLayout = (LinearLayout) findViewById(R.id.csh_ctd_title_layout);
-            dialogTitle = (FermatTextView) findViewById(R.id.csh_ctd_title);
-            //dialogTitleImg = (FermatTextView) findViewById(R.id.csh_ctd_title_img);
-            amountText = (EditText) findViewById(R.id.csh_ctd_amount);
-            memoText = (AutoCompleteTextView) findViewById(R.id.csh_ctd_memo);
-            applyBtn = (Button) findViewById(R.id.csh_ctd_apply_transaction_btn);
-            cancelBtn = (Button) findViewById(R.id.csh_ctd_cancel_transaction_btn);
-
-            amountText.setFilters(new InputFilter[]{new NumberInputFilter(9, 2)});
-
-            cancelBtn.setOnClickListener(this);
-            applyBtn.setOnClickListener(this);
+            dismissButton.setOnClickListener(this);
 
         }catch (Exception e){
             e.printStackTrace();
         }
+
+        /*boolean showHomeTutorial = false;
+        try{
+            showHomeTutorial = settingsManager.loadAndGetSettings(walletSession.getAppPublicKey()).isHomeTutorialDialogEnabled();
+        } catch (CantGetSettingsException | SettingsNotFoundException e){}*/
 
     }
 
@@ -110,9 +114,12 @@ public class HomeTutorialFragmentDialog extends Dialog implements
     @Override
     public void onClick(View v) {
         int i = v.getId();
-        if (i == R.id.csh_ctd_cancel_transaction_btn) {
+        if (i == R.id.csh_dont_show_again_checkbox) {
+            /*isHomeTutorialDialogEnabled = !isHomeTutorialDialogEnabled;
+            settingsManager.loadAndGetSettings()*/
+
+        }else if( i == R.id.csh_dismiss_button){
             dismiss();
-        }else if( i == R.id.csh_ctd_apply_transaction_btn){
 
         }
     }

@@ -143,7 +143,7 @@ implements FermatListItemListeners<CashMoneyWalletTransaction>, DialogInterface.
             showHomeTutorial = settingsManager.loadAndGetSettings(walletSession.getAppPublicKey()).isHomeTutorialDialogEnabled();
         } catch (CantGetSettingsException | SettingsNotFoundException  e){}
 
-        if(showHomeTutorial)
+        //if(showHomeTutorial)
             lauchHomeTutorialDialog();
 
 

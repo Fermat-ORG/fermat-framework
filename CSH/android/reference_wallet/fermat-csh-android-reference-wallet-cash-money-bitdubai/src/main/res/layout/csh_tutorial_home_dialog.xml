@@ -94,7 +94,7 @@
                 android:textSize="14sp"
                 android:paddingBottom="5dp"
                 android:paddingTop="7sp"
-                android:text="This wallet is meant help you manage your cash. With it you can:"
+                android:text="This wallet is meant to help you manage your cash.\nWith it you can:"
                 android:gravity="center_horizontal"
                 android:layout_gravity="center_horizontal"
                 android:paddingLeft="20dp"
@@ -154,7 +154,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_alignParentEnd="true"
-                    android:id="@+id/checkbox_not_show"
+                    android:id="@+id/csh_dont_show_again_checkbox"
                     android:buttonTint="@color/black_overlay"
                     />
                 <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
@@ -180,7 +180,7 @@
             <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatButton
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:id="@+id/btn_dismiss"
+                android:id="@+id/csh_dismiss_button"
                 android:text="Close"
                 android:layout_centerHorizontal="true"
                 android:layout_gravity="center_horizontal"
