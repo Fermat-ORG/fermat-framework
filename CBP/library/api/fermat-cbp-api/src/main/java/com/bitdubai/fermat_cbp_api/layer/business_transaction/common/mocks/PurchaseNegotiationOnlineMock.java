@@ -13,10 +13,9 @@ import java.util.Collection;
 import java.util.UUID;
 
 /**
- * This object is only for testing
- * Created by Manuel Perez (darkpriestrelative@gmail.com) on 28/12/15.
+ * Created by Manuel Perez (darkpriestrelative@gmail.com) on 08/01/16.
  */
-public class PurchaseNegotiationMock implements CustomerBrokerPurchaseNegotiation {
+public class PurchaseNegotiationOnlineMock implements CustomerBrokerPurchaseNegotiation {
     @Override
     public String getCustomerPublicKey() {
         return "CustomerPublicKey";
@@ -66,9 +65,6 @@ public class PurchaseNegotiationMock implements CustomerBrokerPurchaseNegotiatio
     public Collection<Clause> getClauses() throws CantGetListClauseException {
         Collection<Clause> clauses = new ArrayList<>();
         clauses.add(new ClauseMock(UUID.randomUUID(),
-                ClauseType.BROKER_CURRENCY,
-                CurrencyType.BANK_MONEY.getCode()));
-        clauses.add(new ClauseMock(UUID.randomUUID(),
                 ClauseType.BROKER_CURRENCY_QUANTITY,
                 "1961"));
         clauses.add(new ClauseMock(UUID.randomUUID(),
@@ -82,13 +78,16 @@ public class PurchaseNegotiationMock implements CustomerBrokerPurchaseNegotiatio
                 "2000"));
         clauses.add(new ClauseMock(UUID.randomUUID(),
                 ClauseType.CUSTOMER_CURRENCY,
-                CurrencyType.CASH_ON_HAND_MONEY.getCode()));
+                CurrencyType.CRYPTO_MONEY.getCode()));
         clauses.add(new ClauseMock(UUID.randomUUID(),
                 ClauseType.CUSTOMER_DATE_TIME_TO_DELIVER,
                 "100"));
         clauses.add(new ClauseMock(UUID.randomUUID(),
                 ClauseType.CUSTOMER_PAYMENT_METHOD,
-                ContractClauseType.CASH_ON_HAND.getCode()));
+                ContractClauseType.CRYPTO_TRANSFER.getCode()));
+        clauses.add(new ClauseMock(UUID.randomUUID(),
+                ClauseType.BROKER_CRYPTO_ADDRESS,
+                "mxJJSdXdKQLS4NeX6Y8tXFFoNASQnBShtv"));
         clauses.add(new ClauseMock(UUID.randomUUID(),
                 ClauseType.BROKER_PAYMENT_METHOD,
                 ContractClauseType.BANK_TRANSFER.getCode()));
@@ -107,7 +106,7 @@ public class PurchaseNegotiationMock implements CustomerBrokerPurchaseNegotiatio
 
     @Override
     public void setMemo(String memo) {
-
+        //Not implemented in this mock
     }
 
     @Override
@@ -115,3 +114,4 @@ public class PurchaseNegotiationMock implements CustomerBrokerPurchaseNegotiatio
         return "Mock memo";
     }
 }
+
