@@ -7,6 +7,7 @@ import com.bitdubai.fermat_api.CantStartAgentException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
 import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.BitcoinNetworkSelector;
 import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.exceptions.CantBroadcastTransactionException;
+import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.exceptions.CantCancellBroadcastTransactionException;
 import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.exceptions.CantGetCryptoTransactionException;
 import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.exceptions.CantStoreBitcoinTransactionException;
 import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.exceptions.ErrorBroadcastingTransactionException;
@@ -546,5 +547,26 @@ public class BitcoinCryptoNetworkMonitor implements Agent {
         if (bitcoinCryptoNetworkDatabaseDao == null)
             bitcoinCryptoNetworkDatabaseDao = new BitcoinCryptoNetworkDatabaseDao(this.pluginId, this.pluginDatabaseSystem);
         return bitcoinCryptoNetworkDatabaseDao;
+    }
+
+    /**
+     * invalidates the passed transaction by clearing inputs and outputs.
+     * @param txHash
+     */
+    public void cancelBroadcast(String txHash) throws CantCancellBroadcastTransactionException{
+        Sha256Hash sha256Hash = Sha256Hash.wrap(txHash);
+        Transaction transaction = wallet.getTransaction(sha256Hash);
+
+        if (transaction == null)
+            throw new CantCancellBroadcastTransactionException(CantCancellBroadcastTransactionException.DEFAULT_MESSAGE, null, "the specified transaction does not exists.", null);
+
+        transaction.clearInputs();
+        transaction.clearOutputs();
+
+        try {
+            wallet.saveToFile(walletFileName);
+        } catch (IOException e) {
+            throw new CantCancellBroadcastTransactionException(CantCancellBroadcastTransactionException.DEFAULT_MESSAGE, e, "Change in transaction could not be saved in wallet.", null);
+        }
     }
 }
