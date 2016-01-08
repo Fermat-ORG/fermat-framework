@@ -53,11 +53,11 @@ public class TransactionViewHolder extends ChildViewHolder {
     public void bind(CryptoWalletTransaction cryptoWalletTransaction) {
 
         if (cryptoWalletTransaction.getActorFromPublicKey() == null){
-            container_sub_item.getLayoutParams().height=50;
+            container_sub_item.getLayoutParams().height=120;
             txt_amount.setText(formatBalanceString(cryptoWalletTransaction.getAmount(), ShowMoneyType.BITCOIN.getCode()) + " BTC");
-            txt_amount.setGravity(Gravity.CENTER_HORIZONTAL);
             txt_amount.getLayoutParams().height = ViewGroup.LayoutParams.MATCH_PARENT;
             txt_amount.getLayoutParams().width = ViewGroup.LayoutParams.MATCH_PARENT;
+            txt_amount.setGravity(Gravity.CENTER);
             txt_notes.setVisibility(View.GONE);
             txt_time.setVisibility(View.GONE);
         }else {
