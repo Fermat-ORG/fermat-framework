@@ -122,7 +122,7 @@ public class ProviderLaNacionPluginRoot extends AbstractPlugin implements Databa
     @Override
     public boolean isCurrencyPairSupported(CurrencyPair currencyPair) throws IllegalArgumentException {
         for (CurrencyPair cp : supportedCurrencyPairs) {
-            if (currencyPair.equals(cp))
+            if (cp.equals(currencyPair))
                 return true;
         }
         return false;
