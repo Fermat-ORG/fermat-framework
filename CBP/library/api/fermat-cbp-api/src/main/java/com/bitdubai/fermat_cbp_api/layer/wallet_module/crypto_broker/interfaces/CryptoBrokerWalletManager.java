@@ -354,11 +354,11 @@ public interface CryptoBrokerWalletManager extends WalletManager {
     ExchangeRate getExchangeRateFromDate(Currency currencyFrom, Currency currencyTo, long timestamp, UUID providerId) throws UnsupportedCurrencyPairException, CantGetExchangeRateException, CantGetProviderException;
 
     /**
-     * Given a TimeUnit (Days,weeks,months) and a currencyPair, returns a list of max ExchangeRates, starting from the given offset
+     * Given a start and end timestamp and a currencyPair, returns a list of DAILY ExchangeRates
      *
      * @return a list of exchangeRate objects
      */
-    Collection<ExchangeRate> getExchangeRatesFromPeriod(Currency currencyFrom, Currency currencyTo, TimeUnit timeUnit, int max, int offset, UUID providerId) throws UnsupportedCurrencyPairException, CantGetExchangeRateException, CantGetProviderException;
+    Collection<ExchangeRate> getDailyExchangeRatesForPeriod(Currency currencyFrom, Currency currencyTo, long startTimestamp, long endTimestamp, UUID providerId) throws UnsupportedCurrencyPairException, CantGetExchangeRateException, CantGetProviderException;
 
     /**
      * This method load the list CryptoBrokerStockTransaction
