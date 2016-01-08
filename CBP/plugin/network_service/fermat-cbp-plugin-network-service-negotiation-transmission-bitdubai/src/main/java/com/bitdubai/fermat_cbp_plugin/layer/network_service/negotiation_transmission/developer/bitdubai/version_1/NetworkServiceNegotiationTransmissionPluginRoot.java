@@ -656,7 +656,6 @@ public class NetworkServiceNegotiationTransmissionPluginRoot extends AbstractNet
     public void handleClientConnectionCloseNotificationEvent(FermatEvent fermatEvent) {
 
         if(fermatEvent instanceof ClientConnectionCloseNotificationEvent){
-            System.out.println("-----------------------\n *( *( *( *( *( *( *( *( *(  SE CAYO LA CONEXION *( *( *( *( *( *( *( *( *( *( \n-----------------------\n");
             this.register = false;
             communicationNetworkServiceConnectionManager.closeAllConnection();
         }

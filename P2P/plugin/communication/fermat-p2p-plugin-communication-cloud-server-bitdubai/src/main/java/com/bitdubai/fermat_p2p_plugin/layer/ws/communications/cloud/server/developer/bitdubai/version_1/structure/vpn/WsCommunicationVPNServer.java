@@ -30,7 +30,6 @@ import org.java_websocket.framing.FramedataImpl1;
 import org.java_websocket.handshake.ClientHandshake;
 import org.java_websocket.server.WebSocketServer;
 
-
 import java.net.InetSocketAddress;
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -530,6 +529,7 @@ public class WsCommunicationVPNServer extends WebSocketServer{
         closeAllConnections(ex);
 
     }
+
 
     public void closeAllConnections(Exception ex){
 

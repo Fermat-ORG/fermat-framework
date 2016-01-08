@@ -9,6 +9,7 @@ package com.bitdubai.fermat_p2p_plugin.layer.ws.communications.cloud.client.deve
 import com.bitdubai.fermat_api.layer.all_definition.components.enums.PlatformComponentType;
 import com.bitdubai.fermat_api.layer.all_definition.components.interfaces.DiscoveryQueryParameters;
 import com.bitdubai.fermat_api.layer.all_definition.components.interfaces.PlatformComponentProfile;
+import com.bitdubai.fermat_api.layer.all_definition.crypto.asymmetric.ECCKeyPair;
 import com.bitdubai.fermat_api.layer.all_definition.network_service.enums.NetworkServiceType;
 import com.bitdubai.fermat_api.layer.osa_android.location_system.Location;
 import com.bitdubai.fermat_api.layer.osa_android.location_system.LocationManager;
@@ -28,6 +29,7 @@ import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.exceptions.Ca
 import com.bitdubai.fermat_p2p_plugin.layer.ws.communications.cloud.client.developer.bitdubai.version_1.WsCommunicationsCloudClientPluginRoot;
 import com.bitdubai.fermat_p2p_plugin.layer.ws.communications.cloud.client.developer.bitdubai.version_1.structure.agents.WsCommunicationsCloudClientAgent;
 import com.bitdubai.fermat_p2p_plugin.layer.ws.communications.cloud.client.developer.bitdubai.version_1.structure.agents.WsCommunicationsCloudClientPingAgent;
+import com.bitdubai.fermat_p2p_plugin.layer.ws.communications.cloud.client.developer.bitdubai.version_1.structure.processors.ClientSuccessfullyReconnectPacketProcessor;
 import com.bitdubai.fermat_p2p_plugin.layer.ws.communications.cloud.client.developer.bitdubai.version_1.structure.processors.CompleteComponentConnectionRequestPacketProcessor;
 import com.bitdubai.fermat_p2p_plugin.layer.ws.communications.cloud.client.developer.bitdubai.version_1.structure.processors.CompleteRegistrationComponentPacketProcessor;
 import com.bitdubai.fermat_p2p_plugin.layer.ws.communications.cloud.client.developer.bitdubai.version_1.structure.processors.CompleteUpdateActorPacketProcessor;
@@ -47,11 +49,9 @@ import com.google.gson.JsonParser;
 import com.google.gson.reflect.TypeToken;
 
 import org.java_websocket.drafts.Draft_10;
-import org.java_websocket.drafts.Draft_17;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.StringHttpMessageConverter;
 import org.springframework.web.client.RestTemplate;
@@ -112,9 +112,9 @@ public class WsCommunicationsCloudClientConnection implements CommunicationsClie
      * @param uri
      * @param eventManager
      */
-    public WsCommunicationsCloudClientConnection(URI uri, EventManager eventManager, LocationManager locationManager) {
+    public WsCommunicationsCloudClientConnection(URI uri, EventManager eventManager, LocationManager locationManager, ECCKeyPair clientIdentity) {
         super();
-        this.wsCommunicationsCloudClientChannel   = WsCommunicationsCloudClientChannel.constructWsCommunicationsCloudClientFactory(uri, new Draft_10(), this, eventManager);
+        this.wsCommunicationsCloudClientChannel   = WsCommunicationsCloudClientChannel.constructWsCommunicationsCloudClientFactory(uri, new Draft_10(), this, eventManager, clientIdentity);
         this.wsCommunicationsCloudClientAgent     = new WsCommunicationsCloudClientAgent(wsCommunicationsCloudClientChannel);
         this.wsCommunicationsCloudClientPingAgent = new WsCommunicationsCloudClientPingAgent(wsCommunicationsCloudClientChannel);
         this.wsCommunicationVPNClientManagerAgent = new WsCommunicationVPNClientManagerAgent();
@@ -144,6 +144,9 @@ public class WsCommunicationsCloudClientConnection implements CommunicationsClie
         wsCommunicationsCloudClientChannel.registerFermatPacketProcessor(new FailureRequestedListNoAvailblePacketProcessor());
         wsCommunicationsCloudClientChannel.registerFermatPacketProcessor(new CompleteUpdateActorPacketProcessor());
         wsCommunicationsCloudClientChannel.registerFermatPacketProcessor(new FailureUpdateActorPacketProcessor());
+        wsCommunicationsCloudClientChannel.registerFermatPacketProcessor(new ClientSuccessfullyReconnectPacketProcessor());
+
+
 
     }
 
@@ -160,10 +163,8 @@ public class WsCommunicationsCloudClientConnection implements CommunicationsClie
         /*
          * Start the agent to try the connect
          */
-        wsCommunicationsCloudClientAgent.start();
-
-
-        //wsCommunicationsCloudClientPingAgent.start();
+        wsCommunicationsCloudClientChannel.connect();
+        wsCommunicationsCloudClientPingAgent.start();
 
     }
 
@@ -795,8 +796,6 @@ public class WsCommunicationsCloudClientConnection implements CommunicationsClie
             String respond = responseEntity.getBody();
             System.out.println("responseEntity = " + respond);
 
-
-
             /*
              * if respond have the result list
              */
@@ -837,6 +836,13 @@ public class WsCommunicationsCloudClientConnection implements CommunicationsClie
 
         }
 
+    }
+
+    /**
+     * Stop the ping agent
+     */
+    protected void stopWsCommunicationsCloudClientPingAgent(){
+        wsCommunicationsCloudClientPingAgent.interrupt();
     }
 
 }

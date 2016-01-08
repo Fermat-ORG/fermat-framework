@@ -5,7 +5,7 @@
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="105dp"
-    android:background="#66ffffff">
+    android:background="@null">
 
 
 <RelativeLayout
@@ -21,11 +21,11 @@
 
     <ImageView android:id="@+id/profile_Image"
         android:layout_width="55dp"
-        android:layout_height="65dp"
+        android:layout_height="55dp"
         tools:src="@drawable/kid_3"
         android:layout_margin="3dip"
         android:layout_alignParentStart="true"
-        android:paddingTop="7dp"
+        android:background="@drawable/circle_border_transactions"
         />
 
 
@@ -42,7 +42,7 @@
             android:layout_height="wrap_content"
             android:id="@+id/txt_contactName"
             tools:text="Matias Furszyfer"
-            android:textColor="#06356f"
+            android:textColor="#ffffff"
             android:fontFamily="roboto"
             app:typeface="ROBOTO_REGULAR"
             android:paddingTop="12dp"
@@ -55,7 +55,7 @@
             android:id="@+id/txt_notes"
             tools:text="Conference ticket"
             android:textSize="12dp"
-            android:textColor="#9a9a9c"
+            android:textColor="#80ffffff"
             android:fontFamily="roboto"
             app:typeface="ROBOTO_REGULAR"
             android:layout_alignParentBottom="true"
@@ -82,7 +82,7 @@
             android:id="@+id/txt_amount"
             tools:text="1.4 BTC"
             android:textSize="18dp"
-            android:textColor="#1d1d26"
+            android:textColor="#ffffff"
             android:fontFamily="roboto"
             app:typeface="ROBOTO_REGULAR"
             />
@@ -94,7 +94,7 @@
             android:id="@+id/txt_time"
             tools:text="03 Feb 2014"
             android:textSize="10dp"
-            android:textColor="#9a9a9c"
+            android:textColor="#80ffffff"
             android:fontFamily="roboto"
             app:typeface="ROBOTO_REGULAR"/>
 
@@ -138,7 +138,7 @@
                 android:id="@+id/txt_total_number_transactions"
                 tools:text="5 Records"
                 android:textSize="12dp"
-                android:textColor="#06356f"
+                android:textColor="#ffffff"
                 android:fontFamily="roboto"
                 app:typeface="ROBOTO_REGULAR"
                 />
