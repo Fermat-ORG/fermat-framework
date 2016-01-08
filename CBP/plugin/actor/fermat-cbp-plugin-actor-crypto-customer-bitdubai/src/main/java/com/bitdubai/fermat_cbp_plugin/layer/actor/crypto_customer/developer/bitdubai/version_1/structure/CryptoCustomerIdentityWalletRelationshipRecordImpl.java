@@ -7,7 +7,7 @@ import java.util.UUID;
 /**
  * Created by Yordin Alayn on 16.11.15.
  */
-public class CryptoCryptoCustomerIdentityWalletRelationshipRecordImpl implements CryptoCustomerIdentityWalletRelationshipRecord {
+public class CryptoCustomerIdentityWalletRelationshipRecordImpl implements CryptoCustomerIdentityWalletRelationshipRecord {
 
     //TODO: CAMBIAR NUMEROS PRIMOS
     private static final int HASH_PRIME_NUMBER_PRODUCT = 3061;
@@ -16,7 +16,7 @@ public class CryptoCryptoCustomerIdentityWalletRelationshipRecordImpl implements
     private UUID relationship;
     private String walletPublicKey;
     private String identityPublicKey;
-    public CryptoCryptoCustomerIdentityWalletRelationshipRecordImpl(UUID relationship, String walletPublicKey, String identityPublicKey){
+    public CryptoCustomerIdentityWalletRelationshipRecordImpl(UUID relationship, String walletPublicKey, String identityPublicKey){
         this.relationship = relationship;
         this.walletPublicKey = walletPublicKey;
         this.identityPublicKey = identityPublicKey;
@@ -29,9 +29,9 @@ public class CryptoCryptoCustomerIdentityWalletRelationshipRecordImpl implements
     public String getIdentityPublicKey(){ return this.identityPublicKey; }
 
     public boolean equals(Object o){
-        if(!(o instanceof CryptoCryptoCustomerIdentityWalletRelationshipRecordImpl))
+        if(!(o instanceof CryptoCustomerIdentityWalletRelationshipRecordImpl))
             return false;
-        CryptoCryptoCustomerIdentityWalletRelationshipRecordImpl compare = (CryptoCryptoCustomerIdentityWalletRelationshipRecordImpl) o;
+        CryptoCustomerIdentityWalletRelationshipRecordImpl compare = (CryptoCustomerIdentityWalletRelationshipRecordImpl) o;
         return walletPublicKey.equals(compare.getWalletPublicKey()) && identityPublicKey.equals(compare.getIdentityPublicKey());
     }
 
