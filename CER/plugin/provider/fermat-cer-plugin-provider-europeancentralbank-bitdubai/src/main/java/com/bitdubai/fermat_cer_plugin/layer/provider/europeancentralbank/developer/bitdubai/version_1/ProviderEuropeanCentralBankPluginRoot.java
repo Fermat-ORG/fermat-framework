@@ -182,13 +182,14 @@ public class ProviderEuropeanCentralBankPluginRoot extends AbstractPlugin implem
     }
 
     @Override
-    public Collection<ExchangeRate> getExchangeRatesFromPeriod(CurrencyPair currencyPair, TimeUnit timeUnit, int max, int offset) throws UnsupportedCurrencyPairException, CantGetExchangeRateException {
+    public Collection<ExchangeRate> getDailyExchangeRatesForPeriod(CurrencyPair currencyPair, long startTimestamp, long endTimestamp) throws UnsupportedCurrencyPairException, CantGetExchangeRateException {
         if(!isCurrencyPairSupported(currencyPair))
             throw new UnsupportedCurrencyPairException();
 
         //TODO:
         throw new CantGetExchangeRateException("Not currently supported but coming soon ASAP");
     }
+
 
     @Override
     public Collection<ExchangeRate> getQueriedExchangeRates(CurrencyPair currencyPair) throws UnsupportedCurrencyPairException, CantGetExchangeRateException {
