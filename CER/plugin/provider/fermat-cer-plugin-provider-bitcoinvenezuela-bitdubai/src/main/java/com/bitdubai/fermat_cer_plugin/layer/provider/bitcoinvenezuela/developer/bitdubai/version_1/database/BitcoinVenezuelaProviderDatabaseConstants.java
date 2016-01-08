@@ -23,17 +23,17 @@ public class BitcoinVenezuelaProviderDatabaseConstants {
     static final String PROVIDER_INFO_FIRST_KEY_COLUMN = "id";
 
     /**
-     * Query History database table definition.
+     * Daily Exchange Rates database table definition.
      */
-    static final String QUERY_HISTORY_TABLE_NAME = "query_history";
+    static final String DAILY_EXCHANGE_RATES_TABLE_NAME = "daily_exchange_rates";
 
-    static final String QUERY_HISTORY_ID_COLUMN_NAME = "id";
-    static final String QUERY_HISTORY_FROM_CURRENCY_COLUMN_NAME = "from_currency";
-    static final String QUERY_HISTORY_TO_CURRENCY_COLUMN_NAME = "to_currency";
-    static final String QUERY_HISTORY_SALE_PRICE_COLUMN_NAME = "sale_price";
-    static final String QUERY_HISTORY_PURCHASE_PRICE_COLUMN_NAME = "purchase_price";
-    static final String QUERY_HISTORY_TIMESTAMP_COLUMN_NAME = "timestamp";
+    static final String DAILY_EXCHANGE_RATES_ID_COLUMN_NAME = "id";
+    static final String DAILY_EXCHANGE_RATES_FROM_CURRENCY_COLUMN_NAME = "from_currency";
+    static final String DAILY_EXCHANGE_RATES_TO_CURRENCY_COLUMN_NAME = "to_currency";
+    static final String DAILY_EXCHANGE_RATES_SALE_PRICE_COLUMN_NAME = "sale_price";
+    static final String DAILY_EXCHANGE_RATES_PURCHASE_PRICE_COLUMN_NAME = "purchase_price";
+    static final String DAILY_EXCHANGE_RATES_TIMESTAMP_COLUMN_NAME = "timestamp";
 
-    static final String QUERY_HISTORY_FIRST_KEY_COLUMN = "id";
+    static final String DAILY_EXCHANGE_RATES_FIRST_KEY_COLUMN = "id";
 
 }

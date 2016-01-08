@@ -186,18 +186,21 @@ public class ProviderBitcoinVenezuelaPluginRoot extends AbstractPlugin implement
 
 
         ExchangeRateImpl exchangeRate = new ExchangeRateImpl(currencyPair.getFrom(), currencyPair.getTo(), price, price, (new Date().getTime() / 1000));
-        try {
-            dao.saveExchangeRate(exchangeRate);
+
+        //For now, currentExchangeRates will not be saved, Daily ExchangeRates (below) will be saved.
+        /*try {
+            dao.saveCurrentExchangeRate(exchangeRate);
         }catch (CantSaveExchangeRateException e) {
             errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_CER_PROVIDER_BITCOINVENEZUELA, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
-        }
+        }*/
         return exchangeRate;
     }
 
     @Override
     public ExchangeRate getExchangeRateFromDate(CurrencyPair currencyPair, long timestamp) throws UnsupportedCurrencyPairException, CantGetExchangeRateException {
 
-        //TODO: Check if timestamp is into the future!!!!
+        if(DateHelper.timestampIsInTheFuture(timestamp))
+            throw new CantGetExchangeRateException(CantGetExchangeRateException.DEFAULT_MESSAGE, "Provided timestamp is in the future");
 
         if(!isCurrencyPairSupported(currencyPair))
             throw new UnsupportedCurrencyPairException();
@@ -261,8 +264,8 @@ public class ProviderBitcoinVenezuelaPluginRoot extends AbstractPlugin implement
             }
 
             try {
-                dao.updateExchangeRatesFromDates(new CurrencyPairImpl(currencyFrom, currencyTo), exchangeRates);
-                dao.updateExchangeRatesFromDates(new CurrencyPairImpl(currencyTo, currencyFrom), inverseExchangeRates);
+                dao.updateDailyExchangeRateTable(new CurrencyPairImpl(currencyFrom, currencyTo), exchangeRates);
+                dao.updateDailyExchangeRateTable(new CurrencyPairImpl(currencyTo, currencyFrom), inverseExchangeRates);
             } catch (CantSaveExchangeRateException eex) {
                 errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_CER_PROVIDER_BITCOINVENEZUELA, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
             }
@@ -271,12 +274,27 @@ public class ProviderBitcoinVenezuelaPluginRoot extends AbstractPlugin implement
     }
 
     @Override
-    public Collection<ExchangeRate> getExchangeRatesFromPeriod(CurrencyPair currencyPair, TimeUnit timeUnit, int max, int offset) throws UnsupportedCurrencyPairException, CantGetExchangeRateException {
+    public Collection<ExchangeRate> getDailyExchangeRatesForPeriod(CurrencyPair currencyPair, long startTimestamp, long endTimestamp) throws UnsupportedCurrencyPairException, CantGetExchangeRateException {
+
+        if(DateHelper.timestampIsInTheFuture(startTimestamp))
+            throw new CantGetExchangeRateException(CantGetExchangeRateException.DEFAULT_MESSAGE, "Provided startTimestamp is in the future");
+
         if(!isCurrencyPairSupported(currencyPair))
             throw new UnsupportedCurrencyPairException();
 
-        //TODO:
-        throw new CantGetExchangeRateException("Not currently supported but coming soon ASAP");    }
+        long stdStartTimestamp = DateHelper.getStandarizedTimestampFromTimestamp(startTimestamp);
+        long stdEndTimestamp = DateHelper.getStandarizedTimestampFromTimestamp(endTimestamp);
+
+        String startDate = DateHelper.getDateStringFromTimestamp(startTimestamp);
+        String endDate = DateHelper.getDateStringFromTimestamp(endTimestamp);
+        int requiredNumberOfDays = DateHelper.calculateDaysBetweenTimestamps(startTimestamp, endTimestamp);
+
+        return dao.getDailyExchangeRatesForPeriod(currencyPair, stdStartTimestamp, stdEndTimestamp);
+
+        //TODO: falta query al API if db == null
+    }
+
+
 
     @Override
     public Collection<ExchangeRate> getQueriedExchangeRates(CurrencyPair currencyPair) throws UnsupportedCurrencyPairException, CantGetExchangeRateException {

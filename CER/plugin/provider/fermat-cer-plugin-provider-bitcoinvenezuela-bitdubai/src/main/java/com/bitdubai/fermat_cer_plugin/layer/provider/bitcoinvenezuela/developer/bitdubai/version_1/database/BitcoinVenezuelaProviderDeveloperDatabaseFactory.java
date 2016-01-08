@@ -26,7 +26,7 @@ import java.util.UUID;
  * contains the methods that the Developer Database Tools uses to show the information.
  * <p/>
  *
- * Created by Alejandro Bicelis - (abicelis@gmail.com) on 08/12/15.
+ * Created by Alejandro Bicelis - (abicelis@gmail.com) on 08/01/16.
  *
  * @version 1.0
  * @since Java JDK 1.7
@@ -84,13 +84,13 @@ public class BitcoinVenezuelaProviderDeveloperDatabaseFactory implements DealsWi
               * The database no exist may be the first time the plugin is running on this device,
               * We need to create the new database
               */
-            BitcoinVenezuelaProviderDatabaseFactory bitcoinvenezuelaProviderDatabaseFactory = new BitcoinVenezuelaProviderDatabaseFactory(pluginDatabaseSystem);
+            BitcoinVenezuelaProviderDatabaseFactory bitcoinVenezuelaProviderDatabaseFactory = new BitcoinVenezuelaProviderDatabaseFactory(pluginDatabaseSystem);
 
             try {
                   /*
                    * We create the new database
                    */
-                database = bitcoinvenezuelaProviderDatabaseFactory.createDatabase(pluginId, pluginId.toString());
+                database = bitcoinVenezuelaProviderDatabaseFactory.createDatabase(pluginId, pluginId.toString());
             } catch (CantCreateDatabaseException cantCreateDatabaseException) {
                   /*
                    * The database cannot be created. I can not handle this situation.
@@ -128,21 +128,21 @@ public class BitcoinVenezuelaProviderDeveloperDatabaseFactory implements DealsWi
         tables.add(providerInfoTable);
 
         /**
-         * Table Query History columns.
+         * Table Daily Exchange Rates columns.
          */
-        List<String> queryHistoryColumns = new ArrayList<String>();
+        List<String> dailyExchangeRatesColumns = new ArrayList<String>();
 
-        queryHistoryColumns.add(BitcoinVenezuelaProviderDatabaseConstants.QUERY_HISTORY_ID_COLUMN_NAME);
-        queryHistoryColumns.add(BitcoinVenezuelaProviderDatabaseConstants.QUERY_HISTORY_FROM_CURRENCY_COLUMN_NAME);
-        queryHistoryColumns.add(BitcoinVenezuelaProviderDatabaseConstants.QUERY_HISTORY_TO_CURRENCY_COLUMN_NAME);
-        queryHistoryColumns.add(BitcoinVenezuelaProviderDatabaseConstants.QUERY_HISTORY_SALE_PRICE_COLUMN_NAME);
-        queryHistoryColumns.add(BitcoinVenezuelaProviderDatabaseConstants.QUERY_HISTORY_PURCHASE_PRICE_COLUMN_NAME);
-        queryHistoryColumns.add(BitcoinVenezuelaProviderDatabaseConstants.QUERY_HISTORY_TIMESTAMP_COLUMN_NAME);
+        dailyExchangeRatesColumns.add(BitcoinVenezuelaProviderDatabaseConstants.DAILY_EXCHANGE_RATES_ID_COLUMN_NAME);
+        dailyExchangeRatesColumns.add(BitcoinVenezuelaProviderDatabaseConstants.DAILY_EXCHANGE_RATES_FROM_CURRENCY_COLUMN_NAME);
+        dailyExchangeRatesColumns.add(BitcoinVenezuelaProviderDatabaseConstants.DAILY_EXCHANGE_RATES_TO_CURRENCY_COLUMN_NAME);
+        dailyExchangeRatesColumns.add(BitcoinVenezuelaProviderDatabaseConstants.DAILY_EXCHANGE_RATES_SALE_PRICE_COLUMN_NAME);
+        dailyExchangeRatesColumns.add(BitcoinVenezuelaProviderDatabaseConstants.DAILY_EXCHANGE_RATES_PURCHASE_PRICE_COLUMN_NAME);
+        dailyExchangeRatesColumns.add(BitcoinVenezuelaProviderDatabaseConstants.DAILY_EXCHANGE_RATES_TIMESTAMP_COLUMN_NAME);
         /**
-         * Table Query History addition.
+         * Table Daily Exchange Rates addition.
          */
-        DeveloperDatabaseTable queryHistoryTable = developerObjectFactory.getNewDeveloperDatabaseTable(BitcoinVenezuelaProviderDatabaseConstants.QUERY_HISTORY_TABLE_NAME, queryHistoryColumns);
-        tables.add(queryHistoryTable);
+        DeveloperDatabaseTable dailyExchangeRatesTable = developerObjectFactory.getNewDeveloperDatabaseTable(BitcoinVenezuelaProviderDatabaseConstants.DAILY_EXCHANGE_RATES_TABLE_NAME, dailyExchangeRatesColumns);
+        tables.add(dailyExchangeRatesTable);
 
 
 

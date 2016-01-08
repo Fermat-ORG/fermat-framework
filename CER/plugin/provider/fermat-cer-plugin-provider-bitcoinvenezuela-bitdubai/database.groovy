@@ -19,7 +19,7 @@ databaseTables << [
 ]
 
 databaseTables << [
-        name: "Query History",
+        name: "Daily Exchange Rates",
         columns: [
                 ["ID", "STRING", "100", "true"],
                 ["From Currency", "STRING", "100", "false"],
