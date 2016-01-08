@@ -16,7 +16,7 @@ public interface ChatManager {
 
     List<Object> ChatDetails(Integer Id_Chat,Integer Id_Objeto);
 
-    List<Object> Send_Message(Integer Id_Message,Integer Id_Chat,String Message,
+    List<Object> SendMessage(Integer Id_Message,Integer Id_Chat,String Message,
                          Integer Status,Boolean Type,Date Message_Date);
 
 

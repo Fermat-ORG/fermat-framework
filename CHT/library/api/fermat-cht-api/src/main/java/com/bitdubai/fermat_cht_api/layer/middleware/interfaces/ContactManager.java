@@ -7,15 +7,15 @@ import java.sql.Date;
  */
 public interface ContactManager {
 
-    List<Object> Contact_Detail(Integer Id_Contact, String Remote_Name,String Alias,
+    List<Object> ContactDetail(Integer Id_Contact, String Remote_Name,String Alias,
                                 String Remote_Actor_Type, String Remote_Actor_Pub_key,
                                 Date Creation_Date);
 
-    void Contact_Edit(Integer Id_Contact, String Remote_Name,
+    void ContactEdit(Integer Id_Contact, String Remote_Name,
                       String Remote_Actor_Type, String Remote_Actor_Pub_key);
 
 
-    void Delete_Contact(Integer Id_Contact, String Remote_Name,
+    void DeleteContact(Integer Id_Contact, String Remote_Name,
                         String Remote_Actor_Type, String Remote_Actor_Pub_key);
 
 
