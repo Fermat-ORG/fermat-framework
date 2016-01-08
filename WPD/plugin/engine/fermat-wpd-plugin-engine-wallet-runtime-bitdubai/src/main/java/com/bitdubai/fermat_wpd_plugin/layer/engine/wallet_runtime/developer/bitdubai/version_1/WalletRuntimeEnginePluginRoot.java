@@ -2482,10 +2482,8 @@ public class WalletRuntimeEnginePluginRoot extends AbstractPlugin implements
         runtimeActivity = new Activity();
         runtimeActivity.setType(Activities.DAP_WALLET_ASSET_ISSUER_HISTORY_ACTIVITY);
         runtimeActivity.setActivityType(Activities.DAP_WALLET_ASSET_ISSUER_HISTORY_ACTIVITY.getCode());
-//        runtimeActivity.setColor("#627284");
         runtimeActivity.setSideMenu(runtimeSideMenu);
         runtimeWalletNavigationStructure.addActivity(runtimeActivity);
-//        runtimeWalletNavigationStructure.setStartActivity(Activities.DAP_WALLET_ASSET_ISSUER_HISTORY_ACTIVITY);
 
         runtimeTitleBar = new TitleBar();
         runtimeTitleBar.setLabel("History");
@@ -2530,16 +2528,13 @@ public class WalletRuntimeEnginePluginRoot extends AbstractPlugin implements
         runtimeActivity = new Activity();
         runtimeActivity.setType(Activities.DAP_WALLET_ASSET_ISSUER_STADISTICS_ACTIVITY);
         runtimeActivity.setActivityType(Activities.DAP_WALLET_ASSET_ISSUER_STADISTICS_ACTIVITY.getCode());
-//        runtimeActivity.setColor("#627284");
         runtimeActivity.setSideMenu(runtimeSideMenu);
         runtimeWalletNavigationStructure.addActivity(runtimeActivity);
-//        runtimeWalletNavigationStructure.setStartActivity(Activities.DAP_WALLET_ASSET_ISSUER_STADISTICS_ACTIVITY);
 
         runtimeTitleBar = new TitleBar();
         runtimeTitleBar.setLabel("Stadistics");
         runtimeTitleBar.setLabelSize(titleBarLabelSize);
         runtimeTitleBar.setTitleColor("#ffffff");
-//        runtimeTitleBar.setIsTitleTextStatic(true);
         runtimeTitleBar.setColor("#e2e4e6");
         runtimeActivity.setTitleBar(runtimeTitleBar);
 
