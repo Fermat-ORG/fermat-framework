@@ -14,7 +14,7 @@ import java.util.Map;
 /**
  * Created by Matias Furszyfer on 2015.07.20..
  */
-public class CryptoCustomerCommunitySubAppSession extends AbstractFermatSession<InstalledSubApp,CryptoCustomerCommunityModuleManager,SubAppResourcesProviderManager> implements SubAppsSession {
+public class CryptoCustomerCommunitySubAppSession extends AbstractFermatSession<InstalledSubApp,CryptoCustomerCommunityModuleManager,SubAppResourcesProviderManager> {
 
     /**
      * SubApps type
