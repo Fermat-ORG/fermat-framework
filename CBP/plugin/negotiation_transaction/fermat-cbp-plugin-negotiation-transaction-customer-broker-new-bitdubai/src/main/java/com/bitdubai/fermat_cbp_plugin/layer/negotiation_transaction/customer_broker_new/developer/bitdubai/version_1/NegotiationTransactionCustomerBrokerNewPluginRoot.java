@@ -177,10 +177,10 @@ public class NegotiationTransactionCustomerBrokerNewPluginRoot extends AbstractP
 //            customerBrokerNewNegotiationTransactionDatabaseDao.deleteAllForTest();
 
             //TEST MOCK
-            createCustomerBrokerNewPurchaseNegotiationTest();
+//            createCustomerBrokerNewPurchaseNegotiationTest();
 
             //TEST MOCK GET ALL TRANSACTION
-            getAllCustomerBrokerNewNegotiationTranasctionTest();
+//            getAllCustomerBrokerNewNegotiationTranasctionTest();
 
             //TEST MOCK CREATE AND GET NEGOTIATION
 //            createNegotiationsTest();
