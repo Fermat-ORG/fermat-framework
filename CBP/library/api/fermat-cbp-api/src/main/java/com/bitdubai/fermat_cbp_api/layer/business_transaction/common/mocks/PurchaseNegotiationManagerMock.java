@@ -70,7 +70,10 @@ public class PurchaseNegotiationManagerMock implements CustomerBrokerPurchaseNeg
 
     @Override
     public CustomerBrokerPurchaseNegotiation getNegotiationsByNegotiationId(UUID negotiationId) throws CantGetListPurchaseNegotiationsException {
-        return new PurchaseNegotiationMock();
+        //For testing offline business transactions
+        //return new PurchaseNegotiationOfflineMock();
+        //For testing online business transactions
+        return new PurchaseNegotiationOnlineMock();
     }
 
     @Override

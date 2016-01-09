@@ -89,6 +89,11 @@ public class AddConnectionFragment extends FermatWalletListFragment<CryptoWallet
             recyclerView.addItemDecoration(itemDecoration);
             setUpScreen(layout);
             onRefresh();
+            if(intraUserInformationList.isEmpty()){
+                FermatAnimationsUtils.showEmpty(getActivity(), true, empty_view);
+            }else {
+                FermatAnimationsUtils.showEmpty(getActivity(),false,empty_view);
+            }
         } catch (Exception e){
             Toast.makeText(getActivity().getApplicationContext(), "Oooops! recovering from system error. Get Intra User List", Toast.LENGTH_SHORT).show();
             e.printStackTrace();
@@ -254,7 +259,7 @@ public class AddConnectionFragment extends FermatWalletListFragment<CryptoWallet
     @Override
     public List<CryptoWalletIntraUserActor> getMoreDataAsync(FermatRefreshTypes refreshType, int pos) {
         List<CryptoWalletIntraUserActor> data = new ArrayList<>();
-
+        if(menu!=null) menu.clear();
         try {
             if (moduleManager == null) {
                 Toast.makeText(getActivity(),"Nodule manager null",Toast.LENGTH_SHORT).show();

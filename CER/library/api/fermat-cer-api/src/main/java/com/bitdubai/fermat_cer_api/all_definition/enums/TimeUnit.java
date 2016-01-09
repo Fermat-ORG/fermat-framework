@@ -8,7 +8,7 @@ import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterE
  */
 public enum TimeUnit implements FermatEnum {
 
-    HOUR("HR"),
+    //HOUR("HR"),
     DAY("DY"),
     WEEK("WK"),
     MONTH("MT"),
@@ -26,7 +26,7 @@ public enum TimeUnit implements FermatEnum {
     public static TimeUnit getByCode(String code) throws InvalidParameterException {
 
         switch (code) {
-            case "HR":          return HOUR;
+            //case "HR":          return HOUR;
             case "DY":          return DAY;
             case "WK":          return WEEK;
             case "MT":          return MONTH;

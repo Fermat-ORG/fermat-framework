@@ -175,6 +175,7 @@ public enum Plugins implements FermatPluginsEnum {
 
     //Init CER Plugins
     BITDUBAI_CER_PROVIDER_FILTER                ("BCERPF"  ),
+    BITDUBAI_CER_PROVIDER_BITCOINVENEZUELA      ("BCERPBV"  ),
     BITDUBAI_CER_PROVIDER_DOLARTODAY            ("BCERPDT"  ),
     BITDUBAI_CER_PROVIDER_ELCRONISTA            ("BCERPEC"  ),
     BITDUBAI_CER_PROVIDER_EUROPEAN_CENTRAL_BANK ("BCERPECB" ),
@@ -222,6 +223,7 @@ public enum Plugins implements FermatPluginsEnum {
     INCOMING_CRYPTO             ("IC"),
     INCOMING_EXTRA_USER         ("IEU"),
     INCOMING_INTRA_USER         ("IIU"),
+    INTRA_IDENTITY_USER          ("IIA"),
     INTRA_WALLET_USER           ("IWU"),
     ISSUER_REDEMPTION           ("IR"),
     NOTIFICATION                ("NOT"),
@@ -287,6 +289,7 @@ public enum Plugins implements FermatPluginsEnum {
 
     //CHT
 
+    CHAT_MIDDLEWARE                     ("CHMID"),
     CHAT_NETWORK_SERVICE                ("CHTNS"),
     CHAT_SUP_APP_MODULE                 ("CHTSAM");
 
@@ -343,6 +346,7 @@ public enum Plugins implements FermatPluginsEnum {
             case "IEU"  :   return INCOMING_EXTRA_USER      ;
             case "IIU"  :   return INCOMING_INTRA_USER      ;
             case "IWU"  :   return INTRA_WALLET_USER        ;
+            case "IIA"  :   return INTRA_IDENTITY_USER      ;
             case "IR"   :   return ISSUER_REDEMPTION        ;
             case "NOT"  :   return NOTIFICATION             ;
             case "OEU"  :   return OUTGOING_EXTRA_USER      ;
@@ -392,6 +396,7 @@ public enum Plugins implements FermatPluginsEnum {
             case "BCSHMWM": return BITDUBAI_CSH_MONEY_WALLET_MODULE;
             case "BCSHWCM": return BITDUBAI_CSH_WALLET_CASH_MONEY;
             case "BCERPF":  return BITDUBAI_CER_PROVIDER_FILTER;
+            case "BCERPBV": return BITDUBAI_CER_PROVIDER_BITCOINVENEZUELA;
             case "BCERPDT": return BITDUBAI_CER_PROVIDER_DOLARTODAY;
             case "BCERPEC": return BITDUBAI_CER_PROVIDER_ELCRONISTA;
             case "BCERPECB":return BITDUBAI_CER_PROVIDER_EUROPEAN_CENTRAL_BANK;
@@ -413,10 +418,11 @@ public enum Plugins implements FermatPluginsEnum {
             case "BSOM":    return BROKER_SUBMIT_ONLINE_MERCHANDISE ;
             case "BSFM":    return BROKER_SUBMIT_OFFLINE_MERCHANDISE;
 
-            case "BCNNODE"   : return BITDUBAI_COMMUNICATIONS_NETWORK_NODE;
-            case "BCNCLIENT" : return BITDUBAI_COMMUNICATIONS_NETWORK_CLIENT;
-            case "CHTNS"     : return CHAT_NETWORK_SERVICE;
-            case "CHTSAM"     : return CHAT_SUP_APP_MODULE;
+            case "BCNNODE"   :  return BITDUBAI_COMMUNICATIONS_NETWORK_NODE;
+            case "BCNCLIENT" :  return BITDUBAI_COMMUNICATIONS_NETWORK_CLIENT;
+            case "CHMID":       return CHAT_MIDDLEWARE                          ;
+            case "CHTNS":       return CHAT_NETWORK_SERVICE                     ;
+            case "CHTSAM":      return CHAT_SUP_APP_MODULE                      ;
 
             default:
                 throw new InvalidParameterException(

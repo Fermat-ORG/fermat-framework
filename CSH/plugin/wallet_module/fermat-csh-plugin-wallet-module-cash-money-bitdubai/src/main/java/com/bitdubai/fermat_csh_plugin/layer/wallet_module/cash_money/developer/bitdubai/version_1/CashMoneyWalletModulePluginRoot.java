@@ -16,6 +16,7 @@ import com.bitdubai.fermat_api.layer.all_definition.util.Version;
 import com.bitdubai.fermat_api.layer.modules.common_classes.ActiveActorIdentityInformation;
 import com.bitdubai.fermat_api.layer.modules.exceptions.CantGetSelectedActorIdentityException;
 import com.bitdubai.fermat_api.layer.modules.interfaces.FermatSettings;
+import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogLevel;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogManager;
 import com.bitdubai.fermat_cer_api.all_definition.interfaces.CurrencyPair;
@@ -42,6 +43,7 @@ import com.bitdubai.fermat_csh_api.layer.csh_wallet.exceptions.CantLoadCashMoney
 import com.bitdubai.fermat_csh_api.layer.csh_wallet.interfaces.CashMoneyWallet;
 import com.bitdubai.fermat_csh_api.layer.csh_wallet.interfaces.CashMoneyWalletManager;
 import com.bitdubai.fermat_csh_api.layer.csh_wallet.interfaces.CashMoneyWalletTransaction;
+import com.bitdubai.fermat_csh_api.layer.csh_wallet_module.CashMoneyWalletPreferenceSettings;
 import com.bitdubai.fermat_csh_api.layer.csh_wallet_module.exceptions.CantGetCashMoneyWalletBalancesException;
 import com.bitdubai.fermat_csh_api.layer.csh_wallet_module.interfaces.CashMoneyWalletModuleManager;
 import com.bitdubai.fermat_csh_plugin.layer.wallet_module.cash_money.developer.bitdubai.version_1.structure.CashWalletBalancesImpl;
@@ -50,6 +52,7 @@ import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.Un
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 
 import java.math.BigDecimal;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -68,6 +71,9 @@ public class CashMoneyWalletModulePluginRoot extends AbstractPlugin implements L
 
     @NeededAddonReference(platform = Platforms.OPERATIVE_SYSTEM_API, layer = Layers.SYSTEM, addon = Addons.LOG_MANAGER)
     private LogManager logManager;
+
+    @NeededAddonReference(platform = Platforms.OPERATIVE_SYSTEM_API, layer = Layers.SYSTEM, addon = Addons.PLUGIN_FILE_SYSTEM)
+    private PluginFileSystem pluginFileSystem;
 
 
     @NeededPluginReference(platform = Platforms.CASH_PLATFORM, layer = Layers.CASH_MONEY_TRANSACTION, plugin = Plugins.BITDUBAI_CSH_MONEY_TRANSACTION_WITHDRAWAL)
@@ -209,10 +215,27 @@ public class CashMoneyWalletModulePluginRoot extends AbstractPlugin implements L
         cashMoneyWalletManager.createCashMoneyWallet(walletPublicKey, fiatCurrency);
     }
 
+
+
+
+
+
+
+
+
+    private SettingsManager<CashMoneyWalletPreferenceSettings> settingsManager;
+
     @Override
-    public SettingsManager<FermatSettings> getSettingsManager() {
-        return null;
-    }
+    public SettingsManager<CashMoneyWalletPreferenceSettings> getSettingsManager() {
+        if (this.settingsManager != null)
+            return this.settingsManager;
+
+        this.settingsManager = new SettingsManager<>(
+                pluginFileSystem,
+                pluginId
+        );
+
+        return this.settingsManager;    }
 
     @Override
     public ActiveActorIdentityInformation getSelectedActorIdentity() throws CantGetSelectedActorIdentityException {
@@ -229,6 +252,9 @@ public class CashMoneyWalletModulePluginRoot extends AbstractPlugin implements L
         return new int[0];
     }
 
+
+
+
     /*CER TEST METHODS*/
     private void testCERPlatform(){
         System.out.println("CASHMONEYWALLETMODULE - TESTCERPLATFORM START");
@@ -238,6 +264,9 @@ public class CashMoneyWalletModulePluginRoot extends AbstractPlugin implements L
                 public void run() {
                     try {
 
+
+                        UUID bitcoinVzlaKey = null;
+
                         System.out.println("---Listing ALL CER Providers and their supported currencies---");
                         for( Map.Entry<UUID, String> provider : providerFilter.getProviderNames().entrySet()){
                             System.out.println("Found Provider! ID: " + provider.getKey() + " Name: " + provider.getValue());
@@ -245,34 +274,55 @@ public class CashMoneyWalletModulePluginRoot extends AbstractPlugin implements L
                             for(CurrencyPair p : providerFilter.getProviderReference(provider.getKey()).getSupportedCurrencyPairs())
                                 System.out.println("    Supported CurrencyPair! From: " + p.getFrom().getCode() + " To: " + p.getTo().getCode());
 
+                            if(provider.getValue().toString().equals("BitcoinVenezuela"))
+                                bitcoinVzlaKey = provider.getKey();
                         }
                         System.out.println(" ");
 
 
-                        System.out.println("---Listing CER Providers for MXN/USD---");
-                        CurrencyPair mxnUsdCurrencyPair = new CurrencyPairImpl(FiatCurrency.MEXICAN_PESO, FiatCurrency.US_DOLLAR);
-                        for( Map.Entry<UUID, String> provider : providerFilter.getProviderNamesListFromCurrencyPair(mxnUsdCurrencyPair).entrySet())
-                            System.out.println("Found Provider! ID: " + provider.getKey() + " Name: " + provider.getValue());
-                        System.out.println(" ");
-
-
-                        System.out.println("---Listing CER Providers for EUR/USD---");
-                        CurrencyPair eurUsdCurrencyPair = new CurrencyPairImpl(FiatCurrency.EURO, FiatCurrency.US_DOLLAR);
-                        for( Map.Entry<UUID, String> provider : providerFilter.getProviderNamesListFromCurrencyPair(eurUsdCurrencyPair).entrySet())
-                            System.out.println("Found Provider! ID: " + provider.getKey() + " Name: " + provider.getValue());
-                        System.out.println(" ");
-
-
-                        System.out.println("---Listing Providers and Current ExchangeRate for USD/VEF---");
-                        CurrencyPair usdVefCurrencyPair = new CurrencyPairImpl(FiatCurrency.US_DOLLAR, FiatCurrency.VENEZUELAN_BOLIVAR);
-                        for( Map.Entry<UUID, String> provider : providerFilter.getProviderNamesListFromCurrencyPair(usdVefCurrencyPair).entrySet()) {
-                            System.out.println("Found Provider! ID: " + provider.getKey() + " Name: " + provider.getValue());
-
-                            CurrencyExchangeRateProviderManager manager = providerFilter.getProviderReference(provider.getKey());
-                            ExchangeRate rate = manager.getCurrentExchangeRate(usdVefCurrencyPair);
-                            System.out.println("Also got Exchange rate! -  Purchase:" + rate.getPurchasePrice() + " Sale: " + rate.getSalePrice());
+                        System.out.println("BVP ---Getting all ExchangeRates from BitcoinVenezuela Provider");
+                        CurrencyExchangeRateProviderManager btcVzlaProvider = providerFilter.getProviderReference(bitcoinVzlaKey);
+                        for(CurrencyPair p : btcVzlaProvider.getSupportedCurrencyPairs()){
+                            p = new CurrencyPairImpl(p.getTo(), p.getFrom());
+                            System.out.println("BVP    Supported CurrencyPair! From: " + p.getFrom().getCode() + " To: " + p.getTo().getCode());
+                            System.out.println("    Exchange: " + btcVzlaProvider.getCurrentExchangeRate(p).getPurchasePrice());
+                            System.out.println("BVP    Exchange for 2015-09-01: " + btcVzlaProvider.getExchangeRateFromDate(p, 1441065600).getPurchasePrice());
                         }
-                        System.out.println(" ");
+
+
+
+//                        System.out.println("---Listing CER Providers for USD/EUR using getProviderReferencesFromCurrencyPair()---");
+//                        Collection<CurrencyExchangeRateProviderManager> filteredManagers = providerFilter.getProviderReferencesFromCurrencyPair(new CurrencyPairImpl(FiatCurrency.US_DOLLAR, FiatCurrency.EURO));
+//                        for( CurrencyExchangeRateProviderManager p : filteredManagers)
+//                            System.out.println(" Found provider: " + p.getProviderName());
+
+
+
+//
+//                        System.out.println("---Listing CER Providers for MXN/USD---");
+//                        CurrencyPair mxnUsdCurrencyPair = new CurrencyPairImpl(FiatCurrency.MEXICAN_PESO, FiatCurrency.US_DOLLAR);
+//                        for( Map.Entry<UUID, String> provider : providerFilter.getProviderNamesListFromCurrencyPair(mxnUsdCurrencyPair).entrySet())
+//                            System.out.println("Found Provider! ID: " + provider.getKey() + " Name: " + provider.getValue());
+//                        System.out.println(" ");
+//
+//
+//                        System.out.println("---Listing CER Providers for EUR/USD---");
+//                        CurrencyPair eurUsdCurrencyPair = new CurrencyPairImpl(FiatCurrency.EURO, FiatCurrency.US_DOLLAR);
+//                        for( Map.Entry<UUID, String> provider : providerFilter.getProviderNamesListFromCurrencyPair(eurUsdCurrencyPair).entrySet())
+//                            System.out.println("Found Provider! ID: " + provider.getKey() + " Name: " + provider.getValue());
+//                        System.out.println(" ");
+//
+//
+//                        System.out.println("---Listing Providers and Current ExchangeRate for USD/VEF---");
+//                        CurrencyPair usdVefCurrencyPair = new CurrencyPairImpl(FiatCurrency.US_DOLLAR, FiatCurrency.VENEZUELAN_BOLIVAR);
+//                        for( Map.Entry<UUID, String> provider : providerFilter.getProviderNamesListFromCurrencyPair(usdVefCurrencyPair).entrySet()) {
+//                            System.out.println("Found Provider! ID: " + provider.getKey() + " Name: " + provider.getValue());
+//
+//                            CurrencyExchangeRateProviderManager manager = providerFilter.getProviderReference(provider.getKey());
+//                            ExchangeRate rate = manager.getCurrentExchangeRate(usdVefCurrencyPair);
+//                            System.out.println("Also got Exchange rate! -  Purchase:" + rate.getPurchasePrice() + " Sale: " + rate.getSalePrice());
+//                        }
+//                        System.out.println(" ");
 
                     } catch (Exception e) {
                         e.printStackTrace();
