@@ -139,7 +139,7 @@ public class RedeemerAddressesMonitorAgent implements Agent {
                     /**
                      * if I didn't get any keys, then I'll mark keysGenerated as false.
                      */
-                if (redeemPointCryptoAddresses == null)
+                if (redeemPointCryptoAddresses.size() == 0)
                     this.keysGenerated.set(false);
 
                     /**
