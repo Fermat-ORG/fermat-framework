@@ -231,7 +231,7 @@ public class BitcoinNetworkEvents implements WalletEventListener, PeerEventListe
     }
 
     @Override
-    public void onTransactionConfidenceChanged(Wallet wallet, Transaction tx) {
+    public synchronized void onTransactionConfidenceChanged(Wallet wallet, Transaction tx) {
         /**
          * Depending this is a outgoing or incoming transaction, I will set the CryptoStatus
          */
@@ -680,6 +680,7 @@ public class BitcoinNetworkEvents implements WalletEventListener, PeerEventListe
                         saveMissingIncomingTransaction(wallet, tx, CryptoStatus.ON_BLOCKCHAIN);
                     }
                     //else I can't never save the Outgoing transaction on CryptoNetwork
+                    else
                         saveMissingOutgoingTransaction(wallet, tx, CryptoStatus.ON_BLOCKCHAIN);
                 } catch (CantExecuteDatabaseOperationException e){
                     e.printStackTrace(); //I will continue to at least save the incoming transaction.
