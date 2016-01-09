@@ -78,7 +78,7 @@ public class IssuerCommunityHomeFragment extends AbstractFermatFragment implemen
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
         rootView = inflater.inflate(R.layout.home_dap_issuer_community_fragment, container, false);
-        initViews(rootView);
+//        initViews(rootView);
 
         recyclerView = (RecyclerView) rootView.findViewById(R.id.gridView);
         recyclerView.setHasFixedSize(true);
