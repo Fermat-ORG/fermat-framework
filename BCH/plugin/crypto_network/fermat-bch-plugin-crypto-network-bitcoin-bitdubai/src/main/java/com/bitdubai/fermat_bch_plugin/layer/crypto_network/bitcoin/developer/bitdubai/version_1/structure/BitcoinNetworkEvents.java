@@ -675,10 +675,26 @@ public class BitcoinNetworkEvents implements WalletEventListener, PeerEventListe
                     /**
                      * depending on the transaction type, I will add it as incoming or outgoing
                      */
-                    if (transactionType == TransactionTypes.INCOMING)
+                    if (transactionType == TransactionTypes.INCOMING){
                         saveMissingIncomingTransaction(wallet, tx, CryptoStatus.ON_CRYPTO_NETWORK);
+                        saveMissingIncomingTransaction(wallet, tx, CryptoStatus.ON_BLOCKCHAIN);
+                    }
                     //else I can't never save the Outgoing transaction on CryptoNetwork
-                        //saveMissingOutgoingTransaction(wallet, tx, CryptoStatus.ON_CRYPTO_NETWORK);
+                        saveMissingOutgoingTransaction(wallet, tx, CryptoStatus.ON_BLOCKCHAIN);
+                } catch (CantExecuteDatabaseOperationException e){
+                    e.printStackTrace(); //I will continue to at least save the incoming transaction.
+                }
+            }
+
+            if (storedCryptoStatus == CryptoStatus.ON_CRYPTO_NETWORK){
+                try{
+                    /**
+                     * depending on the transaction type, I will add it as incoming or outgoing
+                     */
+                    if (transactionType == TransactionTypes.INCOMING){
+                        saveMissingIncomingTransaction(wallet, tx, CryptoStatus.ON_BLOCKCHAIN);
+                    } else
+                        saveMissingOutgoingTransaction(wallet, tx, CryptoStatus.ON_BLOCKCHAIN);
                 } catch (CantExecuteDatabaseOperationException e){
                     e.printStackTrace(); //I will continue to at least save the incoming transaction.
                 }
@@ -694,15 +710,18 @@ public class BitcoinNetworkEvents implements WalletEventListener, PeerEventListe
                     if (transactionType == TransactionTypes.INCOMING){
                         saveMissingIncomingTransaction(wallet, tx, CryptoStatus.ON_CRYPTO_NETWORK);
                         saveMissingIncomingTransaction(wallet, tx, CryptoStatus.ON_BLOCKCHAIN);
+                        saveMissingIncomingTransaction(wallet, tx, CryptoStatus.IRREVERSIBLE);
                     } else {
                         //saveMissingOutgoingTransaction(wallet, tx, CryptoStatus.ON_CRYPTO_NETWORK);
                         saveMissingOutgoingTransaction(wallet, tx, CryptoStatus.ON_BLOCKCHAIN);
+                        saveMissingOutgoingTransaction(wallet, tx, CryptoStatus.IRREVERSIBLE);
                     }
 
                 } catch (CantExecuteDatabaseOperationException e){
                     e.printStackTrace(); //I will continue to at least save the incoming transaction.
                 }
             }
+
             if (storedCryptoStatus == CryptoStatus.ON_CRYPTO_NETWORK){
                 try{
                     if (transactionType == TransactionTypes.INCOMING){
@@ -710,6 +729,19 @@ public class BitcoinNetworkEvents implements WalletEventListener, PeerEventListe
                         saveMissingIncomingTransaction(wallet, tx, CryptoStatus.IRREVERSIBLE);
                     } else {
                         saveMissingOutgoingTransaction(wallet, tx, CryptoStatus.ON_BLOCKCHAIN);
+                        saveMissingOutgoingTransaction(wallet, tx, CryptoStatus.IRREVERSIBLE);
+                    }
+
+                } catch (CantExecuteDatabaseOperationException e){
+                    e.printStackTrace(); //I will continue to at least save the incoming transaction.
+                }
+            }
+
+            if (storedCryptoStatus == CryptoStatus.ON_BLOCKCHAIN){
+                try{
+                    if (transactionType == TransactionTypes.INCOMING){
+                        saveMissingIncomingTransaction(wallet, tx, CryptoStatus.IRREVERSIBLE);
+                    } else {
                         saveMissingOutgoingTransaction(wallet, tx, CryptoStatus.IRREVERSIBLE);
                     }
 
