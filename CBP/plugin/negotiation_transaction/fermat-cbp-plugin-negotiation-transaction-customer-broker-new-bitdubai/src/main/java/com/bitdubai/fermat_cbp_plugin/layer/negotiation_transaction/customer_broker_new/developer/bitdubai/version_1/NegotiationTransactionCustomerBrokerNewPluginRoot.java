@@ -309,10 +309,10 @@ public class NegotiationTransactionCustomerBrokerNewPluginRoot extends AbstractP
 
         try {
 
-            System.out.print("\n**** MOCK CUSTOMER BROKER NEW. PURCHASE NEGOTIATION. TEST: createCustomerBrokerNewPurchaseNegotiationTranasction() ****\n");
+            System.out.print("\n**** MOCK NEGOTIATION TRANSACTION - CUSTOMER BROKER NEW - PLUGINROOT - PURCHASE NEGOTIATION TEST: createCustomerBrokerNewPurchaseNegotiationTranasction() ****\n");
 
             CustomerBrokerPurchaseNegotiation negotiationMock = purchaseNegotiationMockTest();
-            System.out.print("\n\n**** 1) MOCK CUSTOMER BROKER NEW. PURCHASE NEGOTIATION. PLUGINROOT ****\n" +
+            System.out.print("\n\n**** 1) MOCK NEGOTIATION TRANSACTION - CUSTOMER BROKER NEW - PLUGINROOT - PURCHASE NEGOTIATION ****\n" +
                             "\n------------------------------- NEGOTIATION PURCHASE MOCK -------------------------------" +
                             "\n*CustomerPublicKey = " + negotiationMock.getCustomerPublicKey() +
                             "\n*BrokerPublicKey = " + negotiationMock.getBrokerPublicKey()

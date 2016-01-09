@@ -525,7 +525,7 @@ public class NetworkServiceNegotiationTransmissionPluginRoot extends AbstractNet
             Gson gson = new Gson();
             NegotiationTransmissionMessage negotiationTransmissionMessage = gson.fromJson(fermatMessage.getContent(), NegotiationTransmissionMessage.class);
 
-            System.out.print("\n\n**** 1) MOCK NEGOTIATION TRANSMISSION RECEIVE, PLUGIN ROOT - RECEIVE MESSAGES ****\n");
+            System.out.print("\n\n**** X) MOCK NEGOTIATION TRANSACTION - NEGOTIATION TRANSMISSION - PLUGIN ROOT - RECEIVE MESSAGES ****\n");
 
             switch (negotiationTransmissionMessage.getMessageType()){
                 case TRANSMISSION_NEGOTIATION:
@@ -558,6 +558,8 @@ public class NetworkServiceNegotiationTransmissionPluginRoot extends AbstractNet
 
         try {
 
+            System.out.print("\n\n**** 12) MOCK NEGOTIATION TRANSACTION - NEGOTIATION TRANSMISSION - PLUGIN ROOT - RECEIVE NEGOTIATION ****\n");
+
             NegotiationTransmission negotiationTransmission = new NegotiationTransmissionImpl(
                 negotiationMessage.getTransmissionId(),
                 negotiationMessage.getTransactionId(),
@@ -575,8 +577,6 @@ public class NetworkServiceNegotiationTransmissionPluginRoot extends AbstractNet
             );
             databaseDao.registerSendNegotiatioTransmission(negotiationTransmission, NegotiationTransmissionState.PENDING_ACTION);
 
-            System.out.print("\n\n**** 2) MOCK NEGOTIATION TRANSMISSION RECEIVE, PLUGIN ROOT - RECEIVE NEGOTIATION ****\n");
-
         } catch (CantRegisterSendNegotiationTransmissionException e) {
             throw new CantHandleNewMessagesException(CantHandleNewMessagesException.DEFAULT_MESSAGE, e, "ERROR RECEIVE NEGOTIATION", "");
         } catch (Exception e) {
@@ -588,6 +588,8 @@ public class NetworkServiceNegotiationTransmissionPluginRoot extends AbstractNet
     private void receiveConfirm(ConfirmMessage confirmMessage) throws CantHandleNewMessagesException {
 
         try {
+
+            System.out.print("\n\n**** 26) MOCK NEGOTIATION TRANSACTION - NEGOTIATION TRANSMISSION - PLUGIN ROOT - RECEIVE NEGOTIATION ****\n");
 
             UUID transmissionId = confirmMessage.getTransmissionId();
             databaseDao.confirmReception(transmissionId);

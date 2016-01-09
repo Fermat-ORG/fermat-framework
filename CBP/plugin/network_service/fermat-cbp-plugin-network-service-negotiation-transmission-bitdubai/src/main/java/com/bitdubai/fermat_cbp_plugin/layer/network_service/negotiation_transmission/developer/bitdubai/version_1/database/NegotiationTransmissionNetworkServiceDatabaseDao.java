@@ -86,10 +86,18 @@ public class NegotiationTransmissionNetworkServiceDatabaseDao {
             loadRecordAsSendNegotiatioTransmission(record, negotiationTransmission, negotiationTransmissionState);
             table.insertRecord(record);
 
-            if (negotiationTransmission.getTransmissionState().getCode() == NegotiationTransmissionState.PENDING_ACTION.getCode()) {
-                System.out.print("\n\n**** 3) MOCK NEGOTIATION TRANSMISSION RECEIVE, DAO - REGISTER RECEIVE NEGOTIATION TRANSMISSION ****\n");
-            } else{
-                System.out.print("\n\n**** 2) MOCK NEGOTIATION TRANSMISSION SEND, DAO - REGISTER SEND NEGOTIATION TRANSMISSION ****\n");
+            if(negotiationTransmission.getNegotiationTransactionType().getCode() == NegotiationTransmissionType.TRANSMISSION_NEGOTIATION.getCode()) {
+                if (negotiationTransmission.getTransmissionState().getCode() == NegotiationTransmissionState.PROCESSING_SEND.getCode()) {
+                    System.out.print("\n\n**** 8) MOCK NEGOTIATION TRANSACTION - NEGOTIATION TRANSMISSION - DAO - REGISTER SEND NEGOTIATION TRANSMISSION ****\n");
+                } else {
+                    System.out.print("\n\n**** 13) MOCK NEGOTIATION TRANSACTION - NEGOTIATION TRANSMISSION - DAO - REGISTER RECEIVE NEGOTIATION TRANSMISSION ****\n");
+                }
+            }else{
+                if (negotiationTransmission.getTransmissionState().getCode() == NegotiationTransmissionState.PROCESSING_SEND.getCode()) {
+                    System.out.print("\n\n**** 24) MOCK NEGOTIATION TRANSACTION - NEGOTIATION TRANSMISSION - DAO - REGISTER SEND CONFIRMATION TRANSMISSION ****\n");
+                } else {
+                    System.out.print("\n\n**** ) MOCK NEGOTIATION TRANSACTION - NEGOTIATION TRANSMISSION - DAO - REGISTER RECEIVE CONFIRMATION TRANSMISSION ****\n");
+                }
             }
 
         } catch (CantInsertRecordException e){

@@ -46,6 +46,7 @@ public class CustomerBrokerNewServiceEventHandler implements CBPService {
             /**
              * I will initialize the handling of com.bitdubai.platform events.
              */
+            System.out.print("\n\n**** X) MOCK NEGOTIATION TRANSACTION - NEGOTIATION TRANSMISSION - EVENT HANDLER - LISTENER EVENT ****\n");
             FermatEventListener fermatEventListener;
             FermatEventHandler fermatEventHandler;
 
@@ -88,10 +89,12 @@ public class CustomerBrokerNewServiceEventHandler implements CBPService {
     }
 
     public void incomingNegotiationTransactionEventHandler(IncomingNegotiationTransactionEvent event) throws CantSaveEventException {
-        Logger LOG = Logger.getGlobal();
-        LOG.info("EVENT TEST, I GOT AN EVENT:\n"+event);
+//        Logger LOG = Logger.getGlobal();
+//        LOG.info("EVENT TEST, I GOT AN EVENT:\n"+event);
         this.customerBrokerNewNegotiationTransactionDatabaseDao.saveNewEventTansaction(event.getEventType().getCode(), event.getSource().getCode());
-        LOG.info("CHECK THE DATABASE");
+
+        System.out.print("\n\n**** 16) MOCK NEGOTIATION TRANSACTION - NEGOTIATION TRANSMISSION - EVENT HANDLER - SAVE NEW EVENT ****\n");
+//        LOG.info("CHECK THE DATABASE");
 
     }
 

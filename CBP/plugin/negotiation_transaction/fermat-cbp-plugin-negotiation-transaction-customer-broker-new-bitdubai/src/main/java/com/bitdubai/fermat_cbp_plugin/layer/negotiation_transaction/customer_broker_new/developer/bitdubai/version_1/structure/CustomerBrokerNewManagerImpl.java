@@ -57,7 +57,7 @@ public class CustomerBrokerNewManagerImpl implements CustomerBrokerNewManager {
     public void createCustomerBrokerNewPurchaseNegotiationTranasction(CustomerBrokerPurchaseNegotiation customerBrokerPurchaseNegotiation) throws CantCreateCustomerBrokerNewPurchaseNegotiationTransactionException {
         try {
 
-            System.out.print("\n\n**** 2) MOCK CUSTOMER BROKER NEW. PURCHASE NEGOTIATION. CUSTOMER BROKER NEW PURCHASE MANAGER IMPL. ****\n");
+            System.out.print("\n\n**** 2) MOCK NEGOTIATION TRANSACTION - CUSTOMER BROKER NEW - MANAGER - PURCHASE NEGOTIATION****\n");
             customerBrokerNewPurchaseNegotiationTransaction = new CustomerBrokerNewPurchaseNegotiationTransaction(
                     customerBrokerPurchaseNegotiationManager,
                     customerBrokerNewNegotiationTransactionDatabaseDao

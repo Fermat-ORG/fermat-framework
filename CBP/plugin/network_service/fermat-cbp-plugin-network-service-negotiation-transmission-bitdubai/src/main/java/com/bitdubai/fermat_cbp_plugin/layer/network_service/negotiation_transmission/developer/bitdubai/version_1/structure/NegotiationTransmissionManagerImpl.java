@@ -48,14 +48,16 @@ public class NegotiationTransmissionManagerImpl implements NegotiationTransmissi
 
         try{
 
+            if(transactionType.getCode() == NegotiationTransactionType.CUSTOMER_BROKER_NEW.getCode()) {
+                System.out.print("\n\n**** 7) MOCK NEGOTIATION TRANSACTION - NEGOTIATION TRANSMISSION - MANAGER - SEND NEGOTIATION TO CRYPTO CUSTOMER ****\n");
+            }
+
             PlatformComponentType actorSendType             = PlatformComponentType.ACTOR_CRYPTO_BROKER;
             NegotiationTransmissionType transmissionType    = NegotiationTransmissionType.TRANSMISSION_NEGOTIATION;
             NegotiationTransmissionState transmissionState  = NegotiationTransmissionState.PROCESSING_SEND;
             NegotiationTransmission negotiationTransmission = constructNegotiationTransmission(negotiationTransaction, actorSendType, transactionType, transmissionType);
 
             negotiationTransmissionNetworkServiceDatabaseDao.registerSendNegotiatioTransmission(negotiationTransmission, transmissionState);
-
-            System.out.print("\n\n**** 1) MOCK NEGOTIATION TRANSMISSION SEND, MANAGER - SEND NEGOTIATION TO CRYPTO CUSTOMER ****\n");
 
         } catch (CantConstructNegotiationTransmissionException e){
             throw new CantSendNegotiationToCryptoCustomerException(CantSendNegotiationToCryptoCustomerException.DEFAULT_MESSAGE, e, "ERROR SEND NEGOTIATION TO CRYPTO CUSTOMER", "");
@@ -72,14 +74,16 @@ public class NegotiationTransmissionManagerImpl implements NegotiationTransmissi
 
         try{
 
+            if(transactionType.getCode() == NegotiationTransactionType.CUSTOMER_BROKER_NEW.getCode()) {
+                System.out.print("\n\n**** 7) MOCK NEGOTIATION TRANSACTION - NEGOTIATION TRANSMISSION - MANAGER - SEND NEGOTIATION TO CRYPTO BROKER ****\n");
+            }
+
             PlatformComponentType           actorSendType           = PlatformComponentType.ACTOR_CRYPTO_CUSTOMER;
             NegotiationTransmissionType     transmissionType        = NegotiationTransmissionType.TRANSMISSION_NEGOTIATION;
             NegotiationTransmissionState    transmissionState       = NegotiationTransmissionState.PROCESSING_SEND;
             NegotiationTransmission         negotiationTransmission = constructNegotiationTransmission(negotiationTransaction, actorSendType, transactionType, transmissionType);
 
             negotiationTransmissionNetworkServiceDatabaseDao.registerSendNegotiatioTransmission(negotiationTransmission, transmissionState);
-
-            System.out.print("\n\n**** 1) MOCK NEGOTIATION TRANSMISSION SEND, MANAGER - SEND NEGOTIATION TO CRYPTO BROKER ****\n");
 
         } catch (CantConstructNegotiationTransmissionException e){
             throw new CantSendNegotiationToCryptoBrokerException(CantSendNegotiationToCryptoBrokerException.DEFAULT_MESSAGE, e, "ERROR SEND NEGOTIATION TO CRYPTO BROKER", "");
@@ -95,6 +99,10 @@ public class NegotiationTransmissionManagerImpl implements NegotiationTransmissi
     public void sendConfirmNegotiatioToCryptoCustomer(NegotiationTransaction negotiationTransaction, NegotiationTransactionType transactionType) throws CantSendConfirmToCryptoCustomerException {
 
         try{
+
+            if(transactionType.getCode() == NegotiationTransactionType.CUSTOMER_BROKER_NEW.getCode()) {
+                System.out.print("\n\n**** 23) MOCK NEGOTIATION TRANSACTION - NEGOTIATION TRANSMISSION - MANAGER - SEND CONFIRMATION TO CUSTOMER ****\n");
+            }
 
             PlatformComponentType           actorSendType           = PlatformComponentType.ACTOR_CRYPTO_BROKER;
             NegotiationTransmissionType     transmissionType        = NegotiationTransmissionType.TRANSMISSION_CONFIRM;
