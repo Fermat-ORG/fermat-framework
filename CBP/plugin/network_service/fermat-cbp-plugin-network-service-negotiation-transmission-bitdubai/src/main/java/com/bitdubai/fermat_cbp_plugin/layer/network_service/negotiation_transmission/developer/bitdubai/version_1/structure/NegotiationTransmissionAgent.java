@@ -210,7 +210,8 @@ public class NegotiationTransmissionAgent {
     private void processSend() {
 
         try {
-            
+
+            System.out.print("\n\n**** 3) MOCK NEGOTIATION TRANSMISSION SEND, AGENT - LIST PENDING SEND ****\n");
             List<NegotiationTransmission> negotiationTransmissionList = databaseDao.findAllByTransmissionState(NegotiationTransmissionState.PROCESSING_SEND);
 
             for (NegotiationTransmission negotiationTransmission : negotiationTransmissionList) {
@@ -274,6 +275,8 @@ public class NegotiationTransmissionAgent {
 
                             System.out.print("-----------------------\n NEGOTIATION TRANSACTION STATE: " + negotiationTransmission.getTransmissionState() + "\n-----------------------\n");
 
+                            System.out.print("\n\n**** 4) MOCK NEGOTIATION TRANSMISSION SEND, AGENT - SEND NEGOTIATION TO : " + receiverPublicKey + "****\n");
+
                         } catch (CantRegisterSendNegotiationTransmissionException e) {
                             e.printStackTrace();
                         } catch (Exception e) {
@@ -328,6 +331,8 @@ public class NegotiationTransmissionAgent {
 
         try {
 
+            System.out.print("\n\n**** 4) MOCK NEGOTIATION TRANSMISSION RECEIVE, AGENT - LIST PENDING RECEIVE ****\n");
+
             List<NegotiationTransmission> negotiationTransmissionList = databaseDao.findAllByTransmissionState(NegotiationTransmissionState.PENDING_ACTION);
             for(NegotiationTransmission negotiationTransmission : negotiationTransmissionList) {
                 switch (negotiationTransmission.getNegotiationTransactionType()){
@@ -338,14 +343,14 @@ public class NegotiationTransmissionAgent {
                             FermatEvent eventToRaise = eventManager.getNewEvent(EventType.INCOMING_NEGOTIATION_TRANSMISSION_TRANSACTION_NEW);
                             eventToRaise.setSource(EventSource.NETWORK_SERVICE_NEGOTIATION_TRANSMISSION);
                             eventManager.raiseEvent(eventToRaise);
-                            System.out.println("NEGOTIATION TRANSMISSION TRANSACTION NEW");
+                            System.out.println("\n - NEGOTIATION TRANSMISSION TRANSACTION NEW\n");
 
                         }else{
 
                             FermatEvent eventToRaise = eventManager.getNewEvent(EventType.INCOMING_NEGOTIATION_TRANSMISSION_CONFIRM_NEW);
                             eventToRaise.setSource(EventSource.NETWORK_SERVICE_NEGOTIATION_TRANSMISSION);
                             eventManager.raiseEvent(eventToRaise);
-                            System.out.println("NEGOTIATION TRANSMISSION TRANSACTION CONFIRM");
+                            System.out.println("\n - NEGOTIATION TRANSMISSION TRANSACTION CONFIRM\n");
 
                         }
                         break;
@@ -357,14 +362,14 @@ public class NegotiationTransmissionAgent {
                             FermatEvent eventToRaise = eventManager.getNewEvent(EventType.INCOMING_NEGOTIATION_TRANSMISSION_TRANSACTION_UPDATE);
                             eventToRaise.setSource(EventSource.NETWORK_SERVICE_NEGOTIATION_TRANSMISSION);
                             eventManager.raiseEvent(eventToRaise);
-                            System.out.println("NEGOTIATION TRANSMISSION TRANSACTION UPDATE");
+                            System.out.println("\n - NEGOTIATION TRANSMISSION TRANSACTION UPDATE\n");
 
                         }else{
 
                             FermatEvent eventToRaise = eventManager.getNewEvent(EventType.INCOMING_NEGOTIATION_TRANSMISSION_CONFIRM_UPDATE);
                             eventToRaise.setSource(EventSource.NETWORK_SERVICE_NEGOTIATION_TRANSMISSION);
                             eventManager.raiseEvent(eventToRaise);
-                            System.out.println("NEGOTIATION TRANSMISSION TRANSACTION CONFIRM");
+                            System.out.println("\n - NEGOTIATION TRANSMISSION TRANSACTION CONFIRM\n");
 
                         }
                         break;
@@ -376,14 +381,14 @@ public class NegotiationTransmissionAgent {
                             FermatEvent eventToRaise = eventManager.getNewEvent(EventType.INCOMING_NEGOTIATION_TRANSMISSION_TRANSACTION_CLOSE);
                             eventToRaise.setSource(EventSource.NETWORK_SERVICE_NEGOTIATION_TRANSMISSION);
                             eventManager.raiseEvent(eventToRaise);
-                            System.out.println("NEGOTIATION TRANSMISSION TRANSACTION CLOSE");
+                            System.out.println("\n - NEGOTIATION TRANSMISSION TRANSACTION CLOSE\n");
 
                         }else{
 
                             FermatEvent eventToRaise = eventManager.getNewEvent(EventType.INCOMING_NEGOTIATION_TRANSMISSION_CONFIRM_CLOSE);
                             eventToRaise.setSource(EventSource.NETWORK_SERVICE_NEGOTIATION_TRANSMISSION);
                             eventManager.raiseEvent(eventToRaise);
-                            System.out.println("NEGOTIATION TRANSMISSION TRANSACTION CONFIRM");
+                            System.out.println("\n - NEGOTIATION TRANSMISSION TRANSACTION CONFIRM\n");
 
                         }
                         break;

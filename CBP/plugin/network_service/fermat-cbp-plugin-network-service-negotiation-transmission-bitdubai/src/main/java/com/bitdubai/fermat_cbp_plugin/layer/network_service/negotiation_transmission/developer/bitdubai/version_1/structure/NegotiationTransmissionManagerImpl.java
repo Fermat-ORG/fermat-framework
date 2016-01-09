@@ -55,6 +55,8 @@ public class NegotiationTransmissionManagerImpl implements NegotiationTransmissi
 
             negotiationTransmissionNetworkServiceDatabaseDao.registerSendNegotiatioTransmission(negotiationTransmission, transmissionState);
 
+            System.out.print("\n\n**** 1) MOCK NEGOTIATION TRANSMISSION SEND, MANAGER - SEND NEGOTIATION TO CRYPTO CUSTOMER ****\n");
+
         } catch (CantConstructNegotiationTransmissionException e){
             throw new CantSendNegotiationToCryptoCustomerException(CantSendNegotiationToCryptoCustomerException.DEFAULT_MESSAGE, e, "ERROR SEND NEGOTIATION TO CRYPTO CUSTOMER", "");
         } catch (CantRegisterSendNegotiationTransmissionException e){
@@ -76,6 +78,8 @@ public class NegotiationTransmissionManagerImpl implements NegotiationTransmissi
             NegotiationTransmission         negotiationTransmission = constructNegotiationTransmission(negotiationTransaction, actorSendType, transactionType, transmissionType);
 
             negotiationTransmissionNetworkServiceDatabaseDao.registerSendNegotiatioTransmission(negotiationTransmission, transmissionState);
+
+            System.out.print("\n\n**** 1) MOCK NEGOTIATION TRANSMISSION SEND, MANAGER - SEND NEGOTIATION TO CRYPTO BROKER ****\n");
 
         } catch (CantConstructNegotiationTransmissionException e){
             throw new CantSendNegotiationToCryptoBrokerException(CantSendNegotiationToCryptoBrokerException.DEFAULT_MESSAGE, e, "ERROR SEND NEGOTIATION TO CRYPTO BROKER", "");

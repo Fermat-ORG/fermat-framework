@@ -83,8 +83,14 @@ public class NegotiationTransmissionNetworkServiceDatabaseDao {
         try {
             DatabaseTable table =  this.database.getTable(NegotiationTransmissionNetworkServiceDatabaseConstants.NEGOTIATION_TRANSMISSION_NETWORK_SERVICE_TABLE_NAME);
             DatabaseTableRecord record = table.getEmptyRecord();
-            loadRecordAsSendNegotiatioTransmission(record,negotiationTransmission,negotiationTransmissionState);
+            loadRecordAsSendNegotiatioTransmission(record, negotiationTransmission, negotiationTransmissionState);
             table.insertRecord(record);
+
+            if (negotiationTransmission.getTransmissionState().getCode() == NegotiationTransmissionState.PENDING_ACTION.getCode()) {
+                System.out.print("\n\n**** 3) MOCK NEGOTIATION TRANSMISSION RECEIVE, DAO - REGISTER RECEIVE NEGOTIATION TRANSMISSION ****\n");
+            } else{
+                System.out.print("\n\n**** 2) MOCK NEGOTIATION TRANSMISSION SEND, DAO - REGISTER SEND NEGOTIATION TRANSMISSION ****\n");
+            }
 
         } catch (CantInsertRecordException e){
             throw new CantRegisterSendNegotiationTransmissionException (CantRegisterSendNegotiationTransmissionException.DEFAULT_MESSAGE + ". CAN'T REGISTER IN DATABSE A NEGOTIATION TRANSMISSION", e, "ERROR SEND CONFIRM TO CRYPTO BROKER", "");

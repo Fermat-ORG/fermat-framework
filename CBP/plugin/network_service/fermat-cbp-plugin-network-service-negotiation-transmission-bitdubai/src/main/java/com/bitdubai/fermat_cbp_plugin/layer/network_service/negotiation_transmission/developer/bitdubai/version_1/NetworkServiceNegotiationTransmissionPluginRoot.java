@@ -510,7 +510,7 @@ public class NetworkServiceNegotiationTransmissionPluginRoot extends AbstractNet
     public void handleClientConnectionCloseNotificationEvent(FermatEvent fermatEvent) {
 
         if(fermatEvent instanceof ClientConnectionCloseNotificationEvent){
-            System.out.println("-----------------------\n *( *( *( *( *( *( *( *( *(  SE CAYO LA CONEXION *( *( *( *( *( *( *( *( *( *( \n-----------------------\n");
+            System.out.println("-----------------------\n *( *( *( *( *( *( *( *( *(  SE CAYO LA CONEXION NS - NT*( *( *( *( *( *( *( *( *( *( \n-----------------------\n");
             this.register = false;
             communicationNetworkServiceConnectionManager.closeAllConnection();
         }
@@ -524,6 +524,8 @@ public class NetworkServiceNegotiationTransmissionPluginRoot extends AbstractNet
 
             Gson gson = new Gson();
             NegotiationTransmissionMessage negotiationTransmissionMessage = gson.fromJson(fermatMessage.getContent(), NegotiationTransmissionMessage.class);
+
+            System.out.print("\n\n**** 1) MOCK NEGOTIATION TRANSMISSION RECEIVE, PLUGIN ROOT - RECEIVE MESSAGES ****\n");
 
             switch (negotiationTransmissionMessage.getMessageType()){
                 case TRANSMISSION_NEGOTIATION:
@@ -572,6 +574,8 @@ public class NetworkServiceNegotiationTransmissionPluginRoot extends AbstractNet
                 negotiationMessage.getTimestamp()
             );
             databaseDao.registerSendNegotiatioTransmission(negotiationTransmission, NegotiationTransmissionState.PENDING_ACTION);
+
+            System.out.print("\n\n**** 2) MOCK NEGOTIATION TRANSMISSION RECEIVE, PLUGIN ROOT - RECEIVE NEGOTIATION ****\n");
 
         } catch (CantRegisterSendNegotiationTransmissionException e) {
             throw new CantHandleNewMessagesException(CantHandleNewMessagesException.DEFAULT_MESSAGE, e, "ERROR RECEIVE NEGOTIATION", "");
