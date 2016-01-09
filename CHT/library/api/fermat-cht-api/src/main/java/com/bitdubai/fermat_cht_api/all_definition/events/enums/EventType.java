@@ -9,7 +9,7 @@ import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEven
 import com.bitdubai.fermat_cht_api.layer.network_service.chat.events.IncomingChat;
 import com.bitdubai.fermat_cht_api.layer.network_service.chat.events.OutgoingChat;
 
-/** The enum <code>com.bitdubai.fermat_cht_api.fermat_cbp_api.events.enums.EventType</code>
+/** The enum <code>com.bitdubai.fermat_cht_api.fermat_chp_api.events.enums.EventType</code>
  * represent the different type of events found on cht platform.<p/>
  * Created by Manuel Perez (darkpriestrelative@gmail.com) on 05/01/16.
  */
