@@ -1,6 +1,7 @@
 package com.bitdubai.fermat_cer_core.layer.provider;
 
 import com.bitdubai.fermat_api.layer.all_definition.enums.Layers;
+import com.bitdubai.fermat_cer_core.layer.provider.bitcoinvenezuela.BitcoinVenezuelaSubsystem;
 import com.bitdubai.fermat_cer_core.layer.provider.dolartoday.DolarTodaySubsystem;
 import com.bitdubai.fermat_cer_core.layer.provider.elcronista.ElCronistaSubsystem;
 import com.bitdubai.fermat_cer_core.layer.provider.europeancentralbank.EuropeanCentralBankSubsystem;
@@ -23,6 +24,7 @@ public class ProviderLayer extends AbstractLayer {
     public void start() throws CantStartLayerException {
 
         try {
+            registerPlugin(new BitcoinVenezuelaSubsystem());
             registerPlugin(new DolarTodaySubsystem());
             registerPlugin(new ElCronistaSubsystem());
             registerPlugin(new EuropeanCentralBankSubsystem());

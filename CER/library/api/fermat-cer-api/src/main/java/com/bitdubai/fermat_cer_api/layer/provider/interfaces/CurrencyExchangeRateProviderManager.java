@@ -59,11 +59,11 @@ public interface CurrencyExchangeRateProviderManager extends FermatManager {
     ExchangeRate getExchangeRateFromDate(CurrencyPair currencyPair, long timestamp) throws UnsupportedCurrencyPairException, CantGetExchangeRateException;
 
     /**
-     * Given a TimeUnit (Days,weeks,months) and a currencyPair, returns a list of max ExchangeRates, starting from the given offset
+     * Given a start and end timestamp and a currencyPair, returns a list of DAILY ExchangeRates
      *
      * @return a list of exchangeRate objects
      */
-    Collection<ExchangeRate> getExchangeRatesFromPeriod(CurrencyPair currencyPair, TimeUnit timeUnit, int max, int offset) throws UnsupportedCurrencyPairException, CantGetExchangeRateException;
+    Collection<ExchangeRate> getDailyExchangeRatesForPeriod(CurrencyPair currencyPair, long startTimestamp, long endTimestamp) throws UnsupportedCurrencyPairException, CantGetExchangeRateException;
 
     /**
      * Returns a list of queried exchange rates, for a specific currencyPair

@@ -67,7 +67,12 @@ public class WizardPageSetLocationsFragment extends AbstractFermatFragment imple
             } else {
                 locationList = (List<String>) data;
             }
-
+            if(locationList.size()>0) {
+                int pos = locationList.size() - 1;
+                if (locationList.get(pos).equals("settings") || locationList.get(pos).equals("wizard")) {
+                    locationList.remove(pos);
+                }
+            }
         } catch (Exception ex) {
             Log.e(TAG, ex.getMessage(), ex);
             if (errorManager != null)
@@ -95,6 +100,7 @@ public class WizardPageSetLocationsFragment extends AbstractFermatFragment imple
         addLocationButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                locationList.add("wizard");
                 changeActivity(Activities.CBP_CRYPTO_CUSTOMER_WALLET_CREATE_NEW_LOCATION_IN_WIZARD, appSession.getAppPublicKey());
             }
         });
