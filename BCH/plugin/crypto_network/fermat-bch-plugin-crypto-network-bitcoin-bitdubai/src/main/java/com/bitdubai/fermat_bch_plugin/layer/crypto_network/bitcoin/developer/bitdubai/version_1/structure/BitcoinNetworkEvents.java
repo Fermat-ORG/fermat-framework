@@ -164,7 +164,12 @@ public class BitcoinNetworkEvents implements WalletEventListener, PeerEventListe
              * If the transaction is already under blocks, I will save it.
              */
             if (getTransactionCryptoStatus(tx) != CryptoStatus.ON_CRYPTO_NETWORK){
-                saveMissingOutgoingTransaction(wallet, tx, getTransactionCryptoStatus(tx));
+                if (getTransactionCryptoStatus(tx) == CryptoStatus.IRREVERSIBLE){
+                    saveMissingOutgoingTransaction(wallet, tx, CryptoStatus.ON_BLOCKCHAIN);
+                    saveMissingOutgoingTransaction(wallet, tx, getTransactionCryptoStatus(tx));
+                }
+                if (getTransactionCryptoStatus(tx) == CryptoStatus.ON_BLOCKCHAIN)
+                    saveMissingOutgoingTransaction(wallet, tx, getTransactionCryptoStatus(tx));
             }
         } catch (Exception e) {
             /**

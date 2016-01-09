@@ -800,7 +800,9 @@ public class AssetIssuerWalletDao {
         try {
             DatabaseTable assetStatisticTable;
             assetStatisticTable = database.getTable(AssetWalletIssuerDatabaseConstant.ASSET_STATISTIC_TABLE_NAME);
-            DatabaseTableRecord record = assetStatisticTable.getRecordFromPk(assetPublicKey);
+            assetStatisticTable.addStringFilter(AssetWalletIssuerDatabaseConstant.ASSET_STATISTIC_ASSET_PUBLIC_KEY_COLUMN_NAME, assetPublicKey, DatabaseFilterType.EQUAL);
+            assetStatisticTable.loadToMemory();
+            DatabaseTableRecord record = assetStatisticTable.getRecords().get(0);
 
             if (record == null) {
                 throw new RecordsNotFoundException(null, context, "");

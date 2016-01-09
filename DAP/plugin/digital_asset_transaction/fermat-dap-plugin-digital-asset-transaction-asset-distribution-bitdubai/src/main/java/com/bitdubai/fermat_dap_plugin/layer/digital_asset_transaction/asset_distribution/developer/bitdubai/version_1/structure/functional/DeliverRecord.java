@@ -19,6 +19,7 @@ public class DeliverRecord {
     private Date timeOut;
     private DistributionStatus state;
     private String genesisTransactionSent;
+    private long attemptNumber;
 
     //CONSTRUCTORS
 
@@ -26,7 +27,7 @@ public class DeliverRecord {
     public DeliverRecord() {
     }
 
-    public DeliverRecord(String transactionId, String genesisTransaction, DigitalAssetMetadata digitalAssetMetadata, String actorAssetUser, Date startTime, Date timeOut, DistributionStatus state, String genesisTransactionSent) {
+    public DeliverRecord(String transactionId, String genesisTransaction, DigitalAssetMetadata digitalAssetMetadata, String actorAssetUser, Date startTime, Date timeOut, DistributionStatus state, String genesisTransactionSent, int attemptNumber) {
         this.transactionId = transactionId;
         this.genesisTransaction = genesisTransaction;
         this.digitalAssetMetadata = digitalAssetMetadata;
@@ -35,6 +36,7 @@ public class DeliverRecord {
         this.timeOut = timeOut;
         this.state = state;
         this.genesisTransactionSent = genesisTransactionSent;
+        this.attemptNumber = attemptNumber;
     }
 
     //PUBLIC METHODS
@@ -147,6 +149,14 @@ public class DeliverRecord {
 
     public void setGenesisTransactionSent(String genesisTransactionSent) {
         this.genesisTransactionSent = genesisTransactionSent;
+    }
+
+    public long getAttemptNumber() {
+        return attemptNumber;
+    }
+
+    public void setAttemptNumber(long attemptNumber) {
+        this.attemptNumber = attemptNumber;
     }
 
     //INNER CLASSES
