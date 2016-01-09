@@ -7,7 +7,7 @@
 package com.bitdubai.fermat_cht_plugin.layer.network_service.chat.developer.bitdubai.version_1.communications;
 
 import com.bitdubai.fermat_api.layer.all_definition.components.interfaces.PlatformComponentProfile;
-import com.bitdubai.fermat_p2p_api.layer.all_definition.common.network_services.abstract_classes.AbstractNetworkService;
+import com.bitdubai.fermat_cht_plugin.layer.network_service.chat.developer.bitdubai.version_1.ChatPluginRoot;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.client.CommunicationsClientConnection;
 
 
@@ -19,7 +19,7 @@ import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.client.Commun
  * @version 1.0
  * @since Java JDK 1.7
  */
-public class CommunicationRegistrationProcessNetworkServiceAgent<NS extends AbstractNetworkService> extends Thread {
+public class CommunicationRegistrationProcessNetworkServiceAgent extends Thread {
 
     /*
      * Represent the sleep time for the read or send (5000 milliseconds)
@@ -30,7 +30,7 @@ public class CommunicationRegistrationProcessNetworkServiceAgent<NS extends Abst
     /**
      * Represent the networkService
      */
-    private NS networkService;
+    private ChatPluginRoot networkService;
 
     /**
      * Represent the communicationsClientConnection
@@ -47,10 +47,10 @@ public class CommunicationRegistrationProcessNetworkServiceAgent<NS extends Abst
      * @param networkService
      * @param communicationsClientConnection
      */
-    public CommunicationRegistrationProcessNetworkServiceAgent(NS networkService, CommunicationsClientConnection communicationsClientConnection) {
-        this.networkService = networkService;
-        this.communicationsClientConnection = communicationsClientConnection;
-        this.active = Boolean.FALSE;
+    public CommunicationRegistrationProcessNetworkServiceAgent(ChatPluginRoot networkService, CommunicationsClientConnection communicationsClientConnection) {
+            this.networkService = networkService;
+            this.communicationsClientConnection = communicationsClientConnection;
+            this.active = Boolean.FALSE;
     }
 
     /**
