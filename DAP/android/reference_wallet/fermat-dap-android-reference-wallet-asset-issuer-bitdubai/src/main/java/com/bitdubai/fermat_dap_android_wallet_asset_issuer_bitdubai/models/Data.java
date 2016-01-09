@@ -49,30 +49,11 @@ public class Data {
     }
 
     public static List<UserDelivery> getUserDeliveryList(String walletPublicKey, DigitalAsset digitalAsset, AssetIssuerWalletSupAppModuleManager moduleManager) throws Exception {
-        //TODO get from database
-//        List<UserDelivery> users = new ArrayList<>();
-//        UserDelivery userDelivery = new UserDelivery();
-//        userDelivery.setUserName("Janet Williams");
-//        userDelivery.setDeliveryDate(new Timestamp(Calendar.getInstance().getTimeInMillis()));
-//        userDelivery.setDeliveryStatus("Redeemed");
-//        users.add(userDelivery);
-//        userDelivery = new UserDelivery();
-//        userDelivery.setUserName("Amanda Hood");
-//        userDelivery.setDeliveryDate(new Timestamp(Calendar.getInstance().getTimeInMillis()));
-//        userDelivery.setDeliveryStatus("Appropriated");
-//        users.add(userDelivery);
-//        userDelivery = new UserDelivery();
-//        userDelivery.setUserName("Tom Snow");
-//        userDelivery.setDeliveryDate(new Timestamp(Calendar.getInstance().getTimeInMillis()));
-//        userDelivery.setDeliveryStatus("Unused");
-//        users.add(userDelivery);
         List<UserDelivery> users = new ArrayList<>();
         UserDelivery userDelivery;
         List<AssetStatistic> stats = moduleManager.getWalletStatisticsByAsset(walletPublicKey, digitalAsset.getName());
         for (AssetStatistic stat : stats) {
-            //TODO get user name and distribution date
-//            userDelivery = new UserDelivery("User Name", new Timestamp(stat.getDistributionDate().getTime()), stat.getStatus().getCode());
-            userDelivery = new UserDelivery("User Name", new Timestamp(new Date().getTime()), stat.getStatus().getCode());
+            userDelivery = new UserDelivery(stat.getAssetOwnerName(), new Timestamp(stat.getDistributionDate().getTime()), stat.getStatus().getCode());
             users.add(userDelivery);
         }
         return users;

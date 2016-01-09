@@ -417,7 +417,7 @@ public class AssetIssuerWalletImpl implements AssetIssuerWallet {
         assetStatistic.setAssetName(assetIssuerWalletDao.getAssetName(assetPublicKey));
 
         try {
-            assetStatistic.setAssetOwner(assetIssuerWalletDao.getUserPublicKey(assetPublicKey));
+            assetStatistic.setAssetOwnerName(actorAssetUserManager.getActorRegisteredByPublicKey(assetIssuerWalletDao.getUserPublicKey(assetPublicKey)).getName());
         } catch (Exception e) {
             e.printStackTrace();
             //If this happen it means we couldn't get the user or there were none. So we'll keep it as null.
