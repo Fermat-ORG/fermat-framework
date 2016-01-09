@@ -13,6 +13,7 @@ import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.exceptions.CantB
 import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.exceptions.CantStoreBitcoinTransactionException;
 import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.interfaces.BitcoinNetworkManager;
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.asset_vault.exceptions.CantGetActiveRedeemPointAddressesException;
+import com.bitdubai.fermat_bch_api.layer.crypto_vault.asset_vault.exceptions.CantGetActiveRedeemPointsException;
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.asset_vault.exceptions.CantGetExtendedPublicKeyException;
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.asset_vault.exceptions.CantSendAssetBitcoinsToUserException;
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.classes.HierarchyAccount.*;
@@ -612,6 +613,24 @@ public class AssetCryptoVaultManager  {
     private CryptoAddress getCryptoAddressFromRedemPoint(HierarchyAccount hierarchyAccount, int position) throws GetNewCryptoAddressException {
         return vaultKeyHierarchyGenerator.getVaultKeyHierarchy().getRedeemPointBitcoinAddress(hierarchyAccount, position);
 
+    }
+
+    /**
+     * Returns the private Keys of all the active Redeem Points hierarchies in the asset vault
+     * @return
+     */
+    public List<String> getActiveRedeemPoints() throws CantGetActiveRedeemPointsException {
+        List<String> publicKeys = new ArrayList<>();
+        try {
+            for (HierarchyAccount hierarchyAccount : getDao().getHierarchyAccounts()){
+                if (hierarchyAccount.getHierarchyAccountType() == HierarchyAccountType.REDEEMPOINT_ACCOUNT)
+                    publicKeys.add(hierarchyAccount.getDescription());
+            }
+        } catch (CantExecuteDatabaseOperationException e) {
+            throw new CantGetActiveRedeemPointsException(CantGetActiveRedeemPointsException.DEFAULT_MESSAGE, e, "database error getting the list of active hierarchy accounts.", "database issue");
+        }
+
+        return publicKeys;
     }
 
 
