@@ -107,7 +107,7 @@ import java.util.regex.Pattern;
  */
 
 public class NetworkServiceNegotiationTransmissionPluginRoot extends AbstractNetworkService implements
-        NegotiationTransmissionManager,
+//        NegotiationTransmissionManager,
         DatabaseManagerForDevelopers,
         LogManagerForDevelopers {
 
@@ -280,7 +280,7 @@ public class NetworkServiceNegotiationTransmissionPluginRoot extends AbstractNet
 
     /*IMPLEMENTATION NegotiationTransmissionManager*/
     //Crypto Broker Send negotiation To Crypto Customer
-    public void sendNegotiatioToCryptoCustomer(NegotiationTransaction negotiationTransaction, NegotiationTransactionType transactionType) throws CantSendNegotiationToCryptoCustomerException{
+    /*public void sendNegotiatioToCryptoCustomer(NegotiationTransaction negotiationTransaction, NegotiationTransactionType transactionType) throws CantSendNegotiationToCryptoCustomerException{
 
         try{
 
@@ -422,7 +422,7 @@ public class NetworkServiceNegotiationTransmissionPluginRoot extends AbstractNet
             throw new CantDeliverPendingTransactionsException("CAN'T GET PENDING NOTIFICATIONS",e, "Negotiation Transmission network service", "database error");
 
         }
-    }
+    }*/
     /*END IMPLEMENTATION NegotiationTransmissionManager*/
 
     /*IMPLEMENTATION DatabaseManagerForDevelopers.*/
@@ -487,7 +487,9 @@ public class NetworkServiceNegotiationTransmissionPluginRoot extends AbstractNet
     /*PUBLIC METHOD*/
     @Override
     public String getIdentityPublicKey() {
-        return this.identity.getPublicKey();
+//        return this.identity.getPublicKey();
+        return "23C5580D5A807CA38771A7365FC2141A6450556D5233DD4D5D14D4D9CEE7B9715B98951C2F28F820D858898AE0CBCE7B43055AB3C506A804B793E230610E711AEA";
+//        return "30C5580D5A807CA38771A7365FC2141A6450556D5233DD4D5D14D4D9CEE7B9715B98951C2F28F820D858898AE0CBCE7B43055AB3C506A804B793E230610E711AEA";
     }
 
     @Override

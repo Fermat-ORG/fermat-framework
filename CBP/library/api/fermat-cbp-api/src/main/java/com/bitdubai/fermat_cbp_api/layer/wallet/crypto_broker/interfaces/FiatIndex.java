@@ -14,5 +14,5 @@ public interface FiatIndex {
     float getPurchasePriceDownSpread();
     float getSalePurchaseUpSpread();
     float getPurchasePurchaseDownSpread();
-
+    float getPriceReference();
 }

@@ -175,6 +175,7 @@ public enum Plugins implements FermatPluginsEnum {
 
     //Init CER Plugins
     BITDUBAI_CER_PROVIDER_FILTER                ("BCERPF"  ),
+    BITDUBAI_CER_PROVIDER_BITCOINVENEZUELA      ("BCERPBV"  ),
     BITDUBAI_CER_PROVIDER_DOLARTODAY            ("BCERPDT"  ),
     BITDUBAI_CER_PROVIDER_ELCRONISTA            ("BCERPEC"  ),
     BITDUBAI_CER_PROVIDER_EUROPEAN_CENTRAL_BANK ("BCERPECB" ),
@@ -286,6 +287,12 @@ public enum Plugins implements FermatPluginsEnum {
     CUSTOMER_BROKER_PURCHASE            ("CBPU"),
     CUSTOMER_BROKER_SALE                ("CBSA"),
 
+    //CHT
+
+    CHAT_MIDDLEWARE                     ("CHMID"),
+    CHAT_NETWORK_SERVICE                ("CHTNS"),
+    CHAT_SUP_APP_MODULE                 ("CHTSAM");
+
     // End  new Plugins
 
     ;
@@ -389,6 +396,7 @@ public enum Plugins implements FermatPluginsEnum {
             case "BCSHMWM": return BITDUBAI_CSH_MONEY_WALLET_MODULE;
             case "BCSHWCM": return BITDUBAI_CSH_WALLET_CASH_MONEY;
             case "BCERPF":  return BITDUBAI_CER_PROVIDER_FILTER;
+            case "BCERPBV": return BITDUBAI_CER_PROVIDER_BITCOINVENEZUELA;
             case "BCERPDT": return BITDUBAI_CER_PROVIDER_DOLARTODAY;
             case "BCERPEC": return BITDUBAI_CER_PROVIDER_ELCRONISTA;
             case "BCERPECB":return BITDUBAI_CER_PROVIDER_EUROPEAN_CENTRAL_BANK;
@@ -410,8 +418,11 @@ public enum Plugins implements FermatPluginsEnum {
             case "BSOM":    return BROKER_SUBMIT_ONLINE_MERCHANDISE ;
             case "BSFM":    return BROKER_SUBMIT_OFFLINE_MERCHANDISE;
 
-            case "BCNNODE"   : return BITDUBAI_COMMUNICATIONS_NETWORK_NODE;
-            case "BCNCLIENT" : return BITDUBAI_COMMUNICATIONS_NETWORK_CLIENT;
+            case "BCNNODE"   :  return BITDUBAI_COMMUNICATIONS_NETWORK_NODE;
+            case "BCNCLIENT" :  return BITDUBAI_COMMUNICATIONS_NETWORK_CLIENT;
+            case "CHMID":       return CHAT_MIDDLEWARE                          ;
+            case "CHTNS":       return CHAT_NETWORK_SERVICE                     ;
+            case "CHTSAM":      return CHAT_SUP_APP_MODULE                      ;
 
             default:
                 throw new InvalidParameterException(

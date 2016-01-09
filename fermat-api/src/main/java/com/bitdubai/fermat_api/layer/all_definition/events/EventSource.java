@@ -51,6 +51,7 @@ public enum EventSource implements FermatEnum {
     NETWORK_SERVICE_ACTOR_ASSET_ISSUER      ("NSAIU"),
     NETWORK_SERVICE_ACTOR_ASSET_REDEEM_POINT("NSARU"),
     NETWORK_SERVICE_ASSET_TRANSMISSION      ("NSAT"),
+    NETWORK_SERVICE_CHAT                    ("NSCHT"),
     NETWORK_SERVICE_CRYPTO_ADDRESSES        ("NSCAD"),
     NETWORK_SERVICE_CRYPTO_PAYMENT_REQUEST  ("NSCPR"),
     NETWORK_SERVICE_CRYPTO_TRANSMISSION     ("NCT"),
@@ -115,6 +116,7 @@ public enum EventSource implements FermatEnum {
             case "NSARU":  return NETWORK_SERVICE_ACTOR_ASSET_REDEEM_POINT;
             case "NSAT":   return NETWORK_SERVICE_ASSET_TRANSMISSION;
             case "NSCAD":  return NETWORK_SERVICE_CRYPTO_ADDRESSES;
+            case "NSCHT":  return NETWORK_SERVICE_CHAT;
             case "NSCPR":  return NETWORK_SERVICE_CRYPTO_PAYMENT_REQUEST;
             case "NCT":    return NETWORK_SERVICE_CRYPTO_TRANSMISSION;
             case "NIU":    return NETWORK_SERVICE_INTRA_USER_PLUGIN;

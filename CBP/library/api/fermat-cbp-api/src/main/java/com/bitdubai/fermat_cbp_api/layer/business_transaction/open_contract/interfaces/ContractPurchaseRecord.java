@@ -45,7 +45,7 @@ public class ContractPurchaseRecord implements CustomerBrokerContractPurchase {
 
     @Override
     public String getNegotiatiotId() {
-        return null;
+        return negotiationId;
     }
 
     /**
