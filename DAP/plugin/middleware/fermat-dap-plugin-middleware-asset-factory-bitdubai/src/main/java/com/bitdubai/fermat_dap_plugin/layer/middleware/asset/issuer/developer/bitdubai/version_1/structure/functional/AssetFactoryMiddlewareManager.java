@@ -84,7 +84,7 @@ public final class AssetFactoryMiddlewareManager {
 
     private AssetFactoryMiddlewareDao getAssetFactoryMiddlewareDao() {
 
-        return new AssetFactoryMiddlewareDao(pluginDatabaseSystem, pluginId);
+        return new AssetFactoryMiddlewareDao(pluginDatabaseSystem, pluginFileSystem, pluginId);
     }
 
     private boolean areObjectsSettled(AssetFactory assetFactory) {

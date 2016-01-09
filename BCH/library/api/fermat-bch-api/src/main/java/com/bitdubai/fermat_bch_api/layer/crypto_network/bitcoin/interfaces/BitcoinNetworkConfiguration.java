@@ -36,4 +36,10 @@ public interface BitcoinNetworkConfiguration {
      * Amount of Timeout minutes for broadcasting transactions
      */
     public static final int TRANSACTION_BROADCAST_TIMEOUT = 5;
+
+    /**
+     * Max amount of iterations to get a child transaction. We will iterate x times a transaction
+     * going deeper each time, until we found what we are looking for.
+     */
+    public static final int MAX_DEPTH_SARCHING_CHILD_TRANSACTIONS = 10;
 }

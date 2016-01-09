@@ -10,8 +10,12 @@ import com.bitdubai.fermat_dap_android_wallet_asset_issuer_bitdubai.fragments.As
 import com.bitdubai.fermat_dap_android_wallet_asset_issuer_bitdubai.fragments.AssetDetailActivityFragment;
 import com.bitdubai.fermat_dap_android_wallet_asset_issuer_bitdubai.fragments.MainActivityFragment;
 import com.bitdubai.fermat_dap_android_wallet_asset_issuer_bitdubai.fragments.MyAssetsActivityFragment;
+import com.bitdubai.fermat_dap_android_wallet_asset_issuer_bitdubai.fragments.UserAppropiateListFragment;
+import com.bitdubai.fermat_dap_android_wallet_asset_issuer_bitdubai.fragments.UserAppropiateListHeaderFragment;
 import com.bitdubai.fermat_dap_android_wallet_asset_issuer_bitdubai.fragments.UserDeliveryListFragment;
-import com.bitdubai.fermat_dap_android_wallet_asset_issuer_bitdubai.fragments.UserDeliveryListHeaderFragment;
+import com.bitdubai.fermat_dap_android_wallet_asset_issuer_bitdubai.fragments.UserRedeemedListFragment;
+import com.bitdubai.fermat_dap_android_wallet_asset_issuer_bitdubai.fragments.UserRedeemedListHeaderFragment;
+
 import com.bitdubai.fermat_dap_android_wallet_asset_issuer_bitdubai.sessions.AssetIssuerSession;
 import com.bitdubai.fermat_wpd_api.layer.wpd_network_service.wallet_resources.interfaces.WalletResourcesProviderManager;
 
@@ -38,14 +42,23 @@ public class IssuerWalletFragmentFactory extends FermatFragmentFactory<AssetIssu
                 case DAP_WALLET_ASSET_ISSUER_USER_DELIVERY_LIST:
                     currentFragment = new UserDeliveryListFragment();
                     break;
-                case DAP_WALLET_ASSET_ISSUER_USER_DELIVERY_LIST_HEADER:
-                    currentFragment = new UserDeliveryListHeaderFragment();
+                case DAP_WALLET_ASSET_ISSUER_USER_REDEEMED_LIST:
+                    currentFragment = new UserRedeemedListFragment();
+                    break;
+                case DAP_WALLET_ASSET_ISSUER_USER_REDEEMED_LIST_HEADER:
+                    currentFragment = new UserRedeemedListHeaderFragment();
                     break;
                 case DAP_WALLET_ASSET_ISSUER_ASSET_DELIVERY:
                     currentFragment = new AssetDeliveryFragment();
                     break;
                 case DAP_WALLET_ASSET_ISSUER_ASSET_DELIVERY_TAB_SELECT_USERS:
                     currentFragment = new AssetDeliverySelectUsersFragment();
+                    break;
+                case DAP_WALLET_ASSET_ISSUER_USER_APPROPIATE_LIST:
+                    currentFragment = new UserAppropiateListFragment();
+                    break;
+                case DAP_WALLET_ASSET_ISSUER_USER_APPROPIATE_LIST_HEADER:
+                    currentFragment = new UserAppropiateListHeaderFragment();
                     break;
                 case DAP_WALLET_ASSET_ISSUER_ASSET_DELIVERY_TAB_SELECT_GROUPS:
                     currentFragment = new AssetDeliverySelectGroupsFragment();

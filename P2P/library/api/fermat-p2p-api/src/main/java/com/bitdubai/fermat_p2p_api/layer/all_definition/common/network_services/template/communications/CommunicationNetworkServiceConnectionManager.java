@@ -262,6 +262,33 @@ public class CommunicationNetworkServiceConnectionManager<NS extends AbstractNet
 
     }
 
+    /*
+     * Stop the internal threads of the CommunicationNetworkServiceRemoteAgent
+     */
+    @Override
+    public void stop() {
+        for (String key : communicationNetworkServiceRemoteAgentsCache.keySet()) {
+
+            //stop his threads
+            communicationNetworkServiceRemoteAgentsCache.get(key).stop();
+
+        }
+    }
+
+    /*
+     * restart the internal threads of the CommunicationNetworkServiceRemoteAgent
+     */
+    @Override
+    public void restart() {
+
+        for (String key : communicationNetworkServiceRemoteAgentsCache.keySet()) {
+
+            //Restart threads
+            communicationNetworkServiceRemoteAgentsCache.get(key).start();
+
+        }
+    }
+
     /**
      * Get the OutgoingMessageDao
      * @return OutgoingMessageDao
