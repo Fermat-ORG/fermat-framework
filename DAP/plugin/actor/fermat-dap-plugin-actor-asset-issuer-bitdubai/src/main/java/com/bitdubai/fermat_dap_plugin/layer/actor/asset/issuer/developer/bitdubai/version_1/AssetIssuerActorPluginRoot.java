@@ -54,6 +54,7 @@ import com.bitdubai.fermat_dap_api.layer.dap_actor_network_service.asset_issuer.
 import com.bitdubai.fermat_dap_api.layer.dap_actor_network_service.redeem_point.exceptions.CantSendMessageException;
 import com.bitdubai.fermat_dap_api.layer.dap_actor_network_service.redeem_point.interfaces.AssetRedeemPointActorNetworkServiceManager;
 import com.bitdubai.fermat_dap_plugin.layer.actor.asset.issuer.developer.bitdubai.version_1.agent.ActorAssetIssuerMonitorAgent;
+import com.bitdubai.fermat_dap_plugin.layer.actor.asset.issuer.developer.bitdubai.version_1.agent.RedeemerAddressesMonitorAgent;
 import com.bitdubai.fermat_dap_plugin.layer.actor.asset.issuer.developer.bitdubai.version_1.developerUtils.AssetIssuerActorDeveloperDatabaseFactory;
 import com.bitdubai.fermat_dap_plugin.layer.actor.asset.issuer.developer.bitdubai.version_1.event_handlers.ActorAssetIssuerCompleteRegistrationNotificationEventHandler;
 import com.bitdubai.fermat_dap_plugin.layer.actor.asset.issuer.developer.bitdubai.version_1.event_handlers.NewReceiveMessageActorIssuerNotificationEventHandler;
@@ -350,6 +351,19 @@ public class AssetIssuerActorPluginRoot extends AbstractPlugin implements
          */
         if (extendedPublicKey != null) {
             AssetExtendedPublickKeyContentMessage assetExtendedPublickKeyContentMessage = new AssetExtendedPublickKeyContentMessage(extendedPublicKey, redeemPoint.getActorPublicKey());
+            /**
+             * once the extended Key has been generated, I will start the agent that will register any derived key from this extended KEy
+             * into the address book.
+             */
+            RedeemerAddressesMonitorAgent monitorAgent = new RedeemerAddressesMonitorAgent(cryptoAddressBookManager, assetVaultManager, issuer.getActorPublicKey() );
+            try {
+                monitorAgent.start();
+            } catch (CantStartAgentException e) {
+                /**
+                 * If there was a problem, I will continue.
+                 */
+                e.printStackTrace();
+            }
 
             System.out.println("*****Actor Asset Issuer ****: extended Public KEy generada");
             /**
@@ -364,34 +378,6 @@ public class AssetIssuerActorPluginRoot extends AbstractPlugin implements
 
                 assetRedeemPointActorNetworkServiceManager.sendMessage(dapMessageSend);
                 System.out.println("*****Actor Asset Issuer ****: enviando mensaje a Redeempoint Network Service");
-
-                /**
-                 * Once I send back the ExtendedPublicKey, I will wait until the keys are generated and
-                 * register them in the address book.
-                 */
-                new Thread(new Runnable() {
-                    @Override
-                    public void run() {
-                        List<CryptoAddress> cryptoAddresses = null;
-                        try {
-                            while (cryptoAddresses == null){
-                                cryptoAddresses = assetVaultManager.getActiveRedeemPointAddresses(redeemPoint.getActorPublicKey());
-                                Thread.sleep(5000);
-                            }
-
-                            /**
-                             * Once I got them, I will registed them in the address book
-                             */
-                            registerRedeemPointAddresses(cryptoAddresses, issuer.getActorPublicKey(), redeemPoint.getActorPublicKey());
-
-                        } catch (CantGetActiveRedeemPointAddressesException e) {
-                            e.printStackTrace();
-                        } catch (InterruptedException e) {
-                            e.printStackTrace();
-                        }
-                    }
-                }).start();
-
             } catch (CantSetObjectException e) {
                 e.printStackTrace();
             } catch (CantSendMessageException e) {
@@ -415,29 +401,7 @@ public class AssetIssuerActorPluginRoot extends AbstractPlugin implements
 
     }
 
-    private void testGenerateAndInitializeWatchOnlyVault(){
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                try {
-                    Thread.sleep(5000);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
-                ExtendedPublicKey extendedPublicKey = null;
-                try {
-                    extendedPublicKey = assetVaultManager.getRedeemPointExtendedPublicKey("TestRedeemPoint");
-                    WatchOnlyVaultManager.initialize(extendedPublicKey);
-                } catch (CantGetExtendedPublicKeyException e) {
-                    e.printStackTrace();
-                } catch (CantInitializeWatchOnlyVaultException e) {
-                    e.printStackTrace();
-                }
-            }
-        }).start();
 
-
-    }
     @Override
     public List<DeveloperDatabase> getDatabaseList(DeveloperObjectFactory developerObjectFactory) {
         AssetIssuerActorDeveloperDatabaseFactory dbFactory = new AssetIssuerActorDeveloperDatabaseFactory(this.pluginDatabaseSystem, this.pluginId);
