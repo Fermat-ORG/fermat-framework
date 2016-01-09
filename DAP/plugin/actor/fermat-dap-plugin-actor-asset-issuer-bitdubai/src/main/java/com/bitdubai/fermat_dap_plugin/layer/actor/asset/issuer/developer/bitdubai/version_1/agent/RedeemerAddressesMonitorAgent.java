@@ -14,6 +14,7 @@ import com.bitdubai.fermat_bch_api.layer.crypto_vault.asset_vault.exceptions.Can
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.asset_vault.exceptions.CantGetActiveRedeemPointsException;
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.asset_vault.interfaces.AssetVaultManager;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicBoolean;
 
@@ -58,13 +59,15 @@ public class RedeemerAddressesMonitorAgent implements Agent {
         /**
          * I will get the list of CryptoAddress already registed in the address book to Redeem Points.
          */
-        List<CryptoAddress> addressBookCryptoAddresses;
+        List<CryptoAddress> addressBookCryptoAddresses = new ArrayList<>();
         try {
-             addressBookCryptoAddresses = cryptoAddressBookManager.listCryptoAddressBookRecordsByDeliveredToActorType(Actors.DAP_ASSET_REDEEM_POINT);
+            List<CryptoAddressBookRecord> cryptoAddressBookRecords = cryptoAddressBookManager.listCryptoAddressBookRecordsByDeliveredToActorType(Actors.DAP_ASSET_REDEEM_POINT);
+            for (CryptoAddressBookRecord cryptoAddressBookRecord : cryptoAddressBookRecords){
+                addressBookCryptoAddresses.add(cryptoAddressBookRecord.getCryptoAddress());
+            }
         } catch (CantRegisterCryptoAddressBookRecordException e) {
             throw new CantStartAgentException(e, "Error getting Addresses from Address book" , "Crypto Address Book issue");
         }
-
 
         /**
          * instantiate the monitor agent and run it.

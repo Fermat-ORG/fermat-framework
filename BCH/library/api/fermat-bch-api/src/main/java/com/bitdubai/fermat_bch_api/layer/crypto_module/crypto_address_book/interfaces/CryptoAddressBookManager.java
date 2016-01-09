@@ -96,5 +96,5 @@ public interface CryptoAddressBookManager extends FermatManager {
      * @return
      * @throws CantRegisterCryptoAddressBookRecordException
      */
-    List<CryptoAddress> listCryptoAddressBookRecordsByDeliveredToActorType(Actors actorType) throws CantRegisterCryptoAddressBookRecordException;
+    List<CryptoAddressBookRecord> listCryptoAddressBookRecordsByDeliveredToActorType(Actors actorType) throws CantRegisterCryptoAddressBookRecordException;
 }
