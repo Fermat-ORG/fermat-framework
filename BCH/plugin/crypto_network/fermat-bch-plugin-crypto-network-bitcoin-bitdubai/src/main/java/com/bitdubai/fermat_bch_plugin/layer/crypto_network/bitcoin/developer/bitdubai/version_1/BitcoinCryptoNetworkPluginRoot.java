@@ -167,7 +167,7 @@ public class BitcoinCryptoNetworkPluginRoot extends AbstractPlugin implements
      * @throws CantBroadcastTransactionException
      */
     @Override
-    public void broadcastTransaction(BlockchainNetworkType blockchainNetworkType, Transaction tx, UUID transactionId) throws CantBroadcastTransactionException {
+    public synchronized void broadcastTransaction(BlockchainNetworkType blockchainNetworkType, Transaction tx, UUID transactionId) throws CantBroadcastTransactionException {
         bitcoinCryptoNetworkManager.broadcastTransaction(blockchainNetworkType, tx, transactionId);
     }
 
@@ -261,7 +261,7 @@ public class BitcoinCryptoNetworkPluginRoot extends AbstractPlugin implements
      * @throws CantBroadcastTransactionException
      */
     @Override
-    public void broadcastTransaction(String txHash) throws CantBroadcastTransactionException {
+    public synchronized void broadcastTransaction(String txHash) throws CantBroadcastTransactionException {
         bitcoinCryptoNetworkManager.broadcastTransaction(txHash);
     }
 
@@ -285,7 +285,7 @@ public class BitcoinCryptoNetworkPluginRoot extends AbstractPlugin implements
      * @throws CantStoreBitcoinTransactionException
      */
     @Override
-    public void storeBitcoinTransaction(BlockchainNetworkType blockchainNetworkType, Transaction tx, UUID transactionId) throws CantStoreBitcoinTransactionException {
+    public synchronized void storeBitcoinTransaction(BlockchainNetworkType blockchainNetworkType, Transaction tx, UUID transactionId) throws CantStoreBitcoinTransactionException {
         bitcoinCryptoNetworkManager.storeBitcoinTransaction(blockchainNetworkType, tx, transactionId);
     }
 
