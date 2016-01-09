@@ -350,18 +350,19 @@ public class IntraWalletUserModulePluginRoot extends AbstractPlugin implements
      *
      * @param intraUserToAddName      The name of the intra user to add
      * @param intraUserToAddPublicKey The public key of the intra user to add
-     * @param profileImage            The profile image that the intra user has
+     * @param OthersProfileImage      The profile image of the other intra user
+     * @param MyProfileImage          The profile image of the logged intra user
      * @throws CantStartRequestException
      */
 
     @Override
-    public void askIntraUserForAcceptance(String intraUserToAddName, String intraUserToAddPhrase, String intraUserToAddPublicKey, byte[] profileImage, String identityPublicKey, String identityAlias) throws CantStartRequestException {
+    public void askIntraUserForAcceptance(String intraUserToAddName, String intraUserToAddPhrase, String intraUserToAddPublicKey, byte[] OthersProfileImage,byte[] MyProfileImage, String identityPublicKey, String identityAlias) throws CantStartRequestException {
 
         try {
             /**
              *Call Actor Intra User to add request connection
              */
-            this.intraWalletUserManager.askIntraWalletUserForAcceptance(identityPublicKey, intraUserToAddName, intraUserToAddPhrase,intraUserToAddPublicKey, profileImage);
+            this.intraWalletUserManager.askIntraWalletUserForAcceptance(identityPublicKey, intraUserToAddName, intraUserToAddPhrase,intraUserToAddPublicKey, OthersProfileImage);
 
             /**
              *Call Network Service Intra User to add request connection
@@ -370,7 +371,7 @@ public class IntraWalletUserModulePluginRoot extends AbstractPlugin implements
             if (  this.intraWalletUserManager.getIntraUsersConnectionStatus(intraUserToAddPublicKey)!= ConnectionState.CONNECTED){
                 System.out.println("The User you are trying to connect with is not connected" +
                         "so we send the message to the intraUserNetworkService");
-                this.intraUserNertwokServiceManager.askIntraUserForAcceptance(identityPublicKey, identityAlias, Actors.INTRA_USER, intraUserToAddName,intraUserToAddPhrase, intraUserToAddPublicKey, Actors.INTRA_USER, profileImage);
+                this.intraUserNertwokServiceManager.askIntraUserForAcceptance(identityPublicKey, identityAlias, Actors.INTRA_USER, intraUserToAddName,intraUserToAddPhrase, intraUserToAddPublicKey, Actors.INTRA_USER, MyProfileImage);
             }else{
                 this.intraUserNertwokServiceManager.acceptIntraUser(identityPublicKey, intraUserToAddPublicKey);
                 System.out.println("The user is connected");
