@@ -11,6 +11,8 @@ package com.bitdubai.fermat_cht_plugin.layer.middleware.chat.developer.bitdubai.
  * @since Java JDK 1.7
  */
 public class ChatMiddlewareDatabaseConstants {
+
+    public static final String DATABASE_NAME = "chat_middleware";
     /**
      * Chats database table definition.
      */

@@ -263,6 +263,7 @@ public class CustomerOnlinePaymentPluginRoot extends AbstractPlugin implements
 
             this.serviceStatus = ServiceStatus.STARTED;
             //System.out.println("Customer online payment starting");
+            //testPayment();
         } catch (CantInitializeCustomerOnlinePaymentBusinessTransactionDatabaseException exception) {
             throw new CantStartPluginException(
                     FermatException.wrapException(exception),
