@@ -179,7 +179,7 @@ public class NegotiationTransactionCustomerBrokerNewPluginRoot extends AbstractP
             //TEST MOCK
 //            createCustomerBrokerNewPurchaseNegotiationTest();
 
-            //TEST MOCK GET ALL TRANSACTION
+            //TEST MOCK GET ALL TRANSACTIONk
 //            getAllCustomerBrokerNewNegotiationTranasctionTest();
 
             //TEST MOCK CREATE AND GET NEGOTIATION
