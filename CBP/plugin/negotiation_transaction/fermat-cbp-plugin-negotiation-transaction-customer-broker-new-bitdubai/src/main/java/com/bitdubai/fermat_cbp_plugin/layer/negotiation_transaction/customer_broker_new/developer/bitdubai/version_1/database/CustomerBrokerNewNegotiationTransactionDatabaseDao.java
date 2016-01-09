@@ -358,9 +358,9 @@ public class CustomerBrokerNewNegotiationTransactionDatabaseDao {
             table.deleteRecord(record);
 
         } catch (CantDeleteRecordException e) {
-            throw new CantRegisterCustomerBrokerNewNegotiationTransactionException(e.getMessage(), e, "Crypto Customer Actor, Customer Identity Wallet Relationship", "Cant delete Customer Identity Wallet Relationship, delete database problems.");
+            throw new CantRegisterCustomerBrokerNewNegotiationTransactionException(e.getMessage(), e, "Negotiation Transaction, Customer Broker New", "Cant delete Register, delete database problems.");
         } catch (Exception e) {
-            throw new CantRegisterCustomerBrokerNewNegotiationTransactionException(e.getMessage(), FermatException.wrapException(e), "Crypto Customer Actor, Customer Identity Wallet Relationship", "Cant delete Customer Identity Wallet Relationship, unknown failure.");
+            throw new CantRegisterCustomerBrokerNewNegotiationTransactionException(e.getMessage(), FermatException.wrapException(e), "Negotiation Transaction, Customer Broker New", "Cant delete Register, unknown failure.");
         }
     }
 

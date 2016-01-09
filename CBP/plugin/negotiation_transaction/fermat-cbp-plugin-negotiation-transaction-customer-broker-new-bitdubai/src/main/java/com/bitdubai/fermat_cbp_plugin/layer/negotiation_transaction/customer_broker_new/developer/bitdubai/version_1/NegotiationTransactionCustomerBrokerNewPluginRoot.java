@@ -172,18 +172,15 @@ public class NegotiationTransactionCustomerBrokerNewPluginRoot extends AbstractP
             );
             customerBrokerNewAgent.start();
 
-            //TEST MOCK GET ALL TRANSACTION
-            getAllCustomerBrokerNewNegotiationTranasctionTest();
-
             //DELETE TRANSACTION FOR TEST
-            System.out.print("\n**** MOCK CUSTOMER BROKER NEW. PURCHASE NEGOTIATION. DELETE ALL FOR TEST ****\n");
-            customerBrokerNewNegotiationTransactionDatabaseDao.deleteAllForTest();
-
-            //TEST MOCK GET ALL TRANSACTION
-            getAllCustomerBrokerNewNegotiationTranasctionTest();
+//            System.out.print("\n**** MOCK CUSTOMER BROKER NEW. PURCHASE NEGOTIATION. DELETE ALL FOR TEST ****\n");
+//            customerBrokerNewNegotiationTransactionDatabaseDao.deleteAllForTest();
 
             //TEST MOCK
-//            createCustomerBrokerNewPurchaseNegotiationTest();
+            createCustomerBrokerNewPurchaseNegotiationTest();
+
+            //TEST MOCK GET ALL TRANSACTION
+            getAllCustomerBrokerNewNegotiationTranasctionTest();
 
             //TEST MOCK CREATE AND GET NEGOTIATION
 //            createNegotiationsTest();
