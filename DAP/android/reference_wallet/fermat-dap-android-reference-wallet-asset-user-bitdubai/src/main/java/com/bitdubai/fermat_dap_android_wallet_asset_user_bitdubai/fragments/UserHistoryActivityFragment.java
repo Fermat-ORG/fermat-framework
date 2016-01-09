@@ -1,4 +1,4 @@
-package com.bitdubai.fermat_dap_android_wallet_asset_issuer_bitdubai.fragments;
+package com.bitdubai.fermat_dap_android_wallet_asset_user_bitdubai.fragments;
 
 
 import android.graphics.Bitmap;
@@ -13,9 +13,6 @@ import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
@@ -24,17 +21,15 @@ import com.bitdubai.fermat_android_api.ui.adapters.FermatAdapter;
 import com.bitdubai.fermat_android_api.ui.enums.FermatRefreshTypes;
 import com.bitdubai.fermat_android_api.ui.fragments.FermatWalletListFragment;
 import com.bitdubai.fermat_android_api.ui.interfaces.FermatListItemListeners;
-import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Wallets;
 import com.bitdubai.fermat_api.layer.modules.common_classes.ActiveActorIdentityInformation;
-import com.bitdubai.fermat_dap_android_wallet_asset_issuer_bitdubai.R;
-import com.bitdubai.fermat_dap_android_wallet_asset_issuer_bitdubai.common.adapters.MyAssetsAdapter;
-import com.bitdubai.fermat_dap_android_wallet_asset_issuer_bitdubai.models.Data;
-import com.bitdubai.fermat_dap_android_wallet_asset_issuer_bitdubai.models.DigitalAsset;
-import com.bitdubai.fermat_dap_android_wallet_asset_issuer_bitdubai.sessions.AssetIssuerSession;
-import com.bitdubai.fermat_dap_android_wallet_asset_issuer_bitdubai.util.CommonLogger;
-import com.bitdubai.fermat_dap_api.layer.dap_identity.asset_issuer.interfaces.IdentityAssetIssuer;
-import com.bitdubai.fermat_dap_api.layer.dap_module.wallet_asset_issuer.interfaces.AssetIssuerWalletSupAppModuleManager;
+import com.bitdubai.fermat_dap_android_wallet_asset_user_bitdubai.R;
+import com.bitdubai.fermat_dap_android_wallet_asset_user_bitdubai.adapters.MyAssetsAdapter;
+import com.bitdubai.fermat_dap_android_wallet_asset_user_bitdubai.models.Data;
+import com.bitdubai.fermat_dap_android_wallet_asset_user_bitdubai.models.DigitalAsset;
+import com.bitdubai.fermat_dap_android_wallet_asset_user_bitdubai.sessions.AssetUserSession;
+import com.bitdubai.fermat_dap_android_wallet_asset_user_bitdubai.util.CommonLogger;
+import com.bitdubai.fermat_dap_api.layer.dap_module.wallet_asset_user.interfaces.AssetUserWalletSubAppModuleManager;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedWalletExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 
@@ -48,14 +43,14 @@ import static android.widget.Toast.makeText;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class MyAssetsActivityFragment extends FermatWalletListFragment<DigitalAsset>
+public class UserHistoryActivityFragment extends FermatWalletListFragment<DigitalAsset>
         implements FermatListItemListeners<DigitalAsset> {
 
     // Constants
-    private static final String TAG = "MyAssetsActivityFragment";
+    private static final String TAG = "UserHistoryActivityFragment";
 
     // Fermat Managers
-    private AssetIssuerWalletSupAppModuleManager moduleManager;
+    private AssetUserWalletSubAppModuleManager moduleManager;
     private ErrorManager errorManager;
 
     // Data
@@ -64,18 +59,25 @@ public class MyAssetsActivityFragment extends FermatWalletListFragment<DigitalAs
     //UI
     private View noAssetsView;
 
-    public static MyAssetsActivityFragment newInstance() {
-        return new MyAssetsActivityFragment();
+    public static UserHistoryActivityFragment newInstance() {
+        return new UserHistoryActivityFragment();
     }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        moduleManager = ((AssetIssuerSession) appSession).getModuleManager();
-        errorManager = appSession.getErrorManager();
+        try {
+            moduleManager = ((AssetUserSession) appSession).getModuleManager();
+            errorManager = appSession.getErrorManager();
 
-        digitalAssets = (List) getMoreDataAsync(FermatRefreshTypes.NEW, 0);
+            digitalAssets = (List) getMoreDataAsync(FermatRefreshTypes.NEW, 0);
+        } catch (Exception ex) {
+            CommonLogger.exception(TAG, ex.getMessage(), ex);
+            if (errorManager != null)
+                errorManager.reportUnexpectedWalletException(Wallets.DAP_ASSET_USER_WALLET,
+                        UnexpectedWalletExceptionSeverity.DISABLES_THIS_FRAGMENT, ex);
+        }
     }
 
     @Override
@@ -122,10 +124,10 @@ public class MyAssetsActivityFragment extends FermatWalletListFragment<DigitalAs
 //            }
             Drawable drawable = null;
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                drawable = getResources().getDrawable(R.drawable.dap_wallet_asset_issuer_action_bar_gradient_colors, null);
+                drawable = getResources().getDrawable(R.drawable.dap_wallet_asset_user_action_bar_gradient_colors, null);
                 toolbar.setElevation(0);
             } else {
-                drawable = getResources().getDrawable(R.drawable.dap_wallet_asset_issuer_action_bar_gradient_colors);
+                drawable = getResources().getDrawable(R.drawable.dap_wallet_asset_user_action_bar_gradient_colors);
             }
 
             toolbar.setBackground(drawable);
@@ -174,7 +176,7 @@ public class MyAssetsActivityFragment extends FermatWalletListFragment<DigitalAs
 
     @Override
     protected int getLayoutResource() {
-        return R.layout.dap_wallet_asset_issuer_my_assets_activity;
+        return R.layout.dap_wallet_asset_user_history_fragment;
     }
 
     @Override
@@ -236,7 +238,7 @@ public class MyAssetsActivityFragment extends FermatWalletListFragment<DigitalAs
     @Override
     public void onItemClickListener(DigitalAsset data, int position) {
         appSession.setData("asset_data", data);
-        changeActivity(Activities.DAP_ASSET_ISSUER_WALLET_ASSET_DETAIL, appSession.getAppPublicKey());
+//        changeActivity(Activities.DAP_ASSET_ISSUER_WALLET_ASSET_DETAIL, walletSession.getAppPublicKey());
     }
 
     @Override
@@ -254,7 +256,7 @@ public class MyAssetsActivityFragment extends FermatWalletListFragment<DigitalAs
                 CommonLogger.exception(TAG, ex.getMessage(), ex);
                 if (errorManager != null)
                     errorManager.reportUnexpectedWalletException(
-                            Wallets.DAP_ASSET_ISSUER_WALLET,
+                            Wallets.DAP_ASSET_USER_WALLET,
                             UnexpectedWalletExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT,
                             ex);
             }
