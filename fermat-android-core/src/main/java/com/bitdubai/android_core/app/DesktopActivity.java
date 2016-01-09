@@ -12,14 +12,11 @@ import android.view.ViewGroup;
 import android.widget.RemoteViews;
 import android.widget.Toast;
 
-import com.bitdubai.android_core.app.common.version_1.ApplicationConstants;
-import com.bitdubai.android_core.app.common.version_1.NotificationService;
 import com.bitdubai.android_core.app.common.version_1.connections.ConnectionConstants;
 import com.bitdubai.fermat.R;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.ActivityType;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.FermatSession;
 import com.bitdubai.fermat_api.FermatException;
-import com.bitdubai.fermat_api.layer.all_definition.common.system.exceptions.CantStartAllRegisteredPlatformsException;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Engine;
 import com.bitdubai.fermat_api.layer.all_definition.enums.UISource;
 import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterException;
