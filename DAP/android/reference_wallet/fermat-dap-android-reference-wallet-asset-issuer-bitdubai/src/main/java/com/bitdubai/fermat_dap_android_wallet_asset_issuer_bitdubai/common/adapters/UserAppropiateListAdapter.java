@@ -12,7 +12,7 @@ import com.bitdubai.fermat_dap_api.layer.dap_module.wallet_asset_issuer.interfac
 import java.util.List;
 
 /**
- * Created by frank on 12/23/15.
+ * Created by Penny on 01/08/16.
  */
 public class UserAppropiateListAdapter extends FermatAdapter<UserAppropiate, UserAppropiateListHolder> {
 
