@@ -912,6 +912,7 @@ public class SendTransactionFragment2 extends FermatWalletExpandableListFragment
     }
 
     private void changeAmountType(){
+        updateBalances();
         ShowMoneyType showMoneyType = (referenceWalletSession.getTypeAmount()== ShowMoneyType.BITCOIN.getCode()) ? ShowMoneyType.BITS : ShowMoneyType.BITCOIN;
         referenceWalletSession.setTypeAmount(showMoneyType);
         String moneyTpe = "";
@@ -924,7 +925,6 @@ public class SendTransactionFragment2 extends FermatWalletExpandableListFragment
                 break;
         }
         txt_balance_amount_type.setText(moneyTpe);
-        updateBalances();
     }
 
 
@@ -933,7 +933,7 @@ public class SendTransactionFragment2 extends FermatWalletExpandableListFragment
      * Method to change the balance type
      */
     private void changeBalanceType(TextView txt_type_balance,TextView txt_balance_amount) {
-
+        updateBalances();
         try {
             if (((ReferenceWalletSession)appSession).getBalanceTypeSelected().equals(BalanceType.AVAILABLE.getCode())) {
                 balanceAvailable = loadBalance(BalanceType.AVAILABLE);
