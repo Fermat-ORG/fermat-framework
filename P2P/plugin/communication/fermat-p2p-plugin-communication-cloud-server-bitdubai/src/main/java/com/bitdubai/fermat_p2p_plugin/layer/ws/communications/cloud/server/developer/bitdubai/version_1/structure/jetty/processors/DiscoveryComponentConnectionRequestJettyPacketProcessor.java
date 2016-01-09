@@ -4,12 +4,11 @@
  * You may not modify, use, reproduce or distribute this software.
  * BITDUBAI/CONFIDENTIAL
  */
-package com.bitdubai.fermat_p2p_plugin.layer.ws.communications.cloud.server.developer.bitdubai.version_1.structure.processors;
+package com.bitdubai.fermat_p2p_plugin.layer.ws.communications.cloud.server.developer.bitdubai.version_1.structure.jetty.processors;
 
 import com.bitdubai.fermat_api.layer.all_definition.components.enums.PlatformComponentType;
 import com.bitdubai.fermat_api.layer.all_definition.components.interfaces.PlatformComponentProfile;
 import com.bitdubai.fermat_api.layer.all_definition.crypto.asymmetric.AsymmetricCryptography;
-import com.bitdubai.fermat_api.layer.all_definition.crypto.asymmetric.ECCKeyPair;
 import com.bitdubai.fermat_api.layer.all_definition.network_service.enums.NetworkServiceType;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.components.PlatformComponentProfileCommunication;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.contents.FermatPacketCommunicationFactory;
@@ -17,6 +16,8 @@ import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.co
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.contents.FermatPacket;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.enums.FermatPacketType;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.enums.JsonAttNamesConstants;
+import com.bitdubai.fermat_p2p_plugin.layer.ws.communications.cloud.server.developer.bitdubai.version_1.structure.jetty.ClientConnection;
+import com.bitdubai.fermat_p2p_plugin.layer.ws.communications.cloud.server.developer.bitdubai.version_1.structure.jetty.util.MemoryCache;
 import com.bitdubai.fermat_p2p_plugin.layer.ws.communications.cloud.server.developer.bitdubai.version_1.structure.vpn.WsCommunicationVPNServer;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
@@ -24,7 +25,7 @@ import com.google.gson.JsonParser;
 
 import org.apache.commons.lang.ClassUtils;
 import org.apache.log4j.Logger;
-import org.java_websocket.WebSocket;
+
 
 import java.util.ArrayList;
 import java.util.List;
@@ -39,12 +40,12 @@ import java.util.List;
  * @version 1.0
  * @since Java JDK 1.7
  */
-public class DiscoveryComponentConnectionRequestPacketProcessor extends FermatPacketProcessor {
+public class DiscoveryComponentConnectionRequestJettyPacketProcessor extends FermatJettyPacketProcessor {
 
     /**
      * Represent the logger instance
      */
-    private Logger LOG = Logger.getLogger(ClassUtils.getShortClassName(DiscoveryComponentConnectionRequestPacketProcessor.class));
+    private Logger LOG = Logger.getLogger(ClassUtils.getShortClassName(DiscoveryComponentConnectionRequestJettyPacketProcessor.class));
 
     /**
      * Represent the gson
@@ -59,17 +60,17 @@ public class DiscoveryComponentConnectionRequestPacketProcessor extends FermatPa
     /**
      * Constructor
      */
-    public DiscoveryComponentConnectionRequestPacketProcessor() {
+    public DiscoveryComponentConnectionRequestJettyPacketProcessor() {
         gson = new Gson();
         jsonParser = new JsonParser();
     }
 
     /**
      * (no-javadoc)
-     * @see FermatPacketProcessor#processingPackage(WebSocket, FermatPacket, ECCKeyPair)
+     * @see FermatJettyPacketProcessor#processingPackage(ClientConnection, FermatPacket)
      */
     @Override
-    public void processingPackage(WebSocket clientConnection, FermatPacket receiveFermatPacket, ECCKeyPair serverIdentity) {
+    public void processingPackage(ClientConnection clientConnection, FermatPacket receiveFermatPacket) {
 
         LOG.info("--------------------------------------------------------------------- ");
         LOG.info("Starting processingPackage");
@@ -85,7 +86,7 @@ public class DiscoveryComponentConnectionRequestPacketProcessor extends FermatPa
             /*
              * Get the packet content from the message content and decrypt
              */
-            packetContentJsonStringRepresentation = AsymmetricCryptography.decryptMessagePrivateKey(receiveFermatPacket.getMessageContent(), serverIdentity.getPrivateKey());
+            packetContentJsonStringRepresentation = AsymmetricCryptography.decryptMessagePrivateKey(receiveFermatPacket.getMessageContent(), clientConnection.getServerIdentity().getPrivateKey());
            // LOG.info("packetContentJsonStringRepresentation = " + packetContentJsonStringRepresentation);
 
 
@@ -139,36 +140,31 @@ public class DiscoveryComponentConnectionRequestPacketProcessor extends FermatPa
             LOG.info("participantsList.size() = " + participantsList.size());
 
             //Create a new vpn
-            WsCommunicationVPNServer vpnServer = getWsCommunicationCloudServer().getWsCommunicationVpnServerManagerAgent().createNewWsCommunicationVPNServer(participantsList, getWsCommunicationCloudServer(), networkServiceApplicant.getNetworkServiceType());
+            //WsCommunicationVPNServer vpnServer = getWebSocketCloudServerChannel().getWsCommunicationVpnServerManagerAgent().createNewWsCommunicationVPNServer(participantsList, getWebSocketCloudServerChannel(), networkServiceApplicant.getNetworkServiceType());
 
             /*
              * Notify to the participants of the vpn
              */
-            constructRespondPacketAndSend(vpnServer, applicantParticipant, remoteParticipant, remoteNsParticipant);
-            constructRespondPacketAndSend(vpnServer, remoteParticipant, applicantParticipant, networkServiceApplicant);
+            //constructRespondPacketAndSend(vpnServer, applicantParticipant, remoteParticipant, remoteNsParticipant);
+            //constructRespondPacketAndSend(vpnServer, remoteParticipant, applicantParticipant, networkServiceApplicant);
 
             //if no running
-            if (!getWsCommunicationCloudServer().getWsCommunicationVpnServerManagerAgent().isRunning()){
+            //if (!getWebSocketCloudServerChannel().getWsCommunicationVpnServerManagerAgent().isRunning()){
 
                 //Start the agent
-                getWsCommunicationCloudServer().getWsCommunicationVpnServerManagerAgent().start();
-            }
+              //  getWebSocketCloudServerChannel().getWsCommunicationVpnServerManagerAgent().start();
+            //}
 
         }catch (Exception e){
 
-            LOG.info("applicantParticipant is available    = " + (applicantParticipant    != null ? "SI" : "NO" ));
-            LOG.info("networkServiceApplicant is available = " + (networkServiceApplicant != null ? "SI" : "NO" ));
-            LOG.info("remoteParticipant is available       = " + (remoteParticipant       != null ? "SI" : "NO" ));
-            LOG.info("remoteNsParticipant is available     = " + (remoteNsParticipant     != null ? "SI" : "NO" ));
+            LOG.info("applicantParticipant    = " + (applicantParticipant == null ? "SI" : "NO" ));
+            LOG.info("networkServiceApplicant = " + (networkServiceApplicant== null ? "SI" : "NO" ));
+            LOG.info("remoteParticipant       = " + (remoteParticipant== null ? "SI" : "NO" ));
+            LOG.info("remoteNsParticipant     = " + (remoteNsParticipant== null ? "SI" : "NO" ));
 
             LOG.info("requested connection is no possible, some of the participant are no available.");
             LOG.info("cause: "+e.getMessage());
-
-            /*
-             * Get the client connection destination
-             */
-            WebSocket clientConnectionDestination = getWsCommunicationCloudServer().getRegisteredClientConnectionsCache().get(receiveFermatPacket.getSender());
-
+            
             /*
              * Construct the json object
              */
@@ -181,14 +177,14 @@ public class DiscoveryComponentConnectionRequestPacketProcessor extends FermatPa
              * Create the respond packet
              */
             FermatPacket fermatPacketRespond = FermatPacketCommunicationFactory.constructFermatPacketEncryptedAndSinged(receiveFermatPacket.getSender(), //Destination
-                                                                                                                        serverIdentity.getPublicKey(), //Sender
+                                                                                                                        clientConnection.getServerIdentity().getPublicKey(), //Sender
                                                                                                                         gson.toJson(packetContent), //packet Content
                                                                                                                         FermatPacketType.FAILURE_COMPONENT_CONNECTION_REQUEST, //Packet type
-                                                                                                                        serverIdentity.getPrivateKey()); //Sender private key
+                                                                                                                        clientConnection.getServerIdentity().getPrivateKey()); //Sender private key
             /*
              * Send the packet
              */
-            clientConnectionDestination.send(FermatPacketEncoder.encode(fermatPacketRespond));
+            clientConnection.getSession().getAsyncRemote().sendText(FermatPacketEncoder.encode(fermatPacketRespond));
 
         }
 
@@ -217,25 +213,22 @@ public class DiscoveryComponentConnectionRequestPacketProcessor extends FermatPa
         /*
          * Get the client connection destination
          */
-        WebSocket clientConnectionDestination = getWsCommunicationCloudServer().getRegisteredClientConnectionsCache().get(platformComponentProfileDestination.getCommunicationCloudClientIdentity());
+        ClientConnection clientConnectionDestination = MemoryCache.getInstance().getRegisteredClientConnectionsCache().get(platformComponentProfileDestination.getCommunicationCloudClientIdentity());
 
-        /*
-         * Get the server identity for this client
-         */
-        ECCKeyPair serverIdentity = getWsCommunicationCloudServer().getServerIdentityByClientCache().get(clientConnectionDestination.hashCode());
+
 
         /*
          * Create the respond packet
          */
         FermatPacket fermatPacketRespond = FermatPacketCommunicationFactory.constructFermatPacketEncryptedAndSinged(platformComponentProfileDestination.getCommunicationCloudClientIdentity(), //Destination
-                                                                                                                    serverIdentity.getPublicKey(), //Sender
+                                                                                                                    clientConnectionDestination.getServerIdentity().getPublicKey(), //Sender
                                                                                                                     gson.toJson(packetContent), //packet Content
                                                                                                                     FermatPacketType.COMPONENT_CONNECTION_RESPOND, //Packet type
-                                                                                                                    serverIdentity.getPrivateKey()); //Sender private key
+                                                                                                                    clientConnectionDestination.getServerIdentity().getPrivateKey()); //Sender private key
         /*
          * Send the packet
          */
-        clientConnectionDestination.send(FermatPacketEncoder.encode(fermatPacketRespond));
+        clientConnectionDestination.getSession().getAsyncRemote().sendText(FermatPacketEncoder.encode(fermatPacketRespond));
 
     }
 
@@ -263,27 +256,27 @@ public class DiscoveryComponentConnectionRequestPacketProcessor extends FermatPa
         switch (platformComponentType){
 
             case COMMUNICATION_CLOUD_SERVER :
-                if (!getWsCommunicationCloudServer().getRegisteredCommunicationsCloudServerCache().isEmpty()){
-                    temporalList = new ArrayList<>(getWsCommunicationCloudServer().getRegisteredCommunicationsCloudServerCache().values());
+                if (!getWebSocketCloudServerChannel().getRegisteredCommunicationsCloudServerCache().isEmpty()){
+                    temporalList = new ArrayList<>(getWebSocketCloudServerChannel().getRegisteredCommunicationsCloudServerCache().values());
                 }
                 break;
 
             case COMMUNICATION_CLOUD_CLIENT :
-                if (!getWsCommunicationCloudServer().getRegisteredCommunicationsCloudClientCache().isEmpty()){
-                    temporalList = new ArrayList<>(getWsCommunicationCloudServer().getRegisteredCommunicationsCloudClientCache().values());
+                if (!getWebSocketCloudServerChannel().getRegisteredCommunicationsCloudClientCache().isEmpty()){
+                    temporalList = new ArrayList<>(getWebSocketCloudServerChannel().getRegisteredCommunicationsCloudClientCache().values());
                 }
                 break;
 
             case NETWORK_SERVICE :
-                if(getWsCommunicationCloudServer().getRegisteredNetworkServicesCache().containsKey(networkServiceType) && !getWsCommunicationCloudServer().getRegisteredNetworkServicesCache().get(networkServiceType).isEmpty()){
-                    temporalList = new ArrayList<>(getWsCommunicationCloudServer().getRegisteredNetworkServicesCache().get(networkServiceType));
+                if(getWebSocketCloudServerChannel().getRegisteredNetworkServicesCache().containsKey(networkServiceType) && !getWebSocketCloudServerChannel().getRegisteredNetworkServicesCache().get(networkServiceType).isEmpty()){
+                    temporalList = new ArrayList<>(getWebSocketCloudServerChannel().getRegisteredNetworkServicesCache().get(networkServiceType));
                 }
                 break;
 
             //Others
             default :
-                if (getWsCommunicationCloudServer().getRegisteredOtherPlatformComponentProfileCache().containsKey(platformComponentType) && !getWsCommunicationCloudServer().getRegisteredOtherPlatformComponentProfileCache().get(platformComponentType).isEmpty()){
-                    temporalList = getWsCommunicationCloudServer().getRegisteredOtherPlatformComponentProfileCache().get(platformComponentType);
+                if (getWebSocketCloudServerChannel().getRegisteredOtherPlatformComponentProfileCache().containsKey(platformComponentType) && !getWebSocketCloudServerChannel().getRegisteredOtherPlatformComponentProfileCache().get(platformComponentType).isEmpty()){
+                    temporalList = getWebSocketCloudServerChannel().getRegisteredOtherPlatformComponentProfileCache().get(platformComponentType);
                 }
                 break;
 
@@ -328,27 +321,27 @@ public class DiscoveryComponentConnectionRequestPacketProcessor extends FermatPa
         switch (platformComponentType){
 
             case COMMUNICATION_CLOUD_SERVER :
-                if (!getWsCommunicationCloudServer().getRegisteredCommunicationsCloudServerCache().isEmpty()) {
-                    temporalList = new ArrayList<>(getWsCommunicationCloudServer().getRegisteredCommunicationsCloudServerCache().values());
+                if (!getWebSocketCloudServerChannel().getRegisteredCommunicationsCloudServerCache().isEmpty()) {
+                    temporalList = new ArrayList<>(getWebSocketCloudServerChannel().getRegisteredCommunicationsCloudServerCache().values());
                 }
                 break;
 
             case COMMUNICATION_CLOUD_CLIENT :
-                if (!getWsCommunicationCloudServer().getRegisteredCommunicationsCloudClientCache().isEmpty()){
-                    temporalList = new ArrayList<>(getWsCommunicationCloudServer().getRegisteredCommunicationsCloudClientCache().values());
+                if (!getWebSocketCloudServerChannel().getRegisteredCommunicationsCloudClientCache().isEmpty()){
+                    temporalList = new ArrayList<>(getWebSocketCloudServerChannel().getRegisteredCommunicationsCloudClientCache().values());
                 }
                 break;
 
             case NETWORK_SERVICE :
-                if(getWsCommunicationCloudServer().getRegisteredNetworkServicesCache().containsKey(networkServiceType) && !getWsCommunicationCloudServer().getRegisteredNetworkServicesCache().get(networkServiceType).isEmpty()) {
-                    temporalList = new ArrayList<>(getWsCommunicationCloudServer().getRegisteredNetworkServicesCache().get(networkServiceType));
+                if(getWebSocketCloudServerChannel().getRegisteredNetworkServicesCache().containsKey(networkServiceType) && !getWebSocketCloudServerChannel().getRegisteredNetworkServicesCache().get(networkServiceType).isEmpty()) {
+                    temporalList = new ArrayList<>(getWebSocketCloudServerChannel().getRegisteredNetworkServicesCache().get(networkServiceType));
                 }
                 break;
 
             //Others
             default :
-                if (getWsCommunicationCloudServer().getRegisteredOtherPlatformComponentProfileCache().containsKey(platformComponentType) && !getWsCommunicationCloudServer().getRegisteredOtherPlatformComponentProfileCache().get(platformComponentType).isEmpty()) {
-                    temporalList = getWsCommunicationCloudServer().getRegisteredOtherPlatformComponentProfileCache().get(platformComponentType);
+                if (getWebSocketCloudServerChannel().getRegisteredOtherPlatformComponentProfileCache().containsKey(platformComponentType) && !getWebSocketCloudServerChannel().getRegisteredOtherPlatformComponentProfileCache().get(platformComponentType).isEmpty()) {
+                    temporalList = getWebSocketCloudServerChannel().getRegisteredOtherPlatformComponentProfileCache().get(platformComponentType);
                 }
                 break;
         }
@@ -370,7 +363,7 @@ public class DiscoveryComponentConnectionRequestPacketProcessor extends FermatPa
 
     /**
      * (no-javadoc)
-     * @see FermatPacketProcessor#getFermatPacketType()
+     * @see FermatJettyPacketProcessor#getFermatPacketType()
      */
     @Override
     public FermatPacketType getFermatPacketType() {

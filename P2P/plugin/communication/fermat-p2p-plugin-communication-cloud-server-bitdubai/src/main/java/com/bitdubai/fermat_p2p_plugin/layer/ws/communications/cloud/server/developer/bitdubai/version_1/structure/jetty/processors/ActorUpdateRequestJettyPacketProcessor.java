@@ -4,7 +4,7 @@
  * You may not modify, use, reproduce or distribute this software.
 * BITDUBAI/CONFIDENTIAL
 */
-package com.bitdubai.fermat_p2p_plugin.layer.ws.communications.cloud.server.developer.bitdubai.version_1.structure.processors;
+package com.bitdubai.fermat_p2p_plugin.layer.ws.communications.cloud.server.developer.bitdubai.version_1.structure.jetty.processors;
 
 import com.bitdubai.fermat_api.layer.all_definition.components.enums.PlatformComponentType;
 import com.bitdubai.fermat_api.layer.all_definition.components.interfaces.PlatformComponentProfile;
@@ -17,13 +17,13 @@ import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.co
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.contents.FermatPacket;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.enums.FermatPacketType;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.enums.JsonAttNamesConstants;
+import com.bitdubai.fermat_p2p_plugin.layer.ws.communications.cloud.server.developer.bitdubai.version_1.structure.jetty.ClientConnection;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 
 import org.apache.commons.lang.ClassUtils;
 import org.apache.log4j.Logger;
-import org.java_websocket.WebSocket;
 
 import java.util.List;
 import java.util.Map;
@@ -32,16 +32,17 @@ import java.util.Map;
  * The Class <code>com.bitdubai.fermat_p2p_plugin.layer.ws.communications.cloud.server.developer.bitdubai.version_1.structure.processors.ActorUpdateRequestJettyPacketProcessor</code>
  * <p/>
  * Created by Hendry Rodriguez - (elnegroevaristo@gmail.com) on 06/01/16.
+ * Update by Roberto Requena   - (rart3001@gmail.com) on 09/01/16
  *
  * @version 1.0
  * @since Java JDK 1.7
  */
-public class ActorUpdateRequestPacketProcessor extends FermatPacketProcessor {
+public class ActorUpdateRequestJettyPacketProcessor extends FermatJettyPacketProcessor {
 
     /**
      * Represent the logger instance
      */
-    private Logger LOG = Logger.getLogger(ClassUtils.getShortClassName(ActorUpdateRequestPacketProcessor.class));
+    private Logger LOG = Logger.getLogger(ClassUtils.getShortClassName(ActorUpdateRequestJettyPacketProcessor.class));
 
     /**
      * Represent the gson
@@ -56,13 +57,17 @@ public class ActorUpdateRequestPacketProcessor extends FermatPacketProcessor {
     /**
      * Constructor
      */
-    public ActorUpdateRequestPacketProcessor() {
+    public ActorUpdateRequestJettyPacketProcessor() {
         gson = new Gson();
         jsonParser = new JsonParser();
     }
 
+    /**
+     * (no-javadoc)
+     * @see FermatJettyPacketProcessor#processingPackage(ClientConnection, FermatPacket)
+     */
     @Override
-    public void processingPackage(WebSocket clientConnection, FermatPacket receiveFermatPacket, ECCKeyPair serverIdentity) {
+    public void processingPackage(ClientConnection clientConnection, FermatPacket receiveFermatPacket) {
 
         LOG.info("--------------------------------------------------------------------- ");
         LOG.info("processingPackage");
@@ -76,7 +81,7 @@ public class ActorUpdateRequestPacketProcessor extends FermatPacketProcessor {
             /*
              * Get the platformComponentProfile from the message content and decrypt
              */
-            packetContentJsonStringRepresentation = AsymmetricCryptography.decryptMessagePrivateKey(receiveFermatPacket.getMessageContent(), serverIdentity.getPrivateKey());
+            packetContentJsonStringRepresentation = AsymmetricCryptography.decryptMessagePrivateKey(receiveFermatPacket.getMessageContent(), clientConnection.getServerIdentity().getPrivateKey());
 
             /*
              * Construct the json object
@@ -95,23 +100,18 @@ public class ActorUpdateRequestPacketProcessor extends FermatPacketProcessor {
 
             if(platformComponentProfileToUpdate.getPlatformComponentType() == PlatformComponentType.COMMUNICATION_CLOUD_SERVER ||
                     platformComponentProfileToUpdate.getPlatformComponentType() == PlatformComponentType.COMMUNICATION_CLOUD_CLIENT ||
-                    platformComponentProfileToUpdate.getPlatformComponentType() == PlatformComponentType.NETWORK_SERVICE){
+                        platformComponentProfileToUpdate.getPlatformComponentType() == PlatformComponentType.NETWORK_SERVICE){
 
-                failureToUpdateActor(platformComponentProfileToUpdate, receiveFermatPacket, clientConnection, serverIdentity, networkServiceTypeApplicant, packetContentJsonStringRepresentation);
+                failureToUpdateActor(platformComponentProfileToUpdate, receiveFermatPacket, clientConnection, clientConnection.getServerIdentity(), networkServiceTypeApplicant, packetContentJsonStringRepresentation);
 
             }else{
-                updateComponentActorProfile(platformComponentProfileToUpdate, receiveFermatPacket, clientConnection, serverIdentity, networkServiceTypeApplicant, packetContentJsonStringRepresentation);
+                updateComponentActorProfile(platformComponentProfileToUpdate, receiveFermatPacket, clientConnection, clientConnection.getServerIdentity(), networkServiceTypeApplicant, packetContentJsonStringRepresentation);
             }
 
         }catch (Exception e){
 
             LOG.info("requested update is no possible ");
             LOG.info("cause: " + e.getMessage());
-
-            /*
-             * Get the client connection destination
-             */
-            WebSocket clientConnectionDestination = getWsCommunicationCloudServer().getRegisteredClientConnectionsCache().get(receiveFermatPacket.getSender());
 
             /*
              * Construct the json object
@@ -125,26 +125,26 @@ public class ActorUpdateRequestPacketProcessor extends FermatPacketProcessor {
              * Create the respond packet
              */
             FermatPacket fermatPacketRespond = FermatPacketCommunicationFactory.constructFermatPacketEncryptedAndSinged(receiveFermatPacket.getSender(), //Destination
-                    serverIdentity.getPublicKey(), //Sender
-                    gson.toJson(packetContent), //packet Content
-                    FermatPacketType.FAILURE_UPDATE_ACTOR_REQUEST, //Packet type
-                    serverIdentity.getPrivateKey()); //Sender private key
+                                                                                                                        clientConnection.getServerIdentity().getPublicKey(), //Sender
+                                                                                                                        gson.toJson(packetContent), //packet Content
+                                                                                                                        FermatPacketType.FAILURE_UPDATE_ACTOR_REQUEST, //Packet type
+                                                                                                                        clientConnection.getServerIdentity().getPrivateKey()); //Sender private key
             /*
              * Send the packet
              */
-            clientConnectionDestination.send(FermatPacketEncoder.encode(fermatPacketRespond));
+            clientConnection.getSession().getAsyncRemote().sendText(FermatPacketEncoder.encode(fermatPacketRespond));
 
         }
 
     }
 
-    private void updateComponentActorProfile(final PlatformComponentProfile platformComponentProfileToUpdate, final FermatPacket receiveFermatPacket, final WebSocket clientConnection,  final ECCKeyPair serverIdentity, final NetworkServiceType networkServiceTypeApplicant, final String packetContentJsonStringRepresentation){
+    private void updateComponentActorProfile(final PlatformComponentProfile platformComponentProfileToUpdate, final FermatPacket receiveFermatPacket, final ClientConnection clientConnection,  final ECCKeyPair serverIdentity, final NetworkServiceType networkServiceTypeApplicant, final String packetContentJsonStringRepresentation){
 
         LOG.info("============================================================================ ");
         LOG.info("updateComponentActorProfile");
 
 
-        Map<PlatformComponentType, List<PlatformComponentProfile>> registeredPlatformComponentProfile = getWsCommunicationCloudServer().getRegisteredOtherPlatformComponentProfileCache();
+        Map<PlatformComponentType, List<PlatformComponentProfile>> registeredPlatformComponentProfile = getWebSocketCloudServerChannel().getRegisteredOtherPlatformComponentProfileCache();
 
         /*
          * used to update actor profile
@@ -223,31 +223,25 @@ public class ActorUpdateRequestPacketProcessor extends FermatPacketProcessor {
              * Construct a fermat packet whit the same platform component profile and different FermatPacketType
              */
             FermatPacket fermatPacketRespond = FermatPacketCommunicationFactory.constructFermatPacketEncryptedAndSinged(receiveFermatPacket.getSender(), //Destination
-                    serverIdentity.getPublicKey(),                    //Sender
-                    gson.toJson(jsonObject),                          //Message Content
-                    FermatPacketType.COMPLETE_UPDATE_ACTOR, //Packet type
-                    serverIdentity.getPrivateKey());                  //Sender private key
+                                                                                                                        serverIdentity.getPublicKey(),                    //Sender
+                                                                                                                        gson.toJson(jsonObject),                          //Message Content
+                                                                                                                        FermatPacketType.COMPLETE_UPDATE_ACTOR, //Packet type
+                                                                                                                        serverIdentity.getPrivateKey());                  //Sender private key
 
              /*
              * Send the encode packet to the server
              */
-            clientConnection.send(FermatPacketEncoder.encode(fermatPacketRespond));
+            clientConnection.getSession().getAsyncRemote().sendText(FermatPacketEncoder.encode(fermatPacketRespond));
 
         }else{
 
             String message = null;
 
             if(foundRegister){
-                message = "The fields Name, Alias, ExtraData must be setters are obligatories";
+                message = "The fields Name, Alias, ExtraData must be setters are obligatorily";
             }else{
                 message = "Register not found";
             }
-
-
-            /*
-             * Get the client connection destination
-             */
-            WebSocket clientConnectionDestination = getWsCommunicationCloudServer().getRegisteredClientConnectionsCache().get(receiveFermatPacket.getSender());
 
             /*
              * Construct the json object
@@ -261,47 +255,42 @@ public class ActorUpdateRequestPacketProcessor extends FermatPacketProcessor {
              * Create the respond packet
              */
             FermatPacket fermatPacketRespond = FermatPacketCommunicationFactory.constructFermatPacketEncryptedAndSinged(receiveFermatPacket.getSender(), //Destination
-                    serverIdentity.getPublicKey(), //Sender
-                    gson.toJson(packetContent), //packet Content
-                    FermatPacketType.FAILURE_UPDATE_ACTOR_REQUEST, //Packet type
-                    serverIdentity.getPrivateKey()); //Sender private key
+                                                                                                                        serverIdentity.getPublicKey(), //Sender
+                                                                                                                        gson.toJson(packetContent), //packet Content
+                                                                                                                        FermatPacketType.FAILURE_UPDATE_ACTOR_REQUEST, //Packet type
+                                                                                                                        serverIdentity.getPrivateKey()); //Sender private key
             /*
              * Send the packet
              */
-            clientConnectionDestination.send(FermatPacketEncoder.encode(fermatPacketRespond));
+            clientConnection.getSession().getAsyncRemote().sendText(FermatPacketEncoder.encode(fermatPacketRespond));
 
         }
 
     }
 
-    private void failureToUpdateActor(final PlatformComponentProfile platformComponentProfileToUpdate, final FermatPacket receiveFermatPacket, final WebSocket clientConnection,  final ECCKeyPair serverIdentity, final NetworkServiceType networkServiceTypeApplicant, final String packetContentJsonStringRepresentation){
+    private void failureToUpdateActor(final PlatformComponentProfile platformComponentProfileToUpdate, final FermatPacket receiveFermatPacket, final ClientConnection clientConnection,  final ECCKeyPair serverIdentity, final NetworkServiceType networkServiceTypeApplicant, final String packetContentJsonStringRepresentation){
 
 
-          /*
-             * Get the client connection destination
-             */
-        WebSocket clientConnectionDestination = getWsCommunicationCloudServer().getRegisteredClientConnectionsCache().get(receiveFermatPacket.getSender());
-
-            /*
-             * Construct the json object
-             */
+        /*
+         * Construct the json object
+         */
         JsonObject packetContent = jsonParser.parse(packetContentJsonStringRepresentation).getAsJsonObject();
         packetContent.addProperty(JsonAttNamesConstants.NETWORK_SERVICE_TYPE, networkServiceTypeApplicant.toString());
         packetContent.addProperty(JsonAttNamesConstants.PROFILE_TO_UPDATE, platformComponentProfileToUpdate.toJson());
         packetContent.addProperty(JsonAttNamesConstants.FAILURE_VPN_MSJ, "Failure Update ComponentProfile Cause: is only supported Actor to update ");
 
-            /*
-             * Create the respond packet
-             */
+        /*
+         * Create the respond packet
+         */
         FermatPacket fermatPacketRespond = FermatPacketCommunicationFactory.constructFermatPacketEncryptedAndSinged(receiveFermatPacket.getSender(), //Destination
-                serverIdentity.getPublicKey(), //Sender
-                gson.toJson(packetContent), //packet Content
-                FermatPacketType.FAILURE_UPDATE_ACTOR_REQUEST, //Packet type
-                serverIdentity.getPrivateKey()); //Sender private key
-            /*
-             * Send the packet
-             */
-        clientConnectionDestination.send(FermatPacketEncoder.encode(fermatPacketRespond));
+                                                                                                                    serverIdentity.getPublicKey(), //Sender
+                                                                                                                    gson.toJson(packetContent), //packet Content
+                                                                                                                    FermatPacketType.FAILURE_UPDATE_ACTOR_REQUEST, //Packet type
+                                                                                                                    serverIdentity.getPrivateKey()); //Sender private key
+        /*
+         * Send the packet
+         */
+        clientConnection.getSession().getAsyncRemote().sendText(FermatPacketEncoder.encode(fermatPacketRespond));
 
     }
 

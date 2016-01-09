@@ -180,6 +180,8 @@ public class WsCommunicationsCloudClientPluginRoot extends AbstractPlugin implem
 
             uri = new URI(ServerConf.WS_PROTOCOL + WsCommunicationsCloudClientPluginRoot.SERVER_IP + ":" + ServerConf.DEFAULT_PORT);
 
+            //uri = new URI("ws://192.168.1.5:9090/fermat/ws/");
+
             wsCommunicationsCloudClientConnection = new WsCommunicationsCloudClientConnection(uri,eventManager, locationManager, clientIdentity);
             wsCommunicationsCloudClientConnection.initializeAndConnect();
 

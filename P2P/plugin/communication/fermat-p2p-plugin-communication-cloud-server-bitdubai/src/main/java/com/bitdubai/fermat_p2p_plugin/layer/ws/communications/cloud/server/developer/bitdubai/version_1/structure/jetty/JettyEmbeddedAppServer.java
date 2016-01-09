@@ -1,0 +1,269 @@
+/*
+ * @#JettyEmbeddedAppServer.java - 2016
+ * Copyright bitDubai.com., All rights reserved.
+ * You may not modify, use, reproduce or distribute this software.
+ * BITDUBAI/CONFIDENTIAL
+ */
+package com.bitdubai.fermat_p2p_plugin.layer.ws.communications.cloud.server.developer.bitdubai.version_1.structure.jetty;
+
+import com.bitdubai.fermat_p2p_plugin.layer.ws.communications.cloud.server.developer.bitdubai.version_1.structure.jetty.vpn.VPN;
+import com.bitdubai.fermat_p2p_plugin.layer.ws.communications.cloud.server.developer.bitdubai.version_1.structure.jetty.vpn.VpnWebSocketServlet;
+import com.bitdubai.fermat_p2p_plugin.layer.ws.communications.cloud.server.developer.bitdubai.version_1.structure.jetty.vpn.WebSocketVpnServerChannel;
+
+import org.apache.commons.lang.ClassUtils;
+import org.apache.log4j.Logger;
+import org.eclipse.jetty.server.Server;
+import org.eclipse.jetty.server.ServerConnector;
+import org.eclipse.jetty.servlet.ServletContextHandler;
+
+import javax.servlet.Servlet;
+import javax.websocket.ContainerProvider;
+import javax.websocket.WebSocketContainer;
+import javax.websocket.server.ServerContainer;
+import javax.websocket.server.ServerEndpointConfig;
+
+import org.eclipse.jetty.servlet.ServletHandler;
+import org.eclipse.jetty.servlet.ServletHolder;
+import org.eclipse.jetty.servlet.ServletMapping;
+import org.eclipse.jetty.websocket.jsr356.server.deploy.WebSocketServerContainerInitializer;
+
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Enumeration;
+import java.util.Timer;
+import java.util.TimerTask;
+import java.util.UUID;
+
+/**
+ * The class <code>com.bitdubai.fermat_p2p_plugin.layer.ws.communications.cloud.server.developer.bitdubai.version_1.structure.jetty.JettyEmbeddedAppServer</code>
+ * is the application web server to deploy the web socket server</p>
+ * <p/>
+ * Created by Roberto Requena - (rart3001@gmail.com) on 08/01/16.
+ *
+ * @version 1.0
+ * @since Java JDK 1.7
+ */
+public class JettyEmbeddedAppServer {
+
+    /**
+     * Represent the logger instance
+     */
+    private static Logger LOG = Logger.getLogger(ClassUtils.getShortClassName(JettyEmbeddedAppServer.class));
+
+    /**
+     * Represent the DEFAULT_PORT value (9090)
+     */
+    private static final int DEFAULT_PORT = 9090;
+
+    /**
+     * Represent the DEFAULT_CONTEXT_PATH value (/fermat)
+     */
+    private static final String DEFAULT_CONTEXT_PATH = "/fermat";
+
+    /**
+     * Represent the JettyEmbeddedAppServer instance
+     */
+    private static JettyEmbeddedAppServer instance;
+
+    /**
+     * Represent the server instance
+     */
+    private Server server;
+
+    /**
+     * Represent the web socket server container instance
+     */
+    private ServerContainer wsServerContainer;
+
+    /**
+     * Represent the ServletContextHandler instance
+     */
+    private ServletContextHandler servletContextHandler;
+
+    /**
+     * Represent the ServerConnector instance
+     */
+    private ServerConnector serverConnector;
+
+    /**
+     * Constructor
+     */
+    private JettyEmbeddedAppServer(){
+        super();
+    }
+
+    private void initialize(){
+
+        /*
+         * Create and configure the server
+         */
+        this.server = new Server();
+        this.serverConnector = new ServerConnector(server);
+        this.serverConnector.setPort(JettyEmbeddedAppServer.DEFAULT_PORT);
+        this.server.addConnector(serverConnector);
+
+        /*
+         * Setup the basic application "context" for this application at "/fermat"
+         */
+        this.servletContextHandler = new ServletContextHandler(ServletContextHandler.SESSIONS);
+        this.servletContextHandler.setContextPath(JettyEmbeddedAppServer.DEFAULT_CONTEXT_PATH);
+        this.server.setHandler(servletContextHandler);
+
+        try{
+            /*
+             * Initialize javax.websocket layer
+             */
+            this.wsServerContainer = WebSocketServerContainerInitializer.configureContext(servletContextHandler);
+
+            /*
+             * Add WebSocket endpoint to javax.websocket layer
+             */
+            this.wsServerContainer.addEndpoint(WebSocketCloudServerChannel.class);
+
+
+
+            this.server.start();
+            this.server.dump(System.err);
+            //this.server.join();
+
+        }catch (Throwable t){
+            t.printStackTrace(System.err);
+        }
+    }
+
+    /**
+     * Deploy a new vpn web socket
+     *
+     * @return path
+     */
+    public String deployNewVpnWebSocket() throws Exception {
+
+        // Add a websocket to a specific path spec
+        String path = UUID.randomUUID().toString();
+        System.out.println("Deploy a new ws path = " + path);
+        ServletHolder servletHolder = new ServletHolder("vpn_"+path, VpnWebSocketServlet.class);
+        servletHolder.setInitOrder(1);
+        instance.servletContextHandler.addServlet(servletHolder, "/" + path + "/*");
+        return path;
+    }
+
+    /**
+     * Deploy a new vpn web socket
+     *
+     * @return path
+     */
+    public String deployNewJavaxVpnWebSocket() throws Exception {
+
+        // Add a websocket to a specific path spec
+        String path = UUID.randomUUID().toString();
+        System.out.println("Deploy a new ws path = " + path);
+        ServerEndpointConfig serverEndpointConfig = ServerEndpointConfig.Builder.create(WebSocketVpnServerChannel.class, "/" + path + "/vpn/").build();
+        instance.wsServerContainer.addEndpoint(serverEndpointConfig);
+
+        return path;
+    }
+
+
+    /**
+     * Get the instance value
+     *
+     * @return instance current value
+     */
+    public static JettyEmbeddedAppServer getInstance() {
+
+        if (instance == null){
+            instance = new JettyEmbeddedAppServer();
+            instance.initialize();
+        }
+
+        return instance;
+    }
+
+    /**
+     * Get the server value
+     *
+     * @return server current value
+     */
+    public Server getServer() {
+        return server;
+    }
+
+    public static void main(String[] args)
+    {
+        try {
+
+            JettyEmbeddedAppServer.getInstance();
+            JettyEmbeddedAppServer.getInstance().deployNewJavaxVpnWebSocket();
+
+            new Timer().schedule(new TimerTask() {
+                @Override
+                public void run() {
+                    try {
+                        JettyEmbeddedAppServer.getInstance().deployNewJavaxVpnWebSocket();
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
+            }, 5000);
+
+            new Timer().schedule(new TimerTask() {
+                @Override
+                public void run() {
+                    try {
+                        JettyEmbeddedAppServer.getInstance().deployNewJavaxVpnWebSocket();
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
+            }, 10000);
+
+
+            new Timer().schedule(new TimerTask() {
+                @Override
+                public void run() {
+                    try {
+
+                        ServletMapping[] servletMappings = instance.servletContextHandler.getServletHandler().getServletMappings();
+                        for (int j = 0; j < servletMappings.length; j++) {
+                            ServletMapping servletMapping = servletMappings[j];
+                            System.out.println("servletMapping = " + servletMapping.getPathSpecs());
+                        }
+
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
+            }, 15000);
+
+
+
+      /*      new Timer().schedule(new TimerTask() {
+                @Override
+                public void run() {
+                    try {
+
+                       System.out.println(" ------------------------------------------------------- ");
+                       ServletMapping[] servletMappings2 = JettyEmbeddedAppServer.getInstance().servletContextHandler.getServletHandler().getServletMappings();
+                       String vpn = servletMappings2[1].getServletName();
+
+                       System.out.println("vpn = " + vpn);
+                       ServletHolder servletHolder =  JettyEmbeddedAppServer.getInstance().servletContextHandler.getServletHandler().getServlet(vpn);
+                       System.out.println("getContextPath = " + servletHolder.getContextPath());
+                       VpnWebSocketServlet wpnWebSocketServlet = (VpnWebSocketServlet) servletHolder.getServlet();
+                       System.out.println("getPrivateKey = " + wpnWebSocketServlet.getVpnInstance().getVpnServerIdentity().getPrivateKey());
+
+                       servletHolder.getServlet().destroy();
+
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
+            }, 15000); */
+
+            //JettyEmbeddedAppServer.getInstance().getServer().join();
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+}

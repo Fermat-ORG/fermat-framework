@@ -4,12 +4,11 @@
  * You may not modify, use, reproduce or distribute this software.
  * BITDUBAI/CONFIDENTIAL
  */
-package com.bitdubai.fermat_p2p_plugin.layer.ws.communications.cloud.server.developer.bitdubai.version_1.structure.processors;
+package com.bitdubai.fermat_p2p_plugin.layer.ws.communications.cloud.server.developer.bitdubai.version_1.structure.jetty.processors;
 
 import com.bitdubai.fermat_api.layer.all_definition.components.enums.PlatformComponentType;
 import com.bitdubai.fermat_api.layer.all_definition.components.interfaces.PlatformComponentProfile;
 import com.bitdubai.fermat_api.layer.all_definition.crypto.asymmetric.AsymmetricCryptography;
-import com.bitdubai.fermat_api.layer.all_definition.crypto.asymmetric.ECCKeyPair;
 import com.bitdubai.fermat_api.layer.all_definition.network_service.enums.NetworkServiceType;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.components.PlatformComponentProfileCommunication;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.contents.FermatPacketCommunicationFactory;
@@ -17,13 +16,14 @@ import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.co
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.contents.FermatPacket;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.enums.FermatPacketType;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.enums.JsonAttNamesConstants;
+import com.bitdubai.fermat_p2p_plugin.layer.ws.communications.cloud.server.developer.bitdubai.version_1.structure.jetty.ClientConnection;
+import com.bitdubai.fermat_p2p_plugin.layer.ws.communications.cloud.server.developer.bitdubai.version_1.structure.jetty.util.MemoryCache;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 
 import org.apache.commons.lang.ClassUtils;
 import org.apache.log4j.Logger;
-import org.java_websocket.WebSocket;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -34,17 +34,17 @@ import java.util.Timer;
  * The Class <code>com.bitdubai.fermat_p2p_plugin.layer.ws.communications.cloud.server.developer.bitdubai.version_1.structure.processors.ComponentRegistrationRequestJettyPacketProcessor</code> this
  * class process the FermatPacket of type <code>com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.enums.FermatPacketType.COMPONENT_REGISTRATION_REQUEST</code>
  * <p/>
- * Created by Roberto Requena - (rart3001@gmail.com) on 03/09/15.
+ * Created by Roberto Requena - (rart3001@gmail.com) on 09/01/16.
  *
  * @version 1.0
  * @since Java JDK 1.7
  */
-public class ComponentRegistrationRequestPacketProcessor extends FermatPacketProcessor {
+public class ComponentRegistrationRequestJettyPacketProcessor extends FermatJettyPacketProcessor {
 
     /**
      * Represent the logger instance
      */
-    private Logger LOG = Logger.getLogger(ClassUtils.getShortClassName(ComponentRegistrationRequestPacketProcessor.class));
+    private Logger LOG = Logger.getLogger(ClassUtils.getShortClassName(ComponentRegistrationRequestJettyPacketProcessor.class));
 
     /**
      * Represent the gson
@@ -59,7 +59,7 @@ public class ComponentRegistrationRequestPacketProcessor extends FermatPacketPro
     /**
      * Constructor
      */
-    public ComponentRegistrationRequestPacketProcessor() {
+    public ComponentRegistrationRequestJettyPacketProcessor() {
         gson = new Gson();
         jsonParser = new JsonParser();
     }
@@ -67,10 +67,10 @@ public class ComponentRegistrationRequestPacketProcessor extends FermatPacketPro
 
     /**
      * (no-javadoc)
-     * @see FermatPacketProcessor#processingPackage(WebSocket, FermatPacket, ECCKeyPair)
+     * @see FermatJettyPacketProcessor#processingPackage(ClientConnection, FermatPacket)
      */
     @Override
-    public void processingPackage(final WebSocket clientConnection,final FermatPacket receiveFermatPacket, final ECCKeyPair serverIdentity) {
+    public void processingPackage(final ClientConnection clientConnection, final FermatPacket receiveFermatPacket) {
 
         LOG.info("--------------------------------------------------------------------- ");
         LOG.info("processingPackage");
@@ -79,11 +79,11 @@ public class ComponentRegistrationRequestPacketProcessor extends FermatPacketPro
         PlatformComponentProfile platformComponentProfileToRegister = null;
 
         try {
-            
+
             /*
              * Get the platformComponentProfile from the message content and decrypt
              */
-            packetContentJsonStringRepresentation = AsymmetricCryptography.decryptMessagePrivateKey(receiveFermatPacket.getMessageContent(), serverIdentity.getPrivateKey());
+            packetContentJsonStringRepresentation = AsymmetricCryptography.decryptMessagePrivateKey(receiveFermatPacket.getMessageContent(), clientConnection.getServerIdentity().getPrivateKey());
 
             /*
              * Construct the json object
@@ -104,33 +104,28 @@ public class ComponentRegistrationRequestPacketProcessor extends FermatPacketPro
             switch (platformComponentProfileToRegister.getPlatformComponentType()){
 
                 case COMMUNICATION_CLOUD_SERVER :
-                    registerCommunicationsCloudServerComponent(platformComponentProfileToRegister, receiveFermatPacket, clientConnection, serverIdentity, networkServiceTypeApplicant);
+                    registerCommunicationsCloudServerComponent(platformComponentProfileToRegister, receiveFermatPacket, clientConnection, networkServiceTypeApplicant);
                     break;
 
                 case COMMUNICATION_CLOUD_CLIENT :
-                    registerCommunicationsCloudClientComponent(platformComponentProfileToRegister, receiveFermatPacket, clientConnection, serverIdentity, networkServiceTypeApplicant);
+                    registerCommunicationsCloudClientComponent(platformComponentProfileToRegister, receiveFermatPacket, clientConnection, networkServiceTypeApplicant);
                     break;
 
                 case NETWORK_SERVICE :
-                    registerNetworkServiceComponent(platformComponentProfileToRegister, receiveFermatPacket, clientConnection, serverIdentity, networkServiceTypeApplicant);
+                    registerNetworkServiceComponent(platformComponentProfileToRegister, receiveFermatPacket, clientConnection, networkServiceTypeApplicant);
                     break;
 
                 //Others
                 default :
-                    registerOtherComponent(platformComponentProfileToRegister, receiveFermatPacket, clientConnection, serverIdentity, networkServiceTypeApplicant);
+                    registerOtherComponent(platformComponentProfileToRegister, receiveFermatPacket, clientConnection, networkServiceTypeApplicant);
                     break;
 
             }
-            
+
         }catch (Exception e){
 
             LOG.info("requested registration is no possible ");
             LOG.info("cause: " + e.getMessage());
-
-            /*
-             * Get the client connection destination
-             */
-            WebSocket clientConnectionDestination = getWsCommunicationCloudServer().getRegisteredClientConnectionsCache().get(receiveFermatPacket.getSender());
 
             /*
              * Construct the json object
@@ -144,19 +139,19 @@ public class ComponentRegistrationRequestPacketProcessor extends FermatPacketPro
              * Create the respond packet
              */
             FermatPacket fermatPacketRespond = FermatPacketCommunicationFactory.constructFermatPacketEncryptedAndSinged(receiveFermatPacket.getSender(), //Destination
-                                                                                                                        serverIdentity.getPublicKey(), //Sender
+                                                                                                                        clientConnection.getServerIdentity().getPublicKey(), //Sender
                                                                                                                         gson.toJson(packetContent), //packet Content
                                                                                                                         FermatPacketType.FAILURE_COMPONENT_REGISTRATION_REQUEST, //Packet type
-                                                                                                                        serverIdentity.getPrivateKey()); //Sender private key
+                                                                                                                        clientConnection.getServerIdentity().getPrivateKey()); //Sender private key
             /*
              * Send the packet
              */
-            clientConnectionDestination.send(FermatPacketEncoder.encode(fermatPacketRespond));
-            
-        }
-            
+            clientConnection.getSession().getAsyncRemote().sendText(FermatPacketEncoder.encode(fermatPacketRespond));
 
-        
+        }
+
+
+
 
     }
 
@@ -164,14 +159,14 @@ public class ComponentRegistrationRequestPacketProcessor extends FermatPacketPro
      * Method that process the registration of the Communications
      * Cloud Server Component
      */
-    private void registerCommunicationsCloudServerComponent(final PlatformComponentProfile platformComponentProfileToRegister, final FermatPacket receiveFermatPacket, final WebSocket clientConnection,  final ECCKeyPair serverIdentity, final NetworkServiceType networkServiceTypeApplicant){
+    private void registerCommunicationsCloudServerComponent(final PlatformComponentProfile platformComponentProfileToRegister, final FermatPacket receiveFermatPacket, final ClientConnection clientConnection, final NetworkServiceType networkServiceTypeApplicant){
 
         LOG.info("registerCommunicationsCloudServerComponent");
 
-        /* TODO: Do it in data base is better
+        /*
          * Add to the cache
          */
-        getWsCommunicationCloudServer().getRegisteredCommunicationsCloudServerCache().put(clientConnection.hashCode(), platformComponentProfileToRegister);
+        getWebSocketCloudServerChannel().getRegisteredCommunicationsCloudServerCache().put(clientConnection.hashCode(), platformComponentProfileToRegister);
 
          /*
          * Construct the respond
@@ -185,17 +180,17 @@ public class ComponentRegistrationRequestPacketProcessor extends FermatPacketPro
         * Construct a fermat packet whit the same platform component profile and different FermatPacketType
         */
         FermatPacket fermatPacketRespond = FermatPacketCommunicationFactory.constructFermatPacketEncryptedAndSinged(receiveFermatPacket.getSender(),                  //Destination
-                                                                                                                    serverIdentity.getPublicKey(),                    //Sender
+                                                                                                                    clientConnection.getServerIdentity().getPublicKey(),                    //Sender
                                                                                                                     gson.toJson(jsonObject),                          //Message Content
                                                                                                                     FermatPacketType.COMPLETE_COMPONENT_REGISTRATION, //Packet type
-                                                                                                                    serverIdentity.getPrivateKey());                  //Sender private key
+                                                                                                                    clientConnection.getServerIdentity().getPrivateKey());                  //Sender private key
 
         /*
          * Send the encode packet to the server
          */
-         clientConnection.send(FermatPacketEncoder.encode(fermatPacketRespond));
+         clientConnection.getSession().getAsyncRemote().sendText(FermatPacketEncoder.encode(fermatPacketRespond));
 
-        LOG.info("Total Communications Cloud Server Component Registered = " + getWsCommunicationCloudServer().getRegisteredCommunicationsCloudServerCache().size());
+        LOG.info("Total Communications Cloud Server Component Registered = " + getWebSocketCloudServerChannel().getRegisteredCommunicationsCloudServerCache().size());
 
     }
 
@@ -203,7 +198,7 @@ public class ComponentRegistrationRequestPacketProcessor extends FermatPacketPro
      * Method that process the registration of the Communications
      * Cloud Client Component
      */
-    private void registerCommunicationsCloudClientComponent(final PlatformComponentProfile platformComponentProfileToRegister, final FermatPacket receiveFermatPacket, final WebSocket clientConnection,  final ECCKeyPair serverIdentity, final NetworkServiceType networkServiceTypeApplicant){
+    private void registerCommunicationsCloudClientComponent(final PlatformComponentProfile platformComponentProfileToRegister, final FermatPacket receiveFermatPacket, final ClientConnection clientConnection, final NetworkServiceType networkServiceTypeApplicant){
 
         LOG.info("registerCommunicationsCloudClientComponent");
 
@@ -217,14 +212,14 @@ public class ComponentRegistrationRequestPacketProcessor extends FermatPacketPro
         /*
          * Validate if the connection if in the PendingRegisterClientConnectionsCache
          */
-        if (getWsCommunicationCloudServer().getPendingRegisterClientConnectionsCache().containsKey(receiveFermatPacket.getSender())){
+        if (getWebSocketCloudServerChannel().getPendingRegisterClientConnectionsCache().containsKey(receiveFermatPacket.getSender())){
 
             boolean exist = Boolean.FALSE;
 
             /*
              * Validate are not yet registered
              */
-            for (PlatformComponentProfile registered : getWsCommunicationCloudServer().getRegisteredCommunicationsCloudClientCache().values()) {
+            for (PlatformComponentProfile registered : getWebSocketCloudServerChannel().getRegisteredCommunicationsCloudClientCache().values()) {
 
                 if (registered.getIdentityPublicKey().equals(platformComponentProfileToRegister.getIdentityPublicKey())){
                     exist = Boolean.TRUE;
@@ -235,30 +230,29 @@ public class ComponentRegistrationRequestPacketProcessor extends FermatPacketPro
              * If exist remove all reference
              */
             if (exist) {
-                getWsCommunicationCloudServer().getRegisteredCommunicationsCloudClientCache().remove(platformComponentProfileToRegister.getIdentityPublicKey());
+                getWebSocketCloudServerChannel().getRegisteredCommunicationsCloudClientCache().remove(platformComponentProfileToRegister.getIdentityPublicKey());
             }
 
             /*
              * Add to the cache
              */
-            getWsCommunicationCloudServer().getRegisteredCommunicationsCloudClientCache().put(clientConnection.hashCode(), platformComponentProfileToRegister);
+            getWebSocketCloudServerChannel().getRegisteredCommunicationsCloudClientCache().put(clientConnection.hashCode(), platformComponentProfileToRegister);
 
             /*
              * Remove from the PendingRegisterClientConnectionsCache
              */
-            getWsCommunicationCloudServer().getPendingRegisterClientConnectionsCache().remove(receiveFermatPacket.getSender()); //Remove using temporal client identity
+            getWebSocketCloudServerChannel().getPendingRegisterClientConnectionsCache().remove(receiveFermatPacket.getSender()); //Remove using temporal client identity
 
             /*
              * Add to the RegisteredClientConnectionsCache
              */
-            getWsCommunicationCloudServer().getRegisteredClientConnectionsCache().put(platformComponentProfileToRegister.getIdentityPublicKey(), clientConnection); //Add using the real client identity from profile
+            MemoryCache.getInstance().getRegisteredClientConnectionsCache().put(platformComponentProfileToRegister.getIdentityPublicKey(), clientConnection); //Add using the real client identity from profile
 
 
             /*
              * Update the ClientIdentityByClientConnectionCache to the real identity
              */
-            getWsCommunicationCloudServer().getClientIdentityByClientConnectionCache().put(clientConnection.hashCode(), platformComponentProfileToRegister.getIdentityPublicKey());
-
+            clientConnection.setClientIdentity(platformComponentProfileToRegister.getIdentityPublicKey());
 
 
             FermatPacket fermatPacketRespond = null;
@@ -266,7 +260,7 @@ public class ComponentRegistrationRequestPacketProcessor extends FermatPacketPro
             /*
              * Validate if no has a profile references in stand by, is have is a reconnection
              */
-            if(!getWsCommunicationCloudServer().getStandByProfileByClientIdentity().containsKey(platformComponentProfileToRegister.getIdentityPublicKey())){
+            if(!getWebSocketCloudServerChannel().getStandByProfileByClientIdentity().containsKey(platformComponentProfileToRegister.getIdentityPublicKey())){
 
                 LOG.info("New registration");
 
@@ -282,25 +276,25 @@ public class ComponentRegistrationRequestPacketProcessor extends FermatPacketPro
              * Construct a fermat packet whit the same platform component profile and different FermatPacketType
              */
                 fermatPacketRespond = FermatPacketCommunicationFactory.constructFermatPacketEncryptedAndSinged(receiveFermatPacket.getSender(),                  //Destination
-                        serverIdentity.getPublicKey(),                    //Sender
-                        gson.toJson(jsonObject),                          //Message Content
-                        FermatPacketType.COMPLETE_COMPONENT_REGISTRATION, //Packet type
-                        serverIdentity.getPrivateKey());                  //Sender private key
+                                                                                                                clientConnection.getServerIdentity().getPublicKey(),                    //Sender
+                                                                                                                gson.toJson(jsonObject),                          //Message Content
+                                                                                                                FermatPacketType.COMPLETE_COMPONENT_REGISTRATION, //Packet type
+                                                                                                                clientConnection.getServerIdentity().getPrivateKey());                  //Sender private key
 
             }else{
 
                 LOG.info("Registration for reconnection");
 
-                if (getWsCommunicationCloudServer().getTimersByClientIdentity().containsKey(platformComponentProfileToRegister.getIdentityPublicKey())){
+                if (getWebSocketCloudServerChannel().getTimersByClientIdentity().containsKey(platformComponentProfileToRegister.getIdentityPublicKey())){
                     LOG.info("Cancel timer task to clean references");
-                    Timer timer = getWsCommunicationCloudServer().getTimersByClientIdentity().get(platformComponentProfileToRegister.getIdentityPublicKey());
+                    Timer timer = getWebSocketCloudServerChannel().getTimersByClientIdentity().get(platformComponentProfileToRegister.getIdentityPublicKey());
                     timer.cancel();
                 }
 
             /*
              * Get the profiles in stand by
              */
-                List<PlatformComponentProfile> profilesInStandBy = getWsCommunicationCloudServer().getStandByProfileByClientIdentity().get(platformComponentProfileToRegister.getIdentityPublicKey());
+                List<PlatformComponentProfile> profilesInStandBy = getWebSocketCloudServerChannel().getStandByProfileByClientIdentity().get(platformComponentProfileToRegister.getIdentityPublicKey());
 
             /*
              * Move again to the registers profile cache
@@ -311,10 +305,10 @@ public class ComponentRegistrationRequestPacketProcessor extends FermatPacketPro
              * Construct a fermat packet whit reconnect notification
              */
                 fermatPacketRespond = FermatPacketCommunicationFactory.constructFermatPacketEncryptedAndSinged(receiveFermatPacket.getSender(),                  //Destination
-                        serverIdentity.getPublicKey(),                    //Sender
-                        "Reconnect successfully",                          //Message Content
-                        FermatPacketType.CLIENT_CONNECTION_SUCCESSFULLY_RECONNECT, //Packet type
-                        serverIdentity.getPrivateKey());
+                                                                                                                clientConnection.getServerIdentity().getPublicKey(),                    //Sender
+                                                                                                                "Reconnect successfully",                          //Message Content
+                                                                                                                FermatPacketType.CLIENT_CONNECTION_SUCCESSFULLY_RECONNECT, //Packet type
+                                                                                                                clientConnection.getServerIdentity().getPrivateKey());
 
             }
 
@@ -322,9 +316,9 @@ public class ComponentRegistrationRequestPacketProcessor extends FermatPacketPro
             /*
              * Send the encode packet to the server
              */
-            clientConnection.send(FermatPacketEncoder.encode(fermatPacketRespond));
+            clientConnection.getSession().getAsyncRemote().sendText(FermatPacketEncoder.encode(fermatPacketRespond));
 
-            LOG.info("Total Communications Cloud Client Component Registered = " + getWsCommunicationCloudServer().getRegisteredCommunicationsCloudClientCache().size());
+            LOG.info("Total Communications Cloud Client Component Registered = " + getWebSocketCloudServerChannel().getRegisteredCommunicationsCloudClientCache().size());
 
         }else {
 
@@ -338,11 +332,11 @@ public class ComponentRegistrationRequestPacketProcessor extends FermatPacketPro
     /**
      * Method that process the registration of the Network Service Component
      */
-    private void registerNetworkServiceComponent(final PlatformComponentProfile platformComponentProfileToRegister, final FermatPacket receiveFermatPacket, final WebSocket clientConnection, final ECCKeyPair serverIdentity, final NetworkServiceType networkServiceTypeApplicant){
+    private void registerNetworkServiceComponent(final PlatformComponentProfile platformComponentProfileToRegister, final FermatPacket receiveFermatPacket, final ClientConnection clientConnection, final NetworkServiceType networkServiceTypeApplicant){
 
         LOG.info("registerNetworkServiceComponent");
 
-        Map<NetworkServiceType, List<PlatformComponentProfile>> networkServiceRegistered = getWsCommunicationCloudServer().getRegisteredNetworkServicesCache();
+        Map<NetworkServiceType, List<PlatformComponentProfile>> networkServiceRegistered = getWebSocketCloudServerChannel().getRegisteredNetworkServicesCache();
 
         /*
          * Validate if contain a list for the NetworkServiceType
@@ -389,15 +383,15 @@ public class ComponentRegistrationRequestPacketProcessor extends FermatPacketPro
          * Construct a fermat packet whit the same platform component profile and different FermatPacketType
          */
         FermatPacket fermatPacketRespond = FermatPacketCommunicationFactory.constructFermatPacketEncryptedAndSinged(receiveFermatPacket.getSender(),                  //Destination
-                                                                                                                    serverIdentity.getPublicKey(),                    //Sender
+                                                                                                                    clientConnection.getServerIdentity().getPublicKey(),                    //Sender
                                                                                                                     gson.toJson(jsonObject),                    //Message Content
                                                                                                                     FermatPacketType.COMPLETE_COMPONENT_REGISTRATION, //Packet type
-                                                                                                                    serverIdentity.getPrivateKey());                  //Sender private key
+                                                                                                                    clientConnection.getServerIdentity().getPrivateKey());                  //Sender private key
 
          /*
          * Send the encode packet to the server
          */
-        clientConnection.send(FermatPacketEncoder.encode(fermatPacketRespond));
+        clientConnection.getSession().getAsyncRemote().sendText(FermatPacketEncoder.encode(fermatPacketRespond));
 
         LOG.info("Total Network Service Component Registered (" + platformComponentProfileToRegister.getNetworkServiceType() + ") = " + networkServiceRegistered.get(platformComponentProfileToRegister.getNetworkServiceType()).size());
 
@@ -406,13 +400,13 @@ public class ComponentRegistrationRequestPacketProcessor extends FermatPacketPro
     /**
      * Method that process the registration of the others components
      */
-    private void registerOtherComponent(final PlatformComponentProfile platformComponentProfileToRegister, final FermatPacket receiveFermatPacket, final WebSocket clientConnection,  final ECCKeyPair serverIdentity, final NetworkServiceType networkServiceTypeApplicant){
+    private void registerOtherComponent(final PlatformComponentProfile platformComponentProfileToRegister, final FermatPacket receiveFermatPacket, final ClientConnection clientConnection, final NetworkServiceType networkServiceTypeApplicant){
 
         LOG.info("============================================================================ ");
         LOG.info("registerOtherComponent");
 
 
-        Map<PlatformComponentType, List<PlatformComponentProfile>> registeredPlatformComponentProfile = getWsCommunicationCloudServer().getRegisteredOtherPlatformComponentProfileCache();
+        Map<PlatformComponentType, List<PlatformComponentProfile>> registeredPlatformComponentProfile = getWebSocketCloudServerChannel().getRegisteredOtherPlatformComponentProfileCache();
 
         /*
          * Validate if contain a list for the NetworkServiceType
@@ -458,15 +452,15 @@ public class ComponentRegistrationRequestPacketProcessor extends FermatPacketPro
          * Construct a fermat packet whit the same platform component profile and different FermatPacketType
          */
         FermatPacket fermatPacketRespond = FermatPacketCommunicationFactory.constructFermatPacketEncryptedAndSinged(receiveFermatPacket.getSender(),                  //Destination
-                                                                                                                    serverIdentity.getPublicKey(),                    //Sender
+                                                                                                                    clientConnection.getServerIdentity().getPublicKey(),                    //Sender
                                                                                                                     gson.toJson(jsonObject),                          //Message Content
                                                                                                                     FermatPacketType.COMPLETE_COMPONENT_REGISTRATION, //Packet type
-                                                                                                                    serverIdentity.getPrivateKey());                  //Sender private key
+                                                                                                                    clientConnection.getServerIdentity().getPrivateKey());                  //Sender private key
 
          /*
          * Send the encode packet to the server
          */
-        clientConnection.send(FermatPacketEncoder.encode(fermatPacketRespond));
+        clientConnection.getSession().getAsyncRemote().sendText(FermatPacketEncoder.encode(fermatPacketRespond));
 
         LOG.info(" Total (" + platformComponentProfileToRegister.getPlatformComponentType() + ") Component Registered  = " + registeredPlatformComponentProfile.get(platformComponentProfileToRegister.getPlatformComponentType()).size());
 
@@ -489,7 +483,7 @@ public class ComponentRegistrationRequestPacketProcessor extends FermatPacketPro
 
                 case NETWORK_SERVICE :
 
-                        Map<NetworkServiceType, List<PlatformComponentProfile>> networkServiceRegistered = getWsCommunicationCloudServer().getRegisteredNetworkServicesCache();
+                        Map<NetworkServiceType, List<PlatformComponentProfile>> networkServiceRegistered = getWebSocketCloudServerChannel().getRegisteredNetworkServicesCache();
 
                         /*
                          * Validate if contain a list for the NetworkServiceType
@@ -528,7 +522,7 @@ public class ComponentRegistrationRequestPacketProcessor extends FermatPacketPro
                 //Others
                 default :
 
-                        Map<PlatformComponentType, List<PlatformComponentProfile>> registeredPlatformComponentProfile = getWsCommunicationCloudServer().getRegisteredOtherPlatformComponentProfileCache();
+                        Map<PlatformComponentType, List<PlatformComponentProfile>> registeredPlatformComponentProfile = getWebSocketCloudServerChannel().getRegisteredOtherPlatformComponentProfileCache();
 
                         /*
                          * Validate if contain a list for the NetworkServiceType
@@ -573,7 +567,7 @@ public class ComponentRegistrationRequestPacketProcessor extends FermatPacketPro
 
     /**
      * (no-javadoc)
-     * @see FermatPacketProcessor#getFermatPacketType()
+     * @see FermatJettyPacketProcessor#getFermatPacketType()
      */
     @Override
     public FermatPacketType getFermatPacketType() {
