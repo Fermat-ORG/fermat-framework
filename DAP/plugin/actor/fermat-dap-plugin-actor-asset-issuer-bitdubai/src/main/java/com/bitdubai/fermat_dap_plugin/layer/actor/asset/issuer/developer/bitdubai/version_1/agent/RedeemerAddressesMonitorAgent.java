@@ -30,7 +30,7 @@ public class RedeemerAddressesMonitorAgent implements Agent {
     private AssetVaultManager assetVaultManager;
     private AtomicBoolean running;
     private String issuerPublicKey;
-    private final int SLEEP_TIME = 10000; //10 segundos
+    private MonitorAgent monitorAgent;
 
     /**
      * constructor
@@ -55,15 +55,28 @@ public class RedeemerAddressesMonitorAgent implements Agent {
             throw new CantStartAgentException(e, "Error getting active redeem points public keys" , "Asset vault issue");
         }
 
-        List<CryptoAddress> addressBookCryptoAddresses = cryptoAddressBookManager.
+        /**
+         * I will get the list of CryptoAddress already registed in the address book to Redeem Points.
+         */
+        List<CryptoAddress> addressBookCryptoAddresses;
+        try {
+             addressBookCryptoAddresses = cryptoAddressBookManager.listCryptoAddressBookRecordsByDeliveredToActorType(Actors.DAP_ASSET_REDEEM_POINT);
+        } catch (CantRegisterCryptoAddressBookRecordException e) {
+            throw new CantStartAgentException(e, "Error getting Addresses from Address book" , "Crypto Address Book issue");
+        }
 
-        MonitorAgent monitorAgent = new MonitorAgent(this.cryptoAddressBookManager, this.assetVaultManager, redeemers, )
-        Thread agent = new Thread();
+
+        /**
+         * instantiate the monitor agent and run it.
+         */
+        monitorAgent = new MonitorAgent(this.cryptoAddressBookManager, this.assetVaultManager, redeemers, addressBookCryptoAddresses, issuerPublicKey);
+        Thread agent = new Thread(monitorAgent);
+        agent.start();
     }
 
     @Override
     public void stop() {
-
+        monitorAgent.keysGenerated.set(true);
     }
 
 
@@ -77,6 +90,7 @@ public class RedeemerAddressesMonitorAgent implements Agent {
         private List<CryptoAddress> addressBookCryptoAddresses; //the list of cryptoAddresses stored in the address book registered to RedeemPoints
         private String issuerPublicKey;
         private AtomicBoolean keysGenerated;
+        private final int SLEEP_TIME = 10000; //10 segundos
 
 
         /**
@@ -97,7 +111,14 @@ public class RedeemerAddressesMonitorAgent implements Agent {
 
         @Override
         public void run() {
-            doTheMainTask();
+            do {
+                doTheMainTask();
+                try {
+                    Thread.sleep(SLEEP_TIME);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            } while (!keysGenerated.get());
         }
 
         /**
