@@ -129,6 +129,6 @@ public final class AssetVerification {
         //For now, we going to check, only, the expiration date
         ContractProperty contractProperty = digitalAssetContract.getContractProperty(DigitalAssetContractPropertiesConstants.EXPIRATION_DATE);
         Timestamp expirationDate = (Timestamp) contractProperty.getValue();
-        return expirationDate.after(new Timestamp(System.currentTimeMillis()));
+        return (expirationDate == null || new Timestamp(System.currentTimeMillis()).before(expirationDate));
     }
 }

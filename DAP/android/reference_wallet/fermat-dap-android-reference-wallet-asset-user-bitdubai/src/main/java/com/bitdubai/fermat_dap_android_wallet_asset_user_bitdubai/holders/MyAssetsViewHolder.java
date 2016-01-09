@@ -67,9 +67,9 @@ public class MyAssetsViewHolder extends FermatViewHolder {
         nameText.setText(digitalAsset.getName());
 
         nameText.setText(digitalAsset.getName());
-        availableText.setText(digitalAsset.getAvailableBalanceQuantity()+"");
-        bookText.setText(digitalAsset.getBookBalanceQuantity()+"");
-        btcText.setText(digitalAsset.getFormattedAvailableBalanceBitcoin()+" BTC");
+        availableText.setText(String.format("%d", digitalAsset.getAvailableBalanceQuantity()));
+        bookText.setText(String.format("%d", digitalAsset.getBookBalanceQuantity()));
+        btcText.setText(String.format("%s BTC", digitalAsset.getFormattedAvailableBalanceBitcoin()));
         expDateText.setText(digitalAsset.getFormattedExpDate());
 
         redeemTempButton.setOnClickListener(new View.OnClickListener() {

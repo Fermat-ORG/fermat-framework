@@ -84,7 +84,7 @@ public class MyAssetsActivityFragment extends FermatWalletListFragment<DigitalAs
 
         setupBackgroundBitmap(layout);
         configureToolbar();
-        noAssetsView = layout.findViewById(R.id.dap_wallet_asset_issuer_no_assets);
+        noAssetsView = layout.findViewById(R.id.dap_wallet_no_assets);
         showOrHideNoAssetsView(digitalAssets.isEmpty());
     }
 
