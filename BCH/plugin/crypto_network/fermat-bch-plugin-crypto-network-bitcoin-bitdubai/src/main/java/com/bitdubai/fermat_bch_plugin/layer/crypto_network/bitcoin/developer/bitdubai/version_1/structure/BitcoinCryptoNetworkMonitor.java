@@ -41,6 +41,7 @@ import org.bitcoinj.wallet.WalletTransaction;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.Serializable;
 import java.net.InetSocketAddress;
 import java.util.UUID;
 import java.util.concurrent.ExecutionException;
@@ -213,7 +214,7 @@ public class BitcoinCryptoNetworkMonitor implements Agent {
      * @param transactionId the internal fermat transaction Ifd
      * @throws CantBroadcastTransactionException
      */
-    public void broadcastTransaction(final Transaction tx, final UUID transactionId) throws CantBroadcastTransactionException {
+    public synchronized void  broadcastTransaction(final Transaction tx, final UUID transactionId) throws CantBroadcastTransactionException {
         try{
             /**
              * I will add this transaction to the wallet.
@@ -264,7 +265,7 @@ public class BitcoinCryptoNetworkMonitor implements Agent {
      * @param txHash
      * @throws CantBroadcastTransactionException
      */
-    public void broadcastTransaction(final String txHash) throws CantBroadcastTransactionException{
+    public synchronized void broadcastTransaction(final String txHash) throws CantBroadcastTransactionException{
         /**
          * The transaction is stored in the Wallet and the database, so I will make sure this is correct.
          */
@@ -501,7 +502,7 @@ public class BitcoinCryptoNetworkMonitor implements Agent {
      * @param transactionId
      * @throws CantStoreBitcoinTransactionException
      */
-    public void storeBitcoinTransaction (Transaction tx, UUID transactionId) throws CantStoreBitcoinTransactionException{
+    public synchronized void storeBitcoinTransaction (Transaction tx, UUID transactionId) throws CantStoreBitcoinTransactionException{
         try {
             /**
              * I store it in the database

@@ -45,6 +45,7 @@ import org.bitcoinj.store.UnreadableWalletException;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -218,7 +219,7 @@ public class BitcoinCryptoNetworkManager implements TransactionProtocolManager, 
      * by forming the name wallet_[NETWORK]. If it doesn't exists, then I will create a new object for this network.
      * @return
      */
-    private Wallet getWallet(BlockchainNetworkType blockchainNetworkType, @Nullable List<ECKey> keyList){
+    private synchronized Wallet getWallet(BlockchainNetworkType blockchainNetworkType, @Nullable List<ECKey> keyList){
         Wallet wallet;
         String fileName = WALLET_FILENAME + blockchainNetworkType.getCode();
         walletFile = new File(fileName);
@@ -385,7 +386,7 @@ public class BitcoinCryptoNetworkManager implements TransactionProtocolManager, 
      * @param transactionId the internal fermat transaction id
      * @throws CantBroadcastTransactionException
      */
-    public void broadcastTransaction(BlockchainNetworkType blockchainNetworkType, Transaction tx, UUID transactionId) throws CantBroadcastTransactionException {
+    public synchronized void broadcastTransaction(BlockchainNetworkType blockchainNetworkType, Transaction tx, UUID transactionId) throws CantBroadcastTransactionException {
         runningAgents.get(blockchainNetworkType).broadcastTransaction(tx, transactionId);
     }
 
@@ -394,7 +395,7 @@ public class BitcoinCryptoNetworkManager implements TransactionProtocolManager, 
      * @param txHash
      * @throws CantBroadcastTransactionException
      */
-    public void broadcastTransaction(String txHash) throws CantBroadcastTransactionException{
+    public synchronized void broadcastTransaction(String txHash) throws CantBroadcastTransactionException{
         runningAgents.get(BlockchainNetworkType.DEFAULT).broadcastTransaction(txHash);
     }
 
@@ -494,7 +495,7 @@ public class BitcoinCryptoNetworkManager implements TransactionProtocolManager, 
      * @param blockchainNetworkType
      * @return
      */
-    public List<Transaction> getBitcoinTransactions(BlockchainNetworkType blockchainNetworkType){
+    public synchronized List<Transaction> getBitcoinTransactions(BlockchainNetworkType blockchainNetworkType){
         Wallet wallet = getWallet(blockchainNetworkType, null);
         return wallet.getTransactionsByTime();
     }
@@ -689,7 +690,7 @@ public class BitcoinCryptoNetworkManager implements TransactionProtocolManager, 
      * @param transactionId
      * @throws CantStoreBitcoinTransactionException
      */
-    public void storeBitcoinTransaction(BlockchainNetworkType blockchainNetworkType, Transaction tx, UUID transactionId) throws CantStoreBitcoinTransactionException {
+    public synchronized void storeBitcoinTransaction(BlockchainNetworkType blockchainNetworkType, Transaction tx, UUID transactionId) throws CantStoreBitcoinTransactionException {
         runningAgents.get(blockchainNetworkType).storeBitcoinTransaction(tx, transactionId);
     }
 
