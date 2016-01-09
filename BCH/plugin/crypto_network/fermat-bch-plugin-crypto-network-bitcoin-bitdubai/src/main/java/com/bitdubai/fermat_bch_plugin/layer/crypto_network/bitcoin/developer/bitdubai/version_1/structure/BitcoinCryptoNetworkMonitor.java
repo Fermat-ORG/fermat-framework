@@ -7,6 +7,7 @@ import com.bitdubai.fermat_api.CantStartAgentException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
 import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.BitcoinNetworkSelector;
 import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.RegTestNetwork.FermatTestNetwork;
+import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.RegTestNetwork.FermatTestNetworkNode;
 import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.exceptions.CantBroadcastTransactionException;
 import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.exceptions.CantCancellBroadcastTransactionException;
 import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.exceptions.CantGetCryptoTransactionException;
@@ -156,9 +157,9 @@ public class BitcoinCryptoNetworkMonitor implements Agent {
              */
             if (NETWORK_PARAMETERS == RegTestParams.get()){
                 FermatTestNetwork fermatTestNetwork = new FermatTestNetwork();
-                peerGroup.addAddress(fermatTestNetwork.getRandomNetworkNode().getPeerAddress());
-                peerGroup.addAddress(fermatTestNetwork.getRandomNetworkNode().getPeerAddress());
-                peerGroup.addAddress(fermatTestNetwork.getRandomNetworkNode().getPeerAddress());
+                for (FermatTestNetworkNode node : fermatTestNetwork.getNetworkNodes()){
+                    peerGroup.addAddress(node.getPeerAddress());
+                }
             } else
                 peerGroup.addPeerDiscovery(new DnsDiscovery(NETWORK_PARAMETERS));
 

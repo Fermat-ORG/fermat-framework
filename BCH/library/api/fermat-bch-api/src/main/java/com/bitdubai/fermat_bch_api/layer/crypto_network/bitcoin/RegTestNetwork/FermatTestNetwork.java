@@ -50,4 +50,12 @@ public class FermatTestNetwork {
         int random = (int )(Math.random() * networkNodes.size());
         return networkNodes.get(random);
     }
+
+    /**
+     * gets the network nodes.
+     * @return
+     */
+    public List<FermatTestNetworkNode> getNetworkNodes() {
+        return networkNodes;
+    }
 }
