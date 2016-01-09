@@ -1,4 +1,4 @@
-package com.bitdubai.reference_wallet.crypto_customer_wallet.fragments.common;
+package com.bitdubai.reference_wallet.crypto_customer_wallet.fragments.open_negotiation_details;
 
 import android.app.Fragment;
 import android.os.Bundle;
@@ -7,22 +7,21 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractFermatFragment;
-import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractFermatFragment;
 import com.bitdubai.reference_wallet.crypto_customer_wallet.R;
 
 
 /**
  * A simple {@link Fragment} subclass.
  */
-public class StartNegotiationActivityFragment extends AbstractFermatFragment {
+public class OpenNegotiationDetailsFragment extends AbstractFermatFragment {
 
 
-    public StartNegotiationActivityFragment() {
+    public OpenNegotiationDetailsFragment() {
         // Required empty public constructor
     }
 
-    public static StartNegotiationActivityFragment newInstance() {
-        return new StartNegotiationActivityFragment();
+    public static OpenNegotiationDetailsFragment newInstance() {
+        return new OpenNegotiationDetailsFragment();
     }
 
     @Override
