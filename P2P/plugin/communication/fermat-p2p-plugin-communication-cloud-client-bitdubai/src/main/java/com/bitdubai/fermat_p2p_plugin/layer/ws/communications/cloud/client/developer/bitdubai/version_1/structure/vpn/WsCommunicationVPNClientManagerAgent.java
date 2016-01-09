@@ -14,6 +14,7 @@ import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEven
 import com.bitdubai.fermat_api.layer.all_definition.network_service.enums.NetworkServiceType;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.enums.P2pEventType;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.events.VPNConnectionCloseNotificationEvent;
+import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.events.VPNConnectionLooseNotificationEvent;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.enums.JsonAttNamesConstants;
 import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfaces.EventManager;
 import com.google.gson.JsonObject;
@@ -86,6 +87,7 @@ public class WsCommunicationVPNClientManagerAgent extends Thread{
         JsonObject jsonObject = new JsonObject();
         jsonObject.addProperty(JsonAttNamesConstants.REGISTER_PARTICIPANT_IDENTITY_VPN, participantIdentity);
         jsonObject.addProperty(JsonAttNamesConstants.CLIENT_IDENTITY_VPN, vpnClientIdentity.getPublicKey());
+        jsonObject.addProperty(JsonAttNamesConstants.RECONNECTED, Boolean.FALSE);
 
         /*
          * Add the att to the header
@@ -198,14 +200,13 @@ public class WsCommunicationVPNClientManagerAgent extends Thread{
             }
 
         } catch (Exception e) {
-            e.printStackTrace();
+            System.out.println(" WsCommunicationVPNClientManagerAgent - was stopped");
         }
 
     }
 
     /**
-     * Notify when cloud client component es registered,
-     * this event is raise to show the message in a popup of the UI
+     * Notify when a vpn connection close
      */
     public void riseVpnConnectionCloseNotificationEvent(NetworkServiceType networkServiceApplicant, PlatformComponentProfile remoteParticipant) {
 
@@ -217,6 +218,21 @@ public class WsCommunicationVPNClientManagerAgent extends Thread{
         event.setRemoteParticipant(remoteParticipant);
         eventManager.raiseEvent(platformEvent);
         System.out.println("WsCommunicationVPNClientManagerAgent - Raised Event = P2pEventType.VPN_CONNECTION_CLOSE");
+    }
+
+    /**
+     * Notify when a vpn connection loose
+     */
+    public void riseVpnConnectionLooseNotificationEvent(NetworkServiceType networkServiceApplicant, PlatformComponentProfile remoteParticipant) {
+
+        System.out.println("WsCommunicationVPNClientManagerAgent - riseVpnConnectionLooseNotificationEvent");
+        FermatEvent platformEvent = eventManager.getNewEvent(P2pEventType.VPN_CONNECTION_LOOSE);
+        VPNConnectionLooseNotificationEvent event =  (VPNConnectionLooseNotificationEvent) platformEvent;
+        event.setSource(EventSource.WS_COMMUNICATION_CLOUD_CLIENT_PLUGIN);
+        event.setNetworkServiceApplicant(networkServiceApplicant);
+        event.setRemoteParticipant(remoteParticipant);
+        eventManager.raiseEvent(platformEvent);
+        System.out.println("WsCommunicationVPNClientManagerAgent - Raised Event = P2pEventType.VPN_CONNECTION_LOOSE");
     }
 
     /**
@@ -257,4 +273,32 @@ public class WsCommunicationVPNClientManagerAgent extends Thread{
     public boolean isRunning() {
         return isRunning;
     }
+
+    /*
+     * Close all Vpn Connections when close the App
+     */
+    public void closeAllVpnConnections(){
+
+        try {
+
+            if (!vpnClientActiveCache.isEmpty()) {
+
+                isRunning = Boolean.FALSE;
+
+                for (NetworkServiceType networkServiceType : vpnClientActiveCache.keySet()) {
+                    for (String remote : vpnClientActiveCache.get(networkServiceType).keySet()) {
+                        WsCommunicationVPNClient wsCommunicationVPNClient = vpnClientActiveCache.get(networkServiceType).get(remote);
+                        wsCommunicationVPNClient.close();
+                        vpnClientActiveCache.get(networkServiceType).remove(remote);
+                    }
+                }
+
+            }
+
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+
+    }
+
 }

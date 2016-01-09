@@ -4,6 +4,7 @@ import android.content.Context;
 import android.graphics.Typeface;
 import android.view.View;
 
+import com.bitdubai.fermat_android_api.ui.Views.BadgeDrawable;
 import com.bitdubai.fermat_android_api.ui.adapters.FermatAdapter;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.MenuItem;
 import com.bitdubai.sub_app.intra_user_community.R;
@@ -80,6 +81,7 @@ public class AppNavigationAdapter extends FermatAdapter<MenuItem, AppNavigationH
                     break;
                 case 2:
                     holder.getIcon().setImageResource(R.drawable.ic_nav_notifications);
+                    holder.getBadge().setBackground(new BadgeDrawable.BadgeDrawableBuilder(context).setCount(data.getNotifications()).setTextSize(32).setPosition(BadgeDrawable.Position.CENTER).build());
                     break;
                 case 3:
                     holder.getIcon().setImageResource(R.drawable.ic_nav_settings);

@@ -1,9 +1,19 @@
 package com.bitdubai.fermat_ccp_plugin.layer.network_service.intra_user.developer.bitdubai.version_1.database.communications;
 
+import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
+import com.bitdubai.fermat_api.layer.all_definition.enums.DeviceDirectory;
 import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTransaction;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.DatabaseTransactionFailedException;
+import com.bitdubai.fermat_api.layer.osa_android.file_system.FileLifeSpan;
+import com.bitdubai.fermat_api.layer.osa_android.file_system.FilePrivacy;
+import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginBinaryFile;
+import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
+import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantCreateFileException;
+import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantLoadFileException;
+import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantPersistFileException;
+import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.FileNotFoundException;
 import com.bitdubai.fermat_ccp_api.layer.actor.intra_user.exceptions.CantCreateNotificationException;
 import com.bitdubai.fermat_ccp_api.layer.actor.intra_user.exceptions.CantGetNotificationException;
 import com.bitdubai.fermat_ccp_api.layer.actor.intra_user.exceptions.NotificationNotFoundException;
@@ -20,6 +30,9 @@ import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_payment_request.
 import com.bitdubai.fermat_ccp_api.layer.network_service.intra_actor.enums.ActorProtocolState;
 import com.bitdubai.fermat_ccp_api.layer.network_service.intra_actor.exceptions.CantConfirmNotificationException;
 import com.bitdubai.fermat_ccp_api.layer.network_service.intra_actor.interfaces.IntraUserNotification;
+import com.bitdubai.fermat_ccp_plugin.layer.network_service.intra_user.developer.bitdubai.version_1.exceptions.CantBuildDataBaseRecordException;
+import com.bitdubai.fermat_ccp_plugin.layer.network_service.intra_user.developer.bitdubai.version_1.exceptions.CantGetIntraUserProfileImageException;
+import com.bitdubai.fermat_ccp_plugin.layer.network_service.intra_user.developer.bitdubai.version_1.exceptions.CantPersistProfileImageException;
 import com.bitdubai.fermat_ccp_plugin.layer.network_service.intra_user.developer.bitdubai.version_1.exceptions.CantUpdateRecordDataBaseException;
 import com.bitdubai.fermat_ccp_plugin.layer.network_service.intra_user.developer.bitdubai.version_1.structure.ActorNetworkServiceRecord;
 import com.bitdubai.fermat_ccp_plugin.layer.network_service.intra_user.developer.bitdubai.version_1.structure.DAO;
@@ -37,9 +50,18 @@ public class IncomingNotificationDao implements DAO {
 
     private Database database;
 
-    public IncomingNotificationDao(Database database) {
+    private static final String PROFILE_IMAGE_DIRECTORY_NAME   = DeviceDirectory.LOCAL_USERS.getName() + "/CCP/intraWalletUserNSIncoming";
+    private static final String PROFILE_IMAGE_FILE_NAME_PREFIX = "profileImage";
+    private final PluginFileSystem pluginFileSystem    ;
+    private final UUID                 pluginId;
+
+    public IncomingNotificationDao(Database database,
+                                   final PluginFileSystem pluginFileSystem,
+                                   final UUID pluginId) {
 
         this.database = database         ;
+        this.pluginFileSystem     = pluginFileSystem    ;
+        this.pluginId             = pluginId            ;
     }
 
 
@@ -52,6 +74,7 @@ public class IncomingNotificationDao implements DAO {
                                                         final Actors                          senderType          ,
                                                         final String                          destinationPublicKey,
                                                         final String                          senderAlias         ,
+                                                        final String                          senderPhrase         ,
                                                         final byte[]                          senderProfileImage  ,
                                                         final Actors                          destinationType     ,
                                                         final NotificationDescriptor descriptor          ,
@@ -70,6 +93,7 @@ public class IncomingNotificationDao implements DAO {
             ActorNetworkServiceRecord cryptoPaymentRequestRecord = new ActorNetworkServiceRecord(
                     notificationId      ,
                     senderAlias         ,
+                    senderPhrase,
                     senderProfileImage  ,
                     descriptor          ,
                     destinationType     ,
@@ -90,6 +114,9 @@ public class IncomingNotificationDao implements DAO {
         } catch (CantInsertRecordException e) {
 
             throw new CantCreateNotificationException( "",e, "Exception not handled by the plugin, there is a problem in database and i cannot insert the record.","");
+        } catch (CantBuildDataBaseRecordException e) {
+            throw new CantCreateNotificationException( "",e, "Exception not handled by the plugin, there is a problem in database and i cannot insert the record.","");
+
         }
     }
     public void createNotification(ActorNetworkServiceRecord actorNetworkServiceRecord) throws CantCreateNotificationException {
@@ -104,6 +131,9 @@ public class IncomingNotificationDao implements DAO {
         } catch (CantInsertRecordException e) {
 
             throw new CantCreateNotificationException( "",e, "Exception not handled by the plugin, there is a problem in database and i cannot insert the record.","");
+        } catch (CantBuildDataBaseRecordException e) {
+            throw new CantCreateNotificationException( "",e, "Exception not handled by the plugin, there is a problem in database and i cannot insert the record.","");
+
         }
     }
 
@@ -171,7 +201,7 @@ public class IncomingNotificationDao implements DAO {
             /*
              * 1- Create the record to the entity
              */
-            DatabaseTableRecord entityRecord = buildDatabaseRecord(emptyRecord,entity);
+            DatabaseTableRecord entityRecord = buildDatabaseRecord(emptyRecord, entity);
 
             /**
              * 2.- Create a new transaction and execute
@@ -188,6 +218,9 @@ public class IncomingNotificationDao implements DAO {
             String context = contextBuffer.toString();
             String possibleCause = "The record do not exist";
             CantUpdateRecordDataBaseException cantUpdateRecordDataBaseException = new CantUpdateRecordDataBaseException(CantUpdateRecordDataBaseException.DEFAULT_MESSAGE, databaseTransactionFailedException, context, possibleCause);
+            throw cantUpdateRecordDataBaseException;
+        } catch (CantBuildDataBaseRecordException e) {
+            CantUpdateRecordDataBaseException cantUpdateRecordDataBaseException = new CantUpdateRecordDataBaseException(CantUpdateRecordDataBaseException.DEFAULT_MESSAGE, e, "", "");
             throw cantUpdateRecordDataBaseException;
         }
     }
@@ -310,7 +343,7 @@ public class IncomingNotificationDao implements DAO {
 
 
         if (senderPublicKey == null)
-            throw new CantUpdateRecordDataBaseException("requestId null "   , null);
+            throw new CantUpdateRecordDataBaseException("senderPublicKey null "   , null);
 
         if (notificationDescriptor == null)
             throw new CantUpdateRecordDataBaseException("protocolState null", null);
@@ -335,7 +368,7 @@ public class IncomingNotificationDao implements DAO {
 
                 return buildActorNetworkServiceRecord(record);
             } else {
-                throw new RequestNotFoundException("RequestId: "+senderPublicKey, "Cannot find a CryptoPaymentRequest with the given id.");
+                throw new RequestNotFoundException("senderPublicKey: "+senderPublicKey, "Cannot find a connection request with the given id.");
             }
 
         } catch (CantLoadTableToMemoryException e) {
@@ -418,33 +451,46 @@ public class IncomingNotificationDao implements DAO {
 
 
     private DatabaseTableRecord buildDatabaseRecord(final DatabaseTableRecord       dbRecord,
-                                                    final ActorNetworkServiceRecord record  ) {
+                                                    final ActorNetworkServiceRecord record  ) throws CantBuildDataBaseRecordException {
 
-        dbRecord.setUUIDValue(CommunicationNetworkServiceDatabaseConstants.INCOMING_NOTIFICATION_ID_COLUMN_NAME, record.getId());
-        dbRecord.setStringValue(CommunicationNetworkServiceDatabaseConstants.INCOMING_NOTIFICATION_SENDER_ALIAS_COLUMN_NAME       , record.getActorSenderAlias());
-        if(record.getActorSenderProfileImage() != null)
-            dbRecord.setStringValue(CommunicationNetworkServiceDatabaseConstants.INCOMING_NOTIFICATION_SENDER_IMAGE_COLUMN_NAME       , record.getActorSenderProfileImage().toString());
-        else
-            dbRecord.setStringValue(CommunicationNetworkServiceDatabaseConstants.INCOMING_NOTIFICATION_SENDER_IMAGE_COLUMN_NAME       , "");
+        try {
+            dbRecord.setUUIDValue(CommunicationNetworkServiceDatabaseConstants.INCOMING_NOTIFICATION_ID_COLUMN_NAME, record.getId());
+            dbRecord.setStringValue(CommunicationNetworkServiceDatabaseConstants.INCOMING_NOTIFICATION_SENDER_ALIAS_COLUMN_NAME, record.getActorSenderAlias());
 
-        dbRecord.setStringValue(CommunicationNetworkServiceDatabaseConstants.INCOMING_NOTIFICATION_DESCRIPTOR_COLUMN_NAME         , record.getNotificationDescriptor().getCode());
-        dbRecord.setStringValue(CommunicationNetworkServiceDatabaseConstants.INCOMING_NOTIFICATION_RECEIVER_TYPE_COLUMN_NAME      , record.getActorDestinationType().getCode());
-        dbRecord.setStringValue(CommunicationNetworkServiceDatabaseConstants.INCOMING_NOTIFICATION_SENDER_TYPE_COLUMN_NAME        , record.getActorSenderType().getCode());
-        dbRecord.setStringValue(CommunicationNetworkServiceDatabaseConstants.INCOMING_NOTIFICATION_SENDER_PUBLIC_KEY_COLUMN_NAME  , record.getActorSenderPublicKey());
-        dbRecord.setStringValue(CommunicationNetworkServiceDatabaseConstants.INCOMING_NOTIFICATION_RECEIVER_PUBLIC_KEY_COLUMN_NAME, record.getActorDestinationPublicKey());
-        dbRecord.setLongValue  (CommunicationNetworkServiceDatabaseConstants.INCOMING_NOTIFICATION_TIMESTAMP_COLUMN_NAME          , record.getSentDate());
-        dbRecord.setStringValue(CommunicationNetworkServiceDatabaseConstants.INCOMING_NOTIFICATION_PROTOCOL_STATE_COLUMN_NAME     , record.getActorProtocolState().getCode());
-        dbRecord.setStringValue(CommunicationNetworkServiceDatabaseConstants.INCOMING_NOTIFICATION_READ_MARK_COLUMN_NAME          , String.valueOf(record.isFlagReadead()));
+            dbRecord.setStringValue(CommunicationNetworkServiceDatabaseConstants.INCOMING_NOTIFICATION_DESCRIPTOR_COLUMN_NAME, record.getNotificationDescriptor().getCode());
+            dbRecord.setStringValue(CommunicationNetworkServiceDatabaseConstants.INCOMING_NOTIFICATION_RECEIVER_TYPE_COLUMN_NAME      , record.getActorDestinationType().getCode());
+            dbRecord.setStringValue(CommunicationNetworkServiceDatabaseConstants.INCOMING_NOTIFICATION_SENDER_TYPE_COLUMN_NAME        , record.getActorSenderType().getCode());
+            dbRecord.setStringValue(CommunicationNetworkServiceDatabaseConstants.INCOMING_NOTIFICATION_SENDER_PUBLIC_KEY_COLUMN_NAME  , record.getActorSenderPublicKey());
+            dbRecord.setStringValue(CommunicationNetworkServiceDatabaseConstants.INCOMING_NOTIFICATION_RECEIVER_PUBLIC_KEY_COLUMN_NAME, record.getActorDestinationPublicKey());
+            dbRecord.setLongValue(CommunicationNetworkServiceDatabaseConstants.INCOMING_NOTIFICATION_TIMESTAMP_COLUMN_NAME, record.getSentDate());
+            dbRecord.setStringValue(CommunicationNetworkServiceDatabaseConstants.INCOMING_NOTIFICATION_PROTOCOL_STATE_COLUMN_NAME, record.getActorProtocolState().getCode());
+            dbRecord.setStringValue(CommunicationNetworkServiceDatabaseConstants.INCOMING_NOTIFICATION_READ_MARK_COLUMN_NAME, String.valueOf(record.isFlagReadead()));
+            dbRecord.setStringValue(CommunicationNetworkServiceDatabaseConstants.INCOMING_NOTIFICATION_SENDER_PHRASE_COLUMN_NAME          , record.getActorSenderPhrase());
 
-        return dbRecord;
+
+            /**
+             * Persist profile image on a file
+             */
+            if(record.getActorSenderProfileImage()!=null && record.getActorSenderProfileImage().length > 0)
+                persistNewUserProfileImage(record.getActorSenderPublicKey(), record.getActorSenderProfileImage());
+
+
+            return dbRecord;
+
+        } catch(Exception e)
+        {
+            throw new CantBuildDataBaseRecordException(CantBuildDataBaseRecordException.DEFAULT_MESSAGE,e,"","");
+        }
+
+
     }
 
     private ActorNetworkServiceRecord buildActorNetworkServiceRecord(DatabaseTableRecord record) throws InvalidParameterException {
-
+    try
+    {
         UUID   notificationId            = record.getUUIDValue(CommunicationNetworkServiceDatabaseConstants.INCOMING_NOTIFICATION_ID_COLUMN_NAME);
         String senderAlias    = record.getStringValue(CommunicationNetworkServiceDatabaseConstants.INCOMING_NOTIFICATION_SENDER_ALIAS_COLUMN_NAME);
-        String senderProfileImage   = record.getStringValue(CommunicationNetworkServiceDatabaseConstants.INCOMING_NOTIFICATION_SENDER_IMAGE_COLUMN_NAME      );
-        String descriptor       = record.getStringValue(CommunicationNetworkServiceDatabaseConstants.INCOMING_NOTIFICATION_DESCRIPTOR_COLUMN_NAME   );
+         String descriptor       = record.getStringValue(CommunicationNetworkServiceDatabaseConstants.INCOMING_NOTIFICATION_DESCRIPTOR_COLUMN_NAME   );
         String destinationType      = record.getStringValue(CommunicationNetworkServiceDatabaseConstants.INCOMING_NOTIFICATION_RECEIVER_TYPE_COLUMN_NAME         );
         String senderType          = record.getStringValue(CommunicationNetworkServiceDatabaseConstants.INCOMING_NOTIFICATION_SENDER_TYPE_COLUMN_NAME);
         String senderPublicKey  = record.getStringValue(CommunicationNetworkServiceDatabaseConstants.INCOMING_NOTIFICATION_SENDER_PUBLIC_KEY_COLUMN_NAME);
@@ -452,8 +498,7 @@ public class IncomingNotificationDao implements DAO {
         long timestamp           = record.getLongValue(CommunicationNetworkServiceDatabaseConstants.INCOMING_NOTIFICATION_TIMESTAMP_COLUMN_NAME);
         String protocolState         = record.getStringValue(CommunicationNetworkServiceDatabaseConstants.INCOMING_NOTIFICATION_PROTOCOL_STATE_COLUMN_NAME);
         String flagReaded  = record.getStringValue(CommunicationNetworkServiceDatabaseConstants.INCOMING_NOTIFICATION_READ_MARK_COLUMN_NAME);
-
-
+        String senderPhrase = record.getStringValue(CommunicationNetworkServiceDatabaseConstants.INCOMING_NOTIFICATION_SENDER_PHRASE_COLUMN_NAME);
 
 
         ActorProtocolState  actorProtocolState = ActorProtocolState .getByCode(protocolState);
@@ -463,14 +508,18 @@ public class IncomingNotificationDao implements DAO {
         Actors actorDestinationType = Actors.getByCode(destinationType);
         Actors actorSenderType    = Actors.getByCode(senderType   );
 
-        byte[] profileImage = null;
+        byte[] profileImage;
 
-        if (senderProfileImage.length() > 0)
-            profileImage = senderProfileImage.getBytes();
+        try {
+            profileImage = getIntraUserProfileImagePrivateKey(record.getStringValue(CommunicationNetworkServiceDatabaseConstants.INCOMING_NOTIFICATION_SENDER_PUBLIC_KEY_COLUMN_NAME));
+        } catch(FileNotFoundException e) {
+            profileImage = new  byte[0];
+        }
 
         return new ActorNetworkServiceRecord(
                 notificationId        ,
                 senderAlias,
+                senderPhrase,
                 profileImage    ,
                 notificationDescriptor,
                 actorDestinationType        ,
@@ -483,5 +532,68 @@ public class IncomingNotificationDao implements DAO {
                 0
 
         );
+        }
+        catch(Exception e)
+        {
+            throw  new InvalidParameterException();
+        }
+    }
+
+
+    private void persistNewUserProfileImage(String publicKey, byte[] profileImage) throws CantPersistProfileImageException {
+
+        try {
+
+            PluginBinaryFile file = this.pluginFileSystem.createBinaryFile(pluginId,
+                    PROFILE_IMAGE_DIRECTORY_NAME,
+                    buildProfileImageFileName(publicKey),
+                    FilePrivacy.PRIVATE,
+                    FileLifeSpan.PERMANENT
+            );
+
+            file.setContent(profileImage);
+            file.persistToMedia();
+
+        } catch (CantPersistFileException e) {
+            throw new CantPersistProfileImageException(CantPersistProfileImageException.DEFAULT_MESSAGE,e, "Error persist file.", null);
+
+        } catch (CantCreateFileException e) {
+
+            throw new CantPersistProfileImageException(CantPersistProfileImageException.DEFAULT_MESSAGE,e, "Error creating file.", null);
+        } catch (Exception e) {
+
+            throw new CantPersistProfileImageException(CantPersistProfileImageException.DEFAULT_MESSAGE, FermatException.wrapException(e), "", "");
+        }
+    }
+
+
+    private byte[] getIntraUserProfileImagePrivateKey(final String publicKey) throws CantGetIntraUserProfileImageException,FileNotFoundException {
+
+        try {
+            PluginBinaryFile file = this.pluginFileSystem.getBinaryFile(pluginId,
+                    PROFILE_IMAGE_DIRECTORY_NAME,
+                    buildProfileImageFileName(publicKey),
+                    FilePrivacy.PRIVATE,
+                    FileLifeSpan.PERMANENT
+            );
+
+            file.loadFromMedia();
+
+            return file.getContent();
+
+        } catch (CantLoadFileException e) {
+            throw new CantGetIntraUserProfileImageException(CantGetIntraUserProfileImageException.DEFAULT_MESSAGE,e, "Error loaded file.", null);
+
+        } catch (FileNotFoundException | CantCreateFileException e) {
+
+            throw new FileNotFoundException(e, "", null);
+        } catch (Exception e) {
+
+            throw new CantGetIntraUserProfileImageException(CantGetIntraUserProfileImageException.DEFAULT_MESSAGE,FermatException.wrapException(e), "", "");
+        }
+    }
+
+    private String buildProfileImageFileName(final String publicKey) {
+        return PROFILE_IMAGE_FILE_NAME_PREFIX + "_" + publicKey;
     }
 }

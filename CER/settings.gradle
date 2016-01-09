@@ -5,12 +5,30 @@
  * -Name.
  */
 
+
+//API
 include ':fermat-cer-api'
 project(':fermat-cer-api').projectDir = new File('CER/library/api/fermat-cer-api')
 
+
+//CORE
 include ':fermat-cer-core'
 project(':fermat-cer-core').projectDir = new File('CER/library/core/fermat-cer-core')
 
+//FILTER
+include ':fermat-cer-plugin-search-provider-filter-bitdubai'
+project(':fermat-cer-plugin-search-provider-filter-bitdubai').projectDir = new File('CER/plugin/search/fermat-cer-plugin-search-provider-filter-bitdubai')
 
+//PROVIDERS
+include ':fermat-cer-plugin-provider-bitcoinvenezuela-bitdubai'
+project(':fermat-cer-plugin-provider-bitcoinvenezuela-bitdubai').projectDir = new File('CER/plugin/provider/fermat-cer-plugin-provider-bitcoinvenezuela-bitdubai')
 include ':fermat-cer-plugin-provider-dolartoday-bitdubai'
 project(':fermat-cer-plugin-provider-dolartoday-bitdubai').projectDir = new File('CER/plugin/provider/fermat-cer-plugin-provider-dolartoday-bitdubai')
+include ':fermat-cer-plugin-provider-elcronista-bitdubai'
+project(':fermat-cer-plugin-provider-elcronista-bitdubai').projectDir = new File('CER/plugin/provider/fermat-cer-plugin-provider-elcronista-bitdubai')
+include ':fermat-cer-plugin-provider-europeancentralbank-bitdubai'
+project(':fermat-cer-plugin-provider-europeancentralbank-bitdubai').projectDir = new File('CER/plugin/provider/fermat-cer-plugin-provider-europeancentralbank-bitdubai')
+include ':fermat-cer-plugin-provider-lanacion-bitdubai'
+project(':fermat-cer-plugin-provider-lanacion-bitdubai').projectDir = new File('CER/plugin/provider/fermat-cer-plugin-provider-lanacion-bitdubai')
+include ':fermat-cer-plugin-provider-yahoo-bitdubai'
+project(':fermat-cer-plugin-provider-yahoo-bitdubai').projectDir = new File('CER/plugin/provider/fermat-cer-plugin-provider-yahoo-bitdubai')

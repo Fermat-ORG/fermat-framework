@@ -7,6 +7,7 @@ import android.view.View;
 
 import com.bitdubai.fermat_android_api.ui.adapters.FermatAdapter;
 import com.bitdubai.fermat_ccp_api.layer.identity.intra_user.interfaces.IntraWalletUserIdentity;
+import com.bitdubai.fermat_ccp_api.layer.module.intra_user_identity.interfaces.IntraUserModuleIdentity;
 import com.bitdubai.sub_app.intra_user_identity.R;
 import com.bitdubai.sub_app.intra_user_identity.common.holders.IntraUserIdentityInfoViewHolder;
 import com.bitdubai.sub_app.intra_user_identity.util.UtilsFuncs;
@@ -19,10 +20,10 @@ import java.util.ArrayList;
  *
  * @author Nelson Ramirez
  */
-public class IntraUserIdentityInfoAdapter extends FermatAdapter<IntraWalletUserIdentity, IntraUserIdentityInfoViewHolder> {
+public class IntraUserIdentityInfoAdapter extends FermatAdapter<IntraUserModuleIdentity, IntraUserIdentityInfoViewHolder> {
 
 
-    public IntraUserIdentityInfoAdapter(Context context, ArrayList<IntraWalletUserIdentity> dataSet) {
+    public IntraUserIdentityInfoAdapter(Context context, ArrayList<IntraUserModuleIdentity> dataSet) {
         super(context, dataSet);
     }
 
@@ -37,7 +38,7 @@ public class IntraUserIdentityInfoAdapter extends FermatAdapter<IntraWalletUserI
     }
 
     @Override
-    protected void bindHolder(final IntraUserIdentityInfoViewHolder holder, final IntraWalletUserIdentity data, final int position) {
+    protected void bindHolder(final IntraUserIdentityInfoViewHolder holder, final IntraUserModuleIdentity data, final int position) {
         holder.getIdentityName().setText(data.getAlias());
 
         byte[] profileImage = data.getImage();

@@ -21,9 +21,12 @@ public enum EventSource implements FermatEnum {
     ACTOR_NETWORK_SERVICE_CRYPTO_CUSTOMER   ("ACC"),
     BROKER_ACK_OFFLINE_PAYMENT              ("BAFP"),
     BROKER_ACK_ONLINE_PAYMENT               ("BAOP"),
+    BROKER_SUBMIT_OFFLINE_MERCHANDISE       ("BSFM"),
     BROKER_SUBMIT_ONLINE_MERCHANDISE        ("BSOM"),
     BUSINESS_TRANSACTION_CLOSE_CONTRACT     ("BTCC"),
     BUSINESS_TRANSACTION_OPEN_CONTRACT      ("BTOC"),
+    CUSTOMER_ACK_OFFLINE_MERCHANDISE        ("CAOM"),
+    CUSTOMER_ACK_ONLINE_MERCHANDISE         ("CAOM"),
     NEGOTIATION_TRANSACTION_NEW             ("NTNW"),
     NEGOTIATION_TRANSACTION_UPDATE          ("NTUP"),
     NEGOTIATION_TRANSACTION_CLOSE           ("NTCL"),
@@ -48,6 +51,7 @@ public enum EventSource implements FermatEnum {
     NETWORK_SERVICE_ACTOR_ASSET_ISSUER      ("NSAIU"),
     NETWORK_SERVICE_ACTOR_ASSET_REDEEM_POINT("NSARU"),
     NETWORK_SERVICE_ASSET_TRANSMISSION      ("NSAT"),
+    NETWORK_SERVICE_CHAT                    ("NSCHT"),
     NETWORK_SERVICE_CRYPTO_ADDRESSES        ("NSCAD"),
     NETWORK_SERVICE_CRYPTO_PAYMENT_REQUEST  ("NSCPR"),
     NETWORK_SERVICE_CRYPTO_TRANSMISSION     ("NCT"),
@@ -84,8 +88,10 @@ public enum EventSource implements FermatEnum {
             case "AAR":    return ACTOR_ASSET_REDEEM_POINT;
             case "ACB":    return ACTOR_NETWORK_SERVICE_CRYPTO_BROKER;
             case "ACC":    return ACTOR_NETWORK_SERVICE_CRYPTO_CUSTOMER;
-            case "BAFP":    return BROKER_ACK_OFFLINE_PAYMENT;
+            case "BAFP":   return BROKER_ACK_OFFLINE_PAYMENT;
             case "BAOP":   return BROKER_ACK_ONLINE_PAYMENT;
+            case "BSFM":   return BROKER_SUBMIT_OFFLINE_MERCHANDISE;
+            case "BSOM":   return BROKER_SUBMIT_ONLINE_MERCHANDISE;
             case "BTCC":   return BUSINESS_TRANSACTION_CLOSE_CONTRACT;
             case "BTOC":   return BUSINESS_TRANSACTION_OPEN_CONTRACT;
             case "NTNW":   return NEGOTIATION_TRANSACTION_NEW;
@@ -110,6 +116,7 @@ public enum EventSource implements FermatEnum {
             case "NSARU":  return NETWORK_SERVICE_ACTOR_ASSET_REDEEM_POINT;
             case "NSAT":   return NETWORK_SERVICE_ASSET_TRANSMISSION;
             case "NSCAD":  return NETWORK_SERVICE_CRYPTO_ADDRESSES;
+            case "NSCHT":  return NETWORK_SERVICE_CHAT;
             case "NSCPR":  return NETWORK_SERVICE_CRYPTO_PAYMENT_REQUEST;
             case "NCT":    return NETWORK_SERVICE_CRYPTO_TRANSMISSION;
             case "NIU":    return NETWORK_SERVICE_INTRA_USER_PLUGIN;

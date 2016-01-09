@@ -11,7 +11,9 @@ import com.bitdubai.fermat_android_api.layer.definition.wallet.enums.FermatFragm
 public enum WalletRedeemPointFragmentsEnumType implements FermatFragmentsEnumType<WalletRedeemPointFragmentsEnumType> {
 
 
-    DAP_WALLET_REDEEM_POINT_MAIN_ACTIVITY("DWRPMA");
+    DAP_WALLET_REDEEM_POINT_MAIN_ACTIVITY("DWRPMA"),
+    DAP_WALLET_REDEEM_POINT_HISTORY_ACTIVITY("DWRPHA"),
+    DAP_WALLET_REDEEM_POINT_STADISTICS_ACTIVITY("DWRPSA");
 
     private String key;
 

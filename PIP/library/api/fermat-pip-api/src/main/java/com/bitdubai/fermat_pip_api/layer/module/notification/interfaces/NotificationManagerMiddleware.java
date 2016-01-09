@@ -4,6 +4,7 @@ import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.Fer
 import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
 import com.bitdubai.fermat_api.layer.all_definition.enums.CryptoCurrency;
 import com.bitdubai.fermat_api.layer.all_definition.events.EventSource;
+import  com.bitdubai.fermat_api.layer.dmp_module.notification.NotificationType;
 import com.bitdubai.fermat_pip_api.layer.notifications.FermatNotificationListener;
 
 import java.util.Observer;
@@ -35,4 +36,10 @@ public interface NotificationManagerMiddleware extends FermatManager {
     void addCallback(FermatNotificationListener notificationListener);
 
     void deleteCallback(FermatNotificationListener fermatNotificationListener);
+
+    void addReceiveRequestPaymentNotification(EventSource source, CryptoCurrency cryptoCurrency,long amount );
+
+    void addDeniedRequestPaymentNotification(EventSource source, CryptoCurrency cryptoCurrency,long amount );
+
+    void addNotificacion(NotificationType notificationType);
 }

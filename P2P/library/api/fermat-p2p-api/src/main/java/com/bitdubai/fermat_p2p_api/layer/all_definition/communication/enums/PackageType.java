@@ -20,70 +20,39 @@ public enum PackageType {
     // Definition types
 
     /*
-     * Request messages types
+     * Request packet types
      */
-    REQUEST_CHECK_IN_CLIENT("RCC"),
-    REQUEST_CHECK_IN_NETWORK_SERVICE("RCNS"),
-    REQUEST_CHECK_IN_ACTOR("RCA"),
-    REQUEST_NETWORK_SERVICE_LIST("RNSL"),
-    REQUEST_ACTOR_LIST("RAL"),
+    CHECK_IN_CLIENT_REQUEST,
+    CHECK_IN_NETWORK_SERVICE_REQUEST,
+    CHECK_IN_ACTOR_REQUEST,
+
+    CHECK_OUT_CLIENT_REQUEST,
+    CHECK_OUT_NETWORK_SERVICE_REQUEST,
+    CHECK_OUT_ACTOR_REQUEST,
+
+    NETWORK_SERVICE_LIST_REQUEST,
+    ACTOR_LIST_REQUEST,
+    NEAR_NODE_LIST_REQUEST,
+
+    CHECK_IN_PROFILE_DISCOVERY_QUERY_REQUEST,
+    ACTOR_TRACE_DISCOVERY_QUERY_REQUEST,
 
     /*
-     * Respond messages types
+     * Respond packet types
      */
-    RESPOND_CHECK_IN_CLIENT("RRCC"),
-    RESPOND_CHECK_IN_NETWORK_SERVICE("RRCNS"),
-    RESPOND_CHECK_IN_ACTOR("RRCA"),
-    RESPOND_NETWORK_SERVICE_LIST("RRNSL"),
-    RESPOND_ACTOR_LIST("RRAL")
+    CHECK_IN_CLIENT_RESPOND,
+    CHECK_IN_NETWORK_SERVICE_RESPOND,
+    CHECK_IN_ACTOR_RESPOND,
 
-    ;
+    CHECK_OUT_CLIENT_RESPOND,
+    CHECK_OUT_NETWORK_SERVICE_RESPOND,
+    CHECK_OUT_ACTOR_RESPOND,
 
-    /**
-     * Represent the code
-     */
-    private String code;
+    NETWORK_SERVICE_LIST_RESPOND,
+    ACTOR_LIST_RESPOND,
+    NEAR_NODE_LIST_RESPOND,
 
-    /**
-     * Constructor whit parameter
-     *
-     * @param code
-     */
-    PackageType(String code){
-        this.code = code;
-    }
+    CHECK_IN_PROFILE_DISCOVERY_QUERY_RESPOND,
+    ACTOR_TRACE_DISCOVERY_QUERY_RESPOND,
 
-    /**
-     * (no-javadoc)
-     * @see Object#toString()
-     */
-    @Override
-    public String toString() {
-        return this.code;
-    }
-
-    /**
-     * Return the FermatPacketType represented by the code pass as parameter
-     *
-     * @param code
-     * @return FermatPacketType
-     */
-    public PackageType getByCode(final String code){
-
-        switch (code){
-           case "RCC"  : return REQUEST_CHECK_IN_CLIENT;
-           case "RCNS" : return REQUEST_CHECK_IN_NETWORK_SERVICE;
-           case "RCA"  : return REQUEST_CHECK_IN_ACTOR;
-           case "RNSL" : return REQUEST_NETWORK_SERVICE_LIST;
-           case "RAL"  : return REQUEST_ACTOR_LIST;
-
-           case "RRCC"  : return RESPOND_CHECK_IN_CLIENT;
-           case "RRCNS" : return RESPOND_CHECK_IN_NETWORK_SERVICE;
-           case "RRCA"  : return RESPOND_CHECK_IN_ACTOR;
-           case "RRNSL" : return RESPOND_NETWORK_SERVICE_LIST;
-           case "RRAL"  : return RESPOND_ACTOR_LIST;
-
-           default: throw new IllegalArgumentException();
-        }
-    }
 }

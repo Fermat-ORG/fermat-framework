@@ -32,6 +32,7 @@ import com.bitdubai.fermat_cbp_plugin.layer.user_level_business_transaction.cust
 import com.bitdubai.fermat_cbp_plugin.layer.user_level_business_transaction.customer_broker_purchase.developer.bitdubai.version_1.database.UserLevelBusinessTransactionCustomerBrokerPurchaseDeveloperFactory;
 import com.bitdubai.fermat_cbp_plugin.layer.user_level_business_transaction.customer_broker_purchase.developer.bitdubai.version_1.structure.UserLevelBusinessTransactionCustomerBrokerPurchaseManager;
 import com.bitdubai.fermat_cbp_plugin.layer.user_level_business_transaction.customer_broker_purchase.developer.bitdubai.version_1.structure.events.UserLevelBusinessTransactionCustomerBrokerPurchaseMonitorAgent;
+import com.bitdubai.fermat_pip_api.layer.module.notification.interfaces.NotificationManagerMiddleware;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfaces.EventManager;
 
@@ -83,6 +84,9 @@ public class UserLevelBusinessTransactionCustomerBrokerPurchasePluginRoot extend
     @NeededPluginReference(platform = Platforms.CRYPTO_BROKER_PLATFORM, layer = Layers.WORLD, plugin = Plugins.FIAT_INDEX)
     FiatIndexManager fiatIndexManager;
 
+    @NeededPluginReference(platform = Platforms.PLUG_INS_PLATFORM, layer = Layers.SUB_APP_MODULE, plugin = Plugins.NOTIFICATION)
+    NotificationManagerMiddleware notificationManagerMiddleware;
+
     UserLevelBusinessTransactionCustomerBrokerPurchaseDatabaseDao userLevelBusinessTransactionCustomerBrokerPurchaseDatabaseDao;
 
     static Map<String, LogLevel> newLoggingLevel = new HashMap<String, LogLevel>();
@@ -119,9 +123,9 @@ public class UserLevelBusinessTransactionCustomerBrokerPurchasePluginRoot extend
     public void start() throws CantStartPluginException {
         try {
             customerBrokerPurchaseManager = new UserLevelBusinessTransactionCustomerBrokerPurchaseManager();
-            //startMonitorAgent();
+            startMonitorAgent();
             this.serviceStatus = ServiceStatus.STARTED;
-            System.out.print("***** Init Customer Broker Purchase *****");
+            System.out.print("***** Init User Level Bussines Customer Broker Purchase *****");
         } catch (Exception exception) {
             throw new CantStartPluginException(CantStartPluginException.DEFAULT_MESSAGE, FermatException.wrapException(exception), null, null);
         }
@@ -202,7 +206,8 @@ public class UserLevelBusinessTransactionCustomerBrokerPurchasePluginRoot extend
                     openContractManager,
                     closeContractManager,
                     customerBrokerContractPurchaseManager,
-                    fiatIndexManager);
+                    fiatIndexManager,
+                    notificationManagerMiddleware);
             userLevelBusinessTransactionCustomerBrokerPurchaseMonitorAgent.start();
         }else userLevelBusinessTransactionCustomerBrokerPurchaseMonitorAgent.start();
     }

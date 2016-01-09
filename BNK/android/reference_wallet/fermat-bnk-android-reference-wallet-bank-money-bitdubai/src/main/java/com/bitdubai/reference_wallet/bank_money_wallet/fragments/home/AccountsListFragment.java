@@ -1,15 +1,14 @@
 package com.bitdubai.reference_wallet.bank_money_wallet.fragments.home;
 
-import android.os.Build;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Toast;
+
 import com.bitdubai.fermat_android_api.ui.adapters.FermatAdapter;
 import com.bitdubai.fermat_android_api.ui.enums.FermatRefreshTypes;
 import com.bitdubai.fermat_android_api.ui.fragments.FermatWalletListFragment;
@@ -89,41 +88,25 @@ public class AccountsListFragment extends FermatWalletListFragment<BankAccountNu
     }
 
     @Override
+    protected boolean hasMenu() {
+        return true;
+    }
+
+    @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         menu.clear();
-        //inflater.inflate(R.menu.cbw_contract_history_menu, menu);
+        inflater.inflate(R.menu.bw_menu_home, menu);
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        /*if (item.getItemId() == R.id.action_no_filter) {
-            filterContractStatus = null;
-            swipeRefreshLayout.setRefreshing(true);
-            onRefresh();
-            return true;
+        if (item.getItemId() == R.id.add_account) {
+            changeActivity(Activities.BNK_BANK_MONEY_WALLET_ADD_ACCOUNT,appSession.getAppPublicKey());
         }
 
-        if (item.getItemId() == R.id.action_filter_succeed) {
-            filterContractStatus = ContractStatus.COMPLETED;
-            swipeRefreshLayout.setRefreshing(true);
-            onRefresh();
-            return true;
-        }
-
-        if (item.getItemId() == R.id.action_filter_cancel) {
-            filterContractStatus = ContractStatus.CANCELLED;
-            swipeRefreshLayout.setRefreshing(true);
-            onRefresh();
-            return true;
-        }*/
-
-        return super.onOptionsItemSelected(item);
+        return true;
     }
 
-    @Override
-    protected boolean hasMenu() {
-        return false;
-    }
 
     @Override
     public FermatAdapter getAdapter() {
@@ -168,13 +151,6 @@ public class AccountsListFragment extends FermatWalletListFragment<BankAccountNu
         return true;
     }
 
-    /*
-    @Override
-    public void onItemClickListener(BankAccountNumber data, int position) {
-        walletSession.setData("account data", data);
-        changeActivity(Activities.BNK_BANK_MONEY_WALLET_ACCOUNT_DETAILS, walletSession.getAppPublicKey());
-    }
-    */
 
     @Override
     public void onLongItemClickListener(BankAccountNumber data, int position) {

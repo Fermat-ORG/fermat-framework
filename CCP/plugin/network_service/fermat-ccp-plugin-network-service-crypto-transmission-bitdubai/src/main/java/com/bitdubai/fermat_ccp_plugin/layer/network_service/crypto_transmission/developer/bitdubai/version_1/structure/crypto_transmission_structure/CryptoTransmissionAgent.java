@@ -31,6 +31,13 @@ import com.google.gson.Gson;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Timer;
+import java.util.UUID;
+import java.util.concurrent.Callable;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.ScheduledFuture;
+import java.util.concurrent.TimeUnit;
 
 /**
  * Created by Matias Furszyfer on 2015.10.05..
@@ -116,7 +123,7 @@ public class CryptoTransmissionAgent {
      * Mapa con el publicKey del componentProfile al cual me quiero conectar
      *  y las veces que intenté conectarme para saltearlo si no está conectado
      */
-    Map<String,Integer> connectionsCounters;
+    Map<String,Timer> connectionsTimer;
 
     /**
      * Cola de espera, a la cual van pasando las conecciones que no se pudieron conectar para que se hagan con más tiempo y no saturen el server
@@ -275,13 +282,14 @@ public class CryptoTransmissionAgent {
 
             if(toSend.isInterrupted() == Boolean.FALSE){
                 //Sleep for a time
-                toSend.sleep(CryptoTransmissionAgent.SLEEP_TIME);
+                Thread.sleep(CryptoTransmissionAgent.SLEEP_TIME);
             }
 
         } catch (InterruptedException e) {
+            running = false;
             toSend.interrupt();
             System.out.println("CryptoTransmissionAgent - Thread Interrupted stopped ...  ");
-            return;        }
+        }
 
     }
 
@@ -498,9 +506,10 @@ public class CryptoTransmissionAgent {
             }
 
         } catch (InterruptedException e) {
+            running = false;
             toReceive.interrupt();
             System.out.println("CryptoTransmissionAgent - Thread Interrupted stopped ...  ");
-            return;        }
+        }
 
     }
 
@@ -665,6 +674,32 @@ public class CryptoTransmissionAgent {
         IncomingCryptoMetadataEvent incomingCryptoMetadataReceive = (IncomingCryptoMetadataEvent) fermatEvent;
         incomingCryptoMetadataReceive.setSource(EventSource.NETWORK_SERVICE_CRYPTO_TRANSMISSION);
         eventManager.raiseEvent(incomingCryptoMetadataReceive);
+    }
+
+    public void addToTimer(String connectionDestionation, final UUID metadataId) {
+        final ScheduledExecutorService scheduledExecutorService =
+                Executors.newScheduledThreadPool(2);
+                scheduledExecutorService.schedule(new Runnable() {
+                                                      public void run() {
+                                                          try {
+                                                              CryptoTransmissionMetadata cryptoTransmissionMetadata = cryptoTransmissionMetadataDAO.getMetadata(metadataId);
+                                                              if (cryptoTransmissionMetadata.getCryptoTransmissionStates() != CryptoTransmissionStates.SEEN_BY_DESTINATION_NETWORK_SERVICE ||
+                                                                      cryptoTransmissionMetadata.getCryptoTransmissionStates() != CryptoTransmissionStates.SEEN_BY_DESTINATION_VAULT ||
+                                                                      cryptoTransmissionMetadata.getCryptoTransmissionStates() != CryptoTransmissionStates.CREDITED_IN_DESTINATION_WALLET) {
+                                                                  cryptoTransmissionMetadata.changeState(CryptoTransmissionStates.PRE_PROCESSING_SEND);
+                                                                  cryptoTransmissionMetadata.setPendingToRead(true);
+                                                                  cryptoTransmissionMetadataDAO.changeState(cryptoTransmissionMetadata);
+                                                              }
+                                                          }catch (Exception e){
+                                                              e.printStackTrace();
+                                                              scheduledExecutorService.shutdown();
+                                                          }
+                                                          scheduledExecutorService.shutdown();
+                                                      }
+                                                  },
+                        1,
+                        TimeUnit.HOURS);
+
     }
 
 }

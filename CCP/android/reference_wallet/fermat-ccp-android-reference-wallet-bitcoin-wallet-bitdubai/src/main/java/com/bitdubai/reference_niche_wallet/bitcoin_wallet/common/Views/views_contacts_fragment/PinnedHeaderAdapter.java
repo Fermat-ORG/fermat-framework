@@ -24,7 +24,6 @@ import com.bitdubai.fermat_android_api.layer.definition.wallet.utils.ImagesUtils
 import com.bitdubai.fermat_android_api.ui.transformation.CircleTransform;
 import com.bitdubai.fermat_api.layer.all_definition.enums.UISource;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.interfaces.CryptoWalletWalletContact;
-
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedUIExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.Views.FermatListViewFragment;
@@ -126,7 +125,12 @@ public class PinnedHeaderAdapter extends BaseAdapter implements OnScrollListener
 
     @Override
     public long getItemId(int position) {
-        return mListItems.get(position).hashCode();
+        try {
+            return mListItems.get(position).hashCode();
+        }catch (IndexOutOfBoundsException i){
+            i.printStackTrace();
+            return 0;
+        }
     }
 
 
@@ -163,11 +167,11 @@ public class PinnedHeaderAdapter extends BaseAdapter implements OnScrollListener
                             if (walletContact.getProfilePicture() != null && walletContact.getProfilePicture().length > 0) {
                                 holder.imageView.setImageDrawable(ImagesUtils.getRoundedBitmap(mContext.getResources(), walletContact.getProfilePicture()));
                             } else
-                                Picasso.with(mContext).load(R.drawable.profile_image_standard).transform(new CircleTransform()).into(holder.imageView);
+                                Picasso.with(mContext).load(R.drawable.ic_profile_male).transform(new CircleTransform()).into(holder.imageView);
                         }catch (Exception e){
                             errorManager.reportUnexpectedUIException(UISource.VIEW, UnexpectedUIExceptionSeverity.UNSTABLE,e);
                             Toast.makeText(mContext,"Image database problem",Toast.LENGTH_SHORT).show();
-                            Picasso.with(mContext).load(R.drawable.profile_image_standard).transform(new CircleTransform()).into(holder.imageView);
+                            Picasso.with(mContext).load(R.drawable.ic_profile_male).transform(new CircleTransform()).into(holder.imageView);
                         }
                         text = walletContact.getActorName();
                         //contact image

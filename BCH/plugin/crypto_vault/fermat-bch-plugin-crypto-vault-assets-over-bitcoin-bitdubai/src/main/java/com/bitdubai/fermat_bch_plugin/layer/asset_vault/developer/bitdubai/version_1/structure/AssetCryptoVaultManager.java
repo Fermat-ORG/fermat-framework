@@ -10,7 +10,10 @@ import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
 import com.bitdubai.fermat_api.layer.all_definition.enums.BlockchainNetworkType;
 import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.BitcoinNetworkSelector;
 import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.exceptions.CantBroadcastTransactionException;
+import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.exceptions.CantStoreBitcoinTransactionException;
 import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.interfaces.BitcoinNetworkManager;
+import com.bitdubai.fermat_bch_api.layer.crypto_vault.asset_vault.exceptions.CantGetActiveRedeemPointAddressesException;
+import com.bitdubai.fermat_bch_api.layer.crypto_vault.asset_vault.exceptions.CantGetActiveRedeemPointsException;
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.asset_vault.exceptions.CantGetExtendedPublicKeyException;
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.asset_vault.exceptions.CantSendAssetBitcoinsToUserException;
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.classes.HierarchyAccount.*;
@@ -20,6 +23,7 @@ import com.bitdubai.fermat_bch_api.layer.crypto_vault.exceptions.GetNewCryptoAdd
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.classes.vault_seed.VaultSeedGenerator;
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.classes.vault_seed.exceptions.CantCreateAssetVaultSeed;
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.classes.vault_seed.exceptions.CantLoadExistingVaultSeed;
+import com.bitdubai.fermat_bch_api.layer.crypto_vault.watch_only_vault.ExtendedPublicKey;
 import com.bitdubai.fermat_bch_plugin.layer.asset_vault.developer.bitdubai.version_1.database.AssetsOverBitcoinCryptoVaultDao;
 import com.bitdubai.fermat_bch_plugin.layer.asset_vault.developer.bitdubai.version_1.exceptions.CantExecuteDatabaseOperationException;
 import com.bitdubai.fermat_bch_plugin.layer.asset_vault.developer.bitdubai.version_1.exceptions.CantInitializeAssetsOverBitcoinCryptoVaultDatabaseException;
@@ -41,8 +45,10 @@ import org.bitcoinj.crypto.MnemonicException;
 import org.bitcoinj.wallet.DeterministicSeed;
 import org.bitcoinj.wallet.WalletTransaction;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
+import java.util.concurrent.ExecutionException;
 
 /**
  * The Class <code>com.bitdubai.fermat_bch_plugin.layer.cryptovault.assetsoverbitcoin.developer.bitdubai.version_1.structure.AssetCryptoVaultManager</code>
@@ -253,9 +259,15 @@ public class AssetCryptoVaultManager  {
         }
 
         try {
-            bitcoinNetworkManager.broadcastTransaction(networkType, sendRequest.tx, UUID.randomUUID());
+            /**
+             * Once I formed the transaction, I will store it and ask the CryptoNEtwork to broadcast it.
+             */
+            bitcoinNetworkManager.storeBitcoinTransaction(networkType, sendRequest.tx, UUID.randomUUID());
+            bitcoinNetworkManager.broadcastTransaction(sendRequest.tx.getHashAsString());
+        } catch (CantStoreBitcoinTransactionException e) {
+            e.printStackTrace();
         } catch (CantBroadcastTransactionException e) {
-            throw new CantSendAssetBitcoinsToUserException(CantSendAssetBitcoinsToUserException.DEFAULT_MESSAGE, e, "Cant broadcast the outgoing transaction", "CryptoNetwork issue.");
+            e.printStackTrace();
         }
 
         return sendRequest.tx.getHashAsString();
@@ -380,21 +392,20 @@ public class AssetCryptoVaultManager  {
             int currentUsedCount = getDao().getCurrentUsedKeys(account.getId());
             return currentGeneratedCount - currentUsedCount;
         } catch (CantExecuteDatabaseOperationException e) {
-            e.printStackTrace();
+            return 0;
         }
 
-        return 0;
+
     }
 
 
     /**
      * Derives the specified amount of keys in the selected account. Only some plugins can execute this method.
      * @param plugin the pluginId invoking this call. Might not have permissions to create new keys.
-     * @param account the account to derive keys from.
      * @param keysToDerive thre amount of keys to derive.
      * @throws CantDeriveNewKeysException
      */
-    public void deriveKeys(Plugins plugin, com.bitdubai.fermat_bch_api.layer.crypto_vault.classes.HierarchyAccount.HierarchyAccount account, int keysToDerive) throws CantDeriveNewKeysException{
+    public void deriveKeys(Plugins plugin, int keysToDerive) throws CantDeriveNewKeysException{
         if (plugin == Plugins.ASSET_ISSUING){
             
         }
@@ -446,27 +457,181 @@ public class AssetCryptoVaultManager  {
 
     /**
      * Gets the Extended Public Key from the specified account. Can't be from a master account.
-     * @param hierarchyAccount a Redeem Point account.
+     * @param redeemPointPublicKey a Redeem Point publicKey
      * @return the DeterministicKey that will be used by the redeem Points.
      * @throws CantGetExtendedPublicKeyException
      */
-    public DeterministicKey getExtendedPublicKey(HierarchyAccount hierarchyAccount) throws CantGetExtendedPublicKeyException {
+    public ExtendedPublicKey getRedeemPointExtendedPublicKey(String redeemPointPublicKey) throws CantGetExtendedPublicKeyException {
+        if (redeemPointPublicKey == null)
+            throw new CantGetExtendedPublicKeyException(CantGetExtendedPublicKeyException.DEFAULT_MESSAGE, null, "RedeemPoint Public Key can't be null.", null);
+
+
         /**
-         * get the master account key
+         * if I don't have an account with this publicKey, then I will create it.
          */
-        DeterministicKey accountMasterKey = this.vaultKeyHierarchyGenerator.getVaultKeyHierarchy().getAddressKeyFromAccount(hierarchyAccount);
+        HierarchyAccount redeemPointAccount = null;
+        if (!isExistingRedeemPoint(redeemPointPublicKey)){
+            /**
+             * I will create the new account
+             */
+
+            try {
+                redeemPointAccount = createNewRedeemPointAccount(redeemPointPublicKey);
+                this.vaultKeyHierarchyGenerator.getVaultKeyHierarchy().addVaultAccount(redeemPointAccount);
+            } catch (CantExecuteDatabaseOperationException e) {
+                throw new CantGetExtendedPublicKeyException(CantGetExtendedPublicKeyException.DEFAULT_MESSAGE, e, "There was an error creating and persisting the new account in database.", "database issue");
+            }
+        } else{
+            /**
+             * will load the existing account
+             */
+            try {
+                redeemPointAccount = getDao().getHierarchyAccount(redeemPointPublicKey);
+            } catch (CantExecuteDatabaseOperationException e) {
+                throw new CantGetExtendedPublicKeyException(CantGetExtendedPublicKeyException.DEFAULT_MESSAGE, e, "Error getting existing Hierarchy Account", "database issue");
+            }
+        }
+
+
+        /**
+         * get the master account key for the specified account.
+         */
+        DeterministicKey accountMasterKey = this.vaultKeyHierarchyGenerator.getVaultKeyHierarchy().getAddressKeyFromAccount(redeemPointAccount);
 
         // Serialize the pub key.
         byte[] pubKeyBytes = accountMasterKey.getPubKey();
         byte[] chainCode = accountMasterKey.getChainCode();
 
-
-        // Deserialize the pub key.
-        final DeterministicKey watchPubKeyAccountZero = HDKeyDerivation.createMasterPubKeyFromBytes(pubKeyBytes, chainCode);
-
         /**
          * return the extended public Key
          */
-        return watchPubKeyAccountZero;
+        ExtendedPublicKey extendedPublicKey = new ExtendedPublicKey(redeemPointPublicKey, pubKeyBytes, chainCode);
+        return extendedPublicKey;
     }
+
+    /**
+     * creates a new redeem point account by adding it to the database
+     * @param redeemPointPublicKey
+     * @return
+     */
+    private HierarchyAccount createNewRedeemPointAccount(String redeemPointPublicKey) throws CantExecuteDatabaseOperationException {
+
+        /**
+         * gets the next available ID that is free to be used.
+         */
+        int accountId = getNextAvailableAccountId();
+
+        /**
+         * creates the account and stores it.
+         */
+        HierarchyAccount hierarchyAccount = new HierarchyAccount(accountId, redeemPointPublicKey, HierarchyAccountType.REDEEMPOINT_ACCOUNT);
+        getDao().addNewHierarchyAccount(hierarchyAccount);
+        return hierarchyAccount;
+    }
+
+    /**
+     * Finds out what is the next available ID that can be used for creating and hierarcht account
+     * @return
+     */
+    private int getNextAvailableAccountId() {
+        try {
+            return getDao().getNextAvailableHierarchyAccountId();
+        } catch (CantExecuteDatabaseOperationException e) {
+            return 0;
+        }
+    }
+
+    /**
+     * Searches the databases for this public key
+     * @param redeemPointPublicKey
+     * @return
+     */
+    private boolean isExistingRedeemPoint(String redeemPointPublicKey) {
+        try {
+            return getDao().isExistingRedeemPoint(redeemPointPublicKey);
+        } catch (CantExecuteDatabaseOperationException e) {
+            return false;
+        }
+    }
+
+    /**
+     * If the redeem point keys are initialized, will return all the generated addresses
+     * @param redeemPointPublicKey
+     * @return
+     * @throws CantGetActiveRedeemPointAddressesException
+     */
+    public List<CryptoAddress> getActiveRedeemPointAddresses(String redeemPointPublicKey) throws CantGetActiveRedeemPointAddressesException {
+        /**
+         * will get the hierarchy account for this public key
+         */
+        HierarchyAccount hierarchyAccount = null;
+        try {
+            hierarchyAccount = getDao().getHierarchyAccount(redeemPointPublicKey);
+
+            if (hierarchyAccount == null)
+                throw new CantGetActiveRedeemPointAddressesException(CantGetActiveRedeemPointAddressesException.DEFAULT_MESSAGE, null, "the specified public key does not exists: " + redeemPointPublicKey, null);
+
+            if (hierarchyAccount.getHierarchyAccountType() != HierarchyAccountType.REDEEMPOINT_ACCOUNT)
+                throw new CantGetActiveRedeemPointAddressesException(CantGetActiveRedeemPointAddressesException.DEFAULT_MESSAGE, null, "the specified public key " + redeemPointPublicKey + " is not from a Redeem Point account", null);
+
+        } catch (CantExecuteDatabaseOperationException e) {
+            throw new CantGetActiveRedeemPointAddressesException(CantGetActiveRedeemPointAddressesException.DEFAULT_MESSAGE, e, "Error getting hierarchy account from database.", "database error");
+        }
+
+        /**
+         * will get the current amount of generated keys
+         */
+        int generatedKeys;
+        try {
+            generatedKeys = getDao().getCurrentGeneratedKeys(hierarchyAccount.getId());
+        } catch (CantExecuteDatabaseOperationException e) {
+            generatedKeys = 0;
+        }
+
+        /**
+         * Will derive all keys and return them
+         */
+        List<CryptoAddress> cryptoAddresses = new ArrayList<>();
+        for (int i=1; i<generatedKeys; i++){
+            try {
+                cryptoAddresses.add(this.getCryptoAddressFromRedemPoint(hierarchyAccount, i));
+            } catch (GetNewCryptoAddressException e) {
+                return cryptoAddresses;
+            }
+        }
+
+        return cryptoAddresses;
+    }
+
+    /**
+     * Will get the CryptoAddress for the given account at the passed position.
+     * the difference of getting the address from a redeem point is that it won't mark the address as used.
+     * @param hierarchyAccount
+     * @param position
+     * @return
+     */
+    private CryptoAddress getCryptoAddressFromRedemPoint(HierarchyAccount hierarchyAccount, int position) throws GetNewCryptoAddressException {
+        return vaultKeyHierarchyGenerator.getVaultKeyHierarchy().getRedeemPointBitcoinAddress(hierarchyAccount, position);
+
+    }
+
+    /**
+     * Returns the private Keys of all the active Redeem Points hierarchies in the asset vault
+     * @return
+     */
+    public List<String> getActiveRedeemPoints() throws CantGetActiveRedeemPointsException {
+        List<String> publicKeys = new ArrayList<>();
+        try {
+            for (HierarchyAccount hierarchyAccount : getDao().getHierarchyAccounts()){
+                if (hierarchyAccount.getHierarchyAccountType() == HierarchyAccountType.REDEEMPOINT_ACCOUNT)
+                    publicKeys.add(hierarchyAccount.getDescription());
+            }
+        } catch (CantExecuteDatabaseOperationException e) {
+            throw new CantGetActiveRedeemPointsException(CantGetActiveRedeemPointsException.DEFAULT_MESSAGE, e, "database error getting the list of active hierarchy accounts.", "database issue");
+        }
+
+        return publicKeys;
+    }
+
+
 }

@@ -14,7 +14,6 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTransac
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantInsertRecordException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantLoadTableToMemoryException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantUpdateRecordException;
-import com.bitdubai.fermat_api.layer.osa_android.file_system.DealsWithPluginFileSystem;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.FileLifeSpan;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.FilePrivacy;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
@@ -55,30 +54,23 @@ import java.util.UUID;
 /**
  * Created by franklin on 28/09/15.
  */
-public class AssetIssuerWalletDao implements DealsWithPluginFileSystem {
+public class AssetIssuerWalletDao {
     //TODO: Manejo de excepciones
     public static final String PATH_DIRECTORY = "asset-issuer-swap/";//digital-asset-swap/"
     PluginFileSystem pluginFileSystem;
     UUID plugin;
 
-    @Override
-    public void setPluginFileSystem(PluginFileSystem pluginFileSystem) {
-        this.pluginFileSystem = pluginFileSystem;
-    }
-
-    public void setPlugin(UUID plugin) {
-        this.plugin = plugin;
-    }
-
     private Database database;
 
-    public AssetIssuerWalletDao(Database database) {
+    public AssetIssuerWalletDao(Database database, PluginFileSystem pluginFileSystem, UUID pluginId) {
         this.database = database;
+        this.pluginFileSystem = pluginFileSystem;
+        this.plugin = pluginId;
     }
 
 
     /*
-     * getBookBalance must get actual Book Balance global of Asset Issuer wallet, select record from balances table
+     * getBalance must get actual Book Balance global of Asset Issuer wallet, select record from balances table
      */
     public long getBookBalance() throws CantCalculateBalanceException {
         try {
@@ -92,7 +84,7 @@ public class AssetIssuerWalletDao implements DealsWithPluginFileSystem {
     }
 
     /*
-     * getBookBalance must get actual Book Balance global of Asset Issuer wallet, select record from balances table
+     * getBalance must get actual Book Balance global of Asset Issuer wallet, select record from balances table
      */
     public List<AssetIssuerWalletList> getBalanceByAssets() throws CantCalculateBalanceException {
         try {
@@ -106,7 +98,7 @@ public class AssetIssuerWalletDao implements DealsWithPluginFileSystem {
     }
 
     /*
-    * getBookBalance must get actual Book Balance global of Asset Issuer wallet, select record from balances table
+    * getBalance must get actual Book Balance global of Asset Issuer wallet, select record from balances table
     */
     public long getAvailableBalance() throws CantCalculateBalanceException {
         try {
@@ -137,8 +129,6 @@ public class AssetIssuerWalletDao implements DealsWithPluginFileSystem {
     public void addDebit(final AssetIssuerWalletTransactionRecord assetIssuerWalletTransactionRecord, final BalanceType balanceType) throws CantRegisterDebitException {
         try {
             System.out.println("Agregando Debito-----------------------------------------------------------");
-            if (isTransactionInTable(assetIssuerWalletTransactionRecord.getIdTransaction(), TransactionType.DEBIT, balanceType))
-                throw new CantRegisterDebitException(CantRegisterDebitException.DEFAULT_MESSAGE, null, null, "The transaction is already in the database");
 
             long availableAmount = balanceType.equals(BalanceType.AVAILABLE) ? assetIssuerWalletTransactionRecord.getAmount() : 0L;
             long bookAmount = balanceType.equals(BalanceType.BOOK) ? assetIssuerWalletTransactionRecord.getAmount() : 0L;
@@ -151,7 +141,7 @@ public class AssetIssuerWalletDao implements DealsWithPluginFileSystem {
             long quantityBookRunningBalance = calculateQuantityBookRunningBalanceByAsset(-quantityBookAmount, assetIssuerWalletTransactionRecord.getDigitalAsset().getPublicKey());
 
             executeTransaction(assetIssuerWalletTransactionRecord, TransactionType.DEBIT, balanceType, availableRunningBalance, bookRunningBalance, quantityAvailableRunningBalance, quantityBookRunningBalance);
-        } catch (CantGetBalanceRecordException | CantLoadTableToMemoryException | CantExecuteAssetIssuerTransactionException exception) {
+        } catch (CantGetBalanceRecordException | CantExecuteAssetIssuerTransactionException exception) {
             throw new CantRegisterDebitException(CantRegisterDebitException.DEFAULT_MESSAGE, exception, null, "Check the cause");
         } catch (Exception exception) {
             throw new CantRegisterDebitException(CantRegisterDebitException.DEFAULT_MESSAGE, FermatException.wrapException(exception), null, "Check the cause");
@@ -165,8 +155,6 @@ public class AssetIssuerWalletDao implements DealsWithPluginFileSystem {
 
         try {
             System.out.println("Agregando Credito-----------------------------------------------------------");
-            if (isTransactionInTable(assetIssuerWalletTransactionRecord.getIdTransaction(), TransactionType.CREDIT, balanceType))
-                throw new CantRegisterCreditException(CantRegisterCreditException.DEFAULT_MESSAGE, null, null, "The transaction is already in the database");
 
             long availableAmount = balanceType.equals(BalanceType.AVAILABLE) ? assetIssuerWalletTransactionRecord.getAmount() : 0L;
             long bookAmount = balanceType.equals(BalanceType.BOOK) ? assetIssuerWalletTransactionRecord.getAmount() : 0L;
@@ -179,7 +167,7 @@ public class AssetIssuerWalletDao implements DealsWithPluginFileSystem {
             long quantityBookRunningBalance = calculateQuantityBookRunningBalanceByAsset(quantityBookAmount, assetIssuerWalletTransactionRecord.getDigitalAsset().getPublicKey());
 
             executeTransaction(assetIssuerWalletTransactionRecord, TransactionType.CREDIT, balanceType, availableRunningBalance, bookRunningBalance, quantityAvailableRunningBalance, quantityBookRunningBalance);
-        } catch (CantGetBalanceRecordException | CantLoadTableToMemoryException | CantExecuteAssetIssuerTransactionException exception) {
+        } catch (CantGetBalanceRecordException | CantExecuteAssetIssuerTransactionException exception) {
             throw new CantRegisterCreditException(CantRegisterCreditException.DEFAULT_MESSAGE, exception, null, "Check the cause");
         } catch (Exception exception) {
             throw new CantRegisterCreditException(CantRegisterCreditException.DEFAULT_MESSAGE, FermatException.wrapException(exception), null, "Check the cause");
@@ -364,26 +352,26 @@ public class AssetIssuerWalletDao implements DealsWithPluginFileSystem {
             databaseTable.loadToMemory();
             if (databaseTable.getRecords().isEmpty()) {
                 transaction.addRecordToInsert(databaseTable, assetBalanceRecord);
-                String digitalAssetInnerXML = assetIssuerWalletTransactionRecord.getDigitalAsset().toString();
-                PluginTextFile pluginTextFile = pluginFileSystem.createTextFile(plugin, PATH_DIRECTORY, assetIssuerWalletTransactionRecord.getDigitalAsset().getPublicKey(), FilePrivacy.PRIVATE, FileLifeSpan.PERMANENT);
-                pluginTextFile.setContent(digitalAssetInnerXML);
-                pluginTextFile.persistToMedia();
-
-                /**
-                 * I'm also saving to file the DigitalAssetMetadata of this digital Asset.
-                 */
-                String digitalAssetMetadataFilename = assetIssuerWalletTransactionRecord.getDigitalAsset().getPublicKey() + "_metadata";
-                String digitalAssetMetadataXML = assetIssuerWalletTransactionRecord.getDigitalAssetMetadata().toString();
-                pluginTextFile = pluginFileSystem.createTextFile(plugin, PATH_DIRECTORY, digitalAssetMetadataFilename, FilePrivacy.PRIVATE, FileLifeSpan.PERMANENT);
-                pluginTextFile.setContent(digitalAssetMetadataXML);
-                pluginTextFile.persistToMedia();
-
             } else {
                 transaction.addRecordToUpdate(databaseTable, assetBalanceRecord);
             }
 
+            String digitalAssetInnerXML = assetIssuerWalletTransactionRecord.getDigitalAsset().toString();
+            PluginTextFile pluginTextFile = pluginFileSystem.createTextFile(plugin, PATH_DIRECTORY, assetIssuerWalletTransactionRecord.getDigitalAsset().getPublicKey(), FilePrivacy.PRIVATE, FileLifeSpan.PERMANENT);
+            pluginTextFile.setContent(digitalAssetInnerXML);
+            pluginTextFile.persistToMedia();
+
+            /**
+             * I'm also saving to file the DigitalAssetMetadata of this digital Asset.
+             */
+            String digitalAssetMetadataFilename = assetIssuerWalletTransactionRecord.getDigitalAsset().getPublicKey() + "_metadata";
+            String digitalAssetMetadataXML = assetIssuerWalletTransactionRecord.getDigitalAssetMetadata().toString();
+            pluginTextFile = pluginFileSystem.createTextFile(plugin, PATH_DIRECTORY, digitalAssetMetadataFilename, FilePrivacy.PRIVATE, FileLifeSpan.PERMANENT);
+            pluginTextFile.setContent(digitalAssetMetadataXML);
+            pluginTextFile.persistToMedia();
+
             database.executeTransaction(transaction);
-            database.closeDatabase();
+
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -607,7 +595,9 @@ public class AssetIssuerWalletDao implements DealsWithPluginFileSystem {
     public void assetRedeemed(String assetPublicKey, String userPublicKey, String redeemPointPublicKey) throws RecordsNotFoundException, CantGetAssetStatisticException {
         updateStringFieldByAssetPublicKey(AssetWalletIssuerDatabaseConstant.ASSET_STATISTIC_ASSET_CURRENT_STATUS_COLUMN_NAME, AssetCurrentStatus.ASSET_REDEEMED.getCode(), assetPublicKey);
         updateStringFieldByAssetPublicKey(AssetWalletIssuerDatabaseConstant.ASSET_STATISTIC_REDEEM_POINT_PUBLIC_KEY_COLUMN_NAME, redeemPointPublicKey, assetPublicKey);
-        updateStringFieldByAssetPublicKey(AssetWalletIssuerDatabaseConstant.ASSET_STATISTIC_ACTOR_USER_PUBLIC_KEY_COLUMN_NAME, userPublicKey, assetPublicKey);
+        if (userPublicKey != null) {
+            updateStringFieldByAssetPublicKey(AssetWalletIssuerDatabaseConstant.ASSET_STATISTIC_ACTOR_USER_PUBLIC_KEY_COLUMN_NAME, userPublicKey, assetPublicKey);
+        }
         updateLongFieldByAssetPublicKey(AssetWalletIssuerDatabaseConstant.ASSET_STATISTIC_ASSET_USAGE_DATE_COLUMN_NAME, System.currentTimeMillis(), assetPublicKey);
     }
 
@@ -810,7 +800,9 @@ public class AssetIssuerWalletDao implements DealsWithPluginFileSystem {
         try {
             DatabaseTable assetStatisticTable;
             assetStatisticTable = database.getTable(AssetWalletIssuerDatabaseConstant.ASSET_STATISTIC_TABLE_NAME);
-            DatabaseTableRecord record = assetStatisticTable.getRecordFromPk(assetPublicKey);
+            assetStatisticTable.addStringFilter(AssetWalletIssuerDatabaseConstant.ASSET_STATISTIC_ASSET_PUBLIC_KEY_COLUMN_NAME, assetPublicKey, DatabaseFilterType.EQUAL);
+            assetStatisticTable.loadToMemory();
+            DatabaseTableRecord record = assetStatisticTable.getRecords().get(0);
 
             if (record == null) {
                 throw new RecordsNotFoundException(null, context, "");

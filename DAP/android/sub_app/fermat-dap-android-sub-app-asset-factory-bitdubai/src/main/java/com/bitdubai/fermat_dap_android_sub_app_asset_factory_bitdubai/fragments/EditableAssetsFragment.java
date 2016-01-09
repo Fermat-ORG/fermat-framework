@@ -27,6 +27,7 @@ import com.bitdubai.fermat_android_api.ui.util.FermatWorker;
 import com.bitdubai.fermat_api.layer.all_definition.enums.BlockchainNetworkType;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
 import com.bitdubai.fermat_api.layer.all_definition.resources_structure.Resource;
+import com.bitdubai.fermat_api.layer.modules.common_classes.ActiveActorIdentityInformation;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantCreateFileException;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.FileNotFoundException;
 import com.bitdubai.fermat_dap_android_sub_app_asset_factory_bitdubai.R;
@@ -44,6 +45,9 @@ import com.software.shell.fab.ActionButton;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import static android.widget.Toast.LENGTH_SHORT;
+import static android.widget.Toast.makeText;
 
 /**
  * Main Fragment
@@ -167,7 +171,7 @@ public class EditableAssetsFragment extends AbstractFermatFragment implements
                     MenuInflater inflater = popupMenu.getMenuInflater();
                     inflater.inflate(R.menu.asset_factory_main, popupMenu.getMenu());
                     try {
-                        if (!manager.isReadyToPublish(selectedAsset.getPublicKey())) {
+                        if (!manager.isReadyToPublish(selectedAsset.getAssetPublicKey())) {
                             popupMenu.getMenu().findItem(R.id.action_publish).setVisible(false);
                         }
                     } catch (CantPublishAssetFactoy cantPublishAssetFactoy) {
@@ -275,7 +279,7 @@ public class EditableAssetsFragment extends AbstractFermatFragment implements
                 selectedAsset = null;
         } else if (menuItem.getItemId() == R.id.action_publish) {
             try {
-                if (manager.isReadyToPublish(selectedAsset.getPublicKey())) {
+                if (manager.isReadyToPublish(selectedAsset.getAssetPublicKey())) {
                     final ProgressDialog dialog = new ProgressDialog(getActivity());
                     dialog.setTitle("Asset Factory");
                     dialog.setMessage("Publishing asset, please wait...");
@@ -325,5 +329,25 @@ public class EditableAssetsFragment extends AbstractFermatFragment implements
             }
         }
         return false;
+    }
+
+    @Override
+    public void onActivityCreated(Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        checkIdentity();
+    }
+
+    private void checkIdentity() {
+        ActiveActorIdentityInformation identity = null;
+        try {
+            identity = manager.getSelectedActorIdentity();
+        } catch(Exception e) {
+            e.printStackTrace();
+        }
+        if (identity == null) {
+            makeText(getActivity(), "Identity must be created",
+                    LENGTH_SHORT).show();
+            getActivity().onBackPressed();
+        }
     }
 }

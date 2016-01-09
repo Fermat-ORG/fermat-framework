@@ -1,0 +1,164 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:layout_height="wrap_content"
+    android:layout_width="match_parent"
+    android:background="#FFFFFF"
+   >
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="70dp"
+        android:background="#12aca1">
+
+
+        <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:text=" Create Community Group"
+            android:layout_gravity="center_vertical"
+            android:gravity="center_vertical"
+            android:paddingLeft="12dp"
+            android:textColor="#fff"
+            android:textStyle="bold"
+            android:textSize="18sp"
+            app:typeface="ROBOTO_REGULAR"
+            android:background="#0072bb" />
+
+
+    </LinearLayout>
+
+
+    <LinearLayout
+        android:layout_width="380dp"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:paddingBottom="3dip"
+        android:paddingLeft="7dip"
+        android:paddingRight="7dip"
+        android:paddingTop="6dip"
+        android:background="#FFFFFF"
+        android:divider="#e1e1e1">
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:paddingTop="7dp">
+
+            <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Group name"
+                android:textColor="#0072bb"
+                android:paddingLeft="20dp"
+                android:layout_alignParentTop="true"
+                android:visibility="visible"
+                app:typeface="ROBOTO_REGULAR"/>
+
+
+            <AutoCompleteTextView
+                android:id="@+id/group_name"
+                android:layout_width="200dp"
+                android:layout_height="40dp"
+                android:layout_gravity="center_vertical"
+                android:layout_marginBottom="3dip"
+                android:ellipsize="end"
+                android:gravity="center_vertical"
+                android:hint="Name"
+                android:textColorHint="#9a9a9c"
+                android:inputType="textCapWords"
+                android:paddingBottom="7dip"
+                android:paddingLeft="15dip"
+                android:paddingRight="7dip"
+                android:paddingTop="7dip"
+                android:singleLine="true"
+                android:textColor="#1d1d26"
+                android:textSize="14sp"
+                android:layout_weight="1"
+                android:layout_marginLeft="15dp"
+                android:textStyle="normal" />
+
+        </LinearLayout>
+
+
+
+    </LinearLayout>
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="0.5dp"
+        android:background="#e1e1e1"
+        android:paddingLeft="3dp"
+        android:paddingRight="3dp"
+        android:paddingTop="3dp"
+        android:paddingBottom="3dp"
+        android:layout_marginTop="7dp"
+        ></View>
+
+    <RelativeLayout
+        android:layout_width="380dp"
+        android:layout_height="wrap_content"
+        >
+
+
+
+
+
+    <LinearLayout
+        android:layout_width="380dp"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:background="#FFFFFF"
+        android:divider="#e1e1e1"
+        android:baselineAligned="false"
+        android:id="@+id/container">
+
+
+    </LinearLayout>
+
+    </RelativeLayout>
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="0.5dp"
+        android:background="#e1e1e1"
+        android:layout_alignParentBottom="true"></View>
+    <LinearLayout
+        android:id="@+id/linear_create_group"
+        android:layout_width="380dp"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:paddingBottom="3dip"
+        android:layout_marginTop="20dp"
+        android:background="#FFFFFF"
+        android:paddingRight="50dp"
+        >
+
+        <Button
+            android:id="@+id/cancel_btn"
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:layout_weight="1"
+            android:background="#efefef"
+            android:text="Cancel"
+            android:textColor="#666666"
+            android:textSize="14sp"
+            />
+
+
+        <Button
+            android:id="@+id/save_group_btn"
+            android:layout_width="match_parent"
+            android:layout_weight="1"
+            android:layout_height="40dp"
+            android:background="#1173aa"
+            android:text="Save"
+            android:textColor="#FFFFFF"
+            android:textSize="14sp"
+            />
+    </LinearLayout>
+
+
+
+</LinearLayout>

@@ -171,6 +171,11 @@ public class AssetAppropriationDAO implements AutoCloseable {
         completeTransaction(AppropriationStatus.REVERTED_ON_CRYPTO_NETWORK, transactionId);
     }
 
+
+    public void updateStatusSendingMessage(String transactionId) throws RecordsNotFoundException, CantLoadAssetAppropriationTransactionListException {
+        updateStatus(AppropriationStatus.SENDING_MESSAGE, transactionId);
+    }
+
     public void completeAppropriationSuccessful(String transactionId) throws RecordsNotFoundException, CantLoadAssetAppropriationTransactionListException {
         completeTransaction(AppropriationStatus.APPROPRIATION_SUCCESSFUL, transactionId);
     }
@@ -265,26 +270,8 @@ public class AssetAppropriationDAO implements AutoCloseable {
         try {
             DatabaseTable eventsRecordedTable;
             eventsRecordedTable = database.getTable(AssetAppropriationDatabaseConstants.ASSET_APPROPRIATION_EVENTS_RECORDED_TABLE_NAME);
-
-            DatabaseTableFilter statusFilter = eventsRecordedTable.getEmptyTableFilter();
-            statusFilter.setColumn(AssetAppropriationDatabaseConstants.ASSET_APPROPRIATION_EVENTS_RECORDED_STATUS_COLUMN_NAME);
-            statusFilter.setValue(EventStatus.PENDING.getCode());
-            statusFilter.setType(DatabaseFilterType.EQUAL);
-
-            DatabaseTableFilter sourceFilter = eventsRecordedTable.getEmptyTableFilter();
-            sourceFilter.setColumn(AssetAppropriationDatabaseConstants.ASSET_APPROPRIATION_EVENTS_RECORDED_SOURCE_COLUMN_NAME);
-            sourceFilter.setValue(eventSource.getCode());
-            sourceFilter.setType(DatabaseFilterType.EQUAL);
-
-            List<DatabaseTableFilter> filters = new ArrayList<>();
-            filters.add(statusFilter);
-            filters.add(sourceFilter);
-
-            eventsRecordedTable.setFilterGroup(
-                    eventsRecordedTable.getNewFilterGroup(filters,
-                            new ArrayList<DatabaseTableFilterGroup>(),
-                            DatabaseFilterOperator.AND));
-
+            eventsRecordedTable.addStringFilter(AssetAppropriationDatabaseConstants.ASSET_APPROPRIATION_EVENTS_RECORDED_SOURCE_COLUMN_NAME, eventSource.getCode(), DatabaseFilterType.EQUAL);
+            eventsRecordedTable.addStringFilter(AssetAppropriationDatabaseConstants.ASSET_APPROPRIATION_EVENTS_RECORDED_STATUS_COLUMN_NAME, EventStatus.PENDING.getCode(), DatabaseFilterType.EQUAL);
             eventsRecordedTable.addFilterOrder(AssetAppropriationDatabaseConstants.ASSET_APPROPRIATION_EVENTS_RECORDED_TIMESTAMP_COLUMN_NAME, DatabaseFilterOrder.ASCENDING);
 
             eventsRecordedTable.loadToMemory();
@@ -572,6 +559,10 @@ public class AssetAppropriationDAO implements AutoCloseable {
         return getPendingEventsBySource(EventSource.ACTOR_ASSET_USER);
     }
 
+    public List<String> getPendingCryptoRouterEvents() throws CantLoadAssetAppropriationEventListException {
+        return getPendingEventsBySource(EventSource.CRYPTO_ROUTER);
+    }
+
     public EventType getEventTypeById(String id) throws CantLoadAssetAppropriationEventListException, InvalidParameterException, RecordsNotFoundException {
         return EventType.getByCode(getStringFieldByEventId(AssetAppropriationDatabaseConstants.ASSET_APPROPRIATION_EVENTS_RECORDED_EVENT_COLUMN_NAME, id));
     }
@@ -639,6 +630,7 @@ public class AssetAppropriationDAO implements AutoCloseable {
         uncompleted.addAll(getTransactionsForStatus(AppropriationStatus.APPROPRIATION_STARTED));
         uncompleted.addAll(getTransactionsForStatus(AppropriationStatus.CRYPTOADDRESS_OBTAINED));
         uncompleted.addAll(getTransactionsForStatus(AppropriationStatus.CRYPTOADDRESS_REGISTERED));
+        uncompleted.addAll(getTransactionsForStatus(AppropriationStatus.SENDING_MESSAGE));
         return uncompleted;
     }
 

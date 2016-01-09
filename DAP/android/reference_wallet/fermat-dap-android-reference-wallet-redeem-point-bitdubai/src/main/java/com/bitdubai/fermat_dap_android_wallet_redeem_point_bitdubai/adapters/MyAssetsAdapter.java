@@ -30,7 +30,7 @@ public class MyAssetsAdapter extends FermatAdapter<DigitalAsset, MyAssetsViewHol
 
     @Override
     protected int getCardViewResource() {
-        return R.layout.dap_walletasset_redeem_point_asset_item;
+        return R.layout.dap_wallet_asset_redeem_point_asset_item;
     }
 
     @Override

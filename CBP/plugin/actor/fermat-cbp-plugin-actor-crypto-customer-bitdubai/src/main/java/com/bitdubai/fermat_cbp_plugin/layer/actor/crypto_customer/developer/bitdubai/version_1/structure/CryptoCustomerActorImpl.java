@@ -63,8 +63,4 @@ public class CryptoCustomerActorImpl implements CryptoCustomerActor {
             throw new CantSignExtraUserMessageException("Fatal Error Signed message", e, "", "");
         }
     }
-
-    @Override
-    public ActorIdentity getIdentity() { return null; }
-
 }

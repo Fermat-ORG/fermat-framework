@@ -157,6 +157,15 @@ public class AssetUserActorPluginRoot extends AbstractPlugin implements
     }
 
     @Override
+    public ActorAssetUser getActorRegisteredByPublicKey(String actorPublicKey) throws CantGetAssetUserActorsException, CantAssetUserActorNotFoundException {
+        try {
+            return this.assetUserActorDao.getActorAssetUserRegisteredByPublicKey(actorPublicKey);
+        } catch (CantGetAssetUserActorsException e) {
+            throw new CantGetAssetUserActorsException("", FermatException.wrapException(e), "Cant Get Actor Asset User from Data Base", null);
+        }
+    }
+
+    @Override
     public void createActorAssetUserFactory(String assetUserActorPublicKey, String assetUserActorName, byte[] assetUserActorprofileImage) throws CantCreateAssetUserActorException {
         try {
             ActorAssetUser actorAssetUser = this.assetUserActorDao.getActorAssetUser();

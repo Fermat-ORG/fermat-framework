@@ -14,6 +14,8 @@ import org.restlet.Component;
 import org.restlet.Context;
 import org.restlet.Server;
 import org.restlet.data.Protocol;
+import org.restlet.ext.jetty.HttpServerHelper;
+import org.restlet.ext.jetty.JettyServerHelper;
 
 
 /**
@@ -51,8 +53,11 @@ public class RestletCommunicationCloudServer {
        restletWebServer.setOwner("bitDubai.com");
        restletWebServer.setAuthor("Roberto Requena - (rart3001@gmail.com)");
 
+
        Server server = new Server(new Context(), Protocol.HTTP, 8080);
        server.getContext().getParameters().set("tracing", "false");
+
+
        restletWebServer.getServers().add(server);
 
        restletWebServer.getDefaultHost().attach("/fermat/cloud-server/v1", new WebServicesApplication(wsCommunicationCloudServer));

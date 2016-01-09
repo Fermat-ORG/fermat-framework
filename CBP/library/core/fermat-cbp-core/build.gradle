@@ -5,6 +5,7 @@ apply plugin: 'checkstyle'
 apply plugin: 'pmd'
 
 sourceCompatibility = 1.7
+targetCompatibility = 1.7
 version = '1.0'
 
 repositories {
@@ -40,6 +41,8 @@ dependencies {
     compile project(':fermat-cbp-plugin-business-transaction-broker-submit-offline-merchandise-bitdubai')
     compile project(':fermat-cbp-plugin-business-transaction-broker-submit-online-merchandise-bitdubai')
     compile project(':fermat-cbp-plugin-business-transaction-close-contract-bitdubai')
+    compile project(':fermat-cbp-plugin-business-transaction-customer-ack-offline-merchandise-bitdubai')
+    compile project(':fermat-cbp-plugin-business-transaction-customer-ack-online-merchandise-bitdubai')
     compile project(':fermat-cbp-plugin-business-transaction-customer-offline-payment-bitdubai')
     compile project(':fermat-cbp-plugin-business-transaction-customer-online-payment-bitdubai')
     compile project(':fermat-cbp-plugin-business-transaction-open-contract-bitdubai')

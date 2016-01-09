@@ -1,558 +1,325 @@
-<xs:schema attributeFormDefault="unqualified" elementFormDefault="qualified" xmlns:xs="http://www.w3.org/2001/XMLSchema">
-  <xs:element name="fermat">
-    <xs:complexType>
-      <xs:sequence>
-        <xs:element name="platforms">
-          <xs:complexType>
+﻿<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<xs:schema version="1.0" xmlns:xs="http://www.w3.org/2001/XMLSchema" targetNamespace="http://bitdubai.com/fermat/schemas" >
+
+    <xs:element name="addon">
+        <xs:complexType>
             <xs:sequence>
-              <xs:element name="platform" maxOccurs="unbounded" minOccurs="0">
-                <xs:complexType>
-                  <xs:sequence>
-                    <xs:element name="dependencies" minOccurs="0">
-                      <xs:complexType>
-                        <xs:sequence>
-                          <xs:element name="dependency" maxOccurs="unbounded" minOccurs="0">
-                            <xs:complexType>
-                              <xs:simpleContent>
-                                <xs:extension base="xs:string">
-                                  <xs:attribute type="xs:string" name="code" use="optional"/>
-                                </xs:extension>
-                              </xs:simpleContent>
-                            </xs:complexType>
-                          </xs:element>
-                        </xs:sequence>
-                      </xs:complexType>
-                    </xs:element>
-                    <xs:element name="layer" maxOccurs="unbounded" minOccurs="0">
-                      <xs:complexType mixed="true">
-                        <xs:sequence>
-                          <xs:element name="libraries" minOccurs="0">
-                            <xs:complexType>
-                              <xs:sequence>
-                                <xs:element name="library" maxOccurs="unbounded" minOccurs="0">
-                                  <xs:complexType mixed="true">
-                                    <xs:sequence>
-                                      <xs:element name="authors">
-                                        <xs:complexType>
-                                          <xs:sequence>
-                                            <xs:element name="author" maxOccurs="unbounded" minOccurs="0">
-                                              <xs:complexType>
-                                                <xs:simpleContent>
-                                                  <xs:extension base="xs:string">
-                                                    <xs:attribute type="xs:string" name="name" use="optional"/>
-                                                    <xs:attribute type="xs:string" name="scope" use="optional"/>
-                                                    <xs:attribute type="xs:byte" name="percentage" use="optional"/>
-                                                  </xs:extension>
-                                                </xs:simpleContent>
-                                              </xs:complexType>
-                                            </xs:element>
-                                          </xs:sequence>
-                                        </xs:complexType>
-                                      </xs:element>
-                                      <xs:element name="mantainers">
-                                        <xs:complexType mixed="true">
-                                          <xs:sequence>
-                                            <xs:element name="mantainer" minOccurs="0">
-                                              <xs:complexType>
-                                                <xs:simpleContent>
-                                                  <xs:extension base="xs:string">
-                                                    <xs:attribute type="xs:string" name="name" use="optional"/>
-                                                  </xs:extension>
-                                                </xs:simpleContent>
-                                              </xs:complexType>
-                                            </xs:element>
-                                          </xs:sequence>
-                                        </xs:complexType>
-                                      </xs:element>
-                                      <xs:element type="xs:string" name="certifications"/>
-                                      <xs:element name="life_cycle" minOccurs="0">
-                                        <xs:complexType>
-                                          <xs:choice maxOccurs="unbounded" minOccurs="0">
-                                            <xs:element name="status">
-                                              <xs:complexType>
-                                                <xs:simpleContent>
-                                                  <xs:extension base="xs:string">
-                                                    <xs:attribute type="xs:string" name="name" use="optional"/>
-                                                    <xs:attribute type="xs:date" name="reached" use="optional"/>
-                                                    <xs:attribute type="xs:date" name="target" use="optional"/>
-                                                  </xs:extension>
-                                                </xs:simpleContent>
-                                              </xs:complexType>
-                                            </xs:element>
-                                          </xs:choice>
-                                        </xs:complexType>
-                                      </xs:element>
-                                    </xs:sequence>
-                                    <xs:attribute type="xs:string" name="name" use="optional"/>
-                                    <xs:attribute type="xs:string" name="description" use="optional"/>
-                                    <xs:attribute type="xs:byte" name="difficulty" use="optional"/>
-                                    <xs:attribute type="xs:string" name="code-level" use="optional"/>
-                                  </xs:complexType>
-                                </xs:element>
-                              </xs:sequence>
-                            </xs:complexType>
-                          </xs:element>
-                          <xs:element name="androids" minOccurs="0">
-                            <xs:complexType>
-                              <xs:sequence>
-                                <xs:element name="android" maxOccurs="unbounded" minOccurs="0">
-                                  <xs:complexType>
-                                    <xs:sequence>
-                                      <xs:element name="authors">
-                                        <xs:complexType>
-                                          <xs:sequence>
-                                            <xs:element name="author" maxOccurs="unbounded" minOccurs="0">
-                                              <xs:complexType>
-                                                <xs:simpleContent>
-                                                  <xs:extension base="xs:string">
-                                                    <xs:attribute type="xs:string" name="name" use="optional"/>
-                                                    <xs:attribute type="xs:string" name="scope" use="optional"/>
-                                                    <xs:attribute type="xs:byte" name="percentage" use="optional"/>
-                                                  </xs:extension>
-                                                </xs:simpleContent>
-                                              </xs:complexType>
-                                            </xs:element>
-                                          </xs:sequence>
-                                        </xs:complexType>
-                                      </xs:element>
-                                      <xs:element name="mantainers">
-                                        <xs:complexType mixed="true">
-                                          <xs:sequence>
-                                            <xs:element name="mantainer" minOccurs="0">
-                                              <xs:complexType>
-                                                <xs:simpleContent>
-                                                  <xs:extension base="xs:string">
-                                                    <xs:attribute type="xs:string" name="name" use="optional"/>
-                                                  </xs:extension>
-                                                </xs:simpleContent>
-                                              </xs:complexType>
-                                            </xs:element>
-                                          </xs:sequence>
-                                        </xs:complexType>
-                                      </xs:element>
-                                      <xs:element type="xs:string" name="certifications"/>
-                                      <xs:element name="screenshots" minOccurs="0">
-                                        <xs:complexType>
-                                          <xs:sequence>
-                                            <xs:element type="xs:string" name="screenshot"/>
-                                          </xs:sequence>
-                                        </xs:complexType>
-                                      </xs:element>
-                                    </xs:sequence>
-                                    <xs:attribute type="xs:string" name="name" use="optional"/>
-                                    <xs:attribute type="xs:string" name="description" use="optional"/>
-                                    <xs:attribute type="xs:byte" name="difficulty" use="optional"/>
-                                    <xs:attribute type="xs:string" name="code-level" use="optional"/>
-                                  </xs:complexType>
-                                </xs:element>
-                              </xs:sequence>
-                            </xs:complexType>
-                          </xs:element>
-                          <xs:element name="plugins" minOccurs="0">
-                            <xs:complexType>
-                              <xs:sequence>
-                                <xs:element name="plugin" maxOccurs="unbounded" minOccurs="0">
-                                  <xs:complexType>
-                                    <xs:sequence>
-                                      <xs:element name="authors">
-                                        <xs:complexType>
-                                          <xs:sequence>
-                                            <xs:element name="author" maxOccurs="unbounded" minOccurs="0">
-                                              <xs:complexType>
-                                                <xs:simpleContent>
-                                                  <xs:extension base="xs:string">
-                                                    <xs:attribute type="xs:string" name="name" use="optional"/>
-                                                    <xs:attribute type="xs:string" name="scope" use="optional"/>
-                                                    <xs:attribute type="xs:byte" name="percentage" use="optional"/>
-                                                  </xs:extension>
-                                                </xs:simpleContent>
-                                              </xs:complexType>
-                                            </xs:element>
-                                          </xs:sequence>
-                                        </xs:complexType>
-                                      </xs:element>
-                                      <xs:element name="mantainers">
-                                        <xs:complexType mixed="true">
-                                          <xs:sequence>
-                                            <xs:element name="mantainer" minOccurs="0">
-                                              <xs:complexType>
-                                                <xs:simpleContent>
-                                                  <xs:extension base="xs:string">
-                                                    <xs:attribute type="xs:string" name="name" use="optional"/>
-                                                  </xs:extension>
-                                                </xs:simpleContent>
-                                              </xs:complexType>
-                                            </xs:element>
-                                          </xs:sequence>
-                                        </xs:complexType>
-                                      </xs:element>
-                                      <xs:element name="certifications">
-                                        <xs:complexType mixed="true">
-                                          <xs:sequence>
-                                            <xs:element name="certification" maxOccurs="unbounded" minOccurs="0">
-                                              <xs:complexType>
-                                                <xs:simpleContent>
-                                                  <xs:extension base="xs:string">
-                                                    <xs:attribute type="xs:string" name="signed-by" use="optional"/>
-                                                    <xs:attribute type="xs:string" name="type" use="optional"/>
-                                                  </xs:extension>
-                                                </xs:simpleContent>
-                                              </xs:complexType>
-                                            </xs:element>
-                                          </xs:sequence>
-                                        </xs:complexType>
-                                      </xs:element>
-                                    </xs:sequence>
-                                    <xs:attribute type="xs:string" name="name" use="optional"/>
-                                    <xs:attribute type="xs:string" name="description" use="optional"/>
-                                    <xs:attribute type="xs:byte" name="difficulty" use="optional"/>
-                                    <xs:attribute type="xs:string" name="code-level" use="optional"/>
-                                  </xs:complexType>
-                                </xs:element>
-                              </xs:sequence>
-                            </xs:complexType>
-                          </xs:element>
-                          <xs:element name="addons" minOccurs="0">
-                            <xs:complexType>
-                              <xs:sequence>
-                                <xs:element name="addon" maxOccurs="unbounded" minOccurs="0">
-                                  <xs:complexType>
-                                    <xs:sequence>
-                                      <xs:element name="authors">
-                                        <xs:complexType>
-                                          <xs:sequence>
-                                            <xs:element name="author" maxOccurs="unbounded" minOccurs="0">
-                                              <xs:complexType>
-                                                <xs:simpleContent>
-                                                  <xs:extension base="xs:string">
-                                                    <xs:attribute type="xs:string" name="name" use="optional"/>
-                                                    <xs:attribute type="xs:string" name="scope" use="optional"/>
-                                                    <xs:attribute type="xs:byte" name="percentage" use="optional"/>
-                                                  </xs:extension>
-                                                </xs:simpleContent>
-                                              </xs:complexType>
-                                            </xs:element>
-                                          </xs:sequence>
-                                        </xs:complexType>
-                                      </xs:element>
-                                      <xs:element name="mantainers">
-                                        <xs:complexType mixed="true">
-                                          <xs:sequence>
-                                            <xs:element name="mantainer" minOccurs="0">
-                                              <xs:complexType>
-                                                <xs:simpleContent>
-                                                  <xs:extension base="xs:string">
-                                                    <xs:attribute type="xs:string" name="name" use="optional"/>
-                                                  </xs:extension>
-                                                </xs:simpleContent>
-                                              </xs:complexType>
-                                            </xs:element>
-                                          </xs:sequence>
-                                        </xs:complexType>
-                                      </xs:element>
-                                      <xs:element type="xs:string" name="certifications"/>
-                                    </xs:sequence>
-                                    <xs:attribute type="xs:string" name="name" use="optional"/>
-                                    <xs:attribute type="xs:string" name="description" use="optional"/>
-                                    <xs:attribute type="xs:byte" name="difficulty" use="optional"/>
-                                    <xs:attribute type="xs:string" name="code-level" use="optional"/>
-                                  </xs:complexType>
-                                </xs:element>
-                              </xs:sequence>
-                            </xs:complexType>
-                          </xs:element>
-                        </xs:sequence>
-                        <xs:attribute type="xs:string" name="name" use="optional"/>
-                        <xs:attribute type="xs:string" name="language" use="optional"/>
-                        <xs:attribute type="xs:string" name="super_layer" use="optional"/>
-                      </xs:complexType>
-                    </xs:element>
-                  </xs:sequence>
-                  <xs:attribute type="xs:string" name="code" use="optional"/>
-                  <xs:attribute type="xs:string" name="name" use="optional"/>
-                  <xs:attribute type="xs:string" name="logo" use="optional"/>
-                  <xs:attribute type="xs:string" name="dependsOn" use="optional"/>
-                </xs:complexType>
-              </xs:element>
+                <xs:element ref="authors"/>
+                <xs:element ref="maintainers"/>
+                <xs:element ref="certifications"/>
+                <xs:element ref="life_cycle" minOccurs="0"/>
             </xs:sequence>
-          </xs:complexType>
-        </xs:element>
-        <xs:element name="super_layers">
-          <xs:complexType>
+            <xs:attribute name="code-level" type="xs:NCName" use="required"/>
+            <xs:attribute name="description" type="xs:anySimpleType" use="required"/>
+            <xs:attribute name="difficulty" type="xs:integer" use="required"/>
+            <xs:attribute name="name" type="xs:anySimpleType" use="required"/>
+        </xs:complexType>
+    </xs:element>
+
+    <xs:element name="addons">
+        <xs:complexType>
             <xs:sequence>
-              <xs:element name="super_layer" maxOccurs="unbounded" minOccurs="0">
-                <xs:complexType>
-                  <xs:sequence>
-                    <xs:element name="layer" maxOccurs="unbounded" minOccurs="0">
-                      <xs:complexType>
-                        <xs:sequence>
-                          <xs:element name="plugins" minOccurs="0">
-                            <xs:complexType>
-                              <xs:sequence>
-                                <xs:element name="plugin" maxOccurs="unbounded" minOccurs="0">
-                                  <xs:complexType>
-                                    <xs:sequence>
-                                      <xs:element name="authors">
-                                        <xs:complexType>
-                                          <xs:sequence>
-                                            <xs:element name="author" maxOccurs="unbounded" minOccurs="0">
-                                              <xs:complexType>
-                                                <xs:simpleContent>
-                                                  <xs:extension base="xs:string">
-                                                    <xs:attribute type="xs:string" name="name" use="optional"/>
-                                                    <xs:attribute type="xs:string" name="scope" use="optional"/>
-                                                    <xs:attribute type="xs:byte" name="percentage" use="optional"/>
-                                                  </xs:extension>
-                                                </xs:simpleContent>
-                                              </xs:complexType>
-                                            </xs:element>
-                                          </xs:sequence>
-                                        </xs:complexType>
-                                      </xs:element>
-                                      <xs:element name="mantainers">
-                                        <xs:complexType mixed="true">
-                                          <xs:sequence>
-                                            <xs:element name="mantainer" minOccurs="0">
-                                              <xs:complexType>
-                                                <xs:simpleContent>
-                                                  <xs:extension base="xs:string">
-                                                    <xs:attribute type="xs:string" name="name" use="optional"/>
-                                                  </xs:extension>
-                                                </xs:simpleContent>
-                                              </xs:complexType>
-                                            </xs:element>
-                                          </xs:sequence>
-                                        </xs:complexType>
-                                      </xs:element>
-                                      <xs:element type="xs:string" name="certifications"/>
-                                      <xs:element name="life_cycle" minOccurs="0">
-                                        <xs:complexType>
-                                          <xs:sequence>
-                                            <xs:element name="status" maxOccurs="unbounded" minOccurs="0">
-                                              <xs:complexType>
-                                                <xs:simpleContent>
-                                                  <xs:extension base="xs:string">
-                                                    <xs:attribute type="xs:string" name="name" use="optional"/>
-                                                    <xs:attribute type="xs:date" name="reached" use="optional"/>
-                                                    <xs:attribute type="xs:date" name="target" use="optional"/>
-                                                  </xs:extension>
-                                                </xs:simpleContent>
-                                              </xs:complexType>
-                                            </xs:element>
-                                          </xs:sequence>
-                                        </xs:complexType>
-                                      </xs:element>
-                                    </xs:sequence>
-                                    <xs:attribute type="xs:string" name="name" use="optional"/>
-                                    <xs:attribute type="xs:string" name="description" use="optional"/>
-                                    <xs:attribute type="xs:byte" name="difficulty" use="optional"/>
-                                    <xs:attribute type="xs:string" name="code-level" use="optional"/>
-                                  </xs:complexType>
-                                </xs:element>
-                              </xs:sequence>
-                            </xs:complexType>
-                          </xs:element>
-                          <xs:element name="addons" minOccurs="0">
-                            <xs:complexType>
-                              <xs:sequence>
-                                <xs:element name="addon" maxOccurs="unbounded" minOccurs="0">
-                                  <xs:complexType>
-                                    <xs:sequence>
-                                      <xs:element name="authors">
-                                        <xs:complexType>
-                                          <xs:sequence>
-                                            <xs:element name="author" maxOccurs="unbounded" minOccurs="0">
-                                              <xs:complexType>
-                                                <xs:simpleContent>
-                                                  <xs:extension base="xs:string">
-                                                    <xs:attribute type="xs:string" name="name" use="optional"/>
-                                                    <xs:attribute type="xs:string" name="scope" use="optional"/>
-                                                    <xs:attribute type="xs:byte" name="percentage" use="optional"/>
-                                                  </xs:extension>
-                                                </xs:simpleContent>
-                                              </xs:complexType>
-                                            </xs:element>
-                                          </xs:sequence>
-                                        </xs:complexType>
-                                      </xs:element>
-                                      <xs:element name="mantainers">
-                                        <xs:complexType mixed="true">
-                                          <xs:sequence>
-                                            <xs:element name="mantainer" minOccurs="0">
-                                              <xs:complexType>
-                                                <xs:simpleContent>
-                                                  <xs:extension base="xs:string">
-                                                    <xs:attribute type="xs:string" name="name" use="optional"/>
-                                                  </xs:extension>
-                                                </xs:simpleContent>
-                                              </xs:complexType>
-                                            </xs:element>
-                                          </xs:sequence>
-                                        </xs:complexType>
-                                      </xs:element>
-                                      <xs:element name="certifications">
-                                        <xs:complexType mixed="true">
-                                          <xs:sequence>
-                                            <xs:element name="certification" maxOccurs="unbounded" minOccurs="0">
-                                              <xs:complexType>
-                                                <xs:simpleContent>
-                                                  <xs:extension base="xs:string">
-                                                    <xs:attribute type="xs:string" name="type" use="optional"/>
-                                                    <xs:attribute type="xs:string" name="signed-by" use="optional"/>
-                                                  </xs:extension>
-                                                </xs:simpleContent>
-                                              </xs:complexType>
-                                            </xs:element>
-                                          </xs:sequence>
-                                        </xs:complexType>
-                                      </xs:element>
-                                      <xs:element name="life_cycle" minOccurs="0">
-                                        <xs:complexType>
-                                          <xs:sequence>
-                                            <xs:element name="status" maxOccurs="unbounded" minOccurs="0">
-                                              <xs:complexType>
-                                                <xs:simpleContent>
-                                                  <xs:extension base="xs:string">
-                                                    <xs:attribute type="xs:string" name="name" use="optional"/>
-                                                    <xs:attribute type="xs:date" name="reached" use="optional"/>
-                                                    <xs:attribute type="xs:date" name="target" use="optional"/>
-                                                  </xs:extension>
-                                                </xs:simpleContent>
-                                              </xs:complexType>
-                                            </xs:element>
-                                          </xs:sequence>
-                                        </xs:complexType>
-                                      </xs:element>
-                                    </xs:sequence>
-                                    <xs:attribute type="xs:string" name="name" use="optional"/>
-                                    <xs:attribute type="xs:string" name="description" use="optional"/>
-                                    <xs:attribute type="xs:byte" name="difficulty" use="optional"/>
-                                    <xs:attribute type="xs:string" name="code-level" use="optional"/>
-                                  </xs:complexType>
-                                </xs:element>
-                              </xs:sequence>
-                            </xs:complexType>
-                          </xs:element>
-                        </xs:sequence>
-                        <xs:attribute type="xs:string" name="name" use="optional"/>
-                        <xs:attribute type="xs:string" name="language" use="optional"/>
-                      </xs:complexType>
-                    </xs:element>
-                  </xs:sequence>
-                  <xs:attribute type="xs:string" name="code" use="optional"/>
-                  <xs:attribute type="xs:string" name="name" use="optional"/>
-                  <xs:attribute type="xs:string" name="dependsOn" use="optional"/>
-                </xs:complexType>
-              </xs:element>
+                <xs:element ref="addon" maxOccurs="unbounded"/>
             </xs:sequence>
-          </xs:complexType>
-        </xs:element>
-        <xs:element name="layers">
-          <xs:complexType>
+        </xs:complexType>
+    </xs:element>
+
+    <xs:element name="android">
+        <xs:complexType>
             <xs:sequence>
-              <xs:element name="layer" maxOccurs="unbounded" minOccurs="0">
-                <xs:annotation>
-                  <xs:documentation>separator or empty layer  separator or empty layer  separator or empty layer  separator or empty layer  separator or empty layer  separator or empty layer  separator or empty layer</xs:documentation>
-                </xs:annotation>
-                <xs:complexType>
-                  <xs:simpleContent>
-                    <xs:extension base="xs:string">
-                      <xs:attribute type="xs:string" name="name" use="optional"/>
-                      <xs:attribute type="xs:string" name="language" use="optional"/>
-                      <xs:attribute type="xs:string" name="super_layer" use="optional"/>
-                    </xs:extension>
-                  </xs:simpleContent>
-                </xs:complexType>
-              </xs:element>
+                <xs:element ref="authors"/>
+                <xs:element ref="maintainers"/>
+                <xs:element ref="certifications"/>
             </xs:sequence>
-          </xs:complexType>
-        </xs:element>
-        <xs:element name="processes">
-          <xs:complexType>
-            <xs:choice maxOccurs="unbounded" minOccurs="0">
-              <xs:element name="process">
-                <xs:complexType>
-                  <xs:sequence>
-                    <xs:element name="step" maxOccurs="unbounded" minOccurs="0">
-                      <xs:complexType>
+            <xs:attribute name="code-level" type="xs:NCName" use="required"/>
+            <xs:attribute name="description" type="xs:anySimpleType" use="required"/>
+            <xs:attribute name="difficulty" type="xs:integer" use="required"/>
+            <xs:attribute name="name" type="xs:anySimpleType" use="required"/>
+            <xs:attribute name="screenshots" type="xs:anySimpleType" use="optional"/>
+        </xs:complexType>
+    </xs:element>
+
+    <xs:element name="androids">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element ref="android" maxOccurs="unbounded"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+
+    <xs:element name="author">
+        <xs:complexType>
+            <xs:sequence/>
+            <xs:attribute name="name" type="xs:anySimpleType" use="required"/>
+            <xs:attribute name="percentage" type="xs:integer" use="required"/>
+            <xs:attribute name="scope" type="xs:NCName" use="required"/>
+        </xs:complexType>
+    </xs:element>
+
+    <xs:element name="authors">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element ref="author" maxOccurs="unbounded"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+
+    <xs:element name="certification">
+        <xs:complexType>
+            <xs:sequence/>
+            <xs:attribute name="signed-by" type="xs:anySimpleType" use="required"/>
+            <xs:attribute name="type" type="xs:NCName"/>
+        </xs:complexType>
+    </xs:element>
+
+    <xs:element name="certifications">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="certification" nillable="true" minOccurs="0" maxOccurs="unbounded">
+                    <xs:complexType>
+                        <xs:sequence/>
+                        <xs:attribute name="signed-by" type="xs:anySimpleType" use="required"/>
+                        <xs:attribute name="type" type="xs:NCName"/>
+                    </xs:complexType>
+                </xs:element>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+
+    <xs:element name="dependencies">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element ref="dependency" maxOccurs="unbounded"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+
+    <xs:element name="dependency">
+        <xs:complexType>
+            <xs:sequence/>
+            <xs:attribute name="code" type="xs:NCName" use="required"/>
+        </xs:complexType>
+    </xs:element>
+
+    <xs:element name="fermat">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element ref="platforms"/>
+                <xs:element ref="super_layers"/>
+                <xs:element ref="layers"/>
+                <xs:element ref="processes"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+
+    <xs:element name="layer">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element ref="addons" minOccurs="0"/>
+                <xs:element ref="androids" minOccurs="0"/>
+                <xs:element ref="libraries" minOccurs="0"/>
+                <xs:element ref="plugins" minOccurs="0"/>
+            </xs:sequence>
+            <xs:attribute name="language" type="xs:NCName"/>
+            <xs:attribute name="name" type="xs:anySimpleType"/>
+            <xs:attribute name="super_layer" type="xs:NCName"/>
+        </xs:complexType>
+    </xs:element>
+
+    <xs:element name="layers">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element ref="layer" maxOccurs="unbounded"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+
+    <xs:element name="libraries">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element ref="library" maxOccurs="unbounded"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+
+    <xs:element name="library">
+        <xs:complexType mixed="true">
+            <xs:sequence>
+                <xs:choice minOccurs="0" maxOccurs="unbounded">
+                    <xs:element ref="certifications"/>
+                    <xs:element ref="life_cycle"/>
+                    <xs:element ref="authors"/>
+                    <xs:element ref="maintainers"/>
+                </xs:choice>
+            </xs:sequence>
+            <xs:attribute name="code-level" type="xs:NCName" use="required"/>
+            <xs:attribute name="description" type="xs:anySimpleType" use="required"/>
+            <xs:attribute name="difficulty" type="xs:integer" use="required"/>
+            <xs:attribute name="name" type="xs:anySimpleType" use="required"/>
+        </xs:complexType>
+    </xs:element>
+
+    <xs:element name="life_cycle">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element ref="status" maxOccurs="unbounded"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+
+    <xs:element name="maintainer">
+        <xs:complexType>
+            <xs:sequence/>
+            <xs:attribute name="name" type="xs:NCName" use="required"/>
+        </xs:complexType>
+    </xs:element>
+
+    <xs:element name="maintainers">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element ref="maintainer" minOccurs="0"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+
+    <xs:element name="next">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element ref="step"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+
+    <xs:element name="platform">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element ref="dependencies" minOccurs="0"/>
+                <xs:element ref="layer" maxOccurs="unbounded"/>
+            </xs:sequence>
+            <xs:attribute name="code" type="xs:NCName" use="required"/>
+            <xs:attribute name="dependsOn" type="xs:anySimpleType"/>
+            <xs:attribute name="logo" type="xs:anySimpleType" use="required"/>
+            <xs:attribute name="name" type="xs:anySimpleType" use="required"/>
+        </xs:complexType>
+    </xs:element>
+
+    <xs:element name="platforms">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element ref="platform" maxOccurs="unbounded"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+
+    <xs:element name="plugin">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element ref="authors"/>
+                <xs:element ref="maintainers"/>
+                <xs:element ref="certifications"/>
+                <xs:element ref="life_cycle" minOccurs="0"/>
+            </xs:sequence>
+            <xs:attribute name="code-level" type="xs:NCName" use="required"/>
+            <xs:attribute name="description" type="xs:anySimpleType" use="required"/>
+            <xs:attribute name="difficulty" type="xs:integer" use="required"/>
+            <xs:attribute name="name" type="xs:anySimpleType" use="required"/>
+        </xs:complexType>
+    </xs:element>
+
+    <xs:element name="plugins">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element ref="plugin" maxOccurs="unbounded"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+
+    <xs:element name="process">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element ref="steps" minOccurs="0"/>
+                <xs:element name="step" nillable="true" minOccurs="0" maxOccurs="unbounded">
+                    <xs:complexType>
                         <xs:sequence>
-                          <xs:element name="next">
-                            <xs:complexType>
-                              <xs:sequence>
-                                <xs:element name="step">
-                                  <xs:complexType>
-                                    <xs:simpleContent>
-                                      <xs:extension base="xs:string">
-                                        <xs:attribute type="xs:byte" name="id" use="optional"/>
-                                        <xs:attribute type="xs:string" name="type" use="optional"/>
-                                      </xs:extension>
-                                    </xs:simpleContent>
-                                  </xs:complexType>
-                                </xs:element>
-                              </xs:sequence>
-                            </xs:complexType>
-                          </xs:element>
+                            <xs:element ref="next" minOccurs="0"/>
                         </xs:sequence>
-                        <xs:attribute type="xs:byte" name="id" use="optional"/>
-                        <xs:attribute type="xs:string" name="type" use="optional"/>
-                        <xs:attribute type="xs:string" name="title" use="optional"/>
-                        <xs:attribute type="xs:string" name="description" use="optional"/>
-                        <xs:attribute type="xs:string" name="platform" use="optional"/>
-                        <xs:attribute type="xs:string" name="superlayer" use="optional"/>
-                        <xs:attribute type="xs:string" name="layer" use="optional"/>
-                        <xs:attribute type="xs:string" name="name" use="optional"/>
-                        <xs:attribute type="xs:string" name="component" use="optional"/>
-                      </xs:complexType>
-                    </xs:element>
-                    <xs:element name="steps" minOccurs="0">
-                      <xs:complexType>
-                        <xs:sequence>
-                          <xs:element name="step" maxOccurs="unbounded" minOccurs="0">
-                            <xs:complexType mixed="true">
-                              <xs:sequence>
-                                <xs:element name="next" minOccurs="0">
-                                  <xs:complexType>
-                                    <xs:sequence>
-                                      <xs:element name="step">
-                                        <xs:complexType>
-                                          <xs:simpleContent>
-                                            <xs:extension base="xs:string">
-                                              <xs:attribute type="xs:byte" name="id" use="optional"/>
-                                              <xs:attribute type="xs:string" name="type" use="optional"/>
-                                              <xs:attribute type="xs:string" name="name" use="optional"/>
-                                            </xs:extension>
-                                          </xs:simpleContent>
-                                        </xs:complexType>
-                                      </xs:element>
-                                    </xs:sequence>
-                                  </xs:complexType>
-                                </xs:element>
-                              </xs:sequence>
-                              <xs:attribute type="xs:byte" name="id" use="optional"/>
-                              <xs:attribute type="xs:string" name="title" use="optional"/>
-                              <xs:attribute type="xs:string" name="description" use="optional"/>
-                              <xs:attribute type="xs:string" name="type" use="optional"/>
-                              <xs:attribute type="xs:string" name="component" use="optional"/>
-                              <xs:attribute type="xs:string" name="name" use="optional"/>
-                              <xs:attribute type="xs:string" name="layer" use="optional"/>
-                              <xs:attribute type="xs:string" name="platform" use="optional"/>
-                              <xs:attribute type="xs:string" name="superlayer" use="optional"/>
-                            </xs:complexType>
-                          </xs:element>
-                        </xs:sequence>
-                      </xs:complexType>
-                    </xs:element>
-                  </xs:sequence>
-                  <xs:attribute type="xs:string" name="platform" use="optional"/>
-                  <xs:attribute type="xs:string" name="name" use="optional"/>
-                  <xs:attribute type="xs:string" name="description" use="optional"/>
-                  <xs:attribute type="xs:string" name="previous" use="optional"/>
-                </xs:complexType>
-              </xs:element>
-            </xs:choice>
-          </xs:complexType>
-        </xs:element>
-      </xs:sequence>
-    </xs:complexType>
-  </xs:element>
+                        <xs:attribute name="component" type="xs:anySimpleType"/>
+                        <xs:attribute name="description" type="xs:anySimpleType"/>
+                        <xs:attribute name="id" type="xs:integer" use="required"/>
+                        <xs:attribute name="layer" type="xs:anySimpleType"/>
+                        <xs:attribute name="name" type="xs:anySimpleType"/>
+                        <xs:attribute name="platform" type="xs:anySimpleType"/>
+                        <xs:attribute name="superlayer" type="xs:anySimpleType"/>
+                        <xs:attribute name="title" type="xs:anySimpleType"/>
+                        <xs:attribute name="type" type="xs:anySimpleType" use="required"/>
+                    </xs:complexType>
+                </xs:element>
+            </xs:sequence>
+            <xs:attribute name="description" type="xs:anySimpleType"/>
+            <xs:attribute name="name" type="xs:anySimpleType" use="required"/>
+            <xs:attribute name="platform" type="xs:NCName" use="required"/>
+            <xs:attribute name="previous" type="xs:anySimpleType"/>
+        </xs:complexType>
+    </xs:element>
+
+    <xs:element name="processes">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element ref="process" maxOccurs="unbounded"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+
+    <xs:element name="status">
+        <xs:complexType>
+            <xs:sequence/>
+            <xs:attribute name="name" type="xs:NCName" use="required"/>
+            <xs:attribute name="reached" type="xs:NMTOKEN" use="required"/>
+            <xs:attribute name="target" type="xs:NMTOKEN"/>
+        </xs:complexType>
+    </xs:element>
+
+    <xs:element name="step">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element ref="next" minOccurs="0"/>
+            </xs:sequence>
+            <xs:attribute name="component" type="xs:anySimpleType"/>
+            <xs:attribute name="description" type="xs:anySimpleType"/>
+            <xs:attribute name="id" type="xs:integer" use="required"/>
+            <xs:attribute name="layer" type="xs:anySimpleType"/>
+            <xs:attribute name="name" type="xs:anySimpleType"/>
+            <xs:attribute name="platform" type="xs:anySimpleType"/>
+            <xs:attribute name="superlayer" type="xs:anySimpleType"/>
+            <xs:attribute name="title" type="xs:anySimpleType"/>
+            <xs:attribute name="type" type="xs:anySimpleType" use="required"/>
+        </xs:complexType>
+    </xs:element>
+
+    <xs:element name="steps">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element ref="step" maxOccurs="unbounded"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+
+    <xs:element name="super_layer">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element ref="layer" maxOccurs="unbounded"/>
+            </xs:sequence>
+            <xs:attribute name="code" type="xs:NCName" use="required"/>
+            <xs:attribute name="dependsOn" type="xs:NCName" use="required"/>
+            <xs:attribute name="name" type="xs:anySimpleType" use="required"/>
+        </xs:complexType>
+    </xs:element>
+
+    <xs:element name="super_layers">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element ref="super_layer" maxOccurs="unbounded"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
 </xs:schema>

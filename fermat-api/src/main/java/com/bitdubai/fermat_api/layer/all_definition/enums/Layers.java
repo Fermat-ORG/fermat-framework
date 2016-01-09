@@ -37,9 +37,11 @@ public enum Layers implements FermatEnum {
     NEGOTIATION_TRANSACTION        ("NTR"),
     NETWORK_SERVICE                ("NTS"),
     PLATFORM_SERVICE               ("PMS"),
+    PROVIDER                       ("PRO"),
     REQUEST                        ("REQ"),
     STOCK_TRANSACTIONS             ("STR"),
     SUB_APP_MODULE                 ("SAM"),
+    SEARCH                         ("SCH"),
     SYSTEM                         ("SYS"),
     TRANSACTION                    ("TRA"),
     USER                           ("USR"),
@@ -83,8 +85,10 @@ public enum Layers implements FermatEnum {
             case "NEG":  return NEGOTIATION;
             case "NTS":  return NETWORK_SERVICE;
             case "PMS":  return PLATFORM_SERVICE;
+            case "PRO":  return PROVIDER;
             case "REQ":  return REQUEST;
             case "SAM":  return SUB_APP_MODULE;
+            case "SCH":  return SEARCH;
             case "SYS":  return SYSTEM;
             case "TRA":  return TRANSACTION;
             case "NTR":  return NEGOTIATION_TRANSACTION;

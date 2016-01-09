@@ -60,12 +60,12 @@ public class CustomerBrokerPurchaseManager implements CustomerBrokerPurchaseNego
             this.customerBrokerPurchaseNegotiationDao.updateCustomerBrokerPurchaseNegotiation(negotiation);
         }
 
-    @Override
-    public void updateNegotiationNearExpirationDatetime(UUID negotiationId, Boolean status) throws CantUpdateCustomerBrokerPurchaseNegotiationException {
+        @Override
+        public void updateNegotiationNearExpirationDatetime(UUID negotiationId, Boolean status) throws CantUpdateCustomerBrokerPurchaseNegotiationException {
+            this.updateNegotiationNearExpirationDatetime(negotiationId, status);
+        }
 
-    }
-
-    @Override
+        @Override
         public void cancelNegotiation(CustomerBrokerPurchaseNegotiation negotiation) throws CantUpdateCustomerBrokerPurchaseNegotiationException {
             this.customerBrokerPurchaseNegotiationDao.cancelNegotiation(negotiation);
         }
@@ -186,6 +186,11 @@ public class CustomerBrokerPurchaseManager implements CustomerBrokerPurchaseNego
         @Override
         public Collection<NegotiationBankAccount> getBankAccountByCurrencyType(FiatCurrency currency) throws CantGetListBankAccountsPurchaseException {
             return this.customerBrokerPurchaseNegotiationDao.getBankAccountByCurrencyType(currency);
+        }
+
+        @Override
+        public Collection<FiatCurrency> getCurrencyTypeAvailableBankAccount() throws CantGetListBankAccountsPurchaseException {
+            return this.customerBrokerPurchaseNegotiationDao.getCurrencyTypeAvailableBankAccount();
         }
 
     /*

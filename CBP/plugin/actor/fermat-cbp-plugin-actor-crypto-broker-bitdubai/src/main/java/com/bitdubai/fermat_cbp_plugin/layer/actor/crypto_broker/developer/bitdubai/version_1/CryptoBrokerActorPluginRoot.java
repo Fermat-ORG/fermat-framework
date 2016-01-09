@@ -3,6 +3,7 @@ package com.bitdubai.fermat_cbp_plugin.layer.actor.crypto_broker.developer.bitdu
 import com.bitdubai.fermat_api.CantStartPluginException;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.abstract_classes.AbstractPlugin;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.annotations.NeededAddonReference;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.FermatManager;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.PluginVersionReference;
 import com.bitdubai.fermat_api.layer.all_definition.developer.DatabaseManagerForDevelopers;
 import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperDatabase;
@@ -15,27 +16,22 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
 import com.bitdubai.fermat_api.layer.all_definition.util.Version;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
-import com.bitdubai.fermat_cbp_api.all_definition.identity.ActorIdentity;
-import com.bitdubai.fermat_cbp_api.layer.actor.crypto_broker.exceptions.CantCreateNewBrokerIdentityWalletRelationshipException;
-import com.bitdubai.fermat_cbp_api.layer.actor.crypto_broker.exceptions.CantGetListBrokerIdentityWalletRelationshipException;
-import com.bitdubai.fermat_cbp_api.layer.actor.crypto_broker.interfaces.BrokerIdentityWalletRelationship;
-import com.bitdubai.fermat_cbp_api.layer.actor.crypto_broker.interfaces.CryptoBrokerActorManager;
 import com.bitdubai.fermat_cbp_plugin.layer.actor.crypto_broker.developer.bitdubai.version_1.database.CryptoBrokerActorDao;
 import com.bitdubai.fermat_cbp_plugin.layer.actor.crypto_broker.developer.bitdubai.version_1.database.CryptoBrokerActorDeveloperDatabaseFactory;
 import com.bitdubai.fermat_cbp_plugin.layer.actor.crypto_broker.developer.bitdubai.version_1.exceptions.CantInitializeCryptoBrokerActorDatabaseException;
-import com.bitdubai.fermat_pip_api.layer.user.device_user.interfaces.DeviceUserManager;
-import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
+import com.bitdubai.fermat_cbp_plugin.layer.actor.crypto_broker.developer.bitdubai.version_1.structure.ActorManager;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedPluginExceptionSeverity;
+import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
+import com.bitdubai.fermat_pip_api.layer.user.device_user.interfaces.DeviceUserManager;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
-import java.util.UUID;
 
 /**
  * Created by Angel on 19-11-2015.
  */
-public class CryptoBrokerActorPluginRoot extends AbstractPlugin implements CryptoBrokerActorManager, DatabaseManagerForDevelopers {
+
+public class CryptoBrokerActorPluginRoot extends AbstractPlugin implements DatabaseManagerForDevelopers {
 
 
     @NeededAddonReference(platform = Platforms.PLUG_INS_PLATFORM, layer = Layers.PLATFORM_SERVICE, addon = Addons.ERROR_MANAGER)
@@ -47,8 +43,7 @@ public class CryptoBrokerActorPluginRoot extends AbstractPlugin implements Crypt
     @NeededAddonReference(platform = Platforms.OPERATIVE_SYSTEM_API, layer = Layers.SYSTEM, addon = Addons.PLUGIN_DATABASE_SYSTEM)
     private PluginDatabaseSystem pluginDatabaseSystem;
 
-    private CryptoBrokerActorDao customerBrokerPurchaseNegotiationDao;
-
+    private CryptoBrokerActorDao cryptoBrokerActorDao;
 
     public CryptoBrokerActorPluginRoot() {
         super(new PluginVersionReference(new Version()));
@@ -61,8 +56,8 @@ public class CryptoBrokerActorPluginRoot extends AbstractPlugin implements Crypt
             @Override
             public void start() throws CantStartPluginException {
                 try {
-                    this.customerBrokerPurchaseNegotiationDao = new CryptoBrokerActorDao(pluginDatabaseSystem, pluginId);
-                    this.customerBrokerPurchaseNegotiationDao.initializeDatabase();
+                    this.cryptoBrokerActorDao = new CryptoBrokerActorDao(pluginDatabaseSystem, pluginId);
+                    this.cryptoBrokerActorDao.initializeDatabase();
                     this.serviceStatus = ServiceStatus.STARTED;
                 } catch (CantInitializeCryptoBrokerActorDatabaseException cantInitializeExtraUserRegistryException) {
                     errorManager.reportUnexpectedPluginException(this.getPluginVersionReference(), UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, cantInitializeExtraUserRegistryException);
@@ -70,28 +65,9 @@ public class CryptoBrokerActorPluginRoot extends AbstractPlugin implements Crypt
                 }
             }
 
-        /*
-            CryptoBrokerActorManager Interface implementation.
-        */
-
             @Override
-            public BrokerIdentityWalletRelationship createNewBrokerIdentityWalletRelationship(ActorIdentity identity, UUID wallet) throws CantCreateNewBrokerIdentityWalletRelationshipException {
-                return this.customerBrokerPurchaseNegotiationDao.createNewBrokerIdentityWalletRelationship(identity, wallet);
-            }
-
-            @Override
-            public Collection<BrokerIdentityWalletRelationship> getAllBrokerIdentityWalletRelationship() throws CantGetListBrokerIdentityWalletRelationshipException {
-                return this.customerBrokerPurchaseNegotiationDao.getAllBrokerIdentityWalletRelationship();
-            }
-
-            @Override
-            public BrokerIdentityWalletRelationship getBrokerIdentityWalletRelationshipByIdentity(ActorIdentity identity) throws CantGetListBrokerIdentityWalletRelationshipException {
-                return this.customerBrokerPurchaseNegotiationDao.getBrokerIdentityWalletRelationshipByIdentity(identity);
-            }
-
-            @Override
-            public BrokerIdentityWalletRelationship getBrokerIdentityWalletRelationshipByWallet(UUID wallet) throws CantGetListBrokerIdentityWalletRelationshipException {
-                return this.customerBrokerPurchaseNegotiationDao.getBrokerIdentityWalletRelationshipByWallet(wallet);
+            public FermatManager getManager() {
+                return new ActorManager(this.cryptoBrokerActorDao);
             }
 
         /*

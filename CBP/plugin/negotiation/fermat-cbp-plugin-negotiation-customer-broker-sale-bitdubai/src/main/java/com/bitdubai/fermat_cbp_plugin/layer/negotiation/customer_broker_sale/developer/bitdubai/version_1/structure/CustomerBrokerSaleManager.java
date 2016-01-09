@@ -65,7 +65,7 @@ public class CustomerBrokerSaleManager implements CustomerBrokerSaleNegotiationM
 
     @Override
     public void updateNegotiationNearExpirationDatetime(UUID negotiationId, Boolean status) throws CantUpdateCustomerBrokerSaleException {
-
+        this.updateNegotiationNearExpirationDatetime(negotiationId, status);
     }
 
     @Override
@@ -204,6 +204,11 @@ public class CustomerBrokerSaleManager implements CustomerBrokerSaleNegotiationM
     @Override
     public Collection<NegotiationPaymentCurrency> getAllPaymentCurrencies() throws CantGetListPaymentCurrencySaleException {
         return this.customerBrokerSaleNegotiationDao.getAllPaymentCurrencies();
+    }
+
+    @Override
+    public Collection<FiatCurrency> getCurrencyTypeAvailableBankAccount() throws CantGetListBankAccountsSaleException {
+        return this.customerBrokerSaleNegotiationDao.getCurrencyTypeAvailableBankAccount();
     }
 
 

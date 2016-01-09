@@ -36,6 +36,7 @@ import com.bitdubai.fermat_cbp_plugin.layer.user_level_business_transaction.cust
 import com.bitdubai.fermat_cbp_plugin.layer.user_level_business_transaction.customer_broker_sale.developer.bitdubai.version_1.database.UserLevelBusinessTransactionCustomerBrokerSaleDeveloperFactory;
 import com.bitdubai.fermat_cbp_plugin.layer.user_level_business_transaction.customer_broker_sale.developer.bitdubai.version_1.structure.UserLevelBusinessTransactionCustomerBrokerSaleManager;
 import com.bitdubai.fermat_cbp_plugin.layer.user_level_business_transaction.customer_broker_sale.developer.bitdubai.version_1.structure.events.UserLevelBusinessTransactionCustomerBrokerSaleMonitorAgent;
+import com.bitdubai.fermat_pip_api.layer.module.notification.interfaces.NotificationManagerMiddleware;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfaces.EventManager;
 
@@ -99,6 +100,9 @@ public class UserLevelBusinessTransactionCustomerBrokerSalePluginRoot extends Ab
     @NeededPluginReference(platform = Platforms.CRYPTO_BROKER_PLATFORM, layer = Layers.STOCK_TRANSACTIONS, plugin = Plugins.CRYPTO_MONEY_RESTOCK)
     CryptoMoneyRestockManager cryptoMoneyRestockManager;
 
+    @NeededPluginReference(platform = Platforms.PLUG_INS_PLATFORM, layer = Layers.SUB_APP_MODULE, plugin = Plugins.NOTIFICATION)
+    NotificationManagerMiddleware notificationManagerMiddleware;
+
     UserLevelBusinessTransactionCustomerBrokerSaleDatabaseDao userLevelBusinessTransactionCustomerBrokerSaleDatabaseDao;
 
     static Map<String, LogLevel> newLoggingLevel = new HashMap<String, LogLevel>();
@@ -135,9 +139,9 @@ public class UserLevelBusinessTransactionCustomerBrokerSalePluginRoot extends Ab
     public void start() throws CantStartPluginException {
         try {
             customerBrokerSaleManager = new UserLevelBusinessTransactionCustomerBrokerSaleManager();
-            //startMonitorAgent();
+            startMonitorAgent();
             this.serviceStatus = ServiceStatus.STARTED;
-            System.out.print("***** Init Customer Broker Sale *****");
+            System.out.print("***** Init User Level Bussines Customer Broker Sale *****");
         } catch (Exception exception) {
             throw new CantStartPluginException(CantStartPluginException.DEFAULT_MESSAGE, FermatException.wrapException(exception), null, null);
         }
@@ -222,7 +226,8 @@ public class UserLevelBusinessTransactionCustomerBrokerSalePluginRoot extends Ab
                     cryptoBrokerWalletManager,
                     bankMoneyRestockManager,
                     cashMoneyRestockManager,
-                    cryptoMoneyRestockManager);
+                    cryptoMoneyRestockManager,
+                    notificationManagerMiddleware);
             userLevelBusinessTransactionCustomerBrokerSaleMonitorAgent.start();
         }else userLevelBusinessTransactionCustomerBrokerSaleMonitorAgent.start();
     }

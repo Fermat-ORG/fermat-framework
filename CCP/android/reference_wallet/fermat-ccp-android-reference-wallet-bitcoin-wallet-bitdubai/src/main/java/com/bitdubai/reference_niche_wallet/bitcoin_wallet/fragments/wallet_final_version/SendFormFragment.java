@@ -12,6 +12,8 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.AlphaAnimation;
+import android.view.animation.Animation;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -26,6 +28,7 @@ import com.bitdubai.android_fermat_ccp_wallet_bitcoin.R;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractFermatFragment;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.utils.ImagesUtils;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatButton;
+import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView;
 import com.bitdubai.fermat_android_api.ui.transformation.CircleTransform;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
 import com.bitdubai.fermat_api.layer.all_definition.enums.BlockchainNetworkType;
@@ -98,6 +101,7 @@ public class SendFormFragment extends AbstractFermatFragment<ReferenceWalletSess
     private boolean connectionDialogIsShow;
     private boolean onFocus;
     private Spinner spinner;
+    private FermatTextView txt_type;
 
 
     public static SendFormFragment newInstance() {
@@ -145,15 +149,60 @@ public class SendFormFragment extends AbstractFermatFragment<ReferenceWalletSess
         editTextAmount = (EditText) rootView.findViewById(R.id.amount);
         imageView_contact = (ImageView) rootView.findViewById(R.id.profile_Image);
         send_button = (FermatButton) rootView.findViewById(R.id.send_button);
+        txt_type = (FermatTextView) rootView.findViewById(R.id.txt_type);
         spinner = (Spinner) rootView.findViewById(R.id.spinner);
         List<String> list = new ArrayList<String>();
-        list.add("btc");
-        list.add("bits");
+        list.add("Bits");
+        list.add("BTC");
         list.add("Satoshis");
-        ArrayAdapter<String> dataAdapter = new ArrayAdapter<String>(getActivity(),
-                android.R.layout.simple_spinner_item, list);
+        ArrayAdapter<String> dataAdapter = new ArrayAdapter<>(getActivity(),
+                R.layout.list_item_spinner, list);
         dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinner.setAdapter(dataAdapter);
+        spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                String text = "";
+                switch (position){
+                    case 0:
+                        text = "[bits]";
+                        break;
+                    case 1:
+                        text = "[btc]";
+                        break;
+                    case 2:
+                        text = "[satoshis]";
+                        break;
+                }
+                AlphaAnimation alphaAnimation = new AlphaAnimation((float) 0.4, 1);
+                alphaAnimation.setDuration(300);
+                final String finalText = text;
+                alphaAnimation.setAnimationListener(new Animation.AnimationListener() {
+                    @Override
+                    public void onAnimationStart(Animation animation) {
+                        txt_type.setText(finalText);
+                    }
+
+                    @Override
+                    public void onAnimationEnd(Animation animation) {
+
+                    }
+
+                    @Override
+                    public void onAnimationRepeat(Animation animation) {
+
+                    }
+                });
+                txt_type.startAnimation(alphaAnimation);
+
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
+
     }
 
     private void setUpActions(){
@@ -248,12 +297,12 @@ public class SendFormFragment extends AbstractFermatFragment<ReferenceWalletSess
                 BitmapWorkerTask bitmapWorkerTask = new BitmapWorkerTask(imageView_contact,getResources(),true);
                 bitmapWorkerTask.execute(cryptoWalletWalletContact.getProfilePicture());
             } catch (Exception e) {
-                Picasso.with(getActivity()).load(R.drawable.profile_image_standard).transform(new CircleTransform()).into(imageView_contact);
+                Picasso.with(getActivity()).load(R.drawable.ic_profile_male).transform(new CircleTransform()).into(imageView_contact);
             }
             contactName.setText(cryptoWalletWalletContact.getActorName());
 
         }else{
-            Picasso.with(getActivity()).load(R.drawable.profile_image_standard).transform(new CircleTransform()).into(imageView_contact);
+            Picasso.with(getActivity()).load(R.drawable.ic_profile_male).transform(new CircleTransform()).into(imageView_contact);
         }
 
     }
@@ -334,8 +383,9 @@ public class SendFormFragment extends AbstractFermatFragment<ReferenceWalletSess
             if (getActivity().getCurrentFocus() != null && im.isActive(getActivity().getCurrentFocus())) {
                 im.hideSoftInputFromWindow(getActivity().getCurrentFocus().getWindowToken(), 0);
             }
-            if (cryptoWalletWalletContact != null)
+            if (cryptoWalletWalletContact != null) {
                 sendCrypto();
+            }
             else
                 Toast.makeText(getActivity(), "Contact not found, please add it.", Toast.LENGTH_LONG).show();
         }
@@ -357,43 +407,51 @@ public class SendFormFragment extends AbstractFermatFragment<ReferenceWalletSess
 
     //TODO: VER QUE PASA  SI EL CONTACTO NO TIENE UNA WALLET ADDRESS
     private void sendCrypto() {
-        CryptoAddress validAddress = WalletUtils.validateAddress(cryptoWalletWalletContact.getReceivedCryptoAddress().get(0).getAddress(), cryptoWallet);
-        if (validAddress != null) {
-            EditText txtAmount = (EditText) rootView.findViewById(R.id.amount);
-            String amount = txtAmount.getText().toString();
+        try
+        {
+            CryptoAddress validAddress = WalletUtils.validateAddress(cryptoWalletWalletContact.getReceivedCryptoAddress().get(0).getAddress(), cryptoWallet);
+            if (validAddress != null) {
+                EditText txtAmount = (EditText) rootView.findViewById(R.id.amount);
+                String amount = txtAmount.getText().toString();
 
-            if(!amount.equals("") && amount!=null && Integer.parseInt(amount)!=0) {
-                try {
-                    String notes=null;
-                    if(txt_notes.getText().toString().length()!=0){
-                        notes = txt_notes.getText().toString();
+                if(!amount.equals("") && amount!=null && Long.parseLong(amount)!=0) {
+                    try {
+                        String notes=null;
+                        if(txt_notes.getText().toString().length()!=0){
+                            notes = txt_notes.getText().toString();
+                        }
+                        cryptoWallet.send(
+                                Long.parseLong(txtAmount.getText().toString()),
+                                validAddress,
+                                notes,
+                                appSession.getAppPublicKey(),
+                                cryptoWallet.getActiveIdentities().get(0).getPublicKey(),
+                                Actors.INTRA_USER,
+                                cryptoWalletWalletContact.getActorPublicKey(),
+                                cryptoWalletWalletContact.getActorType(),
+                                ReferenceWallet.BASIC_WALLET_BITCOIN_WALLET
+                        );
+                        Toast.makeText(getActivity(),"Sending...",Toast.LENGTH_SHORT).show();
+                        onBack(null);
+                    } catch (InsufficientFundsException e) {
+                        Toast.makeText(getActivity(), "Insufficient funds", Toast.LENGTH_LONG).show();
+                    } catch (CantSendCryptoException e) {
+                        appSession.getErrorManager().reportUnexpectedWalletException(Wallets.CWP_WALLET_RUNTIME_WALLET_BITCOIN_WALLET_ALL_BITDUBAI, UnexpectedWalletExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
+                        showMessage(getActivity(), "Error send satoshis - " + e.getMessage());
+                    } catch (Exception e) {
+                        appSession.getErrorManager().reportUnexpectedUIException(UISource.VIEW,UnexpectedUIExceptionSeverity.UNSTABLE,e);
+                        Toast.makeText(getActivity(),"oooopps",Toast.LENGTH_SHORT).show();
                     }
-                    cryptoWallet.send(
-                            Long.parseLong(txtAmount.getText().toString()),
-                            validAddress,
-                            notes,
-                            appSession.getAppPublicKey(),
-                            cryptoWallet.getActiveIdentities().get(0).getPublicKey(),
-                            Actors.INTRA_USER,
-                            cryptoWalletWalletContact.getActorPublicKey(),
-                            cryptoWalletWalletContact.getActorType(),
-                            ReferenceWallet.BASIC_WALLET_BITCOIN_WALLET
-                    );
-                    Toast.makeText(getActivity(),"Sending...",Toast.LENGTH_SHORT).show();
-
-                } catch (InsufficientFundsException e) {
-                    Toast.makeText(getActivity(), "Insufficient funds", Toast.LENGTH_LONG).show();
-                } catch (CantSendCryptoException e) {
-                    appSession.getErrorManager().reportUnexpectedWalletException(Wallets.CWP_WALLET_RUNTIME_WALLET_BITCOIN_WALLET_ALL_BITDUBAI, UnexpectedWalletExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
-                    showMessage(getActivity(), "Error send satoshis - " + e.getMessage());
-                } catch (Exception e) {
-                    appSession.getErrorManager().reportUnexpectedUIException(UISource.VIEW,UnexpectedUIExceptionSeverity.UNSTABLE,e);
-                    Toast.makeText(getActivity(),"oooopps",Toast.LENGTH_SHORT).show();
                 }
+            } else {
+                Toast.makeText(getActivity(), "Invalid amount", Toast.LENGTH_LONG).show();
             }
-        } else {
-            Toast.makeText(getActivity(), "Invalid amount", Toast.LENGTH_LONG).show();
         }
+        catch(Exception e)
+        {
+            Toast.makeText(getActivity(),"oooopps -  " + e.getMessage(),Toast.LENGTH_SHORT).show();
+        }
+
     }
 
     /**

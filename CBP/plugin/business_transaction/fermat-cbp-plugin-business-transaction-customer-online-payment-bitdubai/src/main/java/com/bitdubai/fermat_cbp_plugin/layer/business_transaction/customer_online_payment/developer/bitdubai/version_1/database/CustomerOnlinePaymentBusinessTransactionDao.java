@@ -364,6 +364,9 @@ public class CustomerOnlinePaymentBusinessTransactionDao {
                     DatabaseFilterType.EQUAL);
             databaseTable.loadToMemory();
             List<DatabaseTableRecord> records = databaseTable.getRecords();
+            if(records.isEmpty()){
+                return null;
+            }
             checkDatabaseRecords(records);
             String value=records
                     .get(0)
@@ -466,7 +469,7 @@ public class CustomerOnlinePaymentBusinessTransactionDao {
             //I going to set the money as bitcoin in this version
             brokerCryptoAddress=new CryptoAddress(cryptoAddressString, CryptoCurrency.BITCOIN);
             businessTransactionRecord.setCryptoAddress(brokerCryptoAddress);
-            businessTransactionRecord.setCryptoWalletPublicKey(
+            businessTransactionRecord.setExternalWalletPublicKey(
                     record.getStringValue(
                             CustomerOnlinePaymentBusinessTransactionDatabaseConstants.
                                     ONLINE_PAYMENT_WALLET_PUBLIC_KEY_COLUMN_NAME));
@@ -600,7 +603,7 @@ public class CustomerOnlinePaymentBusinessTransactionDao {
                 businessTransactionRecord.getTransactionId());
         record.setStringValue(
                 CustomerOnlinePaymentBusinessTransactionDatabaseConstants.ONLINE_PAYMENT_WALLET_PUBLIC_KEY_COLUMN_NAME,
-                businessTransactionRecord.getCryptoWalletPublicKey());
+                businessTransactionRecord.getExternalWalletPublicKey());
 
         return record;
     }

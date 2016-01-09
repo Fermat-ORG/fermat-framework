@@ -24,6 +24,7 @@ public class CryptoTransmissionMetadataRecord implements CryptoTransmissionMetad
     private CryptoTransmissionMetadataType cryptoTransmissionMetadataType;
     private long timestamp;
     private boolean pendigFlag;
+    private int sentCount;
 
     public CryptoTransmissionMetadataRecord(String associatedCryptoTransactionHash,
                                             long cryptoAmount,
@@ -36,7 +37,8 @@ public class CryptoTransmissionMetadataRecord implements CryptoTransmissionMetad
                                             CryptoTransmissionStates cryptoTransmissionState,
                                             CryptoTransmissionMetadataType cryptoTransmissionMetadataType,
                                             long timestamp,
-                                            boolean pendigFlag) {
+                                            boolean pendigFlag,
+                                            int sentCount) {
 
         this.associatedCryptoTransactionHash    = associatedCryptoTransactionHash;
         this.cryptoAmount                       = cryptoAmount;
@@ -50,6 +52,7 @@ public class CryptoTransmissionMetadataRecord implements CryptoTransmissionMetad
         this.cryptoTransmissionMetadataType = cryptoTransmissionMetadataType;
         this.pendigFlag = pendigFlag;
         this.timestamp =timestamp;
+        this.sentCount = sentCount;
     }
 
     public CryptoTransmissionMetadataRecord(String associatedCryptoTransactionHash,
@@ -61,7 +64,8 @@ public class CryptoTransmissionMetadataRecord implements CryptoTransmissionMetad
                                             String senderPublicKey,
                                             UUID transactionId,
                                             CryptoTransmissionStates cryptoTransmissionState,
-                                            CryptoTransmissionMetadataType cryptoTransmissionMetadataType) {
+                                            CryptoTransmissionMetadataType cryptoTransmissionMetadataType,
+                                            int sentCount) {
 
         this.associatedCryptoTransactionHash    = associatedCryptoTransactionHash;
         this.cryptoAmount                       = cryptoAmount;
@@ -74,6 +78,7 @@ public class CryptoTransmissionMetadataRecord implements CryptoTransmissionMetad
         this.cryptoTransmissionState = cryptoTransmissionState;
         this.cryptoTransmissionMetadataType = cryptoTransmissionMetadataType;
         pendigFlag = false;
+        this.sentCount = sentCount;
     }
 
     @Override
@@ -116,6 +121,13 @@ public class CryptoTransmissionMetadataRecord implements CryptoTransmissionMetad
         return paymentDescription;
     }
 
+
+    @Override
+    public int getSentCount() {
+        return sentCount;
+    }
+
+
     public CryptoTransmissionMetadataType getCryptoTransmissionMetadataType() {
         return cryptoTransmissionMetadataType;
     }
@@ -149,5 +161,10 @@ public class CryptoTransmissionMetadataRecord implements CryptoTransmissionMetad
     @Override
     public long getTimestamp(){
         return timestamp;
+    }
+
+    @Override
+    public void setPendingToRead(boolean pending) {
+        this.pendigFlag = pending;
     }
 }

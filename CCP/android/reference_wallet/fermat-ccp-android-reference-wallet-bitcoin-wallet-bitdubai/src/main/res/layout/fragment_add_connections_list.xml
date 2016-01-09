@@ -1,10 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:fab="http://schemas.android.com/apk/res-auto"
+    xmlns:app="http://schemas.android.com/tools"
     android:id="@+id/activity_container"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#ffffff"
+    android:background="@drawable/background_gradient"
     >
 
     <android.support.v4.widget.SwipeRefreshLayout
@@ -23,12 +24,37 @@
 
     </android.support.v4.widget.SwipeRefreshLayout>
 
-    <ImageView
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:id="@+id/empty_screen"
-        android:background="@drawable/no_request"
-        android:visibility="gone"></ImageView>
+        android:orientation="vertical"
+        android:id="@+id/empty_view"
+        android:layout_gravity="center_horizontal"
+        android:gravity="center"
+        android:visibility="gone">
+
+        <ImageView
+            android:layout_width="125dp"
+            android:layout_height="125dp"
+            android:src="@drawable/contacts_empty_icon"
+            />
+
+
+        <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
+            android:gravity="center"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:padding="15dp"
+            fab:typeface="ROBOTO_REGULAR"
+            android:text="Click me to\nsearch contacts!"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:textColor="#fff"
+            />
+
+    </LinearLayout>
+
+
 
 
 

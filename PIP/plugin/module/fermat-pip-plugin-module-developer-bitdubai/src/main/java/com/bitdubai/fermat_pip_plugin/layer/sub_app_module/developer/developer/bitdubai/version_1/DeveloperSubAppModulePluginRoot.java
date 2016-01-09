@@ -1,12 +1,12 @@
 package com.bitdubai.fermat_pip_plugin.layer.sub_app_module.developer.developer.bitdubai.version_1;
 
+import com.bitdubai.fermat_api.Addon;
+import com.bitdubai.fermat_api.Plugin;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.abstract_classes.AbstractPlugin;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.AddonVersionReference;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.PluginVersionReference;
-import com.bitdubai.fermat_api.layer.all_definition.developer.DatabaseManagerForDevelopers;
 import com.bitdubai.fermat_api.layer.all_definition.developer.DealsWithDatabaseManagers;
 import com.bitdubai.fermat_api.layer.all_definition.developer.DealsWithLogManagers;
-import com.bitdubai.fermat_api.layer.all_definition.developer.LogManagerForDevelopers;
 import com.bitdubai.fermat_api.layer.all_definition.settings.structure.SettingsManager;
 import com.bitdubai.fermat_api.layer.all_definition.util.Version;
 import com.bitdubai.fermat_api.layer.modules.common_classes.ActiveActorIdentityInformation;
@@ -38,11 +38,11 @@ public class DeveloperSubAppModulePluginRoot extends AbstractPlugin implements
         ToolManager {
 
 
-    private ConcurrentHashMap<PluginVersionReference, DatabaseManagerForDevelopers> databaseManagersOnPlugins;
-    private ConcurrentHashMap<AddonVersionReference , DatabaseManagerForDevelopers> databaseManagersOnAddons ;
+    private ConcurrentHashMap<PluginVersionReference, Plugin> databaseManagersOnPlugins;
+    private ConcurrentHashMap<AddonVersionReference , Addon> databaseManagersOnAddons ;
 
-    private ConcurrentHashMap<PluginVersionReference, LogManagerForDevelopers> logManagersOnPlugins;
-    private ConcurrentHashMap<AddonVersionReference , LogManagerForDevelopers> logManagersOnAddons ;
+    private ConcurrentHashMap<PluginVersionReference, Plugin> logManagersOnPlugins;
+    private ConcurrentHashMap<AddonVersionReference , Addon> logManagersOnAddons ;
 
     public DeveloperSubAppModulePluginRoot() {
 
@@ -58,40 +58,40 @@ public class DeveloperSubAppModulePluginRoot extends AbstractPlugin implements
 
     @Override
     public void addDatabaseManager(final PluginVersionReference       pluginVersionReference      ,
-                                   final DatabaseManagerForDevelopers databaseManagerForDevelopers) {
+                                   final Plugin databaseManagerForDevelopers) {
 
-        databaseManagersOnPlugins.putIfAbsent(
-                pluginVersionReference      ,
+        databaseManagersOnPlugins.put(
+                pluginVersionReference,
                 databaseManagerForDevelopers
         );
     }
 
     @Override
     public void addDatabaseManager(final AddonVersionReference        addonVersionReference       ,
-                                   final DatabaseManagerForDevelopers databaseManagerForDevelopers) {
+                                   final Addon databaseManagerForDevelopers) {
 
-        databaseManagersOnAddons.putIfAbsent(
-                addonVersionReference       ,
+        databaseManagersOnAddons.put(
+                addonVersionReference,
                 databaseManagerForDevelopers
         );
     }
 
     @Override
     public void addLogManager(final PluginVersionReference  pluginVersionReference ,
-                              final LogManagerForDevelopers logManagerForDevelopers) {
+                              final Plugin logManagerForDevelopers) {
 
-        logManagersOnPlugins.putIfAbsent(
-                pluginVersionReference ,
+        logManagersOnPlugins.put(
+                pluginVersionReference,
                 logManagerForDevelopers
         );
     }
 
     @Override
     public void addLogManager(final AddonVersionReference   addonVersionReference  ,
-                              final LogManagerForDevelopers logManagerForDevelopers) {
+                              final Addon logManagerForDevelopers) {
 
-        logManagersOnAddons.putIfAbsent(
-                addonVersionReference  ,
+        logManagersOnAddons.put(
+                addonVersionReference,
                 logManagerForDevelopers
         );
     }
@@ -122,5 +122,15 @@ public class DeveloperSubAppModulePluginRoot extends AbstractPlugin implements
     @Override
     public ActiveActorIdentityInformation getSelectedActorIdentity() throws CantGetSelectedActorIdentityException {
         return null;
+    }
+
+    @Override
+    public void setAppPublicKey(String publicKey) {
+
+    }
+
+    @Override
+    public int[] getMenuNotifications() {
+        return new int[0];
     }
 }

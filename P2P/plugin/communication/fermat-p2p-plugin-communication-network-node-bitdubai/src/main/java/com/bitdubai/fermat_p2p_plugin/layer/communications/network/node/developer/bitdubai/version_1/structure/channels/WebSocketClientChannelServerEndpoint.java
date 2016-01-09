@@ -13,9 +13,9 @@ import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.ut
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.enums.HeadersAttName;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.exception.PackageTypeNotSupportedException;
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.channels.conf.ClientChannelConfigurator;
-import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.channels.processors.clients.RequestCheckInActor;
-import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.channels.processors.clients.RequestCheckInClient;
-import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.channels.processors.clients.RequestCheckInNetworkService;
+import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.channels.processors.clients.CheckInActorRequestProcessor;
+import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.channels.processors.clients.CheckInClientRequestProcessor;
+import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.channels.processors.clients.CheckInNetworkServiceRequestProcessor;
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.entities.ClientsConnectionHistory;
 
 import org.jboss.logging.Logger;
@@ -77,9 +77,9 @@ public class WebSocketClientChannelServerEndpoint extends WebSocketChannelServer
          * Register all messages processor for this
          * channel
          */
-        registerMessageProcessor(new RequestCheckInClient(this));
-        registerMessageProcessor(new RequestCheckInNetworkService(this));
-        registerMessageProcessor(new RequestCheckInActor(this));
+        registerMessageProcessor(new CheckInClientRequestProcessor(this));
+        registerMessageProcessor(new CheckInNetworkServiceRequestProcessor(this));
+        registerMessageProcessor(new CheckInActorRequestProcessor(this));
 
     }
 
@@ -157,5 +157,8 @@ public class WebSocketClientChannelServerEndpoint extends WebSocketChannelServer
         LOG.info("Closed session : " + session.getId() + " Code: (" + closeReason.getCloseCode() + ") - reason: "+ closeReason.getReasonPhrase());
 
     }
+
+
+
 
 }

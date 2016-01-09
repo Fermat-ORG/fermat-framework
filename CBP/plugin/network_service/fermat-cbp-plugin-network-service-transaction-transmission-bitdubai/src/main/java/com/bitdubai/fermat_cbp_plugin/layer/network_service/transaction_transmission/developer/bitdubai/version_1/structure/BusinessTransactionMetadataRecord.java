@@ -29,9 +29,9 @@ public class BusinessTransactionMetadataRecord implements BusinessTransactionMet
 
     public BusinessTransactionMetadataRecord(String contractHash,
                                              ContractTransactionStatus contractTransactionStatus,
-                                             String receiverId,
-                                             PlatformComponentType receiverType,
                                              String senderId,
+                                             PlatformComponentType receiverType,
+                                             String receiverId,
                                              PlatformComponentType senderType,
                                              String contractId,
                                              String negotiationId,
@@ -46,7 +46,11 @@ public class BusinessTransactionMetadataRecord implements BusinessTransactionMet
         this.receiverType = receiverType;
         this.senderId=senderId;
         this.senderType=senderType;
-        this.contractId=contractId;
+        if(contractId==null){
+            this.contractId=contractHash;
+        } else {
+            this.contractId=contractId;
+        }
         this.negotiationId=negotiationId;
         this.transactionType=transactionType;
         this.timestamp=timestamp;

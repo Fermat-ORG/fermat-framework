@@ -99,9 +99,9 @@ public class GrouperViewHolder extends ParentViewHolder {
                 BitmapWorkerTask bitmapWorkerTask = new BitmapWorkerTask(contactIcon,res,true);
                 bitmapWorkerTask.execute(photo);
             } else
-                Picasso.with(contactIcon.getContext()).load(R.drawable.profile_image_standard).transform(new CircleTransform()).into(contactIcon);
+                Picasso.with(contactIcon.getContext()).load(R.drawable.ic_profile_male).transform(new CircleTransform()).into(contactIcon);
         }catch (Exception e){
-            Picasso.with(contactIcon.getContext()).load(R.drawable.profile_image_standard).transform(new CircleTransform()).into(contactIcon);
+            Picasso.with(contactIcon.getContext()).load(R.drawable.ic_profile_male).transform(new CircleTransform()).into(contactIcon);
 
         }
 
@@ -160,6 +160,6 @@ public class GrouperViewHolder extends ParentViewHolder {
         if (customerImg != null && customerImg.length > 0)
             return ImagesUtils.getRoundedBitmap(res, customerImg);
 
-        return ImagesUtils.getRoundedBitmap(res, R.drawable.profile_image_standard);
+        return ImagesUtils.getRoundedBitmap(res, R.drawable.ic_profile_male);
     }
 }

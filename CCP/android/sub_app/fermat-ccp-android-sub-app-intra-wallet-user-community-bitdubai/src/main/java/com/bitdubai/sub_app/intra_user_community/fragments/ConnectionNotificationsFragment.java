@@ -1,12 +1,15 @@
 package com.bitdubai.sub_app.intra_user_community.fragments;
 
 import android.app.ProgressDialog;
+import android.content.DialogInterface;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
@@ -18,7 +21,6 @@ import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractFermatFra
 import com.bitdubai.fermat_android_api.ui.interfaces.FermatListItemListeners;
 import com.bitdubai.fermat_android_api.ui.interfaces.FermatWorkerCallBack;
 import com.bitdubai.fermat_android_api.ui.util.FermatWorker;
-import com.bitdubai.fermat_ccp_api.layer.module.intra_user.exceptions.CantAcceptRequestException;
 import com.bitdubai.fermat_ccp_api.layer.module.intra_user.exceptions.CantGetActiveLoginIdentityException;
 import com.bitdubai.fermat_ccp_api.layer.module.intra_user.exceptions.CantGetIntraUsersListException;
 import com.bitdubai.fermat_ccp_api.layer.module.intra_user.interfaces.IntraUserInformation;
@@ -27,11 +29,10 @@ import com.bitdubai.fermat_ccp_api.layer.module.intra_user.interfaces.IntraUserM
 import com.bitdubai.fermat_pip_api.layer.network_service.subapp_resources.SubAppResourcesProviderManager;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 import com.bitdubai.sub_app.intra_user_community.R;
-import com.bitdubai.sub_app.intra_user_community.adapters.AppNavigationAdapter;
 import com.bitdubai.sub_app.intra_user_community.adapters.AppNotificationAdapter;
 import com.bitdubai.sub_app.intra_user_community.common.popups.AcceptDialog;
-import com.bitdubai.sub_app.intra_user_community.common.utils.FragmentsCommons;
 import com.bitdubai.sub_app.intra_user_community.session.IntraUserSubAppSession;
+import com.bitdubai.sub_app.intra_user_community.session.SessionConstants;
 import com.bitdubai.sub_app.intra_user_community.util.CommonLogger;
 
 import java.util.ArrayList;
@@ -74,7 +75,7 @@ public class ConnectionNotificationsFragment extends AbstractFermatFragment impl
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
+        setHasOptionsMenu(true);
         // setting up  module
         intraUserSubAppSession = ((IntraUserSubAppSession) appSession);
         intraUserInformation = (IntraUserInformation) appSession.getData(INTRA_USER_SELECTED);
@@ -101,7 +102,6 @@ public class ConnectionNotificationsFragment extends AbstractFermatFragment impl
             adapter = new AppNotificationAdapter(getActivity(),lstIntraUserInformations);
             adapter.setFermatListEventListener(this);
             recyclerView.setAdapter(adapter);
-
             swipeRefresh = (SwipeRefreshLayout) rootView.findViewById(R.id.swipeRefresh);
             swipeRefresh.setOnRefreshListener(this);
             swipeRefresh.setColorSchemeColors(Color.BLUE, Color.BLUE);
@@ -205,10 +205,27 @@ public class ConnectionNotificationsFragment extends AbstractFermatFragment impl
     @Override
     public void onItemClickListener(IntraUserInformation data, int position) {
         try {
-            moduleManager.acceptIntraUser(moduleManager.getActiveIntraUserIdentity().getPublicKey(), data.getName(), data.getPublicKey(), data.getProfileImage());
+
+            //moduleManager.acceptIntraUser(moduleManager.getActiveIntraUserIdentity().getPublicKey(), data.getName(), data.getPublicKey(), data.getProfileImage());
             AcceptDialog notificationAcceptDialog = new AcceptDialog(getActivity(), intraUserSubAppSession, (SubAppResourcesProviderManager) appResourcesProviderManager, data, moduleManager.getActiveIntraUserIdentity());
+            notificationAcceptDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
+                @Override
+                public void onDismiss(DialogInterface dialog) {
+                    Object o = appSession.getData(SessionConstants.NOTIFICATION_ACCEPTED);
+                    try {
+                        if ((Boolean) o) {
+                            onRefresh();
+                            appSession.removeData(SessionConstants.NOTIFICATION_ACCEPTED);
+                        }
+                    }catch (Exception e){
+                        e.printStackTrace();
+                        onRefresh();
+                    }
+                }
+            });
             notificationAcceptDialog.show();
-        } catch (CantAcceptRequestException | CantGetActiveLoginIdentityException e) {
+
+        } catch ( CantGetActiveLoginIdentityException e) {
             e.printStackTrace();
         }
     }
@@ -234,5 +251,11 @@ public class ConnectionNotificationsFragment extends AbstractFermatFragment impl
             emptyView.setAnimation(anim);
             emptyView.setVisibility(View.GONE);
         }
+    }
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        super.onCreateOptionsMenu(menu, inflater);
+        menu.clear();
     }
 }

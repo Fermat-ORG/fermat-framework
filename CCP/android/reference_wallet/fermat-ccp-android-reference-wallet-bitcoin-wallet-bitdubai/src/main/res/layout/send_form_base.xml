@@ -46,11 +46,11 @@
                         android:layout_width="50dp"
                         android:layout_height="50dp"
                         android:id="@+id/profile_Image"
-                        tools:src="@drawable/profile_image_standard"
+                        tools:src="@drawable/ic_profile_male"
                         android:layout_marginLeft="12dp"/>
 
                     <FrameLayout
-                        android:layout_width="wrap_content"
+                        android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:orientation="vertical">
 
@@ -67,7 +67,7 @@
                             android:id="@+id/contact_name"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:hint="Name"
+                            android:hint="Enter name here"
                             android:textColor="#1d1d26"
                             android:textColorHint="#9a9a9c"
                             android:textSize="16sp"
@@ -144,9 +144,10 @@
                     android:layout_marginLeft="16dp"
                     android:paddingTop="12dp"/>
 
-                    <TextView
+                    <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:id="@+id/txt_type"
                         android:text="[bits]"
                         android:textColor="#12aca1"
                         android:textSize="12sp"
@@ -190,6 +191,7 @@
                         android:layout_width="100dp"
                         android:layout_height="match_parent"
                         android:id="@+id/spinner"
+                        android:background="#fff"
                         >
 
                     </Spinner>
