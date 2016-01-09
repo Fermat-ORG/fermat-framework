@@ -27,7 +27,6 @@ import com.bitdubai.fermat_dap_api.layer.dap_middleware.dap_asset_factory.except
 import com.bitdubai.fermat_dap_api.layer.dap_middleware.dap_asset_factory.exceptions.CantGetAssetFactoryException;
 import com.bitdubai.fermat_dap_api.layer.dap_middleware.dap_asset_factory.exceptions.CantSaveAssetFactoryException;
 import com.bitdubai.fermat_dap_api.layer.dap_middleware.dap_asset_factory.interfaces.AssetFactory;
-import com.bitdubai.fermat_dap_api.layer.dap_transaction.asset_issuing.exceptions.CantIssueDigitalAssetsException;
 import com.bitdubai.fermat_dap_api.layer.dap_transaction.asset_issuing.interfaces.AssetIssuingManager;
 import com.bitdubai.fermat_dap_plugin.layer.middleware.asset.issuer.developer.bitdubai.version_1.exceptions.CantPublishAssetException;
 import com.bitdubai.fermat_dap_plugin.layer.middleware.asset.issuer.developer.bitdubai.version_1.exceptions.DatabaseOperationException;
@@ -600,8 +599,8 @@ public final class AssetFactoryMiddlewareManager {
     public void removeAssetFactory(String publicKey) throws CantDeleteAsserFactoryException {
         try {
             AssetFactory assetFactory = getAssetFactoryByAssetPublicKey(publicKey);
-            if (assetFactory.getState().getCode().equals(State.DRAFT.getCode()))
-                throw new CantDeleteAsserFactoryException(null, "Error delete Asset Factory", "Asset Factory in DRAFT");
+            if (assetFactory.getState() != State.DRAFT)
+                throw new CantDeleteAsserFactoryException(null, "Error delete Asset Factory", "Asset Factory is not DRAFT");
             else
                 getAssetFactoryMiddlewareDao().removeAssetFactory(assetFactory);
         } catch (Exception exception) {
@@ -646,10 +645,13 @@ public final class AssetFactoryMiddlewareManager {
                 throw new CantPublishAssetException(CantPublishAssetException.DEFAULT_MESSAGE);
             }
 
-        } catch (CantIssueDigitalAssetsException e) {
-            throw new CantSaveAssetFactoryException(e, "Exception CantIssueDigitalAssetsException", "Method: issueAssets");
         } catch (Exception e) {
-            throw new CantSaveAssetFactoryException(e, "Exception General", "Method: publishAsset");
+            try {
+                markAssetFactoryState(State.DRAFT, assetFactory.getAssetPublicKey());
+            } catch (Exception e1) {
+                //Well, we're fucked.
+            }
+            throw new CantSaveAssetFactoryException(e, "Exception CantIssueDigitalAssetsException", "Method: issueAssets");
         }
     }
 

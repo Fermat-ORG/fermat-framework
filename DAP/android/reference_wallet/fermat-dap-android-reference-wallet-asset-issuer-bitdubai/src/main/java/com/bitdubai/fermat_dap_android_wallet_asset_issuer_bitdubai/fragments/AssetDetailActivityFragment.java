@@ -171,7 +171,7 @@ public class AssetDetailActivityFragment extends AbstractFermatFragment {
         digitalAsset = (DigitalAsset) appSession.getData("asset_data");
 
         try {
-            Data.setStatistics(assetIssuerSession.getAppPublicKey(), digitalAsset, moduleManager);
+            Data.setStatistics("walletPublicKeyTest", digitalAsset, moduleManager);
         } catch (CantGetAssetStatisticException e) {
             e.printStackTrace();
         } catch (CantLoadWalletException e) {

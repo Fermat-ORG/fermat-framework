@@ -704,6 +704,7 @@ public class AssetTransmissionNetworkServicePluginRoot extends AbstractPlugin im
         /*
          * Tell the manager to handler the new connection stablished
          */
+        initializeCommunicationNetworkServiceConnectionManager();
         communicationNetworkServiceConnectionManager.handleEstablishedRequestedNetworkServiceConnection(remoteComponentProfile);
     }
 

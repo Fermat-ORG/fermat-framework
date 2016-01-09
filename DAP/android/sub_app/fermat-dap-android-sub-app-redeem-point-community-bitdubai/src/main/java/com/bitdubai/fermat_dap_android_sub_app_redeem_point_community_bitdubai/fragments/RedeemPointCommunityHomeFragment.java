@@ -81,7 +81,7 @@ public class RedeemPointCommunityHomeFragment extends AbstractFermatFragment imp
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
         rootView = inflater.inflate(R.layout.home_dap_redeem_point_fragment, container, false);
-        initViews(rootView);
+//        initViews(rootView);
         recyclerView = (RecyclerView) rootView.findViewById(R.id.gridView);
         recyclerView.setHasFixedSize(true);
         layoutManager = new GridLayoutManager(getActivity(), 3, LinearLayoutManager.VERTICAL, false);

@@ -49,6 +49,7 @@ public class AssetDistributionDatabaseConstants {
     public static final String ASSET_DISTRIBUTION_DELIVERING_TIMEOUT_COLUMN_NAME = "timeout";
     public static final String ASSET_DISTRIBUTION_DELIVERING_STATE_COLUMN_NAME = "delivering_state";
     public static final String ASSET_DISTRIBUTION_DELIVERING_SENT_GENESISTX_COLUMN_NAME = "sent_genesis_tx";
+    public static final String ASSET_DISTRIBUTION_DELIVERING_ATTEMPT_NUMBER_COLUMN_NAME = "attempt_number";
 
     public static final String ASSET_DISTRIBUTION_DELIVERING_TABLE_FIRST_KEY_COLUMN = ASSET_DISTRIBUTION_DELIVERING_TRANSACTION_ID_COLUMN_NAME;
 

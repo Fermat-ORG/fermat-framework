@@ -16,6 +16,7 @@ import com.bitdubai.fermat_dap_api.layer.dap_wallet.common.exceptions.CantLoadWa
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -48,30 +49,42 @@ public class Data {
     }
 
     public static List<UserDelivery> getUserDeliveryList(String walletPublicKey, DigitalAsset digitalAsset, AssetIssuerWalletSupAppModuleManager moduleManager) throws Exception {
-        //TODO get from database
-//        List<UserDelivery> users = new ArrayList<>();
-//        UserDelivery userDelivery = new UserDelivery();
-//        userDelivery.setUserName("Janet Williams");
-//        userDelivery.setDeliveryDate(new Timestamp(Calendar.getInstance().getTimeInMillis()));
-//        userDelivery.setDeliveryStatus("Redeemed");
-//        users.add(userDelivery);
-//        userDelivery = new UserDelivery();
-//        userDelivery.setUserName("Amanda Hood");
-//        userDelivery.setDeliveryDate(new Timestamp(Calendar.getInstance().getTimeInMillis()));
-//        userDelivery.setDeliveryStatus("Appropriated");
-//        users.add(userDelivery);
-//        userDelivery = new UserDelivery();
-//        userDelivery.setUserName("Tom Snow");
-//        userDelivery.setDeliveryDate(new Timestamp(Calendar.getInstance().getTimeInMillis()));
-//        userDelivery.setDeliveryStatus("Unused");
-//        users.add(userDelivery);
         List<UserDelivery> users = new ArrayList<>();
         UserDelivery userDelivery;
         List<AssetStatistic> stats = moduleManager.getWalletStatisticsByAsset(walletPublicKey, digitalAsset.getName());
+        for (AssetStatistic stat : stats) {
+            userDelivery = new UserDelivery(stat.getAssetOwnerName(), new Timestamp(stat.getDistributionDate().getTime()), stat.getStatus().getCode());
+            users.add(userDelivery);
+        }
+        return users;
+    }
+
+    public static List<UserRedeemed> getUserRedeemedList(String walletPublicKey, DigitalAsset digitalAsset, AssetIssuerWalletSupAppModuleManager moduleManager) throws Exception {
+        //TODO get from database
+        List<UserRedeemed> users = new ArrayList<>();
+        UserRedeemed UserRedeemed;
+        List<AssetStatistic> stats = moduleManager.getWalletStatisticsByAsset(walletPublicKey, digitalAsset.getName());
         for (AssetStatistic stat :
                 stats) {
-            userDelivery = new UserDelivery(stat.getRedeemPoint().getName(), new Timestamp(stat.getDistributionDate().getTime()), stat.getStatus().getCode());
-            users.add(userDelivery);
+            if (stat.getStatus().equals(AssetCurrentStatus.ASSET_REDEEMED)) {
+                UserRedeemed = new UserRedeemed(stat.getRedeemPoint().getName(), new Timestamp(stat.getDistributionDate().getTime()), stat.getStatus().getCode());
+                users.add(UserRedeemed);
+            }
+        }
+        return users;
+    }
+
+    public static List<UserAppropiate> getUserAppropiateList(String walletPublicKey, DigitalAsset digitalAsset, AssetIssuerWalletSupAppModuleManager moduleManager) throws Exception {
+        //TODO get from database
+        List<UserAppropiate> users = new ArrayList<>();
+        UserAppropiate UserAppropiate;
+        List<AssetStatistic> stats = moduleManager.getWalletStatisticsByAsset(walletPublicKey, digitalAsset.getName());
+        for (AssetStatistic stat :
+                stats) {
+            if (stat.getStatus().equals(AssetCurrentStatus.ASSET_APPROPRIATED)) {
+                UserAppropiate = new UserAppropiate(stat.getRedeemPoint().getName(), new Timestamp(stat.getDistributionDate().getTime()), stat.getStatus().getCode());
+                users.add(UserAppropiate);
+            }
         }
         return users;
     }
