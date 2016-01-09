@@ -1,13 +1,19 @@
 package com.bitdubai.android_core.app;
 
+import android.app.Notification;
+import android.app.NotificationManager;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.RemoteViews;
 import android.widget.Toast;
 
+import com.bitdubai.android_core.app.common.version_1.ApplicationConstants;
+import com.bitdubai.android_core.app.common.version_1.NotificationService;
 import com.bitdubai.android_core.app.common.version_1.connections.ConnectionConstants;
 import com.bitdubai.fermat.R;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.ActivityType;
@@ -68,6 +74,23 @@ public class DesktopActivity extends FermatActivity implements FermatScreenSwapp
 //
 //            }
 //        }
+
+//        Intent i= new Intent(this, NotificationService.class);
+//// potentially add data to the intent
+//        startService(i);
+
+
+        RemoteViews mContentView = new RemoteViews(getPackageName(), R.layout.test_tt);
+        Notification notification = new Notification.Builder(this).setSmallIcon(R.drawable.fermat_bitcoin2).setTicker("ticker")
+                .setPriority(Notification.PRIORITY_HIGH)
+                .setAutoCancel(false)
+                .setOngoing(true)
+                .setContent(mContentView)
+                .setWhen(System.currentTimeMillis()).build();
+
+        NotificationManager mNotificationManager =
+                (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+        mNotificationManager.notify(3,notification);
         try {
 
             loadUI();
@@ -84,6 +107,8 @@ public class DesktopActivity extends FermatActivity implements FermatScreenSwapp
     }
     @Override
     protected void onDestroy() {
+        NotificationManager nMgr = (NotificationManager) getApplicationContext().getSystemService( Context.NOTIFICATION_SERVICE);
+        nMgr.cancel(3);
         super.onDestroy();
 
         unbindDrawables(findViewById(R.id.drawer_layout));
