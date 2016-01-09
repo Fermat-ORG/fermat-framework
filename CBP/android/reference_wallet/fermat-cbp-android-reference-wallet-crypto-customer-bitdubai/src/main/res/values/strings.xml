@@ -99,4 +99,33 @@
     <string name="ccw_settings_locations_description">You must have at least one location to make your transactions</string>
     <string name="ccw_settings_locations_title">Manage Your Locations</string>
     <string name="ccw_save">Save</string>
+    <string name="ccw_amount_to_sell">Amount to Sell</string>
+
+    <string name="add_a_note_button">ADD A NOTE</string>
+    <string name="amount">Amount</string>
+    <string name="broker_bank_account_title">Broker Bank Accounts</string>
+    <string name="broker_locations_title">Broker Locations</string>
+    <string name="customer_locations_title">Customer Locations</string>
+    <string name="customer_bank_account_title">Customer Bank Accounts</string>
+    <string name="delivery_date_title">Delivery Date</string>
+    <string name="delivery_date_text">Delivery Date: </string>
+    <string name="exchange_rate_reference">Exchange Rate Reference</string>
+    <string name="expiration_date_text">Expiration Date:</string>
+    <string name="expiration_date_title">Negotiation Expiration Date</string>
+    <string name="market_exchange_rate">MARKET EXCHANGE RATE</string>
+    <string name="notes">Notes</string>
+    <string name="payment_methods_title">Payment Methods</string>
+    <string name="payment_method">Method: </string>
+    <string name="payment_date_text">Payment Date: </string>
+    <string name="payment_date_title">PAYMENT DATE</string>
+    <string name="payment_date">Payment Date: </string>
+    <string name="selling_text">Selling: </string>
+    <string name="selected_bank_account">Selected Bank Account: </string>
+    <string name="selected_location">Selected Location: </string>
+    <string name="status_confirm">CONFIRM</string>
+    <string name="status_accepted">ACCEPTED</string>
+    <string name="status_changed">CHANGED</string>
+    <string name="suggested_exchange_rate">Suggested:</string>
+    <string name="you_will_receive_amount">You will receive: </string>
+    <string name="yours">Yours:</string>
 </resources>
