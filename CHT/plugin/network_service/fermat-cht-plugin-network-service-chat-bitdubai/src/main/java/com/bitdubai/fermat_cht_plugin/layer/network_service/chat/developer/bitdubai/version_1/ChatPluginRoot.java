@@ -112,6 +112,9 @@ public class ChatPluginRoot extends AbstractPlugin implements
     private WsCommunicationsCloudClientManager wsCommunicationsCloudClientManager;
 
 
+    private List<PlatformComponentProfile> registeredComponentList;
+
+
     public EventManager getEventManager() {
         return eventManager;
     }
@@ -151,7 +154,6 @@ public class ChatPluginRoot extends AbstractPlugin implements
                 ", outgoinChatMetaDataDao=" + outgoinChatMetaDataDao +
                 ", platformComponentType=" + platformComponentType +
                 ", communicationNetworkServiceConnectionManager=" + communicationNetworkServiceConnectionManager +
-                ", platformComponentProfilePluginRoot=" + platformComponentProfilePluginRoot +
                 ", remoteNetworkServicesRegisteredList=" + remoteNetworkServicesRegisteredList +
                 ", communicationNetworkServiceDeveloperDatabaseFactory=" + communicationNetworkServiceDeveloperDatabaseFactory +
                 '}';
@@ -226,8 +228,6 @@ public class ChatPluginRoot extends AbstractPlugin implements
 
      */
     private CommunicationNetworkServiceConnectionManager communicationNetworkServiceConnectionManager;
-
-    private PlatformComponentProfile platformComponentProfilePluginRoot;
 
 
     /**
@@ -323,16 +323,17 @@ public class ChatPluginRoot extends AbstractPlugin implements
         return remoteNetworkServicesRegisteredList;
     }
 
+
     @Override
     public void requestRemoteNetworkServicesRegisteredList(DiscoveryQueryParameters discoveryQueryParameters) {
-        System.out.println(" TemplateNetworkServiceRoot - requestRemoteNetworkServicesRegisteredList");
+        System.out.println("ChatPluginRoot - TemplateNetworkServiceRoot - requestRemoteNetworkServicesRegisteredList");
 
          /*
          * Request the list of component registers
          */
         try {
 
-            wsCommunicationsCloudClientManager.getCommunicationsCloudClientConnection().requestListComponentRegistered(platformComponentProfilePluginRoot, discoveryQueryParameters);
+            wsCommunicationsCloudClientManager.getCommunicationsCloudClientConnection().requestListComponentRegistered(platformComponentProfile, discoveryQueryParameters);
 
         } catch (CantRequestListException e) {
 
@@ -371,13 +372,13 @@ public class ChatPluginRoot extends AbstractPlugin implements
 
     @Override
     public DiscoveryQueryParameters constructDiscoveryQueryParamsFactory(PlatformComponentType platformComponentType, NetworkServiceType networkServiceType, String alias, String identityPublicKey, Location location, Double distance, String name, String extraData, Integer firstRecord, Integer numRegister, PlatformComponentType fromOtherPlatformComponentType, NetworkServiceType fromOtherNetworkServiceType) {
-        return wsCommunicationsCloudClientManager.getCommunicationsCloudClientConnection().constructDiscoveryQueryParamsFactory(platformComponentType,
-                networkServiceType, alias, identityPublicKey, location, distance, name, extraData, firstRecord, numRegister, fromOtherPlatformComponentType, fromOtherNetworkServiceType);
+        System.out.println("ChatPluginRoot - constructDiscoveryQueryParamsFactory");
+        return wsCommunicationsCloudClientManager.getCommunicationsCloudClientConnection().constructDiscoveryQueryParamsFactory(platformComponentType, networkServiceType, alias, identityPublicKey, location, distance, name, extraData, firstRecord, numRegister, fromOtherPlatformComponentType, fromOtherNetworkServiceType);
     }
 
     @Override
     public void handleCompleteComponentRegistrationNotificationEvent(PlatformComponentProfile platformComponentProfileRegistered) {
-        System.out.println(" CommunicationNetworkServiceConnectionManager - Starting method handleCompleteComponentRegistrationNotificationEvent");
+        System.out.println("ChatPLuginRoot - CommunicationNetworkServiceConnectionManager - Starting method handleCompleteComponentRegistrationNotificationEvent");
 
         /*
          * If the component registered have my profile and my identity public key
@@ -400,11 +401,11 @@ public class ChatPluginRoot extends AbstractPlugin implements
                     getCommunicationsCloudClientConnection().
                     constructDiscoveryQueryParamsFactory(PlatformComponentType.NETWORK_SERVICE, //applicant = who made the request
                             NetworkServiceType.CHAT,
-                            null,                     // alias
-                            null,                     // identityPublicKey
+                            this.getAlias(),                     // alias
+                            identity.getPublicKey(),                     // identityPublicKey
                             null,                     // location
                             null,                     // distance
-                            null,                     // name
+                            this.getName(),                     // name
                             null,                     // extraData
                             null,                     // offset
                             null,                     // max
@@ -476,12 +477,12 @@ public class ChatPluginRoot extends AbstractPlugin implements
 
     @Override
     public boolean isRegister() {
-        return false;
+        return this.register;
     }
 
     @Override
     public void setPlatformComponentProfilePluginRoot(PlatformComponentProfile platformComponentProfile) {
-
+        this.platformComponentProfile = platformComponentProfile;
     }
 
     /**
@@ -518,17 +519,17 @@ public class ChatPluginRoot extends AbstractPlugin implements
 
     @Override
     public List<DeveloperDatabase> getDatabaseList(DeveloperObjectFactory developerObjectFactory) {
-        return null;
+        return communicationNetworkServiceDeveloperDatabaseFactory.getDatabaseList(developerObjectFactory);
     }
 
     @Override
     public List<DeveloperDatabaseTable> getDatabaseTableList(DeveloperObjectFactory developerObjectFactory, DeveloperDatabase developerDatabase) {
-        return null;
+        return communicationNetworkServiceDeveloperDatabaseFactory.getDatabaseTableList(developerObjectFactory);
     }
 
     @Override
     public List<DeveloperDatabaseTableRecord> getDatabaseTableContent(DeveloperObjectFactory developerObjectFactory, DeveloperDatabase developerDatabase, DeveloperDatabaseTable developerDatabaseTable) {
-        return null;
+        return communicationNetworkServiceDeveloperDatabaseFactory.getDatabaseTableContent(developerObjectFactory, developerDatabaseTable);
     }
 
     @Override
@@ -611,14 +612,6 @@ public class ChatPluginRoot extends AbstractPlugin implements
             throw new CantStartPluginException(CantStartPluginException.DEFAULT_MESSAGE, FermatException.wrapException(exception), context, possibleCause);
         }
 
-    }
-    /**
-     * Set the PlatformComponentProfile
-     *
-     * @param platformComponentProfile
-     */
-    public void setPlatformComponentProfile(PlatformComponentProfile platformComponentProfile) {
-        this.platformComponentProfilePluginRoot = platformComponentProfile;
     }
 
     /**

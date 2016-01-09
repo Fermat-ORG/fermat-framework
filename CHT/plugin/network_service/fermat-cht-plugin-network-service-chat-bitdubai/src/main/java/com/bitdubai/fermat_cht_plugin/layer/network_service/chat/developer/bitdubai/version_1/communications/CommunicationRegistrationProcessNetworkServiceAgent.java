@@ -48,13 +48,9 @@ public class CommunicationRegistrationProcessNetworkServiceAgent extends Thread 
      * @param communicationsClientConnection
      */
     public CommunicationRegistrationProcessNetworkServiceAgent(ChatPluginRoot networkService, CommunicationsClientConnection communicationsClientConnection) {
-        try{
             this.networkService = networkService;
             this.communicationsClientConnection = communicationsClientConnection;
             this.active = Boolean.FALSE;
-        }catch (Exception e){
-            System.out.println("ChatPluginRoot - CommunicationRegistrationProcessNetworkServiceAgent Error:"+ e.getMessage());
-        }
     }
 
     /**
