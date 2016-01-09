@@ -869,11 +869,11 @@ public abstract class FermatActivity extends AppCompatActivity
                     (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
             mNotificationManager.notify(NOTIFICATION_ID, notification.build());
         } else {
-            if(getCloudClient().getCommunicationsCloudClientConnection().isConnected()){
-                launchIntent("running");
-            }else{
-                launchIntent("closed");
-            }
+//            if(getCloudClient().getCommunicationsCloudClientConnection().isConnected()){
+//                launchIntent("running");
+//            }else{
+//                launchIntent("closed");
+//            }
 
         }
     }

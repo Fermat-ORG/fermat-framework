@@ -187,9 +187,9 @@ public class ContactsFragment extends AbstractFermatFragment implements FermatLi
             mListItems = new ArrayList<Object>();
             onRefresh();
             Handler handlerTimer = new Handler();
-            handlerTimer.postDelayed(new Runnable(){
+            handlerTimer.postDelayed(new Runnable() {
                 public void run() {
-                    if(walletContactRecords.isEmpty()){
+                    if (walletContactRecords.isEmpty()) {
                         rootView.findViewById(R.id.fragment_container2).setVisibility(View.GONE);
                         try {
                             setUpTutorial();
@@ -198,10 +198,11 @@ public class ContactsFragment extends AbstractFermatFragment implements FermatLi
                         } catch (SettingsNotFoundException e) {
                             e.printStackTrace();
                         }
-                    }else{
+                    } else {
                         rootView.findViewById(R.id.fragment_container2).setVisibility(View.VISIBLE);
                     }
-                }}, 300);
+                }
+            }, 300);
             return rootView;
         } catch (Exception e){
             makeText(getActivity(), "Oooops! recovering from system error", Toast.LENGTH_SHORT).show();
@@ -295,12 +296,14 @@ public class ContactsFragment extends AbstractFermatFragment implements FermatLi
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         try {
-            super.onActivityCreated(savedInstanceState);
+            super.onActivityCreated(new Bundle());
         } catch (Exception e){
             makeText(getActivity(), "Oooops! recovering from system error", Toast.LENGTH_SHORT).show();
             referenceWalletSession.getErrorManager().reportUnexpectedUIException(UISource.VIEW, UnexpectedUIExceptionSeverity.CRASH, e);
         }
     }
+
+
 
 
     @Override
@@ -855,6 +858,7 @@ public class ContactsFragment extends AbstractFermatFragment implements FermatLi
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(  requestCode, resultCode, data);
         if (resultCode == Activity.RESULT_OK) {
             contactImageBitmap = null;
             switch (requestCode) {
@@ -881,6 +885,7 @@ public class ContactsFragment extends AbstractFermatFragment implements FermatLi
 
         }
     }
+
 
     private void dispatchTakePictureIntent() {
         Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
