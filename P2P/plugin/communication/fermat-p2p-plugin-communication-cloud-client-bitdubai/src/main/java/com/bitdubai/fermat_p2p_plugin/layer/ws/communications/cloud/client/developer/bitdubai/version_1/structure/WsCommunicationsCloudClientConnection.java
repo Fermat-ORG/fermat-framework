@@ -48,6 +48,7 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.google.gson.reflect.TypeToken;
 
+import org.java_websocket.WebSocket;
 import org.java_websocket.drafts.Draft_10;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
@@ -276,17 +277,17 @@ public class WsCommunicationsCloudClientConnection implements CommunicationsClie
     @Override
     public void registerComponentForCommunication(NetworkServiceType networkServiceNetworkServiceTypeApplicant, PlatformComponentProfile platformComponentProfile) throws CantRegisterComponentException {
 
-        try {
-
-            System.out.println("WsCommunicationsCloudClientConnection - registerComponentForCommunication");
+        System.out.println("WsCommunicationsCloudClientConnection - registerComponentForCommunication");
 
             /*
              * Validate parameter
              */
-            if (platformComponentProfile == null){
+        if (platformComponentProfile == null){
 
-                throw new IllegalArgumentException("The platformComponentProfile is required, can not be null");
-            }
+            throw new IllegalArgumentException("The platformComponentProfile is required, can not be null");
+        }
+
+        try {
 
             Gson gson = new Gson();
             JsonObject jsonObject = new JsonObject();
@@ -305,14 +306,22 @@ public class WsCommunicationsCloudClientConnection implements CommunicationsClie
 
             String fermatPacketEncode = FermatPacketEncoder.encode(fermatPacket);
 
-            /*
-             * Send the encode packet to the server
-             */
-            wsCommunicationsCloudClientChannel.send(fermatPacketEncode);
+            System.out.println("WsCommunicationsCloudClientConnection - wsCommunicationsCloudClientChannel.getReadyState() " + wsCommunicationsCloudClientChannel.getReadyState());
+            if (wsCommunicationsCloudClientChannel.getReadyState() == WebSocket.READYSTATE.OPEN){
+
+                /*
+                 * Send the encode packet to the server
+                 */
+                wsCommunicationsCloudClientChannel.send(fermatPacketEncode);
+
+            }else{
+                wsCommunicationsCloudClientChannel.raiseClientConnectionLooseNotificationEvent();
+                throw new Exception("Client Connection is Close");
+            }
 
 
         }catch (Exception e){
-
+            System.out.println("WsCommunicationsCloudClientConnection - Client Connection possibly is Close :"+e);
             CantRegisterComponentException pluginStartException = new CantRegisterComponentException(CantRegisterComponentException.DEFAULT_MESSAGE, e, e.getLocalizedMessage(), e.getLocalizedMessage());
             throw pluginStartException;
 
@@ -327,17 +336,18 @@ public class WsCommunicationsCloudClientConnection implements CommunicationsClie
     @Override
     public void updateRegisterActorProfile(NetworkServiceType networkServiceNetworkServiceTypeApplicant, PlatformComponentProfile platformComponentProfile) throws CantRegisterComponentException {
 
-        try {
 
-            System.out.println("WsCommunicationsCloudClientConnection - registerComponentForCommunication");
+        System.out.println("WsCommunicationsCloudClientConnection - registerComponentForCommunication");
 
             /*
              * Validate parameter
              */
-            if (platformComponentProfile == null){
+        if (platformComponentProfile == null){
 
-                throw new IllegalArgumentException("The platformComponentProfile is required, can not be null");
-            }
+            throw new IllegalArgumentException("The platformComponentProfile is required, can not be null");
+        }
+
+        try {
 
             Gson gson = new Gson();
             JsonObject jsonObject = new JsonObject();
@@ -356,14 +366,22 @@ public class WsCommunicationsCloudClientConnection implements CommunicationsClie
 
             String fermatPacketEncode = FermatPacketEncoder.encode(fermatPacket);
 
-            /*
-             * Send the encode packet to the server
-             */
-            wsCommunicationsCloudClientChannel.send(fermatPacketEncode);
+            System.out.println("WsCommunicationsCloudClientConnection - wsCommunicationsCloudClientChannel.getReadyState() "+wsCommunicationsCloudClientChannel.getReadyState());
+            if (wsCommunicationsCloudClientChannel.getReadyState() == WebSocket.READYSTATE.OPEN){
+
+                /*
+                 * Send the encode packet to the server
+                 */
+                wsCommunicationsCloudClientChannel.send(fermatPacketEncode);
+
+            }else{
+                wsCommunicationsCloudClientChannel.raiseClientConnectionLooseNotificationEvent();
+                throw new Exception("Client Connection is Close");
+            }
 
 
         }catch (Exception e){
-
+            System.out.println("WsCommunicationsCloudClientConnection - Client Connection possibly is Close :"+e);
             CantRegisterComponentException pluginStartException = new CantRegisterComponentException(CantRegisterComponentException.DEFAULT_MESSAGE, e, e.getLocalizedMessage(), e.getLocalizedMessage());
             throw pluginStartException;
 
@@ -378,17 +396,17 @@ public class WsCommunicationsCloudClientConnection implements CommunicationsClie
     @Override
     public void requestListComponentRegistered(PlatformComponentProfile networkServiceApplicant, DiscoveryQueryParameters discoveryQueryParameters) throws CantRequestListException {
 
+        System.out.println("WsCommunicationsCloudClientConnection - requestListComponentRegistered");
+
+        /*
+         * Validate parameter
+         */
+        if (discoveryQueryParameters == null || networkServiceApplicant == null){
+
+            throw new IllegalArgumentException("The argument are required, can not be null");
+        }
+
         try {
-
-                System.out.println("WsCommunicationsCloudClientConnection - requestListComponentRegistered");
-
-                /*
-                 * Validate parameter
-                 */
-                if (discoveryQueryParameters == null){
-
-                    throw new IllegalArgumentException("The discoveryQueryParameters is required, can not be null");
-                }
 
                 Gson gson = new Gson();
                 JsonObject jsonObject = new JsonObject();
@@ -404,13 +422,21 @@ public class WsCommunicationsCloudClientConnection implements CommunicationsClie
                         FermatPacketType.REQUEST_LIST_COMPONENT_REGISTERED,                      //Packet type
                         wsCommunicationsCloudClientChannel.getClientIdentity().getPrivateKey()); //Sender private key
 
+            System.out.println("WsCommunicationsCloudClientConnection - wsCommunicationsCloudClientChannel.getReadyState() "+wsCommunicationsCloudClientChannel.getReadyState());
+            if (wsCommunicationsCloudClientChannel.getReadyState() == WebSocket.READYSTATE.OPEN){
+
                 /*
                  * Send the encode packet to the server
                  */
                 wsCommunicationsCloudClientChannel.send(FermatPacketEncoder.encode(fermatPacketRespond));
 
-        }catch (Exception e){
+            }else{
+                wsCommunicationsCloudClientChannel.raiseClientConnectionLooseNotificationEvent();
+                throw new Exception("Client Connection is Close");
+            }
 
+        }catch (Exception e){
+            System.out.println("WsCommunicationsCloudClientConnection - Client Connection possibly is Close :"+e);
             CantRequestListException pluginStartException = new CantRequestListException(CantRequestListException.DEFAULT_MESSAGE, e, e.getLocalizedMessage(), e.getLocalizedMessage());
             throw pluginStartException;
 
@@ -428,14 +454,14 @@ public class WsCommunicationsCloudClientConnection implements CommunicationsClie
         System.out.println("WsCommunicationsCloudClientConnection - new requestListComponentRegistered");
         List<PlatformComponentProfile> resultList = new ArrayList<>();
 
-        try {
+        /*
+         * Validate parameter
+         */
+        if (discoveryQueryParameters == null){
+            throw new IllegalArgumentException("The discoveryQueryParameters is required, can not be null");
+        }
 
-            /*
-             * Validate parameter
-             */
-            if (discoveryQueryParameters == null){
-                throw new IllegalArgumentException("The discoveryQueryParameters is required, can not be null");
-            }
+        try {
 
             /*
              * Construct a jsonObject whit the parameters
@@ -503,19 +529,20 @@ public class WsCommunicationsCloudClientConnection implements CommunicationsClie
     public List<PlatformComponentProfile> requestListComponentRegisteredSocket(DiscoveryQueryParameters discoveryQueryParameters) throws CantRequestListException{
 
         System.out.println("WsCommunicationsCloudClientConnection - new requestListComponentRegistered");
+
+        /*
+         * Validate parameter
+         */
+        if (discoveryQueryParameters == null){
+            throw new IllegalArgumentException("The discoveryQueryParameters is required, can not be null");
+        }
+
         List<PlatformComponentProfile> resultList = new ArrayList<>();
         Socket clientConnect = null;
         BufferedReader bufferedReader=null;
         PrintWriter printWriter=null;
 
         try {
-
-            /*
-             * Validate parameter
-             */
-            if (discoveryQueryParameters == null){
-                throw new IllegalArgumentException("The discoveryQueryParameters is required, can not be null");
-            }
 
             /*
              * Construct a jsonObject whit the parameters
@@ -584,63 +611,71 @@ public class WsCommunicationsCloudClientConnection implements CommunicationsClie
     @Override
     public void requestVpnConnection(PlatformComponentProfile applicant, PlatformComponentProfile remoteDestination) throws CantEstablishConnectionException {
 
+        System.out.println("WsCommunicationsCloudClientConnection - requestVpnConnection");
+
+        /*
+         * Validate parameter
+         */
+        if (applicant == null || remoteDestination == null){
+
+            throw new IllegalArgumentException("All parameters are required, can not be null");
+        }
 
         try{
 
-                System.out.println("WsCommunicationsCloudClientConnection - requestVpnConnection");
+            List<PlatformComponentProfile> participants = new ArrayList();
+            participants.add(applicant);
+            participants.add(remoteDestination);
 
-                /*
-                 * Validate parameter
-                 */
-                if (applicant == null || remoteDestination == null){
+            /**
+             * Validate all are the same type and NETWORK_SERVICE
+             */
+            for (PlatformComponentProfile participant: participants) {
 
-                    throw new IllegalArgumentException("All parameters are required, can not be null");
+                if (participant.getPlatformComponentType() != PlatformComponentType.NETWORK_SERVICE){
+                    throw new IllegalArgumentException("All the PlatformComponentProfile has to be NETWORK_SERVICE ");
                 }
 
-                List<PlatformComponentProfile> participants = new ArrayList();
-                participants.add(applicant);
-                participants.add(remoteDestination);
-
-                /**
-                 * Validate all are the same type and NETWORK_SERVICE
-                 */
-                for (PlatformComponentProfile participant: participants) {
-
-                    if (participant.getPlatformComponentType() != PlatformComponentType.NETWORK_SERVICE){
-                        throw new IllegalArgumentException("All the PlatformComponentProfile has to be NETWORK_SERVICE ");
-                    }
-
-                    if (participant.getNetworkServiceType() != applicant.getNetworkServiceType()){
-                        throw new IllegalArgumentException("All the PlatformComponentProfile has to be the same type of network service type ");
-                    }
+                if (participant.getNetworkServiceType() != applicant.getNetworkServiceType()){
+                    throw new IllegalArgumentException("All the PlatformComponentProfile has to be the same type of network service type ");
                 }
+            }
 
-                /*
-                 * Construct the json object
-                 */
-                Gson gson = new Gson();
+            /*
+             * Construct the json object
+             */
+            Gson gson = new Gson();
 
-                /*
-                 * Convert to json representation
-                 */
-                String jsonListRepresentation = gson.toJson(participants, new TypeToken<List<PlatformComponentProfileCommunication>>() {
-                }.getType());
+            /*
+             * Convert to json representation
+             */
+            String jsonListRepresentation = gson.toJson(participants, new TypeToken<List<PlatformComponentProfileCommunication>>() {
+            }.getType());
 
-                 /*
-                 * Construct a fermat packet whit the request
-                 */
-                FermatPacket fermatPacketRespond = FermatPacketCommunicationFactory.constructFermatPacketEncryptedAndSinged(wsCommunicationsCloudClientChannel.getServerIdentity(),                  //Destination
-                                                                                                                            wsCommunicationsCloudClientChannel.getClientIdentity().getPublicKey(),   //Sender
-                                                                                                                            jsonListRepresentation,                                                  //Message Content
-                                                                                                                            FermatPacketType.COMPONENT_CONNECTION_REQUEST,                           //Packet type
-                                                                                                                            wsCommunicationsCloudClientChannel.getClientIdentity().getPrivateKey()); //Sender private key
+             /*
+             * Construct a fermat packet whit the request
+             */
+            FermatPacket fermatPacketRespond = FermatPacketCommunicationFactory.constructFermatPacketEncryptedAndSinged(wsCommunicationsCloudClientChannel.getServerIdentity(),                  //Destination
+                                                                                                                        wsCommunicationsCloudClientChannel.getClientIdentity().getPublicKey(),   //Sender
+                                                                                                                        jsonListRepresentation,                                                  //Message Content
+                                                                                                                        FermatPacketType.COMPONENT_CONNECTION_REQUEST,                           //Packet type
+                                                                                                                        wsCommunicationsCloudClientChannel.getClientIdentity().getPrivateKey()); //Sender private key
+
+
+            System.out.println("WsCommunicationsCloudClientConnection - wsCommunicationsCloudClientChannel.getReadyState() "+wsCommunicationsCloudClientChannel.getReadyState());
+            if (wsCommunicationsCloudClientChannel.getReadyState() == WebSocket.READYSTATE.OPEN){
                 /*
                  * Send the encode packet to the server
                  */
                 wsCommunicationsCloudClientChannel.send(FermatPacketEncoder.encode(fermatPacketRespond));
 
-        }catch (Exception e){
+            }else{
+                wsCommunicationsCloudClientChannel.raiseClientConnectionLooseNotificationEvent();
+                throw new Exception("Client Connection is Close");
+            }
 
+        }catch (Exception e){
+            System.out.println("WsCommunicationsCloudClientConnection - Client Connection possibly is Close :"+e);
             CantEstablishConnectionException pluginStartException = new CantEstablishConnectionException(CantEstablishConnectionException.DEFAULT_MESSAGE, e, e.getLocalizedMessage(), e.getLocalizedMessage());
             throw pluginStartException;
 
@@ -655,23 +690,23 @@ public class WsCommunicationsCloudClientConnection implements CommunicationsClie
     @Override
     public void requestDiscoveryVpnConnection(PlatformComponentProfile applicantParticipant, PlatformComponentProfile applicantNetworkService, PlatformComponentProfile remoteParticipant) throws CantEstablishConnectionException{
 
-        try {
-
-            System.out.println("WsCommunicationsCloudClientConnection - requestDiscoveryVpnConnection");
+        System.out.println("WsCommunicationsCloudClientConnection - requestDiscoveryVpnConnection");
 
             /*
              * Validate parameter
              */
-            if (applicantParticipant == null || applicantNetworkService == null || remoteParticipant == null){
+        if (applicantParticipant == null || applicantNetworkService == null || remoteParticipant == null){
 
-                throw new IllegalArgumentException("All parameters are required, can not be null");
-            }
+            throw new IllegalArgumentException("All parameters are required, can not be null");
+        }
+
+        try {
 
             /*
              * Validate are the  type NETWORK_SERVICE
              */
             if (applicantNetworkService.getPlatformComponentType() != PlatformComponentType.NETWORK_SERVICE){
-                throw new IllegalArgumentException("All the PlatformComponentProfile has to be NETWORK_SERVICE ");
+                throw new IllegalArgumentException("The PlatformComponentProfile of the applicantNetworkService has to be NETWORK_SERVICE ");
             }
 
             /*
@@ -696,16 +731,25 @@ public class WsCommunicationsCloudClientConnection implements CommunicationsClie
                                                                                                                         packetContentJson,                                                  //Message Content
                                                                                                                         FermatPacketType.DISCOVERY_COMPONENT_CONNECTION_REQUEST,                 //Packet type
                                                                                                                         wsCommunicationsCloudClientChannel.getClientIdentity().getPrivateKey()); //Sender private key
-            /*
-             * Send the encode packet to the server
-             */
-            wsCommunicationsCloudClientChannel.send(FermatPacketEncoder.encode(fermatPacketRespond));
+
+
+            System.out.println("WsCommunicationsCloudClientConnection - wsCommunicationsCloudClientChannel.getReadyState() " + wsCommunicationsCloudClientChannel.getReadyState());
+            if (wsCommunicationsCloudClientChannel.getReadyState() == WebSocket.READYSTATE.OPEN){
+
+                /*
+                 * Send the encode packet to the server
+                 */
+                wsCommunicationsCloudClientChannel.send(FermatPacketEncoder.encode(fermatPacketRespond));
+
+            }else{
+                wsCommunicationsCloudClientChannel.raiseClientConnectionLooseNotificationEvent();
+                throw new Exception("Client Connection is Close");
+            }
 
         }catch (Exception e){
-
+            System.out.println("WsCommunicationsCloudClientConnection - Client Connection possibly is Close :"+e);
             CantEstablishConnectionException pluginStartException = new CantEstablishConnectionException(CantEstablishConnectionException.DEFAULT_MESSAGE, e, e.getLocalizedMessage(), e.getLocalizedMessage());
             throw pluginStartException;
-
         }
 
     }
