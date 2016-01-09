@@ -15,7 +15,7 @@ import java.util.UUID;
 /**
  * Created by Yordin Alayn on 16.12.15.
  */
-public class CustomerBrokerNewPurchaseNegotiationTransaction {
+public class    CustomerBrokerNewPurchaseNegotiationTransaction {
 
     /*Represent the Negotiation Purchase*/
     private CustomerBrokerPurchaseNegotiationManager    customerBrokerPurchaseNegotiationManager;

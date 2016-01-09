@@ -9,6 +9,7 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTable;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTableRecord;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantCreateDatabaseException;
+import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantDeleteRecordException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantInsertRecordException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantLoadTableToMemoryException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantOpenDatabaseException;
@@ -127,14 +128,14 @@ public class CustomerBrokerNewNegotiationTransactionDatabaseDao {
 
             List<DatabaseTableRecord> record;
             DatabaseTable table = this.database.getTable(CustomerBrokerNewNegotiationTransactionDatabaseConstants.CUSTOMER_BROKER_NEW_TABLE_NAME);
-            if (table == null) {
+            if (table == null)
                 throw new CantGetUserDeveloperIdentitiesException("Cant check if customer broker new exists", "Customer Broker New Negotiation Transaction", "");
-            }
+
             table.addUUIDFilter(CustomerBrokerNewNegotiationTransactionDatabaseConstants.CUSTOMER_BROKER_NEW_TRANSACTION_ID_COLUMN_NAME, transactionId, DatabaseFilterType.EQUAL);
             table.loadToMemory();
             record = table.getRecords();
             if (record.size() == 0)
-                throw new CantRegisterCustomerBrokerNewNegotiationTransactionException("The number of records is 0 ", null, "", "");
+                return getTransaction;
 
             for (DatabaseTableRecord records : record) {
                 getTransaction = getCustomerBrokerNewFromRecord(records);
@@ -157,14 +158,14 @@ public class CustomerBrokerNewNegotiationTransactionDatabaseDao {
 
             List<DatabaseTableRecord> record;
             DatabaseTable table = this.database.getTable(CustomerBrokerNewNegotiationTransactionDatabaseConstants.CUSTOMER_BROKER_NEW_TABLE_NAME);
-            if (table == null) {
+            if (table == null)
                 throw new CantGetUserDeveloperIdentitiesException("Cant check if customer broker new exists", "Customer Broker New Negotiation Transaction", "");
-            }
+
             table.addUUIDFilter(CustomerBrokerNewNegotiationTransactionDatabaseConstants.CUSTOMER_BROKER_NEW_NEGOTIATION_ID_COLUMN_NAME, negotiationId, DatabaseFilterType.EQUAL);
             table.loadToMemory();
             record = table.getRecords();
             if (record.size() == 0)
-                throw new CantRegisterCustomerBrokerNewNegotiationTransactionException("The number of records is 0 ", null, "", "");
+                return getTransaction;
 
             for (DatabaseTableRecord records : record) {
                 getTransaction = getCustomerBrokerNewFromRecord(records);
@@ -187,13 +188,13 @@ public class CustomerBrokerNewNegotiationTransactionDatabaseDao {
 
             List<DatabaseTableRecord> record;
             DatabaseTable table = this.database.getTable(CustomerBrokerNewNegotiationTransactionDatabaseConstants.CUSTOMER_BROKER_NEW_TABLE_NAME);
-            if (table == null) {
+            if (table == null)
                 throw new CantGetUserDeveloperIdentitiesException("Cant check if customer broker new exists", "Customer Broker New Negotiation Transaction", "");
-            }
+
             table.loadToMemory();
             record = table.getRecords();
             if (record.size() == 0)
-                throw new CantRegisterCustomerBrokerNewNegotiationTransactionException("The number of records is 0 ", null, "", "");
+                return getTransactions;
 
             for (DatabaseTableRecord records : record) {
                 getTransactions.add(getCustomerBrokerNewFromRecord(records));
@@ -216,9 +217,9 @@ public class CustomerBrokerNewNegotiationTransactionDatabaseDao {
 
             List<DatabaseTableRecord> record;
             DatabaseTable table = this.database.getTable(CustomerBrokerNewNegotiationTransactionDatabaseConstants.CUSTOMER_BROKER_NEW_TABLE_NAME);
-            if (table == null) {
+            if (table == null)
                 throw new CantGetUserDeveloperIdentitiesException("Cant check if customer broker new exists", "Customer Broker New Negotiation Transaction", "");
-            }
+
             table.addStringFilter(CustomerBrokerNewNegotiationTransactionDatabaseConstants.CUSTOMER_BROKER_NEW_STATUS_TRANSACTION_COLUMN_NAME, NegotiationTransactionStatus.PENDING_SUBMIT.getCode(), DatabaseFilterType.EQUAL);
             table.loadToMemory();
             record = table.getRecords();
@@ -346,6 +347,21 @@ public class CustomerBrokerNewNegotiationTransactionDatabaseDao {
                     "Cannot load the database table");
         }
 
+    }
+
+    //DELETE METHOD FOR TEST
+    public void deleteAllForTest() throws CantRegisterCustomerBrokerNewNegotiationTransactionException {
+        try {
+
+            DatabaseTable table = this.database.getTable(CustomerBrokerNewNegotiationTransactionDatabaseConstants.CUSTOMER_BROKER_NEW_TABLE_NAME);
+            DatabaseTableRecord record = table.getEmptyRecord();
+            table.deleteRecord(record);
+
+        } catch (CantDeleteRecordException e) {
+            throw new CantRegisterCustomerBrokerNewNegotiationTransactionException(e.getMessage(), e, "Crypto Customer Actor, Customer Identity Wallet Relationship", "Cant delete Customer Identity Wallet Relationship, delete database problems.");
+        } catch (Exception e) {
+            throw new CantRegisterCustomerBrokerNewNegotiationTransactionException(e.getMessage(), FermatException.wrapException(e), "Crypto Customer Actor, Customer Identity Wallet Relationship", "Cant delete Customer Identity Wallet Relationship, unknown failure.");
+        }
     }
 
     /*PUBLIC METHOD*/

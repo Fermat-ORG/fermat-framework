@@ -71,25 +71,6 @@ public class CustomerBrokerNewManagerImpl implements CustomerBrokerNewManager {
     }
 
     @Override
-    public void createCustomerBrokerNewSaleNegotiationTranasction(CustomerBrokerSaleNegotiation customerBrokerSaleNegotiation) throws CantCreateCustomerBrokerNewSaleNegotiationTransactionException {
-
-        try {
-
-            customerBrokerNewSaleNegotiationTransaction = new CustomerBrokerNewSaleNegotiationTransaction(
-                    customerBrokerSaleNegotiationManager,
-                    customerBrokerNewNegotiationTransactionDatabaseDao
-            );
-            customerBrokerNewSaleNegotiationTransaction.sendSaleNegotiationTranasction(customerBrokerSaleNegotiation);
-
-        } catch (CantNewSaleNegotiationTransactionException e){
-            throw new CantCreateCustomerBrokerNewSaleNegotiationTransactionException(e.getMessage(), e, CantCreateCustomerBrokerNewSaleNegotiationTransactionException.DEFAULT_MESSAGE, "ERROR CREATE CUSTOMER BROKER NEW SALE NEGOTIATION TRANSACTION, UNKNOWN FAILURE.");
-        } catch (Exception e){
-            throw new CantCreateCustomerBrokerNewSaleNegotiationTransactionException(e.getMessage(), FermatException.wrapException(e), CantCreateCustomerBrokerNewSaleNegotiationTransactionException.DEFAULT_MESSAGE, "ERROR CREATE CUSTOMER BROKER NEW SALE NEGOTIATION TRANSACTION, UNKNOWN FAILURE.");
-        }
-
-    }
-
-    @Override
     public CustomerBrokerNew getCustomerBrokerNewNegotiationTranasction(UUID transactionId) throws CantGetCustomerBrokerNewNegotiationTransactionException{
 
         try {

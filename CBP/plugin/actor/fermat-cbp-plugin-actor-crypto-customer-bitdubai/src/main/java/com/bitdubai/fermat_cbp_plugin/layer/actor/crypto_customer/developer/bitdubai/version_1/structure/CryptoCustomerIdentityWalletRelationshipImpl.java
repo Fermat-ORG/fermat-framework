@@ -25,6 +25,7 @@ public class CryptoCustomerIdentityWalletRelationshipImpl implements CryptoCusto
     }
 
     //RELATIONSHIP IDENTIDAD-WALLET
+    @Override
     public CryptoCustomerIdentityWalletRelationshipRecord createCustomerIdentityWalletRelationship(String walletPublicKey, String identityPublicKey) throws CantCreateCustomerIdentiyWalletRelationshipException{
         try {
             return databaseDao.createRegisterCustomerIdentityWalletRelationship(walletPublicKey, identityPublicKey);
@@ -45,7 +46,6 @@ public class CryptoCustomerIdentityWalletRelationshipImpl implements CryptoCusto
             throw new CantUpdateCustomerIdentiyWalletRelationshipException("CRYPTO CUSTOMER ACTOR", e, "CAN'T UPDATE RELATIONSHIP IDENTITY WALLET CRYPTO CUSTOMER ACTOR", "");
         }
     }
-
     @Override
     public void deleteCustomerIdentityWalletRelationship(UUID relationshipId) throws CantDeleteCustomerIdentiyWalletRelationshipException {
         try {
