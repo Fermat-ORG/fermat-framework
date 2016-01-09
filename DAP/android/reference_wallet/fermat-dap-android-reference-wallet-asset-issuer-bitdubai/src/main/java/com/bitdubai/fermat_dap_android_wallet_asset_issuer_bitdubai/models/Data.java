@@ -16,6 +16,7 @@ import com.bitdubai.fermat_dap_api.layer.dap_wallet.common.exceptions.CantLoadWa
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -68,9 +69,10 @@ public class Data {
         List<UserDelivery> users = new ArrayList<>();
         UserDelivery userDelivery;
         List<AssetStatistic> stats = moduleManager.getWalletStatisticsByAsset(walletPublicKey, digitalAsset.getName());
-        for (AssetStatistic stat :
-                stats) {
-            userDelivery = new UserDelivery(stat.getRedeemPoint().getName(), new Timestamp(stat.getDistributionDate().getTime()), stat.getStatus().getCode());
+        for (AssetStatistic stat : stats) {
+            //TODO get user name and distribution date
+//            userDelivery = new UserDelivery("User Name", new Timestamp(stat.getDistributionDate().getTime()), stat.getStatus().getCode());
+            userDelivery = new UserDelivery("User Name", new Timestamp(new Date().getTime()), stat.getStatus().getCode());
             users.add(userDelivery);
         }
         return users;
