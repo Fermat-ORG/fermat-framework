@@ -6,6 +6,7 @@ import com.bitdubai.fermat_api.Agent;
 import com.bitdubai.fermat_api.CantStartAgentException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
 import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.BitcoinNetworkSelector;
+import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.RegTestNetwork.FermatTestNetwork;
 import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.exceptions.CantBroadcastTransactionException;
 import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.exceptions.CantCancellBroadcastTransactionException;
 import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.exceptions.CantGetCryptoTransactionException;
@@ -154,19 +155,10 @@ public class BitcoinCryptoNetworkMonitor implements Agent {
              * I will connect to the regTest server or search for peers if we are in a different network.
              */
             if (NETWORK_PARAMETERS == RegTestParams.get()){
-                /**
-                 * Peer 1
-                 */
-                InetSocketAddress inetSocketAddress1 = new InetSocketAddress(BitcoinNetworkConfiguration.BITCOIN_FULL_NODE_1_IP, BitcoinNetworkConfiguration.BITCOIN_FULL_NODE_1_PORT);
-                PeerAddress peerAddress1 = new PeerAddress(inetSocketAddress1);
-                peerGroup.addAddress(peerAddress1);
-
-                /**
-                 * Peer 2
-                 */
-                InetSocketAddress inetSocketAddress2 = new InetSocketAddress(BitcoinNetworkConfiguration.BITCOIN_FULL_NODE_2_IP, BitcoinNetworkConfiguration.BITCOIN_FULL_NODE_2_PORT);
-                PeerAddress peerAddress2 = new PeerAddress(inetSocketAddress2);
-                peerGroup.addAddress(peerAddress2);
+                FermatTestNetwork fermatTestNetwork = new FermatTestNetwork();
+                peerGroup.addAddress(fermatTestNetwork.getRandomNetworkNode().getPeerAddress());
+                peerGroup.addAddress(fermatTestNetwork.getRandomNetworkNode().getPeerAddress());
+                peerGroup.addAddress(fermatTestNetwork.getRandomNetworkNode().getPeerAddress());
             } else
                 peerGroup.addPeerDiscovery(new DnsDiscovery(NETWORK_PARAMETERS));
 
