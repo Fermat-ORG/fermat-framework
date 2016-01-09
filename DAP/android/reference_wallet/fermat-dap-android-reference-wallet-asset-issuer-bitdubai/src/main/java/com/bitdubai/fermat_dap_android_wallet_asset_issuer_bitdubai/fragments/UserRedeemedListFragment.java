@@ -269,7 +269,7 @@ public class UserRedeemedListFragment extends FermatWalletListFragment<UserRedee
         List<UserRedeemed> users = new ArrayList<>();
         if (moduleManager != null) {
             try {
-                users = Data.getUserRedeemedList(appSession.getAppPublicKey(), digitalAsset, moduleManager);
+                users = Data.getUserRedeemedList("walletPublicKeyTest", digitalAsset, moduleManager);
 
             } catch (Exception ex) {
                 CommonLogger.exception(TAG, ex.getMessage(), ex);

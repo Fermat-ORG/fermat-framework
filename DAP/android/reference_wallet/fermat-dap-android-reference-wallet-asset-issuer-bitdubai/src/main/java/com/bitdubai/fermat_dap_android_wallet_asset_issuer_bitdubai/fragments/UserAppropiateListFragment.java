@@ -268,9 +268,7 @@ public class UserAppropiateListFragment extends FermatWalletListFragment<UserApp
         List<UserAppropiate> users = new ArrayList<>();
         if (moduleManager != null) {
             try {
-                users = Data.getUserAppropiateList(appSession.getAppPublicKey(), digitalAsset, moduleManager);
-
-
+                users = Data.getUserAppropiateList("walletPublicKeyTest", digitalAsset, moduleManager);
             } catch (Exception ex) {
                 CommonLogger.exception(TAG, ex.getMessage(), ex);
                 if (errorManager != null)
