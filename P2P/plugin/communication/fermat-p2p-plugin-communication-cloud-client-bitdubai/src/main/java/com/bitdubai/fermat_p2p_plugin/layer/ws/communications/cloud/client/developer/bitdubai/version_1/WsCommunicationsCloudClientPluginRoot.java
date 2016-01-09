@@ -103,11 +103,22 @@ public class WsCommunicationsCloudClientPluginRoot extends AbstractPlugin implem
     private WsCommunicationsCloudClientConnection wsCommunicationsCloudClientConnection;
 
     /**
+     * Represent the reconnectTimer
+     */
+    private Timer reconnectTimer;
+
+    /**
+     * Represent the isTaskCompleted
+     */
+    private boolean isTaskCompleted;
+
+    /**
      * Constructor
      */
     public WsCommunicationsCloudClientPluginRoot(){
         super(new PluginVersionReference(new Version()));
         this.disableClientFlag = ServerConf.ENABLE_CLIENT;
+        isTaskCompleted = Boolean.FALSE;
     }
 
     /**
@@ -270,20 +281,48 @@ public class WsCommunicationsCloudClientPluginRoot extends AbstractPlugin implem
 
         try {
 
-            System.out.println("WsCommunicationsCloudClientPluginRoot - reconnect trying to reconnect");
-            wsCommunicationsCloudClientConnection = new WsCommunicationsCloudClientConnection(uri,eventManager, locationManager, clientIdentity);
-            wsCommunicationsCloudClientConnection.initializeAndConnect();
+            if (reconnectTimer == null && !isTaskCompleted){
+
+                reconnectTimer = new Timer();
+                reconnectTimer.schedule(new TimerTask() {
+                    @Override
+                    public void run() {
+                        System.out.println("WsCommunicationsCloudClientPluginRoot - trying to reconnect");
+
+                        if (!getCommunicationsCloudClientConnection().isConnected()) {
+                            wsCommunicationsCloudClientConnection = new WsCommunicationsCloudClientConnection(uri, eventManager, locationManager, clientIdentity);
+                            wsCommunicationsCloudClientConnection.initializeAndConnect();
+                            isTaskCompleted = Boolean.TRUE;
+                        }
+                    }
+                }, 5000);
+
+            }else {
+
+                if (getCommunicationsCloudClientConnection().isConnected()){
+                    reconnectTimer = null;
+                    isTaskCompleted = Boolean.FALSE;
+                    reconnect();
+                }
+
+            }
 
         }catch (Exception e){
             e.printStackTrace();
             System.out.println("WsCommunicationsCloudClientPluginRoot - trying to reconnect on 40 seg");
 
-            new Timer().schedule(new TimerTask() {
-                               @Override
-                               public void run() {
-                                   reconnect();
-                               }
-                           }, 40000);
+            if (reconnectTimer == null && !isTaskCompleted){
+
+                reconnectTimer = new Timer();
+                reconnectTimer.schedule(new TimerTask() {
+                    @Override
+                    public void run() {
+                        reconnect();
+                        isTaskCompleted = Boolean.TRUE;
+                    }
+                }, 40000);
+
+            }
 
         }
 

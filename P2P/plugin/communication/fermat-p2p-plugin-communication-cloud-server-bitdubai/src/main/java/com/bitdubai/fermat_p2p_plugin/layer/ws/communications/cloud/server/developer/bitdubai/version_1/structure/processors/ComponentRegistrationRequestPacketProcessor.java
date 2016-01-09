@@ -231,7 +231,7 @@ public class ComponentRegistrationRequestPacketProcessor extends FermatPacketPro
                 }
             }
 
-            if (!exist){
+            if (!exist) {
 
                 /*
                  * Add to the cache
@@ -254,6 +254,7 @@ public class ComponentRegistrationRequestPacketProcessor extends FermatPacketPro
                  */
                 getWsCommunicationCloudServer().getClientIdentityByClientConnectionCache().put(clientConnection.hashCode(), platformComponentProfileToRegister.getIdentityPublicKey());
 
+            }
 
                 FermatPacket fermatPacketRespond = null;
 
@@ -313,17 +314,12 @@ public class ComponentRegistrationRequestPacketProcessor extends FermatPacketPro
                 }
 
 
-
                 /*
                  * Send the encode packet to the server
                  */
                 clientConnection.send(FermatPacketEncoder.encode(fermatPacketRespond));
 
                 LOG.info("Total Communications Cloud Client Component Registered = " + getWsCommunicationCloudServer().getRegisteredCommunicationsCloudClientCache().size());
-
-
-            }
-
 
         }else {
 
