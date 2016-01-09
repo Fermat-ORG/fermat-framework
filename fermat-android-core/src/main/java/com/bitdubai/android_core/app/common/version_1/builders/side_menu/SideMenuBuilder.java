@@ -1,4 +1,4 @@
-package com.bitdubai.android_core.app.common.version_1.side_menu;
+package com.bitdubai.android_core.app.common.version_1.builders.side_menu;
 
 import android.app.Activity;
 import android.content.res.Resources;
@@ -15,13 +15,9 @@ import android.widget.RelativeLayout;
 
 import com.bitdubai.fermat.R;
 import com.bitdubai.fermat_android_api.engine.NavigationViewPainter;
-import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.AppConnections;
 import com.bitdubai.fermat_android_api.ui.adapters.FermatAdapter;
 import com.bitdubai.fermat_android_api.ui.interfaces.FermatListItemListeners;
-import com.bitdubai.fermat_api.layer.all_definition.enums.Engine;
-import com.bitdubai.fermat_api.layer.all_definition.identities.ActiveIdentity;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.MenuItem;
-import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.SideMenu;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
 import com.bitdubai.fermat_api.layer.modules.common_classes.ActiveActorIdentityInformation;
 
