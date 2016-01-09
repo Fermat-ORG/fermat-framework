@@ -189,7 +189,7 @@ public class CreateTransactionFragmentDialog extends Dialog implements
 
                     @Override
                     public String getPublicKeyWallet() {
-                        return "testbankwallet";
+                        return "banking_wallet";
                     }
 
                     @Override
@@ -236,7 +236,7 @@ public class CreateTransactionFragmentDialog extends Dialog implements
 
                     @Override
                     public String getPublicKeyWallet() {
-                        return "testbankwallet";
+                        return "banking_wallet";
                     }
 
                     @Override

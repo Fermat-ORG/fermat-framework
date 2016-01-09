@@ -17,6 +17,7 @@ dependencies {
     compile project(':fermat-core-api')
 
     //Providers
+    compile project(':fermat-cer-plugin-provider-bitcoinvenezuela-bitdubai')
     compile project(':fermat-cer-plugin-provider-dolartoday-bitdubai')
     compile project(':fermat-cer-plugin-provider-elcronista-bitdubai')
     compile project(':fermat-cer-plugin-provider-europeancentralbank-bitdubai')

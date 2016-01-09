@@ -190,7 +190,7 @@ public class WizardPageSetProvidersFragment extends AbstractFermatFragment
     private void saveSettingAndGoNextStep() {
 
         if (selectedProviders.isEmpty()) {
-            Toast.makeText(getActivity(), R.string.cbw_select_stock_wallets_warning_msg, Toast.LENGTH_SHORT).show();
+            Toast.makeText(getActivity(), R.string.cbw_select_providers_warning_msg, Toast.LENGTH_SHORT).show();
             return;
         }
 
@@ -212,6 +212,7 @@ public class WizardPageSetProvidersFragment extends AbstractFermatFragment
                         UnexpectedWalletExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, ex);
         }
 
+        // TODO
         changeActivity(Activities.CBP_CRYPTO_BROKER_WALLET_SET_LOCATIONS, appSession.getAppPublicKey());
     }
 
@@ -219,7 +220,7 @@ public class WizardPageSetProvidersFragment extends AbstractFermatFragment
     public void deleteButtonClicked(CurrencyExchangeRateProviderManager data, final int position) {
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
 
-        builder.setTitle(R.string.cbw_delete_wallet_dialog_title).setMessage(R.string.cbw_delete_wallet_dialog_msg);
+        builder.setTitle(R.string.cbw_delete_provider_dialog_title).setMessage(R.string.cbw_delete_provider_dialog_msg);
         builder.setPositiveButton(R.string.cbw_delete_caps, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {

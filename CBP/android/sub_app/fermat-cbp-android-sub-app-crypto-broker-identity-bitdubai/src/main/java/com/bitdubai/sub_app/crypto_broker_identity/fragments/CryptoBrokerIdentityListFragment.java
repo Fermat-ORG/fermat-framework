@@ -81,19 +81,6 @@ public class CryptoBrokerIdentityListFragment extends FermatListFragment<CryptoB
     }
 
     @Override
-    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        super.onCreateOptionsMenu(menu, inflater);
-
-        inflater.inflate(R.menu.crypto_broker_identity_menu, menu);
-
-//        MenuItem searchItem = menu.findItem(R.id.action_search);
-//        MenuItemCompat.setShowAsAction(searchItem, MenuItem.SHOW_AS_ACTION_COLLAPSE_ACTION_VIEW | MenuItem.SHOW_AS_ACTION_ALWAYS);
-//        SearchView mSearchView = (SearchView) MenuItemCompat.getActionView(searchItem);
-//        mSearchView.setOnQueryTextListener(this);
-//        mSearchView.setOnCloseListener(this);
-    }
-
-    @Override
     protected void initViews(View layout) {
         super.initViews(layout);
 

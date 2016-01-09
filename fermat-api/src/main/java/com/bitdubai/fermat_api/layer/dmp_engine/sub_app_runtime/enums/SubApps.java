@@ -28,6 +28,7 @@ public enum SubApps {
     DAP_ASSETS_IDENTITY_ISSUER("DAPAII"),
     DAP_ASSETS_IDENTITY_USER("DAPAIU"),
     DAP_REDEEM_POINT_IDENTITY("DAPRPI"),
+    CHT_CHAT("CHTCHAT"),
     Scanner("S");
 
 
@@ -82,6 +83,8 @@ public enum SubApps {
                 return SubApps.DAP_ASSETS_IDENTITY_USER;
             case "DAPRPI":
                 return SubApps.DAP_REDEEM_POINT_IDENTITY;
+            case "CHTCHAT":
+                return SubApps.CHT_CHAT;
             case "S":
                 return Scanner;
             default:

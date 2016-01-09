@@ -5,6 +5,7 @@ apply plugin: 'checkstyle'
 apply plugin: 'pmd'
 
 sourceCompatibility = 1.7
+targetCompatibility = 1.7
 version = '1.0'
 
 repositories {
@@ -28,8 +29,9 @@ dependencies {
     //Middleware
 
     //Sub App Module
-
+    compile project(':fermat-cht-plugin-sub-app-module-chat-bitdubai')
     //Network Service
+    compile project(':fermat-cht-plugin-network-service-chat-bitdubai')
 
 }
 
