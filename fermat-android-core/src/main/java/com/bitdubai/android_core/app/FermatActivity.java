@@ -394,8 +394,8 @@ public abstract class FermatActivity extends AppCompatActivity
         if (footer != null && footerViewPainter!=null) {
             FooterBuilder.Builder.build(getLayoutInflater(),slide_container,footer_container,footerViewPainter);
         }else {
-            slide_container.setVisibility(View.GONE);
-            footer_container.setVisibility(View.GONE);
+            if(slide_container!=null) slide_container.setVisibility(View.GONE);
+            if(footer_container!=null) footer_container.setVisibility(View.GONE);
         }
     }
 
