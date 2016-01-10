@@ -42,6 +42,7 @@ import org.bitcoinj.core.UTXOProviderException;
 import org.bitcoinj.core.Wallet;
 import org.bitcoinj.params.RegTestParams;
 import org.bitcoinj.store.UnreadableWalletException;
+import org.bitcoinj.wallet.WalletTransaction;
 
 import java.io.File;
 import java.io.IOException;
@@ -493,7 +494,16 @@ public class BitcoinCryptoNetworkManager implements TransactionProtocolManager, 
      * @param blockchainNetworkType
      * @return
      */
-    public synchronized List<Transaction> getBitcoinTransactions(BlockchainNetworkType blockchainNetworkType){
+    public List<Transaction> getBitcoinTransaction(BlockchainNetworkType blockchainNetworkType){
+        Wallet wallet = getWallet(blockchainNetworkType, null);
+        return wallet.getTransactionsByTime();
+
+    }
+
+    public synchronized List<Transaction> getUnspentBitcoinTransactions(BlockchainNetworkType blockchainNetworkType){
+//        Wallet wallet = getWallet(blockchainNetworkType, null);
+//        List<Transaction> transactions = new ArrayList<>(wallet.getTransactionPool(WalletTransaction.Pool.UNSPENT).values());
+//        return transactions;
         Wallet wallet = getWallet(blockchainNetworkType, null);
         return wallet.getTransactionsByTime();
     }
@@ -532,7 +542,7 @@ public class BitcoinCryptoNetworkManager implements TransactionProtocolManager, 
         /**
          * I will get the list of stored transactions for the default network.
          */
-        List<Transaction> transactions = getBitcoinTransactions(BlockchainNetworkType.DEFAULT);
+        List<Transaction> transactions = getBitcoinTransaction(BlockchainNetworkType.DEFAULT);
 
         for (Transaction transaction : transactions){
             /**
