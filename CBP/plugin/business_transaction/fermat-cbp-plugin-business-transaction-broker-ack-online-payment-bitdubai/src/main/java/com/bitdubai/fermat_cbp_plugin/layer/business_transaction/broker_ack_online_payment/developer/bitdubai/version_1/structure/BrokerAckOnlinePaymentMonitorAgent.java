@@ -396,6 +396,9 @@ public class BrokerAckOnlinePaymentMonitorAgent implements
                         ContractTransactionStatus.PENDING_ACK_ONLINE_PAYMENT_NOTIFICATION);
                 brokerAckOnlinePaymentBusinessTransactionDao.updateBusinessTransactionRecord(
                         businessTransactionRecord);
+                brokerAckOnlinePaymentBusinessTransactionDao.updateIncomingEventStatus(
+                        eventId,
+                        EventStatus.NOTIFIED);
 
             } catch (UnexpectedResultReturnedFromDatabaseException e) {
                 throw new IncomingOnlinePaymentException(
