@@ -7,6 +7,7 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseFilterT
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTable;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTableFilter;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTableRecord;
+import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTransaction;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantCreateDatabaseException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantInsertRecordException;
@@ -14,6 +15,8 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.Cant
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantOpenDatabaseException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantUpdateRecordException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.DatabaseNotFoundException;
+import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.DatabaseTransactionFailedException;
+import com.bitdubai.fermat_cht_api.all_definition.enums.ChatStatus;
 import com.bitdubai.fermat_cht_api.all_definition.enums.MessageStatus;
 import com.bitdubai.fermat_cht_api.all_definition.enums.TypeMessage;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CHTException;
@@ -64,83 +67,379 @@ public class ChatMiddlewareDatabaseDao {
 
     }
 
-    public List<Contact> getContacts() throws CantGetContactException
+    public List<Contact> getContacts(DatabaseTableFilter filter) throws CantGetContactException, DatabaseOperationException
     {
-        return null;
+        //if filter is null all records
+        Database database = null;
+        try {
+            database = openDatabase();
+            List<Contact> contacts = new ArrayList<>();
+            // I will add the contact information from the database
+            for (DatabaseTableRecord record : getContactData(filter)) {
+                final Contact contact = getContactTransaction(record);
+
+                contacts.add(contact);
+            }
+
+            database.closeDatabase();
+
+            return contacts;
+        }
+        catch (Exception e) {
+            if (database != null)
+                database.closeDatabase();
+            throw new DatabaseOperationException(DatabaseOperationException.DEFAULT_MESSAGE, e, "error trying to get Contact from the database with filter: " + filter.toString(), null);
+        }
     }
 
-    public Contact getContactByContactId(UUID contactId) throws CantGetContactException
+    public Contact getContactByContactId(UUID contactId) throws CantGetContactException, DatabaseOperationException
     {
-        return null;
+        Database database = null;
+        try {
+            database = openDatabase();
+            List<Contact> contacts = new ArrayList<>();
+            DatabaseTable table = getDatabaseTable(ChatMiddlewareDatabaseConstants.CONTACTS_TABLE_NAME);
+            DatabaseTableFilter filter = table.getEmptyTableFilter();
+            filter.setType(DatabaseFilterType.EQUAL);
+            filter.setValue(contactId.toString());
+            filter.setColumn(ChatMiddlewareDatabaseConstants.CONTACTS_FIRST_KEY_COLUMN);
+            // I will add the contact information from the database
+            for (DatabaseTableRecord record : getContactData(filter)) {
+                final Contact contact = getContactTransaction(record);
+
+                contacts.add(contact);
+            }
+
+            database.closeDatabase();
+
+            return contacts.get(0);
+        }
+        catch (Exception e) {
+            if (database != null)
+                database.closeDatabase();
+            throw new DatabaseOperationException(DatabaseOperationException.DEFAULT_MESSAGE, e, "error trying to get Contact from the database with filter: " + contactId.toString(), null);
+        }
     }
 
     public Contact newEmptyInstanceContact() throws CantNewEmptyContactException
     {
-        return null;
+        ContactImpl contact = new ContactImpl();
+        contact.setContactId(UUID.randomUUID());
+        return contact;
     }
 
-    public void saveContact(Contact contact) throws CantSaveContactException
-    {
+    public void saveContact(Contact contact) throws CantSaveContactException, DatabaseOperationException {
+        try
+        {
+            database = openDatabase();
+            DatabaseTransaction transaction = database.newTransaction();
 
+            DatabaseTable table = getDatabaseTable(ChatMiddlewareDatabaseConstants.CONTACTS_TABLE_NAME);
+            DatabaseTableRecord record = getContactRecord(contact);
+            DatabaseTableFilter filter = table.getEmptyTableFilter();
+            filter.setType(DatabaseFilterType.EQUAL);
+            filter.setValue(contact.getContactId().toString());
+            filter.setColumn(ChatMiddlewareDatabaseConstants.CONTACTS_FIRST_KEY_COLUMN);
+
+            if (isNewRecord(table, filter))
+                transaction.addRecordToInsert(table, record);
+            else {
+                table.addStringFilter(filter.getColumn(), filter.getValue(), filter.getType());
+                transaction.addRecordToUpdate(table, record);
+            }
+
+            //I execute the transaction and persist the database side of the Contact.
+            database.executeTransaction(transaction);
+            database.closeDatabase();
+
+        }catch (Exception e) {
+            if (database != null)
+                database.closeDatabase();
+            throw new DatabaseOperationException(DatabaseOperationException.DEFAULT_MESSAGE, e, "Error trying to save the Contact Transaction in the database.", null);
+        }
     }
 
-    public void deleteContact(Contact contact) throws CantDeleteContactException
+    public void deleteContact(Contact contact) throws CantDeleteContactException, DatabaseOperationException
     {
+        try
+        {
+            database = openDatabase();
+            DatabaseTransaction transaction = database.newTransaction();
 
+            DatabaseTable table = getDatabaseTable(ChatMiddlewareDatabaseConstants.CONTACTS_TABLE_NAME);
+            DatabaseTableRecord record = getContactRecord(contact);
+
+            table.deleteRecord(record);
+
+            //I execute the transaction and persist the database side of the Contact.
+            database.executeTransaction(transaction);
+            database.closeDatabase();
+
+        }catch (Exception e) {
+            if (database != null)
+                database.closeDatabase();
+            throw new DatabaseOperationException(DatabaseOperationException.DEFAULT_MESSAGE, e, "Error trying to delete the Contact Transaction in the database.", null);
+        }
     }
 
-    public List<Chat> getChats() throws CantGetChatException
+    public List<Chat> getChats(DatabaseTableFilter filter) throws CantGetChatException, DatabaseOperationException
     {
-        return null;
+        //if filter is null all records
+        Database database = null;
+        try {
+            database = openDatabase();
+            List<Chat> chats = new ArrayList<>();
+            // I will add the contact information from the database
+            for (DatabaseTableRecord record : getChatData(filter)) {
+                final Chat chat = getChatTransaction(record);
+
+                chats.add(chat);
+            }
+
+            database.closeDatabase();
+
+            return chats;
+        }
+        catch (Exception e) {
+            if (database != null)
+                database.closeDatabase();
+            throw new DatabaseOperationException(DatabaseOperationException.DEFAULT_MESSAGE, e, "error trying to get Contact from the database with filter: " + filter.toString(), null);
+        }
     }
 
-    public Chat getChatByChatId(UUID chatId) throws CantGetChatException
+    public Chat getChatByChatId(UUID chatId) throws CantGetChatException, DatabaseOperationException
     {
-        return null;
+        Database database = null;
+        try {
+            database = openDatabase();
+            List<Chat> chats = new ArrayList<>();
+            DatabaseTable table = getDatabaseTable(ChatMiddlewareDatabaseConstants.CHATS_TABLE_NAME);
+            DatabaseTableFilter filter = table.getEmptyTableFilter();
+            filter.setType(DatabaseFilterType.EQUAL);
+            filter.setValue(chatId.toString());
+            filter.setColumn(ChatMiddlewareDatabaseConstants.CHATS_FIRST_KEY_COLUMN);
+            // I will add the contact information from the database
+            for (DatabaseTableRecord record : getContactData(filter)) {
+                final Chat chat = getChatTransaction(record);
+
+                chats.add(chat);
+            }
+
+            database.closeDatabase();
+
+            return chats.get(0);
+        }
+        catch (Exception e) {
+            if (database != null)
+                database.closeDatabase();
+            throw new DatabaseOperationException(DatabaseOperationException.DEFAULT_MESSAGE, e, "error trying to get Contact from the database with filter: " + chatId.toString(), null);
+        }
     }
     public Chat newEmptyInstanceChat() throws CantNewEmptyChatException
     {
-        return null;
+        ChatImpl chat = new ChatImpl();
+        chat.setChatId(UUID.randomUUID());
+        return chat;
     }
 
-    public void saveChat(Chat chat) throws CantSaveChatException
+    public void saveChat(Chat chat) throws CantSaveChatException, DatabaseOperationException
     {
+        try
+        {
+            database = openDatabase();
+            DatabaseTransaction transaction = database.newTransaction();
 
+            DatabaseTable table = getDatabaseTable(ChatMiddlewareDatabaseConstants.CHATS_TABLE_NAME);
+            DatabaseTableRecord record = getChatRecord(chat);
+            DatabaseTableFilter filter = table.getEmptyTableFilter();
+            filter.setType(DatabaseFilterType.EQUAL);
+            filter.setValue(chat.getChatId().toString());
+            filter.setColumn(ChatMiddlewareDatabaseConstants.CHATS_FIRST_KEY_COLUMN);
+
+            if (isNewRecord(table, filter))
+                transaction.addRecordToInsert(table, record);
+            else {
+                table.addStringFilter(filter.getColumn(), filter.getValue(), filter.getType());
+                transaction.addRecordToUpdate(table, record);
+            }
+
+            //I execute the transaction and persist the database side of the chat.
+            database.executeTransaction(transaction);
+            database.closeDatabase();
+
+        }catch (Exception e) {
+            if (database != null)
+                database.closeDatabase();
+            throw new DatabaseOperationException(DatabaseOperationException.DEFAULT_MESSAGE, e, "Error trying to save the Chat Transaction in the database.", null);
+        }
     }
 
-    public void deleteChat(Chat chat) throws CantDeleteChatException
+    public void deleteChat(Chat chat) throws CantDeleteChatException, DatabaseOperationException
     {
+        try
+        {
+            database = openDatabase();
+            DatabaseTransaction transaction = database.newTransaction();
 
+            DatabaseTable table = getDatabaseTable(ChatMiddlewareDatabaseConstants.CHATS_TABLE_NAME);
+            DatabaseTableRecord record = getChatRecord(chat);
+
+            table.deleteRecord(record);
+
+            //I execute the transaction and persist the database side of the chat.
+            database.executeTransaction(transaction);
+            database.closeDatabase();
+
+        }catch (Exception e) {
+            if (database != null)
+                database.closeDatabase();
+            throw new DatabaseOperationException(DatabaseOperationException.DEFAULT_MESSAGE, e, "Error trying to delete the Chat Transaction in the database.", null);
+        }
     }
 
-    public List<Message> getMessages() throws CantGetMessageException
+    public List<Message> getMessages(DatabaseTableFilter filter) throws CantGetMessageException, DatabaseOperationException
     {
-        return null;
+        //if filter is null all records
+        Database database = null;
+        try {
+            database = openDatabase();
+            List<Message> messages = new ArrayList<>();
+            // I will add the message information from the database
+            for (DatabaseTableRecord record : getMessageData(filter)) {
+                final Message message = getMessageTransaction(record);
+
+                messages.add(message);
+            }
+
+            database.closeDatabase();
+
+            return messages;
+        }
+        catch (Exception e) {
+            if (database != null)
+                database.closeDatabase();
+            throw new DatabaseOperationException(DatabaseOperationException.DEFAULT_MESSAGE, e, "error trying to get message from the database with filter: " + filter.toString(), null);
+        }
     }
 
-    public Message getMessageByChatId(UUID chatId) throws CantGetMessageException
+    public Message getMessageByChatId(UUID chatId) throws CantGetMessageException, DatabaseOperationException
     {
-        return null;
+        Database database = null;
+        try {
+            database = openDatabase();
+            List<Message> messages = new ArrayList<>();
+            DatabaseTable table = getDatabaseTable(ChatMiddlewareDatabaseConstants.MESSAGE_TABLE_NAME);
+            DatabaseTableFilter filter = table.getEmptyTableFilter();
+            filter.setType(DatabaseFilterType.EQUAL);
+            filter.setValue(chatId.toString());
+            filter.setColumn(ChatMiddlewareDatabaseConstants.MESSAGE_ID_CHAT_COLUMN_NAME);
+            // I will add the message information from the database
+            for (DatabaseTableRecord record : getMessageData(filter)) {
+                final Message message = getMessageTransaction(record);
+
+                messages.add(message);
+            }
+
+            database.closeDatabase();
+
+            return messages.get(0);
+        }
+        catch (Exception e) {
+            if (database != null)
+                database.closeDatabase();
+            throw new DatabaseOperationException(DatabaseOperationException.DEFAULT_MESSAGE, e, "error trying to get Message from the database with filter: " + chatId.toString(), null);
+        }
     }
 
-    public Message getMessageByMessageId(UUID messageId) throws CantGetMessageException
+    public Message getMessageByMessageId(UUID messageId) throws CantGetMessageException, DatabaseOperationException
     {
-        return null;
+        Database database = null;
+        try {
+            database = openDatabase();
+            List<Message> messages = new ArrayList<>();
+            DatabaseTable table = getDatabaseTable(ChatMiddlewareDatabaseConstants.MESSAGE_TABLE_NAME);
+            DatabaseTableFilter filter = table.getEmptyTableFilter();
+            filter.setType(DatabaseFilterType.EQUAL);
+            filter.setValue(messageId.toString());
+            filter.setColumn(ChatMiddlewareDatabaseConstants.MESSAGE_FIRST_KEY_COLUMN);
+            // I will add the message information from the database
+            for (DatabaseTableRecord record : getMessageData(filter)) {
+                final Message message = getMessageTransaction(record);
+
+                messages.add(message);
+            }
+
+            database.closeDatabase();
+
+            return messages.get(0);
+        }
+        catch (Exception e) {
+            if (database != null)
+                database.closeDatabase();
+            throw new DatabaseOperationException(DatabaseOperationException.DEFAULT_MESSAGE, e, "error trying to get Message from the database with filter: " + messageId.toString(), null);
+        }
     }
 
-    public Chat newEmptyInstanceMessage() throws CantNewEmptyMessageException
+    public Message newEmptyInstanceMessage() throws CantNewEmptyMessageException
     {
-        return null;
+        MessageImpl message = new MessageImpl();
+        message.setMessageId(UUID.randomUUID());
+        return message;
     }
 
-    public void saveMessage(Message message) throws CantSaveMessageException
+    public void saveMessage(Message message) throws CantSaveMessageException, DatabaseOperationException
     {
+        try
+        {
+            database = openDatabase();
+            DatabaseTransaction transaction = database.newTransaction();
 
+            DatabaseTable table = getDatabaseTable(ChatMiddlewareDatabaseConstants.MESSAGE_TABLE_NAME);
+            DatabaseTableRecord record = getMessageRecord(message);
+            DatabaseTableFilter filter = table.getEmptyTableFilter();
+            filter.setType(DatabaseFilterType.EQUAL);
+            filter.setValue(message.getMessageId().toString());
+            filter.setColumn(ChatMiddlewareDatabaseConstants.MESSAGE_FIRST_KEY_COLUMN);
+
+            if (isNewRecord(table, filter))
+                transaction.addRecordToInsert(table, record);
+            else {
+                table.addStringFilter(filter.getColumn(), filter.getValue(), filter.getType());
+                transaction.addRecordToUpdate(table, record);
+            }
+
+            //I execute the transaction and persist the database side of the chat.
+            database.executeTransaction(transaction);
+            database.closeDatabase();
+
+        }catch (Exception e) {
+            if (database != null)
+                database.closeDatabase();
+            throw new DatabaseOperationException(DatabaseOperationException.DEFAULT_MESSAGE, e, "Error trying to save the message Transaction in the database.", null);
+        }
     }
 
-    public void deleteMessage(Message message) throws CantDeleteMesssageException
+    public void deleteMessage(Message message) throws CantDeleteMesssageException, DatabaseOperationException
     {
+        try
+        {
+            database = openDatabase();
+            DatabaseTransaction transaction = database.newTransaction();
 
+            DatabaseTable table = getDatabaseTable(ChatMiddlewareDatabaseConstants.MESSAGE_TABLE_NAME);
+            DatabaseTableRecord record = getMessageRecord(message);
+
+            table.deleteRecord(record);
+
+            //I execute the transaction and persist the database side of the chat.
+            database.executeTransaction(transaction);
+            database.closeDatabase();
+
+        }catch (Exception e) {
+            if (database != null)
+                database.closeDatabase();
+            throw new DatabaseOperationException(DatabaseOperationException.DEFAULT_MESSAGE, e, "Error trying to delete the message Transaction in the database.", null);
+        }
     }
 
 
@@ -253,15 +552,25 @@ public class ChatMiddlewareDatabaseDao {
         return table.getRecords();
     }
 
-    private Chat getChatTransaction(final DatabaseTableRecord chatTransactionRecord) throws CantLoadTableToMemoryException, DatabaseOperationException
-    {
+    private Chat getChatTransaction(final DatabaseTableRecord chatTransactionRecord) throws CantLoadTableToMemoryException, DatabaseOperationException, InvalidParameterException {
         ChatImpl chat = new ChatImpl();
-        //TODO:Implementar
+
+        chat.setChatId(chatTransactionRecord.getUUIDValue(ChatMiddlewareDatabaseConstants.CHATS_ID_CHAT_COLUMN_NAME));
+        chat.setObjectId(chatTransactionRecord.getUUIDValue(ChatMiddlewareDatabaseConstants.CHATS_ID_OBJECT_COLUMN_NAME));
+        chat.setChatName(chatTransactionRecord.getStringValue(ChatMiddlewareDatabaseConstants.CHATS_CHAT_NAME_COLUMN_NAME));
+        chat.setDate(Date.valueOf(chatTransactionRecord.getStringValue(ChatMiddlewareDatabaseConstants.CHATS_CREATION_DATE_COLUMN_NAME)));
+        chat.setLastMessageDate(Date.valueOf(chatTransactionRecord.getStringValue(ChatMiddlewareDatabaseConstants.CHATS_LAST_MESSAGE_DATE_COLUMN_NAME)));
+        chat.setRemoteActorPublicKey(chatTransactionRecord.getStringValue(ChatMiddlewareDatabaseConstants.CHATS_REMOTE_ACTOR_PUB_KEY_COLUMN_NAME));
+        chat.setRemoteActorType(chatTransactionRecord.getStringValue(ChatMiddlewareDatabaseConstants.CHATS_REMOTE_ACTOR_TYPE_COLUMN_NAME));
+        chat.setLocalActorPublicKey(chatTransactionRecord.getStringValue(ChatMiddlewareDatabaseConstants.CHATS_LOCAL_ACTOR_PUB_KEY_COLUMN_NAME));
+        chat.setLocalActorType(chatTransactionRecord.getStringValue(ChatMiddlewareDatabaseConstants.CHATS_LOCAL_ACTOR_TYPE_COLUMN_NAME));
+        chat.setStatus(ChatStatus.getByCode(chatTransactionRecord.getStringValue(ChatMiddlewareDatabaseConstants.CHATS_STATUS_COLUMN_NAME)));
+
         return chat;
     }
 
-    private Message getMessageTransaction(final DatabaseTableRecord messageTransactionRecord) throws CantLoadTableToMemoryException, DatabaseOperationException, InvalidParameterException {
-
+    private Message getMessageTransaction(final DatabaseTableRecord messageTransactionRecord) throws CantLoadTableToMemoryException, DatabaseOperationException, InvalidParameterException
+    {
         MessageImpl message = new MessageImpl();
 
         message.setChatId(messageTransactionRecord.getUUIDValue(ChatMiddlewareDatabaseConstants.MESSAGE_ID_CHAT_COLUMN_NAME));
@@ -276,81 +585,16 @@ public class ChatMiddlewareDatabaseDao {
 
     private Contact getContactTransaction(final DatabaseTableRecord contactTransactionRecord) throws CantLoadTableToMemoryException, DatabaseOperationException
     {
-        //TODO:Implementar
         ContactImpl contact = new ContactImpl();
+
+        contact.setContactId(contactTransactionRecord.getUUIDValue(ChatMiddlewareDatabaseConstants.CONTACTS_ID_CONTACT_COLUMN_NAME));
+        contact.setAlias(contactTransactionRecord.getStringValue(ChatMiddlewareDatabaseConstants.CONTACTS_ALIAS_COLUMN_NAME));
+        contact.setRemoteName(contactTransactionRecord.getStringValue(ChatMiddlewareDatabaseConstants.CONTACTS_REMOTE_NAME_COLUMN_NAME));
+        contact.setRemoteActorType(contactTransactionRecord.getStringValue(ChatMiddlewareDatabaseConstants.CONTACTS_REMOTE_ACTOR_TYPE_COLUMN_NAME));
+        contact.setRemoteActorPublicKey(contactTransactionRecord.getStringValue(ChatMiddlewareDatabaseConstants.CONTACTS_REMOTE_ACTOR_PUB_KEY_COLUMN_NAME));
+        contact.setCreationDate(Date.valueOf(contactTransactionRecord.getStringValue(ChatMiddlewareDatabaseConstants.CONTACTS_CREATION_DATE_COLUMN_NAME)));
+
         return contact;
-    }
-
-
-
-    //Eliminar
-    //TODO: Added CHTException, CantAddContact exception does not exists
-    public void addContact(String idContact,String remoteName,String remoteActorPubKey,String remoteActorType,
-                           String alias,
-                           String creationDate
-    ) throws CHTException {
-        try {
-            DatabaseTable table = this.database.getTable(ChatMiddlewareDatabaseConstants.CONTACTS_TABLE_NAME);
-            DatabaseTableRecord record = table.getEmptyRecord();
-            record.setStringValue(ChatMiddlewareDatabaseConstants.CONTACTS_ID_CONTACT_COLUMN_NAME,idContact);
-            record.setStringValue(ChatMiddlewareDatabaseConstants.CONTACTS_REMOTE_NAME_COLUMN_NAME,remoteName);
-            record.setStringValue(ChatMiddlewareDatabaseConstants.CONTACTS_REMOTE_ACTOR_TYPE_COLUMN_NAME,remoteActorType);
-            record.setStringValue(ChatMiddlewareDatabaseConstants.CONTACTS_REMOTE_ACTOR_PUB_KEY_COLUMN_NAME,remoteActorPubKey);
-            record.setStringValue(ChatMiddlewareDatabaseConstants.CONTACTS_ALIAS_COLUMN_NAME,alias);
-            record.setStringValue(ChatMiddlewareDatabaseConstants.CONTACTS_CREATION_DATE_COLUMN_NAME,creationDate);
-            table.insertRecord(record);
-            database.closeDatabase();
-        } catch (CantInsertRecordException e) {
-            throw new CHTException(CHTException.DEFAULT_MESSAGE, e, "Cant Add Contact Exception", "Cant Insert Record Exception");
-        }
-    }
-
-    public List<String> getContactDetail(String idChat) throws CantLoadTableToMemoryException {
-        List<String> field = new ArrayList<>();
-        DatabaseTable chatDatabaseTable =this.database.getTable(ChatMiddlewareDatabaseConstants.CHATS_TABLE_NAME);
-        chatDatabaseTable.addStringFilter(ChatMiddlewareDatabaseConstants.CHATS_ID_CHAT_COLUMN_NAME, idChat, DatabaseFilterType.EQUAL);
-        chatDatabaseTable.loadToMemory();
-        List<DatabaseTableRecord> records = chatDatabaseTable.getRecords();
-        chatDatabaseTable.clearAllFilters();
-
-        for (DatabaseTableRecord record : records) {
-            field.add(record.getStringValue(ChatMiddlewareDatabaseConstants.CHATS_CHAT_NAME_COLUMN_NAME));
-            field.add(record.getStringValue(ChatMiddlewareDatabaseConstants.CHATS_STATUS_COLUMN_NAME));
-            field.add(record.getStringValue(ChatMiddlewareDatabaseConstants.CHATS_CREATION_DATE_COLUMN_NAME));
-            field.add(record.getStringValue(ChatMiddlewareDatabaseConstants.CHATS_LAST_MESSAGE_DATE_COLUMN_NAME));
-            field.add(record.getStringValue(ChatMiddlewareDatabaseConstants.CHATS_LOCAL_ACTOR_TYPE_COLUMN_NAME));
-            field.add(record.getStringValue(ChatMiddlewareDatabaseConstants.CHATS_LOCAL_ACTOR_PUB_KEY_COLUMN_NAME));
-            field.add(record.getStringValue(ChatMiddlewareDatabaseConstants.CHATS_REMOTE_ACTOR_TYPE_COLUMN_NAME));
-            field.add(record.getStringValue(ChatMiddlewareDatabaseConstants.CHATS_REMOTE_ACTOR_PUB_KEY_COLUMN_NAME));
-
-
-        }
-
-        return field;
-    }
-
-
-    private void updateReadMessage(String idChat, String idMessage) throws
-            UnexpectedResultReturnedFromDatabaseException, CantUpdateRecordException {
-
-        try {
-            DatabaseTable databaseTable = this.database.getTable(ChatMiddlewareDatabaseConstants.MESSAGE_TABLE_NAME);
-            databaseTable.addStringFilter(
-                    ChatMiddlewareDatabaseConstants.MESSAGE_ID_CHAT_COLUMN_NAME,
-                    idChat,
-                    DatabaseFilterType.EQUAL);
-            databaseTable.addStringFilter(ChatMiddlewareDatabaseConstants.MESSAGE_ID_MESSAGE_COLUMN_NAME,
-                    idMessage,
-                    DatabaseFilterType.EQUAL);
-            databaseTable.loadToMemory();
-            List<DatabaseTableRecord> records = databaseTable.getRecords();
-            checkDatabaseRecords(records);
-            DatabaseTableRecord record = records.get(0);
-            record.setStringValue(ChatMiddlewareDatabaseConstants.MESSAGE_STATUS_COLUMN_NAME, "true");
-            databaseTable.updateRecord(record);
-        } catch (CantLoadTableToMemoryException exception) {
-            throw new UnexpectedResultReturnedFromDatabaseException(exception, "Updating parameter " + true, "");
-        }
     }
 
     private void checkDatabaseRecords(List<DatabaseTableRecord> records) throws
