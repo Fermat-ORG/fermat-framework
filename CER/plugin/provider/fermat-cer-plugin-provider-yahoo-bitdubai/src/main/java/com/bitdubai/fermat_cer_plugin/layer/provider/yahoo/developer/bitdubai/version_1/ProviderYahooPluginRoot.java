@@ -165,20 +165,12 @@ public class ProviderYahooPluginRoot extends AbstractPlugin implements DatabaseM
 
     @Override
     public ExchangeRate getExchangeRateFromDate(CurrencyPair currencyPair, long timestamp) throws UnsupportedCurrencyPairException, CantGetExchangeRateException {
-        if(!isCurrencyPairSupported(currencyPair))
-            throw new UnsupportedCurrencyPairException();
-
-        //TODO:
-        throw new CantGetExchangeRateException("Not currently supported but coming soon ASAP");
+        throw new CantGetExchangeRateException("This provider does not support fetching non-current exchange rates");
     }
 
     @Override
     public Collection<ExchangeRate> getDailyExchangeRatesForPeriod(CurrencyPair currencyPair, long startTimestamp, long endTimestamp) throws UnsupportedCurrencyPairException, CantGetExchangeRateException {
-        if(!isCurrencyPairSupported(currencyPair))
-            throw new UnsupportedCurrencyPairException();
-
-        //TODO:
-        throw new CantGetExchangeRateException("Not currently supported but coming soon ASAP");
+        throw new CantGetExchangeRateException("This provider does not support fetching non-current exchange rates");
     }
 
     @Override
