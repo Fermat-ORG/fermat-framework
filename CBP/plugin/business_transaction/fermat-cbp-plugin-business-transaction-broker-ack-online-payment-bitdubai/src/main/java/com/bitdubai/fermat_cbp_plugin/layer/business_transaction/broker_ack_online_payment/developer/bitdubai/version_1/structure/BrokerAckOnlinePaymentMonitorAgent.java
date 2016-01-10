@@ -473,7 +473,7 @@ public class BrokerAckOnlinePaymentMonitorAgent implements
                                     eventId);
                     brokerAckOnlinePaymentBusinessTransactionDao.persistContractInDatabase(
                             customerBrokerContractSale);
-
+                    brokerAckOnlinePaymentBusinessTransactionDao.updateEventStatus(eventId, EventStatus.NOTIFIED);
                 }
 
             } catch (CantUpdateRecordException exception) {
