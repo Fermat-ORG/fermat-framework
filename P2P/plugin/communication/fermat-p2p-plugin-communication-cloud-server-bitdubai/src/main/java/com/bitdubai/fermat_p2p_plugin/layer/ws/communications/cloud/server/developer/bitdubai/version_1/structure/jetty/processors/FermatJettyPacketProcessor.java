@@ -6,11 +6,9 @@
  */
 package com.bitdubai.fermat_p2p_plugin.layer.ws.communications.cloud.server.developer.bitdubai.version_1.structure.jetty.processors;
 
-import com.bitdubai.fermat_api.layer.all_definition.crypto.asymmetric.ECCKeyPair;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.contents.FermatPacket;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.enums.FermatPacketType;
 import com.bitdubai.fermat_p2p_plugin.layer.ws.communications.cloud.server.developer.bitdubai.version_1.structure.jetty.ClientConnection;
-import com.bitdubai.fermat_p2p_plugin.layer.ws.communications.cloud.server.developer.bitdubai.version_1.structure.jetty.WebSocketCloudServerChannel;
 
 
 /**
@@ -24,29 +22,6 @@ import com.bitdubai.fermat_p2p_plugin.layer.ws.communications.cloud.server.devel
  * @since Java JDK 1.7
  */
 public abstract class FermatJettyPacketProcessor {
-
-    /**
-     * Represent the wsCommunicationCloudServer
-     */
-    private WebSocketCloudServerChannel webSocketCloudServerChannel;
-
-    /**
-     * Get the webSocketCloudServerChannel value
-     *
-     * @return webSocketCloudServerChannel current value
-     */
-    public WebSocketCloudServerChannel getWebSocketCloudServerChannel() {
-        return webSocketCloudServerChannel;
-    }
-
-    /**
-     * Set the webSocketCloudServerChannel value
-     *
-     * @param webSocketCloudServerChannel value to set
-     */
-    public void setWebSocketCloudServerChannel(WebSocketCloudServerChannel webSocketCloudServerChannel) {
-        this.webSocketCloudServerChannel = webSocketCloudServerChannel;
-    }
 
     /**
      * Method that contain the logic to process the packet

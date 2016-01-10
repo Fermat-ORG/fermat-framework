@@ -18,6 +18,7 @@ import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.contents.Ferm
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.enums.FermatPacketType;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.enums.JsonAttNamesConstants;
 import com.bitdubai.fermat_p2p_plugin.layer.ws.communications.cloud.server.developer.bitdubai.version_1.structure.jetty.ClientConnection;
+import com.bitdubai.fermat_p2p_plugin.layer.ws.communications.cloud.server.developer.bitdubai.version_1.structure.jetty.util.MemoryCache;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
@@ -144,7 +145,7 @@ public class ActorUpdateRequestJettyPacketProcessor extends FermatJettyPacketPro
         LOG.info("updateComponentActorProfile");
 
 
-        Map<PlatformComponentType, List<PlatformComponentProfile>> registeredPlatformComponentProfile = getWebSocketCloudServerChannel().getRegisteredOtherPlatformComponentProfileCache();
+        Map<PlatformComponentType, List<PlatformComponentProfile>> registeredPlatformComponentProfile = MemoryCache.getInstance().getRegisteredOtherPlatformComponentProfileCache();
 
         /*
          * used to update actor profile

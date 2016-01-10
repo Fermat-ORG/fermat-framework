@@ -166,7 +166,7 @@ public class ComponentRegistrationRequestJettyPacketProcessor extends FermatJett
         /*
          * Add to the cache
          */
-        getWebSocketCloudServerChannel().getRegisteredCommunicationsCloudServerCache().put(clientConnection.hashCode(), platformComponentProfileToRegister);
+        MemoryCache.getInstance().getRegisteredCommunicationsCloudServerCache().put(clientConnection.hashCode(), platformComponentProfileToRegister);
 
          /*
          * Construct the respond
@@ -190,7 +190,7 @@ public class ComponentRegistrationRequestJettyPacketProcessor extends FermatJett
          */
          clientConnection.getSession().getAsyncRemote().sendText(FermatPacketEncoder.encode(fermatPacketRespond));
 
-        LOG.info("Total Communications Cloud Server Component Registered = " + getWebSocketCloudServerChannel().getRegisteredCommunicationsCloudServerCache().size());
+        LOG.info("Total Communications Cloud Server Component Registered = " + MemoryCache.getInstance().getRegisteredCommunicationsCloudServerCache().size());
 
     }
 
@@ -212,14 +212,14 @@ public class ComponentRegistrationRequestJettyPacketProcessor extends FermatJett
         /*
          * Validate if the connection if in the PendingRegisterClientConnectionsCache
          */
-        if (getWebSocketCloudServerChannel().getPendingRegisterClientConnectionsCache().containsKey(receiveFermatPacket.getSender())){
+        if (MemoryCache.getInstance().getPendingRegisterClientConnectionsCache().containsKey(receiveFermatPacket.getSender())){
 
             boolean exist = Boolean.FALSE;
 
             /*
              * Validate are not yet registered
              */
-            for (PlatformComponentProfile registered : getWebSocketCloudServerChannel().getRegisteredCommunicationsCloudClientCache().values()) {
+            for (PlatformComponentProfile registered : MemoryCache.getInstance().getRegisteredCommunicationsCloudClientCache().values()) {
 
                 if (registered.getIdentityPublicKey().equals(platformComponentProfileToRegister.getIdentityPublicKey())){
                     exist = Boolean.TRUE;
@@ -230,18 +230,18 @@ public class ComponentRegistrationRequestJettyPacketProcessor extends FermatJett
              * If exist remove all reference
              */
             if (exist) {
-                getWebSocketCloudServerChannel().getRegisteredCommunicationsCloudClientCache().remove(platformComponentProfileToRegister.getIdentityPublicKey());
+                MemoryCache.getInstance().getRegisteredCommunicationsCloudClientCache().remove(platformComponentProfileToRegister.getIdentityPublicKey());
             }
 
             /*
              * Add to the cache
              */
-            getWebSocketCloudServerChannel().getRegisteredCommunicationsCloudClientCache().put(clientConnection.hashCode(), platformComponentProfileToRegister);
+            MemoryCache.getInstance().getRegisteredCommunicationsCloudClientCache().put(clientConnection.hashCode(), platformComponentProfileToRegister);
 
             /*
              * Remove from the PendingRegisterClientConnectionsCache
              */
-            getWebSocketCloudServerChannel().getPendingRegisterClientConnectionsCache().remove(receiveFermatPacket.getSender()); //Remove using temporal client identity
+            MemoryCache.getInstance().getPendingRegisterClientConnectionsCache().remove(receiveFermatPacket.getSender()); //Remove using temporal client identity
 
             /*
              * Add to the RegisteredClientConnectionsCache
@@ -260,7 +260,7 @@ public class ComponentRegistrationRequestJettyPacketProcessor extends FermatJett
             /*
              * Validate if no has a profile references in stand by, is have is a reconnection
              */
-            if(!getWebSocketCloudServerChannel().getStandByProfileByClientIdentity().containsKey(platformComponentProfileToRegister.getIdentityPublicKey())){
+            if(!MemoryCache.getInstance().getStandByProfileByClientIdentity().containsKey(platformComponentProfileToRegister.getIdentityPublicKey())){
 
                 LOG.info("New registration");
 
@@ -285,16 +285,16 @@ public class ComponentRegistrationRequestJettyPacketProcessor extends FermatJett
 
                 LOG.info("Registration for reconnection");
 
-                if (getWebSocketCloudServerChannel().getTimersByClientIdentity().containsKey(platformComponentProfileToRegister.getIdentityPublicKey())){
+                if (MemoryCache.getInstance().getTimersByClientIdentity().containsKey(platformComponentProfileToRegister.getIdentityPublicKey())){
                     LOG.info("Cancel timer task to clean references");
-                    Timer timer = getWebSocketCloudServerChannel().getTimersByClientIdentity().get(platformComponentProfileToRegister.getIdentityPublicKey());
+                    Timer timer = MemoryCache.getInstance().getTimersByClientIdentity().get(platformComponentProfileToRegister.getIdentityPublicKey());
                     timer.cancel();
                 }
 
             /*
              * Get the profiles in stand by
              */
-                List<PlatformComponentProfile> profilesInStandBy = getWebSocketCloudServerChannel().getStandByProfileByClientIdentity().get(platformComponentProfileToRegister.getIdentityPublicKey());
+                List<PlatformComponentProfile> profilesInStandBy = MemoryCache.getInstance().getStandByProfileByClientIdentity().get(platformComponentProfileToRegister.getIdentityPublicKey());
 
             /*
              * Move again to the registers profile cache
@@ -318,7 +318,7 @@ public class ComponentRegistrationRequestJettyPacketProcessor extends FermatJett
              */
             clientConnection.getSession().getAsyncRemote().sendText(FermatPacketEncoder.encode(fermatPacketRespond));
 
-            LOG.info("Total Communications Cloud Client Component Registered = " + getWebSocketCloudServerChannel().getRegisteredCommunicationsCloudClientCache().size());
+            LOG.info("Total Communications Cloud Client Component Registered = " + MemoryCache.getInstance().getRegisteredCommunicationsCloudClientCache().size());
 
         }else {
 
@@ -336,7 +336,7 @@ public class ComponentRegistrationRequestJettyPacketProcessor extends FermatJett
 
         LOG.info("registerNetworkServiceComponent");
 
-        Map<NetworkServiceType, List<PlatformComponentProfile>> networkServiceRegistered = getWebSocketCloudServerChannel().getRegisteredNetworkServicesCache();
+        Map<NetworkServiceType, List<PlatformComponentProfile>> networkServiceRegistered = MemoryCache.getInstance().getRegisteredNetworkServicesCache();
 
         /*
          * Validate if contain a list for the NetworkServiceType
@@ -406,7 +406,7 @@ public class ComponentRegistrationRequestJettyPacketProcessor extends FermatJett
         LOG.info("registerOtherComponent");
 
 
-        Map<PlatformComponentType, List<PlatformComponentProfile>> registeredPlatformComponentProfile = getWebSocketCloudServerChannel().getRegisteredOtherPlatformComponentProfileCache();
+        Map<PlatformComponentType, List<PlatformComponentProfile>> registeredPlatformComponentProfile = MemoryCache.getInstance().getRegisteredOtherPlatformComponentProfileCache();
 
         /*
          * Validate if contain a list for the NetworkServiceType
@@ -483,7 +483,7 @@ public class ComponentRegistrationRequestJettyPacketProcessor extends FermatJett
 
                 case NETWORK_SERVICE :
 
-                        Map<NetworkServiceType, List<PlatformComponentProfile>> networkServiceRegistered = getWebSocketCloudServerChannel().getRegisteredNetworkServicesCache();
+                        Map<NetworkServiceType, List<PlatformComponentProfile>> networkServiceRegistered = MemoryCache.getInstance().getRegisteredNetworkServicesCache();
 
                         /*
                          * Validate if contain a list for the NetworkServiceType
@@ -522,7 +522,7 @@ public class ComponentRegistrationRequestJettyPacketProcessor extends FermatJett
                 //Others
                 default :
 
-                        Map<PlatformComponentType, List<PlatformComponentProfile>> registeredPlatformComponentProfile = getWebSocketCloudServerChannel().getRegisteredOtherPlatformComponentProfileCache();
+                        Map<PlatformComponentType, List<PlatformComponentProfile>> registeredPlatformComponentProfile = MemoryCache.getInstance().getRegisteredOtherPlatformComponentProfileCache();
 
                         /*
                          * Validate if contain a list for the NetworkServiceType

@@ -6,33 +6,27 @@
  */
 package com.bitdubai.fermat_p2p_plugin.layer.ws.communications.cloud.server.developer.bitdubai.version_1.structure.jetty;
 
-import com.bitdubai.fermat_p2p_plugin.layer.ws.communications.cloud.server.developer.bitdubai.version_1.structure.jetty.vpn.VPN;
 import com.bitdubai.fermat_p2p_plugin.layer.ws.communications.cloud.server.developer.bitdubai.version_1.structure.jetty.vpn.VpnWebSocketServlet;
 import com.bitdubai.fermat_p2p_plugin.layer.ws.communications.cloud.server.developer.bitdubai.version_1.structure.jetty.vpn.WebSocketVpnServerChannel;
+import com.bitdubai.fermat_p2p_plugin.layer.ws.communications.cloud.server.developer.bitdubai.version_1.structure.jetty.webservices.ApplicationResources;
 
 import org.apache.commons.lang.ClassUtils;
 import org.apache.log4j.Logger;
 import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.server.ServerConnector;
 import org.eclipse.jetty.servlet.ServletContextHandler;
-
-import javax.servlet.Servlet;
-import javax.websocket.ContainerProvider;
-import javax.websocket.WebSocketContainer;
-import javax.websocket.server.ServerContainer;
-import javax.websocket.server.ServerEndpointConfig;
-
-import org.eclipse.jetty.servlet.ServletHandler;
 import org.eclipse.jetty.servlet.ServletHolder;
 import org.eclipse.jetty.servlet.ServletMapping;
 import org.eclipse.jetty.websocket.jsr356.server.deploy.WebSocketServerContainerInitializer;
+import org.jboss.resteasy.plugins.server.servlet.HttpServlet30Dispatcher;
 
-import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Enumeration;
 import java.util.Timer;
 import java.util.TimerTask;
 import java.util.UUID;
+
+import javax.websocket.server.ServerContainer;
+import javax.websocket.server.ServerEndpointConfig;
 
 /**
  * The class <code>com.bitdubai.fermat_p2p_plugin.layer.ws.communications.cloud.server.developer.bitdubai.version_1.structure.jetty.JettyEmbeddedAppServer</code>
@@ -53,12 +47,12 @@ public class JettyEmbeddedAppServer {
     /**
      * Represent the DEFAULT_PORT value (9090)
      */
-    private static final int DEFAULT_PORT = 9090;
+    public static final int DEFAULT_PORT = 9090;
 
     /**
      * Represent the DEFAULT_CONTEXT_PATH value (/fermat)
      */
-    private static final String DEFAULT_CONTEXT_PATH = "/fermat";
+    public static final String DEFAULT_CONTEXT_PATH = "/fermat";
 
     /**
      * Represent the JettyEmbeddedAppServer instance
@@ -110,6 +104,14 @@ public class JettyEmbeddedAppServer {
         this.server.setHandler(servletContextHandler);
 
         try{
+
+            /*
+             * Initialize restful service layer
+             */
+            ServletHolder restfulServiceServletHolder = new ServletHolder(new HttpServlet30Dispatcher());
+            restfulServiceServletHolder.setInitParameter("javax.ws.rs.Application", ApplicationResources.class.getName());
+            servletContextHandler.addServlet(restfulServiceServletHolder, "/*");
+
             /*
              * Initialize javax.websocket layer
              */
@@ -119,8 +121,6 @@ public class JettyEmbeddedAppServer {
              * Add WebSocket endpoint to javax.websocket layer
              */
             this.wsServerContainer.addEndpoint(WebSocketCloudServerChannel.class);
-
-
 
             this.server.start();
             this.server.dump(System.err);
@@ -139,11 +139,12 @@ public class JettyEmbeddedAppServer {
     public String deployNewVpnWebSocket() throws Exception {
 
         // Add a websocket to a specific path spec
-        String path = UUID.randomUUID().toString();
+        String id = UUID.randomUUID().toString();
+        String path =  "/" + id + "/*";
         System.out.println("Deploy a new ws path = " + path);
-        ServletHolder servletHolder = new ServletHolder("vpn_"+path, VpnWebSocketServlet.class);
+        ServletHolder servletHolder = new ServletHolder("vpn_"+id, VpnWebSocketServlet.class);
         servletHolder.setInitOrder(1);
-        instance.servletContextHandler.addServlet(servletHolder, "/" + path + "/*");
+        instance.servletContextHandler.addServlet(servletHolder, path);
         return path;
     }
 
@@ -155,9 +156,10 @@ public class JettyEmbeddedAppServer {
     public String deployNewJavaxVpnWebSocket() throws Exception {
 
         // Add a websocket to a specific path spec
-        String path = UUID.randomUUID().toString();
+        String id = UUID.randomUUID().toString();
+        String path = "/" + id + "/vpn/";
         System.out.println("Deploy a new ws path = " + path);
-        ServerEndpointConfig serverEndpointConfig = ServerEndpointConfig.Builder.create(WebSocketVpnServerChannel.class, "/" + path + "/vpn/").build();
+        ServerEndpointConfig serverEndpointConfig = ServerEndpointConfig.Builder.create(WebSocketVpnServerChannel.class, path).build();
         instance.wsServerContainer.addEndpoint(serverEndpointConfig);
 
         return path;
@@ -223,7 +225,15 @@ public class JettyEmbeddedAppServer {
                 public void run() {
                     try {
 
+                        org.eclipse.jetty.util.Attributes attributes = JettyEmbeddedAppServer.getInstance().servletContextHandler.getAttributes();
+
+                        Enumeration<String> enumeration = attributes.getAttributeNames();
+                        while (enumeration.hasMoreElements()){
+                            System.out.println("name = " +enumeration.nextElement());
+                        }
+
                         ServletMapping[] servletMappings = instance.servletContextHandler.getServletHandler().getServletMappings();
+
                         for (int j = 0; j < servletMappings.length; j++) {
                             ServletMapping servletMapping = servletMappings[j];
                             System.out.println("servletMapping = " + servletMapping.getPathSpecs());

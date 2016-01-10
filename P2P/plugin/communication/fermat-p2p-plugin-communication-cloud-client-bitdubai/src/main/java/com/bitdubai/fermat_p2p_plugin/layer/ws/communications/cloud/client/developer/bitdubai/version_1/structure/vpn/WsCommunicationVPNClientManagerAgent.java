@@ -65,11 +65,12 @@ public class WsCommunicationVPNClientManagerAgent extends Thread{
     /**
      * Create a new WsCommunicationVPNClient
      *
+     * @param clientIdentity
      * @param serverURI
      * @param vpnServerIdentity
      * @param remotePlatformComponentProfile
      */
-    public void createNewWsCommunicationVPNClient(URI serverURI, String vpnServerIdentity, String participantIdentity, PlatformComponentProfile remotePlatformComponentProfile, PlatformComponentProfile remoteParticipantNetworkService, EventManager eventManager) {
+    public void createNewWsCommunicationVPNClient(String clientIdentity, URI serverURI, String vpnServerIdentity, String participantIdentity, PlatformComponentProfile remotePlatformComponentProfile, PlatformComponentProfile remoteParticipantNetworkService, EventManager eventManager) {
 
         /*
          * Create the identity
@@ -85,6 +86,7 @@ public class WsCommunicationVPNClientManagerAgent extends Thread{
          * Get json representation
          */
         JsonObject jsonObject = new JsonObject();
+        jsonObject.addProperty(JsonAttNamesConstants.CLIENT_IDENTITY, clientIdentity);
         jsonObject.addProperty(JsonAttNamesConstants.REGISTER_PARTICIPANT_IDENTITY_VPN, participantIdentity);
         jsonObject.addProperty(JsonAttNamesConstants.CLIENT_IDENTITY_VPN, vpnClientIdentity.getPublicKey());
         jsonObject.addProperty(JsonAttNamesConstants.RECONNECTED, Boolean.FALSE);

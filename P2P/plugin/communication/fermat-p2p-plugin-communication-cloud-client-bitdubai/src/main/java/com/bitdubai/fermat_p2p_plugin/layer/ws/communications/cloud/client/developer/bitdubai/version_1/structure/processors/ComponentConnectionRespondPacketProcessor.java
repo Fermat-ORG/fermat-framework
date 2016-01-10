@@ -20,7 +20,6 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 
 import java.net.URI;
-import java.util.StringTokenizer;
 
 /**
  * The Class <code>com.bitdubai.fermat_p2p_plugin.layer.ws.communications.cloud.client.developer.bitdubai.version_1.structure.processors.ComponentConnectionRespondPacketProcessor</code> implement
@@ -68,17 +67,8 @@ public class ComponentConnectionRespondPacketProcessor extends FermatPacketProce
             PlatformComponentProfile remotePlatformComponentProfile = gson.fromJson(respond.get(JsonAttNamesConstants.REMOTE_PARTICIPANT_VPN).getAsString(), PlatformComponentProfileCommunication.class);
             PlatformComponentProfile remoteNsPlatformComponentProfile = gson.fromJson(respond.get(JsonAttNamesConstants.REMOTE_PARTICIPANT_NS_VPN).getAsString(), PlatformComponentProfileCommunication.class);
 
-            /*
-             * TEMPORAL:
-             * Reconstruct the uri, for the configuration of the AWS. The internal ip is different to the public ip,
-             * when return the vpnServerUri the cloud server only know the internal ip and send this in the respond.
-             * Need to fix this situation in the future
-             */
-            StringTokenizer stringTokenizer = new StringTokenizer(vpnServerUri.toString(), ":");
-            stringTokenizer.nextElement();
-            stringTokenizer.nextElement();
-            String port = (String) stringTokenizer.nextElement();
-            vpnServerUri = new URI(ServerConf.WS_PROTOCOL + WsCommunicationsCloudClientPluginRoot.SERVER_IP  + ":" + port);
+
+            vpnServerUri = new URI(ServerConf.WS_PROTOCOL + WsCommunicationsCloudClientPluginRoot.SERVER_IP  + ":" + ServerConf.DEFAULT_PORT +"/"+vpnServerUri);
 
             //System.out.println("ComponentConnectionRespondPacketProcessor - reconstruct vpnServerUri = "+vpnServerUri);
 
@@ -90,7 +80,7 @@ public class ComponentConnectionRespondPacketProcessor extends FermatPacketProce
             /*
              * Create a new VPN client
              */
-            wsCommunicationVPNClientManagerAgent.createNewWsCommunicationVPNClient(vpnServerUri, vpnServerIdentity, participantIdentity, remotePlatformComponentProfile, remoteNsPlatformComponentProfile, getWsCommunicationsCloudClientChannel().getEventManager());
+            wsCommunicationVPNClientManagerAgent.createNewWsCommunicationVPNClient(getWsCommunicationsCloudClientChannel().getIdentityPublicKey(), vpnServerUri, vpnServerIdentity, participantIdentity, remotePlatformComponentProfile, remoteNsPlatformComponentProfile, getWsCommunicationsCloudClientChannel().getEventManager());
 
             /*
              * Is not running

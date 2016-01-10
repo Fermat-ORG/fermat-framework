@@ -17,37 +17,21 @@ import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.contents.Ferm
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.enums.FermatPacketType;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.enums.JsonAttNamesConstants;
 import com.bitdubai.fermat_p2p_plugin.layer.ws.communications.cloud.server.developer.bitdubai.version_1.structure.jetty.conf.WebSocketConfigurator;
-import com.bitdubai.fermat_p2p_plugin.layer.ws.communications.cloud.server.developer.bitdubai.version_1.structure.jetty.processors.ActorUpdateRequestJettyPacketProcessor;
-import com.bitdubai.fermat_p2p_plugin.layer.ws.communications.cloud.server.developer.bitdubai.version_1.structure.jetty.processors.ComponentConnectionRequestJettyPacketProcessor;
-import com.bitdubai.fermat_p2p_plugin.layer.ws.communications.cloud.server.developer.bitdubai.version_1.structure.jetty.processors.ComponentRegistrationRequestJettyPacketProcessor;
-import com.bitdubai.fermat_p2p_plugin.layer.ws.communications.cloud.server.developer.bitdubai.version_1.structure.jetty.processors.DiscoveryComponentConnectionRequestJettyPacketProcessor;
 import com.bitdubai.fermat_p2p_plugin.layer.ws.communications.cloud.server.developer.bitdubai.version_1.structure.jetty.processors.FermatJettyPacketProcessor;
-import com.bitdubai.fermat_p2p_plugin.layer.ws.communications.cloud.server.developer.bitdubai.version_1.structure.jetty.processors.RequestListComponentRegisterJettyPacketProcessor;
 import com.bitdubai.fermat_p2p_plugin.layer.ws.communications.cloud.server.developer.bitdubai.version_1.structure.jetty.util.MemoryCache;
-import com.bitdubai.fermat_p2p_plugin.layer.ws.communications.cloud.server.developer.bitdubai.version_1.structure.processors.ActorUpdateRequestPacketProcessor;
-import com.bitdubai.fermat_p2p_plugin.layer.ws.communications.cloud.server.developer.bitdubai.version_1.structure.processors.ComponentConnectionRequestPacketProcessor;
-import com.bitdubai.fermat_p2p_plugin.layer.ws.communications.cloud.server.developer.bitdubai.version_1.structure.processors.ComponentRegistrationRequestPacketProcessor;
-import com.bitdubai.fermat_p2p_plugin.layer.ws.communications.cloud.server.developer.bitdubai.version_1.structure.processors.DiscoveryComponentConnectionRequestPacketProcessor;
-import com.bitdubai.fermat_p2p_plugin.layer.ws.communications.cloud.server.developer.bitdubai.version_1.structure.processors.FermatPacketProcessor;
-import com.bitdubai.fermat_p2p_plugin.layer.ws.communications.cloud.server.developer.bitdubai.version_1.structure.processors.RequestListComponentRegisterPacketProcessor;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 
 import org.apache.commons.lang.ClassUtils;
 import org.apache.log4j.Logger;
-import org.eclipse.jetty.websocket.jsr356.annotations.OnMessagePongCallable;
-import org.java_websocket.framing.Framedata;
-import org.java_websocket.framing.FramedataImpl1;
 
 import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
 import java.util.Timer;
 import java.util.TimerTask;
-import java.util.concurrent.ConcurrentHashMap;
 
 import javax.websocket.CloseReason;
 import javax.websocket.OnClose;
@@ -74,45 +58,7 @@ public class WebSocketCloudServerChannel {
      */
     private Logger LOG = Logger.getLogger(ClassUtils.getShortClassName(WebSocketCloudServerChannel.class));
 
-    /**
-     * Holds the pending register clients connections cache
-     */
-    private Map<String, ClientConnection> pendingRegisterClientConnectionsCache;
 
-    /**
-     * Holds the packet processors objects
-     */
-    private Map<FermatPacketType, List<FermatJettyPacketProcessor>> packetProcessorsRegister;
-
-    /**
-     * Holds all the registered Communications Cloud Server by his client connection hash
-     */
-    private Map<Integer, PlatformComponentProfile> registeredCommunicationsCloudServerCache;
-
-    /**
-     * Holds all the registered Communications Cloud Client by his client connection hash
-     */
-    private Map<Integer, PlatformComponentProfile> registeredCommunicationsCloudClientCache;
-
-    /**
-     * Holds all the registered network services by his network service type
-     */
-    private Map<NetworkServiceType, List<PlatformComponentProfile>> registeredNetworkServicesCache;
-
-    /**
-     * Holds all other Platform Component Profile register by type
-     */
-    private Map<PlatformComponentType, List<PlatformComponentProfile>> registeredOtherPlatformComponentProfileCache;
-
-    /**
-     * Holds all profile by client identity, to wait to reconnect
-     */
-    private Map<String, List<PlatformComponentProfile>> standByProfileByClientIdentity;
-
-    /**
-     * Holds all Timer that clear references by client identity
-     */
-    private Map<String, Timer> timersByClientIdentity;
 
     /**
      * Represent the active client Connection
@@ -124,21 +70,7 @@ public class WebSocketCloudServerChannel {
      */
     public WebSocketCloudServerChannel(){
         super();
-        this.packetProcessorsRegister                     = new ConcurrentHashMap<>();
-        this.pendingRegisterClientConnectionsCache        = new ConcurrentHashMap<>();
-        this.pendingRegisterClientConnectionsCache        = new ConcurrentHashMap<>();
-        this.registeredCommunicationsCloudServerCache     = new ConcurrentHashMap<>();
-        this.registeredCommunicationsCloudClientCache     = new ConcurrentHashMap<>();
-        this.registeredNetworkServicesCache               = new ConcurrentHashMap<>();
-        this.registeredOtherPlatformComponentProfileCache = new ConcurrentHashMap<>();
-        this.timersByClientIdentity                       = new ConcurrentHashMap<>();
-        this.standByProfileByClientIdentity               = new ConcurrentHashMap<>();
 
-        registerFermatPacketProcessor(new ComponentRegistrationRequestJettyPacketProcessor());
-        registerFermatPacketProcessor(new ComponentConnectionRequestJettyPacketProcessor());
-        registerFermatPacketProcessor(new DiscoveryComponentConnectionRequestJettyPacketProcessor());
-        registerFermatPacketProcessor(new RequestListComponentRegisterJettyPacketProcessor());
-        registerFermatPacketProcessor(new ActorUpdateRequestJettyPacketProcessor());
     }
 
     /**
@@ -196,7 +128,7 @@ public class WebSocketCloudServerChannel {
             /*
              * Add to the pending register client connection
              */
-            pendingRegisterClientConnectionsCache.put(temporalClientIdentity, activeClientConnection);
+            MemoryCache.getInstance().getPendingRegisterClientConnectionsCache().put(temporalClientIdentity, activeClientConnection);
 
             /*
              * Add the server identity for this client connection
@@ -238,13 +170,13 @@ public class WebSocketCloudServerChannel {
 
 
         //verify is packet supported
-        if (packetProcessorsRegister.containsKey(fermatPacketReceive.getFermatPacketType())){
+        if (MemoryCache.getInstance().getPacketProcessorsRegister().containsKey(fermatPacketReceive.getFermatPacketType())){
 
 
             /*
              * Call the processors for this packet
              */
-            for (FermatJettyPacketProcessor fermatPacketProcessor :packetProcessorsRegister.get(fermatPacketReceive.getFermatPacketType())) {
+            for (FermatJettyPacketProcessor fermatPacketProcessor : MemoryCache.getInstance().getPacketProcessorsRegister().get(fermatPacketReceive.getFermatPacketType())) {
 
                 /*
                  * Processor make his job
@@ -280,14 +212,14 @@ public class WebSocketCloudServerChannel {
                                    @Override
                                    public void run() {
                                        LOG.info("client (" + id + ") not reconnect, proceed to clean references");
-                                       standByProfileByClientIdentity.remove(clientIdentity);
-                                       LOG.info("standByProfileByClientIdentity = " + standByProfileByClientIdentity.size());
+                                       MemoryCache.getInstance().getStandByProfileByClientIdentity().remove(clientIdentity);
+                                       LOG.info("standByProfileByClientIdentity = " + MemoryCache.getInstance().getStandByProfileByClientIdentity().size());
                                    }
                                },
                         60000
                 );
 
-                timersByClientIdentity.put(clientIdentity, timer);
+                MemoryCache.getInstance().getTimersByClientIdentity().put(clientIdentity, timer);
             }
 
         } else {
@@ -338,20 +270,20 @@ public class WebSocketCloudServerChannel {
             LOG.info("ID = " + activeClientConnection.getSession().getId());
             removeNetworkServiceRegisteredByClientIdentity(activeClientConnection.getClientIdentity());
             removeOtherPlatformComponentRegisteredByClientIdentity(activeClientConnection.getClientIdentity());
-            pendingRegisterClientConnectionsCache.remove(activeClientConnection.getClientIdentity());
-            registeredCommunicationsCloudServerCache.remove(activeClientConnection.getClientIdentity());
-            registeredCommunicationsCloudClientCache.remove(activeClientConnection.getClientIdentity());
+            MemoryCache.getInstance().getPendingRegisterClientConnectionsCache().remove(activeClientConnection.getClientIdentity());
+            MemoryCache.getInstance().getRegisteredCommunicationsCloudServerCache().remove(activeClientConnection.getClientIdentity());
+            MemoryCache.getInstance().getRegisteredCommunicationsCloudClientCache().remove(activeClientConnection.getClientIdentity());
 
-            LOG.info("pendingRegisterClientConnectionsCache.size()    = " + pendingRegisterClientConnectionsCache.size());
-            LOG.info("registeredCommunicationsCloudServerCache.size() = " + registeredCommunicationsCloudServerCache.size());
-            LOG.info("registeredCommunicationsCloudClientCache.size() = " + registeredCommunicationsCloudClientCache.size());
-            LOG.info("registeredNetworkServicesCache.size()           = " + registeredNetworkServicesCache.size());
-            for (NetworkServiceType networkServiceType: registeredNetworkServicesCache.keySet()) {
-                LOG.info(networkServiceType + " = " + registeredNetworkServicesCache.get(networkServiceType).size());
+            LOG.info("pendingRegisterClientConnectionsCache.size()    = " + MemoryCache.getInstance().getPendingRegisterClientConnectionsCache().size());
+            LOG.info("registeredCommunicationsCloudServerCache.size() = " + MemoryCache.getInstance().getRegisteredCommunicationsCloudServerCache().size());
+            LOG.info("registeredCommunicationsCloudClientCache.size() = " + MemoryCache.getInstance().getRegisteredCommunicationsCloudClientCache().size());
+            LOG.info("registeredNetworkServicesCache.size()           = " + MemoryCache.getInstance().getRegisteredNetworkServicesCache().size());
+            for (NetworkServiceType networkServiceType: MemoryCache.getInstance().getRegisteredNetworkServicesCache().keySet()) {
+                LOG.info(networkServiceType + " = " + MemoryCache.getInstance().getRegisteredNetworkServicesCache().get(networkServiceType).size());
             }
-            LOG.info("registeredOtherPlatformComponentProfileCache.size()  = " + registeredOtherPlatformComponentProfileCache.size());
-            for (PlatformComponentType platformComponentType: registeredOtherPlatformComponentProfileCache.keySet()) {
-                LOG.info(platformComponentType + " = " + registeredOtherPlatformComponentProfileCache.get(platformComponentType).size());
+            LOG.info("registeredOtherPlatformComponentProfileCache.size()  = " + MemoryCache.getInstance().getRegisteredOtherPlatformComponentProfileCache().size());
+            for (PlatformComponentType platformComponentType: MemoryCache.getInstance().getRegisteredOtherPlatformComponentProfileCache().keySet()) {
+                LOG.info(platformComponentType + " = " + MemoryCache.getInstance().getRegisteredOtherPlatformComponentProfileCache().get(platformComponentType).size());
             }
 
         }catch (Exception e){
@@ -377,10 +309,10 @@ public class WebSocketCloudServerChannel {
              */
             List<PlatformComponentProfile> removeProfile = removeNetworkServiceRegisteredByClientIdentity(activeClientConnection.getClientIdentity());
             removeProfile.addAll(removeOtherPlatformComponentRegisteredByClientIdentity(activeClientConnection.getClientIdentity()));
-            pendingRegisterClientConnectionsCache.remove(activeClientConnection.getClientIdentity());
-            standByProfileByClientIdentity.put(activeClientConnection.getClientIdentity(), removeProfile);
-            registeredCommunicationsCloudServerCache.remove(activeClientConnection.getClientIdentity());
-            registeredCommunicationsCloudClientCache.remove(activeClientConnection.getClientIdentity());
+            MemoryCache.getInstance().getPendingRegisterClientConnectionsCache().remove(activeClientConnection.getClientIdentity());
+            MemoryCache.getInstance().getStandByProfileByClientIdentity().put(activeClientConnection.getClientIdentity(), removeProfile);
+            MemoryCache.getInstance().getRegisteredCommunicationsCloudServerCache().remove(activeClientConnection.getClientIdentity());
+            MemoryCache.getInstance().getRegisteredCommunicationsCloudClientCache().remove(activeClientConnection.getClientIdentity());
             LOG.info("Number of list of profiles put into standby = " + removeProfile.size());
 
         }catch (Exception e){
@@ -399,12 +331,12 @@ public class WebSocketCloudServerChannel {
 
         List<PlatformComponentProfile> removeProfile = new ArrayList<>();
 
-        Iterator<NetworkServiceType> iteratorNetworkServiceType = registeredNetworkServicesCache.keySet().iterator();
+        Iterator<NetworkServiceType> iteratorNetworkServiceType = MemoryCache.getInstance().getRegisteredNetworkServicesCache().keySet().iterator();
 
         while (iteratorNetworkServiceType.hasNext()){
 
             NetworkServiceType networkServiceType = iteratorNetworkServiceType.next();
-            Iterator<PlatformComponentProfile> iterator = registeredNetworkServicesCache.get(networkServiceType).iterator();
+            Iterator<PlatformComponentProfile> iterator = MemoryCache.getInstance().getRegisteredNetworkServicesCache().get(networkServiceType).iterator();
             while (iterator.hasNext()){
 
                 /*
@@ -419,18 +351,18 @@ public class WebSocketCloudServerChannel {
                 }
             }
 
-            if (registeredNetworkServicesCache.get(networkServiceType).isEmpty()){
-                registeredNetworkServicesCache.remove(networkServiceType);
+            if (MemoryCache.getInstance().getRegisteredNetworkServicesCache().get(networkServiceType).isEmpty()){
+                MemoryCache.getInstance().getRegisteredNetworkServicesCache().remove(networkServiceType);
             }
         }
 
         /*
          * Remove the networkServiceType empty
          */
-        for (NetworkServiceType networkServiceType : registeredNetworkServicesCache.keySet()) {
+        for (NetworkServiceType networkServiceType : MemoryCache.getInstance().getRegisteredNetworkServicesCache().keySet()) {
 
-            if (registeredNetworkServicesCache.get(networkServiceType).isEmpty()){
-                registeredNetworkServicesCache.remove(networkServiceType);
+            if (MemoryCache.getInstance().getRegisteredNetworkServicesCache().get(networkServiceType).isEmpty()){
+                MemoryCache.getInstance().getRegisteredNetworkServicesCache().remove(networkServiceType);
             }
         }
 
@@ -448,11 +380,11 @@ public class WebSocketCloudServerChannel {
         LOG.info("removeOtherPlatformComponentRegisteredByClientIdentity ");
 
         List<PlatformComponentProfile> removeProfile = new ArrayList<>();
-        Iterator<PlatformComponentType> iteratorPlatformComponentType = registeredOtherPlatformComponentProfileCache.keySet().iterator();
+        Iterator<PlatformComponentType> iteratorPlatformComponentType = MemoryCache.getInstance().getRegisteredOtherPlatformComponentProfileCache().keySet().iterator();
         while (iteratorPlatformComponentType.hasNext()){
 
             PlatformComponentType platformComponentType = iteratorPlatformComponentType.next();
-            Iterator<PlatformComponentProfile> iterator = registeredOtherPlatformComponentProfileCache.get(platformComponentType).iterator();
+            Iterator<PlatformComponentProfile> iterator = MemoryCache.getInstance().getRegisteredOtherPlatformComponentProfileCache().get(platformComponentType).iterator();
             while (iterator.hasNext()){
 
                 /*
@@ -469,122 +401,12 @@ public class WebSocketCloudServerChannel {
             /*
              * Remove the platformComponentType empty
              */
-            if (registeredOtherPlatformComponentProfileCache.get(platformComponentType).isEmpty()){
-                registeredOtherPlatformComponentProfileCache.remove(platformComponentType);
+            if (MemoryCache.getInstance().getRegisteredOtherPlatformComponentProfileCache().get(platformComponentType).isEmpty()){
+                MemoryCache.getInstance().getRegisteredOtherPlatformComponentProfileCache().remove(platformComponentType);
             }
         }
 
         return removeProfile;
-    }
-
-
-    /**
-     * This method register a FermatJettyPacketProcessor object with this
-     * server
-     */
-    public void registerFermatPacketProcessor(FermatJettyPacketProcessor fermatJettyPacketProcessor) {
-
-        /*
-         * Set server reference
-         */
-        fermatJettyPacketProcessor.setWebSocketCloudServerChannel(this);
-
-        //Validate if a previous list created
-        if (packetProcessorsRegister.containsKey(fermatJettyPacketProcessor.getFermatPacketType())){
-
-            /*
-             * Add to the existing list
-             */
-            packetProcessorsRegister.get(fermatJettyPacketProcessor.getFermatPacketType()).add(fermatJettyPacketProcessor);
-
-        }else{
-
-            /*
-             * Create a new list and add the fermatPacketProcessor
-             */
-            List<FermatJettyPacketProcessor> fermatPacketProcessorList = new ArrayList<>();
-            fermatPacketProcessorList.add(fermatJettyPacketProcessor);
-
-            /*
-             * Add to the packetProcessorsRegister
-             */
-            packetProcessorsRegister.put(fermatJettyPacketProcessor.getFermatPacketType(), fermatPacketProcessorList);
-        }
-
-        LOG.info("packetProcessorsRegister = " + packetProcessorsRegister.size());
-
-    }
-
-    /**
-     * Get the pendingRegisterClientConnectionsCache value
-     *
-     * @return pendingRegisterClientConnectionsCache current value
-     */
-    public Map<String, ClientConnection> getPendingRegisterClientConnectionsCache() {
-        return pendingRegisterClientConnectionsCache;
-    }
-
-    /**
-     * Get the packetProcessorsRegister value
-     *
-     * @return packetProcessorsRegister current value
-     */
-    public Map<FermatPacketType, List<FermatJettyPacketProcessor>> getPacketProcessorsRegister() {
-        return packetProcessorsRegister;
-    }
-
-    /**
-     * Get the registeredCommunicationsCloudServerCache value
-     *
-     * @return registeredCommunicationsCloudServerCache current value
-     */
-    public Map<Integer, PlatformComponentProfile> getRegisteredCommunicationsCloudServerCache() {
-        return registeredCommunicationsCloudServerCache;
-    }
-
-    /**
-     * Get the registeredCommunicationsCloudClientCache value
-     *
-     * @return registeredCommunicationsCloudClientCache current value
-     */
-    public Map<Integer, PlatformComponentProfile> getRegisteredCommunicationsCloudClientCache() {
-        return registeredCommunicationsCloudClientCache;
-    }
-
-    /**
-     * Get the registeredNetworkServicesCache value
-     *
-     * @return registeredNetworkServicesCache current value
-     */
-    public Map<NetworkServiceType, List<PlatformComponentProfile>> getRegisteredNetworkServicesCache() {
-        return registeredNetworkServicesCache;
-    }
-
-    /**
-     * Get the registeredOtherPlatformComponentProfileCache value
-     *
-     * @return registeredOtherPlatformComponentProfileCache current value
-     */
-    public Map<PlatformComponentType, List<PlatformComponentProfile>> getRegisteredOtherPlatformComponentProfileCache() {
-        return registeredOtherPlatformComponentProfileCache;
-    }
-
-    /**
-     * Get the standByProfileByClientIdentity value
-     *
-     * @return standByProfileByClientIdentity current value
-     */
-    public Map<String, List<PlatformComponentProfile>> getStandByProfileByClientIdentity() {
-        return standByProfileByClientIdentity;
-    }
-
-    /**
-     * Get the timersByClientIdentity value
-     *
-     * @return timersByClientIdentity current value
-     */
-    public Map<String, Timer> getTimersByClientIdentity() {
-        return timersByClientIdentity;
     }
 
     /**

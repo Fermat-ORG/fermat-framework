@@ -17,15 +17,15 @@ import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.contents.Ferm
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.enums.FermatPacketType;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.enums.JsonAttNamesConstants;
 import com.bitdubai.fermat_p2p_plugin.layer.ws.communications.cloud.server.developer.bitdubai.version_1.structure.jetty.ClientConnection;
+import com.bitdubai.fermat_p2p_plugin.layer.ws.communications.cloud.server.developer.bitdubai.version_1.structure.jetty.JettyEmbeddedAppServer;
 import com.bitdubai.fermat_p2p_plugin.layer.ws.communications.cloud.server.developer.bitdubai.version_1.structure.jetty.util.MemoryCache;
-import com.bitdubai.fermat_p2p_plugin.layer.ws.communications.cloud.server.developer.bitdubai.version_1.structure.vpn.WsCommunicationVPNServer;
+import com.bitdubai.fermat_p2p_plugin.layer.ws.communications.cloud.server.developer.bitdubai.version_1.structure.jetty.util.WebSocketVpnIdentity;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 
 import org.apache.commons.lang.ClassUtils;
 import org.apache.log4j.Logger;
-
 
 import java.util.ArrayList;
 import java.util.List;
@@ -89,7 +89,6 @@ public class DiscoveryComponentConnectionRequestJettyPacketProcessor extends Fer
             packetContentJsonStringRepresentation = AsymmetricCryptography.decryptMessagePrivateKey(receiveFermatPacket.getMessageContent(), clientConnection.getServerIdentity().getPrivateKey());
            // LOG.info("packetContentJsonStringRepresentation = " + packetContentJsonStringRepresentation);
 
-
             /*
              * Construct the json object
              */
@@ -130,37 +129,23 @@ public class DiscoveryComponentConnectionRequestJettyPacketProcessor extends Fer
             remoteNsParticipant = remoteNsParticipantList.get(0);
             LOG.info("remoteNsParticipant = " + remoteNsParticipant.getAlias() + "("+remoteNsParticipant.getIdentityPublicKey()+")");
 
-            /*
-             * Create the list of participant
-             */
-            List<PlatformComponentProfile> participantsList = new ArrayList<>();
-            participantsList.add(applicantParticipant);
-            participantsList.add(remoteParticipant);
-
-            LOG.info("participantsList.size() = " + participantsList.size());
-
             //Create a new vpn
-            //WsCommunicationVPNServer vpnServer = getWebSocketCloudServerChannel().getWsCommunicationVpnServerManagerAgent().createNewWsCommunicationVPNServer(participantsList, getWebSocketCloudServerChannel(), networkServiceApplicant.getNetworkServiceType());
+           String vpnPath = JettyEmbeddedAppServer.DEFAULT_CONTEXT_PATH + "/" + JettyEmbeddedAppServer.getInstance().deployNewJavaxVpnWebSocket();
+
+            LOG.info("new vpnPath = " + vpnPath);
 
             /*
              * Notify to the participants of the vpn
              */
-            //constructRespondPacketAndSend(vpnServer, applicantParticipant, remoteParticipant, remoteNsParticipant);
-            //constructRespondPacketAndSend(vpnServer, remoteParticipant, applicantParticipant, networkServiceApplicant);
-
-            //if no running
-            //if (!getWebSocketCloudServerChannel().getWsCommunicationVpnServerManagerAgent().isRunning()){
-
-                //Start the agent
-              //  getWebSocketCloudServerChannel().getWsCommunicationVpnServerManagerAgent().start();
-            //}
+            constructRespondPacketAndSend(vpnPath, applicantParticipant, remoteParticipant, remoteNsParticipant);
+            constructRespondPacketAndSend(vpnPath, remoteParticipant, applicantParticipant, networkServiceApplicant);
 
         }catch (Exception e){
 
-            LOG.info("applicantParticipant    = " + (applicantParticipant == null ? "SI" : "NO" ));
-            LOG.info("networkServiceApplicant = " + (networkServiceApplicant== null ? "SI" : "NO" ));
-            LOG.info("remoteParticipant       = " + (remoteParticipant== null ? "SI" : "NO" ));
-            LOG.info("remoteNsParticipant     = " + (remoteNsParticipant== null ? "SI" : "NO" ));
+            LOG.info("applicantParticipant is available    = " + (applicantParticipant    != null ? "SI" : "NO" ));
+            LOG.info("networkServiceApplicant is available = " + (networkServiceApplicant != null ? "SI" : "NO" ));
+            LOG.info("remoteParticipant is available       = " + (remoteParticipant       != null ? "SI" : "NO" ));
+            LOG.info("remoteNsParticipant is available     = " + (remoteNsParticipant     != null ? "SI" : "NO" ));
 
             LOG.info("requested connection is no possible, some of the participant are no available.");
             LOG.info("cause: "+e.getMessage());
@@ -193,19 +178,19 @@ public class DiscoveryComponentConnectionRequestJettyPacketProcessor extends Fer
     /**
      * Construct Respond Packet
      *
-     * @param vpnServer
+     * @param path
      * @param platformComponentProfileDestination
      * @param remoteParticipant
      * @param remoteParticipantNetworkService
      */
-    private void constructRespondPacketAndSend(WsCommunicationVPNServer vpnServer, PlatformComponentProfile platformComponentProfileDestination, PlatformComponentProfile remoteParticipant, PlatformComponentProfile remoteParticipantNetworkService){
+    private void constructRespondPacketAndSend(String path, PlatformComponentProfile platformComponentProfileDestination, PlatformComponentProfile remoteParticipant, PlatformComponentProfile remoteParticipantNetworkService){
 
         /*
          * Get json representation for the filters
          */
         JsonObject packetContent = new JsonObject();
-        packetContent.addProperty(JsonAttNamesConstants.VPN_URI, vpnServer.getUriConnection().toString());
-        packetContent.addProperty(JsonAttNamesConstants.VPN_SERVER_IDENTITY, vpnServer.getVpnServerIdentityPublicKey());
+        packetContent.addProperty(JsonAttNamesConstants.VPN_URI, path);
+        packetContent.addProperty(JsonAttNamesConstants.VPN_SERVER_IDENTITY, WebSocketVpnIdentity.getInstance().getIdentity().getPublicKey());
         packetContent.addProperty(JsonAttNamesConstants.REGISTER_PARTICIPANT_IDENTITY_VPN, platformComponentProfileDestination.getIdentityPublicKey());
         packetContent.addProperty(JsonAttNamesConstants.REMOTE_PARTICIPANT_VPN, remoteParticipant.toJson());
         packetContent.addProperty(JsonAttNamesConstants.REMOTE_PARTICIPANT_NS_VPN, remoteParticipantNetworkService.toJson());
@@ -256,27 +241,27 @@ public class DiscoveryComponentConnectionRequestJettyPacketProcessor extends Fer
         switch (platformComponentType){
 
             case COMMUNICATION_CLOUD_SERVER :
-                if (!getWebSocketCloudServerChannel().getRegisteredCommunicationsCloudServerCache().isEmpty()){
-                    temporalList = new ArrayList<>(getWebSocketCloudServerChannel().getRegisteredCommunicationsCloudServerCache().values());
+                if (!MemoryCache.getInstance().getRegisteredCommunicationsCloudServerCache().isEmpty()){
+                    temporalList = new ArrayList<>(MemoryCache.getInstance().getRegisteredCommunicationsCloudServerCache().values());
                 }
                 break;
 
             case COMMUNICATION_CLOUD_CLIENT :
-                if (!getWebSocketCloudServerChannel().getRegisteredCommunicationsCloudClientCache().isEmpty()){
-                    temporalList = new ArrayList<>(getWebSocketCloudServerChannel().getRegisteredCommunicationsCloudClientCache().values());
+                if (!MemoryCache.getInstance().getRegisteredCommunicationsCloudClientCache().isEmpty()){
+                    temporalList = new ArrayList<>(MemoryCache.getInstance().getRegisteredCommunicationsCloudClientCache().values());
                 }
                 break;
 
             case NETWORK_SERVICE :
-                if(getWebSocketCloudServerChannel().getRegisteredNetworkServicesCache().containsKey(networkServiceType) && !getWebSocketCloudServerChannel().getRegisteredNetworkServicesCache().get(networkServiceType).isEmpty()){
-                    temporalList = new ArrayList<>(getWebSocketCloudServerChannel().getRegisteredNetworkServicesCache().get(networkServiceType));
+                if(MemoryCache.getInstance().getRegisteredNetworkServicesCache().containsKey(networkServiceType) && !MemoryCache.getInstance().getRegisteredNetworkServicesCache().get(networkServiceType).isEmpty()){
+                    temporalList = new ArrayList<>(MemoryCache.getInstance().getRegisteredNetworkServicesCache().get(networkServiceType));
                 }
                 break;
 
             //Others
             default :
-                if (getWebSocketCloudServerChannel().getRegisteredOtherPlatformComponentProfileCache().containsKey(platformComponentType) && !getWebSocketCloudServerChannel().getRegisteredOtherPlatformComponentProfileCache().get(platformComponentType).isEmpty()){
-                    temporalList = getWebSocketCloudServerChannel().getRegisteredOtherPlatformComponentProfileCache().get(platformComponentType);
+                if (MemoryCache.getInstance().getRegisteredOtherPlatformComponentProfileCache().containsKey(platformComponentType) && !MemoryCache.getInstance().getRegisteredOtherPlatformComponentProfileCache().get(platformComponentType).isEmpty()){
+                    temporalList = MemoryCache.getInstance().getRegisteredOtherPlatformComponentProfileCache().get(platformComponentType);
                 }
                 break;
 
@@ -321,27 +306,27 @@ public class DiscoveryComponentConnectionRequestJettyPacketProcessor extends Fer
         switch (platformComponentType){
 
             case COMMUNICATION_CLOUD_SERVER :
-                if (!getWebSocketCloudServerChannel().getRegisteredCommunicationsCloudServerCache().isEmpty()) {
-                    temporalList = new ArrayList<>(getWebSocketCloudServerChannel().getRegisteredCommunicationsCloudServerCache().values());
+                if (!MemoryCache.getInstance().getRegisteredCommunicationsCloudServerCache().isEmpty()) {
+                    temporalList = new ArrayList<>(MemoryCache.getInstance().getRegisteredCommunicationsCloudServerCache().values());
                 }
                 break;
 
             case COMMUNICATION_CLOUD_CLIENT :
-                if (!getWebSocketCloudServerChannel().getRegisteredCommunicationsCloudClientCache().isEmpty()){
-                    temporalList = new ArrayList<>(getWebSocketCloudServerChannel().getRegisteredCommunicationsCloudClientCache().values());
+                if (!MemoryCache.getInstance().getRegisteredCommunicationsCloudClientCache().isEmpty()){
+                    temporalList = new ArrayList<>(MemoryCache.getInstance().getRegisteredCommunicationsCloudClientCache().values());
                 }
                 break;
 
             case NETWORK_SERVICE :
-                if(getWebSocketCloudServerChannel().getRegisteredNetworkServicesCache().containsKey(networkServiceType) && !getWebSocketCloudServerChannel().getRegisteredNetworkServicesCache().get(networkServiceType).isEmpty()) {
-                    temporalList = new ArrayList<>(getWebSocketCloudServerChannel().getRegisteredNetworkServicesCache().get(networkServiceType));
+                if(MemoryCache.getInstance().getRegisteredNetworkServicesCache().containsKey(networkServiceType) && !MemoryCache.getInstance().getRegisteredNetworkServicesCache().get(networkServiceType).isEmpty()) {
+                    temporalList = new ArrayList<>(MemoryCache.getInstance().getRegisteredNetworkServicesCache().get(networkServiceType));
                 }
                 break;
 
             //Others
             default :
-                if (getWebSocketCloudServerChannel().getRegisteredOtherPlatformComponentProfileCache().containsKey(platformComponentType) && !getWebSocketCloudServerChannel().getRegisteredOtherPlatformComponentProfileCache().get(platformComponentType).isEmpty()) {
-                    temporalList = getWebSocketCloudServerChannel().getRegisteredOtherPlatformComponentProfileCache().get(platformComponentType);
+                if (MemoryCache.getInstance().getRegisteredOtherPlatformComponentProfileCache().containsKey(platformComponentType) && !MemoryCache.getInstance().getRegisteredOtherPlatformComponentProfileCache().get(platformComponentType).isEmpty()) {
+                    temporalList = MemoryCache.getInstance().getRegisteredOtherPlatformComponentProfileCache().get(platformComponentType);
                 }
                 break;
         }
