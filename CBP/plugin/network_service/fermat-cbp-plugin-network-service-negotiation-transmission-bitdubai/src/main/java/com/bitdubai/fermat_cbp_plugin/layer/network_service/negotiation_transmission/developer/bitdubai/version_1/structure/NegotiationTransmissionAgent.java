@@ -258,10 +258,17 @@ public class NegotiationTransmissionAgent {
                                     negotiationTransmission.getTimestamp()
                             ).toJson();
 
-                            communicationNetworkServiceLocal.sendMessage(identity.getPublicKey(), receiverPublicKey, jsonNegotiationTransmission);
+//                            communicationNetworkServiceLocal.sendMessage(identity.getPublicKey(), receiverPublicKey, jsonNegotiationTransmission);
+
 
                             if(negotiationTransmission.getTransmissionType() == NegotiationTransmissionType.TRANSMISSION_NEGOTIATION ){
                                 System.out.print("\n\n**** 10) MOCK NEGOTIATION TRANSACTION - NEGOTIATION TRANSMISSION - AGENT - SEND NEGOTIATION TO : " + receiverPublicKey + "****\n");
+                                System.out.print("*** SEND DATES: " +
+                                                "\n - Sender Id = " + identity.getPublicKey() +
+                                                "\n - Receiver Id = " + receiverPublicKey +
+                                                "\n - JsonNegotiationTransmission " + jsonNegotiationTransmission
+                                );
+
                                 negotiationTransmission.setTransmissionState(NegotiationTransmissionState.PENDING_REMOTE_ACTION);
                             }else{
                                 System.out.print("\n\n**** 25) MOCK NEGOTIATION TRANSACTION - NEGOTIATION TRANSMISSION - AGENT - SEND CONFIRMATION TO : " + receiverPublicKey + "****\n");

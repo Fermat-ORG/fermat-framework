@@ -50,6 +50,12 @@ public class NegotiationTransmissionManagerImpl implements NegotiationTransmissi
 
             if(transactionType.getCode() == NegotiationTransactionType.CUSTOMER_BROKER_NEW.getCode()) {
                 System.out.print("\n\n**** 7) MOCK NEGOTIATION TRANSACTION - NEGOTIATION TRANSMISSION - MANAGER - SEND NEGOTIATION TO CRYPTO CUSTOMER ****\n");
+                System.out.print("\n\n --- 7) Negotiation Mock XML Date" +
+                                "\n- NegotiationId = " + negotiationTransaction.getNegotiationId() +
+                                "\n- TransactionId = " + negotiationTransaction.getTransactionId() +
+                                "\n- CustomerPublicKey = " + negotiationTransaction.getPublicKeyCustomer() +
+                                "\n- BrokerPublicKey = " + negotiationTransaction.getPublicKeyBroker()
+                );
             }
 
             PlatformComponentType actorSendType             = PlatformComponentType.ACTOR_CRYPTO_BROKER;

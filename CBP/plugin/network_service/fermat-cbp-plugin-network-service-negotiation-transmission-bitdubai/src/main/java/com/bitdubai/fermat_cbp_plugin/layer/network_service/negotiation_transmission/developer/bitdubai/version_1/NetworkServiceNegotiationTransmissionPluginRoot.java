@@ -209,7 +209,7 @@ public class NetworkServiceNegotiationTransmissionPluginRoot extends AbstractNet
             connectionArrived = new AtomicBoolean(false);
 
             //TEST GET ALL TRANSMISSION
-            getAllNegotiationTransactionTest();
+//            getAllNegotiationTransactionTest();
 
             //Initilize service
             this.serviceStatus = ServiceStatus.STARTED;

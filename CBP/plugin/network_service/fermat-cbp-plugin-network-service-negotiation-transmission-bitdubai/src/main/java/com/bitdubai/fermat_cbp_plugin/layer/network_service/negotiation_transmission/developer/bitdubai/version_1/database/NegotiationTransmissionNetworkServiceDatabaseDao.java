@@ -86,7 +86,16 @@ public class NegotiationTransmissionNetworkServiceDatabaseDao {
             loadRecordAsSendNegotiatioTransmission(record, negotiationTransmission, negotiationTransmissionState);
             table.insertRecord(record);
 
-            if(negotiationTransmission.getNegotiationTransactionType().getCode() == NegotiationTransmissionType.TRANSMISSION_NEGOTIATION.getCode()) {
+            System.out.print("\n\n**** X) MOCK NEGOTIATION TRANSACTION - NEGOTIATION TRANSMISSION - DAO ****\n");
+            System.out.print("\n\n --- Transmission Date" +
+                            "\n- NegotiationId = " + negotiationTransmission.getNegotiationId() +
+                            "\n- TransactionId = " + negotiationTransmission.getTransactionId() +
+                            "\n- TransmissionId = " + negotiationTransmission.getTransmissionId() +
+                            "\n- SenderPublicKey = " + negotiationTransmission.getPublicKeyActorSend() +
+                            "\n- ReceiverPublicKey = " + negotiationTransmission.getPublicKeyActorReceive() +
+                            "\n- NegotiationTransactionType = " + negotiationTransmission.getTransmissionType().getCode() + " == " + NegotiationTransmissionType.TRANSMISSION_NEGOTIATION.getCode()
+            );
+            if(negotiationTransmission.getTransmissionType().getCode() == NegotiationTransmissionType.TRANSMISSION_NEGOTIATION.getCode()) {
                 if (negotiationTransmission.getTransmissionState().getCode() == NegotiationTransmissionState.PROCESSING_SEND.getCode()) {
                     System.out.print("\n\n**** 8) MOCK NEGOTIATION TRANSACTION - NEGOTIATION TRANSMISSION - DAO - REGISTER SEND NEGOTIATION TRANSMISSION ****\n");
                 } else {
