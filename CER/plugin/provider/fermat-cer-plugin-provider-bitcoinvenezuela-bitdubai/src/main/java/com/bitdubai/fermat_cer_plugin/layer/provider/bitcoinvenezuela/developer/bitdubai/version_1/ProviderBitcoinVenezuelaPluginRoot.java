@@ -21,7 +21,7 @@ import com.bitdubai.fermat_api.layer.all_definition.util.Version;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
 import com.bitdubai.fermat_api.layer.world.interfaces.Currency;
-import com.bitdubai.fermat_cer_api.all_definition.enums.TimeUnit;
+import com.bitdubai.fermat_cer_api.all_definition.enums.ExchangeRateType;
 import com.bitdubai.fermat_cer_api.all_definition.interfaces.CurrencyPair;
 import com.bitdubai.fermat_cer_api.all_definition.interfaces.ExchangeRate;
 import com.bitdubai.fermat_cer_api.all_definition.utils.CurrencyPairImpl;
@@ -187,12 +187,11 @@ public class ProviderBitcoinVenezuelaPluginRoot extends AbstractPlugin implement
 
         ExchangeRateImpl exchangeRate = new ExchangeRateImpl(currencyPair.getFrom(), currencyPair.getTo(), price, price, (new Date().getTime() / 1000));
 
-        //For now, currentExchangeRates will not be saved, Daily ExchangeRates (below) will be saved.
-        /*try {
+        try {
             dao.saveCurrentExchangeRate(exchangeRate);
         }catch (CantSaveExchangeRateException e) {
             errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_CER_PROVIDER_BITCOINVENEZUELA, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
-        }*/
+        }
         return exchangeRate;
     }
 
@@ -210,7 +209,7 @@ public class ProviderBitcoinVenezuelaPluginRoot extends AbstractPlugin implement
 
         //Try to find ExchangeRate in database
         try{
-            requiredExchangeRate = dao.getExchangeRateFromDate(currencyPair, DateHelper.getStandarizedTimestampFromTimestamp(timestamp));
+            requiredExchangeRate = dao.getDailyExchangeRateFromDate(currencyPair, DateHelper.getStandarizedTimestampFromTimestamp(timestamp));
             return requiredExchangeRate;
         }catch(CantGetExchangeRateException e) {
 
@@ -317,7 +316,7 @@ public class ProviderBitcoinVenezuelaPluginRoot extends AbstractPlugin implement
 
     @Override
     public Collection<ExchangeRate> getQueriedExchangeRates(CurrencyPair currencyPair) throws UnsupportedCurrencyPairException, CantGetExchangeRateException {
-        return dao.getQueriedExchangeRateHistory(currencyPair);
+        return dao.getQueriedExchangeRateHistory(ExchangeRateType.CURRENT, currencyPair);
     }
 
 

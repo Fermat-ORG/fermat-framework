@@ -7,7 +7,6 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseFilterType;
-import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseRecord;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTable;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTableFilter;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTableRecord;
@@ -18,6 +17,7 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.Cant
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantOpenDatabaseException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.DatabaseNotFoundException;
 import com.bitdubai.fermat_api.layer.world.interfaces.Currency;
+import com.bitdubai.fermat_cer_api.all_definition.enums.ExchangeRateType;
 import com.bitdubai.fermat_cer_api.all_definition.interfaces.CurrencyPair;
 import com.bitdubai.fermat_cer_api.all_definition.interfaces.ExchangeRate;
 import com.bitdubai.fermat_cer_api.all_definition.utils.CurrencyPairImpl;
@@ -32,10 +32,7 @@ import com.bitdubai.fermat_cer_plugin.layer.provider.bitcoinvenezuela.developer.
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedPluginExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 
-import org.apache.commons.lang.StringUtils;
-
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 import java.util.UUID;
 
@@ -88,6 +85,27 @@ public class BitcoinVenezuelaProviderDao {
     }
 
 
+
+    /* CURRENT EXCHANGE RATE METHODS */
+
+    public void saveCurrentExchangeRate(ExchangeRate exchangeRate) throws CantSaveExchangeRateException {
+
+        DatabaseTable table = this.database.getTable(BitcoinVenezuelaProviderDatabaseConstants.CURRENT_EXCHANGE_RATES_TABLE_NAME);
+        DatabaseTableRecord newRecord = table.getEmptyRecord();
+        constructRecordFromExchangeRate(newRecord, exchangeRate);
+        try {
+            table.insertRecord(newRecord);
+        }catch (CantInsertRecordException e) {
+            throw new CantSaveExchangeRateException(e.getMessage(), e, "BitcoinVenezuela provider plugin", "Cant save new record in table");
+        }
+    }
+
+
+
+
+    /* DAILY EXCHANGE RATE METHODS */
+
+
     public void saveDailyExchangeRate(ExchangeRate e) throws CantSaveExchangeRateException {
 
         //Create new exchangeRate with standarized daily timestamp
@@ -132,7 +150,7 @@ public class BitcoinVenezuelaProviderDao {
         {
             String currentTimestamp = String.valueOf(e.getTimestamp());
             if(!exchangeRateTimestampsInDatabase.contains(currentTimestamp)) {
-                this.saveDailyExchangeRate(e);
+                this.saveDailyExchangeRate(e);              //TODO: improve this.. saving one by one..
             }
         }
     }
@@ -140,14 +158,14 @@ public class BitcoinVenezuelaProviderDao {
     public boolean dailyExchangeRateExists(ExchangeRate e)
     {
         try{
-            getExchangeRateFromDate(new CurrencyPairImpl(e.getFromCurrency(), e.getToCurrency()), e.getTimestamp());
+            getDailyExchangeRateFromDate(new CurrencyPairImpl(e.getFromCurrency(), e.getToCurrency()), e.getTimestamp());
             return true;
         } catch (CantGetExchangeRateException ex) {
             return false;
         }
     }
 
-    public ExchangeRate getExchangeRateFromDate(CurrencyPair currencyPair, long timestamp) throws CantGetExchangeRateException
+    public ExchangeRate getDailyExchangeRateFromDate(CurrencyPair currencyPair, long timestamp) throws CantGetExchangeRateException
     {
         DatabaseTable table = this.database.getTable(BitcoinVenezuelaProviderDatabaseConstants.DAILY_EXCHANGE_RATES_TABLE_NAME);
 
@@ -227,14 +245,23 @@ public class BitcoinVenezuelaProviderDao {
 
 
 
-    public List<ExchangeRate> getQueriedExchangeRateHistory(CurrencyPair currencyPair) throws CantGetExchangeRateException
+    public List<ExchangeRate> getQueriedExchangeRateHistory(ExchangeRateType exchangeRateType, CurrencyPair currencyPair) throws CantGetExchangeRateException
     {
         List<ExchangeRate> exchangeRateList = new ArrayList<>();
+        DatabaseTable table = null;
 
-        DatabaseTable table = this.database.getTable(BitcoinVenezuelaProviderDatabaseConstants.DAILY_EXCHANGE_RATES_TABLE_NAME);
-
-        table.addStringFilter(BitcoinVenezuelaProviderDatabaseConstants.DAILY_EXCHANGE_RATES_FROM_CURRENCY_COLUMN_NAME, currencyPair.getFrom().getCode(), DatabaseFilterType.EQUAL);
-        table.addStringFilter(BitcoinVenezuelaProviderDatabaseConstants.DAILY_EXCHANGE_RATES_TO_CURRENCY_COLUMN_NAME, currencyPair.getTo().getCode(), DatabaseFilterType.EQUAL);
+        switch(exchangeRateType) {
+            case CURRENT:
+                table = this.database.getTable(BitcoinVenezuelaProviderDatabaseConstants.CURRENT_EXCHANGE_RATES_TABLE_NAME);
+                table.addStringFilter(BitcoinVenezuelaProviderDatabaseConstants.CURRENT_EXCHANGE_RATES_FROM_CURRENCY_COLUMN_NAME, currencyPair.getFrom().getCode(), DatabaseFilterType.EQUAL);
+                table.addStringFilter(BitcoinVenezuelaProviderDatabaseConstants.CURRENT_EXCHANGE_RATES_TO_CURRENCY_COLUMN_NAME, currencyPair.getTo().getCode(), DatabaseFilterType.EQUAL);
+                break;
+            case DAILY:
+                table = this.database.getTable(BitcoinVenezuelaProviderDatabaseConstants.DAILY_EXCHANGE_RATES_TABLE_NAME);
+                table.addStringFilter(BitcoinVenezuelaProviderDatabaseConstants.DAILY_EXCHANGE_RATES_FROM_CURRENCY_COLUMN_NAME, currencyPair.getFrom().getCode(), DatabaseFilterType.EQUAL);
+                table.addStringFilter(BitcoinVenezuelaProviderDatabaseConstants.DAILY_EXCHANGE_RATES_TO_CURRENCY_COLUMN_NAME, currencyPair.getTo().getCode(), DatabaseFilterType.EQUAL);
+                break;
+        }
 
         try {
             table.loadToMemory();
@@ -256,9 +283,9 @@ public class BitcoinVenezuelaProviderDao {
 
 
 
+    /* PROVIDER INFO METHODS */
 
 
-    /* PROVIDER INFO GETTERS */
     public String getProviderName() throws CantGetProviderInfoException {
         DatabaseTableRecord record = this.getProviderInfo();
         return record.getStringValue(BitcoinVenezuelaProviderDatabaseConstants.PROVIDER_INFO_NAME_COLUMN_NAME);
@@ -298,6 +325,9 @@ public class BitcoinVenezuelaProviderDao {
             throw new CantInitializeProviderInfoException(e.getMessage());
         }
     }
+
+
+
 
 
 
