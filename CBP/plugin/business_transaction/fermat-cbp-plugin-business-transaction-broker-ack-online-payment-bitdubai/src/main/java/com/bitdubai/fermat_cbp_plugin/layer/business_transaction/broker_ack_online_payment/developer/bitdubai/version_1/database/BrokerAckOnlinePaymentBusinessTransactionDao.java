@@ -610,10 +610,10 @@ public class BrokerAckOnlinePaymentBusinessTransactionDao {
                     record.getStringValue(
                             BrokerAckOnlinePaymentBusinessTransactionDatabaseConstants.
                                     ACK_ONLINE_PAYMENT_WALLET_PUBLIC_KEY_COLUMN_NAME));
-            businessTransactionRecord.setCryptoAmount(
+            /*businessTransactionRecord.setCryptoAmount(
                     record.getLongValue(
                             BrokerAckOnlinePaymentBusinessTransactionDatabaseConstants.
-                                    ACK_ONLINE_PAYMENT_CRYPTO_AMOUNT_COLUMN_NAME));
+                                    ACK_ONLINE_PAYMENT_CRYPTO_AMOUNT_COLUMN_NAME));*/
             return businessTransactionRecord;
         } catch (CantLoadTableToMemoryException e) {
             throw new UnexpectedResultReturnedFromDatabaseException(e,
@@ -643,6 +643,22 @@ public class BrokerAckOnlinePaymentBusinessTransactionDao {
                 customerPublicKey,
                 BrokerAckOnlinePaymentBusinessTransactionDatabaseConstants.
                         ACK_ONLINE_PAYMENT_CUSTOMER_PUBLIC_KEY_COLUMN_NAME);
+    }
+
+    public BusinessTransactionRecord getBusinessTransactionRecordByWalletPublicKey(
+            String walletPublicKey) throws UnexpectedResultReturnedFromDatabaseException {
+        return getBusinessTransactionRecord(
+                walletPublicKey,
+                BrokerAckOnlinePaymentBusinessTransactionDatabaseConstants.
+                        ACK_ONLINE_PAYMENT_WALLET_PUBLIC_KEY_COLUMN_NAME);
+    }
+
+    public BusinessTransactionRecord getBusinessTransactionRecordByBrokerPublicKey(
+            String walletPublicKey) throws UnexpectedResultReturnedFromDatabaseException {
+        return getBusinessTransactionRecord(
+                walletPublicKey,
+                BrokerAckOnlinePaymentBusinessTransactionDatabaseConstants.
+                        ACK_ONLINE_PAYMENT_BROKER_PUBLIC_KEY_COLUMN_NAME);
     }
 
     public void updateBusinessTransactionRecord(BusinessTransactionRecord businessTransactionRecord)
@@ -771,9 +787,12 @@ public class BrokerAckOnlinePaymentBusinessTransactionDao {
         record.setLongValue(
                 BrokerAckOnlinePaymentBusinessTransactionDatabaseConstants.ACK_ONLINE_PAYMENT_CRYPTO_AMOUNT_COLUMN_NAME,
                 businessTransactionRecord.getCryptoAmount());
-        record.setStringValue(
-                BrokerAckOnlinePaymentBusinessTransactionDatabaseConstants.ACK_ONLINE_PAYMENT_CRYPTO_STATUS_COLUMN_NAME,
-                businessTransactionRecord.getCryptoStatus().getCode());
+        CryptoStatus cryptoStatus=businessTransactionRecord.getCryptoStatus();
+        if(cryptoStatus!=null){
+            record.setStringValue(
+                    BrokerAckOnlinePaymentBusinessTransactionDatabaseConstants.ACK_ONLINE_PAYMENT_CRYPTO_STATUS_COLUMN_NAME,
+                    cryptoStatus.getCode());
+        }
         record.setStringValue(
                 BrokerAckOnlinePaymentBusinessTransactionDatabaseConstants.ACK_ONLINE_PAYMENT_CUSTOMER_PUBLIC_KEY_COLUMN_NAME,
                 businessTransactionRecord.getCustomerPublicKey());
