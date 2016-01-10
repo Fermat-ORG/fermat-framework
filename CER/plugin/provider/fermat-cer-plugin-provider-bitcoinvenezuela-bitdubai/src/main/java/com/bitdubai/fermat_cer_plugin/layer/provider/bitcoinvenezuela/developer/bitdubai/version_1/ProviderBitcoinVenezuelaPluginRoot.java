@@ -69,10 +69,10 @@ public class ProviderBitcoinVenezuelaPluginRoot extends AbstractPlugin implement
     @NeededAddonReference(platform = Platforms.PLUG_INS_PLATFORM, layer = Layers.PLATFORM_SERVICE, addon = Addons.EVENT_MANAGER)
     private EventManager eventManager;
 
-    BitcoinVenezuelaProviderDao dao;
-    List<Currency> currencyListFrom = new ArrayList<>();
-    List<Currency> currencyListTo = new ArrayList<>();
-    List<CurrencyPair> supportedCurrencyPairs = new ArrayList<>();
+    private BitcoinVenezuelaProviderDao dao;
+    private List<Currency> currencyListFrom = new ArrayList<>();
+    private List<Currency> currencyListTo = new ArrayList<>();
+    private List<CurrencyPair> supportedCurrencyPairs = new ArrayList<>();
 
 
     /*
@@ -205,7 +205,6 @@ public class ProviderBitcoinVenezuelaPluginRoot extends AbstractPlugin implement
             throw new UnsupportedCurrencyPairException();
 
         ExchangeRate requiredExchangeRate = null;
-        long stdTimestamp = DateHelper.getStandarizedTimestampFromTimestamp(timestamp);
 
         //Try to find ExchangeRate in database
         try{
@@ -235,6 +234,7 @@ public class ProviderBitcoinVenezuelaPluginRoot extends AbstractPlugin implement
             queryBitcoinVenezuelaExchangeRateHistoryAPI(exchangeRates, inverseExchangeRates, currencyFrom, currencyTo);
 
             //Find requiredExchangeRate
+            long stdTimestamp = DateHelper.getStandarizedTimestampFromTimestamp(timestamp);
             List<ExchangeRate> aux = (invertExchange ? exchangeRates : inverseExchangeRates);
             for(ExchangeRate er : aux) {
                 if (er.getTimestamp() == stdTimestamp)
@@ -316,6 +316,9 @@ public class ProviderBitcoinVenezuelaPluginRoot extends AbstractPlugin implement
 
     @Override
     public Collection<ExchangeRate> getQueriedExchangeRates(CurrencyPair currencyPair) throws UnsupportedCurrencyPairException, CantGetExchangeRateException {
+        if(!isCurrencyPairSupported(currencyPair))
+            throw new UnsupportedCurrencyPairException();
+
         return dao.getQueriedExchangeRateHistory(ExchangeRateType.CURRENT, currencyPair);
     }
 
