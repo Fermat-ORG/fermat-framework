@@ -1,5 +1,14 @@
 package com.bitdubai.fermat_cht_api.layer.middleware.interfaces;
 
+import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantDeleteChatException;
+import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantDeleteMesssageException;
+import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantGetChatException;
+import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantGetMessageException;
+import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantNewEmptyChatException;
+import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantNewEmptyMessageException;
+import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantSaveChatException;
+import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantSaveMessageException;
+
 import java.sql.Date;
 import java.util.List;
 import java.util.UUID;
@@ -10,27 +19,26 @@ import java.util.UUID;
  */
 public interface ChatManager {
 
-    //Todo: create a chat record or chat wrapper to clean this method, please, use english to name objects.
+    //Documentar
+    List<Chat> getChats() throws CantGetChatException;
 
-    List<Chat> getChats();
+    Chat getChatByChatId(UUID chatId) throws CantGetChatException;
 
-    Chat getChatByChatId(UUID chatId);
+    Chat newEmptyInstanceChat() throws CantNewEmptyChatException;
 
-    Chat newEmptyInstanceChat();
+    void saveChat(Chat chat) throws CantSaveChatException;
 
-    void saveChat(Chat chat);
+    void deleteChat(Chat chat) throws CantDeleteChatException;
 
-    void deleteChat(Chat chat);
+    List<Message> getMessages() throws CantGetMessageException;
 
-    List<Message> getMessages();
+    Message getMessageByChatId(UUID chatId) throws CantGetMessageException;
 
-    Message getMessageByChatId(UUID chatId);
+    Message getMessageByMessageId(UUID messageId) throws CantGetMessageException;
 
-    Message getMessageByMessageId(UUID messageId);
+    Chat newEmptyInstanceMessage() throws CantNewEmptyMessageException;
 
-    Chat newEmptyInstanceMessage();
+    void saveMessage(Message message) throws CantSaveMessageException;
 
-    void saveMessage(Message message);
-
-    void deleteMessage(Message message);
+    void deleteMessage(Message message) throws CantDeleteMesssageException;
 }

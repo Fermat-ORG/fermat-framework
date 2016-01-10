@@ -1,5 +1,10 @@
 package com.bitdubai.fermat_cht_api.layer.middleware.interfaces;
 
+import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantDeleteContactException;
+import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantGetContactException;
+import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantNewEmptyContactException;
+import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantSaveContactException;
+
 import java.util.List;
 import java.sql.Date;
 import java.util.UUID;
@@ -9,17 +14,15 @@ import java.util.UUID;
  * Update by Manuel Perez on 08/01/2016 (fix naming conventions)
  */
 public interface ContactManager {
+    //TODO: Documentar
 
-    //Todo: create a contact record or contact wrapper to clean this method
-    //Documentar
-    //Please, check the observations on ChatManager
-    List<Contact> getContacts();
+    List<Contact> getContacts() throws CantGetContactException;
 
-    Contact getContactByContactId(UUID contactId);
+    Contact getContactByContactId(UUID contactId) throws CantGetContactException;
 
-    Contact newEmptyInstanceContact();
+    Contact newEmptyInstanceContact() throws CantNewEmptyContactException;
 
-    void saveContact(Contact contact);
+    void saveContact(Contact contact) throws CantSaveContactException;
 
-    void deleteContact(Contact contact);
+    void deleteContact(Contact contact) throws CantDeleteContactException;
 }
