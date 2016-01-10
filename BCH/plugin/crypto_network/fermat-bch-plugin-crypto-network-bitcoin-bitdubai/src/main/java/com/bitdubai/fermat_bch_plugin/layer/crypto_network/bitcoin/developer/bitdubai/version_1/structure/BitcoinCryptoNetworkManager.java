@@ -501,9 +501,11 @@ public class BitcoinCryptoNetworkManager implements TransactionProtocolManager, 
     }
 
     public synchronized List<Transaction> getUnspentBitcoinTransactions(BlockchainNetworkType blockchainNetworkType){
+//        Wallet wallet = getWallet(blockchainNetworkType, null);
+//        List<Transaction> transactions = new ArrayList<>(wallet.getTransactionPool(WalletTransaction.Pool.UNSPENT).values());
+//        return transactions;
         Wallet wallet = getWallet(blockchainNetworkType, null);
-        List<Transaction> transactions = new ArrayList<>(wallet.getTransactionPool(WalletTransaction.Pool.UNSPENT).values());
-        return transactions;
+        return wallet.getTransactionsByTime();
     }
 
     /**
