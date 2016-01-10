@@ -36,7 +36,7 @@ public interface ChatManager {
 
     Message getMessageByMessageId(UUID messageId) throws CantGetMessageException;
 
-    Chat newEmptyInstanceMessage() throws CantNewEmptyMessageException;
+    Message newEmptyInstanceMessage() throws CantNewEmptyMessageException;
 
     void saveMessage(Message message) throws CantSaveMessageException;
 
