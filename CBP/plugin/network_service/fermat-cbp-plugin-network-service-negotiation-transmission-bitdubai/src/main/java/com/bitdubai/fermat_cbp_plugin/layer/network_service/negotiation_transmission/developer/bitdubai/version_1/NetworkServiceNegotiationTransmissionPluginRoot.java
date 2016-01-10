@@ -26,12 +26,8 @@ import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEven
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEvent;
 import com.bitdubai.fermat_api.layer.all_definition.network_service.enums.NetworkServiceType;
 import com.bitdubai.fermat_api.layer.all_definition.network_service.interfaces.NetworkServiceConnectionManager;
-import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.Action;
-import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.Specialist;
-import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.Transaction;
-import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.exceptions.CantConfirmTransactionException;
-import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.exceptions.CantDeliverPendingTransactionsException;
 import com.bitdubai.fermat_api.layer.all_definition.util.Version;
+import com.bitdubai.fermat_api.layer.all_definition.util.XMLParser;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantCreateDatabaseException;
@@ -45,14 +41,12 @@ import com.bitdubai.fermat_cbp_api.all_definition.enums.NegotiationTransactionTy
 import com.bitdubai.fermat_cbp_api.all_definition.enums.NegotiationTransmissionState;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.NegotiationTransmissionType;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.NegotiationType;
+import com.bitdubai.fermat_cbp_api.all_definition.negotiation_transaction.NegotiationPurchaseRecord;
+import com.bitdubai.fermat_cbp_api.all_definition.negotiation_transaction.NegotiationSaleRecord;
 import com.bitdubai.fermat_cbp_api.all_definition.negotiation_transaction.NegotiationTransaction;
-import com.bitdubai.fermat_cbp_api.layer.network_service.negotiation_transmission.exceptions.CantConfirmNegotiationException;
-import com.bitdubai.fermat_cbp_api.layer.network_service.negotiation_transmission.exceptions.CantSendConfirmToCryptoBrokerException;
-import com.bitdubai.fermat_cbp_api.layer.network_service.negotiation_transmission.exceptions.CantSendConfirmToCryptoCustomerException;
-import com.bitdubai.fermat_cbp_api.layer.network_service.negotiation_transmission.exceptions.CantSendNegotiationToCryptoBrokerException;
-import com.bitdubai.fermat_cbp_api.layer.network_service.negotiation_transmission.exceptions.CantSendNegotiationToCryptoCustomerException;
+import com.bitdubai.fermat_cbp_api.layer.negotiation.customer_broker_purchase.interfaces.CustomerBrokerPurchaseNegotiation;
+import com.bitdubai.fermat_cbp_api.layer.negotiation.customer_broker_sale.interfaces.CustomerBrokerSaleNegotiation;
 import com.bitdubai.fermat_cbp_api.layer.network_service.negotiation_transmission.interfaces.NegotiationTransmission;
-import com.bitdubai.fermat_cbp_api.layer.network_service.negotiation_transmission.interfaces.NegotiationTransmissionManager;
 import com.bitdubai.fermat_cbp_plugin.layer.network_service.negotiation_transmission.developer.bitdubai.version_1.communication.event_handlers.ClientConnectionCloseNotificationEventHandler;
 import com.bitdubai.fermat_cbp_plugin.layer.network_service.negotiation_transmission.developer.bitdubai.version_1.communication.event_handlers.CompleteComponentConnectionRequestNotificationEventHandler;
 import com.bitdubai.fermat_cbp_plugin.layer.network_service.negotiation_transmission.developer.bitdubai.version_1.communication.event_handlers.CompleteComponentRegistrationNotificationEventHandler;
@@ -107,9 +101,6 @@ import java.util.regex.Pattern;
 public class NetworkServiceNegotiationTransmissionPluginRoot extends AbstractNetworkService implements
         DatabaseManagerForDevelopers,
         LogManagerForDevelopers {
-
-    @NeededAddonReference(platform = Platforms.OPERATIVE_SYSTEM_API,    layer = Layers.SYSTEM,              addon = Addons.PLUGIN_FILE_SYSTEM)
-    protected PluginFileSystem pluginFileSystem;
 
     @NeededAddonReference(platform = Platforms.OPERATIVE_SYSTEM_API,    layer = Layers.SYSTEM,              addon = Addons.PLUGIN_DATABASE_SYSTEM)
     private PluginDatabaseSystem pluginDatabaseSystem;
@@ -216,6 +207,9 @@ public class NetworkServiceNegotiationTransmissionPluginRoot extends AbstractNet
             remoteNetworkServicesRegisteredList = new CopyOnWriteArrayList<PlatformComponentProfile>();
 
             connectionArrived = new AtomicBoolean(false);
+
+            //TEST GET ALL TRANSMISSION
+            getAllNegotiationTransactionTest();
 
             //Initilize service
             this.serviceStatus = ServiceStatus.STARTED;
@@ -523,6 +517,7 @@ public class NetworkServiceNegotiationTransmissionPluginRoot extends AbstractNet
         try{
 
             Gson gson = new Gson();
+
             NegotiationTransmissionMessage negotiationTransmissionMessage = gson.fromJson(fermatMessage.getContent(), NegotiationTransmissionMessage.class);
 
             System.out.print("\n\n**** X) MOCK NEGOTIATION TRANSACTION - NEGOTIATION TRANSMISSION - PLUGIN ROOT - RECEIVE MESSAGES ****\n");
@@ -744,4 +739,74 @@ public class NetworkServiceNegotiationTransmissionPluginRoot extends AbstractNet
 
     }
     /*END PRIVATE METHOD*/
+
+    /*TEST NEGOTIATION TRANSMISSION*/
+    private void getAllNegotiationTransactionTest(){
+
+        try {
+
+
+            List<NegotiationTransmission> list = databaseDao.getAllNegotiationTransmission();
+            if (!list.isEmpty()) {
+                System.out.print("\n\n\n\n------------------------------- LIST NEGOTIATION TRANSAMISSION -------------------------------");
+                for (NegotiationTransmission ListTransmission : list) {
+                    System.out.print("\n --- Negotiation Transmission Date" +
+                                    "\n- TransmissionId = " + ListTransmission.getTransmissionId() +
+                                    "\n- TransmissionType = " + ListTransmission.getTransmissionType().getCode() +
+                                    "\n- TransmissionState = " + ListTransmission.getTransmissionState().getCode() +
+                                    "\n- NegotiationId = " + ListTransmission.getNegotiationId() +
+                                    "\n- NegotiationType = " + ListTransmission.getNegotiationType().getCode() +
+                                    "\n- TransactionId = " + ListTransmission.getTransactionId() +
+                                    "\n- TransactionType = " + ListTransmission.getNegotiationTransactionType().getCode() +
+                                    "\n- SendType = " + ListTransmission.getActorSendType().getCode() +
+                                    "\n- SendPublicKey = " + ListTransmission.getPublicKeyActorSend() +
+                                    "\n- ReceiveType = " + ListTransmission.getActorSendType().getCode() +
+                                    "\n- ReceivePublicKey = " + ListTransmission.getPublicKeyActorReceive()
+                    );
+
+                    //GET NEGOTIATION OF XML
+                    if (ListTransmission.getNegotiationXML() != null) {
+                        if (ListTransmission.getNegotiationType().getCode() == NegotiationType.PURCHASE.getCode()) {
+                            CustomerBrokerPurchaseNegotiation negotiationXML = new NegotiationPurchaseRecord();
+                            negotiationXML = (CustomerBrokerPurchaseNegotiation) XMLParser.parseXML(ListTransmission.getNegotiationXML(), negotiationXML);
+
+                            System.out.print("\n- PurchaseNegotiationXML = " + ListTransmission.getNegotiationXML());
+
+                            if (negotiationXML.getNegotiationId() != null) {
+                                System.out.print("\n\n\n --- PurchaseNegotiationXML Date" +
+                                                "\n- NegotiationId = " + negotiationXML.getNegotiationId() +
+                                                "\n- CustomerPublicKey = " + negotiationXML.getCustomerPublicKey() +
+                                                "\n- BrokerPublicKey = " + negotiationXML.getBrokerPublicKey() +
+                                                "\n- Status = " + negotiationXML.getStatus().getCode()
+                                );
+                            }
+                        } else {
+                            CustomerBrokerSaleNegotiation negotiationXML = new NegotiationSaleRecord();
+                            negotiationXML = (CustomerBrokerSaleNegotiation) XMLParser.parseXML(ListTransmission.getNegotiationXML(), negotiationXML);
+
+                            System.out.print("\n- SaleNegotiationXML = " + ListTransmission.getNegotiationXML());
+
+                            if (negotiationXML.getNegotiationId() != null) {
+                                System.out.print("\n\n\n --- SaleNegotiationXML Date" +
+                                                "\n- NegotiationId = " + negotiationXML.getNegotiationId() +
+                                                "\n- CustomerPublicKey = " + negotiationXML.getCustomerPublicKey() +
+                                                "\n- BrokerPublicKey = " + negotiationXML.getBrokerPublicKey() +
+                                                "\n- Status" + negotiationXML.getStatus().getCode()
+                                );
+                            }
+                        }
+                    } else {
+                        System.out.print("\n\n\n --- NegotiationXML Date: purchaseNegotiationXML IS NOT INSTANCE OF NegotiationPurchaseRecord");
+                    }
+                }
+                System.out.print("\n\n\n\n------------------------------- END LIST NEGOTIATION TRANSAMISSION -------------------------------");
+            } else {
+                System.out.print("\n**** MOCK NEGOTIATION TRANSMISSION. GET LIST ALL TRANSMISSION ERROR LIST IS EMPTY . ****\n");
+            }
+            
+        } catch (CantReadRecordDataBaseException e) {
+            System.out.print("\n**** MOCK NEGOTIATION TRANSMISSION. GET LIST ALL TRANSMISSION, ERROR. ****\n");
+        }
+        
+    }
 }

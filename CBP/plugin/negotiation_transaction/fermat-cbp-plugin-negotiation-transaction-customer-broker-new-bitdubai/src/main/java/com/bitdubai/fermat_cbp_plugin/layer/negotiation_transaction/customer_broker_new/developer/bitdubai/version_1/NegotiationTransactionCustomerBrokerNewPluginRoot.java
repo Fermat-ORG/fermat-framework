@@ -180,7 +180,7 @@ public class NegotiationTransactionCustomerBrokerNewPluginRoot extends AbstractP
 //            createCustomerBrokerNewPurchaseNegotiationTest();
 
             //TEST MOCK GET ALL TRANSACTIONk
-//            getAllCustomerBrokerNewNegotiationTranasctionTest();
+            getAllCustomerBrokerNewNegotiationTranasctionTest();
 
             //TEST MOCK CREATE AND GET NEGOTIATION
 //            createNegotiationsTest();
@@ -393,8 +393,7 @@ public class NegotiationTransactionCustomerBrokerNewPluginRoot extends AbstractP
                     if (ListNegotiation.getNegotiationXML() != null) {
                         CustomerBrokerPurchaseNegotiation purchaseNegotiationXML = new NegotiationPurchaseRecord();
                         System.out.print("\n- NegotiationXML = " + ListNegotiation.getNegotiationXML());
-                        CustomerBrokerPurchaseNegotiation purchaseNegotiationTestXML = new NegotiationPurchaseRecord();
-                        purchaseNegotiationXML = (CustomerBrokerPurchaseNegotiation) XMLParser.parseXML(ListNegotiation.getNegotiationXML(), purchaseNegotiationTestXML);
+                        purchaseNegotiationXML = (CustomerBrokerPurchaseNegotiation) XMLParser.parseXML(ListNegotiation.getNegotiationXML(), purchaseNegotiationXML);
                         if (purchaseNegotiationXML.getNegotiationId() != null) {
                             System.out.print("\n\n\n --- NegotiationXML Date" +
                                             "\n- NegotiationId = " + purchaseNegotiationXML.getNegotiationId() +
@@ -486,7 +485,8 @@ public class NegotiationTransactionCustomerBrokerNewPluginRoot extends AbstractP
         UUID                negotiationId               = UUID.randomUUID();
         String              publicKeyCustomer           = "30C5580D5A807CA38771A7365FC2141A6450556D5233DD4D5D14D4D9CEE7B9715B98951C2F28F820D858898AE0CBCE7B43055AB3C506A804B793E230610E711AEA";
 //        String              publicKeyBroker             = "publicKeyBroker";
-        String              publicKeyBroker             = "23C5580D5A807CA38771A7365FC2141A6450556D5233DD4D5D14D4D9CEE7B9715B98951C2F28F820D858898AE0CBCE7B43055AB3C506A804B793E230610E711AEA";
+        String              publicKeyBroker             = "041FCC359F748B5074D5554FA4DBCCCC7981D6776E57B5465DB297775FB23DBBF064FCB11EDE1979FC6E02307E4D593A81D2347006109F40B21B969E0E290C3B84";
+//        String              publicKeyBroker             = "23C5580D5A807CA38771A7365FC2141A6450556D5233DD4D5D14D4D9CEE7B9715B98951C2F28F820D858898AE0CBCE7B43055AB3C506A804B793E230610E711AEA";
         long                startDataTime               = 0;
         long                negotiationExpirationDate   = timestamp;
         NegotiationStatus   statusNegotiation           = NegotiationStatus.SENT_TO_BROKER;

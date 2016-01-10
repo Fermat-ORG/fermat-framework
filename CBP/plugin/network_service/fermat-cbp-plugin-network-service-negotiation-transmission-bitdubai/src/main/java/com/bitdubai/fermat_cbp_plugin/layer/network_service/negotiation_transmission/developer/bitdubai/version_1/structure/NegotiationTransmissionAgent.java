@@ -242,9 +242,7 @@ public class NegotiationTransmissionAgent {
                     if (communicationNetworkServiceLocal != null) {
                         try {
 
-                            Gson gson = new Gson();
-
-                            NegotiationMessage negotiationMessage = new NegotiationMessage(
+                            String jsonNegotiationTransmission = new NegotiationMessage(
                                     negotiationTransmission.getTransmissionId(),
                                     negotiationTransmission.getTransactionId(),
                                     negotiationTransmission.getNegotiationId(),
@@ -258,10 +256,9 @@ public class NegotiationTransmissionAgent {
                                     negotiationTransmission.getNegotiationType(),
                                     negotiationTransmission.getNegotiationXML(),
                                     negotiationTransmission.getTimestamp()
-                            );
-                            String jsonNegotiationTransaction =gson.toJson(negotiationMessage);
+                            ).toJson();
 
-                            communicationNetworkServiceLocal.sendMessage(identity.getPublicKey(), receiverPublicKey, jsonNegotiationTransaction);
+                            communicationNetworkServiceLocal.sendMessage(identity.getPublicKey(), receiverPublicKey, jsonNegotiationTransmission);
 
                             if(negotiationTransmission.getTransmissionType() == NegotiationTransmissionType.TRANSMISSION_NEGOTIATION ){
                                 System.out.print("\n\n**** 10) MOCK NEGOTIATION TRANSACTION - NEGOTIATION TRANSMISSION - AGENT - SEND NEGOTIATION TO : " + receiverPublicKey + "****\n");

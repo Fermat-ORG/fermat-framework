@@ -164,7 +164,7 @@ public class NegotiationTransmissionNetworkServiceDatabaseDao {
             list.clear();
 
             for (DatabaseTableRecord record : records) {
-                NegotiationTransmission outgoingTemplateNetworkServiceMessage = constructNegotiationTransmission(record);
+                NegotiationTransmission outgoingTemplateNetworkServiceMessage = getNegotiationTransmissionFromRecord(record);
                 list.add(outgoingTemplateNetworkServiceMessage);
             }
 
@@ -177,6 +177,37 @@ public class NegotiationTransmissionNetworkServiceDatabaseDao {
         }
 
         return list;
+    }
+
+    public List<NegotiationTransmission> getAllNegotiationTransmission() throws CantReadRecordDataBaseException {
+
+        try {
+
+            List<NegotiationTransmission> list = new ArrayList<>();
+
+            List<DatabaseTableRecord> records;
+            DatabaseTable table =  this.database.getTable(NegotiationTransmissionNetworkServiceDatabaseConstants.NEGOTIATION_TRANSMISSION_NETWORK_SERVICE_TABLE_NAME);
+            if (table == null)
+                throw new CantReadRecordDataBaseException("Cant check if negotiation_transmission_network_service exists", "Network Service - Negotiation Transmission", "");
+
+            table.loadToMemory();
+            records = table.getRecords();
+            if(records.isEmpty())
+                return list;
+            
+            for (DatabaseTableRecord record : records) {
+                list.add(getNegotiationTransmissionFromRecord(record));
+            }
+
+            return list;
+
+        } catch (CantLoadTableToMemoryException e) {
+            StringBuffer contextBuffer = new StringBuffer();
+            contextBuffer.append("Table Name: " + NegotiationTransmissionNetworkServiceDatabaseConstants.NEGOTIATION_TRANSMISSION_NETWORK_SERVICE_TABLE_NAME);
+            throw new CantReadRecordDataBaseException (CantRegisterSendNegotiationTransmissionException.DEFAULT_MESSAGE, e, contextBuffer.toString(), "The data no exist");
+        } catch (InvalidParameterException e) {
+            throw new CantReadRecordDataBaseException (CantRegisterSendNegotiationTransmissionException.DEFAULT_MESSAGE, e, "", "Invalid parameter");
+        }
     }
     /**
      * Method that list the all entities on the data base. The valid value of
@@ -212,7 +243,7 @@ public class NegotiationTransmissionNetworkServiceDatabaseDao {
             list.clear();
 
             for (DatabaseTableRecord record : records) {
-                NegotiationTransmission outgoingTemplateNetworkServiceMessage = constructNegotiationTransmission(record);
+                NegotiationTransmission outgoingTemplateNetworkServiceMessage = getNegotiationTransmissionFromRecord(record);
                 list.add(outgoingTemplateNetworkServiceMessage);
             }
 
@@ -307,7 +338,7 @@ public class NegotiationTransmissionNetworkServiceDatabaseDao {
             List<DatabaseTableRecord> records = databaseTable.getRecords();
 
             if (!records.isEmpty())
-                return constructNegotiationTransmission(records.get(0));
+                return getNegotiationTransmissionFromRecord(records.get(0));
             else
                 throw new CantGetNegotiationTransmissionException(null, "RequestID: "+transmissionId, "Cannot find an address exchange request with the given request id.");
 
@@ -319,7 +350,7 @@ public class NegotiationTransmissionNetworkServiceDatabaseDao {
     }
 
     /*PRIVATE*/
-    private NegotiationTransmission constructNegotiationTransmission(DatabaseTableRecord record) throws InvalidParameterException{
+    private NegotiationTransmission getNegotiationTransmissionFromRecord(DatabaseTableRecord record) throws InvalidParameterException{
         NegotiationTransmission negotiationTransmission = null;
         UUID                            transmissionId          =   record.getUUIDValue(NegotiationTransmissionNetworkServiceDatabaseConstants.NEGOTIATION_TRANSMISSION_NETWORK_SERVICE_TRANSMISSION_ID_COLUMN_NAME);
         UUID                            transactionId           =   record.getUUIDValue(NegotiationTransmissionNetworkServiceDatabaseConstants.NEGOTIATION_TRANSMISSION_NETWORK_SERVICE_TRANSACTION_ID_COLUMN_NAME);

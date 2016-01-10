@@ -46,7 +46,7 @@ public class CustomerBrokerNewServiceEventHandler implements CBPService {
             /**
              * I will initialize the handling of com.bitdubai.platform events.
              */
-            System.out.print("\n\n**** X) MOCK NEGOTIATION TRANSACTION - NEGOTIATION TRANSMISSION - EVENT HANDLER - LISTENER EVENT ****\n");
+//            System.out.print("\n\n**** X) MOCK NEGOTIATION TRANSACTION - NEGOTIATION TRANSMISSION - EVENT HANDLER - LISTENER EVENT ****\n");
             FermatEventListener fermatEventListener;
             FermatEventHandler fermatEventHandler;
 
