@@ -70,4 +70,8 @@ public class DateHelper {
         return (timestamp > timestampTomorrow);
 
     }
+
+    public static long addDayToTimestamp(long timestamp){
+        return timestamp + 86400; //20*60*60
+    }
 }
