@@ -20,8 +20,6 @@ import com.bitdubai.fermat_api.layer.all_definition.util.Version;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
 import com.bitdubai.fermat_api.layer.world.interfaces.Currency;
-import com.bitdubai.fermat_cer_api.all_definition.enums.TimeUnit;
-import com.bitdubai.fermat_cer_api.all_definition.utils.CurrencyPairImpl;
 import com.bitdubai.fermat_cer_api.all_definition.utils.ExchangeRateImpl;
 import com.bitdubai.fermat_cer_api.layer.provider.utils.CurrencyPairHelper;
 import com.bitdubai.fermat_cer_api.layer.provider.utils.HttpReader;
