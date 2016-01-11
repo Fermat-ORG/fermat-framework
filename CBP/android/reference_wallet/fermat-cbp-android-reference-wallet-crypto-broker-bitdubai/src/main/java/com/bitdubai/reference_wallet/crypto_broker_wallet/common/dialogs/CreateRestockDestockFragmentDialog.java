@@ -4,7 +4,6 @@ import android.app.Activity;
 import android.app.Dialog;
 import android.content.res.Resources;
 import android.os.Bundle;
-import android.text.InputFilter;
 import android.view.View;
 import android.view.Window;
 import android.widget.AutoCompleteTextView;
@@ -15,13 +14,17 @@ import android.widget.Toast;
 
 import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView;
 import com.bitdubai.fermat_api.FermatException;
+import com.bitdubai.fermat_api.layer.all_definition.enums.CryptoCurrency;
 import com.bitdubai.fermat_api.layer.all_definition.enums.FiatCurrency;
+import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
 import com.bitdubai.fermat_api.layer.all_definition.enums.UISource;
 import com.bitdubai.fermat_bnk_api.all_definition.enums.TransactionType;
+import com.bitdubai.fermat_cbp_api.all_definition.enums.OriginTransaction;
+import com.bitdubai.fermat_cbp_api.layer.wallet.crypto_broker.interfaces.setting.CryptoBrokerWalletAssociatedSetting;
+import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_broker.interfaces.CryptoBrokerWalletManager;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedUIExceptionSeverity;
 import com.bitdubai.fermat_wpd_api.layer.wpd_network_service.wallet_resources.interfaces.WalletResourcesProviderManager;
 import com.bitdubai.reference_wallet.crypto_broker_wallet.R;
-import com.bitdubai.reference_wallet.crypto_broker_wallet.session.CryptoBrokerWalletSession;
 
 import java.math.BigDecimal;
 
@@ -29,7 +32,7 @@ import java.math.BigDecimal;
  * Created by Alejandro Bicelis on 12/15/2015.
  */
 
-public class CreateStockDestockFragmentDialog extends Dialog implements
+public class CreateRestockDestockFragmentDialog extends Dialog implements
         View.OnClickListener {
 
     public Activity activity;
@@ -42,9 +45,10 @@ public class CreateStockDestockFragmentDialog extends Dialog implements
      * Resources
      */
     private WalletResourcesProviderManager walletResourcesProviderManager;
-    private CryptoBrokerWalletSession cryptoBrokerWalletSession;
+    private CryptoBrokerWalletManager cryptoBrokerWalletManager;
     private Resources resources;
     private TransactionType transactionType;
+    private CryptoBrokerWalletAssociatedSetting setting;
 
     /**
      *  Contact member
@@ -76,17 +80,13 @@ public class CreateStockDestockFragmentDialog extends Dialog implements
      * @param a
      * @param
      */
-
-
-    public CreateStockDestockFragmentDialog(Activity a, CryptoBrokerWalletSession cryptoBrokerWalletSession, Resources resources) {
+    public CreateRestockDestockFragmentDialog(Activity a, com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_broker.interfaces.CryptoBrokerWalletManager cryptoBrokerWalletManager, Resources resources, CryptoBrokerWalletAssociatedSetting setting) {
         super(a);
         // TODO Auto-generated constructor stub
         this.activity = a;
-        this.cryptoBrokerWalletSession = cryptoBrokerWalletSession;
-        this.transactionType = transactionType;
+        this.cryptoBrokerWalletManager = cryptoBrokerWalletManager;
+        this.setting = setting;
         this.resources = resources;
-        this.account=account;
-        this.fiatCurrency =fiatCurrency;
     }
 
 
@@ -171,15 +171,33 @@ public class CreateStockDestockFragmentDialog extends Dialog implements
             }
             switch (option){
                 case "stock":
-                    System.out.println("***************STOCK DIALOG***************");
+                    System.out.println("*************REESTOCK DIALOG****************   ["+setting.getPlatform()+"]" );
+                    if(Platforms.BANKING_PLATFORM == setting.getPlatform()){
+                        cryptoBrokerWalletManager.createTransactionRestockBank(setting.getBrokerPublicKey(),(FiatCurrency)setting.getMerchandise(),setting.getBrokerPublicKey(),setting.getWalletPublicKey(),setting.getBankAccount(),new BigDecimal(amount),memo,null, OriginTransaction.RESTOCK_AUTOMATIC);
+                    }
+                    if(Platforms.CASH_PLATFORM == setting.getPlatform()){
+                        cryptoBrokerWalletManager.createTransactionRestockCash(setting.getBrokerPublicKey(), (FiatCurrency) setting.getMerchandise(), setting.getBrokerPublicKey(), setting.getWalletPublicKey(), "TEST CASH REFERENCE", new BigDecimal(amount), memo, null, OriginTransaction.RESTOCK_AUTOMATIC);
+                    }
+                    if(Platforms.CRYPTO_CURRENCY_PLATFORM == setting.getPlatform()){
+                        cryptoBrokerWalletManager.createTransactionRestockCrypto(setting.getBrokerPublicKey(), (CryptoCurrency) setting.getMerchandise(), setting.getBrokerPublicKey(), setting.getWalletPublicKey(),  new BigDecimal(amount), memo, null, OriginTransaction.RESTOCK_AUTOMATIC);
+                    }
                     return;
                 case "destock":
-                    System.out.println("*************DESTOCK DIALOG****************");
+                    if(Platforms.BANKING_PLATFORM == setting.getPlatform()){
+                        cryptoBrokerWalletManager.createTransactionDestockBank(setting.getBrokerPublicKey(), (FiatCurrency) setting.getMerchandise(), setting.getBrokerPublicKey(), setting.getWalletPublicKey(), setting.getBankAccount(), new BigDecimal(amount), memo, null, OriginTransaction.RESTOCK_AUTOMATIC);
+                    }
+                    if(Platforms.CASH_PLATFORM == setting.getPlatform()){
+                        cryptoBrokerWalletManager.createTransactionDestockCash(setting.getBrokerPublicKey(), (FiatCurrency) setting.getMerchandise(), setting.getBrokerPublicKey(), setting.getWalletPublicKey(), "TEST CASH REFERENCE", new BigDecimal(amount), memo, null, OriginTransaction.RESTOCK_AUTOMATIC);
+                    }
+                    if(Platforms.CRYPTO_CURRENCY_PLATFORM == setting.getPlatform()){
+                        cryptoBrokerWalletManager.createTransactionDestockCrypto(setting.getBrokerPublicKey(), (CryptoCurrency) setting.getMerchandise(), setting.getBrokerPublicKey(), setting.getWalletPublicKey(), new BigDecimal(amount), memo, null, OriginTransaction.RESTOCK_AUTOMATIC);
+                    }
+                    System.out.println("*************DESTOCK DIALOG****************  ["+setting.getPlatform()+"]");
                     return;
             }
             //TODO:Stock or destock
         } catch (Exception e) {
-            cryptoBrokerWalletSession.getErrorManager().reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.CRASH, FermatException.wrapException(e));
+            cryptoBrokerWalletManager.getErrorManager().reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.CRASH, FermatException.wrapException(e));
             Toast.makeText(activity.getApplicationContext(), "There's been an error, please try again" +  e.getMessage(), Toast.LENGTH_SHORT).show();
             return;
         }

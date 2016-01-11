@@ -1,6 +1,5 @@
 package com.bitdubai.reference_wallet.crypto_broker_wallet.fragments.settings;
 
-import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
@@ -21,7 +20,6 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.FiatCurrency;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Wallets;
-import com.bitdubai.fermat_bnk_api.all_definition.enums.TransactionType;
 import com.bitdubai.fermat_bnk_api.layer.bnk_wallet.bank_money.interfaces.BankAccountNumber;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.CurrencyType;
 import com.bitdubai.fermat_cbp_api.layer.wallet.crypto_broker.interfaces.setting.CryptoBrokerWalletAssociatedSetting;
@@ -34,8 +32,7 @@ import com.bitdubai.fermat_wpd_api.layer.wpd_middleware.wallet_manager.exception
 import com.bitdubai.fermat_wpd_api.layer.wpd_middleware.wallet_manager.interfaces.InstalledWallet;
 import com.bitdubai.reference_wallet.crypto_broker_wallet.R;
 import com.bitdubai.reference_wallet.crypto_broker_wallet.common.adapters.StockDestockAdapter;
-import com.bitdubai.reference_wallet.crypto_broker_wallet.common.adapters.WalletsAdapter;
-import com.bitdubai.reference_wallet.crypto_broker_wallet.common.dialogs.CreateStockDestockFragmentDialog;
+import com.bitdubai.reference_wallet.crypto_broker_wallet.common.dialogs.CreateRestockDestockFragmentDialog;
 import com.bitdubai.reference_wallet.crypto_broker_wallet.fragments.common.SimpleListDialogFragment;
 import com.bitdubai.reference_wallet.crypto_broker_wallet.session.CryptoBrokerWalletSession;
 
@@ -58,7 +55,7 @@ public class SetttingsStockManagementFragment extends AbstractFermatFragment imp
     private List<InstalledWallet> stockWallets;
     private Map<String, FiatCurrency> bankCurrencies;
     private Map<String, String> bankAccounts;
-    private CreateStockDestockFragmentDialog dialog;
+    private CreateRestockDestockFragmentDialog dialog;
     private List<CryptoBrokerWalletAssociatedSetting> settings;
     // Fermat Managers
     private CryptoBrokerWalletManager walletManager;
@@ -402,15 +399,15 @@ public class SetttingsStockManagementFragment extends AbstractFermatFragment imp
 
         return false;
     }
-    private void launchCreateTransactionDialog(){
-        dialog = new CreateStockDestockFragmentDialog(getActivity(),(CryptoBrokerWalletSession) appSession, getResources());
+    private void launchCreateTransactionDialog(CryptoBrokerWalletAssociatedSetting data){
+        dialog = new CreateRestockDestockFragmentDialog(getActivity(), walletManager, getResources(),data);
         dialog.setOnDismissListener(this);
         dialog.show();
     }
 
     @Override
     public void onItemClickListener(CryptoBrokerWalletAssociatedSetting data, int position) {
-        launchCreateTransactionDialog();
+        launchCreateTransactionDialog(data);
     }
 
     @Override
