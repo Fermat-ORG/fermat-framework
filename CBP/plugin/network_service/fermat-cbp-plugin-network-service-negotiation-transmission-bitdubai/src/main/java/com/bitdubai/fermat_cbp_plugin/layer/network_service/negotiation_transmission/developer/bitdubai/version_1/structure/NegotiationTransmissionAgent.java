@@ -216,6 +216,7 @@ public class NegotiationTransmissionAgent {
                 System.out.print("\n\n**** X) MOCK NEGOTIATION TRANSACTION - NEGOTIATION TRANSMISSION - AGENT - PENDING FOR SEND TO : " + receiverPublicKey + "****\n");
 
                 if(!poolConnectionsWaitingForResponse.containsKey(receiverPublicKey)) {
+                    System.out.print("\n\n**** X) MOCK NEGOTIATION TRANSACTION - NEGOTIATION TRANSMISSION - AGENT - POOL****\n");
                     //TODO: hacer un filtro por aquellas que se encuentran conectadas
                     if (communicationNetworkServiceConnectionManager.getNetworkServiceLocalInstance(receiverPublicKey) == null) {
                         if (wsCommunicationsCloudClientManager != null) {
@@ -237,6 +238,7 @@ public class NegotiationTransmissionAgent {
                         }
                     }
                 }else{
+                    System.out.print("\n\n**** X) MOCK NEGOTIATION TRANSACTION - NEGOTIATION TRANSMISSION - AGENT - FOR SEND****\n");
                     NetworkServiceLocal communicationNetworkServiceLocal = networkServiceNegotiationTransmissionPluginRoot.getNetworkServiceConnectionManager().getNetworkServiceLocalInstance(receiverPublicKey);
                     if (communicationNetworkServiceLocal != null) {
                         try {
@@ -283,6 +285,8 @@ public class NegotiationTransmissionAgent {
                         } catch (Exception e) {
                             e.printStackTrace();
                         }
+                    }else {
+                        System.out.print("\n\n**** X) MOCK NEGOTIATION TRANSACTION - NEGOTIATION TRANSMISSION - AGENT - SERVER LOCAL NO FOUNT.****\n");
                     }
                 }
             }
