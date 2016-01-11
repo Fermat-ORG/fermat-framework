@@ -1,6 +1,5 @@
 package com.bitdubai.fermat_cht_plugin.layer.middleware.chat.developer.bitdubai.version_1.database;
 
-import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseFilterType;
@@ -10,19 +9,15 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTableRe
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTransaction;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantCreateDatabaseException;
-import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantInsertRecordException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantLoadTableToMemoryException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantOpenDatabaseException;
-import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantUpdateRecordException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.DatabaseNotFoundException;
-import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.DatabaseTransactionFailedException;
 import com.bitdubai.fermat_cht_api.all_definition.enums.ChatStatus;
 import com.bitdubai.fermat_cht_api.all_definition.enums.MessageStatus;
 import com.bitdubai.fermat_cht_api.all_definition.enums.TypeMessage;
-import com.bitdubai.fermat_cht_api.all_definition.exceptions.CHTException;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantDeleteChatException;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantDeleteContactException;
-import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantDeleteMesssageException;
+import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantDeleteMessageException;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantGetChatException;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantGetContactException;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantGetMessageException;
@@ -39,7 +34,6 @@ import com.bitdubai.fermat_cht_api.layer.middleware.interfaces.Message;
 import com.bitdubai.fermat_cht_api.layer.middleware.utils.ChatImpl;
 import com.bitdubai.fermat_cht_api.layer.middleware.utils.ContactImpl;
 import com.bitdubai.fermat_cht_api.layer.middleware.utils.MessageImpl;
-import com.bitdubai.fermat_cht_plugin.layer.middleware.chat.developer.bitdubai.version_1.exceptions.CantInitializeChatMiddlewareDaoException;
 import com.bitdubai.fermat_cht_plugin.layer.middleware.chat.developer.bitdubai.version_1.exceptions.DatabaseOperationException;
 
 import java.sql.Date;
@@ -182,6 +176,21 @@ public class ChatMiddlewareDatabaseDao {
         }
     }
 
+    /**
+     * This method returns all the chats recorded in database.
+     * @return
+     * @throws DatabaseOperationException
+     * @throws CantGetChatException
+     */
+    public List<Chat> getChatList() throws
+            DatabaseOperationException,
+            CantGetChatException {
+        /**
+         * I'll pass null as argument to the next method to get all the chat list.
+         */
+        return getChats(null);
+    }
+
     public List<Chat> getChats(DatabaseTableFilter filter) throws CantGetChatException, DatabaseOperationException
     {
         //if filter is null all records
@@ -295,6 +304,21 @@ public class ChatMiddlewareDatabaseDao {
                 database.closeDatabase();
             throw new DatabaseOperationException(DatabaseOperationException.DEFAULT_MESSAGE, e, "Error trying to delete the Chat Transaction in the database.", null);
         }
+    }
+
+    /**
+     * This method returns the full messages list.
+     * @return
+     * @throws DatabaseOperationException
+     * @throws CantGetMessageException
+     */
+    public List<Message> getMessages() throws
+            DatabaseOperationException,
+            CantGetMessageException {
+        /**
+         * I'll pass null as argument to the next method to get all the chat list.
+         */
+        return getMessages(null);
     }
 
     public List<Message> getMessages(DatabaseTableFilter filter) throws CantGetMessageException, DatabaseOperationException
@@ -419,7 +443,7 @@ public class ChatMiddlewareDatabaseDao {
         }
     }
 
-    public void deleteMessage(Message message) throws CantDeleteMesssageException, DatabaseOperationException
+    public void deleteMessage(Message message) throws CantDeleteMessageException, DatabaseOperationException
     {
         try
         {

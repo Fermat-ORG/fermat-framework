@@ -1,14 +1,14 @@
 package com.bitdubai.fermat_cht_api.all_definition.exceptions;
 
 /**
- * Created by Franklin Marcano on 09/01/16.
+ * Created by Manuel Perez (darkpriestrelative@gmail.com) on 10/01/16.
  */
-public class CantGetChatException extends CHTException {
+public class CantInitializeDatabaseException extends CHTException {
 
     /**
      * Represent the default message
      */
-    public static final String DEFAULT_MESSAGE = "CANNOT GET A CHAT FROM DATABASE";
+    public static final String DEFAULT_MESSAGE = "CAN'T INITIALIZE CHT DATABASE";
 
     /**
      * Constructor with parameters
@@ -18,7 +18,7 @@ public class CantGetChatException extends CHTException {
      * @param context
      * @param possibleReason
      */
-    public CantGetChatException(final String message, final Exception cause, final String context, final String possibleReason) {
+    public CantInitializeDatabaseException(final String message, final Exception cause, final String context, final String possibleReason) {
         super(message, cause, context, possibleReason);
     }
 
@@ -29,7 +29,7 @@ public class CantGetChatException extends CHTException {
      * @param context
      * @param possibleReason
      */
-    public CantGetChatException(Exception cause, String context, String possibleReason) {
+    public CantInitializeDatabaseException(Exception cause, String context, String possibleReason) {
         super(DEFAULT_MESSAGE , cause, context, possibleReason);
     }
 
@@ -39,7 +39,7 @@ public class CantGetChatException extends CHTException {
      * @param message
      * @param cause
      */
-    public CantGetChatException(final String message, final Exception cause) {
+    public CantInitializeDatabaseException(final String message, final Exception cause) {
         this(message, cause, "", "");
     }
 
@@ -48,7 +48,7 @@ public class CantGetChatException extends CHTException {
      *
      * @param message
      */
-    public CantGetChatException(final String message) {
+    public CantInitializeDatabaseException(final String message) {
         this(message, null);
     }
 
@@ -57,7 +57,7 @@ public class CantGetChatException extends CHTException {
      *
      * @param exception
      */
-    public CantGetChatException(final Exception exception) {
+    public CantInitializeDatabaseException(final Exception exception) {
         this(exception.getMessage());
         setStackTrace(exception.getStackTrace());
     }
@@ -65,8 +65,8 @@ public class CantGetChatException extends CHTException {
     /**
      * Constructor
      */
-    public CantGetChatException() {
+    public CantInitializeDatabaseException() {
         this(DEFAULT_MESSAGE);
     }
-}
 
+}

@@ -1,18 +1,18 @@
-package com.bitdubai.fermat_cht_core.layer.network_service.chat;
+package com.bitdubai.fermat_cht_core.layer.middleware.chat;
 
 import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.PluginReference;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
-import com.bitdubai.fermat_cht_plugin.layer.network_service.chat.developer.bitdubai.DeveloperBitDubai;
+import com.bitdubai.fermat_cht_plugin.layer.middleware.chat.developer.bitdubai.DeveloperBitDubai;
 import com.bitdubai.fermat_core_api.layer.all_definition.system.abstract_classes.AbstractPluginSubsystem;
 import com.bitdubai.fermat_core_api.layer.all_definition.system.exceptions.CantStartSubsystemException;
 
 /**
- * Created by Gabriel Araujo (gabe_512@hotmail.com) on 05/01/2016.
+ * Created by Manuel Perez (darkpriestrelative@gmail.com) on 10/01/16.
  */
-public class ChatPluginSubsystem extends AbstractPluginSubsystem {
+public class ChatMiddlewarePluginSubsystem extends AbstractPluginSubsystem {
 
-    public ChatPluginSubsystem() {
-        super(new PluginReference(Plugins.CHAT_NETWORK_SERVICE));
+    public ChatMiddlewarePluginSubsystem() {
+        super(new PluginReference(Plugins.CHAT_MIDDLEWARE));
     }
 
     @Override

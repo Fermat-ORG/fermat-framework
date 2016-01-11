@@ -128,6 +128,23 @@ public class BitcoinVenezuelaProviderDeveloperDatabaseFactory implements DealsWi
         tables.add(providerInfoTable);
 
         /**
+         * Table Current Exchange Rates columns.
+         */
+        List<String> currentExchangeRatesColumns = new ArrayList<String>();
+
+        currentExchangeRatesColumns.add(BitcoinVenezuelaProviderDatabaseConstants.CURRENT_EXCHANGE_RATES_ID_COLUMN_NAME);
+        currentExchangeRatesColumns.add(BitcoinVenezuelaProviderDatabaseConstants.CURRENT_EXCHANGE_RATES_FROM_CURRENCY_COLUMN_NAME);
+        currentExchangeRatesColumns.add(BitcoinVenezuelaProviderDatabaseConstants.CURRENT_EXCHANGE_RATES_TO_CURRENCY_COLUMN_NAME);
+        currentExchangeRatesColumns.add(BitcoinVenezuelaProviderDatabaseConstants.CURRENT_EXCHANGE_RATES_SALE_PRICE_COLUMN_NAME);
+        currentExchangeRatesColumns.add(BitcoinVenezuelaProviderDatabaseConstants.CURRENT_EXCHANGE_RATES_PURCHASE_PRICE_COLUMN_NAME);
+        currentExchangeRatesColumns.add(BitcoinVenezuelaProviderDatabaseConstants.CURRENT_EXCHANGE_RATES_TIMESTAMP_COLUMN_NAME);
+        /**
+         * Table Current Exchange Rates addition.
+         */
+        DeveloperDatabaseTable currentExchangeRatesTable = developerObjectFactory.getNewDeveloperDatabaseTable(BitcoinVenezuelaProviderDatabaseConstants.CURRENT_EXCHANGE_RATES_TABLE_NAME, currentExchangeRatesColumns);
+        tables.add(currentExchangeRatesTable);
+
+        /**
          * Table Daily Exchange Rates columns.
          */
         List<String> dailyExchangeRatesColumns = new ArrayList<String>();
