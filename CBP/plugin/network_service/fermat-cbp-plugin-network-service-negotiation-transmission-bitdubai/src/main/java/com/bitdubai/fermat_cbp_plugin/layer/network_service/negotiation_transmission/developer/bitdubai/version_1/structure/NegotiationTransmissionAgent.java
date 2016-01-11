@@ -207,11 +207,14 @@ public class NegotiationTransmissionAgent {
 
         try {
 
-//            System.out.print("\n\n**** X) MOCK NEGOTIATION TRANSACTION - NEGOTIATION TRANSMISSION - AGENT - LIST PENDING SEND ****\n");
+            System.out.print("\n\n**** X) MOCK NEGOTIATION TRANSACTION - NEGOTIATION TRANSMISSION - AGENT - LIST PENDING SEND ****\n");
             List<NegotiationTransmission> negotiationTransmissionList = databaseDao.findAllByTransmissionState(NegotiationTransmissionState.PROCESSING_SEND);
 
             for (NegotiationTransmission negotiationTransmission : negotiationTransmissionList) {
                 String receiverPublicKey= negotiationTransmission.getPublicKeyActorReceive();
+
+                System.out.print("\n\n**** X) MOCK NEGOTIATION TRANSACTION - NEGOTIATION TRANSMISSION - AGENT - PENDING FOR SEND TO : " + receiverPublicKey + "****\n");
+
                 if(!poolConnectionsWaitingForResponse.containsKey(receiverPublicKey)) {
                     //TODO: hacer un filtro por aquellas que se encuentran conectadas
                     if (communicationNetworkServiceConnectionManager.getNetworkServiceLocalInstance(receiverPublicKey) == null) {
@@ -257,7 +260,7 @@ public class NegotiationTransmissionAgent {
 //                            communicationNetworkServiceLocal.sendMessage(identity.getPublicKey(), receiverPublicKey, jsonNegotiationTransmission);
 
 
-                            if(negotiationTransmission.getTransmissionType() == NegotiationTransmissionType.TRANSMISSION_NEGOTIATION ){
+                            if(negotiationTransmission.getTransmissionType().getCode() == NegotiationTransmissionType.TRANSMISSION_NEGOTIATION.getCode() ){
                                 System.out.print("\n\n**** 10) MOCK NEGOTIATION TRANSACTION - NEGOTIATION TRANSMISSION - AGENT - SEND NEGOTIATION TO : " + receiverPublicKey + "****\n");
                                 System.out.print("*** SEND DATES: " +
                                                 "\n - Sender Id = " + identity.getPublicKey() +

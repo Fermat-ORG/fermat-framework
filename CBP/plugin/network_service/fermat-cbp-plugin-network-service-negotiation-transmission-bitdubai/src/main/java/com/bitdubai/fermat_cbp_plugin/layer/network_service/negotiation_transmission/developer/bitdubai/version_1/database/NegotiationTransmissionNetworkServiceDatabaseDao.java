@@ -12,9 +12,11 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTableRe
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTransaction;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantCreateDatabaseException;
+import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantDeleteRecordException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantInsertRecordException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantLoadTableToMemoryException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantOpenDatabaseException;
+import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantUpdateRecordException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.DatabaseNotFoundException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.DatabaseTransactionFailedException;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.NegotiationTransactionType;
@@ -161,6 +163,7 @@ public class NegotiationTransmissionNetworkServiceDatabaseDao {
 
             if (negotiationTransmissionState == null)
                 throw new IllegalArgumentException("The filters are required, can not be null or empty");
+
             List<NegotiationTransmission> list = new ArrayList<>();
 
             List<DatabaseTableRecord> records;
@@ -179,7 +182,6 @@ public class NegotiationTransmissionNetworkServiceDatabaseDao {
             }
 
             return list;
-
 
         } catch (CantLoadTableToMemoryException e) {
             StringBuffer contextBuffer = new StringBuffer();
@@ -360,6 +362,36 @@ public class NegotiationTransmissionNetworkServiceDatabaseDao {
         }
     }
 
+    /*TEST*/
+    public void updateTransmissionTest() throws CantRegisterSendNegotiationTransmissionException{
+
+        try {
+            DatabaseTable table = this.database.getTable(NegotiationTransmissionNetworkServiceDatabaseConstants.NEGOTIATION_TRANSMISSION_NETWORK_SERVICE_TABLE_NAME);
+            DatabaseTableRecord record = table.getEmptyRecord();
+            record.setStringValue(NegotiationTransmissionNetworkServiceDatabaseConstants.NEGOTIATION_TRANSMISSION_NETWORK_SERVICE_NEGOTIATION_TRANSACTION_TYPE_COLUMN_NAME, NegotiationTransactionType.CUSTOMER_BROKER_NEW.getCode());
+            table.updateRecord(record);
+        }catch (CantUpdateRecordException e) {
+            throw new CantRegisterSendNegotiationTransmissionException(e.getMessage(), e, "Negotiation Transmission", "Cant update transmission, update database problems.");
+        } catch (Exception e) {
+            throw new CantRegisterSendNegotiationTransmissionException(e.getMessage(), FermatException.wrapException(e), "Cant update transmission", "unknown failure.");
+        }
+    }
+
+    //DELETE METHOD FOR TEST
+    public void deleteTransmissionTest() throws CantRegisterSendNegotiationTransmissionException {
+        try {
+
+            DatabaseTable table = this.database.getTable(NegotiationTransmissionNetworkServiceDatabaseConstants.NEGOTIATION_TRANSMISSION_NETWORK_SERVICE_TABLE_NAME);
+            DatabaseTableRecord record = table.getEmptyRecord();
+            table.deleteRecord(record);
+
+        } catch (CantDeleteRecordException e) {
+            throw new CantRegisterSendNegotiationTransmissionException(e.getMessage(), e, "Negotiation Transmission,", "Cant delete Register, delete database problems.");
+        } catch (Exception e) {
+            throw new CantRegisterSendNegotiationTransmissionException(e.getMessage(), FermatException.wrapException(e), "Negotiation Transmission", "Cant delete Register, unknown failure.");
+        }
+    }
+
     /*PRIVATE*/
     private NegotiationTransmission getNegotiationTransmissionFromRecord(DatabaseTableRecord record) throws InvalidParameterException{
         NegotiationTransmission negotiationTransmission = null;
@@ -400,15 +432,15 @@ public class NegotiationTransmissionNetworkServiceDatabaseDao {
         record.setUUIDValue(NegotiationTransmissionNetworkServiceDatabaseConstants.NEGOTIATION_TRANSMISSION_NETWORK_SERVICE_TRANSMISSION_ID_COLUMN_NAME, negotiationTransmission.getTransmissionId());
         record.setUUIDValue(NegotiationTransmissionNetworkServiceDatabaseConstants.NEGOTIATION_TRANSMISSION_NETWORK_SERVICE_TRANSACTION_ID_COLUMN_NAME, negotiationTransmission.getTransactionId());
         record.setUUIDValue(NegotiationTransmissionNetworkServiceDatabaseConstants.NEGOTIATION_TRANSMISSION_NETWORK_SERVICE_NEGOTIATION_ID_COLUMN_NAME, negotiationTransmission.getNegotiationId());
-        record.setStringValue(NegotiationTransmissionNetworkServiceDatabaseConstants.NEGOTIATION_TRANSMISSION_NETWORK_SERVICE_NEGOTIATION_TRANSACTION_TYPE_COLUMN_NAME, negotiationTransmission.getTransmissionType().getCode());
+        record.setStringValue(NegotiationTransmissionNetworkServiceDatabaseConstants.NEGOTIATION_TRANSMISSION_NETWORK_SERVICE_NEGOTIATION_TRANSACTION_TYPE_COLUMN_NAME, negotiationTransmission.getNegotiationTransactionType().getCode());
         record.setStringValue(NegotiationTransmissionNetworkServiceDatabaseConstants.NEGOTIATION_TRANSMISSION_NETWORK_SERVICE_PUBLIC_KEY_ACTOR_SEND_COLUMN_NAME, negotiationTransmission.getPublicKeyActorSend());
         record.setStringValue(NegotiationTransmissionNetworkServiceDatabaseConstants.NEGOTIATION_TRANSMISSION_NETWORK_SERVICE_ACTOR_SEND_TYPE_COLUMN_NAME, negotiationTransmission.getActorSendType().getCode());
         record.setStringValue(NegotiationTransmissionNetworkServiceDatabaseConstants.NEGOTIATION_TRANSMISSION_NETWORK_SERVICE_PUBLIC_KEY_ACTOR_RECEIVE_COLUMN_NAME, negotiationTransmission.getPublicKeyActorReceive());
         record.setStringValue(NegotiationTransmissionNetworkServiceDatabaseConstants.NEGOTIATION_TRANSMISSION_NETWORK_SERVICE_ACTOR_RECEIVE_TYPE_COLUMN_NAME, negotiationTransmission.getActorReceiveType().getCode());
         record.setStringValue(NegotiationTransmissionNetworkServiceDatabaseConstants.NEGOTIATION_TRANSMISSION_NETWORK_SERVICE_TRANSMISSION_TYPE_COLUMN_NAME, negotiationTransmission.getTransmissionType().getCode());
         record.setStringValue(NegotiationTransmissionNetworkServiceDatabaseConstants.NEGOTIATION_TRANSMISSION_NETWORK_SERVICE_TRANSMISSION_STATE_COLUMN_NAME, negotiationTransmission.getTransmissionState().getCode());
-        record.setStringValue(NegotiationTransmissionNetworkServiceDatabaseConstants.NEGOTIATION_TRANSMISSION_NETWORK_SERVICE_NEGOTIATION_TYPE_COLUMN_NAME, negotiationTransmission.getNegotiationTransactionType().getCode());
-        record.setStringValue(NegotiationTransmissionNetworkServiceDatabaseConstants.NEGOTIATION_TRANSMISSION_NETWORK_SERVICE_NEGOTIATION_XML_COLUMN_NAME, negotiationTransmission.getTransmissionState().getCode());
+        record.setStringValue(NegotiationTransmissionNetworkServiceDatabaseConstants.NEGOTIATION_TRANSMISSION_NETWORK_SERVICE_NEGOTIATION_TYPE_COLUMN_NAME, negotiationTransmission.getNegotiationType().getCode());
+        record.setStringValue(NegotiationTransmissionNetworkServiceDatabaseConstants.NEGOTIATION_TRANSMISSION_NETWORK_SERVICE_NEGOTIATION_XML_COLUMN_NAME, negotiationTransmission.getNegotiationXML());
         record.setLongValue(NegotiationTransmissionNetworkServiceDatabaseConstants.NEGOTIATION_TRANSMISSION_NETWORK_SERVICE_TIMESTAMP_COLUMN_NAME, negotiationTransmission.getTimestamp());
     }
 
@@ -416,14 +448,14 @@ public class NegotiationTransmissionNetworkServiceDatabaseDao {
         record.setUUIDValue(NegotiationTransmissionNetworkServiceDatabaseConstants.NEGOTIATION_TRANSMISSION_NETWORK_SERVICE_TRANSMISSION_ID_COLUMN_NAME, negotiationTransmission.getTransmissionId());
         record.setUUIDValue(NegotiationTransmissionNetworkServiceDatabaseConstants.NEGOTIATION_TRANSMISSION_NETWORK_SERVICE_TRANSACTION_ID_COLUMN_NAME, negotiationTransmission.getTransactionId());
         record.setUUIDValue(NegotiationTransmissionNetworkServiceDatabaseConstants.NEGOTIATION_TRANSMISSION_NETWORK_SERVICE_NEGOTIATION_ID_COLUMN_NAME, negotiationTransmission.getNegotiationId());
-        record.setStringValue(NegotiationTransmissionNetworkServiceDatabaseConstants.NEGOTIATION_TRANSMISSION_NETWORK_SERVICE_NEGOTIATION_TRANSACTION_TYPE_COLUMN_NAME, negotiationTransmission.getTransmissionType().getCode());
+        record.setStringValue(NegotiationTransmissionNetworkServiceDatabaseConstants.NEGOTIATION_TRANSMISSION_NETWORK_SERVICE_NEGOTIATION_TRANSACTION_TYPE_COLUMN_NAME, negotiationTransmission.getNegotiationTransactionType().getCode());
         record.setStringValue(NegotiationTransmissionNetworkServiceDatabaseConstants.NEGOTIATION_TRANSMISSION_NETWORK_SERVICE_PUBLIC_KEY_ACTOR_SEND_COLUMN_NAME, negotiationTransmission.getPublicKeyActorSend());
         record.setStringValue(NegotiationTransmissionNetworkServiceDatabaseConstants.NEGOTIATION_TRANSMISSION_NETWORK_SERVICE_ACTOR_SEND_TYPE_COLUMN_NAME, negotiationTransmission.getActorSendType().getCode());
         record.setStringValue(NegotiationTransmissionNetworkServiceDatabaseConstants.NEGOTIATION_TRANSMISSION_NETWORK_SERVICE_PUBLIC_KEY_ACTOR_RECEIVE_COLUMN_NAME, negotiationTransmission.getPublicKeyActorReceive());
         record.setStringValue(NegotiationTransmissionNetworkServiceDatabaseConstants.NEGOTIATION_TRANSMISSION_NETWORK_SERVICE_ACTOR_RECEIVE_TYPE_COLUMN_NAME, negotiationTransmission.getActorReceiveType().getCode());
         record.setStringValue(NegotiationTransmissionNetworkServiceDatabaseConstants.NEGOTIATION_TRANSMISSION_NETWORK_SERVICE_TRANSMISSION_TYPE_COLUMN_NAME, negotiationTransmission.getTransmissionType().getCode());
         record.setStringValue(NegotiationTransmissionNetworkServiceDatabaseConstants.NEGOTIATION_TRANSMISSION_NETWORK_SERVICE_TRANSMISSION_STATE_COLUMN_NAME, negotiationTransmissionState.getCode());
-        record.setStringValue(NegotiationTransmissionNetworkServiceDatabaseConstants.NEGOTIATION_TRANSMISSION_NETWORK_SERVICE_NEGOTIATION_TYPE_COLUMN_NAME, negotiationTransmission.getNegotiationTransactionType().getCode());
+        record.setStringValue(NegotiationTransmissionNetworkServiceDatabaseConstants.NEGOTIATION_TRANSMISSION_NETWORK_SERVICE_NEGOTIATION_TYPE_COLUMN_NAME, negotiationTransmission.getNegotiationType().getCode());
         record.setStringValue(NegotiationTransmissionNetworkServiceDatabaseConstants.NEGOTIATION_TRANSMISSION_NETWORK_SERVICE_NEGOTIATION_XML_COLUMN_NAME, negotiationTransmission.getNegotiationXML());
         record.setLongValue(NegotiationTransmissionNetworkServiceDatabaseConstants.NEGOTIATION_TRANSMISSION_NETWORK_SERVICE_TIMESTAMP_COLUMN_NAME, negotiationTransmission.getTimestamp());
     }

@@ -210,6 +210,8 @@ public class NetworkServiceNegotiationTransmissionPluginRoot extends AbstractNet
 
             //TEST GET ALL TRANSMISSION
 //            getAllNegotiationTransactionTest();
+//            updateAllTransmissionTest();
+//            deleteAllTransmissionTest();
 
             //Initilize service
             this.serviceStatus = ServiceStatus.STARTED;
@@ -421,11 +423,11 @@ public class NetworkServiceNegotiationTransmissionPluginRoot extends AbstractNet
     @Override
     public void handleCompleteComponentRegistrationNotificationEvent(PlatformComponentProfile platformComponentProfileRegistered) {
 
-//        System.out.println("\nNegotiationTransmissionNetworkServiceConnectionManager - Starting method handleCompleteComponentRegistrationNotificationEvent" +
-//            "\n- platformComponentProfileRegistered.getPlatformComponentType(): " + platformComponentProfileRegistered.getPlatformComponentType().getCode() +" = "+ PlatformComponentType.NETWORK_SERVICE.getCode() +
-//            "\n- platformComponentProfileRegistered.getNetworkServiceType(): " + platformComponentProfileRegistered.getNetworkServiceType().getCode() +" = "+ NetworkServiceType.NEGOTIATION_TRANSMISSION.getCode() +
-//            "\n- platformComponentProfileRegistered.getIdentityPublicKey(): "+ platformComponentProfileRegistered.getIdentityPublicKey() +" = "+ identity.getPublicKey()
-//        );
+        System.out.println("\nNegotiationTransmissionNetworkServiceConnectionManager - Starting method handleCompleteComponentRegistrationNotificationEvent" +
+            "\n- platformComponentProfileRegistered.getPlatformComponentType(): " + platformComponentProfileRegistered.getPlatformComponentType().getCode() +" = "+ PlatformComponentType.NETWORK_SERVICE.getCode() +
+            "\n- platformComponentProfileRegistered.getNetworkServiceType(): " + platformComponentProfileRegistered.getNetworkServiceType().getCode() +" = "+ NetworkServiceType.NEGOTIATION_TRANSMISSION.getCode() +
+            "\n- platformComponentProfileRegistered.getIdentityPublicKey(): "+ platformComponentProfileRegistered.getIdentityPublicKey() +" = "+ identity.getPublicKey()
+        );
         //If the component registered have my profile and my identity public key
         if (platformComponentProfileRegistered.getPlatformComponentType()  == PlatformComponentType.NETWORK_SERVICE &&
                 platformComponentProfileRegistered.getNetworkServiceType()  == NetworkServiceType.NEGOTIATION_TRANSMISSION &&
@@ -751,8 +753,10 @@ public class NetworkServiceNegotiationTransmissionPluginRoot extends AbstractNet
 
         try {
 
+            System.out.print("\n**** MOCK NEGOTIATION TRANSMISSION. GET LIST ALL TRANSMISSION ****\n");
 
-            List<NegotiationTransmission> list = databaseDao.getAllNegotiationTransmission();
+//            List<NegotiationTransmission> list = databaseDao.getAllNegotiationTransmission();
+            List<NegotiationTransmission> list = databaseDao.findAllByTransmissionState(NegotiationTransmissionState.PROCESSING_SEND);
             if (!list.isEmpty()) {
                 System.out.print("\n\n\n\n------------------------------- LIST NEGOTIATION TRANSAMISSION -------------------------------");
                 for (NegotiationTransmission ListTransmission : list) {
@@ -814,5 +818,23 @@ public class NetworkServiceNegotiationTransmissionPluginRoot extends AbstractNet
             System.out.print("\n**** MOCK NEGOTIATION TRANSMISSION. GET LIST ALL TRANSMISSION, ERROR. ****\n");
         }
         
+    }
+
+    private void updateAllTransmissionTest(){
+        try{
+            System.out.print("\n**** MOCK NEGOTIATION TRANSMISSION. UPDATE ALL TRANSMISSION ****\n");
+            databaseDao.updateTransmissionTest();
+        }catch (CantRegisterSendNegotiationTransmissionException e){
+            System.out.print("\n**** MOCK NEGOTIATION TRANSMISSION. UPDATE ALL TRANSMISSION, ERROR. ****\n");
+        }
+    }
+
+    private void deleteAllTransmissionTest(){
+        try{
+            System.out.print("\n**** MOCK NEGOTIATION TRANSMISSION. DELETE ALL TRANSMISSION ****\n");
+            databaseDao.deleteTransmissionTest();
+        }catch (CantRegisterSendNegotiationTransmissionException e){
+            System.out.print("\n**** MOCK NEGOTIATION TRANSMISSION. delete ALL TRANSMISSION, ERROR. ****\n");
+        }
     }
 }
