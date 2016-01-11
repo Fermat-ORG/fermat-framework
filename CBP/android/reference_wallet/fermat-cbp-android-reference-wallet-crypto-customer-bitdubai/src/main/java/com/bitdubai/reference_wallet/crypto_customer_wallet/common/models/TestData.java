@@ -349,4 +349,8 @@ public class TestData {
 
         return contractsHistory;
     }
+
+    public static EmptyCustomerBrokerNegotiationInformation newEmptyNegotiationInformation() {
+        return new EmptyCustomerBrokerNegotiationInformation();
+    }
 }

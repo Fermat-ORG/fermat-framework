@@ -1,34 +1,23 @@
 package com.bitdubai.reference_wallet.crypto_customer_wallet.common.adapters;
 
-import android.app.Activity;
-import android.support.v7.widget.RecyclerView;
-import android.util.Log;
+import android.content.Context;
+import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.FermatSession;
+import com.bitdubai.fermat_android_api.ui.adapters.FermatAdapter;
 import com.bitdubai.fermat_android_api.ui.holders.FermatViewHolder;
-import com.bitdubai.fermat_api.FermatException;
-import com.bitdubai.fermat_bnk_api.layer.bnk_wallet.bank_money.interfaces.BankAccountNumber;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.ClauseType;
-import com.bitdubai.fermat_cbp_api.all_definition.enums.NegotiationStepType;
-import com.bitdubai.fermat_cbp_api.all_definition.enums.NegotiationType;
-import com.bitdubai.fermat_cbp_api.all_definition.negotiation.NegotiationLocations;
-import com.bitdubai.fermat_cbp_api.layer.wallet_module.common.interfaces.AmountToSellStep;
+import com.bitdubai.fermat_cbp_api.layer.wallet_module.common.interfaces.ClauseInformation;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.common.interfaces.CustomerBrokerNegotiationInformation;
-import com.bitdubai.fermat_cbp_api.layer.wallet_module.common.interfaces.ExchangeRateStep;
-import com.bitdubai.fermat_cbp_api.layer.wallet_module.common.interfaces.NegotiationStep;
-import com.bitdubai.fermat_cbp_api.layer.wallet_module.common.interfaces.SingleValueStep;
-import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_broker.interfaces.CryptoBrokerWalletManager;
 import com.bitdubai.reference_wallet.crypto_customer_wallet.R;
-import com.bitdubai.reference_wallet.crypto_customer_wallet.common.holders.negotiation_details.AmountToSellStepViewHolder;
-import com.bitdubai.reference_wallet.crypto_customer_wallet.common.holders.negotiation_details.DateTimeStepViewHolder;
-import com.bitdubai.reference_wallet.crypto_customer_wallet.common.holders.negotiation_details.ExchangeRateStepViewHolder;
-import com.bitdubai.reference_wallet.crypto_customer_wallet.common.holders.negotiation_details.FooterViewHolder;
-import com.bitdubai.reference_wallet.crypto_customer_wallet.common.holders.negotiation_details.NoteViewHolder;
-import com.bitdubai.reference_wallet.crypto_customer_wallet.common.holders.negotiation_details.SingleChoiceStepViewHolder;
-import com.bitdubai.reference_wallet.crypto_customer_wallet.common.models.StepItemGetter;
+import com.bitdubai.reference_wallet.crypto_customer_wallet.common.holders.start_negotiation.AmountToBuyViewHolder;
+import com.bitdubai.reference_wallet.crypto_customer_wallet.common.holders.start_negotiation.ClauseViewHolder;
+import com.bitdubai.reference_wallet.crypto_customer_wallet.common.holders.start_negotiation.ExchangeRateViewHolder;
+import com.bitdubai.reference_wallet.crypto_customer_wallet.common.holders.start_negotiation.FooterViewHolder;
+import com.bitdubai.reference_wallet.crypto_customer_wallet.common.holders.start_negotiation.SingleChoiceViewHolder;
+import com.bitdubai.reference_wallet.crypto_customer_wallet.util.FragmentsCommons;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -36,67 +25,81 @@ import java.util.List;
 import java.util.NoSuchElementException;
 
 
-public class StartNegotiationAdapter extends RecyclerView.Adapter<FermatViewHolder> implements StepItemGetter{
-    private static final int NO_TYPE = Integer.MIN_VALUE;
-    private static final int TYPE_HEADER = 0;
+public class StartNegotiationAdapter extends FermatAdapter<ClauseInformation, FermatViewHolder> {
+
     private static final int TYPE_ITEM_SINGLE_CHOICE = 1;
-    private static final int TYPE_ITEM_DATE_TIME = 2;
     private static final int TYPE_ITEM_EXCHANGE_RATE = 3;
-    private static final int TYPE_ITEM_AMOUNT_TO_SELL = 4;
+    private static final int TYPE_ITEM_AMOUNT_TO_BUY = 4;
     private static final int TYPE_FOOTER = 5;
 
-    private FermatSession session;
-    private List<NegotiationStep> dataSet;
-    private Activity activity;
-    private CryptoBrokerWalletManager walletManager;
+    private TextWatcher textWatcherListener;
+    private View.OnClickListener onClickListener;
     private FooterViewHolder.OnFooterButtonsClickListener footerListener;
 
-    private final CustomerBrokerNegotiationInformation data;
-    private ExchangeRateStepViewHolder exchangeRateViewHolder;
-    private boolean haveNote;
+    private CustomerBrokerNegotiationInformation negotiationInformation;
 
-    public StartNegotiationAdapter(Activity activity, FermatSession session, CryptoBrokerWalletManager walletManager, CustomerBrokerNegotiationInformation data, List<NegotiationStep> dataSet) {
-        this.activity = activity;
-        this.session = session;
-        this.dataSet = dataSet;
+    public StartNegotiationAdapter(Context context, CustomerBrokerNegotiationInformation negotiationInformation) {
+        super(context);
 
-        this.walletManager = walletManager;
+        this.negotiationInformation = negotiationInformation;
 
-        haveNote = false;
-        this.data = data;
-
-        haveNote = (data.getMemo() != null);
+        dataSet = new ArrayList<>();
+        dataSet.addAll(buildListOfItems());
     }
 
-    private FermatViewHolder createHolder(View itemView, int type) {
-        if (type == TYPE_HEADER)
-            return new NoteViewHolder(itemView);
-        if (type == TYPE_ITEM_DATE_TIME)
-            return new DateTimeStepViewHolder(this, itemView, activity, walletManager);
-        if (type == TYPE_ITEM_SINGLE_CHOICE)
-            return new SingleChoiceStepViewHolder(this, itemView, activity, walletManager);
-        if (type == TYPE_ITEM_EXCHANGE_RATE)
-            return new ExchangeRateStepViewHolder(this, itemView, walletManager);
-        if (type == TYPE_ITEM_AMOUNT_TO_SELL)
-            return new AmountToSellStepViewHolder(this, itemView, walletManager);
-        if (type == TYPE_FOOTER)
-            return new FooterViewHolder(itemView, data, dataSet, walletManager);
-
-        throw new NoSuchElementException("Incorrect type value");
+    @Override
+    public FermatViewHolder onCreateViewHolder(ViewGroup viewGroup, int type) {
+        return createHolder(LayoutInflater.from(context).inflate(getCardViewResource(type), viewGroup, false), type);
     }
 
-    private int getCardViewResource(int type) {
+    public void setFooterListener(FooterViewHolder.OnFooterButtonsClickListener footerListener) {
+        this.footerListener = footerListener;
+    }
+
+    public void setOnClickListener(View.OnClickListener onClickListener) {
+        this.onClickListener = onClickListener;
+    }
+
+    public void setTextWatcherListener(TextWatcher textWatcherListener) {
+        this.textWatcherListener = textWatcherListener;
+    }
+
+    @Override
+    protected FermatViewHolder createHolder(View itemView, int type) {
         switch (type) {
-            case TYPE_HEADER:
-                return R.layout.notes_item;
+            case TYPE_ITEM_SINGLE_CHOICE:
+                final SingleChoiceViewHolder singleChoiceViewHolder = new SingleChoiceViewHolder(itemView);
+                singleChoiceViewHolder.setListener(onClickListener);
+                return singleChoiceViewHolder;
+
+            case TYPE_ITEM_EXCHANGE_RATE:
+                final ExchangeRateViewHolder exchangeRateViewHolder = new ExchangeRateViewHolder(itemView);
+                exchangeRateViewHolder.setListener(textWatcherListener);
+                return exchangeRateViewHolder;
+
+            case TYPE_ITEM_AMOUNT_TO_BUY:
+                final AmountToBuyViewHolder amountToBuyViewHolder = new AmountToBuyViewHolder(itemView);
+                amountToBuyViewHolder.setListener(textWatcherListener);
+                return amountToBuyViewHolder;
+
+            case TYPE_FOOTER:
+                final FooterViewHolder footerViewHolder = new FooterViewHolder(itemView);
+                footerViewHolder.setListener(footerListener);
+                return footerViewHolder;
+
+            default:
+                throw new IllegalArgumentException("Cant recognise the given value");
+        }
+    }
+
+    protected int getCardViewResource(int type) {
+        switch (type) {
             case TYPE_ITEM_SINGLE_CHOICE:
                 return R.layout.single_choice_item;
-            case TYPE_ITEM_DATE_TIME:
-                return R.layout.date_time_item;
             case TYPE_ITEM_EXCHANGE_RATE:
                 return R.layout.exchange_rate_item;
-            case TYPE_ITEM_AMOUNT_TO_SELL:
-                return R.layout.amount_to_sell_item;
+            case TYPE_ITEM_AMOUNT_TO_BUY:
+                return R.layout.amount_to_buy_item;
             case TYPE_FOOTER:
                 return R.layout.footer_item;
             default:
@@ -105,246 +108,94 @@ public class StartNegotiationAdapter extends RecyclerView.Adapter<FermatViewHold
     }
 
     @Override
-    public FermatViewHolder onCreateViewHolder(ViewGroup viewGroup, int type) {
-        return createHolder(LayoutInflater.from(activity).inflate(getCardViewResource(type), viewGroup, false), type);
-    }
-
-    @Override
-    public void onBindViewHolder(FermatViewHolder holder, int position) {
-        int holderType = getItemViewType(position);
-        int itemPosition = getItemPosition(position);
-        int stepNumber = itemPosition + 1;
-
-        switch (holderType) {
-            case TYPE_FOOTER:
-                FooterViewHolder footerViewHolder = (FooterViewHolder) holder;
-                footerViewHolder.setListener(footerListener);
-                break;
-            case TYPE_HEADER:
-                NoteViewHolder noteViewHolder = (NoteViewHolder) holder;
-                noteViewHolder.bind(data.getMemo());
-                break;
-            case TYPE_ITEM_SINGLE_CHOICE:
-                SingleValueStep singleValueStep = (SingleValueStep) dataSet.get(itemPosition);
-                SingleChoiceStepViewHolder singleChoiceViewHolder = (SingleChoiceStepViewHolder) holder;
-                bindSingleChoiceViewHolder(
-                        stepNumber,
-                        singleChoiceViewHolder,
-                        singleValueStep);
-                break;
-            case TYPE_ITEM_DATE_TIME:
-                singleValueStep = (SingleValueStep) dataSet.get(itemPosition);
-                DateTimeStepViewHolder dateTimeViewHolder = (DateTimeStepViewHolder) holder;
-                bindDateTimeViewHolder(
-                        stepNumber,
-                        dateTimeViewHolder,
-                        singleValueStep);
-                break;
-            case TYPE_ITEM_EXCHANGE_RATE:
-                ExchangeRateStep exchangeRateStep = (ExchangeRateStep) dataSet.get(itemPosition);
-                exchangeRateViewHolder = (ExchangeRateStepViewHolder) holder;
-                exchangeRateViewHolder.bind(
-                        stepNumber,
-                        exchangeRateStep.getCurrencyToSell(),
-                        exchangeRateStep.getCurrencyToReceive(),
-                        exchangeRateStep.getExchangeRate(),
-                        exchangeRateStep.getSuggestedExchangeRate());
-                break;
-            case TYPE_ITEM_AMOUNT_TO_SELL:
-                AmountToSellStep amountToSellStep = (AmountToSellStep) dataSet.get(itemPosition);
-                AmountToSellStepViewHolder amountToSellViewHolder = (AmountToSellStepViewHolder) holder;
-                amountToSellViewHolder.bind(
-                        stepNumber,
-                        amountToSellStep.getCurrencyToSell(),
-                        amountToSellStep.getCurrencyToReceive(),
-                        amountToSellStep.getAmountToSell(),
-                        amountToSellStep.getAmountToReceive(),
-                        amountToSellStep.getExchangeRateValue());
-
-                if (exchangeRateViewHolder != null) {
-                    exchangeRateViewHolder.setOnExchangeValueChangeListener(amountToSellViewHolder);
-                }
-
-                break;
-        }
-    }
-
-    /**
-     * Get item
-     *
-     * @param position int position to getDate
-     * @return Model object
-     */
-    public NegotiationStep getItem(final int position) {
-        return dataSet != null ? ((!dataSet.isEmpty() && position < dataSet.size()) ? dataSet.get(position) : null) : null;
+    protected int getCardViewResource() {
+        return 0;
     }
 
     @Override
     public int getItemCount() {
-        final int size = dataSet.size();
-        return haveNote ? size + 2 : size + 1;
+        return super.getItemCount() + 1;
     }
 
     @Override
-    public int getItemViewType(int itemPosition) {
-        if (itemPosition == 0 && haveNote) {
-            return TYPE_HEADER;
-        }
-
-        if (itemPosition == getFooterPosition()) {
+    public int getItemViewType(int position) {
+        if (isFooterPosition(position))
             return TYPE_FOOTER;
-        }
 
-        itemPosition = getItemPosition(itemPosition);
-        NegotiationStep step = dataSet.get(itemPosition);
-        NegotiationStepType type = step.getType();
-
+        ClauseType type = dataSet.get(position).getType();
         switch (type) {
+            case CUSTOMER_CURRENCY_QUANTITY:
+                return TYPE_ITEM_AMOUNT_TO_BUY;
             case EXCHANGE_RATE:
                 return TYPE_ITEM_EXCHANGE_RATE;
-            case AMOUNT_TO_SALE:
-                return TYPE_ITEM_AMOUNT_TO_SELL;
-            case PAYMENT_METHOD:
+            case BROKER_CURRENCY:
                 return TYPE_ITEM_SINGLE_CHOICE;
-            case BROKER_BANK_ACCOUNT:
+            case CUSTOMER_PAYMENT_METHOD:
                 return TYPE_ITEM_SINGLE_CHOICE;
-            case BROKER_LOCATION:
-                return TYPE_ITEM_SINGLE_CHOICE;
-            case CUSTOMER_BANK_ACCOUNT:
-                return TYPE_ITEM_SINGLE_CHOICE;
-            case CUSTOMER_LOCATION:
-                return TYPE_ITEM_SINGLE_CHOICE;
-            case DATE_TIME_TO_DELIVER:
-                return TYPE_ITEM_DATE_TIME;
-            case DATE_TIME_TO_PAY:
-                return TYPE_ITEM_DATE_TIME;
-            case EXPIRATION_DATE_TIME:
-                return TYPE_ITEM_DATE_TIME;
+            default:
+                throw new NoSuchElementException("Incorrect type value");
         }
-
-        return NO_TYPE;
     }
 
-    public NegotiationStep getDataSetItem(int position) {
-        return dataSet.get(position);
+    @Override
+    public void onBindViewHolder(FermatViewHolder holder, int position) {
+        if (!isFooterPosition(position))
+            super.onBindViewHolder(holder, position);
     }
 
-    public void setFooterListener(FooterViewHolder.OnFooterButtonsClickListener listener) {
-        footerListener = listener;
+    @Override
+    protected void bindHolder(FermatViewHolder holder, ClauseInformation data, int position) {
+        ClauseViewHolder clauseViewHolder = (ClauseViewHolder) holder;
+        clauseViewHolder.bindData(negotiationInformation, data);
+        setHolderResources(clauseViewHolder, data.getType(), position);
     }
 
-    private int getItemPosition(int position) {
-        return haveNote ? position - 1 : position;
-    }
-
-    private int getFooterPosition() {
-        return getItemCount() - 1;
-    }
-
-    private void bindSingleChoiceViewHolder(int stepNumber, SingleChoiceStepViewHolder viewHolder, SingleValueStep step) {
-        NegotiationStepType type = step.getType();
+    private void setHolderResources(ClauseViewHolder viewHolder, ClauseType type, int position) {
+        final int clauseNumber = position + 1;
+        final int clauseNumberImageRes = FragmentsCommons.getClauseNumberImageRes(clauseNumber);
 
         switch (type) {
-            case PAYMENT_METHOD:
-                String currencyToSell = data.getClauses().get(ClauseType.CUSTOMER_CURRENCY).getValue();
-                viewHolder.bind(
-                        stepNumber,
-                        R.string.payment_methods_title,
-                        R.string.payment_method,
-                        step.getValue(),
-                        walletManager.getPaymentMethods(currencyToSell));
+            case CUSTOMER_CURRENCY_QUANTITY:
+                viewHolder.setViewResources(R.string.ccw_amount_to_buy, clauseNumberImageRes);
                 break;
-            case BROKER_BANK_ACCOUNT:
-                //TODO:Revisar Nelson
-                viewHolder.bind(
-                        stepNumber,
-                        R.string.broker_bank_account_title,
-                        R.string.selected_bank_account,
-                        step.getValue(),
-                        getBankAccounts());
+            case EXCHANGE_RATE:
+                viewHolder.setViewResources(R.string.exchange_rate_reference, clauseNumberImageRes);
                 break;
-            case BROKER_LOCATION:
-                //TODO:Revisar Nelson
-                viewHolder.bind(
-                        stepNumber,
-                        R.string.broker_locations_title,
-                        R.string.selected_location,
-                        step.getValue(),
-                        getLocations());
+            case BROKER_CURRENCY:
+                viewHolder.setViewResources(R.string.ccw_currency_to_pay, clauseNumberImageRes, R.string.ccw_currency_description);
                 break;
-            case CUSTOMER_BANK_ACCOUNT:
-                viewHolder.bind(
-                        stepNumber,
-                        R.string.customer_bank_account_title,
-                        R.string.selected_bank_account,
-                        step.getValue(),
-                        null);
-                break;
-            case CUSTOMER_LOCATION:
-                viewHolder.bind(
-                        stepNumber,
-                        R.string.customer_locations_title,
-                        R.string.selected_location,
-                        step.getValue(),
-                        null);
+            case CUSTOMER_PAYMENT_METHOD:
+                viewHolder.setViewResources(R.string.payment_methods_title, clauseNumberImageRes, R.string.payment_method);
                 break;
         }
     }
 
-    private void bindDateTimeViewHolder(int stepNumber, DateTimeStepViewHolder viewHolder, SingleValueStep step) {
-        NegotiationStepType type = step.getType();
+    private List<ClauseInformation> buildListOfItems() {
+        final int TOTAL_STEPS = 4;
 
-        switch (type) {
-            case DATE_TIME_TO_DELIVER:
-                viewHolder.bind(
-                        stepNumber,
-                        R.string.delivery_date_title,
-                        R.string.delivery_date_text,
-                        step.getValue());
-                break;
-            case DATE_TIME_TO_PAY:
-                viewHolder.bind(
-                        stepNumber,
-                        R.string.payment_date_title,
-                        R.string.payment_date_text,
-                        step.getValue());
-                break;
-            case EXPIRATION_DATE_TIME:
-                viewHolder.bind(
-                        stepNumber,
-                        R.string.expiration_date_title,
-                        R.string.expiration_date_text,
-                        step.getValue());
-                break;
-        }
+        final Collection<ClauseInformation> values = negotiationInformation.getClauses().values();
+        final List<ClauseInformation> list = new ArrayList<>(TOTAL_STEPS);
+
+        for (ClauseInformation value : values)
+            switch (value.getType()) {
+                case CUSTOMER_CURRENCY_QUANTITY:
+                    list.set(0, value);
+                    break;
+                case EXCHANGE_RATE:
+                    list.set(1, value);
+                    break;
+                case BROKER_CURRENCY:
+                    list.set(2, value);
+                    break;
+                case CUSTOMER_PAYMENT_METHOD:
+                    list.set(3, value);
+                    break;
+            }
+
+        return list;
     }
 
-    private List<String> getLocations() {
-        List<String> data = new ArrayList<>();
-        try {
-            Collection<NegotiationLocations> locations = walletManager.getAllLocations(NegotiationType.PURCHASE);
-            if (locations != null)
-                for (NegotiationLocations location : locations)
-                    data.add(location.getLocation());
-
-        } catch (FermatException ex) {
-            Log.e("NegotiationDetailsAdapt", ex.getMessage(), ex);
-        }
-
-        return data;
-    }
-
-    private List<String> getBankAccounts() {
-        List<String> data = new ArrayList<>();
-        try {
-            List<BankAccountNumber> accounts = walletManager.getAccounts(session.getAppPublicKey());
-            for (BankAccountNumber account : accounts)
-                data.add(account.getAccount());
-
-        } catch (FermatException ex) {
-            Log.e("NegotiationDetailsAdapt", ex.getMessage(), ex);
-        }
-
-        return data;
+    private boolean isFooterPosition(int position) {
+        return position == getItemCount() - 1;
     }
 }

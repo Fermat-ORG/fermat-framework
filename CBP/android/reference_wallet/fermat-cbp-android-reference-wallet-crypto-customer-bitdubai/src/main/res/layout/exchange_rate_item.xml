@@ -53,30 +53,9 @@
                 android:layout_margin="16dp">
 
                 <TextView
-                    android:id="@+id/ccw_exchange_rate_reference_text"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginBottom="8dp"
-                    android:layout_marginEnd="5dp"
-                    android:layout_marginRight="5dp"
-                    android:text="@string/suggested_exchange_rate"
-                    android:textColor="@color/description_text_status_confirm"/>
-
-                <TextView
-                    android:id="@+id/ccw_exchange_rate_reference_value"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentTop="true"
-                    android:layout_toEndOf="@+id/ccw_exchange_rate_reference_text"
-                    android:layout_toRightOf="@+id/ccw_exchange_rate_reference_text"
-                    android:textColor="@color/text_value_status_confirm"
-                    tools:text="1 BTC / 210 USD"/>
-
-                <TextView
                     android:id="@+id/ccw_market_exchange_rate_reference_text"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_below="@+id/ccw_exchange_rate_reference_text"
                     android:layout_marginEnd="5dp"
                     android:layout_marginRight="5dp"
                     android:text="@string/market_exchange_rate"

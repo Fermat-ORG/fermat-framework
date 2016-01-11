@@ -1,4 +1,4 @@
-package com.bitdubai.reference_wallet.crypto_customer_wallet.common.holders.negotiation_details;
+package com.bitdubai.reference_wallet.crypto_customer_wallet.common.holders.start_negotiation;
 
 import android.support.v7.widget.CardView;
 import android.view.View;
@@ -7,35 +7,24 @@ import android.widget.TextView;
 import com.bitdubai.fermat_android_api.ui.holders.FermatViewHolder;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.common.interfaces.CustomerBrokerNegotiationInformation;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.common.interfaces.NegotiationStep;
-import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_broker.interfaces.CryptoBrokerWalletManager;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_customer.interfaces.CryptoCustomerWalletManager;
 import com.bitdubai.reference_wallet.crypto_customer_wallet.R;
 
 import java.util.List;
 
 /**
- * Created by nelson on 11/12/15.
+ * Created by nelson on 10/01/16.
  */
 public class FooterViewHolder extends FermatViewHolder implements View.OnClickListener {
-
-    private CustomerBrokerNegotiationInformation data;
-    private List<NegotiationStep> dataSet;
-    private CryptoCustomerWalletManager walletManager;
     OnFooterButtonsClickListener listener;
 
-    private CardView addNoteButton;
-    private TextView sendButton;
-
-    public FooterViewHolder(View itemView, CustomerBrokerNegotiationInformation data, List<NegotiationStep> dataSet, CryptoCustomerWalletManager walletManager) {
+    public FooterViewHolder(View itemView) {
         super(itemView);
-        this.data = data;
-        this.dataSet = dataSet;
-        this.walletManager = walletManager;
 
-        addNoteButton = (CardView) itemView.findViewById(R.id.add_a_note_card_view);
-        addNoteButton.setOnClickListener(this);
+        CardView addNoteButton = (CardView) itemView.findViewById(R.id.add_a_note_card_view);
+        addNoteButton.setVisibility(View.GONE);
 
-        sendButton = (TextView) itemView.findViewById(R.id.send_button);
+        TextView sendButton = (TextView) itemView.findViewById(R.id.send_button);
         sendButton.setOnClickListener(this);
     }
 
