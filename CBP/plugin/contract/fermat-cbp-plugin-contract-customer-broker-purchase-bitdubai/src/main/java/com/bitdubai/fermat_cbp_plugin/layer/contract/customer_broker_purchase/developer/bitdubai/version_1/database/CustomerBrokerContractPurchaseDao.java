@@ -74,7 +74,6 @@ public class CustomerBrokerContractPurchaseDao {
 
             System.out.println("|==| Inicio de las pruebas en el Contract Purchase");
 
-
             try {
 
                 ContractStatus[] status = {
