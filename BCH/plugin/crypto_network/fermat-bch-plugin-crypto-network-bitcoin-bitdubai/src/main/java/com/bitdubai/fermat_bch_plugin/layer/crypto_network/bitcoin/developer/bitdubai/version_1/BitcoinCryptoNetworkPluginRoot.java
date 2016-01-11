@@ -308,4 +308,14 @@ public class BitcoinCryptoNetworkPluginRoot extends AbstractPlugin implements
     public BlockchainConnectionStatus getBlockchainConnectionStatus(BlockchainNetworkType blockchainNetworkType) throws CantGetBlockchainConnectionStatusException {
         return bitcoinCryptoNetworkManager.getBlockchainConnectionStatus(blockchainNetworkType);
     }
+
+    /**
+     * Get the bitcoin transactions stored by the CryptoNetwork
+     * @param blockchainNetworkType the network type
+     * @return the bitcoin transaction
+     */
+    @Override
+    public List<Transaction> getBitcoinTransactions(BlockchainNetworkType blockchainNetworkType) {
+        return bitcoinCryptoNetworkManager.getBitcoinTransactions(blockchainNetworkType);
+    }
 }

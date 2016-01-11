@@ -494,18 +494,16 @@ public class BitcoinCryptoNetworkManager implements TransactionProtocolManager, 
      * @param blockchainNetworkType
      * @return
      */
-    public List<Transaction> getBitcoinTransaction(BlockchainNetworkType blockchainNetworkType){
+    public List<Transaction> getBitcoinTransactions(BlockchainNetworkType blockchainNetworkType){
         Wallet wallet = getWallet(blockchainNetworkType, null);
         return wallet.getTransactionsByTime();
 
     }
 
     public synchronized List<Transaction> getUnspentBitcoinTransactions(BlockchainNetworkType blockchainNetworkType){
-//        Wallet wallet = getWallet(blockchainNetworkType, null);
-//        List<Transaction> transactions = new ArrayList<>(wallet.getTransactionPool(WalletTransaction.Pool.UNSPENT).values());
-//        return transactions;
         Wallet wallet = getWallet(blockchainNetworkType, null);
-        return wallet.getTransactionsByTime();
+        List<Transaction> transactions = new ArrayList<>(wallet.getTransactionPool(WalletTransaction.Pool.UNSPENT).values());
+        return transactions;
     }
 
     /**
@@ -542,7 +540,7 @@ public class BitcoinCryptoNetworkManager implements TransactionProtocolManager, 
         /**
          * I will get the list of stored transactions for the default network.
          */
-        List<Transaction> transactions = getBitcoinTransaction(BlockchainNetworkType.DEFAULT);
+        List<Transaction> transactions = getBitcoinTransactions(BlockchainNetworkType.DEFAULT);
 
         for (Transaction transaction : transactions){
             /**
