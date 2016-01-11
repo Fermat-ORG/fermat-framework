@@ -120,28 +120,34 @@ public class IssuerRedemptionMonitorAgent implements Agent {
                 switch (issuerRedemptionDao.getEventTypeById(eventId)) {
                     case INCOMING_ASSET_ON_CRYPTO_NETWORK_WAITING_TRANSFERENCE_ASSET_USER: {
                         AssetIssuerWallet wallet = assetIssuerWalletManager.loadAssetIssuerWallet("walletPublicKeyTest");
-                        //TODO FIND ASSET PUBLIC KEY
-                        DigitalAssetMetadata digitalAssetMetadata = wallet.getDigitalAssetMetadata("ASSET PK");
-                        String publicKeyFrom = wallet.getUserDeliveredToPublicKey("ASSET PK");
-                        //TODO THIS CRYPTO TRANSACTION IS NO LONGER THE CHILD, ITS LIKE THE GRAND GRAND CHILD.
-                        CryptoTransaction cryptoTransactionOnCryptoNetwork = AssetVerification.getCryptoTransactionFromCryptoNetworkByCryptoStatus(bitcoinNetworkManager, digitalAssetMetadata.getGenesisTransaction(), CryptoStatus.ON_CRYPTO_NETWORK);
-                        String publicKeyTo = actorAssetIssuerManager.getActorAssetIssuer().getActorPublicKey();
-                        AssetIssuerWalletTransactionRecordWrapper recordWrapper = new AssetIssuerWalletTransactionRecordWrapper(digitalAssetMetadata, cryptoTransactionOnCryptoNetwork, publicKeyFrom, publicKeyTo);
-                        wallet.getBalance().credit(recordWrapper, BalanceType.BOOK);
+                        for (DigitalAssetMetadata digitalAssetMetadata : wallet.getAllUsedAssets()) {
+                            CryptoTransaction cryptoTransactionOnCryptoNetwork = AssetVerification.getCryptoTransactionFromCryptoNetworkByCryptoStatus(bitcoinNetworkManager, digitalAssetMetadata.getGenesisTransaction(), CryptoStatus.ON_CRYPTO_NETWORK);
+                            if (cryptoTransactionOnCryptoNetwork == null)
+                                continue; //NOT TODAY KID.
+
+                            String publicKeyFrom = wallet.getUserDeliveredToPublicKey(digitalAssetMetadata.getDigitalAsset().getPublicKey());
+                            digitalAssetMetadata.setGenesisBlock(cryptoTransactionOnCryptoNetwork.getBlockHash());
+                            digitalAssetMetadata.setGenesisTransaction(cryptoTransactionOnCryptoNetwork.getTransactionHash());
+                            digitalAssetMetadata.getDigitalAsset().setGenesisAmount(cryptoTransactionOnCryptoNetwork.getCryptoAmount());
+
+                            String publicKeyTo = actorAssetIssuerManager.getActorAssetIssuer().getActorPublicKey();
+                            AssetIssuerWalletTransactionRecordWrapper recordWrapper = new AssetIssuerWalletTransactionRecordWrapper(digitalAssetMetadata, cryptoTransactionOnCryptoNetwork, publicKeyFrom, publicKeyTo);
+                            wallet.getBalance().credit(recordWrapper, BalanceType.BOOK);
+                        }
                         break;
                     }
                     case INCOMING_ASSET_ON_BLOCKCHAIN_WAITING_TRANSFERENCE_ASSET_USER: {
                         AssetIssuerWallet wallet = assetIssuerWalletManager.loadAssetIssuerWallet("walletPublicKeyTest");
-                        //TODO FIND ASSET PUBLIC KEY
-                        DigitalAssetMetadata digitalAssetMetadata = wallet.getDigitalAssetMetadata("ASSET PK");
-                        String publicKeyFrom = wallet.getUserDeliveredToPublicKey("ASSET PK");
-                        //TODO THIS CRYPTO TRANSACTION IS NO LONGER THE CHILD, ITS LIKE THE GRAND GRAND CHILD.
-                        CryptoTransaction cryptoTransactionOnCryptoNetwork = AssetVerification.getCryptoTransactionFromCryptoNetworkByCryptoStatus(bitcoinNetworkManager, digitalAssetMetadata.getGenesisTransaction(), CryptoStatus.ON_BLOCKCHAIN);
-                        String publicKeyTo = actorAssetIssuerManager.getActorAssetIssuer().getActorPublicKey();
-                        AssetIssuerWalletTransactionRecordWrapper recordWrapper = new AssetIssuerWalletTransactionRecordWrapper(digitalAssetMetadata, cryptoTransactionOnCryptoNetwork, publicKeyFrom, publicKeyTo);
-                        wallet.getBalance().credit(recordWrapper, BalanceType.AVAILABLE);
-                        //TODO GET REDEEM POINT PK
-                        wallet.assetRedeemed(digitalAssetMetadata.getDigitalAsset().getPublicKey(), null, "REPO PK");
+                        for (DigitalAssetMetadata digitalAssetMetadata : wallet.getAllUsedAssets()) {
+                            CryptoTransaction cryptoTransactionOnCryptoNetwork = AssetVerification.getCryptoTransactionFromCryptoNetworkByCryptoStatus(bitcoinNetworkManager, digitalAssetMetadata.getGenesisTransaction(), CryptoStatus.ON_BLOCKCHAIN);
+                            if (cryptoTransactionOnCryptoNetwork == null) continue; //NOT TODAY KID.
+                            String publicKeyFrom = wallet.getUserDeliveredToPublicKey(digitalAssetMetadata.getDigitalAsset().getPublicKey());
+                            String publicKeyTo = actorAssetIssuerManager.getActorAssetIssuer().getActorPublicKey();
+                            AssetIssuerWalletTransactionRecordWrapper recordWrapper = new AssetIssuerWalletTransactionRecordWrapper(digitalAssetMetadata, cryptoTransactionOnCryptoNetwork, publicKeyFrom, publicKeyTo);
+                            wallet.getBalance().credit(recordWrapper, BalanceType.AVAILABLE);
+                            //TODO GET REDEEM POINT PK
+                            wallet.assetRedeemed(digitalAssetMetadata.getDigitalAsset().getPublicKey(), null, "REPO PK");
+                        }
                     }
                     break;
                     case INCOMING_ASSET_REVERSED_ON_BLOCKCHAIN_WAITING_TRANSFERENCE_ASSET_USER:

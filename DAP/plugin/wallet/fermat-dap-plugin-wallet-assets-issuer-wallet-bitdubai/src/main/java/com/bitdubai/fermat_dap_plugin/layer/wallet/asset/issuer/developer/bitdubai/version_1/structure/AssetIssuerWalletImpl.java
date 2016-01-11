@@ -354,6 +354,23 @@ public class AssetIssuerWalletImpl implements AssetIssuerWallet {
     }
 
     @Override
+    public List<DigitalAssetMetadata> getAllUsedAssets() throws CantGetDigitalAssetFromLocalStorageException {
+        List<AssetStatistic> allUsedAssets = new ArrayList<>();
+        List<DigitalAssetMetadata> toReturn = new ArrayList<>();
+        try {
+            allUsedAssets.addAll(constructListFromAssetPublicKey(assetIssuerWalletDao.getAllAssetPublicKeyForStatus(AssetCurrentStatus.ASSET_REDEEMED)));
+            allUsedAssets.addAll(constructListFromAssetPublicKey(assetIssuerWalletDao.getAllAssetPublicKeyForStatus(AssetCurrentStatus.ASSET_APPROPRIATED)));
+
+            for (AssetStatistic statistic : allUsedAssets) {
+                toReturn.add(getDigitalAssetMetadata(statistic.assetPublicKey()));
+            }
+        } catch (CantGetAssetStatisticException e) {
+            throw new CantGetDigitalAssetFromLocalStorageException();
+        }
+        return toReturn;
+    }
+
+    @Override
     public void createdNewAsset(DigitalAsset asset) throws CantSaveStatisticException {
         assetIssuerWalletDao.createdNewAsset(asset);
     }
