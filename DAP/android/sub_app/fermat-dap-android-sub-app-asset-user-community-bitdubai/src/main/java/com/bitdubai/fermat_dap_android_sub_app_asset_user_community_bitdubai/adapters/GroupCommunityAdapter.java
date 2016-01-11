@@ -19,6 +19,8 @@ public class GroupCommunityAdapter extends FermatAdapter<Group, GroupViewHolder>
 
     private PopupMenu menuItemClick;
 
+    private Group groupSelected;
+
     private AdapterChangeListener<Group> adapterChangeListener;
 
     public GroupCommunityAdapter(Context context) {
@@ -56,6 +58,8 @@ public class GroupCommunityAdapter extends FermatAdapter<Group, GroupViewHolder>
                     return true;
                 }
             });
+
+
             holder.groupMembers.setText(R.string.group_members);
             holder.groupMembers.append(String.format("%s",data.getMembers()));
 
@@ -79,4 +83,7 @@ public class GroupCommunityAdapter extends FermatAdapter<Group, GroupViewHolder>
     public void setMenuItemClick(PopupMenu menuItemClick) {
         this.menuItemClick = menuItemClick;
     }
+
+
+
 }

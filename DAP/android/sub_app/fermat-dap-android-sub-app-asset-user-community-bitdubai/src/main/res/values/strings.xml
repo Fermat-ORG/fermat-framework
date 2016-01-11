@@ -8,4 +8,7 @@
     <string name="group_members">Number of Members: </string>
     <string name="group_edit">Edit Name</string>
     <string name="group_delete">Delete</string>
+    <string name="group_users_add">Add</string>
+    <string name="group_users_delete">Delete</string>
+    <string name="group_detail">Group Detail</string>
 </resources>
