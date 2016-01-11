@@ -199,6 +199,7 @@ public abstract class FermatActivity extends AppCompatActivity
      * Handlers
      */
     private final Handler mDrawerActionHandler = new Handler();
+    private final Handler refreshHandler = new Handler();
 
     /**
      * UI
@@ -334,7 +335,7 @@ public abstract class FermatActivity extends AppCompatActivity
             ModuleManager moduleManager = null;
             if(appConnections!=null) {
                 moduleManager = getModuleManager(appConnections.getPluginVersionReference());
-                appConnections.setActiveIdentity(moduleManager.getSelectedActorIdentity());
+                if(moduleManager!=null)appConnections.setActiveIdentity(moduleManager.getSelectedActorIdentity());
             }
             TabStrip tabs = activity.getTabStrip();
             TitleBar titleBar = activity.getTitleBar();
@@ -887,7 +888,7 @@ public abstract class FermatActivity extends AppCompatActivity
                     launchIntent("closed");
                 }
             }catch (Exception e){
-
+                e.printStackTrace();
             }
 
         }
@@ -1793,22 +1794,31 @@ public abstract class FermatActivity extends AppCompatActivity
     protected void refreshSideMenu(){
         //TODO: acá seria bueno un getLastApp
         if(ActivityType.ACTIVITY_TYPE_DESKTOP != activityType) {
-            FermatStructure fermatStructure = getAppInUse();
+            final FermatStructure fermatStructure = getAppInUse();
             FermatSession fermatSession = getFermatSessionInUse(fermatStructure.getPublicKey());
             AppConnections appConnections = FermatAppConnectionManager.getFermatAppConnection(fermatStructure.getPublicKey(), this,fermatSession);
-            NavigationViewPainter viewPainter = appConnections.getNavigationViewPainter();
-            FermatAdapter mAdapter = viewPainter.addNavigationViewAdapter();
-            List<com.bitdubai.fermat_api.layer.all_definition.navigation_structure.MenuItem> lstItems = getNavigationMenu();
-            SideMenuBuilder.setAdapter(
-                    navigation_recycler_view,
-                    mAdapter,
-                    viewPainter.addItemDecoration(),
-                    lstItems,
-                    this,
-                    //TODO: acá seria bueno un getLastActivity
-                    fermatStructure.getLastActivity().getActivityType()
-            );
+            final NavigationViewPainter viewPainter = appConnections.getNavigationViewPainter();
+            final FermatAdapter mAdapter = viewPainter.addNavigationViewAdapter();
+            final List<com.bitdubai.fermat_api.layer.all_definition.navigation_structure.MenuItem> lstItems = getNavigationMenu();
+            refreshHandler.post(new Runnable() {
+                @Override
+                public void run() {
+                    SideMenuBuilder.setAdapter(
+                            navigation_recycler_view,
+                            mAdapter,
+                            viewPainter.addItemDecoration(),
+                            lstItems,
+                            getLisItemListenerMenu(),
+                            //TODO: acá seria bueno un getLastActivity
+                            fermatStructure.getLastActivity().getActivityType()
+                    );
+                }
+            });
+
         }
+    }
+    private FermatListItemListeners getLisItemListenerMenu(){
+        return this;
     }
 
     protected abstract FermatStructure getAppInUse();
