@@ -80,6 +80,21 @@ public class SettingsActivityFragment extends AbstractFermatFragment {
             }
         });
 
+        View merchandiseButton = layout.findViewById(R.id.settings_stock_managment);
+        merchandiseButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                changeActivity(Activities.CBP_CRYPTO_BROKER_WALLET_SETTINGS_MERCHANDISES, appSession.getAppPublicKey());
+            }
+        });
+
+        View earningsButton = layout.findViewById(R.id.settings_public_information);
+        earningsButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                changeActivity(Activities.CBP_CRYPTO_BROKER_WALLET_SETTINGS_MERCHANDISES, appSession.getAppPublicKey());
+            }
+        });
 
         return layout;
     }

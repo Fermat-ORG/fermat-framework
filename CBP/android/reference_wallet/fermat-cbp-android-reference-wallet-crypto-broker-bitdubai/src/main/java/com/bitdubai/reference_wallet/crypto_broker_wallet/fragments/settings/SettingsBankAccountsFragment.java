@@ -110,7 +110,7 @@ public class SettingsBankAccountsFragment extends AbstractFermatFragment impleme
             @Override
             public void onClick(View view) {
                 saveSetting();
-                changeActivity(Activities.CBP_CRYPTO_BROKER_WALLET_HOME, appSession.getAppPublicKey());
+                changeActivity(Activities.CBP_CRYPTO_BROKER_WALLET_SETTINGS, appSession.getAppPublicKey());
             }
         });
 
