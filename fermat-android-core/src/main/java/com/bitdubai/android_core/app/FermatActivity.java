@@ -392,10 +392,13 @@ public abstract class FermatActivity extends AppCompatActivity
         FrameLayout slide_container = (FrameLayout) findViewById(R.id.slide_container);
         RelativeLayout footer_container = (RelativeLayout) findViewById(R.id.footer_container);
         if (footer != null && footerViewPainter!=null) {
+            slide_container.setVisibility(View.VISIBLE);
+            footer_container.setVisibility(View.VISIBLE);
             FooterBuilder.Builder.build(getLayoutInflater(),slide_container,footer_container,footerViewPainter);
         }else {
             if(slide_container!=null) slide_container.setVisibility(View.GONE);
             if(footer_container!=null) footer_container.setVisibility(View.GONE);
+            findViewById(R.id.SlidingDrawer).setVisibility(View.GONE);
         }
     }
 
@@ -689,7 +692,6 @@ public abstract class FermatActivity extends AppCompatActivity
      */
     protected void setMainLayout(SideMenu sidemenu, FermatHeader header) {
         try {
-
             if (header != null) {
                 setContentView(R.layout.new_wallet_runtime);
             } else {
