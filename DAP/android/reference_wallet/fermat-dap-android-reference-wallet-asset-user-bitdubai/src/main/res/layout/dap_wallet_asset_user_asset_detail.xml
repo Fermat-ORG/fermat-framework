@@ -1,0 +1,192 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="210dp"
+            android:id="@+id/asset_image_detail"
+            android:src="@drawable/img_asset_without_image"
+            android:scaleType="centerCrop"/>
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="120dp">
+
+            <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
+                android:id="@+id/assetDetailNameText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceLarge"
+                android:text="Asset Name"
+                android:fontFamily="regular"
+                android:textSize="17sp"
+                android:textColor="#ffffff"
+                android:layout_alignParentTop="true"
+                android:layout_alignParentLeft="true"
+                android:paddingTop="15dp"
+                android:paddingLeft="15dp"/>
+
+            <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
+                android:id="@+id/assetDetailAvailableText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:text="500"
+                android:fontFamily="normal"
+                android:textSize="16sp"
+                android:textColor="#ffffff"
+                android:layout_below="@+id/assetDetailNameText"
+                android:paddingLeft="15dp"
+                android:layout_alignParentLeft="true"
+                android:paddingTop="10dp"/>
+
+            <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
+                android:id="@+id/textView1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceSmall"
+                android:text="Available"
+                android:fontFamily="light"
+                android:textSize="15sp"
+                android:textColor="#b3ffffff"
+                android:layout_alignBottom="@+id/assetDetailAvailableText"
+                android:layout_toRightOf="@+id/assetDetailAvailableText"
+                android:paddingLeft="15dp"/>
+
+            <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
+                android:id="@+id/assetDetailBookText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:text="300"
+                android:fontFamily="normal"
+                android:textSize="16sp"
+                android:textColor="#ffffff"
+                android:layout_below="@+id/assetDetailAvailableText"
+                android:paddingLeft="15dp"
+                android:paddingTop="10dp"/>
+
+            <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceSmall"
+                android:text="Book"
+                android:id="@+id/textView2"
+                android:fontFamily="light"
+                android:textSize="15sp"
+                android:textColor="#b3ffffff"
+                android:layout_alignBottom="@+id/assetDetailBookText"
+                android:layout_toRightOf="@+id/assetDetailBookText"
+                android:paddingLeft="15dp"/>
+
+            <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
+                android:id="@+id/textView7"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="EXP"
+                android:gravity="right"
+                android:fontFamily="normal"
+                android:textSize="12sp"
+                android:textColor="#99000000"
+                android:layout_alignParentTop="true"
+                android:layout_alignParentRight="true"
+                android:paddingRight="15dp"
+                android:paddingTop="15dp"/>
+
+            <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
+                android:id="@+id/assetDetailExpDateText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="25 Dic 2015"
+                android:fontFamily="normal"
+                android:textSize="12sp"
+                android:textColor="#ffffff"
+                android:layout_below="@id/textView7"
+                android:layout_alignParentRight="true"
+                android:paddingRight="15dp"/>
+
+            <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="0.000002 BTC"
+                android:id="@+id/assetDetailBtcText"
+                android:fontFamily="light"
+                android:textSize="14sp"
+                android:textColor="#ffffff"
+                android:gravity="right"
+                android:layout_alignParentBottom="true"
+                android:layout_alignParentRight="true"
+                android:paddingBottom="15dp"
+                android:paddingRight="15dp"/>
+
+            <ImageView
+                android:layout_width="116dp"
+                android:layout_height="47dp"
+                android:src="@drawable/bg_asset_price"
+                android:paddingRight="4dp"
+                android:layout_alignParentBottom="true"
+                android:layout_alignParentRight="true" />
+
+        </RelativeLayout>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="#24202E">
+
+        <RelativeLayout
+            android:id="@+id/assetDetailRedeemLayout"
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:paddingTop="10dp">
+
+            <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
+                android:id="@+id/assetDetailRedeemText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Redeem"
+                android:layout_centerInParent="true"
+                android:fontFamily="regular"
+                android:textSize="17sp"
+                android:textColor="#00aeef"
+                android:paddingTop="10dp"/>
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/bg_delivery_button"/>
+
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/assetDetailAppropriateLayout"
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:layout_below="@+id/assetDetailRedeemLayout"
+            android:paddingTop="10dp">
+
+            <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
+                android:id="@+id/assetDetailAppropriateText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Appropriate"
+                android:layout_centerInParent="true"
+                android:fontFamily="regular"
+                android:textSize="17sp"
+                android:textColor="#00aeef"
+                android:paddingTop="10dp"/>
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/bg_delivery_button"/>
+
+        </RelativeLayout>
+
+    </RelativeLayout>
+
+</LinearLayout>
