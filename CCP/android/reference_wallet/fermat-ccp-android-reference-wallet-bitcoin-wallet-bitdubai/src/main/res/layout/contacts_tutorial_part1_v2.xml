@@ -54,7 +54,7 @@
                         android:layout_width="40dp"
                         android:layout_height="40dp"
                         android:paddingBottom="10dp"
-                        android:src="@drawable/ic_contact_question"
+                        android:src="@drawable/ic_menu_help"
                         android:layout_alignParentRight="true"/>
 
                 </RelativeLayout>
