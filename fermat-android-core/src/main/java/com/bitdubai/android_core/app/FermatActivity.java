@@ -389,16 +389,23 @@ public abstract class FermatActivity extends AppCompatActivity
     }
 
     private void paintFooter(FermatFooter footer,FooterViewPainter footerViewPainter) {
-        FrameLayout slide_container = (FrameLayout) findViewById(R.id.slide_container);
-        RelativeLayout footer_container = (RelativeLayout) findViewById(R.id.footer_container);
-        if (footer != null && footerViewPainter!=null) {
-            slide_container.setVisibility(View.VISIBLE);
-            footer_container.setVisibility(View.VISIBLE);
-            FooterBuilder.Builder.build(getLayoutInflater(),slide_container,footer_container,footerViewPainter);
-        }else {
-            if(slide_container!=null) slide_container.setVisibility(View.GONE);
-            if(footer_container!=null) footer_container.setVisibility(View.GONE);
-            findViewById(R.id.SlidingDrawer).setVisibility(View.GONE);
+        try {
+            FrameLayout slide_container = (FrameLayout) findViewById(R.id.slide_container);
+            RelativeLayout footer_container = (RelativeLayout) findViewById(R.id.footer_container);
+            if (footer != null && footerViewPainter != null) {
+                slide_container.setVisibility(View.VISIBLE);
+                footer_container.setVisibility(View.VISIBLE);
+                if (footer.getBackgroundColor() != null) {
+                    footer_container.setBackgroundColor(Color.parseColor(footer.getBackgroundColor()));
+                }
+                FooterBuilder.Builder.build(getLayoutInflater(), slide_container, footer_container, footerViewPainter);
+            } else {
+                if (slide_container != null) slide_container.setVisibility(View.GONE);
+                if (footer_container != null) footer_container.setVisibility(View.GONE);
+                findViewById(R.id.SlidingDrawer).setVisibility(View.GONE);
+            }
+        }catch (Exception e){
+            getErrorManager().reportUnexpectedUIException(UISource.ACTIVITY,UnexpectedUIExceptionSeverity.UNSTABLE,e);
         }
     }
 
