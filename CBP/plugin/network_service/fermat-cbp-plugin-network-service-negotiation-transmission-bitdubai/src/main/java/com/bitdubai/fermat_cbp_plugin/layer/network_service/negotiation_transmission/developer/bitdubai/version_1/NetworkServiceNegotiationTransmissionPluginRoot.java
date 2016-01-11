@@ -331,9 +331,7 @@ public class NetworkServiceNegotiationTransmissionPluginRoot extends AbstractNet
     /*PUBLIC METHOD*/
     @Override
     public String getIdentityPublicKey() {
-//        return this.identity.getPublicKey();
-        return "23C5580D5A807CA38771A7365FC2141A6450556D5233DD4D5D14D4D9CEE7B9715B98951C2F28F820D858898AE0CBCE7B43055AB3C506A804B793E230610E711AEA";
-//        return "30C5580D5A807CA38771A7365FC2141A6450556D5233DD4D5D14D4D9CEE7B9715B98951C2F28F820D858898AE0CBCE7B43055AB3C506A804B793E230610E711AEA";
+        return this.identity.getPublicKey();
     }
 
     @Override
@@ -423,6 +421,11 @@ public class NetworkServiceNegotiationTransmissionPluginRoot extends AbstractNet
     @Override
     public void handleCompleteComponentRegistrationNotificationEvent(PlatformComponentProfile platformComponentProfileRegistered) {
 
+        System.out.println("\nNegotiationTransmissionNetworkServiceConnectionManager - Starting method handleCompleteComponentRegistrationNotificationEvent" +
+            "\n- platformComponentProfileRegistered.getPlatformComponentType(): " + platformComponentProfileRegistered.getPlatformComponentType().getCode() +" = "+ PlatformComponentType.NETWORK_SERVICE.getCode() +
+            "\n- platformComponentProfileRegistered.getNetworkServiceType(): " + platformComponentProfileRegistered.getNetworkServiceType().getCode() +" = "+ NetworkServiceType.NEGOTIATION_TRANSMISSION.getCode() +
+            "\n- platformComponentProfileRegistered.getIdentityPublicKey(): "+ platformComponentProfileRegistered.getIdentityPublicKey() +" = "+ identity.getPublicKey()
+        );
         //If the component registered have my profile and my identity public key
         if (platformComponentProfileRegistered.getPlatformComponentType()  == PlatformComponentType.NETWORK_SERVICE &&
                 platformComponentProfileRegistered.getNetworkServiceType()  == NetworkServiceType.NEGOTIATION_TRANSMISSION &&

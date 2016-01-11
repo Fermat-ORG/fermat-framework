@@ -31,10 +31,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-//<<<<<<< HEAD
-//=======
-//>>>>>>> 78d02bfd88d1c23d48396cb851829d86d9fbee61
-
 /**
  * Created by Yordin Alayn on 30.11.15.
  */
@@ -211,7 +207,7 @@ public class NegotiationTransmissionAgent {
 
         try {
 
-            System.out.print("\n\n**** X) MOCK NEGOTIATION TRANSACTION - NEGOTIATION TRANSMISSION - AGENT - LIST PENDING SEND ****\n");
+//            System.out.print("\n\n**** X) MOCK NEGOTIATION TRANSACTION - NEGOTIATION TRANSMISSION - AGENT - LIST PENDING SEND ****\n");
             List<NegotiationTransmission> negotiationTransmissionList = databaseDao.findAllByTransmissionState(NegotiationTransmissionState.PROCESSING_SEND);
 
             for (NegotiationTransmission negotiationTransmission : negotiationTransmissionList) {
@@ -333,7 +329,7 @@ public class NegotiationTransmissionAgent {
 
         try {
 
-            System.out.print("\n\n**** 14) MOCK NEGOTIATION TRANSACTION - NEGOTIATION TRANSMISSION - AGENT - LIST PENDING RECEIVE ****\n");
+//            System.out.print("\n\n**** X) MOCK NEGOTIATION TRANSACTION - NEGOTIATION TRANSMISSION - AGENT - LIST PENDING RECEIVE ****\n");
 
             List<NegotiationTransmission> negotiationTransmissionList = databaseDao.findAllByTransmissionState(NegotiationTransmissionState.PENDING_ACTION);
             for(NegotiationTransmission negotiationTransmission : negotiationTransmissionList) {

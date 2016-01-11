@@ -180,7 +180,7 @@ public class NegotiationTransactionCustomerBrokerNewPluginRoot extends AbstractP
 //            createCustomerBrokerNewPurchaseNegotiationTest();
 
             //TEST MOCK GET ALL TRANSACTIONk
-            getAllCustomerBrokerNewNegotiationTranasctionTest();
+//            getAllCustomerBrokerNewNegotiationTranasctionTest();
 
             //TEST MOCK CREATE AND GET NEGOTIATION
 //            createNegotiationsTest();
@@ -190,7 +190,7 @@ public class NegotiationTransactionCustomerBrokerNewPluginRoot extends AbstractP
 
             //Startes Service
             this.serviceStatus = ServiceStatus.STARTED;
-            System.out.print("-----------------------\n CUSTOMER BROKER NEW: SUCCESSFUL START \n-----------------------\n");
+//            System.out.print("-----------------------\n CUSTOMER BROKER NEW: SUCCESSFUL START \n-----------------------\n");
 
         } catch (CantInitializeCustomerBrokerNewNegotiationTransactionDatabaseException e){
             errorManager.reportUnexpectedPluginException(Plugins.CUSTOMER_BROKER_NEW, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN,e);
