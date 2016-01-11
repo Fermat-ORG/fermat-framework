@@ -9,6 +9,8 @@ import android.widget.ArrayAdapter;
 
 import com.bitdubai.fermat_bnk_api.layer.bnk_wallet.bank_money.interfaces.BankAccountNumber;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.CurrencyType;
+import com.bitdubai.fermat_cer_api.layer.provider.exceptions.CantGetProviderInfoException;
+import com.bitdubai.fermat_cer_api.layer.provider.interfaces.CurrencyExchangeRateProviderManager;
 import com.bitdubai.fermat_wpd_api.layer.wpd_middleware.wallet_manager.interfaces.InstalledWallet;
 
 import java.util.ArrayList;
@@ -53,6 +55,13 @@ public class SimpleListDialogFragment<T> extends DialogFragment {
                 BankAccountNumber bankAccount = (BankAccountNumber) choice;
                 data.add(bankAccount.getAlias());
 
+            } else if (choice instanceof CurrencyExchangeRateProviderManager) {
+                CurrencyExchangeRateProviderManager provider = (CurrencyExchangeRateProviderManager) choice;
+                try {
+                    data.add(provider.getProviderName());
+                } catch (CantGetProviderInfoException ignored) {
+                }
+
             } else if (choice instanceof CurrencyType) {
                 CurrencyType currencyType = (CurrencyType) choice;
 
@@ -70,6 +79,8 @@ public class SimpleListDialogFragment<T> extends DialogFragment {
                         data.add("Crypto Money");
                         break;
                 }
+            } else {
+                data.add(choice.toString());
             }
         }
 

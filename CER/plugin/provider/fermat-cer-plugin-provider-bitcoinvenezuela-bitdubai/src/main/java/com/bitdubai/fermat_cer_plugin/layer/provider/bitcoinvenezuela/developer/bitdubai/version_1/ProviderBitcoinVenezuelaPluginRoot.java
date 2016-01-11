@@ -1,0 +1,332 @@
+package com.bitdubai.fermat_cer_plugin.layer.provider.bitcoinvenezuela.developer.bitdubai.version_1;
+
+import com.bitdubai.fermat_api.CantStartPluginException;
+import com.bitdubai.fermat_api.FermatException;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.abstract_classes.AbstractPlugin;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.annotations.NeededAddonReference;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.PluginVersionReference;
+import com.bitdubai.fermat_api.layer.all_definition.developer.DatabaseManagerForDevelopers;
+import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperDatabase;
+import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperDatabaseTable;
+import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperDatabaseTableRecord;
+import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperObjectFactory;
+import com.bitdubai.fermat_api.layer.all_definition.enums.Addons;
+import com.bitdubai.fermat_api.layer.all_definition.enums.CryptoCurrency;
+import com.bitdubai.fermat_api.layer.all_definition.enums.FiatCurrency;
+import com.bitdubai.fermat_api.layer.all_definition.enums.Layers;
+import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
+import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
+import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
+import com.bitdubai.fermat_api.layer.all_definition.util.Version;
+import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
+import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
+import com.bitdubai.fermat_api.layer.world.interfaces.Currency;
+import com.bitdubai.fermat_cer_api.all_definition.enums.TimeUnit;
+import com.bitdubai.fermat_cer_api.all_definition.interfaces.CurrencyPair;
+import com.bitdubai.fermat_cer_api.all_definition.interfaces.ExchangeRate;
+import com.bitdubai.fermat_cer_api.all_definition.utils.CurrencyPairImpl;
+import com.bitdubai.fermat_cer_api.layer.provider.exceptions.CantGetExchangeRateException;
+import com.bitdubai.fermat_cer_api.layer.provider.exceptions.CantGetProviderInfoException;
+import com.bitdubai.fermat_cer_api.layer.provider.exceptions.CantSaveExchangeRateException;
+import com.bitdubai.fermat_cer_api.layer.provider.exceptions.UnsupportedCurrencyPairException;
+import com.bitdubai.fermat_cer_api.layer.provider.interfaces.CurrencyExchangeRateProviderManager;
+import com.bitdubai.fermat_cer_api.layer.provider.utils.CurrencyPairHelper;
+import com.bitdubai.fermat_cer_api.layer.provider.utils.DateHelper;
+import com.bitdubai.fermat_cer_plugin.layer.provider.bitcoinvenezuela.developer.bitdubai.version_1.database.BitcoinVenezuelaProviderDao;
+import com.bitdubai.fermat_cer_plugin.layer.provider.bitcoinvenezuela.developer.bitdubai.version_1.database.BitcoinVenezuelaProviderDeveloperDatabaseFactory;
+import com.bitdubai.fermat_cer_plugin.layer.provider.bitcoinvenezuela.developer.bitdubai.version_1.exceptions.CantInitializeBitcoinVenezuelaProviderDatabaseException;
+import com.bitdubai.fermat_cer_api.all_definition.utils.ExchangeRateImpl;
+import com.bitdubai.fermat_cer_api.layer.provider.utils.HttpReader;
+import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedPluginExceptionSeverity;
+import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
+import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfaces.EventManager;
+
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.text.ParseException;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Date;
+import java.util.Iterator;
+import java.util.List;
+import java.util.UUID;
+
+/**
+ * Created by Alejandro Bicelis on 11/2/2015.
+ */
+public class ProviderBitcoinVenezuelaPluginRoot extends AbstractPlugin implements DatabaseManagerForDevelopers, CurrencyExchangeRateProviderManager {
+
+    @NeededAddonReference(platform = Platforms.OPERATIVE_SYSTEM_API, layer = Layers.SYSTEM, addon = Addons.PLUGIN_DATABASE_SYSTEM)
+    private PluginDatabaseSystem pluginDatabaseSystem;
+
+    @NeededAddonReference(platform = Platforms.OPERATIVE_SYSTEM_API, layer = Layers.SYSTEM, addon = Addons.PLUGIN_FILE_SYSTEM)
+    private PluginFileSystem pluginFileSystem;
+
+    @NeededAddonReference(platform = Platforms.PLUG_INS_PLATFORM, layer = Layers.PLATFORM_SERVICE, addon = Addons.ERROR_MANAGER)
+    private ErrorManager errorManager;
+
+    @NeededAddonReference(platform = Platforms.PLUG_INS_PLATFORM, layer = Layers.PLATFORM_SERVICE, addon = Addons.EVENT_MANAGER)
+    private EventManager eventManager;
+
+    BitcoinVenezuelaProviderDao dao;
+    List<Currency> currencyListFrom = new ArrayList<>();
+    List<Currency> currencyListTo = new ArrayList<>();
+    List<CurrencyPair> supportedCurrencyPairs = new ArrayList<>();
+
+
+    /*
+     * PluginRoot Constructor
+     */
+    public ProviderBitcoinVenezuelaPluginRoot() {
+        super(new PluginVersionReference(new Version()));
+    }
+
+
+    /*
+     * Service interface implementation
+     */
+    @Override
+    public void start() throws CantStartPluginException {
+        System.out.println("PROVIDERBITCOINVENEZUELA - PluginRoot START");
+
+
+        currencyListFrom.add(CryptoCurrency.BITCOIN);
+        currencyListFrom.add(CryptoCurrency.LITECOIN);
+
+        currencyListTo.add(FiatCurrency.US_DOLLAR);
+        currencyListTo.add(FiatCurrency.EURO);
+        currencyListTo.add(FiatCurrency.VENEZUELAN_BOLIVAR);
+        currencyListTo.add(FiatCurrency.ARGENTINE_PESO);
+
+        supportedCurrencyPairs = CurrencyPairHelper.permuteTwoCurrencyLists(currencyListFrom, currencyListTo, true);
+
+
+        try {
+            dao = new BitcoinVenezuelaProviderDao(pluginDatabaseSystem, pluginId, errorManager);
+            dao.initialize();
+            dao.initializeProvider("BitcoinVenezuela");
+        } catch (Exception e) {
+            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_CER_PROVIDER_BITCOINVENEZUELA, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
+            throw new CantStartPluginException(CantStartPluginException.DEFAULT_MESSAGE, FermatException.wrapException(e), null, null);
+        }
+        serviceStatus = ServiceStatus.STARTED;
+    }
+
+
+
+
+    /*
+     * CurrencyExchangeRateProviderManager interface implementation
+     */
+
+    @Override
+    public String getProviderName() throws CantGetProviderInfoException {
+        return dao.getProviderName();
+    }
+
+    @Override
+    public UUID getProviderId() throws CantGetProviderInfoException {
+        return dao.getProviderId();
+    }
+
+    @Override
+    public Collection<CurrencyPair> getSupportedCurrencyPairs() {
+        return supportedCurrencyPairs;
+    }
+
+    @Override
+    public boolean isCurrencyPairSupported(CurrencyPair currencyPair) throws IllegalArgumentException {
+        for (CurrencyPair cp : supportedCurrencyPairs) {
+            if (cp.equals(currencyPair))
+                return true;
+        }
+        return false;
+    }
+
+    @Override
+    public ExchangeRate getCurrentExchangeRate(CurrencyPair currencyPair) throws UnsupportedCurrencyPairException, CantGetExchangeRateException {
+
+        if(!isCurrencyPairSupported(currencyPair))
+            throw new UnsupportedCurrencyPairException();
+
+        //Determine cryptoCurrency base
+        String exchangeFrom, exchangeTo;
+        boolean invertExchange;
+
+        if(CryptoCurrency.codeExists(currencyPair.getFrom().getCode()))
+        {
+            exchangeFrom = currencyPair.getFrom().getCode();
+            exchangeTo = currencyPair.getTo().getCode();
+            invertExchange = false;
+        }
+        else
+        {
+            exchangeFrom = currencyPair.getTo().getCode();
+            exchangeTo = currencyPair.getFrom().getCode();
+            invertExchange = true;
+        }
+
+
+        String aux;
+        JSONObject json;
+        double price = 0;
+
+        try{
+            json =  new JSONObject(HttpReader.getHTTPContent("http://api.bitcoinvenezuela.com/"));
+            price = (double) json.getJSONObject(exchangeFrom).get(exchangeTo);
+
+        }catch (JSONException e) {
+            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_CER_PROVIDER_BITCOINVENEZUELA, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
+            throw new CantGetExchangeRateException(CantGetExchangeRateException.DEFAULT_MESSAGE,e,"BitcoinVenezuela CER Provider","Cant Get exchange rate for" + currencyPair.getFrom().getCode() +  "-" + currencyPair.getTo().getCode());
+        }
+
+        if(invertExchange)
+            price = 1 / price;
+
+
+        ExchangeRateImpl exchangeRate = new ExchangeRateImpl(currencyPair.getFrom(), currencyPair.getTo(), price, price, (new Date().getTime() / 1000));
+
+        //For now, currentExchangeRates will not be saved, Daily ExchangeRates (below) will be saved.
+        /*try {
+            dao.saveCurrentExchangeRate(exchangeRate);
+        }catch (CantSaveExchangeRateException e) {
+            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_CER_PROVIDER_BITCOINVENEZUELA, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+        }*/
+        return exchangeRate;
+    }
+
+    @Override
+    public ExchangeRate getExchangeRateFromDate(CurrencyPair currencyPair, long timestamp) throws UnsupportedCurrencyPairException, CantGetExchangeRateException {
+
+        if(DateHelper.timestampIsInTheFuture(timestamp))
+            throw new CantGetExchangeRateException(CantGetExchangeRateException.DEFAULT_MESSAGE, "Provided timestamp is in the future");
+
+        if(!isCurrencyPairSupported(currencyPair))
+            throw new UnsupportedCurrencyPairException();
+
+        ExchangeRate requiredExchangeRate = null;
+        String requiredDate = DateHelper.getDateStringFromTimestamp(timestamp);
+
+        //Try to find ExchangeRate in database
+        try{
+            requiredExchangeRate = dao.getExchangeRateFromDate(currencyPair, DateHelper.getStandarizedTimestampFromTimestamp(timestamp));
+            return requiredExchangeRate;
+        }catch(CantGetExchangeRateException e) {
+
+            //Get complete ExchangeRate history, iterate trough it to:
+            //Build a list of ExchangeRates to send to dao for insertion into database
+            //Get required ExchangeRate
+
+            //Determine cryptoCurrency base
+            Currency currencyFrom, currencyTo;
+            boolean invertExchange;
+
+            if (CryptoCurrency.codeExists(currencyPair.getFrom().getCode())) {
+                currencyFrom = currencyPair.getFrom();
+                currencyTo = currencyPair.getTo();
+                invertExchange = false;
+            } else {
+                currencyFrom = currencyPair.getTo();
+                currencyTo = currencyPair.getFrom();
+                invertExchange = true;
+            }
+
+            //Query API
+            JSONObject json;
+            List<ExchangeRate> exchangeRates = new ArrayList<>();
+            List<ExchangeRate> inverseExchangeRates = new ArrayList<>();
+            try {
+                json = new JSONObject(HttpReader.getHTTPContent("http://api.bitcoinvenezuela.com/historical/?pair=" + currencyFrom.getCode() + currencyTo.getCode()));
+                json = json.getJSONObject(currencyTo.getCode() + "_" + currencyFrom.getCode());
+
+                Iterator<?> keys = json.keys();
+                while( keys.hasNext() ) {
+                    String key = (String)keys.next();
+                    double value = Double.parseDouble(json.get(key).toString());
+
+                    if(requiredDate.equals(key))
+                    {
+                        if(invertExchange)
+                            requiredExchangeRate = new ExchangeRateImpl(currencyPair.getFrom(), currencyPair.getTo(), 1/value, 1/value, timestamp);
+                        else
+                            requiredExchangeRate = new ExchangeRateImpl(currencyPair.getFrom(), currencyPair.getTo(), value, value, timestamp);
+                    }
+
+                    try{
+                        long time = DateHelper.getTimestampFromDateString(key);
+                        exchangeRates.add(new ExchangeRateImpl(currencyFrom, currencyTo, value, value, time));
+                        inverseExchangeRates.add(new ExchangeRateImpl(currencyTo, currencyFrom, 1/value, 1/value, time));      //Add inverse as well
+                    } catch(ParseException ex) {}
+                }
+            } catch (JSONException ex) {
+                errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_CER_PROVIDER_BITCOINVENEZUELA, UnexpectedPluginExceptionSeverity.NOT_IMPORTANT, e);
+            }
+
+            try {
+                dao.updateDailyExchangeRateTable(new CurrencyPairImpl(currencyFrom, currencyTo), exchangeRates);
+                dao.updateDailyExchangeRateTable(new CurrencyPairImpl(currencyTo, currencyFrom), inverseExchangeRates);
+            } catch (CantSaveExchangeRateException eex) {
+                errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_CER_PROVIDER_BITCOINVENEZUELA, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+            }
+        }
+        return requiredExchangeRate;
+    }
+
+    @Override
+    public Collection<ExchangeRate> getDailyExchangeRatesForPeriod(CurrencyPair currencyPair, long startTimestamp, long endTimestamp) throws UnsupportedCurrencyPairException, CantGetExchangeRateException {
+
+        if(DateHelper.timestampIsInTheFuture(startTimestamp))
+            throw new CantGetExchangeRateException(CantGetExchangeRateException.DEFAULT_MESSAGE, "Provided startTimestamp is in the future");
+
+        if(!isCurrencyPairSupported(currencyPair))
+            throw new UnsupportedCurrencyPairException();
+
+        long stdStartTimestamp = DateHelper.getStandarizedTimestampFromTimestamp(startTimestamp);
+        long stdEndTimestamp = DateHelper.getStandarizedTimestampFromTimestamp(endTimestamp);
+
+        String startDate = DateHelper.getDateStringFromTimestamp(startTimestamp);
+        String endDate = DateHelper.getDateStringFromTimestamp(endTimestamp);
+        int requiredNumberOfDays = DateHelper.calculateDaysBetweenTimestamps(startTimestamp, endTimestamp);
+
+        return dao.getDailyExchangeRatesForPeriod(currencyPair, stdStartTimestamp, stdEndTimestamp);
+
+        //TODO: falta query al API if db == null
+    }
+
+
+
+    @Override
+    public Collection<ExchangeRate> getQueriedExchangeRates(CurrencyPair currencyPair) throws UnsupportedCurrencyPairException, CantGetExchangeRateException {
+        return dao.getQueriedExchangeRateHistory(currencyPair);
+    }
+
+
+    /*
+     * DatabaseManagerForDevelopers interface implementation
+     */
+    @Override
+    public List<DeveloperDatabase> getDatabaseList(DeveloperObjectFactory developerObjectFactory) {
+        BitcoinVenezuelaProviderDeveloperDatabaseFactory factory = new BitcoinVenezuelaProviderDeveloperDatabaseFactory(pluginDatabaseSystem, pluginId);
+        return factory.getDatabaseList(developerObjectFactory);
+    }
+
+    @Override
+    public List<DeveloperDatabaseTable> getDatabaseTableList(DeveloperObjectFactory developerObjectFactory, DeveloperDatabase developerDatabase) {
+        BitcoinVenezuelaProviderDeveloperDatabaseFactory factory = new BitcoinVenezuelaProviderDeveloperDatabaseFactory(pluginDatabaseSystem, pluginId);
+        return factory.getDatabaseTableList(developerObjectFactory);
+    }
+
+    @Override
+    public List<DeveloperDatabaseTableRecord> getDatabaseTableContent(DeveloperObjectFactory developerObjectFactory, DeveloperDatabase developerDatabase, DeveloperDatabaseTable developerDatabaseTable) {
+        BitcoinVenezuelaProviderDeveloperDatabaseFactory factory = new BitcoinVenezuelaProviderDeveloperDatabaseFactory(pluginDatabaseSystem, pluginId);
+        List<DeveloperDatabaseTableRecord> tableRecordList = null;
+        try {
+            factory.initializeDatabase();
+            tableRecordList = factory.getDatabaseTableContent(developerObjectFactory, developerDatabaseTable);
+        } catch (CantInitializeBitcoinVenezuelaProviderDatabaseException e) {
+            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_CER_PROVIDER_BITCOINVENEZUELA, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+        }
+        return tableRecordList;
+    }
+}

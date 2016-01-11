@@ -6,10 +6,12 @@ import com.bitdubai.fermat_api.Agent;
 import com.bitdubai.fermat_api.CantStartAgentException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
 import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.BitcoinNetworkSelector;
+import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.BlockchainConnectionStatus;
 import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.RegTestNetwork.FermatTestNetwork;
 import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.RegTestNetwork.FermatTestNetworkNode;
 import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.exceptions.CantBroadcastTransactionException;
 import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.exceptions.CantCancellBroadcastTransactionException;
+import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.exceptions.CantGetBlockchainConnectionStatusException;
 import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.exceptions.CantGetCryptoTransactionException;
 import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.exceptions.CantStoreBitcoinTransactionException;
 import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.exceptions.ErrorBroadcastingTransactionException;
@@ -41,6 +43,7 @@ import org.bitcoinj.wallet.WalletTransaction;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.Serializable;
 import java.net.InetSocketAddress;
 import java.util.UUID;
 import java.util.concurrent.ExecutionException;
@@ -213,14 +216,12 @@ public class BitcoinCryptoNetworkMonitor implements Agent {
      * @param transactionId the internal fermat transaction Ifd
      * @throws CantBroadcastTransactionException
      */
-    public void broadcastTransaction(final Transaction tx, final UUID transactionId) throws CantBroadcastTransactionException {
+    public synchronized void  broadcastTransaction(final Transaction tx, final UUID transactionId) throws CantBroadcastTransactionException {
         try{
             /**
              * I will add this transaction to the wallet.
              */
-            WalletTransaction walletTransaction = new WalletTransaction(WalletTransaction.Pool.PENDING, tx);
-            wallet.addWalletTransaction(walletTransaction);
-
+            wallet.commitTx(tx);
 
             /**
              * save the added transaction in the wallet
@@ -264,7 +265,7 @@ public class BitcoinCryptoNetworkMonitor implements Agent {
      * @param txHash
      * @throws CantBroadcastTransactionException
      */
-    public void broadcastTransaction(final String txHash) throws CantBroadcastTransactionException{
+    public synchronized void broadcastTransaction(final String txHash) throws CantBroadcastTransactionException{
         /**
          * The transaction is stored in the Wallet and the database, so I will make sure this is correct.
          */
@@ -501,7 +502,7 @@ public class BitcoinCryptoNetworkMonitor implements Agent {
      * @param transactionId
      * @throws CantStoreBitcoinTransactionException
      */
-    public void storeBitcoinTransaction (Transaction tx, UUID transactionId) throws CantStoreBitcoinTransactionException{
+    public synchronized void storeBitcoinTransaction (Transaction tx, UUID transactionId) throws CantStoreBitcoinTransactionException{
         try {
             /**
              * I store it in the database
@@ -510,8 +511,7 @@ public class BitcoinCryptoNetworkMonitor implements Agent {
             /**
              * I store it in the wallet.
              */
-            WalletTransaction walletTransaction = new WalletTransaction(WalletTransaction.Pool.PENDING, tx);
-            wallet.addWalletTransaction(walletTransaction);
+            wallet.commitTx(tx);
             wallet.saveToFile(walletFileName);
 
 
@@ -561,5 +561,24 @@ public class BitcoinCryptoNetworkMonitor implements Agent {
         } catch (IOException e) {
             throw new CantCancellBroadcastTransactionException(CantCancellBroadcastTransactionException.DEFAULT_MESSAGE, e, "Change in transaction could not be saved in wallet.", null);
         }
+    }
+
+    /**
+     * Gets the current blockchainConnectionStatus
+     * @return
+     */
+    public BlockchainConnectionStatus getBlockchainConnectionStatus() throws CantGetBlockchainConnectionStatusException {
+        try{
+            int connectedPeers = peerGroup.getConnectedPeers().size();
+            String downloadNodeIp = peerGroup.getDownloadPeer().getAddress().toString();
+            long downloadPing = peerGroup.getDownloadPeer().getLastPingTime();
+
+            BlockchainConnectionStatus blockchainConnectionStatus = new BlockchainConnectionStatus(connectedPeers, downloadNodeIp, downloadPing, BLOCKCHAIN_NETWORKTYPE);
+
+            return blockchainConnectionStatus;
+        } catch (Exception e){
+            throw new CantGetBlockchainConnectionStatusException(CantGetBlockchainConnectionStatusException.DEFAULT_MESSAGE, e, "Error getting connection status from peers.", null);
+        }
+
     }
 }

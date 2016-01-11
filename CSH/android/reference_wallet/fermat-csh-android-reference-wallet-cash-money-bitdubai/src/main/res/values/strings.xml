@@ -2,17 +2,17 @@
     <string name="app_name">Cash Wallet</string>
 
     <!-- Home balances -->
-    <string name="csh_home_titlebar_title">Cash</string>
-    <string name="csh_home_titlebar_title_2">Wallet</string>
+    <string name="csh_home_titlebar_title">CASH</string>
+    <string name="csh_home_titlebar_title_2">WALLET</string>
 
 
     <!-- Home transactions -->
-    <string name="no_transactions">There are no transactions</string>
-    <string name="transaction_img" translatable="false">transaction_img</string>
-    <string name="withdrawal_transaction_text_caps" translatable="false">WITHDRAWAL</string>
-    <string name="deposit_transaction_text_caps" translatable="false">DEPOSIT</string>
-    <string name="withdrawal_transaction_text" translatable="false">Withdrawal</string>
-    <string name="deposit_transaction_text" translatable="false">Deposit</string>
+    <string name="csh_no_transactions">No transactions yet!</string>
+    <string name="csh_transaction_img_desc" translatable="false">transaction_img</string>
+    <string name="csh_withdrawal_transaction_text_caps" translatable="false">WITHDRAWAL</string>
+    <string name="csh_deposit_transaction_text_caps" translatable="false">DEPOSIT</string>
+    <string name="csh_withdrawal_transaction_text" translatable="false">Withdrawal</string>
+    <string name="csh_deposit_transaction_text" translatable="false">Deposit</string>
 
 
     <!-- Transaction Dialogs -->

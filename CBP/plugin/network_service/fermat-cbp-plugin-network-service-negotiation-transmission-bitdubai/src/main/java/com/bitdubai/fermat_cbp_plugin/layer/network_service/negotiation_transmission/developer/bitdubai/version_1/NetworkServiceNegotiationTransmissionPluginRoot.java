@@ -54,6 +54,8 @@ import com.bitdubai.fermat_cbp_api.layer.network_service.negotiation_transmissio
 import com.bitdubai.fermat_cbp_api.layer.network_service.negotiation_transmission.interfaces.NegotiationTransmission;
 import com.bitdubai.fermat_cbp_api.layer.network_service.negotiation_transmission.interfaces.NegotiationTransmissionManager;
 import com.bitdubai.fermat_cbp_plugin.layer.network_service.negotiation_transmission.developer.bitdubai.version_1.communication.event_handlers.ClientConnectionCloseNotificationEventHandler;
+import com.bitdubai.fermat_cbp_plugin.layer.network_service.negotiation_transmission.developer.bitdubai.version_1.communication.event_handlers.ClientConnectionLooseNotificationEventHandler;
+import com.bitdubai.fermat_cbp_plugin.layer.network_service.negotiation_transmission.developer.bitdubai.version_1.communication.event_handlers.ClientSuccessfullReconnectNotificationEventHandler;
 import com.bitdubai.fermat_cbp_plugin.layer.network_service.negotiation_transmission.developer.bitdubai.version_1.communication.event_handlers.CompleteComponentConnectionRequestNotificationEventHandler;
 import com.bitdubai.fermat_cbp_plugin.layer.network_service.negotiation_transmission.developer.bitdubai.version_1.communication.event_handlers.CompleteComponentRegistrationNotificationEventHandler;
 import com.bitdubai.fermat_cbp_plugin.layer.network_service.negotiation_transmission.developer.bitdubai.version_1.communication.event_handlers.CompleteRequestListComponentRegisteredNotificationEventHandler;
@@ -105,7 +107,7 @@ import java.util.regex.Pattern;
  */
 
 public class NetworkServiceNegotiationTransmissionPluginRoot extends AbstractNetworkService implements
-        NegotiationTransmissionManager,
+//        NegotiationTransmissionManager,
         DatabaseManagerForDevelopers,
         LogManagerForDevelopers {
 
@@ -278,7 +280,7 @@ public class NetworkServiceNegotiationTransmissionPluginRoot extends AbstractNet
 
     /*IMPLEMENTATION NegotiationTransmissionManager*/
     //Crypto Broker Send negotiation To Crypto Customer
-    public void sendNegotiatioToCryptoCustomer(NegotiationTransaction negotiationTransaction, NegotiationTransactionType transactionType) throws CantSendNegotiationToCryptoCustomerException{
+    /*public void sendNegotiatioToCryptoCustomer(NegotiationTransaction negotiationTransaction, NegotiationTransactionType transactionType) throws CantSendNegotiationToCryptoCustomerException{
 
         try{
 
@@ -420,7 +422,7 @@ public class NetworkServiceNegotiationTransmissionPluginRoot extends AbstractNet
             throw new CantDeliverPendingTransactionsException("CAN'T GET PENDING NOTIFICATIONS",e, "Negotiation Transmission network service", "database error");
 
         }
-    }
+    }*/
     /*END IMPLEMENTATION NegotiationTransmissionManager*/
 
     /*IMPLEMENTATION DatabaseManagerForDevelopers.*/
@@ -485,7 +487,9 @@ public class NetworkServiceNegotiationTransmissionPluginRoot extends AbstractNet
     /*PUBLIC METHOD*/
     @Override
     public String getIdentityPublicKey() {
-        return this.identity.getPublicKey();
+//        return this.identity.getPublicKey();
+        return "23C5580D5A807CA38771A7365FC2141A6450556D5233DD4D5D14D4D9CEE7B9715B98951C2F28F820D858898AE0CBCE7B43055AB3C506A804B793E230610E711AEA";
+//        return "30C5580D5A807CA38771A7365FC2141A6450556D5233DD4D5D14D4D9CEE7B9715B98951C2F28F820D858898AE0CBCE7B43055AB3C506A804B793E230610E711AEA";
     }
 
     @Override
@@ -662,6 +666,28 @@ public class NetworkServiceNegotiationTransmissionPluginRoot extends AbstractNet
 
     }
 
+    /*
+  * Handles the events ClientConnectionLooseNotificationEvent
+  */
+    @Override
+    public void handleClientConnectionLooseNotificationEvent(FermatEvent fermatEvent) {
+
+        if(communicationNetworkServiceConnectionManager != null)
+            communicationNetworkServiceConnectionManager.stop();
+
+    }
+
+    /*
+     * Handles the events ClientSuccessfullReconnectNotificationEvent
+     */
+    @Override
+    public void handleClientSuccessfullReconnectNotificationEvent(FermatEvent fermatEvent) {
+
+        if(communicationNetworkServiceConnectionManager != null)
+            communicationNetworkServiceConnectionManager.restart();
+
+    }
+
 
     public void handleNewMessages(final FermatMessage fermatMessage){
 
@@ -821,6 +847,23 @@ public class NetworkServiceNegotiationTransmissionPluginRoot extends AbstractNet
         //new message
         fermatEventListener = eventManager.getNewListener(P2pEventType.NEW_NETWORK_SERVICE_MESSAGE_RECEIVE_NOTIFICATION);
         fermatEventListener.setEventHandler(new NewReceiveMessagesNotificationEventHandler(this));
+        eventManager.addListener(fermatEventListener);
+        listenersAdded.add(fermatEventListener);
+
+          /*
+         * Listen and handle Client Connection Loose Notification Event
+         */
+        fermatEventListener = eventManager.getNewListener(P2pEventType.CLIENT_CONNECTION_LOOSE);
+        fermatEventListener.setEventHandler(new ClientConnectionLooseNotificationEventHandler(this));
+        eventManager.addListener(fermatEventListener);
+        listenersAdded.add(fermatEventListener);
+
+
+        /*
+         * Listen and handle Client Connection Success Reconnect Notification Event
+         */
+        fermatEventListener = eventManager.getNewListener(P2pEventType.CLIENT_SUCCESS_RECONNECT);
+        fermatEventListener.setEventHandler(new ClientSuccessfullReconnectNotificationEventHandler(this));
         eventManager.addListener(fermatEventListener);
         listenersAdded.add(fermatEventListener);
 

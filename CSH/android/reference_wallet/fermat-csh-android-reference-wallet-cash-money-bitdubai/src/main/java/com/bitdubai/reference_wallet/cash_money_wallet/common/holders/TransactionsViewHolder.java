@@ -3,7 +3,6 @@ package com.bitdubai.reference_wallet.cash_money_wallet.common.holders;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.text.format.DateFormat;
 import android.text.format.DateUtils;
 import android.view.View;
 import android.widget.ImageView;
@@ -93,9 +92,9 @@ public class TransactionsViewHolder extends FermatViewHolder {
 
     private String getTransactionTypeText(TransactionType transactionType) {
         if (transactionType == TransactionType.DEBIT)
-            return res.getString(R.string.withdrawal_transaction_text);
+            return res.getString(R.string.csh_withdrawal_transaction_text);
         else
-            return res.getString(R.string.deposit_transaction_text);
+            return res.getString(R.string.csh_deposit_transaction_text);
     }
     private String getTransactionAmountText(TransactionType transactionType, BigDecimal amount)
     {
