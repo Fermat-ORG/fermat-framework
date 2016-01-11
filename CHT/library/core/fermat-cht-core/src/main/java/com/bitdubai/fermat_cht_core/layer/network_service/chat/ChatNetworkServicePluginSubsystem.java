@@ -9,9 +9,9 @@ import com.bitdubai.fermat_core_api.layer.all_definition.system.exceptions.CantS
 /**
  * Created by Gabriel Araujo (gabe_512@hotmail.com) on 05/01/2016.
  */
-public class ChatPluginSubsystem extends AbstractPluginSubsystem {
+public class ChatNetworkServicePluginSubsystem extends AbstractPluginSubsystem {
 
-    public ChatPluginSubsystem() {
+    public ChatNetworkServicePluginSubsystem() {
         super(new PluginReference(Plugins.CHAT_NETWORK_SERVICE));
     }
 
