@@ -31,6 +31,8 @@ import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogManager;
 import com.bitdubai.fermat_cbp_api.all_definition.exceptions.CantInitializeDatabaseException;
 import com.bitdubai.fermat_cbp_api.all_definition.exceptions.CantSetObjectException;
 import com.bitdubai.fermat_cbp_api.all_definition.exceptions.CantStartServiceException;
+import com.bitdubai.fermat_cbp_api.layer.business_transaction.common.mocks.CustomerBrokerContractPurchaseManagerMock;
+import com.bitdubai.fermat_cbp_api.layer.business_transaction.common.mocks.PurchaseNegotiationManagerMock;
 import com.bitdubai.fermat_cbp_api.layer.contract.customer_broker_purchase.interfaces.CustomerBrokerContractPurchaseManager;
 import com.bitdubai.fermat_cbp_api.layer.contract.customer_broker_sale.interfaces.CustomerBrokerContractSaleManager;
 import com.bitdubai.fermat_cbp_api.layer.negotiation.customer_broker_purchase.interfaces.CustomerBrokerPurchaseNegotiationManager;
@@ -227,6 +229,9 @@ public class CustomerOnlinePaymentPluginRoot extends AbstractPlugin implements
             /**
              * Init the plugin manager
              */
+        //TODO: the following two lines are only for testing, please, comment them when the testing is finished
+            customerBrokerContractPurchaseManager=new CustomerBrokerContractPurchaseManagerMock();
+            customerBrokerPurchaseNegotiationManager=new PurchaseNegotiationManagerMock();
             this.customerOnlinePaymentTransactionManager=new CustomerOnlinePaymentTransactionManager(
                     this.customerBrokerContractPurchaseManager,
                     customerOnlinePaymentBusinessTransactionDao,
@@ -258,6 +263,7 @@ public class CustomerOnlinePaymentPluginRoot extends AbstractPlugin implements
 
             this.serviceStatus = ServiceStatus.STARTED;
             //System.out.println("Customer online payment starting");
+            //testPayment();
         } catch (CantInitializeCustomerOnlinePaymentBusinessTransactionDatabaseException exception) {
             throw new CantStartPluginException(
                     FermatException.wrapException(exception),
@@ -337,4 +343,16 @@ public class CustomerOnlinePaymentPluginRoot extends AbstractPlugin implements
     public List<DeveloperDatabaseTableRecord> getDatabaseTableContent(DeveloperObjectFactory developerObjectFactory, DeveloperDatabase developerDatabase, DeveloperDatabaseTable developerDatabaseTable) {
         return customerOnlinePaymentBusinessTransactionDeveloperDatabaseFactory.getDatabaseTableContent(developerObjectFactory, developerDatabaseTable);
     }
+
+    private void testPayment(){
+        try{
+            this.customerOnlinePaymentTransactionManager.sendPayment(
+                    "testWalletPublicKey",
+                    "888052D7D718420BD197B647F3BB04128C9B71BC99DBB7BC60E78BDAC4DFC6E2");
+        } catch(Exception e){
+            System.out.println("Exception in Customer Online Payment: "+e.getMessage());
+            e.printStackTrace();
+        }
+    }
+
 }

@@ -29,9 +29,9 @@ public class BusinessTransactionMetadataRecord implements BusinessTransactionMet
 
     public BusinessTransactionMetadataRecord(String contractHash,
                                              ContractTransactionStatus contractTransactionStatus,
-                                             String receiverId,
-                                             PlatformComponentType receiverType,
                                              String senderId,
+                                             PlatformComponentType receiverType,
+                                             String receiverId,
                                              PlatformComponentType senderType,
                                              String contractId,
                                              String negotiationId,

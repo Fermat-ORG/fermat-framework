@@ -118,13 +118,13 @@ public interface NetworkService {
      * Handles the events ClientConnectionLooseNotificationEvent
      * @param fermatEvent
      */
-    //void handleClientConnectionLooseNotificationEvent(FermatEvent fermatEvent);
+    void handleClientConnectionLooseNotificationEvent(FermatEvent fermatEvent);
 
     /**
      * Handles the events ClientSuccessfullReconnectNotificationEvent
      * @param fermatEvent
      */
-    //void handleClientSuccessfullReconnectNotificationEvent(FermatEvent fermatEvent);
+    void handleClientSuccessfullReconnectNotificationEvent(FermatEvent fermatEvent);
 
     /**
      * Handles the events VPNConnectionCloseNotificationEvent
