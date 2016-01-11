@@ -1,12 +1,12 @@
 package com.bitdubai.fermat_dap_android_wallet_asset_issuer_bitdubai.models;
 
 import com.bitdubai.fermat_api.layer.all_definition.resources_structure.Resource;
+import com.bitdubai.fermat_dap_api.layer.all_definition.digital_asset.DigitalAssetContractPropertiesConstants;
 import com.bitdubai.fermat_dap_api.layer.all_definition.enums.AssetCurrentStatus;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.exceptions.CantGetAssetUserActorsException;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.exceptions.CantGetAssetUserGroupException;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.interfaces.ActorAssetUser;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.interfaces.ActorAssetUserGroup;
-import com.bitdubai.fermat_dap_api.layer.dap_middleware.dap_asset_factory.interfaces.AssetFactory;
 import com.bitdubai.fermat_dap_api.layer.dap_module.wallet_asset_issuer.exceptions.CantGetAssetStatisticException;
 import com.bitdubai.fermat_dap_api.layer.dap_module.wallet_asset_issuer.interfaces.AssetIssuerWalletSupAppModuleManager;
 import com.bitdubai.fermat_dap_api.layer.dap_module.wallet_asset_issuer.interfaces.AssetStatistic;
@@ -15,8 +15,6 @@ import com.bitdubai.fermat_dap_api.layer.dap_wallet.common.exceptions.CantLoadWa
 
 import java.sql.Timestamp;
 import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
 import java.util.List;
 
 /**
@@ -24,23 +22,22 @@ import java.util.List;
  */
 public class Data {
     public static List<DigitalAsset> getAllDigitalAssets(AssetIssuerWalletSupAppModuleManager moduleManager) throws Exception {
-        List<AssetIssuerWalletList> assets = moduleManager.getAssetIssuerWalletBalances("walletPublicKeyTest");
+        List<AssetIssuerWalletList> balances = moduleManager.getAssetIssuerWalletBalances("walletPublicKeyTest");
         List<DigitalAsset> digitalAssets = new ArrayList<>();
         DigitalAsset digitalAsset;
-        for (AssetIssuerWalletList asset : assets) {
-            AssetFactory assetFactory = moduleManager.getAssetFactory(asset.getAssetPublicKey());
-
+        for (AssetIssuerWalletList balance : balances) {
             digitalAsset = new DigitalAsset();
-            digitalAsset.setAssetPublicKey(asset.getAssetPublicKey());
-            digitalAsset.setName(asset.getName());
-            digitalAsset.setAvailableBalanceQuantity(asset.getQuantityAvailableBalance());
-            digitalAsset.setBookBalanceQuantity(asset.getQuantityBookBalance());
-            digitalAsset.setAvailableBalance(asset.getAvailableBalance());
-            digitalAsset.setExpDate(assetFactory.getExpirationDate());
+            digitalAsset.setAssetPublicKey(balance.getDigitalAsset().getPublicKey());
+            digitalAsset.setName(balance.getDigitalAsset().getName());
+            digitalAsset.setAvailableBalanceQuantity(balance.getQuantityAvailableBalance());
+            digitalAsset.setBookBalanceQuantity(balance.getQuantityBookBalance());
+            digitalAsset.setAvailableBalance(balance.getAvailableBalance());
+            Timestamp expirationDate = (Timestamp) balance.getDigitalAsset().getContract().getContractProperty(DigitalAssetContractPropertiesConstants.EXPIRATION_DATE).getValue();
+            digitalAsset.setExpDate(expirationDate);
 
-            List<Resource> resources = assetFactory.getResources();
+            List<Resource> resources = balance.getDigitalAsset().getResources();
             if (resources != null && resources.size() > 0) {
-                digitalAsset.setImage(moduleManager.getAssetFactoryResource(resources.get(0)).getContent());
+                digitalAsset.setImage(balance.getDigitalAsset().getResources().get(0).getResourceBinayData());
             }
 
             digitalAssets.add(digitalAsset);
