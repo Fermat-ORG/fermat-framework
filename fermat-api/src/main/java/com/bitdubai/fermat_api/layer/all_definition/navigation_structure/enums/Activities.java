@@ -91,19 +91,34 @@ public enum Activities implements FermatEnum {
 
     DAP_ASSET_ISSUER_WALLET_ASSET_DETAIL("DAIWAD"),
     DAP_WALLET_ASSET_ISSUER_MAIN_ACTIVITY("DWAIMA"),
+    DAP_WALLET_ASSET_ISSUER_HISTORY_ACTIVITY("DWAIHA"),
+    DAP_WALLET_ASSET_ISSUER_STADISTICS_ACTIVITY("DWAISA"),
+
     DAP_WALLET_ASSET_ISSUER_USER_DELIVERY_LIST("DWAIUDL"),
     DAP_WALLET_ASSET_ISSUER_ASSET_DELIVERY("DWAIADL"),
     DAP_WALLET_ASSET_ISSUER_ASSET_DELIVERY_SELECT_USERS_GROUPS("DWAIADSUG"),
 
+    DAP_WALLET_ASSET_ISSUER_USER_APPROPIATE_LIST("DWAIUAL"),
+
+    DAP_WALLET_ASSET_ISSUER_USER_REDEEMED_LIST("DWAIURL"),
+
+
     DAP_WALLET_ASSET_USER_MAIN_ACTIVITY("DWUIMA"),
+    DAP_WALLET_ASSET_USER_HISTORY_ACTIVITY("DWAUHA"),
+
     DAP_WALLET_REDEEM_POINT_MAIN_ACTIVITY("DWRPMA"),
+    DAP_WALLET_REDEEM_POINT_HISTORY_ACTIVITY("DWRPHA"),
+    DAP_WALLET_REDEEM_POINT_STADISTICS_ACTIVITY("DWRPSA"),
 
     //Desktop
     CCP_DESKTOP("CCPD"),
     DAP_DESKTOP("DAPD"),
     CBP_DESKTOP("CBPD"),
     DAP_MAIN("DAPM"),
+
     DAP_ASSET_USER_COMMUNITY_ACTIVITY_MAIN("DAPAUCAM"),
+    DAP_ASSET_USER_COMMUNITY_ACTIVITY_ADMINISTRATIVE_GROUP_MAIN("DAPAUCAAGM"),
+
     DAP_ASSET_ISSUER_COMMUNITY_ACTIVITY_MAIN("DAPAICAM"),
     DAP_ASSET_REDEEM_POINT_COMMUNITY_ACTIVITY_MAIN("DAPARPCAM"),
 
@@ -427,6 +442,8 @@ public enum Activities implements FermatEnum {
                 return null; //TODO dejaron este case por fuera
             case "DAPAUCAM":
                 return Activities.DAP_ASSET_USER_COMMUNITY_ACTIVITY_MAIN;
+            case "DAPAUCAAGM":
+                return Activities.DAP_ASSET_USER_COMMUNITY_ACTIVITY_ADMINISTRATIVE_GROUP_MAIN;
             case "DAPAICAM":
                 return Activities.DAP_ASSET_ISSUER_COMMUNITY_ACTIVITY_MAIN;
             case "DAPARPCAM":
@@ -491,10 +508,20 @@ public enum Activities implements FermatEnum {
                 return BNK_BANK_MONEY_WALLET_ACCOUNT_DETAILS;
             case "DWAIMA":
                 return DAP_WALLET_ASSET_ISSUER_MAIN_ACTIVITY;
+            case "DWAIHA":
+                return DAP_WALLET_ASSET_ISSUER_HISTORY_ACTIVITY;
+            case "DWAISA":
+                return DAP_WALLET_ASSET_ISSUER_STADISTICS_ACTIVITY;
             case "DWUIMA":
                 return DAP_WALLET_ASSET_USER_MAIN_ACTIVITY;
+            case "DWAUHA":
+                return DAP_WALLET_ASSET_USER_HISTORY_ACTIVITY;
             case "DWRPMA":
                 return DAP_WALLET_REDEEM_POINT_MAIN_ACTIVITY;
+            case "DWRPHA":
+                return DAP_WALLET_REDEEM_POINT_HISTORY_ACTIVITY;
+            case "DWRPSA":
+                return DAP_WALLET_REDEEM_POINT_STADISTICS_ACTIVITY;
             case "DAIWAD":
                 return DAP_ASSET_ISSUER_WALLET_ASSET_DETAIL;
             case "DWAIUDL":
@@ -519,6 +546,13 @@ public enum Activities implements FermatEnum {
 
             case "BNKBMWAA":
                 return BNK_BANK_MONEY_WALLET_ADD_ACCOUNT;
+
+            case "DWAIUAL":
+                return DAP_WALLET_ASSET_ISSUER_USER_APPROPIATE_LIST;
+
+            case "DWAIURL":
+                return DAP_WALLET_ASSET_ISSUER_USER_REDEEMED_LIST;
+
             default:
                 throw new InvalidParameterException(
                         "Code Received: " + code,

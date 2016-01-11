@@ -23,6 +23,8 @@ import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
 import com.bitdubai.fermat_api.layer.all_definition.enums.BlockchainNetworkType;
 import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.interfaces.BitcoinNetworkManager;
 
+import com.bitdubai.fermat_bch_api.layer.crypto_vault.asset_vault.exceptions.CantGetActiveRedeemPointAddressesException;
+import com.bitdubai.fermat_bch_api.layer.crypto_vault.asset_vault.exceptions.CantGetActiveRedeemPointsException;
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.asset_vault.exceptions.CantGetExtendedPublicKeyException;
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.asset_vault.interfaces.AssetVaultManager;
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.asset_vault.exceptions.CantSendAssetBitcoinsToUserException;
@@ -258,18 +260,6 @@ public class CryptoVaultAssetsOverBitcoinPluginRoot extends AbstractPlugin imple
         assetCryptoVaultManager.deriveKeys(plugin, keysToDerive);
     }
 
-    /**
-     * * Creates a new hierarchy Account in the vault.
-     * This will create the sets of keys and start monitoring the default network with these keys.
-     * @param description
-     * @param hierarchyAccountType
-     * @return
-     * @throws CantAddHierarchyAccountException
-     */
-    @Override
-    public HierarchyAccount addHierarchyAccount(String description, HierarchyAccountType hierarchyAccountType) throws CantAddHierarchyAccountException {
-        return assetCryptoVaultManager.addHierarchyAccount(description, hierarchyAccountType);
-    }
 
     /**
      * Gets the Extended Public Key from the specified account. Can't be from a master account.
@@ -280,5 +270,25 @@ public class CryptoVaultAssetsOverBitcoinPluginRoot extends AbstractPlugin imple
     @Override
     public ExtendedPublicKey getRedeemPointExtendedPublicKey(String redeemPointPublicKey) throws CantGetExtendedPublicKeyException {
         return assetCryptoVaultManager.getRedeemPointExtendedPublicKey(redeemPointPublicKey);
+    }
+
+    /**
+     * If the redeem point keys are initialized, will return all the generated addresses
+     * @param redeemPointPublicKey
+     * @return
+     * @throws CantGetActiveRedeemPointAddressesException
+     */
+    @Override
+    public List<CryptoAddress> getActiveRedeemPointAddresses(String redeemPointPublicKey) throws CantGetActiveRedeemPointAddressesException {
+        return assetCryptoVaultManager.getActiveRedeemPointAddresses(redeemPointPublicKey);
+    }
+
+    /**
+     * Returns the private Keys of all the active Redeem Points hierarchies in the asset vault
+     * @return
+     */
+    @Override
+    public List<String> getActiveRedeemPoints() throws CantGetActiveRedeemPointsException {
+        return assetCryptoVaultManager.getActiveRedeemPoints();
     }
 }

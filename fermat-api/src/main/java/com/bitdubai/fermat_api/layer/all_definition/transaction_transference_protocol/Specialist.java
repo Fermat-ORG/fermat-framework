@@ -7,6 +7,7 @@ import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterE
  */
 public enum Specialist {
     ASSET_ISSUER_SPECIALIST("AIS"),
+    ASSET_REDEMPTION_SPECIALIST("ARS"),
     ASSET_USER_SPECIALIST("AUS"),
     CRYPTO_ROUTER_SPECIALIST ("CPR"),
     EXTRA_USER_SPECIALIST ("EXU"),
@@ -28,6 +29,7 @@ public enum Specialist {
         switch (code) {
             case "AIS": return Specialist.ASSET_ISSUER_SPECIALIST;
             case "AUS": return Specialist.ASSET_USER_SPECIALIST;
+            case "ARS": return Specialist.ASSET_REDEMPTION_SPECIALIST;
             case "CPR": return Specialist.CRYPTO_ROUTER_SPECIALIST;
             case "EXU": return Specialist.EXTRA_USER_SPECIALIST;
             case "DVU": return Specialist.DEVICE_USER_SPECIALIST;

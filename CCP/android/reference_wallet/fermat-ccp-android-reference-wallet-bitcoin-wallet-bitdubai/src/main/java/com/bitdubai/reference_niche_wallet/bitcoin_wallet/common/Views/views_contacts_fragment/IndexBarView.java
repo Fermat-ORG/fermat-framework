@@ -3,6 +3,7 @@ package com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.Views.views_co
 
 import android.content.Context;
 import android.graphics.Canvas;
+import android.graphics.Color;
 import android.graphics.Paint;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
@@ -99,7 +100,7 @@ public class IndexBarView extends View {
 
         // index bar item color and text size
         mIndexPaint = new Paint();
-        mIndexPaint.setColor(mContext.getResources().getColor(R.color.color_black));
+        mIndexPaint.setColor(Color.parseColor("#99ffffff"));
         mIndexPaint.setAntiAlias(true);
         mIndexPaint.setTextSize(mContext.getResources().getDimension(R.dimen.index_bar_view_text_size));
     }

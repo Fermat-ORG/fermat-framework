@@ -75,7 +75,7 @@ public class NetworkNodePluginRoot extends AbstractPlugin implements NetworkNode
      * PluginFileSystem references definition.
      */
     @NeededAddonReference(platform = Platforms.OPERATIVE_SYSTEM_API, layer = Layers.SYSTEM, addon = Addons.PLUGIN_FILE_SYSTEM)
-    protected PluginFileSystem pluginFileSystem        ;
+    protected PluginFileSystem pluginFileSystem;
 
     /**
      * PluginDatabaseSystem references definition.

@@ -1,6 +1,7 @@
 package com.bitdubai.fermat_dap_android_wallet_asset_issuer_bitdubai.holders;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.view.View;
 
 import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView;
@@ -16,9 +17,9 @@ public class UserDeliveryListHolder extends FermatViewHolder {
     private AssetIssuerWalletSupAppModuleManager manager;
     private Context context;
 
-    private final FermatTextView userName;
-    private final FermatTextView deliveryDate;
-    private final FermatTextView deliveryStatus;
+    private final FermatTextView deliveryListUserName;
+    private final FermatTextView deliveryListDeliveryDate;
+    private final FermatTextView deliveryListDeliveryStatus;
 
     /**
      * Constructor
@@ -30,14 +31,24 @@ public class UserDeliveryListHolder extends FermatViewHolder {
         this.manager = manager;
         this.context = context;
 
-        userName = (FermatTextView) itemView.findViewById(R.id.userName);
-        deliveryDate = (FermatTextView) itemView.findViewById(R.id.deliveryDate);
-        deliveryStatus = (FermatTextView) itemView.findViewById(R.id.deliveryStatus);
+        deliveryListUserName = (FermatTextView) itemView.findViewById(R.id.deliveryListUserName);
+        deliveryListDeliveryDate = (FermatTextView) itemView.findViewById(R.id.deliveryListDeliveryDate);
+        deliveryListDeliveryStatus = (FermatTextView) itemView.findViewById(R.id.deliveryListDeliveryStatus);
     }
 
     public void bind(final UserDelivery userDelivery) {
-        userName.setText(userDelivery.getUserName());
-        deliveryDate.setText(userDelivery.getFormattedDeliveryDate());
-        deliveryStatus.setText(userDelivery.getDeliveryStatus());
+        deliveryListUserName.setText(userDelivery.getUserName());
+        deliveryListDeliveryDate.setText(userDelivery.getFormattedDeliveryDate());
+        deliveryListDeliveryStatus.setText(userDelivery.getDeliveryStatus());
+
+        setupColor(userDelivery);
+    }
+
+    private void setupColor(UserDelivery userDelivery) {
+        if (userDelivery.getDeliveryStatus().equals("ASAP")) {
+            deliveryListDeliveryStatus.setTextColor(Color.parseColor("#E7212C"));
+        } else if (userDelivery.getDeliveryStatus().equals("ASRE")) {
+            deliveryListDeliveryStatus.setTextColor(Color.parseColor("#013572"));
+        }
     }
 }

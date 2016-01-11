@@ -153,7 +153,13 @@ public final class AssetFactorySubAppModulePluginRoot extends AbstractPlugin imp
 
     @Override
     public ActiveActorIdentityInformation getSelectedActorIdentity() throws CantGetSelectedActorIdentityException, ActorIdentityNotSelectedException {
-        return null;
+        try {
+            List<IdentityAssetIssuer> identities = assetFactoryManager.getActiveIdentities();
+            return (identities == null || identities.isEmpty()) ? null : assetFactoryManager.getActiveIdentities().get(0);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
     }
 
     @Override

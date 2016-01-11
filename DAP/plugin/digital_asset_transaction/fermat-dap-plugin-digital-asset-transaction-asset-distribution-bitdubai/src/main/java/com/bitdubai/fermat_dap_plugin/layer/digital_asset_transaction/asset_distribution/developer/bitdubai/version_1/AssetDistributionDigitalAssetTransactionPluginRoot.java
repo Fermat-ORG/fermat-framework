@@ -69,6 +69,7 @@ public class AssetDistributionDigitalAssetTransactionPluginRoot extends Abstract
         LogManagerForDevelopers {
 
     public static long DELIVERING_TIMEOUT = 3 /*MINUTES!!*/ * 60 * 1000;
+    public static long BROADCASTING_MAX_ATTEMPT_NUMBER = 2;
     static Map<String, LogLevel> newLoggingLevel = new HashMap<String, LogLevel>();
     @NeededAddonReference(platform = Platforms.OPERATIVE_SYSTEM_API, layer = Layers.SYSTEM, addon = Addons.PLUGIN_FILE_SYSTEM)
     protected PluginFileSystem pluginFileSystem;

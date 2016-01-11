@@ -40,6 +40,11 @@ public class AssetDetailActivityFragment extends AbstractFermatFragment {
     private Toolbar toolbar;
     private View assetDetailRemainingLayout;
     private View assetDetailAvailableLayout;
+
+    private View assetDetailAppropiateLayout;
+
+    private View assetDetailRedeemedLayout;
+
     private ImageView assetImageDetail;
     private FermatTextView assetDetailNameText;
     private FermatTextView assetDetailExpDateText;
@@ -109,6 +114,22 @@ public class AssetDetailActivityFragment extends AbstractFermatFragment {
                 changeActivity(Activities.DAP_WALLET_ASSET_ISSUER_USER_DELIVERY_LIST, appSession.getAppPublicKey());
             }
         });
+
+
+        assetDetailAppropiateLayout = rootView.findViewById(R.id.assetDetailAppropiateLayout);
+        assetDetailAppropiateLayout.setOnClickListener(new View.OnClickListener() {
+           public void onClick(View v) {
+               changeActivity(Activities.DAP_WALLET_ASSET_ISSUER_USER_APPROPIATE_LIST, appSession.getAppPublicKey());
+           }
+       });
+
+        assetDetailRedeemedLayout = rootView.findViewById(R.id.assetDetailRedeemedLayout);
+        assetDetailRedeemedLayout.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                changeActivity(Activities.DAP_WALLET_ASSET_ISSUER_USER_REDEEMED_LIST, appSession.getAppPublicKey());
+
+            }
+        });
     }
 
     private void setupBackgroundBitmap() {
@@ -150,7 +171,7 @@ public class AssetDetailActivityFragment extends AbstractFermatFragment {
         digitalAsset = (DigitalAsset) appSession.getData("asset_data");
 
         try {
-            Data.setStatistics(assetIssuerSession.getAppPublicKey(), digitalAsset, moduleManager);
+            Data.setStatistics("walletPublicKeyTest", digitalAsset, moduleManager);
         } catch (CantGetAssetStatisticException e) {
             e.printStackTrace();
         } catch (CantLoadWalletException e) {

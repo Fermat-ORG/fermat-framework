@@ -8,9 +8,10 @@ package com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.develop
 
 import com.bitdubai.fermat_p2p_api.layer.all_definition.common.network_services.template.exceptions.CantInsertRecordDataBaseException;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.data.Package;
-import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.data.client.request.ProfileCheckInMsgRequest;
-import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.data.client.respond.ProfileCheckInMsjRespond;
+import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.data.client.request.CheckInProfileMsgRequest;
+import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.data.client.respond.CheckInProfileMsjRespond;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.profiles.ActorProfile;
+import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.enums.HeadersAttName;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.enums.MessageContentType;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.enums.PackageType;
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.channels.WebSocketChannelServerEndpoint;
@@ -27,7 +28,8 @@ import javax.websocket.Session;
 
 /**
  * The Class <code>com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.channels.processors.clients.CheckInActorRequestProcessor</code>
- * process all messages received the type <code>MessageType.CHECK_IN_NETWORK_SERVICE_REQUEST</code><p/>
+ * process all packages received the type <code>MessageType.CHECK_IN_ACTOR_REQUEST</code><p/>
+ *
  * Created by Roberto Requena - (rart3001@gmail.com) on 06/12/15.
  *
  * @version 1.0
@@ -60,12 +62,12 @@ public class CheckInActorRequestProcessor extends PackageProcessor {
         LOG.info("Processing new package received");
 
         String channelIdentityPrivateKey = getChannel().getChannelIdentity().getPrivateKey();
-        String destinationIdentityPublicKey = (String) session.getUserProperties().get("");
+        String destinationIdentityPublicKey = (String) session.getUserProperties().get(HeadersAttName.CPKI_ATT_HEADER_NAME);
         ActorProfile actorProfile = null;
 
         try {
 
-            ProfileCheckInMsgRequest messageContent = (ProfileCheckInMsgRequest) packageReceived.getContent();
+            CheckInProfileMsgRequest messageContent = (CheckInProfileMsgRequest) packageReceived.getContent();
 
             /*
              * Create the method call history
@@ -95,7 +97,7 @@ public class CheckInActorRequestProcessor extends PackageProcessor {
                 /*
                  * If all ok, respond whit success message
                  */
-                ProfileCheckInMsjRespond respondProfileCheckInMsj = new ProfileCheckInMsjRespond(ProfileCheckInMsjRespond.STATUS.SUCCESS, ProfileCheckInMsjRespond.STATUS.SUCCESS.toString(), actorProfile.getIdentityPublicKey());
+                CheckInProfileMsjRespond respondProfileCheckInMsj = new CheckInProfileMsjRespond(CheckInProfileMsjRespond.STATUS.SUCCESS, CheckInProfileMsjRespond.STATUS.SUCCESS.toString(), actorProfile.getIdentityPublicKey());
                 Package packageRespond = Package.createInstance(respondProfileCheckInMsj, packageReceived.getNetworkServiceTypeSource(), PackageType.CHECK_IN_CLIENT_RESPOND, channelIdentityPrivateKey, destinationIdentityPublicKey);
 
                 /*
@@ -114,7 +116,7 @@ public class CheckInActorRequestProcessor extends PackageProcessor {
                 /*
                  * Respond whit fail message
                  */
-                ProfileCheckInMsjRespond respondProfileCheckInMsj = new ProfileCheckInMsjRespond(ProfileCheckInMsjRespond.STATUS.FAIL, exception.getLocalizedMessage(), actorProfile.getIdentityPublicKey());
+                CheckInProfileMsjRespond respondProfileCheckInMsj = new CheckInProfileMsjRespond(CheckInProfileMsjRespond.STATUS.FAIL, exception.getLocalizedMessage(), actorProfile.getIdentityPublicKey());
                 Package packageRespond = Package.createInstance(respondProfileCheckInMsj, packageReceived.getNetworkServiceTypeSource(), PackageType.CHECK_IN_CLIENT_RESPOND, channelIdentityPrivateKey, destinationIdentityPublicKey);
 
                 /*
