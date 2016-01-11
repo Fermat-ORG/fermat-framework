@@ -18,6 +18,7 @@
   - Crear un agente en el `Plugin Crypto Broker Actor` que actualice o agregue periodicamente esta informacion llamando al `Crypto Broker Actor Network Service` para que devuelva la informacion complementaria de los brokers conectados que tiene registrados
   - Haria falta un metodo en el Plugin `Crypto Broker Actor` que devuelva la informacion registrada para poder ser consumida por otros plugins, como por ejemplo los Modules
   - El Plugin `Crypto Broker Actor` tambien a de guardar su propia informacion complementaria ademas de la de los actores conectados para que pueda ser consumida por el `Crypto Broker Actor Network Service` cuando lo requiera
+  - El setting actual Monedas que maneja el broker, va sustituido por un setting que registra las formas de pago que acepta el broker, y lo que va a llevar es una lista de CurrencyType de CBP
 
 ### Crypto Broker Reference Wallet
 
@@ -247,6 +248,9 @@ Plugins y flujos:
 
 #### Settings Merchandises
 Metodos
+  - [implementar] `float getAvaliableBalanceCrypto(String cryptoPublicKey);`
+  - [implementar] `float getAvaliableBalanceCash(String cashPublicKey);`
+  - [implementar] `float getAvaliableBalanceBank(String bankPublicKey, String bankAccount);`
   - [implementar] `List<CryptoBrokerWalletAssociatedSetting> getAssociatedWallets(string cbpWalletPublicKey)`
   - `void createTransactionRestockBank(...)`
   - `void createTransactionDestockBank(...)`
