@@ -2,7 +2,7 @@ package com.fermat_cht_plugin.layer.sub_app_module.chat.developer.bitdubai.versi
 
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantDeleteChatException;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantDeleteContactException;
-import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantDeleteMesssageException;
+import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantDeleteMessageException;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantGetChatException;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantGetContactException;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantGetMessageException;
@@ -14,7 +14,6 @@ import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantSaveContactExce
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantSaveMessageException;
 import com.bitdubai.fermat_cht_api.layer.middleware.interfaces.Chat;
 import com.bitdubai.fermat_cht_api.layer.middleware.interfaces.Contact;
-import com.bitdubai.fermat_cht_api.layer.middleware.interfaces.ContactManager;
 import com.bitdubai.fermat_cht_api.layer.middleware.interfaces.Message;
 import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.ChatManager;
 
@@ -27,13 +26,10 @@ import java.util.UUID;
 public class ChatSupAppModuleManager implements ChatManager {
 
     private final com.bitdubai.fermat_cht_api.layer.middleware.interfaces.ChatManager chatManager;
-    private final ContactManager contactManager;
 
-    public ChatSupAppModuleManager(com.bitdubai.fermat_cht_api.layer.middleware.interfaces.ChatManager chatManager,
-                                   ContactManager contactManager)
+    public ChatSupAppModuleManager(com.bitdubai.fermat_cht_api.layer.middleware.interfaces.ChatManager chatManager)
     {
         this.chatManager    = chatManager;
-        this.contactManager = contactManager;
     }
 
     @Override
@@ -78,41 +74,41 @@ public class ChatSupAppModuleManager implements ChatManager {
 
     @Override
     public Message newEmptyInstanceMessage() throws CantNewEmptyMessageException {
-        return null;
+        return chatManager.newEmptyInstanceMessage();
     }
 
     @Override
     public void saveMessage(Message message) throws CantSaveMessageException {
-
+        chatManager.saveMessage(message);
     }
 
     @Override
-    public void deleteMessage(Message message) throws CantDeleteMesssageException {
-
+    public void deleteMessage(Message message) throws  CantDeleteMessageException {
+        chatManager.deleteMessage(message);
     }
 
     @Override
     public List<Contact> getContacts() throws CantGetContactException {
-        return null;
+        return chatManager.getContacts();
     }
 
     @Override
     public Contact getContactByContactId(UUID contactId) throws CantGetContactException {
-        return null;
+        return chatManager.getContactByContactId(contactId);
     }
 
     @Override
     public Contact newEmptyInstanceContact() throws CantNewEmptyContactException {
-        return null;
+        return newEmptyInstanceContact();
     }
 
     @Override
     public void saveContact(Contact contact) throws CantSaveContactException {
-
+        chatManager.saveContact(contact);
     }
 
     @Override
     public void deleteContact(Contact contact) throws CantDeleteContactException {
-
+        chatManager.deleteContact(contact);
     }
 }
