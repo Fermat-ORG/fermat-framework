@@ -405,7 +405,7 @@ public abstract class FermatActivity extends AppCompatActivity
                 findViewById(R.id.SlidingDrawer).setVisibility(View.GONE);
             }
         }catch (Exception e){
-            getErrorManager().reportUnexpectedUIException(UISource.ACTIVITY,UnexpectedUIExceptionSeverity.UNSTABLE,e);
+            getErrorManager().reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.UNSTABLE, e);
         }
     }
 
@@ -878,11 +878,15 @@ public abstract class FermatActivity extends AppCompatActivity
                     (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
             mNotificationManager.notify(NOTIFICATION_ID, notification.build());
         } else {
-//            if(getCloudClient().getCommunicationsCloudClientConnection().isConnected()){
-//                launchIntent("running");
-//            }else{
-//                launchIntent("closed");
-//            }
+            try {
+                if (getCloudClient().getCommunicationsCloudClientConnection().isConnected()) {
+                    launchIntent("running");
+                } else {
+                    launchIntent("closed");
+                }
+            }catch (Exception e){
+
+            }
 
         }
     }
@@ -1533,7 +1537,7 @@ public abstract class FermatActivity extends AppCompatActivity
                             Layers.COMMUNICATION,
                             Plugins.WS_CLOUD_CLIENT,
                             Developers.BITDUBAI,
-                            new Version(1,0,0)
+                            new Version()
                     ));
         } catch (VersionNotFoundException e) {
             e.printStackTrace();
@@ -1551,7 +1555,7 @@ public abstract class FermatActivity extends AppCompatActivity
                             Layers.CRYPTO_NETWORK,
                             Plugins.BITCOIN_NETWORK,
                             Developers.BITDUBAI,
-                            new Version(1,0,0)
+                            new Version()
                     ));
         } catch (VersionNotFoundException e) {
             e.printStackTrace();
