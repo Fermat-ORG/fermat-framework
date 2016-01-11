@@ -895,6 +895,7 @@ public abstract class FermatActivity extends AppCompatActivity
         NotificationManager mNotificationManager =
                 (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
         mNotificationManager.cancel(NOTIFICATION_ID);
+        mNotificationManager.cancelAll();
         //mNotificationManager.notify(NOTIFICATION_ID, notification.build());
     }
     /**
