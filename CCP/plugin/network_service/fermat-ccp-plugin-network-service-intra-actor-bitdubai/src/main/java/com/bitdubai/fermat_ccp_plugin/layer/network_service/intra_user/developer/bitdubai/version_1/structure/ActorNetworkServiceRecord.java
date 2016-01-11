@@ -1,5 +1,7 @@
 package com.bitdubai.fermat_ccp_plugin.layer.network_service.intra_user.developer.bitdubai.version_1.structure;
 
+import android.util.Base64;
+
 import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
 import com.bitdubai.fermat_ccp_api.layer.network_service.intra_actor.enums.ActorProtocolState;
 import com.bitdubai.fermat_ccp_api.layer.network_service.intra_actor.enums.NotificationDescriptor;
@@ -155,7 +157,7 @@ public class ActorNetworkServiceRecord implements IntraUserNotification {
                 ", actorDestinationPublicKey='" + actorDestinationPublicKey + '\'' +
                 ", actorSenderAlias='" + actorSenderAlias + '\'' +
                 ", actorSenderPhrase='" + actorSenderPhrase + '\'' +
-                ", actorSenderProfileImage=" + Arrays.toString(actorSenderProfileImage) +
+                ", actorSenderProfileImage=" + Base64.encodeToString(actorSenderProfileImage, Base64.DEFAULT) + //Arrays.toString(actorSenderProfileImage) +
                 ", notificationDescriptor=" + notificationDescriptor +
                 ", sentDate=" + sentDate +
                 ", actorProtocolState=" + actorProtocolState +

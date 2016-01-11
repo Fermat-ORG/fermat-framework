@@ -14,7 +14,7 @@ import java.util.Map;
 /**
  * Created by Francisco Vasquez
  */
-public class IssuerIdentitySubAppSession extends AbstractFermatSession<InstalledSubApp,IdentityAssetIssuerManager,SubAppResourcesProviderManager> implements SubAppsSession {
+public class IssuerIdentitySubAppSession extends AbstractFermatSession<InstalledSubApp,IdentityAssetIssuerManager,SubAppResourcesProviderManager> {
 
     public IssuerIdentitySubAppSession() {}
 

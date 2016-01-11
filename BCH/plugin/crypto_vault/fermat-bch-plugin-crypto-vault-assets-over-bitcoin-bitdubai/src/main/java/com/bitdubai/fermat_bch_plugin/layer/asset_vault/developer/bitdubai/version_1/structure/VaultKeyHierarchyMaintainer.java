@@ -94,7 +94,7 @@ class VaultKeyHierarchyMaintainer implements Agent {
     @Override
     public void stop() {
         isSupposedToRun = false;
-        vaultKeyHierarchyMaintainerAgent.interrupProcess();
+        vaultKeyHierarchyMaintainerAgent.interruptProcess();
         vaultKeyHierarchyMaintainerAgent = null;
     }
 
@@ -134,7 +134,7 @@ class VaultKeyHierarchyMaintainer implements Agent {
         /**
          * stop the current thread.
          */
-        public void interrupProcess(){
+        public void interruptProcess(){
             Thread.currentThread().interrupt();
         }
 

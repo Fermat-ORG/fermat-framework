@@ -11,17 +11,8 @@ import com.bitdubai.fermat_csh_api.layer.csh_wallet_module.CashMoneyWalletPrefer
 /**
  * Created by Alejandro Bicelis on 12/9/2015.
  */
-public class CashMoneyWalletSession extends AbstractFermatSession<InstalledWallet,CashMoneyWalletModuleManager, WalletResourcesProviderManager> implements WalletSession {
+public class CashMoneyWalletSession extends AbstractFermatSession<InstalledWallet,CashMoneyWalletModuleManager, WalletResourcesProviderManager>  {
 
     public CashMoneyWalletSession() {}
 
-    @Override
-    public WalletSettings getWalletSettings() {
-        return new CashMoneyWalletPreferenceSettings();
-    }
-
-    @Override
-    public String getIdentityConnection() {
-        return null;
-    }
 }

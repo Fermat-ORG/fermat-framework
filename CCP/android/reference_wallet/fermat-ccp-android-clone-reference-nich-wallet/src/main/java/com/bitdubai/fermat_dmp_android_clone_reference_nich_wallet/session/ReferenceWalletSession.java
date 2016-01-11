@@ -18,7 +18,7 @@ import java.util.Map;
  * Created by Matias Furszyfer on 2015.07.20..
  */
 
-public class ReferenceWalletSession extends AbstractFermatSession<InstalledWallet,CryptoWalletManager,WalletResourcesProviderManager> implements WalletSession {
+public class ReferenceWalletSession extends AbstractFermatSession<InstalledWallet,CryptoWalletManager,WalletResourcesProviderManager> {
 
 
     /**
@@ -108,10 +108,6 @@ public class ReferenceWalletSession extends AbstractFermatSession<InstalledWalle
         data.put(key,object);
     }
 
-    @Override
-    public String getIdentityConnection() {
-        return null;
-    }
 
     @Override
     public Object getData(String key) {
@@ -155,14 +151,6 @@ public class ReferenceWalletSession extends AbstractFermatSession<InstalledWalle
 
     public void setBalanceTypeSelected(BalanceType balaceType) {
         typeBalanceSelected=balaceType.getCode();
-    }
-
-    /**
-     *
-     */
-    @Override
-    public WalletSettings getWalletSettings() {
-        return this.walletSettings;
     }
 
 
