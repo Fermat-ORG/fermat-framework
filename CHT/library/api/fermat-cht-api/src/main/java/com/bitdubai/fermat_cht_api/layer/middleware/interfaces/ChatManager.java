@@ -1,46 +1,44 @@
 package com.bitdubai.fermat_cht_api.layer.middleware.interfaces;
 
-import java.sql.Date;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.FermatManager;
+import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantDeleteChatException;
+import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantDeleteMessageException;
+import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantGetChatException;
+import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantGetMessageException;
+import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantNewEmptyChatException;
+import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantNewEmptyMessageException;
+import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantSaveChatException;
+import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantSaveMessageException;
+
 import java.util.List;
+import java.util.UUID;
 
 /**
  * Created by miguel payarez (miguel_payarez@hotmail.com) on 29/12/15.
  * Update by Manuel Perez on 08/01/2016 (fix naming conventions)
  */
-public interface ChatManager {
+public interface ChatManager extends FermatManager{
 
-    //Todo: create a chat record or chat wrapper to clean this method, please, use english to name objects.
-    void newChat (
-            Integer chatId, //Why this id is an integer? you can use UUID
-            Integer objectId, //This must be a String, this field can be an UUID or publicKey
-            String localActorType,
-            String localActorPublicKey,
-            String remoteActorType,
-            String remoteActorPublicKey,
-            String chatName,
-            boolean status, //Why this argument is a boolean?
-            Date date,
-            Date lastMessageDate
-    );
+    //Documentar
+    List<Chat> getChats() throws CantGetChatException;
 
-    List<Object> chatList(
-            Integer chatId, //Why this id is an integer? you can use UUID
-            Integer objectId //This must be a String, this field can be an UUID or publicKey
-    );
+    Chat getChatByChatId(UUID chatId) throws CantGetChatException;
 
-    List<Object> chatDetails(
-            Integer chatId, //Why this id is an integer? you can use UUID
-            Integer objectId //This must be a String, this field can be an UUID or publicKey
-                              );
+    Chat newEmptyInstanceChat() throws CantNewEmptyChatException;
 
-    List<Object> sendMessage(
-            Integer messageId, //Why this id is an integer? you can use UUID
-            Integer chatId, //Why this id is an integer? you can use UUID
-            String message,
-            Integer status, //Why this argument is an integer?
-            Boolean type,
-            Date messageDate
-    );
+    void saveChat(Chat chat) throws CantSaveChatException;
 
+    void deleteChat(Chat chat) throws CantDeleteChatException;
 
+    List<Message> getMessages() throws CantGetMessageException;
+
+    Message getMessageByChatId(UUID chatId) throws CantGetMessageException;
+
+    Message getMessageByMessageId(UUID messageId) throws CantGetMessageException;
+
+    Message newEmptyInstanceMessage() throws CantNewEmptyMessageException;
+
+    void saveMessage(Message message) throws CantSaveMessageException;
+
+    void deleteMessage(Message message) throws CantDeleteMessageException;
 }

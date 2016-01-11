@@ -18,6 +18,7 @@ import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfac
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Logger;
 
 /**
  * Created by Manuel Perez (darkpriestrelative@gmail.com) on 16/12/15.
@@ -74,13 +75,13 @@ public class BrokerAckOnlinePaymentRecorderService implements CBPService {
     }
 
     public void incomingMoneyNotification(IncomingMoneyNotificationEvent event) throws CantSaveEventException {
-        //Logger LOG = Logger.getGlobal();
-        //LOG.info("EVENT TEST, I GOT AN EVENT:\n"+event);
+        Logger LOG = Logger.getGlobal();
+        LOG.info("EVENT TEST, I GOT AN EVENT:\n"+event);
         if(event.getActorType().getCode().equals(Actors.CBP_CRYPTO_BROKER.getCode())){
             this.brokerAckOnlinePaymentBusinessTransactionDao.saveIncomingMoneyEvent(event);
         }
 
-        //LOG.info("CHECK THE DATABASE");
+        LOG.info("CHECK THE DATABASE");
     }
 
     public void newContractOpenedEvenHandler(NewContractOpened event)throws CantSaveEventException {
