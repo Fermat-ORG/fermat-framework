@@ -2,6 +2,7 @@ package com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces;
 
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantDeleteChatException;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantDeleteContactException;
+import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantDeleteMessageException;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantDeleteMesssageException;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantGetChatException;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantGetContactException;
@@ -45,7 +46,7 @@ public interface ChatManager {
 
     void saveMessage(Message message) throws CantSaveMessageException;
 
-    void deleteMessage(Message message) throws CantDeleteMesssageException;
+    void deleteMessage(Message message) throws CantDeleteMessageException;
 
     List<Contact> getContacts() throws CantGetContactException;
 
