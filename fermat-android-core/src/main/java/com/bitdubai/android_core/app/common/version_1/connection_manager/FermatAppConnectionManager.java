@@ -15,6 +15,7 @@ import com.bitdubai.fermat_dap_android_sub_app_redeem_point_identity_bitdubai.ap
 import com.bitdubai.fermat_dap_android_wallet_asset_issuer_bitdubai.app_connection.WalletAssetIssuerFermatAppConnection;
 import com.bitdubai.fermat_dap_android_wallet_asset_user_bitdubai.app_connection.WalletAssetUserFermatAppConnection;
 import com.bitdubai.fermat_dap_android_wallet_redeem_point_bitdubai.app_connection.WalletRedeemPointFermatAppConnection;
+import com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.app_connection.ChatFermatAppConnection;
 import com.bitdubai.fermat_dap_api.layer.dap_identity.asset_issuer.interfaces.IdentityAssetIssuer;
 import com.bitdubai.fermat_dap_api.layer.dap_identity.asset_user.interfaces.IdentityAssetUser;
 import com.bitdubai.fermat_dap_api.layer.dap_identity.redeem_point.interfaces.RedeemPointIdentity;
@@ -125,6 +126,12 @@ public class FermatAppConnectionManager {
             // WPD Sub Apps
             case "public_key_store":
                 fermatAppConnection = new WalletStoreFermatAppConnection(activity);
+                break;
+
+            // CHT Sub Apps
+            case "public_key_cht_chat":
+                fermatAppConnection = new ChatFermatAppConnection(activity);
+                break;
         }
         return fermatAppConnection;
     }

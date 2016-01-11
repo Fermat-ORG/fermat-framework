@@ -84,7 +84,7 @@ public class ChatFragment extends AbstractFermatFragment  {//ActionBarActivity
         RelativeLayout contain = (RelativeLayout) layout.findViewById(R.id.container);
         companionLabel.setText("My Contact");// Hard Coded
         loadDummyHistory();// Hard Coded
-
+/*
         sendBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -103,7 +103,7 @@ public class ChatFragment extends AbstractFermatFragment  {//ActionBarActivity
 
                 displayMessage(chatMessage);
             }
-        });
+        });*/
         return layout;
     }
 
