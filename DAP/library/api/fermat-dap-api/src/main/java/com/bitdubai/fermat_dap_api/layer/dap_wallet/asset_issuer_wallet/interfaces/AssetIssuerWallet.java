@@ -59,6 +59,9 @@ public interface AssetIssuerWallet {
     DigitalAsset getAssetByPublicKey(String assetPublicKey);
 
     String getUserDeliveredToPublicKey(String assetPublicKey) throws RecordsNotFoundException, CantGetAssetStatisticException;
+
+    List<DigitalAssetMetadata> getAllUsedAssets() throws CantGetDigitalAssetFromLocalStorageException;
+
     //ASSET STATISTIC METHODS
 
     void createdNewAsset(DigitalAsset asset) throws CantSaveStatisticException;
