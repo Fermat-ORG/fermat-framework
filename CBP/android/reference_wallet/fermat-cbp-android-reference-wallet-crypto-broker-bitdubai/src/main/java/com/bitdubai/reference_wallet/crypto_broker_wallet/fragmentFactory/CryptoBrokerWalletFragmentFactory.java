@@ -16,6 +16,7 @@ import com.bitdubai.reference_wallet.crypto_broker_wallet.fragments.home.MarketR
 import com.bitdubai.reference_wallet.crypto_broker_wallet.fragments.home.OpenContractsTabFragment;
 import com.bitdubai.reference_wallet.crypto_broker_wallet.fragments.home.OpenNegotiationsTabFragment;
 import com.bitdubai.reference_wallet.crypto_broker_wallet.fragments.home.StockStatisticsFragment;
+import com.bitdubai.reference_wallet.crypto_broker_wallet.fragments.settings.SettingsBankAccountsFragment;
 import com.bitdubai.reference_wallet.crypto_broker_wallet.fragments.settings.SettingsMylocationsFragment;
 import com.bitdubai.reference_wallet.crypto_broker_wallet.fragments.settings.SettingsActivityFragment;
 import com.bitdubai.reference_wallet.crypto_broker_wallet.fragments.settings.SetttingsStockManagementFragment;
@@ -82,8 +83,8 @@ public class CryptoBrokerWalletFragmentFactory extends FermatFragmentFactory<Cry
             case CBP_CRYPTO_BROKER_WALLET_CREATE_NEW_LOCATION_IN_SETTINGS:
                 return CreateNewLocationFragment.newInstance();
             case CBP_CRYPTO_BROKER_WALLET_SETTINGS_BANK_ACCOUNT:
-                return WizardPageSetBankAccountsFragment.newInstance();
-            case CBP_CRYPTO_BROKER_WALLET_SETTINGS_MERCHANDISES:
+                return SettingsBankAccountsFragment.newInstance();
+            case CBP_CRYPTO_BROKER_WALLET_SETTINGS_STOCK_MERCHANDISES:
                 return SetttingsStockManagementFragment.newInstance();
             default:
                 throw createFragmentNotFoundException(fragment);
