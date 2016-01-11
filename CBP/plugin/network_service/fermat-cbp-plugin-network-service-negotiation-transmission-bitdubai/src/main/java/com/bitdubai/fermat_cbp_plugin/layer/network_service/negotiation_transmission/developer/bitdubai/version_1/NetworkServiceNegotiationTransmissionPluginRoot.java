@@ -421,11 +421,11 @@ public class NetworkServiceNegotiationTransmissionPluginRoot extends AbstractNet
     @Override
     public void handleCompleteComponentRegistrationNotificationEvent(PlatformComponentProfile platformComponentProfileRegistered) {
 
-        System.out.println("\nNegotiationTransmissionNetworkServiceConnectionManager - Starting method handleCompleteComponentRegistrationNotificationEvent" +
-            "\n- platformComponentProfileRegistered.getPlatformComponentType(): " + platformComponentProfileRegistered.getPlatformComponentType().getCode() +" = "+ PlatformComponentType.NETWORK_SERVICE.getCode() +
-            "\n- platformComponentProfileRegistered.getNetworkServiceType(): " + platformComponentProfileRegistered.getNetworkServiceType().getCode() +" = "+ NetworkServiceType.NEGOTIATION_TRANSMISSION.getCode() +
-            "\n- platformComponentProfileRegistered.getIdentityPublicKey(): "+ platformComponentProfileRegistered.getIdentityPublicKey() +" = "+ identity.getPublicKey()
-        );
+//        System.out.println("\nNegotiationTransmissionNetworkServiceConnectionManager - Starting method handleCompleteComponentRegistrationNotificationEvent" +
+//            "\n- platformComponentProfileRegistered.getPlatformComponentType(): " + platformComponentProfileRegistered.getPlatformComponentType().getCode() +" = "+ PlatformComponentType.NETWORK_SERVICE.getCode() +
+//            "\n- platformComponentProfileRegistered.getNetworkServiceType(): " + platformComponentProfileRegistered.getNetworkServiceType().getCode() +" = "+ NetworkServiceType.NEGOTIATION_TRANSMISSION.getCode() +
+//            "\n- platformComponentProfileRegistered.getIdentityPublicKey(): "+ platformComponentProfileRegistered.getIdentityPublicKey() +" = "+ identity.getPublicKey()
+//        );
         //If the component registered have my profile and my identity public key
         if (platformComponentProfileRegistered.getPlatformComponentType()  == PlatformComponentType.NETWORK_SERVICE &&
                 platformComponentProfileRegistered.getNetworkServiceType()  == NetworkServiceType.NEGOTIATION_TRANSMISSION &&

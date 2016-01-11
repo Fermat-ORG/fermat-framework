@@ -157,25 +157,29 @@ public class NegotiationTransmissionNetworkServiceDatabaseDao {
 
     public List<NegotiationTransmission> findAllByTransmissionState(NegotiationTransmissionState negotiationTransmissionState) throws CantReadRecordDataBaseException {
 
-        if (negotiationTransmissionState == null) {
-            throw new IllegalArgumentException("The filters are required, can not be null or empty");
-        }
-
-        List<NegotiationTransmission> list = null;
-
         try {
+
+            if (negotiationTransmissionState == null)
+                throw new IllegalArgumentException("The filters are required, can not be null or empty");
+            List<NegotiationTransmission> list = new ArrayList<>();
+
+            List<DatabaseTableRecord> records;
             DatabaseTable table =  this.database.getTable(NegotiationTransmissionNetworkServiceDatabaseConstants.NEGOTIATION_TRANSMISSION_NETWORK_SERVICE_TABLE_NAME);
+            if (table == null)
+                throw new CantReadRecordDataBaseException("Cant check if negotiation_transmission_network_service exists", "Network Service - Negotiation Transmission", "");
+
             table.addStringFilter(NegotiationTransmissionNetworkServiceDatabaseConstants.NEGOTIATION_TRANSMISSION_NETWORK_SERVICE_TRANSMISSION_STATE_COLUMN_NAME, negotiationTransmissionState.getCode(), DatabaseFilterType.EQUAL);
             table.loadToMemory();
-            List<DatabaseTableRecord> records = table.getRecords();
-
-            list = new ArrayList<>();
-            list.clear();
+            records = table.getRecords();
+            if(records.isEmpty())
+                return list;
 
             for (DatabaseTableRecord record : records) {
-                NegotiationTransmission outgoingTemplateNetworkServiceMessage = getNegotiationTransmissionFromRecord(record);
-                list.add(outgoingTemplateNetworkServiceMessage);
+                list.add(getNegotiationTransmissionFromRecord(record));
             }
+
+            return list;
+
 
         } catch (CantLoadTableToMemoryException e) {
             StringBuffer contextBuffer = new StringBuffer();
@@ -184,8 +188,6 @@ public class NegotiationTransmissionNetworkServiceDatabaseDao {
         } catch (InvalidParameterException e) {
             throw new CantReadRecordDataBaseException (CantRegisterSendNegotiationTransmissionException.DEFAULT_MESSAGE, e, "", "Invalid parameter");
         }
-
-        return list;
     }
 
     public List<NegotiationTransmission> getAllNegotiationTransmission() throws CantReadRecordDataBaseException {
