@@ -502,8 +502,10 @@ public class ConnectionsWorldFragment extends AbstractFermatFragment implements
                                 if (isBackPressed) {
                                     getActivity().finish();
                                 }
-                            } else
+                            } else {
                                 showCriptoUsersCache();
+                                invalidate();
+                            }
                         }
                     });
                 }
