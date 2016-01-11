@@ -9,6 +9,7 @@ import com.bitdubai.fermat_api.layer.modules.common_classes.ActiveActorIdentityI
 import com.bitdubai.fermat_api.layer.modules.exceptions.CantGetSelectedActorIdentityException;
 import com.bitdubai.fermat_api.layer.modules.interfaces.FermatSettings;
 import com.bitdubai.fermat_api.layer.world.interfaces.Currency;
+import com.bitdubai.fermat_bnk_api.layer.bnk_wallet.bank_money.exceptions.CantCalculateBalanceException;
 import com.bitdubai.fermat_bnk_api.layer.bnk_wallet.bank_money.exceptions.CantLoadBankMoneyWalletException;
 import com.bitdubai.fermat_bnk_api.layer.bnk_wallet.bank_money.interfaces.BankAccountNumber;
 import com.bitdubai.fermat_bnk_api.layer.bnk_wallet.bank_money.interfaces.BankMoneyWalletManager;
@@ -90,6 +91,10 @@ import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_broker.exceptions.
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_broker.interfaces.CryptoBrokerWalletManager;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_broker.interfaces.StockInformation;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_broker.interfaces.StockStatistics;
+import com.bitdubai.fermat_ccp_api.layer.basic_wallet.bitcoin_wallet.interfaces.BitcoinWalletManager;
+import com.bitdubai.fermat_ccp_api.layer.basic_wallet.common.enums.BalanceType;
+import com.bitdubai.fermat_ccp_api.layer.basic_wallet.common.exceptions.CantLoadWalletException;
+import com.bitdubai.fermat_cer_api.all_definition.enums.TimeUnit;
 import com.bitdubai.fermat_cer_api.all_definition.interfaces.CurrencyPair;
 import com.bitdubai.fermat_cer_api.all_definition.interfaces.ExchangeRate;
 import com.bitdubai.fermat_cer_api.layer.provider.exceptions.CantGetExchangeRateException;
@@ -97,6 +102,7 @@ import com.bitdubai.fermat_cer_api.layer.provider.exceptions.UnsupportedCurrency
 import com.bitdubai.fermat_cer_api.layer.provider.interfaces.CurrencyExchangeRateProviderManager;
 import com.bitdubai.fermat_cer_api.layer.search.exceptions.CantGetProviderException;
 import com.bitdubai.fermat_cer_api.layer.search.interfaces.CurrencyExchangeProviderFilterManager;
+import com.bitdubai.fermat_csh_api.layer.csh_wallet.exceptions.CantGetCashMoneyWalletBalanceException;
 import com.bitdubai.fermat_csh_api.layer.csh_wallet.exceptions.CantGetCashMoneyWalletCurrencyException;
 import com.bitdubai.fermat_csh_api.layer.csh_wallet.exceptions.CantLoadCashMoneyWalletException;
 import com.bitdubai.fermat_csh_api.layer.csh_wallet.interfaces.CashMoneyWalletManager;
@@ -140,6 +146,7 @@ public class CryptoBrokerWalletModuleCryptoBrokerWalletManager implements Crypto
     private final CurrencyExchangeProviderFilterManager currencyExchangeProviderFilterManager;
     private final CryptoBrokerIdentityManager cryptoBrokerIdentityManager;
     private final CustomerBrokerUpdateManager customerBrokerUpdateManager;
+    private final BitcoinWalletManager bitcoinWalletManager;
     /*
     *Constructor with Parameters
     */
@@ -157,7 +164,8 @@ public class CryptoBrokerWalletModuleCryptoBrokerWalletManager implements Crypto
                                                              CustomerBrokerContractSaleManager customerBrokerContractSaleManager,
                                                              CurrencyExchangeProviderFilterManager currencyExchangeProviderFilterManager,
                                                              CryptoBrokerIdentityManager cryptoBrokerIdentityManager,
-                                                             CustomerBrokerUpdateManager customerBrokerUpdateManager)
+                                                             CustomerBrokerUpdateManager customerBrokerUpdateManager,
+                                                             BitcoinWalletManager bitcoinWalletManager)
     {
         this.walletManagerManager                 = walletManagerManager;
         this.cryptoBrokerWalletManager            = cryptoBrokerWalletManager;
@@ -174,6 +182,7 @@ public class CryptoBrokerWalletModuleCryptoBrokerWalletManager implements Crypto
         this.currencyExchangeProviderFilterManager= currencyExchangeProviderFilterManager;
         this.cryptoBrokerIdentityManager          = cryptoBrokerIdentityManager;
         this.customerBrokerUpdateManager          = customerBrokerUpdateManager;
+        this.bitcoinWalletManager                 = bitcoinWalletManager;
     }
 
     private List<ContractBasicInformation> contractsHistory;
@@ -1162,6 +1171,39 @@ public class CryptoBrokerWalletModuleCryptoBrokerWalletManager implements Crypto
     @Override
     public void deleteBankAccount(NegotiationBankAccount bankAccount) throws CantDeleteBankAccountSaleException {
         customerBrokerSaleNegotiationManager.deleteBankAccount(bankAccount);
+    }
+
+    /**
+     * Returns the Balance this BankMoneyWalletBalance belongs to. (Can be available or book)
+     *
+     * @param walletPublicKey
+     * @param accountNumber
+     * @return A double, containing the balance.
+     */
+    @Override
+    public double getBalanceBankWallet(String walletPublicKey, String accountNumber) throws CantCalculateBalanceException, CantLoadBankMoneyWalletException {
+        return bankMoneyWalletManager.loadBankMoneyWallet(walletPublicKey).getAvailableBalance().getBalance(accountNumber);
+    }
+
+    /**
+     * Returns the Balance this CashMoneyWalletBalance belongs to. (Can be available or book)
+     *
+     * @param walletPublicKey
+     * @return A BigDecimal, containing the balance.
+     */
+    @Override
+    public BigDecimal getBalanceCashWallet(String walletPublicKey) throws CantGetCashMoneyWalletBalanceException, CantLoadCashMoneyWalletException {
+        return cashMoneyWalletManager.loadCashMoneyWallet(walletPublicKey).getAvailableBalance().getBalance();
+    }
+
+    /**
+     * Returns the Balance this BitcoinWalletBalance belongs to. (Can be available or book)
+     *
+     * @return A BigDecimal, containing the balance.
+     */
+    @Override
+    public long getBalanceBitcoinWallet(String walletPublicKey) throws com.bitdubai.fermat_ccp_api.layer.basic_wallet.common.exceptions.CantCalculateBalanceException, CantLoadWalletException {
+        return bitcoinWalletManager.loadWallet(walletPublicKey).getBalance(BalanceType.AVAILABLE).getBalance();
     }
 
 
