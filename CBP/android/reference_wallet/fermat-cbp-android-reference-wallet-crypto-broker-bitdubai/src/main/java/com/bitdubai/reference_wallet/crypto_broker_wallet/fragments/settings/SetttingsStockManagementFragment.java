@@ -40,7 +40,7 @@ import java.util.*;
 /**
  * Created by nelson on 22/12/15.
  */
-public class SetttingsMerchandisesFragment extends AbstractFermatFragment
+public class SetttingsStockManagementFragment extends AbstractFermatFragment
         implements SingleDeletableItemAdapter.OnDeleteButtonClickedListener<InstalledWallet> {
 
     // Constants
@@ -60,8 +60,8 @@ public class SetttingsMerchandisesFragment extends AbstractFermatFragment
     private FermatTextView emptyView;
 
 
-    public static SetttingsMerchandisesFragment newInstance() {
-        return new SetttingsMerchandisesFragment();
+    public static SetttingsStockManagementFragment newInstance() {
+        return new SetttingsStockManagementFragment();
     }
 
     @Override
@@ -199,7 +199,7 @@ public class SetttingsMerchandisesFragment extends AbstractFermatFragment
             dialogFragment.show(getFragmentManager(), "WalletsDialog");
 
         } catch (CantListWalletsException ex) {
-            Toast.makeText(SetttingsMerchandisesFragment.this.getActivity(), "Oops a error occurred...", Toast.LENGTH_SHORT).show();
+            Toast.makeText(SetttingsStockManagementFragment.this.getActivity(), "Oops a error occurred...", Toast.LENGTH_SHORT).show();
 
             Log.e(TAG, ex.getMessage(), ex);
             if (errorManager != null) {
@@ -238,7 +238,7 @@ public class SetttingsMerchandisesFragment extends AbstractFermatFragment
             accountsDialog.show(getFragmentManager(), "accountsDialog");
 
         } catch (FermatException ex) {
-            Toast.makeText(SetttingsMerchandisesFragment.this.getActivity(), "Oops a error occurred...", Toast.LENGTH_SHORT).show();
+            Toast.makeText(SetttingsStockManagementFragment.this.getActivity(), "Oops a error occurred...", Toast.LENGTH_SHORT).show();
 
             Log.e(TAG, ex.getMessage(), ex);
             if (errorManager != null) {
@@ -295,7 +295,7 @@ public class SetttingsMerchandisesFragment extends AbstractFermatFragment
             }
 
         } catch (FermatException ex) {
-            Toast.makeText(SetttingsMerchandisesFragment.this.getActivity(), "Oops a error occurred...", Toast.LENGTH_SHORT).show();
+            Toast.makeText(SetttingsStockManagementFragment.this.getActivity(), "Oops a error occurred...", Toast.LENGTH_SHORT).show();
 
             Log.e(TAG, ex.getMessage(), ex);
             if (errorManager != null) {
