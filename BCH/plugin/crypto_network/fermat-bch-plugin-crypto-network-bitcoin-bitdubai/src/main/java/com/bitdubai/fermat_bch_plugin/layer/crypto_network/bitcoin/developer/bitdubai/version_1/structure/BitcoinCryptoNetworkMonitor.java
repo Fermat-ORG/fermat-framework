@@ -221,9 +221,7 @@ public class BitcoinCryptoNetworkMonitor implements Agent {
             /**
              * I will add this transaction to the wallet.
              */
-            WalletTransaction walletTransaction = new WalletTransaction(WalletTransaction.Pool.PENDING, tx);
-            wallet.addWalletTransaction(walletTransaction);
-
+            wallet.commitTx(tx);
 
             /**
              * save the added transaction in the wallet
@@ -513,8 +511,7 @@ public class BitcoinCryptoNetworkMonitor implements Agent {
             /**
              * I store it in the wallet.
              */
-            WalletTransaction walletTransaction = new WalletTransaction(WalletTransaction.Pool.PENDING, tx);
-            wallet.addWalletTransaction(walletTransaction);
+            wallet.commitTx(tx);
             wallet.saveToFile(walletFileName);
 
 

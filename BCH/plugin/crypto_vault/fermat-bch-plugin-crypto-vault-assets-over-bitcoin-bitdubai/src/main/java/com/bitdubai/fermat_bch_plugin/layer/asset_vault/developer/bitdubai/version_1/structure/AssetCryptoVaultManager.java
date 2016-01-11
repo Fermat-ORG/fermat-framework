@@ -188,7 +188,7 @@ public class AssetCryptoVaultManager  {
              * stored in our wallet. If this is the case I will find a child that uses the GenesisTransaction as an input and use the child transaction
              * to send the bitcoins.
              */
-            List<Transaction> transactions = bitcoinNetworkManager.getBitcoinTransaction(networkType, VaultType.CRYPTO_ASSET_VAULT);
+            List<Transaction> transactions = bitcoinNetworkManager.getUnspentBitcoinTransactions(networkType);
             for (Transaction transaction : transactions){
                 for (TransactionInput input : transaction.getInputs()){
                     if (input.getOutpoint().getHash().toString().contentEquals(genesisTransactionId))

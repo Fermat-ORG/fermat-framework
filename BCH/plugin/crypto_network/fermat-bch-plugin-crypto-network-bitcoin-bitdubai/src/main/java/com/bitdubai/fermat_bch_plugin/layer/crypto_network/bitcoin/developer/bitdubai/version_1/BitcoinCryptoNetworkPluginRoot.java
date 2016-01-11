@@ -201,9 +201,8 @@ public class BitcoinCryptoNetworkPluginRoot extends AbstractPlugin implements
     }
 
     @Override
-    public List<Transaction> getBitcoinTransaction(BlockchainNetworkType blockchainNetworkType, VaultType vaultType) {
-        //todo improve this to obtain only transactions from the specified vaultype.
-        return bitcoinCryptoNetworkManager.getBitcoinTransactions(blockchainNetworkType);
+    public List<Transaction> getUnspentBitcoinTransactions(BlockchainNetworkType blockchainNetworkType) {
+        return bitcoinCryptoNetworkManager.getUnspentBitcoinTransactions(blockchainNetworkType);
     }
 
     /**
