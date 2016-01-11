@@ -1,6 +1,7 @@
 package com.bitdubai.reference_wallet.crypto_customer_wallet.common.adapters;
 
 import android.content.Context;
+import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -17,6 +18,7 @@ import com.bitdubai.reference_wallet.crypto_customer_wallet.common.holders.start
 import com.bitdubai.reference_wallet.crypto_customer_wallet.common.holders.start_negotiation.ExchangeRateViewHolder;
 import com.bitdubai.reference_wallet.crypto_customer_wallet.common.holders.start_negotiation.FooterViewHolder;
 import com.bitdubai.reference_wallet.crypto_customer_wallet.common.holders.start_negotiation.SingleChoiceViewHolder;
+import com.bitdubai.reference_wallet.crypto_customer_wallet.fragments.start_negotiation.StartNegotiationActivityFragment;
 import com.bitdubai.reference_wallet.crypto_customer_wallet.util.FragmentsCommons;
 
 import java.util.ArrayList;
@@ -32,11 +34,10 @@ public class StartNegotiationAdapter extends FermatAdapter<ClauseInformation, Fe
     private static final int TYPE_ITEM_AMOUNT_TO_BUY = 4;
     private static final int TYPE_FOOTER = 5;
 
-    private TextWatcher textWatcherListener;
-    private View.OnClickListener onClickListener;
-    private FooterViewHolder.OnFooterButtonsClickListener footerListener;
-
     private CustomerBrokerNegotiationInformation negotiationInformation;
+    private StartNegotiationActivityFragment footerListener;
+    ClauseViewHolder.Listener clauseListener;
+
 
     public StartNegotiationAdapter(Context context, CustomerBrokerNegotiationInformation negotiationInformation) {
         super(context);
@@ -52,35 +53,17 @@ public class StartNegotiationAdapter extends FermatAdapter<ClauseInformation, Fe
         return createHolder(LayoutInflater.from(context).inflate(getCardViewResource(type), viewGroup, false), type);
     }
 
-    public void setFooterListener(FooterViewHolder.OnFooterButtonsClickListener footerListener) {
-        this.footerListener = footerListener;
-    }
-
-    public void setOnClickListener(View.OnClickListener onClickListener) {
-        this.onClickListener = onClickListener;
-    }
-
-    public void setTextWatcherListener(TextWatcher textWatcherListener) {
-        this.textWatcherListener = textWatcherListener;
-    }
-
     @Override
     protected FermatViewHolder createHolder(View itemView, int type) {
         switch (type) {
             case TYPE_ITEM_SINGLE_CHOICE:
-                final SingleChoiceViewHolder singleChoiceViewHolder = new SingleChoiceViewHolder(itemView);
-                singleChoiceViewHolder.setListener(onClickListener);
-                return singleChoiceViewHolder;
+                return new SingleChoiceViewHolder(itemView);
 
             case TYPE_ITEM_EXCHANGE_RATE:
-                final ExchangeRateViewHolder exchangeRateViewHolder = new ExchangeRateViewHolder(itemView);
-                exchangeRateViewHolder.setListener(textWatcherListener);
-                return exchangeRateViewHolder;
+                return new ExchangeRateViewHolder(itemView);
 
             case TYPE_ITEM_AMOUNT_TO_BUY:
-                final AmountToBuyViewHolder amountToBuyViewHolder = new AmountToBuyViewHolder(itemView);
-                amountToBuyViewHolder.setListener(textWatcherListener);
-                return amountToBuyViewHolder;
+                return new AmountToBuyViewHolder(itemView);
 
             case TYPE_FOOTER:
                 final FooterViewHolder footerViewHolder = new FooterViewHolder(itemView);
@@ -92,7 +75,7 @@ public class StartNegotiationAdapter extends FermatAdapter<ClauseInformation, Fe
         }
     }
 
-    protected int getCardViewResource(int type) {
+    private int getCardViewResource(int type) {
         switch (type) {
             case TYPE_ITEM_SINGLE_CHOICE:
                 return R.layout.single_choice_item;
@@ -145,29 +128,41 @@ public class StartNegotiationAdapter extends FermatAdapter<ClauseInformation, Fe
 
     @Override
     protected void bindHolder(FermatViewHolder holder, ClauseInformation data, int position) {
-        ClauseViewHolder clauseViewHolder = (ClauseViewHolder) holder;
+        final ClauseViewHolder clauseViewHolder = (ClauseViewHolder) holder;
         clauseViewHolder.bindData(negotiationInformation, data);
-        setHolderResources(clauseViewHolder, data.getType(), position);
-    }
+        clauseViewHolder.getConfirmButton().setVisibility(View.GONE);
+        clauseViewHolder.setListener(clauseListener);
 
-    private void setHolderResources(ClauseViewHolder viewHolder, ClauseType type, int position) {
         final int clauseNumber = position + 1;
         final int clauseNumberImageRes = FragmentsCommons.getClauseNumberImageRes(clauseNumber);
 
-        switch (type) {
+        switch (data.getType()) {
             case CUSTOMER_CURRENCY_QUANTITY:
-                viewHolder.setViewResources(R.string.ccw_amount_to_buy, clauseNumberImageRes);
+                clauseViewHolder.setViewResources(R.string.ccw_amount_to_buy, clauseNumberImageRes);
                 break;
             case EXCHANGE_RATE:
-                viewHolder.setViewResources(R.string.exchange_rate_reference, clauseNumberImageRes);
+                clauseViewHolder.setViewResources(R.string.exchange_rate_reference, clauseNumberImageRes);
                 break;
             case BROKER_CURRENCY:
-                viewHolder.setViewResources(R.string.ccw_currency_to_pay, clauseNumberImageRes, R.string.ccw_currency_description);
+                clauseViewHolder.setViewResources(R.string.ccw_currency_to_pay, clauseNumberImageRes, R.string.ccw_currency_description);
                 break;
             case CUSTOMER_PAYMENT_METHOD:
-                viewHolder.setViewResources(R.string.payment_methods_title, clauseNumberImageRes, R.string.payment_method);
+                clauseViewHolder.setViewResources(R.string.payment_methods_title, clauseNumberImageRes, R.string.payment_method);
                 break;
         }
+    }
+
+    public void setItem(int position, ClauseInformation clause) {
+        dataSet.set(position, clause);
+        notifyItemChanged(position);
+    }
+
+    public void setFooterListener(StartNegotiationActivityFragment footerListener) {
+        this.footerListener = footerListener;
+    }
+
+    public void setClauseListener(ClauseViewHolder.Listener clauseListener) {
+        this.clauseListener = clauseListener;
     }
 
     private List<ClauseInformation> buildListOfItems() {

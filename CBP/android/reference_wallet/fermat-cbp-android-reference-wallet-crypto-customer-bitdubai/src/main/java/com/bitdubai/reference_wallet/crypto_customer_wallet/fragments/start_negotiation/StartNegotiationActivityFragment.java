@@ -13,6 +13,8 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
 
 import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractFermatFragment;
@@ -25,24 +27,32 @@ import com.bitdubai.fermat_cbp_api.all_definition.enums.ClauseType;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.NegotiationStatus;
 import com.bitdubai.fermat_cbp_api.all_definition.identity.ActorIdentity;
 import com.bitdubai.fermat_cbp_api.layer.identity.crypto_customer.interfaces.CryptoCustomerIdentity;
+import com.bitdubai.fermat_cbp_api.layer.wallet_module.common.interfaces.ClauseInformation;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.common.interfaces.CustomerBrokerNegotiationInformation;
-import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_customer.exceptions.CantGetAssociatedCryptoCustomerIdentityException;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_customer.interfaces.CryptoCustomerWalletManager;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_customer.interfaces.CryptoCustomerWalletModuleManager;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedWalletExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 import com.bitdubai.reference_wallet.crypto_customer_wallet.R;
-import com.bitdubai.reference_wallet.crypto_customer_wallet.common.holders.negotiation_details.FooterViewHolder;
+import com.bitdubai.reference_wallet.crypto_customer_wallet.common.adapters.StartNegotiationAdapter;
+import com.bitdubai.reference_wallet.crypto_customer_wallet.common.holders.start_negotiation.ClauseViewHolder;
+import com.bitdubai.reference_wallet.crypto_customer_wallet.common.holders.start_negotiation.FooterViewHolder;
 import com.bitdubai.reference_wallet.crypto_customer_wallet.common.models.EmptyCustomerBrokerNegotiationInformation;
 import com.bitdubai.reference_wallet.crypto_customer_wallet.common.models.TestData;
+import com.bitdubai.reference_wallet.crypto_customer_wallet.fragments.common.SimpleListDialogFragment;
 import com.bitdubai.reference_wallet.crypto_customer_wallet.session.CryptoCustomerWalletSession;
+
+import java.math.BigDecimal;
+import java.text.DecimalFormat;
+import java.util.ArrayList;
+import java.util.Map;
 
 
 /**
  * A simple {@link Fragment} subclass.
  */
 public class StartNegotiationActivityFragment extends AbstractFermatFragment<CryptoCustomerWalletSession, ResourceProviderManager>
-        implements FooterViewHolder.OnFooterButtonsClickListener {
+        implements FooterViewHolder.OnFooterButtonsClickListener, ClauseViewHolder.Listener {
 
     private static final String TAG = "StartNegotiationFrag";
 
@@ -52,9 +62,10 @@ public class StartNegotiationActivityFragment extends AbstractFermatFragment<Cry
     private FermatTextView brokerName;
     private RecyclerView recyclerView;
 
-    private CryptoCustomerWalletManager walletmanager;
+    private CryptoCustomerWalletManager walletManager;
     private ErrorManager errorManager;
-    private CustomerBrokerNegotiationInformation negotiationInfo;
+    private EmptyCustomerBrokerNegotiationInformation negotiationInfo;
+    private StartNegotiationAdapter adapter;
 
 
     public static StartNegotiationActivityFragment newInstance() {
@@ -66,7 +77,7 @@ public class StartNegotiationActivityFragment extends AbstractFermatFragment<Cry
         super.onCreate(savedInstanceState);
         try {
             CryptoCustomerWalletModuleManager moduleManager = appSession.getModuleManager();
-            walletmanager = moduleManager.getCryptoCustomerWallet(appSession.getAppPublicKey());
+            walletManager = moduleManager.getCryptoCustomerWallet(appSession.getAppPublicKey());
             errorManager = appSession.getErrorManager();
 
             negotiationInfo = createNewEmptyNegotiationInfo();
@@ -86,6 +97,76 @@ public class StartNegotiationActivityFragment extends AbstractFermatFragment<Cry
         bindData();
 
         return layout;
+    }
+
+    @Override
+    public void onClauseValueChanged(EditText triggerView, ClauseInformation clause, String newValue, int position) {
+        final ClauseType type = clause.getType();
+        final ClauseInformation newClause = negotiationInfo.putClause(clause, newValue);
+        switch (type) {
+            case EXCHANGE_RATE:
+                final Map<ClauseType, ClauseInformation> clauses = negotiationInfo.getClauses();
+                final ClauseInformation customerCurrencyQty = clauses.get(ClauseType.CUSTOMER_CURRENCY_QUANTITY);
+                final ClauseInformation brokerCurrencyQty = clauses.get(ClauseType.BROKER_CURRENCY_QUANTITY);
+
+                final BigDecimal exchangeRate = BigDecimal.valueOf(Double.valueOf(newValue));
+                final BigDecimal amountToBuy = BigDecimal.valueOf(Double.valueOf(customerCurrencyQty.getValue()));
+                final String format = DecimalFormat.getInstance().format(amountToBuy.multiply(exchangeRate).doubleValue());
+                negotiationInfo.putClause(brokerCurrencyQty, format);
+
+                break;
+            case CUSTOMER_CURRENCY_QUANTITY:
+                break;
+        }
+
+        adapter.setItem(position, newClause);
+        triggerView.setText(newValue);
+    }
+
+    @Override
+    public void onClauseCLicked(final Button triggerView, final ClauseInformation clause, int position) {
+        SimpleListDialogFragment dialogFragment;
+        final ClauseType type = clause.getType();
+        switch (type) {
+            case BROKER_CURRENCY:
+                dialogFragment = new SimpleListDialogFragment<>();
+                dialogFragment.configure("Currencies", new ArrayList<Currency>());
+                dialogFragment.setListener(new SimpleListDialogFragment.ItemSelectedListener<Currency>() {
+                    @Override
+                    public void onItemSelected(Currency selectedItem) {
+                        negotiationInfo.putClause(clause, selectedItem.getCode());
+                        triggerView.setText(selectedItem.getFriendlyName());
+                        adapter.notifyDataSetChanged();
+                    }
+                });
+
+                dialogFragment.show(getFragmentManager(), "brokerCurrenciesDialog");
+                break;
+
+            case CUSTOMER_PAYMENT_METHOD:
+                dialogFragment = new SimpleListDialogFragment<>();
+                dialogFragment.configure("Payment Methods", new ArrayList<String>());
+                dialogFragment.setListener(new SimpleListDialogFragment.ItemSelectedListener<String>() {
+                    @Override
+                    public void onItemSelected(String selectedItem) {
+                        negotiationInfo.putClause(clause, selectedItem);
+                        triggerView.setText(selectedItem);
+                    }
+                });
+
+                dialogFragment.show(getFragmentManager(), "paymentMethodsDialog");
+                break;
+        }
+    }
+
+    @Override
+    public void onSendButtonClicked() {
+        // TODO
+    }
+
+    @Override
+    public void onAddNoteButtonClicked() {
+        // DO NOTHING..
     }
 
     private void initViews(View rootView) {
@@ -119,24 +200,14 @@ public class StartNegotiationActivityFragment extends AbstractFermatFragment<Cry
         brokerName.setText(broker.getAlias());
         sellingDetails.setText(getResources().getString(R.string.ccw_start_selling_details, currencyToBuy.getFriendlyName()));
 
-        // negotiationSteps = walletManager.getSteps(negotiationInfo);
-        // StartNegotiationAdapter adapter = new StartNegotiationAdapter(getActivity(), appSession, walletManager, negotiationInfo, negotiationSteps);
-        // adapter.setFooterListener(this);
+        adapter = new StartNegotiationAdapter(getActivity(), negotiationInfo);
+        adapter.setFooterListener(this);
+        adapter.setClauseListener(this);
 
-        // recyclerView.setAdapter(adapter);
+        recyclerView.setAdapter(adapter);
     }
 
-    @Override
-    public void onAddNoteButtonClicked() {
-        // TODO
-    }
-
-    @Override
-    public void onSendButtonClicked() {
-        // TODO
-    }
-
-    private CustomerBrokerNegotiationInformation createNewEmptyNegotiationInfo() {
+    private EmptyCustomerBrokerNegotiationInformation createNewEmptyNegotiationInfo() {
         try {
             EmptyCustomerBrokerNegotiationInformation negotiationInfo = TestData.newEmptyNegotiationInformation();
             negotiationInfo.setStatus(NegotiationStatus.WAITING_FOR_BROKER);
@@ -144,16 +215,16 @@ public class StartNegotiationActivityFragment extends AbstractFermatFragment<Cry
             String currencyToBuy = (appSession.getCurrencyToBuy() != null) ? appSession.getCurrencyToBuy().getCode() : null;
             negotiationInfo.putClause(ClauseType.CUSTOMER_CURRENCY, currencyToBuy);
             negotiationInfo.putClause(ClauseType.BROKER_CURRENCY, null);
-            negotiationInfo.putClause(ClauseType.CUSTOMER_CURRENCY_QUANTITY, null);
-            negotiationInfo.putClause(ClauseType.BROKER_CURRENCY_QUANTITY, null);
-            negotiationInfo.putClause(ClauseType.EXCHANGE_RATE, null);
+            negotiationInfo.putClause(ClauseType.CUSTOMER_CURRENCY_QUANTITY, "0.0");
+            negotiationInfo.putClause(ClauseType.BROKER_CURRENCY_QUANTITY, "0.0");
+            negotiationInfo.putClause(ClauseType.EXCHANGE_RATE, "0.0");
             negotiationInfo.putClause(ClauseType.CUSTOMER_PAYMENT_METHOD, null);
 
             final ActorIdentity brokerIdentity = appSession.getSelectedBrokerIdentity();
             if (brokerIdentity != null)
                 negotiationInfo.setBroker(brokerIdentity);
 
-            final CryptoCustomerIdentity customerIdentity = walletmanager.getAssociatedIdentity();
+            final CryptoCustomerIdentity customerIdentity = walletManager.getAssociatedIdentity();
             if (customerIdentity != null)
                 negotiationInfo.setCustomer(customerIdentity);
 

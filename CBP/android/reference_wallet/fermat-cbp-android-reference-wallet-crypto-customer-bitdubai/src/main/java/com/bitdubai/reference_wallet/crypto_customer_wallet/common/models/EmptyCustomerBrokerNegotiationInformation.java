@@ -32,7 +32,7 @@ public class EmptyCustomerBrokerNegotiationInformation implements CustomerBroker
         negotiationId = UUID.randomUUID();
     }
 
-    public void putClause(final ClauseType clauseType, final String value) {
+    public ClauseInformation putClause(final ClauseType clauseType, final String value) {
         ClauseInformation clauseInformation = new ClauseInformation() {
             @Override
             public UUID getClauseID() {
@@ -56,6 +56,38 @@ public class EmptyCustomerBrokerNegotiationInformation implements CustomerBroker
         };
 
         clauses.put(clauseType, clauseInformation);
+
+        return clauseInformation;
+    }
+
+    public ClauseInformation putClause(final ClauseInformation clause, final String value) {
+        final ClauseType type = clause.getType();
+
+        ClauseInformation clauseInformation = new ClauseInformation() {
+            @Override
+            public UUID getClauseID() {
+                return clause.getClauseID();
+            }
+
+            @Override
+            public ClauseType getType() {
+                return type;
+            }
+
+            @Override
+            public String getValue() {
+                return value;
+            }
+
+            @Override
+            public ClauseStatus getStatus() {
+                return clause.getStatus();
+            }
+        };
+
+        clauses.put(type, clauseInformation);
+
+        return clauseInformation;
     }
 
     @Override

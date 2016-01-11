@@ -12,9 +12,7 @@ import com.bitdubai.reference_wallet.crypto_customer_wallet.R;
 /**
  * Created by nelson on 10/01/16.
  */
-public class DateTimeViewHolder extends ClauseViewHolder {
-
-    private View.OnClickListener listener;
+public class DateTimeViewHolder extends ClauseViewHolder implements View.OnClickListener {
 
     private Button buttonDate;
     private Button buttonTime;
@@ -27,14 +25,14 @@ public class DateTimeViewHolder extends ClauseViewHolder {
         descriptionTextView = (TextView) itemView.findViewById(R.id.ccw_date_time_description_text);
 
         buttonDate = (Button) itemView.findViewById(R.id.ccw_date_value);
-        buttonDate.setOnClickListener(listener);
-
+        buttonDate.setOnClickListener(this);
         buttonTime = (Button) itemView.findViewById(R.id.ccw_time_value);
-        buttonTime.setOnClickListener(listener);
+        buttonTime.setOnClickListener(this);
     }
 
     @Override
     public void bindData(CustomerBrokerNegotiationInformation data, ClauseInformation clause) {
+        super.bindData(data, clause);
 
         java.text.DateFormat timeFormat = DateFormat.getTimeFormat(itemView.getContext());
         java.text.DateFormat dateFormat = DateFormat.getDateFormat(itemView.getContext());
@@ -44,15 +42,16 @@ public class DateTimeViewHolder extends ClauseViewHolder {
         buttonDate.setText(dateFormat.format(timeInMillis));
     }
 
-    public void setDateTimeListener(View.OnClickListener listener) {
-        this.listener = listener;
-    }
-
     @Override
     public void setViewResources(int titleRes, int positionImgRes, int... stringResources) {
         titleTextView.setText(titleRes);
         clauseNumberImageView.setImageResource(positionImgRes);
         descriptionTextView.setText(stringResources[0]);
+    }
+
+    @Override
+    public void onClick(View view) {
+        listener.onClauseCLicked((Button) view, clause);
     }
 
     @Override

@@ -2,6 +2,7 @@ package com.bitdubai.reference_wallet.crypto_customer_wallet.common.holders.star
 
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -18,6 +19,11 @@ public abstract class ClauseViewHolder extends FermatViewHolder {
     protected ImageView clauseNumberImageView;
     protected TextView titleTextView;
 
+    protected Listener listener;
+    protected ClauseInformation clause;
+    protected CustomerBrokerNegotiationInformation negotiationInformation;
+    protected int clausePosition;
+
     public ClauseViewHolder(View itemView) {
         super(itemView);
 
@@ -30,7 +36,15 @@ public abstract class ClauseViewHolder extends FermatViewHolder {
         return confirmButton;
     }
 
-    public abstract void bindData(CustomerBrokerNegotiationInformation data, ClauseInformation clause);
+    public void setListener(Listener listener) {
+        this.listener = listener;
+    }
+
+    public void bindData(CustomerBrokerNegotiationInformation negotiationInformation, ClauseInformation clause, int clausePosition) {
+        this.negotiationInformation = negotiationInformation;
+        this.clause = clause;
+        this.clausePosition = clausePosition;
+    }
 
     public abstract void setViewResources(int titleRes, int positionImgRes, int... stringResources);
 
@@ -39,4 +53,10 @@ public abstract class ClauseViewHolder extends FermatViewHolder {
     protected abstract int getClauseNumberImageViewRes();
 
     protected abstract int getTitleTextViewRes();
+
+    public interface Listener {
+        void onClauseValueChanged(EditText triggerView, ClauseInformation clause, String newValue, int clausePosition);
+
+        void onClauseCLicked(Button triggerView, ClauseInformation clause, int clausePosition);
+    }
 }

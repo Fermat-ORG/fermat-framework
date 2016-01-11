@@ -13,9 +13,8 @@ import com.bitdubai.reference_wallet.crypto_customer_wallet.fragments.common.Sin
 /**
  * Created by nelson on 10/01/16.
  */
-public class SingleChoiceViewHolder extends ClauseViewHolder {
+public class SingleChoiceViewHolder extends ClauseViewHolder implements View.OnClickListener {
 
-    private View.OnClickListener listener;
     private Button buttonValue;
     private TextView descriptionTextView;
 
@@ -24,16 +23,14 @@ public class SingleChoiceViewHolder extends ClauseViewHolder {
 
         descriptionTextView = (TextView) itemView.findViewById(R.id.ccw_description_text);
         buttonValue = (Button) itemView.findViewById(R.id.ccw_single_choice_value);
-        buttonValue.setOnClickListener(listener);
+        buttonValue.setOnClickListener(this);
     }
 
     @Override
     public void bindData(CustomerBrokerNegotiationInformation data, ClauseInformation clause) {
-        buttonValue.setText(clause.getValue());
-    }
+        super.bindData(data, clause);
 
-    public void setListener(View.OnClickListener listener) {
-        this.listener = listener;
+        buttonValue.setText(clause.getValue());
     }
 
     @Override
@@ -41,6 +38,11 @@ public class SingleChoiceViewHolder extends ClauseViewHolder {
         titleTextView.setText(titleRes);
         clauseNumberImageView.setImageResource(positionImgRes);
         descriptionTextView.setText(stringResources[0]);
+    }
+
+    @Override
+    public void onClick(View view) {
+        listener.onClauseCLicked(buttonValue, clause);
     }
 
     @Override
