@@ -170,7 +170,7 @@ public class AssetCryptoVaultManager  {
      * @return the Transaction hash
      * @throws CantSendAssetBitcoinsToUserException
      */
-    public String sendAssetBitcoins(String genesisTransactionId, CryptoAddress addressTo, long amount) throws CantSendAssetBitcoinsToUserException{
+    public String sendAssetBitcoins(String genesisTransactionId, String genesisBlock, CryptoAddress addressTo) throws CantSendAssetBitcoinsToUserException{
         /**
          * I get the network for this address.
          */
@@ -196,6 +196,14 @@ public class AssetCryptoVaultManager  {
                 }
             }
 
+            /**
+             * If I still don't have it, Then I will look up the hierarchy, at least 10 times.
+             */
+
+
+            /**
+             * If I still couldn't find it, I cant go on.
+             */
             if (genesisTransaction  == null){
                 StringBuilder output = new StringBuilder("The specified transaction hash ");
                 output.append(genesisTransactionId);
