@@ -92,7 +92,9 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
 import static android.widget.Toast.LENGTH_SHORT;
@@ -136,6 +138,7 @@ public class SendTransactionFragment2 extends FermatWalletExpandableListFragment
     private FermatTextView txt_balance_amount_type;
     SettingsManager<BitcoinWalletSettings> settingsManager;
     private int progress1=1;
+    private  Map<Integer, Long> runningDailyBalance;
 
     public static SendTransactionFragment2 newInstance() {
         return new SendTransactionFragment2();
@@ -162,6 +165,8 @@ public class SendTransactionFragment2 extends FermatWalletExpandableListFragment
 //                startWizard(WizardTypes.CCP_WALLET_BITCOIN_START_WIZARD.getKey(),appSession, walletSettings, walletResourcesProviderManager, null);
 //            }
              settingsManager = referenceWalletSession.getModuleManager().getSettingsManager();
+
+
             BitcoinWalletSettings bitcoinWalletSettings = null;
             try {
                  bitcoinWalletSettings = settingsManager.loadAndGetSettings(referenceWalletSession.getAppPublicKey());
@@ -173,10 +178,12 @@ public class SendTransactionFragment2 extends FermatWalletExpandableListFragment
                 bitcoinWalletSettings = new BitcoinWalletSettings();
                 bitcoinWalletSettings.setIsContactsHelpEnabled(true);
                 bitcoinWalletSettings.setIsPresentationHelpEnabled(true);
+
                 settingsManager.persistSettings(referenceWalletSession.getAppPublicKey(),bitcoinWalletSettings);
             }
 
             final BitcoinWalletSettings bitcoinWalletSettingsTemp = bitcoinWalletSettings;
+
 
             Handler handlerTimer = new Handler();
             handlerTimer.postDelayed(new Runnable(){
@@ -336,7 +343,7 @@ public class SendTransactionFragment2 extends FermatWalletExpandableListFragment
 
         circularProgressBar = (CircularProgressBar) balance_header.findViewById(R.id.progress);
 
-        circularProgressBar.setProgressValue(progress1);
+        circularProgressBar.setProgressValue(getBalanceAverage());
         circularProgressBar.setProgressValue2(3);
         circularProgressBar.setBackgroundProgressColor(Color.parseColor("#022346"));
         circularProgressBar.setProgressColor(Color.parseColor("#05ddd2"));
@@ -980,7 +987,68 @@ public class SendTransactionFragment2 extends FermatWalletExpandableListFragment
     }
 
 
+    private int getBalanceAverage(){
+        int cant = runningDailyBalance.size();
+        long balanceSum = 0;
+        int average = 0;
+        try {
 
+            for (Map.Entry<Integer, Long> entry :  runningDailyBalance.entrySet())
+            {
+                balanceSum += entry.getValue();
+            }
+
+             average = (int) (balanceSum / cant);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return average;
+    }
+
+    private void setRunningDailyBalance()
+    {
+        try {
+
+
+            runningDailyBalance = new HashMap<Long, Long>();
+
+            BitcoinWalletSettings bitcoinWalletSettings = null;
+            try {
+                bitcoinWalletSettings = settingsManager.loadAndGetSettings(referenceWalletSession.getAppPublicKey());
+            }catch (Exception e){
+                bitcoinWalletSettings = null;
+            }
+
+            if(bitcoinWalletSettings == null){
+
+                runningDailyBalance.put(runningDailyBalance.size() + 1,  moduleManager.getBalance(BalanceType.AVAILABLE,referenceWalletSession.getAppPublicKey()));
+                bitcoinWalletSettings.setRunningDailyBalance(runningDailyBalance);
+                settingsManager.persistSettings(referenceWalletSession.getAppPublicKey(),bitcoinWalletSettings);
+            }
+            else {
+
+                if (bitcoinWalletSettings.getRunningDailyBalance() == null){
+                    runningDailyBalance.put(0,  moduleManager.getBalance(BalanceType.AVAILABLE,referenceWalletSession.getAppPublicKey()));
+                }
+                else
+                {
+                    runningDailyBalance = bitcoinWalletSettings.getRunningDailyBalance();
+                    //verify that I have this day added
+
+                    //if I have 30 days I start counting again
+                    runningDailyBalance.put(runningDailyBalance.size() + 1,  moduleManager.getBalance(BalanceType.AVAILABLE,referenceWalletSession.getAppPublicKey()));
+                }
+
+
+                bitcoinWalletSettings.setRunningDailyBalance(runningDailyBalance);
+                settingsManager.persistSettings(referenceWalletSession.getAppPublicKey(), bitcoinWalletSettings);
+
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
 
 
 }
