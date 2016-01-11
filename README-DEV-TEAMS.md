@@ -278,7 +278,13 @@ In the Crypto Broker Platform we are responsible for a large part of user level 
 ---
       Email:   josvilchezalmera@gmail.com
       Skype:   josvilchezalmera
-      Github:  https://github.com/  
+      Github:  https://github.com/JDVilchez  
+
+* **Richard Lozada [New Developer]**<br/>
+---
+      Email:   richardalozada@hotmail.com
+      Skype:   richardalozada
+      Github:  https://github.com/Lozadaa 
 
 We are also ameteur philosophers, passionate about esoteric topics as video games.
 
