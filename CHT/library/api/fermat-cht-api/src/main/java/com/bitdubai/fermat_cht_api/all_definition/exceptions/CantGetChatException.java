@@ -8,7 +8,7 @@ public class CantGetChatException extends CHTException {
     /**
      * Represent the default message
      */
-    public static final String DEFAULT_MESSAGE = "CANNOT PERSISTS AN CHAT IN DATABASE";
+    public static final String DEFAULT_MESSAGE = "CANNOT GET A CHAT FROM DATABASE";
 
     /**
      * Constructor with parameters

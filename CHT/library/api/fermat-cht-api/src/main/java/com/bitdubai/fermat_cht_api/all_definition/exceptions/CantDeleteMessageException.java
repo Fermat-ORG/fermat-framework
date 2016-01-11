@@ -3,7 +3,7 @@ package com.bitdubai.fermat_cht_api.all_definition.exceptions;
 /**
  * Created by Franklin Marcano on 09/01/16.
  */
-public class CantDeleteMesssageException extends CHTException {
+public class CantDeleteMessageException extends CHTException {
 
     /**
      * Represent the default message
@@ -18,7 +18,7 @@ public class CantDeleteMesssageException extends CHTException {
      * @param context
      * @param possibleReason
      */
-    public CantDeleteMesssageException(final String message, final Exception cause, final String context, final String possibleReason) {
+    public CantDeleteMessageException(final String message, final Exception cause, final String context, final String possibleReason) {
         super(message, cause, context, possibleReason);
     }
 
@@ -29,7 +29,7 @@ public class CantDeleteMesssageException extends CHTException {
      * @param context
      * @param possibleReason
      */
-    public CantDeleteMesssageException(Exception cause, String context, String possibleReason) {
+    public CantDeleteMessageException(Exception cause, String context, String possibleReason) {
         super(DEFAULT_MESSAGE , cause, context, possibleReason);
     }
 
@@ -39,7 +39,7 @@ public class CantDeleteMesssageException extends CHTException {
      * @param message
      * @param cause
      */
-    public CantDeleteMesssageException(final String message, final Exception cause) {
+    public CantDeleteMessageException(final String message, final Exception cause) {
         this(message, cause, "", "");
     }
 
@@ -48,7 +48,7 @@ public class CantDeleteMesssageException extends CHTException {
      *
      * @param message
      */
-    public CantDeleteMesssageException(final String message) {
+    public CantDeleteMessageException(final String message) {
         this(message, null);
     }
 
@@ -57,7 +57,7 @@ public class CantDeleteMesssageException extends CHTException {
      *
      * @param exception
      */
-    public CantDeleteMesssageException(final Exception exception) {
+    public CantDeleteMessageException(final Exception exception) {
         this(exception.getMessage());
         setStackTrace(exception.getStackTrace());
     }
@@ -65,7 +65,7 @@ public class CantDeleteMesssageException extends CHTException {
     /**
      * Constructor
      */
-    public CantDeleteMesssageException() {
+    public CantDeleteMessageException() {
         this(DEFAULT_MESSAGE);
     }
 }

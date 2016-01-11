@@ -1,7 +1,8 @@
 package com.bitdubai.fermat_cht_api.layer.middleware.interfaces;
 
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.FermatManager;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantDeleteChatException;
-import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantDeleteMesssageException;
+import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantDeleteMessageException;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantGetChatException;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantGetMessageException;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantNewEmptyChatException;
@@ -9,7 +10,6 @@ import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantNewEmptyMessage
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantSaveChatException;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantSaveMessageException;
 
-import java.sql.Date;
 import java.util.List;
 import java.util.UUID;
 
@@ -17,7 +17,7 @@ import java.util.UUID;
  * Created by miguel payarez (miguel_payarez@hotmail.com) on 29/12/15.
  * Update by Manuel Perez on 08/01/2016 (fix naming conventions)
  */
-public interface ChatManager {
+public interface ChatManager extends FermatManager{
 
     //Documentar
     List<Chat> getChats() throws CantGetChatException;
@@ -40,5 +40,5 @@ public interface ChatManager {
 
     void saveMessage(Message message) throws CantSaveMessageException;
 
-    void deleteMessage(Message message) throws CantDeleteMesssageException;
+    void deleteMessage(Message message) throws CantDeleteMessageException;
 }

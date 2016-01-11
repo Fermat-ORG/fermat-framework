@@ -14,6 +14,7 @@ import java.sql.Timestamp;
 public interface ChatManager extends FermatManager, TransactionProtocolManager<ChatMetada> {
 
     //TODO IN CONSTRUCTION
+    //TODO FROM Manuel: Please, refactor this interface, use UUID instead integer for Id, check the new version of chat middleware interface.
     void sendChatMetadata(Integer idChat,Integer idObjecto,String localActorType,String localActorPubKey,String remoteActorType,String remoteActorPubKey, String chatName,ChatMessageStatus chatStatus, Timestamp date, Integer idMessage, String message, DistributionStatus distributionStatus) throws CantSendChatMessageMetadataException;
 
     void sendChatMessageNewStatusNotification() throws CantSendChatMessageNewStatusNotificationException;
