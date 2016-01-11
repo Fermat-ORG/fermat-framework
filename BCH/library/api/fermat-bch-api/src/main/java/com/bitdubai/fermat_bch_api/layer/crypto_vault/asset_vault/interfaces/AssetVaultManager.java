@@ -44,12 +44,12 @@ public interface AssetVaultManager extends FermatManager, PlatformCryptoVault {
     /**
      * Sends the bitcoins generated from the genesisTransactionId to the specified User Actor addres.
      * @param genesisTransactionId
+     * @param genesisBlock
      * @param addressTo
-     * @param amount
-     * @return the generated Transaction Hash
+     * @return
      * @throws CantSendAssetBitcoinsToUserException
      */
-    String sendAssetBitcoins(String genesisTransactionId, CryptoAddress addressTo, long amount) throws CantSendAssetBitcoinsToUserException;
+    String sendAssetBitcoins(String genesisTransactionId, String genesisBlock, CryptoAddress addressTo) throws CantSendAssetBitcoinsToUserException;
 
     /**
      * Gets the amount of unused keys that are available from the master account.

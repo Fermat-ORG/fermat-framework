@@ -126,6 +126,15 @@ public interface BitcoinNetworkManager extends TransactionSender<CryptoTransacti
      */
     List<Transaction> getUnspentBitcoinTransactions(BlockchainNetworkType blockchainNetworkType);
 
+
+    /**
+     * Get the bitcoin transactions stored by the CryptoNetwork
+     * @param blockchainNetworkType the network type
+     * @return the bitcoin transaction
+     */
+    List<Transaction> getBitcoinTransactions(BlockchainNetworkType blockchainNetworkType);
+
+
     /**
      * Will get all the CryptoTransactions stored in the CryptoNetwork which are a child of a parent Transaction
      * @param parentHash
