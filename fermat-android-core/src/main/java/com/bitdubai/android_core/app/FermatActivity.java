@@ -1,5 +1,7 @@
 package com.bitdubai.android_core.app;
 
+import android.animation.Animator;
+import android.animation.AnimatorListenerAdapter;
 import android.app.ActionBar;
 import android.app.Notification;
 import android.app.NotificationManager;
@@ -41,6 +43,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
+import android.view.animation.AccelerateDecelerateInterpolator;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.ArrayAdapter;
 import android.widget.FrameLayout;
@@ -98,7 +101,6 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.Layers;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.enums.UISource;
-import com.bitdubai.fermat_api.layer.all_definition.enums.interfaces.FermatPluginsEnum;
 import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterException;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.Activity;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.MainMenu;
@@ -147,6 +149,9 @@ import java.util.Observer;
 import java.util.Queue;
 import java.util.Set;
 import java.util.Vector;
+
+import io.codetail.animation.SupportAnimator;
+import io.codetail.animation.ViewAnimationUtils;
 
 import static android.widget.Toast.LENGTH_LONG;
 import static android.widget.Toast.LENGTH_SHORT;
@@ -223,6 +228,8 @@ public abstract class FermatActivity extends AppCompatActivity
 
     RemoteViews mContentView;
     private Notification.Builder notification;
+    private boolean hidden = true;
+
     /**
      * Called when the activity is first created
      *
@@ -354,7 +361,7 @@ public abstract class FermatActivity extends AppCompatActivity
             paintTitleBar(titleBar, activity);
 
             if(moduleManager!=null && sideMenu!=null) sideMenu.setNotifications(moduleManager.getMenuNotifications());
-            paintSideMenu(activity, sideMenu,appConnections);
+            paintSideMenu(activity, sideMenu, appConnections);
 
             if(appConnections!=null) {
                 paintFooter(activity.getFooter(), appConnections.getFooterViewPainter());
@@ -390,6 +397,96 @@ public abstract class FermatActivity extends AppCompatActivity
 
         }
     }
+
+    @Override
+    public void setMenuSettings(View viewGroup, final View container_title){
+        final LinearLayout mRevealView = (LinearLayout) findViewById(R.id.reveal_items);
+        mRevealView.setVisibility(View.INVISIBLE);
+        final View view = findViewById(R.id.reveal);
+        viewGroup.findViewById(R.id.img_fermat_setting).setOnClickListener(new View.OnClickListener() {
+                                                                     @Override
+                                                                     public void onClick(View v) {
+                                                                         //Intent i = new Intent(getApplicationContext(),MainActivity2.class);
+                                                                         //startActivity(i);
+                                                                         Log.i("INFORMATION", "TOCADO");
+                                                                         int cx = (mRevealView.getLeft() + mRevealView.getRight());
+//                int cy = (mRevealView.getTop() + mRevealView.getBottom())/2;
+                                                                         int cy = mRevealView.getTop();
+
+                                                                         int radius = Math.max(mRevealView.getWidth(), mRevealView.getHeight());
+
+                                                                         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
+
+
+                                                                             SupportAnimator animator =
+                                                                                     ViewAnimationUtils.createCircularReveal(mRevealView, cx, cy, 0, radius);
+                                                                             animator.setInterpolator(new AccelerateDecelerateInterpolator());
+                                                                             animator.setDuration(800);
+
+                                                                             SupportAnimator animator_reverse = animator.reverse();
+
+                                                                             if (hidden) {
+                                                                                 mRevealView.setVisibility(View.VISIBLE);
+                                                                                 view.bringToFront();
+                                                                                 animator.start();
+                                                                                 hidden = false;
+                                                                             } else {
+                                                                                 animator_reverse.addListener(new SupportAnimator.AnimatorListener() {
+                                                                                     @Override
+                                                                                     public void onAnimationStart() {
+
+                                                                                     }
+
+                                                                                     @Override
+                                                                                     public void onAnimationEnd() {
+                                                                                         mRevealView.setVisibility(View.INVISIBLE);
+                                                                                         hidden = true;
+
+                                                                                     }
+
+                                                                                     @Override
+                                                                                     public void onAnimationCancel() {
+
+                                                                                     }
+
+                                                                                     @Override
+                                                                                     public void onAnimationRepeat() {
+
+                                                                                     }
+                                                                                 });
+                                                                                 animator_reverse.start();
+
+                                                                             }
+                                                                         } else {
+                                                                             if (hidden) {
+                                                                                 android.animation.Animator anim = android.view.ViewAnimationUtils.createCircularReveal(mRevealView, cx, cy, 0, radius);
+                                                                                 mRevealView.setVisibility(View.VISIBLE);
+                                                                                 FrameLayout frameLayout = (FrameLayout) findViewById(R.id.container_main);
+                                                                                 frameLayout.bringChildToFront(mRevealView);
+                                                                                 anim.start();
+                                                                                 hidden = false;
+
+                                                                             } else {
+                                                                                 android.animation.Animator anim = android.view.ViewAnimationUtils.createCircularReveal(mRevealView, cx, cy, radius, 0);
+                                                                                 anim.addListener(new AnimatorListenerAdapter() {
+                                                                                     @Override
+                                                                                     public void onAnimationEnd(android.animation.Animator animation) {
+                                                                                         super.onAnimationEnd(animation);
+                                                                                         mRevealView.setVisibility(View.INVISIBLE);
+                                                                                         container_title.setVisibility(View.VISIBLE);
+                                                                                         hidden = true;
+                                                                                     }
+                                                                                 });
+                                                                                 anim.start();
+
+                                                                             }
+                                                                         }
+                                                                     }
+                                                                 }
+        );
+    }
+
+
 
     private void paintFooter(FermatFooter footer,FooterViewPainter footerViewPainter) {
         try {

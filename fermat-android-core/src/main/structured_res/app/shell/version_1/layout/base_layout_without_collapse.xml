@@ -33,16 +33,89 @@
                 />
         </android.support.design.widget.AppBarLayout>
 
+
             <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_weight="20">
+                android:layout_weight="20"
+                android:id="@+id/container_main">
 
-            <android.support.v4.view.ViewPager
-                android:id="@+id/pager"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                />
+                <android.support.v4.view.ViewPager
+                    android:id="@+id/pager"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    />
+
+                <io.codetail.widget.RevealFrameLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/reveal"
+                    >
+                    <LinearLayout
+                        android:id="@+id/reveal_items"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:background="#fff">
+                        <LinearLayout
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:gravity="center"
+                            android:orientation="vertical">
+                            <ImageButton
+                                android:layout_width="70dp"
+                                android:layout_height="70dp"
+                                android:background="@drawable/ic_03" />
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="16dp"
+                                android:text="Gallery"
+                                android:textColor="#a9a9a9"/>
+
+                        </LinearLayout>
+                        <!-- Other 2 icons here-->
+                        <LinearLayout
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:gravity="center"
+                            android:orientation="vertical">
+                            <ImageButton
+                                android:layout_width="70dp"
+                                android:layout_height="70dp"
+                                android:background="@drawable/ic_03" />
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="16dp"
+                                android:text="Gallery"
+                                android:textColor="#a9a9a9"/>
+
+                        </LinearLayout>
+                        <LinearLayout
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:gravity="center"
+                            android:orientation="vertical">
+                            <ImageButton
+                                android:layout_width="70dp"
+                                android:layout_height="70dp"
+                                android:background="@drawable/ic_03" />
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="16dp"
+                                android:text="Gallery"
+                                android:textColor="#a9a9a9"/>
+
+                        </LinearLayout>
+
+                    </LinearLayout>
+                </io.codetail.widget.RevealFrameLayout>
+
 
             <RadioGroup
                 android:layout_width="wrap_content"
@@ -112,28 +185,29 @@
 
         </FrameLayout>
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="95dp"
-            android:orientation="vertical"
-            android:paddingLeft="1dp"
-            android:paddingRight="1dp"
-            android:paddingStart="1dp"
-            android:id="@+id/bottom_navigation_container"
-            >
 
-
-            <android.support.v7.widget.RecyclerView
-                android:id="@+id/bottom_navigation_recycler"
+            <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:overScrollMode="never"
-                android:layout_gravity="center"
-                />
+                android:layout_height="95dp"
+                android:orientation="vertical"
+                android:paddingLeft="1dp"
+                android:paddingRight="1dp"
+                android:paddingStart="1dp"
+                android:id="@+id/bottom_navigation_container"
+                >
+
+
+                <android.support.v7.widget.RecyclerView
+                    android:id="@+id/bottom_navigation_recycler"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:overScrollMode="never"
+                    android:layout_gravity="center"
+                    />
 
 
 
-        </LinearLayout>
+            </LinearLayout>
 
     </LinearLayout>
 
