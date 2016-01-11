@@ -141,6 +141,8 @@ public enum Activities implements FermatEnum {
     CBP_CRYPTO_BROKER_WALLET_CREATE_NEW_LOCATION_IN_WIZARD("CBPCBWCNLIW"),
     CBP_CRYPTO_BROKER_WALLET_SETTINGS_MY_LOCATIONS("CBPCBWSML"),
     CBP_CRYPTO_BROKER_WALLET_CREATE_NEW_LOCATION_IN_SETTINGS("CBPCBWCNLIS"),
+    CBP_CRYPTO_BROKER_WALLET_SETTINGS_BANK_ACCOUNT("CBPCBWSSBA"),
+    CBP_CRYPTO_BROKER_WALLET_SETTINGS_MERCHANDISES("CBPCBWSSM"),
 
     // Crypto Customer Wallet
     CBP_CRYPTO_CUSTOMER_WALLET_HOME("CBPCCWH"),
@@ -402,6 +404,8 @@ public enum Activities implements FermatEnum {
                 return CBP_CRYPTO_BROKER_WALLET_SETTINGS_MY_LOCATIONS;
             case "CBPCBWCNLIS":
                 return CBP_CRYPTO_BROKER_WALLET_CREATE_NEW_LOCATION_IN_SETTINGS;
+            case "CBPCBWSSM":
+                return CBP_CRYPTO_BROKER_WALLET_SETTINGS_MERCHANDISES;
             case "CBPCCWH":
                 return CBP_CRYPTO_CUSTOMER_WALLET_HOME;
             case "CBPCCWCH":
@@ -438,6 +442,8 @@ public enum Activities implements FermatEnum {
                 return CBP_CRYPTO_CUSTOMER_WALLET_SETTINGS_MY_LOCATIONS;
             case "CBPCCWCNLIS":
                 return CBP_CRYPTO_CUSTOMER_WALLET_CREATE_NEW_LOCATION_IN_SETTINGS;
+            case "CBPCBWSSBA":
+                return CBP_CRYPTO_BROKER_WALLET_SETTINGS_BANK_ACCOUNT;
             case "DAICAM":
                 return null; //TODO dejaron este case por fuera
             case "DAPAUCAM":
