@@ -75,7 +75,7 @@ public class BrokerSubmitOnlineMerchandiseTransactionManager implements BrokerSu
 
             Collection<Clause> negotiationClauses=customerBrokerSaleNegotiation.getClauses();
             for(Clause clause : negotiationClauses){
-                if(clause.getType().equals(ClauseType.BROKER_CRYPTO_ADDRESS)){
+                if(clause.getType().equals(ClauseType.CUSTOMER_CRYPTO_ADDRESS)){
                     return clause.getValue();
                 }
             }
@@ -181,7 +181,7 @@ public class BrokerSubmitOnlineMerchandiseTransactionManager implements BrokerSu
                             contractHash);
             CustomerBrokerSaleNegotiation customerBrokerSaleNegotiation=
                     getCustomerBrokerSaleNegotiation(
-                            contractHash);
+                            customerBrokerContractSale.getNegotiatiotId());
             String customerCryptoAddress=getBrokerCryptoAddressString(
                     customerBrokerSaleNegotiation
             );
