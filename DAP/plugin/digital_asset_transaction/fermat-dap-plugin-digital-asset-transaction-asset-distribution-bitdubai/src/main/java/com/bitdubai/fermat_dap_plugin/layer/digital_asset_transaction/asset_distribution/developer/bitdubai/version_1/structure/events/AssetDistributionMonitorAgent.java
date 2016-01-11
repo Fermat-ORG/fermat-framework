@@ -28,7 +28,7 @@ import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.exceptions.CantG
 import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.interfaces.BitcoinNetworkManager;
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.asset_vault.exceptions.CantSendAssetBitcoinsToUserException;
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.asset_vault.interfaces.AssetVaultManager;
-import com.bitdubai.fermat_dap_api.layer.all_definition.digital_asset.DigitalAsset;
+import com.bitdubai.fermat_dap_api.layer.all_definition.digital_asset.DigitalAssetMetadata;
 import com.bitdubai.fermat_dap_api.layer.all_definition.enums.AssetBalanceType;
 import com.bitdubai.fermat_dap_api.layer.all_definition.enums.DAPTransactionType;
 import com.bitdubai.fermat_dap_api.layer.all_definition.enums.DistributionStatus;
@@ -362,9 +362,9 @@ public class AssetDistributionMonitorAgent implements Agent, DealsWithLogger, De
                 //For now, I set the cryptoAddress for Bitcoins
                 CryptoAddress cryptoAddressTo = new CryptoAddress(actorUserCryptoAddress, CryptoCurrency.BITCOIN);
                 System.out.println("ASSET DISTRIBUTION cryptoAddressTo: " + cryptoAddressTo);
-                DigitalAsset digitalAsset = digitalAssetDistributionVault.getDigitalAssetFromLocalStorage(assetAcceptedGenesisTransaction);
+                DigitalAssetMetadata digitalAsset = digitalAssetDistributionVault.getDigitalAssetMetadataFromLocalStorage(assetAcceptedGenesisTransaction);
                 if (assetDistributionDao.getLastDelivering(assetAcceptedGenesisTransaction).getState() != DistributionStatus.DELIVERING_CANCELLED) {
-                    String genesisTx = sendCryptoAmountToRemoteActor(assetAcceptedGenesisTransaction, cryptoAddressTo, digitalAsset.getGenesisAmount());
+                    String genesisTx = sendCryptoAmountToRemoteActor(assetAcceptedGenesisTransaction, cryptoAddressTo, digitalAsset.getGenesisBlock());
                     updateDistributionStatus(DistributionStatus.SENDING_CRYPTO, assetAcceptedGenesisTransaction);
                     assetDistributionDao.sendingBitcoins(assetAcceptedGenesisTransaction, genesisTx);
                 } else {
@@ -419,9 +419,9 @@ public class AssetDistributionMonitorAgent implements Agent, DealsWithLogger, De
             this.assetDistributionDao = assetDistributionDao;
         }
 
-        private String sendCryptoAmountToRemoteActor(String genesisTransaction, CryptoAddress cryptoAddressTo, long amount) throws CantSendAssetBitcoinsToUserException {
+        private String sendCryptoAmountToRemoteActor(String genesisTransaction, CryptoAddress cryptoAddressTo, String genesisBlock) throws CantSendAssetBitcoinsToUserException {
             System.out.println("ASSET DISTRIBUTION sending genesis amount from asset vault");
-            return assetVaultManager.sendAssetBitcoins(genesisTransaction, null, cryptoAddressTo);
+            return assetVaultManager.sendAssetBitcoins(genesisTransaction, genesisBlock, cryptoAddressTo);
         }
     }
 }
