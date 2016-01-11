@@ -476,22 +476,23 @@ public class SubAppActivity extends FermatActivity implements FermatScreenSwappe
         try {
             if(fermatFragmentFactory !=null){
                     TabLayout tabLayout = (TabLayout) findViewById(R.id.tab_layout);
-                    tabLayout.setVisibility(View.GONE);
-
+                    if(tabLayout!=null) tabLayout.setVisibility(View.GONE);
                     ViewPager pagertabs = (ViewPager) findViewById(R.id.pager);
-                    pagertabs.setVisibility(View.VISIBLE);
-                    adapter = new TabsPagerAdapter(getFragmentManager(),
-                            getApplicationContext(),
-                            fermatFragmentFactory,
-                            fragment,
-                            subAppsSession,
-                            getSubAppResourcesProviderManager(),
-                            getResources());
-                    pagertabs.setAdapter(adapter);
+                    if(pagertabs!=null) {
+                        pagertabs.setVisibility(View.VISIBLE);
+                        adapter = new TabsPagerAdapter(getFragmentManager(),
+                                getApplicationContext(),
+                                fermatFragmentFactory,
+                                fragment,
+                                subAppsSession,
+                                getSubAppResourcesProviderManager(),
+                                getResources());
+                        pagertabs.setAdapter(adapter);
 
-                    final int pageMargin = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 4, getResources()
-                            .getDisplayMetrics());
-                    pagertabs.setPageMargin(pageMargin);
+                        final int pageMargin = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 4, getResources()
+                                .getDisplayMetrics());
+                        pagertabs.setPageMargin(pageMargin);
+                    }
                 }
             }catch (Exception e){
                 e.printStackTrace();
