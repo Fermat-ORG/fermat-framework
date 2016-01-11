@@ -13,11 +13,14 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseS
 import com.bitdubai.fermat_bch_api.layer.crypto_network.BroadcastStatus;
 import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.BitcoinNetworkSelector;
 import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.exceptions.CantBroadcastTransactionException;
+import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.exceptions.CantCancellBroadcastTransactionException;
 import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.exceptions.CantFixTransactionInconsistenciesException;
 import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.exceptions.CantGetBroadcastStatusException;
 import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.exceptions.CantGetCryptoTransactionException;
 import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.exceptions.CantGetTransactionCryptoStatusException;
 import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.exceptions.CantStoreBitcoinTransactionException;
+import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.interfaces.BitcoinNetworkConfiguration;
+import com.bitdubai.fermat_bch_api.layer.crypto_network.enums.Status;
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.enums.CryptoVaults;
 import com.bitdubai.fermat_bch_plugin.layer.crypto_network.bitcoin.developer.bitdubai.version_1.database.BitcoinCryptoNetworkDatabaseDao;
 import com.bitdubai.fermat_bch_plugin.layer.crypto_network.bitcoin.developer.bitdubai.version_1.exceptions.BlockchainException;
@@ -31,6 +34,7 @@ import org.bitcoinj.core.NetworkParameters;
 import org.bitcoinj.core.Sha256Hash;
 import org.bitcoinj.core.Transaction;
 import org.bitcoinj.core.TransactionInput;
+import org.bitcoinj.core.TransactionOutPoint;
 import org.bitcoinj.core.TransactionOutput;
 import org.bitcoinj.core.UTXO;
 import org.bitcoinj.core.UTXOProvider;
@@ -41,6 +45,7 @@ import org.bitcoinj.store.UnreadableWalletException;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -214,7 +219,7 @@ public class BitcoinCryptoNetworkManager implements TransactionProtocolManager, 
      * by forming the name wallet_[NETWORK]. If it doesn't exists, then I will create a new object for this network.
      * @return
      */
-    private Wallet getWallet(BlockchainNetworkType blockchainNetworkType, @Nullable List<ECKey> keyList){
+    private synchronized Wallet getWallet(BlockchainNetworkType blockchainNetworkType, @Nullable List<ECKey> keyList){
         Wallet wallet;
         String fileName = WALLET_FILENAME + blockchainNetworkType.getCode();
         walletFile = new File(fileName);
@@ -381,7 +386,7 @@ public class BitcoinCryptoNetworkManager implements TransactionProtocolManager, 
      * @param transactionId the internal fermat transaction id
      * @throws CantBroadcastTransactionException
      */
-    public void broadcastTransaction(BlockchainNetworkType blockchainNetworkType, Transaction tx, UUID transactionId) throws CantBroadcastTransactionException {
+    public synchronized void broadcastTransaction(BlockchainNetworkType blockchainNetworkType, Transaction tx, UUID transactionId) throws CantBroadcastTransactionException {
         runningAgents.get(blockchainNetworkType).broadcastTransaction(tx, transactionId);
     }
 
@@ -390,7 +395,7 @@ public class BitcoinCryptoNetworkManager implements TransactionProtocolManager, 
      * @param txHash
      * @throws CantBroadcastTransactionException
      */
-    public void broadcastTransaction(String txHash) throws CantBroadcastTransactionException{
+    public synchronized void broadcastTransaction(String txHash) throws CantBroadcastTransactionException{
         runningAgents.get(BlockchainNetworkType.DEFAULT).broadcastTransaction(txHash);
     }
 
@@ -490,7 +495,7 @@ public class BitcoinCryptoNetworkManager implements TransactionProtocolManager, 
      * @param blockchainNetworkType
      * @return
      */
-    public List<Transaction> getBitcoinTransactions(BlockchainNetworkType blockchainNetworkType){
+    public synchronized List<Transaction> getBitcoinTransactions(BlockchainNetworkType blockchainNetworkType){
         Wallet wallet = getWallet(blockchainNetworkType, null);
         return wallet.getTransactionsByTime();
     }
@@ -602,8 +607,7 @@ public class BitcoinCryptoNetworkManager implements TransactionProtocolManager, 
      * @throws CantGetCryptoTransactionException
      */
     public List<CryptoTransaction> getChildCryptoTransaction(String parentHash, int depth) throws CantGetCryptoTransactionException {
-        //todo implementar esto lo voy a necesitar cuando el redeem point recibe el digital asset metadata y quiere buscar la transaccion.
-        return null;
+       return null;
     }
 
     /**
@@ -686,7 +690,7 @@ public class BitcoinCryptoNetworkManager implements TransactionProtocolManager, 
      * @param transactionId
      * @throws CantStoreBitcoinTransactionException
      */
-    public void storeBitcoinTransaction(BlockchainNetworkType blockchainNetworkType, Transaction tx, UUID transactionId) throws CantStoreBitcoinTransactionException {
+    public synchronized void storeBitcoinTransaction(BlockchainNetworkType blockchainNetworkType, Transaction tx, UUID transactionId) throws CantStoreBitcoinTransactionException {
         runningAgents.get(blockchainNetworkType).storeBitcoinTransaction(tx, transactionId);
     }
 
@@ -702,5 +706,28 @@ public class BitcoinCryptoNetworkManager implements TransactionProtocolManager, 
         } catch (CantExecuteDatabaseOperationException e) {
             throw new CantGetBroadcastStatusException (CantGetBroadcastStatusException.DEFAULT_MESSAGE, e, "There was a database error getting the status", "database issue");
         }
+    }
+
+    /**
+     * Will mark the passed transaction as cancelled, and it won't be broadcasted again.
+     * @param txHash
+     * @throws CantCancellBroadcastTransactionException
+     */
+    public void cancelBroadcast(String txHash) throws CantCancellBroadcastTransactionException {
+
+        /**
+         * Will invalidate the transaction in the wallet
+         */
+        runningAgents.get(BlockchainNetworkType.DEFAULT).cancelBroadcast(txHash);
+
+        /**
+         * marks the transaction as cancelled in the database
+         */
+        try {
+            getDao().setBroadcastStatus(Status.CANCELLED, 0, null, txHash);
+        } catch (CantExecuteDatabaseOperationException e) {
+            throw new CantCancellBroadcastTransactionException(CantCancellBroadcastTransactionException.DEFAULT_MESSAGE, e, "Database error while cancelling transaction.", "database issue");
+        }
+
     }
 }

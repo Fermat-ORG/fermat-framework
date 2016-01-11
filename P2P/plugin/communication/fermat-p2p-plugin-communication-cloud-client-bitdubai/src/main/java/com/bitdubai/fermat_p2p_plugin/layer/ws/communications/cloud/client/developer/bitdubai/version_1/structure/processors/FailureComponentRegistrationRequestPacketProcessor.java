@@ -10,6 +10,8 @@ import com.bitdubai.fermat_api.layer.all_definition.components.interfaces.Platfo
 import com.bitdubai.fermat_api.layer.all_definition.crypto.asymmetric.AsymmetricCryptography;
 import com.bitdubai.fermat_api.layer.all_definition.events.EventSource;
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEvent;
+import com.bitdubai.fermat_api.layer.all_definition.network_service.enums.NetworkServiceType;
+import com.bitdubai.fermat_api.layer.all_definition.network_service.interfaces.NetworkService;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.components.PlatformComponentProfileCommunication;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.enums.P2pEventType;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.events.FailureComponentRegistrationNotificationEvent;
@@ -68,10 +70,11 @@ public class FailureComponentRegistrationRequestPacketProcessor extends FermatPa
          * Construct the json object
          */
         JsonObject packetContent = jsonParser.parse(messageContentJsonStringRepresentation).getAsJsonObject();
-        PlatformComponentProfile networkServiceApplicant  = gson.fromJson(packetContent.get(JsonAttNamesConstants.APPLICANT_PARTICIPANT_NS_VPN).getAsString(), PlatformComponentProfile.class);
+        NetworkServiceType networkServiceApplicant  = gson.fromJson(packetContent.get(JsonAttNamesConstants.NETWORK_SERVICE_TYPE).getAsString(), NetworkServiceType.class);
         PlatformComponentProfile platformComponentProfile = new PlatformComponentProfileCommunication().fromJson(packetContent.get(JsonAttNamesConstants.PROFILE_TO_REGISTER).getAsString());
+        String errorMsj = packetContent.get(JsonAttNamesConstants.FAILURE_VPN_MSJ).getAsString();
 
-        //System.out.println("FailureComponentRegistrationRequestPacketProcessor - networkServiceApplicant "+networkServiceApplicant);
+        System.out.println("FailureComponentRegistrationRequestPacketProcessor - errorMsj "+errorMsj);
 
         /*
          * Create a new event whit the networkServiceType and remoteIdentity
@@ -82,8 +85,9 @@ public class FailureComponentRegistrationRequestPacketProcessor extends FermatPa
         /*
          * Configure the values
          */
-        ((FailureComponentRegistrationNotificationEvent)event).setNetworkServiceApplicant(networkServiceApplicant.getNetworkServiceType());
+        ((FailureComponentRegistrationNotificationEvent)event).setNetworkServiceApplicant(networkServiceApplicant);
         ((FailureComponentRegistrationNotificationEvent)event).setPlatformComponentProfile(platformComponentProfile);
+        ((FailureComponentRegistrationNotificationEvent)event).setErrorMsj(errorMsj);
 
         /*
          * Raise the event

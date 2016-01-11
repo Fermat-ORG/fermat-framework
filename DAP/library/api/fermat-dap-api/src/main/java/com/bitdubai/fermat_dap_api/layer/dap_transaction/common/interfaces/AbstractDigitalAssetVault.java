@@ -301,8 +301,8 @@ public abstract class AbstractDigitalAssetVault implements DigitalAssetVault {
         String actorToPublicKey = externalActorPublicKey;
         switch (dapTransactionType) {
             case DISTRIBUTION:
-                AssetIssuerWallet issuerWalet = this.assetIssuerWalletManager.loadAssetIssuerWallet(this.walletPublicKey);
-                AssetIssuerWalletBalance assetIssuerWalletBalance = issuerWalet.getBookBalance(balanceType);
+                AssetIssuerWallet issuerWallet = this.assetIssuerWalletManager.loadAssetIssuerWallet(this.walletPublicKey);
+                AssetIssuerWalletBalance assetIssuerWalletBalance = issuerWallet.getBalance();
                 actorFromPublicKey = this.actorAssetIssuerManager.getActorAssetIssuer().getActorPublicKey();
                 AssetIssuerWalletTransactionRecordWrapper assetIssuerWalletTransactionRecordWrapper = new AssetIssuerWalletTransactionRecordWrapper(
                         digitalAssetMetadata,

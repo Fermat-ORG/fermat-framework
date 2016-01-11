@@ -863,6 +863,16 @@ public class ChatPluginRoot extends AbstractPlugin implements
     }
 
     @Override
+    public void handleClientConnectionLooseNotificationEvent(FermatEvent fermatEvent) {
+        // TODO COMPLETE -.
+    }
+
+    @Override
+    public void handleClientSuccessfullReconnectNotificationEvent(FermatEvent fermatEvent) {
+        // TODO COMPLETE -.
+    }
+
+    @Override
     public void sendChatMessageNewStatusNotification() throws CantSendChatMessageNewStatusNotificationException {
 
     }

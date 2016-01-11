@@ -7,6 +7,7 @@ import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_pro
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.crypto_transactions.CryptoTransaction;
 import com.bitdubai.fermat_bch_api.layer.crypto_network.BroadcastStatus;
 import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.exceptions.CantBroadcastTransactionException;
+import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.exceptions.CantCancellBroadcastTransactionException;
 import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.exceptions.CantFixTransactionInconsistenciesException;
 import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.exceptions.CantGetBroadcastStatusException;
 import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.exceptions.CantGetCryptoTransactionException;
@@ -70,6 +71,14 @@ public interface BitcoinNetworkManager extends TransactionSender<CryptoTransacti
      * @throws CantBroadcastTransactionException
      */
     void broadcastTransaction (String txHash) throws CantBroadcastTransactionException;
+
+
+    /**
+     * Will mark the passed transaction as cancelled, and it won't be broadcasted again.
+     * @param txHash
+     * @throws CantCancellBroadcastTransactionException
+     */
+    void cancelBroadcast(String txHash) throws CantCancellBroadcastTransactionException;
 
     /**
      * Returns the broadcast Status for a specified transaction.

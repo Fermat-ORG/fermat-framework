@@ -21,6 +21,17 @@ import java.util.Map;
  * Created by Gabriel Araujo (gabe_512@hotmail.com) on 29/12/2015.
  */
 public class CommunicationNetworkServiceConnectionManager implements NetworkServiceConnectionManager {
+
+    @Override
+    public void stop() {
+        // TODO COMPLETE -.
+    }
+
+    @Override
+    public void restart() {
+        // TODO COMPLETE -.
+    }
+
     /**
      * Represent the communicationsClientConnection
      */

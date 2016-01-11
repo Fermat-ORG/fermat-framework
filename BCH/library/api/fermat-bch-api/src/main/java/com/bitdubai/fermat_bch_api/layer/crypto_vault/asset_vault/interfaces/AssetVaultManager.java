@@ -5,6 +5,8 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
 import com.bitdubai.fermat_api.layer.all_definition.enums.BlockchainNetworkType;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.money.CryptoAddress;
+import com.bitdubai.fermat_bch_api.layer.crypto_vault.asset_vault.exceptions.CantGetActiveRedeemPointAddressesException;
+import com.bitdubai.fermat_bch_api.layer.crypto_vault.asset_vault.exceptions.CantGetActiveRedeemPointsException;
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.asset_vault.exceptions.CantGetExtendedPublicKeyException;
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.asset_vault.exceptions.CantSendAssetBitcoinsToUserException;
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.classes.HierarchyAccount.HierarchyAccount;
@@ -17,6 +19,7 @@ import com.bitdubai.fermat_bch_api.layer.crypto_vault.watch_only_vault.ExtendedP
 
 import org.bitcoinj.crypto.DeterministicKey;
 
+import java.util.List;
 import java.util.UUID;
 
 /**
@@ -64,17 +67,7 @@ public interface AssetVaultManager extends FermatManager, PlatformCryptoVault {
      */
     void deriveKeys(Plugins plugin, int keysToDerive) throws CantDeriveNewKeysException;
 
-    /**
-     * * Creates a new hierarchy Account in the vault.
-     * This will create the sets of keys and start monitoring the default network with these keys.
-     * @param description
-     * @param hierarchyAccountType
-     * @return
-     * @throws CantAddHierarchyAccountException
-     */
-    HierarchyAccount addHierarchyAccount(String description, HierarchyAccountType hierarchyAccountType) throws CantAddHierarchyAccountException;
-
-    /**
+       /**
      * Gets the Extended Public Key from the specified account. Can't be from a master account.
      * @param redeemPointPublicKey a Redeem Point publicKey
      * @return the Extended Public Keythat will be used by the redeem Points.
@@ -82,4 +75,17 @@ public interface AssetVaultManager extends FermatManager, PlatformCryptoVault {
      */
     ExtendedPublicKey getRedeemPointExtendedPublicKey (String redeemPointPublicKey) throws CantGetExtendedPublicKeyException;
 
+    /**
+     * If the redeem point keys are initialized, will return all the generated addresses
+     * @param redeemPointPublicKey
+     * @return
+     * @throws CantGetActiveRedeemPointAddressesException
+     */
+    List<CryptoAddress> getActiveRedeemPointAddresses (String redeemPointPublicKey) throws CantGetActiveRedeemPointAddressesException;
+
+    /**
+     * Returns the private Keys of all the active Redeem Points hierarchies in the asset vault
+     * @return
+     */
+    List<String> getActiveRedeemPoints() throws CantGetActiveRedeemPointsException;
 }

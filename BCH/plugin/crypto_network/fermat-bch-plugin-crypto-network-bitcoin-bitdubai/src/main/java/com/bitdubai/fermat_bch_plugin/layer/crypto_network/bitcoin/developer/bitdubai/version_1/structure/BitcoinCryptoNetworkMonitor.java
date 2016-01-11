@@ -6,7 +6,10 @@ import com.bitdubai.fermat_api.Agent;
 import com.bitdubai.fermat_api.CantStartAgentException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
 import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.BitcoinNetworkSelector;
+import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.RegTestNetwork.FermatTestNetwork;
+import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.RegTestNetwork.FermatTestNetworkNode;
 import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.exceptions.CantBroadcastTransactionException;
+import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.exceptions.CantCancellBroadcastTransactionException;
 import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.exceptions.CantGetCryptoTransactionException;
 import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.exceptions.CantStoreBitcoinTransactionException;
 import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.exceptions.ErrorBroadcastingTransactionException;
@@ -38,6 +41,7 @@ import org.bitcoinj.wallet.WalletTransaction;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.Serializable;
 import java.net.InetSocketAddress;
 import java.util.UUID;
 import java.util.concurrent.ExecutionException;
@@ -153,19 +157,10 @@ public class BitcoinCryptoNetworkMonitor implements Agent {
              * I will connect to the regTest server or search for peers if we are in a different network.
              */
             if (NETWORK_PARAMETERS == RegTestParams.get()){
-                /**
-                 * Peer 1
-                 */
-                InetSocketAddress inetSocketAddress1 = new InetSocketAddress(BitcoinNetworkConfiguration.BITCOIN_FULL_NODE_1_IP, BitcoinNetworkConfiguration.BITCOIN_FULL_NODE_1_PORT);
-                PeerAddress peerAddress1 = new PeerAddress(inetSocketAddress1);
-                peerGroup.addAddress(peerAddress1);
-
-                /**
-                 * Peer 2
-                 */
-                InetSocketAddress inetSocketAddress2 = new InetSocketAddress(BitcoinNetworkConfiguration.BITCOIN_FULL_NODE_2_IP, BitcoinNetworkConfiguration.BITCOIN_FULL_NODE_2_PORT);
-                PeerAddress peerAddress2 = new PeerAddress(inetSocketAddress2);
-                peerGroup.addAddress(peerAddress2);
+                FermatTestNetwork fermatTestNetwork = new FermatTestNetwork();
+                for (FermatTestNetworkNode node : fermatTestNetwork.getNetworkNodes()){
+                    peerGroup.addAddress(node.getPeerAddress());
+                }
             } else
                 peerGroup.addPeerDiscovery(new DnsDiscovery(NETWORK_PARAMETERS));
 
@@ -219,7 +214,7 @@ public class BitcoinCryptoNetworkMonitor implements Agent {
      * @param transactionId the internal fermat transaction Ifd
      * @throws CantBroadcastTransactionException
      */
-    public void broadcastTransaction(final Transaction tx, final UUID transactionId) throws CantBroadcastTransactionException {
+    public synchronized void  broadcastTransaction(final Transaction tx, final UUID transactionId) throws CantBroadcastTransactionException {
         try{
             /**
              * I will add this transaction to the wallet.
@@ -270,7 +265,7 @@ public class BitcoinCryptoNetworkMonitor implements Agent {
      * @param txHash
      * @throws CantBroadcastTransactionException
      */
-    public void broadcastTransaction(final String txHash) throws CantBroadcastTransactionException{
+    public synchronized void broadcastTransaction(final String txHash) throws CantBroadcastTransactionException{
         /**
          * The transaction is stored in the Wallet and the database, so I will make sure this is correct.
          */
@@ -507,7 +502,7 @@ public class BitcoinCryptoNetworkMonitor implements Agent {
      * @param transactionId
      * @throws CantStoreBitcoinTransactionException
      */
-    public void storeBitcoinTransaction (Transaction tx, UUID transactionId) throws CantStoreBitcoinTransactionException{
+    public synchronized void storeBitcoinTransaction (Transaction tx, UUID transactionId) throws CantStoreBitcoinTransactionException{
         try {
             /**
              * I store it in the database
@@ -546,5 +541,26 @@ public class BitcoinCryptoNetworkMonitor implements Agent {
         if (bitcoinCryptoNetworkDatabaseDao == null)
             bitcoinCryptoNetworkDatabaseDao = new BitcoinCryptoNetworkDatabaseDao(this.pluginId, this.pluginDatabaseSystem);
         return bitcoinCryptoNetworkDatabaseDao;
+    }
+
+    /**
+     * invalidates the passed transaction by clearing inputs and outputs.
+     * @param txHash
+     */
+    public void cancelBroadcast(String txHash) throws CantCancellBroadcastTransactionException{
+        Sha256Hash sha256Hash = Sha256Hash.wrap(txHash);
+        Transaction transaction = wallet.getTransaction(sha256Hash);
+
+        if (transaction == null)
+            throw new CantCancellBroadcastTransactionException(CantCancellBroadcastTransactionException.DEFAULT_MESSAGE, null, "the specified transaction does not exists.", null);
+
+        transaction.clearInputs();
+        transaction.clearOutputs();
+
+        try {
+            wallet.saveToFile(walletFileName);
+        } catch (IOException e) {
+            throw new CantCancellBroadcastTransactionException(CantCancellBroadcastTransactionException.DEFAULT_MESSAGE, e, "Change in transaction could not be saved in wallet.", null);
+        }
     }
 }
