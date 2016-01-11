@@ -139,10 +139,12 @@ import com.bitdubai.sub_app.wallet_manager.fragment.DesktopFragment;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Observable;
 import java.util.Observer;
+import java.util.Queue;
 import java.util.Set;
 import java.util.Vector;
 
@@ -1718,28 +1720,17 @@ public abstract class FermatActivity extends AppCompatActivity
 
     @Override
     public void invalidate() {
-        switch (activityType){
-            case ACTIVITY_TYPE_DESKTOP:
-                break;
-            case ACTIVITY_TYPE_WALLET:
-                WalletNavigationStructure walletNavigationStructure = getWalletRuntimeManager().getLastWallet();
-                Activity activity = walletNavigationStructure.getLastActivity();
-                FermatSession fermatSession = getFermatSessionInUse(walletNavigationStructure.getPublicKey());
-                AppConnections appsConnections = FermatAppConnectionManager.getFermatAppConnection(walletNavigationStructure.getPublicKey(), this,fermatSession);
-                try {
-                    appsConnections.setActiveIdentity(getModuleManager(appsConnections.getPluginVersionReference()).getSelectedActorIdentity());
-                } catch (CantGetSelectedActorIdentityException|ActorIdentityNotSelectedException e) {
-                    e.printStackTrace();
-                }
-                paintSideMenu(activity,activity.getSideMenu(),appsConnections);
-                paintFooter(activity.getFooter(),appsConnections.getFooterViewPainter());
-                break;
-            case ACTIVITY_TYPE_SUB_APP:
-                break;
-            default:
-                break;
+        FermatStructure fermatStructure = getAppInUse();
+        Activity activity = fermatStructure.getLastActivity();
+        FermatSession fermatSession = getFermatSessionInUse(fermatStructure.getPublicKey());
+        AppConnections appsConnections = FermatAppConnectionManager.getFermatAppConnection(fermatStructure.getPublicKey(), this,fermatSession);
+        try {
+            appsConnections.setActiveIdentity(getModuleManager(appsConnections.getPluginVersionReference()).getSelectedActorIdentity());
+        } catch (CantGetSelectedActorIdentityException|ActorIdentityNotSelectedException e) {
+            e.printStackTrace();
         }
-
+        paintSideMenu(activity,activity.getSideMenu(),appsConnections);
+        paintFooter(activity.getFooter(),appsConnections.getFooterViewPainter());
 
     }
 
@@ -1747,8 +1738,11 @@ public abstract class FermatActivity extends AppCompatActivity
     public void notificate(NotificationEvent notification) {
         try {
 
-            for (NotificationEvent notificationEvent : getNotificationManager().getPoolNotification()) {
+            Queue<NotificationEvent> queue = getNotificationManager().getPoolNotification();
+            Iterator<NotificationEvent> ite = queue.iterator();
 
+            while(ite.hasNext()){
+                NotificationEvent notificationEvent = ite.next();
                 switch (NotificationType.getByCode(notificationEvent.getNotificationType())) {
                     case INCOMING_MONEY:
                         launchWalletNotification(notificationEvent.getWalletPublicKey(), notificationEvent.getAlertTitle(), notificationEvent.getTextTitle(), notificationEvent.getTextBody());
