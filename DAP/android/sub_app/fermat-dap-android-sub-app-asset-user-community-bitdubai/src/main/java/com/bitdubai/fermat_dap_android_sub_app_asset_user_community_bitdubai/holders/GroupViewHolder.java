@@ -27,8 +27,6 @@ public class GroupViewHolder extends FermatViewHolder {
         super(itemView);
         thumbnail = (SquareImageView) itemView.findViewById(R.id.group_image);
         groupName = (FermatTextView) itemView.findViewById(R.id.group_name);
-        
-
         groupMembers = (FermatTextView) itemView.findViewById(R.id.group_members);
         
 

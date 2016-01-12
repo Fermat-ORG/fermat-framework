@@ -9,13 +9,15 @@ import com.bitdubai.fermat_android_api.ui.adapters.FermatAdapter;
 import com.bitdubai.fermat_dap_android_sub_app_asset_user_community_bitdubai.R;
 import com.bitdubai.fermat_dap_android_sub_app_asset_user_community_bitdubai.holders.GroupViewHolder;
 import com.bitdubai.fermat_dap_android_sub_app_asset_user_community_bitdubai.interfaces.AdapterChangeListener;
+import com.bitdubai.fermat_dap_android_sub_app_asset_user_community_bitdubai.interfaces.PopupMenu;
 import com.bitdubai.fermat_dap_android_sub_app_asset_user_community_bitdubai.models.Group;
-import com.bitdubai.fermat_dap_api.layer.all_definition.enums.DAPConnectionState;
 import com.squareup.picasso.Picasso;
 
 import java.util.List;
 
 public class GroupCommunityAdapter extends FermatAdapter<Group, GroupViewHolder> {
+
+    private PopupMenu menuItemClick;
 
     private AdapterChangeListener<Group> adapterChangeListener;
 
@@ -39,10 +41,23 @@ public class GroupCommunityAdapter extends FermatAdapter<Group, GroupViewHolder>
 
     @Override
     protected void bindHolder(final GroupViewHolder holder, final Group data, final int position) {
+        holder.itemView.setVisibility(View.VISIBLE);
         try {
             if (data.getGroupName() != null) {
                 holder.groupName.setText(String.format("%s", data.getGroupName()));
             }
+            holder.itemView.setLongClickable(true);
+            holder.itemView.setOnLongClickListener(new View.OnLongClickListener() {
+                @Override
+                public boolean onLongClick(View view) {
+                    if (menuItemClick != null) {
+                        menuItemClick.onMenuItemClickListener(view, data, position);
+                    }
+                    return true;
+                }
+            });
+            holder.groupMembers.setText(R.string.group_members);
+            holder.groupMembers.append(String.format("%s",data.getMembers()));
 
         Picasso.with(context).load(R.drawable.profile_image_standard).into(holder.thumbnail);
 
@@ -59,5 +74,9 @@ public class GroupCommunityAdapter extends FermatAdapter<Group, GroupViewHolder>
         if (dataSet != null)
             return dataSet.size();
         return 0;
+    }
+
+    public void setMenuItemClick(PopupMenu menuItemClick) {
+        this.menuItemClick = menuItemClick;
     }
 }
