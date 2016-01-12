@@ -36,7 +36,7 @@ What is needed on top of all existing protocols is a layer that faces end users 
 
 Fermat is a Framework, a p2p Network and an Ecosystem of Fermat APPs. The Fermat Framework is an open source software that runs on end user devices. This software can run Fermat APPs, which are like mobile APPs but running on top of the Fermat Framework.
 
-By choosing a plug-in architecture for the Framework we make it possible for any developer to add their own reusable components. We define the micro use licensing scheme as the mechanism for plug-in developers to monetize their work. The Framework itself enforces these micro use licenses and guarantees developers a revenue stream. 
+By choosing a plug-in architecture for the Framework we make it possible for any developer to add their own reusable components. We define the micro use licensing scheme as the mechanism for developers to monetize their work. The Framework itself enforces these micro use licenses and guarantees developers a revenue stream. 
 
 The Fermat P2P network interconnects Android devices between each other in order to exchange application data without needing to go through a centralized service.
 
