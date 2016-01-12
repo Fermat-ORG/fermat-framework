@@ -41,13 +41,14 @@ import org.bitcoinj.wallet.DeterministicSeed;
 import org.bitcoinj.wallet.KeyChain;
 import org.bitcoinj.wallet.WalletTransaction;
 
+import java.io.Serializable;
 import java.util.List;
 import java.util.UUID;
 
 /**
  * Created by rodrigo on 12/17/15.
  */
-public class BitcoinCurrencyCryptoVaultManager {
+public class BitcoinCurrencyCryptoVaultManager  {
     /**
      * BitcoinCurrencyCryptoVaultManager variables
      */
@@ -305,7 +306,7 @@ public class BitcoinCurrencyCryptoVaultManager {
      * @throws CouldNotSendMoneyException
      * @throws CryptoTransactionAlreadySentException
      */
-    public String sendBitcoins (String walletPublicKey, UUID FermatTrId,  CryptoAddress addressTo, long satoshis, String op_Return, boolean broadcast)
+    public synchronized String sendBitcoins (String walletPublicKey, UUID FermatTrId,  CryptoAddress addressTo, long satoshis, String op_Return, boolean broadcast)
             throws InsufficientCryptoFundsException,
             InvalidSendToAddressException,
             CouldNotSendMoneyException,
@@ -347,6 +348,7 @@ public class BitcoinCurrencyCryptoVaultManager {
         com.bitdubai.fermat_bch_api.layer.crypto_vault.classes.HierarchyAccount.HierarchyAccount vaultAccount = new com.bitdubai.fermat_bch_api.layer.crypto_vault.classes.HierarchyAccount.HierarchyAccount(0, "Bitcoin Vault account", HierarchyAccountType.MASTER_ACCOUNT);
         //final Wallet wallet = getWalletForAccount(vaultAccount, networkParameters);
         Wallet wallet = null;
+
         try {
              wallet = Wallet.fromSeed(networkParameters, getBitcoinVaultSeed());
         } catch (InvalidSeedException e) {

@@ -29,6 +29,14 @@ public interface AssetStatistic {
     String getAssetOwnerPublicKey();
 
     /**
+     * This method search for user that owns this asset.
+     *
+     * @return {@link String} with the public key of the user
+     * that owns the asset or {@code null} if this asset has not been delivered yet.
+     */
+    String getAssetOwnerName();
+
+    /**
      * This method returns the date corresponding to the moment when this asset
      * was sent to an user.
      *

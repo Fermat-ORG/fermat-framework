@@ -25,7 +25,7 @@ public interface AssetIssuerWallet {
 
     //TODO:Documentar y manejo de excepciones
 
-    AssetIssuerWalletBalance getBookBalance(BalanceType balanceType) throws CantGetTransactionsException;
+    AssetIssuerWalletBalance getBalance() throws CantGetTransactionsException;
 
     List<AssetIssuerWalletTransaction> getTransactionsAll(BalanceType balanceType,
                                                           TransactionType transactionType,
@@ -58,6 +58,7 @@ public interface AssetIssuerWallet {
 
     DigitalAsset getAssetByPublicKey(String assetPublicKey);
 
+    String getUserDeliveredToPublicKey(String assetPublicKey) throws RecordsNotFoundException, CantGetAssetStatisticException;
     //ASSET STATISTIC METHODS
 
     void createdNewAsset(DigitalAsset asset) throws CantSaveStatisticException;

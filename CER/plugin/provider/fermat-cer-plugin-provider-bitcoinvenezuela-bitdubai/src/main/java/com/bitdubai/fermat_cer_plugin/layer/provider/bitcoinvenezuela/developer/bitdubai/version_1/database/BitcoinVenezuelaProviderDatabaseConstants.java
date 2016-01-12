@@ -23,6 +23,20 @@ public class BitcoinVenezuelaProviderDatabaseConstants {
     static final String PROVIDER_INFO_FIRST_KEY_COLUMN = "id";
 
     /**
+     * Current Exchange Rates database table definition.
+     */
+    static final String CURRENT_EXCHANGE_RATES_TABLE_NAME = "current_exchange_rates";
+
+    static final String CURRENT_EXCHANGE_RATES_ID_COLUMN_NAME = "id";
+    static final String CURRENT_EXCHANGE_RATES_FROM_CURRENCY_COLUMN_NAME = "from_currency";
+    static final String CURRENT_EXCHANGE_RATES_TO_CURRENCY_COLUMN_NAME = "to_currency";
+    static final String CURRENT_EXCHANGE_RATES_SALE_PRICE_COLUMN_NAME = "sale_price";
+    static final String CURRENT_EXCHANGE_RATES_PURCHASE_PRICE_COLUMN_NAME = "purchase_price";
+    static final String CURRENT_EXCHANGE_RATES_TIMESTAMP_COLUMN_NAME = "timestamp";
+
+    static final String CURRENT_EXCHANGE_RATES_FIRST_KEY_COLUMN = "id";
+
+    /**
      * Daily Exchange Rates database table definition.
      */
     static final String DAILY_EXCHANGE_RATES_TABLE_NAME = "daily_exchange_rates";

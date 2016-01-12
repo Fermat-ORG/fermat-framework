@@ -41,6 +41,7 @@ import com.bitdubai.fermat_dap_api.layer.dap_transaction.common.exceptions.CantE
 import com.bitdubai.fermat_dap_api.layer.dap_transaction.common.exceptions.CantGetDigitalAssetFromLocalStorageException;
 import com.bitdubai.fermat_dap_api.layer.dap_transaction.common.exceptions.CantInitializeAssetMonitorAgentException;
 import com.bitdubai.fermat_dap_api.layer.dap_transaction.common.exceptions.UnexpectedResultReturnedFromDatabaseException;
+import com.bitdubai.fermat_dap_api.layer.dap_transaction.common.util.AssetVerification;
 import com.bitdubai.fermat_dap_api.layer.dap_wallet.common.enums.TransactionType;
 import com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.user_redemption.bitdubai.version_1.UserRedemptionDigitalAssetTransactionPluginRoot;
 import com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.user_redemption.bitdubai.version_1.exceptions.CantCheckAssetUserRedemptionProgressException;
@@ -361,7 +362,7 @@ public class UserRedemptionMonitorAgent implements Agent, DealsWithLogger, Deals
                         System.out.println("ASSET USER REDEMPTION genesisTransactionList has " + genesisTransactionList.size() + " events");
                         for (String genesisTransaction : genesisTransactionList) {
                             System.out.println("ASSET USER REDEMPTION BCH Transaction Hash: " + genesisTransaction);
-                            CryptoTransaction cryptoGenesisTransaction = getCryptoTransactionByCryptoStatus(CryptoStatus.ON_CRYPTO_NETWORK, genesisTransaction);
+                            CryptoTransaction cryptoGenesisTransaction = AssetVerification.getCryptoTransactionFromCryptoNetworkByCryptoStatus(bitcoinNetworkManager, genesisTransaction, CryptoStatus.ON_CRYPTO_NETWORK);
                             if (cryptoGenesisTransaction == null) {
                                 System.out.println("ASSET USER REDEMPTION the genesis transaction from Crypto Network is null");
                                 continue;
@@ -384,7 +385,7 @@ public class UserRedemptionMonitorAgent implements Agent, DealsWithLogger, Deals
                         System.out.println("ASSET USER REDEMPTION genesisTransactionList has " + genesisTransactionList.size() + " events");
                         for (String genesisTransaction : genesisTransactionList) {
                             System.out.println("ASSET USER REDEMPTION BCH Transaction Hash: " + genesisTransaction);
-                            CryptoTransaction cryptoGenesisTransaction = getCryptoTransactionByCryptoStatus(CryptoStatus.ON_BLOCKCHAIN, genesisTransaction);
+                            CryptoTransaction cryptoGenesisTransaction = AssetVerification.getCryptoTransactionFromCryptoNetworkByCryptoStatus(bitcoinNetworkManager, genesisTransaction, CryptoStatus.ON_BLOCKCHAIN);
                             if (cryptoGenesisTransaction == null) {
                                 System.out.println("ASSET USER REDEMPTION the genesis transaction from Crypto Network is null");
                                 continue;
@@ -441,7 +442,7 @@ public class UserRedemptionMonitorAgent implements Agent, DealsWithLogger, Deals
          * @throws CantGetCryptoTransactionException
          */
         private CryptoTransaction getCryptoTransactionByCryptoStatus(CryptoStatus cryptoStatus, String genesisTransaction) throws CantGetCryptoTransactionException {
-            List<CryptoTransaction> transactionListFromCryptoNetwork = bitcoinNetworkManager.getCryptoTransaction(genesisTransaction);
+            List<CryptoTransaction> transactionListFromCryptoNetwork = bitcoinNetworkManager.getChildCryptoTransaction(genesisTransaction);
             if (transactionListFromCryptoNetwork == null) {
                 System.out.println("ASSET USER REDEMPTION transaction List From Crypto Network for " + genesisTransaction + " is null");
                 throw new CantGetCryptoTransactionException(CantGetCryptoTransactionException.DEFAULT_MESSAGE, null,
@@ -461,6 +462,7 @@ public class UserRedemptionMonitorAgent implements Agent, DealsWithLogger, Deals
                 System.out.println("ASSET USER REDEMPTION CryptoStatus from Crypto Network:" + cryptoTransaction.getCryptoStatus());
                 if (cryptoTransaction.getCryptoStatus() == cryptoStatus) {
                     System.out.println("ASSET USER REDEMPTION I found it!");
+                    cryptoTransaction.setTransactionHash(genesisTransaction);
                     return cryptoTransaction;
                 }
             }

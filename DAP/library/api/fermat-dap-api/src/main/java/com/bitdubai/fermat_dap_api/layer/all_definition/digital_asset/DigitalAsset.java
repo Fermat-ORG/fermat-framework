@@ -6,6 +6,7 @@ import com.bitdubai.fermat_api.layer.all_definition.money.CryptoAddress;
 import com.bitdubai.fermat_api.layer.all_definition.resources_structure.Resource;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_issuer.interfaces.ActorAssetIssuer;
 import com.bitdubai.fermat_dap_api.layer.dap_identity.asset_issuer.interfaces.IdentityAssetIssuer;
+import com.thoughtworks.xstream.annotations.XStreamOmitField;
 
 import java.io.Serializable;
 import java.util.List;
@@ -23,6 +24,7 @@ public class DigitalAsset  implements Serializable{
     String description;
     List<Resource> resources;
     DigitalAssetContract contract;
+    @XStreamOmitField
     long genesisAmount;
 
     /**

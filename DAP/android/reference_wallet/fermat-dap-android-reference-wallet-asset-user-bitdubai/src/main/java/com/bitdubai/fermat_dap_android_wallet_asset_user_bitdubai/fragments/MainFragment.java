@@ -1,6 +1,7 @@
 package com.bitdubai.fermat_dap_android_wallet_asset_user_bitdubai.fragments;
 
 import android.app.ProgressDialog;
+import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
@@ -10,6 +11,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.PopupMenu;
 import android.widget.Toast;
 
@@ -24,6 +26,7 @@ import com.bitdubai.fermat_dap_android_wallet_asset_user_bitdubai.util.CommonLog
 import com.bitdubai.fermat_dap_api.layer.dap_module.wallet_asset_user.interfaces.AssetUserWalletSubAppModuleManager;
 import com.bitdubai.fermat_dap_api.layer.dap_wallet.asset_user_wallet.interfaces.AssetUserWalletList;
 
+import java.io.ByteArrayInputStream;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -41,6 +44,7 @@ public class MainFragment extends AbstractFermatFragment
     private List<AssetUserWalletList> assetUserWalletList;
     private List<DigitalAsset> bookAssets;
     private DigitalAsset asset;
+    private ImageView assetImageDetail;
 
 
     /**
@@ -78,10 +82,10 @@ public class MainFragment extends AbstractFermatFragment
                 if (assetUserWalletList != null && !assetUserWalletList.isEmpty()) {
                     bookAssets = new ArrayList<>();
                     for (AssetUserWalletList assetUserWallet : assetUserWalletList) {
-                        DigitalAsset asset = new DigitalAsset(assetUserWallet.getName(),
+                        DigitalAsset asset = new DigitalAsset(assetUserWallet.getDigitalAsset().getName(),
                                 String.valueOf(String.format("BookBalance: %d - AvailableBalance: %d",
                                         assetUserWallet.getQuantityBookBalance(), assetUserWallet.getQuantityAvailableBalance())));
-                        asset.setAssetPublicKey(assetUserWallet.getAssetPublicKey());
+                        asset.setAssetPublicKey(assetUserWallet.getDigitalAsset().getPublicKey());
                         asset.setWalletPublicKey("public_key");
                         bookAssets.add(asset);
                     }
@@ -118,6 +122,15 @@ public class MainFragment extends AbstractFermatFragment
         rootView = inflater.inflate(R.layout.dap_wallet_asset_user_main_fragment, container, false);
         assetsView = (RecyclerView) rootView.findViewById(R.id.assets);
         assetsView.setHasFixedSize(true);
+        assetImageDetail = (ImageView) rootView.findViewById(R.id.asset_image);
+
+        if (asset.getImage() != null) {
+            assetImageDetail.setImageBitmap(BitmapFactory.decodeStream(new ByteArrayInputStream(asset.getImage())));
+        } else {
+            assetImageDetail.setImageDrawable(rootView.getResources().getDrawable(R.drawable.img_asset_without_image));
+        }
+
+
         layoutManager = new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false);
         assetsView.setLayoutManager(layoutManager);
         adapter = new DigitalAssetAdapter(getActivity());
@@ -204,6 +217,14 @@ public class MainFragment extends AbstractFermatFragment
             return true;
         }
         return false;
+    }
+
+
+    private void setupUI() {
+    }
+
+    private void setupUIData() {
+
     }
 
     public void setAsset(DigitalAsset asset) {
