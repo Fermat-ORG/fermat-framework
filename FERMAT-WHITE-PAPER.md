@@ -25,7 +25,7 @@ Developing peer-to-peer financial applications is challenging. Bitcoin provides 
 
 We propose a peer-to-peer network for transporting meta-data and inter-connect network clients between each other. A synchronization scheme running on top of it transforms a standalone app into a distributed application across several devices still owned by the same user.
 
-We propose a framework to replace the standalone wallet application. This framework handles the full stack on top of crypto networks up to the user interface. In this way we enable the development of peer-to-peer financial applications that are both crypto-currency and digital-asset-enabled, and that does not require a trusted third party of any sort.
+We propose a framework to replace the standalone wallet application. This framework handles the full stack on top of crypto networks up to the user interface and it is intended to easily build and run APPs designed for that framwork. In this way we enable the development of peer-to-peer financial applications that are both crypto-currency and digital-asset-enabled, and that does not require a trusted third party of any sort.
 
 <br>
 ## Introduction
