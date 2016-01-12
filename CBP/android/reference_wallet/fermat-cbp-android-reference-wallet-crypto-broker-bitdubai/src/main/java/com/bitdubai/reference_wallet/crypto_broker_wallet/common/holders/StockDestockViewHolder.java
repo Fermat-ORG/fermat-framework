@@ -12,20 +12,23 @@ import com.bitdubai.reference_wallet.crypto_broker_wallet.R;
  */
 public class StockDestockViewHolder  extends FermatViewHolder {
     private FermatTextView title;
-    private FermatTextView subTitle;
+    private FermatTextView subTitle1;
+    private FermatTextView subTitle2;
 
 
     public StockDestockViewHolder(View itemView) {
         super(itemView);
-
         title = (FermatTextView) itemView.findViewById(R.id.cbw_settings_title);
-        subTitle = (FermatTextView) itemView.findViewById(R.id.cbw_settings_sub_title1);
+        subTitle1 = (FermatTextView) itemView.findViewById(R.id.cbw_settings_sub_title1);
+        subTitle2 = (FermatTextView) itemView.findViewById(R.id.cbw_settings_sub_title2);
     }
 
 
     public void bind(CryptoBrokerWalletAssociatedSetting data) {
-        subTitle.setText(getPlatformTitle(data.getPlatform()));
+        System.out.println("data = "+data.getPlatform().getCode()+"    "+data.getWalletPublicKey() + "         "+ data.getMerchandise().getCode());
+        subTitle1.setText(getPlatformTitle(data.getPlatform()));
         title.setText(data.getMerchandise().getCode());
+        subTitle2.setText("test1");
     }
 
     private String getPlatformTitle(Platforms platform) {

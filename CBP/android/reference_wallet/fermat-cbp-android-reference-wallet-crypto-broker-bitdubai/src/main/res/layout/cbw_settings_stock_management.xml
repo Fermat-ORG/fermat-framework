@@ -41,7 +41,6 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:visibility="gone"
-                tools:listitem="@layout/cbw_settings_recycler_view_item"
                 tools:visibility="visible"/>
 
             <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView

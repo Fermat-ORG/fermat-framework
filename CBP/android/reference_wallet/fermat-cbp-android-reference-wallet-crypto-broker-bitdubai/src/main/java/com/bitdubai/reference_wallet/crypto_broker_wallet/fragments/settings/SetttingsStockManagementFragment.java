@@ -14,6 +14,8 @@ import android.widget.Toast;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractFermatFragment;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatCheckBox;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView;
+import com.bitdubai.fermat_android_api.ui.adapters.FermatAdapter;
+import com.bitdubai.fermat_android_api.ui.fragments.FermatWalletListFragment;
 import com.bitdubai.fermat_android_api.ui.interfaces.FermatListItemListeners;
 import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.enums.FiatCurrency;
@@ -45,7 +47,7 @@ import java.util.UUID;
 /**
  * Created by nelson on 22/12/15.
  */
-public class SetttingsStockManagementFragment extends AbstractFermatFragment implements FermatListItemListeners<CryptoBrokerWalletAssociatedSetting>, DialogInterface.OnDismissListener {
+public class SetttingsStockManagementFragment extends FermatWalletListFragment<CryptoBrokerWalletAssociatedSetting> implements FermatListItemListeners<CryptoBrokerWalletAssociatedSetting>, DialogInterface.OnDismissListener {
 
     // Constants
     private static final String TAG = "SettingsStockManagement";
@@ -60,8 +62,6 @@ public class SetttingsStockManagementFragment extends AbstractFermatFragment imp
     // Fermat Managers
     private CryptoBrokerWalletManager walletManager;
     private ErrorManager errorManager;
-    private StockDestockAdapter adapter;
-    private RecyclerView recyclerView;
     private FermatTextView emptyView;
 
 
@@ -110,16 +110,55 @@ public class SetttingsStockManagementFragment extends AbstractFermatFragment imp
     }
 
     @Override
+    protected void initViews(View layout) {
+        super.initViews(layout);
+        emptyView = (FermatTextView) layout.findViewById(R.id.cbw_selected_stock_wallets_empty_view);
+
+        final FermatTextView spreadTextView = (FermatTextView) layout.findViewById(R.id.cbw_spread_value_text);
+        spreadTextView.setText(String.format("%1$s %%", spreadValue));
+
+        final FermatCheckBox automaticRestockCheckBox = (FermatCheckBox) layout.findViewById(R.id.cbw_automatic_restock_check_box);
+        automaticRestockCheckBox.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                automaticRestock = automaticRestockCheckBox.isChecked();
+            }
+        });
+
+        final SeekBar spreadSeekBar = (SeekBar) layout.findViewById(R.id.cbw_spread_value_seek_bar);
+        spreadSeekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+            @Override
+            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+                spreadValue = progress;
+                spreadTextView.setText(String.format("%1$s %%", spreadValue));
+            }
+
+            @Override
+            public void onStartTrackingTouch(SeekBar seekBar) {
+            }
+
+            @Override
+            public void onStopTrackingTouch(SeekBar seekBar) {
+            }
+        });
+
+
+        final View nextStepButton = layout.findViewById(R.id.cbw_next_step_button);
+        nextStepButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                //saveSettingAndGoNextStep();
+                changeActivity(Activities.CBP_CRYPTO_BROKER_WALLET_SETTINGS, appSession.getAppPublicKey());
+            }
+        });
+        showOrHideNoSelectedWalletsView();
+    }
+
+    /*@Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         super.onCreateView(inflater, container, savedInstanceState);
 
         final View layout = inflater.inflate(R.layout.cbw_settings_stock_management, container, false);
-
-
-        recyclerView = (RecyclerView) layout.findViewById(R.id.cbw_selected_stock_wallets_recycler_view);
-        recyclerView.setLayoutManager(new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false));
-        adapter = new StockDestockAdapter(getActivity(), settings);
-        recyclerView.setAdapter(adapter);
 
         emptyView = (FermatTextView) layout.findViewById(R.id.cbw_selected_stock_wallets_empty_view);
 
@@ -149,7 +188,7 @@ public class SetttingsStockManagementFragment extends AbstractFermatFragment imp
                 showWalletsDialog(Platforms.CASH_PLATFORM);
             }
         });
-*/
+
         final FermatCheckBox automaticRestockCheckBox = (FermatCheckBox) layout.findViewById(R.id.cbw_automatic_restock_check_box);
         automaticRestockCheckBox.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -186,7 +225,7 @@ public class SetttingsStockManagementFragment extends AbstractFermatFragment imp
         });
         showOrHideNoSelectedWalletsView();
         return layout;
-    }
+    }*/
 
     private void showWalletsDialog(final Platforms platform) {
         try {
@@ -409,6 +448,15 @@ public class SetttingsStockManagementFragment extends AbstractFermatFragment imp
     }
 
     @Override
+    public FermatAdapter getAdapter() {
+        if(adapter == null){
+            adapter = new StockDestockAdapter(getActivity(), settings);
+            adapter.setFermatListEventListener(this);
+        }
+        return adapter;
+    }
+
+    @Override
     public void onItemClickListener(CryptoBrokerWalletAssociatedSetting data, int position) {
         launchCreateTransactionDialog(data);
     }
@@ -421,5 +469,52 @@ public class SetttingsStockManagementFragment extends AbstractFermatFragment imp
     @Override
     public void onDismiss(DialogInterface dialog) {
 
+    }
+
+    @Override
+    protected boolean hasMenu() {
+        return false;
+    }
+
+    @Override
+    protected int getLayoutResource() {
+        return R.layout.cbw_settings_stock_management;
+    }
+
+    @Override
+    protected int getSwipeRefreshLayoutId() {
+        return 0;
+    }
+
+    @Override
+    protected int getRecyclerLayoutId() {
+        return R.id.cbw_selected_stock_wallets_recycler_view;
+    }
+
+    @Override
+    protected boolean recyclerHasFixedSize() {
+        return true;
+    }
+
+    @Override
+    public void onPostExecute(Object... result) {
+        /*if (result != null && result.length > 0) {
+            settings = (ArrayList) result[0];
+            if (adapter != null)
+                adapter.changeDataSet(settings);
+        }*/
+    }
+
+    @Override
+    public void onErrorOccurred(Exception ex) {
+
+    }
+
+    @Override
+    public RecyclerView.LayoutManager getLayoutManager() {
+        if (layoutManager == null) {
+            layoutManager = new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false);
+        }
+        return layoutManager;
     }
 }
