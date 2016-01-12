@@ -18,8 +18,8 @@ public class StockDestockViewHolder  extends FermatViewHolder {
     public StockDestockViewHolder(View itemView) {
         super(itemView);
 
-        title = (FermatTextView) itemView.findViewById(R.id.cbw_title);
-        subTitle = (FermatTextView) itemView.findViewById(R.id.cbw_sub_title);
+        title = (FermatTextView) itemView.findViewById(R.id.cbw_settings_title);
+        subTitle = (FermatTextView) itemView.findViewById(R.id.cbw_settings_sub_title1);
     }
 
 
