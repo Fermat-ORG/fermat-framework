@@ -7,6 +7,7 @@
 package com.bitdubai.fermat_p2p_plugin.layer.ws.communications.cloud.server.developer.bitdubai.version_1.structure.jetty.vpn;
 
 import com.bitdubai.fermat_api.layer.all_definition.components.interfaces.PlatformComponentProfile;
+import com.bitdubai.fermat_api.layer.all_definition.network_service.enums.NetworkServiceType;
 
 import javax.websocket.Session;
 
@@ -24,41 +25,73 @@ public class VpnClientConnection {
 
     private static final int MAX_MESSAGE_SIZE = 1000000;
 
-    static final String PROFILE_ATT_NAME = "p";
+    /**
+     *  Represent the networkServiceType
+     */
+    private NetworkServiceType networkServiceType;
 
-    static final String VPN_CLIENT_IDENTITY_ATT_NAME = "VCI";
+    /**
+     *  Represent the vpnClientIdentity
+     */
+    private String vpnClientIdentity;
 
-    static final String PENDING_PONG_MSG_ATT_NAME = "PMG";
+    /**
+     *  Represent the participant
+     */
+    private PlatformComponentProfile participant;
 
+    /**
+     *  Represent the remoteParticipantIdentity
+     */
+    private String remoteParticipantIdentity;
+
+    /**
+     *  Represent the session
+     */
     private Session session;
 
-    public VpnClientConnection(Session session) {
+    /**
+     * Constructor with parameters
+     *
+     * @param vpnClientIdentity
+     * @param participant
+     * @param remoteParticipantIdentity
+     * @param session
+     */
+    public VpnClientConnection(String vpnClientIdentity, PlatformComponentProfile participant, String remoteParticipantIdentity, Session session, NetworkServiceType networkServiceType) {
+        this.vpnClientIdentity = vpnClientIdentity;
+        this.participant = participant;
+        this.remoteParticipantIdentity = remoteParticipantIdentity;
+        this.networkServiceType = networkServiceType;
         this.session = session;
         this.session.setMaxTextMessageBufferSize(MAX_MESSAGE_SIZE);
     }
 
-    public PlatformComponentProfile getPlatformComponentProfile(){
-        return (PlatformComponentProfile) session.getUserProperties().get(PROFILE_ATT_NAME);
+    /**
+     * Get the vpnClientIdentity value
+     *
+     * @return vpnClientIdentity current value
+     */
+    public String getVpnClientIdentity() {
+        return vpnClientIdentity;
     }
 
-    public void setPlatformComponentProfile(PlatformComponentProfile platformComponentProfile){
-        session.getUserProperties().put(PROFILE_ATT_NAME, platformComponentProfile);
+    /**
+     * Get the participant value
+     *
+     * @return participant current value
+     */
+    public PlatformComponentProfile getParticipant() {
+        return participant;
     }
 
-    public String getVpnClientIdentity(){
-        return (String) session.getUserProperties().get(VPN_CLIENT_IDENTITY_ATT_NAME);
-    }
-
-    public void setVpnClientIdentity(String clientIdentity){
-        session.getUserProperties().put(VPN_CLIENT_IDENTITY_ATT_NAME, clientIdentity);
-    }
-
-    public Boolean getPendingPongMsg(){
-        return (Boolean) session.getUserProperties().get(PENDING_PONG_MSG_ATT_NAME);
-    }
-
-    public void setPendingPongMsg(Boolean pending){
-        session.getUserProperties().put(PENDING_PONG_MSG_ATT_NAME, pending);
+    /**
+     * Get the remoteParticipantIdentity value
+     *
+     * @return remoteParticipantIdentity current value
+     */
+    public String getRemoteParticipantIdentity() {
+        return remoteParticipantIdentity;
     }
 
     /**
@@ -68,5 +101,14 @@ public class VpnClientConnection {
      */
     public Session getSession() {
         return session;
+    }
+
+    /**
+     * Get the networkServiceType value
+     *
+     * @return networkServiceType current value
+     */
+    public NetworkServiceType getNetworkServiceType() {
+        return networkServiceType;
     }
 }

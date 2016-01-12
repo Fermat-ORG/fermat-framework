@@ -53,8 +53,11 @@ import org.java_websocket.drafts.Draft_17;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.StringHttpMessageConverter;
+import org.springframework.util.LinkedMultiValueMap;
+import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
 
 import java.io.BufferedReader;
@@ -448,8 +451,7 @@ public class WsCommunicationsCloudClientConnection implements CommunicationsClie
      * (non-javadoc)
      * @see CommunicationsClientConnection#requestListComponentRegistered(DiscoveryQueryParameters)
      */
-    @Override
-    public List<PlatformComponentProfile> requestListComponentRegistered(DiscoveryQueryParameters discoveryQueryParameters) throws CantRequestListException {
+    public List<PlatformComponentProfile> requestListComponentRegisteredOld(DiscoveryQueryParameters discoveryQueryParameters) throws CantRequestListException {
 
         System.out.println("WsCommunicationsCloudClientConnection - new requestListComponentRegistered");
         List<PlatformComponentProfile> resultList = new ArrayList<>();
@@ -499,6 +501,70 @@ public class WsCommunicationsCloudClientConnection implements CommunicationsClie
                  /*
                  * Get the receivedList
                  */
+                resultList = gson.fromJson(respondJsonObject.get(JsonAttNamesConstants.RESULT_LIST).getAsString(), new TypeToken<List<PlatformComponentProfileCommunication>>() {
+                }.getType());
+
+                System.out.println("WsCommunicationsCloudClientConnection - resultList.size() = " + resultList.size());
+
+            }else {
+                System.out.println("WsCommunicationsCloudClientConnection - Requested list is not available, resultList.size() = " + resultList.size());
+            }
+
+        }catch (Exception e){
+            e.printStackTrace();
+            CantRequestListException cantRequestListException = new CantRequestListException(CantRequestListException.DEFAULT_MESSAGE, e, e.getLocalizedMessage(), e.getLocalizedMessage());
+            throw cantRequestListException;
+
+        }
+
+        return resultList;
+    }
+
+    /**
+     * (non-javadoc)
+     * @see CommunicationsClientConnection#requestListComponentRegistered(DiscoveryQueryParameters)
+     */
+    @Override
+    public List<PlatformComponentProfile> requestListComponentRegistered(DiscoveryQueryParameters discoveryQueryParameters) throws CantRequestListException {
+
+        System.out.println("WsCommunicationsCloudClientConnection - new requestListComponentRegistered");
+        List<PlatformComponentProfile> resultList = new ArrayList<>();
+
+        /*
+         * Validate parameter
+         */
+        if (discoveryQueryParameters == null){
+            throw new IllegalArgumentException("The discoveryQueryParameters is required, can not be null");
+        }
+
+        try {
+
+            /*
+             * Construct the parameters
+             */
+            MultiValueMap<String,Object> parameters = new LinkedMultiValueMap<>();
+            parameters.add(JsonAttNamesConstants.NAME_IDENTITY, wsCommunicationsCloudClientChannel.getIdentityPublicKey());
+            parameters.add(JsonAttNamesConstants.DISCOVERY_PARAM, discoveryQueryParameters.toJson());
+
+            // Create a new RestTemplate instance
+            RestTemplate restTemplate = new RestTemplate(true);
+            String respond = restTemplate.postForObject("http://"+ WsCommunicationsCloudClientPluginRoot.SERVER_IP + ":" + ServerConf.DEFAULT_PORT+"/fermat/components/registered", parameters, String.class);
+
+            /*
+             * if respond have the result list
+             */
+            if (respond.contains(JsonAttNamesConstants.RESULT_LIST)){
+
+                /*
+                 * Decode into a json object
+                 */
+                JsonParser parser = new JsonParser();
+                JsonObject respondJsonObject = (JsonObject) parser.parse(respond.toString());
+
+                 /*
+                 * Get the receivedList
+                 */
+                Gson gson = new Gson();
                 resultList = gson.fromJson(respondJsonObject.get(JsonAttNamesConstants.RESULT_LIST).getAsString(), new TypeToken<List<PlatformComponentProfileCommunication>>() {
                 }.getType());
 
@@ -890,8 +956,6 @@ public class WsCommunicationsCloudClientConnection implements CommunicationsClie
     protected void stopWsCommunicationsCloudClientPingAgent(){
         wsCommunicationsCloudClientPingAgent.interrupt();
     }
-
-
 
     public void springTest(){
 

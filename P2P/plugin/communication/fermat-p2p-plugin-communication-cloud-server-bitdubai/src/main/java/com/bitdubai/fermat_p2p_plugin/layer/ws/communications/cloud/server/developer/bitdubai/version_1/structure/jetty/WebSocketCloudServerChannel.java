@@ -58,8 +58,6 @@ public class WebSocketCloudServerChannel {
      */
     private Logger LOG = Logger.getLogger(ClassUtils.getShortClassName(WebSocketCloudServerChannel.class));
 
-
-
     /**
      * Represent the active client Connection
      */
@@ -70,7 +68,6 @@ public class WebSocketCloudServerChannel {
      */
     public WebSocketCloudServerChannel(){
         super();
-
     }
 
     /**
@@ -146,6 +143,8 @@ public class WebSocketCloudServerChannel {
                 session.close(new CloseReason(CloseReason.CloseCodes.PROTOCOL_ERROR, "DENIED, NOT VALID HANDSHAKE"));
             }
         }
+
+        LOG.info("session.getOpenSessions().size() = " + session.getOpenSessions().size());
 
     }
 
@@ -273,6 +272,7 @@ public class WebSocketCloudServerChannel {
             MemoryCache.getInstance().getPendingRegisterClientConnectionsCache().remove(activeClientConnection.getClientIdentity());
             MemoryCache.getInstance().getRegisteredCommunicationsCloudServerCache().remove(activeClientConnection.getClientIdentity());
             MemoryCache.getInstance().getRegisteredCommunicationsCloudClientCache().remove(activeClientConnection.getClientIdentity());
+            MemoryCache.getInstance().getRegisteredClientConnectionsCache().remove(activeClientConnection.getClientIdentity());
 
             LOG.info("pendingRegisterClientConnectionsCache.size()    = " + MemoryCache.getInstance().getPendingRegisterClientConnectionsCache().size());
             LOG.info("registeredCommunicationsCloudServerCache.size() = " + MemoryCache.getInstance().getRegisteredCommunicationsCloudServerCache().size());
@@ -307,12 +307,15 @@ public class WebSocketCloudServerChannel {
              * Clean all the caches, remove data bind whit this connection and put
              * on stand by, to wait to reconnect
              */
-            List<PlatformComponentProfile> removeProfile = removeNetworkServiceRegisteredByClientIdentity(activeClientConnection.getClientIdentity());
-            removeProfile.addAll(removeOtherPlatformComponentRegisteredByClientIdentity(activeClientConnection.getClientIdentity()));
             MemoryCache.getInstance().getPendingRegisterClientConnectionsCache().remove(activeClientConnection.getClientIdentity());
-            MemoryCache.getInstance().getStandByProfileByClientIdentity().put(activeClientConnection.getClientIdentity(), removeProfile);
             MemoryCache.getInstance().getRegisteredCommunicationsCloudServerCache().remove(activeClientConnection.getClientIdentity());
             MemoryCache.getInstance().getRegisteredCommunicationsCloudClientCache().remove(activeClientConnection.getClientIdentity());
+            MemoryCache.getInstance().getRegisteredClientConnectionsCache().remove(activeClientConnection.getClientIdentity());
+
+            List<PlatformComponentProfile> removeProfile = removeNetworkServiceRegisteredByClientIdentity(activeClientConnection.getClientIdentity());
+            removeProfile.addAll(removeOtherPlatformComponentRegisteredByClientIdentity(activeClientConnection.getClientIdentity()));
+
+            MemoryCache.getInstance().getStandByProfileByClientIdentity().put(activeClientConnection.getClientIdentity(), removeProfile);
             LOG.info("Number of list of profiles put into standby = " + removeProfile.size());
 
         }catch (Exception e){

@@ -130,7 +130,7 @@ public class DiscoveryComponentConnectionRequestJettyPacketProcessor extends Fer
             LOG.info("remoteNsParticipant = " + remoteNsParticipant.getAlias() + "("+remoteNsParticipant.getIdentityPublicKey()+")");
 
             //Create a new vpn
-           String vpnPath = JettyEmbeddedAppServer.DEFAULT_CONTEXT_PATH + "/" + JettyEmbeddedAppServer.getInstance().deployNewJavaxVpnWebSocket();
+           String vpnPath = JettyEmbeddedAppServer.DEFAULT_CONTEXT_PATH + "/vpn/";
 
             LOG.info("new vpnPath = " + vpnPath);
 
@@ -185,15 +185,20 @@ public class DiscoveryComponentConnectionRequestJettyPacketProcessor extends Fer
      */
     private void constructRespondPacketAndSend(String path, PlatformComponentProfile platformComponentProfileDestination, PlatformComponentProfile remoteParticipant, PlatformComponentProfile remoteParticipantNetworkService){
 
+
+        LOG.info("Sending vpn connection to = " + platformComponentProfileDestination.getAlias());
+
         /*
          * Get json representation for the filters
          */
         JsonObject packetContent = new JsonObject();
         packetContent.addProperty(JsonAttNamesConstants.VPN_URI, path);
         packetContent.addProperty(JsonAttNamesConstants.VPN_SERVER_IDENTITY, WebSocketVpnIdentity.getInstance().getIdentity().getPublicKey());
-        packetContent.addProperty(JsonAttNamesConstants.REGISTER_PARTICIPANT_IDENTITY_VPN, platformComponentProfileDestination.getIdentityPublicKey());
+        packetContent.addProperty(JsonAttNamesConstants.APPLICANT_PARTICIPANT_VPN, platformComponentProfileDestination.toJson());
         packetContent.addProperty(JsonAttNamesConstants.REMOTE_PARTICIPANT_VPN, remoteParticipant.toJson());
         packetContent.addProperty(JsonAttNamesConstants.REMOTE_PARTICIPANT_NS_VPN, remoteParticipantNetworkService.toJson());
+
+        LOG.info("packetContent = " +gson.toJson(packetContent));
 
         /*
          * Get the client connection destination

@@ -19,7 +19,6 @@ import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.contents.Ferm
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.enums.FermatPacketType;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.enums.JsonAttNamesConstants;
 import com.bitdubai.fermat_p2p_plugin.layer.ws.communications.cloud.server.developer.bitdubai.version_1.structure.jetty.ClientConnection;
-import com.bitdubai.fermat_p2p_plugin.layer.ws.communications.cloud.server.developer.bitdubai.version_1.structure.jetty.conf.WebSocketConfigurator;
 import com.bitdubai.fermat_p2p_plugin.layer.ws.communications.cloud.server.developer.bitdubai.version_1.structure.jetty.util.MemoryCache;
 import com.bitdubai.fermat_p2p_plugin.layer.ws.communications.cloud.server.developer.bitdubai.version_1.structure.jetty.util.VpnShareMemoryCache;
 import com.bitdubai.fermat_p2p_plugin.layer.ws.communications.cloud.server.developer.bitdubai.version_1.structure.jetty.util.WebSocketVpnIdentity;
@@ -29,16 +28,19 @@ import com.google.gson.JsonParser;
 
 import org.apache.commons.lang.ClassUtils;
 import org.apache.log4j.Logger;
+import org.eclipse.jetty.websocket.api.Session;
+import org.eclipse.jetty.websocket.api.WebSocketAdapter;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+import java.util.UUID;
+import java.util.concurrent.ConcurrentHashMap;
 
 import javax.websocket.CloseReason;
-import javax.websocket.OnClose;
-import javax.websocket.OnError;
-import javax.websocket.OnMessage;
-import javax.websocket.OnOpen;
-import javax.websocket.Session;
-import javax.websocket.server.ServerEndpoint;
+
 
 /**
  * The class <code>com.bitdubai.fermat_p2p_plugin.layer.ws.communications.cloud.server.developer.bitdubai.version_1.structure.jetty.vpn.WebSocketVpnServerChannel</code>
@@ -49,13 +51,12 @@ import javax.websocket.server.ServerEndpoint;
  * @version 1.0
  * @since Java JDK 1.7
  */
-@ServerEndpoint(value="/vpn/", configurator = WebSocketConfigurator.class)
-public class WebSocketVpnServerChannel {
+public class WebSocketVpnServerChannelOld extends WebSocketAdapter {
 
     /**
      * Represent the logger instance
      */
-    private Logger LOG = Logger.getLogger(ClassUtils.getShortClassName(WebSocketVpnServerChannel.class));
+    private Logger LOG = Logger.getLogger(ClassUtils.getShortClassName(WebSocketVpnServerChannelOld.class));
 
     /**
      *  Represent the vpnServerIdentity
@@ -63,9 +64,9 @@ public class WebSocketVpnServerChannel {
     private ECCKeyPair vpnServerIdentity;
 
     /**
-     *  Represent the networkServiceType
+     *  Represent the vpnId
      */
-    private NetworkServiceType networkServiceType;
+    private String vpnId;
 
     /**
      *  Represent the vpnClientConnection
@@ -78,22 +79,27 @@ public class WebSocketVpnServerChannel {
     private PlatformComponentProfile participantPendingToReconnect;
 
     /**
+     *  Represent the networkServiceType
+     */
+    private NetworkServiceType networkServiceType;
+
+    /**
      * Constructor
      */
-    public WebSocketVpnServerChannel(){
+    public WebSocketVpnServerChannelOld(){
         super();
+        this.vpnId = UUID.randomUUID().toString();
         this.vpnServerIdentity = WebSocketVpnIdentity.getInstance().getIdentity();
     }
 
-
-    @OnOpen
-    public void onWebSocketConnect(Session session) throws IOException {
+    @Override
+    public void onWebSocketConnect(Session session) {
 
         LOG.info(" --------------------------------------------------------------------- ");
-        LOG.info("Starting method onOpen");
-        LOG.info("New Client: " + session.getId() + " is connected!");
-
-        String temp_i = (String) session.getUserProperties().get(JsonAttNamesConstants.HEADER_ATT_NAME_TI);
+        LOG.info("Starting method onWebSocketConnect");
+        LOG.info("vpnId= " + vpnId);
+        LOG.info("New Client: " + session.getRemoteAddress().toString() + " is connected!");
+        String temp_i = session.getUpgradeRequest().getHeader(JsonAttNamesConstants.HEADER_ATT_NAME_TI);
         LOG.info("temp-i = " + temp_i);
 
         /*
@@ -109,7 +115,7 @@ public class WebSocketVpnServerChannel {
             JsonParser parser = new JsonParser();
             JsonObject contentJsonObject = parser.parse(messageContentJsonStringRepresentation).getAsJsonObject();
 
-             /*
+            /*
              * Get the identity send by the participant
              */
             networkServiceType                   = gson.fromJson(contentJsonObject.get(JsonAttNamesConstants.NETWORK_SERVICE_TYPE), NetworkServiceType.class);
@@ -120,19 +126,20 @@ public class WebSocketVpnServerChannel {
             /*
              * Get the client identity and the participant profile
              */
-            vpnClientConnection = new VpnClientConnection(vpnClientIdentity, participant, remoteParticipantIdentity, session, networkServiceType);
-
-            VpnShareMemoryCache.add(networkServiceType, participant.getIdentityPublicKey(), vpnClientConnection);
+            //vpnClientConnection = new VpnClientConnection(vpnClientIdentity, participant, remoteParticipantIdentity, session);
+            getParticipantsConnections().put(vpnClientConnection.getParticipant().getIdentityPublicKey()+"_"+networkServiceType.toString(), vpnClientConnection);
 
             if (participantPendingToReconnect == null) {
 
-                LOG.info("All participant are connected = " + VpnShareMemoryCache.isConnected(networkServiceType, remoteParticipantIdentity));
+                LOG.info("All participant are connected = " + getParticipantsConnections().containsKey(remoteParticipantIdentity+"_"+networkServiceType.toString()));
 
                 //Validate if all participantsConnections register are connect
-                if(VpnShareMemoryCache.isConnected(networkServiceType, remoteParticipantIdentity)){
+                if(getParticipantsConnections().containsKey(remoteParticipantIdentity+"_"+networkServiceType.toString())){
 
-                    PlatformComponentProfile peer1 = participant;
-                    PlatformComponentProfile peer2 = VpnShareMemoryCache.get(networkServiceType, remoteParticipantIdentity).getParticipant();
+                    List<VpnClientConnection> participants = new ArrayList<>(getParticipantsConnections().values());
+
+                    PlatformComponentProfile peer1 = participants.get(0).getParticipant();
+                    PlatformComponentProfile peer2 = participants.get((participants.size()-1)).getParticipant();
 
                     sendNotificationPacketConnectionComplete(peer1, peer2);
                     sendNotificationPacketConnectionComplete(peer2, peer1);
@@ -156,13 +163,13 @@ public class WebSocketVpnServerChannel {
         }else {
 
             if (session.isOpen()) {
-                session.close(new CloseReason(CloseReason.CloseCodes.PROTOCOL_ERROR, "DENIED, NOT VALID HANDSHAKE"));
+                session.close(CloseReason.CloseCodes.PROTOCOL_ERROR.getCode(), "DENIED, NOT VALID HANDSHAKE");
             }
         }
 
     }
 
-    @OnMessage
+    @Override
     public void onWebSocketText(String fermatPacketEncode){
 
         LOG.info("-----------------------------------------------------------");
@@ -193,14 +200,16 @@ public class WebSocketVpnServerChannel {
             * Construct a new fermat packet whit the same message and different destination
             */
             FermatPacket fermatPacketRespond = FermatPacketCommunicationFactory.constructFermatPacketEncryptedAndSinged(vpnClientConnection.getVpnClientIdentity(), //Destination
-                                                                                                                        vpnServerIdentity.getPublicKey(),           //Sender
-                                                                                                                        fermatMessage.toJson(),                     //Message Content
-                                                                                                                        FermatPacketType.MESSAGE_TRANSMIT,          //Packet type
-                                                                                                                        vpnServerIdentity.getPrivateKey());         //Sender private key
+                    vpnServerIdentity.getPublicKey(),           //Sender
+                    fermatMessage.toJson(),                     //Message Content
+                    FermatPacketType.MESSAGE_TRANSMIT,          //Packet type
+                    vpnServerIdentity.getPrivateKey());         //Sender private key
             /*
              * Get the connection of the destination
              */
-            VpnClientConnection clientConnectionDestination = VpnShareMemoryCache.get(networkServiceType, fermatMessage.getReceiver());
+            VpnClientConnection clientConnectionDestination = getParticipantsConnections().get(fermatMessage.getReceiver()+"_"+networkServiceType.toString());
+
+            //LOG.info("clientConnectionDestination = " + clientConnectionDestination.getSession().getRemoteAddress());
 
             /*
              * If the connection to client destination available
@@ -211,8 +220,14 @@ public class WebSocketVpnServerChannel {
 
                /*
                 * Send the encode packet to the destination
-                */
-                clientConnectionDestination.getSession().getAsyncRemote().sendText(FermatPacketEncoder.encode(fermatPacketRespond));
+
+                try {
+
+                    //clientConnectionDestination.getSession().getRemote().sendString(FermatPacketEncoder.encode(fermatPacketRespond));
+
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }*/
 
             }
 
@@ -221,15 +236,13 @@ public class WebSocketVpnServerChannel {
         }
     }
 
-    @OnClose
-    public void onWebSocketClose(CloseReason reason)
-    {
-        System.out.println("Socket Closed: " + reason);
+    @Override
+    public void onWebSocketClose(int statusCode, String reason){
+        System.out.println("Socket Closed: ["+statusCode+"] " + reason);
     }
 
-    @OnError
-    public void onWebSocketError(Throwable cause)
-    {
+    @Override
+    public void onWebSocketError(Throwable cause){
         cause.printStackTrace(System.err);
     }
 
@@ -262,16 +275,17 @@ public class WebSocketVpnServerChannel {
         * Construct a new fermat packet whit the same message and different destination
         */
         FermatPacket fermatPacketRespond = FermatPacketCommunicationFactory.constructFermatPacketEncryptedAndSinged(destinationPlatformComponentProfile.getCommunicationCloudClientIdentity(), //Destination
-                                                                                                                    clientConnectionDestination.getServerIdentity().getPublicKey(), //Sender
-                                                                                                                    gson.toJson(packetContent),                                        //Message Content
-                                                                                                                    FermatPacketType.COMPLETE_COMPONENT_CONNECTION_REQUEST,            //Packet type
-                                                                                                                    clientConnectionDestination.getServerIdentity().getPrivateKey()); //Sender private key
+                clientConnectionDestination.getServerIdentity().getPublicKey(), //Sender
+                gson.toJson(packetContent),                                        //Message Content
+                FermatPacketType.COMPLETE_COMPONENT_CONNECTION_REQUEST,            //Packet type
+                clientConnectionDestination.getServerIdentity().getPrivateKey()); //Sender private key
         /*
         * Send the encode packet to the destination
         */
         clientConnectionDestination.getSession().getAsyncRemote().sendText(FermatPacketEncoder.encode(fermatPacketRespond));
 
     }
+
 
     /**
      * Construct a packet whit the information that a participant of a vpn is already reconnect
@@ -280,9 +294,12 @@ public class WebSocketVpnServerChannel {
 
         LOG.info("sendNotificationPacketReconnected");
 
-           VpnClientConnection connection = VpnShareMemoryCache.get(networkServiceType, vpnClientConnection.getRemoteParticipantIdentity());
+        Iterator<VpnClientConnection> iterator = getParticipantsConnections().values().iterator();
+        while (iterator.hasNext()){
 
-            if (connection.getSession().getId() != vpnClientConnection.getSession().getId()){
+            VpnClientConnection connection = iterator.next();
+
+            if (!connection.getSession().equals(vpnClientConnection.getSession())){
 
                 /*
                  * Construct the content of the msj
@@ -304,11 +321,34 @@ public class WebSocketVpnServerChannel {
 
                 /*
                  * Send notification
-                 */
-                connection.getSession().getAsyncRemote().sendText(FermatPacketEncoder.encode(fermatPacketRespond));
 
+                try {
+
+                    //connection.getSession().getRemote().sendString(FermatPacketEncoder.encode(fermatPacketRespond));
+
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }*/
+                break;
             }
+        }
 
     }
 
+
+    /**
+     * Get the participantsConnections value
+     *
+     * @return participantsConnections current value
+     */
+    private Map<String, VpnClientConnection> getParticipantsConnections() {
+
+        if (VpnShareMemoryCache.isConnected(networkServiceType, "CONNECTION_MAP")){
+            return (Map<String, VpnClientConnection>) VpnShareMemoryCache.get(networkServiceType, "CONNECTION_MAP");
+        }else {
+            Map<String, VpnClientConnection> connectionMap = new ConcurrentHashMap<>();
+            //VpnShareMemoryCache.getInstance().add("CONNECTION_MAP", connectionMap);
+            return connectionMap;
+        }
+    }
 }

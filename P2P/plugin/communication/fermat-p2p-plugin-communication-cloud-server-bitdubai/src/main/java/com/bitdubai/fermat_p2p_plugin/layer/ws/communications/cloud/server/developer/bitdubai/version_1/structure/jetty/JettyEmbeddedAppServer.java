@@ -121,10 +121,10 @@ public class JettyEmbeddedAppServer {
              * Add WebSocket endpoint to javax.websocket layer
              */
             this.wsServerContainer.addEndpoint(WebSocketCloudServerChannel.class);
+            this.wsServerContainer.addEndpoint(WebSocketVpnServerChannel.class);
 
             this.server.start();
             this.server.dump(System.err);
-            //this.server.join();
 
         }catch (Throwable t){
             t.printStackTrace(System.err);
@@ -195,7 +195,7 @@ public class JettyEmbeddedAppServer {
         try {
 
             JettyEmbeddedAppServer.getInstance();
-            JettyEmbeddedAppServer.getInstance().deployNewJavaxVpnWebSocket();
+         /*   JettyEmbeddedAppServer.getInstance().deployNewJavaxVpnWebSocket();
 
             new Timer().schedule(new TimerTask() {
                 @Override
@@ -247,7 +247,7 @@ public class JettyEmbeddedAppServer {
 
 
 
-      /*      new Timer().schedule(new TimerTask() {
+           new Timer().schedule(new TimerTask() {
                 @Override
                 public void run() {
                     try {

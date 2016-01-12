@@ -64,7 +64,7 @@ public class ComponentConnectionRespondPacketProcessorOld extends FermatPacketPr
             //Get all values
             URI vpnServerUri = new URI(respond.get(JsonAttNamesConstants.VPN_URI).getAsString());
             String vpnServerIdentity = respond.get(JsonAttNamesConstants.VPN_SERVER_IDENTITY).getAsString();
-            String participantIdentity = respond.get(JsonAttNamesConstants.REGISTER_PARTICIPANT_IDENTITY_VPN).getAsString();
+            PlatformComponentProfile participantVpn = gson.fromJson(respond.get(JsonAttNamesConstants.APPLICANT_PARTICIPANT_VPN).getAsString(), PlatformComponentProfileCommunication.class);
             PlatformComponentProfile remotePlatformComponentProfile = gson.fromJson(respond.get(JsonAttNamesConstants.REMOTE_PARTICIPANT_VPN).getAsString(), PlatformComponentProfileCommunication.class);
             PlatformComponentProfile remoteNsPlatformComponentProfile = gson.fromJson(respond.get(JsonAttNamesConstants.REMOTE_PARTICIPANT_NS_VPN).getAsString(), PlatformComponentProfileCommunication.class);
 
@@ -90,7 +90,7 @@ public class ComponentConnectionRespondPacketProcessorOld extends FermatPacketPr
             /*
              * Create a new VPN client
              */
-            wsCommunicationVPNClientManagerAgent.createNewWsCommunicationVPNClient(getWsCommunicationsCloudClientChannel().getIdentityPublicKey(), vpnServerUri, vpnServerIdentity, participantIdentity, remotePlatformComponentProfile, remoteNsPlatformComponentProfile, getWsCommunicationsCloudClientChannel().getEventManager());
+            wsCommunicationVPNClientManagerAgent.createNewWsCommunicationVPNClient(vpnServerUri, vpnServerIdentity, participantVpn, remotePlatformComponentProfile, remoteNsPlatformComponentProfile, getWsCommunicationsCloudClientChannel().getEventManager());
 
             /*
              * Is not running

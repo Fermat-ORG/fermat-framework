@@ -75,7 +75,7 @@ public class WsCommunicationsCloudClientPluginRoot extends AbstractPlugin implem
     /**
      * Represent the SERVER_IP
      */
-     public static final String SERVER_IP = ServerConf.SERVER_IP_PRODUCCTION;
+     public static final String SERVER_IP = ServerConf.SERVER_IP_DEVELOPER_LOCAL;
 
     /**
      * Represent the uri
@@ -178,9 +178,9 @@ public class WsCommunicationsCloudClientPluginRoot extends AbstractPlugin implem
 
             WebSocketImpl.DEBUG = false;
 
-            uri = new URI(ServerConf.WS_PROTOCOL + WsCommunicationsCloudClientPluginRoot.SERVER_IP + ":" + ServerConf.DEFAULT_PORT);
+            //uri = new URI(ServerConf.WS_PROTOCOL + WsCommunicationsCloudClientPluginRoot.SERVER_IP + ":" + ServerConf.DEFAULT_PORT);
 
-            //uri = new URI("ws://192.168.1.5:9090/fermat/ws/");
+            uri = new URI(ServerConf.WS_PROTOCOL + WsCommunicationsCloudClientPluginRoot.SERVER_IP + ":" + ServerConf.DEFAULT_PORT+"/fermat/ws/");
 
             wsCommunicationsCloudClientConnection = new WsCommunicationsCloudClientConnection(uri,eventManager, locationManager, clientIdentity);
             wsCommunicationsCloudClientConnection.initializeAndConnect();
@@ -196,7 +196,6 @@ public class WsCommunicationsCloudClientPluginRoot extends AbstractPlugin implem
                 }
             });
             eventManager.addListener(fermatEventListener);
-
 
         } catch (Exception e) {
             e.printStackTrace();

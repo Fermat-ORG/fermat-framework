@@ -30,6 +30,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
 
+import javax.ws.rs.Consumes;
 import javax.ws.rs.FormParam;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
@@ -73,7 +74,7 @@ public class ComponentRegisteredListWebService {
 
     @POST
     @Produces(MediaType.APPLICATION_JSON)
-    public String getList(@FormParam(JsonAttNamesConstants.NAME_IDENTITY) String clientIdentity, @FormParam(JsonAttNamesConstants.DISCOVERY_PARAM) String discoveryParam){
+    public String getList(@FormParam(JsonAttNamesConstants.NAME_IDENTITY) String clientIdentityPublicKey, @FormParam(JsonAttNamesConstants.DISCOVERY_PARAM) String discoveryParam){
 
         LOG.info(" --------------------------------------------------------------------- ");
         LOG.info("ComponentRegisteredListWebService - Starting getList");
@@ -81,15 +82,10 @@ public class ComponentRegisteredListWebService {
 
         try{
 
-            LOG.info("clientIdentity = " + clientIdentity);
-            LOG.info("discoveryParam = " + discoveryParam);
-
             /*
              * Construct the json object
              */
-            JSONObject requestParametersJsonObject = (new JsonRepresentation(clientIdentity)).getJsonObject();
-            String clientIdentityPublicKey = requestParametersJsonObject.getString(JsonAttNamesConstants.NAME_IDENTITY);
-            DiscoveryQueryParameters discoveryQueryParameters = new DiscoveryQueryParametersCommunication().fromJson(requestParametersJsonObject.getString(JsonAttNamesConstants.DISCOVERY_PARAM));
+            DiscoveryQueryParameters discoveryQueryParameters = new DiscoveryQueryParametersCommunication().fromJson(discoveryParam);
 
             LOG.info("clientIdentityPublicKey  = " + clientIdentityPublicKey);
             LOG.info("discoveryQueryParameters = " + discoveryQueryParameters.toJson());
@@ -185,7 +181,8 @@ public class ComponentRegisteredListWebService {
 
         /*
          * Remove the requester from the list
-         */
+        */
+
         Iterator<PlatformComponentProfile> iterator = list.iterator();
         while (iterator.hasNext()){
 
