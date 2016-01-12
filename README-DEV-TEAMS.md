@@ -4,15 +4,15 @@
 
 ## Introduction
 
-All the work done on the Fermat project is done by a Team. We have several teams working in parallel. Most of them are teams of developers, but these are not the only types of teams. We also have teams of graphic designers, 3d artists, video producers, copy writers, publishing, etc.
+All the work done on the Fermat project is done by a Team. Fermat has several teams working in parallel. Most of them are dev teams, but these are not the only ones. Fermat also has teams of graphic designers, 3d artists, video producers, copy writers, publishing, etc.
 
-bitDubai is a network of teams. Besides these developer teams bitDubai also has designer teams, copywriters, artists, video producers, etc. The following organization is valid only to bitDubai's teams. Other professionals might want to get organized in a different way.
+bitDubai is a network of teams working on the Fermat project. In this document you will learn about how bitDubai teams are organized. At the momento bitDubai is the only team-network working on Fermat, but there is room for other networks to join and they might want to get organized in a different way.
 
-At this file you will find a list of bitDubai/Fermat developers teams. Feel free to contact their team leaders if you want to join them.
+Below you will find a list of bitDubai/Fermat developers teams. Feel free to contact their team leaders if you want to join them.
 
 You can also contribute to the Fermat project through other means. Please refer to the [CONTRIBUTING GUIDE](https://github.com/bitDubai/fermat/blob/master/CONTRIBUTING.md) for more details.
 
-## Organization
+## bitDubai Team's Organization
 
 The maximun size for a team is 5 people. Among all of them, they should have all the skill sets needed for these kind of projects.
 
