@@ -115,6 +115,7 @@ public enum Activities implements FermatEnum {
 
     DAP_ASSET_USER_COMMUNITY_ACTIVITY_MAIN("DAPAUCAM"),
     DAP_ASSET_USER_COMMUNITY_ACTIVITY_ADMINISTRATIVE_GROUP_MAIN("DAPAUCAAGM"),
+    DAP_ASSET_USER_COMMUNITY_ACTIVITY_ADMINISTRATIVE_GROUP_USERS_FRAGMENT("DAUCAAGUF"),
 
     DAP_ASSET_ISSUER_COMMUNITY_ACTIVITY_MAIN("DAPAICAM"),
     DAP_ASSET_REDEEM_POINT_COMMUNITY_ACTIVITY_MAIN("DAPARPCAM"),
@@ -552,6 +553,8 @@ public enum Activities implements FermatEnum {
             case "DWAIURL":
                 return DAP_WALLET_ASSET_ISSUER_USER_REDEEMED_LIST;
 
+            case "DAUCAAGUF":
+                return DAP_ASSET_USER_COMMUNITY_ACTIVITY_ADMINISTRATIVE_GROUP_USERS_FRAGMENT;
             default:
                 throw new InvalidParameterException(
                         "Code Received: " + code,
