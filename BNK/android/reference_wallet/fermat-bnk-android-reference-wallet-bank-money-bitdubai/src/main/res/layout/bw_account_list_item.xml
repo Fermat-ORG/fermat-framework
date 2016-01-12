@@ -3,8 +3,7 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="80dp"
-    android:background="@color/background_body"
+    android:layout_height="wrap_content"
     android:paddingBottom="8dp"
     android:paddingEnd="@dimen/activity_horizontal_margin"
     android:paddingLeft="@dimen/activity_horizontal_margin"
@@ -13,50 +12,140 @@
     android:paddingTop="8dp">
 
 
-
-    <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
-        android:id="@+id/account"
-        android:layout_width="wrap_content"
+    <LinearLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:id="@+id/acc_first_line"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
-        android:layout_gravity="center_vertical"
-        android:singleLine="true"
-        android:textColor="@color/text_color_bold"
-        android:textSize="@dimen/text_size"
-        tools:text="Guillermo Gutierrez"/>
+        android:orientation="horizontal"
+        android:paddingLeft="16dp"
+        android:paddingRight="16dp"
+        android:background="@color/faded_navy_60">
 
     <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
         android:id="@+id/account_alias"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/account"
-        android:layout_marginEnd="@dimen/margin_text"
-        android:layout_marginRight="@dimen/margin_text"
-        android:singleLine="true"
-        android:textColor="@color/text_color_bold"
+        android:layout_gravity="center_horizontal"
+        android:textColor="@color/text_color_blue"
         android:textSize="@dimen/text_size"
-        android:text="prueba alias"/>
+        android:layout_weight="1"
+        tools:text="alias"/>
 
     <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
-        android:id="@+id/account_type"
+        android:id="@+id/account"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentEnd="true"
-        android:layout_alignParentRight="true"
-        android:textColor="@color/text_color_bold"
-        android:textSize="@dimen/text_size"
-        tools:text="03 Feb 2015"/>
-
-    <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
-        android:id="@+id/currency"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/account_alias"
+        android:layout_gravity="center_horizontal"
         android:layout_marginEnd="@dimen/margin_text"
         android:layout_marginRight="@dimen/margin_text"
-        android:singleLine="true"
-        android:textColor="@color/text_color_bold"
+        android:textColor="@color/text_color_white"
         android:textSize="@dimen/text_size"
-        android:text="prueba currency"/>
+        android:layout_weight="1"
+        android:text="account"
+        android:gravity="right" />
+
+    </LinearLayout>
+
+
+
+    <LinearLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:id="@+id/acc_second_line"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_below="@id/acc_first_line"
+        android:paddingLeft="16dp"
+        android:paddingRight="16dp"
+        android:background="@color/faded_navy_20">
+
+        <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentRight="true"
+            android:textColor="@color/text_color_soft_blue"
+            android:textSize="@dimen/text_size"
+            tools:text="Balance"/>
+    </LinearLayout>
+
+
+
+    <LinearLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:id="@+id/acc_third_line"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_below="@id/acc_second_line"
+        android:paddingLeft="16dp"
+        android:paddingRight="16dp"
+        android:background="@color/faded_navy_20">
+        <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
+            android:id="@+id/available_balance"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/account_alias"
+            android:singleLine="true"
+            android:textColor="@color/text_color_white"
+            android:textSize="@dimen/text_size"
+            android:text="30000.00 USD"
+            android:layout_weight="2"
+            android:gravity="left"/>
+
+        <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginEnd="@dimen/margin_text"
+            android:layout_marginRight="@dimen/margin_text"
+            android:textColor="@color/text_color_soft_grey"
+            android:textSize="@dimen/text_size"
+            tools:text="Available"
+            android:layout_weight="1"
+            android:gravity="right"/>
+
+    </LinearLayout>
+
+    <LinearLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:id="@+id/acc_fourth_line"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_below="@id/acc_third_line"
+        android:paddingLeft="16dp"
+        android:paddingRight="16dp"
+        android:background="@color/faded_navy_20">
+        <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
+            android:id="@+id/book_balance"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/account_alias"
+            android:singleLine="true"
+            android:textColor="@color/text_color_blue"
+            android:textSize="@dimen/text_size"
+            android:text="30000.00 USD"
+            android:layout_weight="2"
+            android:gravity="left"/>
+
+        <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginEnd="@dimen/margin_text"
+            android:layout_marginRight="@dimen/margin_text"
+            android:textColor="@color/text_color_blue_navy"
+            android:textSize="@dimen/text_size"
+            tools:text="book"
+            android:layout_weight="1"
+            android:gravity="right"/>
+
+    </LinearLayout>
 </RelativeLayout>
