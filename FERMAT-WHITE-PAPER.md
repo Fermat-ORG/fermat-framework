@@ -201,7 +201,7 @@ Miners receive two types of rewards for mining: new tokens created with each new
 
 To earn this reward, the miners compete to sell incoming bandwith to network clients, i.e. being their home node. Network Clients are free to choose which node to use as their home and at some point they pay in fermats to these nodes for their services. Fermat "proof of work" consist on nodes proving that they have received payments for being a home node. 
 
-The amount of newly created fermats that can be added to a block decreases approximately every four years. It starts at 50 fermats per block and halves by 2 every 4 years. Based on this formula, fermat mining rewards decrease exponentially until all fermats (21,000,000 million) have been issued. After that, no new fermats will be issued.
+The amount of newly created fermats that can be added to a block decreases approximately every four years. It starts at 50,000 fermats per block and halves by 2 every 4 years. Based on this formula, fermat mining rewards decrease exponentially until all fermats (21,000,000,000 billion) have been issued. After that, no new fermats will be issued.
 
 #### Home Node Fees
 
