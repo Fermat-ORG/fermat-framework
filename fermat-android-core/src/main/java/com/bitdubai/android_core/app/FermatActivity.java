@@ -1333,7 +1333,7 @@ public abstract class FermatActivity extends AppCompatActivity
      * @return reference of WalletManagerManager
      */
 
-    public SubAppManager getSubAppManager() {
+    protected SubAppManager getSubAppManager() {
         return FermatSystemUtils.getSubAppManager(getApplication());
     }
 
@@ -1343,35 +1343,35 @@ public abstract class FermatActivity extends AppCompatActivity
      * @return reference of ErrorManager
      */
 
-    public ErrorManager getErrorManager() {
+    protected ErrorManager getErrorManager() {
         return FermatSystemUtils.getErrorManager(getApplication());
     }
 
     /**
      * Get WalletResourcesProvider
      */
-    public WalletResourcesProviderManager getWalletResourcesProviderManager() {
+    protected WalletResourcesProviderManager getWalletResourcesProviderManager() {
         return FermatSystemUtils.getWalletResourcesProviderManager(getApplication());
     }
 
     /**
      * Get SubAppResourcesProvider
      */
-    public SubAppResourcesProviderManager getSubAppResourcesProviderManager() {
+    protected SubAppResourcesProviderManager getSubAppResourcesProviderManager() {
         return FermatSystemUtils.getSubAppResourcesProviderManager(getApplication());
     }
 
     /**
      * Get NotificationManager
      */
-    public NotificationManagerMiddleware getNotificationManager() {
+    private NotificationManagerMiddleware getNotificationManager() {
         return FermatSystemUtils.getNotificationManager(getApplication());
     }
 
     /**
      * Get DesktopRuntimeManager
      */
-    public DesktopRuntimeManager getDesktopRuntimeManager() {
+    private DesktopRuntimeManager getDesktopRuntimeManager() {
         return FermatSystemUtils.getDesktopRuntimeManager(getApplication());
     }
 
