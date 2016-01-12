@@ -492,8 +492,8 @@ public class OutgoinChatMetaDataDao {
 
         try {
 
-            ChatMetadaTransactionRecord.setIdChat(record.getIntegerValue(NetworkServiceChatNetworkServiceDatabaseConstants.OUTGOING_CHAT_IDCHAT_COLUMN_NAME));
-            ChatMetadaTransactionRecord.setIdObjecto(record.getIntegerValue(NetworkServiceChatNetworkServiceDatabaseConstants.OUTGOING_CHAT_IDOBJECTO_COLUMN_NAME));
+            ChatMetadaTransactionRecord.setIdChat(record.getUUIDValue(NetworkServiceChatNetworkServiceDatabaseConstants.OUTGOING_CHAT_IDCHAT_COLUMN_NAME));
+            ChatMetadaTransactionRecord.setIdObjecto(record.getUUIDValue(NetworkServiceChatNetworkServiceDatabaseConstants.OUTGOING_CHAT_IDOBJECTO_COLUMN_NAME));
             ChatMetadaTransactionRecord.setLocalActorType(record.getStringValue(NetworkServiceChatNetworkServiceDatabaseConstants.OUTGOING_CHAT_LOCALACTORTYPE_COLUMN_NAME));
             ChatMetadaTransactionRecord.setLocalActorPubKey(record.getStringValue(NetworkServiceChatNetworkServiceDatabaseConstants.OUTGOING_CHAT_LOCALACTORPUBKEY_COLUMN_NAME));
             ChatMetadaTransactionRecord.setRemoteActorType(record.getStringValue(NetworkServiceChatNetworkServiceDatabaseConstants.OUTGOING_CHAT_REMOTEACTORTYPE_COLUMN_NAME));
@@ -501,7 +501,7 @@ public class OutgoinChatMetaDataDao {
             ChatMetadaTransactionRecord.setChatName(record.getStringValue(NetworkServiceChatNetworkServiceDatabaseConstants.OUTGOING_CHAT_CHATNAME_COLUMN_NAME));
             ChatMetadaTransactionRecord.setChatMessageStatus(ChatMessageStatus.getByCode(record.getStringValue(NetworkServiceChatNetworkServiceDatabaseConstants.OUTGOING_CHAT_CHATSTATUS_COLUMN_NAME)));
             ChatMetadaTransactionRecord.setDate(new Timestamp(Long.parseLong(record.getStringValue(NetworkServiceChatNetworkServiceDatabaseConstants.OUTGOING_CHAT_DATE_COLUMN_NAME))));
-            ChatMetadaTransactionRecord.setIdMessage(record.getIntegerValue(NetworkServiceChatNetworkServiceDatabaseConstants.OUTGOING_CHAT_IDMENSAJE_COLUMN_NAME));
+            ChatMetadaTransactionRecord.setIdMessage(record.getUUIDValue(NetworkServiceChatNetworkServiceDatabaseConstants.OUTGOING_CHAT_IDMENSAJE_COLUMN_NAME));
             ChatMetadaTransactionRecord.setMessage(record.getStringValue(NetworkServiceChatNetworkServiceDatabaseConstants.OUTGOING_CHAT_MESSAGE_COLUMN_NAME));
             ChatMetadaTransactionRecord.setDistributionStatus(DistributionStatus.getByCode(record.getStringValue(NetworkServiceChatNetworkServiceDatabaseConstants.OUTGOING_CHAT_DISTRIBUTIONSTATUS_COLUMN_NAME)));
 
@@ -531,8 +531,8 @@ public class OutgoinChatMetaDataDao {
         /*
          * Set the entity values
          */
-        entityRecord.setIntegerValue(NetworkServiceChatNetworkServiceDatabaseConstants.OUTGOING_CHAT_IDCHAT_COLUMN_NAME,                    ChatMetadaTransactionRecord.getIdChat());
-        entityRecord.setIntegerValue(NetworkServiceChatNetworkServiceDatabaseConstants.OUTGOING_CHAT_IDOBJECTO_COLUMN_NAME,                 ChatMetadaTransactionRecord.getIdChat());
+        entityRecord.setUUIDValue(NetworkServiceChatNetworkServiceDatabaseConstants.OUTGOING_CHAT_IDCHAT_COLUMN_NAME, ChatMetadaTransactionRecord.getIdChat());
+        entityRecord.setUUIDValue(NetworkServiceChatNetworkServiceDatabaseConstants.OUTGOING_CHAT_IDOBJECTO_COLUMN_NAME, ChatMetadaTransactionRecord.getIdChat());
         entityRecord.setStringValue(NetworkServiceChatNetworkServiceDatabaseConstants.OUTGOING_CHAT_LOCALACTORTYPE_COLUMN_NAME,             ChatMetadaTransactionRecord.getLocalActorType());
         entityRecord.setStringValue(NetworkServiceChatNetworkServiceDatabaseConstants.OUTGOING_CHAT_LOCALACTORPUBKEY_COLUMN_NAME,           ChatMetadaTransactionRecord.getLocalActorPubKey());
         entityRecord.setStringValue(NetworkServiceChatNetworkServiceDatabaseConstants.OUTGOING_CHAT_REMOTEACTORTYPE_COLUMN_NAME,            ChatMetadaTransactionRecord.getRemoteActorType());
@@ -540,7 +540,7 @@ public class OutgoinChatMetaDataDao {
         entityRecord.setStringValue(NetworkServiceChatNetworkServiceDatabaseConstants.OUTGOING_CHAT_CHATNAME_COLUMN_NAME,                   ChatMetadaTransactionRecord.getChatName());
         entityRecord.setStringValue(NetworkServiceChatNetworkServiceDatabaseConstants.OUTGOING_CHAT_CHATSTATUS_COLUMN_NAME,                 ChatMetadaTransactionRecord.getChatMessageStatus().getCode());
         entityRecord.setStringValue(NetworkServiceChatNetworkServiceDatabaseConstants.OUTGOING_CHAT_DATE_COLUMN_NAME,                       ChatMetadaTransactionRecord.getDate().toString());
-        entityRecord.setIntegerValue(NetworkServiceChatNetworkServiceDatabaseConstants.OUTGOING_CHAT_IDMENSAJE_COLUMN_NAME,                 ChatMetadaTransactionRecord.getIdMessage());
+        entityRecord.setUUIDValue(NetworkServiceChatNetworkServiceDatabaseConstants.OUTGOING_CHAT_IDMENSAJE_COLUMN_NAME,                 ChatMetadaTransactionRecord.getIdMessage());
         entityRecord.setStringValue(NetworkServiceChatNetworkServiceDatabaseConstants.OUTGOING_CHAT_MESSAGE_COLUMN_NAME,                    ChatMetadaTransactionRecord.getMessage());
         entityRecord.setStringValue(NetworkServiceChatNetworkServiceDatabaseConstants.OUTGOING_CHAT_DISTRIBUTIONSTATUS_COLUMN_NAME,         ChatMetadaTransactionRecord.getDistributionStatus().getCode());
 
