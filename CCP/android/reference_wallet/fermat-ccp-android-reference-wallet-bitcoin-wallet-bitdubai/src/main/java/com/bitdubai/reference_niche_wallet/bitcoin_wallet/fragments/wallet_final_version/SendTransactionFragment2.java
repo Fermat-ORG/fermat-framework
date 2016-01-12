@@ -138,7 +138,7 @@ public class SendTransactionFragment2 extends FermatWalletExpandableListFragment
     private FermatTextView txt_balance_amount_type;
     SettingsManager<BitcoinWalletSettings> settingsManager;
     private int progress1=1;
-    private  Map<Integer, Long> runningDailyBalance;
+    private  Map<Long, Long> runningDailyBalance;
 
     public static SendTransactionFragment2 newInstance() {
         return new SendTransactionFragment2();
@@ -199,6 +199,8 @@ public class SendTransactionFragment2 extends FermatWalletExpandableListFragment
 //
 //                    }
                 }}, 500);
+
+            setRunningDailyBalance();
         } catch (Exception ex) {
             if (errorManager != null)
                 errorManager.reportUnexpectedWalletException(Wallets.CWP_WALLET_RUNTIME_WALLET_BITCOIN_WALLET_ALL_BITDUBAI,
@@ -993,7 +995,7 @@ public class SendTransactionFragment2 extends FermatWalletExpandableListFragment
         int average = 0;
         try {
 
-            for (Map.Entry<Integer, Long> entry :  runningDailyBalance.entrySet())
+            for (Map.Entry<Long, Long> entry :  runningDailyBalance.entrySet())
             {
                 balanceSum += entry.getValue();
             }
@@ -1010,7 +1012,7 @@ public class SendTransactionFragment2 extends FermatWalletExpandableListFragment
     {
         try {
 
-
+            long currentTime = System.currentTimeMillis();
             runningDailyBalance = new HashMap<Long, Long>();
 
             BitcoinWalletSettings bitcoinWalletSettings = null;
@@ -1022,22 +1024,27 @@ public class SendTransactionFragment2 extends FermatWalletExpandableListFragment
 
             if(bitcoinWalletSettings == null){
 
-                runningDailyBalance.put(runningDailyBalance.size() + 1,  moduleManager.getBalance(BalanceType.AVAILABLE,referenceWalletSession.getAppPublicKey()));
+                runningDailyBalance.put(currentTime,  moduleManager.getBalance(BalanceType.AVAILABLE,referenceWalletSession.getAppPublicKey()));
                 bitcoinWalletSettings.setRunningDailyBalance(runningDailyBalance);
                 settingsManager.persistSettings(referenceWalletSession.getAppPublicKey(),bitcoinWalletSettings);
             }
             else {
 
                 if (bitcoinWalletSettings.getRunningDailyBalance() == null){
-                    runningDailyBalance.put(0,  moduleManager.getBalance(BalanceType.AVAILABLE,referenceWalletSession.getAppPublicKey()));
+                    runningDailyBalance.put(currentTime,  moduleManager.getBalance(BalanceType.AVAILABLE,referenceWalletSession.getAppPublicKey()));
                 }
                 else
                 {
                     runningDailyBalance = bitcoinWalletSettings.getRunningDailyBalance();
                     //verify that I have this day added
+                    long lastDate = getKeyDate(runningDailyBalance.size()-1);
+
+                    long dif = currentTime - lastDate;
+
+                    double dias = Math.floor(dif / (1000 * 60 * 60 * 24));
 
                     //if I have 30 days I start counting again
-                    runningDailyBalance.put(runningDailyBalance.size() + 1,  moduleManager.getBalance(BalanceType.AVAILABLE,referenceWalletSession.getAppPublicKey()));
+                    runningDailyBalance.put(currentTime,  moduleManager.getBalance(BalanceType.AVAILABLE,referenceWalletSession.getAppPublicKey()));
                 }
 
 
@@ -1051,5 +1058,26 @@ public class SendTransactionFragment2 extends FermatWalletExpandableListFragment
     }
 
 
+    private long getKeyDate(int pos){
+        int i = 0;
+        long date = 0;
+
+        try {
+
+            for (Map.Entry<Long, Long> entry :  runningDailyBalance.entrySet())
+            {
+                if(i == pos)
+                 date += entry.getKey();
+
+                i++;
+            }
+
+
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return date;
+    }
 }
 
