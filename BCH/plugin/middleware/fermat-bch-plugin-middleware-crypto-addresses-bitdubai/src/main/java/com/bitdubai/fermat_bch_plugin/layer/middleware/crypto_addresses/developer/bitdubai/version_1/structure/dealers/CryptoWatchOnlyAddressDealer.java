@@ -24,7 +24,6 @@ import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_addresses.interf
 public class CryptoWatchOnlyAddressDealer extends CryptoAddressDealer {
 
     private final CryptoAddressesManager cryptoAddressesManager  ;
-    private IntraWalletUserActorManager intraWalletUserActorManager;
 
     public CryptoWatchOnlyAddressDealer(final CryptoAddressesManager   cryptoAddressesManager  ,
                                           final CryptoAddressBookManager cryptoAddressBookManager,
@@ -51,7 +50,6 @@ public class CryptoWatchOnlyAddressDealer extends CryptoAddressDealer {
                         vaultType,
                         request
                 );
-                intraWalletUserActorManager.acceptIntraWalletUser(request.getIdentityPublicKeyResponding(),request.getIdentityPublicKeyRequesting());
                 cryptoAddressesManager.acceptAddressExchangeRequest(
                         request.getRequestId(),
                         cryptoAddress
@@ -59,8 +57,6 @@ public class CryptoWatchOnlyAddressDealer extends CryptoAddressDealer {
 
             } catch(DefaultWalletNotFoundException z) {
                 cryptoAddressesManager.denyAddressExchangeRequest(request.getRequestId());
-            } catch (CantAcceptIntraWalletUserException e) {
-                e.printStackTrace();
             }
 
         } catch(PendingRequestNotFoundException |

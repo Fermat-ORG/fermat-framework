@@ -406,9 +406,12 @@ public class CreateIntraUserIdentityFragment extends AbstractFermatFragment {
     @Override
     public void onCreateOptionsMenu(final Menu menu, MenuInflater inflater) {
         super.onCreateOptionsMenu(menu, inflater);
-        inflater.inflate(R.menu.menu_main, menu);
+        //inflater.inflate(R.menu.menu_main, menu);
 
         try {
+            menu.add(1, 99, 1, "help").setIcon(R.drawable.help_icon)
+                    .setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
+
             final MenuItem action_help = menu.findItem(R.id.action_help);
             menu.findItem(R.id.action_help).setVisible(true);
             action_help.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {

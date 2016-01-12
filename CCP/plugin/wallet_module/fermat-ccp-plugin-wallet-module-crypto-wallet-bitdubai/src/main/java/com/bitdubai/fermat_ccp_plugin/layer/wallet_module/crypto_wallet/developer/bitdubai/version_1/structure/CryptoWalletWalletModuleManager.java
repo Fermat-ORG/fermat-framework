@@ -168,6 +168,7 @@ public class CryptoWalletWalletModuleManager implements CryptoWallet {
 
     private CryptoPaymentRegistry  cryptoPaymentRegistry ;
     private WalletContactsRegistry walletContactsRegistry;
+    private IntraWalletUserActorManager intraWalletUserActorManager;
 
 
     public final void initialize() throws CantInitializeCryptoWalletManagerException {
@@ -1031,6 +1032,7 @@ public class CryptoWalletWalletModuleManager implements CryptoWallet {
             CryptoPayment paymentRequest =  cryptoPaymentRegistry.getRequestById(requestId);
 
             try {
+                intraWalletUserActorManager.acceptIntraWalletUser(paymentRequest.getIdentityPublicKey(),paymentRequest.getActorPublicKey());
                 WalletContactRecord walletContactRecord = walletContactsRegistry.getWalletContactByActorAndWalletPublicKey(paymentRequest.getActorPublicKey(), paymentRequest.getWalletPublicKey());
 
             } catch (com.bitdubai.fermat_ccp_api.layer.middleware.wallet_contacts.exceptions.WalletContactNotFoundException e) {
