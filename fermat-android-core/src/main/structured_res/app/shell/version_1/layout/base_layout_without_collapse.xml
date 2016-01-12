@@ -51,6 +51,10 @@
                     android:layout_height="wrap_content"
                     android:id="@+id/reveal"
                     >
+
+                    <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content">
                     <LinearLayout
                         android:id="@+id/reveal_items"
                         android:layout_width="match_parent"
@@ -70,7 +74,7 @@
                             <TextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:layout_marginTop="16dp"
+                                android:layout_marginTop="7dp"
                                 android:text="Gallery"
                                 android:textColor="#a9a9a9"/>
 
@@ -89,7 +93,7 @@
                             <TextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:layout_marginTop="16dp"
+                                android:layout_marginTop="7dp"
                                 android:text="Gallery"
                                 android:textColor="#a9a9a9"/>
 
@@ -107,13 +111,22 @@
                             <TextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:layout_marginTop="16dp"
+                                android:layout_marginTop="7dp"
                                 android:text="Gallery"
                                 android:textColor="#a9a9a9"/>
 
                         </LinearLayout>
 
                     </LinearLayout>
+
+                        <ImageView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:src="@drawable/ic_action_settings_grey"
+                            android:id="@+id/img_fermat_setting"
+                            android:layout_alignParentEnd="true"/>
+
+                    </RelativeLayout>
                 </io.codetail.widget.RevealFrameLayout>
 
 
