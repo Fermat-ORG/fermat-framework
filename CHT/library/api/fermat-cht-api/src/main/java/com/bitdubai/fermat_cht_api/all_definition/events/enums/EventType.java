@@ -7,6 +7,7 @@ import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEven
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEventListener;
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEventMonitor;
 import com.bitdubai.fermat_cht_api.layer.network_service.chat.events.IncomingChat;
+import com.bitdubai.fermat_cht_api.layer.network_service.chat.events.IncomingNewChatStatusUpdate;
 import com.bitdubai.fermat_cht_api.layer.network_service.chat.events.OutgoingChat;
 
 /** The enum <code>com.bitdubai.fermat_cht_api.fermat_chp_api.events.enums.EventType</code>
@@ -27,7 +28,10 @@ public enum EventType implements FermatEventEnum {
     },
     INCOMING_CHAT("INCHAT"){
         public final FermatEvent getNewEvent()  {   return new IncomingChat(this);}
-    }
+    },
+    INCOMING_STATUS("INSTS"){
+        public final FermatEvent getNewEvent()  { return new IncomingNewChatStatusUpdate(this);}
+        }
     ;
 
     private final String code;
