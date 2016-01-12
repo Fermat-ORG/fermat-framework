@@ -38,9 +38,10 @@ Fermat is a Framework, a p2p Network and an Ecosystem of Fermat APPs. The Fermat
 
 By choosing a plug-in architecture for the Framework we make it possible for any developer to add their own reusable components. We define the micro use licensing scheme as the mechanism for plug-in developers to monetize their work. The Framework itself enforces these micro use licenses and guarantees developers a revenue stream. 
 
-OS dependent GUI components are built on top of the multi-layered plug-in structure to face end users as wallets or financial applications in general. Apps and wallets with similar functionality are wrapped into what we call _platforms_, each one introducing new plug-ins, to the ever increasing functionality of the whole system.
+The Fermat P2P network interconnects Android devices between each other in order to exchange application data without needing to go through a centralized service.
 
-A built-in _APP-factory_ allows developers to reuse the highest level components and create niche Fermat APPs by combining existing functionality and adding their own code to the combo. A built-in _APP-editor_ allows non-developers to reuse any of these _niche Fermat APPs_ to build new _branded APPs_ just by changing their look and feel. A built-in _p2p-APP-store_ allows end users to choose which Fermat APPs to install from the ever growing catalogue.
+The Ecosystem of Fermat APPs offers different products to end users. From the outside it may seem like a set of APPs targeting different use cases for different people, but on the inside there is a system built from hundreds of components collaborating between each other. These APPs are just the user interfaces, or skins of the underlying mechanisms.
+
 
 ![alt text](https://github.com/bitDubai/media-kit/blob/master/MediaKit/Slides/slide-core-concept.png "Core Concept")
 
