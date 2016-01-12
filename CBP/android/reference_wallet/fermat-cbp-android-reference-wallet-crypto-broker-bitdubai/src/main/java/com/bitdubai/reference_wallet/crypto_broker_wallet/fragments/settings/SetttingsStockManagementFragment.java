@@ -184,7 +184,7 @@ public class SetttingsStockManagementFragment extends AbstractFermatFragment imp
                 changeActivity(Activities.CBP_CRYPTO_BROKER_WALLET_SETTINGS, appSession.getAppPublicKey());
             }
         });
-
+        showOrHideNoSelectedWalletsView();
         return layout;
     }
 
@@ -378,7 +378,7 @@ public class SetttingsStockManagementFragment extends AbstractFermatFragment imp
     }*/
 
     private void showOrHideNoSelectedWalletsView() {
-        if (stockWallets.isEmpty()) {
+        if (settings.isEmpty()) {
             emptyView.setVisibility(View.VISIBLE);
             recyclerView.setVisibility(View.GONE);
         } else {
