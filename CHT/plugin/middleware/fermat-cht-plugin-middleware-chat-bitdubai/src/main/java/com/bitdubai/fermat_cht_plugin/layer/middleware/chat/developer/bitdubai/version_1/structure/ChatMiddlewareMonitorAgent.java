@@ -12,18 +12,23 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.Data
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.DealsWithLogger;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogManager;
 import com.bitdubai.fermat_cht_api.all_definition.agent.CHTTransactionAgent;
+import com.bitdubai.fermat_cht_api.all_definition.events.enums.EventType;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantInitializeCHTAgent;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantSetObjectException;
+import com.bitdubai.fermat_cht_api.all_definition.exceptions.UnexpectedResultReturnedFromDatabaseException;
+import com.bitdubai.fermat_cht_api.layer.middleware.utils.EventRecord;
 import com.bitdubai.fermat_cht_plugin.layer.middleware.chat.developer.bitdubai.version_1.ChatMiddlewarePluginRoot;
 import com.bitdubai.fermat_cht_plugin.layer.middleware.chat.developer.bitdubai.version_1.database.ChatMiddlewareDatabaseConstants;
 import com.bitdubai.fermat_cht_plugin.layer.middleware.chat.developer.bitdubai.version_1.database.ChatMiddlewareDatabaseDao;
 import com.bitdubai.fermat_cht_plugin.layer.middleware.chat.developer.bitdubai.version_1.database.ChatMiddlewareDatabaseFactory;
+import com.bitdubai.fermat_cht_plugin.layer.middleware.chat.developer.bitdubai.version_1.exceptions.CantGetPendingEventListException;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.DealsWithErrors;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedPluginExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfaces.DealsWithEvents;
 import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfaces.EventManager;
 
+import java.util.List;
 import java.util.UUID;
 
 /**
@@ -208,9 +213,45 @@ public class ChatMiddlewareMonitorAgent implements
         private void doTheMainTask()  {
 
             //TODO: to implement
+            try{
+                /**
+                 * Init the plugin database dao
+                 */
+                chatMiddlewareDatabaseDao = new ChatMiddlewareDatabaseDao(
+                        pluginDatabaseSystem,
+                        pluginId);
+
+                /**
+                 * Check if pending events in database
+                 */
+                List<EventRecord> pendingEventList = chatMiddlewareDatabaseDao.getPendingEventList();
+                EventType eventType;
+                for(EventRecord eventRecord : pendingEventList){
+                    eventType=eventRecord.getEventType();
+                    switch (eventType){
+                        case INCOMING_CHAT:
+                            //TODO: TO IMPLEMENT
+                            break;
+                        case OUTGOING_CHAT:
+                            //TODO: TO IMPLEMENT
+                            break;
+                        default:
+                            //TODO: THROW AN EXCEPTION
+                            break;
+                    }
+                }
+            } catch (UnexpectedResultReturnedFromDatabaseException e) {
+                e.printStackTrace();
+            } catch (CantGetPendingEventListException e) {
+                e.printStackTrace();
+            }
+
 
         }
 
+        private void checkPendingEvent(String eventId){
+
+        }
 
     }
 
