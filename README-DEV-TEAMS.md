@@ -4,7 +4,7 @@
 
 ## Introduction
 
-All the work done on the Fermat project is done by a Team. Fermat has several teams working in parallel. Most of them are dev teams, but these are not the only ones. Fermat also has teams of graphic designers, 3d artists, video producers, copy writers, publishing, etc.
+All the work done on the Fermat project is done by several teams of people collaborating between each other. Fermat has several teams working in parallel. Most of them are dev teams, but these are not the only ones. Fermat also has teams of graphic designers, 3d artists, video producers, copy writers, publishing, etc.
 
 bitDubai is a network of teams working on the Fermat project. In this document you will learn about how bitDubai teams are organized. At the momento bitDubai is the only team-network working on Fermat, but there is room for other networks to join and they might want to get organized in a different way.
 
