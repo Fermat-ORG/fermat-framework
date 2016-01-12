@@ -126,7 +126,7 @@ With the fund-raising mechanism, tokens are distributed to those who fund the in
 
 #### Development Mechanism
 
-With the development mechanism, tokens are generated using a predefined mechanism and are only available for the development of Fermat components (plug-ins, GUI components, skins, language packages, and analisys of future development). These fermats become available through a pre-determined schedule and are distributed via a community-driven bounty system where decisions are made based on the proof-of-stake mechanism.
+With the development mechanism, tokens are generated using a predefined mechanism and are only available for the development of Fermat components (plug-ins, GUI components, skins, language packages, and analisys of future development). These fermats become available through a pre-determined schedule and are distributed via a community-driven bounty system [3] where decisions are made based on the proof-of-stake mechanism.
 
 #### Mining Mechanism
 
@@ -418,6 +418,9 @@ We have created an environment where the user base of the system is a shared ass
 * [1] Satoshi Nakamoto, "Bitcoin: A Peer-to-Peer Electronic Cash System", https://bitcoin.org/bitcoin.pdf, 2008 
 
 * [2] David Johnston & others, "The General Theory of Decentralized Applications, Dapps", https://github.com/DavidJohnstonCEO/DecentralizedApplications/blob/master/README.md
+
+* [3] Fermat Bounty Program, https://github.com/bitDubai/bounty-program/blob/master/README.md
+
  
 <br>
 ## Further Reading
