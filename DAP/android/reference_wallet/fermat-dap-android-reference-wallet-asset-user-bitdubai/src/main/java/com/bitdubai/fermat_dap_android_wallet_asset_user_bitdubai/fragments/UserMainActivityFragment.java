@@ -14,6 +14,7 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
 import android.widget.Toast;
 
 import com.bitdubai.fermat_android_api.ui.adapters.FermatAdapter;
@@ -114,23 +115,13 @@ public class UserMainActivityFragment extends FermatWalletListFragment<DigitalAs
     private void configureToolbar() {
         Toolbar toolbar = getToolbar();
         if (toolbar != null) {
-//            toolbar.setBackgroundColor(Color.parseColor("#1d1d25"));
+            toolbar.setBackgroundColor(Color.parseColor("#381a5e"));
             toolbar.setTitleTextColor(Color.WHITE);
-//            toolbar.setBackgroundColor(Color.TRANSPARENT);
-//            toolbar.setBottom(Color.WHITE);
-//            if (Build.VERSION.SDK_INT > Build.VERSION_CODES.LOLLIPOP) {
-//                Window window = getActivity().getWindow();
-//                window.setStatusBarColor(Color.parseColor("#1d1d25"));
-//            }
-            Drawable drawable = null;
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                drawable = getResources().getDrawable(R.drawable.dap_wallet_asset_user_action_bar_gradient_colors, null);
-                toolbar.setElevation(0);
-            } else {
-                drawable = getResources().getDrawable(R.drawable.dap_wallet_asset_user_action_bar_gradient_colors);
+            toolbar.setBottom(Color.WHITE);
+            if (Build.VERSION.SDK_INT > Build.VERSION_CODES.LOLLIPOP) {
+                Window window = getActivity().getWindow();
+                window.setStatusBarColor(Color.parseColor("#381a5e"));
             }
-
-            toolbar.setBackground(drawable);
         }
     }
 
@@ -152,7 +143,7 @@ public class UserMainActivityFragment extends FermatWalletListFragment<DigitalAs
                     options.inScaled = true;
                     options.inSampleSize = 5;
                     drawable = BitmapFactory.decodeResource(
-                            getResources(), R.drawable.bg_app_image,options);
+                            getResources(), R.drawable.bg_app_image_user,options);
                 }catch (OutOfMemoryError error){
                     error.printStackTrace();
                 }
