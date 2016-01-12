@@ -658,7 +658,7 @@ public class SendTransactionFragment2 extends FermatWalletExpandableListFragment
         menu.add(0, BitcoinWalletConstants.IC_ACTION_SEND, 0, "send").setIcon(R.drawable.ic_actionbar_send)
                 .setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
 
-        menu.add(1, BitcoinWalletConstants.IC_ACTION_HELP_PRESENTATION, 1, "help").setIcon(R.drawable.ic_contact_question)
+        menu.add(1, BitcoinWalletConstants.IC_ACTION_HELP_PRESENTATION, 1, "help").setIcon(R.drawable.help_icon)
                 .setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
         //inflater.inflate(R.menu.home_menu, menu);
     }
@@ -912,7 +912,7 @@ public class SendTransactionFragment2 extends FermatWalletExpandableListFragment
     }
 
     private void changeAmountType(){
-        updateBalances();
+
         ShowMoneyType showMoneyType = (referenceWalletSession.getTypeAmount()== ShowMoneyType.BITCOIN.getCode()) ? ShowMoneyType.BITS : ShowMoneyType.BITCOIN;
         referenceWalletSession.setTypeAmount(showMoneyType);
         String moneyTpe = "";
@@ -924,7 +924,9 @@ public class SendTransactionFragment2 extends FermatWalletExpandableListFragment
                 moneyTpe = "bits";
                 break;
         }
+
         txt_balance_amount_type.setText(moneyTpe);
+        updateBalances();
     }
 
 

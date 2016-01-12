@@ -22,6 +22,8 @@ public class AssetStatisticImpl implements AssetStatistic {
 
     private String assetOwner;
 
+    private String assetOwnerName;
+
     private AssetCurrentStatus status;
 
     {
@@ -90,6 +92,17 @@ public class AssetStatisticImpl implements AssetStatistic {
     }
 
     /**
+     * This method search for user name that owns this asset.
+     *
+     * @return {@link ActorAssetUser} that owns the asset or {@code null} if
+     * this asset has not been delivered yet.
+     */
+    @Override
+    public String getAssetOwnerName() {
+        return assetOwnerName;
+    }
+
+    /**
      * This method returns the date corresponding to the moment when this asset
      * was sent to an user.
      *
@@ -146,6 +159,10 @@ public class AssetStatisticImpl implements AssetStatistic {
 
     public void setAssetOwner(String assetOwner) {
         this.assetOwner = assetOwner;
+    }
+
+    public void setAssetOwnerName(String assetOwnerName) {
+        this.assetOwnerName = assetOwnerName;
     }
 
     public void setStatus(AssetCurrentStatus status) {

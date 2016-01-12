@@ -12,6 +12,16 @@ public class UserDelivery {
     private Timestamp deliveryDate;
     private String deliveryStatus;
 
+    public UserDelivery() {
+
+    }
+
+    public UserDelivery(String userName, Timestamp deliveryDate, String deliveryStatus) {
+        this.userName = userName;
+        this.deliveryDate = deliveryDate;
+        this.deliveryStatus = deliveryStatus;
+    }
+
     public String getUserName() {
         return userName;
     }
