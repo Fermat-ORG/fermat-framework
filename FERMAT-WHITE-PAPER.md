@@ -154,7 +154,7 @@ Fermat.org makes decisions in a decentralized manner, using a â€œproof of stakeâ
 
 #### Fermat Protocol
 
-The protocol itself issues tokens for miners and for development. In the last case, thay are deposited on accounts of the Non-profit Fermat.org until awarded as bounty payments for developers. 
+The protocol itself issues tokens for miners and for development. In the last case, thay are deposited on accounts of the Non-profit Fermat.org until awarded as bounty or contribution payments for developers. 
 
 ### Token Usage
 
@@ -168,11 +168,11 @@ End users pay Fermat Nodes with fermats to be able to receive calls from other d
 
 #### Use of Fermat Components
 
-End users pay Fermat Component's developers with fermats to be able to use their plug-ins, GUI components, skins, language packages, etc. Developers defines a Micro-Use-License for each components. Products like Wallets or Financial APPs use these components, so the cost for using these products is the sum of the cost of the Micro Use Licenses defined by each developer involved. This is the way how developers are paid for mantaining their components.
+End users pay Fermat Component's developers with fermats to be able to use their plug-ins, GUI components, skins, language packages, etc. Developers defines a Micro-Use-License for each components. Products like Wallets or Financial APPs use these components, so the cost for using these products is the sum of the cost of the Micro Use Licenses defined by each developer involved. This is the way how developers are paid for developing and mantaining their components.
 
 #### Technical Support
 
-End users pay with fermats to receive personalized technical support from Fermat Component's developers.
+End users pay with fermats to receive personalized technical support from Fermat APPs's developers.
 
 <br>
 ## Fermat Blockchain
@@ -189,7 +189,7 @@ Each block within the blockchain:
 
 Mining is the process by which new _fermats_ are added to the token supply. Mining also serves to the main purpose of the Fermat Network: to enable devices to communicate between each other without going through trusted third parties. Miners provide bandwidth to the Extended Fermat Network in exchange for the opportunity to be rewarded fermats.
 
-Miners inter-connect devices and act as a bridge relaying everything from one device to the other. A new block, containing transactions that occurred since the last block, is "mined" every approximately 10 minutes, thereby adding those transactions to the blockchain. Transactions that become part of a block and added to the blockchain are considered "confirmed," which allows the new owners of fermats to spend the fermats they received in those transactions.
+Miners inter-connect devices and act as a bridge relaying data from one device to the other. A new block, containing transactions that occurred since the last block, is "mined" every approximately 10 minutes, thereby adding those transactions to the blockchain. Transactions that become part of a block and added to the blockchain are considered "confirmed," which allows the new owners of fermats to spend the fermats they received in those transactions.
 
 A transaction at the Fermat Blockchain is considered "irreversible" as soon as it is added to a block. This is true because it is based on information read from the bitcoin blockchain that it is already on an irreversible state. The Fermat Blockchain is synchronize with the bitcoin blockchain but 6 blocks behind the bitcoin blockchain's head.
 
