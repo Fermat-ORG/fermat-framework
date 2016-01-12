@@ -205,8 +205,8 @@ public class PresentationBitcoinWalletDialog extends FermatDialog<ReferenceWalle
     private byte[] convertImage(int resImage){
         Bitmap bitmap = BitmapFactory.decodeResource(activity.getResources(), resImage);
         ByteArrayOutputStream stream = new ByteArrayOutputStream();
-        bitmap.compress(Bitmap.CompressFormat.JPEG,80,stream);
-        //bitmap.compress(Bitmap.CompressFormat.PNG, 100, stream);
+        //bitmap.compress(Bitmap.CompressFormat.JPEG,80,stream);
+        bitmap.compress(Bitmap.CompressFormat.PNG, 100, stream);
         return stream.toByteArray();
     }
 

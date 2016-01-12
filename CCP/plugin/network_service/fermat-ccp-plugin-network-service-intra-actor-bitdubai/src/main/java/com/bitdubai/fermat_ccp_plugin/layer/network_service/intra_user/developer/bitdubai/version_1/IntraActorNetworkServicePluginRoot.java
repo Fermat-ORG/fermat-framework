@@ -570,7 +570,7 @@ public class IntraActorNetworkServicePluginRoot extends AbstractPlugin implement
                 @Override
                 public void run() {
                     // change message state to process again
-                    reprocessWaitingMessage();
+                    reprocessMessage();
                 }
             }, 2*3600*1000);
 
@@ -2017,23 +2017,5 @@ public class IntraActorNetworkServicePluginRoot extends AbstractPlugin implement
         }
     }
 
-    //reprocess waiting messages could not be sent to another device
-    private void reprocessWaitingMessage()
-    {
-        try {
-
-            List<ActorNetworkServiceRecord> lstActorRecord = outgoingNotificationDao.listRequestsByProtocolState(ActorProtocolState.WAITING_RESPONSE);
-            for(ActorNetworkServiceRecord record : lstActorRecord) {
-
-                outgoingNotificationDao.changeProtocolState(record.getId(), ActorProtocolState.PROCESSING_SEND);
-            }
-        }
-        catch(CantListIntraWalletUsersException | CantUpdateRecordDataBaseException| CantUpdateRecordException| RequestNotFoundException
-        e)
-        {
-            System.out.print("INTRA USER NS EXCEPCION REPROCESANDO WAIT MESSAGE");
-            e.printStackTrace();
-        }
-    }
 
 }

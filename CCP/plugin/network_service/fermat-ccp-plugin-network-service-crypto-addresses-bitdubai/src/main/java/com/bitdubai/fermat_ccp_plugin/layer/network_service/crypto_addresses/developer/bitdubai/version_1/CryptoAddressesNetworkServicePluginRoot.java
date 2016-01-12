@@ -261,7 +261,7 @@ public class CryptoAddressesNetworkServicePluginRoot extends AbstractNetworkServ
                 @Override
                 public void run() {
                     // change message state to process again
-                    reprocessWaitingMessage();
+                    reprocessMessage();
                 }
             }, 2*3600*1000);
 
@@ -1183,23 +1183,7 @@ public class CryptoAddressesNetworkServicePluginRoot extends AbstractNetworkServ
         }
     }
 
-//reprocess waiting messages could not be sent to another device
 
-    private void reprocessWaitingMessage()
-    {
-        try {
 
-            List<CryptoAddressRequest> cryptoAddressRequestList = cryptoAddressesNetworkServiceDao.listPendingRequestsByProtocolState(ProtocolState.WAITING_RESPONSE);
 
-            for(CryptoAddressRequest record : cryptoAddressRequestList) {
-
-                cryptoAddressesNetworkServiceDao.changeProtocolState(record.getRequestId(),ProtocolState.PROCESSING_SEND);
-            }
-        }
-        catch(CantListPendingCryptoAddressRequestsException | CantChangeProtocolStateException |PendingRequestNotFoundException e)
-        {
-            System.out.print("ADDRESS NS EXCEPCION REPROCESANDO WAIT MESSAGE");
-            e.printStackTrace();
-        }
-    }
 }
