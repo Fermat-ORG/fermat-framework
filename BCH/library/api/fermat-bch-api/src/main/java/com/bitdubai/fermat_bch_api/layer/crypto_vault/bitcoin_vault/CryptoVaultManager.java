@@ -5,6 +5,7 @@ import com.bitdubai.fermat_api.layer.all_definition.money.CryptoAddress;
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.TransactionSender;
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.crypto_transactions.CryptoStatus;
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.crypto_transactions.CryptoTransaction;
+import com.bitdubai.fermat_bch_api.layer.crypto_vault.classes.vault_seed.exceptions.CantLoadExistingVaultSeed;
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.exceptions.CouldNotGenerateTransactionException;
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.interfaces.PlatformCryptoVault;
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.exceptions.CouldNotGetCryptoStatusException;
@@ -81,4 +82,12 @@ public interface CryptoVaultManager extends FermatManager, PlatformCryptoVault {
      * @return true if is valid and we can use it, or false if not.
      */
     boolean isValidAddress(CryptoAddress addressTo);
+
+    /**
+     * Gets the Mnemonic code generated for this vault.
+     * It can be used to export and import it somewhere else.
+     * @return
+     * @throws CantLoadExistingVaultSeed
+     */
+    List<String> getMnemonicCode() throws CantLoadExistingVaultSeed;
 }

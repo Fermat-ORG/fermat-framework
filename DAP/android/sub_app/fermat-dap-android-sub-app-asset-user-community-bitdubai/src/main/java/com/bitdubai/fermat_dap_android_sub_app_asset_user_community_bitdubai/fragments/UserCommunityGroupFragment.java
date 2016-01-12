@@ -22,6 +22,7 @@ import android.widget.Toast;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractFermatFragment;
 import com.bitdubai.fermat_android_api.ui.interfaces.FermatWorkerCallBack;
 import com.bitdubai.fermat_android_api.ui.util.FermatWorker;
+import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
 import com.bitdubai.fermat_dap_android_sub_app_asset_user_community_bitdubai.R;
 import com.bitdubai.fermat_dap_android_sub_app_asset_user_community_bitdubai.adapters.GroupCommunityAdapter;
 import com.bitdubai.fermat_dap_android_sub_app_asset_user_community_bitdubai.adapters.UserCommunityAdapter;
@@ -146,7 +147,7 @@ public class UserCommunityGroupFragment extends AbstractFermatFragment implement
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         super.onCreateOptionsMenu(menu, inflater);
-        inflater.inflate(R.menu.dap_community_user_home_menu, menu);
+        //inflater.inflate(R.menu.dap_community_user_home_menu, menu);
     }
 
     @Override
@@ -353,6 +354,11 @@ public class UserCommunityGroupFragment extends AbstractFermatFragment implement
             }
 
             Toast.makeText(getActivity(), "Group deleted.", Toast.LENGTH_SHORT).show();
+        }
+        else if (item.getItemId() == R.id.action_group_members)
+        {
+            appSession.setData("group_selected", selectedGroup);
+            changeActivity(Activities.DAP_ASSET_USER_COMMUNITY_ACTIVITY_ADMINISTRATIVE_GROUP_USERS_FRAGMENT, appSession.getAppPublicKey());
         }
 
         selectedGroup = null;

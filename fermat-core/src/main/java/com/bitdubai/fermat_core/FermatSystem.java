@@ -97,7 +97,7 @@ public final class FermatSystem {
             //fermatSystemContext.registerPlatform(new CERPlatform());
             //fermatSystemContext.registerPlatform(new CHTPlatform());
             //fermatSystemContext.registerPlatform(new CSHPlatform());
-            //fermatSystemContext.registerPlatform(new DAPPlatform());
+            fermatSystemContext.registerPlatform(new DAPPlatform());
             fermatSystemContext.registerPlatform(new P2PPlatform());
             fermatSystemContext.registerPlatform(new PIPPlatform());
             fermatSystemContext.registerPlatform(new WPDPlatform());
