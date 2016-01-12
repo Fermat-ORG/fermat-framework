@@ -1007,7 +1007,7 @@ public class SendTransactionFragment2 extends FermatWalletExpandableListFragment
 
             for (Map.Entry<Long, Long> entry :  runningDailyBalance.entrySet())
             {
-                balanceSum += entry.getValue();
+                balanceSum += Integer.valueOf(WalletUtils.formatBalanceStringNotDecimal(entry.getValue(), ShowMoneyType.BITCOIN.getCode()));
             }
 
              average = (int) (balanceSum / cant);

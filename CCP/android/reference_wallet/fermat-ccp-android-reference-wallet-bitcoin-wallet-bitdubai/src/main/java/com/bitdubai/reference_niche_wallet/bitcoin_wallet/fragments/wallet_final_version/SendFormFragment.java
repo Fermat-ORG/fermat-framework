@@ -330,6 +330,8 @@ public class SendFormFragment extends AbstractFermatFragment<ReferenceWalletSess
                                 appSession.getAppPublicKey() ,
                                 CryptoCurrency.BITCOIN,
                                 BlockchainNetworkType.TEST);
+
+
                     setUpUIData();
 
                 } catch(CantCreateWalletContactException e) {
@@ -409,43 +411,55 @@ public class SendFormFragment extends AbstractFermatFragment<ReferenceWalletSess
     private void sendCrypto() {
         try
         {
-            CryptoAddress validAddress = WalletUtils.validateAddress(cryptoWalletWalletContact.getReceivedCryptoAddress().get(0).getAddress(), cryptoWallet);
-            if (validAddress != null) {
-                EditText txtAmount = (EditText) rootView.findViewById(R.id.amount);
-                String amount = txtAmount.getText().toString();
+            if(cryptoWalletWalletContact.getReceivedCryptoAddress().size() > 0)
+            {
+                CryptoAddress validAddress = WalletUtils.validateAddress(cryptoWalletWalletContact.getReceivedCryptoAddress().get(0).getAddress(), cryptoWallet);
+                if (validAddress != null) {
+                    EditText txtAmount = (EditText) rootView.findViewById(R.id.amount);
+                    String amount = txtAmount.getText().toString();
 
-                if(!amount.equals("") && amount!=null && Long.parseLong(amount)!=0) {
-                    try {
-                        String notes=null;
-                        if(txt_notes.getText().toString().length()!=0){
-                            notes = txt_notes.getText().toString();
+                    if(!amount.equals("") && amount!=null && Long.parseLong(amount)!=0) {
+                        try {
+                            String notes=null;
+                            if(txt_notes.getText().toString().length()!=0){
+                                notes = txt_notes.getText().toString();
+                            }
+                            cryptoWallet.send(
+                                    Long.parseLong(txtAmount.getText().toString()),
+                                    validAddress,
+                                    notes,
+                                    appSession.getAppPublicKey(),
+                                    cryptoWallet.getActiveIdentities().get(0).getPublicKey(),
+                                    Actors.INTRA_USER,
+                                    cryptoWalletWalletContact.getActorPublicKey(),
+                                    cryptoWalletWalletContact.getActorType(),
+                                    ReferenceWallet.BASIC_WALLET_BITCOIN_WALLET
+                            );
+                            Toast.makeText(getActivity(),"Sending...",Toast.LENGTH_SHORT).show();
+                            onBack(null);
+                        } catch (InsufficientFundsException e) {
+                            Toast.makeText(getActivity(), "Insufficient funds", Toast.LENGTH_LONG).show();
+                        } catch (CantSendCryptoException e) {
+                            appSession.getErrorManager().reportUnexpectedWalletException(Wallets.CWP_WALLET_RUNTIME_WALLET_BITCOIN_WALLET_ALL_BITDUBAI, UnexpectedWalletExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
+                            showMessage(getActivity(), "Error send satoshis - " + e.getMessage());
+                        } catch (Exception e) {
+                            appSession.getErrorManager().reportUnexpectedUIException(UISource.VIEW,UnexpectedUIExceptionSeverity.UNSTABLE,e);
+                            Toast.makeText(getActivity(),"oooopps",Toast.LENGTH_SHORT).show();
                         }
-                        cryptoWallet.send(
-                                Long.parseLong(txtAmount.getText().toString()),
-                                validAddress,
-                                notes,
-                                appSession.getAppPublicKey(),
-                                cryptoWallet.getActiveIdentities().get(0).getPublicKey(),
-                                Actors.INTRA_USER,
-                                cryptoWalletWalletContact.getActorPublicKey(),
-                                cryptoWalletWalletContact.getActorType(),
-                                ReferenceWallet.BASIC_WALLET_BITCOIN_WALLET
-                        );
-                        Toast.makeText(getActivity(),"Sending...",Toast.LENGTH_SHORT).show();
-                        onBack(null);
-                    } catch (InsufficientFundsException e) {
-                        Toast.makeText(getActivity(), "Insufficient funds", Toast.LENGTH_LONG).show();
-                    } catch (CantSendCryptoException e) {
-                        appSession.getErrorManager().reportUnexpectedWalletException(Wallets.CWP_WALLET_RUNTIME_WALLET_BITCOIN_WALLET_ALL_BITDUBAI, UnexpectedWalletExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
-                        showMessage(getActivity(), "Error send satoshis - " + e.getMessage());
-                    } catch (Exception e) {
-                        appSession.getErrorManager().reportUnexpectedUIException(UISource.VIEW,UnexpectedUIExceptionSeverity.UNSTABLE,e);
-                        Toast.makeText(getActivity(),"oooopps",Toast.LENGTH_SHORT).show();
                     }
+                    else {
+                        showMessage(getActivity(), "Invalid Amount");
+                    }
+                } else {
+                    showMessage(getActivity(), "Invalid Contact Address");
                 }
-            } else {
-                Toast.makeText(getActivity(), "Invalid amount", Toast.LENGTH_LONG).show();
             }
+            else
+            {
+                showMessage(getActivity(), "Contact don't have an Address");
+            }
+
+
         }
         catch(Exception e)
         {

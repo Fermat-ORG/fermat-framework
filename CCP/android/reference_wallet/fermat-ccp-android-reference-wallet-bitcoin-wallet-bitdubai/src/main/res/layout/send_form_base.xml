@@ -180,7 +180,7 @@
                         android:textColorHint="#9a9a9c"
                         android:textSize="16sp"
                         android:textStyle="normal"
-                        android:hint="0 Bits"
+                        android:hint="0"
                         android:layout_weight="0.2"
                         android:inputType="numberDecimal"
                         android:state_selected = "true"
