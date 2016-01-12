@@ -6,6 +6,9 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.support.v7.widget.GridLayoutManager;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.view.Window;
 import android.widget.Toast;
@@ -13,12 +16,21 @@ import android.widget.Toast;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatButton;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView;
 import com.bitdubai.fermat_android_api.ui.dialogs.FermatDialog;
+import com.bitdubai.fermat_android_api.ui.interfaces.FermatListItemListeners;
+import com.bitdubai.fermat_api.layer.all_definition.enums.UISource;
+import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_broker_community.exceptions.CantListIdentitiesToSelectException;
 import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_broker_community.interfaces.CryptoBrokerCommunityInformation;
 import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_broker_community.interfaces.CryptoBrokerCommunitySelectableIdentity;
 import com.bitdubai.fermat_pip_api.layer.network_service.subapp_resources.SubAppResourcesProviderManager;
+import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedUIExceptionSeverity;
 import com.bitdubai.sub_app.crypto_broker_community.R;
+import com.bitdubai.sub_app.crypto_broker_community.adapters.AppFriendsListAdapter;
+import com.bitdubai.sub_app.crypto_broker_community.adapters.AppSelectableIdentitiesListAdapter;
 import com.bitdubai.sub_app.crypto_broker_community.constants.Constants;
 import com.bitdubai.sub_app.crypto_broker_community.session.CryptoBrokerCommunitySubAppSession;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by Leon Acosta - (laion.cj91@gmail.com) on 18/12/2015.
@@ -26,38 +38,24 @@ import com.bitdubai.sub_app.crypto_broker_community.session.CryptoBrokerCommunit
  * @author lnacosta
  * @version 1.0.0
  */
-public class ListIdentitiesDialog extends FermatDialog<CryptoBrokerCommunitySubAppSession, SubAppResourcesProviderManager> implements View.OnClickListener {
+public class ListIdentitiesDialog extends FermatDialog<CryptoBrokerCommunitySubAppSession, SubAppResourcesProviderManager> implements FermatListItemListeners<CryptoBrokerCommunitySelectableIdentity> {
 
     /**
      * UI components
      */
-    private FermatButton   positiveBtn ;
-    private FermatButton   negativeBtn ;
-    private FermatTextView mDescription;
-    private FermatTextView mUsername   ;
-    private FermatTextView mTitle      ;
-    private CharSequence   description ;
-    private CharSequence   username    ;
     private CharSequence   title       ;
 
-    private CryptoBrokerCommunityInformation        information;
-    private CryptoBrokerCommunitySelectableIdentity identity   ;
-
+    private AppSelectableIdentitiesListAdapter adapter;
 
     public ListIdentitiesDialog(final Activity                                activity       ,
                                 final CryptoBrokerCommunitySubAppSession      subAppSession  ,
-                                final SubAppResourcesProviderManager          subAppResources,
-                                final CryptoBrokerCommunityInformation        information    ,
-                                final CryptoBrokerCommunitySelectableIdentity identity       ) {
+                                final SubAppResourcesProviderManager          subAppResources) {
 
         super(
-                activity       ,
-                subAppSession  ,
+                activity,
+                subAppSession,
                 subAppResources
         );
-
-        this.information = information;
-        this.identity = identity;
     }
 
     @SuppressLint("SetTextI18n")
@@ -65,26 +63,44 @@ public class ListIdentitiesDialog extends FermatDialog<CryptoBrokerCommunitySubA
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        mDescription = (FermatTextView) findViewById(R.id.description);
-        mUsername = (FermatTextView) findViewById(R.id.user_name);
-        mTitle = (FermatTextView)findViewById(R.id.title);
-        positiveBtn = (FermatButton) findViewById(R.id.positive_button);
-        negativeBtn = (FermatButton) findViewById(R.id.negative_button);
+        List<CryptoBrokerCommunitySelectableIdentity> cryptoBrokerCommunitySelectableIdentitiesList = new ArrayList<>();
 
-        positiveBtn.setOnClickListener(this);
-        negativeBtn.setOnClickListener(this);
-        mDescription.setText(description!= null ? description : "");
-        mUsername.setText(username!= null ? username: "");
-        mTitle.setText(title != null ? title: "");
+        try {
+
+            cryptoBrokerCommunitySelectableIdentitiesList = getSession().getModuleManager().listSelectableIdentities();
+
+        } catch (final CantListIdentitiesToSelectException cantListIdentitiesToSelectException) {
+
+            getSession().getErrorManager().reportUnexpectedUIException(
+                    UISource.ADAPTER,
+                    UnexpectedUIExceptionSeverity.UNSTABLE,
+                    cantListIdentitiesToSelectException
+            );
+        }
+
+        adapter = new AppSelectableIdentitiesListAdapter(getActivity(), cryptoBrokerCommunitySelectableIdentitiesList);
+        adapter.setFermatListEventListener(this);
+
+        adapter.changeDataSet(cryptoBrokerCommunitySelectableIdentitiesList);
+
+        RecyclerView recyclerView = (RecyclerView) findViewById(R.id.my_recycler_view);
+        recyclerView.setHasFixedSize(true);
+        GridLayoutManager layoutManager = new GridLayoutManager(getActivity(), 3, LinearLayoutManager.VERTICAL, false);
+        recyclerView.setLayoutManager(layoutManager);
+        recyclerView.setAdapter(adapter);
 
     }
 
-    public void setDescription(CharSequence description) {
-        this.description = description;
+    @Override
+    public void onItemClickListener(CryptoBrokerCommunitySelectableIdentity data, int position) {
+
+        System.out.println("****** Seleccione esta identidad: "+data);
     }
 
-    public void setUsername(CharSequence username) {
-        this.username = username;
+    @Override
+    public void onLongItemClickListener(CryptoBrokerCommunitySelectableIdentity data, int position) {
+
+        System.out.println("****** Seleccione largamente esta identidad: "+data);
     }
 
     @Override
@@ -94,43 +110,12 @@ public class ListIdentitiesDialog extends FermatDialog<CryptoBrokerCommunitySubA
 
     @Override
     protected int setLayoutId() {
-        return R.layout.dialog_builder;
+        return R.layout.fragment_connections_list;
     }
 
     @Override
     protected int setWindowFeature() {
         return Window.FEATURE_NO_TITLE;
     }
-
-    @Override
-    public void onClick(View v) {
-        int i = v.getId();
-        if (i == R.id.positive_button) {
-            //try {
-                //image null
-                if (information != null && identity != null) {
-                    Toast.makeText(getContext(), "TODO DISCONNECT ->", Toast.LENGTH_SHORT).show();
-                    //getSession().getModuleManager().disconnectIntraUSer(information.getPublicKey());
-
-                    SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getContext());
-                    prefs.edit().putBoolean("Connected", true).apply();
-                    Intent broadcast = new Intent(Constants.LOCAL_BROADCAST_CHANNEL);
-                    broadcast.putExtra(Constants.BROADCAST_DISCONNECTED_UPDATE, true);
-                    sendLocalBroadcast(broadcast);
-                    Toast.makeText(getContext(), "Disconnected", Toast.LENGTH_SHORT).show();
-                } else {
-                    Toast.makeText(getContext(), "Oooops! recovering from system error - ", Toast.LENGTH_SHORT).show();
-                }
-                dismiss();
-            /*} catch (IntraUserDisconnectingFailedException e) {
-                e.printStackTrace();
-            }*/
-
-            dismiss();
-        }else if( i == R.id.negative_button){
-            dismiss();
-        }
-    }
-
 
 }

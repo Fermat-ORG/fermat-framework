@@ -70,6 +70,8 @@ public class CryptoBrokerCommunityManager implements CryptoBrokerCommunitySubApp
     private final UUID                               pluginId                              ;
     private final PluginVersionReference             pluginVersionReference                ;
 
+    private       String                             subAppPublicKey                       ;
+
     public CryptoBrokerCommunityManager(final CryptoBrokerIdentityManager        cryptoBrokerIdentityManager           ,
                                         final CryptoBrokerActorConnectionManager cryptoBrokerActorConnectionManager    ,
                                         final CryptoBrokerManager                cryptoBrokerActorNetworkServiceManager,
@@ -409,7 +411,7 @@ public class CryptoBrokerCommunityManager implements CryptoBrokerCommunitySubApp
 
         try {
 
-            CryptoBrokerCommunitySelectableIdentity lastSelectedIdentity = getSettingsManager().loadAndGetSettings(null).getLastSelectedIdentity();
+            CryptoBrokerCommunitySelectableIdentity lastSelectedIdentity = getSettingsManager().loadAndGetSettings(this.subAppPublicKey).getLastSelectedIdentity();
 
             if (lastSelectedIdentity != null)
                 return lastSelectedIdentity;
@@ -420,9 +422,9 @@ public class CryptoBrokerCommunityManager implements CryptoBrokerCommunitySubApp
 
             try {
 
-                getSettingsManager().persistSettings(null, new CryptoBrokerCommunitySettings());
+                getSettingsManager().persistSettings(this.subAppPublicKey, new CryptoBrokerCommunitySettings());
 
-                CryptoBrokerCommunitySelectableIdentity lastSelectedIdentity = getSettingsManager().loadAndGetSettings(null).getLastSelectedIdentity();
+                CryptoBrokerCommunitySelectableIdentity lastSelectedIdentity = getSettingsManager().loadAndGetSettings(this.subAppPublicKey).getLastSelectedIdentity();
 
                 if (lastSelectedIdentity != null)
                     return lastSelectedIdentity;
@@ -434,17 +436,23 @@ public class CryptoBrokerCommunityManager implements CryptoBrokerCommunitySubApp
                 throw new CantGetSelectedActorIdentityException(exception, "", "Error trying to persist the settings.");
             } catch (final Exception exception) {
 
+                this.errorManager.reportUnexpectedPluginException(pluginVersionReference, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, exception);
                 throw new CantGetSelectedActorIdentityException(exception, "", "Unhandled Error.");
             }
+        } catch (final ActorIdentityNotSelectedException exception) {
+
+            throw exception;
         } catch (final Exception exception) {
 
+            this.errorManager.reportUnexpectedPluginException(pluginVersionReference, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, exception);
             throw new CantGetSelectedActorIdentityException(exception, "", "Unhandled Error.");
         }
     }
 
     @Override
-    public void setAppPublicKey(String publicKey) {
+    public void setAppPublicKey(final String publicKey) {
 
+        this.subAppPublicKey = publicKey;
     }
 
     @Override
