@@ -210,6 +210,23 @@ public class RedeemPointActorPluginRoot extends AbstractPlugin implements
         }
     }
 
+    /**
+     * This method saves an already existing redeem point in the registered redeem point database,
+     * usually uses when the redeem point request the issuer an extended public key, we save in
+     * the issuer side this redeem point so we can retrieve its information on future uses.
+     *
+     * @param redeemPoint The already existing redeem point with all its information
+     * @throws CantCreateActorRedeemPointException
+     */
+    @Override
+    public void saveRegisteredActorRedeemPoint(ActorAssetRedeemPoint redeemPoint) throws CantCreateActorRedeemPointException {
+        try {
+            redeemPointActorDao.createNewRedeemPointRegisterInNetworkService(redeemPoint);
+        } catch (CantAddPendingRedeemPointException e) {
+            throw new CantCreateActorRedeemPointException();
+        }
+    }
+
     @Override
     public void createActorAssetRedeemPointRegisterInNetworkService(List<ActorAssetRedeemPoint> actorAssetRedeemPoints) throws CantCreateActorRedeemPointException {
         try {
