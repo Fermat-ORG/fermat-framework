@@ -1949,7 +1949,7 @@ public class SubAppRuntimeEnginePluginRoot extends AbstractPlugin implements Sub
         runtimeActivity.addFragment(Fragments.CHT_CHAT_OPEN_CHATLIST_TAB_FRAGMENT.getKey(), runtimeFragment);
 
         //Menu Tabs
-        runtimeTabStrip = new TabStrip();
+        /*runtimeTabStrip = new TabStrip();
         runtimeTabStrip.setTabsColor("#d07b62");
         runtimeTabStrip.setTabsTextColor("#FFFFFF");
         runtimeTabStrip.setTabsIndicateColor("#b46a54");
@@ -1979,8 +1979,8 @@ public class SubAppRuntimeEnginePluginRoot extends AbstractPlugin implements Sub
         runtimeTabStrip.addTab(runtimeTab);
 
         chtChat.addActivity(runtimeActivity);
-        listSubApp.put(chtChat.getPublicKey(), chtChat);
-
+        listSubApp.put(chtChat.getPublicKey(), chtChat);*/
+/*
         // Activity: Contacts
         runtimeActivity = new Activity();
         runtimeActivity.setType(Activities.CHT_CHAT_OPEN_CONTACTLIST_TAB_FRAGMENT);
@@ -2005,6 +2005,7 @@ public class SubAppRuntimeEnginePluginRoot extends AbstractPlugin implements Sub
         runtimeActivity.addFragment(Fragments.CHT_CHAT_OPEN_CONTACTLIST_TAB_FRAGMENT.getKey(), runtimeFragment);
         runtimeActivity.setStartFragment(Fragments.CHT_CHAT_OPEN_CONTACTLIST_TAB_FRAGMENT.getKey());
         chtChat.addActivity(runtimeActivity);
+   */
 /*
         // Activity: Edit Contact
         runtimeActivity = new Activity();

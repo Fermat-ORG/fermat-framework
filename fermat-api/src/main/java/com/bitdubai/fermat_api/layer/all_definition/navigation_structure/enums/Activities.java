@@ -214,10 +214,12 @@ public enum Activities implements FermatEnum {
      */
     CHT_CHAT_OPEN_CHATLIST_TAB_FRAGMENT("CHTOCHLTF"),
     CHT_CHAT_OPEN_CONTACTLIST_TAB_FRAGMENT("CHTOCONTLTF"),
-    CHT_CHAT_OPEN_CHAT_DETAIL_FRAGMENT("CHTOCHDF"),
-    CHT_CHAT_OPEN_CONTACT_DETAIL_FRAGMENT("CHTOCODF"),
-    CHT_CHAT_EDIT_CONTACT_FRAGMENT("CHTEDCOF"),
-    CHT_CHAT_OPEN_CONNECTIONLIST_FRAGMENT("CHTOCONNLTF"),
+    /**
+     * CHT_CHAT_OPEN_CHAT_DETAIL_FRAGMENT("CHTOCHDF"),
+     CHT_CHAT_OPEN_CONTACT_DETAIL_FRAGMENT("CHTOCODF"),
+     CHT_CHAT_EDIT_CONTACT_FRAGMENT("CHTEDCOF"),
+     CHT_CHAT_OPEN_CONNECTIONLIST_FRAGMENT("CHTOCONNLTF"),
+     */
 
     WPD_DESKTOP("WPD"),;
 
@@ -532,17 +534,17 @@ public enum Activities implements FermatEnum {
                 return DAP_WALLET_ASSET_ISSUER_ASSET_DELIVERY_SELECT_USERS_GROUPS;
             /* CHAT */
             case "CHTOCHLTF":
-                return CHT_CHAT_OPEN_CHATLIST_TAB_FRAGMENT;
+                return Activities.CHT_CHAT_OPEN_CHATLIST_TAB_FRAGMENT;
             case "CHTOCONTLTF":
-                return CHT_CHAT_OPEN_CONTACTLIST_TAB_FRAGMENT;
-            case "CHTOCHDF":
+                return Activities.CHT_CHAT_OPEN_CONTACTLIST_TAB_FRAGMENT;
+           /* case "CHTOCHDF":
                 return CHT_CHAT_OPEN_CHAT_DETAIL_FRAGMENT;
             case "CHTOCODF":
                 return CHT_CHAT_OPEN_CONTACT_DETAIL_FRAGMENT;
             case "CHTEDCOF":
                 return CHT_CHAT_EDIT_CONTACT_FRAGMENT;
             case "CHTOCONNLTF":
-                return CHT_CHAT_OPEN_CONNECTIONLIST_FRAGMENT;
+                return CHT_CHAT_OPEN_CONNECTIONLIST_FRAGMENT;*/
 
             case "BNKBMWAA":
                 return BNK_BANK_MONEY_WALLET_ADD_ACCOUNT;

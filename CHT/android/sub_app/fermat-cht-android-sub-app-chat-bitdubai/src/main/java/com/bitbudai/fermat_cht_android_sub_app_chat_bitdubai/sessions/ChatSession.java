@@ -18,7 +18,10 @@ import com.bitdubai.fermat_pip_api.layer.network_service.subapp_resources.SubApp
  * @author Jose Cardozo josejcb (josejcb89@gmail.com) on 30/12/15.
  * @version 1.0
  */
-public class ChatSession extends AbstractFermatSession<InstalledSubApp,ChatModuleManager,SubAppResourcesProviderManager> implements SubAppsSession {
+public class ChatSession extends AbstractFermatSession<InstalledSubApp,ChatModuleManager,SubAppResourcesProviderManager> {
+
+
+                        //extends AbstractFermatSession<InstalledSubApp,ChatModuleManager,SubAppResourcesProviderManager> implements SubAppsSession {
 
     public ChatSession() {}
 
