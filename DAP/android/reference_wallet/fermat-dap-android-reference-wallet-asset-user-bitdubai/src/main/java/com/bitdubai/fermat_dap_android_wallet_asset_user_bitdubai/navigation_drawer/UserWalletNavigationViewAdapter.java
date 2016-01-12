@@ -45,28 +45,38 @@ public class UserWalletNavigationViewAdapter extends FermatAdapter<MenuItem, Use
 
             if (data.isSelected()) {
 
-                holder.getRow_container().setBackgroundResource(R.color.black_overlay_2);
+//                holder.getRow_container().setBackgroundResource(R.color.black_overlay_2);
 
                 switch (position) {
                     case 0:
-                        Picasso.with(context).load(R.drawable.sad_face).into(holder.getIcon());
-//                        holder.getIcon().setImageResource(R.drawable.sad_face);
+//                        holder.getIcon().setImageResource(R.drawable.ic_nav_home_active);
+
+                        Picasso.with(context).load(R.drawable.ic_nav_home_active).into(holder.getIcon());
                         break;
                     case 1:
-                        holder.getIcon().setImageResource(R.drawable.sad_face);
+//                        holder.getIcon().setImageResource(R.drawable.ic_nav_history_active);
+
+                        Picasso.with(context).load(R.drawable.ic_nav_history_active).into(holder.getIcon());
                         break;
-                    case 2:
-                        holder.getIcon().setImageResource(R.drawable.sad_face);
+                }
+            } else {
+                switch (position) {
+                    case 0:
+//                        holder.getIcon().setImageResource(R.drawable.ic_nav_home_normal);
+
+                        Picasso.with(context).load(R.drawable.ic_nav_home_normal).into(holder.getIcon());
                         break;
-                    case 3:
-                        holder.getIcon().setImageResource(R.drawable.sad_face);
+                    case 1:
+//                        holder.getIcon().setImageResource(R.drawable.ic_nav_history_normal);
+
+                        Picasso.with(context).load(R.drawable.ic_nav_history_normal).into(holder.getIcon());
                         break;
                 }
             }
 
-            if (position == 4) {
-                holder.getNavigation_row_divider().setVisibility(View.GONE);
-            }
+//            if (position == 4) {
+//                holder.getNavigation_row_divider().setVisibility(View.GONE);
+//            }
 
         } catch (Exception e) {
             e.printStackTrace();

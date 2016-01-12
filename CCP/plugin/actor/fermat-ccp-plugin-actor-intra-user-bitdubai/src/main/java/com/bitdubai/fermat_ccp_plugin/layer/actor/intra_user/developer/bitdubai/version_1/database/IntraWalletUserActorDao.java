@@ -572,7 +572,7 @@ public class IntraWalletUserActorDao {
      * @return boolean exists
      * @throws CantCreateNewDeveloperException
      */
-    public boolean intraUserRequestExists(final String intraUserToAddPublicKey, ConnectionState connectionState) throws CantCreateNewDeveloperException {
+    public boolean intraUserRequestExists(final String intraUserToAddPublicKey, ConnectionState connectionState) throws CantGetIntraWalletUserActorException {
 
         try {
 
@@ -590,13 +590,38 @@ public class IntraWalletUserActorDao {
             return table.getRecords().size() > 0;
 
         } catch (CantLoadTableToMemoryException em) {
-            throw new CantCreateNewDeveloperException(em.getMessage(), em, "Intra User Actor", "Cant load " + IntraWalletUserActorDatabaseConstants.INTRA_WALLET_USER_TABLE_NAME + " table in memory.");
+            throw new CantGetIntraWalletUserActorException(em.getMessage(), em, "Intra User Actor", "Cant load " + IntraWalletUserActorDatabaseConstants.INTRA_WALLET_USER_TABLE_NAME + " table in memory.");
 
         } catch (Exception e) {
 
-            throw new CantCreateNewDeveloperException(e.getMessage(), FermatException.wrapException(e), "Intra User Actor", "Cant check if alias exists, unknown failure.");
+            throw new CantGetIntraWalletUserActorException(e.getMessage(), FermatException.wrapException(e), "Intra User Actor", "Cant check if actor public key exists, unknown failure.");
         }
     }
 
+
+    public boolean intraUserRequestExists(final String intraUserToAddPublicKey) throws CantGetIntraWalletUserActorException {
+
+        try {
+
+            final DatabaseTable table = this.database.getTable(IntraWalletUserActorDatabaseConstants.INTRA_WALLET_USER_TABLE_NAME);
+
+            if (intraUserToAddPublicKey == null) {
+                throw new CantGetUserDeveloperIdentitiesException("intraUserToAddPublicKey null", "intraUserToAddPublicKey must not be null.");
+            }
+
+            table.addStringFilter(IntraWalletUserActorDatabaseConstants.INTRA_WALLET_USER_PUBLIC_KEY_COLUMN_NAME, intraUserToAddPublicKey, DatabaseFilterType.EQUAL);
+
+            table.loadToMemory();
+
+            return table.getRecords().size() > 0;
+
+        } catch (CantLoadTableToMemoryException em) {
+            throw new CantGetIntraWalletUserActorException(em.getMessage(), em, "Intra User Actor", "Cant load " + IntraWalletUserActorDatabaseConstants.INTRA_WALLET_USER_TABLE_NAME + " table in memory.");
+
+        } catch (Exception e) {
+
+            throw new CantGetIntraWalletUserActorException(e.getMessage(), FermatException.wrapException(e), "Intra User Actor", "Cant check if actor public key exists, unknown failure.");
+        }
+    }
 
 }

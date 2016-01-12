@@ -14,6 +14,7 @@ import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogManager;
 import com.bitdubai.fermat_cht_api.all_definition.agent.CHTTransactionAgent;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantInitializeCHTAgent;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantSetObjectException;
+import com.bitdubai.fermat_cht_plugin.layer.middleware.chat.developer.bitdubai.version_1.ChatMiddlewarePluginRoot;
 import com.bitdubai.fermat_cht_plugin.layer.middleware.chat.developer.bitdubai.version_1.database.ChatMiddlewareDatabaseConstants;
 import com.bitdubai.fermat_cht_plugin.layer.middleware.chat.developer.bitdubai.version_1.database.ChatMiddlewareDatabaseDao;
 import com.bitdubai.fermat_cht_plugin.layer.middleware.chat.developer.bitdubai.version_1.database.ChatMiddlewareDatabaseFactory;
@@ -137,9 +138,8 @@ public class ChatMiddlewareMonitorAgent implements
         public void run() {
 
             threadWorking=true;
-            //TODO: change this with thr proper plugin root
-            logManager.log(null,
-            //logManager.log(OpenContractPluginRoot.getLogLevelByClass(this.getClass().getName()),
+            //logManager.log(null,
+            logManager.log(ChatMiddlewarePluginRoot.getLogLevelByClass(this.getClass().getName()),
                     "Chat Middleware Agent: running...", null, null);
             while(threadWorking){
                 /**
@@ -156,9 +156,8 @@ public class ChatMiddlewareMonitorAgent implements
                  * now I will check if there are pending transactions to raise the event
                  */
                 try {
-                    //TODO: change this with thr proper plugin root
-                    logManager.log(null,
-                    //logManager.log(OpenContractPluginRoot.getLogLevelByClass(this.getClass().getName()),
+                    //logManager.log(null,
+                    logManager.log(ChatMiddlewarePluginRoot.getLogLevelByClass(this.getClass().getName()),
                             "Iteration number " + iterationNumber, null, null);
                     doTheMainTask();
                 } catch (Exception e) {
