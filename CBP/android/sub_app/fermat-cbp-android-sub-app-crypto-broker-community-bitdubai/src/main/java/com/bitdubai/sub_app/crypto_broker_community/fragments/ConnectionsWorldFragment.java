@@ -1,6 +1,5 @@
 package com.bitdubai.sub_app.crypto_broker_community.fragments;
 
-
 import android.app.ProgressDialog;
 import android.graphics.Color;
 import android.os.AsyncTask;
@@ -18,7 +17,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
-import android.widget.AdapterView;
 import android.widget.LinearLayout;
 import android.widget.Toast;
 
@@ -34,17 +32,19 @@ import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_broker_community.
 import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_broker_community.interfaces.CryptoBrokerCommunitySearch;
 import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_broker_community.interfaces.CryptoBrokerCommunitySubAppModuleManager;
 import com.bitdubai.fermat_ccp_api.layer.module.intra_user.exceptions.CantGetActiveLoginIdentityException;
+import com.bitdubai.fermat_pip_api.layer.network_service.subapp_resources.SubAppResourcesProviderManager;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedUIExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 import com.bitdubai.sub_app.crypto_broker_community.R;
 import com.bitdubai.sub_app.crypto_broker_community.adapters.AppListAdapter;
+import com.bitdubai.sub_app.crypto_broker_community.common.popups.ListIdentitiesDialog;
+import com.bitdubai.sub_app.crypto_broker_community.constants.Constants;
 import com.bitdubai.sub_app.crypto_broker_community.session.CryptoBrokerCommunitySubAppSession;
 import com.bitdubai.sub_app.crypto_broker_community.util.CommonLogger;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import static android.widget.Toast.LENGTH_LONG;
 import static android.widget.Toast.makeText;
 
 /**
@@ -53,9 +53,7 @@ import static android.widget.Toast.makeText;
  * @author lnacosta
  * @version 1.0.0
  */
-public class ConnectionsWorldFragment extends AbstractFermatFragment implements SearchView.OnCloseListener,
-        SearchView.OnQueryTextListener,
-        AdapterView.OnItemClickListener,
+public class ConnectionsWorldFragment extends AbstractFermatFragment<CryptoBrokerCommunitySubAppSession, SubAppResourcesProviderManager> implements
         SwipeRefreshLayout.OnRefreshListener, FermatListItemListeners<CryptoBrokerCommunityInformation> {
 
 
@@ -80,13 +78,12 @@ public class ConnectionsWorldFragment extends AbstractFermatFragment implements 
     // recycler
     private RecyclerView recyclerView;
     private GridLayoutManager layoutManager;
-    //private ActorAdapter adapter;
+
     private SwipeRefreshLayout swipeRefresh;
 
     // flags
     private boolean isRefreshing = false;
     private View rootView;
-    private CryptoBrokerCommunitySubAppSession cryptoBrokerCommunitySubAppSession;
 
     private LinearLayout emptyView;
     private ArrayList<CryptoBrokerCommunityInformation> cryptoBrokerCommunityInformationList;
@@ -105,10 +102,9 @@ public class ConnectionsWorldFragment extends AbstractFermatFragment implements 
         super.onCreate(savedInstanceState);
         try {
 
-            // setHasOptionsMenu(true);
+            setHasOptionsMenu(true);
             // setting up  module
-            cryptoBrokerCommunitySubAppSession = ((CryptoBrokerCommunitySubAppSession) appSession);
-            moduleManager = cryptoBrokerCommunitySubAppSession.getModuleManager();
+            moduleManager = appSession.getModuleManager();
             errorManager = appSession.getErrorManager();
 
             mNotificationsCount = moduleManager.listCryptoBrokersPendingLocalAction(moduleManager.getSelectedActorIdentity(),MAX, offset).size();
@@ -230,46 +226,9 @@ public class ConnectionsWorldFragment extends AbstractFermatFragment implements 
         }
     }
 
-    @Override
-    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-
-        super.onCreateOptionsMenu(menu, inflater);
-
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        try {
-
-            int id = item.getItemId();
-
-            CharSequence itemTitle = item.getTitle();
-
-            // Esto podria ser un enum de item menu que correspondan a otro menu
-            if (itemTitle.equals("New Identity")) {
-                changeActivity(Activities.CWP_INTRA_USER_CREATE_ACTIVITY.getCode(), appSession.getAppPublicKey());
-
-            }
-//            if(id == R.id.action_connection_request){
-//                Toast.makeText(getActivity(),"Intra user request",Toast.LENGTH_SHORT).show();
-//            }
-            if (item.getItemId() == R.id.action_notifications) {
-                changeActivity(Activities.CCP_SUB_APP_INTRA_USER_COMMUNITY_REQUEST.getCode(), appSession.getAppPublicKey());
-                return true;
-            }
-
-
-        } catch (Exception e) {
-            errorManager.reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.UNSTABLE, FermatException.wrapException(e));
-            makeText(getActivity(), "Oooops! recovering from system error",
-                    LENGTH_LONG).show();
-        }
-        return super.onOptionsItemSelected(item);
-    }
-
     /*
-Updates the count of notifications in the ActionBar.
- */
+     * Updates the count of notifications in the ActionBar.
+     */
     private void updateNotificationsBadge(int count) {
         mNotificationsCount = count;
 
@@ -278,51 +237,36 @@ Updates the count of notifications in the ActionBar.
         getActivity().invalidateOptionsMenu();
     }
 
-
     @Override
-    public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
 
+        super.onCreateOptionsMenu(menu, inflater);
+
+        menu.add(0, Constants.SELECT_IDENTITY, 0, "send").setIcon(R.drawable.ic_actionbar_send)
+                .setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
     }
 
     @Override
-    public boolean onQueryTextSubmit(String alias) {
-
+    public boolean onOptionsItemSelected(MenuItem item) {
         try {
-            CryptoBrokerCommunitySearch cryptoBrokerCommunitySearch = moduleManager.searchNewCryptoBroker(moduleManager.getSelectedActorIdentity());
-            cryptoBrokerCommunitySearch.addAlias(alias);
 
-        } catch(Exception e) {
-            e.printStackTrace();
+            int id = item.getItemId();
+
+            if(id == Constants.SELECT_IDENTITY){
+                final ListIdentitiesDialog progressDialog = new ListIdentitiesDialog(getActivity(), appSession, appResourcesProviderManager);
+                progressDialog.setTitle("Select an Identity");
+                progressDialog.setCancelable(false);
+                progressDialog.show();
+                return true;
+            }
+
+        } catch (Exception e) {
+            errorManager.reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.UNSTABLE, FermatException.wrapException(e));
+            makeText(getActivity(), "Oooops! recovering from system error",
+                    Toast.LENGTH_SHORT).show();
         }
-
-
-        // This method does not exist
-        mSearchView.onActionViewCollapsed();
-        //TODO: cuando esté el network service, esto va a descomentarse
-
-        return true;
+        return super.onOptionsItemSelected(item);
     }
-
-    @Override
-    public boolean onQueryTextChange(String s) {
-        //Toast.makeText(getActivity(), "Probando busqueda completa", Toast.LENGTH_SHORT).show();
-        if (s.length() == 0 && isStartList) {
-            //((IntraUserConnectionsAdapter)adapter).setAddButtonVisible(false);
-            //adapter.changeDataSet(IntraUserConnectionListItem.getTestData(getResources()));
-            return true;
-        }
-        return false;
-    }
-
-    @Override
-    public boolean onClose() {
-        if (!mSearchView.isActivated()) {
-            //adapter.changeDataSet(IntraUserConnectionListItem.getTestData(getResources()));
-        }
-
-        return true;
-    }
-
 
     private synchronized List<CryptoBrokerCommunityInformation> getMoreData() {
         List<CryptoBrokerCommunityInformation> dataSet = new ArrayList<>();

@@ -1,28 +1,29 @@
 package com.bitdubai.fermat_dap_api.layer.dap_wallet.asset_issuer_wallet.interfaces;
 
+import com.bitdubai.fermat_dap_api.layer.all_definition.digital_asset.DigitalAsset;
+
 /**
  * Created by franklin on 29/09/15.
  */
 public interface AssetIssuerWalletList {
 
-    public String getAssetPublicKey();
-    public void setAssetPublicKey(String assetPublicKey);
+    DigitalAsset getDigitalAsset();
 
-    public String getDescription();
-    public void setDescription(String description);
+    void setDigitalAsset(DigitalAsset digitalAsset);
 
-    public String getName();
-    public void setName(String name);
+    long getBookBalance();
 
-    public long getBookBalance();
-    public void setBookBalance(long bookBalance);
+    void setBookBalance(long bookBalance);
 
-    public long getAvailableBalance();
-    public void setAvailableBalance(long availableBalance);
+    long getAvailableBalance();
 
-    public long getQuantityBookBalance();
-    public void setQuantityBookBalance(long quantityBookBalance);
+    void setAvailableBalance(long availableBalance);
 
-    public long getQuantityAvailableBalance();
-    public void setQuantityAvailableBalance(long quantityAvailableBalance);
+    long getQuantityBookBalance();
+
+    void setQuantityBookBalance(long quantityBookBalance);
+
+    long getQuantityAvailableBalance();
+
+    void setQuantityAvailableBalance(long quantityAvailableBalance);
 }

@@ -57,7 +57,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
-                android:text="There are no users"
+                android:text="There are no groups"
                 android:textColor="#ffffff"
                 android:textSize="16sp"
                 tools:ignore="HardcodedText" />

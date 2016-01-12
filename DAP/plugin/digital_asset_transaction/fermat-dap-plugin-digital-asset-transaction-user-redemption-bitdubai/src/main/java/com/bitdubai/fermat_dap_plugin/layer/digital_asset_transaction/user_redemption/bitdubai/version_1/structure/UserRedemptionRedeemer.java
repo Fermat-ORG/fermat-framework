@@ -1,6 +1,7 @@
 package com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.user_redemption.bitdubai.version_1.structure;
 
 import com.bitdubai.fermat_api.layer.all_definition.money.CryptoAddress;
+import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.crypto_transactions.CryptoStatus;
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.crypto_transactions.CryptoTransaction;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantExecuteQueryException;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
@@ -23,6 +24,7 @@ import com.bitdubai.fermat_dap_api.layer.dap_transaction.common.exceptions.CantP
 import com.bitdubai.fermat_dap_api.layer.dap_transaction.common.exceptions.CantPersistsTransactionUUIDException;
 import com.bitdubai.fermat_dap_api.layer.dap_transaction.common.exceptions.UnexpectedResultReturnedFromDatabaseException;
 import com.bitdubai.fermat_dap_api.layer.dap_transaction.common.interfaces.AbstractDigitalAssetSwap;
+import com.bitdubai.fermat_dap_api.layer.dap_transaction.common.util.AssetVerification;
 import com.bitdubai.fermat_dap_api.layer.dap_transaction.user_redemption.exceptions.CantRedeemDigitalAssetException;
 import com.bitdubai.fermat_dap_api.layer.dap_wallet.asset_issuer_wallet.exceptions.CantRegisterDebitException;
 import com.bitdubai.fermat_dap_api.layer.dap_wallet.common.enums.BalanceType;
@@ -155,6 +157,11 @@ public class UserRedemptionRedeemer extends AbstractDigitalAssetSwap {
             if (!isDigitalAssetHashValid(digitalAssetMetadata)) {
                 System.out.println("ASSET USER REDEMPTION The DAM Hash is not valid");
                 throw new CantRedeemDigitalAssetException("The DigitalAsset hash is not valid");
+            } else{
+                /**
+                 * if the asset metadata is valid, I will get the GenesisTransaction
+                 */
+                cryptoTransaction = bitcoinNetworkManager.getCryptoTransactionFromBlockChain(digitalAssetMetadata.getGenesisTransaction(), digitalAssetMetadata.getGenesisBlock());;
             }
             this.userRedemptionDao.updateDistributionStatusByGenesisTransaction(DistributionStatus.HASH_CHECKED, genesisTransaction);
             System.out.println("ASSET USER REDEMPTION set debit in asset issuer wallet:" + genesisTransaction);

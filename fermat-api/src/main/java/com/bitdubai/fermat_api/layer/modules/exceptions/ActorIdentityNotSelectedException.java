@@ -20,4 +20,8 @@ public class ActorIdentityNotSelectedException extends FermatException {
         this(DEFAULT_MESSAGE, cause, context, possibleReason);
     }
 
+    public ActorIdentityNotSelectedException(String context, String possibleReason) {
+        this(DEFAULT_MESSAGE, null, context, possibleReason);
+    }
+
 }

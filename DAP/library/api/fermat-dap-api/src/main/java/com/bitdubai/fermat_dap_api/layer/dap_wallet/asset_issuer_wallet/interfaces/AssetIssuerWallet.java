@@ -4,7 +4,6 @@ import com.bitdubai.fermat_dap_api.layer.all_definition.digital_asset.DigitalAss
 import com.bitdubai.fermat_dap_api.layer.all_definition.digital_asset.DigitalAssetMetadata;
 import com.bitdubai.fermat_dap_api.layer.all_definition.enums.AssetCurrentStatus;
 import com.bitdubai.fermat_dap_api.layer.dap_module.wallet_asset_issuer.exceptions.CantGetAssetStatisticException;
-import com.bitdubai.fermat_dap_api.layer.dap_module.wallet_asset_issuer.interfaces.AssetStatistic;
 import com.bitdubai.fermat_dap_api.layer.dap_transaction.common.exceptions.CantGetDigitalAssetFromLocalStorageException;
 import com.bitdubai.fermat_dap_api.layer.dap_transaction.common.exceptions.RecordsNotFoundException;
 import com.bitdubai.fermat_dap_api.layer.dap_wallet.asset_issuer_wallet.exceptions.CantSaveStatisticException;
@@ -59,6 +58,9 @@ public interface AssetIssuerWallet {
     DigitalAsset getAssetByPublicKey(String assetPublicKey);
 
     String getUserDeliveredToPublicKey(String assetPublicKey) throws RecordsNotFoundException, CantGetAssetStatisticException;
+
+    List<DigitalAssetMetadata> getAllUsedAssets() throws CantGetDigitalAssetFromLocalStorageException;
+
     //ASSET STATISTIC METHODS
 
     void createdNewAsset(DigitalAsset asset) throws CantSaveStatisticException;

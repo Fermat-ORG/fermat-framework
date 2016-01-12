@@ -57,22 +57,18 @@ public class AssetIssuerWalletModuleManager {
 
     public void distributionAssets(String assetPublicKey, String walletPublicKey, List<ActorAssetUser> actorAssetUsers) throws CantDistributeDigitalAssetsException, CantGetTransactionsException, CantCreateFileException, FileNotFoundException, CantLoadWalletException {
         try {
-            if (getAllAssetUserActorConnected().size() > 0) {
-                System.out.println("******* ASSET DISTRIBUTION TEST (Init Distribution)******");
-                walletPublicKey = "walletPublicKeyTest"; //TODO: Solo para la prueba del Distribution
-                HashMap<DigitalAssetMetadata, ActorAssetUser> hashMap = createMapDistribution(walletPublicKey, assetPublicKey, getAllAssetUserActorConnected());
-
-                assetDistributionManager.distributeAssets(hashMap, walletPublicKey);
-            } else {
-                System.out.println("******* ASSET DISTRIBUTION TEST (The list must contain at least one Actor User)******");
+            String context = "Asset PublicKey: " + assetPublicKey + " - Wallet PublicKey: " + walletPublicKey + " - Users: " + actorAssetUsers.toString();
+            if (actorAssetUsers.isEmpty()) {
+                throw new CantDistributeDigitalAssetsException(null, context, "THE USER LIST IS EMPTY.");
             }
+            System.out.println("******* ASSET DISTRIBUTION TEST (Init Distribution)******");
+            walletPublicKey = "walletPublicKeyTest"; //TODO: Solo para la prueba del Distribution
+            HashMap<DigitalAssetMetadata, ActorAssetUser> hashMap = createMapDistribution(walletPublicKey, assetPublicKey, actorAssetUsers);
+            assetDistributionManager.distributeAssets(hashMap, walletPublicKey);
+
         } catch (Exception exception) {
             throw new CantLoadWalletException("Error distribution Assets", exception, "Method: distributionAssets", "Class: AssetIssuerWalletModuleManager");
         }
-    }
-
-    public void setAssetIssuerManager(AssetIssuerWalletManager assetIssuerWalletManager) {
-        this.assetIssuerWalletManager = assetIssuerWalletManager;
     }
 
     public List<ActorAssetUser> getAllAssetUserActorConnected() throws CantGetAssetUserActorsException {
