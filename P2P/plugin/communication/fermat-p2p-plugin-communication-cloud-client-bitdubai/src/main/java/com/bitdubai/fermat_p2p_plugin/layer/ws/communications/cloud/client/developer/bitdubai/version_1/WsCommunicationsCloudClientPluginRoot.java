@@ -45,6 +45,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 
 /**
  * The Class <code>com.bitdubai.fermat_p2p_plugin.layer.communication.server.developer.bitdubai.version_1.WsCommunicationsCloudClientPluginRoot</code> is
@@ -111,6 +114,9 @@ public class WsCommunicationsCloudClientPluginRoot extends AbstractPlugin implem
      * Represent the isTaskCompleted
      */
     private boolean isTaskCompleted;
+
+
+    private boolean networkState;
 
     /**
      * Constructor
@@ -273,54 +279,95 @@ public class WsCommunicationsCloudClientPluginRoot extends AbstractPlugin implem
         return getDisableClientFlag();
     }
 
+    @Override
+    public void setNetworkState(boolean state) {
+        this.networkState = state;
+        if(networkState==true && !getCommunicationsCloudClientConnection().isConnected()){
+            reconnect();
+        }
+    }
 
+
+    public void addToTimer() {
+
+
+    }
     /**
      * Handle de connection Loose event to try to reconnect
      */
     public void reconnect(){
 
         try {
+            if(networkState) {
+                if (!isTaskCompleted) {
 
-            if (reconnectTimer == null && !isTaskCompleted){
+//                reconnectTimer.schedule(new TimerTask() {
+//                    @Override
+//                    public void run() {
+//                        System.out.println("WsCommunicationsCloudClientPluginRoot - trying to reconnect");
+//
+//                        if (!getCommunicationsCloudClientConnection().isConnected()) {
+//                            wsCommunicationsCloudClientConnection = new WsCommunicationsCloudClientConnection(uri, eventManager, locationManager, clientIdentity);
+//                            wsCommunicationsCloudClientConnection.initializeAndConnect();
+//                            isTaskCompleted = Boolean.TRUE;
+//                        }
+//                    }
+//                }, 5000);
 
-                reconnectTimer = new Timer();
-                reconnectTimer.schedule(new TimerTask() {
-                    @Override
-                    public void run() {
-                        System.out.println("WsCommunicationsCloudClientPluginRoot - trying to reconnect");
+                    final ScheduledExecutorService scheduledExecutorService =
+                            Executors.newSingleThreadScheduledExecutor();
+                    scheduledExecutorService.schedule(new Runnable() {
+                                                          public void run() {
+                                                              try {
+                                                                  System.out.println("WsCommunicationsCloudClientPluginRoot - trying to reconnect");
+                                                                  if (!getCommunicationsCloudClientConnection().isConnected()) {
+                                                                      wsCommunicationsCloudClientConnection = new WsCommunicationsCloudClientConnection(uri, eventManager, locationManager, clientIdentity);
+                                                                      wsCommunicationsCloudClientConnection.initializeAndConnect();
+                                                                      isTaskCompleted = Boolean.TRUE;
+                                                                  }
+                                                              } catch (Exception e) {
+                                                                  e.printStackTrace();
+                                                                  scheduledExecutorService.shutdown();
+                                                              }
+                                                              scheduledExecutorService.shutdown();
+                                                          }
+                                                      },
+                            5,
+                            TimeUnit.SECONDS);
 
-                        if (!getCommunicationsCloudClientConnection().isConnected()) {
-                            wsCommunicationsCloudClientConnection = new WsCommunicationsCloudClientConnection(uri, eventManager, locationManager, clientIdentity);
-                            wsCommunicationsCloudClientConnection.initializeAndConnect();
-                            isTaskCompleted = Boolean.TRUE;
-                        }
+                } else {
+
+                    if (getCommunicationsCloudClientConnection().isConnected()) {
+                        isTaskCompleted = Boolean.FALSE;
+                        reconnect();
                     }
-                }, 5000);
 
-            }else {
-
-                if (getCommunicationsCloudClientConnection().isConnected()){
-                    reconnectTimer = null;
-                    isTaskCompleted = Boolean.FALSE;
-                    reconnect();
                 }
-
             }
 
         }catch (Exception e){
             e.printStackTrace();
             System.out.println("WsCommunicationsCloudClientPluginRoot - trying to reconnect on 40 seg");
 
-            if (reconnectTimer == null && !isTaskCompleted){
+            if ( !isTaskCompleted){
 
-                reconnectTimer = new Timer();
-                reconnectTimer.schedule(new TimerTask() {
+//                reconnectTimer.schedule(new TimerTask() {
+//                    @Override
+//                    public void run() {
+//                        reconnect();
+//                        isTaskCompleted = Boolean.TRUE;
+//                    }
+//                }, 40000);
+                final ScheduledExecutorService scheduledExecutorService =
+                        Executors.newSingleThreadScheduledExecutor();
+                scheduledExecutorService.schedule(new Runnable() {
                     @Override
                     public void run() {
                         reconnect();
                         isTaskCompleted = Boolean.TRUE;
                     }
-                }, 40000);
+                },
+                40,TimeUnit.SECONDS);
 
             }
 

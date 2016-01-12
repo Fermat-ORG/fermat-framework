@@ -676,6 +676,7 @@ public class IntraActorNetworkServicePluginRoot extends AbstractPlugin implement
          */
         this.serviceStatus = ServiceStatus.STOPPED;
 
+
     }
 
     private void initializeIntraActorAgent() {
@@ -1281,9 +1282,11 @@ public class IntraActorNetworkServicePluginRoot extends AbstractPlugin implement
      */
     @Override
     public void handleClientConnectionLooseNotificationEvent(FermatEvent fermatEvent) {
-
-        if(communicationNetworkServiceConnectionManager != null)
+        System.out.println("LooseNotificationEvent");
+        if(communicationNetworkServiceConnectionManager != null) {
             communicationNetworkServiceConnectionManager.stop();
+            this.register = false;
+        }
 
     }
 
@@ -1293,8 +1296,11 @@ public class IntraActorNetworkServicePluginRoot extends AbstractPlugin implement
     @Override
     public void handleClientSuccessfullReconnectNotificationEvent(FermatEvent fermatEvent) {
 
-        if(communicationNetworkServiceConnectionManager != null)
+        System.out.println("SuccessfullReconnectNotificationEvent");
+        if(communicationNetworkServiceConnectionManager != null) {
             communicationNetworkServiceConnectionManager.restart();
+            this.register = true;
+        }
 
     }
 

@@ -9,6 +9,7 @@ import android.app.PendingIntent;
 import android.app.WallpaperManager;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
@@ -58,6 +59,7 @@ import com.bitdubai.android_core.app.common.version_1.adapters.ScreenPagerAdapte
 import com.bitdubai.android_core.app.common.version_1.adapters.TabsPagerAdapter;
 import com.bitdubai.android_core.app.common.version_1.bottom_navigation.BottomNavigation;
 import com.bitdubai.android_core.app.common.version_1.builders.FooterBuilder;
+import com.bitdubai.android_core.app.common.version_1.classes.NetworkStateReceiver;
 import com.bitdubai.android_core.app.common.version_1.connection_manager.FermatAppConnectionManager;
 import com.bitdubai.android_core.app.common.version_1.provisory.ProvisoryData;
 import com.bitdubai.android_core.app.common.version_1.provisory.SubAppManagerProvisory;
@@ -172,6 +174,7 @@ public abstract class FermatActivity extends AppCompatActivity
         FermatNotificationListener,
         NavigationView.OnNavigationItemSelectedListener,
         FermatRuntime,
+        NetworkStateReceiver.NetworkStateReceiverListener,
         FermatListItemListeners<com.bitdubai.fermat_api.layer.all_definition.navigation_structure.MenuItem> {
 
 
@@ -206,6 +209,10 @@ public abstract class FermatActivity extends AppCompatActivity
      */
     private final Handler mDrawerActionHandler = new Handler();
     private final Handler refreshHandler = new Handler();
+    /**
+     * Receivers
+     */
+    private NetworkStateReceiver networkStateReceiver;
 
     /**
      * UI
@@ -251,6 +258,14 @@ public abstract class FermatActivity extends AppCompatActivity
             // The FragmentManager will restore the old Fragments so we don't
             // need to create any new ones here.
         }
+
+//        try {
+//            networkStateReceiver = new NetworkStateReceiver();
+//            networkStateReceiver.addListener(this);
+//            this.registerReceiver(networkStateReceiver, new IntentFilter(android.net.ConnectivityManager.CONNECTIVITY_ACTION));
+//        }catch (Exception e){
+//
+//        }
 
     }
 
@@ -301,6 +316,8 @@ public abstract class FermatActivity extends AppCompatActivity
     protected void onStop() {
         try {
             super.onStop();
+            unregisterReceiver(networkStateReceiver);
+       //     networkStateReceiver.removeListener(this);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -949,6 +966,13 @@ public abstract class FermatActivity extends AppCompatActivity
                 e.printStackTrace();
             }
 
+        }
+        try {
+            networkStateReceiver = new NetworkStateReceiver();
+            networkStateReceiver.addListener(this);
+            this.registerReceiver(networkStateReceiver, new IntentFilter(android.net.ConnectivityManager.CONNECTIVITY_ACTION));
+        }catch (Exception e){
+            e.printStackTrace();
         }
     }
 
@@ -1783,6 +1807,18 @@ public abstract class FermatActivity extends AppCompatActivity
         mNotificationManager.notify(NOTIFICATION_ID,notification.build());
     }
 
+
+    @Override
+    public void networkAvailable() {
+        Log.i(TAG,"NETWORK AVAILABLE MATIIIII");
+        getCloudClient().setNetworkState(true);
+    }
+
+    @Override
+    public void networkUnavailable() {
+        Log.i(TAG,"NETWORK UNAVAILABLE MATIIIII");
+        getCloudClient().setNetworkState(false);
+    }
 
 
 }
