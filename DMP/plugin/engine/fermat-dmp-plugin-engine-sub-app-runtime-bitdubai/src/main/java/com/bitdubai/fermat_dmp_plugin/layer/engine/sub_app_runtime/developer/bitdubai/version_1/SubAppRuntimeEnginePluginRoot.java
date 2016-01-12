@@ -1865,7 +1865,8 @@ public class SubAppRuntimeEnginePluginRoot extends AbstractPlugin implements Sub
         runtimeActivity = new Activity();
         runtimeActivity.setType(Activities.CHT_CHAT_OPEN_CHATLIST_TAB_FRAGMENT);
         runtimeActivity.setActivityType(Activities.CHT_CHAT_OPEN_CHATLIST_TAB_FRAGMENT.getCode());
-        runtimeActivity.setColor("#FF0B46F0");
+        chtChat.addActivity(runtimeActivity);
+        //runtimeActivity.setColor("#FF0B46F0");
 
         statusBar = new com.bitdubai.fermat_api.layer.all_definition.navigation_structure.StatusBar();
         statusBar.setColor("#0072bb");
@@ -1941,7 +1942,7 @@ public class SubAppRuntimeEnginePluginRoot extends AbstractPlugin implements Sub
         runtimeActivity.addFragment(Fragments.CHT_CHAT_OPEN_CONTACTLIST_TAB_FRAGMENT.getKey(), runtimeFragment);
         runtimeActivity.setStartFragment(Fragments.CHT_CHAT_OPEN_CONTACTLIST_TAB_FRAGMENT.getKey());
         chtChat.addActivity(runtimeActivity);
-
+/*
         // Activity: Edit Contact
         runtimeActivity = new Activity();
         runtimeActivity.setType(Activities.CHT_CHAT_EDIT_CONTACT_FRAGMENT);
@@ -2047,7 +2048,7 @@ public class SubAppRuntimeEnginePluginRoot extends AbstractPlugin implements Sub
         runtimeActivity.setStartFragment(Fragments.CHT_CHAT_OPEN_CHAT_DETAIL_FRAGMENT.getKey());
 
         chtChat.addActivity(runtimeActivity);
-
+        */
         listSubApp.put(chtChat.getPublicKey(), chtChat);
 
     }

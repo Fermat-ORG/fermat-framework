@@ -19,7 +19,7 @@ import com.bitdubai.fermat_api.layer.all_definition.util.Version;
 /**
  * ChatFragmentFactory
  *
- * @author Jose Cardozo josejcb (josejcb89@gmail.com)  on 29/12/15.
+ * @author Jose Cardozo josejcb (josejcb89@gmail.com)  on 08/01/16.
  * @version 1.0
  */
 public class ChatFermatAppConnection extends AppConnections {
