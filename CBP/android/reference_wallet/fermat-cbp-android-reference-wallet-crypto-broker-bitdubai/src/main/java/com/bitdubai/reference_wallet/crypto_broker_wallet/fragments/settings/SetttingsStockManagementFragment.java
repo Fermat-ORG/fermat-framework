@@ -1,6 +1,5 @@
 package com.bitdubai.reference_wallet.crypto_broker_wallet.fragments.settings;
 
-import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
@@ -11,9 +10,13 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.SeekBar;
 import android.widget.Toast;
+
 import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractFermatFragment;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatCheckBox;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView;
+import com.bitdubai.fermat_android_api.ui.adapters.FermatAdapter;
+import com.bitdubai.fermat_android_api.ui.fragments.FermatWalletListFragment;
+import com.bitdubai.fermat_android_api.ui.interfaces.FermatListItemListeners;
 import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.enums.FiatCurrency;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
@@ -30,38 +33,40 @@ import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfac
 import com.bitdubai.fermat_wpd_api.layer.wpd_middleware.wallet_manager.exceptions.CantListWalletsException;
 import com.bitdubai.fermat_wpd_api.layer.wpd_middleware.wallet_manager.interfaces.InstalledWallet;
 import com.bitdubai.reference_wallet.crypto_broker_wallet.R;
-import com.bitdubai.reference_wallet.crypto_broker_wallet.common.adapters.SingleDeletableItemAdapter;
-import com.bitdubai.reference_wallet.crypto_broker_wallet.common.adapters.WalletsAdapter;
+import com.bitdubai.reference_wallet.crypto_broker_wallet.common.adapters.StockDestockAdapter;
+import com.bitdubai.reference_wallet.crypto_broker_wallet.common.dialogs.CreateRestockDestockFragmentDialog;
 import com.bitdubai.reference_wallet.crypto_broker_wallet.fragments.common.SimpleListDialogFragment;
 import com.bitdubai.reference_wallet.crypto_broker_wallet.session.CryptoBrokerWalletSession;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.UUID;
 
 /**
  * Created by nelson on 22/12/15.
  */
-public class SetttingsMerchandisesFragment extends AbstractFermatFragment
-        implements SingleDeletableItemAdapter.OnDeleteButtonClickedListener<InstalledWallet> {
+public class SetttingsStockManagementFragment extends FermatWalletListFragment<CryptoBrokerWalletAssociatedSetting> implements FermatListItemListeners<CryptoBrokerWalletAssociatedSetting>, DialogInterface.OnDismissListener {
 
     // Constants
-    private static final String TAG = "WizardPageSetMerchand";
+    private static final String TAG = "SettingsStockManagement";
 
     private int spreadValue;
     private boolean automaticRestock;
     private List<InstalledWallet> stockWallets;
     private Map<String, FiatCurrency> bankCurrencies;
     private Map<String, String> bankAccounts;
-
+    private CreateRestockDestockFragmentDialog dialog;
+    private List<CryptoBrokerWalletAssociatedSetting> settings;
     // Fermat Managers
     private CryptoBrokerWalletManager walletManager;
     private ErrorManager errorManager;
-    private WalletsAdapter adapter;
-    private RecyclerView recyclerView;
     private FermatTextView emptyView;
 
 
-    public static SetttingsMerchandisesFragment newInstance() {
-        return new SetttingsMerchandisesFragment();
+    public static SetttingsStockManagementFragment newInstance() {
+        return new SetttingsStockManagementFragment();
     }
 
     @Override
@@ -70,6 +75,7 @@ public class SetttingsMerchandisesFragment extends AbstractFermatFragment
 
         spreadValue = 0;
         automaticRestock = false;
+        settings = new ArrayList<>();
         stockWallets = new ArrayList<>();
         bankCurrencies = new HashMap<>();
         bankAccounts = new HashMap<>();
@@ -85,28 +91,81 @@ public class SetttingsMerchandisesFragment extends AbstractFermatFragment
                 errorManager.reportUnexpectedWalletException(Wallets.CBP_CRYPTO_BROKER_WALLET,
                         UnexpectedWalletExceptionSeverity.DISABLES_THIS_FRAGMENT, ex);
         }
+        try {
+            System.out.println("settings!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
+            settings = walletManager.getCryptoBrokerWalletAssociatedSettings("walletPublicKeyTest");
+            System.out.println("settings ["+settings.size()+"]!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
+        } catch (FermatException ex) {
+            Toast.makeText(SetttingsStockManagementFragment.this.getActivity(), "Oops a error occurred...", Toast.LENGTH_SHORT).show();
+
+            Log.e(TAG, ex.getMessage(), ex);
+            if (errorManager != null) {
+                errorManager.reportUnexpectedWalletException(
+                        Wallets.CBP_CRYPTO_BROKER_WALLET,
+                        UnexpectedWalletExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT,
+                        ex);
+            }
+        }
 
     }
 
     @Override
+    protected void initViews(View layout) {
+        super.initViews(layout);
+        emptyView = (FermatTextView) layout.findViewById(R.id.cbw_selected_stock_wallets_empty_view);
+
+        final FermatTextView spreadTextView = (FermatTextView) layout.findViewById(R.id.cbw_spread_value_text);
+        spreadTextView.setText(String.format("%1$s %%", spreadValue));
+
+        final FermatCheckBox automaticRestockCheckBox = (FermatCheckBox) layout.findViewById(R.id.cbw_automatic_restock_check_box);
+        automaticRestockCheckBox.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                automaticRestock = automaticRestockCheckBox.isChecked();
+            }
+        });
+
+        final SeekBar spreadSeekBar = (SeekBar) layout.findViewById(R.id.cbw_spread_value_seek_bar);
+        spreadSeekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+            @Override
+            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+                spreadValue = progress;
+                spreadTextView.setText(String.format("%1$s %%", spreadValue));
+            }
+
+            @Override
+            public void onStartTrackingTouch(SeekBar seekBar) {
+            }
+
+            @Override
+            public void onStopTrackingTouch(SeekBar seekBar) {
+            }
+        });
+
+
+        final View nextStepButton = layout.findViewById(R.id.cbw_next_step_button);
+        nextStepButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                //saveSettingAndGoNextStep();
+                changeActivity(Activities.CBP_CRYPTO_BROKER_WALLET_SETTINGS, appSession.getAppPublicKey());
+            }
+        });
+        showOrHideNoSelectedWalletsView();
+    }
+
+    /*@Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         super.onCreateView(inflater, container, savedInstanceState);
 
-        final View layout = inflater.inflate(R.layout.cbw_wizard_step_set_merchandises, container, false);
-
-        recyclerView = (RecyclerView) layout.findViewById(R.id.cbw_selected_stock_wallets_recycler_view);
-        recyclerView.setLayoutManager(new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false));
-
-        adapter = new WalletsAdapter(getActivity(), stockWallets);
-        adapter.setDeleteButtonListener(this);
-        recyclerView.setAdapter(adapter);
+        final View layout = inflater.inflate(R.layout.cbw_settings_stock_management, container, false);
 
         emptyView = (FermatTextView) layout.findViewById(R.id.cbw_selected_stock_wallets_empty_view);
 
         final FermatTextView spreadTextView = (FermatTextView) layout.findViewById(R.id.cbw_spread_value_text);
         spreadTextView.setText(String.format("%1$s %%", spreadValue));
 
-        final View cryptoButton = layout.findViewById(R.id.cbw_select_crypto_wallets);
+        /*final View cryptoButton = layout.findViewById(R.id.cbw_select_crypto_wallets);
         cryptoButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -160,12 +219,13 @@ public class SetttingsMerchandisesFragment extends AbstractFermatFragment
         nextStepButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                saveSettingAndGoNextStep();
+                //saveSettingAndGoNextStep();
+                changeActivity(Activities.CBP_CRYPTO_BROKER_WALLET_SETTINGS, appSession.getAppPublicKey());
             }
         });
-
+        showOrHideNoSelectedWalletsView();
         return layout;
-    }
+    }*/
 
     private void showWalletsDialog(final Platforms platform) {
         try {
@@ -185,8 +245,8 @@ public class SetttingsMerchandisesFragment extends AbstractFermatFragment
                     if (!platform.equals(Platforms.BANKING_PLATFORM)) {
 
                         if (!containWallet(selectedItem)) {
-                            stockWallets.add(selectedItem);
-                            adapter.changeDataSet(stockWallets);
+                            /*stockWallets.add(selectedItem);
+                            adapter.changeDataSet(stockWallets);*/
                             showOrHideNoSelectedWalletsView();
                         }
 
@@ -199,7 +259,7 @@ public class SetttingsMerchandisesFragment extends AbstractFermatFragment
             dialogFragment.show(getFragmentManager(), "WalletsDialog");
 
         } catch (CantListWalletsException ex) {
-            Toast.makeText(SetttingsMerchandisesFragment.this.getActivity(), "Oops a error occurred...", Toast.LENGTH_SHORT).show();
+            Toast.makeText(SetttingsStockManagementFragment.this.getActivity(), "Oops a error occurred...", Toast.LENGTH_SHORT).show();
 
             Log.e(TAG, ex.getMessage(), ex);
             if (errorManager != null) {
@@ -228,8 +288,8 @@ public class SetttingsMerchandisesFragment extends AbstractFermatFragment
                     bankAccounts.put(selectedWallet.getWalletPublicKey(), account);
 
                     if (!containWallet(selectedWallet)) {
-                        stockWallets.add(selectedWallet);
-                        adapter.changeDataSet(stockWallets);
+                        /*stockWallets.add(selectedWallet);
+                        adapter.changeDataSet(stockWallets);*/
                         showOrHideNoSelectedWalletsView();
                     }
                 }
@@ -238,7 +298,7 @@ public class SetttingsMerchandisesFragment extends AbstractFermatFragment
             accountsDialog.show(getFragmentManager(), "accountsDialog");
 
         } catch (FermatException ex) {
-            Toast.makeText(SetttingsMerchandisesFragment.this.getActivity(), "Oops a error occurred...", Toast.LENGTH_SHORT).show();
+            Toast.makeText(SetttingsStockManagementFragment.this.getActivity(), "Oops a error occurred...", Toast.LENGTH_SHORT).show();
 
             Log.e(TAG, ex.getMessage(), ex);
             if (errorManager != null) {
@@ -295,7 +355,7 @@ public class SetttingsMerchandisesFragment extends AbstractFermatFragment
             }
 
         } catch (FermatException ex) {
-            Toast.makeText(SetttingsMerchandisesFragment.this.getActivity(), "Oops a error occurred...", Toast.LENGTH_SHORT).show();
+            Toast.makeText(SetttingsStockManagementFragment.this.getActivity(), "Oops a error occurred...", Toast.LENGTH_SHORT).show();
 
             Log.e(TAG, ex.getMessage(), ex);
             if (errorManager != null) {
@@ -310,7 +370,31 @@ public class SetttingsMerchandisesFragment extends AbstractFermatFragment
         changeActivity(Activities.CBP_CRYPTO_BROKER_WALLET_SETTINGS, appSession.getAppPublicKey());
     }
 
-    @Override
+    /*private void getSettings(){
+        try {
+            List<CryptoBrokerWalletAssociatedSetting> settings = walletManager.getCryptoBrokerWalletAssociatedSettings(this.appSession.getAppPublicKey());
+
+            for(CryptoBrokerWalletAssociatedSetting setting:settings){
+                InstalledWallet installedWallet;
+                setting.getPlatform();
+                setting.get
+                stockWallets.add();
+            }
+
+        }catch (FermatException ex) {
+            Toast.makeText(SetttingsStockManagementFragment.this.getActivity(), "Oops a error occurred...", Toast.LENGTH_SHORT).show();
+
+            Log.e(TAG, ex.getMessage(), ex);
+            if (errorManager != null) {
+                errorManager.reportUnexpectedWalletException(
+                        Wallets.CBP_CRYPTO_BROKER_WALLET,
+                        UnexpectedWalletExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT,
+                        ex);
+            }
+        }
+    }*/
+
+    /*@Override
     public void deleteButtonClicked(InstalledWallet data, final int position) {
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
 
@@ -330,10 +414,10 @@ public class SetttingsMerchandisesFragment extends AbstractFermatFragment
         });
 
         builder.show();
-    }
+    }*/
 
     private void showOrHideNoSelectedWalletsView() {
-        if (stockWallets.isEmpty()) {
+        if (settings.isEmpty()) {
             emptyView.setVisibility(View.VISIBLE);
             recyclerView.setVisibility(View.GONE);
         } else {
@@ -355,5 +439,82 @@ public class SetttingsMerchandisesFragment extends AbstractFermatFragment
         }
 
         return false;
+    }
+
+    private void launchCreateTransactionDialog(CryptoBrokerWalletAssociatedSetting data) {
+        dialog = new CreateRestockDestockFragmentDialog(getActivity(), walletManager, getResources(), data);
+        dialog.setOnDismissListener(this);
+        dialog.show();
+    }
+
+    @Override
+    public FermatAdapter getAdapter() {
+        if(adapter == null){
+            adapter = new StockDestockAdapter(getActivity(), settings);
+            adapter.setFermatListEventListener(this);
+        }
+        return adapter;
+    }
+
+    @Override
+    public void onItemClickListener(CryptoBrokerWalletAssociatedSetting data, int position) {
+        launchCreateTransactionDialog(data);
+    }
+
+    @Override
+    public void onLongItemClickListener(CryptoBrokerWalletAssociatedSetting data, int position) {
+
+    }
+
+    @Override
+    public void onDismiss(DialogInterface dialog) {
+
+    }
+
+    @Override
+    protected boolean hasMenu() {
+        return false;
+    }
+
+    @Override
+    protected int getLayoutResource() {
+        return R.layout.cbw_settings_stock_management;
+    }
+
+    @Override
+    protected int getSwipeRefreshLayoutId() {
+        return 0;
+    }
+
+    @Override
+    protected int getRecyclerLayoutId() {
+        return R.id.cbw_selected_stock_wallets_recycler_view;
+    }
+
+    @Override
+    protected boolean recyclerHasFixedSize() {
+        return true;
+    }
+
+    @Override
+    public void onPostExecute(Object... result) {
+        /*if (result != null && result.length > 0) {
+            settings = (ArrayList) result[0];
+            if (adapter != null)
+                adapter.changeDataSet(settings);
+        }*/
+    }
+
+    @Override
+    public void onErrorOccurred(Exception ex) {
+
+    }
+
+    @Override
+    public RecyclerView.LayoutManager getLayoutManager() {
+        if (layoutManager == null) {
+            layoutManager = new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false);
+        }
+        return layoutManager;
     }
 }
