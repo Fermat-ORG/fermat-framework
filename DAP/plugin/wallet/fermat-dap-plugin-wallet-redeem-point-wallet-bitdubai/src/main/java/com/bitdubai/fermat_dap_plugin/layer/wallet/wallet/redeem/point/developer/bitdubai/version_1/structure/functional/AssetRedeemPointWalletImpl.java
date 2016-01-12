@@ -1,4 +1,4 @@
-package com.bitdubai.fermat_dap_plugin.layer.wallet.wallet.redeem.point.developer.bitdubai.version_1.structure;
+package com.bitdubai.fermat_dap_plugin.layer.wallet.wallet.redeem.point.developer.bitdubai.version_1.structure.functional;
 
 import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
@@ -18,11 +18,15 @@ import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantPers
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.FileNotFoundException;
 import com.bitdubai.fermat_dap_api.layer.all_definition.digital_asset.DigitalAssetMetadata;
 import com.bitdubai.fermat_dap_api.layer.dap_transaction.common.exceptions.CantGetDigitalAssetFromLocalStorageException;
+import com.bitdubai.fermat_dap_api.layer.dap_transaction.common.exceptions.RecordsNotFoundException;
 import com.bitdubai.fermat_dap_api.layer.dap_wallet.asset_issuer_wallet.exceptions.CantInitializeAssetIssuerWalletException;
+import com.bitdubai.fermat_dap_api.layer.dap_wallet.asset_redeem_point.exceptions.CantGetRedeemPointStatisticsException;
+import com.bitdubai.fermat_dap_api.layer.dap_wallet.asset_redeem_point.exceptions.CantSaveRedeemPointStatisticException;
 import com.bitdubai.fermat_dap_api.layer.dap_wallet.asset_redeem_point.interfaces.AssetRedeemPointWallet;
 import com.bitdubai.fermat_dap_api.layer.dap_wallet.asset_redeem_point.interfaces.AssetRedeemPointWalletBalance;
 import com.bitdubai.fermat_dap_api.layer.dap_wallet.asset_redeem_point.interfaces.AssetRedeemPointWalletTransaction;
 import com.bitdubai.fermat_dap_api.layer.dap_wallet.asset_redeem_point.interfaces.AssetRedeemPointWalletTransactionSummary;
+import com.bitdubai.fermat_dap_api.layer.dap_wallet.asset_redeem_point.interfaces.RedeemPointStatistic;
 import com.bitdubai.fermat_dap_api.layer.dap_wallet.common.enums.BalanceType;
 import com.bitdubai.fermat_dap_api.layer.dap_wallet.common.enums.TransactionType;
 import com.bitdubai.fermat_dap_api.layer.dap_wallet.common.exceptions.CantCreateWalletException;
@@ -45,7 +49,7 @@ import java.util.UUID;
 /**
  * Created by franklin on 15/10/15.
  */
-public class AssetRedeemPointWalletImpl implements AssetRedeemPointWallet{
+public class AssetRedeemPointWalletImpl implements AssetRedeemPointWallet {
     public static final String PATH_DIRECTORY = "assetredeem-point/assets";
     private static final String ASSET_REDEEM_POINT_WALLET_FILE_NAME = "walletsIds";
 
@@ -106,8 +110,7 @@ public class AssetRedeemPointWalletImpl implements AssetRedeemPointWallet{
 
     }
 
-    private void persistAssetRedeemPointWallet(final PluginTextFile pluginTextFile) throws CantCreateWalletException
-    {
+    private void persistAssetRedeemPointWallet(final PluginTextFile pluginTextFile) throws CantCreateWalletException {
         StringBuilder stringBuilder = new StringBuilder(walletAssetRedeemPoint.size() * 72);
         Iterator iterator = walletAssetRedeemPoint.entrySet().iterator();
 
@@ -132,8 +135,7 @@ public class AssetRedeemPointWalletImpl implements AssetRedeemPointWallet{
         }
     }
 
-    private PluginTextFile  createAssetIssuerWalletFile() throws CantCreateWalletException
-    {
+    private PluginTextFile createAssetIssuerWalletFile() throws CantCreateWalletException {
         try {
             return pluginFileSystem.getTextFile(pluginId, "", ASSET_REDEEM_POINT_WALLET_FILE_NAME, FilePrivacy.PRIVATE, FileLifeSpan.PERMANENT);
         } catch (CantCreateFileException cantCreateFileException) {
@@ -143,8 +145,7 @@ public class AssetRedeemPointWalletImpl implements AssetRedeemPointWallet{
         }
     }
 
-    private void loadAssetIssuerWalletMap(final PluginTextFile loadAssetIssuerWalletMap) throws CantCreateWalletException
-    {
+    private void loadAssetIssuerWalletMap(final PluginTextFile loadAssetIssuerWalletMap) throws CantCreateWalletException {
         try {
             loadAssetIssuerWalletMap.loadFromMedia();
             String[] stringAssetIssuerWallet = loadAssetIssuerWalletMap.getContent().split(";", -1);
@@ -161,8 +162,7 @@ public class AssetRedeemPointWalletImpl implements AssetRedeemPointWallet{
         }
     }
 
-    private void createWalletDatabase(final UUID internalWalletId) throws CantCreateWalletException
-    {
+    private void createWalletDatabase(final UUID internalWalletId) throws CantCreateWalletException {
         try {
             AssetRedeemPointWalletDatabaseFactory databaseFactory = new AssetRedeemPointWalletDatabaseFactory();
             databaseFactory.setPluginDatabaseSystem(pluginDatabaseSystem);
@@ -189,7 +189,7 @@ public class AssetRedeemPointWalletImpl implements AssetRedeemPointWallet{
             assetRedeemPointWalletDao.setPluginFileSystem(pluginFileSystem);
             assetRedeemPointWalletDao.setPlugin(pluginId);
             return assetRedeemPointWalletDao.listsTransactionsByAssets(balanceType, transactionType, max, offset, assetPublicKey);
-        }catch (CantGetTransactionsException exception) {
+        } catch (CantGetTransactionsException exception) {
             errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_ASSET_WALLET_ISSUER, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, FermatException.wrapException(exception));
             throw exception;
         } catch (Exception exception) {
@@ -205,7 +205,7 @@ public class AssetRedeemPointWalletImpl implements AssetRedeemPointWallet{
             assetRedeemPointWalletDao.setPluginFileSystem(pluginFileSystem);
             assetRedeemPointWalletDao.setPlugin(pluginId);
             return assetRedeemPointWalletDao.getTransactionsByActor(actorPublicKey, balanceType, max, offset);
-        }catch (CantGetTransactionsException exception) {
+        } catch (CantGetTransactionsException exception) {
             errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_ASSET_WALLET_ISSUER, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, FermatException.wrapException(exception));
             throw exception;
         } catch (Exception exception) {
@@ -216,12 +216,12 @@ public class AssetRedeemPointWalletImpl implements AssetRedeemPointWallet{
 
     @Override
     public List<AssetRedeemPointWalletTransaction> gettLastActorTransactionsByTransactionType(BalanceType balanceType, TransactionType transactionType, int max, int offset) throws CantGetTransactionsException {
-        try{
+        try {
             assetRedeemPointWalletDao = new AssetRedeemPointWalletDao(database);
             assetRedeemPointWalletDao.setPluginFileSystem(pluginFileSystem);
             assetRedeemPointWalletDao.setPlugin(pluginId);
             return assetRedeemPointWalletDao.getTransactionsByTransactionType(transactionType, max, offset);
-        }catch (CantGetTransactionsException exception) {
+        } catch (CantGetTransactionsException exception) {
             errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_ASSET_WALLET_ISSUER, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, FermatException.wrapException(exception));
             throw exception;
         } catch (Exception exception) {
@@ -237,7 +237,7 @@ public class AssetRedeemPointWalletImpl implements AssetRedeemPointWallet{
             assetRedeemPointWalletDao.setPluginFileSystem(pluginFileSystem);
             assetRedeemPointWalletDao.setPlugin(pluginId);
             assetRedeemPointWalletDao.updateMemoField(transactionID, description);
-        }catch (CantStoreMemoException exception) {
+        } catch (CantStoreMemoException exception) {
             errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_ASSET_WALLET_ISSUER, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, FermatException.wrapException(exception));
             throw exception;
         } catch (Exception exception) {
@@ -261,5 +261,30 @@ public class AssetRedeemPointWalletImpl implements AssetRedeemPointWallet{
         } catch (FileNotFoundException | CantCreateFileException e) {
             throw new CantGetDigitalAssetFromLocalStorageException(e, context, "The path could be wrong or there was an error creating the file.");
         }
+    }
+
+    @Override
+    public void newAssetRedeemed(String userPublicKey, String assetPublicKey) throws CantSaveRedeemPointStatisticException {
+        assetRedeemPointWalletDao.newAssetRedeemed(userPublicKey, assetPublicKey);
+    }
+
+    @Override
+    public List<RedeemPointStatistic> getAllStatistics() throws CantGetRedeemPointStatisticsException, RecordsNotFoundException {
+        return assetRedeemPointWalletDao.getAllStatistics();
+    }
+
+    @Override
+    public List<RedeemPointStatistic> getStatisticsByUser(String userPublicKey) throws CantGetRedeemPointStatisticsException, RecordsNotFoundException {
+        return assetRedeemPointWalletDao.getStatisticsForUser(userPublicKey);
+    }
+
+    @Override
+    public List<RedeemPointStatistic> getStatisticsByAssetPublicKey(String assetPk) throws CantGetRedeemPointStatisticsException, RecordsNotFoundException {
+        return assetRedeemPointWalletDao.getStatisticsForAsset(assetPk);
+    }
+
+    @Override
+    public List<RedeemPointStatistic> getStatisticsByAssetAndUser(String assetPk, String userPk) throws CantGetRedeemPointStatisticsException, RecordsNotFoundException {
+        return assetRedeemPointWalletDao.getStatisticForAssetAndUser(userPk, assetPk);
     }
 }
