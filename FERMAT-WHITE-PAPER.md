@@ -128,9 +128,9 @@ With the fund-raising mechanism, tokens are distributed to those who fund the in
 
 With the development mechanism, tokens are generated using a predefined mechanism and are only available for the development of Fermat components (plug-ins, GUI components, skins, language packages, and analisys of future development). These fermats become available through a pre-determined schedule and are distributed in two ways:
 
-1. Via a community-driven contribution program where different teams of developers and designers work either part-time or full-time on the project.
+1. Via a community-driven contribution program [3] where different teams of developers and designers work either part-time or full-time on the project.
 
-2. Via a community-driven bounty program [3] where decisions are made based on the proof-of-stake mechanism.
+2. Via a community-driven bounty program [4] where decisions are made based on the proof-of-stake mechanism.
 
 #### Mining Mechanism
 
@@ -423,7 +423,9 @@ We have created an environment where the user base of the system is a shared ass
 
 * [2] David Johnston & others, "The General Theory of Decentralized Applications, Dapps", https://github.com/DavidJohnstonCEO/DecentralizedApplications/blob/master/README.md
 
-* [3] Fermat Bounty Program, https://github.com/bitDubai/bounty-program/blob/master/README.md
+* [3] Fermat Contribution Program, [https://github.com/bitDubai/contribution-program](https://github.com/bitDubai/contribution-program)
+
+* [4] Fermat Bounty Program, [https://github.com/bitDubai/bounty-program/blob/master/README.md](https://github.com/bitDubai/bounty-program/blob/master/README.md)
 
  
 <br>
