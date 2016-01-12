@@ -17,6 +17,7 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
 import com.bitdubai.fermat_api.layer.all_definition.settings.exceptions.CantPersistSettingsException;
 import com.bitdubai.fermat_api.layer.all_definition.settings.exceptions.SettingsNotFoundException;
 import com.bitdubai.fermat_api.layer.all_definition.settings.structure.SettingsManager;
+import com.bitdubai.fermat_api.layer.modules.exceptions.ActorIdentityNotSelectedException;
 import com.bitdubai.fermat_api.layer.modules.exceptions.CantGetSelectedActorIdentityException;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
 import com.bitdubai.fermat_cbp_api.layer.actor_connection.crypto_broker.interfaces.CryptoBrokerActorConnectionManager;
@@ -404,11 +405,16 @@ public class CryptoBrokerCommunityManager implements CryptoBrokerCommunitySubApp
     }
 
     @Override
-    public CryptoBrokerCommunitySelectableIdentity getSelectedActorIdentity() throws CantGetSelectedActorIdentityException {
+    public CryptoBrokerCommunitySelectableIdentity getSelectedActorIdentity() throws CantGetSelectedActorIdentityException, ActorIdentityNotSelectedException {
 
         try {
 
-            return getSettingsManager().loadAndGetSettings(null).getLastSelectedIdentity();
+            CryptoBrokerCommunitySelectableIdentity lastSelectedIdentity = getSettingsManager().loadAndGetSettings(null).getLastSelectedIdentity();
+
+            if (lastSelectedIdentity != null)
+                return lastSelectedIdentity;
+            else
+                throw new ActorIdentityNotSelectedException("", "There's no an identity selected");
 
         } catch (final SettingsNotFoundException settingsNotFoundException) {
 
@@ -416,7 +422,12 @@ public class CryptoBrokerCommunityManager implements CryptoBrokerCommunitySubApp
 
                 getSettingsManager().persistSettings(null, new CryptoBrokerCommunitySettings());
 
-                return this.settingsManager.loadAndGetSettings(null).getLastSelectedIdentity();
+                CryptoBrokerCommunitySelectableIdentity lastSelectedIdentity = getSettingsManager().loadAndGetSettings(null).getLastSelectedIdentity();
+
+                if (lastSelectedIdentity != null)
+                    return lastSelectedIdentity;
+                else
+                    throw new ActorIdentityNotSelectedException("", "There's no an identity selected");
 
             }catch (final CantPersistSettingsException exception) {
 
