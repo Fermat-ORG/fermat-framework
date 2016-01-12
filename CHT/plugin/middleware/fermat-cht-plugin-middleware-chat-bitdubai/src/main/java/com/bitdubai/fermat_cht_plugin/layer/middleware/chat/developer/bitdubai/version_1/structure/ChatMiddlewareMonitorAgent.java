@@ -219,7 +219,8 @@ public class ChatMiddlewareMonitorAgent implements
                  */
                 chatMiddlewareDatabaseDao = new ChatMiddlewareDatabaseDao(
                         pluginDatabaseSystem,
-                        pluginId);
+                        pluginId,
+                        database);
 
                 /**
                  * Check if pending events in database

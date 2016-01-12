@@ -64,9 +64,12 @@ public class ChatMiddlewareDatabaseDao {
     /**
      * Constructor
      */
-    public ChatMiddlewareDatabaseDao(PluginDatabaseSystem pluginDatabaseSystem, UUID pluginId) {
+    public ChatMiddlewareDatabaseDao(PluginDatabaseSystem pluginDatabaseSystem,
+                                     UUID pluginId,
+                                     Database database) {
         this.pluginDatabaseSystem = pluginDatabaseSystem;
         this.pluginId             = pluginId;
+        this.database             = database;
 
     }
 
