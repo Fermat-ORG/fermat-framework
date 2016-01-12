@@ -24,7 +24,7 @@ import com.bitdubai.fermat_bch_api.layer.crypto_module.crypto_address_book.inter
 public class CryptoAssetCryptoAddressDealer extends CryptoAddressDealer {
 
     private final CryptoAddressesManager cryptoAddressesManager  ;
-    private IntraWalletUserActorManager intraWalletUserActorManager;
+
 
     public CryptoAssetCryptoAddressDealer(final CryptoAddressesManager   cryptoAddressesManager  ,
                                           final CryptoAddressBookManager cryptoAddressBookManager,
@@ -51,7 +51,7 @@ public class CryptoAssetCryptoAddressDealer extends CryptoAddressDealer {
                         vaultType,
                         request
                 );
-                intraWalletUserActorManager.acceptIntraWalletUser(request.getIdentityPublicKeyResponding(),request.getIdentityPublicKeyRequesting());
+
                 cryptoAddressesManager.acceptAddressExchangeRequest(
                         request.getRequestId(),
                         cryptoAddress
@@ -59,10 +59,7 @@ public class CryptoAssetCryptoAddressDealer extends CryptoAddressDealer {
 
             } catch(DefaultWalletNotFoundException z) {
                 cryptoAddressesManager.denyAddressExchangeRequest(request.getRequestId());
-            } catch (CantAcceptIntraWalletUserException e) {
-                e.printStackTrace();
             }
-
         } catch(PendingRequestNotFoundException |
                 CantAcceptAddressExchangeRequestException |
                 CantDenyAddressExchangeRequestException e) {
