@@ -425,7 +425,7 @@ We have created an environment where the user base of the system is a shared ass
 
 * [3] Fermat Contribution Program, [https://github.com/bitDubai/contribution-program](https://github.com/bitDubai/contribution-program)
 
-* [4] Fermat Bounty Program, [https://github.com/bitDubai/bounty-program/blob/master/README.md](https://github.com/bitDubai/bounty-program/blob/master/README.md)
+* [4] Fermat Bounty Program, [https://github.com/bitDubai/bounty-program](https://github.com/bitDubai/bounty-program)
 
  
 <br>
