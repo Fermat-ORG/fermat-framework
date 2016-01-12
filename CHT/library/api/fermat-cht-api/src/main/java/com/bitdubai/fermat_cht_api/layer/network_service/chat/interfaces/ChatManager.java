@@ -15,7 +15,7 @@ public interface ChatManager extends FermatManager, TransactionProtocolManager<C
 
     //TODO IN CONSTRUCTION
     //TODO FROM Manuel: Please, refactor this interface, use UUID instead integer for Id, check the new version of chat middleware interface.
-    void sendChatMetadata(UUID localActorPubKey, UUID remoteActorPubKey, ChatMetada chatMetada) throws CantSendChatMessageMetadataException;
+    void sendChatMetadata(String localActorPubKey, String remoteActorPubKey, ChatMetada chatMetada) throws CantSendChatMessageMetadataException;
 
     void sendChatMessageNewStatusNotification(UUID localActorPubKey, PlatformComponentType senderType, UUID remoteActorPubKey, PlatformComponentType receiverType, DistributionStatus newDistributionStatus) throws CantSendChatMessageNewStatusNotificationException;
 }
