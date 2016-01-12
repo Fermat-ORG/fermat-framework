@@ -9,8 +9,8 @@ import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.interfaces.ActorAs
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.interfaces.ActorAssetUserGroup;
 import com.bitdubai.fermat_dap_api.layer.dap_module.wallet_asset_issuer.exceptions.CantGetAssetStatisticException;
 import com.bitdubai.fermat_dap_api.layer.dap_module.wallet_asset_issuer.interfaces.AssetIssuerWalletSupAppModuleManager;
-import com.bitdubai.fermat_dap_api.layer.dap_module.wallet_asset_issuer.interfaces.AssetStatistic;
 import com.bitdubai.fermat_dap_api.layer.dap_wallet.asset_issuer_wallet.interfaces.AssetIssuerWalletList;
+import com.bitdubai.fermat_dap_api.layer.dap_wallet.asset_issuer_wallet.interfaces.AssetStatistic;
 import com.bitdubai.fermat_dap_api.layer.dap_wallet.common.exceptions.CantLoadWalletException;
 
 import java.sql.Timestamp;
@@ -50,7 +50,7 @@ public class Data {
         UserDelivery userDelivery;
         List<AssetStatistic> stats = moduleManager.getWalletStatisticsByAsset(walletPublicKey, digitalAsset.getName());
         for (AssetStatistic stat : stats) {
-            userDelivery = new UserDelivery(stat.getAssetOwnerName(), new Timestamp(stat.getDistributionDate().getTime()), stat.getStatus().getCode());
+            userDelivery = new UserDelivery(stat.getOwner().getName(), new Timestamp(stat.getDistributionDate().getTime()), stat.getStatus().getCode());
             users.add(userDelivery);
         }
         return users;
