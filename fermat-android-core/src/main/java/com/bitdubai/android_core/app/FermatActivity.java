@@ -139,10 +139,12 @@ import com.bitdubai.sub_app.wallet_manager.fragment.DesktopFragment;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Observable;
 import java.util.Observer;
+import java.util.Queue;
 import java.util.Set;
 import java.util.Vector;
 
@@ -389,13 +391,23 @@ public abstract class FermatActivity extends AppCompatActivity
     }
 
     private void paintFooter(FermatFooter footer,FooterViewPainter footerViewPainter) {
-        FrameLayout slide_container = (FrameLayout) findViewById(R.id.slide_container);
-        RelativeLayout footer_container = (RelativeLayout) findViewById(R.id.footer_container);
-        if (footer != null && footerViewPainter!=null) {
-            FooterBuilder.Builder.build(getLayoutInflater(),slide_container,footer_container,footerViewPainter);
-        }else {
-            slide_container.setVisibility(View.GONE);
-            footer_container.setVisibility(View.GONE);
+        try {
+            FrameLayout slide_container = (FrameLayout) findViewById(R.id.slide_container);
+            RelativeLayout footer_container = (RelativeLayout) findViewById(R.id.footer_container);
+            if (footer != null && footerViewPainter != null) {
+                slide_container.setVisibility(View.VISIBLE);
+                footer_container.setVisibility(View.VISIBLE);
+                if (footer.getBackgroundColor() != null) {
+                    footer_container.setBackgroundColor(Color.parseColor(footer.getBackgroundColor()));
+                }
+                FooterBuilder.Builder.build(getLayoutInflater(), slide_container, footer_container, footerViewPainter);
+            } else {
+                if (slide_container != null) slide_container.setVisibility(View.GONE);
+                if (footer_container != null) footer_container.setVisibility(View.GONE);
+                findViewById(R.id.SlidingDrawer).setVisibility(View.GONE);
+            }
+        }catch (Exception e){
+            getErrorManager().reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.UNSTABLE, e);
         }
     }
 
@@ -689,7 +701,6 @@ public abstract class FermatActivity extends AppCompatActivity
      */
     protected void setMainLayout(SideMenu sidemenu, FermatHeader header) {
         try {
-
             if (header != null) {
                 setContentView(R.layout.new_wallet_runtime);
             } else {
@@ -869,11 +880,15 @@ public abstract class FermatActivity extends AppCompatActivity
                     (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
             mNotificationManager.notify(NOTIFICATION_ID, notification.build());
         } else {
-//            if(getCloudClient().getCommunicationsCloudClientConnection().isConnected()){
-//                launchIntent("running");
-//            }else{
-//                launchIntent("closed");
-//            }
+            try {
+                if (getCloudClient().getCommunicationsCloudClientConnection().isConnected()) {
+                    launchIntent("running");
+                } else {
+                    launchIntent("closed");
+                }
+            }catch (Exception e){
+
+            }
 
         }
     }
@@ -895,6 +910,7 @@ public abstract class FermatActivity extends AppCompatActivity
         NotificationManager mNotificationManager =
                 (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
         mNotificationManager.cancel(NOTIFICATION_ID);
+        mNotificationManager.cancelAll();
         //mNotificationManager.notify(NOTIFICATION_ID, notification.build());
     }
     /**
@@ -1523,7 +1539,7 @@ public abstract class FermatActivity extends AppCompatActivity
                             Layers.COMMUNICATION,
                             Plugins.WS_CLOUD_CLIENT,
                             Developers.BITDUBAI,
-                            new Version(1,0,0)
+                            new Version()
                     ));
         } catch (VersionNotFoundException e) {
             e.printStackTrace();
@@ -1541,7 +1557,7 @@ public abstract class FermatActivity extends AppCompatActivity
                             Layers.CRYPTO_NETWORK,
                             Plugins.BITCOIN_NETWORK,
                             Developers.BITDUBAI,
-                            new Version(1,0,0)
+                            new Version()
                     ));
         } catch (VersionNotFoundException e) {
             e.printStackTrace();
@@ -1704,28 +1720,17 @@ public abstract class FermatActivity extends AppCompatActivity
 
     @Override
     public void invalidate() {
-        switch (activityType){
-            case ACTIVITY_TYPE_DESKTOP:
-                break;
-            case ACTIVITY_TYPE_WALLET:
-                WalletNavigationStructure walletNavigationStructure = getWalletRuntimeManager().getLastWallet();
-                Activity activity = walletNavigationStructure.getLastActivity();
-                FermatSession fermatSession = getFermatSessionInUse(walletNavigationStructure.getPublicKey());
-                AppConnections appsConnections = FermatAppConnectionManager.getFermatAppConnection(walletNavigationStructure.getPublicKey(), this,fermatSession);
-                try {
-                    appsConnections.setActiveIdentity(getModuleManager(appsConnections.getPluginVersionReference()).getSelectedActorIdentity());
-                } catch (CantGetSelectedActorIdentityException|ActorIdentityNotSelectedException e) {
-                    e.printStackTrace();
-                }
-                paintSideMenu(activity,activity.getSideMenu(),appsConnections);
-                paintFooter(activity.getFooter(),appsConnections.getFooterViewPainter());
-                break;
-            case ACTIVITY_TYPE_SUB_APP:
-                break;
-            default:
-                break;
+        FermatStructure fermatStructure = getAppInUse();
+        Activity activity = fermatStructure.getLastActivity();
+        FermatSession fermatSession = getFermatSessionInUse(fermatStructure.getPublicKey());
+        AppConnections appsConnections = FermatAppConnectionManager.getFermatAppConnection(fermatStructure.getPublicKey(), this,fermatSession);
+        try {
+            appsConnections.setActiveIdentity(getModuleManager(appsConnections.getPluginVersionReference()).getSelectedActorIdentity());
+        } catch (CantGetSelectedActorIdentityException|ActorIdentityNotSelectedException e) {
+            e.printStackTrace();
         }
-
+        paintSideMenu(activity,activity.getSideMenu(),appsConnections);
+        paintFooter(activity.getFooter(),appsConnections.getFooterViewPainter());
 
     }
 
@@ -1733,8 +1738,11 @@ public abstract class FermatActivity extends AppCompatActivity
     public void notificate(NotificationEvent notification) {
         try {
 
-            for (NotificationEvent notificationEvent : getNotificationManager().getPoolNotification()) {
+            Queue<NotificationEvent> queue = getNotificationManager().getPoolNotification();
+            Iterator<NotificationEvent> ite = queue.iterator();
 
+            while(ite.hasNext()){
+                NotificationEvent notificationEvent = ite.next();
                 switch (NotificationType.getByCode(notificationEvent.getNotificationType())) {
                     case INCOMING_MONEY:
                         launchWalletNotification(notificationEvent.getWalletPublicKey(), notificationEvent.getAlertTitle(), notificationEvent.getTextTitle(), notificationEvent.getTextBody());
