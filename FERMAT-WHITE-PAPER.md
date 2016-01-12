@@ -126,7 +126,11 @@ With the fund-raising mechanism, tokens are distributed to those who fund the in
 
 #### Development Mechanism
 
-With the development mechanism, tokens are generated using a predefined mechanism and are only available for the development of Fermat components (plug-ins, GUI components, skins, language packages, and analisys of future development). These fermats become available through a pre-determined schedule and are distributed via a community-driven bounty system [3] where decisions are made based on the proof-of-stake mechanism.
+With the development mechanism, tokens are generated using a predefined mechanism and are only available for the development of Fermat components (plug-ins, GUI components, skins, language packages, and analisys of future development). These fermats become available through a pre-determined schedule and are distributed in two ways:
+
+1. Via a community-driven contribution program where different teams of developers and designers work either part-time or full-time on the project.
+
+2. Via a community-driven bounty program [3] where decisions are made based on the proof-of-stake mechanism.
 
 #### Mining Mechanism
 
