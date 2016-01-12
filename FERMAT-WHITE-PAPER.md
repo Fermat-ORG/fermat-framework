@@ -45,6 +45,17 @@ The Ecosystem of Fermat APPs offers different products to end users. From the ou
 
 ![alt text](https://github.com/bitDubai/media-kit/blob/master/MediaKit/Slides/slide-core-concept.png "Core Concept")
 
+
+<br>
+## The Fermat Framework
+
+The solution we propose begins with a Framework that must be portable into different OS. On a multi-layered format, the bottom most layer is interfacing the OS and must be built with replaceable components implementing the same set of public interfaces in order to build on top a single set of OS-independent components. At the same time, the upper most layers are again OS-dependent, providing a native GUI on each device.
+
+We identify 3 different kinds of components that we arbitrarily call **Add-ons**, **Plug-ins**, and **GUI** components. We define Add-ons as low level components that do not need to identify themselves to consume services from other components. They have broad access to the file system and databases. Plug-ins have their own identity and must identify themselves to other components to use their services which in return restrict the scope of their services based on the caller's identity (for example the filesystem add-on would only give access to the Plug-ins own folder structure, the database system add-on would only give access to a Plug-in's own databases, and so on). In this way we handle the problem of plug-ins accessing the information of other plug-ins.
+
+The core framework is in charge of initializing Add-ons and Plug-ins and managing Plug-ins identities. An internal API library defines the public interfaces that each component exposes to the rest of the components within the same device in order to allow them to use their services locally. This provides a strong encapsulation of each components business logic allowing them to freely define their internal structure and data model.
+
+
 <br> 
 ## The Fermat Network
 
@@ -84,13 +95,13 @@ Fermat clients run the Fermat Framework, which in return run the Fermat Componen
 
 
 <br>
-## The Fermat Framework
+## The Ecosystem of Fermat APPs
 
-The solution we propose begins with a Framework that must be portable into different OS. On a multi-layered format, the bottom most layer is interfacing the OS and must be built with replaceable components implementing the same set of public interfaces in order to build on top a single set of OS-independent components. At the same time, the upper most layers are again OS-dependent, providing a native GUI on each device.
+A Fermat APP is an APP designed to run on top of the Fermat Framework. Fermat APPs are abstractions that makes end users believe they are installing and running custom tailored APPs for some specific use cases. Technically a Fermat APP is a set of components interacting between each other with a certain user interface.
 
-We identify 3 different kinds of components that we arbitrarily call **Add-ons**, **Plug-ins**, and **GUI** components. We define Add-ons as low level components that do not need to identify themselves to consume services from other components. They have broad access to the file system and databases. Plug-ins have their own identity and must identify themselves to other components to use their services which in return restrict the scope of their services based on the caller's identity (for example the filesystem add-on would only give access to the Plug-ins own folder structure, the database system add-on would only give access to a Plug-in's own databases, and so on). In this way we handle the problem of plug-ins accessing the information of other plug-ins.
+These components ara part of a ever incresing pool of re-usable components. Some new Fermat APPs add more components to this pool, some others just re-use components that are already there. 
 
-The core framework is in charge of initializing Add-ons and Plug-ins and managing Plug-ins identities. An internal API library defines the public interfaces that each component exposes to the rest of the components within the same device in order to allow them to use their services locally. This provides a strong encapsulation of each components business logic allowing them to freely define their internal structure and data model.
+Underneeth the sight of end users all these components collaborate between each other to provide the functionality of all Fermat APPs in the ecosystem. Their interactions are divided in _workflows_ and they are part of a big master plan designed to maximaze re-usability.
 
 <br>
 ## Fermat Application Tokens
