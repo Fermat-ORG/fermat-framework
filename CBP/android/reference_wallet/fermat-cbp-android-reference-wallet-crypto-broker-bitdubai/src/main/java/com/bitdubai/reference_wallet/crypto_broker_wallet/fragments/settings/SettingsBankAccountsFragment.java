@@ -1,4 +1,4 @@
-package com.bitdubai.reference_wallet.crypto_broker_wallet.fragments.wizard_pages;
+package com.bitdubai.reference_wallet.crypto_broker_wallet.fragments.settings;
 
 import android.app.AlertDialog;
 import android.content.DialogInterface;
@@ -16,7 +16,6 @@ import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Wallets;
-import com.bitdubai.fermat_bnk_api.layer.bnk_wallet.bank_money.exceptions.CantLoadBankMoneyWalletException;
 import com.bitdubai.fermat_bnk_api.layer.bnk_wallet.bank_money.interfaces.BankAccountNumber;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.CurrencyType;
 import com.bitdubai.fermat_cbp_api.layer.wallet.crypto_broker.interfaces.setting.CryptoBrokerWalletAssociatedSetting;
@@ -39,7 +38,7 @@ import java.util.UUID;
 /**
  * Created by nelson on 22/12/15.
  */
-public class WizardPageSetBankAccountsFragment extends AbstractFermatFragment implements SingleDeletableItemAdapter.OnDeleteButtonClickedListener<BankAccountNumber> {
+public class SettingsBankAccountsFragment extends AbstractFermatFragment implements SingleDeletableItemAdapter.OnDeleteButtonClickedListener<BankAccountNumber> {
 
     // Constants
     private static final String TAG = "WizardPageSetBank";
@@ -56,8 +55,8 @@ public class WizardPageSetBankAccountsFragment extends AbstractFermatFragment im
     List<BankAccountNumber> viewAccounts;
 
 
-    public static WizardPageSetBankAccountsFragment newInstance() {
-        return new WizardPageSetBankAccountsFragment();
+    public static SettingsBankAccountsFragment newInstance() {
+        return new SettingsBankAccountsFragment();
     }
 
     @Override
@@ -111,7 +110,7 @@ public class WizardPageSetBankAccountsFragment extends AbstractFermatFragment im
             @Override
             public void onClick(View view) {
                 saveSetting();
-                changeActivity(Activities.CBP_CRYPTO_BROKER_WALLET_HOME, appSession.getAppPublicKey());
+                changeActivity(Activities.CBP_CRYPTO_BROKER_WALLET_SETTINGS, appSession.getAppPublicKey());
             }
         });
 
@@ -143,8 +142,7 @@ public class WizardPageSetBankAccountsFragment extends AbstractFermatFragment im
     }
 
     private void saveSetting() {
-        //TODO: preguntar como asociar la bank account en un setting cuando se escoge como earnings bank
-        /*try {
+        try {
             List<InstalledWallet> installedWallets = walletManager.getInstallWallets();
             List<InstalledWallet> filteredList = new ArrayList<>();
 
@@ -173,7 +171,7 @@ public class WizardPageSetBankAccountsFragment extends AbstractFermatFragment im
                 walletManager.saveWalletSettingAssociated(associatedSetting, appSession.getAppPublicKey());
             }
         } catch (FermatException ex) {
-            Toast.makeText(WizardPageSetBankAccountsFragment.this.getActivity(), "Oops a error occurred...", Toast.LENGTH_SHORT).show();
+            Toast.makeText(SettingsBankAccountsFragment.this.getActivity(), "Oops a error occurred...", Toast.LENGTH_SHORT).show();
 
             Log.e(TAG, ex.getMessage(), ex);
             if (errorManager != null) {
@@ -182,7 +180,7 @@ public class WizardPageSetBankAccountsFragment extends AbstractFermatFragment im
                         UnexpectedWalletExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT,
                         ex);
             }
-        }*/
+        }
     }
 
     private void showWalletsDialog(final Platforms platform) {
@@ -210,7 +208,7 @@ public class WizardPageSetBankAccountsFragment extends AbstractFermatFragment im
                 showBankAccountsDialog(filteredList);
             }
         } catch (CantListWalletsException ex) {
-            Toast.makeText(WizardPageSetBankAccountsFragment.this.getActivity(), "Oops a error occurred...", Toast.LENGTH_SHORT).show();
+            Toast.makeText(SettingsBankAccountsFragment.this.getActivity(), "Oops a error occurred...", Toast.LENGTH_SHORT).show();
 
             Log.e(TAG, ex.getMessage(), ex);
             if (errorManager != null) {
@@ -243,7 +241,7 @@ public class WizardPageSetBankAccountsFragment extends AbstractFermatFragment im
             accountsDialog.show(getFragmentManager(), "accountsDialog");
 
         } catch (FermatException ex) {
-            Toast.makeText(WizardPageSetBankAccountsFragment.this.getActivity(), "Oops a error occurred...", Toast.LENGTH_SHORT).show();
+            Toast.makeText(SettingsBankAccountsFragment.this.getActivity(), "Oops a error occurred...", Toast.LENGTH_SHORT).show();
 
             Log.e(TAG, ex.getMessage(), ex);
             if (errorManager != null) {
