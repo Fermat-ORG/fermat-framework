@@ -421,7 +421,7 @@ public class AssetDistributionMonitorAgent implements Agent, DealsWithLogger, De
 
         private String sendCryptoAmountToRemoteActor(String genesisTransaction, CryptoAddress cryptoAddressTo, long amount) throws CantSendAssetBitcoinsToUserException {
             System.out.println("ASSET DISTRIBUTION sending genesis amount from asset vault");
-            return assetVaultManager.sendAssetBitcoins(genesisTransaction, cryptoAddressTo, amount);
+            return assetVaultManager.sendAssetBitcoins(genesisTransaction, null, cryptoAddressTo);
         }
     }
 }

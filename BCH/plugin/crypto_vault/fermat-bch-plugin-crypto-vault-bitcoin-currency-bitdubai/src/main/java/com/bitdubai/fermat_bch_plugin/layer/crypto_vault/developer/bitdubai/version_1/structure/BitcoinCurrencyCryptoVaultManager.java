@@ -340,7 +340,7 @@ public class BitcoinCurrencyCryptoVaultManager  {
         /**
          * I get the Bitcoin Transactions stored in the CryptoNetwork for this vault.
          */
-        List<Transaction> transactions = bitcoinNetworkManager.getUnspentBitcoinTransactions(networkType);
+        List<Transaction> transactions = bitcoinNetworkManager.getBitcoinTransactions(networkType);
 
         /**
          * Create the bitcoinj wallet from the keys of this account

@@ -449,7 +449,7 @@ public class SubAppActivity extends FermatActivity implements FermatScreenSwappe
                 initialisePaging();
             }
             if (activity.getTabStrip() != null) {
-                setPagerTabs(getSubAppRuntimeMiddleware().getLastSubApp(), activity.getTabStrip(), subAppSession);
+                setPagerTabs(activity.getTabStrip(), subAppSession,fermatAppConnection.getFragmentFactory());
             }
             if (activity.getFragments().size() == 1) {
                 setOneFragmentInScreen();
@@ -485,8 +485,7 @@ public class SubAppActivity extends FermatActivity implements FermatScreenSwappe
                                 fermatFragmentFactory,
                                 fragment,
                                 subAppsSession,
-                                getSubAppResourcesProviderManager(),
-                                getResources());
+                                getSubAppResourcesProviderManager());
                         pagertabs.setAdapter(adapter);
 
                         final int pageMargin = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 4, getResources()
