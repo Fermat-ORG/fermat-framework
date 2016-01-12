@@ -132,7 +132,7 @@ public class DiscoveryComponentConnectionRequestJettyPacketProcessor extends Fer
             //Create a new vpn
            String vpnPath = JettyEmbeddedAppServer.DEFAULT_CONTEXT_PATH + "/vpn/";
 
-            LOG.info("new vpnPath = " + vpnPath);
+            LOG.info("Vpn path = " + vpnPath);
 
             /*
              * Notify to the participants of the vpn

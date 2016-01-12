@@ -120,6 +120,7 @@ public class JettyEmbeddedAppServer {
          */
         ServletHolder restfulServiceServletHolder = new ServletHolder(new HttpServlet30Dispatcher());
         restfulServiceServletHolder.setInitParameter("javax.ws.rs.Application", ApplicationResources.class.getName());
+        restfulServiceServletHolder.setInitParameter("resteasy.use.builtin.providers", "true");
         servletContextHandler.addServlet(restfulServiceServletHolder, "/*");
 
         /*

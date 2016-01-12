@@ -237,11 +237,13 @@ public class WsCommunicationVPNClientManagerAgent extends Thread{
                         //Verified if this vpn connection is open
                         if (!wsCommunicationVPNClient.getConnection().isOpen()){
 
-                            try {
+                            vpnClientActiveCache.get(networkServiceType).remove(remote);
+
+                          /*  try {
 
                                 /*
                                  * Verified if a pong message respond pending
-                                 */
+
                                 if (wsCommunicationVPNClient.isPongMessagePending()){
                                     throw new RuntimeException("Connection maybe not active");
                                 }
@@ -254,6 +256,7 @@ public class WsCommunicationVPNClientManagerAgent extends Thread{
                                 vpnClientActiveCache.get(networkServiceType).remove(remote);
                                 riseVpnConnectionCloseNotificationEvent(wsCommunicationVPNClient.getRemoteParticipantNetworkService().getNetworkServiceType(), wsCommunicationVPNClient.getRemoteParticipant());
                             }
+                        */
 
                         }else{
                             //If the connection is no open

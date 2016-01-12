@@ -194,7 +194,7 @@ public class WebSocketCloudServerChannel {
     {
         LOG.info(" --------------------------------------------------------------------- ");
         LOG.info("Starting method onWebSocketClose");
-        LOG.info(activeClientConnection.getSession().getId() + " is disconnect! code = " + reason.getCloseCode() + " reason = " + reason.getReasonPhrase());
+        LOG.info("Socket "+activeClientConnection.getSession().getId() + " is disconnect! code = " + reason.getCloseCode() + " reason = " + reason.getReasonPhrase());
 
         if (reason.getCloseCode().equals(CloseReason.CloseCodes.CLOSED_ABNORMALLY)) {
             LOG.info("Waiting for client reconnect");

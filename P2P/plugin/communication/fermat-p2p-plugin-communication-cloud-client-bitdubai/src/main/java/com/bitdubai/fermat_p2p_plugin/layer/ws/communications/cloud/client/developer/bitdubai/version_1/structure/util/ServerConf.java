@@ -29,7 +29,7 @@ public class ServerConf {
     /**
      * Represent the SERVER_IP in the local environment
      */
-    public static final String SERVER_IP_DEVELOPER_LOCAL = "192.168.42.5";
+    public static final String SERVER_IP_DEVELOPER_LOCAL = "192.168.1.5";
 
     /**
      * Represents the value of DISABLE_CLIENT
@@ -45,6 +45,11 @@ public class ServerConf {
      * Represent the WS_PROTOCOL
      */
     public static final String WS_PROTOCOL = "ws://";
+
+    /**
+     * Represent the WESOCKET_CONTEXT_PATH
+     */
+    public static final String WESOCKET_CONTEXT_PATH = "/fermat/ws/";
 
     /**
      * Represent the HTTP_PROTOCOL

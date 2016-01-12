@@ -168,7 +168,7 @@ public class WsCommunicationsCloudClientConnection implements CommunicationsClie
          * Start the agent to try the connect
          */
         wsCommunicationsCloudClientChannel.connect();
-        wsCommunicationsCloudClientPingAgent.start();
+        //wsCommunicationsCloudClientPingAgent.start();
 
     }
 

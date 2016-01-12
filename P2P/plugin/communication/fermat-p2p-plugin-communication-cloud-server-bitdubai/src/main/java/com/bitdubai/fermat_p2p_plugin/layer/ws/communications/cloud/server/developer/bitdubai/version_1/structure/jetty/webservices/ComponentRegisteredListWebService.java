@@ -37,6 +37,7 @@ import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
 
 /**
  * The Class <code>com.bitdubai.fermat_p2p_plugin.layer.ws.communications.cloud.server.developer.bitdubai.version_1.structure.webservices.ComponentRegisteredListWebService</code>
@@ -74,7 +75,7 @@ public class ComponentRegisteredListWebService {
 
     @POST
     @Produces(MediaType.APPLICATION_JSON)
-    public String getList(@FormParam(JsonAttNamesConstants.NAME_IDENTITY) String clientIdentityPublicKey, @FormParam(JsonAttNamesConstants.DISCOVERY_PARAM) String discoveryParam){
+    public Response getList(@FormParam(JsonAttNamesConstants.NAME_IDENTITY) String clientIdentityPublicKey, @FormParam(JsonAttNamesConstants.DISCOVERY_PARAM) String discoveryParam){
 
         LOG.info(" --------------------------------------------------------------------- ");
         LOG.info("ComponentRegisteredListWebService - Starting getList");
@@ -130,7 +131,8 @@ public class ComponentRegisteredListWebService {
 
         LOG.info("jsonString.length() = " + jsonString.length());
 
-        return  jsonString;
+        return Response.status(200).entity(jsonString).build();
+
     }
 
     /**

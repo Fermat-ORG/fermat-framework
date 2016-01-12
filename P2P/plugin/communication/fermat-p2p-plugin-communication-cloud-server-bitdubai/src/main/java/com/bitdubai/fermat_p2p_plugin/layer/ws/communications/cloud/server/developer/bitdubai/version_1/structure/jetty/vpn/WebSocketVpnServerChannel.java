@@ -203,10 +203,10 @@ public class WebSocketVpnServerChannel {
             * Construct a new fermat packet whit the same message and different destination
             */
             FermatPacket fermatPacketRespond = FermatPacketCommunicationFactory.constructFermatPacketEncryptedAndSinged(vpnClientConnection.getVpnClientIdentity(), //Destination
-                                                                                                                        vpnServerIdentity.getPublicKey(),           //Sender
-                                                                                                                        fermatMessage.toJson(),                     //Message Content
-                                                                                                                        FermatPacketType.MESSAGE_TRANSMIT,          //Packet type
-                                                                                                                        vpnServerIdentity.getPrivateKey());         //Sender private key
+                    vpnServerIdentity.getPublicKey(),           //Sender
+                    fermatMessage.toJson(),                     //Message Content
+                    FermatPacketType.MESSAGE_TRANSMIT,          //Packet type
+                    vpnServerIdentity.getPrivateKey());         //Sender private key
             /*
              * Get the connection of the destination
              */
@@ -232,25 +232,34 @@ public class WebSocketVpnServerChannel {
     }
 
     /**
-     * Whe a websocket client close the connection
+     * Whe a web socket client close the connection
      *
      * @param reason of the closure
      */
     @OnClose
     public void onWebSocketClose(CloseReason reason) {
 
-        LOG.info("Socket Closed: ["+reason.getCloseCode()+"]" + reason.getReasonPhrase());
+        LOG.info(" --------------------------------------------------------------------- ");
+        LOG.info("Starting method onWebSocketClose");
+        LOG.info("Socket "+vpnClientConnection.getSession().getId()+" is disconnect! code = " + reason.getCloseCode() + " reason = " + reason.getReasonPhrase());
 
-        if (reason.getCloseCode().equals(CloseReason.CloseCodes.NORMAL_CLOSURE)) {
+        VpnClientConnection vpnClientConnectionRemote = VpnShareMemoryCache.get(networkServiceType, vpnClientConnection.getRemoteParticipantIdentity());
 
-           VpnClientConnection vpnClientConnectionRemote = VpnShareMemoryCache.get(networkServiceType, vpnClientConnection.getRemoteParticipantIdentity());
-            try {
+        try {
 
-                vpnClientConnectionRemote.getSession().close(new CloseReason(reason.getCloseCode(), "The remote participant close the connection. Details: "+reason.getReasonPhrase()));
+            if (reason.getCloseCode().equals(CloseReason.CloseCodes.NORMAL_CLOSURE)) {
+                if (vpnClientConnectionRemote != null)
+                    vpnClientConnectionRemote.getSession().close(new CloseReason(reason.getCloseCode(), "The remote participant close the connection. Details: "+reason.getReasonPhrase()));
 
-            } catch (IOException e) {
-                e.printStackTrace();
+            }else {
+                if (vpnClientConnectionRemote != null)
+                    vpnClientConnectionRemote.getSession().close(new CloseReason(reason.getCloseCode(), "Details: "+reason.getReasonPhrase()));
             }
+
+            VpnShareMemoryCache.remove(networkServiceType, vpnClientConnection.getParticipant().getIdentityPublicKey());
+
+        } catch (IOException e) {
+            e.printStackTrace();
         }
     }
 
