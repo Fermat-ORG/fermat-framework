@@ -161,7 +161,7 @@ public class CryptoBrokerWalletDatabaseDao implements DealsWithPluginFileSystem 
                 } else {
                     cryptoBrokerWalletBalanceRecord.setMerchandise(CryptoCurrency.getByCode(records.getStringValue(CryptoBrokerWalletDatabaseConstants.CRYPTO_BROKER_STOCK_BALANCE_MERCHANDISE_COLUMN_NAME)));
                 }
-                cryptoBrokerWalletBalanceRecord.setAvilableBalance( new BigDecimal(0));
+                cryptoBrokerWalletBalanceRecord.setAvilableBalance(new BigDecimal(0));
                 cryptoBrokerWalletBalanceRecord.setBrokerPublicKey(records.getStringValue(CryptoBrokerWalletDatabaseConstants.CRYPTO_BROKER_STOCK_BALANCE_BROKER_PUBLIC_KEY_COLUMN_NAME));
 
                 cryptoBrokerWalletBalanceRecords.add(cryptoBrokerWalletBalanceRecord);
@@ -215,7 +215,6 @@ public class CryptoBrokerWalletDatabaseDao implements DealsWithPluginFileSystem 
         return quote;
     }
 
-    //TODO Implementar:
     public FiatIndex getMarketRate(final FermatEnum merchandise, FiatCurrency fiatCurrency, CurrencyType currencyType) throws CantGetCryptoBrokerMarketRateException {
         //Buscar el Spread en el setting de la wallet
         FiatIndexImpl fiatIndex = null;
@@ -227,27 +226,30 @@ public class CryptoBrokerWalletDatabaseDao implements DealsWithPluginFileSystem 
             //Tambien podemos determinar devolver segun la volatilidad del mercado
             float volatility = getVolatilityCalculation(merchandise, currencyType);
             //Determinar mediante el precio del mercado a como esta esa mercancia
-            float priceReference = 0; //Precio en dolar devuelto al pedir el precio del mercado
-            final float priceRateSale = 0;
-            final float priceRatePurchase = 0;
-            final float priceSaleUp = (priceRateSale * ((spread / 2) / 100)) + priceRateSale;
-            final float priceSaleDown = (priceRateSale * ((spread / 2) / 100)) - priceRateSale;
-            final float pricePurchaseUp = (priceRatePurchase * ((spread / 2) / 100)) + priceRatePurchase;
-            final float pricePurchaseDown = (priceRatePurchase * ((spread / 2) / 100)) + priceRatePurchase;
+            float priceReference    = 0; //Precio en dolar devuelto al pedir el precio del mercado
+            float priceRateSale     = 0;
+            float priceRatePurchase = 0;
+            if (!getCryptoBrokerStockTransactionsByMerchandise(merchandise, currencyType, TransactionType.CREDIT, BalanceType.AVAILABLE).isEmpty())
+                priceRateSale = getCryptoBrokerStockTransactionsByMerchandise(merchandise, currencyType, TransactionType.CREDIT, BalanceType.AVAILABLE).get(0).getPriceReference().floatValue();
+            if (!getCryptoBrokerStockTransactionsByMerchandise(merchandise, currencyType, TransactionType.DEBIT, BalanceType.AVAILABLE).isEmpty())
+                priceRatePurchase = getCryptoBrokerStockTransactionsByMerchandise(merchandise, currencyType, TransactionType.DEBIT, BalanceType.AVAILABLE).get(0).getPriceReference().floatValue();
+
             Currency currency = (Currency) merchandise;
             CurrencyPair usdVefCurrencyPair = new CurrencyPairImpl(currency, fiatCurrency);
-            try {
-                Collection<CurrencyExchangeRateProviderManager> usdVefProviders = providerFilter.getProviderReferencesFromCurrencyPair(usdVefCurrencyPair);
-                for( CurrencyExchangeRateProviderManager provider : usdVefProviders) {
-                    rate = provider.getCurrentExchangeRate(usdVefCurrencyPair);
-                }
-            } catch (CantGetProviderException e) {
-                e.printStackTrace();
-            } catch (CantGetExchangeRateException e) {
-                e.printStackTrace();
-            } catch (UnsupportedCurrencyPairException e) {
-                e.printStackTrace();
+
+            Collection<CurrencyExchangeRateProviderManager> usdVefProviders = providerFilter.getProviderReferencesFromCurrencyPair(usdVefCurrencyPair);
+            for( CurrencyExchangeRateProviderManager provider : usdVefProviders) {
+                rate = provider.getCurrentExchangeRate(usdVefCurrencyPair);
             }
+
+            if (priceRateSale     == 0) priceRateSale     = (float) rate.getSalePrice();
+            if (priceRatePurchase == 0) priceRatePurchase = (float) rate.getPurchasePrice();
+
+            final float priceSaleUp       = (priceRateSale * ((spread / 2) / 100)) + priceRateSale;
+            final float priceSaleDown     = (priceRateSale * ((spread / 2) / 100)) - priceRateSale;
+            final float pricePurchaseUp   = (priceRatePurchase * ((spread / 2) / 100)) + priceRatePurchase;
+            final float pricePurchaseDown = (priceRatePurchase * ((spread / 2) / 100)) + priceRatePurchase;
+
             priceReference = (float)rate.getSalePrice();
             fiatIndex = new FiatIndexImpl(
                     merchandise,
@@ -257,12 +259,19 @@ public class CryptoBrokerWalletDatabaseDao implements DealsWithPluginFileSystem 
                     priceSaleDown,
                     pricePurchaseUp,
                     pricePurchaseDown,
-                    priceReference
+                    priceReference,
+                    fiatCurrency
             );
         } catch (CantLoadTableToMemoryException e) {
             throw new CantGetCryptoBrokerMarketRateException("Cant Load Table Memory", e, "", "");
         } catch (CantGetCryptoBrokerStockTransactionException e) {
             throw new CantGetCryptoBrokerMarketRateException("Cant Get Broker Stock Transaction", e, "", "");
+        }catch (CantGetProviderException e) {
+            throw new CantGetCryptoBrokerMarketRateException("Cant Get Provider Exception", e, "", "");
+        }catch (CantGetExchangeRateException e) {
+            throw new CantGetCryptoBrokerMarketRateException("Cant Get Exchange Rate Exception", e, "", "");
+        }catch (UnsupportedCurrencyPairException e) {
+            throw new CantGetCryptoBrokerMarketRateException("Cant Get Crypto Broker Market Rate Exception", e, "", "");
         }
         return fiatIndex;
     }
