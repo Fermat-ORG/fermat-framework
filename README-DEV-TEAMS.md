@@ -4,19 +4,19 @@
 
 ## Introduction
 
-All the work done on the Fermat project is done by a Team. We have several teams working in parallel. Most of them are teams of developers, but these are not the only types of teams. We also have teams of graphic designers, 3d artists, video producers, copy writers, publishing, etc.
+All the work done on the Fermat project is done by a Team. We have several teams working in parallel. Most of them are teams of developers, but there are also  teams of graphic designers, 3d artists, video producers, copy writers, publishing, etc, contributing to the project.
 
-bitDubai is a network of teams. Besides these developer teams bitDubai also has designer teams, copywriters, artists, video producers, etc. The following organization is valid only to bitDubai's teams. Other professionals might want to get organized in a different way.
+bitDubai is a network of teams. Besides developer teams bitDubai also has designer teams, copywriters, artists, video producers, etc. The following organization is valid only to bitDubai's teams. Other professionals might want to get organized in a different way.
 
-At this file you will find a list of bitDubai/Fermat developers teams. Feel free to contact their team leaders if you want to join them.
+At this file you will find a list of bitDubai/Fermat developer teams. Feel free to contact their team leaders if you want to join them.
 
 You can also contribute to the Fermat project through other means. Please refer to the [CONTRIBUTING GUIDE](https://github.com/bitDubai/fermat/blob/master/CONTRIBUTING.md) for more details.
 
 ## Organization
 
-The maximun size for a team is 5 people. Among all of them, they should have all the skill sets needed for these kind of projects.
+The maximun size for a team is 5 people. All of them together should have all the skill sets needed for these kind of projects.
 
-Fermat teams are organized in a hierarchical way. This helps the task of reviewing changes in source code, since it is expected that a child team changes they are pushed to its parent team in order to be reviewed, merged with their own changes and pushed again to the next parent in the hierarchy. At the top the core developers are the only ones merging the combined batch of changes into the bitDubai codebase.
+Fermat teams are organized in a hierarchical way. This helps the task of reviewing changes in source code. It is expected that a child team changes are pushed to its parent team in order to be reviewed, then merged with their own changes and pushed again to the next parent in the hierarchy. At the top the core developers are the only ones merging the combined batch of changes into the bitDubai codebase.
 
 ## Team List
 
@@ -24,11 +24,12 @@ Fermat teams are organized in a hierarchical way. This helps the task of reviewi
 * Code Butchers
 * Coin Diggers
 * Disruptors
-* Fermat ORG Charlie
-* Fermat ORG Sierra
 * DBZ Team
 * Mordor
 * Kabuto
+* Skynet
+* Fermat ORG Charlie
+* Fermat ORG Sierra
 
 ## Current Hierarchy
 
@@ -196,9 +197,9 @@ We are in charge of Android-core, Fermat-Core, Android framework development and
 ### Disruptor Team:
 -----------------------------------
 
-We want to assemble a team that wants to combine its technical capacity with its creative talent, where you feel passion for development and for the work done and not just do it for the pay, a team that is willing to work together and share nights without sleep.
+We are team that wants to combine technical capacity with creative talent, where passion for development and satisfaction for the work done are important ingredients of the daily motivation, and also so engaged that we do not hesitate in sharing nights without sleep to fullfill the goals! The spirit of gentle collaboration is also very important to us. We are willing to share our work with new members.
 
-Currently we are a small team dedicated to the development of a communication layer based on a peer-to-peer network with all its complications, and the development of some network services.
+Currently we are a small team dedicated to the development of a communication layer based on a peer-to-peer network with all its complexity, and the development of some network services.
 
 #### Team Members:
 
@@ -286,12 +287,12 @@ In the Crypto Broker Platform we are responsible for a large part of user level 
       Skype:   richardalozada
       Github:  https://github.com/Lozadaa 
 
-We are also amateur philosophers, passionate about esoteric topics as video games.
+We are also amateur philosophers, passionate about esoteric topics and video games.
 
 <br/>
 ### Code Butchers Team:
 -----------------------------------
-We are a team of diverse nature developers, interested on the bases and structure of the Fermat Framework, and even nonconforming, we work along the entire platform, trying to keep the things ordered and collaborating with other teams.
+We are a team of developers of diverse nature, interested on the basis and structure of the Fermat Framework, and always looking for a better way of perfecting the system, with an innovative spirit and full of perspicacy. We work across the entire platform, trying to keep the things ordered and paying attention to collaborate with other teams.
 
 * In the Fermat Core we are responsible for the enhancements and maintenance.
 * In the OSA Platform we do our best.
@@ -354,7 +355,7 @@ We are a developer team with different experience levels; we give our best to de
       Skype:   y_alayn
       Github:  https://github.com/yalayn
 
-We can talk about any topic outside of work, as movies, video games (!), politics, etc, always respecting everyone's opinion. The DBZ initials refers to Dragon Ball Z, so as you can notice we also like anime and boy do we! If you want to join our team you're more that welcome!
+We can talk about any topic outside of work, as movies, video games (!), politics, etc, always respecting everyone's opinion. The DBZ initials refers to Dragon Ball Z, so as you can notice we also like anime and boy do we! If you want to join our team you're more than welcome!
 
 <br/>
 
