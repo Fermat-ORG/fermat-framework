@@ -91,7 +91,7 @@ Each node maintains the Fermat Blockchain: a public record of all _coinbase_ tra
 
 ### Fermat Clients
 
-Fermat clients run the Fermat Framework, which in return run the Fermat Components (libraries, add-ons, plug-ins, GUIs, etc.). Clients adhere to the Fermat Client Protocol.
+Fermat clients run the Fermat Framework, which in turn run the Fermat Components (Libraries, Add-ons, Plug-ins, GUIs, etc.). Clients adhere to the Fermat Client Protocol.
 
 
 <br>
