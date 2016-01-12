@@ -1,5 +1,7 @@
 package com.bitdubai.fermat_cht_plugin.layer.middleware.chat.developer.bitdubai.version_1.database;
 
+import com.bitdubai.fermat_api.FermatException;
+import com.bitdubai.fermat_api.layer.all_definition.events.EventSource;
 import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseFilterType;
@@ -9,12 +11,16 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTableRe
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTransaction;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantCreateDatabaseException;
+import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantInsertRecordException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantLoadTableToMemoryException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantOpenDatabaseException;
+import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantUpdateRecordException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.DatabaseNotFoundException;
 import com.bitdubai.fermat_cht_api.all_definition.enums.ChatStatus;
 import com.bitdubai.fermat_cht_api.all_definition.enums.MessageStatus;
 import com.bitdubai.fermat_cht_api.all_definition.enums.TypeMessage;
+import com.bitdubai.fermat_cht_api.all_definition.events.enums.EventStatus;
+import com.bitdubai.fermat_cht_api.all_definition.events.enums.EventType;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantDeleteChatException;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantDeleteContactException;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantDeleteMessageException;
@@ -26,6 +32,7 @@ import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantNewEmptyContact
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantNewEmptyMessageException;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantSaveChatException;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantSaveContactException;
+import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantSaveEventException;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantSaveMessageException;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.UnexpectedResultReturnedFromDatabaseException;
 import com.bitdubai.fermat_cht_api.layer.middleware.interfaces.Chat;
@@ -33,7 +40,9 @@ import com.bitdubai.fermat_cht_api.layer.middleware.interfaces.Contact;
 import com.bitdubai.fermat_cht_api.layer.middleware.interfaces.Message;
 import com.bitdubai.fermat_cht_api.layer.middleware.utils.ChatImpl;
 import com.bitdubai.fermat_cht_api.layer.middleware.utils.ContactImpl;
+import com.bitdubai.fermat_cht_api.layer.middleware.utils.EventRecord;
 import com.bitdubai.fermat_cht_api.layer.middleware.utils.MessageImpl;
+import com.bitdubai.fermat_cht_plugin.layer.middleware.chat.developer.bitdubai.version_1.exceptions.CantGetPendingEventListException;
 import com.bitdubai.fermat_cht_plugin.layer.middleware.chat.developer.bitdubai.version_1.exceptions.DatabaseOperationException;
 
 import java.sql.Date;
@@ -55,9 +64,12 @@ public class ChatMiddlewareDatabaseDao {
     /**
      * Constructor
      */
-    public ChatMiddlewareDatabaseDao(PluginDatabaseSystem pluginDatabaseSystem, UUID pluginId) {
+    public ChatMiddlewareDatabaseDao(PluginDatabaseSystem pluginDatabaseSystem,
+                                     UUID pluginId,
+                                     Database database) {
         this.pluginDatabaseSystem = pluginDatabaseSystem;
         this.pluginId             = pluginId;
+        this.database             = database;
 
     }
 
@@ -636,6 +648,175 @@ public class ChatMiddlewareDatabaseDao {
         recordsSize=records.size();
         if(recordsSize>VALID_RESULTS_NUMBER){
             throw new UnexpectedResultReturnedFromDatabaseException("I excepted "+VALID_RESULTS_NUMBER+", but I got "+recordsSize);
+        }
+    }
+
+    /**
+     * This method returns the event database table
+     * @return
+     */
+    private DatabaseTable getDatabaseEventsTable() {
+        return database.getTable(
+                ChatMiddlewareDatabaseConstants.EVENTS_RECORDED_TABLE_NAME);
+    }
+
+    /**
+     * This method saves a new event in database
+     * @param eventType
+     * @param eventSource
+     * @throws CantSaveEventException
+     */
+    public void saveNewEvent(
+            String eventType,
+            String eventSource) throws CantSaveEventException {
+        try {
+            DatabaseTable databaseTable = getDatabaseEventsTable();
+            DatabaseTableRecord eventRecord = databaseTable.getEmptyRecord();
+            UUID eventRecordID = UUID.randomUUID();
+            long unixTime = System.currentTimeMillis();
+            //Logger LOG = Logger.getGlobal();
+            //LOG.info("Distribution DAO:\nUUID:" + eventRecordID + "\n" + unixTime);
+            eventRecord.setUUIDValue(ChatMiddlewareDatabaseConstants.EVENTS_RECORDED_ID_COLUMN_NAME, eventRecordID);
+            eventRecord.setStringValue(ChatMiddlewareDatabaseConstants.EVENTS_RECORDED_EVENT_COLUMN_NAME, eventType);
+            eventRecord.setStringValue(ChatMiddlewareDatabaseConstants.EVENTS_RECORDED_SOURCE_COLUMN_NAME, eventSource);
+            eventRecord.setStringValue(ChatMiddlewareDatabaseConstants.EVENTS_RECORDED_STATUS_COLUMN_NAME, EventStatus.PENDING.getCode());
+            eventRecord.setLongValue(ChatMiddlewareDatabaseConstants.EVENTS_RECORDED_TIMESTAMP_COLUMN_NAME, unixTime);
+            databaseTable.insertRecord(eventRecord);
+
+        } catch (CantInsertRecordException exception) {
+            throw new CantSaveEventException(
+                    exception,
+                    "Saving new event.",
+                    "Cannot insert a record in Open Contract database");
+        } catch(Exception exception){
+            throw new CantSaveEventException(
+                    FermatException.wrapException(exception),
+                    "Saving new event.",
+                    "Unexpected exception");
+        }
+    }
+
+    public List<EventRecord> getPendingEventList() throws
+            CantGetPendingEventListException,
+            UnexpectedResultReturnedFromDatabaseException {
+        try{
+            DatabaseTable databaseTable=getDatabaseEventsTable();
+            List<EventRecord> eventRecords=new ArrayList<>();
+            EventRecord eventRecord;
+            databaseTable.addStringFilter(
+                    ChatMiddlewareDatabaseConstants.EVENTS_RECORDED_STATUS_COLUMN_NAME,
+                    EventStatus.PENDING.getCode(),
+                    DatabaseFilterType.EQUAL);
+            databaseTable.loadToMemory();
+            List<DatabaseTableRecord> records = databaseTable.getRecords();
+            if(records.isEmpty()){
+                //There is no records in database, I'll return an empty list.
+                return eventRecords;
+            }
+            for(DatabaseTableRecord databaseTableRecord : records){
+                String eventTypeString=databaseTableRecord.getStringValue(
+                        ChatMiddlewareDatabaseConstants.EVENTS_RECORDED_EVENT_COLUMN_NAME);
+                if(eventTypeString==null){
+                    throw new UnexpectedResultReturnedFromDatabaseException("The event type is null");
+                }
+                eventRecord=new EventRecord(EventType.valueOf(eventTypeString));
+                String eventId=databaseTableRecord.getStringValue(
+                        ChatMiddlewareDatabaseConstants.EVENTS_RECORDED_ID_COLUMN_NAME);
+                eventRecord.setEventId(eventId);
+                String eventSource =databaseTableRecord.getStringValue(
+                        ChatMiddlewareDatabaseConstants.EVENTS_RECORDED_SOURCE_COLUMN_NAME);
+                if(eventSource==null){
+                    throw new UnexpectedResultReturnedFromDatabaseException("The event source is null");
+                }
+                eventRecord.setEventSource(EventSource.valueOf(eventSource));
+                String eventStatus=databaseTableRecord.getStringValue(
+                        ChatMiddlewareDatabaseConstants.EVENTS_RECORDED_STATUS_COLUMN_NAME);
+                if(eventStatus==null){
+                    throw new UnexpectedResultReturnedFromDatabaseException("The event status is null");
+                }
+                eventRecord.setEventStatus(EventStatus.getByCode(eventStatus));
+                long timestamp=databaseTableRecord.getLongValue(
+                        ChatMiddlewareDatabaseConstants.EVENTS_RECORDED_TIMESTAMP_COLUMN_NAME);
+                eventRecord.setTimestamp(timestamp);
+                eventRecords.add(eventRecord);
+            }
+            return eventRecords;
+        } catch (CantLoadTableToMemoryException e) {
+            throw new CantGetPendingEventListException(e,
+                    "Getting events in EventStatus.PENDING",
+                    "Cannot load the table into memory");
+        } catch (InvalidParameterException e) {
+            throw new CantGetPendingEventListException(e,
+                    "Getting events in EventStatus.PENDING",
+                    "Invalid parameter in EventStatus enum");
+        }
+    }
+
+
+    /**
+     * This method returns a pending events list from database
+     * @return
+     * @throws UnexpectedResultReturnedFromDatabaseException
+     * @throws CantGetPendingEventListException
+     */
+    public List<String> getPendingEvents() throws
+            UnexpectedResultReturnedFromDatabaseException,
+            CantGetPendingEventListException {
+        try{
+            DatabaseTable databaseTable=getDatabaseEventsTable();
+            List<String> eventTypeList=new ArrayList<>();
+            String eventId;
+            databaseTable.addStringFilter(
+                    ChatMiddlewareDatabaseConstants.EVENTS_RECORDED_STATUS_COLUMN_NAME,
+                    EventStatus.PENDING.getCode(),
+                    DatabaseFilterType.EQUAL);
+            databaseTable.loadToMemory();
+            List<DatabaseTableRecord> records = databaseTable.getRecords();
+            if(records.isEmpty()){
+                //There is no records in database, I'll return an empty list.
+                return eventTypeList;
+            }
+            for(DatabaseTableRecord databaseTableRecord : records){
+                eventId=databaseTableRecord.getStringValue(
+                        ChatMiddlewareDatabaseConstants.EVENTS_RECORDED_ID_COLUMN_NAME);
+                eventTypeList.add(eventId);
+            }
+            return eventTypeList;
+        } catch (CantLoadTableToMemoryException e) {
+            throw new CantGetPendingEventListException(e,
+                    "Getting events in EventStatus.PENDING",
+                    "Cannot load the table into memory");
+        }
+    }
+
+    /**
+     * This method updates the event status
+     * @param eventId
+     * @param eventStatus
+     * @throws UnexpectedResultReturnedFromDatabaseException
+     * @throws CantUpdateRecordException
+     */
+    public void updateEventStatus(
+            String eventId,
+            EventStatus eventStatus) throws UnexpectedResultReturnedFromDatabaseException, CantUpdateRecordException {
+        try{
+            DatabaseTable databaseTable=getDatabaseEventsTable();
+            databaseTable.addStringFilter(
+                    ChatMiddlewareDatabaseConstants.EVENTS_RECORDED_ID_COLUMN_NAME,
+                    eventId,
+                    DatabaseFilterType.EQUAL);
+            databaseTable.loadToMemory();
+            List<DatabaseTableRecord> records = databaseTable.getRecords();
+            checkDatabaseRecords(records);
+            DatabaseTableRecord record=records.get(0);
+            record.setStringValue(
+                    ChatMiddlewareDatabaseConstants.EVENTS_RECORDED_STATUS_COLUMN_NAME,
+                    eventStatus.getCode());
+            databaseTable.updateRecord(record);
+        }  catch (CantLoadTableToMemoryException exception) {
+            throw new UnexpectedResultReturnedFromDatabaseException(
+                    exception,
+                    "Updating parameter "+ChatMiddlewareDatabaseConstants.EVENTS_RECORDED_STATUS_COLUMN_NAME,"");
         }
     }
 

@@ -19,13 +19,27 @@ databaseTables << [
 ]
 
 databaseTables << [
-        name: "Query History",
+        name: "Current Exchange Rates",
         columns: [
                 ["ID", "STRING", "100", "true"],
                 ["From Currency", "STRING", "100", "false"],
                 ["To Currency", "STRING", "100", "false"],
-                ["Sale Price", "MONEY", "100", "false"],
-                ["Purchase Price", "MONEY", "100", "false"],
+                ["Sale Price", "STRING", "100", "false"],
+                ["Purchase Price", "STRING", "100", "false"],
+                ["Timestamp", "LONG_INTEGER", "100", "false"]
+
+        ],
+        firstKey:"ID"
+]
+
+databaseTables << [
+        name: "Daily Exchange Rates",
+        columns: [
+                ["ID", "STRING", "100", "true"],
+                ["From Currency", "STRING", "100", "false"],
+                ["To Currency", "STRING", "100", "false"],
+                ["Sale Price", "STRING", "100", "false"],
+                ["Purchase Price", "STRING", "100", "false"],
                 ["Timestamp", "LONG_INTEGER", "100", "false"]
 
         ],

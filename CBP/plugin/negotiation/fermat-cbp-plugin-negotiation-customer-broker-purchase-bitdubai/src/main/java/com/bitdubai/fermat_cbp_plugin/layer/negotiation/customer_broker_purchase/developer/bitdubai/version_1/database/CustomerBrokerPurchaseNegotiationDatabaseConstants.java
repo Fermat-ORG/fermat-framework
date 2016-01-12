@@ -5,7 +5,7 @@ package com.bitdubai.fermat_cbp_plugin.layer.negotiation.customer_broker_purchas
  * keeps constants the column names of the database.<p/>
  * <p/>
  *
- * Created by Angel Veloz - (vlzangel91@gmail.com) on 21/12/15.
+ * Created by Angel Veloz - (vlzangel91@gmail.com) on 09/01/16.
  *
  * @version 1.0
  * @since Java JDK 1.7
@@ -23,9 +23,10 @@ public class CustomerBrokerPurchaseNegotiationDatabaseConstants {
     static final String NEGOTIATIONS_PURCHASE_START_DATE_TIME_COLUMN_NAME = "start_date_time";
     static final String NEGOTIATIONS_PURCHASE_EXPIRATION_DATE_TIME_COLUMN_NAME = "expiration_date_time";
     static final String NEGOTIATIONS_PURCHASE_STATUS_COLUMN_NAME = "status";
+    static final String NEGOTIATIONS_PURCHASE_NEAR_EXPIRATION_DATE_TIME_COLUMN_NAME = "near_expiration_date_time";
     static final String NEGOTIATIONS_PURCHASE_MEMO_COLUMN_NAME = "memo";
     static final String NEGOTIATIONS_PURCHASE_CANCEL_REASON_COLUMN_NAME = "cancel_reason";
-    static final String NEGOTIATIONS_PURCHASE_NEAR_EXPIRATION_DATE_TIME_COLUMN_NAME = "near_expiration_date_time";
+    static final String NEGOTIATIONS_PURCHASE_LAST_NEGOTIATION_UPDATE_DATE_COLUMN_NAME = "last_negotiation_update_date";
 
     static final String NEGOTIATIONS_PURCHASE_FIRST_KEY_COLUMN = "negotiation_id";
 
