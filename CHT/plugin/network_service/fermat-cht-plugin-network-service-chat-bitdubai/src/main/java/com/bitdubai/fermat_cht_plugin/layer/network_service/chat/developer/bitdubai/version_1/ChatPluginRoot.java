@@ -58,9 +58,11 @@ import com.bitdubai.fermat_cht_plugin.layer.network_service.chat.developer.bitdu
 import com.bitdubai.fermat_cht_plugin.layer.network_service.chat.developer.bitdubai.version_1.event_handlers.CompleteComponentConnectionRequestNotificationEventHandler;
 import com.bitdubai.fermat_cht_plugin.layer.network_service.chat.developer.bitdubai.version_1.event_handlers.CompleteComponentRegistrationNotificationEventHandler;
 import com.bitdubai.fermat_cht_plugin.layer.network_service.chat.developer.bitdubai.version_1.event_handlers.CompleteRequestListComponentRegisteredNotificationEventHandler;
+import com.bitdubai.fermat_cht_plugin.layer.network_service.chat.developer.bitdubai.version_1.event_handlers.FailureComponentConnectionRequestNotificationEventHandler;
 import com.bitdubai.fermat_cht_plugin.layer.network_service.chat.developer.bitdubai.version_1.event_handlers.NewReceiveMessagesNotificationEventHandler;
 import com.bitdubai.fermat_cht_plugin.layer.network_service.chat.developer.bitdubai.version_1.event_handlers.NewSentMessagesNotificationEventHandler;
 import com.bitdubai.fermat_cht_plugin.layer.network_service.chat.developer.bitdubai.version_1.event_handlers.VPNConnectionCloseNotificationEventHandler;
+import com.bitdubai.fermat_cht_plugin.layer.network_service.chat.developer.bitdubai.version_1.event_handlers.NewSentMessagesNotificationEventHandler;
 import com.bitdubai.fermat_cht_plugin.layer.network_service.chat.developer.bitdubai.version_1.exceptions.CantInitializeChatNetworkServiceDatabaseException;
 import com.bitdubai.fermat_cht_plugin.layer.network_service.chat.developer.bitdubai.version_1.structure.ChatMetadaTransactionRecord;
 import com.bitdubai.fermat_cht_plugin.layer.network_service.chat.developer.bitdubai.version_1.structure.EncodeMsjContent;
@@ -378,6 +380,8 @@ public class ChatPluginRoot extends AbstractPlugin implements
 
     @Override
     public void handleCompleteComponentRegistrationNotificationEvent(PlatformComponentProfile platformComponentProfileRegistered) {
+
+        toString();
         System.out.println("ChatPLuginRoot - CommunicationNetworkServiceConnectionManager - Starting method handleCompleteComponentRegistrationNotificationEvent");
 
         /*
@@ -391,7 +395,9 @@ public class ChatPluginRoot extends AbstractPlugin implements
              * Mark as register
              */
             this.register = Boolean.TRUE;
-
+            System.out.print("-----------------------\n" +
+                    "CHAT NETWORK SERVICE REGISTERED  -----------------------\n" +
+                    "-----------------------\n TO: " + getName());
 
             /*-------------------------------------------------------------------------------------------------
              * This is for test and example of how to use
@@ -686,7 +692,7 @@ public class ChatPluginRoot extends AbstractPlugin implements
     }
 
     @Override
-    public void sendChatMetadata(Integer idChat, Integer idObjecto, String localActorType, String localActorPubKey, String remoteActorType, String remoteActorPubKey, String chatName, ChatMessageStatus chatStatus, Timestamp date, Integer idMessage, String message, DistributionStatus distributionStatus) throws CantSendChatMessageMetadataException {
+    public void sendChatMetadata(UUID localActorPubKey, UUID remoteActorPubKey, ChatMetada chatMetada) throws CantSendChatMessageMetadataException {
         try {
             System.out.println(" ChatPLuginRoot - Starting method sendChatMetadata");
 
@@ -694,30 +700,30 @@ public class ChatPluginRoot extends AbstractPlugin implements
             * Initialize as null so if the instance is one I can't handle then it will break the app fast instead of causing weird bugs.
             */
 
-            System.out.println("ChatPLuginRoot - Actor Sender: PK : " + localActorPubKey+ " - Type: " + localActorType);
-            System.out.println("ChatPLuginRoot - Actor Receiver: PK : " + remoteActorPubKey+ " - Type: " +   remoteActorType);
+            System.out.println("ChatPLuginRoot - Actor Sender: PK : " + localActorPubKey+ " - Type: " + chatMetada.getLocalActorType());
+            System.out.println("ChatPLuginRoot - Actor Receiver: PK : " + remoteActorPubKey+ " - Type: " +   chatMetada.getRemoteActorType());
 
             /*
              * ask for a previous connection
              */
-            CommunicationNetworkServiceLocal communicationNetworkServiceLocal = communicationNetworkServiceConnectionManager.getNetworkServiceLocalInstance(remoteActorPubKey);
+            CommunicationNetworkServiceLocal communicationNetworkServiceLocal = communicationNetworkServiceConnectionManager.getNetworkServiceLocalInstance(remoteActorPubKey.toString());
 
             /*
              * Construct the message content in json format
              */
             ChatMetadaTransactionRecord chatMetadaTransactionRecord = new ChatMetadaTransactionRecord();
-            chatMetadaTransactionRecord.setIdChat(idChat);
-            chatMetadaTransactionRecord.setIdObjecto(idObjecto);
-            chatMetadaTransactionRecord.setLocalActorType(localActorType);
-            chatMetadaTransactionRecord.setLocalActorPubKey(localActorPubKey);
-            chatMetadaTransactionRecord.setRemoteActorType(remoteActorType);
-            chatMetadaTransactionRecord.setRemoteActorPubKey(remoteActorPubKey);
-            chatMetadaTransactionRecord.setChatName(chatName);
-            chatMetadaTransactionRecord.setChatMessageStatus(chatStatus);
-            chatMetadaTransactionRecord.setDate(date);
-            chatMetadaTransactionRecord.setIdMessage(idMessage);
-            chatMetadaTransactionRecord.setMessage(message);
-            chatMetadaTransactionRecord.setDistributionStatus(distributionStatus);
+            chatMetadaTransactionRecord.setIdChat(chatMetada.getIdChat());
+            chatMetadaTransactionRecord.setIdObjecto(chatMetada.getIdObjecto());
+            chatMetadaTransactionRecord.setLocalActorType(chatMetada.getLocalActorType());
+            chatMetadaTransactionRecord.setLocalActorPubKey(chatMetada.getLocalActorPubKey());
+            chatMetadaTransactionRecord.setRemoteActorType(chatMetada.getRemoteActorType());
+            chatMetadaTransactionRecord.setRemoteActorPubKey(chatMetada.getRemoteActorPubKey());
+            chatMetadaTransactionRecord.setChatName(chatMetada.getChatName());
+            chatMetadaTransactionRecord.setChatMessageStatus(chatMetada.getChatMessageStatus());
+            chatMetadaTransactionRecord.setDate(chatMetada.getDate());
+            chatMetadaTransactionRecord.setIdMessage(chatMetada.getIdMessage());
+            chatMetadaTransactionRecord.setMessage(chatMetada.getMessage());
+            chatMetadaTransactionRecord.setDistributionStatus(DistributionStatus.DELIVERING);
             String msjContent = EncodeMsjContent.encodeMSjContentChatMetadataTransmit(chatMetadaTransactionRecord, PlatformComponentType.getByCode(chatMetadaTransactionRecord.getLocalActorType()), PlatformComponentType.getByCode(chatMetadaTransactionRecord.getRemoteActorType()));
 
             System.out.println("ChatPLuginRoot - Chat transaction: " + chatMetadaTransactionRecord);
@@ -860,6 +866,15 @@ public class ChatPluginRoot extends AbstractPlugin implements
         eventManager.addListener(fermatEventListener);
         listenersAdded.add(fermatEventListener);
 
+        /**
+         *  failure connection
+         */
+
+        fermatEventListener = eventManager.getNewListener(P2pEventType.FAILURE_COMPONENT_CONNECTION_REQUEST_NOTIFICATION);
+        fermatEventListener.setEventHandler(new FailureComponentConnectionRequestNotificationEventHandler(this));
+        eventManager.addListener(fermatEventListener);
+        listenersAdded.add(fermatEventListener);
+
     }
 
     @Override
@@ -886,4 +901,6 @@ public class ChatPluginRoot extends AbstractPlugin implements
     public List<Transaction<ChatMetada>> getPendingTransactions(Specialist specialist) throws CantDeliverPendingTransactionsException {
         return null;
     }
+
+
 }
