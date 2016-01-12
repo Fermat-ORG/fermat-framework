@@ -339,18 +339,15 @@ public class IntraWalletUserActorPluginRoot extends AbstractPlugin implements
              * if intra user exist on table
              * return error
              */
-            if (intraWalletUserActorDao.intraUserRequestExists(intraUserToAddPublicKey)) {
-
-                throw new RequestAlreadySendException("CAN'T INSERT INTRA USER", null, "", "The request already sent by actor.");
-
-                //this.updateConnectionState(intraUserLoggedInPublicKey, intraUserToAddPublicKey, contactState);
-
-            } else if (intraWalletUserActorDao.intraUserRequestExists(intraUserToAddPublicKey, ConnectionState.PENDING_REMOTELY_ACCEPTANCE)){
+             if (intraWalletUserActorDao.intraUserRequestExists(intraUserToAddPublicKey, ConnectionState.PENDING_REMOTELY_ACCEPTANCE)){
 
                     this.intraWalletUserActorDao.updateConnectionState(intraUserLoggedInPublicKey, intraUserToAddPublicKey, ConnectionState.CONNECTED);
 
-                }else{
-                this.intraWalletUserActorDao.createNewIntraWalletUser(intraUserLoggedInPublicKey, intraUserToAddName, intraUserToAddPublicKey, profileImage, ConnectionState.PENDING_LOCALLY_ACCEPTANCE,intraUserPhrase);
+                }
+            else{
+
+                 if (!intraWalletUserActorDao.intraUserRequestExists(intraUserToAddPublicKey,ConnectionState.CONNECTED))
+                        this.intraWalletUserActorDao.createNewIntraWalletUser(intraUserLoggedInPublicKey, intraUserToAddName, intraUserToAddPublicKey, profileImage, ConnectionState.PENDING_LOCALLY_ACCEPTANCE,intraUserPhrase);
             }
 
 

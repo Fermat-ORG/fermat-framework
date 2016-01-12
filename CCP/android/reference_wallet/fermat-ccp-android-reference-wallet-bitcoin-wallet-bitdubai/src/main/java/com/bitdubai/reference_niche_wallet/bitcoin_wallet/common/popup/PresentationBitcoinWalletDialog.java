@@ -212,7 +212,7 @@ public class PresentationBitcoinWalletDialog extends FermatDialog<ReferenceWalle
 
     @Override
     public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-        Toast.makeText(activity,String.valueOf(isChecked),Toast.LENGTH_SHORT).show();
+        //Toast.makeText(activity,String.valueOf(isChecked),Toast.LENGTH_SHORT).show();
         if(isChecked){
             getSession().setData(SessionConstant.PRESENTATION_SCREEN_ENABLED,Boolean.TRUE);
         }else {
