@@ -295,7 +295,8 @@ public class SendTransactionFragment2 extends FermatWalletExpandableListFragment
     CircularProgressBar circularProgressBar;
     Thread background;
 
-    private void setUpDonut(LayoutInflater inflater){
+    private void setUpDonut(LayoutInflater inflater)  {
+        try {
         final RelativeLayout container_header_balance = getToolbarHeader();
         try {
             container_header_balance.removeAllViews();
@@ -345,8 +346,10 @@ public class SendTransactionFragment2 extends FermatWalletExpandableListFragment
 
         circularProgressBar = (CircularProgressBar) balance_header.findViewById(R.id.progress);
 
-        circularProgressBar.setProgressValue(getBalanceAverage());
-        circularProgressBar.setProgressValue2(3);
+        String runningBalance = WalletUtils.formatBalanceStringNotDecimal(moduleManager.getBalance(BalanceType.AVAILABLE, referenceWalletSession.getAppPublicKey()),ShowMoneyType.BITCOIN.getCode());
+
+        circularProgressBar.setProgressValue(Integer.valueOf(runningBalance));
+        circularProgressBar.setProgressValue2(getBalanceAverage());
         circularProgressBar.setBackgroundProgressColor(Color.parseColor("#022346"));
         circularProgressBar.setProgressColor(Color.parseColor("#05ddd2"));
         circularProgressBar.setProgressColor2(Color.parseColor("#05537c"));
@@ -493,8 +496,15 @@ public class SendTransactionFragment2 extends FermatWalletExpandableListFragment
         }
 
         txt_balance_amount_type = (FermatTextView) balance_header.findViewById(R.id.txt_balance_amount_type);
+        }
+        catch (Exception e){
 
+            errorManager.reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.CRASH, FermatException.wrapException(e));
+
+        }
     }
+
+
     private String getWalletAddress(String actorPublicKey) {
         String walletAddres="";
         try {
@@ -1053,6 +1063,12 @@ public class SendTransactionFragment2 extends FermatWalletExpandableListFragment
                         runningDailyBalance.put(currentTime, moduleManager.getBalance(BalanceType.AVAILABLE, referenceWalletSession.getAppPublicKey()));
 
                     }
+                    else
+                    {
+                        //update balance
+                        this.updateDailyBalance(runningDailyBalance.size()-1,moduleManager.getBalance(BalanceType.AVAILABLE, referenceWalletSession.getAppPublicKey()));
+                    }
+
 
 
                 }
@@ -1068,6 +1084,7 @@ public class SendTransactionFragment2 extends FermatWalletExpandableListFragment
     }
 
 
+
     private long getKeyDate(int pos){
         int i = 0;
         long date = 0;
@@ -1077,17 +1094,38 @@ public class SendTransactionFragment2 extends FermatWalletExpandableListFragment
             for (Map.Entry<Long, Long> entry :  runningDailyBalance.entrySet())
             {
                 if(i == pos)
-                 date += entry.getKey();
+                    date += entry.getKey();
 
                 i++;
             }
-
-
-
         } catch (Exception e) {
             e.printStackTrace();
         }
         return date;
     }
+
+    private long updateDailyBalance(int pos, long balance){
+        int i = 0;
+        long date = 0;
+
+        try {
+
+            for (Map.Entry<Long, Long> entry :  runningDailyBalance.entrySet())
+            {
+                if(i == pos)
+                {
+                    entry.setValue(balance);
+                    break;
+                }
+
+                i++;
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return date;
+    }
+
+
 }
 
