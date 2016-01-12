@@ -20,11 +20,14 @@ import org.eclipse.jetty.servlet.ServletMapping;
 import org.eclipse.jetty.websocket.jsr356.server.deploy.WebSocketServerContainerInitializer;
 import org.jboss.resteasy.plugins.server.servlet.HttpServlet30Dispatcher;
 
+import java.io.IOException;
 import java.util.Enumeration;
 import java.util.Timer;
 import java.util.TimerTask;
 import java.util.UUID;
 
+import javax.servlet.ServletException;
+import javax.websocket.DeploymentException;
 import javax.websocket.server.ServerContainer;
 import javax.websocket.server.ServerEndpointConfig;
 
@@ -86,7 +89,16 @@ public class JettyEmbeddedAppServer {
         super();
     }
 
-    private void initialize(){
+    /**
+     * Initialize and configure the server instance
+     *
+     * @throws IOException
+     * @throws DeploymentException
+     * @throws ServletException
+     */
+    private void initialize() throws IOException, DeploymentException, ServletException {
+
+        LOG.info("Initializing the internal Server");
 
         /*
          * Create and configure the server
@@ -103,32 +115,43 @@ public class JettyEmbeddedAppServer {
         this.servletContextHandler.setContextPath(JettyEmbeddedAppServer.DEFAULT_CONTEXT_PATH);
         this.server.setHandler(servletContextHandler);
 
-        try{
+        /*
+         * Initialize restful service layer
+         */
+        ServletHolder restfulServiceServletHolder = new ServletHolder(new HttpServlet30Dispatcher());
+        restfulServiceServletHolder.setInitParameter("javax.ws.rs.Application", ApplicationResources.class.getName());
+        servletContextHandler.addServlet(restfulServiceServletHolder, "/*");
 
-            /*
-             * Initialize restful service layer
-             */
-            ServletHolder restfulServiceServletHolder = new ServletHolder(new HttpServlet30Dispatcher());
-            restfulServiceServletHolder.setInitParameter("javax.ws.rs.Application", ApplicationResources.class.getName());
-            servletContextHandler.addServlet(restfulServiceServletHolder, "/*");
+        /*
+         * Initialize javax.websocket layer
+         */
+        this.wsServerContainer = WebSocketServerContainerInitializer.configureContext(servletContextHandler);
 
-            /*
-             * Initialize javax.websocket layer
-             */
-            this.wsServerContainer = WebSocketServerContainerInitializer.configureContext(servletContextHandler);
+        /*
+         * Add WebSocket endpoint to javax.websocket layer
+         */
+        this.wsServerContainer.addEndpoint(WebSocketCloudServerChannel.class);
+        this.wsServerContainer.addEndpoint(WebSocketVpnServerChannel.class);
 
-            /*
-             * Add WebSocket endpoint to javax.websocket layer
-             */
-            this.wsServerContainer.addEndpoint(WebSocketCloudServerChannel.class);
-            this.wsServerContainer.addEndpoint(WebSocketVpnServerChannel.class);
 
-            this.server.start();
-            this.server.dump(System.err);
+        this.server.dump(System.err);
 
-        }catch (Throwable t){
-            t.printStackTrace(System.err);
-        }
+    }
+
+    /**
+     * Start the server instance
+     *
+     * @throws Exception
+     */
+    public void start() throws Exception {
+
+        this.initialize();
+        LOG.info("Starting the internal server");
+        this.server.start();
+
+        LOG.info("Server URI = " + this.server.getURI());
+        this.server.join();
+
     }
 
     /**
@@ -136,6 +159,7 @@ public class JettyEmbeddedAppServer {
      *
      * @return path
      */
+    @Deprecated
     public String deployNewVpnWebSocket() throws Exception {
 
         // Add a websocket to a specific path spec
@@ -153,6 +177,7 @@ public class JettyEmbeddedAppServer {
      *
      * @return path
      */
+    @Deprecated
     public String deployNewJavaxVpnWebSocket() throws Exception {
 
         // Add a websocket to a specific path spec
@@ -175,7 +200,6 @@ public class JettyEmbeddedAppServer {
 
         if (instance == null){
             instance = new JettyEmbeddedAppServer();
-            instance.initialize();
         }
 
         return instance;
@@ -190,11 +214,14 @@ public class JettyEmbeddedAppServer {
         return server;
     }
 
+
+
+
     public static void main(String[] args)
     {
         try {
 
-            JettyEmbeddedAppServer.getInstance();
+            JettyEmbeddedAppServer.getInstance().start();
          /*   JettyEmbeddedAppServer.getInstance().deployNewJavaxVpnWebSocket();
 
             new Timer().schedule(new TimerTask() {

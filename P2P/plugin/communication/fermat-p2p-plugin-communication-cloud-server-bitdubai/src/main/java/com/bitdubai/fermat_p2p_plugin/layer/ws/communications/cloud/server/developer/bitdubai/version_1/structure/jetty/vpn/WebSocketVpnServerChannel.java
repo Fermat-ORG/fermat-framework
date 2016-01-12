@@ -85,7 +85,12 @@ public class WebSocketVpnServerChannel {
         this.vpnServerIdentity = WebSocketVpnIdentity.getInstance().getIdentity();
     }
 
-
+    /**
+     * When a new websocket client connect with this server
+     *
+     * @param session of the client
+     * @throws IOException
+     */
     @OnOpen
     public void onWebSocketConnect(Session session) throws IOException {
 
@@ -162,8 +167,13 @@ public class WebSocketVpnServerChannel {
 
     }
 
+    /**
+     * When a new fermatPacketEncode is receive
+     *
+     * @param fermatPacketEncode value
+     */
     @OnMessage
-    public void onWebSocketText(String fermatPacketEncode){
+    public void fermatPacketReceive(String fermatPacketEncode){
 
         LOG.info("-----------------------------------------------------------");
         LOG.info("Received TEXT message: " + fermatPacketEncode);
@@ -221,16 +231,45 @@ public class WebSocketVpnServerChannel {
         }
     }
 
+    /**
+     * Whe a websocket client close the connection
+     *
+     * @param reason of the closure
+     */
     @OnClose
-    public void onWebSocketClose(CloseReason reason)
-    {
-        System.out.println("Socket Closed: " + reason);
+    public void onWebSocketClose(CloseReason reason) {
+
+        LOG.info("Socket Closed: ["+reason.getCloseCode()+"]" + reason.getReasonPhrase());
+
+        if (reason.getCloseCode().equals(CloseReason.CloseCodes.NORMAL_CLOSURE)) {
+
+           VpnClientConnection vpnClientConnectionRemote = VpnShareMemoryCache.get(networkServiceType, vpnClientConnection.getRemoteParticipantIdentity());
+            try {
+
+                vpnClientConnectionRemote.getSession().close(new CloseReason(reason.getCloseCode(), "The remote participant close the connection. Details: "+reason.getReasonPhrase()));
+
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
     }
 
+    /**
+     * When occur a error
+     *
+     * @param cause of the error
+     */
     @OnError
-    public void onWebSocketError(Throwable cause)
-    {
-        cause.printStackTrace(System.err);
+    public void onWebSocketError(Throwable cause){
+
+        try {
+
+            LOG.error(cause.getMessage());
+            vpnClientConnection.getSession().close(new CloseReason(CloseReason.CloseCodes.PROTOCOL_ERROR, "Server detect a error, close connection. Details: "+cause.getMessage()));
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     /**
