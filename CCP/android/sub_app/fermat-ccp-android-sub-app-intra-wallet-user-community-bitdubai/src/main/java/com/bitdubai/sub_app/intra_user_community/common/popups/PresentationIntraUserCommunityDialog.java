@@ -95,6 +95,8 @@ public class PresentationIntraUserCommunityDialog extends FermatDialog<IntraUser
                 startCommunity.setOnClickListener(this);
                 break;
         }
+
+        dontShowAgainCheckBox.setChecked(true);
     }
 
     @Override
