@@ -127,16 +127,16 @@ public class StartNegotiationAdapter extends FermatAdapter<ClauseInformation, Fe
     }
 
     @Override
-    protected void bindHolder(FermatViewHolder holder, ClauseInformation data, int position) {
+    protected void bindHolder(FermatViewHolder holder, ClauseInformation clause, int position) {
         final ClauseViewHolder clauseViewHolder = (ClauseViewHolder) holder;
-        clauseViewHolder.bindData(negotiationInformation, data);
+        clauseViewHolder.bindData(negotiationInformation, clause, position);
         clauseViewHolder.getConfirmButton().setVisibility(View.GONE);
         clauseViewHolder.setListener(clauseListener);
 
         final int clauseNumber = position + 1;
         final int clauseNumberImageRes = FragmentsCommons.getClauseNumberImageRes(clauseNumber);
 
-        switch (data.getType()) {
+        switch (clause.getType()) {
             case CUSTOMER_CURRENCY_QUANTITY:
                 clauseViewHolder.setViewResources(R.string.ccw_amount_to_buy, clauseNumberImageRes);
                 break;
