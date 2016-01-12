@@ -767,6 +767,7 @@ public abstract class FermatActivity extends AppCompatActivity
                     ((LinearLayout)findViewById(R.id.bottom_navigation_container)).setVisibility(View.VISIBLE);
                 }else{
                     ((LinearLayout)findViewById(R.id.bottom_navigation_container)).setVisibility(View.GONE);
+                    findViewById(R.id.reveal).setVisibility(View.GONE);
                 }
             }
 

@@ -110,6 +110,15 @@ import java.util.List;
         this.fragmentFactory = fermatFragmentFactory;
         this.tabStrip=tabStrip;
         this.resourcesProviderManager =resourceProviderManager;
+
+        if(tabStrip != null){
+            List<Tab> titleTabs = tabStrip.getTabs();
+            titles = new String[titleTabs.size()];
+            for (int i = 0; i < titleTabs.size(); i++) {
+                Tab tab = titleTabs.get(i);
+                titles[i] = tab.getLabel();
+            }
+        }
     }
 
 
