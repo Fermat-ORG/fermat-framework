@@ -45,7 +45,7 @@ import java.util.UUID;
 /**
  * Created by nelson on 22/12/15.
  */
-public class SetttingsStockManagementFragment extends AbstractFermatFragment implements FermatListItemListeners<CryptoBrokerWalletAssociatedSetting>, DialogInterface.OnDismissListener   {
+public class SetttingsStockManagementFragment extends AbstractFermatFragment implements FermatListItemListeners<CryptoBrokerWalletAssociatedSetting>, DialogInterface.OnDismissListener {
 
     // Constants
     private static final String TAG = "SettingsStockManagement";
@@ -63,7 +63,6 @@ public class SetttingsStockManagementFragment extends AbstractFermatFragment imp
     private StockDestockAdapter adapter;
     private RecyclerView recyclerView;
     private FermatTextView emptyView;
-
 
 
     public static SetttingsStockManagementFragment newInstance() {
@@ -92,6 +91,21 @@ public class SetttingsStockManagementFragment extends AbstractFermatFragment imp
                 errorManager.reportUnexpectedWalletException(Wallets.CBP_CRYPTO_BROKER_WALLET,
                         UnexpectedWalletExceptionSeverity.DISABLES_THIS_FRAGMENT, ex);
         }
+        try {
+            System.out.println("settings!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
+            settings = walletManager.getCryptoBrokerWalletAssociatedSettings("walletPublicKeyTest");
+            System.out.println("settings ["+settings.size()+"]!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
+        } catch (FermatException ex) {
+            Toast.makeText(SetttingsStockManagementFragment.this.getActivity(), "Oops a error occurred...", Toast.LENGTH_SHORT).show();
+
+            Log.e(TAG, ex.getMessage(), ex);
+            if (errorManager != null) {
+                errorManager.reportUnexpectedWalletException(
+                        Wallets.CBP_CRYPTO_BROKER_WALLET,
+                        UnexpectedWalletExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT,
+                        ex);
+            }
+        }
 
     }
 
@@ -100,19 +114,7 @@ public class SetttingsStockManagementFragment extends AbstractFermatFragment imp
         super.onCreateView(inflater, container, savedInstanceState);
 
         final View layout = inflater.inflate(R.layout.cbw_settings_stock_management, container, false);
-        try{
-            settings = walletManager.getCryptoBrokerWalletAssociatedSettings(this.appSession.getAppPublicKey());
-        } catch (FermatException ex) {
-        Toast.makeText(SetttingsStockManagementFragment.this.getActivity(), "Oops a error occurred...", Toast.LENGTH_SHORT).show();
 
-        Log.e(TAG, ex.getMessage(), ex);
-        if (errorManager != null) {
-            errorManager.reportUnexpectedWalletException(
-                    Wallets.CBP_CRYPTO_BROKER_WALLET,
-                    UnexpectedWalletExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT,
-                    ex);
-        }
-    }
 
         recyclerView = (RecyclerView) layout.findViewById(R.id.cbw_selected_stock_wallets_recycler_view);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false));
@@ -399,8 +401,9 @@ public class SetttingsStockManagementFragment extends AbstractFermatFragment imp
 
         return false;
     }
-    private void launchCreateTransactionDialog(CryptoBrokerWalletAssociatedSetting data){
-        dialog = new CreateRestockDestockFragmentDialog(getActivity(), walletManager, getResources(),data);
+
+    private void launchCreateTransactionDialog(CryptoBrokerWalletAssociatedSetting data) {
+        dialog = new CreateRestockDestockFragmentDialog(getActivity(), walletManager, getResources(), data);
         dialog.setOnDismissListener(this);
         dialog.show();
     }

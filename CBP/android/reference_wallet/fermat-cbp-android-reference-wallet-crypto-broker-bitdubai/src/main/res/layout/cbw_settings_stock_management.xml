@@ -11,7 +11,7 @@
     <LinearLayout
         android:id="@+id/cbw_selected_stock_wallets_container"
         android:layout_width="match_parent"
-        android:layout_height="350dp"
+        android:layout_height="300dp"
         android:orientation="vertical"
         android:paddingEnd="16dp"
         android:paddingLeft="16dp"

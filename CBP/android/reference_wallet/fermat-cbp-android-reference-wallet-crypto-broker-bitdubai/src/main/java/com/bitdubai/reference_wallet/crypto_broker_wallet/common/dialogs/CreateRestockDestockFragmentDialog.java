@@ -197,7 +197,7 @@ public class CreateRestockDestockFragmentDialog extends Dialog implements
             }
             //TODO:Stock or destock
         } catch (Exception e) {
-            cryptoBrokerWalletManager.getErrorManager().reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.CRASH, FermatException.wrapException(e));
+            //err.reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.CRASH, FermatException.wrapException(e));
             Toast.makeText(activity.getApplicationContext(), "There's been an error, please try again" +  e.getMessage(), Toast.LENGTH_SHORT).show();
             return;
         }
