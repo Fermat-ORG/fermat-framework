@@ -52,6 +52,7 @@ public class PresentationIntraUserIdentityDialog extends FermatDialog<IntraUserI
         startCommunity = (FermatButton) findViewById(R.id.start_community);
         dontShowAgainCheckBox = (CheckBox) findViewById(R.id.checkbox_not_show);
         startCommunity.setOnClickListener(this);
+        dontShowAgainCheckBox.setChecked(true);
 
 
     }
