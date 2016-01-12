@@ -41,7 +41,7 @@ import java.util.Map;
  * @version 1.0
  * @since Java JDK 1.7
  */
-public class OutgoinChatMetaDataDao {
+public class ChatMetaDataDao {
 
     /**
      * Represent the dataBase
@@ -53,7 +53,7 @@ public class OutgoinChatMetaDataDao {
      *
      * @param dataBase
      */
-    public OutgoinChatMetaDataDao(Database dataBase) {
+    public ChatMetaDataDao(Database dataBase) {
         super();
         this.dataBase = dataBase;
     }
