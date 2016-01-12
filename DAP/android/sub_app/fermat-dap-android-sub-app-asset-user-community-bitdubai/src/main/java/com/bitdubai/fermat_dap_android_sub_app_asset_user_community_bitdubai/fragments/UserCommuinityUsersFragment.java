@@ -32,6 +32,7 @@ import com.bitdubai.fermat_dap_api.layer.all_definition.exceptions.CantGetIdenti
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.AssetUserActorRecord;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.AssetUserGroupMemberRecord;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.interfaces.ActorAssetUser;
+import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.interfaces.ActorAssetUserGroupMember;
 import com.bitdubai.fermat_dap_api.layer.dap_sub_app_module.asset_user_community.interfaces.AssetUserCommunitySubAppModuleManager;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 import com.software.shell.fab.ActionButton;
@@ -42,7 +43,7 @@ import java.util.List;
 /**
  * Home Fragment
  */
-public class UserCommuinityGroupUsersFragment extends AbstractFermatFragment implements SwipeRefreshLayout.OnRefreshListener {
+public class UserCommuinityUsersFragment extends AbstractFermatFragment implements SwipeRefreshLayout.OnRefreshListener {
 
     private static AssetUserCommunitySubAppModuleManager manager;
     private static final int MAX = 20;
@@ -59,7 +60,7 @@ public class UserCommuinityGroupUsersFragment extends AbstractFermatFragment imp
     private View rootView;
     private LinearLayout emptyView;
     private int offset = 0;
-    private MenuItem menuItemDelete;
+    private MenuItem menuItemAdd;
     private Menu menu;
 
     /**
@@ -67,8 +68,8 @@ public class UserCommuinityGroupUsersFragment extends AbstractFermatFragment imp
      */
     private boolean isRefreshing = false;
 
-    public static UserCommuinityGroupUsersFragment newInstance() {
-        return new UserCommuinityGroupUsersFragment();
+    public static UserCommuinityUsersFragment newInstance() {
+        return new UserCommuinityUsersFragment();
     }
 
     @Override
@@ -87,7 +88,8 @@ public class UserCommuinityGroupUsersFragment extends AbstractFermatFragment imp
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
-        rootView = inflater.inflate(R.layout.group_user_fragment, container, false);
+        rootView = inflater.inflate(R.layout.users_fragment, container, false);
+
 
         recyclerView = (RecyclerView) rootView.findViewById(R.id.gridView);
         recyclerView.setHasFixedSize(true);
@@ -98,22 +100,20 @@ public class UserCommuinityGroupUsersFragment extends AbstractFermatFragment imp
             @Override
             public void onDataSetChanged(List<Actor> dataSet) {
                 actors = dataSet;
+
                 boolean someSelected = false;
-                for (Actor actor : actors) {
-                    if (actor.selected) {
+                for (Actor actor : actors){
+                    if (actor.selected){
                         someSelected = true;
                         break;
                     }
                 }
 
-                if (someSelected) {
-                    menuItemDelete.setVisible(true);
-                }
-                else
+                if (someSelected)
                 {
-                    menuItemDelete.setVisible(false);
+                    menuItemAdd.setVisible(true);
                 }
-
+                else {menuItemAdd.setVisible(false);}
             }
         });
         recyclerView.setAdapter(adapter);
@@ -124,37 +124,22 @@ public class UserCommuinityGroupUsersFragment extends AbstractFermatFragment imp
         rootView.setBackgroundColor(Color.parseColor("#000b12"));
         emptyView = (LinearLayout) rootView.findViewById(R.id.empty_view);
         swipeRefreshLayout.setRefreshing(true);
+
+        getToolbar().setTitle("Add users to " + group.getGroupName());
         onRefresh();
 
-        ActionButton create = (ActionButton) rootView.findViewById(R.id.add_users_group);
-        create.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-
-                appSession.setData("group_selected", group);
-                changeActivity(Activities.DAP_ASSET_USER_COMMUNITY_ACTIVITY_ADMINISTRATIVE_USERS.getCode(), appSession.getAppPublicKey());
-
-            }
-        });
-        create.setAnimation(AnimationUtils.loadAnimation(getActivity(), R.anim.fab_jump_from_down));
-        create.setVisibility(View.VISIBLE);
-
-        //Toast.makeText(getActivity(), group.getGroupName(), Toast.LENGTH_LONG).show();
-        getToolbar().setTitle(group.getGroupName()+" Users");
-        //getToolbar().getMenu().getItem(1).setVisible(true);
         return rootView;
     }
 
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         super.onCreateOptionsMenu(menu, inflater);
-        inflater.inflate(R.menu.dap_community_user_group_users_menu, menu);
+        inflater.inflate(R.menu.dap_community_users_menu, menu);
         this.menu = menu;
-        menuItemDelete = menu.findItem(R.id.group_users_delete);
-        menuItemDelete.setVisible(false);
-
-
+        menuItemAdd = menu.findItem(R.id.action_add_to_group);
+        menuItemAdd.setVisible(false);
     }
+
 
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
@@ -166,16 +151,14 @@ public class UserCommuinityGroupUsersFragment extends AbstractFermatFragment imp
                     onRefresh();
                 }
             });
-
-
     }
 
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        if (item.getItemId() == R.id.group_users_delete) {
+        if (item.getItemId() == R.id.action_add_to_group) {
             final ProgressDialog dialog = new ProgressDialog(getActivity());
-            dialog.setMessage("Deleting users from group...");
+            dialog.setMessage("Adding users to group...");
             dialog.setCancelable(false);
             dialog.show();
             FermatWorker worker = new FermatWorker() {
@@ -187,7 +170,7 @@ public class UserCommuinityGroupUsersFragment extends AbstractFermatFragment imp
                         {   AssetUserGroupMemberRecord actorGroup = new AssetUserGroupMemberRecord();
                             actorGroup.setGroupId(group.getGroupId());
                             actorGroup.setActorPublicKey(actor.getActorPublicKey());
-                            manager.removeActorAssetUserFromGroup(actorGroup);
+                            manager.addActorAssetUserToGroup(actorGroup);
                         }
                     }
 
@@ -199,7 +182,7 @@ public class UserCommuinityGroupUsersFragment extends AbstractFermatFragment imp
                 @Override
                 public void onPostExecute(Object... result) {
                     dialog.dismiss();
-                    Toast.makeText(getActivity(), "Selected users deleted from the group", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getActivity(), "Selected users added to the group", Toast.LENGTH_SHORT).show();
                     appSession.setData("group_selected", group);
                     changeActivity(Activities.DAP_ASSET_USER_COMMUNITY_ACTIVITY_ADMINISTRATIVE_GROUP_USERS_FRAGMENT, appSession.getAppPublicKey());
                 }
@@ -289,19 +272,31 @@ public class UserCommuinityGroupUsersFragment extends AbstractFermatFragment imp
     private synchronized List<Actor> getMoreData() throws Exception {
         List<Actor> dataSet = new ArrayList<>();
         List<AssetUserActorRecord> result = null;
-        List<ActorAssetUser> resultAux = null;
+        List<ActorAssetUser> usersInGroup = null;
+
         if (manager == null)
             throw new NullPointerException("AssetUserCommunitySubAppModuleManager is null");
+        result = manager.getAllActorAssetUserRegistered();
+        usersInGroup = manager.getListActorAssetUserByGroups(group.getGroupName());
+        if (result != null && result.size() > 0) {
+            for (AssetUserActorRecord record : result) {
+                if (!userInGroup(record.getActorPublicKey(),usersInGroup))
+                {
+                    dataSet.add((new Actor(record)));
+                }
 
-        resultAux = manager.getListActorAssetUserByGroups(group.getGroupName());
-
-
-        if (resultAux != null && resultAux.size() > 0) {
-            for (ActorAssetUser record : resultAux) {
-
-                dataSet.add((new Actor((AssetUserActorRecord)record)));
             }
         }
         return dataSet;
+    }
+
+    private boolean userInGroup(String actorPublicKey, List<ActorAssetUser> usersInGroup) {
+        for (ActorAssetUser record : usersInGroup) {
+            if (record.getActorPublicKey().equals(actorPublicKey))
+            {
+                return true;
+            }
+        }
+        return false;
     }
 }

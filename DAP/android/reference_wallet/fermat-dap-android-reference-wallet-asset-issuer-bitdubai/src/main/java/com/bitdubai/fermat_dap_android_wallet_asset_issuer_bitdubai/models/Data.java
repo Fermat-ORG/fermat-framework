@@ -82,7 +82,7 @@ public class Data {
         for (AssetStatistic stat :
                 stats) {
             if (stat.getStatus().equals(AssetCurrentStatus.ASSET_APPROPRIATED)) {
-                UserAppropiate = new UserAppropiate(stat.getRedeemPoint().getName(), new Timestamp(stat.getDistributionDate().getTime()), stat.getStatus().getCode());
+                UserAppropiate = new UserAppropiate(stat.getAssetOwnerName(), new Timestamp(stat.getAssetUsedDate().getTime()), stat.getStatus().getCode());
                 users.add(UserAppropiate);
             }
         }
