@@ -97,11 +97,11 @@ Fermat clients run the Fermat Framework, which in return run the Fermat Componen
 <br>
 ## The Ecosystem of Fermat APPs
 
-A Fermat APP is an APP designed to run on top of the Fermat Framework. Fermat APPs are abstractions that makes end users believe they are installing and running custom tailored APPs for some specific use cases. Technically a Fermat APP is a set of components interacting between each other with a certain user interface.
+A Fermat APP is an APP designed to run on top of the Fermat Framework. Fermat APPs are abstractions that make end users believe they are installing and running custom tailored APPs for some specific use cases. Technically a Fermat APP is a set of components interacting between each other with a certain user interface.
 
-These components ara part of a ever incresing pool of re-usable components. Some new Fermat APPs add more components to this pool, some others just re-use components that are already there. 
+These components are part of an ever incresing pool of re-usable components. Some new Fermat APPs add more components to this pool, some others just re-use components that are already there. 
 
-Underneeth the sight of end users all these components collaborate between each other to provide the functionality of all Fermat APPs in the ecosystem. Their interactions are divided in _workflows_ and they are part of a big master plan designed to maximaze re-usability.
+Underneeth the sight of end users all these components collaborate between each other to provide the functionality of all Fermat APPs in the ecosystem. Their interactions are divided in _workflows_. Fermat APPs and all their components are part of a big master plan designed to maximaze re-usability. 
 
 <br>
 ## Fermat Application Tokens
