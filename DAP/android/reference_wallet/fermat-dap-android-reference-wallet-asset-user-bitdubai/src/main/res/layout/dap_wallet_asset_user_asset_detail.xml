@@ -136,7 +136,7 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="#24202E">
+        android:background="#093A90">
 
         <RelativeLayout
             android:id="@+id/assetDetailRedeemLayout"
