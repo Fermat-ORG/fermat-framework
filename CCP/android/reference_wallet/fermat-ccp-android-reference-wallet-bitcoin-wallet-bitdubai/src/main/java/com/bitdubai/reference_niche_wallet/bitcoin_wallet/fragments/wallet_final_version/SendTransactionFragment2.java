@@ -1036,15 +1036,25 @@ public class SendTransactionFragment2 extends FermatWalletExpandableListFragment
                 else
                 {
                     runningDailyBalance = bitcoinWalletSettings.getRunningDailyBalance();
+
+
                     //verify that I have this day added
                     long lastDate = getKeyDate(runningDailyBalance.size()-1);
 
                     long dif = currentTime - lastDate;
 
                     double dias = Math.floor(dif / (1000 * 60 * 60 * 24));
+                    if(dias > 1)
+                    {
+                        //if I have 30 days I start counting again
+                        if(runningDailyBalance.size() == 30)
+                            runningDailyBalance = new HashMap<Long, Long>();
 
-                    //if I have 30 days I start counting again
-                    runningDailyBalance.put(currentTime,  moduleManager.getBalance(BalanceType.AVAILABLE,referenceWalletSession.getAppPublicKey()));
+                        runningDailyBalance.put(currentTime, moduleManager.getBalance(BalanceType.AVAILABLE, referenceWalletSession.getAppPublicKey()));
+
+                    }
+
+
                 }
 
 
