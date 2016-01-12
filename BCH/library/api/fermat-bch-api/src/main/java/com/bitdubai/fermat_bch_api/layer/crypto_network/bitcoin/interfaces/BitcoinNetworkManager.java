@@ -5,16 +5,16 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.VaultType;
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.TransactionSender;
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.crypto_transactions.CryptoStatus;
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.crypto_transactions.CryptoTransaction;
-import com.bitdubai.fermat_bch_api.layer.crypto_network.BroadcastStatus;
+import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.BroadcastStatus;
+import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.BlockchainConnectionStatus;
 import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.exceptions.CantBroadcastTransactionException;
 import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.exceptions.CantCancellBroadcastTransactionException;
-import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.exceptions.CantFixTransactionInconsistenciesException;
+import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.exceptions.CantGetBlockchainConnectionStatusException;
 import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.exceptions.CantGetBroadcastStatusException;
 import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.exceptions.CantGetCryptoTransactionException;
 import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.exceptions.CantGetTransactionCryptoStatusException;
 import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.exceptions.CantMonitorBitcoinNetworkException;
 import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.exceptions.CantStoreBitcoinTransactionException;
-import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.exceptions.ErrorBroadcastingTransactionException;
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.enums.CryptoVaults;
 
 import org.bitcoinj.core.ECKey;
@@ -23,7 +23,6 @@ import org.bitcoinj.core.UTXOProvider;
 
 import java.util.List;
 import java.util.UUID;
-import java.util.concurrent.ExecutionException;
 
 /**
  * Created by rodrigo on 9/30/15.
@@ -121,12 +120,20 @@ public interface BitcoinNetworkManager extends TransactionSender<CryptoTransacti
     List<Transaction> getBitcoinTransaction(BlockchainNetworkType blockchainNetworkType, List<ECKey> ecKeys);
 
     /**
-     * Get the bitcoin transaction stored by the CryptoNetwork
+     * Get the Unspent bitcoin transaction stored by the CryptoNetwork
      * @param blockchainNetworkType the network type
-     * @param vaultType the crypto vault that generated the keys that affects the returned transactions
      * @return the bitcoin transaction
      */
-    List<Transaction> getBitcoinTransaction(BlockchainNetworkType blockchainNetworkType, VaultType vaultType);
+    List<Transaction> getUnspentBitcoinTransactions(BlockchainNetworkType blockchainNetworkType);
+
+
+    /**
+     * Get the bitcoin transactions stored by the CryptoNetwork
+     * @param blockchainNetworkType the network type
+     * @return the bitcoin transaction
+     */
+    List<Transaction> getBitcoinTransactions(BlockchainNetworkType blockchainNetworkType);
+
 
     /**
      * Will get all the CryptoTransactions stored in the CryptoNetwork which are a child of a parent Transaction
@@ -163,4 +170,14 @@ public interface BitcoinNetworkManager extends TransactionSender<CryptoTransacti
      * @throws CantStoreBitcoinTransactionException
      */
     void storeBitcoinTransaction(BlockchainNetworkType blockchainNetworkType, Transaction tx, UUID transactionId) throws CantStoreBitcoinTransactionException;
+
+
+    /**
+     * Will get the BlockchainConnectionStatus for the specified network.
+     * @param blockchainNetworkType the Network type we won't to get info from. If the passed network is not currently activated,
+     *                              then we will receive null.
+     * @return BlockchainConnectionStatus with information of amount of peers currently connected, etc.
+     * @exception CantGetBlockchainConnectionStatusException
+     */
+    BlockchainConnectionStatus getBlockchainConnectionStatus(BlockchainNetworkType blockchainNetworkType)  throws CantGetBlockchainConnectionStatusException;
 }

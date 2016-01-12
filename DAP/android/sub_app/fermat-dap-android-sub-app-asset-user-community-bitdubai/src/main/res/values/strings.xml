@@ -6,4 +6,6 @@
     <string name="status_offline">Offline</string>
     <string name="status_connecting">Connecting</string>
     <string name="group_members">Number of Members: </string>
+    <string name="group_edit">Edit Name</string>
+    <string name="group_delete">Delete</string>
 </resources>

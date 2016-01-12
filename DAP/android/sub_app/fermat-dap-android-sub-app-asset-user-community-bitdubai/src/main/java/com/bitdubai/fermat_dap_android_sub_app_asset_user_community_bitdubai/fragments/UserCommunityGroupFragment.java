@@ -26,12 +26,17 @@ import com.bitdubai.fermat_dap_android_sub_app_asset_user_community_bitdubai.R;
 import com.bitdubai.fermat_dap_android_sub_app_asset_user_community_bitdubai.adapters.GroupCommunityAdapter;
 import com.bitdubai.fermat_dap_android_sub_app_asset_user_community_bitdubai.adapters.UserCommunityAdapter;
 import com.bitdubai.fermat_dap_android_sub_app_asset_user_community_bitdubai.interfaces.AdapterChangeListener;
+import com.bitdubai.fermat_dap_android_sub_app_asset_user_community_bitdubai.interfaces.PopupMenu;
 import com.bitdubai.fermat_dap_android_sub_app_asset_user_community_bitdubai.models.Actor;
 import com.bitdubai.fermat_dap_android_sub_app_asset_user_community_bitdubai.models.Group;
 import com.bitdubai.fermat_dap_android_sub_app_asset_user_community_bitdubai.popup.CreateGroupFragmentDialog;
 import com.bitdubai.fermat_dap_android_sub_app_asset_user_community_bitdubai.sessions.AssetUserCommunitySubAppSession;
+import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.exceptions.CantDeleteAssetUserGroupException;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.interfaces.ActorAssetUserGroup;
+import com.bitdubai.fermat_dap_api.layer.dap_middleware.dap_asset_factory.exceptions.CantPublishAssetFactoy;
+import com.bitdubai.fermat_dap_api.layer.dap_middleware.dap_asset_factory.interfaces.AssetFactory;
 import com.bitdubai.fermat_dap_api.layer.dap_sub_app_module.asset_user_community.interfaces.AssetUserCommunitySubAppModuleManager;
+import com.bitdubai.fermat_dap_api.layer.dap_transaction.common.exceptions.RecordsNotFoundException;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 import com.software.shell.fab.ActionButton;
 
@@ -42,7 +47,7 @@ import java.util.List;
  * Created by Nerio on 06/01/16.
  */
 public class UserCommunityGroupFragment extends AbstractFermatFragment implements
-        SwipeRefreshLayout.OnRefreshListener {
+        SwipeRefreshLayout.OnRefreshListener, android.widget.PopupMenu.OnMenuItemClickListener {
 
     private static AssetUserCommunitySubAppModuleManager manager;
     private static final int MAX = 20;
@@ -60,6 +65,7 @@ public class UserCommunityGroupFragment extends AbstractFermatFragment implement
     private LinearLayout emptyView;
     private int offset = 0;
     private CreateGroupFragmentDialog dialog;
+    private Group selectedGroup;
 
     /**
      * Flags
@@ -97,6 +103,19 @@ public class UserCommunityGroupFragment extends AbstractFermatFragment implement
                 groups = dataSet;
             }
         });
+        adapter.setMenuItemClick(new PopupMenu() {
+                @Override
+                public void onMenuItemClickListener(View menuView, Group group, int position) {
+                    selectedGroup = group;
+                    android.widget.PopupMenu popupMenu = new android.widget.PopupMenu(getActivity(), menuView);
+                    MenuInflater inflater = popupMenu.getMenuInflater();
+                    inflater.inflate(R.menu.dap_community_user_group_menu, popupMenu.getMenu());
+
+                    popupMenu.setOnMenuItemClickListener(UserCommunityGroupFragment.this);
+                    popupMenu.show();
+                }
+            });
+
         recyclerView.setAdapter(adapter);
         swipeRefreshLayout = (SwipeRefreshLayout) rootView.findViewById(R.id.swipe_group);
         swipeRefreshLayout.setOnRefreshListener(this);
@@ -165,6 +184,19 @@ public class UserCommunityGroupFragment extends AbstractFermatFragment implement
                     groups = dataSet;
                 }
             });
+
+         /*   adapter.setMenuItemClick(new PopupMenu() {
+                @Override
+                public void onMenuItemClickListener(View menuView, Group group, int position) {
+                    selectedGroup = group;
+                    android.widget.PopupMenu popupMenu = new android.widget.PopupMenu(getActivity(), menuView);
+                    MenuInflater inflater = popupMenu.getMenuInflater();
+                    inflater.inflate(R.menu.dap_community_user_group_menu, popupMenu.getMenu());
+
+                    popupMenu.setOnMenuItemClickListener(UserCommunityGroupFragment.this);
+                    popupMenu.show();
+                }
+            });*/
 //            adapter = new AssetFactoryAdapter(getActivity());
 //            adapter.setMenuItemClick(new PopupMenu() {
 //                @Override
@@ -229,7 +261,7 @@ public class UserCommunityGroupFragment extends AbstractFermatFragment implement
 
     private void lauchCreateGroupDialog(){
         dialog = new CreateGroupFragmentDialog(
-                getActivity(),manager);
+                getActivity(),manager,selectedGroup);
         dialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
             @Override
             public void onDismiss(DialogInterface dialog) {
@@ -296,10 +328,35 @@ public class UserCommunityGroupFragment extends AbstractFermatFragment implement
         result = manager.getGroups();
         if (result != null && result.size() > 0) {
             for (ActorAssetUserGroup record : result) {
-                dataSet.add((new Group(record)));
+                Group group = new Group(record);
+                group.setMembers(manager.getListActorAssetUserByGroups(group.getGroupName()).size());
+                dataSet.add(group);
             }
         }
         return dataSet;
     }
 
+    @Override
+    public boolean onMenuItemClick(MenuItem item) {
+        if (item.getItemId() == R.id.action_edit) {
+            lauchCreateGroupDialog();
+        }
+        else if (item.getItemId() == R.id.action_delete)
+        {
+            try {
+                manager.deleteGroup(selectedGroup.getGroupId());
+            } catch (CantDeleteAssetUserGroupException e) {
+                e.printStackTrace();
+                Toast.makeText(getActivity(), "This group couldn't be deleted.", Toast.LENGTH_SHORT).show();
+            } catch (RecordsNotFoundException e) {
+                Toast.makeText(getActivity(), "Group not found.", Toast.LENGTH_SHORT).show();
+            }
+
+            Toast.makeText(getActivity(), "Group deleted.", Toast.LENGTH_SHORT).show();
+        }
+
+        selectedGroup = null;
+        onRefresh();
+        return false;
+    }
 }

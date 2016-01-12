@@ -170,7 +170,7 @@ public class AssetCryptoVaultManager  {
      * @return the Transaction hash
      * @throws CantSendAssetBitcoinsToUserException
      */
-    public String sendAssetBitcoins(String genesisTransactionId, CryptoAddress addressTo, long amount) throws CantSendAssetBitcoinsToUserException{
+    public String sendAssetBitcoins(String genesisTransactionId, String genesisBlock, CryptoAddress addressTo) throws CantSendAssetBitcoinsToUserException{
         /**
          * I get the network for this address.
          */
@@ -188,7 +188,7 @@ public class AssetCryptoVaultManager  {
              * stored in our wallet. If this is the case I will find a child that uses the GenesisTransaction as an input and use the child transaction
              * to send the bitcoins.
              */
-            List<Transaction> transactions = bitcoinNetworkManager.getBitcoinTransaction(networkType, VaultType.CRYPTO_ASSET_VAULT);
+            List<Transaction> transactions = bitcoinNetworkManager.getBitcoinTransactions(networkType);
             for (Transaction transaction : transactions){
                 for (TransactionInput input : transaction.getInputs()){
                     if (input.getOutpoint().getHash().toString().contentEquals(genesisTransactionId))
@@ -196,6 +196,14 @@ public class AssetCryptoVaultManager  {
                 }
             }
 
+            /**
+             * If I still don't have it, Then I will look up the hierarchy, at least 10 times.
+             */
+
+
+            /**
+             * If I still couldn't find it, I cant go on.
+             */
             if (genesisTransaction  == null){
                 StringBuilder output = new StringBuilder("The specified transaction hash ");
                 output.append(genesisTransactionId);

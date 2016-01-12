@@ -10,6 +10,7 @@ public class Group extends AssetUserGroupRecord
         implements ActorAssetUserGroup {
 
     public boolean selected;
+    private int members;
 
     public Group() {
         super();
@@ -20,5 +21,13 @@ public class Group extends AssetUserGroupRecord
                 record.getGroupId(),
                 record.getGroupName()
         );
+    }
+
+    public int getMembers() {
+        return members;
+    }
+
+    public void setMembers(int members) {
+        this.members = members;
     }
 }

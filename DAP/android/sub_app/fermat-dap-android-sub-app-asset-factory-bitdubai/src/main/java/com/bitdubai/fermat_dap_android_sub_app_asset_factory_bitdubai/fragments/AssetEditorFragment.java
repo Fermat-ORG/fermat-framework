@@ -287,6 +287,7 @@ public class AssetEditorFragment extends AbstractFermatFragment implements View.
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult( requestCode, resultCode, data);
         if (resultCode == Activity.RESULT_OK) {
             Bitmap imageBitmap = null;
             switch (requestCode) {

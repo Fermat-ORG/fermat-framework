@@ -278,7 +278,7 @@ public class EditableWalletActivity extends FermatActivity implements FermatScre
             }
             if (activity.getTabStrip() != null) {
 
-                setPagerTabs(walletNavigationStructure, activity.getTabStrip(), walletSession,fermatFragmentFactory);
+                setPagerTabs(activity.getTabStrip(), walletSession,fermatFragmentFactory);
             }
             if (activity.getFragments().size() == 1) {
                 setOneFragmentInScreen(fermatFragmentFactory);
