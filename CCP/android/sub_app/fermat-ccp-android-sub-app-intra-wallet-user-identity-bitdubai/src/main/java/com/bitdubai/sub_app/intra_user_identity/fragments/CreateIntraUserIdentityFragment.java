@@ -404,6 +404,29 @@ public class CreateIntraUserIdentityFragment extends AbstractFermatFragment {
     }
 
     @Override
+    public void onCreateOptionsMenu(final Menu menu, MenuInflater inflater) {
+        super.onCreateOptionsMenu(menu, inflater);
+        inflater.inflate(R.menu.menu_main, menu);
+
+        try {
+            final MenuItem action_help = menu.findItem(R.id.action_help);
+            menu.findItem(R.id.action_help).setVisible(true);
+            action_help.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
+                @Override
+                public boolean onMenuItemClick(MenuItem item) {
+                    menu.findItem(R.id.action_help).setVisible(false);
+                    return false;
+                }
+            });
+
+        } catch (Exception e) {
+
+        }
+
+    }
+
+
+    @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         try {
             int id = item.getItemId();
