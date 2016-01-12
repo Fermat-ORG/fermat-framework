@@ -6,6 +6,7 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEvent;
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEventHandler;
 import com.bitdubai.fermat_api.layer.all_definition.network_service.interfaces.NetworkService;
+import com.bitdubai.fermat_p2p_api.layer.all_definition.common.network_services.abstract_classes.AbstractNetworkServiceV2;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.interfaces.CommunicationBaseEvent;
 
 
@@ -17,14 +18,14 @@ public abstract class AbstractCommunicationBaseEventHandler<E extends Communicat
     /*
     * Represent the networkService
     */
-    protected NetworkService networkService;
+    protected AbstractNetworkServiceV2 networkService;
 
     /**
      * Constructor with parameter
      *
      * @param networkService
      */
-    public AbstractCommunicationBaseEventHandler(NetworkService networkService) {
+    public AbstractCommunicationBaseEventHandler(AbstractNetworkServiceV2 networkService) {
         this.networkService = networkService;
     }
 
@@ -42,8 +43,6 @@ public abstract class AbstractCommunicationBaseEventHandler<E extends Communicat
         if (((Service) this.networkService).getStatus() == ServiceStatus.STARTED) {
 
             E event = (E) platformEvent;
-
-
 
             if(event.getNetworkServiceTypeApplicant() == networkService.getNetworkServiceType()){
 

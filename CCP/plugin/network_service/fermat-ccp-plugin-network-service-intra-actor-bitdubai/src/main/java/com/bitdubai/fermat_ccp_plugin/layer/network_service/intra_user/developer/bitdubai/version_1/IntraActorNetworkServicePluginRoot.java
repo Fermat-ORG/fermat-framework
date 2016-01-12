@@ -265,8 +265,6 @@ public class IntraActorNetworkServicePluginRoot extends AbstractPlugin implement
      */
     private CommunicationNetworkServiceDeveloperDatabaseFactory communicationNetworkServiceDeveloperDatabaseFactory;
 
-    private IntraActorNetworkServiceDeveloperDatabaseFactory intraActorNetworkServiceDeveloperDatabaseFactory;
-
     /**
      * Agent
      */
@@ -290,8 +288,6 @@ public class IntraActorNetworkServicePluginRoot extends AbstractPlugin implement
 
     private IntraActorNetworkServiceDao intraActorNetworkServiceDao;
 
-
-    private Thread toCache;
     /**
      * Constructor
      */
@@ -675,7 +671,6 @@ public class IntraActorNetworkServicePluginRoot extends AbstractPlugin implement
          * Set the new status
          */
         this.serviceStatus = ServiceStatus.STOPPED;
-
 
     }
 
@@ -1282,7 +1277,7 @@ public class IntraActorNetworkServicePluginRoot extends AbstractPlugin implement
      */
     @Override
     public void handleClientConnectionLooseNotificationEvent(FermatEvent fermatEvent) {
-        System.out.println("LooseNotificationEvent");
+
         if(communicationNetworkServiceConnectionManager != null) {
             communicationNetworkServiceConnectionManager.stop();
             this.register = false;
