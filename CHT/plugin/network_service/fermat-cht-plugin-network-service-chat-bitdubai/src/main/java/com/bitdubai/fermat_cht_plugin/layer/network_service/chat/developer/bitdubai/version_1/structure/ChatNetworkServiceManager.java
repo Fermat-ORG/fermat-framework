@@ -32,31 +32,36 @@ public class ChatNetworkServiceManager implements ChatManager{
     public ChatNetworkServiceManager(OutgoinChatMetaDataDao outgoingMetaDataDaossageDao){
         this.outgoingMetaDataDaossageDao = outgoingMetaDataDaossageDao;
     }
+//    @Override
+//    public void sendChatMetadata(Integer idChat, Integer idObjecto, String localActorType, String localActorPubKey, String remoteActorType, String remoteActorPubKey, String chatName, ChatMessageStatus chatStatus, Timestamp date, Integer idMessage, String message, DistributionStatus distributionStatus) throws CantSendChatMessageMetadataException {
+//
+//        communicationNetworkServiceLocal = communicationNetworkServiceConnectionManager.getNetworkServiceLocalInstance(remoteActorPubKey);
+//        ChatMetadaTransactionRecord chatMetadaTransactionRecord = new ChatMetadaTransactionRecord();
+//        chatMetadaTransactionRecord.setIdChat(idChat);
+//        chatMetadaTransactionRecord.setIdObjecto(idObjecto);
+//        chatMetadaTransactionRecord.setLocalActorType(localActorType);
+//        chatMetadaTransactionRecord.setLocalActorPubKey(localActorPubKey);
+//        chatMetadaTransactionRecord.setRemoteActorType(remoteActorType);
+//        chatMetadaTransactionRecord.setRemoteActorPubKey(remoteActorPubKey);
+//        chatMetadaTransactionRecord.setChatName(chatName);
+//        chatMetadaTransactionRecord.setChatMessageStatus(chatStatus);
+//        chatMetadaTransactionRecord.setDate(date);
+//        chatMetadaTransactionRecord.setIdMessage(idMessage);
+//        chatMetadaTransactionRecord.setMessage(message);
+//        chatMetadaTransactionRecord.setDistributionStatus(distributionStatus);
+//        try {
+//          outgoingMetaDataDaossageDao.create(chatMetadaTransactionRecord);
+//
+//        }catch(CantInsertRecordDataBaseException e){
+//            throw new CantSendChatMessageMetadataException(e);
+//        }catch (Exception e){
+//            throw new CantSendChatMessageMetadataException(e);
+//        }
+//
+ //   }
+
     @Override
-    public void sendChatMetadata(Integer idChat, Integer idObjecto, String localActorType, String localActorPubKey, String remoteActorType, String remoteActorPubKey, String chatName, ChatMessageStatus chatStatus, Timestamp date, Integer idMessage, String message, DistributionStatus distributionStatus) throws CantSendChatMessageMetadataException {
-
-        communicationNetworkServiceLocal = communicationNetworkServiceConnectionManager.getNetworkServiceLocalInstance(remoteActorPubKey);
-        ChatMetadaTransactionRecord chatMetadaTransactionRecord = new ChatMetadaTransactionRecord();
-        chatMetadaTransactionRecord.setIdChat(idChat);
-        chatMetadaTransactionRecord.setIdObjecto(idObjecto);
-        chatMetadaTransactionRecord.setLocalActorType(localActorType);
-        chatMetadaTransactionRecord.setLocalActorPubKey(localActorPubKey);
-        chatMetadaTransactionRecord.setRemoteActorType(remoteActorType);
-        chatMetadaTransactionRecord.setRemoteActorPubKey(remoteActorPubKey);
-        chatMetadaTransactionRecord.setChatName(chatName);
-        chatMetadaTransactionRecord.setChatMessageStatus(chatStatus);
-        chatMetadaTransactionRecord.setDate(date);
-        chatMetadaTransactionRecord.setIdMessage(idMessage);
-        chatMetadaTransactionRecord.setMessage(message);
-        chatMetadaTransactionRecord.setDistributionStatus(distributionStatus);
-        try {
-          outgoingMetaDataDaossageDao.create(chatMetadaTransactionRecord);
-
-        }catch(CantInsertRecordDataBaseException e){
-            throw new CantSendChatMessageMetadataException(e);
-        }catch (Exception e){
-            throw new CantSendChatMessageMetadataException(e);
-        }
+    public void sendChatMetadata(UUID localActorPubKey, UUID remoteActorPubKey, ChatMetada chatMetada) throws CantSendChatMessageMetadataException {
 
     }
 
