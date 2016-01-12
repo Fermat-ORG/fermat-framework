@@ -246,7 +246,7 @@ public class UserRedemptionMonitorAgent implements Agent, DealsWithLogger, Deals
 
                 if (isPendingNetworkLayerEvents()) {
                     System.out.println("ASSET USER REDEMPTION is network layer pending events");
-                    List<Transaction<DigitalAssetMetadataTransaction>> pendingEventsList = assetTransmissionManager.getPendingTransactions(Specialist.ASSET_ISSUER_SPECIALIST);
+                    List<Transaction<DigitalAssetMetadataTransaction>> pendingEventsList = assetTransmissionManager.getPendingTransactions(Specialist.ASSET_USER_SPECIALIST);
                     System.out.println("ASSET USER REDEMPTION is " + pendingEventsList.size() + " events");
                     for (Transaction<DigitalAssetMetadataTransaction> transaction : pendingEventsList) {
                         if (transaction.getInformation().getReceiverType() == PlatformComponentType.ACTOR_ASSET_USER) {
