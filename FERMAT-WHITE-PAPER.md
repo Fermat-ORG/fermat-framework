@@ -2,15 +2,15 @@
 
 #--draft--
 
-# Fermat 
+# Fermat
 
 ## A Peer-to-Peer Financial Application Framework
 
 **Contributors** : Luis Fernando Molina
 
-**Advisors** : 
+**Advisors** :
 
-**Reviewers** : 
+**Reviewers** :
 
 November 2015
 
@@ -19,13 +19,13 @@ _www.fermat.org_
 <br>
 ## Abstract
 
-A peer-to-peer financial application framework could allow standalone crypto wallets to evolve into any kind of peer-to-peer financial applications. 
+A peer-to-peer financial application framework could allow standalone crypto wallets to evolve into any kind of peer-to-peer financial applications.
 
 Developing peer-to-peer financial applications is challenging. Bitcoin provides part of the solution as a p2p system of electronic cash [1], but the main benefits are lost if a trusted third party is still required to transport meta-data, synchronize devices, hold wallets files or keys, manage identities, interface crypto networks or the legacy financial system.
 
 We propose a peer-to-peer network for transporting meta-data and inter-connect network clients between each other. A synchronization scheme running on top of it transforms a standalone app into a distributed application across several devices still owned by the same user.
 
-We propose a framework to replace the standalone wallet application. This framework handles the full stack on top of crypto networks up to the user interface and it is intended to easily build and run APPs designed for that framwork. In this way we enable the development of peer-to-peer financial applications that are both crypto-currency and digital-asset-enabled, and that does not require a trusted third party of any sort.
+We propose a framework to replace the standalone wallet application. This framework handles the full stack on top of crypto networks up to the user interface and it is intended to easily build and run APPs designed for that framework. In this way we enable the development of peer-to-peer financial applications that are both crypto-currency and digital-asset-enabled, and that does not require a trusted third party of any sort.
 
 <br>
 ## Introduction
@@ -36,7 +36,7 @@ What is needed on top of all existing protocols is a layer that faces end users 
 
 Fermat is a Framework, a p2p Network and an Ecosystem of Fermat APPs. The Fermat Framework is an open source software that runs on end user devices. This software can run Fermat APPs, which are like mobile APPs but running on top of the Fermat Framework.
 
-By choosing a plug-in architecture for the Framework we make it possible for any developer to add their own reusable components. We define the micro use licensing scheme as the mechanism for developers to monetize their work. The Framework itself enforces these micro use licenses and guarantees developers a revenue stream. 
+By choosing a plug-in architecture for the Framework we make it possible for any developer to add their own reusable components. We define the micro use licensing scheme as the mechanism for developers to monetize their work. The Framework itself enforces these micro use licenses and guarantees developers a revenue stream.
 
 The Fermat P2P network interconnects Android devices between each other in order to exchange application data without needing to go through a centralized service.
 
@@ -56,12 +56,12 @@ We identify 3 different kinds of components that we arbitrarily call **Add-ons**
 The core framework is in charge of initializing Add-ons and Plug-ins and managing Plug-ins identities. An internal API library defines the public interfaces that each component exposes to the rest of the components within the same device in order to allow them to use their services locally. This provides a strong encapsulation of each components business logic allowing them to freely define their internal structure and data model.
 
 
-<br> 
+<br>
 ## The Fermat Network
 
 ### Peer-to-Peer Network Architecture
 
-The Fermat Network is structured as a peer-to-peer network architecture on top of the Internet. Fermat nodes are peers to each other, meaning that they are all equal and there are no "special" nodes. All the nodes share the burden of providing all services. The network nodes interconnect to each other only when they need to do so according to the Fermat P2P Protocol. There is no server, no centralized service, and no hierarchy within the network. 
+The Fermat Network is structured as a peer-to-peer network architecture on top of the Internet. Fermat nodes are peers to each other, meaning that they are all equal and there are no "special" nodes. All the nodes share the burden of providing all services. The network nodes interconnect to each other only when they need to do so according to the Fermat P2P Protocol. There is no server, no centralized service, and no hierarchy within the network.
 
 The term "Fermat Network" refers to the collection of nodes running the Fermat P2P Protocol. There are two other protocols such as the Fermat Consensus Protocol which allows the network to agree which transactions are going to be recorded on the blockchain, and the Fermat Client Protocol which is used for communicating Fermat Clients between each other and to Fermat Nodes. We use the term "Extended Fermat Network" to refer to the overall network that includes both Fermat Nodes and Clients.
 
@@ -77,7 +77,7 @@ Each node maintains a full catalogue of all nodes registered in the network. Thi
 
 Each node maintains a part of a distributed catalogue of end users identities. This catalogue is designed to facilitate end users to find each other. This role is ruled by the Fermat Client Protocol.
 
-#### Act as Identities' Home
+#### Act as Identities Home
 
 Each node is home to a set of end users identities. These identities can receive calls only through their home node. This role is also ruled by the Fermat Client Protocol.
 
@@ -99,9 +99,9 @@ Fermat clients run the Fermat Framework, which in turn run the Fermat Components
 
 A Fermat APP is an APP designed to run on top of the Fermat Framework. Fermat APPs are abstractions that make end users believe they are installing and running custom tailored APPs for some specific use cases. Technically a Fermat APP is a set of components interacting between each other with a certain user interface.
 
-These components are part of an ever incresing pool of re-usable components. Some new Fermat APPs add more components to this pool, some others just re-use components that are already there. 
+These components are part of an ever incresing pool of re-usable components. Some new Fermat APPs add more components to this pool, some others just re-use components that are already there.
 
-Underneeth the sight of end users all these components collaborate between each other to provide the functionality of all Fermat APPs in the ecosystem. Their interactions are divided in _workflows_. Fermat APPs and all their components are part of a big master plan designed to maximaze re-usability. 
+Underneeth the sight of end users all these components collaborate between each other to provide the functionality of all Fermat APPs in the ecosystem. Their interactions are divided in _workflows_. Fermat APPs and all their components are part of a big master plan designed to maximaze re-usability.
 
 <br>
 ## Fermat Application Tokens
@@ -154,17 +154,17 @@ Fermat.org makes decisions in a decentralized manner, using a â€œproof of stakeâ
 
 #### Fermat Protocol
 
-The protocol itself issues tokens for miners and for development. In the last case, thay are deposited on accounts of the Non-profit Fermat.org until awarded as bounty or contribution payments for developers. 
+The protocol itself issues tokens for miners and for development. In the last case, they are deposited on accounts of the Non-profit Fermat.org until awarded as bounty or contribution payments for developers.
 
 ### Token Usage
 
-End users automatically acquire fermats by receiving bitcoins into a Fermat wallet of their own. They can go back to bitcoins by transfering fermats into a Bitcoin wallet. 
+End users automatically acquire fermats by receiving bitcoins into a Fermat wallet of their own. They can go back to bitcoins by transfering fermats into a Bitcoin wallet.
 
 Fermat tokens are necessary for users to pay for three things:
 
 #### Communication
 
-End users pay Fermat Nodes with fermats to be able to receive calls from other devices. 
+End users pay Fermat Nodes with fermats to be able to receive calls from other devices.
 
 #### Use of Fermat Components
 
@@ -177,17 +177,17 @@ End users pay with fermats to receive personalized technical support from Fermat
 <br>
 ## Fermat Blockchain
 
-Fermat's blockchain inherits many of the characteristics of the bitcoin blockchain and it is highly coupled with it. The data structure is an ordered, back-linked list of blocks of transactions. In our case all the transactions are _coinbase_ transactions, meaning that they are transactions where new fermats are issued by the protocol. Blocks are linked "back" each referring to the previous block in the chain. 
+Fermat's blockchain inherits many of the characteristics of the bitcoin blockchain and it is highly coupled with it. The data structure is an ordered, back-linked list of blocks of transactions. In our case all the transactions are _coinbase_ transactions, meaning that they are transactions where new fermats are issued by the protocol. Blocks are linked "back" each referring to the previous block in the chain.
 
 Each block within the blockchain:
 
-* Is identified by a hash, generated using the SHA256 cryptographic hash algorithm on the header of the block. 
-* References a previous block, known as the parent block, through the "previous block hash" field in the block header. 
+* Is identified by a hash, generated using the SHA256 cryptographic hash algorithm on the header of the block.
+* References a previous block, known as the parent block, through the "previous block hash" field in the block header.
 
 <br>
 ## Mining
 
-Mining is the process by which new _fermats_ are added to the token supply. Mining also serves to the main purpose of the Fermat Network: to enable devices to communicate between each other without going through trusted third parties. Miners provide bandwidth to the Extended Fermat Network in exchange for the opportunity to be rewarded fermats.
+Mining is the process by which new _fermats_ are added to the token supply. Mining also serves to the main purpose of the Fermat Network: to enable devices to communicate between each other without going through trusted third parties. Miners provide bandwidth to the Extended Fermat Network in exchange for the opportunity to be rewarded with fermats.
 
 Miners inter-connect devices and act as a bridge relaying data from one device to the other. A new block, containing transactions that occurred since the last block, is "mined" every approximately 10 minutes, thereby adding those transactions to the blockchain. Transactions that become part of a block and added to the blockchain are considered "confirmed," which allows the new owners of fermats to spend the fermats they received in those transactions.
 
@@ -195,30 +195,30 @@ A transaction at the Fermat Blockchain is considered "irreversible" as soon as i
 
 ### Rewards
 
-Miners receive two types of rewards for mining: new tokens created with each new block, and subscription fees from all the network clients that use that node as a home. 
+Miners receive two types of rewards for mining: new tokens created with each new block, and subscription fees from all the network clients that use that node as a home.
 
 #### New Minted fermats
 
-To earn this reward, the miners compete to sell incoming bandwith to network clients, i.e. being their home node. Network Clients are free to choose which node to use as their home and at some point they pay in fermats to these nodes for their services. Fermat "proof of work" consist on nodes proving that they have received payments for being a home node. 
+To earn this reward, the miners compete to sell incoming bandwith to network clients, i.e. being their home node. Network Clients are free to choose which node to use as their home and at some point they pay in fermats to these nodes for their services. Fermat "proof of work" consist on nodes proving that they have received payments for being a home node.
 
 The amount of newly created fermats that can be added to a block decreases approximately every four years. It starts at 50 fermats per block and halves by 2 every 4 years. Based on this formula, fermat mining rewards decrease exponentially until all fermats (21,000,000 million) have been issued. After that, no new fermats will be issued.
 
 #### Home Node Fees
 
-Network clients will try to establish their home base at a nearby Node. This will help end users to find the end user behind the network client by knowing approximately where he or she lives (city & country). But the network client will scan all nearby nodes and finally decide where to stablish its home base on the plans and tariffs each node is charging for their services. 
+Network clients will try to establish their home base at a nearby Node. This will help end users to find the end user behind the network client by knowing approximately where he or she lives (city & country). But the network client will scan all nearby nodes and finally decide where to stablish its home base on the plans and tariffs each node is charging for their services.
 
 <br>
 ## Decentralized Consensus
 
-The Fermat blockchain is not created by a central authority, but is assembled independently by every node in the network. The Fermat Protocol provides a set of rules that defines which _coinbase_ transactions are going to be added to the blockchain. As Fermat outsources the transaction processing features of the bitcoin network, it is easier for Fermat to arrive to a consensus. 
+The Fermat blockchain is not created by a central authority, but is assembled independently by every node in the network. The Fermat Protocol provides a set of rules that defines which _coinbase_ transactions are going to be added to the blockchain. As Fermat outsources the transaction processing features of the bitcoin network, it is easier for Fermat to arrive to a consensus.
 
 ### Proof of Work
 
-Fermat Proof of Work algorithm is designed in a way to prevent dishonest nodes to lie about the value they are adding to the network. 
+Fermat Proof of Work algorithm is designed in a way to prevent dishonest nodes to lie about the value they are adding to the network.
 
 According to the Fermat Protocol these are the rules to be followed:
 
-* Each node scans the transactions at the bitcoin blockchain block height: head - 6. 
+* Each node scans the transactions at the bitcoin blockchain block height: head - 6.
 * They search for fermat transactions and aggregate all the ones that are payments to nodes in their node catalog.
 * They order the node list considering the ones with the highest amount collected in fees first.
 * If they are between the 25% of the nodes that:
@@ -238,7 +238,7 @@ In other words, if the node making all these calculations is at the same time in
 
 Immediately when a new block is mined at the bitcoin network, the following actions are taken by each qualifying node in order to see if they can earn the new fermats.
 
-They create a _coinbase_ transaction racing between each other to be incorporated first by a bitcoin miner into the bitcoin blockchain at the next block mined. The first 10 % of valid transactions to be incorporated at the bitcoin blockchain will be the ones recorded by every Fermat Node on the Fermat blockchain by adding them on a new block. The recording will happen when that block has 6 more blocks on top of it. 
+They create a _coinbase_ transaction racing between each other to be incorporated first by a bitcoin miner into the bitcoin blockchain at the next block mined. The first 10 % of valid transactions to be incorporated at the bitcoin blockchain will be the ones recorded by every Fermat Node on the Fermat blockchain by adding them on a new block. The recording will happen when that block has 6 more blocks on top of it.
 
 As every node is reading confirmed bitcoin transactions and they all share a syncronized copy of the node catalogue, the Proof of Work algorithm should give exactly the same result to every node in the network. This means every node knows how many nodes should be part of the race, and how many fermats they should add on their own _coinbase_ transaction in order for the 10% of all these nodes not to exceed the amount of fermats per block.
 
@@ -270,20 +270,20 @@ We call a _Fermat Genesis Transaction_ to each _coinbase_ transaction recorded o
 
 Note that the _Genesis Transaction_ can have _n_ number of UTXO as INPUTS, all of them, bitcoins (or satoshis to be precise). It can also have _m_ number of OUTPUTS where all of them will represent fermats except _m - 1_ which is reserved for bitcoin change and the _m_ which is used to place the Fermat _Coinbase_ Transaction hash on the OP_RETURN field.
 
-As usual any difference between the sum of all OUTPUTS and the sum of all INPUTS are the bitcoin miner's fees. 
+As usual any difference between the sum of all OUTPUTS and the sum of all INPUTS are the bitcoin miner's fees.
 
 So the amount of satoshis on each OUTPUT from _1_ to _m - 2_ are turned into _fers_ that is how we call a ten thousand part of a fermat.
 
 1 fermat = 1,000 fers
 
-We know that by doing this, 1 fermat has a minimun market value of 0.00001 bitcoins. 
+We know that by doing this, 1 fermat has a minimun market value of 0.00001 bitcoins.
 
 <br>
 ## Incentive
 
 ### For developers
 
-Plug-in developers declare a _Micro Use License_ for each plug-in they add to the Framework. Wallet or Financial Apps developers declare a _Micro Use License_ for their components. End users install the Apps (wallets) of their choice. The license to be paid is the sum of the Apps _Micro Use License_ plus all the _Micro Use Licenses_ of the plug-ins used by that App. 
+Plug-in developers declare a _Micro Use License_ for each plug-in they add to the Framework. Wallet or Financial Apps developers declare a _Micro Use License_ for their components. End users install the Apps (wallets) of their choice. The license to be paid is the sum of the Apps _Micro Use License_ plus all the _Micro Use Licenses_ of the plug-ins used by that App.
 
 The Framework is responsible to charge end users and distribute the payments to all developers involved.
 
@@ -308,9 +308,9 @@ We handle identities at different levels for multiple reasons. In all cases, ide
 
 The need to handle multiple logins on the same device brings with it, the first kind of identity which we call _device-user_. This identity lives only at a certain device and not even a public key is exposed to the network.
 
-Besides, the end users can have multiple types of identities (we call them _actors_), and within each type as many instances as they want. Each type of identity corresponds to a role in real life or an _actor_ in a Use Case. Usually each Platform introduces a set of _actors_ and all the Platforms functionality orbits around all the use cases derived on the interactions between those _actors_. 
+Besides, the end users can have multiple types of identities (we call them _actors_), and within each type as many instances as they want. Each type of identity corresponds to a role in real life or an _actor_ in a Use Case. Usually each Platform introduces a set of _actors_ and all the Platforms functionality orbits around all the use cases derived on the interactions between those _actors_.
 
-The Framework handles a hierarchy of identities. One of them is what we call the _root identity_. At root level end users can set a standard set of information that can be overwritten at any level down the hierarchy, narrowing or expanding that information as needed. All these identities are exposed to the Fermat Network in a way that from the outside, no one could tell they are related between each other or to a certain end user. 
+The Framework handles a hierarchy of identities. One of them is what we call the _root identity_. At root level end users can set a standard set of information that can be overwritten at any level down the hierarchy, narrowing or expanding that information as needed. All these identities are exposed to the Fermat Network in a way that from the outside, no one could tell they are related between each other or to a certain end user.
 
 ### Component Identities
 
@@ -327,9 +327,9 @@ d. Nodes to recognize each other even when their IP location or other profile in
 <br>
 ## Platforms
 
-We define as a _Platform_ a set of interrelated functionality. _Platforms_ may consume services from other _platforms_ and their dependencies form a hierarchical stack. 
+We define as a _Platform_ a set of interrelated functionality. _Platforms_ may consume services from other _platforms_ and their dependencies form a hierarchical stack.
 
-Each _Platform_ may introduce new workflows to the system, Add-ons, Plug-ins, GUI components (Apps, wallets) and _actors_. This enables the system to target different use cases with different _actors_ involved. 
+Each _Platform_ may introduce new workflows to the system, Add-ons, Plug-ins, GUI components (Apps, wallets) and _actors_. This enables the system to target different use cases with different _actors_ involved.
 
 
 <br>
@@ -339,17 +339,17 @@ We define workflows as high level processes that require several components to a
 
 From a workflow point of view, each plug-in runs a task and is fully responsible for doing its job. Workflows are a chain of tasks that may split into several paths and may span through more than one device.
 
-In some cases workflows interconnect with each other, forming a _workflow chain_ that usually spans more than one _Platform_. 
+In some cases workflows interconnect with each other, forming a _workflow chain_ that usually spans more than one _Platform_.
 
 <br>
 ## Transactions
 
 ### Transactional Workflows
 
-As the Framework runs on potentially unstable devices such as mobile phones, each plug-in must be prepared to overcome the difficulties caused by a device shutting down at any moment and it must be able to complete its intended job later and never leave information on an inconsistent state. This is quite challenging but not impossible. 
+As the Framework runs on potentially unstable devices such as mobile phones, each plug-in must be prepared to overcome the difficulties caused by a device shutting down at any moment and it must be able to complete its intended job later and never leave information on an inconsistent state. This is quite challenging but not impossible.
 
 The solution is to make each plug-in responsible for the workflow while they are handling part of a transaction on a transactional workflow. This responsibility is transferred to each step of the chain using what we call a _Responsibility Transfer Protocol_. This means that the component that is responsible at the moment of a black out is the one that must resume and do its best to get rid of that responsibility moving it further down the chain within the transactional workflow.
- 
+
 ### Value Transactions
 
 We handle monetary and digital assets transactions dividing the accounting from the value. Usually transactions start on specialized plug-ins which are in charge of coordinating the whole transaction. These plug-ins usually interact with wallet plug-ins debiting or crediting the accounts involved. The accounting of the currency or digital asset involved are kept by these wallet plug-ins. Later the transactional workflow splits between moving the value (usually crypto currency) and moving the meta-data associated to the transaction.
@@ -361,7 +361,7 @@ Through two different paths, the value and the meta-data arrive to the recipient
 
 We define a Private Device Network as a network of devices owned by the same end user. Using the Fermat Network, the Framework synchronizes the information on all nodes of the Private Network. By doing so the information and system identities belonging to the end user are available at any end user's devices.
 
-Crypto funds are kept in a _Multi-Sig-Vault_ and in a _Petty-Cash-Vault_. The funds at the _Petty-Cash-Vault_ are accessible from all nodes even when they are offline from this Private Network. An automated process monitors the _Petty-Cash-Vault_ and tops it up when needed. Several nodes must sign the top-up transaction in order to proceed. 
+Crypto funds are kept in a _Multi-Sig-Vault_ and in a _Petty-Cash-Vault_. The funds at the _Petty-Cash-Vault_ are accessible from all nodes even when they are offline from this Private Network. An automated process monitors the _Petty-Cash-Vault_ and tops it up when needed. Several nodes must sign the top-up transaction in order to proceed.
 
 If a device is lost or stolen, only the funds at the _Petty-Cash-Vault_ are at risk. End users can eject stolen devices from their Private Network and if they act quickly, the system might be on time to recreate the _Petty-Cash-Vault_ under the new configuration of the Private Network and be able to move the funds from the previous _Petty-Cash-Vault_ to the new one.
 
@@ -370,15 +370,15 @@ If a device is lost or stolen, only the funds at the _Petty-Cash-Vault_ are at r
 
 The Framework handles a stack of layers. Starting from the bottom we have the _OS API level_, then the _Blockchain Level_, the _Communication Level_, _Platform Level_ and the _User Interface Level_. With the goal in mind for allowing even non-developers to deploy their own peer-to-peer financial applications, we define several concepts:
 
-**Wallet**: Any kind of financial application that handles either crypto or digital assets for any purpose. 
+**Wallet**: Any kind of financial application that handles either crypto or digital assets for any purpose.
 
-**Reference Wallet**: A primitive wallet that is used by a single _actor_ for a handful of use cases. 
+**Reference Wallet**: A primitive wallet that is used by a single _actor_ for a handful of use cases.
 
 **Niche Wallet**: A combination of several _Reference Wallets_ into a single product with its own look and feel and possibly extra functionality.
 
-**Branded Wallet**: A _niche wallet_ turned into a new product owned by a different end user. Achieved by a process similar to building a Wordpress site but locally, on the end user's device. Usually it involves reusing the business logic of the _niche wallet_ it derives from and adding a new look and feel (different skin and navigation structure).
+**Branded Wallet**: A _niche wallet_ turned into a new product owned by a different end user. Achieved by a process similar to building a WordPress site but locally, on the end user's device. Usually it involves reusing the business logic of the _niche wallet_ it derives from and adding a new look and feel (different skin and navigation structure).
 
-**External Wallet**: A third party APP running on the same device that uses Fermat as a backend for different reasons. For example to benefit from its infrastructure to interface crypto networks, transporting data through its p2p network, or storing data on the end user's _Private Device Network_. 
+**External Wallet**: A third party APP running on the same device that uses Fermat as a backend for different reasons. For example to benefit from its infrastructure to interface crypto networks, transporting data through its p2p network, or storing data on the end user's _Private Device Network_.
 
 <br>
 Several tools were designed with the purpose of enabling the development of new wallets, and their distribution.
@@ -394,7 +394,7 @@ Several tools were designed with the purpose of enabling the development of new 
 
 The proposed system complements the privacy properties of crypto networks, extending them to the full stack needed to run different kind of financial applications. By using its own P2P network with point to point encryption for transporting meta-data both value and information are under a similar privacy standard.
 
-Identities are public keys related to private keys kept by end users and never shared to anyone in any way. 
+Identities are public keys related to private keys kept by end users and never shared to anyone in any way.
 
 The collection of system information for visualization and statistics uses hashes of public keys to protect end users privacy and at the same time preserve the relationships between them.
 
@@ -407,7 +407,7 @@ We have proposed a system for developing and running peer-to-peer financial appl
 * How to exchange meta-data in a peer-to-peer way
 * How to prevent the loss of private keys (funds and identities)
 * How to maximize reusability by building with plug-ins
-* How to enable even non-developers to create and use their own wallets and financial applications. 
+* How to enable even non-developers to create and use their own wallets and financial applications.
 
 We have shifted the paradigm from competition to collaboration by designing and building pieces of a large master plan where anyone can collaborate and be part of it. At the same time we are giving end users the "illusion" of using a custom tailored financial application, while underneath the skin a set of plug-ins are collaborating to provide end users the desired functionality and present it in the exact way they feel comfortable with.
 
@@ -419,7 +419,7 @@ We have created an environment where the user base of the system is a shared ass
 <br>
 ## References
 
-* [1] Satoshi Nakamoto, "Bitcoin: A Peer-to-Peer Electronic Cash System", https://bitcoin.org/bitcoin.pdf, 2008 
+* [1] Satoshi Nakamoto, "Bitcoin: A Peer-to-Peer Electronic Cash System", https://bitcoin.org/bitcoin.pdf, 2008
 
 * [2] David Johnston & others, "The General Theory of Decentralized Applications, Dapps", https://github.com/DavidJohnstonCEO/DecentralizedApplications/blob/master/README.md
 
@@ -427,7 +427,7 @@ We have created an environment where the user base of the system is a shared ass
 
 * [4] Fermat Bounty Program, [https://github.com/bitDubai/bounty-program](https://github.com/bitDubai/bounty-program)
 
- 
+
 <br>
 ## Further Reading
 
