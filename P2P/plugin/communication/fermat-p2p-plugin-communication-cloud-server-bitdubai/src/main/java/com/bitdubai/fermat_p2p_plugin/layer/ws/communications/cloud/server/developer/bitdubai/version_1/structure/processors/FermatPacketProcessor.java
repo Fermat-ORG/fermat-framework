@@ -14,7 +14,7 @@ import com.bitdubai.fermat_p2p_plugin.layer.ws.communications.cloud.server.devel
 import org.java_websocket.WebSocket;
 
 /**
- * The class <code>com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.contents.FermatPacketProcessor</code> define
+ * The class <code>com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.contents.FermatJettyPacketProcessor</code> define
  * the method that have to implements a fermat packet processor class, side of the server
  * <p/>
  *

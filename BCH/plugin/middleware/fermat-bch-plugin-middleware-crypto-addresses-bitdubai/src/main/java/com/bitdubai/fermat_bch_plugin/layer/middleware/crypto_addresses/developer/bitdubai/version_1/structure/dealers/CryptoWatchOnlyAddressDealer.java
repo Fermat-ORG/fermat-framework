@@ -25,6 +25,7 @@ public class CryptoWatchOnlyAddressDealer extends CryptoAddressDealer {
 
     private final CryptoAddressesManager cryptoAddressesManager  ;
 
+
     public CryptoWatchOnlyAddressDealer(final CryptoAddressesManager   cryptoAddressesManager  ,
                                           final CryptoAddressBookManager cryptoAddressBookManager,
                                           final CryptoVaultSelector cryptoVaultSelector     ,
@@ -50,6 +51,7 @@ public class CryptoWatchOnlyAddressDealer extends CryptoAddressDealer {
                         vaultType,
                         request
                 );
+
                 cryptoAddressesManager.acceptAddressExchangeRequest(
                         request.getRequestId(),
                         cryptoAddress
