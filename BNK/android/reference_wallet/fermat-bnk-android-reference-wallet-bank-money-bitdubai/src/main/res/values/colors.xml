@@ -24,4 +24,6 @@
     <color name="text_color_soft_grey">#CCCFD2</color>
     <color name="faded_navy_60">#99074264</color>
     <color name="faded_navy_20">#33074264</color>
+    <color name="faded_black_60">#ad000000</color>
+    <color name="faded_black_20">#87000000</color>
 </resources>

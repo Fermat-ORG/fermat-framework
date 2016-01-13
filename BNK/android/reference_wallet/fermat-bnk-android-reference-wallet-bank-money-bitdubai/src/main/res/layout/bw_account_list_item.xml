@@ -21,7 +21,7 @@
         android:orientation="horizontal"
         android:paddingLeft="16dp"
         android:paddingRight="16dp"
-        android:background="@color/faded_navy_60">
+        android:background="@color/faded_black_60">
 
     <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
         android:id="@+id/account_alias"
@@ -60,7 +60,7 @@
         android:layout_below="@id/acc_first_line"
         android:paddingLeft="16dp"
         android:paddingRight="16dp"
-        android:background="@color/faded_navy_20">
+        android:background="@color/faded_black_20">
 
         <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
             android:layout_width="wrap_content"
@@ -70,7 +70,8 @@
             android:layout_alignParentRight="true"
             android:textColor="@color/text_color_soft_blue"
             android:textSize="@dimen/text_size"
-            tools:text="Balance"/>
+            android:visibility="visible"
+            tools:text="Balance" />
     </LinearLayout>
 
 
@@ -85,7 +86,7 @@
         android:layout_below="@id/acc_second_line"
         android:paddingLeft="16dp"
         android:paddingRight="16dp"
-        android:background="@color/faded_navy_20">
+        android:background="@color/faded_black_20">
         <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
             android:id="@+id/available_balance"
             android:layout_width="wrap_content"
@@ -108,6 +109,7 @@
             android:textSize="@dimen/text_size"
             tools:text="Available"
             android:layout_weight="1"
+            android:visibility="visible"
             android:gravity="right"/>
 
     </LinearLayout>
@@ -122,7 +124,7 @@
         android:layout_below="@id/acc_third_line"
         android:paddingLeft="16dp"
         android:paddingRight="16dp"
-        android:background="@color/faded_navy_20">
+        android:background="@color/faded_black_20">
         <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
             android:id="@+id/book_balance"
             android:layout_width="wrap_content"
@@ -145,6 +147,7 @@
             android:textSize="@dimen/text_size"
             tools:text="book"
             android:layout_weight="1"
+            android:visibility="visible"
             android:gravity="right"/>
 
     </LinearLayout>
