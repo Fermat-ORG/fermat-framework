@@ -16,11 +16,11 @@ Currently there is no automated system to issue Fermat Tokens as the Fermat Bloc
 
 ### Founders Tokens
 
-Fermat was founded on 2014 by a group of people that defined the vision and worked on the arquitecture of the system. By that time Fermat Tokens were worthless since no one has ever bought any of them. For their contribution founders got the first batch of 1 billion Fermat Tokens, representing 4.76% of the 21 billion to be ever issued.
+Fermat was founded on 2014 by a group of people that defined the vision and worked on the arquitecture of the system. By that time Fermat Tokens were worthless since no one has ever bought any of them. For their contribution founders got the first batch of 1 million Fermat Tokens, representing 4.76% of the 21 million to be ever issued.
 
 ### First Tokens Sale
 
-Early 2015 a first token sale was closed. 333,333,333 Fermat tokens where sold for 200K USD setting the price at 1 Fermat = 0.0006 USD. 
+Early 2015 a first token sale was closed. 333,333 Fermat tokens where sold for 200K USD setting the price at 1 Fermat = 0.0006 USD. 
 
 
 <br>
