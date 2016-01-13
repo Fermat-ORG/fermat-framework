@@ -82,6 +82,15 @@ public interface CryptoCustomerWalletManager extends WalletManager {
      */
     CryptoCustomerIdentity getAssociatedIdentity() throws CantGetAssociatedCryptoCustomerIdentityException;
 
+
+    /**
+     * Verify if thew wallet is configured or not
+     *
+     * @param customerWalletPublicKey the wallet public key
+     * @return true if configure, false otherwise
+     */
+    boolean isWalletConfigured(String customerWalletPublicKey);
+
     /**
      * Start a new negotiation with a crypto broker
      *
@@ -95,12 +104,11 @@ public interface CryptoCustomerWalletManager extends WalletManager {
     /**
      * This method list all wallet installed in device, start the transaction
      */
-    List<InstalledWallet> getInstallWallets()  throws CantListWalletsException;
+    List<InstalledWallet> getInstallWallets() throws CantListWalletsException;
 
     CustomerBrokerNegotiationInformation setMemo(String memo, CustomerBrokerNegotiationInformation data);
 
     /**
-     *
      * @param location
      * @param uri
      * @throws CantCreateLocationPurchaseException
@@ -110,21 +118,18 @@ public interface CryptoCustomerWalletManager extends WalletManager {
     NegotiationBankAccount newEmptyNegotiationBankAccount(final String bankAccount, final FiatCurrency currencyType) throws CantCreateBankAccountPurchaseException;
 
     /**
-     *
      * @param bankAccount
      * @throws CantCreateBankAccountPurchaseException
      */
     void createNewBankAccount(NegotiationBankAccount bankAccount) throws CantCreateBankAccountPurchaseException;
 
     /**
-     *
      * @param bankAccount
      * @throws CantUpdateBankAccountPurchaseException
      */
     void updateBankAccount(NegotiationBankAccount bankAccount) throws CantUpdateBankAccountPurchaseException;
 
     /**
-     *
      * @param bankAccount
      * @throws CantDeleteBankAccountPurchaseException
      */
@@ -139,7 +144,7 @@ public interface CryptoCustomerWalletManager extends WalletManager {
      * Returns a list of provider references which can obtain the ExchangeRate of the given CurrencyPair
      *
      * @return a Map of name/provider reference pairs
-     * */
+     */
     Map<String, CurrencyExchangeRateProviderManager> getProviderReferencesFromCurrencyPair(Currency currencyFrom, Currency currencyTo) throws CantGetProviderException;
 
     CryptoCustomerWalletProviderSetting newEmptyCryptoCustomerWalletProviderSetting() throws CantNewEmptyCryptoCustomerWalletProviderSettingException;

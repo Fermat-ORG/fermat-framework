@@ -461,6 +461,11 @@ public class CryptoCustomerWalletModuleCryptoCustomerWalletManager implements Cr
     }
 
     @Override
+    public boolean isWalletConfigured(String customerWalletPublicKey) {
+        return false;
+    }
+
+    @Override
     public boolean startNegotiation(UUID customerId, UUID brokerId, Collection<ClauseInformation> clauses) throws CouldNotStartNegotiationException {
         return false; //CustomerBrokerNewManager con la data minima
     }
