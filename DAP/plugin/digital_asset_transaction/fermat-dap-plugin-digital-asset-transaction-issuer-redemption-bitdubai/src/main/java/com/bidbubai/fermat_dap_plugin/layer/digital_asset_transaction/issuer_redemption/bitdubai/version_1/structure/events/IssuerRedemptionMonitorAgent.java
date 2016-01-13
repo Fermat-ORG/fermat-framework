@@ -15,6 +15,7 @@ import com.bitdubai.fermat_bch_api.layer.crypto_module.crypto_address_book.inter
 import com.bitdubai.fermat_bch_api.layer.crypto_module.crypto_address_book.interfaces.CryptoAddressBookRecord;
 import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.exceptions.CantGetCryptoTransactionException;
 import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.interfaces.BitcoinNetworkManager;
+import com.bitdubai.fermat_bch_api.layer.crypto_vault.asset_vault.interfaces.AssetVaultManager;
 import com.bitdubai.fermat_dap_api.layer.all_definition.digital_asset.DigitalAssetMetadata;
 import com.bitdubai.fermat_dap_api.layer.all_definition.enums.DAPMessageType;
 import com.bitdubai.fermat_dap_api.layer.all_definition.exceptions.CantSetObjectException;
@@ -49,6 +50,7 @@ public class IssuerRedemptionMonitorAgent implements Agent {
     private BitcoinNetworkManager bitcoinNetworkManager;
     private ActorAssetIssuerManager actorAssetIssuerManager;
     private CryptoAddressBookManager cryptoAddressBookManager;
+    private AssetVaultManager assetVaultManager;
 
     public IssuerRedemptionMonitorAgent(AssetIssuerWalletManager assetIssuerWalletManager,
                                         ActorAssetIssuerManager actorAssetIssuerManager,
@@ -56,12 +58,14 @@ public class IssuerRedemptionMonitorAgent implements Agent {
                                         CryptoAddressBookManager cryptoAddressBookManager,
                                         ErrorManager errorManager,
                                         UUID pluginId,
-                                        PluginDatabaseSystem pluginDatabaseSystem) throws CantSetObjectException, CantExecuteDatabaseOperationException {
+                                        PluginDatabaseSystem pluginDatabaseSystem,
+                                        AssetVaultManager assetVaultManager) throws CantSetObjectException, CantExecuteDatabaseOperationException {
         this.assetIssuerWalletManager = Validate.verifySetter(assetIssuerWalletManager, "assetIssuerWalletManager is null");
         this.errorManager = Validate.verifySetter(errorManager, "errorManager is null");
         this.bitcoinNetworkManager = Validate.verifySetter(bitcoinNetworkManager, "bitcoinNetworkManager is null");
         this.actorAssetIssuerManager = Validate.verifySetter(actorAssetIssuerManager, "actorAssetIssuerManager is null");
         this.cryptoAddressBookManager = Validate.verifySetter(cryptoAddressBookManager, "cryptoAddressBookManager is null");
+        this.assetVaultManager = Validate.verifySetter(assetVaultManager, "assetVaultManager is null");
         issuerRedemptionDao = new IssuerRedemptionDao(pluginId, pluginDatabaseSystem);
     }
 
@@ -155,6 +159,8 @@ public class IssuerRedemptionMonitorAgent implements Agent {
                             AssetIssuerWalletTransactionRecordWrapper recordWrapper = new AssetIssuerWalletTransactionRecordWrapper(digitalAssetMetadata, cryptoTx, publicKeyFrom, publicKeyTo);
                             wallet.getBalance().credit(recordWrapper, BalanceType.AVAILABLE);
                             wallet.assetRedeemed(digitalAssetMetadata.getDigitalAsset().getPublicKey(), null, bookRecord.getDeliveredToActorPublicKey());
+
+                            assetVaultManager.notifyUsedRedeemPointAddress(bookRecord.getCryptoAddress(), bookRecord.getDeliveredToActorPublicKey());
                         }
                     }
                     break;
