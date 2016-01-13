@@ -83,11 +83,14 @@ public class NegotiationTransmissionNetworkServiceDatabaseDao {
     /*REGISTER NEW SEND NEGOTIATION TRANSMISSION*/
     public void registerSendNegotiatioTransmission(NegotiationTransmission negotiationTransmission,NegotiationTransmissionState negotiationTransmissionState) throws CantRegisterSendNegotiationTransmissionException{
         try {
+
+
             DatabaseTable table =  this.database.getTable(NegotiationTransmissionNetworkServiceDatabaseConstants.NEGOTIATION_TRANSMISSION_NETWORK_SERVICE_TABLE_NAME);
             DatabaseTableRecord record = table.getEmptyRecord();
             loadRecordAsSendNegotiatioTransmission(record, negotiationTransmission, negotiationTransmissionState);
             table.insertRecord(record);
 
+            //TEST
             System.out.print("\n\n**** X) MOCK NEGOTIATION TRANSACTION - NEGOTIATION TRANSMISSION - DAO ****\n");
             System.out.print("\n\n --- Transmission Date" +
                             "\n- NegotiationId = " + negotiationTransmission.getNegotiationId() +
@@ -97,6 +100,7 @@ public class NegotiationTransmissionNetworkServiceDatabaseDao {
                             "\n- ReceiverPublicKey = " + negotiationTransmission.getPublicKeyActorReceive() +
                             "\n- NegotiationTransactionType = " + negotiationTransmission.getTransmissionType().getCode() + " == " + NegotiationTransmissionType.TRANSMISSION_NEGOTIATION.getCode()
             );
+
             if(negotiationTransmission.getTransmissionType().getCode() == NegotiationTransmissionType.TRANSMISSION_NEGOTIATION.getCode()) {
                 if (negotiationTransmission.getTransmissionState().getCode() == NegotiationTransmissionState.PROCESSING_SEND.getCode()) {
                     System.out.print("\n\n**** 8) MOCK NEGOTIATION TRANSACTION - NEGOTIATION TRANSMISSION - DAO - REGISTER SEND NEGOTIATION TRANSMISSION ****\n");
