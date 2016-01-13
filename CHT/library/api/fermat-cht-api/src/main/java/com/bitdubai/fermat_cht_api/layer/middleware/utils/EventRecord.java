@@ -4,6 +4,8 @@ import com.bitdubai.fermat_api.layer.all_definition.events.EventSource;
 import com.bitdubai.fermat_cht_api.all_definition.events.enums.EventStatus;
 import com.bitdubai.fermat_cht_api.all_definition.events.enums.EventType;
 
+import java.util.UUID;
+
 /**
  * Created by Manuel Perez (darkpriestrelative@gmail.com) on 11/01/16.
  */
@@ -18,6 +20,8 @@ public class EventRecord {
     EventSource eventSource;
 
     long timestamp;
+
+    UUID chatId;
 
     public EventRecord(EventType eventType) {
 
@@ -65,6 +69,14 @@ public class EventRecord {
         this.timestamp = timestamp;
     }
 
+    public UUID getChatId() {
+        return chatId;
+    }
+
+    public void setChatId(UUID chatId) {
+        this.chatId = chatId;
+    }
+
     @Override
     public String toString() {
         return "EventRecord{" +
@@ -73,6 +85,7 @@ public class EventRecord {
                 ", eventType=" + eventType +
                 ", eventSource=" + eventSource +
                 ", timestamp=" + timestamp +
+                ", chatId=" + chatId +
                 '}';
     }
 }
