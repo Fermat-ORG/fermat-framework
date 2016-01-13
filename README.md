@@ -26,7 +26,9 @@ Early 2015 a first token sale was closed. 333,333,333 Fermat tokens where sold f
 <br>
 ## Monthy Issuing
 
-### Monthly Contribution Program Tokens
+There are two development programs running where tokens are needed to pay for contributions to the Fermat Project. 
+
+### Contribution Program Tokens
 
 Every month new tokens are issued according to the [CONTRIBUTION PROGRAM](https://github.com/bitDubai/contribution-program) to pay for contributions done to the project. Below you can see the details of tokens issued related to this program.
 
@@ -39,11 +41,9 @@ Every month new tokens are issued according to the [CONTRIBUTION PROGRAM](https:
 |2015|Sep|9,021,699|26,200|0.00290|20|
 |2015|Oct|10,042,939|36,220|0.00361|28|
 |2015|Nov|8,638,507|37,117|0.00430|30|
+|2015|Dec|8,570,877|42,700|0.00498|34|
 
+<br>
+### Bounty Program Tokens
 
-
-
-
-
-### Monthly Bounty Program Tokens
-
+Curretly, no bounty has been awarded yet.
