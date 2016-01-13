@@ -85,7 +85,7 @@ public class SettingsBankAccountsFragment extends AbstractFermatFragment impleme
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         super.onCreateView(inflater, container, savedInstanceState);
 
-        View layout = inflater.inflate(R.layout.cbw_wizard_step_set_bank_accounts, container, false);
+        View layout = inflater.inflate(R.layout.cbw_settings_bank_accounts, container, false);
 
         recyclerView = (RecyclerView) layout.findViewById(R.id.cbw_selected_bank_accounts_recycler_view);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false));

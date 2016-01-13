@@ -77,6 +77,8 @@ dependencies {
     compile project(':fermat-api')
     compile project(':fermat-core')
     compile project(':fermat-osa-android-core')
+    compile 'com.github.ozodrukh:CircularReveal:1.1.0'
+
     // DMP Projects (Wallets)
     compile project(':fermat-ccp-android-reference-wallet-bitcoin-wallet-bitdubai')
     compile project(':fermat-ccp-android-clone-reference-nich-wallet')
