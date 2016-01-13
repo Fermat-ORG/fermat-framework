@@ -151,8 +151,7 @@ public class AssetDetailActivityFragment extends AbstractFermatFragment {
     }
 
     private void setupUIData() {
-        //TODO review this
-        digitalAsset = (DigitalAsset) ((HashMap) appSession.getData("asset_data")).get("asset_data");
+        digitalAsset = (DigitalAsset) appSession.getData("asset_data");
 
         toolbar.setTitle(digitalAsset.getName());
 

@@ -243,7 +243,7 @@ public class RedeemPointRedemptionMonitorAgent implements Agent {
                             debug("new transaction on crypto network");
                             boolean notifyEventOnCryptoNetwork = false;
                             for (String transactionId : dao.getPendingSubmitGenesisTransactions()) {
-                                for (CryptoTransaction cryptoTransaction : bitcoinNetworkManager.getCryptoTransaction(transactionId)) {
+                                for (CryptoTransaction cryptoTransaction : bitcoinNetworkManager.getCryptoTransactions(transactionId)) {
                                     debug("verifying transactions");
                                     if (cryptoTransaction.getCryptoStatus() == CryptoStatus.ON_CRYPTO_NETWORK) {
                                         //TODO LOAD WALLET! I SHOULD SEARCH FOR THE WALLET PUBLIC KEY
@@ -283,7 +283,7 @@ public class RedeemPointRedemptionMonitorAgent implements Agent {
                             boolean notifyEventOnBlockChain = false;
                             debug("new transaction on blockchain");
                             for (String transactionId : dao.getOnCryptoNetworkGenesisTransactions()) {
-                                for (CryptoTransaction cryptoTransaction : bitcoinNetworkManager.getCryptoTransaction(transactionId)) {
+                                for (CryptoTransaction cryptoTransaction : bitcoinNetworkManager.getCryptoTransactions(transactionId)) {
                                     debug("verifying transactions");
                                     if (cryptoTransaction.getCryptoStatus() == CryptoStatus.ON_BLOCKCHAIN) {
                                         String userPublicKey = dao.getSenderPublicKeyById(transactionId);
