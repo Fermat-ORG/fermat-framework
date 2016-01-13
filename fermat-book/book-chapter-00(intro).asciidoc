@@ -51,8 +51,8 @@ The Fermat Community is contributing to that future with a system that builds an
 
  *  To build the best possible integrated system able to handle the finances not just of all the human world population but also of companies and machines in the context of the IoT.
 
- *  to allow any company, big or small, brand or institution to have their financials applications.
- 
+ *  To allow end users, startups,  brand or institution to have their financials applications.
+
 === The challenge
 
 The design of Fermat addressed the answers to the following questions:
