@@ -2,6 +2,8 @@ package com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_transmission
 
 import com.bitdubai.fermat_api.layer.all_definition.enums.CryptoCurrency;
 import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterException;
+import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantDeleteRecordException;
+import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantUpdateRecordException;
 import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_transmission.enums.CryptoTransmissionStates;
 import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_transmission.interfaces.structure.CryptoTransmissionMetadata;
 import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_transmission.interfaces.structure.CryptoTransmissionMetadataType;
@@ -131,7 +133,7 @@ public class CryptoTransmissionMetadataDAO {
             PendingRequestNotFoundException {
 
         if (transmissionId == null)
-            throw new CantGetCryptoTransmissionMetadataException("",null, "requestId, can not be null","");
+            throw new CantGetCryptoTransmissionMetadataException("",null, "TransmissionID, can not be null","");
 
         try {
 
@@ -147,7 +149,7 @@ public class CryptoTransmissionMetadataDAO {
             if (!records.isEmpty())
                 return buildCryptoTransmissionRecord(records.get(0));
             else
-                throw new PendingRequestNotFoundException(null, "RequestID: "+transmissionId, "Can not find an address exchange request with the given request id.");
+                throw new PendingRequestNotFoundException(null, "TransmissionID: "+transmissionId, "Can not find a transmission metadata with the given transmission id.");
 
 
         } catch (CantLoadTableToMemoryException exception) {
@@ -377,15 +379,15 @@ public class CryptoTransmissionMetadataDAO {
      *
      * @throws CantUpdateRecordDataBaseException
      */
-    public void changeState(UUID transaction_id, CryptoTransmissionStates cryptoTransmissionState) throws CantUpdateRecordDataBaseException {
+    public void changeState(UUID transmission_id, CryptoTransmissionStates cryptoTransmissionState) throws CantUpdateRecordDataBaseException {
 
-        if (transaction_id == null) {
+        if (transmission_id == null) {
             throw new IllegalArgumentException("The entity is required, can not be null");
         }
 
         try {
 
-            CryptoTransmissionMetadata cryptoTransmissionMetadata = getMetadata(transaction_id);
+            CryptoTransmissionMetadata cryptoTransmissionMetadata = getMetadata(transmission_id);
             cryptoTransmissionMetadata.changeState(cryptoTransmissionState);
 
 
@@ -417,6 +419,66 @@ public class CryptoTransmissionMetadataDAO {
             e.printStackTrace();
         } catch (CantGetCryptoTransmissionMetadataException e) {
             e.printStackTrace();
+        }
+
+    }
+
+
+    public void changeSentNumber(UUID transmission_id, int sentCount) throws CantUpdateRecordDataBaseException {
+
+        try {
+
+            DatabaseTable cryptoTransmissiontTable = database.getTable(CryptoTransmissionNetworkServiceDatabaseConstants.CRYPTO_TRANSMISSION_METADATA_TABLE_NAME);
+
+            cryptoTransmissiontTable.addUUIDFilter(CryptoTransmissionNetworkServiceDatabaseConstants.CRYPTO_TRANSMISSION_METADATA_TRANSMISSION_ID_COLUMN_NAME, transmission_id, DatabaseFilterType.EQUAL);
+
+            cryptoTransmissiontTable.loadToMemory();
+
+            List<DatabaseTableRecord> records = cryptoTransmissiontTable.getRecords();
+
+            if (!records.isEmpty()) {
+                DatabaseTableRecord record = records.get(0);
+                record.setIntegerValue(CryptoTransmissionNetworkServiceDatabaseConstants.CRYPTO_TRANSMISSION_METADATA_SENT_COUNT_COLUMN_NAME, sentCount);
+
+
+                cryptoTransmissiontTable.updateRecord(record);
+            }
+
+        } catch (CantLoadTableToMemoryException e) {
+
+            throw new CantUpdateRecordDataBaseException(CantUpdateRecordDataBaseException.DEFAULT_MESSAGE,e, "", "Exception not handled by the plugin, there is a problem in database and i cannot load the table.");
+
+        } catch (CantUpdateRecordException e) {
+            throw new CantUpdateRecordDataBaseException(CantUpdateRecordDataBaseException.DEFAULT_MESSAGE,e, "", "Cant delete record exception.");
+        }
+
+    }
+
+
+    public void delete(UUID transmission_id) throws CantDeleteRecordDataBaseException {
+
+        try {
+
+            DatabaseTable cryptoTransmissiontTable = database.getTable(CryptoTransmissionNetworkServiceDatabaseConstants.CRYPTO_TRANSMISSION_METADATA_TABLE_NAME);
+
+            cryptoTransmissiontTable.addUUIDFilter(CryptoTransmissionNetworkServiceDatabaseConstants.CRYPTO_TRANSMISSION_METADATA_TRANSMISSION_ID_COLUMN_NAME, transmission_id, DatabaseFilterType.EQUAL);
+
+            cryptoTransmissiontTable.loadToMemory();
+
+            List<DatabaseTableRecord> records = cryptoTransmissiontTable.getRecords();
+
+            if (!records.isEmpty()) {
+                DatabaseTableRecord record = records.get(0);
+
+                cryptoTransmissiontTable.deleteRecord(record);
+            }
+
+        } catch (CantLoadTableToMemoryException e) {
+
+            throw new CantDeleteRecordDataBaseException(CantDeleteRecordDataBaseException.DEFAULT_MESSAGE,e, "", "Exception not handled by the plugin, there is a problem in database and i cannot load the table.");
+
+        } catch (CantDeleteRecordException e) {
+            throw new CantDeleteRecordDataBaseException(CantDeleteRecordDataBaseException.DEFAULT_MESSAGE,e, "", "Cant delete record exception.");
         }
 
     }
@@ -497,6 +559,40 @@ public class CryptoTransmissionMetadataDAO {
 
 
 
+    public  List<CryptoTransmissionMetadata> getNotSentRecord() throws CantUpdateRecordDataBaseException {
+
+        try {
+
+            List<CryptoTransmissionMetadata> list = new ArrayList<>();
+
+            DatabaseTable cryptoTransmissiontTable = database.getTable(CryptoTransmissionNetworkServiceDatabaseConstants.CRYPTO_TRANSMISSION_METADATA_TABLE_NAME);
+
+            cryptoTransmissiontTable.addStringFilter(CryptoTransmissionNetworkServiceDatabaseConstants.CRYPTO_TRANSMISSION_METADATA_STATUS_COLUMN_NAME, CryptoTransmissionStates.SEEN_BY_DESTINATION_NETWORK_SERVICE.getCode(), DatabaseFilterType.NOT_EQUALS);
+            cryptoTransmissiontTable.addStringFilter(CryptoTransmissionNetworkServiceDatabaseConstants.CRYPTO_TRANSMISSION_METADATA_STATUS_COLUMN_NAME, CryptoTransmissionStates.SEEN_BY_DESTINATION_VAULT.getCode(), DatabaseFilterType.NOT_EQUALS);
+            cryptoTransmissiontTable.addStringFilter(CryptoTransmissionNetworkServiceDatabaseConstants.CRYPTO_TRANSMISSION_METADATA_STATUS_COLUMN_NAME, CryptoTransmissionStates.CREDITED_IN_DESTINATION_WALLET.getCode(), DatabaseFilterType.NOT_EQUALS);
+
+            cryptoTransmissiontTable.loadToMemory();
+
+
+            for (DatabaseTableRecord record : cryptoTransmissiontTable.getRecords()) {
+                CryptoTransmissionMetadata outgoingTemplateNetworkServiceMessage = buildCryptoTransmissionRecord(record);
+                list.add(outgoingTemplateNetworkServiceMessage);
+            }
+
+            return list;
+
+        } catch (CantLoadTableToMemoryException e) {
+
+            throw new CantUpdateRecordDataBaseException(CantUpdateRecordDataBaseException.DEFAULT_MESSAGE,e, "", "Exception not handled by the plugin, there is a problem in database and i cannot load the table.");
+
+        } catch (InvalidParameterException e) {
+            throw new CantUpdateRecordDataBaseException(CantUpdateRecordDataBaseException.DEFAULT_MESSAGE,e, "", "Cant get crypto transmission record data.");
+
+        }
+
+    }
+
+
     private CryptoTransmissionMetadata buildCryptoTransmissionRecord(DatabaseTableRecord record) throws InvalidParameterException {
 
         UUID   transactionId                       = record.getUUIDValue(CryptoTransmissionNetworkServiceDatabaseConstants.CRYPTO_TRANSMISSION_METADATA_TRANSMISSION_ID_COLUMN_NAME);
@@ -511,6 +607,8 @@ public class CryptoTransmissionMetadataDAO {
         String type = record.getStringValue(CryptoTransmissionNetworkServiceDatabaseConstants.CRYPTO_TRANSMISSION_METADATA_TYPE_COLUMN_NAME);
         String pendig = record.getStringValue(CryptoTransmissionNetworkServiceDatabaseConstants.CRYPTO_TRANSMISSION_METADATA_PENDING_FLAG_COLUMN_NAME);
         long timestamp = record.getLongValue(CryptoTransmissionNetworkServiceDatabaseConstants.CRYPTO_TRANSMISSION_METADATA_TIMESTAMP_COLUMN_NAME);
+        int sentCount = record.getIntegerValue(CryptoTransmissionNetworkServiceDatabaseConstants.CRYPTO_TRANSMISSION_METADATA_SENT_COUNT_COLUMN_NAME);
+
 
         CryptoCurrency cryptoCurrency = CryptoCurrency                     .getByCode(cryptoCurrencyString);
         CryptoTransmissionStates cryptoTransmissionStates = CryptoTransmissionStates.getByCode(state);
@@ -528,7 +626,9 @@ public class CryptoTransmissionMetadataDAO {
                 cryptoTransmissionStates,
                 cryptoTransmissionType,
                 timestamp,
-                Boolean.getBoolean(pendig)
+                Boolean.getBoolean(pendig),
+                sentCount
+
         );
     }
 
@@ -548,6 +648,9 @@ public class CryptoTransmissionMetadataDAO {
         record.setStringValue(CryptoTransmissionNetworkServiceDatabaseConstants.CRYPTO_TRANSMISSION_METADATA_TYPE_COLUMN_NAME, cryptoTransmissionMetadata.getCryptoTransmissionMetadataType().getCode());
         record.setStringValue(CryptoTransmissionNetworkServiceDatabaseConstants.CRYPTO_TRANSMISSION_METADATA_PENDING_FLAG_COLUMN_NAME, String.valueOf(cryptoTransmissionMetadata.isPendigToRead()));
         record.setLongValue(CryptoTransmissionNetworkServiceDatabaseConstants.CRYPTO_TRANSMISSION_METADATA_TIMESTAMP_COLUMN_NAME, cryptoTransmissionMetadata.getTimestamp());
+        record.setIntegerValue(CryptoTransmissionNetworkServiceDatabaseConstants.CRYPTO_TRANSMISSION_METADATA_SENT_COUNT_COLUMN_NAME, cryptoTransmissionMetadata.getSentCount());
+
+
         return record;
     }
 

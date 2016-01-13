@@ -5,10 +5,15 @@ import android.app.Activity;
 import android.app.Fragment;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.widget.Toolbar;
+import android.view.KeyEvent;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
+import android.view.View;
+import android.view.ViewGroup;
 import android.widget.RelativeLayout;
 
 
@@ -28,7 +33,7 @@ import com.bitdubai.fermat_api.layer.pip_engine.interfaces.ResourceProviderManag
 /**
  * Created by Matias Furszyfer on 2015.11.21..
  */
-public abstract class AbstractFermatFragment<S extends FermatSession,R extends ResourceProviderManager> extends Fragment{
+public abstract class AbstractFermatFragment<S extends FermatSession,R extends ResourceProviderManager> extends Fragment {
 
     /**
      * FLAGS
@@ -47,6 +52,7 @@ public abstract class AbstractFermatFragment<S extends FermatSession,R extends R
      */
     protected ViewInflater viewInflater;
     private WizardConfiguration context;
+    private String changeBackActivity;
 
 
     @Override
@@ -60,6 +66,10 @@ public abstract class AbstractFermatFragment<S extends FermatSession,R extends R
         }
     }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+    }
 
     /**
      * Start a configuration Wizard
@@ -213,8 +223,12 @@ public abstract class AbstractFermatFragment<S extends FermatSession,R extends R
         System.gc();
     }
 
+    protected final void onBack(String activityCodeBack){
+        getFermatScreenSwapper().onControlledActivityBack(activityCodeBack);
+    }
 
-
-
+    protected final void setChangeBackActivity(Activities backActivity){
+        getFermatScreenSwapper().setChangeBackActivity(backActivity);
+    }
 
 }

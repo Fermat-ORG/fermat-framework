@@ -2,8 +2,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="@color/gray">
+    android:layout_height="match_parent">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -82,9 +81,9 @@
             android:layout_below="@id/textView"
             android:layout_marginLeft="15dp"
             android:layout_marginTop="5dp"
-            android:textColorHint="#b3ffffff"
             android:textSize="15sp"
             android:textColor="#ffffff"
+            android:fontFamily="regular"
             android:background="@drawable/bg_delivery_input"/>
 
         <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
@@ -111,6 +110,7 @@
             android:background="#5A555C">
 
             <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
+                android:id="@+id/selectedUsersText"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Select users"
@@ -140,7 +140,8 @@
                 android:layout_height="wrap_content"
                 android:layout_centerInParent="true"
                 android:text="Deliver Assets"
-                android:textSize="18sp"
+                android:textSize="17sp"
+                android:fontFamily="regular"
                 android:textColor="#00aeef"/>
 
             <ImageView

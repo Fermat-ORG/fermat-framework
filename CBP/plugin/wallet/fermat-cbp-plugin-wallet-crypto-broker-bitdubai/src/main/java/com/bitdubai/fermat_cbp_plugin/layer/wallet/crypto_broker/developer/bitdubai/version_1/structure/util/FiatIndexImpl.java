@@ -15,6 +15,7 @@ public class FiatIndexImpl implements FiatIndex {
     float      salePriceDownSpread;
     float      purchasePriceUpSpread;
     float      purchasePriceDownSpread;
+    float      priceReference;
 
     public FiatIndexImpl(FermatEnum merchandise,
                          float      salePrice,
@@ -22,7 +23,8 @@ public class FiatIndexImpl implements FiatIndex {
                          float      salePriceUpSpread,
                          float      salePriceDownSpread,
                          float      purchasePriceUpSpread,
-                         float      purchasePriceDownSpread)
+                         float      purchasePriceDownSpread,
+                         float      priceReference)
     {
         this.merchandise                = merchandise;
         this.salePrice                  = salePrice;
@@ -31,6 +33,7 @@ public class FiatIndexImpl implements FiatIndex {
         this.salePriceDownSpread        = salePriceDownSpread;
         this.purchasePriceUpSpread      = purchasePriceUpSpread;
         this.purchasePriceDownSpread    = purchasePriceDownSpread;
+        this.priceReference             = priceReference;
     }
 
     @Override
@@ -66,5 +69,10 @@ public class FiatIndexImpl implements FiatIndex {
     @Override
     public float getPurchasePurchaseDownSpread() {
         return purchasePriceDownSpread;
+    }
+
+    @Override
+    public float getPriceReference() {
+        return priceReference;
     }
 }

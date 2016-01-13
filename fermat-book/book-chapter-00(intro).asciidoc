@@ -5,12 +5,13 @@ image::https://raw.githubusercontent.com/bitDubai/media-kit/master/Readme%20Imag
 === What is Fermat? 
 Fermat is a *peer-to-peer financial application framework*. + 
 
-It consists of two main parts: +
+It consists of three main parts: +
 
 .  a p2p network for interconnecting devices 
-.  a Plug-in Framework for developing and running distributed financial applications and wallets (view link:https://github.com/bitDubai/fermat/blob/master/fermat-book/book-glossary.asciidoc#wallet[wallet definition]). +
+.  a plug-in framework for developing and running distributed financial applications and link:https://github.com/bitDubai/fermat/blob/master/fermat-book/book-glossary.asciidoc#wallet[wallets]. +
+. a system of integrated apps
 
-The framework itself it is an evolution of standalone wallets and also of centralized wallet services, because it extends the functionality of wallets and financial applications to a trust-less (or trust-free) decentralized environment that handles both _crypto currencies_ and _digital assets_. This independence from third parties makes Fermat censorship resistant the same way it was intended at the creation of Bitcoin protocol and Bitcoin network. +
+The link:https://github.com/bitDubai/fermat/blob/master/fermat-book/book-glossary.asciidoc#framework[framework] itself it is an evolution of standalone wallets and also of centralized wallet services, because it extends the functionality of wallets and financial applications to a trust-less (or trust-free) decentralized environment that handles both _crypto currencies_ and _digital assets_. This independence from third parties makes Fermat censorship resistant the same way it was intended at the creation of Bitcoin protocol and Bitcoin network. +
 
 Fermat allows developers and specially non-developers to create their own distributed (i.e. living on the user's devices) financial applications (wallets are considered a special kind of financial applications) reusing or combining other previous financial applications or some of its components that are built into Fermat as plug-ins. +
 The core concept of Fermat is to divide the *_transport of meta-data_* (carried by the Fermat network) from the *_transport of value_* (carried by proven crypto networks being accesed by the lower layers of the Fermat framework). 
@@ -26,9 +27,9 @@ Fermat's architecture includes the possibility of interconnecting the trust-less
 
 === Fermat Community
 
-Fermat is an Open Source project and there is an active community of developers, designers and academics contributing to it. The project's maintainer community is bitDubai, a joint venture of developers.
+Fermat is an Open Source project and there is an active community of developers, designers and academics contributing to it, beyond bitDubai, the project's main maintainer community.
 
-The project started on August 2014 and its earliest version was written from January to May 2015 by a handful of people, the core developers team. From there, many more developers joined in. It is *code base portable* because most of it is written in *JAVA*.
+The project started on August 2014 and its earliest version was written from January to May 2015 by a handful of people, the core developers team. From there, many more developers, graphic and UX designers, and some industry related people joined in. 
 
 Today Fermat is a vibrant community spanning several countries and disciplines.
 

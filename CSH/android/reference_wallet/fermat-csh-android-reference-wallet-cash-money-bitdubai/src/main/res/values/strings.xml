@@ -2,24 +2,25 @@
     <string name="app_name">Cash Wallet</string>
 
     <!-- Home balances -->
-    <string name="available_balance_text">Available Balance:</string>
-    <string name="book_balance_text">Book Balance:</string>
+    <string name="csh_home_titlebar_title">CASH</string>
+    <string name="csh_home_titlebar_title_2">WALLET</string>
+
 
     <!-- Home transactions -->
-    <string name="no_transactions">There are no transactions</string>
-    <string name="transaction_img" translatable="false">transaction_img</string>
-    <string name="withdrawal_transaction_text_caps" translatable="false">WITHDRAWAL</string>
-    <string name="deposit_transaction_text_caps" translatable="false">DEPOSIT</string>
-    <string name="withdrawal_transaction_text" translatable="false">Withdrawal</string>
-    <string name="deposit_transaction_text" translatable="false">Deposit</string>
+    <string name="csh_no_transactions">No transactions yet!</string>
+    <string name="csh_transaction_img_desc" translatable="false">transaction_img</string>
+    <string name="csh_withdrawal_transaction_text_caps" translatable="false">WITHDRAWAL</string>
+    <string name="csh_deposit_transaction_text_caps" translatable="false">DEPOSIT</string>
+    <string name="csh_withdrawal_transaction_text" translatable="false">Withdrawal</string>
+    <string name="csh_deposit_transaction_text" translatable="false">Deposit</string>
 
 
-
+    <!-- Transaction Dialogs -->
     <string name="csh_ctd_title" translatable="false">transact_title_here</string>
-    <string name="csh_ctd_amount_tag" translatable="false">Enter amount</string>
-    <string name="csh_ctd_amount_hint" translatable="false">Amount</string>
-    <string name="csh_ctd_memo_tag" translatable="false">Enter memo</string>
-    <string name="csh_ctd_memo_hint" translatable="false">Memo</string>
+    <string name="csh_ctd_amount_tag" translatable="false">AMOUNT</string>
+    <string name="csh_ctd_amount_hint" translatable="false">Enter an amount</string>
+    <string name="csh_ctd_memo_tag" translatable="false">MEMO</string>
+    <string name="csh_ctd_memo_hint" translatable="false">Enter a memo</string>
 
 
 </resources>

@@ -33,9 +33,12 @@ import com.bitdubai.fermat_pip_api.layer.module.notification.interfaces.Notifica
 import com.bitdubai.fermat_pip_api.layer.module.notification.interfaces.NotificationManagerMiddleware;
 import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.enums.EventType;
 import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfaces.EventManager;
+import com.bitdubai.fermat_pip_plugin.layer.sub_app_module.notification.developer.bitdubai.version_1.event_handlers.ClientConnectionCloseNotificationHandler;
+import com.bitdubai.fermat_pip_plugin.layer.sub_app_module.notification.developer.bitdubai.version_1.event_handlers.ClientConnectionLooseNotificationHandler;
 import com.bitdubai.fermat_pip_plugin.layer.sub_app_module.notification.developer.bitdubai.version_1.event_handlers.CloudClientNotificationHandler;
 import com.bitdubai.fermat_pip_plugin.layer.sub_app_module.notification.developer.bitdubai.version_1.event_handlers.IncomingMoneyNotificationHandler;
 import com.bitdubai.fermat_pip_plugin.layer.sub_app_module.notification.developer.bitdubai.version_1.exceptions.CantCreateNotification;
+import com.bitdubai.fermat_pip_plugin.layer.sub_app_module.notification.developer.bitdubai.version_1.structure.Notification;
 
 import java.util.ArrayList;
 import java.util.LinkedList;
@@ -156,6 +159,26 @@ public class NotificationSubAppModulePluginRoot extends AbstractPlugin implement
         eventManager.addListener(deniedPaymentRequestNotificationEventListener);
         listenersAdded.add(deniedPaymentRequestNotificationEventListener);
 
+        //close connection server
+        FermatEventListener clientConnectionCloseNotificationEventListener = eventManager.getNewListener(P2pEventType.CLIENT_CONNECTION_CLOSE);
+        FermatEventHandler clientConnectionCloseNotificationHandler = new ClientConnectionCloseNotificationHandler(this);
+        clientConnectionCloseNotificationEventListener.setEventHandler(clientConnectionCloseNotificationHandler);
+        eventManager.addListener(clientConnectionCloseNotificationEventListener);
+        listenersAdded.add(clientConnectionCloseNotificationEventListener);
+
+        //loose connection server
+        FermatEventListener clientConnectionLooseNotificationEventListener = eventManager.getNewListener(P2pEventType.CLIENT_CONNECTION_LOOSE);
+        FermatEventHandler clientConnectionLooseNotificationHandler = new ClientConnectionLooseNotificationHandler(this);
+        clientConnectionLooseNotificationEventListener.setEventHandler(clientConnectionLooseNotificationHandler);
+        eventManager.addListener(clientConnectionLooseNotificationEventListener);
+        listenersAdded.add(clientConnectionLooseNotificationEventListener);
+
+        //connect connection server
+        FermatEventListener fermatEventListener = eventManager.getNewListener(P2pEventType.COMPLETE_COMPONENT_REGISTRATION_NOTIFICATION);
+        fermatEventListener.setEventHandler(new CloudClientNotificationHandler(this));
+        eventManager.addListener(fermatEventListener);
+        listenersAdded.add(fermatEventListener);
+
 
     }
 
@@ -195,20 +218,16 @@ public class NotificationSubAppModulePluginRoot extends AbstractPlugin implement
             com.bitdubai.fermat_pip_plugin.layer.sub_app_module.notification.developer.bitdubai.version_1.structure.Notification notification = createNotification(eventSource, intraUserIdentityPublicKey,walletPublicKey, amount, cryptoCurrency, actorId, actorType);
             notification.setNotificationType(NotificationType.INCOMING_MONEY.getCode());
             poolNotification.add(notification);
+
+            notificationListener.notificate(notification);
         } catch (CantCreateNotification cantCreateNotification) {
             cantCreateNotification.printStackTrace();
         }
-//            Notification notification = new Notification();
-//            notification.setAlertTitle("Sos capo pibe");
-//            notification.setTextTitle("Ganaste un premio");
-//            notification.setTextBody("5000 btc");
-//            poolNotification.add(notification);
+
         // notify observers
         notifyNotificationArrived();
 
-//        } catch (CantCreateNotification cantCreateNotification) {
-//            cantCreateNotification.printStackTrace();
-//        }
+
     }
 
     private com.bitdubai.fermat_pip_plugin.layer.sub_app_module.notification.developer.bitdubai.version_1.structure.Notification createNotification(EventSource eventSource,String intraUserIdentityPublicKey,String walletPublicKey, long amount, CryptoCurrency cryptoCurrency, String actorId, Actors actorType) throws CantCreateNotification {
@@ -384,7 +403,7 @@ public class NotificationSubAppModulePluginRoot extends AbstractPlugin implement
 
     {
         try {
-            com.bitdubai.fermat_pip_plugin.layer.sub_app_module.notification.developer.bitdubai.version_1.structure.Notification notification = new com.bitdubai.fermat_pip_plugin.layer.sub_app_module.notification.developer.bitdubai.version_1.structure.Notification();
+            Notification notification = new com.bitdubai.fermat_pip_plugin.layer.sub_app_module.notification.developer.bitdubai.version_1.structure.Notification();
 
             notification.setAlertTitle(getSourceString(source));
             notification.setTextTitle("");
@@ -400,6 +419,35 @@ public class NotificationSubAppModulePluginRoot extends AbstractPlugin implement
 
         // notify observers
         notifyNotificationArrived();
+    }
+
+    @Override
+    public void addNotificacion(NotificationType notificationType) {
+        Notification notification = new Notification();
+        switch (notificationType){
+            case CLOUD_CLIENT_CONNECTED:
+                notification.setAlertTitle("running");
+                notification.setTextTitle("");
+                notification.setTextBody("running");
+                notification.setNotificationType(NotificationType.CLOUD_CONNECTED_NOTIFICATION.getCode());
+                break;
+            case CLOUD_CLIENT_CLOSED:
+                notification.setAlertTitle("closed");
+                notification.setTextTitle("");
+                notification.setTextBody("closed");
+                notification.setNotificationType(NotificationType.CLOUD_CLIENT_CLOSED.getCode());
+                break;
+            case CLOUD_CLIENT_CONNECTION_LOOSE:
+                notification.setAlertTitle("stopped");
+                notification.setTextTitle("");
+                notification.setTextBody("stopped");
+                notification.setNotificationType(NotificationType.CLOUD_CLIENT_CONNECTION_LOOSE.getCode());
+                break;
+        }
+
+
+        poolNotification.add(notification);
+        notificationListener.notificate(notification);
     }
 
     @Override
@@ -426,6 +474,8 @@ public class NotificationSubAppModulePluginRoot extends AbstractPlugin implement
         switch (eventSource) {
             case INCOMING_EXTRA_USER:
                 return "Received money";
+            case INCOMING_INTRA_USER:
+                return "Received money";
             case OUTGOING_INTRA_USER:
                 return "Transaction canceled";
             default:
@@ -435,7 +485,8 @@ public class NotificationSubAppModulePluginRoot extends AbstractPlugin implement
 
     private String makeString(EventSource eventSource){
         switch (eventSource){
-
+            case INCOMING_INTRA_USER:
+                return " send ";
             case INCOMING_EXTRA_USER:
                 return " send ";
             default:

@@ -60,7 +60,7 @@ public interface IntraUserManager extends FermatManager {
          * @param intraUserToAddPublicKey    The public key of the intra user to send the request to
          * @param myProfileImage             The profile image of the user sending the request
          */
-    void askIntraUserForAcceptance(String intraUserLoggedInPublicKey,String intraUserLoggedName,Actors senderType, String intraUserToAddName, String intraUserToAddPublicKey,Actors destinationType, byte[] myProfileImage) throws CantAskIntraUserForAcceptanceException;
+    void askIntraUserForAcceptance(String intraUserLoggedInPublicKey,String intraUserLoggedName,Actors senderType, String intraUserToAddName, String intraUserToAddPublicKey,String intraUserToAddPhrase,Actors destinationType, byte[] myProfileImage) throws CantAskIntraUserForAcceptanceException;
 
     /**
      * The method <code>acceptIntraUser</code> send an acceptance message of a connection request.
@@ -125,4 +125,6 @@ public interface IntraUserManager extends FermatManager {
     void registrateActor(Actor actor);
 
     Actor contructIdentity(String publicKey, String alias, String phrase, Actors actors ,byte[] profileImage);
+
+    void updateActor(Actor actor);
 }

@@ -1,4 +1,4 @@
-![alt text](https://github.com/bitDubai/media-kit/blob/master/Readme%20Image/Fermat%20Logotype/Fermat_Logo_3D.png "Fermat Logo")
+![alt text](https://github.com/bitDubai/media-kit/blob/master/MediaKit/Fermat%20Branding/Fermat%20Logotype/Fermat_Logo_3D.png "Fermat Logo")
 
 #Contributing Guide
 
@@ -6,13 +6,13 @@
 ## Introduction
 =======
 
-Anybody can contribute to Fermat and you are welcome to do so. There is a stable community of mantainers called bitDubai. You might want to join this community and specifically one of their teams which are working on different areas of the system. Visit their [site](https://bitDubai.com) to learn how to join in.
+Anybody can contribute to Fermat and you are welcome to do so. There is a stable community of maintainers called bitDubai. You might want to join this community and specifically one of their teams which are working on different areas of the system. Visit their [site](https://bitDubai.com) to learn how to join in.
 
-Also, you might want to add your own functionality to Fermat, perhaps your own platform, plugins, reference wallet or build your own niche wallet. To help you get all the necessary tools to set up the development enviroment, please refer to [Installation Guide](https://github.com/bitDubai/fermat/blob/master/README-INSTALLATION.md)
+Also, you might want to add your own functionality to Fermat, perhaps your own platform, plug-ins, reference wallet or build your own niche wallet. To help you get all the necessary tools to set up the development environment, please refer to [Installation Guide](https://github.com/bitDubai/fermat/blob/master/README-INSTALLATION.md)
 <br>
 ## Part I: Casual Contribution
 
-We consider a _casual contribution_ a bug fix or any other change big or small done in casual way, without assuming any responsability for the maintenance of the code submited.  _Casual contributions_ don't get to the size of adding new components to the system.
+We consider a _casual contribution_ a bug fix or any other change big or small done in a casual way, without assuming any responsibility for the maintenance of the code submitted.  _Casual contributions_ are not enough as adding new components to the system.
 
 
 <br>
@@ -22,13 +22,13 @@ Whatever you may find that could make Fermat better is welcome and it will be co
 
 In fermat, every component (plug-in, add-on, library, etc) has an author and a maintainer.
 
-1. Open http://dev.fermat.org , go to the Architecture view and zoom in until you find the component you will suggest to change.
+1. Open http://dev.fermat.org, go to the Architecture view and zoom in until you find the component you will suggest to change.
 2. Click on that component to select it.
-3. You will find there a picture of the author. If he/she is not the current maintainer, you will also find the maintainers picture. 
-4. Click again their the picture to get more detailed info including their github username.
+3. You will find there a picture of the author. If he/she is not the current maintainer, you will also find the maintainer's picture. 
+4. Click again on their picture to get more detailed info including their github username.
 5. Go to https://github.com/*username*/fermat.
 
-If your change doesn't need to be compiled and tested or you prefer not to do that yourself, then you can go through the _Casual or Minor Change_ section. Otherwise, if you prefer to get deeper and finish the job yourself, then go throught the _Major Change_ section.
+If your proposed change doesn't need to be compiled and tested or you prefer not to do that yourself, then you can go through the _Casual or Minor Change_ section. Otherwise, if you prefer to get deeper and finish the job yourself, then go through the _Major Change_ section.
 
 #### Casual or Minor Change
 
@@ -36,7 +36,7 @@ Find the file in *username*/fermat repo, open it on edit mode and hit the "Propo
 
 #### Major Change
 
-Fork the *username*/fermat repo, and submit a pull request there when done.
+Fork the *username*/fermat repo, and there submit a pull request when done.
 
 
 <br>
@@ -46,7 +46,7 @@ It is very easy to contribute to the book, just edit the desired file and at the
 
 
 <br>
-## Part II: Expanding Fermat Functionality ( currently in redaction process..)
+## Part II: Expanding Fermat Functionality (currently in writing process..)
 
 <br>
 ### Expanding the Master Plan
@@ -63,7 +63,7 @@ It is very easy to contribute to the book, just edit the desired file and at the
 <br>
 ### Adding a New Plug-in
 
-For the details on this process, you can check the [Adding a New Plug-in to Fermat](https://github.com/bitDubai/fermat/blob/master/README-PLUG-INS.md) document.
+For details on this process, you can check the [Adding a New Plug-in to Fermat](https://github.com/bitDubai/fermat/blob/master/README-PLUG-INS.md) document.
 
 <br>
 ### Adding a New Reference Wallet

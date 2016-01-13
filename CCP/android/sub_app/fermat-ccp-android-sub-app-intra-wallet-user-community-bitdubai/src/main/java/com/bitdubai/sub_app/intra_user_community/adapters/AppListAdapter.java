@@ -10,7 +10,6 @@ import com.bitdubai.fermat_api.layer.actor_connection.common.enums.ConnectionSta
 import com.bitdubai.fermat_ccp_api.layer.module.intra_user.interfaces.IntraUserInformation;
 import com.bitdubai.sub_app.intra_user_community.R;
 import com.bitdubai.sub_app.intra_user_community.holders.AppWorldHolder;
-import com.squareup.picasso.Picasso;
 
 import java.util.List;
 
@@ -64,12 +63,11 @@ public class AppListAdapter extends FermatAdapter<IntraUserInformation, AppWorld
         }
         holder.name.setText(data.getName());
         byte[] profileImage = data.getProfileImage();
-        if (profileImage != null) {
-            if (profileImage.length > 0) {
-                Bitmap bitmap = BitmapFactory.decodeByteArray(profileImage, 0, profileImage.length);
-                holder.thumbnail.setImageBitmap(bitmap);
-            } else Picasso.with(context).load(R.drawable.profile_image).into(holder.thumbnail);
-        } else Picasso.with(context).load(R.drawable.profile_image).into(holder.thumbnail);
+        if (profileImage != null && profileImage.length > 0) {
+            Bitmap bitmap = BitmapFactory.decodeByteArray(profileImage, 0, profileImage.length);
+            bitmap = Bitmap.createScaledBitmap(bitmap, 480, 480, true);
+            holder.thumbnail.setImageBitmap(bitmap);
+        }
 
     }
 

@@ -1,4 +1,4 @@
-![alt text](https://github.com/bitDubai/media-kit/blob/master/Readme%20Image/Fermat%20Logotype/Fermat_Logo_3D.png "Fermat Logo")
+![alt text](https://github.com/bitDubai/media-kit/blob/master/MediaKit/Fermat%20Branding/Fermat%20Logotype/Fermat_Logo_3D.png "Fermat Logo")
 # Installation and Configuration Guide for Fermat Development Environment 
 
 <br>
@@ -337,79 +337,88 @@ You have to go to your fork and then with the commits do the pull request.
 
 <br>
 ### Compiling
-Para abrir el proyecto debemos iniciar el IDE que en este caso puede ser Android Studio o IntelliJ IDEA (cualquiera que se haya elegido para trabajar).
+To open the project we must start the IDE in this case it can be android studio or IntelliJ IDEA (whichever you have chosen to work with).
 <br>
-Al iniciar el IDE se mostrará el formulario de bienvenida y se listarán diferentes opciones entre ellas la  de “Open an existing Android Studio Project” o simplemente “Open” depende del IDE que hayan seleccionado para trabajar.
+When you start the IDE a welcome form will show up and different options willl be listed including "Open an existing Android Studio Project" or simply "Open" depending on the IDE you have selected to work with.
 <br>
-Seleccionamos esta última opción nombrada para abrir el proyecto y nos dirigimos al directorio donde fue clonado el mismo.
+We chose the latter named option to open the project and head to the directory where it was cloned.
 <br>
-#### Nota.
-_Al clonar el proyecto se creará un directorio llamado “fermat” y es este el que debe ser seleccionado para abrir el proyecto. 
-Se recomienda utilizar el IDE Android Studio debido a que presenta mayor estabilidad y cuenta con más documentación de ayuda._
+#### Note.
+_When cloning the project a directory called "Fermat" will be created and its this one that must be selected to open the project. We recommend using IDE Android Studio because it has greater stability and has more helping guide._
 <br>
 <br>
-Al Abrir el proyecto comienza un proceso de carga normal del IDE que puede demorar unos cuantos minutos al principio y más si es abierto por primera vez. Esto es normal y solo hay que dejar que este proceso continue hasta que final.
-Una vez abierto el proyecto procedemos a compilarlo. 
+When opening the project a normal IDE charging process starts, which can take a few minutes at the beginning and more so if its opened for the first time. This is normal and you just have to let this process continue until the end. Once the project is opened we proceed to compile it. 
 <br>
-Para compilar nos dirigimos a “build” en la barra de herramientas y hacemos click en “Make Project” o simplemente recurrimos a la combinación de teclas Ctrl + F9 para Compilar el proyecto. Este proceso durará varios minutos probablemente. 
+In order to compile we go to "build" in the toolbar and click on "Make Project" or we could simply use the key combination Ctrl + F9 to compile the project. This process will probably take several minutes. 
 <br>
-Para verificar el avance de la compilación y las tareas que se están ejecutando podemos abrir el Gradle Console que nos mostrará el avance, y una vez que finalice la compilación mostrará si fue exitosa o no con la siguiente leyenda:
+To check the progress of the compilation and the tasks that are running we can open the Gradle Console that will show us the progress, and once completed it will show if the compilation was successful or not with the following inscription:
 <br>
-* “BUILD SUCCESSFUL” en caso de ser exitosa. 
-* “BUILD FAILED” en caso de que haya fallado. 
+* “BUILD SUCCESSFUL” in case it was successful. 
+* “BUILD FAILED” in case it failed. 
 <br>
 
 ### Running
-Antes de correr la aplicación se requiere, ya sea de un dispositivo físico (que soporte la aplicación), o un dispositivo creado a través de la máquina virtual.
+Before running the application we require either a physical device (supported by the application), or a device created by the virtual machine.
 <br>
-Dentro del IDE  viene por defecto una aplicación conocida como “Android Virtual Device Manager” o “AVD Manager” que permite crear máquinas virtuales para ejecutar la aplicación en caso de no contar con un dispositivo  físico.
+A default application known as "Android Virtual Device Manager" or "AVD Manager" comes inside the IDE, which allows you to create virtual machines to run the application in case you don’t have a physical device.
 <br>
-#### Nota:
-_Al ejecutar el proyecto a través de un dispositivo móvil físico el rendimiento de procesamiento será mayor que al usar “AVD Manager” el cual demandará mayor consumo de recursos. 
-También se permite utilizar otras aplicaciones equivalentes al “AVD Manager” como “Genymotion” o similares, para crear máquinas virtuales._ 
-<br>
-<br>
-Para correr la aplicación simplemente debemos dirigimos al item “Run” del menú y luego hacer click en el “Run” o presionando Mayus + F10.
-<br>
-Es probable que al correr el proyecto comience a compilar. Esto es por defecto así, pero si queremos evitar que compile al correr debemos dirigirnos  al item “Run” del menú y luego al item “Edit Configurations” y se abrirá una ventana que nos permitirá configurar las diferentes maneras de ejecutar el proyecto.
-<br>
-En el item “Android Aplication” encontraremos la aplicación con el nombre “fermat-android-core”. Al hacer click sobre ella se mostrarán las diferentes opciones para configurar y correr la aplicación. 
-<br>
-En el item “Before Launch” debemos eliminar de la lista el item “Make”. De esta forma el proyecto se podrá ejecutar sin necesidad de compilar antes.
+#### Note:
+_When you run the project through a physical mobile device, the processing performance will be higher than when using "AVD Manager" which will require greater resource consumption. 
+Its also allowed to use applications equivalent to "AVD Manager" like "Genymotion" or similar in order to create virtual machines._ 
 <br>
 <br>
-#### Nota
-_Es necesario  compilar siempre la aplicación antes de correr. Muchas veces la tarea de compilar y correr la aplicación se hace por separado. Por eso mismo se ha explicado la manera de hacer las dos tareas de forma separada._
+To run the application we should just go to the "Run" item of the menu and then click on "Run" or press Shift + F10.
+<br>
+It is likely for it to begin compiling when we run the project. It is so by default, but if we want to avoid compiling when it begins running, we must go to the "Run" item of the menu and then to the "Edit Configurations" item where a window will pop allowing us to configure different ways of running a project.
+<br>
+In the "Android Aplication" item we will find the application named "Fermat-android-core". After clicking on it different options to configure and run the application will be displayed. 
+<br>
+In the "Before Launch" item we must remove from the list the item named "Make". In this way the project will be able to run without recompiling previously.
 <br>
 <br>
-Al correr la aplicación se mostrará una ventana llamada “Choose Device” que dentro de la misma se listarán, principalmente, dos opciones: 
+#### Note
+_It is necessary to always compile the application before running it. Often the task of compiling and running the application is made separately. That its why we have explained how to do both tasks separately._
 <br>
-* “Choose a running device”: Dentro de esta opción se podrá seleccionar los dispositivo físicos conectados al equipo para correr la aplicación.
-* “Launch emulator”:  Dentro de esta opción se listan las máquinas virtuales para correr la aplicación.
+<br>
+When running the application a window called "Choose Device" will be displayed, inside the window two options will be listed mainly: 
+<br>
+* “Choose a running device”: In this option you will be able to select the physical devices connected to the equipment in order to run the application.
+* “Launch emulator”: Within this option, the virtual machines to run the application are listed.
 <br>
 
-Cualquiera sean las opciones elegidas probablemente la ejecución demore varios minutos y más si es la primera vez que se ejecuta, ya que requiere de la instalación de la misma. 
+Despite the option chosen the execution will probably take several minutes, and more so if it is the first time it runs, since its installation is required. 
 <br>
 <br>
 
 ### Debbuging
 
-Para iniciar la aplicación en modo Debugging, en el item “Run” del menú hacemos click en “Debug” o presionamos Alt+Ctrl+F9. De esta manera la aplicación se coloca en modo debug.                                                                  Al igual que cuando se corre la aplicación nos mostrará la ventana “Choose Device”, seleccionamos la opción conveniente y la aplicación se ejecutara en modo  Debugging.
+To start the application in Debugging mode, in the "Run" item on the menu we click on " Debug" or we press Alt + Ctrl + F9. This way the application is put in debug mode.                                                                  Just as when you run the application, it will show the "Choose Device" window. Select the appropriate option and the application will run in Debugging mode. 
 <br>
 <br>
-De esta manera podremos acceder a varios recursos que el IDE proporciona para realizar esta tarea:
-* Ver el system log.
-* Set breakpoints en el código.
-* Examinar variables y Evaluar expresiones en el run time.
-* Ejecute las herramientas de depuración desde el SDK de Android.
+This way we can access various resources that the IDE provides for this task:
+* See the system log.
+* Set breakpoints in the code.
+* Examine variables and evaluate expressions in the run time.
+* Run debugging tools from the Android SDK. 
 
-Y otras funcionalidades.
+And other features.
 
 
 <br>
 ### Developer Sub App
+<br>
+Este componente esta dedicado a los desarrolladores y básicamente posee dos funcionalidades principales:
 
-**Explain what it is**
+* **Data Base Tools:** Permite ver las bases de datos que todos los plugins y sus respectivas tablas.
+A través de esta herramienta se puede verificar el comportamiento de los datos a la hora de desarrollar.
+
+* **Log Tools:** Cambia el nivel de ejecución de la aplicación a un nivel de Log de los Plugins. De esta manera el desarrollador podrá colocar la aplicación en modo depuración o cualquier otro tipo de Log que requiera para verificar el comportamiento de las clases, métodos, variable que este utilizando la aplicación.  
+<br>
+El objetivo de esta Sub App es facilitar el trabajo a los desarrolladores permitiendo acceder a las bases de datos, tablas de los plugins que se estén desarrollando como también verificar en el Log Tools el comportamiento del mismo desde el dispositivo movil.
+<br>
+La ventaja que principal de la Developer Sub App es permitir depurar sin necesidad de que el dispositivo este conectado a Android Studio u otro IDE y capturar posibles errores. 
+<br>
+También permite acceder a las base de datos de manera practica evitando utilizar Browser externos.
 
 #### How to enable your Plug-in on the Developer Sub App
 

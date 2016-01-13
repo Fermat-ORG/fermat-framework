@@ -94,7 +94,7 @@ class VaultKeyHierarchyMaintainer implements Agent {
     @Override
     public void stop() {
         isSupposedToRun = false;
-        vaultKeyHierarchyMaintainerAgent.interrupProcess();
+        vaultKeyHierarchyMaintainerAgent.interruptProcess();
         vaultKeyHierarchyMaintainerAgent = null;
     }
 
@@ -112,7 +112,7 @@ class VaultKeyHierarchyMaintainer implements Agent {
         /**
          * Sleep time of the agent between iterations
          */
-        final long AGENT_SLEEP_TIME = 600000; //default time is 10 minutes
+        final long AGENT_SLEEP_TIME = 60000; //default time is 1 minutes
 
 
         @Override
@@ -134,7 +134,7 @@ class VaultKeyHierarchyMaintainer implements Agent {
         /**
          * stop the current thread.
          */
-        public void interrupProcess(){
+        public void interruptProcess(){
             Thread.currentThread().interrupt();
         }
 

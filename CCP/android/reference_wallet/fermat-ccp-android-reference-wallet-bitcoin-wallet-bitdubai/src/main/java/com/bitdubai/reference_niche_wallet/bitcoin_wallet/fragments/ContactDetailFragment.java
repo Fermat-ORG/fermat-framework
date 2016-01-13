@@ -104,6 +104,9 @@ public class ContactDetailFragment extends AbstractFermatFragment implements Vie
             referenceWalletSession = (ReferenceWalletSession) appSession;
             setHasOptionsMenu(true);
             cryptoWalletWalletContact = referenceWalletSession.getLastContactSelected();
+            if(cryptoWalletWalletContact==null){
+                onBack(null);
+            }
             //typeface = Typeface.createFromAsset(getActivity().getAssets(), "fonts/CaviarDreams.ttf");
             cryptoWalletManager = referenceWalletSession.getModuleManager();
             errorManager = appSession.getErrorManager();
@@ -197,6 +200,7 @@ public class ContactDetailFragment extends AbstractFermatFragment implements Vie
                 receive_button.setTypeface(typeface);
                 send_button.setTypeface(typeface);
             }
+            if(cryptoWalletWalletContact!=null)
             if(cryptoWalletWalletContact.getActorType().equals(Actors.INTRA_USER)){
                 linear_layout_extra_user_receive.setVisibility(View.GONE);
             }
@@ -224,9 +228,12 @@ public class ContactDetailFragment extends AbstractFermatFragment implements Vie
             }
             if (edit_text_name != null)
                 edit_text_name.setText(cryptoWalletWalletContact.getActorName());
-            if (text_view_address != null)
-                if(cryptoWalletWalletContact.getReceivedCryptoAddress().size() > 0)
-                text_view_address.setText(cryptoWalletWalletContact.getReceivedCryptoAddress().get(0).getAddress());
+            if (text_view_address != null) {
+                if (cryptoWalletWalletContact.getReceivedCryptoAddress().size() > 0)
+                    text_view_address.setText(cryptoWalletWalletContact.getReceivedCryptoAddress().get(0).getAddress());
+            }else{
+                text_view_address.setText("Waiting...");
+            }
         }
     }
 

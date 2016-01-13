@@ -70,7 +70,10 @@ public class PurchaseNegotiationManagerMock implements CustomerBrokerPurchaseNeg
 
     @Override
     public CustomerBrokerPurchaseNegotiation getNegotiationsByNegotiationId(UUID negotiationId) throws CantGetListPurchaseNegotiationsException {
-        return new PurchaseNegotiationMock();
+        //For testing offline business transactions
+        //return new PurchaseNegotiationOfflineMock();
+        //For testing online business transactions
+        return new PurchaseNegotiationOnlineMock();
     }
 
     @Override
@@ -125,6 +128,11 @@ public class PurchaseNegotiationManagerMock implements CustomerBrokerPurchaseNeg
 
     @Override
     public Collection<NegotiationBankAccount> getBankAccountByCurrencyType(FiatCurrency currency) throws CantGetListBankAccountsPurchaseException {
+        return null;
+    }
+
+    @Override
+    public Collection<FiatCurrency> getCurrencyTypeAvailableBankAccount() throws CantGetListBankAccountsPurchaseException{
         return null;
     }
 }

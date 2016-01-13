@@ -6,7 +6,6 @@ import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.abstract_classes.AbstractPlugin;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.annotations.NeededAddonReference;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.annotations.NeededPluginReference;
-import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.FermatManager;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.PluginVersionReference;
 import com.bitdubai.fermat_api.layer.all_definition.developer.DatabaseManagerForDevelopers;
 import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperDatabase;
@@ -14,7 +13,6 @@ import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperDatabaseT
 import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperDatabaseTableRecord;
 import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperObjectFactory;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Addons;
-import com.bitdubai.fermat_api.layer.all_definition.enums.FiatCurrency;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Layers;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
@@ -22,30 +20,27 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
 import com.bitdubai.fermat_api.layer.all_definition.util.Version;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
-import com.bitdubai.fermat_api.layer.world.exceptions.CantGetIndexException;
 import com.bitdubai.fermat_cer_api.all_definition.interfaces.CurrencyPair;
-import com.bitdubai.fermat_cer_api.all_definition.interfaces.ExchangeRate;
-import com.bitdubai.fermat_cer_api.layer.provider.exceptions.UnsupportedCurrencyPairException;
+import com.bitdubai.fermat_cer_api.layer.provider.exceptions.CantGetProviderInfoException;
 import com.bitdubai.fermat_cer_api.layer.provider.interfaces.CurrencyExchangeRateProviderManager;
 import com.bitdubai.fermat_cer_api.layer.search.exceptions.CantGetProviderException;
-import com.bitdubai.fermat_cer_api.layer.search.interfaces.ProviderFilterManager;
-import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedPluginExceptionSeverity;
+import com.bitdubai.fermat_cer_api.layer.search.interfaces.CurrencyExchangeProviderFilterManager;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfaces.EventManager;
 
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 
 /**
  * Created by Alejandro Bicelis on 12/26/2015.
  */
 
 
-public class SearchProviderFilterPluginRoot extends AbstractPlugin implements DatabaseManagerForDevelopers, ProviderFilterManager {
+public class SearchProviderFilterPluginRoot extends AbstractPlugin implements DatabaseManagerForDevelopers, CurrencyExchangeProviderFilterManager {
 
 
     @NeededAddonReference(platform = Platforms.OPERATIVE_SYSTEM_API, layer = Layers.SYSTEM, addon = Addons.PLUGIN_DATABASE_SYSTEM)
@@ -60,11 +55,25 @@ public class SearchProviderFilterPluginRoot extends AbstractPlugin implements Da
     @NeededAddonReference(platform = Platforms.PLUG_INS_PLATFORM, layer = Layers.PLATFORM_SERVICE, addon = Addons.EVENT_MANAGER)
     private EventManager eventManager;
 
+    @NeededPluginReference(platform = Platforms.CURRENCY_EXCHANGE_RATE_PLATFORM, layer = Layers.PROVIDER, plugin = Plugins.BITDUBAI_CER_PROVIDER_BITCOINVENEZUELA)
+    private CurrencyExchangeRateProviderManager bitcoinVenezuelaProvider;
+
     @NeededPluginReference(platform = Platforms.CURRENCY_EXCHANGE_RATE_PLATFORM, layer = Layers.PROVIDER, plugin = Plugins.BITDUBAI_CER_PROVIDER_DOLARTODAY)
     private CurrencyExchangeRateProviderManager dolarTodayProvider;
 
+    @NeededPluginReference(platform = Platforms.CURRENCY_EXCHANGE_RATE_PLATFORM, layer = Layers.PROVIDER, plugin = Plugins.BITDUBAI_CER_PROVIDER_ELCRONISTA)
+    private CurrencyExchangeRateProviderManager elCronistaProvider;
 
-    Map<String, CurrencyExchangeRateProviderManager> providerMap;
+    @NeededPluginReference(platform = Platforms.CURRENCY_EXCHANGE_RATE_PLATFORM, layer = Layers.PROVIDER, plugin = Plugins.BITDUBAI_CER_PROVIDER_EUROPEAN_CENTRAL_BANK)
+    private CurrencyExchangeRateProviderManager europeanCentralBankProvider;
+
+    @NeededPluginReference(platform = Platforms.CURRENCY_EXCHANGE_RATE_PLATFORM, layer = Layers.PROVIDER, plugin = Plugins.BITDUBAI_CER_PROVIDER_LANACION)
+    private CurrencyExchangeRateProviderManager laNacionProvider;
+
+    @NeededPluginReference(platform = Platforms.CURRENCY_EXCHANGE_RATE_PLATFORM, layer = Layers.PROVIDER, plugin = Plugins.BITDUBAI_CER_PROVIDER_YAHOO)
+    private CurrencyExchangeRateProviderManager yahooProvider;
+
+    Map<UUID, CurrencyExchangeRateProviderManager> providerMap;
 
     /*
      * PluginRoot Constructor
@@ -73,29 +82,6 @@ public class SearchProviderFilterPluginRoot extends AbstractPlugin implements Da
         super(new PluginVersionReference(new Version()));
     }
 
-
-    /*
-     *  TESTING STUFFS
-     */
-    /*public void testGetCurrentIndex(){
-        System.out.println("PROVIDERDOLARTODAY - testGetCurrentIndex CALLED");
-
-        FiatIndex index = null;
-        try{
-            index = getCurrentIndex(FiatCurrency.CANADIAN_DOLLAR);
-        } catch (CantGetIndexException e){
-            System.out.println("PROVIDERDOLARTODAY - testGetCurrentIndex DAO EXCEPTION");
-        }
-        System.out.println("");
-        System.out.println("");
-        System.out.println("PROVIDERDOLARTODAY - PROVIDER DESC: " + index.getProviderDescription());
-        System.out.println("PROVIDERDOLARTODAY - CURRENCY: " + index.getCurrency().getCode());
-        System.out.println("PROVIDERDOLARTODAY - REFERENCE CURRENCY: " + index.getReferenceCurrency().getCode());
-        System.out.println("PROVIDERDOLARTODAY - TIMESTAMP: " + index.getTimestamp());
-        System.out.println("PROVIDERDOLARTODAY - PURCHASE: " + index.getPurchasePrice());
-        System.out.println("PROVIDERDOLARTODAY - SALE: " + index.getSalePrice());
-
-    }*/
 
 
     /*
@@ -108,15 +94,21 @@ public class SearchProviderFilterPluginRoot extends AbstractPlugin implements Da
         //Build Provider map
         providerMap = new HashMap<>();
         try {
-            providerMap.put(dolarTodayProvider.getProviderName(), dolarTodayProvider);
+            providerMap.put(bitcoinVenezuelaProvider.getProviderId(), bitcoinVenezuelaProvider);
+            providerMap.put(dolarTodayProvider.getProviderId(), dolarTodayProvider);
+            providerMap.put(elCronistaProvider.getProviderId(), elCronistaProvider);
+            providerMap.put(europeanCentralBankProvider.getProviderId(), europeanCentralBankProvider);
+            providerMap.put(laNacionProvider.getProviderId(), laNacionProvider);
+            providerMap.put(yahooProvider.getProviderId(), yahooProvider);
             // ... add the rest
         } catch (Exception e) {
             //TODO: complete this
+            System.out.println("PROVIDERFILTER - PluginRoot Exception");
+
             //errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_CSH_MONEY_TRANSACTION_HOLD, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
             throw new CantStartPluginException(CantStartPluginException.DEFAULT_MESSAGE, FermatException.wrapException(e), null, null);
         }
         serviceStatus = ServiceStatus.STARTED;
-
         //testGetCurrentIndex();
     }
 
@@ -124,40 +116,41 @@ public class SearchProviderFilterPluginRoot extends AbstractPlugin implements Da
 
 
   /*
-   * ProviderFilterManager interface implementation
+   * CurrencyExchangeProviderFilterManager interface implementation
    */
     @Override
-    public Collection<String> getProviderNames() throws CantGetProviderException {
-        Iterator iterator = providerMap.keySet().iterator();
-        List<String> providerNames = new ArrayList<>();
-        while(iterator.hasNext()){
-            providerNames.add(iterator.next().toString());
+    public Map<UUID, String> getProviderNames() throws CantGetProviderInfoException {
+
+        Map<UUID, String> providers = new HashMap<>();
+        for (Map.Entry<UUID, CurrencyExchangeRateProviderManager> provider : providerMap.entrySet())
+        {
+            CurrencyExchangeRateProviderManager manager = provider.getValue();
+            providers.put(provider.getKey(), manager.getProviderName());
         }
 
-        return providerNames;
+        return providers;
     }
 
     @Override
-    public Collection<String> getProviderNamesListFromCurrencyPair(CurrencyPair currencyPair) throws CantGetProviderException {
-        Iterator iterator = providerMap.keySet().iterator();
-        List<String> providerNames = new ArrayList<>();
-        CurrencyExchangeRateProviderManager manager;
+    public Map<UUID, String> getProviderNamesListFromCurrencyPair(CurrencyPair currencyPair) throws CantGetProviderInfoException {
 
-        while(iterator.hasNext()){
-            String key = iterator.next().toString();
-            manager = providerMap.get(key);
+        Map<UUID, String> providers = new HashMap<>();
+        for (Map.Entry<UUID, CurrencyExchangeRateProviderManager> provider : providerMap.entrySet())
+        {
+            CurrencyExchangeRateProviderManager manager = provider.getValue();
 
             if(manager.isCurrencyPairSupported(currencyPair))
-                providerNames.add(key.toString());
+                providers.put(provider.getKey(), manager.getProviderName());
         }
 
-        return providerNames;
+        return providers;
     }
 
-    @Override
-    public CurrencyExchangeRateProviderManager getProviderReference(String providerName) throws CantGetProviderException {
 
-        CurrencyExchangeRateProviderManager manager = providerMap.get(providerName);
+    @Override
+    public CurrencyExchangeRateProviderManager getProviderReference(UUID providerId) throws CantGetProviderException {
+
+        CurrencyExchangeRateProviderManager manager = providerMap.get(providerId);
 
         if(manager == null)
             throw new CantGetProviderException();
@@ -166,19 +159,16 @@ public class SearchProviderFilterPluginRoot extends AbstractPlugin implements Da
     }
 
     @Override
-    public Map<String, CurrencyExchangeRateProviderManager> getProviderReferencesFromCurrencyPair(CurrencyPair currencyPair) throws CantGetProviderException {
-        Iterator iterator = providerMap.keySet().iterator();
-        Map<String, CurrencyExchangeRateProviderManager> providerReferences = new HashMap<>();
-        CurrencyExchangeRateProviderManager manager;
+    public Collection<CurrencyExchangeRateProviderManager> getProviderReferencesFromCurrencyPair(CurrencyPair currencyPair) throws CantGetProviderException {
 
-        while(iterator.hasNext()){
-            String key = iterator.next().toString();
-            manager = providerMap.get(key);
+        List<CurrencyExchangeRateProviderManager> providerReferences = new ArrayList<>();
+        for (Map.Entry<UUID, CurrencyExchangeRateProviderManager> provider : providerMap.entrySet())
+        {
+            CurrencyExchangeRateProviderManager manager = provider.getValue();
 
             if(manager.isCurrencyPairSupported(currencyPair))
-                providerReferences.put(key, manager);
+                providerReferences.add(manager);
         }
-
         return providerReferences;
     }
 

@@ -68,4 +68,22 @@ class BitcoinCryptoNetworkDatabaseConstants {
 
     static final String EVENTAGENT_STATS_FIRST_KEY_COLUMN = "execution_number";
 
+    /**
+     * Broadcast database table definition.
+     */
+    static final String BROADCAST_TABLE_NAME = "broadcast";
+
+    static final String BROADCAST_EXECUTION_NUMBER_COLUMN_NAME = "execution_number";
+    static final String BROADCAST_NETWORK = "network";
+    static final String BROADCAST_TRANSACTION_ID = "tx_id";
+    static final String BROADCAST_TX_HASH = "hash";
+    static final String BROADCAST_PEER_COUNT = "peer_count";
+    static final String BROADCAST_PEER_BROADCAST_IP = "peer_ip";
+    static final String BROADCAST_RETRIES_COUNT = "retries";
+    static final String BROADCAST_STATUS = "status";
+    static final String BROADCAST_EXCEPTION = "exception";
+    static final String BROADCAST_LAST_EXECUTION_DATE_COLUMN_NAME = "last_execution_date";
+
+    static final String BRTOADCAST_FIRST_KEY_COLUMN = "hash";
+
 }

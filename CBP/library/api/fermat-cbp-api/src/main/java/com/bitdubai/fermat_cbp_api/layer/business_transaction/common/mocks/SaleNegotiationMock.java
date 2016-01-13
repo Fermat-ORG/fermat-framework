@@ -1,5 +1,6 @@
 package com.bitdubai.fermat_cbp_api.layer.business_transaction.common.mocks;
 
+import com.bitdubai.fermat_api.layer.all_definition.enums.FiatCurrency;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.ClauseType;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.ContractClauseType;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.CurrencyType;
@@ -66,23 +67,17 @@ public class SaleNegotiationMock implements CustomerBrokerSaleNegotiation {
     public Collection<Clause> getClauses() throws CantGetListClauseException {
         Collection<Clause> clauses = new ArrayList<>();
         clauses.add(new ClauseMock(UUID.randomUUID(),
-                ClauseType.BROKER_CURRENCY,
-                CurrencyType.BANK_MONEY.getCode()));
-        clauses.add(new ClauseMock(UUID.randomUUID(),
                 ClauseType.BROKER_CURRENCY_QUANTITY,
                 "1961"));
         clauses.add(new ClauseMock(UUID.randomUUID(),
                 ClauseType.BROKER_CURRENCY,
-                CurrencyType.BANK_MONEY.getCode()));
+                FiatCurrency.US_DOLLAR.getCode()));
         clauses.add(new ClauseMock(UUID.randomUUID(),
                 ClauseType.BROKER_DATE_TIME_TO_DELIVER,
                 "1000"));
         clauses.add(new ClauseMock(UUID.randomUUID(),
                 ClauseType.CUSTOMER_CURRENCY_QUANTITY,
                 "2000"));
-        clauses.add(new ClauseMock(UUID.randomUUID(),
-                ClauseType.CUSTOMER_CURRENCY,
-                "200"));
         clauses.add(new ClauseMock(UUID.randomUUID(),
                 ClauseType.CUSTOMER_CURRENCY,
                 CurrencyType.CASH_ON_HAND_MONEY.getCode()));

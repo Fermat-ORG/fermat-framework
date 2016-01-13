@@ -24,6 +24,7 @@
     <color name="ccw_third_line_item">#7b7b7b</color>
     <color name="ccw_waiting_for_broker_grouper_background">#0191ba</color>
     <color name="ccw_waiting_for_broker_grouper_text">#ffffff</color>
+    <color name="ccw_wizard_color">#492781</color>
     <color name="contract_cancelled_list_item_background">#ff8b8b</color>
     <color name="contract_completed_list_item_background">#f3f3f3</color>
     <color name="dark_grey">#7b7b7b</color>
@@ -34,8 +35,28 @@
     <color name="waiting_for_text">#6b7378</color>
     <color name="waiting_for_broker_list_item_background">#f3f3f3</color>
     <color name="waiting_for_customer_list_item_background">#ffffff</color>
+    <color name="light_grey">#EEE</color>
     <color name="withe">#FFFFFF</color>
     <color name="black">#000000</color>
     <color name="white">#FFF</color>
+
+    <color name="option_button_background">#75222222</color>
+    <color name="card_title_color_status_confirm">#222</color>
+    <color name="card_title_color_status_accepted">#fff</color>
+    <color name="card_title_color_status_changed">#fff</color>
+    <color name="ccw_card_background_status_confirm">#f1f1f1</color>
+    <color name="card_background_status_accepted">#2e679c</color>
+    <color name="card_background_status_changed">#39ab89</color>
+    <color name="note_card_background">#363636</color>
+    <color name="ccw_negotiation_details_background">#222</color>
+
+    <color name="note_card_separator_background">#b5009dff</color>
+    <color name="description_text_status_changed">#ffffff</color>
+    <color name="description_text_status_confirm">#232323</color>
+    <color name="description_text_status_accepted">#ffffff</color>
+    <color name="text_value_status_changed">#27507b</color>
+    <color name="text_value_status_confirm">#27507b</color>
+    <color name="text_value_status_accepted">#0e0e0e</color>
+    <color name="activity_background">#222</color>
 
 </resources>

@@ -41,7 +41,6 @@ import com.bitdubai.fermat_dap_api.layer.all_definition.network_service_message.
 import com.bitdubai.fermat_dap_api.layer.dap_actor.DAPActor;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_issuer.interfaces.ActorAssetIssuer;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.exceptions.CantConnectToActorAssetUserException;
-import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.interfaces.ActorAssetUser;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.redeem_point.RedeemPointActorRecord;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.redeem_point.exceptions.CantAssetRedeemPointActorNotFoundException;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.redeem_point.exceptions.CantCreateActorRedeemPointException;
@@ -317,7 +316,7 @@ public class RedeemPointActorPluginRoot extends AbstractPlugin implements
                     + "\n-------------------------------------------------");
             for (final CryptoAddressRequest request : list) {
 
-                if (request.getCryptoAddressDealer().equals(CryptoAddressDealers.DAP_ASSET)) {
+                if (request.getCryptoAddressDealer() == CryptoAddressDealers.DAP_WATCH_ONLY || request.getCryptoAddressDealer() == CryptoAddressDealers.DAP_ASSET) {
 
                     if (request.getAction().equals(RequestAction.ACCEPT))
                         this.handleCryptoAddressReceivedEvent(request);
@@ -374,7 +373,8 @@ public class RedeemPointActorPluginRoot extends AbstractPlugin implements
         }
     }
 
-    public void handleNewReceiveMessageActorNotificationEvent(DAPActor dapActorSender, DAPActor dapActorDestination, DAPMessage dapMessage) {
+    public void handleNewReceiveMessageActorNotificationEvent(DAPMessage dapMessage) {
+        DAPActor dapActorSender = dapMessage.getActorSender();
         System.out.println("*****Actor Asset Redeem Point Recibe*****");
         System.out.println("Actor Asset Redeem Point name: " + dapActorSender.getName());
         System.out.println("Actor Asset Redeem Point message: " + dapMessage.getMessageType());
@@ -383,27 +383,29 @@ public class RedeemPointActorPluginRoot extends AbstractPlugin implements
         /**
          * we will extract the ExtendedPublicKey from the message
          */
-        ExtendedPublicKey extendedPublicKey= null;
-        try{
+        ExtendedPublicKey extendedPublicKey = null;
+        try {
             AssetExtendedPublickKeyContentMessage assetExtendedPublickKeyContentMessage = (AssetExtendedPublickKeyContentMessage) dapMessage.getMessageContent();
             extendedPublicKey = assetExtendedPublickKeyContentMessage.getExtendedPublicKey();
 
-        } catch (Exception e){
+        } catch (Exception e) {
             //handle this. I might have a Class Cast exception
         }
 
-        if (extendedPublicKey == null){
+        if (extendedPublicKey == null) {
             System.out.println("*** Actor Asset Redeem Point  *** The extended public Key received by " + dapActorSender.getName() + " is null.");
+        } else {
+            /**
+             * I will start the Bitcoin Watch only Vault on the redeem Point.
+             */
+            try {
+                watchOnlyVaultManager.initialize(extendedPublicKey);
+            } catch (CantInitializeWatchOnlyVaultException e) {
+                //handle this.
+            }
         }
 
-        /**
-         * I will start the Bitcoin Watch only Vault on the redeem Point.
-         */
-        try {
-            watchOnlyVaultManager.initialize(extendedPublicKey);
-        } catch (CantInitializeWatchOnlyVaultException e) {
-            //handle this.
-        }
+
     }
 
     @Override

@@ -19,6 +19,7 @@ import com.bitdubai.fermat_android_api.ui.interfaces.FermatListItemListeners;
 import com.bitdubai.fermat_android_api.ui.interfaces.FermatWorkerCallBack;
 import com.bitdubai.fermat_android_api.ui.util.FermatWorker;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
+import com.bitdubai.fermat_api.layer.modules.exceptions.ActorIdentityNotSelectedException;
 import com.bitdubai.fermat_api.layer.modules.exceptions.CantGetSelectedActorIdentityException;
 import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_broker_community.exceptions.CantListCryptoBrokersException;
 import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_broker_community.interfaces.CryptoBrokerCommunityInformation;
@@ -164,7 +165,7 @@ public class ConnectionsListFragment extends AbstractFermatFragment implements S
         List<CryptoBrokerCommunityInformation> dataSet = new ArrayList<>();
         try {
             dataSet.addAll(moduleManager.listAllConnectedCryptoBrokers(moduleManager.getSelectedActorIdentity(), MAX, offset));
-        } catch (CantListCryptoBrokersException | CantGetSelectedActorIdentityException e) {
+        } catch (CantListCryptoBrokersException | CantGetSelectedActorIdentityException |ActorIdentityNotSelectedException e) {
             e.printStackTrace();
         }
 

@@ -14,6 +14,7 @@ import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.da
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.data.client.respond.NearNodeListMsgRespond;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.profiles.NodeProfile;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.util.DistanceCalculator;
+import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.enums.HeadersAttName;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.enums.MessageContentType;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.enums.PackageType;
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.channels.WebSocketChannelServerEndpoint;
@@ -33,7 +34,8 @@ import javax.websocket.Session;
 
 /**
  * The Class <code>com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.channels.processors.clients.NearNodeListRequestProcessor</code>
- * <p/>
+ * process all packages received the type <code>MessageType.NEAR_NODE_LIST_REQUEST</code><p/>
+ *
  * Created by Roberto Requena - (rart3001@gmail.com) on 26/12/15.
  *
  * @version 1.0
@@ -52,7 +54,7 @@ public class NearNodeListRequestProcessor extends PackageProcessor {
      * @param webSocketChannelServerEndpoint register
      */
     public NearNodeListRequestProcessor(WebSocketChannelServerEndpoint webSocketChannelServerEndpoint) {
-        super(webSocketChannelServerEndpoint, PackageType.CHECK_IN_ACTOR_REQUEST);
+        super(webSocketChannelServerEndpoint, PackageType.NEAR_NODE_LIST_REQUEST);
     }
 
     /**
@@ -65,7 +67,7 @@ public class NearNodeListRequestProcessor extends PackageProcessor {
         LOG.info("Processing new package received");
 
         String channelIdentityPrivateKey = getChannel().getChannelIdentity().getPrivateKey();
-        String destinationIdentityPublicKey = (String) session.getUserProperties().get("");
+        String destinationIdentityPublicKey = (String) session.getUserProperties().get(HeadersAttName.CPKI_ATT_HEADER_NAME);
 
         try {
 

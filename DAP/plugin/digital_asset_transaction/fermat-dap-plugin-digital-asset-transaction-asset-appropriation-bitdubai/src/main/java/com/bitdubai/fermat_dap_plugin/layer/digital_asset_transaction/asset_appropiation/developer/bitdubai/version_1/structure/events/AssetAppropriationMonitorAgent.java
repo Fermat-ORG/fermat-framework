@@ -14,7 +14,6 @@ import com.bitdubai.fermat_api.layer.all_definition.money.CryptoAddress;
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.crypto_transactions.CryptoStatus;
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.crypto_transactions.CryptoTransaction;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
-import com.bitdubai.fermat_api.layer.osa_android.location_system.Location;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogManager;
 import com.bitdubai.fermat_bch_api.layer.crypto_module.crypto_address_book.interfaces.CryptoAddressBookManager;
 import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.exceptions.CantGetCryptoTransactionException;
@@ -25,13 +24,13 @@ import com.bitdubai.fermat_ccp_api.layer.identity.intra_user.interfaces.IntraWal
 import com.bitdubai.fermat_ccp_api.layer.identity.intra_user.interfaces.IntraWalletUserIdentityManager;
 import com.bitdubai.fermat_dap_api.layer.all_definition.digital_asset.DigitalAsset;
 import com.bitdubai.fermat_dap_api.layer.all_definition.enums.AppropriationStatus;
-import com.bitdubai.fermat_dap_api.layer.all_definition.enums.DAPConnectionState;
 import com.bitdubai.fermat_dap_api.layer.all_definition.enums.DAPMessageType;
 import com.bitdubai.fermat_dap_api.layer.all_definition.enums.EventStatus;
 import com.bitdubai.fermat_dap_api.layer.all_definition.exceptions.CantSetObjectException;
 import com.bitdubai.fermat_dap_api.layer.all_definition.network_service_message.DAPMessage;
 import com.bitdubai.fermat_dap_api.layer.all_definition.network_service_message.content_message.AssetAppropriationContentMessage;
 import com.bitdubai.fermat_dap_api.layer.all_definition.util.Validate;
+import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_issuer.AssetIssuerActorRecord;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_issuer.interfaces.ActorAssetIssuer;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.exceptions.CantGetAssetUserActorsException;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.interfaces.ActorAssetUser;
@@ -42,6 +41,7 @@ import com.bitdubai.fermat_dap_api.layer.dap_transaction.asset_appropriation.exc
 import com.bitdubai.fermat_dap_api.layer.dap_transaction.asset_appropriation.interfaces.AssetAppropriationTransactionRecord;
 import com.bitdubai.fermat_dap_api.layer.dap_transaction.common.AssetUserWalletTransactionRecordWrapper;
 import com.bitdubai.fermat_dap_api.layer.dap_transaction.common.exceptions.RecordsNotFoundException;
+import com.bitdubai.fermat_dap_api.layer.dap_transaction.common.util.AssetVerification;
 import com.bitdubai.fermat_dap_api.layer.dap_wallet.asset_issuer_wallet.exceptions.CantRegisterDebitException;
 import com.bitdubai.fermat_dap_api.layer.dap_wallet.asset_issuer_wallet.interfaces.AssetIssuerWallet;
 import com.bitdubai.fermat_dap_api.layer.dap_wallet.asset_issuer_wallet.interfaces.AssetIssuerWalletManager;
@@ -215,7 +215,7 @@ public class AssetAppropriationMonitorAgent implements Agent {
         }
 
         private void eventMonitoring(AssetAppropriationDAO dao) throws Exception {
-            for (String eventId : dao.getPendingActorAssetUserEvents()) {
+            for (String eventId : dao.getPendingCryptoRouterEvents()) {
                 switch (dao.getEventTypeById(eventId)) {
                     //TODO CHANGE THESE EVENTS TO THE NEW ONES.
                     case INCOMING_ASSET_ON_CRYPTO_NETWORK_WAITING_TRANSFERENCE_ASSET_USER:
@@ -225,52 +225,43 @@ public class AssetAppropriationMonitorAgent implements Agent {
                                 dao.updateTransactionStatusCryptoAddressObtained(record.transactionRecordId());
                                 continue;
                             }
-                            for (CryptoTransaction cryptoTransaction : bitcoinNetworkManager.getCryptoTransaction(record.genesisTransaction())) {
-                                if (cryptoTransaction.getCryptoStatus() == CryptoStatus.ON_CRYPTO_NETWORK) {
-                                    AssetUserWallet userWallet = assetUserWalletManager.loadAssetUserWallet(record.userWalletPublicKey());
-                                    AssetUserWalletBalance balance = userWallet.getBalance();
-                                    AssetUserWalletTransactionRecordWrapper walletRecord = new AssetUserWalletTransactionRecordWrapper(record.digitalAsset(),
-                                            cryptoTransaction,
-                                            record.digitalAsset().getPublicKey(),
-                                            Actors.DAP_ASSET_USER,
-                                            record.addressTo().getAddress(),
-                                            Actors.EXTRA_USER);
-                                    balance.debit(walletRecord, BalanceType.AVAILABLE);
-                                    dao.updateTransactionStatusAssetDebited(record.transactionRecordId());
-                                }
-                            }
+                            CryptoTransaction cryptoTransaction = AssetVerification.getCryptoTransactionFromCryptoNetworkByCryptoStatus(bitcoinNetworkManager, record.genesisTransaction(), CryptoStatus.ON_CRYPTO_NETWORK);
+                            if(cryptoTransaction == null) continue;
+                            AssetUserWallet userWallet = assetUserWalletManager.loadAssetUserWallet(record.userWalletPublicKey());
+                            AssetUserWalletBalance balance = userWallet.getBalance();
+                            AssetUserWalletTransactionRecordWrapper walletRecord = new AssetUserWalletTransactionRecordWrapper(record.digitalAsset(),
+                                    cryptoTransaction,
+                                    record.digitalAsset().getPublicKey(),
+                                    Actors.DAP_ASSET_USER,
+                                    record.addressTo().getAddress(),
+                                    Actors.INTRA_USER);
+                            balance.debit(walletRecord, BalanceType.AVAILABLE);
+                            dao.updateTransactionStatusAssetDebited(record.transactionRecordId());
                         }
-                        dao.updateEventStatus(EventStatus.NOTIFIED, eventId);
                         break;
 
                     case INCOMING_ASSET_ON_BLOCKCHAIN_WAITING_TRANSFERENCE_ASSET_USER:
                         for (AssetAppropriationTransactionRecord record : dao.getTransactionsForStatus(AppropriationStatus.ASSET_DEBITED)) {
-                            for (CryptoTransaction cryptoTransaction : bitcoinNetworkManager.getCryptoTransaction(record.genesisTransaction())) {
-                                if (cryptoTransaction.getCryptoStatus() == CryptoStatus.ON_BLOCKCHAIN) {
-                                    AssetUserWallet userWallet = assetUserWalletManager.loadAssetUserWallet(record.userWalletPublicKey());
-                                    AssetUserWalletBalance balance = userWallet.getBalance();
-                                    AssetUserWalletTransactionRecordWrapper walletRecord = new AssetUserWalletTransactionRecordWrapper(record.digitalAsset(),
-                                            cryptoTransaction,
-                                            record.digitalAsset().getPublicKey(),
-                                            Actors.DAP_ASSET_USER,
-                                            record.addressTo().getAddress(),
-                                            Actors.EXTRA_USER);
-                                    balance.debit(walletRecord, BalanceType.BOOK);
-
-                                    sendMessageAssetAppropriated(record.digitalAsset());
-
-                                    dao.completeAppropriationSuccessful(record.transactionRecordId());
-                                }
-                            }
+                            CryptoTransaction cryptoTransaction = AssetVerification.getCryptoTransactionFromCryptoNetworkByCryptoStatus(bitcoinNetworkManager, record.genesisTransaction(), CryptoStatus.ON_BLOCKCHAIN);
+                            if(cryptoTransaction == null) continue;
+                            AssetUserWallet userWallet = assetUserWalletManager.loadAssetUserWallet(record.userWalletPublicKey());
+                            AssetUserWalletBalance balance = userWallet.getBalance();
+                            AssetUserWalletTransactionRecordWrapper walletRecord = new AssetUserWalletTransactionRecordWrapper(record.digitalAsset(),
+                                    cryptoTransaction,
+                                    record.digitalAsset().getPublicKey(),
+                                    Actors.DAP_ASSET_USER,
+                                    record.addressTo().getAddress(),
+                                    Actors.INTRA_USER);
+                            balance.debit(walletRecord, BalanceType.BOOK);
+                            dao.updateStatusSendingMessage(record.transactionRecordId());
                         }
-                        dao.updateEventStatus(EventStatus.NOTIFIED, eventId);
                         break;
 
                     default:
                         //THIS CAN'T HAPPEN. But if it happen, this event is not for me and I don't care...
-                        dao.updateEventStatus(EventStatus.NOTIFIED, eventId);
                         break;
                 }
+                dao.updateEventStatus(EventStatus.NOTIFIED, eventId);
             }
 
             for (String eventId : dao.getPendingIssuerNetworkServiceEvents()) {
@@ -281,7 +272,7 @@ public class AssetAppropriationMonitorAgent implements Agent {
                                 AssetAppropriationContentMessage contentMessage = (AssetAppropriationContentMessage) message.getMessageContent();
                                 //TODO REMOVE HARDCODE.
                                 AssetIssuerWallet wallet = assetIssuerWalletManager.loadAssetIssuerWallet("walletPublicKeyTest");
-                                wallet.assetAppropriated(contentMessage.getDigitalAssetAppropriated().getPublicKey(), contentMessage.getUserThatAppropriate().getActorPublicKey());
+                                wallet.assetAppropriated(contentMessage.getDigitalAssetAppropriated(), contentMessage.getUserThatAppropriate());
                             }
                         }
                         dao.updateEventStatus(EventStatus.NOTIFIED, eventId);
@@ -291,7 +282,6 @@ public class AssetAppropriationMonitorAgent implements Agent {
                         dao.updateEventStatus(EventStatus.NOTIFIED, eventId);
                         break;
                 }
-
             }
         }
 
@@ -314,7 +304,7 @@ public class AssetAppropriationMonitorAgent implements Agent {
                                 assetIdentity.getPublicKey(),
                                 Actors.INTRA_USER,
                                 intraWalletUserIdentityManager.getAllIntraWalletUsersFromCurrentDeviceUser().get(0).getPublicKey(),
-                                Actors.INTRA_USER,
+                                Actors.EXTRA_USER,
                                 Platforms.CRYPTO_CURRENCY_PLATFORM,
                                 VaultType.CRYPTO_CURRENCY_VAULT,
                                 CryptoCurrencyVault.BITCOIN_VAULT.getCode(),
@@ -335,6 +325,10 @@ public class AssetAppropriationMonitorAgent implements Agent {
                             AssetAppropriationDigitalAssetTransactionPluginRoot.debugAssetAppropriation("Bitcoins sent!");
                         }
                         break;
+                    case SENDING_MESSAGE:
+                        sendMessageAssetAppropriated(record.digitalAsset());
+                        dao.completeAppropriationSuccessful(record.transactionRecordId());
+                        break;
                     default:
                         //This should never happen.
                         break;
@@ -344,117 +338,10 @@ public class AssetAppropriationMonitorAgent implements Agent {
 
 
         public void sendMessageAssetAppropriated(final DigitalAsset assetAppropriated) throws CantGetAssetUserActorsException, CantSetObjectException, CantSendMessageException {
-            ActorAssetIssuer actorAssetIssuer = new ActorAssetIssuer() {
-                /**
-                 * The method <code>getActorPublicKey</code> gives us the public key of the represented a Actor
-                 *
-                 * @return the publicKey
-                 */
-                @Override
-                public String getActorPublicKey() {
-                    return assetAppropriated.getIdentityAssetIssuer().getPublicKey();
-                }
-
-                /**
-                 * The method <code>getName</code> gives us the name of the represented a Actor
-                 *
-                 * @return the name of the intra user
-                 */
-                @Override
-                public String getName() {
-                    return assetAppropriated.getIdentityAssetIssuer().getAlias();
-                }
-
-                /**
-                 * The method <coda>getProfileImage</coda> gives us the profile image of the represented a Actor
-                 *
-                 * @return the image
-                 */
-                @Override
-                public byte[] getProfileImage() {
-                    return assetAppropriated.getIdentityAssetIssuer().getImage();
-                }
-
-                /**
-                 * The method <code>getRegistrationDate</code> gives us the date when both Asset Issuers
-                 * exchanged their information and accepted each other as contacts.
-                 *
-                 * @return the date
-                 */
-                @Override
-                public long getRegistrationDate() {
-                    return 0;
-                }
-
-                /**
-                 * The method <code>getLastConnectionDate</code> gives us the Las Connection Date of the represented
-                 * Asset Issuer
-                 *
-                 * @return the Connection Date
-                 */
-                @Override
-                public long getLastConnectionDate() {
-                    return 0;
-                }
-
-                /**
-                 * The method <code>getConnectionState</code> gives us the connection state of the represented
-                 * Asset Issuer
-                 *
-                 * @return the Connection state
-                 */
-                @Override
-                public DAPConnectionState getDapConnectionState() {
-                    return DAPConnectionState.REGISTERED_OFFLINE;
-                }
-
-                /**
-                 * Método {@code getDescription}
-                 * The Method return a description about Issuer
-                 * acerca de él mismo.
-                 *
-                 * @return {@link String} con la descripción del {@link ActorAssetIssuer}
-                 */
-                @Override
-                public String getDescription() {
-                    return null;
-                }
-
-                /**
-                 * The method <code>getLocation</code> gives us the Location of the represented
-                 * Asset Issuer
-                 *
-                 * @return the Location
-                 */
-                @Override
-                public Location getLocation() {
-                    return null;
-                }
-
-                /**
-                 * The method <code>getLocationLatitude</code> gives us the Location of the represented
-                 * Asset Issuer
-                 *
-                 * @return the Location Latitude
-                 */
-                @Override
-                public Double getLocationLatitude() {
-                    return null;
-                }
-
-                /**
-                 * The method <code>getLocationLongitude</code> gives us the Location of the represented
-                 * Asset Issuer
-                 *
-                 * @return the Location Longitude
-                 */
-                @Override
-                public Double getLocationLongitude() {
-                    return null;
-                }
-            };
+            ActorAssetIssuer actorAssetIssuer = new AssetIssuerActorRecord(assetAppropriated.getIdentityAssetIssuer().getAlias(),
+                    assetAppropriated.getIdentityAssetIssuer().getPublicKey());
             ActorAssetUser actorAssetUser = actorAssetUserManager.getActorAssetUser(); //The user of this device, whom appropriate the asset.
-            DAPMessage message = new DAPMessage(DAPMessageType.ASSET_APPROPRIATION, new AssetAppropriationContentMessage(assetAppropriated, actorAssetUser), actorAssetUser, actorAssetIssuer);
+            DAPMessage message = new DAPMessage(DAPMessageType.ASSET_APPROPRIATION, new AssetAppropriationContentMessage(assetAppropriated.getPublicKey(), actorAssetUser.getActorPublicKey()), actorAssetUser, actorAssetIssuer);
             assetIssuerActorNetworkServiceManager.sendMessage(message); //FROM: USER. TO:ISSUER.
         }
 
@@ -470,5 +357,7 @@ public class AssetAppropriationMonitorAgent implements Agent {
         public void startAgent() {
             agentRunning = true;
         }
+
+
     }
 }

@@ -74,6 +74,7 @@ public class IncomingNotificationDao implements DAO {
                                                         final Actors                          senderType          ,
                                                         final String                          destinationPublicKey,
                                                         final String                          senderAlias         ,
+                                                        final String                          senderPhrase         ,
                                                         final byte[]                          senderProfileImage  ,
                                                         final Actors                          destinationType     ,
                                                         final NotificationDescriptor descriptor          ,
@@ -92,6 +93,7 @@ public class IncomingNotificationDao implements DAO {
             ActorNetworkServiceRecord cryptoPaymentRequestRecord = new ActorNetworkServiceRecord(
                     notificationId      ,
                     senderAlias         ,
+                    senderPhrase,
                     senderProfileImage  ,
                     descriptor          ,
                     destinationType     ,
@@ -341,7 +343,7 @@ public class IncomingNotificationDao implements DAO {
 
 
         if (senderPublicKey == null)
-            throw new CantUpdateRecordDataBaseException("requestId null "   , null);
+            throw new CantUpdateRecordDataBaseException("senderPublicKey null "   , null);
 
         if (notificationDescriptor == null)
             throw new CantUpdateRecordDataBaseException("protocolState null", null);
@@ -366,7 +368,7 @@ public class IncomingNotificationDao implements DAO {
 
                 return buildActorNetworkServiceRecord(record);
             } else {
-                throw new RequestNotFoundException("RequestId: "+senderPublicKey, "Cannot find a CryptoPaymentRequest with the given id.");
+                throw new RequestNotFoundException("senderPublicKey: "+senderPublicKey, "Cannot find a connection request with the given id.");
             }
 
         } catch (CantLoadTableToMemoryException e) {
@@ -453,16 +455,18 @@ public class IncomingNotificationDao implements DAO {
 
         try {
             dbRecord.setUUIDValue(CommunicationNetworkServiceDatabaseConstants.INCOMING_NOTIFICATION_ID_COLUMN_NAME, record.getId());
-            dbRecord.setStringValue(CommunicationNetworkServiceDatabaseConstants.INCOMING_NOTIFICATION_SENDER_ALIAS_COLUMN_NAME       , record.getActorSenderAlias());
+            dbRecord.setStringValue(CommunicationNetworkServiceDatabaseConstants.INCOMING_NOTIFICATION_SENDER_ALIAS_COLUMN_NAME, record.getActorSenderAlias());
 
-            dbRecord.setStringValue(CommunicationNetworkServiceDatabaseConstants.INCOMING_NOTIFICATION_DESCRIPTOR_COLUMN_NAME         , record.getNotificationDescriptor().getCode());
+            dbRecord.setStringValue(CommunicationNetworkServiceDatabaseConstants.INCOMING_NOTIFICATION_DESCRIPTOR_COLUMN_NAME, record.getNotificationDescriptor().getCode());
             dbRecord.setStringValue(CommunicationNetworkServiceDatabaseConstants.INCOMING_NOTIFICATION_RECEIVER_TYPE_COLUMN_NAME      , record.getActorDestinationType().getCode());
             dbRecord.setStringValue(CommunicationNetworkServiceDatabaseConstants.INCOMING_NOTIFICATION_SENDER_TYPE_COLUMN_NAME        , record.getActorSenderType().getCode());
             dbRecord.setStringValue(CommunicationNetworkServiceDatabaseConstants.INCOMING_NOTIFICATION_SENDER_PUBLIC_KEY_COLUMN_NAME  , record.getActorSenderPublicKey());
             dbRecord.setStringValue(CommunicationNetworkServiceDatabaseConstants.INCOMING_NOTIFICATION_RECEIVER_PUBLIC_KEY_COLUMN_NAME, record.getActorDestinationPublicKey());
-            dbRecord.setLongValue  (CommunicationNetworkServiceDatabaseConstants.INCOMING_NOTIFICATION_TIMESTAMP_COLUMN_NAME          , record.getSentDate());
-            dbRecord.setStringValue(CommunicationNetworkServiceDatabaseConstants.INCOMING_NOTIFICATION_PROTOCOL_STATE_COLUMN_NAME     , record.getActorProtocolState().getCode());
-            dbRecord.setStringValue(CommunicationNetworkServiceDatabaseConstants.INCOMING_NOTIFICATION_READ_MARK_COLUMN_NAME          , String.valueOf(record.isFlagReadead()));
+            dbRecord.setLongValue(CommunicationNetworkServiceDatabaseConstants.INCOMING_NOTIFICATION_TIMESTAMP_COLUMN_NAME, record.getSentDate());
+            dbRecord.setStringValue(CommunicationNetworkServiceDatabaseConstants.INCOMING_NOTIFICATION_PROTOCOL_STATE_COLUMN_NAME, record.getActorProtocolState().getCode());
+            dbRecord.setStringValue(CommunicationNetworkServiceDatabaseConstants.INCOMING_NOTIFICATION_READ_MARK_COLUMN_NAME, String.valueOf(record.isFlagReadead()));
+            dbRecord.setStringValue(CommunicationNetworkServiceDatabaseConstants.INCOMING_NOTIFICATION_SENDER_PHRASE_COLUMN_NAME          , record.getActorSenderPhrase());
+
 
             /**
              * Persist profile image on a file
@@ -494,8 +498,7 @@ public class IncomingNotificationDao implements DAO {
         long timestamp           = record.getLongValue(CommunicationNetworkServiceDatabaseConstants.INCOMING_NOTIFICATION_TIMESTAMP_COLUMN_NAME);
         String protocolState         = record.getStringValue(CommunicationNetworkServiceDatabaseConstants.INCOMING_NOTIFICATION_PROTOCOL_STATE_COLUMN_NAME);
         String flagReaded  = record.getStringValue(CommunicationNetworkServiceDatabaseConstants.INCOMING_NOTIFICATION_READ_MARK_COLUMN_NAME);
-
-
+        String senderPhrase = record.getStringValue(CommunicationNetworkServiceDatabaseConstants.INCOMING_NOTIFICATION_SENDER_PHRASE_COLUMN_NAME);
 
 
         ActorProtocolState  actorProtocolState = ActorProtocolState .getByCode(protocolState);
@@ -516,6 +519,7 @@ public class IncomingNotificationDao implements DAO {
         return new ActorNetworkServiceRecord(
                 notificationId        ,
                 senderAlias,
+                senderPhrase,
                 profileImage    ,
                 notificationDescriptor,
                 actorDestinationType        ,

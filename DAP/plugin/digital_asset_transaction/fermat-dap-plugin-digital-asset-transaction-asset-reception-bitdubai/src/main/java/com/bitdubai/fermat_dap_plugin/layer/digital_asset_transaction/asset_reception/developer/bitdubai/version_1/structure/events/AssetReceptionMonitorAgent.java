@@ -36,6 +36,7 @@ import com.bitdubai.fermat_dap_api.layer.dap_transaction.asset_issuing.interface
 import com.bitdubai.fermat_dap_api.layer.dap_transaction.common.exceptions.CantExecuteDatabaseOperationException;
 import com.bitdubai.fermat_dap_api.layer.dap_transaction.common.exceptions.CantGetDigitalAssetFromLocalStorageException;
 import com.bitdubai.fermat_dap_api.layer.dap_transaction.common.exceptions.UnexpectedResultReturnedFromDatabaseException;
+import com.bitdubai.fermat_dap_api.layer.dap_transaction.common.util.AssetVerification;
 import com.bitdubai.fermat_dap_api.layer.dap_wallet.common.enums.TransactionType;
 import com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.asset_reception.developer.bitdubai.version_1.AssetReceptionDigitalAssetTransactionPluginRoot;
 import com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.asset_reception.developer.bitdubai.version_1.exceptions.CantCheckAssetReceptionProgressException;
@@ -273,7 +274,7 @@ public class AssetReceptionMonitorAgent implements Agent {
                         System.out.println("ASSET RECEPTION genesisTransactionList on pending submit has " + genesisTransactionList.size() + " events");
                         for (String genesisTransaction : genesisTransactionList) {
                             System.out.println("ASSET RECEPTION CN genesis transaction: " + genesisTransaction);
-                            CryptoTransaction cryptoGenesisTransaction = getCryptoTransactionByCryptoStatus(CryptoStatus.ON_CRYPTO_NETWORK, genesisTransaction);
+                            CryptoTransaction cryptoGenesisTransaction = AssetVerification.getCryptoTransactionFromCryptoNetworkByCryptoStatus(bitcoinNetworkManager, genesisTransaction, CryptoStatus.ON_CRYPTO_NETWORK);
                             if (cryptoGenesisTransaction == null) {
                                 System.out.println("ASSET RECEPTION the genesis transaction from Crypto Network is null");
                                 continue;
@@ -298,7 +299,7 @@ public class AssetReceptionMonitorAgent implements Agent {
                         System.out.println("ASSET RECEPTION genesisTransactionList has " + genesisTransactionList.size() + " events");
                         for (String genesisTransaction : genesisTransactionList) {
                             System.out.println("ASSET RECEPTION BCH Transaction Hash: " + genesisTransaction);
-                            CryptoTransaction cryptoGenesisTransaction = getCryptoTransactionByCryptoStatus(CryptoStatus.ON_BLOCKCHAIN, genesisTransaction);
+                            CryptoTransaction cryptoGenesisTransaction = AssetVerification.getCryptoTransactionFromCryptoNetworkByCryptoStatus(bitcoinNetworkManager, genesisTransaction, CryptoStatus.ON_BLOCKCHAIN);
                             if (cryptoGenesisTransaction == null) {
                                 //throw new CantCheckAssetIssuingProgressException("Cannot get the crypto status from crypto network");
                                 System.out.println("ASSET RECEPTION the genesis transaction from Crypto Network is null");
@@ -310,7 +311,7 @@ public class AssetReceptionMonitorAgent implements Agent {
                             System.out.println("ASSET RECEPTION transactionInternalId " + transactionInternalId);
                             String actorIssuerPublicKey = assetReceptionDao.getActorUserPublicKeyByGenesisTransaction(genesisTransaction);
                             digitalAssetReceptionVault.setDigitalAssetMetadataAssetIssuerWalletTransaction(cryptoGenesisTransaction, transactionInternalId, AssetBalanceType.AVAILABLE, TransactionType.CREDIT, DAPTransactionType.RECEPTION, actorIssuerPublicKey);
-                            assetReceptionDao.updateDigitalAssetCryptoStatusByGenesisTransaction(genesisTransaction, CryptoStatus.ON_CRYPTO_NETWORK);
+                            assetReceptionDao.updateDigitalAssetCryptoStatusByGenesisTransaction(genesisTransaction, CryptoStatus.ON_BLOCKCHAIN);
 
                         }
                     }
@@ -358,58 +359,7 @@ public class AssetReceptionMonitorAgent implements Agent {
         }
 
         private boolean isTransactionToBeNotified(CryptoStatus cryptoStatus) throws CantExecuteQueryException {
-            boolean isPending = assetReceptionDao.isPendingTransactions(cryptoStatus);
-            return isPending;
+            return assetReceptionDao.isPendingTransactions(cryptoStatus);
         }
-
-        /**
-         * This method returns a full CryptoTransaction from Bitcoin Crypto Network.
-         *
-         * @param cryptoStatus
-         * @param genesisTransaction
-         * @return null if the transaction cannot be found in crypto network
-         * @throws CantGetCryptoTransactionException
-         */
-        private CryptoTransaction getCryptoTransactionByCryptoStatus(CryptoStatus cryptoStatus, String genesisTransaction) throws CantGetCryptoTransactionException {
-            /**
-             * I will get the genesis transaction from the CryptoNetwork
-             */
-            List<CryptoTransaction> transactionListFromCryptoNetwork = bitcoinNetworkManager.getCryptoTransaction(genesisTransaction);
-            if (transactionListFromCryptoNetwork.size() == 0) {
-                /**
-                 * If I didn't get it, I will get the child of the genesis Transaction
-                 */
-                transactionListFromCryptoNetwork = bitcoinNetworkManager.getChildCryptoTransaction(genesisTransaction);
-            }
-
-
-            if (transactionListFromCryptoNetwork == null) {
-                System.out.println("ASSET RECEPTION transaction List From Crypto Network for " + genesisTransaction + " is null");
-                throw new CantGetCryptoTransactionException(CantGetCryptoTransactionException.DEFAULT_MESSAGE, null,
-                        "Getting the cryptoStatus from CryptoNetwork",
-                        "The crypto status from genesis transaction " + genesisTransaction + " return null");
-            }
-            if (transactionListFromCryptoNetwork.isEmpty()) {
-                System.out.println("ASSET RECEPTION transaction List From Crypto Network for " + genesisTransaction + " is empty");
-                throw new CantGetCryptoTransactionException(CantGetCryptoTransactionException.DEFAULT_MESSAGE, null,
-                        "Getting the cryptoStatus from CryptoNetwork",
-                        "The genesis transaction " + genesisTransaction + " cannot be found in crypto network");
-            }
-            System.out.println("ASSET RECEPTION I found " + transactionListFromCryptoNetwork.size() + " in Crypto network from genesis transaction:\n" + genesisTransaction);
-
-            System.out.println("ASSET RECEPTION Now, I'm looking for this crypto status " + cryptoStatus);
-            for (CryptoTransaction cryptoTransaction : transactionListFromCryptoNetwork) {
-                System.out.println("ASSET RECEPTION CryptoStatus from Crypto Network:" + cryptoTransaction.getCryptoStatus());
-                if (cryptoTransaction.getCryptoStatus() == cryptoStatus) {
-                    System.out.println("ASSET RECEPTION I found it!");
-                    cryptoTransaction.setTransactionHash(genesisTransaction);
-                    return cryptoTransaction;
-                }
-            }
-            //TODO: think a better return
-            return null;
-            //return transactionList;
-        }
-
     }
 }

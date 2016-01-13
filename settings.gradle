@@ -18,7 +18,8 @@ apply from: 'P2P/settings.gradle'
 apply from: 'PIP/settings.gradle'
 apply from: 'WPD/settings.gradle'
 
-include ':fermat-android-api', ':fermat-cht-plugin-middleware-chat', ':fermat-cht-network-service-chat', ':fermat-chat-plugin-network-service-chat', ':fermat-cht-plugin-network-service-chat', ':fermat-cht-plugin-sub-app-module-chat'
+
+include ':fermat-android-api'
 include ':fermat-android-core'
 include ':fermat-api'
 include ':fermat-core'
@@ -81,3 +82,4 @@ include ':fermat-shp-plugin-identity-brand-bitdubai'
 project(':fermat-shp-plugin-identity-brand-bitdubai').projectDir = new File('SHP/plugin/identity/fermat-shp-plugin-identity-brand-bitdubai')
 
 
+//project(':fermat-ccp-plugin-module-intra-user-identity-bitdubai').projectDir = new File('CCP/plugin/module/fermat-ccp-plugin-module-intra-user-identity-bitdubai')

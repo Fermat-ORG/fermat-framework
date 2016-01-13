@@ -30,6 +30,10 @@ import com.bitdubai.fermat_ccp_api.layer.identity.intra_user.exceptions.CantCrea
 import com.bitdubai.fermat_ccp_api.layer.identity.intra_user.exceptions.CantUpdateIdentityException;
 import com.bitdubai.fermat_ccp_api.layer.identity.intra_user.interfaces.IntraWalletUserIdentity;
 import com.bitdubai.fermat_ccp_api.layer.identity.intra_user.interfaces.IntraWalletUserIdentityManager;
+import com.bitdubai.fermat_ccp_api.layer.module.intra_user_identity.exceptions.CantCreateNewIntraUserIdentityException;
+import com.bitdubai.fermat_ccp_api.layer.module.intra_user_identity.exceptions.CantUpdateIntraUserIdentityException;
+import com.bitdubai.fermat_ccp_api.layer.module.intra_user_identity.interfaces.IntraUserIdentityModuleManager;
+import com.bitdubai.fermat_ccp_api.layer.module.intra_user_identity.interfaces.IntraUserModuleIdentity;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedUIExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 import com.bitdubai.sub_app.intra_user_identity.R;
@@ -59,12 +63,12 @@ public class CreateIntraUserIdentityFragment extends AbstractFermatFragment {
     private static final int CONTEXT_MENU_GALLERY = 2;
     IntraUserIdentitySubAppSession intraUserIdentitySubAppSession;
     private byte[] brokerImageByteArray;
-    private IntraWalletUserIdentityManager moduleManager;
+    private IntraUserIdentityModuleManager moduleManager;
     private ErrorManager errorManager;
     private Button createButton;
     private EditText mBrokerName;
     private ImageView mBrokerImage;
-    private IntraWalletUserIdentity identitySelected;
+    private IntraUserModuleIdentity identitySelected;
     private boolean isUpdate = false;
     private EditText mBrokerPhrase;
 
@@ -164,13 +168,13 @@ public class CreateIntraUserIdentityFragment extends AbstractFermatFragment {
     private void setUpIdentity() {
         try {
 
-            identitySelected = (IntraWalletUserIdentity) intraUserIdentitySubAppSession.getData(SessionConstants.IDENTITY_SELECTED);
+            identitySelected = (IntraUserModuleIdentity) intraUserIdentitySubAppSession.getData(SessionConstants.IDENTITY_SELECTED);
 
 
             if (identitySelected != null) {
                 loadIdentity();
             } else {
-                List<IntraWalletUserIdentity> lst = moduleManager.getAllIntraWalletUsersFromCurrentDeviceUser();
+                List<IntraUserModuleIdentity> lst = moduleManager.getAllIntraWalletUsersFromCurrentDeviceUser();
                 if(!lst.isEmpty()){
                     identitySelected = lst.get(0);
                 }
@@ -206,6 +210,7 @@ public class CreateIntraUserIdentityFragment extends AbstractFermatFragment {
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(  requestCode, resultCode, data);
         if (resultCode == Activity.RESULT_OK) {
             Bitmap imageBitmap = null;
             ImageView pictureView = mBrokerImage;
@@ -283,10 +288,12 @@ public class CreateIntraUserIdentityFragment extends AbstractFermatFragment {
                         moduleManager.createNewIntraWalletUser(brokerNameText, brokerPhraseText, (brokerImageByteArray == null) ? convertImage(R.drawable.ic_profile_male) : brokerImageByteArray);
                     else
                         moduleManager.updateIntraUserIdentity(identitySelected.getPublicKey(), brokerNameText, brokerPhraseText, brokerImageByteArray);
-                } catch (CantCreateNewIntraWalletUserException e) {
+                 } catch (CantCreateNewIntraUserIdentityException e) {
                     errorManager.reportUnexpectedUIException(UISource.VIEW, UnexpectedUIExceptionSeverity.UNSTABLE, e);
-                } catch (CantUpdateIdentityException e) {
+
+                } catch (CantUpdateIntraUserIdentityException e) {
                     errorManager.reportUnexpectedUIException(UISource.VIEW, UnexpectedUIExceptionSeverity.UNSTABLE, e);
+
                 }
                 return CREATE_IDENTITY_SUCCESS;
             }

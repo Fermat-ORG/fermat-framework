@@ -13,16 +13,21 @@ project(':fermat-cht-core').projectDir = new File('CHT/library/core/fermat-cht-c
 
 //ANDROID
 
+//subapp
+include ':fermat-cht-android-sub-app-chat-bitdubai'
+project(':fermat-cht-android-sub-app-chat-bitdubai').projectDir = new File('CHT/android/sub_app/fermat-cht-android-sub-app-chat-bitdubai')
+
+
 //PLUGINS
 
 //Middleware
-include ':fermat-cht-plugin-middleware-chat'
-project(':fermat-cht-plugin-middleware-chat').projectDir = new File('CHT/plugin/middleware/fermat-cht-plugin-middleware-chat')
+include ':fermat-cht-plugin-middleware-chat-bitdubai'
+project(':fermat-cht-plugin-middleware-chat-bitdubai').projectDir = new File('CHT/plugin/middleware/fermat-cht-plugin-middleware-chat-bitdubai')
 
 //Network Service
-include ':fermat-cht-plugin-network-service-chat'
-project(':fermat-cht-plugin-network-service-chat').projectDir = new File('CHT/plugin/network_service/fermat-cht-plugin-network-service-chat')
+include ':fermat-cht-plugin-network-service-chat-bitdubai'
+project(':fermat-cht-plugin-network-service-chat-bitdubai').projectDir = new File('CHT/plugin/network_service/fermat-cht-plugin-network-service-chat-bitdubai')
 
-//Network Service
-include ':fermat-cht-plugin-sub-app-module-chat'
-project(':fermat-cht-plugin-sub-app-module-chat').projectDir = new File('CHT/plugin/sub_app_module/fermat-cht-plugin-sub-app-module-chat')
+//Sub app module
+include ':fermat-cht-plugin-sub-app-module-chat-bitdubai'
+project(':fermat-cht-plugin-sub-app-module-chat-bitdubai').projectDir = new File('CHT/plugin/sub_app_module/fermat-cht-plugin-sub-app-module-chat-bitdubai')

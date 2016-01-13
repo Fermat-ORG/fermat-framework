@@ -221,7 +221,8 @@ public class CustomerAckOnlineMerchandisePluginRoot extends AbstractPlugin imple
                     new CustomerAckOnlineMerchandiseRecorderService(
                             customerAckOnlineMerchandiseBusinessTransactionDao,
                             eventManager);
-//            customerAckOnlineMerchandiseRecorderService.start();
+
+            //customerAckOnlineMerchandiseRecorderService.start();
 
             /**
              * Init monitor Agent
@@ -290,17 +291,17 @@ public class CustomerAckOnlineMerchandisePluginRoot extends AbstractPlugin imple
 
     @Override
     public List<DeveloperDatabase> getDatabaseList(DeveloperObjectFactory developerObjectFactory) {
-        return null;
+        return customerAckOnlineMerchandiseBusinessTransactionDeveloperDatabaseFactory.getDatabaseList(developerObjectFactory);
     }
 
     @Override
     public List<DeveloperDatabaseTable> getDatabaseTableList(DeveloperObjectFactory developerObjectFactory, DeveloperDatabase developerDatabase) {
-        return null;
+        return customerAckOnlineMerchandiseBusinessTransactionDeveloperDatabaseFactory.getDatabaseTableList(developerObjectFactory);
     }
 
     @Override
     public List<DeveloperDatabaseTableRecord> getDatabaseTableContent(DeveloperObjectFactory developerObjectFactory, DeveloperDatabase developerDatabase, DeveloperDatabaseTable developerDatabaseTable) {
-        return null;
+        return customerAckOnlineMerchandiseBusinessTransactionDeveloperDatabaseFactory.getDatabaseTableContent(developerObjectFactory,developerDatabaseTable);
     }
 
     public static LogLevel getLogLevelByClass(String className) {
