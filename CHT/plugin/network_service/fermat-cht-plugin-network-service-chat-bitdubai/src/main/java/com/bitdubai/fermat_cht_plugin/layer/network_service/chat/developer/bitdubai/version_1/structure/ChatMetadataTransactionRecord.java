@@ -2,7 +2,7 @@ package com.bitdubai.fermat_cht_plugin.layer.network_service.chat.developer.bitd
 
 import com.bitdubai.fermat_cht_api.layer.network_service.chat.enums.ChatMessageStatus;
 import com.bitdubai.fermat_cht_api.layer.network_service.chat.enums.DistributionStatus;
-import com.bitdubai.fermat_cht_api.layer.network_service.chat.interfaces.ChatMetada;
+import com.bitdubai.fermat_cht_api.layer.network_service.chat.interfaces.ChatMetadata;
 
 import java.io.Serializable;
 import java.sql.Timestamp;
@@ -11,11 +11,11 @@ import java.util.UUID;
 /**
  * Created by root on 06/01/16.
  */
-public class ChatMetadaTransactionRecord implements ChatMetada,Serializable {
+public class ChatMetadataTransactionRecord implements ChatMetadata,Serializable {
 
     private UUID idChat;
 
-    private UUID idObjecto;
+    private UUID idObject;
 
     private String localActorType;
 
@@ -48,9 +48,9 @@ public class ChatMetadaTransactionRecord implements ChatMetada,Serializable {
 
     @Override
     public String toString() {
-        return "ChatMetadaTransactionRecord{" +
+        return "ChatMetadataTransactionRecord{" +
                 "idChat=" + idChat +
-                ", idObjecto=" + idObjecto +
+                ", idObject=" + idObject +
                 ", localActorType='" + localActorType + '\'' +
                 ", localActorPubKey='" + localActorPubKey + '\'' +
                 ", remoteActorType='" + remoteActorType + '\'' +
@@ -147,12 +147,12 @@ public class ChatMetadaTransactionRecord implements ChatMetada,Serializable {
     }
 
     @Override
-    public UUID getIdObjecto() {
-        return idObjecto;
+    public UUID getIdObject() {
+        return idObject;
     }
 
-    public void setIdObjecto(UUID idObjecto) {
-        this.idObjecto = idObjecto;
+    public void setIdObject(UUID idObject) {
+        this.idObject = idObject;
     }
 
     @Override

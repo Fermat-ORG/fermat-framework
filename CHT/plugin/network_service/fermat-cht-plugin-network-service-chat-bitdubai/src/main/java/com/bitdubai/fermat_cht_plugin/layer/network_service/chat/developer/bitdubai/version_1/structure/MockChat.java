@@ -2,7 +2,7 @@ package com.bitdubai.fermat_cht_plugin.layer.network_service.chat.developer.bitd
 
 import com.bitdubai.fermat_cht_api.layer.network_service.chat.enums.ChatMessageStatus;
 import com.bitdubai.fermat_cht_api.layer.network_service.chat.enums.DistributionStatus;
-import com.bitdubai.fermat_cht_api.layer.network_service.chat.interfaces.ChatMetada;
+import com.bitdubai.fermat_cht_api.layer.network_service.chat.interfaces.ChatMetadata;
 
 import java.sql.Timestamp;
 import java.util.UUID;
@@ -10,11 +10,11 @@ import java.util.UUID;
 /**
  * Created by root on 11/01/16.
  */
-public class MockChat implements ChatMetada {
+public class MockChat implements ChatMetadata {
 
     private UUID idChat;
 
-    private UUID idObjecto;
+    private UUID idObject;
 
     private String localActorType;
 
@@ -46,12 +46,12 @@ public class MockChat implements ChatMetada {
     }
 
     @Override
-    public UUID getIdObjecto() {
-        return idObjecto;
+    public UUID getIdObject() {
+        return idObject;
     }
 
-    public void setIdObjecto(UUID idObjecto) {
-        this.idObjecto = idObjecto;
+    public void setIdObject(UUID idObject) {
+        this.idObject = idObject;
     }
 
     @Override

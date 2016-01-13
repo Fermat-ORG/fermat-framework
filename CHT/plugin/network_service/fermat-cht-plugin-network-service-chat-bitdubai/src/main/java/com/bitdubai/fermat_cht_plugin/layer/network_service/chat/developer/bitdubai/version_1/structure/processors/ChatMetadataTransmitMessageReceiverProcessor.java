@@ -13,7 +13,7 @@ import com.bitdubai.fermat_api.layer.all_definition.util.XMLParser;
 import com.bitdubai.fermat_cht_api.layer.network_service.chat.enums.ChatMessageTransactionType;
 import com.bitdubai.fermat_cht_plugin.layer.network_service.chat.developer.bitdubai.version_1.ChatPluginRoot;
 import com.bitdubai.fermat_cht_plugin.layer.network_service.chat.developer.bitdubai.version_1.communications.CommunicationNetworkServiceConnectionManager;
-import com.bitdubai.fermat_cht_plugin.layer.network_service.chat.developer.bitdubai.version_1.structure.ChatMetadaTransactionRecord;
+import com.bitdubai.fermat_cht_plugin.layer.network_service.chat.developer.bitdubai.version_1.structure.ChatMetadataTransactionRecord;
 import com.bitdubai.fermat_cht_plugin.layer.network_service.chat.developer.bitdubai.version_1.structure.ChatTransmissionJsonAttNames;
 import com.bitdubai.fermat_cht_api.layer.network_service.chat.enums.DistributionStatus;
 import com.bitdubai.fermat_cht_api.all_definition.events.enums.EventType;
@@ -62,13 +62,13 @@ public class ChatMetadataTransmitMessageReceiverProcessor extends FermatMessageP
             /*
              * Convert the xml to object
              */
-            ChatMetadaTransactionRecord chatMetadaTransactionRecord = (ChatMetadaTransactionRecord) XMLParser.parseXML(digitalAssetMetadataXml, new ChatMetadaTransactionRecord());
+            ChatMetadataTransactionRecord chatMetadaTransactionRecord = (ChatMetadataTransactionRecord) XMLParser.parseXML(digitalAssetMetadataXml, new ChatMetadataTransactionRecord());
 
 
             /*
              * Construct a new digitalAssetMetadataTransaction
 
-            ChatMetadaTransactionRecord chatMetadaTransactionRecord1 = new DigitalAssetMetadataTransactionImpl();
+            ChatMetadataTransactionRecord chatMetadaTransactionRecord1 = new DigitalAssetMetadataTransactionImpl();
             chatMetadaTransactionRecord1.setGenesisTransaction(chatMetadaTransactionRecord.getGenesisTransaction());
             chatMetadaTransactionRecord1.setSenderId(fermatMessage.getSender());
             chatMetadaTransactionRecord1.setSenderType(senderType);

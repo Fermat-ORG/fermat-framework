@@ -8,11 +8,11 @@ import java.util.UUID;
 /**
  * Created by root on 05/01/16.
  */
-public interface ChatMetada {
+public interface ChatMetadata {
 
     UUID getIdChat();
 
-    UUID getIdObjecto();
+    UUID getIdObject();
 
     String getLocalActorType();
 
