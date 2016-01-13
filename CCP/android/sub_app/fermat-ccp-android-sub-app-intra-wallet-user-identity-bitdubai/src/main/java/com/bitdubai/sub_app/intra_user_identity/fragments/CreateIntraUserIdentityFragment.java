@@ -11,10 +11,13 @@ import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.ContextMenu;
 import android.view.LayoutInflater;
 import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
@@ -25,9 +28,15 @@ import android.widget.Toast;
 
 import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractFermatFragment;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.utils.ImagesUtils;
+import com.bitdubai.fermat_android_api.ui.interfaces.FermatWorkerCallBack;
+import com.bitdubai.fermat_android_api.ui.util.FermatWorker;
+import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.enums.UISource;
+import com.bitdubai.fermat_api.layer.all_definition.settings.structure.SettingsManager;
+import com.bitdubai.fermat_ccp_api.layer.actor.intra_user.interfaces.IntraUserWalletSettings;
 import com.bitdubai.fermat_ccp_api.layer.identity.intra_user.exceptions.CantCreateNewIntraWalletUserException;
 import com.bitdubai.fermat_ccp_api.layer.identity.intra_user.exceptions.CantUpdateIdentityException;
+import com.bitdubai.fermat_ccp_api.layer.identity.intra_user.interfaces.IntraUserIdentitySettings;
 import com.bitdubai.fermat_ccp_api.layer.identity.intra_user.interfaces.IntraWalletUserIdentity;
 import com.bitdubai.fermat_ccp_api.layer.identity.intra_user.interfaces.IntraWalletUserIdentityManager;
 import com.bitdubai.fermat_ccp_api.layer.module.intra_user_identity.exceptions.CantCreateNewIntraUserIdentityException;
@@ -43,7 +52,11 @@ import com.bitdubai.sub_app.intra_user_identity.session.SessionConstants;
 import com.bitdubai.sub_app.intra_user_identity.util.CommonLogger;
 
 import java.io.ByteArrayOutputStream;
+import java.util.ArrayList;
 import java.util.List;
+
+import static android.widget.Toast.LENGTH_LONG;
+import static android.widget.Toast.makeText;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -68,9 +81,12 @@ public class CreateIntraUserIdentityFragment extends AbstractFermatFragment {
     private Button createButton;
     private EditText mBrokerName;
     private ImageView mBrokerImage;
+    private Menu menuHelp;
     private IntraUserModuleIdentity identitySelected;
     private boolean isUpdate = false;
     private EditText mBrokerPhrase;
+    SettingsManager<IntraUserIdentitySettings> settingsManager;
+    IntraUserIdentitySettings intraUserIdentitySettings = null;
 
 
     public static CreateIntraUserIdentityFragment newInstance() {
@@ -86,6 +102,30 @@ public class CreateIntraUserIdentityFragment extends AbstractFermatFragment {
             moduleManager = intraUserIdentitySubAppSession.getModuleManager();
             errorManager = appSession.getErrorManager();
 
+            settingsManager = intraUserIdentitySubAppSession.getModuleManager().getSettingsManager();
+
+            try {
+                if (intraUserIdentitySubAppSession.getAppPublicKey()!= null){
+                    intraUserIdentitySettings = settingsManager.loadAndGetSettings(intraUserIdentitySubAppSession.getAppPublicKey());
+                }else{
+                    //TODO: Joaquin: Lo estoy poniendo con un public key hardcoded porque en este punto no posee public key.
+                    intraUserIdentitySettings = settingsManager.loadAndGetSettings("123456789");
+                }
+
+            } catch (Exception e) {
+                intraUserIdentitySettings = null;
+            }
+
+            if (intraUserIdentitySettings == null) {
+                intraUserIdentitySettings = new IntraUserIdentitySettings();
+                intraUserIdentitySettings.setIsPresentationHelpEnabled(true);
+                if (intraUserIdentitySubAppSession.getAppPublicKey()!=null){
+                    settingsManager.persistSettings(intraUserIdentitySubAppSession.getAppPublicKey(), intraUserIdentitySettings);
+                }else{
+                    settingsManager.persistSettings("123456789", intraUserIdentitySettings);
+                }
+
+            }
 
 //            if(moduleManager.getAllIntraWalletUsersFromCurrentDeviceUser().isEmpty()){
 //                moduleManager.createNewIntraWalletUser("John Doe", null);
@@ -103,10 +143,16 @@ public class CreateIntraUserIdentityFragment extends AbstractFermatFragment {
         initViews(rootLayout);
         setUpIdentity();
         SharedPreferences pref = getActivity().getSharedPreferences("dont show dialog more", Context.MODE_PRIVATE);
-        if (!pref.getBoolean("isChecked", false)) {
-            PresentationIntraUserIdentityDialog presentationIntraUserCommunityDialog = new PresentationIntraUserIdentityDialog(getActivity(), null, null);
+//        if (!pref.getBoolean("isChecked", false)) {
+//            PresentationIntraUserIdentityDialog presentationIntraUserCommunityDialog = new PresentationIntraUserIdentityDialog(getActivity(), null, null);
+//            presentationIntraUserCommunityDialog.show();
+//        }
+
+        if (intraUserIdentitySettings.isPresentationHelpEnabled()) {
+            PresentationIntraUserIdentityDialog presentationIntraUserCommunityDialog = new PresentationIntraUserIdentityDialog(getActivity(),intraUserIdentitySubAppSession, null,moduleManager);
             presentationIntraUserCommunityDialog.show();
         }
+
         return rootLayout;
     }
 
@@ -121,7 +167,6 @@ public class CreateIntraUserIdentityFragment extends AbstractFermatFragment {
         mBrokerName = (EditText) layout.findViewById(R.id.crypto_broker_name);
         mBrokerPhrase = (EditText) layout.findViewById(R.id.crypto_broker_phrase);
         mBrokerImage = (ImageView) layout.findViewById(R.id.crypto_broker_image);
-
         createButton.setText((!isUpdate) ? "Create" : "Update");
 
         mBrokerName.requestFocus();
@@ -210,6 +255,7 @@ public class CreateIntraUserIdentityFragment extends AbstractFermatFragment {
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
         if (resultCode == Activity.RESULT_OK) {
             Bitmap imageBitmap = null;
             ImageView pictureView = mBrokerImage;
@@ -349,5 +395,28 @@ public class CreateIntraUserIdentityFragment extends AbstractFermatFragment {
         ByteArrayOutputStream stream = new ByteArrayOutputStream();
         bitmap.compress(Bitmap.CompressFormat.PNG, 100, stream);
         return stream.toByteArray();
+    }
+
+// TODO: HAY QUE DESCOMENTAR ESTO PARA QUE FUNCIONE EL ICONO DE ITEM SELECTED
+    public void showDialog(){
+        PresentationIntraUserIdentityDialog presentationIntraUserCommunityDialog = new PresentationIntraUserIdentityDialog(getActivity(), null, null,moduleManager);
+        presentationIntraUserCommunityDialog.show();
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        try {
+            int id = item.getItemId();
+
+            if (id == R.id.action_help)
+                showDialog();
+
+
+        } catch (Exception e) {
+            errorManager.reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.UNSTABLE, FermatException.wrapException(e));
+            makeText(getActivity(), "Oooops! recovering from system error",
+                    LENGTH_LONG).show();
+        }
+        return super.onOptionsItemSelected(item);
     }
 }

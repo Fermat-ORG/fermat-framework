@@ -6,9 +6,14 @@ import com.bitdubai.fermat_api.Agent;
 import com.bitdubai.fermat_api.CantStartAgentException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
 import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.BitcoinNetworkSelector;
+import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.BlockchainConnectionStatus;
+import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.RegTestNetwork.FermatTestNetwork;
+import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.RegTestNetwork.FermatTestNetworkNode;
 import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.exceptions.CantBroadcastTransactionException;
 import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.exceptions.CantCancellBroadcastTransactionException;
+import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.exceptions.CantGetBlockchainConnectionStatusException;
 import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.exceptions.CantGetCryptoTransactionException;
+import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.exceptions.CantGetTransactionException;
 import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.exceptions.CantStoreBitcoinTransactionException;
 import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.exceptions.ErrorBroadcastingTransactionException;
 import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.interfaces.BitcoinNetworkConfiguration;
@@ -39,6 +44,7 @@ import org.bitcoinj.wallet.WalletTransaction;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.Serializable;
 import java.net.InetSocketAddress;
 import java.util.UUID;
 import java.util.concurrent.ExecutionException;
@@ -154,19 +160,10 @@ public class BitcoinCryptoNetworkMonitor implements Agent {
              * I will connect to the regTest server or search for peers if we are in a different network.
              */
             if (NETWORK_PARAMETERS == RegTestParams.get()){
-                /**
-                 * Peer 1
-                 */
-                InetSocketAddress inetSocketAddress1 = new InetSocketAddress(BitcoinNetworkConfiguration.BITCOIN_FULL_NODE_1_IP, BitcoinNetworkConfiguration.BITCOIN_FULL_NODE_1_PORT);
-                PeerAddress peerAddress1 = new PeerAddress(inetSocketAddress1);
-                peerGroup.addAddress(peerAddress1);
-
-                /**
-                 * Peer 2
-                 */
-                InetSocketAddress inetSocketAddress2 = new InetSocketAddress(BitcoinNetworkConfiguration.BITCOIN_FULL_NODE_2_IP, BitcoinNetworkConfiguration.BITCOIN_FULL_NODE_2_PORT);
-                PeerAddress peerAddress2 = new PeerAddress(inetSocketAddress2);
-                peerGroup.addAddress(peerAddress2);
+                FermatTestNetwork fermatTestNetwork = new FermatTestNetwork();
+                for (FermatTestNetworkNode node : fermatTestNetwork.getNetworkNodes()){
+                    peerGroup.addAddress(node.getPeerAddress());
+                }
             } else
                 peerGroup.addPeerDiscovery(new DnsDiscovery(NETWORK_PARAMETERS));
 
@@ -220,14 +217,12 @@ public class BitcoinCryptoNetworkMonitor implements Agent {
      * @param transactionId the internal fermat transaction Ifd
      * @throws CantBroadcastTransactionException
      */
-    public void broadcastTransaction(final Transaction tx, final UUID transactionId) throws CantBroadcastTransactionException {
+    public synchronized void  broadcastTransaction(final Transaction tx, final UUID transactionId) throws CantBroadcastTransactionException {
         try{
             /**
              * I will add this transaction to the wallet.
              */
-            WalletTransaction walletTransaction = new WalletTransaction(WalletTransaction.Pool.PENDING, tx);
-            wallet.addWalletTransaction(walletTransaction);
-
+            wallet.commitTx(tx);
 
             /**
              * save the added transaction in the wallet
@@ -271,7 +266,7 @@ public class BitcoinCryptoNetworkMonitor implements Agent {
      * @param txHash
      * @throws CantBroadcastTransactionException
      */
-    public void broadcastTransaction(final String txHash) throws CantBroadcastTransactionException{
+    public synchronized void broadcastTransaction(final String txHash) throws CantBroadcastTransactionException{
         /**
          * The transaction is stored in the Wallet and the database, so I will make sure this is correct.
          */
@@ -426,58 +421,13 @@ public class BitcoinCryptoNetworkMonitor implements Agent {
      */
 
     public CryptoTransaction getCryptoTransactionFromBlockChain(String txHash, String blockHash) throws CantGetCryptoTransactionException {
-        /**
-         * I will check I don't get nulls in the parameters
-         */
-        if (txHash == null )
-            throw new CantGetCryptoTransactionException(CantGetCryptoTransactionException.DEFAULT_MESSAGE, null, "TxHash parameters can't be null", null);
-
-        /**
-         * I will get the transaction from our own database if we have it.
-         */
-        Sha256Hash transactionSha256Hash = Sha256Hash.wrap(txHash);
-        Transaction storedTransaction = wallet.getTransaction(transactionSha256Hash);
-
-        if (storedTransaction != null)
-            return getCryptoTransactionFromBitcoinTransaction(storedTransaction);
-
-
-        /**
-         * I don't have it locally, so I will request it to a peer.
-         */
-        if (blockHash == null )
-            throw new CantGetCryptoTransactionException(CantGetCryptoTransactionException.DEFAULT_MESSAGE, null, "BlockHash parameters can't be null", null);
-        try{
-            /**
-             * I get the hash of the block
-             */
-            Sha256Hash blockSha256Hash = Sha256Hash.wrap(blockHash);
-
-
-            /**
-             * If I don't have this block, then I will get the block from the peer
-             */
-            Block genesisBlock = getBlockFromPeer(blockSha256Hash);
-
-            /**
-             * Will search all transactions from the block until I find my own.
-             */
-            for (Transaction transaction : genesisBlock.getTransactions()){
-                if (transaction.getHashAsString().contentEquals(txHash)){
-                    /**
-                     * I form the CryptoTransaction and return it.
-                     */
-                    return getCryptoTransactionFromBitcoinTransaction(transaction);
-                }
-            }
-
-            /**
-             * If I couldn't find it. then I will return null.
-             * */
-            return null;
-        } catch (Exception e){
-            throw new CantGetCryptoTransactionException(CantGetCryptoTransactionException.DEFAULT_MESSAGE, e, null, null);
+        Transaction transaction = null;
+        try {
+            transaction = this.getTransactionFromBlockChain(txHash, blockHash);
+        } catch (Exception e) {
+            throw new CantGetCryptoTransactionException(CantGetCryptoTransactionException.DEFAULT_MESSAGE, e, "Error getting the transaction from the blockchain.", null);
         }
+        return this.getCryptoTransactionFromBitcoinTransaction(transaction);
     }
 
     /**
@@ -494,11 +444,11 @@ public class BitcoinCryptoNetworkMonitor implements Agent {
      * @param blockHash
      * @return
      */
-    private Block getBlockFromPeer(Sha256Hash blockHash) throws CantGetCryptoTransactionException {
+    private Block getBlockFromPeer(Sha256Hash blockHash) throws CantGetTransactionException {
         try {
             return peerGroup.getDownloadPeer().getBlock(blockHash).get(1, TimeUnit.MINUTES);
         } catch (InterruptedException | ExecutionException | TimeoutException e) {
-            throw new CantGetCryptoTransactionException(CantGetCryptoTransactionException.DEFAULT_MESSAGE, e, "There was a problem trying to get the block from the Peer.", null);
+            throw new CantGetTransactionException(CantGetTransactionException.DEFAULT_MESSAGE, e, "There was a problem trying to get the block from the Peer.", null);
         }
     }
 
@@ -508,7 +458,7 @@ public class BitcoinCryptoNetworkMonitor implements Agent {
      * @param transactionId
      * @throws CantStoreBitcoinTransactionException
      */
-    public void storeBitcoinTransaction (Transaction tx, UUID transactionId) throws CantStoreBitcoinTransactionException{
+    public synchronized void storeBitcoinTransaction (Transaction tx, UUID transactionId) throws CantStoreBitcoinTransactionException{
         try {
             /**
              * I store it in the database
@@ -517,8 +467,7 @@ public class BitcoinCryptoNetworkMonitor implements Agent {
             /**
              * I store it in the wallet.
              */
-            WalletTransaction walletTransaction = new WalletTransaction(WalletTransaction.Pool.PENDING, tx);
-            wallet.addWalletTransaction(walletTransaction);
+            wallet.commitTx(tx);
             wallet.saveToFile(walletFileName);
 
 
@@ -568,5 +517,84 @@ public class BitcoinCryptoNetworkMonitor implements Agent {
         } catch (IOException e) {
             throw new CantCancellBroadcastTransactionException(CantCancellBroadcastTransactionException.DEFAULT_MESSAGE, e, "Change in transaction could not be saved in wallet.", null);
         }
+    }
+
+    /**
+     * Gets the current blockchainConnectionStatus
+     * @return
+     */
+    public BlockchainConnectionStatus getBlockchainConnectionStatus() throws CantGetBlockchainConnectionStatusException {
+        try{
+            int connectedPeers = peerGroup.getConnectedPeers().size();
+            String downloadNodeIp = peerGroup.getDownloadPeer().getAddress().toString();
+            long downloadPing = peerGroup.getDownloadPeer().getLastPingTime();
+
+            BlockchainConnectionStatus blockchainConnectionStatus = new BlockchainConnectionStatus(connectedPeers, downloadNodeIp, downloadPing, BLOCKCHAIN_NETWORKTYPE);
+
+            return blockchainConnectionStatus;
+        } catch (Exception e){
+            throw new CantGetBlockchainConnectionStatusException(CantGetBlockchainConnectionStatusException.DEFAULT_MESSAGE, e, "Error getting connection status from peers.", null);
+        }
+
+    }
+
+    /**
+     * Gets the specified Transaction from the Blockchain by looking it locally, or on the blockchain using the block hash
+     * @param parentTransactionHash
+     * @param transactionBlockHash
+     * @return
+     * @throws CantGetTransactionException
+     */
+    public Transaction getTransactionFromBlockChain(String parentTransactionHash, String transactionBlockHash) throws CantGetTransactionException {
+        /**
+         * I will check I don't get nulls in the parameters
+         */
+        if (parentTransactionHash == null )
+            throw new CantGetTransactionException(CantGetTransactionException.DEFAULT_MESSAGE, null, "TxHash parameters can't be null", null);
+
+        /**
+         * I will get the transaction from our own database if we have it.
+         */
+        Sha256Hash transactionSha256Hash = Sha256Hash.wrap(parentTransactionHash);
+        Transaction storedTransaction = wallet.getTransaction(transactionSha256Hash);
+
+        if (storedTransaction != null)
+            return storedTransaction;
+
+
+        /**
+         * I don't have it locally, so I will request it to a peer.
+         */
+        if (transactionBlockHash == null )
+            throw new CantGetTransactionException(CantGetTransactionException.DEFAULT_MESSAGE, null, "BlockHash parameters can't be null", null);
+
+        try {
+            /**
+             * I get the hash of the block
+             */
+            Sha256Hash blockSha256Hash = Sha256Hash.wrap(transactionBlockHash);
+
+
+            /**
+             * If I don't have this block, then I will get the block from the peer
+             */
+            Block genesisBlock = getBlockFromPeer(blockSha256Hash);
+
+            /**
+             * Will search all transactions from the block until I find my own.
+             */
+            for (Transaction transaction : genesisBlock.getTransactions()) {
+                if (transaction.getHashAsString().contentEquals(parentTransactionHash)) {
+                    /**
+                     * I form the CryptoTransaction and return it.
+                     */
+                    return transaction;
+                }
+            }
+        } catch (Exception e) {
+            throw new CantGetTransactionException(CantGetTransactionException.DEFAULT_MESSAGE, e, "error getting the Transaction from the blockchain" , null);
+        }
+
+        return null;
     }
 }

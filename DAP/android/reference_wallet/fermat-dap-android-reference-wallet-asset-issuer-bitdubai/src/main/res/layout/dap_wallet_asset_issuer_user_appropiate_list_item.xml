@@ -1,46 +1,50 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="75dp"
-    android:background="@color/fab_material_white">
+    android:layout_height="60dp">
 
     <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
-        android:id="@+id/userName"
+        android:id="@+id/appropiateListUserName"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Frank Contreras"
-        android:layout_marginBottom="13dp"
-        android:layout_above="@+id/deliveryDate"
+        android:textSize="16sp"
+        android:fontFamily="regular"
+        android:textColor="#2A3F52"
+        android:layout_alignParentTop="true"
         android:layout_alignParentLeft="true"
-        android:layout_marginLeft="12dp"
-        android:textSize="@dimen/abc_text_size_title_material"
-        android:textColor="@color/fab_material_black"/>
+        android:paddingTop="10dp"
+        android:paddingLeft="10dp"/>
 
     <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
-        android:id="@+id/deliveryDate"
+        android:id="@+id/appropiateListAppropiateDate"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="25, Nov 2015"
-        android:layout_marginBottom="12dp"
-        android:layout_above="@+id/view"
-        android:layout_alignLeft="@+id/userName"
-        android:textSize="@dimen/abc_text_size_small_material"
-        android:textColor="@color/gray"/>
+        android:text="25 Nov 2015"
+        android:textSize="12sp"
+        android:fontFamily="normal"
+        android:textColor="#9E9E9E"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentLeft="true"
+        android:paddingBottom="10dp"
+        android:paddingLeft="10dp"/>
 
     <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
-        android:id="@+id/deliveryStatus"
+        android:id="@+id/appropiateListAppropiateStatus"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Redeemed"
+        android:text="Unused"
+        android:textSize="16sp"
+        android:fontFamily="regular"
+        android:textColor="#9E9E9E"
         android:layout_centerVertical="true"
         android:layout_alignParentRight="true"
-        android:layout_marginRight="17dp"
-        android:textColor="@color/fab_material_blue_900"/>
+        android:paddingRight="10dp"/>
 
     <View
         android:layout_width="fill_parent"
-        android:layout_height="1dip"
-        android:background="@color/gray"
+        android:layout_height="1dp"
+        android:background="#9E9E9E"
         android:layout_alignParentBottom="true"
         android:id="@+id/view" />
 

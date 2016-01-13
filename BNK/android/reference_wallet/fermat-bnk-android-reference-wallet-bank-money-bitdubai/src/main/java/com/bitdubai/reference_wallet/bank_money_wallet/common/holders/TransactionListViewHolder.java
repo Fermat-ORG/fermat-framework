@@ -1,5 +1,6 @@
 package com.bitdubai.reference_wallet.bank_money_wallet.common.holders;
 
+import android.text.format.DateUtils;
 import android.view.View;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView;
 import com.bitdubai.fermat_android_api.ui.holders.FermatViewHolder;
@@ -38,7 +39,8 @@ public class TransactionListViewHolder extends FermatViewHolder {
         transactionAmount.setText(String.valueOf(itemInfo.getAmount()));
         currency.setText(itemInfo.getCurrencyType().getCode());
         transactionType.setText(itemInfo.getTransactionType().getCode());
-        transactionTimestamp.setText(String.valueOf(convertTime(itemInfo.getTimestamp())));
+        //transactionTimestamp.setText(String.valueOf(convertTime(itemInfo.getTimestamp())));
+        transactionTimestamp.setText(DateUtils.getRelativeTimeSpanString(itemInfo.getTimestamp()));
         memo.setText(itemInfo.getMemo());
     }
 

@@ -22,10 +22,10 @@ import com.bitdubai.fermat_android_api.ui.enums.FermatRefreshTypes;
 import com.bitdubai.fermat_android_api.ui.fragments.FermatWalletListFragment;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Wallets;
 import com.bitdubai.fermat_dap_android_wallet_asset_issuer_bitdubai.R;
-import com.bitdubai.fermat_dap_android_wallet_asset_issuer_bitdubai.common.adapters.UserDeliveryListAdapter;
+import com.bitdubai.fermat_dap_android_wallet_asset_issuer_bitdubai.common.adapters.UserAppropiateListAdapter;
 import com.bitdubai.fermat_dap_android_wallet_asset_issuer_bitdubai.models.Data;
 import com.bitdubai.fermat_dap_android_wallet_asset_issuer_bitdubai.models.DigitalAsset;
-import com.bitdubai.fermat_dap_android_wallet_asset_issuer_bitdubai.models.UserDelivery;
+import com.bitdubai.fermat_dap_android_wallet_asset_issuer_bitdubai.models.UserAppropiate;
 import com.bitdubai.fermat_dap_android_wallet_asset_issuer_bitdubai.sessions.AssetIssuerSession;
 import com.bitdubai.fermat_dap_android_wallet_asset_issuer_bitdubai.util.CommonLogger;
 import com.bitdubai.fermat_dap_api.layer.dap_module.wallet_asset_issuer.interfaces.AssetIssuerWalletSupAppModuleManager;
@@ -40,7 +40,7 @@ import java.util.List;
 /**
  * Created by Jinmy on 01/06/16.
  */
-public class UserAppropiateListFragment extends FermatWalletListFragment<UserDelivery> {
+public class UserAppropiateListFragment extends FermatWalletListFragment<UserAppropiate> {
 
     // Constants
     private static final String TAG = "UserAppropiateListFragment";
@@ -50,16 +50,16 @@ public class UserAppropiateListFragment extends FermatWalletListFragment<UserDel
     private ErrorManager errorManager;
 
     // Data
-    private List<UserDelivery> users;
+    private List<UserAppropiate> users;
     private DigitalAsset digitalAsset;
 
 
     //UI
     private View noUsersView;
     private View rootView;
-    private FermatTextView assetDeliveryListNameText;
-    private FermatTextView assetDeliveryListRemainingText;
-    private ImageView assetDeliveryListImage;
+    private FermatTextView assetAppropiateListNameText;
+    private FermatTextView assetAppropiateListRemainingText;
+    private ImageView assetAppropiateListImage;
 
     public static UserAppropiateListFragment newInstance() {
         return new UserAppropiateListFragment();
@@ -135,22 +135,22 @@ public class UserAppropiateListFragment extends FermatWalletListFragment<UserDel
     }
 
     private void setupUI() {
-        assetDeliveryListImage = (ImageView) rootView.findViewById(R.id.assetDeliveryListImage);
-        assetDeliveryListNameText = (FermatTextView) rootView.findViewById(R.id.assetDeliveryListNameText);
-        assetDeliveryListRemainingText = (FermatTextView) rootView.findViewById(R.id.assetDeliveryListRemainingText);
+        assetAppropiateListImage = (ImageView) rootView.findViewById(R.id.assetAppropiateListImage);
+        assetAppropiateListNameText = (FermatTextView) rootView.findViewById(R.id.assetAppropiateListNameText);
+        assetAppropiateListRemainingText = (FermatTextView) rootView.findViewById(R.id.assetAppropiateListRemainingText);
     }
 
     private void setupUIData() {
         digitalAsset = (DigitalAsset) appSession.getData("asset_data");
 
         if (digitalAsset.getImage() != null) {
-            assetDeliveryListImage.setImageBitmap(BitmapFactory.decodeStream(new ByteArrayInputStream(digitalAsset.getImage())));
+            assetAppropiateListImage.setImageBitmap(BitmapFactory.decodeStream(new ByteArrayInputStream(digitalAsset.getImage())));
         } else {
-            assetDeliveryListImage.setImageDrawable(rootView.getResources().getDrawable(R.drawable.img_asset_without_image));
+            assetAppropiateListImage.setImageDrawable(rootView.getResources().getDrawable(R.drawable.img_asset_without_image));
         }
 
-        assetDeliveryListNameText.setText(digitalAsset.getName());
-        assetDeliveryListRemainingText.setText(digitalAsset.getAvailableBalanceQuantity() + " Assets Remaining");
+        assetAppropiateListNameText.setText(digitalAsset.getName());
+        assetAppropiateListRemainingText.setText(digitalAsset.getAvailableBalanceQuantity() + " Assets Remaining");
     }
 
     private void setupBackgroundBitmap(final View rootView) {
@@ -205,7 +205,7 @@ public class UserAppropiateListFragment extends FermatWalletListFragment<UserDel
 
     @Override
     protected int getRecyclerLayoutId() {
-        return R.id.dap_wallet_asset_issuer_user_delivery_list_activity_recycler_view;
+        return R.id.dap_wallet_asset_issuer_user_appropiate_list_activity_recycler_view;
     }
 
     @Override
@@ -240,7 +240,7 @@ public class UserAppropiateListFragment extends FermatWalletListFragment<UserDel
     @Override
     public FermatAdapter getAdapter() {
         if (adapter == null) {
-            adapter = new UserDeliveryListAdapter(getActivity(), users, moduleManager);
+            adapter = new UserAppropiateListAdapter(getActivity(), users, moduleManager);
         }
         return adapter;
     }
@@ -264,13 +264,11 @@ public class UserAppropiateListFragment extends FermatWalletListFragment<UserDel
     }
 
     @Override
-    public List<UserDelivery> getMoreDataAsync(FermatRefreshTypes refreshType, int pos) {
-        List<UserDelivery> users = new ArrayList<>();
+    public List<UserAppropiate> getMoreDataAsync(FermatRefreshTypes refreshType, int pos) {
+        List<UserAppropiate> users = new ArrayList<>();
         if (moduleManager != null) {
             try {
-                users = Data.getUserDeliveryList(appSession.getAppPublicKey(), digitalAsset, moduleManager);
-
-
+                users = Data.getUserAppropiateList("walletPublicKeyTest", digitalAsset, moduleManager);
             } catch (Exception ex) {
                 CommonLogger.exception(TAG, ex.getMessage(), ex);
                 if (errorManager != null)

@@ -228,6 +228,9 @@ public class CustomerAckOfflineMerchandiseBusinessTransactionDao {
                     DatabaseFilterType.EQUAL);
             databaseTable.loadToMemory();
             List<DatabaseTableRecord> records = databaseTable.getRecords();
+            if(records.isEmpty()){
+                return null;
+            }
             checkDatabaseRecords(records);
             String value=records
                     .get(0)
@@ -322,7 +325,7 @@ public class CustomerAckOfflineMerchandiseBusinessTransactionDao {
                 customerBrokerContractPurchase.getPublicKeyBroker());
         record.setStringValue(
                 CustomerAckOfflineMerchandiseBusinessTransactionDatabaseConstants.ACK_OFFLINE_MERCHANDISE_CONTRACT_TRANSACTION_STATUS_COLUMN_NAME,
-                ContractTransactionStatus.PENDING_OFFLINE_MERCHANDISE_CONFIRMATION.getCode());
+                ContractTransactionStatus.PENDING_OFFLINE_MERCHANDISE_NOTIFICATION.getCode());
 
         return record;
     }

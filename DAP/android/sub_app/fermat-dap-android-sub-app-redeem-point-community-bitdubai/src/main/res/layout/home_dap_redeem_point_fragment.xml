@@ -81,7 +81,7 @@
             android:layout_marginBottom="@dimen/fab_margin"
             android:layout_marginEnd="@dimen/fab_margin"
             android:layout_marginRight="@dimen/fab_margin"
-            android:visibility="visible"
+            android:visibility="invisible"
             app:button_color="#22ff00"
             app:button_colorPressed="#08930f"
             app:image="@drawable/fab_plus_icon"

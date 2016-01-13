@@ -210,6 +210,23 @@ public class RedeemPointActorPluginRoot extends AbstractPlugin implements
         }
     }
 
+    /**
+     * This method saves an already existing redeem point in the registered redeem point database,
+     * usually uses when the redeem point request the issuer an extended public key, we save in
+     * the issuer side this redeem point so we can retrieve its information on future uses.
+     *
+     * @param redeemPoint The already existing redeem point with all its information
+     * @throws CantCreateActorRedeemPointException
+     */
+    @Override
+    public void saveRegisteredActorRedeemPoint(ActorAssetRedeemPoint redeemPoint) throws CantCreateActorRedeemPointException {
+        try {
+            redeemPointActorDao.createNewRedeemPointRegisterInNetworkService(redeemPoint);
+        } catch (CantAddPendingRedeemPointException e) {
+            throw new CantCreateActorRedeemPointException();
+        }
+    }
+
     @Override
     public void createActorAssetRedeemPointRegisterInNetworkService(List<ActorAssetRedeemPoint> actorAssetRedeemPoints) throws CantCreateActorRedeemPointException {
         try {
@@ -316,7 +333,7 @@ public class RedeemPointActorPluginRoot extends AbstractPlugin implements
                     + "\n-------------------------------------------------");
             for (final CryptoAddressRequest request : list) {
 
-                if (request.getCryptoAddressDealer().equals(CryptoAddressDealers.DAP_WATCH_ONLY)) {
+                if (request.getCryptoAddressDealer() == CryptoAddressDealers.DAP_WATCH_ONLY || request.getCryptoAddressDealer() == CryptoAddressDealers.DAP_ASSET) {
 
                     if (request.getAction().equals(RequestAction.ACCEPT))
                         this.handleCryptoAddressReceivedEvent(request);
@@ -383,16 +400,16 @@ public class RedeemPointActorPluginRoot extends AbstractPlugin implements
         /**
          * we will extract the ExtendedPublicKey from the message
          */
-        ExtendedPublicKey extendedPublicKey= null;
-        try{
+        ExtendedPublicKey extendedPublicKey = null;
+        try {
             AssetExtendedPublickKeyContentMessage assetExtendedPublickKeyContentMessage = (AssetExtendedPublickKeyContentMessage) dapMessage.getMessageContent();
             extendedPublicKey = assetExtendedPublickKeyContentMessage.getExtendedPublicKey();
 
-        } catch (Exception e){
+        } catch (Exception e) {
             //handle this. I might have a Class Cast exception
         }
 
-        if (extendedPublicKey == null){
+        if (extendedPublicKey == null) {
             System.out.println("*** Actor Asset Redeem Point  *** The extended public Key received by " + dapActorSender.getName() + " is null.");
         } else {
             /**

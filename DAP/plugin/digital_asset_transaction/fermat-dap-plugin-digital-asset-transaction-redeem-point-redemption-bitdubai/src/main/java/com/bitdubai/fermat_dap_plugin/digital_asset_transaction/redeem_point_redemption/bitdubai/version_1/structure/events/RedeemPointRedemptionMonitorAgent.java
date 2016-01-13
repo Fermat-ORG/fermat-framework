@@ -305,7 +305,7 @@ public class RedeemPointRedemptionMonitorAgent implements Agent {
                                         debug("adding credit on available balance");
                                         AssetRedeemPointWalletBalance walletBalance = wallet.getBalance();
                                         walletBalance.credit(assetRedeemPointWalletTransactionRecord, BalanceType.AVAILABLE);
-
+                                        wallet.newAssetRedeemed(userPublicKey, metadata.getDigitalAsset().getPublicKey());
                                         //I GOT IT, EVERYTHING WENT OK!
                                         debug("update status");
                                         dao.updateTransactionCryptoStatusById(CryptoStatus.ON_BLOCKCHAIN, transactionId);

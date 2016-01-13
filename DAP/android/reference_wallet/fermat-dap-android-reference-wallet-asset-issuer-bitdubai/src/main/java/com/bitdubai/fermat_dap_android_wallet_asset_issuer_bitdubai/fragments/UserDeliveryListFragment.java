@@ -265,7 +265,8 @@ public class UserDeliveryListFragment extends FermatWalletListFragment<UserDeliv
         List<UserDelivery> users = new ArrayList<>();
         if (moduleManager != null) {
             try {
-                users = Data.getUserDeliveryList(appSession.getAppPublicKey(), digitalAsset, moduleManager);
+                if (digitalAsset == null) digitalAsset = (DigitalAsset) appSession.getData("asset_data");
+                users = Data.getUserDeliveryList("walletPublicKeyTest", digitalAsset, moduleManager);
 
             } catch (Exception ex) {
                 CommonLogger.exception(TAG, ex.getMessage(), ex);

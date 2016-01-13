@@ -74,6 +74,7 @@ public class SubAppActivity extends FermatActivity implements FermatScreenSwappe
             //hacer un enum con areas genericas
             //TODO error manager null
           //  getErrorManager().reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.UNSTABLE, FermatException.wrapException(e));
+            e.printStackTrace();
             Toast.makeText(getApplicationContext(), "Oooops! recovering from system error", Toast.LENGTH_LONG).show();
         }
 
@@ -448,7 +449,7 @@ public class SubAppActivity extends FermatActivity implements FermatScreenSwappe
                 initialisePaging();
             }
             if (activity.getTabStrip() != null) {
-                setPagerTabs(getSubAppRuntimeMiddleware().getLastSubApp(), activity.getTabStrip(), subAppSession);
+                setPagerTabs(activity.getTabStrip(), subAppSession,fermatAppConnection.getFragmentFactory());
             }
             if (activity.getFragments().size() == 1) {
                 setOneFragmentInScreen();
@@ -475,22 +476,22 @@ public class SubAppActivity extends FermatActivity implements FermatScreenSwappe
         try {
             if(fermatFragmentFactory !=null){
                     TabLayout tabLayout = (TabLayout) findViewById(R.id.tab_layout);
-                    tabLayout.setVisibility(View.GONE);
-
+                    if(tabLayout!=null) tabLayout.setVisibility(View.GONE);
                     ViewPager pagertabs = (ViewPager) findViewById(R.id.pager);
-                    pagertabs.setVisibility(View.VISIBLE);
-                    adapter = new TabsPagerAdapter(getFragmentManager(),
-                            getApplicationContext(),
-                            fermatFragmentFactory,
-                            fragment,
-                            subAppsSession,
-                            getSubAppResourcesProviderManager(),
-                            getResources());
-                    pagertabs.setAdapter(adapter);
+                    if(pagertabs!=null) {
+                        pagertabs.setVisibility(View.VISIBLE);
+                        adapter = new TabsPagerAdapter(getFragmentManager(),
+                                getApplicationContext(),
+                                fermatFragmentFactory,
+                                fragment,
+                                subAppsSession,
+                                getSubAppResourcesProviderManager());
+                        pagertabs.setAdapter(adapter);
 
-                    final int pageMargin = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 4, getResources()
-                            .getDisplayMetrics());
-                    pagertabs.setPageMargin(pageMargin);
+                        final int pageMargin = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 4, getResources()
+                                .getDisplayMetrics());
+                        pagertabs.setPageMargin(pageMargin);
+                    }
                 }
             }catch (Exception e){
                 e.printStackTrace();

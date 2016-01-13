@@ -14,14 +14,6 @@ public interface BitcoinNetworkConfiguration {
     public static final NetworkParameters DEFAULT_NETWORK_PARAMETERS = RegTestParams.get();
 
     /**
-     * RegTest client configuration
-     */
-    public static final String BITCOIN_FULL_NODE_1_IP = "52.32.106.35";
-    public static final int  BITCOIN_FULL_NODE_1_PORT = 19020;
-    public static final String BITCOIN_FULL_NODE_2_IP = "52.34.184.168";
-    public static final int  BITCOIN_FULL_NODE_2_PORT = 19030;
-
-    /**
      * Agent name and version
      */
     public static final String USER_AGENT_NAME = "Fermat Agent";

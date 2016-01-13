@@ -49,6 +49,7 @@ import com.bitdubai.fermat_cbp_api.layer.wallet_module.common.interfaces.WalletM
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_broker.exceptions.CantGetCryptoBrokerIdentityListException;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_broker.exceptions.CantGetCurrentIndexSummaryForStockCurrenciesException;
 
+import com.bitdubai.fermat_cer_api.all_definition.enums.TimeUnit;
 import com.bitdubai.fermat_cer_api.all_definition.interfaces.CurrencyPair;
 import com.bitdubai.fermat_cer_api.all_definition.interfaces.ExchangeRate;
 import com.bitdubai.fermat_cer_api.layer.provider.exceptions.CantGetExchangeRateException;
@@ -83,26 +84,9 @@ public interface CryptoBrokerWalletManager extends WalletManager {
     Collection<IndexInfoSummary> getCurrentIndexSummaryForStockCurrencies() throws CantGetCurrentIndexSummaryForStockCurrenciesException;
 
     /**
-     * Get information about the current stock
-     *
-     * @param stockCurrency the stock currency
-     * @return information about the current stock
-     */
-    StockInformation getCurrentStock(String stockCurrency);
-
-    /**
      * @return list of identities associated with this wallet
      */
     List<CryptoBrokerIdentity> getListOfIdentities() throws CantGetCryptoBrokerIdentityListException, CantListCryptoBrokerIdentitiesException;
-
-    /**
-     * Get stock staticstics data about the given stock currency
-     *
-     * @param stockCurrency the stock currency
-     * @return stock statistics data
-     */
-    StockStatistics getStockStatistics(String stockCurrency);
-
 
     List<String> getPaymentMethods(String currencyToSell);
 
@@ -363,11 +347,18 @@ public interface CryptoBrokerWalletManager extends WalletManager {
     List<CryptoBrokerWalletAssociatedSetting> getCryptoBrokerWalletAssociatedSettings(String walletPublicKey) throws CantGetCryptoBrokerWalletSettingException, CryptoBrokerWalletNotFoundException;
 
     /**
-     * Returns a list of exchange rates of a given date, for a specific currencyPair
+     * Returns an exchange rate of a given date, for a specific currencyPair
+     *
+     * @return an exchangeRate object
+     */
+    ExchangeRate getExchangeRateFromDate(Currency currencyFrom, Currency currencyTo, long timestamp, UUID providerId) throws UnsupportedCurrencyPairException, CantGetExchangeRateException, CantGetProviderException;
+
+    /**
+     * Given a start and end timestamp and a currencyPair, returns a list of DAILY ExchangeRates
      *
      * @return a list of exchangeRate objects
      */
-    Collection<ExchangeRate> getExchangeRateListFromDate(UUID providerId, Currency currencyFrom, Currency currencyTo, long timestamp) throws UnsupportedCurrencyPairException, CantGetExchangeRateException;
+    Collection<ExchangeRate> getDailyExchangeRatesForPeriod(Currency currencyFrom, Currency currencyTo, long startTimestamp, long endTimestamp, UUID providerId) throws UnsupportedCurrencyPairException, CantGetExchangeRateException, CantGetProviderException;
 
     /**
      * This method load the list CryptoBrokerStockTransaction

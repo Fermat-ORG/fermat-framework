@@ -1,5 +1,6 @@
 package com.bitdubai.fermat_dap_android_sub_app_asset_user_community_bitdubai.fragments;
 
+import android.content.DialogInterface;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.widget.SwipeRefreshLayout;
@@ -23,12 +24,20 @@ import com.bitdubai.fermat_android_api.ui.interfaces.FermatWorkerCallBack;
 import com.bitdubai.fermat_android_api.ui.util.FermatWorker;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
 import com.bitdubai.fermat_dap_android_sub_app_asset_user_community_bitdubai.R;
+import com.bitdubai.fermat_dap_android_sub_app_asset_user_community_bitdubai.adapters.GroupCommunityAdapter;
 import com.bitdubai.fermat_dap_android_sub_app_asset_user_community_bitdubai.adapters.UserCommunityAdapter;
 import com.bitdubai.fermat_dap_android_sub_app_asset_user_community_bitdubai.interfaces.AdapterChangeListener;
+import com.bitdubai.fermat_dap_android_sub_app_asset_user_community_bitdubai.interfaces.PopupMenu;
 import com.bitdubai.fermat_dap_android_sub_app_asset_user_community_bitdubai.models.Actor;
+import com.bitdubai.fermat_dap_android_sub_app_asset_user_community_bitdubai.models.Group;
+import com.bitdubai.fermat_dap_android_sub_app_asset_user_community_bitdubai.popup.CreateGroupFragmentDialog;
 import com.bitdubai.fermat_dap_android_sub_app_asset_user_community_bitdubai.sessions.AssetUserCommunitySubAppSession;
-import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.AssetUserActorRecord;
+import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.exceptions.CantDeleteAssetUserGroupException;
+import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.interfaces.ActorAssetUserGroup;
+import com.bitdubai.fermat_dap_api.layer.dap_middleware.dap_asset_factory.exceptions.CantPublishAssetFactoy;
+import com.bitdubai.fermat_dap_api.layer.dap_middleware.dap_asset_factory.interfaces.AssetFactory;
 import com.bitdubai.fermat_dap_api.layer.dap_sub_app_module.asset_user_community.interfaces.AssetUserCommunitySubAppModuleManager;
+import com.bitdubai.fermat_dap_api.layer.dap_transaction.common.exceptions.RecordsNotFoundException;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 import com.software.shell.fab.ActionButton;
 
@@ -39,12 +48,12 @@ import java.util.List;
  * Created by Nerio on 06/01/16.
  */
 public class UserCommunityGroupFragment extends AbstractFermatFragment implements
-        FermatWorkerCallBack, SwipeRefreshLayout.OnRefreshListener, android.widget.PopupMenu.OnMenuItemClickListener {
+        SwipeRefreshLayout.OnRefreshListener, android.widget.PopupMenu.OnMenuItemClickListener {
 
     private static AssetUserCommunitySubAppModuleManager manager;
     private static final int MAX = 20;
 
-    private List<Actor> actors;
+    private List<Group> groups;
     ErrorManager errorManager;
 
     // recycler
@@ -52,10 +61,12 @@ public class UserCommunityGroupFragment extends AbstractFermatFragment implement
     private SwipeRefreshLayout swipeRefreshLayout;
     private RecyclerView recyclerView;
     private GridLayoutManager layoutManager;
-    private UserCommunityAdapter adapter;
+    private GroupCommunityAdapter adapter;
     private View rootView;
     private LinearLayout emptyView;
     private int offset = 0;
+    private CreateGroupFragmentDialog dialog;
+    private Group selectedGroup;
 
     /**
      * Flags
@@ -80,28 +91,75 @@ public class UserCommunityGroupFragment extends AbstractFermatFragment implement
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View rootView = inflater.inflate(R.layout.group_fragment, container, false);
-        initViews(rootView);
+        rootView = inflater.inflate(R.layout.group_fragment, container, false);
+//        initViews(rootView);
+        recyclerView = (RecyclerView) rootView.findViewById(R.id.gridViewGroup);
+        recyclerView.setHasFixedSize(true);
+        layoutManager = new GridLayoutManager(getActivity(), 3, LinearLayoutManager.VERTICAL, false);
+        recyclerView.setLayoutManager(layoutManager);
+        adapter = new GroupCommunityAdapter(getActivity());
+        adapter.setAdapterChangeListener(new AdapterChangeListener<Group>() {
+            @Override
+            public void onDataSetChanged(List<Group> dataSet) {
+                groups = dataSet;
+            }
+        });
+        adapter.setMenuItemClick(new PopupMenu() {
+                @Override
+                public void onMenuItemClickListener(View menuView, Group group, int position) {
+                    selectedGroup = group;
+                    android.widget.PopupMenu popupMenu = new android.widget.PopupMenu(getActivity(), menuView);
+                    MenuInflater inflater = popupMenu.getMenuInflater();
+                    inflater.inflate(R.menu.dap_community_user_group_menu, popupMenu.getMenu());
+
+                    popupMenu.setOnMenuItemClickListener(UserCommunityGroupFragment.this);
+                    popupMenu.show();
+                }
+            });
+
+        recyclerView.setAdapter(adapter);
+        swipeRefreshLayout = (SwipeRefreshLayout) rootView.findViewById(R.id.swipe_group);
+        swipeRefreshLayout.setOnRefreshListener(this);
+        swipeRefreshLayout.setColorSchemeColors(Color.BLUE, Color.BLUE);
+
+        rootView.setBackgroundColor(Color.parseColor("#000b12"));
+        emptyView = (LinearLayout) rootView.findViewById(R.id.empty_view_group);
+        swipeRefreshLayout.setRefreshing(true);
+        onRefresh();
+
+        ActionButton create = (ActionButton) rootView.findViewById(R.id.create_group);
+        create.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                /* create new asset factory project */
+//                selectedAsset = null;
+//                changeActivity(Activities.DAP_ASSET_EDITOR_ACTIVITY.getCode(), appSession.getAppPublicKey(), getAssetForEdit());
+                lauchCreateGroupDialog();
+            }
+        });
+        create.setAnimation(AnimationUtils.loadAnimation(getActivity(), R.anim.fab_jump_from_down));
+        create.setVisibility(View.VISIBLE);
+
+
         return rootView;
     }
 
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         super.onCreateOptionsMenu(menu, inflater);
-//        inflater.inflate(R.menu.dap_community_user_home_menu, menu);
+        //inflater.inflate(R.menu.dap_community_user_home_menu, menu);
     }
 
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        if (swipeRefreshLayout != null && !isRefreshing) {
+        if (swipeRefreshLayout != null)
             swipeRefreshLayout.post(new Runnable() {
                 @Override
                 public void run() {
                     onRefresh();
                 }
             });
-        }
     }
 
     @Override
@@ -114,11 +172,32 @@ public class UserCommunityGroupFragment extends AbstractFermatFragment implement
         Log.i(TAG, "recycler view setup");
         if (layout == null)
             return;
-        recyclerView = (RecyclerView) layout.findViewById(R.id.recycler_assets);
+        recyclerView = (RecyclerView) layout.findViewById(R.id.gridViewGroup);
         if (recyclerView != null) {
             recyclerView.setHasFixedSize(true);
             layoutManager = new GridLayoutManager(getActivity(), 2, GridLayoutManager.VERTICAL, false);
             recyclerView.setLayoutManager(layoutManager);
+
+            adapter = new GroupCommunityAdapter(getActivity());
+            adapter.setAdapterChangeListener(new AdapterChangeListener<Group>() {
+                @Override
+                public void onDataSetChanged(List<Group> dataSet) {
+                    groups = dataSet;
+                }
+            });
+
+         /*   adapter.setMenuItemClick(new PopupMenu() {
+                @Override
+                public void onMenuItemClickListener(View menuView, Group group, int position) {
+                    selectedGroup = group;
+                    android.widget.PopupMenu popupMenu = new android.widget.PopupMenu(getActivity(), menuView);
+                    MenuInflater inflater = popupMenu.getMenuInflater();
+                    inflater.inflate(R.menu.dap_community_user_group_menu, popupMenu.getMenu());
+
+                    popupMenu.setOnMenuItemClickListener(UserCommunityGroupFragment.this);
+                    popupMenu.show();
+                }
+            });*/
 //            adapter = new AssetFactoryAdapter(getActivity());
 //            adapter.setMenuItemClick(new PopupMenu() {
 //                @Override
@@ -141,8 +220,9 @@ public class UserCommunityGroupFragment extends AbstractFermatFragment implement
 //                }
 //            });
             recyclerView.setAdapter(adapter);
+
         }
-        swipeRefreshLayout = (SwipeRefreshLayout) layout.findViewById(R.id.swipe_assets);
+        swipeRefreshLayout = (SwipeRefreshLayout) layout.findViewById(R.id.swipe_group);
         if (swipeRefreshLayout != null) {
             isRefreshing = false;
             swipeRefreshLayout.setRefreshing(false);
@@ -158,6 +238,7 @@ public class UserCommunityGroupFragment extends AbstractFermatFragment implement
                 /* create new asset factory project */
 //                selectedAsset = null;
 //                changeActivity(Activities.DAP_ASSET_EDITOR_ACTIVITY.getCode(), appSession.getAppPublicKey(), getAssetForEdit());
+                lauchCreateGroupDialog();
             }
         });
         create.setAnimation(AnimationUtils.loadAnimation(getActivity(), R.anim.fab_jump_from_down));
@@ -179,67 +260,109 @@ public class UserCommunityGroupFragment extends AbstractFermatFragment implement
         }
     }
 
+    private void lauchCreateGroupDialog(){
+        dialog = new CreateGroupFragmentDialog(
+                getActivity(),manager,selectedGroup);
+        dialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
+            @Override
+            public void onDismiss(DialogInterface dialog) {
+                onRefresh();
+            }
+        });
+        dialog.show();
+    }
+
     @Override
     public void onRefresh() {
         if (!isRefreshing) {
             isRefreshing = true;
             if (swipeRefreshLayout != null)
                 swipeRefreshLayout.setRefreshing(true);
-            FermatWorker worker = new FermatWorker(getActivity(), this) {
+            FermatWorker worker = new FermatWorker() {
                 @Override
                 protected Object doInBackground() throws Exception {
                     return getMoreData();
                 }
             };
+            worker.setContext(getActivity());
+            worker.setCallBack(new FermatWorkerCallBack() {
+                @SuppressWarnings("unchecked")
+                @Override
+                public void onPostExecute(Object... result) {
+                    isRefreshing = false;
+                    if (swipeRefreshLayout != null)
+                        swipeRefreshLayout.setRefreshing(false);
+                    if (result != null &&
+                            result.length > 0) {
+                        if (getActivity() != null && adapter != null) {
+                            groups = (ArrayList<Group>) result[0];
+                            adapter.changeDataSet(groups);
+                            if (groups.isEmpty()) {
+                                showEmpty(true, emptyView);
+                            } else {
+                                showEmpty(false, emptyView);
+                            }
+                        }
+                    } else
+                        showEmpty(true, emptyView);
+                }
+
+                @Override
+                public void onErrorOccurred(Exception ex) {
+                    isRefreshing = false;
+                    if (swipeRefreshLayout != null)
+                        swipeRefreshLayout.setRefreshing(false);
+                    if (getActivity() != null)
+                        Toast.makeText(getActivity(), ex.getMessage(), Toast.LENGTH_LONG).show();
+                    ex.printStackTrace();
+                }
+            });
             worker.execute();
         }
     }
 
-    private synchronized List<Actor> getMoreData() throws Exception {
-        List<Actor> dataSet = new ArrayList<>();
-        List<AssetUserActorRecord> result = null;
+    private synchronized List<Group> getMoreData() throws Exception {
+        List<Group> dataSet = new ArrayList<>();
+        List<ActorAssetUserGroup> result = null;
         if (manager == null)
             throw new NullPointerException("AssetUserCommunitySubAppModuleManager is null");
-        result = manager.getAllActorAssetUserRegistered();
+        result = manager.getGroups();
         if (result != null && result.size() > 0) {
-            for (AssetUserActorRecord record : result) {
-                dataSet.add((new Actor(record)));
+            for (ActorAssetUserGroup record : result) {
+                Group group = new Group(record);
+                group.setMembers(manager.getListActorAssetUserByGroups(group.getGroupName()).size());
+                dataSet.add(group);
             }
         }
         return dataSet;
     }
 
     @Override
-    public void onPostExecute(Object... result) {
-        isRefreshing = false;
-        if (isAttached) {
-            if (swipeRefreshLayout != null)
-                swipeRefreshLayout.setRefreshing(false);
-            if (result != null && result.length > 0) {
-//                dataSet = (ArrayList<AssetFactory>) result[0];
-//                adapter.changeDataSet(dataSet);
-//                if (dataSet == null || dataSet.isEmpty()) {
-//                    /* create new asset */
-//                    //changeActivity(Activities.DAP_ASSET_EDITOR_ACTIVITY.getCode(), getAssetForEdit());
-//                }
-            } else if (result != null) {
-//                dataSet = new ArrayList<>();
-//                adapter.changeDataSet(dataSet);
+    public boolean onMenuItemClick(MenuItem item) {
+        if (item.getItemId() == R.id.action_edit) {
+            lauchCreateGroupDialog();
+        }
+        else if (item.getItemId() == R.id.action_delete)
+        {
+            try {
+                manager.deleteGroup(selectedGroup.getGroupId());
+            } catch (CantDeleteAssetUserGroupException e) {
+                e.printStackTrace();
+                Toast.makeText(getActivity(), "This group couldn't be deleted.", Toast.LENGTH_SHORT).show();
+            } catch (RecordsNotFoundException e) {
+                Toast.makeText(getActivity(), "Group not found.", Toast.LENGTH_SHORT).show();
             }
-        }
-    }
 
-    @Override
-    public void onErrorOccurred(Exception ex) {
-        isRefreshing = false;
-        if (isAttached) {
-            if (swipeRefreshLayout != null)
-                swipeRefreshLayout.setRefreshing(false);
+            Toast.makeText(getActivity(), "Group deleted.", Toast.LENGTH_SHORT).show();
         }
-    }
+        else if (item.getItemId() == R.id.action_group_members)
+        {
+            appSession.setData("group_selected", selectedGroup);
+            changeActivity(Activities.DAP_ASSET_USER_COMMUNITY_ACTIVITY_ADMINISTRATIVE_GROUP_USERS_FRAGMENT, appSession.getAppPublicKey());
+        }
 
-    @Override
-    public boolean onMenuItemClick(MenuItem menuItem) {
+        selectedGroup = null;
+        onRefresh();
         return false;
     }
 }

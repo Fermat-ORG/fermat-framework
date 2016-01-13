@@ -8,8 +8,10 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseFilterOrder;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseFilterType;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTable;
+import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTableFilter;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTableRecord;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTransaction;
+import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantInsertRecordException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantLoadTableToMemoryException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantUpdateRecordException;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.DealsWithPluginFileSystem;
@@ -17,14 +19,21 @@ import com.bitdubai.fermat_api.layer.osa_android.file_system.FileLifeSpan;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.FilePrivacy;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginTextFile;
+import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantCreateFileException;
+import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.FileNotFoundException;
 import com.bitdubai.fermat_dap_api.layer.all_definition.digital_asset.DigitalAsset;
+import com.bitdubai.fermat_dap_api.layer.all_definition.digital_asset.DigitalAssetMetadata;
+import com.bitdubai.fermat_dap_api.layer.dap_transaction.common.exceptions.RecordsNotFoundException;
 import com.bitdubai.fermat_dap_api.layer.dap_wallet.asset_issuer_wallet.exceptions.CantCalculateBalanceException;
 import com.bitdubai.fermat_dap_api.layer.dap_wallet.asset_issuer_wallet.exceptions.CantRegisterCreditException;
 import com.bitdubai.fermat_dap_api.layer.dap_wallet.asset_issuer_wallet.exceptions.CantRegisterDebitException;
+import com.bitdubai.fermat_dap_api.layer.dap_wallet.asset_redeem_point.exceptions.CantGetRedeemPointStatisticsException;
+import com.bitdubai.fermat_dap_api.layer.dap_wallet.asset_redeem_point.exceptions.CantSaveRedeemPointStatisticException;
 import com.bitdubai.fermat_dap_api.layer.dap_wallet.asset_redeem_point.interfaces.AssetRedeemPointWalletList;
 import com.bitdubai.fermat_dap_api.layer.dap_wallet.asset_redeem_point.interfaces.AssetRedeemPointWalletTransaction;
 import com.bitdubai.fermat_dap_api.layer.dap_wallet.asset_redeem_point.interfaces.AssetRedeemPointWalletTransactionRecord;
 import com.bitdubai.fermat_dap_api.layer.dap_wallet.asset_redeem_point.interfaces.AssetRedeemPointWalletTransactionSummary;
+import com.bitdubai.fermat_dap_api.layer.dap_wallet.asset_redeem_point.interfaces.RedeemPointStatistic;
 import com.bitdubai.fermat_dap_api.layer.dap_wallet.common.enums.BalanceType;
 import com.bitdubai.fermat_dap_api.layer.dap_wallet.common.enums.TransactionType;
 import com.bitdubai.fermat_dap_api.layer.dap_wallet.common.exceptions.CantFindTransactionException;
@@ -32,9 +41,11 @@ import com.bitdubai.fermat_dap_api.layer.dap_wallet.common.exceptions.CantGetAct
 import com.bitdubai.fermat_dap_api.layer.dap_wallet.common.exceptions.CantGetTransactionsException;
 import com.bitdubai.fermat_dap_api.layer.dap_wallet.common.exceptions.CantStoreMemoException;
 import com.bitdubai.fermat_dap_plugin.layer.wallet.wallet.redeem.point.developer.bitdubai.version_1.AssetRedeemPointWalletPluginRoot;
-import com.bitdubai.fermat_dap_plugin.layer.wallet.wallet.redeem.point.developer.bitdubai.version_1.structure.AssetRedeemPointWalletTransactionWrapper;
 import com.bitdubai.fermat_dap_plugin.layer.wallet.wallet.redeem.point.developer.bitdubai.version_1.structure.exceptions.CantExecuteAssetRedeemPointTransactionException;
 import com.bitdubai.fermat_dap_plugin.layer.wallet.wallet.redeem.point.developer.bitdubai.version_1.structure.exceptions.CantGetBalanceRecordException;
+import com.bitdubai.fermat_dap_plugin.layer.wallet.wallet.redeem.point.developer.bitdubai.version_1.structure.functional.AssetRedeemPointWalletBalance;
+import com.bitdubai.fermat_dap_plugin.layer.wallet.wallet.redeem.point.developer.bitdubai.version_1.structure.functional.AssetRedeemPointWalletTransactionWrapper;
+import com.bitdubai.fermat_dap_plugin.layer.wallet.wallet.redeem.point.developer.bitdubai.version_1.structure.functional.RedeemPointStatisticImpl;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -53,11 +64,11 @@ public class AssetRedeemPointWalletDao implements DealsWithPluginFileSystem {
         this.pluginFileSystem = pluginFileSystem;
     }
 
+    private Database database;
+
     public void setPlugin(UUID plugin) {
         this.plugin = plugin;
     }
-
-    private Database database;
 
     public AssetRedeemPointWalletDao(Database database) {
         this.database = database;
@@ -96,6 +107,10 @@ public class AssetRedeemPointWalletDao implements DealsWithPluginFileSystem {
         return databaseTable; //database.getTable(AssetWalletIssuerDatabaseConstant.ASSET_WALLET_ISSUER_BALANCE_TABLE_NAME);
     }
 
+    private DatabaseTable getStatisticTable() {
+        return database.getTable(AssetWalletRedeemPointDatabaseConstant.ASSET_WALLET_REDEEM_POINT_STATISTIC_TABLE_NAME);
+    }
+
     /*
  * getBookBalance must get actual Book Balance global of Asset Redeem Point wallet, select record from balances table
  */
@@ -112,16 +127,20 @@ public class AssetRedeemPointWalletDao implements DealsWithPluginFileSystem {
 
     private List<AssetRedeemPointWalletList> getCurrentBalanceByAsset() throws CantGetBalanceRecordException {
         List<AssetRedeemPointWalletList> redeemPointWalletBalances = new ArrayList<>();
-        for (DatabaseTableRecord record : getBalancesRecord())
-        {
-            AssetRedeemPointWalletList redeemPointIssuerWalletBalance = new com.bitdubai.fermat_dap_plugin.layer.wallet.wallet.redeem.point.developer.bitdubai.version_1.structure.AssetRedeemPointWalletBalance();
-            redeemPointIssuerWalletBalance.setName(record.getStringValue(AssetWalletRedeemPointDatabaseConstant.ASSET_WALLET_REDEEM_POINT_BALANCE_TABLE_NAME_COLUMN_NAME));
-            redeemPointIssuerWalletBalance.setDescription(record.getStringValue(AssetWalletRedeemPointDatabaseConstant.ASSET_WALLET_REDEEM_POINT_BALANCE_TABLE_DESCRIPTION_COLUMN_NAME));
-            redeemPointIssuerWalletBalance.setAssetPublicKey(record.getStringValue(AssetWalletRedeemPointDatabaseConstant.ASSET_WALLET_REDEEM_POINT_POINT_BALANCE_TABLE_ASSET_PUBLIC_KEY_COLUMN_NAME));
-            redeemPointIssuerWalletBalance.setBookBalance(record.getLongValue(AssetWalletRedeemPointDatabaseConstant.ASSET_WALLET_REDEEM_POINT_BALANCE_TABLE_BOOK_BALANCE_COLUMN_NAME));
-            redeemPointIssuerWalletBalance.setAvailableBalance(record.getLongValue(AssetWalletRedeemPointDatabaseConstant.ASSET_WALLET_REDEEM_POINT_BALANCE_TABLE_AVAILABLE_BALANCE_COLUMN_NAME));
+        for (DatabaseTableRecord record : getBalancesRecord()) {
+            AssetRedeemPointWalletList redeemPointIssuerWalletBalance = new AssetRedeemPointWalletBalance();
+            String assetPublicKey = record.getStringValue(AssetWalletRedeemPointDatabaseConstant.ASSET_WALLET_REDEEM_POINT_ASSET_PUBLIC_KEY_COLUMN_NAME);
             redeemPointIssuerWalletBalance.setQuantityBookBalance(record.getLongValue(AssetWalletRedeemPointDatabaseConstant.ASSET_WALLET_REDEEM_POINT_BALANCE_TABLE_QUANTITY_BOOK_BALANCE_COLUMN_NAME));
             redeemPointIssuerWalletBalance.setQuantityAvailableBalance(record.getLongValue(AssetWalletRedeemPointDatabaseConstant.ASSET_WALLET_REDEEM_POINT_BALANCE_TABLE_QUANTITY_AVAILABLE_BALANCE_COLUMN_NAME));
+
+            try {
+                PluginTextFile pluginTextFile = pluginFileSystem.getTextFile(plugin, AssetRedeemPointWalletPluginRoot.PATH_DIRECTORY, assetPublicKey, FilePrivacy.PRIVATE, FileLifeSpan.PERMANENT);
+                DigitalAssetMetadata metadata = (DigitalAssetMetadata) XMLParser.parseXML(pluginTextFile.getContent(), new DigitalAssetMetadata());
+                redeemPointIssuerWalletBalance.setDigitalAsset(metadata.getDigitalAsset());
+            } catch (FileNotFoundException | CantCreateFileException e) {
+                e.printStackTrace();
+            }
+
             redeemPointWalletBalances.add(redeemPointIssuerWalletBalance);
         }
         return redeemPointWalletBalances;
@@ -285,8 +304,6 @@ public class AssetRedeemPointWalletDao implements DealsWithPluginFileSystem {
     public void addDebit(final AssetRedeemPointWalletTransactionRecord assetRedeemPointWalletTransactionRecord, final BalanceType balanceType) throws CantRegisterDebitException {
         try {
             System.out.println("Agregando Debito-----------------------------------------------------------");
-            if (isTransactionInTable(assetRedeemPointWalletTransactionRecord.getIdTransaction(), TransactionType.DEBIT, balanceType))
-                throw new CantRegisterDebitException(CantRegisterDebitException.DEFAULT_MESSAGE, null, null, "The transaction is already in the database");
 
             long availableAmount = balanceType.equals(BalanceType.AVAILABLE) ? assetRedeemPointWalletTransactionRecord.getAmount() : 0L;
             long bookAmount = balanceType.equals(BalanceType.BOOK) ? assetRedeemPointWalletTransactionRecord.getAmount() : 0L;
@@ -299,7 +316,7 @@ public class AssetRedeemPointWalletDao implements DealsWithPluginFileSystem {
             long quantityBookRunningBalance = calculateQuantityBookRunningBalanceByAsset(-quantityBookAmount, assetRedeemPointWalletTransactionRecord.getDigitalAsset().getPublicKey());
 
             executeTransaction(assetRedeemPointWalletTransactionRecord, TransactionType.DEBIT, balanceType, availableRunningBalance, bookRunningBalance, quantityAvailableRunningBalance, quantityBookRunningBalance);
-        } catch (CantGetBalanceRecordException | CantLoadTableToMemoryException | CantExecuteAssetRedeemPointTransactionException exception) {
+        } catch (CantGetBalanceRecordException | CantExecuteAssetRedeemPointTransactionException exception) {
             throw new CantRegisterDebitException(CantRegisterDebitException.DEFAULT_MESSAGE, exception, null, "Check the cause");
         } catch (Exception exception) {
             throw new CantRegisterDebitException(CantRegisterDebitException.DEFAULT_MESSAGE, FermatException.wrapException(exception), null, "Check the cause");
@@ -313,8 +330,6 @@ public class AssetRedeemPointWalletDao implements DealsWithPluginFileSystem {
 
         try {
             System.out.println("Agregando Credito-----------------------------------------------------------");
-            if (isTransactionInTable(assetRedeemPointWalletTransactionRecord.getIdTransaction(), TransactionType.CREDIT, balanceType))
-                throw new CantRegisterCreditException(CantRegisterCreditException.DEFAULT_MESSAGE, null, null, "The transaction is already in the database");
 
             long availableAmount = balanceType.equals(BalanceType.AVAILABLE) ? assetRedeemPointWalletTransactionRecord.getAmount() : 0L;
             long bookAmount = balanceType.equals(BalanceType.BOOK) ? assetRedeemPointWalletTransactionRecord.getAmount() : 0L;
@@ -328,7 +343,7 @@ public class AssetRedeemPointWalletDao implements DealsWithPluginFileSystem {
 
             executeTransaction(assetRedeemPointWalletTransactionRecord, TransactionType.CREDIT, balanceType, availableRunningBalance, bookRunningBalance, quantityAvailableRunningBalance, quantityBookRunningBalance);
 
-        } catch (CantGetBalanceRecordException | CantLoadTableToMemoryException | CantExecuteAssetRedeemPointTransactionException exception) {
+        } catch (CantGetBalanceRecordException | CantExecuteAssetRedeemPointTransactionException exception) {
             throw new CantRegisterCreditException(CantRegisterCreditException.DEFAULT_MESSAGE, exception, null, "Check the cause");
         } catch (Exception exception) {
             throw new CantRegisterCreditException(CantRegisterCreditException.DEFAULT_MESSAGE, FermatException.wrapException(exception), null, "Check the cause");
@@ -529,6 +544,90 @@ public class AssetRedeemPointWalletDao implements DealsWithPluginFileSystem {
 
     private long getCurrentQuantityBookBalanceByAsset(String assetPublicKey) throws CantGetBalanceRecordException {
         return getQuantityCurrentBalanceByAsset(BalanceType.BOOK, assetPublicKey);
+    }
+
+    public void newAssetRedeemed(String userPublicKey, String assetPublicKey) throws CantSaveRedeemPointStatisticException {
+        String context = "User Pk: " + userPublicKey + " - Asset Pk: " + assetPublicKey;
+        try {
+            DatabaseTable statisticTable = getStatisticTable();
+            DatabaseTableRecord recordToInsert = statisticTable.getEmptyRecord();
+            recordToInsert.setStringValue(AssetWalletRedeemPointDatabaseConstant.ASSET_WALLET_REDEEM_POINT_POINT_STATISTIC_ID_COLUMN_NAME, UUID.randomUUID().toString());
+            recordToInsert.setStringValue(AssetWalletRedeemPointDatabaseConstant.ASSET_WALLET_REDEEM_POINT_POINT_STATISTIC_ASSET_PUBLIC_KEY_COLUMN_NAME, assetPublicKey);
+            recordToInsert.setStringValue(AssetWalletRedeemPointDatabaseConstant.ASSET_WALLET_REDEEM_POINT_STATISTIC_USER_PUBLICKEY_COLUMN_NAME, userPublicKey);
+            recordToInsert.setLongValue(AssetWalletRedeemPointDatabaseConstant.ASSET_WALLET_REDEEM_POINT_STATISTIC_REDEMPTION_TIMESTAMP_COLUMN_NAME, System.currentTimeMillis());
+            statisticTable.insertRecord(recordToInsert);
+        } catch (CantInsertRecordException e) {
+            throw new CantSaveRedeemPointStatisticException(e, context, null);
+        }
+    }
+
+    public List<RedeemPointStatistic> getAllStatistics() throws RecordsNotFoundException, CantGetRedeemPointStatisticsException {
+        return getStatisticsByFilters();
+    }
+
+    public List<RedeemPointStatistic> getStatisticsForUser(String userPk) throws RecordsNotFoundException, CantGetRedeemPointStatisticsException {
+        return getStatisticsByFilters(getUserPublicKeyFilter(userPk));
+    }
+
+    public List<RedeemPointStatistic> getStatisticsForAsset(String assetPk) throws RecordsNotFoundException, CantGetRedeemPointStatisticsException {
+        return getStatisticsByFilters(getAssetPublicKeyFilter(assetPk));
+    }
+
+    public List<RedeemPointStatistic> getStatisticForAssetAndUser(String userPk, String assetPk) throws RecordsNotFoundException, CantGetRedeemPointStatisticsException {
+        return getStatisticsByFilters(getAssetPublicKeyFilter(assetPk), getUserPublicKeyFilter(userPk));
+    }
+
+    private DatabaseTableFilter getUserPublicKeyFilter(String userPk) {
+        DatabaseTableFilter filter = getStatisticTable().getEmptyTableFilter();
+        filter.setType(DatabaseFilterType.EQUAL);
+        filter.setValue(userPk);
+        filter.setColumn(AssetWalletRedeemPointDatabaseConstant.ASSET_WALLET_REDEEM_POINT_STATISTIC_USER_PUBLICKEY_COLUMN_NAME);
+        return filter;
+    }
+
+    private DatabaseTableFilter getAssetPublicKeyFilter(String assetPk) {
+        DatabaseTableFilter filter = getStatisticTable().getEmptyTableFilter();
+        filter.setType(DatabaseFilterType.EQUAL);
+        filter.setValue(assetPk);
+        filter.setColumn(AssetWalletRedeemPointDatabaseConstant.ASSET_WALLET_REDEEM_POINT_POINT_STATISTIC_ASSET_PUBLIC_KEY_COLUMN_NAME);
+        return filter;
+    }
+
+    private List<RedeemPointStatistic> getStatisticsByFilters(DatabaseTableFilter... filters) throws RecordsNotFoundException, CantGetRedeemPointStatisticsException {
+        DatabaseTable statistictable = getStatisticTable();
+        for (DatabaseTableFilter filter : filters) {
+            statistictable.addStringFilter(filter.getColumn(), filter.getValue(), filter.getType());
+        }
+        List<RedeemPointStatistic> listToReturn = new ArrayList<>();
+        for (DatabaseTableRecord record : statistictable.getRecords()) {
+            listToReturn.add(constructStatisticById(record.getStringValue(AssetWalletRedeemPointDatabaseConstant.ASSET_WALLET_REDEEM_POINT_POINT_STATISTIC_ID_COLUMN_NAME)));
+        }
+        return listToReturn;
+    }
+
+    private RedeemPointStatistic constructStatisticById(String uuid) throws RecordsNotFoundException, CantGetRedeemPointStatisticsException {
+        String context = "UUID: " + uuid;
+        try {
+            DatabaseTable statisticTable = getStatisticTable();
+            statisticTable.addStringFilter(AssetWalletRedeemPointDatabaseConstant.ASSET_WALLET_REDEEM_POINT_POINT_STATISTIC_ID_COLUMN_NAME, uuid, DatabaseFilterType.EQUAL);
+
+            statisticTable.loadToMemory();
+
+
+            if (statisticTable.getRecords().isEmpty())
+                throw new RecordsNotFoundException(null, uuid, null);
+
+            DatabaseTableRecord record = statisticTable.getRecords().get(0);
+
+            RedeemPointStatisticImpl statistic = new RedeemPointStatisticImpl();
+            statistic.setStatisticId(uuid);
+            statistic.setAssetPk(record.getStringValue(AssetWalletRedeemPointDatabaseConstant.ASSET_WALLET_REDEEM_POINT_POINT_STATISTIC_ASSET_PUBLIC_KEY_COLUMN_NAME));
+            statistic.setUserPk(record.getStringValue(AssetWalletRedeemPointDatabaseConstant.ASSET_WALLET_REDEEM_POINT_STATISTIC_USER_PUBLICKEY_COLUMN_NAME));
+            statistic.setRedemptionDate(record.getLongValue(AssetWalletRedeemPointDatabaseConstant.ASSET_WALLET_REDEEM_POINT_STATISTIC_REDEMPTION_TIMESTAMP_COLUMN_NAME));
+            return statistic;
+        } catch (CantLoadTableToMemoryException e) {
+            throw new CantGetRedeemPointStatisticsException(e, context, null);
+        }
     }
 
 }
