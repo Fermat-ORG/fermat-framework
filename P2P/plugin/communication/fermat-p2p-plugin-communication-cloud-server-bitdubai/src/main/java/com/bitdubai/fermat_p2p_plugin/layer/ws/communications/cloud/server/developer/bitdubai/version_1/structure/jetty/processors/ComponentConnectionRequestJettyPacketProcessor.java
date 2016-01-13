@@ -4,7 +4,7 @@
  * You may not modify, use, reproduce or distribute this software.
  * BITDUBAI/CONFIDENTIAL
  */
-package com.bitdubai.fermat_p2p_plugin.layer.ws.communications.cloud.server.developer.bitdubai.version_1.structure.processors;
+package com.bitdubai.fermat_p2p_plugin.layer.ws.communications.cloud.server.developer.bitdubai.version_1.structure.jetty.processors;
 
 import com.bitdubai.fermat_api.layer.all_definition.components.interfaces.PlatformComponentProfile;
 import com.bitdubai.fermat_api.layer.all_definition.crypto.asymmetric.AsymmetricCryptography;
@@ -15,6 +15,10 @@ import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.co
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.contents.FermatPacket;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.enums.FermatPacketType;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.enums.JsonAttNamesConstants;
+import com.bitdubai.fermat_p2p_plugin.layer.ws.communications.cloud.server.developer.bitdubai.version_1.structure.jetty.ClientConnection;
+import com.bitdubai.fermat_p2p_plugin.layer.ws.communications.cloud.server.developer.bitdubai.version_1.structure.jetty.JettyEmbeddedAppServer;
+import com.bitdubai.fermat_p2p_plugin.layer.ws.communications.cloud.server.developer.bitdubai.version_1.structure.jetty.util.MemoryCache;
+import com.bitdubai.fermat_p2p_plugin.layer.ws.communications.cloud.server.developer.bitdubai.version_1.structure.jetty.util.WebSocketVpnIdentity;
 import com.bitdubai.fermat_p2p_plugin.layer.ws.communications.cloud.server.developer.bitdubai.version_1.structure.vpn.WsCommunicationVPNServer;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
@@ -23,24 +27,23 @@ import com.google.gson.reflect.TypeToken;
 
 import org.apache.commons.lang.ClassUtils;
 import org.apache.log4j.Logger;
-import org.java_websocket.WebSocket;
 
 import java.util.List;
 
 /**
  * The Class <code>com.bitdubai.fermat_p2p_plugin.layer.ws.communications.cloud.server.developer.bitdubai.version_1.structure.processors.ComponentConnectionRequestJettyPacketProcessor</code>
  * <p/>
- * Created by Roberto Requena - (rart3001@gmail.com) on 12/09/15.
+ * Created by Roberto Requena - (rart3001@gmail.com) on 09/01/16.
  *
  * @version 1.0
  * @since Java JDK 1.7
  */
-public class ComponentConnectionRequestPacketProcessor extends FermatPacketProcessor {
+public class ComponentConnectionRequestJettyPacketProcessor extends FermatJettyPacketProcessor {
 
     /**
      * Represent the logger instance
      */
-    private Logger LOG = Logger.getLogger(ClassUtils.getShortClassName(ComponentConnectionRequestPacketProcessor.class));
+    private Logger LOG = Logger.getLogger(ClassUtils.getShortClassName(ComponentConnectionRequestJettyPacketProcessor.class));
 
     /**
      * Represent the gson
@@ -55,17 +58,17 @@ public class ComponentConnectionRequestPacketProcessor extends FermatPacketProce
     /**
      * Constructor
      */
-    public ComponentConnectionRequestPacketProcessor() {
+    public ComponentConnectionRequestJettyPacketProcessor() {
         gson = new Gson();
         jsonParser = new JsonParser();
     }
 
     /**
      * (no-javadoc)
-     * @see FermatPacketProcessor#processingPackage(WebSocket, FermatPacket, ECCKeyPair)
+     * @see FermatJettyPacketProcessor#processingPackage(ClientConnection, FermatPacket)
      */
     @Override
-    public void processingPackage(WebSocket clientConnection, FermatPacket receiveFermatPacket, ECCKeyPair serverIdentity) {
+    public void processingPackage(ClientConnection clientConnection, FermatPacket receiveFermatPacket) {
 
 
         LOG.info("--------------------------------------------------------------------- ");
@@ -79,7 +82,7 @@ public class ComponentConnectionRequestPacketProcessor extends FermatPacketProce
              /*
              * Get the packet content from the message content and decrypt
              */
-            packetContentJsonStringRepresentation = AsymmetricCryptography.decryptMessagePrivateKey(receiveFermatPacket.getMessageContent(), serverIdentity.getPrivateKey());
+            packetContentJsonStringRepresentation = AsymmetricCryptography.decryptMessagePrivateKey(receiveFermatPacket.getMessageContent(), clientConnection.getServerIdentity().getPrivateKey());
             LOG.info("packetContentJsonStringRepresentation = " + packetContentJsonStringRepresentation);
 
             /*
@@ -95,30 +98,21 @@ public class ComponentConnectionRequestPacketProcessor extends FermatPacketProce
             peer1 = participantsList.get(0);
             peer2 = participantsList.get((participantsList.size() - 1));
 
-            //Create a new vpn
-            WsCommunicationVPNServer vpnServer = getWsCommunicationCloudServer().getWsCommunicationVpnServerManagerAgent().createNewWsCommunicationVPNServer(participantsList, getWsCommunicationCloudServer(), peer1.getNetworkServiceType());
+            //Get the vpn path
+            String vpnPath = JettyEmbeddedAppServer.DEFAULT_CONTEXT_PATH + "/vpn/";
 
-            constructRespondPacketAndSend(vpnServer, peer1, peer2, peer2);
-            constructRespondPacketAndSend(vpnServer, peer2, peer1, peer1);
+            LOG.info("Vpn path = " + vpnPath);
 
-            //if no running
-            if (!getWsCommunicationCloudServer().getWsCommunicationVpnServerManagerAgent().isRunning()){
-
-                //Start the agent
-                getWsCommunicationCloudServer().getWsCommunicationVpnServerManagerAgent().start();
-            }
+            /*
+             * Notify to the participants of the vpn
+             */
+            constructRespondPacketAndSend(vpnPath, peer1, peer2, peer2);
+            constructRespondPacketAndSend(vpnPath, peer2, peer1, peer1);
 
         }catch (Exception e){
 
             LOG.error("requested connection is no possible ");
             LOG.error(" cause: "+e.getMessage());
-
-            // e.printStackTrace();
-
-            /*
-             * Get the client connection destination
-             */
-            WebSocket clientConnectionDestination = getWsCommunicationCloudServer().getRegisteredClientConnectionsCache().get(receiveFermatPacket.getSender());
 
             /*
              * Construct the json object
@@ -132,70 +126,68 @@ public class ComponentConnectionRequestPacketProcessor extends FermatPacketProce
              * Create the respond packet
              */
             FermatPacket fermatPacketRespond = FermatPacketCommunicationFactory.constructFermatPacketEncryptedAndSinged(receiveFermatPacket.getSender(), //Destination
-                                                                                                                        serverIdentity.getPublicKey(), //Sender
+                                                                                                                        clientConnection.getServerIdentity().getPublicKey(), //Sender
                                                                                                                         gson.toJson(packetContent), //packet Content
                                                                                                                         FermatPacketType.FAILURE_COMPONENT_CONNECTION_REQUEST, //Packet type
-                                                                                                                        serverIdentity.getPrivateKey()); //Sender private key
+                                                                                                                        clientConnection.getServerIdentity().getPrivateKey()); //Sender private key
+
             /*
              * Send the packet
              */
-            clientConnectionDestination.send(FermatPacketEncoder.encode(fermatPacketRespond));
+            clientConnection.getSession().getAsyncRemote().sendText(FermatPacketEncoder.encode(fermatPacketRespond));
 
         }
-
-
-
 
     }
 
     /**
      * Construct Respond Packet
      *
-     * @param vpnServer
+     * @param path
      * @param platformComponentProfileDestination
      * @param remoteParticipant
      * @param remoteParticipantNetworkService
      */
-    private void constructRespondPacketAndSend(WsCommunicationVPNServer vpnServer, PlatformComponentProfile platformComponentProfileDestination, PlatformComponentProfile remoteParticipant, PlatformComponentProfile remoteParticipantNetworkService){
+    private void constructRespondPacketAndSend(String path, PlatformComponentProfile platformComponentProfileDestination, PlatformComponentProfile remoteParticipant, PlatformComponentProfile remoteParticipantNetworkService){
 
         /*
          * Get json representation for the filters
          */
         JsonObject packetContent = new JsonObject();
-        packetContent.addProperty(JsonAttNamesConstants.VPN_URI, vpnServer.getUriConnection().toString());
-        packetContent.addProperty(JsonAttNamesConstants.VPN_SERVER_IDENTITY, vpnServer.getVpnServerIdentityPublicKey());
-        packetContent.addProperty(JsonAttNamesConstants.REGISTER_PARTICIPANT_IDENTITY_VPN, platformComponentProfileDestination.getIdentityPublicKey());
+        packetContent.addProperty(JsonAttNamesConstants.VPN_URI, path);
+        packetContent.addProperty(JsonAttNamesConstants.VPN_SERVER_IDENTITY, WebSocketVpnIdentity.getInstance().getIdentity().getPublicKey());
+        packetContent.addProperty(JsonAttNamesConstants.APPLICANT_PARTICIPANT_VPN, platformComponentProfileDestination.toJson());
         packetContent.addProperty(JsonAttNamesConstants.REMOTE_PARTICIPANT_VPN, remoteParticipant.toJson());
         packetContent.addProperty(JsonAttNamesConstants.REMOTE_PARTICIPANT_NS_VPN, remoteParticipantNetworkService.toJson());
 
         /*
          * Get the client connection destination
          */
-        WebSocket clientConnectionDestination = getWsCommunicationCloudServer().getRegisteredClientConnectionsCache().get(platformComponentProfileDestination.getCommunicationCloudClientIdentity());
+        ClientConnection clientConnectionDestination = MemoryCache.getInstance().getRegisteredClientConnectionsCache().get(platformComponentProfileDestination.getCommunicationCloudClientIdentity());
 
         /*
          * Get the server identity for this client
          */
-        ECCKeyPair serverIdentity = getWsCommunicationCloudServer().getServerIdentityByClientCache().get(clientConnectionDestination.hashCode());
+        ECCKeyPair serverIdentity = clientConnectionDestination.getServerIdentity();
 
         /*
          * Create the respond packet
          */
         FermatPacket fermatPacketRespond = FermatPacketCommunicationFactory.constructFermatPacketEncryptedAndSinged(platformComponentProfileDestination.getCommunicationCloudClientIdentity(), //Destination
-                serverIdentity.getPublicKey(), //Sender
-                gson.toJson(packetContent), //packet Content
-                FermatPacketType.COMPONENT_CONNECTION_RESPOND, //Packet type
-                serverIdentity.getPrivateKey()); //Sender private key
+                                                                                                                    serverIdentity.getPublicKey(), //Sender
+                                                                                                                    gson.toJson(packetContent), //packet Content
+                                                                                                                    FermatPacketType.COMPONENT_CONNECTION_RESPOND, //Packet type
+                                                                                                                    serverIdentity.getPrivateKey()); //Sender private key
         /*
          * Send the packet
          */
-        clientConnectionDestination.send(FermatPacketEncoder.encode(fermatPacketRespond));
+        clientConnectionDestination.getSession().getAsyncRemote().sendText(FermatPacketEncoder.encode(fermatPacketRespond));
 
     }
 
     /**
      * (no-javadoc)
-     * @see FermatPacketProcessor#getFermatPacketType()
+     * @see FermatJettyPacketProcessor#getFermatPacketType()
      */
     @Override
     public FermatPacketType getFermatPacketType() {

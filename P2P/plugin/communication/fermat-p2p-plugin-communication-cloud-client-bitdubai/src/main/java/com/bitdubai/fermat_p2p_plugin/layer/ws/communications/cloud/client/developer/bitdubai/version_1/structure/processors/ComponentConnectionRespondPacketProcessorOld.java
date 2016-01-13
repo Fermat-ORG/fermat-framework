@@ -1,5 +1,5 @@
 /*
- * @#DiscoveryComponentConnectionRespondPacketProcessor.java - 2015
+ * @#ComponentConnectionRespondPacketProcessor.java - 2015
  * Copyright bitDubai.com., All rights reserved.
  * You may not modify, use, reproduce or distribute this software.
  * BITDUBAI/CONFIDENTIAL
@@ -13,6 +13,7 @@ import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.contents.Ferm
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.enums.FermatPacketType;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.enums.JsonAttNamesConstants;
 import com.bitdubai.fermat_p2p_plugin.layer.ws.communications.cloud.client.developer.bitdubai.version_1.WsCommunicationsCloudClientPluginRoot;
+import com.bitdubai.fermat_p2p_plugin.layer.ws.communications.cloud.client.developer.bitdubai.version_1.structure.util.ServerConf;
 import com.bitdubai.fermat_p2p_plugin.layer.ws.communications.cloud.client.developer.bitdubai.version_1.structure.vpn.WsCommunicationVPNClientManagerAgent;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
@@ -23,14 +24,14 @@ import java.util.StringTokenizer;
 
 /**
  * The Class <code>com.bitdubai.fermat_p2p_plugin.layer.ws.communications.cloud.client.developer.bitdubai.version_1.structure.processors.ComponentConnectionRespondPacketProcessor</code> implement
- * the logic to process the packet when a packet type <code>com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.enums.FermatPacketType.DISCOVERY_COMPONENT_CONNECTION_RESPOND</code> is receive by the server.
+ * the logic to process the packet when a packet type <code>com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.enums.FermatPacketType.COMPONENT_CONNECTION_RESPOND</code> is receive by the server.
  * <p/>
  * Created by Roberto Requena - (rart3001@gmail.com) on 13/09/15.
  *
  * @version 1.0
  * @since Java JDK 1.7
  */
-public class DiscoveryComponentConnectionRespondPacketProcessor extends FermatPacketProcessor {
+public class ComponentConnectionRespondPacketProcessorOld extends FermatPacketProcessor {
 
     /**
      * (no-javadoc)
@@ -38,6 +39,7 @@ public class DiscoveryComponentConnectionRespondPacketProcessor extends FermatPa
      */
     @Override
     public void processingPackage(FermatPacket receiveFermatPacket) {
+
 
         //System.out.println(" --------------------------------------------------------------------- ");
         //System.out.println("ComponentConnectionRespondPacketProcessor - Starting processingPackage");
@@ -76,7 +78,7 @@ public class DiscoveryComponentConnectionRespondPacketProcessor extends FermatPa
             stringTokenizer.nextElement();
             stringTokenizer.nextElement();
             String port = (String) stringTokenizer.nextElement();
-            vpnServerUri = new URI("ws://" + WsCommunicationsCloudClientPluginRoot.SERVER_IP  + ":" + port);
+            vpnServerUri = new URI(ServerConf.WS_PROTOCOL + WsCommunicationsCloudClientPluginRoot.SERVER_IP  + ":" + port);
 
             //System.out.println("ComponentConnectionRespondPacketProcessor - reconstruct vpnServerUri = "+vpnServerUri);
 
@@ -93,7 +95,9 @@ public class DiscoveryComponentConnectionRespondPacketProcessor extends FermatPa
             /*
              * Is not running
              */
-            if (!wsCommunicationVPNClientManagerAgent.isRunning()){
+            if (!wsCommunicationVPNClientManagerAgent.isRunning() &&
+                    wsCommunicationVPNClientManagerAgent.getState() == Thread.State.NEW){
+
                 wsCommunicationVPNClientManagerAgent.start();
             }
 
@@ -109,6 +113,6 @@ public class DiscoveryComponentConnectionRespondPacketProcessor extends FermatPa
      */
     @Override
     public FermatPacketType getFermatPacketType() {
-        return FermatPacketType.DISCOVERY_COMPONENT_CONNECTION_RESPOND;
+        return FermatPacketType.COMPONENT_CONNECTION_RESPOND;
     }
 }
