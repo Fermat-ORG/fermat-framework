@@ -46,4 +46,7 @@ Every month new tokens are issued according to the [CONTRIBUTION PROGRAM](https:
 <br>
 ### Bounty Program Tokens
 
+Every month new tokens are issued according to the [BOUNTY PROGRAM](https://github.com/bitDubai/bounty-program) to pay for contributions done to the project.
+
+
 Curretly, no bounty has been awarded yet.
