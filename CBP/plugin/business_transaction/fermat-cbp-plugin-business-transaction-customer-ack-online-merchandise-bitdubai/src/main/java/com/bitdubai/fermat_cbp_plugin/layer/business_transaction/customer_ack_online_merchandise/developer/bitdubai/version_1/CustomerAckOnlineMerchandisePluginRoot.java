@@ -267,8 +267,8 @@ public class CustomerAckOnlineMerchandisePluginRoot extends AbstractPlugin imple
             this.serviceStatus = ServiceStatus.STARTED;
             //System.out.println("Customer Ack Online Merchandise Starting");
             //Test methods
-            raiseNewContractEventTest();
-            testAck();
+            //raiseNewContractEventTest();
+            //testAck();
         } catch (CantInitializeCustomerAckOnlineMerchandiseBusinessTransactionDatabaseException exception) {
             throw new CantStartPluginException(
                     FermatException.wrapException(exception),
