@@ -270,11 +270,11 @@ public class BrokerSubmitOnlineMerchandiseTransactionManager implements BrokerSu
             for(CryptoBrokerWalletAssociatedSetting cryptoBrokerWalletAssociatedSetting :
                 cryptoBrokerWalletAssociatedSettingList){
                 CurrencyType currencyType=cryptoBrokerWalletAssociatedSetting.getCurrencyType();
-                System.out.println("Currency type: "+currencyType);
+                //System.out.println("Currency type: "+currencyType);
                 switch (currencyType){
                     case CRYPTO_MONEY:
                         cryptoWalletPublicKey=cryptoBrokerWalletAssociatedSetting.getWalletPublicKey();
-                        System.out.println("Found wallet public key: "+cryptoWalletPublicKey);
+                        //System.out.println("Found wallet public key: "+cryptoWalletPublicKey);
                         isCryptoWalletSets=true;
                         break;
                     default:
