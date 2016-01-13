@@ -348,10 +348,10 @@ public class AssetDistributionMonitorAgent implements Agent, DealsWithLogger, De
                             }
                             assetDistributionDao.updateDistributionStatusByGenesisTransaction(digitalAssetMetadataTransaction.getDistributionStatus(), genesisTransaction);
                             assetTransmissionManager.confirmReception(transaction.getTransactionID());
-                            assetDistributionDao.updateEventStatus(assetDistributionDao.getPendingNetworkLayerEvents().get(0));
                         }
                     }
                 }
+                assetDistributionDao.updateEventStatus(assetDistributionDao.getPendingNetworkLayerEvents().get(0));
             }
 
             //ASSET ACCEPTED BY USER
