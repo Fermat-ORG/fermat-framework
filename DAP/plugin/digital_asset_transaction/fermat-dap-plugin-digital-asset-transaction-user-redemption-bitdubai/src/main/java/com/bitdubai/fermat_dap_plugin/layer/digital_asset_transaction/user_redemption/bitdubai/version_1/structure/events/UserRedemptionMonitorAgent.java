@@ -260,7 +260,7 @@ public class UserRedemptionMonitorAgent implements Agent, DealsWithLogger, Deals
             List<String> assetRejectedByContractGenesisTransactionList = userRedemptionDao.getGenesisTransactionByAssetRejectedByContractStatus();
             for (String assetRejectedGenesisTransaction : assetRejectedByContractGenesisTransactionList) {
                 String internalId = userRedemptionDao.getTransactionIdByGenesisTransaction(assetRejectedGenesisTransaction);
-                List<CryptoTransaction> genesisTransactionList = bitcoinNetworkManager.getCryptoTransaction(assetRejectedGenesisTransaction);
+                List<CryptoTransaction> genesisTransactionList = bitcoinNetworkManager.getCryptoTransactions(assetRejectedGenesisTransaction);
                 if (genesisTransactionList == null || genesisTransactionList.isEmpty()) {
                     throw new CantCheckAssetUserRedemptionProgressException("Cannot get the CryptoTransaction from Crypto Network for " + assetRejectedGenesisTransaction);
                 }
@@ -271,7 +271,7 @@ public class UserRedemptionMonitorAgent implements Agent, DealsWithLogger, Deals
             List<String> assetRejectedByHashGenesisTransactionList = userRedemptionDao.getGenesisTransactionByAssetRejectedByHashStatus();
             for (String assetRejectedGenesisTransaction : assetRejectedByHashGenesisTransactionList) {
                 String internalId = userRedemptionDao.getTransactionIdByGenesisTransaction(assetRejectedGenesisTransaction);
-                List<CryptoTransaction> genesisTransactionList = bitcoinNetworkManager.getCryptoTransaction(assetRejectedGenesisTransaction);
+                List<CryptoTransaction> genesisTransactionList = bitcoinNetworkManager.getCryptoTransactions(assetRejectedGenesisTransaction);
                 if (genesisTransactionList == null || genesisTransactionList.isEmpty()) {
                     throw new CantCheckAssetUserRedemptionProgressException("Cannot get the CryptoTransaction from Crypto Network for " + assetRejectedGenesisTransaction);
                 }
