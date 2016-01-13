@@ -22,6 +22,7 @@ import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractFermatFra
 import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView;
 import com.bitdubai.fermat_android_api.ui.interfaces.FermatWorkerCallBack;
 import com.bitdubai.fermat_android_api.ui.util.FermatWorker;
+import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
 import com.bitdubai.fermat_dap_android_wallet_asset_user_bitdubai.R;
 import com.bitdubai.fermat_dap_android_wallet_asset_user_bitdubai.models.DigitalAsset;
 import com.bitdubai.fermat_dap_android_wallet_asset_user_bitdubai.sessions.AssetUserSession;
@@ -95,11 +96,6 @@ public class AssetDetailActivityFragment extends AbstractFermatFragment {
         assetDetailRedeemText = (FermatTextView) rootView.findViewById(R.id.assetDetailRedeemText);
 
         assetDetailRedeemLayout = rootView.findViewById(R.id.assetDetailRedeemLayout);
-        assetDetailRedeemLayout.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {
-                doRedeem(digitalAsset.getAssetPublicKey());
-            }
-        });
 
         assetDetailAppropriateLayout = rootView.findViewById(R.id.assetDetailAppropriateLayout);
         assetDetailAppropriateLayout.setOnClickListener(new View.OnClickListener() {
@@ -156,6 +152,17 @@ public class AssetDetailActivityFragment extends AbstractFermatFragment {
             assetImageDetail.setImageDrawable(rootView.getResources().getDrawable(R.drawable.img_asset_without_image));
         }
 
+        if (digitalAsset.getAvailableBalanceQuantity() > 0) {
+            assetDetailRedeemText.setTextColor(Color.parseColor("#00aeef"));
+            assetDetailRedeemLayout.setOnClickListener(new View.OnClickListener() {
+                public void onClick(View v) {
+                    changeActivity(Activities.DAP_WALLET_ASSET_USER_ASSET_REDEEM, appSession.getAppPublicKey());
+                }
+            });
+        } else {
+            assetDetailRedeemText.setTextColor(Color.parseColor("#CCFFFFFF"));
+        }
+
         assetDetailNameText.setText(digitalAsset.getName());
         assetDetailExpDateText.setText(digitalAsset.getFormattedExpDate());
         assetDetailAvailableText.setText(digitalAsset.getAvailableBalanceQuantity()+"");
@@ -176,46 +183,6 @@ public class AssetDetailActivityFragment extends AbstractFermatFragment {
         }
     }
 
-    private void doRedeem(final String assetPublicKey) {
-        final Activity activity = getActivity();
-        final ProgressDialog dialog = new ProgressDialog(activity);
-        dialog.setMessage("Please wait...");
-        dialog.setCancelable(false);
-        dialog.show();
-        FermatWorker task = new FermatWorker() {
-            @Override
-            protected Object doInBackground() throws Exception {
-//                    manager.distributionAssets(
-//                            asset.getAssetPublicKey(),
-//                            asset.getWalletPublicKey(),
-//                            asset.getActorAssetUser()
-//                    );
-                //TODO: only for Redeemption test
-                moduleManager.redeemAssetToRedeemPoint(assetPublicKey, null, null);
-                return true;
-            }
-        };
-        task.setContext(activity);
-        task.setCallBack(new FermatWorkerCallBack() {
-            @Override
-            public void onPostExecute(Object... result) {
-                dialog.dismiss();
-                if (activity != null) {
-                    Toast.makeText(activity, "Everything ok (redeem)...", Toast.LENGTH_SHORT).show();
-                }
-            }
-
-            @Override
-            public void onErrorOccurred(Exception ex) {
-                dialog.dismiss();
-                if (activity != null)
-                    Toast.makeText(activity, "Fermat Has detected an exception",
-                            Toast.LENGTH_SHORT).show();
-            }
-        });
-        task.execute();
-    }
-
     private void doAppropriate(final String assetPublicKey) {
         final Activity activity = getActivity();
         final ProgressDialog dialog = new ProgressDialog(activity);
@@ -228,7 +195,7 @@ public class AssetDetailActivityFragment extends AbstractFermatFragment {
 //                    manager.distributionAssets(
 //                            asset.getAssetPublicKey(),
 //                            asset.getWalletPublicKey(),
-//                            asset.getActorAssetUser()
+//                            asset.getActorAssetRedeemPoint()
 //                    );
                 //TODO: only for Appropriate test
                 moduleManager.appropriateAsset(assetPublicKey, null);
