@@ -63,7 +63,7 @@ public class AssetUserSession extends AbstractFermatSession<InstalledWallet,Asse
 
     @Override
     public Object getData(String key) {
-        return data;
+        return data.get(key);
     }
 
     @Override

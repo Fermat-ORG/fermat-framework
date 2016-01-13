@@ -122,7 +122,7 @@ public class AssetRedeemFragment extends AbstractFermatFragment {
         redeemAssetsButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 if (selectedRPCount > 0) {
-                    Object x = appSession.getData("users");
+                    Object x = appSession.getData("redeem_points");
                     if (x != null) {
                         List<RedeemPoint> redeemPoints = (List<RedeemPoint>) x;
                         if (redeemPoints.size() > 0) {
@@ -183,7 +183,7 @@ public class AssetRedeemFragment extends AbstractFermatFragment {
     }
 
     private int getRedeemPointsSelectedCount() {
-        Object x = ((HashMap) appSession.getData("redeem_points")).get("redeem_points");
+        Object x = appSession.getData("redeem_points");
         int count = 0;
         if (x != null) {
             List<RedeemPoint> redeemPoints = (List<RedeemPoint>) x;
@@ -234,7 +234,7 @@ public class AssetRedeemFragment extends AbstractFermatFragment {
     }
 
     private void setupUIData() {
-        digitalAsset = (DigitalAsset) ((HashMap) appSession.getData("asset_data")).get("asset_data");
+        digitalAsset = (DigitalAsset) appSession.getData("asset_data");
 
         toolbar.setTitle(digitalAsset.getName());
 
