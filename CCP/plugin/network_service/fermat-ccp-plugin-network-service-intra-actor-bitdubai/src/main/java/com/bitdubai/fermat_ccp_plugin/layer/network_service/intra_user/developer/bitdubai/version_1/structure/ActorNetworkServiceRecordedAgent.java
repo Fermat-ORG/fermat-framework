@@ -206,7 +206,7 @@ public class ActorNetworkServiceRecordedAgent extends FermatAgent{
                 switch (cpr.getNotificationDescriptor()) {
                     case ASKFORACCEPTANCE:
                         System.out.println("----------------------------\n" +
-                                "MENSAJE PROCESANDOSE:" + cpr
+                                "MENSAJE PROCESANDOSE:" + cpr.getActorDestinationPublicKey()
                                 + "\n-------------------------------------------------");
 
                         lauchNotification();
@@ -226,7 +226,7 @@ public class ActorNetworkServiceRecordedAgent extends FermatAgent{
 
                         System.out.print("-----------------------\n" +
                                 "ACEPTARON EL REQUEST!!!!!-----------------------\n" +
-                                "-----------------------\n NOTIFICAION: " + cpr);
+                                "-----------------------\n NOTIFICAION: " + cpr.getActorDestinationPublicKey());
 
                         lauchNotification();
 
@@ -246,7 +246,7 @@ public class ActorNetworkServiceRecordedAgent extends FermatAgent{
                     case DISCONNECTED:
                         System.out.print("-----------------------\n" +
                                 "REQUEST PARA DESCONEXION!!!!!-----------------------\n" +
-                                "-----------------------\n NOTIFICAION: " + cpr);
+                                "-----------------------\n NOTIFICAION: " + cpr.getActorDestinationPublicKey());
 
                         lauchNotification();
 
@@ -271,7 +271,7 @@ public class ActorNetworkServiceRecordedAgent extends FermatAgent{
                     case DENIED:
                         System.out.print("-----------------------\n" +
                                 "DENEGARON EL REQUEST!!!!!-----------------------\n" +
-                                "-----------------------\n NOTIFICAION: " + cpr);
+                                "-----------------------\n NOTIFICAION: " + cpr.getActorDestinationPublicKey());
 
                         lauchNotification();
 
@@ -332,7 +332,7 @@ public class ActorNetworkServiceRecordedAgent extends FermatAgent{
                     NetworkServiceLocal communicationNetworkServiceLocal = actorNetworkServicePluginRoot.getNetworkServiceConnectionManager().getNetworkServiceLocalInstance(actorNetworkServiceRecord.getActorDestinationPublicKey());
 
                     System.out.println("----------------------------\n" +
-                            "ENVIANDO MENSAJE:" + actorNetworkServiceRecord
+                            "ENVIANDO MENSAJE:" + actorNetworkServiceRecord.getActorDestinationPublicKey()
                             + "\n-------------------------------------------------");
 
                     Gson gson = new Gson();
@@ -356,7 +356,7 @@ public class ActorNetworkServiceRecordedAgent extends FermatAgent{
                     try {
 
                         System.out.println("----------------------------\n" +
-                                "ENVIANDO MENSAJE:" + actorNetworkServiceRecord
+                                "ENVIANDO MENSAJE:" + actorNetworkServiceRecord.getActorDestinationPublicKey()
                                 + "\n-------------------------------------------------");
 
                         Gson gson = new Gson();

@@ -134,7 +134,8 @@ public class CryptoWalletCryptoModulePluginRoot extends AbstractPlugin implement
                     intraWalletUserIdentityManager,
                     outgoingExtraUserManager      ,
                     outgoingIntraActorManager     ,
-                    walletContactsManager
+                    walletContactsManager,
+                    intraWalletUserActorManager
             );
 
             walletModuleCryptoWallet.initialize();

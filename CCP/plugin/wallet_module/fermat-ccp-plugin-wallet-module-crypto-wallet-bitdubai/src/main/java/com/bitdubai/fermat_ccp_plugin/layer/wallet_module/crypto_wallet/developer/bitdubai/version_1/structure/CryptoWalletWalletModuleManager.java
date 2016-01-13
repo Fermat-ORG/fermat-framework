@@ -138,6 +138,7 @@ public class CryptoWalletWalletModuleManager implements CryptoWallet {
     private final OutgoingExtraUserManager       outgoingExtraUserManager      ;
     private final OutgoingIntraActorManager      outgoingIntraActorManager     ;
     private final WalletContactsManager          walletContactsManager         ;
+    private final IntraWalletUserActorManager intraWalletUserActorManager;
 
     public CryptoWalletWalletModuleManager(final BitcoinWalletManager           bitcoinWalletManager          ,
                                            final CryptoAddressBookManager       cryptoAddressBookManager      ,
@@ -150,7 +151,8 @@ public class CryptoWalletWalletModuleManager implements CryptoWallet {
                                            final IntraWalletUserIdentityManager intraWalletUserIdentityManager,
                                            final OutgoingExtraUserManager       outgoingExtraUserManager      ,
                                            final OutgoingIntraActorManager      outgoingIntraActorManager     ,
-                                           final WalletContactsManager          walletContactsManager         ) {
+                                           final WalletContactsManager          walletContactsManager        ,
+                                           final IntraWalletUserActorManager intraWalletUserActorManager) {
 
         this.bitcoinWalletManager           = bitcoinWalletManager          ;
         this.cryptoAddressBookManager       = cryptoAddressBookManager      ;
@@ -164,11 +166,12 @@ public class CryptoWalletWalletModuleManager implements CryptoWallet {
         this.outgoingExtraUserManager       = outgoingExtraUserManager      ;
         this.outgoingIntraActorManager      = outgoingIntraActorManager     ;
         this.walletContactsManager          = walletContactsManager         ;
+        this.intraWalletUserActorManager = intraWalletUserActorManager;
     }
 
     private CryptoPaymentRegistry  cryptoPaymentRegistry ;
     private WalletContactsRegistry walletContactsRegistry;
-    private IntraWalletUserActorManager intraWalletUserActorManager;
+
 
 
     public final void initialize() throws CantInitializeCryptoWalletManagerException {

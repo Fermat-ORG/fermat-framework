@@ -867,13 +867,13 @@ public class IntraActorNetworkServicePluginRoot extends AbstractPlugin implement
             switch (actorNetworkServiceRecord.getNotificationDescriptor()) {
                 case ASKFORACCEPTANCE:
                     System.out.println("----------------------------\n" +
-                            "MENSAJE LLEGO EXITOSAMENTE:" + actorNetworkServiceRecord
+                            "MENSAJE LLEGO EXITOSAMENTE:"
                             + "\n-------------------------------------------------");
 
                     actorNetworkServiceRecord.changeState(ActorProtocolState.PROCESSING_RECEIVE);
 
                     System.out.println("----------------------------\n" +
-                            "CREANDO REGISTRO EN EL INCOMING NOTIFICATION DAO:" + actorNetworkServiceRecord
+                            "CREANDO REGISTRO EN EL INCOMING NOTIFICATION DAO:"
                             + "\n-------------------------------------------------");
 
 
@@ -895,7 +895,7 @@ public class IntraActorNetworkServicePluginRoot extends AbstractPlugin implement
                     actorNetworkServiceRecord.setFlagReadead(false);
                     getIncomingNotificationsDao().createNotification(actorNetworkServiceRecord);
                     System.out.println("----------------------------\n" +
-                            "MENSAJE ACCEPTED LLEGÓ BIEN: CASE ACCEPTED" + actorNetworkServiceRecord
+                            "MENSAJE ACCEPTED LLEGÓ BIEN: CASE ACCEPTED"
                             + "\n-------------------------------------------------");
 
 
@@ -908,23 +908,23 @@ public class IntraActorNetworkServicePluginRoot extends AbstractPlugin implement
 
                     //launchIncomingRequestConnectionNotificationEvent(actorNetworkServiceRecord);
                     System.out.println("----------------------------\n" +
-                            "INTRA ACTOR NETWORK SERVICE" +
-                            "THE RECORD WAS CHANGE TO THE STATE OF DELIVERY" + actorNetworkServiceRecord
+                            "INTRA ACTOR NETWORK SERVICE " +
+                            "THE RECORD WAS CHANGE TO THE STATE OF DELIVERY "
                             + "\n-------------------------------------------------");
                     getOutgoingNotificationDao().changeProtocolState(actorNetworkServiceRecord.getId(), ActorProtocolState.DELIVERY);
                     if (actorNetworkServiceRecord.getActorProtocolState().getCode().equals(ActorProtocolState.DONE)){
                         // close connection, sender is the destination
                         System.out.println("----------------------------\n" +
-                                "INTRA ACTOR NETWORK SERVICE" +
-                                "THE CONNECTION BECAUSE THE ACTOR PROTOCOL STATE" +
-                                "WAS CHANGE TO DONE" + actorNetworkServiceRecord
+                                "INTRA ACTOR NETWORK SERVICE " +
+                                "THE CONNECTION BECAUSE THE ACTOR PROTOCOL STATE " +
+                                "WAS CHANGE TO DONE"
                                 + "\n-------------------------------------------------");
 
                         communicationNetworkServiceConnectionManager.closeConnection(actorNetworkServiceRecord.getActorSenderPublicKey());
                         actorNetworkServiceRecordedAgent.getPoolConnectionsWaitingForResponse().remove(actorNetworkServiceRecord.getActorSenderPublicKey());
                         System.out.println("----------------------------\n" +
-                                "INTRA ACTOR NETWORK SERVICE" +
-                                "THE CONNECTION WAS CLOSED AND THE AWAITING POOL CLEARED." + actorNetworkServiceRecord
+                                "INTRA ACTOR NETWORK SERVICE " +
+                                "THE CONNECTION WAS CLOSED AND THE AWAITING POOL CLEARED. "
                                 + "\n-------------------------------------------------");
 
                     }
@@ -941,7 +941,7 @@ public class IntraActorNetworkServicePluginRoot extends AbstractPlugin implement
                     actorNetworkServiceRecord.setFlagReadead(false);
                     getIncomingNotificationsDao().createNotification(actorNetworkServiceRecord);
                     System.out.println("----------------------------\n" +
-                            "MENSAJE DENIED LLEGÓ BIEN: CASE DENIED" + actorNetworkServiceRecord
+                            "MENSAJE DENIED LLEGÓ BIEN: CASE DENIED"
                             + "\n-------------------------------------------------");
 
 
@@ -959,7 +959,7 @@ public class IntraActorNetworkServicePluginRoot extends AbstractPlugin implement
                     actorNetworkServiceRecord.setFlagReadead(false);
                     getIncomingNotificationsDao().createNotification(actorNetworkServiceRecord);
                     System.out.println("----------------------------\n" +
-                            "MENSAJE DISCONNECTED LLEGÓ BIEN: CASE DISCONNECTED" + actorNetworkServiceRecord
+                            "MENSAJE DISCONNECTED LLEGÓ BIEN: CASE DISCONNECTED"
                             + "\n-------------------------------------------------");
 
 
