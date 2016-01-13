@@ -26,7 +26,6 @@ import android.widget.Toast;
 
 import com.bitdubai.android_fermat_ccp_wallet_bitcoin.R;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractFermatFragment;
-import com.bitdubai.fermat_android_api.layer.definition.wallet.utils.ImagesUtils;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatButton;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView;
 import com.bitdubai.fermat_android_api.ui.transformation.CircleTransform;
@@ -39,8 +38,6 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.UISource;
 import com.bitdubai.fermat_api.layer.all_definition.money.CryptoAddress;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Wallets;
 import com.bitdubai.fermat_api.layer.pip_engine.interfaces.ResourceProviderManager;
-import com.bitdubai.fermat_ccp_api.layer.module.intra_user.exceptions.CantGetActiveLoginIdentityException;
-import com.bitdubai.fermat_ccp_api.layer.module.intra_user.interfaces.IntraUserModuleManager;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.exceptions.CantCreateWalletContactException;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.exceptions.CantGetAllWalletContactsException;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.exceptions.CantGetCryptoWalletException;
@@ -102,6 +99,7 @@ public class SendFormFragment extends AbstractFermatFragment<ReferenceWalletSess
     private boolean onFocus;
     private Spinner spinner;
     private FermatTextView txt_type;
+    private ImageView spinnerArrow;
 
 
     public static SendFormFragment newInstance() {
@@ -145,6 +143,7 @@ public class SendFormFragment extends AbstractFermatFragment<ReferenceWalletSess
 
     private void setUpUI(){
         contactName = (AutoCompleteTextView) rootView.findViewById(R.id.contact_name);
+        spinnerArrow = (ImageView) rootView.findViewById(R.id.spinner_open);
         txt_notes = (TextView) rootView.findViewById(R.id.notes);
         editTextAmount = (EditText) rootView.findViewById(R.id.amount);
         imageView_contact = (ImageView) rootView.findViewById(R.id.profile_Image);
@@ -163,7 +162,7 @@ public class SendFormFragment extends AbstractFermatFragment<ReferenceWalletSess
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 String text = "";
-                switch (position){
+                switch (position) {
                     case 0:
                         text = "[bits]";
                         break;
@@ -200,6 +199,12 @@ public class SendFormFragment extends AbstractFermatFragment<ReferenceWalletSess
             @Override
             public void onNothingSelected(AdapterView<?> parent) {
 
+            }
+        });
+        spinnerArrow.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                spinner.performClick();
             }
         });
 
