@@ -2910,6 +2910,23 @@ public class WalletRuntimeEnginePluginRoot extends AbstractPlugin implements
         runtimeWalletNavigationStructure.setWalletType(WalletType.REFERENCE.getCode());
         runtimeWalletNavigationStructure.setPublicKey(publicKey);
 
+        //Setup activity
+        runtimeActivity = new Activity();
+        runtimeActivity.setType(Activities.BNK_BANK_MONEY_WALLET_SETUP);
+        runtimeActivity.setActivityType(Activities.BNK_BANK_MONEY_WALLET_SETUP.getCode());
+        runtimeWalletNavigationStructure.addActivity(runtimeActivity);
+        runtimeWalletNavigationStructure.setStartActivity(Activities.BNK_BANK_MONEY_WALLET_SETUP);
+
+        runtimeStatusBar = new StatusBar();
+        runtimeStatusBar.setColor(statusBarColor);
+        runtimeActivity.setStatusBar(runtimeStatusBar);
+
+        runtimeFragment = new Fragment();
+        runtimeFragment.setType(Fragments.BNK_BANK_MONEY_WALLET_SETUP.getKey());
+        runtimeActivity.addFragment(Fragments.BNK_BANK_MONEY_WALLET_SETUP.getKey(), runtimeFragment);
+        runtimeActivity.setStartFragment(Fragments.BNK_BANK_MONEY_WALLET_SETUP.getKey());
+
+
         //Home Activity
         runtimeActivity = new Activity();
         runtimeActivity.setType(Activities.BNK_BANK_MONEY_WALLET_HOME);
@@ -2931,7 +2948,7 @@ public class WalletRuntimeEnginePluginRoot extends AbstractPlugin implements
         runtimeFragment = new Fragment();
         runtimeFragment.setType(Fragments.BNK_BANK_MONEY_WALLET_ACCOUNTS_LIST.getKey());
         runtimeActivity.addFragment(Fragments.BNK_BANK_MONEY_WALLET_ACCOUNTS_LIST.getKey(), runtimeFragment);
-        runtimeActivity.setStartFragment(Fragments.BNK_BANK_MONEY_WALLET_ACCOUNTS_LIST.getKey());
+        //runtimeActivity.setStartFragment(Fragments.BNK_BANK_MONEY_WALLET_ACCOUNTS_LIST.getKey());
 
         //account detail activity
         runtimeActivity = new Activity();

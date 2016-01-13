@@ -9,6 +9,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Toast;
 
+import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView;
 import com.bitdubai.fermat_android_api.ui.adapters.FermatAdapter;
 import com.bitdubai.fermat_android_api.ui.enums.FermatRefreshTypes;
 import com.bitdubai.fermat_android_api.ui.fragments.FermatWalletListFragment;
@@ -48,7 +49,7 @@ public class AccountsListFragment extends FermatWalletListFragment<BankAccountNu
         return new AccountsListFragment();
     }
 
-
+    private FermatTextView emtyView;
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -68,6 +69,7 @@ public class AccountsListFragment extends FermatWalletListFragment<BankAccountNu
     protected void initViews(View layout) {
         super.initViews(layout);
         configureToolbar();
+        emtyView = (FermatTextView) layout.findViewById(R.id.empty)
         showOrHideNoAccountListView(accountsList.isEmpty());
     }
 
@@ -180,8 +182,10 @@ public class AccountsListFragment extends FermatWalletListFragment<BankAccountNu
 
     private void showOrHideNoAccountListView(boolean show) {
         if (show) {
+            emtyView.setVisibility(View.VISIBLE);
             recyclerView.setVisibility(View.GONE);
         } else {
+            emtyView.setVisibility(View.GONE);
             recyclerView.setVisibility(View.VISIBLE);
         }
     }

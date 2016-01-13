@@ -4,7 +4,7 @@
     <string name="hello_blank_fragment">Hello Banking Wallet fragment</string>
     <string name="action_settings">Settings</string>
     <string name="home_header">Accounts</string>
-    <string name="no_accounts">there are no accounts in this wallet</string>
+    <string name="no_accounts">You don't have any account yet</string>
     <string name="no_transactions">there are no transactions in this account</string>
     
     <string name="bnk_ctd_title">transaction title</string>
