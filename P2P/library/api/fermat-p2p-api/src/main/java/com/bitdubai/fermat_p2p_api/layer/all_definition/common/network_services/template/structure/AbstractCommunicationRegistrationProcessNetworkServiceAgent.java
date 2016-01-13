@@ -4,6 +4,7 @@ import com.bitdubai.fermat_api.FermatAgent;
 import com.bitdubai.fermat_api.layer.all_definition.components.interfaces.PlatformComponentProfile;
 import com.bitdubai.fermat_api.layer.all_definition.enums.AgentStatus;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.common.network_services.abstract_classes.AbstractNetworkService;
+import com.bitdubai.fermat_p2p_api.layer.all_definition.common.network_services.abstract_classes.AbstractNetworkServiceV2;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.client.CommunicationsClientConnection;
 
 /**
@@ -27,7 +28,9 @@ public abstract class AbstractCommunicationRegistrationProcessNetworkServiceAgen
 
     private final Thread agentThread;
 
-    private final AbstractNetworkService networkServicePluginRoot      ;
+    private AbstractNetworkService networkServicePluginRoot;
+
+    private AbstractNetworkServiceV2 abstractNetworkServiceV2;
     private final CommunicationsClientConnection communicationsClientConnection;
 
     /**
@@ -40,6 +43,29 @@ public abstract class AbstractCommunicationRegistrationProcessNetworkServiceAgen
                                                                        final CommunicationsClientConnection communicationsClientConnection) {
 
         this.networkServicePluginRoot       = networkServicePluginRoot      ;
+        this.communicationsClientConnection = communicationsClientConnection;
+
+        this.status = AgentStatus.CREATED;
+
+        this.agentThread = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                while (isRunning())
+                    registrationProcess();
+            }
+        });
+    }
+
+    /**
+     * Constructor with parameters.
+     *
+     * @param networkServicePluginRoot         pluginRoot of the network service.
+     * @param communicationsClientConnection   communication client connection instance.
+     */
+    public AbstractCommunicationRegistrationProcessNetworkServiceAgent(final AbstractNetworkServiceV2 networkServicePluginRoot      ,
+                                                                       final CommunicationsClientConnection communicationsClientConnection) {
+
+        this.abstractNetworkServiceV2       = networkServicePluginRoot      ;
         this.communicationsClientConnection = communicationsClientConnection;
 
         this.status = AgentStatus.CREATED;
@@ -75,39 +101,76 @@ public abstract class AbstractCommunicationRegistrationProcessNetworkServiceAgen
 
         try {
 
-            if (communicationsClientConnection.isRegister() && !networkServicePluginRoot.isRegister()){
+            if(networkServicePluginRoot!=null) {
+                if (communicationsClientConnection.isRegister() && !networkServicePluginRoot.isRegister()) {
 
-                //Construct my profile and register me
-                PlatformComponentProfile platformComponentProfile =  communicationsClientConnection.constructPlatformComponentProfileFactory(
-                        networkServicePluginRoot.getIdentityPublicKey(),
-                         networkServicePluginRoot.getAlias().toLowerCase(),
-                         networkServicePluginRoot.getName(),
-                         networkServicePluginRoot.getNetworkServiceType(),
-                         networkServicePluginRoot.getPlatformComponentType(),
-                         networkServicePluginRoot.getExtraData()
-                );
+                    //Construct my profile and register me
+                    PlatformComponentProfile platformComponentProfile = communicationsClientConnection.constructPlatformComponentProfileFactory(
+                            networkServicePluginRoot.getIdentityPublicKey(),
+                            networkServicePluginRoot.getAlias().toLowerCase(),
+                            networkServicePluginRoot.getName(),
+                            networkServicePluginRoot.getNetworkServiceType(),
+                            networkServicePluginRoot.getPlatformComponentType(),
+                            networkServicePluginRoot.getExtraData()
+                    );
 
-                // Register me
-                communicationsClientConnection.registerComponentForCommunication(networkServicePluginRoot.getNetworkServiceType(), platformComponentProfile);
+                    // Register me
+                    communicationsClientConnection.registerComponentForCommunication(networkServicePluginRoot.getNetworkServiceType(), platformComponentProfile);
 
-                // Configure my new profile
-                networkServicePluginRoot.setPlatformComponentProfilePluginRoot(platformComponentProfile);
+                    // Configure my new profile
+                    networkServicePluginRoot.setPlatformComponentProfilePluginRoot(platformComponentProfile);
 
-                //Initialize the connection manager
-                networkServicePluginRoot.initializeCommunicationNetworkServiceConnectionManager();
+                    //Initialize the connection manager
+                    networkServicePluginRoot.initializeCommunicationNetworkServiceConnectionManager();
 
-                // Stop the agent
-                this.status = AgentStatus.STOPPED;
-
-            } else if (!networkServicePluginRoot.isRegister()){
-
-                try {
-                    Thread.sleep(AbstractCommunicationRegistrationProcessNetworkServiceAgent.SLEEP_TIME);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
+                    // Stop the agent
                     this.status = AgentStatus.STOPPED;
-                }
 
+                } else if (!networkServicePluginRoot.isRegister()) {
+
+                    try {
+                        Thread.sleep(AbstractCommunicationRegistrationProcessNetworkServiceAgent.SLEEP_TIME);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                        this.status = AgentStatus.STOPPED;
+                    }
+
+                }
+            }else if(abstractNetworkServiceV2!=null){
+                if (communicationsClientConnection.isRegister() && !abstractNetworkServiceV2.isRegister()) {
+
+                    //Construct my profile and register me
+                    PlatformComponentProfile platformComponentProfile = communicationsClientConnection.constructPlatformComponentProfileFactory(
+                            abstractNetworkServiceV2.getIdentityPublicKey(),
+                            abstractNetworkServiceV2.getAlias().toLowerCase(),
+                            abstractNetworkServiceV2.getName(),
+                            abstractNetworkServiceV2.getNetworkServiceType(),
+                            abstractNetworkServiceV2.getPlatformComponentType(),
+                            abstractNetworkServiceV2.getExtraData()
+                    );
+
+                    // Register me
+                    communicationsClientConnection.registerComponentForCommunication(abstractNetworkServiceV2.getNetworkServiceType(), platformComponentProfile);
+
+                    // Configure my new profile
+                    abstractNetworkServiceV2.setPlatformComponentProfilePluginRoot(platformComponentProfile);
+
+                    //Initialize the connection manager
+                    abstractNetworkServiceV2.initializeCommunicationNetworkServiceConnectionManager();
+
+                    // Stop the agent
+                    this.status = AgentStatus.STOPPED;
+
+                } else if (!abstractNetworkServiceV2.isRegister()) {
+
+                    try {
+                        Thread.sleep(AbstractCommunicationRegistrationProcessNetworkServiceAgent.SLEEP_TIME);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                        this.status = AgentStatus.STOPPED;
+                    }
+
+                }
             }
 
             // TODO add better exception control here.
