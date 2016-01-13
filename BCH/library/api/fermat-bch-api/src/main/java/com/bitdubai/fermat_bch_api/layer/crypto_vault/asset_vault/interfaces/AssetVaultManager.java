@@ -88,4 +88,12 @@ public interface AssetVaultManager extends FermatManager, PlatformCryptoVault {
      * @return
      */
     List<String> getActiveRedeemPoints() throws CantGetActiveRedeemPointsException;
+
+    /**
+     * When we receive assets from a Redeemption processes, the Issuer that granted the extended public key to the redeem point
+     * needs to inform us when an address is used, so we can generate more if needed.
+     * @param cryptoAddress
+     * @param redeemPointPublicKey
+     */
+    void notifyUsedRedeemPointAddress(CryptoAddress cryptoAddress, String redeemPointPublicKey);
 }
