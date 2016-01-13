@@ -111,6 +111,7 @@ public class WizardPageSetBankAccountsFragment extends AbstractFermatFragment im
             @Override
             public void onClick(View view) {
                 saveSetting();
+                appSession.setData(CryptoBrokerWalletSession.CONFIGURED_DATA, true); // TODO Solo para testing, eliminar despues
                 changeActivity(Activities.CBP_CRYPTO_BROKER_WALLET_HOME, appSession.getAppPublicKey());
             }
         });
