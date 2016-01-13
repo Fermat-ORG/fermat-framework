@@ -17,7 +17,7 @@ import java.util.UUID;
  * This object is only for testing
  * Created by Manuel Perez (darkpriestrelative@gmail.com) on 28/12/15.
  */
-public class SaleNegotiationMock implements CustomerBrokerSaleNegotiation {
+public class SaleNegotiationOfflineMock implements CustomerBrokerSaleNegotiation {
     @Override
     public String getCustomerPublicKey() {
         return "CustomerPublicKey";
