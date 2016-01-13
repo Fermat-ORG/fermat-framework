@@ -615,7 +615,8 @@ public class ChatPluginRoot extends AbstractPlugin implements
             this.serviceStatus = ServiceStatus.STARTED;
             System.out.println("ChatPluginRoot - Is ready to go");
 
-            System.out.println("ChatPLuginRoot - Sending Chat TEST");
+            //TODO: I commented this test, Manuel.
+            /*System.out.println("ChatPLuginRoot - Sending Chat TEST");
 
             MockChat mockChat = new MockChat();
 
@@ -633,7 +634,7 @@ public class ChatPluginRoot extends AbstractPlugin implements
             mockChat.setDistributionStatus(DistributionStatus.DELIVERING);
 
             sendChatMetadata(mockChat.getLocalActorPubKey(), mockChat.getRemoteActorPubKey(), mockChat);
-            raiseTestEvent();
+            raiseTestEvent();*/
 
 
         }catch (CantInitializeChatNetworkServiceDatabaseException exception) {
