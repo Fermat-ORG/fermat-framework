@@ -223,7 +223,7 @@ public class CommunicationNetworkServiceConnectionManager<NS extends AbstractNet
                  */
                     communicationNetworkServiceRemoteAgent = new CommunicationNetworkServiceRemoteAgent(networkServicePluginRoot, identity, communicationsVPNConnection, errorManager, eventManager, incomingMessageDao, outgoingMessageDao);
 
-                }else {
+                }else if(abstractNetworkServiceV2!=null){
                         /*
                  * Instantiate the local reference
                  */
