@@ -184,6 +184,11 @@ public class CustomerBrokerPurchaseManager implements CustomerBrokerPurchaseNego
         }
 
         @Override
+        public Collection<NegotiationBankAccount> getAllBankAccount() throws CantGetListBankAccountsPurchaseException {
+            return this.customerBrokerPurchaseNegotiationDao.getAllBankAccount();
+        }
+
+        @Override
         public Collection<NegotiationBankAccount> getBankAccountByCurrencyType(FiatCurrency currency) throws CantGetListBankAccountsPurchaseException {
             return this.customerBrokerPurchaseNegotiationDao.getBankAccountByCurrencyType(currency);
         }
