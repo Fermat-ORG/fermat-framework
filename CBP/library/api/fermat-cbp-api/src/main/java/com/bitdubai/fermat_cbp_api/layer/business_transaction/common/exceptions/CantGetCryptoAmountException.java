@@ -1,4 +1,4 @@
-package com.bitdubai.fermat_cbp_plugin.layer.business_transaction.customer_online_payment.developer.bitdubai.version_1.exceptions;
+package com.bitdubai.fermat_cbp_api.layer.business_transaction.common.exceptions;
 
 import com.bitdubai.fermat_cbp_api.all_definition.exceptions.CBPException;
 

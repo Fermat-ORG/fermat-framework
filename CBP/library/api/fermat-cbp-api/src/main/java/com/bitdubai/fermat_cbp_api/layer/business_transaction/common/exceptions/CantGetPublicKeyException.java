@@ -1,15 +1,15 @@
-package com.bitdubai.fermat_cbp_plugin.layer.business_transaction.customer_online_payment.developer.bitdubai.version_1.exceptions;
+package com.bitdubai.fermat_cbp_api.layer.business_transaction.common.exceptions;
 
 import com.bitdubai.fermat_cbp_api.all_definition.exceptions.CBPException;
 
 /**
- * Created by Manuel Perez (darkpriestrelative@gmail.com) on 08/12/15.
+ * Created by Manuel Perez (darkpriestrelative@gmail.com) on 12/01/16.
  */
-public class CantGetCryptoAddressException extends CBPException {
+public class CantGetPublicKeyException  extends CBPException {
     /**
      * Represent the default message
      */
-    public static final String DEFAULT_MESSAGE = "CANNOT GET A CRYPTO ADDRESS";
+    public static final String DEFAULT_MESSAGE = "CANNOT GET A PUBLIC KEY";
 
     /**
      * Constructor with parameters
@@ -19,7 +19,7 @@ public class CantGetCryptoAddressException extends CBPException {
      * @param context
      * @param possibleReason
      */
-    public CantGetCryptoAddressException(final String message, final Exception cause, final String context, final String possibleReason) {
+    public CantGetPublicKeyException(final String message, final Exception cause, final String context, final String possibleReason) {
         super(message, cause, context, possibleReason);
     }
 
@@ -30,7 +30,7 @@ public class CantGetCryptoAddressException extends CBPException {
      * @param context
      * @param possibleReason
      */
-    public CantGetCryptoAddressException(Exception cause, String context, String possibleReason) {
+    public CantGetPublicKeyException(Exception cause, String context, String possibleReason) {
         super(DEFAULT_MESSAGE , cause, context, possibleReason);
     }
 
@@ -40,7 +40,7 @@ public class CantGetCryptoAddressException extends CBPException {
      * @param message
      * @param cause
      */
-    public CantGetCryptoAddressException(final String message, final Exception cause) {
+    public CantGetPublicKeyException(final String message, final Exception cause) {
         this(message, cause, "", "");
     }
 
@@ -49,7 +49,7 @@ public class CantGetCryptoAddressException extends CBPException {
      *
      * @param message
      */
-    public CantGetCryptoAddressException(final String message) {
+    public CantGetPublicKeyException(final String message) {
         this(message, null);
     }
 
@@ -58,7 +58,7 @@ public class CantGetCryptoAddressException extends CBPException {
      *
      * @param exception
      */
-    public CantGetCryptoAddressException(final Exception exception) {
+    public CantGetPublicKeyException(final Exception exception) {
         this(exception.getMessage());
         setStackTrace(exception.getStackTrace());
     }
@@ -66,7 +66,7 @@ public class CantGetCryptoAddressException extends CBPException {
     /**
      * Constructor
      */
-    public CantGetCryptoAddressException() {
+    public CantGetPublicKeyException() {
         this(DEFAULT_MESSAGE);
     }
 }
