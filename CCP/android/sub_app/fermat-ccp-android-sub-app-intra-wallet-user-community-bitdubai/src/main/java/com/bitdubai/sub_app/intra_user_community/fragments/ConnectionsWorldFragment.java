@@ -136,11 +136,15 @@ public class ConnectionsWorldFragment extends AbstractFermatFragment implements
                 intraUserWalletSettings = null;
             }
 
-            if (intraUserWalletSettings == null) {
-                intraUserWalletSettings = new IntraUserWalletSettings();
-                intraUserWalletSettings.setIsPresentationHelpEnabled(true);
-                settingsManager.persistSettings(intraUserSubAppSession.getAppPublicKey(), intraUserWalletSettings);
+            if(intraUserSubAppSession.getAppPublicKey() != null) //the identity not exist yet
+            {
+                if (intraUserWalletSettings == null) {
+                    intraUserWalletSettings = new IntraUserWalletSettings();
+                    intraUserWalletSettings.setIsPresentationHelpEnabled(true);
+                    settingsManager.persistSettings(intraUserSubAppSession.getAppPublicKey(), intraUserWalletSettings);
+                }
             }
+
             mNotificationsCount = moduleManager.getIntraUsersWaitingYourAcceptanceCount();
             new FetchCountTask().execute();
 
