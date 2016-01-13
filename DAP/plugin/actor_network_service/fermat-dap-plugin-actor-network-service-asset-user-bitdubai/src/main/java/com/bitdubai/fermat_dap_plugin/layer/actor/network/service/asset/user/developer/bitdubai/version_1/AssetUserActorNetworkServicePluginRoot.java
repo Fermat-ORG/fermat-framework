@@ -449,7 +449,7 @@ public class AssetUserActorNetworkServicePluginRoot extends AbstractNetworkServi
     public List<ActorAssetUser> getListActorAssetUserRegistered() throws CantRequestListActorAssetUserRegisteredException {
 
         try {
-            if (this.isRegister()) {
+           // if (this.isRegister()) {
                 if (actorAssetUserRegisteredList != null && !actorAssetUserRegisteredList.isEmpty()) {
                     actorAssetUserRegisteredList.clear();
                 }
@@ -481,9 +481,9 @@ public class AssetUserActorNetworkServicePluginRoot extends AbstractNetworkServi
                     return actorAssetUserRegisteredList;
                 }
 
-            } else {
-                return actorAssetUserRegisteredList;
-            }
+//            } else {
+//                return actorAssetUserRegisteredList;
+//            }
         } catch (CantRequestListException e) {
 
             StringBuffer contextBuffer = new StringBuffer();

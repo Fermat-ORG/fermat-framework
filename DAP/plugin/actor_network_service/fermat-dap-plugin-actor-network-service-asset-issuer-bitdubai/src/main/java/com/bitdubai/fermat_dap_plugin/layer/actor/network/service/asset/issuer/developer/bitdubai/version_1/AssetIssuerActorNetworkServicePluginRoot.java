@@ -793,7 +793,7 @@ public class AssetIssuerActorNetworkServicePluginRoot extends AbstractNetworkSer
 
         try {
 
-            if (this.isRegister()) {
+//            if (this.isRegister()) {
 
                 if (actorAssetIssuerRegisteredList != null && !actorAssetIssuerRegisteredList.isEmpty()) {
                     actorAssetIssuerRegisteredList.clear();
@@ -832,9 +832,9 @@ public class AssetIssuerActorNetworkServicePluginRoot extends AbstractNetworkSer
                     return actorAssetIssuerRegisteredList;
                 }
 
-            } else {
-                return actorAssetIssuerRegisteredList;
-            }
+//            } else {
+//                return actorAssetIssuerRegisteredList;
+//            }
 
         } catch (CantRequestListException e) {
 

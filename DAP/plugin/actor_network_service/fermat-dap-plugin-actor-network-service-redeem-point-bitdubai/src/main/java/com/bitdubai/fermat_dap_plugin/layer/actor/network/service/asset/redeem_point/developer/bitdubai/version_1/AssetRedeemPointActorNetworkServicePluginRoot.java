@@ -566,7 +566,7 @@ public class AssetRedeemPointActorNetworkServicePluginRoot extends AbstractNetwo
     public List<ActorAssetRedeemPoint> getListActorAssetRedeemPointRegistered() throws CantRequestListActorAssetRedeemPointRegisteredException {
 
         try {
-            if (this.isRegister()) {
+//            if (this.isRegister()) {
                 if (actorAssetRedeemPointRegisteredList != null && !actorAssetRedeemPointRegisteredList.isEmpty()) {
                     actorAssetRedeemPointRegisteredList.clear();
                 }
@@ -598,9 +598,9 @@ public class AssetRedeemPointActorNetworkServicePluginRoot extends AbstractNetwo
                     return actorAssetRedeemPointRegisteredList;
                 }
 
-            } else {
-                return actorAssetRedeemPointRegisteredList;
-            }
+//            } else {
+//                return actorAssetRedeemPointRegisteredList;
+//            }
         } catch (CantRequestListException e) {
 
             StringBuffer contextBuffer = new StringBuffer();
