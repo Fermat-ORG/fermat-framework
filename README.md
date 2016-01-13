@@ -20,6 +20,11 @@ Currently there is no automated system to issue Fermat Tokens as the Fermat Bloc
 
 Every month new tokens are issued according to the [CONTRIBUTION PROGRAM](https://github.com/bitDubai/contribution-program) to pay for contributions done to the project. Below you can see the details of tokens issued related to this program.
 
+| Year | Month | Tokens Issued | Dollar Value | USD / Fermat Rate |
+|:---:|:---:|:---:|:---:|---:|
+|2015|Jun|1,000|2,000|0.0001534|
+|2015|Jun|1,000|2,000|0.0001534|
 
-### Monthly Contribution Program Tokens
+
+### Monthly Bounty Program Tokens
 
