@@ -50,3 +50,12 @@ Every month new tokens are issued according to the [BOUNTY PROGRAM](https://gith
 
 
 Curretly, no bounty has been awarded yet.
+
+
+<br>
+### Competition Program Tokens
+
+Every month new tokens are issued according to the [DUBAI COMPETITION PROGRAM](https://github.com/bitDubai/competition/tree/master/2016AUC) to pay for contributions done mantaining components.
+
+
+The first payments are schedulled for Feb 2016.
