@@ -29,7 +29,7 @@ public class ServerConf {
     /**
      * Represent the SERVER_IP in the local environment
      */
-    public static final String SERVER_IP_DEVELOPER_LOCAL = "192.168.1.5";
+    public static final String SERVER_IP_DEVELOPER_LOCAL = "192.168.1.2";
 
     /**
      * Represents the value of DISABLE_CLIENT
