@@ -317,7 +317,8 @@ public class CommunicationNetworkServiceRemoteAgent extends Observable {
                              * Put the message on a event and fire new event
                              */
                             FermatEvent fermatEvent = eventManager.getNewEvent(P2pEventType.NEW_NETWORK_SERVICE_MESSAGE_SENT_NOTIFICATION);
-                            fermatEvent.setSource(IntraActorNetworkServicePluginRoot.EVENT_SOURCE);
+                            //TODO no source
+                         //   fermatEvent.setSource(IntraActorNetworkServicePluginRoot.EVENT_SOURCE);
                             ((NewNetworkServiceMessageSentNotificationEvent) fermatEvent).setData(message);
                             eventManager.raiseEvent(fermatEvent);
                         }
