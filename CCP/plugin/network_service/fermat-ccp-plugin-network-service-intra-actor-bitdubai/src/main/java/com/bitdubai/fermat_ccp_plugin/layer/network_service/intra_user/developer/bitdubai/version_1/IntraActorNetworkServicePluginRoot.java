@@ -139,9 +139,6 @@ public class IntraActorNetworkServicePluginRoot extends AbstractNetworkServiceV2
     @NeededPluginReference(platform = Platforms.COMMUNICATION_PLATFORM, layer = Layers.COMMUNICATION, plugin = Plugins.WS_CLOUD_CLIENT)
     private WsCommunicationsCloudClientManager wsCommunicationsCloudClientManager;
 
-
-    private Database dataBase;
-
     /**
      * Agent
      */
@@ -164,6 +161,7 @@ public class IntraActorNetworkServicePluginRoot extends AbstractNetworkServiceV2
     private OutgoingNotificationDao outgoingNotificationDao;
 
     private IntraActorNetworkServiceDao intraActorNetworkServiceDao;
+    private Database dataBase;
 
     /**
      * Constructor
@@ -202,9 +200,9 @@ public class IntraActorNetworkServicePluginRoot extends AbstractNetworkServiceV2
             initializeCacheDb();
 
             //DAO
-            incomingNotificationsDao = new IncomingNotificationDao(dataBase, this.getPluginFileSystem(), this.pluginId);
+            incomingNotificationsDao = new IncomingNotificationDao(getDataBaseCommunication(), this.getPluginFileSystem(), this.pluginId);
 
-            outgoingNotificationDao = new OutgoingNotificationDao(dataBase,this.getPluginFileSystem(), this.pluginId);
+            outgoingNotificationDao = new OutgoingNotificationDao(getDataBaseCommunication(),this.getPluginFileSystem(), this.pluginId);
 
             intraActorNetworkServiceDao = new IntraActorNetworkServiceDao(this.dataBase, this.getPluginFileSystem(),this.pluginId);
 
