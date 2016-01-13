@@ -222,7 +222,43 @@ public class NetworkServiceChatNetworkServiceDeveloperDatabaseFactory implements
          */
         DeveloperDatabaseTable outgoingChatMessageNotificationStatusTable = developerObjectFactory.getNewDeveloperDatabaseTable(NetworkServiceChatNetworkServiceDatabaseConstants.OUTGOING_CHAT_MESSAGE_NOTIFICATION_STATUS_TABLE_NAME, outgoingChatMessageNotificationStatusColumns);
         tables.add(outgoingChatMessageNotificationStatusTable);
+        /**
+         * Table incoming messages columns.
+         */
+        List<String> incomingmessagesColumns = new ArrayList<String>();
 
+        incomingmessagesColumns.add(NetworkServiceChatNetworkServiceDatabaseConstants.INCOMING_MESSAGES_ID_COLUMN_NAME);
+        incomingmessagesColumns.add(NetworkServiceChatNetworkServiceDatabaseConstants.INCOMING_MESSAGES_SENDER_ID_COLUMN_NAME);
+        incomingmessagesColumns.add(NetworkServiceChatNetworkServiceDatabaseConstants.INCOMING_MESSAGES_RECEIVER_ID_COLUMN_NAME);
+        incomingmessagesColumns.add(NetworkServiceChatNetworkServiceDatabaseConstants.INCOMING_MESSAGES_TEXT_CONTENT_COLUMN_NAME);
+        incomingmessagesColumns.add(NetworkServiceChatNetworkServiceDatabaseConstants.INCOMING_MESSAGES_TYPE_COLUMN_NAME);
+        incomingmessagesColumns.add(NetworkServiceChatNetworkServiceDatabaseConstants.INCOMING_MESSAGES_SHIPPING_TIMESTAMP_COLUMN_NAME);
+        incomingmessagesColumns.add(NetworkServiceChatNetworkServiceDatabaseConstants.INCOMING_MESSAGES_DELIVERY_TIMESTAMP_COLUMN_NAME);
+        incomingmessagesColumns.add(NetworkServiceChatNetworkServiceDatabaseConstants.INCOMING_MESSAGES_STATUS_COLUMN_NAME);
+        /**
+         * Table incoming messages addition.
+         */
+        DeveloperDatabaseTable incomingmessagesTable = developerObjectFactory.getNewDeveloperDatabaseTable(NetworkServiceChatNetworkServiceDatabaseConstants.INCOMING_MESSAGES_TABLE_NAME, incomingmessagesColumns);
+        tables.add(incomingmessagesTable);
+
+        /**
+         * Table outgoing messages columns.
+         */
+        List<String> outgoingmessagesColumns = new ArrayList<String>();
+
+        outgoingmessagesColumns.add(NetworkServiceChatNetworkServiceDatabaseConstants.OUTGOING_MESSAGES_ID_COLUMN_NAME);
+        outgoingmessagesColumns.add(NetworkServiceChatNetworkServiceDatabaseConstants.OUTGOING_MESSAGES_SENDER_ID_COLUMN_NAME);
+        outgoingmessagesColumns.add(NetworkServiceChatNetworkServiceDatabaseConstants.OUTGOING_MESSAGES_RECEIVER_ID_COLUMN_NAME);
+        outgoingmessagesColumns.add(NetworkServiceChatNetworkServiceDatabaseConstants.OUTGOING_MESSAGES_TEXT_CONTENT_COLUMN_NAME);
+        outgoingmessagesColumns.add(NetworkServiceChatNetworkServiceDatabaseConstants.OUTGOING_MESSAGES_TYPE_COLUMN_NAME);
+        outgoingmessagesColumns.add(NetworkServiceChatNetworkServiceDatabaseConstants.OUTGOING_MESSAGES_SHIPPING_TIMESTAMP_COLUMN_NAME);
+        outgoingmessagesColumns.add(NetworkServiceChatNetworkServiceDatabaseConstants.OUTGOING_MESSAGES_DELIVERY_TIMESTAMP_COLUMN_NAME);
+        outgoingmessagesColumns.add(NetworkServiceChatNetworkServiceDatabaseConstants.OUTGOING_MESSAGES_STATUS_COLUMN_NAME);
+        /**
+         * Table outgoing messages addition.
+         */
+        DeveloperDatabaseTable outgoingmessagesTable = developerObjectFactory.getNewDeveloperDatabaseTable(NetworkServiceChatNetworkServiceDatabaseConstants.OUTGOING_MESSAGES_TABLE_NAME, outgoingmessagesColumns);
+        tables.add(outgoingmessagesTable);
 
 
         return tables;
