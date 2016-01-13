@@ -1289,4 +1289,40 @@ public class BitcoinCryptoNetworkDatabaseDao {
 
         return record.getUUIDValue(BitcoinCryptoNetworkDatabaseConstants.TRANSACTIONS_TRX_ID_COLUMN_NAME);
     }
+
+    /**
+     * Gets the last CryptoTransaction that we have locally.
+     * @param txHash
+     * @return
+     */
+    public CryptoTransaction getCryptoTransaction(String txHash) throws CantExecuteDatabaseOperationException{
+        /**
+         * I get the list of stored cryptoTransactions with all their crypto Status
+         */
+        List<CryptoTransaction> cryptoTransactions = this.getIncomingCryptoTransaction(txHash);
+
+        /**
+         * I get the last available crypto Status
+         */
+        CryptoStatus lastCryptoStatus = null;
+        for (CryptoTransaction cryptoTransaction: cryptoTransactions){
+            CryptoStatus cryptoStatus = cryptoTransaction.getCryptoStatus();
+
+            if (lastCryptoStatus == null)
+                lastCryptoStatus = cryptoStatus;
+            else if (lastCryptoStatus.getOrder() < cryptoStatus.getOrder())
+                lastCryptoStatus = cryptoStatus;
+        }
+
+        /**
+         * I return the CryptoTranasction with the last cryptoStatus
+         */
+        for (CryptoTransaction cryptoTransaction: cryptoTransactions){
+            if (cryptoTransaction.getCryptoStatus() == lastCryptoStatus)
+                return cryptoTransaction;
+        }
+
+        //this should never happen
+        return null;
+    }
 }

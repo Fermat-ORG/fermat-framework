@@ -824,4 +824,33 @@ public class BitcoinCryptoNetworkManager implements TransactionProtocolManager, 
         }
         return null;
     }
+
+    /**
+     * Starting from the parentTransaction, I will navigate up until the last transaction, and return the CryptoTransaction
+     * @blockchainNetworkType the network in which we will be executing this. If none provided, DEFAULT will be used.
+     * @param parentTransactionHash The starting point transaction hash.
+     * @param transactionBlockHash the block where this transaction is.
+     * @return the Last child transaction.
+     */
+    public CryptoTransaction getLastChildCryptoTransaction(@Nullable BlockchainNetworkType blockchainNetworkType, String parentTransactionHash, String transactionBlockHash) throws CantGetCryptoTransactionException {
+        try {
+            return CryptoTransaction.getCryptoTransaction(this.getLastChildTransaction(blockchainNetworkType, parentTransactionHash, transactionBlockHash));
+        } catch (CantGetTransactionException e) {
+            throw new CantGetCryptoTransactionException(CantGetCryptoTransactionException.DEFAULT_MESSAGE, e, "error getting the transaction from blockchain.", null);
+        }
+    }
+
+    /**
+     * Gets a stored CryptoTransaction in wathever network.
+     * @param txHash the transaction hash we want to get the CryptoTransaction
+     * @return the last recorded CryptoTransaction.
+     * @throws CantGetCryptoTransactionException
+     */
+    public CryptoTransaction getCryptoTransaction(String txHash) throws CantGetCryptoTransactionException {
+        try {
+            return getDao().getCryptoTransaction(txHash);
+        } catch (CantExecuteDatabaseOperationException e) {
+            throw new CantGetCryptoTransactionException(CantGetCryptoTransactionException.DEFAULT_MESSAGE, e, "database error getting the last crypto transaction.", "database error");
+        }
+    }
 }
