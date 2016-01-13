@@ -364,7 +364,7 @@ public class CommunicationNetworkServiceRemoteAgent<NS extends AbstractNetworkSe
                              * Put the message on a event and fire new event
                              */
                             FermatEvent fermatEvent = eventManager.getNewEvent(P2pEventType.NEW_NETWORK_SERVICE_MESSAGE_SENT_NOTIFICATION);
-                            fermatEvent.setSource(networkServicePluginRoot.getEventSource());
+                            fermatEvent.setSource((networkServicePluginRoot!=null)?networkServicePluginRoot.getEventSource():abstractNetworkService.getEventSource());
                             ((NewNetworkServiceMessageSentNotificationEvent) fermatEvent).setData(message);
                             eventManager.raiseEvent(fermatEvent);
                         }
