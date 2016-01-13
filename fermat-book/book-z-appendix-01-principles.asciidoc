@@ -1,4 +1,4 @@
-image::https://raw.githubusercontent.com/bitDubai/media-kit/master/Readme%20Image/Fermat%20Logotype/Fermat_Logo_3D.png[FermatLogo]
+image::https://raw.githubusercontent.com/bitDubai/media-kit/master/MediaKit/Fermat%20Branding/Fermat%20Logotype/Fermat_Logo_3D.png[FermatLogo]
 == Appendix 01 - Detailed Fermat Principles
 
 Here is an in depth analysis of Fermat principles.
@@ -96,7 +96,7 @@ Here is an in depth analysis of Fermat principles.
 * Crypto Distribution Network concept.
 * Crypto Brokers concept.
 
-image::https://raw.githubusercontent.com/bitDubai/media-kit/master/Readme%20Image/Background/Front_Bitcoin_scn_low.jpg[FermatCoin]
+image::https://raw.githubusercontent.com/bitDubai/media-kit/master/MediaKit/Coins/Fermat%20Bitcoin/PerspView/1/Front_MedQ_1280x720.jpg[FermatCoin]
 ==== _Continue Reading ..._
 
 link:book-chapter-00(intro).asciidoc[Back to Intro]
