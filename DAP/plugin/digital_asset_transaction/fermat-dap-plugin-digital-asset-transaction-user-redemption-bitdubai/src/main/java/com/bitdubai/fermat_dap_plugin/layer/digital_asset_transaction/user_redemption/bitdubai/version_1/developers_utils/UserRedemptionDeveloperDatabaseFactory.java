@@ -147,11 +147,15 @@ public class UserRedemptionDeveloperDatabaseFactory implements DealsWithPluginDa
          */
         List<String> assetDeliveringColumns = new ArrayList<String>();
 
-        assetDeliveringColumns.add(UserRedemptionDatabaseConstants.USER_REDEMPTION_DELIVERING_MESSAGE_ID_COLUMN_NAME);
+        assetDeliveringColumns.add(UserRedemptionDatabaseConstants.USER_REDEMPTION_DELIVERING_TRANSACTION_ID_COLUMN_NAME);
         assetDeliveringColumns.add(UserRedemptionDatabaseConstants.USER_REDEMPTION_DELIVERING_GENESIS_TRANSACTION_COLUMN_NAME);
-        assetDeliveringColumns.add(UserRedemptionDatabaseConstants.USER_REDEMPTION_DELIVERING_MESSAGE_TYPE_COLUMN_NAME);
-        assetDeliveringColumns.add(UserRedemptionDatabaseConstants.USER_REDEMPTION_DELIVERING_TIMESTAMP_COLUMN_NAME);
-        assetDeliveringColumns.add(UserRedemptionDatabaseConstants.USER_REDEMPTION_DELIVERING_EVENT_ID_COLUMN_NAME);
+        assetDeliveringColumns.add(UserRedemptionDatabaseConstants.USER_REDEMPTION_DELIVERING_ASSET_PUBLICKEY_COLUMN_NAME);
+        assetDeliveringColumns.add(UserRedemptionDatabaseConstants.USER_REDEMPTION_DELIVERING_REPO_PUBLICKEY_COLUMN_NAME);
+        assetDeliveringColumns.add(UserRedemptionDatabaseConstants.USER_REDEMPTION_DELIVERING_START_TIME_COLUMN_NAME);
+        assetDeliveringColumns.add(UserRedemptionDatabaseConstants.USER_REDEMPTION_DELIVERING_TIMEOUT_COLUMN_NAME);
+        assetDeliveringColumns.add(UserRedemptionDatabaseConstants.USER_REDEMPTION_DELIVERING_STATE_COLUMN_NAME);
+        assetDeliveringColumns.add(UserRedemptionDatabaseConstants.USER_REDEMPTION_DELIVERING_SENT_GENESISTX_COLUMN_NAME);
+        assetDeliveringColumns.add(UserRedemptionDatabaseConstants.USER_REDEMPTION_DELIVERING_ATTEMPT_NUMBER_COLUMN_NAME);
 
         DeveloperDatabaseTable assetDeliveringTable = developerObjectFactory.getNewDeveloperDatabaseTable(UserRedemptionDatabaseConstants.USER_REDEMPTION_DELIVERING_TABLE_NAME, assetDeliveringColumns);
         tables.add(assetDeliveringTable);

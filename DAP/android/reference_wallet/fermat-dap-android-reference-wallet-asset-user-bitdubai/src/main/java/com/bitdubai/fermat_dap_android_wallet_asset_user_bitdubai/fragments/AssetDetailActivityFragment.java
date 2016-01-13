@@ -191,7 +191,7 @@ public class AssetDetailActivityFragment extends AbstractFermatFragment {
 //                            asset.getActorAssetUser()
 //                    );
                 //TODO: only for Redeemption test
-                moduleManager.redeemAssetToRedeemPoint(assetPublicKey, null);
+                moduleManager.redeemAssetToRedeemPoint(assetPublicKey, null, null);
                 return true;
             }
         };
