@@ -1815,13 +1815,21 @@ public abstract class FermatActivity extends AppCompatActivity
     @Override
     public void networkAvailable() {
         Log.i(TAG,"NETWORK AVAILABLE MATIIIII");
-        getCloudClient().setNetworkState(true);
+        try {
+            getCloudClient().setNetworkState(true);
+        }catch (Exception e){
+            //e.printStackTrace();
+        }
     }
 
     @Override
     public void networkUnavailable() {
-        Log.i(TAG,"NETWORK UNAVAILABLE MATIIIII");
-        getCloudClient().setNetworkState(false);
+        Log.i(TAG, "NETWORK UNAVAILABLE MATIIIII");
+        try{
+            getCloudClient().setNetworkState(false);
+        }catch (Exception e){
+          //  e.printStackTrace();
+        }
     }
 
 
