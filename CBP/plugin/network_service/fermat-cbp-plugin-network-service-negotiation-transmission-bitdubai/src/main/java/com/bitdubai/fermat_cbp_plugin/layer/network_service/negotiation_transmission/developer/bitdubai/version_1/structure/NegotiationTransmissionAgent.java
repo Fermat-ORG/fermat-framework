@@ -31,10 +31,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-//<<<<<<< HEAD
-//=======
-//>>>>>>> 78d02bfd88d1c23d48396cb851829d86d9fbee61
-
 /**
  * Created by Yordin Alayn on 30.11.15.
  */
@@ -210,12 +206,17 @@ public class NegotiationTransmissionAgent {
     private void processSend() {
 
         try {
-            
+
+            System.out.print("\n\n**** X) MOCK NEGOTIATION TRANSACTION - NEGOTIATION TRANSMISSION - AGENT - LIST PENDING SEND ****\n");
             List<NegotiationTransmission> negotiationTransmissionList = databaseDao.findAllByTransmissionState(NegotiationTransmissionState.PROCESSING_SEND);
 
             for (NegotiationTransmission negotiationTransmission : negotiationTransmissionList) {
                 String receiverPublicKey= negotiationTransmission.getPublicKeyActorReceive();
+
+                System.out.print("\n\n**** X) MOCK NEGOTIATION TRANSACTION - NEGOTIATION TRANSMISSION - AGENT - PENDING FOR SEND TO : " + receiverPublicKey + "****\n");
+
                 if(!poolConnectionsWaitingForResponse.containsKey(receiverPublicKey)) {
+                    System.out.print("\n\n**** X) MOCK NEGOTIATION TRANSACTION - NEGOTIATION TRANSMISSION - AGENT - POOL****\n");
                     //TODO: hacer un filtro por aquellas que se encuentran conectadas
                     if (communicationNetworkServiceConnectionManager.getNetworkServiceLocalInstance(receiverPublicKey) == null) {
                         if (wsCommunicationsCloudClientManager != null) {
@@ -237,15 +238,12 @@ public class NegotiationTransmissionAgent {
                         }
                     }
                 }else{
+                    System.out.print("\n\n**** X) MOCK NEGOTIATION TRANSACTION - NEGOTIATION TRANSMISSION - AGENT - FOR SEND****\n");
                     NetworkServiceLocal communicationNetworkServiceLocal = networkServiceNegotiationTransmissionPluginRoot.getNetworkServiceConnectionManager().getNetworkServiceLocalInstance(receiverPublicKey);
                     if (communicationNetworkServiceLocal != null) {
                         try {
 
-                            System.out.print("-----------------------\n SENDING NEGOTIATION TRANSACTION RECORD To:" + receiverPublicKey + "-----------------------\n");
-
-                            Gson gson = new Gson();
-
-                            NegotiationMessage negotiationMessage = new NegotiationMessage(
+                            String jsonNegotiationTransmission = new NegotiationMessage(
                                     negotiationTransmission.getTransmissionId(),
                                     negotiationTransmission.getTransactionId(),
                                     negotiationTransmission.getNegotiationId(),
@@ -259,14 +257,22 @@ public class NegotiationTransmissionAgent {
                                     negotiationTransmission.getNegotiationType(),
                                     negotiationTransmission.getNegotiationXML(),
                                     negotiationTransmission.getTimestamp()
-                            );
-                            String jsonNegotiationTransaction =gson.toJson(negotiationMessage);
+                            ).toJson();
 
-                            communicationNetworkServiceLocal.sendMessage(identity.getPublicKey(), receiverPublicKey, jsonNegotiationTransaction);
+//                            communicationNetworkServiceLocal.sendMessage(identity.getPublicKey(), receiverPublicKey, jsonNegotiationTransmission);
 
-                            if(negotiationTransmission.getTransmissionType() == NegotiationTransmissionType.TRANSMISSION_NEGOTIATION ){
+
+                            if(negotiationTransmission.getTransmissionType().getCode() == NegotiationTransmissionType.TRANSMISSION_NEGOTIATION.getCode() ){
+                                System.out.print("\n\n**** 10) MOCK NEGOTIATION TRANSACTION - NEGOTIATION TRANSMISSION - AGENT - SEND NEGOTIATION TO : " + receiverPublicKey + "****\n");
+                                System.out.print("*** SEND DATES: " +
+                                                "\n - Sender Id = " + identity.getPublicKey() +
+                                                "\n - Receiver Id = " + receiverPublicKey +
+                                                "\n - JsonNegotiationTransmission " + jsonNegotiationTransmission
+                                );
+
                                 negotiationTransmission.setTransmissionState(NegotiationTransmissionState.PENDING_REMOTE_ACTION);
                             }else{
+                                System.out.print("\n\n**** 25) MOCK NEGOTIATION TRANSACTION - NEGOTIATION TRANSMISSION - AGENT - SEND CONFIRMATION TO : " + receiverPublicKey + "****\n");
                                 negotiationTransmission.setTransmissionState(NegotiationTransmissionState.DONE);
                             }
 
@@ -279,6 +285,8 @@ public class NegotiationTransmissionAgent {
                         } catch (Exception e) {
                             e.printStackTrace();
                         }
+                    }else {
+                        System.out.print("\n\n**** X) MOCK NEGOTIATION TRANSACTION - NEGOTIATION TRANSMISSION - AGENT - SERVER LOCAL NO FOUNT.****\n");
                     }
                 }
             }
@@ -328,6 +336,8 @@ public class NegotiationTransmissionAgent {
 
         try {
 
+//            System.out.print("\n\n**** X) MOCK NEGOTIATION TRANSACTION - NEGOTIATION TRANSMISSION - AGENT - LIST PENDING RECEIVE ****\n");
+
             List<NegotiationTransmission> negotiationTransmissionList = databaseDao.findAllByTransmissionState(NegotiationTransmissionState.PENDING_ACTION);
             for(NegotiationTransmission negotiationTransmission : negotiationTransmissionList) {
                 switch (negotiationTransmission.getNegotiationTransactionType()){
@@ -338,14 +348,14 @@ public class NegotiationTransmissionAgent {
                             FermatEvent eventToRaise = eventManager.getNewEvent(EventType.INCOMING_NEGOTIATION_TRANSMISSION_TRANSACTION_NEW);
                             eventToRaise.setSource(EventSource.NETWORK_SERVICE_NEGOTIATION_TRANSMISSION);
                             eventManager.raiseEvent(eventToRaise);
-                            System.out.println("NEGOTIATION TRANSMISSION TRANSACTION NEW");
+                            System.out.println("\n**** 15) MOCK NEGOTIATION TRANSACTION - NEGOTIATION TRANSMISSION - AGENT - RAISE EVENT NEGOTIATION TRANSMISSION TRANSACTION NEW\n");
 
                         }else{
 
                             FermatEvent eventToRaise = eventManager.getNewEvent(EventType.INCOMING_NEGOTIATION_TRANSMISSION_CONFIRM_NEW);
                             eventToRaise.setSource(EventSource.NETWORK_SERVICE_NEGOTIATION_TRANSMISSION);
                             eventManager.raiseEvent(eventToRaise);
-                            System.out.println("NEGOTIATION TRANSMISSION TRANSACTION CONFIRM");
+                            System.out.println("\n**** 15) MOCK NEGOTIATION TRANSACTION - NEGOTIATION TRANSMISSION - AGENT - RAISE EVENT NEGOTIATION TRANSMISSION TRANSACTION CONFIRM\n");
 
                         }
                         break;
@@ -357,14 +367,14 @@ public class NegotiationTransmissionAgent {
                             FermatEvent eventToRaise = eventManager.getNewEvent(EventType.INCOMING_NEGOTIATION_TRANSMISSION_TRANSACTION_UPDATE);
                             eventToRaise.setSource(EventSource.NETWORK_SERVICE_NEGOTIATION_TRANSMISSION);
                             eventManager.raiseEvent(eventToRaise);
-                            System.out.println("NEGOTIATION TRANSMISSION TRANSACTION UPDATE");
+                            System.out.println("\n**** 15) MOCK NEGOTIATION TRANSACTION - NEGOTIATION TRANSMISSION - AGENT - RAISE EVENT NEGOTIATION TRANSMISSION TRANSACTION UPDATE\n");
 
                         }else{
 
                             FermatEvent eventToRaise = eventManager.getNewEvent(EventType.INCOMING_NEGOTIATION_TRANSMISSION_CONFIRM_UPDATE);
                             eventToRaise.setSource(EventSource.NETWORK_SERVICE_NEGOTIATION_TRANSMISSION);
                             eventManager.raiseEvent(eventToRaise);
-                            System.out.println("NEGOTIATION TRANSMISSION TRANSACTION CONFIRM");
+                            System.out.println("\n**** 15) MOCK NEGOTIATION TRANSACTION - NEGOTIATION TRANSMISSION - AGENT - RAISE EVENT NEGOTIATION TRANSMISSION TRANSACTION CONFIRM\n");
 
                         }
                         break;
@@ -376,14 +386,14 @@ public class NegotiationTransmissionAgent {
                             FermatEvent eventToRaise = eventManager.getNewEvent(EventType.INCOMING_NEGOTIATION_TRANSMISSION_TRANSACTION_CLOSE);
                             eventToRaise.setSource(EventSource.NETWORK_SERVICE_NEGOTIATION_TRANSMISSION);
                             eventManager.raiseEvent(eventToRaise);
-                            System.out.println("NEGOTIATION TRANSMISSION TRANSACTION CLOSE");
+                            System.out.println("\n**** 15) MOCK NEGOTIATION TRANSACTION - NEGOTIATION TRANSMISSION - AGENT - RAISE EVENT NEGOTIATION TRANSMISSION TRANSACTION CLOSE\n");
 
                         }else{
 
                             FermatEvent eventToRaise = eventManager.getNewEvent(EventType.INCOMING_NEGOTIATION_TRANSMISSION_CONFIRM_CLOSE);
                             eventToRaise.setSource(EventSource.NETWORK_SERVICE_NEGOTIATION_TRANSMISSION);
                             eventManager.raiseEvent(eventToRaise);
-                            System.out.println("NEGOTIATION TRANSMISSION TRANSACTION CONFIRM");
+                            System.out.println("\n**** 15) MOCK NEGOTIATION TRANSACTION - NEGOTIATION TRANSMISSION - AGENT - RAISE EVENT NEGOTIATION TRANSMISSION TRANSACTION CONFIRM\n");
 
                         }
                         break;
