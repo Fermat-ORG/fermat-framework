@@ -115,5 +115,8 @@ public class JsonAttNamesConstants {
      */
     public static final String RECONNECTED = "rc";
 
-
+    /**
+     * Represen the value of CLIENT_IDENTITY
+     */
+    public static final String CLIENT_IDENTITY = "c-i";
 }
