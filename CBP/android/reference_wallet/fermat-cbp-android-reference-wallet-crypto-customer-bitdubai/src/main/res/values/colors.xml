@@ -40,6 +40,8 @@
     <color name="black">#000000</color>
     <color name="white">#FFF</color>
 
+    <color name="ccw_selling_summary">#65c6ff</color>
+
     <color name="option_button_background">#75222222</color>
     <color name="card_title_color_status_confirm">#222</color>
     <color name="card_title_color_status_accepted">#fff</color>
