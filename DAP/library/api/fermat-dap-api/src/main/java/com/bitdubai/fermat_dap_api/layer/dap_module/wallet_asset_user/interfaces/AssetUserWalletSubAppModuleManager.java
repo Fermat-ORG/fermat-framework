@@ -8,6 +8,7 @@ import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginBinaryFile;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantCreateFileException;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.FileNotFoundException;
 import com.bitdubai.fermat_dap_api.layer.all_definition.exceptions.CantGetIdentityAssetUserException;
+import com.bitdubai.fermat_dap_api.layer.dap_actor.redeem_point.exceptions.CantGetAssetRedeemPointActorsException;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.redeem_point.interfaces.ActorAssetRedeemPoint;
 import com.bitdubai.fermat_dap_api.layer.dap_identity.asset_user.interfaces.IdentityAssetUser;
 import com.bitdubai.fermat_dap_api.layer.dap_middleware.dap_asset_factory.exceptions.CantGetAssetFactoryException;
@@ -31,6 +32,8 @@ public interface AssetUserWalletSubAppModuleManager extends ModuleManager<Fermat
      * @see List<AssetUserWalletList> getAssetIssuerWalletBalancesBook(String publicKey)
      */
     List<AssetUserWalletList> getAssetUserWalletBalances(String publicKey) throws CantLoadWalletException;
+
+    List<ActorAssetRedeemPoint> getAllActorAssetRedeemPointConnected() throws CantGetAssetRedeemPointActorsException;
 
     AssetUserWallet loadAssetUserWallet(String walletPublicKey) throws CantLoadWalletException;
 

@@ -27,6 +27,7 @@ import com.bitdubai.fermat_android_api.ui.interfaces.FermatWorkerCallBack;
 import com.bitdubai.fermat_android_api.ui.util.FermatWorker;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
 import com.bitdubai.fermat_dap_android_wallet_asset_user_bitdubai.R;
+import com.bitdubai.fermat_dap_android_wallet_asset_user_bitdubai.models.Data;
 import com.bitdubai.fermat_dap_android_wallet_asset_user_bitdubai.models.DigitalAsset;
 import com.bitdubai.fermat_dap_android_wallet_asset_user_bitdubai.models.RedeemPoint;
 import com.bitdubai.fermat_dap_android_wallet_asset_user_bitdubai.sessions.AssetUserSession;
@@ -129,7 +130,7 @@ public class AssetRedeemFragment extends AbstractFermatFragment {
                         }
                     }
                 } else {
-                    Toast.makeText(activity, "No users selected", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(activity, "No redeem points selected", Toast.LENGTH_SHORT).show();
                 }
             }
         });
@@ -206,13 +207,7 @@ public class AssetRedeemFragment extends AbstractFermatFragment {
         FermatWorker task = new FermatWorker() {
             @Override
             protected Object doInBackground() throws Exception {
-                for (RedeemPoint redeemPoint : redeemPoints) {
-                    if (redeemPoint.isSelected()) {
-                        //redeemPoint.getActorAssetRedeemPoint()
-                        //TODO complete
-                        moduleManager.redeemAssetToRedeemPoint(assetPublicKey, null, null);
-                    }
-                }
+                moduleManager.redeemAssetToRedeemPoint(assetPublicKey, null, Data.getRedeemPoints(redeemPoints));
                 return true;
             }
         };

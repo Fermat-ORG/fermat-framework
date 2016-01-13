@@ -115,6 +115,11 @@ public class AssetUserWalletModulePluginRoot extends AbstractPlugin implements
     }
 
     @Override
+    public List<ActorAssetRedeemPoint> getAllActorAssetRedeemPointConnected() throws CantGetAssetRedeemPointActorsException {
+        return actorAssetRedeemPointManager.getAllRedeemPointActorConnected();
+    }
+
+    @Override
     public AssetUserWallet loadAssetUserWallet(String walletPublicKey) throws CantLoadWalletException {
         return assetUserWalletManager.loadAssetUserWallet(walletPublicKey);
     }
@@ -135,13 +140,6 @@ public class AssetUserWalletModulePluginRoot extends AbstractPlugin implements
 
     @Override
     public void redeemAssetToRedeemPoint(String digitalAssetPublicKey, String walletPublicKey, List<ActorAssetRedeemPoint> actorAssetRedeemPoints) throws CantRedeemDigitalAssetException {
-        //TODO REMOVE HARDCODE!!
-        actorAssetRedeemPoints = new ArrayList<>();
-        try {
-            actorAssetRedeemPoints.add(actorAssetRedeemPointManager.getAllRedeemPointActorConnected().get(0));
-        } catch (CantGetAssetRedeemPointActorsException e) {
-            e.printStackTrace();
-        }
         assetUserWalletModule.redeemAssetToRedeemPoint(digitalAssetPublicKey, walletPublicKey, actorAssetRedeemPoints);
     }
 
