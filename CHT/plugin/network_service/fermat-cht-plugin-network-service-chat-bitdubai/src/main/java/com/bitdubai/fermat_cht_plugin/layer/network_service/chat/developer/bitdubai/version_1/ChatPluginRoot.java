@@ -40,8 +40,10 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.Data
 import com.bitdubai.fermat_api.layer.osa_android.location_system.Location;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogLevel;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogManager;
+import com.bitdubai.fermat_cht_api.all_definition.events.enums.EventType;
 import com.bitdubai.fermat_cht_api.layer.network_service.chat.enums.ChatMessageStatus;
 import com.bitdubai.fermat_cht_api.layer.network_service.chat.enums.DistributionStatus;
+import com.bitdubai.fermat_cht_api.layer.network_service.chat.events.OutgoingChat;
 import com.bitdubai.fermat_cht_api.layer.network_service.chat.exceptions.CantInitializeCommunicationNetworkServiceConnectionManagerException;
 import com.bitdubai.fermat_cht_api.layer.network_service.chat.exceptions.CantSendChatMessageMetadataException;
 import com.bitdubai.fermat_cht_api.layer.network_service.chat.exceptions.CantSendChatMessageNewStatusNotificationException;
@@ -49,15 +51,16 @@ import com.bitdubai.fermat_cht_api.layer.network_service.chat.interfaces.ChatMan
 import com.bitdubai.fermat_cht_api.layer.network_service.chat.interfaces.ChatMetada;
 import com.bitdubai.fermat_cht_plugin.layer.network_service.chat.developer.bitdubai.version_1.communications.CommunicationNetworkServiceConnectionManager;
 import com.bitdubai.fermat_cht_plugin.layer.network_service.chat.developer.bitdubai.version_1.communications.CommunicationNetworkServiceLocal;
+import com.bitdubai.fermat_cht_plugin.layer.network_service.chat.developer.bitdubai.version_1.database.ChatMetaDataDao;
 import com.bitdubai.fermat_cht_plugin.layer.network_service.chat.developer.bitdubai.version_1.database.NetworkServiceChatNetworkServiceDatabaseConstants;
 import com.bitdubai.fermat_cht_plugin.layer.network_service.chat.developer.bitdubai.version_1.database.NetworkServiceChatNetworkServiceDatabaseFactory;
 import com.bitdubai.fermat_cht_plugin.layer.network_service.chat.developer.bitdubai.version_1.database.NetworkServiceChatNetworkServiceDeveloperDatabaseFactory;
-import com.bitdubai.fermat_cht_plugin.layer.network_service.chat.developer.bitdubai.version_1.database.OutgoinChatMetaDataDao;
 import com.bitdubai.fermat_cht_plugin.layer.network_service.chat.developer.bitdubai.version_1.database.OutgoingMessageDao;
 import com.bitdubai.fermat_cht_plugin.layer.network_service.chat.developer.bitdubai.version_1.event_handlers.ClientConnectionCloseNotificationEventHandler;
 import com.bitdubai.fermat_cht_plugin.layer.network_service.chat.developer.bitdubai.version_1.event_handlers.CompleteComponentConnectionRequestNotificationEventHandler;
 import com.bitdubai.fermat_cht_plugin.layer.network_service.chat.developer.bitdubai.version_1.event_handlers.CompleteComponentRegistrationNotificationEventHandler;
 import com.bitdubai.fermat_cht_plugin.layer.network_service.chat.developer.bitdubai.version_1.event_handlers.CompleteRequestListComponentRegisteredNotificationEventHandler;
+import com.bitdubai.fermat_cht_plugin.layer.network_service.chat.developer.bitdubai.version_1.event_handlers.FailureComponentConnectionRequestNotificationEventHandler;
 import com.bitdubai.fermat_cht_plugin.layer.network_service.chat.developer.bitdubai.version_1.event_handlers.NewReceiveMessagesNotificationEventHandler;
 import com.bitdubai.fermat_cht_plugin.layer.network_service.chat.developer.bitdubai.version_1.event_handlers.NewSentMessagesNotificationEventHandler;
 import com.bitdubai.fermat_cht_plugin.layer.network_service.chat.developer.bitdubai.version_1.event_handlers.VPNConnectionCloseNotificationEventHandler;
@@ -65,6 +68,7 @@ import com.bitdubai.fermat_cht_plugin.layer.network_service.chat.developer.bitdu
 import com.bitdubai.fermat_cht_plugin.layer.network_service.chat.developer.bitdubai.version_1.structure.ChatMetadaTransactionRecord;
 import com.bitdubai.fermat_cht_plugin.layer.network_service.chat.developer.bitdubai.version_1.structure.EncodeMsjContent;
 import com.bitdubai.fermat_cht_plugin.layer.network_service.chat.developer.bitdubai.version_1.communications.CommunicationRegistrationProcessNetworkServiceAgent;
+import com.bitdubai.fermat_cht_plugin.layer.network_service.chat.developer.bitdubai.version_1.structure.MockChat;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.contents.FermatMessageCommunication;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.contents.FermatMessageCommunicationFactory;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.enums.P2pEventType;
@@ -151,7 +155,7 @@ public class ChatPluginRoot extends AbstractPlugin implements
                 ", networkServiceType=" + networkServiceType +
                 ", platformComponentProfile=" + platformComponentProfile +
                 ", listenersAdded=" + listenersAdded +
-                ", outgoinChatMetaDataDao=" + outgoinChatMetaDataDao +
+                ", chatMetaDataDao=" + chatMetaDataDao +
                 ", platformComponentType=" + platformComponentType +
                 ", communicationNetworkServiceConnectionManager=" + communicationNetworkServiceConnectionManager +
                 ", remoteNetworkServicesRegisteredList=" + remoteNetworkServicesRegisteredList +
@@ -201,12 +205,12 @@ public class ChatPluginRoot extends AbstractPlugin implements
 
     List<FermatEventListener> listenersAdded = new ArrayList<>();
     /**
-     * Represent the OutgoinChatMetaDataDao
+     * Represent the ChatMetaDataDao
      */
-    private OutgoinChatMetaDataDao outgoinChatMetaDataDao;
+    private ChatMetaDataDao chatMetaDataDao;
 
-    public OutgoinChatMetaDataDao getOutgoinChatMetaDataDao() {
-        return outgoinChatMetaDataDao;
+    public ChatMetaDataDao getChatMetaDataDao() {
+        return chatMetaDataDao;
     }
 
     /**
@@ -378,6 +382,8 @@ public class ChatPluginRoot extends AbstractPlugin implements
 
     @Override
     public void handleCompleteComponentRegistrationNotificationEvent(PlatformComponentProfile platformComponentProfileRegistered) {
+
+        toString();
         System.out.println("ChatPLuginRoot - CommunicationNetworkServiceConnectionManager - Starting method handleCompleteComponentRegistrationNotificationEvent");
 
         /*
@@ -391,7 +397,9 @@ public class ChatPluginRoot extends AbstractPlugin implements
              * Mark as register
              */
             this.register = Boolean.TRUE;
-
+            System.out.print("-----------------------\n" +
+                    "CHAT NETWORK SERVICE REGISTERED  -----------------------\n" +
+                    "-----------------------\n TO: " + getName());
 
             /*-------------------------------------------------------------------------------------------------
              * This is for test and example of how to use
@@ -445,6 +453,7 @@ public class ChatPluginRoot extends AbstractPlugin implements
         /*
          * Tell the manager to handler the new connection stablished
          */
+        initializeCommunicationNetworkServiceConnectionManager();
         communicationNetworkServiceConnectionManager.handleEstablishedRequestedNetworkServiceConnection(remoteComponentProfile);
     }
 
@@ -549,28 +558,44 @@ public class ChatPluginRoot extends AbstractPlugin implements
          * Validate required resources
          */
         validateInjectedResources();
+        System.out.println("ChatPluginRoot - Injected resources");
+
         try {
 
             /*
              * Create a new key pair for this execution
              */
             identity = new ECCKeyPair();
+            System.out.println("ChatPluginRoot - identity:"+identity.toString());
 
             /*
              * Initialize the data base
              */
             initializeDb();
 
+            System.out.println("ChatPluginRoot - DAtabase Ready!");
+
             /*
             *  initializeListener
              */
             initializeListener();
+            System.out.println("ChatPluginRoot - Events handlers ready!");
+
+            /*
+             *  Initialize initializeCommunicationNetworkServiceConnectionManager
+             */
+            initializeCommunicationNetworkServiceConnectionManager();
 
             /*
              * Initialize Developer Database Factory
              */
+            System.out.println("ChatPluginRoot - PluginId:"+pluginId.toString());
+            System.out.println("ChatPluginRoot - PluginId:"+pluginDatabaseSystem.toString());
+
             communicationNetworkServiceDeveloperDatabaseFactory = new NetworkServiceChatNetworkServiceDeveloperDatabaseFactory(pluginDatabaseSystem, pluginId);
             communicationNetworkServiceDeveloperDatabaseFactory.initializeDatabase();
+            System.out.println("ChatPluginRoot - communicationNetworkServiceDeveloperDatabaseFactory ready!");
+
 
              /*
              * Verify if the communication cloud client is active
@@ -588,8 +613,28 @@ public class ChatPluginRoot extends AbstractPlugin implements
              * Its all ok, set the new status
             */
             this.serviceStatus = ServiceStatus.STARTED;
+            System.out.println("ChatPluginRoot - Is ready to go");
 
-            toString();
+            System.out.println("ChatPLuginRoot - Sending Chat TEST");
+
+            MockChat mockChat = new MockChat();
+
+            mockChat.setIdChat(UUID.randomUUID());
+            mockChat.setIdObjecto(UUID.randomUUID());
+            mockChat.setLocalActorType("CHAT");
+            mockChat.setLocalActorPubKey("0470B2649FE0625CE409E7D83A3C9676196A07E1E77FC393AA1C94126354830761FF05655C92FB5E31BA8F41A22BEBE626470C09607FDCCBAD5BB4545BCBECBAD4");
+            mockChat.setRemoteActorType("CRYPTO_BROKER");
+            mockChat.setRemoteActorPubKey("04F32B7FBABCA4DDD2854FA4879DB73C11C0F15A68C29C1E2DF8C10B5EEE9521D80404C98C453D8119DF27B7D5E6304D2FCB92EC072C904D59433A206729CFE836");
+            mockChat.setChatName("Chat de prueba");
+            mockChat.setChatMessageStatus(ChatMessageStatus.CREATED_CHAT);
+            mockChat.setDate(new Timestamp(145517));
+            mockChat.setIdMessage(UUID.randomUUID());
+            mockChat.setMessage("This is a test message to test funcionality");
+            mockChat.setDistributionStatus(DistributionStatus.DELIVERING);
+
+            sendChatMetadata(mockChat.getLocalActorPubKey(), mockChat.getRemoteActorPubKey(), mockChat);
+            raiseTestEvent();
+
 
         }catch (CantInitializeChatNetworkServiceDatabaseException exception) {
 
@@ -602,18 +647,25 @@ public class ChatPluginRoot extends AbstractPlugin implements
             String possibleCause = "The Template Database triggered an unexpected problem that wasn't able to solve by itself";
             CantStartPluginException pluginStartException = new CantStartPluginException(CantStartPluginException.DEFAULT_MESSAGE, exception, context, possibleCause);
 
-            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_TEMPLATE_NETWORK_SERVICE,UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, pluginStartException);
+            errorManager.reportUnexpectedPluginException(Plugins.CHAT_NETWORK_SERVICE,UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, pluginStartException);
             throw pluginStartException;
         }catch (Exception exception){
             StringBuffer contextBuffer = new StringBuffer();
             contextBuffer.append("Plugin ID: " + pluginId);
             String context = contextBuffer.toString();
-            String possibleCause = "The plugin was unable to start";
-            throw new CantStartPluginException(CantStartPluginException.DEFAULT_MESSAGE, FermatException.wrapException(exception), context, possibleCause);
+            String possibleCause = "The plugin was unable to start\n"+exception.getMessage();
+            throw new CantStartPluginException(exception.getMessage(), FermatException.wrapException(exception), context, possibleCause);
         }
 
     }
 
+    private void raiseTestEvent(){
+        FermatEvent fermatEvent = eventManager.getNewEvent(EventType.OUTGOING_CHAT);
+        OutgoingChat outgoingChat = (OutgoingChat) fermatEvent;
+        outgoingChat.setSource(EventSource.NETWORK_SERVICE_CHAT);
+        eventManager.raiseEvent(outgoingChat);
+
+    }
     /**
      * Static method to get the logging level from any class under root.
      * @param className
@@ -646,6 +698,8 @@ public class ChatPluginRoot extends AbstractPlugin implements
              * Open new database connection
              */
             this.dataBase = this.pluginDatabaseSystem.openDatabase(pluginId, NetworkServiceChatNetworkServiceDatabaseConstants.DATA_BASE_NAME);
+            this.chatMetaDataDao = new ChatMetaDataDao(dataBase);
+
 
         } catch (CantOpenDatabaseException cantOpenDatabaseException) {
 
@@ -686,46 +740,48 @@ public class ChatPluginRoot extends AbstractPlugin implements
     }
 
     @Override
-    public void sendChatMetadata(Integer idChat, Integer idObjecto, String localActorType, String localActorPubKey, String remoteActorType, String remoteActorPubKey, String chatName, ChatMessageStatus chatStatus, Timestamp date, Integer idMessage, String message, DistributionStatus distributionStatus) throws CantSendChatMessageMetadataException {
+    public void sendChatMetadata(String localActorPubKey, String remoteActorPubKey, ChatMetada chatMetada) throws CantSendChatMessageMetadataException {
         try {
-            System.out.println(" ChatPLuginRoot - Starting method sendChatMetadata");
+            System.out.println("ChatPLuginRoot - Starting method sendChatMetadata");
 
             /*
             * Initialize as null so if the instance is one I can't handle then it will break the app fast instead of causing weird bugs.
             */
 
-            System.out.println("ChatPLuginRoot - Actor Sender: PK : " + localActorPubKey+ " - Type: " + localActorType);
-            System.out.println("ChatPLuginRoot - Actor Receiver: PK : " + remoteActorPubKey+ " - Type: " +   remoteActorType);
+            System.out.println("ChatPLuginRoot - Actor Sender: PK : " + localActorPubKey+ " - Type: " + chatMetada.getLocalActorType());
+            System.out.println("ChatPLuginRoot - Actor Receiver: PK : " + remoteActorPubKey+ " - Type: " +   chatMetada.getRemoteActorType());
 
             /*
              * ask for a previous connection
              */
             CommunicationNetworkServiceLocal communicationNetworkServiceLocal = communicationNetworkServiceConnectionManager.getNetworkServiceLocalInstance(remoteActorPubKey);
+            System.out.println("ChatPluginRoot - communicationNetworkServiceLocal: "+communicationNetworkServiceLocal);
 
+            String msjContent = EncodeMsjContent.encodeMSjContentChatMetadataTransmit(chatMetada, PlatformComponentType.getByCode(chatMetada.getLocalActorType()), PlatformComponentType.getByCode(chatMetada.getRemoteActorType()));
+            System.out.println("ChatPluginRoot - Message encoded:\n"+msjContent);
             /*
              * Construct the message content in json format
              */
             ChatMetadaTransactionRecord chatMetadaTransactionRecord = new ChatMetadaTransactionRecord();
-            chatMetadaTransactionRecord.setIdChat(idChat);
-            chatMetadaTransactionRecord.setIdObjecto(idObjecto);
-            chatMetadaTransactionRecord.setLocalActorType(localActorType);
-            chatMetadaTransactionRecord.setLocalActorPubKey(localActorPubKey);
-            chatMetadaTransactionRecord.setRemoteActorType(remoteActorType);
-            chatMetadaTransactionRecord.setRemoteActorPubKey(remoteActorPubKey);
-            chatMetadaTransactionRecord.setChatName(chatName);
-            chatMetadaTransactionRecord.setChatMessageStatus(chatStatus);
-            chatMetadaTransactionRecord.setDate(date);
-            chatMetadaTransactionRecord.setIdMessage(idMessage);
-            chatMetadaTransactionRecord.setMessage(message);
-            chatMetadaTransactionRecord.setDistributionStatus(distributionStatus);
-            String msjContent = EncodeMsjContent.encodeMSjContentChatMetadataTransmit(chatMetadaTransactionRecord, PlatformComponentType.getByCode(chatMetadaTransactionRecord.getLocalActorType()), PlatformComponentType.getByCode(chatMetadaTransactionRecord.getRemoteActorType()));
+            chatMetadaTransactionRecord.setIdChat(chatMetada.getIdChat());
+            chatMetadaTransactionRecord.setIdObjecto(chatMetada.getIdObjecto());
+            chatMetadaTransactionRecord.setLocalActorType(chatMetada.getLocalActorType());
+            chatMetadaTransactionRecord.setLocalActorPubKey(chatMetada.getLocalActorPubKey());
+            chatMetadaTransactionRecord.setRemoteActorType(chatMetada.getRemoteActorType());
+            chatMetadaTransactionRecord.setRemoteActorPubKey(chatMetada.getRemoteActorPubKey());
+            chatMetadaTransactionRecord.setChatName(chatMetada.getChatName());
+            chatMetadaTransactionRecord.setChatMessageStatus(chatMetada.getChatMessageStatus());
+            chatMetadaTransactionRecord.setDate(chatMetada.getDate());
+            chatMetadaTransactionRecord.setIdMessage(chatMetada.getIdMessage());
+            chatMetadaTransactionRecord.setMessage(chatMetada.getMessage());
+            chatMetadaTransactionRecord.setDistributionStatus(DistributionStatus.DELIVERING);
 
             System.out.println("ChatPLuginRoot - Chat transaction: " + chatMetadaTransactionRecord);
 
             /*
              * Save into data base
              */
-            getOutgoinChatMetaDataDao().create(chatMetadaTransactionRecord);
+            getChatMetaDataDao().create(chatMetadaTransactionRecord);
 
             /*
              * If not null
@@ -759,19 +815,19 @@ public class ChatPluginRoot extends AbstractPlugin implements
                 /*
                  * Create the sender basic profile
                  */
-                PlatformComponentProfile sender = wsCommunicationsCloudClientManager.getCommunicationsCloudClientConnection().constructBasicPlatformComponentProfileFactory(chatMetadaTransactionRecord.getLocalActorPubKey(), NetworkServiceType.UNDEFINED, PlatformComponentType.getByCode(chatMetadaTransactionRecord.getLocalActorType()));
+                PlatformComponentProfile sender = wsCommunicationsCloudClientManager.getCommunicationsCloudClientConnection().constructBasicPlatformComponentProfileFactory(chatMetadaTransactionRecord.getLocalActorPubKey(), NetworkServiceType.CHAT, PlatformComponentType.getByCode(chatMetadaTransactionRecord.getLocalActorType()));
 
                 /*
                  * Create the receiver basic profile
                  */
-                PlatformComponentProfile receiver = wsCommunicationsCloudClientManager.getCommunicationsCloudClientConnection().constructBasicPlatformComponentProfileFactory(chatMetadaTransactionRecord.getRemoteActorPubKey(), NetworkServiceType.UNDEFINED, PlatformComponentType.getByCode(chatMetadaTransactionRecord.getRemoteActorType()));
+                PlatformComponentProfile receiver = wsCommunicationsCloudClientManager.getCommunicationsCloudClientConnection().constructBasicPlatformComponentProfileFactory(chatMetadaTransactionRecord.getRemoteActorPubKey(), NetworkServiceType.CHAT, PlatformComponentType.getByCode(chatMetadaTransactionRecord.getRemoteActorType()));
 
                 /*
                  * Ask the client to connect
                  */
                 communicationNetworkServiceConnectionManager.connectTo(sender, platformComponentProfile, receiver);
             }
-            System.out.println("AssetTransmissionNetworkServicePluginRoot - Message sent.");
+            System.out.println("ChatPluginRoot - Message sent.");
         } catch (Exception e) {
 
             StringBuilder contextBuffer = new StringBuilder();
@@ -788,12 +844,17 @@ public class ChatPluginRoot extends AbstractPlugin implements
             String context = contextBuffer.toString();
             String possibleCause = "Plugin was not registered";
 
-            CantSendChatMessageMetadataException pluginStartException = new CantSendChatMessageMetadataException(CantSendChatMessageMetadataException.DEFAULT_MESSAGE, e, context, possibleCause);
+            CantSendChatMessageMetadataException pluginStartException = new CantSendChatMessageMetadataException(e.getMessage(), e, context, possibleCause);
 
             errorManager.reportUnexpectedPluginException(Plugins.CHAT_NETWORK_SERVICE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, pluginStartException);
 
             throw pluginStartException;
         }
+    }
+
+    @Override
+    public void sendChatMessageNewStatusNotification(UUID localActorPubKey, PlatformComponentType senderType, UUID remoteActorPubKey, PlatformComponentType receiverType, DistributionStatus newDistributionStatus) throws CantSendChatMessageNewStatusNotificationException {
+
     }
 
 
@@ -860,6 +921,15 @@ public class ChatPluginRoot extends AbstractPlugin implements
         eventManager.addListener(fermatEventListener);
         listenersAdded.add(fermatEventListener);
 
+        /**
+         *  failure connection
+         */
+
+        fermatEventListener = eventManager.getNewListener(P2pEventType.FAILURE_COMPONENT_CONNECTION_REQUEST_NOTIFICATION);
+        fermatEventListener.setEventHandler(new FailureComponentConnectionRequestNotificationEventHandler(this));
+        eventManager.addListener(fermatEventListener);
+        listenersAdded.add(fermatEventListener);
+
     }
 
     @Override
@@ -872,10 +942,6 @@ public class ChatPluginRoot extends AbstractPlugin implements
         // TODO COMPLETE -.
     }
 
-    @Override
-    public void sendChatMessageNewStatusNotification() throws CantSendChatMessageNewStatusNotificationException {
-
-    }
 
     @Override
     public void confirmReception(UUID transactionID) throws CantConfirmTransactionException {
@@ -886,4 +952,6 @@ public class ChatPluginRoot extends AbstractPlugin implements
     public List<Transaction<ChatMetada>> getPendingTransactions(Specialist specialist) throws CantDeliverPendingTransactionsException {
         return null;
     }
+
+
 }
