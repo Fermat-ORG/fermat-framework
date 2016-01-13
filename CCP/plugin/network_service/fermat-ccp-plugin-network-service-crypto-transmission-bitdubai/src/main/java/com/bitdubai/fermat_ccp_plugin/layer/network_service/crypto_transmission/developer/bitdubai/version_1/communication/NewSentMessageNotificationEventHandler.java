@@ -24,8 +24,10 @@ public class NewSentMessageNotificationEventHandler extends AbstractCommunicatio
          *
          * @param
          */
-    public NewSentMessageNotificationEventHandler(NetworkService intraActorNetworkServicePluginRoot) {
-        super((AbstractNetworkServiceV2) intraActorNetworkServicePluginRoot);
+
+    public NewSentMessageNotificationEventHandler(AbstractNetworkServiceV2 intraActorNetworkServicePluginRoot) {
+        super(intraActorNetworkServicePluginRoot);
+
     }
 
         /**
@@ -40,7 +42,7 @@ public class NewSentMessageNotificationEventHandler extends AbstractCommunicatio
         public void processEvent(NewNetworkServiceMessageSentNotificationEvent event) {
 
 //            if(event.getNetworkServiceTypeApplicant().equals(NetworkServiceType.INTRA_USER))
-            ((CryptoTransmissionNetworkServicePluginRoot)networkService).handleNewSentMessageNotificationEvent((FermatMessage) event.getData());
+            networkService.handleNewSentMessageNotificationEvent((FermatMessage) event.getData());
 
         }
 }
