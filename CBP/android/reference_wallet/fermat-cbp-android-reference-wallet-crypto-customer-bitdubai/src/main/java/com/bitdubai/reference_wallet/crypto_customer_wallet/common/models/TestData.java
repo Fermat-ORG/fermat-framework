@@ -350,6 +350,7 @@ public class TestData {
         return contractsHistory;
     }
 
+    // TODO Revisar Franklin
     public static EmptyCustomerBrokerNegotiationInformation newEmptyNegotiationInformation() {
         return new EmptyCustomerBrokerNegotiationInformation();
     }

@@ -53,7 +53,7 @@
                 android:layout_margin="16dp">
 
                 <TextView
-                    android:id="@+id/ccw_market_exchange_rate_reference_text"
+                    android:id="@+id/ccw_market_rate_text"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginEnd="5dp"
@@ -62,12 +62,12 @@
                     android:textColor="@color/description_text_status_confirm"/>
 
                 <TextView
-                    android:id="@+id/ccw_market_exchange_rate_reference_value"
+                    android:id="@+id/ccw_market_rate_value"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_alignTop="@+id/ccw_market_exchange_rate_reference_text"
-                    android:layout_toEndOf="@+id/ccw_market_exchange_rate_reference_text"
-                    android:layout_toRightOf="@+id/ccw_market_exchange_rate_reference_text"
+                    android:layout_alignTop="@+id/ccw_market_rate_text"
+                    android:layout_toEndOf="@+id/ccw_market_rate_text"
+                    android:layout_toRightOf="@+id/ccw_market_rate_text"
                     android:textColor="@color/text_value_status_confirm"
                     tools:text="1 BTC / 210 USD"/>
             </RelativeLayout>
@@ -83,7 +83,7 @@
                 android:layout_margin="16dp">
 
                 <TextView
-                    android:id="@+id/ccw_your_exchange_rate_text"
+                    android:id="@+id/ccw_exchange_rate_text"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_alignParentLeft="true"
@@ -95,25 +95,25 @@
                     android:textColor="@color/description_text_status_confirm"/>
 
                 <TextView
-                    android:id="@+id/ccw_your_exchange_rate_value_left_side"
+                    android:id="@+id/ccw_exchange_rate_value_left_side"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_alignTop="@+id/ccw_your_exchange_rate_text"
+                    android:layout_alignTop="@+id/ccw_exchange_rate_text"
                     android:layout_centerVertical="true"
-                    android:layout_toEndOf="@+id/ccw_your_exchange_rate_text"
-                    android:layout_toRightOf="@+id/ccw_your_exchange_rate_text"
+                    android:layout_toEndOf="@+id/ccw_exchange_rate_text"
+                    android:layout_toRightOf="@+id/ccw_exchange_rate_text"
                     android:textColor="@color/text_value_status_confirm"
                     tools:text="1 USD / "/>
 
                 <EditText
-                    android:id="@+id/ccw_your_exchange_rate_value"
+                    android:id="@+id/ccw_exchange_rate_value"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_centerVertical="true"
                     android:layout_marginEnd="5dp"
                     android:layout_marginRight="5dp"
-                    android:layout_toEndOf="@+id/ccw_your_exchange_rate_value_left_side"
-                    android:layout_toRightOf="@+id/ccw_your_exchange_rate_value_left_side"
+                    android:layout_toEndOf="@+id/ccw_exchange_rate_value_left_side"
+                    android:layout_toRightOf="@+id/ccw_exchange_rate_value_left_side"
                     android:inputType="numberDecimal"
                     android:minEms="3"
                     android:textColor="@color/text_value_status_confirm"
@@ -121,14 +121,14 @@
                     tools:text="212.05"/>
 
                 <TextView
-                    android:id="@+id/ccw_your_exchange_rate_value_right_side"
+                    android:id="@+id/ccw_exchange_rate_value_right_side"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_centerVertical="true"
                     android:layout_marginEnd="5dp"
                     android:layout_marginRight="5dp"
-                    android:layout_toEndOf="@+id/ccw_your_exchange_rate_value"
-                    android:layout_toRightOf="@+id/ccw_your_exchange_rate_value"
+                    android:layout_toEndOf="@+id/ccw_exchange_rate_value"
+                    android:layout_toRightOf="@+id/ccw_exchange_rate_value"
                     android:textColor="@color/text_value_status_confirm"
                     tools:text="BTC"/>
             </RelativeLayout>

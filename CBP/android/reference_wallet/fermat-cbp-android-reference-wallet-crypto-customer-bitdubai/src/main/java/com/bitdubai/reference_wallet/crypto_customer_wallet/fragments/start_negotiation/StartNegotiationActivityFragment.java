@@ -20,6 +20,8 @@ import android.widget.ImageView;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractFermatFragment;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.utils.ImagesUtils;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView;
+import com.bitdubai.fermat_api.layer.all_definition.enums.CryptoCurrency;
+import com.bitdubai.fermat_api.layer.all_definition.enums.FiatCurrency;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Wallets;
 import com.bitdubai.fermat_api.layer.pip_engine.interfaces.ResourceProviderManager;
 import com.bitdubai.fermat_api.layer.world.interfaces.Currency;
@@ -28,7 +30,6 @@ import com.bitdubai.fermat_cbp_api.all_definition.enums.NegotiationStatus;
 import com.bitdubai.fermat_cbp_api.all_definition.identity.ActorIdentity;
 import com.bitdubai.fermat_cbp_api.layer.identity.crypto_customer.interfaces.CryptoCustomerIdentity;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.common.interfaces.ClauseInformation;
-import com.bitdubai.fermat_cbp_api.layer.wallet_module.common.interfaces.CustomerBrokerNegotiationInformation;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_customer.interfaces.CryptoCustomerWalletManager;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_customer.interfaces.CryptoCustomerWalletModuleManager;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedWalletExceptionSeverity;
@@ -61,11 +62,13 @@ public class StartNegotiationActivityFragment extends AbstractFermatFragment<Cry
     private FermatTextView sellingDetails;
     private FermatTextView brokerName;
     private RecyclerView recyclerView;
+    private StartNegotiationAdapter adapter;
 
     private CryptoCustomerWalletManager walletManager;
     private ErrorManager errorManager;
     private EmptyCustomerBrokerNegotiationInformation negotiationInfo;
-    private StartNegotiationAdapter adapter;
+    private ArrayList<String> paymentMethods; // test data
+    private ArrayList<Currency> currencies; // test data
 
 
     public static StartNegotiationActivityFragment newInstance() {
@@ -75,12 +78,24 @@ public class StartNegotiationActivityFragment extends AbstractFermatFragment<Cry
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        paymentMethods = new ArrayList<>();
+        paymentMethods.add("Cash");
+        paymentMethods.add("Bank");
+        paymentMethods.add("Crypto");
+
+        currencies = new ArrayList<>();
+        currencies.add(FiatCurrency.VENEZUELAN_BOLIVAR);
+        currencies.add(FiatCurrency.US_DOLLAR);
+        currencies.add(CryptoCurrency.BITCOIN);
+
         try {
             CryptoCustomerWalletModuleManager moduleManager = appSession.getModuleManager();
             walletManager = moduleManager.getCryptoCustomerWallet(appSession.getAppPublicKey());
             errorManager = appSession.getErrorManager();
 
             negotiationInfo = createNewEmptyNegotiationInfo();
+
         } catch (Exception e) {
             Log.e(TAG, e.getMessage(), e);
         }
@@ -101,42 +116,35 @@ public class StartNegotiationActivityFragment extends AbstractFermatFragment<Cry
 
     @Override
     public void onClauseValueChanged(EditText triggerView, ClauseInformation clause, String newValue, int position) {
-        final ClauseType type = clause.getType();
         final ClauseInformation newClause = negotiationInfo.putClause(clause, newValue);
-        switch (type) {
-            case EXCHANGE_RATE:
-                final Map<ClauseType, ClauseInformation> clauses = negotiationInfo.getClauses();
-                final ClauseInformation customerCurrencyQty = clauses.get(ClauseType.CUSTOMER_CURRENCY_QUANTITY);
-                final ClauseInformation brokerCurrencyQty = clauses.get(ClauseType.BROKER_CURRENCY_QUANTITY);
 
-                final BigDecimal exchangeRate = BigDecimal.valueOf(Double.valueOf(newValue));
-                final BigDecimal amountToBuy = BigDecimal.valueOf(Double.valueOf(customerCurrencyQty.getValue()));
-                final String format = DecimalFormat.getInstance().format(amountToBuy.multiply(exchangeRate).doubleValue());
-                negotiationInfo.putClause(brokerCurrencyQty, format);
+        final Map<ClauseType, ClauseInformation> clauses = negotiationInfo.getClauses();
+        final ClauseInformation customerCurrencyQty = clauses.get(ClauseType.CUSTOMER_CURRENCY_QUANTITY);
+        final ClauseInformation brokerCurrencyQty = clauses.get(ClauseType.BROKER_CURRENCY_QUANTITY);
 
-                break;
-            case CUSTOMER_CURRENCY_QUANTITY:
-                break;
-        }
+        final BigDecimal exchangeRate = BigDecimal.valueOf(Double.valueOf(newValue));
+        final BigDecimal amountToBuy = BigDecimal.valueOf(Double.valueOf(customerCurrencyQty.getValue()));
+        final String format = DecimalFormat.getInstance().format(amountToBuy.multiply(exchangeRate).doubleValue());
+        negotiationInfo.putClause(brokerCurrencyQty, format);
 
-        adapter.setItem(position, newClause);
+        adapter.changeItem(position, newClause);
         triggerView.setText(newValue);
     }
 
     @Override
-    public void onClauseCLicked(final Button triggerView, final ClauseInformation clause, int position) {
+    public void onClauseCLicked(final Button triggerView, final ClauseInformation clause, final int position) {
         SimpleListDialogFragment dialogFragment;
         final ClauseType type = clause.getType();
         switch (type) {
             case BROKER_CURRENCY:
                 dialogFragment = new SimpleListDialogFragment<>();
-                dialogFragment.configure("Currencies", new ArrayList<Currency>());
+                dialogFragment.configure("Currencies", currencies);
                 dialogFragment.setListener(new SimpleListDialogFragment.ItemSelectedListener<Currency>() {
                     @Override
                     public void onItemSelected(Currency selectedItem) {
-                        negotiationInfo.putClause(clause, selectedItem.getCode());
+                        ClauseInformation newClause = negotiationInfo.putClause(clause, selectedItem.getCode());
                         triggerView.setText(selectedItem.getFriendlyName());
-                        adapter.notifyDataSetChanged();
+                        adapter.changeItem(position, newClause);
                     }
                 });
 
@@ -145,12 +153,14 @@ public class StartNegotiationActivityFragment extends AbstractFermatFragment<Cry
 
             case CUSTOMER_PAYMENT_METHOD:
                 dialogFragment = new SimpleListDialogFragment<>();
-                dialogFragment.configure("Payment Methods", new ArrayList<String>());
+
+                dialogFragment.configure("Payment Methods", paymentMethods);
                 dialogFragment.setListener(new SimpleListDialogFragment.ItemSelectedListener<String>() {
                     @Override
                     public void onItemSelected(String selectedItem) {
-                        negotiationInfo.putClause(clause, selectedItem);
+                        ClauseInformation newClause = negotiationInfo.putClause(clause, selectedItem);
                         triggerView.setText(selectedItem);
+                        adapter.changeItem(position, newClause);
                     }
                 });
 
@@ -212,13 +222,14 @@ public class StartNegotiationActivityFragment extends AbstractFermatFragment<Cry
             EmptyCustomerBrokerNegotiationInformation negotiationInfo = TestData.newEmptyNegotiationInformation();
             negotiationInfo.setStatus(NegotiationStatus.WAITING_FOR_BROKER);
 
-            String currencyToBuy = (appSession.getCurrencyToBuy() != null) ? appSession.getCurrencyToBuy().getCode() : null;
-            negotiationInfo.putClause(ClauseType.CUSTOMER_CURRENCY, currencyToBuy);
-            negotiationInfo.putClause(ClauseType.BROKER_CURRENCY, null);
+            final Currency currency = appSession.getCurrencyToBuy();
+            negotiationInfo.putClause(ClauseType.CUSTOMER_CURRENCY, currency.getCode());
+            negotiationInfo.putClause(ClauseType.BROKER_CURRENCY, currencies.get(0).getCode());
             negotiationInfo.putClause(ClauseType.CUSTOMER_CURRENCY_QUANTITY, "0.0");
             negotiationInfo.putClause(ClauseType.BROKER_CURRENCY_QUANTITY, "0.0");
             negotiationInfo.putClause(ClauseType.EXCHANGE_RATE, "0.0");
-            negotiationInfo.putClause(ClauseType.CUSTOMER_PAYMENT_METHOD, null);
+            negotiationInfo.putClause(ClauseType.CUSTOMER_PAYMENT_METHOD, paymentMethods.get(0));
+            negotiationInfo.putClause(ClauseType.BROKER_PAYMENT_METHOD, paymentMethods.get(0));
 
             final ActorIdentity brokerIdentity = appSession.getSelectedBrokerIdentity();
             if (brokerIdentity != null)

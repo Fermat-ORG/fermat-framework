@@ -14,6 +14,7 @@ import java.util.UUID;
 /**
  * Created by nelson on 10/01/16.
  */
+//TODO Revisar Franklin
 public class EmptyCustomerBrokerNegotiationInformation implements CustomerBrokerNegotiationInformation {
     private Long lastNegotiationUpdateDate;
     private ActorIdentity customer;
@@ -46,7 +47,7 @@ public class EmptyCustomerBrokerNegotiationInformation implements CustomerBroker
 
             @Override
             public String getValue() {
-                return value;
+                return (value != null) ? value : "";
             }
 
             @Override

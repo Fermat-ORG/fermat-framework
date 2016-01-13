@@ -9,6 +9,7 @@ import android.view.ViewGroup;
 
 import com.bitdubai.fermat_android_api.ui.adapters.FermatAdapter;
 import com.bitdubai.fermat_android_api.ui.holders.FermatViewHolder;
+import com.bitdubai.fermat_api.layer.world.interfaces.Currency;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.ClauseType;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.common.interfaces.ClauseInformation;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.common.interfaces.CustomerBrokerNegotiationInformation;
@@ -22,8 +23,11 @@ import com.bitdubai.reference_wallet.crypto_customer_wallet.fragments.start_nego
 import com.bitdubai.reference_wallet.crypto_customer_wallet.util.FragmentsCommons;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 import java.util.NoSuchElementException;
 
 
@@ -152,7 +156,7 @@ public class StartNegotiationAdapter extends FermatAdapter<ClauseInformation, Fe
         }
     }
 
-    public void setItem(int position, ClauseInformation clause) {
+    public void changeItem(int position, ClauseInformation clause) {
         dataSet.set(position, clause);
         notifyItemChanged(position);
     }
@@ -166,28 +170,18 @@ public class StartNegotiationAdapter extends FermatAdapter<ClauseInformation, Fe
     }
 
     private List<ClauseInformation> buildListOfItems() {
-        final int TOTAL_STEPS = 4;
+        final int TOTAL_STEPS = 5;
 
-        final Collection<ClauseInformation> values = negotiationInformation.getClauses().values();
-        final List<ClauseInformation> list = new ArrayList<>(TOTAL_STEPS);
+        Map<ClauseType, ClauseInformation> clauses = negotiationInformation.getClauses();
+        final ClauseInformation[] data = new ClauseInformation[TOTAL_STEPS];
 
-        for (ClauseInformation value : values)
-            switch (value.getType()) {
-                case CUSTOMER_CURRENCY_QUANTITY:
-                    list.set(0, value);
-                    break;
-                case EXCHANGE_RATE:
-                    list.set(1, value);
-                    break;
-                case BROKER_CURRENCY:
-                    list.set(2, value);
-                    break;
-                case CUSTOMER_PAYMENT_METHOD:
-                    list.set(3, value);
-                    break;
-            }
+        data[0] = clauses.get(ClauseType.CUSTOMER_CURRENCY_QUANTITY);
+        data[1] = clauses.get(ClauseType.EXCHANGE_RATE);
+        data[2] = clauses.get(ClauseType.BROKER_CURRENCY);
+        data[3] = clauses.get(ClauseType.CUSTOMER_PAYMENT_METHOD);
+        data[4] = clauses.get(ClauseType.BROKER_PAYMENT_METHOD);
 
-        return list;
+        return Arrays.asList(data);
     }
 
     private boolean isFooterPosition(int position) {

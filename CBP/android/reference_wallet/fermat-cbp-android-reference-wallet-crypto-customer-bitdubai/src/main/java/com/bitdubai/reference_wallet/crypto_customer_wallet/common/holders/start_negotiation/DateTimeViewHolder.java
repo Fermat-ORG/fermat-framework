@@ -31,8 +31,8 @@ public class DateTimeViewHolder extends ClauseViewHolder implements View.OnClick
     }
 
     @Override
-    public void bindData(CustomerBrokerNegotiationInformation data, ClauseInformation clause) {
-        super.bindData(data, clause);
+    public void bindData(CustomerBrokerNegotiationInformation data, ClauseInformation clause, int position) {
+        super.bindData(data, clause, position);
 
         java.text.DateFormat timeFormat = DateFormat.getTimeFormat(itemView.getContext());
         java.text.DateFormat dateFormat = DateFormat.getDateFormat(itemView.getContext());
@@ -51,7 +51,7 @@ public class DateTimeViewHolder extends ClauseViewHolder implements View.OnClick
 
     @Override
     public void onClick(View view) {
-        listener.onClauseCLicked((Button) view, clause);
+        listener.onClauseCLicked((Button) view, clause, clausePosition);
     }
 
     @Override

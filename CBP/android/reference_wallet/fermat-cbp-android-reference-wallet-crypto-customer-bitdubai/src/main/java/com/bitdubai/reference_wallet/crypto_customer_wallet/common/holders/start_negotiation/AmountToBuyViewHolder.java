@@ -34,8 +34,8 @@ public class AmountToBuyViewHolder extends ClauseViewHolder implements TextWatch
     }
 
     @Override
-    public void bindData(CustomerBrokerNegotiationInformation data, ClauseInformation clause) {
-        super.bindData(data, clause);
+    public void bindData(CustomerBrokerNegotiationInformation data, ClauseInformation clause, int position) {
+        super.bindData(data, clause, position);
 
         final Map<ClauseType, ClauseInformation> clauses = data.getClauses();
         final ClauseInformation currencyToBuy = clauses.get(ClauseType.CUSTOMER_CURRENCY);
@@ -63,7 +63,7 @@ public class AmountToBuyViewHolder extends ClauseViewHolder implements TextWatch
 
     @Override
     public void afterTextChanged(Editable editable) {
-        listener.onClauseValueChanged(buyingValue, clause, buyingValue.getText().toString());
+        listener.onClauseValueChanged(buyingValue, clause, buyingValue.getText().toString(), clausePosition);
     }
 
     @Override

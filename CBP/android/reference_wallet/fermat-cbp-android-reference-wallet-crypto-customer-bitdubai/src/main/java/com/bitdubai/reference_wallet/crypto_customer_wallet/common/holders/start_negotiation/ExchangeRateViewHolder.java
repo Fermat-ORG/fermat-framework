@@ -2,6 +2,7 @@ package com.bitdubai.reference_wallet.crypto_customer_wallet.common.holders.star
 
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -19,27 +20,31 @@ import java.util.Map;
  * Created by nelson on 10/01/16.
  */
 public class ExchangeRateViewHolder extends ClauseViewHolder implements TextWatcher {
-    private final TextView markerRateReference;
-    private final TextView yourExchangeRateValueLeftSide;
-    private final TextView yourExchangeRateValueRightSide;
-    private final EditText yourExchangeRateValue;
+    private TextView markerRateReference;
+    private TextView yourExchangeRateValueLeftSide;
+    private TextView yourExchangeRateValueRightSide;
+    private EditText yourExchangeRateValue;
 
 
     public ExchangeRateViewHolder(View itemView) {
         super(itemView);
 
-        markerRateReference = (TextView) itemView.findViewById(R.id.ccw_market_exchange_rate_reference_value);
-        yourExchangeRateValueLeftSide = (TextView) itemView.findViewById(R.id.ccw_your_exchange_rate_value_left_side);
-        yourExchangeRateValueRightSide = (TextView) itemView.findViewById(R.id.ccw_your_exchange_rate_value_right_side);
-        yourExchangeRateValue = (EditText) itemView.findViewById(R.id.ccw_your_exchange_rate_value);
-        yourExchangeRateValue.addTextChangedListener(this);
+        try {
+            yourExchangeRateValueLeftSide = (TextView) itemView.findViewById(R.id.ccw_exchange_rate_value_left_side);
+            yourExchangeRateValueRightSide = (TextView) itemView.findViewById(R.id.ccw_exchange_rate_value_right_side);
+            yourExchangeRateValue = (EditText) itemView.findViewById(R.id.ccw_exchange_rate_value);
+            markerRateReference = (TextView) itemView.findViewById(R.id.ccw_market_rate_value);
+            yourExchangeRateValue.addTextChangedListener(this);
+        }catch (Exception ex){
+            Log.e("ExchangeRateViewHolder", ex.getMessage(), ex);
+        }
     }
 
     @Override
-    public void bindData(CustomerBrokerNegotiationInformation data, ClauseInformation clause) {
-        super.bindData(data, clause);
+    public void bindData(CustomerBrokerNegotiationInformation negotiationInformation, ClauseInformation clause, int clausePosition) {
+        super.bindData(negotiationInformation, clause, clausePosition);
 
-        final Map<ClauseType, ClauseInformation> clauses = data.getClauses();
+        final Map<ClauseType, ClauseInformation> clauses = negotiationInformation.getClauses();
         final ClauseInformation currencyToBuy = clauses.get(ClauseType.CUSTOMER_CURRENCY);
         final ClauseInformation currencyToPay = clauses.get(ClauseType.BROKER_CURRENCY);
 
@@ -70,7 +75,7 @@ public class ExchangeRateViewHolder extends ClauseViewHolder implements TextWatc
     @Override
     public void afterTextChanged(Editable editable) {
         final Editable text = yourExchangeRateValue.getText();
-        listener.onClauseValueChanged(yourExchangeRateValue, clause, text.toString());
+        listener.onClauseValueChanged(yourExchangeRateValue, clause, text.toString(), clausePosition);
     }
 
     @Override

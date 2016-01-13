@@ -27,8 +27,8 @@ public class SingleChoiceViewHolder extends ClauseViewHolder implements View.OnC
     }
 
     @Override
-    public void bindData(CustomerBrokerNegotiationInformation data, ClauseInformation clause) {
-        super.bindData(data, clause);
+    public void bindData(CustomerBrokerNegotiationInformation negotiationInformation, ClauseInformation clause, int clausePosition) {
+        super.bindData(negotiationInformation, clause, clausePosition);
 
         buttonValue.setText(clause.getValue());
     }
@@ -42,7 +42,7 @@ public class SingleChoiceViewHolder extends ClauseViewHolder implements View.OnC
 
     @Override
     public void onClick(View view) {
-        listener.onClauseCLicked(buttonValue, clause);
+        listener.onClauseCLicked(buttonValue, clause, clausePosition);
     }
 
     @Override

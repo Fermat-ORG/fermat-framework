@@ -26,22 +26,12 @@ public class CryptoCustomerWalletSession
     public CryptoCustomerWalletSession() {
     }
 
-    @Override
-    public WalletSettings getWalletSettings() {
-        return new CryptoCustomerWalletPreferenceSettings();
-    }
-
-    @Override
-    public String getIdentityConnection() {
-        return null;
-    }
-
     public ActorIdentity getSelectedBrokerIdentity() {
         Object data = getData(BROKER_ACTOR);
         return (data != null) ? (ActorIdentity) data : null;
     }
 
-    private void setSelectedBrokerIdentity(ActorIdentity brokerIdentity) {
+    public void setSelectedBrokerIdentity(ActorIdentity brokerIdentity) {
         setData(BROKER_ACTOR, brokerIdentity);
     }
 
