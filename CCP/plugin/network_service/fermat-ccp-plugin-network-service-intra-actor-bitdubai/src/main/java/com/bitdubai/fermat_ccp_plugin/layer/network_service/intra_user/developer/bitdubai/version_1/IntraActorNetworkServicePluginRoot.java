@@ -7,9 +7,9 @@
 package com.bitdubai.fermat_ccp_plugin.layer.network_service.intra_user.developer.bitdubai.version_1;
 
 import android.util.Base64;
-
 import com.bitdubai.fermat_api.CantStartAgentException;
 import com.bitdubai.fermat_api.CantStartPluginException;
+import com.bitdubai.fermat_api.CantStopAgentException;
 import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.Service;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.annotations.NeededAddonReference;
@@ -202,9 +202,9 @@ public class IntraActorNetworkServicePluginRoot extends AbstractNetworkServiceV2
             initializeCacheDb();
 
             //DAO
-            incomingNotificationsDao = new IncomingNotificationDao(getDataBaseCommunication(), this.getPluginFileSystem(), this.pluginId);
+            incomingNotificationsDao = new IncomingNotificationDao(dataBase, this.getPluginFileSystem(), this.pluginId);
 
-            outgoingNotificationDao = new OutgoingNotificationDao(getDataBaseCommunication(),this.getPluginFileSystem(), this.pluginId);
+            outgoingNotificationDao = new OutgoingNotificationDao(dataBase,this.getPluginFileSystem(), this.pluginId);
 
             intraActorNetworkServiceDao = new IntraActorNetworkServiceDao(this.dataBase, this.getPluginFileSystem(),this.pluginId);
 
@@ -728,7 +728,11 @@ public class IntraActorNetworkServicePluginRoot extends AbstractNetworkServiceV2
      */
     @Override
     public void onHandleClientConnectionLooseNotificationEvent(FermatEvent fermatEvent) {
-        actorNetworkServiceRecordedAgent.stop();
+        try {
+            actorNetworkServiceRecordedAgent.stop();
+        } catch (CantStopAgentException e) {
+            e.printStackTrace();
+        }
     }
 
     /*
