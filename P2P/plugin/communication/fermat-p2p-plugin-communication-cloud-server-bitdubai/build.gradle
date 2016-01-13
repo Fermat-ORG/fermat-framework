@@ -35,7 +35,7 @@ buildscript {
 task serverJar(type: OneJar) {
     mainClass = 'com.bitdubai.fermat_p2p_plugin.layer.ws.communications.cloud.server.developer.bitdubai.version_1.WsCommunicationsServerCloudMainRunner'
     archiveName = project.name + '-with-dependencies-' + version + ".jar"
-    additionalDir = file('one-jar.properties')
+    additionalDir = file('src/main/resources/one-jar.properties')
 }
 
 
@@ -91,7 +91,7 @@ dependencies {
 
     compile ('org.java-websocket:java-websocket:1.3.1')
 
-    compile 'org.clear:slf4j-log4j12:1.7.13'
+    compile ('org.slf4j:slf4j-log4j12:1.7.13')
 
     testCompile group: 'junit', name: 'junit', version: '4.11'
 	testCompile group: 'org.easytesting', name: 'fest-assert-core', version: '2.0M10'

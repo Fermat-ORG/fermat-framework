@@ -133,7 +133,7 @@ public class JettyEmbeddedAppServer {
         this.wsServerContainer.addEndpoint(WebSocketVpnServerChannel.class);
 
 
-        this.server.dump(System.err);
+        //this.server.dump(System.err);
 
     }
 
