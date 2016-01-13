@@ -498,7 +498,7 @@ public class AssetIssuerActorNetworkServicePluginRoot extends AbstractNetworkSer
             /*
              * If register
              */
-            if (this.isRegister()) {
+            if (true) {
                 /*
                  * Construct the profile
                  */
@@ -611,7 +611,7 @@ public class AssetIssuerActorNetworkServicePluginRoot extends AbstractNetworkSer
         try {
             CommunicationNetworkServiceLocal communicationNetworkServiceLocal = communicationNetworkServiceConnectionManager.getNetworkServiceLocalInstance(actorIssuerDestination.getActorPublicKey());
 
-            if (this.isRegister()) {
+            if (true) {
                 Gson gson = DAPMessageGson.getGson();
 
                 String messageContentIntoJson = gson.toJson(dapMessage);
@@ -722,7 +722,7 @@ public class AssetIssuerActorNetworkServicePluginRoot extends AbstractNetworkSer
         try {
             CommunicationNetworkServiceLocal communicationNetworkServiceLocal = communicationNetworkServiceConnectionManager.getNetworkServiceLocalInstance(actorAssetIssuerReceiver.getActorPublicKey());
 
-            if (this.isRegister()) {
+            if (true) {
                 Gson gson = DAPMessageGson.getGson();
 
                 String messageContentIntoJson = gson.toJson(dapMessage);
@@ -793,7 +793,7 @@ public class AssetIssuerActorNetworkServicePluginRoot extends AbstractNetworkSer
 
         try {
 
-//            if (this.isRegister()) {
+//            if (true) {
 
                 if (actorAssetIssuerRegisteredList != null && !actorAssetIssuerRegisteredList.isEmpty()) {
                     actorAssetIssuerRegisteredList.clear();
