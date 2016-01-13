@@ -231,6 +231,16 @@ public class BitcoinCryptoNetworkDatabaseDao {
         DatabaseTableRecord record = databaseTable.getEmptyRecord();
 
         /**
+         * if the transaction hash already exists with the same crypto Status, then I won't insert it.
+         * Issue #4501
+         * This is because the wallet is not detecting as own our outgoing transactions and the commit launches the incoming bitcoins
+         * event. A transaction that we are sending may be actually recorded as incoming. The important thing at this point is not to
+         * duplicate transactions
+         */
+        if (!this.isNewTransaction(hash, cryptoStatus))
+            return;
+
+        /**
          * generates the trx_id if this is an incoming transaction or used the passed one.
          */
         UUID trxId = null;
