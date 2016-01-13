@@ -11,4 +11,5 @@
     <string name="group_users_add">Add</string>
     <string name="group_users_delete">Delete</string>
     <string name="group_detail">Group Detail</string>
+    <string name="add_users">Add</string>
 </resources>
