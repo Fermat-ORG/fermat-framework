@@ -160,6 +160,9 @@ public class IssuerRedemptionMonitorAgent implements Agent {
                             wallet.getBalance().credit(recordWrapper, BalanceType.AVAILABLE);
                             wallet.assetRedeemed(digitalAssetMetadata.getDigitalAsset().getPublicKey(), null, bookRecord.getDeliveredToActorPublicKey());
 
+                            /**
+                             * Notifies the Asset Vault that the address of this Redeem Point, has been used.
+                             */
                             assetVaultManager.notifyUsedRedeemPointAddress(bookRecord.getCryptoAddress(), bookRecord.getDeliveredToActorPublicKey());
                         }
                     }
