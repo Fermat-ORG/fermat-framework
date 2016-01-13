@@ -92,7 +92,7 @@ public final class AssetVerification {
         /**
          * I will get the genesis transaction from the CryptoNetwork
          */
-        List<CryptoTransaction> transactionListFromCryptoNetwork = bitcoinNetworkManager.getCryptoTransaction(genesisTransaction);
+        List<CryptoTransaction> transactionListFromCryptoNetwork = bitcoinNetworkManager.getCryptoTransactions(genesisTransaction);
         if (transactionListFromCryptoNetwork.size() == 0) {
             /**
              * If I didn't get it, I will get the child of the genesis Transaction
