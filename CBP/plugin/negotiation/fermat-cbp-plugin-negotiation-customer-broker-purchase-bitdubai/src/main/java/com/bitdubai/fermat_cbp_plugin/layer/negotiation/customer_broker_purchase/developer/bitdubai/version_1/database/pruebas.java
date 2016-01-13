@@ -27,8 +27,8 @@ public class pruebas {
     public pruebas(CustomerBrokerPurchaseNegotiationDao dao){
         this.dao = dao;
 
-        init_test_locations();
-        init_test_bank();
+        //init_test_locations();
+        //init_test_bank();
 
     }
 
