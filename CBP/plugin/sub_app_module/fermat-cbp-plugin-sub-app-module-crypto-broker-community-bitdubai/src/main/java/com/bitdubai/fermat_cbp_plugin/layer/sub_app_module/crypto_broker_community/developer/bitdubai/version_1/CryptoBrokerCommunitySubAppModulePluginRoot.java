@@ -74,8 +74,14 @@ public class CryptoBrokerCommunitySubAppModulePluginRoot extends AbstractPlugin 
             );
 
             this.serviceStatus = ServiceStatus.STARTED;
+
         } catch (Exception exception) {
-            throw new CantStartPluginException(CantStartPluginException.DEFAULT_MESSAGE, FermatException.wrapException(exception), null, null);
+
+            throw new CantStartPluginException(
+                    exception,
+                    null,
+                    null
+            );
         }
     }
 

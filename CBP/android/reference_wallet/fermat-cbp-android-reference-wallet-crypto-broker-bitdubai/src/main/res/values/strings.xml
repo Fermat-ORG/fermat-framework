@@ -128,4 +128,8 @@
     <string name="cbw_settings_locations_description">You must have at least one location to make your transactions</string>
     <string name="cbw_settings_locations_title">Manage Your Locations</string>
     <string name="cbw_save">Save</string>
+    <string name="cbw_ctd_title">Transaction</string>
+    <string name="cbw_ctd_amount_tag">Amount</string>
+    <string name="cbw_ctd_amount_hint">Enter amount</string>
+
 </resources>
