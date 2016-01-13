@@ -24,7 +24,7 @@ public abstract class FermatAgent {
         this.status = AgentStatus.STARTED;
     }
 
-    public void stop(){
+    public void stop() throws CantStopAgentException {
         this.status = AgentStatus.STOPPED;
     }
 

@@ -1,6 +1,7 @@
 package com.bitdubai.fermat_ccp_plugin.layer.network_service.intra_user.developer.bitdubai.version_1.structure;
 
 import com.bitdubai.fermat_api.CantStartAgentException;
+import com.bitdubai.fermat_api.CantStopAgentException;
 import com.bitdubai.fermat_api.FermatAgent;
 import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.components.enums.PlatformComponentType;
@@ -105,6 +106,20 @@ public class ActorNetworkServiceRecordedAgent extends FermatAgent{
         } catch (Exception exception) {
 
             throw new CantStartAgentException(FermatException.wrapException(exception), null, "You should inspect the cause.");
+        }
+    }
+    public void stop() throws CantStopAgentException {
+        try {
+
+            toSend.interrupt();
+
+            toReceive.interrupt();
+
+            this.status = AgentStatus.PAUSED;
+
+        } catch (Exception exception) {
+
+            throw new CantStopAgentException(FermatException.wrapException(exception), null, "You should inspect the cause.");
         }
     }
 

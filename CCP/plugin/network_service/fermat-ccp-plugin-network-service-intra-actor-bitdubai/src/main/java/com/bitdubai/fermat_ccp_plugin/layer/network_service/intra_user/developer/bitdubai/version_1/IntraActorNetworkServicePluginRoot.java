@@ -7,9 +7,9 @@
 package com.bitdubai.fermat_ccp_plugin.layer.network_service.intra_user.developer.bitdubai.version_1;
 
 import android.util.Base64;
-
 import com.bitdubai.fermat_api.CantStartAgentException;
 import com.bitdubai.fermat_api.CantStartPluginException;
+import com.bitdubai.fermat_api.CantStopAgentException;
 import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.Service;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.annotations.NeededAddonReference;
@@ -139,9 +139,6 @@ public class IntraActorNetworkServicePluginRoot extends AbstractNetworkServiceV2
     @NeededPluginReference(platform = Platforms.COMMUNICATION_PLATFORM, layer = Layers.COMMUNICATION, plugin = Plugins.WS_CLOUD_CLIENT)
     private WsCommunicationsCloudClientManager wsCommunicationsCloudClientManager;
 
-
-    private Database dataBase;
-
     /**
      * Agent
      */
@@ -164,6 +161,7 @@ public class IntraActorNetworkServicePluginRoot extends AbstractNetworkServiceV2
     private OutgoingNotificationDao outgoingNotificationDao;
 
     private IntraActorNetworkServiceDao intraActorNetworkServiceDao;
+    private Database dataBase;
 
     /**
      * Constructor
@@ -728,7 +726,11 @@ public class IntraActorNetworkServicePluginRoot extends AbstractNetworkServiceV2
      */
     @Override
     public void onHandleClientConnectionLooseNotificationEvent(FermatEvent fermatEvent) {
-        actorNetworkServiceRecordedAgent.stop();
+        try {
+            actorNetworkServiceRecordedAgent.stop();
+        } catch (CantStopAgentException e) {
+            e.printStackTrace();
+        }
     }
 
     /*
