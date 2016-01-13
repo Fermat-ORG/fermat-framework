@@ -10,6 +10,7 @@ import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
 import com.bitdubai.fermat_api.layer.all_definition.enums.BlockchainNetworkType;
 import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.BitcoinNetworkSelector;
 import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.exceptions.CantBroadcastTransactionException;
+import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.exceptions.CantGetTransactionException;
 import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.exceptions.CantStoreBitcoinTransactionException;
 import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.interfaces.BitcoinNetworkManager;
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.asset_vault.exceptions.CantGetActiveRedeemPointAddressesException;
@@ -164,13 +165,13 @@ public class AssetCryptoVaultManager  {
      * * Sends bitcoins to the specified address. It will create a new wallet object from the Keys generated from the
      * VaultKeyHierarchyGenerator and set an UTXO provider from the CryptoNetwork. Using my UTXO, I will create a new
      * transaction and broadcast it on the corresponding network.
-     * @param genesisTransactionId
+     * @param genesisTransactionHash
+     * @param genesisBlockHash
      * @param addressTo
-     * @param amount
      * @return the Transaction hash
      * @throws CantSendAssetBitcoinsToUserException
      */
-    public String sendAssetBitcoins(String genesisTransactionId, String genesisBlock, CryptoAddress addressTo) throws CantSendAssetBitcoinsToUserException{
+    public String sendAssetBitcoins(String genesisTransactionHash, String genesisBlockHash, CryptoAddress addressTo) throws CantSendAssetBitcoinsToUserException{
         /**
          * I get the network for this address.
          */
@@ -180,7 +181,7 @@ public class AssetCryptoVaultManager  {
         /**
          * I will get the genesis transaction  I will use to form the input from the CryptoNetwork
          */
-        Transaction genesisTransaction = bitcoinNetworkManager.getBitcoinTransaction(networkType, genesisTransactionId);
+        Transaction genesisTransaction = bitcoinNetworkManager.getBitcoinTransaction(networkType, genesisTransactionHash);
 
         if (genesisTransaction  == null){
             /**
@@ -191,22 +192,37 @@ public class AssetCryptoVaultManager  {
             List<Transaction> transactions = bitcoinNetworkManager.getBitcoinTransactions(networkType);
             for (Transaction transaction : transactions){
                 for (TransactionInput input : transaction.getInputs()){
-                    if (input.getOutpoint().getHash().toString().contentEquals(genesisTransactionId))
+                    if (input.getOutpoint().getHash().toString().contentEquals(genesisTransactionHash))
                         genesisTransaction = transaction;
                 }
             }
 
             /**
-             * If I still don't have it, Then I will look up the hierarchy, at least 10 times.
+             * If I still don't have it, Then I will get the last transaction originated from the GenesisBlock and use that one if possible.
+             * I'm using these method last because it is the most expensive in terms of resources.             *
              */
+            if (genesisBlockHash != null && genesisTransaction == null){
+                Transaction lastAssetTransaction = null;
+                try {
+                    lastAssetTransaction = bitcoinNetworkManager.getLastChildTransaction(networkType, genesisTransactionHash, genesisBlockHash);
+                } catch (CantGetTransactionException e) {
+                    throw new CantSendAssetBitcoinsToUserException(CantSendAssetBitcoinsToUserException.DEFAULT_MESSAGE, e, "couln't get the last child transaction of the genesis transaction.", "Crypto network issue");
+                }
 
+                if (lastAssetTransaction != null){
+                    for (Transaction transaction : transactions){
+                        if (transaction.getHashAsString().equals(lastAssetTransaction.getHashAsString()))
+                            genesisTransaction = transaction;
+                    }
+                }
+            }
 
             /**
              * If I still couldn't find it, I cant go on.
              */
             if (genesisTransaction  == null){
                 StringBuilder output = new StringBuilder("The specified transaction hash ");
-                output.append(genesisTransactionId);
+                output.append(genesisTransactionHash);
                 output.append(System.lineSeparator());
                 output.append("doesn't exists in the CryptoNetwork.");
                 throw new CantSendAssetBitcoinsToUserException(CantSendAssetBitcoinsToUserException.DEFAULT_MESSAGE, null, output.toString(), null);
@@ -243,6 +259,18 @@ public class AssetCryptoVaultManager  {
          */
         Coin fee = Coin.valueOf(10000);
         final Coin coinToSend = wallet.getBalance().subtract(fee);
+
+        /**
+         * if the value to send is negative or zero, I will inform of the error
+         */
+        if (coinToSend.isNegative() || coinToSend.isZero()){
+            StringBuilder output = new StringBuilder("The resulting value to be send is insufficient.");
+            output.append(System.lineSeparator());
+            output.append("We are trying to send " + coinToSend.getValue() + " satoshis, which is ValueToSend - fee (" + wallet.getBalance() + " - " + fee.getValue() + ")");
+
+            throw new CantSendAssetBitcoinsToUserException(CantSendAssetBitcoinsToUserException.DEFAULT_MESSAGE, null, output.toString(), null);
+        }
+
 
         /**
          * creates the send request and broadcast it on the network.

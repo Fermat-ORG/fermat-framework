@@ -47,6 +47,11 @@ public class ServerConf {
     public static final String WS_PROTOCOL = "ws://";
 
     /**
+     * Represent the WEB_SOCKET_CONTEXT_PATH
+     */
+    public static final String WEB_SOCKET_CONTEXT_PATH = "/fermat/ws/";
+
+    /**
      * Represent the HTTP_PROTOCOL
      */
     public static final String HTTP_PROTOCOL = "http://";

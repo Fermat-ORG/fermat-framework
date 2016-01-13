@@ -102,11 +102,6 @@ public class AssetDetailActivityFragment extends AbstractFermatFragment {
         assetDetailAppropriatedText = (FermatTextView) rootView.findViewById(R.id.assetDetailAppropriatedText);
 
         assetDetailRemainingLayout = rootView.findViewById(R.id.assetDetailRemainingLayout);
-        assetDetailRemainingLayout.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {
-                changeActivity(Activities.DAP_WALLET_ASSET_ISSUER_ASSET_DELIVERY, appSession.getAppPublicKey());
-            }
-        });
 
         assetDetailAvailableLayout = rootView.findViewById(R.id.assetDetailAvailableLayout);
         assetDetailAvailableLayout.setOnClickListener(new View.OnClickListener() {
@@ -120,14 +115,13 @@ public class AssetDetailActivityFragment extends AbstractFermatFragment {
         assetDetailAppropiateLayout.setOnClickListener(new View.OnClickListener() {
            public void onClick(View v) {
                changeActivity(Activities.DAP_WALLET_ASSET_ISSUER_USER_APPROPIATE_LIST, appSession.getAppPublicKey());
-           }
-       });
+            }
+        });
 
         assetDetailRedeemedLayout = rootView.findViewById(R.id.assetDetailRedeemedLayout);
         assetDetailRedeemedLayout.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 changeActivity(Activities.DAP_WALLET_ASSET_ISSUER_USER_REDEEMED_LIST, appSession.getAppPublicKey());
-
             }
         });
     }
@@ -184,6 +178,17 @@ public class AssetDetailActivityFragment extends AbstractFermatFragment {
             assetImageDetail.setImageBitmap(BitmapFactory.decodeStream(new ByteArrayInputStream(digitalAsset.getImage())));
         } else {
             assetImageDetail.setImageDrawable(rootView.getResources().getDrawable(R.drawable.img_asset_without_image));
+        }
+
+        if (digitalAsset.getAvailableBalanceQuantity() > 0) {
+            assetDetailRemainingText.setTextColor(Color.parseColor("#00aeef"));
+            assetDetailRemainingLayout.setOnClickListener(new View.OnClickListener() {
+                public void onClick(View v) {
+                    changeActivity(Activities.DAP_WALLET_ASSET_ISSUER_ASSET_DELIVERY, appSession.getAppPublicKey());
+                }
+            });
+        } else {
+            assetDetailRemainingText.setTextColor(Color.parseColor("#CCFFFFFF"));
         }
 
         assetDetailNameText.setText(digitalAsset.getName());

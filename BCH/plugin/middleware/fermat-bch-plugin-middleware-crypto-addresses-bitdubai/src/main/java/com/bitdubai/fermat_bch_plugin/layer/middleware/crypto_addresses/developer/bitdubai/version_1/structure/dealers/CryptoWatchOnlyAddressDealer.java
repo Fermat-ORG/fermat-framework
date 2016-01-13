@@ -50,6 +50,10 @@ public class CryptoWatchOnlyAddressDealer extends CryptoAddressDealer {
                         vaultType,
                         request
                 );
+<<<<<<< HEAD
+=======
+
+>>>>>>> 77816786a075b016d2fe87e216b20d92d0d69d9a
                 cryptoAddressesManager.acceptAddressExchangeRequest(
                         request.getRequestId(),
                         cryptoAddress

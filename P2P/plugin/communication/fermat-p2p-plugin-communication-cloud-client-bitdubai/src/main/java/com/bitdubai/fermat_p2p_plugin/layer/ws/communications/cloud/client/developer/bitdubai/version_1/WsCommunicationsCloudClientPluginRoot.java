@@ -183,8 +183,7 @@ public class WsCommunicationsCloudClientPluginRoot extends AbstractPlugin implem
             initializeClientIdentity();
 
             WebSocketImpl.DEBUG = false;
-
-            uri = new URI(ServerConf.WS_PROTOCOL + WsCommunicationsCloudClientPluginRoot.SERVER_IP + ":" + ServerConf.DEFAULT_PORT);
+            uri = new URI(ServerConf.WS_PROTOCOL + WsCommunicationsCloudClientPluginRoot.SERVER_IP + ":" + ServerConf.DEFAULT_PORT + ServerConf.WEB_SOCKET_CONTEXT_PATH);
 
             wsCommunicationsCloudClientConnection = new WsCommunicationsCloudClientConnection(uri,eventManager, locationManager, clientIdentity);
             wsCommunicationsCloudClientConnection.initializeAndConnect();
@@ -200,7 +199,6 @@ public class WsCommunicationsCloudClientPluginRoot extends AbstractPlugin implem
                 }
             });
             eventManager.addListener(fermatEventListener);
-
 
         } catch (Exception e) {
             e.printStackTrace();
