@@ -9,7 +9,7 @@ It consists of three main parts: +
 
 .  a p2p network for interconnecting devices
 .  a plug-in framework for developing and running distributed financial applications and link:https://github.com/bitDubai/fermat/blob/master/fermat-book/book-glossary.asciidoc#wallet[wallets]. +
-. a system of integrated apps
+.  a system of integrated apps
 
 The link:https://github.com/bitDubai/fermat/blob/master/fermat-book/book-glossary.asciidoc#framework[framework] itself it is an evolution of standalone wallets and also of centralized wallet services, because it extends the functionality of wallets and financial applications to a trust-less (or trust-free) decentralized environment that handles both _crypto currencies_ and _digital assets_. This independence from third parties makes Fermat censorship resistant and hard to attack the same way it was intended at the creation of Bitcoin protocol and Bitcoin network. +
 
@@ -55,6 +55,9 @@ The Fermat Community is contributing to that future with a system that builds an
 
 === The challenge
 
+After the pioneer step of Nakamoto who gave rise to *Bitcoin* and its revolutionary blockchain technology, there has been a lot of fin tech investment money given to a myriad of startups initiating in this industry in the last years. This fostered the next evolutionary step, *"crypto currency 2.0"* but it has still not reached the level of adoption expected. There seems to exist an unbalance between the considerable investment of funds and efforts needed to master this technology plus the results they are bringing up. Furthermore, isolated projects trying to build something useful starting form zero have it difficult to obtain the necessary support and the persistent endurance needed to succeed... +
+Precisely acknowledging this weak points in the industry, and choosing *collaboration* within a *master plan* as a starting point, its how the Fermat community believes to succeed in solving the challenges set in their mission and purpose by building a complete new framework that solves the problem in an efficient, inclusive and attractive way.
+
 The design of Fermat addressed the answers to the following questions:
 
   *  How can the perception of complexity on crypto currencies be isolated from common people?
@@ -65,6 +68,7 @@ The design of Fermat addressed the answers to the following questions:
   *  How can non-developers be allowed to create digital wallets without programming anything at all?
 
 The answers to each of these questions are addressed within Fermat.
+
 
 
 === Fermat's Principles
