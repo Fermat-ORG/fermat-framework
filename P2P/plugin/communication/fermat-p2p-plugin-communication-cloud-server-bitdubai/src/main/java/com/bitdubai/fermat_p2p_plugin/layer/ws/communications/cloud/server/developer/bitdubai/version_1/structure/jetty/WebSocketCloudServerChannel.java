@@ -271,7 +271,7 @@ public class WebSocketCloudServerChannel {
             removeOtherPlatformComponentRegisteredByClientIdentity(activeClientConnection.getClientIdentity());
             MemoryCache.getInstance().getPendingRegisterClientConnectionsCache().remove(activeClientConnection.getClientIdentity());
             MemoryCache.getInstance().getRegisteredCommunicationsCloudServerCache().remove(activeClientConnection.getClientIdentity());
-            MemoryCache.getInstance().getRegisteredCommunicationsCloudClientCache().remove(activeClientConnection.getClientIdentity());
+            MemoryCache.getInstance().getRegisteredCommunicationsCloudClientCache().remove(activeClientConnection.getSession().hashCode());
             MemoryCache.getInstance().getRegisteredClientConnectionsCache().remove(activeClientConnection.getClientIdentity());
 
             LOG.info("pendingRegisterClientConnectionsCache.size()    = " + MemoryCache.getInstance().getPendingRegisterClientConnectionsCache().size());

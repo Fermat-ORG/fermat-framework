@@ -236,7 +236,7 @@ public class ComponentRegistrationRequestJettyPacketProcessor extends FermatJett
             /*
              * Add to the cache
              */
-            MemoryCache.getInstance().getRegisteredCommunicationsCloudClientCache().put(clientConnection.hashCode(), platformComponentProfileToRegister);
+            MemoryCache.getInstance().getRegisteredCommunicationsCloudClientCache().put(clientConnection.getSession().hashCode(), platformComponentProfileToRegister);
 
             /*
              * Remove from the PendingRegisterClientConnectionsCache
