@@ -150,7 +150,7 @@ public class RedeemPointMainActivityFragment extends FermatWalletListFragment<Di
                     options.inScaled = true;
                     options.inSampleSize = 5;
                     drawable = BitmapFactory.decodeResource(
-                            getResources(), R.drawable.bg_app_image,options);
+                            getResources(), R.drawable.bg_image_redeem_point,options);
                 }catch (OutOfMemoryError error){
                     error.printStackTrace();
                 }
