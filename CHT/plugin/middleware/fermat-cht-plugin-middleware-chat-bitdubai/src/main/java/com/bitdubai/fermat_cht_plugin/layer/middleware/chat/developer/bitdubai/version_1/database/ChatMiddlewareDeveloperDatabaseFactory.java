@@ -152,6 +152,22 @@ public class ChatMiddlewareDeveloperDatabaseFactory implements DealsWithPluginDa
         DeveloperDatabaseTable contactsTable = developerObjectFactory.getNewDeveloperDatabaseTable(ChatMiddlewareDatabaseConstants.CONTACTS_TABLE_NAME, contactsColumns);
         tables.add(contactsTable);
 
+        /**
+         * Table Events columns.
+         */
+        List<String> eventsColumns = new ArrayList<String>();
+
+        eventsColumns.add(ChatMiddlewareDatabaseConstants.EVENTS_RECORDED_ID_COLUMN_NAME);
+        eventsColumns.add(ChatMiddlewareDatabaseConstants.EVENTS_RECORDED_EVENT_COLUMN_NAME);
+        eventsColumns.add(ChatMiddlewareDatabaseConstants.EVENTS_RECORDED_SOURCE_COLUMN_NAME);
+        eventsColumns.add(ChatMiddlewareDatabaseConstants.EVENTS_RECORDED_STATUS_COLUMN_NAME);
+        eventsColumns.add(ChatMiddlewareDatabaseConstants.EVENTS_RECORDED_TIMESTAMP_COLUMN_NAME);
+        eventsColumns.add(ChatMiddlewareDatabaseConstants.EVENTS_RECORDED_CHAT_ID_COLUMN_NAME);
+        /**
+         * Table Events addition.
+         */
+        DeveloperDatabaseTable eventsTable = developerObjectFactory.getNewDeveloperDatabaseTable(ChatMiddlewareDatabaseConstants.EVENTS_RECORDED_TABLE_NAME, eventsColumns);
+        tables.add(eventsTable);
 
         return tables;
     }

@@ -25,6 +25,7 @@ import com.bitdubai.fermat_ccp_api.layer.identity.intra_user.exceptions.CantCrea
 import com.bitdubai.fermat_ccp_api.layer.identity.intra_user.exceptions.CantDeleteIdentityException;
 import com.bitdubai.fermat_ccp_api.layer.identity.intra_user.exceptions.CantListIntraWalletUsersException;
 import com.bitdubai.fermat_ccp_api.layer.identity.intra_user.exceptions.CantUpdateIdentityException;
+import com.bitdubai.fermat_ccp_api.layer.identity.intra_user.interfaces.IntraUserIdentitySettings;
 import com.bitdubai.fermat_ccp_api.layer.identity.intra_user.interfaces.IntraWalletUserIdentity;
 import com.bitdubai.fermat_ccp_api.layer.identity.intra_user.interfaces.IntraWalletUserIdentityManager;
 import com.bitdubai.fermat_ccp_api.layer.module.intra_user_identity.exceptions.CantCreateNewIntraUserIdentityException;
@@ -252,10 +253,10 @@ public class IntraUserIdentityModulePluginRoot extends AbstractPlugin implements
 
 
 
-    private SettingsManager<FermatSettings> settingsManager;
+    private SettingsManager<IntraUserIdentitySettings> settingsManager;
 
     @Override
-    public SettingsManager<FermatSettings> getSettingsManager() {
+    public SettingsManager<IntraUserIdentitySettings> getSettingsManager() {
         if (this.settingsManager != null)
             return this.settingsManager;
 

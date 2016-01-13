@@ -15,24 +15,24 @@ public class NetworkServiceChatNetworkServiceDatabaseConstants {
     public static final String DATA_BASE_NAME  = "chat_network_service_data_base";
 
     /**
-     * Outgoing Chat database table definition.
+     * Chat database table definition.
      */
-    public static final String OUTGOING_CHAT_TABLE_NAME = "outgoing_chat";
+    public static final String CHAT_TABLE_NAME = "outgoing_chat";
 
-    public static final String OUTGOING_CHAT_IDCHAT_COLUMN_NAME = "idchat";
-    public static final String OUTGOING_CHAT_IDOBJECTO_COLUMN_NAME = "idobjecto";
-    public static final String OUTGOING_CHAT_LOCALACTORTYPE_COLUMN_NAME = "localactortype";
-    public static final String OUTGOING_CHAT_LOCALACTORPUBKEY_COLUMN_NAME = "localactorpubkey";
-    public static final String OUTGOING_CHAT_REMOTEACTORTYPE_COLUMN_NAME = "remoteactortype";
-    public static final String OUTGOING_CHAT_REMOTEACTORPUBKEY_COLUMN_NAME = "remoteactorpubkey";
-    public static final String OUTGOING_CHAT_CHATNAME_COLUMN_NAME = "chatname";
-    public static final String OUTGOING_CHAT_CHATSTATUS_COLUMN_NAME = "chatstatus";
-    public static final String OUTGOING_CHAT_DATE_COLUMN_NAME = "date";
-    public static final String OUTGOING_CHAT_IDMENSAJE_COLUMN_NAME = "idmensaje";
-    public static final String OUTGOING_CHAT_MESSAGE_COLUMN_NAME = "message";
-    public static final String OUTGOING_CHAT_DISTRIBUTIONSTATUS_COLUMN_NAME = "distributionstatus";
+    public static final String CHAT_IDCHAT_COLUMN_NAME = "idchat";
+    public static final String CHAT_IDOBJECTO_COLUMN_NAME = "idobjecto";
+    public static final String CHAT_LOCALACTORTYPE_COLUMN_NAME = "localactortype";
+    public static final String CHAT_LOCALACTORPUBKEY_COLUMN_NAME = "localactorpubkey";
+    public static final String CHAT_REMOTEACTORTYPE_COLUMN_NAME = "remoteactortype";
+    public static final String CHAT_REMOTEACTORPUBKEY_COLUMN_NAME = "remoteactorpubkey";
+    public static final String CHAT_CHATNAME_COLUMN_NAME = "chatname";
+    public static final String CHAT_CHATSTATUS_COLUMN_NAME = "chatstatus";
+    public static final String CHAT_DATE_COLUMN_NAME = "date";
+    public static final String CHAT_IDMENSAJE_COLUMN_NAME = "idmensaje";
+    public static final String CHAT_MESSAGE_COLUMN_NAME = "message";
+    public static final String CHAT_DISTRIBUTIONSTATUS_COLUMN_NAME = "distributionstatus";
 
-    public static final String OUTGOING_CHAT_FIRST_KEY_COLUMN = "idchat";
+    public static final String CHAT_FIRST_KEY_COLUMN = "idchat";
 
     /**
      * Incoming Chat database table definition.

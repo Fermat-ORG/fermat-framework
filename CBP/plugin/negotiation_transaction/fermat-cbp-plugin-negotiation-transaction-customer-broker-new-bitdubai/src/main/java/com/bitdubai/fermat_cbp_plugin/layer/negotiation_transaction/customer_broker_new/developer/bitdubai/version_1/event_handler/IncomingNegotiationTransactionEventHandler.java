@@ -20,6 +20,8 @@ public class IncomingNegotiationTransactionEventHandler extends AbstractCustomer
 
                 this.customerBrokerNewServiceEventHandler.incomingNegotiationTransactionEventHandler((IncomingNegotiationTransactionEvent) fermatEvent);
 
+                System.out.print("\n\n**** 6) MOCK CUSTOMER BROKER NEW RECEIVE, EVENT HANDLER - LISTENER EVENT ****\n");
+
             } catch(CantSaveEventException exception){
                 throw new CantSaveEventException(exception,"Handling the IncomingNegotiationTransactionEventHandler", "Check the cause");
             } catch(ClassCastException exception){

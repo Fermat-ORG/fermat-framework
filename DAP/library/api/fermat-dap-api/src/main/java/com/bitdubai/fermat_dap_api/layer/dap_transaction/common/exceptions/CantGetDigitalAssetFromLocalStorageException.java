@@ -11,4 +11,7 @@ public class CantGetDigitalAssetFromLocalStorageException extends DAPException {
     public CantGetDigitalAssetFromLocalStorageException(Exception cause, String context, String possibleReason) {
         super(DEFAULT_MESSAGE , cause, context, possibleReason);
     }
+
+    public CantGetDigitalAssetFromLocalStorageException() {
+    }
 }

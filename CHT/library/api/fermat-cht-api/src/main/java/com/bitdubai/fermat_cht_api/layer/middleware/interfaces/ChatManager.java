@@ -2,12 +2,16 @@ package com.bitdubai.fermat_cht_api.layer.middleware.interfaces;
 
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.FermatManager;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantDeleteChatException;
+import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantDeleteContactException;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantDeleteMessageException;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantGetChatException;
+import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantGetContactException;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantGetMessageException;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantNewEmptyChatException;
+import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantNewEmptyContactException;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantNewEmptyMessageException;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantSaveChatException;
+import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantSaveContactException;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantSaveMessageException;
 
 import java.util.List;
@@ -41,4 +45,15 @@ public interface ChatManager extends FermatManager{
     void saveMessage(Message message) throws CantSaveMessageException;
 
     void deleteMessage(Message message) throws CantDeleteMessageException;
+
+    List<Contact> getContacts() throws CantGetContactException;
+
+    Contact getContactByContactId(UUID contactId) throws CantGetContactException;
+
+    Contact newEmptyInstanceContact() throws CantNewEmptyContactException;
+
+    void saveContact(Contact contact) throws CantSaveContactException;
+
+    void deleteContact(Contact contact) throws CantDeleteContactException;
+
 }

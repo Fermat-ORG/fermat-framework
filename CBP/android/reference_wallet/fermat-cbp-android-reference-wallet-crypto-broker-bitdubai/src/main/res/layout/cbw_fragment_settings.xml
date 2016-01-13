@@ -86,7 +86,7 @@
             android:layout_gravity="center_vertical"
             android:layout_weight="1"
             android:gravity="left"
-            android:text="STOCK MANAGMENT"
+            android:text="STOCK MANAGEMENT"
             android:textSize="16dp"
             android:textColor="@color/text_value_status_accepted"/>
 

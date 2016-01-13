@@ -198,7 +198,8 @@ public class ChatMiddlewarePluginRoot extends AbstractPlugin implements
              */
             ChatMiddlewareDatabaseDao chatMiddlewareDatabaseDao=
                     new ChatMiddlewareDatabaseDao(pluginDatabaseSystem,
-                            pluginId);
+                            pluginId,
+                            database);
             //chatMiddlewareDatabaseDao.initialize();
             /**
              * Initialize manager
@@ -231,7 +232,8 @@ public class ChatMiddlewarePluginRoot extends AbstractPlugin implements
                     logManager,
                     errorManager,
                     eventManager,
-                    pluginId);
+                    pluginId,
+                    chatManager);
             openContractMonitorAgent.start();
 
             this.serviceStatus = ServiceStatus.STARTED;

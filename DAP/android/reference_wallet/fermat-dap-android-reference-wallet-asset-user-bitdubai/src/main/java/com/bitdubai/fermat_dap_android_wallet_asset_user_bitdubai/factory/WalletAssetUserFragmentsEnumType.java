@@ -12,7 +12,8 @@ public enum WalletAssetUserFragmentsEnumType implements FermatFragmentsEnumType<
 
 
     DAP_WALLET_ASSET_USER_MAIN_ACTIVITY("DWUIMA"),
-    DAP_WALLET_ASSET_USER_HISTORY_ACTIVITY("DWAUHA");
+    DAP_WALLET_ASSET_USER_HISTORY_ACTIVITY("DWAUHA"),
+    DAP_WALLET_ASSET_USER_ASSET_DETAIL("DWAUAD");
 
     private String key;
 
