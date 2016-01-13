@@ -136,6 +136,7 @@ public class ChatMiddlewareDatabaseFactory implements DealsWithPluginDatabaseSys
             table.addColumn(ChatMiddlewareDatabaseConstants.EVENTS_RECORDED_SOURCE_COLUMN_NAME, DatabaseDataType.STRING, 10, Boolean.FALSE);
             table.addColumn(ChatMiddlewareDatabaseConstants.EVENTS_RECORDED_STATUS_COLUMN_NAME, DatabaseDataType.STRING, 10, Boolean.FALSE);
             table.addColumn(ChatMiddlewareDatabaseConstants.EVENTS_RECORDED_TIMESTAMP_COLUMN_NAME, DatabaseDataType.LONG_INTEGER, 100, Boolean.FALSE);
+            table.addColumn(ChatMiddlewareDatabaseConstants.EVENTS_RECORDED_CHAT_ID_COLUMN_NAME, DatabaseDataType.STRING, 36, Boolean.FALSE);
 
             table.addIndex(ChatMiddlewareDatabaseConstants.EVENTS_RECORDED_TABLE_FIRST_KEY_COLUMN);
 
