@@ -19,13 +19,11 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.Data
 import com.bitdubai.fermat_api.layer.world.interfaces.Currency;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.ClauseStatus;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.ClauseType;
-import com.bitdubai.fermat_cbp_api.all_definition.enums.ContractStatus;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.NegotiationStatus;
 import com.bitdubai.fermat_cbp_api.all_definition.negotiation.Clause;
 import com.bitdubai.fermat_cbp_api.all_definition.negotiation.NegotiationBankAccount;
 import com.bitdubai.fermat_cbp_api.all_definition.negotiation.NegotiationClauseManager;
 import com.bitdubai.fermat_cbp_api.all_definition.negotiation.NegotiationLocations;
-import com.bitdubai.fermat_cbp_api.layer.contract.customer_broker_sale.interfaces.CustomerBrokerContractSale;
 import com.bitdubai.fermat_cbp_api.layer.negotiation.customer_broker_purchase.exceptions.CantCreateBankAccountPurchaseException;
 import com.bitdubai.fermat_cbp_api.layer.negotiation.customer_broker_purchase.exceptions.CantCreateCustomerBrokerPurchaseNegotiationException;
 import com.bitdubai.fermat_cbp_api.layer.negotiation.customer_broker_purchase.exceptions.CantCreateLocationPurchaseException;
@@ -87,107 +85,6 @@ public class CustomerBrokerPurchaseNegotiationDao implements NegotiationClauseMa
                 throw new CantInitializeCustomerBrokerPurchaseNegotiationDatabaseException(cantCreateDatabaseException.getMessage());
             }
         }
-
-        System.out.println("vlz: =======================================================================================");
-        System.out.println("vlz:  Inicio de las pruebas en el Negotiation Purchase");
-
-            Collection<Clause> clauses = new ArrayList<>();
-
-            ClauseType[] tipos = {
-                ClauseType.BROKER_BANK_ACCOUNT,
-                ClauseType.BROKER_CRYPTO_ADDRESS,
-                ClauseType.BROKER_CURRENCY_QUANTITY
-            };
-
-            ClauseStatus[] status = {
-                ClauseStatus.DRAFT,
-                ClauseStatus.SENT_TO_BROKER,
-                ClauseStatus.WAITING_FOR_BROKER
-            };
-
-            Currency[] monedas = {
-                FiatCurrency.VENEZUELAN_BOLIVAR,
-                CryptoCurrency.BITCOIN,
-                FiatCurrency.ARGENTINE_PESO
-            };
-
-            for(int i=0; i<tipos.length; i++) {
-                Short orden = (short) i;
-                Clause clause = new CustomerBrokerPurchaseClause(
-                        UUID.randomUUID(),
-                        tipos[i],
-                        monedas[i].getCode(),
-                        status[i],
-                        "publicKeyCustomer",
-                        orden
-                );
-
-                clauses.add(clause);
-
-                CustomerBrokerPurchaseNegotiation negotiation = new CustomerBrokerPurchaseNegotiationInformation(
-                        UUID.randomUUID(),
-                        "publicKeyCustomer "+i,
-                        "publicKeyBroker "+i,
-                        System.currentTimeMillis(),
-                        System.currentTimeMillis() + 10,
-                        NegotiationStatus.SENT_TO_BROKER,
-                        clauses,
-                        false,
-                        "Memo "+i,
-                        "cancelReason "+i,
-                        System.currentTimeMillis() + 20
-                );
-
-                try {
-                    this.createCustomerBrokerPurchaseNegotiation(negotiation);
-                    System.out.println("vlz:  Negotiation Purchase ["+i+"] creada exitosamente");
-                } catch (CantCreateCustomerBrokerPurchaseNegotiationException e) {
-                    System.out.println("vlz:  Error creando la negociacion");
-                }
-            }
-
-            try {
-                Collection<CustomerBrokerPurchaseNegotiation> negs = this.getNegotiations();
-
-                System.out.println("vlz:  Imprimiendo el listado de negociaciones");
-
-                for(CustomerBrokerPurchaseNegotiation neg : negs){
-                    System.out.println("vlz:  \tNegotiationId: "+neg.getNegotiationId());
-                    System.out.println("vlz:  \tBrokerPublicKey: "+neg.getBrokerPublicKey());
-                    System.out.println("vlz:  \tCustomerPublicKey: "+neg.getCustomerPublicKey());
-                    System.out.println("vlz:  \tStartDate: "+neg.getStartDate());
-                    System.out.println("vlz:  \tNegotiationExpirationDate: "+neg.getNegotiationExpirationDate());
-                    System.out.println("vlz:  \tStatus: "+neg.getStatus().getCode());
-                    System.out.println("vlz:  \tNear: "+neg.getNearExpirationDatetime());
-                    System.out.println("vlz:  \tMemo: "+neg.getMemo());
-                    System.out.println("vlz:  \tCancelReason: "+neg.getCancelReason());
-                    System.out.println("vlz:  \tLast: "+neg.getLastNegotiationUpdateDate());
-
-                    try {
-                        Collection<Clause> clausulas = neg.getClauses();
-
-                        for(Clause c : clausulas){
-                            System.out.println("vlz:  \t\tClauseId: "+c.getClauseId());
-                            System.out.println("vlz:  \t\tType: "+c.getType().getCode());
-                            System.out.println("vlz:  \t\tValue: "+c.getValue());
-                            System.out.println("vlz:  \t\tStatus: "+c.getStatus().getCode());
-                            System.out.println("vlz:  \t\tProposedBy: "+c.getProposedBy());
-                            System.out.println("vlz:  \t\tOrder: "+c.getIndexOrder());
-                        }
-
-
-                    } catch (CantGetListClauseException e) {
-                        System.out.println("vlz:  Error: "+CantGetListClauseException.DEFAULT_MESSAGE);
-                    }
-                }
-
-            } catch (CantGetListPurchaseNegotiationsException e) {
-                System.out.println("vlz:  Error obteniendo el listado de negociaciones");
-            }
-
-        System.out.println("vlz:  Fin de las pruebas en el Negotiation Purchase");
-
-        System.out.println("vlz: =======================================================================================");
     }
 
     public void createCustomerBrokerPurchaseNegotiation(CustomerBrokerPurchaseNegotiation negotiation) throws CantCreateCustomerBrokerPurchaseNegotiationException {

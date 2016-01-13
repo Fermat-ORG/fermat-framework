@@ -3,6 +3,7 @@ package com.bitdubai.fermat_cbp_plugin.layer.negotiation_transaction.customer_br
 import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEvent;
+import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEventHandler;
 import com.bitdubai.fermat_api.layer.dmp_transaction.TransactionServiceNotStartedException;
 import com.bitdubai.fermat_cbp_api.all_definition.exceptions.CantSaveEventException;
 import com.bitdubai.fermat_cbp_api.layer.network_service.negotiation_transmission.events.IncomingNegotiationTransactionEvent;
@@ -11,16 +12,22 @@ import com.bitdubai.fermat_cbp_api.layer.network_service.negotiation_transmissio
  * Created by Yordin Alayn 10.12.15
  */
 public class IncomingNegotiationTransactionEventHandler extends AbstractCustomerBrokerNewEventHandler {
+//public class IncomingNegotiationTransactionEventHandler implements FermatEventHandler {
+
+    public IncomingNegotiationTransactionEventHandler(){
+//        System.out.print("\n\n**** 6.0) MOCK CUSTOMER BROKER NEW RECEIVE, EVENT HANDLER - LISTENER EVENT ****\n");
+    }
 
     @Override
     public void handleEvent(FermatEvent fermatEvent) throws FermatException {
-        if(this.customerBrokerNewServiceEventHandler.getStatus()== ServiceStatus.STARTED) {
+//        System.out.print("\n\n**** 6.0.1) MOCK CUSTOMER BROKER NEW RECEIVE, EVENT HANDLER - LISTENER EVENT ****\n");
+        /*if(this.customerBrokerNewServiceEventHandler.getStatus()== ServiceStatus.STARTED) {
 
             try {
 
-                this.customerBrokerNewServiceEventHandler.incomingNegotiationTransactionEventHandler((IncomingNegotiationTransactionEvent) fermatEvent);
+                System.out.print("\n\n**** 6.1) MOCK CUSTOMER BROKER NEW RECEIVE, EVENT HANDLER - LISTENER EVENT ****\n");
 
-                System.out.print("\n\n**** 6) MOCK CUSTOMER BROKER NEW RECEIVE, EVENT HANDLER - LISTENER EVENT ****\n");
+                this.customerBrokerNewServiceEventHandler.incomingNegotiationTransactionEventHandler((IncomingNegotiationTransactionEvent) fermatEvent);
 
             } catch(CantSaveEventException exception){
                 throw new CantSaveEventException(exception,"Handling the IncomingNegotiationTransactionEventHandler", "Check the cause");
@@ -32,6 +39,6 @@ public class IncomingNegotiationTransactionEventHandler extends AbstractCustomer
 
         }else {
             throw new TransactionServiceNotStartedException();
-        }
+        }*/
     }
 }
