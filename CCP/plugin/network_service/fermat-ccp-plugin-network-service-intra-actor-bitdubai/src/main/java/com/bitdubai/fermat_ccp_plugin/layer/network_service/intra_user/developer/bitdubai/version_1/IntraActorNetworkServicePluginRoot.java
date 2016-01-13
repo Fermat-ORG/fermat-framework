@@ -643,9 +643,10 @@ public class IntraActorNetworkServicePluginRoot extends AbstractNetworkServiceV2
         return format.format(date);
     }
 
+
     @Override
     public NetworkServiceConnectionManager getNetworkServiceConnectionManager() {
-        return null;
+        return getCommunicationNetworkServiceConnectionManager();
     }
 
     @Override
@@ -727,7 +728,7 @@ public class IntraActorNetworkServicePluginRoot extends AbstractNetworkServiceV2
      */
     @Override
     public void onHandleClientConnectionLooseNotificationEvent(FermatEvent fermatEvent) {
-
+        actorNetworkServiceRecordedAgent.stop();
     }
 
     /*
@@ -738,6 +739,11 @@ public class IntraActorNetworkServicePluginRoot extends AbstractNetworkServiceV2
         // change message state to process again first time
         //TODO: ver esto
         reprocessMessage();
+        try {
+            actorNetworkServiceRecordedAgent.start();
+        } catch (CantStartAgentException e) {
+            e.printStackTrace();
+        }
     }
 
     @Override
