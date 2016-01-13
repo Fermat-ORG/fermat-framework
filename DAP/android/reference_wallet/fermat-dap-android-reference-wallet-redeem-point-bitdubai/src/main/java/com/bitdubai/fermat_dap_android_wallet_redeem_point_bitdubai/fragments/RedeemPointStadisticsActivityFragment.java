@@ -158,7 +158,7 @@ public class RedeemPointStadisticsActivityFragment extends FermatWalletListFragm
                     options.inScaled = true;
                     options.inSampleSize = 5;
                     drawable = BitmapFactory.decodeResource(
-                            getResources(), R.drawable.bg_app_image,options);
+                            getResources(), R.drawable.bg_image_redeem_point,options);
                 }catch (OutOfMemoryError error){
                     error.printStackTrace();
                 }
@@ -182,7 +182,7 @@ public class RedeemPointStadisticsActivityFragment extends FermatWalletListFragm
 
     @Override
     protected int getLayoutResource() {
-        return R.layout.dap_wallet_asset_redeem_point_stadistics_activity;
+        return R.layout.dap_wallet_asset_redeem_point_statistics_activity;
     }
 
     @Override

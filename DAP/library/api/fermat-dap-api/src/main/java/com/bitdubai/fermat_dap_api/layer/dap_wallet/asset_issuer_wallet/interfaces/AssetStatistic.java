@@ -1,6 +1,7 @@
-package com.bitdubai.fermat_dap_api.layer.dap_module.wallet_asset_issuer.interfaces;
+package com.bitdubai.fermat_dap_api.layer.dap_wallet.asset_issuer_wallet.interfaces;
 
 import com.bitdubai.fermat_dap_api.layer.all_definition.enums.AssetCurrentStatus;
+import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.interfaces.ActorAssetUser;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.redeem_point.interfaces.ActorAssetRedeemPoint;
 
 import java.util.Date;
@@ -23,18 +24,10 @@ public interface AssetStatistic {
     /**
      * This method search for user that owns this asset.
      *
-     * @return {@link String} with the public key of the user
-     * that owns the asset or {@code null} if this asset has not been delivered yet.
+     * @return {@link ActorAssetUser} with the user that owns this asset
+     * or {@code null} if this asset has not been delivered yet.
      */
-    String getAssetOwnerPublicKey();
-
-    /**
-     * This method search for user that owns this asset.
-     *
-     * @return {@link String} with the public key of the user
-     * that owns the asset or {@code null} if this asset has not been delivered yet.
-     */
-    String getAssetOwnerName();
+    ActorAssetUser getOwner();
 
     /**
      * This method returns the date corresponding to the moment when this asset
