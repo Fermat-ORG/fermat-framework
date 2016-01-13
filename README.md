@@ -44,7 +44,7 @@ Every month new tokens are issued according to the [CONTRIBUTION PROGRAM](https:
 |2015|Dec|8,571|42,700|4.98|34|
 
 
-Note: Fermat Token prices are arbitrary set according to the percieved progress of the project. This technique will be discontinued once we set up open market mechanisms within Fermat to buy & sell fermats for bitcoins.
+Note: Fermat Tokens prices are arbitrary set according to the percieved progress of the project. This technique will be discontinued once we set up open market mechanisms within Fermat to buy & sell fermats for bitcoins.
 
 <br>
 ### Bounty Program Tokens
