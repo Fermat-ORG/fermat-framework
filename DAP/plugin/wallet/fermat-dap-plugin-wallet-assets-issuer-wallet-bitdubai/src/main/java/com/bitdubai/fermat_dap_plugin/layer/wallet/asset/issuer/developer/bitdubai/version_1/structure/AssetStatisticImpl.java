@@ -4,7 +4,7 @@ import com.bitdubai.fermat_dap_api.layer.all_definition.enums.AssetCurrentStatus
 import com.bitdubai.fermat_dap_api.layer.all_definition.util.Validate;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.interfaces.ActorAssetUser;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.redeem_point.interfaces.ActorAssetRedeemPoint;
-import com.bitdubai.fermat_dap_api.layer.dap_module.wallet_asset_issuer.interfaces.AssetStatistic;
+import com.bitdubai.fermat_dap_api.layer.dap_wallet.asset_issuer_wallet.interfaces.AssetStatistic;
 
 import java.util.Date;
 
@@ -19,10 +19,6 @@ public class AssetStatisticImpl implements AssetStatistic {
     {
         assetPublicKey = Validate.DEFAULT_STRING;
     }
-
-    private String assetOwner;
-
-    private String assetOwnerName;
 
     private AssetCurrentStatus status;
 
@@ -41,25 +37,21 @@ public class AssetStatisticImpl implements AssetStatistic {
     {
         assetName = Validate.DEFAULT_STRING;
     }
+
+    private ActorAssetUser owner;
     //CONSTRUCTORS
 
     public AssetStatisticImpl() {
     }
 
-    public AssetStatisticImpl(String assetPublicKey,
-                              String assetOwner,
-                              AssetCurrentStatus status,
-                              Date distributionDate,
-                              Date usageDate,
-                              ActorAssetRedeemPoint redeemPoint,
-                              String assetName) {
+    public AssetStatisticImpl(String assetPublicKey, AssetCurrentStatus status, Date distributionDate, Date usageDate, ActorAssetRedeemPoint redeemPoint, String assetName, ActorAssetUser owner) {
         this.assetPublicKey = assetPublicKey;
-        this.assetOwner = assetOwner;
         this.status = status;
         this.distributionDate = distributionDate;
         this.usageDate = usageDate;
         this.redeemPoint = redeemPoint;
         this.assetName = assetName;
+        this.owner = owner;
     }
 
     //PUBLIC METHODS
@@ -83,23 +75,12 @@ public class AssetStatisticImpl implements AssetStatistic {
     /**
      * This method search for user that owns this asset.
      *
-     * @return {@link ActorAssetUser} that owns the asset or {@code null} if
-     * this asset has not been delivered yet.
+     * @return {@link ActorAssetUser} with the user that owns this asset
+     * or {@code null} if this asset has not been delivered yet.
      */
     @Override
-    public String getAssetOwnerPublicKey() {
-        return assetOwner;
-    }
-
-    /**
-     * This method search for user name that owns this asset.
-     *
-     * @return {@link ActorAssetUser} that owns the asset or {@code null} if
-     * this asset has not been delivered yet.
-     */
-    @Override
-    public String getAssetOwnerName() {
-        return assetOwnerName;
+    public ActorAssetUser getOwner() {
+        return null;
     }
 
     /**
@@ -157,12 +138,8 @@ public class AssetStatisticImpl implements AssetStatistic {
         return assetName;
     }
 
-    public void setAssetOwner(String assetOwner) {
-        this.assetOwner = assetOwner;
-    }
-
-    public void setAssetOwnerName(String assetOwnerName) {
-        this.assetOwnerName = assetOwnerName;
+    public void setOwner(ActorAssetUser owner) {
+        this.owner = owner;
     }
 
     public void setStatus(AssetCurrentStatus status) {

@@ -340,7 +340,7 @@ public class BitcoinCurrencyCryptoVaultManager  {
         /**
          * I get the Bitcoin Transactions stored in the CryptoNetwork for this vault.
          */
-        List<Transaction> transactions = bitcoinNetworkManager.getBitcoinTransaction(networkType, VaultType.CRYPTO_CURRENCY_VAULT);
+        List<Transaction> transactions = bitcoinNetworkManager.getBitcoinTransactions(networkType);
 
         /**
          * Create the bitcoinj wallet from the keys of this account
@@ -428,5 +428,19 @@ public class BitcoinCurrencyCryptoVaultManager  {
         }
 
         return sendRequest.tx.getHashAsString();
+    }
+
+    /**
+     * Gets the Mnemonic code generated for this vault.
+     * It can be used to export and import it somewhere else.
+     * @return
+     * @throws CantLoadExistingVaultSeed
+     */
+    public List<String> getMnemonicCode() throws CantLoadExistingVaultSeed {
+        try {
+            return this.getBitcoinVaultSeed().getMnemonicCode();
+        } catch (InvalidSeedException e) {
+            throw new CantLoadExistingVaultSeed(CantLoadExistingVaultSeed.DEFAULT_MESSAGE, e, "error loading Seed", "seed generator");
+        }
     }
 }

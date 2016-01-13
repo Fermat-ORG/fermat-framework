@@ -49,6 +49,7 @@ import com.bitdubai.sub_app.intra_user_community.R;
 import com.bitdubai.sub_app.intra_user_community.adapters.AppListAdapter;
 import com.bitdubai.sub_app.intra_user_community.common.popups.PresentationIntraUserCommunityDialog;
 import com.bitdubai.sub_app.intra_user_community.constants.Constants;
+import com.bitdubai.sub_app.intra_user_community.interfaces.RecreateView;
 import com.bitdubai.sub_app.intra_user_community.session.IntraUserSubAppSession;
 import com.bitdubai.sub_app.intra_user_community.util.CommonLogger;
 
@@ -67,7 +68,7 @@ import static android.widget.Toast.makeText;
 
 public class ConnectionsWorldFragment extends AbstractFermatFragment implements
         AdapterView.OnItemClickListener,
-        SwipeRefreshLayout.OnRefreshListener, FermatListItemListeners<IntraUserInformation>, SearchView.OnQueryTextListener, SearchView.OnCloseListener {
+        SwipeRefreshLayout.OnRefreshListener, FermatListItemListeners<IntraUserInformation>, RecreateView {
 
 
     public static final String INTRA_USER_SELECTED = "intra_user";
@@ -88,13 +89,10 @@ public class ConnectionsWorldFragment extends AbstractFermatFragment implements
     private SearchView mSearchView;
     private AppListAdapter adapter;
     private boolean isStartList = false;
-    //private ProgressDialog mDialog;
-    // recycler
     private RecyclerView recyclerView;
     private GridLayoutManager layoutManager;
-    //private ActorAdapter adapter;
     private SwipeRefreshLayout swipeRefresh;
-    private View logo;
+    private View searchView;
     // flags
     private boolean isRefreshing = false;
     private View rootView;
@@ -104,7 +102,7 @@ public class ConnectionsWorldFragment extends AbstractFermatFragment implements
     private ArrayList<IntraUserInformation> lstIntraUserInformations;
     private List<IntraUserInformation> dataSet = new ArrayList<>();
     private android.support.v7.widget.Toolbar toolbar;
-    private EditText search;
+    private EditText searchEditText;
     private List<IntraUserInformation> dataSetFiltered;
     private ImageView closeSearch;
     private LinearLayout searchEmptyView;
@@ -173,9 +171,9 @@ public class ConnectionsWorldFragment extends AbstractFermatFragment implements
             toolbar = getToolbar();
             toolbar.setTitle("Cripto wallet users");
             setUpScreen(inflater);
-            logo = inflater.inflate(R.layout.search_edit_text, null);
-            search = (EditText) logo.findViewById(R.id.search);
-            closeSearch = (ImageView) logo.findViewById(R.id.close_search);
+            searchView = inflater.inflate(R.layout.search_edit_text, null);
+            searchEditText = (EditText) searchView.findViewById(R.id.search);
+            closeSearch = (ImageView) searchView.findViewById(R.id.close_search);
             recyclerView = (RecyclerView) rootView.findViewById(R.id.gridView);
             recyclerView.setHasFixedSize(true);
             layoutManager = new GridLayoutManager(getActivity(), 3, LinearLayoutManager.VERTICAL, false);
@@ -287,7 +285,7 @@ public class ConnectionsWorldFragment extends AbstractFermatFragment implements
                     menu.findItem(R.id.action_search).setVisible(false);
                     toolbar = getToolbar();
                     toolbar.setTitle("");
-                    toolbar.addView(logo);
+                    toolbar.addView(searchView);
                     if (closeSearch != null)
                         closeSearch.setOnClickListener(new View.OnClickListener() {
                             @Override
@@ -295,13 +293,14 @@ public class ConnectionsWorldFragment extends AbstractFermatFragment implements
                                 menu.findItem(R.id.action_help).setVisible(true);
                                 menu.findItem(R.id.action_search).setVisible(true);
                                 toolbar = getToolbar();
-                                toolbar.removeView(logo);
+                                toolbar.removeView(searchView);
                                 toolbar.setTitle("Cripto wallet users");
                                 onRefresh();
                             }
                         });
-                    if (search != null)
-                        search.addTextChangedListener(new TextWatcher() {
+
+                    if (searchEditText != null) {
+                        searchEditText.addTextChangedListener(new TextWatcher() {
                             @Override
                             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
 
@@ -366,7 +365,7 @@ public class ConnectionsWorldFragment extends AbstractFermatFragment implements
                                     menu.findItem(R.id.action_help).setVisible(true);
                                     menu.findItem(R.id.action_search).setVisible(true);
                                     toolbar = getToolbar();
-                                    toolbar.removeView(logo);
+                                    toolbar.removeView(searchView);
                                     toolbar.setTitle("Cripto wallet users");
                                     onRefresh();
                                 }
@@ -377,6 +376,7 @@ public class ConnectionsWorldFragment extends AbstractFermatFragment implements
 
                             }
                         });
+                    }
                     return false;
                 }
             });
@@ -419,7 +419,7 @@ public class ConnectionsWorldFragment extends AbstractFermatFragment implements
 
     private synchronized List<IntraUserInformation> getQueryData(final CharSequence charSequence) {
         if (dataSet != null && !dataSet.isEmpty()) {
-            if (search != null && !search.getText().toString().isEmpty()) {
+            if (searchEditText != null && !searchEditText.getText().toString().isEmpty()) {
                 //noinspection unchecked
                 dataSetFiltered = (List<IntraUserInformation>) CollectionUtils.find(dataSet, new org.apache.commons.collections.Predicate() {
                     @Override
@@ -479,6 +479,7 @@ public class ConnectionsWorldFragment extends AbstractFermatFragment implements
                             moduleManager,
                             PresentationIntraUserCommunityDialog.TYPE_PRESENTATION_WITHOUT_IDENTITIES);
                     presentationIntraUserCommunityDialog.show();
+                    presentationIntraUserCommunityDialog.setRecreateView(this);
                     presentationIntraUserCommunityDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
                         @Override
                         public void onDismiss(DialogInterface dialog) {
@@ -492,6 +493,7 @@ public class ConnectionsWorldFragment extends AbstractFermatFragment implements
                             moduleManager,
                             PresentationIntraUserCommunityDialog.TYPE_PRESENTATION);
                     presentationIntraUserCommunityDialog.show();
+                    presentationIntraUserCommunityDialog.setRecreateView(this);
                     presentationIntraUserCommunityDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
                         @Override
                         public void onDismiss(DialogInterface dialog) {
@@ -500,8 +502,10 @@ public class ConnectionsWorldFragment extends AbstractFermatFragment implements
                                 if (isBackPressed) {
                                     getActivity().finish();
                                 }
-                            } else
+                            } else {
                                 showCriptoUsersCache();
+                                invalidate();
+                            }
                         }
                     });
                 }
@@ -512,6 +516,7 @@ public class ConnectionsWorldFragment extends AbstractFermatFragment implements
                         moduleManager,
                         PresentationIntraUserCommunityDialog.TYPE_PRESENTATION);
                 presentationIntraUserCommunityDialog.show();
+                presentationIntraUserCommunityDialog.setRecreateView(this);
                 presentationIntraUserCommunityDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
                     @Override
                     public void onDismiss(DialogInterface dialog) {
@@ -539,6 +544,7 @@ public class ConnectionsWorldFragment extends AbstractFermatFragment implements
                     swipeRefresh.setRefreshing(true);
                     onRefresh();
                 }
+
             });
         } else {
             adapter.changeDataSet(dataSet);
@@ -565,6 +571,7 @@ public class ConnectionsWorldFragment extends AbstractFermatFragment implements
             emptyView.setAnimation(anim);
             emptyView.setVisibility(View.GONE);
         }
+
     }
 
     private void setUpScreen(LayoutInflater layoutInflater) throws CantGetActiveLoginIdentityException {
@@ -572,45 +579,10 @@ public class ConnectionsWorldFragment extends AbstractFermatFragment implements
     }
 
     @Override
-    public boolean onQueryTextSubmit(String name) {
-        //swipeRefreshLayout.setRefreshing(true);
-
-        // This method does not exist
-        mSearchView.onActionViewCollapsed();
-        //TODO: cuando esté el network service, esto va a descomentarse
-//        try {
-//            adapter.changeDataSet(intraUserSearch.getResult());
-//
-//        } catch (CantGetIntraUserSearchResult cantGetIntraUserSearchResult) {
-//            cantGetIntraUserSearchResult.printStackTrace();
-//        }
-
-
-        //adapter.setAddButtonVisible(true);
-        //adapter.changeDataSet(IntraUserConnectionListItem.getTestDataExample(getResources()));
-        //swipeRefreshLayout.setRefreshing(false);
-
-        return true;
-    }
-
-    @Override
-    public boolean onQueryTextChange(String s) {
-        //Toast.makeText(getActivity(), "Probando busqueda completa", Toast.LENGTH_SHORT).show();
-        if (s.length() == 0 && isStartList) {
-            //((IntraUserConnectionsAdapter)adapter).setAddButtonVisible(false);
-            //adapter.changeDataSet(IntraUserConnectionListItem.getTestData(getResources()));
-            return true;
+    public void recreate() {
+        if (isAttached) {
+            //TODO inflate side menu
         }
-        return false;
-    }
-
-    @Override
-    public boolean onClose() {
-        if (!mSearchView.isActivated()) {
-            //adapter.changeDataSet(IntraUserConnectionListItem.getTestData(getResources()));
-        }
-
-        return true;
     }
 
     /*
