@@ -30,10 +30,13 @@ Early 2015 a first token sale was closed. 333,333,333 Fermat tokens where sold f
 
 Every month new tokens are issued according to the [CONTRIBUTION PROGRAM](https://github.com/bitDubai/contribution-program) to pay for contributions done to the project. Below you can see the details of tokens issued related to this program.
 
-| Year | Month | Tokens Issued | Dollar Value | USD / Fermat Rate |
-|:---:|:---:|:---:|:---:|---:|
-|2015|May|12,000,000|10,850|0.0009041|
-|2015|Jun|14,596,867|13,550|0.0009282|
+| Year | Month | Tokens Issued | Dollar Value | USD / Fermat Rate | # Contributors |
+|:---:|---:|:---:|:---:|:---:|:---:|
+|2015|May|12,000,000|10,850|0.0009041|5|
+|2015|Jun|14,596,867|13,550|0.0009282|8|
+|2015|Jul|9,213,527|18,000|0.0019536|13|
+|2015|Ago|8,214,862|26,200|0.0031893|20|
+
 
 
 
