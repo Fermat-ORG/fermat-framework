@@ -115,14 +115,13 @@ public class AssetDetailActivityFragment extends AbstractFermatFragment {
         assetDetailAppropiateLayout.setOnClickListener(new View.OnClickListener() {
            public void onClick(View v) {
                changeActivity(Activities.DAP_WALLET_ASSET_ISSUER_USER_APPROPIATE_LIST, appSession.getAppPublicKey());
-           }
-       });
+            }
+        });
 
         assetDetailRedeemedLayout = rootView.findViewById(R.id.assetDetailRedeemedLayout);
         assetDetailRedeemedLayout.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 changeActivity(Activities.DAP_WALLET_ASSET_ISSUER_USER_REDEEMED_LIST, appSession.getAppPublicKey());
-
             }
         });
     }

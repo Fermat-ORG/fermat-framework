@@ -388,7 +388,7 @@ public class AssetRedeemPointActorNetworkServicePluginRoot extends AbstractNetwo
             /*
              * If register
              */
-            if (this.isRegister()) {
+            if (true) {
 
                 System.out.println("*************************************");
                 System.out.println("Actor Redeem Point - Registrar Datos " + actorAssetRedeemPointToRegister.getName());
@@ -455,7 +455,7 @@ public class AssetRedeemPointActorNetworkServicePluginRoot extends AbstractNetwo
         DAPActor actorRedeemPointDestination = dapMessage.getActorReceiver();
         try {
 
-            if (this.isRegister()) {
+            if (true) {
 
                 CommunicationNetworkServiceLocal communicationNetworkServiceLocal = communicationNetworkServiceConnectionManager.getNetworkServiceLocalInstance(actorRedeemPointDestination.getActorPublicKey());
 
@@ -566,7 +566,7 @@ public class AssetRedeemPointActorNetworkServicePluginRoot extends AbstractNetwo
     public List<ActorAssetRedeemPoint> getListActorAssetRedeemPointRegistered() throws CantRequestListActorAssetRedeemPointRegisteredException {
 
         try {
-            if (this.isRegister()) {
+//            if (true) {
                 if (actorAssetRedeemPointRegisteredList != null && !actorAssetRedeemPointRegisteredList.isEmpty()) {
                     actorAssetRedeemPointRegisteredList.clear();
                 }
@@ -598,9 +598,9 @@ public class AssetRedeemPointActorNetworkServicePluginRoot extends AbstractNetwo
                     return actorAssetRedeemPointRegisteredList;
                 }
 
-            } else {
-                return actorAssetRedeemPointRegisteredList;
-            }
+//            } else {
+//                return actorAssetRedeemPointRegisteredList;
+//            }
         } catch (CantRequestListException e) {
 
             StringBuffer contextBuffer = new StringBuffer();
