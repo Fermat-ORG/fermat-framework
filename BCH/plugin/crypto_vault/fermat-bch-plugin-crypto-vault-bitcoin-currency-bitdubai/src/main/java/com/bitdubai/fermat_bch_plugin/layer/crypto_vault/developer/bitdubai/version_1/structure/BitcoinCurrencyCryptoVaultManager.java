@@ -9,6 +9,7 @@ import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.BitcoinNetworkSe
 import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.exceptions.CantBroadcastTransactionException;
 import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.exceptions.CantStoreBitcoinTransactionException;
 import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.interfaces.BitcoinNetworkManager;
+import com.bitdubai.fermat_bch_api.layer.crypto_vault.asset_vault.exceptions.CantSendAssetBitcoinsToUserException;
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.classes.HierarchyAccount.HierarchyAccountType;
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.classes.vault_seed.VaultSeedGenerator;
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.classes.vault_seed.exceptions.CantCreateAssetVaultSeed;
@@ -373,6 +374,15 @@ public class BitcoinCurrencyCryptoVaultManager  {
         Coin fee = Coin.valueOf(10000);
         final Coin coinToSend = Coin.valueOf(satoshis);
 
+        if (coinToSend.isNegative() || coinToSend.isZero()){
+            StringBuilder output = new StringBuilder("The resulting value to be send is insufficient.");
+            output.append(System.lineSeparator());
+            output.append("We are trying to send " + coinToSend.getValue() + " satoshis, which is ValueToSend - fee (" + satoshis + " - " + fee.getValue() + ")");
+
+
+            throw new CouldNotSendMoneyException(CouldNotSendMoneyException.DEFAULT_MESSAGE, null, output.toString(), null);
+        }
+
         /**
          * creates the send request and broadcast it on the network.
          */
@@ -428,5 +438,19 @@ public class BitcoinCurrencyCryptoVaultManager  {
         }
 
         return sendRequest.tx.getHashAsString();
+    }
+
+    /**
+     * Gets the Mnemonic code generated for this vault.
+     * It can be used to export and import it somewhere else.
+     * @return
+     * @throws CantLoadExistingVaultSeed
+     */
+    public List<String> getMnemonicCode() throws CantLoadExistingVaultSeed {
+        try {
+            return this.getBitcoinVaultSeed().getMnemonicCode();
+        } catch (InvalidSeedException e) {
+            throw new CantLoadExistingVaultSeed(CantLoadExistingVaultSeed.DEFAULT_MESSAGE, e, "error loading Seed", "seed generator");
+        }
     }
 }
