@@ -4,6 +4,8 @@ import com.bitdubai.fermat_api.layer.all_definition.resources_structure.Resource
 import com.bitdubai.fermat_dap_api.layer.all_definition.digital_asset.DigitalAssetContractPropertiesConstants;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.exceptions.CantGetAssetUserActorsException;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.interfaces.ActorAssetUser;
+import com.bitdubai.fermat_dap_api.layer.dap_actor.redeem_point.exceptions.CantGetAssetRedeemPointActorsException;
+import com.bitdubai.fermat_dap_api.layer.dap_actor.redeem_point.interfaces.ActorAssetRedeemPoint;
 import com.bitdubai.fermat_dap_api.layer.dap_module.wallet_asset_issuer.interfaces.AssetIssuerWalletSupAppModuleManager;
 import com.bitdubai.fermat_dap_api.layer.dap_module.wallet_asset_user.interfaces.AssetUserWalletSubAppModuleManager;
 import com.bitdubai.fermat_dap_api.layer.dap_wallet.asset_user_wallet.interfaces.AssetUserWalletList;
@@ -40,20 +42,28 @@ public class Data {
         return digitalAssets;
     }
 
-    public static List<RedeemPoint> getConnectedRedeemPoints(AssetUserWalletSubAppModuleManager moduleManager, List<RedeemPoint> usersSelected) throws CantGetAssetUserActorsException {
-        List<RedeemPoint> users = new ArrayList<>();
-        users.add(new RedeemPoint("Frank Contreras RP", null));
-        users.add(new RedeemPoint("Victor Mars RP", null));
-        users.add(new RedeemPoint("Nerio Indriago RP", null));
-        users.add(new RedeemPoint("Rodrigo Acosta RP", null));
-//        List<RedeemPoint> users = new ArrayList<>();
-//        List<ActorAssetUser> actorAssetRedeemPoints = moduleManager.getAllActorAssetRedeemPointConnected();
-//        for (ActorAssetUser actorAssetRedeemPoint:actorAssetRedeemPoints) {
-//            RedeemPoint newUser = new RedeemPoint(actorAssetRedeemPoint.getName(), actorAssetRedeemPoint);
-////            int index = usersSelected.indexOf(newUser);
-////            if (index > 0) newUser.setSelected(usersSelected.get(index).isSelected());
-//            users.add(newUser);
-//        }
-        return users;
+    public static List<RedeemPoint> getConnectedRedeemPoints(AssetUserWalletSubAppModuleManager moduleManager, List<RedeemPoint> usersSelected) throws CantGetAssetRedeemPointActorsException {
+//        List<RedeemPoint> redeemPoints = new ArrayList<>();
+//        redeemPoints.add(new RedeemPoint("Frank Contreras RP", null));
+//        redeemPoints.add(new RedeemPoint("Victor Mars RP", null));
+//        redeemPoints.add(new RedeemPoint("Nerio Indriago RP", null));
+//        redeemPoints.add(new RedeemPoint("Rodrigo Acosta RP", null));
+        List<RedeemPoint> redeemPoints = new ArrayList<>();
+        List<ActorAssetRedeemPoint> actorAssetRedeemPoints = moduleManager.getAllActorAssetRedeemPointConnected();
+        for (ActorAssetRedeemPoint actorAssetRedeemPoint : actorAssetRedeemPoints) {
+            RedeemPoint newUser = new RedeemPoint(actorAssetRedeemPoint.getName(), actorAssetRedeemPoint);
+//            int index = usersSelected.indexOf(newUser);
+//            if (index > 0) newUser.setSelected(usersSelected.get(index).isSelected());
+            redeemPoints.add(newUser);
+        }
+        return redeemPoints;
+    }
+
+    public static List<ActorAssetRedeemPoint> getRedeemPoints(List<RedeemPoint> redeemPoints) {
+        List<ActorAssetRedeemPoint> actorAssetRedeemPoints = new ArrayList<>();
+        for (RedeemPoint redeemPoint : redeemPoints) {
+            actorAssetRedeemPoints.add(redeemPoint.getActorAssetRedeemPoint());
+        }
+        return actorAssetRedeemPoints;
     }
 }
