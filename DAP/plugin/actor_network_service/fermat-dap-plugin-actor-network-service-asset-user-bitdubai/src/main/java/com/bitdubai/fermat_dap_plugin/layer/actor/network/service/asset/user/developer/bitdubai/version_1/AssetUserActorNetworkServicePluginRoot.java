@@ -389,7 +389,7 @@ public class AssetUserActorNetworkServicePluginRoot extends AbstractNetworkServi
             /*
              * If register
              */
-            if (this.isRegister()) {
+            if (true) {
 
                 System.out.println("*************************************");
                 System.out.println("Actor Asset User - Registrar Datos " + actorAssetUserToRegister.getName());
@@ -449,7 +449,7 @@ public class AssetUserActorNetworkServicePluginRoot extends AbstractNetworkServi
     public List<ActorAssetUser> getListActorAssetUserRegistered() throws CantRequestListActorAssetUserRegisteredException {
 
         try {
-           // if (this.isRegister()) {
+           // if (true) {
                 if (actorAssetUserRegisteredList != null && !actorAssetUserRegisteredList.isEmpty()) {
                     actorAssetUserRegisteredList.clear();
                 }
@@ -515,7 +515,7 @@ public class AssetUserActorNetworkServicePluginRoot extends AbstractNetworkServi
 
         try {
 
-            if (this.isRegister()) {
+            if (true) {
 
                 CommunicationNetworkServiceLocal communicationNetworkServiceLocal = communicationNetworkServiceConnectionManager.getNetworkServiceLocalInstance(actorAssetUserDestination.getActorPublicKey());
 
@@ -626,7 +626,7 @@ public class AssetUserActorNetworkServicePluginRoot extends AbstractNetworkServi
         try {
 
 
-            if (this.isRegister()) {
+            if (true) {
                 CommunicationNetworkServiceLocal communicationNetworkServiceLocal = communicationNetworkServiceConnectionManager.getNetworkServiceLocalInstance(actorAssetIssuerDestination.getActorPublicKey());
 
                 Gson gson = new Gson();
