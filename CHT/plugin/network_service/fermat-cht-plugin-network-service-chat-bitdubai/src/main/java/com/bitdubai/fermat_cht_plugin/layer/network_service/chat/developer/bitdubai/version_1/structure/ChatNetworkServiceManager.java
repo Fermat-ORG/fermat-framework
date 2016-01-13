@@ -9,7 +9,7 @@ import com.bitdubai.fermat_cht_api.layer.network_service.chat.enums.Distribution
 import com.bitdubai.fermat_cht_api.layer.network_service.chat.exceptions.CantSendChatMessageMetadataException;
 import com.bitdubai.fermat_cht_api.layer.network_service.chat.exceptions.CantSendChatMessageNewStatusNotificationException;
 import com.bitdubai.fermat_cht_api.layer.network_service.chat.interfaces.ChatManager;
-import com.bitdubai.fermat_cht_api.layer.network_service.chat.interfaces.ChatMetada;
+import com.bitdubai.fermat_cht_api.layer.network_service.chat.interfaces.ChatMetadata;
 import com.bitdubai.fermat_cht_plugin.layer.network_service.chat.developer.bitdubai.version_1.communications.CommunicationNetworkServiceConnectionManager;
 import com.bitdubai.fermat_cht_plugin.layer.network_service.chat.developer.bitdubai.version_1.communications.CommunicationNetworkServiceLocal;
 import com.bitdubai.fermat_cht_plugin.layer.network_service.chat.developer.bitdubai.version_1.database.ChatMetaDataDao;
@@ -33,9 +33,9 @@ public class ChatNetworkServiceManager implements ChatManager{
 //    public void sendChatMetadata(Integer idChat, Integer idObjecto, String localActorType, String localActorPubKey, String remoteActorType, String remoteActorPubKey, String chatName, ChatMessageStatus chatStatus, Timestamp date, Integer idMessage, String message, DistributionStatus distributionStatus) throws CantSendChatMessageMetadataException {
 //
 //        communicationNetworkServiceLocal = communicationNetworkServiceConnectionManager.getNetworkServiceLocalInstance(remoteActorPubKey);
-//        ChatMetadaTransactionRecord chatMetadaTransactionRecord = new ChatMetadaTransactionRecord();
+//        ChatMetadataTransactionRecord chatMetadaTransactionRecord = new ChatMetadataTransactionRecord();
 //        chatMetadaTransactionRecord.setIdChat(idChat);
-//        chatMetadaTransactionRecord.setIdObjecto(idObjecto);
+//        chatMetadaTransactionRecord.setIdObject(idObjecto);
 //        chatMetadaTransactionRecord.setLocalActorType(localActorType);
 //        chatMetadaTransactionRecord.setLocalActorPubKey(localActorPubKey);
 //        chatMetadaTransactionRecord.setRemoteActorType(remoteActorType);
@@ -59,7 +59,7 @@ public class ChatNetworkServiceManager implements ChatManager{
 
 
     @Override
-    public void sendChatMetadata(String localActorPubKey, String remoteActorPubKey, ChatMetada chatMetada) throws CantSendChatMessageMetadataException {
+    public void sendChatMetadata(String localActorPubKey, String remoteActorPubKey, ChatMetadata chatMetadata) throws CantSendChatMessageMetadataException {
 
     }
 
@@ -75,7 +75,7 @@ public class ChatNetworkServiceManager implements ChatManager{
     }
 
     @Override
-    public List<Transaction<ChatMetada>> getPendingTransactions(Specialist specialist) throws CantDeliverPendingTransactionsException {
+    public List<Transaction<ChatMetadata>> getPendingTransactions(Specialist specialist) throws CantDeliverPendingTransactionsException {
         return null;
     }
 }

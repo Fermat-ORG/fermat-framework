@@ -8,7 +8,7 @@ package com.bitdubai.fermat_cht_plugin.layer.network_service.chat.developer.bitd
 
 import com.bitdubai.fermat_api.layer.all_definition.components.enums.PlatformComponentType;
 import com.bitdubai.fermat_cht_api.layer.network_service.chat.enums.ChatMessageTransactionType;
-import com.bitdubai.fermat_cht_api.layer.network_service.chat.interfaces.ChatMetada;
+import com.bitdubai.fermat_cht_api.layer.network_service.chat.interfaces.ChatMetadata;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 
@@ -26,10 +26,10 @@ public class EncodeMsjContent {
     /**
      *  Construct the content of the message fot the type <code>DigitalAssetMetadataTransactionType.META_DATA_TRANSMIT</code>
      *
-     * @param chatMetada
+     * @param chatMetadata
      * @return String message content
      */
-    public static String encodeMSjContentChatMetadataTransmit(ChatMetada chatMetada, PlatformComponentType senderType, PlatformComponentType receiverType){
+    public static String encodeMSjContentChatMetadataTransmit(ChatMetadata chatMetadata, PlatformComponentType senderType, PlatformComponentType receiverType){
 
         String contemnt = "";
 
@@ -39,7 +39,7 @@ public class EncodeMsjContent {
         Gson gson = new Gson();
         JsonObject jsonObjectContent = new JsonObject();
         jsonObjectContent.addProperty(ChatTransmissionJsonAttNames.MSJ_CONTENT_TYPE, ChatMessageTransactionType.META_DATA_TRANSMIT.toString());
-        jsonObjectContent.addProperty(ChatTransmissionJsonAttNames.CHAT_METADATA, chatMetada.toString());
+        jsonObjectContent.addProperty(ChatTransmissionJsonAttNames.CHAT_METADATA, chatMetadata.toString());
         jsonObjectContent.addProperty(ChatTransmissionJsonAttNames.SENDER_TYPE, senderType.toString());
         jsonObjectContent.addProperty(ChatTransmissionJsonAttNames.RECEIVER_TYPE, receiverType.toString());
 

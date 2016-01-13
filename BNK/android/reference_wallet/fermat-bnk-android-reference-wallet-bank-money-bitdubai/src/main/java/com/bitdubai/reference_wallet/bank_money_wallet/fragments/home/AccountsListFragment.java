@@ -72,7 +72,7 @@ public class AccountsListFragment extends FermatWalletListFragment<BankAccountNu
     }
 
     private void configureToolbar() {
-        getToolbar().setBackgroundColor(getResources().getColor(R.color.background_header));
+        getToolbar().setBackgroundColor(getResources().getColor(R.color.background_header_navy));
     }
 
     @Override

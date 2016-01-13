@@ -107,47 +107,8 @@ public final class AssetFactoryMiddlewareMonitorAgent implements Agent {
             try {
                 List<AssetFactory> assetFactories = getAssetFactoryAll();
                 for (AssetFactory assetFactory : assetFactories) {
-                    if (assetFactory.getState() != State.DRAFT) {
-                        IssuingStatus issuingStatus = assetIssuingManager.getIssuingStatus(assetFactory.getAssetPublicKey());
-                        switch (issuingStatus) {
-                            case ISSUING:
-                                break;
-                            case ISSUED:
-                                if (!assetFactoryMiddlewareManager.getFactoryByStateAndAssetPublicKey(assetFactory, State.PENDING_FINAL).isEmpty()) {
-                                    assetFactoryMiddlewareManager.removePendingFinalFactory(assetFactory.getAssetPublicKey());
-                                }
-                                break;
-                            case INSUFFICIENT_FONDS:
-                                break;
-                            case UNEXPECTED_INTERRUPTION:
-                                assetFactoryMiddlewareManager.markAssetFactoryState(State.DRAFT, assetFactory.getAssetPublicKey());
-                                break;
-                            default:
-                                break;
-                        }
-                    }
-                    int assetsIssued = assetIssuingManager.getNumberOfIssuedAssets(assetFactory.getAssetPublicKey());
-                    if (assetsIssued >= 1) {
-                        if (assetFactoryMiddlewareManager.getFactoryByStateAndAssetPublicKey(assetFactory, State.FINAL).isEmpty()) {
-                            assetFactory.setFactoryId(UUID.randomUUID().toString());
-                            assetFactory.setState(State.FINAL);
-                            assetFactory.setQuantity(assetsIssued);
-                            assetFactoryMiddlewareManager.saveAssetFactory(assetFactory);
-                        } else {
-                            List<AssetFactory> finalFactories = assetFactoryMiddlewareManager.getFactoryByStateAndAssetPublicKey(assetFactory, State.FINAL);
-                            List<AssetFactory> pendingFinal = assetFactoryMiddlewareManager.getFactoryByStateAndAssetPublicKey(assetFactory, State.PENDING_FINAL);
-                            List<AssetFactory> both = assetFactoryMiddlewareManager.getFactoryByStateAndAssetPublicKey(assetFactory, State.DRAFT);
-                            both.addAll(pendingFinal);
-                            if (!finalFactories.isEmpty()) {
-                                assetFactoryMiddlewareManager.updateAssetFactoryQuantity(assetsIssued, finalFactories.get(0).getFactoryId());
-                            }
-                            if (!both.isEmpty()) {
-                                AssetFactory notFinalFactory = both.get(0);
-                                int missingAmount = notFinalFactory.getTotalQuantity() - assetsIssued;
-                                assetFactoryMiddlewareManager.updateAssetFactoryQuantity(missingAmount, notFinalFactory.getFactoryId());
-                            }
-                        }
-                    }
+                    monitorIssuingFactory(assetFactory);
+                    monitorState(assetFactory);
                 }
             } catch (CantSaveAssetFactoryException e) {
 
@@ -166,6 +127,53 @@ public final class AssetFactoryMiddlewareMonitorAgent implements Agent {
                 throw new CantGetAssetFactoryException("Cant Get Asset Factory", e, "Method: doTheMainTask", null);
             }
 
+        }
+
+        private void monitorState(AssetFactory assetFactory) throws CantExecuteDatabaseOperationException, CantGetAssetFactoryException, CantCreateFileException, CantDeleteAsserFactoryException, CantSaveAssetFactoryException, CantPersistFileException {
+            if (assetFactory.getState() != State.DRAFT) {
+                IssuingStatus issuingStatus = assetIssuingManager.getIssuingStatus(assetFactory.getAssetPublicKey());
+                switch (issuingStatus) {
+                    case ISSUING:
+                        break;
+                    case ISSUED:
+                        if (!assetFactoryMiddlewareManager.getFactoryByStateAndAssetPublicKey(assetFactory, State.PENDING_FINAL).isEmpty()) {
+                            assetFactoryMiddlewareManager.removePendingFinalFactory(assetFactory.getAssetPublicKey());
+                        }
+                        break;
+                    case INSUFFICIENT_FONDS:
+                        break;
+                    case UNEXPECTED_INTERRUPTION:
+                        assetFactoryMiddlewareManager.markAssetFactoryState(State.DRAFT, assetFactory.getAssetPublicKey());
+                        break;
+                    default:
+                        break;
+                }
+            }
+        }
+
+        private void monitorIssuingFactory(AssetFactory assetFactory) throws CantExecuteDatabaseOperationException, CantGetAssetFactoryException, CantCreateFileException, CantSaveAssetFactoryException, CantPersistFileException {
+            int assetsIssued = assetIssuingManager.getNumberOfIssuedAssets(assetFactory.getAssetPublicKey());
+            if (assetsIssued >= 1) {
+                if (assetFactoryMiddlewareManager.getFactoryByStateAndAssetPublicKey(assetFactory, State.FINAL).isEmpty()) {
+                    assetFactory.setFactoryId(UUID.randomUUID().toString());
+                    assetFactory.setState(State.FINAL);
+                    assetFactory.setQuantity(assetsIssued);
+                    assetFactoryMiddlewareManager.saveAssetFactory(assetFactory);
+                } else {
+                    List<AssetFactory> finalFactories = assetFactoryMiddlewareManager.getFactoryByStateAndAssetPublicKey(assetFactory, State.FINAL);
+                    List<AssetFactory> pendingFinal = assetFactoryMiddlewareManager.getFactoryByStateAndAssetPublicKey(assetFactory, State.PENDING_FINAL);
+                    List<AssetFactory> both = assetFactoryMiddlewareManager.getFactoryByStateAndAssetPublicKey(assetFactory, State.DRAFT);
+                    both.addAll(pendingFinal);
+                    if (!finalFactories.isEmpty()) {
+                        assetFactoryMiddlewareManager.updateAssetFactoryQuantity(assetsIssued, finalFactories.get(0).getFactoryId());
+                    }
+                    if (!both.isEmpty()) {
+                        AssetFactory notFinalFactory = both.get(0);
+                        int missingAmount = notFinalFactory.getTotalQuantity() - assetsIssued;
+                        assetFactoryMiddlewareManager.updateAssetFactoryQuantity(missingAmount, notFinalFactory.getFactoryId());
+                    }
+                }
+            }
         }
 
         private List<AssetFactory> getAssetFactoryAll() throws CantGetAssetFactoryException, CantCreateFileException {

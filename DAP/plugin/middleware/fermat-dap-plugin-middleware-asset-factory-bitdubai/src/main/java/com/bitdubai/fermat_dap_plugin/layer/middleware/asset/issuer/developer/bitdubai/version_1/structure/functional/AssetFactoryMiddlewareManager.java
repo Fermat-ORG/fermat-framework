@@ -602,7 +602,7 @@ public final class AssetFactoryMiddlewareManager {
             if (assetFactory.getState() != State.DRAFT)
                 throw new CantDeleteAsserFactoryException(null, "Error delete Asset Factory", "Asset Factory is not DRAFT");
             else
-                getAssetFactoryMiddlewareDao().removeAssetFactory(assetFactory);
+                getAssetFactoryMiddlewareDao().removeAssetFactory(assetFactory, true);
         } catch (Exception exception) {
             throw new CantDeleteAsserFactoryException(exception, "Error delete Asset Factory", "Asset Factory - Delete");
         }
@@ -611,10 +611,10 @@ public final class AssetFactoryMiddlewareManager {
     public void removePendingFinalFactory(String publicKey) throws CantDeleteAsserFactoryException {
         try {
             AssetFactory assetFactory = getAssetFactoryPendingFinalByAssetPublicKey(publicKey);
-            if (assetFactory.getState().getCode().equals(State.DRAFT.getCode()))
+            if (assetFactory.getState() == State.DRAFT)
                 throw new CantDeleteAsserFactoryException(null, "Error delete Asset Factory", "Asset Factory in DRAFT");
             else
-                getAssetFactoryMiddlewareDao().removeAssetFactory(assetFactory);
+                getAssetFactoryMiddlewareDao().removeAssetFactory(assetFactory, false);
         } catch (Exception exception) {
             throw new CantDeleteAsserFactoryException(exception, "Error delete Asset Factory", "Asset Factory - Delete");
         }
