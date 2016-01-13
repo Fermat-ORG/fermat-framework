@@ -1136,7 +1136,11 @@ public abstract class FermatActivity extends AppCompatActivity
     protected void removecallbacks() {
         try {
 
-            this.getNotificationManager().deleteObserver(this);
+            try {
+                this.getNotificationManager().deleteObserver(this);
+            }catch (Exception e){
+                e.printStackTrace();
+            }
 
             this.adapter = null;
             paintStatusBar(null);
