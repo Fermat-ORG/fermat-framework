@@ -3,6 +3,7 @@ package com.bitdubai.fermat_p2p_api.layer.all_definition.common.network_services
 import com.bitdubai.fermat_api.CantStartPluginException;
 import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.Service;
+import com.bitdubai.fermat_api.layer.DeveloperDatabasePIP;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.abstract_classes.AbstractPlugin;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.annotations.NeededAddonReference;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.annotations.NeededPluginReference;
@@ -70,6 +71,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.atomic.AtomicBoolean;
 
@@ -100,7 +102,7 @@ public abstract class AbstractNetworkServiceV2 extends AbstractPlugin implements
     /**
      * Represent the communicationNetworkServiceDeveloperDatabaseFactory
      */
-    private CommunicationNetworkServiceDeveloperDatabaseFactory communicationNetworkServiceDeveloperDatabaseFactory;
+    private DeveloperDatabasePIP communicationNetworkServiceDeveloperDatabaseFactory;
 
 
     /**
@@ -206,7 +208,7 @@ public abstract class AbstractNetworkServiceV2 extends AbstractPlugin implements
 
     protected abstract EventManager getEventManager();
 
-    public CommunicationNetworkServiceDeveloperDatabaseFactory getCommunicationNetworkServiceDeveloperDatabaseFactory() {
+    public DeveloperDatabasePIP getCommunicationNetworkServiceDeveloperDatabaseFactory() {
         return communicationNetworkServiceDeveloperDatabaseFactory;
     }
 
@@ -225,10 +227,11 @@ public abstract class AbstractNetworkServiceV2 extends AbstractPlugin implements
             /*
              * Initialize Developer Database Factory
              */
-            communicationNetworkServiceDeveloperDatabaseFactory = new CommunicationNetworkServiceDeveloperDatabaseFactory(getPluginDatabaseSystem(), pluginId);
-            communicationNetworkServiceDeveloperDatabaseFactory.initializeDatabase();
+//            communicationNetworkServiceDeveloperDatabaseFactory = new CommunicationNetworkServiceDeveloperDatabaseFactory(getPluginDatabaseSystem(), pluginId);
+//            communicationNetworkServiceDeveloperDatabaseFactory.initializeDatabase();
+            communicationNetworkServiceDeveloperDatabaseFactory = initializeCommunicationDeveloperDatabase(pluginId);
             initializeListener();
-            initializeDb();
+            dataBaseCommunication = initializeDb();
 
 
             /*
@@ -253,6 +256,9 @@ public abstract class AbstractNetworkServiceV2 extends AbstractPlugin implements
             e.printStackTrace();
         }
     }
+
+    protected abstract DeveloperDatabasePIP initializeCommunicationDeveloperDatabase(UUID pluginId);
+    protected abstract Database initializeDb() throws CantInitializeTemplateNetworkServiceDatabaseException;
 
     public void pause(){
           /*
@@ -817,52 +823,5 @@ public abstract class AbstractNetworkServiceV2 extends AbstractPlugin implements
         return PLUGIN_IDS_FILE_NAME + "_" + pluginId;
     }
 
-    /**
-     * This method initialize the database
-     *
-     * @throws CantInitializeTemplateNetworkServiceDatabaseException
-     */
-    private void initializeDb() throws CantInitializeTemplateNetworkServiceDatabaseException {
 
-        try {
-            /*
-             * Open new database connection
-             */
-            this.dataBaseCommunication = this.getPluginDatabaseSystem().openDatabase(pluginId, CommunicationNetworkServiceDatabaseConstants.DATA_BASE_NAME);
-
-        } catch (CantOpenDatabaseException cantOpenDatabaseException) {
-
-            /*
-             * The database exists but cannot be open. I can not handle this situation.
-             */
-            getErrorManager().reportUnexpectedPluginException(Plugins.BITDUBAI_INTRAUSER_NETWORK_SERVICE, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, cantOpenDatabaseException);
-            throw new CantInitializeTemplateNetworkServiceDatabaseException(cantOpenDatabaseException.getLocalizedMessage());
-
-        } catch (DatabaseNotFoundException e) {
-
-            /*
-             * The database no exist may be the first time the plugin is running on this device,
-             * We need to create the new database
-             */
-            CommunicationNetworkServiceDatabaseFactory communicationNetworkServiceDatabaseFactory = new CommunicationNetworkServiceDatabaseFactory(getPluginDatabaseSystem());
-
-            try {
-
-                /*
-                 * We create the new database
-                 */
-                this.dataBaseCommunication = communicationNetworkServiceDatabaseFactory.createDatabase(pluginId, CommunicationNetworkServiceDatabaseConstants.DATA_BASE_NAME);
-
-            } catch (CantCreateDatabaseException cantOpenDatabaseException) {
-
-                /*
-                 * The database cannot be created. I can not handle this situation.
-                 */
-                getErrorManager().reportUnexpectedPluginException(Plugins.BITDUBAI_INTRAUSER_NETWORK_SERVICE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, cantOpenDatabaseException);
-                throw new CantInitializeTemplateNetworkServiceDatabaseException(cantOpenDatabaseException.getLocalizedMessage());
-
-            }
-        }
-
-    }
 }
