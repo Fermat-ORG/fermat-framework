@@ -285,7 +285,7 @@ public class CryptoCustomerActorPluginRoot extends AbstractPlugin implements
         
     }
 
-    private void deleteCustomerIdentityWalletRelationshipTest(String sId){
+    /*private void deleteCustomerIdentityWalletRelationshipTest(String sId){
 
         if(sId != null) {
             try {
@@ -314,7 +314,7 @@ public class CryptoCustomerActorPluginRoot extends AbstractPlugin implements
             System.out.print("\n**** MOCK CRYPTO CUSTOMER ACTOR. UPDATE RELATIONSHIP. OFF****\n");
         }
 
-    }
+    }*/
     
     private void getAllCustomerIdentityWalletRelationshipsTest(boolean sw){
 
