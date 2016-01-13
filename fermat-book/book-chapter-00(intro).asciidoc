@@ -1,5 +1,5 @@
 :numbered!:
-image::https://raw.githubusercontent.com/bitDubai/media-kit/master/Readme%20Image/Fermat%20Logotype/Fermat_Logo_3D.png[FermatLogo]
+image::https://raw.githubusercontent.com/bitDubai/media-kit/master/MediaKit/Fermat%20Branding/Fermat%20Logotype/Fermat_Logo_3D.png[FermatLogo]
 == Introduction
 
 === What is Fermat?
@@ -16,7 +16,7 @@ The link:https://github.com/bitDubai/fermat/blob/master/fermat-book/book-glossar
 Fermat allows developers and specially non-developers to create their own distributed (i.e. living on the user's devices) financial applications (wallets are considered a special kind of financial applications) reusing or combining other previous financial applications or some of its components that are built into Fermat as plug-ins. +
 The core concept of Fermat is to divide the *_transport of meta-data_* (carried by the Fermat network) from the *_transport of value_* (carried by proven crypto networks like BitCoin being accesed by the lower layers of the Fermat framework).
 
-image::https://raw.githubusercontent.com/bitDubai/media-kit/master/Readme%20Image/Slides/slide-core-concept.png[Fermat Core Concept]
+image::https://raw.githubusercontent.com/bitDubai/media-kit/master/MediaKit/Slides/slide-core-concept.png[Fermat Core Concept]
 
 In this way Fermat builds a *full stack* of decentralized applications from the existing blockchain protocols up to the end user.
 The existing gap between the available but complex crypto networks technology  and the end user is bridged by consecutive abstraction layers, beginning with a first layer of _reference financial applications and wallets_ that are programmed to solve only a specific set of tasks. Then, these simple "bricks"  are combined to offer together a set of functionalities to a second layer of  _niche financial applications and wallets_ that are developed to address different use cases, one at a time. A third layer of  _branded financial applications and wallets_ combine niche fin apps/niche wallets and reuse their components in a sort of "WordPress for fin apps" making possible that non developers add their own touch and create a new fin app/wallet of their unique style. (*brand*). +
@@ -96,7 +96,7 @@ The community developing the Fermat System agreed on the following founding prin
 
 Learning about Fermat is very easy. It's just a matter of continuing reading this book that will guide you step by step all the way until you reach a complete understanding of this amazing technology.
 
-image::https://raw.githubusercontent.com/bitDubai/media-kit/master/Readme%20Image/Background/Front_Bitcoin_scn_low.jpg[FermatCoin]
+image::https://raw.githubusercontent.com/bitDubai/media-kit/master/MediaKit/Coins/Fermat%20Bitcoin/PerspView/1/Front_MedQ_1280x720.jpg[FermatCoin]
 
 ==== _Continue Reading ..._
 
