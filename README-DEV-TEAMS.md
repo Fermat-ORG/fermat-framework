@@ -4,21 +4,22 @@
 
 ## Introduction
 
-All the work done on the Fermat project is done by a Team. We have several teams working in parallel. Most of them are teams of developers, but there are also  teams of graphic designers, 3d artists, video producers, copy writers, publishing, etc, contributing to the project.
+All the work done for the Fermat open source project is done by several teams of people collaborating between each other. Fermat has several teams working in parallel. Most of them are dev teams, but these are not the only ones. Fermat also has teams of graphic designers, 3d artists, video producers, copy writers, publishing, etc.
 
-bitDubai is a network of teams. Besides developer teams bitDubai also has designer teams, copywriters, artists, video producers, etc. The following organization is valid only to bitDubai's teams. Other professionals might want to get organized in a different way.
+bitDubai is a network of teams working on the Fermat project. In this document you will learn about how bitDubai teams are organized. At the moment bitDubai is the only team-network working on Fermat, but there is room for other networks to join and they might want to get organized in a different way.
 
-At this file you will find a list of bitDubai/Fermat developer teams. Feel free to contact their team leaders if you want to join them.
+Below you will find a list of bitDubai/Fermat developers teams. Feel free to contact their team leaders if you want to join them.
 
 You can also contribute to the Fermat project through other means. Please refer to the [CONTRIBUTING GUIDE](https://github.com/bitDubai/fermat/blob/master/CONTRIBUTING.md) for more details.
 
-## Organization
+## bitDubai Teams Organization
 
 The maximun size for a team is 5 people. All of them together should have all the skill sets needed for these kind of projects.
 
-Fermat teams are organized in a hierarchical way. This helps the task of reviewing changes in source code. It is expected that a child team changes are pushed to its parent team in order to be reviewed, then merged with their own changes and pushed again to the next parent in the hierarchy. At the top the core developers are the only ones merging the combined batch of changes into the bitDubai codebase.
+Teams are organized in a hierarchical way. This helps the task of reviewing changes in source code, since it is expected that a child team changes they are pushed to its parent team in order to be reviewed, merged with their own changes and pushed again to the next parent in the hierarchy. At the top the core developers are the only ones merging the combined batch of changes into the bitDubai codebase.
 
-## Team List
+
+## Teams List
 
 * Thunder
 * Code Butchers

@@ -10,16 +10,17 @@ import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_pro
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.exceptions.CantConfirmTransactionException;
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.exceptions.CantDeliverPendingTransactionsException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
-import com.bitdubai.fermat_bch_api.layer.crypto_network.BroadcastStatus;
+import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.BroadcastStatus;
 import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.BitcoinNetworkSelector;
+import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.BlockchainConnectionStatus;
 import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.exceptions.CantBroadcastTransactionException;
 import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.exceptions.CantCancellBroadcastTransactionException;
 import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.exceptions.CantFixTransactionInconsistenciesException;
+import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.exceptions.CantGetBlockchainConnectionStatusException;
 import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.exceptions.CantGetBroadcastStatusException;
 import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.exceptions.CantGetCryptoTransactionException;
 import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.exceptions.CantGetTransactionCryptoStatusException;
 import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.exceptions.CantStoreBitcoinTransactionException;
-import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.interfaces.BitcoinNetworkConfiguration;
 import com.bitdubai.fermat_bch_api.layer.crypto_network.enums.Status;
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.enums.CryptoVaults;
 import com.bitdubai.fermat_bch_plugin.layer.crypto_network.bitcoin.developer.bitdubai.version_1.database.BitcoinCryptoNetworkDatabaseDao;
@@ -34,7 +35,6 @@ import org.bitcoinj.core.NetworkParameters;
 import org.bitcoinj.core.Sha256Hash;
 import org.bitcoinj.core.Transaction;
 import org.bitcoinj.core.TransactionInput;
-import org.bitcoinj.core.TransactionOutPoint;
 import org.bitcoinj.core.TransactionOutput;
 import org.bitcoinj.core.UTXO;
 import org.bitcoinj.core.UTXOProvider;
@@ -42,15 +42,14 @@ import org.bitcoinj.core.UTXOProviderException;
 import org.bitcoinj.core.Wallet;
 import org.bitcoinj.params.RegTestParams;
 import org.bitcoinj.store.UnreadableWalletException;
+import org.bitcoinj.wallet.WalletTransaction;
 
 import java.io.File;
 import java.io.IOException;
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.UUID;
-import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 
 import javax.annotation.Nullable;
@@ -495,9 +494,16 @@ public class BitcoinCryptoNetworkManager implements TransactionProtocolManager, 
      * @param blockchainNetworkType
      * @return
      */
-    public synchronized List<Transaction> getBitcoinTransactions(BlockchainNetworkType blockchainNetworkType){
+    public List<Transaction> getBitcoinTransactions(BlockchainNetworkType blockchainNetworkType){
         Wallet wallet = getWallet(blockchainNetworkType, null);
         return wallet.getTransactionsByTime();
+
+    }
+
+    public synchronized List<Transaction> getUnspentBitcoinTransactions(BlockchainNetworkType blockchainNetworkType){
+        Wallet wallet = getWallet(blockchainNetworkType, null);
+        List<Transaction> transactions = new ArrayList<>(wallet.getTransactionPool(WalletTransaction.Pool.UNSPENT).values());
+        return transactions;
     }
 
     /**
@@ -729,5 +735,16 @@ public class BitcoinCryptoNetworkManager implements TransactionProtocolManager, 
             throw new CantCancellBroadcastTransactionException(CantCancellBroadcastTransactionException.DEFAULT_MESSAGE, e, "Database error while cancelling transaction.", "database issue");
         }
 
+    }
+
+    /**
+     * Will get the BlockchainConnectionStatus for the specified network.
+     * @param blockchainNetworkType the Network type we won't to get info from. If the passed network is not currently activated,
+     *                              then we will receive null.
+     * @return BlockchainConnectionStatus with information of amount of peers currently connected, etc.
+     * @exception CantGetBlockchainConnectionStatusException
+     */
+    public BlockchainConnectionStatus getBlockchainConnectionStatus(BlockchainNetworkType blockchainNetworkType) throws CantGetBlockchainConnectionStatusException {
+        return runningAgents.get(blockchainNetworkType).getBlockchainConnectionStatus();
     }
 }

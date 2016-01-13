@@ -1,4 +1,4 @@
-package com.bitdubai.fermat_bch_api.layer.crypto_network;
+package com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin;
 
 import com.bitdubai.fermat_bch_api.layer.crypto_network.enums.Status;
 

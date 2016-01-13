@@ -430,7 +430,8 @@ public class UserRedemptionMonitorAgent implements Agent, DealsWithLogger, Deals
 
         private void sendCryptoAmountToRemoteActor(String genesisTransaction, CryptoAddress cryptoAddressTo, long amount) throws CantSendAssetBitcoinsToUserException {
             System.out.println("ASSET USER REDEMPTION sending genesis amount from asset vault");
-            assetVaultManager.sendAssetBitcoins(genesisTransaction, cryptoAddressTo, amount);
+            //todo victor, enviar el GenesisBlock.
+            assetVaultManager.sendAssetBitcoins(genesisTransaction, null, cryptoAddressTo);
         }
 
         /**

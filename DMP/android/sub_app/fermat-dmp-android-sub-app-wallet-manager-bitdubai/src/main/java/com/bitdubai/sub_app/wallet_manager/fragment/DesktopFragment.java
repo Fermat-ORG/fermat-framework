@@ -150,6 +150,9 @@ public class DesktopFragment extends AbstractFermatFragment implements SearchVie
             ItemTouchHelper.Callback callback = new SimpleItemTouchHelperCallback(adapter);
             mItemTouchHelper = new ItemTouchHelper(callback);
             mItemTouchHelper.attachToRecyclerView(recyclerView);
+
+            View container_title = rootView.findViewById(R.id.container_title);
+            getPaintActivtyFeactures().setMenuSettings(rootView,container_title);
             //adapter.setFermatListEventListener(this);
 
         } catch(Exception ex) {
