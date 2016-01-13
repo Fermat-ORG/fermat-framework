@@ -37,15 +37,24 @@ import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
 import com.bitdubai.fermat_api.layer.osa_android.location_system.Location;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogLevel;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogManager;
+import com.bitdubai.fermat_cbp_api.all_definition.enums.ClauseType;
+import com.bitdubai.fermat_cbp_api.all_definition.enums.ContractClauseType;
+import com.bitdubai.fermat_cbp_api.all_definition.enums.CurrencyType;
+import com.bitdubai.fermat_cbp_api.all_definition.enums.NegotiationStatus;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.NegotiationTransactionType;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.NegotiationTransmissionState;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.NegotiationTransmissionType;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.NegotiationType;
+import com.bitdubai.fermat_cbp_api.all_definition.events.enums.EventType;
+import com.bitdubai.fermat_cbp_api.all_definition.negotiation.Clause;
 import com.bitdubai.fermat_cbp_api.all_definition.negotiation_transaction.NegotiationPurchaseRecord;
 import com.bitdubai.fermat_cbp_api.all_definition.negotiation_transaction.NegotiationSaleRecord;
 import com.bitdubai.fermat_cbp_api.all_definition.negotiation_transaction.NegotiationTransaction;
+import com.bitdubai.fermat_cbp_api.layer.business_transaction.common.mocks.ClauseMock;
 import com.bitdubai.fermat_cbp_api.layer.negotiation.customer_broker_purchase.interfaces.CustomerBrokerPurchaseNegotiation;
 import com.bitdubai.fermat_cbp_api.layer.negotiation.customer_broker_sale.interfaces.CustomerBrokerSaleNegotiation;
+import com.bitdubai.fermat_cbp_api.layer.negotiation_transaction.Test.mocks.PurchaseNegotiationMock;
+import com.bitdubai.fermat_cbp_api.layer.network_service.negotiation_transmission.events.IncomingNegotiationTransactionEvent;
 import com.bitdubai.fermat_cbp_api.layer.network_service.negotiation_transmission.interfaces.NegotiationTransmission;
 import com.bitdubai.fermat_cbp_plugin.layer.network_service.negotiation_transmission.developer.bitdubai.version_1.communication.event_handlers.ClientConnectionCloseNotificationEventHandler;
 import com.bitdubai.fermat_cbp_plugin.layer.network_service.negotiation_transmission.developer.bitdubai.version_1.communication.event_handlers.ClientConnectionLooseNotificationEventHandler;
@@ -87,6 +96,7 @@ import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfac
 import com.google.gson.Gson;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -214,6 +224,9 @@ public class NetworkServiceNegotiationTransmissionPluginRoot extends AbstractNet
 //            getAllNegotiationTransactionTest();
 //            updateAllTransmissionTest();
 //            deleteAllTransmissionTest();
+//            createNegotiationTransamissionTest();
+
+//            eventTest();
 
             //Initilize service
             this.serviceStatus = ServiceStatus.STARTED;
@@ -233,7 +246,7 @@ public class NetworkServiceNegotiationTransmissionPluginRoot extends AbstractNet
             throw pluginStartException;
 
         }
-        System.out.print("-----------------------\n Negotiation Transmission: Successful start.\n-----------------------\n");
+//        System.out.print("-----------------------\n Negotiation Transmission: Successful start.\n-----------------------\n");
     }
 
     @Override
@@ -426,9 +439,9 @@ public class NetworkServiceNegotiationTransmissionPluginRoot extends AbstractNet
     public void handleCompleteComponentRegistrationNotificationEvent(PlatformComponentProfile platformComponentProfileRegistered) {
 
         System.out.println("\nNegotiationTransmissionNetworkServiceConnectionManager - Starting method handleCompleteComponentRegistrationNotificationEvent" +
-            "\n- platformComponentProfileRegistered.getPlatformComponentType(): " + platformComponentProfileRegistered.getPlatformComponentType().getCode() +" = "+ PlatformComponentType.NETWORK_SERVICE.getCode() +
-            "\n- platformComponentProfileRegistered.getNetworkServiceType(): " + platformComponentProfileRegistered.getNetworkServiceType().getCode() +" = "+ NetworkServiceType.NEGOTIATION_TRANSMISSION.getCode() +
-            "\n- platformComponentProfileRegistered.getIdentityPublicKey(): "+ platformComponentProfileRegistered.getIdentityPublicKey() +" = "+ identity.getPublicKey()
+                        "\n- platformComponentProfileRegistered.getPlatformComponentType(): " + platformComponentProfileRegistered.getPlatformComponentType().getCode() + " = " + PlatformComponentType.NETWORK_SERVICE.getCode() +
+                        "\n- platformComponentProfileRegistered.getNetworkServiceType(): " + platformComponentProfileRegistered.getNetworkServiceType().getCode() + " = " + NetworkServiceType.NEGOTIATION_TRANSMISSION.getCode() +
+                        "\n- platformComponentProfileRegistered.getIdentityPublicKey(): " + platformComponentProfileRegistered.getIdentityPublicKey() + " = " + identity.getPublicKey()
         );
         //If the component registered have my profile and my identity public key
         if (platformComponentProfileRegistered.getPlatformComponentType()  == PlatformComponentType.NETWORK_SERVICE &&
@@ -552,7 +565,7 @@ public class NetworkServiceNegotiationTransmissionPluginRoot extends AbstractNet
 
             NegotiationTransmissionMessage negotiationTransmissionMessage = gson.fromJson(fermatMessage.getContent(), NegotiationTransmissionMessage.class);
 
-            System.out.print("\n\n**** X) MOCK NEGOTIATION TRANSACTION - NEGOTIATION TRANSMISSION - PLUGIN ROOT - RECEIVE MESSAGES ****\n");
+//            System.out.print("\n\n**** X) MOCK NEGOTIATION TRANSACTION - NEGOTIATION TRANSMISSION - PLUGIN ROOT - RECEIVE MESSAGES ****\n");
 
             switch (negotiationTransmissionMessage.getMessageType()){
                 case TRANSMISSION_NEGOTIATION:
@@ -585,7 +598,7 @@ public class NetworkServiceNegotiationTransmissionPluginRoot extends AbstractNet
 
         try {
 
-            System.out.print("\n\n**** 12) MOCK NEGOTIATION TRANSACTION - NEGOTIATION TRANSMISSION - PLUGIN ROOT - RECEIVE NEGOTIATION ****\n");
+//            System.out.print("\n\n**** 12) MOCK NEGOTIATION TRANSACTION - NEGOTIATION TRANSMISSION - PLUGIN ROOT - RECEIVE NEGOTIATION ****\n");
 
             NegotiationTransmission negotiationTransmission = new NegotiationTransmissionImpl(
                 negotiationMessage.getTransmissionId(),
@@ -616,7 +629,7 @@ public class NetworkServiceNegotiationTransmissionPluginRoot extends AbstractNet
 
         try {
 
-            System.out.print("\n\n**** 26) MOCK NEGOTIATION TRANSACTION - NEGOTIATION TRANSMISSION - PLUGIN ROOT - RECEIVE NEGOTIATION ****\n");
+//            System.out.print("\n\n**** 26) MOCK NEGOTIATION TRANSACTION - NEGOTIATION TRANSMISSION - PLUGIN ROOT - RECEIVE NEGOTIATION ****\n");
 
             UUID transmissionId = confirmMessage.getTransmissionId();
             databaseDao.confirmReception(transmissionId);
@@ -877,5 +890,160 @@ public class NetworkServiceNegotiationTransmissionPluginRoot extends AbstractNet
         }catch (CantRegisterSendNegotiationTransmissionException e){
             System.out.print("\n**** MOCK NEGOTIATION TRANSMISSION. delete ALL TRANSMISSION, ERROR. ****\n");
         }
+    }
+
+    private void eventTest(){
+        System.out.print("\n**** MOCK NEGOTIATION TRANSMISSION. EVENT TEST RAISE METHOD****\n");
+
+        FermatEvent fermatEvent = eventManager.getNewEvent(EventType.INCOMING_NEGOTIATION_TRANSMISSION_TRANSACTION_NEW);
+        IncomingNegotiationTransactionEvent incomingNegotiationTransactionEvent = (IncomingNegotiationTransactionEvent) fermatEvent;
+        incomingNegotiationTransactionEvent.setSource(EventSource.NETWORK_SERVICE_NEGOTIATION_TRANSMISSION);
+        incomingNegotiationTransactionEvent.setDestinationPlatformComponentType(PlatformComponentType.ACTOR_CRYPTO_BROKER);
+        eventManager.raiseEvent(incomingNegotiationTransactionEvent);
+
+        /*
+        fermatEvent = eventManager.getNewEvent(EventType.INCOMING_CONFIRM_BUSINESS_TRANSACTION_CONTRACT);
+        IncomingConfirmBusinessTransactionContract incomingConfirmBusinessTransactionContract = (IncomingConfirmBusinessTransactionContract) fermatEvent;
+        incomingConfirmBusinessTransactionContract.setSource(EventSource.NETWORK_SERVICE_TRANSACTION_TRANSMISSION);
+        incomingConfirmBusinessTransactionContract.setDestinationPlatformComponentType(businessTransactionMetadataReceived.getReceiverType());
+        eventManager.raiseEvent(incomingConfirmBusinessTransactionContract);
+        */
+        /*FermatEvent eventToRaise = eventManager.getNewEvent(EventType.INCOMING_NEGOTIATION_TRANSMISSION_TRANSACTION_NEW);
+        eventToRaise.setSource(EventSource.NETWORK_SERVICE_NEGOTIATION_TRANSMISSION);
+        eventManager.raiseEvent(eventToRaise);*/
+
+        /*
+        FermatEvent fermatEvent = eventManager.getNewEvent(EventType.INCOMING_NEGOTIATION_TRANSMISSION_TRANSACTION_NEW);
+        IncomingNegotiationTransactionEvent incomingNegotiationTransactionEvent = (IncomingNegotiationTransactionEvent) fermatEvent;
+        incomingNegotiationTransactionEvent.setSource(EventSource.NETWORK_SERVICE_NEGOTIATION_TRANSMISSION);
+        eventManager.raiseEvent(incomingNewContractStatusUpdate);
+        */
+        /*
+        FermatEventListener fermatEventListener = eventManager.getNewListener(P2pEventType.COMPLETE_COMPONENT_REGISTRATION_NOTIFICATION);
+        fermatEventListener.setEventHandler(new CompleteComponentRegistrationNotificationEventHandler(this));
+        eventManager.addListener(fermatEventListener);
+        listenersAdded.add(fermatEventListener);
+        */
+
+    }
+
+    private void createNegotiationTransamissionTest(){
+        System.out.print("\n**** MOCK NEGOTIATION TRANSMISSION. CREATE NEGOTIATION TRANSMISSION ****\n");
+        try {
+            NegotiationTransmission negotiationTransmission = negotiationTransmissionMockTest();
+
+            //GET NEGOTIATION XML
+            String negotiationMockXML = negotiationTransmission.getNegotiationXML();
+            CustomerBrokerPurchaseNegotiation purchaseNegotiationXML = new NegotiationPurchaseRecord();
+            purchaseNegotiationXML = (CustomerBrokerPurchaseNegotiation) XMLParser.parseXML(negotiationMockXML, purchaseNegotiationXML);
+            System.out.print("\n\n --- Negotiation Mock XML Date" +
+                            "\n- NegotiationId = " + purchaseNegotiationXML.getNegotiationId() +
+                            "\n- CustomerPublicKey = " + purchaseNegotiationXML.getCustomerPublicKey() +
+                            "\n- BrokerPublicKey = " + purchaseNegotiationXML.getCustomerPublicKey()
+            );
+
+            databaseDao.registerSendNegotiatioTransmission(negotiationTransmission, NegotiationTransmissionState.PROCESSING_SEND);
+
+        } catch (CantRegisterSendNegotiationTransmissionException e){
+            System.out.print("\n**** MOCK NEGOTIATION TRANSMISSION. CREATE TRANSMISSION, ERROR. ****\n");
+        }
+
+    }
+
+    private NegotiationTransmission negotiationTransmissionMockTest(){
+
+        Date time = new Date();
+        CustomerBrokerPurchaseNegotiation negotiation = purchaseNegotiationMockTest();
+
+        String negotiationMockXML = XMLParser.parseObject(negotiation);
+        
+        UUID                            transmissionId                  = UUID.randomUUID();
+        UUID                            transactionId                   = UUID.randomUUID();
+        UUID                            negotiationId                   = negotiation.getNegotiationId();
+        NegotiationTransactionType      negotiationTransactionType      = NegotiationTransactionType.CUSTOMER_BROKER_NEW;
+        String                          publicKeyActorSend              = negotiation.getCustomerPublicKey();
+        PlatformComponentType           actorSendType                   = PlatformComponentType.ACTOR_CRYPTO_CUSTOMER;
+        String                          publicKeyActorReceive           = negotiation.getBrokerPublicKey();
+        PlatformComponentType           actorReceiveType                = PlatformComponentType.ACTOR_CRYPTO_BROKER;
+        NegotiationTransmissionType     transmissionType                = NegotiationTransmissionType.TRANSMISSION_NEGOTIATION;
+        NegotiationTransmissionState    transmissionState               = NegotiationTransmissionState.PROCESSING_SEND;
+        NegotiationType                 negotiationType                 = NegotiationType.PURCHASE;
+        String                          negotiationXML                  = negotiationMockXML;
+        long                            timestamp                       = time.getTime();
+
+        NegotiationTransmission negotiationTransmission = new NegotiationTransmissionImpl(
+            transmissionId,
+            transactionId,
+            negotiationId,
+            negotiationTransactionType,
+            publicKeyActorSend,
+            actorSendType,
+            publicKeyActorReceive,
+            actorReceiveType,
+            transmissionType,
+            transmissionState,
+            negotiationType,
+            negotiationXML,
+            timestamp
+        );
+        
+        return negotiationTransmission;
+    }
+
+    private CustomerBrokerPurchaseNegotiation purchaseNegotiationMockTest(){
+
+        Date time = new Date();
+        long timestamp = time.getTime();
+        UUID                negotiationId               = UUID.randomUUID();
+        String              publicKeyCustomer           = "30C5580D5A807CA38771A7365FC2141A6450556D5233DD4D5D14D4D9CEE7B9715B98951C2F28F820D858898AE0CBCE7B43055AB3C506A804B793E230610E711AEA";
+        String              publicKeyBroker             = "041FCC359F748B5074D5554FA4DBCCCC7981D6776E57B5465DB297775FB23DBBF064FCB11EDE1979FC6E02307E4D593A81D2347006109F40B21B969E0E290C3B84";
+        long                startDataTime               = 0;
+        long                negotiationExpirationDate   = timestamp;
+        NegotiationStatus statusNegotiation             = NegotiationStatus.SENT_TO_BROKER;
+        Collection<Clause> clauses                      = getClausesTest();
+        Boolean             nearExpirationDatetime      = Boolean.FALSE;
+    
+        return new PurchaseNegotiationMock(
+                negotiationId,
+                publicKeyCustomer,
+                publicKeyBroker,
+                startDataTime,
+                negotiationExpirationDate,
+                statusNegotiation,
+                clauses,
+                nearExpirationDatetime
+        );
+    }
+
+    private Collection<Clause> getClausesTest(){
+        Collection<Clause> clauses = new ArrayList<>();
+        clauses.add(new ClauseMock(UUID.randomUUID(),
+                ClauseType.BROKER_CURRENCY,
+                CurrencyType.BANK_MONEY.getCode()));
+        clauses.add(new ClauseMock(UUID.randomUUID(),
+                ClauseType.BROKER_CURRENCY_QUANTITY,
+                "1961"));
+        clauses.add(new ClauseMock(UUID.randomUUID(),
+                ClauseType.BROKER_CURRENCY,
+                CurrencyType.BANK_MONEY.getCode()));
+        clauses.add(new ClauseMock(UUID.randomUUID(),
+                ClauseType.BROKER_DATE_TIME_TO_DELIVER,
+                "1000"));
+        clauses.add(new ClauseMock(UUID.randomUUID(),
+                ClauseType.CUSTOMER_CURRENCY_QUANTITY,
+                "2000"));
+        clauses.add(new ClauseMock(UUID.randomUUID(),
+                ClauseType.CUSTOMER_CURRENCY,
+                CurrencyType.CASH_ON_HAND_MONEY.getCode()));
+        clauses.add(new ClauseMock(UUID.randomUUID(),
+                ClauseType.CUSTOMER_DATE_TIME_TO_DELIVER,
+                "100"));
+        clauses.add(new ClauseMock(UUID.randomUUID(),
+                ClauseType.CUSTOMER_PAYMENT_METHOD,
+                ContractClauseType.CASH_ON_HAND.getCode()));
+        clauses.add(new ClauseMock(UUID.randomUUID(),
+                ClauseType.BROKER_PAYMENT_METHOD,
+                ContractClauseType.BANK_TRANSFER.getCode()));
+        return clauses;
     }
 }

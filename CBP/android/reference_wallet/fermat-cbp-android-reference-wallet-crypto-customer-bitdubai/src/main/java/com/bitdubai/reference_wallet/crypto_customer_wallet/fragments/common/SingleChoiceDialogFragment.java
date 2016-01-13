@@ -34,6 +34,17 @@ public class SingleChoiceDialogFragment<T> extends DialogFragment {
 
     }
 
+    public void configure(String title, List<T> choices, T selectedItem) {
+        this.title = title;
+        this.choices = (choices == null) ? new ArrayList<T>() : choices;
+        int index = this.choices.indexOf(selectedItem);
+        this.selectedItemIndex = index == NO_ITEM_INDEX ? 0 : index;
+
+    }
+
+    public void setListener(SelectedItem<T> listener) {
+        this.selectedItemListener = listener;
+    }
 
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {

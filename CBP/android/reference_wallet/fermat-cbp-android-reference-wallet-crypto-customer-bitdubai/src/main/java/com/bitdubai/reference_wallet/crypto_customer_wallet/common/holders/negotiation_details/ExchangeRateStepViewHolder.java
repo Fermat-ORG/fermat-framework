@@ -11,6 +11,7 @@ import com.bitdubai.fermat_android_api.ui.adapters.FermatAdapter;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.NegotiationStepStatus;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.common.interfaces.NegotiationStep;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_broker.interfaces.CryptoBrokerWalletManager;
+import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_customer.interfaces.CryptoCustomerWalletManager;
 import com.bitdubai.reference_wallet.crypto_customer_wallet.R;
 import com.bitdubai.reference_wallet.crypto_customer_wallet.common.models.StepItemGetter;
 
@@ -20,15 +21,13 @@ import java.text.NumberFormat;
 
 public class ExchangeRateStepViewHolder extends StepViewHolder implements TextWatcher {
     private final DecimalFormat decimalFormat;
-    private final CryptoBrokerWalletManager walletManager;
+    private final CryptoCustomerWalletManager walletManager;
     private RecyclerView.Adapter adapter;
 
     private TextView yourExchangeRateValueLeftSide;
     private TextView yourExchangeRateValueRightSide;
     private TextView markerRateReference;
-    private TextView exchangeRateReference;
     private EditText yourExchangeRateValue;
-    private TextView exchangeRateReferenceText;
     private TextView markerRateReferenceText;
     private TextView yourExchangeRateText;
 
@@ -38,7 +37,7 @@ public class ExchangeRateStepViewHolder extends StepViewHolder implements TextWa
     private String actualValue;
 
 
-    public ExchangeRateStepViewHolder(RecyclerView.Adapter adapter, View itemView, CryptoBrokerWalletManager walletManager) {
+    public ExchangeRateStepViewHolder(RecyclerView.Adapter adapter, View itemView, CryptoCustomerWalletManager walletManager) {
         super(itemView, (StepItemGetter) adapter);
 
         this.adapter = adapter;
@@ -46,14 +45,12 @@ public class ExchangeRateStepViewHolder extends StepViewHolder implements TextWa
 
         decimalFormat = (DecimalFormat) NumberFormat.getInstance();
 
-        exchangeRateReferenceText = (TextView) itemView.findViewById(R.id.ccw_exchange_rate_reference_text);
-        exchangeRateReference = (TextView) itemView.findViewById(R.id.ccw_exchange_rate_reference_value);
-        markerRateReferenceText = (TextView) itemView.findViewById(R.id.ccw_market_exchange_rate_reference_text);
-        markerRateReference = (TextView) itemView.findViewById(R.id.ccw_market_exchange_rate_reference_value);
-        yourExchangeRateText = (TextView) itemView.findViewById(R.id.ccw_your_exchange_rate_text);
-        yourExchangeRateValueLeftSide = (TextView) itemView.findViewById(R.id.ccw_your_exchange_rate_value_left_side);
-        yourExchangeRateValueRightSide = (TextView) itemView.findViewById(R.id.ccw_your_exchange_rate_value_right_side);
-        yourExchangeRateValue = (EditText) itemView.findViewById(R.id.ccw_your_exchange_rate_value);
+        markerRateReferenceText = (TextView) itemView.findViewById(R.id.ccw_market_rate_text);
+        markerRateReference = (TextView) itemView.findViewById(R.id.ccw_market_rate_value);
+        yourExchangeRateText = (TextView) itemView.findViewById(R.id.ccw_exchange_rate_text);
+        yourExchangeRateValueLeftSide = (TextView) itemView.findViewById(R.id.ccw_exchange_rate_value_left_side);
+        yourExchangeRateValueRightSide = (TextView) itemView.findViewById(R.id.ccw_exchange_rate_value_right_side);
+        yourExchangeRateValue = (EditText) itemView.findViewById(R.id.ccw_exchange_rate_value);
         yourExchangeRateValue.addTextChangedListener(this);
     }
 
@@ -84,8 +81,6 @@ public class ExchangeRateStepViewHolder extends StepViewHolder implements TextWa
 
         switch (clauseStatus) {
             case ACCEPTED:
-                exchangeRateReferenceText.setTextColor(getColor(R.color.description_text_status_accepted));
-                exchangeRateReference.setTextColor(getColor(R.color.text_value_status_accepted));
                 markerRateReferenceText.setTextColor(getColor(R.color.description_text_status_accepted));
                 markerRateReference.setTextColor(getColor(R.color.text_value_status_accepted));
                 yourExchangeRateText.setTextColor(getColor(R.color.description_text_status_accepted));
@@ -94,8 +89,6 @@ public class ExchangeRateStepViewHolder extends StepViewHolder implements TextWa
                 yourExchangeRateValue.setTextColor(getColor(R.color.text_value_status_accepted));
                 break;
             case CHANGED:
-                exchangeRateReferenceText.setTextColor(getColor(R.color.description_text_status_changed));
-                exchangeRateReference.setTextColor(getColor(R.color.text_value_status_changed));
                 markerRateReferenceText.setTextColor(getColor(R.color.description_text_status_changed));
                 markerRateReference.setTextColor(getColor(R.color.text_value_status_changed));
                 yourExchangeRateText.setTextColor(getColor(R.color.description_text_status_changed));
@@ -104,8 +97,6 @@ public class ExchangeRateStepViewHolder extends StepViewHolder implements TextWa
                 yourExchangeRateValue.setTextColor(getColor(R.color.text_value_status_changed));
                 break;
             case CONFIRM:
-                exchangeRateReferenceText.setTextColor(getColor(R.color.description_text_status_confirm));
-                exchangeRateReference.setTextColor(getColor(R.color.text_value_status_confirm));
                 markerRateReferenceText.setTextColor(getColor(R.color.description_text_status_confirm));
                 markerRateReference.setTextColor(getColor(R.color.text_value_status_confirm));
                 yourExchangeRateText.setTextColor(getColor(R.color.description_text_status_confirm));
@@ -122,7 +113,6 @@ public class ExchangeRateStepViewHolder extends StepViewHolder implements TextWa
         double marketRate = 212.48;
         String formattedMarketRate = decimalFormat.format(marketRate);
 
-        exchangeRateReference.setText(String.format("1 %1$s / %2$s %3$s", currencyToSell, suggestedExchangeRate, currencyToReceive));
         markerRateReference.setText(String.format("1 %1$s / %2$s %3$s", currencyToSell, formattedMarketRate, currencyToReceive));
         yourExchangeRateValueLeftSide.setText(String.format("1 %1$s", currencyToSell));
         yourExchangeRateValue.setText(yourExchangeRate);
@@ -140,7 +130,7 @@ public class ExchangeRateStepViewHolder extends StepViewHolder implements TextWa
         super.modifyData(stepStatus);
 
         NegotiationStep step = stepItemGetter.getItem(itemPosition);
-        walletManager.modifyNegotiationStepValues(step, stepStatus, actualValue);
+        // TODO walletManager.modifyNegotiationStepValues(step, stepStatus, actualValue);
         adapter.notifyItemChanged(itemPosition);
     }
 
