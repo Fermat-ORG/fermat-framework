@@ -34,36 +34,11 @@ public class CustomerBrokerNewSaleNegotiationTransaction {
         this.customerBrokerNewNegotiationTransactionDatabaseDao = customerBrokerNewNegotiationTransactionDatabaseDao;
     }
 
-    //PROCESS THE NEW SALE NEGOTIATION TRANSACTION
-    public void sendSaleNegotiationTranasction(CustomerBrokerSaleNegotiation customerBrokerSaleNegotiation) throws CantNewSaleNegotiationTransactionException{
-
-        try {
-
-            UUID transactionId = UUID.randomUUID();
-
-            //CREATE NEGOTIATION
-            this.customerBrokerSaleNegotiationManager.createCustomerBrokerSaleNegotiation(customerBrokerSaleNegotiation);
-
-            //CREATE NEGOTIATION TRANSATION
-            this.customerBrokerNewNegotiationTransactionDatabaseDao.createCustomerBrokerNewNegotiationTransaction(
-                    transactionId,
-                    customerBrokerSaleNegotiation,
-                    NegotiationType.SALE,
-                    NegotiationTransactionStatus.PENDING_SUBMIT
-            );
-
-        } catch (CantCreateCustomerBrokerSaleNegotiationException e) {
-            throw new CantNewSaleNegotiationTransactionException(e.getMessage(),e, CantNewSaleNegotiationTransactionException.DEFAULT_MESSAGE, "ERROR CREATE CUSTOMER BROKER SALE NEGOTIATION, UNKNOWN FAILURE.");
-        } catch (CantRegisterCustomerBrokerNewNegotiationTransactionException e) {
-            throw new CantNewSaleNegotiationTransactionException(e.getMessage(),e, CantNewSaleNegotiationTransactionException.DEFAULT_MESSAGE, "ERROR REGISTER CUSTOMER BROKER SALE NEGOTIATION TRANSACTION, UNKNOWN FAILURE.");
-        } catch (Exception e){
-            throw new CantNewSaleNegotiationTransactionException(e.getMessage(), FermatException.wrapException(e), CantNewSaleNegotiationTransactionException.DEFAULT_MESSAGE, "ERROR PROCESS CUSTOMER BROKER SALE NEGOTIATION, UNKNOWN FAILURE.");
-        }
-        
-    }
-
     public void receiveSaleNegotiationTranasction(UUID transactionId, CustomerBrokerSaleNegotiation customerBrokerSaleNegotiation)  throws CantNewSaleNegotiationTransactionException{
         try {
+
+
+            System.out.print("\n\n**** 20) MOCK NEGOTIATION TRANSACTION - CUSTOMER BROKER NEW - SALE NEGOTIATION - CREATE SALE NEGOTIATION TRANSACTION  ****\n");
 
             //CREATE NEGOTIATION
             this.customerBrokerSaleNegotiationManager.createCustomerBrokerSaleNegotiation(customerBrokerSaleNegotiation);
