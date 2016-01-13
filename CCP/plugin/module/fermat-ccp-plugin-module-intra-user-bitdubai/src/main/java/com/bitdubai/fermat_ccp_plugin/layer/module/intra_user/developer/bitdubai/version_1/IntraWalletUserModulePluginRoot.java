@@ -573,6 +573,9 @@ public class IntraWalletUserModulePluginRoot extends AbstractPlugin implements
             e.printStackTrace();
         } catch (CantGetActiveLoginIdentityException e) {
             e.printStackTrace();
+
+        } catch (Exception e) {
+            e.printStackTrace();
         }
         return 0;
     }
