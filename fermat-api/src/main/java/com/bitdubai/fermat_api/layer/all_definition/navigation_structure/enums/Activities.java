@@ -212,8 +212,8 @@ public enum Activities implements FermatEnum {
     /**
      * Chat
      */
-    CHT_CHAT_OPEN_CHATLIST_TAB_FRAGMENT("CHTOCHLTF"),
-    CHT_CHAT_OPEN_CONTACTLIST_TAB_FRAGMENT("CHTOCONTLTF"),
+    CHT_CHAT_OPEN_CHATLIST("CHTOCHL"),
+    CHT_CHAT_OPEN_CONTACTLIST("CHTOCONTL"),
     /**
      * CHT_CHAT_OPEN_CHAT_DETAIL_FRAGMENT("CHTOCHDF"),
      CHT_CHAT_OPEN_CONTACT_DETAIL_FRAGMENT("CHTOCODF"),
@@ -534,9 +534,9 @@ public enum Activities implements FermatEnum {
                 return DAP_WALLET_ASSET_ISSUER_ASSET_DELIVERY_SELECT_USERS_GROUPS;
             /* CHAT */
             case "CHTOCHLTF":
-                return Activities.CHT_CHAT_OPEN_CHATLIST_TAB_FRAGMENT;
+                return Activities.CHT_CHAT_OPEN_CHATLIST;
             case "CHTOCONTLTF":
-                return Activities.CHT_CHAT_OPEN_CONTACTLIST_TAB_FRAGMENT;
+                return Activities.CHT_CHAT_OPEN_CONTACTLIST;
            /* case "CHTOCHDF":
                 return CHT_CHAT_OPEN_CHAT_DETAIL_FRAGMENT;
             case "CHTOCODF":
