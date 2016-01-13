@@ -4,6 +4,7 @@ import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEven
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEventHandler;
 import com.bitdubai.fermat_api.layer.all_definition.network_service.interfaces.NetworkService;
 import com.bitdubai.fermat_ccp_plugin.layer.network_service.intra_user.developer.bitdubai.version_1.IntraActorNetworkServicePluginRoot;
+import com.bitdubai.fermat_p2p_api.layer.all_definition.common.network_services.abstract_classes.AbstractNetworkServiceV2;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.common.network_services.template.event_handlers.AbstractCommunicationBaseEventHandler;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.events.NewNetworkServiceMessageSentNotificationEvent;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.contents.FermatMessage;
@@ -23,7 +24,7 @@ public class NewSentMessageNotificationEventHandler extends AbstractCommunicatio
          *
          * @param
          */
-    public NewSentMessageNotificationEventHandler(NetworkService intraActorNetworkServicePluginRoot) {
+    public NewSentMessageNotificationEventHandler(AbstractNetworkServiceV2 intraActorNetworkServicePluginRoot) {
         super(intraActorNetworkServicePluginRoot);
     }
 
