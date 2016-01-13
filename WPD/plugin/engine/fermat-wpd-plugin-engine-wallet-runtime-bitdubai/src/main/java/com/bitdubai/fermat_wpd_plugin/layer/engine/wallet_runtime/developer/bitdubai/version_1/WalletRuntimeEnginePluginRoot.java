@@ -1847,14 +1847,6 @@ public class WalletRuntimeEnginePluginRoot extends AbstractPlugin implements
 
         String walletSetupLabel = "Wallet Setup";
 
-        runtimeTitleBar = new TitleBar();
-        runtimeTitleBar.setLabel(walletSetupLabel);
-        runtimeTitleBar.setLabelSize(titleBarTextSize);
-        runtimeTitleBar.setTitleColor(titleBarTitleColor);
-        runtimeTitleBar.setColor(titleBarColor);
-        runtimeTitleBar.setIsTitleTextStatic(true);
-        runtimeActivity.setTitleBar(runtimeTitleBar);
-
         runtimeStatusBar = new StatusBar();
         runtimeStatusBar.setColor(statusBarColor);
         runtimeActivity.setStatusBar(runtimeStatusBar);
@@ -1871,14 +1863,6 @@ public class WalletRuntimeEnginePluginRoot extends AbstractPlugin implements
         runtimeActivity.setBackActivity(Activities.CBP_CRYPTO_BROKER_WALLET_SET_IDENTITY);
         runtimeActivity.setBackPublicKey(publicKey);
         runtimeWalletNavigationStructure.addActivity(runtimeActivity);
-
-        runtimeTitleBar = new TitleBar();
-        runtimeTitleBar.setLabel(walletSetupLabel);
-        runtimeTitleBar.setLabelSize(titleBarTextSize);
-        runtimeTitleBar.setTitleColor(titleBarTitleColor);
-        runtimeTitleBar.setColor(titleBarColor);
-        runtimeTitleBar.setIsTitleTextStatic(true);
-        runtimeActivity.setTitleBar(runtimeTitleBar);
 
         runtimeStatusBar = new StatusBar();
         runtimeStatusBar.setColor(statusBarColor);
@@ -1897,14 +1881,6 @@ public class WalletRuntimeEnginePluginRoot extends AbstractPlugin implements
         runtimeActivity.setBackPublicKey(publicKey);
         runtimeWalletNavigationStructure.addActivity(runtimeActivity);
 
-        runtimeTitleBar = new TitleBar();
-        runtimeTitleBar.setLabel(walletSetupLabel);
-        runtimeTitleBar.setLabelSize(titleBarTextSize);
-        runtimeTitleBar.setTitleColor(titleBarTitleColor);
-        runtimeTitleBar.setColor(titleBarColor);
-        runtimeTitleBar.setIsTitleTextStatic(true);
-        runtimeActivity.setTitleBar(runtimeTitleBar);
-
         runtimeStatusBar = new StatusBar();
         runtimeStatusBar.setColor(statusBarColor);
         runtimeActivity.setStatusBar(runtimeStatusBar);
@@ -1921,14 +1897,6 @@ public class WalletRuntimeEnginePluginRoot extends AbstractPlugin implements
         runtimeActivity.setBackActivity(Activities.CBP_CRYPTO_BROKER_WALLET_SET_EARNINGS);
         runtimeActivity.setBackPublicKey(publicKey);
         runtimeWalletNavigationStructure.addActivity(runtimeActivity);
-
-        runtimeTitleBar = new TitleBar();
-        runtimeTitleBar.setLabel(walletSetupLabel);
-        runtimeTitleBar.setLabelSize(titleBarTextSize);
-        runtimeTitleBar.setTitleColor(titleBarTitleColor);
-        runtimeTitleBar.setColor(titleBarColor);
-        runtimeTitleBar.setIsTitleTextStatic(true);
-        runtimeActivity.setTitleBar(runtimeTitleBar);
 
         runtimeStatusBar = new StatusBar();
         runtimeStatusBar.setColor(statusBarColor);

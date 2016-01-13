@@ -107,11 +107,9 @@
     <string name="cbw_wizard_bank_account_description">You must select the Bank Account from the Bank Wallet you selected as Earning</string>
     <string name="cbw_wizard_bank_account_title">Bank Accounts</string>
     <string name="cbw_wizard_exchange_rate_providers_title">Exchange Rate Providers</string>
-    <string name="cbw_wizard_exchange_rate_providers_description">You must select the Currency Exchange Rate Providers for your Merchandises</string>
-    <string name="your_providers">Your Providers</string>
-    <string name="cbw_providers">Providers</string>
+    <string name="cbw_wizard_exchange_rate_providers_description">You must select a Exchange Provider for your Merchandises</string>
+    <string name="cbw_choose_provider">Choose Provider</string>
     <string name="cbw_wizard_locations_description">You must add at least one location to make your transactions</string>
-    <string name="wizard_locations_title">Add Your Locations</string>
     <string name="cbw_add_location">Add a Location</string>
     <string name="cbw_your_location">Your Locations</string>
     <string name="cbw_no_locations_added">No Locations Added</string>
@@ -131,5 +129,7 @@
     <string name="cbw_ctd_title">Transaction</string>
     <string name="cbw_ctd_amount_tag">Amount</string>
     <string name="cbw_ctd_amount_hint">Enter amount</string>
+    <string name="selected_providers">Selected Providers</string>
+    <string name="wizard_locations_title">Add Your Locations</string>
 
 </resources>
