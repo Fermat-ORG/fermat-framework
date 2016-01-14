@@ -28,6 +28,7 @@ import com.bitdubai.fermat_cht_api.all_definition.exceptions.UnexpectedResultRet
 import com.bitdubai.fermat_cht_api.layer.middleware.interfaces.Chat;
 import com.bitdubai.fermat_cht_api.layer.middleware.interfaces.Message;
 import com.bitdubai.fermat_cht_api.layer.middleware.utils.EventRecord;
+import com.bitdubai.fermat_cht_api.layer.middleware.utils.MessageImpl;
 import com.bitdubai.fermat_cht_api.layer.network_service.chat.enums.ChatMessageStatus;
 import com.bitdubai.fermat_cht_api.layer.network_service.chat.enums.DistributionStatus;
 import com.bitdubai.fermat_cht_api.layer.network_service.chat.exceptions.CantSendChatMessageMetadataException;
@@ -39,6 +40,7 @@ import com.bitdubai.fermat_cht_plugin.layer.middleware.chat.developer.bitdubai.v
 import com.bitdubai.fermat_cht_plugin.layer.middleware.chat.developer.bitdubai.version_1.database.ChatMiddlewareDatabaseDao;
 import com.bitdubai.fermat_cht_plugin.layer.middleware.chat.developer.bitdubai.version_1.database.ChatMiddlewareDatabaseFactory;
 import com.bitdubai.fermat_cht_plugin.layer.middleware.chat.developer.bitdubai.version_1.exceptions.CantGetPendingEventListException;
+import com.bitdubai.fermat_cht_plugin.layer.middleware.chat.developer.bitdubai.version_1.exceptions.CantGetPendingTransactionException;
 import com.bitdubai.fermat_cht_plugin.layer.middleware.chat.developer.bitdubai.version_1.exceptions.DatabaseOperationException;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.DealsWithErrors;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedPluginExceptionSeverity;
@@ -268,6 +270,8 @@ public class ChatMiddlewareMonitorAgent implements
                         case OUTGOING_CHAT:
                             //TODO: TO IMPLEMENT
                             break;
+                        case INCOMING_STATUS:
+                            //TODO TO IMPLEMENT
                         default:
                             //TODO: THROW AN EXCEPTION
                             break;
@@ -304,6 +308,80 @@ public class ChatMiddlewareMonitorAgent implements
                 pendingTransaction.getInformation().
             }*/
             //TODO: to implement
+        }
+
+        private void checkIncomingStatus(UUID eventChatId) throws CantGetPendingTransactionException {
+            try{
+                List<Transaction<ChatMetadata>> pendingTransactionList=chatNetworkServiceManager.getPendingTransactions(Specialist.UNKNOWN_SPECIALIST);
+                UUID incomingTransactionChatId;
+                ChatMetadata incomingChatMetadata;
+                Message incomingMessage;
+                UUID messageId;
+                for(Transaction<ChatMetadata> pendingTransaction : pendingTransactionList){
+                    incomingChatMetadata=pendingTransaction.getInformation();
+                    incomingTransactionChatId=incomingChatMetadata.getIdChat();
+                    if(eventChatId.toString().equals(incomingTransactionChatId.toString())){
+                        //Check if metadata exists in database
+                        checkChatMetadata(incomingChatMetadata);
+                        updateMessageStatus(incomingChatMetadata);
+                        break;
+                    }
+                }
+            } catch (CantDeliverPendingTransactionsException e) {
+                e.printStackTrace();
+            } catch (CantGetChatException e) {
+                e.printStackTrace();
+            } catch (DatabaseOperationException e) {
+                e.printStackTrace();
+            }  catch (CantGetMessageException e) {
+                e.printStackTrace();
+            } catch (CantSaveMessageException e) {
+                e.printStackTrace();
+            }
+
+        }
+
+        /**
+         * This method returns true if the chat and the message exists in database.
+         * This throws an exception instead return false if any element does not exists in database
+         * because this is not should happen.
+         * @param chatMetadata
+         * @return
+         * @throws CantGetChatException
+         * @throws CantGetPendingTransactionException
+         */
+        private boolean checkChatMetadata(ChatMetadata chatMetadata) throws
+                CantGetChatException,
+                CantGetPendingTransactionException {
+            UUID chatId=chatMetadata.getIdChat();
+            UUID messageId;
+            if(chatMiddlewareDatabaseDao.chatIdExists(
+                    chatId)){
+                messageId=chatMetadata.getIdMessage();
+                if(chatMiddlewareDatabaseDao.messageIdExists(messageId)){
+                    return true;
+                }else{
+                    //TODO: I need to study how can I handle this case.
+                    throw new CantGetPendingTransactionException(
+                            "The Message Id "+messageId+" does not exists in database");
+                }
+            }else{
+                //This is a case that in this version I cannot handle
+                throw new CantGetPendingTransactionException(
+                        "The Chat Id "+chatId+" does not exists in database");
+            }
+        }
+
+        private void updateMessageStatus(
+                ChatMetadata chatMetadata) throws
+                DatabaseOperationException,
+                CantSaveMessageException,
+                CantGetMessageException {
+            UUID messageId=chatMetadata.getIdMessage();
+            Message messageRecorded=chatMiddlewareDatabaseDao.getMessageByMessageId(messageId);
+            //TODO: wait for chatMetadata refactor
+            //messageRecorded.setStatus(MessageStatus.CREATED);
+            chatMiddlewareDatabaseDao.saveMessage(messageRecorded);
         }
 
         /**

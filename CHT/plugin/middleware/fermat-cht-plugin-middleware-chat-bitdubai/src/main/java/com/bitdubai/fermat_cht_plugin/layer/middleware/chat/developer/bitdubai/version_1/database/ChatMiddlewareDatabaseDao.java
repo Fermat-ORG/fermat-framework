@@ -681,6 +681,24 @@ public class ChatMiddlewareDatabaseDao {
     }
 
     /**
+     * This method returns the chat database table
+     * @return
+     */
+    private DatabaseTable getDatabaseChatTable() {
+        return database.getTable(
+                ChatMiddlewareDatabaseConstants.CHATS_TABLE_NAME);
+    }
+
+    /**
+     * This method returns the chat database table
+     * @return
+     */
+    private DatabaseTable getDatabaseMessageTable() {
+        return database.getTable(
+                ChatMiddlewareDatabaseConstants.MESSAGE_TABLE_NAME);
+    }
+
+    /**
      * This method saves a new event in database
      * @param eventType
      * @param eventSource
@@ -889,6 +907,68 @@ public class ChatMiddlewareDatabaseDao {
             throw new UnexpectedResultReturnedFromDatabaseException(
                     exception,
                     "Updating parameter "+ChatMiddlewareDatabaseConstants.EVENTS_RECORDED_STATUS_COLUMN_NAME,"");
+        }
+    }
+
+    /**
+     * This method checks if the chat exists in database.
+     * @param chatId
+     * @return
+     * @throws CantGetChatException
+     */
+    public boolean chatIdExists(UUID chatId) throws CantGetChatException{
+        DatabaseTable databaseTable=getDatabaseChatTable();
+        return checkIdExists(
+                chatId,
+                ChatMiddlewareDatabaseConstants.CHATS_ID_CHAT_COLUMN_NAME,
+                databaseTable);
+
+    }
+
+    /**
+     * This method checks if the message exists in database.
+     * @param chatId
+     * @return
+     * @throws CantGetChatException
+     */
+    public boolean messageIdExists(UUID chatId) throws CantGetChatException{
+        DatabaseTable databaseTable=getDatabaseMessageTable();
+        return checkIdExists(
+                chatId,
+                ChatMiddlewareDatabaseConstants.MESSAGE_ID_MESSAGE_COLUMN_NAME,
+                databaseTable);
+    }
+
+    /**
+     * This method checks if an Id (UUID) exists in database
+     * @param id
+     * @param databaseColumn
+     * @param databaseTable
+     * @return
+     * @throws CantGetChatException
+     */
+    private boolean checkIdExists(
+            UUID id,
+            String databaseColumn,
+            DatabaseTable databaseTable) throws
+            CantGetChatException {
+        try{
+            DatabaseTableFilter databaseTableFilter=databaseTable.getEmptyTableFilter();
+            databaseTableFilter.setType(DatabaseFilterType.EQUAL);
+            databaseTableFilter.setValue(id.toString());
+            databaseTableFilter.setColumn(databaseColumn);
+            List<DatabaseTableRecord> records=getChatData(databaseTableFilter);
+            if(records==null||records.isEmpty()){
+                return false;
+            }else{
+                return true;
+            }
+        } catch (CantLoadTableToMemoryException e) {
+            throw new CantGetChatException(
+                    e,
+                    "Checking if Id exists in database",
+                    "An unexpected error in database"
+            );
         }
     }
 
