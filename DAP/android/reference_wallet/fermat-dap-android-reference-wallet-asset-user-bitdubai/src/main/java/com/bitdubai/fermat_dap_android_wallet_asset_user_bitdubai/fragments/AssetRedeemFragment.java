@@ -2,6 +2,7 @@ package com.bitdubai.fermat_dap_android_wallet_asset_user_bitdubai.fragments;
 
 import android.app.Activity;
 import android.app.ProgressDialog;
+import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
@@ -24,6 +25,7 @@ import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractFermatFra
 import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatEditText;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView;
 import com.bitdubai.fermat_android_api.ui.interfaces.FermatWorkerCallBack;
+import com.bitdubai.fermat_android_api.ui.util.BitmapWorkerTask;
 import com.bitdubai.fermat_android_api.ui.util.FermatWorker;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
 import com.bitdubai.fermat_dap_android_wallet_asset_user_bitdubai.R;
@@ -50,6 +52,7 @@ public class AssetRedeemFragment extends AbstractFermatFragment {
 
     private View rootView;
     private Toolbar toolbar;
+    private Resources res;
     private ImageView assetRedeemImage;
     private FermatTextView assetRedeemNameText;
     private FermatTextView assetRedeemRemainingText;
@@ -85,6 +88,7 @@ public class AssetRedeemFragment extends AbstractFermatFragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         rootView = inflater.inflate(R.layout.dap_wallet_asset_user_asset_redeem, container, false);
+        res = rootView.getResources();
 
         setupUI();
         setupUIData();
@@ -122,7 +126,7 @@ public class AssetRedeemFragment extends AbstractFermatFragment {
         redeemAssetsButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 if (selectedRPCount > 0) {
-                    Object x = appSession.getData("users");
+                    Object x = appSession.getData("redeem_points");
                     if (x != null) {
                         List<RedeemPoint> redeemPoints = (List<RedeemPoint>) x;
                         if (redeemPoints.size() > 0) {
@@ -183,7 +187,7 @@ public class AssetRedeemFragment extends AbstractFermatFragment {
     }
 
     private int getRedeemPointsSelectedCount() {
-        Object x = ((HashMap) appSession.getData("redeem_points")).get("redeem_points");
+        Object x = appSession.getData("redeem_points");
         int count = 0;
         if (x != null) {
             List<RedeemPoint> redeemPoints = (List<RedeemPoint>) x;
@@ -234,15 +238,18 @@ public class AssetRedeemFragment extends AbstractFermatFragment {
     }
 
     private void setupUIData() {
-        digitalAsset = (DigitalAsset) ((HashMap) appSession.getData("asset_data")).get("asset_data");
+        digitalAsset = (DigitalAsset) appSession.getData("asset_data");
 
         toolbar.setTitle(digitalAsset.getName());
 
-        if (digitalAsset.getImage() != null) {
-            assetRedeemImage.setImageBitmap(BitmapFactory.decodeStream(new ByteArrayInputStream(digitalAsset.getImage())));
-        } else {
-            assetRedeemImage.setImageDrawable(rootView.getResources().getDrawable(R.drawable.img_asset_without_image));
-        }
+//        if (digitalAsset.getImage() != null) {
+//            assetRedeemImage.setImageBitmap(BitmapFactory.decodeStream(new ByteArrayInputStream(digitalAsset.getImage())));
+//        } else {
+//            assetRedeemImage.setImageDrawable(rootView.getResources().getDrawable(R.drawable.img_asset_without_image));
+//        }
+        byte[] img = (digitalAsset.getImage() == null) ? new byte[0] : digitalAsset.getImage();
+        BitmapWorkerTask bitmapWorkerTask = new BitmapWorkerTask(assetRedeemImage, res, R.drawable.img_asset_without_image, false);
+        bitmapWorkerTask.execute(img);
 
         assetRedeemNameText.setText(digitalAsset.getName());
         assetsToRedeemEditText.setText(digitalAsset.getAvailableBalanceQuantity() + "");

@@ -157,7 +157,7 @@ public class BitcoinCryptoNetworkPluginRoot extends AbstractPlugin implements
      * @throws CantGetCryptoTransactionException
      */
     @Override
-    public List<CryptoTransaction> getCryptoTransaction(String txHash) throws CantGetCryptoTransactionException {
+    public List<CryptoTransaction> getCryptoTransactions(String txHash) throws CantGetCryptoTransactionException {
         return bitcoinCryptoNetworkManager.getGenesisTransaction(txHash);
     }
 
@@ -332,5 +332,28 @@ public class BitcoinCryptoNetworkPluginRoot extends AbstractPlugin implements
     @Override
     public Transaction getLastChildTransaction(@Nullable BlockchainNetworkType blockchainNetworkType, String parentTransactionHash, String transactionBlockHash) throws CantGetTransactionException {
         return bitcoinCryptoNetworkManager.getLastChildTransaction(blockchainNetworkType, parentTransactionHash, transactionBlockHash);
+    }
+
+    /**
+     * Starting from the parentTransaction, I will navigate up until the last transaction, and return the CryptoTransaction
+     * @blockchainNetworkType the network in which we will be executing this. If none provided, DEFAULT will be used.
+     * @param parentTransactionHash The starting point transaction hash.
+     * @param transactionBlockHash the block where this transaction is.
+     * @return the Last child transaction.
+     */
+    @Override
+    public CryptoTransaction getLastChildCryptoTransaction(@Nullable BlockchainNetworkType blockchainNetworkType, String parentTransactionHash, String transactionBlockHash) throws CantGetCryptoTransactionException {
+        return bitcoinCryptoNetworkManager.getLastChildCryptoTransaction(blockchainNetworkType, parentTransactionHash, transactionBlockHash);
+    }
+
+    /**
+     * Gets a stored CryptoTransaction in wathever network.
+     * @param txHash the transaction hash we want to get the CryptoTransaction
+     * @return the last recorded CryptoTransaction.
+     * @throws CantGetCryptoTransactionException
+     */
+    @Override
+    public CryptoTransaction getCryptoTransaction(String txHash) throws CantGetCryptoTransactionException {
+        return null;
     }
 }

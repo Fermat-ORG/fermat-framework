@@ -21,6 +21,7 @@ import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogLevel;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogManager;
 import com.bitdubai.fermat_p2p_plugin.layer.ws.communications.cloud.server.developer.bitdubai.version_1.structure.WsCommunicationCloudServer;
 import com.bitdubai.fermat_p2p_plugin.layer.ws.communications.cloud.server.developer.bitdubai.version_1.structure.WsCommunicationsCloudServerPingAgent;
+import com.bitdubai.fermat_p2p_plugin.layer.ws.communications.cloud.server.developer.bitdubai.version_1.structure.jetty.JettyEmbeddedAppServer;
 import com.bitdubai.fermat_p2p_plugin.layer.ws.communications.cloud.server.developer.bitdubai.version_1.structure.processors.ActorUpdateRequestPacketProcessor;
 import com.bitdubai.fermat_p2p_plugin.layer.ws.communications.cloud.server.developer.bitdubai.version_1.structure.processors.ComponentConnectionRequestPacketProcessor;
 import com.bitdubai.fermat_p2p_plugin.layer.ws.communications.cloud.server.developer.bitdubai.version_1.structure.processors.ComponentRegistrationRequestPacketProcessor;
@@ -200,76 +201,7 @@ public class WsCommunicationsServerCloudPluginRoot implements Service, DealsWith
 
             LOG.info("Starting plugin");
 
-            /*
-             * Get all network interfaces of the device
-             */
-            Enumeration<NetworkInterface> interfaces = NetworkInterface.getNetworkInterfaces();
-
-            while (interfaces.hasMoreElements()) {
-
-                NetworkInterface networkInterface = interfaces.nextElement();
-
-                /**
-                 * If not a loopback interfaces (127.0.0.1) and is active
-                 */
-                if (!networkInterface.isLoopback() && networkInterface.isUp()){
-
-                    /*
-                     * Get his inet addresses
-                     */
-                    Enumeration<InetAddress> addresses = networkInterface.getInetAddresses();
-
-                    /*
-                     * Create a cloud service for each ip
-                     */
-                    for (InetAddress address : Collections.list(addresses)) {
-
-                        /**
-                         * look only for ipv4 addresses
-                         */
-                         if (address instanceof Inet6Address) {
-                             continue;
-                         }
-
-                        WebSocketImpl.DEBUG = false;
-                        InetSocketAddress inetSocketAddress = new InetSocketAddress(address, WsCommunicationCloudServer.DEFAULT_PORT);
-                        wsCommunicationCloudServer = new WsCommunicationCloudServer(inetSocketAddress);
-                        wsCommunicationCloudServer.registerFermatPacketProcessor(new ComponentRegistrationRequestPacketProcessor());
-                        wsCommunicationCloudServer.registerFermatPacketProcessor(new ComponentConnectionRequestPacketProcessor());
-                        wsCommunicationCloudServer.registerFermatPacketProcessor(new DiscoveryComponentConnectionRequestPacketProcessor());
-                        wsCommunicationCloudServer.registerFermatPacketProcessor(new RequestListComponentRegisterPacketProcessor());
-                        wsCommunicationCloudServer.registerFermatPacketProcessor(new ActorUpdateRequestPacketProcessor());
-                        wsCommunicationCloudServer.start();
-
-                        /*
-                         * Start the ping agent
-                         */
-                        wsCommunicationsCloudServerPingAgent = new WsCommunicationsCloudServerPingAgent(wsCommunicationCloudServer);
-                        wsCommunicationsCloudServerPingAgent.start();
-
-                        LOG.info("New CommunicationChannelAddress linked on " + networkInterface.getName());
-                        LOG.info("Host = " + inetSocketAddress.getHostString());
-                        LOG.info("Port = "     + inetSocketAddress.getPort());
-                        LOG.info("Communication Service Manager on " + networkInterface.getName() + " started.");
-
-                        break;
-
-                    }
-
-                }
-
-            }
-
-            /*
-             * Create and start the restlet server
-             */
-            RestletCommunicationCloudServer rlCommunicationCloudServer = new RestletCommunicationCloudServer(wsCommunicationCloudServer);
-            rlCommunicationCloudServer.start();
-
-            /*
-             * Start the socket to handle the request of Component Registered List
-             */
-           // SocketServerInitialization socketServerInitialization =new SocketServerInitialization(wsCommunicationCloudServer);
+            JettyEmbeddedAppServer.getInstance().start();
 
         } catch (Exception e) {
             e.printStackTrace();

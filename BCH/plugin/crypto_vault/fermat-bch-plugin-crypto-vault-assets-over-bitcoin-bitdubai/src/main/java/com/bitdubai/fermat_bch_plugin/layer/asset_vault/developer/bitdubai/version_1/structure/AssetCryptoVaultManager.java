@@ -24,6 +24,7 @@ import com.bitdubai.fermat_bch_api.layer.crypto_vault.exceptions.GetNewCryptoAdd
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.classes.vault_seed.VaultSeedGenerator;
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.classes.vault_seed.exceptions.CantCreateAssetVaultSeed;
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.classes.vault_seed.exceptions.CantLoadExistingVaultSeed;
+import com.bitdubai.fermat_bch_api.layer.crypto_vault.interfaces.VaultKeyMaintenanceParameters;
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.watch_only_vault.ExtendedPublicKey;
 import com.bitdubai.fermat_bch_plugin.layer.asset_vault.developer.bitdubai.version_1.database.AssetsOverBitcoinCryptoVaultDao;
 import com.bitdubai.fermat_bch_plugin.layer.asset_vault.developer.bitdubai.version_1.exceptions.CantExecuteDatabaseOperationException;
@@ -669,5 +670,88 @@ public class AssetCryptoVaultManager  {
         return publicKeys;
     }
 
+    /**
+     * When we receive assets from a Redeemption processes, the Issuer that granted the extended public key to the redeem point
+     * needs to inform us when an address is used, so we can generate more if needed.
+     * @param cryptoAddress
+     * @param redeemPointPublicKey
+     */
+    public void notifyUsedRedeemPointAddress(CryptoAddress cryptoAddress, String redeemPointPublicKey) {
+        /**
+         * I will get the NetworkParameters from the passed Address
+         */
+        NetworkParameters networkParameters;
+        try {
+            networkParameters = Address.getParametersFromAddress(cryptoAddress.getAddress());
+        } catch (AddressFormatException e) {
+            networkParameters = BitcoinNetworkSelector.getNetworkParameter(BlockchainNetworkType.DEFAULT);
+        }
+
+        /**
+         * I get the Address I will be comparing to.
+         */
+        Address usedAddress;
+        try {
+            usedAddress = new Address(networkParameters, cryptoAddress.getAddress());
+        } catch (AddressFormatException e) {
+            e.printStackTrace();
+            return;
+        }
+
+        /**
+         * I get the Hierarchy Account Key that corresponds to this redeem point
+         */
+        HierarchyAccount hierarchyAccount = null;
+
+        try {
+            hierarchyAccount = getDao().getHierarchyAccount(redeemPointPublicKey);
+        } catch (CantExecuteDatabaseOperationException e) {
+            e.printStackTrace();
+            return;
+        }
+
+
+        /**
+         * I need to derive Bitcoin Address from all the generated Keys that I have for the Redeem Point
+         * until I found a match.
+         */
+        List<ECKey> derivedKeys = this.vaultKeyHierarchyGenerator.getVaultKeyHierarchy().getDerivedKeys(hierarchyAccount);
+        int position = 0;
+        for (ECKey key : derivedKeys){
+            if (usedAddress.equals(key.toAddress(networkParameters))){
+                /**
+                 * I will leave the loop once I found the key to determine the position of the key.
+                 */
+                break;
+            }
+            position++;
+        }
+
+        /**
+         * I will get the current amount of generated keys, to update this value only if it is greater.
+         */
+        int currentUsedKeys;
+        try {
+            currentUsedKeys = getDao().getCurrentUsedKeys(hierarchyAccount.getId());
+        } catch (CantExecuteDatabaseOperationException e) {
+            e.printStackTrace();
+            return;
+        }
+
+        /**
+         * update the new value of generated keys so that the maintainer will generate new ones when possible.
+         */
+        if (currentUsedKeys < position){
+            try {
+                getDao().setNewCurrentUsedKeyValue(hierarchyAccount.getId(), position);
+            } catch (CantExecuteDatabaseOperationException e) {
+                e.printStackTrace();
+                return;
+            }
+        }
+
+
+
+    }
 
 }

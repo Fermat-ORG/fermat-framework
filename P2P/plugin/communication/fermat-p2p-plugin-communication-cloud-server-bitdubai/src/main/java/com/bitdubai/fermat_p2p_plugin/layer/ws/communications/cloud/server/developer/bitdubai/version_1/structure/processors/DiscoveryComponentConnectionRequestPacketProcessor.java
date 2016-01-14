@@ -30,7 +30,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * The Class <code>com.bitdubai.fermat_p2p_plugin.layer.ws.communications.cloud.server.developer.bitdubai.version_1.structure.processors.DiscoveryComponentConnectionRequestPacketProcessor</code> process
+ * The Class <code>com.bitdubai.fermat_p2p_plugin.layer.ws.communications.cloud.server.developer.bitdubai.version_1.structure.processors.DiscoveryComponentConnectionRequestJettyPacketProcessor</code> process
  * the received packet type <code>com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.enums.FermatPacketType.DISCOVERY_COMPONENT_CONNECTION_REQUEST</code>, this packet type indicate that a
  * a component type is try to connect whit the component is the his same type, but he has the identity public key from the other component type different as hin.
  * <p/>
@@ -156,10 +156,10 @@ public class DiscoveryComponentConnectionRequestPacketProcessor extends FermatPa
 
         }catch (Exception e){
 
-            LOG.info("applicantParticipant    = " + (applicantParticipant == null ? "SI" : "NO" ));
-            LOG.info("networkServiceApplicant = " + (networkServiceApplicant== null ? "SI" : "NO" ));
-            LOG.info("remoteParticipant       = " + (remoteParticipant== null ? "SI" : "NO" ));
-            LOG.info("remoteNsParticipant     = " + (remoteNsParticipant== null ? "SI" : "NO" ));
+            LOG.info("applicantParticipant is available    = " + (applicantParticipant    != null ? "SI" : "NO" ));
+            LOG.info("networkServiceApplicant is available = " + (networkServiceApplicant != null ? "SI" : "NO" ));
+            LOG.info("remoteParticipant is available       = " + (remoteParticipant       != null ? "SI" : "NO" ));
+            LOG.info("remoteNsParticipant is available     = " + (remoteNsParticipant     != null ? "SI" : "NO" ));
 
             LOG.info("requested connection is no possible, some of the participant are no available.");
             LOG.info("cause: "+e.getMessage());
