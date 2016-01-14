@@ -40,7 +40,15 @@ public class CustomerBrokerUpdatePurchaseNegotiationTransaction {
 
             UUID transactionId = UUID.randomUUID();
 
-            //CREATE NEGOTIATION
+            System.out.print("\n\n**** 3) MOCK NEGOTIATION TRANSACTION - CUSTOMER BROKER UPDATE - PURCHASE NEGOTIATION - CUSTOMER BROKER UPDATE PURCHASE NEGOTIATION TRANSACTION. transactionId: " + transactionId + " ****\n");
+
+            System.out.print("\n\n --- Negotiation Mock XML Date" +
+                            "\n- NegotiationId = " + customerBrokerPurchaseNegotiation.getNegotiationId() +
+                            "\n- CustomerPublicKey = " + customerBrokerPurchaseNegotiation.getCustomerPublicKey() +
+                            "\n- BrokerPublicKey = " + customerBrokerPurchaseNegotiation.getCustomerPublicKey()
+            );
+
+            //UPDATE NEGOTIATION
             this.customerBrokerPurchaseNegotiationManager.updateCustomerBrokerPurchaseNegotiation(customerBrokerPurchaseNegotiation);
 
             //CREATE NEGOTIATION TRANSATION
@@ -66,7 +74,7 @@ public class CustomerBrokerUpdatePurchaseNegotiationTransaction {
 
         try {
 
-            //CREATE NEGOTIATION
+            //UPDATE NEGOTIATION
             this.customerBrokerPurchaseNegotiationManager.updateCustomerBrokerPurchaseNegotiation(customerBrokerPurchaseNegotiation);
 
             //CREATE NEGOTIATION TRANSATION
@@ -93,6 +101,14 @@ public class CustomerBrokerUpdatePurchaseNegotiationTransaction {
         try {
 
             UUID transactionId = UUID.randomUUID();
+
+            System.out.print("\n\n**** 3) MOCK NEGOTIATION TRANSACTION - CUSTOMER BROKER UPDATE - SALE NEGOTIATION - CUSTOMER BROKER UPDATE SALE NEGOTIATION TRANSACTION. transactionId: " + transactionId + " ****\n");
+
+            System.out.print("\n\n --- Negotiation Mock XML Date" +
+                            "\n- NegotiationId = " + customerBrokerPurchaseNegotiation.getNegotiationId() +
+                            "\n- CustomerPublicKey = " + customerBrokerPurchaseNegotiation.getCustomerPublicKey() +
+                            "\n- BrokerPublicKey = " + customerBrokerPurchaseNegotiation.getCustomerPublicKey()
+            );
 
             //CANCEL NEGOTIATION
             this.customerBrokerPurchaseNegotiationManager.cancelNegotiation(customerBrokerPurchaseNegotiation);

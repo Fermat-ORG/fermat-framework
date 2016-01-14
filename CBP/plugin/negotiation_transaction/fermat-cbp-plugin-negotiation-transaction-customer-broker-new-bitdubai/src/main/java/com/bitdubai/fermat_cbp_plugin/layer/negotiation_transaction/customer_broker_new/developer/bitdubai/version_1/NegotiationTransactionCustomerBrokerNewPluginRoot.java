@@ -180,13 +180,14 @@ public class NegotiationTransactionCustomerBrokerNewPluginRoot extends AbstractP
 //            createCustomerBrokerNewPurchaseNegotiationTest();
 
             //TEST MOCK GET ALL TRANSACTIONk
-//            getAllCustomerBrokerNewNegotiationTranasctionTest();
+            getAllCustomerBrokerNewNegotiationTranasctionTest();
 
             //TEST MOCK CREATE AND GET NEGOTIATION
 //            createNegotiationsTest();
 
             //TEST MOCK GET ALL NEGOTIATION
 //            getNegotiationsTest();
+//            getNegotiationsByIdTest(UUID.fromString("eac97ab3-034e-4e57-93dc-b9f4ccaf1a74"));
 
             //Startes Service
             this.serviceStatus = ServiceStatus.STARTED;
@@ -279,7 +280,7 @@ public class NegotiationTransactionCustomerBrokerNewPluginRoot extends AbstractP
     }
     /*END IMPLEMENTATION LogManagerForDevelopers*/
 
-    /*PUBLIC METHOD*/
+    /*PRIVATE METHOD*/
     private void initializeDb() throws CantInitializeDatabaseException {
         try {
 
@@ -304,7 +305,9 @@ public class NegotiationTransactionCustomerBrokerNewPluginRoot extends AbstractP
             throw new CantInitializeDatabaseException(CantOpenDatabaseException.DEFAULT_MESSAGE, e, "", "Generic Exception.");
         }
     }
+    /*PRIVATE METHOD*/
 
+    /*TEST METHOD*/
     private void createCustomerBrokerNewPurchaseNegotiationTest() {
 
         try {
@@ -478,6 +481,32 @@ public class NegotiationTransactionCustomerBrokerNewPluginRoot extends AbstractP
 
     }
 
+    private void getNegotiationsByIdTest(UUID negotiationId){
+
+        try{
+
+            System.out.print("\n**** MOCK CUSTOMER BROKER NEW. PURCHASE NEGOTIATION. TEST: getNegotiation() ****\n");
+
+            System.out.print("\n\n\n\n------------------------------- LIST NEGOTIATION -------------------------------");
+            CustomerBrokerPurchaseNegotiation purchaseNegotiation= customerBrokerPurchaseNegotiationManager.getNegotiationsByNegotiationId(negotiationId);
+            if(purchaseNegotiation != null){
+                System.out.print("\n\n\n --- Negotiation Date" +
+                                "\n- NegotiationId = " + purchaseNegotiation.getNegotiationId() +
+                                "\n- CustomerPublicKey" + purchaseNegotiation.getCustomerPublicKey() +
+                                "\n- BrokerPublicKey" + purchaseNegotiation.getBrokerPublicKey() +
+                                "\n- Status" + purchaseNegotiation.getStatus().getCode()
+                );
+            }else{ System.out.print("\n\n\n --- List Negotiation IS NULL"); }
+
+            System.out.print("\n\n\n\n------------------------------- END LIST NEGOTIATION -------------------------------");
+
+
+        } catch (CantGetListPurchaseNegotiationsException e) {
+            System.out.print("\n**** MOCK CUSTOMER BROKER NEW. PURCHASE NEGOTIATION. ERROR GET ALL CUSTOMER BROKER PURCHASE NEGOTIATION NOT FOUNT. ****\n");
+        }
+
+    }
+
     private CustomerBrokerPurchaseNegotiation purchaseNegotiationMockTest(){
 
         Date time = new Date();
@@ -536,6 +565,6 @@ public class NegotiationTransactionCustomerBrokerNewPluginRoot extends AbstractP
                 ContractClauseType.BANK_TRANSFER.getCode()));
         return clauses;
     }
-    /*END PUBLIC METHOD*/
+    /*END TEST METHOD*/
 
 }
