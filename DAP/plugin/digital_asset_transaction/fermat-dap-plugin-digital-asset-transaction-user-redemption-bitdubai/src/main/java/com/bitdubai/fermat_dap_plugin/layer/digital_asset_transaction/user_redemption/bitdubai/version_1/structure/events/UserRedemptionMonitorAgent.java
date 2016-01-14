@@ -53,9 +53,9 @@ import com.bitdubai.fermat_dap_api.layer.dap_wallet.common.exceptions.CantGetTra
 import com.bitdubai.fermat_dap_api.layer.dap_wallet.common.exceptions.CantLoadWalletException;
 import com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.user_redemption.bitdubai.version_1.UserRedemptionDigitalAssetTransactionPluginRoot;
 import com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.user_redemption.bitdubai.version_1.exceptions.CantCheckAssetUserRedemptionProgressException;
+import com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.user_redemption.bitdubai.version_1.structure.database.UserRedemptionDao;
 import com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.user_redemption.bitdubai.version_1.structure.functional.DeliverRecord;
 import com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.user_redemption.bitdubai.version_1.structure.functional.DigitalAssetUserRedemptionVault;
-import com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.user_redemption.bitdubai.version_1.structure.database.UserRedemptionDao;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.DealsWithErrors;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedPluginExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
@@ -225,7 +225,7 @@ public class UserRedemptionMonitorAgent implements Agent, DealsWithLogger, Deals
             List<Transaction<DigitalAssetMetadataTransaction>> pendingEventsList = assetTransmissionManager.getPendingTransactions(Specialist.ASSET_ISSUER_SPECIALIST);
             if (!userRedemptionDao.getPendingNetworkLayerEvents().isEmpty()) {
                 for (Transaction<DigitalAssetMetadataTransaction> transaction : pendingEventsList) {
-                    if (transaction.getInformation().getReceiverType() == PlatformComponentType.ACTOR_ASSET_USER) {
+                    if (transaction.getInformation().getReceiverType() == PlatformComponentType.ACTOR_ASSET_USER && transaction.getInformation().getSenderType() == PlatformComponentType.ACTOR_ASSET_REDEEM_POINT) {
                         DigitalAssetMetadataTransaction digitalAssetMetadataTransaction = transaction.getInformation();
                         System.out.println("ASSET USER REDEMPTION Digital Asset Metadata Transaction: " + digitalAssetMetadataTransaction);
                         DigitalAssetMetadataTransactionType digitalAssetMetadataTransactionType = digitalAssetMetadataTransaction.getType();
