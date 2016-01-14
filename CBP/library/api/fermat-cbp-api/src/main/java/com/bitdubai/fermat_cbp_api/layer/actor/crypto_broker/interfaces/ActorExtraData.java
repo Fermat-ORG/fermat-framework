@@ -12,7 +12,7 @@ import java.util.Map;
  * Created by angel on 13/1/16.
  */
 
-public interface BrokerSettings {
+public interface ActorExtraData {
 
     /**
      *
