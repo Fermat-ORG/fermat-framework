@@ -9,6 +9,7 @@ package com.bitdubai.fermat_dap_plugin.layer.network.service.asset.transmission.
 import com.bitdubai.fermat_api.layer.all_definition.components.interfaces.PlatformComponentProfile;
 import com.bitdubai.fermat_dap_plugin.layer.network.service.asset.transmission.developer.bitdubai.version_1.AssetTransmissionNetworkServicePluginRoot;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.client.CommunicationsClientConnection;
+import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.exceptions.CantRegisterComponentException;
 
 
 /**
@@ -44,6 +45,7 @@ public class CommunicationRegistrationProcessNetworkServiceAgent extends Thread 
 
     /**
      * Constructor with parameters
+     *
      * @param assetTransmissionNetworkServicePluginRoot
      * @param communicationsClientConnection
      */
@@ -55,66 +57,82 @@ public class CommunicationRegistrationProcessNetworkServiceAgent extends Thread 
 
     /**
      * (non-javadoc)
+     *
      * @see Thread#run()
      */
     @Override
     public void run() {
 
-        while (active){
-            try{
+        while (active) {
 
-                if (communicationsClientConnection.isRegister() && !assetTransmissionNetworkServicePluginRoot.isRegister()){
+            if (assetTransmissionNetworkServicePluginRoot.isRegister()) {
+                try {
+                    sleep(MAX_SLEEP_TIME);
+                    continue;
+                } catch (InterruptedException e) {
+                    active = Boolean.FALSE;
+                    e.printStackTrace();
+                }
+            }
+
+            if (communicationsClientConnection.isRegister()) {
 
                     /*
                      * Construct my profile and register me
                      */
-                    PlatformComponentProfile platformComponentProfile =  communicationsClientConnection.constructPlatformComponentProfileFactory(assetTransmissionNetworkServicePluginRoot.getIdentityPublicKey(),
-                            assetTransmissionNetworkServicePluginRoot.getAlias().toLowerCase(),
-                             assetTransmissionNetworkServicePluginRoot.getName(),
-                            assetTransmissionNetworkServicePluginRoot.getNetworkServiceType(),
-                            assetTransmissionNetworkServicePluginRoot.getPlatformComponentType(),
-                            assetTransmissionNetworkServicePluginRoot.getExtraData());
+                PlatformComponentProfile platformComponentProfile = communicationsClientConnection.constructPlatformComponentProfileFactory(assetTransmissionNetworkServicePluginRoot.getIdentityPublicKey(),
+                        assetTransmissionNetworkServicePluginRoot.getAlias().toLowerCase(),
+                        assetTransmissionNetworkServicePluginRoot.getName(),
+                        assetTransmissionNetworkServicePluginRoot.getNetworkServiceType(),
+                        assetTransmissionNetworkServicePluginRoot.getPlatformComponentType(),
+                        assetTransmissionNetworkServicePluginRoot.getExtraData());
 
-                    /*
-                     * Register me
-                     */
-                    communicationsClientConnection.registerComponentForCommunication(assetTransmissionNetworkServicePluginRoot.getNetworkServiceType(), platformComponentProfile);
 
                     /*
                      * Configure my new profile
                      */
-                    assetTransmissionNetworkServicePluginRoot.setPlatformComponentProfilePluginRoot(platformComponentProfile);
+                assetTransmissionNetworkServicePluginRoot.setPlatformComponentProfilePluginRoot(platformComponentProfile);
 
                     /*
                      * Initialize the connection manager
                      */
-                    assetTransmissionNetworkServicePluginRoot.initializeCommunicationNetworkServiceConnectionManager();
+                assetTransmissionNetworkServicePluginRoot.initializeCommunicationNetworkServiceConnectionManager();
 
+                if (!assetTransmissionNetworkServicePluginRoot.isRegister()) {
+                    /*
+                     * Register me
+                     */
+                    try {
+                        communicationsClientConnection.registerComponentForCommunication(assetTransmissionNetworkServicePluginRoot.getNetworkServiceType(), platformComponentProfile);
                     /*
                      * Stop the agent
                      */
-                    active = Boolean.FALSE;
-
-                }else if (!assetTransmissionNetworkServicePluginRoot.isRegister()){
+                        active = Boolean.FALSE;
+                    } catch (CantRegisterComponentException e) {
+                        try {
+                            sleep(CommunicationRegistrationProcessNetworkServiceAgent.MAX_SLEEP_TIME);
+                        } catch (InterruptedException e1) {
+                            e1.printStackTrace();
+                            active = Boolean.FALSE;
+                        }
+                    }
+                }
+                if (!assetTransmissionNetworkServicePluginRoot.isRegister()) {
 
                     try {
+                        active = Boolean.TRUE;
                         sleep(CommunicationRegistrationProcessNetworkServiceAgent.SLEEP_TIME);
                     } catch (InterruptedException e) {
-                        //e.printStackTrace();
+                        e.printStackTrace();
                         active = Boolean.FALSE;
                     }
-
-                }else if (!assetTransmissionNetworkServicePluginRoot.isRegister()){
-                    active = Boolean.FALSE;
                 }
-
-            }catch (Exception e){
+            } else {
                 try {
-                    //e.printStackTrace();
-                    sleep(CommunicationRegistrationProcessNetworkServiceAgent.MAX_SLEEP_TIME);
-                } catch (InterruptedException e1) {
-                    e1.printStackTrace();
+                    sleep(MAX_SLEEP_TIME);
+                } catch (InterruptedException e) {
                     active = Boolean.FALSE;
+                    e.printStackTrace();
                 }
             }
         }
@@ -122,6 +140,7 @@ public class CommunicationRegistrationProcessNetworkServiceAgent extends Thread 
 
     /**
      * (non-javadoc)
+     *
      * @see Thread#start()
      */
     @Override
@@ -132,6 +151,7 @@ public class CommunicationRegistrationProcessNetworkServiceAgent extends Thread 
 
     /**
      * Get the IsRunning
+     *
      * @return boolean
      */
     public boolean getActive() {

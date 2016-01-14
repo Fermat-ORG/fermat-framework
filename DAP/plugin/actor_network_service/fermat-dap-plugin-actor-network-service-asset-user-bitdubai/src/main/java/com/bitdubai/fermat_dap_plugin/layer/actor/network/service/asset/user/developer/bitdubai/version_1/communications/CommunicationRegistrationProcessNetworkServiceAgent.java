@@ -45,6 +45,7 @@ public class CommunicationRegistrationProcessNetworkServiceAgent extends Thread 
 
     /**
      * Constructor with parameters
+     *
      * @param assetUserActorNetworkServicePluginRoot
      * @param communicationsClientConnection
      */
@@ -56,66 +57,80 @@ public class CommunicationRegistrationProcessNetworkServiceAgent extends Thread 
 
     /**
      * (non-javadoc)
+     *
      * @see Thread#run()
      */
     @Override
     public void run() {
 
         while (active) {
-            try{
-
-                if (communicationsClientConnection.isRegister() && !assetUserActorNetworkServicePluginRoot.isRegister()){
+            if (assetUserActorNetworkServicePluginRoot.isRegister()) {
+                try {
+                    sleep(MAX_SLEEP_TIME);
+                    continue;
+                } catch (InterruptedException e) {
+                    active = Boolean.FALSE;
+                    e.printStackTrace();
+                }
+            }
+            if (communicationsClientConnection.isRegister()) {
 
                     /*
                      * Construct my profile and register me
                      */
-                    PlatformComponentProfile platformComponentProfile =  communicationsClientConnection.constructPlatformComponentProfileFactory(assetUserActorNetworkServicePluginRoot.getIdentityPublicKey(),
-                            assetUserActorNetworkServicePluginRoot.getAlias().toLowerCase(),
-                            assetUserActorNetworkServicePluginRoot.getName(),
-                            assetUserActorNetworkServicePluginRoot.getNetworkServiceType(),
-                            assetUserActorNetworkServicePluginRoot.getPlatformComponentType(),
-                            assetUserActorNetworkServicePluginRoot.getExtraData());
-
-                    /*
-                     * Register me
-                     */
-                    communicationsClientConnection.registerComponentForCommunication(assetUserActorNetworkServicePluginRoot.getNetworkServiceType(), platformComponentProfile);
+                PlatformComponentProfile platformComponentProfile = communicationsClientConnection.constructPlatformComponentProfileFactory(assetUserActorNetworkServicePluginRoot.getIdentityPublicKey(),
+                        assetUserActorNetworkServicePluginRoot.getAlias().toLowerCase(),
+                        assetUserActorNetworkServicePluginRoot.getName(),
+                        assetUserActorNetworkServicePluginRoot.getNetworkServiceType(),
+                        assetUserActorNetworkServicePluginRoot.getPlatformComponentType(),
+                        assetUserActorNetworkServicePluginRoot.getExtraData());
 
                     /*
                      * Configure my new profile
                      */
-                    assetUserActorNetworkServicePluginRoot.setPlatformComponentProfilePluginRoot(platformComponentProfile);
+                assetUserActorNetworkServicePluginRoot.setPlatformComponentProfilePluginRoot(platformComponentProfile);
 
                     /*
                      * Initialize the connection manager
                      */
-                    assetUserActorNetworkServicePluginRoot.initializeCommunicationNetworkServiceConnectionManager();
+                assetUserActorNetworkServicePluginRoot.initializeCommunicationNetworkServiceConnectionManager();
+
+                if (!assetUserActorNetworkServicePluginRoot.isRegister()) {
+                    try {
+                    /*
+                     * Register me
+                     */
+                        communicationsClientConnection.registerComponentForCommunication(assetUserActorNetworkServicePluginRoot.getNetworkServiceType(), platformComponentProfile);
 
                     /*
                      * Stop the agent
                      */
-                    active = Boolean.FALSE;
-
-                }else if (!assetUserActorNetworkServicePluginRoot.isRegister()){
-
+                        active = Boolean.FALSE;
+                    } catch (Exception e) {
+                        try {
+                            e.printStackTrace();
+                            sleep(CommunicationRegistrationProcessNetworkServiceAgent.MAX_SLEEP_TIME);
+                        } catch (InterruptedException e1) {
+                            e1.printStackTrace();
+                            active = Boolean.FALSE;
+                        }
+                    }
+                }
+                if (!assetUserActorNetworkServicePluginRoot.isRegister()) {
                     try {
+                        active = Boolean.TRUE;
                         sleep(CommunicationRegistrationProcessNetworkServiceAgent.SLEEP_TIME);
                     } catch (InterruptedException e) {
                         e.printStackTrace();
                         active = Boolean.FALSE;
                     }
-
-                }else if (!assetUserActorNetworkServicePluginRoot.isRegister()){
-                    active = Boolean.FALSE;
                 }
-
-            }catch (Exception e){
+            } else {
                 try {
-                    e.printStackTrace();
-                    sleep(CommunicationRegistrationProcessNetworkServiceAgent.MAX_SLEEP_TIME);
-                } catch (InterruptedException e1) {
-                    e1.printStackTrace();
+                    sleep(MAX_SLEEP_TIME);
+                } catch (InterruptedException e) {
                     active = Boolean.FALSE;
+                    e.printStackTrace();
                 }
             }
         }
@@ -123,6 +138,7 @@ public class CommunicationRegistrationProcessNetworkServiceAgent extends Thread 
 
     /**
      * (non-javadoc)
+     *
      * @see Thread#start()
      */
     @Override
@@ -133,8 +149,10 @@ public class CommunicationRegistrationProcessNetworkServiceAgent extends Thread 
 
     /**
      * Get the IsRunning
+     *
      * @return boolean
      */
+
     public boolean getActive() {
         return active;
     }

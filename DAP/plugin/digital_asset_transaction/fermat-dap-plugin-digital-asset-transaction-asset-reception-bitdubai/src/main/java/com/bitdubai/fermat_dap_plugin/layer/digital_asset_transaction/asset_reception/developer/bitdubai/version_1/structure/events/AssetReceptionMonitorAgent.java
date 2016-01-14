@@ -163,7 +163,7 @@ public class AssetReceptionMonitorAgent implements Agent {
                     List<Transaction<DigitalAssetMetadataTransaction>> pendingTransactions = assetTransmissionManager.getPendingTransactions(Specialist.ASSET_USER_SPECIALIST);
                     System.out.println("ASSET RECEPTION is " + pendingTransactions.size() + " events");
                     for (Transaction<DigitalAssetMetadataTransaction> transaction : pendingTransactions) {
-                        if (transaction.getInformation().getReceiverType() == PlatformComponentType.ACTOR_ASSET_USER) {
+                        if (transaction.getInformation().getReceiverType() == PlatformComponentType.ACTOR_ASSET_USER && transaction.getInformation().getSenderType() == PlatformComponentType.ACTOR_ASSET_ISSUER) {
                             DigitalAssetMetadataTransaction digitalAssetMetadataTransaction = transaction.getInformation();
                             System.out.println("ASSET RECEPTION Digital Asset Metadata Transaction: " + digitalAssetMetadataTransaction);
                             DigitalAssetMetadataTransactionType digitalAssetMetadataTransactionType = digitalAssetMetadataTransaction.getType();
