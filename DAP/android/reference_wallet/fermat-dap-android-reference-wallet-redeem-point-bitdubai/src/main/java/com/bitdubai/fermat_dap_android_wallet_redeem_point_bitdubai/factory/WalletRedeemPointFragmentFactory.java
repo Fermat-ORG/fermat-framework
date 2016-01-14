@@ -4,6 +4,7 @@ import com.bitdubai.fermat_android_api.engine.FermatFragmentFactory;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractFermatFragment;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.enums.FermatFragmentsEnumType;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.exceptions.FragmentNotFoundException;
+import com.bitdubai.fermat_dap_android_wallet_redeem_point_bitdubai.fragments.RedeemPointDetailActivityFragment;
 import com.bitdubai.fermat_dap_android_wallet_redeem_point_bitdubai.fragments.RedeemPointMainActivityFragment;
 import com.bitdubai.fermat_dap_android_wallet_redeem_point_bitdubai.fragments.RedeemPointHistoryActivityFragment;
 import com.bitdubai.fermat_dap_android_wallet_redeem_point_bitdubai.fragments.RedeemPointStadisticsActivityFragment;
@@ -37,6 +38,9 @@ public class WalletRedeemPointFragmentFactory extends FermatFragmentFactory<Rede
                     break;
                 case DAP_WALLET_REDEEM_POINT_STADISTICS_ACTIVITY:
                     currentFragment = new RedeemPointStadisticsActivityFragment();
+                    break;
+                case DAP_WALLET_REDEEM_POINT_DETAILS_ACTIVITY:
+                    currentFragment = new RedeemPointDetailActivityFragment();
                     break;
                 default:
                     throw new FragmentNotFoundException("Fragment not found", new Exception(), fragment.getKey(), "Swith failed");
