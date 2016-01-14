@@ -101,7 +101,7 @@ public class CustomerBrokerUpdateManagerImpl implements CustomerBrokerUpdateMana
 
         try {
 
-            System.out.print("\n\n**** 2) MOCK NEGOTIATION TRANSACTION - CUSTOMER BROKER UPDATE - MANAGER - CANCEL PURCHASE NEGOTIATION****\n");
+            System.out.print("\n\n**** 2) MOCK NEGOTIATION TRANSACTION - CUSTOMER BROKER CANCEL - MANAGER - CANCEL PURCHASE NEGOTIATION****\n");
             customerBrokerUpdatePurchaseNegotiationTransaction = new CustomerBrokerUpdatePurchaseNegotiationTransaction(
                     customerBrokerPurchaseNegotiationManager,
                     customerBrokerUpdateNegotiationTransactionDatabaseDao
@@ -121,7 +121,7 @@ public class CustomerBrokerUpdateManagerImpl implements CustomerBrokerUpdateMana
 
         try {
 
-            System.out.print("\n\n**** 2) MOCK NEGOTIATION TRANSACTION - CUSTOMER BROKER UPDATE - MANAGER - CANCEL SALE NEGOTIATION****\n");
+            System.out.print("\n\n**** 2) MOCK NEGOTIATION TRANSACTION - CUSTOMER BROKER CANCEL - MANAGER - CANCEL SALE NEGOTIATION****\n");
             customerBrokerUpdateSaleNegotiationTransaction = new CustomerBrokerUpdateSaleNegotiationTransaction(
                     customerBrokerSaleNegotiationManager,
                     customerBrokerUpdateNegotiationTransactionDatabaseDao

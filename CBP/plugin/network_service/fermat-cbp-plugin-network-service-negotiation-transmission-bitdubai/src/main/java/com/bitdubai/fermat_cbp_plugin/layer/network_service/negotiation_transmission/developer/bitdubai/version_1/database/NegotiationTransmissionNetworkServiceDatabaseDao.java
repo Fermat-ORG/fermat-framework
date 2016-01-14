@@ -108,7 +108,7 @@ public class NegotiationTransmissionNetworkServiceDatabaseDao {
                     } else if(negotiationTransmission.getNegotiationTransactionType().getCode() == NegotiationTransactionType.CUSTOMER_BROKER_UPDATE.getCode()) {
                         System.out.print("\n\n**** 10) MOCK NEGOTIATION TRANSACTION UPDATE - NEGOTIATION TRANSMISSION - DAO - REGISTER SEND NEGOTIATION TRANSMISSION ****\n");
                     } else if(negotiationTransmission.getNegotiationTransactionType().getCode() == NegotiationTransactionType.CUSTOMER_BROKER_CLOSE.getCode()) {
-                        System.out.print("\n\n**** 8) MOCK NEGOTIATION TRANSACTION CLOSE - NEGOTIATION TRANSMISSION - DAO - REGISTER SEND NEGOTIATION TRANSMISSION ****\n");
+                        System.out.print("\n\n**** 10) MOCK NEGOTIATION TRANSACTION CLOSE - NEGOTIATION TRANSMISSION - DAO - REGISTER SEND NEGOTIATION TRANSMISSION ****\n");
                     }
                 } else {
                     System.out.print("\n\n**** 13) MOCK NEGOTIATION TRANSACTION - NEGOTIATION TRANSMISSION - DAO - REGISTER RECEIVE NEGOTIATION TRANSMISSION ****\n");

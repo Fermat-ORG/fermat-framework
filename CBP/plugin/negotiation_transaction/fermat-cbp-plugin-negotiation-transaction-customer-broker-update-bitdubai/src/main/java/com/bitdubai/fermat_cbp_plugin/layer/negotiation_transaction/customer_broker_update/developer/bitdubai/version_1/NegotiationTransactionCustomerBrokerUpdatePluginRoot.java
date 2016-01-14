@@ -45,6 +45,7 @@ import com.bitdubai.fermat_cbp_api.layer.negotiation_transaction.Test.mocks.Sale
 import com.bitdubai.fermat_cbp_api.layer.negotiation_transaction.customer_broker_new.exceptions.CantCreateCustomerBrokerNewPurchaseNegotiationTransactionException;
 import com.bitdubai.fermat_cbp_api.layer.negotiation_transaction.customer_broker_new.exceptions.CantGetListCustomerBrokerNewNegotiationTransactionException;
 import com.bitdubai.fermat_cbp_api.layer.negotiation_transaction.customer_broker_new.interfaces.CustomerBrokerNew;
+import com.bitdubai.fermat_cbp_api.layer.negotiation_transaction.customer_broker_update.exceptions.CantCancelNegotiationException;
 import com.bitdubai.fermat_cbp_api.layer.negotiation_transaction.customer_broker_update.exceptions.CantCreateCustomerBrokerUpdatePurchaseNegotiationTransactionException;
 import com.bitdubai.fermat_cbp_api.layer.negotiation_transaction.customer_broker_update.exceptions.CantCreateCustomerBrokerUpdateSaleNegotiationTransactionException;
 import com.bitdubai.fermat_cbp_api.layer.negotiation_transaction.customer_broker_update.exceptions.CantGetListCustomerBrokerUpdateNegotiationTransactionException;
@@ -173,7 +174,17 @@ public class NegotiationTransactionCustomerBrokerUpdatePluginRoot  extends Abstr
             customerBrokerUpdateAgent.start();
 
             //TEST MOCK
-            createCustomerBrokerUpdatePurchaseNegotiationTest();
+            //CREATE CUSTOMER BROKER UPDATE PURCHASE NEGOTIATION
+//            createCustomerBrokerUpdatePurchaseNegotiationTest();
+
+            //CREATE CUSTOMER BROKER UPDATE SALE NEGOTIATION
+//            createCustomerBrokerUpdateSaleNegotiationTest();
+
+            //CREATE CUSTOMER BROKER CANCEL PURCHASE NEGTIATION
+//            createCustomerBrokerCancelPurchaseNegotiationTest();
+
+            //CREATE CUSTOMER BROKER CANCEL SALE NEGTIATION
+//            createCustomerBrokerCancelSaleNegotiationTest();
 
             //Startes Service
             this.serviceStatus = ServiceStatus.STARTED;
@@ -361,7 +372,7 @@ public class NegotiationTransactionCustomerBrokerUpdatePluginRoot  extends Abstr
 
             CustomerBrokerSaleNegotiation negotiationMock = saleNegotiationMockTest();
             System.out.print("\n\n**** 1) MOCK NEGOTIATION TRANSACTION - CUSTOMER BROKER UPDATE - PLUGINROOT - SALE NEGOTIATION ****\n" +
-                            "\n------------------------------- NEGOTIATION PURCHASE MOCK -------------------------------" +
+                            "\n------------------------------- NEGOTIATION SALE MOCK -------------------------------" +
                             "\n*CustomerPublicKey = " + negotiationMock.getCustomerPublicKey() +
                             "\n*BrokerPublicKey = " + negotiationMock.getBrokerPublicKey()
             );
@@ -378,7 +389,7 @@ public class NegotiationTransactionCustomerBrokerUpdatePluginRoot  extends Abstr
             );
 
             //CREATE CUSTOMER BROKER UPDATE NEGOTIATION.
-            customerBrokerUpdateManagerImpl.createCustomerBrokerUpdateSaleNegotiationTranasction(negotiationMock);
+//            customerBrokerUpdateManagerImpl.createCustomerBrokerUpdateSaleNegotiationTranasction(negotiationMock);
 
             //GET TRANSACTION OF NEGOTIATION
             System.out.print("\n\n\n\n------------------------------- NEGOTIATION TRANSACTION -------------------------------");
@@ -408,8 +419,8 @@ public class NegotiationTransactionCustomerBrokerUpdatePluginRoot  extends Abstr
                 }else{ System.out.print("\n\n\n --- NegotiationXML Date: saleNegotiationXML IS NOT INSTANCE OF NegotiationPurchaseRecord");}
             }else{ System.out.print("\n\n\n --- NegotiationXML Date IS NULL"); }
 
-        } catch (CantCreateCustomerBrokerUpdateSaleNegotiationTransactionException e) {
-            System.out.print("\n**** MOCK NEGOTIATION TRANSACTION - CUSTOMER BROKER UPDATE. PLUGIN ROOT. ERROR CREATE CUSTOMER BROKER UPDATE. ****\n");
+//        } catch (CantCreateCustomerBrokerUpdateSaleNegotiationTransactionException e) {
+//            System.out.print("\n**** MOCK NEGOTIATION TRANSACTION - CUSTOMER BROKER UPDATE. PLUGIN ROOT. ERROR CREATE CUSTOMER BROKER UPDATE. ****\n");
         } catch (CantRegisterCustomerBrokerUpdateNegotiationTransactionException e){
             System.out.print("\n**** MOCK NEGOTIATION TRANSACTION - CUSTOMER BROKER UPDATE. PLUGIN ROOT. ERROR LIST CUSTOMER BROKER UPDATE NOT FOUNT. ****\n");
         }
@@ -443,7 +454,7 @@ public class NegotiationTransactionCustomerBrokerUpdatePluginRoot  extends Abstr
             );
 
             //CREATE CUSTOMER BROKER UPDATE NEGOTIATION.
-            customerBrokerUpdateManagerImpl.createCustomerBrokerUpdatePurchaseNegotiationTranasction(negotiationMock);
+            customerBrokerUpdateManagerImpl.cancelNegotiation(negotiationMock);
 
             //GET TRANSACTION OF NEGOTIATION
             System.out.print("\n\n\n\n------------------------------- NEGOTIATION TRANSACTION -------------------------------");
@@ -473,7 +484,7 @@ public class NegotiationTransactionCustomerBrokerUpdatePluginRoot  extends Abstr
                 }else{ System.out.print("\n\n\n --- NegotiationXML Date: purchaseNegotiationXML IS NOT INSTANCE OF NegotiationPurchaseRecord");}
             }else{ System.out.print("\n\n\n --- NegotiationXML Date IS NULL"); }
 
-        } catch (CantCreateCustomerBrokerUpdatePurchaseNegotiationTransactionException e) {
+        } catch (CantCancelNegotiationException e) {
             System.out.print("\n**** MOCK NEGOTIATION TRANSACTION - CUSTOMER BROKER UPDATE. PLUGIN ROOT. ERROR CREATE CUSTOMER BROKER UPDATE. ****\n");
         } catch (CantRegisterCustomerBrokerUpdateNegotiationTransactionException e){
             System.out.print("\n**** MOCK NEGOTIATION TRANSACTION - CUSTOMER BROKER UPDATE. PLUGIN ROOT. ERROR LIST CUSTOMER BROKER UPDATE NOT FOUNT. ****\n");
@@ -486,11 +497,11 @@ public class NegotiationTransactionCustomerBrokerUpdatePluginRoot  extends Abstr
 
         try {
 
-            System.out.print("\n**** MOCK NEGOTIATION TRANSACTION - CUSTOMER BROKER UPDATE - PLUGINROOT - SALE NEGOTIATION TEST: createCustomerBrokerUpdatePurchaseNegotiationTranasction() ****\n");
+            System.out.print("\n**** MOCK NEGOTIATION TRANSACTION - CUSTOMER BROKER CANCEL - PLUGINROOT - SALE NEGOTIATION TEST: createCustomerBrokerUpdatePurchaseNegotiationTranasction() ****\n");
 
             CustomerBrokerSaleNegotiation negotiationMock = saleNegotiationMockTest();
-            System.out.print("\n\n**** 1) MOCK NEGOTIATION TRANSACTION - CUSTOMER BROKER UPDATE - PLUGINROOT - SALE NEGOTIATION ****\n" +
-                            "\n------------------------------- NEGOTIATION PURCHASE MOCK -------------------------------" +
+            System.out.print("\n\n**** 1) MOCK NEGOTIATION TRANSACTION - CUSTOMER BROKER CANCEL - PLUGINROOT - SALE NEGOTIATION ****\n" +
+                            "\n------------------------------- NEGOTIATION SALE MOCK -------------------------------" +
                             "\n*CustomerPublicKey = " + negotiationMock.getCustomerPublicKey() +
                             "\n*BrokerPublicKey = " + negotiationMock.getBrokerPublicKey()
             );
