@@ -80,7 +80,7 @@ public class AssetStatisticImpl implements AssetStatistic {
      */
     @Override
     public ActorAssetUser getOwner() {
-        return null;
+        return owner;
     }
 
     /**
