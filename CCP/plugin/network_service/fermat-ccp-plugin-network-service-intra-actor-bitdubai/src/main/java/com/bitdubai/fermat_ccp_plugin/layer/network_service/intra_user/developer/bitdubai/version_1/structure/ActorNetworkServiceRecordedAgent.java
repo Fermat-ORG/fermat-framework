@@ -325,15 +325,19 @@ public class ActorNetworkServiceRecordedAgent extends FermatAgent{
                         if (actorNetworkServicePluginRoot.getPlatformComponentProfilePluginRoot() != null) {
 
                             PlatformComponentProfile applicantParticipant = wsCommunicationsCloudClientManager.getCommunicationsCloudClientConnection()
-                                    .constructBasicPlatformComponentProfileFactory(
+                                    .constructPlatformComponentProfileFactory(
                                             actorNetworkServiceRecord.getActorSenderPublicKey(),
+                                            actorNetworkServiceRecord.getActorSenderAlias(),
+                                            actorNetworkServiceRecord.getActorSenderAlias(),
                                             NetworkServiceType.UNDEFINED,
-                                            PlatformComponentType.ACTOR_INTRA_USER);
+                                            PlatformComponentType.ACTOR_INTRA_USER,"");
                             PlatformComponentProfile remoteParticipant = wsCommunicationsCloudClientManager.getCommunicationsCloudClientConnection()
-                                    .constructBasicPlatformComponentProfileFactory(
+                                    .constructPlatformComponentProfileFactory(
                                             actorNetworkServiceRecord.getActorDestinationPublicKey(),
+                                            actorNetworkServiceRecord.getActorSenderAlias(),
+                                            actorNetworkServiceRecord.getActorSenderAlias(),
                                             NetworkServiceType.UNDEFINED,
-                                            PlatformComponentType.ACTOR_INTRA_USER);
+                                            PlatformComponentType.ACTOR_INTRA_USER,"");
 
                             communicationNetworkServiceConnectionManager.connectTo(
                                     applicantParticipant,
