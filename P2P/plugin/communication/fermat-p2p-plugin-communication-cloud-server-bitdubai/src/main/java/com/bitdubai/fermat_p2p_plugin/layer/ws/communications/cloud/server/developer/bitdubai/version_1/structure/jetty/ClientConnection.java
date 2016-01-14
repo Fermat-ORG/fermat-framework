@@ -22,7 +22,9 @@ import javax.websocket.Session;
  */
 public class ClientConnection {
 
-    private static final int MAX_MESSAGE_SIZE = 1000000;
+    private static final int MAX_MESSAGE_SIZE = 3000000;
+
+    private static final int MAX_IDLE_TIMEOUT = 1200000;
 
     static final String SERVER_IDENTITY_ATT_NAME = "SI";
 
@@ -35,6 +37,7 @@ public class ClientConnection {
     public ClientConnection(Session session) {
         this.session = session;
         this.session.setMaxTextMessageBufferSize(MAX_MESSAGE_SIZE);
+        this.session.setMaxIdleTimeout(MAX_IDLE_TIMEOUT);
     }
 
     public ECCKeyPair getServerIdentity(){
