@@ -1,3 +1,4 @@
+<!-- new link to dev.fermat.org>
 <!-- all links tested by laderuner -->
 ![alt text](https://github.com/bitDubai/media-kit/blob/master/MediaKit/Fermat%20Branding/Fermat%20Logotype/Fermat_Logo_3D.png "Fermat Logo")
 
@@ -112,7 +113,8 @@ Technically Fermat is an open-source P2P system built on a plug-in architecture 
 Fermat is moving towards version 1, but we're not stopping there. We have many feature ideas on our
 [white paper](FERMAT-WHITE-PAPER.md) that we're anxious to add. So take Fermat out for a spin and let us know how we can make it your favorite platform to launch your own digital wallet or financial APP.
 
-You can learn more, see some cool images of Fermat's architecture and its P2P network and explore the design space at [Fermat.org](http://www.fermat.org).
+You can learn more about the project at  [Fermat.org](http://www.fermat.org). 
+If you are a *developer* you can see some cool visualization of Fermat's architecture at [dev.fermat.org](http://dev.fermat.org).
 
 
 ![alt text](https://github.com/bitDubai/media-kit/blob/master/MediaKit/Coins/Fiat%20Coins/Fiat%20Art/Scene1/HQ_1920x1080.jpg "Fermat Digital Money")
@@ -233,14 +235,14 @@ You can learn more, see some cool images of Fermat's architecture and its P2P ne
 
 #### Download
 
-Installers for the latest version of Android can be [downloaded here](http://fermat.org/fermat.apk). Mac, Windows and Linux (Debian/Ubuntu) will be supported in the near future.
+Installers for the latest version for Android can be [downloaded here](http://fermat.org/fermat.apk). Mac, Windows and Linux (Debian/Ubuntu) will be supported in the near future.
 
 
 #### Installation
 
 In addition to the core features built into Fermat, there is a growing community of developers building _Plug-ins_ and _Niche Wallets_ that add all sorts of useful functionality.
 
-For instructions on how to install and run the source code, see the [Installation Guide](https://github.com/bitDubai/fermat/blob/master/README-INSTALLATION.md).
+For instructions on how to install and run the source code, as well as setting up the developemt environment, see the [Installation Guide](https://github.com/bitDubai/fermat/blob/master/README-INSTALLATION.md).
 
 #### Need Help?
 
@@ -255,7 +257,7 @@ Take a look at the [Fermat Book](https://github.com/bitDubai/fermat/tree/master/
 
 As of November 2015 the project status is the following:
 
-**Code state** : Under development for 6 months. No realeses yet. Many full time developers working on it provided by the project's main contributor: [bitDubai](https://www.bitDubai.com).
+**Code state** : Under development for 6 months. No releases yet. Many full time developers working on it provided by the project's main contributor: [bitDubai](https://www.bitDubai.com).
 
 **Future path of development** : Active (First release with very limited features scheduled for December 2015).
 
