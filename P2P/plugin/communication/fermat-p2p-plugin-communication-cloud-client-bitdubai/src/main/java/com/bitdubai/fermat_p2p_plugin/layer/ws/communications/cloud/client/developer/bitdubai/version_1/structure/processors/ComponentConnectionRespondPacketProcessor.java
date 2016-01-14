@@ -66,6 +66,7 @@ public class ComponentConnectionRespondPacketProcessor extends FermatPacketProce
             PlatformComponentProfile participantVpn = gson.fromJson(respond.get(JsonAttNamesConstants.APPLICANT_PARTICIPANT_VPN).getAsString(), PlatformComponentProfileCommunication.class);
             PlatformComponentProfile remotePlatformComponentProfile = gson.fromJson(respond.get(JsonAttNamesConstants.REMOTE_PARTICIPANT_VPN).getAsString(), PlatformComponentProfileCommunication.class);
             PlatformComponentProfile remoteNsPlatformComponentProfile = gson.fromJson(respond.get(JsonAttNamesConstants.REMOTE_PARTICIPANT_NS_VPN).getAsString(), PlatformComponentProfileCommunication.class);
+            Boolean iApplicant = Boolean.parseBoolean(respond.get(JsonAttNamesConstants.I_APPLICANT).getAsString());
 
             vpnServerUri = new URI(ServerConf.WS_PROTOCOL + WsCommunicationsCloudClientPluginRoot.SERVER_IP + ":" + ServerConf.DEFAULT_PORT + vpnServerUri);
 
@@ -79,7 +80,7 @@ public class ComponentConnectionRespondPacketProcessor extends FermatPacketProce
             /*
              * Create a new VPN client
              */
-            wsCommunicationVPNClientManagerAgent.createNewWsCommunicationVPNClient(vpnServerUri, vpnServerIdentity, participantVpn, remotePlatformComponentProfile, remoteNsPlatformComponentProfile, getWsCommunicationsCloudClientChannel().getEventManager());
+            wsCommunicationVPNClientManagerAgent.createNewWsCommunicationVPNClient(vpnServerUri, vpnServerIdentity, participantVpn, remotePlatformComponentProfile, remoteNsPlatformComponentProfile, getWsCommunicationsCloudClientChannel().getEventManager(), iApplicant);
 
             /*
              * Is not running

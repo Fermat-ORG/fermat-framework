@@ -70,7 +70,7 @@ public class WsCommunicationVPNClientManagerAgent extends Thread{
      * @param vpnServerIdentity
      * @param remotePlatformComponentProfile
      */
-    public void createNewWsCommunicationVPNClient(URI serverURI, String vpnServerIdentity, PlatformComponentProfile participant, PlatformComponentProfile remotePlatformComponentProfile, PlatformComponentProfile remoteParticipantNetworkService, EventManager eventManager) {
+    public void createNewWsCommunicationVPNClient(URI serverURI, String vpnServerIdentity, PlatformComponentProfile participant, PlatformComponentProfile remotePlatformComponentProfile, PlatformComponentProfile remoteParticipantNetworkService, EventManager eventManager, Boolean isApplicant) {
 
         /*
          * Create the identity
@@ -96,6 +96,8 @@ public class WsCommunicationVPNClientManagerAgent extends Thread{
         jsonObject.addProperty(JsonAttNamesConstants.CLIENT_IDENTITY_VPN, vpnClientIdentity.getPublicKey());
         jsonObject.addProperty(JsonAttNamesConstants.APPLICANT_PARTICIPANT_VPN, registerParticipant.toJson());
         jsonObject.addProperty(JsonAttNamesConstants.REMOTE_PARTICIPANT_VPN, remotePlatformComponentProfile.getIdentityPublicKey());
+        jsonObject.addProperty(JsonAttNamesConstants.I_APPLICANT, isApplicant);
+
 
         /*
          * Add the att to the header
@@ -114,6 +116,8 @@ public class WsCommunicationVPNClientManagerAgent extends Thread{
 
         System.out.println("GUARDANDO LA CONEXION EN CACHE CON NS = " + remoteParticipantNetworkService.getNetworkServiceType());
         System.out.println("GUARDANDO LA CONEXION EN CACHE CON PK = " + remotePlatformComponentProfile.getIdentityPublicKey());
+        System.out.println("GUARDANDO LA CONEXION PARA EL ALIAS   = " + remotePlatformComponentProfile.getAlias());
+        System.out.println("GUARDANDO LA CONEXION PARA EL NAME    = " + remotePlatformComponentProfile.getName());
 
         /*
          * Add to the vpn client active
@@ -332,6 +336,8 @@ public class WsCommunicationVPNClientManagerAgent extends Thread{
      * @return WsCommunicationVPNClient
      */
     public WsCommunicationVPNClient getActiveVpnConnection(NetworkServiceType applicantNetworkServiceType, PlatformComponentProfile remotePlatformComponentProfile){
+
+        System.out.println("WsCommunicationVPNClientManagerAgent getActiveVpnConnection - remotePlatformComponentProfile = "+remotePlatformComponentProfile.getAlias());
 
         if (vpnClientActiveCache.containsKey(applicantNetworkServiceType)){
 
