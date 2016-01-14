@@ -210,7 +210,7 @@ public class WebSocketCloudServerChannel {
                 timer.schedule(new TimerTask() {
                                    @Override
                                    public void run() {
-                                       LOG.info("Client (" + id + ") not reconnect, proceed to clean references");
+                                       LOG.info("Client (" + id + ") not reconnect, proceed to clean references on stand by");
                                        MemoryCache.getInstance().getStandByProfileByClientIdentity().remove(clientIdentity);
                                        LOG.info("Number of list of profiles into standby cache = " + MemoryCache.getInstance().getStandByProfileByClientIdentity().size());
                                    }

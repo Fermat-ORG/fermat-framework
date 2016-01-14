@@ -343,9 +343,9 @@ public class WsCommunicationsCloudClientPluginRoot extends AbstractPlugin implem
 
             System.out.println("Loading clientIdentity");
 
-         /*
-          * Load the file with the clientIdentity
-          */
+             /*
+              * Load the file with the clientIdentity
+              */
             PluginTextFile pluginTextFile = pluginFileSystem.getTextFile(pluginId, "private", "clientIdentity", FilePrivacy.PRIVATE, FileLifeSpan.PERMANENT);
             String content = pluginTextFile.getContent();
 
