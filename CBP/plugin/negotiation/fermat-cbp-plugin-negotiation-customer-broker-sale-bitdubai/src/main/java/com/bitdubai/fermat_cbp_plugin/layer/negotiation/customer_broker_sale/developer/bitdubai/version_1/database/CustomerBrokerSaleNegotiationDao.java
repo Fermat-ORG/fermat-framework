@@ -539,6 +539,26 @@ public class CustomerBrokerSaleNegotiationDao implements NegotiationClauseManage
             }
         }
 
+        public Collection<NegotiationBankAccount> getAllBankAccount() throws CantGetListBankAccountsSaleException {
+            try {
+                DatabaseTable SaleBanksTable = this.database.getTable(CustomerBrokerSaleNegotiationDatabaseConstants.LOCATIONS_BROKER_TABLE_NAME);
+
+                SaleBanksTable.loadToMemory();
+                List<DatabaseTableRecord> records = SaleBanksTable.getRecords();
+                SaleBanksTable.clearAllFilters();
+
+                Collection<NegotiationBankAccount> resultados = new ArrayList<>();
+                for (DatabaseTableRecord record : records) {
+                    resultados.add(constructBankSaleFromRecord(record));
+                }
+                return resultados;
+            } catch (CantLoadTableToMemoryException e) {
+                throw new CantGetListBankAccountsSaleException(CantGetListBankAccountsSaleException.DEFAULT_MESSAGE, e, "", "");
+            } catch (InvalidParameterException e) {
+                throw new CantGetListBankAccountsSaleException(CantGetListBankAccountsSaleException.DEFAULT_MESSAGE, e, "", "");
+            }
+        }
+
         public Collection<FiatCurrency> getCurrencyTypeAvailableBankAccount() throws CantGetListBankAccountsSaleException {
 
             DatabaseTable PurchaseBanksTable = this.database.getTable(CustomerBrokerSaleNegotiationDatabaseConstants.BANK_ACCOUNTS_BROKER_TABLE_NAME);
