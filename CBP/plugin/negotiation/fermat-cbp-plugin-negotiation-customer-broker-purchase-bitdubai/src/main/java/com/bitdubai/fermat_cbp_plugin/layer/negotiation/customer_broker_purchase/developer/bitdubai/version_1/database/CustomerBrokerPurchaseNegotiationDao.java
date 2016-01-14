@@ -1,6 +1,5 @@
 package com.bitdubai.fermat_cbp_plugin.layer.negotiation.customer_broker_purchase.developer.bitdubai.version_1.database;
 
-import com.bitdubai.fermat_api.layer.all_definition.enums.CryptoCurrency;
 import com.bitdubai.fermat_api.layer.all_definition.enums.FiatCurrency;
 import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
@@ -16,16 +15,13 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.Cant
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantOpenDatabaseException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantUpdateRecordException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.DatabaseNotFoundException;
-import com.bitdubai.fermat_api.layer.world.interfaces.Currency;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.ClauseStatus;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.ClauseType;
-import com.bitdubai.fermat_cbp_api.all_definition.enums.ContractStatus;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.NegotiationStatus;
 import com.bitdubai.fermat_cbp_api.all_definition.negotiation.Clause;
 import com.bitdubai.fermat_cbp_api.all_definition.negotiation.NegotiationBankAccount;
 import com.bitdubai.fermat_cbp_api.all_definition.negotiation.NegotiationClauseManager;
 import com.bitdubai.fermat_cbp_api.all_definition.negotiation.NegotiationLocations;
-import com.bitdubai.fermat_cbp_api.layer.contract.customer_broker_sale.interfaces.CustomerBrokerContractSale;
 import com.bitdubai.fermat_cbp_api.layer.negotiation.customer_broker_purchase.exceptions.CantCreateBankAccountPurchaseException;
 import com.bitdubai.fermat_cbp_api.layer.negotiation.customer_broker_purchase.exceptions.CantCreateCustomerBrokerPurchaseNegotiationException;
 import com.bitdubai.fermat_cbp_api.layer.negotiation.customer_broker_purchase.exceptions.CantCreateLocationPurchaseException;
@@ -88,106 +84,7 @@ public class CustomerBrokerPurchaseNegotiationDao implements NegotiationClauseMa
             }
         }
 
-        System.out.println("vlz: =======================================================================================");
-        System.out.println("vlz:  Inicio de las pruebas en el Negotiation Purchase");
-
-            Collection<Clause> clauses = new ArrayList<>();
-
-            ClauseType[] tipos = {
-                ClauseType.BROKER_BANK_ACCOUNT,
-                ClauseType.BROKER_CRYPTO_ADDRESS,
-                ClauseType.BROKER_CURRENCY_QUANTITY
-            };
-
-            ClauseStatus[] status = {
-                ClauseStatus.DRAFT,
-                ClauseStatus.SENT_TO_BROKER,
-                ClauseStatus.WAITING_FOR_BROKER
-            };
-
-            Currency[] monedas = {
-                FiatCurrency.VENEZUELAN_BOLIVAR,
-                CryptoCurrency.BITCOIN,
-                FiatCurrency.ARGENTINE_PESO
-            };
-
-            for(int i=0; i<tipos.length; i++) {
-                Short orden = (short) i;
-                Clause clause = new CustomerBrokerPurchaseClause(
-                        UUID.randomUUID(),
-                        tipos[i],
-                        monedas[i].getCode(),
-                        status[i],
-                        "publicKeyCustomer",
-                        orden
-                );
-
-                clauses.add(clause);
-
-                CustomerBrokerPurchaseNegotiation negotiation = new CustomerBrokerPurchaseNegotiationInformation(
-                        UUID.randomUUID(),
-                        "publicKeyCustomer "+i,
-                        "publicKeyBroker "+i,
-                        System.currentTimeMillis(),
-                        System.currentTimeMillis() + 10,
-                        NegotiationStatus.SENT_TO_BROKER,
-                        clauses,
-                        false,
-                        "Memo "+i,
-                        "cancelReason "+i,
-                        System.currentTimeMillis() + 20
-                );
-
-                try {
-                    this.createCustomerBrokerPurchaseNegotiation(negotiation);
-                    System.out.println("vlz:  Negotiation Purchase ["+i+"] creada exitosamente");
-                } catch (CantCreateCustomerBrokerPurchaseNegotiationException e) {
-                    System.out.println("vlz:  Error creando la negociacion");
-                }
-            }
-
-            try {
-                Collection<CustomerBrokerPurchaseNegotiation> negs = this.getNegotiations();
-
-                System.out.println("vlz:  Imprimiendo el listado de negociaciones");
-
-                for(CustomerBrokerPurchaseNegotiation neg : negs){
-                    System.out.println("vlz:  \tNegotiationId: "+neg.getNegotiationId());
-                    System.out.println("vlz:  \tBrokerPublicKey: "+neg.getBrokerPublicKey());
-                    System.out.println("vlz:  \tCustomerPublicKey: "+neg.getCustomerPublicKey());
-                    System.out.println("vlz:  \tStartDate: "+neg.getStartDate());
-                    System.out.println("vlz:  \tNegotiationExpirationDate: "+neg.getNegotiationExpirationDate());
-                    System.out.println("vlz:  \tStatus: "+neg.getStatus().getCode());
-                    System.out.println("vlz:  \tNear: "+neg.getNearExpirationDatetime());
-                    System.out.println("vlz:  \tMemo: "+neg.getMemo());
-                    System.out.println("vlz:  \tCancelReason: "+neg.getCancelReason());
-                    System.out.println("vlz:  \tLast: "+neg.getLastNegotiationUpdateDate());
-
-                    try {
-                        Collection<Clause> clausulas = neg.getClauses();
-
-                        for(Clause c : clausulas){
-                            System.out.println("vlz:  \t\tClauseId: "+c.getClauseId());
-                            System.out.println("vlz:  \t\tType: "+c.getType().getCode());
-                            System.out.println("vlz:  \t\tValue: "+c.getValue());
-                            System.out.println("vlz:  \t\tStatus: "+c.getStatus().getCode());
-                            System.out.println("vlz:  \t\tProposedBy: "+c.getProposedBy());
-                            System.out.println("vlz:  \t\tOrder: "+c.getIndexOrder());
-                        }
-
-
-                    } catch (CantGetListClauseException e) {
-                        System.out.println("vlz:  Error: "+CantGetListClauseException.DEFAULT_MESSAGE);
-                    }
-                }
-
-            } catch (CantGetListPurchaseNegotiationsException e) {
-                System.out.println("vlz:  Error obteniendo el listado de negociaciones");
-            }
-
-        System.out.println("vlz:  Fin de las pruebas en el Negotiation Purchase");
-
-        System.out.println("vlz: =======================================================================================");
+        new pruebas(this);
     }
 
     public void createCustomerBrokerPurchaseNegotiation(CustomerBrokerPurchaseNegotiation negotiation) throws CantCreateCustomerBrokerPurchaseNegotiationException {
@@ -539,159 +436,191 @@ public class CustomerBrokerPurchaseNegotiationDao implements NegotiationClauseMa
         return newCustomerBrokerPurchaseClause(clauseId, type, value, status, proposedBy, (short) indexOrder);
     }
 
-    /*
-        Settings
-     */
+    /*==============================================================================================
 
-    public void createNewLocation(String location, String uri) throws CantCreateLocationPurchaseException {
-        try {
-            DatabaseTable PurchaseLocationTable = this.database.getTable(CustomerBrokerPurchaseNegotiationDatabaseConstants.LOCATIONS_CUSTOMER_TABLE_NAME);
-            DatabaseTableRecord recordToInsert   = PurchaseLocationTable.getEmptyRecord();
-            recordToInsert.setUUIDValue(CustomerBrokerPurchaseNegotiationDatabaseConstants.LOCATIONS_CUSTOMER_LOCATION_ID_COLUMN_NAME, UUID.randomUUID());
-            recordToInsert.setStringValue(CustomerBrokerPurchaseNegotiationDatabaseConstants.LOCATIONS_CUSTOMER_LOCATION_COLUMN_NAME, location);
-            recordToInsert.setStringValue(CustomerBrokerPurchaseNegotiationDatabaseConstants.LOCATIONS_CUSTOMER_URI_COLUMN_NAME, uri);
-            PurchaseLocationTable.insertRecord(recordToInsert);
-        } catch (CantInsertRecordException e) {
-            throw new CantCreateLocationPurchaseException(e.DEFAULT_MESSAGE, e, "", "");
-        }
-    }
+                                                SETTINGS
 
-    public void updateLocation(NegotiationLocations location) throws CantUpdateLocationPurchaseException {
-        try {
-            DatabaseTable PurchaseLocationTable = this.database.getTable(CustomerBrokerPurchaseNegotiationDatabaseConstants.LOCATIONS_CUSTOMER_TABLE_NAME);
-            DatabaseTableRecord recordToUpdate   = PurchaseLocationTable.getEmptyRecord();
-            PurchaseLocationTable.addUUIDFilter(CustomerBrokerPurchaseNegotiationDatabaseConstants.LOCATIONS_CUSTOMER_LOCATION_ID_COLUMN_NAME, location.getLocationId(), DatabaseFilterType.EQUAL);
-            recordToUpdate.setStringValue(CustomerBrokerPurchaseNegotiationDatabaseConstants.LOCATIONS_CUSTOMER_LOCATION_COLUMN_NAME, location.getLocation());
-            recordToUpdate.setStringValue(CustomerBrokerPurchaseNegotiationDatabaseConstants.LOCATIONS_CUSTOMER_URI_COLUMN_NAME, location.getURI());
-            PurchaseLocationTable.updateRecord(recordToUpdate);
-        } catch (CantUpdateRecordException e) {
-            throw new CantUpdateLocationPurchaseException(e.DEFAULT_MESSAGE, e, "", "");
-        }
-    }
+     ==============================================================================================*/
 
-    public void deleteLocation(NegotiationLocations location) throws CantDeleteLocationPurchaseException {
-        try {
-            DatabaseTable PurchaseLocationTable = this.database.getTable(CustomerBrokerPurchaseNegotiationDatabaseConstants.LOCATIONS_CUSTOMER_TABLE_NAME);
-            DatabaseTableRecord recordToDelete   = PurchaseLocationTable.getEmptyRecord();
-            PurchaseLocationTable.addUUIDFilter(CustomerBrokerPurchaseNegotiationDatabaseConstants.LOCATIONS_CUSTOMER_LOCATION_ID_COLUMN_NAME, location.getLocationId(), DatabaseFilterType.EQUAL);
-            PurchaseLocationTable.deleteRecord(recordToDelete);
-        } catch (CantDeleteRecordException e) {
-            throw new CantDeleteLocationPurchaseException(e.DEFAULT_MESSAGE, e, "", "");
-        }
-    }
+    /*==============================================================================================
 
-    public Collection<NegotiationLocations> getAllLocations() throws CantGetListLocationsPurchaseException {
-        try {
-            DatabaseTable PurchaseLocationsTable = this.database.getTable(CustomerBrokerPurchaseNegotiationDatabaseConstants.LOCATIONS_CUSTOMER_TABLE_NAME);
-            PurchaseLocationsTable.loadToMemory();
-            List<DatabaseTableRecord> records = PurchaseLocationsTable.getRecords();
-            PurchaseLocationsTable.clearAllFilters();
-            Collection<NegotiationLocations> resultados = new ArrayList<>();
-            for (DatabaseTableRecord record : records) {
-                resultados.add(constructLocationsPurchaseFromRecord(record));
+        LOCATIONS
+
+     ==============================================================================================*/
+
+        public void createNewLocation(String location, String uri) throws CantCreateLocationPurchaseException {
+            try {
+                DatabaseTable PurchaseLocationTable = this.database.getTable(CustomerBrokerPurchaseNegotiationDatabaseConstants.LOCATIONS_CUSTOMER_TABLE_NAME);
+                DatabaseTableRecord recordToInsert   = PurchaseLocationTable.getEmptyRecord();
+                recordToInsert.setUUIDValue(CustomerBrokerPurchaseNegotiationDatabaseConstants.LOCATIONS_CUSTOMER_LOCATION_ID_COLUMN_NAME, UUID.randomUUID());
+                recordToInsert.setStringValue(CustomerBrokerPurchaseNegotiationDatabaseConstants.LOCATIONS_CUSTOMER_LOCATION_COLUMN_NAME, location);
+                recordToInsert.setStringValue(CustomerBrokerPurchaseNegotiationDatabaseConstants.LOCATIONS_CUSTOMER_URI_COLUMN_NAME, uri);
+                PurchaseLocationTable.insertRecord(recordToInsert);
+            } catch (CantInsertRecordException e) {
+                throw new CantCreateLocationPurchaseException(e.DEFAULT_MESSAGE, e, "", "");
             }
-            return resultados;
-        } catch (CantLoadTableToMemoryException e) {
-            throw new CantGetListLocationsPurchaseException(e.DEFAULT_MESSAGE, e, "", "");
-        } catch (InvalidParameterException e) {
-            throw new CantGetListLocationsPurchaseException(e.DEFAULT_MESSAGE, e, "", "");
         }
-    }
 
-    private NegotiationLocations constructLocationsPurchaseFromRecord(DatabaseTableRecord record) throws InvalidParameterException{
-        UUID    locationId  = record.getUUIDValue(CustomerBrokerPurchaseNegotiationDatabaseConstants.LOCATIONS_CUSTOMER_LOCATION_ID_COLUMN_NAME);
-        String  location    = record.getStringValue(CustomerBrokerPurchaseNegotiationDatabaseConstants.LOCATIONS_CUSTOMER_LOCATION_COLUMN_NAME);
-        String  uri         = record.getStringValue(CustomerBrokerPurchaseNegotiationDatabaseConstants.LOCATIONS_CUSTOMER_URI_COLUMN_NAME);
-        return new NegotiationPurchaseLocations(locationId, location, uri);
-    }
-
-    public void createNewBankAccount(NegotiationBankAccount bankAccount) throws CantCreateBankAccountPurchaseException {
-        try {
-            DatabaseTable PurchaseBankTable = this.database.getTable(CustomerBrokerPurchaseNegotiationDatabaseConstants.BANK_ACCOUNTS_CUSTOMER_TABLE_NAME);
-            DatabaseTableRecord recordToInsert = PurchaseBankTable.getEmptyRecord();
-            recordToInsert.setUUIDValue(CustomerBrokerPurchaseNegotiationDatabaseConstants.BANK_ACCOUNTS_CUSTOMER_BANK_ACCOUNTS_ID_COLUMN_NAME, bankAccount.getBankAccountId());
-            recordToInsert.setStringValue(CustomerBrokerPurchaseNegotiationDatabaseConstants.BANK_ACCOUNTS_CUSTOMER_BANK_ACCOUNTS_COLUMN_NAME, bankAccount.getBankAccount());
-            recordToInsert.setStringValue(CustomerBrokerPurchaseNegotiationDatabaseConstants.BANK_ACCOUNTS_CUSTOMER_BANK_ACCOUNTS_TYPE_COLUMN_NAME, bankAccount.getCurrencyType().getCode());
-            PurchaseBankTable.insertRecord(recordToInsert);
-        } catch (CantInsertRecordException e) {
-            throw new CantCreateBankAccountPurchaseException(e.DEFAULT_MESSAGE, e, "", "");
+        public void updateLocation(NegotiationLocations location) throws CantUpdateLocationPurchaseException {
+            try {
+                DatabaseTable PurchaseLocationTable = this.database.getTable(CustomerBrokerPurchaseNegotiationDatabaseConstants.LOCATIONS_CUSTOMER_TABLE_NAME);
+                DatabaseTableRecord recordToUpdate   = PurchaseLocationTable.getEmptyRecord();
+                PurchaseLocationTable.addUUIDFilter(CustomerBrokerPurchaseNegotiationDatabaseConstants.LOCATIONS_CUSTOMER_LOCATION_ID_COLUMN_NAME, location.getLocationId(), DatabaseFilterType.EQUAL);
+                recordToUpdate.setStringValue(CustomerBrokerPurchaseNegotiationDatabaseConstants.LOCATIONS_CUSTOMER_LOCATION_COLUMN_NAME, location.getLocation());
+                recordToUpdate.setStringValue(CustomerBrokerPurchaseNegotiationDatabaseConstants.LOCATIONS_CUSTOMER_URI_COLUMN_NAME, location.getURI());
+                PurchaseLocationTable.updateRecord(recordToUpdate);
+            } catch (CantUpdateRecordException e) {
+                throw new CantUpdateLocationPurchaseException(e.DEFAULT_MESSAGE, e, "", "");
+            }
         }
-    }
 
-    public void updateBankAccount(NegotiationBankAccount bankAccount) throws CantUpdateBankAccountPurchaseException {
-        try {
-            DatabaseTable PurchaseBankTable = this.database.getTable(CustomerBrokerPurchaseNegotiationDatabaseConstants.BANK_ACCOUNTS_CUSTOMER_TABLE_NAME);
-            DatabaseTableRecord recordToUpdate = PurchaseBankTable.getEmptyRecord();
-            PurchaseBankTable.addUUIDFilter(CustomerBrokerPurchaseNegotiationDatabaseConstants.BANK_ACCOUNTS_CUSTOMER_BANK_ACCOUNTS_ID_COLUMN_NAME, bankAccount.getBankAccountId(), DatabaseFilterType.EQUAL);
-            recordToUpdate.setStringValue(CustomerBrokerPurchaseNegotiationDatabaseConstants.BANK_ACCOUNTS_CUSTOMER_BANK_ACCOUNTS_COLUMN_NAME, bankAccount.getBankAccount());
-            recordToUpdate.setStringValue(CustomerBrokerPurchaseNegotiationDatabaseConstants.BANK_ACCOUNTS_CUSTOMER_BANK_ACCOUNTS_TYPE_COLUMN_NAME, bankAccount.getCurrencyType().getCode());
-            PurchaseBankTable.updateRecord(recordToUpdate);
-        } catch (CantUpdateRecordException e) {
-            throw new CantUpdateBankAccountPurchaseException(e.DEFAULT_MESSAGE, e, "", "");
+        public void deleteLocation(NegotiationLocations location) throws CantDeleteLocationPurchaseException {
+            try {
+                DatabaseTable PurchaseLocationTable = this.database.getTable(CustomerBrokerPurchaseNegotiationDatabaseConstants.LOCATIONS_CUSTOMER_TABLE_NAME);
+                DatabaseTableRecord recordToDelete   = PurchaseLocationTable.getEmptyRecord();
+                PurchaseLocationTable.addUUIDFilter(CustomerBrokerPurchaseNegotiationDatabaseConstants.LOCATIONS_CUSTOMER_LOCATION_ID_COLUMN_NAME, location.getLocationId(), DatabaseFilterType.EQUAL);
+                PurchaseLocationTable.deleteRecord(recordToDelete);
+            } catch (CantDeleteRecordException e) {
+                throw new CantDeleteLocationPurchaseException(e.DEFAULT_MESSAGE, e, "", "");
+            }
         }
-    }
 
-    public void deleteBankAccount(NegotiationBankAccount bankAccount) throws CantDeleteBankAccountPurchaseException {
-        try {
-            DatabaseTable PurchaseBankTable = this.database.getTable(CustomerBrokerPurchaseNegotiationDatabaseConstants.BANK_ACCOUNTS_CUSTOMER_TABLE_NAME);
-            DatabaseTableRecord recordToDelete = PurchaseBankTable.getEmptyRecord();
-            PurchaseBankTable.addUUIDFilter(CustomerBrokerPurchaseNegotiationDatabaseConstants.BANK_ACCOUNTS_CUSTOMER_BANK_ACCOUNTS_ID_COLUMN_NAME, bankAccount.getBankAccountId(), DatabaseFilterType.EQUAL);
-            PurchaseBankTable.deleteRecord(recordToDelete);
-        } catch (CantDeleteRecordException e) {
-            throw new CantDeleteBankAccountPurchaseException(e.DEFAULT_MESSAGE, e, "", "");
+        public Collection<NegotiationLocations> getAllLocations() throws CantGetListLocationsPurchaseException {
+            try {
+                DatabaseTable PurchaseLocationsTable = this.database.getTable(CustomerBrokerPurchaseNegotiationDatabaseConstants.LOCATIONS_CUSTOMER_TABLE_NAME);
+                PurchaseLocationsTable.loadToMemory();
+                List<DatabaseTableRecord> records = PurchaseLocationsTable.getRecords();
+                PurchaseLocationsTable.clearAllFilters();
+                Collection<NegotiationLocations> resultados = new ArrayList<>();
+                for (DatabaseTableRecord record : records) {
+                    resultados.add(constructLocationsPurchaseFromRecord(record));
+                }
+                return resultados;
+            } catch (CantLoadTableToMemoryException e) {
+                throw new CantGetListLocationsPurchaseException(e.DEFAULT_MESSAGE, e, "", "");
+            } catch (InvalidParameterException e) {
+                throw new CantGetListLocationsPurchaseException(e.DEFAULT_MESSAGE, e, "", "");
+            }
         }
-    }
 
-    public Collection<NegotiationBankAccount> getBankAccountByCurrencyType(FiatCurrency currency) throws CantGetListBankAccountsPurchaseException {
-        try {
+        private NegotiationLocations constructLocationsPurchaseFromRecord(DatabaseTableRecord record) throws InvalidParameterException{
+            UUID    locationId  = record.getUUIDValue(CustomerBrokerPurchaseNegotiationDatabaseConstants.LOCATIONS_CUSTOMER_LOCATION_ID_COLUMN_NAME);
+            String  location    = record.getStringValue(CustomerBrokerPurchaseNegotiationDatabaseConstants.LOCATIONS_CUSTOMER_LOCATION_COLUMN_NAME);
+            String  uri         = record.getStringValue(CustomerBrokerPurchaseNegotiationDatabaseConstants.LOCATIONS_CUSTOMER_URI_COLUMN_NAME);
+            return new NegotiationPurchaseLocations(locationId, location, uri);
+        }
+
+    /*==============================================================================================
+
+        BANKACCOUNT
+
+     ==============================================================================================*/
+
+        public void createNewBankAccount(NegotiationBankAccount bankAccount) throws CantCreateBankAccountPurchaseException {
+            try {
+                DatabaseTable PurchaseBankTable = this.database.getTable(CustomerBrokerPurchaseNegotiationDatabaseConstants.BANK_ACCOUNTS_CUSTOMER_TABLE_NAME);
+                DatabaseTableRecord recordToInsert = PurchaseBankTable.getEmptyRecord();
+                recordToInsert.setUUIDValue(CustomerBrokerPurchaseNegotiationDatabaseConstants.BANK_ACCOUNTS_CUSTOMER_BANK_ACCOUNTS_ID_COLUMN_NAME, bankAccount.getBankAccountId());
+                recordToInsert.setStringValue(CustomerBrokerPurchaseNegotiationDatabaseConstants.BANK_ACCOUNTS_CUSTOMER_BANK_ACCOUNTS_COLUMN_NAME, bankAccount.getBankAccount());
+                recordToInsert.setStringValue(CustomerBrokerPurchaseNegotiationDatabaseConstants.BANK_ACCOUNTS_CUSTOMER_BANK_ACCOUNTS_TYPE_COLUMN_NAME, bankAccount.getCurrencyType().getCode());
+                PurchaseBankTable.insertRecord(recordToInsert);
+            } catch (CantInsertRecordException e) {
+                throw new CantCreateBankAccountPurchaseException(e.DEFAULT_MESSAGE, e, "", "");
+            }
+        }
+
+        public void updateBankAccount(NegotiationBankAccount bankAccount) throws CantUpdateBankAccountPurchaseException {
+            try {
+                DatabaseTable PurchaseBankTable = this.database.getTable(CustomerBrokerPurchaseNegotiationDatabaseConstants.BANK_ACCOUNTS_CUSTOMER_TABLE_NAME);
+                DatabaseTableRecord recordToUpdate = PurchaseBankTable.getEmptyRecord();
+                PurchaseBankTable.addUUIDFilter(CustomerBrokerPurchaseNegotiationDatabaseConstants.BANK_ACCOUNTS_CUSTOMER_BANK_ACCOUNTS_ID_COLUMN_NAME, bankAccount.getBankAccountId(), DatabaseFilterType.EQUAL);
+                recordToUpdate.setStringValue(CustomerBrokerPurchaseNegotiationDatabaseConstants.BANK_ACCOUNTS_CUSTOMER_BANK_ACCOUNTS_COLUMN_NAME, bankAccount.getBankAccount());
+                recordToUpdate.setStringValue(CustomerBrokerPurchaseNegotiationDatabaseConstants.BANK_ACCOUNTS_CUSTOMER_BANK_ACCOUNTS_TYPE_COLUMN_NAME, bankAccount.getCurrencyType().getCode());
+                PurchaseBankTable.updateRecord(recordToUpdate);
+            } catch (CantUpdateRecordException e) {
+                throw new CantUpdateBankAccountPurchaseException(e.DEFAULT_MESSAGE, e, "", "");
+            }
+        }
+
+        public void deleteBankAccount(NegotiationBankAccount bankAccount) throws CantDeleteBankAccountPurchaseException {
+            try {
+                DatabaseTable PurchaseBankTable = this.database.getTable(CustomerBrokerPurchaseNegotiationDatabaseConstants.BANK_ACCOUNTS_CUSTOMER_TABLE_NAME);
+                DatabaseTableRecord recordToDelete = PurchaseBankTable.getEmptyRecord();
+                PurchaseBankTable.addUUIDFilter(CustomerBrokerPurchaseNegotiationDatabaseConstants.BANK_ACCOUNTS_CUSTOMER_BANK_ACCOUNTS_ID_COLUMN_NAME, bankAccount.getBankAccountId(), DatabaseFilterType.EQUAL);
+                PurchaseBankTable.deleteRecord(recordToDelete);
+            } catch (CantDeleteRecordException e) {
+                throw new CantDeleteBankAccountPurchaseException(e.DEFAULT_MESSAGE, e, "", "");
+            }
+        }
+
+        public Collection<NegotiationBankAccount> getAllBankAccount() throws CantGetListBankAccountsPurchaseException {
+            try {
+                DatabaseTable PurchaseBanksTable = this.database.getTable(CustomerBrokerPurchaseNegotiationDatabaseConstants.BANK_ACCOUNTS_CUSTOMER_TABLE_NAME);
+                PurchaseBanksTable.loadToMemory();
+                List<DatabaseTableRecord> records = PurchaseBanksTable.getRecords();
+                PurchaseBanksTable.clearAllFilters();
+                Collection<NegotiationBankAccount> resultados = new ArrayList<>();
+                for (DatabaseTableRecord record : records) {
+                    resultados.add(constructBankPurchaseFromRecord(record));
+                }
+                return resultados;
+            } catch (CantLoadTableToMemoryException e) {
+                throw new CantGetListBankAccountsPurchaseException(e.DEFAULT_MESSAGE, e, "", "");
+            } catch (InvalidParameterException e) {
+                throw new CantGetListBankAccountsPurchaseException(e.DEFAULT_MESSAGE, e, "", "");
+            }
+        }
+
+        public Collection<NegotiationBankAccount> getBankAccountByCurrencyType(FiatCurrency currency) throws CantGetListBankAccountsPurchaseException {
+            try {
+                DatabaseTable PurchaseBanksTable = this.database.getTable(CustomerBrokerPurchaseNegotiationDatabaseConstants.BANK_ACCOUNTS_CUSTOMER_TABLE_NAME);
+                PurchaseBanksTable.addStringFilter(CustomerBrokerPurchaseNegotiationDatabaseConstants.BANK_ACCOUNTS_CUSTOMER_BANK_ACCOUNTS_TYPE_COLUMN_NAME, currency.getCode(), DatabaseFilterType.EQUAL);
+                PurchaseBanksTable.loadToMemory();
+                List<DatabaseTableRecord> records = PurchaseBanksTable.getRecords();
+                PurchaseBanksTable.clearAllFilters();
+                Collection<NegotiationBankAccount> resultados = new ArrayList<>();
+                for (DatabaseTableRecord record : records) {
+                    resultados.add(constructBankPurchaseFromRecord(record));
+                }
+                return resultados;
+            } catch (CantLoadTableToMemoryException e) {
+                throw new CantGetListBankAccountsPurchaseException(e.DEFAULT_MESSAGE, e, "", "");
+            } catch (InvalidParameterException e) {
+                throw new CantGetListBankAccountsPurchaseException(e.DEFAULT_MESSAGE, e, "", "");
+            }
+        }
+
+        public Collection<FiatCurrency> getCurrencyTypeAvailableBankAccount() throws CantGetListBankAccountsPurchaseException {
+
             DatabaseTable PurchaseBanksTable = this.database.getTable(CustomerBrokerPurchaseNegotiationDatabaseConstants.BANK_ACCOUNTS_CUSTOMER_TABLE_NAME);
-            PurchaseBanksTable.addStringFilter(CustomerBrokerPurchaseNegotiationDatabaseConstants.BANK_ACCOUNTS_CUSTOMER_BANK_ACCOUNTS_TYPE_COLUMN_NAME, currency.getCode(), DatabaseFilterType.EQUAL);
-            PurchaseBanksTable.loadToMemory();
-            List<DatabaseTableRecord> records = PurchaseBanksTable.getRecords();
-            PurchaseBanksTable.clearAllFilters();
-            Collection<NegotiationBankAccount> resultados = new ArrayList<>();
-            for (DatabaseTableRecord record : records) {
-                resultados.add(constructBankPurchaseFromRecord(record));
+
+            String Query = "SELECT DISTINCT " +
+                CustomerBrokerPurchaseNegotiationDatabaseConstants.BANK_ACCOUNTS_CUSTOMER_BANK_ACCOUNTS_TYPE_COLUMN_NAME +
+                " FROM " +
+                CustomerBrokerPurchaseNegotiationDatabaseConstants.BANK_ACCOUNTS_CUSTOMER_TABLE_NAME;
+
+            Collection<DatabaseTableRecord> records = null;
+            try {
+                records = PurchaseBanksTable.customQuery(Query, true);
+                Collection<FiatCurrency> resultados = new ArrayList<>();
+                for (DatabaseTableRecord record : records) {
+                    resultados.add(FiatCurrency.getByCode(record.getStringValue("Column2")));
+                }
+                return resultados;
+            } catch (CantLoadTableToMemoryException e) {
+                throw new CantGetListBankAccountsPurchaseException(e.DEFAULT_MESSAGE, e, "", "");
+            } catch (InvalidParameterException e) {
+                throw new CantGetListBankAccountsPurchaseException(e.DEFAULT_MESSAGE, e, "", "");
             }
-            return resultados;
-        } catch (CantLoadTableToMemoryException e) {
-            throw new CantGetListBankAccountsPurchaseException(e.DEFAULT_MESSAGE, e, "", "");
-        } catch (InvalidParameterException e) {
-            throw new CantGetListBankAccountsPurchaseException(e.DEFAULT_MESSAGE, e, "", "");
         }
-    }
 
-    public Collection<FiatCurrency> getCurrencyTypeAvailableBankAccount() throws CantGetListBankAccountsPurchaseException {
+        private NegotiationBankAccount constructBankPurchaseFromRecord(DatabaseTableRecord record) throws InvalidParameterException{
 
-        DatabaseTable PurchaseBanksTable = this.database.getTable(CustomerBrokerPurchaseNegotiationDatabaseConstants.BANK_ACCOUNTS_CUSTOMER_TABLE_NAME);
+            UUID            bankId  = record.getUUIDValue(CustomerBrokerPurchaseNegotiationDatabaseConstants.BANK_ACCOUNTS_CUSTOMER_BANK_ACCOUNTS_ID_COLUMN_NAME);
+            String          bank    = record.getStringValue(CustomerBrokerPurchaseNegotiationDatabaseConstants.BANK_ACCOUNTS_CUSTOMER_BANK_ACCOUNTS_COLUMN_NAME);
+            FiatCurrency    type    = FiatCurrency.getByCode(record.getStringValue(CustomerBrokerPurchaseNegotiationDatabaseConstants.BANK_ACCOUNTS_CUSTOMER_BANK_ACCOUNTS_TYPE_COLUMN_NAME));
 
-        String Query = "SELECT DISTINCT " +
-            CustomerBrokerPurchaseNegotiationDatabaseConstants.BANK_ACCOUNTS_CUSTOMER_BANK_ACCOUNTS_TYPE_COLUMN_NAME +
-            " FROM " +
-            CustomerBrokerPurchaseNegotiationDatabaseConstants.BANK_ACCOUNTS_CUSTOMER_TABLE_NAME;
-
-        Collection<DatabaseTableRecord> records = null;
-        try {
-            records = PurchaseBanksTable.customQuery(Query, true);
-            Collection<FiatCurrency> resultados = new ArrayList<>();
-            for (DatabaseTableRecord record : records) {
-                resultados.add(FiatCurrency.getByCode(record.getStringValue(CustomerBrokerPurchaseNegotiationDatabaseConstants.BANK_ACCOUNTS_CUSTOMER_BANK_ACCOUNTS_TYPE_COLUMN_NAME)));
-            }
-            return resultados;
-        } catch (CantLoadTableToMemoryException e) {
-            throw new CantGetListBankAccountsPurchaseException(e.DEFAULT_MESSAGE, e, "", "");
-        } catch (InvalidParameterException e) {
-            throw new CantGetListBankAccountsPurchaseException(e.DEFAULT_MESSAGE, e, "", "");
+            return new NegotiationBankAccountPurchase(bankId, bank, type);
         }
-    }
-
-    private NegotiationBankAccount constructBankPurchaseFromRecord(DatabaseTableRecord record) throws InvalidParameterException{
-
-        UUID            bankId  = record.getUUIDValue(CustomerBrokerPurchaseNegotiationDatabaseConstants.BANK_ACCOUNTS_CUSTOMER_BANK_ACCOUNTS_ID_COLUMN_NAME);
-        String          bank    = record.getStringValue(CustomerBrokerPurchaseNegotiationDatabaseConstants.BANK_ACCOUNTS_CUSTOMER_BANK_ACCOUNTS_COLUMN_NAME);
-        FiatCurrency    type    = FiatCurrency.getByCode(record.getStringValue(CustomerBrokerPurchaseNegotiationDatabaseConstants.BANK_ACCOUNTS_CUSTOMER_BANK_ACCOUNTS_TYPE_COLUMN_NAME));
-
-        return new NegotiationBankAccountPurchase(bankId, bank, type);
-    }
 
 }

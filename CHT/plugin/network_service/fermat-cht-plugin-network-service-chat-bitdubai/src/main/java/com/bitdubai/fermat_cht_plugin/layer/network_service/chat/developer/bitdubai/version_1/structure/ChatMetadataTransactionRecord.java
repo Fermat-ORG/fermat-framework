@@ -2,19 +2,20 @@ package com.bitdubai.fermat_cht_plugin.layer.network_service.chat.developer.bitd
 
 import com.bitdubai.fermat_cht_api.layer.network_service.chat.enums.ChatMessageStatus;
 import com.bitdubai.fermat_cht_api.layer.network_service.chat.enums.DistributionStatus;
-import com.bitdubai.fermat_cht_api.layer.network_service.chat.interfaces.ChatMetada;
+import com.bitdubai.fermat_cht_api.layer.network_service.chat.interfaces.ChatMetadata;
 
 import java.io.Serializable;
 import java.sql.Timestamp;
+import java.util.UUID;
 
 /**
  * Created by root on 06/01/16.
  */
-public class ChatMetadaTransactionRecord implements ChatMetada,Serializable {
+public class ChatMetadataTransactionRecord implements ChatMetadata,Serializable {
 
-    private Integer idChat;
+    private UUID idChat;
 
-    private Integer idObjecto;
+    private UUID idObject;
 
     private String localActorType;
 
@@ -30,7 +31,7 @@ public class ChatMetadaTransactionRecord implements ChatMetada,Serializable {
 
     private Timestamp date;
 
-    private Integer idMessage;
+    private UUID idMessage;
 
     private String message;
 
@@ -47,9 +48,9 @@ public class ChatMetadaTransactionRecord implements ChatMetada,Serializable {
 
     @Override
     public String toString() {
-        return "ChatMetadaTransactionRecord{" +
+        return "ChatMetadataTransactionRecord{" +
                 "idChat=" + idChat +
-                ", idObjecto=" + idObjecto +
+                ", idObject=" + idObject +
                 ", localActorType='" + localActorType + '\'' +
                 ", localActorPubKey='" + localActorPubKey + '\'' +
                 ", remoteActorType='" + remoteActorType + '\'' +
@@ -62,23 +63,7 @@ public class ChatMetadaTransactionRecord implements ChatMetada,Serializable {
                 '}';
     }
 
-    @Override
-    public Integer getIdChat() {
-        return idChat;
-    }
 
-    public void setIdChat(Integer idChat) {
-        this.idChat = idChat;
-    }
-
-    @Override
-    public Integer getIdObjecto() {
-        return idObjecto;
-    }
-
-    public void setIdObjecto(Integer idObjecto) {
-        this.idObjecto = idObjecto;
-    }
 
     @Override
     public String getLocalActorType() {
@@ -144,20 +129,38 @@ public class ChatMetadaTransactionRecord implements ChatMetada,Serializable {
     }
 
     @Override
-    public Integer getIdMessage() {
-        return idMessage;
-    }
-
-    public void setIdMessage(Integer idMessage) {
-        this.idMessage = idMessage;
-    }
-
-    @Override
     public String getMessage() {
         return message;
     }
 
     public void setMessage(String message) {
         this.message = message;
+    }
+
+    @Override
+    public UUID getIdChat() {
+        return idChat;
+    }
+
+    public void setIdChat(UUID idChat) {
+        this.idChat = idChat;
+    }
+
+    @Override
+    public UUID getIdObject() {
+        return idObject;
+    }
+
+    public void setIdObject(UUID idObject) {
+        this.idObject = idObject;
+    }
+
+    @Override
+    public UUID getIdMessage() {
+        return idMessage;
+    }
+
+    public void setIdMessage(UUID idMessage) {
+        this.idMessage = idMessage;
     }
 }

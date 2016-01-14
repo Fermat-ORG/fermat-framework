@@ -9,6 +9,7 @@ import com.bitdubai.fermat_cbp_api.all_definition.events.enums.EventType;
 import com.bitdubai.fermat_cbp_api.all_definition.exceptions.CantSaveEventException;
 import com.bitdubai.fermat_cbp_api.all_definition.exceptions.CantSetObjectException;
 import com.bitdubai.fermat_cbp_api.all_definition.exceptions.CantStartServiceException;
+import com.bitdubai.fermat_cbp_api.layer.business_transaction.common.events.BrokerAckPaymentConfirmed;
 import com.bitdubai.fermat_cbp_api.layer.business_transaction.common.events.BrokerSubmitMerchandiseConfirmed;
 import com.bitdubai.fermat_cbp_api.layer.network_service.transaction_transmission.events.IncomingConfirmBusinessTransactionResponse;
 import com.bitdubai.fermat_cbp_api.layer.network_service.transaction_transmission.events.IncomingNewContractStatusUpdate;
@@ -83,7 +84,7 @@ public class CustomerAckOnlineMerchandiseRecorderService implements CBPService {
         //LOG.info("CHECK THE DATABASE");
     }
 
-    public void BrokerSubmitMerchandiseConfirmedEventHandler(BrokerSubmitMerchandiseConfirmed event)throws CantSaveEventException {
+    public void brokerAckPaymentConfirmedEventHandler(BrokerAckPaymentConfirmed event)throws CantSaveEventException {
         //Logger LOG = Logger.getGlobal();
         //LOG.info("EVENT TEST, I GOT AN EVENT:\n"+event);
         this.customerAckOnlineMerchandiseBusinessTransactionDao.saveNewEvent(
@@ -116,17 +117,24 @@ public class CustomerAckOnlineMerchandiseRecorderService implements CBPService {
             eventManager.addListener(fermatEventListener);
             listenersAdded.add(fermatEventListener);
 
-            fermatEventListener = eventManager.getNewListener(EventType.BROKER_SUBMIT_MERCHANDISE_CONFIRMED);
-            fermatEventHandler = new BrokerSubmitMerchandiseConfirmedEventHandler();
-            ((BrokerSubmitMerchandiseConfirmedEventHandler) fermatEventHandler).setCustomerAckOnlineMerchandiseRecorderService(this);
+            /*fermatEventListener = eventManager.getNewListener(EventType.BROKER_SUBMIT_MERCHANDISE_CONFIRMED);
+            fermatEventHandler = new BrokerAckPaymentConfirmedEventHandler();
+            ((BrokerAckPaymentConfirmedEventHandler) fermatEventHandler).setCustomerAckOnlineMerchandiseRecorderService(this);
             fermatEventListener.setEventHandler(fermatEventHandler);
             eventManager.addListener(fermatEventListener);
-            listenersAdded.add(fermatEventListener);
+            listenersAdded.add(fermatEventListener);*/
 
             fermatEventListener = eventManager.getNewListener(
                     com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.enums.EventType.INCOMING_MONEY_NOTIFICATION);
             fermatEventHandler = new IncomingMoneyNotificationEventHandler();
             ((IncomingMoneyNotificationEventHandler) fermatEventHandler).setCustomerAckOnlineMerchandiseRecorderService(this);
+            fermatEventListener.setEventHandler(fermatEventHandler);
+            eventManager.addListener(fermatEventListener);
+            listenersAdded.add(fermatEventListener);
+
+            fermatEventListener = eventManager.getNewListener(EventType.BROKER_ACK_PAYMENT_CONFIRMED);
+            fermatEventHandler = new BrokerAckPaymentConfirmedEventHandler();
+            ((BrokerAckPaymentConfirmedEventHandler) fermatEventHandler).setCustomerAckOnlineMerchandiseRecorderService(this);
             fermatEventListener.setEventHandler(fermatEventHandler);
             eventManager.addListener(fermatEventListener);
             listenersAdded.add(fermatEventListener);

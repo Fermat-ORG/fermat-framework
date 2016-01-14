@@ -18,7 +18,7 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.Cant
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.DatabaseTransactionFailedException;
 import com.bitdubai.fermat_cht_api.layer.network_service.chat.enums.ChatMessageStatus;
 import com.bitdubai.fermat_cht_api.layer.network_service.chat.enums.DistributionStatus;
-import com.bitdubai.fermat_cht_plugin.layer.network_service.chat.developer.bitdubai.version_1.structure.ChatMetadaTransactionRecord;
+import com.bitdubai.fermat_cht_plugin.layer.network_service.chat.developer.bitdubai.version_1.structure.ChatMetadataTransactionRecord;
 import com.bitdubai.fermat_cht_plugin.layer.network_service.chat.developer.bitdubai.version_1.exceptions.CantDeleteRecordDataBaseException;
 import com.bitdubai.fermat_cht_plugin.layer.network_service.chat.developer.bitdubai.version_1.exceptions.CantInsertRecordDataBaseException;
 import com.bitdubai.fermat_cht_plugin.layer.network_service.chat.developer.bitdubai.version_1.exceptions.CantReadRecordDataBaseException;
@@ -41,7 +41,7 @@ import java.util.Map;
  * @version 1.0
  * @since Java JDK 1.7
  */
-public class OutgoinChatMetaDataDao {
+public class ChatMetaDataDao {
 
     /**
      * Represent the dataBase
@@ -53,7 +53,7 @@ public class OutgoinChatMetaDataDao {
      *
      * @param dataBase
      */
-    public OutgoinChatMetaDataDao(Database dataBase) {
+    public ChatMetaDataDao(Database dataBase) {
         super();
         this.dataBase = dataBase;
     }
@@ -73,23 +73,23 @@ public class OutgoinChatMetaDataDao {
      * @return DatabaseTable
      */
     DatabaseTable getDatabaseTable() {
-        return getDataBase().getTable(NetworkServiceChatNetworkServiceDatabaseConstants.OUTGOING_CHAT_TABLE_NAME);
+        return getDataBase().getTable(NetworkServiceChatNetworkServiceDatabaseConstants.CHAT_TABLE_NAME);
     }
 
     /**
-     * Method that find an ChatMetadaTransactionRecord by id in the data base.
+     * Method that find an ChatMetadataTransactionRecord by id in the data base.
      *
      * @param id Long id.
-     * @return ChatMetadaTransactionRecord found.
+     * @return ChatMetadataTransactionRecord found.
      * @throws CantReadRecordDataBaseException
      */
-    public ChatMetadaTransactionRecord findById(String id) throws CantReadRecordDataBaseException {
+    public ChatMetadataTransactionRecord findById(String id) throws CantReadRecordDataBaseException {
 
         if (id == null) {
             throw new IllegalArgumentException("The id is required, can not be null");
         }
 
-        ChatMetadaTransactionRecord  chatMetadaTransactionRecord = null;
+        ChatMetadataTransactionRecord chatMetadaTransactionRecord = null;
 
         try {
 
@@ -97,7 +97,7 @@ public class OutgoinChatMetaDataDao {
              * 1 - load the data base to memory with filter
              */
             DatabaseTable incomingMessageTable = getDatabaseTable();
-            incomingMessageTable.addStringFilter(NetworkServiceChatNetworkServiceDatabaseConstants.OUTGOING_CHAT_IDCHAT_COLUMN_NAME, id, DatabaseFilterType.EQUAL);
+            incomingMessageTable.addStringFilter(NetworkServiceChatNetworkServiceDatabaseConstants.CHAT_IDCHAT_COLUMN_NAME, id, DatabaseFilterType.EQUAL);
             incomingMessageTable.loadToMemory();
 
             /*
@@ -107,12 +107,12 @@ public class OutgoinChatMetaDataDao {
 
 
             /*
-             * 3 - Convert into ChatMetadaTransactionRecord objects
+             * 3 - Convert into ChatMetadataTransactionRecord objects
              */
             for (DatabaseTableRecord record : records) {
 
                 /*
-                 * 3.1 - Create and configure a  ChatMetadaTransactionRecord
+                 * 3.1 - Create and configure a  ChatMetadataTransactionRecord
                  */
                 chatMetadaTransactionRecord = constructFrom(record);
             }
@@ -134,13 +134,13 @@ public class OutgoinChatMetaDataDao {
     /**
      * Method that list the all entities on the data base.
      *
-     * @return All ChatMetadaTransactionRecord.
+     * @return All ChatMetadataTransactionRecord.
      * @throws CantReadRecordDataBaseException
      */
-    public List<ChatMetadaTransactionRecord> findAll() throws CantReadRecordDataBaseException {
+    public List<ChatMetadataTransactionRecord> findAll() throws CantReadRecordDataBaseException {
 
 
-        List<ChatMetadaTransactionRecord> list = null;
+        List<ChatMetadataTransactionRecord> list = null;
 
         try {
 
@@ -156,20 +156,20 @@ public class OutgoinChatMetaDataDao {
             List<DatabaseTableRecord> records = networkIntraUserTable.getRecords();
 
             /*
-             * 3 - Create a list of ChatMetadaTransactionRecord objects
+             * 3 - Create a list of ChatMetadataTransactionRecord objects
              */
             list = new ArrayList<>();
             list.clear();
 
             /*
-             * 4 - Convert into ChatMetadaTransactionRecord objects
+             * 4 - Convert into ChatMetadataTransactionRecord objects
              */
             for (DatabaseTableRecord record : records) {
 
                 /*
-                 * 4.1 - Create and configure a  ChatMetadaTransactionRecord
+                 * 4.1 - Create and configure a  ChatMetadataTransactionRecord
                  */
-                ChatMetadaTransactionRecord ChatMetadaTransactionRecord = constructFrom(record);
+                ChatMetadataTransactionRecord ChatMetadaTransactionRecord = constructFrom(record);
 
                 /*
                  * 4.2 - Add to the list
@@ -200,11 +200,11 @@ public class OutgoinChatMetaDataDao {
      * Method that list the all entities on the data base. The valid value of
      * the column name are the att of the <code>NetworkServiceChatNetworkServiceDatabaseConstants</code>
      *
-     * @return All ChatMetadaTransactionRecord.
+     * @return All ChatMetadataTransactionRecord.
      * @throws CantReadRecordDataBaseException
      * @see NetworkServiceChatNetworkServiceDatabaseConstants
      */
-    public List<ChatMetadaTransactionRecord> findAll(String columnName, String columnValue) throws CantReadRecordDataBaseException {
+    public List<ChatMetadataTransactionRecord> findAll(String columnName, String columnValue) throws CantReadRecordDataBaseException {
 
         if (columnName == null ||
                 columnName.isEmpty() ||
@@ -215,7 +215,7 @@ public class OutgoinChatMetaDataDao {
         }
 
 
-        List<ChatMetadaTransactionRecord> list = null;
+        List<ChatMetadataTransactionRecord> list = null;
 
         try {
 
@@ -232,20 +232,20 @@ public class OutgoinChatMetaDataDao {
             List<DatabaseTableRecord> records = templateTable.getRecords();
 
             /*
-             * 3 - Create a list of ChatMetadaTransactionRecord objects
+             * 3 - Create a list of ChatMetadataTransactionRecord objects
              */
             list = new ArrayList<>();
             list.clear();
 
             /*
-             * 4 - Convert into ChatMetadaTransactionRecord objects
+             * 4 - Convert into ChatMetadataTransactionRecord objects
              */
             for (DatabaseTableRecord record : records) {
 
                 /*
-                 * 4.1 - Create and configure a  ChatMetadaTransactionRecord
+                 * 4.1 - Create and configure a  ChatMetadataTransactionRecord
                  */
-                ChatMetadaTransactionRecord ChatMetadaTransactionRecord = constructFrom(record);
+                ChatMetadataTransactionRecord ChatMetadaTransactionRecord = constructFrom(record);
 
                 /*
                  * 4.2 - Add to the list
@@ -277,10 +277,10 @@ public class OutgoinChatMetaDataDao {
      * the key are the att of the <code>NetworkServiceChatNetworkServiceDatabaseConstants</code>
      *
      * @param filters
-     * @return List<ChatMetadaTransactionRecord>
+     * @return List<ChatMetadataTransactionRecord>
      * @throws CantReadRecordDataBaseException
      */
-    public List<ChatMetadaTransactionRecord> findAll(Map<String, Object> filters) throws CantReadRecordDataBaseException {
+    public List<ChatMetadataTransactionRecord> findAll(Map<String, Object> filters) throws CantReadRecordDataBaseException {
 
         if (filters == null ||
                 filters.isEmpty()) {
@@ -288,7 +288,7 @@ public class OutgoinChatMetaDataDao {
             throw new IllegalArgumentException("The filters are required, can not be null or empty");
         }
 
-        List<ChatMetadaTransactionRecord> list = null;
+        List<ChatMetadataTransactionRecord> list = null;
         List<DatabaseTableFilter> filtersTable = new ArrayList<>();
 
         try {
@@ -322,20 +322,20 @@ public class OutgoinChatMetaDataDao {
             List<DatabaseTableRecord> records = templateTable.getRecords();
 
             /*
-             * 4 - Create a list of ChatMetadaTransactionRecord objects
+             * 4 - Create a list of ChatMetadataTransactionRecord objects
              */
             list = new ArrayList<>();
             list.clear();
 
             /*
-             * 5 - Convert into ChatMetadaTransactionRecord objects
+             * 5 - Convert into ChatMetadataTransactionRecord objects
              */
             for (DatabaseTableRecord record : records) {
 
                 /*
-                 * 5.1 - Create and configure a  ChatMetadaTransactionRecord
+                 * 5.1 - Create and configure a  ChatMetadataTransactionRecord
                  */
-                ChatMetadaTransactionRecord ChatMetadaTransactionRecord = constructFrom(record);
+                ChatMetadataTransactionRecord ChatMetadaTransactionRecord = constructFrom(record);
 
                 /*
                  * 5.2 - Add to the list
@@ -364,10 +364,10 @@ public class OutgoinChatMetaDataDao {
     /**
      * Method that create a new entity in the data base.
      *
-     * @param entity ChatMetadaTransactionRecord to create.
+     * @param entity ChatMetadataTransactionRecord to create.
      * @throws CantInsertRecordDataBaseException
      */
-    public void create(ChatMetadaTransactionRecord entity) throws CantInsertRecordDataBaseException {
+    public void create(ChatMetadataTransactionRecord entity) throws CantInsertRecordDataBaseException {
 
         if (entity == null) {
             throw new IllegalArgumentException("The entity is required, can not be null");
@@ -405,10 +405,10 @@ public class OutgoinChatMetaDataDao {
     /**
      * Method that update an entity in the data base.
      *
-     * @param entity ChatMetadaTransactionRecord to update.
+     * @param entity ChatMetadataTransactionRecord to update.
      * @throws CantUpdateRecordDataBaseException
      */
-    public void update(ChatMetadaTransactionRecord entity) throws CantUpdateRecordDataBaseException {
+    public void update(ChatMetadataTransactionRecord entity) throws CantUpdateRecordDataBaseException {
 
         if (entity == null) {
             throw new IllegalArgumentException("The entity is required, can not be null");
@@ -481,29 +481,29 @@ public class OutgoinChatMetaDataDao {
 
 
     /**
-     * Create a instance of ChatMetadaTransactionRecord from the DatabaseTableRecord
+     * Create a instance of ChatMetadataTransactionRecord from the DatabaseTableRecord
      *
      * @param record with values from the table
-     * @return ChatMetadaTransactionRecord setters the values from table
+     * @return ChatMetadataTransactionRecord setters the values from table
      */
-    private ChatMetadaTransactionRecord constructFrom(DatabaseTableRecord record) {
+    private ChatMetadataTransactionRecord constructFrom(DatabaseTableRecord record) {
 
-        ChatMetadaTransactionRecord ChatMetadaTransactionRecord = new ChatMetadaTransactionRecord();
+        ChatMetadataTransactionRecord ChatMetadaTransactionRecord = new ChatMetadataTransactionRecord();
 
         try {
 
-            ChatMetadaTransactionRecord.setIdChat(record.getIntegerValue(NetworkServiceChatNetworkServiceDatabaseConstants.OUTGOING_CHAT_IDCHAT_COLUMN_NAME));
-            ChatMetadaTransactionRecord.setIdObjecto(record.getIntegerValue(NetworkServiceChatNetworkServiceDatabaseConstants.OUTGOING_CHAT_IDOBJECTO_COLUMN_NAME));
-            ChatMetadaTransactionRecord.setLocalActorType(record.getStringValue(NetworkServiceChatNetworkServiceDatabaseConstants.OUTGOING_CHAT_LOCALACTORTYPE_COLUMN_NAME));
-            ChatMetadaTransactionRecord.setLocalActorPubKey(record.getStringValue(NetworkServiceChatNetworkServiceDatabaseConstants.OUTGOING_CHAT_LOCALACTORPUBKEY_COLUMN_NAME));
-            ChatMetadaTransactionRecord.setRemoteActorType(record.getStringValue(NetworkServiceChatNetworkServiceDatabaseConstants.OUTGOING_CHAT_REMOTEACTORTYPE_COLUMN_NAME));
-            ChatMetadaTransactionRecord.setRemoteActorPubKey(record.getStringValue(NetworkServiceChatNetworkServiceDatabaseConstants.OUTGOING_CHAT_REMOTEACTORPUBKEY_COLUMN_NAME));
-            ChatMetadaTransactionRecord.setChatName(record.getStringValue(NetworkServiceChatNetworkServiceDatabaseConstants.OUTGOING_CHAT_CHATNAME_COLUMN_NAME));
-            ChatMetadaTransactionRecord.setChatMessageStatus(ChatMessageStatus.getByCode(record.getStringValue(NetworkServiceChatNetworkServiceDatabaseConstants.OUTGOING_CHAT_CHATSTATUS_COLUMN_NAME)));
-            ChatMetadaTransactionRecord.setDate(new Timestamp(Long.parseLong(record.getStringValue(NetworkServiceChatNetworkServiceDatabaseConstants.OUTGOING_CHAT_DATE_COLUMN_NAME))));
-            ChatMetadaTransactionRecord.setIdMessage(record.getIntegerValue(NetworkServiceChatNetworkServiceDatabaseConstants.OUTGOING_CHAT_IDMENSAJE_COLUMN_NAME));
-            ChatMetadaTransactionRecord.setMessage(record.getStringValue(NetworkServiceChatNetworkServiceDatabaseConstants.OUTGOING_CHAT_MESSAGE_COLUMN_NAME));
-            ChatMetadaTransactionRecord.setDistributionStatus(DistributionStatus.getByCode(record.getStringValue(NetworkServiceChatNetworkServiceDatabaseConstants.OUTGOING_CHAT_DISTRIBUTIONSTATUS_COLUMN_NAME)));
+            ChatMetadaTransactionRecord.setIdChat(record.getUUIDValue(NetworkServiceChatNetworkServiceDatabaseConstants.CHAT_IDCHAT_COLUMN_NAME));
+            ChatMetadaTransactionRecord.setIdObject(record.getUUIDValue(NetworkServiceChatNetworkServiceDatabaseConstants.CHAT_IDOBJECTO_COLUMN_NAME));
+            ChatMetadaTransactionRecord.setLocalActorType(record.getStringValue(NetworkServiceChatNetworkServiceDatabaseConstants.CHAT_LOCALACTORTYPE_COLUMN_NAME));
+            ChatMetadaTransactionRecord.setLocalActorPubKey(record.getStringValue(NetworkServiceChatNetworkServiceDatabaseConstants.CHAT_LOCALACTORPUBKEY_COLUMN_NAME));
+            ChatMetadaTransactionRecord.setRemoteActorType(record.getStringValue(NetworkServiceChatNetworkServiceDatabaseConstants.CHAT_REMOTEACTORTYPE_COLUMN_NAME));
+            ChatMetadaTransactionRecord.setRemoteActorPubKey(record.getStringValue(NetworkServiceChatNetworkServiceDatabaseConstants.CHAT_REMOTEACTORPUBKEY_COLUMN_NAME));
+            ChatMetadaTransactionRecord.setChatName(record.getStringValue(NetworkServiceChatNetworkServiceDatabaseConstants.CHAT_CHATNAME_COLUMN_NAME));
+            ChatMetadaTransactionRecord.setChatMessageStatus(ChatMessageStatus.getByCode(record.getStringValue(NetworkServiceChatNetworkServiceDatabaseConstants.CHAT_CHATSTATUS_COLUMN_NAME)));
+            ChatMetadaTransactionRecord.setDate(new Timestamp(Long.parseLong(record.getStringValue(NetworkServiceChatNetworkServiceDatabaseConstants.CHAT_DATE_COLUMN_NAME))));
+            ChatMetadaTransactionRecord.setIdMessage(record.getUUIDValue(NetworkServiceChatNetworkServiceDatabaseConstants.CHAT_IDMENSAJE_COLUMN_NAME));
+            ChatMetadaTransactionRecord.setMessage(record.getStringValue(NetworkServiceChatNetworkServiceDatabaseConstants.CHAT_MESSAGE_COLUMN_NAME));
+            ChatMetadaTransactionRecord.setDistributionStatus(DistributionStatus.getByCode(record.getStringValue(NetworkServiceChatNetworkServiceDatabaseConstants.CHAT_DISTRIBUTIONSTATUS_COLUMN_NAME)));
 
         } catch (InvalidParameterException e) {
             //this should not happen, but if it happens return null
@@ -515,13 +515,13 @@ public class OutgoinChatMetaDataDao {
     }
 
     /**
-     * Construct a DatabaseTableRecord whit the values of the a ChatMetadaTransactionRecord pass
+     * Construct a DatabaseTableRecord whit the values of the a ChatMetadataTransactionRecord pass
      * by parameter
      *
      * @param ChatMetadaTransactionRecord the contains the values
      * @return DatabaseTableRecord whit the values
      */
-    private DatabaseTableRecord constructFrom(ChatMetadaTransactionRecord ChatMetadaTransactionRecord) {
+    private DatabaseTableRecord constructFrom(ChatMetadataTransactionRecord ChatMetadaTransactionRecord) {
 
         /*
          * Create the record to the entity
@@ -531,18 +531,18 @@ public class OutgoinChatMetaDataDao {
         /*
          * Set the entity values
          */
-        entityRecord.setIntegerValue(NetworkServiceChatNetworkServiceDatabaseConstants.OUTGOING_CHAT_IDCHAT_COLUMN_NAME,                    ChatMetadaTransactionRecord.getIdChat());
-        entityRecord.setIntegerValue(NetworkServiceChatNetworkServiceDatabaseConstants.OUTGOING_CHAT_IDOBJECTO_COLUMN_NAME,                 ChatMetadaTransactionRecord.getIdChat());
-        entityRecord.setStringValue(NetworkServiceChatNetworkServiceDatabaseConstants.OUTGOING_CHAT_LOCALACTORTYPE_COLUMN_NAME,             ChatMetadaTransactionRecord.getLocalActorType());
-        entityRecord.setStringValue(NetworkServiceChatNetworkServiceDatabaseConstants.OUTGOING_CHAT_LOCALACTORPUBKEY_COLUMN_NAME,           ChatMetadaTransactionRecord.getLocalActorPubKey());
-        entityRecord.setStringValue(NetworkServiceChatNetworkServiceDatabaseConstants.OUTGOING_CHAT_REMOTEACTORTYPE_COLUMN_NAME,            ChatMetadaTransactionRecord.getRemoteActorType());
-        entityRecord.setStringValue(NetworkServiceChatNetworkServiceDatabaseConstants.OUTGOING_CHAT_REMOTEACTORPUBKEY_COLUMN_NAME,          ChatMetadaTransactionRecord.getRemoteActorPubKey());
-        entityRecord.setStringValue(NetworkServiceChatNetworkServiceDatabaseConstants.OUTGOING_CHAT_CHATNAME_COLUMN_NAME,                   ChatMetadaTransactionRecord.getChatName());
-        entityRecord.setStringValue(NetworkServiceChatNetworkServiceDatabaseConstants.OUTGOING_CHAT_CHATSTATUS_COLUMN_NAME,                 ChatMetadaTransactionRecord.getChatMessageStatus().getCode());
-        entityRecord.setStringValue(NetworkServiceChatNetworkServiceDatabaseConstants.OUTGOING_CHAT_DATE_COLUMN_NAME,                       ChatMetadaTransactionRecord.getDate().toString());
-        entityRecord.setIntegerValue(NetworkServiceChatNetworkServiceDatabaseConstants.OUTGOING_CHAT_IDMENSAJE_COLUMN_NAME,                 ChatMetadaTransactionRecord.getIdMessage());
-        entityRecord.setStringValue(NetworkServiceChatNetworkServiceDatabaseConstants.OUTGOING_CHAT_MESSAGE_COLUMN_NAME,                    ChatMetadaTransactionRecord.getMessage());
-        entityRecord.setStringValue(NetworkServiceChatNetworkServiceDatabaseConstants.OUTGOING_CHAT_DISTRIBUTIONSTATUS_COLUMN_NAME,         ChatMetadaTransactionRecord.getDistributionStatus().getCode());
+        entityRecord.setUUIDValue(NetworkServiceChatNetworkServiceDatabaseConstants.CHAT_IDCHAT_COLUMN_NAME, ChatMetadaTransactionRecord.getIdChat());
+        entityRecord.setUUIDValue(NetworkServiceChatNetworkServiceDatabaseConstants.CHAT_IDOBJECTO_COLUMN_NAME, ChatMetadaTransactionRecord.getIdChat());
+        entityRecord.setStringValue(NetworkServiceChatNetworkServiceDatabaseConstants.CHAT_LOCALACTORTYPE_COLUMN_NAME,             ChatMetadaTransactionRecord.getLocalActorType());
+        entityRecord.setStringValue(NetworkServiceChatNetworkServiceDatabaseConstants.CHAT_LOCALACTORPUBKEY_COLUMN_NAME,           ChatMetadaTransactionRecord.getLocalActorPubKey());
+        entityRecord.setStringValue(NetworkServiceChatNetworkServiceDatabaseConstants.CHAT_REMOTEACTORTYPE_COLUMN_NAME,            ChatMetadaTransactionRecord.getRemoteActorType());
+        entityRecord.setStringValue(NetworkServiceChatNetworkServiceDatabaseConstants.CHAT_REMOTEACTORPUBKEY_COLUMN_NAME,          ChatMetadaTransactionRecord.getRemoteActorPubKey());
+        entityRecord.setStringValue(NetworkServiceChatNetworkServiceDatabaseConstants.CHAT_CHATNAME_COLUMN_NAME,                   ChatMetadaTransactionRecord.getChatName());
+        entityRecord.setStringValue(NetworkServiceChatNetworkServiceDatabaseConstants.CHAT_CHATSTATUS_COLUMN_NAME,                 ChatMetadaTransactionRecord.getChatMessageStatus().getCode());
+        entityRecord.setStringValue(NetworkServiceChatNetworkServiceDatabaseConstants.CHAT_DATE_COLUMN_NAME,                       ChatMetadaTransactionRecord.getDate().toString());
+        entityRecord.setUUIDValue(NetworkServiceChatNetworkServiceDatabaseConstants.CHAT_IDMENSAJE_COLUMN_NAME,                 ChatMetadaTransactionRecord.getIdMessage());
+        entityRecord.setStringValue(NetworkServiceChatNetworkServiceDatabaseConstants.CHAT_MESSAGE_COLUMN_NAME,                    ChatMetadaTransactionRecord.getMessage());
+        entityRecord.setStringValue(NetworkServiceChatNetworkServiceDatabaseConstants.CHAT_DISTRIBUTIONSTATUS_COLUMN_NAME,         ChatMetadaTransactionRecord.getDistributionStatus().getCode());
 
         /*
          * return the new table record
