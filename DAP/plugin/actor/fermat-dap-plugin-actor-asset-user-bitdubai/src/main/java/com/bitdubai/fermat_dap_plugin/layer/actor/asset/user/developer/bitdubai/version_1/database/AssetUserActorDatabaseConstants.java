@@ -47,16 +47,26 @@ public class AssetUserActorDatabaseConstants {
 
     public static final String ASSET_USER_REGISTERED_FIRST_KEY_COLUMN = ASSET_USER_REGISTERED_PUBLIC_KEY_COLUMN_NAME;
 
+    /**
+     * Asset User Actor GROUP REGISTERED database table definition.
+     */
     public static final String ASSET_USER_GROUP_TABLE_NAME = "asset_user_group";
 
     public static final String ASSET_USER_GROUP_ID_COLUMN_NAME = "group_id";
     public static final String ASSET_USER_GROUP_NAME_COLUMN_NAME = "group_name";
+
     public static final String ASSET_USER_GROUP_FIRST_KEY_COLUMN = ASSET_USER_GROUP_ID_COLUMN_NAME;
 
+    /**
+     * Asset User Actor GROUP MEMBER REGISTERED database table definition.
+     */
     public static final String ASSET_USER_GROUP_MEMBER_TABLE_NAME = "asset_user_group_member";
 
-    public static final String ASSET_USER_GROUP_MEMBER_GROUP_ID_COLUMN_NAME = ASSET_USER_GROUP_ID_COLUMN_NAME;
-    public static final String ASSET_USER_GROUP_MEMBER_USER_REGISTERED_PUBLIC_KEY_COLUMN_NAME = ASSET_USER_REGISTERED_PUBLIC_KEY_COLUMN_NAME;
+    public static final String ASSET_USER_GROUP_MEMBER_GROUP_ID_COLUMN_NAME = "asset_user_group_id_member";
+    public static final String ASSET_USER_GROUP_MEMBER_USER_REGISTERED_PUBLIC_KEY_COLUMN_NAME = "asset_user_group_member_publicKey";
+
+    public static final String ASSET_USER_GROUP_MEMBER_FIRST_KEY_COLUMN = ASSET_USER_GROUP_MEMBER_GROUP_ID_COLUMN_NAME;
+
     /**
      * Asset User Relation Asset Issuer database table definition.
      */
