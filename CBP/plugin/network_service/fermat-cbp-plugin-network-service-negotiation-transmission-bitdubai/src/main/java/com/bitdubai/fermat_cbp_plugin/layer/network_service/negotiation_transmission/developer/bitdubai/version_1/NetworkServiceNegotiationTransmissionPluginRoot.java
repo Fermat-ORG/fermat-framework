@@ -645,10 +645,9 @@ public class NetworkServiceNegotiationTransmissionPluginRoot extends AbstractNet
     @Override
     public void handleVpnConnectionCloseNotificationEvent(FermatEvent fermatEvent) {
 
-        if(fermatEvent instanceof VPNConnectionCloseNotificationEvent){
+        if((fermatEvent instanceof ClientConnectionCloseNotificationEvent) && (communicationNetworkServiceConnectionManager != null)){
             VPNConnectionCloseNotificationEvent vpnConnectionCloseNotificationEvent = (VPNConnectionCloseNotificationEvent) fermatEvent;
             if(vpnConnectionCloseNotificationEvent.getNetworkServiceApplicant() == getNetworkServiceType()){
-                System.out.print("-----------------------\n SE CAYO LA VPN PUBLIC KEY \n" + vpnConnectionCloseNotificationEvent.getRemoteParticipant().getIdentityPublicKey() +"\n-----------------------\n");
                         communicationNetworkServiceConnectionManager.closeConnection(vpnConnectionCloseNotificationEvent.getRemoteParticipant().getIdentityPublicKey());
             }
 
@@ -659,7 +658,7 @@ public class NetworkServiceNegotiationTransmissionPluginRoot extends AbstractNet
     @Override
     public void handleClientConnectionCloseNotificationEvent(FermatEvent fermatEvent) {
 
-        if(fermatEvent instanceof ClientConnectionCloseNotificationEvent){
+        if((fermatEvent instanceof ClientConnectionCloseNotificationEvent) && (communicationNetworkServiceConnectionManager != null)){
             this.register = false;
             communicationNetworkServiceConnectionManager.closeAllConnection();
         }
