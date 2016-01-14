@@ -111,6 +111,7 @@ public class WsCommunicationsCloudClientPluginRoot extends AbstractPlugin implem
      * Represent the isTaskCompleted
      */
     private boolean isTaskCompleted;
+    private boolean networkState;
 
     /**
      * Constructor
@@ -269,6 +270,11 @@ public class WsCommunicationsCloudClientPluginRoot extends AbstractPlugin implem
     @Override
     public Boolean isDisable() {
         return getDisableClientFlag();
+    }
+
+    @Override
+    public void setNetworkState(boolean state) {
+        networkState = state;
     }
 
 
