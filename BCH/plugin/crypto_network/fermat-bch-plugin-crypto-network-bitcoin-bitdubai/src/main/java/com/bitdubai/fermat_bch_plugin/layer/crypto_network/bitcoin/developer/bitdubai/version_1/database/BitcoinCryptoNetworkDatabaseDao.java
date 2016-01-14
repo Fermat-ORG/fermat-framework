@@ -983,6 +983,7 @@ public class BitcoinCryptoNetworkDatabaseDao {
             return;
 
         DatabaseTable databaseTable = database.getTable(BitcoinCryptoNetworkDatabaseConstants.CRYPTOVAULTS_DETAILED_STATS_TABLE_NAME);
+        databaseTable.addStringFilter(BitcoinCryptoNetworkDatabaseConstants.CRYPTOVAULTS_DETAILED_STATS_CRYPTO_VAULT_COLUMN_NAME, cryptoVault.getCode(), DatabaseFilterType.EQUAL);
         try {
             databaseTable.loadToMemory();
         } catch (CantLoadTableToMemoryException e) {
