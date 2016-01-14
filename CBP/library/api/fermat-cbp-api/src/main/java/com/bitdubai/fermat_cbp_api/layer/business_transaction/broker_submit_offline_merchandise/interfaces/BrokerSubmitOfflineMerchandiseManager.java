@@ -19,5 +19,15 @@ public interface BrokerSubmitOfflineMerchandiseManager extends BrokerSubmitMerch
      */
     void submitMerchandise(BigDecimal referencePrice, String cbpWalletPublicKey, String offlineWalletPublicKey, String contractHash)throws CantSubmitMerchandiseException;
 
+    /**
+     * This method send a payment according the contract clauses.
+     * In this case, this method submit merchandise and not requires the cbpWalletPublicKey,
+     * this public key can be obtained from the crypto broker wallet
+     * @param referencePrice
+     * @param cbpWalletPublicKey
+     * @param contractHash
+     */
+    void submitMerchandise(BigDecimal referencePrice, String cbpWalletPublicKey, String contractHash)throws CantSubmitMerchandiseException;
+
 
 }
