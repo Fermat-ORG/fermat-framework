@@ -23,4 +23,6 @@ public interface BankingWallet {
     void makeWithdraw(BankTransactionParameters bankTransactionParameters)throws CantMakeWithdrawTransactionException;
     float getBookBalance(String account);
     float getAvailableBalance(String account);
+    void createBankName(String bankName);
+    String getBankName();
 }
