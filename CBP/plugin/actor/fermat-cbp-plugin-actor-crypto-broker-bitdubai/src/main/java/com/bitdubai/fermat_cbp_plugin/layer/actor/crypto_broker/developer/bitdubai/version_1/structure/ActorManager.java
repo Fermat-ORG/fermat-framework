@@ -40,4 +40,5 @@ public class ActorManager implements CryptoBrokerActorManager {
     public BrokerIdentityWalletRelationship getBrokerIdentityWalletRelationshipByWallet(UUID wallet) throws CantGetListBrokerIdentityWalletRelationshipException {
         return this.dao.getBrokerIdentityWalletRelationshipByWallet(wallet);
     }
+
 }

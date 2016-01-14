@@ -31,6 +31,7 @@ import com.bitdubai.fermat_cbp_api.layer.identity.crypto_customer.exceptions.Can
 import com.bitdubai.fermat_cbp_api.layer.identity.crypto_customer.interfaces.CryptoCustomerIdentity;
 import com.bitdubai.fermat_cbp_api.layer.identity.crypto_customer.interfaces.CryptoCustomerIdentityManager;
 import com.bitdubai.fermat_cbp_api.layer.negotiation.customer_broker_purchase.exceptions.CantCreateBankAccountPurchaseException;
+import com.bitdubai.fermat_cbp_api.layer.negotiation.customer_broker_purchase.exceptions.CantCreateCustomerBrokerPurchaseNegotiationException;
 import com.bitdubai.fermat_cbp_api.layer.negotiation.customer_broker_purchase.exceptions.CantCreateLocationPurchaseException;
 import com.bitdubai.fermat_cbp_api.layer.negotiation.customer_broker_purchase.exceptions.CantDeleteBankAccountPurchaseException;
 import com.bitdubai.fermat_cbp_api.layer.negotiation.customer_broker_purchase.exceptions.CantGetListLocationsPurchaseException;
@@ -38,6 +39,8 @@ import com.bitdubai.fermat_cbp_api.layer.negotiation.customer_broker_purchase.ex
 import com.bitdubai.fermat_cbp_api.layer.negotiation.customer_broker_purchase.exceptions.CantUpdateBankAccountPurchaseException;
 import com.bitdubai.fermat_cbp_api.layer.negotiation.customer_broker_purchase.interfaces.CustomerBrokerPurchaseNegotiation;
 import com.bitdubai.fermat_cbp_api.layer.negotiation.customer_broker_purchase.interfaces.CustomerBrokerPurchaseNegotiationManager;
+import com.bitdubai.fermat_cbp_api.layer.negotiation_transaction.customer_broker_new.exceptions.CantCreateCustomerBrokerNewPurchaseNegotiationTransactionException;
+import com.bitdubai.fermat_cbp_api.layer.negotiation_transaction.customer_broker_new.interfaces.CustomerBrokerNewManager;
 import com.bitdubai.fermat_cbp_api.layer.user_level_business_transaction.customer_broker_purchase.interfaces.CustomerBrokerPurchaseManager;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.common.exceptions.CantGetContractHistoryException;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.common.exceptions.CantGetContractsWaitingForBrokerException;
@@ -58,6 +61,7 @@ import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_customer.exception
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_customer.exceptions.CantGetCurrentIndexSummaryForCurrenciesOfInterestException;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_customer.exceptions.CantNewEmptyCryptoCustomerWalletAssociatedSettingException;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_customer.exceptions.CantNewEmptyCryptoCustomerWalletProviderSettingException;
+import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_customer.exceptions.CantNewEmptyCustomerBrokerNegotiationInformationException;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_customer.exceptions.CantSaveCryptoCustomerWalletSettingException;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_customer.exceptions.CouldNotStartNegotiationException;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_customer.interfaces.BrokerIdentityBusinessInfo;
@@ -89,6 +93,7 @@ public class CryptoCustomerWalletModuleCryptoCustomerWalletManager implements Cr
     private final PluginFileSystem pluginFileSystem;
     private final CryptoCustomerIdentityManager cryptoCustomerIdentityManager;
     private final CustomerBrokerContractPurchaseManager customerBrokerContractPurchaseManager;
+    private final CustomerBrokerNewManager customerBrokerNewManager;
     private String merchandise = null, typeOfPayment = null, paymentCurrency = null;
 
     /*
@@ -99,7 +104,8 @@ public class CryptoCustomerWalletModuleCryptoCustomerWalletManager implements Cr
                                                                  UUID pluginId,
                                                                  PluginFileSystem pluginFileSystem,
                                                                  CryptoCustomerIdentityManager cryptoCustomerIdentityManager,
-                                                                 CustomerBrokerContractPurchaseManager customerBrokerContractPurchaseManager)
+                                                                 CustomerBrokerContractPurchaseManager customerBrokerContractPurchaseManager,
+                                                                 CustomerBrokerNewManager customerBrokerNewManage)
     {
         this.walletManagerManager                     = walletManagerManager;
         this.customerBrokerPurchaseNegotiationManager = customerBrokerPurchaseNegotiationManager;
@@ -107,6 +113,7 @@ public class CryptoCustomerWalletModuleCryptoCustomerWalletManager implements Cr
         this.pluginFileSystem                         = pluginFileSystem;
         this.cryptoCustomerIdentityManager            = cryptoCustomerIdentityManager;
         this.customerBrokerContractPurchaseManager    = customerBrokerContractPurchaseManager;
+        this.customerBrokerNewManager                 = customerBrokerNewManage;
     }
 
     private List<ContractBasicInformation> contractsHistory;
@@ -461,8 +468,24 @@ public class CryptoCustomerWalletModuleCryptoCustomerWalletManager implements Cr
     }
 
     @Override
-    public boolean startNegotiation(UUID customerId, UUID brokerId, Collection<ClauseInformation> clauses) throws CouldNotStartNegotiationException {
-        return false; //CustomerBrokerNewManager con la data minima
+    public boolean isWalletConfigured(String customerWalletPublicKey) {
+        return false;
+    }
+
+    @Override
+    public boolean startNegotiation(UUID customerId, UUID brokerId, Collection<ClauseInformation> clauses) throws CouldNotStartNegotiationException, CantCreateCustomerBrokerNewPurchaseNegotiationTransactionException {
+        try {
+            CustomerBrokerPurchaseNegotiationImpl customerBrokerPurchaseNegotiation = new CustomerBrokerPurchaseNegotiationImpl();
+            customerBrokerPurchaseNegotiation.setClauses(null);
+            customerBrokerPurchaseNegotiation.setBrokerPublicKey(brokerId.toString());
+            customerBrokerPurchaseNegotiation.setCustomerPublicKey(customerId.toString());
+            customerBrokerNewManager.createCustomerBrokerNewPurchaseNegotiationTranasction(customerBrokerPurchaseNegotiation);
+            return true; //CustomerBrokerNewManager con la data minima
+        }
+        catch(Exception exception)
+        {
+            return false;
+        }
     }
 
     /**
@@ -510,6 +533,11 @@ public class CryptoCustomerWalletModuleCryptoCustomerWalletManager implements Cr
         };
     }
 
+    @Override
+    public CustomerBrokerNegotiationInformation newEmptyCustomerBrokerNegotiationInformation() throws CantNewEmptyCustomerBrokerNegotiationInformationException {
+        return new EmptyCustomerBrokerNegotiationInformationImpl();
+    }
+
     /**
      * @param bankAccount
      * @throws CantCreateBankAccountPurchaseException
@@ -535,6 +563,28 @@ public class CryptoCustomerWalletModuleCryptoCustomerWalletManager implements Cr
     @Override
     public void deleteBankAccount(NegotiationBankAccount bankAccount) throws CantDeleteBankAccountPurchaseException {
         customerBrokerPurchaseNegotiationManager.deleteBankAccount(bankAccount);
+    }
+
+    /**
+     * @param negotiation
+     * @throws CantCreateCustomerBrokerPurchaseNegotiationException
+     */
+    @Override
+    public void createCustomerBrokerPurchaseNegotiation(CustomerBrokerNegotiationInformation negotiation) throws CantCreateCustomerBrokerPurchaseNegotiationException {
+        CustomerBrokerPurchaseNegotiationImpl customerBrokerPurchaseNegotiation = new CustomerBrokerPurchaseNegotiationImpl();
+        customerBrokerPurchaseNegotiation.setNegotiationId(negotiation.getNegotiationId());
+        customerBrokerPurchaseNegotiation.setCustomerPublicKey(negotiation.getCustomer().getPublicKey());
+        customerBrokerPurchaseNegotiation.setBrokerPublicKey(negotiation.getBroker().getPublicKey());
+        customerBrokerPurchaseNegotiation.setStartDate(null);
+        customerBrokerPurchaseNegotiation.setNegotiationExpirationDate(negotiation.getNegotiationExpirationDate());
+        customerBrokerPurchaseNegotiation.setStatus(negotiation.getStatus());
+        customerBrokerPurchaseNegotiation.setNearExpirationDatetime(false);
+        //customerBrokerPurchaseNegotiation.setClauses(negotiation.getClauses());
+        customerBrokerPurchaseNegotiation.setClauses(null);
+        customerBrokerPurchaseNegotiation.setCancelReason(negotiation.getCancelReason());
+        customerBrokerPurchaseNegotiation.setMemo(negotiation.getMemo());
+        customerBrokerPurchaseNegotiation.setLastNegotiationUpdateDate(negotiation.getLastNegotiationUpdateDate());
+        customerBrokerPurchaseNegotiationManager.createCustomerBrokerPurchaseNegotiation(customerBrokerPurchaseNegotiation);
     }
 
     @Override

@@ -61,14 +61,20 @@ public class ChatMiddlewareRecorderService implements CHTService {
     public void outgoingChatEventHandler(OutgoingChat event) throws CantSaveEventException {
         //Logger LOG = Logger.getGlobal();
         //LOG.info("EVENT TEST, I GOT AN EVENT:\n"+event);
-        this.chatMiddlewareDatabaseDao.saveNewEvent(event.getEventType().getCode(), event.getSource().getCode());
+        this.chatMiddlewareDatabaseDao.saveNewEvent(
+                event.getEventType().getCode(),
+                event.getSource().getCode(),
+                event.getChatId());
         //LOG.info("CHECK THE DATABASE");
     }
 
     public void incomingChatEventHandler(IncomingChat event) throws CantSaveEventException {
         //Logger LOG = Logger.getGlobal();
         //LOG.info("EVENT TEST, I GOT AN EVENT:\n"+event);
-        this.chatMiddlewareDatabaseDao.saveNewEvent(event.getEventType().getCode(), event.getSource().getCode());
+        this.chatMiddlewareDatabaseDao.saveNewEvent(
+                event.getEventType().getCode(),
+                event.getSource().getCode(),
+                event.getChatId());
         //LOG.info("CHECK THE DATABASE");
     }
 
