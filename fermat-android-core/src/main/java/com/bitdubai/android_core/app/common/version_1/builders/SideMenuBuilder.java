@@ -1,4 +1,4 @@
-package com.bitdubai.android_core.app.common.version_1.builders.side_menu;
+package com.bitdubai.android_core.app.common.version_1.builders;
 
 import android.app.Activity;
 import android.content.res.Resources;

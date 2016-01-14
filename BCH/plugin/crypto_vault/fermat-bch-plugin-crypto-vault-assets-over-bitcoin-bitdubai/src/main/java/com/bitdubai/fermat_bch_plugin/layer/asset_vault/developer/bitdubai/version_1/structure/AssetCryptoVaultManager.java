@@ -261,6 +261,18 @@ public class AssetCryptoVaultManager  {
         final Coin coinToSend = wallet.getBalance().subtract(fee);
 
         /**
+         * if the value to send is negative or zero, I will inform of the error
+         */
+        if (coinToSend.isNegative() || coinToSend.isZero()){
+            StringBuilder output = new StringBuilder("The resulting value to be send is insufficient.");
+            output.append(System.lineSeparator());
+            output.append("We are trying to send " + coinToSend.getValue() + " satoshis, which is ValueToSend - fee (" + wallet.getBalance() + " - " + fee.getValue() + ")");
+
+            throw new CantSendAssetBitcoinsToUserException(CantSendAssetBitcoinsToUserException.DEFAULT_MESSAGE, null, output.toString(), null);
+        }
+
+
+        /**
          * creates the send request and broadcast it on the network.
          */
         wallet.allowSpendingUnconfirmedTransactions();
