@@ -112,6 +112,13 @@ public class BankMoneyWalletDatabaseFactory implements DealsWithPluginDatabaseSy
 
             table.addIndex(BankMoneyWalletDatabaseConstants.BANK_MONEY_BANK_ACCOUNT_NUMBER_COLUMN_NAME);
 
+
+            table = databaseFactory.newTableFactory(ownerId, BankMoneyWalletDatabaseConstants.BANK_MONEY_BANK_NAME_TABLE);
+            table.addColumn(BankMoneyWalletDatabaseConstants.BANK_MONEY_BANK_PUBLIC_KEY_COLUMN, DatabaseDataType.STRING, 100, Boolean.TRUE);
+            table.addColumn(BankMoneyWalletDatabaseConstants.BANK_MONEY_BANK_NAME_COLUMN, DatabaseDataType.STRING, 100, Boolean.FALSE);
+
+            table.addIndex(BankMoneyWalletDatabaseConstants.BANK_MONEY_BANK_PUBLIC_KEY_COLUMN);
+
             try {
                 //Create the table
                 databaseFactory.createTable(ownerId, table);
