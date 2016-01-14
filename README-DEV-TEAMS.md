@@ -223,7 +223,7 @@ We would be grateful for any help received, and anyone interested in joining the
 -----------------------------------
 We are putting together a team of talented developers, especially passionate about the implementation of major challenges, in order to carry out our goals and collaborate with other teams on their goals.
 
-In the Crypto Broker Platform we are responsible for a large part of business transactions, while in the Chat Platform we are developing the back end. In each platform mentioned, we are involved in the development of Network Services.
+In the Crypto Broker Platform we are responsible for a large part of business transactions, while in the Chat Platform we are developing the back end. In each platform mentioned, we are involved in the development of Network Services and transactional plugins.
 
 #### Team Members:
 
@@ -252,6 +252,12 @@ In the Crypto Broker Platform we are responsible for a large part of business tr
     Email:   sulbaranja@gmail.com
     Skype:   juanaso15
     Github:  https://github.com/Juanaso
+
+* **Alexander Jimenez [New Developer]**<br/>
+---
+    Email:   alex_jimenez76@hotmail.com
+    Skype:   alex_jimenez76
+    Github:  https://github.com/alexanderejm
     
 This is a team full of manga, anime, comics, sci-fi and Tolkien fans, also we represent the dark side of the force. We would be grateful for any help received, and anyone interested in joining the team will be welcome.
 
