@@ -1,17 +1,26 @@
 package com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.utils;
 
+import java.math.BigDecimal;
+
 /**
  * Created by Joaquin C. on 13/01/16.
  */
 public class BitcoinConverter {
 
-    public double uBTC =  0.00000100;
-    private static final double mBTC =  0.00100000;
-    private static final double BTC  =  1.00000000;
-    private static final double SATOSHIS_BTC_BITS = 100;
-    private static final double SATOSHIS_BTC_mBITS = 100000;
-    private static final double SATOSHIS_BTC = 100000000;
 
+    //-------------------------------------------------------------------------------------
+    private static final BigDecimal BITS_IN_BITCOIN = BigDecimal.valueOf(1000000);
+    private static final BigDecimal uBTC = BigDecimal.valueOf(0.00000100);
+    private static final BigDecimal mBTC = BigDecimal.valueOf(0.00100000);
+    private static final BigDecimal BTC  = BigDecimal.valueOf(1.00000000);
+    //-------------------------------------------------------------------------------------
+    private static final BigDecimal BIT_ARE_SATOSHIS = BigDecimal.valueOf(100);
+    private static final BigDecimal MBITS_ARE_SATOSHIS = BigDecimal.valueOf(100000);
+    private static final BigDecimal BTC_ARE_SATOSHIS = BigDecimal.valueOf(100000000);
+
+    //-------------------------------------------------------------------------------------
+    private static final BigDecimal ONE_SATOSHI_IS_BITCOIN = BigDecimal.valueOf(0.00000001);
+    private static final BigDecimal SATOSHI = BigDecimal.valueOf(1);
 
     public BitcoinConverter() {
 
@@ -21,14 +30,15 @@ public class BitcoinConverter {
      * @param satoshis
      * @return the corresponding amount of uBTC.
      */
-    public double getBits(double satoshis){
-        double operacion = 0;
+    public String getBits(String satoshis){
+        String operacion = "";
         try {
-             operacion = (satoshis * uBTC)/SATOSHIS_BTC_BITS;
+            BigDecimal operator = new BigDecimal(satoshis);
+             operacion = ""+(operator.multiply(uBTC)).divide(BIT_ARE_SATOSHIS);
             return operacion;
         }catch (Exception e){
             e.printStackTrace();
-            return operacion;
+            return operacion = "0";
         }
 
     }
@@ -37,14 +47,15 @@ public class BitcoinConverter {
      * @param satoshis
      * @return the corresponding amount of mBTC.
      */
-    public double getMBTC(double satoshis){
-        double operacion = 0;
+    public String getMBTC(String satoshis){
+        String operacion = "";
         try {
-             operacion = (satoshis * mBTC)/SATOSHIS_BTC_mBITS;
+            BigDecimal operator = new BigDecimal(satoshis);
+             operacion =""+ (operator.multiply(mBTC)).divide(MBITS_ARE_SATOSHIS);
             return operacion;
         }catch (Exception e){
             e.printStackTrace();
-            return operacion;
+            return operacion = "0";
         }
 
     }
@@ -53,14 +64,15 @@ public class BitcoinConverter {
      * @param satoshis
      * @return the corresponding amount of BTC.
      */
-    public double getBTC(double satoshis){
-        double operacion = 0;
+    public String getBTC(String satoshis){
+        String operacion = "";
         try {
-             operacion = (satoshis * BTC)/SATOSHIS_BTC;
+            BigDecimal operator = new BigDecimal(satoshis);
+             operacion =""+(operator.multiply(BTC)).divide(BTC_ARE_SATOSHIS);
             return operacion;
         }catch (Exception e){
             e.printStackTrace();
-            return operacion;
+            return operacion = "0";
         }
     }
 
@@ -68,14 +80,15 @@ public class BitcoinConverter {
      * @param bits
      * @return the corresponding amount of satoshis given the bits passed.
      */
-    public double getSathoshisFromBits(double bits){
-        double operacion = 0;
+    public String getSathoshisFromBits(String bits){
+        String operacion = "";
         try {
-            operacion = (bits * SATOSHIS_BTC_BITS)/uBTC;
+            BigDecimal operator = new BigDecimal(bits);
+            operacion = ""+(operator.multiply(BIT_ARE_SATOSHIS)).divide(uBTC);
             return operacion;
         }catch (Exception e){
             e.printStackTrace();
-            return operacion;
+            return operacion = "0";
         }
     }
 
@@ -83,14 +96,15 @@ public class BitcoinConverter {
      * @param mbits
      * @return the corresponding amount of satoshis given the mBTC passed.
      */
-    public double getSathoshisFromMBTC(double mbits){
-        double operacion = 0;
+    public String getSathoshisFromMBTC(String mbits){
+        String operacion = "";
         try {
-            operacion = (mbits * SATOSHIS_BTC_mBITS)/mBTC;
+            BigDecimal operator = new BigDecimal(mbits);
+            operacion ="" +(operator.multiply(MBITS_ARE_SATOSHIS)).divide(mBTC);
             return operacion;
         }catch (Exception e){
             e.printStackTrace();
-            return operacion;
+            return operacion="0";
         }
     }
 
@@ -98,14 +112,47 @@ public class BitcoinConverter {
      * @param bitcoins
      * @return the corresponding amount of satoshis given the BTC passed.
      */
-    public double getSathoshisFromBTC(double bitcoins){
-        double operacion = 0;
+    public String getSathoshisFromBTC(String bitcoins){
+        String operacion = "";
         try {
-            operacion = (bitcoins * SATOSHIS_BTC)/BTC;
+            BigDecimal operator = new BigDecimal(bitcoins);
+            operacion =""+ (operator.multiply(BTC_ARE_SATOSHIS)).divide(BTC);
             return operacion;
         }catch (Exception e){
             e.printStackTrace();
+            return operacion="0";
+        }
+    }
+
+    /**
+     * @param bitcoins
+     * @return the corresponding amount of bits given the BTC passed.
+     */
+    public String getBitsFromBTC(String bitcoins){
+        String operacion = "";
+        try {
+            BigDecimal operator =new BigDecimal(bitcoins);
+            operacion =""+ (operator.multiply(BITS_IN_BITCOIN));
             return operacion;
+        }catch (Exception e){
+            e.printStackTrace();
+            return operacion="0";
+        }
+    }
+
+    /**
+     * @param bits
+     * @return the corresponding amount of BTC given the bits passed.
+     */
+    public String getBitcoinsFromBits(String bits){
+        String operacion = "";
+        try {
+            BigDecimal operator = new BigDecimal(bits);
+            operacion =""+ (operator.divide(BITS_IN_BITCOIN));
+            return operacion;
+        }catch (Exception e){
+            e.printStackTrace();
+            return operacion= "0";
         }
     }
 
