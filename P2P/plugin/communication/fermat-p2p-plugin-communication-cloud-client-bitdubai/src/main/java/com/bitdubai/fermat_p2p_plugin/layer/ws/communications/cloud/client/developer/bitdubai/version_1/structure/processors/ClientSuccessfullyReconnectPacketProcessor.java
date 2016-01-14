@@ -52,7 +52,7 @@ public class ClientSuccessfullyReconnectPacketProcessor extends FermatPacketProc
     public void processingPackage(FermatPacket receiveFermatPacket) {
 
         //System.out.println(" --------------------------------------------------------------------- ");
-        //System.out.println("ClientSuccessfullyReconnectPacketProcessor - processingPackage");
+        System.out.println("ClientSuccessfullyReconnectPacketProcessor - processingPackage");
 
        /*
         * Get the platformComponentProfile from the message content and decrypt

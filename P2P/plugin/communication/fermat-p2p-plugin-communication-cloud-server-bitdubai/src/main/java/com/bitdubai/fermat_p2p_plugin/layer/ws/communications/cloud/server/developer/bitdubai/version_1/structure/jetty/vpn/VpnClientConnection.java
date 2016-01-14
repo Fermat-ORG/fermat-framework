@@ -23,7 +23,7 @@ import javax.websocket.Session;
  */
 public class VpnClientConnection {
 
-    private static final int MAX_MESSAGE_SIZE = 1000000;
+    private static final int MAX_MESSAGE_SIZE = 3000000;
 
     /**
      *  Represent the networkServiceType

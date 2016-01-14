@@ -26,6 +26,7 @@ import org.apache.commons.lang.ClassUtils;
 import org.apache.log4j.Logger;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Timer;
@@ -214,7 +215,7 @@ public class ComponentRegistrationRequestJettyPacketProcessor extends FermatJett
          */
         if (MemoryCache.getInstance().getPendingRegisterClientConnectionsCache().containsKey(receiveFermatPacket.getSender())){
 
-            boolean exist = Boolean.FALSE;
+            PlatformComponentProfile oldReference = null;
 
             /*
              * Validate are not yet registered
@@ -222,15 +223,17 @@ public class ComponentRegistrationRequestJettyPacketProcessor extends FermatJett
             for (PlatformComponentProfile registered : MemoryCache.getInstance().getRegisteredCommunicationsCloudClientCache().values()) {
 
                 if (registered.getIdentityPublicKey().equals(platformComponentProfileToRegister.getIdentityPublicKey())){
-                    exist = Boolean.TRUE;
+                    LOG.info("Find a old reference");
+                    oldReference = registered;
                 }
             }
 
             /*
              * If exist remove all reference
              */
-            if (exist) {
-                MemoryCache.getInstance().getRegisteredCommunicationsCloudClientCache().remove(platformComponentProfileToRegister.getIdentityPublicKey());
+            if (oldReference != null) {
+                LOG.info("Removing old reference");
+                MemoryCache.getInstance().getRegisteredCommunicationsCloudClientCache().remove(oldReference);
             }
 
             /*
@@ -248,12 +251,10 @@ public class ComponentRegistrationRequestJettyPacketProcessor extends FermatJett
              */
             MemoryCache.getInstance().getRegisteredClientConnectionsCache().put(platformComponentProfileToRegister.getIdentityPublicKey(), clientConnection); //Add using the real client identity from profile
 
-
             /*
              * Update the ClientIdentityByClientConnectionCache to the real identity
              */
             clientConnection.setClientIdentity(platformComponentProfileToRegister.getIdentityPublicKey());
-
 
             FermatPacket fermatPacketRespond = null;
 
@@ -264,22 +265,22 @@ public class ComponentRegistrationRequestJettyPacketProcessor extends FermatJett
 
                 LOG.info("New registration");
 
-            /*
-             * Construct the respond
-             */
+                /*
+                 * Construct the respond
+                 */
                 Gson gson = new Gson();
                 JsonObject jsonObject = new JsonObject();
                 jsonObject.addProperty(JsonAttNamesConstants.NETWORK_SERVICE_TYPE, networkServiceTypeApplicant.toString());
                 jsonObject.addProperty(JsonAttNamesConstants.PROFILE_TO_REGISTER, platformComponentProfileToRegister.toJson());
 
-            /*
-             * Construct a fermat packet whit the same platform component profile and different FermatPacketType
-             */
+                /*
+                 * Construct a fermat packet whit the same platform component profile and different FermatPacketType
+                 */
                 fermatPacketRespond = FermatPacketCommunicationFactory.constructFermatPacketEncryptedAndSinged(receiveFermatPacket.getSender(),                  //Destination
                                                                                                                 clientConnection.getServerIdentity().getPublicKey(),                    //Sender
                                                                                                                 gson.toJson(jsonObject),                          //Message Content
                                                                                                                 FermatPacketType.COMPLETE_COMPONENT_REGISTRATION, //Packet type
-                                                                                                                clientConnection.getServerIdentity().getPrivateKey());                  //Sender private key
+                                                                                                                clientConnection.getServerIdentity().getPrivateKey());  //Sender private key
 
             }else{
 
@@ -291,19 +292,19 @@ public class ComponentRegistrationRequestJettyPacketProcessor extends FermatJett
                     timer.cancel();
                 }
 
-            /*
-             * Get the profiles in stand by
-             */
-                List<PlatformComponentProfile> profilesInStandBy = MemoryCache.getInstance().getStandByProfileByClientIdentity().get(platformComponentProfileToRegister.getIdentityPublicKey());
+                /*
+                 * Get the profiles in stand by
+                 */
+                List<PlatformComponentProfile> profilesInStandBy = MemoryCache.getInstance().getStandByProfileByClientIdentity().remove(platformComponentProfileToRegister.getIdentityPublicKey());
 
-            /*
-             * Move again to the registers profile cache
-             */
+                /*
+                 * Move again to the registers profile cache
+                 */
                 moveFromStandByToRegistersCache(profilesInStandBy);
 
-            /*
-             * Construct a fermat packet whit reconnect notification
-             */
+                /*
+                 * Construct a fermat packet whit reconnect notification
+                 */
                 fermatPacketRespond = FermatPacketCommunicationFactory.constructFermatPacketEncryptedAndSinged(receiveFermatPacket.getSender(),                  //Destination
                                                                                                                 clientConnection.getServerIdentity().getPublicKey(),                    //Sender
                                                                                                                 "Reconnect successfully",                          //Message Content
@@ -312,6 +313,8 @@ public class ComponentRegistrationRequestJettyPacketProcessor extends FermatJett
 
             }
 
+
+            LOG.info("FermatPacketRespond to send = "+fermatPacketRespond.getFermatPacketType());
 
             /*
              * Send the encode packet to the server
@@ -472,9 +475,14 @@ public class ComponentRegistrationRequestJettyPacketProcessor extends FermatJett
      */
     private void moveFromStandByToRegistersCache(List<PlatformComponentProfile> profilesInStandBy){
 
-        LOG.info("moveFromStandByToRegistersCache");
+        LOG.info(" Moving "+profilesInStandBy.size()+" references from StandBy cache To Registers Caches");
 
-        for (PlatformComponentProfile platformComponentProfileToRegister: profilesInStandBy){
+        Iterator<PlatformComponentProfile> iterable = (Iterator<PlatformComponentProfile>) profilesInStandBy.iterator();
+
+        while (iterable.hasNext()){
+
+            PlatformComponentProfile platformComponentProfileToRegister = iterable.next();
+            LOG.info(" Moving component "+platformComponentProfileToRegister.getPlatformComponentType().toString()+" ["+platformComponentProfileToRegister.getNetworkServiceType().toString()+"]  references from StandBy cache To Registers Caches");
 
             /*
              * Switch between platform component type
@@ -517,6 +525,8 @@ public class ComponentRegistrationRequestJettyPacketProcessor extends FermatJett
 
                         }
 
+                    iterable.remove();
+
                     break;
 
                 //Others
@@ -555,6 +565,8 @@ public class ComponentRegistrationRequestJettyPacketProcessor extends FermatJett
                             registeredPlatformComponentProfile.put(platformComponentProfileToRegister.getPlatformComponentType(), newListPCP);
 
                         }
+
+                    iterable.remove();
 
                     break;
 

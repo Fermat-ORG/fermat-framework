@@ -59,7 +59,7 @@ public class CompleteRegistrationComponentPacketProcessor extends FermatPacketPr
     public void processingPackage(FermatPacket receiveFermatPacket) {
 
         //System.out.println(" --------------------------------------------------------------------- ");
-        //System.out.println("CompleteRegistrationComponentPacketProcessor - processingPackage");
+        System.out.println("CompleteRegistrationComponentPacketProcessor - processingPackage");
 
         String messageContentJsonStringRepresentation = null;
 
@@ -122,7 +122,7 @@ public class CompleteRegistrationComponentPacketProcessor extends FermatPacketPr
         /*
          * Raise the event
          */
-        //System.out.println("CompleteRegistrationComponentPacketProcessor - Raised a event = P2pEventType.COMPLETE_COMPONENT_REGISTRATION_NOTIFICATION");
+        System.out.println("CompleteRegistrationComponentPacketProcessor - Raised a event = P2pEventType.COMPLETE_COMPONENT_REGISTRATION_NOTIFICATION");
         getWsCommunicationsCloudClientChannel().getEventManager().raiseEvent(event);
 
     }
