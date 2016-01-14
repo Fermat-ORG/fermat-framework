@@ -2,6 +2,8 @@ package com.bitdubai.fermat_bch_plugin.layer.crypto_network.bitcoin.developer.bi
 
 import com.bitdubai.fermat_api.CantStartAgentException;
 import com.bitdubai.fermat_api.layer.all_definition.enums.BlockchainNetworkType;
+import com.bitdubai.fermat_api.layer.all_definition.enums.CryptoCurrency;
+import com.bitdubai.fermat_api.layer.all_definition.money.CryptoAddress;
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.ProtocolStatus;
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.Specialist;
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.TransactionProtocolManager;
@@ -887,11 +889,7 @@ public class BitcoinCryptoNetworkManager implements TransactionProtocolManager, 
      * @return the Last child transaction.
      */
     public CryptoTransaction getLastChildCryptoTransaction(@Nullable BlockchainNetworkType blockchainNetworkType, String parentTransactionHash, String transactionBlockHash) throws CantGetCryptoTransactionException {
-        try {
-            return CryptoTransaction.getCryptoTransaction(this.getLastChildTransaction(blockchainNetworkType, parentTransactionHash, transactionBlockHash));
-        } catch (CantGetTransactionException e) {
-            throw new CantGetCryptoTransactionException(CantGetCryptoTransactionException.DEFAULT_MESSAGE, e, "error getting the transaction from blockchain.", null);
-        }
+        return CryptoTransaction.getCryptoTransaction(this.getBitcoinTransactions(BlockchainNetworkType.DEFAULT).get(0));
     }
 
     /**

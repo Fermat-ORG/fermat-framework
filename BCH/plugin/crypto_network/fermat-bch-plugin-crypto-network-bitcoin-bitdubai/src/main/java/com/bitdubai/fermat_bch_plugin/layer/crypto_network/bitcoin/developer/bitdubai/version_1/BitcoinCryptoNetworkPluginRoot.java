@@ -343,7 +343,9 @@ public class BitcoinCryptoNetworkPluginRoot extends AbstractPlugin implements
      */
     @Override
     public CryptoTransaction getLastChildCryptoTransaction(@Nullable BlockchainNetworkType blockchainNetworkType, String parentTransactionHash, String transactionBlockHash) throws CantGetCryptoTransactionException {
-        return bitcoinCryptoNetworkManager.getLastChildCryptoTransaction(blockchainNetworkType, parentTransactionHash, transactionBlockHash);
+        CryptoTransaction cryptoTransaction = bitcoinCryptoNetworkManager.getLastChildCryptoTransaction(blockchainNetworkType, parentTransactionHash, transactionBlockHash);
+        cryptoTransaction.setTransactionHash(parentTransactionHash);
+        return cryptoTransaction;
     }
 
     /**
@@ -354,6 +356,6 @@ public class BitcoinCryptoNetworkPluginRoot extends AbstractPlugin implements
      */
     @Override
     public CryptoTransaction getCryptoTransaction(String txHash) throws CantGetCryptoTransactionException {
-        return null;
+        return bitcoinCryptoNetworkManager.getCryptoTransaction(txHash);
     }
 }
