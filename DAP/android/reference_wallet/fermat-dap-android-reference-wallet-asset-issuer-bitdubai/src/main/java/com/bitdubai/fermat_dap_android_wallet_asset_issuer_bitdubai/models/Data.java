@@ -51,7 +51,7 @@ public class Data {
         List<AssetStatistic> stats = moduleManager.getWalletStatisticsByAsset(walletPublicKey, digitalAsset.getName());
         for (AssetStatistic stat : stats) {
             if (stat.getStatus().equals(AssetCurrentStatus.ASSET_UNUSED)) {
-                userDelivery = new UserDelivery(stat.getOwner().getName(), new Timestamp(stat.getDistributionDate().getTime()), stat.getStatus().getCode());
+                userDelivery = new UserDelivery(stat.getOwner().getName(), new Timestamp(stat.getDistributionDate().getTime()), stat.getStatus().getDescription());
                 users.add(userDelivery);
             }
         }
@@ -65,7 +65,7 @@ public class Data {
         for (AssetStatistic stat :
                 stats) {
             if (stat.getStatus().equals(AssetCurrentStatus.ASSET_REDEEMED)) {
-                UserRedeemed = new UserRedeemed(stat.getOwner().getName(), new Timestamp(stat.getDistributionDate().getTime()), stat.getStatus().getCode());
+                UserRedeemed = new UserRedeemed(stat.getOwner().getName(), new Timestamp(stat.getDistributionDate().getTime()), stat.getStatus().getDescription());
                 users.add(UserRedeemed);
             }
         }
@@ -79,7 +79,7 @@ public class Data {
         for (AssetStatistic stat :
                 stats) {
             if (stat.getStatus().equals(AssetCurrentStatus.ASSET_APPROPRIATED)) {
-                UserAppropiate = new UserAppropiate(stat.getOwner().getName(), new Timestamp(stat.getAssetUsedDate().getTime()), stat.getStatus().getCode());
+                UserAppropiate = new UserAppropiate(stat.getOwner().getName(), new Timestamp(stat.getAssetUsedDate().getTime()), stat.getStatus().getDescription());
                 users.add(UserAppropiate);
             }
         }
