@@ -302,7 +302,7 @@ public class AssetUserActorPluginRoot extends AbstractPlugin implements
                         Actors.DAP_ASSET_REDEEM_POINT,
                         requester.getActorPublicKey(),
                         actorAssetRedeemPoint.getActorPublicKey(),
-                        CryptoAddressDealers.DAP_ASSET,
+                        CryptoAddressDealers.DAP_WATCH_ONLY,
                         BlockchainNetworkType.DEFAULT);
 
 //                    this.assetUserActorDao.updateAssetUserDAPConnectionStateActorNetworService(actorAssetUser.getActorPublicKey(), DAPConnectionState.CONNECTING, actorAssetUser.getCryptoAddress());
