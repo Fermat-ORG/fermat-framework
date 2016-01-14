@@ -791,9 +791,13 @@ public class BrokerSubmitOnlineMerchandiseBusinessTransactionDao {
         record.setLongValue(
                 BrokerSubmitOnlineMerchandiseBusinessTransactionDatabaseConstants.SUBMIT_ONLINE_MERCHANDISE_CRYPTO_AMOUNT_COLUMN_NAME,
                 businessTransactionRecord.getCryptoAmount());
-        record.setStringValue(
-                BrokerSubmitOnlineMerchandiseBusinessTransactionDatabaseConstants.SUBMIT_ONLINE_MERCHANDISE_CRYPTO_STATUS_COLUMN_NAME,
-                businessTransactionRecord.getCryptoStatus().getCode());
+        //I need to check if crypto status is null
+        CryptoStatus cryptoStatus=businessTransactionRecord.getCryptoStatus();
+        if(cryptoStatus!=null){
+            record.setStringValue(
+                    BrokerSubmitOnlineMerchandiseBusinessTransactionDatabaseConstants.SUBMIT_ONLINE_MERCHANDISE_CRYPTO_STATUS_COLUMN_NAME,
+                    cryptoStatus.getCode());
+        }
         record.setStringValue(
                 BrokerSubmitOnlineMerchandiseBusinessTransactionDatabaseConstants.SUBMIT_ONLINE_MERCHANDISE_CUSTOMER_PUBLIC_KEY_COLUMN_NAME,
                 businessTransactionRecord.getCustomerPublicKey());
@@ -811,7 +815,7 @@ public class BrokerSubmitOnlineMerchandiseBusinessTransactionDao {
                 businessTransactionRecord.getExternalWalletPublicKey());
         record.setDoubleValue(
                 BrokerSubmitOnlineMerchandiseBusinessTransactionDatabaseConstants.SUBMIT_ONLINE_MERCHANDISE_REFERENCE_PRICE_COLUMN_NAME,
-                businessTransactionRecord.getCryptoAmount()
+                businessTransactionRecord.getPriceReference().doubleValue()
         );
         record.setStringValue(
                 BrokerSubmitOnlineMerchandiseBusinessTransactionDatabaseConstants.SUBMIT_ONLINE_MERCHANDISE_CBP_WALLET_PUBLIC_KEY_COLUMN_NAME,
@@ -831,7 +835,7 @@ public class BrokerSubmitOnlineMerchandiseBusinessTransactionDao {
             UnexpectedResultReturnedFromDatabaseException,
             CantGetContractListException {
         return getStringList(
-                ContractTransactionStatus.PENDING_PAYMENT.getCode(),
+                ContractTransactionStatus.PENDING_SUBMIT_ONLINE_MERCHANDISE.getCode(),
                 BrokerSubmitOnlineMerchandiseBusinessTransactionDatabaseConstants.
                         SUBMIT_ONLINE_MERCHANDISE_CONTRACT_TRANSACTION_STATUS_COLUMN_NAME,
                 BrokerSubmitOnlineMerchandiseBusinessTransactionDatabaseConstants.

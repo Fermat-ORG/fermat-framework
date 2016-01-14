@@ -75,6 +75,6 @@
         android:paddingLeft="16dp"
         android:paddingRight="16dp"
         android:paddingTop="16dp"
-        tools:listitem="@layout/exchange_rate_item"/>
+        tools:listitem="@layout/cbw_exchange_rate_item"/>
 
 </LinearLayout>

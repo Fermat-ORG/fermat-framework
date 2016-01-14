@@ -1,6 +1,7 @@
 package unit.com.bitdubai.fermat_dap_api.all_definition.digital_asset;
 
 import com.bitdubai.fermat_api.layer.all_definition.crypto.asymmetric.ECCKeyPair;
+import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
 import com.bitdubai.fermat_api.layer.all_definition.enums.CryptoCurrency;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Genders;
 import com.bitdubai.fermat_api.layer.all_definition.money.CryptoAddress;
@@ -68,11 +69,21 @@ public class LocalStorageTest {
             }
 
             @Override
+            public byte[] getImage() {
+                return new byte[0];
+            }
+
+            @Override
             public String getPublicKey() {
                 return "ASDS-10087982";
             }
 
             @Override
+            public Actors getActorType() {
+                return null;
+            }
+
+            //@Override
             public byte[] getProfileImage() {
                 return new byte[0];
             }

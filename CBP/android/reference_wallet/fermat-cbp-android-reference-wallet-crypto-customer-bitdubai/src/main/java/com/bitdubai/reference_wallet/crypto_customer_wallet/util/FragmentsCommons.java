@@ -18,6 +18,28 @@ import com.squareup.picasso.Picasso;
  */
 public class FragmentsCommons {
 
+    public static int getClauseNumberImageRes(int clauseNumber) {
+        switch (clauseNumber) {
+            case 1:
+                return R.drawable.bg_detail_number_01;
+            case 2:
+                return R.drawable.bg_detail_number_02;
+            case 3:
+                return R.drawable.bg_detail_number_03;
+            case 4:
+                return R.drawable.bg_detail_number_04;
+            case 5:
+                return R.drawable.bg_detail_number_05;
+            case 6:
+                return R.drawable.bg_detail_number_06;
+            case 7:
+                return R.drawable.bg_detail_number_07;
+            case 8:
+                return R.drawable.bg_detail_number_08;
+            default:
+                return R.drawable.bg_detail_number_09;
+        }
+    }
 
     public static View setUpHeaderScreen(LayoutInflater inflater, Activity activity, ActorIdentity identity) throws CantGetActiveLoginIdentityException {
         View view = inflater.inflate(R.layout.ccw_navigation_view_header, null, true);

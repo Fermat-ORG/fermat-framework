@@ -8,6 +8,7 @@ import com.bitdubai.fermat_android_api.ui.holders.FermatViewHolder;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.common.interfaces.CustomerBrokerNegotiationInformation;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.common.interfaces.NegotiationStep;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_broker.interfaces.CryptoBrokerWalletManager;
+import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_customer.interfaces.CryptoCustomerWalletManager;
 import com.bitdubai.reference_wallet.crypto_customer_wallet.R;
 
 import java.util.List;
@@ -19,13 +20,13 @@ public class FooterViewHolder extends FermatViewHolder implements View.OnClickLi
 
     private CustomerBrokerNegotiationInformation data;
     private List<NegotiationStep> dataSet;
-    private CryptoBrokerWalletManager walletManager;
+    private CryptoCustomerWalletManager walletManager;
     OnFooterButtonsClickListener listener;
 
     private CardView addNoteButton;
     private TextView sendButton;
 
-    public FooterViewHolder(View itemView, CustomerBrokerNegotiationInformation data, List<NegotiationStep> dataSet, CryptoBrokerWalletManager walletManager) {
+    public FooterViewHolder(View itemView, CustomerBrokerNegotiationInformation data, List<NegotiationStep> dataSet, CryptoCustomerWalletManager walletManager) {
         super(itemView);
         this.data = data;
         this.dataSet = dataSet;
