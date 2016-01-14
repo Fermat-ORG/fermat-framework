@@ -138,18 +138,7 @@ public class BitcoinWatchOnlyVaultManager {
 
         DeterministicKey masterPublicKey = getMasterPublicKey(extendedPublicKey);
 
-        VaultKeyHierarchyGenerator generator = new VaultKeyHierarchyGenerator(masterPublicKey, hierarchyAccount, this.pluginDatabaseSystem, this.bitcoinNetworkManager, this.pluginId);
-        new Thread(generator).start();
-    }
-
-
-    /**
-     * starts in a new thread the process that will generate the Key hierarchy.
-     * Once created will start the KeyHierarchy Maintainer which will derive all needed keys and
-     * pass them to the crypto network to start the monitoring.
-     * @param generator
-     */
-    private void startHierarchyGenerationProcess(VaultKeyHierarchyGenerator generator){
+        generator = new VaultKeyHierarchyGenerator(masterPublicKey, hierarchyAccount, this.pluginDatabaseSystem, this.bitcoinNetworkManager, this.pluginId);
         new Thread(generator).start();
     }
 
@@ -261,7 +250,12 @@ public class BitcoinWatchOnlyVaultManager {
          * I create the account manually instead of getting it from the database because this method always returns addresses
          * from the asset vault account with Id 0.
          */
+        if (generator == null){
+            throw new GetNewCryptoAddressException(GetNewCryptoAddressException.DEFAULT_MESSAGE, null, "Generator is null", null);
+        }
+
         com.bitdubai.fermat_bch_api.layer.crypto_vault.classes.HierarchyAccount.HierarchyAccount vaultAccount = new com.bitdubai.fermat_bch_api.layer.crypto_vault.classes.HierarchyAccount.HierarchyAccount(0, "Asset Vault account", HierarchyAccountType.MASTER_ACCOUNT);
-        return generator.getVaultKeyHierarchy().getBitcoinAddress(blockchainNetworkType, vaultAccount);
+        CryptoAddress cryptoAddress = generator.getVaultKeyHierarchy().getBitcoinAddress(blockchainNetworkType, vaultAccount);
+        return cryptoAddress;
     }
 }
