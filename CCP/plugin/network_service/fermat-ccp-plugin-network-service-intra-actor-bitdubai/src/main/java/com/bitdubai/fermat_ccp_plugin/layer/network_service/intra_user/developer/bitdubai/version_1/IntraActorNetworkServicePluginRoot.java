@@ -558,7 +558,7 @@ public class IntraActorNetworkServicePluginRoot extends AbstractNetworkServiceV2
                 .sendMessage(
                         actorNetworkServiceRecord.getActorSenderPublicKey(),
                         actorNetworkServiceRecord.getActorDestinationPublicKey(),
-                        actorNetworkServiceRecord.toJson());
+                        actorNetworkServiceRecord.toString());
 
 
     }

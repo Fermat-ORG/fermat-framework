@@ -18,6 +18,7 @@ public enum DatabaseDataType {
     LONG_INTEGER("LINT"),
     MONEY("MONEY"),
     BLOB("BLOB"),
+    TEXT("TEXT"),
     REAL("REAL");
 
     private String code;
@@ -44,6 +45,8 @@ public enum DatabaseDataType {
                 return MONEY;
             case "BLOB":
                 return BLOB;
+            case "TEXT":
+                return TEXT;
             case "REAL":
                 return REAL;
             default:
