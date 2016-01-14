@@ -23,6 +23,7 @@ import com.bitdubai.fermat_cbp_api.layer.contract.customer_broker_purchase.inter
 import com.bitdubai.fermat_cbp_api.layer.identity.crypto_customer.interfaces.CryptoCustomerIdentityManager;
 import com.bitdubai.fermat_cbp_api.layer.negotiation.customer_broker_purchase.interfaces.CustomerBrokerPurchaseNegotiationManager;
 import com.bitdubai.fermat_cbp_api.layer.negotiation.customer_broker_sale.interfaces.CustomerBrokerSaleNegotiationManager;
+import com.bitdubai.fermat_cbp_api.layer.negotiation_transaction.customer_broker_new.interfaces.CustomerBrokerNewManager;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_customer.exceptions.CantGetCryptoCustomerWalletException;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_customer.interfaces.CryptoCustomerWalletManager;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_customer.interfaces.CryptoCustomerWalletModuleManager;
@@ -68,6 +69,10 @@ public class CryptoCustomerWalletModulePluginRoot extends AbstractPlugin impleme
     @NeededPluginReference(platform = Platforms.CRYPTO_BROKER_PLATFORM, layer = Layers.CONTRACT, plugin = Plugins.CONTRACT_PURCHASE)
     CustomerBrokerContractPurchaseManager customerBrokerContractPurchaseManager;
 
+    // TODO Revisar Franklin
+    @NeededPluginReference(platform = Platforms.CRYPTO_BROKER_PLATFORM, layer = Layers.NEGOTIATION_TRANSACTION, plugin = Plugins.CUSTOMER_BROKER_NEW)
+    CustomerBrokerNewManager customerBrokerNewManager;
+
     private CryptoCustomerWalletModuleCryptoCustomerWalletManager walletManager;
 
     public CryptoCustomerWalletModulePluginRoot() {
@@ -90,7 +95,8 @@ public class CryptoCustomerWalletModulePluginRoot extends AbstractPlugin impleme
                         pluginId,
                         pluginFileSystem,
                         cryptoCustomerIdentityManager,
-                        customerBrokerContractPurchaseManager);
+                        customerBrokerContractPurchaseManager,
+                        customerBrokerNewManager); // TODO Revisar franklin
             return walletManager;
 
         } catch (Exception e) {
