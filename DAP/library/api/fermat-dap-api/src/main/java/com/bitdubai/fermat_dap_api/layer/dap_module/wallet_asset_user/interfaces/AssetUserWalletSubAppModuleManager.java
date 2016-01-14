@@ -7,9 +7,10 @@ import com.bitdubai.fermat_api.layer.modules.interfaces.ModuleManager;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginBinaryFile;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantCreateFileException;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.FileNotFoundException;
+import com.bitdubai.fermat_dap_api.layer.all_definition.exceptions.CantGetIdentityAssetUserException;
+import com.bitdubai.fermat_dap_api.layer.dap_actor.redeem_point.exceptions.CantGetAssetRedeemPointActorsException;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.redeem_point.interfaces.ActorAssetRedeemPoint;
 import com.bitdubai.fermat_dap_api.layer.dap_identity.asset_user.interfaces.IdentityAssetUser;
-import com.bitdubai.fermat_dap_api.layer.all_definition.exceptions.CantGetIdentityAssetUserException;
 import com.bitdubai.fermat_dap_api.layer.dap_middleware.dap_asset_factory.exceptions.CantGetAssetFactoryException;
 import com.bitdubai.fermat_dap_api.layer.dap_middleware.dap_asset_factory.interfaces.AssetFactory;
 import com.bitdubai.fermat_dap_api.layer.dap_transaction.asset_appropriation.exceptions.CantExecuteAppropriationTransactionException;
@@ -32,13 +33,15 @@ public interface AssetUserWalletSubAppModuleManager extends ModuleManager<Fermat
      */
     List<AssetUserWalletList> getAssetUserWalletBalances(String publicKey) throws CantLoadWalletException;
 
+    List<ActorAssetRedeemPoint> getAllActorAssetRedeemPointConnected() throws CantGetAssetRedeemPointActorsException;
+
     AssetUserWallet loadAssetUserWallet(String walletPublicKey) throws CantLoadWalletException;
 
     void createAssetUserWallet(String walletPublicKey) throws CantCreateWalletException;
 
     IdentityAssetUser getActiveAssetUserIdentity() throws CantGetIdentityAssetUserException;
 
-    void redeemAssetToRedeemPoint(String digitalAssetPublicKey, ActorAssetRedeemPoint actorAssetRedeemPoint) throws CantRedeemDigitalAssetException;
+    void redeemAssetToRedeemPoint(String digitalAssetPublicKey, String walletPublicKey, List<ActorAssetRedeemPoint> actorAssetRedeemPoints) throws CantRedeemDigitalAssetException;
 
     void appropriateAsset(String digitalAssetPublicKey, String bitcoinWalletPublicKey) throws CantExecuteAppropriationTransactionException, TransactionAlreadyStartedException;
 

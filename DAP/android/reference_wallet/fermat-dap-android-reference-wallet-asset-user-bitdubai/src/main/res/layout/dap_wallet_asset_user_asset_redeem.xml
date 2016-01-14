@@ -1,0 +1,156 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:background="#7858AE">
+
+        <RelativeLayout
+            android:layout_height="100dp"
+            android:layout_width="100dp">
+
+            <ImageView
+                android:id="@+id/assetRedeemImage"
+                android:layout_width="80dp"
+                android:layout_height="80dp"
+                android:src="@drawable/img_asset_without_image"
+                android:layout_centerInParent="true"/>
+
+        </RelativeLayout>
+
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginTop="20dp"
+            android:layout_marginLeft="5dp">
+
+            <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
+                android:id="@+id/assetRedeemNameText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Asset Name"
+                android:layout_marginBottom="15dp"
+                android:textSize="17sp"
+                android:textColor="#b3ffffff"
+                android:fontFamily="regular"/>
+
+            <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
+                android:id="@+id/assetRedeemRemainingText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="94 Assets Remaining"
+                android:textSize="15sp"
+                android:textColor="#b3ffffff"
+                android:fontFamily="light"/>
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+
+        <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Assets to redeem"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentLeft="true"
+            android:layout_marginTop="15dp"
+            android:layout_marginLeft="15dp"
+            android:id="@+id/textView"
+            android:textSize="14sp"
+            android:textColor="#ffffff"
+            android:fontFamily="regular"/>
+
+        <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatEditText
+            android:layout_width="175dp"
+            android:layout_height="25dp"
+            android:inputType="number"
+            android:ems="10"
+            android:id="@+id/assetsToRedeemEditText"
+            android:text="0"
+            android:layout_below="@id/textView"
+            android:layout_marginLeft="15dp"
+            android:layout_marginTop="5dp"
+            android:textSize="15sp"
+            android:textColor="#ffffff"
+            android:fontFamily="regular"
+            android:background="@drawable/bg_delivery_input"/>
+
+        <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Redeem to"
+            android:layout_below="@id/assetsToRedeemEditText"
+            android:layout_marginLeft="15dp"
+            android:layout_marginTop="15dp"
+            android:id="@+id/textView2"
+            android:textSize="14sp"
+            android:textColor="#ffffff"
+            android:fontFamily="regular"/>
+
+        <RelativeLayout
+            android:id="@+id/selectRedeemPointsButton"
+            android:layout_height="30dp"
+            android:layout_marginTop="5dp"
+            android:layout_marginLeft="15dp"
+            android:layout_marginRight="15dp"
+            android:layout_width="match_parent"
+            android:layout_centerHorizontal="true"
+            android:layout_below="@+id/textView2"
+            android:background="#5A555C">
+
+            <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
+                android:id="@+id/selectedRedeemPointsText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Select redeem points"
+                android:textColor="#ffffff"
+                android:textSize="16dp"
+                android:layout_centerVertical="true"/>
+
+            <ImageView
+                android:layout_width="25dp"
+                android:layout_height="25dp"
+                android:src="@drawable/ic_detail_more"
+                android:layout_alignParentRight="true"
+                android:layout_centerInParent="true"/>
+
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/redeemAssetsButton"
+            android:layout_width="match_parent"
+            android:layout_height="30dp"
+            android:layout_marginTop="80dp"
+            android:layout_below="@+id/selectRedeemPointsButton"
+            android:layout_centerHorizontal="true">
+
+            <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:src="@drawable/bg_delivery_button_redeem"/>
+
+            <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:text="Redeem Assets"
+                android:textSize="17sp"
+                android:fontFamily="regular"
+                android:textColor="#00aeef"/>
+
+        </RelativeLayout>
+
+    </RelativeLayout>
+
+</LinearLayout>
