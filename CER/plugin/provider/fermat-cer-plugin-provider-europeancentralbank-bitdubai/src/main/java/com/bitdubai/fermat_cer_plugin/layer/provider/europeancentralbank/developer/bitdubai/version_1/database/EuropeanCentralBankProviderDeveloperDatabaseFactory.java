@@ -84,13 +84,13 @@ public class EuropeanCentralBankProviderDeveloperDatabaseFactory implements Deal
               * The database no exist may be the first time the plugin is running on this device,
               * We need to create the new database
               */
-            EuropeanCentralBankProviderDatabaseFactory europeancentralbankProviderDatabaseFactory = new EuropeanCentralBankProviderDatabaseFactory(pluginDatabaseSystem);
+            EuropeanCentralBankProviderDatabaseFactory europeanCentralBankProviderDatabaseFactory = new EuropeanCentralBankProviderDatabaseFactory(pluginDatabaseSystem);
 
             try {
                   /*
                    * We create the new database
                    */
-                database = europeancentralbankProviderDatabaseFactory.createDatabase(pluginId, pluginId.toString());
+                database = europeanCentralBankProviderDatabaseFactory.createDatabase(pluginId, pluginId.toString());
             } catch (CantCreateDatabaseException cantCreateDatabaseException) {
                   /*
                    * The database cannot be created. I can not handle this situation.
@@ -106,7 +106,7 @@ public class EuropeanCentralBankProviderDeveloperDatabaseFactory implements Deal
          * I only have one database on my plugin. I will return its name.
          */
         List<DeveloperDatabase> databases = new ArrayList<DeveloperDatabase>();
-        databases.add(developerObjectFactory.getNewDeveloperDatabase("Dolartoday", this.pluginId.toString()));
+        databases.add(developerObjectFactory.getNewDeveloperDatabase("EuropeanCentralBank", this.pluginId.toString()));
         return databases;
     }
 
@@ -128,21 +128,38 @@ public class EuropeanCentralBankProviderDeveloperDatabaseFactory implements Deal
         tables.add(providerInfoTable);
 
         /**
-         * Table Query History columns.
+         * Table Current Exchange Rates columns.
          */
-        List<String> queryHistoryColumns = new ArrayList<String>();
+        List<String> currentExchangeRatesColumns = new ArrayList<String>();
 
-        queryHistoryColumns.add(EuropeanCentralBankProviderDatabaseConstants.QUERY_HISTORY_ID_COLUMN_NAME);
-        queryHistoryColumns.add(EuropeanCentralBankProviderDatabaseConstants.QUERY_HISTORY_FROM_CURRENCY_COLUMN_NAME);
-        queryHistoryColumns.add(EuropeanCentralBankProviderDatabaseConstants.QUERY_HISTORY_TO_CURRENCY_COLUMN_NAME);
-        queryHistoryColumns.add(EuropeanCentralBankProviderDatabaseConstants.QUERY_HISTORY_SALE_PRICE_COLUMN_NAME);
-        queryHistoryColumns.add(EuropeanCentralBankProviderDatabaseConstants.QUERY_HISTORY_PURCHASE_PRICE_COLUMN_NAME);
-        queryHistoryColumns.add(EuropeanCentralBankProviderDatabaseConstants.QUERY_HISTORY_TIMESTAMP_COLUMN_NAME);
+        currentExchangeRatesColumns.add(EuropeanCentralBankProviderDatabaseConstants.CURRENT_EXCHANGE_RATES_ID_COLUMN_NAME);
+        currentExchangeRatesColumns.add(EuropeanCentralBankProviderDatabaseConstants.CURRENT_EXCHANGE_RATES_FROM_CURRENCY_COLUMN_NAME);
+        currentExchangeRatesColumns.add(EuropeanCentralBankProviderDatabaseConstants.CURRENT_EXCHANGE_RATES_TO_CURRENCY_COLUMN_NAME);
+        currentExchangeRatesColumns.add(EuropeanCentralBankProviderDatabaseConstants.CURRENT_EXCHANGE_RATES_SALE_PRICE_COLUMN_NAME);
+        currentExchangeRatesColumns.add(EuropeanCentralBankProviderDatabaseConstants.CURRENT_EXCHANGE_RATES_PURCHASE_PRICE_COLUMN_NAME);
+        currentExchangeRatesColumns.add(EuropeanCentralBankProviderDatabaseConstants.CURRENT_EXCHANGE_RATES_TIMESTAMP_COLUMN_NAME);
         /**
-         * Table Query History addition.
+         * Table Current Exchange Rates addition.
          */
-        DeveloperDatabaseTable queryHistoryTable = developerObjectFactory.getNewDeveloperDatabaseTable(EuropeanCentralBankProviderDatabaseConstants.QUERY_HISTORY_TABLE_NAME, queryHistoryColumns);
-        tables.add(queryHistoryTable);
+        DeveloperDatabaseTable currentExchangeRatesTable = developerObjectFactory.getNewDeveloperDatabaseTable(EuropeanCentralBankProviderDatabaseConstants.CURRENT_EXCHANGE_RATES_TABLE_NAME, currentExchangeRatesColumns);
+        tables.add(currentExchangeRatesTable);
+
+        /**
+         * Table Daily Exchange Rates columns.
+         */
+        List<String> dailyExchangeRatesColumns = new ArrayList<String>();
+
+        dailyExchangeRatesColumns.add(EuropeanCentralBankProviderDatabaseConstants.DAILY_EXCHANGE_RATES_ID_COLUMN_NAME);
+        dailyExchangeRatesColumns.add(EuropeanCentralBankProviderDatabaseConstants.DAILY_EXCHANGE_RATES_FROM_CURRENCY_COLUMN_NAME);
+        dailyExchangeRatesColumns.add(EuropeanCentralBankProviderDatabaseConstants.DAILY_EXCHANGE_RATES_TO_CURRENCY_COLUMN_NAME);
+        dailyExchangeRatesColumns.add(EuropeanCentralBankProviderDatabaseConstants.DAILY_EXCHANGE_RATES_SALE_PRICE_COLUMN_NAME);
+        dailyExchangeRatesColumns.add(EuropeanCentralBankProviderDatabaseConstants.DAILY_EXCHANGE_RATES_PURCHASE_PRICE_COLUMN_NAME);
+        dailyExchangeRatesColumns.add(EuropeanCentralBankProviderDatabaseConstants.DAILY_EXCHANGE_RATES_TIMESTAMP_COLUMN_NAME);
+        /**
+         * Table Daily Exchange Rates addition.
+         */
+        DeveloperDatabaseTable dailyExchangeRatesTable = developerObjectFactory.getNewDeveloperDatabaseTable(EuropeanCentralBankProviderDatabaseConstants.DAILY_EXCHANGE_RATES_TABLE_NAME, dailyExchangeRatesColumns);
+        tables.add(dailyExchangeRatesTable);
 
 
 

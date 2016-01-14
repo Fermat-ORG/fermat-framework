@@ -26,7 +26,7 @@ import java.util.UUID;
  * contains the methods that the Developer Database Tools uses to show the information.
  * <p/>
  *
- * Created by Angel Veloz - (vlzangel91@gmail.com) on 21/12/15.
+ * Created by Angel Veloz - (vlzangel91@gmail.com) on 09/01/16.
  *
  * @version 1.0
  * @since Java JDK 1.7
@@ -125,9 +125,10 @@ public class CustomerBrokerPurchaseNegotiationDeveloperDatabaseFactory implement
         negotiationsPurchaseColumns.add(CustomerBrokerPurchaseNegotiationDatabaseConstants.NEGOTIATIONS_PURCHASE_START_DATE_TIME_COLUMN_NAME);
         negotiationsPurchaseColumns.add(CustomerBrokerPurchaseNegotiationDatabaseConstants.NEGOTIATIONS_PURCHASE_EXPIRATION_DATE_TIME_COLUMN_NAME);
         negotiationsPurchaseColumns.add(CustomerBrokerPurchaseNegotiationDatabaseConstants.NEGOTIATIONS_PURCHASE_STATUS_COLUMN_NAME);
+        negotiationsPurchaseColumns.add(CustomerBrokerPurchaseNegotiationDatabaseConstants.NEGOTIATIONS_PURCHASE_NEAR_EXPIRATION_DATE_TIME_COLUMN_NAME);
         negotiationsPurchaseColumns.add(CustomerBrokerPurchaseNegotiationDatabaseConstants.NEGOTIATIONS_PURCHASE_MEMO_COLUMN_NAME);
         negotiationsPurchaseColumns.add(CustomerBrokerPurchaseNegotiationDatabaseConstants.NEGOTIATIONS_PURCHASE_CANCEL_REASON_COLUMN_NAME);
-        negotiationsPurchaseColumns.add(CustomerBrokerPurchaseNegotiationDatabaseConstants.NEGOTIATIONS_PURCHASE_NEAR_EXPIRATION_DATE_TIME_COLUMN_NAME);
+        negotiationsPurchaseColumns.add(CustomerBrokerPurchaseNegotiationDatabaseConstants.NEGOTIATIONS_PURCHASE_LAST_NEGOTIATION_UPDATE_DATE_COLUMN_NAME);
         /**
          * Table Negotiations Purchase addition.
          */

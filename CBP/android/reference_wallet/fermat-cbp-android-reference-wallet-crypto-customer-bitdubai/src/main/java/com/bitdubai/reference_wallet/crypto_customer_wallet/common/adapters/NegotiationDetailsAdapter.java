@@ -10,7 +10,6 @@ import android.view.ViewGroup;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.FermatSession;
 import com.bitdubai.fermat_android_api.ui.holders.FermatViewHolder;
 import com.bitdubai.fermat_api.FermatException;
-import com.bitdubai.fermat_bnk_api.layer.bnk_wallet.bank_money.interfaces.BankAccountNumber;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.ClauseType;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.NegotiationStepType;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.NegotiationType;
@@ -20,9 +19,9 @@ import com.bitdubai.fermat_cbp_api.layer.wallet_module.common.interfaces.Custome
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.common.interfaces.ExchangeRateStep;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.common.interfaces.NegotiationStep;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.common.interfaces.SingleValueStep;
-import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_broker.interfaces.CryptoBrokerWalletManager;
+import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_customer.interfaces.CryptoCustomerWalletManager;
 import com.bitdubai.reference_wallet.crypto_customer_wallet.R;
-import com.bitdubai.reference_wallet.crypto_customer_wallet.common.holders.negotiation_details.AmountToSellStepViewHolder;
+import com.bitdubai.reference_wallet.crypto_customer_wallet.common.holders.negotiation_details.AmountToBuyStepViewHolder;
 import com.bitdubai.reference_wallet.crypto_customer_wallet.common.holders.negotiation_details.DateTimeStepViewHolder;
 import com.bitdubai.reference_wallet.crypto_customer_wallet.common.holders.negotiation_details.ExchangeRateStepViewHolder;
 import com.bitdubai.reference_wallet.crypto_customer_wallet.common.holders.negotiation_details.FooterViewHolder;
@@ -48,14 +47,14 @@ public class NegotiationDetailsAdapter extends RecyclerView.Adapter<FermatViewHo
     private FermatSession session;
     private List<NegotiationStep> dataSet;
     private Activity activity;
-    private CryptoBrokerWalletManager walletManager;
+    private CryptoCustomerWalletManager walletManager;
     private FooterViewHolder.OnFooterButtonsClickListener footerListener;
 
     private final CustomerBrokerNegotiationInformation data;
     private ExchangeRateStepViewHolder exchangeRateViewHolder;
     private boolean haveNote;
 
-    public NegotiationDetailsAdapter(Activity activity, FermatSession session, CryptoBrokerWalletManager walletManager, CustomerBrokerNegotiationInformation data, List<NegotiationStep> dataSet) {
+    public NegotiationDetailsAdapter(Activity activity, FermatSession session, CryptoCustomerWalletManager walletManager, CustomerBrokerNegotiationInformation data, List<NegotiationStep> dataSet) {
         this.activity = activity;
         this.session = session;
         this.dataSet = dataSet;
@@ -78,7 +77,7 @@ public class NegotiationDetailsAdapter extends RecyclerView.Adapter<FermatViewHo
         if (type == TYPE_ITEM_EXCHANGE_RATE)
             return new ExchangeRateStepViewHolder(this, itemView, walletManager);
         if (type == TYPE_ITEM_AMOUNT_TO_SELL)
-            return new AmountToSellStepViewHolder(this, itemView, walletManager);
+            return new AmountToBuyStepViewHolder(this, itemView, walletManager);
         if (type == TYPE_FOOTER)
             return new FooterViewHolder(itemView, data, dataSet, walletManager);
 
@@ -88,17 +87,17 @@ public class NegotiationDetailsAdapter extends RecyclerView.Adapter<FermatViewHo
     private int getCardViewResource(int type) {
         switch (type) {
             case TYPE_HEADER:
-                return R.layout.notes_item;
+                return R.layout.ccw_notes_item;
             case TYPE_ITEM_SINGLE_CHOICE:
-                return R.layout.single_choice_item;
+                return R.layout.ccw_single_choice_item;
             case TYPE_ITEM_DATE_TIME:
-                return R.layout.date_time_item;
+                return R.layout.ccw_date_time_item;
             case TYPE_ITEM_EXCHANGE_RATE:
-                return R.layout.exchange_rate_item;
+                return R.layout.ccw_exchange_rate_item;
             case TYPE_ITEM_AMOUNT_TO_SELL:
-                return R.layout.amount_to_sell_item;
+                return R.layout.ccw_amount_to_buy_item;
             case TYPE_FOOTER:
-                return R.layout.footer_item;
+                return R.layout.ccw_footer_item;
             default:
                 throw new NoSuchElementException("Incorrect type value");
         }
@@ -152,7 +151,7 @@ public class NegotiationDetailsAdapter extends RecyclerView.Adapter<FermatViewHo
                 break;
             case TYPE_ITEM_AMOUNT_TO_SELL:
                 AmountToSellStep amountToSellStep = (AmountToSellStep) dataSet.get(itemPosition);
-                AmountToSellStepViewHolder amountToSellViewHolder = (AmountToSellStepViewHolder) holder;
+                AmountToBuyStepViewHolder amountToSellViewHolder = (AmountToBuyStepViewHolder) holder;
                 amountToSellViewHolder.bind(
                         stepNumber,
                         amountToSellStep.getCurrencyToSell(),
@@ -253,19 +252,17 @@ public class NegotiationDetailsAdapter extends RecyclerView.Adapter<FermatViewHo
                         R.string.payment_methods_title,
                         R.string.payment_method,
                         step.getValue(),
-                        walletManager.getPaymentMethods(currencyToSell));
+                        null); //TODO walletManager.getPaymentMethods(currencyToSell));
                 break;
             case BROKER_BANK_ACCOUNT:
-                //TODO:Revisar Nelson
                 viewHolder.bind(
                         stepNumber,
                         R.string.broker_bank_account_title,
                         R.string.selected_bank_account,
                         step.getValue(),
-                        getBankAccounts());
+                        null);//getBankAccounts());
                 break;
             case BROKER_LOCATION:
-                //TODO:Revisar Nelson
                 viewHolder.bind(
                         stepNumber,
                         R.string.broker_locations_title,
@@ -327,20 +324,6 @@ public class NegotiationDetailsAdapter extends RecyclerView.Adapter<FermatViewHo
             if (locations != null)
                 for (NegotiationLocations location : locations)
                     data.add(location.getLocation());
-
-        } catch (FermatException ex) {
-            Log.e("NegotiationDetailsAdapt", ex.getMessage(), ex);
-        }
-
-        return data;
-    }
-
-    private List<String> getBankAccounts() {
-        List<String> data = new ArrayList<>();
-        try {
-            List<BankAccountNumber> accounts = walletManager.getAccounts(session.getAppPublicKey());
-            for (BankAccountNumber account : accounts)
-                data.add(account.getAccount());
 
         } catch (FermatException ex) {
             Log.e("NegotiationDetailsAdapt", ex.getMessage(), ex);

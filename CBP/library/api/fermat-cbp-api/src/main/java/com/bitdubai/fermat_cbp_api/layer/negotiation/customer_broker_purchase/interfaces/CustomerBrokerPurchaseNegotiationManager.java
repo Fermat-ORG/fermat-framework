@@ -171,6 +171,13 @@ public interface CustomerBrokerPurchaseNegotiationManager extends FermatManager 
 
     /**
      *
+     * @return a collection with all the NegotiationBankAccount
+     * @throws CantGetListBankAccountsPurchaseException
+     */
+    Collection<NegotiationBankAccount> getAllBankAccount() throws CantGetListBankAccountsPurchaseException;
+
+    /**
+     *
      * @param currency
      * @return Collection<NegotiationBankAccount>
      * @throws CantGetListBankAccountsPurchaseException
