@@ -14,7 +14,6 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTransac
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantInsertRecordException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantLoadTableToMemoryException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantUpdateRecordException;
-import com.bitdubai.fermat_api.layer.osa_android.file_system.DealsWithPluginFileSystem;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.FileLifeSpan;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.FilePrivacy;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
@@ -55,23 +54,16 @@ import java.util.UUID;
 /**
  * Created by franklin on 14/10/15.
  */
-public class AssetRedeemPointWalletDao implements DealsWithPluginFileSystem {
-    PluginFileSystem pluginFileSystem;
-    UUID plugin;
-
-    @Override
-    public void setPluginFileSystem(PluginFileSystem pluginFileSystem) {
-        this.pluginFileSystem = pluginFileSystem;
-    }
-
+public class AssetRedeemPointWalletDao {
+    private PluginFileSystem pluginFileSystem;
+    private UUID plugin;
     private Database database;
 
-    public void setPlugin(UUID plugin) {
-        this.plugin = plugin;
-    }
 
-    public AssetRedeemPointWalletDao(Database database) {
+    public AssetRedeemPointWalletDao(Database database, PluginFileSystem pluginFileSystem, UUID plugin) {
         this.database = database;
+        this.pluginFileSystem = pluginFileSystem;
+        this.plugin = plugin;
     }
 
     private long getCurrentBookBalance() throws CantGetBalanceRecordException {
