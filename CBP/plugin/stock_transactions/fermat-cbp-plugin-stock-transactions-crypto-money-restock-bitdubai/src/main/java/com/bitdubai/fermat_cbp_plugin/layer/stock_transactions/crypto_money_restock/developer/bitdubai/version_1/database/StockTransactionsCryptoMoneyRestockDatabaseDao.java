@@ -138,6 +138,8 @@ public class StockTransactionsCryptoMoneyRestockDatabaseDao {
             database = openDatabase();
             DatabaseTransaction transaction = database.newTransaction();
 
+            //TODO: Solo para prueba ya que priceReference viene null desde android revisar con Nelson
+            cryptoMoneyTransaction.setPriceReference(new BigDecimal(0));
             DatabaseTable table = getDatabaseTable(StockTransactionsCrpytoMoneyRestockDatabaseConstants.CRYPTO_MONEY_RESTOCK_TABLE_NAME);
             DatabaseTableRecord bankMoneyRestockRecord = getBankMoneyRestockRecord(cryptoMoneyTransaction);
             DatabaseTableFilter filter = table.getEmptyTableFilter();
