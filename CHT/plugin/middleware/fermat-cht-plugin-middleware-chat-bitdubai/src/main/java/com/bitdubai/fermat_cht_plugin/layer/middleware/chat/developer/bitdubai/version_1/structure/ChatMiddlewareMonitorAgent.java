@@ -454,6 +454,7 @@ public class ChatMiddlewareMonitorAgent implements
                     chat.getRemoteActorPublicKey(),
                     chat.getChatName(),
                     ChatMessageStatus.READ_CHAT,
+                    MessageStatus.SEND,
                     timestamp,
                     message.getMessageId(),
                     message.getMessage(),
