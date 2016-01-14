@@ -130,7 +130,7 @@ public class DiscoveryComponentConnectionRequestJettyPacketProcessor extends Fer
             LOG.info("remoteNsParticipant = " + remoteNsParticipant.getAlias() + "("+remoteNsParticipant.getIdentityPublicKey()+")");
 
             //Create a new vpn
-           String vpnPath = JettyEmbeddedAppServer.DEFAULT_CONTEXT_PATH + "/vpn/";
+            String vpnPath = JettyEmbeddedAppServer.DEFAULT_CONTEXT_PATH + "/vpn/";
 
             LOG.info("Vpn path = " + vpnPath);
 
@@ -142,21 +142,39 @@ public class DiscoveryComponentConnectionRequestJettyPacketProcessor extends Fer
 
         }catch (Exception e){
 
-            LOG.info("applicantParticipant is available    = " + (applicantParticipant    != null ? "SI" : "NO" ));
-            LOG.info("networkServiceApplicant is available = " + (networkServiceApplicant != null ? "SI" : "NO" ));
-            LOG.info("remoteParticipant is available       = " + (remoteParticipant       != null ? "SI" : "NO" ));
-            LOG.info("remoteNsParticipant is available     = " + (remoteNsParticipant     != null ? "SI" : "NO" ));
+            LOG.info("Requested connection is no possible, some of the participant are no available.");
+            LOG.info("Cause: "+e.getMessage());
+            LOG.info("Details: ");
+            LOG.info("ApplicantParticipant is available    = " + (applicantParticipant    != null ? "SI ("+applicantParticipant.getAlias()+")" : "NO" ));
+            LOG.info("NetworkServiceApplicant is available = " + (networkServiceApplicant != null ? "SI ("+networkServiceApplicant.getAlias()+")": "NO" ));
+            LOG.info("RemoteParticipant is available       = " + (remoteParticipant       != null ? "SI ("+remoteParticipant.getAlias()+")" : "NO" ));
+            LOG.info("RemoteNsParticipant is available     = " + (remoteNsParticipant     != null ? "SI ("+remoteNsParticipant.getAlias()+")" : "NO" ));
 
-            LOG.info("requested connection is no possible, some of the participant are no available.");
-            LOG.info("cause: "+e.getMessage());
-            
+            String details = "";
+
+            if (applicantParticipant == null){
+                details = "Applicant Participant is not available. ";
+            }
+
+            if (networkServiceApplicant == null){
+                details = "Applicant Network Service is not available. ";
+            }
+
+            if (remoteParticipant == null){
+                details = "RemoteParticipant is not available. ";
+            }
+
+            if (remoteNsParticipant == null){
+                details = "Remote Network Service Participant is not available. ";
+            }
+
             /*
              * Construct the json object
              */
             JsonObject packetContent = jsonParser.parse(packetContentJsonStringRepresentation).getAsJsonObject();
             packetContent.addProperty(JsonAttNamesConstants.APPLICANT_PARTICIPANT_NS_VPN, networkServiceApplicant.toJson());
             packetContent.addProperty(JsonAttNamesConstants.REMOTE_PARTICIPANT_VPN, remoteParticipant.toJson());
-            packetContent.addProperty(JsonAttNamesConstants.FAILURE_VPN_MSJ, "failure in component connection, some of the component participant are no available: "+e.getMessage());
+            packetContent.addProperty(JsonAttNamesConstants.FAILURE_VPN_MSJ, "Failure in component connection, some of the component needed to establish the vpn are no available: "+details+" "+e.getMessage());
 
             /*
              * Create the respond packet
