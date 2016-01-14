@@ -69,7 +69,6 @@ public class CryptoCustomerWalletModulePluginRoot extends AbstractPlugin impleme
     @NeededPluginReference(platform = Platforms.CRYPTO_BROKER_PLATFORM, layer = Layers.CONTRACT, plugin = Plugins.CONTRACT_PURCHASE)
     CustomerBrokerContractPurchaseManager customerBrokerContractPurchaseManager;
 
-    // TODO Revisar Franklin
     @NeededPluginReference(platform = Platforms.CRYPTO_BROKER_PLATFORM, layer = Layers.NEGOTIATION_TRANSACTION, plugin = Plugins.CUSTOMER_BROKER_NEW)
     CustomerBrokerNewManager customerBrokerNewManager;
 
@@ -96,7 +95,7 @@ public class CryptoCustomerWalletModulePluginRoot extends AbstractPlugin impleme
                         pluginFileSystem,
                         cryptoCustomerIdentityManager,
                         customerBrokerContractPurchaseManager,
-                        customerBrokerNewManager); // TODO Revisar franklin
+                        customerBrokerNewManager);
             return walletManager;
 
         } catch (Exception e) {
