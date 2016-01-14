@@ -169,6 +169,9 @@ public class NegotiationTransactionCustomerBrokerUpdatePluginRoot  extends Abstr
             );
             customerBrokerUpdateAgent.start();
 
+            //TEST MOCK
+            createCustomerBrokerUpdatePurchaseNegotiationTest();
+
             //Startes Service
             this.serviceStatus = ServiceStatus.STARTED;
 //            System.out.print("-----------------------\n CUSTOMER BROKER UPDATE: SUCCESSFUL START \n-----------------------\n");
@@ -337,9 +340,9 @@ public class NegotiationTransactionCustomerBrokerUpdatePluginRoot  extends Abstr
             }else{ System.out.print("\n\n\n --- NegotiationXML Date IS NULL"); }
 
         } catch (CantCreateCustomerBrokerUpdatePurchaseNegotiationTransactionException e) {
-            System.out.print("\n**** MOCK CUSTOMER BROKER UPDATE. PURCHASE NEGOTIATION. ERROR CREATE CUSTOMER BROKER UPDATE. ****\n");
+            System.out.print("\n**** MOCK NEGOTIATION TRANSACTION - CUSTOMER BROKER UPDATE. PLUGIN ROOT. ERROR CREATE CUSTOMER BROKER UPDATE. ****\n");
         } catch (CantRegisterCustomerBrokerUpdateNegotiationTransactionException e){
-            System.out.print("\n**** MOCK CUSTOMER BROKER UPDATE. PURCHASE NEGOTIATION. ERROR LIST CUSTOMER BROKER UPDATE NOT FOUNT. ****\n");
+            System.out.print("\n**** MOCK NEGOTIATION TRANSACTION - CUSTOMER BROKER UPDATE. PLUGIN ROOT. ERROR LIST CUSTOMER BROKER UPDATE NOT FOUNT. ****\n");
         }
 
     }
