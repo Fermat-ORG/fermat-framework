@@ -48,6 +48,7 @@ public class RedeemPointSession extends AbstractFermatSession<InstalledWallet,As
     public RedeemPointSession() {
 
         installedWallet = null;
+        data = new HashMap<String, Object>();
     }
 
 

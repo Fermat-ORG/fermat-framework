@@ -37,4 +37,14 @@ public class Data {
         }
         return digitalAssets;
     }
+
+    public static List<UserRedeemed> getUserRedeemedPointList(AssetRedeemPointWalletSubAppModule moduleManager) throws Exception {
+        List<AssetRedeemPointWalletList> assets = moduleManager.getAssetRedeemPointWalletBalances("walletPublicKeyTest");
+        List<UserRedeemed> userRedeemeds = new ArrayList<>();
+        UserRedeemed userRedeemed;
+
+
+        return userRedeemeds;
+    }
+    
 }

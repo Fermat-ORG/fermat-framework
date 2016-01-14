@@ -1782,6 +1782,30 @@ public class WalletRuntimeEnginePluginRoot extends AbstractPlugin implements
         runtimeActivity.addFragment(Fragments.DAP_WALLET_REDEEM_POINT_STADISTICS_ACTIVITY.getKey(), runtimeFragment);
         runtimeActivity.setStartFragment(Fragments.DAP_WALLET_REDEEM_POINT_STADISTICS_ACTIVITY.getKey());
 
+        // -- Redeem Point Detail Activity
+        runtimeActivity = new Activity();
+        runtimeActivity.setType(Activities.DAP_WALLET_REDEEM_POINT_DETAILS_ACTIVITY);
+        runtimeActivity.setActivityType(Activities.DAP_WALLET_REDEEM_POINT_DETAILS_ACTIVITY.getCode());
+        runtimeActivity.setBackActivity(Activities.DAP_WALLET_REDEEM_POINT_MAIN_ACTIVITY);
+        runtimeActivity.setBackPublicKey(publicKey);
+        runtimeWalletNavigationStructure.addActivity(runtimeActivity);
+
+        runtimeTitleBar = new TitleBar();
+        runtimeTitleBar.setLabel("Asset Redeem Detail");
+        runtimeTitleBar.setTitleColor("#ffffff");
+        runtimeTitleBar.setColor("#005580");
+
+        runtimeTitleBar.setLabelSize(30);
+        runtimeTitleBar.setIconName("back");
+        runtimeActivity.setTitleBar(runtimeTitleBar);
+
+        runtimeFragment = new Fragment();
+        runtimeFragment.setType(Fragments.DAP_WALLET_REDEEM_POINT_DETAILS_ACTIVITY.getKey());
+        runtimeActivity.addFragment(Fragments.DAP_WALLET_REDEEM_POINT_DETAILS_ACTIVITY.getKey(), runtimeFragment);
+        runtimeActivity.setStartFragment(Fragments.DAP_WALLET_REDEEM_POINT_DETAILS_ACTIVITY.getKey());
+        // -- Redeem Point Detail Activity END
+
+
         return runtimeWalletNavigationStructure;
     }
 
