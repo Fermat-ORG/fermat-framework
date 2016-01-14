@@ -69,7 +69,7 @@ public class AccountsListFragment extends FermatWalletListFragment<BankAccountNu
     protected void initViews(View layout) {
         super.initViews(layout);
         configureToolbar();
-        emtyView = (FermatTextView) layout.findViewById(R.id.empty)
+        emtyView = (FermatTextView) layout.findViewById(R.id.empty);
         showOrHideNoAccountListView(accountsList.isEmpty());
     }
 
