@@ -1805,7 +1805,7 @@ public abstract class FermatActivity extends AppCompatActivity
         mContentView.setTextViewText(R.id.txt_cloud,s);
         if(notification==null)
         notification = new Notification.Builder(this).setSmallIcon(R.drawable.fermat_bitcoin2).setTicker("ticker")
-                .setPriority(Notification.PRIORITY_HIGH)
+                .setPriority(Notification.PRIORITY_LOW).setAutoCancel(true)
                // .setAutoCancel(false)
               //  .setOngoing(true)
                 .setContent(mContentView)

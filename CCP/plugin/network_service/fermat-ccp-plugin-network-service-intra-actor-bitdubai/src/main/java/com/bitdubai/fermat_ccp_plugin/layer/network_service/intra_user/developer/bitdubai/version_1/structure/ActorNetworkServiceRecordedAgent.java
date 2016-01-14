@@ -309,6 +309,7 @@ public class ActorNetworkServiceRecordedAgent extends FermatAgent{
             }
 
 
+
        } catch (CantListIntraWalletUsersException e) {
            e.printStackTrace();
        }
