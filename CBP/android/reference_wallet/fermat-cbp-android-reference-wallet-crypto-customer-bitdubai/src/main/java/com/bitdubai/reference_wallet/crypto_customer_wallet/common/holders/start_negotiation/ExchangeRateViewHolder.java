@@ -52,10 +52,10 @@ public class ExchangeRateViewHolder extends ClauseViewHolder implements TextWatc
 
         String formattedMarketRate = NumberFormat.getInstance().format(marketRate);
 
-        markerRateReference.setText(String.format("1 %1$s / %2$s %3$s", currencyToBuy, formattedMarketRate, currencyToPay));
-        yourExchangeRateValueLeftSide.setText(String.format("1 %1$s", currencyToBuy));
+        markerRateReference.setText(String.format("1 %1$s / %2$s %3$s", currencyToBuy.getValue(), formattedMarketRate, currencyToPay.getValue()));
+        yourExchangeRateValueLeftSide.setText(String.format("1 %1$s /", currencyToBuy.getValue()));
         yourExchangeRateValue.setText(clause.getValue());
-        yourExchangeRateValueRightSide.setText(String.format("%1$s", currencyToPay));
+        yourExchangeRateValueRightSide.setText(String.format("%1$s", currencyToPay.getValue()));
     }
 
     @Override
