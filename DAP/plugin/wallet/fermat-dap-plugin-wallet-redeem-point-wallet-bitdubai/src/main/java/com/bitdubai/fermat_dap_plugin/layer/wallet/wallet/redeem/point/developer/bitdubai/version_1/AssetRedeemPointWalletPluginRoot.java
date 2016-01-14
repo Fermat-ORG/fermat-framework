@@ -59,7 +59,7 @@ public class AssetRedeemPointWalletPluginRoot extends AbstractPlugin implements
     @NeededAddonReference(platform = Platforms.OPERATIVE_SYSTEM_API, layer = Layers.SYSTEM, addon = Addons.PLUGIN_FILE_SYSTEM)
     private PluginFileSystem pluginFileSystem;
 
-    @NeededAddonReference(platform = Platforms.PLUG_INS_PLATFORM   , layer = Layers.PLATFORM_SERVICE, addon = Addons.ERROR_MANAGER         )
+    @NeededAddonReference(platform = Platforms.PLUG_INS_PLATFORM, layer = Layers.PLATFORM_SERVICE, addon = Addons.ERROR_MANAGER)
     private ErrorManager errorManager;
 
     public static final String PATH_DIRECTORY = "asset-redeem-point-swap/";
@@ -70,6 +70,8 @@ public class AssetRedeemPointWalletPluginRoot extends AbstractPlugin implements
 
     private static final String WALLET_REDEEM_POINT_FILE_NAME = "walletsIds";
     private Map<String, UUID> walletRedeemPoint = new HashMap<>();
+    private boolean existsWallet = false;
+    private AssetRedeemPointWallet redeemPointWallet;
 
     @Override
     public List<DeveloperDatabase> getDatabaseList(DeveloperObjectFactory developerObjectFactory) {
@@ -92,7 +94,7 @@ public class AssetRedeemPointWalletPluginRoot extends AbstractPlugin implements
         try {
             Database database = this.pluginDatabaseSystem.openDatabase(this.pluginId, developerDatabase.getName());
             databaseTableRecords.addAll(DeveloperDatabaseFactory.getDatabaseTableContent(developerObjectFactory, database, developerDatabaseTable));
-            database.closeDatabase();
+
         } catch (CantOpenDatabaseException cantOpenDatabaseException) {
             /**
              * The database exists but cannot be open. I can not handle this situation.
@@ -112,16 +114,19 @@ public class AssetRedeemPointWalletPluginRoot extends AbstractPlugin implements
 
     @Override
     public void start() throws CantStartPluginException {
-        try{
+        try {
             loadWalletRedeemPointMap();
-            createWalletAssetRedeemPoint("walletPublicKeyTest");
-            loadAssetRedeemPointWallet("walletPublicKeyTest");
+
+            if (!existsWallet) {
+                createWalletAssetRedeemPoint("walletPublicKeyTest");
+            }
+            redeemPointWallet = loadAssetRedeemPointWallet("walletPublicKeyTest");
             this.serviceStatus = ServiceStatus.STARTED;
             System.out.println("Star Plugin AssetWalletRedeemPoint");
-        }catch(CantStartPluginException exception){
+        } catch (CantStartPluginException exception) {
             errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_DAP_ASSET_REDEEM_POINT_WALLET, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, exception);
             throw exception;
-        }catch(Exception exception){
+        } catch (Exception exception) {
             errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_DAP_ASSET_REDEEM_POINT_WALLET, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, FermatException.wrapException(exception));
             throw new CantStartPluginException(CantStartPluginException.DEFAULT_MESSAGE, FermatException.wrapException(exception), null, null);
         }
@@ -135,8 +140,7 @@ public class AssetRedeemPointWalletPluginRoot extends AbstractPlugin implements
             UUID internalAssetRedeemPointWalletId = walletRedeemPoint.get(walletPublicKey);
             assetRedeemPointWallet.initialize(internalAssetRedeemPointWalletId);
             return assetRedeemPointWallet;
-
-        }catch (CantInitializeAssetIssuerWalletException exception) {
+        } catch (CantInitializeAssetIssuerWalletException exception) {
             errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_DAP_ASSET_REDEEM_POINT_WALLET, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, FermatException.wrapException(exception));
             throw new CantLoadWalletException("I can't initialize wallet", exception, "", "");
         } catch (Exception exception) {
@@ -149,11 +153,9 @@ public class AssetRedeemPointWalletPluginRoot extends AbstractPlugin implements
     public void createWalletAssetRedeemPoint(String walletPublicKey) throws CantCreateWalletException {
         try {
             AssetRedeemPointWalletImpl assetRedeemPointWallet = new AssetRedeemPointWalletImpl(errorManager, pluginDatabaseSystem, pluginFileSystem, pluginId);
-
             UUID internalAssetRedeemPointWalletId = assetRedeemPointWallet.create(walletPublicKey);
-
             walletRedeemPoint.put(walletPublicKey, internalAssetRedeemPointWalletId);
-        }catch (CantCreateWalletException exception) {
+        } catch (CantCreateWalletException exception) {
             errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_DAP_ASSET_REDEEM_POINT_WALLET, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, FermatException.wrapException(exception));
             throw new CantCreateWalletException("Wallet Creation Failed", exception, "walletId: " + walletPublicKey, "");
         } catch (Exception exception) {
@@ -170,6 +172,7 @@ public class AssetRedeemPointWalletPluginRoot extends AbstractPlugin implements
             if (!stringWalletId.equals("")) {
                 String[] idPair = stringWalletId.split(",", -1);
                 walletRedeemPoint.put(idPair[0], UUID.fromString(idPair[1]));
+                existsWallet = true;
             }
     }
 
