@@ -82,6 +82,7 @@ public class AssetRedeemPointWalletImpl implements AssetRedeemPointWallet {
 
         try {
             database = this.pluginDatabaseSystem.openDatabase(this.pluginId, walletId.toString());
+            assetRedeemPointWalletDao = new AssetRedeemPointWalletDao(database, pluginFileSystem, walletId);
         } catch (CantOpenDatabaseException cantOpenDatabaseException) {
             throw new CantInitializeAssetIssuerWalletException("I can't open database", cantOpenDatabaseException, "WalletId: " + walletId.toString(), "");
         } catch (DatabaseNotFoundException databaseNotFoundException) {
@@ -185,9 +186,6 @@ public class AssetRedeemPointWalletImpl implements AssetRedeemPointWallet {
     @Override
     public List<AssetRedeemPointWalletTransaction> getTransactions(BalanceType balanceType, TransactionType transactionType, int max, int offset, String assetPublicKey) throws CantGetTransactionsException {
         try {
-            assetRedeemPointWalletDao = new AssetRedeemPointWalletDao(database);
-            assetRedeemPointWalletDao.setPluginFileSystem(pluginFileSystem);
-            assetRedeemPointWalletDao.setPlugin(pluginId);
             return assetRedeemPointWalletDao.listsTransactionsByAssets(balanceType, transactionType, max, offset, assetPublicKey);
         } catch (CantGetTransactionsException exception) {
             errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_ASSET_WALLET_ISSUER, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, FermatException.wrapException(exception));
@@ -201,9 +199,6 @@ public class AssetRedeemPointWalletImpl implements AssetRedeemPointWallet {
     @Override
     public List<AssetRedeemPointWalletTransaction> getTransactionsByActor(String actorPublicKey, BalanceType balanceType, int max, int offset) throws CantGetTransactionsException {
         try {
-            assetRedeemPointWalletDao = new AssetRedeemPointWalletDao(database);
-            assetRedeemPointWalletDao.setPluginFileSystem(pluginFileSystem);
-            assetRedeemPointWalletDao.setPlugin(pluginId);
             return assetRedeemPointWalletDao.getTransactionsByActor(actorPublicKey, balanceType, max, offset);
         } catch (CantGetTransactionsException exception) {
             errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_ASSET_WALLET_ISSUER, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, FermatException.wrapException(exception));
@@ -217,9 +212,6 @@ public class AssetRedeemPointWalletImpl implements AssetRedeemPointWallet {
     @Override
     public List<AssetRedeemPointWalletTransaction> gettLastActorTransactionsByTransactionType(BalanceType balanceType, TransactionType transactionType, int max, int offset) throws CantGetTransactionsException {
         try {
-            assetRedeemPointWalletDao = new AssetRedeemPointWalletDao(database);
-            assetRedeemPointWalletDao.setPluginFileSystem(pluginFileSystem);
-            assetRedeemPointWalletDao.setPlugin(pluginId);
             return assetRedeemPointWalletDao.getTransactionsByTransactionType(transactionType, max, offset);
         } catch (CantGetTransactionsException exception) {
             errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_ASSET_WALLET_ISSUER, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, FermatException.wrapException(exception));
@@ -233,9 +225,6 @@ public class AssetRedeemPointWalletImpl implements AssetRedeemPointWallet {
     @Override
     public void setTransactionDescription(UUID transactionID, String description) throws CantFindTransactionException, CantStoreMemoException {
         try {
-            assetRedeemPointWalletDao = new AssetRedeemPointWalletDao(database);
-            assetRedeemPointWalletDao.setPluginFileSystem(pluginFileSystem);
-            assetRedeemPointWalletDao.setPlugin(pluginId);
             assetRedeemPointWalletDao.updateMemoField(transactionID, description);
         } catch (CantStoreMemoException exception) {
             errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_ASSET_WALLET_ISSUER, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, FermatException.wrapException(exception));

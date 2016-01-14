@@ -19,43 +19,36 @@ import java.util.UUID;
 public class AssetRedeemPointWalletBalanceImpl implements com.bitdubai.fermat_dap_api.layer.dap_wallet.asset_redeem_point.interfaces.AssetRedeemPointWalletBalance {
     private Database database;
     private AssetRedeemPointWalletDao assetRedeemPointWalletDao;
-    UUID plugin;
-    PluginFileSystem pluginFileSystem;
+    private UUID plugin;
+    private PluginFileSystem pluginFileSystem;
+
     /**
      * Constructor.
      */
-    public AssetRedeemPointWalletBalanceImpl(final Database database, final UUID plugin, final PluginFileSystem pluginFileSystem){
+    public AssetRedeemPointWalletBalanceImpl(final Database database, final UUID plugin, final PluginFileSystem pluginFileSystem) {
         this.database = database;
         this.plugin = plugin;
         this.pluginFileSystem = pluginFileSystem;
+        assetRedeemPointWalletDao = new AssetRedeemPointWalletDao(database, pluginFileSystem, plugin);
     }
+
     @Override
     public long getBalance() throws CantCalculateBalanceException {
-        assetRedeemPointWalletDao = new AssetRedeemPointWalletDao(database);
-        assetRedeemPointWalletDao.setPlugin(plugin);
         return assetRedeemPointWalletDao.getAvailableBalance();
     }
 
     @Override
     public List<AssetRedeemPointWalletList> getAssetIssuerWalletBalances() throws CantCalculateBalanceException {
-        assetRedeemPointWalletDao = new AssetRedeemPointWalletDao(database);
-        assetRedeemPointWalletDao.setPlugin(plugin);
-        assetRedeemPointWalletDao.setPluginFileSystem(pluginFileSystem);
         return assetRedeemPointWalletDao.getBalanceByAssets();
     }
 
     @Override
     public void debit(AssetRedeemPointWalletTransactionRecord assetRedeemPointWalletTransactionRecord, BalanceType balanceType) throws CantRegisterDebitException {
-        assetRedeemPointWalletDao = new AssetRedeemPointWalletDao(database);
-        assetRedeemPointWalletDao.setPlugin(plugin);
         assetRedeemPointWalletDao.addDebit(assetRedeemPointWalletTransactionRecord, balanceType);
     }
 
     @Override
     public void credit(AssetRedeemPointWalletTransactionRecord assetRedeemPointWalletTransactionRecord, BalanceType balanceType) throws CantRegisterCreditException {
-        assetRedeemPointWalletDao = new AssetRedeemPointWalletDao(database);
-        assetRedeemPointWalletDao.setPlugin(plugin);
-        assetRedeemPointWalletDao.setPluginFileSystem(pluginFileSystem);
         assetRedeemPointWalletDao.addCredit(assetRedeemPointWalletTransactionRecord, balanceType);
     }
 }
