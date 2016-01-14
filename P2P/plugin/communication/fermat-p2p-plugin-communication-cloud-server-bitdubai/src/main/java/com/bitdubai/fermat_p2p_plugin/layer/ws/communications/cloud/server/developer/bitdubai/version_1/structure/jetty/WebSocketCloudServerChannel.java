@@ -194,7 +194,7 @@ public class WebSocketCloudServerChannel {
     {
         LOG.info(" --------------------------------------------------------------------- ");
         LOG.info("Starting method onWebSocketClose");
-        LOG.info("Socket "+activeClientConnection.getSession().getId() + " is disconnect! code = " + reason.getCloseCode() + " reason = " + reason.getReasonPhrase());
+        LOG.info("Socket "+activeClientConnection.getSession().getId() + " is disconnect! code = " + reason.getCloseCode() + "["+reason.getCloseCode().getCode()+"] reason = " + reason.getReasonPhrase());
 
         if (reason.getCloseCode().equals(CloseReason.CloseCodes.CLOSED_ABNORMALLY)) {
             LOG.info("Waiting for client reconnect");
@@ -210,9 +210,9 @@ public class WebSocketCloudServerChannel {
                 timer.schedule(new TimerTask() {
                                    @Override
                                    public void run() {
-                                       LOG.info("client (" + id + ") not reconnect, proceed to clean references");
+                                       LOG.info("Client (" + id + ") not reconnect, proceed to clean references on stand by");
                                        MemoryCache.getInstance().getStandByProfileByClientIdentity().remove(clientIdentity);
-                                       LOG.info("standByProfileByClientIdentity = " + MemoryCache.getInstance().getStandByProfileByClientIdentity().size());
+                                       LOG.info("Number of list of profiles into standby cache = " + MemoryCache.getInstance().getStandByProfileByClientIdentity().size());
                                    }
                                },
                         60000
@@ -267,10 +267,14 @@ public class WebSocketCloudServerChannel {
             LOG.info("--------------------------------------------------------------------- ");
             LOG.info("Starting method cleanReferences" );
             LOG.info("ID = " + activeClientConnection.getSession().getId());
+            LOG.info("hashCode = " + activeClientConnection.getSession().hashCode());
             removeNetworkServiceRegisteredByClientIdentity(activeClientConnection.getClientIdentity());
             removeOtherPlatformComponentRegisteredByClientIdentity(activeClientConnection.getClientIdentity());
             MemoryCache.getInstance().getPendingRegisterClientConnectionsCache().remove(activeClientConnection.getClientIdentity());
-            MemoryCache.getInstance().getRegisteredCommunicationsCloudServerCache().remove(activeClientConnection.getClientIdentity());
+
+            PlatformComponentProfile clientProfile = MemoryCache.getInstance().getRegisteredCommunicationsCloudServerCache().remove(activeClientConnection.getClientIdentity());
+            LOG.info("Remove clientProfile " + clientProfile);
+
             MemoryCache.getInstance().getRegisteredCommunicationsCloudClientCache().remove(activeClientConnection.getSession().hashCode());
             MemoryCache.getInstance().getRegisteredClientConnectionsCache().remove(activeClientConnection.getClientIdentity());
 
@@ -309,14 +313,15 @@ public class WebSocketCloudServerChannel {
              */
             MemoryCache.getInstance().getPendingRegisterClientConnectionsCache().remove(activeClientConnection.getClientIdentity());
             MemoryCache.getInstance().getRegisteredCommunicationsCloudServerCache().remove(activeClientConnection.getClientIdentity());
-            MemoryCache.getInstance().getRegisteredCommunicationsCloudClientCache().remove(activeClientConnection.getClientIdentity());
+            MemoryCache.getInstance().getRegisteredCommunicationsCloudClientCache().remove(activeClientConnection.getSession().hashCode());
             MemoryCache.getInstance().getRegisteredClientConnectionsCache().remove(activeClientConnection.getClientIdentity());
 
             List<PlatformComponentProfile> removeProfile = removeNetworkServiceRegisteredByClientIdentity(activeClientConnection.getClientIdentity());
             removeProfile.addAll(removeOtherPlatformComponentRegisteredByClientIdentity(activeClientConnection.getClientIdentity()));
 
+            LOG.info("Number of profiles put into standby " + removeProfile.size());
             MemoryCache.getInstance().getStandByProfileByClientIdentity().put(activeClientConnection.getClientIdentity(), removeProfile);
-            LOG.info("Number of list of profiles put into standby = " + removeProfile.size());
+            LOG.info("Number of list of profiles into standby cache = " + MemoryCache.getInstance().getStandByProfileByClientIdentity().size());
 
         }catch (Exception e){
             e.printStackTrace();

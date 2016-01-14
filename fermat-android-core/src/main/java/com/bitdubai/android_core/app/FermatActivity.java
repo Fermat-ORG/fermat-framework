@@ -84,6 +84,7 @@ import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.Wizard
 import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView;
 import com.bitdubai.fermat_android_api.ui.adapters.FermatAdapter;
 import com.bitdubai.fermat_android_api.ui.interfaces.FermatListItemListeners;
+import com.bitdubai.fermat_android_api.ui.util.FermatAnimationsUtils;
 import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.exceptions.CantGetErrorManagerException;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.exceptions.CantGetModuleManagerException;
@@ -421,7 +422,9 @@ public abstract class FermatActivity extends AppCompatActivity
         final LinearLayout mRevealView = (LinearLayout) findViewById(R.id.reveal_items);
         mRevealView.setVisibility(View.INVISIBLE);
         final View view = findViewById(R.id.reveal);
-        viewGroup.findViewById(R.id.img_fermat_setting).setOnClickListener(new View.OnClickListener() {
+        final View txt_settings = view.findViewById(R.id.txt_settings);
+        txt_settings.setVisibility(View.INVISIBLE);
+        view.findViewById(R.id.img_fermat_setting).setOnClickListener(new View.OnClickListener() {
                                                                      @Override
                                                                      public void onClick(View v) {
                                                                          int cx = (mRevealView.getLeft() + mRevealView.getRight());
@@ -478,6 +481,7 @@ public abstract class FermatActivity extends AppCompatActivity
                                                                                  mRevealView.setVisibility(View.VISIBLE);
                                                                                  FrameLayout frameLayout = (FrameLayout) findViewById(R.id.container_main);
                                                                                  frameLayout.bringChildToFront(mRevealView);
+                                                                                 FermatAnimationsUtils.showEmpty(getApplicationContext(),true,txt_settings);
                                                                                  anim.start();
                                                                                  hidden = false;
 
@@ -489,6 +493,7 @@ public abstract class FermatActivity extends AppCompatActivity
                                                                                          super.onAnimationEnd(animation);
                                                                                          mRevealView.setVisibility(View.INVISIBLE);
                                                                                          container_title.setVisibility(View.VISIBLE);
+                                                                                         FermatAnimationsUtils.showEmpty(getApplicationContext(), false, txt_settings);
                                                                                          hidden = true;
                                                                                      }
                                                                                  });
@@ -951,22 +956,22 @@ public abstract class FermatActivity extends AppCompatActivity
         } catch (Exception e) {
             e.printStackTrace();
         }
-        if (notification != null) {
-            NotificationManager mNotificationManager =
-                    (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
-            mNotificationManager.notify(NOTIFICATION_ID, notification.build());
-        } else {
-            try {
-                if (getCloudClient().getCommunicationsCloudClientConnection().isConnected()) {
-                    launchIntent("running");
-                } else {
-                    launchIntent("closed");
-                }
-            }catch (Exception e){
-                e.printStackTrace();
-            }
-
-        }
+//        if (notification != null) {
+//            NotificationManager mNotificationManager =
+//                    (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+//            mNotificationManager.notify(NOTIFICATION_ID, notification.build());
+//        } else {
+//            try {
+//                if (getCloudClient().getCommunicationsCloudClientConnection().isConnected()) {
+//                    launchIntent("running");
+//                } else {
+//                    launchIntent("closed");
+//                }
+//            }catch (Exception e){
+//                e.printStackTrace();
+//            }
+//
+//        }
         try {
             networkStateReceiver = new NetworkStateReceiver();
             networkStateReceiver.addListener(this);
@@ -990,10 +995,10 @@ public abstract class FermatActivity extends AppCompatActivity
         } catch (Exception e) {
             e.printStackTrace();
         }
-        NotificationManager mNotificationManager =
-                (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
-        mNotificationManager.cancel(NOTIFICATION_ID);
-        mNotificationManager.cancelAll();
+//        NotificationManager mNotificationManager =
+//                (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+//        mNotificationManager.cancel(NOTIFICATION_ID);
+//        mNotificationManager.cancelAll();
         //mNotificationManager.notify(NOTIFICATION_ID, notification.build());
     }
     /**
@@ -1801,8 +1806,8 @@ public abstract class FermatActivity extends AppCompatActivity
         if(notification==null)
         notification = new Notification.Builder(this).setSmallIcon(R.drawable.fermat_bitcoin2).setTicker("ticker")
                 .setPriority(Notification.PRIORITY_HIGH)
-                .setAutoCancel(false)
-                .setOngoing(true)
+               // .setAutoCancel(false)
+              //  .setOngoing(true)
                 .setContent(mContentView)
                 .setWhen(System.currentTimeMillis());
 

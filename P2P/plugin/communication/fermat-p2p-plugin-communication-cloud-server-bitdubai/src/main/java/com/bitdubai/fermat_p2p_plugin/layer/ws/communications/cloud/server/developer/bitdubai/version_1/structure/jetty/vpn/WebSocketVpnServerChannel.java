@@ -241,7 +241,7 @@ public class WebSocketVpnServerChannel {
 
         LOG.info(" --------------------------------------------------------------------- ");
         LOG.info("Starting method onWebSocketClose");
-        LOG.info("Socket "+vpnClientConnection.getSession().getId()+" is disconnect! code = " + reason.getCloseCode() + " reason = " + reason.getReasonPhrase());
+        LOG.info("Socket "+vpnClientConnection.getSession().getId()+" is disconnect! code = " + reason.getCloseCode() + "["+reason.getCloseCode().getCode()+"] reason = " + reason.getReasonPhrase());
 
         VpnClientConnection vpnClientConnectionRemote = VpnShareMemoryCache.get(networkServiceType, vpnClientConnection.getRemoteParticipantIdentity());
 
