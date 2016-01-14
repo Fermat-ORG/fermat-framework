@@ -1010,7 +1010,7 @@ public class SendTransactionFragment2 extends FermatWalletExpandableListFragment
                 balanceSum += Integer.valueOf(WalletUtils.formatBalanceStringNotDecimal(entry.getValue(), ShowMoneyType.BITCOIN.getCode()));
             }
 
-             average = (int) (balanceSum / cant);
+             average = (int) ((Integer.valueOf(WalletUtils.formatBalanceStringNotDecimal(getBalanceValue(runningDailyBalance.size() - 1), ShowMoneyType.BITCOIN.getCode())) * 100) / balanceSum);
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -1095,6 +1095,25 @@ public class SendTransactionFragment2 extends FermatWalletExpandableListFragment
             {
                 if(i == pos)
                     date += entry.getKey();
+
+                i++;
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return date;
+    }
+
+    private long getBalanceValue(int pos){
+        int i = 0;
+        long date = 0;
+
+        try {
+
+            for (Map.Entry<Long, Long> entry :  runningDailyBalance.entrySet())
+            {
+                if(i == pos)
+                    date += entry.getValue();
 
                 i++;
             }

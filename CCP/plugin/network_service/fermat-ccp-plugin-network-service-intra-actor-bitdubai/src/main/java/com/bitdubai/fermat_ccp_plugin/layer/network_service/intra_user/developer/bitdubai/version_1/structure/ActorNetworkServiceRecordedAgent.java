@@ -357,12 +357,11 @@ public class ActorNetworkServiceRecordedAgent extends FermatAgent{
                             "ENVIANDO MENSAJE:" + actorNetworkServiceRecord.getActorDestinationPublicKey()
                             + "\n-------------------------------------------------");
 
-                    Gson gson = new Gson();
 
                     communicationNetworkServiceLocal.sendMessage(
                             actorNetworkServiceRecord.getActorSenderPublicKey(),
                             actorNetworkServiceRecord.getActorDestinationPublicKey(),
-                            gson.toJson(actorNetworkServiceRecord)
+                           actorNetworkServiceRecord.toJson()
                     );
 
                     actorNetworkServicePluginRoot.getOutgoingNotificationDao().changeProtocolState(actorNetworkServiceRecord.getId(), ActorProtocolState.SENT);
@@ -386,7 +385,7 @@ public class ActorNetworkServiceRecordedAgent extends FermatAgent{
                         communicationNetworkServiceLocal.sendMessage(
                                 actorNetworkServiceRecord.getActorSenderPublicKey(),
                                 actorNetworkServiceRecord.getActorDestinationPublicKey(),
-                                gson.toJson(actorNetworkServiceRecord)
+                                actorNetworkServiceRecord.toJson()
                         );
 
                         actorNetworkServicePluginRoot.getOutgoingNotificationDao().changeProtocolState(actorNetworkServiceRecord.getId(), ActorProtocolState.SENT);

@@ -142,8 +142,24 @@ public class ActorNetworkServiceRecord implements IntraUserNotification {
 
     public String toJson() {
 
-        Gson gson = new Gson();
-        return gson.toJson(this);
+       // Gson gson = new Gson();
+        //return gson.toJson(this);
+
+        return "{"+
+                "\"actorDestinationType\":\"" + actorDestinationType +"\""+
+                ",\"actorSenderType\":\"" + actorSenderType +"\""+
+                ",\"actorSenderPublicKey\":\"" + actorSenderPublicKey +"\""+
+                ",\"actorDestinationPublicKey\":\"" + actorDestinationPublicKey + "\""+
+                ",\"actorSenderAlias\":\"" + actorSenderAlias +"\""+
+                ",\"actorSenderPhrase\":\"" + actorSenderPhrase + "\""+
+                ",\"actorSenderProfileImage\":\"" + Base64.encodeToString(actorSenderProfileImage, Base64.DEFAULT)+ "\""+
+                ",\"notificationDescriptor\":\"" + notificationDescriptor +"\""+
+                ",\" sentDate\":\"" + sentDate + "\""+
+                ",\"actorProtocolState\":\"" + actorProtocolState + "\""+
+                ",\"flagReadead\":\"" + flagReadead + "\""+
+                ",\"sentCount\":\"" + sentCount + "\""+
+                '}';
+
     }
 
 
