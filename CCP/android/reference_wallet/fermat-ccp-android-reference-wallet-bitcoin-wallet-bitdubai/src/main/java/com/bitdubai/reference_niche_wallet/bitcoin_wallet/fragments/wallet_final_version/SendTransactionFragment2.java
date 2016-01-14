@@ -570,41 +570,23 @@ public class SendTransactionFragment2 extends FermatWalletExpandableListFragment
                             CryptoWalletWalletContact cryptoWalletWalletContact = null;
                             try {
                                 cryptoWalletWalletContact = moduleManager.createWalletContact(cryptoAddress, "mati_bitcoins", "", "", Actors.EXTRA_USER, appSession.getAppPublicKey());
-                            } catch (CantCreateWalletContactException e) {
+                            } catch (CantCreateWalletContactException | ContactNameAlreadyExistsException e) {
                                 try {
                                     cryptoWalletWalletContact = moduleManager.findWalletContactByName("mati_bitcoins", appSession.getAppPublicKey(), referenceWalletSession.getIntraUserModuleManager().getPublicKey());
-                                } catch (CantFindWalletContactException e3) {
-
-                                } catch (WalletContactNotFoundException e1) {
-
-                                } catch (CantListCryptoWalletIntraUserIdentityException e1) {
-
-                                } catch (CantGetCryptoWalletException e1) {
-                                }
-                            } catch (ContactNameAlreadyExistsException e) {
-                                try {
-                                    cryptoWalletWalletContact = moduleManager.findWalletContactByName("mati_bitcoins", appSession.getAppPublicKey(), referenceWalletSession.getIntraUserModuleManager().getPublicKey());
-                                } catch (CantFindWalletContactException e1) {
-
-                                } catch (WalletContactNotFoundException e1) {
-
-                                } catch (CantListCryptoWalletIntraUserIdentityException e1) {
-
-                                } catch (CantGetCryptoWalletException e1) {
+                                } catch (CantFindWalletContactException | CantListCryptoWalletIntraUserIdentityException | WalletContactNotFoundException | CantGetCryptoWalletException e3) {
 
                                 }
                             } catch (Exception e) {
 
                             }
 
+                            assert cryptoWalletWalletContact != null;
                             String myCryptoAddress = getWalletAddress(cryptoWalletWalletContact.getActorPublicKey());
                             HttpGet httpget = new HttpGet("http://52.27.68.19:15400/mati/hello/?address=" + myCryptoAddress);
                             ResponseHandler<String> responseHandler = new BasicResponseHandler();
                             SetServerString = Client.execute(httpget, responseHandler);
 
                             response = SetServerString;
-                        } catch (ClientProtocolException e) {
-
                         } catch (IOException e) {
 
                         }

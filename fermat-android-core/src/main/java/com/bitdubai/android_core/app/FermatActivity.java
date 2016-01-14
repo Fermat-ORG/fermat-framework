@@ -993,10 +993,9 @@ public abstract class FermatActivity extends AppCompatActivity
         } catch (Exception e) {
             e.printStackTrace();
         }
-//        NotificationManager mNotificationManager =
-//                (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
-//        mNotificationManager.cancel(NOTIFICATION_ID);
-//        mNotificationManager.cancelAll();
+        NotificationManager mNotificationManager =
+                (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+        mNotificationManager.cancelAll();
         //mNotificationManager.notify(NOTIFICATION_ID, notification.build());
     }
     /**
