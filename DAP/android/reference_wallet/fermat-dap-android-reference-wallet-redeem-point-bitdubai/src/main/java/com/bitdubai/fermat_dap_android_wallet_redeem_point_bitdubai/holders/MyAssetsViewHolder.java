@@ -9,6 +9,7 @@ import android.widget.ImageView;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatButton;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView;
 import com.bitdubai.fermat_android_api.ui.holders.FermatViewHolder;
+import com.bitdubai.fermat_android_api.ui.util.BitmapWorkerTask;
 import com.bitdubai.fermat_dap_android_wallet_redeem_point_bitdubai.R;
 import com.bitdubai.fermat_dap_android_wallet_redeem_point_bitdubai.models.DigitalAsset;
 import com.bitdubai.fermat_dap_api.layer.dap_module.wallet_asset_redeem_point.interfaces.AssetRedeemPointWalletSubAppModule;
@@ -50,11 +51,15 @@ public class MyAssetsViewHolder extends FermatViewHolder {
     }
 
     public void bind(final DigitalAsset digitalAsset) {
-        if (digitalAsset.getImage() != null) {
-            image.setImageBitmap(BitmapFactory.decodeStream(new ByteArrayInputStream(digitalAsset.getImage())));
-        } else {
-            image.setImageDrawable(res.getDrawable(R.drawable.img_asset_without_image));
-        }
+//        if (digitalAsset.getImage() != null) {
+//            image.setImageBitmap(BitmapFactory.decodeStream(new ByteArrayInputStream(digitalAsset.getImage())));
+//        } else {
+//            image.setImageDrawable(res.getDrawable(R.drawable.img_asset_without_image));
+//        }
+        byte[] img = (digitalAsset.getImage() == null) ? new byte[0] : digitalAsset.getImage();
+        BitmapWorkerTask bitmapWorkerTask = new BitmapWorkerTask(image, res, R.drawable.img_asset_without_image, false);
+        bitmapWorkerTask.execute(img);
+
         nameText.setText(digitalAsset.getName());
 
         nameText.setText(digitalAsset.getName());
