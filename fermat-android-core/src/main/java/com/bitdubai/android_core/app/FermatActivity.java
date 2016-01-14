@@ -235,8 +235,6 @@ public abstract class FermatActivity extends AppCompatActivity
     private List<ElementsWithAnimation> elementsWithAnimation = new ArrayList<>();
     private BottomNavigation bottomNavigation;
 
-    RemoteViews mContentView;
-    private Notification.Builder notification;
     private boolean hidden = true;
 
     /**
@@ -1566,12 +1564,10 @@ public abstract class FermatActivity extends AppCompatActivity
                     case CLOUD_CLIENT_CONNECTION_LOOSE:
                     case CLOUD_CONNECTED_NOTIFICATION:
                         //launchWalletNotification(null, notificationEvent.getAlertTitle(), notificationEvent.getTextTitle(), notificationEvent.getTextBody());
-                        mContentView.setTextViewText(R.id.txt_cloud,notificationEvent.getTextBody());
                         launchIntent(notificationEvent.getTextBody());
                         break;
                     default:
                         //launchWalletNotification(notificationEvent.getWalletPublicKey(), notificationEvent.getAlertTitle(), notificationEvent.getTextTitle(), notificationEvent.getTextBody());
-                        mContentView.setTextViewText(R.id.txt_cloud,notificationEvent.getTextBody());
                         launchIntent(notificationEvent.getTextBody());
                         break;
 
@@ -1801,10 +1797,9 @@ public abstract class FermatActivity extends AppCompatActivity
     public abstract void connectWithOtherApp(Engine engine,String fermatAppPublicKey,Object[] objectses);
 
     protected final void launchIntent(String s){
-        if(mContentView==null) mContentView = new RemoteViews(getPackageName(), R.layout.test_tt);
-        mContentView.setTextViewText(R.id.txt_cloud,s);
-        if(notification==null)
-        notification = new Notification.Builder(this).setSmallIcon(R.drawable.fermat_bitcoin2).setTicker("ticker")
+        RemoteViews mContentView = new RemoteViews(getPackageName(), R.layout.test_tt);
+        mContentView.setTextViewText(R.id.txt_cloud, s);
+        Notification.Builder notification = new Notification.Builder(this).setSmallIcon(R.drawable.fermat_bitcoin2).setTicker("ticker")
                 .setPriority(Notification.PRIORITY_LOW).setAutoCancel(true)
                // .setAutoCancel(false)
               //  .setOngoing(true)
