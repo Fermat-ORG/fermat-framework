@@ -4,6 +4,7 @@ import com.bitdubai.fermat_api.DealsWithPluginIdentity;
 import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEvent;
+import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEventHandler;
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEventListener;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DealsWithPluginDatabaseSystem;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
@@ -73,15 +74,33 @@ public class RedeemPointRedemptionRecorderService implements DealsWithEvents, As
 
     @Override
     public void start() throws CantStartServiceException {
-        String context = "PluginDatabaseSystem: " + pluginDatabaseSystem + " - Plugin ID: " + pluginId + " Event Manager: " + eventManager;
 
+        FermatEventHandler handler = new RedeemPointRedemptionEventHandler(this);
         FermatEventListener fermatEventListener = eventManager.getNewListener(EventType.RECEIVED_NEW_DIGITAL_ASSET_METADATA_NOTIFICATION);
-        try {
-            fermatEventListener.setEventHandler(new RedeemPointRedemptionEventHandler(this));
-        } catch (CantSetObjectException e) {
-            //This should like never happen because I'm passing a self reference.
-            throw new CantStartServiceException(e, context, "recorderService is null.");
-        }
+        fermatEventListener.setEventHandler(handler);
+        eventManager.addListener(fermatEventListener);
+        listenersAdded.add(fermatEventListener);
+
+        fermatEventListener = eventManager.getNewListener(EventType.INCOMING_ASSET_ON_CRYPTO_NETWORK_WAITING_TRANSFERENCE_REDEEM_POINT);
+        fermatEventListener.setEventHandler(handler);
+        eventManager.addListener(fermatEventListener);
+        listenersAdded.add(fermatEventListener);
+
+        fermatEventListener = eventManager.getNewListener(EventType.INCOMING_ASSET_ON_BLOCKCHAIN_WAITING_TRANSFERENCE_REDEEM_POINT);
+        fermatEventListener.setEventHandler(handler);
+        eventManager.addListener(fermatEventListener);
+        listenersAdded.add(fermatEventListener);
+
+        fermatEventListener = eventManager.getNewListener(EventType.INCOMING_ASSET_REVERSED_ON_CRYPTO_NETWORK_WAITING_TRANSFERENCE_REDEEM_POINT);
+        fermatEventListener.setEventHandler(handler);
+        eventManager.addListener(fermatEventListener);
+        listenersAdded.add(fermatEventListener);
+
+        fermatEventListener = eventManager.getNewListener(EventType.INCOMING_ASSET_REVERSED_ON_BLOCKCHAIN_WAITING_TRANSFERENCE_REDEMPTION);
+        fermatEventListener.setEventHandler(handler);
+        eventManager.addListener(fermatEventListener);
+        listenersAdded.add(fermatEventListener);
+
         addListener(fermatEventListener);
         serviceStatus = ServiceStatus.STARTED;
     }

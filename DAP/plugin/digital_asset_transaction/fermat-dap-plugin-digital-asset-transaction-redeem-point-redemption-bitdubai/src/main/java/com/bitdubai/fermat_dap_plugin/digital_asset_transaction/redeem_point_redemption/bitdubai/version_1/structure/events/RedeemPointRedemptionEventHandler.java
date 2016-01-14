@@ -5,8 +5,6 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEvent;
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEventHandler;
 import com.bitdubai.fermat_api.layer.dmp_transaction.TransactionServiceNotStartedException;
-import com.bitdubai.fermat_dap_api.layer.all_definition.exceptions.CantSetObjectException;
-import com.bitdubai.fermat_dap_api.layer.all_definition.util.Validate;
 import com.bitdubai.fermat_dap_api.layer.dap_transaction.common.exceptions.CantSaveEventException;
 import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.events.AbstractFermatEvent;
 
@@ -20,8 +18,8 @@ public class RedeemPointRedemptionEventHandler implements FermatEventHandler {
 
     //CONSTRUCTORS
 
-    public RedeemPointRedemptionEventHandler(RedeemPointRedemptionRecorderService recorderService) throws CantSetObjectException {
-        this.recorderService = Validate.verifySetter(recorderService, "recorderService is null");
+    public RedeemPointRedemptionEventHandler(RedeemPointRedemptionRecorderService recorderService) {
+        this.recorderService = recorderService;
     }
 
     //PUBLIC METHODS
