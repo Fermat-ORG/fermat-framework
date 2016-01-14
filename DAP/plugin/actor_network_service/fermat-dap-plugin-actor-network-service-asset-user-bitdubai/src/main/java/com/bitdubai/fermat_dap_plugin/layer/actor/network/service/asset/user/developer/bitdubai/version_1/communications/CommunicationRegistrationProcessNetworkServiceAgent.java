@@ -6,7 +6,6 @@
  */
 package com.bitdubai.fermat_dap_plugin.layer.actor.network.service.asset.user.developer.bitdubai.version_1.communications;
 
-import com.bitdubai.fermat_api.layer.all_definition.components.interfaces.PlatformComponentProfile;
 import com.bitdubai.fermat_dap_plugin.layer.actor.network.service.asset.user.developer.bitdubai.version_1.AssetUserActorNetworkServicePluginRoot;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.client.CommunicationsClientConnection;
 
@@ -74,33 +73,12 @@ public class CommunicationRegistrationProcessNetworkServiceAgent extends Thread 
                 }
             }
             if (communicationsClientConnection.isRegister()) {
-
-                    /*
-                     * Construct my profile and register me
-                     */
-                PlatformComponentProfile platformComponentProfile = communicationsClientConnection.constructPlatformComponentProfileFactory(assetUserActorNetworkServicePluginRoot.getIdentityPublicKey(),
-                        assetUserActorNetworkServicePluginRoot.getAlias().toLowerCase(),
-                        assetUserActorNetworkServicePluginRoot.getName(),
-                        assetUserActorNetworkServicePluginRoot.getNetworkServiceType(),
-                        assetUserActorNetworkServicePluginRoot.getPlatformComponentType(),
-                        assetUserActorNetworkServicePluginRoot.getExtraData());
-
-                    /*
-                     * Configure my new profile
-                     */
-                assetUserActorNetworkServicePluginRoot.setPlatformComponentProfilePluginRoot(platformComponentProfile);
-
-                    /*
-                     * Initialize the connection manager
-                     */
-                assetUserActorNetworkServicePluginRoot.initializeCommunicationNetworkServiceConnectionManager();
-
                 if (!assetUserActorNetworkServicePluginRoot.isRegister()) {
                     try {
                     /*
                      * Register me
                      */
-                        communicationsClientConnection.registerComponentForCommunication(assetUserActorNetworkServicePluginRoot.getNetworkServiceType(), platformComponentProfile);
+                        communicationsClientConnection.registerComponentForCommunication(assetUserActorNetworkServicePluginRoot.getNetworkServiceType(), assetUserActorNetworkServicePluginRoot.getPlatformComponentProfilePluginRoot());
 
                     /*
                      * Stop the agent
