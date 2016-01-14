@@ -240,7 +240,7 @@ public class ChatMiddlewareDatabaseDao {
             filter.setValue(chatId.toString());
             filter.setColumn(ChatMiddlewareDatabaseConstants.CHATS_FIRST_KEY_COLUMN);
             // I will add the contact information from the database
-            for (DatabaseTableRecord record : getContactData(filter)) {
+            for (DatabaseTableRecord record : getChatData(filter)) {
                 final Chat chat = getChatTransaction(record);
 
                 chats.add(chat);
@@ -316,6 +316,26 @@ public class ChatMiddlewareDatabaseDao {
                 database.closeDatabase();
             throw new DatabaseOperationException(DatabaseOperationException.DEFAULT_MESSAGE, e, "Error trying to delete the Chat Transaction in the database.", null);
         }
+    }
+
+    /**
+     * This method returns a message created list.
+     * The messages in CREATED status are saved in database, but, are not sent through the Network
+     * Service.
+     * @return
+     * @throws DatabaseOperationException
+     * @throws CantGetMessageException
+     */
+    public List<Message> getCreatedMesages() throws
+            DatabaseOperationException,
+            CantGetMessageException {
+        DatabaseTable databaseTable=getDatabaseTable(
+                ChatMiddlewareDatabaseConstants.MESSAGE_TABLE_NAME);
+        DatabaseTableFilter databaseTableFilter=databaseTable.getEmptyTableFilter();
+        databaseTableFilter.setColumn(ChatMiddlewareDatabaseConstants.MESSAGE_STATUS_COLUMN_NAME);
+        databaseTableFilter.setType(DatabaseFilterType.EQUAL);
+        databaseTableFilter.setValue(MessageStatus.CREATED.getCode());
+        return getMessages(databaseTableFilter);
     }
 
     /**

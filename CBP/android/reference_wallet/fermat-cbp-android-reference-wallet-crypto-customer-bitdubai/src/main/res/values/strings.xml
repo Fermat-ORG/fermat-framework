@@ -119,6 +119,7 @@
     <string name="no_new_open_contracts">No New\nOpen Contracts</string>
 
     <string name="payment_methods_title">Payment Methods</string>
+    <string name="reception_methods_title">Reception Methods</string>
     <string name="payment_method">Method: </string>
     <string name="payment_date_text">Payment Date: </string>
     <string name="payment_date_title">PAYMENT DATE</string>

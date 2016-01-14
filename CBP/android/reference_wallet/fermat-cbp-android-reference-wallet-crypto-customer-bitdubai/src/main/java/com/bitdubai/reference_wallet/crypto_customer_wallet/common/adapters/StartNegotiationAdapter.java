@@ -1,15 +1,12 @@
 package com.bitdubai.reference_wallet.crypto_customer_wallet.common.adapters;
 
 import android.content.Context;
-import android.text.Editable;
-import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import com.bitdubai.fermat_android_api.ui.adapters.FermatAdapter;
 import com.bitdubai.fermat_android_api.ui.holders.FermatViewHolder;
-import com.bitdubai.fermat_api.layer.world.interfaces.Currency;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.ClauseType;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.common.interfaces.ClauseInformation;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.common.interfaces.CustomerBrokerNegotiationInformation;
@@ -24,8 +21,6 @@ import com.bitdubai.reference_wallet.crypto_customer_wallet.util.FragmentsCommon
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collection;
-import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.NoSuchElementException;
@@ -82,13 +77,13 @@ public class StartNegotiationAdapter extends FermatAdapter<ClauseInformation, Fe
     private int getCardViewResource(int type) {
         switch (type) {
             case TYPE_ITEM_SINGLE_CHOICE:
-                return R.layout.single_choice_item;
+                return R.layout.ccw_single_choice_item;
             case TYPE_ITEM_EXCHANGE_RATE:
-                return R.layout.exchange_rate_item;
+                return R.layout.ccw_exchange_rate_item;
             case TYPE_ITEM_AMOUNT_TO_BUY:
-                return R.layout.amount_to_buy_item;
+                return R.layout.ccw_amount_to_buy_item;
             case TYPE_FOOTER:
-                return R.layout.footer_item;
+                return R.layout.ccw_footer_item;
             default:
                 throw new NoSuchElementException("Incorrect type value");
         }
@@ -115,12 +110,8 @@ public class StartNegotiationAdapter extends FermatAdapter<ClauseInformation, Fe
                 return TYPE_ITEM_AMOUNT_TO_BUY;
             case EXCHANGE_RATE:
                 return TYPE_ITEM_EXCHANGE_RATE;
-            case BROKER_CURRENCY:
+           default:
                 return TYPE_ITEM_SINGLE_CHOICE;
-            case CUSTOMER_PAYMENT_METHOD:
-                return TYPE_ITEM_SINGLE_CHOICE;
-            default:
-                throw new NoSuchElementException("Incorrect type value");
         }
     }
 
@@ -152,6 +143,9 @@ public class StartNegotiationAdapter extends FermatAdapter<ClauseInformation, Fe
                 break;
             case CUSTOMER_PAYMENT_METHOD:
                 clauseViewHolder.setViewResources(R.string.payment_methods_title, clauseNumberImageRes, R.string.payment_method);
+                break;
+            case BROKER_PAYMENT_METHOD:
+                clauseViewHolder.setViewResources(R.string.reception_methods_title, clauseNumberImageRes, R.string.payment_method);
                 break;
         }
     }
