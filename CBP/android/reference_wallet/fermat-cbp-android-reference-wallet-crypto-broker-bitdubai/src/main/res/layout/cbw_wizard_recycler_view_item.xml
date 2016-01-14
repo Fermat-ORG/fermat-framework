@@ -24,8 +24,8 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_gravity="center_vertical"
-        android:layout_marginLeft="16dp"
-        android:layout_marginStart="16dp"
+        android:layout_marginLeft="8dp"
+        android:layout_marginStart="8dp"
         android:layout_weight="4"
         android:textColor="@color/cbw_wizard_color"
         android:textSize="14sp"
@@ -33,8 +33,9 @@
 
     <ImageView
         android:id="@+id/cbw_close_img_button"
-        android:layout_width="wrap_content"
-        android:layout_height="match_parent"
+        android:layout_width="20dp"
+        android:layout_height="20dp"
+        android:scaleType="centerInside"
         android:layout_gravity="end|center_vertical"
-        android:src="@drawable/cbw_action_content_clear"/>
+        android:src="@drawable/cbw_btn_wizard_remove"/>
 </LinearLayout>

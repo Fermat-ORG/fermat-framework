@@ -304,8 +304,6 @@ public class AssetRedeemPointWalletDao implements DealsWithPluginFileSystem {
     public void addDebit(final AssetRedeemPointWalletTransactionRecord assetRedeemPointWalletTransactionRecord, final BalanceType balanceType) throws CantRegisterDebitException {
         try {
             System.out.println("Agregando Debito-----------------------------------------------------------");
-            if (isTransactionInTable(assetRedeemPointWalletTransactionRecord.getIdTransaction(), TransactionType.DEBIT, balanceType))
-                throw new CantRegisterDebitException(CantRegisterDebitException.DEFAULT_MESSAGE, null, null, "The transaction is already in the database");
 
             long availableAmount = balanceType.equals(BalanceType.AVAILABLE) ? assetRedeemPointWalletTransactionRecord.getAmount() : 0L;
             long bookAmount = balanceType.equals(BalanceType.BOOK) ? assetRedeemPointWalletTransactionRecord.getAmount() : 0L;
@@ -318,7 +316,7 @@ public class AssetRedeemPointWalletDao implements DealsWithPluginFileSystem {
             long quantityBookRunningBalance = calculateQuantityBookRunningBalanceByAsset(-quantityBookAmount, assetRedeemPointWalletTransactionRecord.getDigitalAsset().getPublicKey());
 
             executeTransaction(assetRedeemPointWalletTransactionRecord, TransactionType.DEBIT, balanceType, availableRunningBalance, bookRunningBalance, quantityAvailableRunningBalance, quantityBookRunningBalance);
-        } catch (CantGetBalanceRecordException | CantLoadTableToMemoryException | CantExecuteAssetRedeemPointTransactionException exception) {
+        } catch (CantGetBalanceRecordException | CantExecuteAssetRedeemPointTransactionException exception) {
             throw new CantRegisterDebitException(CantRegisterDebitException.DEFAULT_MESSAGE, exception, null, "Check the cause");
         } catch (Exception exception) {
             throw new CantRegisterDebitException(CantRegisterDebitException.DEFAULT_MESSAGE, FermatException.wrapException(exception), null, "Check the cause");
@@ -332,8 +330,6 @@ public class AssetRedeemPointWalletDao implements DealsWithPluginFileSystem {
 
         try {
             System.out.println("Agregando Credito-----------------------------------------------------------");
-            if (isTransactionInTable(assetRedeemPointWalletTransactionRecord.getIdTransaction(), TransactionType.CREDIT, balanceType))
-                throw new CantRegisterCreditException(CantRegisterCreditException.DEFAULT_MESSAGE, null, null, "The transaction is already in the database");
 
             long availableAmount = balanceType.equals(BalanceType.AVAILABLE) ? assetRedeemPointWalletTransactionRecord.getAmount() : 0L;
             long bookAmount = balanceType.equals(BalanceType.BOOK) ? assetRedeemPointWalletTransactionRecord.getAmount() : 0L;
@@ -347,7 +343,7 @@ public class AssetRedeemPointWalletDao implements DealsWithPluginFileSystem {
 
             executeTransaction(assetRedeemPointWalletTransactionRecord, TransactionType.CREDIT, balanceType, availableRunningBalance, bookRunningBalance, quantityAvailableRunningBalance, quantityBookRunningBalance);
 
-        } catch (CantGetBalanceRecordException | CantLoadTableToMemoryException | CantExecuteAssetRedeemPointTransactionException exception) {
+        } catch (CantGetBalanceRecordException | CantExecuteAssetRedeemPointTransactionException exception) {
             throw new CantRegisterCreditException(CantRegisterCreditException.DEFAULT_MESSAGE, exception, null, "Check the cause");
         } catch (Exception exception) {
             throw new CantRegisterCreditException(CantRegisterCreditException.DEFAULT_MESSAGE, FermatException.wrapException(exception), null, "Check the cause");

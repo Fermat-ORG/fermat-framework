@@ -162,6 +162,7 @@ public class ChatMiddlewareDeveloperDatabaseFactory implements DealsWithPluginDa
         eventsColumns.add(ChatMiddlewareDatabaseConstants.EVENTS_RECORDED_SOURCE_COLUMN_NAME);
         eventsColumns.add(ChatMiddlewareDatabaseConstants.EVENTS_RECORDED_STATUS_COLUMN_NAME);
         eventsColumns.add(ChatMiddlewareDatabaseConstants.EVENTS_RECORDED_TIMESTAMP_COLUMN_NAME);
+        eventsColumns.add(ChatMiddlewareDatabaseConstants.EVENTS_RECORDED_CHAT_ID_COLUMN_NAME);
         /**
          * Table Events addition.
          */

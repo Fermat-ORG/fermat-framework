@@ -668,7 +668,8 @@ public class ChatMiddlewareDatabaseDao {
      */
     public void saveNewEvent(
             String eventType,
-            String eventSource) throws CantSaveEventException {
+            String eventSource,
+            UUID chatId) throws CantSaveEventException {
         try {
             DatabaseTable databaseTable = getDatabaseEventsTable();
             DatabaseTableRecord eventRecord = databaseTable.getEmptyRecord();
@@ -681,6 +682,7 @@ public class ChatMiddlewareDatabaseDao {
             eventRecord.setStringValue(ChatMiddlewareDatabaseConstants.EVENTS_RECORDED_SOURCE_COLUMN_NAME, eventSource);
             eventRecord.setStringValue(ChatMiddlewareDatabaseConstants.EVENTS_RECORDED_STATUS_COLUMN_NAME, EventStatus.PENDING.getCode());
             eventRecord.setLongValue(ChatMiddlewareDatabaseConstants.EVENTS_RECORDED_TIMESTAMP_COLUMN_NAME, unixTime);
+            eventRecord.setUUIDValue(ChatMiddlewareDatabaseConstants.EVENTS_RECORDED_CHAT_ID_COLUMN_NAME, chatId);
             databaseTable.insertRecord(eventRecord);
 
         } catch (CantInsertRecordException exception) {
@@ -738,6 +740,9 @@ public class ChatMiddlewareDatabaseDao {
                 long timestamp=databaseTableRecord.getLongValue(
                         ChatMiddlewareDatabaseConstants.EVENTS_RECORDED_TIMESTAMP_COLUMN_NAME);
                 eventRecord.setTimestamp(timestamp);
+                UUID chatId=databaseTableRecord.getUUIDValue(
+                        ChatMiddlewareDatabaseConstants.EVENTS_RECORDED_CHAT_ID_COLUMN_NAME);
+                eventRecord.setChatId(chatId);
                 eventRecords.add(eventRecord);
             }
             return eventRecords;
@@ -798,7 +803,8 @@ public class ChatMiddlewareDatabaseDao {
      */
     public void updateEventStatus(
             String eventId,
-            EventStatus eventStatus) throws UnexpectedResultReturnedFromDatabaseException, CantUpdateRecordException {
+            EventStatus eventStatus) throws UnexpectedResultReturnedFromDatabaseException,
+            CantUpdateRecordException {
         try{
             DatabaseTable databaseTable=getDatabaseEventsTable();
             databaseTable.addStringFilter(
@@ -814,6 +820,52 @@ public class ChatMiddlewareDatabaseDao {
                     eventStatus.getCode());
             databaseTable.updateRecord(record);
         }  catch (CantLoadTableToMemoryException exception) {
+            throw new UnexpectedResultReturnedFromDatabaseException(
+                    exception,
+                    "Updating parameter "+ChatMiddlewareDatabaseConstants.EVENTS_RECORDED_STATUS_COLUMN_NAME,"");
+        }
+    }
+
+    /**
+     * This method updates an event record by eventId
+     * @param eventRecord
+     */
+    public void updateEventRecord(EventRecord eventRecord)
+            throws UnexpectedResultReturnedFromDatabaseException {
+        try{
+            DatabaseTable databaseTable=getDatabaseEventsTable();
+            String eventId=eventRecord.getEventId();
+            databaseTable.addStringFilter(
+                    ChatMiddlewareDatabaseConstants.EVENTS_RECORDED_ID_COLUMN_NAME,
+                    eventId,
+                    DatabaseFilterType.EQUAL);
+            databaseTable.loadToMemory();
+            List<DatabaseTableRecord> records = databaseTable.getRecords();
+            checkDatabaseRecords(records);
+            if(records.isEmpty()){
+                throw new UnexpectedResultReturnedFromDatabaseException(
+                        "This record "+eventRecord+" does not exists in database.");
+            }
+            DatabaseTableRecord record=records.get(0);
+            record.setStringValue(
+                    ChatMiddlewareDatabaseConstants.EVENTS_RECORDED_ID_COLUMN_NAME,
+                    eventRecord.getEventId());
+            record.setStringValue(
+                    ChatMiddlewareDatabaseConstants.EVENTS_RECORDED_EVENT_COLUMN_NAME,
+                    eventRecord.getEventType().getCode());
+            record.setStringValue(
+                    ChatMiddlewareDatabaseConstants.EVENTS_RECORDED_SOURCE_COLUMN_NAME,
+                    eventRecord.getEventSource().getCode());
+            record.setStringValue(
+                    ChatMiddlewareDatabaseConstants.EVENTS_RECORDED_STATUS_COLUMN_NAME,
+                    eventRecord.getEventStatus().getCode());
+            record.setLongValue(
+                    ChatMiddlewareDatabaseConstants.EVENTS_RECORDED_TIMESTAMP_COLUMN_NAME,
+                    eventRecord.getTimestamp());
+            record.setUUIDValue(
+                    ChatMiddlewareDatabaseConstants.EVENTS_RECORDED_CHAT_ID_COLUMN_NAME,
+                    eventRecord.getChatId());
+        } catch (CantLoadTableToMemoryException exception) {
             throw new UnexpectedResultReturnedFromDatabaseException(
                     exception,
                     "Updating parameter "+ChatMiddlewareDatabaseConstants.EVENTS_RECORDED_STATUS_COLUMN_NAME,"");
