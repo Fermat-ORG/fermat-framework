@@ -687,6 +687,13 @@ public class WsCommunicationsCloudClientConnection implements CommunicationsClie
             throw new IllegalArgumentException("All parameters are required, can not be null");
         }
 
+        /*
+         * Validate are the  type NETWORK_SERVICE
+         */
+        if (applicant.getIdentityPublicKey().equals(remoteDestination.getIdentityPublicKey())){
+            throw new IllegalArgumentException("The applicant and remote can not be the same component");
+        }
+
         try{
 
             List<PlatformComponentProfile> participants = new ArrayList();
@@ -837,14 +844,21 @@ public class WsCommunicationsCloudClientConnection implements CommunicationsClie
             throw new IllegalArgumentException("All parameters are required, can not be null");
         }
 
-        try {
+        /*
+         * Validate are the  type NETWORK_SERVICE
+         */
+        if (applicantNetworkService.getPlatformComponentType() != PlatformComponentType.NETWORK_SERVICE){
+            throw new IllegalArgumentException("The PlatformComponentProfile of the applicantNetworkService has to be NETWORK_SERVICE ");
+        }
 
-            /*
-             * Validate are the  type NETWORK_SERVICE
-             */
-            if (applicantNetworkService.getPlatformComponentType() != PlatformComponentType.NETWORK_SERVICE){
-                throw new IllegalArgumentException("The PlatformComponentProfile of the applicantNetworkService has to be NETWORK_SERVICE ");
-            }
+        /*
+         * Validate are the  type NETWORK_SERVICE
+         */
+        if (applicantParticipant.getIdentityPublicKey().equals(remoteParticipant.getIdentityPublicKey())){
+            throw new IllegalArgumentException("The applicant and remote can not be the same component");
+        }
+
+        try {
 
             /*
              * Construct the json object
