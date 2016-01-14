@@ -28,6 +28,10 @@ public class NewSentMessageNotificationEventHandler extends AbstractCommunicatio
         super(intraActorNetworkServicePluginRoot);
     }
 
+    public NewSentMessageNotificationEventHandler(NetworkService intraActorNetworkServicePluginRoot) {
+        super(intraActorNetworkServicePluginRoot);
+    }
+
         /**
          * (non-Javadoc)
          *
@@ -40,7 +44,10 @@ public class NewSentMessageNotificationEventHandler extends AbstractCommunicatio
         public void processEvent(NewNetworkServiceMessageSentNotificationEvent event) {
 
 //            if(event.getNetworkServiceTypeApplicant().equals(NetworkServiceType.INTRA_USER))
-            ((IntraActorNetworkServicePluginRoot)networkService).handleNewSentMessageNotificationEvent((FermatMessage) event.getData());
+            if(networkService!=null) networkService.handleNewSentMessageNotificationEvent((FermatMessage) event.getData());
+            else if (ns!=null) {
+                ((IntraActorNetworkServicePluginRoot)ns).handleNewSentMessageNotificationEvent((FermatMessage)event.getData());
+            }
 
         }
 }
