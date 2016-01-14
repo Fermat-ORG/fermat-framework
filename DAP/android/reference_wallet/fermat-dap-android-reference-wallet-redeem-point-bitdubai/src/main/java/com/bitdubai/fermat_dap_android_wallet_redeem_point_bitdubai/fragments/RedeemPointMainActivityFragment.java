@@ -46,7 +46,7 @@ public class RedeemPointMainActivityFragment extends FermatWalletListFragment<Di
         implements FermatListItemListeners<DigitalAsset> {
 
     // Constants
-    private static final String TAG = "MyAssetsActivityFragment";
+    private static final String TAG = "RedeemPointMainActivityFragment";
 
     // Fermat Managers
     private AssetRedeemPointWalletSubAppModule moduleManager;
