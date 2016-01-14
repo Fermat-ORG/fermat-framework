@@ -277,15 +277,19 @@ public class WsCommunicationsCloudClientPluginRoot extends AbstractPlugin implem
      */
     public void reconnect(){
 
+        System.out.println("WsCommunicationsCloudClientPluginRoot - Initiation of the reconnect process.");
+
         try {
 
             if (reconnectTimer == null && !isTaskCompleted){
+
+                System.out.println("WsCommunicationsCloudClientPluginRoot - Trying to reconnect in 10 seg");
 
                 reconnectTimer = new Timer();
                 reconnectTimer.schedule(new TimerTask() {
                     @Override
                     public void run() {
-                        System.out.println("WsCommunicationsCloudClientPluginRoot - Trying to reconnect in 10 seg");
+                        System.out.println("WsCommunicationsCloudClientPluginRoot - Reconnecting");
 
                         if (!getCommunicationsCloudClientConnection().isConnected()) {
                             wsCommunicationsCloudClientConnection = null;
@@ -320,14 +324,13 @@ public class WsCommunicationsCloudClientPluginRoot extends AbstractPlugin implem
                         reconnect();
                         isTaskCompleted = Boolean.TRUE;
                     }
-                }, 40000);
+                }, 30000);
 
             }
 
         }
 
     }
-
 
     /**
      * Initialize the clientIdentity of this plugin
