@@ -20,6 +20,8 @@ public abstract class AbstractCommunicationBaseEventHandler<E extends Communicat
     */
     protected AbstractNetworkServiceV2 networkService;
 
+    protected NetworkService ns;
+
     /**
      * Constructor with parameter
      *
@@ -27,6 +29,10 @@ public abstract class AbstractCommunicationBaseEventHandler<E extends Communicat
      */
     public AbstractCommunicationBaseEventHandler(AbstractNetworkServiceV2 networkService) {
         this.networkService = networkService;
+    }
+
+    public AbstractCommunicationBaseEventHandler(NetworkService networkService) {
+        this.ns = networkService;
     }
 
     /**
@@ -40,17 +46,33 @@ public abstract class AbstractCommunicationBaseEventHandler<E extends Communicat
     @Override
     public final void handleEvent(FermatEvent platformEvent) throws FermatException {
 
-        if (((Service) this.networkService).getStatus() == ServiceStatus.STARTED) {
+        if(ns!=null){
+            if (((Service) this.ns).getStatus() == ServiceStatus.STARTED) {
 
-            E event = (E) platformEvent;
+                E event = (E) platformEvent;
 
-            if(event.getNetworkServiceTypeApplicant() == networkService.getNetworkServiceType()){
+                if(event.getNetworkServiceTypeApplicant() == ns.getNetworkServiceType()){
 
-                processEvent(event);
+                    processEvent(event);
+
+                }
+
 
             }
+        }else if (networkService!=null) {
+
+            if (((Service) this.networkService).getStatus() == ServiceStatus.STARTED) {
+
+                E event = (E) platformEvent;
+
+                if (event.getNetworkServiceTypeApplicant() == networkService.getNetworkServiceType()) {
+
+                    processEvent(event);
+
+                }
 
 
+            }
         }
     }
 
