@@ -142,19 +142,48 @@ public class BitcoinCryptoNetworkManager implements TransactionProtocolManager, 
              * add new keys (if any).
              */
             boolean isWalletReset = false;
-            if (areNewKeysAdded(wallet, keyList)){
-                wallet.importKeys(keyList);
-                try {
-                    wallet.saveToFile(walletFile);
-                } catch (IOException e) {
-                    e.printStackTrace();
+
+            /**
+             * if this is the Watch Only Vault, I won't be importing keys, I will be watching them
+             */
+            if (cryptoVault == CryptoVaults.BITCOIN_WATCH_ONLY){
+                if (areNewKeysWatched(wallet, keyList, blockchainNetworkType)){
+                    NetworkParameters networkParameters = BitcoinNetworkSelector.getNetworkParameter(blockchainNetworkType);
+                    for (ECKey ecKey : keyList){
+                        wallet.addWatchedAddress(ecKey.toAddress(networkParameters));
+                    }
+
+                    try {
+                        wallet.saveToFile(walletFile);
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+
+                    /**
+                     * I do not need to reset the wallet because I will
+                     * always be importing fresh (unused) keys.
+                     */
+                    isWalletReset = true;
                 }
+            } else{
                 /**
-                 * I do not need to reset the wallet because I will
-                 * always be importing fresh (unused) keys.
+                 * regulat vault, so will try to import new keys if any
                  */
-                isWalletReset = true;
+                if (areNewKeysAdded(wallet, keyList)){
+                    wallet.importKeys(keyList);
+                    try {
+                        wallet.saveToFile(walletFile);
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                    /**
+                     * I do not need to reset the wallet because I will
+                     * always be importing fresh (unused) keys.
+                     */
+                    isWalletReset = true;
+                }
             }
+
 
             /**
              * If the agent for this network is already running...
@@ -195,6 +224,31 @@ public class BitcoinCryptoNetworkManager implements TransactionProtocolManager, 
             List<ECKey> importedKEys = wallet.getImportedKeys();
             updateDetailedCryptoStats(cryptoVault, blockchainNetworkType, importedKEys);
         }
+    }
+
+    /**
+     * Will compare if from the passed KeyList there is a missing watched address in the wallet
+     * @param wallet
+     * @param keyList
+     * @return
+     */
+    private boolean areNewKeysWatched(Wallet wallet, List<ECKey> keyList, BlockchainNetworkType blockchainNetworkType) {
+        List<Address> watchedAddresses= wallet.getWatchedAddresses();
+        List<Address> newAddresses = new ArrayList<>();
+
+        NetworkParameters networkParameters = BitcoinNetworkSelector.getNetworkParameter(blockchainNetworkType);
+        for (ECKey ecKey : keyList){
+            newAddresses.add(ecKey.toAddress(networkParameters));
+        }
+
+        /**
+         * I compare both lists.
+         */
+        newAddresses.removeAll(watchedAddresses);
+        if (newAddresses.isEmpty())
+            return false;
+        else
+            return true;
     }
 
     /**
