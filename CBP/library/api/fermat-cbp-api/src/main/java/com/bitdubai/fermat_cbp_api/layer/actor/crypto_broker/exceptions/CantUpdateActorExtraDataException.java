@@ -6,9 +6,9 @@ import com.bitdubai.fermat_api.FermatException;
  * Created by Angel on 19-10-2015.
  */
 
-public class CantCreateNewBrokerSettingsException extends FermatException {
+public class CantUpdateActorExtraDataException extends FermatException {
 
-    public static final String DEFAULT_MESSAGE = "CAN'T CREATE NEW BROKER SETTINGS EXCEPTION";
+    public static final String DEFAULT_MESSAGE = "CAN'T UPDATE BROKER SETTINGS EXCEPTION";
 
     /**
      * This is the constructor that every inherited FermatException must implement
@@ -19,7 +19,7 @@ public class CantCreateNewBrokerSettingsException extends FermatException {
      * @param possibleReason an explicative reason of why we believe this exception was most likely thrown
      */
 
-    public CantCreateNewBrokerSettingsException(String message, Exception cause, String context, String possibleReason) {
+    public CantUpdateActorExtraDataException(String message, Exception cause, String context, String possibleReason) {
         super(message, cause, context, possibleReason);
     }
 
