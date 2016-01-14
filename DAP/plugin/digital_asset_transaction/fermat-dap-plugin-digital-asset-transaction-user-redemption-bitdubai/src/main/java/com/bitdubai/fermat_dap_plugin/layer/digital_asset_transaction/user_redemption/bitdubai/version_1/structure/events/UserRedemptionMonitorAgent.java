@@ -255,7 +255,7 @@ public class UserRedemptionMonitorAgent implements Agent, DealsWithLogger, Deals
                 System.out.println("ASSET USER REDEMPTION cryptoAddressTo: " + cryptoAddressTo);
                 updateDistributionStatus(DistributionStatus.SENDING_CRYPTO, assetAcceptedGenesisTransaction);
 
-                DigitalAssetMetadata metadata = digitalAssetUserRedemptionVault.getDigitalAssetMetadataFromLocalStorage(userRedemptionDao.getTransactionIdByGenesisTransaction(assetAcceptedGenesisTransaction));
+                DigitalAssetMetadata metadata = digitalAssetUserRedemptionVault.getDigitalAssetMetadataFromLocalStorage(assetAcceptedGenesisTransaction);
                 sendCryptoAmountToRemoteActor(assetAcceptedGenesisTransaction, cryptoAddressTo, metadata.getGenesisBlock());
                 userRedemptionDao.updateDigitalAssetCryptoStatusByGenesisTransaction(assetAcceptedGenesisTransaction, CryptoStatus.PENDING_SUBMIT);
             }
