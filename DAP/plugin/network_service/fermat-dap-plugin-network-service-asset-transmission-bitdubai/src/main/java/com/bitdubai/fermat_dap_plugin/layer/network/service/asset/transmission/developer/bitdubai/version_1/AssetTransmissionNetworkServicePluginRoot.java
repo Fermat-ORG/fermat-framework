@@ -289,6 +289,19 @@ public class AssetTransmissionNetworkServicePluginRoot extends AbstractPlugin im
      * because at this moment, is create the platformComponentProfile for this component
      */
     public void initializeCommunicationNetworkServiceConnectionManager() {
+        /*
+         * Construct my profile and register me
+         */
+        PlatformComponentProfile platformComponentProfile = wsCommunicationsCloudClientManager.getCommunicationsCloudClientConnection().constructPlatformComponentProfileFactory(getIdentityPublicKey(),
+                getAlias().toLowerCase(),
+                getName(),
+                getNetworkServiceType(),
+                getPlatformComponentType(),
+                getExtraData());
+        /*
+         * Configure my new profile
+         */
+        setPlatformComponentProfilePluginRoot(platformComponentProfile);
         this.communicationNetworkServiceConnectionManager = new CommunicationNetworkServiceConnectionManager(platformComponentProfile, identity, wsCommunicationsCloudClientManager.getCommunicationsCloudClientConnection(), dataBase, errorManager, eventManager);
     }
 
@@ -490,6 +503,7 @@ public class AssetTransmissionNetworkServicePluginRoot extends AbstractPlugin im
              * Initialize listeners
              */
             initializeListener();
+            initializeCommunicationNetworkServiceConnectionManager();
 
                 /*
                  * Initialize the agent and start

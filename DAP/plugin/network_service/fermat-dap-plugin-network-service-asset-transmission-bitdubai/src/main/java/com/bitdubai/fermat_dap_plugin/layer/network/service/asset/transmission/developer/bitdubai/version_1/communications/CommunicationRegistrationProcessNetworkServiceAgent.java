@@ -6,7 +6,6 @@
  */
 package com.bitdubai.fermat_dap_plugin.layer.network.service.asset.transmission.developer.bitdubai.version_1.communications;
 
-import com.bitdubai.fermat_api.layer.all_definition.components.interfaces.PlatformComponentProfile;
 import com.bitdubai.fermat_dap_plugin.layer.network.service.asset.transmission.developer.bitdubai.version_1.AssetTransmissionNetworkServicePluginRoot;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.client.CommunicationsClientConnection;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.exceptions.CantRegisterComponentException;
@@ -62,7 +61,6 @@ public class CommunicationRegistrationProcessNetworkServiceAgent extends Thread 
      */
     @Override
     public void run() {
-
         while (active) {
 
             if (assetTransmissionNetworkServicePluginRoot.isRegister()) {
@@ -75,57 +73,33 @@ public class CommunicationRegistrationProcessNetworkServiceAgent extends Thread 
                 }
             }
 
-            if (communicationsClientConnection.isRegister()) {
-
-                    /*
-                     * Construct my profile and register me
-                     */
-                PlatformComponentProfile platformComponentProfile = communicationsClientConnection.constructPlatformComponentProfileFactory(assetTransmissionNetworkServicePluginRoot.getIdentityPublicKey(),
-                        assetTransmissionNetworkServicePluginRoot.getAlias().toLowerCase(),
-                        assetTransmissionNetworkServicePluginRoot.getName(),
-                        assetTransmissionNetworkServicePluginRoot.getNetworkServiceType(),
-                        assetTransmissionNetworkServicePluginRoot.getPlatformComponentType(),
-                        assetTransmissionNetworkServicePluginRoot.getExtraData());
-
-
-                    /*
-                     * Configure my new profile
-                     */
-                assetTransmissionNetworkServicePluginRoot.setPlatformComponentProfilePluginRoot(platformComponentProfile);
-
-                    /*
-                     * Initialize the connection manager
-                     */
-                assetTransmissionNetworkServicePluginRoot.initializeCommunicationNetworkServiceConnectionManager();
-
-                if (!assetTransmissionNetworkServicePluginRoot.isRegister()) {
+            if (communicationsClientConnection.isRegister() && !assetTransmissionNetworkServicePluginRoot.isRegister()) {
                     /*
                      * Register me
                      */
-                    try {
-                        communicationsClientConnection.registerComponentForCommunication(assetTransmissionNetworkServicePluginRoot.getNetworkServiceType(), platformComponentProfile);
+                try {
+                    communicationsClientConnection.registerComponentForCommunication(assetTransmissionNetworkServicePluginRoot.getNetworkServiceType(), assetTransmissionNetworkServicePluginRoot.getPlatformComponentProfilePluginRoot());
                     /*
                      * Stop the agent
                      */
+                    active = Boolean.FALSE;
+                } catch (CantRegisterComponentException e) {
+                    try {
+                        sleep(CommunicationRegistrationProcessNetworkServiceAgent.MAX_SLEEP_TIME);
+                    } catch (InterruptedException e1) {
+                        e1.printStackTrace();
                         active = Boolean.FALSE;
-                    } catch (CantRegisterComponentException e) {
-                        try {
-                            sleep(CommunicationRegistrationProcessNetworkServiceAgent.MAX_SLEEP_TIME);
-                        } catch (InterruptedException e1) {
-                            e1.printStackTrace();
-                            active = Boolean.FALSE;
-                        }
                     }
                 }
-                if (!assetTransmissionNetworkServicePluginRoot.isRegister()) {
+            }
+            if (!assetTransmissionNetworkServicePluginRoot.isRegister()) {
 
-                    try {
-                        active = Boolean.TRUE;
-                        sleep(CommunicationRegistrationProcessNetworkServiceAgent.SLEEP_TIME);
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
-                        active = Boolean.FALSE;
-                    }
+                try {
+                    active = Boolean.TRUE;
+                    sleep(CommunicationRegistrationProcessNetworkServiceAgent.SLEEP_TIME);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                    active = Boolean.FALSE;
                 }
             } else {
                 try {
