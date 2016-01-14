@@ -75,7 +75,7 @@ public class WsCommunicationsCloudClientPluginRoot extends AbstractPlugin implem
     /**
      * Represent the SERVER_IP
      */
-     public static final String SERVER_IP = ServerConf.SERVER_IP_PRODUCCTION;
+     public static final String SERVER_IP = ServerConf.SERVER_IP_DEVELOPER_LOCAL;
 
     /**
      * Represent the uri
@@ -285,19 +285,21 @@ public class WsCommunicationsCloudClientPluginRoot extends AbstractPlugin implem
                 reconnectTimer.schedule(new TimerTask() {
                     @Override
                     public void run() {
-                        System.out.println("WsCommunicationsCloudClientPluginRoot - trying to reconnect");
+                        System.out.println("WsCommunicationsCloudClientPluginRoot - Trying to reconnect in 10 seg");
 
                         if (!getCommunicationsCloudClientConnection().isConnected()) {
+                            wsCommunicationsCloudClientConnection = null;
                             wsCommunicationsCloudClientConnection = new WsCommunicationsCloudClientConnection(uri, eventManager, locationManager, clientIdentity);
                             wsCommunicationsCloudClientConnection.initializeAndConnect();
                             isTaskCompleted = Boolean.TRUE;
                         }
                     }
-                }, 5000);
+                }, 10000);
 
             }else {
 
-                if (getCommunicationsCloudClientConnection().isConnected()){
+                if (!getCommunicationsCloudClientConnection().isConnected()){
+                    reconnectTimer.cancel();
                     reconnectTimer = null;
                     isTaskCompleted = Boolean.FALSE;
                     reconnect();
@@ -307,7 +309,7 @@ public class WsCommunicationsCloudClientPluginRoot extends AbstractPlugin implem
 
         }catch (Exception e){
             e.printStackTrace();
-            System.out.println("WsCommunicationsCloudClientPluginRoot - trying to reconnect on 40 seg");
+            System.out.println("WsCommunicationsCloudClientPluginRoot - Trying to reconnect on 40 seg");
 
             if (reconnectTimer == null && !isTaskCompleted){
 
