@@ -1,5 +1,7 @@
 package com.bitdubai.fermat_cht_plugin.layer.network_service.chat.developer.bitdubai.version_1.structure;
 
+import com.bitdubai.fermat_api.layer.all_definition.components.enums.PlatformComponentType;
+import com.bitdubai.fermat_cht_api.all_definition.enums.MessageStatus;
 import com.bitdubai.fermat_cht_api.layer.network_service.chat.enums.ChatMessageStatus;
 import com.bitdubai.fermat_cht_api.layer.network_service.chat.enums.DistributionStatus;
 import com.bitdubai.fermat_cht_api.layer.network_service.chat.interfaces.ChatMetadata;
@@ -17,17 +19,19 @@ public class ChatMetadataTransactionRecord implements ChatMetadata,Serializable 
 
     private UUID idObject;
 
-    private String localActorType;
+    private PlatformComponentType localActorType;
 
     private String localActorPubKey;
 
-    private String remoteActorType;
+    private PlatformComponentType remoteActorType;
 
     private String remoteActorPubKey;
 
     private String chatName;
 
     private ChatMessageStatus chatMessageStatus;
+
+    private MessageStatus messageStatus;
 
     private Timestamp date;
 
@@ -36,6 +40,15 @@ public class ChatMetadataTransactionRecord implements ChatMetadata,Serializable 
     private String message;
 
     private DistributionStatus distributionStatus;
+
+    @Override
+    public MessageStatus getMessageStatus() {
+        return messageStatus;
+    }
+
+    public void setMessageStatus(MessageStatus messageStatus) {
+        this.messageStatus = messageStatus;
+    }
 
     @Override
     public DistributionStatus getDistributionStatus() {
@@ -66,11 +79,11 @@ public class ChatMetadataTransactionRecord implements ChatMetadata,Serializable 
 
 
     @Override
-    public String getLocalActorType() {
+    public PlatformComponentType getLocalActorType() {
         return localActorType;
     }
 
-    public void setLocalActorType(String localActorType) {
+    public void setLocalActorType(PlatformComponentType localActorType) {
         this.localActorType = localActorType;
     }
 
@@ -84,11 +97,11 @@ public class ChatMetadataTransactionRecord implements ChatMetadata,Serializable 
     }
 
     @Override
-    public String getRemoteActorType() {
+    public PlatformComponentType getRemoteActorType() {
         return remoteActorType;
     }
 
-    public void setRemoteActorType(String remoteActorType) {
+    public void setRemoteActorType(PlatformComponentType remoteActorType) {
         this.remoteActorType = remoteActorType;
     }
 
