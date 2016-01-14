@@ -26,7 +26,7 @@ Early 2015 a first token sale was closed. 333,333 Fermat tokens where sold for 2
 <br>
 ## Monthy Issuing
 
-There are two development programs running where tokens are needed to pay for contributions to the Fermat Project. 
+There are two development programs running that contribute on a monthly basis to the project and Fermat tokens are issued to compensate the contribution
 
 ### Contribution Program Tokens
 
