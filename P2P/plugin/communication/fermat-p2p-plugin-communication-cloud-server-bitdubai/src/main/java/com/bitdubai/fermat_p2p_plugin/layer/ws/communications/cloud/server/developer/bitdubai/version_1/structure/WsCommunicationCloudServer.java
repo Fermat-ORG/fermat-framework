@@ -375,7 +375,7 @@ public class WsCommunicationCloudServer extends WebSocketServer implements Commu
     }
 
     /**
-     * This method register a FermatPacketProcessor object with this
+     * This method register a FermatJettyPacketProcessor object with this
      * server
      */
     public void registerFermatPacketProcessor(FermatPacketProcessor fermatPacketProcessor) {
@@ -665,7 +665,7 @@ public class WsCommunicationCloudServer extends WebSocketServer implements Commu
 
     /**
      * Get the PacketProcessorsRegister
-     * @return Map<FermatPacketType, List<FermatPacketProcessor>>
+     * @return Map<FermatPacketType, List<FermatJettyPacketProcessor>>
      */
     public Map<FermatPacketType, List<FermatPacketProcessor>> getPacketProcessorsRegister() {
         return packetProcessorsRegister;

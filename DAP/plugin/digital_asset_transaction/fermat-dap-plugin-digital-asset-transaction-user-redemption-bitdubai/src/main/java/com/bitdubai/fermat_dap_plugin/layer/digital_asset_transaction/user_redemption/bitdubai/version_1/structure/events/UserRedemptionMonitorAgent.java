@@ -223,23 +223,25 @@ public class UserRedemptionMonitorAgent implements Agent, DealsWithLogger, Deals
 
         private void checkNetworkLayerEvents() throws CantConfirmTransactionException, CantExecuteQueryException, UnexpectedResultReturnedFromDatabaseException, CantCheckAssetUserRedemptionProgressException, CantGetDigitalAssetFromLocalStorageException, CantSendAssetBitcoinsToUserException, CantGetCryptoTransactionException, CantDeliverDigitalAssetToAssetWalletException, CantDistributeDigitalAssetsException, CantDeliverPendingTransactionsException, RecordsNotFoundException {
             List<Transaction<DigitalAssetMetadataTransaction>> pendingEventsList = assetTransmissionManager.getPendingTransactions(Specialist.ASSET_ISSUER_SPECIALIST);
-            for (Transaction<DigitalAssetMetadataTransaction> transaction : pendingEventsList) {
-                if (transaction.getInformation().getReceiverType() == PlatformComponentType.ACTOR_ASSET_USER) {
-                    DigitalAssetMetadataTransaction digitalAssetMetadataTransaction = transaction.getInformation();
-                    System.out.println("ASSET USER REDEMPTION Digital Asset Metadata Transaction: " + digitalAssetMetadataTransaction);
-                    DigitalAssetMetadataTransactionType digitalAssetMetadataTransactionType = digitalAssetMetadataTransaction.getType();
-                    System.out.println("ASSET USER REDEMPTION Digital Asset Metadata Transaction Type: " + digitalAssetMetadataTransactionType);
-                    String userId = digitalAssetMetadataTransaction.getSenderId();
-                    System.out.println("ASSET USER REDEMPTION User Id: " + userId);
-                    String genesisTransaction = digitalAssetMetadataTransaction.getGenesisTransaction();
-                    System.out.println("ASSET USER REDEMPTION Genesis Transaction: " + genesisTransaction);
-                    if (!userRedemptionDao.isGenesisTransactionRegistered(genesisTransaction)) {
-                        System.out.println("ASSET USET REDEMPTION THIS IS NOT FOR ME!!");
-                        break;
+            if (!userRedemptionDao.getPendingNetworkLayerEvents().isEmpty()) {
+                for (Transaction<DigitalAssetMetadataTransaction> transaction : pendingEventsList) {
+                    if (transaction.getInformation().getReceiverType() == PlatformComponentType.ACTOR_ASSET_USER) {
+                        DigitalAssetMetadataTransaction digitalAssetMetadataTransaction = transaction.getInformation();
+                        System.out.println("ASSET USER REDEMPTION Digital Asset Metadata Transaction: " + digitalAssetMetadataTransaction);
+                        DigitalAssetMetadataTransactionType digitalAssetMetadataTransactionType = digitalAssetMetadataTransaction.getType();
+                        System.out.println("ASSET USER REDEMPTION Digital Asset Metadata Transaction Type: " + digitalAssetMetadataTransactionType);
+                        String userId = digitalAssetMetadataTransaction.getSenderId();
+                        System.out.println("ASSET USER REDEMPTION User Id: " + userId);
+                        String genesisTransaction = digitalAssetMetadataTransaction.getGenesisTransaction();
+                        System.out.println("ASSET USER REDEMPTION Genesis Transaction: " + genesisTransaction);
+                        if (!userRedemptionDao.isGenesisTransactionRegistered(genesisTransaction)) {
+                            System.out.println("ASSET USET REDEMPTION THIS IS NOT FOR ME!!");
+                            break;
+                        }
+                        DistributionStatus distributionStatus = digitalAssetMetadataTransaction.getDistributionStatus();
+                        userRedemptionDao.updateDistributionStatusByGenesisTransaction(distributionStatus, genesisTransaction);
+                        assetTransmissionManager.confirmReception(transaction.getTransactionID());
                     }
-                    DistributionStatus distributionStatus = digitalAssetMetadataTransaction.getDistributionStatus();
-                    userRedemptionDao.updateDistributionStatusByGenesisTransaction(distributionStatus, genesisTransaction);
-                    assetTransmissionManager.confirmReception(transaction.getTransactionID());
                 }
                 userRedemptionDao.updateEventStatus(userRedemptionDao.getPendingNetworkLayerEvents().get(0));
             }
