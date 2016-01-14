@@ -1,6 +1,8 @@
 package com.bitdubai.fermat_cht_plugin.layer.middleware.chat.developer.bitdubai.version_1.structure;
 
+import com.bitdubai.fermat_api.layer.all_definition.components.enums.PlatformComponentType;
 import com.bitdubai.fermat_api.layer.all_definition.util.XMLParser;
+import com.bitdubai.fermat_cht_api.all_definition.enums.MessageStatus;
 import com.bitdubai.fermat_cht_api.layer.network_service.chat.enums.ChatMessageStatus;
 import com.bitdubai.fermat_cht_api.layer.network_service.chat.enums.DistributionStatus;
 import com.bitdubai.fermat_cht_api.layer.network_service.chat.interfaces.ChatMetadata;
@@ -15,12 +17,13 @@ public class ChatMetadataRecord implements ChatMetadata {
 
     UUID chatId;
     UUID objectId;
-    String localActorType;
+    PlatformComponentType localActorType;
     String localActorPublicKey;
-    String remoteActorType;
+    PlatformComponentType remoteActorType;
     String remoteActorPublicKey;
     String chatName;
     ChatMessageStatus chatMessageStatus;
+    MessageStatus messageStatus;
     Timestamp date;
     UUID messageId;
     String message;
@@ -29,12 +32,13 @@ public class ChatMetadataRecord implements ChatMetadata {
     public ChatMetadataRecord(
             UUID chatId,
             UUID objectId,
-            String localActorType,
+            PlatformComponentType localActorType,
             String localActorPublicKey,
-            String remoteActorType,
+            PlatformComponentType remoteActorType,
             String remoteActorPublicKey,
             String chatName,
             ChatMessageStatus chatMessageStatus,
+            MessageStatus messageStatus,
             Timestamp date,
             UUID messageId,
             String message,
@@ -47,6 +51,7 @@ public class ChatMetadataRecord implements ChatMetadata {
         this.remoteActorPublicKey = remoteActorPublicKey;
         this.chatName = chatName;
         this.chatMessageStatus = chatMessageStatus;
+        this.messageStatus = messageStatus;
         this.date = date;
         this.messageId = messageId;
         this.message = message;
@@ -64,7 +69,7 @@ public class ChatMetadataRecord implements ChatMetadata {
     }
 
     @Override
-    public String getLocalActorType() {
+    public PlatformComponentType getLocalActorType() {
         return this.localActorType;
     }
 
@@ -74,7 +79,7 @@ public class ChatMetadataRecord implements ChatMetadata {
     }
 
     @Override
-    public String getRemoteActorType() {
+    public PlatformComponentType getRemoteActorType() {
         return this.remoteActorType;
     }
 
@@ -91,6 +96,15 @@ public class ChatMetadataRecord implements ChatMetadata {
     @Override
     public ChatMessageStatus getChatMessageStatus() {
         return this.chatMessageStatus;
+    }
+
+    @Override
+    public MessageStatus getMessageStatus() {
+        return this.messageStatus;
+    }
+
+    public void setMessageStatus(MessageStatus messageStatus) {
+        this.messageStatus = messageStatus;
     }
 
     @Override
@@ -121,7 +135,7 @@ public class ChatMetadataRecord implements ChatMetadata {
         this.objectId = objectId;
     }
 
-    public void setLocalActorType(String localActorType) {
+    public void setLocalActorType(PlatformComponentType localActorType) {
         this.localActorType = localActorType;
     }
 
@@ -129,7 +143,7 @@ public class ChatMetadataRecord implements ChatMetadata {
         this.localActorPublicKey = localActorPublicKey;
     }
 
-    public void setRemoteActorType(String remoteActorType) {
+    public void setRemoteActorType(PlatformComponentType remoteActorType) {
         this.remoteActorType = remoteActorType;
     }
 
