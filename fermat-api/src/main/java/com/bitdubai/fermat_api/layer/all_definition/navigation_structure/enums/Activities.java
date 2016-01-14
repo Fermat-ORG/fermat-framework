@@ -108,7 +108,7 @@ public enum Activities implements FermatEnum {
     DAP_WALLET_REDEEM_POINT_MAIN_ACTIVITY("DWRPMA"),
     DAP_WALLET_REDEEM_POINT_HISTORY_ACTIVITY("DWRPHA"),
     DAP_WALLET_REDEEM_POINT_STADISTICS_ACTIVITY("DWRPSA"),
-
+    DAP_WALLET_REDEEM_POINT_DETAILS_ACTIVITY("DWRPD"),
     //Desktop
     CCP_DESKTOP("CCPD"),
     DAP_DESKTOP("DAPD"),
@@ -564,6 +564,8 @@ public enum Activities implements FermatEnum {
                 return DAP_ASSET_USER_COMMUNITY_ACTIVITY_ADMINISTRATIVE_GROUP_USERS_FRAGMENT;
             case "DAUCAAU":
                 return DAP_ASSET_USER_COMMUNITY_ACTIVITY_ADMINISTRATIVE_USERS;
+            case "DWRPD":
+                return DAP_WALLET_REDEEM_POINT_DETAILS_ACTIVITY;
             default:
                 throw new InvalidParameterException(
                         "Code Received: " + code,
