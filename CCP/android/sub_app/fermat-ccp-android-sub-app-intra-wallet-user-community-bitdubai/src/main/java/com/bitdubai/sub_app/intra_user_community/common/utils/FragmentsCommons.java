@@ -9,6 +9,7 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 
 import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView;
+import com.bitdubai.fermat_android_api.ui.util.BitmapWorkerTask;
 import com.bitdubai.fermat_api.layer.modules.common_classes.ActiveActorIdentityInformation;
 import com.bitdubai.fermat_ccp_api.layer.module.intra_user.exceptions.CantGetActiveLoginIdentityException;
 import com.bitdubai.fermat_ccp_api.layer.module.intra_user.interfaces.IntraUserLoginIdentity;
@@ -34,7 +35,9 @@ public class FragmentsCommons {
         if (intraUserLoginIdentity != null) {
             if (intraUserLoginIdentity.getImage() != null) {
                 if (intraUserLoginIdentity.getImage().length > 0) {
-                    imageView.setImageBitmap((BitmapFactory.decodeByteArray(intraUserLoginIdentity.getImage(), 0, intraUserLoginIdentity.getImage().length)));
+                   // imageView.setImageBitmap((BitmapFactory.decodeByteArray(intraUserLoginIdentity.getImage(), 0, intraUserLoginIdentity.getImage().length)));
+                    BitmapWorkerTask bitmapWorkerTask = new BitmapWorkerTask(imageView,activity.getResources(),0,false);
+                    bitmapWorkerTask.execute(intraUserLoginIdentity.getImage());
                 } else
                     Picasso.with(activity).load(R.drawable.profile_image).into(imageView);
             } else
