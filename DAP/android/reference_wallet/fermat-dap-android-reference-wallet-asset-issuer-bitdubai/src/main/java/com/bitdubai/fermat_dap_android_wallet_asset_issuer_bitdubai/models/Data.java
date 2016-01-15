@@ -45,6 +45,32 @@ public class Data {
         return digitalAssets;
     }
 
+    public static DigitalAsset getDigitalAsset(AssetIssuerWalletSupAppModuleManager moduleManager, String digitalAssetPublicKey) throws CantLoadWalletException {
+        List<AssetIssuerWalletList> balances = moduleManager.getAssetIssuerWalletBalances("walletPublicKeyTest");
+        DigitalAsset digitalAsset;
+        String publicKey;
+        for (AssetIssuerWalletList balance : balances) {
+            publicKey = balance.getDigitalAsset().getPublicKey();
+            if (publicKey.equals(digitalAssetPublicKey)) {
+                digitalAsset = new DigitalAsset();
+                digitalAsset.setAssetPublicKey(balance.getDigitalAsset().getPublicKey());
+                digitalAsset.setName(balance.getDigitalAsset().getName());
+                digitalAsset.setAvailableBalanceQuantity(balance.getQuantityAvailableBalance());
+                digitalAsset.setBookBalanceQuantity(balance.getQuantityBookBalance());
+                digitalAsset.setAvailableBalance(balance.getAvailableBalance());
+                Timestamp expirationDate = (Timestamp) balance.getDigitalAsset().getContract().getContractProperty(DigitalAssetContractPropertiesConstants.EXPIRATION_DATE).getValue();
+                digitalAsset.setExpDate(expirationDate);
+
+                List<Resource> resources = balance.getDigitalAsset().getResources();
+                if (resources != null && resources.size() > 0) {
+                    digitalAsset.setImage(balance.getDigitalAsset().getResources().get(0).getResourceBinayData());
+                }
+                return digitalAsset;
+            }
+        }
+        return null;
+    }
+
     public static List<UserDelivery> getUserDeliveryList(String walletPublicKey, DigitalAsset digitalAsset, AssetIssuerWalletSupAppModuleManager moduleManager) throws Exception {
         List<UserDelivery> users = new ArrayList<>();
         UserDelivery userDelivery;
