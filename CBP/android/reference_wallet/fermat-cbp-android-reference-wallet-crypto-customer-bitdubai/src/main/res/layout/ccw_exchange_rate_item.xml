@@ -100,25 +100,34 @@
                     android:layout_height="wrap_content"
                     android:layout_alignTop="@+id/ccw_exchange_rate_text"
                     android:layout_centerVertical="true"
+                    android:layout_marginEnd="5dp"
+                    android:layout_marginRight="5dp"
                     android:layout_toEndOf="@+id/ccw_exchange_rate_text"
                     android:layout_toRightOf="@+id/ccw_exchange_rate_text"
                     android:textColor="@color/text_value_status_confirm"
                     tools:text="1 USD / "/>
 
-                <EditText
+                <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatButton
                     android:id="@+id/ccw_exchange_rate_value"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_height="30dp"
                     android:layout_centerVertical="true"
                     android:layout_marginEnd="5dp"
                     android:layout_marginRight="5dp"
                     android:layout_toEndOf="@+id/ccw_exchange_rate_value_left_side"
                     android:layout_toRightOf="@+id/ccw_exchange_rate_value_left_side"
+                    android:background="@color/option_button_background"
                     android:inputType="numberDecimal"
-                    android:minEms="3"
-                    android:textColor="@color/text_value_status_confirm"
+                    android:maxWidth="150dp"
+                    android:minWidth="50dp"
+                    android:paddingEnd="8dp"
+                    android:paddingLeft="8dp"
+                    android:paddingRight="8dp"
+                    android:paddingStart="8dp"
+                    android:textAllCaps="false"
+                    android:textColor="#fff"
                     android:textSize="14sp"
-                    tools:text="212.05"/>
+                    tools:text="556.4"/>
 
                 <TextView
                     android:id="@+id/ccw_exchange_rate_value_right_side"

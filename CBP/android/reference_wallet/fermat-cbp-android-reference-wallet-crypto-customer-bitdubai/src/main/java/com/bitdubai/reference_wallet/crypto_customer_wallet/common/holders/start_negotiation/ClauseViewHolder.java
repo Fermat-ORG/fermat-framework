@@ -55,8 +55,6 @@ public abstract class ClauseViewHolder extends FermatViewHolder {
     protected abstract int getTitleTextViewRes();
 
     public interface Listener {
-        void onClauseValueChanged(EditText triggerView, ClauseInformation clause, String newValue, int clausePosition);
-
         void onClauseCLicked(Button triggerView, ClauseInformation clause, int clausePosition);
     }
 }
