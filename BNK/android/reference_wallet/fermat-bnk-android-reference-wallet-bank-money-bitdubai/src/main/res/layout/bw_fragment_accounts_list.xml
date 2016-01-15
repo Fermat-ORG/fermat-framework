@@ -27,21 +27,20 @@
                 android:textSize="@dimen/large_text_size" />
         </LinearLayout>
 
-        <LinearLayout
+        <FrameLayout
             android:layout_width="match_parent"
             android:layout_height="fill_parent"
             android:background="@drawable/bg_home"
             android:orientation="vertical">
 
             <android.support.v4.widget.SwipeRefreshLayout
-                android:id="@+id/swipe_refresh"
+                android:id="@+id/bw_swipe_refresh"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:visibility="visible">
 
                 <android.support.v7.widget.RecyclerView
                     android:id="@+id/account_list_recycler_view"
-
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_marginEnd="16dp"
@@ -53,29 +52,31 @@
             </android.support.v4.widget.SwipeRefreshLayout>
 
             <LinearLayout
-                android:id="@+id/empty"
+                    android:id="@+id/bw_empty_accounts_view"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:gravity="center"
                 android:orientation="vertical"
-                android:visibility="gone">
+                android:visibility="visible">
 
                 <ImageView
+
                     android:layout_width="90dp"
                     android:layout_height="90dp"
                     android:layout_marginBottom="16dp"
                     android:scaleType="fitXY"
-                    android:src="@drawable/sad_face" />
+                    android:src="@drawable/bw_img_home_empty" />
 
                 <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:gravity="center"
                     android:text="@string/no_accounts"
-                    android:textColor="#000"
-                    android:textSize="20sp" />
+                    android:textColor="@color/white"
+                    android:textStyle="bold"
+                    android:textSize="16dp"/>
 
             </LinearLayout>
-        </LinearLayout>
+        </FrameLayout>
     </LinearLayout>
 </FrameLayout>

@@ -1,6 +1,8 @@
 package com.bitdubai.fermat_bnk_plugin.layer.wallet_module.bank_money.developer.bitdubai.version_1.structure;
 
+import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.enums.FiatCurrency;
+import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.interfaces.FermatActivity;
 import com.bitdubai.fermat_bnk_api.all_definition.bank_money_transaction.BankTransactionParameters;
 import com.bitdubai.fermat_bnk_api.all_definition.enums.BankAccountType;
 import com.bitdubai.fermat_bnk_api.all_definition.enums.TransactionType;
@@ -102,5 +104,24 @@ public class BankingWalletModuleImpl implements BankingWallet {
             System.out.println("exception "+e.getMessage());
         }
         return balance;
+    }
+
+    @Override
+    public void createBankName(String bankName) {
+        try {
+            bankMoneyWalletManager.loadBankMoneyWallet(publicKey).createBankName(bankName);
+        }catch (FermatException e){
+            System.out.println("exception "+e.getMessage());
+        }
+    }
+
+    @Override
+    public String getBankName() {
+        try {
+            return  bankMoneyWalletManager.loadBankMoneyWallet(publicKey).getBankName();
+        }catch (FermatException e){
+            System.out.println("exception "+e.getMessage());
+        }
+        return null;
     }
 }
