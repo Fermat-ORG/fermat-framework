@@ -29,10 +29,12 @@ import com.bitdubai.fermat_android_api.ui.util.BitmapWorkerTask;
 import com.bitdubai.fermat_android_api.ui.util.FermatWorker;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
 import com.bitdubai.fermat_dap_android_wallet_asset_issuer_bitdubai.R;
+import com.bitdubai.fermat_dap_android_wallet_asset_issuer_bitdubai.models.Data;
 import com.bitdubai.fermat_dap_android_wallet_asset_issuer_bitdubai.models.DigitalAsset;
 import com.bitdubai.fermat_dap_android_wallet_asset_issuer_bitdubai.models.User;
 import com.bitdubai.fermat_dap_android_wallet_asset_issuer_bitdubai.sessions.AssetIssuerSession;
 import com.bitdubai.fermat_dap_api.layer.dap_module.wallet_asset_issuer.interfaces.AssetIssuerWalletSupAppModuleManager;
+import com.bitdubai.fermat_dap_api.layer.dap_wallet.common.exceptions.CantLoadWalletException;
 
 import java.io.ByteArrayInputStream;
 import java.lang.ref.WeakReference;
@@ -244,7 +246,13 @@ public class AssetDeliveryFragment extends AbstractFermatFragment {
     }
 
     private void setupUIData() {
-        digitalAsset = (DigitalAsset) appSession.getData("asset_data");
+//        digitalAsset = (DigitalAsset) appSession.getData("asset_data");
+        String digitalAssetPublicKey = ((DigitalAsset) appSession.getData("asset_data")).getAssetPublicKey();
+        try {
+            digitalAsset = Data.getDigitalAsset(moduleManager, digitalAssetPublicKey);
+        } catch (CantLoadWalletException e) {
+            e.printStackTrace();
+        }
 
         toolbar.setTitle(digitalAsset.getName());
 

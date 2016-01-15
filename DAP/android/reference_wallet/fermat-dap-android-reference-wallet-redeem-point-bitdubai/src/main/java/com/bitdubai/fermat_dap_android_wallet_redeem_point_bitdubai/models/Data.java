@@ -2,7 +2,6 @@ package com.bitdubai.fermat_dap_android_wallet_redeem_point_bitdubai.models;
 
 import com.bitdubai.fermat_api.layer.all_definition.resources_structure.Resource;
 import com.bitdubai.fermat_dap_api.layer.all_definition.digital_asset.DigitalAssetContractPropertiesConstants;
-import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.interfaces.ActorAssetUserManager;
 import com.bitdubai.fermat_dap_api.layer.dap_module.wallet_asset_redeem_point.interfaces.AssetRedeemPointWalletSubAppModule;
 import com.bitdubai.fermat_dap_api.layer.dap_wallet.asset_redeem_point.interfaces.AssetRedeemPointWallet;
 import com.bitdubai.fermat_dap_api.layer.dap_wallet.asset_redeem_point.interfaces.AssetRedeemPointWalletList;
@@ -10,8 +9,6 @@ import com.bitdubai.fermat_dap_api.layer.dap_wallet.asset_redeem_point.interface
 
 import java.sql.Timestamp;
 import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
 import java.util.List;
 
 /**
@@ -48,8 +45,8 @@ public class Data {
         List<RedeemPointStatistic> all = wallet.getStatisticsByAssetPublicKey(digitalAsset.getAssetPublicKey());
         List<UserRedeemed> userRedeemeds = new ArrayList<>();
 
-        for (RedeemPointStatistic stadistic : all){
-            UserRedeemed user= new UserRedeemed(stadistic.userThatRedeemed().getName(),new Timestamp(stadistic.redemptionTime().getTime()));
+        for (RedeemPointStatistic stadistic : all) {
+            UserRedeemed user = new UserRedeemed(stadistic.userThatRedeemed().getName(), new Timestamp(stadistic.redemptionTime().getTime()));
             userRedeemeds.add(user);
         }
 
@@ -63,5 +60,5 @@ public class Data {
 
         return userRedeemeds;
     }
-    
+
 }

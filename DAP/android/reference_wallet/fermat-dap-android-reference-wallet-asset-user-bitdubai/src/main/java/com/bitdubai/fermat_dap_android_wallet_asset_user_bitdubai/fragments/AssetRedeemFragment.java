@@ -34,6 +34,7 @@ import com.bitdubai.fermat_dap_android_wallet_asset_user_bitdubai.models.Digital
 import com.bitdubai.fermat_dap_android_wallet_asset_user_bitdubai.models.RedeemPoint;
 import com.bitdubai.fermat_dap_android_wallet_asset_user_bitdubai.sessions.AssetUserSession;
 import com.bitdubai.fermat_dap_api.layer.dap_module.wallet_asset_user.interfaces.AssetUserWalletSubAppModuleManager;
+import com.bitdubai.fermat_dap_api.layer.dap_wallet.common.exceptions.CantLoadWalletException;
 
 import java.io.ByteArrayInputStream;
 import java.lang.ref.WeakReference;
@@ -238,7 +239,13 @@ public class AssetRedeemFragment extends AbstractFermatFragment {
     }
 
     private void setupUIData() {
-        digitalAsset = (DigitalAsset) appSession.getData("asset_data");
+//        digitalAsset = (DigitalAsset) appSession.getData("asset_data");
+        String digitalAssetPublicKey = ((DigitalAsset) appSession.getData("asset_data")).getAssetPublicKey();
+        try {
+            digitalAsset = Data.getDigitalAsset(moduleManager, digitalAssetPublicKey);
+        } catch (CantLoadWalletException e) {
+            e.printStackTrace();
+        }
 
         toolbar.setTitle(digitalAsset.getName());
 
