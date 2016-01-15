@@ -19,6 +19,8 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.Layers;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
+import com.bitdubai.fermat_api.layer.all_definition.events.EventSource;
+import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEvent;
 import com.bitdubai.fermat_api.layer.all_definition.util.Version;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
@@ -27,6 +29,7 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.Cant
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.DatabaseNotFoundException;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogLevel;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogManager;
+import com.bitdubai.fermat_cht_api.all_definition.events.enums.EventType;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantInitializeDatabaseException;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantSetObjectException;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantStartServiceException;
@@ -34,6 +37,7 @@ import com.bitdubai.fermat_cht_api.layer.middleware.interfaces.Chat;
 import com.bitdubai.fermat_cht_api.layer.middleware.interfaces.Message;
 import com.bitdubai.fermat_cht_api.layer.middleware.mocks.ChatMock;
 import com.bitdubai.fermat_cht_api.layer.middleware.mocks.MessageMock;
+import com.bitdubai.fermat_cht_api.layer.network_service.chat.events.IncomingChat;
 import com.bitdubai.fermat_cht_api.layer.network_service.chat.interfaces.ChatManager;
 import com.bitdubai.fermat_cht_plugin.layer.middleware.chat.developer.bitdubai.version_1.database.ChatMiddlewareDatabaseConstants;
 import com.bitdubai.fermat_cht_plugin.layer.middleware.chat.developer.bitdubai.version_1.database.ChatMiddlewareDatabaseDao;
@@ -243,6 +247,7 @@ public class ChatMiddlewarePluginRoot extends AbstractPlugin implements
             this.serviceStatus = ServiceStatus.STARTED;
             //Test method
             //sendMessageTest();
+            //receiveMessageTest();
         } catch (CantInitializeDatabaseException exception) {
             throw new CantStartPluginException(
                     CantStartPluginException.DEFAULT_MESSAGE,
@@ -341,6 +346,24 @@ public class ChatMiddlewarePluginRoot extends AbstractPlugin implements
             this.chatMiddlewareManager.saveMessage(testMessage);
         } catch(Exception exception){
             System.out.println("Exception in chat middleware test: "+exception.getMessage());
+            exception.printStackTrace();
+        }
+    }
+
+    private void receiveMessageTest(){
+        try {
+            /**
+             * This test must be finish in an exception, because the network service mock is not
+             * created. The objective in this method is raise the incoming chat and handle this
+             * event. This exception must be thrown in chat monitor agent.
+             */
+            FermatEvent fermatEvent = eventManager.getNewEvent(EventType.INCOMING_CHAT);
+            IncomingChat incomingChat = (IncomingChat) fermatEvent;
+            incomingChat.setSource(EventSource.NETWORK_SERVICE_CHAT);
+            incomingChat.setChatId(UUID.fromString("52d7fab8-a423-458f-bcc9-49cdb3e9ba8f"));
+            eventManager.raiseEvent(incomingChat);
+        } catch(Exception exception){
+            System.out.println("Exception in raise event chat middleware test: "+exception.getMessage());
             exception.printStackTrace();
         }
     }

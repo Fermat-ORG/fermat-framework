@@ -8,6 +8,7 @@ apply plugin: 'jacoco'
 
 group = "com.bitdubai.fermat.cer"
 sourceCompatibility = 1.7
+targetCompatibility = 1.7
 version = '1.2.0'
 
 configurations {

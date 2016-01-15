@@ -47,47 +47,52 @@
                 android:layout_height="1dp"
                 android:background="#2e2e2e2e"/>
 
-            <RelativeLayout
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_marginLeft="8dp"
                 android:layout_marginRight="8dp"
-                android:layout_marginTop="16dp">
+                android:layout_marginTop="16dp"
+                android:layout_marginBottom="16dp"
+                android:orientation="horizontal">
 
                 <TextView
                     android:id="@+id/ccw_buying_text"
                     android:layout_width="wrap_content"
-                    android:layout_height="30dp"
+                    android:layout_height="wrap_content"
                     android:layout_marginBottom="8dp"
+                    android:layout_marginEnd="5dp"
+                    android:layout_marginRight="5dp"
                     android:text="@string/buying_text"
                     android:textColor="@color/description_text_status_confirm"/>
 
-                <EditText
+                <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatButton
                     android:id="@+id/ccw_buying_value"
                     android:layout_width="wrap_content"
                     android:layout_height="30dp"
-                    android:layout_alignParentTop="true"
-                    android:layout_toEndOf="@+id/ccw_buying_text"
-                    android:layout_toRightOf="@+id/ccw_buying_text"
-                    android:hint="@string/amount"
+                    android:layout_marginEnd="5dp"
+                    android:layout_marginRight="5dp"
+                    android:background="@color/option_button_background"
                     android:inputType="numberDecimal"
-                    android:minEms="3"
-                    android:paddingTop="0dp"
-                    android:textColor="@color/text_value_status_confirm"
-                    android:textColorHint="@color/text_value_status_confirm"
-                    android:textSize="14sp"/>
+                    android:maxWidth="150dp"
+                    android:minWidth="50dp"
+                    android:paddingEnd="8dp"
+                    android:paddingLeft="8dp"
+                    android:paddingRight="8dp"
+                    android:paddingStart="8dp"
+                    android:textAllCaps="false"
+                    android:textColor="#fff"
+                    android:textSize="14sp"
+                    tools:text="556.4"/>
 
                 <TextView
                     android:id="@+id/ccw_currency_to_buy"
                     android:layout_width="wrap_content"
                     android:layout_height="30dp"
-                    android:layout_alignParentTop="true"
-                    android:layout_toEndOf="@+id/ccw_buying_value"
-                    android:layout_toRightOf="@+id/ccw_buying_value"
                     android:textColor="@color/text_value_status_confirm"
                     tools:text="BTC"/>
 
-            </RelativeLayout>
+            </LinearLayout>
 
             <LinearLayout
                 android:layout_width="match_parent"
