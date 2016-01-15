@@ -29,7 +29,8 @@ public class NewReceiveMessagesNotificationEventHandler extends AbstractCommunic
 
         System.out.print("NOTIFICACION EVENTO LLEGADA MENSAJE A CRYPTO TRANSMISSION NETWORK SERVICE!!!!");
 
-        networkService.handleNewMessages((FermatMessage) event.getData());
+        if(networkService!=null)networkService.handleNewMessages((FermatMessage) event.getData());
+        else if(ns!=null) ((CryptoTransmissionNetworkServicePluginRoot)ns).handleNewMessages((FermatMessage) event.getData());
     }
 
 }
