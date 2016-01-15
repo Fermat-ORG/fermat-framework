@@ -389,7 +389,7 @@ public class NegotiationTransactionCustomerBrokerUpdatePluginRoot  extends Abstr
             );
 
             //CREATE CUSTOMER BROKER UPDATE NEGOTIATION.
-//            customerBrokerUpdateManagerImpl.createCustomerBrokerUpdateSaleNegotiationTranasction(negotiationMock);
+            customerBrokerUpdateManagerImpl.createCustomerBrokerUpdateSaleNegotiationTranasction(negotiationMock);
 
             //GET TRANSACTION OF NEGOTIATION
             System.out.print("\n\n\n\n------------------------------- NEGOTIATION TRANSACTION -------------------------------");
@@ -419,8 +419,8 @@ public class NegotiationTransactionCustomerBrokerUpdatePluginRoot  extends Abstr
                 }else{ System.out.print("\n\n\n --- NegotiationXML Date: saleNegotiationXML IS NOT INSTANCE OF NegotiationPurchaseRecord");}
             }else{ System.out.print("\n\n\n --- NegotiationXML Date IS NULL"); }
 
-//        } catch (CantCreateCustomerBrokerUpdateSaleNegotiationTransactionException e) {
-//            System.out.print("\n**** MOCK NEGOTIATION TRANSACTION - CUSTOMER BROKER UPDATE. PLUGIN ROOT. ERROR CREATE CUSTOMER BROKER UPDATE. ****\n");
+        } catch (CantCreateCustomerBrokerUpdateSaleNegotiationTransactionException e) {
+            System.out.print("\n**** MOCK NEGOTIATION TRANSACTION - CUSTOMER BROKER UPDATE. PLUGIN ROOT. ERROR CREATE CUSTOMER BROKER UPDATE. ****\n");
         } catch (CantRegisterCustomerBrokerUpdateNegotiationTransactionException e){
             System.out.print("\n**** MOCK NEGOTIATION TRANSACTION - CUSTOMER BROKER UPDATE. PLUGIN ROOT. ERROR LIST CUSTOMER BROKER UPDATE NOT FOUNT. ****\n");
         }
