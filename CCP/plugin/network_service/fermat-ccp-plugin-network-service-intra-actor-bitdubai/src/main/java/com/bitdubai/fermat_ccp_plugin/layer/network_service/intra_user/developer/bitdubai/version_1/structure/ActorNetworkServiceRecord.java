@@ -167,6 +167,7 @@ public class ActorNetworkServiceRecord implements IntraUserNotification {
     public String toJson() {
 
         Gson gson = new Gson();
+
         JsonObject jsonObject = new JsonObject();
         jsonObject.addProperty("id",                        id.toString());
         jsonObject.addProperty("actorDestinationType",      actorDestinationType.toString());
