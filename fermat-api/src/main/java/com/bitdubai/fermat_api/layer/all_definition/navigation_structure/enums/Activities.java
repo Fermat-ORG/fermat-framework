@@ -108,7 +108,7 @@ public enum Activities implements FermatEnum {
     DAP_WALLET_REDEEM_POINT_MAIN_ACTIVITY("DWRPMA"),
     DAP_WALLET_REDEEM_POINT_HISTORY_ACTIVITY("DWRPHA"),
     DAP_WALLET_REDEEM_POINT_STADISTICS_ACTIVITY("DWRPSA"),
-
+    DAP_WALLET_REDEEM_POINT_DETAILS_ACTIVITY("DWRPD"),
     //Desktop
     CCP_DESKTOP("CCPD"),
     DAP_DESKTOP("DAPD"),
@@ -118,6 +118,7 @@ public enum Activities implements FermatEnum {
     DAP_ASSET_USER_COMMUNITY_ACTIVITY_MAIN("DAPAUCAM"),
     DAP_ASSET_USER_COMMUNITY_ACTIVITY_ADMINISTRATIVE_GROUP_MAIN("DAPAUCAAGM"),
     DAP_ASSET_USER_COMMUNITY_ACTIVITY_ADMINISTRATIVE_GROUP_USERS_FRAGMENT("DAUCAAGUF"),
+    DAP_ASSET_USER_COMMUNITY_ACTIVITY_ADMINISTRATIVE_USERS("DAUCAAU"),
 
     DAP_ASSET_ISSUER_COMMUNITY_ACTIVITY_MAIN("DAPAICAM"),
     DAP_ASSET_REDEEM_POINT_COMMUNITY_ACTIVITY_MAIN("DAPARPCAM"),
@@ -167,6 +168,7 @@ public enum Activities implements FermatEnum {
 
     // Bank Money Wallet
     BNK_BANK_MONEY_WALLET_HOME("BNKBMWH"),
+    BNK_BANK_MONEY_WALLET_SETUP("BNKBMWS"),
     BNK_BANK_MONEY_WALLET_ACCOUNT_DETAILS("BNKBMWAD"),
     BNK_BANK_MONEY_WALLET_ADD_ACCOUNT("BNKBMWAA"),
 
@@ -506,6 +508,8 @@ public enum Activities implements FermatEnum {
                 return CCP_SUB_APP_INTRA_USER_COMMUNITY_CONNECTION_SETTINGS;
             case "BNKBMWH":
                 return BNK_BANK_MONEY_WALLET_HOME;
+            case "BNKBMWS":
+                return BNK_BANK_MONEY_WALLET_SETUP;
             case "CSHCMWH":
                 return CSH_CASH_MONEY_WALLET_HOME;
             case "CSHCMWS":
@@ -567,6 +571,10 @@ public enum Activities implements FermatEnum {
 
             case "DAUCAAGUF":
                 return DAP_ASSET_USER_COMMUNITY_ACTIVITY_ADMINISTRATIVE_GROUP_USERS_FRAGMENT;
+            case "DAUCAAU":
+                return DAP_ASSET_USER_COMMUNITY_ACTIVITY_ADMINISTRATIVE_USERS;
+            case "DWRPD":
+                return DAP_WALLET_REDEEM_POINT_DETAILS_ACTIVITY;
             default:
                 throw new InvalidParameterException(
                         "Code Received: " + code,

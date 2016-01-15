@@ -163,7 +163,7 @@ public class AssetReceptionMonitorAgent implements Agent {
                     List<Transaction<DigitalAssetMetadataTransaction>> pendingTransactions = assetTransmissionManager.getPendingTransactions(Specialist.ASSET_USER_SPECIALIST);
                     System.out.println("ASSET RECEPTION is " + pendingTransactions.size() + " events");
                     for (Transaction<DigitalAssetMetadataTransaction> transaction : pendingTransactions) {
-                        if (transaction.getInformation().getReceiverType() == PlatformComponentType.ACTOR_ASSET_USER) {
+                        if (transaction.getInformation().getReceiverType() == PlatformComponentType.ACTOR_ASSET_USER && transaction.getInformation().getSenderType() == PlatformComponentType.ACTOR_ASSET_ISSUER) {
                             DigitalAssetMetadataTransaction digitalAssetMetadataTransaction = transaction.getInformation();
                             System.out.println("ASSET RECEPTION Digital Asset Metadata Transaction: " + digitalAssetMetadataTransaction);
                             DigitalAssetMetadataTransactionType digitalAssetMetadataTransactionType = digitalAssetMetadataTransaction.getType();
@@ -290,6 +290,7 @@ public class AssetReceptionMonitorAgent implements Agent {
                             }
                             digitalAssetReceptionVault.setDigitalAssetMetadataAssetIssuerWalletTransaction(cryptoGenesisTransaction, transactionInternalId, AssetBalanceType.BOOK, TransactionType.CREDIT, DAPTransactionType.RECEPTION, actorIssuerPublicKey);
                             assetReceptionDao.updateDigitalAssetCryptoStatusByGenesisTransaction(genesisTransaction, CryptoStatus.ON_CRYPTO_NETWORK);
+                            assetReceptionDao.updateEventStatus(eventId);
                         }
                     }
                 }
@@ -312,6 +313,7 @@ public class AssetReceptionMonitorAgent implements Agent {
                             String actorIssuerPublicKey = assetReceptionDao.getActorUserPublicKeyByGenesisTransaction(genesisTransaction);
                             digitalAssetReceptionVault.setDigitalAssetMetadataAssetIssuerWalletTransaction(cryptoGenesisTransaction, transactionInternalId, AssetBalanceType.AVAILABLE, TransactionType.CREDIT, DAPTransactionType.RECEPTION, actorIssuerPublicKey);
                             assetReceptionDao.updateDigitalAssetCryptoStatusByGenesisTransaction(genesisTransaction, CryptoStatus.ON_BLOCKCHAIN);
+                            assetReceptionDao.updateEventStatus(eventId);
                         }
                     }
                 }
@@ -321,7 +323,6 @@ public class AssetReceptionMonitorAgent implements Agent {
                 if (eventType.equals(EventType.INCOMING_ASSET_REVERSED_ON_BLOCKCHAIN_WAITING_TRANSFERENCE_ASSET_USER)) {
                     //TODO: to handle
                 }
-                assetReceptionDao.updateEventStatus(eventId);
             }
         }
 

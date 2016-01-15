@@ -8,7 +8,8 @@ import com.bitdubai.fermat_android_api.layer.definition.wallet.enums.FermatFragm
 public enum BankMoneyWalletFragmentsEnumType implements FermatFragmentsEnumType<BankMoneyWalletFragmentsEnumType> {
     BNK_BANK_MONEY_WALLET_ACCOUNTS_LIST("BNKBMWAL"),
     BNK_BANK_MONEY_WALLET_ADD_ACCOUNT("BNKBMWAA"),
-    BNK_BANK_MONEY_WALLET_ACCOUNT_DETAIL("BNKBMWAD");
+    BNK_BANK_MONEY_WALLET_ACCOUNT_DETAIL("BNKBMWAD"),
+    BNK_BANK_MONEY_WALLET_SETUP("BNKBMWS");
 
 
     private String key;

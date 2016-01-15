@@ -10,11 +10,15 @@ import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.AlphaAnimation;
+import android.view.animation.Animation;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -36,7 +40,6 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.VaultType;
 import com.bitdubai.fermat_api.layer.all_definition.money.CryptoAddress;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Wallets;
-import com.bitdubai.fermat_ccp_api.layer.module.intra_user.interfaces.IntraUserModuleManager;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.exceptions.CantCreateWalletContactException;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.exceptions.CantGetAllWalletContactsException;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.exceptions.CantGetCryptoWalletException;
@@ -50,6 +53,7 @@ import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.bar_code_scanne
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.contacts_list_adapter.WalletContact;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.contacts_list_adapter.WalletContactListAdapter;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.popup.ConnectionWithCommunityDialog;
+import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.utils.BitcoinConverter;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.session.ReferenceWalletSession;
 import com.squareup.picasso.Picasso;
 
@@ -90,6 +94,10 @@ public class RequestFormFragment extends AbstractFermatFragment implements View.
     private boolean onFocus;
     private WalletContactListAdapter contactsAdapter;
     private WalletContact walletContact;
+    private Spinner spinner;
+    private FermatTextView txt_type;
+    private BitcoinConverter bitcoinConverter;
+    private ImageView spinnerArrow;
 
 
     public static RequestFormFragment newInstance() {
@@ -117,6 +125,8 @@ public class RequestFormFragment extends AbstractFermatFragment implements View.
         super.onCreateView(inflater, container, savedInstanceState);
         try {
             rootView = inflater.inflate(R.layout.request_form_base, container, false);
+
+            bitcoinConverter = new BitcoinConverter();
             setUpUI();
             setUpActions();
             setUpUIData();
@@ -130,10 +140,97 @@ public class RequestFormFragment extends AbstractFermatFragment implements View.
 
     private void setUpUI(){
         contactName = (AutoCompleteTextView) rootView.findViewById(R.id.contact_name);
+        spinnerArrow = (ImageView) rootView.findViewById(R.id.spinner_open);
         txt_notes = (TextView) rootView.findViewById(R.id.notes);
         editTextAmount = (EditText) rootView.findViewById(R.id.amount);
         imageView_contact = (ImageView) rootView.findViewById(R.id.profile_Image);
         send_button = (FermatButton) rootView.findViewById(R.id.send_button);
+        txt_type = (FermatTextView) rootView.findViewById(R.id.txt_type);
+        spinner = (Spinner) rootView.findViewById(R.id.spinner);
+        List<String> list = new ArrayList<String>();
+        list.add("Bits");
+        list.add("BTC");
+        list.add("Satoshis");
+        ArrayAdapter<String> dataAdapter = new ArrayAdapter<>(getActivity(),
+                R.layout.list_item_spinner, list);
+        dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        spinner.setAdapter(dataAdapter);
+        spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                String text = "";
+                String txtType = txt_type.getText().toString();
+                String amount = editTextAmount.getText().toString();
+                String newAmount = "";
+                switch (position) {
+                    case 0:
+                        text = "[bits]";
+                        if (txtType.equals("[btc]")) {
+                            newAmount = bitcoinConverter.getBitsFromBTC(amount);
+                        } else if (txtType.equals("[satoshis]")) {
+                            newAmount = bitcoinConverter.getBits(amount);
+                        } else {
+                            newAmount = amount;
+                        }
+
+                        break;
+                    case 1:
+                        text = "[btc]";
+                        if (txtType.equals("[bits]")) {
+                            newAmount = bitcoinConverter.getBitcoinsFromBits(amount);
+                        } else if (txtType.equals("[satoshis]")) {
+                            newAmount = bitcoinConverter.getBTC(amount);
+                        } else {
+                            newAmount = amount;
+                        }
+                        break;
+                    case 2:
+                        text = "[satoshis]";
+                        if (txtType.equals("[bits]")) {
+                            newAmount = bitcoinConverter.getSathoshisFromBits(amount);
+                        } else if (txtType.equals("[btc]")) {
+                            newAmount = bitcoinConverter.getSathoshisFromBTC(amount);
+                        } else {
+                            newAmount = amount;
+                        }
+                        break;
+                }
+                AlphaAnimation alphaAnimation = new AlphaAnimation((float) 0.4, 1);
+                alphaAnimation.setDuration(300);
+                final String finalText = text;
+                final String finalAmount = newAmount;
+                alphaAnimation.setAnimationListener(new Animation.AnimationListener() {
+                    @Override
+                    public void onAnimationStart(Animation animation) {
+                        txt_type.setText(finalText);
+                        editTextAmount.setText(finalAmount);
+                    }
+
+                    @Override
+                    public void onAnimationEnd(Animation animation) {
+
+                    }
+
+                    @Override
+                    public void onAnimationRepeat(Animation animation) {
+
+                    }
+                });
+                txt_type.startAnimation(alphaAnimation);
+
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
+        spinnerArrow.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                spinner.performClick();
+            }
+        });
     }
 
     private void setUpContactAddapter(){
