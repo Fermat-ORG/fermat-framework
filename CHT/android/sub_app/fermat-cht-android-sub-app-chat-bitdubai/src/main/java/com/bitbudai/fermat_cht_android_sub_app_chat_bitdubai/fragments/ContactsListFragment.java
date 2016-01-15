@@ -292,12 +292,12 @@ public class ContactsListFragment extends AbstractFermatFragment {
         }
 
         // Retrieves the system search manager service
-        final SearchManager searchManager =
+/*        final SearchManager searchManager =
                 (SearchManager) getActivity().getSystemService(Context.SEARCH_SERVICE);
 
         // Retrieves the SearchView from the search menu item
         final SearchView searchView = (SearchView) searchItem.getActionView();
-/*
+
         // Assign searchable info to SearchView
         searchView.setSearchableInfo(
                 searchManager.getSearchableInfo(getActivity().getComponentName()));
