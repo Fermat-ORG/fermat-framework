@@ -60,6 +60,7 @@ public class CustomerBrokerUpdateManagerImpl implements CustomerBrokerUpdateMana
 
         try {
 
+            System.out.print("\n\n**** 2) MOCK NEGOTIATION TRANSACTION - CUSTOMER BROKER UPDATE - MANAGER - PURCHASE NEGOTIATION****\n");
             customerBrokerUpdatePurchaseNegotiationTransaction = new CustomerBrokerUpdatePurchaseNegotiationTransaction(
                 customerBrokerPurchaseNegotiationManager,
                 customerBrokerUpdateNegotiationTransactionDatabaseDao
@@ -80,6 +81,7 @@ public class CustomerBrokerUpdateManagerImpl implements CustomerBrokerUpdateMana
 
         try {
 
+            System.out.print("\n\n**** 2) MOCK NEGOTIATION TRANSACTION - CUSTOMER BROKER UPDATE - MANAGER - SALE NEGOTIATION****\n");
             customerBrokerUpdateSaleNegotiationTransaction = new CustomerBrokerUpdateSaleNegotiationTransaction(
                 customerBrokerSaleNegotiationManager,
                 customerBrokerUpdateNegotiationTransactionDatabaseDao
@@ -99,6 +101,7 @@ public class CustomerBrokerUpdateManagerImpl implements CustomerBrokerUpdateMana
 
         try {
 
+            System.out.print("\n\n**** 2) MOCK NEGOTIATION TRANSACTION - CUSTOMER BROKER CANCEL - MANAGER - CANCEL PURCHASE NEGOTIATION****\n");
             customerBrokerUpdatePurchaseNegotiationTransaction = new CustomerBrokerUpdatePurchaseNegotiationTransaction(
                     customerBrokerPurchaseNegotiationManager,
                     customerBrokerUpdateNegotiationTransactionDatabaseDao
@@ -117,6 +120,8 @@ public class CustomerBrokerUpdateManagerImpl implements CustomerBrokerUpdateMana
     public void cancelNegotiation(CustomerBrokerSaleNegotiation customerBrokerSaleNegotiation) throws CantCancelNegotiationException{
 
         try {
+
+            System.out.print("\n\n**** 2) MOCK NEGOTIATION TRANSACTION - CUSTOMER BROKER CANCEL - MANAGER - CANCEL SALE NEGOTIATION****\n");
             customerBrokerUpdateSaleNegotiationTransaction = new CustomerBrokerUpdateSaleNegotiationTransaction(
                     customerBrokerSaleNegotiationManager,
                     customerBrokerUpdateNegotiationTransactionDatabaseDao
@@ -134,11 +139,9 @@ public class CustomerBrokerUpdateManagerImpl implements CustomerBrokerUpdateMana
     //GET THE NEW NEGOTIATION TRANSACTION FOR THE INDICATE ID
     public CustomerBrokerUpdate getCustomerBrokerNewNegotiationTranasction(UUID transactionId) throws CantGetCustomerBrokerUpdateNegotiationTransactionException{
 
-        CustomerBrokerUpdate customerBrokerUpdate = null;
-
         try {
 
-            customerBrokerUpdate = customerBrokerUpdateNegotiationTransactionDatabaseDao.getRegisterCustomerBrokerUpdateNegotiationTranasction(transactionId);
+            return customerBrokerUpdateNegotiationTransactionDatabaseDao.getRegisterCustomerBrokerUpdateNegotiationTranasction(transactionId);
 
         } catch (CantRegisterCustomerBrokerUpdateNegotiationTransactionException e){
             throw new CantGetCustomerBrokerUpdateNegotiationTransactionException(e.getMessage(), e, CantGetListCustomerBrokerUpdateNegotiationTransactionException.DEFAULT_MESSAGE, "ERROR GET CUSTOMER BROKER UPDATE NEGOTIATION TRANSACTION, UNKNOWN FAILURE.");
@@ -146,17 +149,14 @@ public class CustomerBrokerUpdateManagerImpl implements CustomerBrokerUpdateMana
             throw new CantGetCustomerBrokerUpdateNegotiationTransactionException(e.getMessage(), FermatException.wrapException(e), CantCreateCustomerBrokerNewSaleNegotiationTransactionException.DEFAULT_MESSAGE, "ERROR GET CUSTOMER BROKER UPDATE NEGOTIATION TRANSACTION, UNKNOWN FAILURE.");
         }
 
-        return customerBrokerUpdate;
     }
 
     //LIST THE UPDATE NEGOTIATION TRANSACTION
     public List<CustomerBrokerUpdate> getAllCustomerBrokerNewNegotiationTranasction() throws CantGetListCustomerBrokerUpdateNegotiationTransactionException{
 
-        List<CustomerBrokerUpdate> getTransactions = null;
-
         try {
 
-            getTransactions = customerBrokerUpdateNegotiationTransactionDatabaseDao.getAllRegisterCustomerBrokerUpdateNegotiationTranasction();
+            return customerBrokerUpdateNegotiationTransactionDatabaseDao.getAllRegisterCustomerBrokerUpdateNegotiationTranasction();
 
         } catch (CantRegisterCustomerBrokerUpdateNegotiationTransactionException e){
             throw new CantGetListCustomerBrokerUpdateNegotiationTransactionException(e.getMessage(), e, CantGetListCustomerBrokerUpdateNegotiationTransactionException.DEFAULT_MESSAGE, "ERROR GET LIST CUSTOMER BROKER UPDATE NEGOTIATION TRANSACTION, UNKNOWN FAILURE.");
@@ -164,6 +164,5 @@ public class CustomerBrokerUpdateManagerImpl implements CustomerBrokerUpdateMana
             throw new CantGetListCustomerBrokerUpdateNegotiationTransactionException(e.getMessage(), FermatException.wrapException(e), CantCreateCustomerBrokerNewSaleNegotiationTransactionException.DEFAULT_MESSAGE, "ERROR GET CUSTOMER BROKER UPDATE NEGOTIATION TRANSACTION, UNKNOWN FAILURE.");
         }
 
-        return getTransactions;
     }
 }
