@@ -117,7 +117,7 @@ public class ChatSupAppModulePluginRoot extends AbstractPlugin implements
          */
         chatManager=new ChatSupAppModuleManager(chatMiddlewareManager);
         //TODO: This method is only for testing, please, comment it when the test is finish, thanks.
-        testMethod();
+        //testMethod();
 
     }
 
