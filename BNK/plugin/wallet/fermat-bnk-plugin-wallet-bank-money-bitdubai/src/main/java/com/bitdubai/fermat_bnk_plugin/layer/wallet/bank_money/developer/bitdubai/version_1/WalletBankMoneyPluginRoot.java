@@ -133,10 +133,5 @@ public class WalletBankMoneyPluginRoot extends AbstractPlugin implements Databas
         }
 
     }
-    /*@Override
-    public void createBankMoneyWallet(String walletPublicKey) throws CantCreateBankMoneyWalletException {
-
-    }*/
-
 
 }
