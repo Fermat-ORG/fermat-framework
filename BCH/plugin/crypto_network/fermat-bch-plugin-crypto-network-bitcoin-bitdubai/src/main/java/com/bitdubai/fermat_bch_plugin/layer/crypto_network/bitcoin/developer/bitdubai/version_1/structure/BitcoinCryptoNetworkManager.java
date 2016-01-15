@@ -53,6 +53,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 
@@ -904,5 +905,17 @@ public class BitcoinCryptoNetworkManager implements TransactionProtocolManager, 
         } catch (CantExecuteDatabaseOperationException e) {
             throw new CantGetCryptoTransactionException(CantGetCryptoTransactionException.DEFAULT_MESSAGE, e, "database error getting the last crypto transaction.", "database error");
         }
+    }
+
+    /**
+     * Based on the passed transaction chain of Transactions hashes and Blocks hashes, determines the entire path
+     * of the chain until the Genesis Transaction is reached.
+     * The genesis Transaction will be the first transaction in the map.
+     * @param transactionChain a Map with the form TransactionHash / BlockHash
+     * @return the CryptoTransaction that represents the GenesisTransaction
+     * @throws CantGetCryptoTransactionException
+     */
+    public CryptoTransaction getGenesisTransaction(Map<String, String> transactionChain) throws CantGetCryptoTransactionException {
+        return null;
     }
 }

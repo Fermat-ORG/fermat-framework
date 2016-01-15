@@ -45,6 +45,7 @@ import org.bitcoinj.core.Transaction;
 import org.bitcoinj.core.UTXOProvider;
 
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
 import javax.annotation.Nullable;
@@ -357,5 +358,18 @@ public class BitcoinCryptoNetworkPluginRoot extends AbstractPlugin implements
     @Override
     public CryptoTransaction getCryptoTransaction(String txHash) throws CantGetCryptoTransactionException {
         return bitcoinCryptoNetworkManager.getCryptoTransaction(txHash);
+    }
+
+    /**
+     * Based on the passed transaction chain of Transactions hashes and Blocks hashes, determines the entire path
+     * of the chain until the Genesis Transaction is reached.
+     * The genesis Transaction will be the first transaction in the map.
+     * @param transactionChain a Map with the form TransactionHash / BlockHash
+     * @return the CryptoTransaction that represents the GenesisTransaction
+     * @throws CantGetCryptoTransactionException
+     */
+    @Override
+    public CryptoTransaction getGenesisTransaction(Map<String, String> transactionChain) throws CantGetCryptoTransactionException {
+        return bitcoinCryptoNetworkManager.getGenesisTransaction(transactionChain);
     }
 }
