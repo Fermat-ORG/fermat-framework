@@ -204,7 +204,7 @@ public class ContactsListFragment extends AbstractFermatFragment {
         }*/
     }
 
-    @Override
+    /*@Override
     public void onAttach(Activity activity) {
         super.onAttach(activity);
 
@@ -219,7 +219,7 @@ public class ContactsListFragment extends AbstractFermatFragment {
             throw new ClassCastException(activity.toString()
                     + " must implement OnContactsInteractionListener");
         }
-    }
+    }*/
 
     @Override
     public void onPause() {

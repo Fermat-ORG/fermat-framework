@@ -12,12 +12,22 @@ import android.widget.TextView;
 //import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.ListView;
+
+import com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.sessions.ChatSession;
+import com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.settings.ChatSettings;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView;
 import com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.adapters.ChatAdapter;
+import com.bitdubai.fermat_api.layer.all_definition.settings.structure.SettingsManager;
+import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.SubApp;
+import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.enums.SubApps;
 import com.bitdubai.fermat_cht_android_sub_app_chat_bitdubai.R;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractFermatFragment;
 import com.bitdubai.fermat_android_api.ui.inflater.ViewInflater;
 import com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.models.ChatMessage;
+import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.ChatModuleManager;
+import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedSubAppExceptionSeverity;
+import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedWalletExceptionSeverity;
+import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 //import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
 //import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedWalletExceptionSeverity;
 //import com.bitdubai.fermat_cht_api.layer.chat_module.interfaces.ChatModuleManager;
@@ -38,8 +48,10 @@ import java.text.DateFormat;
 public class ChatFragment extends AbstractFermatFragment  {//ActionBarActivity
 
     // Fermat Managers
-    //private ChatModuleManager moduleManager;
-    //private ErrorManager errorManager;
+    private ChatModuleManager moduleManager;
+    private ErrorManager errorManager;
+    private SettingsManager<ChatSettings> settingsManager;
+    private ChatSession chatSession;
 
     //Data
     List<String> chatmessages =  new ArrayList<>();
@@ -56,16 +68,15 @@ public class ChatFragment extends AbstractFermatFragment  {//ActionBarActivity
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        //setContentView(R.layout.chat);
-        //initControls();
-        /*try {
-            moduleManager = ((CashMoneyWalletSession) appSession).getModuleManager();
+        try {
+            chatSession = ((ChatSession) appSession);
+            moduleManager = chatSession.getModuleManager();
+            //settingsManager = moduleManager.getSettingsManager();
             errorManager = appSession.getErrorManager();
         } catch (Exception e) {
             if (errorManager != null)
-                errorManager.reportUnexpectedWalletException(Wallets.CSH_CASH_WALLET, UnexpectedWalletExceptionSeverity.DISABLES_THIS_FRAGMENT, e);
-        }*/
-
+                errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
+        }
     }
 
 
@@ -84,7 +95,7 @@ public class ChatFragment extends AbstractFermatFragment  {//ActionBarActivity
         RelativeLayout contain = (RelativeLayout) layout.findViewById(R.id.container);
         companionLabel.setText("My Contact");// Hard Coded
         loadDummyHistory();// Hard Coded
-
+/*
         sendBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -103,7 +114,7 @@ public class ChatFragment extends AbstractFermatFragment  {//ActionBarActivity
 
                 displayMessage(chatMessage);
             }
-        });
+        });*/
         return layout;
     }
 
@@ -134,7 +145,7 @@ public class ChatFragment extends AbstractFermatFragment  {//ActionBarActivity
         msg1.setDate(DateFormat.getDateTimeInstance().format(new Date()));
         chatHistory.add(msg1);
         adapter = new ChatAdapter(getActivity());//,
-        messagesContainer.setAdapter((ListAdapter) adapter);
+        //messagesContainer.setAdapter((ListAdapter) adapter);
 
         for(int i=0; i<chatHistory.size(); i++) {
             ChatMessage message = chatHistory.get(i);
