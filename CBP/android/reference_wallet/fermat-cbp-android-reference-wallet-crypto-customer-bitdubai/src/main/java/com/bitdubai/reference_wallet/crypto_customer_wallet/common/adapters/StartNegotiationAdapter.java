@@ -16,6 +16,7 @@ import com.bitdubai.reference_wallet.crypto_customer_wallet.common.holders.start
 import com.bitdubai.reference_wallet.crypto_customer_wallet.common.holders.start_negotiation.ExchangeRateViewHolder;
 import com.bitdubai.reference_wallet.crypto_customer_wallet.common.holders.start_negotiation.FooterViewHolder;
 import com.bitdubai.reference_wallet.crypto_customer_wallet.common.holders.start_negotiation.SingleChoiceViewHolder;
+import com.bitdubai.reference_wallet.crypto_customer_wallet.common.models.EmptyCustomerBrokerNegotiationInformation;
 import com.bitdubai.reference_wallet.crypto_customer_wallet.fragments.start_negotiation.StartNegotiationActivityFragment;
 import com.bitdubai.reference_wallet.crypto_customer_wallet.util.FragmentsCommons;
 
@@ -45,6 +46,13 @@ public class StartNegotiationAdapter extends FermatAdapter<ClauseInformation, Fe
 
         dataSet = new ArrayList<>();
         dataSet.addAll(buildListOfItems());
+    }
+
+    public void changeDataSet(EmptyCustomerBrokerNegotiationInformation negotiationInfo) {
+        this.negotiationInformation = negotiationInfo;
+
+        final List<ClauseInformation> items = buildListOfItems();
+        super.changeDataSet(items);
     }
 
     @Override

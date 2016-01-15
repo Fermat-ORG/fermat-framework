@@ -21,6 +21,10 @@ public class AccountListViewHolder extends FermatViewHolder {
     private FermatTextView availableBalance;
     private FermatTextView bookBalance;
 
+    private FermatTextView balanceText;
+    private FermatTextView availableText;
+    private FermatTextView bookText;
+
     private BankMoneyWalletModuleManager moduleManager;
 
     public AccountListViewHolder(View itemView,BankMoneyWalletModuleManager moduleManager) {
@@ -32,6 +36,13 @@ public class AccountListViewHolder extends FermatViewHolder {
         //currency = (FermatTextView) itemView.findViewById(R.id.currency);
         availableBalance = (FermatTextView) itemView.findViewById(R.id.available_balance);
         bookBalance = (FermatTextView) itemView.findViewById(R.id.book_balance);
+
+        balanceText = (FermatTextView) itemView.findViewById(R.id.balance_text);
+        availableText = (FermatTextView) itemView.findViewById(R.id.available_text);
+        bookText = (FermatTextView) itemView.findViewById(R.id.book_text);
+        balanceText.setText("Balance");
+        bookText.setText("Book");
+        availableText.setText("Available");
     }
 
     public void bind(BankAccountNumber itemInfo){
