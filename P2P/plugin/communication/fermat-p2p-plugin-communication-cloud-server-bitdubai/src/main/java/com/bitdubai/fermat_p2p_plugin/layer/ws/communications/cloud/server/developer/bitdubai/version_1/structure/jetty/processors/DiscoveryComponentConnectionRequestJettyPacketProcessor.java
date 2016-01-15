@@ -134,8 +134,8 @@ public class DiscoveryComponentConnectionRequestJettyPacketProcessor extends Fer
 
             LOG.info("Vpn path = " + vpnPath);
 
-            constructRequestConnectToVpnRespondPacketAndSend(vpnPath, applicantParticipant, remoteParticipant, remoteNsParticipant, Boolean.TRUE);
-            constructRequestConnectToVpnRespondPacketAndSend(vpnPath, remoteParticipant, applicantParticipant, applicantNetworkService, Boolean.FALSE);
+            constructRequestConnectToVpnRespondPacketAndSend(vpnPath, applicantParticipant, remoteParticipant, remoteNsParticipant);
+            constructRequestConnectToVpnRespondPacketAndSend(vpnPath, remoteParticipant, applicantParticipant, applicantNetworkService);
 
 
         }catch (Exception e){
@@ -201,12 +201,11 @@ public class DiscoveryComponentConnectionRequestJettyPacketProcessor extends Fer
      * @param remoteParticipant
      * @param remoteParticipantNetworkService
      */
-    private void constructRequestConnectToVpnRespondPacketAndSend(String path, PlatformComponentProfile platformComponentProfileDestination, PlatformComponentProfile remoteParticipant, PlatformComponentProfile remoteParticipantNetworkService, boolean isApplicant){
+    private void constructRequestConnectToVpnRespondPacketAndSend(String path, PlatformComponentProfile platformComponentProfileDestination, PlatformComponentProfile remoteParticipant, PlatformComponentProfile remoteParticipantNetworkService){
 
 
         LOG.info("Sending vpn connection to = " + platformComponentProfileDestination.getAlias());
         LOG.info("Sending whit remote = " + remoteParticipant.getAlias());
-        LOG.info("Sending whit isApplicant = " + isApplicant);
 
         /*
          * Get json representation for the filters
@@ -217,7 +216,6 @@ public class DiscoveryComponentConnectionRequestJettyPacketProcessor extends Fer
         packetContent.addProperty(JsonAttNamesConstants.APPLICANT_PARTICIPANT_VPN, platformComponentProfileDestination.toJson());
         packetContent.addProperty(JsonAttNamesConstants.REMOTE_PARTICIPANT_VPN, remoteParticipant.toJson());
         packetContent.addProperty(JsonAttNamesConstants.REMOTE_PARTICIPANT_NS_VPN, remoteParticipantNetworkService.toJson());
-        packetContent.addProperty(JsonAttNamesConstants.I_APPLICANT, isApplicant);
 
         LOG.info("packetContent = " +gson.toJson(packetContent));
 
