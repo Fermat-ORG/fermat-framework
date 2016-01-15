@@ -59,6 +59,7 @@ import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.utils.WalletUti
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.session.ReferenceWalletSession;
 import com.squareup.picasso.Picasso;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -474,8 +475,9 @@ public class SendFormFragment extends AbstractFermatFragment<ReferenceWalletSess
                                 newAmount = bitcoinConverter.getSathoshisFromBits(amount);
                             }
 
+                            BigDecimal operator = new BigDecimal(newAmount);
                             cryptoWallet.send(
-                                    Long.parseLong(newAmount),
+                                    operator.longValueExact(),
                                     validAddress,
                                     notes,
                                     appSession.getAppPublicKey(),
