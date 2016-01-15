@@ -1,6 +1,7 @@
 package com.bitdubai.fermat_ccp_plugin.layer.network_service.intra_user.developer.bitdubai.version_1.event_handlers.communication;
 
 import com.bitdubai.fermat_api.layer.all_definition.network_service.interfaces.NetworkService;
+import com.bitdubai.fermat_p2p_api.layer.all_definition.common.network_services.abstract_classes.AbstractNetworkServiceV2;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.common.network_services.template.event_handlers.AbstractCommunicationBaseEventHandler;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.events.CompleteComponentConnectionRequestNotificationEvent;
 
@@ -14,7 +15,7 @@ public class CloseConnectionNotificationEventHandler extends AbstractCommunicati
      *
      * @param networkService
      */
-    public CloseConnectionNotificationEventHandler(NetworkService networkService) {
+    public CloseConnectionNotificationEventHandler(AbstractNetworkServiceV2 networkService) {
         super(networkService);
     }
 

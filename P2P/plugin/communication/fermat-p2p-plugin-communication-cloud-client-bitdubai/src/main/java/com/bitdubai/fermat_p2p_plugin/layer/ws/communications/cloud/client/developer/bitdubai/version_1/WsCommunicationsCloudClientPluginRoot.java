@@ -75,8 +75,10 @@ public class WsCommunicationsCloudClientPluginRoot extends AbstractPlugin implem
     /**
      * Represent the SERVER_IP
      */
+
     //public static final String SERVER_IP = ServerConf.SERVER_IP_PRODUCTION;
     public static final String SERVER_IP = ServerConf.SERVER_IP_DEVELOPER_LOCAL;
+
 
     /**
      * Represent the uri
@@ -112,6 +114,7 @@ public class WsCommunicationsCloudClientPluginRoot extends AbstractPlugin implem
      * Represent the isTaskCompleted
      */
     private boolean isTaskCompleted;
+    private boolean networkState;
 
     /**
      * Constructor
@@ -270,6 +273,11 @@ public class WsCommunicationsCloudClientPluginRoot extends AbstractPlugin implem
     @Override
     public Boolean isDisable() {
         return getDisableClientFlag();
+    }
+
+    @Override
+    public void setNetworkState(boolean state) {
+        networkState = state;
     }
 
 

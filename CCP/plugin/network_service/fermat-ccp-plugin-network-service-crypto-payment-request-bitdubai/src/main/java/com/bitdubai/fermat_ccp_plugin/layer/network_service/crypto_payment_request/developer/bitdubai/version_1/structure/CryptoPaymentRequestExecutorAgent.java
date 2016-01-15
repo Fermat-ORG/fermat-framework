@@ -1,6 +1,7 @@
 package com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_payment_request.developer.bitdubai.version_1.structure;
 
 import com.bitdubai.fermat_api.CantStartAgentException;
+import com.bitdubai.fermat_api.CantStopAgentException;
 import com.bitdubai.fermat_api.FermatAgent;
 import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.PluginVersionReference;
@@ -117,7 +118,11 @@ public class CryptoPaymentRequestExecutorAgent extends FermatAgent {
     @Override
     public void stop() {
         agentThread.interrupt();
-        super.stop();
+        try {
+            super.stop();
+        } catch (CantStopAgentException e) {
+            e.printStackTrace();
+        }
     }
 
     public void sendCycle() {

@@ -1,9 +1,7 @@
 package com.bitdubai.sub_app.intra_user_community.fragments;
 
 
-import android.content.Context;
 import android.content.DialogInterface;
-import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -47,9 +45,10 @@ import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.Un
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 import com.bitdubai.sub_app.intra_user_community.R;
 import com.bitdubai.sub_app.intra_user_community.adapters.AppListAdapter;
+import com.bitdubai.sub_app.intra_user_community.common.popups.ErrorConnectingFermatNetworkDialog;
 import com.bitdubai.sub_app.intra_user_community.common.popups.PresentationIntraUserCommunityDialog;
 import com.bitdubai.sub_app.intra_user_community.constants.Constants;
-import com.bitdubai.sub_app.intra_user_community.interfaces.RecreateView;
+import com.bitdubai.sub_app.intra_user_community.interfaces.ErrorConnectingFermatNetwork;
 import com.bitdubai.sub_app.intra_user_community.session.IntraUserSubAppSession;
 import com.bitdubai.sub_app.intra_user_community.util.CommonLogger;
 
@@ -68,7 +67,7 @@ import static android.widget.Toast.makeText;
 
 public class ConnectionsWorldFragment extends AbstractFermatFragment implements
         AdapterView.OnItemClickListener,
-        SwipeRefreshLayout.OnRefreshListener, FermatListItemListeners<IntraUserInformation>, RecreateView {
+        SwipeRefreshLayout.OnRefreshListener, FermatListItemListeners<IntraUserInformation> {
 
 
     public static final String INTRA_USER_SELECTED = "intra_user";
@@ -84,6 +83,7 @@ public class ConnectionsWorldFragment extends AbstractFermatFragment implements
     FermatWorker worker;
     SettingsManager<IntraUserWalletSettings> settingsManager;
     IntraUserWalletSettings intraUserWalletSettings = null;
+    private ErrorConnectingFermatNetwork errorConnectingFermatNetwork;
     private int offset = 0;
     private int mNotificationsCount = 0;
     private SearchView mSearchView;
@@ -106,6 +106,7 @@ public class ConnectionsWorldFragment extends AbstractFermatFragment implements
     private List<IntraUserInformation> dataSetFiltered;
     private ImageView closeSearch;
     private LinearLayout searchEmptyView;
+    private LinearLayout noNetworkView;
 
     /**
      * Create a new instance of this fragment
@@ -135,11 +136,15 @@ public class ConnectionsWorldFragment extends AbstractFermatFragment implements
                 intraUserWalletSettings = null;
             }
 
-            if (intraUserWalletSettings == null) {
-                intraUserWalletSettings = new IntraUserWalletSettings();
-                intraUserWalletSettings.setIsPresentationHelpEnabled(true);
-                settingsManager.persistSettings(intraUserSubAppSession.getAppPublicKey(), intraUserWalletSettings);
+            if(intraUserSubAppSession.getAppPublicKey() != null) //the identity not exist yet
+            {
+                if (intraUserWalletSettings == null) {
+                    intraUserWalletSettings = new IntraUserWalletSettings();
+                    intraUserWalletSettings.setIsPresentationHelpEnabled(true);
+                    settingsManager.persistSettings(intraUserSubAppSession.getAppPublicKey(), intraUserWalletSettings);
+                }
             }
+
             mNotificationsCount = moduleManager.getIntraUsersWaitingYourAcceptanceCount();
             new FetchCountTask().execute();
 
@@ -187,8 +192,8 @@ public class ConnectionsWorldFragment extends AbstractFermatFragment implements
             rootView.setBackgroundColor(Color.parseColor("#000b12"));
             emptyView = (LinearLayout) rootView.findViewById(R.id.empty_view);
             searchEmptyView = (LinearLayout) rootView.findViewById(R.id.search_empty_view);
+            noNetworkView = (LinearLayout) rootView.findViewById(R.id.no_connection_view);
             dataSet.addAll(moduleManager.getCacheSuggestionsToContact(MAX, offset));
-            SharedPreferences pref = getActivity().getSharedPreferences(Constants.PRESENTATIO_DIALOG_CHECKED, Context.MODE_PRIVATE);
             if (intraUserWalletSettings.isPresentationHelpEnabled()) {
                 showDialogHelp();
             } else {
@@ -199,6 +204,23 @@ public class ConnectionsWorldFragment extends AbstractFermatFragment implements
             Toast.makeText(getActivity().getApplicationContext(), "Oooops! recovering from system error", Toast.LENGTH_SHORT).show();
         }
         return rootView;
+    }
+
+    public void showErrorNetworkDialog() {
+        ErrorConnectingFermatNetworkDialog errorConnectingFermatNetworkDialog = new ErrorConnectingFermatNetworkDialog(getActivity(), intraUserSubAppSession, null);
+        errorConnectingFermatNetworkDialog.setErrorConnectingFermatNetwork(new ErrorConnectingFermatNetwork() {
+            @Override
+            public void errorConnectingFermatNetwork(boolean connected) {
+                if (!connected) {
+                    showEmpty(true, noNetworkView);
+                    showEmpty(false, emptyView);
+                    showEmpty(false, searchEmptyView);
+                } else {
+                    showCriptoUsersCache();
+                }
+            }
+        });
+        errorConnectingFermatNetworkDialog.show();
     }
 
     @Override
@@ -479,7 +501,6 @@ public class ConnectionsWorldFragment extends AbstractFermatFragment implements
                             moduleManager,
                             PresentationIntraUserCommunityDialog.TYPE_PRESENTATION_WITHOUT_IDENTITIES);
                     presentationIntraUserCommunityDialog.show();
-                    presentationIntraUserCommunityDialog.setRecreateView(this);
                     presentationIntraUserCommunityDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
                         @Override
                         public void onDismiss(DialogInterface dialog) {
@@ -493,7 +514,6 @@ public class ConnectionsWorldFragment extends AbstractFermatFragment implements
                             moduleManager,
                             PresentationIntraUserCommunityDialog.TYPE_PRESENTATION);
                     presentationIntraUserCommunityDialog.show();
-                    presentationIntraUserCommunityDialog.setRecreateView(this);
                     presentationIntraUserCommunityDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
                         @Override
                         public void onDismiss(DialogInterface dialog) {
@@ -516,7 +536,6 @@ public class ConnectionsWorldFragment extends AbstractFermatFragment implements
                         moduleManager,
                         PresentationIntraUserCommunityDialog.TYPE_PRESENTATION);
                 presentationIntraUserCommunityDialog.show();
-                presentationIntraUserCommunityDialog.setRecreateView(this);
                 presentationIntraUserCommunityDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
                     @Override
                     public void onDismiss(DialogInterface dialog) {
@@ -576,13 +595,6 @@ public class ConnectionsWorldFragment extends AbstractFermatFragment implements
 
     private void setUpScreen(LayoutInflater layoutInflater) throws CantGetActiveLoginIdentityException {
 
-    }
-
-    @Override
-    public void recreate() {
-        if (isAttached) {
-            //TODO inflate side menu
-        }
     }
 
     /*

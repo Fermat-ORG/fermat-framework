@@ -7,7 +7,9 @@
 package com.bitdubai.fermat_p2p_api.layer.all_definition.communication.events;
 
 import com.bitdubai.fermat_api.layer.all_definition.components.interfaces.PlatformComponentProfile;
+import com.bitdubai.fermat_api.layer.all_definition.network_service.enums.NetworkServiceType;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.enums.P2pEventType;
+import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.interfaces.CommunicationBaseEvent;
 
 /**
  * The Class <code>com.bitdubai.fermat_p2p_api.layer.all_definition.communication.events.FailureComponentConnectionRequestNotificationEvent</code>
@@ -17,7 +19,7 @@ import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.enums.P2pE
  * @version 1.0
  * @since Java JDK 1.7
  */
-public class FailureComponentConnectionRequestNotificationEvent extends AbstractP2PFermatEvent {
+public class FailureComponentConnectionRequestNotificationEvent extends AbstractP2PFermatEvent implements CommunicationBaseEvent {
 
     /**
      * Represent the remoteComponent
@@ -68,5 +70,10 @@ public class FailureComponentConnectionRequestNotificationEvent extends Abstract
      */
     public void setRemoteParticipant(PlatformComponentProfile remoteParticipant) {
         this.remoteParticipant = remoteParticipant;
+    }
+
+    @Override
+    public NetworkServiceType getNetworkServiceTypeApplicant() {
+        return networkServiceApplicant.getNetworkServiceType();
     }
 }

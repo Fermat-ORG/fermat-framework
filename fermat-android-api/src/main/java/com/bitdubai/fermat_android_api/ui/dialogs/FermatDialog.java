@@ -6,14 +6,15 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.content.LocalBroadcastManager;
 import android.widget.Toast;
+
 import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.FermatSession;
 import com.bitdubai.fermat_android_api.ui.inflater.ViewInflater;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Engine;
 import com.bitdubai.fermat_api.layer.all_definition.enums.UISource;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.interfaces.FermatScreenSwapper;
 import com.bitdubai.fermat_api.layer.pip_engine.interfaces.ResourceProviderManager;
-import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedUIExceptionSeverity;
+import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 
 /**
  * Created by Matias Furszyfer on 2015.10.18..
@@ -108,7 +109,7 @@ public abstract class FermatDialog <S extends FermatSession,R extends ResourcePr
      * @return error manager from session
      */
     public ErrorManager getErrorManager(){
-       return fermatSession.getErrorManager();
+        return fermatSession != null ? fermatSession.getErrorManager() : null;
     }
 
     protected void changeApp(Engine emgine,String fermatAppToConnectPublicKey, Object[] objects) {

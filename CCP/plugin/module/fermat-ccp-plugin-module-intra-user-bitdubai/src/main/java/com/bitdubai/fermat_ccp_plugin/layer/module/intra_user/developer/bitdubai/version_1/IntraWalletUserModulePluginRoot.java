@@ -573,6 +573,9 @@ public class IntraWalletUserModulePluginRoot extends AbstractPlugin implements
             e.printStackTrace();
         } catch (CantGetActiveLoginIdentityException e) {
             e.printStackTrace();
+
+        } catch (Exception e) {
+            e.printStackTrace();
         }
         return 0;
     }
@@ -857,7 +860,10 @@ public class IntraWalletUserModulePluginRoot extends AbstractPlugin implements
     public int[] getMenuNotifications() {
         int[] notifications = new int[4];
         try {
-            notifications[2] = intraWalletUserManager.getWaitingYourAcceptanceIntraWalletUsers(getSelectedActorIdentity().getPublicKey(),99,0).size();
+            if(getSelectedActorIdentity().getPublicKey() != null)
+                notifications[2] = intraWalletUserManager.getWaitingYourAcceptanceIntraWalletUsers(getSelectedActorIdentity().getPublicKey(),99,0).size();
+            else
+                notifications[2] = 0;
         } catch (CantGetIntraWalletUsersException e) {
             e.printStackTrace();
         } catch (CantGetSelectedActorIdentityException | ActorIdentityNotSelectedException e) {

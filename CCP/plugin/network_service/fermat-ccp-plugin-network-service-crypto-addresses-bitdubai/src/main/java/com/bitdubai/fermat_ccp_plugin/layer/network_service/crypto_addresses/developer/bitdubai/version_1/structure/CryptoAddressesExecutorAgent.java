@@ -1,6 +1,7 @@
 package com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_addresses.developer.bitdubai.version_1.structure;
 
 import com.bitdubai.fermat_api.CantStartAgentException;
+import com.bitdubai.fermat_api.CantStopAgentException;
 import com.bitdubai.fermat_api.FermatAgent;
 import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.components.enums.PlatformComponentType;
@@ -115,7 +116,12 @@ public final class CryptoAddressesExecutorAgent extends FermatAgent {
     @Override
     public void stop() {
         agentThread.interrupt();
-        super.stop();
+        //TODO check this
+        try {
+            super.stop();
+        } catch (CantStopAgentException e) {
+            e.printStackTrace();
+        }
     }
 
     private void sendCycle() {

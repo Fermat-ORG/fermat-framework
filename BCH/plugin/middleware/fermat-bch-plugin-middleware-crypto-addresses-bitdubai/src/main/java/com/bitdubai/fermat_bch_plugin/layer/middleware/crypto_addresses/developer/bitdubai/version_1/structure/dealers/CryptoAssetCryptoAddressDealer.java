@@ -25,7 +25,6 @@ public class CryptoAssetCryptoAddressDealer extends CryptoAddressDealer {
 
     private final CryptoAddressesManager cryptoAddressesManager  ;
 
-
     public CryptoAssetCryptoAddressDealer(final CryptoAddressesManager   cryptoAddressesManager  ,
                                           final CryptoAddressBookManager cryptoAddressBookManager,
                                           final CryptoVaultSelector      cryptoVaultSelector     ,
