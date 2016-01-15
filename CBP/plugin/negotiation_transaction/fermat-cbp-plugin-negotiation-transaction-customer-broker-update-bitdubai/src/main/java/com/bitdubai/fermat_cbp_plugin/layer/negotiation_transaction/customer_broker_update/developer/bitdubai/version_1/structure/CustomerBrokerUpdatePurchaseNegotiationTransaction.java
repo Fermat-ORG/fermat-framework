@@ -102,7 +102,7 @@ public class CustomerBrokerUpdatePurchaseNegotiationTransaction {
 
             UUID transactionId = UUID.randomUUID();
 
-            System.out.print("\n\n**** 3) MOCK NEGOTIATION TRANSACTION - CUSTOMER BROKER CANCEL - SALE NEGOTIATION - CUSTOMER BROKER CANCEL SALE NEGOTIATION TRANSACTION. transactionId: " + transactionId + " ****\n");
+            System.out.print("\n\n**** 3) MOCK NEGOTIATION TRANSACTION - CUSTOMER BROKER CANCEL - PURCHASE NEGOTIATION - CUSTOMER BROKER CANCEL PURCHASE NEGOTIATION TRANSACTION. transactionId: " + transactionId + " ****\n");
 
             System.out.print("\n\n --- Negotiation Mock XML Date" +
                             "\n- NegotiationId = " + customerBrokerPurchaseNegotiation.getNegotiationId() +

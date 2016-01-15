@@ -92,6 +92,12 @@ public class CustomerBrokerCloseNegotiationTransactionDatabaseDao {
 
             table.insertRecord(record);
 
+            if(statusTransaction.getCode() == NegotiationTransactionStatus.PENDING_SUBMIT_CONFIRM.getCode()) {
+                System.out.print("\n\n**** 21) MOCK NEGOTIATION TRANSACTION - CUSTOMER BROKER CLOSE - DAO. CONFIRM negotiationType: " + negotiationType.getCode() + " transactionId: " + transactionId + " ****\n");
+            }else{
+                System.out.print("\n\n**** 4) MOCK NEGOTIATION TRANSACTION - CUSTOMER BROKER CLOSE - DAO. NEGOTIATION negotiationType: " + negotiationType.getCode() + "transactionId: " + transactionId + " ****\n");
+            }
+
         } catch (CantInsertRecordException e){
             throw new CantRegisterCustomerBrokerCloseNegotiationTransactionException(e.getMessage(), e, "customer broker close Negotiation Transaction", "Cant create new customer broker close Negotiation Transaction, insert database problems.");
         } catch (Exception e) {
@@ -112,6 +118,7 @@ public class CustomerBrokerCloseNegotiationTransactionDatabaseDao {
             record.setStringValue(CustomerBrokerCloseNegotiationTransactionDatabaseConstants.CUSTOMER_BROKER_CLOSE_STATUS_COLUMN_NAME, statusTransaction.getCode());
             table.updateRecord(record);
 
+            System.out.print("\n\n**** 8) MOCK NEGOTIATION TRANSACTION - CUSTOMER BROKER CLOSE - DAO - UPDATE STATUS NEGOTIATION STATUS : " + NegotiationTransactionStatus.SENDING_NEGOTIATION.getCode() + " ****\n");
         } catch (CantUpdateRecordException e) {
             throw new CantRegisterCustomerBrokerCloseNegotiationTransactionException(e.getMessage(), e, "customer broker close Negotiation Transaction, Update State", "Cant Update State customer broker close Negotiation Transaction, update database problems.");
         } catch (Exception e) {

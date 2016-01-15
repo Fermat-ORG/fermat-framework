@@ -75,6 +75,8 @@ public class CustomerBrokerCloseManagerImpl implements CustomerBrokerCloseManage
 
         try {
 
+            System.out.print("\n\n**** 2) MOCK NEGOTIATION TRANSACTION - CUSTOMER BROKER CLOSE - MANAGER - PURCHASE NEGOTIATION****\n");
+
             customerBrokerClosePurchaseNegotiationTransaction = new CustomerBrokerClosePurchaseNegotiationTransaction(
                     customerBrokerPurchaseNegotiationManager,
                     customerBrokerCloseNegotiationTransactionDatabaseDao,
@@ -97,6 +99,8 @@ public class CustomerBrokerCloseManagerImpl implements CustomerBrokerCloseManage
             throws CantCreateCustomerBrokerSaleNegotiationException {
 
         try {
+
+            System.out.print("\n\n**** 2) MOCK NEGOTIATION TRANSACTION - CUSTOMER BROKER CLOSE - MANAGER - SALE NEGOTIATION****\n");
 
             customerBrokerCloseSaleNegotiationTransaction = new CustomerBrokerCloseSaleNegotiationTransaction(
                     customerBrokerSaleNegotiationManager,

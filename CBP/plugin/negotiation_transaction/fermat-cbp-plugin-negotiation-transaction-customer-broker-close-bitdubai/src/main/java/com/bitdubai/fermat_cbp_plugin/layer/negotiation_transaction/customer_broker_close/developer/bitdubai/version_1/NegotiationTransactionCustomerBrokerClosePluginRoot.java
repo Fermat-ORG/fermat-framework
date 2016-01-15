@@ -39,9 +39,11 @@ import com.bitdubai.fermat_cbp_api.all_definition.negotiation_transaction.Negoti
 import com.bitdubai.fermat_cbp_api.all_definition.negotiation_transaction.NegotiationSaleRecord;
 import com.bitdubai.fermat_cbp_api.layer.business_transaction.common.mocks.ClauseMock;
 import com.bitdubai.fermat_cbp_api.layer.negotiation.customer_broker_purchase.exceptions.CantCreateCustomerBrokerPurchaseNegotiationException;
+import com.bitdubai.fermat_cbp_api.layer.negotiation.customer_broker_purchase.exceptions.CantGetListPurchaseNegotiationsException;
 import com.bitdubai.fermat_cbp_api.layer.negotiation.customer_broker_purchase.interfaces.CustomerBrokerPurchaseNegotiation;
 import com.bitdubai.fermat_cbp_api.layer.negotiation.customer_broker_purchase.interfaces.CustomerBrokerPurchaseNegotiationManager;
 import com.bitdubai.fermat_cbp_api.layer.negotiation.customer_broker_sale.exceptions.CantCreateCustomerBrokerSaleNegotiationException;
+import com.bitdubai.fermat_cbp_api.layer.negotiation.customer_broker_sale.exceptions.CantGetListSaleNegotiationsException;
 import com.bitdubai.fermat_cbp_api.layer.negotiation.customer_broker_sale.interfaces.CustomerBrokerSaleNegotiation;
 import com.bitdubai.fermat_cbp_api.layer.negotiation.customer_broker_sale.interfaces.CustomerBrokerSaleNegotiationManager;
 import com.bitdubai.fermat_cbp_api.layer.negotiation_transaction.Test.mocks.PurchaseNegotiationMock;
@@ -189,6 +191,19 @@ public class NegotiationTransactionCustomerBrokerClosePluginRoot extends Abstrac
              );
              customerBrokerCloseAgent.start();
 
+             //TEST
+             //TEST CREATE CUSTOMER BROKER CLOSE PURCHASE NEGOTIATION
+             createCustomerBrokerClosePurchaseNegotiationTest();
+
+             //TEST CREATE CUSTOMER BROKER CLOSE SALE NEGOTIATION
+//             createCustomerBrokerCloseSaleNegotiationTest();
+//
+             //TEST LIST PURCHASE NEGOTIATION
+             getAllPurchaseNegotiationTest();
+
+             //TEST LIST PURCHASE NEGOTIATION
+//             getAllSaleNegotiationTest();
+
              //Startes Service
              this.serviceStatus = ServiceStatus.STARTED;
 //             System.out.print("-----------------------\n CUSTOMER BROKER CLOSE: SUCCESSFUL START \n-----------------------\n");
@@ -312,8 +327,7 @@ public class NegotiationTransactionCustomerBrokerClosePluginRoot extends Abstrac
     /*TEST METHOD*/
 
     //TEST CREATE CUSTOMER BROKER CLOSE PURCHASE NEGOTIATION
-
-    private void createCustomerBrokerUpdatePurchaseNegotiationTest() {
+    private void createCustomerBrokerClosePurchaseNegotiationTest() {
 
         try {
 
@@ -377,8 +391,7 @@ public class NegotiationTransactionCustomerBrokerClosePluginRoot extends Abstrac
     }
 
     //TEST CREATE CUSTOMER BROKER CLOSE SALE NEGOTIATION
-
-    private void createCustomerBrokerUpdateSaleNegotiationTest() {
+    private void createCustomerBrokerCloseSaleNegotiationTest() {
 
         try {
 
@@ -437,6 +450,56 @@ public class NegotiationTransactionCustomerBrokerClosePluginRoot extends Abstrac
             System.out.print("\n**** MOCK NEGOTIATION TRANSACTION - CUSTOMER BROKER CLOSE. PLUGIN ROOT. ERROR CREATE CUSTOMER BROKER CLOSE. ****\n");
         } catch (CantRegisterCustomerBrokerCloseNegotiationTransactionException e){
             System.out.print("\n**** MOCK NEGOTIATION TRANSACTION - CUSTOMER BROKER CLOSE. PLUGIN ROOT. ERROR LIST CUSTOMER BROKER CLOSE NOT FOUNT. ****\n");
+        }
+
+    }
+
+    //TEST GET ALL NEGOTIATION
+    private void getAllPurchaseNegotiationTest(){
+
+        try{
+
+            System.out.print("\n**** MOCK NEGOTIATION TRANSACTION - CUSTOMER BROKER CLOSE - PLUGINROOT - LIST CUSTOMER BROKER PURCHASE NEGOTIATION ****\n");
+
+            Collection<CustomerBrokerPurchaseNegotiation> negotiationCollection =customerBrokerPurchaseNegotiationManager.getNegotiations();
+            for (CustomerBrokerPurchaseNegotiation negotiation: negotiationCollection){
+
+                System.out.print("\n\n\n --- Negotiation Date" +
+                                "\n- NegotiationId = " + negotiation.getNegotiationId() +
+                                "\n- CustomerPublicKey = " + negotiation.getCustomerPublicKey() +
+                                "\n- BrokerPublicKey = " + negotiation.getBrokerPublicKey() +
+                                "\n- Status = " + negotiation.getStatus().getCode()
+                );
+
+            }
+
+        } catch (CantGetListPurchaseNegotiationsException e) {
+            System.out.print("\n**** MOCK NEGOTIATION TRANSACTION - CUSTOMER BROKER CLOSE. PLUGIN ROOT. ERROR LIST CUSTOMER BROKER PURCHASE NEGOTIATION. ****\n");
+        }
+
+    }
+
+    //TEST GET ALL NEGOTIATION
+    private void getAllSaleNegotiationTest(){
+
+        try{
+
+            System.out.print("\n**** MOCK NEGOTIATION TRANSACTION - CUSTOMER BROKER CLOSE - PLUGINROOT - LIST CUSTOMER BROKER SALE NEGOTIATION ****\n");
+
+            Collection<CustomerBrokerSaleNegotiation> negotiationCollection = customerBrokerSaleNegotiationManager.getNegotiations();
+            for (CustomerBrokerSaleNegotiation negotiation: negotiationCollection){
+
+                System.out.print("\n\n\n --- Negotiation Date" +
+                                "\n- NegotiationId = " + negotiation.getNegotiationId() +
+                                "\n- CustomerPublicKey = " + negotiation.getCustomerPublicKey() +
+                                "\n- BrokerPublicKey = " + negotiation.getBrokerPublicKey() +
+                                "\n- Status = " + negotiation.getStatus().getCode()
+                );
+
+            }
+
+        } catch (CantGetListSaleNegotiationsException e) {
+            System.out.print("\n**** MOCK NEGOTIATION TRANSACTION - CUSTOMER BROKER CLOSE. PLUGIN ROOT. ERROR LIST CUSTOMER BROKER SALE NEGOTIATION. ****\n");
         }
 
     }
