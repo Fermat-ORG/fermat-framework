@@ -49,7 +49,6 @@ public class NegotiationPurchaseRecord implements CustomerBrokerPurchaseNegotiat
 
     public Long getLastNegotiationUpdateDate(){ return this.lastNegotiationUpdateDate; }
 
-
     public void setLastNegotiationUpdateDate(Long lastNegotiationUpdateDate){ this.lastNegotiationUpdateDate = lastNegotiationUpdateDate; }
 
     //TODO Revisar esta implementacion, lo coloque como un setter para el nuevo metodo getNearExpirationDatetime() que se agrego a CustomerBrokerPurchaseNegotiation

@@ -36,6 +36,7 @@ import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.Un
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 import com.bitdubai.reference_wallet.crypto_customer_wallet.R;
 import com.bitdubai.reference_wallet.crypto_customer_wallet.common.adapters.StartNegotiationAdapter;
+import com.bitdubai.reference_wallet.crypto_customer_wallet.common.dialogs.ClauseTextDialog;
 import com.bitdubai.reference_wallet.crypto_customer_wallet.common.holders.start_negotiation.ClauseViewHolder;
 import com.bitdubai.reference_wallet.crypto_customer_wallet.common.holders.start_negotiation.FooterViewHolder;
 import com.bitdubai.reference_wallet.crypto_customer_wallet.common.models.EmptyCustomerBrokerNegotiationInformation;
@@ -115,23 +116,6 @@ public class StartNegotiationActivityFragment extends AbstractFermatFragment<Cry
     }
 
     @Override
-    public void onClauseValueChanged(EditText triggerView, ClauseInformation clause, String newValue, int position) {
-        final ClauseInformation newClause = negotiationInfo.putClause(clause, newValue);
-
-        final Map<ClauseType, ClauseInformation> clauses = negotiationInfo.getClauses();
-        final ClauseInformation customerCurrencyQty = clauses.get(ClauseType.CUSTOMER_CURRENCY_QUANTITY);
-        final ClauseInformation brokerCurrencyQty = clauses.get(ClauseType.BROKER_CURRENCY_QUANTITY);
-
-        final BigDecimal exchangeRate = BigDecimal.valueOf(Double.valueOf(newValue));
-        final BigDecimal amountToBuy = BigDecimal.valueOf(Double.valueOf(customerCurrencyQty.getValue()));
-        final String format = DecimalFormat.getInstance().format(amountToBuy.multiply(exchangeRate).doubleValue());
-        negotiationInfo.putClause(brokerCurrencyQty, format);
-
-        adapter.changeItem(position, newClause);
-        triggerView.setText(newValue);
-    }
-
-    @Override
     public void onClauseCLicked(final Button triggerView, final ClauseInformation clause, final int position) {
         SimpleListDialogFragment dialogFragment;
         final ClauseType type = clause.getType();
@@ -142,9 +126,8 @@ public class StartNegotiationActivityFragment extends AbstractFermatFragment<Cry
                 dialogFragment.setListener(new SimpleListDialogFragment.ItemSelectedListener<Currency>() {
                     @Override
                     public void onItemSelected(Currency selectedItem) {
-                        ClauseInformation newClause = negotiationInfo.putClause(clause, selectedItem.getCode());
-                        triggerView.setText(selectedItem.getFriendlyName());
-                        adapter.changeItem(position, newClause);
+                        negotiationInfo.putClause(clause, selectedItem.getCode());
+                        adapter.changeDataSet(negotiationInfo);
                     }
                 });
 
@@ -153,18 +136,60 @@ public class StartNegotiationActivityFragment extends AbstractFermatFragment<Cry
 
             case CUSTOMER_PAYMENT_METHOD:
                 dialogFragment = new SimpleListDialogFragment<>();
-
                 dialogFragment.configure("Payment Methods", paymentMethods);
                 dialogFragment.setListener(new SimpleListDialogFragment.ItemSelectedListener<String>() {
                     @Override
                     public void onItemSelected(String selectedItem) {
-                        ClauseInformation newClause = negotiationInfo.putClause(clause, selectedItem);
-                        triggerView.setText(selectedItem);
-                        adapter.changeItem(position, newClause);
+                        negotiationInfo.putClause(clause, selectedItem);
+                        adapter.changeDataSet(negotiationInfo);
                     }
                 });
 
                 dialogFragment.show(getFragmentManager(), "paymentMethodsDialog");
+                break;
+
+            case BROKER_PAYMENT_METHOD:
+                dialogFragment = new SimpleListDialogFragment<>();
+
+                dialogFragment.configure("Reception Methods", paymentMethods);
+                dialogFragment.setListener(new SimpleListDialogFragment.ItemSelectedListener<String>() {
+                    @Override
+                    public void onItemSelected(String selectedItem) {
+                        negotiationInfo.putClause(clause, selectedItem);
+                        adapter.changeDataSet(negotiationInfo);
+                    }
+                });
+
+                dialogFragment.show(getFragmentManager(), "paymentMethodsDialog");
+                break;
+
+            default:
+                ClauseTextDialog clauseTextDialog = new ClauseTextDialog(getActivity(), appSession, appResourcesProviderManager);
+                clauseTextDialog.setAcceptBtnListener(new ClauseTextDialog.OnClickAcceptListener() {
+                    @Override
+                    public void onClick(String newValue) {
+                        negotiationInfo.putClause(clause, newValue);
+
+                        final Map<ClauseType, ClauseInformation> clauses = negotiationInfo.getClauses();
+
+                        final BigDecimal exchangeRate = new BigDecimal(clauses.get(ClauseType.EXCHANGE_RATE).getValue());
+                        final BigDecimal amountToBuy = new BigDecimal(clauses.get(ClauseType.CUSTOMER_CURRENCY_QUANTITY).getValue());
+                        final BigDecimal amountToSell = amountToBuy.multiply(exchangeRate);
+
+                        final String amountToSellStr = DecimalFormat.getInstance().format(amountToSell.doubleValue());
+                        final ClauseInformation brokerCurrencyQuantity = clauses.get(ClauseType.BROKER_CURRENCY_QUANTITY);
+                        negotiationInfo.putClause(brokerCurrencyQuantity, amountToSellStr);
+
+                        adapter.changeDataSet(negotiationInfo);
+                    }
+                });
+
+                clauseTextDialog.setEditTextValue(clause.getValue());
+                clauseTextDialog.configure(
+                        type.equals(ClauseType.EXCHANGE_RATE) ? R.string.ccw_your_exchange_rate : R.string.ccw_amount_to_buy,
+                        type.equals(ClauseType.EXCHANGE_RATE) ? R.string.amount : R.string.ccw_value);
+
+                clauseTextDialog.show();
                 break;
         }
     }

@@ -54,4 +54,14 @@ public class BankMoneyWalletDatabaseConstants {
 
     public static final String BANK_MONEY_ACCOUNTS_FIRST_KEY_COLUMN = "public_key";
 
+    /**
+     * nombre del banco asociado a un publickey
+     */
+    public static final String BANK_MONEY_BANK_NAME_TABLE = "bank_name";
+
+    public static final String BANK_MONEY_BANK_PUBLIC_KEY_COLUMN = "bank_name_public_key";
+    public static final String BANK_MONEY_BANK_NAME_COLUMN = "bank_name_column";
+
+    public static final String BANK_MONEY_BANK_NAME_TABLE_FIRST_KEY = "bank_name_public_key";
+
 }

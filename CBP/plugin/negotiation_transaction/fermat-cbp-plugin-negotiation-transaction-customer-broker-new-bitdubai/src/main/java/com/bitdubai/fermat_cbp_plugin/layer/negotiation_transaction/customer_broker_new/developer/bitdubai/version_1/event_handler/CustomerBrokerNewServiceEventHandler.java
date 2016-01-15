@@ -42,19 +42,19 @@ public class CustomerBrokerNewServiceEventHandler implements CBPService {
     /*SERVICE*/
     public void start() throws CantStartServiceException {
         try {
-            /**
-             * I will initialize the handling of com.bitdubai.platform events.
-             */
+        /**
+         * I will initialize the handling of com.bitdubai.platform events.
+         */
 //            System.out.print("\n\n**** X) MOCK NEGOTIATION TRANSACTION - NEGOTIATION TRANSMISSION - EVENT HANDLER - LISTENER EVENT ****\n");
-            FermatEventListener fermatEventListener;
-            FermatEventHandler fermatEventHandler;
+        FermatEventListener fermatEventListener;
+        FermatEventHandler fermatEventHandler;
 
-            fermatEventListener = eventManager.getNewListener(EventType.INCOMING_NEGOTIATION_TRANSMISSION_TRANSACTION_NEW);
-            fermatEventHandler = new IncomingNegotiationTransactionEventHandler();
-            ((IncomingNegotiationTransactionEventHandler) fermatEventHandler).setCustomerBrokerNewService(this);
-            fermatEventListener.setEventHandler(fermatEventHandler);
-            eventManager.addListener(fermatEventListener);
-            listenersAdded.add(fermatEventListener);
+        fermatEventListener = eventManager.getNewListener(EventType.INCOMING_NEGOTIATION_TRANSMISSION_TRANSACTION_NEW);
+        fermatEventHandler = new IncomingNegotiationTransactionEventHandler();
+        ((IncomingNegotiationTransactionEventHandler) fermatEventHandler).setCustomerBrokerNewService(this);
+        fermatEventListener.setEventHandler(fermatEventHandler);
+        eventManager.addListener(fermatEventListener);
+        listenersAdded.add(fermatEventListener);
 
             /*
             fermatEventListener = eventManager.getNewListener(EventType.INCOMING_CRYPTO_ON_CRYPTO_NETWORK);
@@ -65,14 +65,14 @@ public class CustomerBrokerNewServiceEventHandler implements CBPService {
             listenersAdded.add(fermatEventListener);
             */
 
-            /*fermatEventListener = eventManager.getNewListener(EventType.INCOMING_NEGOTIATION_TRANSMISSION_CONFIRM_NEW);
-            fermatEventHandler = new IncomingNegotiationTransmissionConfirmEventHandler();
-            ((IncomingNegotiationTransmissionConfirmEventHandler) fermatEventHandler).setCustomerBrokerNewService(this);
-            fermatEventListener.setEventHandler(fermatEventHandler);
-            eventManager.addListener(fermatEventListener);
-            listenersAdded.add(fermatEventListener);*/
+        fermatEventListener = eventManager.getNewListener(EventType.INCOMING_NEGOTIATION_TRANSMISSION_CONFIRM_NEW);
+        fermatEventHandler = new IncomingNegotiationTransmissionConfirmEventHandler();
+        ((IncomingNegotiationTransmissionConfirmEventHandler) fermatEventHandler).setCustomerBrokerNewService(this);
+        fermatEventListener.setEventHandler(fermatEventHandler);
+        eventManager.addListener(fermatEventListener);
+        listenersAdded.add(fermatEventListener);
 
-            this.serviceStatus = ServiceStatus.STARTED;
+        this.serviceStatus = ServiceStatus.STARTED;
 
         } catch (CantSetObjectException exception){
             throw new CantStartServiceException(exception,"Starting the CustomerBrokerNewServiceEventHandler", "The CustomerBrokerNewServiceEventHandler is probably null");
