@@ -193,13 +193,13 @@ public class NegotiationTransactionCustomerBrokerClosePluginRoot extends Abstrac
 
              //TEST
              //TEST CREATE CUSTOMER BROKER CLOSE PURCHASE NEGOTIATION
-             createCustomerBrokerClosePurchaseNegotiationTest();
+//             createCustomerBrokerClosePurchaseNegotiationTest();
 
              //TEST CREATE CUSTOMER BROKER CLOSE SALE NEGOTIATION
 //             createCustomerBrokerCloseSaleNegotiationTest();
 //
              //TEST LIST PURCHASE NEGOTIATION
-             getAllPurchaseNegotiationTest();
+//             getAllPurchaseNegotiationTest();
 
              //TEST LIST PURCHASE NEGOTIATION
 //             getAllSaleNegotiationTest();
