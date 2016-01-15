@@ -66,6 +66,7 @@ import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.ChatManager;
  *
  * @author Jose Cardozo josejcb (josejcb89@gmail.com) on 30/12/15.
  * @version 1.0
+ * Update by Miguel Payarez on 15/01/2016 (android-module connection with send button)
  */
 
 public class ChatFragment extends AbstractFermatFragment  {//ActionBarActivity
