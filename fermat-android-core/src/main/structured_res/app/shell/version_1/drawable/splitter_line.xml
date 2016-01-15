@@ -8,5 +8,7 @@
         android:centerColor="#35a89a"
         android:endColor="#d0eae6"/>
 
+    <padding android:left="4dp" android:right="4dp"/>
+
 
     </shape>
