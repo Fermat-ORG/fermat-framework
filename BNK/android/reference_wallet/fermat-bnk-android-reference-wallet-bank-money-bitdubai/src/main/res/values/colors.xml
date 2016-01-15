@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="background_header">#406feb</color>
+    <color name="background_header">#ffffff</color>
+    <color name="background_header_blue">#108be9</color>
     <color name="background_body">#E2F0FF</color>
     <color name="background_tab_pressed">#6633B5E5</color>
     <color name="black_overlay">#66000000</color>
@@ -10,8 +11,20 @@
     <color name="fab_red_background">#FF2A1A</color>
     <color name="fab_normal">#6633B5E5</color>
     <color name="white">#ffffff</color>
+    <color name="black">#400F4D</color>
     <color name="fab_black_semi_transparent">#B2000000</color>
 
     <color name="bnk_fab_color_normal_w">#FD0018</color>
     <color name="bnk_fab_color_normal_d">#00B8FE</color>
+    <color name="background_header_navy">#074264</color>
+
+    <color name="text_color_white">#ffffff</color>
+    <color name="text_color_blue">#07A3E3</color>
+    <color name="text_color_soft_blue">#01EAFF</color>
+    <color name="text_color_blue_navy">#0584BA</color>
+    <color name="text_color_soft_grey">#CCCFD2</color>
+    <color name="faded_navy_60">#99074264</color>
+    <color name="faded_navy_20">#33074264</color>
+    <color name="faded_black_60">#ad000000</color>
+    <color name="faded_black_20">#87000000</color>
 </resources>

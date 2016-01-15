@@ -157,7 +157,7 @@ public class CustomerBrokerCloseAgent  implements
 
         this.agentThread = new Thread(monitorAgentTransaction);
         this.agentThread.start();
-        System.out.print("-----------------------\n CUSTOMER BROKER CLOSE AGENT: SUCCESSFUL START \n-----------------------\n");
+//        System.out.print("-----------------------\n CUSTOMER BROKER CLOSE AGENT: SUCCESSFUL START \n-----------------------\n");
     }
 
     @Override

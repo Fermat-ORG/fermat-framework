@@ -14,10 +14,36 @@ import java.util.UUID;
 
 public interface CryptoBrokerActorManager extends FermatManager {
 
+    /**
+     *
+     * @param identity
+     * @param wallet
+     * @return
+     * @throws CantCreateNewBrokerIdentityWalletRelationshipException
+     */
     BrokerIdentityWalletRelationship createNewBrokerIdentityWalletRelationship(ActorIdentity identity, UUID wallet) throws CantCreateNewBrokerIdentityWalletRelationshipException;
 
+    /**
+     *
+     * @return
+     * @throws CantGetListBrokerIdentityWalletRelationshipException
+     */
     Collection<BrokerIdentityWalletRelationship> getAllBrokerIdentityWalletRelationship() throws CantGetListBrokerIdentityWalletRelationshipException;
+
+    /**
+     *
+     * @param identity
+     * @return
+     * @throws CantGetListBrokerIdentityWalletRelationshipException
+     */
     BrokerIdentityWalletRelationship getBrokerIdentityWalletRelationshipByIdentity(ActorIdentity identity) throws CantGetListBrokerIdentityWalletRelationshipException;
+
+    /**
+     *
+     * @param wallet
+     * @return
+     * @throws CantGetListBrokerIdentityWalletRelationshipException
+     */
     BrokerIdentityWalletRelationship getBrokerIdentityWalletRelationshipByWallet(UUID wallet) throws CantGetListBrokerIdentityWalletRelationshipException;
 
 }

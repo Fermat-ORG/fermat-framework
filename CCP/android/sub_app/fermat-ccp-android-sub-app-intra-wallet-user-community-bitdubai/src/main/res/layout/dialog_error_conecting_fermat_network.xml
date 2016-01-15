@@ -18,7 +18,7 @@
             android:layout_gravity="center"
             android:paddingBottom="16dp"
             android:paddingTop="16dp"
-            android:src="@drawable/img_dialog_connect"
+            android:src="@drawable/img_network_fermat"
             tools:ignore="ContentDescription" />
 
         <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
@@ -31,20 +31,6 @@
             android:paddingRight="8dp"
             android:paddingStart="8dp"
             android:text="You are not connected to"
-            android:textColor="#ffffff"
-            android:textSize="16sp"
-            tools:ignore="HardcodedText" />
-
-        <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
-            android:id="@+id/second_description"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:gravity="center"
-            android:paddingEnd="8dp"
-            android:paddingLeft="8dp"
-            android:paddingRight="8dp"
-            android:paddingStart="8dp"
-            android:text="the fermat network"
             android:textColor="#ffffff"
             android:textSize="16sp"
             tools:ignore="HardcodedText" />

@@ -107,6 +107,7 @@ public class ConnectionsWorldFragment extends AbstractFermatFragment implements
     private ImageView closeSearch;
     private LinearLayout searchEmptyView;
     private LinearLayout noNetworkView;
+    private LinearLayout noFermatNetworkView;
 
     /**
      * Create a new instance of this fragment
@@ -193,6 +194,7 @@ public class ConnectionsWorldFragment extends AbstractFermatFragment implements
             emptyView = (LinearLayout) rootView.findViewById(R.id.empty_view);
             searchEmptyView = (LinearLayout) rootView.findViewById(R.id.search_empty_view);
             noNetworkView = (LinearLayout) rootView.findViewById(R.id.no_connection_view);
+            noFermatNetworkView = (LinearLayout) rootView.findViewById(R.id.no_fermat_connection_view);
             dataSet.addAll(moduleManager.getCacheSuggestionsToContact(MAX, offset));
             if (intraUserWalletSettings.isPresentationHelpEnabled()) {
                 showDialogHelp();
@@ -208,16 +210,35 @@ public class ConnectionsWorldFragment extends AbstractFermatFragment implements
 
     public void showErrorNetworkDialog() {
         ErrorConnectingFermatNetworkDialog errorConnectingFermatNetworkDialog = new ErrorConnectingFermatNetworkDialog(getActivity(), intraUserSubAppSession, null);
-        errorConnectingFermatNetworkDialog.setErrorConnectingFermatNetwork(new ErrorConnectingFermatNetwork() {
+        errorConnectingFermatNetworkDialog.setDescription("You are not connected  /n to the Fermat Network");
+        errorConnectingFermatNetworkDialog.setRightButton("Connect", new View.OnClickListener() {
             @Override
-            public void errorConnectingFermatNetwork(boolean connected) {
-                if (!connected) {
-                    showEmpty(true, noNetworkView);
-                    showEmpty(false, emptyView);
-                    showEmpty(false, searchEmptyView);
-                } else {
-                    showCriptoUsersCache();
-                }
+            public void onClick(View v) {
+
+            }
+        });
+        errorConnectingFermatNetworkDialog.setLeftButton("Cancel", new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+            }
+        });
+        errorConnectingFermatNetworkDialog.show();
+    }
+
+    public void showErrorFermatNetworkDialog() {
+        ErrorConnectingFermatNetworkDialog errorConnectingFermatNetworkDialog = new ErrorConnectingFermatNetworkDialog(getActivity(), intraUserSubAppSession, null);
+        errorConnectingFermatNetworkDialog.setDescription("The access to the /n Fermat Network is disabled.");
+        errorConnectingFermatNetworkDialog.setRightButton("Enable", new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+            }
+        });
+        errorConnectingFermatNetworkDialog.setLeftButton("Cancel", new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
             }
         });
         errorConnectingFermatNetworkDialog.show();

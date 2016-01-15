@@ -143,7 +143,7 @@ public class CustomerBrokerUpdateAgent implements
 
         this.agentThread = new Thread(monitorAgentTransaction);
         this.agentThread.start();
-        System.out.print("-----------------------\n CUSTOMER BROKER UPDATE AGENT: SUCCESSFUL START \n-----------------------\n");
+//        System.out.print("-----------------------\n CUSTOMER BROKER UPDATE AGENT: SUCCESSFUL START \n-----------------------\n");
     }
 
     @Override

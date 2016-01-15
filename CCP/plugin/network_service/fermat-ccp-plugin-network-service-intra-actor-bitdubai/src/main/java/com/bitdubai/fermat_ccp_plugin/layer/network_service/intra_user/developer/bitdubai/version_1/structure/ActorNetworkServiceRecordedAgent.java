@@ -379,7 +379,6 @@ public class ActorNetworkServiceRecordedAgent extends FermatAgent{
                                 "ENVIANDO MENSAJE:" + actorNetworkServiceRecord.getActorDestinationPublicKey()
                                 + "\n-------------------------------------------------");
 
-                        Gson gson = new Gson();
 
                         communicationNetworkServiceLocal.sendMessage(
                                 actorNetworkServiceRecord.getActorSenderPublicKey(),

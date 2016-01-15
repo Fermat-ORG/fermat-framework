@@ -68,7 +68,7 @@ public class AssetDistributionDigitalAssetTransactionPluginRoot extends Abstract
         DatabaseManagerForDevelopers,
         LogManagerForDevelopers {
 
-    public static long DELIVERING_TIMEOUT = 3 /*MINUTES!!*/ * 60 * 1000;
+    public static long DELIVERING_TIMEOUT = 1 /*MINUTES!!*/ * 40 * 1000;
     public static long BROADCASTING_MAX_ATTEMPT_NUMBER = 10;
     static Map<String, LogLevel> newLoggingLevel = new HashMap<String, LogLevel>();
     @NeededAddonReference(platform = Platforms.OPERATIVE_SYSTEM_API, layer = Layers.SYSTEM, addon = Addons.PLUGIN_FILE_SYSTEM)

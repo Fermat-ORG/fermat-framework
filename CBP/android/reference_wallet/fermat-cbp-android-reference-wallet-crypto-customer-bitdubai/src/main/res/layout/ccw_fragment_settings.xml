@@ -86,7 +86,7 @@
             android:layout_gravity="center_vertical"
             android:layout_weight="1"
             android:gravity="left"
-            android:text="WALLET MANAGMENT"
+            android:text="WALLET MANAGEMENT"
             android:textSize="16dp"
             android:textColor="@color/white"/>
 

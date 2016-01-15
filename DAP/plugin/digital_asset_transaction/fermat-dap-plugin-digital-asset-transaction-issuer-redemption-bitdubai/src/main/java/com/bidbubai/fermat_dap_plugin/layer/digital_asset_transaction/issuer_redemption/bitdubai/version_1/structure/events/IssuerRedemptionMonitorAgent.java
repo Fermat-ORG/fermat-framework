@@ -11,12 +11,15 @@ import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_pro
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantLoadTableToMemoryException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantUpdateRecordException;
+import com.bitdubai.fermat_bch_api.layer.crypto_module.crypto_address_book.interfaces.CryptoAddressBookManager;
+import com.bitdubai.fermat_bch_api.layer.crypto_module.crypto_address_book.interfaces.CryptoAddressBookRecord;
+import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.exceptions.CantGetCryptoTransactionException;
 import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.interfaces.BitcoinNetworkManager;
+import com.bitdubai.fermat_bch_api.layer.crypto_vault.asset_vault.interfaces.AssetVaultManager;
 import com.bitdubai.fermat_dap_api.layer.all_definition.digital_asset.DigitalAssetMetadata;
 import com.bitdubai.fermat_dap_api.layer.all_definition.enums.DAPMessageType;
 import com.bitdubai.fermat_dap_api.layer.all_definition.exceptions.CantSetObjectException;
 import com.bitdubai.fermat_dap_api.layer.all_definition.network_service_message.DAPMessage;
-import com.bitdubai.fermat_dap_api.layer.all_definition.network_service_message.content_message.AssetRedeemedContentMessage;
 import com.bitdubai.fermat_dap_api.layer.all_definition.util.Validate;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_issuer.interfaces.ActorAssetIssuerManager;
 import com.bitdubai.fermat_dap_api.layer.dap_actor_network_service.asset_issuer.exceptions.CantGetIssuerNetworkServiceMessageListException;
@@ -40,26 +43,29 @@ import java.util.UUID;
  */
 public class IssuerRedemptionMonitorAgent implements Agent {
 
-    private final AssetIssuerActorNetworkServiceManager assetIssuerActorNetworkServiceManager;
     private final ErrorManager errorManager;
     private MonitorAgent agent;
     private IssuerRedemptionDao issuerRedemptionDao;
     private AssetIssuerWalletManager assetIssuerWalletManager;
     private BitcoinNetworkManager bitcoinNetworkManager;
     private ActorAssetIssuerManager actorAssetIssuerManager;
+    private CryptoAddressBookManager cryptoAddressBookManager;
+    private AssetVaultManager assetVaultManager;
 
-    public IssuerRedemptionMonitorAgent(AssetIssuerActorNetworkServiceManager assetIssuerActorNetworkServiceManager,
-                                        AssetIssuerWalletManager assetIssuerWalletManager,
+    public IssuerRedemptionMonitorAgent(AssetIssuerWalletManager assetIssuerWalletManager,
                                         ActorAssetIssuerManager actorAssetIssuerManager,
                                         BitcoinNetworkManager bitcoinNetworkManager,
+                                        CryptoAddressBookManager cryptoAddressBookManager,
                                         ErrorManager errorManager,
                                         UUID pluginId,
-                                        PluginDatabaseSystem pluginDatabaseSystem) throws CantSetObjectException, CantExecuteDatabaseOperationException {
+                                        PluginDatabaseSystem pluginDatabaseSystem,
+                                        AssetVaultManager assetVaultManager) throws CantSetObjectException, CantExecuteDatabaseOperationException {
         this.assetIssuerWalletManager = Validate.verifySetter(assetIssuerWalletManager, "assetIssuerWalletManager is null");
         this.errorManager = Validate.verifySetter(errorManager, "errorManager is null");
-        this.assetIssuerActorNetworkServiceManager = Validate.verifySetter(assetIssuerActorNetworkServiceManager, "assetIssuerActorNetworkServiceManager  is null");
         this.bitcoinNetworkManager = Validate.verifySetter(bitcoinNetworkManager, "bitcoinNetworkManager is null");
         this.actorAssetIssuerManager = Validate.verifySetter(actorAssetIssuerManager, "actorAssetIssuerManager is null");
+        this.cryptoAddressBookManager = Validate.verifySetter(cryptoAddressBookManager, "cryptoAddressBookManager is null");
+        this.assetVaultManager = Validate.verifySetter(assetVaultManager, "assetVaultManager is null");
         issuerRedemptionDao = new IssuerRedemptionDao(pluginId, pluginDatabaseSystem);
     }
 
@@ -110,21 +116,21 @@ public class IssuerRedemptionMonitorAgent implements Agent {
 
 
         private void doTheMainTask() throws Exception {
-            checkPendingMessages();
             checkPendingCryptoRouterEvents();
-
         }
 
         public void checkPendingCryptoRouterEvents() throws Exception {
             for (String eventId : issuerRedemptionDao.getPendingCryptoRouterEvents()) {
+                boolean notify = true;
                 switch (issuerRedemptionDao.getEventTypeById(eventId)) {
-                    case INCOMING_ASSET_ON_CRYPTO_NETWORK_WAITING_TRANSFERENCE_ASSET_USER: {
+                    case INCOMING_ASSET_ON_CRYPTO_NETWORK_WAITING_TRANSFERENCE_REDEMPTION: {
                         AssetIssuerWallet wallet = assetIssuerWalletManager.loadAssetIssuerWallet("walletPublicKeyTest");
                         for (DigitalAssetMetadata digitalAssetMetadata : wallet.getAllUsedAssets()) {
                             CryptoTransaction cryptoTransactionOnCryptoNetwork = AssetVerification.getCryptoTransactionFromCryptoNetworkByCryptoStatus(bitcoinNetworkManager, digitalAssetMetadata.getGenesisTransaction(), CryptoStatus.ON_CRYPTO_NETWORK);
-                            if (cryptoTransactionOnCryptoNetwork == null)
+                            if (cryptoTransactionOnCryptoNetwork == null) {
+                                notify = false;
                                 continue; //NOT TODAY KID.
-
+                            }
                             String publicKeyFrom = wallet.getUserDeliveredToPublicKey(digitalAssetMetadata.getDigitalAsset().getPublicKey());
                             digitalAssetMetadata.setGenesisBlock(cryptoTransactionOnCryptoNetwork.getBlockHash());
                             digitalAssetMetadata.setGenesisTransaction(cryptoTransactionOnCryptoNetwork.getTransactionHash());
@@ -136,45 +142,46 @@ public class IssuerRedemptionMonitorAgent implements Agent {
                         }
                         break;
                     }
-                    case INCOMING_ASSET_ON_BLOCKCHAIN_WAITING_TRANSFERENCE_ASSET_USER: {
+                    case INCOMING_ASSET_ON_BLOCKCHAIN_WAITING_TRANSFERENCE_REDEMPTION: {
                         AssetIssuerWallet wallet = assetIssuerWalletManager.loadAssetIssuerWallet("walletPublicKeyTest");
                         for (DigitalAssetMetadata digitalAssetMetadata : wallet.getAllUsedAssets()) {
-                            CryptoTransaction cryptoTransactionOnCryptoNetwork = AssetVerification.getCryptoTransactionFromCryptoNetworkByCryptoStatus(bitcoinNetworkManager, digitalAssetMetadata.getGenesisTransaction(), CryptoStatus.ON_BLOCKCHAIN);
-                            if (cryptoTransactionOnCryptoNetwork == null) continue; //NOT TODAY KID.
+                            CryptoTransaction cryptoTx;
+                            try {
+                                cryptoTx = getCryptoTx(digitalAssetMetadata);
+                            } catch (CantGetCryptoTransactionException e) {
+                                //WAIT FOR IT...
+                                notify = false;
+                                continue;
+                            }
+                            CryptoAddressBookRecord bookRecord = cryptoAddressBookManager.getCryptoAddressBookRecordByCryptoAddress(cryptoTx.getAddressTo());
                             String publicKeyFrom = wallet.getUserDeliveredToPublicKey(digitalAssetMetadata.getDigitalAsset().getPublicKey());
                             String publicKeyTo = actorAssetIssuerManager.getActorAssetIssuer().getActorPublicKey();
-                            AssetIssuerWalletTransactionRecordWrapper recordWrapper = new AssetIssuerWalletTransactionRecordWrapper(digitalAssetMetadata, cryptoTransactionOnCryptoNetwork, publicKeyFrom, publicKeyTo);
+                            AssetIssuerWalletTransactionRecordWrapper recordWrapper = new AssetIssuerWalletTransactionRecordWrapper(digitalAssetMetadata, cryptoTx, publicKeyFrom, publicKeyTo);
                             wallet.getBalance().credit(recordWrapper, BalanceType.AVAILABLE);
-                            //TODO GET REDEEM POINT PK
-                            wallet.assetRedeemed(digitalAssetMetadata.getDigitalAsset().getPublicKey(), null, "REPO PK");
+                            wallet.assetRedeemed(digitalAssetMetadata.getDigitalAsset().getPublicKey(), null, bookRecord.getDeliveredToActorPublicKey());
+
+                            /**
+                             * Notifies the Asset Vault that the address of this Redeem Point, has been used.
+                             */
+                            assetVaultManager.notifyUsedRedeemPointAddress(bookRecord.getCryptoAddress(), bookRecord.getDeliveredToActorPublicKey());
                         }
                     }
                     break;
-                    case INCOMING_ASSET_REVERSED_ON_BLOCKCHAIN_WAITING_TRANSFERENCE_ASSET_USER:
+                    case INCOMING_ASSET_REVERSED_ON_CRYPTO_NETWORK_WAITING_TRANSFERENCE_REDEMPTION:
                         break;
-                    case INCOMING_ASSET_REVERSED_ON_CRYPTO_NETWORK_WAITING_TRANSFERENCE_ASSET_USER:
+                    case INCOMING_ASSET_REVERSED_ON_BLOCKCHAIN_WAITING_TRANSFERENCE_REDEMPTION:
                         break;
                 }
-                issuerRedemptionDao.notifyEvent(eventId);
+                if (notify) {
+                    issuerRedemptionDao.notifyEvent(eventId);
+                }
             }
         }
 
-        public void checkPendingMessages() throws CantLoadIssuerRedemptionEventListException, CantGetIssuerNetworkServiceMessageListException, CantLoadWalletException, RecordsNotFoundException, CantGetAssetStatisticException, CantUpdateRecordException, CantLoadTableToMemoryException {
-            for (String eventId : issuerRedemptionDao.getPendingNewReceiveMessageActorEvents()) {
-                for (DAPMessage message : assetIssuerActorNetworkServiceManager.getUnreadDAPMessagesByType(DAPMessageType.ASSET_REDEEMED)) {
-                    if (message.getMessageContent() instanceof AssetRedeemedContentMessage) { //Just a security measure, this SHOULD always be true.
-                        AssetRedeemedContentMessage contentMessage = (AssetRedeemedContentMessage) message.getMessageContent();
-                        //TODO REMOVE HARDCODE.
-                        AssetIssuerWallet wallet = assetIssuerWalletManager.loadAssetIssuerWallet("walletPublicKeyTest");
-                        wallet.assetRedeemed(contentMessage.getAssetRedeemedPublicKey(),
-                                contentMessage.getUserThatRedeemed(),
-                                contentMessage.getRedeemPointPublicKey());
-                    }
-                }
-                issuerRedemptionDao.notifyEvent(eventId);
-            }
+        private CryptoTransaction getCryptoTx(DigitalAssetMetadata digitalAssetMetadata) throws CantGetCryptoTransactionException {
+            CryptoTransaction lastTx = bitcoinNetworkManager.getLastChildCryptoTransaction(null, digitalAssetMetadata.getGenesisTransaction(), digitalAssetMetadata.getGenesisBlock());
+            return bitcoinNetworkManager.getCryptoTransaction(lastTx.getTransactionHash());
         }
-
 
         public void stopAgent() {
             agentRunning = false;

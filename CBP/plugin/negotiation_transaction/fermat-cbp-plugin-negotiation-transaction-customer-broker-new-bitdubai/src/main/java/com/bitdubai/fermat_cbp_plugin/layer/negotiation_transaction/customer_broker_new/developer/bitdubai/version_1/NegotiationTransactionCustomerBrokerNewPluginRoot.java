@@ -35,6 +35,7 @@ import com.bitdubai.fermat_cbp_api.all_definition.exceptions.CantStartServiceExc
 import com.bitdubai.fermat_cbp_api.all_definition.negotiation.Clause;
 import com.bitdubai.fermat_cbp_api.all_definition.negotiation_transaction.NegotiationPurchaseRecord;
 import com.bitdubai.fermat_cbp_api.layer.business_transaction.common.mocks.ClauseMock;
+import com.bitdubai.fermat_cbp_api.layer.negotiation.customer_broker_purchase.exceptions.CantCreateCustomerBrokerPurchaseNegotiationException;
 import com.bitdubai.fermat_cbp_api.layer.negotiation.customer_broker_purchase.exceptions.CantGetListPurchaseNegotiationsException;
 import com.bitdubai.fermat_cbp_api.layer.negotiation.customer_broker_purchase.interfaces.CustomerBrokerPurchaseNegotiation;
 import com.bitdubai.fermat_cbp_api.layer.negotiation.customer_broker_purchase.interfaces.CustomerBrokerPurchaseNegotiationManager;
@@ -169,15 +170,27 @@ public class NegotiationTransactionCustomerBrokerNewPluginRoot extends AbstractP
                     customerBrokerSaleNegotiationManager
 
             );
+            customerBrokerNewAgent.start();
+
+            //DELETE TRANSACTION FOR TEST
+//            System.out.print("\n**** MOCK CUSTOMER BROKER NEW. PURCHASE NEGOTIATION. DELETE ALL FOR TEST ****\n");
+//            customerBrokerNewNegotiationTransactionDatabaseDao.deleteAllForTest();
 
             //TEST MOCK
-//            customerBrokerNewPurchaseNegotiationTest();
+//            createCustomerBrokerNewPurchaseNegotiationTest();
 
-            customerBrokerNewAgent.start();
+            //TEST MOCK GET ALL TRANSACTIONk
+//            getAllCustomerBrokerNewNegotiationTranasctionTest();
+
+            //TEST MOCK CREATE AND GET NEGOTIATION
+//            createNegotiationsTest();
+
+            //TEST MOCK GET ALL NEGOTIATION
+//            getNegotiationsTest();
 
             //Startes Service
             this.serviceStatus = ServiceStatus.STARTED;
-            System.out.print("-----------------------\n CUSTOMER BROKER NEW: SUCCESSFUL START \n-----------------------\n");
+//            System.out.print("-----------------------\n CUSTOMER BROKER NEW: SUCCESSFUL START \n-----------------------\n");
 
         } catch (CantInitializeCustomerBrokerNewNegotiationTransactionDatabaseException e){
             errorManager.reportUnexpectedPluginException(Plugins.CUSTOMER_BROKER_NEW, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN,e);
@@ -292,11 +305,14 @@ public class NegotiationTransactionCustomerBrokerNewPluginRoot extends AbstractP
         }
     }
 
-    private void customerBrokerNewPurchaseNegotiationTest() {
+    private void createCustomerBrokerNewPurchaseNegotiationTest() {
 
         try {
+
+            System.out.print("\n**** MOCK NEGOTIATION TRANSACTION - CUSTOMER BROKER NEW - PLUGINROOT - PURCHASE NEGOTIATION TEST: createCustomerBrokerNewPurchaseNegotiationTranasction() ****\n");
+
             CustomerBrokerPurchaseNegotiation negotiationMock = purchaseNegotiationMockTest();
-            System.out.print("\n\n**** 1) MOCK CUSTOMER BROKER NEW. PURCHASE NEGOTIATION. PLUGINROOT ****\n" +
+            System.out.print("\n\n**** 1) MOCK NEGOTIATION TRANSACTION - CUSTOMER BROKER NEW - PLUGINROOT - PURCHASE NEGOTIATION ****\n" +
                             "\n------------------------------- NEGOTIATION PURCHASE MOCK -------------------------------" +
                             "\n*CustomerPublicKey = " + negotiationMock.getCustomerPublicKey() +
                             "\n*BrokerPublicKey = " + negotiationMock.getBrokerPublicKey()
@@ -344,70 +360,120 @@ public class NegotiationTransactionCustomerBrokerNewPluginRoot extends AbstractP
                 }else{ System.out.print("\n\n\n --- NegotiationXML Date: purchaseNegotiationXML IS NOT INSTANCE OF NegotiationPurchaseRecord");}
             }else{ System.out.print("\n\n\n --- NegotiationXML Date IS NULL"); }
 
-            //GET NEGOTIATION OF THE TRANSACTION.
-            /*CustomerBrokerPurchaseNegotiation purchaseNegotiation = customerBrokerPurchaseNegotiationManager.getNegotiationsByNegotiationId(negotiationMock.getNegotiationId());
-            System.out.print("\n\n\n --- Negotiation Date" +
-                            "\n- NegotiationId = " + purchaseNegotiation.getNegotiationId() +
-                            "\n- CustomerPublicKey" + purchaseNegotiation.getCustomerPublicKey() +
-                            "\n- BrokerPublicKey" + purchaseNegotiation.getBrokerPublicKey() +
-                            "\n- Status" + purchaseNegotiation.getStatus().getCode()
-            );*/
+        } catch (CantCreateCustomerBrokerNewPurchaseNegotiationTransactionException e) {
+            System.out.print("\n**** MOCK CUSTOMER BROKER NEW. PURCHASE NEGOTIATION. ERROR CREATE CUSTOMER BROKER NEW. ****\n");
+        } catch (CantRegisterCustomerBrokerNewNegotiationTransactionException e){
+            System.out.print("\n**** MOCK CUSTOMER BROKER NEW. PURCHASE NEGOTIATION. ERROR LIST CUSTOMER BROKER NEW NOT FOUNT. ****\n");
+        }
 
+    }
+
+    private void getAllCustomerBrokerNewNegotiationTranasctionTest() {
+
+        try {
+
+            System.out.print("\n**** MOCK CUSTOMER BROKER NEW. PURCHASE NEGOTIATION. TEST: getAllCustomerBrokerNewNegotiationTranasction() ****\n");
             //LIST CUSTOMER BROKER NEW TRANSACTION.
-            /*List<CustomerBrokerNew> list = customerBrokerNewManagerImpl.getAllCustomerBrokerNewNegotiationTranasction();
-            if(!list.isEmpty()) {
+            List<CustomerBrokerNew> list = customerBrokerNewManagerImpl.getAllCustomerBrokerNewNegotiationTranasction();
+            if (!list.isEmpty()) {
 
                 System.out.print("\n\n\n\n------------------------------- LIST NEGOTIATION TRANSACTION -------------------------------");
                 for (CustomerBrokerNew ListNegotiation : list) {
 
                     System.out.print("\n\n --- Negotiation Transaction Date" +
-                        "\n- NegotiationId = " + ListNegotiation.getNegotiationId() +
-                        "\n- TransactionId = " + ListNegotiation.getTransactionId() +
-                        "\n- CustomerPublicKey = " + ListNegotiation.getPublicKeyCustomer() +
-                        "\n- BrokerPublicKey = " + ListNegotiation.getPublicKeyBroker() +
-                        "\n- NegotiationType = " + ListNegotiation.getNegotiationType().getCode() +
-                        "\n- StatusTransaction = " + ListNegotiation.getStatusTransaction().getCode()
+                                    "\n- NegotiationId = " + ListNegotiation.getNegotiationId() +
+                                    "\n- TransactionId = " + ListNegotiation.getTransactionId() +
+                                    "\n- CustomerPublicKey = " + ListNegotiation.getPublicKeyCustomer() +
+                                    "\n- BrokerPublicKey = " + ListNegotiation.getPublicKeyBroker() +
+                                    "\n- NegotiationType = " + ListNegotiation.getNegotiationType().getCode() +
+                                    "\n- StatusTransaction = " + ListNegotiation.getStatusTransaction().getCode()
                     );
-
 
                     //GET NEGOTIATION OF XML
                     if (ListNegotiation.getNegotiationXML() != null) {
+                        CustomerBrokerPurchaseNegotiation purchaseNegotiationXML = new NegotiationPurchaseRecord();
                         System.out.print("\n- NegotiationXML = " + ListNegotiation.getNegotiationXML());
-                        CustomerBrokerPurchaseNegotiation purchaseNegotiationTestXML = new NegotiationPurchaseRecord();
-                        purchaseNegotiationXML = (CustomerBrokerPurchaseNegotiation) XMLParser.parseXML(ListNegotiation.getNegotiationXML(), purchaseNegotiationTestXML);
-                        if(purchaseNegotiationXML.getNegotiationId() != null) {
+                        purchaseNegotiationXML = (CustomerBrokerPurchaseNegotiation) XMLParser.parseXML(ListNegotiation.getNegotiationXML(), purchaseNegotiationXML);
+                        if (purchaseNegotiationXML.getNegotiationId() != null) {
                             System.out.print("\n\n\n --- NegotiationXML Date" +
                                             "\n- NegotiationId = " + purchaseNegotiationXML.getNegotiationId() +
                                             "\n- CustomerPublicKey" + purchaseNegotiationXML.getCustomerPublicKey() +
                                             "\n- BrokerPublicKey" + purchaseNegotiationXML.getBrokerPublicKey() +
                                             "\n- Status" + purchaseNegotiationXML.getStatus().getCode()
                             );
-                        }else{ System.out.print("\n\n\n --- NegotiationXML Date: purchaseNegotiationXML IS NOT INSTANCE OF NegotiationPurchaseRecord");}
-                    }else{
+                        } else {
+                            System.out.print("\n\n\n --- NegotiationXML Date: purchaseNegotiationXML IS NOT INSTANCE OF NegotiationPurchaseRecord");
+                        }
+                    } else {
                         System.out.print("\n\n\n --- NegotiationXML Date IS NULL");
                     }
-
-                    //GET NEGOTIATION OF THE TRANSACTION.
-
-                    CustomerBrokerPurchaseNegotiation purchaseNegotiation = customerBrokerPurchaseNegotiationManager.getNegotiationsByNegotiationId(ListNegotiation.getNegotiationId());
-                    System.out.print("\n\n\n --- Negotiation Date" +
-                        "\n- NegotiationId = " + purchaseNegotiation.getNegotiationId() +
-                        "\n- CustomerPublicKey" + purchaseNegotiation.getCustomerPublicKey() +
-                        "\n- BrokerPublicKey" + purchaseNegotiation.getBrokerPublicKey() +
-                        "\n- Status" + purchaseNegotiation.getStatus().getCode()
-                    );
                 }
                 System.out.print("\n\n------------------------------- END LIST NEGOTIATION TRANSACTION -------------------------------");
-            }else{
+            } else {
                 System.out.print("\n**** MOCK CUSTOMER BROKER NEW. PURCHASE NEGOTIATION. ERROR LIST CUSTOMER BROKER NEW IS EMPTY . ****\n");
-            }*/
+            }
 
-        } catch (CantCreateCustomerBrokerNewPurchaseNegotiationTransactionException e) {
-            System.out.print("\n**** MOCK CUSTOMER BROKER NEW. PURCHASE NEGOTIATION. ERROR CREATE CUSTOMER BROKER NEW. ****\n");
-        } catch (CantRegisterCustomerBrokerNewNegotiationTransactionException e){
-            System.out.print("\n**** MOCK CUSTOMER BROKER NEW. PURCHASE NEGOTIATION. ERROR LIST CUSTOMER BROKER NEW NOT FOUNT. ****\n");
-//        }catch (CantGetListPurchaseNegotiationsException e){
-//            System.out.print("\n**** MOCK CUSTOMER BROKER NEW. PURCHASE NEGOTIATION. ERROR GET CUSTOMER BROKER PURCHASE NEGOTIATION NOT FOUNT. ****\n");
+        } catch (CantGetListCustomerBrokerNewNegotiationTransactionException e){
+            System.out.print("\n**** MOCK CUSTOMER BROKER NEW. PURCHASE NEGOTIATION. ERROR GET ALL CUSTOMER BROKER PURCHASE NEGOTIATION NOT FOUNT. ****\n");
+        }
+    }
+
+    private void createNegotiationsTest() {
+
+        try {
+
+            System.out.print("\n**** MOCK CUSTOMER BROKER NEW. PURCHASE NEGOTIATION. TEST: CreateNegotiation and GetNegotiation ****\n");
+
+            //MOCK NEGOTIATION
+            CustomerBrokerPurchaseNegotiation negotiationMock = purchaseNegotiationMockTest();
+
+            //CREATE NEGOTIATION
+            customerBrokerPurchaseNegotiationManager.createCustomerBrokerPurchaseNegotiation(negotiationMock);
+
+            //GET NEGOTIATION
+            CustomerBrokerPurchaseNegotiation purchaseNegotiation = customerBrokerPurchaseNegotiationManager.getNegotiationsByNegotiationId(negotiationMock.getNegotiationId());
+            if(purchaseNegotiation != null) {
+                System.out.print("\n\n\n --- Negotiation Date" +
+                                "\n- NegotiationId = " + purchaseNegotiation.getNegotiationId() +
+                                "\n- CustomerPublicKey" + purchaseNegotiation.getCustomerPublicKey() +
+                                "\n- BrokerPublicKey" + purchaseNegotiation.getBrokerPublicKey() +
+                                "\n- Status" + purchaseNegotiation.getStatus().getCode()
+                );
+            }else{ System.out.print("\n\n\n --- Negotiation Date IS NULL"); }
+
+        } catch (CantCreateCustomerBrokerPurchaseNegotiationException e){
+            System.out.print("\n**** MOCK CUSTOMER BROKER NEW. PURCHASE NEGOTIATION. ERROR GET CUSTOMER BROKER PURCHASE NEGOTIATION NOT FOUNT. ****\n");
+        } catch (CantGetListPurchaseNegotiationsException e){
+            System.out.print("\n**** MOCK CUSTOMER BROKER NEW. PURCHASE NEGOTIATION. ERROR GET CUSTOMER BROKER PURCHASE NEGOTIATION NOT FOUNT. ****\n");
+        }
+    }
+
+    private void getNegotiationsTest(){
+
+        try{
+
+            System.out.print("\n**** MOCK CUSTOMER BROKER NEW. PURCHASE NEGOTIATION. TEST: getNegotiation() ****\n");
+
+            System.out.print("\n\n\n\n------------------------------- LIST NEGOTIATION -------------------------------");
+            Collection<CustomerBrokerPurchaseNegotiation> list = customerBrokerPurchaseNegotiationManager.getNegotiations();
+            if(list != null){
+                for (CustomerBrokerPurchaseNegotiation purchaseNegotiation : list) {
+
+                    System.out.print("\n\n\n --- Negotiation Date" +
+                                    "\n- NegotiationId = " + purchaseNegotiation.getNegotiationId() +
+                                    "\n- CustomerPublicKey" + purchaseNegotiation.getCustomerPublicKey() +
+                                    "\n- BrokerPublicKey" + purchaseNegotiation.getBrokerPublicKey() +
+                                    "\n- Status" + purchaseNegotiation.getStatus().getCode()
+                    );
+
+                }
+            }else{ System.out.print("\n\n\n --- List Negotiation IS NULL"); }
+
+            System.out.print("\n\n\n\n------------------------------- END LIST NEGOTIATION -------------------------------");
+
+
+        } catch (CantGetListPurchaseNegotiationsException e) {
+            System.out.print("\n**** MOCK CUSTOMER BROKER NEW. PURCHASE NEGOTIATION. ERROR GET ALL CUSTOMER BROKER PURCHASE NEGOTIATION NOT FOUNT. ****\n");
         }
 
     }
@@ -419,7 +485,8 @@ public class NegotiationTransactionCustomerBrokerNewPluginRoot extends AbstractP
         UUID                negotiationId               = UUID.randomUUID();
         String              publicKeyCustomer           = "30C5580D5A807CA38771A7365FC2141A6450556D5233DD4D5D14D4D9CEE7B9715B98951C2F28F820D858898AE0CBCE7B43055AB3C506A804B793E230610E711AEA";
 //        String              publicKeyBroker             = "publicKeyBroker";
-        String              publicKeyBroker             = "23C5580D5A807CA38771A7365FC2141A6450556D5233DD4D5D14D4D9CEE7B9715B98951C2F28F820D858898AE0CBCE7B43055AB3C506A804B793E230610E711AEA";
+        String              publicKeyBroker             = "041FCC359F748B5074D5554FA4DBCCCC7981D6776E57B5465DB297775FB23DBBF064FCB11EDE1979FC6E02307E4D593A81D2347006109F40B21B969E0E290C3B84";
+//        String              publicKeyBroker             = "23C5580D5A807CA38771A7365FC2141A6450556D5233DD4D5D14D4D9CEE7B9715B98951C2F28F820D858898AE0CBCE7B43055AB3C506A804B793E230610E711AEA";
         long                startDataTime               = 0;
         long                negotiationExpirationDate   = timestamp;
         NegotiationStatus   statusNegotiation           = NegotiationStatus.SENT_TO_BROKER;

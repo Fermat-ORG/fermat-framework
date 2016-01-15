@@ -2,7 +2,7 @@
 
 # Fermat License
 
-Fermat is a system built with components. These are the main types of component:
+Fermat is a system built with components. These are the main types of components:
 
 #### Libraries
 
@@ -32,7 +32,7 @@ SOFTWARE.
 
 #### Add-ons
 
-Add-ons are low level components. The following license applies to these components :
+Add-ons are low level components. The following license applies to these components:
 
 >The MIT License (MIT)
 
@@ -58,16 +58,16 @@ SOFTWARE.
 
 #### Plug-ins
 
-Plug-ins are middleware components. Anybody can write _Plug-ins_ for Fermat and their authors hold all the rights over them. Please find at the root folder of each _Plug-in_ their LICENSE.md file.
+Plug-ins are middleware components. Anyone can write _Plug-ins_ for Fermat and their authors hold all the rights over them. Please find at the root folder of each _Plug-in_ their LICENSE.md file.
 
 #### GUI Components
 
-GUI Components provide an interface for end users. Anybody can write _GUI Components_ for Fermat and their authors hold all the rights over them. Please find at the root folder of each _GUI Component_ their LICENSE.md file.
+GUI Components provide an interface for end users. Anyone can write _GUI Components_ for Fermat and their authors hold all the rights over them. Please find at the root folder of each _GUI Component_ their LICENSE.md file.
 
 #### Skins
 
-Skins are graphic resources to be used by GUI Components. Anybody can provide _Skins_ so their authors hold all the rights over them. Please find at the root folder of each _Skin_ their LICENSE.md file.
+Skins are graphic resources to be used by GUI Components. Anyone can provide _Skins_ so their authors hold all the rights over them. Please find at the root folder of each _Skin_ their LICENSE.md file.
 
 #### Language Packages
 
-Language Packages are files with translations to be used by GUI Components. Anybody can provide _Language Packages_ so their authors hold all the rights over them. Please find at the root folder of each _Language Packages_ their LICENSE.md file.
+Language Packages are files with translations to be used by GUI Components. Anyone can provide _Language Packages_ so their authors hold all the rights over them. Please find at the root folder of each _Language Packages_ their LICENSE.md file.

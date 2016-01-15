@@ -1,65 +1,47 @@
 <resources>
     <string name="app_name">Crypto Customer Wallet</string>
     <string name="action_settings">Settings</string>
-    <string name="ccw_action_filter">Filter</string>
     <string name="action_start_negotiation">Start Negotiation</string>
+    <string name="add_a_note_button">ADD A NOTE</string>
+    <string name="amount">Amount</string>
     <string name="arrow" translatable="false">arrow</string>
     <string name="at">\@</string>
-    <string name="selling">Selling</string>
-    <string name="contract_closed">Close</string>
-    <string name="contract_cancelled">Cancelled</string>
-    <string name="hello_blank_fragment">Hello blank fragment</string>
-    <string name="identity_img" translatable="false">person_img</string>
-    <string name="negotiation_closed">Close</string>
-    <string name="negotiation_cancelled">Cancelled</string>
-    <string name="no_new_open_negotiations">No New\nOpen Negotiations</string>
-    <string name="no_new_open_contracts">No New\nOpen Contracts</string>
-    <string name="unit_number" translatable="false">1</string>
-    <string name="waiting_for_you">Waiting for you</string>
-    <string name="waiting_for_broker">Waiting for the Broker</string>
-    <string name="ccw_unit_number">1</string>
-    <string name="sell_text_and_price">Sell: %1$s</string>
+
+    <string name="bought">Bought</string>
+    <string name="broker_bank_account_title">Broker Bank Accounts</string>
+    <string name="broker_locations_title">Broker Locations</string>
+    <string name="buying_text">Buying: </string>
     <string name="buy_text_and_price">Buy: %1$s</string>
-    <string name="ccw_market_exchange_rate_market_exchange_rate">MARKET EXCHANGE RATE</string>
-    <string name="ccw_market_exchange_rate_no_market_exchange_rates_to_show">No Market Exchange Rates to Show</string>
+
+    <string name="ccw_account_alias">Account Alias</string>
+    <string name="ccw_account_number">Account Number</string>
+    <string name="ccw_action_filter">Filter</string>
+    <string name="ccw_add_bank_account">Add Bank Account</string>
+    <string name="ccw_add_location_warning_msg">Need to Add at least ONE Location</string>
+    <string name="ccw_automatic_restock">Automatic Restock</string>
+    <string name="ccw_address_line_1">Address line 1</string>
+    <string name="ccw_address_line_2">Address line 2</string>
+    <string name="ccw_add_location">Add a Location</string>
+    <string name="ccw_add_your_bank_accounts">Add Your Bank Accounts</string>
+    <string name="ccw_amount_to_buy">Amount to Buy</string>
+    <string name="ccw_bank">Bank</string>
+    <string name="ccw_bank_name">Bank Name</string>
+    <string name="ccw_broker_exchange_rate_for_selling_item">%1$s/%2$s: %3$s</string>
+    <string name="ccw_broker_information">Broker Information</string>
+    <string name="ccw_cancel_caps">CANCEL</string>
+    <string name="ccw_cancellation_reason_title">Cancellation Reason:</string>
+    <string name="ccw_cash">Cash</string>
+    <string name="ccw_check_negotiation_details">Check Negotiation Details</string>
+    <string name="ccw_city">City</string>
+    <string name="ccw_contract_details_last_update_date">At Date: %1$s</string>
+    <string name="ccw_contract_details_payment_method">Payment Method</string>
     <string name="ccw_contract_history_action_no_filter_text">No filter</string>
     <string name="ccw_contract_history_action_filter_succeed_text">Succeed</string>
     <string name="ccw_contract_history_action_filter_canceled_text">Canceled</string>
     <string name="ccw_contract_history_exchange_rate_amount_and_currency">1 %1$s @ %2$s %3$s</string>
     <string name="ccw_contract_history_sold_quantity_and_currency">%1$s %2$s %3$s</string>
-    <string name="no_contracts">No Contracts</string>
-    <string name="no_brokers">No Brokers</string>
-    <string name="bought">Bought</string>
-    <string name="sending">Sending</string>
-    <string name="receiving">Receiving</string>
-    <string name="ccw_selling_merchandise">Selling %1$s</string>
-    <string name="ccw_broker_exchange_rate_for_selling_item">%1$s/%2$s: %3$s</string>
-    <string name="ccw_identity_alias_default_text">Crypto Customer</string>
-    <string name="ccw_navigation_view_bitcoin_balance">Bitcoin Balance</string>
-    <string name="ccw_check_negotiation_details">Check Negotiation Details</string>
-    <string name="ccw_contract_details_last_update_date">At Date: %1$s</string>
-    <string name="ccw_cancellation_reason_title">Cancellation Reason:</string>
-    <string name="ccw_contract_details_payment_method">Payment Method</string>
-    <string name="ccw_broker_information">Broker Information</string>
-    <string name="ccw_you_bought">You Bought</string>
-    <string name="ccw_price">Price</string>
-    <string name="ccw_wanted_to_buy">Wanted To Buy</string>
-    <string name="ccw_set_identity_wizard_description">Please choose one identity to use in this wallet. This step can not be undone.</string>
-    <string name="ccw_welcome">Welcome</string>
-    <string name="ccw_next_step">Next Step</string>
-    <string name="ccw_select_identity_warning_msg">Need to Select an Identity</string>
-    <string name="ccw_select_stock_wallets_warning_msg">Need to Select at least ONE Wallet</string>
-    <string name="ccw_select_providers_warning_msg">Need to Select at least ONE Provider</string>
-    <string name="ccw_add_location_warning_msg">Need to Add at least ONE Location</string>
-    <string name="ccw_automatic_restock">Automatic Restock</string>
-    <string name="ccw_no_selected_wallets">No Selected Wallets</string>
-    <string name="ccw_city">City</string>
-    <string name="ccw_state_province">State/Province</string>
-    <string name="ccw_zip_postal_code">Zip/Postal Code</string>
-    <string name="ccw_address_line_1">Address line 1</string>
-    <string name="ccw_address_line_2">Address line 2</string>
     <string name="ccw_create">Create</string>
-    <string name="ccw_cancel_caps">CANCEL</string>
+    <string name="ccw_crypto">Crypto</string>
     <string name="ccw_delete_caps">DELETE</string>
     <string name="ccw_delete_wallet_dialog_title">Delete Wallet</string>
     <string name="ccw_delete_wallet_dialog_msg">"Do you want to delete this wallet?"</string>
@@ -67,65 +49,106 @@
     <string name="ccw_delete_location_dialog_msg">"Do you want to delete this location?"</string>
     <string name="ccw_delete_bank_account_dialog_title">Delete Bank Account</string>
     <string name="ccw_delete_bank_account_dialog_msg">"Do you want to delete this Bank Account?"</string>
-    <string name="ccw_no_selected_providers">No Selected Providers</string>
+    <string name="ccw_exchange_rate_summary">1 %1$s @ %2$s %3$s</string>
     <string name="ccw_finish">Finish</string>
-    <string name="ccw_add_your_bank_accounts">Add Your Bank Accounts</string>
-    <string name="ccw_no_selected_bank_account">No Selected Bank Accounts</string>
-    <string name="ccw_wizard_bank_account_description">You must select the Bank Account from the Bank Wallet you selected as Earning</string>
-    <string name="ccw_wizard_bank_account_title">Bank Accounts</string>
-    <string name="ccw_wizard_exchange_rate_providers_title">Bitcoin Wallet and Providers</string>
-    <string name="ccw_wizard_exchange_rate_providers_description">You must select the Currency Exchange Rate Providers for your Merchandises</string>
-    <string name="ccw_your_providers">Your Providers</string>
-    <string name="ccw_your_bitcoin_wallet">Your Bitcoin Wallet</string>
-    <string name="ccw_providers">Providers</string>
-    <string name="ccw_wizard_locations_description">You must add at least one location to make your transactions</string>
-    <string name="wizard_locations_title">Add Your Locations</string>
-    <string name="ccw_add_location">Add a Location</string>
-    <string name="ccw_your_location">Your Locations</string>
+    <string name="ccw_identity_alias_default_text">Crypto Customer</string>
+    <string name="ccw_market_exchange_rate_market_exchange_rate">MARKET EXCHANGE RATE</string>
+    <string name="ccw_market_exchange_rate_no_market_exchange_rates_to_show">No Market Exchange Rates to Show</string>
+    <string name="ccw_navigation_view_bitcoin_balance">Bitcoin Balance</string>
+    <string name="ccw_next_step">Next Step</string>
     <string name="ccw_no_locations_added">No Locations Added</string>
-    <string name="ccw_add_bank_account">Add Bank Account</string>
-    <string name="ccw_wizard_earning_merchandise_title">Choose Earning Merchandises</string>
-    <string name="ccw_wizard_earning_merchandise_description">You must select a Wallet or Wallets that will work as Merchandise</string>
-    <string name="ccw_select_earnings_merchandise">Select a Earning Merchandise</string>
-    <string name="ccw_crypto">Crypto</string>
-    <string name="ccw_cash">Cash</string>
-    <string name="ccw_bank">Bank</string>
-    <string name="ccw_wizard_stock_merchandise_title">Choose Stock Merchandises</string>
-    <string name="ccw_wizard_stock_merchandise_description">You must select a Wallet that work as Merchandise and the spread applied to them</string>
+    <string name="ccw_no_selected_bank_account">No Selected Bank Accounts</string>
+    <string name="ccw_no_selected_providers">No Selected Providers</string>
+    <string name="ccw_no_selected_wallets">No Selected Wallets</string>
+    <string name="ccw_price">Price</string>
+    <string name="ccw_providers">Providers</string>
+    <string name="ccw_save">Save</string>
+    <string name="ccw_select_identity_warning_msg">Need to Select an Identity</string>
+    <string name="ccw_selling_details">Selling %1$s %2$s</string>
+    <string name="ccw_selling_merchandise">Selling %1$s</string>
+    <string name="ccw_select_providers_warning_msg">Need to Select at least ONE Provider</string>
+    <string name="ccw_select_stock_wallets_warning_msg">Need to Select at least ONE Wallet</string>
     <string name="ccw_select_stock_merchandise">Select a Stock Merchandise</string>
-    <string name="ccw_bank_name">Bank Name</string>
-    <string name="ccw_account_number">Account Number</string>
-    <string name="ccw_account_alias">Account Alias</string>
+    <string name="ccw_set_identity_wizard_description">Please choose one identity to use in this wallet. This step can not be undone.</string>
     <string name="ccw_settings_locations_description">You must have at least one location to make your transactions</string>
     <string name="ccw_settings_locations_title">Manage Your Locations</string>
-    <string name="ccw_save">Save</string>
-    <string name="ccw_amount_to_sell">Amount to Sell</string>
-
-    <string name="add_a_note_button">ADD A NOTE</string>
-    <string name="amount">Amount</string>
-    <string name="broker_bank_account_title">Broker Bank Accounts</string>
-    <string name="broker_locations_title">Broker Locations</string>
+    <string name="ccw_start_selling_details">Selling %1$s</string>
+    <string name="ccw_state_province">State/Province</string>
+    <string name="ccw_unit_number">1</string>
+    <string name="ccw_wanted_to_buy">Wanted To Buy</string>
+    <string name="ccw_welcome">Welcome</string>
+    <string name="ccw_wizard_bank_account_description">You must select the Bank Account from the Bank Wallet you selected as Earning</string>
+    <string name="ccw_wizard_bank_account_title">Bank Accounts</string>
+    <string name="ccw_select_earnings_merchandise">Select a Earning Merchandise</string>
+    <string name="ccw_wizard_earning_merchandise_description">You must select a Wallet or Wallets that will work as Merchandise</string>
+    <string name="ccw_wizard_earning_merchandise_title">Choose Earning Merchandises</string>
+    <string name="ccw_wizard_exchange_rate_providers_title">Bitcoin Wallet and Providers</string>
+    <string name="ccw_wizard_exchange_rate_providers_description">You must select the Currency Exchange Rate Providers for your Merchandises</string>
+    <string name="ccw_wizard_locations_description">You must add at least one location to make your transactions</string>
+    <string name="ccw_wizard_stock_merchandise_title">Choose Stock Merchandises</string>
+    <string name="ccw_wizard_stock_merchandise_description">You must select a Wallet that work as Merchandise and the spread applied to them</string>
+    <string name="ccw_your_bitcoin_wallet">Your Bitcoin Wallet</string>
+    <string name="ccw_you_bought">You Bought</string>
+    <string name="ccw_your_location">Your Locations</string>
+    <string name="ccw_your_providers">Your Providers</string>
+    <string name="ccw_zip_postal_code">Zip/Postal Code</string>
+    <string name="contract_cancelled">Cancelled</string>
+    <string name="contract_closed">Close</string>
     <string name="customer_locations_title">Customer Locations</string>
     <string name="customer_bank_account_title">Customer Bank Accounts</string>
+
     <string name="delivery_date_title">Delivery Date</string>
     <string name="delivery_date_text">Delivery Date: </string>
+
     <string name="exchange_rate_reference">Exchange Rate Reference</string>
     <string name="expiration_date_text">Expiration Date:</string>
     <string name="expiration_date_title">Negotiation Expiration Date</string>
+
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+
+    <string name="identity_img" translatable="false">person_img</string>
+
     <string name="market_exchange_rate">MARKET EXCHANGE RATE</string>
+
+    <string name="negotiation_closed">Close</string>
+    <string name="negotiation_cancelled">Cancelled</string>
     <string name="notes">Notes</string>
+    <string name="no_contracts">No Contracts</string>
+    <string name="no_brokers">No Brokers</string>
+    <string name="no_new_open_negotiations">No New\nOpen Negotiations</string>
+    <string name="no_new_open_contracts">No New\nOpen Contracts</string>
+
     <string name="payment_methods_title">Payment Methods</string>
+    <string name="reception_methods_title">Reception Methods</string>
     <string name="payment_method">Method: </string>
     <string name="payment_date_text">Payment Date: </string>
     <string name="payment_date_title">PAYMENT DATE</string>
     <string name="payment_date">Payment Date: </string>
-    <string name="selling_text">Selling: </string>
+
+    <string name="receiving">Receiving</string>
+
     <string name="selected_bank_account">Selected Bank Account: </string>
     <string name="selected_location">Selected Location: </string>
+    <string name="selling">Selling</string>
+    <string name="sell_text_and_price">Sell: %1$s</string>
+    <string name="sending">Sending</string>
     <string name="status_confirm">CONFIRM</string>
     <string name="status_accepted">ACCEPTED</string>
     <string name="status_changed">CHANGED</string>
     <string name="suggested_exchange_rate">Suggested:</string>
-    <string name="you_will_receive_amount">You will receive: </string>
+
+    <string name="unit_number" translatable="false">1</string>
+
+    <string name="waiting_for_you">Waiting for you</string>
+    <string name="waiting_for_broker">Waiting for the Broker</string>
+    <string name="wizard_locations_title">Add Your Locations</string>
+
+    <string name="you_will_have_to_pay_amount">You will have to pay: </string>
     <string name="yours">Yours:</string>
+    <string name="ccw_currency_to_pay">Currency to Pay</string>
+    <string name="ccw_amount_to_pay">Amount to Pay</string>
+    <string name="ccw_currency_to_buy">Currency to Buy</string>
+    <string name="selected_currency">Selected Currency</string>
+    <string name="ccw_currency_description">Currency:</string>
+
 </resources>
