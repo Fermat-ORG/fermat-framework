@@ -256,7 +256,8 @@ public class UserRedemptionMonitorAgent implements Agent, DealsWithLogger, Deals
                 updateDistributionStatus(DistributionStatus.SENDING_CRYPTO, assetAcceptedGenesisTransaction);
 
                 DigitalAssetMetadata metadata = digitalAssetUserRedemptionVault.getDigitalAssetMetadataFromLocalStorage(assetAcceptedGenesisTransaction);
-                sendCryptoAmountToRemoteActor(assetAcceptedGenesisTransaction, cryptoAddressTo, metadata.getGenesisBlock());
+                String genesisTxBitcoinsSent = sendCryptoAmountToRemoteActor(assetAcceptedGenesisTransaction, cryptoAddressTo, metadata.getGenesisBlock());
+                userRedemptionDao.sendingBitcoins(assetAcceptedGenesisTransaction, genesisTxBitcoinsSent);
                 userRedemptionDao.updateDigitalAssetCryptoStatusByGenesisTransaction(assetAcceptedGenesisTransaction, CryptoStatus.PENDING_SUBMIT);
             }
             List<String> assetRejectedByContractGenesisTransactionList = userRedemptionDao.getGenesisTransactionByAssetRejectedByContractStatus();
@@ -342,9 +343,9 @@ public class UserRedemptionMonitorAgent implements Agent, DealsWithLogger, Deals
             userRedemptionDao.updateDistributionStatusByGenesisTransaction(distributionStatus, genesisTransaction);
         }
 
-        private void sendCryptoAmountToRemoteActor(String genesisTransaction, CryptoAddress cryptoAddressTo, String genesisBlock) throws CantSendAssetBitcoinsToUserException {
+        private String sendCryptoAmountToRemoteActor(String genesisTransaction, CryptoAddress cryptoAddressTo, String genesisBlock) throws CantSendAssetBitcoinsToUserException {
             System.out.println("ASSET USER REDEMPTION sending genesis amount from asset vault");
-            assetVaultManager.sendAssetBitcoins(genesisTransaction, genesisBlock, cryptoAddressTo);
+            return assetVaultManager.sendAssetBitcoins(genesisTransaction, genesisBlock, cryptoAddressTo);
         }
     }
 
