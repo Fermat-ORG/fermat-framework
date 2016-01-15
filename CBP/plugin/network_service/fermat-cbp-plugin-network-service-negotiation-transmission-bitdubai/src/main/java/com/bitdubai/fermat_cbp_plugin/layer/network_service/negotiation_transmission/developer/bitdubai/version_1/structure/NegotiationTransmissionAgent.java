@@ -211,12 +211,42 @@ public class NegotiationTransmissionAgent {
             List<NegotiationTransmission> negotiationTransmissionList = databaseDao.findAllByTransmissionState(NegotiationTransmissionState.PROCESSING_SEND);
 
             for (NegotiationTransmission negotiationTransmission : negotiationTransmissionList) {
+                //TEST
                 String receiverPublicKey= negotiationTransmission.getPublicKeyActorReceive();
 
+                String jsonNegotiationTransmission = new NegotiationMessage(
+                        negotiationTransmission.getTransmissionId(),
+                        negotiationTransmission.getTransactionId(),
+                        negotiationTransmission.getNegotiationId(),
+                        negotiationTransmission.getNegotiationTransactionType(),
+                        negotiationTransmission.getPublicKeyActorSend(),
+                        negotiationTransmission.getActorSendType(),
+                        negotiationTransmission.getPublicKeyActorReceive(),
+                        negotiationTransmission.getActorReceiveType(),
+                        negotiationTransmission.getTransmissionType(),
+                        negotiationTransmission.getTransmissionState(),
+                        negotiationTransmission.getNegotiationType(),
+                        negotiationTransmission.getNegotiationXML(),
+                        negotiationTransmission.getTimestamp()
+                ).toJson();
+
+                if(negotiationTransmission.getTransmissionType().getCode() == NegotiationTransmissionType.TRANSMISSION_NEGOTIATION.getCode() ){
+                    System.out.print("\n\n**** 11) MOCK NEGOTIATION TRANSACTION - NEGOTIATION TRANSMISSION - AGENT - SEND NEGOTIATION TO : " + receiverPublicKey + "****\n");
+                    System.out.print("*** SEND DATES: " +
+                                    "\n - Sender Id = " + identity.getPublicKey() +
+                                    "\n - Receiver Id = " + receiverPublicKey +
+                                    "\n - JsonNegotiationTransmission " + jsonNegotiationTransmission
+                    );
+
+//                    negotiationTransmission.setTransmissionState(NegotiationTransmissionState.PENDING_REMOTE_ACTION);
+                }else{
+                    System.out.print("\n\n**** 25) MOCK NEGOTIATION TRANSACTION - NEGOTIATION TRANSMISSION - AGENT - SEND CONFIRMATION TO : " + receiverPublicKey + "****\n");
+//                    negotiationTransmission.setTransmissionState(NegotiationTransmissionState.DONE);
+                }
 //                System.out.print("\n\n**** X) MOCK NEGOTIATION TRANSACTION - NEGOTIATION TRANSMISSION - AGENT - PENDING FOR SEND TO : " + receiverPublicKey + "****\n");
 
-                if(!poolConnectionsWaitingForResponse.containsKey(receiverPublicKey)) {
-//                    System.out.print("\n\n**** X) MOCK NEGOTIATION TRANSACTION - NEGOTIATION TRANSMISSION - AGENT - POOL****\n");
+                /*if(!poolConnectionsWaitingForResponse.containsKey(receiverPublicKey)) {
+                    System.out.print("\n\n**** X) MOCK NEGOTIATION TRANSACTION - NEGOTIATION TRANSMISSION - AGENT - POOL****\n");
                     //TODO: hacer un filtro por aquellas que se encuentran conectadas
                     if (communicationNetworkServiceConnectionManager.getNetworkServiceLocalInstance(receiverPublicKey) == null) {
                         if (wsCommunicationsCloudClientManager != null) {
@@ -263,12 +293,12 @@ public class NegotiationTransmissionAgent {
 
 
                             if(negotiationTransmission.getTransmissionType().getCode() == NegotiationTransmissionType.TRANSMISSION_NEGOTIATION.getCode() ){
-                                /*System.out.print("\n\n**** 10) MOCK NEGOTIATION TRANSACTION - NEGOTIATION TRANSMISSION - AGENT - SEND NEGOTIATION TO : " + receiverPublicKey + "****\n");
-                                System.out.print("*** SEND DATES: " +
-                                                "\n - Sender Id = " + identity.getPublicKey() +
-                                                "\n - Receiver Id = " + receiverPublicKey +
-                                                "\n - JsonNegotiationTransmission " + jsonNegotiationTransmission
-                                );*/
+//                                System.out.print("\n\n**** 10) MOCK NEGOTIATION TRANSACTION - NEGOTIATION TRANSMISSION - AGENT - SEND NEGOTIATION TO : " + receiverPublicKey + "****\n");
+//                                System.out.print("*** SEND DATES: " +
+//                                                "\n - Sender Id = " + identity.getPublicKey() +
+//                                                "\n - Receiver Id = " + receiverPublicKey +
+//                                                "\n - JsonNegotiationTransmission " + jsonNegotiationTransmission
+//                                );
 
                                 negotiationTransmission.setTransmissionState(NegotiationTransmissionState.PENDING_REMOTE_ACTION);
                             }else{
@@ -278,22 +308,21 @@ public class NegotiationTransmissionAgent {
 
                             databaseDao.changeState(negotiationTransmission);
 
-                            System.out.print("-----------------------\n NEGOTIATION TRANSACTION STATE: " + negotiationTransmission.getTransmissionState() + "\n-----------------------\n");
-
                         } catch (CantRegisterSendNegotiationTransmissionException e) {
                             e.printStackTrace();
                         } catch (Exception e) {
                             e.printStackTrace();
                         }
+
                     }else {
 //                        System.out.print("\n\n**** X) MOCK NEGOTIATION TRANSACTION - NEGOTIATION TRANSMISSION - AGENT - SERVER LOCAL NO FOUNT.****\n");
                     }
-                }
+                }*/
             }
-        } catch (com.bitdubai.fermat_cbp_plugin.layer.network_service.negotiation_transmission.developer.bitdubai.version_1.exceptions.CantReadRecordDataBaseException e) {
+        } catch (CantReadRecordDataBaseException e) {
             e.printStackTrace();
-        } catch (CantEstablishConnectionException e) {
-            e.printStackTrace();
+//        } catch (CantEstablishConnectionException e) {
+//            e.printStackTrace();
         }
     }
 
