@@ -33,6 +33,7 @@ import com.bitdubai.fermat_cbp_api.layer.negotiation.customer_broker_purchase.in
 import com.bitdubai.fermat_cbp_api.layer.negotiation.customer_broker_purchase.interfaces.CustomerBrokerPurchaseNegotiationManager;
 import com.bitdubai.fermat_cbp_api.layer.negotiation.customer_broker_sale.interfaces.CustomerBrokerSaleNegotiation;
 import com.bitdubai.fermat_cbp_api.layer.negotiation.customer_broker_sale.interfaces.CustomerBrokerSaleNegotiationManager;
+import com.bitdubai.fermat_cbp_api.layer.negotiation_transaction.customer_broker_close.interfaces.CustomerBrokerClose;
 import com.bitdubai.fermat_cbp_api.layer.network_service.negotiation_transmission.exceptions.CantSendConfirmToCryptoCustomerException;
 import com.bitdubai.fermat_cbp_api.layer.network_service.negotiation_transmission.exceptions.CantSendConfirmToCryptoBrokerException;
 import com.bitdubai.fermat_cbp_api.layer.network_service.negotiation_transmission.exceptions.CantSendNegotiationToCryptoBrokerException;
@@ -298,22 +299,20 @@ public class CustomerBrokerCloseAgent  implements
                 String                              negotiationXML;
                 NegotiationType                     negotiationType;
                 UUID                                transactionId;
-                NegotiationTransaction              negotiationTransaction;
-                List<String>                        negotiationPendingToSubmitList;
+                List<CustomerBrokerClose>           negotiationPendingToSubmitList;
                 CustomerBrokerPurchaseNegotiation   purchaseNegotiation = new NegotiationPurchaseRecord();
                 CustomerBrokerSaleNegotiation       saleNegotiation     = new NegotiationSaleRecord();
 
                 //SEND NEGOTIATION PENDING (CUSTOMER_BROKER_NEW_STATUS_NEGOTIATION_COLUMN_NAME = NegotiationTransactionStatus.PENDING_SUBMIT)
                 negotiationPendingToSubmitList = customerBrokerCloseNegotiationTransactionDatabaseDao.getPendingToSubmitNegotiation();
                 if(!negotiationPendingToSubmitList.isEmpty()){
-                    for(String negotiationToSubmit: negotiationPendingToSubmitList){
+                    for(CustomerBrokerClose negotiationTransaction: negotiationPendingToSubmitList){
 
-                        System.out.println("Customer Broker Close - Negotiation to submit:\n"+negotiationToSubmit);
+                        System.out.print("\n\n**** 5) MOCK NEGOTIATION TRANSACTION - CUSTOMER BROKER UPDATE - AGENT - NEGOTIATION FOR SEND transactionId: " + negotiationTransaction.getTransactionId() + " ****\n");
 
-                        transactionId          = customerBrokerCloseNegotiationTransactionDatabaseDao.getTransactionId(negotiationToSubmit);
-                        negotiationTransaction = customerBrokerCloseNegotiationTransactionDatabaseDao.getRegisterCustomerBrokerCloseNegotiationTranasction(transactionId);
-                        negotiationXML         = negotiationTransaction.getNegotiationXML();
-                        negotiationType        = negotiationTransaction.getNegotiationType();
+                        negotiationXML  = negotiationTransaction.getNegotiationXML();
+                        negotiationType = negotiationTransaction.getNegotiationType();
+                        transactionId   = negotiationTransaction.getTransactionId();
 
                         switch (negotiationType){
                             case PURCHASE:
@@ -341,13 +340,10 @@ public class CustomerBrokerCloseAgent  implements
                 //SEND CONFIRM PENDING (CUSTOMER_BROKER_NEW_STATUS_NEGOTIATION_COLUMN_NAME = NegotiationTransactionStatus.PENDING_CONFIRMATION)
                 negotiationPendingToSubmitList = customerBrokerCloseNegotiationTransactionDatabaseDao.getPendingToConfirmtNegotiation();
                 if(!negotiationPendingToSubmitList.isEmpty()){
-                    for(String negotiationToSubmit: negotiationPendingToSubmitList) {
+                    for(CustomerBrokerClose negotiationTransaction: negotiationPendingToSubmitList){
 
-                        System.out.println("Customer Broker Close - Negotiation to submit:\n" + negotiationToSubmit);
-
-                        transactionId           = customerBrokerCloseNegotiationTransactionDatabaseDao.getTransactionId(negotiationToSubmit);
-                        negotiationTransaction  = customerBrokerCloseNegotiationTransactionDatabaseDao.getRegisterCustomerBrokerCloseNegotiationTranasction(transactionId);
-                        negotiationType         = negotiationTransaction.getNegotiationType();
+                        transactionId   = negotiationTransaction.getTransactionId();
+                        negotiationType = negotiationTransaction.getNegotiationType();
 
                         switch (negotiationType) {
                             case PURCHASE:
