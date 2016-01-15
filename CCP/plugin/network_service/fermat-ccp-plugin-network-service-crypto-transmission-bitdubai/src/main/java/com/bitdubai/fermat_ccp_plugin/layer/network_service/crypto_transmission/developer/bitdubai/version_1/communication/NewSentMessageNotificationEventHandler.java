@@ -38,7 +38,9 @@ public class NewSentMessageNotificationEventHandler extends AbstractCommunicatio
         public void processEvent(NewNetworkServiceMessageSentNotificationEvent event) {
 
 //            if(event.getNetworkServiceTypeApplicant().equals(NetworkServiceType.INTRA_USER))
-            networkService.handleNewSentMessageNotificationEvent((FermatMessage) event.getData());
+         //   networkService.handleNewSentMessageNotificationEvent((FermatMessage) event.getData());
+            if(networkService!=null)networkService.handleNewSentMessageNotificationEvent((FermatMessage) event.getData());
+            else if(ns!=null) ((CryptoTransmissionNetworkServicePluginRoot)ns).handleNewSentMessageNotificationEvent((FermatMessage) event.getData());
 
         }
 }
