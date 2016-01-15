@@ -222,5 +222,5 @@ public interface BitcoinNetworkManager extends TransactionSender<CryptoTransacti
      * @return the CryptoTransaction that represents the GenesisTransaction
      * @throws CantGetCryptoTransactionException
      */
-    CryptoTransaction getGenesisTransaction(@Nullable BlockchainNetworkType blockchainNetworkType, LinkedHashMap<String, String> transactionChain) throws CantGetCryptoTransactionException;
+    CryptoTransaction getGenesisCryptoTransaction(@Nullable BlockchainNetworkType blockchainNetworkType, LinkedHashMap<String, String> transactionChain) throws CantGetCryptoTransactionException;
 }

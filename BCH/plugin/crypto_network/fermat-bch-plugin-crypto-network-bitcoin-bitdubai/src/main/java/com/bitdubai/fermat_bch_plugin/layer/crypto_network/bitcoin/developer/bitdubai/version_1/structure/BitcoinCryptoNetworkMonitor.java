@@ -446,6 +446,7 @@ public class BitcoinCryptoNetworkMonitor implements Agent {
      */
     private Block getBlockFromPeer(Sha256Hash blockHash) throws CantGetTransactionException {
         try {
+            // todo retry from a different peer if not found, for example switch to the lower ping
             return peerGroup.getDownloadPeer().getBlock(blockHash).get(1, TimeUnit.MINUTES);
         } catch (InterruptedException | ExecutionException | TimeoutException e) {
             throw new CantGetTransactionException(CantGetTransactionException.DEFAULT_MESSAGE, e, "There was a problem trying to get the block from the Peer.", null);
@@ -561,6 +562,7 @@ public class BitcoinCryptoNetworkMonitor implements Agent {
         if (storedTransaction != null)
             return storedTransaction;
 
+        //todo search it in the local stored blockchain
 
         /**
          * I don't have it locally, so I will request it to a peer.
@@ -578,7 +580,9 @@ public class BitcoinCryptoNetworkMonitor implements Agent {
             /**
              * If I don't have this block, then I will get the block from the peer
              */
+
             Block genesisBlock = getBlockFromPeer(blockSha256Hash);
+
 
             /**
              * Will search all transactions from the block until I find my own.
