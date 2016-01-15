@@ -16,6 +16,7 @@ import android.support.v4.content.Loader;
 import android.support.v4.widget.CursorAdapter;*/
 import android.text.SpannableString;
 import android.text.TextUtils;
+import android.widget.CursorAdapter;
 
 import com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.util.ImageLoader;
 import com.bitdubai.android_api.BuildConfig;
