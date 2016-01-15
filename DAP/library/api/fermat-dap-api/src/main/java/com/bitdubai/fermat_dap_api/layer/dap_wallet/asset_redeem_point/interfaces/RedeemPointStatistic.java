@@ -1,5 +1,8 @@
 package com.bitdubai.fermat_dap_api.layer.dap_wallet.asset_redeem_point.interfaces;
 
+import com.bitdubai.fermat_dap_api.layer.all_definition.digital_asset.DigitalAssetMetadata;
+import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.interfaces.ActorAssetUser;
+
 import java.util.Date;
 import java.util.UUID;
 
@@ -19,22 +22,20 @@ public interface RedeemPointStatistic {
     UUID statisticId();
 
     /**
-     * The asset public key associated with the redemption.
-     * If you want to get all the remaining information for that asset
-     * you'd have to use {@link AssetRedeemPointWallet#getDigitalAssetMetadata(String)}.
+     * The {@link DigitalAssetMetadata} associated with the redemption.
      *
-     * @return {@link String}
+     * @return {@link DigitalAssetMetadata} instance.
      */
-    String assetPublicKey();
+    DigitalAssetMetadata assetRedeemed();
 
     /**
-     * The user public key associated with the redemption.
-     * If you want to get all the remaining information for that asset
-     * you'd have to use {@link com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.interfaces.ActorAssetUserManager#getActorByPublicKey(String)}.
+     * The {@link ActorAssetUser} that redeemed the asset,
+     * if this method doesn't find any user on {@link com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.interfaces.ActorAssetUserManager}
+     * then it will return a fake user with public key and unknown name.
      *
-     * @return
+     * @return {@link ActorAssetUser} instance.
      */
-    String userPublicKey();
+    ActorAssetUser userThatRedeemed();
 
     /**
      * The exact time when that redemption happen.

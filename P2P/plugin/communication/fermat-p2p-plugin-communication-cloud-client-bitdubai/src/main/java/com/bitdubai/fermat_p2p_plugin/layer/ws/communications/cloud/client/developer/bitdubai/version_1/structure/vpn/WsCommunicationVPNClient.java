@@ -428,4 +428,15 @@ public class WsCommunicationVPNClient extends WebSocketClient implements Communi
     public void reconnect(){
         connect();
     }
+
+
+    @Override
+    public String toString() {
+        return "WsCommunicationVPNClient{" +
+                "vpnClientIdentity=" + vpnClientIdentity +
+                ", remoteParticipant=" + remoteParticipant +
+                ", remoteParticipantNetworkService=" + remoteParticipantNetworkService +
+                ", vpnServerIdentity='" + vpnServerIdentity + '\'' +
+                '}';
+    }
 }

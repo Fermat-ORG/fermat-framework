@@ -342,7 +342,7 @@ public class IntraWalletUserActorPluginRoot extends AbstractPlugin implements
              if (intraWalletUserActorDao.intraUserRequestExists(intraUserToAddPublicKey, ConnectionState.PENDING_REMOTELY_ACCEPTANCE)){
 
                     this.intraWalletUserActorDao.updateConnectionState(intraUserLoggedInPublicKey, intraUserToAddPublicKey, ConnectionState.CONNECTED);
-
+                    this.intraUserNetworkServiceManager.acceptIntraUser(intraUserLoggedInPublicKey,intraUserToAddPublicKey);
                 }
             else{
 

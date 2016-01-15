@@ -25,14 +25,6 @@ public interface CustomerBrokerNewManager extends FermatManager {
     void createCustomerBrokerNewPurchaseNegotiationTranasction(CustomerBrokerPurchaseNegotiation customerBrokerPurchaseNegotiation) throws CantCreateCustomerBrokerNewPurchaseNegotiationTransactionException;
 
     /**
-     * Create an Customer Broker New Negotiation Transaction for the broker
-     *
-     * @param customerBrokerSaleNegotiation the updated negotiation
-     * @throws CantCreateCustomerBrokerNewSaleNegotiationTransactionException
-     */
-    void createCustomerBrokerNewSaleNegotiationTranasction(CustomerBrokerSaleNegotiation customerBrokerSaleNegotiation) throws CantCreateCustomerBrokerNewSaleNegotiationTransactionException;
-
-    /**
      * Get negotiation transaction Customer Broker New for the transactionId indicate
      *
      * @param transactionId the id negotiation transaction

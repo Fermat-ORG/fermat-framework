@@ -160,6 +160,20 @@ public class BankMoneyWalletDeveloperDatabaseFactory implements DealsWithPluginD
         tables.add(bankMoneyTotalBalancesTable);
 
 
+        /**
+         * Table Bank Money BANK NAME columns.
+         */
+        List<String> bankMoneyBankName = new ArrayList<String>();
+
+        bankMoneyBankName.add(BankMoneyWalletDatabaseConstants.BANK_MONEY_BANK_PUBLIC_KEY_COLUMN);
+        bankMoneyBankName.add(BankMoneyWalletDatabaseConstants.BANK_MONEY_BANK_NAME_COLUMN);
+
+        /**
+         * Table Bank Money BANK NAME addition.
+         */
+        DeveloperDatabaseTable bankMoneyBankNameTable = developerObjectFactory.getNewDeveloperDatabaseTable(BankMoneyWalletDatabaseConstants.BANK_MONEY_BANK_NAME_TABLE, bankMoneyBankName);
+        tables.add(bankMoneyBankNameTable);
+
 
         return tables;
     }

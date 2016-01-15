@@ -340,7 +340,7 @@ public class AssetIssuingTransactionMonitorAgent implements Agent {
 
         //I left working this method for testing porpoises
         private CryptoTransaction getGenesisTransactionFromAssetVault(String transactionHash) throws CantGetCryptoTransactionException {
-            List<CryptoTransaction> cryptoTransactions = bitcoinNetworkManager.getCryptoTransaction(transactionHash);
+            List<CryptoTransaction> cryptoTransactions = bitcoinNetworkManager.getCryptoTransactions(transactionHash);
 
             /**
              * I will return the more mature crypto transaction

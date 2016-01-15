@@ -14,11 +14,15 @@ import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperDatabaseT
 import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperDatabaseTableRecord;
 import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperObjectFactory;
 import com.bitdubai.fermat_api.layer.all_definition.developer.LogManagerForDevelopers;
+import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Addons;
+import com.bitdubai.fermat_api.layer.all_definition.enums.CryptoCurrency;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Layers;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
+import com.bitdubai.fermat_api.layer.all_definition.events.EventSource;
+import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEvent;
 import com.bitdubai.fermat_api.layer.all_definition.util.Version;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
@@ -29,9 +33,15 @@ import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogLevel;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogManager;
 import com.bitdubai.fermat_cbp_api.all_definition.exceptions.CantInitializeDatabaseException;
 import com.bitdubai.fermat_cbp_api.all_definition.exceptions.CantStartServiceException;
+import com.bitdubai.fermat_cbp_api.layer.business_transaction.common.events.BrokerAckPaymentConfirmed;
+import com.bitdubai.fermat_cbp_api.layer.business_transaction.common.mocks.CustomerBrokerContractPurchaseManagerMock;
+import com.bitdubai.fermat_cbp_api.layer.business_transaction.common.mocks.CustomerBrokerContractSaleManagerMock;
+import com.bitdubai.fermat_cbp_api.layer.business_transaction.common.mocks.PurchaseNegotiationManagerMock;
+import com.bitdubai.fermat_cbp_api.layer.business_transaction.open_contract.events.NewContractOpened;
 import com.bitdubai.fermat_cbp_api.layer.contract.customer_broker_purchase.interfaces.CustomerBrokerContractPurchaseManager;
 import com.bitdubai.fermat_cbp_api.layer.contract.customer_broker_sale.interfaces.CustomerBrokerContractSaleManager;
 import com.bitdubai.fermat_cbp_api.layer.negotiation.customer_broker_purchase.interfaces.CustomerBrokerPurchaseNegotiationManager;
+import com.bitdubai.fermat_cbp_api.layer.negotiation.customer_broker_sale.interfaces.CustomerBrokerSaleNegotiationManager;
 import com.bitdubai.fermat_cbp_api.layer.network_service.transaction_transmission.interfaces.TransactionTransmissionManager;
 import com.bitdubai.fermat_cbp_plugin.layer.business_transaction.customer_ack_online_merchandise.developer.bitdubai.version_1.database.CustomerAckOnlineMerchandiseBusinessTransactionDao;
 import com.bitdubai.fermat_cbp_plugin.layer.business_transaction.customer_ack_online_merchandise.developer.bitdubai.version_1.database.CustomerAckOnlineMerchandiseBusinessTransactionDatabaseConstants;
@@ -43,6 +53,8 @@ import com.bitdubai.fermat_cbp_plugin.layer.business_transaction.customer_ack_on
 import com.bitdubai.fermat_cbp_plugin.layer.business_transaction.customer_ack_online_merchandise.developer.bitdubai.version_1.structure.CustomerAckOnlineMerchandiseTransactionManager;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedPluginExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
+import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.enums.EventType;
+import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.events.IncomingMoneyNotificationEvent;
 import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfaces.EventManager;
 
 import java.util.ArrayList;
@@ -82,6 +94,9 @@ public class CustomerAckOnlineMerchandisePluginRoot extends AbstractPlugin imple
 
     @NeededPluginReference(platform = Platforms.CRYPTO_BROKER_PLATFORM, layer = Layers.NEGOTIATION, plugin = Plugins.NEGOTIATION_PURCHASE)
     private CustomerBrokerPurchaseNegotiationManager customerBrokerPurchaseNegotiationManager;
+
+    @NeededPluginReference(platform = Platforms.CRYPTO_BROKER_PLATFORM, layer = Layers.NEGOTIATION, plugin = Plugins.NEGOTIATION_SALE)
+    private CustomerBrokerSaleNegotiationManager customerBrokerSaleNegotiationManager;
 
     /**
      * Represents the plugin CustomerOnlinePaymentBusinessTransactionDatabaseFactory
@@ -222,11 +237,15 @@ public class CustomerAckOnlineMerchandisePluginRoot extends AbstractPlugin imple
                             customerAckOnlineMerchandiseBusinessTransactionDao,
                             eventManager);
 
-            //customerAckOnlineMerchandiseRecorderService.start();
+            customerAckOnlineMerchandiseRecorderService.start();
 
             /**
              * Init monitor Agent
              */
+        //TODO: the following three lines are only for testing, please, comment them when the test is finish
+            customerBrokerContractPurchaseManager=new CustomerBrokerContractPurchaseManagerMock();
+            customerBrokerContractSaleManager=new CustomerBrokerContractSaleManagerMock();
+            customerBrokerPurchaseNegotiationManager= new PurchaseNegotiationManagerMock();
             CustomerAckOnlineMerchandiseMonitorAgent customerAckOnlineMerchandiseMonitorAgent=new CustomerAckOnlineMerchandiseMonitorAgent(
                     pluginDatabaseSystem,
                     logManager,
@@ -235,7 +254,8 @@ public class CustomerAckOnlineMerchandisePluginRoot extends AbstractPlugin imple
                     pluginId,
                     transactionTransmissionManager,
                     customerBrokerContractPurchaseManager,
-                    customerBrokerContractSaleManager);
+                    customerBrokerContractSaleManager,
+                    customerBrokerPurchaseNegotiationManager);
             customerAckOnlineMerchandiseMonitorAgent.start();
 
             /**
@@ -246,6 +266,9 @@ public class CustomerAckOnlineMerchandisePluginRoot extends AbstractPlugin imple
                     errorManager);
             this.serviceStatus = ServiceStatus.STARTED;
             //System.out.println("Customer Ack Online Merchandise Starting");
+            //Test methods
+            //raiseNewContractEventTest();
+            //testAck();
         } catch (CantInitializeCustomerAckOnlineMerchandiseBusinessTransactionDatabaseException exception) {
             throw new CantStartPluginException(
                     FermatException.wrapException(exception),
@@ -301,7 +324,7 @@ public class CustomerAckOnlineMerchandisePluginRoot extends AbstractPlugin imple
 
     @Override
     public List<DeveloperDatabaseTableRecord> getDatabaseTableContent(DeveloperObjectFactory developerObjectFactory, DeveloperDatabase developerDatabase, DeveloperDatabaseTable developerDatabaseTable) {
-        return customerAckOnlineMerchandiseBusinessTransactionDeveloperDatabaseFactory.getDatabaseTableContent(developerObjectFactory,developerDatabaseTable);
+        return customerAckOnlineMerchandiseBusinessTransactionDeveloperDatabaseFactory.getDatabaseTableContent(developerObjectFactory, developerDatabaseTable);
     }
 
     public static LogLevel getLogLevelByClass(String className) {
@@ -314,5 +337,35 @@ public class CustomerAckOnlineMerchandisePluginRoot extends AbstractPlugin imple
         }
     }
 
+    private void testAck(){
+        try{
+            FermatEvent fermatEvent = eventManager.getNewEvent(EventType.INCOMING_MONEY_NOTIFICATION);
+            IncomingMoneyNotificationEvent incomingMoneyNotificationEvent = (IncomingMoneyNotificationEvent) fermatEvent;
+            incomingMoneyNotificationEvent.setSource(EventSource.OUTGOING_INTRA_USER);
+            incomingMoneyNotificationEvent.setActorId("CustomerPublicKey");
+            incomingMoneyNotificationEvent.setActorType(Actors.CBP_CRYPTO_CUSTOMER);
+            incomingMoneyNotificationEvent.setAmount(2000);
+            incomingMoneyNotificationEvent.setCryptoCurrency(CryptoCurrency.BITCOIN);
+            incomingMoneyNotificationEvent.setIntraUserIdentityPublicKey("BrokerPublicKey");
+            incomingMoneyNotificationEvent.setWalletPublicKey("TestWalletPublicKey");
+            eventManager.raiseEvent(incomingMoneyNotificationEvent);
+            System.out.println("Event raised:\n"+incomingMoneyNotificationEvent.toString());
+        } catch(Exception e){
+            System.out.println("Exception in Broker Ack Online Merchandise Test: "+e);
+            e.printStackTrace();
+        }
+    }
+
+    private void raiseNewContractEventTest(){
+        try{
+            FermatEvent fermatEvent = eventManager.getNewEvent(com.bitdubai.fermat_cbp_api.all_definition.events.enums.EventType.BROKER_ACK_PAYMENT_CONFIRMED);
+            BrokerAckPaymentConfirmed brokerAckPaymentConfirmed = (BrokerAckPaymentConfirmed) fermatEvent;
+            brokerAckPaymentConfirmed.setSource(EventSource.BROKER_ACK_ONLINE_PAYMENT);
+            brokerAckPaymentConfirmed.setContractHash("888052D7D718420BD197B647F3BB04128C9B71BC99DBB7BC60E78BDAC4DFC6E2");
+            eventManager.raiseEvent(brokerAckPaymentConfirmed);
+        } catch(Exception e){
+            System.out.println("Exception in Broker Ack Online Merchandise Test: "+e);
+        }
+    }
 
 }
