@@ -141,9 +141,10 @@ public class StockTransactionsCashMoneyRestockMonitorAgent implements Agent{
                                 cashMoneyTransaction.getCashWalletPublicKey(),
                                 cashMoneyTransaction.getActorPublicKey(),
                                 cashMoneyTransaction.getAmount(),
-                                cashMoneyTransaction.getCashReference(),
-                                cashMoneyTransaction.getMemo());
-                        //"pluginId");
+                                //cashMoneyTransaction.getCashReference(),
+                                cashMoneyTransaction.getMemo(),
+                                "pluginId");
+                        //TODO:Buscar si existe la transaccion en CASH y si es positivo no volverla agregar
                         cashHoldTransactionManager.createCashHoldTransaction(cashTransactionParametersWrapper);
                         CashTransactionStatus castTransactionStatus =  cashHoldTransactionManager.getCashHoldTransactionStatus(cashMoneyTransaction.getTransactionId());
                         if (castTransactionStatus.CONFIRMED.getCode() == castTransactionStatus.getCode())
@@ -164,10 +165,10 @@ public class StockTransactionsCashMoneyRestockMonitorAgent implements Agent{
                         try {
                             WalletTransactionWrapper walletTransactionRecord = new WalletTransactionWrapper(
                                     cashMoneyTransaction.getTransactionId(),
-                                    null,
+                                    cashMoneyTransaction.getFiatCurrency(),
                                     BalanceType.AVAILABLE,
                                     TransactionType.CREDIT,
-                                    CurrencyType.BANK_MONEY,
+                                    CurrencyType.CASH_DELIVERY_MONEY,
                                     cashMoneyTransaction.getCbpWalletPublicKey(),
                                     cashMoneyTransaction.getActorPublicKey(),
                                     cashMoneyTransaction.getAmount(),
@@ -176,6 +177,8 @@ public class StockTransactionsCashMoneyRestockMonitorAgent implements Agent{
                                     cashMoneyTransaction.getPriceReference(),
                                     cashMoneyTransaction.getOriginTransaction());
 
+                            //TODO:Solo para testear
+                            cashMoneyTransaction.setCbpWalletPublicKey("walletPublicKeyTest");
                             cryptoBrokerWalletManager.loadCryptoBrokerWallet(cashMoneyTransaction.getCbpWalletPublicKey()).getStockBalance().debit(walletTransactionRecord, BalanceType.BOOK);
                             cryptoBrokerWalletManager.loadCryptoBrokerWallet(cashMoneyTransaction.getCbpWalletPublicKey()).getStockBalance().debit(walletTransactionRecord, BalanceType.AVAILABLE);
                             cashMoneyTransaction.setTransactionStatus(TransactionStatusRestockDestock.IN_WALLET);
