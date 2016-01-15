@@ -14,17 +14,17 @@ public class IncomingNegotiationTransactionEventHandler extends AbstractCustomer
 //public class IncomingNegotiationTransactionEventHandler implements FermatEventHandler {
 
     public IncomingNegotiationTransactionEventHandler(){
-//        System.out.print("\n\n**** 6.0) MOCK CUSTOMER BROKER NEW RECEIVE, EVENT HANDLER - LISTENER EVENT ****\n");
+        System.out.print("\n\n**** 6.0) MOCK CUSTOMER BROKER NEW RECEIVE, EVENT HANDLER - LISTENER EVENT ****\n");
     }
 
     @Override
     public void handleEvent(FermatEvent fermatEvent) throws FermatException {
-//        System.out.print("\n\n**** 6.0.1) MOCK CUSTOMER BROKER NEW RECEIVE, EVENT HANDLER - LISTENER EVENT ****\n");
+        System.out.print("\n\n**** 6.0.1) MOCK CUSTOMER BROKER NEW RECEIVE, EVENT HANDLER - LISTENER EVENT ****\n");
         if(this.customerBrokerNewServiceEventHandler.getStatus()== ServiceStatus.STARTED) {
 
             try {
 
-//                System.out.print("\n\n**** 6.1) MOCK CUSTOMER BROKER NEW RECEIVE, EVENT HANDLER - LISTENER EVENT ****\n");
+                System.out.print("\n\n**** 6.1) MOCK CUSTOMER BROKER NEW RECEIVE, EVENT HANDLER - LISTENER EVENT ****\n");
 
                 this.customerBrokerNewServiceEventHandler.incomingNegotiationTransactionEventHandler((IncomingNegotiationTransactionEvent) fermatEvent);
 
