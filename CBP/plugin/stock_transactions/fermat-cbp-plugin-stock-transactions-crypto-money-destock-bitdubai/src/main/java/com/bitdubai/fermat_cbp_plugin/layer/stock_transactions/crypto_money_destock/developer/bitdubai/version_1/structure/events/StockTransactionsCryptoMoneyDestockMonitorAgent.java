@@ -128,6 +128,7 @@ public class StockTransactionsCryptoMoneyDestockMonitorAgent implements Agent{
             DatabaseTableFilter filter = null;
             for(CryptoMoneyTransaction cryptoMoneyTransaction : stockTransactionCryptoMoneyDestockFactory.getCryptoMoneyTransactionList(filter)) {
                 switch (cryptoMoneyTransaction.getTransactionStatus()) {
+                    //TODO: Hacer un case que vea el status REJECTED para reversar la operacion en la wallet, si es credito se hace un debito, si debito se hace un credito
                     case INIT_TRANSACTION:
                         cryptoMoneyTransaction.setTransactionStatus(TransactionStatusRestockDestock.IN_WALLET);
                         stockTransactionCryptoMoneyDestockFactory.saveCryptoMoneyDestockTransactionData(cryptoMoneyTransaction);
@@ -136,10 +137,10 @@ public class StockTransactionsCryptoMoneyDestockMonitorAgent implements Agent{
                         try {
                             WalletTransactionWrapper walletTransactionRecord = new WalletTransactionWrapper(
                                     cryptoMoneyTransaction.getTransactionId(),
-                                    null,
+                                    cryptoMoneyTransaction.getCryptoCurrency(),
                                     BalanceType.AVAILABLE,
                                     TransactionType.CREDIT,
-                                    CurrencyType.BANK_MONEY,
+                                    CurrencyType.CRYPTO_MONEY,
                                     cryptoMoneyTransaction.getCbpWalletPublicKey(),
                                     cryptoMoneyTransaction.getActorPublicKey(),
                                     cryptoMoneyTransaction.getAmount(),
@@ -148,6 +149,8 @@ public class StockTransactionsCryptoMoneyDestockMonitorAgent implements Agent{
                                     cryptoMoneyTransaction.getPriceReference(),
                                     cryptoMoneyTransaction.getOriginTransaction());
 
+                            //TODO:Solo para testear
+                            cryptoMoneyTransaction.setCbpWalletPublicKey("walletPublicKeyTest");
                             cryptoBrokerWalletManager.loadCryptoBrokerWallet(cryptoMoneyTransaction.getCbpWalletPublicKey()).getStockBalance().credit(walletTransactionRecord, BalanceType.BOOK);
                             cryptoBrokerWalletManager.loadCryptoBrokerWallet(cryptoMoneyTransaction.getCbpWalletPublicKey()).getStockBalance().credit(walletTransactionRecord, BalanceType.AVAILABLE);
                             cryptoMoneyTransaction.setTransactionStatus(TransactionStatusRestockDestock.IN_UNHOLD);

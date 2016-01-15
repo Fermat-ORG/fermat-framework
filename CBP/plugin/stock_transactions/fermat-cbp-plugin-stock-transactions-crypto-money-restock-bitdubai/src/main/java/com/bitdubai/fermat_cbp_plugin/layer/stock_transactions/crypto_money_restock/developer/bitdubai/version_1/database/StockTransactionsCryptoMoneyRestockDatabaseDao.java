@@ -75,7 +75,7 @@ public class StockTransactionsCryptoMoneyRestockDatabaseDao {
         DatabaseTable databaseTable = getDatabaseTable(StockTransactionsCrpytoMoneyRestockDatabaseConstants.CRYPTO_MONEY_RESTOCK_TABLE_NAME);
         DatabaseTableRecord record = databaseTable.getEmptyRecord();
 
-        record.setUUIDValue(StockTransactionsCrpytoMoneyRestockDatabaseConstants.CRYPTO_MONEY_RESTOCK_CONCEPT_COLUMN_NAME, cryptoMoneyTransaction.getTransactionId());
+        record.setUUIDValue(StockTransactionsCrpytoMoneyRestockDatabaseConstants.CRYPTO_MONEY_RESTOCK_TRANSACTION_ID_COLUMN_NAME, cryptoMoneyTransaction.getTransactionId());
         record.setStringValue(StockTransactionsCrpytoMoneyRestockDatabaseConstants.CRYPTO_MONEY_RESTOCK_PUBLIC_KEY_ACTOR_COLUMN_NAME, cryptoMoneyTransaction.getActorPublicKey());
         record.setStringValue(StockTransactionsCrpytoMoneyRestockDatabaseConstants.CRYPTO_MONEY_RESTOCK_CRYPTO_CURRENCY_COLUMN_NAME, cryptoMoneyTransaction.getCryptoCurrency().getCode());
         record.setStringValue(StockTransactionsCrpytoMoneyRestockDatabaseConstants.CRYPTO_MONEY_RESTOCK_CBP_WALLET_PUBLIC_KEY_COLUMN_NAME, cryptoMoneyTransaction.getCbpWalletPublicKey());
