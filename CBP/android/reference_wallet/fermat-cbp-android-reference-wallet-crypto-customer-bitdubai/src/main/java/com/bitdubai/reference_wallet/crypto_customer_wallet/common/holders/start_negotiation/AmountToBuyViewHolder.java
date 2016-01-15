@@ -6,6 +6,7 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatButton;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.ClauseType;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.common.interfaces.ClauseInformation;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.common.interfaces.CustomerBrokerNegotiationInformation;
@@ -17,20 +18,19 @@ import java.util.Map;
 /**
  * Created by nelson on 10/01/16.
  */
-public class AmountToBuyViewHolder extends ClauseViewHolder implements TextWatcher {
+public class AmountToBuyViewHolder extends ClauseViewHolder implements View.OnClickListener {
 
     private TextView youWillPayTextValue;
     private TextView currencyToBuyTextValue;
-    private EditText buyingValue;
-
+    private FermatButton buyingValue;
 
     public AmountToBuyViewHolder(View itemView) {
         super(itemView);
 
         currencyToBuyTextValue = (TextView) itemView.findViewById(R.id.ccw_currency_to_buy);
         youWillPayTextValue = (TextView) itemView.findViewById(R.id.ccw_you_will_pay_text_value);
-        buyingValue = (EditText) itemView.findViewById(R.id.ccw_buying_value);
-        buyingValue.addTextChangedListener(this);
+        buyingValue = (FermatButton) itemView.findViewById(R.id.ccw_buying_value);
+        buyingValue.setOnClickListener(this);
     }
 
     @Override
@@ -48,22 +48,15 @@ public class AmountToBuyViewHolder extends ClauseViewHolder implements TextWatch
     }
 
     @Override
+    public void onClick(View view) {
+        if (listener != null)
+            listener.onClauseCLicked(buyingValue, clause, clausePosition);
+    }
+
+    @Override
     public void setViewResources(int titleRes, int positionImgRes, int... stringResources) {
         titleTextView.setText(titleRes);
         clauseNumberImageView.setImageResource(positionImgRes);
-    }
-
-    @Override
-    public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-    }
-
-    @Override
-    public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-    }
-
-    @Override
-    public void afterTextChanged(Editable editable) {
-        listener.onClauseValueChanged(buyingValue, clause, buyingValue.getText().toString(), clausePosition);
     }
 
     @Override
