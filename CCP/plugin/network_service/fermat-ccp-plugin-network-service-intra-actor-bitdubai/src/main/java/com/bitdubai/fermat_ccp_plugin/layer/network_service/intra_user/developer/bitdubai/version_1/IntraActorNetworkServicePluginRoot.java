@@ -860,7 +860,9 @@ public class IntraActorNetworkServicePluginRoot extends AbstractPlugin implement
                     "CONVIERTIENDO MENSAJE ENTRANTE A GSON:" + fermatMessage.toJson()
                     + "\n-------------------------------------------------");
 
-            //JsonObject jsonObject =new JsonParser().parse(fermatMessage.getContent()).getAsJsonObject();
+//            JsonObject jsonObject =new JsonParser().parse(fermatMessage.getContent()).getAsJsonObject();
+//            String pk = jsonObject.get("actorSenderPublicKey").getAsString();
+
 
             ActorNetworkServiceRecord actorNetworkServiceRecord = gson.fromJson(fermatMessage.getContent(), ActorNetworkServiceRecord.class);
 
