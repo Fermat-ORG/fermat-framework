@@ -39,6 +39,7 @@ import android.widget.AlphabetIndexer;
 //import android.widget.Button;
 //import android.widget.EditText;
 //import android.widget.ListAdapter;
+import android.widget.CursorAdapter;
 import android.widget.QuickContactBadge;
 import android.widget.SearchView;
 import android.widget.SectionIndexer;
