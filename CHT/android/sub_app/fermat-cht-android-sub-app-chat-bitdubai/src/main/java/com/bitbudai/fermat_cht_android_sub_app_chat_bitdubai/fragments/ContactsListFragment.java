@@ -297,7 +297,7 @@ public class ContactsListFragment extends AbstractFermatFragment {
 
         // Retrieves the SearchView from the search menu item
         final SearchView searchView = (SearchView) searchItem.getActionView();
-
+/*
         // Assign searchable info to SearchView
         searchView.setSearchableInfo(
                 searchManager.getSearchableInfo(getActivity().getComponentName()));
@@ -373,7 +373,7 @@ public class ContactsListFragment extends AbstractFermatFragment {
             // Sets the SearchView to the previous search string
             searchView.setQuery(savedSearchTerm, false);
         }
-
+*/
     }
 
     @Override
