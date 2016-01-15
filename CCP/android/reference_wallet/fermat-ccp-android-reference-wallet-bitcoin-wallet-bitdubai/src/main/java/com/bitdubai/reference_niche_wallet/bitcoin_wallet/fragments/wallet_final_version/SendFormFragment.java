@@ -329,7 +329,7 @@ public class SendFormFragment extends AbstractFermatFragment<ReferenceWalletSess
         cryptoWalletWalletContact = appSession.getLastContactSelected();
         if(cryptoWalletWalletContact!=null) {
             try {
-                BitmapWorkerTask bitmapWorkerTask = new BitmapWorkerTask(imageView_contact,getResources(),true);
+                BitmapWorkerTask bitmapWorkerTask = new BitmapWorkerTask(imageView_contact,getResources(),false);
                 bitmapWorkerTask.execute(cryptoWalletWalletContact.getProfilePicture());
             } catch (Exception e) {
                 Picasso.with(getActivity()).load(R.drawable.ic_profile_male).transform(new CircleTransform()).into(imageView_contact);

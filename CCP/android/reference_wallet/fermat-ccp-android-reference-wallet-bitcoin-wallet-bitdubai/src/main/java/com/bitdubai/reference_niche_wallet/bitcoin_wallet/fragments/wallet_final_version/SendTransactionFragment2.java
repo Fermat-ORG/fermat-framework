@@ -173,7 +173,6 @@ public class SendTransactionFragment2 extends FermatWalletExpandableListFragment
             }catch (Exception e){
                 bitcoinWalletSettings = null;
             }
-
             if(bitcoinWalletSettings == null){
                 bitcoinWalletSettings = new BitcoinWalletSettings();
                 bitcoinWalletSettings.setIsContactsHelpEnabled(true);
