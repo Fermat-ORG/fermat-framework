@@ -7,6 +7,7 @@ import com.thoughtworks.xstream.XStream;
 
 import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.UUID;
 
 /**
  * This class represents the metadata associated with a single instance of
@@ -17,6 +18,23 @@ import java.util.Map;
  * Created by rodrigo on 9/4/15.
  */
 public class DigitalAssetMetadata {
+
+    //VARIABLE DECLARATION
+    /**
+     * This ID is used for identified the metadata,
+     * since this metadata have lots of transactions and there can be
+     * the same asset in the same devices at different steps of the process
+     * we need to identify every single of them so it can get represented on
+     * the asset statistics.
+     */
+
+    private UUID metadataId;
+
+    {
+        //If its a previous metadata then we will need to override this.
+        metadataId = UUID.randomUUID();
+    }
+
     /**
      * The {@link DigitalAsset} to which this object
      * corresponds too.
@@ -34,6 +52,8 @@ public class DigitalAssetMetadata {
         transactionChain = new LinkedHashMap<>();
     }
 
+    //CONSTRUCTORS
+
     public DigitalAssetMetadata(DigitalAsset digitalAsset) {
         this.digitalAsset = digitalAsset;
     }
@@ -42,37 +62,14 @@ public class DigitalAssetMetadata {
         this.digitalAsset = null;
     }
 
+    //PRIVATE METHODS
+
     private String generateHash() {
         digitalAsset.setState(State.FINAL);
         XStream xStream = new XStream();
         xStream.autodetectAnnotations(true);
         String xml = xStream.toXML(digitalAsset);
         return CryptoHasher.performSha256(xml);
-    }
-
-    public String getDigitalAssetHash() {
-        return generateHash();
-    }
-
-    public String getGenesisTransaction() {
-        return getTransactionByDepth(1).getKey();
-    }
-
-    public String getGenesisBlock() {
-        return getTransactionByDepth(1).getValue();
-    }
-
-    @Override
-    public String toString() {
-        return XMLParser.parseObject(this);
-    }
-
-    public DigitalAsset getDigitalAsset() {
-        return this.digitalAsset;
-    }
-
-    public void setDigitalAsset(DigitalAsset digitalAsset) {
-        this.digitalAsset = digitalAsset;
     }
 
     private Map.Entry<String, String> getTransactionByDepth(int transactionDepth) {
@@ -88,6 +85,72 @@ public class DigitalAssetMetadata {
         throw new IllegalStateException("This depth is not found on this transaction chain.");
     }
 
+
+    //PUBLIC METHODS
+
+    public void addNewTransaction(String transactionHash, String blockHash) {
+        transactionChain.put(transactionHash, blockHash);
+    }
+
+    public void removeTransaction(String transactionHash) {
+        transactionChain.remove(transactionHash);
+    }
+
+    @Override
+    public String toString() {
+        return XMLParser.parseObject(this);
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || !(o instanceof DigitalAssetMetadata)) return false;
+
+        DigitalAssetMetadata that = (DigitalAssetMetadata) o;
+
+        if (!getMetadataId().equals(that.getMetadataId())) return false;
+        if (!getDigitalAsset().equals(that.getDigitalAsset())) return false;
+        return getTransactionChain().equals(that.getTransactionChain());
+
+    }
+
+    @Override
+    public int hashCode() {
+        int result = getMetadataId().hashCode();
+        result = 31 * result + getDigitalAsset().hashCode();
+        result = 31 * result + getTransactionChain().hashCode();
+        return result;
+    }
+
+    //GETTERS AND SETTERS
+    public String getDigitalAssetHash() {
+        return generateHash();
+    }
+
+    public String getGenesisTransaction() {
+        return getTransactionByDepth(1).getKey();
+    }
+
+    public String getGenesisBlock() {
+        return getTransactionByDepth(1).getValue();
+    }
+
+    public DigitalAsset getDigitalAsset() {
+        return this.digitalAsset;
+    }
+
+    public void setDigitalAsset(DigitalAsset digitalAsset) {
+        this.digitalAsset = digitalAsset;
+    }
+
+    public UUID getMetadataId() {
+        return metadataId;
+    }
+
+    public void setMetadataId(UUID metadataId) {
+        this.metadataId = metadataId;
+    }
+
     public String getLastTransactionHash() {
         return getTransactionByDepth(transactionChain.size()).getKey();
     }
@@ -99,13 +162,4 @@ public class DigitalAssetMetadata {
     public LinkedHashMap<String, String> getTransactionChain() {
         return transactionChain;
     }
-
-    public void addNewTransaction(String transactionHash, String blockHash) {
-        transactionChain.put(transactionHash, blockHash);
-    }
-
-    public void removeTransaction(String transactionHash) {
-        transactionChain.remove(transactionHash);
-    }
-
 }
