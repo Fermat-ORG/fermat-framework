@@ -9,9 +9,13 @@ public class CantInitializeRedeemPointWalletException extends DAPException {
 
     //VARIABLE DECLARATION
 
-    public static final String DEFAULT_MESSAGE = "There was an error while attempting to retrieve the RedeemPoint Statistics...";
+    public static final String DEFAULT_MESSAGE = "There was an error while attempting to initialize the asset redeem point wallet...";
 
     //CONSTRUCTORS
+
+    public CantInitializeRedeemPointWalletException(String message, Exception cause, String context, String possibleReason) {
+        super(message, cause, context, possibleReason);
+    }
 
     public CantInitializeRedeemPointWalletException(Exception cause, String context, String possibleReason) {
         super(DEFAULT_MESSAGE, cause, context, possibleReason);
