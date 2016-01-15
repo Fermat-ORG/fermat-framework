@@ -118,7 +118,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
-            android:text="You don't have connection"
+            android:text="You are not"
             android:textColor="#ffffff"
             android:textSize="16sp"
             tools:ignore="HardcodedText" />
@@ -126,7 +126,57 @@
         <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="press to connect"
+            android:text="connected to "
+            android:textColor="#ffffff"
+            android:textSize="16sp"
+            tools:ignore="HardcodedText" />
+
+        <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="the Fermat Network"
+            android:textColor="#ffffff"
+            android:textSize="16sp"
+            tools:ignore="HardcodedText" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/no_fermat_connection_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center"
+        android:orientation="vertical"
+        android:visibility="gone">
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:src="@drawable/img_home_no_connection"
+            tools:ignore="ContentDescription" />
+
+        <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:text="The access to the"
+            android:textColor="#ffffff"
+            android:textSize="16sp"
+            tools:ignore="HardcodedText" />
+
+        <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Fermat Network"
+            android:textColor="#ffffff"
+            android:textSize="16sp"
+            tools:ignore="HardcodedText" />
+
+        <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="is disabled."
             android:textColor="#ffffff"
             android:textSize="16sp"
             tools:ignore="HardcodedText" />
