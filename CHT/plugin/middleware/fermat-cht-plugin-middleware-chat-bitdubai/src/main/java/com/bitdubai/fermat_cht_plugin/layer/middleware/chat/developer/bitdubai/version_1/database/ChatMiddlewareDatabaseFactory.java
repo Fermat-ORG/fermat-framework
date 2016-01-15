@@ -66,16 +66,16 @@ public class ChatMiddlewareDatabaseFactory implements DealsWithPluginDatabaseSys
              */
             table = databaseFactory.newTableFactory(ownerId, ChatMiddlewareDatabaseConstants.CHATS_TABLE_NAME);
 
-            table.addColumn(ChatMiddlewareDatabaseConstants.CHATS_ID_CHAT_COLUMN_NAME, DatabaseDataType.INTEGER, 1000, Boolean.TRUE);
-            table.addColumn(ChatMiddlewareDatabaseConstants.CHATS_ID_OBJECT_COLUMN_NAME, DatabaseDataType.INTEGER, 1000, Boolean.FALSE);
+            table.addColumn(ChatMiddlewareDatabaseConstants.CHATS_ID_CHAT_COLUMN_NAME, DatabaseDataType.STRING, 50, Boolean.TRUE);
+            table.addColumn(ChatMiddlewareDatabaseConstants.CHATS_ID_OBJECT_COLUMN_NAME, DatabaseDataType.STRING, 50, Boolean.FALSE);
             table.addColumn(ChatMiddlewareDatabaseConstants.CHATS_LOCAL_ACTOR_TYPE_COLUMN_NAME, DatabaseDataType.STRING, 100, Boolean.FALSE);
             table.addColumn(ChatMiddlewareDatabaseConstants.CHATS_LOCAL_ACTOR_PUB_KEY_COLUMN_NAME, DatabaseDataType.STRING, 100, Boolean.FALSE);
             table.addColumn(ChatMiddlewareDatabaseConstants.CHATS_REMOTE_ACTOR_TYPE_COLUMN_NAME, DatabaseDataType.STRING, 100, Boolean.FALSE);
             table.addColumn(ChatMiddlewareDatabaseConstants.CHATS_REMOTE_ACTOR_PUB_KEY_COLUMN_NAME, DatabaseDataType.STRING, 100, Boolean.FALSE);
             table.addColumn(ChatMiddlewareDatabaseConstants.CHATS_CHAT_NAME_COLUMN_NAME, DatabaseDataType.STRING, 100, Boolean.FALSE);
-            table.addColumn(ChatMiddlewareDatabaseConstants.CHATS_STATUS_COLUMN_NAME, DatabaseDataType.STRING, 1, Boolean.FALSE);
-            table.addColumn(ChatMiddlewareDatabaseConstants.CHATS_CREATION_DATE_COLUMN_NAME, DatabaseDataType.LONG_INTEGER,100, Boolean.FALSE);
-            table.addColumn(ChatMiddlewareDatabaseConstants.CHATS_LAST_MESSAGE_DATE_COLUMN_NAME, DatabaseDataType.LONG_INTEGER,100 , Boolean.FALSE);
+            table.addColumn(ChatMiddlewareDatabaseConstants.CHATS_STATUS_COLUMN_NAME, DatabaseDataType.STRING, 10, Boolean.FALSE);
+            table.addColumn(ChatMiddlewareDatabaseConstants.CHATS_CREATION_DATE_COLUMN_NAME, DatabaseDataType.STRING, 50, Boolean.FALSE);
+            table.addColumn(ChatMiddlewareDatabaseConstants.CHATS_LAST_MESSAGE_DATE_COLUMN_NAME, DatabaseDataType.STRING, 50 , Boolean.FALSE);
 
             table.addIndex(ChatMiddlewareDatabaseConstants.CHATS_FIRST_KEY_COLUMN);
 
@@ -84,17 +84,18 @@ public class ChatMiddlewareDatabaseFactory implements DealsWithPluginDatabaseSys
                 databaseFactory.createTable(ownerId, table);
             } catch (CantCreateTableException cantCreateTableException) {
                 throw new CantCreateDatabaseException(CantCreateDatabaseException.DEFAULT_MESSAGE, cantCreateTableException, "", "Exception not handled by the plugin, There is a problem and i cannot create the table.");
-            }           /**
+            }
+            /**
              * Create Message table.
              */
             table = databaseFactory.newTableFactory(ownerId, ChatMiddlewareDatabaseConstants.MESSAGE_TABLE_NAME);
 
-            table.addColumn(ChatMiddlewareDatabaseConstants.MESSAGE_ID_MESSAGE_COLUMN_NAME, DatabaseDataType.INTEGER, 1000, Boolean.TRUE);
-            table.addColumn(ChatMiddlewareDatabaseConstants.MESSAGE_ID_CHAT_COLUMN_NAME, DatabaseDataType.INTEGER, 1000, Boolean.FALSE);
+            table.addColumn(ChatMiddlewareDatabaseConstants.MESSAGE_ID_MESSAGE_COLUMN_NAME, DatabaseDataType.STRING, 50, Boolean.TRUE);
+            table.addColumn(ChatMiddlewareDatabaseConstants.MESSAGE_ID_CHAT_COLUMN_NAME, DatabaseDataType.STRING, 50, Boolean.FALSE);
             table.addColumn(ChatMiddlewareDatabaseConstants.MESSAGE_TEXT_MESSAGE_COLUMN_NAME, DatabaseDataType.STRING, 100, Boolean.FALSE);
-            table.addColumn(ChatMiddlewareDatabaseConstants.MESSAGE_STATUS_COLUMN_NAME, DatabaseDataType.INTEGER, 3, Boolean.FALSE);
-            table.addColumn(ChatMiddlewareDatabaseConstants.MESSAGE_TYPE_COLUMN_NAME, DatabaseDataType.STRING, 1, Boolean.FALSE);
-            table.addColumn(ChatMiddlewareDatabaseConstants.MESSAGE_MESSAGE_DATE_COLUMN_NAME, DatabaseDataType.LONG_INTEGER,100 , Boolean.FALSE);
+            table.addColumn(ChatMiddlewareDatabaseConstants.MESSAGE_STATUS_COLUMN_NAME, DatabaseDataType.STRING, 10, Boolean.FALSE);
+            table.addColumn(ChatMiddlewareDatabaseConstants.MESSAGE_TYPE_COLUMN_NAME, DatabaseDataType.STRING, 10, Boolean.FALSE);
+            table.addColumn(ChatMiddlewareDatabaseConstants.MESSAGE_MESSAGE_DATE_COLUMN_NAME, DatabaseDataType.STRING, 50 , Boolean.FALSE);
 
             table.addIndex(ChatMiddlewareDatabaseConstants.MESSAGE_FIRST_KEY_COLUMN);
 
@@ -103,17 +104,18 @@ public class ChatMiddlewareDatabaseFactory implements DealsWithPluginDatabaseSys
                 databaseFactory.createTable(ownerId, table);
             } catch (CantCreateTableException cantCreateTableException) {
                 throw new CantCreateDatabaseException(CantCreateDatabaseException.DEFAULT_MESSAGE, cantCreateTableException, "", "Exception not handled by the plugin, There is a problem and i cannot create the table.");
-            }           /**
+            }
+            /**
              * Create Contacts table.
              */
             table = databaseFactory.newTableFactory(ownerId, ChatMiddlewareDatabaseConstants.CONTACTS_TABLE_NAME);
 
-            table.addColumn(ChatMiddlewareDatabaseConstants.CONTACTS_ID_CONTACT_COLUMN_NAME, DatabaseDataType.INTEGER, 1000, Boolean.TRUE);
+            table.addColumn(ChatMiddlewareDatabaseConstants.CONTACTS_ID_CONTACT_COLUMN_NAME, DatabaseDataType.STRING, 50, Boolean.TRUE);
             table.addColumn(ChatMiddlewareDatabaseConstants.CONTACTS_REMOTE_NAME_COLUMN_NAME, DatabaseDataType.STRING, 100, Boolean.FALSE);
             table.addColumn(ChatMiddlewareDatabaseConstants.CONTACTS_ALIAS_COLUMN_NAME, DatabaseDataType.STRING, 100, Boolean.FALSE);
             table.addColumn(ChatMiddlewareDatabaseConstants.CONTACTS_REMOTE_ACTOR_TYPE_COLUMN_NAME, DatabaseDataType.STRING, 100, Boolean.FALSE);
             table.addColumn(ChatMiddlewareDatabaseConstants.CONTACTS_REMOTE_ACTOR_PUB_KEY_COLUMN_NAME, DatabaseDataType.STRING, 100, Boolean.FALSE);
-            table.addColumn(ChatMiddlewareDatabaseConstants.CONTACTS_CREATION_DATE_COLUMN_NAME, DatabaseDataType.LONG_INTEGER, 100, Boolean.FALSE);
+            table.addColumn(ChatMiddlewareDatabaseConstants.CONTACTS_CREATION_DATE_COLUMN_NAME, DatabaseDataType.STRING, 50, Boolean.FALSE);
 
             table.addIndex(ChatMiddlewareDatabaseConstants.CONTACTS_FIRST_KEY_COLUMN);
 
@@ -123,6 +125,28 @@ public class ChatMiddlewareDatabaseFactory implements DealsWithPluginDatabaseSys
             } catch (CantCreateTableException cantCreateTableException) {
                 throw new CantCreateDatabaseException(CantCreateDatabaseException.DEFAULT_MESSAGE, cantCreateTableException, "", "Exception not handled by the plugin, There is a problem and i cannot create the table.");
             }
+
+            /**
+             * Create Events table.
+             */
+            table = databaseFactory.newTableFactory(ownerId, ChatMiddlewareDatabaseConstants.EVENTS_RECORDED_TABLE_NAME);
+
+            table.addColumn(ChatMiddlewareDatabaseConstants.EVENTS_RECORDED_ID_COLUMN_NAME, DatabaseDataType.STRING, 36, Boolean.TRUE);
+            table.addColumn(ChatMiddlewareDatabaseConstants.EVENTS_RECORDED_EVENT_COLUMN_NAME, DatabaseDataType.STRING, 10, Boolean.FALSE);
+            table.addColumn(ChatMiddlewareDatabaseConstants.EVENTS_RECORDED_SOURCE_COLUMN_NAME, DatabaseDataType.STRING, 10, Boolean.FALSE);
+            table.addColumn(ChatMiddlewareDatabaseConstants.EVENTS_RECORDED_STATUS_COLUMN_NAME, DatabaseDataType.STRING, 10, Boolean.FALSE);
+            table.addColumn(ChatMiddlewareDatabaseConstants.EVENTS_RECORDED_TIMESTAMP_COLUMN_NAME, DatabaseDataType.LONG_INTEGER, 100, Boolean.FALSE);
+            table.addColumn(ChatMiddlewareDatabaseConstants.EVENTS_RECORDED_CHAT_ID_COLUMN_NAME, DatabaseDataType.STRING, 36, Boolean.FALSE);
+
+            table.addIndex(ChatMiddlewareDatabaseConstants.EVENTS_RECORDED_TABLE_FIRST_KEY_COLUMN);
+
+            try {
+                //Create the table
+                databaseFactory.createTable(ownerId, table);
+            } catch (CantCreateTableException cantCreateTableException) {
+                throw new CantCreateDatabaseException(CantCreateDatabaseException.DEFAULT_MESSAGE, cantCreateTableException, "", "Exception not handled by the plugin, There is a problem and i cannot create the table.");
+            }
+
         } catch (InvalidOwnerIdException invalidOwnerId) {
             /**
              * This shouldn't happen here because I was the one who gave the owner id to the database file system,

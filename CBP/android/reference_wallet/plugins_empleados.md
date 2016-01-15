@@ -1,20 +1,46 @@
 (A = Aprobado, ? = por determinar, I = implentado Android)
 
 ### Notas:
-- Los contratos no se cancelan (por ahora) y para evitar que se mantenga siempre abierto, se ha de colocar un estado EXPIRADO para indicar que el contrato paso las fechas para su ejecucion y asi filtrarlo de la lista de contratos abierto
+- Los contratos no se cancelan (por ahora) y para evitar que se mantenga siempre abierto, se ha de colocar un estado EXPIRADO para indicar que el contrato paso las fechas para su ejecucion y asi filtrarlo de la lista de contratos abiertos
 - layer CER con inteligencia, al estipo de P2P (plugins de index ya no irian, porque al parecer ya no se usan)
-- Settings de locaciones, metodos de pago y cuentas bancarias (practicamente los datos que pueden ser seleccionables en una negociacion) en Plugin de Customer Broker Sale y Purchase Negotiation ya que ellso tienen la responsabildiad de llevar la informacion de las negociaciones
-- Wallet Plugin: setting de wallets asociadas para que el tenga toda la informacion que necesita para hacer sus debitos y creditos. El Stock de una mercaderia puede estar descompuesto en varias wallets
-- Wallets que manejan ganancia en Plugin Matching Engine, ya que el tiene la responsabilidad de obtener las ganancias
+- Settings de locaciones y cuentas bancarias se guardaran en Plugins de `Customer Broker Sale Negotiation` y `Customer Broker Purchase Negotiation` ya que ellos tienen la responsabildiad de llevar la informacion de las negociaciones.
+- Setting de wallets asociadas como Stock se guarda en Plugin `Crypto Broker Wallet` para que el tenga toda la informacion que necesita para hacer sus debitos y creditos.
+- El Stock de una mercaderia puede estar descompuesto en varias wallets
+- Setting de Wallets asociadas como Ganancia se guardan en Plugin `Matching Engine`, ya que el tiene la responsabilidad de obtener las ganancias
 - con respecto a los datos de la negociacion se llego a lo siguiente:
   - las fechas en las clausulas van a ser tipo long
-  - Negotiation Expiration Date va ser un campo tipo long de `NegotiationInformation` no va a ser una clausula
-  - Memo va a ser un campo tipo String (texto libre) de `NegotiationInformation` no va a ser una clausula
-  - Cancel Reason va a ser un campo tipo String (texto libre) de `NegotiationInformation` no va a ser una clausula
-- Propcurar atomicidad en metodos que guardan settings en los diferentes plugins 
+  - `Negotiation Expiration Date` va ser un campo tipo long de `NegotiationInformation` y no una clausula
+  - `Memo` va a ser un campo tipo String (texto libre) de `NegotiationInformation` y no una clausula
+  - `Cancel Reason` va a ser un campo tipo String (texto libre) de `NegotiationInformation` y no una clausula
+- Procurar atomicidad en metodos que guardan settings en los diferentes plugins 
 - Es necesario actualizar `NegotiationBankAccount` para cambiar `UUID getBankAccountId();`por `String getWalletPublicKey();`
-- Despues de analizar la situacion con respecto a obtener la data complementaria que se debe mostrar en la lista de brokers llegamos a la siguientes concluciones:
-  - Basicamente el Plugin `Crypto Broker Actor` va a ser el encargado de persistir la informacion complementaria en Base de Datos, esta es: mercancias que vende, mercancias que acepta como pago, cotizaciones, modos de pago, por ahora
+- Agregar en la interface `FiatIndex` creando por Fraklin un metodo `Currency getCurrency()` para devolver la otra moneda que se usa para obtener la cotizacion, dado que actualmente solo existe `Currency getMerchandise()`
+- Despues de analizar la situacion con respecto a obtener la data complementaria que se debe mostrar en la lista de brokers y en la broker community llegamos a la siguientes concluciones:
+  - Basicamente el Plugin `Crypto Broker Actor` va a ser el encargado de persistir la informacion complementaria en Base de Datos, esta es:
+    - Informacion basica del actor: 
+      - Foto, Alias, PublicKey
+    - Mercancias:
+      - Se usa para asignar valor a la Clausula `CUSTOMER_CURRENCY`
+      - `List<Currency>`
+      - Se obtiene de la Broker Wallet. El tiene la lista de wallets asociadas y en concencia las mercancias
+    - Cotizacion
+      - Se usa para asignar valor a la Clausula `EXCHANGE_RATE`
+      - Sale de Broker Wallet, por el metodo FiatIndex getMarketRate(...)
+      - `List<FiatIndex>`
+      - Este FiatIndex va a tener la mercancia, la moneda de pago y la cotoizacion propiamente dicha
+    - Monedas de Pago
+      - Se usa para asignar valor a la Clausula `BROKER_CURRENCY`
+      - `List<Currency>`
+      - Se obtiene de Matching Engine. el tiene la lista de wallets asociadas para manejar las ganacias y en consecuencia dichas momendas
+    - Formas de Pago que acepta el broker
+      - Se usa para asignar valor a la Clausula `CUSTOMER_PAYMENT_METHOD`
+      - `Map<Currency, List<Platform>>`
+      - Se obtiene de la lista de wallets asociadas como ganancia en MatchingEarning y se puede inferir esa informacion 
+    - Formas de Entrega que maneja el broker
+      - Se usa para asignar valor a la Clausula `BROKER_PAYMENT_METHOD`
+      - `Map<Currency, List<Platform>>`
+      - Se obtiene de la Broker Wallet, ya que el tiene las wallet asociadas, y se puede inferir esa informacion
+  
   - Crear un agente en el `Plugin Crypto Broker Actor` que actualice o agregue periodicamente esta informacion llamando al `Crypto Broker Actor Network Service` para que devuelva la informacion complementaria de los brokers conectados que tiene registrados
   - Haria falta un metodo en el Plugin `Crypto Broker Actor` que devuelva la informacion registrada para poder ser consumida por otros plugins, como por ejemplo los Modules
   - El Plugin `Crypto Broker Actor` tambien a de guardar su propia informacion complementaria ademas de la de los actores conectados para que pueda ser consumida por el `Crypto Broker Actor Network Service` cuando lo requiera
@@ -247,6 +273,9 @@ Plugins y flujos:
 
 #### Settings Merchandises
 Metodos
+  - [implementar] `float getAvaliableBalanceCrypto(String cryptoPublicKey);`
+  - [implementar] `float getAvaliableBalanceCash(String cashPublicKey);`
+  - [implementar] `float getAvaliableBalanceBank(String bankPublicKey, String bankAccount);`
   - [implementar] `List<CryptoBrokerWalletAssociatedSetting> getAssociatedWallets(string cbpWalletPublicKey)`
   - `void createTransactionRestockBank(...)`
   - `void createTransactionDestockBank(...)`
@@ -388,39 +417,45 @@ Metodos
     - Le paso el `ContractBasicInformation` seleccionado en la pantalla de Contract History
 
 #### Broker List [I]
-  - **Obtener lista de brokers** >> `Crypto Broker Actor Connection`
-  - **Obtener Mercancias que vende un broker** >> `Crypto Customer Module`y `Crypto Broker Actor`
-    - Me recorro la lista de brokers que me da `Crypto Broker Actor Connection`
-    - Por cada Broker llamo a `Crypto Broker Actor` para que me devuelva la lista de mercancias que vende el broker
-    - Guardo esa data en un xml dentro del module como si fuera una cache. 
-    - Cada ves que vaya obtener la lista de brokers verifico si esta data esta desactualizada para ejecutar nuevamente el ciclo
-  - **Obtener cotizaciones por broker** >> `Crypto Customer Module`y `Crypto Broker Actor`
-    - Me recorro la lista de brokers que me da `Crypto Broker Actor Connection`
-    - Por cada Broker llamo a `Crypto Broker Actor` para que me devuelva la lista cotizacines por cada mercancia que vende el broker
-    - Guardo esa data en un xml dentro del module como si fuera una cache indicando un tiempo de caducidad.
-    - Cada ves que vaya obtener la lista de brokers verifico si ya se paso el tiempo de caducidad para ejecutar nuevamente el ciclo
-  - **Obtener formas en que se ofrece la mercancia (Bank, Cash, Crypto)** >> `Crypto Customer Module`
-    - Me recorro la lista de brokers que me da `Crypto Broker Actor Connection`
-    - Por cada Broker llamo a `Crypto Broker Actor` para que me devuelva las formas que tiene el broker para ofrecer la mercancia
-    - Esto va a depender de las wallets que tiene asociadas un broker en su wallet para una mercancia
+Metodos:
 
+Plugins y flujos:
+  - **Obtener lista de brokers con sus mercancias** >> `Crypto Broker Actor`
+  - **Obtener lista de cotizaciones para una mercancia dada** >> `Crypto Broker Actor`
+  - **Obtener Metodos de pago** >> `Crypto Broker Actor`
+  - **Obtener Metodos de entrega** >> `Crypto Broker Actor`
+  
 #### Start Negotiation
-  - **Mostrar Mercancia a comprar** >> `Crypto Customer Module`
-    - Cuando se selecciona un broker de la lista de broker, automaticamente se selecciona la mercancia a comprar
-  - **Como ofrece la mercancia el broker** >> `Crypto Customer Module`
-    - Ya este valor se obtuvo de la lista lista de brokers y fue registrado en el module como cache en un xml
+Metodos:
+
+Plugins y Flujos:
+  - **Mercancia a comprar**
+    - Viene en la informacion de la sesion cuando selecciono un broker de la Broker List
+    - Clausula `CUSTOMER_CURRENCY`
+    - Revisar las notas de este documento
+  - **Indicar cuanta mercancia quiere comprar**
+    - Lo ingresa el customer
+    - Clausula `CUSTOMER_CURRENCY_QUANTITY`
+    - Revisar las notas de este documento
+  - **Mostrar Precio de Cotizacion**
+    - Viene en la informacion de la sesion cuando selecciono un broker de la Broker List
+    - El precio de mercado que se muestra de referencia a de venir de los proveedores que selecciona el Customer
+    - Clausula `EXCHANGE_RATE`
+    - Revisar las notas de este documento
+  - **Mostrar Metodos de Entrega** >> `Crypto Customer Module`
+    - Viene en la informacion de la sesion cuando selecciono un broker de la Broker List
+    - Clausula `CUSTOMER_PAYMENT_METHOD`
+    - Revisar las notas de este documento
   - **Mostrar Moneda de pago** >> `Crypto Customer Module`
-    - Ya este valor se obtuvo de la lista lista de brokers y fue registrado en el module como cache en un xml
-  - **Mostrar Precio de Cotizacion** >> `Crypto Customer Module`
-    - Ya este valor se obtuvo de la lista lista de brokers y fue registrado en el module como cache en un xml
-  - **Mostrar Metodos de Pago** >> `Crypto Customer Module`
-    - Ya este valor se obtuvo de la lista lista de brokers y fue registrado en el module como cache en un xml
-  - **Locacion de customer** >> `Customer Broker Purchase Negotiation`
-    - depende de si el broker ofrece la mercancia como cash
-  - **Cuentas bancarias del customer** >> `Customer Broker Purchase Negotiation`
-    - depende de si el broker ofrece la mercancia como bank
+    - Viene en la informacion de la sesion cuando selecciono un broker de la Broker List
+    - Clausula `BROKER_CURRENCY`
+    - Revisar las notas de este documento
+  - **Mostrar Metodos de Pago**
+    - Viene en la informacion de la sesion cuando selecciono un broker de la Broker List
+    - Clausula `CUSTOMER_PAYMENT_METHOD`
+    - Revisar las notas de este documento
   - **Crear Nueva negociacion** >> `Crypto Customer New Negotiation Transaction`
-    - Debe permitirme registrar la siguiente data: Mercancia a comprar (Moneda), cantidad a comprar, como me ofrece la mercancia, moneda de pago, el modo de pago, la tasa de cambio a pagar, cuenta bancaria del customer, locacion del customer, publicKeyCustomer, publicKeyBroker
+    - Se le pasa un objeto `CustomerBrokerPurchaseNegotiation` al metodo `createCustomerBrokerNewPurchaseNegotiationTranasction()`
     - Me deberia devolver un registro `NegotiationInformation` con los datos de esta nueva negociacion
 
 #### Market Rates [I]

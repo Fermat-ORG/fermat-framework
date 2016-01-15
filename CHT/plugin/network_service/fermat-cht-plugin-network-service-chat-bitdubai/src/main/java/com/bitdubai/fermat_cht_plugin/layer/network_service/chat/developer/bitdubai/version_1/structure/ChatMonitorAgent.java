@@ -146,7 +146,7 @@ public class ChatMonitorAgent implements CHTTransactionAgent,
 //            private PluginDatabaseSystem pluginDatabaseSystem;
 //
 //            private  int iterationNumber = 0;
-//            private OutgoinChatMetaDataDao outgoinChatMetaDataDao;
+//            private ChatMetaDataDao outgoinChatMetaDataDao;
 //            private boolean threadWorking;
 //
 //            @Override
@@ -228,7 +228,7 @@ public class ChatMonitorAgent implements CHTTransactionAgent,
 //                CantSendChatMessageNewStatusNotificationException {
 //
 //            try{
-//                outgoinChatMetaDataDao=new OutgoinChatMetaDataDao(
+//                outgoinChatMetaDataDao=new ChatMetaDataDao(
 //                        database);
 //                /**
 //                 * Check if exist in database new contracts to send
