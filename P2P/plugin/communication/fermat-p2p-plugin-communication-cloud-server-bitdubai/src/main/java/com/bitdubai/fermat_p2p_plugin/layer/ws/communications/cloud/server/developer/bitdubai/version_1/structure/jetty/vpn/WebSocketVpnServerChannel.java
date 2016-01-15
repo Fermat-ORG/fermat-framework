@@ -116,15 +116,13 @@ public class WebSocketVpnServerChannel {
             String vpnClientIdentity             = contentJsonObject.get(JsonAttNamesConstants.CLIENT_IDENTITY_VPN).getAsString();
             PlatformComponentProfile participant = gson.fromJson(contentJsonObject.get(JsonAttNamesConstants.APPLICANT_PARTICIPANT_VPN).getAsString(), PlatformComponentProfileCommunication.class);
             String remoteParticipantIdentity     = contentJsonObject.get(JsonAttNamesConstants.REMOTE_PARTICIPANT_VPN).getAsString();
-            Boolean isApplicant = Boolean.parseBoolean(contentJsonObject.get(JsonAttNamesConstants.I_APPLICANT).getAsString());
 
             LOG.info("participant.getAlias( = " + participant.getAlias());
-            LOG.info("isApplicant = " + isApplicant);
 
             /*
              * Get the client identity and the participant profile
              */
-            vpnClientConnection = new VpnClientConnection(vpnClientIdentity, participant, remoteParticipantIdentity, session, networkServiceType, isApplicant);
+            vpnClientConnection = new VpnClientConnection(vpnClientIdentity, participant, remoteParticipantIdentity, session, networkServiceType);
             ShareMemoryCacheForVpnClientsConnections.add(vpnClientConnection);
 
             Boolean allConnected = ShareMemoryCacheForVpnClientsConnections.isConnected(networkServiceType, vpnClientConnection.getKeyForMyRemote());
@@ -276,9 +274,6 @@ public class WebSocketVpnServerChannel {
     private void sendNotificationVpnConnectionComplete(PlatformComponentProfile destinationPlatformComponentProfile, PlatformComponentProfile remotePlatformComponentProfile){
 
         LOG.info("sendNotificationVpnConnectionComplete = " + destinationPlatformComponentProfile.getName() + " (" + destinationPlatformComponentProfile.getIdentityPublicKey() + ")");
-        LOG.info("remote for this connection = " + remotePlatformComponentProfile.getName() + " (" + remotePlatformComponentProfile.getIdentityPublicKey() + ")");
-
-
 
          /*
          * Construct the content of the msj

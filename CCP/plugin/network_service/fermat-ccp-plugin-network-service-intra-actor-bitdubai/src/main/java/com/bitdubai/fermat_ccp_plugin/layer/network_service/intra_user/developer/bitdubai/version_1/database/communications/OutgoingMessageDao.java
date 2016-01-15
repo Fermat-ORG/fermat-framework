@@ -352,6 +352,8 @@ public class OutgoingMessageDao {
 
         } catch (CantLoadTableToMemoryException cantLoadTableToMemory) {
 
+            cantLoadTableToMemory.printStackTrace();
+
             StringBuffer contextBuffer = new StringBuffer();
             contextBuffer.append("Database Name: " + CommunicationNetworkServiceDatabaseConstants.DATA_BASE_NAME);
 

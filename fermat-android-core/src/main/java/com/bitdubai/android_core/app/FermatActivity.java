@@ -9,6 +9,7 @@ import android.app.PendingIntent;
 import android.app.WallpaperManager;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
@@ -58,6 +59,7 @@ import com.bitdubai.android_core.app.common.version_1.adapters.ScreenPagerAdapte
 import com.bitdubai.android_core.app.common.version_1.adapters.TabsPagerAdapter;
 import com.bitdubai.android_core.app.common.version_1.bottom_navigation.BottomNavigation;
 import com.bitdubai.android_core.app.common.version_1.builders.FooterBuilder;
+import com.bitdubai.android_core.app.common.version_1.classes.NetworkStateReceiver;
 import com.bitdubai.android_core.app.common.version_1.connection_manager.FermatAppConnectionManager;
 import com.bitdubai.android_core.app.common.version_1.provisory.ProvisoryData;
 import com.bitdubai.android_core.app.common.version_1.provisory.SubAppManagerProvisory;
@@ -82,6 +84,7 @@ import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.Wizard
 import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView;
 import com.bitdubai.fermat_android_api.ui.adapters.FermatAdapter;
 import com.bitdubai.fermat_android_api.ui.interfaces.FermatListItemListeners;
+import com.bitdubai.fermat_android_api.ui.util.FermatAnimationsUtils;
 import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.exceptions.CantGetErrorManagerException;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.exceptions.CantGetModuleManagerException;
@@ -172,6 +175,7 @@ public abstract class FermatActivity extends AppCompatActivity
         FermatNotificationListener,
         NavigationView.OnNavigationItemSelectedListener,
         FermatRuntime,
+        NetworkStateReceiver.NetworkStateReceiverListener,
         FermatListItemListeners<com.bitdubai.fermat_api.layer.all_definition.navigation_structure.MenuItem> {
 
 
@@ -206,6 +210,10 @@ public abstract class FermatActivity extends AppCompatActivity
      */
     private final Handler mDrawerActionHandler = new Handler();
     private final Handler refreshHandler = new Handler();
+    /**
+     * Receivers
+     */
+    private NetworkStateReceiver networkStateReceiver;
 
     /**
      * UI
@@ -227,8 +235,6 @@ public abstract class FermatActivity extends AppCompatActivity
     private List<ElementsWithAnimation> elementsWithAnimation = new ArrayList<>();
     private BottomNavigation bottomNavigation;
 
-    RemoteViews mContentView;
-    private Notification.Builder notification;
     private boolean hidden = true;
 
     /**
@@ -251,6 +257,14 @@ public abstract class FermatActivity extends AppCompatActivity
             // The FragmentManager will restore the old Fragments so we don't
             // need to create any new ones here.
         }
+
+//        try {
+//            networkStateReceiver = new NetworkStateReceiver();
+//            networkStateReceiver.addListener(this);
+//            this.registerReceiver(networkStateReceiver, new IntentFilter(android.net.ConnectivityManager.CONNECTIVITY_ACTION));
+//        }catch (Exception e){
+//
+//        }
 
     }
 
@@ -301,6 +315,8 @@ public abstract class FermatActivity extends AppCompatActivity
     protected void onStop() {
         try {
             super.onStop();
+            unregisterReceiver(networkStateReceiver);
+       //     networkStateReceiver.removeListener(this);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -404,7 +420,9 @@ public abstract class FermatActivity extends AppCompatActivity
         final LinearLayout mRevealView = (LinearLayout) findViewById(R.id.reveal_items);
         mRevealView.setVisibility(View.INVISIBLE);
         final View view = findViewById(R.id.reveal);
-        viewGroup.findViewById(R.id.img_fermat_setting).setOnClickListener(new View.OnClickListener() {
+        final View txt_settings = view.findViewById(R.id.txt_settings);
+        txt_settings.setVisibility(View.INVISIBLE);
+        view.findViewById(R.id.img_fermat_setting).setOnClickListener(new View.OnClickListener() {
                                                                      @Override
                                                                      public void onClick(View v) {
                                                                          int cx = (mRevealView.getLeft() + mRevealView.getRight());
@@ -461,6 +479,7 @@ public abstract class FermatActivity extends AppCompatActivity
                                                                                  mRevealView.setVisibility(View.VISIBLE);
                                                                                  FrameLayout frameLayout = (FrameLayout) findViewById(R.id.container_main);
                                                                                  frameLayout.bringChildToFront(mRevealView);
+                                                                                 FermatAnimationsUtils.showEmpty(getApplicationContext(),true,txt_settings);
                                                                                  anim.start();
                                                                                  hidden = false;
 
@@ -472,6 +491,7 @@ public abstract class FermatActivity extends AppCompatActivity
                                                                                          super.onAnimationEnd(animation);
                                                                                          mRevealView.setVisibility(View.INVISIBLE);
                                                                                          container_title.setVisibility(View.VISIBLE);
+                                                                                         FermatAnimationsUtils.showEmpty(getApplicationContext(), false, txt_settings);
                                                                                          hidden = true;
                                                                                      }
                                                                                  });
@@ -934,21 +954,28 @@ public abstract class FermatActivity extends AppCompatActivity
         } catch (Exception e) {
             e.printStackTrace();
         }
-        if (notification != null) {
-            NotificationManager mNotificationManager =
-                    (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
-            mNotificationManager.notify(NOTIFICATION_ID, notification.build());
-        } else {
-            try {
-                if (getCloudClient().getCommunicationsCloudClientConnection().isConnected()) {
-                    launchIntent("running");
-                } else {
-                    launchIntent("closed");
-                }
-            }catch (Exception e){
-                e.printStackTrace();
-            }
-
+//        if (notification != null) {
+//            NotificationManager mNotificationManager =
+//                    (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+//            mNotificationManager.notify(NOTIFICATION_ID, notification.build());
+//        } else {
+//            try {
+//                if (getCloudClient().getCommunicationsCloudClientConnection().isConnected()) {
+//                    launchIntent("running");
+//                } else {
+//                    launchIntent("closed");
+//                }
+//            }catch (Exception e){
+//                e.printStackTrace();
+//            }
+//
+//        }
+        try {
+            networkStateReceiver = new NetworkStateReceiver();
+            networkStateReceiver.addListener(this);
+            this.registerReceiver(networkStateReceiver, new IntentFilter(android.net.ConnectivityManager.CONNECTIVITY_ACTION));
+        }catch (Exception e){
+            e.printStackTrace();
         }
     }
 
@@ -968,7 +995,6 @@ public abstract class FermatActivity extends AppCompatActivity
         }
         NotificationManager mNotificationManager =
                 (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
-        mNotificationManager.cancel(NOTIFICATION_ID);
         mNotificationManager.cancelAll();
         //mNotificationManager.notify(NOTIFICATION_ID, notification.build());
     }
@@ -1112,7 +1138,11 @@ public abstract class FermatActivity extends AppCompatActivity
     protected void removecallbacks() {
         try {
 
-            this.getNotificationManager().deleteObserver(this);
+            try {
+                this.getNotificationManager().deleteObserver(this);
+            }catch (Exception e){
+                e.printStackTrace();
+            }
 
             this.adapter = null;
             paintStatusBar(null);
@@ -1533,12 +1563,10 @@ public abstract class FermatActivity extends AppCompatActivity
                     case CLOUD_CLIENT_CONNECTION_LOOSE:
                     case CLOUD_CONNECTED_NOTIFICATION:
                         //launchWalletNotification(null, notificationEvent.getAlertTitle(), notificationEvent.getTextTitle(), notificationEvent.getTextBody());
-                        mContentView.setTextViewText(R.id.txt_cloud,notificationEvent.getTextBody());
                         launchIntent(notificationEvent.getTextBody());
                         break;
                     default:
                         //launchWalletNotification(notificationEvent.getWalletPublicKey(), notificationEvent.getAlertTitle(), notificationEvent.getTextTitle(), notificationEvent.getTextBody());
-                        mContentView.setTextViewText(R.id.txt_cloud,notificationEvent.getTextBody());
                         launchIntent(notificationEvent.getTextBody());
                         break;
 
@@ -1768,13 +1796,12 @@ public abstract class FermatActivity extends AppCompatActivity
     public abstract void connectWithOtherApp(Engine engine,String fermatAppPublicKey,Object[] objectses);
 
     protected final void launchIntent(String s){
-        if(mContentView==null) mContentView = new RemoteViews(getPackageName(), R.layout.test_tt);
-        mContentView.setTextViewText(R.id.txt_cloud,s);
-        if(notification==null)
-        notification = new Notification.Builder(this).setSmallIcon(R.drawable.fermat_bitcoin2).setTicker("ticker")
-                .setPriority(Notification.PRIORITY_HIGH)
-                .setAutoCancel(false)
-                .setOngoing(true)
+        RemoteViews mContentView = new RemoteViews(getPackageName(), R.layout.test_tt);
+        mContentView.setTextViewText(R.id.txt_cloud, s);
+        Notification.Builder notification = new Notification.Builder(this).setSmallIcon(R.drawable.fermat_bitcoin2).setTicker("ticker")
+                .setPriority(Notification.PRIORITY_LOW).setAutoCancel(true)
+               // .setAutoCancel(false)
+              //  .setOngoing(true)
                 .setContent(mContentView)
                 .setWhen(System.currentTimeMillis());
 
@@ -1783,6 +1810,26 @@ public abstract class FermatActivity extends AppCompatActivity
         mNotificationManager.notify(NOTIFICATION_ID,notification.build());
     }
 
+
+    @Override
+    public void networkAvailable() {
+        Log.i(TAG,"NETWORK AVAILABLE MATIIIII");
+        try {
+            getCloudClient().setNetworkState(true);
+        }catch (Exception e){
+            //e.printStackTrace();
+        }
+    }
+
+    @Override
+    public void networkUnavailable() {
+        Log.i(TAG, "NETWORK UNAVAILABLE MATIIIII");
+        try{
+            getCloudClient().setNetworkState(false);
+        }catch (Exception e){
+          //  e.printStackTrace();
+        }
+    }
 
 
 }

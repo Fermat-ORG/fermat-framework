@@ -7,6 +7,7 @@ import com.bitdubai.fermat_api.layer.all_definition.network_service.interfaces.N
 import com.bitdubai.fermat_api.layer.all_definition.network_service.interfaces.NetworkServiceConnectionManager;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.common.network_services.abstract_classes.AbstractNetworkService;
+import com.bitdubai.fermat_p2p_api.layer.all_definition.common.network_services.abstract_classes.AbstractNetworkServiceV2;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.client.CommunicationsClientConnection;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.client.CommunicationsVPNConnection;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.exceptions.CantEstablishConnectionException;
@@ -78,6 +79,8 @@ public class CommunicationNetworkServiceConnectionManager<NS extends AbstractNet
      */
     private NS networkServicePluginRoot;
 
+    private AbstractNetworkServiceV2 abstractNetworkServiceV2;
+
 
     /**
      * Constructor with parameters
@@ -97,6 +100,26 @@ public class CommunicationNetworkServiceConnectionManager<NS extends AbstractNet
         this.communicationNetworkServiceLocalsCache = new HashMap<>();
         this.communicationNetworkServiceRemoteAgentsCache = new HashMap<>();
         this.networkServicePluginRoot = networkServicePluginRoot;
+    }
+
+    /**
+     * Constructor with parameters
+     *
+     * @param communicationsClientConnection a communicationLayerManager instance
+     * @param errorManager              a errorManager instance
+     */
+    public CommunicationNetworkServiceConnectionManager(AbstractNetworkServiceV2 networkServicePluginRoot,PlatformComponentProfile platformComponentProfile, ECCKeyPair identity, CommunicationsClientConnection communicationsClientConnection, Database dataBase, ErrorManager errorManager, EventManager eventManager) {
+        super();
+        this.platformComponentProfile = platformComponentProfile;
+        this.identity = identity;
+        this.communicationsClientConnection = communicationsClientConnection;
+        this.errorManager = errorManager;
+        this.eventManager = eventManager;
+        this.incomingMessageDao = new IncomingMessageDao(dataBase);
+        this.outgoingMessageDao = new OutgoingMessageDao(dataBase);
+        this.communicationNetworkServiceLocalsCache = new HashMap<>();
+        this.communicationNetworkServiceRemoteAgentsCache = new HashMap<>();
+        this.abstractNetworkServiceV2 = networkServicePluginRoot;
     }
 
 
@@ -187,16 +210,31 @@ public class CommunicationNetworkServiceConnectionManager<NS extends AbstractNet
             if (communicationsVPNConnection != null &&
                     communicationsVPNConnection.isActive()) {
 
+                CommunicationNetworkServiceLocal communicationNetworkServiceLocal = null;
+                CommunicationNetworkServiceRemoteAgent communicationNetworkServiceRemoteAgent = null;
+                if(networkServicePluginRoot!=null) {
                  /*
                  * Instantiate the local reference
                  */
-                CommunicationNetworkServiceLocal communicationNetworkServiceLocal = new CommunicationNetworkServiceLocal(remoteComponentProfile, errorManager, eventManager, outgoingMessageDao,platformComponentProfile.getNetworkServiceType(),networkServicePluginRoot);
+                    communicationNetworkServiceLocal = new CommunicationNetworkServiceLocal(remoteComponentProfile, errorManager, eventManager, outgoingMessageDao, platformComponentProfile.getNetworkServiceType(), networkServicePluginRoot);
 
                 /*
                  * Instantiate the remote reference
                  */
-                CommunicationNetworkServiceRemoteAgent communicationNetworkServiceRemoteAgent = new CommunicationNetworkServiceRemoteAgent(networkServicePluginRoot,identity, communicationsVPNConnection, errorManager, eventManager, incomingMessageDao, outgoingMessageDao);
+                    communicationNetworkServiceRemoteAgent = new CommunicationNetworkServiceRemoteAgent(networkServicePluginRoot, identity, communicationsVPNConnection, errorManager, eventManager, incomingMessageDao, outgoingMessageDao);
 
+                }else if(abstractNetworkServiceV2!=null){
+                        /*
+                 * Instantiate the local reference
+                 */
+                    communicationNetworkServiceLocal = new CommunicationNetworkServiceLocal(remoteComponentProfile, errorManager, eventManager, outgoingMessageDao, platformComponentProfile.getNetworkServiceType(), abstractNetworkServiceV2);
+
+                /*
+                 * Instantiate the remote reference
+                 */
+                    communicationNetworkServiceRemoteAgent = new CommunicationNetworkServiceRemoteAgent(abstractNetworkServiceV2, identity, communicationsVPNConnection, errorManager, eventManager, incomingMessageDao, outgoingMessageDao);
+
+                }
                 /*
                  * Register the observer to the observable agent
                  */
