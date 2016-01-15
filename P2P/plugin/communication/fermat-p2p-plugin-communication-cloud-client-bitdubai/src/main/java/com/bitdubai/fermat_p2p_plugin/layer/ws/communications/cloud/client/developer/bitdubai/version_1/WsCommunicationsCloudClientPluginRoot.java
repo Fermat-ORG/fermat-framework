@@ -75,8 +75,8 @@ public class WsCommunicationsCloudClientPluginRoot extends AbstractPlugin implem
     /**
      * Represent the SERVER_IP
      */
-    public static final String SERVER_IP = ServerConf.SERVER_IP_PRODUCCTION;
-    //public static final String SERVER_IP = ServerConf.SERVER_IP_DEVELOPER_LOCAL;
+    //public static final String SERVER_IP = ServerConf.SERVER_IP_PRODUCTION;
+    public static final String SERVER_IP = ServerConf.SERVER_IP_DEVELOPER_LOCAL;
 
     /**
      * Represent the uri

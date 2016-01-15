@@ -119,4 +119,12 @@ public class JsonAttNamesConstants {
      * Represen the value of CLIENT_IDENTITY
      */
     public static final String CLIENT_IDENTITY = "c-i";
+
+    /**
+     * Represent the value of I_APPLICANT
+     */
+    public static final String I_APPLICANT = "ia";
+
+
+
 }

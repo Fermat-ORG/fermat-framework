@@ -51,6 +51,11 @@ public class VpnClientConnection {
     private Session session;
 
     /**
+     * Represent the isApplicant
+     */
+    private boolean isApplicant;
+
+    /**
      * Constructor with parameters
      *
      * @param vpnClientIdentity
@@ -58,13 +63,14 @@ public class VpnClientConnection {
      * @param remoteParticipantIdentity
      * @param session
      */
-    public VpnClientConnection(String vpnClientIdentity, PlatformComponentProfile participant, String remoteParticipantIdentity, Session session, NetworkServiceType networkServiceType) {
+    public VpnClientConnection(String vpnClientIdentity, PlatformComponentProfile participant, String remoteParticipantIdentity, Session session, NetworkServiceType networkServiceType, boolean isApplicant) {
         this.vpnClientIdentity = vpnClientIdentity;
         this.participant = participant;
         this.remoteParticipantIdentity = remoteParticipantIdentity;
         this.networkServiceType = networkServiceType;
         this.session = session;
         this.session.setMaxTextMessageBufferSize(MAX_MESSAGE_SIZE);
+        this.isApplicant = isApplicant;
     }
 
     /**
@@ -110,5 +116,30 @@ public class VpnClientConnection {
      */
     public NetworkServiceType getNetworkServiceType() {
         return networkServiceType;
+    }
+
+    /**
+     * Get the isApplicant value
+     *
+     * @return isApplicant current value
+     */
+    public boolean isApplicant() {
+        return isApplicant;
+    }
+
+    /**
+     * Get the key
+     * @return String
+     */
+    public String getMyKey(){
+        return (participant.getIdentityPublicKey() + remoteParticipantIdentity);
+    }
+
+    /**
+     * Get the remote key
+     * @return String
+     */
+    public String getKeyForMyRemote(){
+        return (remoteParticipantIdentity+participant.getIdentityPublicKey() );
     }
 }

@@ -21,7 +21,7 @@ import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.enums.JsonAtt
 import com.bitdubai.fermat_p2p_plugin.layer.ws.communications.cloud.server.developer.bitdubai.version_1.structure.jetty.ClientConnection;
 import com.bitdubai.fermat_p2p_plugin.layer.ws.communications.cloud.server.developer.bitdubai.version_1.structure.jetty.conf.WebSocketConfigurator;
 import com.bitdubai.fermat_p2p_plugin.layer.ws.communications.cloud.server.developer.bitdubai.version_1.structure.jetty.util.MemoryCache;
-import com.bitdubai.fermat_p2p_plugin.layer.ws.communications.cloud.server.developer.bitdubai.version_1.structure.jetty.util.VpnShareMemoryCache;
+import com.bitdubai.fermat_p2p_plugin.layer.ws.communications.cloud.server.developer.bitdubai.version_1.structure.jetty.util.ShareMemoryCacheForVpnClientsConnections;
 import com.bitdubai.fermat_p2p_plugin.layer.ws.communications.cloud.server.developer.bitdubai.version_1.structure.jetty.util.WebSocketVpnIdentity;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
@@ -73,11 +73,6 @@ public class WebSocketVpnServerChannel {
     private VpnClientConnection vpnClientConnection;
 
     /**
-     *  Represent the participantPendingToReconnect
-     */
-    private PlatformComponentProfile participantPendingToReconnect;
-
-    /**
      * Constructor
      */
     public WebSocketVpnServerChannel(){
@@ -121,40 +116,31 @@ public class WebSocketVpnServerChannel {
             String vpnClientIdentity             = contentJsonObject.get(JsonAttNamesConstants.CLIENT_IDENTITY_VPN).getAsString();
             PlatformComponentProfile participant = gson.fromJson(contentJsonObject.get(JsonAttNamesConstants.APPLICANT_PARTICIPANT_VPN).getAsString(), PlatformComponentProfileCommunication.class);
             String remoteParticipantIdentity     = contentJsonObject.get(JsonAttNamesConstants.REMOTE_PARTICIPANT_VPN).getAsString();
+            Boolean isApplicant = Boolean.parseBoolean(contentJsonObject.get(JsonAttNamesConstants.I_APPLICANT).getAsString());
+
+            LOG.info("participant.getAlias( = " + participant.getAlias());
+            LOG.info("isApplicant = " + isApplicant);
 
             /*
              * Get the client identity and the participant profile
              */
-            vpnClientConnection = new VpnClientConnection(vpnClientIdentity, participant, remoteParticipantIdentity, session, networkServiceType);
+            vpnClientConnection = new VpnClientConnection(vpnClientIdentity, participant, remoteParticipantIdentity, session, networkServiceType, isApplicant);
+            ShareMemoryCacheForVpnClientsConnections.add(vpnClientConnection);
 
-            VpnShareMemoryCache.add(networkServiceType, participant.getIdentityPublicKey(), vpnClientConnection);
+            Boolean allConnected = ShareMemoryCacheForVpnClientsConnections.isConnected(networkServiceType, vpnClientConnection.getKeyForMyRemote());
+            LOG.info("All participant are connected = " + allConnected);
 
-            if (participantPendingToReconnect == null) {
+            //Validate if all participantsConnections register are connect
+            if(allConnected){
 
-                LOG.info("All participant are connected = " + VpnShareMemoryCache.isConnected(networkServiceType, remoteParticipantIdentity));
+                PlatformComponentProfile peer1 = participant;
+                PlatformComponentProfile peer2 = ShareMemoryCacheForVpnClientsConnections.getMyRemote(vpnClientConnection).getParticipant();
 
-                //Validate if all participantsConnections register are connect
-                if(VpnShareMemoryCache.isConnected(networkServiceType, remoteParticipantIdentity)){
+                LOG.info("peer1 is = " + peer1.getAlias());
+                LOG.info("peer2 is = " + peer2.getAlias());
 
-                    PlatformComponentProfile peer1 = participant;
-                    PlatformComponentProfile peer2 = VpnShareMemoryCache.get(networkServiceType, remoteParticipantIdentity).getParticipant();
-
-                    sendNotificationPacketConnectionComplete(peer1, peer2);
-                    sendNotificationPacketConnectionComplete(peer2, peer1);
-
-                }
-
-            }else {
-
-                /*
-                 * Validate if the client
-                 */
-                if (participantPendingToReconnect.getIdentityPublicKey().equals(participant.getIdentityPublicKey())){
-
-                    //Notify to the remote participant already connecting again
-                    sendNotificationPacketReconnected(vpnClientConnection);
-                    participantPendingToReconnect = null;
-                }
+                sendNotificationVpnConnectionComplete(peer1, peer2);
+                sendNotificationVpnConnectionComplete(peer2, peer1);
 
             }
 
@@ -203,14 +189,14 @@ public class WebSocketVpnServerChannel {
             * Construct a new fermat packet whit the same message and different destination
             */
             FermatPacket fermatPacketRespond = FermatPacketCommunicationFactory.constructFermatPacketEncryptedAndSinged(vpnClientConnection.getVpnClientIdentity(), //Destination
-                    vpnServerIdentity.getPublicKey(),           //Sender
-                    fermatMessage.toJson(),                     //Message Content
-                    FermatPacketType.MESSAGE_TRANSMIT,          //Packet type
-                    vpnServerIdentity.getPrivateKey());         //Sender private key
+                                                                                                                        vpnServerIdentity.getPublicKey(),           //Sender
+                                                                                                                        fermatMessage.toJson(),                     //Message Content
+                                                                                                                        FermatPacketType.MESSAGE_TRANSMIT,          //Packet type
+                                                                                                                        vpnServerIdentity.getPrivateKey());         //Sender private key
             /*
              * Get the connection of the destination
              */
-            VpnClientConnection clientConnectionDestination = VpnShareMemoryCache.get(networkServiceType, fermatMessage.getReceiver());
+            VpnClientConnection clientConnectionDestination = ShareMemoryCacheForVpnClientsConnections.getMyRemote(vpnClientConnection);
 
             /*
              * If the connection to client destination available
@@ -241,9 +227,9 @@ public class WebSocketVpnServerChannel {
 
         LOG.info(" --------------------------------------------------------------------- ");
         LOG.info("Starting method onWebSocketClose");
-        LOG.info("Socket "+vpnClientConnection.getSession().getId()+" is disconnect! code = " + reason.getCloseCode() + "["+reason.getCloseCode().getCode()+"] reason = " + reason.getReasonPhrase());
+        LOG.info("Socket " + vpnClientConnection.getSession().getId() + " is disconnect! code = " + reason.getCloseCode() + "[" + reason.getCloseCode().getCode() + "] reason = " + reason.getReasonPhrase());
 
-        VpnClientConnection vpnClientConnectionRemote = VpnShareMemoryCache.get(networkServiceType, vpnClientConnection.getRemoteParticipantIdentity());
+        VpnClientConnection vpnClientConnectionRemote = ShareMemoryCacheForVpnClientsConnections.getMyRemote(vpnClientConnection);
 
         try {
 
@@ -256,7 +242,7 @@ public class WebSocketVpnServerChannel {
                     vpnClientConnectionRemote.getSession().close(new CloseReason(reason.getCloseCode(), "Details: "+reason.getReasonPhrase()));
             }
 
-            VpnShareMemoryCache.remove(networkServiceType, vpnClientConnection.getParticipant().getIdentityPublicKey());
+            ShareMemoryCacheForVpnClientsConnections.remove(networkServiceType, vpnClientConnection.getMyKey());
 
         } catch (IOException e) {
             e.printStackTrace();
@@ -287,9 +273,12 @@ public class WebSocketVpnServerChannel {
      * @param destinationPlatformComponentProfile
      * @param remotePlatformComponentProfile
      */
-    private void sendNotificationPacketConnectionComplete(PlatformComponentProfile destinationPlatformComponentProfile, PlatformComponentProfile remotePlatformComponentProfile){
+    private void sendNotificationVpnConnectionComplete(PlatformComponentProfile destinationPlatformComponentProfile, PlatformComponentProfile remotePlatformComponentProfile){
 
-        LOG.info("sendNotificationPacketConnectionComplete = " + destinationPlatformComponentProfile.getName() + " (" + destinationPlatformComponentProfile.getIdentityPublicKey() + ")");
+        LOG.info("sendNotificationVpnConnectionComplete = " + destinationPlatformComponentProfile.getName() + " (" + destinationPlatformComponentProfile.getIdentityPublicKey() + ")");
+        LOG.info("remote for this connection = " + remotePlatformComponentProfile.getName() + " (" + remotePlatformComponentProfile.getIdentityPublicKey() + ")");
+
+
 
          /*
          * Construct the content of the msj
@@ -328,34 +317,29 @@ public class WebSocketVpnServerChannel {
 
         LOG.info("sendNotificationPacketReconnected");
 
-           VpnClientConnection connection = VpnShareMemoryCache.get(networkServiceType, vpnClientConnection.getRemoteParticipantIdentity());
+           VpnClientConnection connectionRemote = ShareMemoryCacheForVpnClientsConnections.getMyRemote(vpnClientConnection);
 
-            if (connection.getSession().getId() != vpnClientConnection.getSession().getId()){
+            /*
+             * Construct the content of the msj
+             */
+            Gson gson = new Gson();
+            JsonObject packetContent = new JsonObject();
+            packetContent.addProperty(JsonAttNamesConstants.REMOTE_PARTICIPANT_VPN, vpnClientConnection.getParticipant().getIdentityPublicKey());
+            packetContent.addProperty(JsonAttNamesConstants.NETWORK_SERVICE_TYPE, networkServiceType.toString());
+            packetContent.addProperty(JsonAttNamesConstants.RECONNECTED, Boolean.TRUE);
 
-                /*
-                 * Construct the content of the msj
-                 */
-                Gson gson = new Gson();
-                JsonObject packetContent = new JsonObject();
-                packetContent.addProperty(JsonAttNamesConstants.REMOTE_PARTICIPANT_VPN, vpnClientConnection.getParticipant().getIdentityPublicKey());
-                packetContent.addProperty(JsonAttNamesConstants.NETWORK_SERVICE_TYPE, networkServiceType.toString());
-                packetContent.addProperty(JsonAttNamesConstants.RECONNECTED, Boolean.TRUE);
-
-                /*
-                * Construct a notification
-                */
-                FermatPacket fermatPacketRespond = FermatPacketCommunicationFactory.constructFermatPacketEncryptedAndSinged(connection.getVpnClientIdentity(), //Destination
-                                                                                                                            vpnServerIdentity.getPublicKey(),                      //Sender
-                                                                                                                            gson.toJson(packetContent),                            //Message Content
-                                                                                                                            FermatPacketType.MESSAGE_TRANSMIT,                     //Packet type
-                                                                                                                            vpnServerIdentity.getPrivateKey());                    //Sender private key
-
-                /*
-                 * Send notification
-                 */
-                connection.getSession().getAsyncRemote().sendText(FermatPacketEncoder.encode(fermatPacketRespond));
-
-            }
+            /*
+            * Construct a notification
+            */
+            FermatPacket fermatPacketRespond = FermatPacketCommunicationFactory.constructFermatPacketEncryptedAndSinged(connectionRemote.getVpnClientIdentity(), //Destination
+                                                                                                                        vpnServerIdentity.getPublicKey(),                      //Sender
+                                                                                                                        gson.toJson(packetContent),                            //Message Content
+                                                                                                                        FermatPacketType.MESSAGE_TRANSMIT,                     //Packet type
+                                                                                                                        vpnServerIdentity.getPrivateKey());                    //Sender private key
+            /*
+             * Send notification
+             */
+        connectionRemote.getSession().getAsyncRemote().sendText(FermatPacketEncoder.encode(fermatPacketRespond));
 
     }
 

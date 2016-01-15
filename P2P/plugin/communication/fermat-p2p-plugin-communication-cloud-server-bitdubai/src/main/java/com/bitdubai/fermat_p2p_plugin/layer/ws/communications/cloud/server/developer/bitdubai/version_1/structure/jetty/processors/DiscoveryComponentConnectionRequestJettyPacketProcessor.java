@@ -75,11 +75,11 @@ public class DiscoveryComponentConnectionRequestJettyPacketProcessor extends Fer
         LOG.info("--------------------------------------------------------------------- ");
         LOG.info("Starting processingPackage");
 
-        String packetContentJsonStringRepresentation = null;
-        PlatformComponentProfile applicantParticipant = null;
-        PlatformComponentProfile networkServiceApplicant = null;
-        PlatformComponentProfile remoteParticipant = null;
-        PlatformComponentProfile remoteNsParticipant = null;
+        String packetContentJsonStringRepresentation     = null;
+        PlatformComponentProfile applicantParticipant    = null;
+        PlatformComponentProfile applicantNetworkService = null;
+        PlatformComponentProfile remoteParticipant       = null;
+        PlatformComponentProfile remoteNsParticipant     = null;
 
         try {
 
@@ -97,17 +97,17 @@ public class DiscoveryComponentConnectionRequestJettyPacketProcessor extends Fer
             /*
              * Get the applicant network service
              */
-            networkServiceApplicant = new PlatformComponentProfileCommunication().fromJson(packetContent.get(JsonAttNamesConstants.APPLICANT_PARTICIPANT_NS_VPN).getAsString());
-            LOG.info("networkServiceApplicant = " + networkServiceApplicant.getAlias() + "("+networkServiceApplicant.getIdentityPublicKey()+")");
+            applicantNetworkService = new PlatformComponentProfileCommunication().fromJson(packetContent.get(JsonAttNamesConstants.APPLICANT_PARTICIPANT_NS_VPN).getAsString());
+            LOG.info("networkServiceApplicant = " + applicantNetworkService.getAlias() + "("+applicantNetworkService.getIdentityPublicKey()+")");
 
             /*
              * Get the component profile as participant that live in the same device of the network service applicant
              */
             applicantParticipant = new PlatformComponentProfileCommunication().fromJson(packetContent.get(JsonAttNamesConstants.APPLICANT_PARTICIPANT_VPN).getAsString());
-            List<PlatformComponentProfile> applicantParticipantList = searchProfileByCommunicationCloudClientIdentity(applicantParticipant.getPlatformComponentType(), applicantParticipant.getNetworkServiceType(), networkServiceApplicant.getCommunicationCloudClientIdentity());
+            List<PlatformComponentProfile> applicantParticipantList = searchProfileByCommunicationCloudClientIdentity(applicantParticipant.getPlatformComponentType(), applicantParticipant.getNetworkServiceType(), applicantNetworkService.getCommunicationCloudClientIdentity());
             for (PlatformComponentProfile platformComponentProfile: applicantParticipantList) {
                 if (platformComponentProfile.getIdentityPublicKey().equals(applicantParticipant.getIdentityPublicKey()) &&
-                        platformComponentProfile.getCommunicationCloudClientIdentity().equals(networkServiceApplicant.getCommunicationCloudClientIdentity())){
+                        platformComponentProfile.getCommunicationCloudClientIdentity().equals(applicantNetworkService.getCommunicationCloudClientIdentity())){
                     applicantParticipant = platformComponentProfile;
                     break;
                 }
@@ -125,7 +125,7 @@ public class DiscoveryComponentConnectionRequestJettyPacketProcessor extends Fer
             /*
              * Get the network service profile that live in the same device of the remote participant
              */
-            List<PlatformComponentProfile> remoteNsParticipantList = searchProfileByCommunicationCloudClientIdentity(networkServiceApplicant.getPlatformComponentType(), networkServiceApplicant.getNetworkServiceType(), remoteParticipant.getCommunicationCloudClientIdentity());
+            List<PlatformComponentProfile> remoteNsParticipantList = searchProfileByCommunicationCloudClientIdentity(applicantNetworkService.getPlatformComponentType(), applicantNetworkService.getNetworkServiceType(), remoteParticipant.getCommunicationCloudClientIdentity());
             remoteNsParticipant = remoteNsParticipantList.get(0);
             LOG.info("remoteNsParticipant = " + remoteNsParticipant.getAlias() + "("+remoteNsParticipant.getIdentityPublicKey()+")");
 
@@ -134,21 +134,21 @@ public class DiscoveryComponentConnectionRequestJettyPacketProcessor extends Fer
 
             LOG.info("Vpn path = " + vpnPath);
 
-            /*
-             * Notify to the participants of the vpn
-             */
-            constructRespondPacketAndSend(vpnPath, applicantParticipant, remoteParticipant, remoteNsParticipant);
-            constructRespondPacketAndSend(vpnPath, remoteParticipant, applicantParticipant, networkServiceApplicant);
+            constructRequestConnectToVpnRespondPacketAndSend(vpnPath, applicantParticipant, remoteParticipant, remoteNsParticipant, Boolean.TRUE);
+            constructRequestConnectToVpnRespondPacketAndSend(vpnPath, remoteParticipant, applicantParticipant, applicantNetworkService, Boolean.FALSE);
+
 
         }catch (Exception e){
 
-            LOG.info("Requested connection is no possible, some of the participant are no available.");
-            LOG.info("Cause: "+e.getMessage());
-            LOG.info("Details: ");
-            LOG.info("ApplicantParticipant is available    = " + (applicantParticipant    != null ? "SI ("+applicantParticipant.getAlias()+")" : "NO" ));
-            LOG.info("NetworkServiceApplicant is available = " + (networkServiceApplicant != null ? "SI ("+networkServiceApplicant.getAlias()+")": "NO" ));
-            LOG.info("RemoteParticipant is available       = " + (remoteParticipant       != null ? "SI ("+remoteParticipant.getAlias()+")" : "NO" ));
-            LOG.info("RemoteNsParticipant is available     = " + (remoteNsParticipant     != null ? "SI ("+remoteNsParticipant.getAlias()+")" : "NO" ));
+            LOG.error("Requested connection is no possible, some of the participant are no available.");
+            LOG.error("Cause: " + e.getMessage());
+            LOG.error("Details: ");
+            LOG.error("ApplicantParticipant is available    = " + (applicantParticipant    != null ? "SI ("+applicantParticipant.getAlias()+")" : "NO" ));
+            LOG.error("NetworkServiceApplicant is available = " + (applicantNetworkService != null ? "SI (" + applicantNetworkService.getAlias() + ")" : "NO"));
+            LOG.error("RemoteParticipant is available       = " + (remoteParticipant != null ? "SI (" + remoteParticipant.getAlias() + ")" : "NO"));
+            LOG.error("RemoteNsParticipant is available     = " + (remoteNsParticipant != null ? "SI (" + remoteNsParticipant.getAlias() + ")" : "NO"));
+
+            e.printStackTrace();
 
             String details = "";
 
@@ -156,7 +156,7 @@ public class DiscoveryComponentConnectionRequestJettyPacketProcessor extends Fer
                 details = "Applicant Participant is not available. ";
             }
 
-            if (networkServiceApplicant == null){
+            if (applicantNetworkService == null){
                 details = "Applicant Network Service is not available. ";
             }
 
@@ -172,7 +172,7 @@ public class DiscoveryComponentConnectionRequestJettyPacketProcessor extends Fer
              * Construct the json object
              */
             JsonObject packetContent = jsonParser.parse(packetContentJsonStringRepresentation).getAsJsonObject();
-            packetContent.addProperty(JsonAttNamesConstants.APPLICANT_PARTICIPANT_NS_VPN, networkServiceApplicant.toJson());
+            packetContent.addProperty(JsonAttNamesConstants.APPLICANT_PARTICIPANT_NS_VPN, applicantNetworkService.toJson());
             packetContent.addProperty(JsonAttNamesConstants.REMOTE_PARTICIPANT_VPN, remoteParticipant.toJson());
             packetContent.addProperty(JsonAttNamesConstants.FAILURE_VPN_MSJ, "Failure in component connection, some of the component needed to establish the vpn are no available: "+details+" "+e.getMessage());
 
@@ -201,10 +201,12 @@ public class DiscoveryComponentConnectionRequestJettyPacketProcessor extends Fer
      * @param remoteParticipant
      * @param remoteParticipantNetworkService
      */
-    private void constructRespondPacketAndSend(String path, PlatformComponentProfile platformComponentProfileDestination, PlatformComponentProfile remoteParticipant, PlatformComponentProfile remoteParticipantNetworkService){
+    private void constructRequestConnectToVpnRespondPacketAndSend(String path, PlatformComponentProfile platformComponentProfileDestination, PlatformComponentProfile remoteParticipant, PlatformComponentProfile remoteParticipantNetworkService, boolean isApplicant){
 
 
         LOG.info("Sending vpn connection to = " + platformComponentProfileDestination.getAlias());
+        LOG.info("Sending whit remote = " + remoteParticipant.getAlias());
+        LOG.info("Sending whit isApplicant = " + isApplicant);
 
         /*
          * Get json representation for the filters
@@ -215,6 +217,7 @@ public class DiscoveryComponentConnectionRequestJettyPacketProcessor extends Fer
         packetContent.addProperty(JsonAttNamesConstants.APPLICANT_PARTICIPANT_VPN, platformComponentProfileDestination.toJson());
         packetContent.addProperty(JsonAttNamesConstants.REMOTE_PARTICIPANT_VPN, remoteParticipant.toJson());
         packetContent.addProperty(JsonAttNamesConstants.REMOTE_PARTICIPANT_NS_VPN, remoteParticipantNetworkService.toJson());
+        packetContent.addProperty(JsonAttNamesConstants.I_APPLICANT, isApplicant);
 
         LOG.info("packetContent = " +gson.toJson(packetContent));
 
@@ -236,6 +239,46 @@ public class DiscoveryComponentConnectionRequestJettyPacketProcessor extends Fer
         /*
          * Send the packet
          */
+        clientConnectionDestination.getSession().getAsyncRemote().sendText(FermatPacketEncoder.encode(fermatPacketRespond));
+
+    }
+
+    /**
+     * Construct a packet whit the information that a vpn is ready
+     *
+     * @param destinationPlatformComponentProfile
+     * @param remotePlatformComponentProfile
+     */
+    private void sendNotificationVpnConnectionComplete(PlatformComponentProfile destinationPlatformComponentProfile, PlatformComponentProfile remotePlatformComponentProfile, NetworkServiceType networkServiceType){
+
+        LOG.info("sendNotificationVpnConnectionComplete = " + destinationPlatformComponentProfile.getName() + " (" + destinationPlatformComponentProfile.getIdentityPublicKey() + ")");
+
+         /*
+         * Construct the content of the msj
+         */
+        Gson gson = new Gson();
+        JsonObject packetContent = new JsonObject();
+        packetContent.addProperty(JsonAttNamesConstants.REMOTE_PARTICIPANT_VPN,  remotePlatformComponentProfile.toJson());
+        packetContent.addProperty(JsonAttNamesConstants.APPLICANT_PARTICIPANT_VPN,  destinationPlatformComponentProfile.toJson());
+        packetContent.addProperty(JsonAttNamesConstants.NETWORK_SERVICE_TYPE, networkServiceType.toString());
+
+        /*
+         * Get the connection client of the destination
+         * IMPORTANT: No send by vpn connection, no support this type of packet
+         */
+        ClientConnection clientConnectionDestination = MemoryCache.getInstance().getRegisteredClientConnectionsCache().get(destinationPlatformComponentProfile.getCommunicationCloudClientIdentity());
+
+        /*
+        * Construct a new fermat packet whit the same message and different destination
+        */
+        FermatPacket fermatPacketRespond = FermatPacketCommunicationFactory.constructFermatPacketEncryptedAndSinged(destinationPlatformComponentProfile.getCommunicationCloudClientIdentity(), //Destination
+                clientConnectionDestination.getServerIdentity().getPublicKey(), //Sender
+                gson.toJson(packetContent),                                        //Message Content
+                FermatPacketType.COMPLETE_COMPONENT_CONNECTION_REQUEST,            //Packet type
+                clientConnectionDestination.getServerIdentity().getPrivateKey()); //Sender private key
+        /*
+        * Send the encode packet to the destination
+        */
         clientConnectionDestination.getSession().getAsyncRemote().sendText(FermatPacketEncoder.encode(fermatPacketRespond));
 
     }

@@ -121,7 +121,7 @@ public class WsCommunicationsCloudClientConnection implements CommunicationsClie
         this.wsCommunicationsCloudClientChannel   = WsCommunicationsCloudClientChannel.constructWsCommunicationsCloudClientFactory(uri, new Draft_17(), this, eventManager, clientIdentity);
         this.wsCommunicationsCloudClientAgent     = new WsCommunicationsCloudClientAgent(wsCommunicationsCloudClientChannel);
         this.wsCommunicationsCloudClientPingAgent = new WsCommunicationsCloudClientPingAgent(wsCommunicationsCloudClientChannel);
-        this.wsCommunicationVPNClientManagerAgent = new WsCommunicationVPNClientManagerAgent();
+        this.wsCommunicationVPNClientManagerAgent = WsCommunicationVPNClientManagerAgent.getInstance();
         this.locationManager                      = locationManager;
     }
 
@@ -836,9 +836,9 @@ public class WsCommunicationsCloudClientConnection implements CommunicationsClie
 
         System.out.println("WsCommunicationsCloudClientConnection - requestDiscoveryVpnConnection");
 
-            /*
-             * Validate parameter
-             */
+        /*
+         * Validate parameter
+         */
         if (applicantParticipant == null || applicantNetworkService == null || remoteParticipant == null){
 
             throw new IllegalArgumentException("All parameters are required, can not be null");
