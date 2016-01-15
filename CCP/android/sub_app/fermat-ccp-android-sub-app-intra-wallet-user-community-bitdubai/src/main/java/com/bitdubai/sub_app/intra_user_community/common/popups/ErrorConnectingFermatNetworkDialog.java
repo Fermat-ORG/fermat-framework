@@ -25,11 +25,20 @@ public class ErrorConnectingFermatNetworkDialog extends FermatDialog<IntraUserSu
      */
     private ErrorConnectingFermatNetwork errorConnectingFermatNetwork;
     /**
+     * onClick listeners
+     */
+    private View.OnClickListener leftClick;
+    private View.OnClickListener rightClick;
+    /**
+     * Positive and negative button option text
+     */
+    private CharSequence leftButton;
+    private CharSequence rightButton;
+    /**
      * UI components
      */
-    private FermatTextView positiveBtn;
-    private FermatTextView negativeBtn;
-
+    private FermatTextView mDescription;
+    private CharSequence description;
 
     public ErrorConnectingFermatNetworkDialog(final Activity a,
                                               final IntraUserSubAppSession intraUserSubAppSession,
@@ -44,10 +53,16 @@ public class ErrorConnectingFermatNetworkDialog extends FermatDialog<IntraUserSu
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        positiveBtn = (FermatTextView) findViewById(R.id.positive_button);
-        negativeBtn = (FermatTextView) findViewById(R.id.negative_button);
-        positiveBtn.setOnClickListener(this);
-        negativeBtn.setOnClickListener(this);
+        FermatTextView positiveButtonView = (FermatTextView) findViewById(R.id.positive_button);
+        FermatTextView negativeButtonView = (FermatTextView) findViewById(R.id.negative_button);
+        mDescription = (FermatTextView) findViewById(R.id.description);
+        positiveButtonView.setOnClickListener(rightClick);
+        negativeButtonView.setOnClickListener(leftClick);
+        mDescription.setText(description != null ? description : "");
+        positiveButtonView.setText(leftButton != null ? leftButton : "");
+        negativeButtonView.setText(rightButton != null ? rightButton : "");
+        positiveButtonView.setOnClickListener(leftClick);
+        negativeButtonView.setOnClickListener(rightClick);
     }
 
     @Override
@@ -75,7 +90,33 @@ public class ErrorConnectingFermatNetworkDialog extends FermatDialog<IntraUserSu
     }
 
 
+    /**
+     * Set positive button listener and text
+     *
+     * @param text    CharSequence
+     * @param onClick View.OnClickListener
+     */
+    public void setLeftButton(CharSequence text, View.OnClickListener onClick) {
+        leftClick = onClick;
+        leftButton = text;
+    }
+
+    /**
+     * Set negative button listener and text
+     *
+     * @param text    CharSequence
+     * @param onClick View.OnClickListener
+     */
+    public void setRightButton(CharSequence text, View.OnClickListener onClick) {
+        rightClick = onClick;
+        rightButton = text;
+    }
+
     public void setErrorConnectingFermatNetwork(ErrorConnectingFermatNetwork errorConnectingFermatNetwork) {
         this.errorConnectingFermatNetwork = errorConnectingFermatNetwork;
+    }
+
+    public void setDescription(CharSequence description) {
+        this.description = description;
     }
 }
