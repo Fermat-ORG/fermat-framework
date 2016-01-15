@@ -17,6 +17,8 @@ import android.support.v4.widget.CursorAdapter;*/
 import android.text.SpannableString;
 import android.text.TextUtils;
 
+import com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.models.ChatMessage;
+import com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.models.ContactList;
 import com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.util.ImageLoader;
 import com.bitdubai.android_api.BuildConfig;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractFermatFragment;
@@ -40,6 +42,8 @@ import android.widget.AlphabetIndexer;
 //import android.widget.EditText;
 //import android.widget.ListAdapter;
 import android.widget.CursorAdapter;
+import android.widget.ListAdapter;
+import android.widget.ListView;
 import android.widget.QuickContactBadge;
 import android.widget.SearchView;
 import android.widget.SectionIndexer;
@@ -82,6 +86,9 @@ public class ContactsListFragment extends AbstractFermatFragment {
     // Stores the previously selected search item so that on a configuration change the same item
     // can be reselected again
     private int mPreviouslySelectedSearchItem = 0;
+    public ArrayList<ContactList> contactList;
+    private ListView contactsContainer;
+    private ContactsAdapter adapter;
 
     // Whether or not the search query has changed since the last time the loader was refreshed
     private boolean mSearchQueryChanged;
@@ -162,8 +169,43 @@ public class ContactsListFragment extends AbstractFermatFragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+
+        loadDummyHistory();
         // Inflate the list fragment layout
         return inflater.inflate(R.layout.contact_list_fragment, container, false);
+    }
+
+    private void loadDummyHistory(){// Hard Coded
+
+        contactList = new ArrayList<ContactList>();
+
+        ContactList cl = new ContactList();
+        cl.setId(1);
+        cl.setName("John Doe");
+        cl.setDate(DateFormat.getDateTimeInstance().format(new Date()));
+        contactList.add(cl);
+        ContactList cl1 = new ContactList();
+        cl1.setId(2);
+        cl1.setName("Jane Doe");
+        cl1.setDate(DateFormat.getDateTimeInstance().format(new Date()));
+        contactList.add(cl1);
+        //adapter = new ChatAdapter(getActivity());//,
+        //contactsContainer.setAdapter((ListAdapter) cl);
+
+        for(int i=0; i<contactList.size(); i++) {
+            ContactList contact_list = contactList.get(i);
+            displayMessage(contact_list);
+        }
+    }
+
+    public void displayMessage(ContactList message) {
+        adapter.add(message);
+        //adapter.notifyDataSetChanged();
+        scroll();
+    }
+
+    private void scroll() {
+        contactsContainer.setSelection(contactsContainer.getCount() - 1);
     }
 
     @Override
@@ -295,8 +337,8 @@ public class ContactsListFragment extends AbstractFermatFragment {
                 (SearchManager) getActivity().getSystemService(Context.SEARCH_SERVICE);
 
         // Retrieves the SearchView from the search menu item
-        final SearchView searchView = (SearchView) searchItem.getActionView();
-/*
+ /*       final SearchView searchView = (SearchView) searchItem.getActionView();
+
         // Assign searchable info to SearchView
         searchView.setSearchableInfo(
                 searchManager.getSearchableInfo(getActivity().getComponentName()));
@@ -588,7 +630,7 @@ public class ContactsListFragment extends AbstractFermatFragment {
         private LayoutInflater mInflater; // Stores the layout inflater
         private AlphabetIndexer mAlphabetIndexer; // Stores the AlphabetIndexer instance
         private TextAppearanceSpan highlightTextSpan; // Stores the highlight text appearance style
-
+        List<ContactList> contactList = new ArrayList<>();
         /**
          * Instantiates a new Contacts Adapter.
          * @param context A context that has access to the app's layout.
@@ -788,6 +830,9 @@ public class ContactsListFragment extends AbstractFermatFragment {
             TextView text1;
             TextView text2;
             QuickContactBadge icon;
+        }
+
+        public void add(ContactList contactlist) {contactList.add(contactlist);
         }
     }
 

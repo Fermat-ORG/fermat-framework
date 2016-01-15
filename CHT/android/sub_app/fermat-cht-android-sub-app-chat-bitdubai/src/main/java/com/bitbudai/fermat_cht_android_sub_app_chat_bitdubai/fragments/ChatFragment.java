@@ -144,8 +144,11 @@ public class ChatFragment extends AbstractFermatFragment  {//ActionBarActivity
         msg1.setMessage("How r u doing???");
         msg1.setDate(DateFormat.getDateTimeInstance().format(new Date()));
         chatHistory.add(msg1);
-        adapter = new ChatAdapter(getActivity());//,
-        //messagesContainer.setAdapter((ListAdapter) adapter);
+        //adapter = new ChatAdapter(getActivity(), msg);
+        //adapter.setFermatListEventListener(this);
+        //recyclerView.setAdapter(adapter);
+        //adapter = new ChatAdapter(getActivity());//,
+        //messagesContainer.setAdapter((ListAdapter) msg);
 
         for(int i=0; i<chatHistory.size(); i++) {
             ChatMessage message = chatHistory.get(i);
