@@ -860,7 +860,7 @@ public class IntraWalletUserModulePluginRoot extends AbstractPlugin implements
     public int[] getMenuNotifications() {
         int[] notifications = new int[4];
         try {
-            if(getSelectedActorIdentity().getPublicKey() != null)
+            if(getSelectedActorIdentity() != null)
                 notifications[2] = intraWalletUserManager.getWaitingYourAcceptanceIntraWalletUsers(getSelectedActorIdentity().getPublicKey(),99,0).size();
             else
                 notifications[2] = 0;
