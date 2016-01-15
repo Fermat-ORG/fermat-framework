@@ -126,4 +126,20 @@ public class VpnClientConnection {
     public boolean isApplicant() {
         return isApplicant;
     }
+
+    /**
+     * Get the key
+     * @return String
+     */
+    public String getMyKey(){
+        return (participant.getIdentityPublicKey() + remoteParticipantIdentity);
+    }
+
+    /**
+     * Get the remote key
+     * @return String
+     */
+    public String getKeyForMyRemote(){
+        return (remoteParticipantIdentity+participant.getIdentityPublicKey() );
+    }
 }
