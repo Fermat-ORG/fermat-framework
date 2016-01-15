@@ -1,4 +1,7 @@
 :numbered:
+
+image::https://raw.githubusercontent.com/bitDubai/media-kit/master/MediaKit/Fermat%20Branding/Fermat%20Logotype/Fermat_Logo_3D.png[Fermat Logo]
+
 == Fermat System-wide definitions
 
 
@@ -63,6 +66,18 @@ CASH OUT POINT Wallet :: -> for shops/organizations/persons who gives out money 
 ////
 
 
+image::https://raw.githubusercontent.com/bitDubai/media-kit/master/MediaKit/Coins/Fermat%20Bitcoin/PerspView/1/Front_MedQ_1280x720.jpg[FermatCoin]
+
+
+==== _Continue Reading ..._
+
+link:book-chapter-00(intro).asciidoc[Back to Intro]
+
+link:book-z-appendix-01-principles.asciidoc[Appendix: Fermat Principles in Detail]
+
+link:book-z-appendix-02-history.asciidoc[Appendix: Fermat History]
+
+link:book-z-appendix-03-money.asciidoc[Appendix: Money and Crypto Currency]
 
 
 
