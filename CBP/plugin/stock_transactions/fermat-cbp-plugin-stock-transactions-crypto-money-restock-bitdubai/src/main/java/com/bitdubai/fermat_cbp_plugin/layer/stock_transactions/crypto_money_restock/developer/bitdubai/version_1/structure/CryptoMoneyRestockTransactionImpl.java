@@ -85,7 +85,7 @@ public class CryptoMoneyRestockTransactionImpl implements CryptoMoneyTransaction
 
     @Override
     public void setCryptoCurrency(CryptoCurrency cryptoCurrency) {
-
+        this.cryptoCurrency = cryptoCurrency;
     }
 
     @Override
