@@ -125,6 +125,15 @@ public final class AssetVerification {
         return availableBalanceForTransaction < genesisAmount;
     }
 
+
+    public static CryptoTransaction foundCryptoTransaction(BitcoinNetworkManager bitcoinNetworkManager, DigitalAssetMetadata digitalAssetMetadata) throws CantGetCryptoTransactionException {
+        CryptoTransaction cryptoTransaction = bitcoinNetworkManager.getCryptoTransactionFromBlockChain(digitalAssetMetadata.getGenesisTransaction(), digitalAssetMetadata.getGenesisBlock());
+        if (cryptoTransaction == null) {
+            throw new CantGetCryptoTransactionException(CantGetCryptoTransactionException.DEFAULT_MESSAGE, null, "Getting the genesis transaction from Crypto Network", "The crypto transaction received is null");
+        }
+        return cryptoTransaction;
+    }
+
     public static boolean isValidContract(DigitalAssetContract digitalAssetContract) {
         //For now, we going to check, only, the expiration date
         ContractProperty contractProperty = digitalAssetContract.getContractProperty(DigitalAssetContractPropertiesConstants.EXPIRATION_DATE);

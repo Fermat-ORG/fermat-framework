@@ -104,7 +104,7 @@ public class CreateRestockDestockFragmentDialog extends Dialog implements
             setContentView(R.layout.cbw_create_stock_transaction_dialog);
 
 
-            dialogTitleLayout = (LinearLayout) findViewById(R.id.cbw_ctd_title);
+            dialogTitleLayout = (LinearLayout) findViewById(R.id.cbw_ctd_title_layout);
             dialogTitle = (FermatTextView) findViewById(R.id.cbw_ctd_title);
             amountText = (EditText) findViewById(R.id.cbw_ctd_amount);
             //memoText = (AutoCompleteTextView) findViewById(R.id.bnk_ctd_memo);
@@ -157,7 +157,7 @@ public class CreateRestockDestockFragmentDialog extends Dialog implements
     private void applyTransaction(String option) {
         try {
 
-            final String memo = memoText.getText().toString();
+            final String memo = "testmemo";
             String amount = amountText.getText().toString();
 
             if (amount.equals("")) {
@@ -181,8 +181,10 @@ public class CreateRestockDestockFragmentDialog extends Dialog implements
                     if(Platforms.CRYPTO_CURRENCY_PLATFORM == setting.getPlatform()){
                         cryptoBrokerWalletManager.createTransactionRestockCrypto(setting.getBrokerPublicKey(), (CryptoCurrency) setting.getMerchandise(), setting.getBrokerPublicKey(), setting.getWalletPublicKey(),  new BigDecimal(amount), memo, null, OriginTransaction.RESTOCK_AUTOMATIC);
                     }
+                    dismiss();
                     return;
                 case "destock":
+                    System.out.println("*************DESTOCK DIALOG****************  ["+setting.getPlatform()+"]");
                     if(Platforms.BANKING_PLATFORM == setting.getPlatform()){
                         cryptoBrokerWalletManager.createTransactionDestockBank(setting.getBrokerPublicKey(), (FiatCurrency) setting.getMerchandise(), setting.getBrokerPublicKey(), setting.getWalletPublicKey(), setting.getBankAccount(), new BigDecimal(amount), memo, null, OriginTransaction.RESTOCK_AUTOMATIC);
                     }
@@ -192,7 +194,7 @@ public class CreateRestockDestockFragmentDialog extends Dialog implements
                     if(Platforms.CRYPTO_CURRENCY_PLATFORM == setting.getPlatform()){
                         cryptoBrokerWalletManager.createTransactionDestockCrypto(setting.getBrokerPublicKey(), (CryptoCurrency) setting.getMerchandise(), setting.getBrokerPublicKey(), setting.getWalletPublicKey(), new BigDecimal(amount), memo, null, OriginTransaction.RESTOCK_AUTOMATIC);
                     }
-                    System.out.println("*************DESTOCK DIALOG****************  ["+setting.getPlatform()+"]");
+                    dismiss();
                     return;
             }
             //TODO:Stock or destock

@@ -29,6 +29,9 @@ public class RecordsNotFoundException extends DAPException {
         super(message);
     }
 
+    public RecordsNotFoundException() {
+    }
+
     public RecordsNotFoundException(Exception exception) {
         super(exception);
     }

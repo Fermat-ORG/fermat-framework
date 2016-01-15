@@ -1,5 +1,6 @@
 package com.bitdubai.fermat_cht_api.layer.middleware.utils;
 
+import com.bitdubai.fermat_api.layer.all_definition.components.enums.PlatformComponentType;
 import com.bitdubai.fermat_cht_api.all_definition.enums.ChatStatus;
 import com.bitdubai.fermat_cht_api.layer.middleware.interfaces.Chat;
 
@@ -11,24 +12,24 @@ import java.util.UUID;
  */
 public class ChatImpl implements Chat {
     //TODO: Documentar
-    private UUID       chatId;
-    private UUID       objectId;
-    private String     localActorType;
-    private String     localActorPublicKey;
-    private String     remoteActorType;
-    private String     remoteActorPublicKey;
-    private String     chatName;
-    private ChatStatus status;
-    private Date       date;
-    private Date       lastMessageDate;
+    private UUID                        chatId;
+    private UUID                        objectId;
+    private PlatformComponentType       localActorType;
+    private String                      localActorPublicKey;
+    private PlatformComponentType       remoteActorType;
+    private String                      remoteActorPublicKey;
+    private String                      chatName;
+    private ChatStatus                  status;
+    private Date                        date;
+    private Date                        lastMessageDate;
 
     public ChatImpl(){};
 
     public ChatImpl(UUID chatId,
                     UUID objectId,
-                    String localActorType,
+                    PlatformComponentType localActorType,
                     String localActorPublicKey,
-                    String remoteActorType,
+                    PlatformComponentType remoteActorType,
                     String remoteActorPublicKey,
                     String chatName,
                     ChatStatus status,
@@ -69,12 +70,12 @@ public class ChatImpl implements Chat {
     }
 
     @Override
-    public String getLocalActorType() {
+    public PlatformComponentType getLocalActorType() {
         return localActorType;
     }
 
     @Override
-    public void setLocalActorType(String localActorType) {
+    public void setLocalActorType(PlatformComponentType localActorType) {
         this.localActorType = localActorType;
     }
 
@@ -89,12 +90,12 @@ public class ChatImpl implements Chat {
     }
 
     @Override
-    public String getRemoteActorType() {
+    public PlatformComponentType getRemoteActorType() {
         return this.remoteActorType;
     }
 
     @Override
-    public void setRemoteActorType(String remoteActorType) {
+    public void setRemoteActorType(PlatformComponentType remoteActorType) {
         this.remoteActorType = remoteActorType;
     }
 

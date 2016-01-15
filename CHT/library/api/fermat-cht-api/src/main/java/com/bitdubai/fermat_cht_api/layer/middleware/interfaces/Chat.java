@@ -1,5 +1,6 @@
 package com.bitdubai.fermat_cht_api.layer.middleware.interfaces;
 
+import com.bitdubai.fermat_api.layer.all_definition.components.enums.PlatformComponentType;
 import com.bitdubai.fermat_cht_api.all_definition.enums.ChatStatus;
 
 import java.sql.Date;
@@ -13,12 +14,12 @@ public interface Chat {
     void setChatId(UUID chatId);
     UUID getObjectId();
     void setObjectId(UUID objectId);
-    String getLocalActorType();
-    void setLocalActorType(String localActorType);
+    PlatformComponentType getLocalActorType();
+    void setLocalActorType(PlatformComponentType localActorType);
     String getLocalActorPublicKey();
     void setLocalActorPublicKey(String localActorPublicKey);
-    String getRemoteActorType();
-    void setRemoteActorType(String remoteActorType);
+    PlatformComponentType getRemoteActorType();
+    void setRemoteActorType(PlatformComponentType remoteActorType);
     String getRemoteActorPublicKey();
     void setRemoteActorPublicKey(String remoteActorPublicKey);
     String getChatName();
