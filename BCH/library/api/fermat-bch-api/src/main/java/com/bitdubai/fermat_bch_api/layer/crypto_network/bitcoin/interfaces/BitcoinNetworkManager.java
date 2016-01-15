@@ -140,25 +140,7 @@ public interface BitcoinNetworkManager extends TransactionSender<CryptoTransacti
     List<Transaction> getBitcoinTransactions(BlockchainNetworkType blockchainNetworkType);
 
 
-    /**
-     * Will get all the CryptoTransactions stored in the CryptoNetwork which are a child of a parent Transaction
-     * @param parentHash
-     * @return
-     * @throws CantGetCryptoTransactionException
-     */
-    List<CryptoTransaction> getChildCryptoTransaction(String parentHash) throws CantGetCryptoTransactionException;
-
-    /**
-     * Will get all the CryptoTransactions stored in the CryptoNetwork which are a child of a parent Transaction
-     * @param parentHash the parent transaction
-     * @param depth the depth of how many transactions we will navigate until we reach the parent transaction. Max is 10
-     * @return
-     * @throws CantGetCryptoTransactionException
-     */
-    List<CryptoTransaction> getChildCryptoTransaction(String parentHash, int depth) throws CantGetCryptoTransactionException;
-
-
-    /**
+     /**
      * gets the current Crypto Status for the specified Transaction ID
      * @param txHash the Bitcoin transaction hash
      * @return the last crypto status
@@ -186,26 +168,7 @@ public interface BitcoinNetworkManager extends TransactionSender<CryptoTransacti
      */
     BlockchainConnectionStatus getBlockchainConnectionStatus(BlockchainNetworkType blockchainNetworkType)  throws CantGetBlockchainConnectionStatusException;
 
-    /**
-     * Starting from the parentTransaction, I will navigate up until the last transaction, and return it.
-     * @blockchainNetworkType the network in which we will be executing this. If none provided, DEFAULT will be used.
-     * @param parentTransactionHash The starting point transaction hash.
-     * @param transactionBlockHash the block where this transaction is.
-     * @return the Last child transaction.
-     */
-    Transaction getLastChildTransaction(@Nullable BlockchainNetworkType blockchainNetworkType, String parentTransactionHash, String transactionBlockHash) throws CantGetTransactionException;
-
-    /**
-     * Starting from the parentTransaction, I will navigate up until the last transaction, and return the CryptoTransaction
-     * @blockchainNetworkType the network in which we will be executing this. If none provided, DEFAULT will be used.
-     * @param parentTransactionHash The starting point transaction hash.
-     * @param transactionBlockHash the block where this transaction is.
-     * @return the Last child transaction.
-     */
-    CryptoTransaction getLastChildCryptoTransaction(@Nullable BlockchainNetworkType blockchainNetworkType, String parentTransactionHash, String transactionBlockHash) throws CantGetCryptoTransactionException;
-
-
-    /**
+     /**
      * Gets a stored CryptoTransaction in wathever network.
      * @param txHash the transaction hash we want to get the CryptoTransaction
      * @return the last recorded CryptoTransaction.

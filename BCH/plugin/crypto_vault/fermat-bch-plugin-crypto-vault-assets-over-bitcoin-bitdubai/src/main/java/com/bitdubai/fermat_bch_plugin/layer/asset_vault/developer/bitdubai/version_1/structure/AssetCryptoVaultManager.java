@@ -200,25 +200,6 @@ public class AssetCryptoVaultManager  {
                 }
             }
 
-            /**
-             * If I still don't have it, Then I will get the last transaction originated from the GenesisBlock and use that one if possible.
-             * I'm using these method last because it is the most expensive in terms of resources.             *
-             */
-            if (genesisBlockHash != null && genesisTransaction == null){
-                Transaction lastAssetTransaction = null;
-                try {
-                    lastAssetTransaction = bitcoinNetworkManager.getLastChildTransaction(networkType, genesisTransactionHash, genesisBlockHash);
-                } catch (CantGetTransactionException e) {
-                    throw new CantSendAssetBitcoinsToUserException(CantSendAssetBitcoinsToUserException.DEFAULT_MESSAGE, e, "couln't get the last child transaction of the genesis transaction.", "Crypto network issue");
-                }
-
-                if (lastAssetTransaction != null){
-                    for (Transaction transaction : transactions){
-                        if (transaction.getHashAsString().equals(lastAssetTransaction.getHashAsString()))
-                            genesisTransaction = transaction;
-                    }
-                }
-            }
 
             /**
              * If I still couldn't find it, I cant go on.
