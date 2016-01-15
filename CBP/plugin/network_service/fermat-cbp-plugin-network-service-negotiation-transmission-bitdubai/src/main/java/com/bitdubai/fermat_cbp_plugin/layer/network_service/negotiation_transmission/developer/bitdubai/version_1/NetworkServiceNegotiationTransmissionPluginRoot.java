@@ -204,7 +204,7 @@ public class NetworkServiceNegotiationTransmissionPluginRoot extends AbstractNet
             //Verify if the communication cloud client is active
             if (!wsCommunicationsCloudClientManager.isDisable()){
                 //Initialize the agent and start
-                communicationRegistrationProcessNetworkServiceAgent = new CommunicationRegistrationProcessNetworkServiceAgent(this, wsCommunicationsCloudClientManager.getCommunicationsCloudClientConnection());
+                communicationRegistrationProcessNetworkServiceAgent = new CommunicationRegistrationProcessNetworkServiceAgent(this, wsCommunicationsCloudClientManager);
                 communicationRegistrationProcessNetworkServiceAgent.start();
             }
 
@@ -648,7 +648,9 @@ public class NetworkServiceNegotiationTransmissionPluginRoot extends AbstractNet
         if((fermatEvent instanceof ClientConnectionCloseNotificationEvent) && (communicationNetworkServiceConnectionManager != null)){
             VPNConnectionCloseNotificationEvent vpnConnectionCloseNotificationEvent = (VPNConnectionCloseNotificationEvent) fermatEvent;
             if(vpnConnectionCloseNotificationEvent.getNetworkServiceApplicant() == getNetworkServiceType()){
-                        communicationNetworkServiceConnectionManager.closeConnection(vpnConnectionCloseNotificationEvent.getRemoteParticipant().getIdentityPublicKey());
+
+                if(communicationNetworkServiceConnectionManager != null)
+                    communicationNetworkServiceConnectionManager.closeConnection(vpnConnectionCloseNotificationEvent.getRemoteParticipant().getIdentityPublicKey());
             }
 
         }
@@ -660,7 +662,9 @@ public class NetworkServiceNegotiationTransmissionPluginRoot extends AbstractNet
 
         if((fermatEvent instanceof ClientConnectionCloseNotificationEvent) && (communicationNetworkServiceConnectionManager != null)){
             this.register = false;
-            communicationNetworkServiceConnectionManager.closeAllConnection();
+
+            if(communicationNetworkServiceConnectionManager != null)
+                communicationNetworkServiceConnectionManager.closeAllConnection();
         }
 
     }
@@ -684,6 +688,10 @@ public class NetworkServiceNegotiationTransmissionPluginRoot extends AbstractNet
 
         if(communicationNetworkServiceConnectionManager != null)
             communicationNetworkServiceConnectionManager.restart();
+
+        if(!this.register){
+            communicationRegistrationProcessNetworkServiceAgent.start();
+        }
 
     }
 

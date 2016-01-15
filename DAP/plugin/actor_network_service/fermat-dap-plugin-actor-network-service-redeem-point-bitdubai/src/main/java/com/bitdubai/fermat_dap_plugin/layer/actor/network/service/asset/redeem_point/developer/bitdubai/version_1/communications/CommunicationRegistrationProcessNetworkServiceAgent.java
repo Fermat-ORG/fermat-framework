@@ -2,6 +2,7 @@ package com.bitdubai.fermat_dap_plugin.layer.actor.network.service.asset.redeem_
 
 import com.bitdubai.fermat_api.layer.all_definition.components.interfaces.PlatformComponentProfile;
 import com.bitdubai.fermat_dap_plugin.layer.actor.network.service.asset.redeem_point.developer.bitdubai.version_1.AssetRedeemPointActorNetworkServicePluginRoot;
+import com.bitdubai.fermat_p2p_api.layer.p2p_communication.WsCommunicationsCloudClientManager;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.client.CommunicationsClientConnection;
 
 /**
@@ -23,7 +24,7 @@ public class CommunicationRegistrationProcessNetworkServiceAgent extends Thread 
     /**
      * Represent the communicationsClientConnection
      */
-    private CommunicationsClientConnection communicationsClientConnection;
+    private WsCommunicationsCloudClientManager communicationsClientConnection;
 
     /**
      * Represent the active
@@ -35,7 +36,7 @@ public class CommunicationRegistrationProcessNetworkServiceAgent extends Thread 
      * @param assetUserActorNetworkServicePluginRoot
      * @param communicationsClientConnection
      */
-    public CommunicationRegistrationProcessNetworkServiceAgent(AssetRedeemPointActorNetworkServicePluginRoot assetUserActorNetworkServicePluginRoot, CommunicationsClientConnection communicationsClientConnection) {
+    public CommunicationRegistrationProcessNetworkServiceAgent(AssetRedeemPointActorNetworkServicePluginRoot assetUserActorNetworkServicePluginRoot, WsCommunicationsCloudClientManager communicationsClientConnection) {
         this.assetRedemPointActorNetworkServicePluginRoot = assetUserActorNetworkServicePluginRoot;
         this.communicationsClientConnection = communicationsClientConnection;
         this.active = Boolean.FALSE;
@@ -52,12 +53,12 @@ public class CommunicationRegistrationProcessNetworkServiceAgent extends Thread 
 
             try {
 
-                if (communicationsClientConnection.isRegister() && !assetRedemPointActorNetworkServicePluginRoot.isRegister()){
+                if (communicationsClientConnection.getCommunicationsCloudClientConnection().isRegister() && !assetRedemPointActorNetworkServicePluginRoot.isRegister()){
 
                     /*
                      * Construct my profile and register me
                      */
-                    PlatformComponentProfile platformComponentProfile =  communicationsClientConnection.constructPlatformComponentProfileFactory(assetRedemPointActorNetworkServicePluginRoot.getIdentityPublicKey(),
+                    PlatformComponentProfile platformComponentProfile =  communicationsClientConnection.getCommunicationsCloudClientConnection().constructPlatformComponentProfileFactory(assetRedemPointActorNetworkServicePluginRoot.getIdentityPublicKey(),
                             assetRedemPointActorNetworkServicePluginRoot.getAlias().toLowerCase(),
                             assetRedemPointActorNetworkServicePluginRoot.getName(),
                             assetRedemPointActorNetworkServicePluginRoot.getNetworkServiceType(),
@@ -67,7 +68,7 @@ public class CommunicationRegistrationProcessNetworkServiceAgent extends Thread 
                     /*
                      * Register me
                      */
-                    communicationsClientConnection.registerComponentForCommunication(assetRedemPointActorNetworkServicePluginRoot.getNetworkServiceType(), platformComponentProfile);
+                    communicationsClientConnection.getCommunicationsCloudClientConnection().registerComponentForCommunication(assetRedemPointActorNetworkServicePluginRoot.getNetworkServiceType(), platformComponentProfile);
 
                     /*
                      * Configure my new profile

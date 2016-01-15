@@ -483,7 +483,7 @@ public final class CryptoPaymentRequestNetworkServicePluginRoot extends Abstract
                 /*
                  * Initialize the agent and start
                  */
-                communicationRegistrationProcessNetworkServiceAgent = new CommunicationRegistrationProcessNetworkServiceAgent(this, wsCommunicationsCloudClientManager.getCommunicationsCloudClientConnection());
+                communicationRegistrationProcessNetworkServiceAgent = new CommunicationRegistrationProcessNetworkServiceAgent(this, wsCommunicationsCloudClientManager);
                 communicationRegistrationProcessNetworkServiceAgent.start();
             }
 
@@ -942,6 +942,10 @@ public final class CryptoPaymentRequestNetworkServicePluginRoot extends Abstract
 
         if(communicationNetworkServiceConnectionManager != null)
             communicationNetworkServiceConnectionManager.restart();
+
+        if(!this.register){
+            communicationRegistrationProcessNetworkServiceAgent.start();
+        }
 
     }
 

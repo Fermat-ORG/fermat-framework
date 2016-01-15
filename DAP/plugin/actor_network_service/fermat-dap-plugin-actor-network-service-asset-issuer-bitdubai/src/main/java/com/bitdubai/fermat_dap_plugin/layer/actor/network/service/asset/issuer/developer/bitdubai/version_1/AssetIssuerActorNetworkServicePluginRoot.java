@@ -295,7 +295,7 @@ public class AssetIssuerActorNetworkServicePluginRoot extends AbstractNetworkSer
                 /*
                  * Initialize the agent and start
                  */
-                communicationRegistrationProcessNetworkServiceAgent = new CommunicationRegistrationProcessNetworkServiceAgent(this, wsCommunicationsCloudClientManager.getCommunicationsCloudClientConnection());
+                communicationRegistrationProcessNetworkServiceAgent = new CommunicationRegistrationProcessNetworkServiceAgent(this, wsCommunicationsCloudClientManager);
                 communicationRegistrationProcessNetworkServiceAgent.start();
             }
 
@@ -1098,6 +1098,10 @@ public class AssetIssuerActorNetworkServicePluginRoot extends AbstractNetworkSer
 
         if(communicationNetworkServiceConnectionManager != null)
             communicationNetworkServiceConnectionManager.restart();
+
+        if(!this.register){
+            communicationRegistrationProcessNetworkServiceAgent.start();
+        }
 
     }
 

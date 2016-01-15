@@ -4,6 +4,7 @@ import com.bitdubai.fermat_api.FermatAgent;
 import com.bitdubai.fermat_api.layer.all_definition.components.interfaces.PlatformComponentProfile;
 import com.bitdubai.fermat_api.layer.all_definition.enums.AgentStatus;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.common.network_services.abstract_classes.AbstractNetworkService;
+import com.bitdubai.fermat_p2p_api.layer.p2p_communication.WsCommunicationsCloudClientManager;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.client.CommunicationsClientConnection;
 
 /**
@@ -28,7 +29,7 @@ public abstract class AbstractCommunicationRegistrationProcessNetworkServiceAgen
     private final Thread agentThread;
 
     private final AbstractNetworkService networkServicePluginRoot      ;
-    private final CommunicationsClientConnection communicationsClientConnection;
+    private final WsCommunicationsCloudClientManager communicationsClientConnection;
 
     /**
      * Constructor with parameters.
@@ -37,7 +38,7 @@ public abstract class AbstractCommunicationRegistrationProcessNetworkServiceAgen
      * @param communicationsClientConnection   communication client connection instance.
      */
     public AbstractCommunicationRegistrationProcessNetworkServiceAgent(final AbstractNetworkService         networkServicePluginRoot      ,
-                                                                       final CommunicationsClientConnection communicationsClientConnection) {
+                                                                       final WsCommunicationsCloudClientManager communicationsClientConnection) {
 
         this.networkServicePluginRoot       = networkServicePluginRoot      ;
         this.communicationsClientConnection = communicationsClientConnection;
@@ -75,10 +76,10 @@ public abstract class AbstractCommunicationRegistrationProcessNetworkServiceAgen
 
         try {
 
-            if (communicationsClientConnection.isRegister() && !networkServicePluginRoot.isRegister()){
+            if (communicationsClientConnection.getCommunicationsCloudClientConnection().isRegister() && !networkServicePluginRoot.isRegister()){
 
                 //Construct my profile and register me
-                PlatformComponentProfile platformComponentProfile =  communicationsClientConnection.constructPlatformComponentProfileFactory(
+                PlatformComponentProfile platformComponentProfile =  communicationsClientConnection.getCommunicationsCloudClientConnection().constructPlatformComponentProfileFactory(
                         networkServicePluginRoot.getIdentityPublicKey(),
                          networkServicePluginRoot.getAlias().toLowerCase(),
                          networkServicePluginRoot.getName(),
@@ -88,7 +89,7 @@ public abstract class AbstractCommunicationRegistrationProcessNetworkServiceAgen
                 );
 
                 // Register me
-                communicationsClientConnection.registerComponentForCommunication(networkServicePluginRoot.getNetworkServiceType(), platformComponentProfile);
+                communicationsClientConnection.getCommunicationsCloudClientConnection().registerComponentForCommunication(networkServicePluginRoot.getNetworkServiceType(), platformComponentProfile);
 
                 // Configure my new profile
                 networkServicePluginRoot.setPlatformComponentProfilePluginRoot(platformComponentProfile);

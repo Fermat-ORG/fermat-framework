@@ -499,7 +499,7 @@ public class AssetTransmissionNetworkServicePluginRoot extends AbstractPlugin im
                 /*
                  * Initialize the agent and start
                  */
-                communicationRegistrationProcessNetworkServiceAgent = new CommunicationRegistrationProcessNetworkServiceAgent(this, wsCommunicationsCloudClientManager.getCommunicationsCloudClientConnection());
+                communicationRegistrationProcessNetworkServiceAgent = new CommunicationRegistrationProcessNetworkServiceAgent(this, wsCommunicationsCloudClientManager);
                 communicationRegistrationProcessNetworkServiceAgent.start();
             }
 
@@ -768,6 +768,10 @@ public class AssetTransmissionNetworkServicePluginRoot extends AbstractPlugin im
 
         if(communicationNetworkServiceConnectionManager != null)
             communicationNetworkServiceConnectionManager.restart();
+
+        if(!this.register){
+            communicationRegistrationProcessNetworkServiceAgent.start();
+        }
 
     }
 

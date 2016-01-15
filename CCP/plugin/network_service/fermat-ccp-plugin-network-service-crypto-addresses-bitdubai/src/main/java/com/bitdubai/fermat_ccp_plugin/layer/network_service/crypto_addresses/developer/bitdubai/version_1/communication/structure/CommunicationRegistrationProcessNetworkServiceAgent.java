@@ -3,6 +3,7 @@ package com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_addresses.de
 import com.bitdubai.fermat_p2p_api.layer.all_definition.common.network_services.template.structure.AbstractCommunicationRegistrationProcessNetworkServiceAgent;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.common.network_services.abstract_classes.AbstractNetworkService;
 
+import com.bitdubai.fermat_p2p_api.layer.p2p_communication.WsCommunicationsCloudClientManager;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.client.CommunicationsClientConnection;
 
 /**
@@ -16,7 +17,7 @@ import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.client.Commun
 public class CommunicationRegistrationProcessNetworkServiceAgent extends AbstractCommunicationRegistrationProcessNetworkServiceAgent {
 
     public CommunicationRegistrationProcessNetworkServiceAgent(final AbstractNetworkService         networkServicePluginRoot      ,
-                                                               final CommunicationsClientConnection communicationsClientConnection) {
+                                                               final WsCommunicationsCloudClientManager communicationsClientConnection) {
 
         super(networkServicePluginRoot, communicationsClientConnection);
     }

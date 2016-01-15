@@ -311,7 +311,7 @@ public class AssetRedeemPointActorNetworkServicePluginRoot extends AbstractNetwo
                 /*
                  * Initialize the agent and start
                  */
-                communicationRegistrationProcessNetworkServiceAgent = new CommunicationRegistrationProcessNetworkServiceAgent(this, wsCommunicationsCloudClientManager.getCommunicationsCloudClientConnection());
+                communicationRegistrationProcessNetworkServiceAgent = new CommunicationRegistrationProcessNetworkServiceAgent(this, wsCommunicationsCloudClientManager);
                 communicationRegistrationProcessNetworkServiceAgent.start();
             }
 
@@ -851,6 +851,10 @@ public class AssetRedeemPointActorNetworkServicePluginRoot extends AbstractNetwo
 
         if(communicationNetworkServiceConnectionManager != null)
             communicationNetworkServiceConnectionManager.restart();
+
+        if(!this.register){
+            communicationRegistrationProcessNetworkServiceAgent.start();
+        }
 
     }
 

@@ -184,7 +184,7 @@ public class CryptoBrokerActorNetworkServicePluginRoot extends AbstractNetworkSe
                 /*
                  * Initialize the agent and start
                  */
-                communicationRegistrationProcessNetworkServiceAgent = new CommunicationRegistrationProcessNetworkServiceAgent(this, wsCommunicationsCloudClientManager.getCommunicationsCloudClientConnection());
+                communicationRegistrationProcessNetworkServiceAgent = new CommunicationRegistrationProcessNetworkServiceAgent(this, wsCommunicationsCloudClientManager);
                 communicationRegistrationProcessNetworkServiceAgent.start();
             }
 
@@ -641,6 +641,10 @@ public class CryptoBrokerActorNetworkServicePluginRoot extends AbstractNetworkSe
 
         if(communicationNetworkServiceConnectionManager != null)
             communicationNetworkServiceConnectionManager.restart();
+
+        if(!this.register){
+             communicationRegistrationProcessNetworkServiceAgent.start();
+        }
 
     }
 
