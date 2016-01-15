@@ -30,6 +30,10 @@ import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogManager;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantInitializeDatabaseException;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantSetObjectException;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantStartServiceException;
+import com.bitdubai.fermat_cht_api.layer.middleware.interfaces.Chat;
+import com.bitdubai.fermat_cht_api.layer.middleware.interfaces.Message;
+import com.bitdubai.fermat_cht_api.layer.middleware.mocks.ChatMock;
+import com.bitdubai.fermat_cht_api.layer.middleware.mocks.MessageMock;
 import com.bitdubai.fermat_cht_api.layer.network_service.chat.interfaces.ChatManager;
 import com.bitdubai.fermat_cht_plugin.layer.middleware.chat.developer.bitdubai.version_1.database.ChatMiddlewareDatabaseConstants;
 import com.bitdubai.fermat_cht_plugin.layer.middleware.chat.developer.bitdubai.version_1.database.ChatMiddlewareDatabaseDao;
@@ -47,6 +51,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 import java.util.regex.Pattern;
 
 /**
@@ -204,7 +209,6 @@ public class ChatMiddlewarePluginRoot extends AbstractPlugin implements
             /**
              * Initialize manager
              */
-            //System.out.println("OPEN_CONTRACT Man");
             chatMiddlewareManager =new ChatMiddlewareManager(
                     chatMiddlewareDatabaseDao);
 
@@ -237,6 +241,8 @@ public class ChatMiddlewarePluginRoot extends AbstractPlugin implements
             openContractMonitorAgent.start();
 
             this.serviceStatus = ServiceStatus.STARTED;
+            //Test method
+            //sendMessageTest();
         } catch (CantInitializeDatabaseException exception) {
             throw new CantStartPluginException(
                     CantStartPluginException.DEFAULT_MESSAGE,
@@ -324,6 +330,18 @@ public class ChatMiddlewarePluginRoot extends AbstractPlugin implements
              * If I couldn't get the correct logging level, then I will set it to minimal.
              */
             return DEFAULT_LOG_LEVEL;
+        }
+    }
+
+    private void sendMessageTest(){
+        try{
+            Chat testChat=new ChatMock();
+            Message testMessage=new MessageMock(UUID.fromString("52d7fab8-a423-458f-bcc9-49cdb3e9ba8f"));
+            this.chatMiddlewareManager.saveChat(testChat);
+            this.chatMiddlewareManager.saveMessage(testMessage);
+        } catch(Exception exception){
+            System.out.println("Exception in chat middleware test: "+exception.getMessage());
+            exception.printStackTrace();
         }
     }
 

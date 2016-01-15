@@ -163,7 +163,7 @@ public class BrokerListActivityFragment extends FermatWalletListFragment<BrokerI
     @Override
     public void onItemClickListener(BrokerIdentityBusinessInfo data, int position) {
         final CryptoCustomerWalletSession walletSession = (CryptoCustomerWalletSession) this.appSession;
-        walletSession.setCurrencyToBuy(FiatCurrency.US_DOLLAR);
+        walletSession.setCurrencyToBuy(data.getMerchandiseCurrency());
         walletSession.setSelectedBrokerIdentity(data);
         changeActivity(Activities.CBP_CRYPTO_CUSTOMER_WALLET_START_NEGOTIATION, this.appSession.getAppPublicKey());
     }
