@@ -75,7 +75,7 @@ public class WsCommunicationVPNClientManagerAgent extends Thread{
      * @param vpnServerIdentity
      * @param remotePlatformComponentProfile
      */
-    public void createNewWsCommunicationVPNClient(URI serverURI, String vpnServerIdentity, PlatformComponentProfile participant, PlatformComponentProfile remotePlatformComponentProfile, PlatformComponentProfile remoteParticipantNetworkService, EventManager eventManager, Boolean isApplicant) {
+    public void createNewWsCommunicationVPNClient(URI serverURI, String vpnServerIdentity, PlatformComponentProfile participant, PlatformComponentProfile remotePlatformComponentProfile, PlatformComponentProfile remoteParticipantNetworkService, EventManager eventManager) {
 
         /*
          * Create the identity
@@ -101,83 +101,11 @@ public class WsCommunicationVPNClientManagerAgent extends Thread{
         jsonObject.addProperty(JsonAttNamesConstants.CLIENT_IDENTITY_VPN, vpnClientIdentity.getPublicKey());
         jsonObject.addProperty(JsonAttNamesConstants.APPLICANT_PARTICIPANT_VPN, registerParticipant.toJson());
         jsonObject.addProperty(JsonAttNamesConstants.REMOTE_PARTICIPANT_VPN, remotePlatformComponentProfile.getIdentityPublicKey());
-        jsonObject.addProperty(JsonAttNamesConstants.I_APPLICANT, isApplicant);
-
 
         /*
          * Add the att to the header
          */
         headers.put(JsonAttNamesConstants.HEADER_ATT_NAME_TI, AsymmetricCryptography.encryptMessagePublicKey(jsonObject.toString(), vpnServerIdentity));
-
-        /*
-         * Construct the vpn client
-         */
-        WsCommunicationVPNClient vpnClient = new WsCommunicationVPNClient(this, vpnClientIdentity, serverURI, remotePlatformComponentProfile, remoteParticipantNetworkService, vpnServerIdentity, headers);
-
-        /*
-         * Configure the event manager
-         */
-        this.eventManager = eventManager;
-
-        System.out.println("GUARDANDO LA CONEXION EN CACHE CON NS = " + remoteParticipantNetworkService.getNetworkServiceType());
-        System.out.println("GUARDANDO LA CONEXION EN CACHE CON PK = " + remotePlatformComponentProfile.getIdentityPublicKey());
-        System.out.println("GUARDANDO LA CONEXION PARA EL ALIAS   = " + remotePlatformComponentProfile.getAlias());
-        System.out.println("GUARDANDO LA CONEXION PARA EL NAME    = " + remotePlatformComponentProfile.getName());
-
-        /*
-         * Add to the vpn client active
-         */
-        if (vpnClientActiveCache.containsKey(remoteParticipantNetworkService.getNetworkServiceType())){
-
-            vpnClientActiveCache.get(remoteParticipantNetworkService.getNetworkServiceType()).put(remotePlatformComponentProfile.getIdentityPublicKey(), vpnClient);
-
-        }else {
-
-            Map<String, WsCommunicationVPNClient> newMap = new ConcurrentHashMap<>();
-            newMap.put(remotePlatformComponentProfile.getIdentityPublicKey(), vpnClient);
-            vpnClientActiveCache.put(remoteParticipantNetworkService.getNetworkServiceType(), newMap);
-        }
-
-        /*
-         * call the connect
-         */
-        vpnClient.connect();
-    }
-
-
-    /**
-     * Create a new WsCommunicationVPNClient
-     *
-     * @param clientIdentity
-     * @param serverURI
-     * @param vpnServerIdentity
-     * @param remotePlatformComponentProfile
-     */
-    public void createNewWsCommunicationVPNClientOld(String clientIdentity, URI serverURI, String vpnServerIdentity, String participantIdentity, PlatformComponentProfile remotePlatformComponentProfile, PlatformComponentProfile remoteParticipantNetworkService, EventManager eventManager) {
-
-        /*
-         * Create the identity
-         */
-        ECCKeyPair vpnClientIdentity = new ECCKeyPair();
-
-        /*
-         * Create a new headers
-         */
-        Map<String, String> headers = new HashMap<>();
-
-        /*
-         * Get json representation
-         */
-        JsonObject jsonObject = new JsonObject();
-        jsonObject.addProperty(JsonAttNamesConstants.CLIENT_IDENTITY, clientIdentity);
-        jsonObject.addProperty(JsonAttNamesConstants.REGISTER_PARTICIPANT_IDENTITY_VPN, participantIdentity);
-        jsonObject.addProperty(JsonAttNamesConstants.CLIENT_IDENTITY_VPN, vpnClientIdentity.getPublicKey());
-        jsonObject.addProperty(JsonAttNamesConstants.RECONNECTED, Boolean.FALSE);
-
-        /*
-         * Add the att to the header
-         */
-        headers.put(JsonAttNamesConstants.HEADER_ATT_NAME_TI,  AsymmetricCryptography.encryptMessagePublicKey(jsonObject.toString(), vpnServerIdentity));
 
         /*
          * Construct the vpn client
@@ -359,7 +287,7 @@ public class WsCommunicationVPNClientManagerAgent extends Thread{
             System.out.println("WsCommunicationVPNClientManagerAgent - vpnClientActiveCache.get(applicantNetworkServiceType).size() = "+vpnClientActiveCache.get(applicantNetworkServiceType).size());
 
             if (vpnClientActiveCache.get(applicantNetworkServiceType).containsKey(remotePlatformComponentProfile.getIdentityPublicKey())){
-                return vpnClientActiveCache.get(applicantNetworkServiceType).get(remotePlatformComponentProfile.getIdentityPublicKey());
+                return vpnClientActiveCache.get(applicantNetworkServiceType).remove(remotePlatformComponentProfile.getIdentityPublicKey());
             }else {
                 throw new IllegalArgumentException("The remote pk is no valid, do not exist a vpn connection for this ");
             }
