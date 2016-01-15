@@ -289,6 +289,19 @@ public class AssetTransmissionNetworkServicePluginRoot extends AbstractPlugin im
      * because at this moment, is create the platformComponentProfile for this component
      */
     public void initializeCommunicationNetworkServiceConnectionManager() {
+        /*
+         * Construct my profile and register me
+         */
+        PlatformComponentProfile platformComponentProfile = wsCommunicationsCloudClientManager.getCommunicationsCloudClientConnection().constructPlatformComponentProfileFactory(getIdentityPublicKey(),
+                getAlias().toLowerCase(),
+                getName(),
+                getNetworkServiceType(),
+                getPlatformComponentType(),
+                getExtraData());
+        /*
+         * Configure my new profile
+         */
+        setPlatformComponentProfilePluginRoot(platformComponentProfile);
         this.communicationNetworkServiceConnectionManager = new CommunicationNetworkServiceConnectionManager(platformComponentProfile, identity, wsCommunicationsCloudClientManager.getCommunicationsCloudClientConnection(), dataBase, errorManager, eventManager);
     }
 
@@ -490,18 +503,13 @@ public class AssetTransmissionNetworkServicePluginRoot extends AbstractPlugin im
              * Initialize listeners
              */
             initializeListener();
-
-            /*
-             * Verify if the communication cloud client is active
-             */
-            if (!wsCommunicationsCloudClientManager.isDisable()) {
+            initializeCommunicationNetworkServiceConnectionManager();
 
                 /*
                  * Initialize the agent and start
                  */
-                communicationRegistrationProcessNetworkServiceAgent = new CommunicationRegistrationProcessNetworkServiceAgent(this, wsCommunicationsCloudClientManager.getCommunicationsCloudClientConnection());
-                communicationRegistrationProcessNetworkServiceAgent.start();
-            }
+            communicationRegistrationProcessNetworkServiceAgent = new CommunicationRegistrationProcessNetworkServiceAgent(this, wsCommunicationsCloudClientManager.getCommunicationsCloudClientConnection());
+            communicationRegistrationProcessNetworkServiceAgent.start();
 
             /*
              * Its all ok, set the new status
@@ -659,7 +667,7 @@ public class AssetTransmissionNetworkServicePluginRoot extends AbstractPlugin im
                     constructDiscoveryQueryParamsFactory(PlatformComponentType.ACTOR_ASSET_USER, //applicant = who made the request
                             NetworkServiceType.UNDEFINED,
                             null,                     // alias
-                           null,                     // identityPublicKey
+                            null,                     // identityPublicKey
                             null,                     // location
                             null,                     // distance
                             null,                     // name
@@ -755,7 +763,7 @@ public class AssetTransmissionNetworkServicePluginRoot extends AbstractPlugin im
     @Override
     public void handleClientConnectionLooseNotificationEvent(FermatEvent fermatEvent) {
 
-        if(communicationNetworkServiceConnectionManager != null)
+        if (communicationNetworkServiceConnectionManager != null)
             communicationNetworkServiceConnectionManager.stop();
 
     }
@@ -766,7 +774,7 @@ public class AssetTransmissionNetworkServicePluginRoot extends AbstractPlugin im
     @Override
     public void handleClientSuccessfullReconnectNotificationEvent(FermatEvent fermatEvent) {
 
-        if(communicationNetworkServiceConnectionManager != null)
+        if (communicationNetworkServiceConnectionManager != null)
             communicationNetworkServiceConnectionManager.restart();
 
     }

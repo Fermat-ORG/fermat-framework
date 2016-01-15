@@ -2,6 +2,7 @@ package com.bitdubai.fermat_dap_plugin.layer.wallet.wallet.redeem.point.develope
 
 import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
+import com.bitdubai.fermat_api.layer.all_definition.enums.Genders;
 import com.bitdubai.fermat_api.layer.all_definition.money.CryptoAddress;
 import com.bitdubai.fermat_api.layer.all_definition.util.XMLParser;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
@@ -14,15 +15,22 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTransac
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantInsertRecordException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantLoadTableToMemoryException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantUpdateRecordException;
-import com.bitdubai.fermat_api.layer.osa_android.file_system.DealsWithPluginFileSystem;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.FileLifeSpan;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.FilePrivacy;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginTextFile;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantCreateFileException;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.FileNotFoundException;
+import com.bitdubai.fermat_api.layer.osa_android.location_system.Location;
 import com.bitdubai.fermat_dap_api.layer.all_definition.digital_asset.DigitalAsset;
 import com.bitdubai.fermat_dap_api.layer.all_definition.digital_asset.DigitalAssetMetadata;
+import com.bitdubai.fermat_dap_api.layer.all_definition.enums.DAPConnectionState;
+import com.bitdubai.fermat_dap_api.layer.all_definition.util.Validate;
+import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.exceptions.CantAssetUserActorNotFoundException;
+import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.exceptions.CantGetAssetUserActorsException;
+import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.interfaces.ActorAssetUser;
+import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.interfaces.ActorAssetUserManager;
+import com.bitdubai.fermat_dap_api.layer.dap_transaction.common.exceptions.CantGetDigitalAssetFromLocalStorageException;
 import com.bitdubai.fermat_dap_api.layer.dap_transaction.common.exceptions.RecordsNotFoundException;
 import com.bitdubai.fermat_dap_api.layer.dap_wallet.asset_issuer_wallet.exceptions.CantCalculateBalanceException;
 import com.bitdubai.fermat_dap_api.layer.dap_wallet.asset_issuer_wallet.exceptions.CantRegisterCreditException;
@@ -32,12 +40,10 @@ import com.bitdubai.fermat_dap_api.layer.dap_wallet.asset_redeem_point.exception
 import com.bitdubai.fermat_dap_api.layer.dap_wallet.asset_redeem_point.interfaces.AssetRedeemPointWalletList;
 import com.bitdubai.fermat_dap_api.layer.dap_wallet.asset_redeem_point.interfaces.AssetRedeemPointWalletTransaction;
 import com.bitdubai.fermat_dap_api.layer.dap_wallet.asset_redeem_point.interfaces.AssetRedeemPointWalletTransactionRecord;
-import com.bitdubai.fermat_dap_api.layer.dap_wallet.asset_redeem_point.interfaces.AssetRedeemPointWalletTransactionSummary;
 import com.bitdubai.fermat_dap_api.layer.dap_wallet.asset_redeem_point.interfaces.RedeemPointStatistic;
 import com.bitdubai.fermat_dap_api.layer.dap_wallet.common.enums.BalanceType;
 import com.bitdubai.fermat_dap_api.layer.dap_wallet.common.enums.TransactionType;
 import com.bitdubai.fermat_dap_api.layer.dap_wallet.common.exceptions.CantFindTransactionException;
-import com.bitdubai.fermat_dap_api.layer.dap_wallet.common.exceptions.CantGetActorTransactionSummaryException;
 import com.bitdubai.fermat_dap_api.layer.dap_wallet.common.exceptions.CantGetTransactionsException;
 import com.bitdubai.fermat_dap_api.layer.dap_wallet.common.exceptions.CantStoreMemoException;
 import com.bitdubai.fermat_dap_plugin.layer.wallet.wallet.redeem.point.developer.bitdubai.version_1.AssetRedeemPointWalletPluginRoot;
@@ -55,23 +61,21 @@ import java.util.UUID;
 /**
  * Created by franklin on 14/10/15.
  */
-public class AssetRedeemPointWalletDao implements DealsWithPluginFileSystem {
-    PluginFileSystem pluginFileSystem;
-    UUID plugin;
-
-    @Override
-    public void setPluginFileSystem(PluginFileSystem pluginFileSystem) {
-        this.pluginFileSystem = pluginFileSystem;
-    }
-
+public class AssetRedeemPointWalletDao {
+    private PluginFileSystem pluginFileSystem;
+    private UUID plugin;
     private Database database;
+    private ActorAssetUserManager actorAssetUserManager;
 
-    public void setPlugin(UUID plugin) {
-        this.plugin = plugin;
-    }
 
-    public AssetRedeemPointWalletDao(Database database) {
+    public AssetRedeemPointWalletDao(Database database,
+                                     PluginFileSystem pluginFileSystem,
+                                     UUID plugin,
+                                     ActorAssetUserManager actorAssetUserManager) {
         this.database = database;
+        this.pluginFileSystem = pluginFileSystem;
+        this.plugin = plugin;
+        this.actorAssetUserManager = actorAssetUserManager;
     }
 
     private long getCurrentBookBalance() throws CantGetBalanceRecordException {
@@ -214,13 +218,14 @@ public class AssetRedeemPointWalletDao implements DealsWithPluginFileSystem {
             databaseTable.loadToMemory();
             if (databaseTable.getRecords().isEmpty()) {
                 transaction.addRecordToInsert(databaseTable, assetBalanceRecord);
-                String assetMetadataXML = XMLParser.parseObject(assetRedeemPointWalletTransactionRecord.getDigitalAssetMetadata());
-                PluginTextFile pluginTextFile = pluginFileSystem.createTextFile(plugin, AssetRedeemPointWalletPluginRoot.PATH_DIRECTORY, assetRedeemPointWalletTransactionRecord.getDigitalAsset().getPublicKey(), FilePrivacy.PRIVATE, FileLifeSpan.PERMANENT);
-                pluginTextFile.setContent(assetMetadataXML);
-                pluginTextFile.persistToMedia();
             } else {
                 transaction.addRecordToUpdate(databaseTable, assetBalanceRecord);
             }
+
+            String assetMetadataXML = XMLParser.parseObject(assetRedeemPointWalletTransactionRecord.getDigitalAssetMetadata());
+            PluginTextFile pluginTextFile = pluginFileSystem.createTextFile(plugin, AssetRedeemPointWalletPluginRoot.PATH_DIRECTORY, assetRedeemPointWalletTransactionRecord.getDigitalAsset().getPublicKey(), FilePrivacy.PRIVATE, FileLifeSpan.PERMANENT);
+            pluginTextFile.setContent(assetMetadataXML);
+            pluginTextFile.persistToMedia();
 
             database.executeTransaction(transaction);
 
@@ -429,20 +434,6 @@ public class AssetRedeemPointWalletDao implements DealsWithPluginFileSystem {
 
     }
 
-    public AssetRedeemPointWalletTransactionSummary getActorTransactionSummary(String actorPublicKey, BalanceType balanceType) throws CantGetActorTransactionSummaryException {
-        return null;
-    }
-
-    public List<AssetRedeemPointWalletTransaction> distributeAssets(String assetPublicKey) throws CantGetTransactionsException {
-        try {
-            List<AssetRedeemPointWalletTransaction> assetRedeemPointWalletTransactions = listsTransactionsByAsset(assetPublicKey);
-            return assetRedeemPointWalletTransactions;
-        } catch (CantGetTransactionsException e) {
-            throw new CantGetTransactionsException("Get List of Transactions", e, "Error load wallet table ", "Method: distributeAssets()");
-        }
-
-    }
-
     public void updateMemoField(UUID transactionID, String memo) throws CantStoreMemoException, CantFindTransactionException {
         try {
             DatabaseTable databaseTableAssuerRedeemPointWalletBalance = getBalancesTable();
@@ -621,12 +612,96 @@ public class AssetRedeemPointWalletDao implements DealsWithPluginFileSystem {
 
             RedeemPointStatisticImpl statistic = new RedeemPointStatisticImpl();
             statistic.setStatisticId(uuid);
-            statistic.setAssetPk(record.getStringValue(AssetWalletRedeemPointDatabaseConstant.ASSET_WALLET_REDEEM_POINT_POINT_STATISTIC_ASSET_PUBLIC_KEY_COLUMN_NAME));
-            statistic.setUserPk(record.getStringValue(AssetWalletRedeemPointDatabaseConstant.ASSET_WALLET_REDEEM_POINT_STATISTIC_USER_PUBLICKEY_COLUMN_NAME));
+            statistic.setAssetMetadata(getDigitalAssetMetadata(record.getStringValue(AssetWalletRedeemPointDatabaseConstant.ASSET_WALLET_REDEEM_POINT_POINT_STATISTIC_ASSET_PUBLIC_KEY_COLUMN_NAME)));
+            statistic.setActorAssetUser(getActorAssetUser(record.getStringValue(AssetWalletRedeemPointDatabaseConstant.ASSET_WALLET_REDEEM_POINT_STATISTIC_USER_PUBLICKEY_COLUMN_NAME)));
             statistic.setRedemptionDate(record.getLongValue(AssetWalletRedeemPointDatabaseConstant.ASSET_WALLET_REDEEM_POINT_STATISTIC_REDEMPTION_TIMESTAMP_COLUMN_NAME));
             return statistic;
-        } catch (CantLoadTableToMemoryException e) {
+        } catch (CantLoadTableToMemoryException | CantGetDigitalAssetFromLocalStorageException e) {
             throw new CantGetRedeemPointStatisticsException(e, context, null);
+        }
+    }
+
+    public DigitalAssetMetadata getDigitalAssetMetadata(String assetPublicKey) throws CantGetDigitalAssetFromLocalStorageException {
+        String context = "Path: " + AssetRedeemPointWalletPluginRoot.PATH_DIRECTORY + " - Asset Public Key: " + assetPublicKey;
+        try {
+            String metadataXML = pluginFileSystem.getTextFile(plugin, AssetRedeemPointWalletPluginRoot.PATH_DIRECTORY, assetPublicKey, FilePrivacy.PRIVATE, FileLifeSpan.PERMANENT).getContent();
+            return (DigitalAssetMetadata) XMLParser.parseXML(metadataXML, new DigitalAssetMetadata());
+        } catch (FileNotFoundException | CantCreateFileException e) {
+            throw new CantGetDigitalAssetFromLocalStorageException(e, context, "The path could be wrong or there was an error creating the file.");
+        }
+    }
+
+    private ActorAssetUser getActorAssetUser(final String userPublicKey) {
+        try {
+            return actorAssetUserManager.getActorRegisteredByPublicKey(userPublicKey);
+        } catch (CantGetAssetUserActorsException | CantAssetUserActorNotFoundException e) {
+            System.out.println("COULDN'T FIND THE ACTOR ASSET USER, RETRIEVING AN UNKNOWN USER.");
+            return new ActorAssetUser() {
+                @Override
+                public String getPublicLinkedIdentity() {
+                    return null;
+                }
+
+                @Override
+                public String getAge() {
+                    return Validate.DEFAULT_STRING;
+                }
+
+                @Override
+                public Genders getGenders() {
+                    return Genders.INDEFINITE;
+                }
+
+                @Override
+                public long getRegistrationDate() {
+                    return 0;
+                }
+
+                @Override
+                public long getLastConnectionDate() {
+                    return 0;
+                }
+
+                @Override
+                public DAPConnectionState getDapConnectionState() {
+                    return DAPConnectionState.REGISTERED_LOCALLY;
+                }
+
+                @Override
+                public Location getLocation() {
+                    return null;
+                }
+
+                @Override
+                public Double getLocationLatitude() {
+                    return null;
+                }
+
+                @Override
+                public Double getLocationLongitude() {
+                    return null;
+                }
+
+                @Override
+                public CryptoAddress getCryptoAddress() {
+                    return null;
+                }
+
+                @Override
+                public String getActorPublicKey() {
+                    return userPublicKey;
+                }
+
+                @Override
+                public String getName() {
+                    return Validate.DEFAULT_STRING;
+                }
+
+                @Override
+                public byte[] getProfileImage() {
+                    return new byte[0];
+                }
+            };
         }
     }
 
