@@ -118,11 +118,11 @@ public class ChatFragment extends AbstractFermatFragment  {//ActionBarActivity
         return layout;
     }
 
-    public void displayMessage(ChatMessage message) {
+    /*public void displayMessage(ChatMessage message) {
         adapter.add(message);
         //adapter.notifyDataSetChanged();
         scroll();
-    }
+    }*/
 
     private void scroll() {
         messagesContainer.setSelection(messagesContainer.getCount() - 1);
@@ -152,7 +152,7 @@ public class ChatFragment extends AbstractFermatFragment  {//ActionBarActivity
 
         for(int i=0; i<chatHistory.size(); i++) {
             ChatMessage message = chatHistory.get(i);
-            displayMessage(message);
+            //displayMessage(message);
         }
     }
 }

@@ -170,7 +170,7 @@ public class ContactsListFragment extends AbstractFermatFragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
-        loadDummyHistory();
+        //loadDummyHistory();
         // Inflate the list fragment layout
         return inflater.inflate(R.layout.contact_list_fragment, container, false);
     }
@@ -183,30 +183,30 @@ public class ContactsListFragment extends AbstractFermatFragment {
         cl.setId(1);
         cl.setName("John Doe");
         cl.setDate(DateFormat.getDateTimeInstance().format(new Date()));
-        contactList.add(cl);
+        //contactList.add(cl);
         ContactList cl1 = new ContactList();
         cl1.setId(2);
         cl1.setName("Jane Doe");
         cl1.setDate(DateFormat.getDateTimeInstance().format(new Date()));
-        contactList.add(cl1);
+        //contactList.add(cl1);
         //adapter = new ChatAdapter(getActivity());//,
         //contactsContainer.setAdapter((ListAdapter) cl);
 
         for(int i=0; i<contactList.size(); i++) {
             ContactList contact_list = contactList.get(i);
-            displayMessage(contact_list);
+            //displayMessage(contact_list);
         }
     }
 
-    public void displayMessage(ContactList message) {
+   /* public void displayMessage(ContactList message) {
         adapter.add(message);
         //adapter.notifyDataSetChanged();
         scroll();
     }
-
-    private void scroll() {
+*/
+    /*private void scroll() {
         contactsContainer.setSelection(contactsContainer.getCount() - 1);
-    }
+    }*/
 
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
