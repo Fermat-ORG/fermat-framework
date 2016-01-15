@@ -16,6 +16,7 @@ import android.support.v4.content.Loader;
 import android.support.v4.widget.CursorAdapter;*/
 import android.text.SpannableString;
 import android.text.TextUtils;
+import android.widget.CursorAdapter;
 
 import com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.models.ChatMessage;
 import com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.models.ContactList;
@@ -41,7 +42,6 @@ import android.widget.AlphabetIndexer;
 //import android.widget.Button;
 //import android.widget.EditText;
 //import android.widget.ListAdapter;
-import android.widget.CursorAdapter;
 import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.QuickContactBadge;
@@ -333,11 +333,13 @@ public class ContactsListFragment extends AbstractFermatFragment {
         }
 
         // Retrieves the system search manager service
-        final SearchManager searchManager =
+/*        final SearchManager searchManager =
                 (SearchManager) getActivity().getSystemService(Context.SEARCH_SERVICE);
 
         // Retrieves the SearchView from the search menu item
  /*       final SearchView searchView = (SearchView) searchItem.getActionView();
+
+        final SearchView searchView = (SearchView) searchItem.getActionView();
 
         // Assign searchable info to SearchView
         searchView.setSearchableInfo(
