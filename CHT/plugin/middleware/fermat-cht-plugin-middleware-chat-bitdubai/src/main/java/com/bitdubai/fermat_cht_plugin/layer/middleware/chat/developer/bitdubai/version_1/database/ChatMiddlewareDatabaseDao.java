@@ -760,7 +760,7 @@ public class ChatMiddlewareDatabaseDao {
                 if(eventTypeString==null){
                     throw new UnexpectedResultReturnedFromDatabaseException("The event type is null");
                 }
-                eventRecord=new EventRecord(EventType.valueOf(eventTypeString));
+                eventRecord=new EventRecord(getEventTypeFromStringCode(eventTypeString));
                 String eventId=databaseTableRecord.getStringValue(
                         ChatMiddlewareDatabaseConstants.EVENTS_RECORDED_ID_COLUMN_NAME);
                 eventRecord.setEventId(eventId);
@@ -769,7 +769,7 @@ public class ChatMiddlewareDatabaseDao {
                 if(eventSource==null){
                     throw new UnexpectedResultReturnedFromDatabaseException("The event source is null");
                 }
-                eventRecord.setEventSource(EventSource.valueOf(eventSource));
+                eventRecord.setEventSource(EventSource.getByCode(eventSource));
                 String eventStatus=databaseTableRecord.getStringValue(
                         ChatMiddlewareDatabaseConstants.EVENTS_RECORDED_STATUS_COLUMN_NAME);
                 if(eventStatus==null){
@@ -796,6 +796,26 @@ public class ChatMiddlewareDatabaseDao {
         }
     }
 
+    /**
+     * This method returns the EventType by String code.
+     * @param code
+     * @return
+     * @throws InvalidParameterException
+     */
+    private EventType getEventTypeFromStringCode(
+            String code)
+            throws InvalidParameterException {
+        if(code.equals(EventType.INCOMING_CHAT.getCode())){
+            return EventType.INCOMING_CHAT;
+        }
+        if(code.equals(EventType.OUTGOING_CHAT.getCode())){
+            return EventType.OUTGOING_CHAT;
+        }
+        if(code.equals(EventType.INCOMING_STATUS.getCode())){
+            return EventType.INCOMING_STATUS;
+        }
+        throw new InvalidParameterException("The code "+code+" is not valid in EvenType enum");
+    }
 
     /**
      * This method returns a pending events list from database
