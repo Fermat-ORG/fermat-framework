@@ -175,7 +175,7 @@ public class WsCommunicationVPNClientManagerAgent extends Thread{
                         //Verified if this vpn connection is open
                         if (wsCommunicationVPNClient.getConnection().isOpen()){
 
-                            System.out.println(" WsCommunicationVPNClientManagerAgent - wsCommunicationVPNClient.getConnection().isOpen() ");
+                            System.out.println(" WsCommunicationVPNClientManagerAgent - "+wsCommunicationVPNClient.getConnection().isOpen());
                             vpnClientActiveCache.get(networkServiceType).remove(remote);
 
                           /*  try {
@@ -285,10 +285,13 @@ public class WsCommunicationVPNClientManagerAgent extends Thread{
         if (vpnClientActiveCache.containsKey(applicantNetworkServiceType)){
 
             System.out.println("WsCommunicationVPNClientManagerAgent - vpnClientActiveCache.get(applicantNetworkServiceType).size() = "+vpnClientActiveCache.get(applicantNetworkServiceType).size());
-
+            System.out.println("---------------------CLAVE DISPONIBLES:"+vpnClientActiveCache.keySet().toArray()+"------------------------------------");
+            System.out.println("---------------------CLAVES BUSCADA:"+remotePlatformComponentProfile.getIdentityPublicKey()+"------------------------------------");
             if (vpnClientActiveCache.get(applicantNetworkServiceType).containsKey(remotePlatformComponentProfile.getIdentityPublicKey())){
                 return vpnClientActiveCache.get(applicantNetworkServiceType).remove(remotePlatformComponentProfile.getIdentityPublicKey());
             }else {
+                System.out.println("---------------------CLAVE DISPONIBLES:"+vpnClientActiveCache.keySet().toArray()+"------------------------------------");
+                System.out.println("---------------------CLAVES BUSCADA:"+remotePlatformComponentProfile.getIdentityPublicKey()+"------------------------------------");
                 throw new IllegalArgumentException("The remote pk is no valid, do not exist a vpn connection for this ");
             }
 
