@@ -68,6 +68,11 @@ public class ClientSuccessfullyReconnectPacketProcessor extends FermatPacketProc
         event.setSource(EventSource.WS_COMMUNICATION_CLOUD_CLIENT_PLUGIN);
 
         /*
+         * we must ensure set true to Client Register preventing registration of the Network Services if are no registered
+         */
+        getWsCommunicationsCloudClientChannel().setIsRegister(Boolean.TRUE);
+
+        /*
          * Raise the event
          */
         System.out.println("ClientSuccessfullyReconnectPacketProcessor - Raised a event = P2pEventType.CLIENT_SUCCESS_RECONNECT");
