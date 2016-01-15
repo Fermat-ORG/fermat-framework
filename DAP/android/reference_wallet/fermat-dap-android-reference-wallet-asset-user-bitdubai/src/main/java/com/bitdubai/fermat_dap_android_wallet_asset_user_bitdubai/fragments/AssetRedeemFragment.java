@@ -97,21 +97,6 @@ public class AssetRedeemFragment extends AbstractFermatFragment {
         return rootView;
     }
 
-    @Override
-    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        super.onCreateOptionsMenu(menu, inflater);
-        inflater.inflate(R.menu.dap_wallet_asset_user_asset_redeem_select_redeempoints_menu, menu);
-        menu.clear();
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        if (item.getItemId() == R.id.action_select_redeempoints) {
-            changeActivity(Activities.DAP_WALLET_ASSET_USER_ASSET_REDEEM, appSession.getAppPublicKey());
-        }
-        return super.onOptionsItemSelected(item);
-    }
-
     private void setupUI() {
         setupBackgroundBitmap();
 
