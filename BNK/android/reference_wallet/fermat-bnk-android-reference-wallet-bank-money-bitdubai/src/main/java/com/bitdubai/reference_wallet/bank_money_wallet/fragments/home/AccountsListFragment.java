@@ -8,8 +8,6 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Toast;
-
-import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView;
 import com.bitdubai.fermat_android_api.ui.adapters.FermatAdapter;
 import com.bitdubai.fermat_android_api.ui.enums.FermatRefreshTypes;
 import com.bitdubai.fermat_android_api.ui.fragments.FermatWalletListFragment;
@@ -49,11 +47,11 @@ public class AccountsListFragment extends FermatWalletListFragment<BankAccountNu
         return new AccountsListFragment();
     }
 
-    private FermatTextView emtyView;
+    private View emtyView;
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
+        accountsList = new ArrayList<>();
         try {
             moduleManager = ((BankMoneyWalletSession) appSession).getModuleManager();
             errorManager = appSession.getErrorManager();
@@ -69,7 +67,7 @@ public class AccountsListFragment extends FermatWalletListFragment<BankAccountNu
     protected void initViews(View layout) {
         super.initViews(layout);
         configureToolbar();
-        emtyView = (FermatTextView) layout.findViewById(R.id.empty);
+        this.emtyView =  layout.findViewById(R.id.bw_empty_accounts_view);
         showOrHideNoAccountListView(accountsList.isEmpty());
     }
 
@@ -105,7 +103,6 @@ public class AccountsListFragment extends FermatWalletListFragment<BankAccountNu
         if (item.getItemId() == R.id.add_account) {
             changeActivity(Activities.BNK_BANK_MONEY_WALLET_ADD_ACCOUNT,appSession.getAppPublicKey());
         }
-
         return true;
     }
 
@@ -140,7 +137,7 @@ public class AccountsListFragment extends FermatWalletListFragment<BankAccountNu
 
     @Override
     protected int getSwipeRefreshLayoutId() {
-        return R.id.swipe_refresh;
+        return R.id.bw_swipe_refresh;
     }
 
     @Override
@@ -182,11 +179,11 @@ public class AccountsListFragment extends FermatWalletListFragment<BankAccountNu
 
     private void showOrHideNoAccountListView(boolean show) {
         if (show) {
-            emtyView.setVisibility(View.VISIBLE);
             recyclerView.setVisibility(View.GONE);
+            emtyView.setVisibility(View.VISIBLE);
         } else {
-            emtyView.setVisibility(View.GONE);
             recyclerView.setVisibility(View.VISIBLE);
+            emtyView.setVisibility(View.GONE);
         }
     }
 
@@ -198,6 +195,7 @@ public class AccountsListFragment extends FermatWalletListFragment<BankAccountNu
                 accountsList = (ArrayList) result[0];
                 if (adapter != null)
                     adapter.changeDataSet(accountsList);
+                showOrHideNoAccountListView(accountsList.isEmpty());
             }
         }
     }

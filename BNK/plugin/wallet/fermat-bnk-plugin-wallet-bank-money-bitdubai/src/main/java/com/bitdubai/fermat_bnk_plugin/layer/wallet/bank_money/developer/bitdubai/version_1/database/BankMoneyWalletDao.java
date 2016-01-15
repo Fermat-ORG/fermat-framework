@@ -469,8 +469,11 @@ public class BankMoneyWalletDao {
         DatabaseTable table = this.database.getTable(BankMoneyWalletDatabaseConstants.BANK_MONEY_BANK_NAME_TABLE);
         table.addStringFilter(BankMoneyWalletDatabaseConstants.BANK_MONEY_BANK_PUBLIC_KEY_COLUMN, publicKey, DatabaseFilterType.EQUAL);
         table.loadToMemory();
-        return table.getRecords().get(0).getStringValue(BankMoneyWalletDatabaseConstants.BANK_MONEY_BANK_NAME_COLUMN);
-
+        try {
+            return table.getRecords().get(0).getStringValue(BankMoneyWalletDatabaseConstants.BANK_MONEY_BANK_NAME_COLUMN);
+        }catch (Exception e){
+            return null;
+        }
     }
 
 }

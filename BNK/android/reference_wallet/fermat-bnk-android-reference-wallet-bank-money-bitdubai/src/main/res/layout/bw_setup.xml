@@ -1,92 +1,103 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical">
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:orientation="vertical"
+              android:background="@color/background_header_navy">
+
 
     <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-        android:id="@+id/setup_container"
-        android:layout_width="match_parent"
-        android:layout_height="140dp"
-        android:background="@color/background_header_navy"
-        android:orientation="vertical">
-
-        <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical"
-            android:layout_marginTop="45dp"
-            android:gravity="center_horizontal"
-            android:text="BANK WALLET"
-            android:textColor="#fff"
-            android:textSize="@dimen/large_text_size"
-            android:textStyle="bold" />
-
-        <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
-
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical"
-            android:layout_marginTop="30dp"
-            android:gravity="center_horizontal"
-            android:text="Set the name of your Bank"
-            android:textColor="#fff"
-            android:textSize="@dimen/text_size" />
-
-    </LinearLayout>
-
-    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-        android:layout_width="match_parent"
-        android:layout_height="fill_parent"
-        android:background="@drawable/bg_setup"
-        android:orientation="vertical">
+                  android:id="@+id/setup_container"
+                  android:orientation="vertical"
+                  android:layout_height="match_parent"
+                  android:layout_width="match_parent"
+                  android:background="@color/background_header_navy"
+                  android:visibility="invisible"
+            >
 
         <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-            android:layout_width="match_parent"
-            android:layout_height="200dp"
-            android:orientation="horizontal">
+
+                      android:layout_width="match_parent"
+                      android:layout_height="140dp"
+                      android:background="@color/background_header_navy"
+                      android:orientation="vertical">
 
             <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_vertical"
-                android:layout_weight="1"
-                android:gravity="center_horizontal"
-                android:text="Bank name: "
-                android:textColor="#fff"
-                android:textSize="@dimen/text_size" />
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:layout_marginTop="45dp"
+                    android:gravity="center_horizontal"
+                    android:text="BANK WALLET"
+                    android:textColor="#fff"
+                    android:textSize="@dimen/large_text_size"
+                    android:textStyle="bold"/>
 
-            <EditText
-                    android:id="@+id/bank_name_edittext"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_vertical"
-                android:layout_weight="1"
-                android:gravity="center_horizontal"
-                android:hint="Enter bank name"
-                android:textColor="#fff"
-                android:textSize="@dimen/text_size" />
+            <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
+
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:layout_marginTop="30dp"
+                    android:gravity="center_horizontal"
+                    android:text="Set the name of your Bank"
+                    android:textColor="#fff"
+                    android:textSize="@dimen/text_size"/>
+
         </LinearLayout>
 
         <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-            android:layout_width="match_parent"
-            android:layout_height="fill_parent"
-            android:orientation="vertical">
+                      android:layout_width="match_parent"
+                      android:layout_height="fill_parent"
+                      android:background="@drawable/bg_setup"
+                      android:orientation="vertical">
 
-            <ImageView
-                    android:id="@+id/bw_setup_ok_btn"
-                android:layout_width="90dp"
-                android:layout_height="90dp"
-                android:layout_marginTop="30dp"
-                android:layout_gravity="center_horizontal"
-                android:layout_marginRight="15dip"
-                android:layout_marginLeft="15dip"
-                android:scaleType="fitXY"
-                android:src="@drawable/btn_accept_normal" />
+            <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                          android:layout_width="match_parent"
+                          android:layout_height="200dp"
+                          android:orientation="horizontal">
+
+                <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_vertical"
+                        android:layout_weight="1"
+                        android:gravity="center_horizontal"
+                        android:text="Bank name: "
+                        android:textColor="#fff"
+                        android:textSize="@dimen/text_size"/>
+
+                <EditText
+                        android:id="@+id/bank_name_edittext"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_vertical"
+                        android:layout_weight="1"
+                        android:gravity="center_horizontal"
+                        android:hint="Enter bank name"
+                        android:textColor="#fff"
+                        android:textSize="@dimen/text_size"/>
+            </LinearLayout>
+
+            <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                          android:layout_width="match_parent"
+                          android:layout_height="fill_parent"
+                          android:orientation="vertical">
+
+                <ImageView
+                        android:id="@+id/bw_setup_ok_btn"
+                        android:layout_width="90dp"
+                        android:layout_height="90dp"
+                        android:layout_marginTop="30dp"
+                        android:layout_gravity="center_horizontal"
+                        android:layout_marginRight="15dip"
+                        android:layout_marginLeft="15dip"
+                        android:scaleType="fitXY"
+                        android:src="@drawable/btn_accept_normal"/>
+            </LinearLayout>
+
         </LinearLayout>
 
     </LinearLayout>
-
-
 
 </LinearLayout>
