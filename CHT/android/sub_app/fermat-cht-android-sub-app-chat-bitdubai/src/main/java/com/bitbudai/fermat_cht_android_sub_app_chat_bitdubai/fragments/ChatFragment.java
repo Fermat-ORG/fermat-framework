@@ -145,7 +145,7 @@ public class ChatFragment extends AbstractFermatFragment  {//ActionBarActivity
         msg1.setDate(DateFormat.getDateTimeInstance().format(new Date()));
         chatHistory.add(msg1);
         adapter = new ChatAdapter(getActivity());//,
-        messagesContainer.setAdapter((ListAdapter) adapter);
+        //messagesContainer.setAdapter((ListAdapter) adapter);
 
         for(int i=0; i<chatHistory.size(); i++) {
             ChatMessage message = chatHistory.get(i);
