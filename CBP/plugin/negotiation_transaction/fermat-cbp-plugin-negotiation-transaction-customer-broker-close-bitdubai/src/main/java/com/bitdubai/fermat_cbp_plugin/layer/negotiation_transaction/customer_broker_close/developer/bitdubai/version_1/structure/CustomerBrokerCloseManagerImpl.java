@@ -5,8 +5,10 @@ import com.bitdubai.fermat_bch_api.layer.crypto_module.crypto_address_book.inter
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.bitcoin_vault.CryptoVaultManager;
 import com.bitdubai.fermat_cbp_api.layer.contract.customer_broker_purchase.exceptions.CantCreateCustomerBrokerContractPurchaseException;
 import com.bitdubai.fermat_cbp_api.layer.contract.customer_broker_sale.exceptions.CantCreateCustomerBrokerContractSaleException;
+import com.bitdubai.fermat_cbp_api.layer.negotiation.customer_broker_purchase.exceptions.CantCreateCustomerBrokerPurchaseNegotiationException;
 import com.bitdubai.fermat_cbp_api.layer.negotiation.customer_broker_purchase.interfaces.CustomerBrokerPurchaseNegotiation;
 import com.bitdubai.fermat_cbp_api.layer.negotiation.customer_broker_purchase.interfaces.CustomerBrokerPurchaseNegotiationManager;
+import com.bitdubai.fermat_cbp_api.layer.negotiation.customer_broker_sale.exceptions.CantCreateCustomerBrokerSaleNegotiationException;
 import com.bitdubai.fermat_cbp_api.layer.negotiation.customer_broker_sale.interfaces.CustomerBrokerSaleNegotiation;
 import com.bitdubai.fermat_cbp_api.layer.negotiation.customer_broker_sale.interfaces.CustomerBrokerSaleNegotiationManager;
 import com.bitdubai.fermat_cbp_api.layer.negotiation_transaction.customer_broker_close.exceptions.CantGetCustomerBrokerCloseNegotiationTransactionException;
@@ -69,9 +71,11 @@ public class CustomerBrokerCloseManagerImpl implements CustomerBrokerCloseManage
 
     @Override
     public void createCustomerBrokerClosePurchaseNegotiationTranasction(CustomerBrokerPurchaseNegotiation customerBrokerPurchaseNegotiation)
-            throws CantCreateCustomerBrokerContractPurchaseException{
+            throws CantCreateCustomerBrokerPurchaseNegotiationException {
 
         try {
+
+            System.out.print("\n\n**** 2) MOCK NEGOTIATION TRANSACTION - CUSTOMER BROKER CLOSE - MANAGER - PURCHASE NEGOTIATION****\n");
 
             customerBrokerClosePurchaseNegotiationTransaction = new CustomerBrokerClosePurchaseNegotiationTransaction(
                     customerBrokerPurchaseNegotiationManager,
@@ -83,18 +87,20 @@ public class CustomerBrokerCloseManagerImpl implements CustomerBrokerCloseManage
             customerBrokerClosePurchaseNegotiationTransaction.sendPurchaseNegotiationTranasction(customerBrokerPurchaseNegotiation);
 
         } catch (CantClosePurchaseNegotiationTransactionException e){
-            throw new CantCreateCustomerBrokerContractPurchaseException(e.getMessage(),e, CantCreateCustomerBrokerContractPurchaseException.DEFAULT_MESSAGE, "ERROR CREATE CUSTOMER BROKER CLOSE PURCHASE NEGOTIATION TRANSACTION, UNKNOWN FAILURE.");
+            throw new CantCreateCustomerBrokerPurchaseNegotiationException(e.getMessage(),e, CantCreateCustomerBrokerContractPurchaseException.DEFAULT_MESSAGE, "ERROR CREATE CUSTOMER BROKER CLOSE PURCHASE NEGOTIATION TRANSACTION, UNKNOWN FAILURE.");
         } catch (Exception e){
-            throw new CantCreateCustomerBrokerContractPurchaseException(e.getMessage(), FermatException.wrapException(e), CantCreateCustomerBrokerContractPurchaseException.DEFAULT_MESSAGE, "ERROR CREATE CUSTOMER BROKER CLOSE PURCHASE NEGOTIATION TRANSACTION, UNKNOWN FAILURE.");
+            throw new CantCreateCustomerBrokerPurchaseNegotiationException(e.getMessage(), FermatException.wrapException(e), CantCreateCustomerBrokerContractPurchaseException.DEFAULT_MESSAGE, "ERROR CREATE CUSTOMER BROKER CLOSE PURCHASE NEGOTIATION TRANSACTION, UNKNOWN FAILURE.");
         }
 
     }
 
     @Override
     public void createCustomerBrokerCloseSaleNegotiationTranasction(CustomerBrokerSaleNegotiation customerBrokerSaleNegotiation)
-            throws CantCreateCustomerBrokerContractSaleException{
+            throws CantCreateCustomerBrokerSaleNegotiationException {
 
         try {
+
+            System.out.print("\n\n**** 2) MOCK NEGOTIATION TRANSACTION - CUSTOMER BROKER CLOSE - MANAGER - SALE NEGOTIATION****\n");
 
             customerBrokerCloseSaleNegotiationTransaction = new CustomerBrokerCloseSaleNegotiationTransaction(
                     customerBrokerSaleNegotiationManager,
@@ -106,9 +112,9 @@ public class CustomerBrokerCloseManagerImpl implements CustomerBrokerCloseManage
             customerBrokerCloseSaleNegotiationTransaction.sendSaleNegotiationTranasction(customerBrokerSaleNegotiation);
 
         } catch (CantCloseSaleNegotiationTransactionException e){
-            throw new CantCreateCustomerBrokerContractSaleException(e.getMessage(),e, CantCreateCustomerBrokerContractSaleException.DEFAULT_MESSAGE, "ERROR CREATE CUSTOMER BROKER CLOSE PURCHASE NEGOTIATION TRANSACTION, UNKNOWN FAILURE.");
+            throw new CantCreateCustomerBrokerSaleNegotiationException(e.getMessage(),e, CantCreateCustomerBrokerContractSaleException.DEFAULT_MESSAGE, "ERROR CREATE CUSTOMER BROKER CLOSE PURCHASE NEGOTIATION TRANSACTION, UNKNOWN FAILURE.");
         } catch (Exception e){
-            throw new CantCreateCustomerBrokerContractSaleException(e.getMessage(), FermatException.wrapException(e), CantCreateCustomerBrokerContractSaleException.DEFAULT_MESSAGE, "ERROR CREATE CUSTOMER BROKER CLOSE PURCHASE NEGOTIATION TRANSACTION, UNKNOWN FAILURE.");
+            throw new CantCreateCustomerBrokerSaleNegotiationException(e.getMessage(), FermatException.wrapException(e), CantCreateCustomerBrokerContractSaleException.DEFAULT_MESSAGE, "ERROR CREATE CUSTOMER BROKER CLOSE PURCHASE NEGOTIATION TRANSACTION, UNKNOWN FAILURE.");
         }
 
     }
@@ -117,11 +123,9 @@ public class CustomerBrokerCloseManagerImpl implements CustomerBrokerCloseManage
     public CustomerBrokerClose getCustomerBrokerCloseNegotiationTranasction(UUID transactionId)
             throws CantGetCustomerBrokerCloseNegotiationTransactionException{
 
-        CustomerBrokerClose customerBrokerClose = null;
-
         try {
 
-            customerBrokerClose = customerBrokerCloseNegotiationTransactionDatabaseDao.getRegisterCustomerBrokerCloseNegotiationTranasction(transactionId);
+            return customerBrokerCloseNegotiationTransactionDatabaseDao.getRegisterCustomerBrokerCloseNegotiationTranasction(transactionId);
 
         } catch (CantRegisterCustomerBrokerCloseNegotiationTransactionException e){
             throw new CantGetCustomerBrokerCloseNegotiationTransactionException(e.getMessage(), e, CantGetCustomerBrokerCloseNegotiationTransactionException.DEFAULT_MESSAGE, "ERROR GET CUSTOMER BROKER CLOSE NEGOTIATION TRANSACTION, UNKNOWN FAILURE.");
@@ -129,18 +133,15 @@ public class CustomerBrokerCloseManagerImpl implements CustomerBrokerCloseManage
             throw new CantGetCustomerBrokerCloseNegotiationTransactionException(e.getMessage(), FermatException.wrapException(e), CantGetCustomerBrokerCloseNegotiationTransactionException.DEFAULT_MESSAGE, "ERROR GET CUSTOMER BROKER CLOSE NEGOTIATION TRANSACTION, UNKNOWN FAILURE.");
         }
 
-        return customerBrokerClose;
     }
 
     @Override
     public List<CustomerBrokerClose> getAllCustomerBrokerCloseNegotiationTranasction()
             throws CantGetListCustomerBrokerCloseNegotiationTransactionException{
 
-        List<CustomerBrokerClose> getTransactions = null;
-
         try{
 
-            getTransactions = customerBrokerCloseNegotiationTransactionDatabaseDao.getAllRegisterCustomerBrokerCloseNegotiationTranasction();
+           return customerBrokerCloseNegotiationTransactionDatabaseDao.getAllRegisterCustomerBrokerCloseNegotiationTranasction();
 
         } catch (CantRegisterCustomerBrokerCloseNegotiationTransactionException e){
             throw new CantGetListCustomerBrokerCloseNegotiationTransactionException(e.getMessage(), e, CantGetListCustomerBrokerCloseNegotiationTransactionException.DEFAULT_MESSAGE, "ERROR GET LIST CUSTOMER BROKER CLOSE NEGOTIATION TRANSACTION, UNKNOWN FAILURE.");
@@ -148,6 +149,5 @@ public class CustomerBrokerCloseManagerImpl implements CustomerBrokerCloseManage
             throw new CantGetListCustomerBrokerCloseNegotiationTransactionException(e.getMessage(), FermatException.wrapException(e), CantGetListCustomerBrokerCloseNegotiationTransactionException.DEFAULT_MESSAGE, "ERROR GET LIST CUSTOMER BROKER CLOSE NEGOTIATION TRANSACTION, UNKNOWN FAILURE.");
         }
 
-        return getTransactions;
     }
 }

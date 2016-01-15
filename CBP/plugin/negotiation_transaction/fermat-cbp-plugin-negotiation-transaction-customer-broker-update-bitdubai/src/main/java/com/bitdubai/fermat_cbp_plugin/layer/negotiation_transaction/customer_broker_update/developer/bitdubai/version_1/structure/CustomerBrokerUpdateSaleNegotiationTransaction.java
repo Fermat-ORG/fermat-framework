@@ -40,8 +40,16 @@ public class CustomerBrokerUpdateSaleNegotiationTransaction {
 
             UUID transactionId = UUID.randomUUID();
 
-            //CREATE NEGOTIATION
-            this.customerBrokerSaleNegotiationManager.updateCustomerBrokerSaleNegotiation(customerBrokerSaleNegotiation);
+            System.out.print("\n\n**** 3) MOCK NEGOTIATION TRANSACTION - CUSTOMER BROKER UPDATE - SALE NEGOTIATION - CUSTOMER BROKER UPDATE SALE NEGOTIATION TRANSACTION. transactionId: " + transactionId + " ****\n");
+
+            System.out.print("\n\n --- Negotiation Mock XML Date" +
+                            "\n- NegotiationId = " + customerBrokerSaleNegotiation.getNegotiationId() +
+                            "\n- CustomerPublicKey = " + customerBrokerSaleNegotiation.getCustomerPublicKey() +
+                            "\n- BrokerPublicKey = " + customerBrokerSaleNegotiation.getCustomerPublicKey()
+            );
+
+            //UPDATE NEGOTIATION
+//            this.customerBrokerSaleNegotiationManager.updateCustomerBrokerSaleNegotiation(customerBrokerSaleNegotiation);
 
             //CREATE NEGOTIATION TRANSATION
             this.customerBrokerUpdateNegotiationTransactionDatabaseDao.createCustomerBrokerUpdateNegotiationTransaction(
@@ -51,8 +59,8 @@ public class CustomerBrokerUpdateSaleNegotiationTransaction {
                 NegotiationTransactionStatus.PENDING_SUBMIT
             );
 
-        } catch (CantUpdateCustomerBrokerSaleException e) {
-            throw new CantUpdateSaleNegotiationTransactionException(e.getMessage(),e, CantUpdateSaleNegotiationTransactionException.DEFAULT_MESSAGE, "ERROR CREATE CUSTOMER BROKER SALE NEGOTIATION, UNKNOWN FAILURE.");
+        //} catch (CantUpdateCustomerBrokerSaleException e) {
+        //    throw new CantUpdateSaleNegotiationTransactionException(e.getMessage(),e, CantUpdateSaleNegotiationTransactionException.DEFAULT_MESSAGE, "ERROR CREATE CUSTOMER BROKER SALE NEGOTIATION, UNKNOWN FAILURE.");
         } catch (CantRegisterCustomerBrokerUpdateNegotiationTransactionException e) {
             throw new CantUpdateSaleNegotiationTransactionException(e.getMessage(),e, CantUpdateSaleNegotiationTransactionException.DEFAULT_MESSAGE, "ERROR REGISTER CUSTOMER BROKER SALE NEGOTIATION TRANSACTION, UNKNOWN FAILURE.");
         } catch (Exception e){
@@ -91,6 +99,14 @@ public class CustomerBrokerUpdateSaleNegotiationTransaction {
         try {
 
             UUID transactionId = UUID.randomUUID();
+
+            System.out.print("\n\n**** 3) MOCK NEGOTIATION TRANSACTION - CUSTOMER BROKER CANCEL - SALE NEGOTIATION - CUSTOMER BROKER CANCEL SALE NEGOTIATION TRANSACTION. transactionId: " + transactionId + " ****\n");
+
+            System.out.print("\n\n --- Negotiation Mock XML Date" +
+                            "\n- NegotiationId = " + customerBrokerSaleNegotiation.getNegotiationId() +
+                            "\n- CustomerPublicKey = " + customerBrokerSaleNegotiation.getCustomerPublicKey() +
+                            "\n- BrokerPublicKey = " + customerBrokerSaleNegotiation.getCustomerPublicKey()
+            );
 
             //CANCEL NEGOTIATION
             this.customerBrokerSaleNegotiationManager.cancelNegotiation(customerBrokerSaleNegotiation);
