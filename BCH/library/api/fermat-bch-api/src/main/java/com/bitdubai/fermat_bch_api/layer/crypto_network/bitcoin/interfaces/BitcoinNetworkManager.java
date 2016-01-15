@@ -217,9 +217,10 @@ public interface BitcoinNetworkManager extends TransactionSender<CryptoTransacti
      * Based on the passed transaction chain of Transactions hashes and Blocks hashes, determines the entire path
      * of the chain until the Genesis Transaction is reached.
      * The genesis Transaction will be the first transaction in the map.
+     * @param blockchainNetworkType the active network we are getting this info from. Defaults to BlockchainNetworkType.DEFAULT
      * @param transactionChain a Map with the form TransactionHash / BlockHash
      * @return the CryptoTransaction that represents the GenesisTransaction
      * @throws CantGetCryptoTransactionException
      */
-    CryptoTransaction getGenesisTransaction(LinkedHashMap<String, String> transactionChain) throws CantGetCryptoTransactionException;
+    CryptoTransaction getGenesisTransaction(@Nullable BlockchainNetworkType blockchainNetworkType, LinkedHashMap<String, String> transactionChain) throws CantGetCryptoTransactionException;
 }

@@ -370,7 +370,7 @@ public class BitcoinCryptoNetworkPluginRoot extends AbstractPlugin implements
      * @throws CantGetCryptoTransactionException
      */
     @Override
-    public CryptoTransaction getGenesisTransaction(LinkedHashMap<String, String> transactionChain) throws CantGetCryptoTransactionException {
-        return bitcoinCryptoNetworkManager.getGenesisTransaction(transactionChain);
+    public CryptoTransaction getGenesisTransaction(@Nullable BlockchainNetworkType blockchainNetworkType, LinkedHashMap<String, String> transactionChain) throws CantGetCryptoTransactionException {
+        return bitcoinCryptoNetworkManager.getGenesisTransaction(blockchainNetworkType, transactionChain);
     }
 }

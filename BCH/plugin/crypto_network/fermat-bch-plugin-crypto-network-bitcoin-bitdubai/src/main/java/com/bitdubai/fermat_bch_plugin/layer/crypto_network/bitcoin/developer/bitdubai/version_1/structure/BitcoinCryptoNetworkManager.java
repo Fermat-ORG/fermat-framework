@@ -54,6 +54,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.ListIterator;
 import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.TimeUnit;
@@ -912,14 +913,30 @@ public class BitcoinCryptoNetworkManager implements TransactionProtocolManager, 
      * Based on the passed transaction chain of Transactions hashes and Blocks hashes, determines the entire path
      * of the chain until the Genesis Transaction is reached.
      * The genesis Transaction will be the first transaction in the map.
+     * @param blockchainNetworkType the active network to validate
      * @param transactionChain a Map with the form TransactionHash / BlockHash
      * @return the CryptoTransaction that represents the GenesisTransaction
      * @throws CantGetCryptoTransactionException
      */
-    public CryptoTransaction getGenesisTransaction(LinkedHashMap<String, String> transactionChain) throws CantGetCryptoTransactionException {
+    public CryptoTransaction getGenesisTransaction(@Nullable BlockchainNetworkType blockchainNetworkType, LinkedHashMap<String, String> transactionChain) throws CantGetCryptoTransactionException {
         if (transactionChain.isEmpty())
             throw new CantGetCryptoTransactionException(CantGetCryptoTransactionException.DEFAULT_MESSAGE, null, "Transaction chain information is required.", "missing data");
 
+        if (blockchainNetworkType == null)
+            blockchainNetworkType = BlockchainNetworkType.DEFAULT;
+
+
+        /**
+         * I will iterate the passed map backwards getting one at the time, the transactions locally (or remotely if not found)
+         * make sure they are linked together lineally, until I reach the first genesis Transaction in the map.
+         */
+        ListIterator<Map.Entry<String, String>> iterator = new ArrayList<Map.Entry<String, String>>(transactionChain.entrySet()).listIterator(transactionChain.size());
+        while (iterator.hasPrevious()){
+            Map.Entry<String, String> entry = iterator.previous();
+
+
+
+        }
 
         return null;
     }
