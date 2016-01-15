@@ -11,9 +11,9 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.provider.ContactsContract;
-import android.support.v4.content.CursorLoader;
+/*import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
-import android.support.v4.widget.CursorAdapter;
+import android.support.v4.widget.CursorAdapter;*/
 import android.text.SpannableString;
 import android.text.TextUtils;
 
@@ -385,7 +385,7 @@ public class ContactsListFragment extends AbstractFermatFragment {
             //outState.putInt(STATE_PREVIOUSLY_SELECTED_KEY, getListView().getCheckedItemPosition());
         }
     }
-
+/*
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
 
@@ -482,7 +482,7 @@ public class ContactsListFragment extends AbstractFermatFragment {
             mAdapter.swapCursor(null);
         }
     }
-
+*/
     /**
      * Gets the preferred height for each item in the ListView, in pixels, after accounting for
      * screen density. ImageLoader uses this value to resize thumbnail images to match the ListView
