@@ -303,7 +303,7 @@ public class CryptoVaultAssetsOverBitcoinPluginRoot extends AbstractPlugin imple
      */
     @Override
     public CryptoTransaction getGenesisTransaction(Map<String, String> transactionChain) throws CantGetCryptoTransactionException {
-        return null;
+        return assetCryptoVaultManager.getGenesisTransaction(transactionChain);
     }
 
 
@@ -317,6 +317,6 @@ public class CryptoVaultAssetsOverBitcoinPluginRoot extends AbstractPlugin imple
      */
     @Override
     public String createBitcoinTransaction(String inputTransaction, CryptoAddress addressTo) throws CantCreateBitcoinTransactionException {
-        return null;
+        return assetCryptoVaultManager.createBitcoinTransaction(inputTransaction, addressTo);
     }
 }
