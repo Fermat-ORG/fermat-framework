@@ -84,12 +84,13 @@ public class ComponentConnectionRespondPacketProcessor extends FermatPacketProce
 
             /*
              * Is not running
-             */
+
             if (!wsCommunicationVPNClientManagerAgent.isRunning() &&
                     wsCommunicationVPNClientManagerAgent.getState() == Thread.State.NEW){
 
                 wsCommunicationVPNClientManagerAgent.start();
             }
+            */
 
         } catch (Exception e) {
            throw new RuntimeException(e);
