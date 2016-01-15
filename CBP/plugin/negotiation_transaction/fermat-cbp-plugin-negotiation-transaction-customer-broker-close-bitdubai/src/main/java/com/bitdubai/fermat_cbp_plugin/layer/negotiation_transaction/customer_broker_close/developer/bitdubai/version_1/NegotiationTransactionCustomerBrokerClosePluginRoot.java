@@ -38,12 +38,17 @@ import com.bitdubai.fermat_cbp_api.all_definition.negotiation.Clause;
 import com.bitdubai.fermat_cbp_api.all_definition.negotiation_transaction.NegotiationPurchaseRecord;
 import com.bitdubai.fermat_cbp_api.all_definition.negotiation_transaction.NegotiationSaleRecord;
 import com.bitdubai.fermat_cbp_api.layer.business_transaction.common.mocks.ClauseMock;
+import com.bitdubai.fermat_cbp_api.layer.negotiation.customer_broker_purchase.exceptions.CantCreateCustomerBrokerPurchaseNegotiationException;
 import com.bitdubai.fermat_cbp_api.layer.negotiation.customer_broker_purchase.interfaces.CustomerBrokerPurchaseNegotiation;
 import com.bitdubai.fermat_cbp_api.layer.negotiation.customer_broker_purchase.interfaces.CustomerBrokerPurchaseNegotiationManager;
+import com.bitdubai.fermat_cbp_api.layer.negotiation.customer_broker_sale.exceptions.CantCreateCustomerBrokerSaleNegotiationException;
 import com.bitdubai.fermat_cbp_api.layer.negotiation.customer_broker_sale.interfaces.CustomerBrokerSaleNegotiation;
 import com.bitdubai.fermat_cbp_api.layer.negotiation.customer_broker_sale.interfaces.CustomerBrokerSaleNegotiationManager;
 import com.bitdubai.fermat_cbp_api.layer.negotiation_transaction.Test.mocks.PurchaseNegotiationMock;
 import com.bitdubai.fermat_cbp_api.layer.negotiation_transaction.Test.mocks.SaleNegotiationMock;
+import com.bitdubai.fermat_cbp_api.layer.negotiation_transaction.customer_broker_close.exceptions.CantCreateCustomerBrokerClosePurchaseNegotiationTransactionException;
+import com.bitdubai.fermat_cbp_api.layer.negotiation_transaction.customer_broker_close.exceptions.CantCreateCustomerBrokerCloseSaleNegotiationTransactionException;
+import com.bitdubai.fermat_cbp_api.layer.negotiation_transaction.customer_broker_close.interfaces.CustomerBrokerClose;
 import com.bitdubai.fermat_cbp_api.layer.negotiation_transaction.customer_broker_update.exceptions.CantCreateCustomerBrokerUpdatePurchaseNegotiationTransactionException;
 import com.bitdubai.fermat_cbp_api.layer.negotiation_transaction.customer_broker_update.interfaces.CustomerBrokerUpdate;
 import com.bitdubai.fermat_cbp_api.layer.network_service.negotiation_transmission.interfaces.NegotiationTransmissionManager;
@@ -337,7 +342,7 @@ public class NegotiationTransactionCustomerBrokerClosePluginRoot extends Abstrac
 
             //GET TRANSACTION OF NEGOTIATION
             System.out.print("\n\n\n\n------------------------------- NEGOTIATION TRANSACTION -------------------------------");
-            CustomerBrokerUpdate ListNegotiation = customerBrokerCloseNegotiationTransactionDatabaseDao.getRegisterCustomerBrokerCloseNegotiationTranasctionFromNegotiationId(negotiationMock.getNegotiationId());
+            CustomerBrokerClose ListNegotiation = customerBrokerCloseNegotiationTransactionDatabaseDao.getRegisterCustomerBrokerCloseNegotiationTranasctionFromNegotiationId(negotiationMock.getNegotiationId());
             System.out.print("\n\n --- Negotiation Transaction Date" +
                             "\n- NegotiationId = " + ListNegotiation.getNegotiationId() +
                             "\n- TransactionId = " + ListNegotiation.getTransactionId() +
@@ -363,7 +368,7 @@ public class NegotiationTransactionCustomerBrokerClosePluginRoot extends Abstrac
                 }else{ System.out.print("\n\n\n --- NegotiationXML Date: purchaseNegotiationXML IS NOT INSTANCE OF NegotiationPurchaseRecord");}
             }else{ System.out.print("\n\n\n --- NegotiationXML Date IS NULL"); }
 
-        } catch (CantCreateCustomerBrokerClosePurchaseNegotiationTransactionException e) {
+        } catch (CantCreateCustomerBrokerPurchaseNegotiationException e) {
             System.out.print("\n**** MOCK NEGOTIATION TRANSACTION - CUSTOMER BROKER CLOSE. PLUGIN ROOT. ERROR CREATE CUSTOMER BROKER CLOSE. ****\n");
         } catch (CantRegisterCustomerBrokerCloseNegotiationTransactionException e){
             System.out.print("\n**** MOCK NEGOTIATION TRANSACTION - CUSTOMER BROKER CLOSE. PLUGIN ROOT. ERROR LIST CUSTOMER BROKER CLOSE NOT FOUNT. ****\n");
@@ -398,11 +403,11 @@ public class NegotiationTransactionCustomerBrokerClosePluginRoot extends Abstrac
             );
 
             //CREATE CUSTOMER BROKER CLOSE NEGOTIATION.
-//            customerBrokerUpdateManagerImpl.createCustomerBrokerUpdateSaleNegotiationTranasction(negotiationMock);
+            customerBrokerCloseManagerImpl.createCustomerBrokerCloseSaleNegotiationTranasction(negotiationMock);
 
             //GET TRANSACTION OF NEGOTIATION
             System.out.print("\n\n\n\n------------------------------- NEGOTIATION TRANSACTION -------------------------------");
-            CustomerBrokerUpdate ListNegotiation = customerBrokerCloseNegotiationTransactionDatabaseDao.getRegisterCustomerBrokerUpdateNegotiationTranasctionFromNegotiationId(negotiationMock.getNegotiationId());
+            CustomerBrokerClose ListNegotiation = customerBrokerCloseNegotiationTransactionDatabaseDao.getRegisterCustomerBrokerCloseNegotiationTranasctionFromNegotiationId(negotiationMock.getNegotiationId());
             System.out.print("\n\n --- Negotiation Transaction Date" +
                             "\n- NegotiationId = " + ListNegotiation.getNegotiationId() +
                             "\n- TransactionId = " + ListNegotiation.getTransactionId() +
@@ -428,7 +433,7 @@ public class NegotiationTransactionCustomerBrokerClosePluginRoot extends Abstrac
                 }else{ System.out.print("\n\n\n --- NegotiationXML Date: saleNegotiationXML IS NOT INSTANCE OF NegotiationPurchaseRecord");}
             }else{ System.out.print("\n\n\n --- NegotiationXML Date IS NULL"); }
 
-        } catch (CantCreateCustomerBrokerCloseSaleNegotiationTransactionException e) {
+        } catch (CantCreateCustomerBrokerSaleNegotiationException e) {
             System.out.print("\n**** MOCK NEGOTIATION TRANSACTION - CUSTOMER BROKER CLOSE. PLUGIN ROOT. ERROR CREATE CUSTOMER BROKER CLOSE. ****\n");
         } catch (CantRegisterCustomerBrokerCloseNegotiationTransactionException e){
             System.out.print("\n**** MOCK NEGOTIATION TRANSACTION - CUSTOMER BROKER CLOSE. PLUGIN ROOT. ERROR LIST CUSTOMER BROKER CLOSE NOT FOUNT. ****\n");
