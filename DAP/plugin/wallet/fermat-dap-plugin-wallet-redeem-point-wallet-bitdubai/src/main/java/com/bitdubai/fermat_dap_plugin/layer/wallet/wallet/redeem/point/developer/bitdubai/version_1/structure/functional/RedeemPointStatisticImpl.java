@@ -1,7 +1,8 @@
 package com.bitdubai.fermat_dap_plugin.layer.wallet.wallet.redeem.point.developer.bitdubai.version_1.structure.functional;
 
+import com.bitdubai.fermat_dap_api.layer.all_definition.digital_asset.DigitalAssetMetadata;
+import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.interfaces.ActorAssetUser;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.interfaces.ActorAssetUserManager;
-import com.bitdubai.fermat_dap_api.layer.dap_wallet.asset_redeem_point.interfaces.AssetRedeemPointWallet;
 import com.bitdubai.fermat_dap_api.layer.dap_wallet.asset_redeem_point.interfaces.RedeemPointStatistic;
 
 import java.util.Date;
@@ -15,8 +16,8 @@ public class RedeemPointStatisticImpl implements RedeemPointStatistic {
     //VARIABLE DECLARATION
 
     private UUID statisticId;
-    private String assetPk;
-    private String userPk;
+    private DigitalAssetMetadata assetMetadata;
+    private ActorAssetUser actorAssetUser;
     private Date redemptionDate;
 
     //CONSTRUCTORS
@@ -25,13 +26,12 @@ public class RedeemPointStatisticImpl implements RedeemPointStatistic {
     public RedeemPointStatisticImpl() {
     }
 
-    public RedeemPointStatisticImpl(UUID statisticId, String assetPk, String userPk, Date redemptionDate) {
+    public RedeemPointStatisticImpl(UUID statisticId, DigitalAssetMetadata assetMetadata, ActorAssetUser actorAssetUser, Date redemptionDate) {
         this.statisticId = statisticId;
-        this.assetPk = assetPk;
-        this.userPk = userPk;
+        this.assetMetadata = assetMetadata;
+        this.actorAssetUser = actorAssetUser;
         this.redemptionDate = redemptionDate;
     }
-
 
     //PUBLIC METHODS
 
@@ -47,28 +47,27 @@ public class RedeemPointStatisticImpl implements RedeemPointStatistic {
     }
 
     /**
-     * The asset public key associated with the redemption.
-     * If you want to get all the remaining information for that asset
-     * you'd have to use {@link AssetRedeemPointWallet#getDigitalAssetMetadata(String)}.
+     * The {@link DigitalAssetMetadata} associated with the redemption.
      *
-     * @return {@link String}
+     * @return {@link DigitalAssetMetadata} instance.
      */
     @Override
-    public String assetPublicKey() {
-        return assetPk;
+    public DigitalAssetMetadata assetRedeemed() {
+        return assetMetadata;
     }
 
     /**
-     * The user public key associated with the redemption.
-     * If you want to get all the remaining information for that asset
-     * you'd have to use {@link ActorAssetUserManager#getActorByPublicKey(String)}.
+     * The {@link ActorAssetUser} that redeemed the asset,
+     * if this method doesn't find any user on {@link ActorAssetUserManager}
+     * then it will return a fake user with public key and unknown name.
      *
-     * @return
+     * @return {@link ActorAssetUser} instance.
      */
     @Override
-    public String userPublicKey() {
-        return userPk;
+    public ActorAssetUser userThatRedeemed() {
+        return actorAssetUser;
     }
+
 
     /**
      * The exact time when that redemption happen.
@@ -83,20 +82,20 @@ public class RedeemPointStatisticImpl implements RedeemPointStatistic {
 
     //GETTER AND SETTERS
 
-    public void setAssetPk(String assetPk) {
-        this.assetPk = assetPk;
-    }
-
-    public void setUserPk(String userPk) {
-        this.userPk = userPk;
-    }
-
     public void setRedemptionDate(long redemptionDate) {
         this.redemptionDate = new Date(redemptionDate);
     }
 
     public void setStatisticId(String statisticId) {
         this.statisticId = UUID.fromString(statisticId);
+    }
+
+    public void setActorAssetUser(ActorAssetUser actorAssetUser) {
+        this.actorAssetUser = actorAssetUser;
+    }
+
+    public void setAssetMetadata(DigitalAssetMetadata assetMetadata) {
+        this.assetMetadata = assetMetadata;
     }
 
     //INNER CLASSES
