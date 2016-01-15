@@ -990,7 +990,7 @@ public class IntraActorNetworkServicePluginRoot extends AbstractPlugin implement
                 .sendMessage(
                         actorNetworkServiceRecord.getActorSenderPublicKey(),
                         actorNetworkServiceRecord.getActorDestinationPublicKey(),
-                        actorNetworkServiceRecord.toString());
+                        actorNetworkServiceRecord.toJson());
 
 
     }
