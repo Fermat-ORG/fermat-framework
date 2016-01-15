@@ -105,7 +105,7 @@ import static android.widget.Toast.makeText;
  * Fragment the show the list of open negotiations waiting for the broker and the customer un the Home activity
  *
  * @author Nelson Ramirez
- * @version 1.0
+ * @version 1.0refresh
  * @since 20/10/2015
  */
 public class SendTransactionFragment2 extends FermatWalletExpandableListFragment<GrouperItem>
@@ -937,6 +937,7 @@ public class SendTransactionFragment2 extends FermatWalletExpandableListFragment
      */
     private void changeBalanceType(TextView txt_type_balance,TextView txt_balance_amount) {
         updateBalances();
+        setRunningDailyBalance();
         try {
             if (((ReferenceWalletSession)appSession).getBalanceTypeSelected().equals(BalanceType.AVAILABLE.getCode())) {
                 balanceAvailable = loadBalance(BalanceType.AVAILABLE);
@@ -992,7 +993,8 @@ public class SendTransactionFragment2 extends FermatWalletExpandableListFragment
                 balanceSum += Integer.valueOf(WalletUtils.formatBalanceStringNotDecimal(entry.getValue(), ShowMoneyType.BITCOIN.getCode()));
             }
 
-             average = (int) ((Integer.valueOf(WalletUtils.formatBalanceStringNotDecimal(getBalanceValue(runningDailyBalance.size() - 1), ShowMoneyType.BITCOIN.getCode())) * 100) / balanceSum);
+            if(balanceSum > 0 )
+                average = (int) ((Integer.valueOf(WalletUtils.formatBalanceStringNotDecimal(getBalanceValue(runningDailyBalance.size() - 1), ShowMoneyType.BITCOIN.getCode())) * 100) / balanceSum);
 
         } catch (Exception e) {
             e.printStackTrace();
