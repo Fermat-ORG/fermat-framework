@@ -140,10 +140,10 @@ public class StockTransactionsCashMoneyDestockMonitorAgent implements Agent{
                         try {
                             WalletTransactionWrapper walletTransactionRecord = new WalletTransactionWrapper(
                                     cashMoneyTransaction.getTransactionId(),
-                                    null,
+                                    cashMoneyTransaction.getFiatCurrency(),
                                     BalanceType.AVAILABLE,
                                     TransactionType.CREDIT,
-                                    CurrencyType.BANK_MONEY,
+                                    CurrencyType.CASH_DELIVERY_MONEY,
                                     cashMoneyTransaction.getCbpWalletPublicKey(),
                                     cashMoneyTransaction.getActorPublicKey(),
                                     cashMoneyTransaction.getAmount(),
@@ -152,6 +152,8 @@ public class StockTransactionsCashMoneyDestockMonitorAgent implements Agent{
                                     cashMoneyTransaction.getPriceReference(),
                                     cashMoneyTransaction.getOriginTransaction());
 
+                            //TODO:Solo para testear
+                            cashMoneyTransaction.setCbpWalletPublicKey("walletPublicKeyTest");
                             cryptoBrokerWalletManager.loadCryptoBrokerWallet(cashMoneyTransaction.getCbpWalletPublicKey()).getStockBalance().credit(walletTransactionRecord, BalanceType.BOOK);
                             cryptoBrokerWalletManager.loadCryptoBrokerWallet(cashMoneyTransaction.getCbpWalletPublicKey()).getStockBalance().credit(walletTransactionRecord, BalanceType.AVAILABLE);
                             cashMoneyTransaction.setTransactionStatus(TransactionStatusRestockDestock.IN_UNHOLD);
