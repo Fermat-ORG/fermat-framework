@@ -407,18 +407,17 @@ And other features.
 <br>
 ### Developer Sub App
 <br>
-Este componente esta dedicado a los desarrolladores y básicamente posee dos funcionalidades principales:
+This component is dedicated to developers and it basically holds two main functionalities:
 
-* **Data Base Tools:** Permite ver las bases de datos que todos los plugins y sus respectivas tablas.
-A través de esta herramienta se puede verificar el comportamiento de los datos a la hora de desarrollar.
+* **Data Base Tools:** Allows viewing the entire Plug-in database and its corresponding charts. With this tool you can verify the behavior of the data when developing.
 
-* **Log Tools:** Cambia el nivel de ejecución de la aplicación a un nivel de Log de los Plugins. De esta manera el desarrollador podrá colocar la aplicación en modo depuración o cualquier otro tipo de Log que requiera para verificar el comportamiento de las clases, métodos, variable que este utilizando la aplicación.  
+* **Log Tools:** Changes the level of application execution to a log level for Plug-ins. This way the developer can put the application in debug mode or any other type of Log to check the behavior of classes, methods, and variables used by the app.  
 <br>
-El objetivo de esta Sub App es facilitar el trabajo a los desarrolladores permitiendo acceder a las bases de datos, tablas de los plugins que se estén desarrollando como también verificar en el Log Tools el comportamiento del mismo desde el dispositivo movil.
+The objective of this SubApp is to facilitatethe work of developers allowing them to access the database, Plug-in charts that are being developed as well as verifying the behavior of the Log Tools from the mobile device.
 <br>
-La ventaja que principal de la Developer Sub App es permitir depurar sin necesidad de que el dispositivo este conectado a Android Studio u otro IDE y capturar posibles errores. 
+The main advantage the SubApp Developer gives is to allow debugging without the device having to be connected to Android Studio or an other IDE and capture possible errors.
 <br>
-También permite acceder a las base de datos de manera practica evitando utilizar Browser externos.
+It also allows accessing the database in a practical way to avoid using external Browsers.
 
 #### How to enable your Plug-in on the Developer Sub App
 
