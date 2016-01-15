@@ -21,7 +21,7 @@ import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.enums.JsonAtt
 import com.bitdubai.fermat_p2p_plugin.layer.ws.communications.cloud.server.developer.bitdubai.version_1.structure.jetty.ClientConnection;
 import com.bitdubai.fermat_p2p_plugin.layer.ws.communications.cloud.server.developer.bitdubai.version_1.structure.jetty.conf.WebSocketConfigurator;
 import com.bitdubai.fermat_p2p_plugin.layer.ws.communications.cloud.server.developer.bitdubai.version_1.structure.jetty.util.MemoryCache;
-import com.bitdubai.fermat_p2p_plugin.layer.ws.communications.cloud.server.developer.bitdubai.version_1.structure.jetty.util.VpnShareMemoryCache;
+import com.bitdubai.fermat_p2p_plugin.layer.ws.communications.cloud.server.developer.bitdubai.version_1.structure.jetty.util.ShareMemoryCacheForVpnClientsConnections;
 import com.bitdubai.fermat_p2p_plugin.layer.ws.communications.cloud.server.developer.bitdubai.version_1.structure.jetty.util.WebSocketVpnIdentity;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
@@ -71,11 +71,6 @@ public class WebSocketVpnServerChannel {
      *  Represent the vpnClientConnection
      */
     private VpnClientConnection vpnClientConnection;
-
-    /**
-     *  Represent the participantPendingToReconnect
-     */
-    private PlatformComponentProfile participantPendingToReconnect;
 
     /**
      * Constructor
@@ -130,16 +125,16 @@ public class WebSocketVpnServerChannel {
              * Get the client identity and the participant profile
              */
             vpnClientConnection = new VpnClientConnection(vpnClientIdentity, participant, remoteParticipantIdentity, session, networkServiceType, isApplicant);
-            VpnShareMemoryCache.add(vpnClientConnection);
+            ShareMemoryCacheForVpnClientsConnections.add(vpnClientConnection);
 
-            Boolean allConnected = VpnShareMemoryCache.myRemoteIsConnected(vpnClientConnection);
+            Boolean allConnected = ShareMemoryCacheForVpnClientsConnections.isConnected(networkServiceType, vpnClientConnection.getKeyForMyRemote());
             LOG.info("All participant are connected = " + allConnected);
 
             //Validate if all participantsConnections register are connect
             if(allConnected){
 
                 PlatformComponentProfile peer1 = participant;
-                PlatformComponentProfile peer2 = VpnShareMemoryCache.getMyRemote(vpnClientConnection).getParticipant();
+                PlatformComponentProfile peer2 = ShareMemoryCacheForVpnClientsConnections.getMyRemote(vpnClientConnection).getParticipant();
 
                 LOG.info("peer1 is = " + peer1.getAlias());
                 LOG.info("peer2 is = " + peer2.getAlias());
@@ -201,7 +196,7 @@ public class WebSocketVpnServerChannel {
             /*
              * Get the connection of the destination
              */
-            VpnClientConnection clientConnectionDestination = VpnShareMemoryCache.getMyRemote(vpnClientConnection);
+            VpnClientConnection clientConnectionDestination = ShareMemoryCacheForVpnClientsConnections.getMyRemote(vpnClientConnection);
 
             /*
              * If the connection to client destination available
@@ -234,7 +229,7 @@ public class WebSocketVpnServerChannel {
         LOG.info("Starting method onWebSocketClose");
         LOG.info("Socket " + vpnClientConnection.getSession().getId() + " is disconnect! code = " + reason.getCloseCode() + "[" + reason.getCloseCode().getCode() + "] reason = " + reason.getReasonPhrase());
 
-        VpnClientConnection vpnClientConnectionRemote = VpnShareMemoryCache.getMyRemote(vpnClientConnection);
+        VpnClientConnection vpnClientConnectionRemote = ShareMemoryCacheForVpnClientsConnections.getMyRemote(vpnClientConnection);
 
         try {
 
@@ -247,7 +242,7 @@ public class WebSocketVpnServerChannel {
                     vpnClientConnectionRemote.getSession().close(new CloseReason(reason.getCloseCode(), "Details: "+reason.getReasonPhrase()));
             }
 
-            VpnShareMemoryCache.remove(vpnClientConnection);
+            ShareMemoryCacheForVpnClientsConnections.remove(networkServiceType, vpnClientConnection.getMyKey());
 
         } catch (IOException e) {
             e.printStackTrace();
@@ -322,7 +317,7 @@ public class WebSocketVpnServerChannel {
 
         LOG.info("sendNotificationPacketReconnected");
 
-           VpnClientConnection connectionRemote = VpnShareMemoryCache.getMyRemote(vpnClientConnection);
+           VpnClientConnection connectionRemote = ShareMemoryCacheForVpnClientsConnections.getMyRemote(vpnClientConnection);
 
             /*
              * Construct the content of the msj

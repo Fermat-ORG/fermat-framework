@@ -12,6 +12,7 @@ import com.bitdubai.fermat_android_api.ui.adapters.FermatAdapter;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.NegotiationStepStatus;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.common.interfaces.NegotiationStep;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_broker.interfaces.CryptoBrokerWalletManager;
+import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_customer.interfaces.CryptoCustomerWalletManager;
 import com.bitdubai.reference_wallet.crypto_customer_wallet.R;
 import com.bitdubai.reference_wallet.crypto_customer_wallet.common.models.StepItemGetter;
 import com.bitdubai.reference_wallet.crypto_customer_wallet.fragments.common.DatePickerFragment;
@@ -27,7 +28,7 @@ public class DateTimeStepViewHolder extends StepViewHolder
     private java.text.DateFormat dateFormat;
     private java.text.DateFormat timeFormat;
 
-    CryptoBrokerWalletManager walletManager;
+    CryptoCustomerWalletManager walletManager;
     private Activity activity;
     private RecyclerView.Adapter adapter;
 
@@ -38,7 +39,7 @@ public class DateTimeStepViewHolder extends StepViewHolder
     private int year, monthOfYear, dayOfMonth, hourOfDay, minute;
 
 
-    public DateTimeStepViewHolder(RecyclerView.Adapter adapter, View viewItem, Activity activity, CryptoBrokerWalletManager walletManager) {
+    public DateTimeStepViewHolder(RecyclerView.Adapter adapter, View viewItem, Activity activity, CryptoCustomerWalletManager walletManager) {
         super(viewItem, (StepItemGetter) adapter);
 
         this.adapter = adapter;
@@ -143,7 +144,7 @@ public class DateTimeStepViewHolder extends StepViewHolder
         super.modifyData(stepStatus);
 
         NegotiationStep step = stepItemGetter.getItem(itemPosition);
-        walletManager.modifyNegotiationStepValues(step, stepStatus, String.valueOf(selectedValue));
+        //TODO walletManager.modifyNegotiationStepValues(step, stepStatus, String.valueOf(selectedValue));
         adapter.notifyItemChanged(itemPosition);
     }
 }

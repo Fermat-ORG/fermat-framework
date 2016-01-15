@@ -62,7 +62,7 @@ public class CustomerBrokerPurchaseManager implements CustomerBrokerPurchaseNego
 
         @Override
         public void updateNegotiationNearExpirationDatetime(UUID negotiationId, Boolean status) throws CantUpdateCustomerBrokerPurchaseNegotiationException {
-            this.updateNegotiationNearExpirationDatetime(negotiationId, status);
+            this.customerBrokerPurchaseNegotiationDao.updateNegotiationNearExpirationDatetime(negotiationId, status);
         }
 
         @Override
@@ -181,6 +181,11 @@ public class CustomerBrokerPurchaseManager implements CustomerBrokerPurchaseNego
         @Override
         public void deleteBankAccount(NegotiationBankAccount bankAccount) throws CantDeleteBankAccountPurchaseException {
             this.customerBrokerPurchaseNegotiationDao.deleteBankAccount(bankAccount);
+        }
+
+        @Override
+        public Collection<NegotiationBankAccount> getAllBankAccount() throws CantGetListBankAccountsPurchaseException {
+            return this.customerBrokerPurchaseNegotiationDao.getAllBankAccount();
         }
 
         @Override

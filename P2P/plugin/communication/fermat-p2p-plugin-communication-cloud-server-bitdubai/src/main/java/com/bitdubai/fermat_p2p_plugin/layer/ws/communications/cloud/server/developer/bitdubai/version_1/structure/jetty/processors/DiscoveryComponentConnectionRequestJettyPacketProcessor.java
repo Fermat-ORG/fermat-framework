@@ -19,7 +19,6 @@ import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.enums.JsonAtt
 import com.bitdubai.fermat_p2p_plugin.layer.ws.communications.cloud.server.developer.bitdubai.version_1.structure.jetty.ClientConnection;
 import com.bitdubai.fermat_p2p_plugin.layer.ws.communications.cloud.server.developer.bitdubai.version_1.structure.jetty.JettyEmbeddedAppServer;
 import com.bitdubai.fermat_p2p_plugin.layer.ws.communications.cloud.server.developer.bitdubai.version_1.structure.jetty.util.MemoryCache;
-import com.bitdubai.fermat_p2p_plugin.layer.ws.communications.cloud.server.developer.bitdubai.version_1.structure.jetty.util.VpnShareMemoryCache;
 import com.bitdubai.fermat_p2p_plugin.layer.ws.communications.cloud.server.developer.bitdubai.version_1.structure.jetty.util.WebSocketVpnIdentity;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
@@ -206,6 +205,8 @@ public class DiscoveryComponentConnectionRequestJettyPacketProcessor extends Fer
 
 
         LOG.info("Sending vpn connection to = " + platformComponentProfileDestination.getAlias());
+        LOG.info("Sending whit remote = " + remoteParticipant.getAlias());
+        LOG.info("Sending whit isApplicant = " + isApplicant);
 
         /*
          * Get json representation for the filters

@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/cbw_navigation_drawer_background"
+    android:background="@drawable/cbw_wizard_title_background"
     android:orientation="vertical">
 
     <LinearLayout
