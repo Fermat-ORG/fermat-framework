@@ -579,7 +579,7 @@ public class ChatPluginRoot extends AbstractPlugin implements
             /*
              *  Initialize initializeCommunicationNetworkServiceConnectionManager
              */
-            initializeCommunicationNetworkServiceConnectionManager();
+            //initializeCommunicationNetworkServiceConnectionManager();
 
             /*
              * Initialize Developer Database Factory

@@ -6,6 +6,8 @@
  */
 package com.bitdubai.fermat_cht_plugin.layer.network_service.chat.developer.bitdubai.version_1.structure;
 
+
+
 /**
  * The Class <code>com.bitdubai.fermat_dap_plugin.layer.network.service.asset.transmission.developer.bitdubai.version_1.structure.ChatTransmissionJsonAttNames</code>
  * <p/>
@@ -16,6 +18,10 @@ package com.bitdubai.fermat_cht_plugin.layer.network_service.chat.developer.bitd
  */
 public class ChatTransmissionJsonAttNames {
 
+    /**
+     * Represent the idchat value CHAT_ID
+     */
+    public final static String ID_CHAT = "idcht";
     /**
      * Represent the value of MSJ_CONTENT_TYPE
      */
@@ -37,12 +43,11 @@ public class ChatTransmissionJsonAttNames {
     public final static String CHAT_METADATA = "chtd";
 
     /**
-     * Represent the value of GENESIS_TRANSACTION
-     */
-    public final static String GENESIS_TRANSACTION = "gt";
-
-    /**
      * Represent the value of NEW_DISTRIBUTION_STATUS
      */
-    public final static String NEW_DISTRIBUTION_STATUS = "nds";
+    public final static String DISTRIBUTION_STATUS = "ds";
+
+    public final static String CHAT_STATUS = "chtst";
+
+    public final static String MESSAGE_STATUS = "msgst";
 }
