@@ -8,7 +8,9 @@ import com.bitdubai.fermat_dap_api.layer.dap_actor.redeem_point.exceptions.CantG
 import com.bitdubai.fermat_dap_api.layer.dap_actor.redeem_point.interfaces.ActorAssetRedeemPoint;
 import com.bitdubai.fermat_dap_api.layer.dap_module.wallet_asset_issuer.interfaces.AssetIssuerWalletSupAppModuleManager;
 import com.bitdubai.fermat_dap_api.layer.dap_module.wallet_asset_user.interfaces.AssetUserWalletSubAppModuleManager;
+import com.bitdubai.fermat_dap_api.layer.dap_wallet.asset_issuer_wallet.interfaces.AssetIssuerWalletList;
 import com.bitdubai.fermat_dap_api.layer.dap_wallet.asset_user_wallet.interfaces.AssetUserWalletList;
+import com.bitdubai.fermat_dap_api.layer.dap_wallet.common.exceptions.CantLoadWalletException;
 
 import java.sql.Timestamp;
 import java.util.ArrayList;
@@ -40,6 +42,32 @@ public class Data {
             }
         }
         return digitalAssets;
+    }
+
+    public static DigitalAsset getDigitalAsset(AssetUserWalletSubAppModuleManager moduleManager, String digitalAssetPublicKey) throws CantLoadWalletException {
+        List<AssetUserWalletList> balances = moduleManager.getAssetUserWalletBalances("walletPublicKeyTest");
+        DigitalAsset digitalAsset;
+        String publicKey;
+        for (AssetUserWalletList balance : balances) {
+            publicKey = balance.getDigitalAsset().getPublicKey();
+            if (publicKey.equals(digitalAssetPublicKey)) {
+                digitalAsset = new DigitalAsset();
+                digitalAsset.setAssetPublicKey(balance.getDigitalAsset().getPublicKey());
+                digitalAsset.setName(balance.getDigitalAsset().getName());
+                digitalAsset.setAvailableBalanceQuantity(balance.getQuantityAvailableBalance());
+                digitalAsset.setBookBalanceQuantity(balance.getQuantityBookBalance());
+                digitalAsset.setAvailableBalance(balance.getDigitalAsset().getGenesisAmount());
+                Timestamp expirationDate = (Timestamp) balance.getDigitalAsset().getContract().getContractProperty(DigitalAssetContractPropertiesConstants.EXPIRATION_DATE).getValue();
+                digitalAsset.setExpDate(expirationDate);
+
+                List<Resource> resources = balance.getDigitalAsset().getResources();
+                if (resources != null && resources.size() > 0) {
+                    digitalAsset.setImage(balance.getDigitalAsset().getResources().get(0).getResourceBinayData());
+                }
+                return digitalAsset;
+            }
+        }
+        return null;
     }
 
     public static List<RedeemPoint> getConnectedRedeemPoints(AssetUserWalletSubAppModuleManager moduleManager, List<RedeemPoint> usersSelected) throws CantGetAssetRedeemPointActorsException {
