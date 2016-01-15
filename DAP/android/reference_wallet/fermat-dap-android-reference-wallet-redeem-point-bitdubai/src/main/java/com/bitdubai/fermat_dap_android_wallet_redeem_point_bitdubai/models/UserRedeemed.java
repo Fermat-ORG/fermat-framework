@@ -16,7 +16,7 @@ public class UserRedeemed {
 
     }
 
-    public UserRedeemed(String userName, Timestamp redeemedDate, String redeemedStatus) {
+    public UserRedeemed(String userName, Timestamp redeemedDate) {
         this.userName = userName;
         this.redeemedDate = redeemedDate;
         this.redeemedStatus = redeemedStatus;
