@@ -32,16 +32,17 @@ import com.bitdubai.fermat_dap_api.layer.dap_identity.asset_user.exceptions.Cant
 import com.bitdubai.fermat_dap_api.layer.dap_identity.asset_user.exceptions.CantUpdateIdentityAssetUserException;
 import com.bitdubai.fermat_dap_api.layer.dap_identity.asset_user.interfaces.IdentityAssetUser;
 import com.bitdubai.fermat_dap_api.layer.dap_identity.asset_user.interfaces.IdentityAssetUserManager;
-import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedUIExceptionSeverity;
+import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 
 import java.io.ByteArrayOutputStream;
+import java.util.List;
 
 /**
  * A simple {@link Fragment} subclass.
  */
 public class CreateIdentityFragment extends AbstractFermatFragment {
-    private static final String TAG = "CreateBrokerIdentity";
+    private static final String TAG = "CreateAssetUserIdentityFragment";
 
     private static final int CREATE_IDENTITY_FAIL_MODULE_IS_NULL = 0;
     private static final int CREATE_IDENTITY_FAIL_NO_VALID_DATA = 1;
@@ -65,7 +66,7 @@ public class CreateIdentityFragment extends AbstractFermatFragment {
 
     UserIdentitySubAppSession userIdentitySubAppSession;
     private IdentityAssetUser identitySelected;
-    private boolean isUpdate=false;
+    private boolean isUpdate = false;
 
     public static CreateIdentityFragment newInstance() {
         return new CreateIdentityFragment();
@@ -109,7 +110,7 @@ public class CreateIdentityFragment extends AbstractFermatFragment {
         mIdentityName = (EditText) layout.findViewById(R.id.crypto_broker_name);
         mIdentityImage = (ImageView) layout.findViewById(R.id.crypto_broker_image);
 
-        createButton.setText((!isUpdate) ? "Create" : "Update" );
+        createButton.setText((!isUpdate) ? "Create" : "Update");
 
         mIdentityName.requestFocus();
 
@@ -155,34 +156,36 @@ public class CreateIdentityFragment extends AbstractFermatFragment {
 
             identitySelected = (IdentityAssetUser) userIdentitySubAppSession.getData(SessionConstants.IDENTITY_SELECTED);
 
-
             if (identitySelected != null) {
                 loadIdentity();
-            } else{
-                identitySelected = moduleManager.getIdentityAssetUsersFromCurrentDeviceUser().get(0);
-                if(identitySelected!=null) {
+            } else {
+                List<IdentityAssetUser> lst = moduleManager.getIdentityAssetUsersFromCurrentDeviceUser();
+                if (!lst.isEmpty()) {
+                    identitySelected = lst.get(0);
+                }
+                if (identitySelected != null) {
                     loadIdentity();
                     isUpdate = true;
                     createButton.setText("Save changes");
                 }
             }
-        }catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
-    private void loadIdentity(){
+    private void loadIdentity() {
         if (identitySelected.getImage() != null) {
             Bitmap bitmap = null;
             if (identitySelected.getImage().length > 0) {
                 bitmap = BitmapFactory.decodeByteArray(identitySelected.getImage(), 0, identitySelected.getImage().length);
 //                bitmap = Bitmap.createScaledBitmap(bitmap, mBrokerImage.getWidth(), mBrokerImage.getHeight(), true);
-            }else{
+            } else {
                 bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.profile_image);
 
                 //Picasso.with(getActivity()).load(R.drawable.profile_image).into(mBrokerImage);
             }
-            bitmap = Bitmap.createScaledBitmap(bitmap, 100,100, true);
+            bitmap = Bitmap.createScaledBitmap(bitmap, 100, 100, true);
             brokerImageByteArray = toByteArray(bitmap);
             mIdentityImage.setImageDrawable(ImagesUtils.getRoundedBitmap(getResources(), bitmap));
         }
@@ -191,7 +194,7 @@ public class CreateIdentityFragment extends AbstractFermatFragment {
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(  requestCode, resultCode, data);
+        super.onActivityResult(requestCode, resultCode, data);
         if (resultCode == Activity.RESULT_OK) {
             Bitmap imageBitmap = null;
             ImageView pictureView = mIdentityImage;
@@ -263,8 +266,8 @@ public class CreateIdentityFragment extends AbstractFermatFragment {
         if (dataIsValid) {
             if (moduleManager != null) {
                 try {
-                    if(!isUpdate)
-                        moduleManager.createNewIdentityAssetUser(brokerNameText, brokerImageByteArray);
+                    if (!isUpdate)
+                        moduleManager.createNewIdentityAssetUser(brokerNameText, (brokerImageByteArray == null) ? convertImage(R.drawable.ic_profile_male) : brokerImageByteArray);
                     else
                         moduleManager.updateIdentityAssetUser(identitySelected.getPublicKey(), brokerNameText, brokerImageByteArray);
                 } catch (CantCreateNewIdentityAssetUserException e) {
@@ -278,6 +281,14 @@ public class CreateIdentityFragment extends AbstractFermatFragment {
         }
         return CREATE_IDENTITY_FAIL_NO_VALID_DATA;
 
+    }
+
+    private byte[] convertImage(int resImage) {
+        Bitmap bitmap = BitmapFactory.decodeResource(getActivity().getResources(), resImage);
+        ByteArrayOutputStream stream = new ByteArrayOutputStream();
+        bitmap.compress(Bitmap.CompressFormat.JPEG, 80, stream);
+        //bitmap.compress(Bitmap.CompressFormat.PNG, 100, stream);
+        return stream.toByteArray();
     }
 
     private void dispatchTakePictureIntent() {

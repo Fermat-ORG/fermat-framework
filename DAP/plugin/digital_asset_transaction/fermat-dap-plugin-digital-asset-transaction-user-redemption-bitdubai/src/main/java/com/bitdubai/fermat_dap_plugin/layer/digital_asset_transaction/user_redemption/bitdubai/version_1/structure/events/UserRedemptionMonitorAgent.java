@@ -256,7 +256,8 @@ public class UserRedemptionMonitorAgent implements Agent, DealsWithLogger, Deals
                 updateDistributionStatus(DistributionStatus.SENDING_CRYPTO, assetAcceptedGenesisTransaction);
 
                 DigitalAssetMetadata metadata = digitalAssetUserRedemptionVault.getDigitalAssetMetadataFromLocalStorage(assetAcceptedGenesisTransaction);
-                sendCryptoAmountToRemoteActor(assetAcceptedGenesisTransaction, cryptoAddressTo, metadata.getGenesisBlock());
+                String genesisTxBitcoinsSent = sendCryptoAmountToRemoteActor(assetAcceptedGenesisTransaction, cryptoAddressTo, metadata.getGenesisBlock());
+                userRedemptionDao.sendingBitcoins(assetAcceptedGenesisTransaction, genesisTxBitcoinsSent);
                 userRedemptionDao.updateDigitalAssetCryptoStatusByGenesisTransaction(assetAcceptedGenesisTransaction, CryptoStatus.PENDING_SUBMIT);
             }
             List<String> assetRejectedByContractGenesisTransactionList = userRedemptionDao.getGenesisTransactionByAssetRejectedByContractStatus();
@@ -294,12 +295,11 @@ public class UserRedemptionMonitorAgent implements Agent, DealsWithLogger, Deals
          */
         private void checkPendingTransactions() throws CantExecuteQueryException, CantCheckAssetUserRedemptionProgressException, CantGetCryptoTransactionException, UnexpectedResultReturnedFromDatabaseException, CantGetDigitalAssetFromLocalStorageException, CantDeliverDigitalAssetToAssetWalletException, CantGetTransactionCryptoStatusException, RecordsNotFoundException, CantGetBroadcastStatusException, CantCancellBroadcastTransactionException, CantBroadcastTransactionException, CantGetTransactionsException, CantGetAssetUserActorsException, CantRegisterDebitException, CantAssetUserActorNotFoundException, CantLoadWalletException, CantGetAssetIssuerActorsException, CantRegisterCreditException {
             for (DeliverRecord record : userRedemptionDao.getDeliveredRecords()) {
-                String transactionInternalId = userRedemptionDao.getTransactionIdByGenesisTransaction(record.getGenesisTransaction());
                 switch (bitcoinNetworkManager.getCryptoStatus(record.getGenesisTransactionSent())) {
                     case ON_BLOCKCHAIN:
                     case IRREVERSIBLE:
                         CryptoTransaction transactionOnBlockChain = AssetVerification.getCryptoTransactionFromCryptoNetworkByCryptoStatus(bitcoinNetworkManager, record.getGenesisTransactionSent(), CryptoStatus.ON_BLOCKCHAIN);
-                        digitalAssetUserRedemptionVault.setDigitalAssetMetadataAssetIssuerWalletTransaction(transactionOnBlockChain, transactionInternalId, AssetBalanceType.BOOK, TransactionType.DEBIT, DAPTransactionType.DISTRIBUTION, record.getRedeemPointPublicKey());
+                        digitalAssetUserRedemptionVault.setDigitalAssetMetadataAssetIssuerWalletTransaction(transactionOnBlockChain, record.getGenesisTransaction(), AssetBalanceType.BOOK, TransactionType.DEBIT, DAPTransactionType.RECEPTION, record.getRedeemPointPublicKey());
                         userRedemptionDao.updateDeliveringStatusForTxId(record.getTransactionId(), DistributionStatus.DISTRIBUTION_FINISHED);
                         break;
                     case REVERSED_ON_BLOCKCHAIN:
@@ -342,9 +342,9 @@ public class UserRedemptionMonitorAgent implements Agent, DealsWithLogger, Deals
             userRedemptionDao.updateDistributionStatusByGenesisTransaction(distributionStatus, genesisTransaction);
         }
 
-        private void sendCryptoAmountToRemoteActor(String genesisTransaction, CryptoAddress cryptoAddressTo, String genesisBlock) throws CantSendAssetBitcoinsToUserException {
+        private String sendCryptoAmountToRemoteActor(String genesisTransaction, CryptoAddress cryptoAddressTo, String genesisBlock) throws CantSendAssetBitcoinsToUserException {
             System.out.println("ASSET USER REDEMPTION sending genesis amount from asset vault");
-            assetVaultManager.sendAssetBitcoins(genesisTransaction, genesisBlock, cryptoAddressTo);
+            return assetVaultManager.sendAssetBitcoins(genesisTransaction, genesisBlock, cryptoAddressTo);
         }
     }
 
