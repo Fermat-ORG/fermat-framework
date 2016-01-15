@@ -44,6 +44,7 @@ import org.bitcoinj.core.ECKey;
 import org.bitcoinj.core.Transaction;
 import org.bitcoinj.core.UTXOProvider;
 
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
@@ -369,7 +370,7 @@ public class BitcoinCryptoNetworkPluginRoot extends AbstractPlugin implements
      * @throws CantGetCryptoTransactionException
      */
     @Override
-    public CryptoTransaction getGenesisTransaction(Map<String, String> transactionChain) throws CantGetCryptoTransactionException {
+    public CryptoTransaction getGenesisTransaction(LinkedHashMap<String, String> transactionChain) throws CantGetCryptoTransactionException {
         return bitcoinCryptoNetworkManager.getGenesisTransaction(transactionChain);
     }
 }

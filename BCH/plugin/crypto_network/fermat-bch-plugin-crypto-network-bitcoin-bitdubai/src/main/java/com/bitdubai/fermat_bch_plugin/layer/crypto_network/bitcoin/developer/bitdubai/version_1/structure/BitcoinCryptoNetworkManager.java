@@ -52,6 +52,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
@@ -915,7 +916,11 @@ public class BitcoinCryptoNetworkManager implements TransactionProtocolManager, 
      * @return the CryptoTransaction that represents the GenesisTransaction
      * @throws CantGetCryptoTransactionException
      */
-    public CryptoTransaction getGenesisTransaction(Map<String, String> transactionChain) throws CantGetCryptoTransactionException {
+    public CryptoTransaction getGenesisTransaction(LinkedHashMap<String, String> transactionChain) throws CantGetCryptoTransactionException {
+        if (transactionChain.isEmpty())
+            throw new CantGetCryptoTransactionException(CantGetCryptoTransactionException.DEFAULT_MESSAGE, null, "Transaction chain information is required.", "missing data");
+
+
         return null;
     }
 }

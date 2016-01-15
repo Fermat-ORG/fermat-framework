@@ -22,6 +22,7 @@ import org.bitcoinj.core.ECKey;
 import org.bitcoinj.core.Transaction;
 import org.bitcoinj.core.UTXOProvider;
 
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
@@ -220,5 +221,5 @@ public interface BitcoinNetworkManager extends TransactionSender<CryptoTransacti
      * @return the CryptoTransaction that represents the GenesisTransaction
      * @throws CantGetCryptoTransactionException
      */
-    CryptoTransaction getGenesisTransaction(Map<String, String> transactionChain) throws CantGetCryptoTransactionException;
+    CryptoTransaction getGenesisTransaction(LinkedHashMap<String, String> transactionChain) throws CantGetCryptoTransactionException;
 }
