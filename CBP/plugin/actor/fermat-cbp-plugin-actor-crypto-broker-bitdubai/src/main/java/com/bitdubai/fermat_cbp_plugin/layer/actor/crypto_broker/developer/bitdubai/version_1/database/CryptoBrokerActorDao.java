@@ -28,7 +28,7 @@ import java.util.UUID;
 /**
  * Created by angel on 19/11/15.
  */
-public class CryptoBrokerActorDao implements CryptoBrokerActorManager {
+public class CryptoBrokerActorDao {
 
     private Database database;
     private PluginDatabaseSystem pluginDatabaseSystem;
@@ -62,7 +62,6 @@ public class CryptoBrokerActorDao implements CryptoBrokerActorManager {
             }
         }
 
-        @Override
         public BrokerIdentityWalletRelationship createNewBrokerIdentityWalletRelationship(ActorIdentity identity, UUID wallet) throws CantCreateNewBrokerIdentityWalletRelationshipException {
 
             try {
@@ -86,7 +85,6 @@ public class CryptoBrokerActorDao implements CryptoBrokerActorManager {
             }
         }
 
-        @Override
         public Collection<BrokerIdentityWalletRelationship> getAllBrokerIdentityWalletRelationship() throws CantGetListBrokerIdentityWalletRelationshipException {
             try {
                 DatabaseTable RelationshipTable = this.database.getTable(CryptoBrokerActorDatabaseConstants.CRYPTO_BROKER_ACTOR_RELATIONSHIP_TABLE_NAME);
@@ -107,7 +105,6 @@ public class CryptoBrokerActorDao implements CryptoBrokerActorManager {
             }
         }
 
-        @Override
         public BrokerIdentityWalletRelationship getBrokerIdentityWalletRelationshipByIdentity(ActorIdentity identity) throws CantGetListBrokerIdentityWalletRelationshipException {
             try {
                 DatabaseTable RelationshipTable = this.database.getTable(CryptoBrokerActorDatabaseConstants.CRYPTO_BROKER_ACTOR_RELATIONSHIP_TABLE_NAME);
@@ -128,7 +125,6 @@ public class CryptoBrokerActorDao implements CryptoBrokerActorManager {
             }
         }
 
-        @Override
         public BrokerIdentityWalletRelationship getBrokerIdentityWalletRelationshipByWallet(UUID wallet) throws CantGetListBrokerIdentityWalletRelationshipException {
             try {
                 DatabaseTable RelationshipTable = this.database.getTable(CryptoBrokerActorDatabaseConstants.CRYPTO_BROKER_ACTOR_RELATIONSHIP_TABLE_NAME);

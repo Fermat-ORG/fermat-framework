@@ -10,7 +10,7 @@ import java.util.Collection;
 /**
  * Created by angel on 13/1/16.
  */
-public interface ActorExtraDataManager {
+public interface ActorExtraDataManager extends CryptoBrokerActorManager {
 
     /**
      *
