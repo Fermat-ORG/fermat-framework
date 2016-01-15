@@ -295,12 +295,11 @@ public class UserRedemptionMonitorAgent implements Agent, DealsWithLogger, Deals
          */
         private void checkPendingTransactions() throws CantExecuteQueryException, CantCheckAssetUserRedemptionProgressException, CantGetCryptoTransactionException, UnexpectedResultReturnedFromDatabaseException, CantGetDigitalAssetFromLocalStorageException, CantDeliverDigitalAssetToAssetWalletException, CantGetTransactionCryptoStatusException, RecordsNotFoundException, CantGetBroadcastStatusException, CantCancellBroadcastTransactionException, CantBroadcastTransactionException, CantGetTransactionsException, CantGetAssetUserActorsException, CantRegisterDebitException, CantAssetUserActorNotFoundException, CantLoadWalletException, CantGetAssetIssuerActorsException, CantRegisterCreditException {
             for (DeliverRecord record : userRedemptionDao.getDeliveredRecords()) {
-                String transactionInternalId = userRedemptionDao.getTransactionIdByGenesisTransaction(record.getGenesisTransaction());
                 switch (bitcoinNetworkManager.getCryptoStatus(record.getGenesisTransactionSent())) {
                     case ON_BLOCKCHAIN:
                     case IRREVERSIBLE:
                         CryptoTransaction transactionOnBlockChain = AssetVerification.getCryptoTransactionFromCryptoNetworkByCryptoStatus(bitcoinNetworkManager, record.getGenesisTransactionSent(), CryptoStatus.ON_BLOCKCHAIN);
-                        digitalAssetUserRedemptionVault.setDigitalAssetMetadataAssetIssuerWalletTransaction(transactionOnBlockChain, transactionInternalId, AssetBalanceType.BOOK, TransactionType.DEBIT, DAPTransactionType.DISTRIBUTION, record.getRedeemPointPublicKey());
+                        digitalAssetUserRedemptionVault.setDigitalAssetMetadataAssetIssuerWalletTransaction(transactionOnBlockChain, record.getGenesisTransaction(), AssetBalanceType.BOOK, TransactionType.DEBIT, DAPTransactionType.RECEPTION, record.getRedeemPointPublicKey());
                         userRedemptionDao.updateDeliveringStatusForTxId(record.getTransactionId(), DistributionStatus.DISTRIBUTION_FINISHED);
                         break;
                     case REVERSED_ON_BLOCKCHAIN:
