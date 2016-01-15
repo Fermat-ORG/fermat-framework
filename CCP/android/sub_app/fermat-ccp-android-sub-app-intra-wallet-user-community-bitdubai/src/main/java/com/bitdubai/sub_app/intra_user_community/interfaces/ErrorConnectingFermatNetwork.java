@@ -8,8 +8,15 @@ public interface ErrorConnectingFermatNetwork {
     /**
      * Is called when user is not connected to fermat network
      *
-     * @param connected boolean true when user is connected to network
+     * @param fermatConnect boolean true when user is connected to network
      */
-    void errorConnectingFermatNetwork(boolean connected);
+    void errorConnectingFermatNetwork(boolean fermatConnect);
+
+    /**
+     * Is called when user is not connected to network
+     *
+     * @param connect boolean true when user is connected to network
+     */
+    void errorConnectingNetwork(boolean connect);
 
 }
