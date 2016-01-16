@@ -422,7 +422,7 @@ public abstract class FermatActivity extends AppCompatActivity
         final View view = findViewById(R.id.reveal);
         final View txt_settings = view.findViewById(R.id.txt_settings);
         txt_settings.setVisibility(View.INVISIBLE);
-        view.findViewById(R.id.img_fermat_setting).setOnClickListener(new View.OnClickListener() {
+        View.OnClickListener onClickListener = new View.OnClickListener() {
                                                                      @Override
                                                                      public void onClick(View v) {
                                                                          int cx = (mRevealView.getLeft() + mRevealView.getRight());
@@ -475,7 +475,7 @@ public abstract class FermatActivity extends AppCompatActivity
                                                                              }
                                                                          } else {
                                                                              if (hidden) {
-                                                                                 android.animation.Animator anim = android.view.ViewAnimationUtils.createCircularReveal(mRevealView, cx, cy, 0, radius);
+                                                                                 android.animation.Animator anim = android.view.ViewAnimationUtils.createCircularReveal(mRevealView, 0, cy, 0, radius);
                                                                                  mRevealView.setVisibility(View.VISIBLE);
                                                                                  FrameLayout frameLayout = (FrameLayout) findViewById(R.id.container_main);
                                                                                  frameLayout.bringChildToFront(mRevealView);
@@ -500,8 +500,10 @@ public abstract class FermatActivity extends AppCompatActivity
                                                                              }
                                                                          }
                                                                      }
-                                                                 }
-        );
+                                                                 };
+        view.findViewById(R.id.img_fermat_setting_1).setOnClickListener(onClickListener);
+        view.findViewById(R.id.img_fermat_setting).setOnClickListener(onClickListener);
+
     }
 
 
@@ -1644,10 +1646,10 @@ public abstract class FermatActivity extends AppCompatActivity
                     case CLOUD_CLIENT_CONNECTION_LOOSE:
                     case CLOUD_CLIENT_CLOSED:
                     case CLOUD_CLIENT_CONNECTED:
-                        launchIntent(notification.getTextBody());
+                       // launchIntent(notification.getTextBody());
                         break;
                     default:
-                        launchIntent(notification.getTextBody());
+                      //  launchIntent(notification.getTextBody());
                         //launchWalletNotification(notificationEvent.getWalletPublicKey(), notificationEvent.getAlertTitle(), notificationEvent.getTextTitle(), notificationEvent.getTextBody());
                         break;
 

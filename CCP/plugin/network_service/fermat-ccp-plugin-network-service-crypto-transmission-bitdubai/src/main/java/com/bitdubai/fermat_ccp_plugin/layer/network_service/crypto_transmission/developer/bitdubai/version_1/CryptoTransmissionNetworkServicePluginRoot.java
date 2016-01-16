@@ -352,9 +352,9 @@ public class CryptoTransmissionNetworkServicePluginRoot extends AbstractNetworkS
          *  Message sent
          */
         fermatEventListener = eventManager.getNewListener(P2pEventType.NEW_NETWORK_SERVICE_MESSAGE_SENT_NOTIFICATION);
-//        fermatEventListener.setEventHandler(new NewSentMessageNotificationEventHandler(this));
-//        eventManager.addListener(fermatEventListener);
-//        listenersAdded.add(fermatEventListener);
+        fermatEventListener.setEventHandler(new NewSentMessageNotificationEventHandler(this));
+        eventManager.addListener(fermatEventListener);
+        listenersAdded.add(fermatEventListener);
 
                 /*
          * Listen and handle Client Connection Loose Notification Event
@@ -373,7 +373,8 @@ public class CryptoTransmissionNetworkServicePluginRoot extends AbstractNetworkS
         eventManager.addListener(fermatEventListener);
         listenersAdded.add(fermatEventListener);
 
-
+        // Initialize messages handlers
+        initializeMessagesListeners();
     }
 
     /**
@@ -385,9 +386,9 @@ public class CryptoTransmissionNetworkServicePluginRoot extends AbstractNetworkS
          *
          */
         FermatEventListener fermatEventListener = eventManager.getNewListener(P2pEventType.NEW_NETWORK_SERVICE_MESSAGE_RECEIVE_NOTIFICATION);
-//        fermatEventListener.setEventHandler(new NewReceiveMessagesNotificationEventHandler(this));
-//        eventManager.addListener(fermatEventListener);
-//        listenersAdded.add(fermatEventListener);
+        fermatEventListener.setEventHandler(new NewReceiveMessagesNotificationEventHandler(this));
+        eventManager.addListener(fermatEventListener);
+        listenersAdded.add(fermatEventListener);
     }
 
     /**
@@ -749,7 +750,7 @@ public class CryptoTransmissionNetworkServicePluginRoot extends AbstractNetworkS
             /*
              * Mark as register
              */
-             this.register = Boolean.TRUE;
+            this.register = Boolean.TRUE;
             setRegister(Boolean.TRUE);
 
             System.out.print("-----------------------\n" +
@@ -774,8 +775,7 @@ public class CryptoTransmissionNetworkServicePluginRoot extends AbstractNetworkS
 
             setPlatformComponentProfilePluginRoot(platformComponentProfileRegistered);
 
-            // Initialize messages handlers
-            initializeMessagesListeners();
+
 
             // start main threads
             cryptoTransmissionAgent.start();
