@@ -5,6 +5,7 @@ import com.bitdubai.fermat_api.DealsWithPluginIdentity;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.Specialist;
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.Transaction;
+import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.exceptions.CantConfirmTransactionException;
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.exceptions.CantDeliverPendingTransactionsException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DealsWithPluginDatabaseSystem;
@@ -31,7 +32,6 @@ import com.bitdubai.fermat_cht_api.layer.middleware.utils.EventRecord;
 import com.bitdubai.fermat_cht_api.layer.network_service.chat.enums.ChatMessageStatus;
 import com.bitdubai.fermat_cht_api.layer.network_service.chat.enums.DistributionStatus;
 import com.bitdubai.fermat_cht_api.layer.network_service.chat.exceptions.CantSendChatMessageMetadataException;
-import com.bitdubai.fermat_cht_api.layer.network_service.chat.exceptions.CantSendChatMessageNewStatusNotificationException;
 import com.bitdubai.fermat_cht_api.layer.network_service.chat.interfaces.ChatManager;
 import com.bitdubai.fermat_cht_api.layer.network_service.chat.interfaces.ChatMetadata;
 import com.bitdubai.fermat_cht_plugin.layer.middleware.chat.developer.bitdubai.version_1.ChatMiddlewarePluginRoot;
@@ -39,6 +39,7 @@ import com.bitdubai.fermat_cht_plugin.layer.middleware.chat.developer.bitdubai.v
 import com.bitdubai.fermat_cht_plugin.layer.middleware.chat.developer.bitdubai.version_1.database.ChatMiddlewareDatabaseDao;
 import com.bitdubai.fermat_cht_plugin.layer.middleware.chat.developer.bitdubai.version_1.database.ChatMiddlewareDatabaseFactory;
 import com.bitdubai.fermat_cht_plugin.layer.middleware.chat.developer.bitdubai.version_1.exceptions.CantGetPendingEventListException;
+import com.bitdubai.fermat_cht_plugin.layer.middleware.chat.developer.bitdubai.version_1.exceptions.CantGetPendingTransactionException;
 import com.bitdubai.fermat_cht_plugin.layer.middleware.chat.developer.bitdubai.version_1.exceptions.DatabaseOperationException;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.DealsWithErrors;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedPluginExceptionSeverity;
@@ -259,15 +260,19 @@ public class ChatMiddlewareMonitorAgent implements
                  */
                 List<EventRecord> pendingEventList = chatMiddlewareDatabaseDao.getPendingEventList();
                 EventType eventType;
+                UUID chatId;
                 for(EventRecord eventRecord : pendingEventList){
                     eventType=eventRecord.getEventType();
+                    chatId=eventRecord.getChatId();
                     switch (eventType){
                         case INCOMING_CHAT:
-                            //TODO: TO IMPLEMENT
+                            checkIncomingChat(chatId);
                             break;
                         case OUTGOING_CHAT:
                             //TODO: TO IMPLEMENT
                             break;
+                        case INCOMING_STATUS:
+                            checkIncomingStatus(chatId);
                         default:
                             //TODO: THROW AN EXCEPTION
                             break;
@@ -293,17 +298,199 @@ public class ChatMiddlewareMonitorAgent implements
                         "Executing Monitor Agent",
                         "Cannot get the message"
                 );
+            } catch (CantGetPendingTransactionException e) {
+                throw new CantSendChatMessageException(
+                        e,
+                        "Executing Monitor Agent",
+                        "Cannot get the pending transaction from Network Service plugin"
+                );
             }
 
 
         }
 
-        private void checkIncomingChat(String eventId) throws CantDeliverPendingTransactionsException {
-            /*List<Transaction<ChatMetadata>> pendingTransactionList=chatNetworkServiceManager.getPendingTransactions(Specialist.UNKNOWN_SPECIALIST);
-            for(Transaction<ChatMetadata> pendingTransaction : pendingTransactionList){
-                pendingTransaction.getInformation().
-            }*/
-            //TODO: to implement
+        /**
+         * This method checks the incoming chat event and acts according to this.
+         * @param eventChatId
+         * @throws CantGetPendingTransactionException
+         */
+        private void checkIncomingChat(UUID eventChatId) throws CantGetPendingTransactionException {
+            try{
+                List<Transaction<ChatMetadata>> pendingTransactionList=
+                        chatNetworkServiceManager.getPendingTransactions(
+                                Specialist.UNKNOWN_SPECIALIST);
+                UUID incomingTransactionChatId;
+                ChatMetadata incomingChatMetadata;
+                if(pendingTransactionList==null){
+                    throw new CantGetPendingTransactionException("The Network Service returns a null list");
+                }
+                for(Transaction<ChatMetadata> pendingTransaction : pendingTransactionList){
+                    incomingChatMetadata=pendingTransaction.getInformation();
+                    incomingTransactionChatId=incomingChatMetadata.getIdChat();
+                    if(eventChatId.toString().equals(incomingTransactionChatId.toString())){
+                        //If message exists in database, this message will be updated
+                        saveMessage(incomingChatMetadata);
+                    }
+                }
+            } catch (CantDeliverPendingTransactionsException e) {
+                throw new CantGetPendingTransactionException(
+                        e,
+                        "Checking the incoming chat pending transactions",
+                        "Cannot get the pending transaction from Network Service plugin"
+                );
+            } catch (DatabaseOperationException e) {
+                throw new CantGetPendingTransactionException(
+                        e,
+                        "Checking the incoming chat pending transactions",
+                        "Unexpected error in database operation"
+                );
+            } catch (CantSaveMessageException e) {
+                throw new CantGetPendingTransactionException(
+                        e,
+                        "Checking the incoming chat pending transactions",
+                        "Cannot save message from database"
+                );
+            } catch (CantGetMessageException e) {
+                throw new CantGetPendingTransactionException(
+                        e,
+                        "Checking the incoming chat pending transactions",
+                        "Cannot get the message from database"
+                );
+            }
+
+        }
+
+        /**
+         * This method checks the incoming status event and acts according to this.
+         * @param eventChatId
+         * @throws CantGetPendingTransactionException
+         */
+        private void checkIncomingStatus(UUID eventChatId) throws
+                CantGetPendingTransactionException {
+            try{
+                List<Transaction<ChatMetadata>> pendingTransactionList=
+                        chatNetworkServiceManager.getPendingTransactions(
+                                Specialist.UNKNOWN_SPECIALIST);
+                UUID incomingTransactionChatId;
+                ChatMetadata incomingChatMetadata;
+                if(pendingTransactionList==null){
+                    throw new CantGetPendingTransactionException("The Network Service returns a null list");
+                }
+                for(Transaction<ChatMetadata> pendingTransaction : pendingTransactionList){
+                    incomingChatMetadata=pendingTransaction.getInformation();
+                    incomingTransactionChatId=incomingChatMetadata.getIdChat();
+                    if(eventChatId.toString().equals(incomingTransactionChatId.toString())){
+                        //Check if metadata exists in database
+                        checkChatMetadata(incomingChatMetadata);
+                        updateMessageStatus(incomingChatMetadata);
+                        chatNetworkServiceManager.confirmReception(pendingTransaction.getTransactionID());
+                        break;
+                    }
+                }
+            } catch (CantDeliverPendingTransactionsException e) {
+                throw new CantGetPendingTransactionException(
+                        e,
+                        "Checking the incoming status pending transactions",
+                        "Cannot get the pending transaction from Network Service plugin"
+                );
+            } catch (CantGetChatException e) {
+                throw new CantGetPendingTransactionException(
+                        e,
+                        "Checking the incoming status pending transactions",
+                        "Cannot get the chat from database"
+                );
+            } catch (DatabaseOperationException e) {
+                throw new CantGetPendingTransactionException(
+                        e,
+                        "Checking the incoming status pending transactions",
+                        "Unexpected error in database operation"
+                );
+            }  catch (CantGetMessageException e) {
+                throw new CantGetPendingTransactionException(
+                        e,
+                        "Checking the incoming status pending transactions",
+                        "Cannot get the message from database"
+                );
+            } catch (CantSaveMessageException e) {
+                throw new CantGetPendingTransactionException(
+                        e,
+                        "Checking the incoming status pending transactions",
+                        "Cannot update message from database"
+                );
+            } catch (CantConfirmTransactionException e) {
+                throw new CantGetPendingTransactionException(
+                        e,
+                        "Checking the incoming status pending transactions",
+                        "Cannot confirm the pending transaction in Network Service plugin"
+                );
+            }
+
+        }
+
+        /**
+         * This method returns true if the chat and the message exists in database.
+         * This throws an exception instead return false if any element does not exists in database
+         * because this is not should happen.
+         * @param chatMetadata
+         * @return
+         * @throws CantGetChatException
+         * @throws CantGetPendingTransactionException
+         */
+        private boolean checkChatMetadata(ChatMetadata chatMetadata) throws
+                CantGetChatException,
+                CantGetPendingTransactionException {
+            UUID chatId=chatMetadata.getIdChat();
+            UUID messageId;
+            if(chatMiddlewareDatabaseDao.chatIdExists(
+                    chatId)){
+                messageId=chatMetadata.getIdMessage();
+                if(chatMiddlewareDatabaseDao.messageIdExists(messageId)){
+                    return true;
+                }else{
+                    //TODO: I need to study how can I handle this case.
+                    throw new CantGetPendingTransactionException(
+                            "The Message Id "+messageId+" does not exists in database");
+                }
+            }else{
+                //This is a case that in this version I cannot handle
+                throw new CantGetPendingTransactionException(
+                        "The Chat Id "+chatId+" does not exists in database");
+            }
+        }
+
+        /**
+         * This method saves a new message in database
+         * @param chatMetadata
+         * @throws DatabaseOperationException
+         * @throws CantSaveMessageException
+         * @throws CantGetMessageException
+         */
+        private void saveMessage(
+                ChatMetadata chatMetadata) throws
+                DatabaseOperationException,
+                CantSaveMessageException,
+                CantGetMessageException {
+            UUID messageId=chatMetadata.getIdMessage();
+            Message messageRecorded=chatMiddlewareDatabaseDao.getMessageByMessageId(messageId);
+            chatMiddlewareDatabaseDao.saveMessage(messageRecorded);
+        }
+
+        /**
+         * This method updates a message record in database.
+         * @param chatMetadata
+         * @throws DatabaseOperationException
+         * @throws CantSaveMessageException
+         * @throws CantGetMessageException
+         */
+        private void updateMessageStatus(
+                ChatMetadata chatMetadata) throws
+                DatabaseOperationException,
+                CantSaveMessageException,
+                CantGetMessageException {
+            UUID messageId=chatMetadata.getIdMessage();
+            Message messageRecorded=chatMiddlewareDatabaseDao.getMessageByMessageId(messageId);
+            messageRecorded.setStatus(chatMetadata.getMessageStatus());
+            chatMiddlewareDatabaseDao.saveMessage(messageRecorded);
         }
 
         /**
@@ -376,6 +563,7 @@ public class ChatMiddlewareMonitorAgent implements
                     chat.getRemoteActorPublicKey(),
                     chat.getChatName(),
                     ChatMessageStatus.READ_CHAT,
+                    MessageStatus.SEND,
                     timestamp,
                     message.getMessageId(),
                     message.getMessage(),

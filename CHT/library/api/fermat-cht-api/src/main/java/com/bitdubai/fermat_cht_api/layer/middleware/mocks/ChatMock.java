@@ -1,5 +1,6 @@
 package com.bitdubai.fermat_cht_api.layer.middleware.mocks;
 
+import com.bitdubai.fermat_api.layer.all_definition.components.enums.PlatformComponentType;
 import com.bitdubai.fermat_cht_api.all_definition.enums.ChatStatus;
 import com.bitdubai.fermat_cht_api.layer.middleware.interfaces.Chat;
 
@@ -32,12 +33,12 @@ public class ChatMock implements Chat {
     }
 
     @Override
-    public String getLocalActorType() {
-        return "TestLocalActorType";
+    public PlatformComponentType getLocalActorType() {
+        return PlatformComponentType.NETWORK_SERVICE;
     }
 
     @Override
-    public void setLocalActorType(String localActorType) {
+    public void setLocalActorType(PlatformComponentType localActorType) {
 
     }
 
@@ -52,12 +53,12 @@ public class ChatMock implements Chat {
     }
 
     @Override
-    public String getRemoteActorType() {
-        return "TestRemoteActorType";
+    public PlatformComponentType getRemoteActorType() {
+        return PlatformComponentType.NETWORK_SERVICE;
     }
 
     @Override
-    public void setRemoteActorType(String remoteActorType) {
+    public void setRemoteActorType(PlatformComponentType remoteActorType) {
 
     }
 

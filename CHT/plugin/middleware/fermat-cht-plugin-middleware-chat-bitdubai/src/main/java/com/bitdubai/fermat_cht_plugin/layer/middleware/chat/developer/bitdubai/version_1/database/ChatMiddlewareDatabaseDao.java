@@ -1,6 +1,7 @@
 package com.bitdubai.fermat_cht_plugin.layer.middleware.chat.developer.bitdubai.version_1.database;
 
 import com.bitdubai.fermat_api.FermatException;
+import com.bitdubai.fermat_api.layer.all_definition.components.enums.PlatformComponentType;
 import com.bitdubai.fermat_api.layer.all_definition.events.EventSource;
 import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
@@ -531,7 +532,7 @@ public class ChatMiddlewareDatabaseDao {
         record.setUUIDValue(ChatMiddlewareDatabaseConstants.CONTACTS_ID_CONTACT_COLUMN_NAME, contact.getContactId());
         record.setStringValue(ChatMiddlewareDatabaseConstants.CONTACTS_ALIAS_COLUMN_NAME, contact.getAlias());
         record.setStringValue(ChatMiddlewareDatabaseConstants.CONTACTS_REMOTE_NAME_COLUMN_NAME, contact.getRemoteName());
-        record.setStringValue(ChatMiddlewareDatabaseConstants.CONTACTS_REMOTE_ACTOR_TYPE_COLUMN_NAME, contact.getRemoteActorType());
+        record.setStringValue(ChatMiddlewareDatabaseConstants.CONTACTS_REMOTE_ACTOR_TYPE_COLUMN_NAME, contact.getRemoteActorType().getCode());
         record.setStringValue(ChatMiddlewareDatabaseConstants.CONTACTS_REMOTE_ACTOR_PUB_KEY_COLUMN_NAME, contact.getRemoteActorPublicKey());
         record.setStringValue(ChatMiddlewareDatabaseConstants.CONTACTS_CREATION_DATE_COLUMN_NAME, contact.getCreationDate().toString());
 
@@ -546,9 +547,9 @@ public class ChatMiddlewareDatabaseDao {
         record.setUUIDValue(ChatMiddlewareDatabaseConstants.CHATS_ID_CHAT_COLUMN_NAME, chat.getChatId());
         record.setUUIDValue(ChatMiddlewareDatabaseConstants.CHATS_ID_OBJECT_COLUMN_NAME, chat.getObjectId());
         record.setStringValue(ChatMiddlewareDatabaseConstants.CHATS_CHAT_NAME_COLUMN_NAME, chat.getChatName());
-        record.setStringValue(ChatMiddlewareDatabaseConstants.CHATS_LOCAL_ACTOR_TYPE_COLUMN_NAME, chat.getLocalActorType());
+        record.setStringValue(ChatMiddlewareDatabaseConstants.CHATS_LOCAL_ACTOR_TYPE_COLUMN_NAME, chat.getLocalActorType().getCode());
         record.setStringValue(ChatMiddlewareDatabaseConstants.CHATS_LOCAL_ACTOR_PUB_KEY_COLUMN_NAME, chat.getLocalActorPublicKey());
-        record.setStringValue(ChatMiddlewareDatabaseConstants.CHATS_REMOTE_ACTOR_TYPE_COLUMN_NAME, chat.getRemoteActorType());
+        record.setStringValue(ChatMiddlewareDatabaseConstants.CHATS_REMOTE_ACTOR_TYPE_COLUMN_NAME, chat.getRemoteActorType().getCode());
         record.setStringValue(ChatMiddlewareDatabaseConstants.CHATS_REMOTE_ACTOR_PUB_KEY_COLUMN_NAME, chat.getRemoteActorPublicKey());
         record.setStringValue(ChatMiddlewareDatabaseConstants.CHATS_STATUS_COLUMN_NAME, chat.getStatus().getCode());
         record.setStringValue(ChatMiddlewareDatabaseConstants.CHATS_CREATION_DATE_COLUMN_NAME, chat.getDate().toString());
@@ -617,9 +618,9 @@ public class ChatMiddlewareDatabaseDao {
         chat.setDate(Date.valueOf(chatTransactionRecord.getStringValue(ChatMiddlewareDatabaseConstants.CHATS_CREATION_DATE_COLUMN_NAME)));
         chat.setLastMessageDate(Date.valueOf(chatTransactionRecord.getStringValue(ChatMiddlewareDatabaseConstants.CHATS_LAST_MESSAGE_DATE_COLUMN_NAME)));
         chat.setRemoteActorPublicKey(chatTransactionRecord.getStringValue(ChatMiddlewareDatabaseConstants.CHATS_REMOTE_ACTOR_PUB_KEY_COLUMN_NAME));
-        chat.setRemoteActorType(chatTransactionRecord.getStringValue(ChatMiddlewareDatabaseConstants.CHATS_REMOTE_ACTOR_TYPE_COLUMN_NAME));
+        chat.setRemoteActorType(PlatformComponentType.getByCode(chatTransactionRecord.getStringValue(ChatMiddlewareDatabaseConstants.CHATS_REMOTE_ACTOR_TYPE_COLUMN_NAME)));
         chat.setLocalActorPublicKey(chatTransactionRecord.getStringValue(ChatMiddlewareDatabaseConstants.CHATS_LOCAL_ACTOR_PUB_KEY_COLUMN_NAME));
-        chat.setLocalActorType(chatTransactionRecord.getStringValue(ChatMiddlewareDatabaseConstants.CHATS_LOCAL_ACTOR_TYPE_COLUMN_NAME));
+        chat.setLocalActorType(PlatformComponentType.getByCode(chatTransactionRecord.getStringValue(ChatMiddlewareDatabaseConstants.CHATS_LOCAL_ACTOR_TYPE_COLUMN_NAME)));
         chat.setStatus(ChatStatus.getByCode(chatTransactionRecord.getStringValue(ChatMiddlewareDatabaseConstants.CHATS_STATUS_COLUMN_NAME)));
 
         return chat;
@@ -646,7 +647,7 @@ public class ChatMiddlewareDatabaseDao {
         contact.setContactId(contactTransactionRecord.getUUIDValue(ChatMiddlewareDatabaseConstants.CONTACTS_ID_CONTACT_COLUMN_NAME));
         contact.setAlias(contactTransactionRecord.getStringValue(ChatMiddlewareDatabaseConstants.CONTACTS_ALIAS_COLUMN_NAME));
         contact.setRemoteName(contactTransactionRecord.getStringValue(ChatMiddlewareDatabaseConstants.CONTACTS_REMOTE_NAME_COLUMN_NAME));
-        contact.setRemoteActorType(contactTransactionRecord.getStringValue(ChatMiddlewareDatabaseConstants.CONTACTS_REMOTE_ACTOR_TYPE_COLUMN_NAME));
+        contact.setRemoteActorType(PlatformComponentType.getByCode(contactTransactionRecord.getStringValue(ChatMiddlewareDatabaseConstants.CONTACTS_REMOTE_ACTOR_TYPE_COLUMN_NAME)));
         contact.setRemoteActorPublicKey(contactTransactionRecord.getStringValue(ChatMiddlewareDatabaseConstants.CONTACTS_REMOTE_ACTOR_PUB_KEY_COLUMN_NAME));
         contact.setCreationDate(Date.valueOf(contactTransactionRecord.getStringValue(ChatMiddlewareDatabaseConstants.CONTACTS_CREATION_DATE_COLUMN_NAME)));
 
@@ -678,6 +679,24 @@ public class ChatMiddlewareDatabaseDao {
     private DatabaseTable getDatabaseEventsTable() {
         return database.getTable(
                 ChatMiddlewareDatabaseConstants.EVENTS_RECORDED_TABLE_NAME);
+    }
+
+    /**
+     * This method returns the chat database table
+     * @return
+     */
+    private DatabaseTable getDatabaseChatTable() {
+        return database.getTable(
+                ChatMiddlewareDatabaseConstants.CHATS_TABLE_NAME);
+    }
+
+    /**
+     * This method returns the chat database table
+     * @return
+     */
+    private DatabaseTable getDatabaseMessageTable() {
+        return database.getTable(
+                ChatMiddlewareDatabaseConstants.MESSAGE_TABLE_NAME);
     }
 
     /**
@@ -741,7 +760,7 @@ public class ChatMiddlewareDatabaseDao {
                 if(eventTypeString==null){
                     throw new UnexpectedResultReturnedFromDatabaseException("The event type is null");
                 }
-                eventRecord=new EventRecord(EventType.valueOf(eventTypeString));
+                eventRecord=new EventRecord(getEventTypeFromStringCode(eventTypeString));
                 String eventId=databaseTableRecord.getStringValue(
                         ChatMiddlewareDatabaseConstants.EVENTS_RECORDED_ID_COLUMN_NAME);
                 eventRecord.setEventId(eventId);
@@ -750,7 +769,7 @@ public class ChatMiddlewareDatabaseDao {
                 if(eventSource==null){
                     throw new UnexpectedResultReturnedFromDatabaseException("The event source is null");
                 }
-                eventRecord.setEventSource(EventSource.valueOf(eventSource));
+                eventRecord.setEventSource(EventSource.getByCode(eventSource));
                 String eventStatus=databaseTableRecord.getStringValue(
                         ChatMiddlewareDatabaseConstants.EVENTS_RECORDED_STATUS_COLUMN_NAME);
                 if(eventStatus==null){
@@ -777,6 +796,26 @@ public class ChatMiddlewareDatabaseDao {
         }
     }
 
+    /**
+     * This method returns the EventType by String code.
+     * @param code
+     * @return
+     * @throws InvalidParameterException
+     */
+    private EventType getEventTypeFromStringCode(
+            String code)
+            throws InvalidParameterException {
+        if(code.equals(EventType.INCOMING_CHAT.getCode())){
+            return EventType.INCOMING_CHAT;
+        }
+        if(code.equals(EventType.OUTGOING_CHAT.getCode())){
+            return EventType.OUTGOING_CHAT;
+        }
+        if(code.equals(EventType.INCOMING_STATUS.getCode())){
+            return EventType.INCOMING_STATUS;
+        }
+        throw new InvalidParameterException("The code "+code+" is not valid in EvenType enum");
+    }
 
     /**
      * This method returns a pending events list from database
@@ -889,6 +928,68 @@ public class ChatMiddlewareDatabaseDao {
             throw new UnexpectedResultReturnedFromDatabaseException(
                     exception,
                     "Updating parameter "+ChatMiddlewareDatabaseConstants.EVENTS_RECORDED_STATUS_COLUMN_NAME,"");
+        }
+    }
+
+    /**
+     * This method checks if the chat exists in database.
+     * @param chatId
+     * @return
+     * @throws CantGetChatException
+     */
+    public boolean chatIdExists(UUID chatId) throws CantGetChatException{
+        DatabaseTable databaseTable=getDatabaseChatTable();
+        return checkIdExists(
+                chatId,
+                ChatMiddlewareDatabaseConstants.CHATS_ID_CHAT_COLUMN_NAME,
+                databaseTable);
+
+    }
+
+    /**
+     * This method checks if the message exists in database.
+     * @param chatId
+     * @return
+     * @throws CantGetChatException
+     */
+    public boolean messageIdExists(UUID chatId) throws CantGetChatException{
+        DatabaseTable databaseTable=getDatabaseMessageTable();
+        return checkIdExists(
+                chatId,
+                ChatMiddlewareDatabaseConstants.MESSAGE_ID_MESSAGE_COLUMN_NAME,
+                databaseTable);
+    }
+
+    /**
+     * This method checks if an Id (UUID) exists in database
+     * @param id
+     * @param databaseColumn
+     * @param databaseTable
+     * @return
+     * @throws CantGetChatException
+     */
+    private boolean checkIdExists(
+            UUID id,
+            String databaseColumn,
+            DatabaseTable databaseTable) throws
+            CantGetChatException {
+        try{
+            DatabaseTableFilter databaseTableFilter=databaseTable.getEmptyTableFilter();
+            databaseTableFilter.setType(DatabaseFilterType.EQUAL);
+            databaseTableFilter.setValue(id.toString());
+            databaseTableFilter.setColumn(databaseColumn);
+            List<DatabaseTableRecord> records=getChatData(databaseTableFilter);
+            if(records==null||records.isEmpty()){
+                return false;
+            }else{
+                return true;
+            }
+        } catch (CantLoadTableToMemoryException e) {
+            throw new CantGetChatException(
+                    e,
+                    "Checking if Id exists in database",
+                    "An unexpected error in database"
+            );
         }
     }
 
