@@ -120,7 +120,7 @@ public class MemoryCache {
      *
      * @return ClientsSessionMemoryCache
      */
-    public static MemoryCache getInstance(){
+    public synchronized  static MemoryCache getInstance(){
 
         /*
          * If no exist create a new one
@@ -138,7 +138,7 @@ public class MemoryCache {
      * @param key to identify
      * @return the Object value
      */
-    public Object get(String key){
+    public synchronized  Object get(String key){
 
         /*
          * Return the session of this client
@@ -152,7 +152,7 @@ public class MemoryCache {
      * @param key the identify
      * @param value to storage
      */
-    public void add(String key, Object value){
+    public synchronized  void add(String key, Object value){
 
         /*
          * Add to the cache
@@ -166,7 +166,7 @@ public class MemoryCache {
      * @param key that identify
      * @return the object value
      */
-    public Object remove(String key){
+    public synchronized  Object remove(String key){
 
         /*
          * remove the session of this client
@@ -180,7 +180,7 @@ public class MemoryCache {
      * @param key that identify
      * @return (TRUE or FALSE)
      */
-    public boolean exist(String key){
+    public synchronized  boolean exist(String key){
 
         return instance.properties.containsKey(key);
     }
@@ -190,7 +190,7 @@ public class MemoryCache {
      *
      * @return registeredClientConnectionsCache current value
      */
-    public Map<String, ClientConnection> getRegisteredClientConnectionsCache() {
+    public synchronized  Map<String, ClientConnection> getRegisteredClientConnectionsCache() {
         return registeredClientConnectionsCache;
     }
 
@@ -198,7 +198,7 @@ public class MemoryCache {
      * This method register a FermatJettyPacketProcessor object with this
      * server
      */
-    public void registerFermatPacketProcessor(FermatJettyPacketProcessor fermatJettyPacketProcessor) {
+    public synchronized  void registerFermatPacketProcessor(FermatJettyPacketProcessor fermatJettyPacketProcessor) {
 
         //Validate if a previous list created
         if (packetProcessorsRegister.containsKey(fermatJettyPacketProcessor.getFermatPacketType())){
@@ -231,7 +231,7 @@ public class MemoryCache {
      *
      * @return pendingRegisterClientConnectionsCache current value
      */
-    public Map<String, ClientConnection> getPendingRegisterClientConnectionsCache() {
+    public synchronized  Map<String, ClientConnection> getPendingRegisterClientConnectionsCache() {
         return pendingRegisterClientConnectionsCache;
     }
 
@@ -240,7 +240,7 @@ public class MemoryCache {
      *
      * @return packetProcessorsRegister current value
      */
-    public Map<FermatPacketType, List<FermatJettyPacketProcessor>> getPacketProcessorsRegister() {
+    public synchronized  Map<FermatPacketType, List<FermatJettyPacketProcessor>> getPacketProcessorsRegister() {
         return packetProcessorsRegister;
     }
 
@@ -249,7 +249,7 @@ public class MemoryCache {
      *
      * @return registeredCommunicationsCloudServerCache current value
      */
-    public Map<Integer, PlatformComponentProfile> getRegisteredCommunicationsCloudServerCache() {
+    public synchronized  Map<Integer, PlatformComponentProfile> getRegisteredCommunicationsCloudServerCache() {
         return registeredCommunicationsCloudServerCache;
     }
 
@@ -258,7 +258,7 @@ public class MemoryCache {
      *
      * @return registeredCommunicationsCloudClientCache current value
      */
-    public Map<Integer, PlatformComponentProfile> getRegisteredCommunicationsCloudClientCache() {
+    public synchronized  Map<Integer, PlatformComponentProfile> getRegisteredCommunicationsCloudClientCache() {
         return registeredCommunicationsCloudClientCache;
     }
 
@@ -267,7 +267,7 @@ public class MemoryCache {
      *
      * @return registeredNetworkServicesCache current value
      */
-    public Map<NetworkServiceType, List<PlatformComponentProfile>> getRegisteredNetworkServicesCache() {
+    public synchronized  Map<NetworkServiceType, List<PlatformComponentProfile>> getRegisteredNetworkServicesCache() {
         return registeredNetworkServicesCache;
     }
 
@@ -276,7 +276,7 @@ public class MemoryCache {
      *
      * @return registeredOtherPlatformComponentProfileCache current value
      */
-    public Map<PlatformComponentType, List<PlatformComponentProfile>> getRegisteredOtherPlatformComponentProfileCache() {
+    public synchronized  Map<PlatformComponentType, List<PlatformComponentProfile>> getRegisteredOtherPlatformComponentProfileCache() {
         return registeredOtherPlatformComponentProfileCache;
     }
 
@@ -285,7 +285,7 @@ public class MemoryCache {
      *
      * @return standByProfileByClientIdentity current value
      */
-    public Map<String, List<PlatformComponentProfile>> getStandByProfileByClientIdentity() {
+    public synchronized  Map<String, List<PlatformComponentProfile>> getStandByProfileByClientIdentity() {
         return standByProfileByClientIdentity;
     }
 
@@ -294,7 +294,7 @@ public class MemoryCache {
      *
      * @return timersByClientIdentity current value
      */
-    public Map<String, Timer> getTimersByClientIdentity() {
+    public synchronized  Map<String, Timer> getTimersByClientIdentity() {
         return timersByClientIdentity;
     }
 }
