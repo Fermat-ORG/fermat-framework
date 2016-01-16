@@ -30,7 +30,7 @@ public class BrokerCommunityWalletNavigationViewAdapter extends FermatAdapter<Me
      */
     @Override
     protected int getCardViewResource() {
-        return R.layout.row_navigation_drawer_community_content;
+        return R.layout.cbc_row_navigation_drawer_community_content;
     }
 
     /**

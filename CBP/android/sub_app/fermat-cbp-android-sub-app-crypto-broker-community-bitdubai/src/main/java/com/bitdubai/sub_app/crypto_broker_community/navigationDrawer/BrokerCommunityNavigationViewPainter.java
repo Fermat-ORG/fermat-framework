@@ -24,15 +24,19 @@ import com.bitdubai.sub_app.crypto_broker_community.common.utils.FragmentsCommon
 public class BrokerCommunityNavigationViewPainter implements NavigationViewPainter {
 
     private Activity activity;
+    private ActorIdentity actorIdentity;
 
-    public BrokerCommunityNavigationViewPainter(Activity activity) {
+
+    public BrokerCommunityNavigationViewPainter(Activity activity, ActorIdentity actorIdentity) {
         this.activity = activity;
+        this.actorIdentity = actorIdentity;
+
     }
 
     @Override
-    public View addNavigationViewHeader(ActiveActorIdentityInformation intraUserLoginIdentity) {
+    public View addNavigationViewHeader(ActiveActorIdentityInformation actorIdentityInformation) {
         try {
-            return FragmentsCommons.setUpHeaderScreen(activity.getLayoutInflater(), activity, null);
+            return FragmentsCommons.setUpHeaderScreen(activity.getLayoutInflater(), activity, actorIdentity);
         } catch (CantGetActiveLoginIdentityException e) {
             e.printStackTrace();
         }

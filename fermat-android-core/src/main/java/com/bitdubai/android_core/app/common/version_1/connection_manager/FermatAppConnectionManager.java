@@ -105,7 +105,7 @@ public class FermatAppConnectionManager {
                 break;
             //CBP Sub Apps
             case "public_key_crypto_broker_community":
-                fermatAppConnection = new CryptoBrokerCommunityFermatAppConnection(activity);
+                fermatAppConnection = new CryptoBrokerCommunityFermatAppConnection(activity, null);
                 break;
             case "sub_app_crypto_broker_identity":
                 fermatAppConnection = new CryptoBrokerIdentityFermatAppConnection(activity);
