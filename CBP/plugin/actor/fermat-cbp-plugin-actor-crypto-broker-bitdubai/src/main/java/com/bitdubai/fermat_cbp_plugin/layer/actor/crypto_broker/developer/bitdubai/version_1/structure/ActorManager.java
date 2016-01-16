@@ -67,7 +67,7 @@ public class ActorManager implements ActorExtraDataManager {
 
         @Override
         public void createBrokerExtraData(ActorExtraData actorExtraData) throws CantCreateNewActorExtraDataException {
-
+            this.dao.createBrokerExtraData(actorExtraData);
         }
 
         @Override
