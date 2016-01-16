@@ -204,7 +204,8 @@ public class CommunicationNetworkServiceConnectionManager<NS extends AbstractNet
             /*
              * Get the active connection
              */
-            CommunicationsVPNConnection communicationsVPNConnection = communicationsClientConnection.getCommunicationsVPNConnectionStablished(platformComponentProfile.getNetworkServiceType(), remoteComponentProfile);
+            //TODO: Mati: cambié el platformComponentProfile de esto por el networkServicePluginRoot.getPlatformComponentProfilePluginRoot()
+            CommunicationsVPNConnection communicationsVPNConnection = communicationsClientConnection.getCommunicationsVPNConnectionStablished(networkServicePluginRoot.getPlatformComponentProfilePluginRoot().getNetworkServiceType(), remoteComponentProfile);
 
             //Validate the connection
             if (communicationsVPNConnection != null &&

@@ -1034,7 +1034,8 @@ public class CryptoWalletWalletModuleManager implements CryptoWallet {
 
             try {
                 intraUserManager.acceptIntraWalletUser(paymentRequest.getIdentityPublicKey(),paymentRequest.getActorPublicKey());
-                WalletContactRecord walletContactRecord = walletContactsRegistry.getWalletContactByActorAndWalletPublicKey(paymentRequest.getActorPublicKey(), paymentRequest.getWalletPublicKey());
+
+                walletContactsRegistry.getWalletContactByActorAndWalletPublicKey(paymentRequest.getActorPublicKey(), paymentRequest.getWalletPublicKey());
 
             } catch (com.bitdubai.fermat_ccp_api.layer.middleware.wallet_contacts.exceptions.WalletContactNotFoundException e) {
                 try {
