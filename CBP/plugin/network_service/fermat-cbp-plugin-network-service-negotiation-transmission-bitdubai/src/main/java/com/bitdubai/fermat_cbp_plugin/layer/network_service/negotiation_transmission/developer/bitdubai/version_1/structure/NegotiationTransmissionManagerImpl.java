@@ -49,8 +49,24 @@ public class NegotiationTransmissionManagerImpl implements NegotiationTransmissi
         try{
 
             if(transactionType.getCode() == NegotiationTransactionType.CUSTOMER_BROKER_NEW.getCode()) {
-                System.out.print("\n\n**** 7) MOCK NEGOTIATION TRANSACTION - NEGOTIATION TRANSMISSION - MANAGER - SEND NEGOTIATION TO CRYPTO CUSTOMER ****\n");
+                System.out.print("\n\n**** 7) MOCK NEGOTIATION TRANSACTION NEW - NEGOTIATION TRANSMISSION - MANAGER - SEND NEGOTIATION TO CRYPTO CUSTOMER ****\n");
                 System.out.print("\n\n --- 7) Negotiation Mock XML Date" +
+                                "\n- NegotiationId = " + negotiationTransaction.getNegotiationId() +
+                                "\n- TransactionId = " + negotiationTransaction.getTransactionId() +
+                                "\n- CustomerPublicKey = " + negotiationTransaction.getPublicKeyCustomer() +
+                                "\n- BrokerPublicKey = " + negotiationTransaction.getPublicKeyBroker()
+                );
+            } else if(transactionType.getCode() == NegotiationTransactionType.CUSTOMER_BROKER_UPDATE.getCode()) {
+                System.out.print("\n\n**** 9) MOCK NEGOTIATION TRANSACTION UPDATE - NEGOTIATION TRANSMISSION - MANAGER - SEND NEGOTIATION TO CRYPTO CUSTOMER ****\n");
+                System.out.print("\n\n --- 9) Negotiation Mock XML Date" +
+                                "\n- NegotiationId = " + negotiationTransaction.getNegotiationId() +
+                                "\n- TransactionId = " + negotiationTransaction.getTransactionId() +
+                                "\n- CustomerPublicKey = " + negotiationTransaction.getPublicKeyCustomer() +
+                                "\n- BrokerPublicKey = " + negotiationTransaction.getPublicKeyBroker()
+                );
+            } else if(transactionType.getCode() == NegotiationTransactionType.CUSTOMER_BROKER_CLOSE.getCode()) {
+                System.out.print("\n\n**** 9) MOCK NEGOTIATION TRANSACTION CLOSE - NEGOTIATION TRANSMISSION - MANAGER - SEND NEGOTIATION TO CRYPTO CUSTOMER ****\n");
+                System.out.print("\n\n --- 9) Negotiation Mock XML Date" +
                                 "\n- NegotiationId = " + negotiationTransaction.getNegotiationId() +
                                 "\n- TransactionId = " + negotiationTransaction.getTransactionId() +
                                 "\n- CustomerPublicKey = " + negotiationTransaction.getPublicKeyCustomer() +
@@ -81,7 +97,29 @@ public class NegotiationTransmissionManagerImpl implements NegotiationTransmissi
         try{
 
             if(transactionType.getCode() == NegotiationTransactionType.CUSTOMER_BROKER_NEW.getCode()) {
-                System.out.print("\n\n**** 7) MOCK NEGOTIATION TRANSACTION - NEGOTIATION TRANSMISSION - MANAGER - SEND NEGOTIATION TO CRYPTO BROKER ****\n");
+                System.out.print("\n\n**** 7) MOCK NEGOTIATION TRANSACTION NEW - NEGOTIATION TRANSMISSION - MANAGER - SEND NEGOTIATION TO CRYPTO BROKER ****\n");
+                System.out.print("\n\n --- 7) Negotiation Mock XML Date" +
+                                "\n- NegotiationId = " + negotiationTransaction.getNegotiationId() +
+                                "\n- TransactionId = " + negotiationTransaction.getTransactionId() +
+                                "\n- CustomerPublicKey = " + negotiationTransaction.getPublicKeyCustomer() +
+                                "\n- BrokerPublicKey = " + negotiationTransaction.getPublicKeyBroker()
+                );
+            } else if(transactionType.getCode() == NegotiationTransactionType.CUSTOMER_BROKER_UPDATE.getCode()) {
+                System.out.print("\n\n**** 9) MOCK NEGOTIATION TRANSACTION UPDATE - NEGOTIATION TRANSMISSION - MANAGER - SEND NEGOTIATION TO CRYPTO BROKER ****\n");
+                System.out.print("\n\n --- 9) Negotiation Mock XML Date" +
+                                "\n- NegotiationId = " + negotiationTransaction.getNegotiationId() +
+                                "\n- TransactionId = " + negotiationTransaction.getTransactionId() +
+                                "\n- CustomerPublicKey = " + negotiationTransaction.getPublicKeyCustomer() +
+                                "\n- BrokerPublicKey = " + negotiationTransaction.getPublicKeyBroker()
+                );
+            } else if(transactionType.getCode() == NegotiationTransactionType.CUSTOMER_BROKER_CLOSE.getCode()) {
+                System.out.print("\n\n**** 9) MOCK NEGOTIATION TRANSACTION CLOSE - NEGOTIATION TRANSMISSION - MANAGER - SEND NEGOTIATION TO CRYPTO BROKER ****\n");
+                System.out.print("\n\n --- 9) Negotiation Mock XML Date" +
+                                "\n- NegotiationId = " + negotiationTransaction.getNegotiationId() +
+                                "\n- TransactionId = " + negotiationTransaction.getTransactionId() +
+                                "\n- CustomerPublicKey = " + negotiationTransaction.getPublicKeyCustomer() +
+                                "\n- BrokerPublicKey = " + negotiationTransaction.getPublicKeyBroker()
+                );
             }
 
             PlatformComponentType           actorSendType           = PlatformComponentType.ACTOR_CRYPTO_CUSTOMER;
