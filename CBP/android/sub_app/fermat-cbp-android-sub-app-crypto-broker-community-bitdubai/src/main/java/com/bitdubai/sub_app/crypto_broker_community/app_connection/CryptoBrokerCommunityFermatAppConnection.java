@@ -15,6 +15,7 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.util.Version;
 import com.bitdubai.sub_app.crypto_broker_community.fragmentFactory.CryptoBrokerCommunityFragmentFactory;
+import com.bitdubai.sub_app.crypto_broker_community.navigationDrawer.BrokerCommunityNavigationViewPainter;
 import com.bitdubai.sub_app.crypto_broker_community.session.CryptoBrokerCommunitySubAppSession;
 
 /**
@@ -53,7 +54,9 @@ public class CryptoBrokerCommunityFermatAppConnection extends AppConnections{
 
     @Override
     public NavigationViewPainter getNavigationViewPainter() {
-        return null;
+
+        return new BrokerCommunityNavigationViewPainter(getActivity());
+
     }
 
     @Override
