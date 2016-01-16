@@ -1,5 +1,6 @@
 package com.bitdubai.fermat_cbp_plugin.layer.actor.crypto_broker.developer.bitdubai.version_1.database;
 
+import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
 import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseFilterType;
@@ -11,18 +12,24 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.Cant
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantLoadTableToMemoryException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantOpenDatabaseException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.DatabaseNotFoundException;
+import com.bitdubai.fermat_api.layer.world.interfaces.Currency;
 import com.bitdubai.fermat_cbp_api.all_definition.identity.ActorIdentity;
+import com.bitdubai.fermat_cbp_api.layer.actor.crypto_broker.exceptions.CantCreateNewActorExtraDataException;
 import com.bitdubai.fermat_cbp_api.layer.actor.crypto_broker.exceptions.CantCreateNewBrokerIdentityWalletRelationshipException;
 import com.bitdubai.fermat_cbp_api.layer.actor.crypto_broker.exceptions.CantGetListBrokerIdentityWalletRelationshipException;
+import com.bitdubai.fermat_cbp_api.layer.actor.crypto_broker.interfaces.ActorExtraData;
 import com.bitdubai.fermat_cbp_api.layer.actor.crypto_broker.interfaces.BrokerIdentityWalletRelationship;
 import com.bitdubai.fermat_cbp_api.layer.actor.crypto_broker.interfaces.CryptoBrokerActorManager;
+import com.bitdubai.fermat_cbp_api.layer.actor.crypto_broker.interfaces.QuotesExtraData;
 import com.bitdubai.fermat_cbp_api.layer.negotiation.exceptions.CantGetListClauseException;
 import com.bitdubai.fermat_cbp_plugin.layer.actor.crypto_broker.developer.bitdubai.version_1.exceptions.CantInitializeCryptoBrokerActorDatabaseException;
 import com.bitdubai.fermat_cbp_plugin.layer.actor.crypto_broker.developer.bitdubai.version_1.structure.BrokerIdentityWalletRelationshipInformation;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
 /**
@@ -173,6 +180,73 @@ public class CryptoBrokerActorDao {
             String  publicKeyBroker     = record.getStringValue(CryptoBrokerActorDatabaseConstants.CRYPTO_BROKER_ACTOR_RELATIONSHIP_BROKER_PUBLIC_KEY_COLUMN_NAME);
             UUID    walletId            = record.getUUIDValue(CryptoBrokerActorDatabaseConstants.CRYPTO_BROKER_ACTOR_RELATIONSHIP_WALLET_COLUMN_NAME);
             return newCryptoBrokerActorRelationship(relationshipId, publicKeyBroker, walletId);
+        }
+
+
+    /*==============================================================================================
+    *
+    *   Actor Extra Data
+    *
+    *==============================================================================================*/
+
+
+        public void createBrokerExtraData(ActorExtraData actorExtraData) throws CantCreateNewActorExtraDataException{
+            try {
+                DatabaseTable table = this.database.getTable(CryptoBrokerActorDatabaseConstants.ACTOR_EXTRA_DATA_TABLE_NAME);
+                DatabaseTableRecord record   = table.getEmptyRecord();
+                record.setStringValue(CryptoBrokerActorDatabaseConstants.ACTOR_EXTRA_DATA_BROKER_PUBLIC_KEY_COLUMN_NAME, actorExtraData.getBrokerIdentity().getPublicKey());
+                record.setStringValue(CryptoBrokerActorDatabaseConstants.ACTOR_EXTRA_DATA_ALIAS_COLUMN_NAME, actorExtraData.getBrokerIdentity().getAlias());
+                table.insertRecord(record);
+                createActorQoutes(actorExtraData);
+                createActorPlasforms(actorExtraData);
+            } catch (CantInsertRecordException e) {
+                throw new CantCreateNewActorExtraDataException(e.DEFAULT_MESSAGE, e, "", "");
+            }
+        }
+
+        private void createActorQoutes(ActorExtraData actorExtraData) throws CantCreateNewActorExtraDataException{
+            try {
+                DatabaseTable table = this.database.getTable(CryptoBrokerActorDatabaseConstants.QUOTE_EXTRA_DATA_TABLE_NAME);
+                DatabaseTableRecord record;
+
+                for(QuotesExtraData quote : actorExtraData.getQuotes()){
+                    record = table.getEmptyRecord();
+                    record.setUUIDValue(CryptoBrokerActorDatabaseConstants.QUOTE_EXTRA_DATA_QUOTE_ID_COLUMN_NAME, UUID.randomUUID());
+                    record.setStringValue(CryptoBrokerActorDatabaseConstants.QUOTE_EXTRA_DATA_BROKER_PUBLIC_KEY_COLUMN_NAME, actorExtraData.getBrokerIdentity().getPublicKey());
+                    record.setStringValue(CryptoBrokerActorDatabaseConstants.QUOTE_EXTRA_DATA_MERCHANDISE_COLUMN_NAME, quote.getMerchandise().getCode());
+                    record.setStringValue(CryptoBrokerActorDatabaseConstants.QUOTE_EXTRA_DATA_PAYMENT_CURRENCY_COLUMN_NAME, quote.getMerchandise().getCode());
+                    record.setStringValue(CryptoBrokerActorDatabaseConstants.QUOTE_EXTRA_DATA_PAYMENT_CURRENCY_COLUMN_NAME, quote.getPaymentMethod().getCode());
+                    record.setFloatValue(CryptoBrokerActorDatabaseConstants.QUOTE_EXTRA_DATA_PAYMENT_CURRENCY_COLUMN_NAME, quote.getPrice());
+                    table.insertRecord(record);
+                }
+
+            } catch (CantInsertRecordException e) {
+                throw new CantCreateNewActorExtraDataException(e.DEFAULT_MESSAGE, e, "", "");
+            }
+        }
+
+        private void createActorPlasforms(ActorExtraData actorExtraData) throws CantCreateNewActorExtraDataException{
+            try {
+                DatabaseTable table = this.database.getTable(CryptoBrokerActorDatabaseConstants.PLATFORMS_EXTRA_DATA_TABLE_NAME);
+                DatabaseTableRecord record;
+                Map list = actorExtraData.getCurrencies();
+                Iterator it = list.keySet().iterator();
+                while(it.hasNext()){
+                    Currency currency = (Currency) it.next();
+                    Collection<Platforms> plasformas = (Collection<Platforms>) list.get(currency);
+                    for(Platforms plat : plasformas){
+                        record = table.getEmptyRecord();
+                        record.setUUIDValue(CryptoBrokerActorDatabaseConstants.PLATFORMS_EXTRA_DATA_PLATFORM_ID_COLUMN_NAME, UUID.randomUUID());
+                        record.setStringValue(CryptoBrokerActorDatabaseConstants.PLATFORMS_EXTRA_DATA_BROKER_PUBLIC_KEY_COLUMN_NAME, actorExtraData.getBrokerIdentity().getPublicKey());
+                        record.setStringValue(CryptoBrokerActorDatabaseConstants.PLATFORMS_EXTRA_DATA_CURRENCY_COLUMN_NAME, currency.getCode());
+                        record.setStringValue(CryptoBrokerActorDatabaseConstants.PLATFORMS_EXTRA_DATA_CURRENCY_COLUMN_NAME, plat.getCode());
+                        table.insertRecord(record);
+                    }
+                }
+
+            } catch (CantInsertRecordException e) {
+                throw new CantCreateNewActorExtraDataException(e.DEFAULT_MESSAGE, e, "", "");
+            }
         }
 
 }

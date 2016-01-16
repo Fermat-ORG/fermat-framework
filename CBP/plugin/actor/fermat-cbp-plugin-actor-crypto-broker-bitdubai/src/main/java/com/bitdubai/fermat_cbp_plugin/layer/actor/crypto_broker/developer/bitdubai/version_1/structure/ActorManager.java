@@ -1,5 +1,7 @@
 package com.bitdubai.fermat_cbp_plugin.layer.actor.crypto_broker.developer.bitdubai.version_1.structure;
 
+import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
+import com.bitdubai.fermat_api.layer.world.interfaces.Currency;
 import com.bitdubai.fermat_cbp_api.all_definition.identity.ActorIdentity;
 import com.bitdubai.fermat_cbp_api.layer.actor.crypto_broker.exceptions.CantCreateNewActorExtraDataException;
 import com.bitdubai.fermat_cbp_api.layer.actor.crypto_broker.exceptions.CantCreateNewBrokerIdentityWalletRelationshipException;
@@ -8,6 +10,8 @@ import com.bitdubai.fermat_cbp_api.layer.actor.crypto_broker.exceptions.CantGetL
 import com.bitdubai.fermat_cbp_api.layer.actor.crypto_broker.exceptions.CantUpdateActorExtraDataException;
 import com.bitdubai.fermat_cbp_api.layer.actor.crypto_broker.interfaces.*;
 import com.bitdubai.fermat_cbp_api.layer.actor.crypto_broker.interfaces.ActorExtraData;
+import com.bitdubai.fermat_cbp_api.layer.actor_network_service.crypto_broker.interfaces.CryptoBrokerManager;
+import com.bitdubai.fermat_cbp_api.layer.wallet.crypto_broker.interfaces.CryptoBrokerWalletManager;
 import com.bitdubai.fermat_cbp_plugin.layer.actor.crypto_broker.developer.bitdubai.version_1.database.CryptoBrokerActorDao;
 
 import java.util.Collection;
@@ -19,58 +23,80 @@ import java.util.UUID;
 public class ActorManager implements ActorExtraDataManager {
 
     private CryptoBrokerActorDao dao;
+    private CryptoBrokerManager cryptoBrokerANSManager;
+    private CryptoBrokerWalletManager cryptoBrokerWalletManager;
 
-    public ActorManager(CryptoBrokerActorDao dao){
+    public ActorManager(CryptoBrokerActorDao dao, CryptoBrokerManager cryptoBrokerANSManager, CryptoBrokerWalletManager cryptoBrokerWalletManager){
         this.dao = dao;
+        this.cryptoBrokerANSManager = cryptoBrokerANSManager;
+        this.cryptoBrokerWalletManager = cryptoBrokerWalletManager;
     }
+
+    /*==============================================================================================
+    *
+    *   Broker Identity Wallet Relationship
+    *
+    *==============================================================================================*/
+
 
     @Override
-    public BrokerIdentityWalletRelationship createNewBrokerIdentityWalletRelationship(ActorIdentity identity, UUID wallet) throws CantCreateNewBrokerIdentityWalletRelationshipException {
-        return this.dao.createNewBrokerIdentityWalletRelationship(identity, wallet);
-    }
+        public BrokerIdentityWalletRelationship createNewBrokerIdentityWalletRelationship(ActorIdentity identity, UUID wallet) throws CantCreateNewBrokerIdentityWalletRelationshipException {
+            return this.dao.createNewBrokerIdentityWalletRelationship(identity, wallet);
+        }
 
-    @Override
-    public Collection<BrokerIdentityWalletRelationship> getAllBrokerIdentityWalletRelationship() throws CantGetListBrokerIdentityWalletRelationshipException {
-        return this.dao.getAllBrokerIdentityWalletRelationship();
-    }
+        @Override
+        public Collection<BrokerIdentityWalletRelationship> getAllBrokerIdentityWalletRelationship() throws CantGetListBrokerIdentityWalletRelationshipException {
+            return this.dao.getAllBrokerIdentityWalletRelationship();
+        }
 
-    @Override
-    public BrokerIdentityWalletRelationship getBrokerIdentityWalletRelationshipByIdentity(ActorIdentity identity) throws CantGetListBrokerIdentityWalletRelationshipException {
-        return this.dao.getBrokerIdentityWalletRelationshipByIdentity(identity);
-    }
+        @Override
+        public BrokerIdentityWalletRelationship getBrokerIdentityWalletRelationshipByIdentity(ActorIdentity identity) throws CantGetListBrokerIdentityWalletRelationshipException {
+            return this.dao.getBrokerIdentityWalletRelationshipByIdentity(identity);
+        }
 
-    @Override
-    public BrokerIdentityWalletRelationship getBrokerIdentityWalletRelationshipByWallet(UUID wallet) throws CantGetListBrokerIdentityWalletRelationshipException {
-        return this.dao.getBrokerIdentityWalletRelationshipByWallet(wallet);
-    }
+        @Override
+        public BrokerIdentityWalletRelationship getBrokerIdentityWalletRelationshipByWallet(UUID wallet) throws CantGetListBrokerIdentityWalletRelationshipException {
+            return this.dao.getBrokerIdentityWalletRelationshipByWallet(wallet);
+        }
 
-    @Override
-    public void createBrokerSetting(ActorExtraData ActorExtraData) throws CantCreateNewActorExtraDataException {
+    /*==============================================================================================
+    *
+    *   Actor Extra Data
+    *
+    *==============================================================================================*/
 
-    }
+        @Override
+        public void createBrokerExtraData(ActorExtraData actorExtraData) throws CantCreateNewActorExtraDataException {
 
-    @Override
-    public void updateBrokerSetting(ActorExtraData ActorExtraData) throws CantUpdateActorExtraDataException {
+        }
 
-    }
+        @Override
+        public void updateBrokerExtraData(ActorExtraData actorExtraData) throws CantUpdateActorExtraDataException {
 
-    @Override
-    public Collection<ActorExtraData> getAllActorExtraData() throws CantGetListActorExtraDataException {
-        return null;
-    }
+        }
 
-    @Override
-    public Collection<ActorExtraData> getAllActorExtraDataConnected() throws CantGetListActorExtraDataException {
-        return null;
-    }
+        @Override
+        public Collection<ActorExtraData> getAllActorExtraData() throws CantGetListActorExtraDataException {
+            return null;
+        }
 
-    @Override
-    public Collection<ActorExtraData> getActorExtraDataConnectedByIdentity(ActorIdentity identity) throws CantGetListActorExtraDataException {
-        return null;
-    }
+        @Override
+        public Collection<ActorExtraData> getAllActorExtraDataConnected() throws CantGetListActorExtraDataException {
+            return null;
+        }
 
-    @Override
-    public ActorExtraData getActorExtraDataLocalActor() throws CantGetListActorExtraDataException {
-        return null;
-    }
+        @Override
+        public Collection<ActorExtraData> getActorExtraDataConnectedByIdentity(ActorIdentity identity) throws CantGetListActorExtraDataException {
+            return null;
+        }
+
+        @Override
+        public ActorExtraData getActorExtraDataLocalActor() throws CantGetListActorExtraDataException {
+            return null;
+        }
+
+        @Override
+        public Collection<Platforms> getPlatformsSupport(String brokerPublicKey, Currency currency) {
+            return null;
+        }
 }
