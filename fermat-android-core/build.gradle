@@ -122,6 +122,8 @@ dependencies {
     compile project(':fermat-bnk-android-reference-wallet-bank-money-bitdubai')
     //CSH wallet
     compile project(':fermat-csh-android-reference-wallet-cash-money-bitdubai')
+    //CHT
+    compile project(':fermat-cht-android-sub-app-chat-bitdubai')
     //    compile project(':fermat-dap-plugin-wallet-module-asset-issuer-bitdubai')
     compile fileTree(dir: 'libs', include: ['*.jar'])
     //compile 'com.android.support:appcompat-v7:21.0.3'
@@ -135,5 +137,4 @@ dependencies {
     compile 'com.android.support:design:23.1.0'
     compile 'com.github.PhilJay:MPAndroidChart:v2.1.6'
     // compile files('src/main/libs/beans.jar')
-    compile project(':fermat-cht-android-sub-app-chat-bitdubai')
 }
