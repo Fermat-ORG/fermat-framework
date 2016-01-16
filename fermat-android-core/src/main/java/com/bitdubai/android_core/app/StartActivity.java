@@ -76,9 +76,22 @@ public class StartActivity extends FermatActivity implements FermatWorkerCallBac
     Animation animation2;
 
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        final FermatSystem fermatSystem =((ApplicationSession) getApplication()).getFermatSystem();
+
+        try {
+            fermatSystem.start(this.getApplicationContext(), new OSAPlatform());
+        } catch (FermatException e) {
+
+            System.out.println(e.toString());
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 
             // Indicate if the app was loaded, for not load again the start activity.
             if (WAS_START_ACTIVITY_LOADED) {
@@ -288,8 +301,6 @@ public class StartActivity extends FermatActivity implements FermatWorkerCallBac
             final FermatSystem fermatSystem =((ApplicationSession) getApplication()).getFermatSystem();
 
             try {
-                Context context = getApplicationContext();
-                fermatSystem.start(context, new OSAPlatform());
                 fermatSystem.startAllRegisteredPlatforms();
 
             } catch (CantStartAllRegisteredPlatformsException e) {
@@ -337,4 +348,6 @@ public class StartActivity extends FermatActivity implements FermatWorkerCallBac
         //}
         return list;
     }
+
+
 }
