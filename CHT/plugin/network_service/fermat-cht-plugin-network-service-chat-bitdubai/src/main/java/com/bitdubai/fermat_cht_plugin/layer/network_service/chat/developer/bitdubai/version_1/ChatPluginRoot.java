@@ -46,13 +46,14 @@ import com.bitdubai.fermat_cht_api.layer.network_service.chat.exceptions.CantIni
 import com.bitdubai.fermat_cht_api.layer.network_service.chat.exceptions.CantSendChatMessageMetadataException;
 import com.bitdubai.fermat_cht_api.layer.network_service.chat.exceptions.CantSendChatMessageNewStatusNotificationException;
 import com.bitdubai.fermat_cht_api.layer.network_service.chat.interfaces.ChatManager;
-import com.bitdubai.fermat_cht_api.layer.network_service.chat.interfaces.ChatMetada;
+//import com.bitdubai.fermat_cht_api.layer.network_service.chat.interfaces.ChatMetada;
+import com.bitdubai.fermat_cht_api.layer.network_service.chat.interfaces.ChatMetadata;
 import com.bitdubai.fermat_cht_plugin.layer.network_service.chat.developer.bitdubai.version_1.communications.CommunicationNetworkServiceConnectionManager;
 import com.bitdubai.fermat_cht_plugin.layer.network_service.chat.developer.bitdubai.version_1.communications.CommunicationNetworkServiceLocal;
 import com.bitdubai.fermat_cht_plugin.layer.network_service.chat.developer.bitdubai.version_1.database.NetworkServiceChatNetworkServiceDatabaseConstants;
 import com.bitdubai.fermat_cht_plugin.layer.network_service.chat.developer.bitdubai.version_1.database.NetworkServiceChatNetworkServiceDatabaseFactory;
 import com.bitdubai.fermat_cht_plugin.layer.network_service.chat.developer.bitdubai.version_1.database.NetworkServiceChatNetworkServiceDeveloperDatabaseFactory;
-import com.bitdubai.fermat_cht_plugin.layer.network_service.chat.developer.bitdubai.version_1.database.OutgoinChatMetaDataDao;
+//import com.bitdubai.fermat_cht_plugin.layer.network_service.chat.developer.bitdubai.version_1.database.OutgoinChatMetaDataDao;
 import com.bitdubai.fermat_cht_plugin.layer.network_service.chat.developer.bitdubai.version_1.database.OutgoingMessageDao;
 import com.bitdubai.fermat_cht_plugin.layer.network_service.chat.developer.bitdubai.version_1.event_handlers.ClientConnectionCloseNotificationEventHandler;
 import com.bitdubai.fermat_cht_plugin.layer.network_service.chat.developer.bitdubai.version_1.event_handlers.ClientConnectionLooseNotificationEventHandler;
@@ -64,7 +65,7 @@ import com.bitdubai.fermat_cht_plugin.layer.network_service.chat.developer.bitdu
 import com.bitdubai.fermat_cht_plugin.layer.network_service.chat.developer.bitdubai.version_1.event_handlers.NewSentMessagesNotificationEventHandler;
 import com.bitdubai.fermat_cht_plugin.layer.network_service.chat.developer.bitdubai.version_1.event_handlers.VPNConnectionCloseNotificationEventHandler;
 import com.bitdubai.fermat_cht_plugin.layer.network_service.chat.developer.bitdubai.version_1.exceptions.CantInitializeChatNetworkServiceDatabaseException;
-import com.bitdubai.fermat_cht_plugin.layer.network_service.chat.developer.bitdubai.version_1.structure.ChatMetadaTransactionRecord;
+//import com.bitdubai.fermat_cht_plugin.layer.network_service.chat.developer.bitdubai.version_1.structure.ChatMetadaTransactionRecord;
 import com.bitdubai.fermat_cht_plugin.layer.network_service.chat.developer.bitdubai.version_1.structure.EncodeMsjContent;
 import com.bitdubai.fermat_cht_plugin.layer.network_service.chat.developer.bitdubai.version_1.communications.CommunicationRegistrationProcessNetworkServiceAgent;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.contents.FermatMessageCommunication;
@@ -153,7 +154,7 @@ public class ChatPluginRoot extends AbstractPlugin implements
                 ", networkServiceType=" + networkServiceType +
                 ", platformComponentProfile=" + platformComponentProfile +
                 ", listenersAdded=" + listenersAdded +
-                ", outgoinChatMetaDataDao=" + outgoinChatMetaDataDao +
+                //", outgoinChatMetaDataDao=" + outgoinChatMetaDataDao +
                 ", platformComponentType=" + platformComponentType +
                 ", communicationNetworkServiceConnectionManager=" + communicationNetworkServiceConnectionManager +
                 ", remoteNetworkServicesRegisteredList=" + remoteNetworkServicesRegisteredList +
@@ -205,11 +206,11 @@ public class ChatPluginRoot extends AbstractPlugin implements
     /**
      * Represent the OutgoinChatMetaDataDao
      */
-    private OutgoinChatMetaDataDao outgoinChatMetaDataDao;
+   // private OutgoinChatMetaDataDao outgoinChatMetaDataDao;
 
-    public OutgoinChatMetaDataDao getOutgoinChatMetaDataDao() {
-        return outgoinChatMetaDataDao;
-    }
+    //public OutgoinChatMetaDataDao getOutgoinChatMetaDataDao() {
+      //  return outgoinChatMetaDataDao;
+    //}
 
     /**
      * Represent the platformComponentType
@@ -688,7 +689,6 @@ public class ChatPluginRoot extends AbstractPlugin implements
 
     }
 
-    @Override
     public void sendChatMetadata(Integer idChat, Integer idObjecto, String localActorType, String localActorPubKey, String remoteActorType, String remoteActorPubKey, String chatName, ChatMessageStatus chatStatus, Timestamp date, Integer idMessage, String message, DistributionStatus distributionStatus) throws CantSendChatMessageMetadataException {
         try {
             System.out.println(" ChatPLuginRoot - Starting method sendChatMetadata");
@@ -705,75 +705,75 @@ public class ChatPluginRoot extends AbstractPlugin implements
              */
             CommunicationNetworkServiceLocal communicationNetworkServiceLocal = communicationNetworkServiceConnectionManager.getNetworkServiceLocalInstance(remoteActorPubKey);
 
-            /*
-             * Construct the message content in json format
-             */
-            ChatMetadaTransactionRecord chatMetadaTransactionRecord = new ChatMetadaTransactionRecord();
-            chatMetadaTransactionRecord.setIdChat(idChat);
-            chatMetadaTransactionRecord.setIdObjecto(idObjecto);
-            chatMetadaTransactionRecord.setLocalActorType(localActorType);
-            chatMetadaTransactionRecord.setLocalActorPubKey(localActorPubKey);
-            chatMetadaTransactionRecord.setRemoteActorType(remoteActorType);
-            chatMetadaTransactionRecord.setRemoteActorPubKey(remoteActorPubKey);
-            chatMetadaTransactionRecord.setChatName(chatName);
-            chatMetadaTransactionRecord.setChatMessageStatus(chatStatus);
-            chatMetadaTransactionRecord.setDate(date);
-            chatMetadaTransactionRecord.setIdMessage(idMessage);
-            chatMetadaTransactionRecord.setMessage(message);
-            chatMetadaTransactionRecord.setDistributionStatus(distributionStatus);
-            String msjContent = EncodeMsjContent.encodeMSjContentChatMetadataTransmit(chatMetadaTransactionRecord, PlatformComponentType.getByCode(chatMetadaTransactionRecord.getLocalActorType()), PlatformComponentType.getByCode(chatMetadaTransactionRecord.getRemoteActorType()));
-
-            System.out.println("ChatPLuginRoot - Chat transaction: " + chatMetadaTransactionRecord);
-
-            /*
-             * Save into data base
-             */
-            getOutgoinChatMetaDataDao().create(chatMetadaTransactionRecord);
-
-            /*
-             * If not null
-             */
-            System.out.println("ChatPLuginRoot - Sending message.....");
-            if (communicationNetworkServiceLocal != null) {
-
-                //Send the message
-                communicationNetworkServiceLocal.sendMessage(chatMetadaTransactionRecord.getLocalActorPubKey(), chatMetadaTransactionRecord.getLocalActorPubKey(), msjContent);
-
-            } else {
-
-                /*
-                 * Created the message
-                 */
-                FermatMessage fermatMessage = FermatMessageCommunicationFactory.constructFermatMessage(chatMetadaTransactionRecord.getLocalActorPubKey(),//Sender
-                        chatMetadaTransactionRecord.getRemoteActorPubKey(), //Receiver
-                        msjContent, //Message Content
-                        FermatMessageContentType.TEXT);//Type
-                /*
-                 * Configure the correct status
-                 */
-                ((FermatMessageCommunication) fermatMessage).setFermatMessagesStatus(FermatMessagesStatus.PENDING_TO_SEND);
-
-                /*
-                 * Save to the data base table
-                 */
-                OutgoingMessageDao outgoingMessageDao = communicationNetworkServiceConnectionManager.getOutgoingMessageDao();
-                outgoingMessageDao.create(fermatMessage);
-
-                /*
-                 * Create the sender basic profile
-                 */
-                PlatformComponentProfile sender = wsCommunicationsCloudClientManager.getCommunicationsCloudClientConnection().constructBasicPlatformComponentProfileFactory(chatMetadaTransactionRecord.getLocalActorPubKey(), NetworkServiceType.UNDEFINED, PlatformComponentType.getByCode(chatMetadaTransactionRecord.getLocalActorType()));
-
-                /*
-                 * Create the receiver basic profile
-                 */
-                PlatformComponentProfile receiver = wsCommunicationsCloudClientManager.getCommunicationsCloudClientConnection().constructBasicPlatformComponentProfileFactory(chatMetadaTransactionRecord.getRemoteActorPubKey(), NetworkServiceType.UNDEFINED, PlatformComponentType.getByCode(chatMetadaTransactionRecord.getRemoteActorType()));
-
-                /*
-                 * Ask the client to connect
-                 */
-                communicationNetworkServiceConnectionManager.connectTo(sender, platformComponentProfile, receiver);
-            }
+//            /*
+//             * Construct the message content in json format
+//             */
+//            ChatMetadaTransactionRecord chatMetadaTransactionRecord = new ChatMetadaTransactionRecord();
+//            chatMetadaTransactionRecord.setIdChat(idChat);
+//            chatMetadaTransactionRecord.setIdObjecto(idObjecto);
+//            chatMetadaTransactionRecord.setLocalActorType(localActorType);
+//            chatMetadaTransactionRecord.setLocalActorPubKey(localActorPubKey);
+//            chatMetadaTransactionRecord.setRemoteActorType(remoteActorType);
+//            chatMetadaTransactionRecord.setRemoteActorPubKey(remoteActorPubKey);
+//            chatMetadaTransactionRecord.setChatName(chatName);
+//            chatMetadaTransactionRecord.setChatMessageStatus(chatStatus);
+//            chatMetadaTransactionRecord.setDate(date);
+//            chatMetadaTransactionRecord.setIdMessage(idMessage);
+//            chatMetadaTransactionRecord.setMessage(message);
+//            chatMetadaTransactionRecord.setDistributionStatus(distributionStatus);
+//            String msjContent = EncodeMsjContent.encodeMSjContentChatMetadataTransmit((ChatMetadata)chatMetadaTransactionRecord, PlatformComponentType.getByCode(chatMetadaTransactionRecord.getLocalActorType()), PlatformComponentType.getByCode(chatMetadaTransactionRecord.getRemoteActorType()));
+//
+//            System.out.println("ChatPLuginRoot - Chat transaction: " + chatMetadaTransactionRecord);
+//
+//            /*
+//             * Save into data base
+//             */
+//            getOutgoinChatMetaDataDao().create(chatMetadaTransactionRecord);
+//
+//            /*
+//             * If not null
+//             */
+//            System.out.println("ChatPLuginRoot - Sending message.....");
+//            if (communicationNetworkServiceLocal != null) {
+//
+//                //Send the message
+//                communicationNetworkServiceLocal.sendMessage(chatMetadaTransactionRecord.getLocalActorPubKey(), chatMetadaTransactionRecord.getLocalActorPubKey(), msjContent);
+//
+//            } else {
+//
+//                /*
+//                 * Created the message
+//                 */
+//                FermatMessage fermatMessage = FermatMessageCommunicationFactory.constructFermatMessage(chatMetadaTransactionRecord.getLocalActorPubKey(),//Sender
+//                        chatMetadaTransactionRecord.getRemoteActorPubKey(), //Receiver
+//                        msjContent, //Message Content
+//                        FermatMessageContentType.TEXT);//Type
+//                /*
+//                 * Configure the correct status
+//                 */
+//                ((FermatMessageCommunication) fermatMessage).setFermatMessagesStatus(FermatMessagesStatus.PENDING_TO_SEND);
+//
+//                /*
+//                 * Save to the data base table
+//                 */
+//                OutgoingMessageDao outgoingMessageDao = communicationNetworkServiceConnectionManager.getOutgoingMessageDao();
+//                outgoingMessageDao.create(fermatMessage);
+//
+//                /*
+//                 * Create the sender basic profile
+//                 */
+//                PlatformComponentProfile sender = wsCommunicationsCloudClientManager.getCommunicationsCloudClientConnection().constructBasicPlatformComponentProfileFactory(chatMetadaTransactionRecord.getLocalActorPubKey(), NetworkServiceType.UNDEFINED, PlatformComponentType.getByCode(chatMetadaTransactionRecord.getLocalActorType()));
+//
+//                /*
+//                 * Create the receiver basic profile
+//                 */
+//                PlatformComponentProfile receiver = wsCommunicationsCloudClientManager.getCommunicationsCloudClientConnection().constructBasicPlatformComponentProfileFactory(chatMetadaTransactionRecord.getRemoteActorPubKey(), NetworkServiceType.UNDEFINED, PlatformComponentType.getByCode(chatMetadaTransactionRecord.getRemoteActorType()));
+//
+//                /*
+//                 * Ask the client to connect
+//                 */
+//                communicationNetworkServiceConnectionManager.connectTo(sender, platformComponentProfile, receiver);
+//            }
             System.out.println("AssetTransmissionNetworkServicePluginRoot - Message sent.");
         } catch (Exception e) {
 
@@ -900,7 +900,7 @@ public class ChatPluginRoot extends AbstractPlugin implements
         }
     }
 
-    @Override
+
     public void sendChatMessageNewStatusNotification() throws CantSendChatMessageNewStatusNotificationException {
 
     }
@@ -911,7 +911,17 @@ public class ChatPluginRoot extends AbstractPlugin implements
     }
 
     @Override
-    public List<Transaction<ChatMetada>> getPendingTransactions(Specialist specialist) throws CantDeliverPendingTransactionsException {
+    public List<Transaction<ChatMetadata>> getPendingTransactions(Specialist specialist) throws CantDeliverPendingTransactionsException {
         return null;
+    }
+
+    @Override
+    public void sendChatMetadata(String localActorPubKey, String remoteActorPubKey, ChatMetadata chatMetadata) throws CantSendChatMessageMetadataException {
+
+    }
+
+    @Override
+    public void sendChatMessageNewStatusNotification(UUID localActorPubKey, PlatformComponentType senderType, UUID remoteActorPubKey, PlatformComponentType receiverType, DistributionStatus newDistributionStatus) throws CantSendChatMessageNewStatusNotificationException {
+
     }
 }
