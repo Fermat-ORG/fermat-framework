@@ -18,7 +18,7 @@ public interface FermatWallet extends Serializable,FermatStructure{
 
     public Activity getStartActivity();
 
-    public void setStartActivity(Activities activity);
+    public void addPosibleStartActivity(Activities activity);
 
     public Activity getLastActivity();
 

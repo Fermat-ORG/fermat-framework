@@ -484,7 +484,7 @@ public abstract class FermatActivity extends AppCompatActivity
                                                                                  hidden = false;
 
                                                                              } else {
-                                                                                 android.animation.Animator anim = android.view.ViewAnimationUtils.createCircularReveal(mRevealView, cx, cy, radius, 0);
+                                                                                 android.animation.Animator anim = android.view.ViewAnimationUtils.createCircularReveal(mRevealView, 0, cy, radius, 0);
                                                                                  anim.addListener(new AnimatorListenerAdapter() {
                                                                                      @Override
                                                                                      public void onAnimationEnd(android.animation.Animator animation) {
@@ -1501,6 +1501,11 @@ public abstract class FermatActivity extends AppCompatActivity
         final LinearLayout linearLayout = (LinearLayout)findViewById(R.id.icons_container);
         if(linearLayout!=null)
         linearLayout.setVisibility(View.GONE);
+    }
+
+    @Override
+    public void changeStartActivity(int optionActivity){
+        getAppInUse().changeActualStartActivity(optionActivity);
     }
 
     @Override
