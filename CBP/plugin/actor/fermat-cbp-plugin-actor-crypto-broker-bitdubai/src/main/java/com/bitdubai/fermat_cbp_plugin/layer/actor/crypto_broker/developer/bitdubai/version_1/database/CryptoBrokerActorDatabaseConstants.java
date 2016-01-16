@@ -56,6 +56,6 @@ public class CryptoBrokerActorDatabaseConstants {
     static final String PLATFORMS_EXTRA_DATA_CURRENCY_COLUMN_NAME = "currency";
     static final String PLATFORMS_EXTRA_DATA_PLATFORM_COLUMN_NAME = "platform";
 
-    static final String PLATFORMS_EXTRA_DATA_FIRST_KEY_COLUMN = "platforms_extra_data";
+    static final String PLATFORMS_EXTRA_DATA_FIRST_KEY_COLUMN = "platform_id";
 
 }
