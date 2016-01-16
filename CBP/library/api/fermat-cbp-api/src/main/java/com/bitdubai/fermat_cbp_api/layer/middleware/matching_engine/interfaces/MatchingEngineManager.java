@@ -41,6 +41,8 @@ public interface MatchingEngineManager {
      *    . Para estos casos hay que tener en cuenta de que la moneda sobre la cual se van a sacar las ganancias puede ir cambiando a lo largo del tiempo.
      *
      * ??? - En el caso en el cual se determine que hubo pérdidas, el proceso debería registrarlas, y no sacar ganancias hasta que sean cubiertas?
+     *
+     * tener en cuenta que esto tendría que poder ser reutilizado por otros plug-ins y no solo los crypto brokers
      */
 
 }
