@@ -75,9 +75,11 @@ import com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_transmission.
 import com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_transmission.developer.bitdubai.version_1.communication.VPNConnectionCloseNotificationEventHandler;
 import com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_transmission.developer.bitdubai.version_1.crypto_transmission_database.CryptoTransmissionNetworkServiceDatabaseConstants;
 import com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_transmission.developer.bitdubai.version_1.crypto_transmission_database.CryptoTransmissionNetworkServiceDatabaseFactory;
+import com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_transmission.developer.bitdubai.version_1.crypto_transmission_database.CryptoTransmissionNetworkServiceDeveloperDatabaseFactory;
 import com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_transmission.developer.bitdubai.version_1.crypto_transmission_database.dao.CryptoTransmissionConnectionsDAO;
 import com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_transmission.developer.bitdubai.version_1.crypto_transmission_database.dao.CryptoTransmissionMetadataDAO;
 import com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_transmission.developer.bitdubai.version_1.crypto_transmission_database.exceptions.CantGetCryptoTransmissionMetadataException;
+import com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_transmission.developer.bitdubai.version_1.crypto_transmission_database.exceptions.CantInitializeCryptoTransmissionNetworkServiceDatabaseException;
 import com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_transmission.developer.bitdubai.version_1.crypto_transmission_database.exceptions.CantSaveCryptoTransmissionMetadatatException;
 import com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_transmission.developer.bitdubai.version_1.database.communications.CommunicationNetworkServiceDatabaseConstants;
 import com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_transmission.developer.bitdubai.version_1.database.communications.CommunicationNetworkServiceDatabaseFactory;
@@ -205,7 +207,7 @@ public class CryptoTransmissionNetworkServicePluginRoot extends AbstractNetworkS
     /**
      *   Represent the communicationNetworkServiceDeveloperDatabaseFactory
      */
-    private CommunicationNetworkServiceDeveloperDatabaseFactory communicationNetworkServiceDeveloperDatabaseFactory;
+    private CryptoTransmissionNetworkServiceDeveloperDatabaseFactory communicationNetworkServiceDeveloperDatabaseFactory;
 
     /**
      *  Active connectionss
@@ -522,7 +524,7 @@ public class CryptoTransmissionNetworkServicePluginRoot extends AbstractNetworkS
             /*
              * Initialize Developer Database Factory
              */
-            communicationNetworkServiceDeveloperDatabaseFactory = new CommunicationNetworkServiceDeveloperDatabaseFactory(pluginDatabaseSystem, pluginId);
+            communicationNetworkServiceDeveloperDatabaseFactory = new CryptoTransmissionNetworkServiceDeveloperDatabaseFactory(pluginDatabaseSystem, pluginId);
             communicationNetworkServiceDeveloperDatabaseFactory.initializeDatabase();
 
             /*
@@ -579,7 +581,7 @@ public class CryptoTransmissionNetworkServicePluginRoot extends AbstractNetworkS
 
 
 
-        } catch (CantInitializeTemplateNetworkServiceDatabaseException exception) {
+        } catch (CantInitializeCryptoTransmissionNetworkServiceDatabaseException exception) {
 
             StringBuffer contextBuffer = new StringBuffer();
             contextBuffer.append("Plugin ID: " + pluginId);
@@ -591,6 +593,11 @@ public class CryptoTransmissionNetworkServicePluginRoot extends AbstractNetworkS
             CantStartPluginException pluginStartException = new CantStartPluginException(CantStartPluginException.DEFAULT_MESSAGE, exception, context, possibleCause);
 
             errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_TEMPLATE_NETWORK_SERVICE,UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, pluginStartException);
+            throw pluginStartException;
+        } catch (CantInitializeTemplateNetworkServiceDatabaseException e) {
+            CantStartPluginException pluginStartException = new CantStartPluginException(CantStartPluginException.DEFAULT_MESSAGE, e, "", "");
+
+            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_TEMPLATE_NETWORK_SERVICE, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, pluginStartException);
             throw pluginStartException;
         }
 
