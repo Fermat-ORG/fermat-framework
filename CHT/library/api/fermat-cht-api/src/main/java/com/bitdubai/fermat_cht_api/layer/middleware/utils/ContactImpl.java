@@ -1,5 +1,6 @@
 package com.bitdubai.fermat_cht_api.layer.middleware.utils;
 
+import com.bitdubai.fermat_api.layer.all_definition.components.enums.PlatformComponentType;
 import com.bitdubai.fermat_cht_api.layer.middleware.interfaces.Contact;
 
 import java.sql.Date;
@@ -13,7 +14,7 @@ public class ContactImpl implements Contact {
     private UUID contactId;
     private String remoteName;
     private String alias;
-    private String remoteActorType;
+    private PlatformComponentType remoteActorType;
     private String remoteActorPublicKey;
     private Date creationDate;
 
@@ -21,7 +22,7 @@ public class ContactImpl implements Contact {
     public ContactImpl(UUID contactId,
                        String remoteName,
                        String alias,
-                       String remoteActorType,
+                       PlatformComponentType remoteActorType,
                        String remoteActorPublicKey,
                        Date creationDate)
     {
@@ -63,12 +64,12 @@ public class ContactImpl implements Contact {
     }
 
     @Override
-    public String getRemoteActorType() {
+    public PlatformComponentType getRemoteActorType() {
         return this.remoteActorType;
     }
 
     @Override
-    public void setRemoteActorType(String remoteActorType) {
+    public void setRemoteActorType(PlatformComponentType remoteActorType) {
         this.remoteActorType = remoteActorType;
     }
 

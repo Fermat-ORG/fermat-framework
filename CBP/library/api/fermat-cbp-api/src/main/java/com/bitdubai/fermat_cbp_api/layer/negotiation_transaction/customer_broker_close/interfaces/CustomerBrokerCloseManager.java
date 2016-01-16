@@ -1,19 +1,13 @@
 package com.bitdubai.fermat_cbp_api.layer.negotiation_transaction.customer_broker_close.interfaces;
 
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.FermatManager;
-import com.bitdubai.fermat_cbp_api.all_definition.enums.NegotiationStatus;
-import com.bitdubai.fermat_cbp_api.all_definition.negotiation.Clause;
-import com.bitdubai.fermat_cbp_api.all_definition.negotiation.Negotiation;
-import com.bitdubai.fermat_cbp_api.layer.contract.customer_broker_purchase.exceptions.CantCreateCustomerBrokerContractPurchaseException;
-import com.bitdubai.fermat_cbp_api.layer.contract.customer_broker_sale.exceptions.CantCreateCustomerBrokerContractSaleException;
+import com.bitdubai.fermat_cbp_api.layer.negotiation.customer_broker_purchase.exceptions.CantCreateCustomerBrokerPurchaseNegotiationException;
 import com.bitdubai.fermat_cbp_api.layer.negotiation.customer_broker_purchase.interfaces.CustomerBrokerPurchaseNegotiation;
+import com.bitdubai.fermat_cbp_api.layer.negotiation.customer_broker_sale.exceptions.CantCreateCustomerBrokerSaleNegotiationException;
 import com.bitdubai.fermat_cbp_api.layer.negotiation.customer_broker_sale.interfaces.CustomerBrokerSaleNegotiation;
-import com.bitdubai.fermat_cbp_api.layer.negotiation_transaction.customer_broker_close.exceptions.CantCreateCustomerBrokerCloseNegotiationTransactionException;
 import com.bitdubai.fermat_cbp_api.layer.negotiation_transaction.customer_broker_close.exceptions.CantGetCustomerBrokerCloseNegotiationTransactionException;
 import com.bitdubai.fermat_cbp_api.layer.negotiation_transaction.customer_broker_close.exceptions.CantGetListCustomerBrokerCloseNegotiationTransactionException;
-import com.bitdubai.fermat_cbp_api.layer.negotiation_transaction.customer_broker_close.exceptions.CantUpdateStateCustomerBrokerCloseNegotiationTransactionException;
 
-import java.util.Collection;
 import java.util.List;
 import java.util.UUID;
 
@@ -26,17 +20,17 @@ public interface CustomerBrokerCloseManager extends FermatManager {
      * Create an Customer Broker Close  Negotiation Transaction for the customer
      *
      * @param customerBrokerPurchaseNegotiation the updated negotiation
-     * @throws CantCreateCustomerBrokerContractPurchaseException
+     * @throws CantCreateCustomerBrokerPurchaseNegotiationException
      */
-    void createCustomerBrokerClosePurchaseNegotiationTranasction(CustomerBrokerPurchaseNegotiation customerBrokerPurchaseNegotiation) throws CantCreateCustomerBrokerContractPurchaseException;
+    void createCustomerBrokerClosePurchaseNegotiationTranasction(CustomerBrokerPurchaseNegotiation customerBrokerPurchaseNegotiation) throws CantCreateCustomerBrokerPurchaseNegotiationException;
 
     /**
      * Create an Customer Broker Close Negotiation Transaction for the broker
      *
      * @param customerBrokerSaleNegotiation the updated negotiation
-     * @throws CantCreateCustomerBrokerContractSaleException
+     * @throws CantCreateCustomerBrokerSaleNegotiationException
      */
-    void createCustomerBrokerCloseSaleNegotiationTranasction(CustomerBrokerSaleNegotiation customerBrokerSaleNegotiation) throws CantCreateCustomerBrokerContractSaleException;
+    void createCustomerBrokerCloseSaleNegotiationTranasction(CustomerBrokerSaleNegotiation customerBrokerSaleNegotiation) throws CantCreateCustomerBrokerSaleNegotiationException;
 
     /**
      * Get negotiation transaction Customer Broker Close for the transactionId indicate

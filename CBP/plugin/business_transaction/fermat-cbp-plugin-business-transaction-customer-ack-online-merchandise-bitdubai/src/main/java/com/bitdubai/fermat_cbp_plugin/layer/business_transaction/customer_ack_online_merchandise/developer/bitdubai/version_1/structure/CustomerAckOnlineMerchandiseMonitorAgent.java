@@ -415,6 +415,9 @@ public class CustomerAckOnlineMerchandiseMonitorAgent implements
                         ContractTransactionStatus.PENDING_ACK_ONLINE_MERCHANDISE_NOTIFICATION);
                 customerAckOnlineMerchandiseBusinessTransactionDao.updateBusinessTransactionRecord(
                         businessTransactionRecord);
+                customerAckOnlineMerchandiseBusinessTransactionDao.updateEventStatus(
+                        eventId,
+                        EventStatus.NOTIFIED);
 
             } catch (UnexpectedResultReturnedFromDatabaseException e) {
                 throw new IncomingOnlineMerchandiseException(

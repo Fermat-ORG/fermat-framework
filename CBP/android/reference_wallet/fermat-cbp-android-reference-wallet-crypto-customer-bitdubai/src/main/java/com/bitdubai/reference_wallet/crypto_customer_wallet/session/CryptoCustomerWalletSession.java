@@ -2,6 +2,7 @@ package com.bitdubai.reference_wallet.crypto_customer_wallet.session;
 
 import com.bitdubai.fermat_android_api.layer.definition.wallet.abstracts.AbstractFermatSession;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.WalletSession;
+import com.bitdubai.fermat_api.layer.all_definition.enums.interfaces.FermatEnum;
 import com.bitdubai.fermat_api.layer.dmp_module.wallet_manager.InstalledWallet;
 import com.bitdubai.fermat_api.layer.world.interfaces.Currency;
 import com.bitdubai.fermat_cbp_api.all_definition.identity.ActorIdentity;
@@ -40,7 +41,7 @@ public class CryptoCustomerWalletSession
         return (data != null) ? (Currency) data : null;
     }
 
-    public void setCurrencyToBuy(Currency currencyToBuy) {
+    public void setCurrencyToBuy(FermatEnum currencyToBuy) {
         setData(CURRENCY_TO_BUY, currencyToBuy);
     }
 }

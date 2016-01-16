@@ -30,7 +30,7 @@ public class ChatNetworkServiceManager implements ChatManager{
         this.outgoingMetaDataDaossageDao = outgoingMetaDataDaossageDao;
     }
 //    @Override
-//    public void sendChatMetadata(Integer idChat, Integer idObjecto, String localActorType, String localActorPubKey, String remoteActorType, String remoteActorPubKey, String chatName, ChatMessageStatus chatStatus, Timestamp date, Integer idMessage, String message, DistributionStatus distributionStatus) throws CantSendChatMessageMetadataException {
+//    public void sendChatMetadata(Integer idChat, Integer idObjecto, PlatformComponentType localActorType, String localActorPubKey, PlatformComponentType remoteActorType, String remoteActorPubKey, String chatName, ChatMessageStatus chatStatus, Timestamp date, Integer idMessage, String message, DistributionStatus distributionStatus) throws CantSendChatMessageMetadataException {
 //
 //        communicationNetworkServiceLocal = communicationNetworkServiceConnectionManager.getNetworkServiceLocalInstance(remoteActorPubKey);
 //        ChatMetadataTransactionRecord chatMetadaTransactionRecord = new ChatMetadataTransactionRecord();

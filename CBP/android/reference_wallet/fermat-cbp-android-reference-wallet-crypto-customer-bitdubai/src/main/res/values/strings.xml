@@ -75,6 +75,7 @@
     <string name="ccw_start_selling_details">Selling %1$s</string>
     <string name="ccw_state_province">State/Province</string>
     <string name="ccw_unit_number">1</string>
+    <string name="ccw_value">Value</string>
     <string name="ccw_wanted_to_buy">Wanted To Buy</string>
     <string name="ccw_welcome">Welcome</string>
     <string name="ccw_wizard_bank_account_description">You must select the Bank Account from the Bank Wallet you selected as Earning</string>
@@ -103,6 +104,7 @@
     <string name="exchange_rate_reference">Exchange Rate Reference</string>
     <string name="expiration_date_text">Expiration Date:</string>
     <string name="expiration_date_title">Negotiation Expiration Date</string>
+    <string name="ccw_your_exchange_rate">Your Reference</string>
 
     <string name="hello_blank_fragment">Hello blank fragment</string>
 
@@ -119,6 +121,7 @@
     <string name="no_new_open_contracts">No New\nOpen Contracts</string>
 
     <string name="payment_methods_title">Payment Methods</string>
+    <string name="reception_methods_title">Reception Methods</string>
     <string name="payment_method">Method: </string>
     <string name="payment_date_text">Payment Date: </string>
     <string name="payment_date_title">PAYMENT DATE</string>
@@ -149,5 +152,9 @@
     <string name="ccw_currency_to_buy">Currency to Buy</string>
     <string name="selected_currency">Selected Currency</string>
     <string name="ccw_currency_description">Currency:</string>
+    <string name="accept">Accept</string>
+    <string name="cancel">Cancel</string>
+    <string name="hint">hint</string>
+    <string name="title">Title</string>
 
 </resources>
