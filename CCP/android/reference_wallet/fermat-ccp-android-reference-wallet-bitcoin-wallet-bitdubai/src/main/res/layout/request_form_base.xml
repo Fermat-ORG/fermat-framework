@@ -153,6 +153,7 @@
                         android:layout_marginLeft="5dp"
                         android:paddingTop="12dp"
                         android:text="[bits]"
+                        android:id="@+id/txt_type"
                         android:textColor="#12aca1"
                         android:textSize="12sp"
                         app:typeface="ROBOTO_REGULAR" />
