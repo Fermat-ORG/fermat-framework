@@ -38,7 +38,7 @@ public class ChatTransmissionJsonAttNames {
     public final static String RECEIVER_TYPE = "rt";
 
     /**
-     * Represent the value of DIGITAL_ASSET_METADATA
+     * Represent the value of CHAT_METADATA
      */
     public final static String CHAT_METADATA = "chtd";
 
@@ -47,7 +47,19 @@ public class ChatTransmissionJsonAttNames {
      */
     public final static String DISTRIBUTION_STATUS = "ds";
 
+    /**
+     *  Represents the value of CHAT_STATUS
+     */
     public final static String CHAT_STATUS = "chtst";
 
+    /**
+     *  Represents the value of MESSAGE_STATUS
+     */
     public final static String MESSAGE_STATUS = "msgst";
+
+    /**
+     *  Represents the value of ID_OBJECT
+     */
+
+    public final static String ID_OBJECT = "idobj";
 }

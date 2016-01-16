@@ -128,6 +128,7 @@ public class NetworkServiceChatNetworkServiceDeveloperDatabaseFactory implements
         outgoingChatColumns.add(NetworkServiceChatNetworkServiceDatabaseConstants.CHAT_REMOTEACTORPUBKEY_COLUMN_NAME);
         outgoingChatColumns.add(NetworkServiceChatNetworkServiceDatabaseConstants.CHAT_CHATNAME_COLUMN_NAME);
         outgoingChatColumns.add(NetworkServiceChatNetworkServiceDatabaseConstants.CHAT_CHATSTATUS_COLUMN_NAME);
+        outgoingChatColumns.add(NetworkServiceChatNetworkServiceDatabaseConstants.CHAT_MESSAGE_STATUS_COLUMN_NAME);
         outgoingChatColumns.add(NetworkServiceChatNetworkServiceDatabaseConstants.CHAT_DATE_COLUMN_NAME);
         outgoingChatColumns.add(NetworkServiceChatNetworkServiceDatabaseConstants.CHAT_IDMENSAJE_COLUMN_NAME);
         outgoingChatColumns.add(NetworkServiceChatNetworkServiceDatabaseConstants.CHAT_MESSAGE_COLUMN_NAME);
@@ -151,6 +152,7 @@ public class NetworkServiceChatNetworkServiceDeveloperDatabaseFactory implements
         incomingChatColumns.add(NetworkServiceChatNetworkServiceDatabaseConstants.INCOMING_CHAT_REMOTEACTORPUBKEY_COLUMN_NAME);
         incomingChatColumns.add(NetworkServiceChatNetworkServiceDatabaseConstants.INCOMING_CHAT_CHATNAME_COLUMN_NAME);
         incomingChatColumns.add(NetworkServiceChatNetworkServiceDatabaseConstants.INCOMING_CHAT_CHATSTATUS_COLUMN_NAME);
+        incomingChatColumns.add(NetworkServiceChatNetworkServiceDatabaseConstants.INCOMING_CHAT_MESSAGE_STATUS_COLUMN_NAME);
         incomingChatColumns.add(NetworkServiceChatNetworkServiceDatabaseConstants.INCOMING_CHAT_DATE_COLUMN_NAME);
         incomingChatColumns.add(NetworkServiceChatNetworkServiceDatabaseConstants.INCOMING_CHAT_IDMENSAJE_COLUMN_NAME);
         incomingChatColumns.add(NetworkServiceChatNetworkServiceDatabaseConstants.INCOMING_CHAT_MESSAGE_COLUMN_NAME);

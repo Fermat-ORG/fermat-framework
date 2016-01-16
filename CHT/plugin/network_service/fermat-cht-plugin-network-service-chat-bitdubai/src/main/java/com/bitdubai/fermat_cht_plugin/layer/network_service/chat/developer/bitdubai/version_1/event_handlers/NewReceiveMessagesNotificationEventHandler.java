@@ -44,7 +44,8 @@ public class NewReceiveMessagesNotificationEventHandler implements FermatEventHa
      */
     public NewReceiveMessagesNotificationEventHandler(ChatPluginRoot chatPluginRoot) {
         this.messagesProcessorsRegistered = new HashMap<>();
-        this.messagesProcessorsRegistered.put(ChatMessageTransactionType.META_DATA_TRANSMIT, new ChatMetadataTransmitMessageReceiverProcessor(chatPluginRoot));
+        this.messagesProcessorsRegistered.put(ChatMessageTransactionType.CHAT_METADATA_TRASMIT, new ChatMetadataTransmitMessageReceiverProcessor(chatPluginRoot));
+        //TODO TO IMPLEMENT MESSAGE PROCESSOR
         this.messagesProcessorsRegistered.put(ChatMessageTransactionType.TRANSACTION_STATUS_UPDATE, new NewTransactionStatusNotificationMessageReceiverProcessor(chatPluginRoot));
         gson = new Gson();
         parser = new JsonParser();
@@ -64,7 +65,7 @@ public class NewReceiveMessagesNotificationEventHandler implements FermatEventHa
         if (platformEvent.getSource() == ChatPluginRoot.EVENT_SOURCE) {
 
             System.out.println("CompleteComponentConnectionRequestNotificationEventHandler - handleEvent platformEvent =" + platformEvent.toString());
-            System.out.print("CHAT - NOTIFICACION EVENTO MENSAJE RECIBIDO!!!!");
+            System.out.print("ChatPluginRoot  - NOTIFICACION EVENTO MENSAJE RECIBIDO!!!!");
 
             /*
              * Get the message receive
@@ -88,7 +89,7 @@ public class NewReceiveMessagesNotificationEventHandler implements FermatEventHa
             if (messagesProcessorsRegistered.containsKey(chatMessageTransactionType)) {
                 messagesProcessorsRegistered.get(chatMessageTransactionType).processingMessage(fermatMessageReceive, jsonMsjContent);
             }else{
-                System.out.println("CompleteComponentConnectionRequestNotificationEventHandler - message type no supported = "+chatMessageTransactionType);
+                System.out.println("ChatPluginRoot - CompleteComponentConnectionRequestNotificationEventHandler - message type no supported = "+chatMessageTransactionType);
             }
 
         }
