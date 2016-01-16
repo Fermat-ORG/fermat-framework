@@ -82,14 +82,14 @@ public class RuntimeSubApp implements SubApp {
     @Override
     public Activity getStartActivity() {
         if(!startActivities.isEmpty())
-        return activities.get(activities.get(startActivities.get(actualStart)));
+        return activities.get(startActivities.get(actualStart));
         else return activities.get(0);
     }
 
     @Override
     public Activity getLastActivity() {
         if(lastActivity==null){
-            return activities.get(activities.get(startActivities.get(actualStart)));
+            return activities.get(startActivities.get(actualStart));
         }
         return activities.get(lastActivity);
     }
