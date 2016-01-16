@@ -730,7 +730,7 @@ public class ChatPluginRoot extends AbstractPlugin implements
             CommunicationNetworkServiceLocal communicationNetworkServiceLocal = communicationNetworkServiceConnectionManager.getNetworkServiceLocalInstance(remoteActorPubKey);
             System.out.println("ChatPluginRoot - communicationNetworkServiceLocal: "+communicationNetworkServiceLocal);
 
-            String msjContent = EncodeMsjContent.encodeMSjContentChatMetadataTransmit(chatMetadata, PlatformComponentType.getByCode(chatMetadata.getLocalActorType()), PlatformComponentType.getByCode(chatMetadata.getRemoteActorType()));
+            String msjContent = EncodeMsjContent.encodeMSjContentChatMetadataTransmit(chatMetadata, chatMetadata.getLocalActorType(), chatMetadata.getRemoteActorType());
             System.out.println("ChatPluginRoot - Message encoded:\n"+msjContent);
             /*
              * Construct the message content in json format
@@ -744,6 +744,7 @@ public class ChatPluginRoot extends AbstractPlugin implements
             chatMetadaTransactionRecord.setRemoteActorPubKey(chatMetadata.getRemoteActorPubKey());
             chatMetadaTransactionRecord.setChatName(chatMetadata.getChatName());
             chatMetadaTransactionRecord.setChatMessageStatus(chatMetadata.getChatMessageStatus());
+            chatMetadaTransactionRecord.setMessageStatus(chatMetadata.getMessageStatus());
             chatMetadaTransactionRecord.setDate(chatMetadata.getDate());
             chatMetadaTransactionRecord.setIdMessage(chatMetadata.getIdMessage());
             chatMetadaTransactionRecord.setMessage(chatMetadata.getMessage());
@@ -790,12 +791,12 @@ public class ChatPluginRoot extends AbstractPlugin implements
                 /*
                  * Create the sender basic profile
                  */
-                PlatformComponentProfile sender = wsCommunicationsCloudClientManager.getCommunicationsCloudClientConnection().constructBasicPlatformComponentProfileFactory(chatMetadaTransactionRecord.getLocalActorPubKey(), NetworkServiceType.CHAT, PlatformComponentType.getByCode(chatMetadaTransactionRecord.getLocalActorType()));
+                PlatformComponentProfile sender = wsCommunicationsCloudClientManager.getCommunicationsCloudClientConnection().constructBasicPlatformComponentProfileFactory(chatMetadaTransactionRecord.getLocalActorPubKey(), NetworkServiceType.CHAT, chatMetadaTransactionRecord.getLocalActorType());
                 System.out.println("ChatPLuginRoot - sender:"+sender);
                 /*
                  * Create the receiver basic profile
                  */
-                PlatformComponentProfile receiver = wsCommunicationsCloudClientManager.getCommunicationsCloudClientConnection().constructBasicPlatformComponentProfileFactory(chatMetadaTransactionRecord.getRemoteActorPubKey(), NetworkServiceType.CHAT, PlatformComponentType.getByCode(chatMetadaTransactionRecord.getRemoteActorType()));
+                PlatformComponentProfile receiver = wsCommunicationsCloudClientManager.getCommunicationsCloudClientConnection().constructBasicPlatformComponentProfileFactory(chatMetadaTransactionRecord.getRemoteActorPubKey(), NetworkServiceType.CHAT, chatMetadaTransactionRecord.getRemoteActorType());
                 System.out.println("ChatPLuginRoot - receiver:"+receiver);
                 /*
                  * Ask the client to connect

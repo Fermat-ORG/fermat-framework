@@ -1,8 +1,10 @@
 package com.bitdubai.fermat_cht_api.layer.middleware.utils;
 
+import com.bitdubai.fermat_api.layer.all_definition.util.XMLParser;
 import com.bitdubai.fermat_cht_api.all_definition.enums.MessageStatus;
 import com.bitdubai.fermat_cht_api.all_definition.enums.TypeMessage;
 import com.bitdubai.fermat_cht_api.layer.middleware.interfaces.Message;
+import com.bitdubai.fermat_cht_api.layer.network_service.chat.interfaces.ChatMetadata;
 
 import java.sql.Date;
 import java.util.UUID;
@@ -19,7 +21,21 @@ public class MessageImpl implements Message {
     private TypeMessage type;
     private Date messageDate;
 
-    public MessageImpl(){};
+    public MessageImpl(){}
+
+    public MessageImpl(
+            ChatMetadata chatMetadata,
+            MessageStatus messageStatus,
+            TypeMessage typeMessage
+    ){
+        messageId=chatMetadata.getIdMessage();
+        chatId=chatMetadata.getIdChat();
+        message=chatMetadata.getMessage();
+        status=messageStatus;
+        type=typeMessage;
+        messageDate=new Date(
+                chatMetadata.getDate().getTime());
+    }
 
     @Override
     public UUID getMessageId() {
@@ -79,5 +95,13 @@ public class MessageImpl implements Message {
     @Override
     public void setMessageDate(Date messageDate) {
         this.messageDate = messageDate;
+    }
+
+    /**
+     * This method returns a String in XML format containing all this object information
+     * @return
+     */
+    public String toString(){
+        return XMLParser.parseObject(this);
     }
 }
