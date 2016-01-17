@@ -439,14 +439,8 @@ public class RequestFormFragment extends AbstractFermatFragment implements View.
                 String amount = editTextAmount.getText().toString();
                 if(!amount.equals("") && amount!=null && Long.parseLong(amount)!=0) {
 
-                        String notes = null;
-                        if (txt_notes.getText().toString().length() != 0) {
-                            notes = txt_notes.getText().toString();
-                        }
-
                         String txtType = txt_type.getText().toString();
                         String newAmount = "";
-
 
                         if (txtType.equals("[btc]")) {
                             newAmount = bitcoinConverter.getSathoshisFromBTC(amount);
