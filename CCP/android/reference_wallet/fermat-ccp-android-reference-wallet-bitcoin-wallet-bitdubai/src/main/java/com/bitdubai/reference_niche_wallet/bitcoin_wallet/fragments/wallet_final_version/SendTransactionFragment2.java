@@ -6,6 +6,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -105,7 +106,7 @@ import static android.widget.Toast.makeText;
  * Fragment the show the list of open negotiations waiting for the broker and the customer un the Home activity
  *
  * @author Nelson Ramirez
- * @version 1.0
+ * @version 1.0refresh
  * @since 20/10/2015
  */
 public class SendTransactionFragment2 extends FermatWalletExpandableListFragment<GrouperItem>
@@ -154,7 +155,18 @@ public class SendTransactionFragment2 extends FermatWalletExpandableListFragment
 
         lstCryptoWalletTransactionsBook = new ArrayList<>();
 
-
+        getExecutor().execute(new Runnable() {
+            @Override
+            public void run() {
+                final Drawable drawable = getResources().getDrawable(R.drawable.background_gradient, null);
+                getActivity().runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        getPaintActivtyFeactures().setActivityBackgroundColor(drawable);
+                    }
+                });
+            }
+        });
 
         try {
             referenceWalletSession = (ReferenceWalletSession) appSession;
@@ -173,7 +185,6 @@ public class SendTransactionFragment2 extends FermatWalletExpandableListFragment
             }catch (Exception e){
                 bitcoinWalletSettings = null;
             }
-
             if(bitcoinWalletSettings == null){
                 bitcoinWalletSettings = new BitcoinWalletSettings();
                 bitcoinWalletSettings.setIsContactsHelpEnabled(true);
@@ -937,6 +948,7 @@ public class SendTransactionFragment2 extends FermatWalletExpandableListFragment
      */
     private void changeBalanceType(TextView txt_type_balance,TextView txt_balance_amount) {
         updateBalances();
+        setRunningDailyBalance();
         try {
             if (((ReferenceWalletSession)appSession).getBalanceTypeSelected().equals(BalanceType.AVAILABLE.getCode())) {
                 balanceAvailable = loadBalance(BalanceType.AVAILABLE);
@@ -992,7 +1004,8 @@ public class SendTransactionFragment2 extends FermatWalletExpandableListFragment
                 balanceSum += Integer.valueOf(WalletUtils.formatBalanceStringNotDecimal(entry.getValue(), ShowMoneyType.BITCOIN.getCode()));
             }
 
-             average = (int) ((Integer.valueOf(WalletUtils.formatBalanceStringNotDecimal(getBalanceValue(runningDailyBalance.size() - 1), ShowMoneyType.BITCOIN.getCode())) * 100) / balanceSum);
+            if(balanceSum > 0 )
+                average = (int) ((Integer.valueOf(WalletUtils.formatBalanceStringNotDecimal(getBalanceValue(runningDailyBalance.size() - 1), ShowMoneyType.BITCOIN.getCode())) * 100) / balanceSum);
 
         } catch (Exception e) {
             e.printStackTrace();

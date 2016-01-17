@@ -59,6 +59,7 @@ import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.utils.WalletUti
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.session.ReferenceWalletSession;
 import com.squareup.picasso.Picasso;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -329,7 +330,7 @@ public class SendFormFragment extends AbstractFermatFragment<ReferenceWalletSess
         cryptoWalletWalletContact = appSession.getLastContactSelected();
         if(cryptoWalletWalletContact!=null) {
             try {
-                BitmapWorkerTask bitmapWorkerTask = new BitmapWorkerTask(imageView_contact,getResources(),true);
+                BitmapWorkerTask bitmapWorkerTask = new BitmapWorkerTask(imageView_contact,getResources(),false);
                 bitmapWorkerTask.execute(cryptoWalletWalletContact.getProfilePicture());
             } catch (Exception e) {
                 Picasso.with(getActivity()).load(R.drawable.ic_profile_male).transform(new CircleTransform()).into(imageView_contact);
@@ -474,8 +475,9 @@ public class SendFormFragment extends AbstractFermatFragment<ReferenceWalletSess
                                 newAmount = bitcoinConverter.getSathoshisFromBits(amount);
                             }
 
+                            BigDecimal operator = new BigDecimal(newAmount);
                             cryptoWallet.send(
-                                    Long.parseLong(newAmount),
+                                    operator.longValueExact(),
                                     validAddress,
                                     notes,
                                     appSession.getAppPublicKey(),

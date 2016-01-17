@@ -108,4 +108,23 @@ public class BankMoneyWalletImpl implements BankMoneyWallet {
             throw new CantAddNewAccountException(CantInsertRecordException.DEFAULT_MESSAGE,e,null,null);
         }
     }
+
+    @Override
+    public void createBankName(String bankName) {
+        try {
+            bankMoneyWalletDao.createBankName(bankName);
+        }catch (FermatException e){
+            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_BNK_BANK_MONEY_WALLET,null,e);
+        }
+    }
+
+    @Override
+    public String getBankName() {
+        try {
+            return bankMoneyWalletDao.getBankName();
+        }catch (FermatException e){
+            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_BNK_BANK_MONEY_WALLET,null,e);
+        }
+        return null;
+    }
 }

@@ -10,17 +10,6 @@ public class BitcoinConverter {
 
     //-------------------------------------------------------------------------------------
     private static final BigDecimal BITS_IN_BITCOIN = BigDecimal.valueOf(1000000);
-    private static final BigDecimal uBTC = BigDecimal.valueOf(0.00000100);
-    private static final BigDecimal mBTC = BigDecimal.valueOf(0.00100000);
-    private static final BigDecimal BTC  = BigDecimal.valueOf(1.00000000);
-    //-------------------------------------------------------------------------------------
-    private static final BigDecimal BIT_ARE_SATOSHIS = BigDecimal.valueOf(100);
-    private static final BigDecimal MBITS_ARE_SATOSHIS = BigDecimal.valueOf(100000);
-    private static final BigDecimal BTC_ARE_SATOSHIS = BigDecimal.valueOf(100000000);
-
-    //-------------------------------------------------------------------------------------
-    private static final BigDecimal ONE_SATOSHI_IS_BITCOIN = BigDecimal.valueOf(0.00000001);
-    private static final BigDecimal SATOSHI = BigDecimal.valueOf(1);
 
     public BitcoinConverter() {
 
@@ -34,7 +23,7 @@ public class BitcoinConverter {
         String operacion = "";
         try {
             BigDecimal operator = new BigDecimal(satoshis);
-             operacion = ""+(operator.multiply(uBTC)).divide(BIT_ARE_SATOSHIS);
+             operacion = ""+(operator.divide(new BigDecimal(100)));
             return operacion;
         }catch (Exception e){
             e.printStackTrace();
@@ -51,7 +40,7 @@ public class BitcoinConverter {
         String operacion = "";
         try {
             BigDecimal operator = new BigDecimal(satoshis);
-             operacion =""+ (operator.multiply(mBTC)).divide(MBITS_ARE_SATOSHIS);
+             operacion =""+ (operator.divide(new BigDecimal(100000)));
             return operacion;
         }catch (Exception e){
             e.printStackTrace();
@@ -68,7 +57,7 @@ public class BitcoinConverter {
         String operacion = "";
         try {
             BigDecimal operator = new BigDecimal(satoshis);
-             operacion =""+(operator.multiply(BTC)).divide(BTC_ARE_SATOSHIS);
+             operacion =""+(operator.divide(new BigDecimal(100000000)));
             return operacion;
         }catch (Exception e){
             e.printStackTrace();
@@ -84,7 +73,7 @@ public class BitcoinConverter {
         String operacion = "";
         try {
             BigDecimal operator = new BigDecimal(bits);
-            operacion = ""+(operator.multiply(BIT_ARE_SATOSHIS)).divide(uBTC);
+            operacion = ""+(operator.multiply(new BigDecimal(100)));
             return operacion;
         }catch (Exception e){
             e.printStackTrace();
@@ -100,7 +89,7 @@ public class BitcoinConverter {
         String operacion = "";
         try {
             BigDecimal operator = new BigDecimal(mbits);
-            operacion ="" +(operator.multiply(MBITS_ARE_SATOSHIS)).divide(mBTC);
+            operacion ="" +(operator.multiply(new BigDecimal(100000)));
             return operacion;
         }catch (Exception e){
             e.printStackTrace();
@@ -116,7 +105,7 @@ public class BitcoinConverter {
         String operacion = "";
         try {
             BigDecimal operator = new BigDecimal(bitcoins);
-            operacion =""+ (operator.multiply(BTC_ARE_SATOSHIS)).divide(BTC);
+            operacion =""+ (operator.multiply(new BigDecimal(100000000)));
             return operacion;
         }catch (Exception e){
             e.printStackTrace();

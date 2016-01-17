@@ -4,14 +4,17 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
+import com.bitdubai.fermat_api.FermatException;
+import com.bitdubai.fermat_api.layer.all_definition.enums.CryptoCurrency;
+import com.bitdubai.fermat_api.layer.all_definition.enums.FiatCurrency;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.ClauseType;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.common.interfaces.ClauseInformation;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.common.interfaces.CustomerBrokerNegotiationInformation;
 import com.bitdubai.reference_wallet.crypto_customer_wallet.R;
-import com.bitdubai.reference_wallet.crypto_customer_wallet.fragments.common.SingleChoiceDialogFragment;
 
 /**
- * Created by nelson on 10/01/16.
+ * Created by nelson
+ * on 10/01/16.
  */
 public class SingleChoiceViewHolder extends ClauseViewHolder implements View.OnClickListener {
 
@@ -30,7 +33,7 @@ public class SingleChoiceViewHolder extends ClauseViewHolder implements View.OnC
     public void bindData(CustomerBrokerNegotiationInformation negotiationInformation, ClauseInformation clause, int clausePosition) {
         super.bindData(negotiationInformation, clause, clausePosition);
 
-        buttonValue.setText(clause.getValue());
+        buttonValue.setText(getFriendlyValue(clause));
     }
 
     @Override
@@ -42,7 +45,8 @@ public class SingleChoiceViewHolder extends ClauseViewHolder implements View.OnC
 
     @Override
     public void onClick(View view) {
-        listener.onClauseCLicked(buttonValue, clause, clausePosition);
+        if (listener != null)
+            listener.onClauseCLicked(buttonValue, clause, clausePosition);
     }
 
     @Override
@@ -58,5 +62,28 @@ public class SingleChoiceViewHolder extends ClauseViewHolder implements View.OnC
     @Override
     protected int getTitleTextViewRes() {
         return R.id.ccw_card_view_title;
+    }
+
+    /**
+     * @param clause the clause with the value
+     * @return A friendly reading value for the clause or the clause's value itself
+     */
+    private String getFriendlyValue(ClauseInformation clause) {
+        final String clauseValue = clause.getValue();
+        String friendlyValue = clauseValue;
+
+        final ClauseType type = clause.getType();
+        if (type.equals(ClauseType.CUSTOMER_CURRENCY) || type.equals(ClauseType.BROKER_CURRENCY)) {
+            try {
+                if (FiatCurrency.codeExists(clauseValue))
+                    friendlyValue = FiatCurrency.getByCode(clauseValue).getFriendlyName() + "(" + clauseValue + ")";
+                else if (CryptoCurrency.codeExists(clauseValue))
+                    friendlyValue = CryptoCurrency.getByCode(clauseValue).getFriendlyName() + "(" + clauseValue + ")";
+
+            } catch (FermatException ignore) {
+            }
+        }
+
+        return friendlyValue;
     }
 }

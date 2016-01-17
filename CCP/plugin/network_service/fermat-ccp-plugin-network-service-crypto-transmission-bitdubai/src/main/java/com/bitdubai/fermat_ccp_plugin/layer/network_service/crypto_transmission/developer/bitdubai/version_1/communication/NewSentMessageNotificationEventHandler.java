@@ -13,10 +13,6 @@ import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.contents.Ferm
  * Created by Joaquin C. on 23/11/15.
  */
 public class NewSentMessageNotificationEventHandler extends AbstractCommunicationBaseEventHandler<NewNetworkServiceMessageSentNotificationEvent> {
-    /**
-     * Agent
-     */
-    private NetworkService actorNetworkServiceRecordedAgent;
 
 
     /**
@@ -25,7 +21,7 @@ public class NewSentMessageNotificationEventHandler extends AbstractCommunicatio
          * @param
          */
 
-    public NewSentMessageNotificationEventHandler(AbstractNetworkServiceV2 intraActorNetworkServicePluginRoot) {
+    public NewSentMessageNotificationEventHandler(NetworkService intraActorNetworkServicePluginRoot) {
         super(intraActorNetworkServicePluginRoot);
 
     }
@@ -42,7 +38,9 @@ public class NewSentMessageNotificationEventHandler extends AbstractCommunicatio
         public void processEvent(NewNetworkServiceMessageSentNotificationEvent event) {
 
 //            if(event.getNetworkServiceTypeApplicant().equals(NetworkServiceType.INTRA_USER))
-            networkService.handleNewSentMessageNotificationEvent((FermatMessage) event.getData());
+         //   networkService.handleNewSentMessageNotificationEvent((FermatMessage) event.getData());
+            if(networkService!=null)networkService.handleNewSentMessageNotificationEvent((FermatMessage) event.getData());
+            else if(ns!=null) ((CryptoTransmissionNetworkServicePluginRoot)ns).handleNewSentMessageNotificationEvent((FermatMessage) event.getData());
 
         }
 }

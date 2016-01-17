@@ -1,5 +1,6 @@
 package com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_transmission.developer.bitdubai.version_1.communication;
 
+import com.bitdubai.fermat_api.layer.all_definition.network_service.interfaces.NetworkService;
 import com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_transmission.developer.bitdubai.version_1.CryptoTransmissionNetworkServicePluginRoot;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.common.network_services.abstract_classes.AbstractNetworkServiceV2;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.common.network_services.template.event_handlers.AbstractCommunicationBaseEventHandler;
@@ -16,7 +17,7 @@ public class NewReceiveMessagesNotificationEventHandler extends AbstractCommunic
      *
      * @param
      */
-    public NewReceiveMessagesNotificationEventHandler(AbstractNetworkServiceV2 cryptoTransmissionNetworkServicePluginRoot) {
+    public NewReceiveMessagesNotificationEventHandler(NetworkService cryptoTransmissionNetworkServicePluginRoot) {
         super(cryptoTransmissionNetworkServicePluginRoot);
     }
 
@@ -28,7 +29,8 @@ public class NewReceiveMessagesNotificationEventHandler extends AbstractCommunic
 
         System.out.print("NOTIFICACION EVENTO LLEGADA MENSAJE A CRYPTO TRANSMISSION NETWORK SERVICE!!!!");
 
-        networkService.handleNewMessages((FermatMessage) event.getData());
+        if(networkService!=null)networkService.handleNewMessages((FermatMessage) event.getData());
+        else if(ns!=null) ((CryptoTransmissionNetworkServicePluginRoot)ns).handleNewMessages((FermatMessage) event.getData());
     }
 
 }

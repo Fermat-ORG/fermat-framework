@@ -221,7 +221,7 @@ public class ContactDetailFragment extends AbstractFermatFragment implements Vie
                           //  Bitmap bitmapDrawable = BitmapFactory.decodeByteArray(cryptoWalletWalletContact.getProfilePicture(), 0, cryptoWalletWalletContact.getProfilePicture().length);// MemoryUtils.decodeSampledBitmapFromByteArray(cryptoWalletWalletContact.getProfilePicture(),image_view_profile.getMaxWidth(),image_view_profile.getMaxHeight());
                           //  bitmapDrawable = Bitmap.createScaledBitmap(bitmapDrawable, image_view_profile.getWidth(), 200, true);
                            // image_view_profile.setImageBitmap(bitmapDrawable);
-                        BitmapWorkerTask bitmapWorkerTask = new BitmapWorkerTask(image_view_profile,getResources(),true);
+                        BitmapWorkerTask bitmapWorkerTask = new BitmapWorkerTask(image_view_profile,getResources(),false);
                         bitmapWorkerTask.execute(cryptoWalletWalletContact.getProfilePicture());
                     } else
                         Picasso.with(getActivity()).load(R.drawable.ic_profile_male).into(image_view_profile);
