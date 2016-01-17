@@ -74,11 +74,6 @@ public class ClientSuccessfullyReconnectPacketProcessor extends FermatPacketProc
         getWsCommunicationsCloudClientChannel().setIsRegister(Boolean.TRUE);
 
         /*
-         * set Event True was raise from ClientSuccessReconnectNotificationEvent
-         */
-        ((ClientSuccessReconnectNotificationEvent) event).setIsFromReconnectEvent(Boolean.TRUE);
-
-        /*
          * Raise the event
          */
         System.out.println("ClientSuccessfullyReconnectPacketProcessor - Raised a event = P2pEventType.CLIENT_SUCCESS_RECONNECT");

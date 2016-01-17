@@ -109,26 +109,7 @@ public class CompleteRegistrationComponentPacketProcessor extends FermatPacketPr
             System.out.println("CompleteRegistrationComponentPacketProcessor - getWsCommunicationsCloudClientChannel().isRegister() " + getWsCommunicationsCloudClientChannel().isRegister());
             // getWsCommunicationsCloudClientChannel().launchCompleteClientComponentRegistrationNotificationEvent();
             // System.out.println("CompleteRegistrationComponentPacketProcessor - Raised a event = P2pEventType.COMPLETE_CLIENT_COMPONENT_REGISTRATION_NOTIFICATION");
-            //System.out.println("CompleteRegistrationComponentPacketProcessor - getWsCommunicationsCloudClientChannel().isRegister() = "+ getWsCommunicationsCloudClientChannel().isRegister());
-
-
-                /*
-                 * Create a raise a new event whit the Reconnect
-                 */
-                FermatEvent event = P2pEventType.CLIENT_SUCCESS_RECONNECT.getNewEvent();
-                event.setSource(EventSource.WS_COMMUNICATION_CLOUD_CLIENT_PLUGIN);
-
-                /*
-                 * set Event True was raise from ClientSuccessReconnectNotificationEvent
-                 */
-                ((ClientSuccessReconnectNotificationEvent) event).setIsFromReconnectEvent(Boolean.FALSE);
-
-                /*
-                 * Raise the event
-                 */
-                 getWsCommunicationsCloudClientChannel().getEventManager().raiseEvent(event);
-
-
+            //System.out.println("CompleteRegistrationComponentPacketProcessor - getWsCommunicationsCloudClientChannel().isRegister() = "+ getWsCommunicationsCloudClientChannel().isRe            .raiseEvent(event);
 
 
         }

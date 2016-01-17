@@ -103,6 +103,7 @@ import com.bitdubai.fermat_p2p_api.layer.p2p_communication.MessagesStatus;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.WsCommunicationsCloudClientManager;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.contents.FermatMessage;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.enums.FermatMessagesStatus;
+import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.exceptions.CantRegisterComponentException;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.exceptions.CantRequestListException;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedPluginExceptionSeverity;
@@ -226,6 +227,8 @@ public class CryptoTransmissionNetworkServicePluginRoot extends AbstractNetworkS
      */
     CryptoTransmissionAgent cryptoTransmissionAgent;
 
+    private  boolean beforeRegistered;
+
 
     /**
      * Constructor
@@ -242,6 +245,7 @@ public class CryptoTransmissionNetworkServicePluginRoot extends AbstractNetworkS
                 );
         this.remoteNetworkServicesRegisteredList = new CopyOnWriteArrayList<>();
         this.listenersAdded = new ArrayList<>();
+        beforeRegistered = Boolean.FALSE;
     }
 
 
@@ -746,6 +750,36 @@ public class CryptoTransmissionNetworkServicePluginRoot extends AbstractNetworkS
 
         System.out.println(" Crypto Transmission CommunicationNetworkServiceConnectionManager - Starting method handleCompleteComponentRegistrationNotificationEvent");
 
+        if (platformComponentProfileRegistered.getPlatformComponentType() == PlatformComponentType.COMMUNICATION_CLOUD_CLIENT && this.register){
+
+            if(communicationRegistrationProcessNetworkServiceAgent.isAlive()){
+                communicationRegistrationProcessNetworkServiceAgent.interrupt();
+                communicationRegistrationProcessNetworkServiceAgent = null;
+            }
+
+            beforeRegistered = Boolean.TRUE;
+                              /*
+                 * Construct my profile and register me
+                 */
+            PlatformComponentProfile platformComponentProfileToReconnect =  wsCommunicationsCloudClientManager.getCommunicationsCloudClientConnection().constructPlatformComponentProfileFactory(this.getIdentityPublicKey(),
+                    this.getAlias().toLowerCase(),
+                    this.getName(),
+                    this.getNetworkServiceType(),
+                    this.getPlatformComponentType(),
+                    this.getExtraData());
+
+            try {
+                    /*
+                     * Register me
+                     */
+                wsCommunicationsCloudClientManager.getCommunicationsCloudClientConnection().registerComponentForCommunication(this.getNetworkServiceType(), platformComponentProfileToReconnect);
+
+            } catch (CantRegisterComponentException e) {
+                e.printStackTrace();
+            }
+
+        }
+
 
 
         /*
@@ -760,36 +794,34 @@ public class CryptoTransmissionNetworkServicePluginRoot extends AbstractNetworkS
              */
             this.register = Boolean.TRUE;
             setRegister(Boolean.TRUE);
-            communicationRegistrationProcessNetworkServiceAgent.interrupt();
-            communicationRegistrationProcessNetworkServiceAgent=null;
 
             System.out.print("-----------------------\n" +
                     "CRYPTO TRANSMISSION REGISTRADO  -----------------------\n" +
                     "-----------------------\n A: " + getName());
 
-            /**
-             * Inicialice de main agent
-             */
-            cryptoTransmissionAgent = new CryptoTransmissionAgent(
-                    this,
-                    cryptoTransmissionConnectionsDAO,
-                    cryptoTransmissionMetadataDAO,
-                    communicationNetworkServiceConnectionManager,
-                    wsCommunicationsCloudClientManager,
-                    platformComponentProfileRegistered,
-                    errorManager,
-                    new ArrayList<PlatformComponentProfile>(),
-                    identity,
-                    eventManager
-            );
-
             setPlatformComponentProfilePluginRoot(platformComponentProfileRegistered);
 
+            if(!beforeRegistered) {
+                /**
+                 * Inicialice de main agent
+                 */
+                cryptoTransmissionAgent = new CryptoTransmissionAgent(
+                        this,
+                        cryptoTransmissionConnectionsDAO,
+                        cryptoTransmissionMetadataDAO,
+                        communicationNetworkServiceConnectionManager,
+                        wsCommunicationsCloudClientManager,
+                        platformComponentProfileRegistered,
+                        errorManager,
+                        new ArrayList<PlatformComponentProfile>(),
+                        identity,
+                        eventManager
+                );
 
+                // start main threads
+                cryptoTransmissionAgent.start();
 
-            // start main threads
-            cryptoTransmissionAgent.start();
-
+            }
 
         }
 
@@ -970,44 +1002,51 @@ public class CryptoTransmissionNetworkServicePluginRoot extends AbstractNetworkS
     @Override
     public void handleClientSuccessfullReconnectNotificationEvent(FermatEvent fermatEvent) {
 
-        ClientSuccessReconnectNotificationEvent clientSuccessReconnectNotificationEvent = (ClientSuccessReconnectNotificationEvent) fermatEvent;
-
-        /*
-         * Is From the Event ClientSuccessfullReconnectNotificationEvent
-         */
-        if(clientSuccessReconnectNotificationEvent.getIsFromReconnectEvent()){
-
             if(communicationNetworkServiceConnectionManager != null) {
                 communicationNetworkServiceConnectionManager.restart();
             }
 
-            if(!this.register){
+           if(!this.register){
 
                 if(communicationRegistrationProcessNetworkServiceAgent.isAlive()){
-                    System.out.println("communicationRegistrationProcessNetworkServiceAgent.isAlive() = " + communicationRegistrationProcessNetworkServiceAgent.isAlive());
-                    communicationRegistrationProcessNetworkServiceAgent = new CommunicationRegistrationProcessNetworkServiceAgent(this, wsCommunicationsCloudClientManager);
-                    communicationRegistrationProcessNetworkServiceAgent.start();
 
-                    //communicationRegistrationProcessNetworkServiceAgent.setActive(Boolean.TRUE);
+                    communicationRegistrationProcessNetworkServiceAgent.interrupt();
+                    communicationRegistrationProcessNetworkServiceAgent = null;
+
+                       /*
+                 * Construct my profile and register me
+                 */
+                    PlatformComponentProfile platformComponentProfileToReconnect =  wsCommunicationsCloudClientManager.getCommunicationsCloudClientConnection().constructPlatformComponentProfileFactory(this.getIdentityPublicKey(),
+                            this.getAlias().toLowerCase(),
+                            this.getName(),
+                            this.getNetworkServiceType(),
+                            this.getPlatformComponentType(),
+                            this.getExtraData());
+
+                    try {
+                    /*
+                     * Register me
+                     */
+                        wsCommunicationsCloudClientManager.getCommunicationsCloudClientConnection().registerComponentForCommunication(this.getNetworkServiceType(), platformComponentProfileToReconnect);
+
+                    } catch (CantRegisterComponentException e) {
+                        e.printStackTrace();
+                    }
+
+                /*
+                 * Configure my new profile
+                 */
+                    this.setPlatformComponentProfilePluginRoot(platformComponentProfileToReconnect);
+
+                /*
+                 * Initialize the connection manager
+                 */
+                    this.initializeCommunicationNetworkServiceConnectionManager();
+
                 }
 
-            }
+         }
 
-        }else{
-
-            if(communicationRegistrationProcessNetworkServiceAgent != null) {
-
-                if(communicationRegistrationProcessNetworkServiceAgent.isAlive()){
-                    this.register=Boolean.FALSE;
-                    System.out.println("communicationRegistrationProcessNetworkServiceAgent.isAlive() = " + communicationRegistrationProcessNetworkServiceAgent.isAlive());
-                    communicationRegistrationProcessNetworkServiceAgent = new CommunicationRegistrationProcessNetworkServiceAgent(this, wsCommunicationsCloudClientManager);
-                    communicationRegistrationProcessNetworkServiceAgent.start();
-
-                    //communicationRegistrationProcessNetworkServiceAgent.setActive(Boolean.TRUE);
-                }
-            }
-
-        }
 
     }
 

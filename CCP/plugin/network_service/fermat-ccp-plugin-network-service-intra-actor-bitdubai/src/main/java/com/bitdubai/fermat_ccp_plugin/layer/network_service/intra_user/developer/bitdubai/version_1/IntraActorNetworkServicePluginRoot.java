@@ -281,6 +281,7 @@ public class IntraActorNetworkServicePluginRoot extends AbstractPlugin implement
 
     private IntraActorNetworkServiceDao intraActorNetworkServiceDao;
 
+    private  boolean beforeRegistered;
     /**
      * Constructor
      */
@@ -292,6 +293,7 @@ public class IntraActorNetworkServicePluginRoot extends AbstractPlugin implement
         this.name = "Intra actor Network Service";
         this.alias = "IntraActorNetworkService";
         this.extraData = null;
+        beforeRegistered = false;
     }
 
     /**
@@ -694,6 +696,40 @@ public class IntraActorNetworkServicePluginRoot extends AbstractPlugin implement
 
         System.out.println(" CommunicationNetworkServiceConnectionManager - Starting method handleCompleteComponentRegistrationNotificationEvent");
 
+
+
+        if (platformComponentProfileRegistered.getPlatformComponentType() == PlatformComponentType.COMMUNICATION_CLOUD_CLIENT && this.register){
+
+            if(communicationRegistrationProcessNetworkServiceAgent.isAlive()){
+                communicationRegistrationProcessNetworkServiceAgent.interrupt();
+                communicationRegistrationProcessNetworkServiceAgent = null;
+            }
+
+            beforeRegistered = true;
+
+                /*
+                 * Construct my profile and register me
+                 */
+                PlatformComponentProfile platformComponentProfileToReconnect =  wsCommunicationsCloudClientManager.getCommunicationsCloudClientConnection().constructPlatformComponentProfileFactory(this.getIdentityPublicKey(),
+                        this.getAlias().toLowerCase(),
+                        this.getName(),
+                        this.getNetworkServiceType(),
+                        this.getPlatformComponentType(),
+                        this.getExtraData());
+
+                try {
+                    /*
+                     * Register me
+                     */
+                    wsCommunicationsCloudClientManager.getCommunicationsCloudClientConnection().registerComponentForCommunication(this.getNetworkServiceType(), platformComponentProfileToReconnect);
+
+                } catch (CantRegisterComponentException e) {
+                    e.printStackTrace();
+                }
+
+        }
+
+
         if (platformComponentProfileRegistered.getPlatformComponentType() == PlatformComponentType.ACTOR_INTRA_USER) {
             System.out.print("-----------------------\n" +
                     "ACTOR REGISTRADO!! -----------------------\n" +
@@ -708,14 +744,17 @@ public class IntraActorNetworkServicePluginRoot extends AbstractPlugin implement
                 platformComponentProfileRegistered.getNetworkServiceType() == NetworkServiceType.INTRA_USER &&
                 platformComponentProfileRegistered.getIdentityPublicKey().equals(identity.getPublicKey())) {
 
+
             /*
              * Mark as register
              */
             this.register = Boolean.TRUE;
-            communicationRegistrationProcessNetworkServiceAgent.interrupt();
-            communicationRegistrationProcessNetworkServiceAgent=null;
 
-            initializeIntraActorAgent();
+            if(!beforeRegistered)
+                initializeIntraActorAgent();
+
+
+
 
 
             try {
@@ -1289,40 +1328,50 @@ public class IntraActorNetworkServicePluginRoot extends AbstractPlugin implement
 
         System.out.println("SuccessfullReconnectNotificationEvent");
 
-        ClientSuccessReconnectNotificationEvent clientSuccessReconnectNotificationEvent = (ClientSuccessReconnectNotificationEvent) fermatEvent;
 
-        /*
-         * Is From the Event ClientSuccessfullReconnectNotificationEvent
-         */
-        if(clientSuccessReconnectNotificationEvent.getIsFromReconnectEvent()){
+        if(communicationNetworkServiceConnectionManager != null) {
+           communicationNetworkServiceConnectionManager.restart();
+        }
 
-            if(communicationNetworkServiceConnectionManager != null) {
-                communicationNetworkServiceConnectionManager.restart();
-            }
+        if(!this.register){
 
-            if(!this.register){
+            if(communicationRegistrationProcessNetworkServiceAgent.isAlive()){
 
-                if(communicationRegistrationProcessNetworkServiceAgent.isAlive()){
-                    System.out.println("communicationRegistrationProcessNetworkServiceAgent.isAlive() = " + communicationRegistrationProcessNetworkServiceAgent.isAlive());
-                    communicationRegistrationProcessNetworkServiceAgent = new CommunicationRegistrationProcessNetworkServiceAgent(this, wsCommunicationsCloudClientManager);
-                    communicationRegistrationProcessNetworkServiceAgent.start();
+                communicationRegistrationProcessNetworkServiceAgent.interrupt();
+                communicationRegistrationProcessNetworkServiceAgent = null;
 
-                    //communicationRegistrationProcessNetworkServiceAgent.setActive(Boolean.TRUE);
+                /*
+                 * Construct my profile and register me
+                 */
+                PlatformComponentProfile platformComponentProfileToReconnect =  wsCommunicationsCloudClientManager.getCommunicationsCloudClientConnection().constructPlatformComponentProfileFactory(this.getIdentityPublicKey(),
+                        this.getAlias().toLowerCase(),
+                        this.getName(),
+                        this.getNetworkServiceType(),
+                        this.getPlatformComponentType(),
+                        this.getExtraData());
+
+                try {
+                    /*
+                     * Register me
+                     */
+                    wsCommunicationsCloudClientManager.getCommunicationsCloudClientConnection().registerComponentForCommunication(this.getNetworkServiceType(), platformComponentProfileToReconnect);
+
+                } catch (CantRegisterComponentException e) {
+                    e.printStackTrace();
                 }
 
+                /*
+                 * Configure my new profile
+                 */
+                this.setPlatformComponentProfilePluginRoot(platformComponentProfileToReconnect);
+
+                /*
+                 * Initialize the connection manager
+                 */
+                this.initializeCommunicationNetworkServiceConnectionManager();
+
+
             }
-
-        }else{
-
-                if(communicationRegistrationProcessNetworkServiceAgent.isAlive()){
-                    this.register=Boolean.FALSE;
-                    System.out.println("communicationRegistrationProcessNetworkServiceAgent.isAlive() = " + communicationRegistrationProcessNetworkServiceAgent.isAlive());
-                    communicationRegistrationProcessNetworkServiceAgent = new CommunicationRegistrationProcessNetworkServiceAgent(this, wsCommunicationsCloudClientManager);
-                    communicationRegistrationProcessNetworkServiceAgent.start();
-
-                    //communicationRegistrationProcessNetworkServiceAgent.setActive(Boolean.TRUE);
-                }
-
 
         }
 

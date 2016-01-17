@@ -87,6 +87,7 @@ import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.events.Cli
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.events.VPNConnectionCloseNotificationEvent;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.WsCommunicationsCloudClientManager;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.contents.FermatMessage;
+import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.exceptions.CantRegisterComponentException;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.exceptions.CantRequestListException;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedPluginExceptionSeverity;
@@ -166,6 +167,8 @@ public class NetworkServiceNegotiationTransmissionPluginRoot extends AbstractNet
     //Represent the newLoggingLevel
     static Map<String, LogLevel> newLoggingLevel = new HashMap<>();
 
+    private boolean beforeRegistered;
+
     public NetworkServiceNegotiationTransmissionPluginRoot() {
         super(
                 new PluginVersionReference(new Version()),
@@ -177,6 +180,7 @@ public class NetworkServiceNegotiationTransmissionPluginRoot extends AbstractNet
                 EventSource.NETWORK_SERVICE_NEGOTIATION_TRANSMISSION
         );
         this.listenersAdded=new ArrayList<>();
+        beforeRegistered = false;
     }
 
     /*IMPLEMENTATION Service*/
@@ -580,6 +584,35 @@ public class NetworkServiceNegotiationTransmissionPluginRoot extends AbstractNet
     @Override
     public void handleCompleteComponentRegistrationNotificationEvent(PlatformComponentProfile platformComponentProfileRegistered) {
 
+        if (platformComponentProfileRegistered.getPlatformComponentType() == PlatformComponentType.COMMUNICATION_CLOUD_CLIENT && this.register){
+
+            if(communicationRegistrationProcessNetworkServiceAgent!=null){
+                communicationRegistrationProcessNetworkServiceAgent.stop();
+                communicationRegistrationProcessNetworkServiceAgent = null;
+            }
+            beforeRegistered = true;
+                              /*
+                 * Construct my profile and register me
+                 */
+            PlatformComponentProfile platformComponentProfileToReconnect =  wsCommunicationsCloudClientManager.getCommunicationsCloudClientConnection().constructPlatformComponentProfileFactory(this.getIdentityPublicKey(),
+                    this.getAlias().toLowerCase(),
+                    this.getName(),
+                    this.getNetworkServiceType(),
+                    this.getPlatformComponentType(),
+                    this.getExtraData());
+
+            try {
+                    /*
+                     * Register me
+                     */
+                wsCommunicationsCloudClientManager.getCommunicationsCloudClientConnection().registerComponentForCommunication(this.getNetworkServiceType(), platformComponentProfileToReconnect);
+
+            } catch (CantRegisterComponentException e) {
+                e.printStackTrace();
+            }
+
+        }
+
         //If the component registered have my profile and my identity public key
         if (platformComponentProfileRegistered.getPlatformComponentType()  == PlatformComponentType.NETWORK_SERVICE &&
                 platformComponentProfileRegistered.getNetworkServiceType()  == NetworkServiceType.NEGOTIATION_TRANSMISSION &&
@@ -590,23 +623,25 @@ public class NetworkServiceNegotiationTransmissionPluginRoot extends AbstractNet
             //Mark as register
             this.register = Boolean.TRUE;
 
-            //Negotiation Transmission Agent
-            negotiationTransmissionAgent = new NegotiationTransmissionAgent(
-                this,
-                databaseConnectionsDao,
-                databaseDao,
-                communicationNetworkServiceConnectionManager,
-                wsCommunicationsCloudClientManager,
-                platformComponentProfileRegistered,
-                errorManager,
-                new ArrayList<PlatformComponentProfile>(),
-                identity,
-                eventManager
-            );
+            if(!beforeRegistered) {
+                //Negotiation Transmission Agent
+                negotiationTransmissionAgent = new NegotiationTransmissionAgent(
+                        this,
+                        databaseConnectionsDao,
+                        databaseDao,
+                        communicationNetworkServiceConnectionManager,
+                        wsCommunicationsCloudClientManager,
+                        platformComponentProfileRegistered,
+                        errorManager,
+                        new ArrayList<PlatformComponentProfile>(),
+                        identity,
+                        eventManager
+                );
 
-            System.out.print("-----------------------\n NEGOTIATION TRANSMISSION CALL AGENT \n-----------------------\n TO: " + getName());
-            //Start agent
-            negotiationTransmissionAgent.start();
+                System.out.print("-----------------------\n NEGOTIATION TRANSMISSION CALL AGENT \n-----------------------\n TO: " + getName());
+                //Start agent
+                negotiationTransmissionAgent.start();
+            }
         }
     }
 
@@ -688,25 +723,47 @@ public class NetworkServiceNegotiationTransmissionPluginRoot extends AbstractNet
     public void handleClientSuccessfullReconnectNotificationEvent(FermatEvent fermatEvent) {
 
 
-        ClientSuccessReconnectNotificationEvent clientSuccessReconnectNotificationEvent = (ClientSuccessReconnectNotificationEvent) fermatEvent;
+        if(communicationNetworkServiceConnectionManager != null) {
+            communicationNetworkServiceConnectionManager.restart();
+        }
 
-        /*
-         * Is From the Event ClientSuccessfullReconnectNotificationEvent
-         */
-        if(clientSuccessReconnectNotificationEvent.getIsFromReconnectEvent()){
-
-            if(communicationNetworkServiceConnectionManager != null) {
-                communicationNetworkServiceConnectionManager.restart();
-            }
-
-            if(!this.register){
-                communicationRegistrationProcessNetworkServiceAgent.start();
-            }
-
-        }else{
+        if(!this.register){
 
             if(communicationRegistrationProcessNetworkServiceAgent != null) {
-                communicationRegistrationProcessNetworkServiceAgent.start();
+
+                communicationRegistrationProcessNetworkServiceAgent.stop();
+                communicationRegistrationProcessNetworkServiceAgent = null;
+
+                   /*
+                 * Construct my profile and register me
+                 */
+                PlatformComponentProfile platformComponentProfileToReconnect =  wsCommunicationsCloudClientManager.getCommunicationsCloudClientConnection().constructPlatformComponentProfileFactory(this.getIdentityPublicKey(),
+                        this.getAlias().toLowerCase(),
+                        this.getName(),
+                        this.getNetworkServiceType(),
+                        this.getPlatformComponentType(),
+                        this.getExtraData());
+
+                try {
+                    /*
+                     * Register me
+                     */
+                    wsCommunicationsCloudClientManager.getCommunicationsCloudClientConnection().registerComponentForCommunication(this.getNetworkServiceType(), platformComponentProfileToReconnect);
+
+                } catch (CantRegisterComponentException e) {
+                    e.printStackTrace();
+                }
+
+                /*
+                 * Configure my new profile
+                 */
+                this.setPlatformComponentProfilePluginRoot(platformComponentProfileToReconnect);
+
+                /*
+                 * Initialize the connection manager
+                 */
+                this.initializeCommunicationNetworkServiceConnectionManager();
+
             }
 
         }
