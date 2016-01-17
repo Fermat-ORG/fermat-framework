@@ -324,7 +324,7 @@ public class WsCommunicationsCloudClientConnection implements CommunicationsClie
 
 
         }catch (Exception e){
-            System.out.println("WsCommunicationsCloudClientConnection - Client Connection possibly is Close :"+e);
+            System.out.println("WsCommunicationsCloudClientConnection: "+e.getStackTrace());
             CantRegisterComponentException pluginStartException = new CantRegisterComponentException(CantRegisterComponentException.DEFAULT_MESSAGE, e, e.getLocalizedMessage(), e.getLocalizedMessage());
             throw pluginStartException;
 
@@ -384,7 +384,7 @@ public class WsCommunicationsCloudClientConnection implements CommunicationsClie
 
 
         }catch (Exception e){
-            System.out.println("WsCommunicationsCloudClientConnection - Client Connection possibly is Close :"+e);
+            System.out.println("WsCommunicationsCloudClientConnection+:"+e.getStackTrace());
             CantRegisterComponentException pluginStartException = new CantRegisterComponentException(CantRegisterComponentException.DEFAULT_MESSAGE, e, e.getLocalizedMessage(), e.getLocalizedMessage());
             throw pluginStartException;
 
@@ -439,7 +439,7 @@ public class WsCommunicationsCloudClientConnection implements CommunicationsClie
             }
 
         }catch (Exception e){
-            System.out.println("WsCommunicationsCloudClientConnection - Client Connection possibly is Close :"+e);
+            System.out.println("WsCommunicationsCloudClientConnection: "+e.getStackTrace());
             CantRequestListException pluginStartException = new CantRequestListException(CantRequestListException.DEFAULT_MESSAGE, e, e.getLocalizedMessage(), e.getLocalizedMessage());
             throw pluginStartException;
 
@@ -748,7 +748,7 @@ public class WsCommunicationsCloudClientConnection implements CommunicationsClie
             }
 
         }catch (Exception e){
-            System.out.println("WsCommunicationsCloudClientConnection - Client Connection possibly is Close :" + e);
+            System.out.println("WsCommunicationsCloudClientConnection: " + e);
             CantEstablishConnectionException pluginStartException = new CantEstablishConnectionException(CantEstablishConnectionException.DEFAULT_MESSAGE, e, e.getLocalizedMessage(), e.getLocalizedMessage());
             throw pluginStartException;
 
@@ -819,7 +819,7 @@ public class WsCommunicationsCloudClientConnection implements CommunicationsClie
             }
 
         }catch (Exception e){
-            System.out.println("WsCommunicationsCloudClientConnection - Client Connection possibly is Close :"+e);
+            System.out.println("WsCommunicationsCloudClientConnection - "+e.getStackTrace());
             CantEstablishConnectionException pluginStartException = new CantEstablishConnectionException(CantEstablishConnectionException.DEFAULT_MESSAGE, e, e.getLocalizedMessage(), e.getLocalizedMessage());
             throw pluginStartException;
         }
@@ -898,7 +898,7 @@ public class WsCommunicationsCloudClientConnection implements CommunicationsClie
             }
 
         }catch (Exception e){
-            System.out.println("WsCommunicationsCloudClientConnection - Client Connection possibly is Close :"+e);
+            System.out.println("WsCommunicationsCloudClientConnection: "+e.getStackTrace());
             CantEstablishConnectionException pluginStartException = new CantEstablishConnectionException(CantEstablishConnectionException.DEFAULT_MESSAGE, e, e.getLocalizedMessage(), e.getLocalizedMessage());
             throw pluginStartException;
         }

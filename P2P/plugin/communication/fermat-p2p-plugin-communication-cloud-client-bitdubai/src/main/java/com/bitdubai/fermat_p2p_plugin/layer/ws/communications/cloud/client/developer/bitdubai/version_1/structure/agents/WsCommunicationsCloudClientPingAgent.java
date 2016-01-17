@@ -19,11 +19,6 @@ import com.bitdubai.fermat_p2p_plugin.layer.ws.communications.cloud.client.devel
  */
 public class WsCommunicationsCloudClientPingAgent extends Thread {
 
-    /*
-     * Represent the sleep time for send new ping (120000 milliseconds)
-     */
-    private static final long SLEEP_TIME = 130000;
-    private boolean running;
     /**
      * Represent the wsCommunicationsCloudClientChannel
      */
@@ -35,7 +30,6 @@ public class WsCommunicationsCloudClientPingAgent extends Thread {
      */
     public WsCommunicationsCloudClientPingAgent(WsCommunicationsCloudClientChannel wsCommunicationsCloudClientChannel){
         this.wsCommunicationsCloudClientChannel = wsCommunicationsCloudClientChannel;
-        this.running = true;
     }
 
     /**
@@ -45,50 +39,18 @@ public class WsCommunicationsCloudClientPingAgent extends Thread {
     @Override
     public void run() {
 
-        /*
-         * While is no connect
-         */
-        while (running){
+        try {
 
-            try {
+            /*
+             * Send the ping message
+             */
+            wsCommunicationsCloudClientChannel.sendPingMessage();
 
-                if (wsCommunicationsCloudClientChannel.getConnection().isOpen()){
-
-                    //System.out.println(" WsCommunicationsCloudClientPingAgent - running");
-
-                    try {
-
-                        /*
-                         * If a pong message respond pending
-                         */
-                        if (wsCommunicationsCloudClientChannel.isPongMessagePending()){
-                            throw new RuntimeException("Connection maybe not active");
-                        }
-
-                        /*
-                         * Send the ping message
-                         */
-                        wsCommunicationsCloudClientChannel.sendPingMessage();
-
-                    } catch (Exception ex) {
-                        System.out.println(" WsCommunicationsCloudClientPingAgent - Error occurred sending ping to the node, closing the connection to remote node");
-                        wsCommunicationsCloudClientChannel.getConnection().close();
-                        wsCommunicationsCloudClientChannel.setIsRegister(Boolean.FALSE);
-                        wsCommunicationsCloudClientChannel.raiseClientConnectionLooseNotificationEvent();
-                        this.interrupt();
-                        break;
-                    }
-
-                }
-
-                if (!this.isInterrupted()){
-                    sleep(SLEEP_TIME);
-                }
-
-            } catch (InterruptedException e) {
-                running = false;
-                System.out.println(" WsCommunicationsCloudClientPingAgent - was stopped ");
-            }
+        } catch (Exception ex) {
+            System.out.println(" WsCommunicationsCloudClientPingAgent - Error occurred sending ping to the node, closing the connection to remote node");
+            wsCommunicationsCloudClientChannel.getConnection().close();
+            wsCommunicationsCloudClientChannel.setIsRegister(Boolean.FALSE);
+            wsCommunicationsCloudClientChannel.raiseClientConnectionLooseNotificationEvent();
         }
 
     }
