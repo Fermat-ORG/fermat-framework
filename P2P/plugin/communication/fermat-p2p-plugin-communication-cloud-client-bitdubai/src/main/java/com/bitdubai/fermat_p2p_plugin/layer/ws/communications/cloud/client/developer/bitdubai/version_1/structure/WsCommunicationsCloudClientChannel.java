@@ -17,7 +17,7 @@ import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.events.Com
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.contents.FermatPacket;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.enums.FermatPacketType;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.enums.JsonAttNamesConstants;
-import com.bitdubai.fermat_p2p_plugin.layer.ws.communications.cloud.client.developer.bitdubai.version_1.structure.agents.WsCommunicationsCloudClientAgent;
+import com.bitdubai.fermat_p2p_plugin.layer.ws.communications.cloud.client.developer.bitdubai.version_1.structure.agents.WsCommunicationsCloudClientSupervisorConnectionAgent;
 import com.bitdubai.fermat_p2p_plugin.layer.ws.communications.cloud.client.developer.bitdubai.version_1.structure.processors.FermatPacketProcessor;
 import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfaces.EventManager;
 import com.google.gson.JsonObject;
@@ -26,7 +26,6 @@ import org.java_websocket.WebSocket;
 import org.java_websocket.client.WebSocketClient;
 import org.java_websocket.drafts.Draft;
 import org.java_websocket.framing.Framedata;
-import org.java_websocket.framing.FramedataImpl1;
 import org.java_websocket.handshake.ServerHandshake;
 
 import java.net.URI;
@@ -55,12 +54,15 @@ public class WsCommunicationsCloudClientChannel extends WebSocketClient {
      */
     private EventManager eventManager;
 
+    /**
+     * Represent the wsCommunicationsCloudClientConnection
+     */
     private WsCommunicationsCloudClientConnection wsCommunicationsCloudClientConnection;
 
-    /*
-     * Represent the wsCommunicationsCloudClientAgent
+    /**
+     * Represent the wsCommunicationsCloudClientSupervisorConnectionAgent
      */
-    private WsCommunicationsCloudClientAgent wsCommunicationsCloudClientAgent;
+    private WsCommunicationsCloudClientSupervisorConnectionAgent wsCommunicationsCloudClientSupervisorConnectionAgent;
 
     /**
      * Represent the temporalIdentity
@@ -93,11 +95,6 @@ public class WsCommunicationsCloudClientChannel extends WebSocketClient {
     private boolean isRegister;
 
     /**
-     * Represent is the PongMessagePending
-     */
-    private boolean isPongMessagePending;
-
-    /**
      * Constructor with parameters
      *
      * @param serverUri
@@ -107,30 +104,14 @@ public class WsCommunicationsCloudClientChannel extends WebSocketClient {
      */
     private WsCommunicationsCloudClientChannel(URI serverUri, Draft draft, Map<String, String> headers, int connectTimeout, ECCKeyPair temporalIdentity, WsCommunicationsCloudClientConnection wsCommunicationsCloudClientConnection, EventManager eventManager, ECCKeyPair clientIdentity) {
         super(serverUri, draft, headers, connectTimeout);
-
-        System.out.println(" WsCommunicationsCloudClientChannel - clientIdentity = " + clientIdentity.getPrivateKey());
-
         this.clientIdentity = clientIdentity;
         this.temporalIdentity = temporalIdentity;
         this.packetProcessorsRegister = new ConcurrentHashMap<>();
         this.wsCommunicationsCloudClientConnection = wsCommunicationsCloudClientConnection;
         this.eventManager = eventManager;
         this.isRegister = Boolean.FALSE;
-        this.isPongMessagePending = Boolean.FALSE;
     }
 
-    /**
-     * Send ping message to the remote node, to verify is connection
-     * alive
-     */
-    public void sendPingMessage(){
-
-        //System.out.println(" WsCommunicationVPNClient - Sending ping message to remote node (" + getConnection().getRemoteSocketAddress() + ")");
-        FramedataImpl1 frame = new FramedataImpl1(Framedata.Opcode.PING);
-        frame.setFin(true);
-        getConnection().sendFrame(frame);
-        this.isPongMessagePending = Boolean.TRUE;
-    }
 
     /**
      * Receive pong message from the remote node, to verify is connection
@@ -141,10 +122,7 @@ public class WsCommunicationsCloudClientChannel extends WebSocketClient {
      */
     @Override
     public void onWebsocketPong(WebSocket conn, Framedata f) {
-        if (f.getOpcode() == Framedata.Opcode.PONG){
-            //System.out.println(" WsCommunicationVPNClient - Pong message receiveRemote from node ("+conn.getLocalSocketAddress()+") connection is alive");
-            this.isPongMessagePending = Boolean.FALSE;
-        }
+        System.out.println(" WsCommunicationsCloudClientChannel - onWebsocketPong = " + new String(f.getPayloadData().array()));
     }
 
     /**
@@ -299,8 +277,6 @@ public class WsCommunicationsCloudClientChannel extends WebSocketClient {
             e.printStackTrace();
         }
 
-        getWsCommunicationsCloudClientConnection().stopWsCommunicationsCloudClientPingAgent();
-
     }
 
     /**
@@ -449,11 +425,11 @@ public class WsCommunicationsCloudClientChannel extends WebSocketClient {
     }
 
     /**
-     * Set the wsCommunicationsCloudClientAgent
-     * @param wsCommunicationsCloudClientAgent
+     * Set the wsCommunicationsCloudClientSupervisorConnectionAgent
+     * @param wsCommunicationsCloudClientSupervisorConnectionAgent
      */
-    public void setWsCommunicationsCloudClientAgent(WsCommunicationsCloudClientAgent wsCommunicationsCloudClientAgent) {
-        this.wsCommunicationsCloudClientAgent = wsCommunicationsCloudClientAgent;
+    public void setWsCommunicationsCloudClientSupervisorConnectionAgent(WsCommunicationsCloudClientSupervisorConnectionAgent wsCommunicationsCloudClientSupervisorConnectionAgent) {
+        this.wsCommunicationsCloudClientSupervisorConnectionAgent = wsCommunicationsCloudClientSupervisorConnectionAgent;
     }
 
     /**
@@ -515,13 +491,5 @@ public class WsCommunicationsCloudClientChannel extends WebSocketClient {
      */
     public String getIdentityPublicKey(){
         return clientIdentity.getPublicKey();
-    }
-
-    /**
-     * Is Pong Message Pending
-     * @return boolean
-     */
-    public boolean isPongMessagePending() {
-        return isPongMessagePending;
     }
 }

@@ -27,8 +27,6 @@ import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.exceptions.Ca
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.exceptions.CantRegisterComponentException;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.exceptions.CantRequestListException;
 import com.bitdubai.fermat_p2p_plugin.layer.ws.communications.cloud.client.developer.bitdubai.version_1.WsCommunicationsCloudClientPluginRoot;
-import com.bitdubai.fermat_p2p_plugin.layer.ws.communications.cloud.client.developer.bitdubai.version_1.structure.agents.WsCommunicationsCloudClientAgent;
-import com.bitdubai.fermat_p2p_plugin.layer.ws.communications.cloud.client.developer.bitdubai.version_1.structure.agents.WsCommunicationsCloudClientPingAgent;
 import com.bitdubai.fermat_p2p_plugin.layer.ws.communications.cloud.client.developer.bitdubai.version_1.structure.processors.ClientSuccessfullyReconnectPacketProcessor;
 import com.bitdubai.fermat_p2p_plugin.layer.ws.communications.cloud.client.developer.bitdubai.version_1.structure.processors.CompleteComponentConnectionRequestPacketProcessor;
 import com.bitdubai.fermat_p2p_plugin.layer.ws.communications.cloud.client.developer.bitdubai.version_1.structure.processors.CompleteRegistrationComponentPacketProcessor;
@@ -53,7 +51,6 @@ import org.java_websocket.drafts.Draft_17;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.StringHttpMessageConverter;
 import org.springframework.util.LinkedMultiValueMap;
@@ -96,16 +93,6 @@ public class WsCommunicationsCloudClientConnection implements CommunicationsClie
     private WsCommunicationVPNClientManagerAgent wsCommunicationVPNClientManagerAgent;
 
     /**
-     * Represent the wsCommunicationsCloudClientAgent
-     */
-    private WsCommunicationsCloudClientAgent wsCommunicationsCloudClientAgent;
-
-    /**
-     * Represent the wsCommunicationsCloudClientPingAgent
-     */
-    private WsCommunicationsCloudClientPingAgent wsCommunicationsCloudClientPingAgent;
-
-    /**
      * Represent the locationManager
      */
     private LocationManager locationManager;
@@ -119,8 +106,6 @@ public class WsCommunicationsCloudClientConnection implements CommunicationsClie
     public WsCommunicationsCloudClientConnection(URI uri, EventManager eventManager, LocationManager locationManager, ECCKeyPair clientIdentity) {
         super();
         this.wsCommunicationsCloudClientChannel   = WsCommunicationsCloudClientChannel.constructWsCommunicationsCloudClientFactory(uri, new Draft_17(), this, eventManager, clientIdentity);
-        this.wsCommunicationsCloudClientAgent     = new WsCommunicationsCloudClientAgent(wsCommunicationsCloudClientChannel);
-        this.wsCommunicationsCloudClientPingAgent = new WsCommunicationsCloudClientPingAgent(wsCommunicationsCloudClientChannel);
         this.wsCommunicationVPNClientManagerAgent = WsCommunicationVPNClientManagerAgent.getInstance();
         this.locationManager                      = locationManager;
     }
@@ -955,7 +940,6 @@ public class WsCommunicationsCloudClientConnection implements CommunicationsClie
         return wsCommunicationVPNClientManagerAgent;
     }
 
-
     /**
      * (non-javadoc)
      * @see CommunicationsClientConnection#isRegister()
@@ -964,12 +948,7 @@ public class WsCommunicationsCloudClientConnection implements CommunicationsClie
         return wsCommunicationsCloudClientChannel.isRegister();
     }
 
-    /**
-     * Stop the ping agent
-     */
-    protected void stopWsCommunicationsCloudClientPingAgent(){
-        wsCommunicationsCloudClientPingAgent.interrupt();
-    }
+
 
     public void springTest(){
 
