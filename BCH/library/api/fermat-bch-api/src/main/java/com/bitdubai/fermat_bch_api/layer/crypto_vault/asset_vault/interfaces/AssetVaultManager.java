@@ -5,6 +5,9 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
 import com.bitdubai.fermat_api.layer.all_definition.enums.BlockchainNetworkType;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.money.CryptoAddress;
+import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.crypto_transactions.CryptoTransaction;
+import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.exceptions.CantGetCryptoTransactionException;
+import com.bitdubai.fermat_bch_api.layer.crypto_vault.asset_vault.exceptions.CantCreateBitcoinTransactionException;
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.asset_vault.exceptions.CantGetActiveRedeemPointAddressesException;
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.asset_vault.exceptions.CantGetActiveRedeemPointsException;
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.asset_vault.exceptions.CantGetExtendedPublicKeyException;
@@ -20,6 +23,7 @@ import com.bitdubai.fermat_bch_api.layer.crypto_vault.watch_only_vault.ExtendedP
 import org.bitcoinj.crypto.DeterministicKey;
 
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
 /**
@@ -96,4 +100,25 @@ public interface AssetVaultManager extends FermatManager, PlatformCryptoVault {
      * @param redeemPointPublicKey
      */
     void notifyUsedRedeemPointAddress(CryptoAddress cryptoAddress, String redeemPointPublicKey);
+
+    /**
+     * Based on the passed transaction chain of Transactions hashes and Blocks hashes, determines the entire path
+     * of the chain until the Genesis Transaction is reached.
+     * The genesis Transaction will be the first transaction in the map.
+     * @param transactionChain a Map with the form TransactionHash / BlockHash
+     * @return the CryptoTransaction that represents the GenesisTransaction
+     * @throws CantGetCryptoTransactionException
+     */
+    CryptoTransaction getGenesisTransaction(Map<String, String> transactionChain) throws CantGetCryptoTransactionException;
+
+    /**
+     * Will create a Bitcoin transaction and prepare it to be broadcasted later.
+     * This transaction locks the bitcoins associated with the passed input (if valid).
+     * @param inputTransaction the Transaction hash that will be used to get the funds from.
+     * @param addressTo the destination of the bitcoins.
+     * @return the Transaction Hash of the new transaction
+     * @throws CantCreateBitcoinTransactionException
+     */
+    String createBitcoinTransaction (String inputTransaction, CryptoAddress addressTo) throws CantCreateBitcoinTransactionException;
+
 }
