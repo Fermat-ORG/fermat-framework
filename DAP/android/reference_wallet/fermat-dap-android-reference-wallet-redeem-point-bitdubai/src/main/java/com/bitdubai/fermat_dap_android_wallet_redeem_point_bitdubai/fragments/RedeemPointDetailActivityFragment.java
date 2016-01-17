@@ -63,8 +63,6 @@ public class RedeemPointDetailActivityFragment extends FermatWalletListFragment<
     private List<UserRedeemed> users;
     private View rootView;
     private Toolbar toolbar;
-    private View assetDetailRedeemLayout;
-    private View assetDetailAppropriateLayout;
     private View noUsersView;
     private ErrorManager errorManager;
 
@@ -90,10 +88,6 @@ public class RedeemPointDetailActivityFragment extends FermatWalletListFragment<
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-
-        //configureToolbar();
-
-
         try {
             assetUserSession = (RedeemPointSession) appSession;
             moduleManager = assetUserSession.getModuleManager();
@@ -103,7 +97,7 @@ public class RedeemPointDetailActivityFragment extends FermatWalletListFragment<
         } catch (Exception ex) {
             CommonLogger.exception(TAG, ex.getMessage(), ex);
             if (errorManager != null)
-                errorManager.reportUnexpectedWalletException(Wallets.DAP_ASSET_ISSUER_WALLET,
+                errorManager.reportUnexpectedWalletException(Wallets.DAP_REDEEM_POINT_WALLET,
                         UnexpectedWalletExceptionSeverity.DISABLES_THIS_FRAGMENT, ex);
         }
     }
