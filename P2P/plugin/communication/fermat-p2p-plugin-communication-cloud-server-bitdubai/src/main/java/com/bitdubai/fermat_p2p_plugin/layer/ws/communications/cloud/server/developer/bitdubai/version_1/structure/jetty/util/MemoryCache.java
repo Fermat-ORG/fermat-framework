@@ -53,14 +53,9 @@ public class MemoryCache {
     private Map<String, ClientConnection> registeredClientConnectionsCache;
 
     /**
-     * Holds all the registered Communications Cloud Server by his client connection hash
-     */
-    private Map<Integer, PlatformComponentProfile> registeredCommunicationsCloudServerCache;
-
-    /**
      * Holds all the registered Communications Cloud Client by his client connection hash
      */
-    private Map<Integer, PlatformComponentProfile> registeredCommunicationsCloudClientCache;
+    private Map<String, PlatformComponentProfile> registeredCommunicationsCloudClientCache;
 
     /**
      * Holds all the registered network services by his network service type
@@ -101,7 +96,6 @@ public class MemoryCache {
         this.registeredClientConnectionsCache = new ConcurrentHashMap<>();this.packetProcessorsRegister                     = new ConcurrentHashMap<>();
         this.pendingRegisterClientConnectionsCache        = new ConcurrentHashMap<>();
         this.pendingRegisterClientConnectionsCache        = new ConcurrentHashMap<>();
-        this.registeredCommunicationsCloudServerCache     = new ConcurrentHashMap<>();
         this.registeredCommunicationsCloudClientCache     = new ConcurrentHashMap<>();
         this.registeredNetworkServicesCache               = new ConcurrentHashMap<>();
         this.registeredOtherPlatformComponentProfileCache = new ConcurrentHashMap<>();
@@ -245,20 +239,11 @@ public class MemoryCache {
     }
 
     /**
-     * Get the registeredCommunicationsCloudServerCache value
-     *
-     * @return registeredCommunicationsCloudServerCache current value
-     */
-    public synchronized  Map<Integer, PlatformComponentProfile> getRegisteredCommunicationsCloudServerCache() {
-        return registeredCommunicationsCloudServerCache;
-    }
-
-    /**
      * Get the registeredCommunicationsCloudClientCache value
      *
      * @return registeredCommunicationsCloudClientCache current value
      */
-    public synchronized  Map<Integer, PlatformComponentProfile> getRegisteredCommunicationsCloudClientCache() {
+    public synchronized  Map<String, PlatformComponentProfile> getRegisteredCommunicationsCloudClientCache() {
         return registeredCommunicationsCloudClientCache;
     }
 

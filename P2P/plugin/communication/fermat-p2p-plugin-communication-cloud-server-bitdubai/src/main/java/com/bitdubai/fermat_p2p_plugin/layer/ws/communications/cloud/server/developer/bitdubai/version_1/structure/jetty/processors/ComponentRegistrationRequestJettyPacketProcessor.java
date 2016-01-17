@@ -104,10 +104,6 @@ public class ComponentRegistrationRequestJettyPacketProcessor extends FermatJett
              */
             switch (platformComponentProfileToRegister.getPlatformComponentType()){
 
-                case COMMUNICATION_CLOUD_SERVER :
-                    registerCommunicationsCloudServerComponent(platformComponentProfileToRegister, receiveFermatPacket, clientConnection, networkServiceTypeApplicant);
-                    break;
-
                 case COMMUNICATION_CLOUD_CLIENT :
                     registerCommunicationsCloudClientComponent(platformComponentProfileToRegister, receiveFermatPacket, clientConnection, networkServiceTypeApplicant);
                     break;
@@ -158,45 +154,6 @@ public class ComponentRegistrationRequestJettyPacketProcessor extends FermatJett
 
     /**
      * Method that process the registration of the Communications
-     * Cloud Server Component
-     */
-    private void registerCommunicationsCloudServerComponent(final PlatformComponentProfile platformComponentProfileToRegister, final FermatPacket receiveFermatPacket, final ClientConnection clientConnection, final NetworkServiceType networkServiceTypeApplicant){
-
-        LOG.info("registerCommunicationsCloudServerComponent");
-
-        /*
-         * Add to the cache
-         */
-        MemoryCache.getInstance().getRegisteredCommunicationsCloudServerCache().put(clientConnection.hashCode(), platformComponentProfileToRegister);
-
-         /*
-         * Construct the respond
-         */
-        Gson gson = new Gson();
-        JsonObject jsonObject = new JsonObject();
-        jsonObject.addProperty(JsonAttNamesConstants.NETWORK_SERVICE_TYPE, networkServiceTypeApplicant.toString());
-        jsonObject.addProperty(JsonAttNamesConstants.PROFILE_TO_REGISTER, platformComponentProfileToRegister.toJson());
-
-        /*
-        * Construct a fermat packet whit the same platform component profile and different FermatPacketType
-        */
-        FermatPacket fermatPacketRespond = FermatPacketCommunicationFactory.constructFermatPacketEncryptedAndSinged(receiveFermatPacket.getSender(),                  //Destination
-                                                                                                                    clientConnection.getServerIdentity().getPublicKey(),                    //Sender
-                                                                                                                    gson.toJson(jsonObject),                          //Message Content
-                                                                                                                    FermatPacketType.COMPLETE_COMPONENT_REGISTRATION, //Packet type
-                                                                                                                    clientConnection.getServerIdentity().getPrivateKey());                  //Sender private key
-
-        /*
-         * Send the encode packet to the server
-         */
-         clientConnection.getSession().getAsyncRemote().sendText(FermatPacketEncoder.encode(fermatPacketRespond));
-
-        LOG.info("Total Communications Cloud Server Component Registered = " + MemoryCache.getInstance().getRegisteredCommunicationsCloudServerCache().size());
-
-    }
-
-    /**
-     * Method that process the registration of the Communications
      * Cloud Client Component
      */
     private void registerCommunicationsCloudClientComponent(final PlatformComponentProfile platformComponentProfileToRegister, final FermatPacket receiveFermatPacket, final ClientConnection clientConnection, final NetworkServiceType networkServiceTypeApplicant){
@@ -215,31 +172,20 @@ public class ComponentRegistrationRequestJettyPacketProcessor extends FermatJett
          */
         if (MemoryCache.getInstance().getPendingRegisterClientConnectionsCache().containsKey(receiveFermatPacket.getSender())){
 
-            PlatformComponentProfile oldReference = null;
-
-            /*
-             * Validate are not yet registered
-             */
-            for (PlatformComponentProfile registered : MemoryCache.getInstance().getRegisteredCommunicationsCloudClientCache().values()) {
-
-                if (registered.getIdentityPublicKey().equals(platformComponentProfileToRegister.getIdentityPublicKey())){
-                    LOG.info("Find a old reference");
-                    oldReference = registered;
-                }
-            }
-
             /*
              * If exist remove all reference
              */
-            if (oldReference != null) {
+            if (MemoryCache.getInstance().getRegisteredCommunicationsCloudClientCache().containsKey(platformComponentProfileToRegister.getIdentityPublicKey())) {
                 LOG.info("Removing old reference");
-                MemoryCache.getInstance().getRegisteredCommunicationsCloudClientCache().remove(oldReference);
+                MemoryCache.getInstance().getRegisteredCommunicationsCloudClientCache().remove(platformComponentProfileToRegister.getIdentityPublicKey());
+            }else{
+                LOG.info("No old reference found");
             }
 
             /*
              * Add to the cache
              */
-            MemoryCache.getInstance().getRegisteredCommunicationsCloudClientCache().put(clientConnection.getSession().hashCode(), platformComponentProfileToRegister);
+            MemoryCache.getInstance().getRegisteredCommunicationsCloudClientCache().put(platformComponentProfileToRegister.getIdentityPublicKey(), platformComponentProfileToRegister);
 
             /*
              * Remove from the PendingRegisterClientConnectionsCache
