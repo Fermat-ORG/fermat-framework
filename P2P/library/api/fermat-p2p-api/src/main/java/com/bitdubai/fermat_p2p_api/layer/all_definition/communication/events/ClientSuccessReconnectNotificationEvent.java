@@ -18,6 +18,16 @@ import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.enums.P2pE
  */
 public class ClientSuccessReconnectNotificationEvent extends AbstractP2PFermatEvent {
 
+    private boolean isFromReconnectEvent;
+
+    public boolean getIsFromReconnectEvent() {
+        return isFromReconnectEvent;
+    }
+
+    public void setIsFromReconnectEvent(boolean isFromReconnectEvent) {
+        this.isFromReconnectEvent = isFromReconnectEvent;
+    }
+
     /**
      * Constructor with parameter
      * @param p2pEventType

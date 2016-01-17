@@ -83,6 +83,7 @@ import com.bitdubai.fermat_cbp_plugin.layer.network_service.negotiation_transmis
 import com.bitdubai.fermat_p2p_api.layer.all_definition.common.network_services.abstract_classes.AbstractNetworkService;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.enums.P2pEventType;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.events.ClientConnectionCloseNotificationEvent;
+import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.events.ClientSuccessReconnectNotificationEvent;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.events.VPNConnectionCloseNotificationEvent;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.WsCommunicationsCloudClientManager;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.contents.FermatMessage;
@@ -686,11 +687,28 @@ public class NetworkServiceNegotiationTransmissionPluginRoot extends AbstractNet
     @Override
     public void handleClientSuccessfullReconnectNotificationEvent(FermatEvent fermatEvent) {
 
-        if(communicationNetworkServiceConnectionManager != null)
-            communicationNetworkServiceConnectionManager.restart();
 
-        if(!this.register){
-            communicationRegistrationProcessNetworkServiceAgent.start();
+        ClientSuccessReconnectNotificationEvent clientSuccessReconnectNotificationEvent = (ClientSuccessReconnectNotificationEvent) fermatEvent;
+
+        /*
+         * Is From the Event ClientSuccessfullReconnectNotificationEvent
+         */
+        if(clientSuccessReconnectNotificationEvent.getIsFromReconnectEvent()){
+
+            if(communicationNetworkServiceConnectionManager != null) {
+                communicationNetworkServiceConnectionManager.restart();
+            }
+
+            if(!this.register){
+                communicationRegistrationProcessNetworkServiceAgent.start();
+            }
+
+        }else{
+
+            if(communicationRegistrationProcessNetworkServiceAgent != null) {
+                communicationRegistrationProcessNetworkServiceAgent.start();
+            }
+
         }
 
     }

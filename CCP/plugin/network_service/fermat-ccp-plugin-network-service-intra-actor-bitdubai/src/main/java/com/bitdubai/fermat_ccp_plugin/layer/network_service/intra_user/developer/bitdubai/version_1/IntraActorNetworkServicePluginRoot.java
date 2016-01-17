@@ -100,6 +100,7 @@ import com.bitdubai.fermat_ccp_plugin.layer.network_service.intra_user.developer
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.contents.FermatMessageCommunication;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.enums.P2pEventType;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.events.ClientConnectionCloseNotificationEvent;
+import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.events.ClientSuccessReconnectNotificationEvent;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.events.VPNConnectionCloseNotificationEvent;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.MessagesStatus;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.WsCommunicationsCloudClientManager;
@@ -711,6 +712,8 @@ public class IntraActorNetworkServicePluginRoot extends AbstractPlugin implement
              * Mark as register
              */
             this.register = Boolean.TRUE;
+            communicationRegistrationProcessNetworkServiceAgent.interrupt();
+            communicationRegistrationProcessNetworkServiceAgent=null;
 
             initializeIntraActorAgent();
 
@@ -1274,7 +1277,6 @@ public class IntraActorNetworkServicePluginRoot extends AbstractPlugin implement
 
         if(communicationNetworkServiceConnectionManager != null) {
             communicationNetworkServiceConnectionManager.stop();
-            this.register = false;
         }
 
     }
@@ -1286,13 +1288,42 @@ public class IntraActorNetworkServicePluginRoot extends AbstractPlugin implement
     public void handleClientSuccessfullReconnectNotificationEvent(FermatEvent fermatEvent) {
 
         System.out.println("SuccessfullReconnectNotificationEvent");
-        if(communicationNetworkServiceConnectionManager != null) {
-            communicationNetworkServiceConnectionManager.restart();
-            this.register = true;
-        }
 
-        if(!this.register){
-            communicationRegistrationProcessNetworkServiceAgent.start();
+        ClientSuccessReconnectNotificationEvent clientSuccessReconnectNotificationEvent = (ClientSuccessReconnectNotificationEvent) fermatEvent;
+
+        /*
+         * Is From the Event ClientSuccessfullReconnectNotificationEvent
+         */
+        if(clientSuccessReconnectNotificationEvent.getIsFromReconnectEvent()){
+
+            if(communicationNetworkServiceConnectionManager != null) {
+                communicationNetworkServiceConnectionManager.restart();
+            }
+
+            if(!this.register){
+
+                if(communicationRegistrationProcessNetworkServiceAgent.isAlive()){
+                    System.out.println("communicationRegistrationProcessNetworkServiceAgent.isAlive() = " + communicationRegistrationProcessNetworkServiceAgent.isAlive());
+                    communicationRegistrationProcessNetworkServiceAgent = new CommunicationRegistrationProcessNetworkServiceAgent(this, wsCommunicationsCloudClientManager);
+                    communicationRegistrationProcessNetworkServiceAgent.start();
+
+                    //communicationRegistrationProcessNetworkServiceAgent.setActive(Boolean.TRUE);
+                }
+
+            }
+
+        }else{
+
+                if(communicationRegistrationProcessNetworkServiceAgent.isAlive()){
+                    this.register=Boolean.FALSE;
+                    System.out.println("communicationRegistrationProcessNetworkServiceAgent.isAlive() = " + communicationRegistrationProcessNetworkServiceAgent.isAlive());
+                    communicationRegistrationProcessNetworkServiceAgent = new CommunicationRegistrationProcessNetworkServiceAgent(this, wsCommunicationsCloudClientManager);
+                    communicationRegistrationProcessNetworkServiceAgent.start();
+
+                    //communicationRegistrationProcessNetworkServiceAgent.setActive(Boolean.TRUE);
+                }
+
+
         }
 
     }

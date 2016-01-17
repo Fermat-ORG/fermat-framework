@@ -132,6 +132,10 @@ public class CommunicationRegistrationProcessNetworkServiceAgent extends Thread 
         super.start();
     }
 
+    public void setActive(boolean active){
+        this.active=active;
+    }
+
     /**
      * Get the IsRunning
      * @return boolean

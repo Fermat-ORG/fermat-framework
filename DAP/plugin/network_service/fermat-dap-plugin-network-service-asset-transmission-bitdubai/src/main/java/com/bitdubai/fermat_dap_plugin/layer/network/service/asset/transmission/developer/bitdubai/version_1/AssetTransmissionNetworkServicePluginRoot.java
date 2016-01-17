@@ -86,6 +86,7 @@ import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.co
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.contents.FermatMessageCommunicationFactory;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.enums.P2pEventType;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.events.ClientConnectionCloseNotificationEvent;
+import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.events.ClientSuccessReconnectNotificationEvent;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.events.VPNConnectionCloseNotificationEvent;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.MessagesStatus;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.WsCommunicationsCloudClientManager;
@@ -766,11 +767,36 @@ public class AssetTransmissionNetworkServicePluginRoot extends AbstractPlugin im
     @Override
     public void handleClientSuccessfullReconnectNotificationEvent(FermatEvent fermatEvent) {
 
-        if(communicationNetworkServiceConnectionManager != null)
-            communicationNetworkServiceConnectionManager.restart();
+        ClientSuccessReconnectNotificationEvent clientSuccessReconnectNotificationEvent = (ClientSuccessReconnectNotificationEvent) fermatEvent;
 
-        if(!this.register){
-            communicationRegistrationProcessNetworkServiceAgent.start();
+        /*
+         * Is From the Event ClientSuccessfullReconnectNotificationEvent
+         */
+        if(clientSuccessReconnectNotificationEvent.getIsFromReconnectEvent()){
+
+            if(communicationNetworkServiceConnectionManager != null) {
+                communicationNetworkServiceConnectionManager.restart();
+            }
+
+            if(!this.register){
+
+                if(communicationRegistrationProcessNetworkServiceAgent.isAlive())
+                    communicationRegistrationProcessNetworkServiceAgent.interrupt();
+
+                communicationRegistrationProcessNetworkServiceAgent.start();
+
+            }
+
+        }else{
+
+            if(communicationRegistrationProcessNetworkServiceAgent != null) {
+
+                if(communicationRegistrationProcessNetworkServiceAgent.isAlive())
+                    communicationRegistrationProcessNetworkServiceAgent.interrupt();
+
+                communicationRegistrationProcessNetworkServiceAgent.start();
+            }
+
         }
 
     }
