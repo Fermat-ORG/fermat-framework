@@ -1,6 +1,8 @@
 package com.bitdubai.fermat_dap_plugin.layer.actor.network.service.asset.redeem_point.developer.bitdubai.version_1.communications;
 
+import com.bitdubai.fermat_api.layer.all_definition.components.interfaces.PlatformComponentProfile;
 import com.bitdubai.fermat_dap_plugin.layer.actor.network.service.asset.redeem_point.developer.bitdubai.version_1.AssetRedeemPointActorNetworkServicePluginRoot;
+import com.bitdubai.fermat_p2p_api.layer.p2p_communication.WsCommunicationsCloudClientManager;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.client.CommunicationsClientConnection;
 
 /**
@@ -22,7 +24,7 @@ public class CommunicationRegistrationProcessNetworkServiceAgent extends Thread 
     /**
      * Represent the communicationsClientConnection
      */
-    private CommunicationsClientConnection communicationsClientConnection;
+    private WsCommunicationsCloudClientManager communicationsClientConnection;
 
     /**
      * Represent the active
@@ -31,11 +33,10 @@ public class CommunicationRegistrationProcessNetworkServiceAgent extends Thread 
 
     /**
      * Constructor with parameters
-     *
      * @param assetUserActorNetworkServicePluginRoot
      * @param communicationsClientConnection
      */
-    public CommunicationRegistrationProcessNetworkServiceAgent(AssetRedeemPointActorNetworkServicePluginRoot assetUserActorNetworkServicePluginRoot, CommunicationsClientConnection communicationsClientConnection) {
+    public CommunicationRegistrationProcessNetworkServiceAgent(AssetRedeemPointActorNetworkServicePluginRoot assetUserActorNetworkServicePluginRoot, WsCommunicationsCloudClientManager communicationsClientConnection) {
         this.assetRedemPointActorNetworkServicePluginRoot = assetUserActorNetworkServicePluginRoot;
         this.communicationsClientConnection = communicationsClientConnection;
         this.active = Boolean.FALSE;
@@ -43,67 +44,75 @@ public class CommunicationRegistrationProcessNetworkServiceAgent extends Thread 
 
     /**
      * (non-javadoc)
-     *
      * @see Thread#run()
      */
     @Override
     public void run() {
-        while (active) {
-            if (assetRedemPointActorNetworkServicePluginRoot.isRegister()) {
-                try {
-                    sleep(MAX_SLEEP_TIME);
-                    continue;
-                } catch (InterruptedException e) {
-                    active = Boolean.FALSE;
-                    e.printStackTrace();
-                }
-            }
 
-            if (communicationsClientConnection.isRegister()) {
-                if (!assetRedemPointActorNetworkServicePluginRoot.isRegister()) {
+        while (active){
+
+            try {
+
+                if (communicationsClientConnection.getCommunicationsCloudClientConnection().isRegister() && !assetRedemPointActorNetworkServicePluginRoot.isRegister()){
+
+                    /*
+                     * Construct my profile and register me
+                     */
+                    PlatformComponentProfile platformComponentProfile =  communicationsClientConnection.getCommunicationsCloudClientConnection().constructPlatformComponentProfileFactory(assetRedemPointActorNetworkServicePluginRoot.getIdentityPublicKey(),
+                            assetRedemPointActorNetworkServicePluginRoot.getAlias().toLowerCase(),
+                            assetRedemPointActorNetworkServicePluginRoot.getName(),
+                            assetRedemPointActorNetworkServicePluginRoot.getNetworkServiceType(),
+                            assetRedemPointActorNetworkServicePluginRoot.getPlatformComponentType(),
+                            assetRedemPointActorNetworkServicePluginRoot.getExtraData());
+
                     /*
                      * Register me
                      */
-                    try {
-                        communicationsClientConnection.registerComponentForCommunication(assetRedemPointActorNetworkServicePluginRoot.getNetworkServiceType(), assetRedemPointActorNetworkServicePluginRoot.getPlatformComponentProfilePluginRoot());
-                                        /*
+                    communicationsClientConnection.getCommunicationsCloudClientConnection().registerComponentForCommunication(assetRedemPointActorNetworkServicePluginRoot.getNetworkServiceType(), platformComponentProfile);
+
+                    /*
+                     * Configure my new profile
+                     */
+                    assetRedemPointActorNetworkServicePluginRoot.setPlatformComponentProfilePluginRoot(platformComponentProfile);
+
+                    /*
+                     * Initialize the connection manager
+                     */
+                    assetRedemPointActorNetworkServicePluginRoot.initializeCommunicationNetworkServiceConnectionManager();
+
+                    /*
                      * Stop the agent
                      */
-                        active = Boolean.FALSE;
-                    } catch (Exception e) {
-                        try {
-                            e.printStackTrace();
-                            sleep(CommunicationRegistrationProcessNetworkServiceAgent.MAX_SLEEP_TIME);
-                        } catch (InterruptedException e1) {
-                            e1.printStackTrace();
-                            active = Boolean.FALSE;
-                        }
-                    }
-                }
-                if (!assetRedemPointActorNetworkServicePluginRoot.isRegister()) {
+                    active = Boolean.FALSE;
+
+                }else if (!assetRedemPointActorNetworkServicePluginRoot.isRegister()){
 
                     try {
-                        active = Boolean.TRUE;
                         sleep(CommunicationRegistrationProcessNetworkServiceAgent.SLEEP_TIME);
                     } catch (InterruptedException e) {
                         e.printStackTrace();
                         active = Boolean.FALSE;
                     }
-                }
-            } else {
-                try {
-                    sleep(MAX_SLEEP_TIME);
-                } catch (InterruptedException e) {
+
+                }else if (!assetRedemPointActorNetworkServicePluginRoot.isRegister()){
                     active = Boolean.FALSE;
+                }
+
+            }catch (Exception e){
+                try {
                     e.printStackTrace();
+                    sleep(CommunicationRegistrationProcessNetworkServiceAgent.MAX_SLEEP_TIME);
+                } catch (InterruptedException e1) {
+                    e1.printStackTrace();
+                    active = Boolean.FALSE;
                 }
             }
+
         }
     }
 
     /**
      * (non-javadoc)
-     *
      * @see Thread#start()
      */
     @Override
@@ -114,10 +123,8 @@ public class CommunicationRegistrationProcessNetworkServiceAgent extends Thread 
 
     /**
      * Get the IsRunning
-     *
      * @return boolean
      */
-
     public boolean getActive() {
         return active;
     }

@@ -447,7 +447,7 @@ public class NotificationSubAppModulePluginRoot extends AbstractPlugin implement
 
 
         poolNotification.add(notification);
-        notificationListener.notificate(notification);
+       // notificationListener.notificate(notification);
     }
 
     @Override

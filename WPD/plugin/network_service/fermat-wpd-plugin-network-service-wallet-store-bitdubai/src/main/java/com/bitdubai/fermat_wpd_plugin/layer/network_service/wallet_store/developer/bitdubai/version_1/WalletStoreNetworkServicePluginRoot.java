@@ -490,6 +490,10 @@ public class WalletStoreNetworkServicePluginRoot extends AbstractPlugin implemen
 //        if(communicationNetworkServiceConnectionManager != null)
 //            communicationNetworkServiceConnectionManager.restart();
 
+//        if(!this.register){
+//            communicationRegistrationProcessNetworkServiceAgent.start();
+//        }
+
     }
 
     @Override

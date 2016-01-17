@@ -7,7 +7,6 @@
 package com.bitdubai.fermat_p2p_plugin.layer.ws.communications.cloud.client.developer.bitdubai.version_1;
 
 import com.bitdubai.fermat_api.CantStartPluginException;
-import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.Service;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.abstract_classes.AbstractPlugin;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.annotations.NeededAddonReference;
@@ -18,8 +17,6 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.Layers;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
-import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEvent;
-import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEventHandler;
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEventListener;
 import com.bitdubai.fermat_api.layer.all_definition.util.Version;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.FileLifeSpan;
@@ -29,10 +26,10 @@ import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginTextFile;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantCreateFileException;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.FileNotFoundException;
 import com.bitdubai.fermat_api.layer.osa_android.location_system.LocationManager;
-import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.enums.P2pEventType;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.WsCommunicationsCloudClientManager;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.client.CommunicationsClientConnection;
 import com.bitdubai.fermat_p2p_plugin.layer.ws.communications.cloud.client.developer.bitdubai.version_1.structure.WsCommunicationsCloudClientConnection;
+import com.bitdubai.fermat_p2p_plugin.layer.ws.communications.cloud.client.developer.bitdubai.version_1.structure.agents.WsCommunicationsCloudClientSupervisorConnectionAgent;
 import com.bitdubai.fermat_p2p_plugin.layer.ws.communications.cloud.client.developer.bitdubai.version_1.structure.util.ServerConf;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedPluginExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
@@ -41,10 +38,12 @@ import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfac
 import org.java_websocket.WebSocketImpl;
 
 import java.net.URI;
+import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Timer;
-import java.util.TimerTask;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 
 /**
  * The Class <code>com.bitdubai.fermat_p2p_plugin.layer.communication.server.developer.bitdubai.version_1.WsCommunicationsCloudClientPluginRoot</code> is
@@ -75,10 +74,13 @@ public class WsCommunicationsCloudClientPluginRoot extends AbstractPlugin implem
     /**
      * Represent the SERVER_IP
      */
+    //public static final String SERVER_IP = ServerConf.SERVER_IP_PRODUCTION;
+    public static final String SERVER_IP = ServerConf.SERVER_IP_DEVELOPER_LOCAL;
 
-    public static final String SERVER_IP = ServerConf.SERVER_IP_PRODUCTION;
- //   public static final String SERVER_IP = ServerConf.SERVER_IP_DEVELOPER_LOCAL;
-
+    /**
+     * Represent the executor
+     */
+    private ScheduledExecutorService scheduledExecutorService;
 
     /**
      * Represent the uri
@@ -106,14 +108,13 @@ public class WsCommunicationsCloudClientPluginRoot extends AbstractPlugin implem
     private WsCommunicationsCloudClientConnection wsCommunicationsCloudClientConnection;
 
     /**
-     * Represent the reconnectTimer
-     */
-    private Timer reconnectTimer;
-
-    /**
      * Represent the isTaskCompleted
      */
     private boolean isTaskCompleted;
+
+    /**
+     * Represent the networkState
+     */
     private boolean networkState;
 
     /**
@@ -123,6 +124,7 @@ public class WsCommunicationsCloudClientPluginRoot extends AbstractPlugin implem
         super(new PluginVersionReference(new Version()));
         this.disableClientFlag = ServerConf.ENABLE_CLIENT;
         isTaskCompleted = Boolean.FALSE;
+        scheduledExecutorService = Executors.newScheduledThreadPool(2);
     }
 
     /**
@@ -178,25 +180,29 @@ public class WsCommunicationsCloudClientPluginRoot extends AbstractPlugin implem
 
             System.out.println("WsCommunicationsCloudClientPluginRoot - Starting plugin");
 
+            /*
+             * Construct the URI
+             */
+            this.uri = new URI(ServerConf.WS_PROTOCOL + WsCommunicationsCloudClientPluginRoot.SERVER_IP + ":" + ServerConf.DEFAULT_PORT + ServerConf.WEB_SOCKET_CONTEXT_PATH);
+
+            /*
+             * Initialize the identity for the cloud client
+             */
             initializeClientIdentity();
 
-            WebSocketImpl.DEBUG = false;
-            uri = new URI(ServerConf.WS_PROTOCOL + WsCommunicationsCloudClientPluginRoot.SERVER_IP + ":" + ServerConf.DEFAULT_PORT + ServerConf.WEB_SOCKET_CONTEXT_PATH);
-
+            /*
+             * Try to connect whit the cloud server
+             */
+            System.out.println(" WsCommunicationsCloudClientPluginRoot - ===================================");
+            System.out.println(" WsCommunicationsCloudClientPluginRoot - Connecting with the cloud server...");
+            System.out.println(" WsCommunicationsCloudClientPluginRoot - ===================================");
             wsCommunicationsCloudClientConnection = new WsCommunicationsCloudClientConnection(uri,eventManager, locationManager, clientIdentity);
             wsCommunicationsCloudClientConnection.initializeAndConnect();
 
             /*
-             * Handle connection loose
+             * Scheduled the reconnection agent
              */
-            FermatEventListener fermatEventListener = eventManager.getNewListener(P2pEventType.CLIENT_CONNECTION_LOOSE);
-            fermatEventListener.setEventHandler(new FermatEventHandler() {
-                @Override
-                public void handleEvent(FermatEvent fermatEvent) throws FermatException {
-                    reconnect();
-                }
-            });
-            eventManager.addListener(fermatEventListener);
+            scheduledExecutorService.scheduleAtFixedRate(new WsCommunicationsCloudClientSupervisorConnectionAgent(this), 10, 30, TimeUnit.SECONDS);
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -210,6 +216,28 @@ public class WsCommunicationsCloudClientPluginRoot extends AbstractPlugin implem
         this.serviceStatus = ServiceStatus.STARTED;
 
     }
+
+    /**
+     * Method that connect the client whit the server
+     *
+     * @throws URISyntaxException
+     */
+    public void connectClient() throws URISyntaxException {
+
+        System.out.println(" WsCommunicationsCloudClientPluginRoot - ***********************************");
+        System.out.println(" WsCommunicationsCloudClientPluginRoot - ReConnecting with the cloud server...");
+        System.out.println(" WsCommunicationsCloudClientPluginRoot - ***********************************");
+
+        WebSocketImpl.DEBUG = false;
+        if (wsCommunicationsCloudClientConnection != null){
+            wsCommunicationsCloudClientConnection.closeMainConnection();
+        }
+
+        wsCommunicationsCloudClientConnection = new WsCommunicationsCloudClientConnection(uri,eventManager, locationManager, clientIdentity);
+        wsCommunicationsCloudClientConnection.initializeAndConnect();
+
+    }
+
 
     /**
      * (non-Javadoc)
@@ -278,67 +306,6 @@ public class WsCommunicationsCloudClientPluginRoot extends AbstractPlugin implem
     @Override
     public void setNetworkState(boolean state) {
         networkState = state;
-    }
-
-
-    /**
-     * Handle de connection Loose event to try to reconnect
-     */
-    public void reconnect(){
-
-        System.out.println("WsCommunicationsCloudClientPluginRoot - Initiation of the reconnect process.");
-
-        try {
-
-            if (reconnectTimer == null && !isTaskCompleted){
-
-                System.out.println("WsCommunicationsCloudClientPluginRoot - Trying to reconnect in 10 seg");
-
-                reconnectTimer = new Timer();
-                reconnectTimer.schedule(new TimerTask() {
-                    @Override
-                    public void run() {
-                        System.out.println("WsCommunicationsCloudClientPluginRoot - Reconnecting");
-
-                        if (!getCommunicationsCloudClientConnection().isConnected()) {
-                            wsCommunicationsCloudClientConnection = null;
-                            wsCommunicationsCloudClientConnection = new WsCommunicationsCloudClientConnection(uri, eventManager, locationManager, clientIdentity);
-                            wsCommunicationsCloudClientConnection.initializeAndConnect();
-                            isTaskCompleted = Boolean.TRUE;
-                        }
-                    }
-                }, 10000);
-
-            }else {
-
-                if (!getCommunicationsCloudClientConnection().isConnected()){
-                    reconnectTimer.cancel();
-                    reconnectTimer = null;
-                    isTaskCompleted = Boolean.FALSE;
-                    reconnect();
-                }
-
-            }
-
-        }catch (Exception e){
-            e.printStackTrace();
-            System.out.println("WsCommunicationsCloudClientPluginRoot - Trying to reconnect on 40 seg");
-
-            if (reconnectTimer == null && !isTaskCompleted){
-
-                reconnectTimer = new Timer();
-                reconnectTimer.schedule(new TimerTask() {
-                    @Override
-                    public void run() {
-                        reconnect();
-                        isTaskCompleted = Boolean.TRUE;
-                    }
-                }, 30000);
-
-            }
-
-        }
-
     }
 
     /**
