@@ -75,7 +75,10 @@ public class WsCommunicationsCloudClientPluginRoot extends AbstractPlugin implem
     /**
      * Represent the SERVER_IP
      */
-     public static final String SERVER_IP = ServerConf.SERVER_IP_PRODUCCTION;
+
+    public static final String SERVER_IP = ServerConf.SERVER_IP_PRODUCTION;
+ //   public static final String SERVER_IP = ServerConf.SERVER_IP_DEVELOPER_LOCAL;
+
 
     /**
      * Represent the uri
@@ -111,6 +114,7 @@ public class WsCommunicationsCloudClientPluginRoot extends AbstractPlugin implem
      * Represent the isTaskCompleted
      */
     private boolean isTaskCompleted;
+    private boolean networkState;
 
     /**
      * Constructor
@@ -177,8 +181,7 @@ public class WsCommunicationsCloudClientPluginRoot extends AbstractPlugin implem
             initializeClientIdentity();
 
             WebSocketImpl.DEBUG = false;
-
-            uri = new URI(ServerConf.WS_PROTOCOL + WsCommunicationsCloudClientPluginRoot.SERVER_IP + ":" + ServerConf.DEFAULT_PORT);
+            uri = new URI(ServerConf.WS_PROTOCOL + WsCommunicationsCloudClientPluginRoot.SERVER_IP + ":" + ServerConf.DEFAULT_PORT + ServerConf.WEB_SOCKET_CONTEXT_PATH);
 
             wsCommunicationsCloudClientConnection = new WsCommunicationsCloudClientConnection(uri,eventManager, locationManager, clientIdentity);
             wsCommunicationsCloudClientConnection.initializeAndConnect();
@@ -194,7 +197,6 @@ public class WsCommunicationsCloudClientPluginRoot extends AbstractPlugin implem
                 }
             });
             eventManager.addListener(fermatEventListener);
-
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -273,33 +275,44 @@ public class WsCommunicationsCloudClientPluginRoot extends AbstractPlugin implem
         return getDisableClientFlag();
     }
 
+    @Override
+    public void setNetworkState(boolean state) {
+        networkState = state;
+    }
+
 
     /**
      * Handle de connection Loose event to try to reconnect
      */
     public void reconnect(){
 
+        System.out.println("WsCommunicationsCloudClientPluginRoot - Initiation of the reconnect process.");
+
         try {
 
             if (reconnectTimer == null && !isTaskCompleted){
+
+                System.out.println("WsCommunicationsCloudClientPluginRoot - Trying to reconnect in 10 seg");
 
                 reconnectTimer = new Timer();
                 reconnectTimer.schedule(new TimerTask() {
                     @Override
                     public void run() {
-                        System.out.println("WsCommunicationsCloudClientPluginRoot - trying to reconnect");
+                        System.out.println("WsCommunicationsCloudClientPluginRoot - Reconnecting");
 
                         if (!getCommunicationsCloudClientConnection().isConnected()) {
+                            wsCommunicationsCloudClientConnection = null;
                             wsCommunicationsCloudClientConnection = new WsCommunicationsCloudClientConnection(uri, eventManager, locationManager, clientIdentity);
                             wsCommunicationsCloudClientConnection.initializeAndConnect();
                             isTaskCompleted = Boolean.TRUE;
                         }
                     }
-                }, 5000);
+                }, 10000);
 
             }else {
 
-                if (getCommunicationsCloudClientConnection().isConnected()){
+                if (!getCommunicationsCloudClientConnection().isConnected()){
+                    reconnectTimer.cancel();
                     reconnectTimer = null;
                     isTaskCompleted = Boolean.FALSE;
                     reconnect();
@@ -309,7 +322,7 @@ public class WsCommunicationsCloudClientPluginRoot extends AbstractPlugin implem
 
         }catch (Exception e){
             e.printStackTrace();
-            System.out.println("WsCommunicationsCloudClientPluginRoot - trying to reconnect on 40 seg");
+            System.out.println("WsCommunicationsCloudClientPluginRoot - Trying to reconnect on 40 seg");
 
             if (reconnectTimer == null && !isTaskCompleted){
 
@@ -320,14 +333,13 @@ public class WsCommunicationsCloudClientPluginRoot extends AbstractPlugin implem
                         reconnect();
                         isTaskCompleted = Boolean.TRUE;
                     }
-                }, 40000);
+                }, 30000);
 
             }
 
         }
 
     }
-
 
     /**
      * Initialize the clientIdentity of this plugin
@@ -340,9 +352,9 @@ public class WsCommunicationsCloudClientPluginRoot extends AbstractPlugin implem
 
             System.out.println("Loading clientIdentity");
 
-         /*
-          * Load the file with the clientIdentity
-          */
+             /*
+              * Load the file with the clientIdentity
+              */
             PluginTextFile pluginTextFile = pluginFileSystem.getTextFile(pluginId, "private", "clientIdentity", FilePrivacy.PRIVATE, FileLifeSpan.PERMANENT);
             String content = pluginTextFile.getContent();
 

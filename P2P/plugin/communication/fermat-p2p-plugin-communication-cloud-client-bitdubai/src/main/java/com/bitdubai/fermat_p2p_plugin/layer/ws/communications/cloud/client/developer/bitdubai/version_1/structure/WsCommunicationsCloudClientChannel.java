@@ -277,6 +277,7 @@ public class WsCommunicationsCloudClientChannel extends WebSocketClient {
         try {
             switch (code) {
 
+                case 1002:
                 case 1006:
                         raiseClientConnectionLooseNotificationEvent();
                         System.out.println(" WsCommunicationsCloudClientChannel - Connection loose");
@@ -284,7 +285,7 @@ public class WsCommunicationsCloudClientChannel extends WebSocketClient {
 
                 default:
 
-                        if (reason.contains("ENETUNREACH")){
+                        if (reason.contains("ENETUNREACH") || reason.contains("connect failed:ETIMEDOUT (Connection timed out)")){
                             raiseClientConnectionLooseNotificationEvent();
                         }else{
                             raiseClientConnectionCloseNotificationEvent();
@@ -308,12 +309,10 @@ public class WsCommunicationsCloudClientChannel extends WebSocketClient {
      */
     @Override
     public void onError(Exception ex) {
-
         System.out.println(" --------------------------------------------------------------------- ");
         System.out.println(" WsCommunicationsCloudClientChannel - Starting method onError");
         ex.printStackTrace();
-        getConnection().closeConnection(1000, ex.getLocalizedMessage());
-
+        getConnection().closeConnection(1002, ex.getLocalizedMessage());
     }
 
     /**
