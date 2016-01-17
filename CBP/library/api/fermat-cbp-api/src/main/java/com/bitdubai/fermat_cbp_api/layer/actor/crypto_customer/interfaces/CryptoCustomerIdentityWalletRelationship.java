@@ -15,8 +15,6 @@ public interface CryptoCustomerIdentityWalletRelationship {
 
     CryptoCustomerIdentityWalletRelationshipRecord updateCustomerIdentityWalletRelationship(UUID relationshipId, String walletPublicKey, String identityPublicKey) throws com.bitdubai.fermat_cbp_api.layer.actor.crypto_customer.exceptions.CantUpdateCustomerIdentiyWalletRelationshipException;
 
-    void deleteCustomerIdentityWalletRelationship(UUID relationshipId) throws CantDeleteCustomerIdentiyWalletRelationshipException;
-
     Collection<CryptoCustomerIdentityWalletRelationshipRecord> getAllCustomerIdentityWalletRelationships() throws CantGetCustomerIdentiyWalletRelationshipException;
 
     CryptoCustomerIdentityWalletRelationshipRecord getCustomerIdentityWalletRelationships(UUID relationshipId) throws CantGetCustomerIdentiyWalletRelationshipException;

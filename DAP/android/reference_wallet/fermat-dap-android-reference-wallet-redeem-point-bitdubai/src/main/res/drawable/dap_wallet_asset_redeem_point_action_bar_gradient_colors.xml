@@ -5,8 +5,8 @@
 
     <gradient
         android:angle="180"
-        android:startColor="@color/dap_wallet_asset_user_gradient_start_color"
-        android:endColor="@color/dap_wallet_asset_user_gradient_end_color"
+        android:startColor="@color/dap_wallet_redeem_point_gradient_start_color"
+        android:endColor="@color/dap_wallet_redeem_point_gradient_end_color"
         android:type="linear" />
 
 </shape>

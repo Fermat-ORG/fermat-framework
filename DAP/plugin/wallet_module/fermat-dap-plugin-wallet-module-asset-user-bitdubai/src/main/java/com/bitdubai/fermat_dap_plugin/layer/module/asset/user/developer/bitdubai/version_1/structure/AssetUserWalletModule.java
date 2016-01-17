@@ -1,5 +1,7 @@
 package com.bitdubai.fermat_dap_plugin.layer.module.asset.user.developer.bitdubai.version_1.structure;
 
+import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantCreateFileException;
+import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.FileNotFoundException;
 import com.bitdubai.fermat_dap_api.layer.all_definition.digital_asset.DigitalAssetMetadata;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.redeem_point.interfaces.ActorAssetRedeemPoint;
 import com.bitdubai.fermat_dap_api.layer.dap_identity.asset_user.interfaces.IdentityAssetUser;
@@ -12,8 +14,10 @@ import com.bitdubai.fermat_dap_api.layer.dap_transaction.user_redemption.excepti
 import com.bitdubai.fermat_dap_api.layer.dap_transaction.user_redemption.interfaces.UserRedemptionManager;
 import com.bitdubai.fermat_dap_api.layer.dap_wallet.asset_user_wallet.interfaces.AssetUserWalletList;
 import com.bitdubai.fermat_dap_api.layer.dap_wallet.asset_user_wallet.interfaces.AssetUserWalletManager;
+import com.bitdubai.fermat_dap_api.layer.dap_wallet.common.exceptions.CantGetTransactionsException;
 import com.bitdubai.fermat_dap_api.layer.dap_wallet.common.exceptions.CantLoadWalletException;
 
+import java.util.HashMap;
 import java.util.List;
 
 /**
@@ -41,14 +45,28 @@ public class AssetUserWalletModule {
     }
 
 
-    public void redeemAssetToRedeemPoint(String digitalAssetPublicKey, ActorAssetRedeemPoint actorAssetRedeemPoint) throws CantRedeemDigitalAssetException {
+    public void redeemAssetToRedeemPoint(String digitalAssetPublicKey, String walletPublicKey, List<ActorAssetRedeemPoint> actorAssetRedeemPoint) throws CantRedeemDigitalAssetException {
         String context = "Asset Public Key: " + digitalAssetPublicKey + " - ActorAssetRedeemPoint: " + actorAssetRedeemPoint;
         try {
-            DigitalAssetMetadata digitalAssetMetadata = assetUserWalletManager.loadAssetUserWallet("walletPublicKeyTest").getDigitalAssetMetadata(digitalAssetPublicKey);
-            userRedemptionManager.redeemAssetToRedeemPoint(digitalAssetMetadata, actorAssetRedeemPoint, "walletPublicKeyTest");
-        } catch (CantGetDigitalAssetFromLocalStorageException | CantLoadWalletException e) {
+            if (actorAssetRedeemPoint.isEmpty()) {
+                throw new CantRedeemDigitalAssetException(null, context, "THE REDEEM POINT LIST IS EMPTY.");
+            }
+            walletPublicKey = "walletPublicKeyTest"; //TODO: Solo para la prueba del Redemption
+            HashMap<DigitalAssetMetadata, ActorAssetRedeemPoint> hashMap = createRedemptionMap(walletPublicKey, digitalAssetPublicKey, actorAssetRedeemPoint);
+            userRedemptionManager.redeemAssetToRedeemPoint(hashMap, walletPublicKey);
+        } catch (CantGetDigitalAssetFromLocalStorageException | CantLoadWalletException | CantGetTransactionsException | FileNotFoundException | CantCreateFileException e) {
             throw new CantRedeemDigitalAssetException(e, context, null);
         }
+    }
+
+
+    private HashMap<DigitalAssetMetadata, ActorAssetRedeemPoint> createRedemptionMap(String walletPublicKey, String assetPublicKey, List<ActorAssetRedeemPoint> redeemPoints) throws CantGetTransactionsException, FileNotFoundException, CantCreateFileException, CantLoadWalletException, CantGetDigitalAssetFromLocalStorageException {
+        HashMap<DigitalAssetMetadata, ActorAssetRedeemPoint> hashMap = new HashMap<>();
+        for (ActorAssetRedeemPoint redeemPoint : redeemPoints) {
+            DigitalAssetMetadata digitalAssetMetadata = assetUserWalletManager.loadAssetUserWallet(walletPublicKey).getDigitalAssetMetadata(assetPublicKey);
+            hashMap.put(digitalAssetMetadata, redeemPoint);
+        }
+        return hashMap;
     }
 
 

@@ -104,11 +104,15 @@ public class UserRedemptionDatabaseFactory implements DealsWithPluginDatabaseSys
 
             DatabaseTableFactory assetDeliveringTable = databaseFactory.newTableFactory(ownerId, UserRedemptionDatabaseConstants.USER_REDEMPTION_DELIVERING_TABLE_NAME);
 
-            assetDeliveringTable.addColumn(UserRedemptionDatabaseConstants.USER_REDEMPTION_DELIVERING_MESSAGE_ID_COLUMN_NAME, DatabaseDataType.STRING, 255, Boolean.TRUE);
+            assetDeliveringTable.addColumn(UserRedemptionDatabaseConstants.USER_REDEMPTION_DELIVERING_TRANSACTION_ID_COLUMN_NAME, DatabaseDataType.STRING, 255, Boolean.TRUE);
             assetDeliveringTable.addColumn(UserRedemptionDatabaseConstants.USER_REDEMPTION_DELIVERING_GENESIS_TRANSACTION_COLUMN_NAME, DatabaseDataType.STRING, 100, Boolean.FALSE);
-            assetDeliveringTable.addColumn(UserRedemptionDatabaseConstants.USER_REDEMPTION_DELIVERING_MESSAGE_TYPE_COLUMN_NAME, DatabaseDataType.STRING, 10, Boolean.FALSE);
-            assetDeliveringTable.addColumn(UserRedemptionDatabaseConstants.USER_REDEMPTION_DELIVERING_TIMESTAMP_COLUMN_NAME, DatabaseDataType.LONG_INTEGER, 100, Boolean.FALSE);
-            assetDeliveringTable.addColumn(UserRedemptionDatabaseConstants.USER_REDEMPTION_DELIVERING_EVENT_ID_COLUMN_NAME, DatabaseDataType.STRING, 255, Boolean.FALSE);
+            assetDeliveringTable.addColumn(UserRedemptionDatabaseConstants.USER_REDEMPTION_DELIVERING_ASSET_PUBLICKEY_COLUMN_NAME, DatabaseDataType.STRING, 100, Boolean.FALSE);
+            assetDeliveringTable.addColumn(UserRedemptionDatabaseConstants.USER_REDEMPTION_DELIVERING_REPO_PUBLICKEY_COLUMN_NAME, DatabaseDataType.STRING, 100, Boolean.FALSE);
+            assetDeliveringTable.addColumn(UserRedemptionDatabaseConstants.USER_REDEMPTION_DELIVERING_START_TIME_COLUMN_NAME, DatabaseDataType.LONG_INTEGER, 0, Boolean.FALSE);
+            assetDeliveringTable.addColumn(UserRedemptionDatabaseConstants.USER_REDEMPTION_DELIVERING_TIMEOUT_COLUMN_NAME, DatabaseDataType.LONG_INTEGER, 0, Boolean.FALSE);
+            assetDeliveringTable.addColumn(UserRedemptionDatabaseConstants.USER_REDEMPTION_DELIVERING_STATE_COLUMN_NAME, DatabaseDataType.STRING, 10, Boolean.FALSE);
+            assetDeliveringTable.addColumn(UserRedemptionDatabaseConstants.USER_REDEMPTION_DELIVERING_SENT_GENESISTX_COLUMN_NAME, DatabaseDataType.STRING, 100, Boolean.FALSE);
+            assetDeliveringTable.addColumn(UserRedemptionDatabaseConstants.USER_REDEMPTION_DELIVERING_ATTEMPT_NUMBER_COLUMN_NAME, DatabaseDataType.STRING, 255, Boolean.FALSE);
 
             assetDeliveringTable.addIndex(UserRedemptionDatabaseConstants.USER_REDEMPTION_DELIVERING_TABLE_FIRST_KEY_COLUMN);
 

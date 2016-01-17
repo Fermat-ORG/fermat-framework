@@ -319,7 +319,7 @@ public class AssetAppropriationMonitorAgent implements Agent {
                             AssetAppropriationDigitalAssetTransactionPluginRoot.debugAssetAppropriation("This transaction failed to have a crypto address... Returning to previous state");
                             dao.updateTransactionStatusAppropriationStarted(record.transactionRecordId());
                         } else {
-                            String genesisTransaction = assetVaultManager.sendAssetBitcoins(record.assetMetadata().getGenesisTransaction(), null, record.addressTo());
+                            String genesisTransaction = assetVaultManager.sendAssetBitcoins(record.assetMetadata().getGenesisTransaction(), record.assetMetadata().getGenesisBlock(), record.addressTo());
                             dao.updateGenesisTransaction(genesisTransaction, record.transactionRecordId());
                             dao.updateTransactionStatusBitcoinsSent(record.transactionRecordId());
                             AssetAppropriationDigitalAssetTransactionPluginRoot.debugAssetAppropriation("Bitcoins sent!");

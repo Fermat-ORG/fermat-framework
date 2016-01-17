@@ -63,6 +63,8 @@ public class CommunicationRegistrationProcessNetworkServiceAgent extends Thread 
         while (active){
             try{
 
+                System.out.println("communicationsClientConnection.isRegister() :"+communicationsClientConnection.isRegister());
+
                 if (communicationsClientConnection.isRegister() && !networkService.isRegister()){
 
                     /*
@@ -98,6 +100,8 @@ public class CommunicationRegistrationProcessNetworkServiceAgent extends Thread 
                 }else if (!networkService.isRegister()){
 
                     try {
+
+                        System.out.println(" CommunicationRegistrationProcessNetworkServiceAgent - sleep for :"+SLEEP_TIME);
                         sleep(CommunicationRegistrationProcessNetworkServiceAgent.SLEEP_TIME);
                     } catch (InterruptedException e) {
                         e.printStackTrace();

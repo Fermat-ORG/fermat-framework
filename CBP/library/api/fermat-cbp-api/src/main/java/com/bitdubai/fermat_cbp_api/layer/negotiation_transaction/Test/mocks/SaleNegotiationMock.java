@@ -15,104 +15,110 @@ import java.util.UUID;
 
 /**
  * This object is only for testing
- * Created by Manuel Perez (darkpriestrelative@gmail.com) on 28/12/15.
+ * Created by Yordin Alayn 04.01.16.
  */
 public class SaleNegotiationMock implements CustomerBrokerSaleNegotiation {
+    private final UUID   negotiationId;
+    private final String publicKeyCustomer;
+    private final String publicKeyBroker;
+    private final Long   startDataTime;
+    private final Long   negotiationExpirationDate;
+    private NegotiationStatus statusNegotiation;
+    private final Collection<Clause> clauses;
+
+    private final Boolean nearExpirationDatetime;
+
+    private Long   lastNegotiationUpdateDate;
+    private String cancelReason;
+    private String memo;
+
+    public SaleNegotiationMock(
+            UUID   negotiationId,
+            String publicKeyCustomer,
+            String publicKeyBroker,
+            Long startDataTime,
+            Long negotiationExpirationDate,
+            NegotiationStatus statusNegotiation,
+            Collection<Clause> clauses,
+            Boolean nearExpirationDatetime
+    ){
+        this.negotiationId = negotiationId;
+        this.publicKeyCustomer = publicKeyCustomer;
+        this.publicKeyBroker = publicKeyBroker;
+        this.startDataTime = startDataTime;
+        this.negotiationExpirationDate = negotiationExpirationDate;
+        this.statusNegotiation = statusNegotiation;
+        this.clauses = clauses;
+        this.nearExpirationDatetime = nearExpirationDatetime;
+    }
+
     @Override
     public String getCustomerPublicKey() {
-        return "CustomerPublicKey";
+        return this.publicKeyCustomer;
     }
 
     @Override
     public String getBrokerPublicKey() {
-        return "BrokerPublicKey";
+        return this.publicKeyBroker;
     }
 
     @Override
     public UUID getNegotiationId() {
-        return UUID.fromString("550e8400-e29b-41d4-a716-446655440000");
+        return this.negotiationId;
     }
 
     @Override
     public Long getStartDate() {
-        return Long.valueOf(1248);
+        return this.startDataTime;
     }
 
     @Override
     public Long getLastNegotiationUpdateDate() {
-        return Long.valueOf(1248);
+        return this.lastNegotiationUpdateDate;
     }
 
     @Override
     public void setLastNegotiationUpdateDate(Long lastNegotiationUpdateDate) {
-        //Not implemented in this mock
+        this.lastNegotiationUpdateDate = lastNegotiationUpdateDate;
     }
 
     @Override
     public Long getNegotiationExpirationDate() {
-        return Long.valueOf(2048);
+        return this.negotiationExpirationDate;
     }
 
     @Override
     public NegotiationStatus getStatus() {
-        return NegotiationStatus.CLOSED;
+        return this.statusNegotiation;
     }
 
     @Override
     public Boolean getNearExpirationDatetime() {
-        return Boolean.FALSE;
+        return this.nearExpirationDatetime;
     }
 
     @Override
-    public Collection<Clause> getClauses() throws CantGetListClauseException {
-        Collection<Clause> clauses = new ArrayList<>();
-        clauses.add(new ClauseMock(UUID.randomUUID(),
-                ClauseType.BROKER_CURRENCY,
-                CurrencyType.BANK_MONEY.getCode()));
-        clauses.add(new ClauseMock(UUID.randomUUID(),
-                ClauseType.BROKER_CURRENCY_QUANTITY,
-                "1961"));
-        clauses.add(new ClauseMock(UUID.randomUUID(),
-                ClauseType.BROKER_CURRENCY,
-                CurrencyType.BANK_MONEY.getCode()));
-        clauses.add(new ClauseMock(UUID.randomUUID(),
-                ClauseType.BROKER_DATE_TIME_TO_DELIVER,
-                "1000"));
-        clauses.add(new ClauseMock(UUID.randomUUID(),
-                ClauseType.CUSTOMER_CURRENCY_QUANTITY,
-                "2000"));
-        clauses.add(new ClauseMock(UUID.randomUUID(),
-                ClauseType.CUSTOMER_CURRENCY,
-                CurrencyType.CASH_ON_HAND_MONEY.getCode()));
-        clauses.add(new ClauseMock(UUID.randomUUID(),
-                ClauseType.CUSTOMER_DATE_TIME_TO_DELIVER,
-                "100"));
-        clauses.add(new ClauseMock(UUID.randomUUID(),
-                ClauseType.CUSTOMER_PAYMENT_METHOD,
-                ContractClauseType.CASH_ON_HAND.getCode()));
-        clauses.add(new ClauseMock(UUID.randomUUID(),
-                ClauseType.BROKER_PAYMENT_METHOD,
-                ContractClauseType.BANK_TRANSFER.getCode()));
-        return clauses;
+    public Collection<Clause> getClauses() {
+        return this.clauses;
     }
 
     @Override
     public void setCancelReason(String cancelReason) {
-        //Not implemented in this mock
+        this.cancelReason = cancelReason;
     }
 
     @Override
     public String getCancelReason() {
-        return null;
+        return this.cancelReason;
     }
 
     @Override
     public void setMemo(String memo) {
-
+        this.memo = memo;
     }
 
     @Override
     public String getMemo() {
-        return "Mock memo";
+        return this.memo;
     }
 }

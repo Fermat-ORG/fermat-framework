@@ -92,7 +92,7 @@ public final class AssetVerification {
         /**
          * I will get the genesis transaction from the CryptoNetwork
          */
-        List<CryptoTransaction> transactionListFromCryptoNetwork = bitcoinNetworkManager.getCryptoTransaction(genesisTransaction);
+        List<CryptoTransaction> transactionListFromCryptoNetwork = bitcoinNetworkManager.getCryptoTransactions(genesisTransaction);
         if (transactionListFromCryptoNetwork.size() == 0) {
             /**
              * If I didn't get it, I will get the child of the genesis Transaction
@@ -123,6 +123,15 @@ public final class AssetVerification {
     public static boolean isAvailableBalanceInAssetVault(AssetVaultManager assetVaultManager, long genesisAmount, String genesisTransaction) {
         long availableBalanceForTransaction = assetVaultManager.getAvailableBalanceForTransaction(genesisTransaction);
         return availableBalanceForTransaction < genesisAmount;
+    }
+
+
+    public static CryptoTransaction foundCryptoTransaction(BitcoinNetworkManager bitcoinNetworkManager, DigitalAssetMetadata digitalAssetMetadata) throws CantGetCryptoTransactionException {
+        CryptoTransaction cryptoTransaction = bitcoinNetworkManager.getCryptoTransactionFromBlockChain(digitalAssetMetadata.getGenesisTransaction(), digitalAssetMetadata.getGenesisBlock());
+        if (cryptoTransaction == null) {
+            throw new CantGetCryptoTransactionException(CantGetCryptoTransactionException.DEFAULT_MESSAGE, null, "Getting the genesis transaction from Crypto Network", "The crypto transaction received is null");
+        }
+        return cryptoTransaction;
     }
 
     public static boolean isValidContract(DigitalAssetContract digitalAssetContract) {

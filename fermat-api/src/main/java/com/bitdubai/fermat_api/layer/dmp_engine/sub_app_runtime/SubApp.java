@@ -56,7 +56,7 @@ public interface SubApp extends FermatApp,FermatStructure {
      * @param activity
      */
 
-    public void setStartActivity(Activities activity);
+    public void addPosibleStartActivity(Activities activity);
 
     /**
      *  Available languages

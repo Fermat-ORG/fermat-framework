@@ -1,8 +1,8 @@
 package com.bitdubai.fermat_dap_android_wallet_asset_issuer_bitdubai.models;
 
+import com.bitdubai.fermat_dap_api.layer.all_definition.util.DAPStandardFormats;
+
 import java.sql.Timestamp;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 
 /**
  * Created by Penny on 01/08/16.
@@ -36,8 +36,7 @@ public class UserAppropiate {
 
     public String getFormattedAppropiateDate() {
         if (appropiateDate == null) return "No date";
-        DateFormat df = new SimpleDateFormat("dd MMM yyyy");
-        return df.format(appropiateDate);
+        return DAPStandardFormats.DATE_FORMAT.format(appropiateDate);
     }
 
     public void setAppropiateDate(Timestamp appropiateDate) {

@@ -9,6 +9,7 @@ package com.bitdubai.fermat_p2p_api.layer.all_definition.common.network_services
 import com.bitdubai.fermat_api.layer.all_definition.components.interfaces.PlatformComponentProfile;
 import com.bitdubai.fermat_api.layer.all_definition.network_service.interfaces.NetworkService;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.common.network_services.abstract_classes.AbstractNetworkService;
+import com.bitdubai.fermat_p2p_api.layer.all_definition.common.network_services.abstract_classes.AbstractNetworkServiceV2;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.client.CommunicationsClientConnection;
 
 
@@ -32,6 +33,10 @@ public class CommunicationRegistrationProcessNetworkServiceAgent<NS extends Abst
      * Represent the networkService
      */
     private NS networkService;
+    /**
+     * Represent the networkService
+     */
+    private AbstractNetworkServiceV2 abstractNetworkServiceV2;
 
     /**
      * Represent the communicationsClientConnection
@@ -55,6 +60,17 @@ public class CommunicationRegistrationProcessNetworkServiceAgent<NS extends Abst
     }
 
     /**
+     * Constructor with parameters
+     * @param networkService
+     * @param communicationsClientConnection
+     */
+    public CommunicationRegistrationProcessNetworkServiceAgent(AbstractNetworkServiceV2 networkService, CommunicationsClientConnection communicationsClientConnection) {
+        this.abstractNetworkServiceV2 = networkService;
+        this.communicationsClientConnection = communicationsClientConnection;
+        this.active = Boolean.FALSE;
+    }
+
+    /**
      * (non-javadoc)
      * @see Thread#run()
      */
@@ -64,49 +80,96 @@ public class CommunicationRegistrationProcessNetworkServiceAgent<NS extends Abst
         while (active){
             try{
 
-                if (communicationsClientConnection.isRegister() && !networkService.isRegister()){
+                if(networkService!=null) {
+                    if (communicationsClientConnection.isRegister() && !networkService.isRegister()) {
 
                     /*
                      * Construct my profile and register me
                      */
-                    PlatformComponentProfile platformComponentProfile =  communicationsClientConnection.constructPlatformComponentProfileFactory(networkService.getIdentityPublicKey(),
-                                                                                                                                                 networkService.getAlias().toLowerCase(),
-                                                                                                                                                  networkService.getName(),
-                                                                                                                                                 networkService.getNetworkServiceType(),
-                                                                                                                                                 networkService.getPlatformComponentType(),
-                                                                                                                                                 networkService.getExtraData());
+                        PlatformComponentProfile platformComponentProfile = communicationsClientConnection.constructPlatformComponentProfileFactory(networkService.getIdentityPublicKey(),
+                                networkService.getAlias().toLowerCase(),
+                                networkService.getName(),
+                                networkService.getNetworkServiceType(),
+                                networkService.getPlatformComponentType(),
+                                networkService.getExtraData());
 
                     /*
                      * Register me
                      */
-                    communicationsClientConnection.registerComponentForCommunication(networkService.getNetworkServiceType(), platformComponentProfile);
+                        communicationsClientConnection.registerComponentForCommunication(networkService.getNetworkServiceType(), platformComponentProfile);
 
                     /*
                      * Configure my new profile
                      */
-                    networkService.setPlatformComponentProfilePluginRoot(platformComponentProfile);
+                        networkService.setPlatformComponentProfilePluginRoot(platformComponentProfile);
 
                     /*
                      * Initialize the connection manager
                      */
-                    networkService.initializeCommunicationNetworkServiceConnectionManager();
+                        networkService.initializeCommunicationNetworkServiceConnectionManager();
 
                     /*
                      * Stop the agent
                      */
-                    active = Boolean.FALSE;
+                        active = Boolean.FALSE;
 
-                }else if (!networkService.isRegister()){
+                    } else if (!networkService.isRegister()) {
 
-                    try {
-                        sleep(CommunicationRegistrationProcessNetworkServiceAgent.SLEEP_TIME);
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
+                        try {
+                            sleep(CommunicationRegistrationProcessNetworkServiceAgent.SLEEP_TIME);
+                        } catch (InterruptedException e) {
+                            e.printStackTrace();
+                            active = Boolean.FALSE;
+                        }
+
+                    } else if (!networkService.isRegister()) {
                         active = Boolean.FALSE;
                     }
+                }else if(abstractNetworkServiceV2!=null){
+                    if (communicationsClientConnection.isRegister() && !abstractNetworkServiceV2.isRegister()) {
 
-                }else if (!networkService.isRegister()){
-                    active = Boolean.FALSE;
+                    /*
+                     * Construct my profile and register me
+                     */
+                        PlatformComponentProfile platformComponentProfile = communicationsClientConnection.constructPlatformComponentProfileFactory(abstractNetworkServiceV2.getIdentityPublicKey(),
+                                abstractNetworkServiceV2.getAlias().toLowerCase(),
+                                abstractNetworkServiceV2.getName(),
+                                abstractNetworkServiceV2.getNetworkServiceType(),
+                                abstractNetworkServiceV2.getPlatformComponentType(),
+                                abstractNetworkServiceV2.getExtraData());
+
+                    /*
+                     * Register me
+                     */
+                        communicationsClientConnection.registerComponentForCommunication(abstractNetworkServiceV2.getNetworkServiceType(), platformComponentProfile);
+
+                    /*
+                     * Configure my new profile
+                     */
+                        abstractNetworkServiceV2.setPlatformComponentProfilePluginRoot(platformComponentProfile);
+
+                    /*
+                     * Initialize the connection manager
+                     */
+                        abstractNetworkServiceV2.initializeCommunicationNetworkServiceConnectionManager();
+
+                    /*
+                     * Stop the agent
+                     */
+                        active = Boolean.FALSE;
+
+                    } else if (!abstractNetworkServiceV2.isRegister()) {
+
+                        try {
+                            sleep(CommunicationRegistrationProcessNetworkServiceAgent.SLEEP_TIME);
+                        } catch (InterruptedException e) {
+                            e.printStackTrace();
+                            active = Boolean.FALSE;
+                        }
+
+                    } else if (!abstractNetworkServiceV2.isRegister()) {
+                        active = Boolean.FALSE;
+                    }
                 }
 
             }catch (Exception e){
