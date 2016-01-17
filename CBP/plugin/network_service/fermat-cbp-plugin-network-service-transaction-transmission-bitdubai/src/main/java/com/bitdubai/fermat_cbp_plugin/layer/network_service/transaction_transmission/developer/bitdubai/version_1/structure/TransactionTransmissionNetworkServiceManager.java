@@ -64,7 +64,7 @@ public class TransactionTransmissionNetworkServiceManager implements Transaction
                 BusinessTransactionTransactionType.TRANSACTION_HASH,
                 timestamp.getTime(),
                 transactionId,
-                TransactionTransmissionStates.SENDING_HASH
+                TransactionTransmissionStates.PRE_PROCESSING_SEND
         );
         try {
             transactionTransmissionContractHashDao.saveBusinessTransmissionRecord(businessTransactionMetadata);
@@ -98,7 +98,7 @@ public class TransactionTransmissionNetworkServiceManager implements Transaction
                 BusinessTransactionTransactionType.TRANSACTION_HASH,
                 timestamp.getTime(),
                 transactionId,
-                TransactionTransmissionStates.SENDING_HASH
+                TransactionTransmissionStates.PRE_PROCESSING_SEND
         );
         try {
             transactionTransmissionContractHashDao.saveBusinessTransmissionRecord(businessTransactionMetadata);
@@ -130,7 +130,7 @@ public class TransactionTransmissionNetworkServiceManager implements Transaction
                 BusinessTransactionTransactionType.CONTRACT_STATUS_UPDATE,
                 timestamp.getTime(),
                 uuidTransactionId,
-                TransactionTransmissionStates.UPDATE_CONTRACT
+                TransactionTransmissionStates.PRE_PROCESSING_SEND
         );
         try {
             transactionTransmissionContractHashDao.saveBusinessTransmissionRecord(businessTransactionMetadata);
@@ -163,7 +163,7 @@ public class TransactionTransmissionNetworkServiceManager implements Transaction
                 BusinessTransactionTransactionType.CONTRACT_STATUS_UPDATE,
                 timestamp.getTime(),
                 uuidTransactionId,
-                TransactionTransmissionStates.UPDATE_CONTRACT
+                TransactionTransmissionStates.PRE_PROCESSING_SEND
         );
         try {
             transactionTransmissionContractHashDao.saveBusinessTransmissionRecord(businessTransactionMetadata);
@@ -194,7 +194,7 @@ public class TransactionTransmissionNetworkServiceManager implements Transaction
                 BusinessTransactionTransactionType.CONFIRM_MESSAGE,
                 timestamp.getTime(),
                 uuidTransactionId,
-                TransactionTransmissionStates.CONFIRM_RESPONSE
+                TransactionTransmissionStates.PRE_PROCESSING_SEND
         );
         try {
             transactionTransmissionContractHashDao.saveBusinessTransmissionRecord(businessTransactionMetadata);
@@ -228,7 +228,7 @@ public class TransactionTransmissionNetworkServiceManager implements Transaction
             Map<String, Object> filters = new HashMap<>();
             filters.put(CommunicationNetworkServiceDatabaseConstants.TRANSACTION_TRANSMISSION_HASH_PENDING_FLAG_COLUMN_NAME, "false");
 
-            List<BusinessTransactionMetadata> businessTransactionMetadataList =transactionTransmissionContractHashDao.findAll(filters);
+            List<BusinessTransactionMetadata> businessTransactionMetadataList =transactionTransmissionContractHashDao.findAllToReceive(filters);
             if(!businessTransactionMetadataList.isEmpty()){
 
                 for(BusinessTransactionMetadata businessTransactionMetadata : businessTransactionMetadataList){
