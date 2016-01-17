@@ -461,8 +461,6 @@ public class SendFormFragment extends AbstractFermatFragment<ReferenceWalletSess
                                 notes = txt_notes.getText().toString();
                             }
 
-
-                            String text = "";
                             String txtType = txt_type.getText().toString();
                             String newAmount= "";
 
