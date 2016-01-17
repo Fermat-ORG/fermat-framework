@@ -12,6 +12,7 @@ import com.bitdubai.fermat_cbp_api.all_definition.enums.CurrencyType;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.TransactionStatusRestockDestock;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.TransactionType;
 import com.bitdubai.fermat_cbp_api.layer.wallet.crypto_broker.exceptions.CantAddCreditCryptoBrokerWalletException;
+import com.bitdubai.fermat_cbp_api.layer.wallet.crypto_broker.exceptions.CantAddDebitCryptoBrokerWalletException;
 import com.bitdubai.fermat_cbp_api.layer.wallet.crypto_broker.exceptions.CantGetStockCryptoBrokerWalletException;
 import com.bitdubai.fermat_cbp_api.layer.wallet.crypto_broker.exceptions.CryptoBrokerWalletNotFoundException;
 import com.bitdubai.fermat_cbp_api.layer.wallet.crypto_broker.interfaces.CryptoBrokerWalletManager;
@@ -142,7 +143,7 @@ public class StockTransactionsCashMoneyDestockMonitorAgent implements Agent{
                                     cashMoneyTransaction.getTransactionId(),
                                     cashMoneyTransaction.getFiatCurrency(),
                                     BalanceType.AVAILABLE,
-                                    TransactionType.CREDIT,
+                                    TransactionType.DEBIT,
                                     CurrencyType.CASH_DELIVERY_MONEY,
                                     cashMoneyTransaction.getCbpWalletPublicKey(),
                                     cashMoneyTransaction.getActorPublicKey(),
@@ -154,8 +155,8 @@ public class StockTransactionsCashMoneyDestockMonitorAgent implements Agent{
 
                             //TODO:Solo para testear
                             cashMoneyTransaction.setCbpWalletPublicKey("walletPublicKeyTest");
-                            cryptoBrokerWalletManager.loadCryptoBrokerWallet(cashMoneyTransaction.getCbpWalletPublicKey()).getStockBalance().credit(walletTransactionRecord, BalanceType.BOOK);
-                            cryptoBrokerWalletManager.loadCryptoBrokerWallet(cashMoneyTransaction.getCbpWalletPublicKey()).getStockBalance().credit(walletTransactionRecord, BalanceType.AVAILABLE);
+                            cryptoBrokerWalletManager.loadCryptoBrokerWallet(cashMoneyTransaction.getCbpWalletPublicKey()).getStockBalance().debit(walletTransactionRecord, BalanceType.BOOK);
+                            cryptoBrokerWalletManager.loadCryptoBrokerWallet(cashMoneyTransaction.getCbpWalletPublicKey()).getStockBalance().debit(walletTransactionRecord, BalanceType.AVAILABLE);
                             cashMoneyTransaction.setTransactionStatus(TransactionStatusRestockDestock.IN_UNHOLD);
                             stockTransactionCashMoneyDestockFactory.saveCashMoneyDestockTransactionData(cashMoneyTransaction);
 
@@ -163,7 +164,7 @@ public class StockTransactionsCashMoneyDestockMonitorAgent implements Agent{
                             errorManager.reportUnexpectedPluginException(Plugins.BANK_MONEY_DESTOCK, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);;
                         } catch (CantGetStockCryptoBrokerWalletException e) {
                             e.printStackTrace();
-                        } catch (CantAddCreditCryptoBrokerWalletException e) {
+                        } catch (CantAddDebitCryptoBrokerWalletException e) {
                             e.printStackTrace();
                         }
                         break;
