@@ -2,7 +2,8 @@
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:fab="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:background="@drawable/bg_home">
 
     <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="match_parent"
@@ -10,57 +11,13 @@
         android:background="@color/black_overlay"
         android:orientation="vertical">
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="150dp"
-            android:background="@color/background_header"
-            android:orientation="vertical">
 
-            <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
-                android:id="@+id/textView_available"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:gravity="left"
-                android:paddingLeft="@dimen/activity_horizontal_margin"
-                android:paddingTop="@dimen/activity_vertical_margin"
-                android:text="Available Balance: "
-                android:textColor="@color/text_color_clear"
-                android:textSize="@dimen/large_text_size" />
+        <include
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            layout="@layout/bw_account_list_item"
+            android:id="@+id/account_header"/>
 
-            <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
-                android:id="@+id/textView_available_amount"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:gravity="left"
-                android:paddingLeft="@dimen/activity_horizontal_margin"
-                android:text="0"
-                android:textColor="@color/text_color_clear"
-                android:textSize="@dimen/large_text_size" />
-
-            <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
-                android:id="@+id/textView_book"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:gravity="left"
-                android:paddingLeft="@dimen/activity_horizontal_margin"
-                android:paddingTop="@dimen/activity_vertical_margin"
-                android:text="Book Balance: "
-                android:textColor="@color/text_color_clear"
-                android:textSize="@dimen/large_text_size" />
-
-            <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
-                android:id="@+id/textView_book_amount"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:gravity="left"
-                android:paddingBottom="@dimen/activity_vertical_margin"
-                android:paddingLeft="@dimen/activity_horizontal_margin"
-                android:text="0"
-                android:textColor="@color/text_color_clear"
-
-                android:textSize="@dimen/large_text_size" />
-
-        </LinearLayout>
 
         <LinearLayout
             android:layout_width="match_parent"
