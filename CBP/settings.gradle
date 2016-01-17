@@ -141,6 +141,8 @@ include ':fermat-cbp-plugin-middleware-sub-app-manager-bitdubai'
 project(':fermat-cbp-plugin-middleware-sub-app-manager-bitdubai').projectDir = new File('CBP/plugin/middleware/fermat-cbp-plugin-middleware-sub-app-manager-bitdubai')
 include ':fermat-cbp-plugin-middleware-wallet-manager-bitdubai'
 project(':fermat-cbp-plugin-middleware-wallet-manager-bitdubai').projectDir = new File('CBP/plugin/middleware/fermat-cbp-plugin-middleware-wallet-manager-bitdubai')
+include ':fermat-cbp-plugin-middleware-matching-engine-bitdubai'
+project(':fermat-cbp-plugin-middleware-matching-engine-bitdubai').projectDir = new File('CBP/plugin/middleware/fermat-cbp-plugin-middleware-matching-engine-bitdubai')
 
 //Negotiation
 include ':fermat-cbp-plugin-negotiation-customer-broker-purchase-bitdubai'

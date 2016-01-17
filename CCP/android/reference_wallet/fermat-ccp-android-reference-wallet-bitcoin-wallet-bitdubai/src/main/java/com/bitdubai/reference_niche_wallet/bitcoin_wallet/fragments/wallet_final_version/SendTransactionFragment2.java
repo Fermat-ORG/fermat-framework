@@ -6,6 +6,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -154,7 +155,18 @@ public class SendTransactionFragment2 extends FermatWalletExpandableListFragment
 
         lstCryptoWalletTransactionsBook = new ArrayList<>();
 
-
+        getExecutor().execute(new Runnable() {
+            @Override
+            public void run() {
+                final Drawable drawable = getResources().getDrawable(R.drawable.background_gradient, null);
+                getActivity().runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        getPaintActivtyFeactures().setActivityBackgroundColor(drawable);
+                    }
+                });
+            }
+        });
 
         try {
             referenceWalletSession = (ReferenceWalletSession) appSession;

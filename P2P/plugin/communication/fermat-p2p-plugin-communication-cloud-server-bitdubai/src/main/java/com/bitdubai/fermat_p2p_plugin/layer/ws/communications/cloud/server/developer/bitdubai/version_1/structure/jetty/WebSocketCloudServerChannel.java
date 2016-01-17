@@ -272,14 +272,10 @@ public class WebSocketCloudServerChannel {
             removeOtherPlatformComponentRegisteredByClientIdentity(activeClientConnection.getClientIdentity());
             MemoryCache.getInstance().getPendingRegisterClientConnectionsCache().remove(activeClientConnection.getClientIdentity());
 
-            PlatformComponentProfile clientProfile = MemoryCache.getInstance().getRegisteredCommunicationsCloudServerCache().remove(activeClientConnection.getClientIdentity());
-            LOG.info("Remove clientProfile " + clientProfile);
-
-            MemoryCache.getInstance().getRegisteredCommunicationsCloudClientCache().remove(activeClientConnection.getSession().hashCode());
+            MemoryCache.getInstance().getRegisteredCommunicationsCloudClientCache().remove(activeClientConnection.getClientIdentity());
             MemoryCache.getInstance().getRegisteredClientConnectionsCache().remove(activeClientConnection.getClientIdentity());
 
             LOG.info("pendingRegisterClientConnectionsCache.size()    = " + MemoryCache.getInstance().getPendingRegisterClientConnectionsCache().size());
-            LOG.info("registeredCommunicationsCloudServerCache.size() = " + MemoryCache.getInstance().getRegisteredCommunicationsCloudServerCache().size());
             LOG.info("registeredCommunicationsCloudClientCache.size() = " + MemoryCache.getInstance().getRegisteredCommunicationsCloudClientCache().size());
             LOG.info("registeredNetworkServicesCache.size()           = " + MemoryCache.getInstance().getRegisteredNetworkServicesCache().size());
             for (NetworkServiceType networkServiceType: MemoryCache.getInstance().getRegisteredNetworkServicesCache().keySet()) {
@@ -312,8 +308,7 @@ public class WebSocketCloudServerChannel {
              * on stand by, to wait to reconnect
              */
             MemoryCache.getInstance().getPendingRegisterClientConnectionsCache().remove(activeClientConnection.getClientIdentity());
-            MemoryCache.getInstance().getRegisteredCommunicationsCloudServerCache().remove(activeClientConnection.getClientIdentity());
-            MemoryCache.getInstance().getRegisteredCommunicationsCloudClientCache().remove(activeClientConnection.getSession().hashCode());
+            MemoryCache.getInstance().getRegisteredCommunicationsCloudClientCache().remove(activeClientConnection.getClientIdentity());
             MemoryCache.getInstance().getRegisteredClientConnectionsCache().remove(activeClientConnection.getClientIdentity());
 
             List<PlatformComponentProfile> removeProfile = removeNetworkServiceRegisteredByClientIdentity(activeClientConnection.getClientIdentity());

@@ -37,7 +37,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
-                android:background="#C8FFFFFF"
+                android:background="#DAFFFFFF"
                 android:paddingBottom="7dp"
                 >
 
@@ -68,13 +68,14 @@
                         android:gravity="center"
                         android:orientation="vertical">
                         <ImageButton
-                            android:layout_width="56dp"
-                            android:layout_height="56dp"
+                            android:layout_width="48dp"
+                            android:layout_height="48dp"
                             android:background="@drawable/ic_drawable_p2p_network" />
                         <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:gravity="center"
+                            android:textSize="12sp"
                             android:layout_marginTop="2dp"
                             android:text="Fermat\nNetwork"
                             android:textColor="#000"/>
@@ -88,14 +89,15 @@
                         android:gravity="center"
                         android:orientation="vertical">
                         <ImageButton
-                            android:layout_width="56dp"
-                            android:layout_height="56dp"
+                            android:layout_width="48dp"
+                            android:layout_height="48dp"
                             android:background="@drawable/ic_drawable_btc_network" />
                         <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginTop="2dp"
                             android:gravity="center"
+                            android:textSize="12sp"
                             android:text="Bitcoin\nNetwork"
                             android:textColor="#000"/>
 
@@ -107,13 +109,14 @@
                         android:gravity="center"
                         android:orientation="vertical">
                         <ImageButton
-                            android:layout_width="56dp"
-                            android:layout_height="56dp"
+                            android:layout_width="48dp"
+                            android:layout_height="48dp"
                             android:background="@drawable/ic_drawable_private_network" />
                         <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginTop="2dp"
+                            android:textSize="12sp"
                             android:gravity="center"
                             android:text="Private\nNetwork"
                             android:textColor="#000"/>
@@ -136,8 +139,8 @@
                 android:visibility="gone"
                 android:layout_alignParentEnd="true">
             <ImageButton
-                android:layout_width="56dp"
-                android:layout_height="56dp"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
                 android:background="@drawable/ic_drawable_settings"
                 />
             <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView

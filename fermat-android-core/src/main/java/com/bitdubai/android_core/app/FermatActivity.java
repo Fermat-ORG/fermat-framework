@@ -66,6 +66,7 @@ import com.bitdubai.android_core.app.common.version_1.provisory.SubAppManagerPro
 import com.bitdubai.android_core.app.common.version_1.sessions.SubAppSessionManager;
 import com.bitdubai.android_core.app.common.version_1.sessions.WalletSessionManager;
 import com.bitdubai.android_core.app.common.version_1.builders.SideMenuBuilder;
+import com.bitdubai.android_core.app.common.version_1.util.DepthPageTransformer;
 import com.bitdubai.android_core.app.common.version_1.util.FermatSystemUtils;
 import com.bitdubai.fermat.R;
 import com.bitdubai.fermat_android_api.engine.DesktopHolderClickCallback;
@@ -387,14 +388,7 @@ public abstract class FermatActivity extends AppCompatActivity
             }
 
             setScreen(activity);
-        } catch (Exception e) {
-            getErrorManager().reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.UNSTABLE, FermatException.wrapException(e));
-            makeText(getApplicationContext(), "Oooops! recovering from system error",
-                    LENGTH_SHORT).show();
-        }
-        // rendering wizards components
-        try {
-            TabStrip tabs = activity.getTabStrip();
+            // rendering wizards components
             if (tabs != null && tabs.getWizards() != null)
                 setWizards(tabs.getWizards());
             if (activity.getWizards() != null)
@@ -484,7 +478,7 @@ public abstract class FermatActivity extends AppCompatActivity
                                                                                  hidden = false;
 
                                                                              } else {
-                                                                                 android.animation.Animator anim = android.view.ViewAnimationUtils.createCircularReveal(mRevealView, cx, cy, radius, 0);
+                                                                                 android.animation.Animator anim = android.view.ViewAnimationUtils.createCircularReveal(mRevealView, 0, cy, radius, 0);
                                                                                  anim.addListener(new AnimatorListenerAdapter() {
                                                                                      @Override
                                                                                      public void onAnimationEnd(android.animation.Animator animation) {
@@ -746,7 +740,7 @@ public abstract class FermatActivity extends AppCompatActivity
     }
 
     /**
-     * Method used from a Wallet to paint tabs
+     * Method used from app to paint tabs
      */
     protected void setPagerTabs(TabStrip tabStrip, FermatSession fermatSession,FermatFragmentFactory fermatFragmentFactory) {
         TabLayout tabLayout = (TabLayout) findViewById(R.id.tab_layout);
@@ -794,11 +788,6 @@ public abstract class FermatActivity extends AppCompatActivity
             }
 
             coordinatorLayout = (CoordinatorLayout) findViewById(R.id.coordinator);
-
-            if(activityType == ActivityType.ACTIVITY_TYPE_WALLET){
-                if(coordinatorLayout!=null)
-                coordinatorLayout.setBackgroundColor(Color.WHITE);
-            }
 
 
             mToolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -1504,6 +1493,11 @@ public abstract class FermatActivity extends AppCompatActivity
     }
 
     @Override
+    public void changeStartActivity(int optionActivity){
+        getAppInUse().changeActualStartActivity(optionActivity);
+    }
+
+    @Override
     public void launchWalletNotification(String walletPublicKey, String notificationTitle, String notificationImageText, String notificationTextBody) {
         //try {
         //getWalletRuntimeManager().getWallet(walletPublicKey).getLastActivity();
@@ -1608,7 +1602,7 @@ public abstract class FermatActivity extends AppCompatActivity
     }
 
     @Override
-    public void notificate(NotificationEvent notification) {
+    public synchronized void notificate(NotificationEvent notification) {
         try {
 
             Queue<NotificationEvent> queue = getNotificationManager().getPoolNotification();
@@ -1755,6 +1749,11 @@ public abstract class FermatActivity extends AppCompatActivity
     public void onLongItemClickListener(com.bitdubai.fermat_api.layer.all_definition.navigation_structure.MenuItem data, int position) {
 
     }
+    @Override
+    public void setActivityBackgroundColor(Drawable drawable){
+        if(drawable!=null) coordinatorLayout.setBackground(drawable);
+
+    }
 
     @Override
     public Toolbar getToolbar() {
@@ -1787,6 +1786,9 @@ public abstract class FermatActivity extends AppCompatActivity
                 requestWindowFeature(Window.FEATURE_NO_TITLE);
                 getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
                         WindowManager.LayoutParams.FLAG_FULLSCREEN);
+            }
+            if(activity.getBackgroundColor()!=null && coordinatorLayout!=null){
+                    coordinatorLayout.setBackgroundColor(Color.parseColor(activity.getBackgroundColor()));
             }
         }catch (Exception e){
 
