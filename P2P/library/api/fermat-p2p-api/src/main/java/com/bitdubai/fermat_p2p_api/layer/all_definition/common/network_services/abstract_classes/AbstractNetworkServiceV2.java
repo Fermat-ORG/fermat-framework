@@ -242,8 +242,8 @@ public abstract class AbstractNetworkServiceV2 extends AbstractPlugin implements
                 /*
                  * Initialize the agent and start
                  */
-                communicationRegistrationProcessNetworkServiceAgent = new CommunicationRegistrationProcessNetworkServiceAgent(this, getWsCommunicationsCloudClientManager().getCommunicationsCloudClientConnection());
-                communicationRegistrationProcessNetworkServiceAgent.start();
+//                communicationRegistrationProcessNetworkServiceAgent = new CommunicationRegistrationProcessNetworkServiceAgent(this, getWsCommunicationsCloudClientManager());
+//                communicationRegistrationProcessNetworkServiceAgent.start();
             }
 
             remoteNetworkServicesRegisteredList = new CopyOnWriteArrayList<PlatformComponentProfile>();
