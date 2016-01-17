@@ -226,7 +226,7 @@ public class NetworkServiceNegotiationTransmissionPluginRoot extends AbstractNet
 //            deleteAllTransmissionTest();
 //            createNegotiationTransamissionTest();
 
-//            eventTest();
+            eventTest();
 
             //Initilize service
             this.serviceStatus = ServiceStatus.STARTED;
@@ -895,11 +895,15 @@ public class NetworkServiceNegotiationTransmissionPluginRoot extends AbstractNet
     private void eventTest(){
         System.out.print("\n**** MOCK NEGOTIATION TRANSMISSION. EVENT TEST RAISE METHOD****\n");
 
-        FermatEvent fermatEvent = eventManager.getNewEvent(EventType.INCOMING_NEGOTIATION_TRANSMISSION_TRANSACTION_NEW);
+        FermatEvent eventToRaise = eventManager.getNewEvent(EventType.INCOMING_NEGOTIATION_TRANSMISSION_TRANSACTION_NEW2);
+        eventToRaise.setSource(this.getEventSource());
+        eventManager.raiseEvent(eventToRaise);
+
+        /*FermatEvent fermatEvent = eventManager.getNewEvent(EventType.INCOMING_NEGOTIATION_TRANSMISSION_TRANSACTION_NEW);
         IncomingNegotiationTransactionEvent incomingNegotiationTransactionEvent = (IncomingNegotiationTransactionEvent) fermatEvent;
         incomingNegotiationTransactionEvent.setSource(EventSource.NETWORK_SERVICE_NEGOTIATION_TRANSMISSION);
         incomingNegotiationTransactionEvent.setDestinationPlatformComponentType(PlatformComponentType.ACTOR_CRYPTO_BROKER);
-        eventManager.raiseEvent(incomingNegotiationTransactionEvent);
+        eventManager.raiseEvent(incomingNegotiationTransactionEvent);*/
 
         /*
         fermatEvent = eventManager.getNewEvent(EventType.INCOMING_CONFIRM_BUSINESS_TRANSACTION_CONTRACT);

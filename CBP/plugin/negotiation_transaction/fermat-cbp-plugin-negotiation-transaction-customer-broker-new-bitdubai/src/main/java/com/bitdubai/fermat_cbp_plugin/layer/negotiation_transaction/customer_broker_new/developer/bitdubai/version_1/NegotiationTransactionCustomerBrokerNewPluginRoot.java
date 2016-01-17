@@ -18,6 +18,7 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.Layers;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
+import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEventListener;
 import com.bitdubai.fermat_api.layer.all_definition.util.Version;
 import com.bitdubai.fermat_api.layer.all_definition.util.XMLParser;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
@@ -31,6 +32,7 @@ import com.bitdubai.fermat_cbp_api.all_definition.enums.ClauseType;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.ContractClauseType;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.CurrencyType;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.NegotiationStatus;
+import com.bitdubai.fermat_cbp_api.all_definition.events.enums.EventType;
 import com.bitdubai.fermat_cbp_api.all_definition.exceptions.CantStartServiceException;
 import com.bitdubai.fermat_cbp_api.all_definition.negotiation.Clause;
 import com.bitdubai.fermat_cbp_api.all_definition.negotiation_transaction.NegotiationPurchaseRecord;
@@ -50,7 +52,9 @@ import com.bitdubai.fermat_cbp_plugin.layer.negotiation_transaction.customer_bro
 import com.bitdubai.fermat_cbp_plugin.layer.negotiation_transaction.customer_broker_new.developer.bitdubai.version_1.database.CustomerBrokerNewNegotiationTransactionDatabaseDao;
 import com.bitdubai.fermat_cbp_plugin.layer.negotiation_transaction.customer_broker_new.developer.bitdubai.version_1.database.CustomerBrokerNewNegotiationTransactionDatabaseFactory;
 import com.bitdubai.fermat_cbp_plugin.layer.negotiation_transaction.customer_broker_new.developer.bitdubai.version_1.database.CustomerBrokerNewNegotiationTransactionDeveloperDatabaseFactory;
+import com.bitdubai.fermat_cbp_plugin.layer.negotiation_transaction.customer_broker_new.developer.bitdubai.version_1.event_handler.CustomerBrokerNewExecutorService;
 import com.bitdubai.fermat_cbp_plugin.layer.negotiation_transaction.customer_broker_new.developer.bitdubai.version_1.event_handler.CustomerBrokerNewServiceEventHandler;
+import com.bitdubai.fermat_cbp_plugin.layer.negotiation_transaction.customer_broker_new.developer.bitdubai.version_1.event_handler.CustomerBromerNewEventHandler;
 import com.bitdubai.fermat_cbp_plugin.layer.negotiation_transaction.customer_broker_new.developer.bitdubai.version_1.exceptions.CantInitializeCustomerBrokerNewNegotiationTransactionDatabaseException;
 import com.bitdubai.fermat_cbp_plugin.layer.negotiation_transaction.customer_broker_new.developer.bitdubai.version_1.exceptions.CantInitializeDatabaseException;
 import com.bitdubai.fermat_cbp_plugin.layer.negotiation_transaction.customer_broker_new.developer.bitdubai.version_1.exceptions.CantRegisterCustomerBrokerNewNegotiationTransactionException;
@@ -124,8 +128,15 @@ public class NegotiationTransactionCustomerBrokerNewPluginRoot extends AbstractP
 
     static Map<String, LogLevel> newLoggingLevel = new HashMap<String, LogLevel>();
 
+    //TEA
+    private final List<FermatEventListener> listenersAdded;
+
+
     public NegotiationTransactionCustomerBrokerNewPluginRoot() {
         super(new PluginVersionReference(new Version()));
+
+        //TEA
+        listenersAdded = new ArrayList<>();
     }
     
     /*IMPLEMENTATION Service.*/
@@ -153,8 +164,17 @@ public class NegotiationTransactionCustomerBrokerNewPluginRoot extends AbstractP
             );
 
             //Init event recorder service.
-            customerBrokerNewServiceEventHandler = new CustomerBrokerNewServiceEventHandler(customerBrokerNewNegotiationTransactionDatabaseDao,eventManager);
-            customerBrokerNewServiceEventHandler.start();
+            /*customerBrokerNewServiceEventHandler = new CustomerBrokerNewServiceEventHandler(customerBrokerNewNegotiationTransactionDatabaseDao,eventManager);
+            customerBrokerNewServiceEventHandler.start();*/
+
+            //TEA
+            CustomerBrokerNewExecutorService executorService = new CustomerBrokerNewExecutorService();
+
+            //TEA
+            FermatEventListener fermatEventListener = eventManager.getNewListener(EventType.INCOMING_NEGOTIATION_TRANSMISSION_TRANSACTION_NEW2);
+            fermatEventListener.setEventHandler(new CustomerBromerNewEventHandler(executorService, this));
+            eventManager.addListener(fermatEventListener);
+            listenersAdded.add(fermatEventListener);
 
             //Init monitor Agent
             customerBrokerNewAgent = new CustomerBrokerNewAgent(
@@ -196,9 +216,9 @@ public class NegotiationTransactionCustomerBrokerNewPluginRoot extends AbstractP
         } catch (CantInitializeCustomerBrokerNewNegotiationTransactionDatabaseException e){
             errorManager.reportUnexpectedPluginException(Plugins.CUSTOMER_BROKER_NEW, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN,e);
             throw new CantStartPluginException(CantStartPluginException.DEFAULT_MESSAGE,FermatException.wrapException(e),"Error Starting Customer Broker New PluginRoot - Database","Unexpected Exception");
-        } catch (CantStartServiceException e){
-            errorManager.reportUnexpectedPluginException(Plugins.CUSTOMER_BROKER_NEW,UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN,e);
-            throw new CantStartPluginException(CantStartPluginException.DEFAULT_MESSAGE,FermatException.wrapException(e),"Error Starting Customer Broker New PluginRoot - EventHandler","Unexpected Exception");
+//        } catch (CantStartServiceException e){
+//            errorManager.reportUnexpectedPluginException(Plugins.CUSTOMER_BROKER_NEW,UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN,e);
+//            throw new CantStartPluginException(CantStartPluginException.DEFAULT_MESSAGE,FermatException.wrapException(e),"Error Starting Customer Broker New PluginRoot - EventHandler","Unexpected Exception");
         } catch (Exception e) {
             errorManager.reportUnexpectedPluginException(Plugins.CUSTOMER_BROKER_NEW,UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN,e);
             throw new CantStartPluginException(CantStartPluginException.DEFAULT_MESSAGE,FermatException.wrapException(e),"Error Starting Customer Broker New PluginRoot","Unexpected Exception");
