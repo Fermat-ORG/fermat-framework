@@ -1,6 +1,5 @@
 ![alt text](https://github.com/bitDubai/media-kit/blob/master/MediaKit/Fermat%20Branding/Fermat%20Logotype/Fermat_Logo_3D.png "Fermat Logo")
 
-#--draft--
 
 # Fermat
 
@@ -21,7 +20,7 @@ _www.fermat.org_
 <br>
 ## Status of the Document
 
-This document is a draft with no formal reviews yet. Some changes are being done from time to time. If you want, you  can make a formal review of this document. We will be happy to add you at the _reviewrs_ section. 
+This document is a DRAFT with no formal reviews yet. Some changes are being done from time to time. If you want, you  can make a formal review of this document. We will be happy to add you at the _reviewrs_ section. 
 
 
 <br>
