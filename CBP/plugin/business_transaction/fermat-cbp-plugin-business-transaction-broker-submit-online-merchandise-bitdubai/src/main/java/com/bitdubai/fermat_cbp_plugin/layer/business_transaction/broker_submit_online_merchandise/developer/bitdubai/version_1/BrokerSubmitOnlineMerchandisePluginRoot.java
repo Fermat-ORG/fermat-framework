@@ -41,6 +41,7 @@ import com.bitdubai.fermat_cbp_api.layer.contract.customer_broker_sale.interface
 import com.bitdubai.fermat_cbp_api.layer.negotiation.customer_broker_sale.interfaces.CustomerBrokerSaleNegotiationManager;
 import com.bitdubai.fermat_cbp_api.layer.network_service.transaction_transmission.interfaces.TransactionTransmissionManager;
 import com.bitdubai.fermat_cbp_api.layer.stock_transactions.crypto_money_destock.interfaces.CryptoMoneyDestockManager;
+import com.bitdubai.fermat_cbp_api.layer.wallet.crypto_broker.interfaces.CryptoBrokerWalletManager;
 import com.bitdubai.fermat_cbp_plugin.layer.business_transaction.broker_submit_online_merchandise.developer.bitdubai.version_1.database.BrokerSubmitOnlineMerchandiseBusinessTransactionDao;
 import com.bitdubai.fermat_cbp_plugin.layer.business_transaction.broker_submit_online_merchandise.developer.bitdubai.version_1.database.BrokerSubmitOnlineMerchandiseBusinessTransactionDatabaseConstants;
 import com.bitdubai.fermat_cbp_plugin.layer.business_transaction.broker_submit_online_merchandise.developer.bitdubai.version_1.database.BrokerSubmitOnlineMerchandiseBusinessTransactionDatabaseFactory;
@@ -99,6 +100,9 @@ public class BrokerSubmitOnlineMerchandisePluginRoot extends AbstractPlugin impl
 
     @NeededPluginReference(platform = Platforms.CRYPTO_BROKER_PLATFORM, layer = Layers.NEGOTIATION, plugin = Plugins.NEGOTIATION_SALE)
     private CustomerBrokerSaleNegotiationManager customerBrokerSaleNegotiationManager;
+
+    @NeededPluginReference(platform = Platforms.CRYPTO_BROKER_PLATFORM, layer = Layers.WALLET, plugin = Plugins.CRYPTO_BROKER_WALLET)
+    private CryptoBrokerWalletManager cryptoBrokerWalletManager;
 
     /**
      * Represents the plugin manager.
@@ -245,6 +249,7 @@ public class BrokerSubmitOnlineMerchandisePluginRoot extends AbstractPlugin impl
                     brokerSubmitOnlineMerchandiseBusinessTransactionDao,
                     this.customerBrokerContractSaleManager,
                     this.customerBrokerSaleNegotiationManager,
+                    this.cryptoBrokerWalletManager,
                     errorManager
                     );
 

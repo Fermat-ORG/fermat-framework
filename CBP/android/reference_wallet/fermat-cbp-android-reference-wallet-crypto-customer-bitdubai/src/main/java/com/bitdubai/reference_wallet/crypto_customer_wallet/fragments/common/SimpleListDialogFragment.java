@@ -7,6 +7,7 @@ import android.content.DialogInterface;
 import android.os.Bundle;
 import android.widget.ArrayAdapter;
 
+import com.bitdubai.fermat_api.layer.world.interfaces.Currency;
 import com.bitdubai.fermat_bnk_api.layer.bnk_wallet.bank_money.interfaces.BankAccountNumber;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.CurrencyType;
 import com.bitdubai.fermat_cer_api.layer.provider.exceptions.CantGetProviderInfoException;
@@ -61,6 +62,10 @@ public class SimpleListDialogFragment<T> extends DialogFragment {
                     data.add(provider.getProviderName());
                 } catch (CantGetProviderInfoException ignored) {
                 }
+
+            } else if (choice instanceof Currency) {
+                final Currency currency = (Currency) choice;
+                data.add(currency.getFriendlyName());
 
             } else if (choice instanceof CurrencyType) {
                 CurrencyType currencyType = (CurrencyType) choice;

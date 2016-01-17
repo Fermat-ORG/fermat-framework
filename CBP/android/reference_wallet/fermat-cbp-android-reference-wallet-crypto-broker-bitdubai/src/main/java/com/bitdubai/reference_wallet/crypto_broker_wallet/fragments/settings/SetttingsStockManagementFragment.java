@@ -1,9 +1,12 @@
 package com.bitdubai.reference_wallet.crypto_broker_wallet.fragments.settings;
 
 import android.content.DialogInterface;
+import android.graphics.Color;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -112,6 +115,7 @@ public class SetttingsStockManagementFragment extends FermatWalletListFragment<C
     @Override
     protected void initViews(View layout) {
         super.initViews(layout);
+        configureToolbar();
         emptyView = (FermatTextView) layout.findViewById(R.id.cbw_selected_stock_wallets_empty_view);
 
         final FermatTextView spreadTextView = (FermatTextView) layout.findViewById(R.id.cbw_spread_value_text);
@@ -152,6 +156,18 @@ public class SetttingsStockManagementFragment extends FermatWalletListFragment<C
             }
         });
         showOrHideNoSelectedWalletsView();
+    }
+
+    private void configureToolbar() {
+        Toolbar toolbar = getToolbar();
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP)
+            toolbar.setBackground(getResources().getDrawable(R.drawable.cbw_action_bar_gradient_colors, null));
+        else
+            toolbar.setBackground(getResources().getDrawable(R.drawable.cbw_action_bar_gradient_colors));
+
+        toolbar.setTitleTextColor(Color.WHITE);
+        if (toolbar.getMenu() != null) toolbar.getMenu().clear();
     }
 
     /*@Override
