@@ -435,35 +435,55 @@ public class RequestFormFragment extends AbstractFermatFragment implements View.
             } else if (cryptoWalletWalletContact.getReceivedCryptoAddress().isEmpty()) {
                 Toast.makeText(getActivity(), "We can't find an address for the contact yet.", Toast.LENGTH_LONG).show();
             } else {
-                String identityPublicKey = referenceWalletSession.getIntraUserModuleManager().getPublicKey();
 
-                CryptoAddress cryptoAddress = cryptoWallet.requestAddressToKnownUser(
-                        identityPublicKey,
-                        Actors.INTRA_USER,
-                        cryptoWalletWalletContact.getActorPublicKey(),
-                        cryptoWalletWalletContact.getActorType(),
-                        Platforms.CRYPTO_CURRENCY_PLATFORM,
-                        VaultType.CRYPTO_CURRENCY_VAULT,
-                        CryptoCurrencyVault.BITCOIN_VAULT.getCode(),
-                        appSession.getAppPublicKey(),
-                        ReferenceWallet.BASIC_WALLET_BITCOIN_WALLET
-                        );
-                cryptoWallet.sendCryptoPaymentRequest(
-                        cryptoWalletWalletContact.getWalletPublicKey(),
-                        identityPublicKey,
-                        Actors.INTRA_USER,
-                        cryptoWalletWalletContact.getActorPublicKey(),
-                        cryptoWalletWalletContact.getActorType(),
-                        cryptoAddress,
-                        txt_notes.getText().toString(),
-                        Long.valueOf(editTextAmount.getText().toString()),
-                        BlockchainNetworkType.DEFAULT,
-                        ReferenceWallet.BASIC_WALLET_BITCOIN_WALLET
+                String amount = editTextAmount.getText().toString();
+                if(!amount.equals("") && amount!=null && Long.parseLong(amount)!=0) {
 
-                );
-                Toast.makeText(getActivity(), "Request Sent", Toast.LENGTH_LONG).show();
-                if(isFragmentFromDetail) onBack(null);
-                else onBack(Activities.CWP_WALLET_RUNTIME_WALLET_BASIC_WALLET_BITDUBAI_VERSION_1_PAYMENT_REQUEST.getCode());
+                        String txtType = txt_type.getText().toString();
+                        String newAmount = "";
+
+                        if (txtType.equals("[btc]")) {
+                            newAmount = bitcoinConverter.getSathoshisFromBTC(amount);
+                        } else if (txtType.equals("[satoshis]")) {
+                            newAmount = amount;
+                        } else if (txtType.equals("[bits]")) {
+                            newAmount = bitcoinConverter.getSathoshisFromBits(amount);
+                        }
+
+                    String identityPublicKey = referenceWalletSession.getIntraUserModuleManager().getPublicKey();
+
+                    CryptoAddress cryptoAddress = cryptoWallet.requestAddressToKnownUser(
+                            identityPublicKey,
+                            Actors.INTRA_USER,
+                            cryptoWalletWalletContact.getActorPublicKey(),
+                            cryptoWalletWalletContact.getActorType(),
+                            Platforms.CRYPTO_CURRENCY_PLATFORM,
+                            VaultType.CRYPTO_CURRENCY_VAULT,
+                            CryptoCurrencyVault.BITCOIN_VAULT.getCode(),
+                            appSession.getAppPublicKey(),
+                            ReferenceWallet.BASIC_WALLET_BITCOIN_WALLET
+                    );
+                    cryptoWallet.sendCryptoPaymentRequest(
+                            cryptoWalletWalletContact.getWalletPublicKey(),
+                            identityPublicKey,
+                            Actors.INTRA_USER,
+                            cryptoWalletWalletContact.getActorPublicKey(),
+                            cryptoWalletWalletContact.getActorType(),
+                            cryptoAddress,
+                            txt_notes.getText().toString(),
+                            Long.valueOf(newAmount),
+                            BlockchainNetworkType.DEFAULT,
+                            ReferenceWallet.BASIC_WALLET_BITCOIN_WALLET
+
+                    );
+                    Toast.makeText(getActivity(), "Request Sent", Toast.LENGTH_LONG).show();
+                    if(isFragmentFromDetail) onBack(null);
+                    else onBack(Activities.CWP_WALLET_RUNTIME_WALLET_BASIC_WALLET_BITDUBAI_VERSION_1_PAYMENT_REQUEST.getCode());
+
+                }
+                else {
+                    showMessage(getActivity(), "Invalid Request Amount");
+                }
             }
 
         } catch (Exception e) {

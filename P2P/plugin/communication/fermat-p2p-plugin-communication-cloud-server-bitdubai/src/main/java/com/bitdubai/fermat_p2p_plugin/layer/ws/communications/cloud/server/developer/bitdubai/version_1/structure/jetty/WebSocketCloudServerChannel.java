@@ -34,10 +34,12 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 import javax.websocket.CloseReason;
+import javax.websocket.MessageHandler;
 import javax.websocket.OnClose;
 import javax.websocket.OnError;
 import javax.websocket.OnMessage;
 import javax.websocket.OnOpen;
+import javax.websocket.PongMessage;
 import javax.websocket.Session;
 import javax.websocket.server.ServerEndpoint;
 
@@ -137,6 +139,44 @@ public class WebSocketCloudServerChannel {
              */
             activeClientConnection.setClientIdentity(temporalClientIdentity);
 
+            activeClientConnection.getSession().addMessageHandler(new MessageHandler.Whole<PongMessage>() {
+                @Override
+                public void onMessage(PongMessage message) {
+                    LOG.info("PongMessage = " + message);
+
+                    try {
+
+                        String pingString = "PING";
+                        ByteBuffer pingData = ByteBuffer.allocate(pingString.getBytes().length);
+                        pingData.put(pingString.getBytes()).flip();
+                        activeClientConnection.getSession().getBasicRemote().sendPing(pingData);
+
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
+            });
+
+
+            // add binary based message handler
+            session.addMessageHandler(new MessageHandler.Whole<ByteBuffer>() {
+                @Override
+                public void onMessage(ByteBuffer buffer) {
+
+                    try {
+
+                        LOG.info("PingMessage = " + new String(buffer.array()));
+                        String pongString = "PONG";
+                        ByteBuffer pongData = ByteBuffer.allocate(pongString.getBytes().length);
+                        pongData.put(pongString.getBytes()).flip();
+                        activeClientConnection.getSession().getBasicRemote().sendPong(pongData);
+
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
+            });
+
         }else {
 
             if (session.isOpen()) {
@@ -194,7 +234,7 @@ public class WebSocketCloudServerChannel {
     {
         LOG.info(" --------------------------------------------------------------------- ");
         LOG.info("Starting method onWebSocketClose");
-        LOG.info("Socket "+activeClientConnection.getSession().getId() + " is disconnect! code = " + reason.getCloseCode() + "["+reason.getCloseCode().getCode()+"] reason = " + reason.getReasonPhrase());
+        LOG.info("Socket " + activeClientConnection.getSession().getId() + " is disconnect! code = " + reason.getCloseCode() + "[" + reason.getCloseCode().getCode() + "] reason = " + reason.getReasonPhrase());
 
         if (reason.getCloseCode().equals(CloseReason.CloseCodes.CLOSED_ABNORMALLY)) {
             LOG.info("Waiting for client reconnect");
@@ -240,24 +280,6 @@ public class WebSocketCloudServerChannel {
     }
 
     /**
-     * Send ping message to the remote node, to verify is connection
-     * alive
-     */
-    public void sendPingMessage(ClientConnection clientConnection){
-
-        LOG.debug("Sending ping message to remote node (" + clientConnection.getSession().getId() + ")");
-        try {
-            ByteBuffer payload = ByteBuffer.wrap("PING".getBytes());
-            clientConnection.getSession().getAsyncRemote().sendPing(payload);
-            clientConnection.setPendingPongMsg(Boolean.TRUE);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-    }
-
-
-    /**
      * Clean all reference from the connection
      */
     private void cleanReferences(){
@@ -300,7 +322,7 @@ public class WebSocketCloudServerChannel {
         try {
 
             LOG.info("--------------------------------------------------------------------- ");
-            LOG.info("Starting method putReferencesToStandBy" );
+            LOG.info("Starting method putReferencesToStandBy");
             LOG.info("ID = " + activeClientConnection.getSession().getId());
 
            /*
@@ -411,15 +433,5 @@ public class WebSocketCloudServerChannel {
 
         return removeProfile;
     }
-
-    /**
-     * Get the activeClientConnection value
-     *
-     * @return activeClientConnection current value
-     */
-    public ClientConnection getActiveClientConnection() {
-        return activeClientConnection;
-    }
-
 
 }
