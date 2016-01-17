@@ -6,7 +6,9 @@
 
 ## A Peer-to-Peer Financial Application Framework
 
-**Contributors** : Luis Fernando Molina
+**Author** : [Luis Fernando Molina](https://github.com/Luis-Fernando-Molina)
+
+**Contributors** :
 
 **Advisors** :
 
@@ -15,6 +17,12 @@
 November 2015
 
 _www.fermat.org_
+
+<br>
+## Status of the Document
+
+This document is a draft with no formal reviews yet. Some changes are being done from time to time. If you want, you  can make a formal review of this document. We will be happy to add you at the _reviewrs_ section. 
+
 
 <br>
 ## Abstract
