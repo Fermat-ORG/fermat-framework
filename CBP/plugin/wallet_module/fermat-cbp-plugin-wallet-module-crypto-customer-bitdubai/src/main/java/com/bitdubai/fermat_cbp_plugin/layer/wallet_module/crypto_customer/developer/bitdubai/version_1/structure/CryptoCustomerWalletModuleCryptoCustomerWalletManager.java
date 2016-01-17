@@ -27,6 +27,7 @@ import com.bitdubai.fermat_cbp_api.all_definition.negotiation.NegotiationLocatio
 import com.bitdubai.fermat_cbp_api.layer.actor.crypto_broker.exceptions.CantGetListActorExtraDataException;
 import com.bitdubai.fermat_cbp_api.layer.actor.crypto_broker.interfaces.ActorExtraData;
 import com.bitdubai.fermat_cbp_api.layer.actor.crypto_broker.interfaces.ActorExtraDataManager;
+import com.bitdubai.fermat_cbp_api.layer.actor.crypto_broker.interfaces.QuotesExtraData;
 import com.bitdubai.fermat_cbp_api.layer.contract.customer_broker_purchase.exceptions.CantGetListCustomerBrokerContractPurchaseException;
 import com.bitdubai.fermat_cbp_api.layer.contract.customer_broker_purchase.interfaces.CustomerBrokerContractPurchase;
 import com.bitdubai.fermat_cbp_api.layer.contract.customer_broker_purchase.interfaces.CustomerBrokerContractPurchaseManager;
@@ -466,10 +467,10 @@ public class CryptoCustomerWalletModuleCryptoCustomerWalletManager implements Cr
         Collection<BrokerIdentityBusinessInfo> brokerIdentityBusinessInfos = null;
         for (ActorExtraData actorExtraData : actorExtraDatas)
         {
-            for (FiatIndex fiatIndex : actorExtraData.getQuotes()) {
+            for (QuotesExtraData quotesExtraData : actorExtraData.getQuotes()) {
                 CryptoCustomerWalletModuleBrokerIdentityBusinessInfo cryptoCustomerWalletModuleBrokerIdentityBusinessInfo = new CryptoCustomerWalletModuleBrokerIdentityBusinessInfo(
 
-                        actorExtraData.getBrokerIdentity().getAlias(), actorExtraData.getBrokerIdentity().getProfileImage(), actorExtraData.getBrokerIdentity().getPublicKey(), fiatIndex.getMerchandise());
+                        actorExtraData.getBrokerIdentity().getAlias(), actorExtraData.getBrokerIdentity().getProfileImage(), actorExtraData.getBrokerIdentity().getPublicKey(), quotesExtraData.getMerchandise());
 
                 brokerIdentityBusinessInfos.add(cryptoCustomerWalletModuleBrokerIdentityBusinessInfo);
             }
