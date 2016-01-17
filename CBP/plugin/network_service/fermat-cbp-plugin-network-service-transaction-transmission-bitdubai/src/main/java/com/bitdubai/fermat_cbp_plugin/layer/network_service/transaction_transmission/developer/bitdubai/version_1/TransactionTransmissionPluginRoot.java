@@ -1102,7 +1102,7 @@ public class TransactionTransmissionPluginRoot extends AbstractNetworkService im
                     transactionId,
                     transactionTransmissionStates
             );
-            transactionTransmissionNetworkServiceManager.sendContractHashToCryptoBroker(
+            transactionTransmissionNetworkServiceManager.sendContractHash(
                     transactionId,
                     senderId,
                     receiverId,
