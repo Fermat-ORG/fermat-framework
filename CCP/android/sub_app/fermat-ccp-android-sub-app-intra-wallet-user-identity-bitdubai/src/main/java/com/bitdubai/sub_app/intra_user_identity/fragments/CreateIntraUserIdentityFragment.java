@@ -101,7 +101,7 @@ public class CreateIntraUserIdentityFragment extends AbstractFermatFragment {
             intraUserIdentitySubAppSession = (IntraUserIdentitySubAppSession) appSession;
             moduleManager = intraUserIdentitySubAppSession.getModuleManager();
             errorManager = appSession.getErrorManager();
-
+            setHasOptionsMenu(true);
             settingsManager = intraUserIdentitySubAppSession.getModuleManager().getSettingsManager();
 
             try {
@@ -397,9 +397,9 @@ public class CreateIntraUserIdentityFragment extends AbstractFermatFragment {
         return stream.toByteArray();
     }
 
-// TODO: HAY QUE DESCOMENTAR ESTO PARA QUE FUNCIONE EL ICONO DE ITEM SELECTED
+
     public void showDialog(){
-        PresentationIntraUserIdentityDialog presentationIntraUserCommunityDialog = new PresentationIntraUserIdentityDialog(getActivity(), null, null,moduleManager);
+        PresentationIntraUserIdentityDialog presentationIntraUserCommunityDialog = new PresentationIntraUserIdentityDialog(getActivity(),intraUserIdentitySubAppSession, null,moduleManager);
         presentationIntraUserCommunityDialog.show();
     }
 
@@ -434,7 +434,7 @@ public class CreateIntraUserIdentityFragment extends AbstractFermatFragment {
         try {
             int id = item.getItemId();
 
-            if (id == R.id.action_help)
+            if (id == 99)
                 showDialog();
 
 
