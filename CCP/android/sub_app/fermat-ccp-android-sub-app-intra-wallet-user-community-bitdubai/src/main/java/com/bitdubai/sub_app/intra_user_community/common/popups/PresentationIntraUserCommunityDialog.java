@@ -167,11 +167,7 @@ public class PresentationIntraUserCommunityDialog extends FermatDialog<IntraUser
                         IntraUserWalletSettings intraUserWalletSettings = settingsManager.loadAndGetSettings(getSession().getAppPublicKey());
                         intraUserWalletSettings.setIsPresentationHelpEnabled(!dontShowAgainCheckBox.isChecked());
                         settingsManager.persistSettings(getSession().getAppPublicKey(),intraUserWalletSettings);
-                    } catch (CantGetSettingsException e) {
-                        e.printStackTrace();
-                    } catch (SettingsNotFoundException e) {
-                        e.printStackTrace();
-                    } catch (CantPersistSettingsException e) {
+                    } catch (CantGetSettingsException | SettingsNotFoundException | CantPersistSettingsException e) {
                         e.printStackTrace();
                     }
                 }
