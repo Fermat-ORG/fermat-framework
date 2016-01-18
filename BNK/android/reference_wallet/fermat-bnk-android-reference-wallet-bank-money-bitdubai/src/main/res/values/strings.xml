@@ -15,5 +15,9 @@
 
     <string name="bw_withdrawal_transaction_text" translatable="false">Withdrawal</string>
     <string name="bw_deposit_transaction_text" translatable="false">Deposit</string>
+    <string name="bnk_withdrawal_transaction_text_caps" translatable="false">WITHDRAWAL</string>
+    <string name="bnk_deposit_transaction_text_caps" translatable="false">DEPOSIT</string>
+
+
     <string name="add_account" translatable="false">Add Account</string>
 </resources>
