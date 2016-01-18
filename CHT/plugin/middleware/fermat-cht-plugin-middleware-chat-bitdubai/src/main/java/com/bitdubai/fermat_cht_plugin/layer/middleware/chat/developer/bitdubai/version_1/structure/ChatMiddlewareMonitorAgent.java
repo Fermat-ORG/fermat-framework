@@ -266,17 +266,17 @@ public class ChatMiddlewareMonitorAgent implements
                     chatId=eventRecord.getChatId();
                     switch (eventType){
                         case INCOMING_CHAT:
-                            checkIncomingChat(chatId);
-                            eventRecord.setEventStatus(EventStatus.NOTIFIED);
-                            chatMiddlewareDatabaseDao.updateEventRecord(eventRecord);
+                            checkIncomingChat(
+                                    chatId,
+                                    eventRecord);
                             break;
                         case OUTGOING_CHAT:
                             //TODO: TO IMPLEMENT
                             break;
                         case INCOMING_STATUS:
-                            checkIncomingStatus(chatId);
-                            eventRecord.setEventStatus(EventStatus.NOTIFIED);
-                            chatMiddlewareDatabaseDao.updateEventRecord(eventRecord);
+                            checkIncomingStatus(
+                                    chatId,
+                                    eventRecord);
                         default:
                             //TODO: THROW AN EXCEPTION
                             break;
@@ -317,7 +317,9 @@ public class ChatMiddlewareMonitorAgent implements
          * @param eventChatId
          * @throws CantGetPendingTransactionException
          */
-        private void checkIncomingChat(UUID eventChatId) throws CantGetPendingTransactionException {
+        private void checkIncomingChat(UUID eventChatId, EventRecord eventRecord)
+                throws CantGetPendingTransactionException,
+                UnexpectedResultReturnedFromDatabaseException {
             try{
                 List<Transaction<ChatMetadata>> pendingTransactionList=
                         chatNetworkServiceManager.getPendingTransactions(
@@ -341,6 +343,8 @@ public class ChatMiddlewareMonitorAgent implements
                         saveMessage(incomingChatMetadata);
                     }
                 }
+                eventRecord.setEventStatus(EventStatus.NOTIFIED);
+                chatMiddlewareDatabaseDao.updateEventRecord(eventRecord);
             } catch (CantDeliverPendingTransactionsException e) {
                 throw new CantGetPendingTransactionException(
                         e,
@@ -374,8 +378,11 @@ public class ChatMiddlewareMonitorAgent implements
          * @param eventChatId
          * @throws CantGetPendingTransactionException
          */
-        private void checkIncomingStatus(UUID eventChatId) throws
-                CantGetPendingTransactionException {
+        private void checkIncomingStatus(
+                UUID eventChatId,
+                EventRecord eventRecord) throws
+                CantGetPendingTransactionException,
+                UnexpectedResultReturnedFromDatabaseException {
             try{
                 List<Transaction<ChatMetadata>> pendingTransactionList=
                         chatNetworkServiceManager.getPendingTransactions(
@@ -396,6 +403,8 @@ public class ChatMiddlewareMonitorAgent implements
                         break;
                     }
                 }
+                eventRecord.setEventStatus(EventStatus.NOTIFIED);
+                chatMiddlewareDatabaseDao.updateEventRecord(eventRecord);
             } catch (CantDeliverPendingTransactionsException e) {
                 throw new CantGetPendingTransactionException(
                         e,
