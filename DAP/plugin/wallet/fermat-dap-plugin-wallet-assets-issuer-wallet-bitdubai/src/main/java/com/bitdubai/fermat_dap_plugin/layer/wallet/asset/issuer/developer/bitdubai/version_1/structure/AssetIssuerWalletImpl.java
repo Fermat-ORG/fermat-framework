@@ -109,9 +109,9 @@ public class AssetIssuerWalletImpl implements AssetIssuerWallet {
             database = this.pluginDatabaseSystem.openDatabase(this.pluginId, walletId.toString());
             assetIssuerWalletDao = new AssetIssuerWalletDao(database, pluginFileSystem, walletId);
         } catch (CantOpenDatabaseException cantOpenDatabaseException) {
-            throw new CantInitializeAssetIssuerWalletException("I can't open database", cantOpenDatabaseException, "WalletId: " + pluginId.toString(), "");
+            throw new CantInitializeAssetIssuerWalletException("I can't open database", cantOpenDatabaseException, "WalletId: " + walletId.toString(), "");
         } catch (DatabaseNotFoundException databaseNotFoundException) {
-            throw new CantInitializeAssetIssuerWalletException("Database does not exists", databaseNotFoundException, "WalletId: " + pluginId.toString(), "");
+            throw new CantInitializeAssetIssuerWalletException("Database does not exists", databaseNotFoundException, "WalletId: " + walletId.toString(), "");
         } catch (Exception exception) {
             throw new CantInitializeAssetIssuerWalletException(CantInitializeAssetIssuerWalletException.DEFAULT_MESSAGE, FermatException.wrapException(exception), null, null);
         }
