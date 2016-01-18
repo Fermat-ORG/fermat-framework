@@ -18,6 +18,7 @@ import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.interfaces.Bitco
 import com.bitdubai.fermat_ccp_api.layer.crypto_transaction.outgoing_intra_actor.exceptions.CantGetOutgoingIntraActorTransactionManagerException;
 import com.bitdubai.fermat_ccp_api.layer.crypto_transaction.outgoing_intra_actor.exceptions.OutgoingIntraActorCantGetSendCryptoTransactionHashException;
 import com.bitdubai.fermat_ccp_api.layer.crypto_transaction.outgoing_intra_actor.interfaces.OutgoingIntraActorManager;
+import com.bitdubai.fermat_dap_api.layer.all_definition.digital_asset.DigitalAssetMetadata;
 import com.bitdubai.fermat_dap_api.layer.all_definition.enums.AssetBalanceType;
 import com.bitdubai.fermat_dap_api.layer.all_definition.enums.IssuingStatus;
 import com.bitdubai.fermat_dap_api.layer.all_definition.enums.TransactionStatus;
@@ -199,7 +200,7 @@ public class AssetIssuingTransactionMonitorAgent implements Agent {
                 CantCheckAssetIssuingProgressException,
                 UnexpectedResultReturnedFromDatabaseException,
                 CantGetCryptoTransactionException,
-                InvalidParameterException {
+                InvalidParameterException, CantGetDigitalAssetFromLocalStorageException {
 
             for (String eventId : getPendingEvents()) {
                 List<String> genesisTransactionList;
@@ -210,8 +211,9 @@ public class AssetIssuingTransactionMonitorAgent implements Agent {
                     case INCOMING_ASSET_ON_CRYPTO_NETWORK_WAITING_TRANSFERENCE_ASSET_ISSUER: {
                         genesisTransactionList = assetIssuingTransactionDao.getGenesisTransactionsByCryptoStatus(CryptoStatus.PENDING_SUBMIT);
                         for (String genesisTransaction : genesisTransactionList) {
+                            DigitalAssetMetadata metadata = digitalAssetIssuingVault.getDigitalAssetMetadataFromLocalStorage(genesisTransaction);
                             System.out.println("ASSET ISSUING checking status On Crypto Network genesis transaction: " + genesisTransaction);
-                            CryptoTransaction cryptoGenesisTransaction = AssetVerification.getCryptoTransactionFromCryptoNetworkByCryptoStatus(bitcoinNetworkManager, genesisTransaction, CryptoStatus.ON_CRYPTO_NETWORK);
+                            CryptoTransaction cryptoGenesisTransaction = AssetVerification.getCryptoTransactionFromCryptoNetworkByCryptoStatus(bitcoinNetworkManager, metadata.getTransactionChain(), CryptoStatus.ON_CRYPTO_NETWORK);
                             if (cryptoGenesisTransaction == null) {
                                 System.out.println("ASSET ISSUING The genesis transaction " + genesisTransaction + " could not be found in crypto network");
                                 continue;
@@ -235,8 +237,9 @@ public class AssetIssuingTransactionMonitorAgent implements Agent {
                         genesisTransactionList = assetIssuingTransactionDao.getGenesisTransactionsByCryptoStatus(CryptoStatus.ON_CRYPTO_NETWORK);
                         System.out.println("ASSET ISSUING found " + genesisTransactionList.size() + " genesis transactions on crypto network");
                         for (String genesisTransaction : genesisTransactionList) {
+                            DigitalAssetMetadata metadata = digitalAssetIssuingVault.getDigitalAssetMetadataFromLocalStorage(genesisTransaction);
                             System.out.println("ASSET ISSUING checking status On Blockchain genesis transaction: " + genesisTransaction);
-                            CryptoTransaction cryptoGenesisTransaction = AssetVerification.getCryptoTransactionFromCryptoNetworkByCryptoStatus(bitcoinNetworkManager, genesisTransaction, CryptoStatus.ON_BLOCKCHAIN);
+                            CryptoTransaction cryptoGenesisTransaction = AssetVerification.getCryptoTransactionFromCryptoNetworkByCryptoStatus(bitcoinNetworkManager, metadata.getTransactionChain(), CryptoStatus.ON_BLOCKCHAIN);
                             if (cryptoGenesisTransaction == null) {
                                 System.out.println("ASSET ISSUING The genesis transaction " + genesisTransaction + " in crypto network is null");
                                 continue;
