@@ -1,10 +1,9 @@
 package com.bitdubai.fermat_api.layer.all_definition.settings.structure;
 
-import com.bitdubai.fermat_api.layer.all_definition.settings.exceptions.CantBuildSettingsObjectException;
-import com.bitdubai.fermat_api.layer.all_definition.util.XMLParser;
 import com.bitdubai.fermat_api.layer.all_definition.settings.exceptions.CantGetSettingsException;
 import com.bitdubai.fermat_api.layer.all_definition.settings.exceptions.CantPersistSettingsException;
 import com.bitdubai.fermat_api.layer.all_definition.settings.exceptions.SettingsNotFoundException;
+import com.bitdubai.fermat_api.layer.all_definition.util.XMLParser;
 import com.bitdubai.fermat_api.layer.modules.interfaces.FermatSettings;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.FileLifeSpan;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.FilePrivacy;
@@ -14,7 +13,9 @@ import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantCrea
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantPersistFileException;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.FileNotFoundException;
 
+import java.util.Map;
 import java.util.UUID;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * The class <code>com.bitdubai.fermat_api.layer.all_definition.settings.structure.SettingsManager</code>
@@ -33,13 +34,15 @@ public /*abstract */class SettingsManager<Z extends FermatSettings> {
     private final PluginFileSystem pluginFileSystem;
     private final UUID             pluginId        ;
 
-    protected Z moduleSettings;
+    protected Map<String, Z> moduleSettingsMap;
 
     public SettingsManager(final PluginFileSystem pluginFileSystem,
                            final UUID             pluginId        ) {
 
         this.pluginFileSystem = pluginFileSystem;
         this.pluginId         = pluginId        ;
+
+        this.moduleSettingsMap = new ConcurrentHashMap<>();
     };
 
     /**
@@ -51,8 +54,12 @@ public /*abstract */class SettingsManager<Z extends FermatSettings> {
      *
      * @throws CantPersistSettingsException if something goes wrong.
      */
-    public final void persistSettings(final String publicKey,
+    public final void persistSettings(      String publicKey,
                                       final Z      settings ) throws CantPersistSettingsException {
+
+
+        if (publicKey == null)
+            publicKey = "default";
 
         try {
 
@@ -70,7 +77,7 @@ public /*abstract */class SettingsManager<Z extends FermatSettings> {
 
             settingsFile.persistToMedia();
 
-            moduleSettings = settings;
+            moduleSettingsMap.put(publicKey, settings);
 
         } catch(final CantCreateFileException |
                       CantPersistFileException e) {
@@ -93,7 +100,7 @@ public /*abstract */class SettingsManager<Z extends FermatSettings> {
                 pluginTextFile.setContent(settingsContent);
                 pluginTextFile.persistToMedia();
 
-                moduleSettings = settings;
+                moduleSettingsMap.put(publicKey, settings);
 
             } catch (CantCreateFileException | CantPersistFileException z) {
 
@@ -114,11 +121,14 @@ public /*abstract */class SettingsManager<Z extends FermatSettings> {
      * @throws SettingsNotFoundException  if we can't find a module settings for the given public key.
      */
     @SuppressWarnings("unchecked")
-    public final Z loadAndGetSettings(final String publicKey) throws CantGetSettingsException  ,
+    public final Z loadAndGetSettings(String publicKey) throws CantGetSettingsException  ,
                                                                      SettingsNotFoundException {
 
-        if (moduleSettings != null)
-            return moduleSettings;
+        if (publicKey == null)
+            publicKey = "default";
+
+        if (moduleSettingsMap.get(publicKey) != null)
+            return moduleSettingsMap.get(publicKey);
 
         try {
 
@@ -132,7 +142,11 @@ public /*abstract */class SettingsManager<Z extends FermatSettings> {
 
             final String identityFileContent = settingsFile.getContent();
 
+            Z moduleSettings = null;
+
             moduleSettings = (Z) XMLParser.parseXML(identityFileContent, moduleSettings);
+
+            moduleSettingsMap.put(publicKey, moduleSettings);
 
             return moduleSettings;
 
@@ -149,18 +163,5 @@ public /*abstract */class SettingsManager<Z extends FermatSettings> {
 
         return SETTINGS_FILE_NAME_PREFIX + "_" + publicKey;
     }
-
-    /**
-     * Through the method <code>buildSettingsObject</code> you can build a new settings object.
-     *
-     * You must override this method to generate a settings object with the default behaviour.
-     *
-     * @param publicKey  of the wallet or sub-app.
-     *
-     * @return an instance of the settings object.
-     *
-     * @throws CantBuildSettingsObjectException if something goes wrong.
-     */
-    //public abstract Z buildSettingsObject(final String publicKey) throws CantBuildSettingsObjectException;
 
 }

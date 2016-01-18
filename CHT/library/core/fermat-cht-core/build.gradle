@@ -27,7 +27,7 @@ dependencies {
     //Sub App
 
     //Middleware
-
+    compile project(':fermat-cht-plugin-middleware-chat-bitdubai')
     //Sub App Module
     compile project(':fermat-cht-plugin-sub-app-module-chat-bitdubai')
     //Network Service

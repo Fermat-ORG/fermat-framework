@@ -7,6 +7,7 @@ import com.bitdubai.fermat_android_api.layer.definition.wallet.exceptions.Fragme
 import com.bitdubai.fermat_wpd_api.layer.wpd_network_service.wallet_resources.interfaces.WalletResourcesProviderManager;
 import com.bitdubai.reference_wallet.bank_money_wallet.fragments.add_account.AddAccountFragment;
 import com.bitdubai.reference_wallet.bank_money_wallet.fragments.home.AccountsListFragment;
+import com.bitdubai.reference_wallet.bank_money_wallet.fragments.setup.SetupFragment;
 import com.bitdubai.reference_wallet.bank_money_wallet.fragments.summary.AccountDetailFragment;
 import com.bitdubai.reference_wallet.bank_money_wallet.session.BankMoneyWalletSession;
 
@@ -26,6 +27,8 @@ public class BankMoneyWalletFragmentFactory extends FermatFragmentFactory<BankMo
                 return AccountDetailFragment.newInstance();
             case BNK_BANK_MONEY_WALLET_ADD_ACCOUNT:
                 return AddAccountFragment.newInstance();
+            case BNK_BANK_MONEY_WALLET_SETUP:
+                return SetupFragment.newInstance();
             default: throw createFragmentNotFoundException(fragment);
         }
     }

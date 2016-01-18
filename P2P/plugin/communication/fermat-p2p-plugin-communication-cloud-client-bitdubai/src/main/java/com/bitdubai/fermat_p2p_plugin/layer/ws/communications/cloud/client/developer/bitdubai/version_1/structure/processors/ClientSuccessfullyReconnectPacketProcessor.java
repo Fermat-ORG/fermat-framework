@@ -10,6 +10,7 @@ import com.bitdubai.fermat_api.layer.all_definition.crypto.asymmetric.Asymmetric
 import com.bitdubai.fermat_api.layer.all_definition.events.EventSource;
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEvent;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.enums.P2pEventType;
+import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.events.ClientSuccessReconnectNotificationEvent;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.contents.FermatPacket;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.enums.FermatPacketType;
 import com.google.gson.Gson;
@@ -66,6 +67,11 @@ public class ClientSuccessfullyReconnectPacketProcessor extends FermatPacketProc
          */
         FermatEvent event = P2pEventType.CLIENT_SUCCESS_RECONNECT.getNewEvent();
         event.setSource(EventSource.WS_COMMUNICATION_CLOUD_CLIENT_PLUGIN);
+
+        /*
+         * we must ensure set true to Client Register preventing registration of the Network Services if are no registered
+         */
+        getWsCommunicationsCloudClientChannel().setIsRegister(Boolean.TRUE);
 
         /*
          * Raise the event

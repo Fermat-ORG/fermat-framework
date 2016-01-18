@@ -17,6 +17,7 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
 import com.bitdubai.fermat_api.layer.all_definition.settings.exceptions.CantPersistSettingsException;
 import com.bitdubai.fermat_api.layer.all_definition.settings.exceptions.SettingsNotFoundException;
 import com.bitdubai.fermat_api.layer.all_definition.settings.structure.SettingsManager;
+import com.bitdubai.fermat_api.layer.modules.exceptions.ActorIdentityNotSelectedException;
 import com.bitdubai.fermat_api.layer.modules.exceptions.CantGetSelectedActorIdentityException;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
 import com.bitdubai.fermat_cbp_api.layer.actor_connection.crypto_broker.interfaces.CryptoBrokerActorConnectionManager;
@@ -68,6 +69,8 @@ public class CryptoBrokerCommunityManager implements CryptoBrokerCommunitySubApp
     private final PluginFileSystem                   pluginFileSystem                      ;
     private final UUID                               pluginId                              ;
     private final PluginVersionReference             pluginVersionReference                ;
+
+    private       String                             subAppPublicKey                       ;
 
     public CryptoBrokerCommunityManager(final CryptoBrokerIdentityManager        cryptoBrokerIdentityManager           ,
                                         final CryptoBrokerActorConnectionManager cryptoBrokerActorConnectionManager    ,
@@ -404,36 +407,52 @@ public class CryptoBrokerCommunityManager implements CryptoBrokerCommunitySubApp
     }
 
     @Override
-    public CryptoBrokerCommunitySelectableIdentity getSelectedActorIdentity() throws CantGetSelectedActorIdentityException {
+    public CryptoBrokerCommunitySelectableIdentity getSelectedActorIdentity() throws CantGetSelectedActorIdentityException, ActorIdentityNotSelectedException {
 
         try {
 
-            return getSettingsManager().loadAndGetSettings(null).getLastSelectedIdentity();
+            CryptoBrokerCommunitySelectableIdentity lastSelectedIdentity = getSettingsManager().loadAndGetSettings(this.subAppPublicKey).getLastSelectedIdentity();
+
+            if (lastSelectedIdentity != null)
+                return lastSelectedIdentity;
+            else
+                throw new ActorIdentityNotSelectedException("", "There's no an identity selected");
 
         } catch (final SettingsNotFoundException settingsNotFoundException) {
 
             try {
 
-                getSettingsManager().persistSettings(null, new CryptoBrokerCommunitySettings());
+                getSettingsManager().persistSettings(this.subAppPublicKey, new CryptoBrokerCommunitySettings());
 
-                return this.settingsManager.loadAndGetSettings(null).getLastSelectedIdentity();
+                CryptoBrokerCommunitySelectableIdentity lastSelectedIdentity = getSettingsManager().loadAndGetSettings(this.subAppPublicKey).getLastSelectedIdentity();
+
+                if (lastSelectedIdentity != null)
+                    return lastSelectedIdentity;
+                else
+                    throw new ActorIdentityNotSelectedException("", "There's no an identity selected");
 
             }catch (final CantPersistSettingsException exception) {
 
                 throw new CantGetSelectedActorIdentityException(exception, "", "Error trying to persist the settings.");
             } catch (final Exception exception) {
 
+                this.errorManager.reportUnexpectedPluginException(pluginVersionReference, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, exception);
                 throw new CantGetSelectedActorIdentityException(exception, "", "Unhandled Error.");
             }
+        } catch (final ActorIdentityNotSelectedException exception) {
+
+            throw exception;
         } catch (final Exception exception) {
 
+            this.errorManager.reportUnexpectedPluginException(pluginVersionReference, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, exception);
             throw new CantGetSelectedActorIdentityException(exception, "", "Unhandled Error.");
         }
     }
 
     @Override
-    public void setAppPublicKey(String publicKey) {
+    public void setAppPublicKey(final String publicKey) {
 
+        this.subAppPublicKey = publicKey;
     }
 
     @Override

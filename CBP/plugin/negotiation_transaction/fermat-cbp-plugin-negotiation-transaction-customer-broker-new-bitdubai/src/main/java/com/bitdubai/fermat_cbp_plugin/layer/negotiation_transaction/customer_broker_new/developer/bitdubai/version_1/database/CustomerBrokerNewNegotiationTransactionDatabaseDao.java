@@ -9,6 +9,7 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTable;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTableRecord;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantCreateDatabaseException;
+import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantDeleteRecordException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantInsertRecordException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantLoadTableToMemoryException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantOpenDatabaseException;
@@ -90,7 +91,12 @@ public class CustomerBrokerNewNegotiationTransactionDatabaseDao {
             record.setLongValue(CustomerBrokerNewNegotiationTransactionDatabaseConstants.CUSTOMER_BROKER_NEW_TIMESTAMP_COLUMN_NAME, timestamp);
 
             table.insertRecord(record);
-            System.out.print("\n\n**** 4) MOCK CUSTOMER BROKER NEW. PURCHASE NEGOTIATION. DATABASE DAO. transactionId: " + transactionId + " ****\n");
+
+            if(statusTransaction.getCode() == NegotiationTransactionStatus.PENDING_SUBMIT_CONFIRM.getCode()) {
+                System.out.print("\n\n**** 21) MOCK NEGOTIATION TRANSACTION - CUSTOMER BROKER NEW - DAO. CONFIRM negotiationType: " + negotiationType.getCode() + " transactionId: " + transactionId + " ****\n");
+            }else{
+                System.out.print("\n\n**** 4) MOCK NEGOTIATION TRANSACTION - CUSTOMER BROKER NEW - DAO. NEGOTIATION negotiationType: " + negotiationType.getCode() + "transactionId: " + transactionId + " ****\n");
+            }
 
         } catch (CantInsertRecordException e){
             throw new CantRegisterCustomerBrokerNewNegotiationTransactionException (e.getMessage(), e, "Customer Broker New Negotiation Transaction", "Cant create new Customer Broker New Negotiation Transaction, insert database problems.");
@@ -127,14 +133,14 @@ public class CustomerBrokerNewNegotiationTransactionDatabaseDao {
 
             List<DatabaseTableRecord> record;
             DatabaseTable table = this.database.getTable(CustomerBrokerNewNegotiationTransactionDatabaseConstants.CUSTOMER_BROKER_NEW_TABLE_NAME);
-            if (table == null) {
+            if (table == null)
                 throw new CantGetUserDeveloperIdentitiesException("Cant check if customer broker new exists", "Customer Broker New Negotiation Transaction", "");
-            }
+
             table.addUUIDFilter(CustomerBrokerNewNegotiationTransactionDatabaseConstants.CUSTOMER_BROKER_NEW_TRANSACTION_ID_COLUMN_NAME, transactionId, DatabaseFilterType.EQUAL);
             table.loadToMemory();
             record = table.getRecords();
             if (record.size() == 0)
-                throw new CantRegisterCustomerBrokerNewNegotiationTransactionException("The number of records is 0 ", null, "", "");
+                return getTransaction;
 
             for (DatabaseTableRecord records : record) {
                 getTransaction = getCustomerBrokerNewFromRecord(records);
@@ -157,14 +163,14 @@ public class CustomerBrokerNewNegotiationTransactionDatabaseDao {
 
             List<DatabaseTableRecord> record;
             DatabaseTable table = this.database.getTable(CustomerBrokerNewNegotiationTransactionDatabaseConstants.CUSTOMER_BROKER_NEW_TABLE_NAME);
-            if (table == null) {
+            if (table == null)
                 throw new CantGetUserDeveloperIdentitiesException("Cant check if customer broker new exists", "Customer Broker New Negotiation Transaction", "");
-            }
+
             table.addUUIDFilter(CustomerBrokerNewNegotiationTransactionDatabaseConstants.CUSTOMER_BROKER_NEW_NEGOTIATION_ID_COLUMN_NAME, negotiationId, DatabaseFilterType.EQUAL);
             table.loadToMemory();
             record = table.getRecords();
             if (record.size() == 0)
-                throw new CantRegisterCustomerBrokerNewNegotiationTransactionException("The number of records is 0 ", null, "", "");
+                return getTransaction;
 
             for (DatabaseTableRecord records : record) {
                 getTransaction = getCustomerBrokerNewFromRecord(records);
@@ -187,13 +193,13 @@ public class CustomerBrokerNewNegotiationTransactionDatabaseDao {
 
             List<DatabaseTableRecord> record;
             DatabaseTable table = this.database.getTable(CustomerBrokerNewNegotiationTransactionDatabaseConstants.CUSTOMER_BROKER_NEW_TABLE_NAME);
-            if (table == null) {
+            if (table == null)
                 throw new CantGetUserDeveloperIdentitiesException("Cant check if customer broker new exists", "Customer Broker New Negotiation Transaction", "");
-            }
+
             table.loadToMemory();
             record = table.getRecords();
             if (record.size() == 0)
-                throw new CantRegisterCustomerBrokerNewNegotiationTransactionException("The number of records is 0 ", null, "", "");
+                return getTransactions;
 
             for (DatabaseTableRecord records : record) {
                 getTransactions.add(getCustomerBrokerNewFromRecord(records));
@@ -216,9 +222,9 @@ public class CustomerBrokerNewNegotiationTransactionDatabaseDao {
 
             List<DatabaseTableRecord> record;
             DatabaseTable table = this.database.getTable(CustomerBrokerNewNegotiationTransactionDatabaseConstants.CUSTOMER_BROKER_NEW_TABLE_NAME);
-            if (table == null) {
+            if (table == null)
                 throw new CantGetUserDeveloperIdentitiesException("Cant check if customer broker new exists", "Customer Broker New Negotiation Transaction", "");
-            }
+
             table.addStringFilter(CustomerBrokerNewNegotiationTransactionDatabaseConstants.CUSTOMER_BROKER_NEW_STATUS_TRANSACTION_COLUMN_NAME, NegotiationTransactionStatus.PENDING_SUBMIT.getCode(), DatabaseFilterType.EQUAL);
             table.loadToMemory();
             record = table.getRecords();
@@ -248,14 +254,42 @@ public class CustomerBrokerNewNegotiationTransactionDatabaseDao {
     }*/
 
     //GET LIST NEW NEGOTIATION TRANSACTION PENDING TO CONFIRM
-    public List<String> getPendingToConfirmtNegotiation() throws UnexpectedResultReturnedFromDatabaseException, CantGetNegotiationTransactionListException {
+    public List<CustomerBrokerNew> getPendingToConfirmtNegotiation() throws CantGetNegotiationTransactionListException {
+
+        try {
+            List<CustomerBrokerNew> getTransactions = new ArrayList<>();
+
+            List<DatabaseTableRecord> record;
+            DatabaseTable table = this.database.getTable(CustomerBrokerNewNegotiationTransactionDatabaseConstants.CUSTOMER_BROKER_NEW_TABLE_NAME);
+            if (table == null)
+                throw new CantGetUserDeveloperIdentitiesException("Cant check if customer broker new exists", "Customer Broker New Negotiation Transaction", "");
+
+            table.addStringFilter(CustomerBrokerNewNegotiationTransactionDatabaseConstants.CUSTOMER_BROKER_NEW_STATUS_TRANSACTION_COLUMN_NAME, NegotiationTransactionStatus.PENDING_SUBMIT_CONFIRM.getCode(), DatabaseFilterType.EQUAL);
+            table.loadToMemory();
+            record = table.getRecords();
+            if (record.isEmpty())
+                return getTransactions;
+
+            for (DatabaseTableRecord records : record) {
+                getTransactions.add(getCustomerBrokerNewFromRecord(records));
+            }
+
+            return getTransactions;
+
+        } catch (CantLoadTableToMemoryException em) {
+            throw new CantGetNegotiationTransactionListException(em.getMessage(), em, "Customer Broker New Negotiation Transaction not return register", "Cant load " + CustomerBrokerNewNegotiationTransactionDatabaseConstants.CUSTOMER_BROKER_NEW_TABLE_NAME + " table in memory.");
+        } catch (Exception e) {
+            throw new CantGetNegotiationTransactionListException(e.getMessage(), FermatException.wrapException(e), "Customer Broker New Negotiation Transaction not return register", "unknown failure.");
+        }
+    }
+    /*public List<String> getPendingToConfirmtNegotiation() throws UnexpectedResultReturnedFromDatabaseException, CantGetNegotiationTransactionListException {
 
         return getStringList(
                 NegotiationTransactionStatus.PENDING_SUBMIT_CONFIRM.getCode(),
                 CustomerBrokerNewNegotiationTransactionDatabaseConstants.CUSTOMER_BROKER_NEW_STATUS_NEGOTIATION_COLUMN_NAME,
                 CustomerBrokerNewNegotiationTransactionDatabaseConstants.CUSTOMER_BROKER_NEW_NEGOTIATION_ID_COLUMN_NAME);
 
-    }
+    }*/
 
     //GET TRANSACTION ID OF NEGOTIATION TRANSACTION
     public UUID getTransactionId(String negotiationId) throws UnexpectedResultReturnedFromDatabaseException {
@@ -348,6 +382,21 @@ public class CustomerBrokerNewNegotiationTransactionDatabaseDao {
 
     }
 
+    //DELETE METHOD FOR TEST
+    public void deleteAllForTest() throws CantRegisterCustomerBrokerNewNegotiationTransactionException {
+        try {
+
+            DatabaseTable table = this.database.getTable(CustomerBrokerNewNegotiationTransactionDatabaseConstants.CUSTOMER_BROKER_NEW_TABLE_NAME);
+            DatabaseTableRecord record = table.getEmptyRecord();
+            table.deleteRecord(record);
+
+        } catch (CantDeleteRecordException e) {
+            throw new CantRegisterCustomerBrokerNewNegotiationTransactionException(e.getMessage(), e, "Negotiation Transaction, Customer Broker New", "Cant delete Register, delete database problems.");
+        } catch (Exception e) {
+            throw new CantRegisterCustomerBrokerNewNegotiationTransactionException(e.getMessage(), FermatException.wrapException(e), "Negotiation Transaction, Customer Broker New", "Cant delete Register, unknown failure.");
+        }
+    }
+
     /*PUBLIC METHOD*/
     public void saveNewEventTansaction(String eventType, String eventSource) throws CantSaveEventException {
         try {
@@ -364,6 +413,8 @@ public class CustomerBrokerNewNegotiationTransactionDatabaseDao {
             eventRecord.setStringValue(CustomerBrokerNewNegotiationTransactionDatabaseConstants.CUSTOMER_BROKER_NEW_EVENT_STATUS_COLUMN_NAME, EventStatus.PENDING.getCode());
             eventRecord.setLongValue(CustomerBrokerNewNegotiationTransactionDatabaseConstants.CUSTOMER_BROKER_NEW_EVENT_TIMESTAMP_COLUMN_NAME, unixTime);
             table.insertRecord(eventRecord);
+
+            System.out.print("\n\n**** 17) MOCK NEGOTIATION TRANSACTION - NEGOTIATION TRANSMISSION - DAO - REGISTER NEW EVENT ****\n");
 
         } catch (CantInsertRecordException exception) {
             throw new CantSaveEventException(exception, "Saving new event.", "Cannot insert a record in Asset Distribution database");

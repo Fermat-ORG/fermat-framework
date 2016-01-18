@@ -39,6 +39,10 @@ import com.bitdubai.fermat_cbp_api.layer.contract.customer_broker_sale.exception
 import com.bitdubai.fermat_cbp_api.layer.contract.customer_broker_sale.exceptions.CantUpdateCustomerBrokerContractSaleException;
 import com.bitdubai.fermat_cbp_api.layer.contract.customer_broker_sale.interfaces.CustomerBrokerContractSale;
 import com.bitdubai.fermat_cbp_api.layer.contract.customer_broker_sale.interfaces.CustomerBrokerContractSaleManager;
+import com.bitdubai.fermat_cbp_api.layer.negotiation.customer_broker_purchase.exceptions.CantGetListPurchaseNegotiationsException;
+import com.bitdubai.fermat_cbp_api.layer.negotiation.customer_broker_purchase.interfaces.CustomerBrokerPurchaseNegotiation;
+import com.bitdubai.fermat_cbp_api.layer.negotiation.customer_broker_purchase.interfaces.CustomerBrokerPurchaseNegotiationManager;
+import com.bitdubai.fermat_cbp_api.layer.negotiation.customer_broker_sale.interfaces.CustomerBrokerSaleNegotiationManager;
 import com.bitdubai.fermat_cbp_api.layer.network_service.transaction_transmission.exceptions.CantSendContractNewStatusNotificationException;
 import com.bitdubai.fermat_cbp_api.layer.network_service.transaction_transmission.interfaces.BusinessTransactionMetadata;
 import com.bitdubai.fermat_cbp_api.layer.network_service.transaction_transmission.interfaces.TransactionTransmissionManager;
@@ -78,6 +82,7 @@ public class CustomerAckOnlineMerchandiseMonitorAgent implements
     TransactionTransmissionManager transactionTransmissionManager;
     CustomerBrokerContractPurchaseManager customerBrokerContractPurchaseManager;
     CustomerBrokerContractSaleManager customerBrokerContractSaleManager;
+    CustomerBrokerPurchaseNegotiationManager customerBrokerPurchaseNegotiationManager;
 
     public CustomerAckOnlineMerchandiseMonitorAgent(
             PluginDatabaseSystem pluginDatabaseSystem,
@@ -87,7 +92,8 @@ public class CustomerAckOnlineMerchandiseMonitorAgent implements
             UUID pluginId,
             TransactionTransmissionManager transactionTransmissionManager,
             CustomerBrokerContractPurchaseManager customerBrokerContractPurchaseManager,
-            CustomerBrokerContractSaleManager customerBrokerContractSaleManager)  {
+            CustomerBrokerContractSaleManager customerBrokerContractSaleManager,
+            CustomerBrokerPurchaseNegotiationManager customerBrokerPurchaseNegotiationManager)  {
         this.eventManager = eventManager;
         this.pluginDatabaseSystem = pluginDatabaseSystem;
         this.errorManager = errorManager;
@@ -96,6 +102,7 @@ public class CustomerAckOnlineMerchandiseMonitorAgent implements
         this.transactionTransmissionManager=transactionTransmissionManager;
         this.customerBrokerContractPurchaseManager=customerBrokerContractPurchaseManager;
         this.customerBrokerContractSaleManager=customerBrokerContractSaleManager;
+        this.customerBrokerPurchaseNegotiationManager=customerBrokerPurchaseNegotiationManager;
     }
 
     @Override
@@ -389,21 +396,21 @@ public class CustomerAckOnlineMerchandiseMonitorAgent implements
                     );
                 }
                 receiverActorPublicKey=incomingMoneyEventWrapper.getReceiverPublicKey();
-                expectedActorPublicKey= businessTransactionRecord.getBrokerPublicKey();
+                expectedActorPublicKey= businessTransactionRecord.getCustomerPublicKey();
                 if(!receiverActorPublicKey.equals(expectedActorPublicKey)){
                     throw new IncomingOnlineMerchandiseException("The actor public key that receive the money is "+receiverActorPublicKey+"\n" +
                             "The broker public key in contract "+contractHash+"\n" +
                             "is "+expectedActorPublicKey
                     );
                 }
-                incomingWalletPublicKey=incomingMoneyEventWrapper.getWalletPublicKey();
+                /*incomingWalletPublicKey=incomingMoneyEventWrapper.getWalletPublicKey();
                 contractWalletPublicKey= businessTransactionRecord.getExternalWalletPublicKey();
                 if(!incomingWalletPublicKey.equals(contractWalletPublicKey)){
                     throw new IncomingOnlineMerchandiseException("The wallet public key that receive the money is "+incomingWalletPublicKey+"\n" +
                             "The wallet public key in contract "+contractHash+"\n" +
                             "is "+contractWalletPublicKey
                     );
-                }
+                }*/
                 businessTransactionRecord.setContractTransactionStatus(
                         ContractTransactionStatus.PENDING_ACK_ONLINE_MERCHANDISE_NOTIFICATION);
                 customerAckOnlineMerchandiseBusinessTransactionDao.updateBusinessTransactionRecord(
@@ -483,8 +490,15 @@ public class CustomerAckOnlineMerchandiseMonitorAgent implements
                     CustomerBrokerContractPurchase customerBrokerContractPurchase=
                             customerBrokerContractPurchaseManager.getCustomerBrokerContractPurchaseForContractId(
                                     eventId);
+                    String negotiationId=customerBrokerContractPurchase.getNegotiatiotId();
+                    CustomerBrokerPurchaseNegotiation customerBrokerPurchaseNegotiation=
+                            customerBrokerPurchaseNegotiationManager.getNegotiationsByNegotiationId(
+                                    UUID.fromString(
+                                            negotiationId));
                     customerAckOnlineMerchandiseBusinessTransactionDao.persistContractInDatabase(
-                            customerBrokerContractPurchase);
+                            customerBrokerContractPurchase,
+                            customerBrokerPurchaseNegotiation);
+                    customerAckOnlineMerchandiseBusinessTransactionDao.updateEventStatus(eventId, EventStatus.NOTIFIED);
 
                 }
 
@@ -528,6 +542,11 @@ public class CustomerAckOnlineMerchandiseMonitorAgent implements
                         exception,
                         "Checking pending events",
                         "Cannot update the contract sale status");
+            } catch (CantGetListPurchaseNegotiationsException exception) {
+                throw new UnexpectedResultReturnedFromDatabaseException(
+                        exception,
+                        "Checking pending events",
+                        "Cannot get the purchase negotiation list");
             }
 
         }

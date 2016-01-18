@@ -8,7 +8,7 @@ Gustavo H. Corradi <book@fermat.org>
 v.0.0 (draft), December, 2015.
 
 
-image::https://raw.githubusercontent.com/bitDubai/media-kit/master/Readme%20Image/Fermat%20book%20logotype/FermatBookLogotype3D/PNG_fermat_book_logo_3D_Low_800x813.png[FermatBookLogo]
+image::https://raw.githubusercontent.com/bitDubai/media-kit/master/MediaKit/Logotype/Fermat%20Book/PNG/MedQ_1500x1525.png[FermatBookLogo]
 
 
 include::book-chapter-00(intro).asciidoc[Introduction]
@@ -68,4 +68,4 @@ include::conventions.asciidoc[]
 include::book-index.asciidoc[]
 ////
 
-image::https://raw.githubusercontent.com/bitDubai/media-kit/master/Readme%20Image/Background/Front_Bitcoin_scn_low.jpg[FermatCoin]
+image::https://raw.githubusercontent.com/bitDubai/media-kit/master/MediaKit/Coins/Fermat%20Bitcoin/PerspView/1/Front_MedQ_1280x720.jpg[FermatCoin]

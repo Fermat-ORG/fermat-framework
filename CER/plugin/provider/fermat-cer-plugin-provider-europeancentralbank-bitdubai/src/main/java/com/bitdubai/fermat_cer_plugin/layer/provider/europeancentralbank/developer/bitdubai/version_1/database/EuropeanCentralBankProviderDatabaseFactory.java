@@ -85,18 +85,37 @@ public class EuropeanCentralBankProviderDatabaseFactory implements DealsWithPlug
             } catch (CantCreateTableException cantCreateTableException) {
                 throw new CantCreateDatabaseException(CantCreateDatabaseException.DEFAULT_MESSAGE, cantCreateTableException, "", "Exception not handled by the plugin, There is a problem and i cannot create the table.");
             }           /**
-             * Create Query History table.
+             * Create Current Exchange Rates table.
              */
-            table = databaseFactory.newTableFactory(ownerId, EuropeanCentralBankProviderDatabaseConstants.QUERY_HISTORY_TABLE_NAME);
+            table = databaseFactory.newTableFactory(ownerId, EuropeanCentralBankProviderDatabaseConstants.CURRENT_EXCHANGE_RATES_TABLE_NAME);
 
-            table.addColumn(EuropeanCentralBankProviderDatabaseConstants.QUERY_HISTORY_ID_COLUMN_NAME, DatabaseDataType.STRING, 100, Boolean.TRUE);
-            table.addColumn(EuropeanCentralBankProviderDatabaseConstants.QUERY_HISTORY_FROM_CURRENCY_COLUMN_NAME, DatabaseDataType.STRING, 100, Boolean.FALSE);
-            table.addColumn(EuropeanCentralBankProviderDatabaseConstants.QUERY_HISTORY_TO_CURRENCY_COLUMN_NAME, DatabaseDataType.STRING, 100, Boolean.FALSE);
-            table.addColumn(EuropeanCentralBankProviderDatabaseConstants.QUERY_HISTORY_SALE_PRICE_COLUMN_NAME, DatabaseDataType.MONEY, 100, Boolean.FALSE);
-            table.addColumn(EuropeanCentralBankProviderDatabaseConstants.QUERY_HISTORY_PURCHASE_PRICE_COLUMN_NAME, DatabaseDataType.MONEY, 100, Boolean.FALSE);
-            table.addColumn(EuropeanCentralBankProviderDatabaseConstants.QUERY_HISTORY_TIMESTAMP_COLUMN_NAME, DatabaseDataType.LONG_INTEGER, 100, Boolean.FALSE);
+            table.addColumn(EuropeanCentralBankProviderDatabaseConstants.CURRENT_EXCHANGE_RATES_ID_COLUMN_NAME, DatabaseDataType.STRING, 100, Boolean.TRUE);
+            table.addColumn(EuropeanCentralBankProviderDatabaseConstants.CURRENT_EXCHANGE_RATES_FROM_CURRENCY_COLUMN_NAME, DatabaseDataType.STRING, 100, Boolean.FALSE);
+            table.addColumn(EuropeanCentralBankProviderDatabaseConstants.CURRENT_EXCHANGE_RATES_TO_CURRENCY_COLUMN_NAME, DatabaseDataType.STRING, 100, Boolean.FALSE);
+            table.addColumn(EuropeanCentralBankProviderDatabaseConstants.CURRENT_EXCHANGE_RATES_SALE_PRICE_COLUMN_NAME, DatabaseDataType.STRING, 100, Boolean.FALSE);
+            table.addColumn(EuropeanCentralBankProviderDatabaseConstants.CURRENT_EXCHANGE_RATES_PURCHASE_PRICE_COLUMN_NAME, DatabaseDataType.STRING, 100, Boolean.FALSE);
+            table.addColumn(EuropeanCentralBankProviderDatabaseConstants.CURRENT_EXCHANGE_RATES_TIMESTAMP_COLUMN_NAME, DatabaseDataType.LONG_INTEGER, 100, Boolean.FALSE);
 
-            table.addIndex(EuropeanCentralBankProviderDatabaseConstants.QUERY_HISTORY_FIRST_KEY_COLUMN);
+            table.addIndex(EuropeanCentralBankProviderDatabaseConstants.CURRENT_EXCHANGE_RATES_FIRST_KEY_COLUMN);
+
+            try {
+                //Create the table
+                databaseFactory.createTable(ownerId, table);
+            } catch (CantCreateTableException cantCreateTableException) {
+                throw new CantCreateDatabaseException(CantCreateDatabaseException.DEFAULT_MESSAGE, cantCreateTableException, "", "Exception not handled by the plugin, There is a problem and i cannot create the table.");
+            }           /**
+             * Create Daily Exchange Rates table.
+             */
+            table = databaseFactory.newTableFactory(ownerId, EuropeanCentralBankProviderDatabaseConstants.DAILY_EXCHANGE_RATES_TABLE_NAME);
+
+            table.addColumn(EuropeanCentralBankProviderDatabaseConstants.DAILY_EXCHANGE_RATES_ID_COLUMN_NAME, DatabaseDataType.STRING, 100, Boolean.TRUE);
+            table.addColumn(EuropeanCentralBankProviderDatabaseConstants.DAILY_EXCHANGE_RATES_FROM_CURRENCY_COLUMN_NAME, DatabaseDataType.STRING, 100, Boolean.FALSE);
+            table.addColumn(EuropeanCentralBankProviderDatabaseConstants.DAILY_EXCHANGE_RATES_TO_CURRENCY_COLUMN_NAME, DatabaseDataType.STRING, 100, Boolean.FALSE);
+            table.addColumn(EuropeanCentralBankProviderDatabaseConstants.DAILY_EXCHANGE_RATES_SALE_PRICE_COLUMN_NAME, DatabaseDataType.STRING, 100, Boolean.FALSE);
+            table.addColumn(EuropeanCentralBankProviderDatabaseConstants.DAILY_EXCHANGE_RATES_PURCHASE_PRICE_COLUMN_NAME, DatabaseDataType.STRING, 100, Boolean.FALSE);
+            table.addColumn(EuropeanCentralBankProviderDatabaseConstants.DAILY_EXCHANGE_RATES_TIMESTAMP_COLUMN_NAME, DatabaseDataType.LONG_INTEGER, 100, Boolean.FALSE);
+
+            table.addIndex(EuropeanCentralBankProviderDatabaseConstants.DAILY_EXCHANGE_RATES_FIRST_KEY_COLUMN);
 
             try {
                 //Create the table

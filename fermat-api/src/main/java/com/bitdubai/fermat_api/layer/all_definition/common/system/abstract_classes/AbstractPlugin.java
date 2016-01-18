@@ -68,7 +68,7 @@ public abstract class AbstractPlugin implements Plugin, Service {
     }
 
     @Override
-    public final ServiceStatus getStatus() {
+    public ServiceStatus getStatus() {
         return serviceStatus;
     }
 

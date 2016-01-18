@@ -203,7 +203,7 @@ public class SubAppRuntimeEnginePluginRoot extends AbstractPlugin implements Sub
             runtimeActivity.setType(Activities.CWP_WALLET_FACTORY_MAIN);
             runtimeActivity.setColor("#b46a54");
             runtimeActivity.setBackPublicKey(factory_public_key);
-            runtimeSubApp.setStartActivity(Activities.CWP_WALLET_FACTORY_MAIN);
+            runtimeSubApp.addPosibleStartActivity(Activities.CWP_WALLET_FACTORY_MAIN);
             //runtimeActivity.setStatusBarColor("");
 
 
@@ -317,7 +317,7 @@ public class SubAppRuntimeEnginePluginRoot extends AbstractPlugin implements Sub
             runtimeActivity.setType(Activities.CWP_WALLET_PUBLISHER_MAIN);
             runtimeActivity.setColor("#b46a54");
             //runtimeActivity.setStatusBarColor("#b46a54");556
-            runtimeSubApp.setStartActivity(Activities.CWP_WALLET_PUBLISHER_MAIN);
+            runtimeSubApp.addPosibleStartActivity(Activities.CWP_WALLET_PUBLISHER_MAIN);
 
             runtimeTitleBar = new TitleBar();
             runtimeTitleBar.setLabel("Wallet Publisher");
@@ -530,7 +530,7 @@ public class SubAppRuntimeEnginePluginRoot extends AbstractPlugin implements Sub
             runtimeActivity = new Activity();
             runtimeActivity.setType(Activities.CCP_SUB_APP_INTRA_USER_COMMUNITY_CONNECTION_WORLD);
             runtimeActivity.setActivityType(Activities.CCP_SUB_APP_INTRA_USER_COMMUNITY_CONNECTION_WORLD.getCode());
-            subAppIntraUser.setStartActivity(Activities.CCP_SUB_APP_INTRA_USER_COMMUNITY_CONNECTION_WORLD);
+            subAppIntraUser.addPosibleStartActivity(Activities.CCP_SUB_APP_INTRA_USER_COMMUNITY_CONNECTION_WORLD);
             runtimeActivity.setColor("#FF0B46F0");
 
             statusBar = new com.bitdubai.fermat_api.layer.all_definition.navigation_structure.StatusBar();
@@ -728,7 +728,7 @@ public class SubAppRuntimeEnginePluginRoot extends AbstractPlugin implements Sub
             // DAP
             RuntimeSubApp dapFactory = new RuntimeSubApp();
             dapFactory.setType(SubApps.DAP_ASSETS_FACTORY);
-            dapFactory.setStartActivity(Activities.DAP_MAIN);
+            dapFactory.addPosibleStartActivity(Activities.DAP_MAIN);
             dapFactory.setPublicKey("public_key_dap_factory");
 
             runtimeActivity = new Activity();
@@ -872,7 +872,7 @@ public class SubAppRuntimeEnginePluginRoot extends AbstractPlugin implements Sub
             //runtimeActivity.setBackActivity(Activities.CCP_SUB_APP_INTRA_USER_IDENTITY);
             runtimeActivity.setColor("#03A9F4");
             runtimeSubApp.addActivity(runtimeActivity);
-            runtimeSubApp.setStartActivity(Activities.CCP_SUB_APP_INTRA_IDENTITY_CREATE_IDENTITY);
+            runtimeSubApp.addPosibleStartActivity(Activities.CCP_SUB_APP_INTRA_IDENTITY_CREATE_IDENTITY);
 
             runtimeTitleBar = new TitleBar();
             runtimeTitleBar.setLabel("Identity Manager");
@@ -911,7 +911,7 @@ public class SubAppRuntimeEnginePluginRoot extends AbstractPlugin implements Sub
             runtimeActivity.setBackActivity(null);
             runtimeActivity.setColor("#03A9F4");
             runtimeSubApp.addActivity(runtimeActivity);
-//            runtimeSubApp.setStartActivity(Activities.DAP_SUB_APP_ASSET_ISSUER_IDENTITY);
+//            runtimeSubApp.addPosibleStartActivity(Activities.DAP_SUB_APP_ASSET_ISSUER_IDENTITY);
 
             runtimeTitleBar = new TitleBar();
             runtimeTitleBar.setLabel("Issuer Identity");
@@ -937,7 +937,7 @@ public class SubAppRuntimeEnginePluginRoot extends AbstractPlugin implements Sub
 //            runtimeActivity.setBackActivity(Activities.DAP_SUB_APP_ASSET_ISSUER_IDENTITY);
             runtimeActivity.setColor("#03A9F4");
             runtimeSubApp.addActivity(runtimeActivity);
-            runtimeSubApp.setStartActivity(Activities.DAP_SUB_APP_ASSET_ISSUER_IDENTITY_CREATE_IDENTITY);
+            runtimeSubApp.addPosibleStartActivity(Activities.DAP_SUB_APP_ASSET_ISSUER_IDENTITY_CREATE_IDENTITY);
 
             runtimeTitleBar = new TitleBar();
             runtimeTitleBar.setLabel("Create New Issuer Identity");
@@ -973,7 +973,7 @@ public class SubAppRuntimeEnginePluginRoot extends AbstractPlugin implements Sub
             runtimeActivity.setBackActivity(null);
             runtimeActivity.setColor("#03A9F4");
             runtimeSubApp.addActivity(runtimeActivity);
-//            runtimeSubApp.setStartActivity(Activities.DAP_SUB_APP_ASSET_USER_IDENTITY);
+//            runtimeSubApp.addPosibleStartActivity(Activities.DAP_SUB_APP_ASSET_USER_IDENTITY);
 
             runtimeTitleBar = new TitleBar();
             runtimeTitleBar.setLabel("User Identity");
@@ -999,7 +999,7 @@ public class SubAppRuntimeEnginePluginRoot extends AbstractPlugin implements Sub
 //            runtimeActivity.setBackActivity(Activities.DAP_SUB_APP_ASSET_USER_IDENTITY_CREATE_IDENTITY);
             runtimeActivity.setColor("#03A9F4");
             runtimeSubApp.addActivity(runtimeActivity);
-            runtimeSubApp.setStartActivity(Activities.DAP_SUB_APP_ASSET_USER_IDENTITY_CREATE_IDENTITY);
+            runtimeSubApp.addPosibleStartActivity(Activities.DAP_SUB_APP_ASSET_USER_IDENTITY_CREATE_IDENTITY);
 
             runtimeTitleBar = new TitleBar();
             runtimeTitleBar.setLabel("Create New User Identity");
@@ -1034,7 +1034,7 @@ public class SubAppRuntimeEnginePluginRoot extends AbstractPlugin implements Sub
             runtimeActivity.setBackActivity(null);
             runtimeActivity.setColor("#03A9F4");
             runtimeSubApp.addActivity(runtimeActivity);
-//            runtimeSubApp.setStartActivity(Activities.DAP_SUB_APP_REDEEM_POINT_IDENTITY);
+//            runtimeSubApp.addPosibleStartActivity(Activities.DAP_SUB_APP_REDEEM_POINT_IDENTITY);
 
             runtimeTitleBar = new TitleBar();
             runtimeTitleBar.setLabel("Redeem Point Identity");
@@ -1060,7 +1060,7 @@ public class SubAppRuntimeEnginePluginRoot extends AbstractPlugin implements Sub
 //            runtimeActivity.setBackActivity(Activities.DAP_SUB_APP_REDEEM_POINT_IDENTITY_CREATE_IDENTITY);
             runtimeActivity.setColor("#03A9F4");
             runtimeSubApp.addActivity(runtimeActivity);
-            runtimeSubApp.setStartActivity(Activities.DAP_SUB_APP_REDEEM_POINT_IDENTITY_CREATE_IDENTITY);
+            runtimeSubApp.addPosibleStartActivity(Activities.DAP_SUB_APP_REDEEM_POINT_IDENTITY_CREATE_IDENTITY);
 
             runtimeTitleBar = new TitleBar();
             runtimeTitleBar.setLabel("Create New Redeem Point Identity");
@@ -1112,7 +1112,7 @@ public class SubAppRuntimeEnginePluginRoot extends AbstractPlugin implements Sub
         runtimeActivity.setType(Activities.CWP_WALLET_STORE_MAIN_ACTIVITY);
         runtimeActivity.setActivityType(Activities.CWP_WALLET_STORE_MAIN_ACTIVITY.getCode());
         runtimeSubApp.addActivity(runtimeActivity);
-        runtimeSubApp.setStartActivity(Activities.CWP_WALLET_STORE_MAIN_ACTIVITY);
+        runtimeSubApp.addPosibleStartActivity(Activities.CWP_WALLET_STORE_MAIN_ACTIVITY);
 
         statusBar = new StatusBar();
         statusBar.setColor("#B4573C");
@@ -1194,7 +1194,7 @@ public class SubAppRuntimeEnginePluginRoot extends AbstractPlugin implements Sub
         dapAssetIssuerCommunity.setType(SubApps.DAP_ASSETS_COMMUNITY_ISSUER);
         String communityIssuerPublicKey = "public_key_dap_issuer_community";
         dapAssetIssuerCommunity.setPublicKey(communityIssuerPublicKey);
-        dapAssetIssuerCommunity.setStartActivity(Activities.DAP_ASSET_ISSUER_COMMUNITY_ACTIVITY_MAIN);
+        dapAssetIssuerCommunity.addPosibleStartActivity(Activities.DAP_ASSET_ISSUER_COMMUNITY_ACTIVITY_MAIN);
 
         runtimeActivity = new Activity();
         runtimeActivity.setType(Activities.DAP_ASSET_ISSUER_COMMUNITY_ACTIVITY_MAIN);
@@ -1258,7 +1258,7 @@ public class SubAppRuntimeEnginePluginRoot extends AbstractPlugin implements Sub
         dapAssetUserCommunity.setType(SubApps.DAP_ASSETS_COMMUNITY_USER);
         String communityUserPublicKey = "public_key_dap_user_community";
         dapAssetUserCommunity.setPublicKey(communityUserPublicKey);
-        dapAssetUserCommunity.setStartActivity(Activities.DAP_ASSET_USER_COMMUNITY_ACTIVITY_MAIN);
+        dapAssetUserCommunity.addPosibleStartActivity(Activities.DAP_ASSET_USER_COMMUNITY_ACTIVITY_MAIN);
 
         runtimeActivity = new Activity();
         runtimeActivity.setType(Activities.DAP_ASSET_USER_COMMUNITY_ACTIVITY_MAIN);
@@ -1506,7 +1506,7 @@ public class SubAppRuntimeEnginePluginRoot extends AbstractPlugin implements Sub
         dapAssetRedeemPointCommunity.setType(SubApps.DAP_ASSETS_COMMUNITY_REDEEM_POINT);
         String communityRedeemPointPublicKey = "public_key_dap_reedem_point_community";
         dapAssetRedeemPointCommunity.setPublicKey(communityRedeemPointPublicKey);
-        dapAssetRedeemPointCommunity.setStartActivity(Activities.DAP_ASSET_REDEEM_POINT_COMMUNITY_ACTIVITY_MAIN);
+        dapAssetRedeemPointCommunity.addPosibleStartActivity(Activities.DAP_ASSET_REDEEM_POINT_COMMUNITY_ACTIVITY_MAIN);
 
         runtimeActivity = new Activity();
         runtimeActivity.setType(Activities.DAP_ASSET_REDEEM_POINT_COMMUNITY_ACTIVITY_MAIN);
@@ -1576,7 +1576,7 @@ public class SubAppRuntimeEnginePluginRoot extends AbstractPlugin implements Sub
         runtimeActivity.setType(Activities.CBP_SUB_APP_CRYPTO_CUSTOMER_IDENTITY);
         runtimeActivity.setActivityType(Activities.CBP_SUB_APP_CRYPTO_CUSTOMER_IDENTITY.getCode());
         runtimeSubApp.addActivity(runtimeActivity);
-        runtimeSubApp.setStartActivity(Activities.CBP_SUB_APP_CRYPTO_CUSTOMER_IDENTITY);
+        runtimeSubApp.addPosibleStartActivity(Activities.CBP_SUB_APP_CRYPTO_CUSTOMER_IDENTITY);
 
         statusBar = new StatusBar();
         statusBar.setColor("#0288D1");
@@ -1665,7 +1665,7 @@ public class SubAppRuntimeEnginePluginRoot extends AbstractPlugin implements Sub
         runtimeActivity.setType(Activities.CBP_SUB_APP_CRYPTO_BROKER_IDENTITY);
         runtimeActivity.setActivityType(Activities.CBP_SUB_APP_CRYPTO_BROKER_IDENTITY.getCode());
         runtimeSubApp.addActivity(runtimeActivity);
-        runtimeSubApp.setStartActivity(Activities.CBP_SUB_APP_CRYPTO_BROKER_IDENTITY);
+        runtimeSubApp.addPosibleStartActivity(Activities.CBP_SUB_APP_CRYPTO_BROKER_IDENTITY);
 
         statusBar = new StatusBar();
         statusBar.setColor("#0e738b");
@@ -1753,7 +1753,7 @@ public class SubAppRuntimeEnginePluginRoot extends AbstractPlugin implements Sub
         runtimeActivity = new Activity();
         runtimeActivity.setType(Activities.CCP_SUB_APP_INTRA_USER_COMMUNITY_CONNECTION_WORLD);
         runtimeActivity.setActivityType(Activities.CCP_SUB_APP_INTRA_USER_COMMUNITY_CONNECTION_WORLD.getCode());
-        subAppIntraUser.setStartActivity(Activities.CCP_SUB_APP_INTRA_USER_COMMUNITY_CONNECTION_WORLD);
+        subAppIntraUser.addPosibleStartActivity(Activities.CCP_SUB_APP_INTRA_USER_COMMUNITY_CONNECTION_WORLD);
         runtimeActivity.setColor("#FF0B46F0");
 
         statusBar = new com.bitdubai.fermat_api.layer.all_definition.navigation_structure.StatusBar();
@@ -1965,7 +1965,7 @@ public class SubAppRuntimeEnginePluginRoot extends AbstractPlugin implements Sub
         runtimeActivity.setStatusBar(statusBar);
 
         runtimeSubApp.addActivity(runtimeActivity);
-        runtimeSubApp.setStartActivity(Activities.CWP_SUB_APP_ALL_DEVELOPER);
+        runtimeSubApp.addPosibleStartActivity(Activities.CWP_SUB_APP_ALL_DEVELOPER);
 
         runtimeTitleBar = new TitleBar();
         runtimeTitleBar.setLabel("Developer");
@@ -2040,7 +2040,7 @@ public class SubAppRuntimeEnginePluginRoot extends AbstractPlugin implements Sub
         chtChat.setType(SubApps.CHT_CHAT);
         String chatPublicKey = "public_key_cht_chat";
         chtChat.setPublicKey(chatPublicKey);
-        chtChat.setStartActivity(Activities.CHT_CHAT_OPEN_CHATLIST_TAB_FRAGMENT);
+        chtChat.addPosibleStartActivity(Activities.CHT_CHAT_OPEN_CHATLIST_TAB_FRAGMENT);
 
         //Activity Chat
         runtimeActivity = new Activity();

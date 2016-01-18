@@ -27,8 +27,6 @@ import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.exceptions.Ca
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.exceptions.CantRegisterComponentException;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.exceptions.CantRequestListException;
 import com.bitdubai.fermat_p2p_plugin.layer.ws.communications.cloud.client.developer.bitdubai.version_1.WsCommunicationsCloudClientPluginRoot;
-import com.bitdubai.fermat_p2p_plugin.layer.ws.communications.cloud.client.developer.bitdubai.version_1.structure.agents.WsCommunicationsCloudClientAgent;
-import com.bitdubai.fermat_p2p_plugin.layer.ws.communications.cloud.client.developer.bitdubai.version_1.structure.agents.WsCommunicationsCloudClientPingAgent;
 import com.bitdubai.fermat_p2p_plugin.layer.ws.communications.cloud.client.developer.bitdubai.version_1.structure.processors.ClientSuccessfullyReconnectPacketProcessor;
 import com.bitdubai.fermat_p2p_plugin.layer.ws.communications.cloud.client.developer.bitdubai.version_1.structure.processors.CompleteComponentConnectionRequestPacketProcessor;
 import com.bitdubai.fermat_p2p_plugin.layer.ws.communications.cloud.client.developer.bitdubai.version_1.structure.processors.CompleteRegistrationComponentPacketProcessor;
@@ -53,7 +51,6 @@ import org.java_websocket.drafts.Draft_17;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.StringHttpMessageConverter;
 import org.springframework.util.LinkedMultiValueMap;
@@ -96,16 +93,6 @@ public class WsCommunicationsCloudClientConnection implements CommunicationsClie
     private WsCommunicationVPNClientManagerAgent wsCommunicationVPNClientManagerAgent;
 
     /**
-     * Represent the wsCommunicationsCloudClientAgent
-     */
-    private WsCommunicationsCloudClientAgent wsCommunicationsCloudClientAgent;
-
-    /**
-     * Represent the wsCommunicationsCloudClientPingAgent
-     */
-    private WsCommunicationsCloudClientPingAgent wsCommunicationsCloudClientPingAgent;
-
-    /**
      * Represent the locationManager
      */
     private LocationManager locationManager;
@@ -119,9 +106,7 @@ public class WsCommunicationsCloudClientConnection implements CommunicationsClie
     public WsCommunicationsCloudClientConnection(URI uri, EventManager eventManager, LocationManager locationManager, ECCKeyPair clientIdentity) {
         super();
         this.wsCommunicationsCloudClientChannel   = WsCommunicationsCloudClientChannel.constructWsCommunicationsCloudClientFactory(uri, new Draft_17(), this, eventManager, clientIdentity);
-        this.wsCommunicationsCloudClientAgent     = new WsCommunicationsCloudClientAgent(wsCommunicationsCloudClientChannel);
-        this.wsCommunicationsCloudClientPingAgent = new WsCommunicationsCloudClientPingAgent(wsCommunicationsCloudClientChannel);
-        this.wsCommunicationVPNClientManagerAgent = new WsCommunicationVPNClientManagerAgent();
+        this.wsCommunicationVPNClientManagerAgent = WsCommunicationVPNClientManagerAgent.getInstance();
         this.locationManager                      = locationManager;
     }
 
@@ -324,7 +309,7 @@ public class WsCommunicationsCloudClientConnection implements CommunicationsClie
 
 
         }catch (Exception e){
-            System.out.println("WsCommunicationsCloudClientConnection - Client Connection possibly is Close :"+e);
+            System.out.println("WsCommunicationsCloudClientConnection: "+e.getStackTrace());
             CantRegisterComponentException pluginStartException = new CantRegisterComponentException(CantRegisterComponentException.DEFAULT_MESSAGE, e, e.getLocalizedMessage(), e.getLocalizedMessage());
             throw pluginStartException;
 
@@ -384,7 +369,7 @@ public class WsCommunicationsCloudClientConnection implements CommunicationsClie
 
 
         }catch (Exception e){
-            System.out.println("WsCommunicationsCloudClientConnection - Client Connection possibly is Close :"+e);
+            System.out.println("WsCommunicationsCloudClientConnection+:"+e.getStackTrace());
             CantRegisterComponentException pluginStartException = new CantRegisterComponentException(CantRegisterComponentException.DEFAULT_MESSAGE, e, e.getLocalizedMessage(), e.getLocalizedMessage());
             throw pluginStartException;
 
@@ -439,7 +424,7 @@ public class WsCommunicationsCloudClientConnection implements CommunicationsClie
             }
 
         }catch (Exception e){
-            System.out.println("WsCommunicationsCloudClientConnection - Client Connection possibly is Close :"+e);
+            System.out.println("WsCommunicationsCloudClientConnection: "+e.getStackTrace());
             CantRequestListException pluginStartException = new CantRequestListException(CantRequestListException.DEFAULT_MESSAGE, e, e.getLocalizedMessage(), e.getLocalizedMessage());
             throw pluginStartException;
 
@@ -687,6 +672,13 @@ public class WsCommunicationsCloudClientConnection implements CommunicationsClie
             throw new IllegalArgumentException("All parameters are required, can not be null");
         }
 
+        /*
+         * Validate are the  type NETWORK_SERVICE
+         */
+        if (applicant.getIdentityPublicKey().equals(remoteDestination.getIdentityPublicKey())){
+            throw new IllegalArgumentException("The applicant and remote can not be the same component");
+        }
+
         try{
 
             List<PlatformComponentProfile> participants = new ArrayList();
@@ -741,7 +733,7 @@ public class WsCommunicationsCloudClientConnection implements CommunicationsClie
             }
 
         }catch (Exception e){
-            System.out.println("WsCommunicationsCloudClientConnection - Client Connection possibly is Close :" + e);
+            System.out.println("WsCommunicationsCloudClientConnection: " + e);
             CantEstablishConnectionException pluginStartException = new CantEstablishConnectionException(CantEstablishConnectionException.DEFAULT_MESSAGE, e, e.getLocalizedMessage(), e.getLocalizedMessage());
             throw pluginStartException;
 
@@ -812,7 +804,7 @@ public class WsCommunicationsCloudClientConnection implements CommunicationsClie
             }
 
         }catch (Exception e){
-            System.out.println("WsCommunicationsCloudClientConnection - Client Connection possibly is Close :"+e);
+            System.out.println("WsCommunicationsCloudClientConnection - "+e.getStackTrace());
             CantEstablishConnectionException pluginStartException = new CantEstablishConnectionException(CantEstablishConnectionException.DEFAULT_MESSAGE, e, e.getLocalizedMessage(), e.getLocalizedMessage());
             throw pluginStartException;
         }
@@ -829,22 +821,29 @@ public class WsCommunicationsCloudClientConnection implements CommunicationsClie
 
         System.out.println("WsCommunicationsCloudClientConnection - requestDiscoveryVpnConnection");
 
-            /*
-             * Validate parameter
-             */
+        /*
+         * Validate parameter
+         */
         if (applicantParticipant == null || applicantNetworkService == null || remoteParticipant == null){
 
             throw new IllegalArgumentException("All parameters are required, can not be null");
         }
 
-        try {
+        /*
+         * Validate are the  type NETWORK_SERVICE
+         */
+        if (applicantNetworkService.getPlatformComponentType() != PlatformComponentType.NETWORK_SERVICE){
+            throw new IllegalArgumentException("The PlatformComponentProfile of the applicantNetworkService has to be NETWORK_SERVICE ");
+        }
 
-            /*
-             * Validate are the  type NETWORK_SERVICE
-             */
-            if (applicantNetworkService.getPlatformComponentType() != PlatformComponentType.NETWORK_SERVICE){
-                throw new IllegalArgumentException("The PlatformComponentProfile of the applicantNetworkService has to be NETWORK_SERVICE ");
-            }
+        /*
+         * Validate are the  type NETWORK_SERVICE
+         */
+        if (applicantParticipant.getIdentityPublicKey().equals(remoteParticipant.getIdentityPublicKey())){
+            throw new IllegalArgumentException("The applicant and remote can not be the same component");
+        }
+
+        try {
 
             /*
              * Construct the json object
@@ -884,7 +883,7 @@ public class WsCommunicationsCloudClientConnection implements CommunicationsClie
             }
 
         }catch (Exception e){
-            System.out.println("WsCommunicationsCloudClientConnection - Client Connection possibly is Close :"+e);
+            System.out.println("WsCommunicationsCloudClientConnection: "+e.getStackTrace());
             CantEstablishConnectionException pluginStartException = new CantEstablishConnectionException(CantEstablishConnectionException.DEFAULT_MESSAGE, e, e.getLocalizedMessage(), e.getLocalizedMessage());
             throw pluginStartException;
         }
@@ -941,7 +940,6 @@ public class WsCommunicationsCloudClientConnection implements CommunicationsClie
         return wsCommunicationVPNClientManagerAgent;
     }
 
-
     /**
      * (non-javadoc)
      * @see CommunicationsClientConnection#isRegister()
@@ -950,12 +948,7 @@ public class WsCommunicationsCloudClientConnection implements CommunicationsClie
         return wsCommunicationsCloudClientChannel.isRegister();
     }
 
-    /**
-     * Stop the ping agent
-     */
-    protected void stopWsCommunicationsCloudClientPingAgent(){
-        wsCommunicationsCloudClientPingAgent.interrupt();
-    }
+
 
     public void springTest(){
 
