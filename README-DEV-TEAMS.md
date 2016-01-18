@@ -420,5 +420,11 @@ In the Fermat ORG Sierra Team we look for the excellence in coding, following th
     Skype:   campol
     Github:  https://github.com/campol
 
+* **Erick Narvaez [ORG Developer]**<br/>
+---
+    Email:   ericknarvaez@hotmail.com 
+    Skype:   campol
+    Github:  https://github.com/korik1
+
 <br/>
 
