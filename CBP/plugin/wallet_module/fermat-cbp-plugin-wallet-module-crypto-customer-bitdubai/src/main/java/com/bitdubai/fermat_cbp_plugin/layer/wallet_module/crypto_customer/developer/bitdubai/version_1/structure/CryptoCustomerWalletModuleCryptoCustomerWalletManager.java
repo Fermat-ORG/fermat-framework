@@ -24,6 +24,10 @@ import com.bitdubai.fermat_cbp_api.all_definition.enums.NegotiationType;
 import com.bitdubai.fermat_cbp_api.all_definition.negotiation.Clause;
 import com.bitdubai.fermat_cbp_api.all_definition.negotiation.NegotiationBankAccount;
 import com.bitdubai.fermat_cbp_api.all_definition.negotiation.NegotiationLocations;
+import com.bitdubai.fermat_cbp_api.layer.actor.crypto_broker.exceptions.CantGetListActorExtraDataException;
+import com.bitdubai.fermat_cbp_api.layer.actor.crypto_broker.interfaces.ActorExtraData;
+import com.bitdubai.fermat_cbp_api.layer.actor.crypto_broker.interfaces.ActorExtraDataManager;
+import com.bitdubai.fermat_cbp_api.layer.actor.crypto_broker.interfaces.QuotesExtraData;
 import com.bitdubai.fermat_cbp_api.layer.contract.customer_broker_purchase.exceptions.CantGetListCustomerBrokerContractPurchaseException;
 import com.bitdubai.fermat_cbp_api.layer.contract.customer_broker_purchase.interfaces.CustomerBrokerContractPurchase;
 import com.bitdubai.fermat_cbp_api.layer.contract.customer_broker_purchase.interfaces.CustomerBrokerContractPurchaseManager;
@@ -42,6 +46,7 @@ import com.bitdubai.fermat_cbp_api.layer.negotiation.customer_broker_purchase.in
 import com.bitdubai.fermat_cbp_api.layer.negotiation_transaction.customer_broker_new.exceptions.CantCreateCustomerBrokerNewPurchaseNegotiationTransactionException;
 import com.bitdubai.fermat_cbp_api.layer.negotiation_transaction.customer_broker_new.interfaces.CustomerBrokerNewManager;
 import com.bitdubai.fermat_cbp_api.layer.user_level_business_transaction.customer_broker_purchase.interfaces.CustomerBrokerPurchaseManager;
+import com.bitdubai.fermat_cbp_api.layer.wallet.crypto_broker.interfaces.FiatIndex;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.common.exceptions.CantGetContractHistoryException;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.common.exceptions.CantGetContractsWaitingForBrokerException;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.common.exceptions.CantGetContractsWaitingForCustomerException;
@@ -68,14 +73,18 @@ import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_customer.interface
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_customer.interfaces.CryptoCustomerWalletManager;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_customer.interfaces.settings.CryptoCustomerWalletAssociatedSetting;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_customer.interfaces.settings.CryptoCustomerWalletProviderSetting;
+import com.bitdubai.fermat_cer_api.all_definition.interfaces.CurrencyPair;
+import com.bitdubai.fermat_cer_api.layer.provider.exceptions.CantGetProviderInfoException;
 import com.bitdubai.fermat_cer_api.layer.provider.interfaces.CurrencyExchangeRateProviderManager;
 import com.bitdubai.fermat_cer_api.layer.search.exceptions.CantGetProviderException;
+import com.bitdubai.fermat_cer_api.layer.search.interfaces.CurrencyExchangeProviderFilterManager;
 import com.bitdubai.fermat_wpd_api.layer.wpd_middleware.wallet_manager.exceptions.CantListWalletsException;
 import com.bitdubai.fermat_wpd_api.layer.wpd_middleware.wallet_manager.interfaces.InstalledWallet;
 import com.bitdubai.fermat_wpd_api.layer.wpd_middleware.wallet_manager.interfaces.WalletManagerManager;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
@@ -94,6 +103,8 @@ public class CryptoCustomerWalletModuleCryptoCustomerWalletManager implements Cr
     private final CryptoCustomerIdentityManager cryptoCustomerIdentityManager;
     private final CustomerBrokerContractPurchaseManager customerBrokerContractPurchaseManager;
     private final CustomerBrokerNewManager customerBrokerNewManager;
+    private final CurrencyExchangeProviderFilterManager currencyExchangeProviderFilterManager;
+    private final ActorExtraDataManager actorExtraDataManager;
     private String merchandise = null, typeOfPayment = null, paymentCurrency = null;
 
     /*
@@ -105,7 +116,9 @@ public class CryptoCustomerWalletModuleCryptoCustomerWalletManager implements Cr
                                                                  PluginFileSystem pluginFileSystem,
                                                                  CryptoCustomerIdentityManager cryptoCustomerIdentityManager,
                                                                  CustomerBrokerContractPurchaseManager customerBrokerContractPurchaseManager,
-                                                                 CustomerBrokerNewManager customerBrokerNewManage)
+                                                                 CustomerBrokerNewManager customerBrokerNewManage,
+                                                                 CurrencyExchangeProviderFilterManager currencyExchangeProviderFilterManager,
+                                                                 ActorExtraDataManager actorExtraDataManager)
     {
         this.walletManagerManager                     = walletManagerManager;
         this.customerBrokerPurchaseNegotiationManager = customerBrokerPurchaseNegotiationManager;
@@ -114,6 +127,8 @@ public class CryptoCustomerWalletModuleCryptoCustomerWalletManager implements Cr
         this.cryptoCustomerIdentityManager            = cryptoCustomerIdentityManager;
         this.customerBrokerContractPurchaseManager    = customerBrokerContractPurchaseManager;
         this.customerBrokerNewManager                 = customerBrokerNewManage;
+        this.currencyExchangeProviderFilterManager    = currencyExchangeProviderFilterManager;
+        this.actorExtraDataManager                    = actorExtraDataManager;
     }
 
     private List<ContractBasicInformation> contractsHistory;
@@ -446,13 +461,28 @@ public class CryptoCustomerWalletModuleCryptoCustomerWalletManager implements Cr
     }
 
     @Override
-    public Collection<BrokerIdentityBusinessInfo> getListOfConnectedBrokersAndTheirMerchandises(String customerPublicKey) throws CantGetCryptoBrokerListException {
-        return getBrokerListTestData(); //recorrer actor NS y buscar dicho actor en el plugin Actor y devolver la mercancia del actor
+    public Collection<BrokerIdentityBusinessInfo> getListOfConnectedBrokersAndTheirMerchandises(String customerPublicKey) throws CantGetCryptoBrokerListException, CantGetListActorExtraDataException {
+
+        Collection<ActorExtraData> actorExtraDatas = actorExtraDataManager.getAllActorExtraDataConnected();
+        Collection<BrokerIdentityBusinessInfo> brokerIdentityBusinessInfos = null;
+        for (ActorExtraData actorExtraData : actorExtraDatas)
+        {
+            for (QuotesExtraData quotesExtraData : actorExtraData.getQuotes()) {
+                CryptoCustomerWalletModuleBrokerIdentityBusinessInfo cryptoCustomerWalletModuleBrokerIdentityBusinessInfo = new CryptoCustomerWalletModuleBrokerIdentityBusinessInfo(
+
+                        actorExtraData.getBrokerIdentity().getAlias(), actorExtraData.getBrokerIdentity().getProfileImage(), actorExtraData.getBrokerIdentity().getPublicKey(), quotesExtraData.getMerchandise());
+
+                brokerIdentityBusinessInfos.add(cryptoCustomerWalletModuleBrokerIdentityBusinessInfo);
+            }
+        }
+
+        return brokerIdentityBusinessInfos;//getBrokerListTestData(); //recorrer actor NS y buscar dicho actor en el plugin Actor y devolver la mercancia del actor
     }
 
     @Override
     public Collection<MerchandiseExchangeRate> getListOfBrokerMerchandisesExchangeRate(String brokerPublicKey, FermatEnum target) {
-        List<MerchandiseExchangeRate> list = new ArrayList<>(); //PublicKeyWallet y los providers asociados a la wallet y luego buscarlo en el CER
+        //TODO: Implementar PublicKeyWallet y los providers asociados a la wallet y luego buscarlo en el CER
+        List<MerchandiseExchangeRate> list = new ArrayList<>();
 
         list.add(new CryptoCustomerWalletModuleMerchandiseExchangeRate(target, CryptoCurrency.LITECOIN, 250));
         list.add(new CryptoCustomerWalletModuleMerchandiseExchangeRate(target, FiatCurrency.COLOMBIAN_PESO, 240000.23));
@@ -610,8 +640,25 @@ public class CryptoCustomerWalletModuleCryptoCustomerWalletManager implements Cr
      * @return a Map of name/provider reference pairs
      */
     @Override
-    public Map<String, CurrencyExchangeRateProviderManager> getProviderReferencesFromCurrencyPair(Currency currencyFrom, Currency currencyTo) throws CantGetProviderException {
-        return null;
+    public Map<String, CurrencyExchangeRateProviderManager> getProviderReferencesFromCurrencyPair(final Currency currencyFrom, final Currency currencyTo) throws CantGetProviderException, CantGetProviderInfoException {
+        Map<String, CurrencyExchangeRateProviderManager> managerMap = new HashMap<String, CurrencyExchangeRateProviderManager>();
+        CurrencyPair currencyPair = new CurrencyPair() {
+            @Override
+            public Currency getFrom() {
+                return currencyFrom;
+            }
+
+            @Override
+            public Currency getTo() {
+                return currencyTo;
+            }
+        };
+        for (CurrencyExchangeRateProviderManager currencyExchangeRateProviderManager : currencyExchangeProviderFilterManager.getProviderReferencesFromCurrencyPair(currencyPair))
+        {
+            managerMap.put(currencyExchangeRateProviderManager.getProviderName(), currencyExchangeRateProviderManager);
+        }
+
+        return managerMap;
     }
 
     @Override
