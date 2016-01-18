@@ -26,6 +26,7 @@ import com.bitdubai.fermat_android_api.ui.util.BitmapWorkerTask;
 import com.bitdubai.fermat_android_api.ui.util.FermatWorker;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
 import com.bitdubai.fermat_dap_android_wallet_asset_issuer_bitdubai.R;
+import com.bitdubai.fermat_dap_android_wallet_asset_issuer_bitdubai.dialogs.DistributeAcceptDialog;
 import com.bitdubai.fermat_dap_android_wallet_asset_issuer_bitdubai.models.Data;
 import com.bitdubai.fermat_dap_android_wallet_asset_issuer_bitdubai.models.DigitalAsset;
 import com.bitdubai.fermat_dap_android_wallet_asset_issuer_bitdubai.models.User;
@@ -115,9 +116,16 @@ public class AssetDeliveryFragment extends AbstractFermatFragment {
                 } else {
                     Object x = appSession.getData("users");
                     if (x != null) {
-                        List<User> users = (List<User>) x;
+                        final List<User> users = (List<User>) x;
                         if (users.size() > 0) {
-                            doDistribute(digitalAsset.getAssetPublicKey(), users);
+                            DistributeAcceptDialog dialog = new DistributeAcceptDialog(getActivity(), (AssetIssuerSession) appSession, appResourcesProviderManager);
+                            dialog.setYesBtnListener(new DistributeAcceptDialog.OnClickAcceptListener() {
+                                @Override
+                                public void onClick() {
+                                    doDistribute(digitalAsset.getAssetPublicKey(), null);
+                                }
+                            });
+                            dialog.show();
                         }
                     }
                 }
