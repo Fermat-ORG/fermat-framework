@@ -76,14 +76,14 @@ public class TransactionListViewHolder extends FermatViewHolder {
 
             depositItemsVisible();
             depositAmount.setText(String.valueOf(itemInfo.getAmount()));
-            depositDate.setText(DateUtils.getRelativeTimeSpanString(itemInfo.getTimestamp() * 1000).toString());
+            depositDate.setText(DateUtils.getRelativeTimeSpanString(itemInfo.getTimestamp()).toString());
             depositMemo.setText(itemInfo.getMemo());
         }
         else {
 
             withdrawalItemsVisible();
             withdrawalAmount.setText(String.valueOf(itemInfo.getAmount()));
-            withdrawalDate.setText(DateUtils.getRelativeTimeSpanString(itemInfo.getTimestamp() * 1000).toString());
+            withdrawalDate.setText(DateUtils.getRelativeTimeSpanString(itemInfo.getTimestamp()).toString());
             withdrawalMemo.setText(itemInfo.getMemo());
         }
     }
