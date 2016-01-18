@@ -1751,7 +1751,7 @@ public abstract class FermatActivity extends AppCompatActivity
     }
     @Override
     public void setActivityBackgroundColor(Drawable drawable){
-        if(drawable!=null) coordinatorLayout.setBackground(drawable);
+        if(drawable!=null) pagertabs.setBackground(drawable);
 
     }
 

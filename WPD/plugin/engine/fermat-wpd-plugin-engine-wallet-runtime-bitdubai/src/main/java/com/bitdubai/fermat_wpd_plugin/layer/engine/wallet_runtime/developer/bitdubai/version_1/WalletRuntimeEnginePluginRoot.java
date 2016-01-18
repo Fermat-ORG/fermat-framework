@@ -1925,6 +1925,14 @@ public class WalletRuntimeEnginePluginRoot extends AbstractPlugin implements
         runtimeWalletNavigationStructure.addActivity(runtimeActivity);
         runtimeWalletNavigationStructure.addPosibleStartActivity(Activities.CBP_CRYPTO_BROKER_WALLET_SET_IDENTITY);
 
+        Footer runtimeFooter = new Footer();
+        runtimeFooter.setBackgroundColor("#AAAAAA");
+        runtimeFragment = new Fragment();
+        runtimeFragment.setType(Fragments.CBP_CRYPTO_BROKER_WALLET_STOCK_STATISTICS.getKey());
+        runtimeActivity.addFragment(Fragments.CBP_CRYPTO_BROKER_WALLET_STOCK_STATISTICS.getKey(), runtimeFragment);
+        runtimeFooter.setFragmentCode(Fragments.CBP_CRYPTO_BROKER_WALLET_STOCK_STATISTICS.getKey());
+        runtimeActivity.setFooter(runtimeFooter);
+
         String walletSetupLabel = "Wallet Setup";
 
         runtimeStatusBar = new StatusBar();
@@ -2100,7 +2108,7 @@ public class WalletRuntimeEnginePluginRoot extends AbstractPlugin implements
         runtimeActivity.addFragment(Fragments.CBP_CRYPTO_BROKER_WALLET_OPEN_CONTRACTS_TAB.getKey(), runtimeFragment);
 
         // TODO falta agregar un footer a navigation structure
-        Footer runtimeFooter = new Footer();
+        runtimeFooter = new Footer();
         runtimeFooter.setBackgroundColor("#AAAAAA");
         runtimeFragment = new Fragment();
         runtimeFragment.setType(Fragments.CBP_CRYPTO_BROKER_WALLET_STOCK_STATISTICS.getKey());

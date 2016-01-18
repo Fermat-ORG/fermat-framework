@@ -90,7 +90,7 @@
                 android:layout_height="wrap_content"
                 android:id="@+id/txt_time"
                 android:text="03 Feb 2014"
-                android:textSize="10dp"
+                android:textSize="11dp"
                 android:textColor="#07346f"
                 android:fontFamily="roboto"/>
 
@@ -118,7 +118,7 @@
             android:layout_height="wrap_content"
             android:id="@+id/txt_state"
             android:text="Accepted"
-            android:textColor="#1173aa"
+            android:textColor="#07346f"
             android:textSize="13dp"
             android:layout_marginRight="10dp"/>
 
@@ -133,6 +133,7 @@
         android:gravity="end"
         android:paddingRight="15dp"
         android:id="@+id/linear_layour_container_buttons"
+        android:visibility="visible"
         >
 
         <Button
