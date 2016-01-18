@@ -104,7 +104,7 @@ public class CustomerBrokerNewServiceEventHandler implements CBPService {
                 "\n - Source = "+event.getSource().getCode()+
                 "****\n");
 
-//        this.customerBrokerNewNegotiationTransactionDatabaseDao.saveNewEventTansaction(event.getEventType().getCode(), event.getSource().getCode());
+        this.customerBrokerNewNegotiationTransactionDatabaseDao.saveNewEventTansaction(event.getEventType().getCode(), event.getSource().getCode());
 //        LOG.info("CHECK THE DATABASE");
     }
 
