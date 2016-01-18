@@ -39,7 +39,7 @@ import com.bitdubai.fermat_api.layer.osa_android.location_system.Location;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogManager;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.common.network_services.exceptions.CantLoadKeyPairException;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.common.network_services.template.communications.CantInitializeTemplateNetworkServiceDatabaseException;
-import com.bitdubai.fermat_p2p_api.layer.all_definition.common.network_services.template.communications.CommunicationNetworkServiceConnectionManager;
+
 import com.bitdubai.fermat_p2p_api.layer.all_definition.common.network_services.template.communications.CommunicationNetworkServiceDatabaseConstants;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.common.network_services.template.communications.CommunicationNetworkServiceDatabaseFactory;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.common.network_services.template.communications.CommunicationNetworkServiceDeveloperDatabaseFactory;
@@ -97,7 +97,7 @@ public abstract class AbstractNetworkServiceV2 extends AbstractPlugin implements
     /**
      * Represent the communicationNetworkServiceConnectionManager
      */
-    private CommunicationNetworkServiceConnectionManager communicationNetworkServiceConnectionManager;
+   // private CommunicationNetworkServiceConnectionManager communicationNetworkServiceConnectionManager;
 
     /**
      * Represent the communicationNetworkServiceDeveloperDatabaseFactory
@@ -198,9 +198,9 @@ public abstract class AbstractNetworkServiceV2 extends AbstractPlugin implements
 
     protected abstract WsCommunicationsCloudClientManager getWsCommunicationsCloudClientManager();
 
-    public CommunicationNetworkServiceConnectionManager getCommunicationNetworkServiceConnectionManager() {
-        return communicationNetworkServiceConnectionManager;
-    }
+//    public CommunicationNetworkServiceConnectionManager getCommunicationNetworkServiceConnectionManager() {
+//        return communicationNetworkServiceConnectionManager;
+//    }
 
     public PlatformComponentProfile getPlatformComponentProfile() {
         return platformComponentProfile;
@@ -264,7 +264,7 @@ public abstract class AbstractNetworkServiceV2 extends AbstractPlugin implements
           /*
          * Pause
          */
-        communicationNetworkServiceConnectionManager.pause();
+   //     communicationNetworkServiceConnectionManager.pause();
         onPause();
         serviceStatus = ServiceStatus.PAUSED;
     }
@@ -273,7 +273,7 @@ public abstract class AbstractNetworkServiceV2 extends AbstractPlugin implements
          /*
          * resume the managers
          */
-        communicationNetworkServiceConnectionManager.resume();
+ //       communicationNetworkServiceConnectionManager.resume();
         onResume();
         serviceStatus = ServiceStatus.STARTED;
     }
@@ -284,7 +284,7 @@ public abstract class AbstractNetworkServiceV2 extends AbstractPlugin implements
         /*
          * Stop all connection on the managers
          */
-        communicationNetworkServiceConnectionManager.closeAllConnection();
+  //      communicationNetworkServiceConnectionManager.closeAllConnection();
         //set to not register
         register = new AtomicBoolean(false);
         onStop();
@@ -297,7 +297,7 @@ public abstract class AbstractNetworkServiceV2 extends AbstractPlugin implements
      * because at this moment, is create the platformComponentProfilePluginRoot for this component
      */
     public void initializeCommunicationNetworkServiceConnectionManager() {
-        this.communicationNetworkServiceConnectionManager = new CommunicationNetworkServiceConnectionManager(this,platformComponentProfile, identity, getWsCommunicationsCloudClientManager().getCommunicationsCloudClientConnection(), dataBaseCommunication, getErrorManager(), getEventManager());
+  //      this.communicationNetworkServiceConnectionManager = new CommunicationNetworkServiceConnectionManager(this,platformComponentProfile, identity, getWsCommunicationsCloudClientManager().getCommunicationsCloudClientConnection(), dataBaseCommunication, getErrorManager(), getEventManager());
     };
 
     //TODO: vaya a sabaer porqué me pusieron esto
@@ -450,7 +450,7 @@ public abstract class AbstractNetworkServiceV2 extends AbstractPlugin implements
          * Tell the manager to handler the new connection stablished
          */
         //todo: TO COMPLETE
-        communicationNetworkServiceConnectionManager.handleEstablishedRequestedNetworkServiceConnection(remoteComponentProfile);
+     //   communicationNetworkServiceConnectionManager.handleEstablishedRequestedNetworkServiceConnection(remoteComponentProfile);
         onHandleCompleteComponentConnectionRequestNotificationEvent(applicantComponentProfile, remoteComponentProfile);
     }
 
@@ -481,8 +481,8 @@ public abstract class AbstractNetworkServiceV2 extends AbstractPlugin implements
         if(fermatEvent instanceof VPNConnectionCloseNotificationEvent){
             VPNConnectionCloseNotificationEvent vpnConnectionCloseNotificationEvent = (VPNConnectionCloseNotificationEvent) fermatEvent;
             if(vpnConnectionCloseNotificationEvent.getNetworkServiceApplicant() == getNetworkServiceType()){
-                if(communicationNetworkServiceConnectionManager != null)
-                    communicationNetworkServiceConnectionManager.closeConnection(vpnConnectionCloseNotificationEvent.getRemoteParticipant().getIdentityPublicKey());
+//                if(communicationNetworkServiceConnectionManager != null)
+//                    communicationNetworkServiceConnectionManager.closeConnection(vpnConnectionCloseNotificationEvent.getRemoteParticipant().getIdentityPublicKey());
 
             }
             onHandleVpnConnectionCloseNotificationEvent(fermatEvent);
@@ -501,8 +501,8 @@ public abstract class AbstractNetworkServiceV2 extends AbstractPlugin implements
                     "TO PROCESSING SEND IN ORDER TO ENSURE PROPER RECEPTION :"
                     + "\n-------------------------------------------------");
             this.register = new AtomicBoolean(false);
-            if(communicationNetworkServiceConnectionManager != null)
-                communicationNetworkServiceConnectionManager.closeAllConnection();
+//            if(communicationNetworkServiceConnectionManager != null)
+//                communicationNetworkServiceConnectionManager.closeAllConnection();
         }
         onHandleClientConnectionCloseNotificationEvent(fermatEvent);
     }
@@ -511,10 +511,10 @@ public abstract class AbstractNetworkServiceV2 extends AbstractPlugin implements
      * Handles the events ClientConnectionLooseNotificationEvent
      */
     public void handleClientConnectionLooseNotificationEvent(FermatEvent fermatEvent) {
-        if(communicationNetworkServiceConnectionManager != null) {
-            communicationNetworkServiceConnectionManager.stop();
-            this.register = new AtomicBoolean(false);
-        }
+//        if(communicationNetworkServiceConnectionManager != null) {
+//            communicationNetworkServiceConnectionManager.stop();
+//            this.register = new AtomicBoolean(false);
+//        }
         onHandleClientConnectionLooseNotificationEvent(fermatEvent);
     }
 
@@ -523,10 +523,10 @@ public abstract class AbstractNetworkServiceV2 extends AbstractPlugin implements
      */
     public void handleClientSuccessfullReconnectNotificationEvent(FermatEvent fermatEvent) {
         System.out.println("SuccessfullReconnectNotificationEvent");
-        if(communicationNetworkServiceConnectionManager != null) {
-            communicationNetworkServiceConnectionManager.restart();
-            this.register = new AtomicBoolean(true);
-        }
+//        if(communicationNetworkServiceConnectionManager != null) {
+//            communicationNetworkServiceConnectionManager.restart();
+//            this.register = new AtomicBoolean(true);
+//        }
         onHandleClientSuccessfulReconnectionNotificationEvent(fermatEvent);
     }
 
@@ -725,7 +725,8 @@ public abstract class AbstractNetworkServiceV2 extends AbstractPlugin implements
         Map<String, Object> filters = new HashMap<>();
         filters.put(CommunicationNetworkServiceDatabaseConstants.INCOMING_MESSAGES_FIRST_KEY_COLUMN, MessagesStatus.NEW_RECEIVED.getCode());
 
-        return communicationNetworkServiceConnectionManager.getIncomingMessageDao().findAll(filters);
+     //   return communicationNetworkServiceConnectionManager.getIncomingMessageDao().findAll(filters);
+        return null;
     }
 
     /**
@@ -736,7 +737,7 @@ public abstract class AbstractNetworkServiceV2 extends AbstractPlugin implements
     public void markAsRead(FermatMessage fermatMessage) throws CantUpdateRecordDataBaseException {
 
         ((FermatMessageCommunication) fermatMessage).setFermatMessagesStatus(FermatMessagesStatus.READ);
-        communicationNetworkServiceConnectionManager.getIncomingMessageDao().update(fermatMessage);
+  //      communicationNetworkServiceConnectionManager.getIncomingMessageDao().update(fermatMessage);
     }
 
 

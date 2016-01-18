@@ -46,6 +46,7 @@ import java.util.List;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 import javax.websocket.ContainerProvider;
 import javax.websocket.DeploymentException;
@@ -76,6 +77,9 @@ public class WsCommunicationsCloudClientPluginRoot extends AbstractPlugin implem
 
     @NeededAddonReference(platform = Platforms.OPERATIVE_SYSTEM_API, layer = Layers.SYSTEM, addon = Addons.PLUGIN_FILE_SYSTEM)
     protected PluginFileSystem pluginFileSystem;
+
+
+    private static WsCommunicationsCloudClientPluginRoot instance = new WsCommunicationsCloudClientPluginRoot();
 
     /**
      * Represent the SERVER_IP
@@ -109,6 +113,7 @@ public class WsCommunicationsCloudClientPluginRoot extends AbstractPlugin implem
      */
     private Boolean disableClientFlag;
 
+    private AtomicBoolean flag = new AtomicBoolean(false);
     /**
      * Represent the wsCommunicationsCloudClientConnection
      */
@@ -132,6 +137,10 @@ public class WsCommunicationsCloudClientPluginRoot extends AbstractPlugin implem
         this.disableClientFlag = ServerConf.ENABLE_CLIENT;
         isTaskCompleted = Boolean.FALSE;
         scheduledExecutorService = Executors.newScheduledThreadPool(2);
+    }
+
+    public static AbstractPlugin getInstance() {
+        return instance;
     }
 
     /**
@@ -171,56 +180,62 @@ public class WsCommunicationsCloudClientPluginRoot extends AbstractPlugin implem
      * @see Service#start()
      */
     @Override
-    public void start() {
+    public synchronized void start() {
 
-        try {
+            if(!flag.getAndSet(true)) {
+                if (this.serviceStatus != ServiceStatus.STARTING) {
+                    serviceStatus = ServiceStatus.STARTING;
 
-            /*
-             * Validate required resources
-             */
-            validateInjectedResources();
+                    try {
+                /*
+                 * Validate required resources
+                 */
+                        validateInjectedResources();
 
-            if (disableClientFlag) {
-                System.out.println("WsCommunicationsCloudClientPluginRoot - Local Client is Disable, no started");
-                return;
-            }
+                        if (disableClientFlag) {
+                            System.out.println("WsCommunicationsCloudClientPluginRoot - Local Client is Disable, no started");
+                            return;
+                        }
 
-            System.out.println("WsCommunicationsCloudClientPluginRoot - Starting plugin");
+                        System.out.println("WsCommunicationsCloudClientPluginRoot - Starting plugin");
 
-            /*
-             * Construct the URI
-             */
-            this.uri = new URI(ServerConf.WS_PROTOCOL + WsCommunicationsCloudClientPluginRoot.SERVER_IP + ":" + ServerConf.DEFAULT_PORT + ServerConf.WEB_SOCKET_CONTEXT_PATH);
+                /*
+                 * Construct the URI
+                 */
+                        this.uri = new URI(ServerConf.WS_PROTOCOL + WsCommunicationsCloudClientPluginRoot.SERVER_IP + ":" + ServerConf.DEFAULT_PORT + ServerConf.WEB_SOCKET_CONTEXT_PATH);
 
-            /*
-             * Initialize the identity for the cloud client
-             */
-            initializeClientIdentity();
+                /*
+                 * Initialize the identity for the cloud client
+                 */
+                        initializeClientIdentity();
 
-            /*
-             * Try to connect whit the cloud server
-             */
-            System.out.println(" WsCommunicationsCloudClientPluginRoot - ===================================");
-            System.out.println(" WsCommunicationsCloudClientPluginRoot - Connecting with the cloud server...");
-            System.out.println(" WsCommunicationsCloudClientPluginRoot - ===================================");
-            wsCommunicationsCloudClientConnection = new WsCommunicationsCloudClientConnection(uri,eventManager, locationManager, clientIdentity);
-            wsCommunicationsCloudClientConnection.initializeAndConnect();
+                /*
+                 * Try to connect whit the cloud server
+                 */
+                        System.out.println(" WsCommunicationsCloudClientPluginRoot - ===================================");
+                        System.out.println(" WsCommunicationsCloudClientPluginRoot - Connecting with the cloud server...");
+                        System.out.println(" WsCommunicationsCloudClientPluginRoot - ===================================");
+                        wsCommunicationsCloudClientConnection = new WsCommunicationsCloudClientConnection(uri, eventManager, locationManager, clientIdentity);
+                        wsCommunicationsCloudClientConnection.initializeAndConnect();
 
-            /*
-             * Scheduled the reconnection agent
-             */
-            scheduledExecutorService.scheduleAtFixedRate(new WsCommunicationsCloudClientSupervisorConnectionAgent(this), 10, 20, TimeUnit.SECONDS);
+                /*
+                 * Scheduled the reconnection agent
+                 */
+                        scheduledExecutorService.scheduleAtFixedRate(new WsCommunicationsCloudClientSupervisorConnectionAgent(this), 10, 20, TimeUnit.SECONDS);
 
-        } catch (Exception e) {
-            e.printStackTrace();
-            wsCommunicationsCloudClientConnection.getWsCommunicationsCloudClientChannel().close();
-            throw new RuntimeException(e);
-        }
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                        wsCommunicationsCloudClientConnection.getWsCommunicationsCloudClientChannel().close();
+                        throw new RuntimeException(e);
+                    }
+                }
 
         /*
          * Set the new status of the service
          */
-        this.serviceStatus = ServiceStatus.STARTED;
+                this.serviceStatus = ServiceStatus.STARTED;
+
+            }
 
     }
 
