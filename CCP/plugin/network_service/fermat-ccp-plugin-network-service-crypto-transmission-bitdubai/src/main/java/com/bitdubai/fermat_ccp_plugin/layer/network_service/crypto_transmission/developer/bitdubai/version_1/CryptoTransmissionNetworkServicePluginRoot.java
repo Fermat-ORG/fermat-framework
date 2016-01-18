@@ -918,6 +918,48 @@ public class CryptoTransmissionNetworkServicePluginRoot extends AbstractNetworkS
 
             if(vpnConnectionCloseNotificationEvent.getNetworkServiceApplicant() == getNetworkServiceType()){
 
+                try {
+
+                    Map<String, Object> filters = new HashMap<>();
+                    filters.put(CryptoTransmissionNetworkServiceDatabaseConstants.CRYPTO_TRANSMISSION_METADATA_STATUS_COLUMN_NAME, CryptoTransmissionStates.WAITING_RESPONSE.getCode());
+                    /*
+         * Read all pending CryptoTransmissionMetadata from database
+         */
+                    List<CryptoTransmissionMetadata> lstCryptoTransmissionMetadata = cryptoTransmissionMetadataDAO.findAll(filters);
+
+                    for(CryptoTransmissionMetadata record : lstCryptoTransmissionMetadata) {
+
+                        cryptoTransmissionMetadataDAO.changeState(record.getTransactionId(), CryptoTransmissionStates.PRE_PROCESSING_SEND);
+                    }
+
+
+                } catch (CantUpdateRecordDataBaseException | CantReadRecordDataBaseException e) {
+                    System.out.print("CRYPTO TRANSMISSION EXCEPCION REPROCESANDO WAIT MESSAGE");
+                    e.printStackTrace();
+                }
+
+                try {
+
+                    Map<String, Object> filters = new HashMap<>();
+                    filters.put(CryptoTransmissionNetworkServiceDatabaseConstants.CRYPTO_TRANSMISSION_METADATA_STATUS_COLUMN_NAME, CryptoTransmissionStates.SENT.getCode());
+                    /*
+         * Read all pending CryptoTransmissionMetadata from database
+         */
+                    List<CryptoTransmissionMetadata> lstCryptoTransmissionMetadata = cryptoTransmissionMetadataDAO.findAll(filters);
+
+                    for(CryptoTransmissionMetadata record : lstCryptoTransmissionMetadata) {
+
+                        cryptoTransmissionMetadataDAO.changeState(record.getTransactionId(), CryptoTransmissionStates.PRE_PROCESSING_SEND);
+                    }
+
+
+                } catch (CantUpdateRecordDataBaseException | CantReadRecordDataBaseException e) {
+                    System.out.print("CRYPTO TRANSMISSION EXCEPCION REPROCESANDO WAIT MESSAGE");
+                    e.printStackTrace();
+                }
+
+
+
                 if(communicationNetworkServiceConnectionManager != null)
                      communicationNetworkServiceConnectionManager.closeConnection(vpnConnectionCloseNotificationEvent.getRemoteParticipant().getIdentityPublicKey());
 
