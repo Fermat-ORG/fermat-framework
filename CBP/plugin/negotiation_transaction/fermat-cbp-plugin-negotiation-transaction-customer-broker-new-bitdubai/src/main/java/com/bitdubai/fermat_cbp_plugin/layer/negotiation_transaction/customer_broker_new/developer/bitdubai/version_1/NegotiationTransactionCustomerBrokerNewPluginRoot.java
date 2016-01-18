@@ -218,7 +218,7 @@ public class NegotiationTransactionCustomerBrokerNewPluginRoot extends AbstractP
 //            registerEventTest();
 
             //TEST GET ALL EVENT
-            getAllEvent();
+//            getAllEvent();
 
             //Startes Service
             this.serviceStatus = ServiceStatus.STARTED;
