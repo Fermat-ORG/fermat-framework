@@ -6,6 +6,8 @@
  */
 package com.bitdubai.fermat_dap_plugin.layer.actor.network.service.asset.issuer.developer.bitdubai.version_1;
 
+import android.util.Base64;
+
 import com.bitdubai.fermat_api.CantStartPluginException;
 import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.annotations.NeededAddonReference;
@@ -99,10 +101,11 @@ import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.Un
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfaces.EventManager;
 import com.google.gson.Gson;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 import com.google.gson.JsonSyntaxException;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -149,6 +152,8 @@ public class AssetIssuerActorNetworkServicePluginRoot extends AbstractNetworkSer
      * Represent the EVENT_SOURCE
      */
     public final static EventSource EVENT_SOURCE = EventSource.NETWORK_SERVICE_ACTOR_ASSET_ISSUER;
+
+    protected final static String DAP_IMG_ISSUER = "DAP_IMG_ISSUER";
 
     List<FermatEventListener> listenersAdded = new ArrayList<>();
 
@@ -504,12 +509,18 @@ public class AssetIssuerActorNetworkServicePluginRoot extends AbstractNetworkSer
                 /*
                  * Construct the profile
                  */
-                PlatformComponentProfile platformComponentProfileAssetIssuer = communicationsClientConnection.constructPlatformComponentProfileFactory(actorAssetIssuerToRegister.getActorPublicKey(),
+                Gson gson = new Gson();
+                JsonObject jsonObject = new JsonObject();
+                jsonObject.addProperty(DAP_IMG_ISSUER, Base64.encodeToString(actorAssetIssuerToRegister.getProfileImage(), Base64.DEFAULT));
+                String extraData = gson.toJson(jsonObject);
+
+                PlatformComponentProfile platformComponentProfileAssetIssuer = communicationsClientConnection.constructPlatformComponentProfileFactory(
+                        actorAssetIssuerToRegister.getActorPublicKey(),
                         actorAssetIssuerToRegister.getName().toLowerCase().trim(),
                         actorAssetIssuerToRegister.getName(),
                         NetworkServiceType.UNDEFINED,
                         PlatformComponentType.ACTOR_ASSET_ISSUER,
-                        Arrays.toString(actorAssetIssuerToRegister.getProfileImage()));
+                        extraData);
                 /*
                  * ask to the communication cloud client to register
                  */
@@ -518,12 +529,89 @@ public class AssetIssuerActorNetworkServicePluginRoot extends AbstractNetworkSer
                 /*
                  * Construct the profile
                  */
-                PlatformComponentProfile platformComponentProfileAssetIssuer = communicationsClientConnection.constructPlatformComponentProfileFactory(actorAssetIssuerToRegister.getActorPublicKey(),
+                Gson gson = new Gson();
+                JsonObject jsonObject = new JsonObject();
+                jsonObject.addProperty(DAP_IMG_ISSUER, Base64.encodeToString(actorAssetIssuerToRegister.getProfileImage(), Base64.DEFAULT));
+                String extraData = gson.toJson(jsonObject);
+
+                PlatformComponentProfile platformComponentProfileAssetIssuer = communicationsClientConnection.constructPlatformComponentProfileFactory(
+                        actorAssetIssuerToRegister.getActorPublicKey(),
                         actorAssetIssuerToRegister.getName().toLowerCase().trim(),
                         actorAssetIssuerToRegister.getName(),
                         NetworkServiceType.UNDEFINED,
                         PlatformComponentType.ACTOR_ASSET_ISSUER,
-                        Arrays.toString(actorAssetIssuerToRegister.getProfileImage()));
+                        extraData);
+                /*
+                 * Add to the list of pending to register
+                 */
+                actorAssetIssuerPendingToRegistration.add(platformComponentProfileAssetIssuer);
+            }
+        } catch (Exception e) {
+            StringBuffer contextBuffer = new StringBuffer();
+            contextBuffer.append("Plugin ID: " + pluginId);
+            contextBuffer.append(CantStartPluginException.CONTEXT_CONTENT_SEPARATOR);
+            contextBuffer.append("wsCommunicationsCloudClientManager: " + wsCommunicationsCloudClientManager);
+            contextBuffer.append(CantStartPluginException.CONTEXT_CONTENT_SEPARATOR);
+            contextBuffer.append("pluginDatabaseSystem: " + pluginDatabaseSystem);
+            contextBuffer.append(CantStartPluginException.CONTEXT_CONTENT_SEPARATOR);
+            contextBuffer.append("errorManager: " + errorManager);
+            contextBuffer.append(CantStartPluginException.CONTEXT_CONTENT_SEPARATOR);
+            contextBuffer.append("eventManager: " + eventManager);
+
+            String context = contextBuffer.toString();
+            String possibleCause = "Plugin was not registered";
+
+            CantRegisterActorAssetIssuerException pluginStartException = new CantRegisterActorAssetIssuerException(CantStartPluginException.DEFAULT_MESSAGE, e, context, possibleCause);
+            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_DAP_ASSET_ISSUER_ACTOR_NETWORK_SERVICE, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, pluginStartException);
+
+            throw pluginStartException;
+        }
+    }
+
+    @Override
+    public void updateActorAssetIssuer(ActorAssetIssuer actorAssetIssuerToRegister) throws CantRegisterActorAssetIssuerException {
+
+        try {
+            CommunicationsClientConnection communicationsClientConnection = wsCommunicationsCloudClientManager.getCommunicationsCloudClientConnection();
+            /*
+             * If register
+             */
+            if (true) {
+                /*
+                 * Construct the profile
+                 */
+                Gson gson = new Gson();
+                JsonObject jsonObject = new JsonObject();
+                jsonObject.addProperty(DAP_IMG_ISSUER, Base64.encodeToString(actorAssetIssuerToRegister.getProfileImage(), Base64.DEFAULT));
+                String extraData = gson.toJson(jsonObject);
+
+                PlatformComponentProfile platformComponentProfileAssetIssuer = communicationsClientConnection.constructPlatformComponentProfileFactory(
+                        actorAssetIssuerToRegister.getActorPublicKey(),
+                        actorAssetIssuerToRegister.getName().toLowerCase().trim(),
+                        actorAssetIssuerToRegister.getName(),
+                        NetworkServiceType.UNDEFINED,
+                        PlatformComponentType.ACTOR_ASSET_ISSUER,
+                        extraData);
+                /*
+                 * ask to the communication cloud client to register
+                 */
+                communicationsClientConnection.updateRegisterActorProfile(this.getNetworkServiceType(), platformComponentProfileAssetIssuer);
+            } else {
+                /*
+                 * Construct the profile
+                 */
+                Gson gson = new Gson();
+                JsonObject jsonObject = new JsonObject();
+                jsonObject.addProperty(DAP_IMG_ISSUER, Base64.encodeToString(actorAssetIssuerToRegister.getProfileImage(), Base64.DEFAULT));
+                String extraData = gson.toJson(jsonObject);
+
+                PlatformComponentProfile platformComponentProfileAssetIssuer = communicationsClientConnection.constructPlatformComponentProfileFactory(
+                        actorAssetIssuerToRegister.getActorPublicKey(),
+                        actorAssetIssuerToRegister.getName().toLowerCase().trim(),
+                        actorAssetIssuerToRegister.getName(),
+                        NetworkServiceType.UNDEFINED,
+                        PlatformComponentType.ACTOR_ASSET_ISSUER,
+                        extraData);
                 /*
                  * Add to the list of pending to register
                  */
@@ -802,17 +890,18 @@ public class AssetIssuerActorNetworkServicePluginRoot extends AbstractNetworkSer
             }
 
             DiscoveryQueryParameters discoveryQueryParametersAssetUser = wsCommunicationsCloudClientManager.getCommunicationsCloudClientConnection().
-                    constructDiscoveryQueryParamsFactory(PlatformComponentType.ACTOR_ASSET_ISSUER, //applicant = who made the request
-                            NetworkServiceType.UNDEFINED,
-                            null,                     // alias
-                            null,                     // identityPublicKey
-                            null,                     // location
-                            null,                     // distance
-                            null,                     // name
-                            null,                     // extraData
-                            null,                     // offset
-                            null,                     // max
-                            null,                     // fromOtherPlatformComponentType, when use this filter apply the identityPublicKey
+                    constructDiscoveryQueryParamsFactory(
+                            PlatformComponentType.ACTOR_ASSET_ISSUER,   //applicant = who made the request
+                            NetworkServiceType.UNDEFINED,               //NetworkServiceType you want to find
+                            null,                                       // alias
+                            null,                                       // identityPublicKey
+                            null,                                       // location
+                            null,                                       // distance
+                            null,                                       // name
+                            null,                                       // extraData
+                            null,                                       // offset
+                            null,                                       // max
+                            null,                       // fromOtherPlatformComponentType, when use this filter apply the identityPublicKey
                             null);
 
 
@@ -822,9 +911,27 @@ public class AssetIssuerActorNetworkServicePluginRoot extends AbstractNetworkSer
             if (platformComponentProfileRegisteredListRemote != null && !platformComponentProfileRegisteredListRemote.isEmpty()) {
 
 
-                for (PlatformComponentProfile p : platformComponentProfileRegisteredListRemote) {
+                for (PlatformComponentProfile platformComponentProfile : platformComponentProfileRegisteredListRemote) {
 
-                    ActorAssetIssuer actorAssetIssuerNew = new AssetIssuerActorRecord(p.getIdentityPublicKey(), p.getName(), convertoByteArrayfromString(p.getExtraData()), p.getLocation());
+                    String profileImage = "";
+                    if (!platformComponentProfile.getExtraData().equals("")) {
+                        try {
+                            JsonParser jParser = new JsonParser();
+                            JsonObject jsonObject = jParser.parse(platformComponentProfile.getExtraData()).getAsJsonObject();
+
+                            profileImage = jsonObject.get(DAP_IMG_ISSUER).getAsString();
+                        } catch (Exception e) {
+                            profileImage = platformComponentProfile.getExtraData();
+                        }
+                    }
+
+                    byte[] imageByte = Base64.decode(profileImage, Base64.DEFAULT);
+
+                    ActorAssetIssuer actorAssetIssuerNew = new AssetIssuerActorRecord(
+                            platformComponentProfile.getIdentityPublicKey(),
+                            platformComponentProfile.getName(),
+                            imageByte,
+                            platformComponentProfile.getLocation());
 
                     actorAssetIssuerRegisteredList.add(actorAssetIssuerNew);
 
