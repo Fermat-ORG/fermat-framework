@@ -942,7 +942,7 @@ public class BitcoinCryptoNetworkManager implements TransactionProtocolManager, 
              */
             if (childTransaction == null){
                 try {
-                    childTransaction = this.getTransactionFromBlockChain(blockchainNetworkType, entry.getValue(), entry.getKey());
+                    childTransaction = this.getTransactionFromBlockChain(blockchainNetworkType, entry.getKey(), entry.getValue());
                 } catch (CantGetTransactionsException e) {
                     throw new CantGetTransactionException(CantGetTransactionException.DEFAULT_MESSAGE, e, "Error downloading child transaction from peer.", "Network issue - Timeout");
                 }
@@ -952,14 +952,23 @@ public class BitcoinCryptoNetworkManager implements TransactionProtocolManager, 
                     /**
                      * I will compare the childTransaction against the parent transaction, making sure that the child Transaction is an has an outputPoint to his parent.
                      */
-                    parentTransaction = this.getTransactionFromBlockChain(blockchainNetworkType,entry.getValue(), entry.getKey());
-                    if (!parentTransaction.getInput(0).getOutpoint().getHash().equals(childTransaction.getHash())){
+                    parentTransaction = this.getTransactionFromBlockChain(blockchainNetworkType,entry.getKey(), entry.getValue());
+                    if (!childTransaction.getInput(0).getOutpoint().getHash().equals(parentTransaction.getHash())){
                         StringBuilder output = new StringBuilder("The passed chain of transactions is not lineal.");
                         output.append(System.lineSeparator());
                         output.append("Transaction hash " + childTransaction.getHashAsString() + " is not a child of " + parentTransaction.getHashAsString());
                         throw new CantGetTransactionException(CantGetTransactionException.DEFAULT_MESSAGE, null, output.toString(), null);
                     }
 
+                    /**
+                     * I will set the new childTransaction for the next run.
+                     */
+                    childTransaction = parentTransaction;
+
+                    /**
+                     * I will set the genesis Transaction as the parent, so that when the loop is over, I will be getting
+                     * truly the genesisTransaction.
+                     */
                     genesisTransaction = parentTransaction;
                 } catch (CantGetTransactionsException e) {
                     throw new CantGetTransactionException(CantGetTransactionException.DEFAULT_MESSAGE, e, "Error downloading transaction from peer.", "Network issue - Timeout");
