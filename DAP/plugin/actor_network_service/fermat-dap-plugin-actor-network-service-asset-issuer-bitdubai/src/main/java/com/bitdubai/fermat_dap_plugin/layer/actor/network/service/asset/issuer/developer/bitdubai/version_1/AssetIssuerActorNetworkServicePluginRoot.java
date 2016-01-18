@@ -87,7 +87,6 @@ import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.co
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.contents.FermatMessageCommunicationFactory;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.enums.P2pEventType;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.events.ClientConnectionCloseNotificationEvent;
-import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.events.ClientSuccessReconnectNotificationEvent;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.events.VPNConnectionCloseNotificationEvent;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.MessagesStatus;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.WsCommunicationsCloudClientManager;
@@ -884,9 +883,9 @@ public class AssetIssuerActorNetworkServicePluginRoot extends AbstractNetworkSer
 
 //            if (true) {
 
-                if (actorAssetIssuerRegisteredList != null && !actorAssetIssuerRegisteredList.isEmpty()) {
-                    actorAssetIssuerRegisteredList.clear();
-                }
+            if (actorAssetIssuerRegisteredList != null && !actorAssetIssuerRegisteredList.isEmpty()) {
+                actorAssetIssuerRegisteredList.clear();
+            }
 
             DiscoveryQueryParameters discoveryQueryParametersAssetUser = wsCommunicationsCloudClientManager.getCommunicationsCloudClientConnection().
                     constructDiscoveryQueryParamsFactory(
@@ -903,10 +902,9 @@ public class AssetIssuerActorNetworkServicePluginRoot extends AbstractNetworkSer
                             null,                       // fromOtherPlatformComponentType, when use this filter apply the identityPublicKey
                             null);
 
-                List<PlatformComponentProfile> platformComponentProfileRegisteredListRemote = wsCommunicationsCloudClientManager.getCommunicationsCloudClientConnection().requestListComponentRegistered(discoveryQueryParametersAssetUser);
+            List<PlatformComponentProfile> platformComponentProfileRegisteredListRemote = wsCommunicationsCloudClientManager.getCommunicationsCloudClientConnection().requestListComponentRegistered(discoveryQueryParametersAssetUser);
 
-
-                if (platformComponentProfileRegisteredListRemote != null && !platformComponentProfileRegisteredListRemote.isEmpty()) {
+            if (platformComponentProfileRegisteredListRemote != null && !platformComponentProfileRegisteredListRemote.isEmpty()) {
 
                 for (PlatformComponentProfile platformComponentProfile : platformComponentProfileRegisteredListRemote) {
 
@@ -930,11 +928,11 @@ public class AssetIssuerActorNetworkServicePluginRoot extends AbstractNetworkSer
                             imageByte,
                             platformComponentProfile.getLocation());
 
-                        actorAssetIssuerRegisteredList.add(actorAssetIssuerNew);
-                    }
-                } else {
-                    return actorAssetIssuerRegisteredList;
+                    actorAssetIssuerRegisteredList.add(actorAssetIssuerNew);
                 }
+            } else {
+                return actorAssetIssuerRegisteredList;
+            }
 
         } catch (CantRequestListException e) {
 
@@ -996,9 +994,9 @@ public class AssetIssuerActorNetworkServicePluginRoot extends AbstractNetworkSer
     @Override
     public void handleCompleteComponentRegistrationNotificationEvent(PlatformComponentProfile platformComponentProfileRegistered) {
 
-        if (platformComponentProfileRegistered.getPlatformComponentType() == PlatformComponentType.COMMUNICATION_CLOUD_CLIENT && this.register){
+        if (platformComponentProfileRegistered.getPlatformComponentType() == PlatformComponentType.COMMUNICATION_CLOUD_CLIENT && this.register) {
 
-            if(communicationRegistrationProcessNetworkServiceAgent.isAlive()){
+            if (communicationRegistrationProcessNetworkServiceAgent.isAlive()) {
                 communicationRegistrationProcessNetworkServiceAgent.interrupt();
                 communicationRegistrationProcessNetworkServiceAgent = null;
             }
@@ -1006,7 +1004,7 @@ public class AssetIssuerActorNetworkServicePluginRoot extends AbstractNetworkSer
                               /*
                  * Construct my profile and register me
                  */
-            PlatformComponentProfile platformComponentProfileToReconnect =  wsCommunicationsCloudClientManager.getCommunicationsCloudClientConnection().constructPlatformComponentProfileFactory(this.getIdentityPublicKey(),
+            PlatformComponentProfile platformComponentProfileToReconnect = wsCommunicationsCloudClientManager.getCommunicationsCloudClientConnection().constructPlatformComponentProfileFactory(this.getIdentityPublicKey(),
                     this.getAlias().toLowerCase(),
                     this.getName(),
                     this.getNetworkServiceType(),
@@ -1215,7 +1213,7 @@ public class AssetIssuerActorNetworkServicePluginRoot extends AbstractNetworkSer
     @Override
     public void handleClientConnectionLooseNotificationEvent(FermatEvent fermatEvent) {
 
-        if(communicationNetworkServiceConnectionManager != null)
+        if (communicationNetworkServiceConnectionManager != null)
             communicationNetworkServiceConnectionManager.stop();
 
     }
@@ -1227,13 +1225,13 @@ public class AssetIssuerActorNetworkServicePluginRoot extends AbstractNetworkSer
     public void handleClientSuccessfullReconnectNotificationEvent(FermatEvent fermatEvent) {
 
 
-        if(communicationNetworkServiceConnectionManager != null) {
+        if (communicationNetworkServiceConnectionManager != null) {
             communicationNetworkServiceConnectionManager.restart();
         }
 
-        if(!this.register){
+        if (!this.register) {
 
-            if(communicationRegistrationProcessNetworkServiceAgent.isAlive()){
+            if (communicationRegistrationProcessNetworkServiceAgent.isAlive()) {
 
                 communicationRegistrationProcessNetworkServiceAgent.interrupt();
                 communicationRegistrationProcessNetworkServiceAgent = null;
@@ -1241,7 +1239,7 @@ public class AssetIssuerActorNetworkServicePluginRoot extends AbstractNetworkSer
                 /*
                  * Construct my profile and register me
                  */
-                PlatformComponentProfile platformComponentProfileToReconnect =  wsCommunicationsCloudClientManager.getCommunicationsCloudClientConnection().constructPlatformComponentProfileFactory(this.getIdentityPublicKey(),
+                PlatformComponentProfile platformComponentProfileToReconnect = wsCommunicationsCloudClientManager.getCommunicationsCloudClientConnection().constructPlatformComponentProfileFactory(this.getIdentityPublicKey(),
                         this.getAlias().toLowerCase(),
                         this.getName(),
                         this.getNetworkServiceType(),
