@@ -267,18 +267,21 @@ public class ChatMiddlewareMonitorAgent implements
                     switch (eventType){
                         case INCOMING_CHAT:
                             checkIncomingChat(chatId);
+                            eventRecord.setEventStatus(EventStatus.NOTIFIED);
+                            chatMiddlewareDatabaseDao.updateEventRecord(eventRecord);
                             break;
                         case OUTGOING_CHAT:
                             //TODO: TO IMPLEMENT
                             break;
                         case INCOMING_STATUS:
                             checkIncomingStatus(chatId);
+                            eventRecord.setEventStatus(EventStatus.NOTIFIED);
+                            chatMiddlewareDatabaseDao.updateEventRecord(eventRecord);
                         default:
                             //TODO: THROW AN EXCEPTION
                             break;
                     }
-                    eventRecord.setEventStatus(EventStatus.NOTIFIED);
-                    chatMiddlewareDatabaseDao.updateEventRecord(eventRecord);
+
                 }
             } catch (UnexpectedResultReturnedFromDatabaseException e) {
                 throw new CantSendChatMessageException(
