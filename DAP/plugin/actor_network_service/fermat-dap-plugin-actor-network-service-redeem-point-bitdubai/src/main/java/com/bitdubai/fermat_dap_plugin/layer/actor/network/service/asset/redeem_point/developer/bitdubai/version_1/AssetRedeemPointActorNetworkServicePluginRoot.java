@@ -6,6 +6,8 @@
  */
 package com.bitdubai.fermat_dap_plugin.layer.actor.network.service.asset.redeem_point.developer.bitdubai.version_1;
 
+import android.util.Base64;
+
 import com.bitdubai.fermat_api.CantStartPluginException;
 import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.annotations.NeededAddonReference;
@@ -93,6 +95,7 @@ import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.Un
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfaces.EventManager;
 import com.google.gson.Gson;
+import com.google.gson.JsonObject;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -142,6 +145,8 @@ public class AssetRedeemPointActorNetworkServicePluginRoot extends AbstractNetwo
      * Represent the EVENT_SOURCE
      */
     public final static EventSource EVENT_SOURCE = EventSource.NETWORK_SERVICE_ACTOR_ASSET_REDEEM_POINT;
+
+    protected final static String DAP_IMG_REDEEM_POINT = "DAP_IMG_REDEEM_POINT";
 
     List<FermatEventListener> listenersAdded = new ArrayList<>();
 
@@ -395,20 +400,21 @@ public class AssetRedeemPointActorNetworkServicePluginRoot extends AbstractNetwo
              * If register
              */
             if (true) {
-
-                System.out.println("*************************************");
-                System.out.println("Actor Redeem Point - Registrar Datos " + actorAssetRedeemPointToRegister.getName());
-                System.out.println("*************************************");
-
                 /*
                  * Construct the profile
                  */
-                PlatformComponentProfile platformComponentProfileAssetRedeemPoint = communicationsClientConnection.constructPlatformComponentProfileFactory(actorAssetRedeemPointToRegister.getActorPublicKey(),
+                Gson gson = new Gson();
+                JsonObject jsonObject = new JsonObject();
+                jsonObject.addProperty(DAP_IMG_REDEEM_POINT, Base64.encodeToString(actorAssetRedeemPointToRegister.getProfileImage(), Base64.DEFAULT));
+                String extraData = gson.toJson(jsonObject);
+
+                PlatformComponentProfile platformComponentProfileAssetRedeemPoint = communicationsClientConnection.constructPlatformComponentProfileFactory(
+                        actorAssetRedeemPointToRegister.getActorPublicKey(),
                         actorAssetRedeemPointToRegister.getName().toLowerCase().trim(),
-                        actorAssetRedeemPointToRegister.getName(),
+                        (actorAssetRedeemPointToRegister.getName().toLowerCase() + "_" + this.getName().replace(" ", "_")),
                         NetworkServiceType.UNDEFINED,
                         PlatformComponentType.ACTOR_ASSET_REDEEM_POINT,
-                        Arrays.toString(actorAssetRedeemPointToRegister.getProfileImage()));
+                        extraData);
                 /*
                  * ask to the communication cloud client to register
                  */
@@ -417,12 +423,91 @@ public class AssetRedeemPointActorNetworkServicePluginRoot extends AbstractNetwo
                 /*
                  * Construct the profile
                  */
-                PlatformComponentProfile platformComponentProfileAssetRedeemPoint = communicationsClientConnection.constructPlatformComponentProfileFactory(actorAssetRedeemPointToRegister.getActorPublicKey(),
+                Gson gson = new Gson();
+                JsonObject jsonObject = new JsonObject();
+                jsonObject.addProperty(DAP_IMG_REDEEM_POINT, Base64.encodeToString(actorAssetRedeemPointToRegister.getProfileImage(), Base64.DEFAULT));
+                String extraData = gson.toJson(jsonObject);
+
+                PlatformComponentProfile platformComponentProfileAssetRedeemPoint = communicationsClientConnection.constructPlatformComponentProfileFactory(
+                        actorAssetRedeemPointToRegister.getActorPublicKey(),
                         actorAssetRedeemPointToRegister.getName().toLowerCase().trim(),
-                        actorAssetRedeemPointToRegister.getName(),
+                        (actorAssetRedeemPointToRegister.getName().toLowerCase() + "_" + this.getName().replace(" ", "_")),
                         NetworkServiceType.UNDEFINED,
                         PlatformComponentType.ACTOR_ASSET_REDEEM_POINT,
-                        Arrays.toString(actorAssetRedeemPointToRegister.getProfileImage()));
+                        extraData);
+                /*
+                 * Add to the list of pending to register
+                 */
+                actorAssetRedeemPointPendingToRegistration.add(platformComponentProfileAssetRedeemPoint);
+            }
+        } catch (Exception e) {
+
+            StringBuffer contextBuffer = new StringBuffer();
+            contextBuffer.append("Plugin ID: " + pluginId);
+            contextBuffer.append(CantStartPluginException.CONTEXT_CONTENT_SEPARATOR);
+            contextBuffer.append("wsCommunicationsCloudClientManager: " + wsCommunicationsCloudClientManager);
+            contextBuffer.append(CantStartPluginException.CONTEXT_CONTENT_SEPARATOR);
+            contextBuffer.append("pluginDatabaseSystem: " + pluginDatabaseSystem);
+            contextBuffer.append(CantStartPluginException.CONTEXT_CONTENT_SEPARATOR);
+            contextBuffer.append("errorManager: " + errorManager);
+            contextBuffer.append(CantStartPluginException.CONTEXT_CONTENT_SEPARATOR);
+            contextBuffer.append("eventManager: " + eventManager);
+
+            String context = contextBuffer.toString();
+            String possibleCause = "Plugin was not registered";
+
+            CantRegisterActorAssetRedeemPointException pluginStartException = new CantRegisterActorAssetRedeemPointException(CantStartPluginException.DEFAULT_MESSAGE, e, context, possibleCause);
+            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_DAP_ASSET_REDEEM_POINT_ACTOR_NETWORK_SERVICE, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, pluginStartException);
+
+            throw pluginStartException;
+        }
+    }
+
+    @Override
+    public void updateActorAssetRedeemPoint(ActorAssetRedeemPoint actorAssetRedeemPointToRegister) throws CantRegisterActorAssetRedeemPointException {
+        try {
+
+            CommunicationsClientConnection communicationsClientConnection = wsCommunicationsCloudClientManager.getCommunicationsCloudClientConnection();
+
+            /*
+             * If register
+             */
+            if (true) {
+                /*
+                 * Construct the profile
+                 */
+                Gson gson = new Gson();
+                JsonObject jsonObject = new JsonObject();
+                jsonObject.addProperty(DAP_IMG_REDEEM_POINT, Base64.encodeToString(actorAssetRedeemPointToRegister.getProfileImage(), Base64.DEFAULT));
+                String extraData = gson.toJson(jsonObject);
+
+                PlatformComponentProfile platformComponentProfileAssetRedeemPoint = communicationsClientConnection.constructPlatformComponentProfileFactory(
+                        actorAssetRedeemPointToRegister.getActorPublicKey(),
+                        actorAssetRedeemPointToRegister.getName().toLowerCase().trim(),
+                        (actorAssetRedeemPointToRegister.getName().toLowerCase() + "_" + this.getName().replace(" ", "_")),
+                        NetworkServiceType.UNDEFINED,
+                        PlatformComponentType.ACTOR_ASSET_REDEEM_POINT,
+                        extraData);
+                /*
+                 * ask to the communication cloud client to register
+                 */
+                communicationsClientConnection.updateRegisterActorProfile(getNetworkServiceType(), platformComponentProfileAssetRedeemPoint);
+            } else {
+                /*
+                 * Construct the profile
+                 */
+                Gson gson = new Gson();
+                JsonObject jsonObject = new JsonObject();
+                jsonObject.addProperty(DAP_IMG_REDEEM_POINT, Base64.encodeToString(actorAssetRedeemPointToRegister.getProfileImage(), Base64.DEFAULT));
+                String extraData = gson.toJson(jsonObject);
+
+                PlatformComponentProfile platformComponentProfileAssetRedeemPoint = communicationsClientConnection.constructPlatformComponentProfileFactory(
+                        actorAssetRedeemPointToRegister.getActorPublicKey(),
+                        actorAssetRedeemPointToRegister.getName().toLowerCase().trim(),
+                        (actorAssetRedeemPointToRegister.getName().toLowerCase() + "_" + this.getName().replace(" ", "_")),
+                        NetworkServiceType.UNDEFINED,
+                        PlatformComponentType.ACTOR_ASSET_REDEEM_POINT,
+                        extraData);
                 /*
                  * Add to the list of pending to register
                  */
