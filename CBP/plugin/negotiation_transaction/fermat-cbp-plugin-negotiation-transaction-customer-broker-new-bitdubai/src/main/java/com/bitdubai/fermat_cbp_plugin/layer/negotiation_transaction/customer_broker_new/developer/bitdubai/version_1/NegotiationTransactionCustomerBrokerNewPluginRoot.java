@@ -218,7 +218,7 @@ public class NegotiationTransactionCustomerBrokerNewPluginRoot extends AbstractP
 //            registerEventTest();
 
             //TEST GET ALL EVENT
-//            getAllEvent();
+            getAllEvent();
 
             //Startes Service
             this.serviceStatus = ServiceStatus.STARTED;
@@ -458,8 +458,8 @@ public class NegotiationTransactionCustomerBrokerNewPluginRoot extends AbstractP
 
             System.out.print("\n**** MOCK CUSTOMER BROKER NEW. EVENT . GET ALL EVENT. ****\n");
 
-            List<String> eventList = customerBrokerNewNegotiationTransactionDatabaseDao.getPendingEvents();
-            for (String eventId: eventList){
+            List<UUID> eventList = customerBrokerNewNegotiationTransactionDatabaseDao.getPendingEvents();
+            for (UUID eventId: eventList){
                 String eventTypeCode = customerBrokerNewNegotiationTransactionDatabaseDao.getEventType(eventId);
                 System.out.print("\n**** MOCK CUSTOMER BROKER NEW. EVENT. ****\n" +
                         "\n - EVENT ID = " + eventId +
@@ -644,8 +644,8 @@ public class NegotiationTransactionCustomerBrokerNewPluginRoot extends AbstractP
         try{
 
             System.out.print("\n**** MOCK CUSTOMER BROKER NEW. GET ALL REGISTER EVENT. ****\n");
-            List<String> pendingEventsIdList=customerBrokerNewNegotiationTransactionDatabaseDao.getPendingEvents();
-            for(String eventId : pendingEventsIdList){
+            List<UUID> pendingEventsIdList=customerBrokerNewNegotiationTransactionDatabaseDao.getPendingEvents();
+            for(UUID eventId : pendingEventsIdList){
                 System.out.print("\n**** MOCK CUSTOMER BROKER NEW. GET ALL REGISTER EVENT. EVENT ID: "+eventId+" ****\n");
             }
         } catch (UnexpectedResultReturnedFromDatabaseException e){

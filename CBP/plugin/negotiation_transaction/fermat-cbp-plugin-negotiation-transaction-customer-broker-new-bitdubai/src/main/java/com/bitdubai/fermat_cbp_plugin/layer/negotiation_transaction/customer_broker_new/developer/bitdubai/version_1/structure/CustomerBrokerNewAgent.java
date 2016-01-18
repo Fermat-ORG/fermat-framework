@@ -367,8 +367,8 @@ public class CustomerBrokerNewAgent implements
                 }
 
                 //PROCES PENDING EVENT
-                List<String> pendingEventsIdList=customerBrokerNewNegotiationTransactionDatabaseDao.getPendingEvents();
-                for(String eventId : pendingEventsIdList){
+                List<UUID> pendingEventsIdList=customerBrokerNewNegotiationTransactionDatabaseDao.getPendingEvents();
+                for(UUID eventId : pendingEventsIdList){
                     checkPendingEvent(eventId);
                 }
                 
@@ -388,7 +388,7 @@ public class CustomerBrokerNewAgent implements
         }
 
         //CHECK PENDING EVEN
-        private void checkPendingEvent(String eventId) throws UnexpectedResultReturnedFromDatabaseException {
+        private void checkPendingEvent(UUID eventId) throws UnexpectedResultReturnedFromDatabaseException {
 
             try {
 
@@ -426,7 +426,7 @@ public class CustomerBrokerNewAgent implements
 //                            );
 
                             if (negotiationXML != null) {
-                                System.out.print("\n**** 18.2) MOCK NEGOTIATION TRANSACTION - CUSTOMER BROKER NEW - AGENT - LIST EVENT PENDING ****\n");
+                                System.out.print("\n**** 18.2) MOCK NEGOTIATION TRANSACTION - CUSTOMER BROKER NEW - AGENT - LIST EVENT ID "+ eventId +" PENDING ****\n");
                                 switch (negotiationType) {
                                     case SALE:
                                         //CREATE SALE NEGOTIATION
@@ -440,7 +440,7 @@ public class CustomerBrokerNewAgent implements
                                         break;
                                 }
                                 //NOTIFIED EVENT
-                                customerBrokerNewNegotiationTransactionDatabaseDao.updateEventTansactionStatus(transactionId, EventStatus.NOTIFIED);
+                                customerBrokerNewNegotiationTransactionDatabaseDao.updateEventTansactionStatus(eventId, EventStatus.NOTIFIED);
                                 //CONFIRM TRANSMISSION
                                 negotiationTransmissionManager.confirmReception(transmissionId);
                             }
@@ -463,7 +463,7 @@ public class CustomerBrokerNewAgent implements
                             //CONFIRM TRANSACTION
                             customerBrokerNewNegotiationTransactionDatabaseDao.updateStatusRegisterCustomerBrokerNewNegotiationTranasction(transactionId, NegotiationTransactionStatus.CONFIRM_NEGOTIATION);
                             //NOTIFIED EVENT
-                            customerBrokerNewNegotiationTransactionDatabaseDao.updateEventTansactionStatus(transactionId, EventStatus.NOTIFIED);
+                            customerBrokerNewNegotiationTransactionDatabaseDao.updateEventTansactionStatus(eventId, EventStatus.NOTIFIED);
                             //CONFIRM TRANSMISSION
                             negotiationTransmissionManager.confirmReception(transmissionId);
 
