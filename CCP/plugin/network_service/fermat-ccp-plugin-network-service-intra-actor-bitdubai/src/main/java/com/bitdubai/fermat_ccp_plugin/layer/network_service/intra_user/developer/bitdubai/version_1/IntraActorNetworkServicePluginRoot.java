@@ -1261,27 +1261,8 @@ public class IntraActorNetworkServicePluginRoot extends AbstractPlugin implement
                         "TO PROCESSING SEND IN ORDER TO ENSURE PROPER RECEPTION :"
                         + "\n-------------------------------------------------");
 
+                reprocessMessage();
 
-                try {
-
-                    List<ActorNetworkServiceRecord> lstActorRecord = getOutgoingNotificationDao().listRequestsByProtocolState(
-                            ActorProtocolState.SENT
-                    );
-
-
-                    for (ActorNetworkServiceRecord cpr : lstActorRecord) {
-                        getOutgoingNotificationDao().changeProtocolState(cpr.getId(), ActorProtocolState.PROCESSING_SEND);
-
-                    }
-                } catch (CantListIntraWalletUsersException e) {
-                    e.printStackTrace();
-                } catch (CantUpdateRecordDataBaseException e) {
-                    e.printStackTrace();
-                } catch (CantUpdateRecordException e) {
-                    e.printStackTrace();
-                } catch (RequestNotFoundException e) {
-                    e.printStackTrace();
-                }
 
                 if(communicationNetworkServiceConnectionManager != null)
                     communicationNetworkServiceConnectionManager.closeConnection(vpnConnectionCloseNotificationEvent.getRemoteParticipant().getIdentityPublicKey());
@@ -1308,26 +1289,7 @@ public class IntraActorNetworkServicePluginRoot extends AbstractPlugin implement
                     + "\n-------------------------------------------------");
 
 
-            try {
-
-                List<ActorNetworkServiceRecord> lstActorRecord = getOutgoingNotificationDao().listRequestsByProtocolState(
-                        ActorProtocolState.SENT
-                );
-
-
-                for (ActorNetworkServiceRecord cpr : lstActorRecord) {
-                    getOutgoingNotificationDao().changeProtocolState(cpr.getId(), ActorProtocolState.PROCESSING_SEND);
-
-                }
-            } catch (CantListIntraWalletUsersException e) {
-                e.printStackTrace();
-            } catch (CantUpdateRecordDataBaseException e) {
-                e.printStackTrace();
-            } catch (CantUpdateRecordException e) {
-                e.printStackTrace();
-            } catch (RequestNotFoundException e) {
-                e.printStackTrace();
-            }
+           reprocessMessage();
 
 
             this.register = false;
