@@ -10,6 +10,7 @@ import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperDatabaseT
 import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperDatabaseTableRecord;
 import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperObjectFactory;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Addons;
+import com.bitdubai.fermat_api.layer.all_definition.enums.AgentStatus;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Layers;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ReferenceWallet;
@@ -822,16 +823,13 @@ public final class CryptoPaymentRequestNetworkServicePluginRoot extends Abstract
      */
     public void handleCompleteComponentRegistrationNotificationEvent(final PlatformComponentProfile platformComponentProfileRegistered) {
 
-        if (platformComponentProfileRegistered.getPlatformComponentType() == PlatformComponentType.COMMUNICATION_CLOUD_CLIENT && this.register){
+        if (platformComponentProfileRegistered.getPlatformComponentType() == PlatformComponentType.COMMUNICATION_CLOUD_CLIENT && this.register && communicationRegistrationProcessNetworkServiceAgent.getStatus() == AgentStatus.STOPPED){
 
-            if(communicationRegistrationProcessNetworkServiceAgent!=null){
-                communicationRegistrationProcessNetworkServiceAgent.stop();
-                communicationRegistrationProcessNetworkServiceAgent = null;
-            }
             beforeRegistered = Boolean.TRUE;
-                              /*
-                 * Construct my profile and register me
-                 */
+
+            /*
+             * Construct my profile and register me
+             */
             PlatformComponentProfile platformComponentProfileToReconnect =  wsCommunicationsCloudClientManager.getCommunicationsCloudClientConnection().constructPlatformComponentProfileFactory(this.getIdentityPublicKey(),
                     this.getAlias().toLowerCase(),
                     this.getName(),

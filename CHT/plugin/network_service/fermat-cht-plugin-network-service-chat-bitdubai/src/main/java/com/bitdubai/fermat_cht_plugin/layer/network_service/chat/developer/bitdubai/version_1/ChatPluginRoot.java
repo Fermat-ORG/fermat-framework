@@ -386,16 +386,15 @@ public class ChatPluginRoot extends AbstractPlugin implements
     public void handleCompleteComponentRegistrationNotificationEvent(PlatformComponentProfile platformComponentProfileRegistered) {
         System.out.println("ChatPLuginRoot - CommunicationNetworkServiceConnectionManager - Starting method handleCompleteComponentRegistrationNotificationEvent");
 
-        if (platformComponentProfileRegistered.getPlatformComponentType() == PlatformComponentType.COMMUNICATION_CLOUD_CLIENT && this.register){
+        if (platformComponentProfileRegistered.getPlatformComponentType() == PlatformComponentType.COMMUNICATION_CLOUD_CLIENT && this.register && communicationRegistrationProcessNetworkServiceAgent.isAlive()){
 
-            if(communicationRegistrationProcessNetworkServiceAgent.isAlive()){
-                communicationRegistrationProcessNetworkServiceAgent.interrupt();
-                communicationRegistrationProcessNetworkServiceAgent = null;
-            }
+            communicationRegistrationProcessNetworkServiceAgent.interrupt();
+            communicationRegistrationProcessNetworkServiceAgent = null;
 
-                              /*
-                 * Construct my profile and register me
-                 */
+
+            /*
+             * Construct my profile and register me
+             */
             PlatformComponentProfile platformComponentProfileToReconnect =  wsCommunicationsCloudClientManager.getCommunicationsCloudClientConnection().constructPlatformComponentProfileFactory(this.getIdentityPublicKey(),
                     this.getAlias().toLowerCase(),
                     this.getName(),

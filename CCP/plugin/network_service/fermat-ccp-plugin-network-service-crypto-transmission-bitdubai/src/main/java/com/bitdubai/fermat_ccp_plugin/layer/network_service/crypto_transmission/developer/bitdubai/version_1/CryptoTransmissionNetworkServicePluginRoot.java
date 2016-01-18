@@ -750,12 +750,10 @@ public class CryptoTransmissionNetworkServicePluginRoot extends AbstractNetworkS
 
         System.out.println(" Crypto Transmission CommunicationNetworkServiceConnectionManager - Starting method handleCompleteComponentRegistrationNotificationEvent");
 
-        if (platformComponentProfileRegistered.getPlatformComponentType() == PlatformComponentType.COMMUNICATION_CLOUD_CLIENT && this.register){
+        if (platformComponentProfileRegistered.getPlatformComponentType() == PlatformComponentType.COMMUNICATION_CLOUD_CLIENT && this.register && communicationRegistrationProcessNetworkServiceAgent.isAlive()){
 
-            if(communicationRegistrationProcessNetworkServiceAgent.isAlive()){
-                communicationRegistrationProcessNetworkServiceAgent.interrupt();
-                communicationRegistrationProcessNetworkServiceAgent = null;
-            }
+            communicationRegistrationProcessNetworkServiceAgent.interrupt();
+            communicationRegistrationProcessNetworkServiceAgent = null;
 
             beforeRegistered = Boolean.TRUE;
                               /*

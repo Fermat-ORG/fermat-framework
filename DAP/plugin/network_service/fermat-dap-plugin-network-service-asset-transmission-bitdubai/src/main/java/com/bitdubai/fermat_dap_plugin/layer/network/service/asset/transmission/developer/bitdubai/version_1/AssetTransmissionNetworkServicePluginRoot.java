@@ -639,12 +639,10 @@ public class AssetTransmissionNetworkServicePluginRoot extends AbstractPlugin im
 
         System.out.println(" CommunicationNetworkServiceConnectionManager - Starting method handleCompleteComponentRegistrationNotificationEvent");
 
-        if (platformComponentProfileRegistered.getPlatformComponentType() == PlatformComponentType.COMMUNICATION_CLOUD_CLIENT && this.register){
+        if (platformComponentProfileRegistered.getPlatformComponentType() == PlatformComponentType.COMMUNICATION_CLOUD_CLIENT && this.register && communicationRegistrationProcessNetworkServiceAgent.isAlive()){
 
-            if(communicationRegistrationProcessNetworkServiceAgent.isAlive()){
-                communicationRegistrationProcessNetworkServiceAgent.interrupt();
-                communicationRegistrationProcessNetworkServiceAgent = null;
-            }
+            communicationRegistrationProcessNetworkServiceAgent.interrupt();
+            communicationRegistrationProcessNetworkServiceAgent = null;
 
                               /*
                  * Construct my profile and register me

@@ -696,14 +696,10 @@ public class IntraActorNetworkServicePluginRoot extends AbstractPlugin implement
 
         System.out.println(" CommunicationNetworkServiceConnectionManager - Starting method handleCompleteComponentRegistrationNotificationEvent");
 
+        if (platformComponentProfileRegistered.getPlatformComponentType() == PlatformComponentType.COMMUNICATION_CLOUD_CLIENT && this.register && communicationRegistrationProcessNetworkServiceAgent.isAlive()){
 
-
-        if (platformComponentProfileRegistered.getPlatformComponentType() == PlatformComponentType.COMMUNICATION_CLOUD_CLIENT && this.register){
-
-            if(communicationRegistrationProcessNetworkServiceAgent.isAlive()){
-                communicationRegistrationProcessNetworkServiceAgent.interrupt();
-                communicationRegistrationProcessNetworkServiceAgent = null;
-            }
+            communicationRegistrationProcessNetworkServiceAgent.interrupt();
+            communicationRegistrationProcessNetworkServiceAgent = null;
 
             beforeRegistered = true;
 
