@@ -97,7 +97,7 @@ public final class AssetVerification {
             /**
              * If I didn't get it, I will get the child of the genesis Transaction
              */
-            transactionListFromCryptoNetwork = null; // todo get new method
+            transactionListFromCryptoNetwork = bitcoinNetworkManager.getChildCryptoTransaction(genesisTransaction);
         }
 
         if (transactionListFromCryptoNetwork == null || transactionListFromCryptoNetwork.isEmpty()) {

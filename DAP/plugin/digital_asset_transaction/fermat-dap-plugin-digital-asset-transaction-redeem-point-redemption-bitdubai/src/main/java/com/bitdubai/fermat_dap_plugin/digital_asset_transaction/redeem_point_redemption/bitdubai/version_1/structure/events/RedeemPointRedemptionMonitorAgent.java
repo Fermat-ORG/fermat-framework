@@ -247,7 +247,7 @@ public class RedeemPointRedemptionMonitorAgent implements Agent {
                                 DigitalAssetMetadata digitalAssetMetadata = getDigitalAssetMetadataFromLocalStorage(transactionId);
                                 debug("searching the crypto transaction");
 
-                                CryptoTransaction cryptoTransaction = null;//todo get it from new method bitcoinNetworkManager.getLastChildCryptoTransaction(null, digitalAssetMetadata.getGenesisTransaction(), digitalAssetMetadata.getGenesisBlock());
+                                CryptoTransaction cryptoTransaction = bitcoinNetworkManager.getLastChildCryptoTransaction(null, digitalAssetMetadata.getGenesisTransaction(), digitalAssetMetadata.getGenesisBlock());
                                 //TODO LOAD WALLET! I SHOULD SEARCH FOR THE WALLET PUBLIC KEY
                                 //BUT THAT'S NOT YET IMPLEMENTED.
                                 debug("loading redeem point wallet, public key is hardcoded");
@@ -283,7 +283,7 @@ public class RedeemPointRedemptionMonitorAgent implements Agent {
                             for (String transactionId : dao.getOnCryptoNetworkGenesisTransactions()) {
                                 DigitalAssetMetadata metadata = getDigitalAssetMetadataFromLocalStorage(transactionId);
                                 debug("searching the crypto transaction");
-                                CryptoTransaction cryptoTransaction = null; //todo get it from new method bitcoinNetworkManager.getLastChildCryptoTransaction(null, metadata.getGenesisTransaction(), metadata.getGenesisBlock());
+                                CryptoTransaction cryptoTransaction = bitcoinNetworkManager.getLastChildCryptoTransaction(null, metadata.getGenesisTransaction(), metadata.getGenesisBlock());
                                 String userPublicKey = dao.getSenderPublicKeyById(transactionId);
                                 //TODO LOAD WALLET! I SHOULD SEARCH FOR THE WALLET PUBLIC KEY
                                 //BUT THAT'S NOT YET IMPLEMENTED.
