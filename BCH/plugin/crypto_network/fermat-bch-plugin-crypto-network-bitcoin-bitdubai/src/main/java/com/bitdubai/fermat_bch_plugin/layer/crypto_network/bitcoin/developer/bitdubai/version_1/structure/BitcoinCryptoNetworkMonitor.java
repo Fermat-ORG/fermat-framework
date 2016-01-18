@@ -468,7 +468,9 @@ public class BitcoinCryptoNetworkMonitor implements Agent {
             /**
              * I store it in the wallet.
              */
-            wallet.commitTx(tx);
+            WalletTransaction walletTransaction = new WalletTransaction(WalletTransaction.Pool.PENDING, tx);
+            wallet.addWalletTransaction(walletTransaction);
+            //wallet.commitTx(tx);
             wallet.saveToFile(walletFileName);
 
 
@@ -562,7 +564,6 @@ public class BitcoinCryptoNetworkMonitor implements Agent {
         if (storedTransaction != null)
             return storedTransaction;
 
-
         /**
          * I don't have it locally, so I will try to get it from the stored blockstore
          */
@@ -577,7 +578,6 @@ public class BitcoinCryptoNetworkMonitor implements Agent {
              */
 
             Block genesisBlock = getBlockFromPeer(blockHash);
-
 
             /**
              * Will search all transactions from the block until I find my own.
