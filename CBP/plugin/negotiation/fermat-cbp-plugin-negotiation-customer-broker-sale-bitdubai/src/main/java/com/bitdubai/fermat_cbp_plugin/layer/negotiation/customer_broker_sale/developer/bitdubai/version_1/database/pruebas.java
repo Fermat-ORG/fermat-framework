@@ -1,18 +1,18 @@
-package com.bitdubai.fermat_cbp_plugin.layer.negotiation.customer_broker_purchase.developer.bitdubai.version_1.database;
+package com.bitdubai.fermat_cbp_plugin.layer.negotiation.customer_broker_sale.developer.bitdubai.version_1.database;
 
 import com.bitdubai.fermat_api.layer.all_definition.enums.FiatCurrency;
 import com.bitdubai.fermat_cbp_api.all_definition.negotiation.NegotiationBankAccount;
 import com.bitdubai.fermat_cbp_api.all_definition.negotiation.NegotiationLocations;
-import com.bitdubai.fermat_cbp_api.layer.negotiation.customer_broker_purchase.exceptions.CantCreateBankAccountPurchaseException;
-import com.bitdubai.fermat_cbp_api.layer.negotiation.customer_broker_purchase.exceptions.CantCreateLocationPurchaseException;
-import com.bitdubai.fermat_cbp_api.layer.negotiation.customer_broker_purchase.exceptions.CantDeleteBankAccountPurchaseException;
-import com.bitdubai.fermat_cbp_api.layer.negotiation.customer_broker_purchase.exceptions.CantDeleteLocationPurchaseException;
-import com.bitdubai.fermat_cbp_api.layer.negotiation.customer_broker_purchase.exceptions.CantGetListBankAccountsPurchaseException;
-import com.bitdubai.fermat_cbp_api.layer.negotiation.customer_broker_purchase.exceptions.CantGetListLocationsPurchaseException;
-import com.bitdubai.fermat_cbp_api.layer.negotiation.customer_broker_purchase.exceptions.CantUpdateBankAccountPurchaseException;
-import com.bitdubai.fermat_cbp_api.layer.negotiation.customer_broker_purchase.exceptions.CantUpdateLocationPurchaseException;
-import com.bitdubai.fermat_cbp_plugin.layer.negotiation.customer_broker_purchase.developer.bitdubai.version_1.structure.NegotiationBankAccountPurchase;
-import com.bitdubai.fermat_cbp_plugin.layer.negotiation.customer_broker_purchase.developer.bitdubai.version_1.structure.NegotiationPurchaseLocations;
+import com.bitdubai.fermat_cbp_api.layer.negotiation.customer_broker_sale.exceptions.CantCreateBankAccountSaleException;
+import com.bitdubai.fermat_cbp_api.layer.negotiation.customer_broker_sale.exceptions.CantCreateLocationSaleException;
+import com.bitdubai.fermat_cbp_api.layer.negotiation.customer_broker_sale.exceptions.CantDeleteBankAccountSaleException;
+import com.bitdubai.fermat_cbp_api.layer.negotiation.customer_broker_sale.exceptions.CantDeleteLocationSaleException;
+import com.bitdubai.fermat_cbp_api.layer.negotiation.customer_broker_sale.exceptions.CantGetListBankAccountsSaleException;
+import com.bitdubai.fermat_cbp_api.layer.negotiation.customer_broker_sale.exceptions.CantGetListLocationsSaleException;
+import com.bitdubai.fermat_cbp_api.layer.negotiation.customer_broker_sale.exceptions.CantUpdateBankAccountSaleException;
+import com.bitdubai.fermat_cbp_api.layer.negotiation.customer_broker_sale.exceptions.CantUpdateLocationSaleException;
+import com.bitdubai.fermat_cbp_plugin.layer.negotiation.customer_broker_sale.developer.bitdubai.version_1.structure.NegotiationBankAccountSale;
+import com.bitdubai.fermat_cbp_plugin.layer.negotiation.customer_broker_sale.developer.bitdubai.version_1.structure.NegotiationSaleLocations;
 
 import java.util.Collection;
 import java.util.UUID;
@@ -22,13 +22,13 @@ import java.util.UUID;
  */
 public class pruebas {
 
-    CustomerBrokerPurchaseNegotiationDao dao;
+    CustomerBrokerSaleNegotiationDao dao;
 
-    public pruebas(CustomerBrokerPurchaseNegotiationDao dao){
+    public pruebas(CustomerBrokerSaleNegotiationDao dao){
         this.dao = dao;
 
-        //init_test_locations();
-        //init_test_bank();
+        init_test_locations();
+        init_test_bank();
 
     }
 
@@ -41,7 +41,7 @@ public class pruebas {
         for(int i=0; i<5; i++){
             try {
                 this.dao.createNewLocation("Locacion "+i, "Uri de la direccion "+i);
-            } catch (CantCreateLocationPurchaseException e) {
+            } catch (CantCreateLocationSaleException e) {
                 System.out.println("vlz: Error creando la locacion ["+i+"]");
             }
         }
@@ -62,17 +62,17 @@ public class pruebas {
                     System.out.println("vlz: \tURI: "+loc.getURI());
                 }
 
-            } catch (CantGetListLocationsPurchaseException e) {
+            } catch (CantGetListLocationsSaleException e) {
                 System.out.println("vlz: Error obteniendo las locaciones");
             }
 
         System.out.println("vlz: Actualizando las locaciones");
 
-            NegotiationLocations aux2 = new NegotiationPurchaseLocations(aux.getLocationId(), aux.getLocation()+" Modificada", aux.getURI());
+            NegotiationLocations aux2 = new NegotiationSaleLocations(aux.getLocationId(), aux.getLocation()+" Modificada", aux.getURI());
 
             try {
                 this.dao.updateLocation(aux2);
-            } catch (CantUpdateLocationPurchaseException e) {
+            } catch (CantUpdateLocationSaleException e) {
                 System.out.println("vlz: Error actualizando la locacion");
             }
 
@@ -87,7 +87,7 @@ public class pruebas {
                     System.out.println("vlz: \tURI: "+loc.getURI());
                 }
 
-            } catch (CantGetListLocationsPurchaseException e) {
+            } catch (CantGetListLocationsSaleException e) {
                 System.out.println("vlz: Error obteniendo las locaciones");
             }
 
@@ -95,7 +95,7 @@ public class pruebas {
 
             try {
                 this.dao.deleteLocation(aux2);
-            } catch (CantDeleteLocationPurchaseException e) {
+            } catch (CantDeleteLocationSaleException e) {
                 System.out.println("vlz: Error eliminando la locacion");
             }
 
@@ -110,7 +110,7 @@ public class pruebas {
                     System.out.println("vlz: \tURI: "+loc.getURI());
                 }
 
-            } catch (CantGetListLocationsPurchaseException e) {
+            } catch (CantGetListLocationsSaleException e) {
                 System.out.println("vlz: Error obteniendo las locaciones");
             }
 
@@ -131,13 +131,13 @@ public class pruebas {
 
                 for(int i=0; i<monedas.length; i++){
                     try {
-                        this.dao.createNewBankAccount( new NegotiationBankAccountPurchase(
+                        this.dao.createNewBankAccount( new NegotiationBankAccountSale(
                                 UUID.randomUUID(),
                                 "Cuenta "+i,
                                 monedas[i]
                             )
                         );
-                    } catch (CantCreateBankAccountPurchaseException e) {
+                    } catch (CantCreateBankAccountSaleException e) {
                         System.out.println("vlz: Error creando cuenta bancaria");
                     }
                 }
@@ -156,17 +156,17 @@ public class pruebas {
                         System.out.println("vlz: \tCurrencyType: "+cuenta.getCurrencyType().getCode());
                     }
 
-                } catch (CantGetListBankAccountsPurchaseException e) {
+                } catch (CantGetListBankAccountsSaleException e) {
                     System.out.println("vlz: Error obteniendo las cuentas");
                 }
 
             System.out.println("vlz: Actualizando las cuentas");
 
-                NegotiationBankAccount aux2 = new NegotiationBankAccountPurchase(aux.getBankAccountId(), aux.getBankAccount()+" Modificada", aux.getCurrencyType());
+                NegotiationBankAccount aux2 = new NegotiationBankAccountSale(aux.getBankAccountId(), aux.getBankAccount()+" Modificada", aux.getCurrencyType());
 
                 try {
                     this.dao.updateBankAccount(aux2);
-                } catch (CantUpdateBankAccountPurchaseException e) {
+                } catch (CantUpdateBankAccountSaleException e) {
                     System.out.println("vlz: Error actualizando la cuenta");
                 }
 
@@ -180,7 +180,7 @@ public class pruebas {
                         System.out.println("vlz: \tCurrencyType: "+cuenta.getCurrencyType().getCode());
                     }
 
-                } catch (CantGetListBankAccountsPurchaseException e) {
+                } catch (CantGetListBankAccountsSaleException e) {
                     System.out.println("vlz: Error obteniendo las locaciones");
                 }
 
@@ -188,7 +188,7 @@ public class pruebas {
 
                 try {
                     this.dao.deleteBankAccount(aux2);
-                } catch (CantDeleteBankAccountPurchaseException e) {
+                } catch (CantDeleteBankAccountSaleException e) {
                     System.out.println("vlz: Error eliminando la cuenta");
                 }
 
@@ -202,7 +202,7 @@ public class pruebas {
                         System.out.println("vlz: \tCurrencyType: "+cuenta.getCurrencyType().getCode());
                     }
 
-                } catch (CantGetListBankAccountsPurchaseException e) {
+                } catch (CantGetListBankAccountsSaleException e) {
                     System.out.println("vlz: Error obteniendo las cuentas");
                 }
 
@@ -216,7 +216,7 @@ public class pruebas {
                         System.out.println("vlz: \tMoneda: "+moneda.getCode());
                     }
 
-                } catch (CantGetListBankAccountsPurchaseException e) {
+                } catch (CantGetListBankAccountsSaleException e) {
                     System.out.println("vlz: Error obteniendo las cuentas");
                 }
 
@@ -230,7 +230,7 @@ public class pruebas {
                         System.out.println("vlz: \tCurrencyType: "+cuenta.getCurrencyType().getCode());
                     }
 
-                } catch (CantGetListBankAccountsPurchaseException e) {
+                } catch (CantGetListBankAccountsSaleException e) {
                     System.out.println("vlz: Error obteniendo las cuentas");
                 }
 
