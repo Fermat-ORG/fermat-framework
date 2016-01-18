@@ -322,7 +322,13 @@ public class ChatMiddlewareMonitorAgent implements
                 UUID incomingTransactionChatId;
                 ChatMetadata incomingChatMetadata;
                 if(pendingTransactionList==null){
-                    throw new CantGetPendingTransactionException("The Network Service returns a null list");
+                    /**
+                     * In this version, when the NS return a null list, I'll ignore this this issue,
+                     * I'll try later.
+                     */
+                    //throw new CantGetPendingTransactionException("The Network Service returns a null list");
+                    System.out.println("CHAT MIDDLEWARE: The Network Service returns a null list");
+                    return;
                 }
                 for(Transaction<ChatMetadata> pendingTransaction : pendingTransactionList){
                     incomingChatMetadata=pendingTransaction.getInformation();
