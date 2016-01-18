@@ -885,7 +885,7 @@ public class CryptoTransmissionNetworkServicePluginRoot extends AbstractNetworkS
          */
 
         //TODO: SE lo paso en duro para probar
-        communicationNetworkServiceConnectionManager.handleEstablishedRequestedNetworkServiceConnection(remoteComponentProfile,NetworkServiceType.CRYPTO_TRANSMISSION);
+        communicationNetworkServiceConnectionManager.handleEstablishedRequestedNetworkServiceConnection(remoteComponentProfile);
 
         System.out.print("-----------------------\n" +
                 "CRYPTO TRANSMISSION CONEXION ENTRANTE  -----------------------\n" +
