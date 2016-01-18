@@ -2,8 +2,6 @@ package com.bitdubai.fermat_bch_plugin.layer.crypto_network.bitcoin.developer.bi
 
 import com.bitdubai.fermat_api.CantStartAgentException;
 import com.bitdubai.fermat_api.layer.all_definition.enums.BlockchainNetworkType;
-import com.bitdubai.fermat_api.layer.all_definition.enums.CryptoCurrency;
-import com.bitdubai.fermat_api.layer.all_definition.money.CryptoAddress;
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.ProtocolStatus;
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.Specialist;
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.TransactionProtocolManager;
@@ -12,9 +10,9 @@ import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_pro
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.exceptions.CantConfirmTransactionException;
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.exceptions.CantDeliverPendingTransactionsException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
-import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.BroadcastStatus;
 import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.BitcoinNetworkSelector;
 import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.BlockchainConnectionStatus;
+import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.BroadcastStatus;
 import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.exceptions.CantBroadcastTransactionException;
 import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.exceptions.CantCancellBroadcastTransactionException;
 import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.exceptions.CantFixTransactionInconsistenciesException;
@@ -32,6 +30,7 @@ import com.bitdubai.fermat_bch_plugin.layer.crypto_network.bitcoin.developer.bit
 import com.bitdubai.fermat_bch_plugin.layer.crypto_network.bitcoin.developer.bitdubai.version_1.util.TransactionProtocolData;
 import com.bitdubai.fermat_dap_api.layer.dap_wallet.common.exceptions.CantGetTransactionsException;
 import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfaces.EventManager;
+import com.google.common.collect.Lists;
 
 import org.bitcoinj.core.Address;
 import org.bitcoinj.core.ECKey;
@@ -52,7 +51,10 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.ListIterator;
+import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 
@@ -587,18 +589,25 @@ public class BitcoinCryptoNetworkManager implements TransactionProtocolManager, 
         return null;
     }
 
-    private Transaction getTransactionFromBlockChain(String parentTransactionHash, String transactionBlockHash) throws CantGetTransactionsException{
+    /**
+     * Gets the transaction passed in the network.
+     * It will look first if it is a local trasaction, if not I will look for it at the stored blockchain
+     * and if still not found, I will look for it at the Blockchain requesting it from multiple peers.
+     * @param blockchainNetworkType
+     * @param parentTransactionHash
+     * @param transactionBlockHash
+     * @return
+     * @throws CantGetTransactionsException
+     */
+    private Transaction getTransactionFromBlockChain(BlockchainNetworkType blockchainNetworkType, String parentTransactionHash, String transactionBlockHash) throws CantGetTransactionsException{
         /**
-         * I will get the CryptoTransaction from all agents running. Only one will return the CryptoTransaction
+         * will get it from the specified agent monitoring the passed network.
          */
-        for (BitcoinCryptoNetworkMonitor monitor : runningAgents.values()){
-            try {
-                return monitor.getTransactionFromBlockChain(parentTransactionHash, transactionBlockHash);
-            } catch (CantGetTransactionException e) {
-                throw new CantGetTransactionsException(CantGetTransactionsException.DEFAULT_MESSAGE, e, "Error getting the parent transaction from the blockchain.", "Blockchain error");
-            }
+        try {
+            runningAgents.get(blockchainNetworkType).getTransactionFromBlockChain(parentTransactionHash, transactionBlockHash);
+        } catch (CantGetTransactionException e) {
+            throw new CantGetTransactionsException(CantGetTransactionsException.DEFAULT_MESSAGE, e, "Error getting the parent transaction from the blockchain.", "Blockchain error");
         }
-
         /**
          * if no agents are running, then no CryptoTransaction to return.
          */
@@ -824,75 +833,7 @@ public class BitcoinCryptoNetworkManager implements TransactionProtocolManager, 
         return runningAgents.get(blockchainNetworkType).getBlockchainConnectionStatus();
     }
 
-    /**
-     * Starting from the parentTransaction, I will navigate up until the last transaction, and return it.
-     * @blockchainNetworkType the network in which we will be executing this. If none provided, DEFAULT will be used.
-     * @param parentTransactionHash The starting point transaction hash.
-     * @param transactionBlockHash the block where this transaction is.
-     * @return the Last child transaction.
-     */
-    public Transaction getLastChildTransaction(@Nullable BlockchainNetworkType blockchainNetworkType, String parentTransactionHash, String transactionBlockHash) throws CantGetTransactionException {
-        /**
-         * if no blockchain network type info provided, then I will use default.
-         */
-        if (blockchainNetworkType == null)
-            blockchainNetworkType = BlockchainNetworkType.DEFAULT;
-
-        /**
-         * I will get the parent transaction, locally or remotely.
-         */
-        Transaction parentTransaction;
-        try {
-            parentTransaction = this.getTransactionFromBlockChain(parentTransactionHash, transactionBlockHash);
-        } catch (CantGetTransactionsException e) {
-            throw new CantGetTransactionException(CantGetTransactionException.DEFAULT_MESSAGE, e, "Error getting the parent transaction from the blockchain.", "Blockchain error.");
-        }
-
-        /**
-         * If I couldn't get it, then the nothing else to do.
-         */
-        if (parentTransaction == null)
-            return null;
-
-        /**
-         * Now that I have the parent transaction, I will navigate down one level
-         */
-        for (TransactionOutput output : parentTransaction.getOutputs()){
-            /**
-             * I will only consider the output that is for sending bitcoins to someone else.
-             */
-            if (output.getScriptPubKey().isSentToAddress() && !output.isMine(getWallet(blockchainNetworkType, null))){
-                Transaction childTransaction = output.getSpentBy().getParentTransaction();
-                /**
-                 * if there are no inputs associated to this transaction's output, the this is the last trasaction of the key
-                 */
-                if (childTransaction == null)
-                    return parentTransaction;
-                else{
-                    /**
-                     * I will get the block in which this transaction appears and call this function again.
-                     */
-                    transactionBlockHash = childTransaction.getAppearsInHashes().keySet().toString();
-                    this.getLastChildTransaction(blockchainNetworkType, childTransaction.getHashAsString(), transactionBlockHash);
-                }
-
-            }
-        }
-        return null;
-    }
-
-    /**
-     * Starting from the parentTransaction, I will navigate up until the last transaction, and return the CryptoTransaction
-     * @blockchainNetworkType the network in which we will be executing this. If none provided, DEFAULT will be used.
-     * @param parentTransactionHash The starting point transaction hash.
-     * @param transactionBlockHash the block where this transaction is.
-     * @return the Last child transaction.
-     */
-    public CryptoTransaction getLastChildCryptoTransaction(@Nullable BlockchainNetworkType blockchainNetworkType, String parentTransactionHash, String transactionBlockHash) throws CantGetCryptoTransactionException {
-        return CryptoTransaction.getCryptoTransaction(this.getBitcoinTransactions(BlockchainNetworkType.DEFAULT).get(0));
-    }
-
-    /**
+     /**
      * Gets a stored CryptoTransaction in wathever network.
      * @param txHash the transaction hash we want to get the CryptoTransaction
      * @return the last recorded CryptoTransaction.
@@ -904,5 +845,127 @@ public class BitcoinCryptoNetworkManager implements TransactionProtocolManager, 
         } catch (CantExecuteDatabaseOperationException e) {
             throw new CantGetCryptoTransactionException(CantGetCryptoTransactionException.DEFAULT_MESSAGE, e, "database error getting the last crypto transaction.", "database error");
         }
+    }
+
+
+    /**
+     * Based on the passed transaction chain of Transactions hashes and Blocks hashes, determines the entire path
+     * of the chain until the Genesis Transaction is reached.
+     * The genesis Transaction will be the first transaction in the map.
+     * @param blockchainNetworkType the active network to validate
+     * @param transactionChain a Map with the form TransactionHash / BlockHash
+     * @return all the CryptoTransactions originated at the genesis transaction
+     * @throws CantGetCryptoTransactionException
+     */
+    public List<CryptoTransaction> getGenesisCryptoTransaction(@Nullable BlockchainNetworkType blockchainNetworkType, LinkedHashMap<String, String> transactionChain) throws CantGetCryptoTransactionException {
+        try {
+            CryptoTransaction cryptoTransaction = CryptoTransaction.getCryptoTransaction(this.getGenesisTransaction(blockchainNetworkType, transactionChain));
+            return getCryptoTransactionWithAllCryptoStatus(cryptoTransaction);
+        } catch (CantGetTransactionException e) {
+            throw new CantGetCryptoTransactionException(CantGetCryptoTransactionException.DEFAULT_MESSAGE, e, null, null);
+        }
+    }
+
+    /**
+     * Based on a passed CryptoTransaction, returns a list of all the previous generated cryptoTransactions
+     * with the different CryptoStatus genereated
+     * @param cryptoTransaction
+     * @return
+     */
+    private List<CryptoTransaction> getCryptoTransactionWithAllCryptoStatus(CryptoTransaction cryptoTransaction) {
+        List<CryptoTransaction> cryptoTransactions = new ArrayList<>();
+
+        CryptoTransaction onCryptoNetwork = cryptoTransaction;
+        switch (cryptoTransaction.getCryptoStatus()){
+            case IRREVERSIBLE:
+                onCryptoNetwork.setCryptoStatus(CryptoStatus.ON_CRYPTO_NETWORK);
+                cryptoTransactions.add(onCryptoNetwork);
+
+                CryptoTransaction onBlockChain = cryptoTransaction;
+                onBlockChain.setCryptoStatus(CryptoStatus.ON_BLOCKCHAIN);
+                cryptoTransactions.add(onBlockChain);
+
+                cryptoTransactions.add(cryptoTransaction);
+                break;
+            case ON_BLOCKCHAIN:
+                onCryptoNetwork.setCryptoStatus(CryptoStatus.ON_CRYPTO_NETWORK);
+                cryptoTransactions.add(onCryptoNetwork);
+
+                cryptoTransactions.add(cryptoTransaction);
+                break;
+            default:
+                cryptoTransactions.add(cryptoTransaction);
+                break;
+        }
+
+        return cryptoTransactions;
+    }
+
+
+    /**
+     * Based on the passed transaction chain of Transactions hashes and Blocks hashes, determines the entire path
+     * of the chain until the Genesis Transaction is reached.
+     * The genesis Transaction will be the first transaction in the map.
+     * @param blockchainNetworkType the active network to validate
+     * @param transactionChain a Map with the form TransactionHash / BlockHash
+     * @return the transaction that represents the GenesisTransaction
+     * @throws CantGetCryptoTransactionException
+     */
+    private Transaction getGenesisTransaction(@Nullable BlockchainNetworkType blockchainNetworkType, LinkedHashMap<String, String> transactionChain) throws CantGetTransactionException {
+        if (transactionChain.isEmpty())
+            throw new CantGetTransactionException(CantGetTransactionException.DEFAULT_MESSAGE, null, "Transaction chain information is required.", "missing data");
+
+        /**
+         * will set default network if non provided.
+         */
+        if (blockchainNetworkType == null)
+            blockchainNetworkType = BlockchainNetworkType.DEFAULT;
+
+        Transaction parentTransaction = null, childTransaction = null, genesisTransaction = null;
+
+        /**
+         * I will iterate the passed map backwards getting one at the time, the transactions locally (or remotely if not found)
+         * make sure they are linked together lineally with the next transaction, until I reach the first genesis Transaction in the map.
+         *
+         * iterating reverse using guava :-)
+         */
+
+        for(Map.Entry<String,String> entry : Lists.reverse(Lists.newArrayList(transactionChain.entrySet())) ){
+            /**
+             * first iteration may have block hash null because transaction is not yet confirmed. If this is the case I will move to the next one
+             */
+            if (entry.getValue().isEmpty())
+                break;
+
+            /**
+             * if this is the first entry, I will only get the first transaction in the chain
+             */
+            if (childTransaction == null){
+                try {
+                    childTransaction = this.getTransactionFromBlockChain(blockchainNetworkType, entry.getValue(), entry.getKey());
+                } catch (CantGetTransactionsException e) {
+                    throw new CantGetTransactionException(CantGetTransactionException.DEFAULT_MESSAGE, e, "Error downloading child transaction from peer.", "Network issue - Timeout");
+                }
+            }
+            else{
+                try {
+                    /**
+                     * I will compare the childTransaction against the parent transaction, making sure that the child Transaction is an has an outputPoint to his parent.
+                     */
+                    parentTransaction = this.getTransactionFromBlockChain(blockchainNetworkType,entry.getValue(), entry.getKey());
+                    if (!parentTransaction.getInput(0).getOutpoint().getHash().equals(childTransaction.getHash())){
+                        StringBuilder output = new StringBuilder("The passed chain of transactions is not lineal.");
+                        output.append(System.lineSeparator());
+                        output.append("Transaction hash " + childTransaction.getHashAsString() + " is not a child of " + parentTransaction.getHashAsString());
+                        throw new CantGetTransactionException(CantGetTransactionException.DEFAULT_MESSAGE, null, output.toString(), null);
+                    }
+
+                    genesisTransaction = parentTransaction;
+                } catch (CantGetTransactionsException e) {
+                    throw new CantGetTransactionException(CantGetTransactionException.DEFAULT_MESSAGE, e, "Error downloading transaction from peer.", "Network issue - Timeout");
+                }
+            }
+        }
+        return genesisTransaction;
     }
 }
