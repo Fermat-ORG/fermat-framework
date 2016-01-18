@@ -58,4 +58,14 @@ public interface NetworkServiceConnectionManager {
      * @return NetworkServiceLocal the local instance that represent
      */
     public NetworkServiceLocal getNetworkServiceLocalInstance(String remoteNetworkServicePublicKey);
+
+    /*
+     * Stop the internal threads of the CommunicationNetworkServiceRemoteAgent
+     */
+    public void stop();
+
+    /*
+     * restart the internal threads of the CommunicationNetworkServiceRemoteAgent
+     */
+    public void restart();
 }

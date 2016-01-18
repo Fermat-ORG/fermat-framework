@@ -88,6 +88,16 @@ public interface CommunicationsClientConnection {
     public void registerComponentForCommunication(NetworkServiceType networkServiceNetworkServiceTypeApplicant, PlatformComponentProfile platformComponentProfile) throws CantRegisterComponentException;
 
     /**
+     * Method that update a actor profile with for Communication like online
+     *
+     * @param networkServiceNetworkServiceTypeApplicant
+     * @param platformComponentProfile
+     * @throws CantRegisterComponentException
+     */
+    public void updateRegisterActorProfile(NetworkServiceType networkServiceNetworkServiceTypeApplicant, PlatformComponentProfile platformComponentProfile) throws CantRegisterComponentException;
+
+
+    /**
      * Method that request to the communication cloud server the list of component registered that match
      * whit the discovery query params, this method is asynchronous
      *
@@ -160,5 +170,10 @@ public interface CommunicationsClientConnection {
      * @return CommunicationsVPNConnection
      */
     public CommunicationsVPNConnection getCommunicationsVPNConnectionStablished(NetworkServiceType networkServiceType, PlatformComponentProfile remotePlatformComponentProfile);
+
+    /*
+    * Close the main connection when is closing the App
+     */
+    public void closeMainConnection();
 
 }

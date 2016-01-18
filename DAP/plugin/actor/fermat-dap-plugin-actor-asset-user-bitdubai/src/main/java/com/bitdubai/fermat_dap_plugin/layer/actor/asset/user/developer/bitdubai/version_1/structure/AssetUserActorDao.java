@@ -1218,7 +1218,7 @@ public class AssetUserActorDao implements Serializable {
         }
     }
 
-    private ActorAssetUser getActorAssetUserRegisteredByPublicKey(String actorPublicKey) throws CantGetAssetUserActorsException {
+    public ActorAssetUser getActorAssetUserRegisteredByPublicKey(String actorPublicKey) throws CantGetAssetUserActorsException {
         DatabaseTable table;
 
         // Get Asset Users identities list.

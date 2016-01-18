@@ -60,6 +60,8 @@ import com.bitdubai.fermat_dap_plugin.layer.actor.network.service.asset.user.dev
 import com.bitdubai.fermat_dap_plugin.layer.actor.network.service.asset.user.developer.bitdubai.version_1.database.communications.CommunicationNetworkServiceDeveloperDatabaseFactory;
 import com.bitdubai.fermat_dap_plugin.layer.actor.network.service.asset.user.developer.bitdubai.version_1.database.communications.OutgoingMessageDao;
 import com.bitdubai.fermat_dap_plugin.layer.actor.network.service.asset.user.developer.bitdubai.version_1.event_handlers.ClientConnectionCloseNotificationEventHandler;
+import com.bitdubai.fermat_dap_plugin.layer.actor.network.service.asset.user.developer.bitdubai.version_1.event_handlers.ClientConnectionLooseNotificationEventHandler;
+import com.bitdubai.fermat_dap_plugin.layer.actor.network.service.asset.user.developer.bitdubai.version_1.event_handlers.ClientSuccessfullReconnectNotificationEventHandler;
 import com.bitdubai.fermat_dap_plugin.layer.actor.network.service.asset.user.developer.bitdubai.version_1.event_handlers.CompleteComponentConnectionRequestNotificationEventHandler;
 import com.bitdubai.fermat_dap_plugin.layer.actor.network.service.asset.user.developer.bitdubai.version_1.event_handlers.CompleteComponentRegistrationNotificationEventHandler;
 import com.bitdubai.fermat_dap_plugin.layer.actor.network.service.asset.user.developer.bitdubai.version_1.event_handlers.CompleteRequestListComponentRegisteredNotificationEventHandler;
@@ -387,7 +389,7 @@ public class AssetUserActorNetworkServicePluginRoot extends AbstractNetworkServi
             /*
              * If register
              */
-            if (this.isRegister()) {
+            if (true) {
 
                 System.out.println("*************************************");
                 System.out.println("Actor Asset User - Registrar Datos " + actorAssetUserToRegister.getName());
@@ -447,7 +449,7 @@ public class AssetUserActorNetworkServicePluginRoot extends AbstractNetworkServi
     public List<ActorAssetUser> getListActorAssetUserRegistered() throws CantRequestListActorAssetUserRegisteredException {
 
         try {
-            if (this.isRegister()) {
+           // if (true) {
                 if (actorAssetUserRegisteredList != null && !actorAssetUserRegisteredList.isEmpty()) {
                     actorAssetUserRegisteredList.clear();
                 }
@@ -479,9 +481,9 @@ public class AssetUserActorNetworkServicePluginRoot extends AbstractNetworkServi
                     return actorAssetUserRegisteredList;
                 }
 
-            } else {
-                return actorAssetUserRegisteredList;
-            }
+//            } else {
+//                return actorAssetUserRegisteredList;
+//            }
         } catch (CantRequestListException e) {
 
             StringBuffer contextBuffer = new StringBuffer();
@@ -513,7 +515,7 @@ public class AssetUserActorNetworkServicePluginRoot extends AbstractNetworkServi
 
         try {
 
-            if (this.isRegister()) {
+            if (true) {
 
                 CommunicationNetworkServiceLocal communicationNetworkServiceLocal = communicationNetworkServiceConnectionManager.getNetworkServiceLocalInstance(actorAssetUserDestination.getActorPublicKey());
 
@@ -624,7 +626,7 @@ public class AssetUserActorNetworkServicePluginRoot extends AbstractNetworkServi
         try {
 
 
-            if (this.isRegister()) {
+            if (true) {
                 CommunicationNetworkServiceLocal communicationNetworkServiceLocal = communicationNetworkServiceConnectionManager.getNetworkServiceLocalInstance(actorAssetIssuerDestination.getActorPublicKey());
 
                 Gson gson = new Gson();
@@ -934,6 +936,28 @@ public class AssetUserActorNetworkServicePluginRoot extends AbstractNetworkServi
 
     }
 
+    /*
+     * Handles the events ClientConnectionLooseNotificationEvent
+     */
+    @Override
+    public void handleClientConnectionLooseNotificationEvent(FermatEvent fermatEvent) {
+
+        if(communicationNetworkServiceConnectionManager != null)
+            communicationNetworkServiceConnectionManager.stop();
+
+    }
+
+    /*
+     * Handles the events ClientSuccessfullReconnectNotificationEvent
+     */
+    @Override
+    public void handleClientSuccessfullReconnectNotificationEvent(FermatEvent fermatEvent) {
+
+        if(communicationNetworkServiceConnectionManager != null)
+            communicationNetworkServiceConnectionManager.restart();
+
+    }
+
     /**
      * Static method to get the logging level from any class under root.
      *
@@ -1155,6 +1179,23 @@ public class AssetUserActorNetworkServicePluginRoot extends AbstractNetworkServi
 //        fermatEventListener.setEventHandler(new NewReceiveMessagesNotificationEventHandler(this, eventManager));
 //        eventManager.addListener(fermatEventListener);
 //        listenersAdded.add(fermatEventListener);
+
+          /*
+         * Listen and handle Client Connection Loose Notification Event
+         */
+        fermatEventListener = eventManager.getNewListener(P2pEventType.CLIENT_CONNECTION_LOOSE);
+        fermatEventListener.setEventHandler(new ClientConnectionLooseNotificationEventHandler(this));
+        eventManager.addListener(fermatEventListener);
+        listenersAdded.add(fermatEventListener);
+
+
+        /*
+         * Listen and handle Client Connection Success Reconnect Notification Event
+         */
+        fermatEventListener = eventManager.getNewListener(P2pEventType.CLIENT_SUCCESS_RECONNECT);
+        fermatEventListener.setEventHandler(new ClientSuccessfullReconnectNotificationEventHandler(this));
+        eventManager.addListener(fermatEventListener);
+        listenersAdded.add(fermatEventListener);
 
     }
 

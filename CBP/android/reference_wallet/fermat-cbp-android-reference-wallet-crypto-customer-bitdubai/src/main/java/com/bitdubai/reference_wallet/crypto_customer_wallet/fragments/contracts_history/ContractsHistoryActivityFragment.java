@@ -29,6 +29,7 @@ import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.Un
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 import com.bitdubai.reference_wallet.crypto_customer_wallet.R;
 import com.bitdubai.reference_wallet.crypto_customer_wallet.common.adapters.ContractHistoryAdapter;
+import com.bitdubai.reference_wallet.crypto_customer_wallet.common.models.TestData;
 import com.bitdubai.reference_wallet.crypto_customer_wallet.common.navigationDrawer.CustomerNavigationViewPainter;
 import com.bitdubai.reference_wallet.crypto_customer_wallet.session.CryptoCustomerWalletSession;
 import com.bitdubai.reference_wallet.crypto_customer_wallet.util.CommonLogger;
@@ -50,6 +51,7 @@ public class ContractsHistoryActivityFragment extends FermatWalletListFragment<C
 
     // Fermat Managers
     private CryptoCustomerWalletModuleManager moduleManager;
+    private CryptoCustomerWalletManager walletManager;
     private ErrorManager errorManager;
 
     // Data
@@ -58,6 +60,7 @@ public class ContractsHistoryActivityFragment extends FermatWalletListFragment<C
 
     //UI
     private View noContractsView;
+    ;
 
 
     public static ContractsHistoryActivityFragment newInstance() {
@@ -70,6 +73,7 @@ public class ContractsHistoryActivityFragment extends FermatWalletListFragment<C
 
         try {
             moduleManager = ((CryptoCustomerWalletSession) appSession).getModuleManager();
+            walletManager = moduleManager.getCryptoCustomerWallet(appSession.getAppPublicKey());
             errorManager = appSession.getErrorManager();
 
             contractHistoryList = (ArrayList) getMoreDataAsync(FermatRefreshTypes.NEW, 0);
@@ -215,8 +219,8 @@ public class ContractsHistoryActivityFragment extends FermatWalletListFragment<C
 
         if (moduleManager != null) {
             try {
-                CryptoCustomerWalletManager wallet = moduleManager.getCryptoCustomerWallet(appSession.getAppPublicKey());
-                data.addAll(wallet.getContractsHistory(filterContractStatus, 0, 20));
+                data.addAll(TestData.getContractsHistory(filterContractStatus));
+                //TODO data.addAll(walletManager.getContractsHistory(filterContractStatus, 0, 20));
 
             } catch (Exception ex) {
                 CommonLogger.exception(TAG, ex.getMessage(), ex);

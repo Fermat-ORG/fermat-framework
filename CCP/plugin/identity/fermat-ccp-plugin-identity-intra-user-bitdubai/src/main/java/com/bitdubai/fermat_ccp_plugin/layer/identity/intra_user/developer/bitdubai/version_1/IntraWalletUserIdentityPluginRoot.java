@@ -228,7 +228,8 @@ public class IntraWalletUserIdentityPluginRoot extends AbstractPlugin
     public void updateIntraUserIdentity(String identityPublicKey, String identityAlias, String phrase, byte[] profileImage) throws CantUpdateIdentityException {
             try {
                 intraWalletUserIdentityDao.updateIdentity(identityPublicKey,identityAlias,phrase,profileImage);
-                registerIdentities();
+                updateIdentity(identityPublicKey,identityAlias,phrase,profileImage);
+
             }
             catch(CantUpdateIntraUserIdentityException e)
             {
@@ -238,6 +239,10 @@ public class IntraWalletUserIdentityPluginRoot extends AbstractPlugin
             {
                 throw new CantUpdateIdentityException("CAN'T UPDATE INTRA USER IDENTITY", FermatException.wrapException(e), "", "");
             }
+    }
+
+    private void updateIdentity(String publicKey,String alias,String phrase,byte[] img){
+        intraActorManager.updateActor(intraActorManager.contructIdentity(publicKey,alias,phrase,Actors.INTRA_USER,img));
     }
 
     @Override
@@ -366,19 +371,10 @@ public class IntraWalletUserIdentityPluginRoot extends AbstractPlugin
         }
     }
 
-    private SettingsManager<FermatSettings> settingsManager;
 
     @Override
     public SettingsManager<FermatSettings> getSettingsManager() {
-        if (this.settingsManager != null)
-            return this.settingsManager;
-
-        this.settingsManager = new SettingsManager<>(
-                pluginFileSystem,
-                pluginId
-        );
-
-        return this.settingsManager;
+        return null;
     }
 
     @Override

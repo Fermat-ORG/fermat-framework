@@ -21,6 +21,12 @@ import com.bitdubai.fermat_cbp_api.layer.negotiation.customer_broker_sale.except
 import com.bitdubai.fermat_cbp_api.layer.negotiation.customer_broker_sale.interfaces.CustomerBrokerSaleNegotiation;
 import com.bitdubai.fermat_cbp_api.layer.negotiation.customer_broker_sale.interfaces.CustomerBrokerSaleNegotiationManager;
 import com.bitdubai.fermat_cbp_api.layer.negotiation.exceptions.CantGetListClauseException;
+import com.bitdubai.fermat_cbp_api.layer.wallet.crypto_broker.exceptions.CantGetCryptoBrokerWalletSettingException;
+import com.bitdubai.fermat_cbp_api.layer.wallet.crypto_broker.exceptions.CryptoBrokerWalletNotFoundException;
+import com.bitdubai.fermat_cbp_api.layer.wallet.crypto_broker.interfaces.CryptoBrokerWallet;
+import com.bitdubai.fermat_cbp_api.layer.wallet.crypto_broker.interfaces.CryptoBrokerWalletManager;
+import com.bitdubai.fermat_cbp_api.layer.wallet.crypto_broker.interfaces.setting.CryptoBrokerWalletAssociatedSetting;
+import com.bitdubai.fermat_cbp_api.layer.wallet.crypto_broker.interfaces.setting.CryptoBrokerWalletSetting;
 import com.bitdubai.fermat_cbp_plugin.layer.business_transaction.broker_submit_offline_merchandise.developer.bitdubai.version_1.database.BrokerSubmitOfflineMerchandiseBusinessTransactionDao;
 import com.bitdubai.fermat_cbp_plugin.layer.business_transaction.broker_submit_offline_merchandise.developer.bitdubai.version_1.exceptions.CantGetAmountException;
 import com.bitdubai.fermat_cbp_plugin.layer.business_transaction.broker_submit_offline_merchandise.developer.bitdubai.version_1.exceptions.CantGetBrokerMerchandiseException;
@@ -29,6 +35,7 @@ import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfac
 
 import java.math.BigDecimal;
 import java.util.Collection;
+import java.util.List;
 import java.util.UUID;
 
 /**
@@ -52,6 +59,11 @@ public class BrokerSubmitOfflineMerchandiseTransactionManager implements BrokerS
     CustomerBrokerSaleNegotiationManager customerBrokerSaleNegotiationManager;
 
     /**
+     * Represents the CryptoBrokerWalletManager
+     */
+    CryptoBrokerWalletManager cryptoBrokerWalletManager;
+
+    /**
      * Represents the error manager
      */
     ErrorManager errorManager;
@@ -60,10 +72,12 @@ public class BrokerSubmitOfflineMerchandiseTransactionManager implements BrokerS
             BrokerSubmitOfflineMerchandiseBusinessTransactionDao brokerSubmitOfflineMerchandiseBusinessTransactionDao,
             CustomerBrokerContractSaleManager customerBrokerContractSaleManager,
             CustomerBrokerSaleNegotiationManager customerBrokerSaleNegotiationManager,
+            CryptoBrokerWalletManager cryptoBrokerWalletManager,
             ErrorManager errorManager){
         this.brokerSubmitOfflineMerchandiseBusinessTransactionDao=brokerSubmitOfflineMerchandiseBusinessTransactionDao;
         this.customerBrokerContractSaleManager=customerBrokerContractSaleManager;
         this.customerBrokerSaleNegotiationManager=customerBrokerSaleNegotiationManager;
+        this.cryptoBrokerWalletManager=cryptoBrokerWalletManager;
         this.errorManager=errorManager;
 
     }
@@ -87,12 +101,14 @@ public class BrokerSubmitOfflineMerchandiseTransactionManager implements BrokerS
                             negotiationId);
             long amount = getCryptoAmount(customerBrokerSaleNegotiation);
             CurrencyType merchandiseType = getMerchandiseType(customerBrokerSaleNegotiation);
+            FiatCurrency fiatCurrencyType = getFiatCurrency(customerBrokerSaleNegotiation);
             this.brokerSubmitOfflineMerchandiseBusinessTransactionDao.persistContractInDatabase(
                     customerBrokerContractSale,
                     offlineWalletPublicKey,
                     amount,
                     cbpWalletPublicKey,
                     referencePrice,
+                    fiatCurrencyType,
                     merchandiseType);
         } catch (CantGetListCustomerBrokerContractSaleException e) {
             throw new CantSubmitMerchandiseException(e,
@@ -122,6 +138,90 @@ public class BrokerSubmitOfflineMerchandiseTransactionManager implements BrokerS
     }
 
     /**
+     * This method send a payment according the contract clauses.
+     * In this case, this method submit merchandise and not requires the cbpWalletPublicKey,
+     * this public key can be obtained from the crypto broker wallet
+     * @param referencePrice
+     * @param cbpWalletPublicKey
+     * @param contractHash
+     * @throws CantSubmitMerchandiseException
+     */
+    @Override
+    public void submitMerchandise(BigDecimal referencePrice, String cbpWalletPublicKey, String contractHash) throws CantSubmitMerchandiseException {
+        try{
+            //Checking the arguments
+            Object[] arguments={referencePrice, cbpWalletPublicKey, contractHash};
+            ObjectChecker.checkArguments(arguments);
+            CryptoBrokerWallet cryptoBrokerWallet=cryptoBrokerWalletManager.loadCryptoBrokerWallet(
+                    cbpWalletPublicKey);
+            CryptoBrokerWalletSetting cryptoBrokerWalletSetting=
+                    cryptoBrokerWallet.getCryptoWalletSetting();
+            List<CryptoBrokerWalletAssociatedSetting> cryptoBrokerWalletAssociatedSettingList =
+                    cryptoBrokerWalletSetting.getCryptoBrokerWalletAssociatedSettings();
+            if(cryptoBrokerWalletAssociatedSettingList.isEmpty()){
+                //Cannot handle this situation, throw an exception
+                throw new CantSubmitMerchandiseException(
+                        "Cannot get the crypto Wallet Associates Setting because the list is null");
+            }
+            boolean isCryptoWalletSets=false;
+            String offlineWalletPublicKey="WalletNotSet";
+            for(CryptoBrokerWalletAssociatedSetting cryptoBrokerWalletAssociatedSetting :
+                    cryptoBrokerWalletAssociatedSettingList){
+                CurrencyType currencyType=cryptoBrokerWalletAssociatedSetting.getCurrencyType();
+                System.out.println("Currency type: "+currencyType);
+                switch (currencyType){
+                    case BANK_MONEY:
+                        offlineWalletPublicKey=cryptoBrokerWalletAssociatedSetting.getWalletPublicKey();
+                        System.out.println("Found wallet public key: "+offlineWalletPublicKey);
+                        isCryptoWalletSets=true;
+                        break;
+                    case CASH_ON_HAND_MONEY:
+                        offlineWalletPublicKey=cryptoBrokerWalletAssociatedSetting.getWalletPublicKey();
+                        System.out.println("Found wallet public key: "+offlineWalletPublicKey);
+                        isCryptoWalletSets=true;
+                        break;
+                    case CASH_DELIVERY_MONEY:
+                        offlineWalletPublicKey=cryptoBrokerWalletAssociatedSetting.getWalletPublicKey();
+                        System.out.println("Found wallet public key: "+offlineWalletPublicKey);
+                        isCryptoWalletSets=true;
+                        break;
+                    default:
+                        continue;
+                }
+                if(isCryptoWalletSets){
+                    break;
+                }
+            }
+            if(!isCryptoWalletSets){
+                /**
+                 * In this case the crypto wallet is not set in Crypto Broker wallet, I cannot
+                 * handle this situation.
+                 */
+                throw new CantSubmitMerchandiseException("There is not crypto wallet associated in " +
+                        "Crypto Broker Wallet Settings");
+            }
+            //Overload the original method
+            submitMerchandise(
+                    referencePrice,
+                    cbpWalletPublicKey,
+                    offlineWalletPublicKey,
+                    contractHash);
+        } catch (CryptoBrokerWalletNotFoundException e) {
+            throw new CantSubmitMerchandiseException(e,
+                    "Creating Broker Submit Online Merchandise Business Transaction",
+                    "Cannot get the crypto broker wallet");
+        } catch (CantGetCryptoBrokerWalletSettingException e) {
+            throw new CantSubmitMerchandiseException(e,
+                    "Creating Broker Submit Online Merchandise Business Transaction",
+                    "Cannot get the Crypto Wallet Setting");
+        } catch (ObjectNotSetException e) {
+            throw new CantSubmitMerchandiseException(e,
+                    "Creating Broker Submit Online Merchandise Business Transaction",
+                    "Invalid input to this manager");
+        }
+    }
+
+    /**
      * This method returns a CustomerBrokerPurchaseNegotiation by negotiationId.
      * @param negotiationId
      * @return
@@ -136,6 +236,12 @@ public class BrokerSubmitOfflineMerchandiseTransactionManager implements BrokerS
         return customerBrokerSaleNegotiation;
     }
 
+    /**
+     * This method gets the Merchandise type from Negotiation Clauses.
+     * @param customerBrokerSaleNegotiation
+     * @return
+     * @throws CantGetBrokerMerchandiseException
+     */
     private CurrencyType getMerchandiseType(
             CustomerBrokerSaleNegotiation customerBrokerSaleNegotiation) throws CantGetBrokerMerchandiseException {
         try{
@@ -167,7 +273,37 @@ public class BrokerSubmitOfflineMerchandiseTransactionManager implements BrokerS
             }
     }
 
-    //TODO: GET FIAT CURRENCY
+    /**
+     * This method gets the currency type from Negotiation Clauses.
+     * @param customerBrokerSaleNegotiation
+     * @return
+     * @throws CantGetBrokerMerchandiseException
+     */
+    private FiatCurrency getFiatCurrency(
+            CustomerBrokerSaleNegotiation customerBrokerSaleNegotiation) throws CantGetBrokerMerchandiseException {
+        try{
+            Collection<Clause> negotiationClauses=customerBrokerSaleNegotiation.getClauses();
+            String clauseValue;
+            for(Clause clause : negotiationClauses){
+                if(clause.getType().equals(ClauseType.BROKER_CURRENCY)){
+                    clauseValue=clause.getValue();
+                    return FiatCurrency.getByCode(clauseValue);
+                }
+            }
+            throw new CantGetBrokerMerchandiseException(
+                    "The Negotiation clauses doesn't include the broker payment method");
+        } catch (InvalidParameterException e) {
+            throw new CantGetBrokerMerchandiseException(
+                    e,
+                    "Getting the merchandise type",
+                    "Invalid parameter Clause value");
+        } catch (CantGetListClauseException e) {
+            throw new CantGetBrokerMerchandiseException(
+                    e,
+                    "Getting the merchandise type",
+                    "Cannot get the clauses list");
+        }
+    }
 
     /**
      * This method returns a crypto amount (long) from a CustomerBrokerPurchaseNegotiation

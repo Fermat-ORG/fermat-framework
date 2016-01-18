@@ -137,7 +137,7 @@ public class ActorNetworkServiceRecordedAgent extends FermatAgent{
     private void processSend() {
         try {
 
-            List<ActorNetworkServiceRecord> lstActorRecord = actorNetworkServicePluginRoot.getOutgoingNotificationDao().listRequestsByProtocolStateAndType(
+            List<ActorNetworkServiceRecord> lstActorRecord = actorNetworkServicePluginRoot.getOutgoingNotificationDao().listRequestsByProtocolState(
                     ActorProtocolState.PROCESSING_SEND
             );
 

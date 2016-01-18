@@ -17,7 +17,7 @@ import java.util.Map;
  * @author Francisco Vasquez
  * @version 1.0
  */
-public class AssetUserSession extends AbstractFermatSession<InstalledWallet,AssetUserWalletSubAppModuleManager,WalletResourcesProviderManager> implements WalletSession {
+public class AssetUserSession extends AbstractFermatSession<InstalledWallet,AssetUserWalletSubAppModuleManager,WalletResourcesProviderManager> {
 
     private WalletResourcesProviderManager resourceManager;
     private AssetUserWalletSubAppModuleManager walletManager;
@@ -59,10 +59,7 @@ public class AssetUserSession extends AbstractFermatSession<InstalledWallet,Asse
         data.put(key, object);
     }
 
-    @Override
-    public String getIdentityConnection() {
-        return null;
-    }
+
 
     @Override
     public Object getData(String key) {
@@ -79,10 +76,6 @@ public class AssetUserSession extends AbstractFermatSession<InstalledWallet,Asse
         return resourceManager;
     }
 
-    @Override
-    public WalletSettings getWalletSettings() {
-        return settings;
-    }
 
     public AssetUserWalletSubAppModuleManager getWalletManager() {
         return walletManager;

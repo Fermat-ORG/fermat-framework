@@ -22,7 +22,7 @@ public class WsCommunicationsCloudClientPingAgent extends Thread {
     /*
      * Represent the sleep time for send new ping (120000 milliseconds)
      */
-    private static final long SLEEP_TIME = 120000;
+    private static final long SLEEP_TIME = 30000;
     private boolean running;
     /**
      * Represent the wsCommunicationsCloudClientChannel
@@ -35,6 +35,7 @@ public class WsCommunicationsCloudClientPingAgent extends Thread {
      */
     public WsCommunicationsCloudClientPingAgent(WsCommunicationsCloudClientChannel wsCommunicationsCloudClientChannel){
         this.wsCommunicationsCloudClientChannel = wsCommunicationsCloudClientChannel;
+        this.running = true;
     }
 
     /**
@@ -43,17 +44,17 @@ public class WsCommunicationsCloudClientPingAgent extends Thread {
      */
     @Override
     public void run() {
-        running = true;
+
         /*
          * While is no connect
          */
-        while (true){
+        while (running){
 
             try {
 
                 if (wsCommunicationsCloudClientChannel.getConnection().isOpen()){
 
-                    System.out.println(" WsCommunicationsCloudClientPingAgent - running");
+                    //System.out.println(" WsCommunicationsCloudClientPingAgent - running");
 
                     try {
 
@@ -73,7 +74,7 @@ public class WsCommunicationsCloudClientPingAgent extends Thread {
                         System.out.println(" WsCommunicationsCloudClientPingAgent - Error occurred sending ping to the node, closing the connection to remote node");
                         wsCommunicationsCloudClientChannel.getConnection().close();
                         wsCommunicationsCloudClientChannel.setIsRegister(Boolean.FALSE);
-                        wsCommunicationsCloudClientChannel.raiseClientConnectionCloseNotificationEvent();
+                        wsCommunicationsCloudClientChannel.raiseClientConnectionLooseNotificationEvent();
                         this.interrupt();
                         break;
                     }
@@ -86,7 +87,7 @@ public class WsCommunicationsCloudClientPingAgent extends Thread {
 
             } catch (InterruptedException e) {
                 running = false;
-                e.printStackTrace();
+                System.out.println(" WsCommunicationsCloudClientPingAgent - was stopped ");
             }
         }
 

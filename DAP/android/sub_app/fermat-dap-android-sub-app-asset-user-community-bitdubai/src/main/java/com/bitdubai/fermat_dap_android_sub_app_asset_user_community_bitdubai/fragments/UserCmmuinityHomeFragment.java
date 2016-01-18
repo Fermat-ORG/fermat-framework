@@ -33,6 +33,7 @@ import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.interfaces.ActorAs
 import com.bitdubai.fermat_dap_api.layer.all_definition.exceptions.CantGetIdentityAssetUserException;
 import com.bitdubai.fermat_dap_api.layer.dap_sub_app_module.asset_user_community.interfaces.AssetUserCommunitySubAppModuleManager;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
+import com.software.shell.fab.ActionButton;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -82,6 +83,7 @@ public class UserCmmuinityHomeFragment extends AbstractFermatFragment implements
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
         rootView = inflater.inflate(R.layout.home_fragment, container, false);
+//        initViews(rootView);
         recyclerView = (RecyclerView) rootView.findViewById(R.id.gridView);
         recyclerView.setHasFixedSize(true);
         layoutManager = new GridLayoutManager(getActivity(), 3, LinearLayoutManager.VERTICAL, false);
@@ -110,6 +112,63 @@ public class UserCmmuinityHomeFragment extends AbstractFermatFragment implements
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         super.onCreateOptionsMenu(menu, inflater);
         inflater.inflate(R.menu.dap_community_user_home_menu, menu);
+    }
+
+    protected void initViews(View layout) {
+
+        // fab action button create
+    ActionButton create = (ActionButton) layout.findViewById(R.id.create);
+    create.setOnClickListener(new View.OnClickListener() {
+        @Override
+        public void onClick(View view) {
+//            if (item.getItemId() == R.id.action_connect) {
+                final ProgressDialog dialog = new ProgressDialog(getActivity());
+                dialog.setMessage("Connecting please wait...");
+                dialog.setCancelable(false);
+                dialog.show();
+                FermatWorker worker = new FermatWorker() {
+                    @Override
+                    protected Object doInBackground() throws Exception {
+                        List<ActorAssetUser> toConnect = new ArrayList<>();
+                        for (Actor actor : actors) {
+                            if (actor.selected)
+                                toConnect.add(actor);
+                        }
+                        //// TODO: 28/10/15 get Actor asset User
+                        manager.connectToActorAssetUser(null, toConnect);
+                        return true;
+                    }
+                };
+                worker.setContext(getActivity());
+                worker.setCallBack(new FermatWorkerCallBack() {
+                    @Override
+                    public void onPostExecute(Object... result) {
+                        dialog.dismiss();
+                        if (swipeRefreshLayout != null)
+                            swipeRefreshLayout.post(new Runnable() {
+                                @Override
+                                public void run() {
+                                    onRefresh();
+                                }
+                            });
+                    }
+
+                    @Override
+                    public void onErrorOccurred(Exception ex) {
+                        dialog.dismiss();
+                        Toast.makeText(getActivity(), String.format("An exception has been thrown: %s", ex.getMessage()), Toast.LENGTH_LONG).show();
+                        ex.printStackTrace();
+                    }
+                });
+                worker.execute();
+//                return true;
+                /* create new asset factory project */
+//                selectedAsset = null;
+//                changeActivity(Activities.DAP_ASSET_EDITOR_ACTIVITY.getCode(), appSession.getAppPublicKey(), getAssetForEdit());
+        }
+    });
+    create.setAnimation(AnimationUtils.loadAnimation(getActivity(), R.anim.fab_jump_from_down));
+    create.setVisibility(View.VISIBLE);
     }
 
     @Override

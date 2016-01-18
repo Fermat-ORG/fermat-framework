@@ -11,6 +11,7 @@ import com.bitdubai.fermat_cbp_api.layer.negotiation.customer_broker_purchase.in
 import com.bitdubai.fermat_cbp_api.layer.negotiation.customer_broker_purchase.interfaces.CustomerBrokerPurchaseNegotiationManager;
 import com.bitdubai.fermat_cbp_plugin.layer.negotiation_transaction.customer_broker_close.developer.bitdubai.version_1.database.CustomerBrokerCloseNegotiationTransactionDatabaseDao;
 import com.bitdubai.fermat_cbp_plugin.layer.negotiation_transaction.customer_broker_close.developer.bitdubai.version_1.exceptions.CantClosePurchaseNegotiationTransactionException;
+import com.bitdubai.fermat_cbp_plugin.layer.negotiation_transaction.customer_broker_close.developer.bitdubai.version_1.exceptions.CantDetermineCryptoCurrencyException;
 import com.bitdubai.fermat_cbp_plugin.layer.negotiation_transaction.customer_broker_close.developer.bitdubai.version_1.exceptions.CantReceiveConfirmNegotiationTransactionException;
 import com.bitdubai.fermat_cbp_plugin.layer.negotiation_transaction.customer_broker_close.developer.bitdubai.version_1.exceptions.CantRegisterCustomerBrokerCloseNegotiationTransactionException;
 import com.bitdubai.fermat_wpd_api.layer.wpd_middleware.wallet_manager.interfaces.WalletManagerManager;
@@ -61,31 +62,42 @@ public class CustomerBrokerClosePurchaseNegotiationTransaction {
 
             UUID transactionId = UUID.randomUUID();
 
-            CustomerBrokerPurchaseNegotiation purchaseNegotiation;
+            System.out.print("\n\n**** 3) MOCK NEGOTIATION TRANSACTION - CUSTOMER BROKER CLOSE - PURCHASE NEGOTIATION - CUSTOMER BROKER CLOSE PURCHASE NEGOTIATION TRANSACTION. transactionId: " + transactionId + " ****\n");
 
-            negotiationCryptoAdreess = new CustomerBrokerCloseNegotiationCryptoAddress(
-                this.cryptoAddressBookManager,
-                this.cryptoVaultManager,
-                this.walletManagerManager
+            System.out.print("\n\n --- Negotiation Mock XML Date" +
+                            "\n- NegotiationId = " + customerBrokerPurchaseNegotiation.getNegotiationId() +
+                            "\n- CustomerPublicKey = " + customerBrokerPurchaseNegotiation.getCustomerPublicKey() +
+                            "\n- BrokerPublicKey = " + customerBrokerPurchaseNegotiation.getCustomerPublicKey()
             );
 
-            //ADD CRYPTO ADREESS OF THE CUSTOMER AT THE CLAUSES
-            purchaseNegotiation = negotiationCryptoAdreess.getNegotiationAddCryptoAdreess(customerBrokerPurchaseNegotiation);
+            negotiationCryptoAdreess = new CustomerBrokerCloseNegotiationCryptoAddress(
+                    this.cryptoAddressBookManager,
+                    this.cryptoVaultManager,
+                    this.walletManagerManager
+            );
 
-            //SAVE CRYPTO ADREESS OF THE CUSTOMER
-            this.customerBrokerPurchaseNegotiationManager.updateCustomerBrokerPurchaseNegotiation(purchaseNegotiation);
+            if (negotiationCryptoAdreess.isCryptoCurrency(customerBrokerPurchaseNegotiation.getClauses(),ClauseType.CUSTOMER_PAYMENT_METHOD)){
+                System.out.print("\n\n**** 3.1) MOCK NEGOTIATION TRANSACTION - CUSTOMER BROKER CLOSE - PURCHASE NEGOTIATION - CUSTOMER BROKER CLOSE PURCHASE NEGOTIATION TRANSACTION. IS CRYPTO CURRENCY ****\n");
+                //ADD CRYPTO ADREESS OF THE CUSTOMER AT THE CLAUSES
+                customerBrokerPurchaseNegotiation = negotiationCryptoAdreess.getNegotiationAddCryptoAdreess(customerBrokerPurchaseNegotiation);
+
+                //SAVE CRYPTO ADREESS OF THE CUSTOMER
+                this.customerBrokerPurchaseNegotiationManager.updateCustomerBrokerPurchaseNegotiation(customerBrokerPurchaseNegotiation);
+            } else { System.out.print("\n\n**** 3.1) MOCK NEGOTIATION TRANSACTION - CUSTOMER BROKER CLOSE - PURCHASE NEGOTIATION - CUSTOMER BROKER CLOSE PURCHASE NEGOTIATION TRANSACTION. NOT IS CRYPTO CURRENCY ****\n"); }
 
             //CLOSE NEGOTIATION
-            this.customerBrokerPurchaseNegotiationManager.closeNegotiation(purchaseNegotiation);
+            this.customerBrokerPurchaseNegotiationManager.closeNegotiation(customerBrokerPurchaseNegotiation);
 
             //CREATE NEGOTIATION TRANSATION
             this.customerBrokerCloseNegotiationTransactionDatabaseDao.createCustomerBrokerCloseNegotiationTransaction(
-                transactionId,
-                purchaseNegotiation,
-                NegotiationType.PURCHASE,
-                NegotiationTransactionStatus.PENDING_SUBMIT
+                    transactionId,
+                    customerBrokerPurchaseNegotiation,
+                    NegotiationType.PURCHASE,
+                    NegotiationTransactionStatus.PENDING_SUBMIT
             );
 
+        } catch (CantDetermineCryptoCurrencyException e) {
+            throw new CantClosePurchaseNegotiationTransactionException(e.getMessage(),e, CantClosePurchaseNegotiationTransactionException.DEFAULT_MESSAGE, "ERROR CREATE CUSTOMER BROKER PURCHASE NEGOTIATION, UNKNOWN FAILURE.");
         } catch (CantUpdateCustomerBrokerPurchaseNegotiationException e) {
             throw new CantClosePurchaseNegotiationTransactionException(e.getMessage(),e, CantClosePurchaseNegotiationTransactionException.DEFAULT_MESSAGE, "ERROR CREATE CUSTOMER BROKER PURCHASE NEGOTIATION, UNKNOWN FAILURE.");
         } catch (CantRegisterCustomerBrokerCloseNegotiationTransactionException e) {
@@ -109,19 +121,21 @@ public class CustomerBrokerClosePurchaseNegotiationTransaction {
                 this.walletManagerManager
             );
 
-            //ADD CRYPTO ADREESS OF THE CUSTOMER AT THE CLAUSES
-            purchaseNegotiation = negotiationCryptoAdreess.getNegotiationAddCryptoAdreess(customerBrokerPurchaseNegotiation);
+            if (negotiationCryptoAdreess.isCryptoCurrency(customerBrokerPurchaseNegotiation.getClauses(),ClauseType.CUSTOMER_PAYMENT_METHOD)){
+                //ADD CRYPTO ADREESS OF THE CUSTOMER AT THE CLAUSES
+                customerBrokerPurchaseNegotiation = negotiationCryptoAdreess.getNegotiationAddCryptoAdreess(customerBrokerPurchaseNegotiation);
 
-            //SAVE CRYPTO ADREESS OF THE CUSTOMER
-            this.customerBrokerPurchaseNegotiationManager.updateCustomerBrokerPurchaseNegotiation(purchaseNegotiation);
+                //SAVE CRYPTO ADREESS OF THE CUSTOMER
+                this.customerBrokerPurchaseNegotiationManager.updateCustomerBrokerPurchaseNegotiation(customerBrokerPurchaseNegotiation);
+            }
 
             //CLOSE NEGOTIATION
-            this.customerBrokerPurchaseNegotiationManager.closeNegotiation(purchaseNegotiation);
+            this.customerBrokerPurchaseNegotiationManager.closeNegotiation(customerBrokerPurchaseNegotiation);
 
             //CREATE NEGOTIATION TRANSATION
             this.customerBrokerCloseNegotiationTransactionDatabaseDao.createCustomerBrokerCloseNegotiationTransaction(
                 transactionId,
-                purchaseNegotiation,
+                customerBrokerPurchaseNegotiation,
                 NegotiationType.PURCHASE,
                 NegotiationTransactionStatus.PENDING_SUBMIT_CONFIRM
             );

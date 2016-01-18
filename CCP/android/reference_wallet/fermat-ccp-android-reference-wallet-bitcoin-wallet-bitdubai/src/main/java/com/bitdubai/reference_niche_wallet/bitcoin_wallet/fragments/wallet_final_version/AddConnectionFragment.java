@@ -89,6 +89,11 @@ public class AddConnectionFragment extends FermatWalletListFragment<CryptoWallet
             recyclerView.addItemDecoration(itemDecoration);
             setUpScreen(layout);
             onRefresh();
+            if(intraUserInformationList.isEmpty()){
+                FermatAnimationsUtils.showEmpty(getActivity(), true, empty_view);
+            }else {
+                FermatAnimationsUtils.showEmpty(getActivity(),false,empty_view);
+            }
         } catch (Exception e){
             Toast.makeText(getActivity().getApplicationContext(), "Oooops! recovering from system error. Get Intra User List", Toast.LENGTH_SHORT).show();
             e.printStackTrace();
@@ -254,7 +259,7 @@ public class AddConnectionFragment extends FermatWalletListFragment<CryptoWallet
     @Override
     public List<CryptoWalletIntraUserActor> getMoreDataAsync(FermatRefreshTypes refreshType, int pos) {
         List<CryptoWalletIntraUserActor> data = new ArrayList<>();
-
+        runThread();
         try {
             if (moduleManager == null) {
                 Toast.makeText(getActivity(),"Nodule manager null",Toast.LENGTH_SHORT).show();
@@ -271,6 +276,26 @@ public class AddConnectionFragment extends FermatWalletListFragment<CryptoWallet
         }
 
         return data;
+    }
+
+    private void runThread(){
+        Thread timer = new Thread() {
+            public void run() {
+                try {
+                    sleep(320);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                } finally {
+                    getActivity().runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            if (menu != null) menu.clear();
+                        }
+                    });
+                }
+            }
+        };
+        timer.start();
     }
 
 
@@ -291,6 +316,7 @@ public class AddConnectionFragment extends FermatWalletListFragment<CryptoWallet
     @Override
     public void addMenuEnabled() {
         if(!isMenuVisible){
+            isMenuVisible = true;
             menu.add(0, BitcoinWalletConstants.IC_ACTION_ADD_CONNECTION, 0, "ADD")
                     .setIcon(R.drawable.button_add_connection)
                     .setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
@@ -303,6 +329,12 @@ public class AddConnectionFragment extends FermatWalletListFragment<CryptoWallet
         connectionPickCounter--;
         if(connectionPickCounter==0){
             menu.clear();
+            isMenuVisible = false;
         }
+    }
+
+    @Override
+    public void setSelected(CryptoWalletIntraUserActor cryptoWalletIntraUserActor,boolean selected) {
+        intraUserInformationList.get(intraUserInformationList.indexOf(cryptoWalletIntraUserActor)).setSelected(selected);
     }
 }

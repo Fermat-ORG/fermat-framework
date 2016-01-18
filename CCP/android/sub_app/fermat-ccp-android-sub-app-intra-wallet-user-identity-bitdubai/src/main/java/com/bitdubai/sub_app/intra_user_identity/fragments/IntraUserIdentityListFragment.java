@@ -16,6 +16,9 @@ import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.A
 import com.bitdubai.fermat_ccp_api.layer.identity.intra_user.exceptions.CantListIntraWalletUsersException;
 import com.bitdubai.fermat_ccp_api.layer.identity.intra_user.interfaces.IntraWalletUserIdentity;
 import com.bitdubai.fermat_ccp_api.layer.identity.intra_user.interfaces.IntraWalletUserIdentityManager;
+import com.bitdubai.fermat_ccp_api.layer.module.intra_user_identity.exceptions.CantListIntraUsersIdentityException;
+import com.bitdubai.fermat_ccp_api.layer.module.intra_user_identity.interfaces.IntraUserIdentityModuleManager;
+import com.bitdubai.fermat_ccp_api.layer.module.intra_user_identity.interfaces.IntraUserModuleIdentity;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 import com.bitdubai.sub_app.intra_user_identity.R;
 import com.bitdubai.sub_app.intra_user_identity.common.adapters.IntraUserIdentityInfoAdapter;
@@ -32,13 +35,13 @@ import java.util.List;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class IntraUserIdentityListFragment extends FermatListFragment<IntraWalletUserIdentity>
-        implements FermatListItemListeners<IntraWalletUserIdentity> {
+public class IntraUserIdentityListFragment extends FermatListFragment<IntraUserModuleIdentity>
+        implements FermatListItemListeners<IntraUserModuleIdentity> {
 
 
-    private IntraWalletUserIdentityManager moduleManager;
+    private IntraUserIdentityModuleManager moduleManager;
     private ErrorManager errorManager;
-    private ArrayList<IntraWalletUserIdentity> identityInformationList;
+    private ArrayList<IntraUserModuleIdentity> identityInformationList;
 
     IntraUserIdentitySubAppSession intraUserIdentitySubAppSession ;
 
@@ -90,7 +93,7 @@ public class IntraUserIdentityListFragment extends FermatListFragment<IntraWalle
              else
                  newIdentityButton.setVisibility(View.VISIBLE);
          }
-        catch (CantListIntraWalletUsersException e)
+        catch (CantListIntraUsersIdentityException e)
         {
             Toast.makeText(getActivity().getApplicationContext(), "Can't Get Intra User List", Toast.LENGTH_SHORT).show();
             e.printStackTrace();
@@ -170,8 +173,8 @@ public class IntraUserIdentityListFragment extends FermatListFragment<IntraWalle
     }
 
     @Override
-    public List<IntraWalletUserIdentity> getMoreDataAsync(FermatRefreshTypes refreshType, int pos) {
-        List<IntraWalletUserIdentity> data = new ArrayList<>();
+    public List<IntraUserModuleIdentity> getMoreDataAsync(FermatRefreshTypes refreshType, int pos) {
+        List<IntraUserModuleIdentity> data = new ArrayList<>();
 
         try {
             if (moduleManager == null) {
@@ -191,13 +194,13 @@ public class IntraUserIdentityListFragment extends FermatListFragment<IntraWalle
 
 
     @Override
-    public void onItemClickListener(IntraWalletUserIdentity data, int position) {
+    public void onItemClickListener(IntraUserModuleIdentity data, int position) {
         //intraUserIdentitySubAppSession.setData(SessionConstants.IDENTITY_SELECTED,data);
         //changeActivity(Activities.CCP_SUB_APP_INTRA_IDENTITY_CREATE_IDENTITY.getCode());
     }
 
     @Override
-    public void onLongItemClickListener(IntraWalletUserIdentity data, int position) {
+    public void onLongItemClickListener(IntraUserModuleIdentity data, int position) {
 
     }
 }

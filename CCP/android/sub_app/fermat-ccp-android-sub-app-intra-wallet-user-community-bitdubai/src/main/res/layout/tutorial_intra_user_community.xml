@@ -70,7 +70,7 @@
                 android:layout_marginLeft="5dp"
                 android:layout_marginRight="5dp"
                 android:background="@drawable/round_corner_line_dialog"
-                android:layout_marginBottom="12dp"
+                android:layout_marginBottom="10dp"
                 />
 
 
@@ -100,7 +100,7 @@
                 android:paddingTop="7sp"
                 android:text="This app will allow you to find other users of crypto wallets within the Fermat Network. The main features of this APP are:"
                 android:textColor="#1d1d26"
-                android:textSize="14sp"
+                android:textSize="12sp"
                 tools:ignore="HardcodedText" />
 
             <View
@@ -115,8 +115,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
-                android:paddingBottom="7dp"
-                android:paddingTop="12dp">
+                android:paddingBottom="3dp"
+                android:paddingTop="5dp">
 
 
                 <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
@@ -139,7 +139,6 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_horizontal"
                     android:gravity="center"
-                    android:paddingBottom="5dp"
                     android:paddingEnd="30dp"
                     android:paddingLeft="16dp"
                     android:paddingRight="30dp"
@@ -163,14 +162,14 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
-                android:paddingTop="10dp">
+                android:paddingTop="5dp">
 
                 <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_horizontal"
                     android:gravity="center"
-                    android:paddingBottom="10dp"
+                    android:paddingBottom="5dp"
                     android:paddingEnd="30dp"
                     android:paddingLeft="16dp"
                     android:paddingRight="30dp"

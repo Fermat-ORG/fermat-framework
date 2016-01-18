@@ -20,6 +20,7 @@ import com.bitdubai.fermat_bnk_api.layer.bnk_wallet_module.interfaces.BankMoneyW
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedWalletExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 import com.bitdubai.reference_wallet.bank_money_wallet.R;
+import com.bitdubai.reference_wallet.bank_money_wallet.common.adapters.AccountListAdapter;
 import com.bitdubai.reference_wallet.bank_money_wallet.common.adapters.TransactionListAdapter;
 import com.bitdubai.reference_wallet.bank_money_wallet.common.dialogs.CreateTransactionFragmentDialog;
 import com.bitdubai.reference_wallet.bank_money_wallet.session.BankMoneyWalletSession;
@@ -44,8 +45,14 @@ public class AccountDetailFragment extends FermatWalletListFragment<BankMoneyTra
     CreateTransactionFragmentDialog dialog;
 
 
-    FermatTextView bookTextView;
-    FermatTextView availableTextView;
+
+    private FermatTextView bookTextView;
+    private FermatTextView availableTextView;
+    private FermatTextView balanceText;
+    private FermatTextView availableText;
+    private FermatTextView bookText;
+    private FermatTextView aliasText;
+    private FermatTextView accountText;
 
     private static final String TAG = "AccountListActivityFragment";
     public AccountDetailFragment() {
@@ -79,9 +86,13 @@ public class AccountDetailFragment extends FermatWalletListFragment<BankMoneyTra
     protected void initViews(View layout) {
         super.initViews(layout);
         this.fab = (com.getbase.floatingactionbutton.FloatingActionsMenu) layout.findViewById(R.id.bw_fab_multiple_actions);
-        this.availableTextView = (FermatTextView) layout.findViewById(R.id.textView_available_amount);
-        this.bookTextView = (FermatTextView) layout.findViewById(R.id.textView_book_amount);
-        updateBalance();
+        this.availableTextView = (FermatTextView) layout.findViewById(R.id.available_balance);
+        this.bookTextView = (FermatTextView) layout.findViewById(R.id.book_balance);
+
+        List<BankAccountNumber> tempList= new ArrayList<>();
+        tempList.add(bankAccountNumber);
+
+
         layout.findViewById(R.id.bw_fab_withdraw).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -96,6 +107,16 @@ public class AccountDetailFragment extends FermatWalletListFragment<BankMoneyTra
             }
         });
         configureToolbar();
+
+        accountText = (FermatTextView) layout.findViewById(R.id.account);
+        aliasText =  (FermatTextView) layout.findViewById(R.id.account_alias);
+        balanceText = (FermatTextView) layout.findViewById(R.id.balance_text);
+        availableText = (FermatTextView) layout.findViewById(R.id.available_text);
+        bookText = (FermatTextView) layout.findViewById(R.id.book_text);
+        balanceText.setText("Balance");
+        bookText.setText("Book");
+        availableText.setText("Available");
+        updateBalance();
         //showOrHideNoAccountListView(accountsList.isEmpty());
     }
 
@@ -106,12 +127,15 @@ public class AccountDetailFragment extends FermatWalletListFragment<BankMoneyTra
     }
 
     private void updateBalance(){
-        availableTextView.setText(String.valueOf(moduleManager.getBankingWallet().getAvailableBalance(bankAccountNumber.getAccount())));
-        bookTextView.setText(String.valueOf(moduleManager.getBankingWallet().getBookBalance(bankAccountNumber.getAccount())));
+
+        accountText.setText(bankAccountNumber.getAccount());
+        aliasText.setText(bankAccountNumber.getAlias());
+        availableTextView.setText(String.valueOf(moduleManager.getBankingWallet().getAvailableBalance(bankAccountNumber.getAccount()))+" "+bankAccountNumber.getCurrencyType().getCode());
+        bookTextView.setText(String.valueOf(moduleManager.getBankingWallet().getBookBalance(bankAccountNumber.getAccount()))+" "+bankAccountNumber.getCurrencyType().getCode());
     }
 
     private void configureToolbar() {
-        getToolbar().setBackgroundColor(getResources().getColor(R.color.background_header));
+        getToolbar().setBackgroundColor(getResources().getColor(R.color.background_header_navy));
     }
 
     @Override

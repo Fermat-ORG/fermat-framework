@@ -1,10 +1,7 @@
 package com.bitdubai.sub_app.intra_user_community.fragments;
 
 import android.annotation.SuppressLint;
-import android.content.Context;
 import android.content.DialogInterface;
-import android.content.Intent;
-import android.content.IntentFilter;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -13,6 +10,8 @@ import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
@@ -32,10 +31,9 @@ import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.interfaces.
 import com.bitdubai.fermat_pip_api.layer.network_service.subapp_resources.SubAppResourcesProviderManager;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 import com.bitdubai.sub_app.intra_user_community.R;
+import com.bitdubai.sub_app.intra_user_community.common.popups.AcceptDialog;
 import com.bitdubai.sub_app.intra_user_community.common.popups.ConnectDialog;
 import com.bitdubai.sub_app.intra_user_community.common.popups.DisconectDialog;
-import com.bitdubai.sub_app.intra_user_community.constants.Constants;
-import com.bitdubai.sub_app.intra_user_community.interfaces.MessageReceiver;
 import com.bitdubai.sub_app.intra_user_community.session.IntraUserSubAppSession;
 import com.bitdubai.sub_app.intra_user_community.util.CommonLogger;
 
@@ -43,7 +41,7 @@ import com.bitdubai.sub_app.intra_user_community.util.CommonLogger;
  * Creado por Jose Manuel De Sousa on 29/11/15.
  */
 @SuppressWarnings({"FieldCanBeLocal", "unused"})
-public class ConnectionOtherProfileFragment extends AbstractFermatFragment implements MessageReceiver, View.OnClickListener {
+public class ConnectionOtherProfileFragment extends AbstractFermatFragment implements View.OnClickListener {
 
     public static final String INTRA_USER_SELECTED = "intra_user";
     private String TAG = "ConnectionOtherProfileFragment";
@@ -61,11 +59,13 @@ public class ConnectionOtherProfileFragment extends AbstractFermatFragment imple
     private Button disconnect;
     private int MAX = 1;
     private int OFFSET = 0;
-    private FermatTextView userPhrase;
+    private FermatTextView userStatus;
     private Button connectionRequestSend;
     private Button connectionRequestRejected;
+    private Button accept;
     private IntraWalletUserActorManager intraWalletUserActorManager;
     private ConnectionState connectionState;
+    private android.support.v7.widget.Toolbar toolbar;
 
     /**
      * Create a new instance of this fragment
@@ -79,7 +79,7 @@ public class ConnectionOtherProfileFragment extends AbstractFermatFragment imple
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
+        setHasOptionsMenu(true);
         // setting up  module
         intraUserSubAppSession = ((IntraUserSubAppSession) appSession);
         intraUserInformation = (IntraUserInformation) appSession.getData(INTRA_USER_SELECTED);
@@ -95,13 +95,17 @@ public class ConnectionOtherProfileFragment extends AbstractFermatFragment imple
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         rootView = inflater.inflate(R.layout.fragment_connections_other_profile, container, false);
+        toolbar = getToolbar();
+        if (toolbar != null)
+            toolbar.setTitle(intraUserInformation.getName());
         userProfileAvatar = (ImageView) rootView.findViewById(R.id.img_user_avatar);
-        userPhrase = (FermatTextView) rootView.findViewById(R.id.userPhrase);
+        userStatus = (FermatTextView) rootView.findViewById(R.id.userPhrase);
         userName = (FermatTextView) rootView.findViewById(R.id.username);
         userEmail = (FermatTextView) rootView.findViewById(R.id.email);
         connectionRequestSend = (Button) rootView.findViewById(R.id.btn_connection_request_send);
         connectionRequestRejected = (Button) rootView.findViewById(R.id.btn_connection_request_reject);
         connect = (Button) rootView.findViewById(R.id.btn_conect);
+        accept = (Button) rootView.findViewById(R.id.btn_connection_accept);
         disconnect = (Button) rootView.findViewById(R.id.btn_disconect);
         connectionRequestSend.setVisibility(View.GONE);
         connectionRequestRejected.setVisibility(View.GONE);
@@ -112,7 +116,7 @@ public class ConnectionOtherProfileFragment extends AbstractFermatFragment imple
         connect.setOnClickListener(this);
         disconnect.setOnClickListener(this);
 
-        switch (intraUserInformation.getConnectionState()) {
+        switch (intraUserInformation.getConnectionState()) {           
                 case BLOCKED_LOCALLY:
                 case BLOCKED_REMOTELY:
                 case CANCELLED_LOCALLY:
@@ -131,6 +135,8 @@ public class ConnectionOtherProfileFragment extends AbstractFermatFragment imple
                     connectRequest();
                     break;
                 case PENDING_LOCALLY_ACCEPTANCE:
+                    conectionAccept();
+                    break;
                 case PENDING_REMOTELY_ACCEPTANCE:
                     connectionSend();
                     break;
@@ -138,8 +144,8 @@ public class ConnectionOtherProfileFragment extends AbstractFermatFragment imple
 
         try {
             userName.setText(intraUserInformation.getName());
-            userPhrase.setText(intraUserInformation.getPhrase());
-            userPhrase.setTextColor(Color.parseColor("#292929"));
+            userStatus.setText(intraUserInformation.getPhrase());
+            userStatus.setTextColor(Color.parseColor("#292929"));
             if (intraUserInformation.getProfileImage() != null) {
                 Bitmap bitmap;
                 if (intraUserInformation.getProfileImage().length > 0) {
@@ -147,12 +153,12 @@ public class ConnectionOtherProfileFragment extends AbstractFermatFragment imple
                 } else {
                     bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.profile_image);
                 }
-                bitmap = Bitmap.createScaledBitmap(bitmap, 110, 110, true);
+                bitmap = Bitmap.createScaledBitmap(bitmap, 480, 480, true);
                 userProfileAvatar.setImageDrawable(ImagesUtils.getRoundedBitmap(getResources(), bitmap));
             } else {
                 Bitmap bitmap;
                 bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.profile_image);
-                bitmap = Bitmap.createScaledBitmap(bitmap, 110, 110, true);
+                bitmap = Bitmap.createScaledBitmap(bitmap, 480, 480, true);
                 userProfileAvatar.setImageDrawable(ImagesUtils.getRoundedBitmap(getResources(), bitmap));
             }
         } catch (Exception ex) {
@@ -206,6 +212,22 @@ public class ConnectionOtherProfileFragment extends AbstractFermatFragment imple
                 e.printStackTrace();
             }
         }
+        if (i == R.id.btn_connection_accept){
+            try {
+
+                AcceptDialog notificationAcceptDialog = new AcceptDialog(getActivity(), intraUserSubAppSession, (SubAppResourcesProviderManager) appResourcesProviderManager, intraUserInformation, moduleManager.getActiveIntraUserIdentity());
+                notificationAcceptDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
+                    @Override
+                    public void onDismiss(DialogInterface dialog) {
+                        updateButton();
+                    }
+                });
+                notificationAcceptDialog.show();
+
+            } catch ( CantGetActiveLoginIdentityException e) {
+                e.printStackTrace();
+            }
+        }
         if (i == R.id.btn_connection_request_send) {
             CommonLogger.info(TAG, "User connection state " + intraUserInformation.getConnectionState());
             Toast.makeText(getActivity(), "The connection request has been sent\n you need to wait until the user responds", Toast.LENGTH_SHORT).show();
@@ -218,7 +240,7 @@ public class ConnectionOtherProfileFragment extends AbstractFermatFragment imple
 
     private void updateButton() {
         try {
-             connectionState = moduleManager.getIntraUsersConnectionStatus(this.intraUserInformation.getPublicKey());
+            connectionState = moduleManager.getIntraUsersConnectionStatus(this.intraUserInformation.getPublicKey());
         } catch (CantGetIntraUserConnectionStatusException e) {
             e.printStackTrace();
         }
@@ -240,9 +262,12 @@ public class ConnectionOtherProfileFragment extends AbstractFermatFragment imple
             case DENIED_REMOTELY:
                 connectRequest();
                 break;
-            case PENDING_LOCALLY_ACCEPTANCE:
             case PENDING_REMOTELY_ACCEPTANCE:
                 connectionSend();
+                break;
+
+            case PENDING_LOCALLY_ACCEPTANCE:
+                conectionAccept();
                 break;
         }
     }
@@ -253,6 +278,15 @@ public class ConnectionOtherProfileFragment extends AbstractFermatFragment imple
         connect.setVisibility(View.GONE);
         disconnect.setVisibility(View.GONE);
         connectionRequestRejected.setVisibility(View.GONE);
+    }
+
+    private void conectionAccept(){
+        connectionRequestSend.setVisibility(View.GONE);
+        connect.setVisibility(View.GONE);
+        disconnect.setVisibility(View.GONE);
+        connectionRequestRejected.setVisibility(View.GONE);
+        accept.setVisibility(View.VISIBLE);
+
     }
 
     private void connectRequest() {
@@ -287,18 +321,8 @@ public class ConnectionOtherProfileFragment extends AbstractFermatFragment imple
     }
 
     @Override
-    public void onMessageReceive(Context context, Intent data) {
-        Bundle extras = data != null ? data.getExtras() : null;
-        if (extras != null && extras.containsKey(Constants.BROADCAST_CONNECTED_UPDATE)) {
-            connectionSend();
-        }
-        if (extras != null && extras.containsKey(Constants.BROADCAST_DISCONNECTED_UPDATE)) {
-            connectRequest();
-        }
-    }
-
-    @Override
-    public IntentFilter getBroadcastIntentChannel() {
-        return new IntentFilter(Constants.LOCAL_BROADCAST_CHANNEL);
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        super.onCreateOptionsMenu(menu, inflater);
+        menu.clear();
     }
 }

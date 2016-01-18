@@ -14,19 +14,30 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.Cant
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantInsertRecordException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantLoadTableToMemoryException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantOpenDatabaseException;
+import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantUpdateRecordException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.DatabaseNotFoundException;
 import com.bitdubai.fermat_dap_api.layer.all_definition.enums.DistributionStatus;
 import com.bitdubai.fermat_dap_api.layer.all_definition.enums.EventStatus;
 import com.bitdubai.fermat_dap_api.layer.all_definition.enums.TransactionStatus;
+import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.interfaces.ActorAssetUser;
+import com.bitdubai.fermat_dap_api.layer.dap_actor.redeem_point.interfaces.ActorAssetRedeemPoint;
 import com.bitdubai.fermat_dap_api.layer.dap_transaction.common.exceptions.CantExecuteDatabaseOperationException;
 import com.bitdubai.fermat_dap_api.layer.dap_transaction.common.exceptions.CantPersistDigitalAssetException;
 import com.bitdubai.fermat_dap_api.layer.dap_transaction.common.exceptions.CantPersistsTransactionUUIDException;
 import com.bitdubai.fermat_dap_api.layer.dap_transaction.common.exceptions.CantSaveEventException;
+import com.bitdubai.fermat_dap_api.layer.dap_transaction.common.exceptions.CantStartDeliveringException;
+import com.bitdubai.fermat_dap_api.layer.dap_transaction.common.exceptions.RecordsNotFoundException;
 import com.bitdubai.fermat_dap_api.layer.dap_transaction.common.exceptions.UnexpectedResultReturnedFromDatabaseException;
+import com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.user_redemption.bitdubai.version_1.UserRedemptionDigitalAssetTransactionPluginRoot;
 import com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.user_redemption.bitdubai.version_1.exceptions.CantCheckAssetUserRedemptionProgressException;
+import com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.user_redemption.bitdubai.version_1.structure.functional.DeliverRecord;
+import com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.user_redemption.bitdubai.version_1.structure.functional.DigitalAssetUserRedemptionVault;
 
 import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 import java.util.logging.Logger;
 
@@ -34,20 +45,23 @@ import java.util.logging.Logger;
  * Created by Manuel Perez (darkpriestrelative@gmail.com) on 01/11/15.
  */
 public class UserRedemptionDao {
-    UUID pluginId;
-    Database database;
-    PluginDatabaseSystem pluginDatabaseSystem;
 
-    public UserRedemptionDao(PluginDatabaseSystem pluginDatabaseSystem, UUID pluginId) throws CantExecuteDatabaseOperationException {
+    private UUID pluginId;
+    private Database database;
+    private PluginDatabaseSystem pluginDatabaseSystem;
+    private DigitalAssetUserRedemptionVault userRedemptionVault;
 
+    public UserRedemptionDao(PluginDatabaseSystem pluginDatabaseSystem,
+                             UUID pluginId,
+                             DigitalAssetUserRedemptionVault userRedemptionVault) throws CantExecuteDatabaseOperationException {
         this.pluginDatabaseSystem = pluginDatabaseSystem;
         this.pluginId = pluginId;
         database = openDatabase();
+        this.userRedemptionVault = userRedemptionVault;
     }
 
     private DatabaseTable getDatabaseTable(String tableName) {
-        DatabaseTable assetDistributionDatabaseTable = database.getTable(tableName);
-        return assetDistributionDatabaseTable;
+        return database.getTable(tableName);
     }
 
     private Database openDatabase() throws CantExecuteDatabaseOperationException {
@@ -56,6 +70,298 @@ public class UserRedemptionDao {
         } catch (CantOpenDatabaseException | DatabaseNotFoundException exception) {
             throw new CantExecuteDatabaseOperationException(exception, "Opening the User Redemption Transaction Database", "Error in database plugin.");
         }
+    }
+
+    public void startDelivering(String genesisTransaction,
+                                String assetPublicKey,
+                                String repoPublicKey) throws CantStartDeliveringException {
+        String context = "Genesis Transaction: " + genesisTransaction + " - Asset Public Key: " + assetPublicKey + " - User Public Key: " + repoPublicKey;
+
+        String transactionId = UUID.randomUUID().toString();
+        long startTime = System.currentTimeMillis();
+        long timeOut = startTime + UserRedemptionDigitalAssetTransactionPluginRoot.DELIVERING_TIMEOUT;
+
+        try {
+            DatabaseTable databaseTable = getDatabaseTable(UserRedemptionDatabaseConstants.USER_REDEMPTION_DELIVERING_TABLE_NAME);
+            DatabaseTableRecord record = databaseTable.getEmptyRecord();
+            record.setStringValue(UserRedemptionDatabaseConstants.USER_REDEMPTION_DELIVERING_TRANSACTION_ID_COLUMN_NAME, transactionId);
+            record.setStringValue(UserRedemptionDatabaseConstants.USER_REDEMPTION_DELIVERING_GENESIS_TRANSACTION_COLUMN_NAME, genesisTransaction);
+            record.setStringValue(UserRedemptionDatabaseConstants.USER_REDEMPTION_DELIVERING_ASSET_PUBLICKEY_COLUMN_NAME, assetPublicKey);
+            record.setStringValue(UserRedemptionDatabaseConstants.USER_REDEMPTION_DELIVERING_REPO_PUBLICKEY_COLUMN_NAME, repoPublicKey);
+            record.setLongValue(UserRedemptionDatabaseConstants.USER_REDEMPTION_DELIVERING_START_TIME_COLUMN_NAME, startTime);
+            record.setLongValue(UserRedemptionDatabaseConstants.USER_REDEMPTION_DELIVERING_TIMEOUT_COLUMN_NAME, timeOut);
+            record.setStringValue(UserRedemptionDatabaseConstants.USER_REDEMPTION_DELIVERING_STATE_COLUMN_NAME, DistributionStatus.DELIVERING.getCode());
+            record.setLongValue(UserRedemptionDatabaseConstants.USER_REDEMPTION_DELIVERING_ATTEMPT_NUMBER_COLUMN_NAME, 0);
+
+            databaseTable.insertRecord(record);
+        } catch (CantInsertRecordException exception) {
+            throw new CantStartDeliveringException(exception, context, "Starting the delivering at distribution");
+        }
+    }
+
+
+    public void sendingBitcoins(String genesisTransaction, String bitcoinsSentGenesisTx) throws RecordsNotFoundException, CantCheckAssetUserRedemptionProgressException {
+        try {
+            DatabaseTable databaseTable;
+            databaseTable = database.getTable(UserRedemptionDatabaseConstants.USER_REDEMPTION_DELIVERING_TABLE_NAME);
+            databaseTable.addStringFilter(UserRedemptionDatabaseConstants.USER_REDEMPTION_DELIVERING_GENESIS_TRANSACTION_COLUMN_NAME, genesisTransaction, DatabaseFilterType.EQUAL);
+            databaseTable.addStringFilter(UserRedemptionDatabaseConstants.USER_REDEMPTION_DELIVERING_STATE_COLUMN_NAME, DistributionStatus.DELIVERING.getCode(), DatabaseFilterType.EQUAL);
+            databaseTable.addFilterOrder(UserRedemptionDatabaseConstants.USER_REDEMPTION_DELIVERING_START_TIME_COLUMN_NAME, DatabaseFilterOrder.DESCENDING);
+            databaseTable.loadToMemory();
+            List<DatabaseTableRecord> databaseTableRecords = databaseTable.getRecords();
+            DatabaseTableRecord databaseTableRecord;
+            if (databaseTable.getRecords().isEmpty()) {
+                throw new RecordsNotFoundException(null, "Genesis Tx: " + genesisTransaction, "There is nothing to update.");
+            }
+
+            databaseTableRecord = databaseTableRecords.get(0);
+
+            databaseTableRecord.setStringValue(UserRedemptionDatabaseConstants.USER_REDEMPTION_DELIVERING_SENT_GENESISTX_COLUMN_NAME, bitcoinsSentGenesisTx);
+            databaseTableRecord.setStringValue(UserRedemptionDatabaseConstants.USER_REDEMPTION_DELIVERING_STATE_COLUMN_NAME, DistributionStatus.SENDING_CRYPTO.getCode());
+            databaseTable.updateRecord(databaseTableRecord);
+        } catch (CantLoadTableToMemoryException | CantUpdateRecordException exception) {
+            throw new CantCheckAssetUserRedemptionProgressException(exception, "Updating Crypto Status ", "Cannot load the table into memory");
+        }
+    }
+
+
+    public void updateDeliveringStatusForTxId(String transactionId, DistributionStatus status) throws CantCheckAssetUserRedemptionProgressException, RecordsNotFoundException {
+        try {
+            DatabaseTable databaseTable;
+            databaseTable = database.getTable(UserRedemptionDatabaseConstants.USER_REDEMPTION_DELIVERING_TABLE_NAME);
+            databaseTable.addStringFilter(UserRedemptionDatabaseConstants.USER_REDEMPTION_DELIVERING_TRANSACTION_ID_COLUMN_NAME, transactionId, DatabaseFilterType.EQUAL);
+            databaseTable.addFilterOrder(UserRedemptionDatabaseConstants.USER_REDEMPTION_DELIVERING_START_TIME_COLUMN_NAME, DatabaseFilterOrder.DESCENDING);
+            databaseTable.loadToMemory();
+            List<DatabaseTableRecord> databaseTableRecords = databaseTable.getRecords();
+            DatabaseTableRecord databaseTableRecord;
+            if (databaseTable.getRecords().isEmpty()) {
+                throw new RecordsNotFoundException(null, "Tx Id: " + transactionId, "There is nothing to update.");
+            }
+
+            databaseTableRecord = databaseTableRecords.get(0);
+
+            databaseTableRecord.setStringValue(UserRedemptionDatabaseConstants.USER_REDEMPTION_DELIVERING_STATE_COLUMN_NAME, status.getCode());
+            databaseTable.updateRecord(databaseTableRecord);
+        } catch (CantLoadTableToMemoryException | CantUpdateRecordException exception) {
+            throw new CantCheckAssetUserRedemptionProgressException(exception, "Updating Crypto Status ", "Cannot load the table into memory");
+        }
+    }
+
+
+    public void cancelDelivering(String transactionId) throws RecordsNotFoundException, CantCheckAssetUserRedemptionProgressException {
+        updateDeliveringStatusForTxId(transactionId, DistributionStatus.DELIVERING_CANCELLED);
+    }
+
+    public void failedToSendCrypto(String transactionId) throws RecordsNotFoundException, CantCheckAssetUserRedemptionProgressException {
+        updateDeliveringStatusForTxId(transactionId, DistributionStatus.SENDING_CRYPTO_FAILED);
+    }
+
+    public void newAttempt(String transactionId) throws CantCheckAssetUserRedemptionProgressException, CantExecuteQueryException, RecordsNotFoundException {
+        long attemptNumber = constructRecordFromTransactionId(transactionId).getAttemptNumber();
+        updateLongValueByStringFieldDeliveringTable(++attemptNumber, UserRedemptionDatabaseConstants.USER_REDEMPTION_DELIVERING_ATTEMPT_NUMBER_COLUMN_NAME, transactionId, UserRedemptionDatabaseConstants.USER_REDEMPTION_DELIVERING_TRANSACTION_ID_COLUMN_NAME);
+    }
+
+
+    private DeliverRecord constructRecordFromTransactionId(String transactionId) throws CantCheckAssetUserRedemptionProgressException {
+        try {
+            DeliverRecord recordToReturn = new DeliverRecord();
+            recordToReturn.setTransactionId(transactionId);
+            recordToReturn.setGenesisTransaction(getStringFieldByDeliveringId(transactionId, UserRedemptionDatabaseConstants.USER_REDEMPTION_DELIVERING_GENESIS_TRANSACTION_COLUMN_NAME));
+            recordToReturn.setRedeemPointPublicKey(getStringFieldByDeliveringId(transactionId, UserRedemptionDatabaseConstants.USER_REDEMPTION_DELIVERING_REPO_PUBLICKEY_COLUMN_NAME));
+            recordToReturn.setDigitalAssetMetadata(userRedemptionVault.getDigitalAssetMetadataFromLocalStorage(getStringFieldByDeliveringId(transactionId, UserRedemptionDatabaseConstants.USER_REDEMPTION_DELIVERING_GENESIS_TRANSACTION_COLUMN_NAME)));
+            recordToReturn.setStartTime(new Date(getLongFieldByDeliveringId(transactionId, UserRedemptionDatabaseConstants.USER_REDEMPTION_DELIVERING_START_TIME_COLUMN_NAME)));
+            recordToReturn.setTimeOut(new Date(getLongFieldByDeliveringId(transactionId, UserRedemptionDatabaseConstants.USER_REDEMPTION_DELIVERING_TIMEOUT_COLUMN_NAME)));
+            recordToReturn.setState(DistributionStatus.getByCode(getStringFieldByDeliveringId(transactionId, UserRedemptionDatabaseConstants.USER_REDEMPTION_DELIVERING_STATE_COLUMN_NAME)));
+            recordToReturn.setGenesisTransactionSent(getStringFieldByDeliveringId(transactionId, UserRedemptionDatabaseConstants.USER_REDEMPTION_DELIVERING_SENT_GENESISTX_COLUMN_NAME));
+            recordToReturn.setAttemptNumber(getLongFieldByDeliveringId(transactionId, UserRedemptionDatabaseConstants.USER_REDEMPTION_DELIVERING_ATTEMPT_NUMBER_COLUMN_NAME));
+            return recordToReturn;
+        } catch (Exception e) {
+            throw new CantCheckAssetUserRedemptionProgressException(e, transactionId, null);
+        }
+    }
+
+
+    private void updateStringValueByStringFieldDeliveringTable(String value, String columnName, String filterValue, String filterColumn) throws CantExecuteQueryException, RecordsNotFoundException {
+        try {
+            DatabaseTable databaseTable = this.database.getTable(UserRedemptionDatabaseConstants.USER_REDEMPTION_DELIVERING_TABLE_NAME);
+            databaseTable.addStringFilter(filterColumn, filterValue, DatabaseFilterType.EQUAL);
+            databaseTable.loadToMemory();
+            DatabaseTableRecord databaseTableRecord;
+            List<DatabaseTableRecord> databaseTableRecords = databaseTable.getRecords();
+            if (databaseTableRecords.isEmpty()) {
+                throw new RecordsNotFoundException();
+            }
+            databaseTableRecord = databaseTableRecords.get(0);
+
+            databaseTableRecord.setStringValue(columnName, value);
+            databaseTable.updateRecord(databaseTableRecord);
+        } catch (CantLoadTableToMemoryException | CantUpdateRecordException exception) {
+            throw new CantExecuteQueryException(CantLoadTableToMemoryException.DEFAULT_MESSAGE, exception, "Trying to update " + columnName, "Check the cause");
+        }
+    }
+
+    private void updateLongValueByStringFieldDeliveringTable(long value, String columnName, String filterValue, String filterColumn) throws CantExecuteQueryException, RecordsNotFoundException {
+        try {
+            DatabaseTable databaseTable = this.database.getTable(UserRedemptionDatabaseConstants.USER_REDEMPTION_DELIVERING_TABLE_NAME);
+            databaseTable.addStringFilter(filterColumn, filterValue, DatabaseFilterType.EQUAL);
+            databaseTable.loadToMemory();
+            DatabaseTableRecord databaseTableRecord;
+            List<DatabaseTableRecord> databaseTableRecords = databaseTable.getRecords();
+            if (databaseTableRecords.isEmpty()) {
+                throw new RecordsNotFoundException();
+            }
+            databaseTableRecord = databaseTableRecords.get(0);
+            databaseTableRecord.setLongValue(columnName, value);
+            databaseTable.updateRecord(databaseTableRecord);
+        } catch (CantLoadTableToMemoryException | CantUpdateRecordException exception) {
+            throw new CantExecuteQueryException(CantLoadTableToMemoryException.DEFAULT_MESSAGE, exception, "Trying to update " + columnName, "Check the cause");
+        }
+    }
+
+
+    private String getStringFieldByDeliveringId(String deliveringId, String column) throws RecordsNotFoundException, CantLoadTableToMemoryException {
+        String context = "Tx Id: " + deliveringId;
+
+        DatabaseTable databaseTable;
+        databaseTable = database.getTable(UserRedemptionDatabaseConstants.USER_REDEMPTION_DELIVERING_TABLE_NAME);
+        databaseTable.addStringFilter(UserRedemptionDatabaseConstants.USER_REDEMPTION_DELIVERING_TRANSACTION_ID_COLUMN_NAME, deliveringId, DatabaseFilterType.EQUAL);
+        databaseTable.loadToMemory();
+
+        if (databaseTable.getRecords().isEmpty()) throw new RecordsNotFoundException(context);
+
+        return databaseTable.getRecords().get(0).getStringValue(column);
+    }
+
+    private long getLongFieldByDeliveringId(String deliveringId, String column) throws RecordsNotFoundException, CantLoadTableToMemoryException {
+        String context = "Tx Id: " + deliveringId;
+
+        DatabaseTable databaseTable;
+        databaseTable = database.getTable(UserRedemptionDatabaseConstants.USER_REDEMPTION_DELIVERING_TABLE_NAME);
+        databaseTable.addStringFilter(UserRedemptionDatabaseConstants.USER_REDEMPTION_DELIVERING_TRANSACTION_ID_COLUMN_NAME, deliveringId, DatabaseFilterType.EQUAL);
+        databaseTable.loadToMemory();
+
+        if (databaseTable.getRecords().isEmpty()) throw new RecordsNotFoundException(context);
+
+        return databaseTable.getRecords().get(0).getLongValue(column);
+    }
+
+
+    public boolean isFirstTransaction(String genesisTransaction) throws CantCheckAssetUserRedemptionProgressException {
+        return getValueListFromTableByColumn(genesisTransaction,
+                UserRedemptionDatabaseConstants.USER_REDEMPTION_TABLE_NAME,
+                UserRedemptionDatabaseConstants.USER_REDEMPTION_GENESIS_TRANSACTION_COLUMN_NAME,
+                UserRedemptionDatabaseConstants.USER_REDEMPTION_GENESIS_TRANSACTION_COLUMN_NAME
+        ).isEmpty();
+    }
+
+
+    public void updateActorAssetRedeemPoint(ActorAssetRedeemPoint redeemPoint, String genesisTransaction) throws CantUpdateRecordException, CantLoadTableToMemoryException, RecordsNotFoundException {
+        String context = "RePo: " + redeemPoint + " - Genesis Tx: " + genesisTransaction;
+        DatabaseTable databaseTable = this.database.getTable(UserRedemptionDatabaseConstants.USER_REDEMPTION_TABLE_NAME);
+        databaseTable.addStringFilter(UserRedemptionDatabaseConstants.USER_REDEMPTION_GENESIS_TRANSACTION_COLUMN_NAME, genesisTransaction, DatabaseFilterType.EQUAL);
+        databaseTable.loadToMemory();
+        List<DatabaseTableRecord> databaseTableRecords = databaseTable.getRecords();
+        if (databaseTableRecords.isEmpty()) {
+            throw new RecordsNotFoundException(null, context, null);
+        }
+
+        DatabaseTableRecord record = databaseTableRecords.get(0);
+        record.setStringValue(UserRedemptionDatabaseConstants.USER_REDEMPTION_ACTOR_REDEEM_POINT_PUBLIC_KEY_COLUMN_NAME, redeemPoint.getActorPublicKey());
+        record.setStringValue(UserRedemptionDatabaseConstants.USER_REDEMPTION_ACTOR_REDEEM_POINT_BITCOIN_ADDRESS_COLUMN_NAME, redeemPoint.getCryptoAddress() == null ? "" : redeemPoint.getCryptoAddress().getAddress());
+        databaseTable.updateRecord(record);
+    }
+
+    public boolean isDeliveringGenesisTransaction(String genesisTransaction) throws CantCheckAssetUserRedemptionProgressException {
+        return !getDeliveringTransactionsFromGenesisTransaction(genesisTransaction).isEmpty();
+    }
+
+
+    private List<String> getDeliveringTransactionsFromGenesisTransaction(String genesisTransaction) throws CantCheckAssetUserRedemptionProgressException {
+        return getDeliveringIdByStatus(DistributionStatus.DELIVERING, genesisTransaction);
+    }
+
+
+    private List<String> getDeliveringIdByStatus(DistributionStatus status, String genesisTransaction) throws CantCheckAssetUserRedemptionProgressException {
+        HashMap<String, String> filters = new HashMap<>();
+        filters.put(UserRedemptionDatabaseConstants.USER_REDEMPTION_DELIVERING_GENESIS_TRANSACTION_COLUMN_NAME, genesisTransaction);
+        filters.put(UserRedemptionDatabaseConstants.USER_REDEMPTION_DELIVERING_STATE_COLUMN_NAME, status.getCode());
+        return getValueListFromTableByColumn(filters, UserRedemptionDatabaseConstants.USER_REDEMPTION_DELIVERING_TRANSACTION_ID_COLUMN_NAME);
+    }
+
+
+    private List<String> getValueListFromTableByColumn(Map<String, String> filters, String returningColumn) throws CantCheckAssetUserRedemptionProgressException {
+        try {
+            DatabaseTable databaseTable;
+            List<String> returningList = new ArrayList<>();
+            databaseTable = database.getTable(UserRedemptionDatabaseConstants.USER_REDEMPTION_DELIVERING_TABLE_NAME);
+            for (Map.Entry<String, String> filter : filters.entrySet()) {
+                String filterColumn = filter.getKey();
+                String filterValue = filter.getValue();
+                databaseTable.addStringFilter(filterColumn, filterValue, DatabaseFilterType.EQUAL);
+            }
+
+            databaseTable.addFilterOrder(UserRedemptionDatabaseConstants.USER_REDEMPTION_DELIVERING_START_TIME_COLUMN_NAME, DatabaseFilterOrder.DESCENDING);
+
+            databaseTable.loadToMemory();
+            for (DatabaseTableRecord record : databaseTable.getRecords()) {
+                returningList.add(record.getStringValue(returningColumn));
+            }
+            return returningList;
+        } catch (CantLoadTableToMemoryException exception) {
+            throw new CantCheckAssetUserRedemptionProgressException(exception, "Getting " + filters + " list", "Cannot load table to memory");
+        } catch (Exception exception) {
+            throw new CantCheckAssetUserRedemptionProgressException(FermatException.wrapException(exception), "Getting " + filters + " list", "Unexpected exception");
+        }
+    }
+
+
+    public DeliverRecord getLastDelivering(String genesisTx) throws CantCheckAssetUserRedemptionProgressException {
+        List<DeliverRecord> records = getDeliverRecordsForGenesisTransaction(genesisTx);
+        return records.get(records.size() - 1);
+    }
+
+    public List<DeliverRecord> getSendingCryptoRecords() throws CantCheckAssetUserRedemptionProgressException {
+        List<DeliverRecord> toReturn = new ArrayList<>();
+        for (String txId : getValueListFromTableByColumn(DistributionStatus.SENDING_CRYPTO.getCode(),
+                UserRedemptionDatabaseConstants.USER_REDEMPTION_DELIVERING_TABLE_NAME,
+                UserRedemptionDatabaseConstants.USER_REDEMPTION_DELIVERING_STATE_COLUMN_NAME,
+                UserRedemptionDatabaseConstants.USER_REDEMPTION_DELIVERING_TRANSACTION_ID_COLUMN_NAME)) {
+            toReturn.add(constructRecordFromTransactionId(txId));
+        }
+        return toReturn;
+    }
+
+    public List<DeliverRecord> getDeliveredRecords() throws CantCheckAssetUserRedemptionProgressException {
+        List<DeliverRecord> toReturn = new ArrayList<>();
+        for (String txId : getValueListFromTableByColumn(DistributionStatus.DELIVERED.getCode(),
+                UserRedemptionDatabaseConstants.USER_REDEMPTION_DELIVERING_TABLE_NAME,
+                UserRedemptionDatabaseConstants.USER_REDEMPTION_DELIVERING_STATE_COLUMN_NAME,
+                UserRedemptionDatabaseConstants.USER_REDEMPTION_DELIVERING_TRANSACTION_ID_COLUMN_NAME)) {
+            toReturn.add(constructRecordFromTransactionId(txId));
+        }
+        return toReturn;
+    }
+
+    public List<DeliverRecord> getDeliveringRecords() throws CantCheckAssetUserRedemptionProgressException {
+        List<DeliverRecord> toReturn = new ArrayList<>();
+        for (String txId : getValueListFromTableByColumn(DistributionStatus.DELIVERING.getCode(),
+                UserRedemptionDatabaseConstants.USER_REDEMPTION_DELIVERING_TABLE_NAME,
+                UserRedemptionDatabaseConstants.USER_REDEMPTION_DELIVERING_STATE_COLUMN_NAME,
+                UserRedemptionDatabaseConstants.USER_REDEMPTION_DELIVERING_TRANSACTION_ID_COLUMN_NAME)) {
+            toReturn.add(constructRecordFromTransactionId(txId));
+        }
+        return toReturn;
+    }
+
+    public List<DeliverRecord> getDeliverRecordsForGenesisTransaction(String genesisTransaction) throws CantCheckAssetUserRedemptionProgressException {
+        List<DeliverRecord> toReturn = new ArrayList<>();
+        for (String txId : getValueListFromTableByColumn(genesisTransaction,
+                UserRedemptionDatabaseConstants.USER_REDEMPTION_DELIVERING_TABLE_NAME,
+                UserRedemptionDatabaseConstants.USER_REDEMPTION_DELIVERING_GENESIS_TRANSACTION_COLUMN_NAME,
+                UserRedemptionDatabaseConstants.USER_REDEMPTION_DELIVERING_TRANSACTION_ID_COLUMN_NAME)) {
+            toReturn.add(constructRecordFromTransactionId(txId));
+        }
+        return toReturn;
     }
 
     public void saveNewEvent(String eventType, String eventSource) throws CantSaveEventException {
@@ -197,21 +503,21 @@ public class UserRedemptionDao {
         }
     }
 
-    public String getActorUserPublicKeyByGenesisTransaction(String genesisTransaction) throws CantCheckAssetUserRedemptionProgressException, UnexpectedResultReturnedFromDatabaseException {
+    public String getActorUserPublicKeyByGenesisTransaction(String genesisTransaction) throws CantCheckAssetUserRedemptionProgressException, RecordsNotFoundException {
         return getStringValueFromSelectedTableTableByFieldCode(UserRedemptionDatabaseConstants.USER_REDEMPTION_TABLE_NAME,
                 genesisTransaction,
                 UserRedemptionDatabaseConstants.USER_REDEMPTION_ACTOR_REDEEM_POINT_PUBLIC_KEY_COLUMN_NAME,
                 UserRedemptionDatabaseConstants.USER_REDEMPTION_GENESIS_TRANSACTION_COLUMN_NAME);
     }
 
-    public String getActorRedeemPointCryptoAddressByGenesisTransaction(String genesisTransaction) throws CantCheckAssetUserRedemptionProgressException, UnexpectedResultReturnedFromDatabaseException {
+    public String getActorRedeemPointCryptoAddressByGenesisTransaction(String genesisTransaction) throws CantCheckAssetUserRedemptionProgressException, RecordsNotFoundException {
         return getStringValueFromSelectedTableTableByFieldCode(UserRedemptionDatabaseConstants.USER_REDEMPTION_TABLE_NAME,
                 genesisTransaction,
                 UserRedemptionDatabaseConstants.USER_REDEMPTION_ACTOR_REDEEM_POINT_BITCOIN_ADDRESS_COLUMN_NAME,
                 UserRedemptionDatabaseConstants.USER_REDEMPTION_GENESIS_TRANSACTION_COLUMN_NAME);
     }
 
-    public String getTransactionIdByGenesisTransaction(String genesisTransaction) throws CantCheckAssetUserRedemptionProgressException, UnexpectedResultReturnedFromDatabaseException {
+    public String getTransactionIdByGenesisTransaction(String genesisTransaction) throws CantCheckAssetUserRedemptionProgressException, RecordsNotFoundException {
         return getStringValueFromSelectedTableTableByFieldCode(UserRedemptionDatabaseConstants.USER_REDEMPTION_TABLE_NAME,
                 genesisTransaction,
                 UserRedemptionDatabaseConstants.USER_REDEMPTION_REDEMPTION_ID_COLUMN_NAME,
@@ -236,7 +542,7 @@ public class UserRedemptionDao {
      * @throws CantCheckAssetUserRedemptionProgressException
      * @throws UnexpectedResultReturnedFromDatabaseException
      */
-    private String getStringValueFromSelectedTableTableByFieldCode(String tableName, String value, String fieldCode, String indexColumn) throws CantCheckAssetUserRedemptionProgressException, UnexpectedResultReturnedFromDatabaseException {
+    private String getStringValueFromSelectedTableTableByFieldCode(String tableName, String value, String fieldCode, String indexColumn) throws CantCheckAssetUserRedemptionProgressException, RecordsNotFoundException {
         try {
             this.database = openDatabase();
             DatabaseTable databaseTable = getDatabaseTable(tableName);
@@ -244,15 +550,12 @@ public class UserRedemptionDao {
             databaseTable.loadToMemory();
             DatabaseTableRecord databaseTableRecord;
             List<DatabaseTableRecord> databaseTableRecords = databaseTable.getRecords();
-            if (databaseTableRecords.size() > 1) {
-
-                throw new UnexpectedResultReturnedFromDatabaseException("Unexpected result. More than value returned.", indexColumn + ":" + value);
-            } else {
-                databaseTableRecord = databaseTableRecords.get(0);
+            if (databaseTable.getRecords().isEmpty()) {
+                throw new RecordsNotFoundException();
             }
+            databaseTableRecord = databaseTableRecords.get(0);
 
-            String stringToReturn = databaseTableRecord.getStringValue(fieldCode);
-            return stringToReturn;
+            return databaseTableRecord.getStringValue(fieldCode);
         } catch (CantExecuteDatabaseOperationException exception) {
 
             throw new CantCheckAssetUserRedemptionProgressException(exception, "Trying to get " + fieldCode, "Cannot find or open the database");

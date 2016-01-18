@@ -30,6 +30,7 @@ import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.Un
 import com.bitdubai.reference_wallet.crypto_customer_wallet.R;
 import com.bitdubai.reference_wallet.crypto_customer_wallet.common.adapters.OpenContractsExpandableAdapter;
 import com.bitdubai.reference_wallet.crypto_customer_wallet.common.models.GrouperItem;
+import com.bitdubai.reference_wallet.crypto_customer_wallet.common.models.TestData;
 import com.bitdubai.reference_wallet.crypto_customer_wallet.session.CryptoCustomerWalletSession;
 import com.bitdubai.reference_wallet.crypto_customer_wallet.util.CommonLogger;
 
@@ -111,7 +112,7 @@ public class OpenContractsTabFragment extends FermatWalletExpandableListFragment
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == R.id.action_start_negotiation) {
-            changeActivity(Activities.CBP_CRYPTO_CUSTOMER_WALLET_BROKER_LIST,appSession.getAppPublicKey());
+            changeActivity(Activities.CBP_CRYPTO_CUSTOMER_WALLET_BROKER_LIST, appSession.getAppPublicKey());
         }
 
         return true;
@@ -160,26 +161,26 @@ public class OpenContractsTabFragment extends FermatWalletExpandableListFragment
                 CryptoCustomerWalletManager wallet = moduleManager.getCryptoCustomerWallet(appSession.getAppPublicKey());
                 GrouperItem<ContractBasicInformation> grouper;
 
-                
+
                 grouperText = getActivity().getString(R.string.waiting_for_you);
                 List<ContractBasicInformation> waitingForCustomer = new ArrayList<>();
-                waitingForCustomer.addAll(wallet.getContractsWaitingForCustomer(10, 0));
+                //TODO waitingForCustomer.addAll(wallet.getContractsWaitingForCustomer(10, 0));
+                waitingForCustomer.addAll(TestData.getContractsWaitingForCustomer());
                 grouper = new GrouperItem<>(grouperText, waitingForCustomer, true);
                 data.add(grouper);
 
                 grouperText = getActivity().getString(R.string.waiting_for_broker);
                 List<ContractBasicInformation> waitingForBroker = new ArrayList<>();
-                waitingForBroker.addAll(wallet.getContractsWaitingForBroker(10, 0));
+                //TODO waitingForBroker.addAll(wallet.getContractsWaitingForBroker(10, 0));
+                waitingForBroker.addAll(TestData.getContractsWaitingForBroker());
                 grouper = new GrouperItem<>(grouperText, waitingForBroker, true);
                 data.add(grouper);
 
-            } catch (CantGetContractsWaitingForCustomerException | CantGetContractsWaitingForBrokerException | CantGetCryptoCustomerWalletException ex) {
+            } catch (Exception ex) {
                 CommonLogger.exception(TAG, ex.getMessage(), ex);
                 if (errorManager != null) {
-                    errorManager.reportUnexpectedWalletException(
-                            Wallets.CBP_CRYPTO_CUSTOMER_WALLET,
-                            UnexpectedWalletExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT,
-                            ex);
+                    errorManager.reportUnexpectedWalletException(Wallets.CBP_CRYPTO_CUSTOMER_WALLET,
+                            UnexpectedWalletExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, ex);
                 }
             }
         } else {

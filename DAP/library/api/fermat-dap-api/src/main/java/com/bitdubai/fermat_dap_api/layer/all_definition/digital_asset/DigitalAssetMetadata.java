@@ -3,6 +3,7 @@ package com.bitdubai.fermat_dap_api.layer.all_definition.digital_asset;
 import com.bitdubai.fermat_api.layer.all_definition.crypto.util.CryptoHasher;
 import com.bitdubai.fermat_api.layer.all_definition.util.XMLParser;
 import com.bitdubai.fermat_dap_api.layer.all_definition.enums.State;
+import com.thoughtworks.xstream.XStream;
 
 /**
  * Created by rodrigo on 9/4/15.
@@ -24,7 +25,10 @@ public class DigitalAssetMetadata {
 
     private String  generateHash(){
         digitalAsset.setState(State.FINAL);
-        return CryptoHasher.performSha256(digitalAsset.toString());
+        XStream xStream = new XStream();
+        xStream.autodetectAnnotations(true);
+        String xml = xStream.toXML(digitalAsset);
+        return CryptoHasher.performSha256(xml);
     }
 
     public String getDigitalAssetHash() {

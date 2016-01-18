@@ -201,15 +201,37 @@ public class WsCommunicationVPNClient extends WebSocketClient implements Communi
     @Override
     public void onClose(int code, String reason, boolean remote) {
 
+        if( getReadyState() == WebSocket.READYSTATE.CLOSED ) {
+            return;
+        }
+
         System.out.println(" --------------------------------------------------------------------- ");
         System.out.println(" WsCommunicationVPNClient - Starting method onClose");
         System.out.println(" WsCommunicationVPNClient -  code   = " + code + " reason = " + reason + " remote = " + remote);
         isActive = Boolean.FALSE;
 
-        try {
-            wsCommunicationVPNClientManagerAgent.riseVpnConnectionCloseNotificationEvent(remoteParticipantNetworkService.getNetworkServiceType(), remoteParticipant);
-        }catch (Exception e){
-            e.printStackTrace();
+        switch (code) {
+
+            case 1006:
+
+                    try {
+                        wsCommunicationVPNClientManagerAgent.riseVpnConnectionLooseNotificationEvent(remoteParticipantNetworkService.getNetworkServiceType(), remoteParticipant);
+                        System.out.println(" WsCommunicationVPNClient - Connection loose,  trying to reconnect");
+                    }catch (Exception e){
+                        e.printStackTrace();
+                    }
+
+                break;
+
+            default:
+
+                    try {
+                        wsCommunicationVPNClientManagerAgent.riseVpnConnectionCloseNotificationEvent(remoteParticipantNetworkService.getNetworkServiceType(), remoteParticipant);
+                    }catch (Exception e){
+                        e.printStackTrace();
+                    }
+
+                break;
         }
 
     }
@@ -222,7 +244,7 @@ public class WsCommunicationVPNClient extends WebSocketClient implements Communi
     public void onError(Exception ex) {
 
         System.out.println(" --------------------------------------------------------------------- ");
-        System.out.println(" WsCommunicationVPNClient - Starting method onError");
+        System.out.println(" WsCommunicationVPNClient - Starting method onError, proceed to close the connection");
         ex.printStackTrace();
         getConnection().closeConnection(1000, ex.getLocalizedMessage());
 
@@ -397,5 +419,13 @@ public class WsCommunicationVPNClient extends WebSocketClient implements Communi
      */
     public boolean isPongMessagePending() {
         return isPongMessagePending;
+    }
+
+
+    /**
+     * Reconnect again
+     */
+    public void reconnect(){
+        connect();
     }
 }

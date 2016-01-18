@@ -1,4 +1,4 @@
-package com.bitdubai.fermat_cht_android_sub_app_chat_bitdubai.settings;
+package com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.settings;
 
 import com.bitdubai.fermat_pip_api.all_definition.sub_app_module.settings.exceptions.CantLoadSubAppSettings;
 import com.bitdubai.fermat_pip_api.all_definition.sub_app_module.settings.exceptions.CantSaveSubAppSettings;

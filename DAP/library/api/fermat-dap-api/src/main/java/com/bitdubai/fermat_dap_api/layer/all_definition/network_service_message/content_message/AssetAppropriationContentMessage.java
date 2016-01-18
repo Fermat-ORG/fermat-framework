@@ -1,8 +1,6 @@
 package com.bitdubai.fermat_dap_api.layer.all_definition.network_service_message.content_message;
 
 import com.bitdubai.fermat_api.layer.all_definition.util.XMLParser;
-import com.bitdubai.fermat_dap_api.layer.all_definition.digital_asset.DigitalAsset;
-import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.interfaces.ActorAssetUser;
 
 import java.io.Serializable;
 
@@ -16,15 +14,15 @@ public class AssetAppropriationContentMessage implements Serializable, DAPConten
 
     //VARIABLE DECLARATION
 
-    private DigitalAsset digitalAssetAppropriated;
-    private ActorAssetUser userThatAppropriate;
+    private String digitalAssetAppropriated;
+    private String userThatAppropriate;
 
     //CONSTRUCTORS
 
     public AssetAppropriationContentMessage() {
     }
 
-    public AssetAppropriationContentMessage(DigitalAsset digitalAssetAppropriated, ActorAssetUser userThatAppropriate) {
+    public AssetAppropriationContentMessage(String digitalAssetAppropriated, String userThatAppropriate) {
         this.digitalAssetAppropriated = digitalAssetAppropriated;
         this.userThatAppropriate = userThatAppropriate;
     }
@@ -47,19 +45,19 @@ public class AssetAppropriationContentMessage implements Serializable, DAPConten
 
     //GETTER AND SETTERS
 
-    public ActorAssetUser getUserThatAppropriate() {
+    public String getUserThatAppropriate() {
         return userThatAppropriate;
     }
 
-    public void setUserThatAppropriate(ActorAssetUser userThatAppropriate) {
+    public void setUserThatAppropriate(String userThatAppropriate) {
         this.userThatAppropriate = userThatAppropriate;
     }
 
-    public DigitalAsset getDigitalAssetAppropriated() {
+    public String getDigitalAssetAppropriated() {
         return digitalAssetAppropriated;
     }
 
-    public void setDigitalAssetAppropriated(DigitalAsset digitalAssetAppropriated) {
+    public void setDigitalAssetAppropriated(String digitalAssetAppropriated) {
         this.digitalAssetAppropriated = digitalAssetAppropriated;
     }
 

@@ -15,7 +15,7 @@ import java.util.Map;
  */
 
 //TODO: Nelson fijate que el module manager está mal..
-public class CustomersSubAppSession extends AbstractFermatSession<InstalledSubApp,CustomerModuleManager,SubAppResourcesProviderManager> implements SubAppsSession {
+public class CustomersSubAppSession extends AbstractFermatSession<InstalledSubApp,CustomerModuleManager,SubAppResourcesProviderManager> {
 
     /**
      * SubApps type

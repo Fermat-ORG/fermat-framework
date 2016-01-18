@@ -33,16 +33,102 @@
                 />
         </android.support.design.widget.AppBarLayout>
 
+
             <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_weight="20">
-
-            <android.support.v4.view.ViewPager
-                android:id="@+id/pager"
-                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                />
+                android:layout_weight="20"
+                android:id="@+id/container_main">
+
+                <android.support.v4.view.ViewPager
+                    android:id="@+id/pager"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    />
+
+                <io.codetail.widget.RevealFrameLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/reveal"
+                    >
+
+                    <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content">
+                    <LinearLayout
+                        android:id="@+id/reveal_items"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:background="#fff">
+                        <LinearLayout
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:gravity="center"
+                            android:orientation="vertical">
+                            <ImageButton
+                                android:layout_width="70dp"
+                                android:layout_height="70dp"
+                                android:background="@drawable/ic_03" />
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="7dp"
+                                android:text="Gallery"
+                                android:textColor="#a9a9a9"/>
+
+                        </LinearLayout>
+                        <!-- Other 2 icons here-->
+                        <LinearLayout
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:gravity="center"
+                            android:orientation="vertical">
+                            <ImageButton
+                                android:layout_width="70dp"
+                                android:layout_height="70dp"
+                                android:background="@drawable/ic_03" />
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="7dp"
+                                android:text="Gallery"
+                                android:textColor="#a9a9a9"/>
+
+                        </LinearLayout>
+                        <LinearLayout
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:gravity="center"
+                            android:orientation="vertical">
+                            <ImageButton
+                                android:layout_width="70dp"
+                                android:layout_height="70dp"
+                                android:background="@drawable/ic_03" />
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="7dp"
+                                android:text="Gallery"
+                                android:textColor="#a9a9a9"/>
+
+                        </LinearLayout>
+
+                    </LinearLayout>
+
+                        <ImageView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:src="@drawable/ic_action_settings_grey"
+                            android:id="@+id/img_fermat_setting"
+                            android:layout_alignParentEnd="true"/>
+
+                    </RelativeLayout>
+                </io.codetail.widget.RevealFrameLayout>
+
 
             <RadioGroup
                 android:layout_width="wrap_content"
@@ -69,30 +155,72 @@
 
             </RadioGroup>
 
+                <SlidingDrawer
+                    android:layout_width="match_parent"
+                    android:id="@+id/SlidingDrawer"
+                    android:handle="@+id/slide_container"
+                    android:content="@+id/contentLayout"
+                    android:layout_gravity="bottom"
+                    android:padding="10dip"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:visibility="gone">
+                    <FrameLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/slide_container"
+                        android:background="@drawable/ic_arrow_down_expanded">
+
+
+                    </FrameLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:id="@+id/contentLayout"
+                        android:orientation="vertical"
+                        android:gravity="center"
+                        android:padding="17dip"
+                        android:background="#21ab23"
+                        android:layout_height="wrap_content">
+
+                        <RelativeLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:id="@+id/footer_container">
+
+
+                        </RelativeLayout>
+
+
+
+                    </LinearLayout>
+                </SlidingDrawer>
+
         </FrameLayout>
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="95dp"
-            android:orientation="vertical"
-            android:paddingLeft="1dp"
-            android:paddingRight="1dp"
-            android:paddingStart="1dp"
-            android:id="@+id/bottom_navigation_container"
-            >
 
-
-            <android.support.v7.widget.RecyclerView
-                android:id="@+id/bottom_navigation_recycler"
+            <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:overScrollMode="never"
-                android:layout_gravity="center"
-                />
+                android:layout_height="95dp"
+                android:orientation="vertical"
+                android:paddingLeft="1dp"
+                android:paddingRight="1dp"
+                android:paddingStart="1dp"
+                android:id="@+id/bottom_navigation_container"
+                >
+
+
+                <android.support.v7.widget.RecyclerView
+                    android:id="@+id/bottom_navigation_recycler"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:overScrollMode="never"
+                    android:layout_gravity="center"
+                    />
 
 
 
-        </LinearLayout>
+            </LinearLayout>
 
     </LinearLayout>
 

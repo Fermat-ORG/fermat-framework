@@ -559,6 +559,40 @@ public class CryptoTransmissionMetadataDAO {
 
 
 
+    public  List<CryptoTransmissionMetadata> getNotSentRecord() throws CantUpdateRecordDataBaseException {
+
+        try {
+
+            List<CryptoTransmissionMetadata> list = new ArrayList<>();
+
+            DatabaseTable cryptoTransmissiontTable = database.getTable(CryptoTransmissionNetworkServiceDatabaseConstants.CRYPTO_TRANSMISSION_METADATA_TABLE_NAME);
+
+            cryptoTransmissiontTable.addStringFilter(CryptoTransmissionNetworkServiceDatabaseConstants.CRYPTO_TRANSMISSION_METADATA_STATUS_COLUMN_NAME, CryptoTransmissionStates.SEEN_BY_DESTINATION_NETWORK_SERVICE.getCode(), DatabaseFilterType.NOT_EQUALS);
+            cryptoTransmissiontTable.addStringFilter(CryptoTransmissionNetworkServiceDatabaseConstants.CRYPTO_TRANSMISSION_METADATA_STATUS_COLUMN_NAME, CryptoTransmissionStates.SEEN_BY_DESTINATION_VAULT.getCode(), DatabaseFilterType.NOT_EQUALS);
+            cryptoTransmissiontTable.addStringFilter(CryptoTransmissionNetworkServiceDatabaseConstants.CRYPTO_TRANSMISSION_METADATA_STATUS_COLUMN_NAME, CryptoTransmissionStates.CREDITED_IN_DESTINATION_WALLET.getCode(), DatabaseFilterType.NOT_EQUALS);
+
+            cryptoTransmissiontTable.loadToMemory();
+
+
+            for (DatabaseTableRecord record : cryptoTransmissiontTable.getRecords()) {
+                CryptoTransmissionMetadata outgoingTemplateNetworkServiceMessage = buildCryptoTransmissionRecord(record);
+                list.add(outgoingTemplateNetworkServiceMessage);
+            }
+
+            return list;
+
+        } catch (CantLoadTableToMemoryException e) {
+
+            throw new CantUpdateRecordDataBaseException(CantUpdateRecordDataBaseException.DEFAULT_MESSAGE,e, "", "Exception not handled by the plugin, there is a problem in database and i cannot load the table.");
+
+        } catch (InvalidParameterException e) {
+            throw new CantUpdateRecordDataBaseException(CantUpdateRecordDataBaseException.DEFAULT_MESSAGE,e, "", "Cant get crypto transmission record data.");
+
+        }
+
+    }
+
+
     private CryptoTransmissionMetadata buildCryptoTransmissionRecord(DatabaseTableRecord record) throws InvalidParameterException {
 
         UUID   transactionId                       = record.getUUIDValue(CryptoTransmissionNetworkServiceDatabaseConstants.CRYPTO_TRANSMISSION_METADATA_TRANSMISSION_ID_COLUMN_NAME);

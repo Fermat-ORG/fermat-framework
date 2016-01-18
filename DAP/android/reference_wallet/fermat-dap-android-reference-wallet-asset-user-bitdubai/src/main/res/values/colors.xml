@@ -1,4 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
+
 <resources>
     <color name="background_tab_pressed">#6633B5E5</color>
     <color name="black_overlay">#66000000</color>
@@ -6,8 +7,17 @@
     <color name="wallet_factory_orange">#ff9900</color>
     <color name="black">#000</color>
     <color name="gray">#797979</color>
+
+    <color name="color_black">#000000</color>
+    <color name="color_white">#FFFFFF</color>
+    <color name="color_gray_light1">#aadbfaC8</color>
+    <color name="color_gray_light">#99C9C9C9</color>
+    <color name="color_black_light">#99000000</color>
     <color name="navigation_view_menu_item_overlay">#48ffffff</color>
 
-    <color name="dap_wallet_asset_user_gradient_start_color">#2D2733</color>
-    <color name="dap_wallet_asset_user_gradient_end_color">#657386</color>
+    <color name="secondary_text">#727272</color>
+    <color name="primary_text">#212121</color>
+
+    <color name="dap_wallet_asset_user_gradient_start_color">#7C838D</color>
+    <color name="dap_wallet_asset_user_gradient_end_color">#5C6E81</color>
 </resources>

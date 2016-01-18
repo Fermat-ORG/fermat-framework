@@ -87,6 +87,22 @@ public class DeveloperDatabaseFactory {
         DeveloperDatabaseTable  assetIssuerWalletWalletTotalBalances = developerObjectFactory.getNewDeveloperDatabaseTable(AssetWalletRedeemPointDatabaseConstant.ASSET_WALLET_REDEEM_POINT_BALANCE_TABLE_NAME, assetRedeemPointWalletTotalBalancesColumns);
         tables.add(assetIssuerWalletWalletTotalBalances);
 
+
+        /**
+         * REDEEM POINT STATISTICS TABLE.
+         */
+        List<String> statistics = new ArrayList<>();
+        statistics.add(AssetWalletRedeemPointDatabaseConstant.ASSET_WALLET_REDEEM_POINT_POINT_STATISTIC_ID_COLUMN_NAME);
+        statistics.add(AssetWalletRedeemPointDatabaseConstant.ASSET_WALLET_REDEEM_POINT_POINT_STATISTIC_ASSET_PUBLIC_KEY_COLUMN_NAME);
+        statistics.add(AssetWalletRedeemPointDatabaseConstant.ASSET_WALLET_REDEEM_POINT_STATISTIC_USER_PUBLICKEY_COLUMN_NAME);
+        statistics.add(AssetWalletRedeemPointDatabaseConstant.ASSET_WALLET_REDEEM_POINT_STATISTIC_REDEMPTION_TIMESTAMP_COLUMN_NAME);
+
+        /**
+         * AssetIssuerWalletTotalBalanceColumns table
+         */
+        DeveloperDatabaseTable statisticTable = developerObjectFactory.getNewDeveloperDatabaseTable(AssetWalletRedeemPointDatabaseConstant.ASSET_WALLET_REDEEM_POINT_STATISTIC_TABLE_NAME, statistics);
+        tables.add(statisticTable);
+
         return tables;
     }
 

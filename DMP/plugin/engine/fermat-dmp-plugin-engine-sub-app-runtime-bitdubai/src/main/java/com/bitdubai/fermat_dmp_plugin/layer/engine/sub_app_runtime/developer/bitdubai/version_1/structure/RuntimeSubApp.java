@@ -77,6 +77,13 @@ public class RuntimeSubApp implements SubApp {
     }
 
     @Override
+    public Activity getStartActivity() {
+        if(startActivity!=null)
+        return activities.get(startActivity);
+        else return activities.get(0);
+    }
+
+    @Override
     public Activity getLastActivity() {
         if(lastActivity==null){
             return activities.get(startActivity);

@@ -33,6 +33,16 @@ public interface ActorAssetUserManager extends FermatManager {
     ActorAssetUser getActorByPublicKey(String actorPublicKey) throws CantGetAssetUserActorsException, CantAssetUserActorNotFoundException;
 
     /**
+     * The method <code>getActorRegisteredByPublicKey</code> shows the information associated with the registered actorPublicKey
+     *
+     * @param actorPublicKey                    The public key of the Asset Actor User registered
+     * @return                                  THe information associated with the actorPublicKey.
+     * @throws CantGetAssetUserActorsException
+     * @throws CantAssetUserActorNotFoundException
+     */
+    ActorAssetUser getActorRegisteredByPublicKey(String actorPublicKey) throws CantGetAssetUserActorsException, CantAssetUserActorNotFoundException;
+
+    /**
      * The method <code>createActorAssetUserFactory</code> create Actor by a Identity
      *
      * @param assetUserActorPublicKey                       Referred to the Identity publicKey

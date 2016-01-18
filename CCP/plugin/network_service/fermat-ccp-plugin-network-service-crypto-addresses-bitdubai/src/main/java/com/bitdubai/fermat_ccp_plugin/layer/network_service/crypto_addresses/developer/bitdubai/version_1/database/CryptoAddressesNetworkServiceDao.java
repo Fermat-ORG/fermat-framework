@@ -223,6 +223,38 @@ public final class CryptoAddressesNetworkServiceDao {
         }
     }
 
+
+    public List<CryptoAddressRequest> listUncompletedRequest() throws CantListPendingCryptoAddressRequestsException {
+
+
+        try {
+
+            DatabaseTable addressExchangeRequestTable = database.getTable(CryptoAddressesNetworkServiceDatabaseConstants.ADDRESS_EXCHANGE_REQUEST_TABLE_NAME);
+
+            addressExchangeRequestTable.addStringFilter(CryptoAddressesNetworkServiceDatabaseConstants.ADDRESS_EXCHANGE_REQUEST_STATE_COLUMN_NAME, ProtocolState.DONE.getCode(), DatabaseFilterType.NOT_EQUALS);
+
+            addressExchangeRequestTable.loadToMemory();
+
+            List<DatabaseTableRecord> records = addressExchangeRequestTable.getRecords();
+
+            List<CryptoAddressRequest> cryptoAddressRequests = new ArrayList<>();
+
+            for (DatabaseTableRecord record : records) {
+                cryptoAddressRequests.add(buildAddressExchangeRequestRecord(record));
+            }
+
+            return cryptoAddressRequests;
+
+        } catch (CantLoadTableToMemoryException exception) {
+
+            throw new CantListPendingCryptoAddressRequestsException(exception, "", "Exception not handled by the plugin, there is a problem in database and i cannot load the table.");
+        } catch (InvalidParameterException exception) {
+
+            throw new CantListPendingCryptoAddressRequestsException(exception, "", "Check the cause."                                                                                );
+        }
+    }
+
+
     public List<CryptoAddressRequest> listRequestsByActorPublicKey(String identityPublicKey) throws CantListPendingCryptoAddressRequestsException {
 
 

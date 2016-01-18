@@ -78,8 +78,6 @@ import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfac
 
 import java.util.List;
 import java.util.UUID;
-import java.util.concurrent.CountDownLatch;
-import java.util.logging.Logger;
 
 /**
  * Created by Manuel Perez (darkpriestrelative@gmail.com) on 04/09/15.
@@ -111,10 +109,6 @@ public class DigitalAssetCryptoTransactionFactory implements DealsWithErrors {
     private String intraActorPublicKey;
     private final AssetIssuerWalletManager assetIssuerWalletManager;
     //This flag must be used to select the way to send bitcoins from this plugin
-    long genesisAmount = 100000;
-    //TODO: delete this useless object in production, I'm using it just for testing
-    private Logger LOG = Logger.getGlobal();
-    private CountDownLatch countDownLatch;
 
     public DigitalAssetCryptoTransactionFactory(UUID pluginId,
                                                 CryptoVaultManager cryptoVaultManager,
@@ -217,8 +211,6 @@ public class DigitalAssetCryptoTransactionFactory implements DealsWithErrors {
      * @throws CantIssueDigitalAssetException
      */
     private void areObjectsSettled() throws ObjectNotSetException, CantIssueDigitalAssetException {
-
-        LOG.info("ASSET ISSUING Digital Asset begins check");
         if (digitalAsset.getContract() == null) {
             throw new ObjectNotSetException("Digital Asset Contract is not set");
         }
@@ -240,8 +232,6 @@ public class DigitalAssetCryptoTransactionFactory implements DealsWithErrors {
         if (digitalAsset.getIdentityAssetIssuer() == null) {
             throw new ObjectNotSetException("Digital Asset Identity is not set");
         }
-        LOG.info("ASSET ISSUING Digital Asset check ended");
-
     }
 
     /**
@@ -280,9 +270,7 @@ public class DigitalAssetCryptoTransactionFactory implements DealsWithErrors {
      */
     private CryptoAddress requestGenesisAddress() throws CantGetGenesisAddressException {
         try {
-            CryptoAddress genesisAddress = this.assetVaultManager.getNewAssetVaultCryptoAddress(this.blockchainNetworkType);
-            LOG.info("ASSET ISSUING GENESIS ADDRESS GENERATED:" + genesisAddress.getAddress());
-            return genesisAddress;
+            return this.assetVaultManager.getNewAssetVaultCryptoAddress(this.blockchainNetworkType);
         } catch (GetNewCryptoAddressException exception) {
             throw new CantGetGenesisAddressException(exception, "Requesting a genesis address", "Cannot get a new crypto address from asset vault");
         }
@@ -394,8 +382,6 @@ public class DigitalAssetCryptoTransactionFactory implements DealsWithErrors {
 
         this.digitalAsset = digitalAsset;
         this.assetsAmount = assetsAmount;
-        int counter = 0;
-        //Check if digital asset is complete
         try {
 
             getActorAssetIssuerPublicKey();
@@ -408,9 +394,7 @@ public class DigitalAssetCryptoTransactionFactory implements DealsWithErrors {
                 this.assetIssuingTransactionDao.updateDigitalAssetIssuingStatus(digitalAsset.getPublicKey(), IssuingStatus.INVALID_NUMBER_TO_ISSUE);
                 throw new ObjectNotSetException("The assetsAmount " + assetsAmount + " is lower that " + MINIMAL_DIGITAL_ASSET_TO_GENERATE_AMOUNT);
             }
-            LOG.info("ASSET ISSUING Digital Asset CHECK Objects");
             areObjectsSettled();
-            this.genesisAmount = digitalAsset.getGenesisAmount();
             if (isPublicKeyInDatabase(digitalAsset.getPublicKey())) {
                 this.assetIssuingTransactionDao.updateDigitalAssetIssuingStatus(digitalAsset.getPublicKey(), IssuingStatus.ISSUING);
                 for (String genesisTransaction : assetIssuingTransactionDao.getGenesisTransactionByAssetKey(digitalAsset.getPublicKey())) {
@@ -421,11 +405,8 @@ public class DigitalAssetCryptoTransactionFactory implements DealsWithErrors {
             }
             //Persist the digital asset in local storage
             persistInLocalStorage();
-            LOG.info("ASSET ISSUING Digital Asset persist: " + digitalAssetFileStoragePath + "/" + digitalAssetFileName);
             //Persist the digital asset in database
             persistFormingGenesisDigitalAsset();
-
-            LOG.info("ASSET ISSUING persisted in database");
             for (int i = 0; i < assetsAmount; i++) {
                 createDigitalAssetCryptoTransaction();
             }
@@ -439,13 +420,13 @@ public class DigitalAssetCryptoTransactionFactory implements DealsWithErrors {
             throw new CantIssueDigitalAssetsException(exception, "Issuing " + assetsAmount + " Digital Assets", "A database procedure exception");
         } catch (CantIssueDigitalAssetException exception) {
             //ALREADY UPDATED STATUS IN THE ROOT OF THIS EXCEPTION.
-            throw new CantIssueDigitalAssetsException(exception, "Issuing " + assetsAmount + " Digital Assets - Asset number " + counter, "The public key is already used");
+            throw new CantIssueDigitalAssetsException(exception, "Issuing " + assetsAmount + " Digital Assets", "The public key is already used");
         } catch (CantSetObjectException exception) {
             this.assetIssuingTransactionDao.updateDigitalAssetIssuingStatus(digitalAsset.getPublicKey(), IssuingStatus.WALLET_EXCEPTION);
             throw new CantIssueDigitalAssetsException(exception, "Issuing " + assetsAmount + " Digital Assets", "The wallet public key is probably null");
         } catch (CantCheckAssetIssuingProgressException exception) {
             //ALREADY UPDATED STATUS IN THE ROOT OF THIS EXCEPTION.
-            throw new CantIssueDigitalAssetsException(exception, "Issuing " + assetsAmount + " Digital Assets - Asset number " + counter, "Cannot check the asset issuing progress");
+            throw new CantIssueDigitalAssetsException(exception, "Issuing " + assetsAmount + " Digital Assets", "Cannot check the asset issuing progress");
         } catch (CantGetAssetIssuerActorsException exception) {
             this.assetIssuingTransactionDao.updateDigitalAssetIssuingStatus(digitalAsset.getPublicKey(), IssuingStatus.ACTOR_ISSUER_NULL);
             throw new CantIssueDigitalAssetsException(exception, "Issuing " + assetsAmount + " Digital Assets", "The Actor Issuer is null");
@@ -453,7 +434,7 @@ public class DigitalAssetCryptoTransactionFactory implements DealsWithErrors {
             this.assetIssuingTransactionDao.updateDigitalAssetIssuingStatus(digitalAsset.getPublicKey(), IssuingStatus.INTRA_ACTOR_NULL);
             throw new CantIssueDigitalAssetsException(exception, "Issuing " + assetsAmount + " Digital Assets", "The Actor Issuer is null");
         } catch (Exception e) {
-            throw new CantIssueDigitalAssetsException(e, "Issuing " + assetsAmount + " Digital Assets - Asset number " + counter, "Creating the Digital Asset transaction");
+            throw new CantIssueDigitalAssetsException(e, "Issuing " + assetsAmount + " Digital Assets", "Creating the Digital Asset transaction");
         }
     }
 
@@ -802,9 +783,7 @@ public class DigitalAssetCryptoTransactionFactory implements DealsWithErrors {
             //Get the digital asset metadata hash
             String digitalAssetHash = getDigitalAssetHash(digitalAssetMetadata, transactionId);
             //LOG.info("MAP_DIGITAL ASSET FULL: "+this.digitalAsset);
-            LOG.info("ASSET ISSUING Digital Asset Metadata Hash: " + digitalAssetHash);
             //BTC Sending
-            /*String genesisTransaction=*/
             sendBitcoins(genesisAddress, digitalAssetHash, transactionId);
             saveDigitalAssetMetadataInVault(digitalAssetMetadata, transactionId);
             //TODO REMOVE HARDCODE

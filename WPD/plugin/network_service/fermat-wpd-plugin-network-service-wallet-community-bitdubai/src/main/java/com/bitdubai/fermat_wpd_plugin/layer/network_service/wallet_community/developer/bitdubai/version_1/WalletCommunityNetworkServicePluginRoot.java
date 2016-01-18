@@ -95,6 +95,23 @@ public class WalletCommunityNetworkServicePluginRoot extends AbstractPlugin impl
       //  eventManager.addListener(fermatEventListener);
       //  listenersAdded.add(fermatEventListener);
 
+          /*
+         * Listen and handle Client Connection Loose Notification Event
+         */
+//        fermatEventListener = eventManager.getNewListener(P2pEventType.CLIENT_CONNECTION_LOOSE);
+//        fermatEventListener.setEventHandler(new ClientConnectionLooseNotificationEventHandler(this));
+//        eventManager.addListener(fermatEventListener);
+//        listenersAdded.add(fermatEventListener);
+
+
+        /*
+         * Listen and handle Client Connection Success Reconnect Notification Event
+         */
+//        fermatEventListener = eventManager.getNewListener(P2pEventType.CLIENT_SUCCESS_RECONNECT);
+//        fermatEventListener.setEventHandler(new ClientSuccessfullReconnectNotificationEventHandler(this));
+//        eventManager.addListener(fermatEventListener);
+//        listenersAdded.add(fermatEventListener);
+
 
         this.serviceStatus = ServiceStatus.STARTED;
     }
@@ -218,6 +235,28 @@ public class WalletCommunityNetworkServicePluginRoot extends AbstractPlugin impl
             communicationNetworkServiceConnectionManager.closeAllConnection();
         }
         */
+
+    }
+
+    /*
+    * Handles the events ClientConnectionLooseNotificationEvent
+    */
+    @Override
+    public void handleClientConnectionLooseNotificationEvent(FermatEvent fermatEvent) {
+
+//        if(communicationNetworkServiceConnectionManager != null)
+//            communicationNetworkServiceConnectionManager.stop();
+
+    }
+
+    /*
+     * Handles the events ClientSuccessfullReconnectNotificationEvent
+     */
+    @Override
+    public void handleClientSuccessfullReconnectNotificationEvent(FermatEvent fermatEvent) {
+
+//        if(communicationNetworkServiceConnectionManager != null)
+//            communicationNetworkServiceConnectionManager.restart();
 
     }
 

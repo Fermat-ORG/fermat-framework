@@ -74,6 +74,7 @@ public class OutgoingNotificationDao implements com.bitdubai.fermat_ccp_plugin.l
                                            Actors                      senderType     ,
                                            String                      destinationPublicKey   ,
                                            String                      senderAlias,
+                                           String                      senderPhrase,
                                            byte[]                      senderProfileImage,
                                            Actors                      destinationType        ,
                                            NotificationDescriptor descriptor      ,
@@ -91,6 +92,7 @@ public class OutgoingNotificationDao implements com.bitdubai.fermat_ccp_plugin.l
             ActorNetworkServiceRecord connectionRequestRecord = new ActorNetworkServiceRecord(
                     notificationId        ,
                     senderAlias,
+                    senderPhrase,
                     senderProfileImage     ,
                     descriptor   ,
                     destinationType        ,
@@ -276,7 +278,9 @@ public class OutgoingNotificationDao implements com.bitdubai.fermat_ccp_plugin.l
         }
     }
 
-    public List<ActorNetworkServiceRecord> listRequestsByProtocolStateAndType(final ActorProtocolState protocolState) throws CantListIntraWalletUsersException {
+
+
+    public List<ActorNetworkServiceRecord> listRequestsByProtocolState(final ActorProtocolState protocolState) throws CantListIntraWalletUsersException {
 
         if (protocolState == null)
             throw new CantListIntraWalletUsersException("protocolState null",null, "The protocolState is required, can not be null","");
@@ -306,6 +310,37 @@ public class OutgoingNotificationDao implements com.bitdubai.fermat_ccp_plugin.l
             throw new CantListIntraWalletUsersException("",exception, "Exception invalidParameterException.","");
         }
     }
+
+
+    public List<ActorNetworkServiceRecord> listNotSentNotifications() throws CantListIntraWalletUsersException {
+
+
+
+        try {
+            DatabaseTable cryptoPaymentRequestTable = getDatabaseTable();
+
+            cryptoPaymentRequestTable.addStringFilter(CommunicationNetworkServiceDatabaseConstants.OUTGOING_NOTIFICATION_PROTOCOL_STATE_COLUMN_NAME, ActorProtocolState.DONE.getCode(), DatabaseFilterType.NOT_EQUALS);
+
+            cryptoPaymentRequestTable.loadToMemory();
+
+            List<DatabaseTableRecord> records = cryptoPaymentRequestTable.getRecords();
+
+            List<com.bitdubai.fermat_ccp_plugin.layer.network_service.intra_user.developer.bitdubai.version_1.structure.ActorNetworkServiceRecord> cryptoPaymentList = new ArrayList<>();
+
+            for (DatabaseTableRecord record : records) {
+                cryptoPaymentList.add(buildActorNetworkServiceRecord(record));
+            }
+            return cryptoPaymentList;
+
+        } catch (CantLoadTableToMemoryException e) {
+
+            throw new CantListIntraWalletUsersException("",e, "Exception not handled by the plugin, there is a problem in database and i cannot load the table.","");
+        } catch(InvalidParameterException exception){
+
+            throw new CantListIntraWalletUsersException("",exception, "Exception invalidParameterException.","");
+        }
+    }
+
 
     public List<ActorNetworkServiceRecord> listRequestsByProtocolStateAndType(final ActorProtocolState protocolState,
                                                                               final NotificationDescriptor notificationDescriptor) throws CantListIntraWalletUsersException {
@@ -358,6 +393,7 @@ public class OutgoingNotificationDao implements com.bitdubai.fermat_ccp_plugin.l
         try {
             record.setUUIDValue(CommunicationNetworkServiceDatabaseConstants.OUTGOING_NOTIFICATION_ID_COLUMN_NAME, connectionRequestRecord.getId());
             record.setStringValue(CommunicationNetworkServiceDatabaseConstants.OUTGOING_NOTIFICATION_SENDER_ALIAS_COLUMN_NAME, connectionRequestRecord.getActorSenderAlias());
+            record.setStringValue(CommunicationNetworkServiceDatabaseConstants.OUTGOING_NOTIFICATION_SENDER_PHRASE_COLUMN_NAME, connectionRequestRecord.getActorSenderPhrase());
 
             record.setStringValue(CommunicationNetworkServiceDatabaseConstants.OUTGOING_NOTIFICATION_DESCRIPTOR_COLUMN_NAME     , connectionRequestRecord.getNotificationDescriptor().getCode()                                 );
             record.setStringValue(CommunicationNetworkServiceDatabaseConstants.OUTGOING_NOTIFICATION_RECEIVER_TYPE_COLUMN_NAME, connectionRequestRecord.getActorDestinationType().getCode());
@@ -390,7 +426,7 @@ public class OutgoingNotificationDao implements com.bitdubai.fermat_ccp_plugin.l
         {
         UUID   notificationId            = record.getUUIDValue(CommunicationNetworkServiceDatabaseConstants.OUTGOING_NOTIFICATION_ID_COLUMN_NAME);
         String senderAlias    = record.getStringValue(CommunicationNetworkServiceDatabaseConstants.OUTGOING_NOTIFICATION_SENDER_ALIAS_COLUMN_NAME);
-        //String senderProfileImage   = record.getStringValue(CommunicationNetworkServiceDatabaseConstants.OUTGOING_NOTIFICATION_SENDER_IMAGE_COLUMN_NAME      );
+        String senderPhase   = record.getStringValue(CommunicationNetworkServiceDatabaseConstants.OUTGOING_NOTIFICATION_SENDER_PHRASE_COLUMN_NAME      );
         String descriptor       = record.getStringValue(CommunicationNetworkServiceDatabaseConstants.OUTGOING_NOTIFICATION_DESCRIPTOR_COLUMN_NAME   );
         String destinationType      = record.getStringValue(CommunicationNetworkServiceDatabaseConstants.OUTGOING_NOTIFICATION_RECEIVER_TYPE_COLUMN_NAME         );
         String senderType          = record.getStringValue(CommunicationNetworkServiceDatabaseConstants.OUTGOING_NOTIFICATION_SENDER_TYPE_COLUMN_NAME);
@@ -422,6 +458,7 @@ public class OutgoingNotificationDao implements com.bitdubai.fermat_ccp_plugin.l
         return new ActorNetworkServiceRecord(
                 notificationId        ,
                 senderAlias,
+                senderPhase,
                 profileImage,
                 notificationDescriptor,
                 actorDestinationType        ,

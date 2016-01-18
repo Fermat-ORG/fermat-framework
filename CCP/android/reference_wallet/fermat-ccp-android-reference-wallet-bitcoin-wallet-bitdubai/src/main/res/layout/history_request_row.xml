@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical" android:layout_width="match_parent"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
     android:layout_height="140dp"
-    android:background="#FFF"
-    >
+    android:background="@null">
 
 
     <LinearLayout
@@ -44,8 +45,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:id="@+id/txt_contactName"
-                android:text="Matias Furszyfer"
-                android:textColor="#06356f"
+                tools:text="Matias Furszyfer"
+                android:textColor="#07346f"
                 android:fontFamily="roboto"
                 />
 
@@ -53,9 +54,9 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:id="@+id/txt_amount"
-                android:text="1.4 BTC"
+                tools:text="1.4 BTC"
                 android:textSize="18dp"
-                android:textColor="#1d1d26"
+                android:textColor="#07346f"
                 android:fontFamily="roboto"
                 android:paddingTop="7dp"
                 />
@@ -80,7 +81,7 @@
                 android:id="@+id/txt_notes"
                 android:text="Conference ticket"
                 android:textSize="12dp"
-                android:textColor="#9a9a9c"
+                android:textColor="#13b09f"
                 android:fontFamily="roboto"
                 />
 
@@ -90,7 +91,7 @@
                 android:id="@+id/txt_time"
                 android:text="03 Feb 2014"
                 android:textSize="10dp"
-                android:textColor="#9a9a9c"
+                android:textColor="#07346f"
                 android:fontFamily="roboto"/>
 
         </LinearLayout>

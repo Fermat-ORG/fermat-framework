@@ -10,8 +10,11 @@ import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
 import com.bitdubai.fermat_api.layer.all_definition.enums.BlockchainNetworkType;
 import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.BitcoinNetworkSelector;
 import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.exceptions.CantBroadcastTransactionException;
+import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.exceptions.CantGetTransactionException;
 import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.exceptions.CantStoreBitcoinTransactionException;
 import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.interfaces.BitcoinNetworkManager;
+import com.bitdubai.fermat_bch_api.layer.crypto_vault.asset_vault.exceptions.CantGetActiveRedeemPointAddressesException;
+import com.bitdubai.fermat_bch_api.layer.crypto_vault.asset_vault.exceptions.CantGetActiveRedeemPointsException;
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.asset_vault.exceptions.CantGetExtendedPublicKeyException;
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.asset_vault.exceptions.CantSendAssetBitcoinsToUserException;
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.classes.HierarchyAccount.*;
@@ -43,6 +46,7 @@ import org.bitcoinj.crypto.MnemonicException;
 import org.bitcoinj.wallet.DeterministicSeed;
 import org.bitcoinj.wallet.WalletTransaction;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 import java.util.concurrent.ExecutionException;
@@ -161,13 +165,13 @@ public class AssetCryptoVaultManager  {
      * * Sends bitcoins to the specified address. It will create a new wallet object from the Keys generated from the
      * VaultKeyHierarchyGenerator and set an UTXO provider from the CryptoNetwork. Using my UTXO, I will create a new
      * transaction and broadcast it on the corresponding network.
-     * @param genesisTransactionId
+     * @param genesisTransactionHash
+     * @param genesisBlockHash
      * @param addressTo
-     * @param amount
      * @return the Transaction hash
      * @throws CantSendAssetBitcoinsToUserException
      */
-    public String sendAssetBitcoins(String genesisTransactionId, CryptoAddress addressTo, long amount) throws CantSendAssetBitcoinsToUserException{
+    public String sendAssetBitcoins(String genesisTransactionHash, String genesisBlockHash, CryptoAddress addressTo) throws CantSendAssetBitcoinsToUserException{
         /**
          * I get the network for this address.
          */
@@ -177,7 +181,7 @@ public class AssetCryptoVaultManager  {
         /**
          * I will get the genesis transaction  I will use to form the input from the CryptoNetwork
          */
-        Transaction genesisTransaction = bitcoinNetworkManager.getBitcoinTransaction(networkType, genesisTransactionId);
+        Transaction genesisTransaction = bitcoinNetworkManager.getBitcoinTransaction(networkType, genesisTransactionHash);
 
         if (genesisTransaction  == null){
             /**
@@ -185,17 +189,40 @@ public class AssetCryptoVaultManager  {
              * stored in our wallet. If this is the case I will find a child that uses the GenesisTransaction as an input and use the child transaction
              * to send the bitcoins.
              */
-            List<Transaction> transactions = bitcoinNetworkManager.getBitcoinTransaction(networkType, VaultType.CRYPTO_ASSET_VAULT);
+            List<Transaction> transactions = bitcoinNetworkManager.getBitcoinTransactions(networkType);
             for (Transaction transaction : transactions){
                 for (TransactionInput input : transaction.getInputs()){
-                    if (input.getOutpoint().getHash().toString().contentEquals(genesisTransactionId))
+                    if (input.getOutpoint().getHash().toString().contentEquals(genesisTransactionHash))
                         genesisTransaction = transaction;
                 }
             }
 
+            /**
+             * If I still don't have it, Then I will get the last transaction originated from the GenesisBlock and use that one if possible.
+             * I'm using these method last because it is the most expensive in terms of resources.             *
+             */
+            if (genesisBlockHash != null && genesisTransaction == null){
+                Transaction lastAssetTransaction = null;
+                try {
+                    lastAssetTransaction = bitcoinNetworkManager.getLastChildTransaction(networkType, genesisTransactionHash, genesisBlockHash);
+                } catch (CantGetTransactionException e) {
+                    throw new CantSendAssetBitcoinsToUserException(CantSendAssetBitcoinsToUserException.DEFAULT_MESSAGE, e, "couln't get the last child transaction of the genesis transaction.", "Crypto network issue");
+                }
+
+                if (lastAssetTransaction != null){
+                    for (Transaction transaction : transactions){
+                        if (transaction.getHashAsString().equals(lastAssetTransaction.getHashAsString()))
+                            genesisTransaction = transaction;
+                    }
+                }
+            }
+
+            /**
+             * If I still couldn't find it, I cant go on.
+             */
             if (genesisTransaction  == null){
                 StringBuilder output = new StringBuilder("The specified transaction hash ");
-                output.append(genesisTransactionId);
+                output.append(genesisTransactionHash);
                 output.append(System.lineSeparator());
                 output.append("doesn't exists in the CryptoNetwork.");
                 throw new CantSendAssetBitcoinsToUserException(CantSendAssetBitcoinsToUserException.DEFAULT_MESSAGE, null, output.toString(), null);
@@ -232,6 +259,18 @@ public class AssetCryptoVaultManager  {
          */
         Coin fee = Coin.valueOf(10000);
         final Coin coinToSend = wallet.getBalance().subtract(fee);
+
+        /**
+         * if the value to send is negative or zero, I will inform of the error
+         */
+        if (coinToSend.isNegative() || coinToSend.isZero()){
+            StringBuilder output = new StringBuilder("The resulting value to be send is insufficient.");
+            output.append(System.lineSeparator());
+            output.append("We are trying to send " + coinToSend.getValue() + " satoshis, which is ValueToSend - fee (" + wallet.getBalance() + " - " + fee.getValue() + ")");
+
+            throw new CantSendAssetBitcoinsToUserException(CantSendAssetBitcoinsToUserException.DEFAULT_MESSAGE, null, output.toString(), null);
+        }
+
 
         /**
          * creates the send request and broadcast it on the network.
@@ -550,4 +589,85 @@ public class AssetCryptoVaultManager  {
             return false;
         }
     }
+
+    /**
+     * If the redeem point keys are initialized, will return all the generated addresses
+     * @param redeemPointPublicKey
+     * @return
+     * @throws CantGetActiveRedeemPointAddressesException
+     */
+    public List<CryptoAddress> getActiveRedeemPointAddresses(String redeemPointPublicKey) throws CantGetActiveRedeemPointAddressesException {
+        /**
+         * will get the hierarchy account for this public key
+         */
+        HierarchyAccount hierarchyAccount = null;
+        try {
+            hierarchyAccount = getDao().getHierarchyAccount(redeemPointPublicKey);
+
+            if (hierarchyAccount == null)
+                throw new CantGetActiveRedeemPointAddressesException(CantGetActiveRedeemPointAddressesException.DEFAULT_MESSAGE, null, "the specified public key does not exists: " + redeemPointPublicKey, null);
+
+            if (hierarchyAccount.getHierarchyAccountType() != HierarchyAccountType.REDEEMPOINT_ACCOUNT)
+                throw new CantGetActiveRedeemPointAddressesException(CantGetActiveRedeemPointAddressesException.DEFAULT_MESSAGE, null, "the specified public key " + redeemPointPublicKey + " is not from a Redeem Point account", null);
+
+        } catch (CantExecuteDatabaseOperationException e) {
+            throw new CantGetActiveRedeemPointAddressesException(CantGetActiveRedeemPointAddressesException.DEFAULT_MESSAGE, e, "Error getting hierarchy account from database.", "database error");
+        }
+
+        /**
+         * will get the current amount of generated keys
+         */
+        int generatedKeys;
+        try {
+            generatedKeys = getDao().getCurrentGeneratedKeys(hierarchyAccount.getId());
+        } catch (CantExecuteDatabaseOperationException e) {
+            generatedKeys = 0;
+        }
+
+        /**
+         * Will derive all keys and return them
+         */
+        List<CryptoAddress> cryptoAddresses = new ArrayList<>();
+        for (int i=1; i<generatedKeys; i++){
+            try {
+                cryptoAddresses.add(this.getCryptoAddressFromRedemPoint(hierarchyAccount, i));
+            } catch (GetNewCryptoAddressException e) {
+                return cryptoAddresses;
+            }
+        }
+
+        return cryptoAddresses;
+    }
+
+    /**
+     * Will get the CryptoAddress for the given account at the passed position.
+     * the difference of getting the address from a redeem point is that it won't mark the address as used.
+     * @param hierarchyAccount
+     * @param position
+     * @return
+     */
+    private CryptoAddress getCryptoAddressFromRedemPoint(HierarchyAccount hierarchyAccount, int position) throws GetNewCryptoAddressException {
+        return vaultKeyHierarchyGenerator.getVaultKeyHierarchy().getRedeemPointBitcoinAddress(hierarchyAccount, position);
+
+    }
+
+    /**
+     * Returns the private Keys of all the active Redeem Points hierarchies in the asset vault
+     * @return
+     */
+    public List<String> getActiveRedeemPoints() throws CantGetActiveRedeemPointsException {
+        List<String> publicKeys = new ArrayList<>();
+        try {
+            for (HierarchyAccount hierarchyAccount : getDao().getHierarchyAccounts()){
+                if (hierarchyAccount.getHierarchyAccountType() == HierarchyAccountType.REDEEMPOINT_ACCOUNT)
+                    publicKeys.add(hierarchyAccount.getDescription());
+            }
+        } catch (CantExecuteDatabaseOperationException e) {
+            throw new CantGetActiveRedeemPointsException(CantGetActiveRedeemPointsException.DEFAULT_MESSAGE, e, "database error getting the list of active hierarchy accounts.", "database issue");
+        }
+
+        return publicKeys;
+    }
+
+
 }

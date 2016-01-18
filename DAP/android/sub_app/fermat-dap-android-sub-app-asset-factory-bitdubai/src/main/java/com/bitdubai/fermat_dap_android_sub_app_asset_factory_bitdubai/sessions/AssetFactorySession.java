@@ -17,7 +17,7 @@ import java.util.Map;
  * @author Francisco Vasquez
  * @version 1.0
  */
-public class AssetFactorySession extends AbstractFermatSession<InstalledSubApp,AssetFactoryModuleManager,SubAppResourcesProviderManager> implements SubAppsSession {
+public class AssetFactorySession extends AbstractFermatSession<InstalledSubApp,AssetFactoryModuleManager,SubAppResourcesProviderManager> {
 
     public AssetFactorySession() {}
 

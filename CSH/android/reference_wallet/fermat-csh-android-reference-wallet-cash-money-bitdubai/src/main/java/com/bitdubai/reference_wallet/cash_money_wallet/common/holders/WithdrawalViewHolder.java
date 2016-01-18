@@ -79,9 +79,9 @@ public class WithdrawalViewHolder extends FermatViewHolder {
 
     private String getTransactionTypeText(TransactionType transactionType) {
         if (transactionType == TransactionType.DEBIT)
-            return res.getString(R.string.withdrawal_transaction_text);
+            return res.getString(R.string.csh_withdrawal_transaction_text);
         else
-            return res.getString(R.string.deposit_transaction_text);
+            return res.getString(R.string.csh_deposit_transaction_text);
     }
 
     private String getTransactionAmountText(TransactionType transactionType, BigDecimal amount)

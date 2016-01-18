@@ -78,20 +78,14 @@ public final class AssetVerification {
     public static boolean isDigitalAssetHashValid(BitcoinNetworkManager bitcoinNetworkManager, DigitalAssetMetadata digitalAssetMetadata) throws CantGetCryptoTransactionException, DAPException {
         String digitalAssetMetadataHash = digitalAssetMetadata.getDigitalAssetHash();
         String digitalAssetGenesisTransaction = digitalAssetMetadata.getGenesisTransaction();
-        CryptoTransaction cryptoTransaction = getCryptoTransactionFromCryptoNetwork(bitcoinNetworkManager, digitalAssetGenesisTransaction);
+        String genesisBlockHash = digitalAssetMetadata.getGenesisBlock();
+        CryptoTransaction cryptoTransaction = getCryptoTransactionFromCryptoNetwork(bitcoinNetworkManager, digitalAssetGenesisTransaction, genesisBlockHash);
         String hashFromCryptoTransaction = cryptoTransaction.getOp_Return();
         return digitalAssetMetadataHash.equals(hashFromCryptoTransaction);
     }
 
-    private static CryptoTransaction getCryptoTransactionFromCryptoNetwork(BitcoinNetworkManager bitcoinNetworkManager, String genesisTransaction) throws DAPException, CantGetCryptoTransactionException {
-        List<CryptoTransaction> cryptoTransactionList =
-                bitcoinNetworkManager.getCryptoTransaction(genesisTransaction);
-        for (CryptoTransaction cryptoTransaction : cryptoTransactionList) {
-            if (cryptoTransaction.getTransactionHash().equals(genesisTransaction)) {
-                return cryptoTransaction;
-            }
-        }
-        throw new DAPException("The genesis transaction doesn't exists in the crypto network");
+    private static CryptoTransaction getCryptoTransactionFromCryptoNetwork(BitcoinNetworkManager bitcoinNetworkManager, String genesisTransaction, String genesisBlock) throws DAPException, CantGetCryptoTransactionException {
+        return bitcoinNetworkManager.getCryptoTransactionFromBlockChain(genesisTransaction, genesisBlock);
     }
 
     public static CryptoTransaction getCryptoTransactionFromCryptoNetworkByCryptoStatus(BitcoinNetworkManager bitcoinNetworkManager, String genesisTransaction, CryptoStatus cryptoStatus) throws CantGetCryptoTransactionException {
@@ -131,10 +125,19 @@ public final class AssetVerification {
         return availableBalanceForTransaction < genesisAmount;
     }
 
+
+    public static CryptoTransaction foundCryptoTransaction(BitcoinNetworkManager bitcoinNetworkManager, DigitalAssetMetadata digitalAssetMetadata) throws CantGetCryptoTransactionException {
+        CryptoTransaction cryptoTransaction = bitcoinNetworkManager.getCryptoTransactionFromBlockChain(digitalAssetMetadata.getGenesisTransaction(), digitalAssetMetadata.getGenesisBlock());
+        if (cryptoTransaction == null) {
+            throw new CantGetCryptoTransactionException(CantGetCryptoTransactionException.DEFAULT_MESSAGE, null, "Getting the genesis transaction from Crypto Network", "The crypto transaction received is null");
+        }
+        return cryptoTransaction;
+    }
+
     public static boolean isValidContract(DigitalAssetContract digitalAssetContract) {
         //For now, we going to check, only, the expiration date
         ContractProperty contractProperty = digitalAssetContract.getContractProperty(DigitalAssetContractPropertiesConstants.EXPIRATION_DATE);
         Timestamp expirationDate = (Timestamp) contractProperty.getValue();
-        return expirationDate.after(new Timestamp(System.currentTimeMillis()));
+        return (expirationDate == null || new Timestamp(System.currentTimeMillis()).before(expirationDate));
     }
 }

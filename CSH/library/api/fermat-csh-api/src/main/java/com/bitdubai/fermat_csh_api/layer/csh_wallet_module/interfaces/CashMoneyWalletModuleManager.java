@@ -18,6 +18,7 @@ import com.bitdubai.fermat_csh_api.layer.csh_wallet.exceptions.CantCreateCashMon
 import com.bitdubai.fermat_csh_api.layer.csh_wallet.exceptions.CantGetCashMoneyWalletCurrencyException;
 import com.bitdubai.fermat_csh_api.layer.csh_wallet.exceptions.CantGetCashMoneyWalletTransactionsException;
 import com.bitdubai.fermat_csh_api.layer.csh_wallet.interfaces.CashMoneyWalletTransaction;
+import com.bitdubai.fermat_csh_api.layer.csh_wallet_module.CashMoneyWalletPreferenceSettings;
 import com.bitdubai.fermat_csh_api.layer.csh_wallet_module.exceptions.CantGetCashMoneyWalletBalancesException;
 
 import java.util.List;
@@ -25,7 +26,7 @@ import java.util.List;
 /**
  * Created by Alejandro Bicelis on 12/8/2015.
  */
-public interface CashMoneyWalletModuleManager extends ModuleManager<FermatSettings, ActiveActorIdentityInformation> {
+public interface CashMoneyWalletModuleManager extends ModuleManager<CashMoneyWalletPreferenceSettings, ActiveActorIdentityInformation> {
 
     CashWalletBalances getWalletBalances(String walletPublicKey) throws CantGetCashMoneyWalletBalancesException;
     FiatCurrency getWalletCurrency(String walletPublicKey) throws CantGetCashMoneyWalletCurrencyException;
