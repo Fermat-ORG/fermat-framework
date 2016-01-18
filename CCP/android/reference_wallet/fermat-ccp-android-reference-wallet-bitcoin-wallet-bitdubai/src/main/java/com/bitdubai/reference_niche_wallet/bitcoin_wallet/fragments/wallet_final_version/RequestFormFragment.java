@@ -100,6 +100,8 @@ public class RequestFormFragment extends AbstractFermatFragment implements View.
     private ImageView spinnerArrow;
 
 
+
+
     public static RequestFormFragment newInstance() {
         return new RequestFormFragment();
     }
@@ -372,6 +374,7 @@ public class RequestFormFragment extends AbstractFermatFragment implements View.
             }
         });
 
+        setUpContactAddapter();
         /**
          * Selector
          */
