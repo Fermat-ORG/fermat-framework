@@ -116,15 +116,12 @@ public class IssuerRedemptionMonitorAgent implements Agent {
                     case INCOMING_ASSET_ON_CRYPTO_NETWORK_WAITING_TRANSFERENCE_REDEMPTION: {
                         AssetIssuerWallet wallet = assetIssuerWalletManager.loadAssetIssuerWallet("walletPublicKeyTest");
                         for (DigitalAssetMetadata digitalAssetMetadata : wallet.getAllUsedAssets()) {
-                            CryptoTransaction cryptoTransactionOnCryptoNetwork = AssetVerification.getCryptoTransactionFromCryptoNetworkByCryptoStatus(bitcoinNetworkManager, digitalAssetMetadata.getGenesisTransaction(), CryptoStatus.ON_CRYPTO_NETWORK);
+                            CryptoTransaction cryptoTransactionOnCryptoNetwork = AssetVerification.getCryptoTransactionFromCryptoNetworkByCryptoStatus(bitcoinNetworkManager, digitalAssetMetadata.getTransactionChain(), CryptoStatus.ON_CRYPTO_NETWORK);
                             if (cryptoTransactionOnCryptoNetwork == null) {
                                 notify = false;
                                 continue; //NOT TODAY KID.
                             }
                             String publicKeyFrom = wallet.getUserDeliveredToPublicKey(digitalAssetMetadata.getDigitalAsset().getPublicKey());
-                            //TODO ADD THE NEW TRANSACTION
-//                            digitalAssetMetadata.setGenesisBlock(cryptoTransactionOnCryptoNetwork.getBlockHash());
-//                            digitalAssetMetadata.setGenesisTransaction(cryptoTransactionOnCryptoNetwork.getTransactionHash());
                             digitalAssetMetadata.getDigitalAsset().setGenesisAmount(cryptoTransactionOnCryptoNetwork.getCryptoAmount());
 
                             String publicKeyTo = actorAssetIssuerManager.getActorAssetIssuer().getActorPublicKey();

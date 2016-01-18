@@ -21,7 +21,6 @@ import com.bitdubai.fermat_dap_api.layer.all_definition.enums.AssetBalanceType;
 import com.bitdubai.fermat_dap_api.layer.all_definition.enums.DAPTransactionType;
 import com.bitdubai.fermat_dap_api.layer.all_definition.enums.DistributionStatus;
 import com.bitdubai.fermat_dap_api.layer.all_definition.enums.ReceptionStatus;
-import com.bitdubai.fermat_dap_api.layer.all_definition.exceptions.CantSetObjectException;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_issuer.exceptions.CantGetAssetIssuerActorsException;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.exceptions.CantAssetUserActorNotFoundException;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.exceptions.CantGetAssetUserActorsException;
@@ -87,6 +86,7 @@ public class AssetReceptionMonitorAgent implements Agent {
         this.actorAssetUserManager = actorAssetUserManager;
         this.digitalAssetReceptor = digitalAssetReceptor;
         this.digitalAssetReceptionVault = digitalAssetReceptionVault;
+        this.digitalAssetReceptionVault.setActorAssetUserManager(actorAssetUserManager);
     }
 
     @Override
@@ -276,8 +276,9 @@ public class AssetReceptionMonitorAgent implements Agent {
                         genesisTransactionList = assetReceptionDao.getGenesisTransactionListByCryptoStatus(CryptoStatus.PENDING_SUBMIT);
                         System.out.println("ASSET RECEPTION genesisTransactionList on pending submit has " + genesisTransactionList.size() + " events");
                         for (String genesisTransaction : genesisTransactionList) {
+                            DigitalAssetMetadata metadata = digitalAssetReceptionVault.getDigitalAssetMetadataFromLocalStorage(genesisTransaction);
                             System.out.println("ASSET RECEPTION CN genesis transaction: " + genesisTransaction);
-                            CryptoTransaction cryptoGenesisTransaction = AssetVerification.getCryptoTransactionFromCryptoNetworkByCryptoStatus(bitcoinNetworkManager, genesisTransaction, CryptoStatus.ON_CRYPTO_NETWORK);
+                            CryptoTransaction cryptoGenesisTransaction = AssetVerification.getCryptoTransactionFromCryptoNetworkByCryptoStatus(bitcoinNetworkManager, metadata.getTransactionChain(), CryptoStatus.ON_CRYPTO_NETWORK);
                             if (cryptoGenesisTransaction == null) {
                                 System.out.println("ASSET RECEPTION the genesis transaction from Crypto Network is null");
                                 continue;
@@ -286,11 +287,6 @@ public class AssetReceptionMonitorAgent implements Agent {
                             String transactionInternalId = this.assetReceptionDao.getTransactionIdByGenesisTransaction(genesisTransaction);
                             String actorIssuerPublicKey = assetReceptionDao.getActorUserPublicKeyByGenesisTransaction(genesisTransaction);
 
-                            try {
-                                digitalAssetReceptionVault.setActorAssetUserManager(actorAssetUserManager);
-                            } catch (CantSetObjectException e) {
-                                e.printStackTrace();
-                            }
                             digitalAssetReceptionVault.setDigitalAssetMetadataAssetIssuerWalletTransaction(cryptoGenesisTransaction, transactionInternalId, AssetBalanceType.BOOK, TransactionType.CREDIT, DAPTransactionType.RECEPTION, actorIssuerPublicKey);
                             assetReceptionDao.updateDigitalAssetCryptoStatusByGenesisTransaction(genesisTransaction, CryptoStatus.ON_CRYPTO_NETWORK);
                             assetReceptionDao.updateEventStatus(eventId);
@@ -303,7 +299,8 @@ public class AssetReceptionMonitorAgent implements Agent {
                         System.out.println("ASSET RECEPTION genesisTransactionList has " + genesisTransactionList.size() + " events");
                         for (String genesisTransaction : genesisTransactionList) {
                             System.out.println("ASSET RECEPTION BCH Transaction Hash: " + genesisTransaction);
-                            CryptoTransaction cryptoGenesisTransaction = AssetVerification.getCryptoTransactionFromCryptoNetworkByCryptoStatus(bitcoinNetworkManager, genesisTransaction, CryptoStatus.ON_BLOCKCHAIN);
+                            DigitalAssetMetadata metadata = digitalAssetReceptionVault.getDigitalAssetMetadataFromLocalStorage(genesisTransaction);
+                            CryptoTransaction cryptoGenesisTransaction = AssetVerification.getCryptoTransactionFromCryptoNetworkByCryptoStatus(bitcoinNetworkManager, metadata.getTransactionChain(), CryptoStatus.ON_BLOCKCHAIN);
                             if (cryptoGenesisTransaction == null) {
                                 //throw new CantCheckAssetIssuingProgressException("Cannot get the crypto status from crypto network");
                                 System.out.println("ASSET RECEPTION the genesis transaction from Crypto Network is null");
