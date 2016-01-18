@@ -487,7 +487,12 @@ public class CryptoCustomerActorNetworkServicePluginRoot extends AbstractNetwork
 
     public void handleCompleteComponentRegistrationNotificationEvent(PlatformComponentProfile platformComponentProfileRegistered){
 
-        if (platformComponentProfileRegistered.getPlatformComponentType() == PlatformComponentType.COMMUNICATION_CLOUD_CLIENT && this.register && communicationRegistrationProcessNetworkServiceAgent.getStatus() == AgentStatus.STOPPED){
+        if (platformComponentProfileRegistered.getPlatformComponentType() == PlatformComponentType.COMMUNICATION_CLOUD_CLIENT && this.register){
+
+            if(communicationRegistrationProcessNetworkServiceAgent.isRunning()){
+                communicationRegistrationProcessNetworkServiceAgent.stop();
+                communicationRegistrationProcessNetworkServiceAgent = null;
+            }
 
             /*
              * Construct my profile and register me
@@ -567,9 +572,10 @@ public class CryptoCustomerActorNetworkServicePluginRoot extends AbstractNetwork
 
         if(!this.register){
 
-            if(communicationRegistrationProcessNetworkServiceAgent != null) {
+            if(communicationRegistrationProcessNetworkServiceAgent.isRunning()) {
                communicationRegistrationProcessNetworkServiceAgent.stop();
                communicationRegistrationProcessNetworkServiceAgent = null;
+            }
 
                    /*
                  * Construct my profile and register me
@@ -601,7 +607,7 @@ public class CryptoCustomerActorNetworkServicePluginRoot extends AbstractNetwork
                  */
                 this.initializeCommunicationNetworkServiceConnectionManager();
 
-            }
+
 
         }
 

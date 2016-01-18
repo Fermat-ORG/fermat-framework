@@ -439,7 +439,12 @@ public class TransactionTransmissionPluginRoot extends AbstractNetworkService im
     public void handleCompleteComponentRegistrationNotificationEvent(PlatformComponentProfile platformComponentProfileRegistered) {
         System.out.println("TransactionTransmissionNetworkServiceConnectionManager - Starting method handleCompleteComponentRegistrationNotificationEvent");
 
-        if (platformComponentProfileRegistered.getPlatformComponentType() == PlatformComponentType.COMMUNICATION_CLOUD_CLIENT && this.register && communicationRegistrationProcessNetworkServiceAgent.getStatus() == AgentStatus.STOPPED){
+        if (platformComponentProfileRegistered.getPlatformComponentType() == PlatformComponentType.COMMUNICATION_CLOUD_CLIENT && this.register){
+
+            if(communicationRegistrationProcessNetworkServiceAgent.isRunning()){
+                communicationRegistrationProcessNetworkServiceAgent.stop();
+                communicationRegistrationProcessNetworkServiceAgent = null;
+            }
 
             beforeRegistered = true;
                               /*
@@ -756,10 +761,11 @@ public class TransactionTransmissionPluginRoot extends AbstractNetworkService im
             }
 
             if(!this.register){
-                if(communicationRegistrationProcessNetworkServiceAgent != null) {
 
+                if(communicationRegistrationProcessNetworkServiceAgent.isRunning()) {
                     communicationRegistrationProcessNetworkServiceAgent.stop();
                     communicationRegistrationProcessNetworkServiceAgent = null;
+                }
 
                        /*
                  * Construct my profile and register me
@@ -791,7 +797,7 @@ public class TransactionTransmissionPluginRoot extends AbstractNetworkService im
                  */
                     this.initializeCommunicationNetworkServiceConnectionManager();
 
-                }
+
             }
 
     }
