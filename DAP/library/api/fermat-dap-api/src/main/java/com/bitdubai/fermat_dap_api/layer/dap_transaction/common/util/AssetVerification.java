@@ -17,6 +17,7 @@ import com.bitdubai.fermat_dap_api.layer.all_definition.exceptions.ObjectNotSetE
 import com.bitdubai.fermat_dap_api.layer.all_definition.util.Validate;
 
 import java.sql.Timestamp;
+import java.util.LinkedHashMap;
 import java.util.List;
 
 /**
@@ -88,34 +89,26 @@ public final class AssetVerification {
         return bitcoinNetworkManager.getCryptoTransactionFromBlockChain(genesisTransaction, genesisBlock);
     }
 
-    public static CryptoTransaction getCryptoTransactionFromCryptoNetworkByCryptoStatus(BitcoinNetworkManager bitcoinNetworkManager, String genesisTransaction, CryptoStatus cryptoStatus) throws CantGetCryptoTransactionException {
+    public static CryptoTransaction getCryptoTransactionFromCryptoNetworkByCryptoStatus(BitcoinNetworkManager bitcoinNetworkManager, LinkedHashMap<String, String> transactionChain, CryptoStatus cryptoStatus) throws CantGetCryptoTransactionException {
         /**
          * I will get the genesis transaction from the CryptoNetwork
          */
-        List<CryptoTransaction> transactionListFromCryptoNetwork = bitcoinNetworkManager.getCryptoTransactions(genesisTransaction);
-        if (transactionListFromCryptoNetwork.size() == 0) {
-            /**
-             * If I didn't get it, I will get the child of the genesis Transaction
-             */
-            transactionListFromCryptoNetwork = bitcoinNetworkManager.getChildCryptoTransaction(genesisTransaction);
-        }
+        List<CryptoTransaction> transactionListFromCryptoNetwork = bitcoinNetworkManager.getGenesisCryptoTransaction(null, transactionChain);
 
         if (transactionListFromCryptoNetwork == null || transactionListFromCryptoNetwork.isEmpty()) {
-            System.out.println("ASSET TRANSACTION transaction List From Crypto Network for " + genesisTransaction + " is null or empty");
+            System.out.println("ASSET TRANSACTION transaction List From Crypto Network for " + transactionChain + " is null or empty");
             return null;
         }
-        System.out.println("ASSET TRANSACTION I found " + transactionListFromCryptoNetwork.size() + " in Crypto network from genesis transaction:\n" + genesisTransaction);
+        System.out.println("ASSET TRANSACTION I found " + transactionListFromCryptoNetwork.size() + " in Crypto network from genesis transaction:\n" + transactionChain);
 
         System.out.println("ASSET TRANSACTION Now, I'm looking for this crypto status " + cryptoStatus);
         for (CryptoTransaction cryptoTransaction : transactionListFromCryptoNetwork) {
             System.out.println("ASSET TRANSACTION CryptoStatus from Crypto Network:" + cryptoTransaction.getCryptoStatus());
             if (cryptoTransaction.getCryptoStatus() == cryptoStatus) {
-                System.out.println("ASSET TRANSACTION I found it!");
-                cryptoTransaction.setTransactionHash(genesisTransaction);
                 return cryptoTransaction;
             }
         }
-        System.out.println("ASSET TREANSACTION COULDN'T FIND THE CRYPTO TRANSACTION.");
+        System.out.println("ASSET TRANSACTION COULDN'T FIND THE CRYPTO TRANSACTION.");
         return null;
     }
 
