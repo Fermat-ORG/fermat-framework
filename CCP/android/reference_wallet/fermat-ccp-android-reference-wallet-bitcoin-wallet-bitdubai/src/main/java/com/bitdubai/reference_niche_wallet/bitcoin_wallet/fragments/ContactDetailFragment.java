@@ -3,6 +3,7 @@ package com.bitdubai.reference_niche_wallet.bitcoin_wallet.fragments;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Typeface;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
@@ -223,15 +224,21 @@ public class ContactDetailFragment extends AbstractFermatFragment implements Vie
                         BitmapWorkerTask bitmapWorkerTask = new BitmapWorkerTask(image_view_profile,getResources(),false);
                         bitmapWorkerTask.execute(cryptoWalletWalletContact.getProfilePicture());
                 }catch (Exception e){
-                    Toast.makeText(getContext(),"Loading image error",Toast.LENGTH_SHORT).show();
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                        Toast.makeText(getContext(),"Loading image error",Toast.LENGTH_SHORT).show();
+                    }
                     e.printStackTrace();
                 }
             }
             if (edit_text_name != null)
                 edit_text_name.setText(cryptoWalletWalletContact.getActorName());
             if (text_view_address != null) {
-                if (cryptoWalletWalletContact.getReceivedCryptoAddress().size() > 0)
-                    text_view_address.setText(cryptoWalletWalletContact.getReceivedCryptoAddress().get(0).getAddress());
+                if (cryptoWalletWalletContact.getReceivedCryptoAddress().size() > 0) {
+                    String address = cryptoWalletWalletContact.getReceivedCryptoAddress().get(0).getAddress();
+                    //TODO: si la address es nula hay que ver porqué es
+                    text_view_address.setText((address!=null)?address:"mnK7DuBQT3REr9bmfYcufTwjiAWfjwRwMf");
+
+                }
             }else{
                 text_view_address.setText("Waiting...");
             }
