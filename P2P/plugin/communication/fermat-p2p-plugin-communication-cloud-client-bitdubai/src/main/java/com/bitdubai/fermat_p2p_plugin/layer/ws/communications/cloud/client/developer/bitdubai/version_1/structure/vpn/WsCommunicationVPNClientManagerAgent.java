@@ -41,6 +41,11 @@ public class WsCommunicationVPNClientManagerAgent extends Thread{
     private static long SLEEP_TIME = 160000;
 
     /**
+     *  Represent the instance
+     */
+    private static WsCommunicationVPNClientManagerAgent instance = new WsCommunicationVPNClientManagerAgent();
+
+    /**
      * Represent the vpnClientActiveCache;
      */
     private Map<NetworkServiceType, Map<String, WsCommunicationVPNClient>> vpnClientActiveCache;
@@ -58,7 +63,7 @@ public class WsCommunicationVPNClientManagerAgent extends Thread{
     /**
      * Constructor
      */
-    public WsCommunicationVPNClientManagerAgent(){
+    private WsCommunicationVPNClientManagerAgent(){
        this.vpnClientActiveCache = new ConcurrentHashMap<>();
        this.isRunning = Boolean.FALSE;
     }
@@ -100,80 +105,12 @@ public class WsCommunicationVPNClientManagerAgent extends Thread{
         /*
          * Add the att to the header
          */
-        headers.put(JsonAttNamesConstants.HEADER_ATT_NAME_TI,  AsymmetricCryptography.encryptMessagePublicKey(jsonObject.toString(), vpnServerIdentity));
+        headers.put(JsonAttNamesConstants.HEADER_ATT_NAME_TI, AsymmetricCryptography.encryptMessagePublicKey(jsonObject.toString(), vpnServerIdentity));
 
         /*
          * Construct the vpn client
          */
-        WsCommunicationVPNClient vpnClient = new WsCommunicationVPNClient(this, vpnClientIdentity, serverURI, remotePlatformComponentProfile, remoteParticipantNetworkService, vpnServerIdentity, headers);
-
-        /*
-         * Configure the event manager
-         */
-        this.eventManager = eventManager;
-
-        System.out.println("GUARDANDO LA CONEXION EN CACHE CON NS = " + remoteParticipantNetworkService.getNetworkServiceType());
-        System.out.println("GUARDANDO LA CONEXION EN CACHE CON PK = " + remotePlatformComponentProfile.getIdentityPublicKey());
-
-        /*
-         * Add to the vpn client active
-         */
-        if (vpnClientActiveCache.containsKey(remoteParticipantNetworkService.getNetworkServiceType())){
-
-            vpnClientActiveCache.get(remoteParticipantNetworkService.getNetworkServiceType()).put(remotePlatformComponentProfile.getIdentityPublicKey(), vpnClient);
-
-        }else {
-
-            Map<String, WsCommunicationVPNClient> newMap = new ConcurrentHashMap<>();
-            newMap.put(remotePlatformComponentProfile.getIdentityPublicKey(), vpnClient);
-            vpnClientActiveCache.put(remoteParticipantNetworkService.getNetworkServiceType(), newMap);
-        }
-
-        /*
-         * call the connect
-         */
-        vpnClient.connect();
-    }
-
-
-    /**
-     * Create a new WsCommunicationVPNClient
-     *
-     * @param clientIdentity
-     * @param serverURI
-     * @param vpnServerIdentity
-     * @param remotePlatformComponentProfile
-     */
-    public void createNewWsCommunicationVPNClientOld(String clientIdentity, URI serverURI, String vpnServerIdentity, String participantIdentity, PlatformComponentProfile remotePlatformComponentProfile, PlatformComponentProfile remoteParticipantNetworkService, EventManager eventManager) {
-
-        /*
-         * Create the identity
-         */
-        ECCKeyPair vpnClientIdentity = new ECCKeyPair();
-
-        /*
-         * Create a new headers
-         */
-        Map<String, String> headers = new HashMap<>();
-
-        /*
-         * Get json representation
-         */
-        JsonObject jsonObject = new JsonObject();
-        jsonObject.addProperty(JsonAttNamesConstants.CLIENT_IDENTITY, clientIdentity);
-        jsonObject.addProperty(JsonAttNamesConstants.REGISTER_PARTICIPANT_IDENTITY_VPN, participantIdentity);
-        jsonObject.addProperty(JsonAttNamesConstants.CLIENT_IDENTITY_VPN, vpnClientIdentity.getPublicKey());
-        jsonObject.addProperty(JsonAttNamesConstants.RECONNECTED, Boolean.FALSE);
-
-        /*
-         * Add the att to the header
-         */
-        headers.put(JsonAttNamesConstants.HEADER_ATT_NAME_TI,  AsymmetricCryptography.encryptMessagePublicKey(jsonObject.toString(), vpnServerIdentity));
-
-        /*
-         * Construct the vpn client
-         */
-        WsCommunicationVPNClient vpnClient = new WsCommunicationVPNClient(this, vpnClientIdentity, serverURI, remotePlatformComponentProfile, remoteParticipantNetworkService, vpnServerIdentity, headers);
+        final WsCommunicationVPNClient vpnClient = new WsCommunicationVPNClient(this, vpnClientIdentity, serverURI, remotePlatformComponentProfile, remoteParticipantNetworkService, vpnServerIdentity, headers);
 
         /*
          * Configure the event manager
@@ -210,79 +147,6 @@ public class WsCommunicationVPNClientManagerAgent extends Thread{
      */
     @Override
     public void run() {
-
-        try {
-
-            //While is running
-            while (isRunning){
-
-                System.out.println(" WsCommunicationVPNClientManagerAgent - vpnClientActiveCache.size() "+vpnClientActiveCache.size());
-
-                //If empty
-                if (vpnClientActiveCache.isEmpty()){
-                    System.out.println(" WsCommunicationVPNClientManagerAgent - Auto stop ");
-                    //Auto stop
-                    isRunning = Boolean.FALSE;
-                    this.interrupt();
-                }
-
-                for (NetworkServiceType networkServiceType : vpnClientActiveCache.keySet()) {
-
-                    for (String remote : vpnClientActiveCache.get(networkServiceType).keySet()) {
-
-                       System.out.println(" WsCommunicationVPNClientManagerAgent - vpnClientActiveCache.get("+networkServiceType+").size() = "+vpnClientActiveCache.get(networkServiceType).size());
-
-                       WsCommunicationVPNClient wsCommunicationVPNClient = vpnClientActiveCache.get(networkServiceType).get(remote);
-
-                        //Verified if this vpn connection is open
-                        if (!wsCommunicationVPNClient.getConnection().isOpen()){
-
-                            vpnClientActiveCache.get(networkServiceType).remove(remote);
-
-                          /*  try {
-
-                                /*
-                                 * Verified if a pong message respond pending
-
-                                if (wsCommunicationVPNClient.isPongMessagePending()){
-                                    throw new RuntimeException("Connection maybe not active");
-                                }
-
-                                wsCommunicationVPNClient.sendPingMessage();
-
-                            }catch (Exception e){
-                                System.out.println(" WsCommunicationVPNClientManagerAgent - Error occurred sending ping to the vpn node, closing the connection to remote node");
-                                wsCommunicationVPNClient.close();
-                                vpnClientActiveCache.get(networkServiceType).remove(remote);
-                                riseVpnConnectionCloseNotificationEvent(wsCommunicationVPNClient.getRemoteParticipantNetworkService().getNetworkServiceType(), wsCommunicationVPNClient.getRemoteParticipant());
-                            }
-                        */
-
-                        }else{
-                            //If the connection is no open
-                            wsCommunicationVPNClient.close();
-                            vpnClientActiveCache.get(networkServiceType).remove(remote);
-                        }
-
-                    }
-
-                    //Validate if the cache list is empty
-                    if (vpnClientActiveCache.get(networkServiceType).isEmpty()){
-                        vpnClientActiveCache.remove(networkServiceType);
-                    }
-
-                }
-
-                if (!this.isInterrupted()){
-                    sleep(WsCommunicationVPNClientManagerAgent.SLEEP_TIME);
-                }
-
-            }
-
-        } catch (Exception e) {
-            System.out.println(" WsCommunicationVPNClientManagerAgent - was stopped");
-        }
-
     }
 
     /**
@@ -331,18 +195,34 @@ public class WsCommunicationVPNClientManagerAgent extends Thread{
      * @param applicantNetworkServiceType
      * @return WsCommunicationVPNClient
      */
-    public WsCommunicationVPNClient getActiveVpnConnection(NetworkServiceType applicantNetworkServiceType, PlatformComponentProfile remotePlatformComponentProfile){
+    public synchronized WsCommunicationVPNClient getActiveVpnConnection(NetworkServiceType applicantNetworkServiceType, PlatformComponentProfile remotePlatformComponentProfile){
+
+        System.out.println("WsCommunicationVPNClientManagerAgent getActiveVpnConnection - remotePlatformComponentProfile = "+remotePlatformComponentProfile.getAlias());
+        System.out.println("WsCommunicationVPNClientManagerAgent getActiveVpnConnection - applicantNetworkServiceType = "+applicantNetworkServiceType);
+
+        for (NetworkServiceType networkServiceType: vpnClientActiveCache.keySet()) {
+            System.out.println("WsCommunicationVPNClientManagerAgent networkServiceType available= "+networkServiceType);
+        }
+
+        System.out.println("WsCommunicationVPNClientManagerAgent vpnClientActiveCache.containsKey(applicantNetworkServiceType) = "+vpnClientActiveCache.containsKey(applicantNetworkServiceType));
 
         if (vpnClientActiveCache.containsKey(applicantNetworkServiceType)){
+
+            System.out.println("WsCommunicationVPNClientManagerAgent - vpnClientActiveCache.get(applicantNetworkServiceType).size() = "+vpnClientActiveCache.get(applicantNetworkServiceType).size());
+
+            System.out.println("---------------------CLAVE DISPONIBLES:"+vpnClientActiveCache.keySet().toString()+"------------------------------------");
+            System.out.println("---------------------CLAVES BUSCADA:"+remotePlatformComponentProfile.getIdentityPublicKey()+"------------------------------------");
 
             if (vpnClientActiveCache.get(applicantNetworkServiceType).containsKey(remotePlatformComponentProfile.getIdentityPublicKey())){
                 return vpnClientActiveCache.get(applicantNetworkServiceType).get(remotePlatformComponentProfile.getIdentityPublicKey());
             }else {
-                throw new IllegalArgumentException("The applicantNetworkServiceType is no valid, do not exist a vpn connection for this ");
+
+                System.out.println("WsCommunicationVPNClientManagerAgent getActiveVpnConnection - pk = "+remotePlatformComponentProfile.getIdentityPublicKey());
+                throw new IllegalArgumentException("The remote pk is no valid, do not exist a vpn connection for this pk = "+remotePlatformComponentProfile.getIdentityPublicKey());
             }
 
         }else {
-            throw new IllegalArgumentException("The applicant is no valid, do not exist a vpn connection for this ");
+            throw new IllegalArgumentException("The applicantNetworkServiceType is no valid, do not exist a vpn connection for this ");
         }
     }
 
@@ -360,6 +240,8 @@ public class WsCommunicationVPNClientManagerAgent extends Thread{
     public void closeAllVpnConnections(){
 
         try {
+
+            System.out.println("WsCommunicationVPNClientManagerAgent - closeAllVpnConnections()");
 
             if (!vpnClientActiveCache.isEmpty()) {
 
@@ -381,4 +263,12 @@ public class WsCommunicationVPNClientManagerAgent extends Thread{
 
     }
 
+    /**
+     * Get the instance value
+     *
+     * @return instance current value
+     */
+    public static WsCommunicationVPNClientManagerAgent getInstance() {
+        return instance;
+    }
 }

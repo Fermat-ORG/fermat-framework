@@ -4,6 +4,7 @@ import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.enums.CryptoCurrency;
 import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterException;
 import com.bitdubai.fermat_api.layer.all_definition.money.CryptoAddress;
+import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.crypto_transactions.CryptoStatus;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseFilterType;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTable;
@@ -15,19 +16,27 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.Cant
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantOpenDatabaseException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantUpdateRecordException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.DatabaseNotFoundException;
+import com.bitdubai.fermat_cbp_api.all_definition.enums.ClauseType;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.ContractTransactionStatus;
 import com.bitdubai.fermat_cbp_api.all_definition.events.enums.EventStatus;
 import com.bitdubai.fermat_cbp_api.all_definition.exceptions.CantSaveEventException;
 import com.bitdubai.fermat_cbp_api.all_definition.exceptions.UnexpectedResultReturnedFromDatabaseException;
+import com.bitdubai.fermat_cbp_api.all_definition.negotiation.Clause;
 import com.bitdubai.fermat_cbp_api.layer.business_transaction.common.exceptions.CantGetContractListException;
+import com.bitdubai.fermat_cbp_api.layer.business_transaction.common.exceptions.CantGetCryptoAmountException;
+import com.bitdubai.fermat_cbp_api.layer.business_transaction.common.exceptions.CantGetPublicKeyException;
 import com.bitdubai.fermat_cbp_api.layer.business_transaction.common.interfaces.BusinessTransactionRecord;
 import com.bitdubai.fermat_cbp_api.layer.business_transaction.common.interfaces.IncomingMoneyEventWrapper;
 import com.bitdubai.fermat_cbp_api.layer.contract.customer_broker_purchase.interfaces.CustomerBrokerContractPurchase;
 import com.bitdubai.fermat_cbp_api.layer.contract.customer_broker_sale.interfaces.CustomerBrokerContractSale;
+import com.bitdubai.fermat_cbp_api.layer.negotiation.customer_broker_purchase.interfaces.CustomerBrokerPurchaseNegotiation;
+import com.bitdubai.fermat_cbp_api.layer.negotiation.customer_broker_sale.interfaces.CustomerBrokerSaleNegotiation;
+import com.bitdubai.fermat_cbp_api.layer.negotiation.exceptions.CantGetListClauseException;
 import com.bitdubai.fermat_cbp_plugin.layer.business_transaction.customer_ack_online_merchandise.developer.bitdubai.version_1.exceptions.CantInitializeCustomerAckOnlineMerchandiseBusinessTransactionDatabaseException;
 import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.events.IncomingMoneyNotificationEvent;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.UUID;
 
@@ -387,7 +396,7 @@ public class CustomerAckOnlineMerchandiseBusinessTransactionDao {
             UnexpectedResultReturnedFromDatabaseException,
             CantGetContractListException {
         return getBusinessTransactionRecordList(
-                ContractTransactionStatus.PENDING_SUBMIT_ONLINE_MERCHANDISE_NOTIFICATION.getCode(),
+                ContractTransactionStatus.PENDING_ACK_ONLINE_MERCHANDISE.getCode(),
                 CustomerAckOnlineMerchandiseBusinessTransactionDatabaseConstants.ACK_ONLINE_MERCHANDISE_CONTRACT_TRANSACTION_STATUS_COLUMN_NAME,
                 CustomerAckOnlineMerchandiseBusinessTransactionDatabaseConstants.ACK_ONLINE_MERCHANDISE_CONTRACT_HASH_COLUMN_NAME);
     }
@@ -671,7 +680,7 @@ public class CustomerAckOnlineMerchandiseBusinessTransactionDao {
         return getBusinessTransactionRecord(
                 brokerPublicKey,
                 CustomerAckOnlineMerchandiseBusinessTransactionDatabaseConstants.
-                        ACK_ONLINE_MERCHANDISE_CUSTOMER_PUBLIC_KEY_COLUMN_NAME);
+                        ACK_ONLINE_MERCHANDISE_BROKER_PUBLIC_KEY_COLUMN_NAME);
     }
 
     public void updateBusinessTransactionRecord(BusinessTransactionRecord businessTransactionRecord)
@@ -722,9 +731,12 @@ public class CustomerAckOnlineMerchandiseBusinessTransactionDao {
         record.setLongValue(
                 CustomerAckOnlineMerchandiseBusinessTransactionDatabaseConstants.ACK_ONLINE_MERCHANDISE_CRYPTO_AMOUNT_COLUMN_NAME,
                 businessTransactionRecord.getCryptoAmount());
-        record.setStringValue(
-                CustomerAckOnlineMerchandiseBusinessTransactionDatabaseConstants.ACK_ONLINE_MERCHANDISE_CRYPTO_STATUS_COLUMN_NAME,
-                businessTransactionRecord.getCryptoStatus().getCode());
+        CryptoStatus cryptoStatus=businessTransactionRecord.getCryptoStatus();
+        if(cryptoStatus!=null){
+            record.setStringValue(
+                    CustomerAckOnlineMerchandiseBusinessTransactionDatabaseConstants.ACK_ONLINE_MERCHANDISE_CRYPTO_STATUS_COLUMN_NAME,
+                    cryptoStatus.getCode());
+        }
         record.setStringValue(
                 CustomerAckOnlineMerchandiseBusinessTransactionDatabaseConstants.ACK_ONLINE_MERCHANDISE_CUSTOMER_PUBLIC_KEY_COLUMN_NAME,
                 businessTransactionRecord.getCustomerPublicKey());
@@ -877,16 +889,34 @@ public class CustomerAckOnlineMerchandiseBusinessTransactionDao {
      * @throws CantInsertRecordException
      */
     public void persistContractInDatabase(
-            CustomerBrokerContractPurchase customerBrokerContractPurchase)
+            CustomerBrokerContractPurchase customerBrokerContractPurchase,
+            CustomerBrokerPurchaseNegotiation customerBrokerPurchaseNegotiation)
             throws CantInsertRecordException {
 
-        DatabaseTable databaseTable=getAckMerchandiseTable();
-        DatabaseTableRecord databaseTableRecord=databaseTable.getEmptyRecord();
-        databaseTableRecord= buildDatabaseTableRecord(
-                databaseTableRecord,
-                customerBrokerContractPurchase
-        );
-        databaseTable.insertRecord(databaseTableRecord);
+        try{
+            DatabaseTable databaseTable=getAckMerchandiseTable();
+            DatabaseTableRecord databaseTableRecord=databaseTable.getEmptyRecord();
+            databaseTableRecord= buildDatabaseTableRecord(
+                    databaseTableRecord,
+                    customerBrokerContractPurchase,
+                    customerBrokerPurchaseNegotiation
+            );
+
+            databaseTable.insertRecord(databaseTableRecord);
+        } catch (CantGetCryptoAmountException e) {
+            throw new CantInsertRecordException(
+                    e.DEFAULT_MESSAGE,
+                    e,
+                    "Persisting a Record in Database",
+                    "Cannot get the crypto amount from Negotiation");
+        } catch (CantGetListClauseException e) {
+            throw new CantInsertRecordException(
+                    e.DEFAULT_MESSAGE,
+                    e,
+                    "Persisting a Record in Database",
+                    "Cannot get the Clauses List from Negotiation");
+        }
+
     }
 
     /**
@@ -897,7 +927,9 @@ public class CustomerAckOnlineMerchandiseBusinessTransactionDao {
      */
     private DatabaseTableRecord buildDatabaseTableRecord(
             DatabaseTableRecord record,
-            CustomerBrokerContractPurchase customerBrokerContractPurchase){
+            CustomerBrokerContractPurchase customerBrokerContractPurchase,
+            CustomerBrokerPurchaseNegotiation customerBrokerPurchaseNegotiation) throws
+            CantGetListClauseException, CantGetCryptoAmountException {
         UUID transactionId=UUID.randomUUID();
         record.setUUIDValue(
                 CustomerAckOnlineMerchandiseBusinessTransactionDatabaseConstants.ACK_ONLINE_MERCHANDISE_TRANSACTION_ID_COLUMN_NAME,
@@ -915,8 +947,57 @@ public class CustomerAckOnlineMerchandiseBusinessTransactionDao {
         record.setStringValue(
                 CustomerAckOnlineMerchandiseBusinessTransactionDatabaseConstants.ACK_ONLINE_MERCHANDISE_CONTRACT_TRANSACTION_STATUS_COLUMN_NAME,
                 ContractTransactionStatus.PENDING_ONLINE_MERCHANDISE_CONFIRMATION.getCode());
+        //Get information from negotiation clauses.
+        Collection<Clause> negotiationClauses=customerBrokerPurchaseNegotiation.getClauses();
+        long cryptoAmount=getCryptoAmountFromNegotiationClauses(negotiationClauses);
+        record.setLongValue(
+                CustomerAckOnlineMerchandiseBusinessTransactionDatabaseConstants.ACK_ONLINE_MERCHANDISE_CRYPTO_AMOUNT_COLUMN_NAME,
+                cryptoAmount);
 
         return record;
+    }
+
+    private long getCryptoAmountFromNegotiationClauses(
+            Collection<Clause> negotiationClauses) throws
+            CantGetCryptoAmountException {
+        try{
+            long cryptoAmount;
+            for(Clause clause : negotiationClauses){
+                if(clause.getType().equals(ClauseType.CUSTOMER_CURRENCY_QUANTITY)){
+                    cryptoAmount=parseToLong(clause.getValue());
+                    return cryptoAmount;
+                }
+            }
+            throw new CantGetCryptoAmountException(
+                    "The Negotiation clauses doesn't include the broker crypto amount");
+        }  catch (InvalidParameterException e) {
+            throw new CantGetCryptoAmountException(
+                    e,
+                    "Getting the broker crypto amount",
+                    "There is an error parsing a String to long.");
+        }
+    }
+
+    /**
+     * This method parse a String object to a long object
+     * @param stringValue
+     * @return
+     * @throws InvalidParameterException
+     */
+    public long parseToLong(String stringValue) throws InvalidParameterException {
+        if(stringValue==null){
+            throw new InvalidParameterException("Cannot parse a null string value to long");
+        }else{
+            try{
+                return Long.valueOf(stringValue);
+            }catch (Exception exception){
+                throw new InvalidParameterException(InvalidParameterException.DEFAULT_MESSAGE,
+                        FermatException.wrapException(exception),
+                        "Parsing String object to long",
+                        "Cannot parse "+stringValue+" string value to long");
+            }
+
+        }
     }
 
 

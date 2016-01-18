@@ -53,7 +53,7 @@ public class DateHelper {
 
         //Calculate the difference
         int daysBetween = (int) ((startDay.getTime() - endDay.getTime()) / (1000 * 60 * 60 * 24));
-        return daysBetween;
+        return Math.abs(daysBetween) + 1;
     }
 
     public static boolean timestampIsInTheFuture(long timestamp) {
@@ -69,5 +69,9 @@ public class DateHelper {
 
         return (timestamp > timestampTomorrow);
 
+    }
+
+    public static long addDayToTimestamp(long timestamp){
+        return timestamp + 86400; //20*60*60
     }
 }

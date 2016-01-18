@@ -19,7 +19,6 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
 import com.bitdubai.fermat_api.layer.all_definition.util.Version;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
-import com.bitdubai.fermat_cer_api.all_definition.enums.TimeUnit;
 import com.bitdubai.fermat_cer_api.all_definition.interfaces.CurrencyPair;
 import com.bitdubai.fermat_cer_api.all_definition.interfaces.ExchangeRate;
 import com.bitdubai.fermat_cer_api.layer.provider.exceptions.CantGetExchangeRateException;

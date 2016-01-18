@@ -76,6 +76,7 @@ import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.co
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.contents.FermatMessageCommunicationFactory;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.enums.P2pEventType;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.events.ClientConnectionCloseNotificationEvent;
+import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.events.ClientSuccessReconnectNotificationEvent;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.events.VPNConnectionCloseNotificationEvent;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.MessagesStatus;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.WsCommunicationsCloudClientManager;
@@ -86,8 +87,8 @@ import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.enums.FermatM
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.exceptions.CantRegisterComponentException;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.exceptions.CantRequestListException;
 import com.bitdubai.fermat_pip_api.layer.actor.exception.CantGetLogTool;
-import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedPluginExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
+import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedPluginExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfaces.EventManager;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
@@ -217,19 +218,8 @@ public class AssetUserActorNetworkServicePluginRoot extends AbstractNetworkServi
      * because at this moment, is create the platformComponentProfile for this component
      */
     public void initializeCommunicationNetworkServiceConnectionManager() {
-        PlatformComponentProfile platformComponentProfile = wsCommunicationsCloudClientManager.getCommunicationsCloudClientConnection().constructPlatformComponentProfileFactory(getIdentityPublicKey(),
-                getAlias().toLowerCase(),
-                getName(),
-                getNetworkServiceType(),
-                getPlatformComponentType(),
-                getExtraData());
-
-                    /*
-                     * Configure my new profile
-                     */
-        setPlatformComponentProfilePluginRoot(platformComponentProfile);
         this.communicationNetworkServiceConnectionManager = new CommunicationNetworkServiceConnectionManager(
-                platformComponentProfile,
+                getPlatformComponentProfilePluginRoot(),
                 identity,
                 wsCommunicationsCloudClientManager.getCommunicationsCloudClientConnection(),
                 dataBase,
@@ -312,13 +302,18 @@ public class AssetUserActorNetworkServicePluginRoot extends AbstractNetworkServi
              * Initialize listeners
              */
             initializeListener();
-            initializeCommunicationNetworkServiceConnectionManager();
+
+            /*
+             * Verify if the communication cloud client is active
+             */
+            if (!wsCommunicationsCloudClientManager.isDisable()) {
 
                 /*
                  * Initialize the agent and start
                  */
-            communicationRegistrationProcessNetworkServiceAgent = new CommunicationRegistrationProcessNetworkServiceAgent(this, wsCommunicationsCloudClientManager.getCommunicationsCloudClientConnection());
-            communicationRegistrationProcessNetworkServiceAgent.start();
+                communicationRegistrationProcessNetworkServiceAgent = new CommunicationRegistrationProcessNetworkServiceAgent(this, wsCommunicationsCloudClientManager);
+                communicationRegistrationProcessNetworkServiceAgent.start();
+            }
 
             /*
              * Its all ok, set the new status
@@ -455,37 +450,37 @@ public class AssetUserActorNetworkServicePluginRoot extends AbstractNetworkServi
     public List<ActorAssetUser> getListActorAssetUserRegistered() throws CantRequestListActorAssetUserRegisteredException {
 
         try {
-            // if (true) {
-            if (actorAssetUserRegisteredList != null && !actorAssetUserRegisteredList.isEmpty()) {
-                actorAssetUserRegisteredList.clear();
-            }
-            DiscoveryQueryParameters discoveryQueryParametersAssetUser = wsCommunicationsCloudClientManager.getCommunicationsCloudClientConnection().
-                    constructDiscoveryQueryParamsFactory(PlatformComponentType.ACTOR_ASSET_USER, //applicant = who made the request
-                            NetworkServiceType.UNDEFINED,
-                            null,                     // alias
-                            null,                     // identityPublicKey
-                            null,                     // location
-                            null,                     // distance
-                            null,                     // name
-                            null,                     // extraData
-                            null,                     // offset
-                            null,                     // max
-                            null,                     // fromOtherPlatformComponentType, when use this filter apply the identityPublicKey
-                            null);
-
-            List<PlatformComponentProfile> platformComponentProfileRegisteredListRemote = wsCommunicationsCloudClientManager.getCommunicationsCloudClientConnection().requestListComponentRegistered(discoveryQueryParametersAssetUser);
-
-            if (platformComponentProfileRegisteredListRemote != null && !platformComponentProfileRegisteredListRemote.isEmpty()) {
-
-                for (PlatformComponentProfile p : platformComponentProfileRegisteredListRemote) {
-
-                    ActorAssetUser actorAssetUserNew = new AssetUserActorRecord(p.getIdentityPublicKey(), p.getName(), convertoByteArrayfromString(p.getExtraData()), p.getLocation());
-                    actorAssetUserRegisteredList.add(actorAssetUserNew);
+           // if (true) {
+                if (actorAssetUserRegisteredList != null && !actorAssetUserRegisteredList.isEmpty()) {
+                    actorAssetUserRegisteredList.clear();
                 }
+                DiscoveryQueryParameters discoveryQueryParametersAssetUser = wsCommunicationsCloudClientManager.getCommunicationsCloudClientConnection().
+                        constructDiscoveryQueryParamsFactory(PlatformComponentType.ACTOR_ASSET_USER, //applicant = who made the request
+                                NetworkServiceType.UNDEFINED,
+                                null,                     // alias
+                                null,                     // identityPublicKey
+                                null,                     // location
+                                null,                     // distance
+                                null,                     // name
+                                null,                     // extraData
+                                null,                     // offset
+                                null,                     // max
+                                null,                     // fromOtherPlatformComponentType, when use this filter apply the identityPublicKey
+                                null);
 
-            } else {
-                return actorAssetUserRegisteredList;
-            }
+                List<PlatformComponentProfile> platformComponentProfileRegisteredListRemote = wsCommunicationsCloudClientManager.getCommunicationsCloudClientConnection().requestListComponentRegistered(discoveryQueryParametersAssetUser);
+
+                if (platformComponentProfileRegisteredListRemote != null && !platformComponentProfileRegisteredListRemote.isEmpty()) {
+
+                    for (PlatformComponentProfile p : platformComponentProfileRegisteredListRemote) {
+
+                        ActorAssetUser actorAssetUserNew = new AssetUserActorRecord(p.getIdentityPublicKey(), p.getName(), convertoByteArrayfromString(p.getExtraData()), p.getLocation());
+                        actorAssetUserRegisteredList.add(actorAssetUserNew);
+                    }
+
+                } else {
+                    return actorAssetUserRegisteredList;
+                }
 
 //            } else {
 //                return actorAssetUserRegisteredList;
@@ -763,13 +758,43 @@ public class AssetUserActorNetworkServicePluginRoot extends AbstractNetworkServi
     }
 
     @Override
-    public DiscoveryQueryParameters constructDiscoveryQueryParamsFactory(PlatformComponentType platformComponentType, NetworkServiceType networkServiceType, String alias, String identityPublicKey, Location location, Double distance, String name, String extraData, Integer firstRecord, Integer numRegister, PlatformComponentType fromOtherPlatformComponentType, NetworkServiceType fromOtherNetworkServiceType) {
+    public DiscoveryQueryParameters constructDiscoveryQueryParamsFactory(PlatformComponentType platformComponentType, NetworkServiceType networkServiceType, String alias,String identityPublicKey, Location location, Double distance, String name, String extraData, Integer firstRecord, Integer numRegister, PlatformComponentType fromOtherPlatformComponentType, NetworkServiceType fromOtherNetworkServiceType) {
         return wsCommunicationsCloudClientManager.getCommunicationsCloudClientConnection().constructDiscoveryQueryParamsFactory(platformComponentType,
                 networkServiceType, alias, identityPublicKey, location, distance, name, extraData, firstRecord, numRegister, fromOtherPlatformComponentType, fromOtherNetworkServiceType);
     }
 
     @Override
     public void handleCompleteComponentRegistrationNotificationEvent(PlatformComponentProfile platformComponentProfileRegistered) {
+
+        if (platformComponentProfileRegistered.getPlatformComponentType() == PlatformComponentType.COMMUNICATION_CLOUD_CLIENT && this.register){
+
+            if(communicationRegistrationProcessNetworkServiceAgent.isAlive()){
+                communicationRegistrationProcessNetworkServiceAgent.interrupt();
+                communicationRegistrationProcessNetworkServiceAgent = null;
+            }
+
+                              /*
+                 * Construct my profile and register me
+                 */
+            PlatformComponentProfile platformComponentProfileToReconnect =  wsCommunicationsCloudClientManager.getCommunicationsCloudClientConnection().constructPlatformComponentProfileFactory(this.getIdentityPublicKey(),
+                    this.getAlias().toLowerCase(),
+                    this.getName(),
+                    this.getNetworkServiceType(),
+                    this.getPlatformComponentType(),
+                    this.getExtraData());
+
+            try {
+                    /*
+                     * Register me
+                     */
+                wsCommunicationsCloudClientManager.getCommunicationsCloudClientConnection().registerComponentForCommunication(this.getNetworkServiceType(), platformComponentProfileToReconnect);
+
+            } catch (CantRegisterComponentException e) {
+                e.printStackTrace();
+            }
+
+        }
+
         /*
          * If the component registered have my profile and my identity public key
          */
@@ -906,19 +931,18 @@ public class AssetUserActorNetworkServicePluginRoot extends AbstractNetworkServi
 
     /**
      * Handles the events VPNConnectionCloseNotificationEvent
-     *
      * @param fermatEvent
      */
     @Override
     public void handleVpnConnectionCloseNotificationEvent(FermatEvent fermatEvent) {
 
-        if (fermatEvent instanceof VPNConnectionCloseNotificationEvent) {
+        if(fermatEvent instanceof VPNConnectionCloseNotificationEvent){
 
             VPNConnectionCloseNotificationEvent vpnConnectionCloseNotificationEvent = (VPNConnectionCloseNotificationEvent) fermatEvent;
 
-            if (vpnConnectionCloseNotificationEvent.getNetworkServiceApplicant() == getNetworkServiceType()) {
+            if(vpnConnectionCloseNotificationEvent.getNetworkServiceApplicant() == getNetworkServiceType()){
 
-                if (communicationNetworkServiceConnectionManager != null)
+                if(communicationNetworkServiceConnectionManager != null)
                     communicationNetworkServiceConnectionManager.closeConnection(vpnConnectionCloseNotificationEvent.getRemoteParticipant().getIdentityPublicKey());
 
             }
@@ -929,16 +953,15 @@ public class AssetUserActorNetworkServicePluginRoot extends AbstractNetworkServi
 
     /**
      * Handles the events ClientConnectionCloseNotificationEvent
-     *
      * @param fermatEvent
      */
     @Override
     public void handleClientConnectionCloseNotificationEvent(FermatEvent fermatEvent) {
 
-        if (fermatEvent instanceof ClientConnectionCloseNotificationEvent) {
+        if(fermatEvent instanceof ClientConnectionCloseNotificationEvent){
             this.register = false;
 
-            if (communicationNetworkServiceConnectionManager != null)
+            if(communicationNetworkServiceConnectionManager != null)
                 communicationNetworkServiceConnectionManager.closeAllConnection();
         }
 
@@ -950,7 +973,7 @@ public class AssetUserActorNetworkServicePluginRoot extends AbstractNetworkServi
     @Override
     public void handleClientConnectionLooseNotificationEvent(FermatEvent fermatEvent) {
 
-        if (communicationNetworkServiceConnectionManager != null)
+        if(communicationNetworkServiceConnectionManager != null)
             communicationNetworkServiceConnectionManager.stop();
 
     }
@@ -961,8 +984,52 @@ public class AssetUserActorNetworkServicePluginRoot extends AbstractNetworkServi
     @Override
     public void handleClientSuccessfullReconnectNotificationEvent(FermatEvent fermatEvent) {
 
-        if (communicationNetworkServiceConnectionManager != null)
+
+
+        if(communicationNetworkServiceConnectionManager != null) {
             communicationNetworkServiceConnectionManager.restart();
+        }
+
+        if(!this.register){
+
+            if(communicationRegistrationProcessNetworkServiceAgent.isAlive()){
+
+                communicationRegistrationProcessNetworkServiceAgent.interrupt();
+                communicationRegistrationProcessNetworkServiceAgent = null;
+
+                   /*
+                 * Construct my profile and register me
+                 */
+                PlatformComponentProfile platformComponentProfileToReconnect =  wsCommunicationsCloudClientManager.getCommunicationsCloudClientConnection().constructPlatformComponentProfileFactory(this.getIdentityPublicKey(),
+                        this.getAlias().toLowerCase(),
+                        this.getName(),
+                        this.getNetworkServiceType(),
+                        this.getPlatformComponentType(),
+                        this.getExtraData());
+
+                try {
+                    /*
+                     * Register me
+                     */
+                    wsCommunicationsCloudClientManager.getCommunicationsCloudClientConnection().registerComponentForCommunication(this.getNetworkServiceType(), platformComponentProfileToReconnect);
+
+                } catch (CantRegisterComponentException e) {
+                    e.printStackTrace();
+                }
+
+                /*
+                 * Configure my new profile
+                 */
+                this.setPlatformComponentProfilePluginRoot(platformComponentProfileToReconnect);
+
+                /*
+                 * Initialize the connection manager
+                 */
+                this.initializeCommunicationNetworkServiceConnectionManager();
+
+            }
+
+        }
 
     }
 

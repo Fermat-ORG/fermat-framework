@@ -10,10 +10,13 @@
     <LinearLayout
         android:id="@+id/cbw_wizard_title_container"
         android:layout_width="match_parent"
-        android:layout_height="100dp"
-        android:background="@color/cbw_wizard_color"
+        android:layout_height="130dp"
+        android:background="@drawable/cbw_wizard_title_background"
         android:orientation="vertical"
-        android:padding="16dp">
+        android:paddingBottom="16dp"
+        android:paddingLeft="16dp"
+        android:paddingRight="16dp"
+        android:paddingTop="46dp">
 
         <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
             android:layout_width="wrap_content"
@@ -59,13 +62,14 @@
         <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatButton
             android:id="@+id/cbw_select_bank_accounts"
             android:layout_width="wrap_content"
-            android:layout_height="35dp"
+            android:layout_height="30dp"
             android:layout_marginTop="8dp"
-            android:background="@color/cbw_wizard_color"
+            android:background="@color/cbw_wizard_border_color"
             android:paddingLeft="8dp"
             android:paddingRight="8dp"
             android:text="@string/cbw_add_bank_account"
             android:textColor="@color/white"
+            android:textAllCaps="false"
             android:textSize="14sp"/>
 
         <FrameLayout
@@ -102,7 +106,7 @@
         android:layout_height="40dp"
         android:layout_gravity="center_horizontal"
         android:layout_marginBottom="16dp"
-        android:background="@color/cbw_wizard_color"
+        android:background="@color/cbw_wizard_border_color"
         android:orientation="horizontal"
         android:paddingBottom="8dp"
         android:paddingEnd="16dp"

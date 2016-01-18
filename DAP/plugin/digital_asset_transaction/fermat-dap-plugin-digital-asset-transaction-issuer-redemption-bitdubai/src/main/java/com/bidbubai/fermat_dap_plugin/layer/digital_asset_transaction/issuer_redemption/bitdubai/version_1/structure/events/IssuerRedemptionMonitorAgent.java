@@ -179,7 +179,7 @@ public class IssuerRedemptionMonitorAgent implements Agent {
         }
 
         private CryptoTransaction getCryptoTx(DigitalAssetMetadata digitalAssetMetadata) throws CantGetCryptoTransactionException {
-            CryptoTransaction lastTx = bitcoinNetworkManager.getLastChildCryptoTransaction(null, digitalAssetMetadata.getGenesisTransaction(), digitalAssetMetadata.getGenesisBlock());
+            CryptoTransaction lastTx = null; //todo replace with new methods bitcoinNetworkManager.getLastChildCryptoTransaction(null, digitalAssetMetadata.getGenesisTransaction(), digitalAssetMetadata.getGenesisBlock());
             return bitcoinNetworkManager.getCryptoTransaction(lastTx.getTransactionHash());
         }
 

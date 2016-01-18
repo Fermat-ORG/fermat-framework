@@ -9,9 +9,11 @@ import com.bitdubai.fermat_cbp_api.all_definition.negotiation.NegotiationBankAcc
 import com.bitdubai.fermat_cbp_api.layer.identity.crypto_customer.exceptions.CantGetCryptoCustomerIdentityException;
 import com.bitdubai.fermat_cbp_api.layer.identity.crypto_customer.interfaces.CryptoCustomerIdentity;
 import com.bitdubai.fermat_cbp_api.layer.negotiation.customer_broker_purchase.exceptions.CantCreateBankAccountPurchaseException;
+import com.bitdubai.fermat_cbp_api.layer.negotiation.customer_broker_purchase.exceptions.CantCreateCustomerBrokerPurchaseNegotiationException;
 import com.bitdubai.fermat_cbp_api.layer.negotiation.customer_broker_purchase.exceptions.CantCreateLocationPurchaseException;
 import com.bitdubai.fermat_cbp_api.layer.negotiation.customer_broker_purchase.exceptions.CantDeleteBankAccountPurchaseException;
 import com.bitdubai.fermat_cbp_api.layer.negotiation.customer_broker_purchase.exceptions.CantUpdateBankAccountPurchaseException;
+import com.bitdubai.fermat_cbp_api.layer.negotiation_transaction.customer_broker_new.exceptions.CantCreateCustomerBrokerNewPurchaseNegotiationTransactionException;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.common.interfaces.ClauseInformation;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.common.interfaces.CustomerBrokerNegotiationInformation;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.common.interfaces.IndexInfoSummary;
@@ -23,6 +25,7 @@ import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_customer.exception
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_customer.exceptions.CantGetCurrentIndexSummaryForCurrenciesOfInterestException;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_customer.exceptions.CantNewEmptyCryptoCustomerWalletAssociatedSettingException;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_customer.exceptions.CantNewEmptyCryptoCustomerWalletProviderSettingException;
+import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_customer.exceptions.CantNewEmptyCustomerBrokerNegotiationInformationException;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_customer.exceptions.CantSaveCryptoCustomerWalletSettingException;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_customer.exceptions.CouldNotStartNegotiationException;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_customer.interfaces.settings.CryptoCustomerWalletAssociatedSetting;
@@ -82,6 +85,15 @@ public interface CryptoCustomerWalletManager extends WalletManager {
      */
     CryptoCustomerIdentity getAssociatedIdentity() throws CantGetAssociatedCryptoCustomerIdentityException;
 
+
+    /**
+     * Verify if thew wallet is configured or not
+     *
+     * @param customerWalletPublicKey the wallet public key
+     * @return true if configure, false otherwise
+     */
+    boolean isWalletConfigured(String customerWalletPublicKey);
+
     /**
      * Start a new negotiation with a crypto broker
      *
@@ -90,17 +102,16 @@ public interface CryptoCustomerWalletManager extends WalletManager {
      * @param clauses    the initial and mandatory clauses to start a negotiation
      * @return true if the association was successful false otherwise
      */
-    boolean startNegotiation(UUID customerId, UUID brokerId, Collection<ClauseInformation> clauses) throws CouldNotStartNegotiationException;
+    boolean startNegotiation(UUID customerId, UUID brokerId, Collection<ClauseInformation> clauses) throws CouldNotStartNegotiationException, CantCreateCustomerBrokerNewPurchaseNegotiationTransactionException;
 
     /**
      * This method list all wallet installed in device, start the transaction
      */
-    List<InstalledWallet> getInstallWallets()  throws CantListWalletsException;
+    List<InstalledWallet> getInstallWallets() throws CantListWalletsException;
 
     CustomerBrokerNegotiationInformation setMemo(String memo, CustomerBrokerNegotiationInformation data);
 
     /**
-     *
      * @param location
      * @param uri
      * @throws CantCreateLocationPurchaseException
@@ -109,26 +120,32 @@ public interface CryptoCustomerWalletManager extends WalletManager {
 
     NegotiationBankAccount newEmptyNegotiationBankAccount(final String bankAccount, final FiatCurrency currencyType) throws CantCreateBankAccountPurchaseException;
 
+    CustomerBrokerNegotiationInformation newEmptyCustomerBrokerNegotiationInformation() throws CantNewEmptyCustomerBrokerNegotiationInformationException;
     /**
-     *
      * @param bankAccount
      * @throws CantCreateBankAccountPurchaseException
      */
     void createNewBankAccount(NegotiationBankAccount bankAccount) throws CantCreateBankAccountPurchaseException;
 
     /**
-     *
      * @param bankAccount
      * @throws CantUpdateBankAccountPurchaseException
      */
     void updateBankAccount(NegotiationBankAccount bankAccount) throws CantUpdateBankAccountPurchaseException;
 
     /**
-     *
      * @param bankAccount
      * @throws CantDeleteBankAccountPurchaseException
      */
     void deleteBankAccount(NegotiationBankAccount bankAccount) throws CantDeleteBankAccountPurchaseException;
+
+    /**
+     *
+     * @param negotiation
+     * @throws CantCreateCustomerBrokerPurchaseNegotiationException
+     */
+    void createCustomerBrokerPurchaseNegotiation(CustomerBrokerNegotiationInformation negotiation) throws CantCreateCustomerBrokerPurchaseNegotiationException;
+
 
 
     CryptoCustomerWalletAssociatedSetting newEmptyCryptoBrokerWalletAssociatedSetting() throws CantNewEmptyCryptoCustomerWalletAssociatedSettingException;
@@ -139,7 +156,7 @@ public interface CryptoCustomerWalletManager extends WalletManager {
      * Returns a list of provider references which can obtain the ExchangeRate of the given CurrencyPair
      *
      * @return a Map of name/provider reference pairs
-     * */
+     */
     Map<String, CurrencyExchangeRateProviderManager> getProviderReferencesFromCurrencyPair(Currency currencyFrom, Currency currencyTo) throws CantGetProviderException;
 
     CryptoCustomerWalletProviderSetting newEmptyCryptoCustomerWalletProviderSetting() throws CantNewEmptyCryptoCustomerWalletProviderSettingException;

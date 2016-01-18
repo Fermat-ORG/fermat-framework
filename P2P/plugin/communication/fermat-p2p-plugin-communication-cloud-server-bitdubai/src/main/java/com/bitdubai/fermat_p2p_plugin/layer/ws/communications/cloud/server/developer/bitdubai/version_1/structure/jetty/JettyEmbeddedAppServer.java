@@ -17,6 +17,9 @@ import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.server.ServerConnector;
 import org.eclipse.jetty.servlet.ServletContextHandler;
 import org.eclipse.jetty.servlet.ServletHolder;
+import org.eclipse.jetty.util.log.Log;
+import org.eclipse.jetty.util.log.Slf4jLog;
+import org.eclipse.jetty.webapp.WebAppContext;
 import org.eclipse.jetty.websocket.jsr356.server.deploy.WebSocketServerContainerInitializer;
 import org.jboss.resteasy.plugins.server.servlet.HttpServlet30Dispatcher;
 
@@ -97,6 +100,8 @@ public class JettyEmbeddedAppServer {
 
         LOG.info("Initializing the internal Server");
 
+        Log.setLog(new Slf4jLog(Server.class.getName()));
+
         /*
          * Create and configure the server
          */
@@ -112,6 +117,12 @@ public class JettyEmbeddedAppServer {
         this.servletContextHandler.setContextPath(JettyEmbeddedAppServer.DEFAULT_CONTEXT_PATH);
         this.servletContextHandler.setClassLoader(JettyEmbeddedAppServer.class.getClassLoader());
         this.server.setHandler(servletContextHandler);
+
+       /* WebAppContext webAppContext = new WebAppContext();
+        webAppContext.setContextPath(DEFAULT_CONTEXT_PATH);
+        webAppContext.setResourceBase("src/main/resources/webapp");
+        webAppContext.setWelcomeFiles(new String[]{ "index.html" });
+        this.server.setHandler(webAppContext);*/
 
         /*
          * Initialize restful service layer
