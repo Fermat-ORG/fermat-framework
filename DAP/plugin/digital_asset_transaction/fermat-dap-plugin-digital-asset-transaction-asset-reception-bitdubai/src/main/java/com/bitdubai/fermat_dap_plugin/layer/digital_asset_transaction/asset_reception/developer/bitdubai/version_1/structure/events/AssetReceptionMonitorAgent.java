@@ -33,6 +33,7 @@ import com.bitdubai.fermat_dap_api.layer.dap_network_services.asset_transmission
 import com.bitdubai.fermat_dap_api.layer.dap_network_services.asset_transmission.interfaces.DigitalAssetMetadataTransaction;
 import com.bitdubai.fermat_dap_api.layer.dap_transaction.asset_issuing.exceptions.CantDeliverDigitalAssetToAssetWalletException;
 import com.bitdubai.fermat_dap_api.layer.dap_transaction.asset_issuing.interfaces.AssetIssuingTransactionNotificationAgent;
+import com.bitdubai.fermat_dap_api.layer.dap_transaction.common.exceptions.CantCreateDigitalAssetFileException;
 import com.bitdubai.fermat_dap_api.layer.dap_transaction.common.exceptions.CantExecuteDatabaseOperationException;
 import com.bitdubai.fermat_dap_api.layer.dap_transaction.common.exceptions.CantGetDigitalAssetFromLocalStorageException;
 import com.bitdubai.fermat_dap_api.layer.dap_transaction.common.exceptions.UnexpectedResultReturnedFromDatabaseException;
@@ -240,6 +241,8 @@ public class AssetReceptionMonitorAgent implements Agent {
                 throw new CantCheckAssetReceptionProgressException(exception, "Exception in asset reception monitor agent", "Cannot deliver the digital asset metadata to asset user wallet");
             } catch (CantGetCryptoTransactionException exception) {
                 throw new CantCheckAssetReceptionProgressException(exception, "Exception in asset reception monitor agent", "Cannot get the genesis transaction from Crypto Network");
+            } catch (CantCreateDigitalAssetFileException | CantGetDigitalAssetFromLocalStorageException e) {
+                e.printStackTrace();
             }
         }
 
@@ -258,7 +261,7 @@ public class AssetReceptionMonitorAgent implements Agent {
                 CantGetCryptoTransactionException,
                 UnexpectedResultReturnedFromDatabaseException,
                 //CantGetDigitalAssetFromLocalStorageException,
-                CantDeliverDigitalAssetToAssetWalletException {
+                CantDeliverDigitalAssetToAssetWalletException, CantGetDigitalAssetFromLocalStorageException, CantCreateDigitalAssetFileException {
             System.out.println("ASSET RECEPTION is crypto pending events");
             List<String> eventIdList = assetReceptionDao.getIncomingCryptoEvents();
             System.out.println("ASSET RECEPTION is " + eventIdList.size() + " events");
@@ -311,6 +314,7 @@ public class AssetReceptionMonitorAgent implements Agent {
                             String transactionInternalId = this.assetReceptionDao.getTransactionIdByGenesisTransaction(genesisTransaction);
                             System.out.println("ASSET RECEPTION transactionInternalId " + transactionInternalId);
                             String actorIssuerPublicKey = assetReceptionDao.getActorUserPublicKeyByGenesisTransaction(genesisTransaction);
+                            digitalAssetReceptionVault.updateMetadataTransactionChain(genesisTransaction, cryptoGenesisTransaction.getTransactionHash(), cryptoGenesisTransaction.getBlockHash());
                             digitalAssetReceptionVault.setDigitalAssetMetadataAssetIssuerWalletTransaction(cryptoGenesisTransaction, transactionInternalId, AssetBalanceType.AVAILABLE, TransactionType.CREDIT, DAPTransactionType.RECEPTION, actorIssuerPublicKey);
                             assetReceptionDao.updateDigitalAssetCryptoStatusByGenesisTransaction(genesisTransaction, CryptoStatus.ON_BLOCKCHAIN);
                             assetReceptionDao.updateEventStatus(eventId);
