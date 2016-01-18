@@ -122,7 +122,7 @@ public class AssetDeliveryFragment extends AbstractFermatFragment {
                             dialog.setYesBtnListener(new DistributeAcceptDialog.OnClickAcceptListener() {
                                 @Override
                                 public void onClick() {
-                                    doDistribute(digitalAsset.getAssetPublicKey(), null);
+                                    doDistribute(digitalAsset.getAssetPublicKey(), users);
                                 }
                             });
                             dialog.show();
