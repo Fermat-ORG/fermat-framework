@@ -26,7 +26,7 @@ public interface AssetAppropriationManager extends FermatManager {
      * @throws CantExecuteAppropriationTransactionException in case something bad happen and the appropriation flow can't start.
      * @throws TransactionAlreadyStartedException           in case for some reason you try to appropriate the same asset twice.
      */
-    void appropriateAsset(DigitalAssetMetadata digitalAssetMetadata, String assetUserWalletPublicKey, String bitcoinWalletPublicKey) throws CantExecuteAppropriationTransactionException, TransactionAlreadyStartedException;
+    void appropriateAsset(DigitalAssetMetadata digitalAssetMetadata, String assetUserWalletPublicKey, String bitcoinWalletPublicKey, int amountToAppropriate) throws CantExecuteAppropriationTransactionException, TransactionAlreadyStartedException;
 
     /**
      * Returns an {@link AppropriationTransactionRecord} instance with all its stored values,
