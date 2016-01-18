@@ -9,6 +9,7 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.Cant
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
 import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.exceptions.CantGetCryptoTransactionException;
 import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.interfaces.BitcoinNetworkManager;
+import com.bitdubai.fermat_bch_api.layer.crypto_vault.asset_vault.exceptions.CantCreateBitcoinTransactionException;
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.asset_vault.interfaces.AssetVaultManager;
 import com.bitdubai.fermat_dap_api.layer.all_definition.digital_asset.DigitalAsset;
 import com.bitdubai.fermat_dap_api.layer.all_definition.digital_asset.DigitalAssetContract;
@@ -24,13 +25,11 @@ import com.bitdubai.fermat_dap_api.layer.dap_network_services.asset_transmission
 import com.bitdubai.fermat_dap_api.layer.dap_transaction.asset_distribution.exceptions.CantDistributeDigitalAssetsException;
 import com.bitdubai.fermat_dap_api.layer.dap_transaction.common.exceptions.CantCreateDigitalAssetFileException;
 import com.bitdubai.fermat_dap_api.layer.dap_transaction.common.exceptions.CantPersistDigitalAssetException;
-import com.bitdubai.fermat_dap_api.layer.dap_transaction.common.exceptions.CantPersistsTransactionUUIDException;
 import com.bitdubai.fermat_dap_api.layer.dap_transaction.common.exceptions.CantStartDeliveringException;
 import com.bitdubai.fermat_dap_api.layer.dap_transaction.common.exceptions.RecordsNotFoundException;
 import com.bitdubai.fermat_dap_api.layer.dap_transaction.common.exceptions.TransactionAlreadyDeliveringException;
 import com.bitdubai.fermat_dap_api.layer.dap_transaction.common.exceptions.UnexpectedResultReturnedFromDatabaseException;
 import com.bitdubai.fermat_dap_api.layer.dap_transaction.common.interfaces.AbstractDigitalAssetSwap;
-import com.bitdubai.fermat_dap_api.layer.dap_transaction.common.util.AssetVerification;
 import com.bitdubai.fermat_dap_api.layer.dap_wallet.asset_issuer_wallet.exceptions.CantRegisterCreditException;
 import com.bitdubai.fermat_dap_api.layer.dap_wallet.asset_issuer_wallet.exceptions.CantRegisterDebitException;
 import com.bitdubai.fermat_dap_api.layer.dap_wallet.common.enums.BalanceType;
@@ -161,6 +160,8 @@ public class DigitalAssetDistributor extends AbstractDigitalAssetSwap {
             }
             this.assetDistributionDao.updateDistributionStatusByGenesisTransaction(DistributionStatus.HASH_CHECKED, genesisTransaction);
             cryptoTransaction = foundCryptoTransaction(digitalAssetMetadata);
+            String newTx = assetVaultManager.createBitcoinTransaction(genesisTransaction, actorAssetUser.getCryptoAddress());
+            digitalAssetDistributionVault.updateMetadataTransactionChain(genesisTransaction, newTx, null);
             System.out.println("ASSET DISTRIBUTION set debit in asset issuer wallet:" + genesisTransaction);
             digitalAssetDistributionVault.updateWalletBalance(digitalAssetMetadata, cryptoTransaction, BalanceType.AVAILABLE, TransactionType.DEBIT, DAPTransactionType.DISTRIBUTION, actorAssetUser.getActorPublicKey());
             System.out.println("ASSET DISTRIBUTION Begins the deliver to an remote actor");
@@ -175,7 +176,7 @@ public class DigitalAssetDistributor extends AbstractDigitalAssetSwap {
             throw new CantDeliverDigitalAssetException(exception, "Delivering digital assets", "Cannot execute a database operation");
         } catch (UnexpectedResultReturnedFromDatabaseException exception) {
             throw new CantDeliverDigitalAssetException(exception, "Delivering digital assets", "Unexpected result in database");
-        } catch (CantSendDigitalAssetMetadataException exception) {
+        } catch (CantSendDigitalAssetMetadataException | CantCreateBitcoinTransactionException exception) {
             throw new CantDeliverDigitalAssetException(exception, "Delivering digital assets", "There is an error delivering the digital asset through the network layer");
         } catch (DAPException exception) {
             throw new CantDeliverDigitalAssetException(exception, "Delivering digital assets", "Generic DAP Exception");
@@ -237,13 +238,8 @@ public class DigitalAssetDistributor extends AbstractDigitalAssetSwap {
 
 
     public void persistInLocalStorage(DigitalAssetMetadata digitalAssetMetadata) throws CantCreateDigitalAssetFileException {
-        try {
-            System.out.println("ASSET DISTRIBUTION Internal Id: " + digitalAssetMetadata.getGenesisTransaction());
-            this.assetDistributionDao.persistDistributionId(digitalAssetMetadata.getGenesisTransaction(), digitalAssetMetadata.getGenesisTransaction());
-            this.digitalAssetDistributionVault.persistDigitalAssetMetadataInLocalStorage(digitalAssetMetadata, digitalAssetMetadata.getGenesisTransaction());
-        } catch (CantPersistsTransactionUUIDException exception) {
-            throw new CantCreateDigitalAssetFileException(exception, "Persisting Internal distribution id", "Cannot update the internal Id by genesis transaction");
-        }
+        System.out.println("ASSET DISTRIBUTION Internal Id: " + digitalAssetMetadata.getGenesisTransaction());
+        this.digitalAssetDistributionVault.persistDigitalAssetMetadataInLocalStorage(digitalAssetMetadata, digitalAssetMetadata.getLastTransactionHash());
     }
 
     public void setDigitalAssetLocalFilePath(DigitalAssetMetadata digitalAssetMetadata) {
