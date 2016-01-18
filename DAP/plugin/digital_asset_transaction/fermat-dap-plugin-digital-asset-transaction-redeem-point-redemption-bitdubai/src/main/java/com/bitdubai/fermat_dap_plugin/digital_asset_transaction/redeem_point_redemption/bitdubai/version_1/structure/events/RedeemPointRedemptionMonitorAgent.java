@@ -237,17 +237,20 @@ public class RedeemPointRedemptionMonitorAgent implements Agent {
                 }
 
                 for (String eventId : dao.getPendingCryptoRouterEvents()) {
+                    boolean notifyEvent = false;
                     debug("received new crypto router event");
                     switch (dao.getEventTypeById(eventId)) {
                         case INCOMING_ASSET_ON_CRYPTO_NETWORK_WAITING_TRANSFERENCE_REDEEM_POINT:
                             debug("new transaction on crypto network");
-                            boolean notifyEventOnCryptoNetwork = false;
                             for (String transactionId : dao.getPendingSubmitGenesisTransactions()) {
                                 debug("searching digital asset metadata");
                                 DigitalAssetMetadata digitalAssetMetadata = getDigitalAssetMetadataFromLocalStorage(transactionId);
                                 debug("searching the crypto transaction");
 
-                                CryptoTransaction cryptoTransaction = bitcoinNetworkManager.getLastChildCryptoTransaction(null, digitalAssetMetadata.getGenesisTransaction(), digitalAssetMetadata.getGenesisBlock());
+                                CryptoTransaction cryptoTransaction = AssetVerification.getCryptoTransactionFromCryptoNetworkByCryptoStatus(bitcoinNetworkManager, digitalAssetMetadata.getTransactionChain(), CryptoStatus.ON_CRYPTO_NETWORK);
+
+                                if (cryptoTransaction == null) continue; //Not yet...
+
                                 //TODO LOAD WALLET! I SHOULD SEARCH FOR THE WALLET PUBLIC KEY
                                 //BUT THAT'S NOT YET IMPLEMENTED.
                                 debug("loading redeem point wallet, public key is hardcoded");
@@ -268,22 +271,19 @@ public class RedeemPointRedemptionMonitorAgent implements Agent {
                                 //UPDATE TRANSACTION CRYPTO STATUS.
                                 debug("update transaction status");
                                 dao.updateTransactionCryptoStatusById(CryptoStatus.ON_CRYPTO_NETWORK, transactionId);
-                                notifyEventOnCryptoNetwork = true; //Without this I'd have to put the update in there and it can result on unnecessary updates.
-                            }
-
-                            if (notifyEventOnCryptoNetwork) {
-                                //UPDATE EVENT STATUS
-                                dao.updateEventStatus(EventStatus.NOTIFIED, eventId);
+                                notifyEvent = true; //Without this I'd have to put the update in there and it can result on unnecessary updates.
                             }
                             break;
 
                         case INCOMING_ASSET_ON_BLOCKCHAIN_WAITING_TRANSFERENCE_REDEEM_POINT:
-                            boolean notifyEventOnBlockChain = false;
                             debug("new transaction on blockchain");
                             for (String transactionId : dao.getOnCryptoNetworkGenesisTransactions()) {
                                 DigitalAssetMetadata metadata = getDigitalAssetMetadataFromLocalStorage(transactionId);
                                 debug("searching the crypto transaction");
-                                CryptoTransaction cryptoTransaction = bitcoinNetworkManager.getLastChildCryptoTransaction(null, metadata.getGenesisTransaction(), metadata.getGenesisBlock());
+                                CryptoTransaction cryptoTransaction = AssetVerification.getCryptoTransactionFromCryptoNetworkByCryptoStatus(bitcoinNetworkManager, metadata.getTransactionChain(), CryptoStatus.ON_CRYPTO_NETWORK);
+
+                                if (cryptoTransaction == null) continue; //Not yet...
+
                                 String userPublicKey = dao.getSenderPublicKeyById(transactionId);
                                 //TODO LOAD WALLET! I SHOULD SEARCH FOR THE WALLET PUBLIC KEY
                                 //BUT THAT'S NOT YET IMPLEMENTED.
@@ -307,27 +307,29 @@ public class RedeemPointRedemptionMonitorAgent implements Agent {
                                 //I GOT IT, EVERYTHING WENT OK!
                                 debug("update status");
                                 dao.updateTransactionCryptoStatusById(CryptoStatus.ON_BLOCKCHAIN, transactionId);
-                                notifyEventOnBlockChain = true;
-                            }
-                            if (notifyEventOnBlockChain) {
-                                dao.updateEventStatus(EventStatus.NOTIFIED, eventId);
+                                notifyEvent = true;
                             }
                             break;
 
                         case INCOMING_ASSET_REVERSED_ON_CRYPTO_NETWORK_WAITING_TRANSFERENCE_REDEEM_POINT:
+                            notifyEvent = true;
                             debug("reversed on crypto network");
                             //TODO IMPLEMENT THIS
                             break;
                         case INCOMING_ASSET_REVERSED_ON_BLOCKCHAIN_WAITING_TRANSFERENCE_REDEEM_POINT:
+                            notifyEvent = true;
                             debug("reversed on block chain");
                             //TODO IMPLEMENT THIS
                             break;
 
                         default:
-                            dao.updateEventStatus(EventStatus.NOTIFIED, eventId); //I can't do anything with this event!
+                            notifyEvent = true;
                             logManager.log(LogLevel.MODERATE_LOGGING, "RPR Received an event it can't handle.", "The given event: " + dao.getEventTypeById(eventId) + " cannot be handle by the RPR Agent...", null);
                             //I CANNOT HANDLE THIS EVENT.
                             break;
+                    }
+                    if (notifyEvent) {
+                        dao.updateEventStatus(EventStatus.NOTIFIED, eventId); //I can't do anything with this event!
                     }
                 }
             } catch (CantGetAssetUserActorsException | CantLoadAssetRedemptionEventListException | CantLoadAssetRedemptionMetadataListException e) {
