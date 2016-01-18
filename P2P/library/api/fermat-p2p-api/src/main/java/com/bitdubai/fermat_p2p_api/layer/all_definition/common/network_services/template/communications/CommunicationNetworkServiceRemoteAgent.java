@@ -12,6 +12,7 @@ import com.bitdubai.fermat_api.layer.all_definition.crypto.asymmetric.ECCKeyPair
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEvent;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.common.network_services.abstract_classes.AbstractNetworkService;
+import com.bitdubai.fermat_p2p_api.layer.all_definition.common.network_services.abstract_classes.AbstractNetworkServiceV2;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.common.network_services.template.exceptions.CantInsertRecordDataBaseException;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.contents.FermatMessageCommunication;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.enums.P2pEventType;
@@ -100,6 +101,8 @@ public class CommunicationNetworkServiceRemoteAgent<NS extends AbstractNetworkSe
      */
     private NS networkServicePluginRoot;
 
+    private AbstractNetworkServiceV2 abstractNetworkService;
+
     /**
      * Constructor with parameters
      *
@@ -119,6 +122,49 @@ public class CommunicationNetworkServiceRemoteAgent<NS extends AbstractNetworkSe
         this.outgoingMessageDao                  = outgoingMessageDao;
         this.communicationsVPNConnection         = communicationsVPNConnection;
         this.networkServicePluginRoot = networkServicePluginRoot;
+
+
+        //Create a thread to receive the messages
+        this.toReceive = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                while (running)
+                    processMessageReceived();
+            }
+        });
+
+        //Create a thread to send the messages
+        this.toSend = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                while (running)
+                    processMessageToSend();
+            }
+        });
+
+//        ExecutorService executorService =
+
+    }
+
+    /**
+     * Constructor with parameters
+     *
+     * @param eccKeyPair from the plugin root
+     * @param errorManager  instance
+     * @param incomingMessageDao instance
+     * @param outgoingMessageDao instance
+     */
+    public CommunicationNetworkServiceRemoteAgent(AbstractNetworkServiceV2 networkServicePluginRoot,ECCKeyPair eccKeyPair, CommunicationsVPNConnection communicationsVPNConnection, ErrorManager errorManager, EventManager eventManager, IncomingMessageDao incomingMessageDao, OutgoingMessageDao outgoingMessageDao) {
+
+        super();
+        this.eccKeyPair                          = eccKeyPair;
+        this.errorManager                        = errorManager;
+        this.eventManager                        = eventManager;
+        this.running                             = Boolean.FALSE;
+        this.incomingMessageDao                  = incomingMessageDao;
+        this.outgoingMessageDao                  = outgoingMessageDao;
+        this.communicationsVPNConnection         = communicationsVPNConnection;
+        this.abstractNetworkService = networkServicePluginRoot;
 
 
         //Create a thread to receive the messages
@@ -318,7 +364,7 @@ public class CommunicationNetworkServiceRemoteAgent<NS extends AbstractNetworkSe
                              * Put the message on a event and fire new event
                              */
                             FermatEvent fermatEvent = eventManager.getNewEvent(P2pEventType.NEW_NETWORK_SERVICE_MESSAGE_SENT_NOTIFICATION);
-                            fermatEvent.setSource(networkServicePluginRoot.getEventSource());
+                            fermatEvent.setSource((networkServicePluginRoot!=null)?networkServicePluginRoot.getEventSource():abstractNetworkService.getEventSource());
                             ((NewNetworkServiceMessageSentNotificationEvent) fermatEvent).setData(message);
                             eventManager.raiseEvent(fermatEvent);
                         }

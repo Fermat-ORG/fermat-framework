@@ -277,3 +277,4 @@ You don't need to be a developer to participate on the project. There are many w
 
 ![alt text](https://github.com/bitDubai/media-kit/blob/master/MediaKit/Coins/Fermat%20Bitcoin/PerspView/1/Front_HQ_1920x1080.jpg "Fermat Coin")
 
+

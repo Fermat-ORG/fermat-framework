@@ -23,8 +23,10 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Wallets;
 import com.bitdubai.fermat_api.layer.world.interfaces.Currency;
+import com.bitdubai.fermat_cbp_api.all_definition.enums.CurrencyType;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_customer.interfaces.CryptoCustomerWalletManager;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_customer.interfaces.CryptoCustomerWalletModuleManager;
+import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_customer.interfaces.settings.CryptoCustomerWalletAssociatedSetting;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_customer.interfaces.settings.CryptoCustomerWalletProviderSetting;
 import com.bitdubai.fermat_cer_api.layer.provider.exceptions.CantGetProviderInfoException;
 import com.bitdubai.fermat_cer_api.layer.provider.interfaces.CurrencyExchangeRateProviderManager;
@@ -209,6 +211,16 @@ public class WizardPageSetBitcoinWalletAndProvidersFragment extends AbstractFerm
         }
 
         try {
+            final CryptoCustomerWalletAssociatedSetting associatedWallet = walletManager.newEmptyCryptoBrokerWalletAssociatedSetting();
+            associatedWallet.setId(UUID.randomUUID());
+            associatedWallet.setCurrencyType(CurrencyType.CRYPTO_MONEY);
+            associatedWallet.setMerchandise(selectedBitcoinWallet.getCryptoCurrency());
+            associatedWallet.setPlatform(selectedBitcoinWallet.getPlatform());
+            associatedWallet.setWalletPublicKey(selectedBitcoinWallet.getWalletPublicKey());
+            associatedWallet.setCustomerPublicKey(appSession.getAppPublicKey());
+
+            walletManager.saveWalletSettingAssociated(associatedWallet, appSession.getAppPublicKey());
+
             for (CurrencyExchangeRateProviderManager provider : selectedProviders) {
 
                 CryptoCustomerWalletProviderSetting setting = walletManager.newEmptyCryptoCustomerWalletProviderSetting();

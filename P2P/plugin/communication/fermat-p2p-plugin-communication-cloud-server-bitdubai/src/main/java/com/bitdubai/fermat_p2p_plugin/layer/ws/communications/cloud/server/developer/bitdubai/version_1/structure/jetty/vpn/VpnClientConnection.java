@@ -111,4 +111,20 @@ public class VpnClientConnection {
     public NetworkServiceType getNetworkServiceType() {
         return networkServiceType;
     }
+
+    /**
+     * Get the key
+     * @return String
+     */
+    public String getMyKey(){
+        return (participant.getIdentityPublicKey() + remoteParticipantIdentity);
+    }
+
+    /**
+     * Get the remote key
+     * @return String
+     */
+    public String getKeyForMyRemote(){
+        return (remoteParticipantIdentity+participant.getIdentityPublicKey() );
+    }
 }

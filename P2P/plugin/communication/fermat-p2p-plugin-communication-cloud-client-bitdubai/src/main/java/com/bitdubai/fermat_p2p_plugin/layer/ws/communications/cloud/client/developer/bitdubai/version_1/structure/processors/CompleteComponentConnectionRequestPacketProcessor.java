@@ -40,6 +40,8 @@ public class CompleteComponentConnectionRequestPacketProcessor extends FermatPac
     @Override
     public void processingPackage(FermatPacket receiveFermatPacket){
 
+        System.out.println("CompleteComponentConnectionRequestPacketProcessor - processingPackage = ");
+
         /*
          * Get the filters from the message content and decrypt
          */
@@ -58,6 +60,10 @@ public class CompleteComponentConnectionRequestPacketProcessor extends FermatPac
         PlatformComponentProfile applicantComponent = gson.fromJson(respond.get(JsonAttNamesConstants.APPLICANT_PARTICIPANT_VPN).getAsString(), PlatformComponentProfileCommunication.class);
         PlatformComponentProfile remoteComponent = gson.fromJson(respond.get(JsonAttNamesConstants.REMOTE_PARTICIPANT_VPN).getAsString(), PlatformComponentProfileCommunication.class);
 
+        System.out.println("CompleteComponentConnectionRequestPacketProcessor - networkServiceType = "+networkServiceType);
+        System.out.println("CompleteComponentConnectionRequestPacketProcessor - applicantComponent = "+applicantComponent.getAlias() + "["+applicantComponent.getIdentityPublicKey() +"]");
+        System.out.println("CompleteComponentConnectionRequestPacketProcessor - remoteComponent    = "+remoteComponent.getAlias()    + "["+remoteComponent.getIdentityPublicKey()    +"]");
+
         /*
          * Create a new event whit the networkServiceType and remoteIdentity
          */
@@ -74,7 +80,7 @@ public class CompleteComponentConnectionRequestPacketProcessor extends FermatPac
         /*
          * Raise the event
          */
-        //System.out.println("CompleteComponentConnectionRequestPacketProcessor - Raised a event = P2pEventType.COMPLETE_COMPONENT_CONNECTION_REQUEST_NOTIFICATION");
+        System.out.println("CompleteComponentConnectionRequestPacketProcessor - Raised a event = P2pEventType.COMPLETE_COMPONENT_CONNECTION_REQUEST_NOTIFICATION");
         getWsCommunicationsCloudClientChannel().getEventManager().raiseEvent(event);
 
     }
