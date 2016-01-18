@@ -140,7 +140,6 @@
             tools:ignore="HardcodedText" />
 
     </LinearLayout>
-
     <LinearLayout
         android:id="@+id/no_fermat_connection_view"
         android:layout_width="match_parent"
@@ -182,6 +181,4 @@
             tools:ignore="HardcodedText" />
 
     </LinearLayout>
-
-
 </RelativeLayout>
