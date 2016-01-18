@@ -3,6 +3,7 @@ package com.bitdubai.fermat_p2p_api.layer.all_definition.common.network_services
 import com.bitdubai.fermat_api.layer.all_definition.components.interfaces.PlatformComponentProfile;
 import com.bitdubai.fermat_api.layer.all_definition.crypto.asymmetric.ECCKeyPair;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
+import com.bitdubai.fermat_api.layer.all_definition.network_service.enums.NetworkServiceType;
 import com.bitdubai.fermat_api.layer.all_definition.network_service.interfaces.NetworkService;
 import com.bitdubai.fermat_api.layer.all_definition.network_service.interfaces.NetworkServiceConnectionManager;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
@@ -197,7 +198,7 @@ public class CommunicationNetworkServiceConnectionManager<NS extends AbstractNet
      *
      * @param remoteComponentProfile
      */
-    public void handleEstablishedRequestedNetworkServiceConnection(PlatformComponentProfile remoteComponentProfile) {
+    public void handleEstablishedRequestedNetworkServiceConnection(PlatformComponentProfile remoteComponentProfile,NetworkServiceType networkServiceType) {
 
         try {
 
@@ -205,7 +206,7 @@ public class CommunicationNetworkServiceConnectionManager<NS extends AbstractNet
              * Get the active connection
              */
             //TODO: Mati: cambié el platformComponentProfile de esto por el networkServicePluginRoot.getPlatformComponentProfilePluginRoot()
-            CommunicationsVPNConnection communicationsVPNConnection = communicationsClientConnection.getCommunicationsVPNConnectionStablished(networkServicePluginRoot.getPlatformComponentProfilePluginRoot().getNetworkServiceType(), remoteComponentProfile);
+            CommunicationsVPNConnection communicationsVPNConnection = communicationsClientConnection.getCommunicationsVPNConnectionStablished(networkServiceType, remoteComponentProfile);
 
             //Validate the connection
             if (communicationsVPNConnection != null &&

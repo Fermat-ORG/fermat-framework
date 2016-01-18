@@ -449,7 +449,8 @@ public abstract class AbstractNetworkServiceV2 extends AbstractPlugin implements
           /*
          * Tell the manager to handler the new connection stablished
          */
-        communicationNetworkServiceConnectionManager.handleEstablishedRequestedNetworkServiceConnection(remoteComponentProfile);
+        //todo: TO COMPLETE
+       // communicationNetworkServiceConnectionManager.handleEstablishedRequestedNetworkServiceConnection(remoteComponentProfile);
         onHandleCompleteComponentConnectionRequestNotificationEvent(applicantComponentProfile, remoteComponentProfile);
     }
 
