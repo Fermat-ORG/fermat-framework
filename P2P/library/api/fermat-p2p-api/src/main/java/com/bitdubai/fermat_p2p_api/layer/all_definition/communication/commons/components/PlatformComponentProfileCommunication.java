@@ -304,7 +304,8 @@ public class PlatformComponentProfileCommunication implements PlatformComponentP
                 ", platformComponentType=" + platformComponentType +
                 ", networkServiceType=" + networkServiceType +
                 ", communicationCloudClientIdentity='" + communicationCloudClientIdentity + '\'' +
-                ", extraData = "+extraData + '}';
+                ", extraData = "+extraData +
+                '}';
     }
 
     @Override

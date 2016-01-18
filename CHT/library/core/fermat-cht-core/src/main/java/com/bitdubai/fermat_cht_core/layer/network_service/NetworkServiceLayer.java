@@ -1,7 +1,7 @@
 package com.bitdubai.fermat_cht_core.layer.network_service;
 
 import com.bitdubai.fermat_api.layer.all_definition.enums.Layers;
-import com.bitdubai.fermat_cht_core.layer.network_service.chat.ChatPluginSubsystem;
+import com.bitdubai.fermat_cht_core.layer.network_service.chat.ChatNetworkServicePluginSubsystem;
 import com.bitdubai.fermat_core_api.layer.all_definition.system.abstract_classes.AbstractLayer;
 import com.bitdubai.fermat_core_api.layer.all_definition.system.exceptions.CantRegisterPluginException;
 import com.bitdubai.fermat_core_api.layer.all_definition.system.exceptions.CantStartLayerException;
@@ -19,7 +19,7 @@ public class NetworkServiceLayer extends AbstractLayer {
 
         try {
 
-            registerPlugin(new ChatPluginSubsystem());
+            registerPlugin(new ChatNetworkServicePluginSubsystem());
 
         } catch (CantRegisterPluginException e) {
 

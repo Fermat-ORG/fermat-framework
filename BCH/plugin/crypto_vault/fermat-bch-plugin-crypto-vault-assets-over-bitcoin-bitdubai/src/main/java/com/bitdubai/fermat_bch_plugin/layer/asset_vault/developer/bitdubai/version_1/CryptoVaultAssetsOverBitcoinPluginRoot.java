@@ -294,20 +294,6 @@ public class CryptoVaultAssetsOverBitcoinPluginRoot extends AbstractPlugin imple
     }
 
     /**
-     * Based on the passed transaction chain of Transactions hashes and Blocks hashes, determines the entire path
-     * of the chain until the Genesis Transaction is reached.
-     * The genesis Transaction will be the first transaction in the map.
-     * @param transactionChain a Map with the form TransactionHash / BlockHash
-     * @return the CryptoTransaction that represents the GenesisTransaction
-     * @throws CantGetCryptoTransactionException
-     */
-    @Override
-    public CryptoTransaction getGenesisTransaction(Map<String, String> transactionChain) throws CantGetCryptoTransactionException {
-        return assetCryptoVaultManager.getGenesisTransaction(transactionChain);
-    }
-
-
-    /**
      * Will create a Bitcoin transaction and prepare it to be broadcasted later.
      * This transaction locks the bitcoins associated with the passed input (if valid).
      * @param inputTransaction the Transaction hash that will be used to get the funds from.

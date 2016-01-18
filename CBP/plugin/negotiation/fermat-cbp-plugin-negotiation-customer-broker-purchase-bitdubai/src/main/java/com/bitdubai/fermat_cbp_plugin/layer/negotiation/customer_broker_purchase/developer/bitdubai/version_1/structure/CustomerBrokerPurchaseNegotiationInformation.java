@@ -23,9 +23,9 @@ public class CustomerBrokerPurchaseNegotiationInformation implements CustomerBro
 
     private final Boolean nearExpirationDatetime;
 
-    private Long   lastNegotiationUpdateDate;
     private String cancelReason;
     private String memo;
+    private Long   lastNegotiationUpdateDate;
 
     public CustomerBrokerPurchaseNegotiationInformation(
             UUID   negotiationId,
@@ -35,7 +35,11 @@ public class CustomerBrokerPurchaseNegotiationInformation implements CustomerBro
             Long negotiationExpirationDate,
             NegotiationStatus statusNegotiation,
             Collection<Clause> clauses,
-            Boolean nearExpirationDatetime
+            Boolean nearExpirationDatetime,
+
+            String memo,
+            String cancelReason,
+            Long   lastNegotiationUpdateDate
     ){
         this.negotiationId = negotiationId;
         this.publicKeyCustomer = publicKeyCustomer;
@@ -45,6 +49,10 @@ public class CustomerBrokerPurchaseNegotiationInformation implements CustomerBro
         this.statusNegotiation = statusNegotiation;
         this.clauses = clauses;
         this.nearExpirationDatetime = nearExpirationDatetime;
+
+        this.memo = memo;
+        this.cancelReason = cancelReason;
+        this.lastNegotiationUpdateDate = lastNegotiationUpdateDate;
     }
 
     @Override

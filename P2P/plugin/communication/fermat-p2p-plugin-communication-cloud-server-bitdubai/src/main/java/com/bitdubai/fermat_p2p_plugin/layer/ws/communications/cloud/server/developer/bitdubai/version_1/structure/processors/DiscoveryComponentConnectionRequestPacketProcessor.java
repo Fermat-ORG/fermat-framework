@@ -164,6 +164,8 @@ public class DiscoveryComponentConnectionRequestPacketProcessor extends FermatPa
             LOG.info("requested connection is no possible, some of the participant are no available.");
             LOG.info("cause: "+e.getMessage());
 
+            e.printStackTrace();
+
             /*
              * Get the client connection destination
              */

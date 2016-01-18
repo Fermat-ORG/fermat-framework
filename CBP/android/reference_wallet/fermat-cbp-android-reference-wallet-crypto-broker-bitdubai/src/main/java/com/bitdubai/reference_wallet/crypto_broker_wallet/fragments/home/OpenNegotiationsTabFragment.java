@@ -91,16 +91,8 @@ public class OpenNegotiationsTabFragment extends FermatWalletExpandableListFragm
                         UnexpectedWalletExceptionSeverity.DISABLES_THIS_FRAGMENT, ex);
         }
 
-        openNegotiationList = new ArrayList<>();
-        marketExchangeRateSummaryList = new ArrayList<>();
-        Object configureData = appSession.getData(CryptoBrokerWalletSession.CONFIGURED_DATA);
-        if (configureData == null) {
-            startWizard(WizardTypes.CBP_WALLET_CRYPTO_BROKER_START_WIZARD.getKey(), appSession);
-        } else {
-            openNegotiationList = (ArrayList) getMoreDataAsync(FermatRefreshTypes.NEW, 0);
-            marketExchangeRateSummaryList = getMarketExchangeRateSummaryData();
-        }
-
+        openNegotiationList = (ArrayList) getMoreDataAsync(FermatRefreshTypes.NEW, 0);
+        marketExchangeRateSummaryList = getMarketExchangeRateSummaryData();
 
     }
 

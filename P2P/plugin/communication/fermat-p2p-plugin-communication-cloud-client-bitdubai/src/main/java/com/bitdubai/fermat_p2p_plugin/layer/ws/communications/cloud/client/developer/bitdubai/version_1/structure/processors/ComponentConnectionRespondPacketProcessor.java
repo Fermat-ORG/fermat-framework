@@ -39,9 +39,8 @@ public class ComponentConnectionRespondPacketProcessor extends FermatPacketProce
     @Override
     public void processingPackage(FermatPacket receiveFermatPacket) {
 
-
         //System.out.println(" --------------------------------------------------------------------- ");
-       System.out.println("ComponentConnectionRespondPacketProcessor - Starting processingPackage");
+       //System.out.println("ComponentConnectionRespondPacketProcessor - Starting processingPackage");
 
         /*
          * Get the message content and decrypt
@@ -69,7 +68,7 @@ public class ComponentConnectionRespondPacketProcessor extends FermatPacketProce
 
             vpnServerUri = new URI(ServerConf.WS_PROTOCOL + WsCommunicationsCloudClientPluginRoot.SERVER_IP + ":" + ServerConf.DEFAULT_PORT + vpnServerUri);
 
-            System.out.println("ComponentConnectionRespondPacketProcessor - reconstruct vpnServerUri = "+vpnServerUri);
+            System.out.println("ComponentConnectionRespondPacketProcessor - vpnServerUri to connect = "+vpnServerUri);
 
             /*
              * Get the  wsCommunicationVPNClientManagerAgent
@@ -80,15 +79,6 @@ public class ComponentConnectionRespondPacketProcessor extends FermatPacketProce
              * Create a new VPN client
              */
             wsCommunicationVPNClientManagerAgent.createNewWsCommunicationVPNClient(vpnServerUri, vpnServerIdentity, participantVpn, remotePlatformComponentProfile, remoteNsPlatformComponentProfile, getWsCommunicationsCloudClientChannel().getEventManager());
-
-            /*
-             * Is not running
-             */
-            if (!wsCommunicationVPNClientManagerAgent.isRunning() &&
-                    wsCommunicationVPNClientManagerAgent.getState() == Thread.State.NEW){
-
-                wsCommunicationVPNClientManagerAgent.start();
-            }
 
         } catch (Exception e) {
            throw new RuntimeException(e);

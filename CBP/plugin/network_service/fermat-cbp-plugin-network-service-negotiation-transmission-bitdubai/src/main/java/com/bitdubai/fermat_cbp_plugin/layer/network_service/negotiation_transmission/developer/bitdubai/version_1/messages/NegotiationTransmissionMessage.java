@@ -12,21 +12,16 @@ public class NegotiationTransmissionMessage {
 
     private NegotiationTransmissionType messageType;
 
-    public NegotiationTransmissionMessage() {
+    public NegotiationTransmissionMessage() { }
 
-    }
-
-    public NegotiationTransmissionMessage(final NegotiationTransmissionType messageType) {
-        this.messageType = messageType;
-    }
-
-    public String toJson() {
-
-        Gson gson = new Gson();
-        return gson.toJson(this);
-    }
+    public NegotiationTransmissionMessage(final NegotiationTransmissionType messageType) { this.messageType = messageType; }
 
     public NegotiationTransmissionType getMessageType() {
         return messageType;
+    }
+
+    public String toJson() {
+        Gson gson = new Gson();
+        return gson.toJson(this);
     }
 }
