@@ -217,16 +217,21 @@ public class TransactionTransmissionAgent {
             try {
                 transactionTransmissionContractHashDao.initialize();
             } catch (CantInitializeNetworkServiceDatabaseException e) {
-                e.printStackTrace();
-        //Start the Thread
-        toSend.start();
-        toReceive.start();
-
-        System.out.println("CryptoTransmissionAgent - started ");
+                this.errorManager.reportUnexpectedPluginException(
+                        Plugins.TRANSACTION_TRANSMISSION,
+                        UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,
+                        e);
             }
+            //Start the Thread
+            toSend.start();
+            toReceive.start();
+            System.out.println("TransactionTransmissionAgent - started ");
         } catch (Exception exception){
             FermatException ex = new CantStartPluginException(CantStartPluginException.DEFAULT_MESSAGE,FermatException.wrapException(exception), "EXCEPTION THAT THE PLUGIN CAN NOT HANDLE BY ITSELF","Check the cause");
-            this.errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_TEMPLATE_NETWORK_SERVICE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, ex);
+            this.errorManager.reportUnexpectedPluginException(
+                    Plugins.TRANSACTION_TRANSMISSION,
+                    UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,
+                    ex);
         }
 
     }
@@ -299,7 +304,7 @@ public class TransactionTransmissionAgent {
          /*
          * Read all pending BusinessTransactionMetadata from database
          */
-            List<BusinessTransactionMetadata> businessTransactionMetadataList = transactionTransmissionContractHashDao.findAll(filters);
+            List<BusinessTransactionMetadata> businessTransactionMetadataList = transactionTransmissionContractHashDao.findAllToSend();
 
 
             for (BusinessTransactionMetadata businessTransactionMetadata : businessTransactionMetadataList) {
@@ -316,8 +321,8 @@ public class TransactionTransmissionAgent {
 
                             if (platformComponentProfile != null) {
 
-                                PlatformComponentProfile applicantParticipant = wsCommunicationsCloudClientManager.getCommunicationsCloudClientConnection().constructBasicPlatformComponentProfileFactory(businessTransactionMetadata.getSenderId(), NetworkServiceType.UNDEFINED, PlatformComponentType.ACTOR_INTRA_USER);
-                                PlatformComponentProfile remoteParticipant = wsCommunicationsCloudClientManager.getCommunicationsCloudClientConnection().constructBasicPlatformComponentProfileFactory(businessTransactionMetadata.getReceiverId(), NetworkServiceType.UNDEFINED, PlatformComponentType.ACTOR_INTRA_USER);
+                                PlatformComponentProfile applicantParticipant = wsCommunicationsCloudClientManager.getCommunicationsCloudClientConnection().constructBasicPlatformComponentProfileFactory(businessTransactionMetadata.getSenderId(), NetworkServiceType.TRANSACTION_TRANSMISSION, PlatformComponentType.NETWORK_SERVICE);
+                                PlatformComponentProfile remoteParticipant = wsCommunicationsCloudClientManager.getCommunicationsCloudClientConnection().constructBasicPlatformComponentProfileFactory(businessTransactionMetadata.getReceiverId(), NetworkServiceType.TRANSACTION_TRANSMISSION, PlatformComponentType.NETWORK_SERVICE);
                                 communicationNetworkServiceConnectionManager.connectTo(applicantParticipant, platformComponentProfile, remoteParticipant);
 
                                 // pass the businessTransactionMetadata to a pool waiting for the response of the other peer or server failure
@@ -409,7 +414,7 @@ public class TransactionTransmissionAgent {
          /*
          * Read all pending CryptoTransmissionMetadata from database
          */
-            List<BusinessTransactionMetadata> businessTransactionMetadataList = transactionTransmissionContractHashDao.findAll(filters);
+            List<BusinessTransactionMetadata> businessTransactionMetadataList = transactionTransmissionContractHashDao.findAllToReceive(filters);
 
 
             for(BusinessTransactionMetadata businessTransactionMetadata : businessTransactionMetadataList){
@@ -504,7 +509,7 @@ public class TransactionTransmissionAgent {
            // throw new ObjectNotSetException(ex, "CAN NOT SET THE OBJECT","");
             ex.printStackTrace();
             FermatException e = new ObjectNotSetException(FermatException.wrapException(ex), "","Check the cause");
-            this.errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_CRYPTO_TRANSMISSION_NETWORK_SERVICE,UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,e);
+            this.errorManager.reportUnexpectedPluginException(Plugins.TRANSACTION_TRANSMISSION,UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,e);
         }
 
     }
