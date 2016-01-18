@@ -654,7 +654,7 @@ public class DigitalAssetCryptoTransactionFactory implements DealsWithErrors {
      * @throws UnexpectedResultReturnedFromDatabaseException
      */
     private DigitalAssetMetadata setDigitalAssetGenesisTransaction(String transactionID, String genesisTransaction, DigitalAssetMetadata digitalAssetMetadata) throws CantPersistsGenesisTransactionException, UnexpectedResultReturnedFromDatabaseException {
-        digitalAssetMetadata.setGenesisTransaction(genesisTransaction);
+        digitalAssetMetadata.addNewTransaction(genesisTransaction, null);
         this.assetIssuingTransactionDao.persistGenesisTransaction(transactionID, genesisTransaction);
         return digitalAssetMetadata;
     }

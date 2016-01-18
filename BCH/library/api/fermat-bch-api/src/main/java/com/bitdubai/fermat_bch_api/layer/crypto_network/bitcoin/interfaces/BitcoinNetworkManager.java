@@ -22,9 +22,7 @@ import org.bitcoinj.core.ECKey;
 import org.bitcoinj.core.Transaction;
 import org.bitcoinj.core.UTXOProvider;
 
-import java.util.LinkedHashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.UUID;
 
 import javax.annotation.Nullable;
@@ -140,7 +138,25 @@ public interface BitcoinNetworkManager extends TransactionSender<CryptoTransacti
     List<Transaction> getBitcoinTransactions(BlockchainNetworkType blockchainNetworkType);
 
 
-     /**
+    /**
+     * Will get all the CryptoTransactions stored in the CryptoNetwork which are a child of a parent Transaction
+     * @param parentHash
+     * @return
+     * @throws CantGetCryptoTransactionException
+     */
+    List<CryptoTransaction> getChildCryptoTransaction(String parentHash) throws CantGetCryptoTransactionException;
+
+    /**
+     * Will get all the CryptoTransactions stored in the CryptoNetwork which are a child of a parent Transaction
+     * @param parentHash the parent transaction
+     * @param depth the depth of how many transactions we will navigate until we reach the parent transaction. Max is 10
+     * @return
+     * @throws CantGetCryptoTransactionException
+     */
+    List<CryptoTransaction> getChildCryptoTransaction(String parentHash, int depth) throws CantGetCryptoTransactionException;
+
+
+    /**
      * gets the current Crypto Status for the specified Transaction ID
      * @param txHash the Bitcoin transaction hash
      * @return the last crypto status
@@ -168,22 +184,30 @@ public interface BitcoinNetworkManager extends TransactionSender<CryptoTransacti
      */
     BlockchainConnectionStatus getBlockchainConnectionStatus(BlockchainNetworkType blockchainNetworkType)  throws CantGetBlockchainConnectionStatusException;
 
-     /**
+    /**
+     * Starting from the parentTransaction, I will navigate up until the last transaction, and return it.
+     * @blockchainNetworkType the network in which we will be executing this. If none provided, DEFAULT will be used.
+     * @param parentTransactionHash The starting point transaction hash.
+     * @param transactionBlockHash the block where this transaction is.
+     * @return the Last child transaction.
+     */
+    Transaction getLastChildTransaction(@Nullable BlockchainNetworkType blockchainNetworkType, String parentTransactionHash, String transactionBlockHash) throws CantGetTransactionException;
+
+    /**
+     * Starting from the parentTransaction, I will navigate up until the last transaction, and return the CryptoTransaction
+     * @blockchainNetworkType the network in which we will be executing this. If none provided, DEFAULT will be used.
+     * @param parentTransactionHash The starting point transaction hash.
+     * @param transactionBlockHash the block where this transaction is.
+     * @return the Last child transaction.
+     */
+    CryptoTransaction getLastChildCryptoTransaction(@Nullable BlockchainNetworkType blockchainNetworkType, String parentTransactionHash, String transactionBlockHash) throws CantGetCryptoTransactionException;
+
+
+    /**
      * Gets a stored CryptoTransaction in wathever network.
      * @param txHash the transaction hash we want to get the CryptoTransaction
      * @return the last recorded CryptoTransaction.
      * @throws CantGetCryptoTransactionException
      */
     CryptoTransaction getCryptoTransaction(String txHash) throws CantGetCryptoTransactionException;
-
-    /**
-     * Based on the passed transaction chain of Transactions hashes and Blocks hashes, determines the entire path
-     * of the chain until the Genesis Transaction is reached.
-     * The genesis Transaction will be the first transaction in the map.
-     * @param blockchainNetworkType the active network we are getting this info from. Defaults to BlockchainNetworkType.DEFAULT
-     * @param transactionChain a Map with the form TransactionHash / BlockHash
-     * @return the CryptoTransaction that represents the GenesisTransaction
-     * @throws CantGetCryptoTransactionException
-     */
-    CryptoTransaction getGenesisCryptoTransaction(@Nullable BlockchainNetworkType blockchainNetworkType, LinkedHashMap<String, String> transactionChain) throws CantGetCryptoTransactionException;
 }

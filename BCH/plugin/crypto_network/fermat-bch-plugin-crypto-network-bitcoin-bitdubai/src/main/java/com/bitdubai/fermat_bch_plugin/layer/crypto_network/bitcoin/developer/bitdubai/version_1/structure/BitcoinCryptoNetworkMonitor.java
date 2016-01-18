@@ -570,22 +570,6 @@ public class BitcoinCryptoNetworkMonitor implements Agent {
             throw new CantGetTransactionException(CantGetTransactionException.DEFAULT_MESSAGE, null, "BlockHash parameters can't be null", null);
 
         Sha256Hash blockHash = Sha256Hash.wrap(transactionBlockHash);
-        try {
-            StoredBlock storedBlock= this.blockChain.getBlockStore().get(blockHash);
-            /**
-             * I will search for all transactions in that block to find my transaction
-             */
-            for (Transaction blockTransaction : storedBlock.getHeader().getTransactions()){
-                if (blockTransaction.getHashAsString().equals(transactionHash))
-                    return blockTransaction;
-            }
-        } catch (BlockStoreException e) {
-            /**
-             * if there was an error I will continue to get it from the blockchain
-             */
-            e.printStackTrace();
-        }
-
 
         try {
             /**
