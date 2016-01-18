@@ -35,7 +35,8 @@
             android:layout_marginEnd="16dp"
             android:layout_marginRight="16dp"
             android:src="@drawable/ic_username_delete"
-            android:tint="#ffffff" />
+            android:tint="#ffffff"
+            tools:ignore="RtlHardcoded" />
 
 
     </RelativeLayout>
