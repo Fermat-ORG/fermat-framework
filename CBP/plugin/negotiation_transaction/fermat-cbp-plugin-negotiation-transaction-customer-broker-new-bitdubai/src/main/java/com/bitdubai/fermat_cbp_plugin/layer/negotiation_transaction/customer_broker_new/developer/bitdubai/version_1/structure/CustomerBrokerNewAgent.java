@@ -410,29 +410,30 @@ public class CustomerBrokerNewAgent implements
                     for (Transaction<NegotiationTransmission> record : pendingTransactionList) {
 
                         negotiationTransmission = record.getInformation();
-                        negotiationXML  = negotiationTransmission.getNegotiationXML();
-                        transmissionId  = negotiationTransmission.getTransmissionId();
-                        transactionId   = negotiationTransmission.getTransactionId();
-                        negotiationType = negotiationTransmission.getNegotiationType();
+                        if(negotiationTransmission.getNegotiationTransactionType().getCode().equals(NegotiationTransactionType.CUSTOMER_BROKER_NEW)){
+                            negotiationXML = negotiationTransmission.getNegotiationXML();
+                            transmissionId = negotiationTransmission.getTransmissionId();
+                            transactionId = negotiationTransmission.getTransactionId();
+                            negotiationType = negotiationTransmission.getNegotiationType();
 
-                        if (negotiationXML != null) {
-                            switch (negotiationType) {
-                                case SALE:
-//                                    System.out.print("\n\n**** 19) MOCK NEGOTIATION TRANSACTION - CUSTOMER BROKER NEW - AGENT - CREATE SALE NEGOTIATION TRANSACTION  ****\n");
-                                    //CREATE SALE NEGOTIATION
-                                    saleNegotiation = (CustomerBrokerSaleNegotiation) XMLParser.parseXML(negotiationXML, saleNegotiation);
-                                    customerBrokerNewSaleNegotiationTransaction = new CustomerBrokerNewSaleNegotiationTransaction(
-                                            customerBrokerSaleNegotiationManager,
-                                            customerBrokerNewNegotiationTransactionDatabaseDao
-                                    );
-                                    customerBrokerNewSaleNegotiationTransaction.receiveSaleNegotiationTranasction(transactionId, saleNegotiation);
-                                    break;
+                            if (negotiationXML != null) {
+                                switch (negotiationType) {
+                                    case SALE:
+                                        //CREATE SALE NEGOTIATION
+                                        //System.out.print("\n\n**** 19) MOCK NEGOTIATION TRANSACTION - CUSTOMER BROKER NEW - AGENT - CREATE SALE NEGOTIATION TRANSACTION  ****\n");
+                                        saleNegotiation = (CustomerBrokerSaleNegotiation) XMLParser.parseXML(negotiationXML, saleNegotiation);
+                                        customerBrokerNewSaleNegotiationTransaction = new CustomerBrokerNewSaleNegotiationTransaction(
+                                                customerBrokerSaleNegotiationManager,
+                                                customerBrokerNewNegotiationTransactionDatabaseDao
+                                        );
+                                        customerBrokerNewSaleNegotiationTransaction.receiveSaleNegotiationTranasction(transactionId, saleNegotiation);
+                                        break;
+                                }
+                                //NOTIFIED EVENT
+                                customerBrokerNewNegotiationTransactionDatabaseDao.updateEventTansactionStatus(transactionId, EventStatus.NOTIFIED);
+                                //CONFIRM TRANSMISSION
+                                negotiationTransmissionManager.confirmReception(transmissionId);
                             }
-
-                            //NOTIFIED EVENT
-                            customerBrokerNewNegotiationTransactionDatabaseDao.updateEventTansactionStatus(transactionId, EventStatus.NOTIFIED);
-                            //CONFIRM TRANSMISSION
-                            negotiationTransmissionManager.confirmReception(transmissionId);
                         }
                     }
                 }

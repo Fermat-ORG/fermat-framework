@@ -229,7 +229,11 @@ public class NetworkServiceNegotiationTransmissionPluginRoot extends AbstractNet
 //            deleteAllTransmissionTest();
 //            createNegotiationTransamissionTest();
 
-            eventTest();
+            //TEST EVENT
+//            eventTest();
+
+            //TEST RECEIVE NEGOTIATION
+//            receiveNegotiationTransmissionTest();
 
             //Initilize service
             this.serviceStatus = ServiceStatus.STARTED;
@@ -601,7 +605,7 @@ public class NetworkServiceNegotiationTransmissionPluginRoot extends AbstractNet
 
         try {
 
-            System.out.print("\n\n**** 12) MOCK NEGOTIATION TRANSACTION - NEGOTIATION TRANSMISSION - PLUGIN ROOT - RECEIVE NEGOTIATION ****\n");
+            System.out.print("\n**** 12) MOCK NEGOTIATION TRANSACTION - NEGOTIATION TRANSMISSION - PLUGIN ROOT - RECEIVE NEGOTIATION ****\n");
 
             NegotiationTransmission negotiationTransmission = new NegotiationTransmissionImpl(
                 negotiationMessage.getTransmissionId(),
@@ -618,6 +622,12 @@ public class NetworkServiceNegotiationTransmissionPluginRoot extends AbstractNet
                 negotiationMessage.getNegotiationXML(),
                 negotiationMessage.getTimestamp()
             );
+
+            System.out.print("\n**** 12) MOCK NEGOTIATION TRANSMISSION - NEGOTIATION TRANSMISSION - PLUGIN ROOT - RECEIVE NEGOTIATION DATE: ****\n" +
+                            "- ActorReceive = "+ negotiationTransmission.getPublicKeyActorReceive() +
+                            "- ActorSend = "+ negotiationTransmission.getPublicKeyActorSend()
+            );
+
             databaseDao.registerSendNegotiatioTransmission(negotiationTransmission, NegotiationTransmissionState.PENDING_ACTION);
 
         } catch (CantRegisterSendNegotiationTransmissionException e) {
@@ -948,7 +958,12 @@ public class NetworkServiceNegotiationTransmissionPluginRoot extends AbstractNet
                     NegotiationType.PURCHASE
             );
 
-            this.receiveNegotiation(negotiationMessage);
+            System.out.print("\n**** 11) MOCK NEGOTIATION TRANSMISSION. RECEIVE MESSAGE TEST DATE: ****\n" +
+                    "- ActorReceive = "+ negotiationMessage.getPublicKeyActorReceive() +
+                    "- ActorSend = "+ negotiationMessage.getPublicKeyActorSend()
+            );
+
+            receiveNegotiation(negotiationMessage);
 
         } catch (CantHandleNewMessagesException e){
             System.out.print("\n**** MOCK NEGOTIATION TRANSMISSION. RECEIVE MESSAGE TEST, ERROR, NOT FOUNT ****\n");
@@ -971,19 +986,19 @@ public class NetworkServiceNegotiationTransmissionPluginRoot extends AbstractNet
         PlatformComponentType   actorReceiveType        = null;
         Date                    time                    = new Date();
 
-        UUID transmissionId     = UUID.fromString("111111");
-        UUID transactionId      = UUID.fromString("222222");
+        UUID transmissionId     = UUID.randomUUID();
+        UUID transactionId      = UUID.randomUUID();
         String negotiationXML   = XMLParser.parseObject(negotiation);
 
-        if(actorSendType.getCode().equals(PlatformComponentType.ACTOR_CRYPTO_CUSTOMER.getCode())){
+//        if(actorSendType.getCode().equals(PlatformComponentType.ACTOR_CRYPTO_CUSTOMER.getCode())){
             publicKeyActorSend      = negotiation.getCustomerPublicKey();
             publicKeyActorReceive   = negotiation.getBrokerPublicKey();
             actorReceiveType        = PlatformComponentType.ACTOR_CRYPTO_BROKER;
-        }else{
-            publicKeyActorSend      = negotiation.getBrokerPublicKey();
-            publicKeyActorReceive   = negotiation.getCustomerPublicKey();
-            actorReceiveType        = PlatformComponentType.ACTOR_CRYPTO_CUSTOMER;
-        }
+//        }else{
+//            publicKeyActorSend      = negotiation.getBrokerPublicKey();
+//            publicKeyActorReceive   = negotiation.getCustomerPublicKey();
+//            actorReceiveType        = PlatformComponentType.ACTOR_CRYPTO_CUSTOMER;
+//        }
 
         return new NegotiationMessage(
             transmissionId,
