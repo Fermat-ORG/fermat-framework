@@ -36,7 +36,7 @@ public class ServerHandshakeRespondJettyPacketProcessor extends FermatJettyPacke
      *
      * @param wsCommunicationsJettyCloudClientChannel
      */
-    ServerHandshakeRespondJettyPacketProcessor(WsCommunicationsJettyCloudClientChannel wsCommunicationsJettyCloudClientChannel) {
+    public ServerHandshakeRespondJettyPacketProcessor(WsCommunicationsJettyCloudClientChannel wsCommunicationsJettyCloudClientChannel) {
         super(wsCommunicationsJettyCloudClientChannel);
     }
 
@@ -79,7 +79,7 @@ public class ServerHandshakeRespondJettyPacketProcessor extends FermatJettyPacke
         /*
          * Construct a Communications Cloud Client Profile for this component and send and fermat packet type FermatPacketType.COMPONENT_REGISTRATION_REQUEST
          */
-        PlatformComponentProfile communicationsCloudClientProfile = getWsCommunicationsJettyCloudClientChannel().getWsCommunicationsCloudClientConnection().constructPlatformComponentProfileFactory(getWsCommunicationsJettyCloudClientChannel().getClientIdentity().getPublicKey(), "WsCommunicationsCloudClientChannel",  "Web Socket Communications Cloud Client", NetworkServiceType.UNDEFINED, PlatformComponentType.COMMUNICATION_CLOUD_CLIENT, null);
+        PlatformComponentProfile communicationsCloudClientProfile = getWsCommunicationsJettyCloudClientChannel().getWsCommunicationsTyrusCloudClientConnection().constructPlatformComponentProfileFactory(getWsCommunicationsJettyCloudClientChannel().getClientIdentity().getPublicKey(), "WsCommunicationsCloudClientChannel",  "Web Socket Communications Cloud Client", NetworkServiceType.UNDEFINED, PlatformComponentType.COMMUNICATION_CLOUD_CLIENT, null);
         getWsCommunicationsJettyCloudClientChannel().setPlatformComponentProfile(communicationsCloudClientProfile);
 
         /* ------------------------------------

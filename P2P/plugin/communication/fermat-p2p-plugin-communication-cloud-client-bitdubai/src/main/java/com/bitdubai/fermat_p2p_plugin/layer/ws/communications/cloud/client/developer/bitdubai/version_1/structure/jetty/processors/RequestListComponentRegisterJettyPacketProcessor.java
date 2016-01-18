@@ -42,7 +42,7 @@ public class RequestListComponentRegisterJettyPacketProcessor extends FermatJett
      *
      * @param wsCommunicationsJettyCloudClientChannel
      */
-    RequestListComponentRegisterJettyPacketProcessor(WsCommunicationsJettyCloudClientChannel wsCommunicationsJettyCloudClientChannel) {
+    public RequestListComponentRegisterJettyPacketProcessor(WsCommunicationsJettyCloudClientChannel wsCommunicationsJettyCloudClientChannel) {
         super(wsCommunicationsJettyCloudClientChannel);
     }
 

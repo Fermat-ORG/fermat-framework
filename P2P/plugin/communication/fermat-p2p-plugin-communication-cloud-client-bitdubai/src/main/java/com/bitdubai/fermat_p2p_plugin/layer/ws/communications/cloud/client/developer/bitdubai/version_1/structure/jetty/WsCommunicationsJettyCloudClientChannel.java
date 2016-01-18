@@ -16,37 +16,27 @@ import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.enums.P2pE
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.events.CompleteClientComponentRegistrationNotificationEvent;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.contents.FermatPacket;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.enums.FermatPacketType;
-import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.enums.JsonAttNamesConstants;
-import com.bitdubai.fermat_p2p_plugin.layer.ws.communications.cloud.client.developer.bitdubai.version_1.structure.WsCommunicationsCloudClientConnection;
 import com.bitdubai.fermat_p2p_plugin.layer.ws.communications.cloud.client.developer.bitdubai.version_1.structure.agents.WsCommunicationsCloudClientSupervisorConnectionAgent;
 import com.bitdubai.fermat_p2p_plugin.layer.ws.communications.cloud.client.developer.bitdubai.version_1.structure.jetty.conf.CLoudClientConfigurator;
-import com.bitdubai.fermat_p2p_plugin.layer.ws.communications.cloud.client.developer.bitdubai.version_1.structure.processors.FermatPacketProcessor;
+import com.bitdubai.fermat_p2p_plugin.layer.ws.communications.cloud.client.developer.bitdubai.version_1.structure.jetty.processors.FermatJettyPacketProcessor;
 import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfaces.EventManager;
-import com.google.gson.JsonObject;
 
-import org.java_websocket.WebSocket;
 import org.java_websocket.client.WebSocketClient;
-import org.java_websocket.drafts.Draft;
-import org.java_websocket.framing.Framedata;
 import org.java_websocket.handshake.ServerHandshake;
 
 import java.io.IOException;
-import java.net.URI;
-import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CopyOnWriteArrayList;
 
 import javax.websocket.ClientEndpoint;
 import javax.websocket.CloseReason;
-import javax.websocket.ContainerProvider;
 import javax.websocket.DeploymentException;
 import javax.websocket.OnClose;
 import javax.websocket.OnError;
 import javax.websocket.OnMessage;
 import javax.websocket.OnOpen;
 import javax.websocket.Session;
-import javax.websocket.WebSocketContainer;
 
 /**
  * The Class <code>com.bitdubai.fermat_p2p_plugin.layer.ws.communications.cloud.client.developer.bitdubai.version_1.structure.WsCommunicationsCloudClientChannel</code>
@@ -67,7 +57,7 @@ public class WsCommunicationsJettyCloudClientChannel{
     /**
      * Represent the wsCommunicationsCloudClientConnection
      */
-    private WsCommunicationsCloudClientConnection wsCommunicationsCloudClientConnection;
+    private WsCommunicationsTyrusCloudClientConnection wsCommunicationsTyrusCloudClientConnection;
 
     /**
      * Represent the wsCommunicationsCloudClientSupervisorConnectionAgent
@@ -97,36 +87,37 @@ public class WsCommunicationsJettyCloudClientChannel{
     /**
      * Holds the packet processors objects
      */
-    private Map<FermatPacketType, CopyOnWriteArrayList<FermatPacketProcessor>> packetProcessorsRegister;
+    private Map<FermatPacketType, CopyOnWriteArrayList<FermatJettyPacketProcessor>> packetProcessorsRegister;
 
     /**
      * Represent is the client is register with the server
      */
     private boolean isRegister;
 
-
-    private Session clientSession;
+    /**
+     * Represent the clientConnection
+     */
+    private Session clientConnection;
 
     /**
      * Constructor with parameters
-     * @param wsCommunicationsCloudClientConnection
      * @param eventManager
      * @param clientIdentity
      * @throws IOException
      * @throws DeploymentException
      */
-    public WsCommunicationsJettyCloudClientChannel(WsCommunicationsCloudClientConnection wsCommunicationsCloudClientConnection, EventManager eventManager, ECCKeyPair clientIdentity) throws IOException, DeploymentException {
+    public WsCommunicationsJettyCloudClientChannel(WsCommunicationsTyrusCloudClientConnection wsCommunicationsTyrusCloudClientConnection, EventManager eventManager, ECCKeyPair clientIdentity) throws IOException, DeploymentException {
 
         this.clientIdentity = clientIdentity;
         this.temporalIdentity = CLoudClientConfigurator.tempIdentity;
         this.packetProcessorsRegister = new ConcurrentHashMap<>();
-        this.wsCommunicationsCloudClientConnection = wsCommunicationsCloudClientConnection;
+        this.wsCommunicationsTyrusCloudClientConnection = wsCommunicationsTyrusCloudClientConnection;
         this.eventManager = eventManager;
         this.isRegister = Boolean.FALSE;
     }
 
     public void sendMessage(final String message) {
-        clientSession.getAsyncRemote().sendText(message);
+        clientConnection.getAsyncRemote().sendText(message);
     }
 
 
@@ -140,7 +131,7 @@ public class WsCommunicationsJettyCloudClientChannel{
         System.out.println(" --------------------------------------------------------------------- ");
         System.out.println(" WsCommunicationsCloudClientChannel - Starting method onOpen");
         System.out.println(" WsCommunicationsCloudClientChannel - ready state = "+session.getId());
-        this.clientSession = session;
+        this.clientConnection = session;
     }
 
     /**
@@ -192,7 +183,7 @@ public class WsCommunicationsJettyCloudClientChannel{
              /*
              * Call the processors for this packet
              */
-            for (FermatPacketProcessor fermatPacketProcessor :packetProcessorsRegister.get(fermatPacketReceive.getFermatPacketType())) {
+            for (FermatJettyPacketProcessor fermatPacketProcessor :packetProcessorsRegister.get(fermatPacketReceive.getFermatPacketType())) {
 
                 /*
                  * Processor make his job
@@ -250,10 +241,10 @@ public class WsCommunicationsJettyCloudClientChannel{
      * @see WebSocketClient#onError(Exception)
      */
     @OnError
-    public void onError(Exception ex) {
+    public void onError(Session session, Throwable t) {
         System.out.println(" --------------------------------------------------------------------- ");
         System.out.println(" WsCommunicationsCloudClientChannel - Starting method onError");
-        ex.printStackTrace();
+        t.printStackTrace();
     }
 
     /**
@@ -284,7 +275,7 @@ public class WsCommunicationsJettyCloudClientChannel{
      * This method register a FermatJettyPacketProcessor object with this
      * server
      */
-    public void registerFermatPacketProcessor(FermatPacketProcessor fermatPacketProcessor) {
+    public void registerFermatPacketProcessor(FermatJettyPacketProcessor fermatPacketProcessor) {
 
 
         //Validate if a previous list created
@@ -300,7 +291,7 @@ public class WsCommunicationsJettyCloudClientChannel{
             /*
              * Create a new list and add the fermatPacketProcessor
              */
-            CopyOnWriteArrayList<FermatPacketProcessor> fermatPacketProcessorList = new CopyOnWriteArrayList<>();
+            CopyOnWriteArrayList<FermatJettyPacketProcessor> fermatPacketProcessorList = new CopyOnWriteArrayList<>();
             fermatPacketProcessorList.add(fermatPacketProcessor);
 
             /*
@@ -394,14 +385,6 @@ public class WsCommunicationsJettyCloudClientChannel{
     }
 
     /**
-     * Get the WsCommunicationsCloudClientConnection
-     * @return WsCommunicationsCloudClientConnection
-     */
-    public WsCommunicationsCloudClientConnection getWsCommunicationsCloudClientConnection() {
-        return wsCommunicationsCloudClientConnection;
-    }
-
-    /**
      * Get the EventManager
      * @return EventManager
      */
@@ -452,5 +435,23 @@ public class WsCommunicationsJettyCloudClientChannel{
      */
     public String getIdentityPublicKey(){
         return clientIdentity.getPublicKey();
+    }
+
+    /**
+     * Get the clientConnection value
+     *
+     * @return clientConnection current value
+     */
+    public Session getClientConnection() {
+        return clientConnection;
+    }
+
+    /**
+     * Get the wsCommunicationsTyrusCloudClientConnection value
+     *
+     * @return wsCommunicationsTyrusCloudClientConnection current value
+     */
+    public WsCommunicationsTyrusCloudClientConnection getWsCommunicationsTyrusCloudClientConnection() {
+        return wsCommunicationsTyrusCloudClientConnection;
     }
 }
