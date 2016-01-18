@@ -297,6 +297,8 @@ public class RedeemPointRedemptionMonitorAgent implements Agent {
                                         userPublicKey,
                                         actorAssetRedeemPointManager.getActorAssetRedeemPoint().getActorPublicKey());
 
+                                updateMetadataTransactionChain(transactionId, cryptoTransaction.getTransactionHash(), cryptoTransaction.getBlockHash());
+
                                 //CREDIT ON AVAILABLE BALANCE.
                                 debug("adding credit on available balance");
                                 AssetRedeemPointWalletBalance walletBalance = wallet.getBalance();
