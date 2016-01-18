@@ -106,8 +106,8 @@ public class AssetIssuerWalletImpl implements AssetIssuerWallet {
             throw new CantInitializeAssetIssuerWalletException("InternalId is null", null, "Parameter walletId is null", "loadWallet didn't find the asociated id");
 
         try {
-            database = this.pluginDatabaseSystem.openDatabase(this.pluginId, pluginId.toString());
-            assetIssuerWalletDao = new AssetIssuerWalletDao(database, pluginFileSystem, pluginId);
+            database = this.pluginDatabaseSystem.openDatabase(this.pluginId, walletId.toString());
+            assetIssuerWalletDao = new AssetIssuerWalletDao(database, pluginFileSystem, walletId);
         } catch (CantOpenDatabaseException cantOpenDatabaseException) {
             throw new CantInitializeAssetIssuerWalletException("I can't open database", cantOpenDatabaseException, "WalletId: " + pluginId.toString(), "");
         } catch (DatabaseNotFoundException databaseNotFoundException) {
