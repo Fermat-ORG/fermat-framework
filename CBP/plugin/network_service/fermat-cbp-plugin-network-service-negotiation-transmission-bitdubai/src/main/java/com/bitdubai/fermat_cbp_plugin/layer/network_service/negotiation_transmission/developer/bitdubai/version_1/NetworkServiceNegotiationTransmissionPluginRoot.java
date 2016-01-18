@@ -233,7 +233,7 @@ public class NetworkServiceNegotiationTransmissionPluginRoot extends AbstractNet
 //            eventTest();
 
             //TEST RECEIVE NEGOTIATION
-//            receiveNegotiationTransmissionTest();
+            receiveNegotiationTransmissionTest();
 
             //Initilize service
             this.serviceStatus = ServiceStatus.STARTED;
