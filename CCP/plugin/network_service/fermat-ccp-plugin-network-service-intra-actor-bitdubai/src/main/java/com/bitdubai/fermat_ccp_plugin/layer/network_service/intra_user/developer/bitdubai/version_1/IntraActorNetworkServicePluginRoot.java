@@ -1254,6 +1254,35 @@ public class IntraActorNetworkServicePluginRoot extends AbstractPlugin implement
 
             if(vpnConnectionCloseNotificationEvent.getNetworkServiceApplicant() == getNetworkServiceType()){
 
+
+                System.out.println("----------------------------\n" +
+                        "CHANGING OUTGOING NOTIFICATIONS RECORDS " +
+                        "THAT HAVE THE PROTOCOL STATE SET TO SENT" +
+                        "TO PROCESSING SEND IN ORDER TO ENSURE PROPER RECEPTION :"
+                        + "\n-------------------------------------------------");
+
+
+                try {
+
+                    List<ActorNetworkServiceRecord> lstActorRecord = getOutgoingNotificationDao().listRequestsByProtocolState(
+                            ActorProtocolState.SENT
+                    );
+
+
+                    for (ActorNetworkServiceRecord cpr : lstActorRecord) {
+                        getOutgoingNotificationDao().changeProtocolState(cpr.getId(), ActorProtocolState.PROCESSING_SEND);
+
+                    }
+                } catch (CantListIntraWalletUsersException e) {
+                    e.printStackTrace();
+                } catch (CantUpdateRecordDataBaseException e) {
+                    e.printStackTrace();
+                } catch (CantUpdateRecordException e) {
+                    e.printStackTrace();
+                } catch (RequestNotFoundException e) {
+                    e.printStackTrace();
+                }
+
                 if(communicationNetworkServiceConnectionManager != null)
                     communicationNetworkServiceConnectionManager.closeConnection(vpnConnectionCloseNotificationEvent.getRemoteParticipant().getIdentityPublicKey());
 
