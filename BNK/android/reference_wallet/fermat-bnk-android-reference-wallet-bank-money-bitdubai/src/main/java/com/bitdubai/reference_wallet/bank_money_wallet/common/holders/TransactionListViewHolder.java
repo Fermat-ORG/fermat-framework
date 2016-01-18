@@ -95,16 +95,16 @@ public class TransactionListViewHolder extends FermatViewHolder {
     }
 
     private void resetVisibility() {
-        depositImage.setVisibility(View.INVISIBLE);
-        depositText.setVisibility(View.INVISIBLE);
-        depositAmount.setVisibility(View.INVISIBLE);
-        depositMemo.setVisibility(View.INVISIBLE);
-        depositDate.setVisibility(View.INVISIBLE);
-        withdrawalImage.setVisibility(View.INVISIBLE);
-        withdrawalText.setVisibility(View.INVISIBLE);
-        withdrawalAmount.setVisibility(View.INVISIBLE);
-        withdrawalMemo.setVisibility(View.INVISIBLE);
-        withdrawalDate.setVisibility(View.INVISIBLE);
+        depositImage.setVisibility(View.GONE);
+        depositText.setVisibility(View.GONE);
+        depositAmount.setVisibility(View.GONE);
+        depositMemo.setVisibility(View.GONE);
+        depositDate.setVisibility(View.GONE);
+        withdrawalImage.setVisibility(View.GONE);
+        withdrawalText.setVisibility(View.GONE);
+        withdrawalAmount.setVisibility(View.GONE);
+        withdrawalMemo.setVisibility(View.GONE);
+        withdrawalDate.setVisibility(View.GONE);
     }
 
     private void depositItemsVisible() {
