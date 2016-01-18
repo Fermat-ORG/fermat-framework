@@ -1,9 +1,11 @@
 :numbered!:
 image::https://raw.githubusercontent.com/bitDubai/media-kit/master/MediaKit/Fermat%20Branding/Fermat%20Logotype/Fermat_Logo_3D.png[FermatLogo]
 == Introduction
-In the last 20 years virtually everything went digital: pictures, music, videos, mails, etc. Nevertheless we still have cash as paper money. Even with all the advancements in electronic management of money (ATMs, Payment processors, wire trnsfers, credit cards, debit cards, direct deposit and online billpay, etc) they are all the digital representation of paper currency. It was not until the sucessful implementation of Bitcoin and its underlying blockchain technology based in math, criptography and distributed consensus, that a brand new replacement for the entire concept of money appeared to be possible. It simplifies the exchange of goods and services in the current stage of modern living based on internet at the same time that promises a completely new paradigm of the exchange of values between people, based on opennes, decentralization and privacy.
+In the last 20 years virtually everything went digital: pictures, music, videos, mails, etc. Nevertheless we still have cash as paper money. Even with all the advancements in electronic management of money (ATMs, Payment processors, wire trnsfers, credit cards, debit cards, direct deposit and online billpay, etc) they are all the digital representation of paper currency. It was not until the sucessful implementation of Bitcoin and its underlying blockchain technology based in math, criptography and distributed consensus, that a brand new replacement for the entire concept of money[1] appeared to be possible. It simplifies the exchange of goods and services in the current stage of modern living based on internet at the same time that promises a completely new paradigm of the exchange of values between people, based on opennes, decentralization and privacy.
 The technology is becoming more popular in the last years as a considerable amount of fin tech venture capital has been flowing into startups dealing with it, but at present time, mass adoption seems to be too far away in the future despite of all money, time and effort devoted to achieve it.
 Here is the starting point of Fermat as a community of developers, graphic designers, academics, artists, and people of the industry trying to address this big challenge of crypto currencies and blockchain technology becoming mass adopted: to build the bridge between the technology and end users worldwide.
+
+[1] see a short description of Fiat money and cryptocurrency in link:book-z-appendix-03-money.asciidoc[Appendix: Money and Crypto Currency]
 
 === The Vision
 
@@ -53,10 +55,8 @@ Fermat's architecture includes also the possibility of interconnecting the trust
 === Fermat's Mission
 
  *  To get crypto currencies mass adopted as soon as possible.
-
- *  To build the best possible integrated system able to handle the finances not just of all the human world population but also of companies and machines in the context of the IoT.
-
  *  To allow end users, startups,  brand or institution to have their financials applications.
+ *  To build the best possible integrated system able to handle the finances not just of all the human world population but also of companies and machines in the context of the link:https://github.com/bitDubai/fermat/blob/master/fermat-book/book-glossary.asciidoc#IoT[IoT] (Internet of Things).
 
 === The challenge
 
