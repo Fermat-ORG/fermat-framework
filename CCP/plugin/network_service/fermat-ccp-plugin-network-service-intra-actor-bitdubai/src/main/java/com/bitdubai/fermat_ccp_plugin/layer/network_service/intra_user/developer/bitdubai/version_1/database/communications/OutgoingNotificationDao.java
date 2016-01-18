@@ -238,11 +238,11 @@ public class OutgoingNotificationDao implements com.bitdubai.fermat_ccp_plugin.l
     }
 
 
-    public void changeProtocolState(final UUID                 requestId    ,
-                                    final ActorProtocolState protocolState) throws CantUpdateRecordDataBaseException, CantUpdateRecordException, RequestNotFoundException {
+    public void changeProtocolState(final UUID                 notitficationId    ,
+                                    final ActorProtocolState protocolState) throws CantUpdateRecordDataBaseException, CantUpdateRecordException, Exception {
 
-        if (requestId == null)
-            throw new CantUpdateRecordDataBaseException("requestId null "   , null);
+        if (notitficationId == null)
+            throw new CantUpdateRecordDataBaseException("notification id null "   , null);
 
         if (protocolState == null)
             throw new CantUpdateRecordDataBaseException("protocolState null", null);
@@ -251,7 +251,7 @@ public class OutgoingNotificationDao implements com.bitdubai.fermat_ccp_plugin.l
 
             DatabaseTable cryptoPaymentRequestTable = getDatabaseTable();
 
-            cryptoPaymentRequestTable.addUUIDFilter(CommunicationNetworkServiceDatabaseConstants.OUTGOING_NOTIFICATION_ID_COLUMN_NAME, requestId, DatabaseFilterType.EQUAL);
+            cryptoPaymentRequestTable.addUUIDFilter(CommunicationNetworkServiceDatabaseConstants.OUTGOING_NOTIFICATION_ID_COLUMN_NAME, notitficationId, DatabaseFilterType.EQUAL);
 
             cryptoPaymentRequestTable.loadToMemory();
 
@@ -264,7 +264,7 @@ public class OutgoingNotificationDao implements com.bitdubai.fermat_ccp_plugin.l
 
                 cryptoPaymentRequestTable.updateRecord(record);
             } else {
-                throw new RequestNotFoundException("RequestId: "+requestId, "Cannot find a intra user request with the given id.");
+                throw new Exception("Notification: "+notitficationId,new Throwable("Cannot find a intra user request with the given id."));
             }
 
         } catch (CantLoadTableToMemoryException e) {
