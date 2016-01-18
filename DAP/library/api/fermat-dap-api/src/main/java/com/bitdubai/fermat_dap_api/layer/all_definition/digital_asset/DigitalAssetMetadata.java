@@ -62,6 +62,12 @@ public class DigitalAssetMetadata {
         this.digitalAsset = null;
     }
 
+    public DigitalAssetMetadata(UUID metadataId, DigitalAsset digitalAsset, LinkedHashMap<String, String> transactionChain) {
+        this.metadataId = metadataId;
+        this.digitalAsset = digitalAsset;
+        this.transactionChain = transactionChain;
+    }
+
     //PRIVATE METHODS
 
     private String generateHash() {
