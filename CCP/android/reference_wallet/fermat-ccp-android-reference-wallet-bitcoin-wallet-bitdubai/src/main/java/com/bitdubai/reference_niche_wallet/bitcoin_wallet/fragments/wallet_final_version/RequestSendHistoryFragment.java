@@ -149,21 +149,24 @@ public class RequestSendHistoryFragment extends FermatWalletListFragment<Payment
         frameLayout.setLayoutParams(lbs);
 
         ImageView icon = new ImageView(getActivity()); // Create an icon
+        icon.setImageResource(R.drawable.btn_drawer_icon_request_fluor);
         //icon.setImageResource(R.drawable.ic_contact_newcontact);
 
-        frameLayout.addView(icon);
-
-        com.oguzdev.circularfloatingactionmenu.library.FloatingActionButton actionButton = new com.oguzdev.circularfloatingactionmenu.library.FloatingActionButton.Builder(getActivity())
-                .setContentView(frameLayout)
-                .setBackgroundDrawable(R.drawable.btn_request_selector)
-                .build();
-
-        actionButton.setOnClickListener(new View.OnClickListener() {
+        View.OnClickListener onClickListener = new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 changeActivity(Activities.CCP_BITCOIN_WALLET_REQUEST_FORM_ACTIVITY);
             }
-        });
+        };
+
+        frameLayout.addView(icon);
+        frameLayout.setOnClickListener(onClickListener);
+        icon.setOnClickListener(onClickListener);
+
+        com.oguzdev.circularfloatingactionmenu.library.FloatingActionButton actionButton = new com.oguzdev.circularfloatingactionmenu.library.FloatingActionButton.Builder(getActivity())
+                .setContentView(frameLayout)
+                .build();
+
         FloatingActionMenu actionMenu = new FloatingActionMenu.Builder(getActivity())
                 .attachTo(actionButton)
                 .build();
