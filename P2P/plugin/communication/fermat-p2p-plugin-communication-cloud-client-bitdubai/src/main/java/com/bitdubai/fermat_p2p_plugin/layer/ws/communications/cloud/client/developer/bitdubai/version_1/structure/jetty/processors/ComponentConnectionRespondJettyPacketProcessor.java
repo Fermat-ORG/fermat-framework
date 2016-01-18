@@ -4,7 +4,7 @@
  * You may not modify, use, reproduce or distribute this software.
  * BITDUBAI/CONFIDENTIAL
  */
-package com.bitdubai.fermat_p2p_plugin.layer.ws.communications.cloud.client.developer.bitdubai.version_1.structure.processors;
+package com.bitdubai.fermat_p2p_plugin.layer.ws.communications.cloud.client.developer.bitdubai.version_1.structure.jetty.processors;
 
 import com.bitdubai.fermat_api.layer.all_definition.components.interfaces.PlatformComponentProfile;
 import com.bitdubai.fermat_api.layer.all_definition.crypto.asymmetric.AsymmetricCryptography;
@@ -13,6 +13,7 @@ import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.contents.Ferm
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.enums.FermatPacketType;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.enums.JsonAttNamesConstants;
 import com.bitdubai.fermat_p2p_plugin.layer.ws.communications.cloud.client.developer.bitdubai.version_1.WsCommunicationsCloudClientPluginRoot;
+import com.bitdubai.fermat_p2p_plugin.layer.ws.communications.cloud.client.developer.bitdubai.version_1.structure.jetty.WsCommunicationsJettyCloudClientChannel;
 import com.bitdubai.fermat_p2p_plugin.layer.ws.communications.cloud.client.developer.bitdubai.version_1.structure.util.ServerConf;
 import com.bitdubai.fermat_p2p_plugin.layer.ws.communications.cloud.client.developer.bitdubai.version_1.structure.vpn.WsCommunicationVPNClientManagerAgent;
 import com.google.gson.Gson;
@@ -30,11 +31,20 @@ import java.net.URI;
  * @version 1.0
  * @since Java JDK 1.7
  */
-public class ComponentConnectionRespondPacketProcessor extends FermatPacketProcessor {
+public class ComponentConnectionRespondJettyPacketProcessor extends FermatJettyPacketProcessor {
+
+    /**
+     * Constructor
+     *
+     * @param wsCommunicationsJettyCloudClientChannel
+     */
+    public ComponentConnectionRespondJettyPacketProcessor(WsCommunicationsJettyCloudClientChannel wsCommunicationsJettyCloudClientChannel) {
+        super(wsCommunicationsJettyCloudClientChannel);
+    }
 
     /**
      * (no-javadoc)
-     * @see FermatPacketProcessor#processingPackage(FermatPacket)
+     * @see FermatJettyPacketProcessor#processingPackage(FermatPacket)
      */
     @Override
     public void processingPackage(FermatPacket receiveFermatPacket) {
@@ -45,7 +55,7 @@ public class ComponentConnectionRespondPacketProcessor extends FermatPacketProce
         /*
          * Get the message content and decrypt
          */
-        String messageContentJsonStringRepresentation = AsymmetricCryptography.decryptMessagePrivateKey(receiveFermatPacket.getMessageContent(), getWsCommunicationsCloudClientChannel().getClientIdentity().getPrivateKey());
+        String messageContentJsonStringRepresentation = AsymmetricCryptography.decryptMessagePrivateKey(receiveFermatPacket.getMessageContent(), getWsCommunicationsJettyCloudClientChannel().getClientIdentity().getPrivateKey());
 
 
         //System.out.println("ComponentConnectionRespondJettyPacketProcessor - messageContentJsonStringRepresentation = "+messageContentJsonStringRepresentation);
@@ -73,12 +83,12 @@ public class ComponentConnectionRespondPacketProcessor extends FermatPacketProce
             /*
              * Get the  wsCommunicationVPNClientManagerAgent
              */
-            WsCommunicationVPNClientManagerAgent wsCommunicationVPNClientManagerAgent = getWsCommunicationsCloudClientChannel().getWsCommunicationsCloudClientConnection().getWsCommunicationVPNClientManagerAgent();
+            WsCommunicationVPNClientManagerAgent wsCommunicationVPNClientManagerAgent = getWsCommunicationsJettyCloudClientChannel().getWsCommunicationsCloudClientConnection().getWsCommunicationVPNClientManagerAgent();
 
             /*
              * Create a new VPN client
              */
-            wsCommunicationVPNClientManagerAgent.createNewWsCommunicationVPNClient(vpnServerUri, vpnServerIdentity, participantVpn, remotePlatformComponentProfile, remoteNsPlatformComponentProfile, getWsCommunicationsCloudClientChannel().getEventManager());
+            wsCommunicationVPNClientManagerAgent.createNewWsCommunicationVPNClient(vpnServerUri, vpnServerIdentity, participantVpn, remotePlatformComponentProfile, remoteNsPlatformComponentProfile, getWsCommunicationsJettyCloudClientChannel().getEventManager());
 
         } catch (Exception e) {
            throw new RuntimeException(e);
@@ -88,7 +98,7 @@ public class ComponentConnectionRespondPacketProcessor extends FermatPacketProce
 
     /**
      * (no-javadoc)
-     * @see FermatPacketProcessor#getFermatPacketType()
+     * @see FermatJettyPacketProcessor#getFermatPacketType()
      */
     @Override
     public FermatPacketType getFermatPacketType() {

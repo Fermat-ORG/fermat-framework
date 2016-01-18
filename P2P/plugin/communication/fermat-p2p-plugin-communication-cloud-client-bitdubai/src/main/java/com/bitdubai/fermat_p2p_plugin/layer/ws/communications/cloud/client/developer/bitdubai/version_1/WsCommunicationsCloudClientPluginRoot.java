@@ -30,6 +30,7 @@ import com.bitdubai.fermat_p2p_api.layer.p2p_communication.WsCommunicationsCloud
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.client.CommunicationsClientConnection;
 import com.bitdubai.fermat_p2p_plugin.layer.ws.communications.cloud.client.developer.bitdubai.version_1.structure.WsCommunicationsCloudClientConnection;
 import com.bitdubai.fermat_p2p_plugin.layer.ws.communications.cloud.client.developer.bitdubai.version_1.structure.agents.WsCommunicationsCloudClientSupervisorConnectionAgent;
+import com.bitdubai.fermat_p2p_plugin.layer.ws.communications.cloud.client.developer.bitdubai.version_1.structure.jetty.WsCommunicationsJettyCloudClientChannel;
 import com.bitdubai.fermat_p2p_plugin.layer.ws.communications.cloud.client.developer.bitdubai.version_1.structure.util.ServerConf;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedPluginExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
@@ -37,6 +38,7 @@ import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfac
 
 import org.java_websocket.WebSocketImpl;
 
+import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
@@ -44,6 +46,10 @@ import java.util.List;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
+
+import javax.websocket.ContainerProvider;
+import javax.websocket.DeploymentException;
+import javax.websocket.WebSocketContainer;
 
 /**
  * The Class <code>com.bitdubai.fermat_p2p_plugin.layer.communication.server.developer.bitdubai.version_1.WsCommunicationsCloudClientPluginRoot</code> is
@@ -202,7 +208,7 @@ public class WsCommunicationsCloudClientPluginRoot extends AbstractPlugin implem
             /*
              * Scheduled the reconnection agent
              */
-            scheduledExecutorService.scheduleAtFixedRate(new WsCommunicationsCloudClientSupervisorConnectionAgent(this), 10, 30, TimeUnit.SECONDS);
+            scheduledExecutorService.scheduleAtFixedRate(new WsCommunicationsCloudClientSupervisorConnectionAgent(this), 10, 20, TimeUnit.SECONDS);
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -369,6 +375,19 @@ public class WsCommunicationsCloudClientPluginRoot extends AbstractPlugin implem
             throw new CantStartPluginException(cantCreateFileException.getLocalizedMessage());
 
         }
+
+    }
+
+
+    public static void main(final String[] args) throws InterruptedException, URISyntaxException, IOException, DeploymentException {
+
+        WsCommunicationsCloudClientPluginRoot wsCommunicationsCloudClientPluginRoot = new WsCommunicationsCloudClientPluginRoot();
+
+        wsCommunicationsCloudClientPluginRoot.uri = new URI(ServerConf.WS_PROTOCOL + WsCommunicationsCloudClientPluginRoot.SERVER_IP + ":" + ServerConf.DEFAULT_PORT + ServerConf.WEB_SOCKET_CONTEXT_PATH);
+
+        WsCommunicationsJettyCloudClientChannel wsCommunicationsJettyCloudClientChannel = new WsCommunicationsJettyCloudClientChannel(wsCommunicationsCloudClientPluginRoot.wsCommunicationsCloudClientConnection, wsCommunicationsCloudClientPluginRoot.eventManager, wsCommunicationsCloudClientPluginRoot.clientIdentity);
+        WebSocketContainer container = ContainerProvider.getWebSocketContainer();
+        container.connectToServer(wsCommunicationsJettyCloudClientChannel, wsCommunicationsCloudClientPluginRoot.uri);
 
     }
 

@@ -4,7 +4,7 @@
  * You may not modify, use, reproduce or distribute this software.
  * BITDUBAI/CONFIDENTIAL
  */
-package com.bitdubai.fermat_p2p_plugin.layer.ws.communications.cloud.client.developer.bitdubai.version_1.structure.processors;
+package com.bitdubai.fermat_p2p_plugin.layer.ws.communications.cloud.client.developer.bitdubai.version_1.structure.jetty.processors;
 
 import com.bitdubai.fermat_api.layer.all_definition.components.enums.PlatformComponentType;
 import com.bitdubai.fermat_api.layer.all_definition.components.interfaces.PlatformComponentProfile;
@@ -18,6 +18,7 @@ import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.events.Com
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.contents.FermatPacket;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.enums.FermatPacketType;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.enums.JsonAttNamesConstants;
+import com.bitdubai.fermat_p2p_plugin.layer.ws.communications.cloud.client.developer.bitdubai.version_1.structure.jetty.WsCommunicationsJettyCloudClientChannel;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
@@ -34,11 +35,20 @@ import java.util.List;
  * @version 1.0
  * @since Java JDK 1.7
  */
-public class RequestListComponentRegisterPacketProcessor extends FermatPacketProcessor {
+public class RequestListComponentRegisterJettyPacketProcessor extends FermatJettyPacketProcessor {
+
+    /**
+     * Constructor
+     *
+     * @param wsCommunicationsJettyCloudClientChannel
+     */
+    RequestListComponentRegisterJettyPacketProcessor(WsCommunicationsJettyCloudClientChannel wsCommunicationsJettyCloudClientChannel) {
+        super(wsCommunicationsJettyCloudClientChannel);
+    }
 
     /**
      * (no-javadoc)
-     * @see FermatPacketProcessor#processingPackage(FermatPacket)
+     * @see FermatJettyPacketProcessor#processingPackage(FermatPacket)
      */
     @Override
     public void processingPackage(FermatPacket receiveFermatPacket) {
@@ -49,7 +59,7 @@ public class RequestListComponentRegisterPacketProcessor extends FermatPacketPro
         /*
          * Get the platformComponentProfile from the message content and decrypt
          */
-        String messageContentJsonStringRepresentation = AsymmetricCryptography.decryptMessagePrivateKey(receiveFermatPacket.getMessageContent(), getWsCommunicationsCloudClientChannel().getClientIdentity().getPrivateKey());
+        String messageContentJsonStringRepresentation = AsymmetricCryptography.decryptMessagePrivateKey(receiveFermatPacket.getMessageContent(), getWsCommunicationsJettyCloudClientChannel().getClientIdentity().getPrivateKey());
 
         //System.out.println("RequestListComponentRegisterJettyPacketProcessor - messageContentJsonStringRepresentation = "+messageContentJsonStringRepresentation);
 
@@ -88,13 +98,13 @@ public class RequestListComponentRegisterPacketProcessor extends FermatPacketPro
          * Raise the event
          */
         //System.out.println("RequestListComponentRegisterJettyPacketProcessor - Raised a event = P2pEventType.COMPLETE_REQUEST_LIST_COMPONENT_REGISTERED_NOTIFICATION");
-        getWsCommunicationsCloudClientChannel().getEventManager().raiseEvent(event);
+        getWsCommunicationsJettyCloudClientChannel().getEventManager().raiseEvent(event);
 
     }
 
     /**
      * (no-javadoc)
-     * @see FermatPacketProcessor#getFermatPacketType()
+     * @see FermatJettyPacketProcessor#getFermatPacketType()
      */
     @Override
     public FermatPacketType getFermatPacketType() {
