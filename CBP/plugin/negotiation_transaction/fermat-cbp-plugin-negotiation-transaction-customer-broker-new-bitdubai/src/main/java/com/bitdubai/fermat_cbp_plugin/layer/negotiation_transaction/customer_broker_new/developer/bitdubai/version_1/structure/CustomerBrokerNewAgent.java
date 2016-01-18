@@ -431,6 +431,8 @@ public class CustomerBrokerNewAgent implements
 
                             //NOTIFIED EVENT
                             customerBrokerNewNegotiationTransactionDatabaseDao.updateEventTansactionStatus(transactionId, EventStatus.NOTIFIED);
+                            //CONFIRM TRANSMISSION
+                            negotiationTransmissionManager.confirmReception(transmissionId);
                         }
                     }
                 }
@@ -439,8 +441,11 @@ public class CustomerBrokerNewAgent implements
                 if (eventTypeCode.equals(EventType.INCOMING_NEGOTIATION_TRANSMISSION_CONFIRM_NEW.getCode())) {
                     List<Transaction<NegotiationTransmission>> pendingTransactionList = negotiationTransmissionManager.getPendingTransactions(Specialist.UNKNOWN_SPECIALIST);
                     for (Transaction<NegotiationTransmission> record : pendingTransactionList) {
+
                         negotiationTransmission = record.getInformation();
+                        transmissionId  = negotiationTransmission.getTransmissionId();
                         transactionId = negotiationTransmission.getTransactionId();
+
                         negotiationTransaction = customerBrokerNewNegotiationTransactionDatabaseDao.getRegisterCustomerBrokerNewNegotiationTranasction(transactionId);
                         if (negotiationTransaction.getStatusTransaction().equals(NegotiationTransactionStatus.PENDING_CONFIRMATION.getCode())) {
 
@@ -449,7 +454,7 @@ public class CustomerBrokerNewAgent implements
                             //NOTIFIED EVENT
                             customerBrokerNewNegotiationTransactionDatabaseDao.updateEventTansactionStatus(transactionId, EventStatus.NOTIFIED);
                             //CONFIRM TRANSMISSION
-                            negotiationTransmissionManager.confirmReception(transactionId);
+                            negotiationTransmissionManager.confirmReception(transmissionId);
 
                         }
                     }

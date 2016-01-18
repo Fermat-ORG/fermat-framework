@@ -41,12 +41,14 @@ import com.bitdubai.fermat_cbp_api.all_definition.enums.ClauseType;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.ContractClauseType;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.CurrencyType;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.NegotiationStatus;
+import com.bitdubai.fermat_cbp_api.all_definition.enums.NegotiationTransactionStatus;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.NegotiationTransactionType;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.NegotiationTransmissionState;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.NegotiationTransmissionType;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.NegotiationType;
 import com.bitdubai.fermat_cbp_api.all_definition.events.enums.EventType;
 import com.bitdubai.fermat_cbp_api.all_definition.negotiation.Clause;
+import com.bitdubai.fermat_cbp_api.all_definition.negotiation.Negotiation;
 import com.bitdubai.fermat_cbp_api.all_definition.negotiation_transaction.NegotiationPurchaseRecord;
 import com.bitdubai.fermat_cbp_api.all_definition.negotiation_transaction.NegotiationSaleRecord;
 import com.bitdubai.fermat_cbp_api.all_definition.negotiation_transaction.NegotiationTransaction;
@@ -54,6 +56,7 @@ import com.bitdubai.fermat_cbp_api.layer.business_transaction.common.mocks.Claus
 import com.bitdubai.fermat_cbp_api.layer.negotiation.customer_broker_purchase.interfaces.CustomerBrokerPurchaseNegotiation;
 import com.bitdubai.fermat_cbp_api.layer.negotiation.customer_broker_sale.interfaces.CustomerBrokerSaleNegotiation;
 import com.bitdubai.fermat_cbp_api.layer.negotiation_transaction.Test.mocks.PurchaseNegotiationMock;
+import com.bitdubai.fermat_cbp_api.layer.negotiation_transaction.Test.mocks.SaleNegotiationMock;
 import com.bitdubai.fermat_cbp_api.layer.network_service.negotiation_transmission.events.IncomingNegotiationTransactionEvent;
 import com.bitdubai.fermat_cbp_api.layer.network_service.negotiation_transmission.interfaces.NegotiationTransmission;
 import com.bitdubai.fermat_cbp_plugin.layer.network_service.negotiation_transmission.developer.bitdubai.version_1.communication.event_handlers.ClientConnectionCloseNotificationEventHandler;
@@ -598,7 +601,7 @@ public class NetworkServiceNegotiationTransmissionPluginRoot extends AbstractNet
 
         try {
 
-//            System.out.print("\n\n**** 12) MOCK NEGOTIATION TRANSACTION - NEGOTIATION TRANSMISSION - PLUGIN ROOT - RECEIVE NEGOTIATION ****\n");
+            System.out.print("\n\n**** 12) MOCK NEGOTIATION TRANSACTION - NEGOTIATION TRANSMISSION - PLUGIN ROOT - RECEIVE NEGOTIATION ****\n");
 
             NegotiationTransmission negotiationTransmission = new NegotiationTransmissionImpl(
                 negotiationMessage.getTransmissionId(),
@@ -931,70 +934,101 @@ public class NetworkServiceNegotiationTransmissionPluginRoot extends AbstractNet
 
     }
 
-    private void createNegotiationTransamissionTest(){
-        System.out.print("\n**** MOCK NEGOTIATION TRANSMISSION. CREATE NEGOTIATION TRANSMISSION ****\n");
-        try {
-            NegotiationTransmission negotiationTransmission = negotiationTransmissionMockTest();
+    private void receiveNegotiationTransmissionTest(){
 
-            //GET NEGOTIATION XML
-            String negotiationMockXML = negotiationTransmission.getNegotiationXML();
-            CustomerBrokerPurchaseNegotiation purchaseNegotiationXML = new NegotiationPurchaseRecord();
-            purchaseNegotiationXML = (CustomerBrokerPurchaseNegotiation) XMLParser.parseXML(negotiationMockXML, purchaseNegotiationXML);
-            System.out.print("\n\n --- Negotiation Mock XML Date" +
-                            "\n- NegotiationId = " + purchaseNegotiationXML.getNegotiationId() +
-                            "\n- CustomerPublicKey = " + purchaseNegotiationXML.getCustomerPublicKey() +
-                            "\n- BrokerPublicKey = " + purchaseNegotiationXML.getCustomerPublicKey()
+        try {
+            System.out.print("\n**** 11) MOCK NEGOTIATION TRANSMISSION. RECEIVE MESSAGE TEST ****\n");
+
+            NegotiationMessage negotiationMessage = negotiationMessageTest(
+                    saleNegotiationMockTest(),
+                    PlatformComponentType.ACTOR_CRYPTO_CUSTOMER,
+                    NegotiationTransactionType.CUSTOMER_BROKER_NEW,
+                    NegotiationTransmissionType.TRANSMISSION_NEGOTIATION,
+                    NegotiationTransmissionState.PENDING_ACTION,
+                    NegotiationType.PURCHASE
             );
 
-            databaseDao.registerSendNegotiatioTransmission(negotiationTransmission, NegotiationTransmissionState.PROCESSING_SEND);
+            this.receiveNegotiation(negotiationMessage);
 
-        } catch (CantRegisterSendNegotiationTransmissionException e){
-            System.out.print("\n**** MOCK NEGOTIATION TRANSMISSION. CREATE TRANSMISSION, ERROR. ****\n");
+        } catch (CantHandleNewMessagesException e){
+            System.out.print("\n**** MOCK NEGOTIATION TRANSMISSION. RECEIVE MESSAGE TEST, ERROR, NOT FOUNT ****\n");
         }
 
     }
 
-    private NegotiationTransmission negotiationTransmissionMockTest(){
+    private NegotiationMessage negotiationMessageTest(
+            Negotiation negotiation,
+            PlatformComponentType actorSendType,
+            NegotiationTransactionType negotiationTransactionType,
+            NegotiationTransmissionType negotiationTransmissionType,
+            NegotiationTransmissionState negotiationTransmissionState,
+            NegotiationType negotiationType
+    ){
 
-        Date time = new Date();
-        CustomerBrokerPurchaseNegotiation negotiation = purchaseNegotiationMockTest();
 
-        String negotiationMockXML = XMLParser.parseObject(negotiation);
-        
-        UUID                            transmissionId                  = UUID.randomUUID();
-        UUID                            transactionId                   = UUID.randomUUID();
-        UUID                            negotiationId                   = negotiation.getNegotiationId();
-        NegotiationTransactionType      negotiationTransactionType      = NegotiationTransactionType.CUSTOMER_BROKER_NEW;
-        String                          publicKeyActorSend              = negotiation.getCustomerPublicKey();
-        PlatformComponentType           actorSendType                   = PlatformComponentType.ACTOR_CRYPTO_CUSTOMER;
-        String                          publicKeyActorReceive           = negotiation.getBrokerPublicKey();
-        PlatformComponentType           actorReceiveType                = PlatformComponentType.ACTOR_CRYPTO_BROKER;
-        NegotiationTransmissionType     transmissionType                = NegotiationTransmissionType.TRANSMISSION_NEGOTIATION;
-        NegotiationTransmissionState    transmissionState               = NegotiationTransmissionState.PROCESSING_SEND;
-        NegotiationType                 negotiationType                 = NegotiationType.PURCHASE;
-        String                          negotiationXML                  = negotiationMockXML;
-        long                            timestamp                       = time.getTime();
+        String                  publicKeyActorSend      = null;
+        String                  publicKeyActorReceive   = null;
+        PlatformComponentType   actorReceiveType        = null;
+        Date                    time                    = new Date();
 
-        NegotiationTransmission negotiationTransmission = new NegotiationTransmissionImpl(
+        UUID transmissionId     = UUID.fromString("111111");
+        UUID transactionId      = UUID.fromString("222222");
+        String negotiationXML   = XMLParser.parseObject(negotiation);
+
+        if(actorSendType.getCode().equals(PlatformComponentType.ACTOR_CRYPTO_CUSTOMER.getCode())){
+            publicKeyActorSend      = negotiation.getCustomerPublicKey();
+            publicKeyActorReceive   = negotiation.getBrokerPublicKey();
+            actorReceiveType        = PlatformComponentType.ACTOR_CRYPTO_BROKER;
+        }else{
+            publicKeyActorSend      = negotiation.getBrokerPublicKey();
+            publicKeyActorReceive   = negotiation.getCustomerPublicKey();
+            actorReceiveType        = PlatformComponentType.ACTOR_CRYPTO_CUSTOMER;
+        }
+
+        return new NegotiationMessage(
             transmissionId,
-            transactionId,
-            negotiationId,
-            negotiationTransactionType,
-            publicKeyActorSend,
-            actorSendType,
-            publicKeyActorReceive,
-            actorReceiveType,
-            transmissionType,
-            transmissionState,
-            negotiationType,
-            negotiationXML,
-            timestamp
+                transactionId,
+                negotiation.getNegotiationId(),
+                negotiationTransactionType,
+                publicKeyActorSend,
+                actorSendType,
+                publicKeyActorReceive,
+                actorReceiveType,
+                negotiationTransmissionType,
+                negotiationTransmissionState,
+                negotiationType,
+                negotiationXML,
+                time.getTime()
         );
-        
-        return negotiationTransmission;
+
     }
 
     private CustomerBrokerPurchaseNegotiation purchaseNegotiationMockTest(){
+
+        Date time = new Date();
+        UUID                negotiationId               = UUID.randomUUID();
+        String              publicKeyCustomer           = "30C5580D5A807CA38771A7365FC2141A6450556D5233DD4D5D14D4D9CEE7B9715B98951C2F28F820D858898AE0CBCE7B43055AB3C506A804B793E230610E711AEA";
+        String              publicKeyBroker             = "041FCC359F748B5074D5554FA4DBCCCC7981D6776E57B5465DB297775FB23DBBF064FCB11EDE1979FC6E02307E4D593A81D2347006109F40B21B969E0E290C3B84";
+        long                startDataTime               = 0;
+        long                negotiationExpirationDate   = time.getTime();
+        NegotiationStatus statusNegotiation             = NegotiationStatus.SENT_TO_BROKER;
+        Collection<Clause> clauses                      = getClausesTest();
+        Boolean             nearExpirationDatetime      = Boolean.FALSE;
+    
+        return new PurchaseNegotiationMock(
+                negotiationId,
+                publicKeyCustomer,
+                publicKeyBroker,
+                startDataTime,
+                negotiationExpirationDate,
+                statusNegotiation,
+                clauses,
+                nearExpirationDatetime
+        );
+    }
+
+
+    private CustomerBrokerSaleNegotiation saleNegotiationMockTest(){
 
         Date time = new Date();
         long timestamp = time.getTime();
@@ -1003,11 +1037,11 @@ public class NetworkServiceNegotiationTransmissionPluginRoot extends AbstractNet
         String              publicKeyBroker             = "041FCC359F748B5074D5554FA4DBCCCC7981D6776E57B5465DB297775FB23DBBF064FCB11EDE1979FC6E02307E4D593A81D2347006109F40B21B969E0E290C3B84";
         long                startDataTime               = 0;
         long                negotiationExpirationDate   = timestamp;
-        NegotiationStatus statusNegotiation             = NegotiationStatus.SENT_TO_BROKER;
+        NegotiationStatus statusNegotiation             = NegotiationStatus.SENT_TO_CUSTOMER;
         Collection<Clause> clauses                      = getClausesTest();
         Boolean             nearExpirationDatetime      = Boolean.FALSE;
-    
-        return new PurchaseNegotiationMock(
+
+        return new SaleNegotiationMock(
                 negotiationId,
                 publicKeyCustomer,
                 publicKeyBroker,

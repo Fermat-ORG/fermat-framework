@@ -18,6 +18,7 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.Layers;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
+import com.bitdubai.fermat_api.layer.all_definition.events.EventSource;
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEventListener;
 import com.bitdubai.fermat_api.layer.all_definition.util.Version;
 import com.bitdubai.fermat_api.layer.all_definition.util.XMLParser;
@@ -33,7 +34,9 @@ import com.bitdubai.fermat_cbp_api.all_definition.enums.ContractClauseType;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.CurrencyType;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.NegotiationStatus;
 import com.bitdubai.fermat_cbp_api.all_definition.events.enums.EventType;
+import com.bitdubai.fermat_cbp_api.all_definition.exceptions.CantSaveEventException;
 import com.bitdubai.fermat_cbp_api.all_definition.exceptions.CantStartServiceException;
+import com.bitdubai.fermat_cbp_api.all_definition.exceptions.UnexpectedResultReturnedFromDatabaseException;
 import com.bitdubai.fermat_cbp_api.all_definition.negotiation.Clause;
 import com.bitdubai.fermat_cbp_api.all_definition.negotiation_transaction.NegotiationPurchaseRecord;
 import com.bitdubai.fermat_cbp_api.layer.business_transaction.common.mocks.ClauseMock;
@@ -47,6 +50,7 @@ import com.bitdubai.fermat_cbp_api.layer.negotiation_transaction.Test.mocks.Purc
 import com.bitdubai.fermat_cbp_api.layer.negotiation_transaction.customer_broker_new.exceptions.CantCreateCustomerBrokerNewPurchaseNegotiationTransactionException;
 import com.bitdubai.fermat_cbp_api.layer.negotiation_transaction.customer_broker_new.exceptions.CantGetListCustomerBrokerNewNegotiationTransactionException;
 import com.bitdubai.fermat_cbp_api.layer.negotiation_transaction.customer_broker_new.interfaces.CustomerBrokerNew;
+import com.bitdubai.fermat_cbp_api.layer.network_service.negotiation_transmission.events.IncomingNegotiationTransactionEvent;
 import com.bitdubai.fermat_cbp_api.layer.network_service.negotiation_transmission.interfaces.NegotiationTransmissionManager;
 import com.bitdubai.fermat_cbp_plugin.layer.negotiation_transaction.customer_broker_new.developer.bitdubai.version_1.database.CustomerBrokerNewNegotiationTransactionDatabaseConstants;
 import com.bitdubai.fermat_cbp_plugin.layer.negotiation_transaction.customer_broker_new.developer.bitdubai.version_1.database.CustomerBrokerNewNegotiationTransactionDatabaseDao;
@@ -55,6 +59,7 @@ import com.bitdubai.fermat_cbp_plugin.layer.negotiation_transaction.customer_bro
 import com.bitdubai.fermat_cbp_plugin.layer.negotiation_transaction.customer_broker_new.developer.bitdubai.version_1.event_handler.CustomerBrokerNewExecutorService;
 import com.bitdubai.fermat_cbp_plugin.layer.negotiation_transaction.customer_broker_new.developer.bitdubai.version_1.event_handler.CustomerBrokerNewServiceEventHandler;
 import com.bitdubai.fermat_cbp_plugin.layer.negotiation_transaction.customer_broker_new.developer.bitdubai.version_1.event_handler.CustomerBromerNewEventHandler;
+import com.bitdubai.fermat_cbp_plugin.layer.negotiation_transaction.customer_broker_new.developer.bitdubai.version_1.exceptions.CantGetNegotiationTransactionListException;
 import com.bitdubai.fermat_cbp_plugin.layer.negotiation_transaction.customer_broker_new.developer.bitdubai.version_1.exceptions.CantInitializeCustomerBrokerNewNegotiationTransactionDatabaseException;
 import com.bitdubai.fermat_cbp_plugin.layer.negotiation_transaction.customer_broker_new.developer.bitdubai.version_1.exceptions.CantInitializeDatabaseException;
 import com.bitdubai.fermat_cbp_plugin.layer.negotiation_transaction.customer_broker_new.developer.bitdubai.version_1.exceptions.CantRegisterCustomerBrokerNewNegotiationTransactionException;
@@ -164,17 +169,17 @@ public class NegotiationTransactionCustomerBrokerNewPluginRoot extends AbstractP
             );
 
             //Init event recorder service.
-            /*customerBrokerNewServiceEventHandler = new CustomerBrokerNewServiceEventHandler(customerBrokerNewNegotiationTransactionDatabaseDao,eventManager);
-            customerBrokerNewServiceEventHandler.start();*/
+            customerBrokerNewServiceEventHandler = new CustomerBrokerNewServiceEventHandler(customerBrokerNewNegotiationTransactionDatabaseDao,eventManager);
+            customerBrokerNewServiceEventHandler.start();
 
             //TEA
-            CustomerBrokerNewExecutorService executorService = new CustomerBrokerNewExecutorService();
+            /*CustomerBrokerNewExecutorService executorService = new CustomerBrokerNewExecutorService();
 
             //TEA
             FermatEventListener fermatEventListener = eventManager.getNewListener(EventType.INCOMING_NEGOTIATION_TRANSMISSION_TRANSACTION_NEW2);
             fermatEventListener.setEventHandler(new CustomerBromerNewEventHandler(executorService, this));
             eventManager.addListener(fermatEventListener);
-            listenersAdded.add(fermatEventListener);
+            listenersAdded.add(fermatEventListener);*/
 
             //Init monitor Agent
             customerBrokerNewAgent = new CustomerBrokerNewAgent(
@@ -208,6 +213,9 @@ public class NegotiationTransactionCustomerBrokerNewPluginRoot extends AbstractP
             //TEST MOCK GET ALL NEGOTIATION
 //            getNegotiationsTest();
 //            getNegotiationsByIdTest(UUID.fromString("eac97ab3-034e-4e57-93dc-b9f4ccaf1a74"));
+
+            //TEST EVENT REGISTER
+//            registerEventTest();
 
             //Startes Service
             this.serviceStatus = ServiceStatus.STARTED;
@@ -584,6 +592,40 @@ public class NegotiationTransactionCustomerBrokerNewPluginRoot extends AbstractP
                 ClauseType.BROKER_PAYMENT_METHOD,
                 ContractClauseType.BANK_TRANSFER.getCode()));
         return clauses;
+    }
+
+    //TEST REGISTER EVENT
+    private void registerEventTest(){
+
+        try {
+
+            System.out.print("\n**** MOCK CUSTOMER BROKER NEW. REGISTER EVENT. EVENT REGISTER. ****\n");
+            IncomingNegotiationTransactionEvent eventTest = new IncomingNegotiationTransactionEvent(EventType.INCOMING_NEGOTIATION_TRANSMISSION_TRANSACTION_NEW);
+            eventTest.setSource(EventSource.NETWORK_SERVICE_NEGOTIATION_TRANSMISSION);
+
+            customerBrokerNewServiceEventHandler.incomingNegotiationTransactionEventHandler(eventTest);
+
+        } catch (CantSaveEventException e) {
+            System.out.print("\n**** MOCK CUSTOMER BROKER NEW. REGISTER EVENT. ERROR IN EVENT REGISTER. ****\n");
+        }
+    }
+
+    //TEST LIST EVENT PENDING
+    private void getAllEventTest(){
+
+        try{
+
+            System.out.print("\n**** MOCK CUSTOMER BROKER NEW. GET ALL REGISTER EVENT. ****\n");
+            List<String> pendingEventsIdList=customerBrokerNewNegotiationTransactionDatabaseDao.getPendingEvents();
+            for(String eventId : pendingEventsIdList){
+                System.out.print("\n**** MOCK CUSTOMER BROKER NEW. GET ALL REGISTER EVENT. EVENT ID: "+eventId+" ****\n");
+            }
+        } catch (UnexpectedResultReturnedFromDatabaseException e){
+            System.out.print("\n**** MOCK CUSTOMER BROKER NEW. GET ALL REGISTER EVENT. ERROR GET ALL EVENT REGISTER. ****\n");
+        }catch (CantGetNegotiationTransactionListException e){
+            System.out.print("\n**** MOCK CUSTOMER BROKER NEW. GET ALL REGISTER EVENT. ERROR GET ALL EVENT REGISTER. ****\n");
+        }
+
     }
     /*END TEST METHOD*/
 

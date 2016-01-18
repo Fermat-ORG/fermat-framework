@@ -267,7 +267,7 @@ public class NegotiationTransmissionManagerImpl implements NegotiationTransmissi
             NegotiationType negotiationType = negotiationTransaction.getNegotiationType();
             String          negotiationXML  = negotiationTransaction.getNegotiationXML();
 
-            if(actorSendType == PlatformComponentType.ACTOR_CRYPTO_CUSTOMER){
+            if(actorSendType.getCode().equals(PlatformComponentType.ACTOR_CRYPTO_CUSTOMER.getCode())){
                 publicKeyActorSend      = negotiationTransaction.getPublicKeyCustomer();
                 publicKeyActorReceive   = negotiationTransaction.getPublicKeyBroker();
                 actorReceiveType        = PlatformComponentType.ACTOR_CRYPTO_BROKER;
