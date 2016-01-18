@@ -607,6 +607,13 @@ public class NetworkServiceNegotiationTransmissionPluginRoot extends AbstractNet
 
             System.out.print("\n**** 12) MOCK NEGOTIATION TRANSACTION - NEGOTIATION TRANSMISSION - PLUGIN ROOT - RECEIVE NEGOTIATION ****\n");
 
+            NegotiationType negotiationType;
+
+            if(negotiationMessage.getNegotiationType().getCode().equals(NegotiationType.PURCHASE.getCode())){
+                negotiationType = NegotiationType.SALE;
+            }else{
+                negotiationType = NegotiationType.PURCHASE;
+            }
             NegotiationTransmission negotiationTransmission = new NegotiationTransmissionImpl(
                 negotiationMessage.getTransmissionId(),
                 negotiationMessage.getTransactionId(),
@@ -618,7 +625,7 @@ public class NetworkServiceNegotiationTransmissionPluginRoot extends AbstractNet
                 negotiationMessage.getActorReceiveType(),
                 negotiationMessage.getTransmissionType(),
                 negotiationMessage.getTransmissionState(),
-                negotiationMessage.getNegotiationType(),
+                negotiationType,
                 negotiationMessage.getNegotiationXML(),
                 negotiationMessage.getTimestamp()
             );

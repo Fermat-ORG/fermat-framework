@@ -145,7 +145,7 @@ public class NegotiationTransmissionManagerImpl implements NegotiationTransmissi
         try{
 
             if(transactionType.getCode() == NegotiationTransactionType.CUSTOMER_BROKER_NEW.getCode()) {
-                System.out.print("\n\n**** 23) MOCK NEGOTIATION TRANSACTION - NEGOTIATION TRANSMISSION - MANAGER - SEND CONFIRMATION TO CUSTOMER ****\n");
+                System.out.print("\n\n**** 24) MOCK NEGOTIATION TRANSACTION - NEGOTIATION TRANSMISSION - MANAGER - SEND CONFIRMATION TO CUSTOMER ****\n");
             }
 
             PlatformComponentType           actorSendType           = PlatformComponentType.ACTOR_CRYPTO_BROKER;
@@ -213,6 +213,7 @@ public class NegotiationTransmissionManagerImpl implements NegotiationTransmissi
     public void confirmReception(UUID transmissionId) throws CantConfirmTransactionException {
         try{
             negotiationTransmissionNetworkServiceDatabaseDao.confirmReception(transmissionId);
+            System.out.print("\n\n**** 19.2.1) MOCK NEGOTIATION TRANSACTION - NEGOTIATION TRANSMISSION - DAO - REGISTER NEW EVENT, CONFIRM TRANSAMISSION ****\n");
         } catch (CantRegisterSendNegotiationTransmissionException e){
             throw new CantConfirmTransactionException("CAN'T CONFIRM THE RECEPTION OF NEGOTIATION TRANSMISSION", e, "ERROR SEND CONFIRM THE RECEPTION", "");
         } catch (Exception e){

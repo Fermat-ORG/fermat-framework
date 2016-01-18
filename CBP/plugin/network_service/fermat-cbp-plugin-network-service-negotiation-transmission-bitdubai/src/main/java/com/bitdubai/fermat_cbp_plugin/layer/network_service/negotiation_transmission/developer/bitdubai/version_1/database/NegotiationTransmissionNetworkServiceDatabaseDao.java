@@ -121,7 +121,13 @@ public class NegotiationTransmissionNetworkServiceDatabaseDao {
                 }
             }else{
                 if (negotiationTransmission.getTransmissionState().getCode() == NegotiationTransmissionState.PROCESSING_SEND.getCode()) {
-                    System.out.print("\n\n**** 24) MOCK NEGOTIATION TRANSACTION - NEGOTIATION TRANSMISSION - DAO - REGISTER SEND CONFIRMATION TRANSMISSION ****\n");
+                    if(negotiationTransmission.getNegotiationTransactionType().getCode() == NegotiationTransactionType.CUSTOMER_BROKER_NEW.getCode()) {
+                        System.out.print("\n\n**** 25) MOCK NEGOTIATION TRANSACTION NEW - NEGOTIATION TRANSMISSION - DAO - REGISTER SEND CONFIRMATION TRANSMISSION ****\n");
+                    } else if(negotiationTransmission.getNegotiationTransactionType().getCode() == NegotiationTransactionType.CUSTOMER_BROKER_UPDATE.getCode()) {
+                        System.out.print("\n\n**** 25) MOCK NEGOTIATION TRANSACTION UPDATE - NEGOTIATION TRANSMISSION - DAO - REGISTER SEND CONFIRMATION TRANSMISSION ****\n");
+                    } else if(negotiationTransmission.getNegotiationTransactionType().getCode() == NegotiationTransactionType.CUSTOMER_BROKER_CLOSE.getCode()) {
+                        System.out.print("\n\n**** 25) MOCK NEGOTIATION TRANSACTION CLOSE - NEGOTIATION TRANSMISSION - DAO - REGISTER SEND CONFIRMATION TRANSMISSION ****\n");
+                    }
                 } else {
                     System.out.print("\n\n**** ) MOCK NEGOTIATION TRANSACTION - NEGOTIATION TRANSMISSION - DAO - REGISTER RECEIVE CONFIRMATION TRANSMISSION ****\n");
                 }
@@ -165,7 +171,7 @@ public class NegotiationTransmissionNetworkServiceDatabaseDao {
 
             NegotiationTransmissionState state = NegotiationTransmissionState.DONE;
             this.changeState(transmissionId, state);
-
+            System.out.print("\n\n**** 19.2.2) MOCK NEGOTIATION TRANSACTION - NEGOTIATION TRANSMISSION - DAO - REGISTER NEW EVENT, CONFIRM TRANSAMISSION ****\n");
         } catch (CantRegisterSendNegotiationTransmissionException e) {
             StringBuffer contextBuffer = new StringBuffer();
             contextBuffer.append("Table Name: " + NegotiationTransmissionNetworkServiceDatabaseConstants.NEGOTIATION_TRANSMISSION_NETWORK_SERVICE_TABLE_NAME);

@@ -338,7 +338,7 @@ public class CustomerBrokerNewAgent implements
 //                    for(String negotiationToSubmit: negotiationPendingToSubmitList){
                     for (CustomerBrokerNew negotiationToSubmit : negotiationPendingToSubmitList) {
 
-//                        System.out.print("\n\n**** 22) MOCK NEGOTIATION TRANSACTION - CUSTOMER BROKER NEW - AGENT - CONFIRMATION FOR SEND transactionId: " + negotiationToSubmit.getTransactionId() + " ****\n");
+                        System.out.print("\n\n**** 22) MOCK NEGOTIATION TRANSACTION - CUSTOMER BROKER NEW - AGENT - CONFIRMATION FOR SEND transactionId: " + negotiationToSubmit.getTransactionId() + " ****\n");
                         
 //                        negotiationXML          = customerBrokerNewNegotiationTransactionDatabaseDao.getNegotiationXML(negotiationToSubmit);
 //                        negotiationType         = customerBrokerNewNegotiationTransactionDatabaseDao.getNegotiationType(negotiationToSubmit);
@@ -353,7 +353,7 @@ public class CustomerBrokerNewAgent implements
                         switch (negotiationType){
                             case SALE:
                                 saleNegotiation = (CustomerBrokerSaleNegotiation)XMLParser.parseXML(negotiationXML,saleNegotiation);
-//                                System.out.print("\n\n**** 23) MOCK NEGOTIATION TRANSACTION - CUSTOMER BROKER NEW - AGENT - CONFIRMATION SEND negotiationId(XML): " + negotiationToSubmit.getTransactionId() + " ****\n");
+                                System.out.print("\n\n**** 23) MOCK NEGOTIATION TRANSACTION - CUSTOMER BROKER NEW - AGENT - CONFIRMATION SEND negotiationId(XML): " + negotiationToSubmit.getTransactionId() + " ****\n");
                                 negotiationTransmissionManager.sendConfirmNegotiatioToCryptoCustomer(negotiationTransaction, NegotiationTransactionType.CUSTOMER_BROKER_NEW);
                                 //CHANGE STATUS PURCHASE NEGOTIATION. WAITING_TO_BROKER: send confirm of creation of the negotiation in the broker, Waiting response of part of the broker
                                 customerBrokerSaleNegotiationManager.waitForBroker(saleNegotiation);
@@ -378,10 +378,10 @@ public class CustomerBrokerNewAgent implements
                 throw new CantUpdateRecordException(CantUpdateRecordException.DEFAULT_MESSAGE,e,"Sending Negotiation","Cannot Update State the Negotiation from database");
             } catch (UnexpectedResultReturnedFromDatabaseException e) {
                 throw new CantUpdateRecordException(CantUpdateRecordException.DEFAULT_MESSAGE,e,"Sending Negotiation","Unexpected result in database");
-//            } catch (CantSendNegotiationToCryptoBrokerException e) {
-//                throw new CantSendCustomerBrokerNewNegotiationTransactionException(CantSendCustomerBrokerNewNegotiationTransactionException.DEFAULT_MESSAGE,e,"Sending Sale Negotiation","Error in Negotiation Transmission Network Service");
-//            } catch (CantSendConfirmToCryptoCustomerException e) {
-//                throw new CantSendCustomerBrokerNewConfirmationNegotiationTransactionException(CantSendCustomerBrokerNewConfirmationNegotiationTransactionException.DEFAULT_MESSAGE, e, "Sending Confirm Purchase Negotiation", "Error in Negotiation Transmission Network Service");
+            } catch (CantSendNegotiationToCryptoBrokerException e) {
+                throw new CantSendCustomerBrokerNewNegotiationTransactionException(CantSendCustomerBrokerNewNegotiationTransactionException.DEFAULT_MESSAGE,e,"Sending Sale Negotiation","Error in Negotiation Transmission Network Service");
+            } catch (CantSendConfirmToCryptoCustomerException e) {
+                throw new CantSendCustomerBrokerNewConfirmationNegotiationTransactionException(CantSendCustomerBrokerNewConfirmationNegotiationTransactionException.DEFAULT_MESSAGE, e, "Sending Confirm Purchase Negotiation", "Error in Negotiation Transmission Network Service");
             } catch (Exception e) {
                 throw new CantSendCustomerBrokerNewNegotiationTransactionException(e.getMessage(), FermatException.wrapException(e),"Sending Negotiation","UNKNOWN FAILURE.");
             }
@@ -409,14 +409,24 @@ public class CustomerBrokerNewAgent implements
                     for (Transaction<NegotiationTransmission> record : pendingTransactionList) {
 
                         negotiationTransmission = record.getInformation();
-                        if(negotiationTransmission.getNegotiationTransactionType().getCode().equals(NegotiationTransactionType.CUSTOMER_BROKER_NEW)){
-                            System.out.print("\n**** 18) MOCK NEGOTIATION TRANSACTION - CUSTOMER BROKER NEW - AGENT - LIST EVENT PENDING ****\n");
+
+                        if(negotiationTransmission.getNegotiationTransactionType().getCode().equals(NegotiationTransactionType.CUSTOMER_BROKER_NEW.getCode())){
                             negotiationXML = negotiationTransmission.getNegotiationXML();
                             transmissionId = negotiationTransmission.getTransmissionId();
                             transactionId = negotiationTransmission.getTransactionId();
                             negotiationType = negotiationTransmission.getNegotiationType();
 
+//                            System.out.print("\n**** 18) MOCK NEGOTIATION TRANSACTION - CUSTOMER BROKER NEW - AGENT - LIST EVENT PENDING ****\n" +
+//                                            "\n - NEGOTIATION TRANSACTION TYPE = "+negotiationTransmission.getNegotiationTransactionType().getCode()+
+////                                            "\n - TRANSACTION ID = " +transactionId+
+////                                            "\n - TRANSMISSION ID = " +transmissionId+
+//                                            "\n - TRANSMISSION STATE = "+negotiationTransmission.getTransmissionState().getCode()+
+//                                            "\n - NEGOTIATION TYPE = "+negotiationType+
+//                                            "\n - NEGOTIATION XML = "+negotiationXML
+//                            );
+
                             if (negotiationXML != null) {
+                                System.out.print("\n**** 18.2) MOCK NEGOTIATION TRANSACTION - CUSTOMER BROKER NEW - AGENT - LIST EVENT PENDING ****\n");
                                 switch (negotiationType) {
                                     case SALE:
                                         //CREATE SALE NEGOTIATION
