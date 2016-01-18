@@ -4,7 +4,7 @@
  * You may not modify, use, reproduce or distribute this software.
  * BITDUBAI/CONFIDENTIAL
  */
-package com.bitdubai.fermat_p2p_plugin.layer.ws.communications.cloud.client.developer.bitdubai.version_1.structure.processors;
+package com.bitdubai.fermat_p2p_plugin.layer.ws.communications.cloud.client.developer.bitdubai.version_1.structure.jetty.processors;
 
 import com.bitdubai.fermat_api.layer.all_definition.components.enums.PlatformComponentType;
 import com.bitdubai.fermat_api.layer.all_definition.components.interfaces.PlatformComponentProfile;
@@ -14,11 +14,11 @@ import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEven
 import com.bitdubai.fermat_api.layer.all_definition.network_service.enums.NetworkServiceType;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.components.PlatformComponentProfileCommunication;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.enums.P2pEventType;
-import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.events.ClientSuccessReconnectNotificationEvent;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.events.CompleteComponentRegistrationNotificationEvent;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.contents.FermatPacket;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.enums.FermatPacketType;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.enums.JsonAttNamesConstants;
+import com.bitdubai.fermat_p2p_plugin.layer.ws.communications.cloud.client.developer.bitdubai.version_1.structure.jetty.WsCommunicationsJettyCloudClientChannel;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
@@ -31,7 +31,7 @@ import com.google.gson.JsonParser;
  * @version 1.0
  * @since Java JDK 1.7
  */
-public class CompleteRegistrationComponentPacketProcessor extends FermatPacketProcessor {
+public class CompleteRegistrationComponentJettyPacketProcessor extends FermatJettyPacketProcessor {
 
     /**
      * Represent the gson
@@ -43,21 +43,18 @@ public class CompleteRegistrationComponentPacketProcessor extends FermatPacketPr
      */
     private JsonParser jsonParser;
 
-
-
     /**
      * Constructor
      */
-    public CompleteRegistrationComponentPacketProcessor(){
-        super();
+    public CompleteRegistrationComponentJettyPacketProcessor(WsCommunicationsJettyCloudClientChannel wsCommunicationsJettyCloudClientChannel){
+        super(wsCommunicationsJettyCloudClientChannel);
         gson = new Gson();
         jsonParser = new JsonParser();
-
     }
 
     /**
      * (no-javadoc)
-     * @see FermatPacketProcessor#processingPackage(FermatPacket)
+     * @see FermatJettyPacketProcessor#processingPackage(FermatPacket)
      */
     @Override
     public void processingPackage(FermatPacket receiveFermatPacket) {
@@ -67,13 +64,13 @@ public class CompleteRegistrationComponentPacketProcessor extends FermatPacketPr
 
         String messageContentJsonStringRepresentation = null;
 
-        if (getWsCommunicationsCloudClientChannel().isRegister()){
+        if (getWsCommunicationsJettyCloudClientChannel().isRegister()){
 
             /*
             * Get the platformComponentProfile from the message content and decrypt
             */
             //System.out.println(" CompleteRegistrationComponentJettyPacketProcessor - decoding fermatPacket with client-identity ");
-            messageContentJsonStringRepresentation = AsymmetricCryptography.decryptMessagePrivateKey(receiveFermatPacket.getMessageContent(), getWsCommunicationsCloudClientChannel().getClientIdentity().getPrivateKey());
+            messageContentJsonStringRepresentation = AsymmetricCryptography.decryptMessagePrivateKey(receiveFermatPacket.getMessageContent(), getWsCommunicationsJettyCloudClientChannel().getClientIdentity().getPrivateKey());
 
         }else {
 
@@ -85,7 +82,7 @@ public class CompleteRegistrationComponentPacketProcessor extends FermatPacketPr
             * Get the platformComponentProfile from the message content and decrypt
             */
             //System.out.println(" CompleteRegistrationComponentJettyPacketProcessor - decoding fermatPacket with temp-identity ");
-            messageContentJsonStringRepresentation = AsymmetricCryptography.decryptMessagePrivateKey(receiveFermatPacket.getMessageContent(), getWsCommunicationsCloudClientChannel().getTemporalIdentity().getPrivateKey());
+            messageContentJsonStringRepresentation = AsymmetricCryptography.decryptMessagePrivateKey(receiveFermatPacket.getMessageContent(), getWsCommunicationsJettyCloudClientChannel().getTemporalIdentity().getPrivateKey());
 
         }
 
@@ -105,11 +102,11 @@ public class CompleteRegistrationComponentPacketProcessor extends FermatPacketPr
             /*
              * Mark as register
              */
-            getWsCommunicationsCloudClientChannel().setIsRegister(Boolean.TRUE);
-            System.out.println("CompleteRegistrationComponentJettyPacketProcessor - getWsCommunicationsCloudClientChannel().isRegister() " + getWsCommunicationsCloudClientChannel().isRegister());
-            // getWsCommunicationsCloudClientChannel().launchCompleteClientComponentRegistrationNotificationEvent();
+            getWsCommunicationsJettyCloudClientChannel().setIsRegister(Boolean.TRUE);
+            System.out.println("CompleteRegistrationComponentJettyPacketProcessor - getWsCommunicationsJettyCloudClientChannel().isRegister() " + getWsCommunicationsJettyCloudClientChannel().isRegister());
+            // getWsCommunicationsJettyCloudClientChannel().launchCompleteClientComponentRegistrationNotificationEvent();
             // System.out.println("CompleteRegistrationComponentJettyPacketProcessor - Raised a event = P2pEventType.COMPLETE_CLIENT_COMPONENT_REGISTRATION_NOTIFICATION");
-            //System.out.println("CompleteRegistrationComponentJettyPacketProcessor - getWsCommunicationsCloudClientChannel().isRegister() = "+ getWsCommunicationsCloudClientChannel().isRe            .raiseEvent(event);
+            //System.out.println("CompleteRegistrationComponentJettyPacketProcessor - getWsCommunicationsJettyCloudClientChannel().isRegister() = "+ getWsCommunicationsJettyCloudClientChannel().isRe            .raiseEvent(event);
 
 
         }
@@ -130,13 +127,13 @@ public class CompleteRegistrationComponentPacketProcessor extends FermatPacketPr
          * Raise the event
          */
         System.out.println("CompleteRegistrationComponentJettyPacketProcessor - Raised a event = P2pEventType.COMPLETE_COMPONENT_REGISTRATION_NOTIFICATION");
-        getWsCommunicationsCloudClientChannel().getEventManager().raiseEvent(event);
+        getWsCommunicationsJettyCloudClientChannel().getEventManager().raiseEvent(event);
 
     }
 
     /**
      * (no-javadoc)
-     * @see FermatPacketProcessor#getFermatPacketType()
+     * @see FermatJettyPacketProcessor#getFermatPacketType()
      */
     @Override
     public FermatPacketType getFermatPacketType() {

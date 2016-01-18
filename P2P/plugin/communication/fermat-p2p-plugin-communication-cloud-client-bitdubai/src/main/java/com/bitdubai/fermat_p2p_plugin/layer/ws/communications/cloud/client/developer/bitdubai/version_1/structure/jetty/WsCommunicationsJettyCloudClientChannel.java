@@ -4,7 +4,7 @@
  * You may not modify, use, reproduce or distribute this software.
  * BITDUBAI/CONFIDENTIAL
  */
-package com.bitdubai.fermat_p2p_plugin.layer.ws.communications.cloud.client.developer.bitdubai.version_1.structure;
+package com.bitdubai.fermat_p2p_plugin.layer.ws.communications.cloud.client.developer.bitdubai.version_1.structure.jetty;
 
 import com.bitdubai.fermat_api.layer.all_definition.components.interfaces.PlatformComponentProfile;
 import com.bitdubai.fermat_api.layer.all_definition.crypto.asymmetric.AsymmetricCryptography;
@@ -17,7 +17,9 @@ import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.events.Com
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.contents.FermatPacket;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.enums.FermatPacketType;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.enums.JsonAttNamesConstants;
+import com.bitdubai.fermat_p2p_plugin.layer.ws.communications.cloud.client.developer.bitdubai.version_1.structure.WsCommunicationsCloudClientConnection;
 import com.bitdubai.fermat_p2p_plugin.layer.ws.communications.cloud.client.developer.bitdubai.version_1.structure.agents.WsCommunicationsCloudClientSupervisorConnectionAgent;
+import com.bitdubai.fermat_p2p_plugin.layer.ws.communications.cloud.client.developer.bitdubai.version_1.structure.jetty.conf.CLoudClientConfigurator;
 import com.bitdubai.fermat_p2p_plugin.layer.ws.communications.cloud.client.developer.bitdubai.version_1.structure.processors.FermatPacketProcessor;
 import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfaces.EventManager;
 import com.google.gson.JsonObject;
@@ -28,11 +30,23 @@ import org.java_websocket.drafts.Draft;
 import org.java_websocket.framing.Framedata;
 import org.java_websocket.handshake.ServerHandshake;
 
+import java.io.IOException;
 import java.net.URI;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CopyOnWriteArrayList;
+
+import javax.websocket.ClientEndpoint;
+import javax.websocket.CloseReason;
+import javax.websocket.ContainerProvider;
+import javax.websocket.DeploymentException;
+import javax.websocket.OnClose;
+import javax.websocket.OnError;
+import javax.websocket.OnMessage;
+import javax.websocket.OnOpen;
+import javax.websocket.Session;
+import javax.websocket.WebSocketContainer;
 
 /**
  * The Class <code>com.bitdubai.fermat_p2p_plugin.layer.ws.communications.cloud.client.developer.bitdubai.version_1.structure.WsCommunicationsCloudClientChannel</code>
@@ -42,12 +56,8 @@ import java.util.concurrent.CopyOnWriteArrayList;
  * @version 1.0
  * @since Java JDK 1.7
  */
-public class WsCommunicationsCloudClientChannel extends WebSocketClient {
-
-    /**
-     * Represent the value of DEFAULT_CONNECTION_TIMEOUT
-     */
-    private static final int DEFAULT_CONNECTION_TIMEOUT = 10000;
+@ClientEndpoint(configurator = CLoudClientConfigurator.class)
+public class WsCommunicationsJettyCloudClientChannel{
 
     /**
      * DealWithEvents Interface member variables.
@@ -94,93 +104,50 @@ public class WsCommunicationsCloudClientChannel extends WebSocketClient {
      */
     private boolean isRegister;
 
+
+    private Session clientSession;
+
     /**
      * Constructor with parameters
-     *
-     * @param serverUri
-     * @param draft
-     * @param headers
-     * @param connectTimeout
+     * @param wsCommunicationsCloudClientConnection
+     * @param eventManager
+     * @param clientIdentity
+     * @throws IOException
+     * @throws DeploymentException
      */
-    private WsCommunicationsCloudClientChannel(URI serverUri, Draft draft, Map<String, String> headers, int connectTimeout, ECCKeyPair temporalIdentity, WsCommunicationsCloudClientConnection wsCommunicationsCloudClientConnection, EventManager eventManager, ECCKeyPair clientIdentity) {
-        super(serverUri, draft, headers, connectTimeout);
+    public WsCommunicationsJettyCloudClientChannel(WsCommunicationsCloudClientConnection wsCommunicationsCloudClientConnection, EventManager eventManager, ECCKeyPair clientIdentity) throws IOException, DeploymentException {
+
         this.clientIdentity = clientIdentity;
-        this.temporalIdentity = temporalIdentity;
+        this.temporalIdentity = CLoudClientConfigurator.tempIdentity;
         this.packetProcessorsRegister = new ConcurrentHashMap<>();
         this.wsCommunicationsCloudClientConnection = wsCommunicationsCloudClientConnection;
         this.eventManager = eventManager;
         this.isRegister = Boolean.FALSE;
     }
 
-
-    /**
-     * Receive pong message from the remote node, to verify is connection
-     * alive
-     *
-     * @param conn
-     * @param f
-     */
-    @Override
-    public void onWebsocketPong(WebSocket conn, Framedata f) {
-        System.out.println(" WsCommunicationsCloudClientChannel - onWebsocketPong = " + new String(f.getPayloadData().array()));
+    public void sendMessage(final String message) {
+        clientSession.getAsyncRemote().sendText(message);
     }
 
-    /**
-     * Factory method to create new instance of WsCommunicationsCloudClientChannel
-     *
-     * @param serverUri
-     * @param draft
-     * @return WsCommunicationsCloudClientChannel instance
-     */
-    public static WsCommunicationsCloudClientChannel constructWsCommunicationsCloudClientFactory(URI serverUri, Draft draft, WsCommunicationsCloudClientConnection wsCommunicationsCloudClientConnection,EventManager eventManager, ECCKeyPair clientIdentity){
-
-        /*
-         * Create a new temporal identity
-         */
-        ECCKeyPair tempIdentity = new ECCKeyPair();
-
-        /*
-         * Create a new headers
-         */
-        Map<String, String> headers = new HashMap<>();
-
-        /*
-         * Get json representation
-         */
-        JsonObject jsonObject = new JsonObject();
-        jsonObject.addProperty(JsonAttNamesConstants.NAME_IDENTITY, tempIdentity.getPublicKey());
-
-        /*
-         * Add the att to the header
-         */
-        headers.put(JsonAttNamesConstants.HEADER_ATT_NAME_TI, jsonObject.toString());
-
-        //System.out.println(" WsCommunicationsCloudClientChannel - headers = "+headers);
-
-        /*
-         * Construct the instance with the required parameters
-         */
-        return new WsCommunicationsCloudClientChannel(serverUri, draft, headers, WsCommunicationsCloudClientChannel.DEFAULT_CONNECTION_TIMEOUT, tempIdentity, wsCommunicationsCloudClientConnection, eventManager, clientIdentity);
-    }
 
     /**
      * (non-javadoc)
      * @see WebSocketClient#onOpen(ServerHandshake)
      */
-    @Override
-    public void onOpen(ServerHandshake handShakeData) {
+    @OnOpen
+    public void onOpen(final Session session) {
 
         System.out.println(" --------------------------------------------------------------------- ");
         System.out.println(" WsCommunicationsCloudClientChannel - Starting method onOpen");
-        System.out.println(" WsCommunicationsCloudClientChannel - ready state = "+getReadyState());
-
+        System.out.println(" WsCommunicationsCloudClientChannel - ready state = "+session.getId());
+        this.clientSession = session;
     }
 
     /**
      * (non-javadoc)
      * @see WebSocketClient#onMessage(String)
      */
-    @Override
+    @OnMessage
     public void onMessage(String fermatPacketEncode) {
 
         System.out.println(" --------------------------------------------------------------------- ");
@@ -245,14 +212,13 @@ public class WsCommunicationsCloudClientChannel extends WebSocketClient {
      * (non-javadoc)
      * @see WebSocketClient#onClose(int, String, boolean)
      */
-    @Override
-    public void onClose(int code, String reason, boolean remote) {
+    @OnClose
+    public void onClose(final Session userSession, final CloseReason reason) {
 
         System.out.println(" --------------------------------------------------------------------- ");
         System.out.println(" WsCommunicationsCloudClientChannel - Starting method onClose");
-        System.out.println(" WsCommunicationsCloudClientChannel -  code   = " + code + " reason = " + reason + " remote = " + remote);
 
-        try {
+       /* try {
             switch (code) {
 
                 case 1002:
@@ -275,7 +241,7 @@ public class WsCommunicationsCloudClientChannel extends WebSocketClient {
 
         }catch (Exception e){
             e.printStackTrace();
-        }
+        } */
 
     }
 
@@ -283,12 +249,11 @@ public class WsCommunicationsCloudClientChannel extends WebSocketClient {
      * (non-javadoc)
      * @see WebSocketClient#onError(Exception)
      */
-    @Override
+    @OnError
     public void onError(Exception ex) {
         System.out.println(" --------------------------------------------------------------------- ");
         System.out.println(" WsCommunicationsCloudClientChannel - Starting method onError");
         ex.printStackTrace();
-        getConnection().closeConnection(1002, ex.getLocalizedMessage());
     }
 
     /**
@@ -321,10 +286,6 @@ public class WsCommunicationsCloudClientChannel extends WebSocketClient {
      */
     public void registerFermatPacketProcessor(FermatPacketProcessor fermatPacketProcessor) {
 
-        /*
-         * Set server reference
-         */
-        fermatPacketProcessor.setWsCommunicationsCloudClientChannel(this);
 
         //Validate if a previous list created
         if (packetProcessorsRegister.containsKey(fermatPacketProcessor.getFermatPacketType())){

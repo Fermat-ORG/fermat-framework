@@ -136,4 +136,10 @@ dependencies {
     compile 'com.github.PhilJay:MPAndroidChart:v2.1.6'
     // compile files('src/main/libs/beans.jar')
 
+    configurations {
+        all {
+            exclude module: ':fermat-p2p-plugin-communication-cloud-server-bitdubai'
+        }
+    }
+
 }

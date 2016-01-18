@@ -4,7 +4,7 @@
  * You may not modify, use, reproduce or distribute this software.
  * BITDUBAI/CONFIDENTIAL
  */
-package com.bitdubai.fermat_p2p_plugin.layer.ws.communications.cloud.client.developer.bitdubai.version_1.structure.processors;
+package com.bitdubai.fermat_p2p_plugin.layer.ws.communications.cloud.client.developer.bitdubai.version_1.structure.jetty.processors;
 
 import com.bitdubai.fermat_api.layer.all_definition.components.enums.PlatformComponentType;
 import com.bitdubai.fermat_api.layer.all_definition.components.interfaces.PlatformComponentProfile;
@@ -15,6 +15,7 @@ import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.co
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.contents.FermatPacket;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.enums.FermatPacketType;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.enums.JsonAttNamesConstants;
+import com.bitdubai.fermat_p2p_plugin.layer.ws.communications.cloud.client.developer.bitdubai.version_1.structure.jetty.WsCommunicationsJettyCloudClientChannel;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
@@ -28,11 +29,20 @@ import com.google.gson.JsonParser;
  * @version 1.0
  * @since Java JDK 1.7
  */
-public class ServerHandshakeRespondPacketProcessor extends FermatPacketProcessor {
+public class ServerHandshakeRespondJettyPacketProcessor extends FermatJettyPacketProcessor {
+
+    /**
+     * Constructor
+     *
+     * @param wsCommunicationsJettyCloudClientChannel
+     */
+    ServerHandshakeRespondJettyPacketProcessor(WsCommunicationsJettyCloudClientChannel wsCommunicationsJettyCloudClientChannel) {
+        super(wsCommunicationsJettyCloudClientChannel);
+    }
 
     /**
      * (no-javadoc)
-     * @see FermatPacketProcessor#processingPackage(FermatPacket)
+     * @see FermatJettyPacketProcessor#processingPackage(FermatPacket)
      */
     @Override
     public void processingPackage(final FermatPacket receiveFermatPacket) {
@@ -50,7 +60,7 @@ public class ServerHandshakeRespondPacketProcessor extends FermatPacketProcessor
         /*
          * Decrypt the message content
          */
-        String jsonRepresentation = AsymmetricCryptography.decryptMessagePrivateKey(receiveFermatPacket.getMessageContent(), getWsCommunicationsCloudClientChannel().getTemporalIdentity().getPrivateKey());
+        String jsonRepresentation = AsymmetricCryptography.decryptMessagePrivateKey(receiveFermatPacket.getMessageContent(), getWsCommunicationsJettyCloudClientChannel().getTemporalIdentity().getPrivateKey());
 
         /*
          * Construct the json object
@@ -61,16 +71,16 @@ public class ServerHandshakeRespondPacketProcessor extends FermatPacketProcessor
         /*
          * Get the server identity and set into the communication cloud client
          */
-        getWsCommunicationsCloudClientChannel().setServerIdentity(serverIdentity.get(JsonAttNamesConstants.SERVER_IDENTITY).getAsString());
+        getWsCommunicationsJettyCloudClientChannel().setServerIdentity(serverIdentity.get(JsonAttNamesConstants.SERVER_IDENTITY).getAsString());
 
 
-        //System.out.println("ServerHandshakeRespondJettyPacketProcessor - ServerIdentity = "+ getWsCommunicationsCloudClientChannel().getServerIdentity());
+        //System.out.println("ServerHandshakeRespondJettyPacketProcessor - ServerIdentity = "+ getWsCommunicationsJettyCloudClientChannel().getServerIdentity());
 
         /*
          * Construct a Communications Cloud Client Profile for this component and send and fermat packet type FermatPacketType.COMPONENT_REGISTRATION_REQUEST
          */
-        PlatformComponentProfile communicationsCloudClientProfile = getWsCommunicationsCloudClientChannel().getWsCommunicationsCloudClientConnection().constructPlatformComponentProfileFactory(getWsCommunicationsCloudClientChannel().getClientIdentity().getPublicKey(), "WsCommunicationsCloudClientChannel",  "Web Socket Communications Cloud Client", NetworkServiceType.UNDEFINED, PlatformComponentType.COMMUNICATION_CLOUD_CLIENT, null);
-        getWsCommunicationsCloudClientChannel().setPlatformComponentProfile(communicationsCloudClientProfile);
+        PlatformComponentProfile communicationsCloudClientProfile = getWsCommunicationsJettyCloudClientChannel().getWsCommunicationsCloudClientConnection().constructPlatformComponentProfileFactory(getWsCommunicationsJettyCloudClientChannel().getClientIdentity().getPublicKey(), "WsCommunicationsCloudClientChannel",  "Web Socket Communications Cloud Client", NetworkServiceType.UNDEFINED, PlatformComponentType.COMMUNICATION_CLOUD_CLIENT, null);
+        getWsCommunicationsJettyCloudClientChannel().setPlatformComponentProfile(communicationsCloudClientProfile);
 
         /* ------------------------------------
          * IMPORTANT: At this moment the server only
@@ -90,23 +100,23 @@ public class ServerHandshakeRespondPacketProcessor extends FermatPacketProcessor
         /*
          * Construct a fermat packet whit the server identity
          */
-        FermatPacket fermatPacketRespond = FermatPacketCommunicationFactory.constructFermatPacketEncryptedAndSinged(getWsCommunicationsCloudClientChannel().getServerIdentity(),                    //Destination
-                                                                                                                    getWsCommunicationsCloudClientChannel().getTemporalIdentity().getPublicKey(),   //Sender
+        FermatPacket fermatPacketRespond = FermatPacketCommunicationFactory.constructFermatPacketEncryptedAndSinged(getWsCommunicationsJettyCloudClientChannel().getServerIdentity(),                    //Destination
+                                                                                                                    getWsCommunicationsJettyCloudClientChannel().getTemporalIdentity().getPublicKey(),   //Sender
                                                                                                                     gson.toJson(jsonObject),                                      //Message Content
                                                                                                                     FermatPacketType.COMPONENT_REGISTRATION_REQUEST,                                //Packet type
-                                                                                                                    getWsCommunicationsCloudClientChannel().getTemporalIdentity().getPrivateKey()); //Sender private key
+                                                                                                                    getWsCommunicationsJettyCloudClientChannel().getTemporalIdentity().getPrivateKey()); //Sender private key
 
 
         /*
          * Send the encode packet to the server
          */
-        getWsCommunicationsCloudClientChannel().send(FermatPacketEncoder.encode(fermatPacketRespond));
+        getWsCommunicationsJettyCloudClientChannel().sendMessage(FermatPacketEncoder.encode(fermatPacketRespond));
 
     }
 
     /**
      * (no-javadoc)
-     * @see FermatPacketProcessor#getFermatPacketType()
+     * @see FermatJettyPacketProcessor#getFermatPacketType()
      */
     @Override
     public FermatPacketType getFermatPacketType() {
