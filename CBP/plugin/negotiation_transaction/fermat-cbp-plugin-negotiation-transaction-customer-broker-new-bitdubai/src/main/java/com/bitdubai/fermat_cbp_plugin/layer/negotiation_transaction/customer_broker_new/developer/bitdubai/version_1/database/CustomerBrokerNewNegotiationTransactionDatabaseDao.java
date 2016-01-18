@@ -72,11 +72,11 @@ public class CustomerBrokerNewNegotiationTransactionDatabaseDao {
     //CREATE SEND NEW NEGOTIATION TRANSACTION
     public void createCustomerBrokerNewNegotiationTransaction(UUID transactionId, Negotiation negotiation, NegotiationType negotiationType, NegotiationTransactionStatus statusTransaction) throws CantRegisterCustomerBrokerNewNegotiationTransactionException{
 
-        Date time = new Date();
-        long timestamp = time.getTime();
-        String negotiationXML = XMLParser.parseObject(negotiation);
-
         try {
+
+            Date time = new Date();
+            long timestamp = time.getTime();
+            String negotiationXML = XMLParser.parseObject(negotiation);
 
             DatabaseTable table = this.database.getTable(CustomerBrokerNewNegotiationTransactionDatabaseConstants.CUSTOMER_BROKER_NEW_TABLE_NAME);
             DatabaseTableRecord record = table.getEmptyRecord();
@@ -398,20 +398,22 @@ public class CustomerBrokerNewNegotiationTransactionDatabaseDao {
     }
 
     /*PUBLIC METHOD*/
-    public void saveNewEventTansaction(String eventType, String eventSource) throws CantSaveEventException {
+    public void saveNewEventTransaction(String eventType, String eventSource) throws CantSaveEventException {
         try {
 
-            DatabaseTable table = this.database.getTable(CustomerBrokerNewNegotiationTransactionDatabaseConstants.CUSTOMER_BROKER_NEW_EVENT_TABLE_NAME);
-            DatabaseTableRecord eventRecord = table.getEmptyRecord();
             UUID eventId = UUID.randomUUID();
             Date time = new Date();
             long timestamp = time.getTime();
+
+            DatabaseTable table = this.database.getTable(CustomerBrokerNewNegotiationTransactionDatabaseConstants.CUSTOMER_BROKER_NEW_EVENT_TABLE_NAME);
+            DatabaseTableRecord eventRecord = table.getEmptyRecord();
 
             eventRecord.setUUIDValue(CustomerBrokerNewNegotiationTransactionDatabaseConstants.CUSTOMER_BROKER_NEW_EVENT_ID_COLUMN_NAME, eventId);
             eventRecord.setStringValue(CustomerBrokerNewNegotiationTransactionDatabaseConstants.CUSTOMER_BROKER_NEW_EVENT_TYPE_COLUMN_NAME, eventType);
             eventRecord.setStringValue(CustomerBrokerNewNegotiationTransactionDatabaseConstants.CUSTOMER_BROKER_NEW_EVENT_SOURCE_COLUMN_NAME, eventSource);
             eventRecord.setStringValue(CustomerBrokerNewNegotiationTransactionDatabaseConstants.CUSTOMER_BROKER_NEW_EVENT_STATUS_COLUMN_NAME, EventStatus.PENDING.getCode());
             eventRecord.setLongValue(CustomerBrokerNewNegotiationTransactionDatabaseConstants.CUSTOMER_BROKER_NEW_EVENT_TIMESTAMP_COLUMN_NAME, timestamp);
+
             table.insertRecord(eventRecord);
 
             System.out.print("\n\n**** 17) MOCK NEGOTIATION TRANSACTION - NEGOTIATION TRANSMISSION - DAO - REGISTER NEW EVENT ****\n");

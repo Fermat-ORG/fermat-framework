@@ -405,12 +405,12 @@ public class CustomerBrokerNewAgent implements
 
                 //EVENT - RECEIVE NEGOTIATION
                 if (eventTypeCode.equals(EventType.INCOMING_NEGOTIATION_TRANSMISSION_TRANSACTION_NEW.getCode())) {
-                    System.out.print("\n**** 18) MOCK NEGOTIATION TRANSACTION - CUSTOMER BROKER NEW - AGENT - LIST EVENT PENDING ****\n");
                     List<Transaction<NegotiationTransmission>> pendingTransactionList = negotiationTransmissionManager.getPendingTransactions(Specialist.UNKNOWN_SPECIALIST);
                     for (Transaction<NegotiationTransmission> record : pendingTransactionList) {
 
                         negotiationTransmission = record.getInformation();
                         if(negotiationTransmission.getNegotiationTransactionType().getCode().equals(NegotiationTransactionType.CUSTOMER_BROKER_NEW)){
+                            System.out.print("\n**** 18) MOCK NEGOTIATION TRANSACTION - CUSTOMER BROKER NEW - AGENT - LIST EVENT PENDING ****\n");
                             negotiationXML = negotiationTransmission.getNegotiationXML();
                             transmissionId = negotiationTransmission.getTransmissionId();
                             transactionId = negotiationTransmission.getTransactionId();

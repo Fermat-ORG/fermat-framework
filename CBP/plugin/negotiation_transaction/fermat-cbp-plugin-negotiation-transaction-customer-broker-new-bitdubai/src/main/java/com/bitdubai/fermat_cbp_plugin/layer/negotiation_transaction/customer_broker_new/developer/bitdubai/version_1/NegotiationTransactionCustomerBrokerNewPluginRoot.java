@@ -204,7 +204,7 @@ public class NegotiationTransactionCustomerBrokerNewPluginRoot extends AbstractP
             //TEST MOCK
 //            createCustomerBrokerNewPurchaseNegotiationTest();
 
-            //TEST MOCK GET ALL TRANSACTIONk
+            //TEST MOCK GET ALL TRANSACTION
 //            getAllCustomerBrokerNewNegotiationTranasctionTest();
 
             //TEST MOCK CREATE AND GET NEGOTIATION
@@ -215,7 +215,10 @@ public class NegotiationTransactionCustomerBrokerNewPluginRoot extends AbstractP
 //            getNegotiationsByIdTest(UUID.fromString("eac97ab3-034e-4e57-93dc-b9f4ccaf1a74"));
 
             //TEST EVENT REGISTER
-            registerEventTest();
+//            registerEventTest();
+
+            //TEST GET ALL EVENT
+            getAllEvent();
 
             //Startes Service
             this.serviceStatus = ServiceStatus.STARTED;
@@ -447,6 +450,31 @@ public class NegotiationTransactionCustomerBrokerNewPluginRoot extends AbstractP
         } catch (CantGetListCustomerBrokerNewNegotiationTransactionException e){
             System.out.print("\n**** MOCK CUSTOMER BROKER NEW. PURCHASE NEGOTIATION. ERROR GET ALL CUSTOMER BROKER PURCHASE NEGOTIATION NOT FOUNT. ****\n");
         }
+    }
+
+    private void getAllEvent(){
+
+        try {
+
+            System.out.print("\n**** MOCK CUSTOMER BROKER NEW. EVENT . GET ALL EVENT. ****\n");
+
+            List<String> eventList = customerBrokerNewNegotiationTransactionDatabaseDao.getPendingEvents();
+            for (String eventId: eventList){
+                String eventTypeCode = customerBrokerNewNegotiationTransactionDatabaseDao.getEventType(eventId);
+                System.out.print("\n**** MOCK CUSTOMER BROKER NEW. EVENT. ****\n" +
+                        "\n - EVENT ID = " + eventId +
+                        "\n - EVENT TYPE = " +eventTypeCode
+                );
+
+            }
+
+
+        } catch (UnexpectedResultReturnedFromDatabaseException | CantGetNegotiationTransactionListException e){
+            System.out.print("\n**** MOCK CUSTOMER BROKER NEW. EVENT . ERROR GET ALL EVENT NOT FOUNT. ****\n");
+        }
+
+
+
     }
 
     private void createNegotiationsTest() {
