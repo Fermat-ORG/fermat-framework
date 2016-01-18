@@ -41,8 +41,8 @@ import java.util.List;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class CreateIdentityFragment extends AbstractFermatFragment {
-    private static final String TAG = "CreateRedeemPointIdentityFragment";
+public class CreateRedeemPointIdentityFragment extends AbstractFermatFragment {
+    private static final String TAG = "RedeemPointIdentity";
 
     private static final int CREATE_IDENTITY_FAIL_MODULE_IS_NULL = 0;
     private static final int CREATE_IDENTITY_FAIL_NO_VALID_DATA = 1;
@@ -68,8 +68,8 @@ public class CreateIdentityFragment extends AbstractFermatFragment {
     private RedeemPointIdentity identitySelected;
     private boolean isUpdate = false;
 
-    public static CreateIdentityFragment newInstance() {
-        return new CreateIdentityFragment();
+    public static CreateRedeemPointIdentityFragment newInstance() {
+        return new CreateRedeemPointIdentityFragment();
     }
 
     @Override
@@ -106,9 +106,9 @@ public class CreateIdentityFragment extends AbstractFermatFragment {
      * @param layout el layout de este Fragment que contiene las vistas
      */
     private void initViews(View layout) {
-        createButton = (Button) layout.findViewById(R.id.create_crypto_broker_button);
-        mIdentityName = (EditText) layout.findViewById(R.id.crypto_broker_name);
-        mIdentityImage = (ImageView) layout.findViewById(R.id.crypto_broker_image);
+        createButton = (Button) layout.findViewById(R.id.dap_redeem_point_button);
+        mIdentityName = (EditText) layout.findViewById(R.id.dap_redeem_point_name);
+        mIdentityImage = (ImageView) layout.findViewById(R.id.dap_redeem_point_image);
 
         createButton.setText((!isUpdate) ? "Create" : "Update");
 
