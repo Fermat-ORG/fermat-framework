@@ -141,6 +141,9 @@ public class StockTransactionsCashMoneyRestockDatabaseDao {
             database = openDatabase();
             DatabaseTransaction transaction = database.newTransaction();
 
+            //TODO: Solo para prueba ya que priceReference viene null desde android revisar con Nelson
+            cashMoneyTransaction.setPriceReference(new BigDecimal(0));
+
             DatabaseTable table = getDatabaseTable(StockTransactionsCashMoneyRestockDatabaseConstants.CASH_MONEY_RESTOCK_TABLE_NAME);
             DatabaseTableRecord bankMoneyRestockRecord = getCashMoneyRestockRecord(cashMoneyTransaction);
             DatabaseTableFilter filter = table.getEmptyTableFilter();

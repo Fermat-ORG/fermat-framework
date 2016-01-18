@@ -153,6 +153,7 @@ public class UnHoldCryptoMoneyTransactionMonitorAgent implements Agent{
                 }else{
                     cryptoUnholdTransaction.setStatus(CryptoTransactionStatus.REJECTED);
                     cryptoUnholdTransaction.setTimestampConfirmedRejected(new Date().getTime() / 1000);
+                    cryptoUnholdTransaction.setMemo("REJECTED AVAILABLE BALANCE");
                     unHoldCryptoMoneyTransactionManager.saveUnHoldCryptoMoneyTransactionData(cryptoUnholdTransaction);
                 }
             }
