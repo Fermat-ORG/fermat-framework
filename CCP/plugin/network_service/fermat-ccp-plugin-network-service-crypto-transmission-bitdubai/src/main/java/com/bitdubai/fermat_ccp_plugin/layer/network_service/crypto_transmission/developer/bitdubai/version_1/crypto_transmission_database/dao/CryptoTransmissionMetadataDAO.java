@@ -115,7 +115,7 @@ public class CryptoTransmissionMetadataDAO {
 
         try {
 
-            if(getMetadata(cryptoTransmissionMetadata.getTransactionId()) == null)
+            if(!existMetadata(cryptoTransmissionMetadata.getTransactionId()))
             {
                 DatabaseTable addressExchangeRequestTable = database.getTable(CryptoTransmissionNetworkServiceDatabaseConstants.CRYPTO_TRANSMISSION_METADATA_TABLE_NAME);
                 DatabaseTableRecord entityRecord = addressExchangeRequestTable.getEmptyRecord();
@@ -129,10 +129,7 @@ public class CryptoTransmissionMetadataDAO {
         } catch (CantInsertRecordException e) {
 
             throw new CantSaveCryptoTransmissionMetadatatException("",e, "Exception not handled by the plugin, there is a problem in database and i cannot insert the record.","");
-        } catch (PendingRequestNotFoundException e) {
-            throw new CantSaveCryptoTransmissionMetadatatException("",e, "Pending Request Not Found Exception","");
-
-        } catch (CantGetCryptoTransmissionMetadataException e) {
+        }  catch (CantGetCryptoTransmissionMetadataException e) {
             throw new CantSaveCryptoTransmissionMetadatatException("",e, "Cant Get Crypto Transmission Metadata Exception","");
 
         }
@@ -172,6 +169,30 @@ public class CryptoTransmissionMetadataDAO {
     }
 
 
+
+    public boolean existMetadata(UUID transmissionId) throws CantGetCryptoTransmissionMetadataException{
+
+          try {
+
+            DatabaseTable metadataTable = database.getTable(CryptoTransmissionNetworkServiceDatabaseConstants.CRYPTO_TRANSMISSION_METADATA_TABLE_NAME);
+
+            metadataTable.addUUIDFilter(CryptoTransmissionNetworkServiceDatabaseConstants.CRYPTO_TRANSMISSION_METADATA_TRANSMISSION_ID_COLUMN_NAME, transmissionId, DatabaseFilterType.EQUAL);
+
+            metadataTable.loadToMemory();
+
+            List<DatabaseTableRecord> records = metadataTable.getRecords();
+
+
+            if (!records.isEmpty())
+                return true;
+            else
+               return false;
+
+        } catch (CantLoadTableToMemoryException exception) {
+
+            throw new CantGetCryptoTransmissionMetadataException("",exception, "Exception not handled by the plugin, there is a problem in database and i cannot load the table.","");
+        }
+    }
     /**
      * Method that list the all entities on the data base. The valid value of
      * the column name are the att of the <code>TemplateNetworkServiceDatabaseConstants</code>

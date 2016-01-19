@@ -110,7 +110,7 @@ public final class CryptoPaymentRequestNetworkServiceDao {
 
         try {
 
-            if(getRequestById(requestId) == null)
+            if(!existRequest(requestId))
             {
                 DatabaseTable cryptoPaymentRequestTable = database.getTable(CryptoPaymentRequestNetworkServiceDatabaseConstants.CRYPTO_PAYMENT_REQUEST_TABLE_NAME);
 
@@ -141,8 +141,6 @@ public final class CryptoPaymentRequestNetworkServiceDao {
         } catch (CantInsertRecordException e) {
 
             throw new CantCreateCryptoPaymentRequestException(e, "", "Exception not handled by the plugin, there is a problem in database and i cannot insert the record.");
-        } catch (RequestNotFoundException e) {
-            throw new CantCreateCryptoPaymentRequestException(e, "", "Exception not handled by the plugin, there is a problem in database");
 
         } catch (CantGetRequestException e) {
             throw new CantCreateCryptoPaymentRequestException(e, "", "Exception not handled by the plugin, there is a problem in database.");
@@ -204,6 +202,32 @@ public final class CryptoPaymentRequestNetworkServiceDao {
             throw new CantGetRequestException(exception, "", "Check the cause."                                                                                );
         }
     }
+
+    public boolean existRequest(final UUID requestId) throws CantGetRequestException  {
+
+
+        try {
+
+            DatabaseTable cryptoPaymentRequestTable = database.getTable(CryptoPaymentRequestNetworkServiceDatabaseConstants.CRYPTO_PAYMENT_REQUEST_TABLE_NAME);
+
+            cryptoPaymentRequestTable.addUUIDFilter(CryptoPaymentRequestNetworkServiceDatabaseConstants.CRYPTO_PAYMENT_REQUEST_REQUEST_ID_COLUMN_NAME, requestId, DatabaseFilterType.EQUAL);
+
+            cryptoPaymentRequestTable.loadToMemory();
+
+            List<DatabaseTableRecord> records = cryptoPaymentRequestTable.getRecords();
+
+
+            if (!records.isEmpty())
+                return true;
+            else
+                return false;
+
+        } catch (CantLoadTableToMemoryException exception) {
+
+            throw new CantGetRequestException(exception, "", "Exception not handled by the plugin, there is a problem in database and i cannot load the table.");
+        }
+    }
+
 
     public void takeAction(final UUID                       requestId    ,
                            final RequestAction              action       ,
