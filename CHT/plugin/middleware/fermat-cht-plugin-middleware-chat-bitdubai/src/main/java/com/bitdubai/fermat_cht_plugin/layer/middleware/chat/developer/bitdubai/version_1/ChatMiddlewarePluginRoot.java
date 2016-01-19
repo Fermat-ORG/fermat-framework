@@ -242,7 +242,7 @@ public class ChatMiddlewarePluginRoot extends AbstractPlugin implements
                     eventManager,
                     pluginId,
                     chatManager);
-            //openContractMonitorAgent.start();
+            openContractMonitorAgent.start();
 
             this.serviceStatus = ServiceStatus.STARTED;
             //Test method
@@ -272,13 +272,13 @@ public class ChatMiddlewarePluginRoot extends AbstractPlugin implements
                     exception,
                     "Starting open contract plugin",
                     "Cannot set an object");
-        } /*catch (CantStartAgentException exception) {
+        } catch (CantStartAgentException exception) {
             throw new CantStartPluginException(
                     CantStartPluginException.DEFAULT_MESSAGE,
                     FermatException.wrapException(exception),
                     "Starting open contract plugin",
                     "Cannot start the monitor agent");
-        }*/ catch (Exception exception) {
+        } catch (Exception exception) {
             throw new CantStartPluginException(
                     CantStartPluginException.DEFAULT_MESSAGE,
                     FermatException.wrapException(exception),
