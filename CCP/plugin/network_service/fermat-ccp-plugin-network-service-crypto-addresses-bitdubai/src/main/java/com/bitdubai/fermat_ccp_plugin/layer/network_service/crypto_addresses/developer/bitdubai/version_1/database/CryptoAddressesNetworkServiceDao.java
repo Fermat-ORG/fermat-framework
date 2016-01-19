@@ -113,9 +113,8 @@ public final class CryptoAddressesNetworkServiceDao {
                                              long sentDate) throws CantCreateRequestException {
 
         try {
-
-            if(!existPendingRequest(id))
-            {
+            //todo: ver esto
+           // if(!existPendingRequest(id)) {
                 CryptoAddressesNetworkServiceCryptoAddressRequest addressExchangeRequest = new CryptoAddressesNetworkServiceCryptoAddressRequest(
                         id                      ,
                         walletPublicKey            ,
@@ -141,16 +140,16 @@ public final class CryptoAddressesNetworkServiceDao {
                 entityRecord = buildDatabaseRecord(entityRecord, addressExchangeRequest);
 
                 addressExchangeRequestTable.insertRecord(entityRecord);
-            }
+            //}
 
 
         } catch (CantInsertRecordException e) {
 
             throw new CantCreateRequestException(e, "", "Exception not handled by the plugin, there is a problem in database and i cannot insert the record.");
-
-        } catch (CantGetPendingAddressExchangeRequestException e) {
-            throw new CantCreateRequestException(e, "", "Exception not handled by the plugin, there is a problem in database");
-
+//
+//        } catch (CantGetPendingAddressExchangeRequestException e) {
+//            throw new CantCreateRequestException(e, "", "Exception not handled by the plugin, there is a problem in database");
+//
         }
     }
 
@@ -358,8 +357,7 @@ public final class CryptoAddressesNetworkServiceDao {
         }
     }
 
-    public CryptoAddressRequest getPendingRequest(UUID requestId) throws CantGetPendingAddressExchangeRequestException,
-                                                                           PendingRequestNotFoundException {
+    public CryptoAddressRequest getPendingRequest(UUID requestId) throws Exception {
 
         if (requestId == null)
             throw new CantGetPendingAddressExchangeRequestException(null, "", "requestId, can not be null");
@@ -378,7 +376,7 @@ public final class CryptoAddressesNetworkServiceDao {
             if (!records.isEmpty())
                 return buildAddressExchangeRequestRecord(records.get(0));
             else
-                throw new PendingRequestNotFoundException(null, "RequestID: "+requestId, "Can not find an address exchange request with the given request id.");
+                throw new Exception("AddressID: "+requestId, new Throwable("Can not find an address exchange request with the given request id."));
 
 
         } catch (CantLoadTableToMemoryException exception) {
