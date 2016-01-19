@@ -405,7 +405,7 @@ In the Fermat ORG Sierra Team we look for the excellence in coding, following th
 * **Luis Fuenmayor [ORG Team Leader]**<br/>
 ---
     Email:   fuelusumar@gmail.com
-    Skype:   fuelusumar@gmail.com
+    Skype:   live:fuelusumar.
     Github:  https://github.com/fuelusumar
     
 * **German Mendoza [ORG Veteran Developer]**<br/>
@@ -423,7 +423,7 @@ In the Fermat ORG Sierra Team we look for the excellence in coding, following th
 * **Erick Narvaez [ORG Developer]**<br/>
 ---
     Email:   ericknarvaez@hotmail.com 
-    Skype:   ericknarvaez@hotmail.com
+    Skype:   live:ericknarvaez
     Github:  https://github.com/korik1
 
 <br/>
