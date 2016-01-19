@@ -230,6 +230,7 @@ public class SendTransactionFragment2 extends FermatWalletExpandableListFragment
                         null,
                         (moduleManager.getActiveIdentities().isEmpty()) ? PresentationBitcoinWalletDialog.TYPE_PRESENTATION : PresentationBitcoinWalletDialog.TYPE_PRESENTATION_WITHOUT_IDENTITIES,
                         checkButton);
+
 //        PresentationDialog presentationDialog = new PresentationDialog.Builder(getActivity(),appSession)
 //                .setBannerRes(R.drawable.banner_bitcoin_wallet)
 //                .setIconRes(R.drawable.bitcoin_wallet_2)
