@@ -173,6 +173,7 @@ public enum Activities implements FermatEnum {
 
     // Cash Money Wallet
     CSH_CASH_MONEY_WALLET_HOME("CSHCMWH"),
+    CSH_CASH_MONEY_WALLET_TRANSACTION_DETAIL("CSHCMWTD"),
     CSH_CASH_MONEY_WALLET_SETUP("CSHCMWS"),
 
     // Crypto Broker Identity
@@ -533,6 +534,8 @@ public enum Activities implements FermatEnum {
                 return BNK_BANK_MONEY_WALLET_SETUP;
             case "CSHCMWH":
                 return CSH_CASH_MONEY_WALLET_HOME;
+            case "CSHCMWTD":
+                return CSH_CASH_MONEY_WALLET_TRANSACTION_DETAIL;
             case "CSHCMWS":
                 return CSH_CASH_MONEY_WALLET_SETUP;
             case "BNKBMWAD":
