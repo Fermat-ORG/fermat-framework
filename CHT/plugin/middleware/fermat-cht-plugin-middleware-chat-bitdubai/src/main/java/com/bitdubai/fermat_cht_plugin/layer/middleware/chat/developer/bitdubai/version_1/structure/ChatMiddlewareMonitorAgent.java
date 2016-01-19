@@ -337,7 +337,7 @@ public class ChatMiddlewareMonitorAgent implements
                 }
                 for(Transaction<ChatMetadata> pendingTransaction : pendingTransactionList){
                     incomingChatMetadata=pendingTransaction.getInformation();
-                    incomingTransactionChatId=incomingChatMetadata.getIdChat();
+                    incomingTransactionChatId=incomingChatMetadata.getChatId();
                     if(eventChatId.toString().equals(incomingTransactionChatId.toString())){
                         //If message exists in database, this message will be updated
                         saveMessage(incomingChatMetadata);
@@ -394,7 +394,7 @@ public class ChatMiddlewareMonitorAgent implements
                 }
                 for(Transaction<ChatMetadata> pendingTransaction : pendingTransactionList){
                     incomingChatMetadata=pendingTransaction.getInformation();
-                    incomingTransactionChatId=incomingChatMetadata.getIdChat();
+                    incomingTransactionChatId=incomingChatMetadata.getChatId();
                     if(eventChatId.toString().equals(incomingTransactionChatId.toString())){
                         //Check if metadata exists in database
                         checkChatMetadata(incomingChatMetadata);
@@ -457,11 +457,11 @@ public class ChatMiddlewareMonitorAgent implements
         private boolean checkChatMetadata(ChatMetadata chatMetadata) throws
                 CantGetChatException,
                 CantGetPendingTransactionException {
-            UUID chatId=chatMetadata.getIdChat();
+            UUID chatId=chatMetadata.getChatId();
             UUID messageId;
             if(chatMiddlewareDatabaseDao.chatIdExists(
                     chatId)){
-                messageId=chatMetadata.getIdMessage();
+                messageId=chatMetadata.getMessageId();
                 if(chatMiddlewareDatabaseDao.messageIdExists(messageId)){
                     return true;
                 }else{
@@ -488,7 +488,7 @@ public class ChatMiddlewareMonitorAgent implements
                 DatabaseOperationException,
                 CantSaveMessageException,
                 CantGetMessageException {
-            UUID messageId=chatMetadata.getIdMessage();
+            UUID messageId=chatMetadata.getMessageId();
             Message messageRecorded=chatMiddlewareDatabaseDao.getMessageByMessageId(messageId);
             chatMiddlewareDatabaseDao.saveMessage(messageRecorded);
         }
@@ -505,7 +505,7 @@ public class ChatMiddlewareMonitorAgent implements
                 DatabaseOperationException,
                 CantSaveMessageException,
                 CantGetMessageException {
-            UUID messageId=chatMetadata.getIdMessage();
+            UUID messageId=chatMetadata.getMessageId();
             Message messageRecorded=chatMiddlewareDatabaseDao.getMessageByMessageId(messageId);
             messageRecorded.setStatus(chatMetadata.getMessageStatus());
             chatMiddlewareDatabaseDao.saveMessage(messageRecorded);

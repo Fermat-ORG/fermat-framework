@@ -35,15 +35,15 @@ public class ChatNetworkServiceManager implements ChatManager{
 //        communicationNetworkServiceLocal = communicationNetworkServiceConnectionManager.getNetworkServiceLocalInstance(remoteActorPubKey);
 //        ChatMetadataTransactionRecord chatMetadaTransactionRecord = new ChatMetadataTransactionRecord();
 //        chatMetadaTransactionRecord.setIdChat(idChat);
-//        chatMetadaTransactionRecord.setIdObject(idObjecto);
+//        chatMetadaTransactionRecord.setObjectId(idObjecto);
 //        chatMetadaTransactionRecord.setLocalActorType(localActorType);
-//        chatMetadaTransactionRecord.setLocalActorPubKey(localActorPubKey);
+//        chatMetadaTransactionRecord.setLocalActorPublicKey(localActorPubKey);
 //        chatMetadaTransactionRecord.setRemoteActorType(remoteActorType);
-//        chatMetadaTransactionRecord.setRemoteActorPubKey(remoteActorPubKey);
+//        chatMetadaTransactionRecord.setRemoteActorPublicKey(remoteActorPubKey);
 //        chatMetadaTransactionRecord.setChatName(chatName);
 //        chatMetadaTransactionRecord.setChatMessageStatus(chatStatus);
 //        chatMetadaTransactionRecord.setDate(date);
-//        chatMetadaTransactionRecord.setIdMessage(idMessage);
+//        chatMetadaTransactionRecord.setMessageId(idMessage);
 //        chatMetadaTransactionRecord.setMessage(message);
 //        chatMetadaTransactionRecord.setDistributionStatus(distributionStatus);
 //        try {
