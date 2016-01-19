@@ -77,4 +77,9 @@ public class CashMoneyWalletPreferenceSettings implements WalletSettings {
     public void setDefaultSkin(UUID skinId) throws CantSetDefaultSkinException {
 
     }
+
+    @Override
+    public void setIsPresentationHelpEnabled(boolean b) {
+
+    }
 }
