@@ -67,6 +67,9 @@ public class BitcoinCryptoNetworkPluginRoot extends AbstractPlugin implements
     @NeededAddonReference(platform = Platforms.OPERATIVE_SYSTEM_API, layer = Layers.SYSTEM, addon = Addons.PLUGIN_DATABASE_SYSTEM)
     private PluginDatabaseSystem pluginDatabaseSystem;
 
+    /**
+     * Default Constructor
+     */
     public BitcoinCryptoNetworkPluginRoot() {
         super(new PluginVersionReference(new Version()));
     }
