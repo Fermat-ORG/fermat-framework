@@ -512,8 +512,17 @@ public class BitcoinCryptoNetworkMonitor implements Agent {
         if (transaction == null)
             throw new CantCancellBroadcastTransactionException(CantCancellBroadcastTransactionException.DEFAULT_MESSAGE, null, "the specified transaction does not exists.", null);
 
+        /**
+         * clear the transaction
+         */
         transaction.clearInputs();
         transaction.clearOutputs();
+
+        /**
+         * mark the transaction as dead.
+         */
+        WalletTransaction walletTransaction = new WalletTransaction(WalletTransaction.Pool.DEAD, transaction);
+        wallet.addWalletTransaction(walletTransaction);
 
         try {
             wallet.saveToFile(walletFileName);

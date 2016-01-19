@@ -806,11 +806,21 @@ public class BitcoinCryptoNetworkManager implements TransactionProtocolManager, 
      * @throws CantCancellBroadcastTransactionException
      */
     public void cancelBroadcast(String txHash) throws CantCancellBroadcastTransactionException {
+        /**
+         * I will get the network type this transaction belongs to
+         */
+        BlockchainNetworkType blockchainNetworkType;
+        try {
+            blockchainNetworkType = getDao().getBlockchainNetworkTypeFromBroadcast(txHash);
+        } catch (CantExecuteDatabaseOperationException e) {
+            blockchainNetworkType = BlockchainNetworkType.DEFAULT;
+        }
+
 
         /**
          * Will invalidate the transaction in the wallet
-         */
-        runningAgents.get(BlockchainNetworkType.DEFAULT).cancelBroadcast(txHash);
+        */
+        runningAgents.get(blockchainNetworkType).cancelBroadcast(txHash);
 
         /**
          * marks the transaction as cancelled in the database

@@ -162,7 +162,7 @@ public interface BitcoinNetworkManager extends TransactionSender<CryptoTransacti
     /**
      * Will get the BlockchainConnectionStatus for the specified network.
      * @param blockchainNetworkType the Network type we won't to get info from. If the passed network is not currently activated,
-     *                              then we will receive null.
+     * then we will receive null.
      * @return BlockchainConnectionStatus with information of amount of peers currently connected, etc.
      * @exception CantGetBlockchainConnectionStatusException
      */
