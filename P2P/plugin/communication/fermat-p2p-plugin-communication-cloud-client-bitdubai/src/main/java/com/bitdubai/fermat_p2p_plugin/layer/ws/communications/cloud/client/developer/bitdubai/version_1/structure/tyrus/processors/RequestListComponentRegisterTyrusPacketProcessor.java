@@ -4,7 +4,7 @@
  * You may not modify, use, reproduce or distribute this software.
  * BITDUBAI/CONFIDENTIAL
  */
-package com.bitdubai.fermat_p2p_plugin.layer.ws.communications.cloud.client.developer.bitdubai.version_1.structure.jetty.processors;
+package com.bitdubai.fermat_p2p_plugin.layer.ws.communications.cloud.client.developer.bitdubai.version_1.structure.tyrus.processors;
 
 import com.bitdubai.fermat_api.layer.all_definition.components.enums.PlatformComponentType;
 import com.bitdubai.fermat_api.layer.all_definition.components.interfaces.PlatformComponentProfile;
@@ -18,7 +18,7 @@ import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.events.Com
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.contents.FermatPacket;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.enums.FermatPacketType;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.enums.JsonAttNamesConstants;
-import com.bitdubai.fermat_p2p_plugin.layer.ws.communications.cloud.client.developer.bitdubai.version_1.structure.jetty.WsCommunicationsJettyCloudClientChannel;
+import com.bitdubai.fermat_p2p_plugin.layer.ws.communications.cloud.client.developer.bitdubai.version_1.structure.tyrus.WsCommunicationsTyrusCloudClientChannel;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
@@ -27,7 +27,7 @@ import com.google.gson.reflect.TypeToken;
 import java.util.List;
 
 /**
- * The Class <code>com.bitdubai.fermat_p2p_plugin.layer.ws.communications.cloud.client.developer.bitdubai.version_1.structure.processors.RequestListComponentRegisterJettyPacketProcessor</code> implement
+ * The Class <code>com.bitdubai.fermat_p2p_plugin.layer.ws.communications.cloud.client.developer.bitdubai.version_1.structure.processors.RequestListComponentRegisterTyrusPacketProcessor</code> implement
  * the logic to process the packet when a packet type <code>com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.enums.FermatPacketType.REQUEST_LIST_COMPONENT_REGISTERED</code> is receive by the server.
  * <p/>
  * Created by Roberto Requena - (rart3001@gmail.com) on 06/09/15.
@@ -35,33 +35,33 @@ import java.util.List;
  * @version 1.0
  * @since Java JDK 1.7
  */
-public class RequestListComponentRegisterJettyPacketProcessor extends FermatJettyPacketProcessor {
+public class RequestListComponentRegisterTyrusPacketProcessor extends FermatTyrusPacketProcessor {
 
     /**
      * Constructor
      *
-     * @param wsCommunicationsJettyCloudClientChannel
+     * @param wsCommunicationsTyrusCloudClientChannel
      */
-    public RequestListComponentRegisterJettyPacketProcessor(WsCommunicationsJettyCloudClientChannel wsCommunicationsJettyCloudClientChannel) {
-        super(wsCommunicationsJettyCloudClientChannel);
+    public RequestListComponentRegisterTyrusPacketProcessor(WsCommunicationsTyrusCloudClientChannel wsCommunicationsTyrusCloudClientChannel) {
+        super(wsCommunicationsTyrusCloudClientChannel);
     }
 
     /**
      * (no-javadoc)
-     * @see FermatJettyPacketProcessor#processingPackage(FermatPacket)
+     * @see FermatTyrusPacketProcessor#processingPackage(FermatPacket)
      */
     @Override
     public void processingPackage(FermatPacket receiveFermatPacket) {
 
         //System.out.println(" --------------------------------------------------------------------- ");
-        //System.out.println("RequestListComponentRegisterJettyPacketProcessor - Starting processingPackage");
+        //System.out.println("RequestListComponentRegisterTyrusPacketProcessor - Starting processingPackage");
 
         /*
          * Get the platformComponentProfile from the message content and decrypt
          */
-        String messageContentJsonStringRepresentation = AsymmetricCryptography.decryptMessagePrivateKey(receiveFermatPacket.getMessageContent(), getWsCommunicationsJettyCloudClientChannel().getClientIdentity().getPrivateKey());
+        String messageContentJsonStringRepresentation = AsymmetricCryptography.decryptMessagePrivateKey(receiveFermatPacket.getMessageContent(), getWsCommunicationsTyrusCloudClientChannel().getClientIdentity().getPrivateKey());
 
-        //System.out.println("RequestListComponentRegisterJettyPacketProcessor - messageContentJsonStringRepresentation = "+messageContentJsonStringRepresentation);
+        //System.out.println("RequestListComponentRegisterTyrusPacketProcessor - messageContentJsonStringRepresentation = "+messageContentJsonStringRepresentation);
 
         /*
          * Construct the json object
@@ -79,7 +79,7 @@ public class RequestListComponentRegisterJettyPacketProcessor extends FermatJett
         List<PlatformComponentProfile> receivedList = gson.fromJson(respond.get(JsonAttNamesConstants.RESULT_LIST).getAsString(), new TypeToken<List<PlatformComponentProfileCommunication>>() {
         }.getType());
 
-        //System.out.println("RequestListComponentRegisterJettyPacketProcessor - receivedList.size() = " + receivedList.size());
+        //System.out.println("RequestListComponentRegisterTyrusPacketProcessor - receivedList.size() = " + receivedList.size());
 
          /*
          * Create a new event whit the receivedlist
@@ -97,14 +97,14 @@ public class RequestListComponentRegisterJettyPacketProcessor extends FermatJett
         /*
          * Raise the event
          */
-        //System.out.println("RequestListComponentRegisterJettyPacketProcessor - Raised a event = P2pEventType.COMPLETE_REQUEST_LIST_COMPONENT_REGISTERED_NOTIFICATION");
-        getWsCommunicationsJettyCloudClientChannel().getEventManager().raiseEvent(event);
+        //System.out.println("RequestListComponentRegisterTyrusPacketProcessor - Raised a event = P2pEventType.COMPLETE_REQUEST_LIST_COMPONENT_REGISTERED_NOTIFICATION");
+        getWsCommunicationsTyrusCloudClientChannel().getEventManager().raiseEvent(event);
 
     }
 
     /**
      * (no-javadoc)
-     * @see FermatJettyPacketProcessor#getFermatPacketType()
+     * @see FermatTyrusPacketProcessor#getFermatPacketType()
      */
     @Override
     public FermatPacketType getFermatPacketType() {

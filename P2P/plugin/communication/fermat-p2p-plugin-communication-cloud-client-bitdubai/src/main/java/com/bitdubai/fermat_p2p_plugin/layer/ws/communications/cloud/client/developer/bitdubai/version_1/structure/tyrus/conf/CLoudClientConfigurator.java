@@ -4,7 +4,7 @@
  * You may not modify, use, reproduce or distribute this software.
  * BITDUBAI/CONFIDENTIAL
  */
-package com.bitdubai.fermat_p2p_plugin.layer.ws.communications.cloud.client.developer.bitdubai.version_1.structure.jetty.conf;
+package com.bitdubai.fermat_p2p_plugin.layer.ws.communications.cloud.client.developer.bitdubai.version_1.structure.tyrus.conf;
 
 import com.bitdubai.fermat_api.layer.all_definition.crypto.asymmetric.ECCKeyPair;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.enums.JsonAttNamesConstants;
@@ -18,7 +18,7 @@ import javax.websocket.ClientEndpointConfig;
 import javax.websocket.HandshakeResponse;
 
 /**
- * The class <code>com.bitdubai.fermat_p2p_plugin.layer.ws.communications.cloud.client.developer.bitdubai.version_1.structure.jetty.conf.CLoudClientConfigurator</code>
+ * The class <code>CLoudClientConfigurator</code>
  * </p>
  * <p/>
  * Created by Roberto Requena - (rart3001@gmail.com) on 17/01/16.

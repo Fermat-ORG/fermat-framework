@@ -4,7 +4,7 @@
  * You may not modify, use, reproduce or distribute this software.
  * BITDUBAI/CONFIDENTIAL
  */
-package com.bitdubai.fermat_p2p_plugin.layer.ws.communications.cloud.client.developer.bitdubai.version_1.structure.jetty;
+package com.bitdubai.fermat_p2p_plugin.layer.ws.communications.cloud.client.developer.bitdubai.version_1.structure.tyrus;
 
 import com.bitdubai.fermat_api.layer.all_definition.components.enums.PlatformComponentType;
 import com.bitdubai.fermat_api.layer.all_definition.components.interfaces.DiscoveryQueryParameters;
@@ -27,17 +27,17 @@ import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.exceptions.Ca
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.exceptions.CantRegisterComponentException;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.exceptions.CantRequestListException;
 import com.bitdubai.fermat_p2p_plugin.layer.ws.communications.cloud.client.developer.bitdubai.version_1.WsCommunicationsCloudClientPluginRoot;
-import com.bitdubai.fermat_p2p_plugin.layer.ws.communications.cloud.client.developer.bitdubai.version_1.structure.jetty.processors.ClientSuccessfullyReconnectJettyPacketProcessor;
-import com.bitdubai.fermat_p2p_plugin.layer.ws.communications.cloud.client.developer.bitdubai.version_1.structure.jetty.processors.CompleteComponentConnectionRequestJettyPacketProcessor;
-import com.bitdubai.fermat_p2p_plugin.layer.ws.communications.cloud.client.developer.bitdubai.version_1.structure.jetty.processors.CompleteRegistrationComponentJettyPacketProcessor;
-import com.bitdubai.fermat_p2p_plugin.layer.ws.communications.cloud.client.developer.bitdubai.version_1.structure.jetty.processors.CompleteUpdateActorJettyPacketProcessor;
-import com.bitdubai.fermat_p2p_plugin.layer.ws.communications.cloud.client.developer.bitdubai.version_1.structure.jetty.processors.ComponentConnectionRespondJettyPacketProcessor;
-import com.bitdubai.fermat_p2p_plugin.layer.ws.communications.cloud.client.developer.bitdubai.version_1.structure.jetty.processors.FailureComponentConnectionRequestJettyPacketProcessor;
-import com.bitdubai.fermat_p2p_plugin.layer.ws.communications.cloud.client.developer.bitdubai.version_1.structure.jetty.processors.FailureComponentRegistrationRequestJettyPacketProcessor;
-import com.bitdubai.fermat_p2p_plugin.layer.ws.communications.cloud.client.developer.bitdubai.version_1.structure.jetty.processors.FailureRequestedListNoAvailbleJettyPacketProcessor;
-import com.bitdubai.fermat_p2p_plugin.layer.ws.communications.cloud.client.developer.bitdubai.version_1.structure.jetty.processors.FailureUpdateActorJettyPacketProcessor;
-import com.bitdubai.fermat_p2p_plugin.layer.ws.communications.cloud.client.developer.bitdubai.version_1.structure.jetty.processors.RequestListComponentRegisterJettyPacketProcessor;
-import com.bitdubai.fermat_p2p_plugin.layer.ws.communications.cloud.client.developer.bitdubai.version_1.structure.jetty.processors.ServerHandshakeRespondJettyPacketProcessor;
+import com.bitdubai.fermat_p2p_plugin.layer.ws.communications.cloud.client.developer.bitdubai.version_1.structure.tyrus.processors.ClientSuccessfullyReconnectTyrusPacketProcessor;
+import com.bitdubai.fermat_p2p_plugin.layer.ws.communications.cloud.client.developer.bitdubai.version_1.structure.tyrus.processors.CompleteComponentConnectionRequestTyrusPacketProcessor;
+import com.bitdubai.fermat_p2p_plugin.layer.ws.communications.cloud.client.developer.bitdubai.version_1.structure.tyrus.processors.CompleteRegistrationComponentTyrusPacketProcessor;
+import com.bitdubai.fermat_p2p_plugin.layer.ws.communications.cloud.client.developer.bitdubai.version_1.structure.tyrus.processors.CompleteUpdateActorTyrusPacketProcessor;
+import com.bitdubai.fermat_p2p_plugin.layer.ws.communications.cloud.client.developer.bitdubai.version_1.structure.tyrus.processors.ComponentConnectionRespondTyrusPacketProcessor;
+import com.bitdubai.fermat_p2p_plugin.layer.ws.communications.cloud.client.developer.bitdubai.version_1.structure.tyrus.processors.FailureComponentConnectionRequestTyrusPacketProcessor;
+import com.bitdubai.fermat_p2p_plugin.layer.ws.communications.cloud.client.developer.bitdubai.version_1.structure.tyrus.processors.FailureComponentRegistrationRequestTyrusPacketProcessor;
+import com.bitdubai.fermat_p2p_plugin.layer.ws.communications.cloud.client.developer.bitdubai.version_1.structure.tyrus.processors.FailureRequestedListNoAvailbleTyrusPacketProcessor;
+import com.bitdubai.fermat_p2p_plugin.layer.ws.communications.cloud.client.developer.bitdubai.version_1.structure.tyrus.processors.FailureUpdateActorTyrusPacketProcessor;
+import com.bitdubai.fermat_p2p_plugin.layer.ws.communications.cloud.client.developer.bitdubai.version_1.structure.tyrus.processors.RequestListComponentRegisterTyrusPacketProcessor;
+import com.bitdubai.fermat_p2p_plugin.layer.ws.communications.cloud.client.developer.bitdubai.version_1.structure.tyrus.processors.ServerHandshakeRespondTyrusPacketProcessor;
 import com.bitdubai.fermat_p2p_plugin.layer.ws.communications.cloud.client.developer.bitdubai.version_1.structure.util.ServerConf;
 import com.bitdubai.fermat_p2p_plugin.layer.ws.communications.cloud.client.developer.bitdubai.version_1.structure.vpn.WsCommunicationVPNClientManagerAgent;
 import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfaces.EventManager;
@@ -66,7 +66,9 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import javax.websocket.ContainerProvider;
 import javax.websocket.DeploymentException;
+import javax.websocket.WebSocketContainer;
 
 /**
  * The Class <code>com.bitdubai.fermat_p2p_plugin.layer.ws.communications.cloud.client.developer.bitdubai.version_1.structure.WsCommunicationsCloudClientConnection</code>
@@ -84,9 +86,9 @@ public class WsCommunicationsTyrusCloudClientConnection implements Communication
     private static String WEB_SERVICE_URL = ServerConf.HTTP_PROTOCOL + WsCommunicationsCloudClientPluginRoot.SERVER_IP + ":" + ServerConf.WEB_SERVICE_PORT + "/fermat/cloud-server/v1/components/registered/";
 
     /**
-     * Represent the wsCommunicationsJettyCloudClientChannel
+     * Represent the wsCommunicationsTyrusCloudClientChannel
      */
-    private WsCommunicationsJettyCloudClientChannel wsCommunicationsJettyCloudClientChannel;
+    private WsCommunicationsTyrusCloudClientChannel wsCommunicationsTyrusCloudClientChannel;
 
     /**
      * Represent the wsCommunicationVPNClientManagerAgent
@@ -99,6 +101,11 @@ public class WsCommunicationsTyrusCloudClientConnection implements Communication
     private LocationManager locationManager;
 
     /**
+     * Represent the uri
+     */
+    private URI uri;
+
+    /**
      * Constructor whit parameters
      *
      * @param uri
@@ -106,7 +113,8 @@ public class WsCommunicationsTyrusCloudClientConnection implements Communication
      */
     public WsCommunicationsTyrusCloudClientConnection(URI uri, EventManager eventManager, LocationManager locationManager, ECCKeyPair clientIdentity) throws IOException, DeploymentException {
         super();
-        this.wsCommunicationsJettyCloudClientChannel = new WsCommunicationsJettyCloudClientChannel(this, eventManager, clientIdentity);
+        this.uri = uri;
+        this.wsCommunicationsTyrusCloudClientChannel = new WsCommunicationsTyrusCloudClientChannel(this, eventManager, clientIdentity);
         this.wsCommunicationVPNClientManagerAgent    = WsCommunicationVPNClientManagerAgent.getInstance();
         this.locationManager                         = locationManager;
     }
@@ -119,22 +127,22 @@ public class WsCommunicationsTyrusCloudClientConnection implements Communication
         /*
          * Clean all
          */
-        wsCommunicationsJettyCloudClientChannel.cleanPacketProcessorsRegistered();
+        wsCommunicationsTyrusCloudClientChannel.cleanPacketProcessorsRegistered();
 
         /*
          * Register the packet processors
          */
-        wsCommunicationsJettyCloudClientChannel.registerFermatPacketProcessor(new ServerHandshakeRespondJettyPacketProcessor(wsCommunicationsJettyCloudClientChannel));
-        wsCommunicationsJettyCloudClientChannel.registerFermatPacketProcessor(new CompleteRegistrationComponentJettyPacketProcessor(wsCommunicationsJettyCloudClientChannel));
-        wsCommunicationsJettyCloudClientChannel.registerFermatPacketProcessor(new RequestListComponentRegisterJettyPacketProcessor(wsCommunicationsJettyCloudClientChannel));
-        wsCommunicationsJettyCloudClientChannel.registerFermatPacketProcessor(new ComponentConnectionRespondJettyPacketProcessor(wsCommunicationsJettyCloudClientChannel));
-        wsCommunicationsJettyCloudClientChannel.registerFermatPacketProcessor(new CompleteComponentConnectionRequestJettyPacketProcessor(wsCommunicationsJettyCloudClientChannel));
-        wsCommunicationsJettyCloudClientChannel.registerFermatPacketProcessor(new FailureComponentConnectionRequestJettyPacketProcessor(wsCommunicationsJettyCloudClientChannel));
-        wsCommunicationsJettyCloudClientChannel.registerFermatPacketProcessor(new FailureComponentRegistrationRequestJettyPacketProcessor(wsCommunicationsJettyCloudClientChannel));
-        wsCommunicationsJettyCloudClientChannel.registerFermatPacketProcessor(new FailureRequestedListNoAvailbleJettyPacketProcessor(wsCommunicationsJettyCloudClientChannel));
-        wsCommunicationsJettyCloudClientChannel.registerFermatPacketProcessor(new CompleteUpdateActorJettyPacketProcessor(wsCommunicationsJettyCloudClientChannel));
-        wsCommunicationsJettyCloudClientChannel.registerFermatPacketProcessor(new FailureUpdateActorJettyPacketProcessor(wsCommunicationsJettyCloudClientChannel));
-        wsCommunicationsJettyCloudClientChannel.registerFermatPacketProcessor(new ClientSuccessfullyReconnectJettyPacketProcessor(wsCommunicationsJettyCloudClientChannel));
+        wsCommunicationsTyrusCloudClientChannel.registerFermatPacketProcessor(new ServerHandshakeRespondTyrusPacketProcessor(wsCommunicationsTyrusCloudClientChannel));
+        wsCommunicationsTyrusCloudClientChannel.registerFermatPacketProcessor(new CompleteRegistrationComponentTyrusPacketProcessor(wsCommunicationsTyrusCloudClientChannel));
+        wsCommunicationsTyrusCloudClientChannel.registerFermatPacketProcessor(new RequestListComponentRegisterTyrusPacketProcessor(wsCommunicationsTyrusCloudClientChannel));
+        wsCommunicationsTyrusCloudClientChannel.registerFermatPacketProcessor(new ComponentConnectionRespondTyrusPacketProcessor(wsCommunicationsTyrusCloudClientChannel));
+        wsCommunicationsTyrusCloudClientChannel.registerFermatPacketProcessor(new CompleteComponentConnectionRequestTyrusPacketProcessor(wsCommunicationsTyrusCloudClientChannel));
+        wsCommunicationsTyrusCloudClientChannel.registerFermatPacketProcessor(new FailureComponentConnectionRequestTyrusPacketProcessor(wsCommunicationsTyrusCloudClientChannel));
+        wsCommunicationsTyrusCloudClientChannel.registerFermatPacketProcessor(new FailureComponentRegistrationRequestTyrusPacketProcessor(wsCommunicationsTyrusCloudClientChannel));
+        wsCommunicationsTyrusCloudClientChannel.registerFermatPacketProcessor(new FailureRequestedListNoAvailbleTyrusPacketProcessor(wsCommunicationsTyrusCloudClientChannel));
+        wsCommunicationsTyrusCloudClientChannel.registerFermatPacketProcessor(new CompleteUpdateActorTyrusPacketProcessor(wsCommunicationsTyrusCloudClientChannel));
+        wsCommunicationsTyrusCloudClientChannel.registerFermatPacketProcessor(new FailureUpdateActorTyrusPacketProcessor(wsCommunicationsTyrusCloudClientChannel));
+        wsCommunicationsTyrusCloudClientChannel.registerFermatPacketProcessor(new ClientSuccessfullyReconnectTyrusPacketProcessor(wsCommunicationsTyrusCloudClientChannel));
 
 
 
@@ -143,12 +151,18 @@ public class WsCommunicationsTyrusCloudClientConnection implements Communication
     /**
      * Method that initialize the component and open a new connection
      */
-    public void initializeAndConnect(){
+    public void initializeAndConnect() throws IOException, DeploymentException {
 
         /*
          * Register the processors
          */
         registerFermatPacketProcessors();
+
+        /*
+         * Connect
+         */
+        WebSocketContainer container = ContainerProvider.getWebSocketContainer();
+        container.connectToServer(wsCommunicationsTyrusCloudClientChannel, uri);
 
     }
 
@@ -187,7 +201,7 @@ public class WsCommunicationsTyrusCloudClientConnection implements Communication
              * Construct a PlatformComponentProfile instance
              */
             return new PlatformComponentProfileCommunication(alias,
-                                                             wsCommunicationsJettyCloudClientChannel.getClientIdentity().getPublicKey(),
+                                                             wsCommunicationsTyrusCloudClientChannel.getClientIdentity().getPublicKey(),
                                                              identityPublicKey,
                                                              location,
                                                              name,
@@ -221,7 +235,7 @@ public class WsCommunicationsTyrusCloudClientConnection implements Communication
             }
 
             return new PlatformComponentProfileCommunication(null,
-                                                            wsCommunicationsJettyCloudClientChannel.getClientIdentity().getPublicKey(),
+                                                            wsCommunicationsTyrusCloudClientChannel.getClientIdentity().getPublicKey(),
                                                             identityPublicKey,
                                                             null,
                                                             null,
@@ -280,25 +294,25 @@ public class WsCommunicationsTyrusCloudClientConnection implements Communication
              /*
              * Construct a fermat packet whit the PlatformComponentProfile
              */
-            FermatPacket fermatPacket = FermatPacketCommunicationFactory.constructFermatPacketEncryptedAndSinged(wsCommunicationsJettyCloudClientChannel.getServerIdentity(),                  //Destination
-                    wsCommunicationsJettyCloudClientChannel.getClientIdentity().getPublicKey(),   //Sender
+            FermatPacket fermatPacket = FermatPacketCommunicationFactory.constructFermatPacketEncryptedAndSinged(wsCommunicationsTyrusCloudClientChannel.getServerIdentity(),                  //Destination
+                    wsCommunicationsTyrusCloudClientChannel.getClientIdentity().getPublicKey(),   //Sender
                     gson.toJson(jsonObject),                                                 //Message Content
                     FermatPacketType.COMPONENT_REGISTRATION_REQUEST,                         //Packet type
-                    wsCommunicationsJettyCloudClientChannel.getClientIdentity().getPrivateKey()); //Sender private key
+                    wsCommunicationsTyrusCloudClientChannel.getClientIdentity().getPrivateKey()); //Sender private key
 
 
             String fermatPacketEncode = FermatPacketEncoder.encode(fermatPacket);
 
-            System.out.println("WsCommunicationsCloudClientConnection - wsCommunicationsJettyCloudClientChannel.getClientConnection().isOpen() " + wsCommunicationsJettyCloudClientChannel.getClientConnection().isOpen());
-            if (wsCommunicationsJettyCloudClientChannel.getClientConnection().isOpen()){
+            System.out.println("WsCommunicationsCloudClientConnection - wsCommunicationsTyrusCloudClientChannel.getClientConnection().isOpen() " + wsCommunicationsTyrusCloudClientChannel.getClientConnection().isOpen());
+            if (wsCommunicationsTyrusCloudClientChannel.getClientConnection().isOpen()){
 
                 /*
                  * Send the encode packet to the server
                  */
-                wsCommunicationsJettyCloudClientChannel.sendMessage(fermatPacketEncode);
+                wsCommunicationsTyrusCloudClientChannel.sendMessage(fermatPacketEncode);
 
             }else{
-                wsCommunicationsJettyCloudClientChannel.raiseClientConnectionLooseNotificationEvent();
+                wsCommunicationsTyrusCloudClientChannel.raiseClientConnectionLooseNotificationEvent();
                 throw new Exception("Client Connection is Close");
             }
 
@@ -340,25 +354,25 @@ public class WsCommunicationsTyrusCloudClientConnection implements Communication
              /*
              * Construct a fermat packet whit the PlatformComponentProfile
              */
-            FermatPacket fermatPacket = FermatPacketCommunicationFactory.constructFermatPacketEncryptedAndSinged(wsCommunicationsJettyCloudClientChannel.getServerIdentity(),                  //Destination
-                    wsCommunicationsJettyCloudClientChannel.getClientIdentity().getPublicKey(),   //Sender
+            FermatPacket fermatPacket = FermatPacketCommunicationFactory.constructFermatPacketEncryptedAndSinged(wsCommunicationsTyrusCloudClientChannel.getServerIdentity(),                  //Destination
+                    wsCommunicationsTyrusCloudClientChannel.getClientIdentity().getPublicKey(),   //Sender
                     gson.toJson(jsonObject),                                                 //Message Content
                     FermatPacketType.UPDATE_ACTOR_REQUEST,                         //Packet type
-                    wsCommunicationsJettyCloudClientChannel.getClientIdentity().getPrivateKey()); //Sender private key
+                    wsCommunicationsTyrusCloudClientChannel.getClientIdentity().getPrivateKey()); //Sender private key
 
 
             String fermatPacketEncode = FermatPacketEncoder.encode(fermatPacket);
 
-            System.out.println("WsCommunicationsCloudClientConnection - wsCommunicationsJettyCloudClientChannel.getClientConnection().isOpen() "+wsCommunicationsJettyCloudClientChannel.getClientConnection().isOpen());
-            if (wsCommunicationsJettyCloudClientChannel.getClientConnection().isOpen()){
+            System.out.println("WsCommunicationsCloudClientConnection - wsCommunicationsTyrusCloudClientChannel.getClientConnection().isOpen() "+ wsCommunicationsTyrusCloudClientChannel.getClientConnection().isOpen());
+            if (wsCommunicationsTyrusCloudClientChannel.getClientConnection().isOpen()){
 
                 /*
                  * Send the encode packet to the server
                  */
-                wsCommunicationsJettyCloudClientChannel.sendMessage(fermatPacketEncode);
+                wsCommunicationsTyrusCloudClientChannel.sendMessage(fermatPacketEncode);
 
             }else{
-                wsCommunicationsJettyCloudClientChannel.raiseClientConnectionLooseNotificationEvent();
+                wsCommunicationsTyrusCloudClientChannel.raiseClientConnectionLooseNotificationEvent();
                 throw new Exception("Client Connection is Close");
             }
 
@@ -399,22 +413,22 @@ public class WsCommunicationsTyrusCloudClientConnection implements Communication
                  /*
                  * Construct a fermat packet whit the filters
                  */
-                FermatPacket fermatPacketRespond = FermatPacketCommunicationFactory.constructFermatPacketEncryptedAndSinged(wsCommunicationsJettyCloudClientChannel.getServerIdentity(),                  //Destination
-                        wsCommunicationsJettyCloudClientChannel.getClientIdentity().getPublicKey(),   //Sender
+                FermatPacket fermatPacketRespond = FermatPacketCommunicationFactory.constructFermatPacketEncryptedAndSinged(wsCommunicationsTyrusCloudClientChannel.getServerIdentity(),                  //Destination
+                        wsCommunicationsTyrusCloudClientChannel.getClientIdentity().getPublicKey(),   //Sender
                         gson.toJson(jsonObject),                                           //Message Content
                         FermatPacketType.REQUEST_LIST_COMPONENT_REGISTERED,                      //Packet type
-                        wsCommunicationsJettyCloudClientChannel.getClientIdentity().getPrivateKey()); //Sender private key
+                        wsCommunicationsTyrusCloudClientChannel.getClientIdentity().getPrivateKey()); //Sender private key
 
-            System.out.println("WsCommunicationsCloudClientConnection - wsCommunicationsJettyCloudClientChannel.getClientConnection().isOpen() "+wsCommunicationsJettyCloudClientChannel.getClientConnection().isOpen());
-            if (wsCommunicationsJettyCloudClientChannel.getClientConnection().isOpen()){
+            System.out.println("WsCommunicationsCloudClientConnection - wsCommunicationsTyrusCloudClientChannel.getClientConnection().isOpen() "+ wsCommunicationsTyrusCloudClientChannel.getClientConnection().isOpen());
+            if (wsCommunicationsTyrusCloudClientChannel.getClientConnection().isOpen()){
 
                 /*
                  * Send the encode packet to the server
                  */
-                wsCommunicationsJettyCloudClientChannel.sendMessage(FermatPacketEncoder.encode(fermatPacketRespond));
+                wsCommunicationsTyrusCloudClientChannel.sendMessage(FermatPacketEncoder.encode(fermatPacketRespond));
 
             }else{
-                wsCommunicationsJettyCloudClientChannel.raiseClientConnectionLooseNotificationEvent();
+                wsCommunicationsTyrusCloudClientChannel.raiseClientConnectionLooseNotificationEvent();
                 throw new Exception("Client Connection is Close");
             }
 
@@ -450,7 +464,7 @@ public class WsCommunicationsTyrusCloudClientConnection implements Communication
              */
             Gson gson = new Gson();
             JsonObject jsonObject = new JsonObject();
-            jsonObject.addProperty(JsonAttNamesConstants.NAME_IDENTITY, wsCommunicationsJettyCloudClientChannel.getIdentityPublicKey());
+            jsonObject.addProperty(JsonAttNamesConstants.NAME_IDENTITY, wsCommunicationsTyrusCloudClientChannel.getIdentityPublicKey());
             jsonObject.addProperty(JsonAttNamesConstants.DISCOVERY_PARAM, discoveryQueryParameters.toJson());
 
             // Create a new RestTemplate instance
@@ -523,7 +537,7 @@ public class WsCommunicationsTyrusCloudClientConnection implements Communication
              * Construct the parameters
              */
             MultiValueMap<String,Object> parameters = new LinkedMultiValueMap<>();
-            parameters.add(JsonAttNamesConstants.NAME_IDENTITY, wsCommunicationsJettyCloudClientChannel.getIdentityPublicKey());
+            parameters.add(JsonAttNamesConstants.NAME_IDENTITY, wsCommunicationsTyrusCloudClientChannel.getIdentityPublicKey());
             parameters.add(JsonAttNamesConstants.DISCOVERY_PARAM, discoveryQueryParameters.toJson());
 
             // Create a new RestTemplate instance
@@ -595,7 +609,7 @@ public class WsCommunicationsTyrusCloudClientConnection implements Communication
              */
             Gson gson = new Gson();
             JsonObject jsonObject = new JsonObject();
-            jsonObject.addProperty(JsonAttNamesConstants.NAME_IDENTITY, wsCommunicationsJettyCloudClientChannel.getIdentityPublicKey());
+            jsonObject.addProperty(JsonAttNamesConstants.NAME_IDENTITY, wsCommunicationsTyrusCloudClientChannel.getIdentityPublicKey());
             jsonObject.addProperty(JsonAttNamesConstants.DISCOVERY_PARAM, discoveryQueryParameters.toJson());
 
             clientConnect = new Socket(WsCommunicationsCloudClientPluginRoot.SERVER_IP,9001);
@@ -708,22 +722,22 @@ public class WsCommunicationsTyrusCloudClientConnection implements Communication
              /*
              * Construct a fermat packet whit the request
              */
-            FermatPacket fermatPacketRespond = FermatPacketCommunicationFactory.constructFermatPacketEncryptedAndSinged(wsCommunicationsJettyCloudClientChannel.getServerIdentity(),                  //Destination
-                                                                                                                        wsCommunicationsJettyCloudClientChannel.getClientIdentity().getPublicKey(),   //Sender
+            FermatPacket fermatPacketRespond = FermatPacketCommunicationFactory.constructFermatPacketEncryptedAndSinged(wsCommunicationsTyrusCloudClientChannel.getServerIdentity(),                  //Destination
+                                                                                                                        wsCommunicationsTyrusCloudClientChannel.getClientIdentity().getPublicKey(),   //Sender
                                                                                                                         jsonListRepresentation,                                                  //Message Content
                                                                                                                         FermatPacketType.COMPONENT_CONNECTION_REQUEST,                           //Packet type
-                                                                                                                        wsCommunicationsJettyCloudClientChannel.getClientIdentity().getPrivateKey()); //Sender private key
+                                                                                                                        wsCommunicationsTyrusCloudClientChannel.getClientIdentity().getPrivateKey()); //Sender private key
 
 
-            System.out.println("WsCommunicationsCloudClientConnection - wsCommunicationsJettyCloudClientChannel.getClientConnection().isOpen() " + wsCommunicationsJettyCloudClientChannel.getClientConnection().isOpen());
-            if (wsCommunicationsJettyCloudClientChannel.getClientConnection().isOpen()){
+            System.out.println("WsCommunicationsCloudClientConnection - wsCommunicationsTyrusCloudClientChannel.getClientConnection().isOpen() " + wsCommunicationsTyrusCloudClientChannel.getClientConnection().isOpen());
+            if (wsCommunicationsTyrusCloudClientChannel.getClientConnection().isOpen()){
                 /*
                  * Send the encode packet to the server
                  */
-                wsCommunicationsJettyCloudClientChannel.sendMessage(FermatPacketEncoder.encode(fermatPacketRespond));
+                wsCommunicationsTyrusCloudClientChannel.sendMessage(FermatPacketEncoder.encode(fermatPacketRespond));
 
             }else{
-                wsCommunicationsJettyCloudClientChannel.raiseClientConnectionLooseNotificationEvent();
+                wsCommunicationsTyrusCloudClientChannel.raiseClientConnectionLooseNotificationEvent();
                 throw new Exception("Client Connection is Close");
             }
 
@@ -778,23 +792,23 @@ public class WsCommunicationsTyrusCloudClientConnection implements Communication
              /*
              * Construct a fermat packet whit the request
              */
-            FermatPacket fermatPacketRespond = FermatPacketCommunicationFactory.constructFermatPacketEncryptedAndSinged(wsCommunicationsJettyCloudClientChannel.getServerIdentity(),                  //Destination
-                                                                                                                        wsCommunicationsJettyCloudClientChannel.getClientIdentity().getPublicKey(),   //Sender
+            FermatPacket fermatPacketRespond = FermatPacketCommunicationFactory.constructFermatPacketEncryptedAndSinged(wsCommunicationsTyrusCloudClientChannel.getServerIdentity(),                  //Destination
+                                                                                                                        wsCommunicationsTyrusCloudClientChannel.getClientIdentity().getPublicKey(),   //Sender
                                                                                                                         packetContentJson,                                                  //Message Content
                                                                                                                         FermatPacketType.DISCOVERY_COMPONENT_CONNECTION_REQUEST,                 //Packet type
-                                                                                                                        wsCommunicationsJettyCloudClientChannel.getClientIdentity().getPrivateKey()); //Sender private key
+                                                                                                                        wsCommunicationsTyrusCloudClientChannel.getClientIdentity().getPrivateKey()); //Sender private key
 
 
-            System.out.println("WsCommunicationsCloudClientConnection - wsCommunicationsJettyCloudClientChannel.getClientConnection().isOpen() " + wsCommunicationsJettyCloudClientChannel.getClientConnection().isOpen());
-            if (wsCommunicationsJettyCloudClientChannel.getClientConnection().isOpen()){
+            System.out.println("WsCommunicationsCloudClientConnection - wsCommunicationsTyrusCloudClientChannel.getClientConnection().isOpen() " + wsCommunicationsTyrusCloudClientChannel.getClientConnection().isOpen());
+            if (wsCommunicationsTyrusCloudClientChannel.getClientConnection().isOpen()){
 
                 /*
                  * Send the encode packet to the server
                  */
-                wsCommunicationsJettyCloudClientChannel.sendMessage(FermatPacketEncoder.encode(fermatPacketRespond));
+                wsCommunicationsTyrusCloudClientChannel.sendMessage(FermatPacketEncoder.encode(fermatPacketRespond));
 
             }else{
-                wsCommunicationsJettyCloudClientChannel.raiseClientConnectionLooseNotificationEvent();
+                wsCommunicationsTyrusCloudClientChannel.raiseClientConnectionLooseNotificationEvent();
                 throw new Exception("Client Connection is Close");
             }
 
@@ -857,23 +871,23 @@ public class WsCommunicationsTyrusCloudClientConnection implements Communication
              /*
              * Construct a fermat packet whit the request
              */
-            FermatPacket fermatPacketRespond = FermatPacketCommunicationFactory.constructFermatPacketEncryptedAndSinged(wsCommunicationsJettyCloudClientChannel.getServerIdentity(),                  //Destination
-                    wsCommunicationsJettyCloudClientChannel.getClientIdentity().getPublicKey(),   //Sender
+            FermatPacket fermatPacketRespond = FermatPacketCommunicationFactory.constructFermatPacketEncryptedAndSinged(wsCommunicationsTyrusCloudClientChannel.getServerIdentity(),                  //Destination
+                    wsCommunicationsTyrusCloudClientChannel.getClientIdentity().getPublicKey(),   //Sender
                     packetContentJson,                                                  //Message Content
                     FermatPacketType.DISCOVERY_COMPONENT_CONNECTION_REQUEST,                 //Packet type
-                    wsCommunicationsJettyCloudClientChannel.getClientIdentity().getPrivateKey()); //Sender private key
+                    wsCommunicationsTyrusCloudClientChannel.getClientIdentity().getPrivateKey()); //Sender private key
 
 
-            System.out.println("WsCommunicationsCloudClientConnection - wsCommunicationsJettyCloudClientChannel.getClientConnection().isOpen() " + wsCommunicationsJettyCloudClientChannel.getClientConnection().isOpen());
-            if (wsCommunicationsJettyCloudClientChannel.getClientConnection().isOpen()){
+            System.out.println("WsCommunicationsCloudClientConnection - wsCommunicationsTyrusCloudClientChannel.getClientConnection().isOpen() " + wsCommunicationsTyrusCloudClientChannel.getClientConnection().isOpen());
+            if (wsCommunicationsTyrusCloudClientChannel.getClientConnection().isOpen()){
 
                 /*
                  * Send the encode packet to the server
                  */
-                wsCommunicationsJettyCloudClientChannel.sendMessage(FermatPacketEncoder.encode(fermatPacketRespond));
+                wsCommunicationsTyrusCloudClientChannel.sendMessage(FermatPacketEncoder.encode(fermatPacketRespond));
 
             }else{
-                wsCommunicationsJettyCloudClientChannel.raiseClientConnectionLooseNotificationEvent();
+                wsCommunicationsTyrusCloudClientChannel.raiseClientConnectionLooseNotificationEvent();
                 throw new Exception("Client Connection is Close");
             }
 
@@ -892,7 +906,7 @@ public class WsCommunicationsTyrusCloudClientConnection implements Communication
      */
     @Override
     public boolean isConnected(){
-        return wsCommunicationsJettyCloudClientChannel.getClientConnection().isOpen();
+        return wsCommunicationsTyrusCloudClientChannel.getClientConnection().isOpen();
     }
 
     /**
@@ -914,18 +928,18 @@ public class WsCommunicationsTyrusCloudClientConnection implements Communication
             if(wsCommunicationVPNClientManagerAgent.isRunning()){
                 wsCommunicationVPNClientManagerAgent.closeAllVpnConnections();
             }
-            //wsCommunicationsJettyCloudClientChannel.getClientConnection().close();
+            //wsCommunicationsTyrusCloudClientChannel.getClientConnection().close();
         }
 
     }
 
     /**
-     * Get the wsCommunicationsJettyCloudClientChannel value
+     * Get the wsCommunicationsTyrusCloudClientChannel value
      *
-     * @return wsCommunicationsJettyCloudClientChannel current value
+     * @return wsCommunicationsTyrusCloudClientChannel current value
      */
-    public WsCommunicationsJettyCloudClientChannel getWsCommunicationsJettyCloudClientChannel() {
-        return wsCommunicationsJettyCloudClientChannel;
+    public WsCommunicationsTyrusCloudClientChannel getWsCommunicationsTyrusCloudClientChannel() {
+        return wsCommunicationsTyrusCloudClientChannel;
     }
 
     /**
@@ -941,7 +955,7 @@ public class WsCommunicationsTyrusCloudClientConnection implements Communication
      * @see CommunicationsClientConnection#isRegister()
      */
     public boolean isRegister() {
-        return wsCommunicationsJettyCloudClientChannel.isRegister();
+        return wsCommunicationsTyrusCloudClientChannel.isRegister();
     }
 
 

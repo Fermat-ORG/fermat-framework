@@ -10,9 +10,9 @@ import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.da
 import com.google.gson.Gson;
 import com.google.gson.JsonParser;
 
-import javax.websocket.DecodeException;
+/*import javax.websocket.DecodeException;
 import javax.websocket.Decoder;
-import javax.websocket.EndpointConfig;
+import javax.websocket.EndpointConfig;*/
 
 /**
  * The Class <code>com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.util.PackageDecoder</code>
@@ -23,7 +23,7 @@ import javax.websocket.EndpointConfig;
  * @version 1.0
  * @since Java JDK 1.7
  */
-public class PackageDecoder implements Decoder.Text<Package>{
+public class PackageDecoder /*implements Decoder.Text<Package>*/{
 
     /**
      * Represent the gson instance
@@ -37,18 +37,18 @@ public class PackageDecoder implements Decoder.Text<Package>{
 
     /**
      * (non-javadoc)
-     * @see Decoder.Text#decode(String)
+     //* @see Decoder.Text#decode(String)
      */
-    @Override
-    public Package decode(String s) throws DecodeException {
+    //@Override
+    public Package decode(String s){ //throws DecodeException {
         return gson.fromJson(s, Package.class);
     }
 
     /**
      * (non-javadoc)
-     * @see Decoder.Text#willDecode(String)
+     * @see //Decoder.Text#willDecode(String)
      */
-    @Override
+    //@Override
     public boolean willDecode(String s) {
         try{
 
@@ -62,19 +62,19 @@ public class PackageDecoder implements Decoder.Text<Package>{
 
     /**
      * (non-javadoc)
-     * @see Decoder.Text#init(EndpointConfig)
+     * @see //Decoder.Text#init(EndpointConfig)
      */
-    @Override
-    public void init(EndpointConfig config) {
+    //@Override
+    public void init(/*EndpointConfig config*/) {
         gson = new Gson();
         parser = new JsonParser();
     }
 
     /**
      * (non-javadoc)
-     * @see Decoder.Text#destroy()
+     * //@see Decoder.Text#destroy()
      */
-    @Override
+    //@Override
     public void destroy() {
         gson = null;
         parser = null;

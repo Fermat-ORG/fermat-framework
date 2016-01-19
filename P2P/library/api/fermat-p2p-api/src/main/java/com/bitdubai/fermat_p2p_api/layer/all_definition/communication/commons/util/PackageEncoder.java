@@ -9,9 +9,9 @@ package com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.u
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.data.Package;
 import com.google.gson.Gson;
 
-import javax.websocket.EncodeException;
-import javax.websocket.Encoder;
-import javax.websocket.EndpointConfig;
+//import javax.websocket.EncodeException;
+//import javax.websocket.Encoder;
+//import javax.websocket.EndpointConfig;
 
 /**
  * The Class <code>com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.util.PackageEncoder</code>
@@ -22,7 +22,7 @@ import javax.websocket.EndpointConfig;
  * @version 1.0
  * @since Java JDK 1.7
  */
-public class PackageEncoder implements Encoder.Text<Package>{
+public class PackageEncoder /*implements Encoder.Text<Package>*/{
 
     /**
      * Represent the gson instance
@@ -31,27 +31,27 @@ public class PackageEncoder implements Encoder.Text<Package>{
 
     /**
      * (non-javadoc)
-     * @see Encoder.Text#encode(Object)
+     //* @see Encoder.Text#encode(Object)
      */
-    @Override
-    public String encode(Package packageReceived) throws EncodeException {
+    //@Override
+    public String encode(Package packageReceived) /*throws EncodeException*/ {
         return gson.toJson(packageReceived);
     }
 
     /**
      * (non-javadoc)
-     * @see Encoder.Text#init(EndpointConfig)
+     * @see /*Encoder.Text#init(EndpointConfig)
      */
-    @Override
-    public void init(EndpointConfig config) {
+    //@Override
+    public void init(/*EndpointConfig config*/) {
         gson = new Gson();
     }
 
     /**
      * (non-javadoc)
-     * @see Encoder.Text#destroy()
+     * @see //Encoder.Text#destroy()
      */
-    @Override
+    //@Override
     public void destroy() {
         gson = null;
     }

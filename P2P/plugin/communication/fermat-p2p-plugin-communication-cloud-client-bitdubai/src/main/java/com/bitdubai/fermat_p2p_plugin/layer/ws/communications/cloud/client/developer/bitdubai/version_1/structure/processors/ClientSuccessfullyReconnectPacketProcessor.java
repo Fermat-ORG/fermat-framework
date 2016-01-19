@@ -16,7 +16,7 @@ import com.google.gson.Gson;
 import com.google.gson.JsonParser;
 
 /**
- * The Class <code>com.bitdubai.fermat_p2p_plugin.layer.ws.communications.cloud.client.developer.bitdubai.version_1.structure.processors.ClientSuccessfullyReconnectJettyPacketProcessor</code>
+ * The Class <code>com.bitdubai.fermat_p2p_plugin.layer.ws.communications.cloud.client.developer.bitdubai.version_1.structure.processors.ClientSuccessfullyReconnectTyrusPacketProcessor</code>
  * <p/>
  * Created by Roberto Requena - (rart3001@gmail.com) on 07/09/15.
  *
@@ -52,14 +52,14 @@ public class ClientSuccessfullyReconnectPacketProcessor extends FermatPacketProc
     public void processingPackage(FermatPacket receiveFermatPacket) {
 
         //System.out.println(" --------------------------------------------------------------------- ");
-        System.out.println("ClientSuccessfullyReconnectJettyPacketProcessor - processingPackage");
+        System.out.println("ClientSuccessfullyReconnectTyrusPacketProcessor - processingPackage");
 
        /*
         * Get the platformComponentProfile from the message content and decrypt
         */
         String messageContentJsonStringRepresentation = AsymmetricCryptography.decryptMessagePrivateKey(receiveFermatPacket.getMessageContent(), getWsCommunicationsCloudClientChannel().getClientIdentity().getPrivateKey());
 
-        System.out.println("ClientSuccessfullyReconnectJettyPacketProcessor - messageContentJsonStringRepresentation = "+messageContentJsonStringRepresentation);
+        System.out.println("ClientSuccessfullyReconnectTyrusPacketProcessor - messageContentJsonStringRepresentation = "+messageContentJsonStringRepresentation);
 
         /*
          * Create a raise a new event whit the platformComponentProfile registered
@@ -75,7 +75,7 @@ public class ClientSuccessfullyReconnectPacketProcessor extends FermatPacketProc
         /*
          * Raise the event
          */
-        System.out.println("ClientSuccessfullyReconnectJettyPacketProcessor - Raised a event = P2pEventType.CLIENT_SUCCESS_RECONNECT");
+        System.out.println("ClientSuccessfullyReconnectTyrusPacketProcessor - Raised a event = P2pEventType.CLIENT_SUCCESS_RECONNECT");
         getWsCommunicationsCloudClientChannel().getEventManager().raiseEvent(event);
 
     }

@@ -4,7 +4,7 @@
  * You may not modify, use, reproduce or distribute this software.
  * BITDUBAI/CONFIDENTIAL
  */
-package com.bitdubai.fermat_p2p_plugin.layer.ws.communications.cloud.client.developer.bitdubai.version_1.structure.jetty;
+package com.bitdubai.fermat_p2p_plugin.layer.ws.communications.cloud.client.developer.bitdubai.version_1.structure.tyrus;
 
 import com.bitdubai.fermat_api.layer.all_definition.components.interfaces.PlatformComponentProfile;
 import com.bitdubai.fermat_api.layer.all_definition.crypto.asymmetric.AsymmetricCryptography;
@@ -16,15 +16,16 @@ import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.enums.P2pE
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.events.CompleteClientComponentRegistrationNotificationEvent;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.contents.FermatPacket;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.enums.FermatPacketType;
+import com.bitdubai.fermat_p2p_plugin.layer.ws.communications.cloud.client.developer.bitdubai.version_1.structure.tyrus.conf.CLoudClientConfigurator;
 import com.bitdubai.fermat_p2p_plugin.layer.ws.communications.cloud.client.developer.bitdubai.version_1.structure.agents.WsCommunicationsCloudClientSupervisorConnectionAgent;
-import com.bitdubai.fermat_p2p_plugin.layer.ws.communications.cloud.client.developer.bitdubai.version_1.structure.jetty.conf.CLoudClientConfigurator;
-import com.bitdubai.fermat_p2p_plugin.layer.ws.communications.cloud.client.developer.bitdubai.version_1.structure.jetty.processors.FermatJettyPacketProcessor;
+import com.bitdubai.fermat_p2p_plugin.layer.ws.communications.cloud.client.developer.bitdubai.version_1.structure.tyrus.processors.FermatTyrusPacketProcessor;
 import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfaces.EventManager;
 
 import org.java_websocket.client.WebSocketClient;
 import org.java_websocket.handshake.ServerHandshake;
 
 import java.io.IOException;
+import java.nio.ByteBuffer;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CopyOnWriteArrayList;
@@ -36,6 +37,7 @@ import javax.websocket.OnClose;
 import javax.websocket.OnError;
 import javax.websocket.OnMessage;
 import javax.websocket.OnOpen;
+import javax.websocket.PongMessage;
 import javax.websocket.Session;
 
 /**
@@ -47,7 +49,7 @@ import javax.websocket.Session;
  * @since Java JDK 1.7
  */
 @ClientEndpoint(configurator = CLoudClientConfigurator.class)
-public class WsCommunicationsJettyCloudClientChannel{
+public class WsCommunicationsTyrusCloudClientChannel {
 
     /**
      * DealWithEvents Interface member variables.
@@ -87,7 +89,7 @@ public class WsCommunicationsJettyCloudClientChannel{
     /**
      * Holds the packet processors objects
      */
-    private Map<FermatPacketType, CopyOnWriteArrayList<FermatJettyPacketProcessor>> packetProcessorsRegister;
+    private Map<FermatPacketType, CopyOnWriteArrayList<FermatTyrusPacketProcessor>> packetProcessorsRegister;
 
     /**
      * Represent is the client is register with the server
@@ -106,10 +108,10 @@ public class WsCommunicationsJettyCloudClientChannel{
      * @throws IOException
      * @throws DeploymentException
      */
-    public WsCommunicationsJettyCloudClientChannel(WsCommunicationsTyrusCloudClientConnection wsCommunicationsTyrusCloudClientConnection, EventManager eventManager, ECCKeyPair clientIdentity) throws IOException, DeploymentException {
+    public WsCommunicationsTyrusCloudClientChannel(WsCommunicationsTyrusCloudClientConnection wsCommunicationsTyrusCloudClientConnection, EventManager eventManager, ECCKeyPair clientIdentity) throws IOException, DeploymentException {
 
         this.clientIdentity = clientIdentity;
-        this.temporalIdentity = CLoudClientConfigurator.tempIdentity;
+        this.temporalIdentity = com.bitdubai.fermat_p2p_plugin.layer.ws.communications.cloud.client.developer.bitdubai.version_1.structure.tyrus.conf.CLoudClientConfigurator.tempIdentity;
         this.packetProcessorsRegister = new ConcurrentHashMap<>();
         this.wsCommunicationsTyrusCloudClientConnection = wsCommunicationsTyrusCloudClientConnection;
         this.eventManager = eventManager;
@@ -183,7 +185,7 @@ public class WsCommunicationsJettyCloudClientChannel{
              /*
              * Call the processors for this packet
              */
-            for (FermatJettyPacketProcessor fermatPacketProcessor :packetProcessorsRegister.get(fermatPacketReceive.getFermatPacketType())) {
+            for (FermatTyrusPacketProcessor fermatPacketProcessor :packetProcessorsRegister.get(fermatPacketReceive.getFermatPacketType())) {
 
                 /*
                  * Processor make his job
@@ -247,6 +249,35 @@ public class WsCommunicationsJettyCloudClientChannel{
         t.printStackTrace();
     }
 
+
+    public void sendPing() throws IOException {
+
+        System.out.println(" WsCommunicationsTyrusCloudClientChannel - Sending ping to the node...");
+
+        String pingString = "PING";
+        ByteBuffer pingData = ByteBuffer.allocate(pingString.getBytes().length);
+        pingData.put(pingString.getBytes()).flip();
+        getClientConnection().getBasicRemote().sendPing(pingData);
+
+    }
+
+
+    @OnMessage
+    public void onPongMessage(PongMessage message) {
+        try {
+
+            System.out.println(" WsCommunicationsTyrusCloudClientChannel - onPongMessage = " + new String(message.getApplicationData().array()));
+            String pingString = "PING";
+            ByteBuffer pingData = ByteBuffer.allocate(pingString.getBytes().length);
+            pingData.put(pingString.getBytes()).flip();
+            getClientConnection().getBasicRemote().sendPing(pingData);
+
+        } catch (IOException e) {
+            System.out.println("onPongMessage error = " + e.getMessage());
+        }
+    }
+
+
     /**
      * Validate the signature of the packet
      * @param fermatPacketReceive
@@ -272,10 +303,10 @@ public class WsCommunicationsJettyCloudClientChannel{
     }
 
     /**
-     * This method register a FermatJettyPacketProcessor object with this
+     * This method register a FermatTyrusPacketProcessor object with this
      * server
      */
-    public void registerFermatPacketProcessor(FermatJettyPacketProcessor fermatPacketProcessor) {
+    public void registerFermatPacketProcessor(FermatTyrusPacketProcessor fermatPacketProcessor) {
 
 
         //Validate if a previous list created
@@ -291,7 +322,7 @@ public class WsCommunicationsJettyCloudClientChannel{
             /*
              * Create a new list and add the fermatPacketProcessor
              */
-            CopyOnWriteArrayList<FermatJettyPacketProcessor> fermatPacketProcessorList = new CopyOnWriteArrayList<>();
+            CopyOnWriteArrayList<FermatTyrusPacketProcessor> fermatPacketProcessorList = new CopyOnWriteArrayList<>();
             fermatPacketProcessorList.add(fermatPacketProcessor);
 
             /*
@@ -374,14 +405,6 @@ public class WsCommunicationsJettyCloudClientChannel{
      */
     public void setIsRegister(boolean isRegister) {
         this.isRegister = isRegister;
-    }
-
-    /**
-     * Set the wsCommunicationsCloudClientSupervisorConnectionAgent
-     * @param wsCommunicationsCloudClientSupervisorConnectionAgent
-     */
-    public void setWsCommunicationsCloudClientSupervisorConnectionAgent(WsCommunicationsCloudClientSupervisorConnectionAgent wsCommunicationsCloudClientSupervisorConnectionAgent) {
-        this.wsCommunicationsCloudClientSupervisorConnectionAgent = wsCommunicationsCloudClientSupervisorConnectionAgent;
     }
 
     /**

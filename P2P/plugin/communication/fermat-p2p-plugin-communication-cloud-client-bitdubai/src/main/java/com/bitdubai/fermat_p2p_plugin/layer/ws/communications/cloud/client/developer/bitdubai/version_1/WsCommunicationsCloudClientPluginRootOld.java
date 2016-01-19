@@ -28,8 +28,7 @@ import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.FileNotF
 import com.bitdubai.fermat_api.layer.osa_android.location_system.LocationManager;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.WsCommunicationsCloudClientManager;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.client.CommunicationsClientConnection;
-import com.bitdubai.fermat_p2p_plugin.layer.ws.communications.cloud.client.developer.bitdubai.version_1.structure.agents.WsCommunicationsCloudClientSupervisorConnectionAgent;
-import com.bitdubai.fermat_p2p_plugin.layer.ws.communications.cloud.client.developer.bitdubai.version_1.structure.tyrus.WsCommunicationsTyrusCloudClientConnection;
+import com.bitdubai.fermat_p2p_plugin.layer.ws.communications.cloud.client.developer.bitdubai.version_1.structure.WsCommunicationsCloudClientConnection;
 import com.bitdubai.fermat_p2p_plugin.layer.ws.communications.cloud.client.developer.bitdubai.version_1.structure.util.ServerConf;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedPluginExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
@@ -37,17 +36,13 @@ import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfac
 
 import org.java_websocket.WebSocketImpl;
 
-import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
-
-import javax.websocket.DeploymentException;
 
 /**
  * The Class <code>com.bitdubai.fermat_p2p_plugin.layer.communication.server.developer.bitdubai.version_1.WsCommunicationsCloudClientPluginRoot</code> is
@@ -58,7 +53,7 @@ import javax.websocket.DeploymentException;
  *
  * @version 1.0
  */
-public class WsCommunicationsCloudClientPluginRoot extends AbstractPlugin implements WsCommunicationsCloudClientManager {
+public class WsCommunicationsCloudClientPluginRootOld extends AbstractPlugin implements WsCommunicationsCloudClientManager {
 
     /**
      * Addons References definition.
@@ -76,7 +71,7 @@ public class WsCommunicationsCloudClientPluginRoot extends AbstractPlugin implem
     protected PluginFileSystem pluginFileSystem;
 
 
-    private static WsCommunicationsCloudClientPluginRoot instance = new WsCommunicationsCloudClientPluginRoot();
+    private static WsCommunicationsCloudClientPluginRootOld instance = new WsCommunicationsCloudClientPluginRootOld();
 
     /**
      * Represent the SERVER_IP
@@ -109,15 +104,11 @@ public class WsCommunicationsCloudClientPluginRoot extends AbstractPlugin implem
      */
     private Boolean disableClientFlag;
 
-    /**
-     * Represent the flag
-     */
     private AtomicBoolean flag = new AtomicBoolean(false);
-
     /**
-     * Represent the wsCommunicationsTyrusCloudClientConnection
+     * Represent the wsCommunicationsCloudClientConnection
      */
-    private  WsCommunicationsTyrusCloudClientConnection wsCommunicationsTyrusCloudClientConnection;
+    private WsCommunicationsCloudClientConnection wsCommunicationsCloudClientConnection;
 
     /**
      * Represent the isTaskCompleted
@@ -132,7 +123,7 @@ public class WsCommunicationsCloudClientPluginRoot extends AbstractPlugin implem
     /**
      * Constructor
      */
-    public WsCommunicationsCloudClientPluginRoot(){
+    public WsCommunicationsCloudClientPluginRootOld(){
         super(new PluginVersionReference(new Version()));
         this.disableClientFlag = ServerConf.ENABLE_CLIENT;
         isTaskCompleted = Boolean.FALSE;
@@ -187,10 +178,9 @@ public class WsCommunicationsCloudClientPluginRoot extends AbstractPlugin implem
                     serviceStatus = ServiceStatus.STARTING;
 
                     try {
-
-                        /*
-                         * Validate required resources
-                         */
+                /*
+                 * Validate required resources
+                 */
                         validateInjectedResources();
 
                         if (disableClientFlag) {
@@ -200,42 +190,40 @@ public class WsCommunicationsCloudClientPluginRoot extends AbstractPlugin implem
 
                         System.out.println("WsCommunicationsCloudClientPluginRoot - Starting plugin");
 
-                        /*
-                         * Construct the URI
-                         */
-                        this.uri = new URI(ServerConf.WS_PROTOCOL + WsCommunicationsCloudClientPluginRoot.SERVER_IP + ":" + ServerConf.DEFAULT_PORT + ServerConf.WEB_SOCKET_CONTEXT_PATH);
+                /*
+                 * Construct the URI
+                 */
+                        this.uri = new URI(ServerConf.WS_PROTOCOL + WsCommunicationsCloudClientPluginRootOld.SERVER_IP + ":" + ServerConf.DEFAULT_PORT + ServerConf.WEB_SOCKET_CONTEXT_PATH);
 
-                        /*
-                         * Initialize the identity for the cloud client
-                         */
+                /*
+                 * Initialize the identity for the cloud client
+                 */
                         initializeClientIdentity();
 
-                        /*
-                         * Try to connect whit the cloud server
-                         */
+                /*
+                 * Try to connect whit the cloud server
+                 */
                         System.out.println(" WsCommunicationsCloudClientPluginRoot - ===================================");
                         System.out.println(" WsCommunicationsCloudClientPluginRoot - Connecting with the cloud server...");
                         System.out.println(" WsCommunicationsCloudClientPluginRoot - ===================================");
+                        wsCommunicationsCloudClientConnection = new WsCommunicationsCloudClientConnection(uri, eventManager, locationManager, clientIdentity);
+                        wsCommunicationsCloudClientConnection.initializeAndConnect();
 
-
-                        wsCommunicationsTyrusCloudClientConnection = new WsCommunicationsTyrusCloudClientConnection(uri, eventManager, locationManager, clientIdentity);
-
-
-                        /*
-                         * Scheduled the reconnection agent
-                         */
-                        scheduledExecutorService.scheduleAtFixedRate(new WsCommunicationsCloudClientSupervisorConnectionAgent(this), 10, 20, TimeUnit.SECONDS);
+                /*
+                 * Scheduled the reconnection agent
+                 */
+                       // scheduledExecutorService.scheduleAtFixedRate(new WsCommunicationsCloudClientSupervisorConnectionAgent(this), 10, 20, TimeUnit.SECONDS);
 
                     } catch (Exception e) {
                         e.printStackTrace();
-                        //wsCommunicationsTyrusCloudClientConnection.getWsCommunicationsCloudClientChannel().close();
+                        wsCommunicationsCloudClientConnection.getWsCommunicationsCloudClientChannel().close();
                         throw new RuntimeException(e);
                     }
                 }
 
-                /*
-                 * Set the new status of the service
-                 */
+        /*
+         * Set the new status of the service
+         */
                 this.serviceStatus = ServiceStatus.STARTED;
 
             }
@@ -247,18 +235,19 @@ public class WsCommunicationsCloudClientPluginRoot extends AbstractPlugin implem
      *
      * @throws URISyntaxException
      */
-    public void connectClient() throws URISyntaxException, IOException, DeploymentException {
+    public void connectClient() throws URISyntaxException {
 
         System.out.println(" WsCommunicationsCloudClientPluginRoot - ***********************************");
         System.out.println(" WsCommunicationsCloudClientPluginRoot - ReConnecting with the cloud server...");
         System.out.println(" WsCommunicationsCloudClientPluginRoot - ***********************************");
 
-        if (wsCommunicationsTyrusCloudClientConnection != null){
-            wsCommunicationsTyrusCloudClientConnection.closeMainConnection();
+        WebSocketImpl.DEBUG = false;
+        if (wsCommunicationsCloudClientConnection != null){
+            wsCommunicationsCloudClientConnection.closeMainConnection();
         }
 
-        wsCommunicationsTyrusCloudClientConnection = new WsCommunicationsTyrusCloudClientConnection(uri,eventManager, locationManager, clientIdentity);
-        wsCommunicationsTyrusCloudClientConnection.initializeAndConnect();
+        wsCommunicationsCloudClientConnection = new WsCommunicationsCloudClientConnection(uri,eventManager, locationManager, clientIdentity);
+        wsCommunicationsCloudClientConnection.initializeAndConnect();
 
     }
 
@@ -314,7 +303,7 @@ public class WsCommunicationsCloudClientPluginRoot extends AbstractPlugin implem
      */
     @Override
     public CommunicationsClientConnection getCommunicationsCloudClientConnection() {
-        return wsCommunicationsTyrusCloudClientConnection;
+        return wsCommunicationsCloudClientConnection;
     }
 
     /**
@@ -393,18 +382,6 @@ public class WsCommunicationsCloudClientPluginRoot extends AbstractPlugin implem
             throw new CantStartPluginException(cantCreateFileException.getLocalizedMessage());
 
         }
-
-    }
-
-
-    public static void main(final String[] args) throws InterruptedException, URISyntaxException, IOException, DeploymentException {
-
-        WsCommunicationsCloudClientPluginRoot wsCommunicationsCloudClientPluginRoot = new WsCommunicationsCloudClientPluginRoot();
-
-        wsCommunicationsCloudClientPluginRoot.uri = new URI(ServerConf.WS_PROTOCOL + WsCommunicationsCloudClientPluginRoot.SERVER_IP + ":" + ServerConf.DEFAULT_PORT + ServerConf.WEB_SOCKET_CONTEXT_PATH);
-
-        WsCommunicationsTyrusCloudClientConnection wsCommunicationsTyrusCloudClientConnection = new WsCommunicationsTyrusCloudClientConnection(wsCommunicationsCloudClientPluginRoot.uri, wsCommunicationsCloudClientPluginRoot.eventManager, wsCommunicationsCloudClientPluginRoot.locationManager, wsCommunicationsCloudClientPluginRoot.clientIdentity);
-        wsCommunicationsTyrusCloudClientConnection.initializeAndConnect();
 
     }
 
