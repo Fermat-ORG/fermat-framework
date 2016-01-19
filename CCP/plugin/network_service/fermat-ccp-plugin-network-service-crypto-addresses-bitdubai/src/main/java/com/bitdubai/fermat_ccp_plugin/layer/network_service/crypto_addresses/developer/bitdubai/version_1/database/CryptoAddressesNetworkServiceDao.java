@@ -114,35 +114,45 @@ public final class CryptoAddressesNetworkServiceDao {
 
         try {
 
-            CryptoAddressesNetworkServiceCryptoAddressRequest addressExchangeRequest = new CryptoAddressesNetworkServiceCryptoAddressRequest(
-                    id                      ,
-                    walletPublicKey            ,
-                    identityTypeRequesting     ,
-                    identityTypeAccepting      ,
-                    identityPublicKeyRequesting,
-                    identityPublicKeyAccepting ,
-                    cryptoCurrency             ,
-                    null                       ,
-                    protocolState              ,
-                    requestType                ,
-                    requestAction              ,
-                    dealer                     ,
-                    blockchainNetworkType,
-                    sentNumber,
-                    sentDate
-            );
+            if(getPendingRequest(id) == null)
+            {
+                CryptoAddressesNetworkServiceCryptoAddressRequest addressExchangeRequest = new CryptoAddressesNetworkServiceCryptoAddressRequest(
+                        id                      ,
+                        walletPublicKey            ,
+                        identityTypeRequesting     ,
+                        identityTypeAccepting      ,
+                        identityPublicKeyRequesting,
+                        identityPublicKeyAccepting ,
+                        cryptoCurrency             ,
+                        null                       ,
+                        protocolState              ,
+                        requestType                ,
+                        requestAction              ,
+                        dealer                     ,
+                        blockchainNetworkType,
+                        sentNumber,
+                        sentDate
+                );
 
-            DatabaseTable addressExchangeRequestTable = database.getTable(CryptoAddressesNetworkServiceDatabaseConstants.ADDRESS_EXCHANGE_REQUEST_TABLE_NAME);
+                DatabaseTable addressExchangeRequestTable = database.getTable(CryptoAddressesNetworkServiceDatabaseConstants.ADDRESS_EXCHANGE_REQUEST_TABLE_NAME);
 
-            DatabaseTableRecord entityRecord = addressExchangeRequestTable.getEmptyRecord();
+                DatabaseTableRecord entityRecord = addressExchangeRequestTable.getEmptyRecord();
 
-            entityRecord = buildDatabaseRecord(entityRecord, addressExchangeRequest);
+                entityRecord = buildDatabaseRecord(entityRecord, addressExchangeRequest);
 
-            addressExchangeRequestTable.insertRecord(entityRecord);
+                addressExchangeRequestTable.insertRecord(entityRecord);
+            }
+
 
         } catch (CantInsertRecordException e) {
 
             throw new CantCreateRequestException(e, "", "Exception not handled by the plugin, there is a problem in database and i cannot insert the record.");
+        } catch (PendingRequestNotFoundException e) {
+            throw new CantCreateRequestException(e, "", "Exception not handled by the plugin, there is a problem in database");
+
+        } catch (CantGetPendingAddressExchangeRequestException e) {
+            throw new CantCreateRequestException(e, "", "Exception not handled by the plugin, there is a problem in database");
+
         }
     }
 

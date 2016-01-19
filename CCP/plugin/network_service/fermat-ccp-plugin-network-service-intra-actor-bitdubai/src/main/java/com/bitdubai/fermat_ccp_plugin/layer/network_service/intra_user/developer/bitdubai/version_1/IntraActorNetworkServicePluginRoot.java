@@ -927,11 +927,13 @@ public class IntraActorNetworkServicePluginRoot extends AbstractPlugin implement
                     actorNetworkServiceRecord.changeState(ActorProtocolState.DONE);
                     getOutgoingNotificationDao().update(actorNetworkServiceRecord);
 
+                    //create incoming notification
+
                     actorNetworkServiceRecord.changeState(ActorProtocolState.PROCESSING_RECEIVE);
                     actorNetworkServiceRecord.setFlagReadead(false);
                     getIncomingNotificationsDao().createNotification(actorNetworkServiceRecord);
                     System.out.println("----------------------------\n" +
-                            "MENSAJE ACCEPTED LLEGÓ BIEN: CASE ACCEPTED" + actorNetworkServiceRecord
+                            "MENSAJE ACCEPTED LLEGÓ BIEN: CASE ACCEPTED" + actorNetworkServiceRecord.getActorSenderAlias()
                             + "\n-------------------------------------------------");
 
 

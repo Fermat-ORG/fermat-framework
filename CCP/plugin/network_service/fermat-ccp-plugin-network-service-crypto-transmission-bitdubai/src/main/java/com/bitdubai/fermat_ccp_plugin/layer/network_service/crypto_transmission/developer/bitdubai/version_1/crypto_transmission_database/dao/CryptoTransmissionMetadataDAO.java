@@ -115,16 +115,26 @@ public class CryptoTransmissionMetadataDAO {
 
         try {
 
-            DatabaseTable addressExchangeRequestTable = database.getTable(CryptoTransmissionNetworkServiceDatabaseConstants.CRYPTO_TRANSMISSION_METADATA_TABLE_NAME);
-            DatabaseTableRecord entityRecord = addressExchangeRequestTable.getEmptyRecord();
+            if(getMetadata(cryptoTransmissionMetadata.getTransactionId()) == null)
+            {
+                DatabaseTable addressExchangeRequestTable = database.getTable(CryptoTransmissionNetworkServiceDatabaseConstants.CRYPTO_TRANSMISSION_METADATA_TABLE_NAME);
+                DatabaseTableRecord entityRecord = addressExchangeRequestTable.getEmptyRecord();
 
-            entityRecord = buildDatabaseRecord(entityRecord, cryptoTransmissionMetadata);
+                entityRecord = buildDatabaseRecord(entityRecord, cryptoTransmissionMetadata);
 
-            addressExchangeRequestTable.insertRecord(entityRecord);
+                addressExchangeRequestTable.insertRecord(entityRecord);
+            }
+
 
         } catch (CantInsertRecordException e) {
 
             throw new CantSaveCryptoTransmissionMetadatatException("",e, "Exception not handled by the plugin, there is a problem in database and i cannot insert the record.","");
+        } catch (PendingRequestNotFoundException e) {
+            throw new CantSaveCryptoTransmissionMetadatatException("",e, "Pending Request Not Found Exception","");
+
+        } catch (CantGetCryptoTransmissionMetadataException e) {
+            throw new CantSaveCryptoTransmissionMetadatatException("",e, "Cant Get Crypto Transmission Metadata Exception","");
+
         }
     }
 
