@@ -18,7 +18,7 @@ import com.bitdubai.fermat_api.FermatException;
  */
 public class AssetUserNotFoundException extends FermatException {
 
-    private static String DEFAULT_MESSAGE = "The provided AssetIssuer's public key wasn't found in the database.";
+    private static String DEFAULT_MESSAGE = "The provided AssetUser's public key wasn't found in the database.";
 
     public AssetUserNotFoundException(String context){
         super(DEFAULT_MESSAGE, null, context, null);
