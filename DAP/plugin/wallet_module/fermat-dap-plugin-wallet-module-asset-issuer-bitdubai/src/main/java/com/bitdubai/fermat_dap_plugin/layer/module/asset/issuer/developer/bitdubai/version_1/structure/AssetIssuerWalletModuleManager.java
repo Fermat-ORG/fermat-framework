@@ -12,9 +12,12 @@ import com.bitdubai.fermat_dap_api.layer.dap_identity.asset_issuer.interfaces.Id
 import com.bitdubai.fermat_dap_api.layer.dap_transaction.asset_distribution.exceptions.CantDistributeDigitalAssetsException;
 import com.bitdubai.fermat_dap_api.layer.dap_transaction.asset_distribution.interfaces.AssetDistributionManager;
 import com.bitdubai.fermat_dap_api.layer.dap_transaction.common.exceptions.CantGetDigitalAssetFromLocalStorageException;
+import com.bitdubai.fermat_dap_api.layer.dap_wallet.asset_issuer_wallet.interfaces.AssetIssuerWallet;
 import com.bitdubai.fermat_dap_api.layer.dap_wallet.asset_issuer_wallet.interfaces.AssetIssuerWalletList;
 import com.bitdubai.fermat_dap_api.layer.dap_wallet.asset_issuer_wallet.interfaces.AssetIssuerWalletManager;
 import com.bitdubai.fermat_dap_api.layer.dap_wallet.asset_issuer_wallet.interfaces.AssetIssuerWalletTransaction;
+import com.bitdubai.fermat_dap_api.layer.dap_wallet.common.enums.BalanceType;
+import com.bitdubai.fermat_dap_api.layer.dap_wallet.common.enums.TransactionType;
 import com.bitdubai.fermat_dap_api.layer.dap_wallet.common.exceptions.CantGetTransactionsException;
 import com.bitdubai.fermat_dap_api.layer.dap_wallet.common.exceptions.CantLoadWalletException;
 
@@ -89,9 +92,12 @@ public class AssetIssuerWalletModuleManager {
 
     private HashMap<DigitalAssetMetadata, ActorAssetUser> createMapDistribution(String walletPublicKey, String assetPublicKey, List<ActorAssetUser> actorAssetUsers) throws CantGetTransactionsException, FileNotFoundException, CantCreateFileException, CantLoadWalletException, CantGetDigitalAssetFromLocalStorageException {
         HashMap<DigitalAssetMetadata, ActorAssetUser> hashMap = new HashMap<>();
-        for (ActorAssetUser user : actorAssetUsers) {
-            DigitalAssetMetadata digitalAssetMetadata = assetIssuerWalletManager.loadAssetIssuerWallet(walletPublicKey).getDigitalAssetMetadata(assetPublicKey);
-            hashMap.put(digitalAssetMetadata, user);
+        AssetIssuerWallet wallet = assetIssuerWalletManager.loadAssetIssuerWallet(walletPublicKey);
+        List<AssetIssuerWalletTransaction> transactions = wallet.getAvailableTransactions(assetPublicKey);
+        if (actorAssetUsers.size() > transactions.size())
+            throw new IllegalStateException("WE DON'T HAVE ENOUGH ASSETS!!");
+        for (int i = 0; i < actorAssetUsers.size(); i++) {
+            hashMap.put(wallet.getDigitalAssetMetadata(transactions.get(i).getTransactionHash()), actorAssetUsers.get(i));
         }
         return hashMap;
     }
