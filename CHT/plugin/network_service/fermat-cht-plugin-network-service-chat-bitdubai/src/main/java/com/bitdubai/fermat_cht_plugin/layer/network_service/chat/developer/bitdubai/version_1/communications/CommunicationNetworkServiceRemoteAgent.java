@@ -154,7 +154,7 @@ public class CommunicationNetworkServiceRemoteAgent extends Observable {
         toReceive.start();
         toSend.start();
 
-        System.out.println("CommunicationNetworkServiceRemoteAgent - started ");
+        System.out.println("ChatPluginRoot - CommunicationNetworkServiceRemoteAgent - started ");
 
     }
 
@@ -194,7 +194,7 @@ public class CommunicationNetworkServiceRemoteAgent extends Observable {
 
         try {
 
-            // System.out.println("CommunicationNetworkServiceRemoteAgent - "+communicationsVPNConnection.isActive());
+             System.out.println("ChatPluginRoot - CommunicationNetworkServiceRemoteAgent - "+communicationsVPNConnection.isActive());
 
             /**
              * Verified the status of the connection

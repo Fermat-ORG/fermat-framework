@@ -58,13 +58,9 @@ public class ChatMetadataRecord implements ChatMetadata {
         this.distributionStatus = distributionStatus;
     }
 
-    @Override
-    public UUID getIdChat() {
-        return this.chatId;
-    }
 
     @Override
-    public UUID getIdObject() {
+    public UUID getObjectId() {
         return this.objectId;
     }
 
@@ -74,7 +70,7 @@ public class ChatMetadataRecord implements ChatMetadata {
     }
 
     @Override
-    public String getLocalActorPubKey() {
+    public String getLocalActorPublicKey() {
         return this.localActorPublicKey;
     }
 
@@ -84,7 +80,7 @@ public class ChatMetadataRecord implements ChatMetadata {
     }
 
     @Override
-    public String getRemoteActorPubKey() {
+    public String getRemoteActorPublicKey() {
         return this.remoteActorPublicKey;
     }
 
@@ -113,7 +109,7 @@ public class ChatMetadataRecord implements ChatMetadata {
     }
 
     @Override
-    public UUID getIdMessage() {
+    public UUID getMessageId() {
         return this.messageId;
     }
 
@@ -125,6 +121,11 @@ public class ChatMetadataRecord implements ChatMetadata {
     @Override
     public DistributionStatus getDistributionStatus() {
         return this.distributionStatus;
+    }
+
+    @Override
+    public UUID getChatId() {
+        return chatId;
     }
 
     public void setChatId(UUID chatId) {
