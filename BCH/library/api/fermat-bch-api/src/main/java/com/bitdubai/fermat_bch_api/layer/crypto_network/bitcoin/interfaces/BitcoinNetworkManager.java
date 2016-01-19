@@ -68,15 +68,6 @@ public interface BitcoinNetworkManager extends TransactionSender<CryptoTransacti
     CryptoTransaction getCryptoTransactionFromBlockChain(String txHash, String blockHash) throws CantGetCryptoTransactionException;
 
     /**
-     * Broadcast a well formed, commited and signed transaction into the specified network
-     * @param blockchainNetworkType
-     * @param tx
-     * @param transactionId the internal Fermat Transaction
-     * @throws CantBroadcastTransactionException
-     */
-    void broadcastTransaction(BlockchainNetworkType blockchainNetworkType, Transaction tx, UUID transactionId) throws CantBroadcastTransactionException;
-
-    /**
      * Broadcast a well formed, commited and signed transaction into the network.
      * @param txHash
      * @throws CantBroadcastTransactionException

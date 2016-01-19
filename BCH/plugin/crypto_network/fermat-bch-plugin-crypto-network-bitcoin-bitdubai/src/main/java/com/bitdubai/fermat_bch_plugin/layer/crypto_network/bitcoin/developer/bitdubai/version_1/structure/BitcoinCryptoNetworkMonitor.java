@@ -213,56 +213,6 @@ public class BitcoinCryptoNetworkMonitor implements Agent {
     }
 
     /**
-     * Broadcast a well formed, commited and signed transaction into the network
-     * @param tx
-     * @param transactionId the internal fermat transaction Ifd
-     * @throws CantBroadcastTransactionException
-     */
-    public synchronized void  broadcastTransaction(final Transaction tx, final UUID transactionId) throws CantBroadcastTransactionException {
-        try{
-            /**
-             * I will add this transaction to the wallet.
-             */
-            wallet.maybeCommitTx(tx);
-
-            /**
-             * save the added transaction in the wallet
-             */
-            wallet.saveToFile(walletFileName);
-
-            /**
-             * Broadcast it.
-             */
-            final TransactionBroadcast broadcast = peerGroup.broadcastTransaction(tx);
-            broadcast.setProgressCallback(new TransactionBroadcast.ProgressCallback() {
-                @Override
-                public void onBroadcastProgress(double progress) {
-                    System.out.println("****CryptoNetwork: progress broadcast " + progress);
-                }
-            });
-
-            broadcast.broadcast().get(BitcoinNetworkConfiguration.TRANSACTION_BROADCAST_TIMEOUT, TimeUnit.MINUTES);
-            broadcast.future().get(BitcoinNetworkConfiguration.TRANSACTION_BROADCAST_TIMEOUT, TimeUnit.MINUTES);
-
-            /**
-             * Store this outgoing transaction in the table
-             */
-            storeOutgoingTransaction(wallet, tx, transactionId);
-
-
-            wallet.maybeCommitTx(tx);
-            /**
-             * saves the wallet again.
-             */
-            wallet.saveToFile(walletFileName);
-        } catch (Exception exception){
-            exception.printStackTrace();
-            throw new CantBroadcastTransactionException(CantBroadcastTransactionException.DEFAULT_MESSAGE, exception, "There was an unexpected issue while broadcasting a transaction.", null);
-        }
-
-    }
-
-    /**
      * Broadcast a well formed, commited and signed transaction into the specified network
      * @param txHash
      * @throws CantBroadcastTransactionException
