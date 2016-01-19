@@ -44,7 +44,7 @@ public class AccountDetailFragment extends FermatWalletListFragment<BankMoneyTra
     com.getbase.floatingactionbutton.FloatingActionsMenu fab;
     CreateTransactionFragmentDialog dialog;
 
-
+    private View emtyView;
 
     private FermatTextView bookTextView;
     private FermatTextView availableTextView;
@@ -85,6 +85,7 @@ public class AccountDetailFragment extends FermatWalletListFragment<BankMoneyTra
     @Override
     protected void initViews(View layout) {
         super.initViews(layout);
+        this.emtyView =  layout.findViewById(R.id.no_transactions);
         this.fab = (com.getbase.floatingactionbutton.FloatingActionsMenu) layout.findViewById(R.id.bw_fab_multiple_actions);
         this.availableTextView = (FermatTextView) layout.findViewById(R.id.available_balance);
         this.bookTextView = (FermatTextView) layout.findViewById(R.id.book_balance);
@@ -117,7 +118,7 @@ public class AccountDetailFragment extends FermatWalletListFragment<BankMoneyTra
         bookText.setText("Book");
         availableText.setText("Available");
         updateBalance();
-        //showOrHideNoAccountListView(accountsList.isEmpty());
+        showOrHideNoTransactionsView(transactionList.isEmpty());
     }
 
     private void launchCreateTransactionDialog(TransactionType transactionType){
@@ -130,8 +131,8 @@ public class AccountDetailFragment extends FermatWalletListFragment<BankMoneyTra
 
         accountText.setText(bankAccountNumber.getAccount());
         aliasText.setText(bankAccountNumber.getAlias());
-        availableTextView.setText(String.valueOf(moduleManager.getBankingWallet().getAvailableBalance(bankAccountNumber.getAccount()))+" "+bankAccountNumber.getCurrencyType().getCode());
-        bookTextView.setText(String.valueOf(moduleManager.getBankingWallet().getBookBalance(bankAccountNumber.getAccount()))+" "+bankAccountNumber.getCurrencyType().getCode());
+        availableTextView.setText(String.valueOf(moduleManager.getBankingWallet().getAvailableBalance(bankAccountNumber.getAccount())) + " " + bankAccountNumber.getCurrencyType().getCode());
+        bookTextView.setText(String.valueOf(moduleManager.getBankingWallet().getBookBalance(bankAccountNumber.getAccount())) + " " + bankAccountNumber.getCurrencyType().getCode());
     }
 
     private void configureToolbar() {
@@ -180,10 +181,10 @@ public class AccountDetailFragment extends FermatWalletListFragment<BankMoneyTra
     private void showOrHideNoTransactionsView(boolean show) {
         if (show) {
             recyclerView.setVisibility(View.GONE);
-            //noTransactionsView.setVisibility(View.VISIBLE);
+            emtyView.setVisibility(View.VISIBLE);
         } else {
             recyclerView.setVisibility(View.VISIBLE);
-            //noTransactionsView.setVisibility(View.GONE);
+            emtyView.setVisibility(View.GONE);
         }
     }
 

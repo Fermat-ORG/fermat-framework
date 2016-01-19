@@ -5,7 +5,7 @@
     <string name="action_settings">Settings</string>
     <string name="home_header">Accounts</string>
     <string name="no_accounts">You don\'t have any account yet</string>
-    <string name="no_transactions">there are no transactions in this account</string>
+    <string name="no_transactions">There are no transactions in this account</string>
     
     <string name="bnk_ctd_title">transaction title</string>
     <string name="bnk_ctd_amount_tag" translatable="false">Enter amount</string>
@@ -15,5 +15,9 @@
 
     <string name="bw_withdrawal_transaction_text" translatable="false">Withdrawal</string>
     <string name="bw_deposit_transaction_text" translatable="false">Deposit</string>
+    <string name="bnk_withdrawal_transaction_text_caps" translatable="false">WITHDRAWAL</string>
+    <string name="bnk_deposit_transaction_text_caps" translatable="false">DEPOSIT</string>
+
+
     <string name="add_account" translatable="false">Add Account</string>
 </resources>

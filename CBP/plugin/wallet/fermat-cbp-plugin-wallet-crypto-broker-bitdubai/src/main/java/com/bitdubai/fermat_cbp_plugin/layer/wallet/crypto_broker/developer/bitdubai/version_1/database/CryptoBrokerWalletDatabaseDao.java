@@ -654,6 +654,8 @@ public class CryptoBrokerWalletDatabaseDao implements DealsWithPluginFileSystem 
         else
             cryptoBrokerWalletAssociatedSetting.setMerchandise(CryptoCurrency.getByCode(record.getStringValue(CryptoBrokerWalletDatabaseConstants.CRYPTO_BROKER_WALLET_ASSOCIATED_MERCHANDISE_COLUMN_NAME)));
         cryptoBrokerWalletAssociatedSetting.setPlatform(Platforms.getByCode(record.getStringValue(CryptoBrokerWalletDatabaseConstants.CRYPTO_BROKER_WALLET_ASSOCIATED_PLATFORM_COLUMN_NAME)));
+        if(cryptoBrokerWalletAssociatedSetting.getPlatform() == Platforms.BANKING_PLATFORM)
+            cryptoBrokerWalletAssociatedSetting.setBankAccount(record.getStringValue(CryptoBrokerWalletDatabaseConstants.CRYPTO_BROKER_WALLET_ASSOCIATED_BANK_ACCOUNT_COLUMN_NAME));
         return cryptoBrokerWalletAssociatedSetting;
     }
 
