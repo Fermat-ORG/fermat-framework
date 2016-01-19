@@ -930,6 +930,8 @@ public class CryptoAddressesNetworkServicePluginRoot extends AbstractNetworkServ
 
             if(vpnConnectionCloseNotificationEvent.getNetworkServiceApplicant() == getNetworkServiceType()){
 
+                reprocessMessage();
+
                 if(communicationNetworkServiceConnectionManager != null) {
                     communicationNetworkServiceConnectionManager.closeConnection(vpnConnectionCloseNotificationEvent.getRemoteParticipant().getIdentityPublicKey());
                 }
@@ -948,21 +950,7 @@ public class CryptoAddressesNetworkServicePluginRoot extends AbstractNetworkServ
 
         if(fermatEvent instanceof ClientConnectionCloseNotificationEvent){
             System.out.println("CLOSSING ALL CONNECTIONS IN CRYPTO ADDRESSES ");
-
-            try {
-
-                List<CryptoAddressRequest> cryptoAddressRequestList = cryptoAddressesNetworkServiceDao.listPendingRequestsByProtocolState(ProtocolState.WAITING_RESPONSE);
-
-                for(CryptoAddressRequest record : cryptoAddressRequestList) {
-
-                    cryptoAddressesNetworkServiceDao.changeProtocolState(record.getRequestId(),ProtocolState.PROCESSING_SEND);
-                }
-            }
-            catch(CantListPendingCryptoAddressRequestsException | CantChangeProtocolStateException |PendingRequestNotFoundException e)
-            {
-                System.out.print("EXCEPCION REPROCESANDO WAIT MESSAGE");
-                e.printStackTrace();
-            }
+            reprocessMessage();
 
             this.register = false;
             if(communicationNetworkServiceConnectionManager != null) {

@@ -26,7 +26,7 @@ import com.google.gson.reflect.TypeToken;
 import java.util.List;
 
 /**
- * The Class <code>com.bitdubai.fermat_p2p_plugin.layer.ws.communications.cloud.client.developer.bitdubai.version_1.structure.processors.RequestListComponentRegisterPacketProcessor</code> implement
+ * The Class <code>com.bitdubai.fermat_p2p_plugin.layer.ws.communications.cloud.client.developer.bitdubai.version_1.structure.processors.RequestListComponentRegisterJettyPacketProcessor</code> implement
  * the logic to process the packet when a packet type <code>com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.enums.FermatPacketType.REQUEST_LIST_COMPONENT_REGISTERED</code> is receive by the server.
  * <p/>
  * Created by Roberto Requena - (rart3001@gmail.com) on 06/09/15.
@@ -44,14 +44,14 @@ public class RequestListComponentRegisterPacketProcessor extends FermatPacketPro
     public void processingPackage(FermatPacket receiveFermatPacket) {
 
         //System.out.println(" --------------------------------------------------------------------- ");
-        //System.out.println("RequestListComponentRegisterPacketProcessor - Starting processingPackage");
+        //System.out.println("RequestListComponentRegisterJettyPacketProcessor - Starting processingPackage");
 
         /*
          * Get the platformComponentProfile from the message content and decrypt
          */
         String messageContentJsonStringRepresentation = AsymmetricCryptography.decryptMessagePrivateKey(receiveFermatPacket.getMessageContent(), getWsCommunicationsCloudClientChannel().getClientIdentity().getPrivateKey());
 
-        //System.out.println("RequestListComponentRegisterPacketProcessor - messageContentJsonStringRepresentation = "+messageContentJsonStringRepresentation);
+        //System.out.println("RequestListComponentRegisterJettyPacketProcessor - messageContentJsonStringRepresentation = "+messageContentJsonStringRepresentation);
 
         /*
          * Construct the json object
@@ -69,7 +69,7 @@ public class RequestListComponentRegisterPacketProcessor extends FermatPacketPro
         List<PlatformComponentProfile> receivedList = gson.fromJson(respond.get(JsonAttNamesConstants.RESULT_LIST).getAsString(), new TypeToken<List<PlatformComponentProfileCommunication>>() {
         }.getType());
 
-        //System.out.println("RequestListComponentRegisterPacketProcessor - receivedList.size() = " + receivedList.size());
+        //System.out.println("RequestListComponentRegisterJettyPacketProcessor - receivedList.size() = " + receivedList.size());
 
          /*
          * Create a new event whit the receivedlist
@@ -87,7 +87,7 @@ public class RequestListComponentRegisterPacketProcessor extends FermatPacketPro
         /*
          * Raise the event
          */
-        //System.out.println("RequestListComponentRegisterPacketProcessor - Raised a event = P2pEventType.COMPLETE_REQUEST_LIST_COMPONENT_REGISTERED_NOTIFICATION");
+        //System.out.println("RequestListComponentRegisterJettyPacketProcessor - Raised a event = P2pEventType.COMPLETE_REQUEST_LIST_COMPONENT_REGISTERED_NOTIFICATION");
         getWsCommunicationsCloudClientChannel().getEventManager().raiseEvent(event);
 
     }

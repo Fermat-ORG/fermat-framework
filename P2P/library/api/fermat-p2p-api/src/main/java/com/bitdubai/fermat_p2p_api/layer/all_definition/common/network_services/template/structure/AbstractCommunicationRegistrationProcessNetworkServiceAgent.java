@@ -105,7 +105,7 @@ public abstract class AbstractCommunicationRegistrationProcessNetworkServiceAgen
                 try {
                     Thread.sleep(AbstractCommunicationRegistrationProcessNetworkServiceAgent.SLEEP_TIME);
                 } catch (InterruptedException e) {
-                    e.printStackTrace();
+                    System.out.println(e.getMessage());
                     this.status = AgentStatus.STOPPED;
                 }
 
@@ -115,10 +115,10 @@ public abstract class AbstractCommunicationRegistrationProcessNetworkServiceAgen
 
         } catch (Exception e) {
             try {
-                e.printStackTrace();
+                System.out.println(e.getMessage());
                 Thread.sleep(AbstractCommunicationRegistrationProcessNetworkServiceAgent.MAX_SLEEP_TIME);
             } catch (InterruptedException e1) {
-                e1.printStackTrace();
+                System.out.println(e1.getMessage());
                 this.status = AgentStatus.STOPPED;
             }
         }

@@ -22,7 +22,7 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 
 /**
- * The Class <code>com.bitdubai.fermat_p2p_plugin.layer.ws.communications.cloud.client.developer.bitdubai.version_1.structure.processors.FailureUpdateActorPacketProcessor</code>
+ * The Class <code>com.bitdubai.fermat_p2p_plugin.layer.ws.communications.cloud.client.developer.bitdubai.version_1.structure.processors.FailureUpdateActorJettyPacketProcessor</code>
  * <p/>
  * Created by Hendry Rodriguez - (elnegroevaristo@gmail.com) on 06/01/16.
  *
@@ -59,7 +59,7 @@ public class FailureUpdateActorPacketProcessor extends FermatPacketProcessor {
          */
         String messageContentJsonStringRepresentation = AsymmetricCryptography.decryptMessagePrivateKey(receiveFermatPacket.getMessageContent(), getWsCommunicationsCloudClientChannel().getClientIdentity().getPrivateKey());
 
-        //System.out.println("FailureComponentRegistrationRequestPacketProcessor - messageContentJsonStringRepresentation = "+messageContentJsonStringRepresentation);
+        //System.out.println("FailureComponentRegistrationRequestJettyPacketProcessor - messageContentJsonStringRepresentation = "+messageContentJsonStringRepresentation);
 
         /*
          * Construct the json object

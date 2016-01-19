@@ -44,4 +44,8 @@ public class RedeemPointSettings implements WalletSettings {
         this.skinId = skinId;
     }
 
+    @Override
+    public void setIsPresentationHelpEnabled(boolean b) {
+
+    }
 }

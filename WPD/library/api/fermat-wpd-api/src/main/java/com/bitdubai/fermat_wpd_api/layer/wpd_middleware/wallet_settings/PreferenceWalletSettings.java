@@ -12,4 +12,8 @@ public class PreferenceWalletSettings implements FermatSettings{
         return XMLParser.parseObject(this);
     }
 
+    @Override
+    public void setIsPresentationHelpEnabled(boolean b) {
+
+    }
 }
