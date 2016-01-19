@@ -20,10 +20,9 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 
 import java.net.URI;
-import java.util.StringTokenizer;
 
 /**
- * The Class <code>com.bitdubai.fermat_p2p_plugin.layer.ws.communications.cloud.client.developer.bitdubai.version_1.structure.processors.ComponentConnectionRespondPacketProcessor</code> implement
+ * The Class <code>com.bitdubai.fermat_p2p_plugin.layer.ws.communications.cloud.client.developer.bitdubai.version_1.structure.processors.ComponentConnectionRespondJettyPacketProcessor</code> implement
  * the logic to process the packet when a packet type <code>com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.enums.FermatPacketType.COMPONENT_CONNECTION_RESPOND</code> is receive by the server.
  * <p/>
  * Created by Roberto Requena - (rart3001@gmail.com) on 13/09/15.
@@ -40,9 +39,8 @@ public class ComponentConnectionRespondPacketProcessor extends FermatPacketProce
     @Override
     public void processingPackage(FermatPacket receiveFermatPacket) {
 
-
         //System.out.println(" --------------------------------------------------------------------- ");
-        //System.out.println("ComponentConnectionRespondPacketProcessor - Starting processingPackage");
+       //System.out.println("ComponentConnectionRespondJettyPacketProcessor - Starting processingPackage");
 
         /*
          * Get the message content and decrypt
@@ -50,7 +48,7 @@ public class ComponentConnectionRespondPacketProcessor extends FermatPacketProce
         String messageContentJsonStringRepresentation = AsymmetricCryptography.decryptMessagePrivateKey(receiveFermatPacket.getMessageContent(), getWsCommunicationsCloudClientChannel().getClientIdentity().getPrivateKey());
 
 
-        //System.out.println("ComponentConnectionRespondPacketProcessor - messageContentJsonStringRepresentation = "+messageContentJsonStringRepresentation);
+        //System.out.println("ComponentConnectionRespondJettyPacketProcessor - messageContentJsonStringRepresentation = "+messageContentJsonStringRepresentation);
 
         /*
          * Construct the json object
@@ -64,23 +62,13 @@ public class ComponentConnectionRespondPacketProcessor extends FermatPacketProce
             //Get all values
             URI vpnServerUri = new URI(respond.get(JsonAttNamesConstants.VPN_URI).getAsString());
             String vpnServerIdentity = respond.get(JsonAttNamesConstants.VPN_SERVER_IDENTITY).getAsString();
-            String participantIdentity = respond.get(JsonAttNamesConstants.REGISTER_PARTICIPANT_IDENTITY_VPN).getAsString();
+            PlatformComponentProfile participantVpn = gson.fromJson(respond.get(JsonAttNamesConstants.APPLICANT_PARTICIPANT_VPN).getAsString(), PlatformComponentProfileCommunication.class);
             PlatformComponentProfile remotePlatformComponentProfile = gson.fromJson(respond.get(JsonAttNamesConstants.REMOTE_PARTICIPANT_VPN).getAsString(), PlatformComponentProfileCommunication.class);
             PlatformComponentProfile remoteNsPlatformComponentProfile = gson.fromJson(respond.get(JsonAttNamesConstants.REMOTE_PARTICIPANT_NS_VPN).getAsString(), PlatformComponentProfileCommunication.class);
 
-            /*
-             * TEMPORAL:
-             * Reconstruct the uri, for the configuration of the AWS. The internal ip is different to the public ip,
-             * when return the vpnServerUri the cloud server only know the internal ip and send this in the respond.
-             * Need to fix this situation in the future
-             */
-            StringTokenizer stringTokenizer = new StringTokenizer(vpnServerUri.toString(), ":");
-            stringTokenizer.nextElement();
-            stringTokenizer.nextElement();
-            String port = (String) stringTokenizer.nextElement();
-            vpnServerUri = new URI(ServerConf.WS_PROTOCOL + WsCommunicationsCloudClientPluginRoot.SERVER_IP  + ":" + port);
+            vpnServerUri = new URI(ServerConf.WS_PROTOCOL + WsCommunicationsCloudClientPluginRoot.SERVER_IP + ":" + ServerConf.DEFAULT_PORT + vpnServerUri);
 
-            //System.out.println("ComponentConnectionRespondPacketProcessor - reconstruct vpnServerUri = "+vpnServerUri);
+            System.out.println("ComponentConnectionRespondJettyPacketProcessor - vpnServerUri to connect = "+vpnServerUri);
 
             /*
              * Get the  wsCommunicationVPNClientManagerAgent
@@ -90,16 +78,7 @@ public class ComponentConnectionRespondPacketProcessor extends FermatPacketProce
             /*
              * Create a new VPN client
              */
-            wsCommunicationVPNClientManagerAgent.createNewWsCommunicationVPNClient(vpnServerUri, vpnServerIdentity, participantIdentity, remotePlatformComponentProfile, remoteNsPlatformComponentProfile, getWsCommunicationsCloudClientChannel().getEventManager());
-
-            /*
-             * Is not running
-             */
-            if (!wsCommunicationVPNClientManagerAgent.isRunning() &&
-                    wsCommunicationVPNClientManagerAgent.getState() == Thread.State.NEW){
-
-                wsCommunicationVPNClientManagerAgent.start();
-            }
+            wsCommunicationVPNClientManagerAgent.createNewWsCommunicationVPNClient(vpnServerUri, vpnServerIdentity, participantVpn, remotePlatformComponentProfile, remoteNsPlatformComponentProfile, getWsCommunicationsCloudClientChannel().getEventManager());
 
         } catch (Exception e) {
            throw new RuntimeException(e);

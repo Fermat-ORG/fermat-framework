@@ -12,4 +12,5 @@ public interface FermatStructure {
     public Activity getActivity(Activities activities);
     public Activity getStartActivity();
     public Activity getLastActivity();
+    public void changeActualStartActivity(int option)throws IllegalArgumentException;
 }

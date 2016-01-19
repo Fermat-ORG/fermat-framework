@@ -258,6 +258,10 @@ public class WalletCommunityNetworkServicePluginRoot extends AbstractPlugin impl
 //        if(communicationNetworkServiceConnectionManager != null)
 //            communicationNetworkServiceConnectionManager.restart();
 
+//        if(!this.register){
+//            communicationRegistrationProcessNetworkServiceAgent.start();
+//        }
+
     }
 
     @Override

@@ -1,5 +1,6 @@
 package com.bitdubai.reference_niche_wallet.bitcoin_wallet.fragments.wallet_final_version;
 
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
@@ -77,7 +78,7 @@ public class RequestSendHistoryFragment extends FermatWalletListFragment<Payment
     String walletPublicKey = "reference_wallet";
     private View rootView;
     private LinearLayout empty;
-    private FloatingActionButton fab_request;
+
 
     /**
      * Create a new instance of this fragment
@@ -96,6 +97,19 @@ public class RequestSendHistoryFragment extends FermatWalletListFragment<Payment
         referenceWalletSession = (ReferenceWalletSession)appSession;
 
         lstPaymentRequest = new ArrayList<PaymentRequest>();
+
+        getExecutor().execute(new Runnable() {
+            @Override
+            public void run() {
+                final Drawable drawable = getResources().getDrawable(R.drawable.background_gradient, null);
+                getActivity().runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        getPaintActivtyFeactures().setActivityBackgroundColor(drawable);
+                    }
+                });
+            }
+        });
         try {
             cryptoWallet = referenceWalletSession.getModuleManager().getCryptoWallet();
 
@@ -127,14 +141,6 @@ public class RequestSendHistoryFragment extends FermatWalletListFragment<Payment
     }
 
     private void setUp(){
-        fab_request = (FloatingActionButton) rootView.findViewById(R.id.fab_request);
-        fab_request.setVisibility(View.GONE);
-        fab_request.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                changeActivity(Activities.CCP_BITCOIN_WALLET_REQUEST_FORM_ACTIVITY);
-            }
-        });
 
         FrameLayout frameLayout = new FrameLayout(getActivity());
 
@@ -142,18 +148,32 @@ public class RequestSendHistoryFragment extends FermatWalletListFragment<Payment
 
         frameLayout.setLayoutParams(lbs);
 
-        ImageView icon = new ImageView(getActivity()); // Create an icon
+        //ImageView icon = new ImageView(getActivity());  Create an icon
+        //icon.setImageResource(R.drawable.btn_request_selector);
         //icon.setImageResource(R.drawable.ic_contact_newcontact);
 
-        frameLayout.addView(icon);
+        View.OnClickListener onClickListener = new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                changeActivity(Activities.CCP_BITCOIN_WALLET_REQUEST_FORM_ACTIVITY);
+            }
+        };
+        View view = new View(getActivity());
+        view.setLayoutParams(lbs);
+
+        frameLayout.addView(view);
+        frameLayout.setOnClickListener(onClickListener);
+        view.setOnClickListener(onClickListener);
 
         com.oguzdev.circularfloatingactionmenu.library.FloatingActionButton actionButton = new com.oguzdev.circularfloatingactionmenu.library.FloatingActionButton.Builder(getActivity())
-                .setContentView(frameLayout)
-                .setBackgroundDrawable(R.drawable.btn_contact_selector)
+                .setContentView(frameLayout).setBackgroundDrawable(R.drawable.btn_request_selector)
                 .build();
+
         FloatingActionMenu actionMenu = new FloatingActionMenu.Builder(getActivity())
                 .attachTo(actionButton)
                 .build();
+
+
     }
 
 

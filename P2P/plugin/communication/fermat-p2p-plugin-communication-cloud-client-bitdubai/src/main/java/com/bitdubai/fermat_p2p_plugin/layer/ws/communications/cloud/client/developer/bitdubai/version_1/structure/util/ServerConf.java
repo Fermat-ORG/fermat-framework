@@ -19,7 +19,7 @@ public class ServerConf {
     /**
      * Represent the SERVER_IP in the production environment
      */
-    public static final String SERVER_IP_PRODUCCTION = "52.35.64.221";
+    public static final String SERVER_IP_PRODUCTION = "52.35.64.221";
 
     /**
      * Represent the SERVER_IP in the developer environment
@@ -45,6 +45,11 @@ public class ServerConf {
      * Represent the WS_PROTOCOL
      */
     public static final String WS_PROTOCOL = "ws://";
+
+    /**
+     * Represent the WEB_SOCKET_CONTEXT_PATH
+     */
+    public static final String WEB_SOCKET_CONTEXT_PATH = "/fermat/ws/";
 
     /**
      * Represent the HTTP_PROTOCOL

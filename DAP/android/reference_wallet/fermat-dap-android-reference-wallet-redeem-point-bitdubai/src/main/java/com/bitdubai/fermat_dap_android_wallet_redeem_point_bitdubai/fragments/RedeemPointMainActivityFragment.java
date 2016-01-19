@@ -19,6 +19,7 @@ import com.bitdubai.fermat_android_api.ui.adapters.FermatAdapter;
 import com.bitdubai.fermat_android_api.ui.enums.FermatRefreshTypes;
 import com.bitdubai.fermat_android_api.ui.fragments.FermatWalletListFragment;
 import com.bitdubai.fermat_android_api.ui.interfaces.FermatListItemListeners;
+import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Wallets;
 import com.bitdubai.fermat_api.layer.modules.common_classes.ActiveActorIdentityInformation;
 import com.bitdubai.fermat_dap_android_wallet_redeem_point_bitdubai.R;
@@ -45,7 +46,7 @@ public class RedeemPointMainActivityFragment extends FermatWalletListFragment<Di
         implements FermatListItemListeners<DigitalAsset> {
 
     // Constants
-    private static final String TAG = "MyAssetsActivityFragment";
+    private static final String TAG = "RedeemPointMainActivityFragment";
 
     // Fermat Managers
     private AssetRedeemPointWalletSubAppModule moduleManager;
@@ -236,7 +237,7 @@ public class RedeemPointMainActivityFragment extends FermatWalletListFragment<Di
     @Override
     public void onItemClickListener(DigitalAsset data, int position) {
         appSession.setData("asset_data", data);
-//        changeActivity(Activities.DAP_ASSET_ISSUER_WALLET_ASSET_DETAIL, walletSession.getAppPublicKey());
+        changeActivity(Activities.DAP_WALLET_REDEEM_POINT_DETAILS_ACTIVITY, appSession.getAppPublicKey());
     }
 
     @Override
@@ -250,6 +251,7 @@ public class RedeemPointMainActivityFragment extends FermatWalletListFragment<Di
         if (moduleManager != null) {
             try {
                 digitalAssets = Data.getAllDigitalAssets(moduleManager);
+
 
             } catch (Exception ex) {
                 CommonLogger.exception(TAG, ex.getMessage(), ex);

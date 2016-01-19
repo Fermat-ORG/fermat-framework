@@ -112,7 +112,7 @@ class VaultKeyHierarchyMaintainer implements Agent {
         /**
          * Sleep time of the agent between iterations
          */
-        final long AGENT_SLEEP_TIME = 600000; //default time is 10 minutes
+        final long AGENT_SLEEP_TIME = 10000; //default time is 10 minutes
 
 
         @Override
@@ -268,7 +268,7 @@ class VaultKeyHierarchyMaintainer implements Agent {
                 // I derive the key at position i
                 DeterministicKey derivedKey = keyHierarchy.deriveChild(keyHierarchy.getRootKey().getPath(), true, false, new ChildNumber(i, false));
                 // I add this key to the ECKey list
-                childKeys.add(ECKey.fromPublicOnly(derivedKey.getPubKey()));
+                childKeys.add(ECKey.fromPublicOnly(derivedKey.getPubKeyPoint()));
             }
 
             return childKeys;

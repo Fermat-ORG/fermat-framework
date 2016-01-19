@@ -72,7 +72,6 @@ public class RequestReceiveHistoryFragment extends FermatWalletListFragment<Paym
     String walletPublicKey = "reference_wallet";
     private View rootView;
     private LinearLayout empty;
-    private FloatingActionButton fab_request;
 
     /**
      * Create a new instance of this fragment
@@ -120,13 +119,7 @@ public class RequestReceiveHistoryFragment extends FermatWalletListFragment<Paym
         return container;
     }
     private void setUp(){
-        fab_request = (FloatingActionButton) rootView.findViewById(R.id.fab_request);
-        fab_request.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                changeActivity(Activities.CCP_BITCOIN_WALLET_REQUEST_FORM_ACTIVITY);
-            }
-        });
+
     }
 
     @Override

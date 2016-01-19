@@ -54,6 +54,11 @@ dependencies {
     compile 'org.springframework.android:spring-android-rest-template:1.0.1.RELEASE'
     compile 'org.springframework.android:spring-android-core:1.0.1.RELEASE'
 
+	compile ('org.glassfish.tyrus.bundles:tyrus-standalone-client-jdk:1.12')
+//		exclude group: 'javax.websocket', module:'websocket'
+//	}
+	//compile 'org.eclipse.jetty.websocket:websocket-client:9.0.0.M0'
+
 	testCompile group: 'junit', name: 'junit', version: '4.11'
 	testCompile group: 'org.easytesting', name: 'fest-assert-core', version: '2.0M10'
 	testCompile group: 'com.googlecode.catch-exception', name: 'catch-exception', version: '1.2.0'
@@ -110,3 +115,7 @@ task jenkins(dependsOn: ['clean', 'check', 'jacocoTestReport']) << {
 
 check.mustRunAfter clean
 jacocoTestReport.mustRunAfter check
+
+configurations {
+
+}
