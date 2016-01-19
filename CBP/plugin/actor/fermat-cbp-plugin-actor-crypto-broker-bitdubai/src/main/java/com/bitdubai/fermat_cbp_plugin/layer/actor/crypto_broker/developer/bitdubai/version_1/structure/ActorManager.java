@@ -7,6 +7,7 @@ import com.bitdubai.fermat_cbp_api.layer.actor.crypto_broker.exceptions.CantCrea
 import com.bitdubai.fermat_cbp_api.layer.actor.crypto_broker.exceptions.CantCreateNewBrokerIdentityWalletRelationshipException;
 import com.bitdubai.fermat_cbp_api.layer.actor.crypto_broker.exceptions.CantGetListActorExtraDataException;
 import com.bitdubai.fermat_cbp_api.layer.actor.crypto_broker.exceptions.CantGetListBrokerIdentityWalletRelationshipException;
+import com.bitdubai.fermat_cbp_api.layer.actor.crypto_broker.exceptions.CantGetListPlatformsException;
 import com.bitdubai.fermat_cbp_api.layer.actor.crypto_broker.exceptions.CantUpdateActorExtraDataException;
 import com.bitdubai.fermat_cbp_api.layer.actor.crypto_broker.interfaces.*;
 import com.bitdubai.fermat_cbp_api.layer.actor.crypto_broker.interfaces.ActorExtraData;
@@ -77,26 +78,32 @@ public class ActorManager implements ActorExtraDataManager {
 
         @Override
         public Collection<ActorExtraData> getAllActorExtraData() throws CantGetListActorExtraDataException {
-            return null;
+            return this.dao.getAllActorExtraData();
         }
 
         @Override
         public Collection<ActorExtraData> getAllActorExtraDataConnected() throws CantGetListActorExtraDataException {
+
+            // TODO: buscar la lista de actores conectados y luego usar el metodo
+            // TODO: getActorExtraDataByPublicKey(String _publicKey) para obtener la informacion de cada uno
+            // TODO: y poder retornarla
+
             return null;
         }
 
         @Override
-        public Collection<ActorExtraData> getActorExtraDataConnectedByIdentity(ActorIdentity identity) throws CantGetListActorExtraDataException {
-            return null;
+        public ActorExtraData getActorExtraDataByIdentity(ActorIdentity identity) throws CantGetListActorExtraDataException {
+            return this.dao.getActorExtraDataByPublicKey(identity.getPublicKey());
         }
 
         @Override
         public ActorExtraData getActorExtraDataLocalActor() throws CantGetListActorExtraDataException {
+            // TODO: buscar la informacion local del broker para pasarla al NS
             return null;
         }
 
         @Override
-        public Collection<Platforms> getPlatformsSupport(String brokerPublicKey, Currency currency) {
-            return null;
+        public Collection<Platforms> getPlatformsSupport(String brokerPublicKey, Currency currency) throws CantGetListPlatformsException {
+            return this.dao.getPlatformsSupport(brokerPublicKey, currency);
         }
 }
