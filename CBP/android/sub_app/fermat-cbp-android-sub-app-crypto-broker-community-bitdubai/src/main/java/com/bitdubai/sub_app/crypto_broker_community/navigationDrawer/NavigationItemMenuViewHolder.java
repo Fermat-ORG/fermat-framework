@@ -1,30 +1,31 @@
-package com.bitdubai.sub_app.crypto_broker_community.holders;
+package com.bitdubai.sub_app.crypto_broker_community.navigationDrawer;
 
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.bitdubai.fermat_android_api.ui.holders.FermatViewHolder;
 import com.bitdubai.sub_app.crypto_broker_community.R;
 
-/**
- * Created by Leon Acosta - (laion.cj91@gmail.com) on 16/12/2015.
- *
- * @author lnacosta
- * @version 1.0.0
- */
-public class AppNavigationHolder extends FermatViewHolder {
 
+/**
+ * Created by Matias Furszyfer 22/09/2015
+ */
+
+
+public class NavigationItemMenuViewHolder extends FermatViewHolder {
     private TextView label;
     private ImageView icon;
+    private LinearLayout rowContainer;
 
 
-    public AppNavigationHolder(View itemView) {
+    public NavigationItemMenuViewHolder(View itemView) {
         super(itemView);
 
         label = (TextView) itemView.findViewById(R.id.cbc_textView_label);
         icon = (ImageView) itemView.findViewById(R.id.cbc_imageView_icon);
-
+        rowContainer = (LinearLayout) itemView.findViewById(R.id.cbc_row_container);
 
     }
 
@@ -34,5 +35,9 @@ public class AppNavigationHolder extends FermatViewHolder {
 
     public ImageView getIcon() {
         return icon;
+    }
+
+    public LinearLayout getRowContainer() {
+        return rowContainer;
     }
 }
