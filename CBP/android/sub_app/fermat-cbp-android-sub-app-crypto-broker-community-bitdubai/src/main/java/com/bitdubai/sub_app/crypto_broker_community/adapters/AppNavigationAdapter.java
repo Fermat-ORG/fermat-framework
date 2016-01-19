@@ -58,7 +58,7 @@ public class AppNavigationAdapter extends FermatAdapter<MenuItem, AppNavigationH
      */
     @Override
     protected int getCardViewResource() {
-        return R.layout.row_navigation_drawer_community_content;
+        return R.layout.cbc_row_navigation_drawer_community_content;
     }
 
     /**

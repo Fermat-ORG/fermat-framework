@@ -106,7 +106,7 @@ public class HoldCryptoMoneyTransactionDeveloperDatabaseFactory implements Deals
          * I only have one database on my plugin. I will return its name.
          */
         List<DeveloperDatabase> databases = new ArrayList<DeveloperDatabase>();
-        databases.add(developerObjectFactory.getNewDeveloperDatabase(HoldCryptoMoneyTransactionDatabaseConstants.HOLD_DATABASE_NAME, this.pluginId.toString()));
+        databases.add(developerObjectFactory.getNewDeveloperDatabase(HoldCryptoMoneyTransactionDatabaseConstants.HOLD_DATABASE_NAME, HoldCryptoMoneyTransactionDatabaseConstants.HOLD_DATABASE_NAME));
         return databases;
     }
 

@@ -71,11 +71,8 @@ implements FermatListItemListeners<CashMoneyWalletTransaction>, DialogInterface.
     HomeTutorialFragmentDialog homeTutorialDialog;
     private static final DecimalFormat decimalFormat = (DecimalFormat) NumberFormat.getInstance();
 
-
-
     public HomeFragment() {}
     public static HomeFragment newInstance() {return new HomeFragment();}
-
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -143,7 +140,7 @@ implements FermatListItemListeners<CashMoneyWalletTransaction>, DialogInterface.
             showHomeTutorial = settingsManager.loadAndGetSettings(walletSession.getAppPublicKey()).isHomeTutorialDialogEnabled();
         } catch (CantGetSettingsException | SettingsNotFoundException  e){}
 
-        //if(showHomeTutorial)
+        if(showHomeTutorial)
             lauchHomeTutorialDialog();
 
 
@@ -279,7 +276,7 @@ implements FermatListItemListeners<CashMoneyWalletTransaction>, DialogInterface.
         getWalletBalances();
         updateWalletBalances();
         handleWidhtrawalFabVisibilityAccordingToBalance();
-
+        layoutManager.smoothScrollToPosition(recyclerView, null, 0);
         onRefresh();
     }
 

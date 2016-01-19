@@ -168,8 +168,10 @@ public class BusinessTransactionBankMoneyRestockMonitorAgent  implements Agent{
                                         bankMoneyTransaction.getPriceReference(),
                                         bankMoneyTransaction.getOriginTransaction());
 
-                                cryptoBrokerWalletManager.loadCryptoBrokerWallet(bankMoneyTransaction.getCbpWalletPublicKey()).getStockBalance().debit(walletTransactionRecord, BalanceType.BOOK);
-                                cryptoBrokerWalletManager.loadCryptoBrokerWallet(bankMoneyTransaction.getCbpWalletPublicKey()).getStockBalance().debit(walletTransactionRecord, BalanceType.AVAILABLE);
+                                //TODO:Solo para testear
+                                bankMoneyTransaction.setCbpWalletPublicKey("walletPublicKeyTest");
+                                cryptoBrokerWalletManager.loadCryptoBrokerWallet(bankMoneyTransaction.getCbpWalletPublicKey()).getStockBalance().credit(walletTransactionRecord, BalanceType.BOOK);
+                                cryptoBrokerWalletManager.loadCryptoBrokerWallet(bankMoneyTransaction.getCbpWalletPublicKey()).getStockBalance().credit(walletTransactionRecord, BalanceType.AVAILABLE);
                                 bankMoneyTransaction.setTransactionStatus(TransactionStatusRestockDestock.IN_WALLET);
                                 stockTransactionBankMoneyRestockFactory.saveBankMoneyRestockTransactionData(bankMoneyTransaction);
 
@@ -177,7 +179,7 @@ public class BusinessTransactionBankMoneyRestockMonitorAgent  implements Agent{
                                 errorManager.reportUnexpectedPluginException(Plugins.BANK_MONEY_RESTOCK, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);;
                             } catch (CantGetStockCryptoBrokerWalletException e) {
                                 errorManager.reportUnexpectedPluginException(Plugins.BANK_MONEY_RESTOCK, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);;
-                            } catch (CantAddDebitCryptoBrokerWalletException e) {
+                            } catch (CantAddCreditCryptoBrokerWalletException e) {
                                 errorManager.reportUnexpectedPluginException(Plugins.BANK_MONEY_RESTOCK, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);;
                             }
                         }
