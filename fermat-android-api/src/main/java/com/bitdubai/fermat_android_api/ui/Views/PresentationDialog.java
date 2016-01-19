@@ -3,6 +3,7 @@ package com.bitdubai.fermat_android_api.ui.Views;
 import android.app.Activity;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.os.Handler;
@@ -41,6 +42,8 @@ import java.nio.ByteBuffer;
  */
 public class PresentationDialog extends FermatDialog<FermatSession,SubAppResourcesProviderManager> implements View.OnClickListener, CompoundButton.OnCheckedChangeListener {
 
+    private PresentationCallback callback;
+
     public enum TemplateType{
         TYPE_PRESENTATION,TYPE_PRESENTATION_WITHOUT_IDENTITIES
     }
@@ -59,6 +62,7 @@ public class PresentationDialog extends FermatDialog<FermatSession,SubAppResourc
     String subTitle;
     String body;
     String textFooter;
+    private String textColor;
     int resBannerimage;
     private int iconRes = -1;
 
@@ -95,30 +99,34 @@ public class PresentationDialog extends FermatDialog<FermatSession,SubAppResourc
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        txt_title = (FermatTextView) findViewById(R.id.txt_title);
-        image_banner = (ImageView) findViewById(R.id.image_banner);
-        txt_sub_title = (FermatTextView) findViewById(R.id.txt_sub_title);
-        txt_body = (FermatTextView) findViewById(R.id.txt_body);
-        footer_title = (FermatTextView) findViewById(R.id.footer_title);
-        checkbox_not_show = (CheckBox) findViewById(R.id.checkbox_not_show);
-        checkbox_not_show.setChecked(checkButton);
-        img_icon = (ImageView) findViewById(R.id.img_icon);
-        setUpBasics();
-        switch (type){
-            case TYPE_PRESENTATION:
-                image_view_left = (ImageView) findViewById(R.id.image_view_left);
-                image_view_right = (ImageView) findViewById(R.id.image_view_right);
-                container_john_doe = (FrameLayout) findViewById(R.id.container_john_doe);
-                container_jane_doe = (FrameLayout) findViewById(R.id.container_jane_doe);
-                btn_left = (Button) findViewById(R.id.btn_left);
-                btn_right = (Button) findViewById(R.id.btn_right);
-                setUpListenersPresentation();
-                break;
-            case TYPE_PRESENTATION_WITHOUT_IDENTITIES:
-                btn_dismiss = (FermatButton) findViewById(R.id.btn_dismiss);
-                btn_dismiss.setOnClickListener(this);
-                break;
+        try {
+            super.onCreate(savedInstanceState);
+            txt_title = (FermatTextView) findViewById(R.id.txt_title);
+            image_banner = (ImageView) findViewById(R.id.image_banner);
+            txt_sub_title = (FermatTextView) findViewById(R.id.txt_sub_title);
+            txt_body = (FermatTextView) findViewById(R.id.txt_body);
+            footer_title = (FermatTextView) findViewById(R.id.footer_title);
+            checkbox_not_show = (CheckBox) findViewById(R.id.checkbox_not_show);
+            checkbox_not_show.setChecked(checkButton);
+            img_icon = (ImageView) findViewById(R.id.img_icon);
+            setUpBasics();
+            switch (type) {
+                case TYPE_PRESENTATION:
+                    image_view_left = (ImageView) findViewById(R.id.image_view_left);
+                    image_view_right = (ImageView) findViewById(R.id.image_view_right);
+                    container_john_doe = (FrameLayout) findViewById(R.id.container_john_doe);
+                    container_jane_doe = (FrameLayout) findViewById(R.id.container_jane_doe);
+                    btn_left = (Button) findViewById(R.id.btn_left);
+                    btn_right = (Button) findViewById(R.id.btn_right);
+                    setUpListenersPresentation();
+                    break;
+                case TYPE_PRESENTATION_WITHOUT_IDENTITIES:
+                    btn_dismiss = (FermatButton) findViewById(R.id.btn_dismiss);
+                    btn_dismiss.setOnClickListener(this);
+                    break;
+            }
+        }catch (Exception e){
+            if(callback!=null) callback.onError(e);
         }
     }
 
@@ -128,11 +136,15 @@ public class PresentationDialog extends FermatDialog<FermatSession,SubAppResourc
         if(txt_sub_title != null) txt_sub_title.setText(subTitle);
         if(txt_body!=null) txt_body.setText(body);
         if(footer_title!=null)footer_title.setText(textFooter);
+        if(textColor!=null){
+            int color = Color.parseColor(textColor);
+            txt_sub_title.setTextColor(color);
+            txt_body.setTextColor(color);
+            footer_title.setTextColor(color);
+        }
     }
 
     private void setUpListenersPresentation(){
-//        container_john_doe.setOnClickListener(this);
-//        container_jane_doe.setOnClickListener(this);
         btn_left.setOnClickListener(this);
         btn_right.setOnClickListener(this);
         checkbox_not_show.setOnCheckedChangeListener(this);
@@ -163,7 +175,7 @@ public class PresentationDialog extends FermatDialog<FermatSession,SubAppResourc
                 getSession().getModuleManager().createIdentity("John Doe","Available",convertImage(R.drawable.ic_profile_male));
                 getSession().setData(PRESENTATION_IDENTITY_CREATED, Boolean.TRUE);
             } catch (Exception e) {
-                e.printStackTrace();
+                if(callback!=null) callback.onError(e);
             }
             saveSettings();
             dismiss();
@@ -173,7 +185,7 @@ public class PresentationDialog extends FermatDialog<FermatSession,SubAppResourc
                 getSession().getModuleManager().createIdentity("Jane Doe", "Available", convertImage(R.drawable.img_profile_female));
                 getSession().setData(PRESENTATION_IDENTITY_CREATED, Boolean.TRUE);
             } catch (Exception e) {
-                e.printStackTrace();
+                if(callback!=null) callback.onError(e);
             }
             saveSettings();
             dismiss();
@@ -192,12 +204,8 @@ public class PresentationDialog extends FermatDialog<FermatSession,SubAppResourc
                         FermatSettings bitcoinWalletSettings = settingsManager.loadAndGetSettings(getSession().getAppPublicKey());
                         bitcoinWalletSettings.setIsPresentationHelpEnabled(false);
                         settingsManager.persistSettings(getSession().getAppPublicKey(), bitcoinWalletSettings);
-                    } catch (CantGetSettingsException e) {
-                        e.printStackTrace();
-                    } catch (SettingsNotFoundException e) {
-                        e.printStackTrace();
-                    } catch (CantPersistSettingsException e) {
-                        e.printStackTrace();
+                    } catch (CantGetSettingsException | SettingsNotFoundException | CantPersistSettingsException e) {
+                        if(callback!=null) callback.onError(e);
                     }
                 }
         }
@@ -250,6 +258,14 @@ public class PresentationDialog extends FermatDialog<FermatSession,SubAppResourc
         this.resBannerimage = resBannerimage;
     }
 
+    public void setTextColor(String textColor) {
+        this.textColor = textColor;
+    }
+
+    public void setCallback(PresentationCallback callback) {
+        this.callback = callback;
+    }
+
     public static class Builder{
 
         /**
@@ -266,6 +282,7 @@ public class PresentationDialog extends FermatDialog<FermatSession,SubAppResourc
         private String textFooter;
         private int bannerRes = -1;
         private int iconRes = -1;
+        private String textColor;
 
         public PresentationDialog build() {
             PresentationDialog presentationDialog = new PresentationDialog(activity.get(), fermatSession.get(), null, templateType, isCheckEnabled);
@@ -286,6 +303,12 @@ public class PresentationDialog extends FermatDialog<FermatSession,SubAppResourc
             }
             if (iconRes != -1) {
                 presentationDialog.setIconRes(iconRes);
+            }
+            if (textColor != null) {
+                presentationDialog.setTextColor(textColor);
+            }
+            if (callback != null) {
+                presentationDialog.setCallback(callback);
             }
             return presentationDialog;
         }
@@ -331,6 +354,14 @@ public class PresentationDialog extends FermatDialog<FermatSession,SubAppResourc
 
         public void setCallback(PresentationCallback callback) {
             this.callback = callback;
+        }
+
+        public void setTemplateType(TemplateType templateType) {
+            this.templateType = templateType;
+        }
+
+        public void setTextColor(String textColorInHexa) {
+            this.textColor = textColorInHexa;
         }
     }
 

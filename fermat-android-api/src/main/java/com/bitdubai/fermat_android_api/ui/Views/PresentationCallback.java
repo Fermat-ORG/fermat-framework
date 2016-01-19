@@ -6,5 +6,6 @@ package com.bitdubai.fermat_android_api.ui.Views;
  */
 public interface PresentationCallback {
 
+    void onError(Exception e);
 
 }
