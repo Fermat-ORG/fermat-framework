@@ -77,6 +77,9 @@ public class CryptoCustomerWalletFragmentFactory extends FermatFragmentFactory<C
                 return SettingsMylocationsFragment.newInstance();
             case CBP_CRYPTO_CUSTOMER_WALLET_CREATE_NEW_LOCATION_IN_SETTINGS:
                 return CreateNewLocationFragment.newInstance();
+
+            case CBP_CRYPTO_CUSTOMER_WALLET_CONTRACT_DETAILS:
+                return ContractsHistoryActivityFragment.newInstance();
             default:
                 throw createFragmentNotFoundException(fragment);
         }
