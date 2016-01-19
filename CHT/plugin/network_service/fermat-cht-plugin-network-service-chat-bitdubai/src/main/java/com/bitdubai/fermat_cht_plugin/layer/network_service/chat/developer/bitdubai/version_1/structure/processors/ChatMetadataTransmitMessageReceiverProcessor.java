@@ -96,7 +96,7 @@ public class ChatMetadataTransmitMessageReceiverProcessor extends FermatMessageP
              * Notify to the interested
              */
             IncomingChat event = (IncomingChat) getChatPluginRoot().getEventManager().getNewEvent(EventType.INCOMING_CHAT);
-            event.setChatId(chatMetadaTransactionRecord.getIdChat());
+            event.setChatId(chatMetadaTransactionRecord.getChatId());
             event.setSource(ChatPluginRoot.EVENT_SOURCE);
             getChatPluginRoot().getEventManager().raiseEvent(event);
             System.out.println("ChatPluginRoot - Incoming Chat fired!");

@@ -98,7 +98,7 @@ public class NewTransactionStatusNotificationMessageReceiverProcessor extends Fe
                 * Notify to the interested
                 */
                     IncomingNewChatStatusUpdate event = (IncomingNewChatStatusUpdate) getChatPluginRoot().getEventManager().getNewEvent(EventType.INCOMING_STATUS);
-                    event.setChatId(chatMetadataTransactionRecord.getIdChat());
+                    event.setChatId(chatMetadataTransactionRecord.getChatId());
                 event.setSource(ChatPluginRoot.EVENT_SOURCE);
                 getChatPluginRoot().getEventManager().raiseEvent(event);
                     System.out.println("ChatPluginRoot - Incoming Status fired!");
@@ -112,7 +112,7 @@ public class NewTransactionStatusNotificationMessageReceiverProcessor extends Fe
 //                chatMetadataTransactionRecord = list.get(0);
 //
 //                chatMetadataTransactionRecord.setIdChat(idChat);
-//                chatMetadataTransactionRecord.setIdObject(idObject);
+//                chatMetadataTransactionRecord.setObjectId(idObject);
 //                chatMetadataTransactionRecord.setReceiverId(fermatMessage.getReceiver());
 //                chatMetadataTransactionRecord.setReceiverType(receiverType);
 //                chatMetadataTransactionRecord.setDistributionStatus(distributionStatus);

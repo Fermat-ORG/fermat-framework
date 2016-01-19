@@ -65,7 +65,7 @@ public class NewReceiveMessagesNotificationEventHandler implements FermatEventHa
         if (platformEvent.getSource() == ChatPluginRoot.EVENT_SOURCE) {
 
             System.out.println("CompleteComponentConnectionRequestNotificationEventHandler - handleEvent platformEvent =" + platformEvent.toString());
-            System.out.print("ChatPluginRoot  - NOTIFICACION EVENTO MENSAJE RECIBIDO!!!!");
+            System.out.println("ChatPluginRoot  - NOTIFICACION EVENTO MENSAJE RECIBIDO!!!!");
 
             /*
              * Get the message receive

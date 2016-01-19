@@ -38,7 +38,7 @@ public class EncodeMsjContent {
          */
         Gson gson = new Gson();
         JsonObject jsonObjectContent = new JsonObject();
-        jsonObjectContent.addProperty(ChatTransmissionJsonAttNames.ID_CHAT,chatMetadata.getIdChat().toString());
+        jsonObjectContent.addProperty(ChatTransmissionJsonAttNames.ID_CHAT,chatMetadata.getChatId().toString());
         jsonObjectContent.addProperty(ChatTransmissionJsonAttNames.MSJ_CONTENT_TYPE, ChatMessageTransactionType.CHAT_METADATA_TRASMIT.toString());
         jsonObjectContent.addProperty(ChatTransmissionJsonAttNames.CHAT_METADATA, chatMetadata.toString());
         jsonObjectContent.addProperty(ChatTransmissionJsonAttNames.SENDER_TYPE, senderType.toString());

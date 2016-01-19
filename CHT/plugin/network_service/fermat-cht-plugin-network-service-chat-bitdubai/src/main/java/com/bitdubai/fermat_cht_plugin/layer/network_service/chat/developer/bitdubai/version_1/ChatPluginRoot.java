@@ -538,12 +538,28 @@ public class ChatPluginRoot extends AbstractPlugin implements
 
     @Override
     public List<String> getClassesFullPath() {
-        return null;
+        List<String> returnedClasses = new ArrayList<String>();
+        returnedClasses.add("com.bitdubai.fermat_cht_plugin.layer.network_service.chat.developer.bitdubai.version_1.ChatPluginRoot");
+        return returnedClasses;
     }
 
     @Override
     public void setLoggingLevelPerClass(Map<String, LogLevel> newLoggingLevel) {
+/*
+         * I will check the current values and update the LogLevel in those which is different
+         */
+        for (Map.Entry<String, LogLevel> pluginPair : newLoggingLevel.entrySet()) {
 
+            /*
+             * if this path already exists in the Root.bewLoggingLevel I'll update the value, else, I will put as new
+             */
+            if (ChatPluginRoot.newLoggingLevel.containsKey(pluginPair.getKey())) {
+                ChatPluginRoot.newLoggingLevel.remove(pluginPair.getKey());
+                ChatPluginRoot.newLoggingLevel.put(pluginPair.getKey(), pluginPair.getValue());
+            } else {
+                ChatPluginRoot.newLoggingLevel.put(pluginPair.getKey(), pluginPair.getValue());
+            }
+        }
     }
 
     public void start() throws CantStartPluginException {
@@ -669,7 +685,7 @@ public class ChatPluginRoot extends AbstractPlugin implements
              */
             this.dataBase = this.pluginDatabaseSystem.openDatabase(pluginId, NetworkServiceChatNetworkServiceDatabaseConstants.DATA_BASE_NAME);
             System.out.println("ChatPluginRoot - Database: "+dataBase);
-            this.chatMetaDataDao = new ChatMetaDataDao(dataBase);
+            this.chatMetaDataDao = new ChatMetaDataDao(dataBase,pluginDatabaseSystem,pluginId);
             System.out.println("ChatPluginRoot - chatMetadataDao:"+chatMetaDataDao);
 
 
@@ -694,7 +710,9 @@ public class ChatPluginRoot extends AbstractPlugin implements
                  * We create the new database
                  */
                 this.dataBase = communicationNetworkServiceDatabaseFactory.createDatabase(pluginId, NetworkServiceChatNetworkServiceDatabaseConstants.DATA_BASE_NAME);
-                this.chatMetaDataDao = new ChatMetaDataDao(dataBase);
+                System.out.println("ChatPluginRoot - Database: "+dataBase);
+                this.chatMetaDataDao = new ChatMetaDataDao(dataBase,pluginDatabaseSystem,pluginId);
+                System.out.println("ChatPluginRoot - chatMetadataDao:"+chatMetaDataDao);
 
 
             } catch (CantCreateDatabaseException cantOpenDatabaseException) {
@@ -730,23 +748,24 @@ public class ChatPluginRoot extends AbstractPlugin implements
             CommunicationNetworkServiceLocal communicationNetworkServiceLocal = communicationNetworkServiceConnectionManager.getNetworkServiceLocalInstance(remoteActorPubKey);
             System.out.println("ChatPluginRoot - communicationNetworkServiceLocal: "+communicationNetworkServiceLocal);
 
-            String msjContent = EncodeMsjContent.encodeMSjContentChatMetadataTransmit(chatMetadata, chatMetadata.getLocalActorType(), chatMetadata.getRemoteActorType());
-            System.out.println("ChatPluginRoot - Message encoded:\n"+msjContent);
             /*
              * Construct the message content in json format
              */
+            String msjContent = EncodeMsjContent.encodeMSjContentChatMetadataTransmit(chatMetadata, chatMetadata.getLocalActorType(), chatMetadata.getRemoteActorType());
+            System.out.println("ChatPluginRoot - Message encoded:\n"+msjContent);
+
             ChatMetadataTransactionRecord chatMetadaTransactionRecord = new ChatMetadataTransactionRecord();
-            chatMetadaTransactionRecord.setIdChat(chatMetadata.getIdChat());
-            chatMetadaTransactionRecord.setIdObject(chatMetadata.getIdObject());
+            chatMetadaTransactionRecord.setChatId(chatMetadata.getChatId());
+            chatMetadaTransactionRecord.setObjectId(chatMetadata.getObjectId());
             chatMetadaTransactionRecord.setLocalActorType(chatMetadata.getLocalActorType());
-            chatMetadaTransactionRecord.setLocalActorPubKey(chatMetadata.getLocalActorPubKey());
+            chatMetadaTransactionRecord.setLocalActorPublicKey(chatMetadata.getLocalActorPublicKey());
             chatMetadaTransactionRecord.setRemoteActorType(chatMetadata.getRemoteActorType());
-            chatMetadaTransactionRecord.setRemoteActorPubKey(chatMetadata.getRemoteActorPubKey());
+            chatMetadaTransactionRecord.setRemoteActorPublicKey(chatMetadata.getRemoteActorPublicKey());
             chatMetadaTransactionRecord.setChatName(chatMetadata.getChatName());
             chatMetadaTransactionRecord.setChatMessageStatus(chatMetadata.getChatMessageStatus());
             chatMetadaTransactionRecord.setMessageStatus(chatMetadata.getMessageStatus());
             chatMetadaTransactionRecord.setDate(chatMetadata.getDate());
-            chatMetadaTransactionRecord.setIdMessage(chatMetadata.getIdMessage());
+            chatMetadaTransactionRecord.setMessageId(chatMetadata.getMessageId());
             chatMetadaTransactionRecord.setMessage(chatMetadata.getMessage());
             chatMetadaTransactionRecord.setDistributionStatus(DistributionStatus.DELIVERING);
 
@@ -757,6 +776,8 @@ public class ChatPluginRoot extends AbstractPlugin implements
              */
             getChatMetaDataDao().create(chatMetadaTransactionRecord);
 
+            System.out.println("ChatMetadata to send:\n" + chatMetadaTransactionRecord);
+
             /*
              * If not null
              */
@@ -764,15 +785,15 @@ public class ChatPluginRoot extends AbstractPlugin implements
             if (communicationNetworkServiceLocal != null) {
 
                 //Send the message
-                communicationNetworkServiceLocal.sendMessage(chatMetadaTransactionRecord.getLocalActorPubKey(), chatMetadaTransactionRecord.getLocalActorPubKey(), msjContent);
+                communicationNetworkServiceLocal.sendMessage(chatMetadaTransactionRecord.getLocalActorPublicKey(), chatMetadaTransactionRecord.getRemoteActorPublicKey(), msjContent);
 
             } else {
 
                 /*
                  * Created the message
                  */
-                FermatMessage fermatMessage = FermatMessageCommunicationFactory.constructFermatMessage(chatMetadaTransactionRecord.getLocalActorPubKey(),//Sender
-                        chatMetadaTransactionRecord.getRemoteActorPubKey(), //Receiver
+                FermatMessage fermatMessage = FermatMessageCommunicationFactory.constructFermatMessage(chatMetadaTransactionRecord.getLocalActorPublicKey(),//Sender
+                        chatMetadaTransactionRecord.getRemoteActorPublicKey(), //Receiver
                         msjContent, //Message Content
                         FermatMessageContentType.TEXT);//Type
                 /*
@@ -791,12 +812,12 @@ public class ChatPluginRoot extends AbstractPlugin implements
                 /*
                  * Create the sender basic profile
                  */
-                PlatformComponentProfile sender = wsCommunicationsCloudClientManager.getCommunicationsCloudClientConnection().constructBasicPlatformComponentProfileFactory(chatMetadaTransactionRecord.getLocalActorPubKey(), NetworkServiceType.CHAT, chatMetadaTransactionRecord.getLocalActorType());
+                PlatformComponentProfile sender = wsCommunicationsCloudClientManager.getCommunicationsCloudClientConnection().constructBasicPlatformComponentProfileFactory(chatMetadaTransactionRecord.getLocalActorPublicKey(), NetworkServiceType.CHAT, chatMetadaTransactionRecord.getLocalActorType());
                 System.out.println("ChatPLuginRoot - sender:"+sender);
                 /*
                  * Create the receiver basic profile
                  */
-                PlatformComponentProfile receiver = wsCommunicationsCloudClientManager.getCommunicationsCloudClientConnection().constructBasicPlatformComponentProfileFactory(chatMetadaTransactionRecord.getRemoteActorPubKey(), NetworkServiceType.CHAT, chatMetadaTransactionRecord.getRemoteActorType());
+                PlatformComponentProfile receiver = wsCommunicationsCloudClientManager.getCommunicationsCloudClientConnection().constructBasicPlatformComponentProfileFactory(chatMetadaTransactionRecord.getRemoteActorPublicKey(), NetworkServiceType.CHAT, chatMetadaTransactionRecord.getRemoteActorType());
                 System.out.println("ChatPLuginRoot - receiver:"+receiver);
                 /*
                  * Ask the client to connect
@@ -928,6 +949,7 @@ public class ChatPluginRoot extends AbstractPlugin implements
     public List<Transaction<ChatMetadata>> getPendingTransactions(Specialist specialist) throws CantDeliverPendingTransactionsException {
         return null;
     }
+
 
 
 }
