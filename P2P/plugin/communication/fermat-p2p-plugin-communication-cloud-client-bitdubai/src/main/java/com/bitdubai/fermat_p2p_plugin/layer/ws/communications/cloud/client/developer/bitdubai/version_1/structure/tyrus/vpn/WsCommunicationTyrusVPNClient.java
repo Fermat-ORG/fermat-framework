@@ -35,6 +35,9 @@ import java.util.Map;
 
 import javax.websocket.ClientEndpoint;
 import javax.websocket.CloseReason;
+import javax.websocket.Endpoint;
+import javax.websocket.EndpointConfig;
+import javax.websocket.MessageHandler;
 import javax.websocket.OnClose;
 import javax.websocket.OnError;
 import javax.websocket.OnMessage;
@@ -49,8 +52,7 @@ import javax.websocket.Session;
  * @version 1.0
  * @since Java JDK 1.7
  */
-@ClientEndpoint(configurator = CloudClientVpnConfigurator.class)
-public class WsCommunicationTyrusVPNClient implements CommunicationsVPNConnection{
+public class WsCommunicationTyrusVPNClient extends Endpoint implements CommunicationsVPNConnection{
 
     /**
      * Represent the vpnClientIdentity
@@ -104,17 +106,36 @@ public class WsCommunicationTyrusVPNClient implements CommunicationsVPNConnectio
         this.pendingIncomingMessages = new ArrayList<>();
     }
 
-    @OnOpen
-    public void onOpen(Session session) {
+    /**
+     *  (non-javadoc)
+     *  @see Endpoint#onOpen(Session, EndpointConfig)
+     */
+    @Override
+    public void onOpen(Session session, EndpointConfig config) {
         System.out.println(" --------------------------------------------------------------------- ");
         System.out.println(" WsCommunicationVPNClient - Starting method onOpen");
         System.out.println(" WsCommunicationVPNClient - VPN Server id = " + session.getId());
         this.vpnClientConnection = session;
+
+        /*
+         * Configure message handler
+         */
+        session.addMessageHandler(new MessageHandler.Whole<String>() {
+            @Override
+            public void onMessage(String fermatPacketEncode) {
+                processMessage(fermatPacketEncode);
+            }
+        });
+
+
     }
 
-
-    @OnMessage
-    public void onMessage(String fermatPacketEncode) {
+    /**
+     * Method that process the messages received
+     *
+     * @param fermatPacketEncode
+     */
+    public void processMessage(String fermatPacketEncode) {
 
         System.out.println(" --------------------------------------------------------------------- ");
         System.out.println(" WsCommunicationVPNClient - Starting method onMessage(String)");
@@ -160,8 +181,11 @@ public class WsCommunicationTyrusVPNClient implements CommunicationsVPNConnectio
 
     }
 
-
-    @OnClose
+    /**
+     *  (non-javadoc)
+     *  @see Endpoint#onClose(Session, CloseReason)
+     */
+    @Override
     public void onClose(final Session session, final CloseReason reason)  {
 
         if(!vpnClientConnection.isOpen()) {
@@ -200,7 +224,11 @@ public class WsCommunicationTyrusVPNClient implements CommunicationsVPNConnectio
 
     }
 
-    @OnError
+    /**
+     *  (non-javadoc)
+     *  @see Endpoint#onError(Session, Throwable)
+     */
+    @Override
     public void onError(Session session, Throwable t) {
 
         System.out.println(" --------------------------------------------------------------------- ");

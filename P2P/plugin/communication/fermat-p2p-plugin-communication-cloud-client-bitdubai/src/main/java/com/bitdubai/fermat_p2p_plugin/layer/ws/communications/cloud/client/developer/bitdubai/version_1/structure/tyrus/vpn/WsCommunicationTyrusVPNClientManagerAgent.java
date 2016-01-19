@@ -32,6 +32,8 @@ import java.util.concurrent.ConcurrentHashMap;
 import javax.websocket.ClientEndpointConfig;
 import javax.websocket.ContainerProvider;
 import javax.websocket.DeploymentException;
+import javax.websocket.Endpoint;
+import javax.websocket.Session;
 import javax.websocket.WebSocketContainer;
 import javax.websocket.server.ServerEndpointConfig;
 
@@ -126,10 +128,8 @@ public class WsCommunicationTyrusVPNClientManagerAgent{
                                                                         .configurator(cloudClientVpnConfigurator)
                                                                         .build();
 
-
         WebSocketContainer container = ContainerProvider.getWebSocketContainer();
-        //container.connectToServer(newPpnClient, clientConfig, serverURI);
-
+        container.connectToServer(newPpnClient, clientConfig, serverURI);
 
     }
 
