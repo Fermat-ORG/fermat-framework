@@ -46,6 +46,7 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.google.gson.reflect.TypeToken;
 
+import org.glassfish.tyrus.client.ClientManager;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
@@ -96,6 +97,11 @@ public class WsCommunicationsTyrusCloudClientConnection implements Communication
     private WsCommunicationVPNClientManagerAgent wsCommunicationVPNClientManagerAgent;
 
     /**
+     * Represent the webSocketContainer
+     */
+    private WebSocketContainer webSocketContainer;
+
+    /**
      * Represent the locationManager
      */
     private LocationManager locationManager;
@@ -117,6 +123,7 @@ public class WsCommunicationsTyrusCloudClientConnection implements Communication
         this.wsCommunicationsTyrusCloudClientChannel = new WsCommunicationsTyrusCloudClientChannel(this, eventManager, clientIdentity);
         this.wsCommunicationVPNClientManagerAgent    = WsCommunicationVPNClientManagerAgent.getInstance();
         this.locationManager                         = locationManager;
+        this.webSocketContainer = ContainerProvider.getWebSocketContainer();
     }
 
     /**
@@ -153,6 +160,8 @@ public class WsCommunicationsTyrusCloudClientConnection implements Communication
      */
     public void initializeAndConnect() throws IOException, DeploymentException {
 
+        System.out.println("WsCommunicationsCloudClientConnection - initializeAndConnect ");
+
         /*
          * Register the processors
          */
@@ -161,8 +170,9 @@ public class WsCommunicationsTyrusCloudClientConnection implements Communication
         /*
          * Connect
          */
-        WebSocketContainer container = ContainerProvider.getWebSocketContainer();
-        container.connectToServer(wsCommunicationsTyrusCloudClientChannel, uri);
+        webSocketContainer.connectToServer(wsCommunicationsTyrusCloudClientChannel, uri);
+
+        System.out.println("WsCommunicationsCloudClientConnection - final initializeAndConnect ");
 
     }
 
@@ -928,7 +938,7 @@ public class WsCommunicationsTyrusCloudClientConnection implements Communication
             if(wsCommunicationVPNClientManagerAgent.isRunning()){
                 wsCommunicationVPNClientManagerAgent.closeAllVpnConnections();
             }
-            //wsCommunicationsTyrusCloudClientChannel.getClientConnection().close();
+            wsCommunicationsTyrusCloudClientChannel.closeConnection();
         }
 
     }

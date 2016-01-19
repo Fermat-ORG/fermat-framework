@@ -21,9 +21,6 @@ import com.bitdubai.fermat_p2p_plugin.layer.ws.communications.cloud.client.devel
 import com.bitdubai.fermat_p2p_plugin.layer.ws.communications.cloud.client.developer.bitdubai.version_1.structure.tyrus.processors.FermatTyrusPacketProcessor;
 import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfaces.EventManager;
 
-import org.java_websocket.client.WebSocketClient;
-import org.java_websocket.handshake.ServerHandshake;
-
 import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.util.Map;
@@ -41,7 +38,7 @@ import javax.websocket.PongMessage;
 import javax.websocket.Session;
 
 /**
- * The Class <code>com.bitdubai.fermat_p2p_plugin.layer.ws.communications.cloud.client.developer.bitdubai.version_1.structure.WsCommunicationsCloudClientChannel</code>
+ * The Class <code>com.bitdubai.fermat_p2p_plugin.layer.ws.communications.cloud.client.developer.bitdubai.version_1.structure.WsCommunicationsTyrusCloudClientChannel</code>
  * <p/>
  * Created by Roberto Requena - (rart3001@gmail.com) on 02/09/15.
  *
@@ -60,11 +57,6 @@ public class WsCommunicationsTyrusCloudClientChannel {
      * Represent the wsCommunicationsCloudClientConnection
      */
     private WsCommunicationsTyrusCloudClientConnection wsCommunicationsTyrusCloudClientConnection;
-
-    /**
-     * Represent the wsCommunicationsCloudClientSupervisorConnectionAgent
-     */
-    private WsCommunicationsCloudClientSupervisorConnectionAgent wsCommunicationsCloudClientSupervisorConnectionAgent;
 
     /**
      * Represent the temporalIdentity
@@ -111,7 +103,7 @@ public class WsCommunicationsTyrusCloudClientChannel {
     public WsCommunicationsTyrusCloudClientChannel(WsCommunicationsTyrusCloudClientConnection wsCommunicationsTyrusCloudClientConnection, EventManager eventManager, ECCKeyPair clientIdentity) throws IOException, DeploymentException {
 
         this.clientIdentity = clientIdentity;
-        this.temporalIdentity = com.bitdubai.fermat_p2p_plugin.layer.ws.communications.cloud.client.developer.bitdubai.version_1.structure.tyrus.conf.CLoudClientConfigurator.tempIdentity;
+        this.temporalIdentity = CLoudClientConfigurator.tempIdentity;
         this.packetProcessorsRegister = new ConcurrentHashMap<>();
         this.wsCommunicationsTyrusCloudClientConnection = wsCommunicationsTyrusCloudClientConnection;
         this.eventManager = eventManager;
@@ -123,29 +115,25 @@ public class WsCommunicationsTyrusCloudClientChannel {
     }
 
 
-    /**
-     * (non-javadoc)
-     * @see WebSocketClient#onOpen(ServerHandshake)
-     */
+
     @OnOpen
     public void onOpen(final Session session) {
 
         System.out.println(" --------------------------------------------------------------------- ");
-        System.out.println(" WsCommunicationsCloudClientChannel - Starting method onOpen");
-        System.out.println(" WsCommunicationsCloudClientChannel - ready state = "+session.getId());
+        System.out.println(" WsCommunicationsTyrusCloudClientChannel - Starting method onOpen");
+        System.out.println(" WsCommunicationsTyrusCloudClientChannel - id = "+session.getId());
+        System.out.println(" WsCommunicationsTyrusCloudClientChannel - url = "+session.getRequestURI());
+
         this.clientConnection = session;
     }
 
-    /**
-     * (non-javadoc)
-     * @see WebSocketClient#onMessage(String)
-     */
+
     @OnMessage
     public void onMessage(String fermatPacketEncode) {
 
         System.out.println(" --------------------------------------------------------------------- ");
-        System.out.println(" WsCommunicationsCloudClientChannel - Starting method onMessage(String)");
-       // System.out.println(" WsCommunicationsCloudClientChannel - encode fermatPacket " + fermatPacketEncode);
+        System.out.println(" WsCommunicationsTyrusCloudClientChannel - Starting method onMessage(String)");
+       // System.out.println(" WsCommunicationsTyrusCloudClientChannel - encode fermatPacket " + fermatPacketEncode);
 
         FermatPacket fermatPacketReceive = null;
 
@@ -154,7 +142,7 @@ public class WsCommunicationsTyrusCloudClientChannel {
          */
         if (!isRegister){
 
-            System.out.println(" WsCommunicationsCloudClientChannel - decoding fermatPacket with temp-identity ");
+            System.out.println(" WsCommunicationsTyrusCloudClientChannel - decoding fermatPacket with temp-identity ");
 
             /**
              * Decode the message with the temporal identity
@@ -163,7 +151,7 @@ public class WsCommunicationsTyrusCloudClientChannel {
 
         }else {
 
-            System.out.println(" WsCommunicationsCloudClientChannel - decoding fermatPacket with client-identity ");
+            System.out.println(" WsCommunicationsTyrusCloudClientChannel - decoding fermatPacket with client-identity ");
 
             /**
              * Decode the message with the client identity
@@ -176,7 +164,7 @@ public class WsCommunicationsTyrusCloudClientChannel {
             validateFermatPacketSignature(fermatPacketReceive);
         }
 
-       // System.out.println(" WsCommunicationsCloudClientChannel - decode fermatPacket " + fermatPacketReceive.toJson());
+       // System.out.println(" WsCommunicationsTyrusCloudClientChannel - decode fermatPacket " + fermatPacketReceive.toJson());
 
 
         //verify is packet supported
@@ -195,34 +183,31 @@ public class WsCommunicationsTyrusCloudClientChannel {
 
         }else {
 
-            System.out.println(" WsCommunicationsCloudClientChannel - Packet type " + fermatPacketReceive.getFermatPacketType() + "is not supported");
+            System.out.println(" WsCommunicationsTyrusCloudClientChannel - Packet type " + fermatPacketReceive.getFermatPacketType() + "is not supported");
 
         }
 
     }
 
-    /**
-     * (non-javadoc)
-     * @see WebSocketClient#onClose(int, String, boolean)
-     */
+
     @OnClose
-    public void onClose(final Session userSession, final CloseReason reason) {
+    public void onClose(final Session session, final CloseReason reason) {
 
         System.out.println(" --------------------------------------------------------------------- ");
-        System.out.println(" WsCommunicationsCloudClientChannel - Starting method onClose");
+        System.out.println(" WsCommunicationsTyrusCloudClientChannel - Starting method onClose");
 
-       /* try {
-            switch (code) {
+        try {
+            switch (reason.getCloseCode().getCode()) {
 
                 case 1002:
                 case 1006:
                         raiseClientConnectionLooseNotificationEvent();
-                        System.out.println(" WsCommunicationsCloudClientChannel - Connection loose");
+                        System.out.println(" WsCommunicationsTyrusCloudClientChannel - Connection loose");
                     break;
 
                 default:
 
-                        if (reason.contains("ENETUNREACH") || reason.contains("connect failed:ETIMEDOUT (Connection timed out)")){
+                        if (reason.getReasonPhrase().contains("Connection failed")){
                             raiseClientConnectionLooseNotificationEvent();
                         }else{
                             raiseClientConnectionCloseNotificationEvent();
@@ -234,18 +219,20 @@ public class WsCommunicationsTyrusCloudClientChannel {
 
         }catch (Exception e){
             e.printStackTrace();
-        } */
+        }
 
     }
 
-    /**
-     * (non-javadoc)
-     * @see WebSocketClient#onError(Exception)
-     */
+
+    public void closeConnection(){
+        onClose(clientConnection, new CloseReason(CloseReason.CloseCodes.NORMAL_CLOSURE, "The cloud client close the connection, intentionally."));
+    }
+
+
     @OnError
     public void onError(Session session, Throwable t) {
         System.out.println(" --------------------------------------------------------------------- ");
-        System.out.println(" WsCommunicationsCloudClientChannel - Starting method onError");
+        System.out.println(" WsCommunicationsTyrusCloudClientChannel - Starting method onError");
         t.printStackTrace();
     }
 
@@ -264,17 +251,7 @@ public class WsCommunicationsTyrusCloudClientChannel {
 
     @OnMessage
     public void onPongMessage(PongMessage message) {
-        try {
-
-            System.out.println(" WsCommunicationsTyrusCloudClientChannel - onPongMessage = " + new String(message.getApplicationData().array()));
-            String pingString = "PING";
-            ByteBuffer pingData = ByteBuffer.allocate(pingString.getBytes().length);
-            pingData.put(pingString.getBytes()).flip();
-            getClientConnection().getBasicRemote().sendPing(pingData);
-
-        } catch (IOException e) {
-            System.out.println("onPongMessage error = " + e.getMessage());
-        }
+        System.out.println(" WsCommunicationsTyrusCloudClientChannel - Pong message receive from server = " + new String(message.getApplicationData().array()));
     }
 
 
@@ -284,14 +261,14 @@ public class WsCommunicationsTyrusCloudClientChannel {
      */
     private void validateFermatPacketSignature(FermatPacket fermatPacketReceive){
 
-        System.out.println(" WsCommunicationsCloudClientChannel - validateFermatPacketSignature");
+        System.out.println(" WsCommunicationsTyrusCloudClientChannel - validateFermatPacketSignature");
 
          /*
          * Validate the signature
          */
         boolean isValid = AsymmetricCryptography.verifyMessageSignature(fermatPacketReceive.getSignature(), fermatPacketReceive.getMessageContent(), getServerIdentity());
 
-       // System.out.println(" WsCommunicationsCloudClientChannel - isValid = " + isValid);
+       // System.out.println(" WsCommunicationsTyrusCloudClientChannel - isValid = " + isValid);
 
         /*
          * if not valid signature
@@ -433,11 +410,11 @@ public class WsCommunicationsTyrusCloudClientChannel {
      */
     public void raiseClientConnectionCloseNotificationEvent() {
 
-        System.out.println("WsCommunicationsCloudClientChannel - raiseClientConnectionCloseNotificationEvent");
+        System.out.println("WsCommunicationsTyrusCloudClientChannel - raiseClientConnectionCloseNotificationEvent");
         FermatEvent platformEvent = eventManager.getNewEvent(P2pEventType.CLIENT_CONNECTION_CLOSE);
         platformEvent.setSource(EventSource.WS_COMMUNICATION_CLOUD_CLIENT_PLUGIN);
         eventManager.raiseEvent(platformEvent);
-        System.out.println("WsCommunicationsCloudClientChannel - Raised Event = P2pEventType.CLIENT_CONNECTION_CLOSE");
+        System.out.println("WsCommunicationsTyrusCloudClientChannel - Raised Event = P2pEventType.CLIENT_CONNECTION_CLOSE");
     }
 
     /**
@@ -445,11 +422,11 @@ public class WsCommunicationsTyrusCloudClientChannel {
      */
     public void raiseClientConnectionLooseNotificationEvent() {
 
-        System.out.println("WsCommunicationsCloudClientChannel - raiseClientConnectionLooseNotificationEvent");
+        System.out.println("WsCommunicationsTyrusCloudClientChannel - raiseClientConnectionLooseNotificationEvent");
         FermatEvent platformEvent = eventManager.getNewEvent(P2pEventType.CLIENT_CONNECTION_LOOSE);
         platformEvent.setSource(EventSource.WS_COMMUNICATION_CLOUD_CLIENT_PLUGIN);
         eventManager.raiseEvent(platformEvent);
-        System.out.println("WsCommunicationsCloudClientChannel - Raised Event = P2pEventType.CLIENT_CONNECTION_LOOSE");
+        System.out.println("WsCommunicationsTyrusCloudClientChannel - Raised Event = P2pEventType.CLIENT_CONNECTION_LOOSE");
     }
 
     /**

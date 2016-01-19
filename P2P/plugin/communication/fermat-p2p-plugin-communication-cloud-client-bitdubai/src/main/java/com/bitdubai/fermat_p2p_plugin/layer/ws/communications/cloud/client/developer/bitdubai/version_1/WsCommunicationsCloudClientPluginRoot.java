@@ -216,8 +216,22 @@ public class WsCommunicationsCloudClientPluginRoot extends AbstractPlugin implem
                         System.out.println(" WsCommunicationsCloudClientPluginRoot - ===================================");
 
 
-                        wsCommunicationsTyrusCloudClientConnection = new WsCommunicationsTyrusCloudClientConnection(uri, eventManager, locationManager, clientIdentity);
+                        new Thread(new Runnable() {
+                            @Override
+                            public void run() {
 
+                                try {
+
+                                    wsCommunicationsTyrusCloudClientConnection = new WsCommunicationsTyrusCloudClientConnection(uri, eventManager, locationManager, clientIdentity);
+                                    wsCommunicationsTyrusCloudClientConnection.initializeAndConnect();
+
+                                } catch (IOException e) {
+                                    e.printStackTrace();
+                                } catch (DeploymentException e) {
+                                    e.printStackTrace();
+                                }
+                            }
+                        }).start();
 
                         /*
                          * Scheduled the reconnection agent
@@ -398,9 +412,7 @@ public class WsCommunicationsCloudClientPluginRoot extends AbstractPlugin implem
     public static void main(final String[] args) throws InterruptedException, URISyntaxException, IOException, DeploymentException {
 
         WsCommunicationsCloudClientPluginRoot wsCommunicationsCloudClientPluginRoot = new WsCommunicationsCloudClientPluginRoot();
-
         wsCommunicationsCloudClientPluginRoot.uri = new URI(ServerConf.WS_PROTOCOL + WsCommunicationsCloudClientPluginRoot.SERVER_IP + ":" + ServerConf.DEFAULT_PORT + ServerConf.WEB_SOCKET_CONTEXT_PATH);
-
         WsCommunicationsTyrusCloudClientConnection wsCommunicationsTyrusCloudClientConnection = new WsCommunicationsTyrusCloudClientConnection(wsCommunicationsCloudClientPluginRoot.uri, wsCommunicationsCloudClientPluginRoot.eventManager, wsCommunicationsCloudClientPluginRoot.locationManager, wsCommunicationsCloudClientPluginRoot.clientIdentity);
         wsCommunicationsTyrusCloudClientConnection.initializeAndConnect();
 

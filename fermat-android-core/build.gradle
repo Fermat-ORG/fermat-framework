@@ -36,7 +36,7 @@ android {
     }
 
     dexOptions {
-        javaMaxHeapSize "4g"
+        javaMaxHeapSize "2g"
         incremental true
         preDexLibraries = false
     }
@@ -78,9 +78,11 @@ repositories {
 }
 
 dependencies {
+    compile 'com.android.support:multidex:1.0.1'
     compile project(':fermat-api')
     compile project(':fermat-core')
     compile project(':fermat-osa-android-core')
+    compile 'com.github.ozodrukh:CircularReveal:1.1.0'
 
     // DMP Projects (Wallets)
     compile project(':fermat-ccp-android-reference-wallet-bitcoin-wallet-bitdubai')
@@ -128,23 +130,21 @@ dependencies {
 //    compile project(':fermat-dap-plugin-wallet-module-asset-issuer-bitdubai')
     compile fileTree(dir: 'libs', include: ['*.jar'])
     //compile 'com.android.support:appcompat-v7:21.0.3'
+    compile 'com.android.support:support-v4:23.0.1'
+    compile 'com.android.support:support-v13:23.0.1'
+    compile 'com.google.android.gms:play-services:6.5.87'
     androidTestCompile 'com.jayway.android.robotium:robotium-solo:5+'
+    compile 'com.android.support:recyclerview-v7:23.0.1'
+    compile 'com.android.support:appcompat-v7:23.0.1'
+    compile 'com.android.support:design:23.0.1'
+    compile 'com.android.support:design:23.1.0'
+    compile 'com.github.PhilJay:MPAndroidChart:v2.1.6'
     // compile files('src/main/libs/beans.jar')
 
-    compile 'com.android.support:multidex:1.0.1'
-    compile 'com.github.ozodrukh:CircularReveal:1.1.0'
-    compile 'com.android.support:support-v4:23.1.1'
-    compile 'com.android.support:support-v13:23.1.1'
-    compile 'com.google.android.gms:play-services:8.4.0'
-    compile 'com.android.support:recyclerview-v7:23.1.1'
-    compile 'com.android.support:appcompat-v7:23.1.1'
-    compile 'com.android.support:design:23.1.1'
-    compile 'com.github.PhilJay:MPAndroidChart:v2.1.6'
-    compile 'com.google.android.gms:play-services-ads:8.4.0'
-    compile 'com.google.android.gms:play-services-identity:8.4.0'
-    compile 'com.google.android.gms:play-services-gcm:8.4.0'
+    configurations {
+        all {
+            exclude module: ':fermat-p2p-plugin-communication-cloud-server-bitdubai'
+        }
+    }
+
 }
-
-
-
-
