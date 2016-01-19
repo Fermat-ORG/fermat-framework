@@ -115,21 +115,6 @@ public interface BitcoinNetworkManager extends TransactionSender<CryptoTransacti
      */
     Transaction getBitcoinTransaction(BlockchainNetworkType blockchainNetworkType, String transactionHash);
 
-    /**
-     * Gets the bitcoin transactions stored by the CryptoNetwork
-     * @param blockchainNetworkType     the network type
-     * @param ecKey the ECKey that is affected by the transaction
-     * @return the bitcoin transaction
-     */
-    List<Transaction> getBitcoinTransaction(BlockchainNetworkType blockchainNetworkType, ECKey ecKey);
-
-    /**
-     * Gets the bitcoin transactions stored by the CryptoNetwork
-     * @param blockchainNetworkType the network type.
-     * @param ecKeys the list of ECKeys affected by the transactions returned.
-     * @return the bitcoin transaction
-     */
-    List<Transaction> getBitcoinTransaction(BlockchainNetworkType blockchainNetworkType, List<ECKey> ecKeys);
 
     /**
      * Get the Unspent bitcoin transaction stored by the CryptoNetwork

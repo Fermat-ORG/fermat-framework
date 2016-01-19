@@ -470,7 +470,16 @@ public class BitcoinCryptoNetworkManager implements TransactionProtocolManager, 
      * @throws CantBroadcastTransactionException
      */
     public synchronized void broadcastTransaction(String txHash) throws CantBroadcastTransactionException {
-        runningAgents.get(BlockchainNetworkType.DEFAULT).broadcastTransaction(txHash);
+        /**
+         * will get the network for this transaction and then call the right agent to broadcast it.
+         */
+        BlockchainNetworkType blockchainNetworkType;
+        try {
+            blockchainNetworkType = getDao().getBlockchainNetworkTypeFromBroadcast(txHash);
+        } catch (CantExecuteDatabaseOperationException e) {
+            blockchainNetworkType = BlockchainNetworkType.DEFAULT;
+        }
+        runningAgents.get(blockchainNetworkType).broadcastTransaction(txHash);
     }
 
 
@@ -575,7 +584,7 @@ public class BitcoinCryptoNetworkManager implements TransactionProtocolManager, 
      * @param blockchainNetworkType
      * @return
      */
-    public List<Transaction> getBitcoinTransactions(BlockchainNetworkType blockchainNetworkType){
+    public List<Transaction> getBitcoinTransactions(BlockchainNetworkType blockchainNetworkType) {
         Wallet wallet = getWallet(blockchainNetworkType, null);
         return wallet.getTransactionsByTime();
     }

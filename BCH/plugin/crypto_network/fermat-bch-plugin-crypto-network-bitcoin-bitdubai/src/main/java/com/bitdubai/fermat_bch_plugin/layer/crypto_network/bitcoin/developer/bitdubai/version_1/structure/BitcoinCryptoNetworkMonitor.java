@@ -355,6 +355,12 @@ public class BitcoinCryptoNetworkMonitor implements Agent {
             } catch (CantExecuteDatabaseOperationException e1) {
                 e1.printStackTrace();
             }
+        } catch (Exception e){
+            try {
+                getDao().setBroadcastStatus(Status.WITH_ERROR, connectedPeers, e, txHash);
+            } catch (CantExecuteDatabaseOperationException e1) {
+                e1.printStackTrace();
+            }
         }
     }
 
