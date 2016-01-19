@@ -179,8 +179,8 @@ public class UserRedemptionRedeemer extends AbstractDigitalAssetSwap {
                 System.out.println("ASSET USER REDEMPTION set debit in asset user wallet:" + genesisTransaction);
                 cryptoTransaction = foundCryptoTransaction(digitalAssetMetadata);
                 actorAssetUser = actorAssetUserManager.getActorAssetUser();
-                String newTx = assetVaultManager.createBitcoinTransaction(genesisTransaction, actorAssetRedeemPoint.getCryptoAddress());
-                digitalAssetUserRedemptionVault.updateMetadataTransactionChain(genesisTransaction, newTx, null);
+                String newTx = assetVaultManager.createBitcoinTransaction(digitalAssetMetadata.getLastTransactionHash(), actorAssetRedeemPoint.getCryptoAddress());
+                digitalAssetMetadata = digitalAssetUserRedemptionVault.updateMetadataTransactionChain(genesisTransaction, newTx, null);
                 digitalAssetUserRedemptionVault.updateWalletBalance(digitalAssetMetadata, this.cryptoTransaction, BalanceType.AVAILABLE, TransactionType.DEBIT, DAPTransactionType.RECEPTION, actorAssetRedeemPoint.getActorPublicKey());
                 System.out.println("ASSET USER REDEMPTION Begins the deliver to an remote actor");
                 deliverToRemoteActor(digitalAssetMetadata, actorAssetRedeemPoint);
