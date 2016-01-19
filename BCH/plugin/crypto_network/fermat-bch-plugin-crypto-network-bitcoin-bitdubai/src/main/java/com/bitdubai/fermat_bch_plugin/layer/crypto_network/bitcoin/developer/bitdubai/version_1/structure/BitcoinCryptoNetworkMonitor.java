@@ -476,6 +476,7 @@ public class BitcoinCryptoNetworkMonitor implements Agent {
              * I store it in the database
              */
             getDao().storeBitcoinTransaction(BLOCKCHAIN_NETWORKTYPE, tx.getHashAsString(), transactionId, peerGroup.getConnectedPeers().size(), peerGroup.getDownloadPeer().getAddress().toString());
+
             /**
              * I store it in the wallet.
              */
@@ -525,11 +526,13 @@ public class BitcoinCryptoNetworkMonitor implements Agent {
         transaction.clearInputs();
         transaction.clearOutputs();
 
+
         /**
          * mark the transaction as dead.
          */
         WalletTransaction walletTransaction = new WalletTransaction(WalletTransaction.Pool.DEAD, transaction);
         wallet.addWalletTransaction(walletTransaction);
+
 
         try {
             wallet.saveToFile(walletFileName);
