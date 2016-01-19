@@ -295,20 +295,8 @@ public class CustomerBrokerNewAgent implements
 //                System.out.print("\n\n**** X) MOCK NEGOTIATION TRANSACTION - CUSTOMER BROKER NEW - AGENT - PENDING LIST SENDING ****\n");
                 //SEND NEGOTIATION PENDING (CUSTOMER_BROKER_NEW_STATUS_NEGOTIATION_COLUMN_NAME = NegotiationTransactionStatus.PENDING_SUBMIT)
                 negotiationPendingToSubmitList  = customerBrokerNewNegotiationTransactionDatabaseDao.getPendingToSubmitNegotiation();
-//                negotiationPendingToSubmitList  = customerBrokerNewNegotiationTransactionDatabaseDao.getAllRegisterCustomerBrokerNewNegotiationTranasction();
                 if(!negotiationPendingToSubmitList.isEmpty()){
-//                    for(String negotiationToSubmit: negotiationPendingToSubmitList){
                     for (CustomerBrokerNew negotiationToSubmit : negotiationPendingToSubmitList) {
-//                        if (negotiationToSubmit.getStatusTransaction().getCode().equals(NegotiationTransactionStatus.PENDING_SUBMIT.getCode())) {
-
-//                        System.out.println("\nCustomer Broker New - Negotiation to submit:\n"+negotiationToSubmit);
-//                        System.out.print("\n\n**** 5) MOCK NEGOTIATION TRANSACTION - CUSTOMER BROKER NEW - AGENT - NEGOTIATION FOR SEND transactionId: " + negotiationToSubmit.getTransactionId() + " ****\n");
-//                        System.out.println("\nCustomer Broker New - Negotiation to submit:\n"+negotiationToSubmit.getNegotiationId());
-
-//                        negotiationXML          = customerBrokerNewNegotiationTransactionDatabaseDao.getNegotiationXML(negotiationToSubmit);
-//                        negotiationType         = customerBrokerNewNegotiationTransactionDatabaseDao.getNegotiationType(negotiationToSubmit);
-//                        transactionId           = customerBrokerNewNegotiationTransactionDatabaseDao.getTransactionId(negotiationToSubmit);
-//                        negotiationTransaction  = customerBrokerNewNegotiationTransactionDatabaseDao.getRegisterCustomerBrokerNewNegotiationTranasction(transactionId);
 
                         negotiationXML = negotiationToSubmit.getNegotiationXML();
                         negotiationType = negotiationToSubmit.getNegotiationType();
@@ -335,15 +323,9 @@ public class CustomerBrokerNewAgent implements
                 //SEND CONFIRM PENDING (CUSTOMER_BROKER_NEW_STATUS_NEGOTIATION_COLUMN_NAME = NegotiationTransactionStatus.PENDING_CONFIRMATION)
                 negotiationPendingToSubmitList = customerBrokerNewNegotiationTransactionDatabaseDao.getPendingToConfirmtNegotiation();
                 if(!negotiationPendingToSubmitList.isEmpty()){
-//                    for(String negotiationToSubmit: negotiationPendingToSubmitList){
                     for (CustomerBrokerNew negotiationToSubmit : negotiationPendingToSubmitList) {
 
 //                        System.out.print("\n\n**** 22) MOCK NEGOTIATION TRANSACTION - CUSTOMER BROKER NEW - AGENT - CONFIRMATION FOR SEND transactionId: " + negotiationToSubmit.getTransactionId() + " ****\n");
-                        
-//                        negotiationXML          = customerBrokerNewNegotiationTransactionDatabaseDao.getNegotiationXML(negotiationToSubmit);
-//                        negotiationType         = customerBrokerNewNegotiationTransactionDatabaseDao.getNegotiationType(negotiationToSubmit);
-//                        transactionId           = customerBrokerNewNegotiationTransactionDatabaseDao.getTransactionId(negotiationToSubmit);
-//                        negotiationTransaction  = customerBrokerNewNegotiationTransactionDatabaseDao.getRegisterCustomerBrokerNewNegotiationTranasction(transactionId);
 
                         negotiationXML = negotiationToSubmit.getNegotiationXML();
                         negotiationType = negotiationToSubmit.getNegotiationType();
@@ -411,6 +393,7 @@ public class CustomerBrokerNewAgent implements
                         negotiationTransmission = record.getInformation();
 
                         if(negotiationTransmission.getNegotiationTransactionType().getCode().equals(NegotiationTransactionType.CUSTOMER_BROKER_NEW.getCode())){
+
                             negotiationXML = negotiationTransmission.getNegotiationXML();
                             transmissionId = negotiationTransmission.getTransmissionId();
                             transactionId = negotiationTransmission.getTransactionId();
@@ -429,8 +412,8 @@ public class CustomerBrokerNewAgent implements
 //                                System.out.print("\n**** 18.2) MOCK NEGOTIATION TRANSACTION - CUSTOMER BROKER NEW - AGENT - LIST EVENT ID "+ eventId +" PENDING ****\n");
                                 switch (negotiationType) {
                                     case SALE:
-                                        //CREATE SALE NEGOTIATION
 //                                        System.out.print("\n**** 19) MOCK NEGOTIATION TRANSACTION - CUSTOMER BROKER NEW - AGENT - CREATE SALE NEGOTIATION TRANSACTION  ****\n");
+                                        //CREATE SALE NEGOTIATION
                                         saleNegotiation = (CustomerBrokerSaleNegotiation) XMLParser.parseXML(negotiationXML, saleNegotiation);
                                         customerBrokerNewSaleNegotiationTransaction = new CustomerBrokerNewSaleNegotiationTransaction(
                                                 customerBrokerSaleNegotiationManager,

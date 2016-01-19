@@ -245,7 +245,7 @@ public class CustomerBrokerNewNegotiationTransactionDatabaseDao {
             throw new CantGetNegotiationTransactionListException(e.getMessage(), FermatException.wrapException(e), "Customer Broker New Negotiation Transaction not return register", "unknown failure.");
         }
     }
-    
+
     //GET LIST NEW NEGOTIATION TRANSACTION PENDING TO CONFIRM
     public List<CustomerBrokerNew> getPendingToConfirmtNegotiation() throws CantGetNegotiationTransactionListException {
 
