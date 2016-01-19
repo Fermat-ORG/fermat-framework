@@ -214,7 +214,9 @@ public class BitcoinCryptoNetworkMonitor implements Agent {
 
     /**
      * Broadcast a well formed, commited and signed transaction into the specified network
-     * @param txHash
+     *
+     * @param txHash the transaction hash to be broadcasted
+     * @return the broadcasted transaction.
      * @throws CantBroadcastTransactionException
      */
     public synchronized void broadcastTransaction(final String txHash) throws CantBroadcastTransactionException{
@@ -238,6 +240,7 @@ public class BitcoinCryptoNetworkMonitor implements Agent {
 
          final Transaction transaction = wallet.getTransaction(sha256Hash);
          TransactionBroadcast transactionBroadcast = peerGroup.broadcastTransaction(transaction);
+         transactionBroadcast.setMinConnections(BitcoinNetworkConfiguration.MIN_BROADCAST_CONNECTIONS);
 
 
          ListenableFuture<Transaction> future = transactionBroadcast.future();
@@ -281,6 +284,7 @@ public class BitcoinCryptoNetworkMonitor implements Agent {
                 }
             }
         });
+
 
         /**
          * Will set the time out for this broadcast attempt.
