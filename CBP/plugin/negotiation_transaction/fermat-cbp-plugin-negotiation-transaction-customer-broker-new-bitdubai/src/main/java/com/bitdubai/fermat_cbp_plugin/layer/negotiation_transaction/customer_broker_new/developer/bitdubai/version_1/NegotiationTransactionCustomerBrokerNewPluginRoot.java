@@ -201,7 +201,7 @@ public class NegotiationTransactionCustomerBrokerNewPluginRoot extends AbstractP
 //            System.out.print("\n**** MOCK CUSTOMER BROKER NEW. PURCHASE NEGOTIATION. DELETE ALL FOR TEST ****\n");
 //            customerBrokerNewNegotiationTransactionDatabaseDao.deleteAllForTest();
 
-            //TEST MOCK
+            //TEST CREATE CUSTOMER BROKER NEW PURCHASE NEGOTIATION
 //            createCustomerBrokerNewPurchaseNegotiationTest();
 
             //TEST MOCK GET ALL TRANSACTION
@@ -648,9 +648,8 @@ public class NegotiationTransactionCustomerBrokerNewPluginRoot extends AbstractP
             for(UUID eventId : pendingEventsIdList){
                 System.out.print("\n**** MOCK CUSTOMER BROKER NEW. GET ALL REGISTER EVENT. EVENT ID: "+eventId+" ****\n");
             }
-        } catch (UnexpectedResultReturnedFromDatabaseException e){
-            System.out.print("\n**** MOCK CUSTOMER BROKER NEW. GET ALL REGISTER EVENT. ERROR GET ALL EVENT REGISTER. ****\n");
-        }catch (CantGetNegotiationTransactionListException e){
+
+        } catch (UnexpectedResultReturnedFromDatabaseException | CantGetNegotiationTransactionListException e){
             System.out.print("\n**** MOCK CUSTOMER BROKER NEW. GET ALL REGISTER EVENT. ERROR GET ALL EVENT REGISTER. ****\n");
         }
 

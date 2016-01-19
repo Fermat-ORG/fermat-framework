@@ -287,7 +287,6 @@ public class CustomerBrokerNewAgent implements
                 String                  negotiationXML;
                 NegotiationType         negotiationType;
                 UUID                    transactionId;
-                NegotiationTransaction  negotiationTransaction;
                 List<CustomerBrokerNew> negotiationPendingToSubmitList;
                 CustomerBrokerPurchaseNegotiation  purchaseNegotiation = new NegotiationPurchaseRecord();
                 CustomerBrokerSaleNegotiation  saleNegotiation = new NegotiationSaleRecord();
@@ -296,12 +295,11 @@ public class CustomerBrokerNewAgent implements
                 //SEND NEGOTIATION PENDING (CUSTOMER_BROKER_NEW_STATUS_NEGOTIATION_COLUMN_NAME = NegotiationTransactionStatus.PENDING_SUBMIT)
                 negotiationPendingToSubmitList  = customerBrokerNewNegotiationTransactionDatabaseDao.getPendingToSubmitNegotiation();
                 if(!negotiationPendingToSubmitList.isEmpty()){
-                    for (CustomerBrokerNew negotiationToSubmit : negotiationPendingToSubmitList) {
+                    for (CustomerBrokerNew negotiationTransaction : negotiationPendingToSubmitList) {
 
-                        negotiationXML = negotiationToSubmit.getNegotiationXML();
-                        negotiationType = negotiationToSubmit.getNegotiationType();
-                        transactionId = negotiationToSubmit.getTransactionId();
-                        negotiationTransaction = negotiationToSubmit;
+                        negotiationXML = negotiationTransaction.getNegotiationXML();
+                        negotiationType = negotiationTransaction.getNegotiationType();
+                        transactionId = negotiationTransaction.getTransactionId();
 
                         switch (negotiationType){
                             case PURCHASE:
@@ -323,14 +321,13 @@ public class CustomerBrokerNewAgent implements
                 //SEND CONFIRM PENDING (CUSTOMER_BROKER_NEW_STATUS_NEGOTIATION_COLUMN_NAME = NegotiationTransactionStatus.PENDING_CONFIRMATION)
                 negotiationPendingToSubmitList = customerBrokerNewNegotiationTransactionDatabaseDao.getPendingToConfirmtNegotiation();
                 if(!negotiationPendingToSubmitList.isEmpty()){
-                    for (CustomerBrokerNew negotiationToSubmit : negotiationPendingToSubmitList) {
+                    for (CustomerBrokerNew negotiationTransaction : negotiationPendingToSubmitList) {
 
 //                        System.out.print("\n\n**** 22) MOCK NEGOTIATION TRANSACTION - CUSTOMER BROKER NEW - AGENT - CONFIRMATION FOR SEND transactionId: " + negotiationToSubmit.getTransactionId() + " ****\n");
 
-                        negotiationXML = negotiationToSubmit.getNegotiationXML();
-                        negotiationType = negotiationToSubmit.getNegotiationType();
-                        transactionId = negotiationToSubmit.getTransactionId();
-                        negotiationTransaction = negotiationToSubmit;
+                        negotiationXML = negotiationTransaction.getNegotiationXML();
+                        negotiationType = negotiationTransaction.getNegotiationType();
+                        transactionId = negotiationTransaction.getTransactionId();
 
                         switch (negotiationType){
                             case SALE:
@@ -378,7 +375,6 @@ public class CustomerBrokerNewAgent implements
                 UUID                            transmissionId;
                 NegotiationTransmission         negotiationTransmission;
                 NegotiationTransaction          negotiationTransaction;
-                NegotiationTransactionStatus    negotiationTransactionStatus;
                 NegotiationType                 negotiationType;
                 String                          negotiationXML;
                 CustomerBrokerSaleNegotiation   saleNegotiation     = new NegotiationSaleRecord();
