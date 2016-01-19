@@ -12,9 +12,6 @@ import android.os.Build;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
@@ -29,6 +26,7 @@ import com.bitdubai.fermat_android_api.ui.util.BitmapWorkerTask;
 import com.bitdubai.fermat_android_api.ui.util.FermatWorker;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
 import com.bitdubai.fermat_dap_android_wallet_asset_user_bitdubai.R;
+import com.bitdubai.fermat_dap_android_wallet_asset_user_bitdubai.dialogs.RedeemAcceptDialog;
 import com.bitdubai.fermat_dap_android_wallet_asset_user_bitdubai.models.Data;
 import com.bitdubai.fermat_dap_android_wallet_asset_user_bitdubai.models.DigitalAsset;
 import com.bitdubai.fermat_dap_android_wallet_asset_user_bitdubai.models.RedeemPoint;
@@ -36,9 +34,7 @@ import com.bitdubai.fermat_dap_android_wallet_asset_user_bitdubai.sessions.Asset
 import com.bitdubai.fermat_dap_api.layer.dap_module.wallet_asset_user.interfaces.AssetUserWalletSubAppModuleManager;
 import com.bitdubai.fermat_dap_api.layer.dap_wallet.common.exceptions.CantLoadWalletException;
 
-import java.io.ByteArrayInputStream;
 import java.lang.ref.WeakReference;
-import java.util.HashMap;
 import java.util.List;
 
 /**
@@ -97,21 +93,6 @@ public class AssetRedeemFragment extends AbstractFermatFragment {
         return rootView;
     }
 
-    @Override
-    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        super.onCreateOptionsMenu(menu, inflater);
-        inflater.inflate(R.menu.dap_wallet_asset_user_asset_redeem_select_redeempoints_menu, menu);
-        menu.clear();
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        if (item.getItemId() == R.id.action_select_redeempoints) {
-            changeActivity(Activities.DAP_WALLET_ASSET_USER_ASSET_REDEEM, appSession.getAppPublicKey());
-        }
-        return super.onOptionsItemSelected(item);
-    }
-
     private void setupUI() {
         setupBackgroundBitmap();
 
@@ -129,9 +110,16 @@ public class AssetRedeemFragment extends AbstractFermatFragment {
                 if (selectedRPCount > 0) {
                     Object x = appSession.getData("redeem_points");
                     if (x != null) {
-                        List<RedeemPoint> redeemPoints = (List<RedeemPoint>) x;
+                        final List<RedeemPoint> redeemPoints = (List<RedeemPoint>) x;
                         if (redeemPoints.size() > 0) {
-                            deRedeem(digitalAsset.getAssetPublicKey(), redeemPoints);
+                            RedeemAcceptDialog dialog = new RedeemAcceptDialog(getActivity(), (AssetUserSession) appSession, appResourcesProviderManager);
+                            dialog.setYesBtnListener(new RedeemAcceptDialog.OnClickAcceptListener() {
+                                @Override
+                                public void onClick() {
+                                    doRedeem(digitalAsset.getAssetPublicKey(), redeemPoints);
+                                }
+                            });
+                            dialog.show();
                         }
                     }
                 } else {
@@ -204,7 +192,7 @@ public class AssetRedeemFragment extends AbstractFermatFragment {
         return count;
     }
 
-    private void deRedeem(final String assetPublicKey, final List<RedeemPoint> redeemPoints) {
+    private void doRedeem(final String assetPublicKey, final List<RedeemPoint> redeemPoints) {
         final ProgressDialog dialog = new ProgressDialog(activity);
         dialog.setMessage("Please wait...");
         dialog.setCancelable(false);
