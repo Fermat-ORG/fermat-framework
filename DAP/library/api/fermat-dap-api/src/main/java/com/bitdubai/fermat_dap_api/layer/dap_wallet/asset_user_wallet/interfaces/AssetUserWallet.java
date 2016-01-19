@@ -21,6 +21,14 @@ public interface AssetUserWallet {
 
     AssetUserWalletBalance getBalance() throws CantGetTransactionsException;
 
+
+    List<AssetUserWalletTransaction> getAllAvailableTransactions(String assetPublicKey) throws CantGetTransactionsException;
+
+
+    List<AssetUserWalletTransaction> getTransactions(BalanceType balanceType,
+                                                     TransactionType transactionType,
+                                                     String assetPublicKey) throws CantGetTransactionsException;
+
     List<AssetUserWalletTransaction> getTransactions(BalanceType balanceType,
                                                      TransactionType transactionType,
                                                      int max,
@@ -42,5 +50,5 @@ public interface AssetUserWallet {
     AssetUserWalletTransactionSummary getActorTransactionSummary(String actorPublicKey,
                                                                  BalanceType balanceType) throws CantGetActorTransactionSummaryException;
 
-    DigitalAssetMetadata getDigitalAssetMetadata(String digitalAssetPublicKey) throws CantGetDigitalAssetFromLocalStorageException;
+    DigitalAssetMetadata getDigitalAssetMetadata(String transactionHash) throws CantGetDigitalAssetFromLocalStorageException;
 }

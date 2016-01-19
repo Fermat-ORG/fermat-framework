@@ -12,8 +12,10 @@ import com.bitdubai.fermat_dap_api.layer.dap_transaction.common.exceptions.CantG
 import com.bitdubai.fermat_dap_api.layer.dap_transaction.common.exceptions.TransactionAlreadyStartedException;
 import com.bitdubai.fermat_dap_api.layer.dap_transaction.user_redemption.exceptions.CantRedeemDigitalAssetException;
 import com.bitdubai.fermat_dap_api.layer.dap_transaction.user_redemption.interfaces.UserRedemptionManager;
+import com.bitdubai.fermat_dap_api.layer.dap_wallet.asset_user_wallet.interfaces.AssetUserWallet;
 import com.bitdubai.fermat_dap_api.layer.dap_wallet.asset_user_wallet.interfaces.AssetUserWalletList;
 import com.bitdubai.fermat_dap_api.layer.dap_wallet.asset_user_wallet.interfaces.AssetUserWalletManager;
+import com.bitdubai.fermat_dap_api.layer.dap_wallet.asset_user_wallet.interfaces.AssetUserWalletTransaction;
 import com.bitdubai.fermat_dap_api.layer.dap_wallet.common.exceptions.CantGetTransactionsException;
 import com.bitdubai.fermat_dap_api.layer.dap_wallet.common.exceptions.CantLoadWalletException;
 
@@ -30,10 +32,10 @@ public class AssetUserWalletModule {
     IdentityAssetUserManager identityAssetUserManager;
 
     public AssetUserWalletModule(AssetUserWalletManager assetUserWalletManager, AssetAppropriationManager assetAppropriationManager, UserRedemptionManager userRedemptionManager, IdentityAssetUserManager identityAssetUserManager) {
-        this.assetUserWalletManager     = assetUserWalletManager;
-        this.assetAppropriationManager  = assetAppropriationManager;
-        this.userRedemptionManager      = userRedemptionManager;
-        this.identityAssetUserManager   = identityAssetUserManager;
+        this.assetUserWalletManager = assetUserWalletManager;
+        this.assetAppropriationManager = assetAppropriationManager;
+        this.userRedemptionManager = userRedemptionManager;
+        this.identityAssetUserManager = identityAssetUserManager;
     }
 
     public List<AssetUserWalletList> getAssetUserWalletBalances(String publicKey) throws CantLoadWalletException {
@@ -62,9 +64,13 @@ public class AssetUserWalletModule {
 
     private HashMap<DigitalAssetMetadata, ActorAssetRedeemPoint> createRedemptionMap(String walletPublicKey, String assetPublicKey, List<ActorAssetRedeemPoint> redeemPoints) throws CantGetTransactionsException, FileNotFoundException, CantCreateFileException, CantLoadWalletException, CantGetDigitalAssetFromLocalStorageException {
         HashMap<DigitalAssetMetadata, ActorAssetRedeemPoint> hashMap = new HashMap<>();
-        for (ActorAssetRedeemPoint redeemPoint : redeemPoints) {
-            DigitalAssetMetadata digitalAssetMetadata = assetUserWalletManager.loadAssetUserWallet(walletPublicKey).getDigitalAssetMetadata(assetPublicKey);
-            hashMap.put(digitalAssetMetadata, redeemPoint);
+        AssetUserWallet wallet = assetUserWalletManager.loadAssetUserWallet(walletPublicKey);
+        List<AssetUserWalletTransaction> availableTransactions = wallet.getAllAvailableTransactions(assetPublicKey);
+        if (redeemPoints.size() > availableTransactions.size())
+            throw new IllegalStateException("WE DON'T HAVE ENOUGH ASSETS!!");
+        for (int i = 0; i < redeemPoints.size(); i++) {
+            DigitalAssetMetadata digitalAssetMetadata = wallet.getDigitalAssetMetadata(availableTransactions.get(i).getTransactionHash());
+            hashMap.put(digitalAssetMetadata, redeemPoints.get(i));
         }
         return hashMap;
     }
@@ -82,7 +88,7 @@ public class AssetUserWalletModule {
 
     public List<IdentityAssetUser> getActiveIdentities() {
 
-        try{
+        try {
             return identityAssetUserManager.getIdentityAssetUsersFromCurrentDeviceUser();
         } catch (Exception e) {
             e.printStackTrace();
