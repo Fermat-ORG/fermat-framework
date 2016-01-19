@@ -472,7 +472,6 @@ public class BitcoinCryptoNetworkManager implements TransactionProtocolManager {
     }
 
 
-
     /**
      * Gets the specified bitcoin transaction
      *

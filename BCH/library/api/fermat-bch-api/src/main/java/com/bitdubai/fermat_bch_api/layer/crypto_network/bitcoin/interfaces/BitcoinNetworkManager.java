@@ -67,6 +67,17 @@ public interface BitcoinNetworkManager extends TransactionSender<CryptoTransacti
      */
     CryptoTransaction getCryptoTransactionFromBlockChain(String txHash, String blockHash) throws CantGetCryptoTransactionException;
 
+    /**********************************************Broadcasting functionality ********************************************/
+
+    /**
+     * Stores a Bitcoin Transaction in the CryptoNetwork to be broadcasted later
+     * @param blockchainNetworkType
+     * @param tx
+     * @param transactionId
+     * @throws CantStoreBitcoinTransactionException
+     */
+    void storeBitcoinTransaction(BlockchainNetworkType blockchainNetworkType, Transaction tx, UUID transactionId) throws CantStoreBitcoinTransactionException;
+
     /**
      * Broadcast a well formed, commited and signed transaction into the network.
      * @param txHash
@@ -113,18 +124,6 @@ public interface BitcoinNetworkManager extends TransactionSender<CryptoTransacti
      * @return the bitcoin transaction
      */
     List<Transaction> getBitcoinTransactions(BlockchainNetworkType blockchainNetworkType);
-
-
-
-
-    /**
-     * Stores a Bitcoin Transaction in the CryptoNetwork to be broadcasted later
-     * @param blockchainNetworkType
-     * @param tx
-     * @param transactionId
-     * @throws CantStoreBitcoinTransactionException
-     */
-    void storeBitcoinTransaction(BlockchainNetworkType blockchainNetworkType, Transaction tx, UUID transactionId) throws CantStoreBitcoinTransactionException;
 
 
     /**

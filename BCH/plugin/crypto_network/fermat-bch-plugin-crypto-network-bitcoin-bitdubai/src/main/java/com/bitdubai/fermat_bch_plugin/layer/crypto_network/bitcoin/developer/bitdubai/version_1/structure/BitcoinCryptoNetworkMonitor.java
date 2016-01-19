@@ -286,7 +286,7 @@ public class BitcoinCryptoNetworkMonitor implements Agent {
          * Will set the time out for this broadcast attempt.
          */
         try {
-            future.get(1, TimeUnit.MINUTES);
+            future.get(BitcoinNetworkConfiguration.TRANSACTION_BROADCAST_TIMEOUT, TimeUnit.MINUTES);
         } catch (InterruptedException e) {
             try {
                 getDao().setBroadcastStatus(Status.WITH_ERROR, connectedPeers, e, txHash);
