@@ -281,11 +281,11 @@ public class ConnectionOtherProfileFragment extends AbstractFermatFragment imple
     }
 
     private void conectionAccept(){
-        connectionRequestSend.setVisibility(View.GONE);
+        connectionRequestSend.setVisibility(View.VISIBLE);
         connect.setVisibility(View.GONE);
         disconnect.setVisibility(View.GONE);
         connectionRequestRejected.setVisibility(View.GONE);
-        accept.setVisibility(View.VISIBLE);
+        accept.setVisibility(View.GONE);
 
     }
 

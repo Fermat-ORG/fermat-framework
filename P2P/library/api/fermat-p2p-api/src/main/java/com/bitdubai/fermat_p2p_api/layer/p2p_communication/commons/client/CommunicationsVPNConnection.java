@@ -72,4 +72,6 @@ public interface CommunicationsVPNConnection {
      * @return PlatformComponentProfile
      */
     public PlatformComponentProfile getRemoteParticipantNetworkService();
+
+    public boolean isConnected();
 }

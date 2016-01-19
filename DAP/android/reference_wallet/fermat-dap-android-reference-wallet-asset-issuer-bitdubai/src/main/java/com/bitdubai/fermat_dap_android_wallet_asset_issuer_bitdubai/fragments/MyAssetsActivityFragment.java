@@ -20,6 +20,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
+import com.bitdubai.fermat_android_api.ui.Views.PresentationDialog;
 import com.bitdubai.fermat_android_api.ui.adapters.FermatAdapter;
 import com.bitdubai.fermat_android_api.ui.enums.FermatRefreshTypes;
 import com.bitdubai.fermat_android_api.ui.fragments.FermatWalletListFragment;
@@ -86,6 +87,16 @@ public class MyAssetsActivityFragment extends FermatWalletListFragment<DigitalAs
         configureToolbar();
         noAssetsView = layout.findViewById(R.id.dap_wallet_no_assets);
         showOrHideNoAssetsView(digitalAssets.isEmpty());
+
+        PresentationDialog presentationDialog = new PresentationDialog.Builder(getActivity(), appSession)
+                .setBannerRes(R.drawable.banner)
+                .setIconRes(R.drawable.asset_issuer)
+                .setSubTitle("Welcome to the Asset Issuer Wallet. The wallet that will store all the assets created by you.")
+                .setBody("From this wallet you will be able to distribute your assets to the world and collect statistics of their usage.")
+                .setTextFooter("First things first!. We will be creating an avatar for you in order to identify you in the system as an Asset Issuer. You will be able to add your picture, name and more details later in the Asset Issuer Identity sub app.")
+                .build();
+
+        presentationDialog.show();
     }
 
     @Override

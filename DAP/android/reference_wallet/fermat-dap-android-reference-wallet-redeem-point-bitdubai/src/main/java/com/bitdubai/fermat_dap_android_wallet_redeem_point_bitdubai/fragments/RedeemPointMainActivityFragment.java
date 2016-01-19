@@ -15,6 +15,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
+import com.bitdubai.fermat_android_api.ui.Views.PresentationDialog;
 import com.bitdubai.fermat_android_api.ui.adapters.FermatAdapter;
 import com.bitdubai.fermat_android_api.ui.enums.FermatRefreshTypes;
 import com.bitdubai.fermat_android_api.ui.fragments.FermatWalletListFragment;
@@ -87,6 +88,16 @@ public class RedeemPointMainActivityFragment extends FermatWalletListFragment<Di
         configureToolbar();
         noAssetsView = layout.findViewById(R.id.dap_wallet_no_assets);
         showOrHideNoAssetsView(digitalAssets.isEmpty());
+
+        PresentationDialog presentationDialog = new PresentationDialog.Builder(getActivity(), appSession)
+                .setBannerRes(R.drawable.banner)
+                .setIconRes(R.drawable.redeem_point)
+                .setSubTitle("Welcome to the RedeemPoint Wallet. The wallet that will store all the assets that your users redeem with you!")
+                .setBody("From this wallet you will be able to verify the assets that users redeem with you and get statistic from them.")
+                .setTextFooter("First things first!. We will be creating an avatar for you in order to identify you in the system as a Redeem Point. You will be able to add your picture, name and more details later in the Redeem Point Identity sub app.")
+                .build();
+
+        presentationDialog.show();
     }
 
     @Override
