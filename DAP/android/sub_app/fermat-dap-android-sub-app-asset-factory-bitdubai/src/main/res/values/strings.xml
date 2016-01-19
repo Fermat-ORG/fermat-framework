@@ -14,4 +14,12 @@
     <string name="dap_asset_factory_editor_quantity_hint">Quantity</string>
     <string name="dap_asset_factory_editor_bitcoin_price_hint">BitCoins Price</string>
     <string name="dap_asset_factory_editor_expiration_date_hint">Expiration Date</string>
+
+    <string name="dap_asset_factory_welcome_title">Welcome!</string>
+    <string name="dap_asset_factory_welcome_desc">Welcome to the Asset Factory application. From here you will be able to create, define and publish all your assets.</string>
+    <string name="dap_asset_factory_welcome_content">From this application you will be able to create, define the asset properties and publish it to you Issuer Wallet.</string>
+    <string name="dap_asset_factory_welcome_identity">First things first!. We will be creating an avatar for you in order to identify you in the system as an Asset Issuer. You will be able to add your picture, name and more details later in the Asset Issuer Community sub app.</string>
+    <string name="dap_asset_factory_welcome_identity_button">New Identity</string>
+    <string name="dap_asset_factory_welcome_checkbox">Don\'t show this again</string>
+    <string name="dap_asset_factory_welcome_close">Close</string>
 </resources>
