@@ -114,7 +114,7 @@ public final class CryptoAddressesNetworkServiceDao {
 
         try {
 
-            if(getPendingRequest(id) == null)
+            if(!existPendingRequest(id))
             {
                 CryptoAddressesNetworkServiceCryptoAddressRequest addressExchangeRequest = new CryptoAddressesNetworkServiceCryptoAddressRequest(
                         id                      ,
@@ -147,8 +147,6 @@ public final class CryptoAddressesNetworkServiceDao {
         } catch (CantInsertRecordException e) {
 
             throw new CantCreateRequestException(e, "", "Exception not handled by the plugin, there is a problem in database and i cannot insert the record.");
-        } catch (PendingRequestNotFoundException e) {
-            throw new CantCreateRequestException(e, "", "Exception not handled by the plugin, there is a problem in database");
 
         } catch (CantGetPendingAddressExchangeRequestException e) {
             throw new CantCreateRequestException(e, "", "Exception not handled by the plugin, there is a problem in database");
@@ -389,6 +387,32 @@ public final class CryptoAddressesNetworkServiceDao {
         } catch (InvalidParameterException exception) {
 
             throw new CantGetPendingAddressExchangeRequestException(exception, "", "Check the cause."                                                                                );
+        }
+    }
+
+
+    public boolean existPendingRequest(UUID requestId) throws CantGetPendingAddressExchangeRequestException {
+
+
+        try {
+
+            DatabaseTable addressExchangeRequestTable = database.getTable(CryptoAddressesNetworkServiceDatabaseConstants.ADDRESS_EXCHANGE_REQUEST_TABLE_NAME);
+
+            addressExchangeRequestTable.addUUIDFilter(CryptoAddressesNetworkServiceDatabaseConstants.ADDRESS_EXCHANGE_REQUEST_ID_COLUMN_NAME, requestId, DatabaseFilterType.EQUAL);
+
+            addressExchangeRequestTable.loadToMemory();
+
+            List<DatabaseTableRecord> records = addressExchangeRequestTable.getRecords();
+
+
+            if (!records.isEmpty())
+                return true;
+            else
+                return false;
+
+        } catch (CantLoadTableToMemoryException exception) {
+
+            throw new CantGetPendingAddressExchangeRequestException(exception, "", "Exception not handled by the plugin, there is a problem in database and i cannot load the table.");
         }
     }
 
