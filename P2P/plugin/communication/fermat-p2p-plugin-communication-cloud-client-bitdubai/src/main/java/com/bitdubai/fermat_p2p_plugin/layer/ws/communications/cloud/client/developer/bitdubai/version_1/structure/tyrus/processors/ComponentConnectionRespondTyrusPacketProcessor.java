@@ -60,14 +60,14 @@ public class ComponentConnectionRespondTyrusPacketProcessor extends FermatTyrusP
 
         //System.out.println("ComponentConnectionRespondTyrusPacketProcessor - messageContentJsonStringRepresentation = "+messageContentJsonStringRepresentation);
 
-        /*
-         * Construct the json object
-         */
-        Gson gson = new Gson();
-        JsonParser parser = new JsonParser();
-        JsonObject respond = parser.parse(messageContentJsonStringRepresentation).getAsJsonObject();
-
         try {
+
+            /*
+             * Construct the json object
+             */
+            Gson gson = new Gson();
+            JsonParser parser = new JsonParser();
+            JsonObject respond = parser.parse(messageContentJsonStringRepresentation).getAsJsonObject();
 
             //Get all values
             URI vpnServerUri = new URI(respond.get(JsonAttNamesConstants.VPN_URI).getAsString());
