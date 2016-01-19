@@ -90,19 +90,21 @@ public final class AssetVerification {
     }
 
     public static CryptoTransaction getCryptoTransactionFromCryptoNetworkByCryptoStatus(BitcoinNetworkManager bitcoinNetworkManager, LinkedHashMap<String, String> transactionChain, CryptoStatus cryptoStatus) throws CantGetCryptoTransactionException {
-        /**
-         * I will get the genesis transaction from the CryptoNetwork
-         */
         List<CryptoTransaction> transactionListFromCryptoNetwork = bitcoinNetworkManager.getGenesisCryptoTransaction(null, transactionChain);
+        return matchStatus(transactionListFromCryptoNetwork, cryptoStatus);
+    }
 
-        if (transactionListFromCryptoNetwork == null || transactionListFromCryptoNetwork.isEmpty()) {
-            System.out.println("ASSET TRANSACTION transaction List From Crypto Network for " + transactionChain + " is null or empty");
+    public static CryptoTransaction getCryptoTransactionFromCryptoNetworkByCryptoStatus(BitcoinNetworkManager bitcoinNetworkManager, String genesisTransaction, CryptoStatus cryptoStatus) throws CantGetCryptoTransactionException {
+        return matchStatus(bitcoinNetworkManager.getCryptoTransactions(genesisTransaction), cryptoStatus);
+    }
+
+    private static CryptoTransaction matchStatus(List<CryptoTransaction> allTransactions, CryptoStatus cryptoStatus) {
+        if (allTransactions == null || allTransactions.isEmpty()) {
+            System.out.println("ASSET TRANSACTION transaction List From Crypto Network is null or empty");
             return null;
         }
-        System.out.println("ASSET TRANSACTION I found " + transactionListFromCryptoNetwork.size() + " in Crypto network from genesis transaction:\n" + transactionChain);
-
         System.out.println("ASSET TRANSACTION Now, I'm looking for this crypto status " + cryptoStatus);
-        for (CryptoTransaction cryptoTransaction : transactionListFromCryptoNetwork) {
+        for (CryptoTransaction cryptoTransaction : allTransactions) {
             System.out.println("ASSET TRANSACTION CryptoStatus from Crypto Network:" + cryptoTransaction.getCryptoStatus());
             if (cryptoTransaction.getCryptoStatus() == cryptoStatus) {
                 return cryptoTransaction;

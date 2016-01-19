@@ -1,4 +1,4 @@
-package com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.asset_appropiation.developer.bitdubai.version_1.structure.functional;
+package com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.issuer_appropriation.developer.bitdubai.version_1.structure.functional;
 
 import com.bitdubai.fermat_api.layer.all_definition.money.CryptoAddress;
 import com.bitdubai.fermat_dap_api.layer.all_definition.digital_asset.DigitalAsset;
@@ -12,7 +12,7 @@ import java.util.Date;
 /**
  * Created by Víctor A. Mars M. (marsvicam@gmail.com) on 12/11/15.
  */
-public class AssetAppropriationTransactionRecordImpl implements AppropriationTransactionRecord {
+public class IssuerAppropriationTransactionRecordImpl implements AppropriationTransactionRecord {
 
     //VARIABLE DECLARATION
 
@@ -24,7 +24,7 @@ public class AssetAppropriationTransactionRecordImpl implements AppropriationTra
 
     private String bitcoinWalletPublicKey;
 
-    private String userWalletPublicKey;
+    private String issuerWalletPublicKey;
 
     private CryptoAddress addressTo;
 
@@ -37,20 +37,20 @@ public class AssetAppropriationTransactionRecordImpl implements AppropriationTra
 
     //CONSTRUCTORS
 
-    public AssetAppropriationTransactionRecordImpl(String transactionId,
-                                                   AppropriationStatus status,
-                                                   DigitalAssetMetadata digitalAssetMetadata,
-                                                   String bitcoinWalletPublicKey,
-                                                   String userWalletPublicKey,
-                                                   CryptoAddress addressTo,
-                                                   long startTime,
-                                                   long endTime,
-                                                   String genesisTransaction) {
+    public IssuerAppropriationTransactionRecordImpl(String transactionId,
+                                                    AppropriationStatus status,
+                                                    DigitalAssetMetadata digitalAssetMetadata,
+                                                    String bitcoinWalletPublicKey,
+                                                    String issuerWalletPublicKey,
+                                                    CryptoAddress addressTo,
+                                                    long startTime,
+                                                    long endTime,
+                                                    String genesisTransaction) {
         this.transactionId = transactionId;
         this.status = status;
         this.digitalAssetMetadata = digitalAssetMetadata;
         this.bitcoinWalletPublicKey = bitcoinWalletPublicKey;
-        this.userWalletPublicKey = userWalletPublicKey;
+        this.issuerWalletPublicKey = issuerWalletPublicKey;
         this.addressTo = addressTo;
         this.startTime = startTime;
         this.endTime = endTime;
@@ -67,7 +67,7 @@ public class AssetAppropriationTransactionRecordImpl implements AppropriationTra
                 ", status=" + status +
                 ", digitalAssetMetadata=" + digitalAssetMetadata +
                 ", bitcoinWalletPublicKey=" + bitcoinWalletPublicKey +
-                ", userWalletPublicKey='" + userWalletPublicKey + '\'' +
+                ", walletPublicKey='" + issuerWalletPublicKey + '\'' +
                 ", startTime=" + startTime +
                 ", endTime=" + endTime +
                 ", genesisTransaction='" + genesisTransaction + '\'' +
@@ -79,14 +79,14 @@ public class AssetAppropriationTransactionRecordImpl implements AppropriationTra
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
 
-        AssetAppropriationTransactionRecordImpl that = (AssetAppropriationTransactionRecordImpl) o;
+        IssuerAppropriationTransactionRecordImpl that = (IssuerAppropriationTransactionRecordImpl) o;
 
         if (startTime != that.startTime) return false;
         if (endTime != that.endTime) return false;
         if (!transactionId.equals(that.transactionId)) return false;
         if (status != that.status) return false;
         if (!bitcoinWalletPublicKey.equals(that.bitcoinWalletPublicKey)) return false;
-        if (!userWalletPublicKey.equals(that.userWalletPublicKey)) return false;
+        if (!issuerWalletPublicKey.equals(that.issuerWalletPublicKey)) return false;
         return genesisTransaction.equals(that.genesisTransaction);
 
     }
@@ -96,7 +96,7 @@ public class AssetAppropriationTransactionRecordImpl implements AppropriationTra
         int result = transactionId.hashCode();
         result = 31 * result + status.hashCode();
         result = 31 * result + bitcoinWalletPublicKey.hashCode();
-        result = 31 * result + userWalletPublicKey.hashCode();
+        result = 31 * result + issuerWalletPublicKey.hashCode();
         result = 31 * result + (int) (startTime ^ (startTime >>> 32));
         result = 31 * result + (int) (endTime ^ (endTime >>> 32));
         result = 31 * result + genesisTransaction.hashCode();
@@ -143,7 +143,7 @@ public class AssetAppropriationTransactionRecordImpl implements AppropriationTra
 
     @Override
     public String walletPublicKey() {
-        return userWalletPublicKey;
+        return issuerWalletPublicKey;
     }
 
     @Override

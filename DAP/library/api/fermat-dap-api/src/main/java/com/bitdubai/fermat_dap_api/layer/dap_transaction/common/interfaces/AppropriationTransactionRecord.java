@@ -1,4 +1,4 @@
-package com.bitdubai.fermat_dap_api.layer.dap_transaction.asset_appropriation.interfaces;
+package com.bitdubai.fermat_dap_api.layer.dap_transaction.common.interfaces;
 
 import com.bitdubai.fermat_api.layer.all_definition.money.CryptoAddress;
 import com.bitdubai.fermat_dap_api.layer.all_definition.digital_asset.DigitalAsset;
@@ -10,7 +10,7 @@ import java.util.Date;
 /**
  * Created by Víctor A. Mars M. (marsvicam@gmail.com) on 12/11/15.
  */
-public interface AssetAppropriationTransactionRecord {
+public interface AppropriationTransactionRecord {
 
     String transactionRecordId();
     
@@ -26,7 +26,7 @@ public interface AssetAppropriationTransactionRecord {
 
     CryptoAddress addressTo();
 
-    String userWalletPublicKey();
+    String walletPublicKey();
 
     Date startTime();
 

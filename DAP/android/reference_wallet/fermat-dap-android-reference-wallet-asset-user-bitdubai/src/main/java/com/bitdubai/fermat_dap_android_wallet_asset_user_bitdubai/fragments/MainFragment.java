@@ -159,7 +159,8 @@ public class MainFragment extends AbstractFermatFragment
             FermatWorker task = new FermatWorker() {
                 @Override
                 protected Object doInBackground() throws Exception {
-                    manager.appropriateAsset(asset.getAssetPublicKey(), null);
+                    //TODO GET THE AMOUNT TO APPROPRIATE.
+                    manager.appropriateAsset(asset.getAssetPublicKey(), null, 1);
                     return true;
                 }
             };
