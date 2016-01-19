@@ -96,7 +96,7 @@ public class CustomerBrokerUpdateNegotiationTransactionDatabaseDao {
             table.insertRecord(record);
 
             if(statusTransaction.getCode() == NegotiationTransactionStatus.PENDING_SUBMIT_CONFIRM.getCode()) {
-                    System.out.print("\n\n**** 21) MOCK NEGOTIATION TRANSACTION - CUSTOMER BROKER UPDATE - DAO. CONFIRM negotiationType: " + negotiationType.getCode() + " transactionId: " + transactionId + " ****\n");
+                    System.out.print("\n\n**** 23) MOCK NEGOTIATION TRANSACTION - CUSTOMER BROKER UPDATE - DAO. CONFIRM negotiationType: " + negotiationType.getCode() + " transactionId: " + transactionId + " ****\n");
             }else{
                 System.out.print("\n\n**** 4) MOCK NEGOTIATION TRANSACTION - CUSTOMER BROKER UPDATE - DAO. NEGOTIATION negotiationType: " + negotiationType.getCode() + "transactionId: " + transactionId + " ****\n");
             }
