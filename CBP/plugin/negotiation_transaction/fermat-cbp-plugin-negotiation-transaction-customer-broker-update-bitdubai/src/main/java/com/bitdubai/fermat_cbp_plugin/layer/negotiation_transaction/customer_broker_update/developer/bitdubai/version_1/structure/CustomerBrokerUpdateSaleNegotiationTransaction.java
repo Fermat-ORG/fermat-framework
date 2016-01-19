@@ -133,6 +133,14 @@ public class CustomerBrokerUpdateSaleNegotiationTransaction {
 
         try {
 
+            System.out.print("\n\n**** 21) MOCK NEGOTIATION TRANSACTION - CUSTOMER BROKER CANCEL - SALE NEGOTIATION - CUSTOMER BROKER CANCEL SALE NEGOTIATION TRANSACTION. transactionId: " + transactionId + " ****\n");
+
+            System.out.print("\n\n --- Negotiation Mock XML Date" +
+                            "\n- NegotiationId = " + customerBrokerSaleNegotiation.getNegotiationId() +
+                            "\n- CustomerPublicKey = " + customerBrokerSaleNegotiation.getCustomerPublicKey() +
+                            "\n- BrokerPublicKey = " + customerBrokerSaleNegotiation.getCustomerPublicKey()
+            );
+
             //CANCEL NEGOTIATION
             this.customerBrokerSaleNegotiationManager.cancelNegotiation(customerBrokerSaleNegotiation);
 
