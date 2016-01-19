@@ -10,7 +10,6 @@ import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_pro
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
 import com.bitdubai.fermat_bch_api.layer.crypto_module.crypto_address_book.interfaces.CryptoAddressBookManager;
 import com.bitdubai.fermat_bch_api.layer.crypto_module.crypto_address_book.interfaces.CryptoAddressBookRecord;
-import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.exceptions.CantGetCryptoTransactionException;
 import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.interfaces.BitcoinNetworkManager;
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.asset_vault.interfaces.AssetVaultManager;
 import com.bitdubai.fermat_dap_api.layer.all_definition.digital_asset.DigitalAssetMetadata;
@@ -116,7 +115,7 @@ public class IssuerRedemptionMonitorAgent implements Agent {
                     case INCOMING_ASSET_ON_CRYPTO_NETWORK_WAITING_TRANSFERENCE_REDEMPTION: {
                         AssetIssuerWallet wallet = assetIssuerWalletManager.loadAssetIssuerWallet("walletPublicKeyTest");
                         for (DigitalAssetMetadata digitalAssetMetadata : wallet.getAllUsedAssets()) {
-                            CryptoTransaction cryptoTransactionOnCryptoNetwork = AssetVerification.getCryptoTransactionFromCryptoNetworkByCryptoStatus(bitcoinNetworkManager, digitalAssetMetadata.getTransactionChain(), CryptoStatus.ON_CRYPTO_NETWORK);
+                            CryptoTransaction cryptoTransactionOnCryptoNetwork = AssetVerification.getCryptoTransactionFromCryptoNetworkByCryptoStatus(bitcoinNetworkManager, digitalAssetMetadata, CryptoStatus.ON_CRYPTO_NETWORK);
                             if (cryptoTransactionOnCryptoNetwork == null) {
                                 notify = false;
                                 continue; //NOT TODAY KID.
@@ -133,18 +132,11 @@ public class IssuerRedemptionMonitorAgent implements Agent {
                     case INCOMING_ASSET_ON_BLOCKCHAIN_WAITING_TRANSFERENCE_REDEMPTION: {
                         AssetIssuerWallet wallet = assetIssuerWalletManager.loadAssetIssuerWallet("walletPublicKeyTest");
                         for (DigitalAssetMetadata digitalAssetMetadata : wallet.getAllUsedAssets()) {
-                            CryptoTransaction cryptoTx;
-                            try {
-                                cryptoTx = getCryptoTx(digitalAssetMetadata);
-                            } catch (CantGetCryptoTransactionException e) {
-                                //WAIT FOR IT...
-                                notify = false;
-                                continue;
-                            }
-                            CryptoAddressBookRecord bookRecord = cryptoAddressBookManager.getCryptoAddressBookRecordByCryptoAddress(cryptoTx.getAddressTo());
+                            CryptoTransaction cryptoTransactionOnBlockChain = AssetVerification.getCryptoTransactionFromCryptoNetworkByCryptoStatus(bitcoinNetworkManager, digitalAssetMetadata, CryptoStatus.ON_CRYPTO_NETWORK);
+                            CryptoAddressBookRecord bookRecord = cryptoAddressBookManager.getCryptoAddressBookRecordByCryptoAddress(cryptoTransactionOnBlockChain.getAddressTo());
                             String publicKeyFrom = wallet.getUserDeliveredToPublicKey(digitalAssetMetadata.getDigitalAsset().getPublicKey());
                             String publicKeyTo = actorAssetIssuerManager.getActorAssetIssuer().getActorPublicKey();
-                            AssetIssuerWalletTransactionRecordWrapper recordWrapper = new AssetIssuerWalletTransactionRecordWrapper(digitalAssetMetadata, cryptoTx, publicKeyFrom, publicKeyTo);
+                            AssetIssuerWalletTransactionRecordWrapper recordWrapper = new AssetIssuerWalletTransactionRecordWrapper(digitalAssetMetadata, cryptoTransactionOnBlockChain, publicKeyFrom, publicKeyTo);
                             wallet.getBalance().credit(recordWrapper, BalanceType.AVAILABLE);
                             wallet.assetRedeemed(digitalAssetMetadata.getDigitalAsset().getPublicKey(), null, bookRecord.getDeliveredToActorPublicKey());
 
@@ -164,11 +156,6 @@ public class IssuerRedemptionMonitorAgent implements Agent {
                     issuerRedemptionDao.notifyEvent(eventId);
                 }
             }
-        }
-
-        private CryptoTransaction getCryptoTx(DigitalAssetMetadata digitalAssetMetadata) throws CantGetCryptoTransactionException {
-            CryptoTransaction lastTx = null; //todo replace with new methods bitcoinNetworkManager.getLastChildCryptoTransaction(null, digitalAssetMetadata.getGenesisTransaction(), digitalAssetMetadata.getGenesisBlock());
-            return bitcoinNetworkManager.getCryptoTransaction(lastTx.getTransactionHash());
         }
 
         public void stopAgent() {

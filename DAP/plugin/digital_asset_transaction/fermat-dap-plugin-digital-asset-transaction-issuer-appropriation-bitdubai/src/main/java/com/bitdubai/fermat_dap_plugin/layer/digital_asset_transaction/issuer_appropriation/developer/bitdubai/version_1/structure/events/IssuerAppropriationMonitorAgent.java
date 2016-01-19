@@ -202,7 +202,7 @@ public class IssuerAppropriationMonitorAgent implements Agent {
                                 dao.updateTransactionStatusCryptoAddressObtained(record.transactionRecordId());
                                 continue;
                             }
-                            CryptoTransaction cryptoTransaction = AssetVerification.getCryptoTransactionFromCryptoNetworkByCryptoStatus(bitcoinNetworkManager, record.assetMetadata().getTransactionChain(), CryptoStatus.ON_CRYPTO_NETWORK);
+                            CryptoTransaction cryptoTransaction = AssetVerification.getCryptoTransactionFromCryptoNetworkByCryptoStatus(bitcoinNetworkManager, record.assetMetadata(), CryptoStatus.ON_CRYPTO_NETWORK);
                             if (cryptoTransaction == null) continue;
                             AssetIssuerWallet issuerWallet = assetIssuerWalletManager.loadAssetIssuerWallet(record.walletPublicKey());
                             AssetIssuerWalletBalance balance = issuerWallet.getBalance();
@@ -217,7 +217,7 @@ public class IssuerAppropriationMonitorAgent implements Agent {
 
                     case INCOMING_ASSET_ON_BLOCKCHAIN_WAITING_TRANSFERENCE_ASSET_ISSUER:
                         for (AppropriationTransactionRecord record : dao.getTransactionsForStatus(AppropriationStatus.ASSET_DEBITED)) {
-                            CryptoTransaction cryptoTransaction = AssetVerification.getCryptoTransactionFromCryptoNetworkByCryptoStatus(bitcoinNetworkManager, record.assetMetadata().getTransactionChain(), CryptoStatus.ON_BLOCKCHAIN);
+                            CryptoTransaction cryptoTransaction = AssetVerification.getCryptoTransactionFromCryptoNetworkByCryptoStatus(bitcoinNetworkManager, record.assetMetadata(), CryptoStatus.ON_BLOCKCHAIN);
                             if (cryptoTransaction == null) continue;
                             AssetIssuerWallet issuerWallet = assetIssuerWalletManager.loadAssetIssuerWallet(record.walletPublicKey());
                             AssetIssuerWalletBalance balance = issuerWallet.getBalance();
