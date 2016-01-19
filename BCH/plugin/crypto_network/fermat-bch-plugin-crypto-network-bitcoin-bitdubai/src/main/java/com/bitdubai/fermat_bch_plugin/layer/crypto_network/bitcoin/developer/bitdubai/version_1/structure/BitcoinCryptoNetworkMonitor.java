@@ -223,14 +223,12 @@ public class BitcoinCryptoNetworkMonitor implements Agent {
             /**
              * I will add this transaction to the wallet.
              */
-            wallet.commitTx(tx);
+            wallet.maybeCommitTx(tx);
 
             /**
              * save the added transaction in the wallet
              */
             wallet.saveToFile(walletFileName);
-
-
 
             /**
              * Broadcast it.
@@ -251,6 +249,8 @@ public class BitcoinCryptoNetworkMonitor implements Agent {
              */
             storeOutgoingTransaction(wallet, tx, transactionId);
 
+
+            wallet.maybeCommitTx(tx);
             /**
              * saves the wallet again.
              */
@@ -305,6 +305,11 @@ public class BitcoinCryptoNetworkMonitor implements Agent {
                      */
                     UUID transactionId = getDao().getBroadcastedTransactionId(BLOCKCHAIN_NETWORKTYPE, txHash);
                     storeOutgoingTransaction(wallet, transaction, transactionId);
+
+                    /**
+                     * commits the transaction to trigger the events.
+                     */
+                    wallet.maybeCommitTx(transaction);
 
                     /**
                      * saves the wallet again.
@@ -468,12 +473,8 @@ public class BitcoinCryptoNetworkMonitor implements Agent {
             /**
              * I store it in the wallet.
              */
-            WalletTransaction walletTransaction = new WalletTransaction(WalletTransaction.Pool.PENDING, tx);
-            wallet.addWalletTransaction(walletTransaction);
-            //wallet.commitTx(tx);
+            wallet.maybeCommitTx(tx);
             wallet.saveToFile(walletFileName);
-
-
         } catch (CantExecuteDatabaseOperationException e) {
             throw new CantStoreBitcoinTransactionException(CantStoreBitcoinTransactionException.DEFAULT_MESSAGE, e, "There was an error storing the transaction in the database", null);
         } catch (Exception e) {
