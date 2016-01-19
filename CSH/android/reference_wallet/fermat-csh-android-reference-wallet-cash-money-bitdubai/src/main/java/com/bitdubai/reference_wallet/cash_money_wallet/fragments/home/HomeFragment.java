@@ -71,11 +71,8 @@ implements FermatListItemListeners<CashMoneyWalletTransaction>, DialogInterface.
     HomeTutorialFragmentDialog homeTutorialDialog;
     private static final DecimalFormat decimalFormat = (DecimalFormat) NumberFormat.getInstance();
 
-
-
     public HomeFragment() {}
     public static HomeFragment newInstance() {return new HomeFragment();}
-
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
