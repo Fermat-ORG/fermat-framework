@@ -233,6 +233,14 @@ public class AssetIssuerWalletImpl implements AssetIssuerWallet {
     }
 
     @Override
+    public List<AssetIssuerWalletTransaction> getAvailableTransactions(String assetPublicKey) throws CantGetTransactionsException {
+        List<AssetIssuerWalletTransaction> allCreditAvailable = getTransactionsAll(BalanceType.AVAILABLE, TransactionType.CREDIT, assetPublicKey);
+        List<AssetIssuerWalletTransaction> alldebitAvailable = getTransactionsAll(BalanceType.AVAILABLE, TransactionType.DEBIT, assetPublicKey);
+        allCreditAvailable.removeAll(alldebitAvailable);
+        return allCreditAvailable;
+    }
+
+    @Override
     public List<AssetIssuerWalletTransaction> getTransactionsByActor(String actorPublicKey, BalanceType balanceType, int max, int offset) throws CantGetTransactionsException {
         try {
             assetIssuerWalletDao = new AssetIssuerWalletDao(database, pluginFileSystem, pluginId);
@@ -288,13 +296,11 @@ public class AssetIssuerWalletImpl implements AssetIssuerWallet {
     }
 
     @Override
-    public DigitalAssetMetadata getDigitalAssetMetadata(String digitalAssetPublicKey) throws CantGetDigitalAssetFromLocalStorageException {
+    public DigitalAssetMetadata getDigitalAssetMetadata(String transactionHash) throws CantGetDigitalAssetFromLocalStorageException {
         DigitalAssetMetadata digitalAssetMetadata = new DigitalAssetMetadata();
         try {
             PluginTextFile pluginTextFile = null;
-
-            String digitalAssetMetadataFileName = digitalAssetPublicKey + "_metadata";
-            pluginTextFile = pluginFileSystem.getTextFile(pluginId, PATH_DIRECTORY, digitalAssetMetadataFileName, FilePrivacy.PRIVATE, FileLifeSpan.PERMANENT);
+            pluginTextFile = pluginFileSystem.getTextFile(pluginId, PATH_DIRECTORY, transactionHash, FilePrivacy.PRIVATE, FileLifeSpan.PERMANENT);
             String digitalAssetMetaData = pluginTextFile.getContent();
             digitalAssetMetadata = (DigitalAssetMetadata) XMLParser.parseXML(digitalAssetMetaData, digitalAssetMetadata);
 
