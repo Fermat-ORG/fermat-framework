@@ -147,7 +147,7 @@ public class DigitalAssetReceptor extends AbstractDigitalAssetSwap {
 
     @Override
     public void setDigitalAssetLocalFilePath(DigitalAssetMetadata digitalAssetMetadata) {
-        this.digitalAssetFileStoragePath = this.LOCAL_STORAGE_PATH + "/" + digitalAssetMetadata.getDigitalAssetHash();
+        this.digitalAssetFileStoragePath = this.LOCAL_STORAGE_PATH + "/" + digitalAssetMetadata.getGenesisTransaction();
         this.digitalAssetReceptionVault.setDigitalAssetLocalFilePath(this.digitalAssetFileStoragePath);
     }
 

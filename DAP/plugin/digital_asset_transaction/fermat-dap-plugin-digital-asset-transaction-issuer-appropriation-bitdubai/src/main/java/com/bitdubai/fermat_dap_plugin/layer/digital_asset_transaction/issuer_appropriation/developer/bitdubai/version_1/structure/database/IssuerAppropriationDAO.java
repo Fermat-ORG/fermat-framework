@@ -1,4 +1,4 @@
-package com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.asset_appropiation.developer.bitdubai.version_1.structure.database;
+package com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.issuer_appropriation.developer.bitdubai.version_1.structure.database;
 
 import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.enums.CryptoCurrency;
@@ -33,12 +33,11 @@ import com.bitdubai.fermat_dap_api.layer.dap_transaction.common.exceptions.CantS
 import com.bitdubai.fermat_dap_api.layer.dap_transaction.common.exceptions.RecordsNotFoundException;
 import com.bitdubai.fermat_dap_api.layer.dap_transaction.common.exceptions.TransactionAlreadyStartedException;
 import com.bitdubai.fermat_dap_api.layer.dap_transaction.common.interfaces.AppropriationTransactionRecord;
-import com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.asset_appropiation.developer.bitdubai.version_1.exceptions.CantLoadAssetAppropriationEventListException;
-import com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.asset_appropiation.developer.bitdubai.version_1.structure.functional.AssetAppropriationTransactionRecordImpl;
-import com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.asset_appropiation.developer.bitdubai.version_1.structure.functional.AssetAppropriationVault;
+import com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.issuer_appropriation.developer.bitdubai.version_1.exceptions.CantLoadIssuerAppropriationEventListException;
+import com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.issuer_appropriation.developer.bitdubai.version_1.structure.functional.IssuerAppropriationTransactionRecordImpl;
+import com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.issuer_appropriation.developer.bitdubai.version_1.structure.functional.IssuerAppropriationVault;
 import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.enums.EventType;
 
-import java.io.Closeable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -46,15 +45,15 @@ import java.util.UUID;
 /**
  * Created by Víctor A. Mars M. (marsvicam@gmail.com) on 06/11/15.
  */
-public class AssetAppropriationDAO implements AutoCloseable {
+public class IssuerAppropriationDAO {
 
     //VARIABLE DECLARATION
     private Database database;
-    private AssetAppropriationVault vault;
+    private IssuerAppropriationVault vault;
 
     //CONSTRUCTORS
-    public AssetAppropriationDAO(PluginDatabaseSystem pluginDatabaseSystem, UUID pluginId, AssetAppropriationVault vault) throws CantOpenDatabaseException, DatabaseNotFoundException {
-        database = pluginDatabaseSystem.openDatabase(pluginId, AssetAppropriationDatabaseConstants.ASSET_APPROPRIATION_DATABASE);
+    public IssuerAppropriationDAO(PluginDatabaseSystem pluginDatabaseSystem, UUID pluginId, IssuerAppropriationVault vault) throws CantOpenDatabaseException, DatabaseNotFoundException {
+        database = pluginDatabaseSystem.openDatabase(pluginId, IssuerAppropriationDatabaseConstants.ISSUER_APPROPRIATION_DATABASE);
         this.vault = vault;
     }
 
@@ -70,15 +69,15 @@ public class AssetAppropriationDAO implements AutoCloseable {
 
         String context = "Event Type : " + eventType + " - Event Source: " + eventSource;
         try {
-            DatabaseTable databaseTable = this.database.getTable(AssetAppropriationDatabaseConstants.ASSET_APPROPRIATION_EVENTS_RECORDED_TABLE_NAME);
+            DatabaseTable databaseTable = this.database.getTable(IssuerAppropriationDatabaseConstants.ISSUER_APPROPRIATION_EVENTS_RECORDED_TABLE_NAME);
             DatabaseTableRecord eventRecord = databaseTable.getEmptyRecord();
             UUID eventRecordID = UUID.randomUUID();
 
-            eventRecord.setUUIDValue(AssetAppropriationDatabaseConstants.ASSET_APPROPRIATION_EVENTS_RECORDED_ID_COLUMN_NAME, eventRecordID);
-            eventRecord.setStringValue(AssetAppropriationDatabaseConstants.ASSET_APPROPRIATION_EVENTS_RECORDED_EVENT_COLUMN_NAME, eventType);
-            eventRecord.setStringValue(AssetAppropriationDatabaseConstants.ASSET_APPROPRIATION_EVENTS_RECORDED_SOURCE_COLUMN_NAME, eventSource);
-            eventRecord.setStringValue(AssetAppropriationDatabaseConstants.ASSET_APPROPRIATION_EVENTS_RECORDED_STATUS_COLUMN_NAME, EventStatus.PENDING.getCode());
-            eventRecord.setLongValue(AssetAppropriationDatabaseConstants.ASSET_APPROPRIATION_EVENTS_RECORDED_TIMESTAMP_COLUMN_NAME, System.currentTimeMillis());
+            eventRecord.setUUIDValue(IssuerAppropriationDatabaseConstants.ISSUER_APPROPRIATION_EVENTS_RECORDED_ID_COLUMN_NAME, eventRecordID);
+            eventRecord.setStringValue(IssuerAppropriationDatabaseConstants.ISSUER_APPROPRIATION_EVENTS_RECORDED_EVENT_COLUMN_NAME, eventType);
+            eventRecord.setStringValue(IssuerAppropriationDatabaseConstants.ISSUER_APPROPRIATION_EVENTS_RECORDED_SOURCE_COLUMN_NAME, eventSource);
+            eventRecord.setStringValue(IssuerAppropriationDatabaseConstants.ISSUER_APPROPRIATION_EVENTS_RECORDED_STATUS_COLUMN_NAME, EventStatus.PENDING.getCode());
+            eventRecord.setLongValue(IssuerAppropriationDatabaseConstants.ISSUER_APPROPRIATION_EVENTS_RECORDED_TIMESTAMP_COLUMN_NAME, System.currentTimeMillis());
 
             databaseTable.insertRecord(eventRecord);
         } catch (CantInsertRecordException exception) {
@@ -88,8 +87,8 @@ public class AssetAppropriationDAO implements AutoCloseable {
         }
     }
 
-    public void updateEventStatus(EventStatus status, String eventId) throws CantLoadAssetAppropriationEventListException, RecordsNotFoundException {
-        updateStringFieldByEventId(AssetAppropriationDatabaseConstants.ASSET_APPROPRIATION_EVENTS_RECORDED_STATUS_COLUMN_NAME, status.getCode(), eventId);
+    public void updateEventStatus(EventStatus status, String eventId) throws CantLoadIssuerAppropriationEventListException, RecordsNotFoundException {
+        updateStringFieldByEventId(IssuerAppropriationDatabaseConstants.ISSUER_APPROPRIATION_EVENTS_RECORDED_STATUS_COLUMN_NAME, status.getCode(), eventId);
     }
 
     /*
@@ -107,21 +106,21 @@ public class AssetAppropriationDAO implements AutoCloseable {
 
             vault.persistDigitalAssetMetadataInLocalStorage(assetMetadata);
 
-            DatabaseTable databaseTable = this.database.getTable(AssetAppropriationDatabaseConstants.ASSET_APPROPRIATION_TRANSACTION_METADATA_TABLE_NAME);
+            DatabaseTable databaseTable = this.database.getTable(IssuerAppropriationDatabaseConstants.ISSUER_APPROPRIATION_TRANSACTION_METADATA_TABLE_NAME);
             DatabaseTableRecord transactionRecord = databaseTable.getEmptyRecord();
 
             String transactionId = UUID.randomUUID().toString(); //The id of the record to be created.
 
-            transactionRecord.setStringValue(AssetAppropriationDatabaseConstants.ASSET_APPROPRIATION_TRANSACTION_METADATA_ID_COLUMN_NAME, transactionId);
-            transactionRecord.setStringValue(AssetAppropriationDatabaseConstants.ASSET_APPROPRIATION_TRANSACTION_METADATA_STATUS_COLUMN_NAME, AppropriationStatus.APPROPRIATION_STARTED.getCode());
-            transactionRecord.setStringValue(AssetAppropriationDatabaseConstants.ASSET_APPROPRIATION_TRANSACTION_METADATA_DA_PUBLIC_KEY_COLUMN_NAME, assetMetadata.getDigitalAsset().getPublicKey());
-            transactionRecord.setStringValue(AssetAppropriationDatabaseConstants.ASSET_APPROPRIATION_TRANSACTION_METADATA_USER_WALLET_KEY_TO_COLUMN_NAME, userWalletPublicKey);
-            transactionRecord.setStringValue(AssetAppropriationDatabaseConstants.ASSET_APPROPRIATION_TRANSACTION_METADATA_BTC_WALLET_KEY_TO_COLUMN_NAME, bitcoinWalletPublicKey);
-            transactionRecord.setStringValue(AssetAppropriationDatabaseConstants.ASSET_APPROPRIATION_TRANSACTION_METADATA_CRYPTO_ADDRESS_TO_COLUMN_NAME, "-");
-            transactionRecord.setStringValue(AssetAppropriationDatabaseConstants.ASSET_APPROPRIATION_TRANSACTION_METADATA_CRYPTO_CURRENCY_TO_COLUMN_NAME, "-");
-            transactionRecord.setLongValue(AssetAppropriationDatabaseConstants.ASSET_APPROPRIATION_TRANSACTION_METADATA_START_TIME_COLUMN_NAME, System.currentTimeMillis());
-            transactionRecord.setLongValue(AssetAppropriationDatabaseConstants.ASSET_APPROPRIATION_TRANSACTION_METADATA_END_TIME_COLUMN_NAME, Validate.MAX_DATE); //Since I can't store null on a primitive I'll set it as the max possible then update it.
-            transactionRecord.setStringValue(AssetAppropriationDatabaseConstants.ASSET_APPROPRIATION_TRANSACTION_METADATA_GENESIS_COLUMN_NAME, "-"); //I will update this when I send the bitcoins...
+            transactionRecord.setStringValue(IssuerAppropriationDatabaseConstants.ISSUER_APPROPRIATION_TRANSACTION_METADATA_ID_COLUMN_NAME, transactionId);
+            transactionRecord.setStringValue(IssuerAppropriationDatabaseConstants.ISSUER_APPROPRIATION_TRANSACTION_METADATA_STATUS_COLUMN_NAME, AppropriationStatus.APPROPRIATION_STARTED.getCode());
+            transactionRecord.setStringValue(IssuerAppropriationDatabaseConstants.ISSUER_APPROPRIATION_TRANSACTION_METADATA_DA_PUBLIC_KEY_COLUMN_NAME, assetMetadata.getDigitalAsset().getPublicKey());
+            transactionRecord.setStringValue(IssuerAppropriationDatabaseConstants.ISSUER_APPROPRIATION_TRANSACTION_METADATA_USER_WALLET_KEY_TO_COLUMN_NAME, userWalletPublicKey);
+            transactionRecord.setStringValue(IssuerAppropriationDatabaseConstants.ISSUER_APPROPRIATION_TRANSACTION_METADATA_BTC_WALLET_KEY_TO_COLUMN_NAME, bitcoinWalletPublicKey);
+            transactionRecord.setStringValue(IssuerAppropriationDatabaseConstants.ISSUER_APPROPRIATION_TRANSACTION_METADATA_CRYPTO_ADDRESS_TO_COLUMN_NAME, "-");
+            transactionRecord.setStringValue(IssuerAppropriationDatabaseConstants.ISSUER_APPROPRIATION_TRANSACTION_METADATA_CRYPTO_CURRENCY_TO_COLUMN_NAME, "-");
+            transactionRecord.setLongValue(IssuerAppropriationDatabaseConstants.ISSUER_APPROPRIATION_TRANSACTION_METADATA_START_TIME_COLUMN_NAME, System.currentTimeMillis());
+            transactionRecord.setLongValue(IssuerAppropriationDatabaseConstants.ISSUER_APPROPRIATION_TRANSACTION_METADATA_END_TIME_COLUMN_NAME, Validate.MAX_DATE); //Since I can't store null on a primitive I'll set it as the max possible then update it.
+            transactionRecord.setStringValue(IssuerAppropriationDatabaseConstants.ISSUER_APPROPRIATION_TRANSACTION_METADATA_GENESIS_COLUMN_NAME, "-"); //I will update this when I send the bitcoins...
 
             databaseTable.insertRecord(transactionRecord);
             return transactionId;
@@ -135,12 +134,12 @@ public class AssetAppropriationDAO implements AutoCloseable {
     }
 
     public void updateGenesisTransaction(String genesisTransaction, String transactionId) throws RecordsNotFoundException, CantLoadAssetAppropriationTransactionListException {
-        updateStringFieldByTransactionId(AssetAppropriationDatabaseConstants.ASSET_APPROPRIATION_TRANSACTION_METADATA_GENESIS_COLUMN_NAME, genesisTransaction, transactionId);
+        updateStringFieldByTransactionId(IssuerAppropriationDatabaseConstants.ISSUER_APPROPRIATION_TRANSACTION_METADATA_GENESIS_COLUMN_NAME, genesisTransaction, transactionId);
     }
 
     public void updateCryptoAddress(CryptoAddress cryptoAddress, String transactionId) throws RecordsNotFoundException, CantLoadAssetAppropriationTransactionListException {
-        updateStringFieldByTransactionId(AssetAppropriationDatabaseConstants.ASSET_APPROPRIATION_TRANSACTION_METADATA_CRYPTO_ADDRESS_TO_COLUMN_NAME, cryptoAddress.getAddress(), transactionId);
-        updateStringFieldByTransactionId(AssetAppropriationDatabaseConstants.ASSET_APPROPRIATION_TRANSACTION_METADATA_CRYPTO_CURRENCY_TO_COLUMN_NAME, cryptoAddress.getCryptoCurrency().getCode(), transactionId);
+        updateStringFieldByTransactionId(IssuerAppropriationDatabaseConstants.ISSUER_APPROPRIATION_TRANSACTION_METADATA_CRYPTO_ADDRESS_TO_COLUMN_NAME, cryptoAddress.getAddress(), transactionId);
+        updateStringFieldByTransactionId(IssuerAppropriationDatabaseConstants.ISSUER_APPROPRIATION_TRANSACTION_METADATA_CRYPTO_CURRENCY_TO_COLUMN_NAME, cryptoAddress.getCryptoCurrency().getCode(), transactionId);
     }
 
     public void updateTransactionStatusAssetDebited(String transactionId) throws RecordsNotFoundException, CantLoadAssetAppropriationTransactionListException {
@@ -180,58 +179,17 @@ public class AssetAppropriationDAO implements AutoCloseable {
         completeTransaction(AppropriationStatus.APPROPRIATION_SUCCESSFUL, transactionId);
     }
 
-    /**
-     * Closes this resource, relinquishing any underlying resources.
-     * This method is invoked automatically on objects managed by the
-     * {@code try}-with-resources statement.
-     * <p/>
-     * <p>While this interface method is declared to throw {@code
-     * Exception}, implementers are <em>strongly</em> encouraged to
-     * declare concrete implementations of the {@code close} method to
-     * throw more specific exceptions, or to throw no exception at all
-     * if the close operation cannot fail.
-     * <p/>
-     * <p><em>Implementers of this interface are also strongly advised
-     * to not have the {@code close} method throw {@link
-     * InterruptedException}.</em>
-     * <p/>
-     * This exception interacts with a thread's interrupted status,
-     * and runtime misbehavior is likely to occur if an {@code
-     * InterruptedException} is {@linkplain Throwable#addSuppressed
-     * suppressed}.
-     * <p/>
-     * More generally, if it would cause problems for an
-     * exception to be suppressed, the {@code AutoCloseable.close}
-     * method should not throw it.
-     * <p/>
-     * <p>Note that unlike the {@link Closeable#close close}
-     * method of {@link Closeable}, this {@code close} method
-     * is <em>not</em> required to be idempotent.  In other words,
-     * calling this {@code close} method more than once may have some
-     * visible side effect, unlike {@code Closeable.close} which is
-     * required to have no effect if called more than once.
-     * <p/>
-     * However, implementers of this interface are strongly encouraged
-     * to make their {@code close} methods idempotent.
-     *
-     * @throws Exception if this resource cannot be closed
-     */
-    @Override
-    public void close() throws Exception {
-        database.closeDatabase();
-    }
-
     //PRIVATE METHODS
-    private boolean isPendingEventsBySource(EventSource eventSource) throws CantLoadAssetAppropriationEventListException {
+    private boolean isPendingEventsBySource(EventSource eventSource) throws CantLoadIssuerAppropriationEventListException {
         return !getPendingEventsBySource(eventSource).isEmpty();
     }
 
-    private void updateStringFieldByEventId(String columnName, String value, String id) throws CantLoadAssetAppropriationEventListException, RecordsNotFoundException {
+    private void updateStringFieldByEventId(String columnName, String value, String id) throws CantLoadIssuerAppropriationEventListException, RecordsNotFoundException {
         String context = "Column Name: " + columnName + " - Id: " + id;
         try {
             DatabaseTable eventRecordedTable;
-            eventRecordedTable = database.getTable(AssetAppropriationDatabaseConstants.ASSET_APPROPRIATION_EVENTS_RECORDED_TABLE_NAME);
-            eventRecordedTable.addStringFilter(AssetAppropriationDatabaseConstants.ASSET_APPROPRIATION_EVENTS_RECORDED_ID_COLUMN_NAME, id, DatabaseFilterType.EQUAL);
+            eventRecordedTable = database.getTable(IssuerAppropriationDatabaseConstants.ISSUER_APPROPRIATION_EVENTS_RECORDED_TABLE_NAME);
+            eventRecordedTable.addStringFilter(IssuerAppropriationDatabaseConstants.ISSUER_APPROPRIATION_EVENTS_RECORDED_ID_COLUMN_NAME, id, DatabaseFilterType.EQUAL);
             eventRecordedTable.loadToMemory();
             if (eventRecordedTable.getRecords().isEmpty()) {
                 throw new RecordsNotFoundException(null, context, "");
@@ -241,20 +199,20 @@ public class AssetAppropriationDAO implements AutoCloseable {
                 eventRecordedTable.updateRecord(record);
             }
         } catch (CantLoadTableToMemoryException exception) {
-            throw new CantLoadAssetAppropriationEventListException(exception, context, "Cannot load table to memory.");
+            throw new CantLoadIssuerAppropriationEventListException(exception, context, "Cannot load table to memory.");
         } catch (CantUpdateRecordException exception) {
-            throw new CantLoadAssetAppropriationEventListException(exception, context, "Cannot update record.");
+            throw new CantLoadIssuerAppropriationEventListException(exception, context, "Cannot update record.");
         }
     }
 
 
-    private String getStringFieldByEventId(String columnName, String id) throws CantLoadAssetAppropriationEventListException, RecordsNotFoundException {
+    private String getStringFieldByEventId(String columnName, String id) throws CantLoadIssuerAppropriationEventListException, RecordsNotFoundException {
         try {
             String context = "Column Name: " + columnName + " - Id: " + id;
             DatabaseTable databaseTable;
-            databaseTable = database.getTable(AssetAppropriationDatabaseConstants.ASSET_APPROPRIATION_EVENTS_RECORDED_TABLE_NAME);
-            databaseTable.addStringFilter(AssetAppropriationDatabaseConstants.ASSET_APPROPRIATION_EVENTS_RECORDED_ID_COLUMN_NAME, id, DatabaseFilterType.EQUAL);
-            databaseTable.addFilterOrder(AssetAppropriationDatabaseConstants.ASSET_APPROPRIATION_EVENTS_RECORDED_TIMESTAMP_COLUMN_NAME, DatabaseFilterOrder.ASCENDING);
+            databaseTable = database.getTable(IssuerAppropriationDatabaseConstants.ISSUER_APPROPRIATION_EVENTS_RECORDED_TABLE_NAME);
+            databaseTable.addStringFilter(IssuerAppropriationDatabaseConstants.ISSUER_APPROPRIATION_EVENTS_RECORDED_ID_COLUMN_NAME, id, DatabaseFilterType.EQUAL);
+            databaseTable.addFilterOrder(IssuerAppropriationDatabaseConstants.ISSUER_APPROPRIATION_EVENTS_RECORDED_TIMESTAMP_COLUMN_NAME, DatabaseFilterOrder.ASCENDING);
             databaseTable.loadToMemory();
 
             for (DatabaseTableRecord record : databaseTable.getRecords()) {
@@ -262,28 +220,28 @@ public class AssetAppropriationDAO implements AutoCloseable {
             }
             throw new RecordsNotFoundException(null, context, "");
         } catch (CantLoadTableToMemoryException exception) {
-            throw new CantLoadAssetAppropriationEventListException(exception, "Getting pending events.", "Cannot load table to memory.");
+            throw new CantLoadIssuerAppropriationEventListException(exception, "Getting pending events.", "Cannot load table to memory.");
         }
     }
 
-    private List<String> getPendingEventsBySource(EventSource eventSource) throws CantLoadAssetAppropriationEventListException {
+    private List<String> getPendingEventsBySource(EventSource eventSource) throws CantLoadIssuerAppropriationEventListException {
         try {
             DatabaseTable eventsRecordedTable;
-            eventsRecordedTable = database.getTable(AssetAppropriationDatabaseConstants.ASSET_APPROPRIATION_EVENTS_RECORDED_TABLE_NAME);
-            eventsRecordedTable.addStringFilter(AssetAppropriationDatabaseConstants.ASSET_APPROPRIATION_EVENTS_RECORDED_SOURCE_COLUMN_NAME, eventSource.getCode(), DatabaseFilterType.EQUAL);
-            eventsRecordedTable.addStringFilter(AssetAppropriationDatabaseConstants.ASSET_APPROPRIATION_EVENTS_RECORDED_STATUS_COLUMN_NAME, EventStatus.PENDING.getCode(), DatabaseFilterType.EQUAL);
-            eventsRecordedTable.addFilterOrder(AssetAppropriationDatabaseConstants.ASSET_APPROPRIATION_EVENTS_RECORDED_TIMESTAMP_COLUMN_NAME, DatabaseFilterOrder.ASCENDING);
+            eventsRecordedTable = database.getTable(IssuerAppropriationDatabaseConstants.ISSUER_APPROPRIATION_EVENTS_RECORDED_TABLE_NAME);
+            eventsRecordedTable.addStringFilter(IssuerAppropriationDatabaseConstants.ISSUER_APPROPRIATION_EVENTS_RECORDED_SOURCE_COLUMN_NAME, eventSource.getCode(), DatabaseFilterType.EQUAL);
+            eventsRecordedTable.addStringFilter(IssuerAppropriationDatabaseConstants.ISSUER_APPROPRIATION_EVENTS_RECORDED_STATUS_COLUMN_NAME, EventStatus.PENDING.getCode(), DatabaseFilterType.EQUAL);
+            eventsRecordedTable.addFilterOrder(IssuerAppropriationDatabaseConstants.ISSUER_APPROPRIATION_EVENTS_RECORDED_TIMESTAMP_COLUMN_NAME, DatabaseFilterOrder.ASCENDING);
 
             eventsRecordedTable.loadToMemory();
             List<String> eventIdList = new ArrayList<>();
             for (DatabaseTableRecord record : eventsRecordedTable.getRecords()) {
-                eventIdList.add(record.getStringValue(AssetAppropriationDatabaseConstants.ASSET_APPROPRIATION_EVENTS_RECORDED_ID_COLUMN_NAME));
+                eventIdList.add(record.getStringValue(IssuerAppropriationDatabaseConstants.ISSUER_APPROPRIATION_EVENTS_RECORDED_ID_COLUMN_NAME));
             }
             return eventIdList;
         } catch (CantLoadTableToMemoryException exception) {
-            throw new CantLoadAssetAppropriationEventListException(exception, "Getting pending events.", "Cannot load table to memory.");
+            throw new CantLoadIssuerAppropriationEventListException(exception, "Getting pending events.", "Cannot load table to memory.");
         } catch (Exception exception) {
-            throw new CantLoadAssetAppropriationEventListException(FermatException.wrapException(exception), "Getting pending events.", "Unexpected exception");
+            throw new CantLoadIssuerAppropriationEventListException(FermatException.wrapException(exception), "Getting pending events.", "Unexpected exception");
         }
     }
 
@@ -302,20 +260,20 @@ public class AssetAppropriationDAO implements AutoCloseable {
                 + " - BTC Wallet: " + bitcoinWalletPublicKey;
         try {
             DatabaseTable transactionMetadataTable;
-            transactionMetadataTable = database.getTable(AssetAppropriationDatabaseConstants.ASSET_APPROPRIATION_TRANSACTION_METADATA_TABLE_NAME);
+            transactionMetadataTable = database.getTable(IssuerAppropriationDatabaseConstants.ISSUER_APPROPRIATION_TRANSACTION_METADATA_TABLE_NAME);
 
             DatabaseTableFilter addressFilter = transactionMetadataTable.getEmptyTableFilter();
-            addressFilter.setColumn(AssetAppropriationDatabaseConstants.ASSET_APPROPRIATION_TRANSACTION_METADATA_BTC_WALLET_KEY_TO_COLUMN_NAME);
+            addressFilter.setColumn(IssuerAppropriationDatabaseConstants.ISSUER_APPROPRIATION_TRANSACTION_METADATA_BTC_WALLET_KEY_TO_COLUMN_NAME);
             addressFilter.setValue(bitcoinWalletPublicKey);
             addressFilter.setType(DatabaseFilterType.EQUAL);
 
             DatabaseTableFilter assetPublicKeyFilter = transactionMetadataTable.getEmptyTableFilter();
-            assetPublicKeyFilter.setColumn(AssetAppropriationDatabaseConstants.ASSET_APPROPRIATION_TRANSACTION_METADATA_DA_PUBLIC_KEY_COLUMN_NAME);
+            assetPublicKeyFilter.setColumn(IssuerAppropriationDatabaseConstants.ISSUER_APPROPRIATION_TRANSACTION_METADATA_DA_PUBLIC_KEY_COLUMN_NAME);
             assetPublicKeyFilter.setValue(assetPublicKey);
             assetPublicKeyFilter.setType(DatabaseFilterType.EQUAL);
 
             DatabaseTableFilter userWallerFilter = transactionMetadataTable.getEmptyTableFilter();
-            userWallerFilter.setColumn(AssetAppropriationDatabaseConstants.ASSET_APPROPRIATION_TRANSACTION_METADATA_USER_WALLET_KEY_TO_COLUMN_NAME);
+            userWallerFilter.setColumn(IssuerAppropriationDatabaseConstants.ISSUER_APPROPRIATION_TRANSACTION_METADATA_USER_WALLET_KEY_TO_COLUMN_NAME);
             userWallerFilter.setValue(userWalletPublicKey);
             userWallerFilter.setType(DatabaseFilterType.EQUAL);
 
@@ -329,7 +287,7 @@ public class AssetAppropriationDAO implements AutoCloseable {
                             new ArrayList<DatabaseTableFilterGroup>(),
                             DatabaseFilterOperator.AND));
 
-            transactionMetadataTable.addFilterOrder(AssetAppropriationDatabaseConstants.ASSET_APPROPRIATION_TRANSACTION_METADATA_START_TIME_COLUMN_NAME, DatabaseFilterOrder.ASCENDING);
+            transactionMetadataTable.addFilterOrder(IssuerAppropriationDatabaseConstants.ISSUER_APPROPRIATION_TRANSACTION_METADATA_START_TIME_COLUMN_NAME, DatabaseFilterOrder.ASCENDING);
 
             transactionMetadataTable.loadToMemory();
 
@@ -337,7 +295,7 @@ public class AssetAppropriationDAO implements AutoCloseable {
                 throw new RecordsNotFoundException(null, context, "");
             }
 
-            return transactionMetadataTable.getRecords().get(0).getStringValue(AssetAppropriationDatabaseConstants.ASSET_APPROPRIATION_TRANSACTION_METADATA_ID_COLUMN_NAME);
+            return transactionMetadataTable.getRecords().get(0).getStringValue(IssuerAppropriationDatabaseConstants.ISSUER_APPROPRIATION_TRANSACTION_METADATA_ID_COLUMN_NAME);
         } catch (CantLoadTableToMemoryException exception) {
             throw new CantLoadAssetAppropriationTransactionListException(exception, context, "Cannot load table to memory.");
         }
@@ -347,9 +305,9 @@ public class AssetAppropriationDAO implements AutoCloseable {
         try {
             String context = "Genesis Transaction: " + genesisTransaction;
             DatabaseTable databaseTable;
-            databaseTable = database.getTable(AssetAppropriationDatabaseConstants.ASSET_APPROPRIATION_TRANSACTION_METADATA_TABLE_NAME);
-            databaseTable.addStringFilter(AssetAppropriationDatabaseConstants.ASSET_APPROPRIATION_TRANSACTION_METADATA_GENESIS_COLUMN_NAME, genesisTransaction, DatabaseFilterType.EQUAL);
-            databaseTable.addFilterOrder(AssetAppropriationDatabaseConstants.ASSET_APPROPRIATION_TRANSACTION_METADATA_START_TIME_COLUMN_NAME, DatabaseFilterOrder.ASCENDING);
+            databaseTable = database.getTable(IssuerAppropriationDatabaseConstants.ISSUER_APPROPRIATION_TRANSACTION_METADATA_TABLE_NAME);
+            databaseTable.addStringFilter(IssuerAppropriationDatabaseConstants.ISSUER_APPROPRIATION_TRANSACTION_METADATA_GENESIS_COLUMN_NAME, genesisTransaction, DatabaseFilterType.EQUAL);
+            databaseTable.addFilterOrder(IssuerAppropriationDatabaseConstants.ISSUER_APPROPRIATION_TRANSACTION_METADATA_START_TIME_COLUMN_NAME, DatabaseFilterOrder.ASCENDING);
 
             databaseTable.loadToMemory();
 
@@ -357,7 +315,7 @@ public class AssetAppropriationDAO implements AutoCloseable {
                 throw new RecordsNotFoundException(null, context, "");
             }
 
-            return databaseTable.getRecords().get(0).getStringValue(AssetAppropriationDatabaseConstants.ASSET_APPROPRIATION_TRANSACTION_METADATA_ID_COLUMN_NAME);
+            return databaseTable.getRecords().get(0).getStringValue(IssuerAppropriationDatabaseConstants.ISSUER_APPROPRIATION_TRANSACTION_METADATA_ID_COLUMN_NAME);
         } catch (CantLoadTableToMemoryException exception) {
             throw new CantLoadAssetAppropriationTransactionListException(exception, "Getting pending events.", "Cannot load table to memory.");
         }
@@ -367,9 +325,9 @@ public class AssetAppropriationDAO implements AutoCloseable {
         try {
             String context = "User Wallet: " + userWalletPublicKey;
             DatabaseTable databaseTable;
-            databaseTable = database.getTable(AssetAppropriationDatabaseConstants.ASSET_APPROPRIATION_TRANSACTION_METADATA_TABLE_NAME);
-            databaseTable.addStringFilter(AssetAppropriationDatabaseConstants.ASSET_APPROPRIATION_TRANSACTION_METADATA_USER_WALLET_KEY_TO_COLUMN_NAME, userWalletPublicKey, DatabaseFilterType.EQUAL);
-            databaseTable.addFilterOrder(AssetAppropriationDatabaseConstants.ASSET_APPROPRIATION_TRANSACTION_METADATA_START_TIME_COLUMN_NAME, DatabaseFilterOrder.ASCENDING);
+            databaseTable = database.getTable(IssuerAppropriationDatabaseConstants.ISSUER_APPROPRIATION_TRANSACTION_METADATA_TABLE_NAME);
+            databaseTable.addStringFilter(IssuerAppropriationDatabaseConstants.ISSUER_APPROPRIATION_TRANSACTION_METADATA_USER_WALLET_KEY_TO_COLUMN_NAME, userWalletPublicKey, DatabaseFilterType.EQUAL);
+            databaseTable.addFilterOrder(IssuerAppropriationDatabaseConstants.ISSUER_APPROPRIATION_TRANSACTION_METADATA_START_TIME_COLUMN_NAME, DatabaseFilterOrder.ASCENDING);
             databaseTable.loadToMemory();
 
             if (databaseTable.getRecords().isEmpty()) {
@@ -379,7 +337,7 @@ public class AssetAppropriationDAO implements AutoCloseable {
             List<String> idList = new ArrayList<>(databaseTable.getRecords().size());
 
             for (DatabaseTableRecord record : databaseTable.getRecords()) {
-                idList.add(record.getStringValue(AssetAppropriationDatabaseConstants.ASSET_APPROPRIATION_TRANSACTION_METADATA_ID_COLUMN_NAME));
+                idList.add(record.getStringValue(IssuerAppropriationDatabaseConstants.ISSUER_APPROPRIATION_TRANSACTION_METADATA_ID_COLUMN_NAME));
             }
             return idList;
         } catch (CantLoadTableToMemoryException exception) {
@@ -391,9 +349,9 @@ public class AssetAppropriationDAO implements AutoCloseable {
         try {
             String context = "Bitcoin Wallet: " + bitcoinWalletPublicKey;
             DatabaseTable databaseTable;
-            databaseTable = database.getTable(AssetAppropriationDatabaseConstants.ASSET_APPROPRIATION_TRANSACTION_METADATA_TABLE_NAME);
-            databaseTable.addStringFilter(AssetAppropriationDatabaseConstants.ASSET_APPROPRIATION_TRANSACTION_METADATA_BTC_WALLET_KEY_TO_COLUMN_NAME, bitcoinWalletPublicKey, DatabaseFilterType.EQUAL);
-            databaseTable.addFilterOrder(AssetAppropriationDatabaseConstants.ASSET_APPROPRIATION_TRANSACTION_METADATA_START_TIME_COLUMN_NAME, DatabaseFilterOrder.ASCENDING);
+            databaseTable = database.getTable(IssuerAppropriationDatabaseConstants.ISSUER_APPROPRIATION_TRANSACTION_METADATA_TABLE_NAME);
+            databaseTable.addStringFilter(IssuerAppropriationDatabaseConstants.ISSUER_APPROPRIATION_TRANSACTION_METADATA_BTC_WALLET_KEY_TO_COLUMN_NAME, bitcoinWalletPublicKey, DatabaseFilterType.EQUAL);
+            databaseTable.addFilterOrder(IssuerAppropriationDatabaseConstants.ISSUER_APPROPRIATION_TRANSACTION_METADATA_START_TIME_COLUMN_NAME, DatabaseFilterOrder.ASCENDING);
 
             databaseTable.loadToMemory();
 
@@ -404,7 +362,7 @@ public class AssetAppropriationDAO implements AutoCloseable {
             List<String> idList = new ArrayList<>(databaseTable.getRecords().size());
 
             for (DatabaseTableRecord record : databaseTable.getRecords()) {
-                idList.add(record.getStringValue(AssetAppropriationDatabaseConstants.ASSET_APPROPRIATION_TRANSACTION_METADATA_ID_COLUMN_NAME));
+                idList.add(record.getStringValue(IssuerAppropriationDatabaseConstants.ISSUER_APPROPRIATION_TRANSACTION_METADATA_ID_COLUMN_NAME));
             }
             return idList;
         } catch (CantLoadTableToMemoryException exception) {
@@ -416,9 +374,9 @@ public class AssetAppropriationDAO implements AutoCloseable {
         try {
             String context = "Status: " + status;
             DatabaseTable databaseTable;
-            databaseTable = database.getTable(AssetAppropriationDatabaseConstants.ASSET_APPROPRIATION_TRANSACTION_METADATA_TABLE_NAME);
-            databaseTable.addStringFilter(AssetAppropriationDatabaseConstants.ASSET_APPROPRIATION_TRANSACTION_METADATA_STATUS_COLUMN_NAME, status.getCode(), DatabaseFilterType.EQUAL);
-            databaseTable.addFilterOrder(AssetAppropriationDatabaseConstants.ASSET_APPROPRIATION_TRANSACTION_METADATA_START_TIME_COLUMN_NAME, DatabaseFilterOrder.ASCENDING);
+            databaseTable = database.getTable(IssuerAppropriationDatabaseConstants.ISSUER_APPROPRIATION_TRANSACTION_METADATA_TABLE_NAME);
+            databaseTable.addStringFilter(IssuerAppropriationDatabaseConstants.ISSUER_APPROPRIATION_TRANSACTION_METADATA_STATUS_COLUMN_NAME, status.getCode(), DatabaseFilterType.EQUAL);
+            databaseTable.addFilterOrder(IssuerAppropriationDatabaseConstants.ISSUER_APPROPRIATION_TRANSACTION_METADATA_START_TIME_COLUMN_NAME, DatabaseFilterOrder.ASCENDING);
             databaseTable.loadToMemory();
 
             if (databaseTable.getRecords().isEmpty()) {
@@ -428,7 +386,7 @@ public class AssetAppropriationDAO implements AutoCloseable {
             List<String> idList = new ArrayList<>(databaseTable.getRecords().size());
 
             for (DatabaseTableRecord record : databaseTable.getRecords()) {
-                idList.add(record.getStringValue(AssetAppropriationDatabaseConstants.ASSET_APPROPRIATION_TRANSACTION_METADATA_ID_COLUMN_NAME));
+                idList.add(record.getStringValue(IssuerAppropriationDatabaseConstants.ISSUER_APPROPRIATION_TRANSACTION_METADATA_ID_COLUMN_NAME));
             }
             return idList;
         } catch (CantLoadTableToMemoryException exception) {
@@ -440,8 +398,8 @@ public class AssetAppropriationDAO implements AutoCloseable {
         try {
             String context = "Column Name: " + columnName + " - Id: " + id;
             DatabaseTable databaseTable;
-            databaseTable = database.getTable(AssetAppropriationDatabaseConstants.ASSET_APPROPRIATION_TRANSACTION_METADATA_TABLE_NAME);
-            databaseTable.addStringFilter(AssetAppropriationDatabaseConstants.ASSET_APPROPRIATION_TRANSACTION_METADATA_ID_COLUMN_NAME, id, DatabaseFilterType.EQUAL);
+            databaseTable = database.getTable(IssuerAppropriationDatabaseConstants.ISSUER_APPROPRIATION_TRANSACTION_METADATA_TABLE_NAME);
+            databaseTable.addStringFilter(IssuerAppropriationDatabaseConstants.ISSUER_APPROPRIATION_TRANSACTION_METADATA_ID_COLUMN_NAME, id, DatabaseFilterType.EQUAL);
             databaseTable.loadToMemory();
 
             if (databaseTable.getRecords().isEmpty()) {
@@ -459,8 +417,8 @@ public class AssetAppropriationDAO implements AutoCloseable {
         try {
             String context = "Column Name: " + columnName + " - Id: " + id;
             DatabaseTable databaseTable;
-            databaseTable = database.getTable(AssetAppropriationDatabaseConstants.ASSET_APPROPRIATION_TRANSACTION_METADATA_TABLE_NAME);
-            databaseTable.addStringFilter(AssetAppropriationDatabaseConstants.ASSET_APPROPRIATION_TRANSACTION_METADATA_ID_COLUMN_NAME, id, DatabaseFilterType.EQUAL);
+            databaseTable = database.getTable(IssuerAppropriationDatabaseConstants.ISSUER_APPROPRIATION_TRANSACTION_METADATA_TABLE_NAME);
+            databaseTable.addStringFilter(IssuerAppropriationDatabaseConstants.ISSUER_APPROPRIATION_TRANSACTION_METADATA_ID_COLUMN_NAME, id, DatabaseFilterType.EQUAL);
             databaseTable.loadToMemory();
 
             if (databaseTable.getRecords().isEmpty()) {
@@ -477,8 +435,8 @@ public class AssetAppropriationDAO implements AutoCloseable {
         String context = "Column Name: " + columnName + " - Id: " + id;
         try {
             DatabaseTable transactionTable;
-            transactionTable = database.getTable(AssetAppropriationDatabaseConstants.ASSET_APPROPRIATION_TRANSACTION_METADATA_TABLE_NAME);
-            transactionTable.addStringFilter(AssetAppropriationDatabaseConstants.ASSET_APPROPRIATION_TRANSACTION_METADATA_ID_COLUMN_NAME, id, DatabaseFilterType.EQUAL);
+            transactionTable = database.getTable(IssuerAppropriationDatabaseConstants.ISSUER_APPROPRIATION_TRANSACTION_METADATA_TABLE_NAME);
+            transactionTable.addStringFilter(IssuerAppropriationDatabaseConstants.ISSUER_APPROPRIATION_TRANSACTION_METADATA_ID_COLUMN_NAME, id, DatabaseFilterType.EQUAL);
             transactionTable.loadToMemory();
 
             if (transactionTable.getRecords().isEmpty()) {
@@ -501,8 +459,8 @@ public class AssetAppropriationDAO implements AutoCloseable {
                 + " ID: " + transactionId;
         try {
             DatabaseTable transactionTable;
-            transactionTable = database.getTable(AssetAppropriationDatabaseConstants.ASSET_APPROPRIATION_TRANSACTION_METADATA_TABLE_NAME);
-            transactionTable.addStringFilter(AssetAppropriationDatabaseConstants.ASSET_APPROPRIATION_TRANSACTION_METADATA_ID_COLUMN_NAME, transactionId, DatabaseFilterType.EQUAL);
+            transactionTable = database.getTable(IssuerAppropriationDatabaseConstants.ISSUER_APPROPRIATION_TRANSACTION_METADATA_TABLE_NAME);
+            transactionTable.addStringFilter(IssuerAppropriationDatabaseConstants.ISSUER_APPROPRIATION_TRANSACTION_METADATA_ID_COLUMN_NAME, transactionId, DatabaseFilterType.EQUAL);
             transactionTable.loadToMemory();
 
             if (transactionTable.getRecords().isEmpty()) {
@@ -510,8 +468,8 @@ public class AssetAppropriationDAO implements AutoCloseable {
             }
 
             for (DatabaseTableRecord record : transactionTable.getRecords()) {
-                record.setStringValue(AssetAppropriationDatabaseConstants.ASSET_APPROPRIATION_TRANSACTION_METADATA_STATUS_COLUMN_NAME, status.getCode());
-                record.setLongValue(AssetAppropriationDatabaseConstants.ASSET_APPROPRIATION_TRANSACTION_METADATA_END_TIME_COLUMN_NAME, System.currentTimeMillis());
+                record.setStringValue(IssuerAppropriationDatabaseConstants.ISSUER_APPROPRIATION_TRANSACTION_METADATA_STATUS_COLUMN_NAME, status.getCode());
+                record.setLongValue(IssuerAppropriationDatabaseConstants.ISSUER_APPROPRIATION_TRANSACTION_METADATA_END_TIME_COLUMN_NAME, System.currentTimeMillis());
                 transactionTable.updateRecord(record);
             }
         } catch (CantLoadTableToMemoryException exception) {
@@ -522,28 +480,28 @@ public class AssetAppropriationDAO implements AutoCloseable {
     }
 
     private void updateStatus(AppropriationStatus status, String transactionId) throws RecordsNotFoundException, CantLoadAssetAppropriationTransactionListException {
-        updateStringFieldByTransactionId(AssetAppropriationDatabaseConstants.ASSET_APPROPRIATION_TRANSACTION_METADATA_STATUS_COLUMN_NAME, status.getCode(), transactionId);
+        updateStringFieldByTransactionId(IssuerAppropriationDatabaseConstants.ISSUER_APPROPRIATION_TRANSACTION_METADATA_STATUS_COLUMN_NAME, status.getCode(), transactionId);
     }
 
-    private AssetAppropriationTransactionRecordImpl constructRecordFromId(String transactionId) throws CantLoadAssetAppropriationTransactionListException, RecordsNotFoundException {
+    private IssuerAppropriationTransactionRecordImpl constructRecordFromId(String transactionId) throws CantLoadAssetAppropriationTransactionListException, RecordsNotFoundException {
         String context = "TransactionId : " + transactionId;
         try {
-            String bitcoinWalletPublicKey = getStringFieldByTransactionId(AssetAppropriationDatabaseConstants.ASSET_APPROPRIATION_TRANSACTION_METADATA_BTC_WALLET_KEY_TO_COLUMN_NAME, transactionId);
-            String userWalletPublicKey = getStringFieldByTransactionId(AssetAppropriationDatabaseConstants.ASSET_APPROPRIATION_TRANSACTION_METADATA_USER_WALLET_KEY_TO_COLUMN_NAME, transactionId);
-            String address = getStringFieldByTransactionId(AssetAppropriationDatabaseConstants.ASSET_APPROPRIATION_TRANSACTION_METADATA_CRYPTO_ADDRESS_TO_COLUMN_NAME, transactionId);
-            String code = getStringFieldByTransactionId(AssetAppropriationDatabaseConstants.ASSET_APPROPRIATION_TRANSACTION_METADATA_CRYPTO_CURRENCY_TO_COLUMN_NAME, transactionId);
+            String bitcoinWalletPublicKey = getStringFieldByTransactionId(IssuerAppropriationDatabaseConstants.ISSUER_APPROPRIATION_TRANSACTION_METADATA_BTC_WALLET_KEY_TO_COLUMN_NAME, transactionId);
+            String userWalletPublicKey = getStringFieldByTransactionId(IssuerAppropriationDatabaseConstants.ISSUER_APPROPRIATION_TRANSACTION_METADATA_USER_WALLET_KEY_TO_COLUMN_NAME, transactionId);
+            String address = getStringFieldByTransactionId(IssuerAppropriationDatabaseConstants.ISSUER_APPROPRIATION_TRANSACTION_METADATA_CRYPTO_ADDRESS_TO_COLUMN_NAME, transactionId);
+            String code = getStringFieldByTransactionId(IssuerAppropriationDatabaseConstants.ISSUER_APPROPRIATION_TRANSACTION_METADATA_CRYPTO_CURRENCY_TO_COLUMN_NAME, transactionId);
             CryptoAddress cryptoAddress = null;
             if (!(code.equals("-")) && !(address.equals("-"))) {
                 CryptoCurrency currency = CryptoCurrency.getByCode(code);
                 cryptoAddress = new CryptoAddress(address, currency);
             }
-            AppropriationStatus status = AppropriationStatus.getByCode(getStringFieldByTransactionId(AssetAppropriationDatabaseConstants.ASSET_APPROPRIATION_TRANSACTION_METADATA_STATUS_COLUMN_NAME, transactionId));
-            DigitalAssetMetadata assetMetadata = vault.getDigitalAssetMetadataFromLocalStorage(getStringFieldByTransactionId(AssetAppropriationDatabaseConstants.ASSET_APPROPRIATION_TRANSACTION_METADATA_DA_PUBLIC_KEY_COLUMN_NAME, transactionId));
-            long startTime = getLongFieldByTransactionId(AssetAppropriationDatabaseConstants.ASSET_APPROPRIATION_TRANSACTION_METADATA_START_TIME_COLUMN_NAME, transactionId);
-            long endTime = getLongFieldByTransactionId(AssetAppropriationDatabaseConstants.ASSET_APPROPRIATION_TRANSACTION_METADATA_END_TIME_COLUMN_NAME, transactionId);
-            String genesisTransaction = getStringFieldByTransactionId(AssetAppropriationDatabaseConstants.ASSET_APPROPRIATION_TRANSACTION_METADATA_GENESIS_COLUMN_NAME, transactionId);
+            AppropriationStatus status = AppropriationStatus.getByCode(getStringFieldByTransactionId(IssuerAppropriationDatabaseConstants.ISSUER_APPROPRIATION_TRANSACTION_METADATA_STATUS_COLUMN_NAME, transactionId));
+            DigitalAssetMetadata assetMetadata = vault.getDigitalAssetMetadataFromLocalStorage(getStringFieldByTransactionId(IssuerAppropriationDatabaseConstants.ISSUER_APPROPRIATION_TRANSACTION_METADATA_DA_PUBLIC_KEY_COLUMN_NAME, transactionId));
+            long startTime = getLongFieldByTransactionId(IssuerAppropriationDatabaseConstants.ISSUER_APPROPRIATION_TRANSACTION_METADATA_START_TIME_COLUMN_NAME, transactionId);
+            long endTime = getLongFieldByTransactionId(IssuerAppropriationDatabaseConstants.ISSUER_APPROPRIATION_TRANSACTION_METADATA_END_TIME_COLUMN_NAME, transactionId);
+            String genesisTransaction = getStringFieldByTransactionId(IssuerAppropriationDatabaseConstants.ISSUER_APPROPRIATION_TRANSACTION_METADATA_GENESIS_COLUMN_NAME, transactionId);
 
-            return new AssetAppropriationTransactionRecordImpl(transactionId, status, assetMetadata, bitcoinWalletPublicKey, userWalletPublicKey, cryptoAddress, startTime, endTime, genesisTransaction);
+            return new IssuerAppropriationTransactionRecordImpl(transactionId, status, assetMetadata, bitcoinWalletPublicKey, userWalletPublicKey, cryptoAddress, startTime, endTime, genesisTransaction);
         } catch (InvalidParameterException | CantGetDigitalAssetFromLocalStorageException e) {
             throw new CantLoadAssetAppropriationTransactionListException(e, context, "There was an exception while constructing the record.");
         }
@@ -555,35 +513,35 @@ public class AssetAppropriationDAO implements AutoCloseable {
     /*
      * Events table.
      */
-    public List<String> getPendingActorAssetUserEvents() throws CantLoadAssetAppropriationEventListException {
+    public List<String> getPendingActorAssetUserEvents() throws CantLoadIssuerAppropriationEventListException {
         return getPendingEventsBySource(EventSource.ACTOR_ASSET_USER);
     }
 
-    public List<String> getPendingCryptoRouterEvents() throws CantLoadAssetAppropriationEventListException {
+    public List<String> getPendingCryptoRouterEvents() throws CantLoadIssuerAppropriationEventListException {
         return getPendingEventsBySource(EventSource.CRYPTO_ROUTER);
     }
 
-    public EventType getEventTypeById(String id) throws CantLoadAssetAppropriationEventListException, InvalidParameterException, RecordsNotFoundException {
-        return EventType.getByCode(getStringFieldByEventId(AssetAppropriationDatabaseConstants.ASSET_APPROPRIATION_EVENTS_RECORDED_EVENT_COLUMN_NAME, id));
+    public EventType getEventTypeById(String id) throws CantLoadIssuerAppropriationEventListException, InvalidParameterException, RecordsNotFoundException {
+        return EventType.getByCode(getStringFieldByEventId(IssuerAppropriationDatabaseConstants.ISSUER_APPROPRIATION_EVENTS_RECORDED_EVENT_COLUMN_NAME, id));
     }
 
-    public com.bitdubai.fermat_dap_api.layer.all_definition.enums.EventType getDAPEventTypeById(String id) throws CantLoadAssetAppropriationEventListException, InvalidParameterException, RecordsNotFoundException {
-        return com.bitdubai.fermat_dap_api.layer.all_definition.enums.EventType.getByCode(getStringFieldByEventId(AssetAppropriationDatabaseConstants.ASSET_APPROPRIATION_EVENTS_RECORDED_EVENT_COLUMN_NAME, id));
+    public com.bitdubai.fermat_dap_api.layer.all_definition.enums.EventType getDAPEventTypeById(String id) throws CantLoadIssuerAppropriationEventListException, InvalidParameterException, RecordsNotFoundException {
+        return com.bitdubai.fermat_dap_api.layer.all_definition.enums.EventType.getByCode(getStringFieldByEventId(IssuerAppropriationDatabaseConstants.ISSUER_APPROPRIATION_EVENTS_RECORDED_EVENT_COLUMN_NAME, id));
     }
 
-    public EventSource getEventSourceById(String id) throws CantLoadAssetAppropriationEventListException, InvalidParameterException, RecordsNotFoundException {
-        return EventSource.getByCode(getStringFieldByEventId(AssetAppropriationDatabaseConstants.ASSET_APPROPRIATION_EVENTS_RECORDED_SOURCE_COLUMN_NAME, id));
+    public EventSource getEventSourceById(String id) throws CantLoadIssuerAppropriationEventListException, InvalidParameterException, RecordsNotFoundException {
+        return EventSource.getByCode(getStringFieldByEventId(IssuerAppropriationDatabaseConstants.ISSUER_APPROPRIATION_EVENTS_RECORDED_SOURCE_COLUMN_NAME, id));
     }
 
-    public EventStatus getEventStatusById(String id) throws CantLoadAssetAppropriationEventListException, InvalidParameterException, RecordsNotFoundException {
-        return EventStatus.getByCode(getStringFieldByEventId(AssetAppropriationDatabaseConstants.ASSET_APPROPRIATION_EVENTS_RECORDED_STATUS_COLUMN_NAME, id));
+    public EventStatus getEventStatusById(String id) throws CantLoadIssuerAppropriationEventListException, InvalidParameterException, RecordsNotFoundException {
+        return EventStatus.getByCode(getStringFieldByEventId(IssuerAppropriationDatabaseConstants.ISSUER_APPROPRIATION_EVENTS_RECORDED_STATUS_COLUMN_NAME, id));
     }
 
-    public boolean isPendingActorAssetUserEvents() throws CantLoadAssetAppropriationEventListException {
+    public boolean isPendingActorAssetUserEvents() throws CantLoadIssuerAppropriationEventListException {
         return isPendingEventsBySource(EventSource.NETWORK_SERVICE_ACTOR_ASSET_USER);
     }
 
-    public List<String> getPendingIssuerNetworkServiceEvents() throws CantLoadAssetAppropriationEventListException {
+    public List<String> getPendingIssuerNetworkServiceEvents() throws CantLoadIssuerAppropriationEventListException {
         return getPendingEventsBySource(EventSource.NETWORK_SERVICE_ACTOR_ASSET_ISSUER);
     }
 

@@ -53,19 +53,20 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
-import java.util.ListIterator;
 import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 
 import javax.annotation.Nullable;
 
+import static com.bitdubai.fermat_dap_api.layer.all_definition.util.Validate.isValidString;
+
 /**
  * The Class <code>com.bitdubai.fermat_bch_plugin.layer.cryptonetwork.bitcoin.developer.bitdubai.version_1.structure.BitcoinCryptoNetworkManager</code>
  * Starts the monitoring agent that will listen to transactions. Based on the passed public Keys from the network type
  * it will activate a different agent to listen to that network.
  * <p/>
- *
+ * <p/>
  * Created by Rodrigo Acosta - (acosta_rodrigo@hotmail.com) on 13/10/15.
  *
  * @version 1.0
@@ -104,6 +105,7 @@ public class BitcoinCryptoNetworkManager implements TransactionProtocolManager, 
 
     /**
      * Constructor
+     *
      * @param eventManager
      * @param pluginDatabaseSystem
      */
@@ -117,6 +119,7 @@ public class BitcoinCryptoNetworkManager implements TransactionProtocolManager, 
 
     /**
      * Monitor the bitcoin network with the passes Key Lists.
+     *
      * @param blockchainNetworkTypes
      * @param keyList
      */
@@ -134,7 +137,7 @@ public class BitcoinCryptoNetworkManager implements TransactionProtocolManager, 
         /**
          * For each network that is active to be monitored I will...
          */
-        for (BlockchainNetworkType blockchainNetworkType : blockchainNetworkTypes){
+        for (BlockchainNetworkType blockchainNetworkType : blockchainNetworkTypes) {
 
             /**
              * load (if any) existing wallet.
@@ -150,10 +153,10 @@ public class BitcoinCryptoNetworkManager implements TransactionProtocolManager, 
             /**
              * if this is the Watch Only Vault, I won't be importing keys, I will be watching them
              */
-            if (cryptoVault == CryptoVaults.BITCOIN_WATCH_ONLY){
-                if (areNewKeysWatched(wallet, keyList, blockchainNetworkType)){
+            if (cryptoVault == CryptoVaults.BITCOIN_WATCH_ONLY) {
+                if (areNewKeysWatched(wallet, keyList, blockchainNetworkType)) {
                     NetworkParameters networkParameters = BitcoinNetworkSelector.getNetworkParameter(blockchainNetworkType);
-                    for (ECKey ecKey : keyList){
+                    for (ECKey ecKey : keyList) {
                         wallet.addWatchedAddress(ecKey.toAddress(networkParameters));
                     }
 
@@ -169,11 +172,11 @@ public class BitcoinCryptoNetworkManager implements TransactionProtocolManager, 
                      */
                     isWalletReset = true;
                 }
-            } else{
+            } else {
                 /**
                  * regulat vault, so will try to import new keys if any
                  */
-                if (areNewKeysAdded(wallet, keyList)){
+                if (areNewKeysAdded(wallet, keyList)) {
                     wallet.importKeys(keyList);
                     try {
                         wallet.saveToFile(walletFile);
@@ -192,11 +195,11 @@ public class BitcoinCryptoNetworkManager implements TransactionProtocolManager, 
             /**
              * If the agent for this network is already running...
              */
-            if (isAgentRunning(blockchainNetworkType)){
+            if (isAgentRunning(blockchainNetworkType)) {
                 /**
                  * and the wallet was reseted because new keys were added
                  */
-                if (isWalletReset){
+                if (isWalletReset) {
                     BitcoinCryptoNetworkMonitor bitcoinCryptoNetworkMonitor = runningAgents.get(blockchainNetworkType);
                     bitcoinCryptoNetworkMonitor.stop();
                     runningAgents.remove(blockchainNetworkType);
@@ -232,16 +235,17 @@ public class BitcoinCryptoNetworkManager implements TransactionProtocolManager, 
 
     /**
      * Will compare if from the passed KeyList there is a missing watched address in the wallet
+     *
      * @param wallet
      * @param keyList
      * @return
      */
     private boolean areNewKeysWatched(Wallet wallet, List<ECKey> keyList, BlockchainNetworkType blockchainNetworkType) {
-        List<Address> watchedAddresses= wallet.getWatchedAddresses();
+        List<Address> watchedAddresses = wallet.getWatchedAddresses();
         List<Address> newAddresses = new ArrayList<>();
 
         NetworkParameters networkParameters = BitcoinNetworkSelector.getNetworkParameter(blockchainNetworkType);
-        for (ECKey ecKey : keyList){
+        for (ECKey ecKey : keyList) {
             newAddresses.add(ecKey.toAddress(networkParameters));
         }
 
@@ -257,6 +261,7 @@ public class BitcoinCryptoNetworkManager implements TransactionProtocolManager, 
 
     /**
      * Updates the detailed stats with the passed information
+     *
      * @param cryptoVault
      * @param blockchainNetworkType
      * @param keyList
@@ -276,14 +281,15 @@ public class BitcoinCryptoNetworkManager implements TransactionProtocolManager, 
     /**
      * Will create the wallet Object. I will try to load it from disk from a previous execution
      * by forming the name wallet_[NETWORK]. If it doesn't exists, then I will create a new object for this network.
+     *
      * @return
      */
-    private synchronized Wallet getWallet(BlockchainNetworkType blockchainNetworkType, @Nullable List<ECKey> keyList){
+    private synchronized Wallet getWallet(BlockchainNetworkType blockchainNetworkType, @Nullable List<ECKey> keyList) {
         Wallet wallet;
         String fileName = WALLET_FILENAME + blockchainNetworkType.getCode();
         walletFile = new File(fileName);
         try {
-            wallet  =Wallet.loadFromFile(walletFile);
+            wallet = Wallet.loadFromFile(walletFile);
         } catch (UnreadableWalletException e) {
             /**
              * If I couldn't load the wallet from file, I'm assuming is a new wallet and I will create it.
@@ -311,11 +317,12 @@ public class BitcoinCryptoNetworkManager implements TransactionProtocolManager, 
      * Will compare the keys already saved in the wallet loaded from disk against the list passed by the vault.
      * If there are additions, it will return true.
      * If they are no new keys, will return false.
+     *
      * @param wallet
      * @param keys
      * @return
      */
-    private boolean areNewKeysAdded(Wallet wallet, List<ECKey> keys){
+    private boolean areNewKeysAdded(Wallet wallet, List<ECKey> keys) {
         List<ECKey> walletKeys = wallet.getImportedKeys();
         /**
          * I remove from the passed list, everything is already saved in the wallet-
@@ -325,7 +332,7 @@ public class BitcoinCryptoNetworkManager implements TransactionProtocolManager, 
         /**
          * If there are still keys, then we have new ones.
          */
-        if (keys.size() >0)
+        if (keys.size() > 0)
             return true;
         else
             return false;
@@ -333,10 +340,11 @@ public class BitcoinCryptoNetworkManager implements TransactionProtocolManager, 
 
     /**
      * Verifies if for the passed network type, an Agent is already running.
+     *
      * @param blockchainNetworkType
      * @return
      */
-    private boolean isAgentRunning(BlockchainNetworkType blockchainNetworkType){
+    private boolean isAgentRunning(BlockchainNetworkType blockchainNetworkType) {
         if (runningAgents.get(blockchainNetworkType) == null)
             return false;
         else
@@ -345,9 +353,10 @@ public class BitcoinCryptoNetworkManager implements TransactionProtocolManager, 
 
     /**
      * instantiate if needed the dao object to access the database
+     *
      * @return
      */
-    private BitcoinCryptoNetworkDatabaseDao getDao(){
+    private BitcoinCryptoNetworkDatabaseDao getDao() {
         if (bitcoinCryptoNetworkDatabaseDao == null)
             bitcoinCryptoNetworkDatabaseDao = new BitcoinCryptoNetworkDatabaseDao(this.pluginId, this.pluginDatabaseSystem);
         return bitcoinCryptoNetworkDatabaseDao;
@@ -360,6 +369,7 @@ public class BitcoinCryptoNetworkManager implements TransactionProtocolManager, 
     /**
      * Confirms the reception of a transaction.
      * This will change the ProtocolStatus of a transaction from ToBeNotified to NoActionRequired
+     *
      * @param transactionID
      * @throws CantConfirmTransactionException
      */
@@ -374,6 +384,7 @@ public class BitcoinCryptoNetworkManager implements TransactionProtocolManager, 
 
     /**
      * Gets the list of pending transactions, which are marked as Pending_NOTIFIED
+     *
      * @param specialist
      * @return
      * @throws CantDeliverPendingTransactionsException
@@ -389,7 +400,7 @@ public class BitcoinCryptoNetworkManager implements TransactionProtocolManager, 
          * Will get all the pendingCryptoTransactions data
          */
         try {
-            for (TransactionProtocolData transactionProtocolData : getPendingTransactionProtocolData()){
+            for (TransactionProtocolData transactionProtocolData : getPendingTransactionProtocolData()) {
                 com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.Transaction transaction;
                 /**
                  * I create the transaction protocol object and fill it with the data
@@ -418,6 +429,7 @@ public class BitcoinCryptoNetworkManager implements TransactionProtocolManager, 
 
     /**
      * Gets the pending transaction data
+     *
      * @return
      */
     private List<TransactionProtocolData> getPendingTransactionProtocolData() throws CantExecuteDatabaseOperationException {
@@ -426,6 +438,7 @@ public class BitcoinCryptoNetworkManager implements TransactionProtocolManager, 
 
     /**
      * Gets the CryptoTransaction list that matches the specified hash
+     *
      * @param txHash
      * @return
      * @throws CantGetCryptoTransactionException
@@ -440,9 +453,10 @@ public class BitcoinCryptoNetworkManager implements TransactionProtocolManager, 
 
     /**
      * Broadcast a well formed, commited and signed transaction into the specified network
+     *
      * @param blockchainNetworkType
      * @param tx
-     * @param transactionId the internal fermat transaction id
+     * @param transactionId         the internal fermat transaction id
      * @throws CantBroadcastTransactionException
      */
     public synchronized void broadcastTransaction(BlockchainNetworkType blockchainNetworkType, Transaction tx, UUID transactionId) throws CantBroadcastTransactionException {
@@ -451,16 +465,18 @@ public class BitcoinCryptoNetworkManager implements TransactionProtocolManager, 
 
     /**
      * Broadcast a well formed, commited and signed transaction into the specified network
+     *
      * @param txHash
      * @throws CantBroadcastTransactionException
      */
-    public synchronized void broadcastTransaction(String txHash) throws CantBroadcastTransactionException{
+    public synchronized void broadcastTransaction(String txHash) throws CantBroadcastTransactionException {
         runningAgents.get(BlockchainNetworkType.DEFAULT).broadcastTransaction(txHash);
     }
 
 
     /**
      * Gets the UTXO provider from the CryptoNetwork on the specified Network
+     *
      * @param blockchainNetworkType
      * @return
      */
@@ -471,6 +487,7 @@ public class BitcoinCryptoNetworkManager implements TransactionProtocolManager, 
 
     /**
      * Implementation of UTXOProvider interface. Calculates all the UTXO available which outputs are send to the specified address
+     *
      * @param addresses
      * @return
      * @throws UTXOProviderException
@@ -486,19 +503,19 @@ public class BitcoinCryptoNetworkManager implements TransactionProtocolManager, 
         /**
          * I will get all the outputs that are mine to spent.
          */
-        for (TransactionOutput output : wallet.calculateAllSpendCandidates()){
-            for (Address address : addresses){
+        for (TransactionOutput output : wallet.calculateAllSpendCandidates()) {
+            for (Address address : addresses) {
                 /**
                  * and if one of them matches the passed address, then I will convert it to an UTXO and add it to the list.
                  */
-                if (output.getAddressFromP2PKHScript(RegTestParams.get()) == address){
-                    UTXO utxo = new UTXO(   output.getHash(),
-                                            output.getIndex(),
-                                            output.getValue(),
-                                            output.getParentTransactionDepthInBlocks(),
-                                            output.getParentTransaction().isCoinBase(),
-                                            output.getScriptPubKey(),
-                                            address.toString());
+                if (output.getAddressFromP2PKHScript(RegTestParams.get()) == address) {
+                    UTXO utxo = new UTXO(output.getHash(),
+                            output.getIndex(),
+                            output.getValue(),
+                            output.getParentTransactionDepthInBlocks(),
+                            output.getParentTransaction().isCoinBase(),
+                            output.getScriptPubKey(),
+                            address.toString());
                     utxoList.add(utxo);
                 }
             }
@@ -509,6 +526,7 @@ public class BitcoinCryptoNetworkManager implements TransactionProtocolManager, 
 
     /**
      * Access the store blockchain and get its height
+     *
      * @return
      * @throws UTXOProviderException
      */
@@ -530,6 +548,7 @@ public class BitcoinCryptoNetworkManager implements TransactionProtocolManager, 
 
     /**
      * returns the nertwork parameter defined for this UTXO provider
+     *
      * @return
      */
     @Override
@@ -539,6 +558,7 @@ public class BitcoinCryptoNetworkManager implements TransactionProtocolManager, 
 
     /**
      * Gets the specified bitcoin transaction
+     *
      * @param transactionHash
      * @return
      */
@@ -551,17 +571,18 @@ public class BitcoinCryptoNetworkManager implements TransactionProtocolManager, 
 
     /**
      * Gets all the transactions stored in the specified network.
+     *
      * @param blockchainNetworkType
      * @return
      */
-    public List<Transaction> getBitcoinTransactions(BlockchainNetworkType blockchainNetworkType){
+    public List<Transaction> getBitcoinTransactions(BlockchainNetworkType blockchainNetworkType) {
 //        Wallet wallet = getWallet(blockchainNetworkType, null);
 //        return wallet.getTransactionsByTime();
         return getUnspentBitcoinTransactions(blockchainNetworkType);
 
     }
 
-    public synchronized List<Transaction> getUnspentBitcoinTransactions(BlockchainNetworkType blockchainNetworkType){
+    public synchronized List<Transaction> getUnspentBitcoinTransactions(BlockchainNetworkType blockchainNetworkType) {
         Wallet wallet = getWallet(blockchainNetworkType, null);
         List<Transaction> transactions = new ArrayList<>(wallet.getTransactionPool(WalletTransaction.Pool.UNSPENT).values());
         return transactions;
@@ -570,7 +591,8 @@ public class BitcoinCryptoNetworkManager implements TransactionProtocolManager, 
     /**
      * Will get the CryptoTransaction directly from the blockchain by requesting it to a peer.
      * If the transaction is not part of any of our vaults, we will ask it to a connected peer to retrieve it.
-     * @param txHash the Hash of the transaction we are going to look for.
+     *
+     * @param txHash    the Hash of the transaction we are going to look for.
      * @param blockHash the Hash of block where this transaction was stored..
      * @return a CryptoTransaction with the information of the transaction.
      * @throws CantGetCryptoTransactionException
@@ -580,7 +602,7 @@ public class BitcoinCryptoNetworkManager implements TransactionProtocolManager, 
         /**
          * I will get the CryptoTransaction from all agents running. Only one will return the CryptoTransaction
          */
-        for (BitcoinCryptoNetworkMonitor monitor : runningAgents.values()){
+        for (BitcoinCryptoNetworkMonitor monitor : runningAgents.values()) {
             return monitor.getCryptoTransactionFromBlockChain(txHash, blockHash);
         }
 
@@ -594,29 +616,27 @@ public class BitcoinCryptoNetworkManager implements TransactionProtocolManager, 
      * Gets the transaction passed in the network.
      * It will look first if it is a local trasaction, if not I will look for it at the stored blockchain
      * and if still not found, I will look for it at the Blockchain requesting it from multiple peers.
+     *
      * @param blockchainNetworkType
      * @param parentTransactionHash
      * @param transactionBlockHash
      * @return
      * @throws CantGetTransactionsException
      */
-    private Transaction getTransactionFromBlockChain(BlockchainNetworkType blockchainNetworkType, String parentTransactionHash, String transactionBlockHash) throws CantGetTransactionsException{
+    private Transaction getTransactionFromBlockChain(BlockchainNetworkType blockchainNetworkType, String parentTransactionHash, String transactionBlockHash) throws CantGetTransactionsException {
         /**
          * will get it from the specified agent monitoring the passed network.
          */
         try {
-            runningAgents.get(blockchainNetworkType).getTransactionFromBlockChain(parentTransactionHash, transactionBlockHash);
+            return runningAgents.get(blockchainNetworkType).getTransactionFromBlockChain(parentTransactionHash, transactionBlockHash);
         } catch (CantGetTransactionException e) {
             throw new CantGetTransactionsException(CantGetTransactionsException.DEFAULT_MESSAGE, e, "Error getting the parent transaction from the blockchain.", "Blockchain error");
         }
-        /**
-         * if no agents are running, then no CryptoTransaction to return.
-         */
-        return null;
     }
 
     /**
      * Will get all the CryptoTransactions stored in the CryptoNetwork which are a child of a parent Transaction
+     *
      * @param parentHash
      * @return
      * @throws CantGetCryptoTransactionException
@@ -628,13 +648,13 @@ public class BitcoinCryptoNetworkManager implements TransactionProtocolManager, 
          */
         List<Transaction> transactions = getBitcoinTransactions(BlockchainNetworkType.DEFAULT);
 
-        for (Transaction transaction : transactions){
+        for (Transaction transaction : transactions) {
             /**
              * I will search on the inputs of each transaction and search for the passed hash.
              */
-            for (TransactionInput input : transaction.getInputs()){
+            for (TransactionInput input : transaction.getInputs()) {
                 if (input.getOutpoint().getHash().toString().contentEquals(parentHash))
-                    cryptoTransaction =  CryptoTransaction.getCryptoTransaction(transaction);
+                    cryptoTransaction = CryptoTransaction.getCryptoTransaction(transaction);
             }
         }
 
@@ -654,7 +674,7 @@ public class BitcoinCryptoNetworkManager implements TransactionProtocolManager, 
          * I need to return all the previous CryptoStates of the CryptoTransaction,
          * so I will manually add them.
          */
-        if (cryptoTransaction.getCryptoStatus() == CryptoStatus.IRREVERSIBLE){
+        if (cryptoTransaction.getCryptoStatus() == CryptoStatus.IRREVERSIBLE) {
             CryptoTransaction onBlockChain = duplicateCryptoTransaction(cryptoTransaction, CryptoStatus.ON_BLOCKCHAIN);
             cryptoTransactions.add(onBlockChain);
 
@@ -662,7 +682,7 @@ public class BitcoinCryptoNetworkManager implements TransactionProtocolManager, 
             cryptoTransactions.add(onCryptoNetwork);
         }
 
-        if (cryptoTransaction.getCryptoStatus() == CryptoStatus.ON_BLOCKCHAIN){
+        if (cryptoTransaction.getCryptoStatus() == CryptoStatus.ON_BLOCKCHAIN) {
             CryptoTransaction onCryptoNetwork = duplicateCryptoTransaction(cryptoTransaction, CryptoStatus.ON_CRYPTO_NETWORK);
             cryptoTransactions.add(onCryptoNetwork);
         }
@@ -672,6 +692,7 @@ public class BitcoinCryptoNetworkManager implements TransactionProtocolManager, 
 
     /**
      * instantiates a new cryptoTransaction with a new CryptoStatus
+     *
      * @param cryptoTransaction
      * @param cryptoStatus
      * @return
@@ -693,17 +714,19 @@ public class BitcoinCryptoNetworkManager implements TransactionProtocolManager, 
 
     /**
      * Will get all the CryptoTransactions stored in the CryptoNetwork which are a child of a parent Transaction
+     *
      * @param parentHash the parent transaction
-     * @param depth the depth of how many transactions we will navigate until we reach the parent transaction. Max is 10
+     * @param depth      the depth of how many transactions we will navigate until we reach the parent transaction. Max is 10
      * @return
      * @throws CantGetCryptoTransactionException
      */
     public List<CryptoTransaction> getChildCryptoTransaction(String parentHash, int depth) throws CantGetCryptoTransactionException {
-       return null;
+        return null;
     }
 
     /**
      * gets the current Crypto Status for the specified Transaction ID
+     *
      * @param txHash the Bitcoin transaction hash
      * @return the last crypto status
      * @throws CantGetTransactionCryptoStatusException
@@ -719,6 +742,7 @@ public class BitcoinCryptoNetworkManager implements TransactionProtocolManager, 
     /**
      * Will check and fix any inconsistency that may be in out transaction table.
      * For example, If i don't have all adressTo or From, or coin values of zero.
+     *
      * @throws CantFixTransactionInconsistenciesException
      */
     private void fixTransactionInconsistencies() throws CantFixTransactionInconsistenciesException {
@@ -733,7 +757,7 @@ public class BitcoinCryptoNetworkManager implements TransactionProtocolManager, 
         /**
          * Will iterate each transaction and fix any inconsistency
          */
-        for (TransactionProtocolData transactionProtocolData : transactions){
+        for (TransactionProtocolData transactionProtocolData : transactions) {
             if (transactionProtocolData.getCryptoTransaction().getAddressFrom().getAddress().contentEquals("Empty"))
                 fixAddressFromInconsistency(transactionProtocolData);
 
@@ -748,6 +772,7 @@ public class BitcoinCryptoNetworkManager implements TransactionProtocolManager, 
     /**
      * Fixes any inconsistency we may have in
      * the Crypto Amount
+     *
      * @param transactionProtocolData
      */
     private void fixCryptoAmountInconsistency(TransactionProtocolData transactionProtocolData) {
@@ -758,6 +783,7 @@ public class BitcoinCryptoNetworkManager implements TransactionProtocolManager, 
     /**
      * Fixes any inconsistency we may have in
      * the AddressTo
+     *
      * @param transactionProtocolData
      */
     private void fixAddressToInconsistency(TransactionProtocolData transactionProtocolData) {
@@ -767,6 +793,7 @@ public class BitcoinCryptoNetworkManager implements TransactionProtocolManager, 
 
     /**
      * Fixes any inconsistency we may have in the AddressFrom
+     *
      * @param transactionProtocolData
      */
     private void fixAddressFromInconsistency(TransactionProtocolData transactionProtocolData) {
@@ -777,6 +804,7 @@ public class BitcoinCryptoNetworkManager implements TransactionProtocolManager, 
 
     /**
      * Stores a Bitcoin Transaction in the CryptoNetwork to be broadcasted later
+     *
      * @param blockchainNetworkType
      * @param tx
      * @param transactionId
@@ -788,6 +816,7 @@ public class BitcoinCryptoNetworkManager implements TransactionProtocolManager, 
 
     /**
      * Returns the broadcast Status for a specified transaction.
+     *
      * @param txHash
      * @return
      * @throws CantGetBroadcastStatusException
@@ -796,12 +825,13 @@ public class BitcoinCryptoNetworkManager implements TransactionProtocolManager, 
         try {
             return getDao().getBroadcastStatus(txHash);
         } catch (CantExecuteDatabaseOperationException e) {
-            throw new CantGetBroadcastStatusException (CantGetBroadcastStatusException.DEFAULT_MESSAGE, e, "There was a database error getting the status", "database issue");
+            throw new CantGetBroadcastStatusException(CantGetBroadcastStatusException.DEFAULT_MESSAGE, e, "There was a database error getting the status", "database issue");
         }
     }
 
     /**
      * Will mark the passed transaction as cancelled, and it won't be broadcasted again.
+     *
      * @param txHash
      * @throws CantCancellBroadcastTransactionException
      */
@@ -825,17 +855,19 @@ public class BitcoinCryptoNetworkManager implements TransactionProtocolManager, 
 
     /**
      * Will get the BlockchainConnectionStatus for the specified network.
+     *
      * @param blockchainNetworkType the Network type we won't to get info from. If the passed network is not currently activated,
      *                              then we will receive null.
      * @return BlockchainConnectionStatus with information of amount of peers currently connected, etc.
-     * @exception CantGetBlockchainConnectionStatusException
+     * @throws CantGetBlockchainConnectionStatusException
      */
     public BlockchainConnectionStatus getBlockchainConnectionStatus(BlockchainNetworkType blockchainNetworkType) throws CantGetBlockchainConnectionStatusException {
         return runningAgents.get(blockchainNetworkType).getBlockchainConnectionStatus();
     }
 
-     /**
+    /**
      * Gets a stored CryptoTransaction in wathever network.
+     *
      * @param txHash the transaction hash we want to get the CryptoTransaction
      * @return the last recorded CryptoTransaction.
      * @throws CantGetCryptoTransactionException
@@ -853,8 +885,9 @@ public class BitcoinCryptoNetworkManager implements TransactionProtocolManager, 
      * Based on the passed transaction chain of Transactions hashes and Blocks hashes, determines the entire path
      * of the chain until the Genesis Transaction is reached.
      * The genesis Transaction will be the first transaction in the map.
+     *
      * @param blockchainNetworkType the active network to validate
-     * @param transactionChain a Map with the form TransactionHash / BlockHash
+     * @param transactionChain      a Map with the form TransactionHash / BlockHash
      * @return all the CryptoTransactions originated at the genesis transaction
      * @throws CantGetCryptoTransactionException
      */
@@ -870,6 +903,7 @@ public class BitcoinCryptoNetworkManager implements TransactionProtocolManager, 
     /**
      * Based on a passed CryptoTransaction, returns a list of all the previous generated cryptoTransactions
      * with the different CryptoStatus genereated
+     *
      * @param cryptoTransaction
      * @return
      */
@@ -877,7 +911,7 @@ public class BitcoinCryptoNetworkManager implements TransactionProtocolManager, 
         List<CryptoTransaction> cryptoTransactions = new ArrayList<>();
 
         CryptoTransaction onCryptoNetwork = cryptoTransaction;
-        switch (cryptoTransaction.getCryptoStatus()){
+        switch (cryptoTransaction.getCryptoStatus()) {
             case IRREVERSIBLE:
                 onCryptoNetwork.setCryptoStatus(CryptoStatus.ON_CRYPTO_NETWORK);
                 cryptoTransactions.add(onCryptoNetwork);
@@ -907,8 +941,9 @@ public class BitcoinCryptoNetworkManager implements TransactionProtocolManager, 
      * Based on the passed transaction chain of Transactions hashes and Blocks hashes, determines the entire path
      * of the chain until the Genesis Transaction is reached.
      * The genesis Transaction will be the first transaction in the map.
+     *
      * @param blockchainNetworkType the active network to validate
-     * @param transactionChain a Map with the form TransactionHash / BlockHash
+     * @param transactionChain      a Map with the form TransactionHash / BlockHash
      * @return the transaction that represents the GenesisTransaction
      * @throws CantGetCryptoTransactionException
      */
@@ -931,49 +966,48 @@ public class BitcoinCryptoNetworkManager implements TransactionProtocolManager, 
          * iterating reverse using guava :-)
          */
 
-        for(Map.Entry<String,String> entry : Lists.reverse(Lists.newArrayList(transactionChain.entrySet())) ){
+        for (Map.Entry<String, String> entry : Lists.reverse(Lists.newArrayList(transactionChain.entrySet()))) {
             /**
              * first iteration may have block hash null because transaction is not yet confirmed. If this is the case I will move to the next one
              */
-            if (entry.getValue().isEmpty())
-                break;
+            if (!isValidString(entry.getValue()))
+                continue;
 
             /**
              * if this is the first entry, I will only get the first transaction in the chain
              */
-            if (childTransaction == null){
+            if (childTransaction == null) {
                 try {
                     childTransaction = this.getTransactionFromBlockChain(blockchainNetworkType, entry.getKey(), entry.getValue());
                 } catch (CantGetTransactionsException e) {
                     throw new CantGetTransactionException(CantGetTransactionException.DEFAULT_MESSAGE, e, "Error downloading child transaction from peer.", "Network issue - Timeout");
                 }
             }
-            else{
-                try {
-                    /**
-                     * I will compare the childTransaction against the parent transaction, making sure that the child Transaction is an has an outputPoint to his parent.
-                     */
-                    parentTransaction = this.getTransactionFromBlockChain(blockchainNetworkType,entry.getKey(), entry.getValue());
-                    if (!childTransaction.getInput(0).getOutpoint().getHash().equals(parentTransaction.getHash())){
-                        StringBuilder output = new StringBuilder("The passed chain of transactions is not lineal.");
-                        output.append(System.lineSeparator());
-                        output.append("Transaction hash " + childTransaction.getHashAsString() + " is not a child of " + parentTransaction.getHashAsString());
-                        throw new CantGetTransactionException(CantGetTransactionException.DEFAULT_MESSAGE, null, output.toString(), null);
-                    }
+            try {
+                /**
+                 * I will compare the childTransaction against the parent transaction, making sure that the child Transaction is an has an outputPoint to his parent.
+                 */
+                parentTransaction = this.getTransactionFromBlockChain(blockchainNetworkType, entry.getKey(), entry.getValue());
 
-                    /**
-                     * I will set the new childTransaction for the next run.
-                     */
-                    childTransaction = parentTransaction;
-
-                    /**
-                     * I will set the genesis Transaction as the parent, so that when the loop is over, I will be getting
-                     * truly the genesisTransaction.
-                     */
-                    genesisTransaction = parentTransaction;
-                } catch (CantGetTransactionsException e) {
-                    throw new CantGetTransactionException(CantGetTransactionException.DEFAULT_MESSAGE, e, "Error downloading transaction from peer.", "Network issue - Timeout");
+                if (!childTransaction.equals(parentTransaction) && !childTransaction.getInput(0).getOutpoint().getHash().equals(parentTransaction.getHash())) {
+                    StringBuilder output = new StringBuilder("The passed chain of transactions is not lineal.");
+                    output.append(System.lineSeparator());
+                    output.append("Transaction hash " + childTransaction.getHashAsString() + " is not a child of " + parentTransaction.getHashAsString());
+                    throw new CantGetTransactionException(CantGetTransactionException.DEFAULT_MESSAGE, null, output.toString(), null);
                 }
+
+                /**
+                 * I will set the new childTransaction for the next run.
+                 */
+                childTransaction = parentTransaction;
+
+                /**
+                 * I will set the genesis Transaction as the parent, so that when the loop is over, I will be getting
+                 * truly the genesisTransaction.
+                 */
+                genesisTransaction = parentTransaction;
+            } catch (CantGetTransactionsException e) {
+                throw new CantGetTransactionException(CantGetTransactionException.DEFAULT_MESSAGE, e, "Error downloading transaction from peer.", "Network issue - Timeout");
             }
         }
         return genesisTransaction;

@@ -1,4 +1,4 @@
-package com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.asset_appropiation.developer.bitdubai.version_1;
+package com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.issuer_appropriation.developer.bitdubai.version_1;
 
 import com.bitdubai.fermat_api.CantStartPluginException;
 import com.bitdubai.fermat_api.FermatException;
@@ -35,21 +35,21 @@ import com.bitdubai.fermat_dap_api.layer.all_definition.enums.AppropriationStatu
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.interfaces.ActorAssetUserManager;
 import com.bitdubai.fermat_dap_api.layer.dap_actor_network_service.asset_issuer.interfaces.AssetIssuerActorNetworkServiceManager;
 import com.bitdubai.fermat_dap_api.layer.dap_transaction.asset_appropriation.exceptions.CantLoadAssetAppropriationTransactionListException;
-import com.bitdubai.fermat_dap_api.layer.dap_transaction.asset_appropriation.interfaces.AssetAppropriationManager;
 import com.bitdubai.fermat_dap_api.layer.dap_transaction.common.exceptions.CantDeliverDatabaseException;
 import com.bitdubai.fermat_dap_api.layer.dap_transaction.common.exceptions.CantExecuteAppropriationTransactionException;
 import com.bitdubai.fermat_dap_api.layer.dap_transaction.common.exceptions.RecordsNotFoundException;
 import com.bitdubai.fermat_dap_api.layer.dap_transaction.common.exceptions.TransactionAlreadyStartedException;
 import com.bitdubai.fermat_dap_api.layer.dap_transaction.common.interfaces.AppropriationTransactionRecord;
+import com.bitdubai.fermat_dap_api.layer.dap_transaction.issuer_appropriation.interfaces.IssuerAppropriationManager;
 import com.bitdubai.fermat_dap_api.layer.dap_wallet.asset_issuer_wallet.interfaces.AssetIssuerWalletManager;
 import com.bitdubai.fermat_dap_api.layer.dap_wallet.asset_user_wallet.interfaces.AssetUserWalletManager;
-import com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.asset_appropiation.developer.bitdubai.version_1.developer_utils.AssetAppropriationDeveloperDatabaseFactory;
-import com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.asset_appropiation.developer.bitdubai.version_1.structure.database.AssetAppropriationDAO;
-import com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.asset_appropiation.developer.bitdubai.version_1.structure.database.AssetAppropriationDatabaseConstants;
-import com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.asset_appropiation.developer.bitdubai.version_1.structure.database.AssetAppropriationDatabaseFactory;
-import com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.asset_appropiation.developer.bitdubai.version_1.structure.events.AssetAppropriationMonitorAgent;
-import com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.asset_appropiation.developer.bitdubai.version_1.structure.events.AssetAppropriationRecorderService;
-import com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.asset_appropiation.developer.bitdubai.version_1.structure.functional.AssetAppropriationVault;
+import com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.issuer_appropriation.developer.bitdubai.version_1.developer_utils.IssuerAppropriationDeveloperDatabaseFactory;
+import com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.issuer_appropriation.developer.bitdubai.version_1.structure.database.IssuerAppropriationDAO;
+import com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.issuer_appropriation.developer.bitdubai.version_1.structure.database.IssuerAppropriationDatabaseConstants;
+import com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.issuer_appropriation.developer.bitdubai.version_1.structure.database.IssuerAppropriationDatabaseFactory;
+import com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.issuer_appropriation.developer.bitdubai.version_1.structure.events.IssuerAppropriationMonitorAgent;
+import com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.issuer_appropriation.developer.bitdubai.version_1.structure.events.IssuerAppropriationRecorderService;
+import com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.issuer_appropriation.developer.bitdubai.version_1.structure.functional.IssuerAppropriationVault;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedPluginExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfaces.EventManager;
@@ -64,8 +64,8 @@ import java.util.regex.Pattern;
 /**
  * Created by Manuel Perez (darkpriestrelative@gmail.com) on 16/09/15.
  */
-public class AssetAppropriationDigitalAssetTransactionPluginRoot extends AbstractPlugin implements
-        AssetAppropriationManager,
+public class IssuerAppropriationDigitalAssetTransactionPluginRoot extends AbstractPlugin implements
+        IssuerAppropriationManager,
         LogManagerForDevelopers,
         DatabaseManagerForDevelopers {
 
@@ -118,13 +118,13 @@ public class AssetAppropriationDigitalAssetTransactionPluginRoot extends Abstrac
 
     static Map<String, LogLevel> newLoggingLevel = new HashMap<>();
 
-    AssetAppropriationRecorderService recorderService;
-    AssetAppropriationMonitorAgent monitorAgent;
-    AssetAppropriationVault assetVault;
+    IssuerAppropriationRecorderService recorderService;
+    IssuerAppropriationMonitorAgent monitorAgent;
+    IssuerAppropriationVault assetVault;
 
     //CONSTRUCTORS
 
-    public AssetAppropriationDigitalAssetTransactionPluginRoot() {
+    public IssuerAppropriationDigitalAssetTransactionPluginRoot() {
         super(new PluginVersionReference(new Version()));
     }
 
@@ -135,19 +135,20 @@ public class AssetAppropriationDigitalAssetTransactionPluginRoot extends Abstrac
      * This method starts the appropriation flow. Saves the information in the database and store
      * the asset in the file system.
      *
-     * @param digitalAssetMetadata     the asset to be appropriated
-     * @param assetUserWalletPublicKey the public key from the asset user wallet where this asset will be debited.
-     * @param bitcoinWalletPublicKey   the bitcoin wallet public key where the bitcoins will be sent.
+     * @param digitalAssetMetadata       the asset to be appropriated
+     * @param assetIssuerWalletPublicKey the public key from the asset user wallet where this asset will be debited.
+     * @param bitcoinWalletPublicKey     the bitcoin wallet public key where the bitcoins will be sent.
      * @throws CantExecuteAppropriationTransactionException in case something bad happen and the appropriation flow can't start.
      * @throws TransactionAlreadyStartedException           in case for some reason you try to appropriate the same asset twice.
      */
     @Override
-    public void appropriateAsset(DigitalAssetMetadata digitalAssetMetadata, String assetUserWalletPublicKey, String bitcoinWalletPublicKey, int amountToAppropriate) throws CantExecuteAppropriationTransactionException, TransactionAlreadyStartedException {
-        String context = "Asset: " + digitalAssetMetadata + " - User Wallet: " + assetUserWalletPublicKey + " - BTC Wallet: " + bitcoinWalletPublicKey;
+    public void appropriateAsset(DigitalAssetMetadata digitalAssetMetadata, String assetIssuerWalletPublicKey, String bitcoinWalletPublicKey, int amountToAppropriate) throws CantExecuteAppropriationTransactionException, TransactionAlreadyStartedException {
+        String context = "Asset: " + digitalAssetMetadata + " - User Wallet: " + assetIssuerWalletPublicKey + " - BTC Wallet: " + bitcoinWalletPublicKey;
 
-        try (AssetAppropriationDAO dao = new AssetAppropriationDAO(pluginDatabaseSystem, pluginId, assetVault)) {
+        try {
+            IssuerAppropriationDAO dao = new IssuerAppropriationDAO(pluginDatabaseSystem, pluginId, assetVault);
             for (int i = 0; i < amountToAppropriate; i++) {
-                String transactionId = dao.startAppropriation(digitalAssetMetadata, assetUserWalletPublicKey, bitcoinWalletPublicKey);
+                String transactionId = dao.startAppropriation(digitalAssetMetadata, assetIssuerWalletPublicKey, bitcoinWalletPublicKey);
             }
         } catch (TransactionAlreadyStartedException | CantExecuteAppropriationTransactionException e) {
             throw e;
@@ -159,7 +160,7 @@ public class AssetAppropriationDigitalAssetTransactionPluginRoot extends Abstrac
 
     @Override
     public void start() throws CantStartPluginException {
-        System.out.println("VAMM: PLUGIN ASSET APPROPRIATION INICIADO!!");
+        System.out.println("VAMM: PLUGIN ISSUER APPROPRIATION INICIADO!!");
 
         String context = "pluginId : " + pluginId + "\n" +
                 "ErrorManager : " + errorManager + "\n" +
@@ -171,41 +172,30 @@ public class AssetAppropriationDigitalAssetTransactionPluginRoot extends Abstrac
 
         try {
             //CREATES ASSET APPROPRIATION DATABASE AND ITS TABLES.
-            AssetAppropriationDatabaseFactory databaseFactory = new AssetAppropriationDatabaseFactory(pluginDatabaseSystem);
+            IssuerAppropriationDatabaseFactory databaseFactory = new IssuerAppropriationDatabaseFactory(pluginDatabaseSystem);
             if (!databaseFactory.isDatabaseCreated(pluginId)) {
                 databaseFactory.createDatabase(pluginId);
             }
-            assetVault = new AssetAppropriationVault(pluginId, pluginFileSystem);
-            recorderService = new AssetAppropriationRecorderService(pluginId, eventManager, pluginDatabaseSystem, assetVault);
+            assetVault = new IssuerAppropriationVault(pluginId, pluginFileSystem);
+            recorderService = new IssuerAppropriationRecorderService(pluginId, eventManager, pluginDatabaseSystem, assetVault);
             recorderService.start();
-            monitorAgent = new AssetAppropriationMonitorAgent(assetVault,
+            monitorAgent = new IssuerAppropriationMonitorAgent(assetVault,
                     pluginDatabaseSystem,
                     logManager,
                     errorManager,
                     pluginId,
                     assetVaultManager,
-                    assetUserWalletManager,
                     bitcoinNetworkManager,
                     cryptoAddressBookManager,
                     cryptoVaultManager,
                     intraWalletUserIdentityManager,
-                    assetIssuerActorNetworkServiceManager,
-                    assetIssuerWalletManager,
-                    actorAssetUserManager);
+                    assetIssuerWalletManager);
             monitorAgent.start();
         } catch (Exception e) {
             throw new CantStartPluginException(FermatException.wrapException(e), context, e.getMessage());
         } finally {
             this.serviceStatus = ServiceStatus.STOPPED;
         }
-
-
-        //TODO REMOVE TEST METHOD.
-//        try {
-//            test();
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//        }
 
         super.start();
     }
@@ -235,10 +225,11 @@ public class AssetAppropriationDigitalAssetTransactionPluginRoot extends Abstrac
     }
 
     @Override
-    public AppropriationTransactionRecord getTransaction(DigitalAssetMetadata digitalAssetMetadata, String assetUserWalletPublicKey, String bitcoinWalletPublicKey) throws RecordsNotFoundException, CantLoadAssetAppropriationTransactionListException {
-        String context = "Asset: " + digitalAssetMetadata + " - User Wallet: " + assetUserWalletPublicKey + " - BTC Wallet: " + bitcoinWalletPublicKey;
-        try (AssetAppropriationDAO dao = new AssetAppropriationDAO(pluginDatabaseSystem, pluginId, assetVault)) {
-            return dao.getTransaction(digitalAssetMetadata.getDigitalAsset(), assetUserWalletPublicKey, bitcoinWalletPublicKey);
+    public AppropriationTransactionRecord getTransaction(DigitalAssetMetadata digitalAssetMetadata, String assetIssuerWalletPublicKey, String bitcoinWalletPublicKey) throws RecordsNotFoundException, CantLoadAssetAppropriationTransactionListException {
+        String context = "Asset: " + digitalAssetMetadata + " - User Wallet: " + assetIssuerWalletPublicKey + " - BTC Wallet: " + bitcoinWalletPublicKey;
+        try {
+            IssuerAppropriationDAO dao = new IssuerAppropriationDAO(pluginDatabaseSystem, pluginId, assetVault);
+            return dao.getTransaction(digitalAssetMetadata.getDigitalAsset(), assetIssuerWalletPublicKey, bitcoinWalletPublicKey);
         } catch (RecordsNotFoundException | CantLoadAssetAppropriationTransactionListException e) { //If I don't catch these two they'll be elapsed by the exception catch block.
             throw e;
         } catch (Exception e) {
@@ -258,7 +249,8 @@ public class AssetAppropriationDigitalAssetTransactionPluginRoot extends Abstrac
     @Override
     public AppropriationTransactionRecord getTransaction(String genesisTransaction) throws RecordsNotFoundException, CantLoadAssetAppropriationTransactionListException {
         String context = "Genesis Transaction: " + genesisTransaction;
-        try (AssetAppropriationDAO dao = new AssetAppropriationDAO(pluginDatabaseSystem, pluginId, assetVault)) {
+        try {
+            IssuerAppropriationDAO dao = new IssuerAppropriationDAO(pluginDatabaseSystem, pluginId, assetVault);
             return dao.getTransaction(genesisTransaction);
         } catch (RecordsNotFoundException | CantLoadAssetAppropriationTransactionListException e) { //If I don't catch these two they'll be elapsed by the exception catch block.
             throw e;
@@ -268,10 +260,11 @@ public class AssetAppropriationDigitalAssetTransactionPluginRoot extends Abstrac
     }
 
     @Override
-    public List<AppropriationTransactionRecord> getTransactionsForUserWallet(String assetUserWalletPublicKey) throws CantLoadAssetAppropriationTransactionListException {
-        String context = "User Wallet: " + assetUserWalletPublicKey;
-        try (AssetAppropriationDAO dao = new AssetAppropriationDAO(pluginDatabaseSystem, pluginId, assetVault)) {
-            return dao.getTransactionsForUserWallet(assetUserWalletPublicKey);
+    public List<AppropriationTransactionRecord> getTransactionsForUserWallet(String assetIssuerWalletPublicKey) throws CantLoadAssetAppropriationTransactionListException {
+        String context = "User Wallet: " + assetIssuerWalletPublicKey;
+        try {
+            IssuerAppropriationDAO dao = new IssuerAppropriationDAO(pluginDatabaseSystem, pluginId, assetVault);
+            return dao.getTransactionsForUserWallet(assetIssuerWalletPublicKey);
         } catch (CantLoadAssetAppropriationTransactionListException e) {  //If I don't catch this exception it'll be elapsed by the exception catch block.
             throw e;
         } catch (Exception e) {
@@ -282,7 +275,8 @@ public class AssetAppropriationDigitalAssetTransactionPluginRoot extends Abstrac
     @Override
     public List<AppropriationTransactionRecord> getTransactionsForStatus(AppropriationStatus status) throws CantLoadAssetAppropriationTransactionListException {
         String context = "Status: " + status.getCode();
-        try (AssetAppropriationDAO dao = new AssetAppropriationDAO(pluginDatabaseSystem, pluginId, assetVault)) {
+        try {
+            IssuerAppropriationDAO dao = new IssuerAppropriationDAO(pluginDatabaseSystem, pluginId, assetVault);
             return dao.getTransactionsForStatus(status);
         } catch (CantLoadAssetAppropriationTransactionListException e) { //If I don't catch this exception it'll be elapsed by the exception catch block.
             throw e;
@@ -301,7 +295,8 @@ public class AssetAppropriationDigitalAssetTransactionPluginRoot extends Abstrac
     @Override
     public List<AppropriationTransactionRecord> getTransactionsForBitcoinWallet(String bitcoinWalletPublicKey) throws CantLoadAssetAppropriationTransactionListException {
         String context = "BitcoinWallet: " + bitcoinWalletPublicKey;
-        try (AssetAppropriationDAO dao = new AssetAppropriationDAO(pluginDatabaseSystem, pluginId, assetVault)) {
+        try {
+            IssuerAppropriationDAO dao = new IssuerAppropriationDAO(pluginDatabaseSystem, pluginId, assetVault);
             return dao.getTransactionsForBitcoinWallet(bitcoinWalletPublicKey);
         } catch (CantLoadAssetAppropriationTransactionListException e) { //If I don't catch this exception it'll be elapsed by the exception catch block.
             throw e;
@@ -319,11 +314,11 @@ public class AssetAppropriationDigitalAssetTransactionPluginRoot extends Abstrac
             /**
              * if this path already exists in the Root.bewLoggingLevel I'll update the value, else, I will put as new
              */
-            if (AssetAppropriationDigitalAssetTransactionPluginRoot.newLoggingLevel.containsKey(pluginPair.getKey())) {
-                AssetAppropriationDigitalAssetTransactionPluginRoot.newLoggingLevel.remove(pluginPair.getKey());
-                AssetAppropriationDigitalAssetTransactionPluginRoot.newLoggingLevel.put(pluginPair.getKey(), pluginPair.getValue());
+            if (IssuerAppropriationDigitalAssetTransactionPluginRoot.newLoggingLevel.containsKey(pluginPair.getKey())) {
+                IssuerAppropriationDigitalAssetTransactionPluginRoot.newLoggingLevel.remove(pluginPair.getKey());
+                IssuerAppropriationDigitalAssetTransactionPluginRoot.newLoggingLevel.put(pluginPair.getKey(), pluginPair.getValue());
             } else {
-                AssetAppropriationDigitalAssetTransactionPluginRoot.newLoggingLevel.put(pluginPair.getKey(), pluginPair.getValue());
+                IssuerAppropriationDigitalAssetTransactionPluginRoot.newLoggingLevel.put(pluginPair.getKey(), pluginPair.getValue());
             }
         }
     }
@@ -335,7 +330,7 @@ public class AssetAppropriationDigitalAssetTransactionPluginRoot extends Abstrac
              * I need to ignore whats after this.
              */
             String[] correctedClass = className.split((Pattern.quote("$")));
-            return AssetAppropriationDigitalAssetTransactionPluginRoot.newLoggingLevel.get(correctedClass[0]);
+            return IssuerAppropriationDigitalAssetTransactionPluginRoot.newLoggingLevel.get(correctedClass[0]);
         } catch (Exception e) {
             /**
              * If I couldn't get the correct loggin level, then I will set it to minimal.
@@ -346,20 +341,20 @@ public class AssetAppropriationDigitalAssetTransactionPluginRoot extends Abstrac
 
     @Override
     public List<DeveloperDatabase> getDatabaseList(DeveloperObjectFactory developerObjectFactory) {
-        return AssetAppropriationDeveloperDatabaseFactory.getDatabaseList(developerObjectFactory, pluginId);
+        return IssuerAppropriationDeveloperDatabaseFactory.getDatabaseList(developerObjectFactory, pluginId);
     }
 
     @Override
     public List<DeveloperDatabaseTable> getDatabaseTableList(DeveloperObjectFactory developerObjectFactory, DeveloperDatabase developerDatabase) {
-        return AssetAppropriationDeveloperDatabaseFactory.getDatabaseTableList(developerObjectFactory);
+        return IssuerAppropriationDeveloperDatabaseFactory.getDatabaseTableList(developerObjectFactory);
     }
 
     @Override
     public List<DeveloperDatabaseTableRecord> getDatabaseTableContent(DeveloperObjectFactory developerObjectFactory, DeveloperDatabase developerDatabase, DeveloperDatabaseTable developerDatabaseTable) {
         Database database;
         try {
-            database = this.pluginDatabaseSystem.openDatabase(pluginId, AssetAppropriationDatabaseConstants.ASSET_APPROPRIATION_DATABASE);
-            return AssetAppropriationDeveloperDatabaseFactory.getDatabaseTableContent(developerObjectFactory, database, developerDatabaseTable);
+            database = this.pluginDatabaseSystem.openDatabase(pluginId, IssuerAppropriationDatabaseConstants.ISSUER_APPROPRIATION_DATABASE);
+            return IssuerAppropriationDeveloperDatabaseFactory.getDatabaseTableContent(developerObjectFactory, database, developerDatabaseTable);
         } catch (CantOpenDatabaseException cantOpenDatabaseException) {
             /**
              * The database exists but cannot be open. I can not handle this situation.
@@ -377,7 +372,7 @@ public class AssetAppropriationDigitalAssetTransactionPluginRoot extends Abstrac
         return Collections.EMPTY_LIST;
     }
 
-    public AssetAppropriationVault getAssetVault() {
+    public IssuerAppropriationVault getAssetVault() {
         return assetVault;
     }
 }
