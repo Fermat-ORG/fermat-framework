@@ -679,7 +679,7 @@ public class CryptoBrokerActorNetworkServicePluginRoot extends AbstractNetworkSe
                 communicationNetworkServiceConnectionManager.restart();
             }
 
-            if(!this.register){
+            if(communicationRegistrationProcessNetworkServiceAgent != null && !this.register){
 
                 if(communicationRegistrationProcessNetworkServiceAgent.isRunning()) {
 

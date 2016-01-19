@@ -1324,12 +1324,13 @@ public class IntraActorNetworkServicePluginRoot extends AbstractPlugin implement
            communicationNetworkServiceConnectionManager.restart();
         }
 
-        if(!this.register){
+        if(communicationRegistrationProcessNetworkServiceAgent != null && !this.register){
 
             if(communicationRegistrationProcessNetworkServiceAgent.isAlive()){
 
                 communicationRegistrationProcessNetworkServiceAgent.interrupt();
                 communicationRegistrationProcessNetworkServiceAgent = null;
+            }
 
                 /*
                  * Construct my profile and register me
@@ -1362,7 +1363,7 @@ public class IntraActorNetworkServicePluginRoot extends AbstractPlugin implement
                 this.initializeCommunicationNetworkServiceConnectionManager();
 
 
-            }
+
 
         }
 

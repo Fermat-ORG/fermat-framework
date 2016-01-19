@@ -760,7 +760,7 @@ public class TransactionTransmissionPluginRoot extends AbstractNetworkService im
                 communicationNetworkServiceConnectionManager.restart();
             }
 
-            if(!this.register){
+            if(communicationRegistrationProcessNetworkServiceAgent != null && !this.register){
 
                 if(communicationRegistrationProcessNetworkServiceAgent.isRunning()) {
                     communicationRegistrationProcessNetworkServiceAgent.stop();

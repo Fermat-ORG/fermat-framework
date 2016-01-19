@@ -969,7 +969,7 @@ public final class CryptoPaymentRequestNetworkServicePluginRoot extends Abstract
             }
 
             if(!this.register){
-                if(communicationRegistrationProcessNetworkServiceAgent != null) {
+                if(communicationRegistrationProcessNetworkServiceAgent != null && communicationRegistrationProcessNetworkServiceAgent != null) {
 
                     communicationRegistrationProcessNetworkServiceAgent.stop();
                     communicationRegistrationProcessNetworkServiceAgent = null;

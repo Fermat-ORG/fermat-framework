@@ -977,7 +977,7 @@ public class CryptoAddressesNetworkServicePluginRoot extends AbstractNetworkServ
                 communicationNetworkServiceConnectionManager.restart();
             }
 
-            if(!this.register){
+            if(communicationRegistrationProcessNetworkServiceAgent != null && !this.register){
                 if(communicationRegistrationProcessNetworkServiceAgent != null) {
                     communicationRegistrationProcessNetworkServiceAgent.stop();
                     communicationRegistrationProcessNetworkServiceAgent = null;
