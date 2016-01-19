@@ -1,5 +1,6 @@
-package unit.CryptoMoneyDestockTransactionImpl;
+package unit.CryptoMoneyRestockTransactionImpl;
 
+import com.bitdubai.fermat_api.layer.all_definition.enums.CryptoCurrency;
 import com.bitdubai.fermat_cbp_plugin.layer.stock_transactions.crypto_money_restock.developer.bitdubai.version_1.structure.CryptoMoneyRestockTransactionImpl;
 
 import org.junit.Test;
@@ -14,13 +15,13 @@ import static org.mockito.Mockito.when;
  * Created by Jose Vilchez on 18/01/16.
  */
 @RunWith(MockitoJUnitRunner.class)
-public class getActorPublicKeyTest {
+public class getCryptoCurrencyTest {
+    private CryptoCurrency cryptoCurrency = CryptoCurrency.BITCOIN;
 
     @Test
-    public void getActorPublicKey(){
+    public void getCryptoCurrency(){
         CryptoMoneyRestockTransactionImpl cryptoMoneyRestockTransaction = mock(CryptoMoneyRestockTransactionImpl.class);
-            when(cryptoMoneyRestockTransaction.getActorPublicKey()).thenReturn(new String());
-            assertThat(cryptoMoneyRestockTransaction.getActorPublicKey()).isNotNull();
+        when(cryptoMoneyRestockTransaction.getCryptoCurrency()).thenReturn(cryptoCurrency);
+        assertThat(cryptoMoneyRestockTransaction.getCryptoCurrency()).isNotNull();
     }
-
 }
