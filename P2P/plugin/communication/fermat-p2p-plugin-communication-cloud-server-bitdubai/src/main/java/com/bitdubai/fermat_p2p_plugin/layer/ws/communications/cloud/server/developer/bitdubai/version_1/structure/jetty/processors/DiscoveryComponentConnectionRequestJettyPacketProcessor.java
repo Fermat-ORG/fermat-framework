@@ -28,6 +28,7 @@ import org.apache.commons.lang.ClassUtils;
 import org.apache.log4j.Logger;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -141,14 +142,14 @@ public class DiscoveryComponentConnectionRequestJettyPacketProcessor extends Fer
         }catch (Exception e){
 
             LOG.error("Requested connection is no possible, some of the participant are no available.");
-            LOG.error("Cause: " + e.getMessage());
             LOG.error("Details: ");
             LOG.error("ApplicantParticipant is available    = " + (applicantParticipant    != null ? "SI ("+applicantParticipant.getAlias()+")" : "NO" ));
             LOG.error("NetworkServiceApplicant is available = " + (applicantNetworkService != null ? "SI (" + applicantNetworkService.getAlias() + ")" : "NO"));
             LOG.error("RemoteParticipant is available       = " + (remoteParticipant != null ? "SI (" + remoteParticipant.getAlias() + ")" : "NO"));
             LOG.error("RemoteNsParticipant is available     = " + (remoteNsParticipant != null ? "SI (" + remoteNsParticipant.getAlias() + ")" : "NO"));
+            LOG.error("Cause: " + e.getMessage());
+            LOG.error("Cause: " + e.getCause().getMessage()));
 
-            e.printStackTrace();
 
             String details = "";
 

@@ -45,6 +45,11 @@ android {
         main {
             res.srcDirs = ['src/main/structured_res/app/shell/version_1',
                            'src/main/res']
+            java {
+                include 'com/ourcompany/somepackage/activityadapter/**'
+                include 'com/ourcompany/someotherpackage/**'
+                exclude 'javax/websocket/**'
+            }
         }
     }
     buildTypes {
