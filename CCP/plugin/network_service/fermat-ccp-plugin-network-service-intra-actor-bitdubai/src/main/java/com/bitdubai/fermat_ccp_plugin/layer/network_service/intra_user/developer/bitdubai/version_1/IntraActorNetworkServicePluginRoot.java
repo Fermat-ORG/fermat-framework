@@ -100,6 +100,7 @@ import com.bitdubai.fermat_ccp_plugin.layer.network_service.intra_user.developer
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.contents.FermatMessageCommunication;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.enums.P2pEventType;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.events.ClientConnectionCloseNotificationEvent;
+import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.events.ClientSuccessReconnectNotificationEvent;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.events.VPNConnectionCloseNotificationEvent;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.MessagesStatus;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.WsCommunicationsCloudClientManager;
@@ -280,6 +281,7 @@ public class IntraActorNetworkServicePluginRoot extends AbstractPlugin implement
 
     private IntraActorNetworkServiceDao intraActorNetworkServiceDao;
 
+    private  boolean beforeRegistered;
     /**
      * Constructor
      */
@@ -291,6 +293,7 @@ public class IntraActorNetworkServicePluginRoot extends AbstractPlugin implement
         this.name = "Intra actor Network Service";
         this.alias = "IntraActorNetworkService";
         this.extraData = null;
+        beforeRegistered = false;
     }
 
     /**
@@ -530,7 +533,7 @@ public class IntraActorNetworkServicePluginRoot extends AbstractPlugin implement
                 /*
                  * Initialize the agent and start
                  */
-                communicationRegistrationProcessNetworkServiceAgent = new CommunicationRegistrationProcessNetworkServiceAgent(this, wsCommunicationsCloudClientManager.getCommunicationsCloudClientConnection());
+                communicationRegistrationProcessNetworkServiceAgent = new CommunicationRegistrationProcessNetworkServiceAgent(this, wsCommunicationsCloudClientManager);
                 communicationRegistrationProcessNetworkServiceAgent.start();
             }
 
@@ -693,6 +696,40 @@ public class IntraActorNetworkServicePluginRoot extends AbstractPlugin implement
 
         System.out.println(" CommunicationNetworkServiceConnectionManager - Starting method handleCompleteComponentRegistrationNotificationEvent");
 
+
+
+        if (platformComponentProfileRegistered.getPlatformComponentType() == PlatformComponentType.COMMUNICATION_CLOUD_CLIENT && this.register){
+
+            if(communicationRegistrationProcessNetworkServiceAgent.isAlive()){
+                communicationRegistrationProcessNetworkServiceAgent.interrupt();
+                communicationRegistrationProcessNetworkServiceAgent = null;
+            }
+
+            beforeRegistered = true;
+
+                /*
+                 * Construct my profile and register me
+                 */
+                PlatformComponentProfile platformComponentProfileToReconnect =  wsCommunicationsCloudClientManager.getCommunicationsCloudClientConnection().constructPlatformComponentProfileFactory(this.getIdentityPublicKey(),
+                        this.getAlias().toLowerCase(),
+                        this.getName(),
+                        this.getNetworkServiceType(),
+                        this.getPlatformComponentType(),
+                        this.getExtraData());
+
+                try {
+                    /*
+                     * Register me
+                     */
+                    wsCommunicationsCloudClientManager.getCommunicationsCloudClientConnection().registerComponentForCommunication(this.getNetworkServiceType(), platformComponentProfileToReconnect);
+
+                } catch (CantRegisterComponentException e) {
+                    e.printStackTrace();
+                }
+
+        }
+
+
         if (platformComponentProfileRegistered.getPlatformComponentType() == PlatformComponentType.ACTOR_INTRA_USER) {
             System.out.print("-----------------------\n" +
                     "ACTOR REGISTRADO!! -----------------------\n" +
@@ -707,12 +744,17 @@ public class IntraActorNetworkServicePluginRoot extends AbstractPlugin implement
                 platformComponentProfileRegistered.getNetworkServiceType() == NetworkServiceType.INTRA_USER &&
                 platformComponentProfileRegistered.getIdentityPublicKey().equals(identity.getPublicKey())) {
 
+
             /*
              * Mark as register
              */
             this.register = Boolean.TRUE;
 
-            initializeIntraActorAgent();
+            if(!beforeRegistered)
+                initializeIntraActorAgent();
+
+
+
 
 
             try {
@@ -1274,7 +1316,6 @@ public class IntraActorNetworkServicePluginRoot extends AbstractPlugin implement
 
         if(communicationNetworkServiceConnectionManager != null) {
             communicationNetworkServiceConnectionManager.stop();
-            this.register = false;
         }
 
     }
@@ -1286,9 +1327,52 @@ public class IntraActorNetworkServicePluginRoot extends AbstractPlugin implement
     public void handleClientSuccessfullReconnectNotificationEvent(FermatEvent fermatEvent) {
 
         System.out.println("SuccessfullReconnectNotificationEvent");
+
+
         if(communicationNetworkServiceConnectionManager != null) {
-            communicationNetworkServiceConnectionManager.restart();
-            this.register = true;
+           communicationNetworkServiceConnectionManager.restart();
+        }
+
+        if(!this.register){
+
+            if(communicationRegistrationProcessNetworkServiceAgent.isAlive()){
+
+                communicationRegistrationProcessNetworkServiceAgent.interrupt();
+                communicationRegistrationProcessNetworkServiceAgent = null;
+
+                /*
+                 * Construct my profile and register me
+                 */
+                PlatformComponentProfile platformComponentProfileToReconnect =  wsCommunicationsCloudClientManager.getCommunicationsCloudClientConnection().constructPlatformComponentProfileFactory(this.getIdentityPublicKey(),
+                        this.getAlias().toLowerCase(),
+                        this.getName(),
+                        this.getNetworkServiceType(),
+                        this.getPlatformComponentType(),
+                        this.getExtraData());
+
+                try {
+                    /*
+                     * Register me
+                     */
+                    wsCommunicationsCloudClientManager.getCommunicationsCloudClientConnection().registerComponentForCommunication(this.getNetworkServiceType(), platformComponentProfileToReconnect);
+
+                } catch (CantRegisterComponentException e) {
+                    e.printStackTrace();
+                }
+
+                /*
+                 * Configure my new profile
+                 */
+                this.setPlatformComponentProfilePluginRoot(platformComponentProfileToReconnect);
+
+                /*
+                 * Initialize the connection manager
+                 */
+                this.initializeCommunicationNetworkServiceConnectionManager();
+
+
+            }
+
         }
 
     }

@@ -50,7 +50,7 @@ public class ShareMemoryCacheForVpnClientsConnections {
      * @param key to identify
      * @return the VpnClientConnection instance
      */
-    public static VpnClientConnection get(NetworkServiceType networkServiceType, String key){
+    public synchronized static VpnClientConnection get(NetworkServiceType networkServiceType, String key){
 
         if(instance.connectionMap.containsKey(networkServiceType)){
             return instance.connectionMap.get(networkServiceType).get(key);
@@ -63,7 +63,7 @@ public class ShareMemoryCacheForVpnClientsConnections {
      *  Add a new vpn client connection to the memory cache
      * @param vpnClientConnection
      */
-    public static void add(VpnClientConnection vpnClientConnection){
+    public synchronized  static void add(VpnClientConnection vpnClientConnection){
 
         if(instance.connectionMap.containsKey(vpnClientConnection.getNetworkServiceType())){
             instance.connectionMap.get(vpnClientConnection.getNetworkServiceType()).put(vpnClientConnection.getMyKey(), vpnClientConnection);
@@ -82,7 +82,7 @@ public class ShareMemoryCacheForVpnClientsConnections {
      * @param key that identify
      * @return the VpnClientConnection remove
      */
-    public static VpnClientConnection remove(NetworkServiceType networkServiceType, String key){
+    public synchronized  static VpnClientConnection remove(NetworkServiceType networkServiceType, String key){
 
         if(instance.connectionMap.containsKey(networkServiceType)){
             return instance.connectionMap.get(networkServiceType).remove(key);
@@ -97,7 +97,7 @@ public class ShareMemoryCacheForVpnClientsConnections {
      * @param key
      * @return boolean
      */
-    public static boolean isConnected(NetworkServiceType networkServiceType, String key){
+    public synchronized  static boolean isConnected(NetworkServiceType networkServiceType, String key){
 
         if(instance.connectionMap.containsKey(networkServiceType)){
             return instance.connectionMap.get(networkServiceType).containsKey(key);
@@ -111,7 +111,7 @@ public class ShareMemoryCacheForVpnClientsConnections {
      * @param vpnClientConnection
      * @return VpnClientConnection
      */
-    public static VpnClientConnection getMyRemote(VpnClientConnection vpnClientConnection){
+    public synchronized  static VpnClientConnection getMyRemote(VpnClientConnection vpnClientConnection){
 
         if(instance.connectionMap.containsKey(vpnClientConnection.getNetworkServiceType())){
             return instance.connectionMap.get(vpnClientConnection.getNetworkServiceType()).get(vpnClientConnection.getKeyForMyRemote());

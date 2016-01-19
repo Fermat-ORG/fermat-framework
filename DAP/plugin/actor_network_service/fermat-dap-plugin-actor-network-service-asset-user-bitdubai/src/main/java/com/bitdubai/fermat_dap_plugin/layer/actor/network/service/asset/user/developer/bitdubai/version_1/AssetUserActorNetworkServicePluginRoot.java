@@ -6,6 +6,8 @@
  */
 package com.bitdubai.fermat_dap_plugin.layer.actor.network.service.asset.user.developer.bitdubai.version_1;
 
+import android.util.Base64;
+
 import com.bitdubai.fermat_api.CantStartPluginException;
 import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.annotations.NeededAddonReference;
@@ -91,9 +93,9 @@ import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfac
 import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfaces.EventManager;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -141,6 +143,8 @@ public class AssetUserActorNetworkServicePluginRoot extends AbstractNetworkServi
      * Represent the EVENT_SOURCE
      */
     public final static EventSource EVENT_SOURCE = EventSource.NETWORK_SERVICE_ACTOR_ASSET_USER;
+
+    protected final static String DAP_IMG_USER = "DAP_IMG_USER";
 
     private List<FermatEventListener> listenersAdded = new ArrayList<>();
 
@@ -217,19 +221,8 @@ public class AssetUserActorNetworkServicePluginRoot extends AbstractNetworkServi
      * because at this moment, is create the platformComponentProfile for this component
      */
     public void initializeCommunicationNetworkServiceConnectionManager() {
-        PlatformComponentProfile platformComponentProfile = wsCommunicationsCloudClientManager.getCommunicationsCloudClientConnection().constructPlatformComponentProfileFactory(getIdentityPublicKey(),
-                getAlias().toLowerCase(),
-                getName(),
-                getNetworkServiceType(),
-                getPlatformComponentType(),
-                getExtraData());
-
-                    /*
-                     * Configure my new profile
-                     */
-        setPlatformComponentProfilePluginRoot(platformComponentProfile);
         this.communicationNetworkServiceConnectionManager = new CommunicationNetworkServiceConnectionManager(
-                platformComponentProfile,
+                getPlatformComponentProfilePluginRoot(),
                 identity,
                 wsCommunicationsCloudClientManager.getCommunicationsCloudClientConnection(),
                 dataBase,
@@ -312,13 +305,18 @@ public class AssetUserActorNetworkServicePluginRoot extends AbstractNetworkServi
              * Initialize listeners
              */
             initializeListener();
-            initializeCommunicationNetworkServiceConnectionManager();
+
+            /*
+             * Verify if the communication cloud client is active
+             */
+            if (!wsCommunicationsCloudClientManager.isDisable()) {
 
                 /*
                  * Initialize the agent and start
                  */
-            communicationRegistrationProcessNetworkServiceAgent = new CommunicationRegistrationProcessNetworkServiceAgent(this, wsCommunicationsCloudClientManager.getCommunicationsCloudClientConnection());
-            communicationRegistrationProcessNetworkServiceAgent.start();
+                communicationRegistrationProcessNetworkServiceAgent = new CommunicationRegistrationProcessNetworkServiceAgent(this, wsCommunicationsCloudClientManager);
+                communicationRegistrationProcessNetworkServiceAgent.start();
+            }
 
             /*
              * Its all ok, set the new status
@@ -396,20 +394,21 @@ public class AssetUserActorNetworkServicePluginRoot extends AbstractNetworkServi
              * If register
              */
             if (true) {
-
-                System.out.println("*************************************");
-                System.out.println("Actor Asset User - Registrar Datos " + actorAssetUserToRegister.getName());
-                System.out.println("*************************************");
-
                 /*
                  * Construct the profile
                  */
-                PlatformComponentProfile platformComponentProfileAssetUser = communicationsClientConnection.constructPlatformComponentProfileFactory(actorAssetUserToRegister.getActorPublicKey(),
+                Gson gson = new Gson();
+                JsonObject jsonObject = new JsonObject();
+                jsonObject.addProperty(DAP_IMG_USER, Base64.encodeToString(actorAssetUserToRegister.getProfileImage(), Base64.DEFAULT));
+                String extraData = gson.toJson(jsonObject);
+
+                PlatformComponentProfile platformComponentProfileAssetUser = communicationsClientConnection.constructPlatformComponentProfileFactory(
+                        actorAssetUserToRegister.getActorPublicKey(),
                         actorAssetUserToRegister.getName().toLowerCase().trim(),
                         actorAssetUserToRegister.getName(),
                         NetworkServiceType.UNDEFINED,
                         PlatformComponentType.ACTOR_ASSET_USER,
-                        Arrays.toString(actorAssetUserToRegister.getProfileImage()));
+                        extraData);
                 /*
                  * ask to the communication cloud client to register
                  */
@@ -418,12 +417,89 @@ public class AssetUserActorNetworkServicePluginRoot extends AbstractNetworkServi
                 /*
                  * Construct the profile
                  */
-                PlatformComponentProfile platformComponentProfileAssetUser = communicationsClientConnection.constructPlatformComponentProfileFactory(actorAssetUserToRegister.getActorPublicKey(),
+                Gson gson = new Gson();
+                JsonObject jsonObject = new JsonObject();
+                jsonObject.addProperty(DAP_IMG_USER, Base64.encodeToString(actorAssetUserToRegister.getProfileImage(), Base64.DEFAULT));
+                String extraData = gson.toJson(jsonObject);
+
+                PlatformComponentProfile platformComponentProfileAssetUser = communicationsClientConnection.constructPlatformComponentProfileFactory(
+                        actorAssetUserToRegister.getActorPublicKey(),
                         actorAssetUserToRegister.getName().toLowerCase().trim(),
                         actorAssetUserToRegister.getName(),
                         NetworkServiceType.UNDEFINED,
                         PlatformComponentType.ACTOR_ASSET_USER,
-                        Arrays.toString(actorAssetUserToRegister.getProfileImage()));
+                        extraData);
+                /*
+                 * Add to the list of pending to register
+                 */
+                actorAssetUserPendingToRegistration.add(platformComponentProfileAssetUser);
+            }
+        } catch (Exception e) {
+            StringBuffer contextBuffer = new StringBuffer();
+            contextBuffer.append("Plugin ID: " + pluginId);
+            contextBuffer.append(CantStartPluginException.CONTEXT_CONTENT_SEPARATOR);
+            contextBuffer.append("wsCommunicationsCloudClientManager: " + wsCommunicationsCloudClientManager);
+            contextBuffer.append(CantStartPluginException.CONTEXT_CONTENT_SEPARATOR);
+            contextBuffer.append("pluginDatabaseSystem: " + pluginDatabaseSystem);
+            contextBuffer.append(CantStartPluginException.CONTEXT_CONTENT_SEPARATOR);
+            contextBuffer.append("errorManager: " + errorManager);
+            contextBuffer.append(CantStartPluginException.CONTEXT_CONTENT_SEPARATOR);
+            contextBuffer.append("eventManager: " + eventManager);
+
+            String context = contextBuffer.toString();
+            String possibleCause = "Plugin was not registered";
+
+            CantRegisterActorAssetUserException pluginStartException = new CantRegisterActorAssetUserException(CantStartPluginException.DEFAULT_MESSAGE, e, context, possibleCause);
+            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_DAP_ASSET_USER_ACTOR_NETWORK_SERVICE, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, pluginStartException);
+
+            throw pluginStartException;
+        }
+    }
+
+    @Override
+    public void updateActorAssetUser(ActorAssetUser actorAssetUserToRegister) throws CantRegisterActorAssetUserException {
+
+        try {
+            CommunicationsClientConnection communicationsClientConnection = wsCommunicationsCloudClientManager.getCommunicationsCloudClientConnection();
+            /*
+             * If register
+             */
+            if (true) {
+                /*
+                 * Construct the profile
+                 */
+                Gson gson = new Gson();
+                JsonObject jsonObject = new JsonObject();
+                jsonObject.addProperty(DAP_IMG_USER, Base64.encodeToString(actorAssetUserToRegister.getProfileImage(), Base64.DEFAULT));
+                String extraData = gson.toJson(jsonObject);
+
+                PlatformComponentProfile platformComponentProfileAssetUser = communicationsClientConnection.constructPlatformComponentProfileFactory(
+                        actorAssetUserToRegister.getActorPublicKey(),
+                        actorAssetUserToRegister.getName().toLowerCase().trim(),
+                        actorAssetUserToRegister.getName(),
+                        NetworkServiceType.UNDEFINED,
+                        PlatformComponentType.ACTOR_ASSET_USER,
+                        extraData);
+                /*
+                 * ask to the communication cloud client to register
+                 */
+                communicationsClientConnection.updateRegisterActorProfile(getNetworkServiceType(), platformComponentProfileAssetUser);
+            } else {
+                /*
+                 * Construct the profile
+                 */
+                Gson gson = new Gson();
+                JsonObject jsonObject = new JsonObject();
+                jsonObject.addProperty(DAP_IMG_USER, Base64.encodeToString(actorAssetUserToRegister.getProfileImage(), Base64.DEFAULT));
+                String extraData = gson.toJson(jsonObject);
+
+                PlatformComponentProfile platformComponentProfileAssetUser = communicationsClientConnection.constructPlatformComponentProfileFactory(
+                        actorAssetUserToRegister.getActorPublicKey(),
+                        actorAssetUserToRegister.getName().toLowerCase().trim(),
+                        actorAssetUserToRegister.getName(),
+                        NetworkServiceType.UNDEFINED,
+                        PlatformComponentType.ACTOR_ASSET_USER,
+                        extraData);
                 /*
                  * Add to the list of pending to register
                  */
@@ -477,19 +553,34 @@ public class AssetUserActorNetworkServicePluginRoot extends AbstractNetworkServi
 
             if (platformComponentProfileRegisteredListRemote != null && !platformComponentProfileRegisteredListRemote.isEmpty()) {
 
-                for (PlatformComponentProfile p : platformComponentProfileRegisteredListRemote) {
+                for (PlatformComponentProfile platformComponentProfile : platformComponentProfileRegisteredListRemote) {
 
-                    ActorAssetUser actorAssetUserNew = new AssetUserActorRecord(p.getIdentityPublicKey(), p.getName(), convertoByteArrayfromString(p.getExtraData()), p.getLocation());
+                    String profileImage = "";
+                    if (!platformComponentProfile.getExtraData().equals("")) {
+                        try {
+                            JsonParser jParser = new JsonParser();
+                            JsonObject jsonObject = jParser.parse(platformComponentProfile.getExtraData()).getAsJsonObject();
+
+                            profileImage = jsonObject.get(DAP_IMG_USER).getAsString();
+                        } catch (Exception e) {
+                            profileImage = platformComponentProfile.getExtraData();
+                        }
+                    }
+
+                    byte[] imageByte = Base64.decode(profileImage, Base64.DEFAULT);
+
+                    ActorAssetUser actorAssetUserNew = new AssetUserActorRecord(
+                            platformComponentProfile.getIdentityPublicKey(),
+                            platformComponentProfile.getName(),
+                            imageByte,
+                            platformComponentProfile.getLocation());
+
                     actorAssetUserRegisteredList.add(actorAssetUserNew);
                 }
-
             } else {
                 return actorAssetUserRegisteredList;
             }
 
-//            } else {
-//                return actorAssetUserRegisteredList;
-//            }
         } catch (CantRequestListException e) {
 
             StringBuffer contextBuffer = new StringBuffer();
@@ -770,6 +861,36 @@ public class AssetUserActorNetworkServicePluginRoot extends AbstractNetworkServi
 
     @Override
     public void handleCompleteComponentRegistrationNotificationEvent(PlatformComponentProfile platformComponentProfileRegistered) {
+
+        if (platformComponentProfileRegistered.getPlatformComponentType() == PlatformComponentType.COMMUNICATION_CLOUD_CLIENT && this.register) {
+
+            if (communicationRegistrationProcessNetworkServiceAgent.isAlive()) {
+                communicationRegistrationProcessNetworkServiceAgent.interrupt();
+                communicationRegistrationProcessNetworkServiceAgent = null;
+            }
+
+                              /*
+                 * Construct my profile and register me
+                 */
+            PlatformComponentProfile platformComponentProfileToReconnect = wsCommunicationsCloudClientManager.getCommunicationsCloudClientConnection().constructPlatformComponentProfileFactory(this.getIdentityPublicKey(),
+                    this.getAlias().toLowerCase(),
+                    this.getName(),
+                    this.getNetworkServiceType(),
+                    this.getPlatformComponentType(),
+                    this.getExtraData());
+
+            try {
+                    /*
+                     * Register me
+                     */
+                wsCommunicationsCloudClientManager.getCommunicationsCloudClientConnection().registerComponentForCommunication(this.getNetworkServiceType(), platformComponentProfileToReconnect);
+
+            } catch (CantRegisterComponentException e) {
+                e.printStackTrace();
+            }
+
+        }
+
         /*
          * If the component registered have my profile and my identity public key
          */
@@ -961,8 +1082,51 @@ public class AssetUserActorNetworkServicePluginRoot extends AbstractNetworkServi
     @Override
     public void handleClientSuccessfullReconnectNotificationEvent(FermatEvent fermatEvent) {
 
-        if (communicationNetworkServiceConnectionManager != null)
+
+        if (communicationNetworkServiceConnectionManager != null) {
             communicationNetworkServiceConnectionManager.restart();
+        }
+
+        if (!this.register) {
+
+            if (communicationRegistrationProcessNetworkServiceAgent.isAlive()) {
+
+                communicationRegistrationProcessNetworkServiceAgent.interrupt();
+                communicationRegistrationProcessNetworkServiceAgent = null;
+
+                   /*
+                 * Construct my profile and register me
+                 */
+                PlatformComponentProfile platformComponentProfileToReconnect = wsCommunicationsCloudClientManager.getCommunicationsCloudClientConnection().constructPlatformComponentProfileFactory(this.getIdentityPublicKey(),
+                        this.getAlias().toLowerCase(),
+                        this.getName(),
+                        this.getNetworkServiceType(),
+                        this.getPlatformComponentType(),
+                        this.getExtraData());
+
+                try {
+                    /*
+                     * Register me
+                     */
+                    wsCommunicationsCloudClientManager.getCommunicationsCloudClientConnection().registerComponentForCommunication(this.getNetworkServiceType(), platformComponentProfileToReconnect);
+
+                } catch (CantRegisterComponentException e) {
+                    e.printStackTrace();
+                }
+
+                /*
+                 * Configure my new profile
+                 */
+                this.setPlatformComponentProfilePluginRoot(platformComponentProfileToReconnect);
+
+                /*
+                 * Initialize the connection manager
+                 */
+                this.initializeCommunicationNetworkServiceConnectionManager();
+
+            }
+
+        }
 
     }
 

@@ -1,6 +1,7 @@
 package com.bitdubai.fermat_cbp_plugin.layer.network_service.transaction_transmission.developer.bitdubai.version_1.structure;
 
 import com.bitdubai.fermat_p2p_api.layer.all_definition.common.network_services.abstract_classes.AbstractNetworkService;
+import com.bitdubai.fermat_p2p_api.layer.p2p_communication.WsCommunicationsCloudClientManager;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.client.CommunicationsClientConnection;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.common.network_services.template.structure.AbstractCommunicationRegistrationProcessNetworkServiceAgent;
 
@@ -11,7 +12,7 @@ public class TransactionTransmissionCommunicationRegistrationProcessNetworkServi
 
     public TransactionTransmissionCommunicationRegistrationProcessNetworkServiceAgent(
             AbstractNetworkService networkServicePluginRoot,
-            CommunicationsClientConnection communicationsClientConnection) {
+            WsCommunicationsCloudClientManager communicationsClientConnection) {
         super(
                 networkServicePluginRoot,
                 communicationsClientConnection);

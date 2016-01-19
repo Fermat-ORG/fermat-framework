@@ -6,44 +6,310 @@
     android:background="@drawable/bg_my_identity">
 
     <RelativeLayout
-        android:id="@+id/user_image"
+        android:id="@+id/dap_redeem_point_image_background"
         android:layout_width="120dp"
         android:layout_height="120dp"
         android:layout_centerHorizontal="true"
-        android:gravity="center"
         android:layout_marginTop="32dp"
-        android:background="@drawable/bg_circular_other_profile">
+        android:background="@drawable/bg_circular_other_profile"
+        android:gravity="center">
 
         <ImageView
-            android:id="@+id/crypto_broker_image"
+            android:id="@+id/dap_redeem_point_image"
             android:layout_width="110dp"
             android:layout_height="110dp"
             android:layout_centerHorizontal="true"
             android:layout_centerInParent="true"
             android:layout_centerVertical="true"
-            />
-
+            tools:ignore="ContentDescription" />
     </RelativeLayout>
 
-    <EditText
-        android:id="@+id/crypto_broker_name"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:singleLine="true"
-        android:lines="1"
-        android:layout_below="@+id/user_image"
-        android:background="#66ffffff"
-        android:layout_centerHorizontal="true"
-        android:layout_marginEnd="@dimen/activity_horizontal_margin"
-        android:layout_marginStart="@dimen/activity_horizontal_margin"
-        android:layout_marginTop="@dimen/activity_vertical_margin"
-        android:padding="8dp"
-        android:hint="User name"
-        android:textColor="@android:color/black"
-        android:textColorHint="@android:color/darker_gray" />
+    <!--<LinearLayout-->
+    <!--android:layout_width="match_parent"-->
+    <!--android:layout_height="wrap_content"-->
+    <!--android:layout_below="@+id/user_image"-->
+    <!--android:layout_centerHorizontal="true"-->
+    <!--android:orientation="vertical"-->
+    <!--android:layout_above="@+id/create_crypto_broker_button">-->
+
+    <!--<ScrollView-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:fillViewport="false"-->
+        <!--android:orientation="vertical"-->
+        <!--android:layout_below="@+id/user_image"-->
+        <!--android:layout_centerHorizontal="true"-->
+        <!--android:layout_above="@+id/create_crypto_broker_button">-->
+
+        <!--&lt;!&ndash;&lt;!&ndash;android:layout_above="@+id/create_crypto_broker_button"&ndash;&gt;&ndash;&gt;-->
+        <!--&lt;!&ndash;&lt;!&ndash;android:layout_below="@+id/user_image"&ndash;&gt;&ndash;&gt;-->
+        <!--&lt;!&ndash;&lt;!&ndash;android:layout_centerHorizontal="true"&ndash;&gt;&ndash;&gt;-->
+
+        <!--<LinearLayout-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:orientation="vertical">-->
+
+            <RelativeLayout
+                android:id="@+id/dap_redeem_point_info_name"
+                android:layout_below="@+id/dap_redeem_point_image_background"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="@dimen/activity_horizontal_margin"
+                android:layout_marginStart="@dimen/activity_horizontal_margin"
+                android:layout_marginTop="@dimen/activity_vertical_margin"
+                android:background="@android:color/transparent">
+
+                <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
+                    android:id="@+id/dap_redeem_point_title_name"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="8dp"
+                    android:background="@android:color/transparent"
+                    android:text="Username"
+                    android:textColor="#919090"
+                    android:textSize="14sp"
+                    tools:ignore="HardcodedText" />
+
+                <EditText
+                    android:id="@+id/dap_redeem_point_name"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/dap_redeem_point_title_name"
+                    android:layout_marginTop="4dp"
+                    android:layout_centerHorizontal="true"
+                    android:hint="Username"
+                    android:lines="1"
+                    android:padding="8dp"
+                    android:singleLine="true"
+                    android:textColor="@android:color/black"
+                    android:textColorHint="@android:color/darker_gray"
+                    android:textSize="16sp"
+                    tools:ignore="HardcodedText" />
+            </RelativeLayout>
+
+            <!--<RelativeLayout-->
+                <!--android:id="@+id/user_country"-->
+                <!--android:layout_below="@+id/dap_redeem_point_info_name"-->
+                <!--android:layout_width="match_parent"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:layout_marginEnd="@dimen/activity_horizontal_margin"-->
+                <!--android:layout_marginStart="@dimen/activity_horizontal_margin"-->
+                <!--android:layout_marginTop="@dimen/activity_vertical_margin">-->
+
+                <!--<com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView-->
+                    <!--android:id="@+id/title_country"-->
+                    <!--android:layout_width="wrap_content"-->
+                    <!--android:layout_height="wrap_content"-->
+                    <!--android:layout_margin="8dp"-->
+                    <!--android:background="@android:color/transparent"-->
+                    <!--android:text="Country"-->
+                    <!--android:textColor="#919090"-->
+                    <!--android:textSize="14sp"-->
+                    <!--tools:ignore="HardcodedText" />-->
+
+
+                <!--<EditText-->
+                    <!--android:id="@+id/text_country"-->
+                    <!--android:layout_width="match_parent"-->
+                    <!--android:layout_height="wrap_content"-->
+                    <!--android:layout_below="@+id/title_country"-->
+                    <!--android:layout_marginTop="4dp"-->
+                    <!--android:hint="Write your Country"-->
+                    <!--android:lines="1"-->
+                    <!--android:padding="8dp"-->
+                    <!--android:singleLine="true"-->
+                    <!--android:textColor="@android:color/black"-->
+                    <!--android:textColorHint="@android:color/darker_gray"-->
+                    <!--android:textSize="16sp"-->
+                    <!--tools:ignore="HardcodedText" />-->
+            <!--</RelativeLayout>-->
+
+            <!--<RelativeLayout-->
+                <!--android:id="@+id/user_province"-->
+                <!--android:layout_below="@+id/user_country"-->
+                <!--android:layout_width="match_parent"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:layout_marginEnd="@dimen/activity_horizontal_margin"-->
+                <!--android:layout_marginStart="@dimen/activity_horizontal_margin"-->
+                <!--android:layout_marginTop="@dimen/activity_vertical_margin">-->
+
+                <!--<com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView-->
+                    <!--android:id="@+id/title_province"-->
+                    <!--android:layout_width="wrap_content"-->
+                    <!--android:layout_height="wrap_content"-->
+                    <!--android:layout_margin="8dp"-->
+                    <!--android:background="@android:color/transparent"-->
+                    <!--android:text="Province"-->
+                    <!--android:textColor="#919090"-->
+                    <!--android:textSize="14sp"-->
+                    <!--tools:ignore="HardcodedText" />-->
+
+                <!--<EditText-->
+                    <!--android:id="@+id/text_province"-->
+                    <!--android:layout_width="match_parent"-->
+                    <!--android:layout_height="wrap_content"-->
+                    <!--android:layout_below="@+id/title_province"-->
+                    <!--android:layout_marginTop="4dp"-->
+                    <!--android:hint="Write your Province"-->
+                    <!--android:lines="1"-->
+                    <!--android:padding="8dp"-->
+                    <!--android:singleLine="true"-->
+                    <!--android:textColor="@android:color/black"-->
+                    <!--android:textColorHint="@android:color/darker_gray"-->
+                    <!--android:textSize="16sp"-->
+                    <!--tools:ignore="HardcodedText" />-->
+            <!--</RelativeLayout>-->
+
+            <!--<RelativeLayout-->
+                <!--android:id="@+id/user_city"-->
+                <!--android:layout_below="@+id/user_province"-->
+                <!--android:layout_width="match_parent"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:layout_marginEnd="@dimen/activity_horizontal_margin"-->
+                <!--android:layout_marginStart="@dimen/activity_horizontal_margin"-->
+                <!--android:layout_marginTop="@dimen/activity_vertical_margin">-->
+
+                <!--<com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView-->
+                    <!--android:id="@+id/title_city"-->
+                    <!--android:layout_width="wrap_content"-->
+                    <!--android:layout_height="wrap_content"-->
+                    <!--android:layout_margin="8dp"-->
+                    <!--android:background="@android:color/transparent"-->
+                    <!--android:text="City"-->
+                    <!--android:textColor="#919090"-->
+                    <!--android:textSize="14sp"-->
+                    <!--tools:ignore="HardcodedText" />-->
+
+                <!--<EditText-->
+                    <!--android:id="@+id/text_city"-->
+                    <!--android:layout_width="match_parent"-->
+                    <!--android:layout_height="wrap_content"-->
+                    <!--android:layout_below="@+id/title_city"-->
+                    <!--android:layout_marginTop="4dp"-->
+                    <!--android:hint="Write your City"-->
+                    <!--android:lines="1"-->
+                    <!--android:padding="8dp"-->
+                    <!--android:singleLine="true"-->
+                    <!--android:textColor="@android:color/black"-->
+                    <!--android:textColorHint="@android:color/darker_gray"-->
+                    <!--android:textSize="16sp"-->
+                    <!--tools:ignore="HardcodedText" />-->
+            <!--</RelativeLayout>-->
+
+            <!--<RelativeLayout-->
+                <!--android:id="@+id/user_postal_code"-->
+                <!--android:layout_below="@+id/user_city"-->
+                <!--android:layout_width="match_parent"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:layout_marginEnd="@dimen/activity_horizontal_margin"-->
+                <!--android:layout_marginStart="@dimen/activity_horizontal_margin"-->
+                <!--android:layout_marginTop="@dimen/activity_vertical_margin">-->
+
+                <!--<com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView-->
+                    <!--android:id="@+id/title_postal_code"-->
+                    <!--android:layout_width="wrap_content"-->
+                    <!--android:layout_height="wrap_content"-->
+                    <!--android:layout_margin="8dp"-->
+                    <!--android:background="@android:color/transparent"-->
+                    <!--android:text="Postal Code"-->
+                    <!--android:textColor="#919090"-->
+                    <!--android:textSize="14sp"-->
+                    <!--tools:ignore="HardcodedText" />-->
+
+                <!--<EditText-->
+                    <!--android:id="@+id/text_postal_code"-->
+                    <!--android:layout_width="match_parent"-->
+                    <!--android:layout_height="wrap_content"-->
+                    <!--android:layout_below="@+id/title_postal_code"-->
+                    <!--android:layout_marginTop="4dp"-->
+                    <!--android:hint="Write your Postal Code"-->
+                    <!--android:lines="1"-->
+                    <!--android:padding="8dp"-->
+                    <!--android:singleLine="true"-->
+                    <!--android:textColor="@android:color/black"-->
+                    <!--android:textColorHint="@android:color/darker_gray"-->
+                    <!--android:textSize="16sp"-->
+                    <!--tools:ignore="HardcodedText" />-->
+            <!--</RelativeLayout>-->
+
+            <!--<RelativeLayout-->
+                <!--android:id="@+id/user_street_name"-->
+                <!--android:layout_below="@+id/user_postal_code"-->
+                <!--android:layout_width="match_parent"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:layout_marginEnd="@dimen/activity_horizontal_margin"-->
+                <!--android:layout_marginStart="@dimen/activity_horizontal_margin"-->
+                <!--android:layout_marginTop="@dimen/activity_vertical_margin">-->
+
+                <!--<com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView-->
+                    <!--android:id="@+id/title_street_name"-->
+                    <!--android:layout_width="wrap_content"-->
+                    <!--android:layout_height="wrap_content"-->
+                    <!--android:layout_margin="8dp"-->
+                    <!--android:background="@android:color/transparent"-->
+                    <!--android:text="Street Name"-->
+                    <!--android:textColor="#919090"-->
+                    <!--android:textSize="14sp"-->
+                    <!--tools:ignore="HardcodedText" />-->
+
+                <!--<EditText-->
+                    <!--android:id="@+id/text_street_name"-->
+                    <!--android:layout_width="match_parent"-->
+                    <!--android:layout_height="wrap_content"-->
+                    <!--android:layout_below="@+id/title_street_name"-->
+                    <!--android:layout_marginTop="4dp"-->
+                    <!--android:hint="Write your Street Name"-->
+                    <!--android:lines="1"-->
+                    <!--android:padding="8dp"-->
+                    <!--android:singleLine="true"-->
+                    <!--android:textColor="@android:color/black"-->
+                    <!--android:textColorHint="@android:color/darker_gray"-->
+                    <!--android:textSize="16sp"-->
+                    <!--tools:ignore="HardcodedText" />-->
+            <!--</RelativeLayout>-->
+
+            <!--<RelativeLayout-->
+                <!--android:id="@+id/user_hours_of_operation"-->
+                <!--android:layout_below="@+id/user_street_name"-->
+                <!--android:layout_width="match_parent"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:layout_marginEnd="@dimen/activity_horizontal_margin"-->
+                <!--android:layout_marginStart="@dimen/activity_horizontal_margin"-->
+                <!--android:layout_marginTop="@dimen/activity_vertical_margin">-->
+
+                <!--<com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView-->
+                    <!--android:id="@+id/title_hours_of_operation"-->
+                    <!--android:layout_width="wrap_content"-->
+                    <!--android:layout_height="wrap_content"-->
+                    <!--android:layout_margin="8dp"-->
+                    <!--android:background="@android:color/transparent"-->
+                    <!--android:text="Hours of Operations"-->
+                    <!--android:textColor="#919090"-->
+                    <!--android:textSize="14sp"-->
+                    <!--tools:ignore="HardcodedText" />-->
+
+                <!--<EditText-->
+                    <!--android:id="@+id/text_hours_of_operation"-->
+                    <!--android:layout_width="match_parent"-->
+                    <!--android:layout_height="wrap_content"-->
+                    <!--android:layout_below="@+id/title_hours_of_operation"-->
+                    <!--android:layout_marginTop="4dp"-->
+                    <!--android:hint="Write your Hours of Operations"-->
+                    <!--android:lines="1"-->
+                    <!--android:padding="8dp"-->
+                    <!--android:singleLine="true"-->
+                    <!--android:textColor="@android:color/black"-->
+                    <!--android:textColorHint="@android:color/darker_gray"-->
+                    <!--android:textSize="16sp"-->
+                    <!--tools:ignore="HardcodedText" />-->
+            <!--</RelativeLayout>-->
+        <!--</LinearLayout>-->
+    <!--</ScrollView>-->
+    <!--</LinearLayout>-->
 
     <Button
-        android:id="@+id/create_crypto_broker_button"
+        android:id="@+id/dap_redeem_point_button"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="16dp"

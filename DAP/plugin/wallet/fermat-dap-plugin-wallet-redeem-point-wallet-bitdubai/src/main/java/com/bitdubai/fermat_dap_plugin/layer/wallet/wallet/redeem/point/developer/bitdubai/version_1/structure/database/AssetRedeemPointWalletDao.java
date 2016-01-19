@@ -15,6 +15,7 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTransac
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantInsertRecordException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantLoadTableToMemoryException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantUpdateRecordException;
+import com.bitdubai.fermat_api.layer.osa_android.file_system.DealsWithPluginFileSystem;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.FileLifeSpan;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.FilePrivacy;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
@@ -61,7 +62,7 @@ import java.util.UUID;
 /**
  * Created by franklin on 14/10/15.
  */
-public class AssetRedeemPointWalletDao {
+public class AssetRedeemPointWalletDao implements DealsWithPluginFileSystem {
     private PluginFileSystem pluginFileSystem;
     private UUID plugin;
     private Database database;
@@ -76,6 +77,15 @@ public class AssetRedeemPointWalletDao {
         this.pluginFileSystem = pluginFileSystem;
         this.plugin = plugin;
         this.actorAssetUserManager = actorAssetUserManager;
+    }
+
+    public void setPlugin(UUID plugin) {
+        this.plugin = plugin;
+    }
+
+    @Override
+    public void setPluginFileSystem(PluginFileSystem pluginFileSystem) {
+        this.pluginFileSystem = pluginFileSystem;
     }
 
     private long getCurrentBookBalance() throws CantGetBalanceRecordException {
@@ -589,6 +599,11 @@ public class AssetRedeemPointWalletDao {
         for (DatabaseTableFilter filter : filters) {
             statistictable.addStringFilter(filter.getColumn(), filter.getValue(), filter.getType());
         }
+        try {
+            statistictable.loadToMemory();
+        } catch (CantLoadTableToMemoryException e) {
+            e.printStackTrace();
+        }
         List<RedeemPointStatistic> listToReturn = new ArrayList<>();
         for (DatabaseTableRecord record : statistictable.getRecords()) {
             listToReturn.add(constructStatisticById(record.getStringValue(AssetWalletRedeemPointDatabaseConstant.ASSET_WALLET_REDEEM_POINT_POINT_STATISTIC_ID_COLUMN_NAME)));
@@ -624,8 +639,8 @@ public class AssetRedeemPointWalletDao {
     public DigitalAssetMetadata getDigitalAssetMetadata(String assetPublicKey) throws CantGetDigitalAssetFromLocalStorageException {
         String context = "Path: " + AssetRedeemPointWalletPluginRoot.PATH_DIRECTORY + " - Asset Public Key: " + assetPublicKey;
         try {
-            String metadataXML = pluginFileSystem.getTextFile(plugin, AssetRedeemPointWalletPluginRoot.PATH_DIRECTORY, assetPublicKey, FilePrivacy.PRIVATE, FileLifeSpan.PERMANENT).getContent();
-            return (DigitalAssetMetadata) XMLParser.parseXML(metadataXML, new DigitalAssetMetadata());
+            PluginTextFile pluginTextFile = pluginFileSystem.getTextFile(plugin, AssetRedeemPointWalletPluginRoot.PATH_DIRECTORY, assetPublicKey, FilePrivacy.PRIVATE, FileLifeSpan.PERMANENT);
+            return (DigitalAssetMetadata) XMLParser.parseXML(pluginTextFile.getContent(), new DigitalAssetMetadata());
         } catch (FileNotFoundException | CantCreateFileException e) {
             throw new CantGetDigitalAssetFromLocalStorageException(e, context, "The path could be wrong or there was an error creating the file.");
         }
@@ -704,5 +719,4 @@ public class AssetRedeemPointWalletDao {
             };
         }
     }
-
 }
