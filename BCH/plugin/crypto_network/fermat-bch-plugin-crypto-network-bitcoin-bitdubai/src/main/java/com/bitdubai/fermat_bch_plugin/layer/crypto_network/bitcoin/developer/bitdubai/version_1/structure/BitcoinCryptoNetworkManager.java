@@ -72,7 +72,7 @@ import static com.bitdubai.fermat_dap_api.layer.all_definition.util.Validate.isV
  * @version 1.0
  * @since Java JDK 1.7
  */
-public class BitcoinCryptoNetworkManager implements TransactionProtocolManager, UTXOProvider {
+public class BitcoinCryptoNetworkManager implements TransactionProtocolManager {
 
     /**
      * BitcoinJ wallet where I'm storing the public keys and transactions
@@ -472,87 +472,6 @@ public class BitcoinCryptoNetworkManager implements TransactionProtocolManager, 
     }
 
 
-    /**
-     * Gets the UTXO provider from the CryptoNetwork on the specified Network
-     *
-     * @param blockchainNetworkType
-     * @return
-     */
-    public UTXOProvider getUTXOProvider(BlockchainNetworkType blockchainNetworkType) {
-        this.utxoProviderNetworkParameter = blockchainNetworkType;
-        return this;
-    }
-
-    /**
-     * Implementation of UTXOProvider interface. Calculates all the UTXO available which outputs are send to the specified address
-     *
-     * @param addresses
-     * @return
-     * @throws UTXOProviderException
-     */
-    @Override
-    public List<UTXO> getOpenTransactionOutputs(List<Address> addresses) throws UTXOProviderException {
-        /**
-         * load the wallet from the passed network. The network type was defined when the UTXO provider was set.
-         */
-        Wallet wallet = this.getWallet(utxoProviderNetworkParameter, null);
-        List<UTXO> utxoList = new ArrayList<>();
-
-        /**
-         * I will get all the outputs that are mine to spent.
-         */
-        for (TransactionOutput output : wallet.calculateAllSpendCandidates()) {
-            for (Address address : addresses) {
-                /**
-                 * and if one of them matches the passed address, then I will convert it to an UTXO and add it to the list.
-                 */
-                if (output.getAddressFromP2PKHScript(RegTestParams.get()) == address) {
-                    UTXO utxo = new UTXO(output.getHash(),
-                            output.getIndex(),
-                            output.getValue(),
-                            output.getParentTransactionDepthInBlocks(),
-                            output.getParentTransaction().isCoinBase(),
-                            output.getScriptPubKey(),
-                            address.toString());
-                    utxoList.add(utxo);
-                }
-            }
-        }
-        return utxoList;
-    }
-
-
-    /**
-     * Access the store blockchain and get its height
-     *
-     * @return
-     * @throws UTXOProviderException
-     */
-    @Override
-    public int getChainHeadHeight() throws UTXOProviderException {
-        try {
-            /**
-             * instantiates a blockchain that will load it from file.
-             */
-            BitcoinCryptoNetworkBlockChain blockChain = new BitcoinCryptoNetworkBlockChain(BitcoinNetworkSelector.getNetworkParameter(utxoProviderNetworkParameter), null);
-            /**
-             * get its height.
-             */
-            return blockChain.getBlockChain().getBestChainHeight();
-        } catch (BlockchainException e) {
-            throw new UTXOProviderException("There was an error loading the blockchain.", e);
-        }
-    }
-
-    /**
-     * returns the nertwork parameter defined for this UTXO provider
-     *
-     * @return
-     */
-    @Override
-    public NetworkParameters getParams() {
-        return BitcoinNetworkSelector.getNetworkParameter(utxoProviderNetworkParameter);
-    }
 
     /**
      * Gets the specified bitcoin transaction

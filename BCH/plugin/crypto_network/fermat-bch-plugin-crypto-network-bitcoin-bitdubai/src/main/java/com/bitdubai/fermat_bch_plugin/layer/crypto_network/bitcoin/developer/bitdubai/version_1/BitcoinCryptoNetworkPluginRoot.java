@@ -167,16 +167,6 @@ public class BitcoinCryptoNetworkPluginRoot extends AbstractPlugin implements
     }
 
     /**
-     * Gets the UTXO provider from the CryptoNetwork on the specified Network
-     * @param blockchainNetworkType
-     * @return
-     */
-    @Override
-    public UTXOProvider getUTXOProvider(BlockchainNetworkType blockchainNetworkType) {
-        return bitcoinCryptoNetworkManager.getUTXOProvider(blockchainNetworkType);
-    }
-
-    /**
      * Gets the specified bitcoin transaction
      * @param transactionHash
      * @return

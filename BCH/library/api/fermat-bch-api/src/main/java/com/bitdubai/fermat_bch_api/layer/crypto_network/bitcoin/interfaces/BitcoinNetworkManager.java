@@ -91,14 +91,6 @@ public interface BitcoinNetworkManager extends TransactionSender<CryptoTransacti
     BroadcastStatus getBroadcastStatus (String txHash) throws CantGetBroadcastStatusException;
 
     /**
-     * Gets the UTXO provider from the CryptoNetwork on the specified Network
-     * @param blockchainNetworkType
-     * @return
-     */
-    UTXOProvider getUTXOProvider(BlockchainNetworkType blockchainNetworkType);
-
-
-    /**
      * Get the bitcoin transaction stored by the CryptoNetwork
      * @param blockchainNetworkType the network type
      * @param transactionHash the transsaction hash
