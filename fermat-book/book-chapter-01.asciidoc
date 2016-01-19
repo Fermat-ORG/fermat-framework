@@ -3,10 +3,7 @@ image::https://raw.githubusercontent.com/bitDubai/media-kit/master/MediaKit/Ferm
 
 == Chapter 1: Fermat Master Plan
 
-As a Master Plan, Fermat has its own vision of how a collaborative project should be carried out. The main concept is to define a large master plan far into the future, and start building it by phases, adjusting the target when needed. It is designed this way to absorb the efforts of thousands of contributors over the years into a unified architectural vision. +
-
-After the pioneer step of Nakamoto who gave rise to *Bitcoin* and its revolutionary blockchain technology, there has been a lot of fin tech investment money given to a myriad of startups initiating in this industry in the last years. This fostered the next evolutionary step, *"crypto currency 2.0"* but it has still not reached the level of adoption expected. There seems to exist an unbalance between the considerable investment of funds and efforts needed to master this technology plus the results they are bringing up. Furthermore, isolated projects trying to build something useful starting form zero have it difficult to obtain the necessary support and the persistent endurance needed to succeed... + 
-Precisely acknowledging this weak points in the industry, and choosing *collaboration* within a *master plan* as a starting point, its how the Fermat community believes to succeed in solving the challenges set in their mission and purpose by building a complete new framework that solves the problem in an efficient, inclusive and attractive way.
+Fermat has its own vision of how to carry out the collaborative project of their Open Source software. The main concept is to define a large master plan far into the future, and start building it by phases, adjusting the target when needed. It is designed this way to absorb the efforts of thousands of contributors over the years into a unified architectural vision. It is somehow translating into the industry the useful experience of building a "concept city" like Dubai starting by designing a master plan to guide the necessary tasks and development phases.+
 
 === Phase I: Foundations 
 The goal is to have a framework for developing financial applications in a trust-less environment. What are the services that had to be granted at the lower levels to enable this?

@@ -20,7 +20,7 @@ _www.fermat.org_
 <br>
 ## Status of the Document
 
-This document is a DRAFT with no formal reviews yet. Some changes are being done from time to time. If you want, you  can make a formal review of this document. We will be happy to add you at the _reviewrs_ section. 
+This document is a DRAFT with no formal reviews yet. Some changes are being done from time to time. If you want, you  can make a formal review of this document. We will be happy to add you at the _reviewers_ section. 
 
 
 <br>
@@ -45,7 +45,7 @@ Fermat is a Framework, a p2p Network and an Ecosystem of Fermat APPs. The Fermat
 
 By choosing a plug-in architecture for the Framework we make it possible for any developer to add their own reusable components. We define the micro use licensing scheme as the mechanism for developers to monetize their work. The Framework itself enforces these micro use licenses and guarantees developers a revenue stream.
 
-The Fermat P2P network interconnects Android devices between each other in order to exchange application data without needing to go through a centralized service.
+The Fermat P2P network interconnects devices between each other in order to exchange application data without needing to go through a centralized service.
 
 The Ecosystem of Fermat APPs offers different products to end users. From the outside it may seem like a set of APPs targeting different use cases for different people, but on the inside there is a system built from hundreds of components collaborating between each other. These APPs are just the user interfaces, or skins of the underlying mechanisms.
 
