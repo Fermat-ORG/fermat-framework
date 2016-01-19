@@ -167,28 +167,6 @@ public class BitcoinCryptoNetworkPluginRoot extends AbstractPlugin implements
     }
 
     /**
-     * Broadcast a well formed, commited and signed transaction into the specified network
-     * @param blockchainNetworkType
-     * @param tx
-     * @param transactionId the internal Fermat Transaction
-     * @throws CantBroadcastTransactionException
-     */
-    @Override
-    public synchronized void broadcastTransaction(BlockchainNetworkType blockchainNetworkType, Transaction tx, UUID transactionId) throws CantBroadcastTransactionException {
-        bitcoinCryptoNetworkManager.broadcastTransaction(blockchainNetworkType, tx, transactionId);
-    }
-
-    /**
-     * Gets the UTXO provider from the CryptoNetwork on the specified Network
-     * @param blockchainNetworkType
-     * @return
-     */
-    @Override
-    public UTXOProvider getUTXOProvider(BlockchainNetworkType blockchainNetworkType) {
-        return bitcoinCryptoNetworkManager.getUTXOProvider(blockchainNetworkType);
-    }
-
-    /**
      * Gets the specified bitcoin transaction
      * @param transactionHash
      * @return
@@ -315,5 +293,17 @@ public class BitcoinCryptoNetworkPluginRoot extends AbstractPlugin implements
     @Override
     public CryptoTransaction getGenesisCryptoTransaction(@Nullable BlockchainNetworkType blockchainNetworkType, LinkedHashMap<String, String> transactionChain) throws CantGetCryptoTransactionException {
         return bitcoinCryptoNetworkManager.getGenesisCryptoTransaction(blockchainNetworkType, transactionChain);
+    }
+
+    /**
+     * Based on the Parent trasaction passed, will return all the CryptoTransactions that are a direct descendant of this parent.
+     * Only if it is a locally stored transaction
+     * @param parentTransactionHash the hash of the parent trasaction
+     * @return the list of CryptoTransactions that are a direct child of the parent.
+     * @throws CantGetCryptoTransactionException
+     */
+    @Override
+    public List<CryptoTransaction> getChildTransactionsFromParent(String parentTransactionHash) throws CantGetCryptoTransactionException {
+        return bitcoinCryptoNetworkManager.getChildTransactionsFromParent(parentTransactionHash);
     }
 }
