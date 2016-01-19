@@ -196,16 +196,6 @@ public class BitcoinCryptoNetworkPluginRoot extends AbstractPlugin implements
     }
 
     @Override
-    public List<Transaction> getBitcoinTransaction(BlockchainNetworkType blockchainNetworkType, ECKey ecKey) {
-        return null;
-    }
-
-    @Override
-    public List<Transaction> getBitcoinTransaction(BlockchainNetworkType blockchainNetworkType, List<ECKey> ecKeys) {
-        return null;
-    }
-
-    @Override
     public List<Transaction> getUnspentBitcoinTransactions(BlockchainNetworkType blockchainNetworkType) {
         return bitcoinCryptoNetworkManager.getUnspentBitcoinTransactions(blockchainNetworkType);
     }
