@@ -20,13 +20,16 @@ import com.bitdubai.fermat_cbp_api.layer.actor.crypto_broker.exceptions.CantCrea
 import com.bitdubai.fermat_cbp_api.layer.actor.crypto_broker.exceptions.CantCreateNewBrokerIdentityWalletRelationshipException;
 import com.bitdubai.fermat_cbp_api.layer.actor.crypto_broker.exceptions.CantGetListActorExtraDataException;
 import com.bitdubai.fermat_cbp_api.layer.actor.crypto_broker.exceptions.CantGetListBrokerIdentityWalletRelationshipException;
+import com.bitdubai.fermat_cbp_api.layer.actor.crypto_broker.exceptions.CantGetListPlatformsException;
 import com.bitdubai.fermat_cbp_api.layer.actor.crypto_broker.interfaces.ActorExtraData;
 import com.bitdubai.fermat_cbp_api.layer.actor.crypto_broker.interfaces.BrokerIdentityWalletRelationship;
 import com.bitdubai.fermat_cbp_api.layer.actor.crypto_broker.interfaces.CryptoBrokerActorManager;
 import com.bitdubai.fermat_cbp_api.layer.actor.crypto_broker.interfaces.QuotesExtraData;
+import com.bitdubai.fermat_cbp_api.layer.negotiation.customer_broker_purchase.exceptions.CantGetListBankAccountsPurchaseException;
 import com.bitdubai.fermat_cbp_api.layer.negotiation.exceptions.CantGetListClauseException;
 import com.bitdubai.fermat_cbp_plugin.layer.actor.crypto_broker.developer.bitdubai.version_1.exceptions.CantInitializeCryptoBrokerActorDatabaseException;
 import com.bitdubai.fermat_cbp_plugin.layer.actor.crypto_broker.developer.bitdubai.version_1.structure.ActorExtraDataIdentity;
+import com.bitdubai.fermat_cbp_plugin.layer.actor.crypto_broker.developer.bitdubai.version_1.structure.ActorExtraDataInformation;
 import com.bitdubai.fermat_cbp_plugin.layer.actor.crypto_broker.developer.bitdubai.version_1.structure.BrokerIdentityWalletRelationshipInformation;
 import com.bitdubai.fermat_cbp_plugin.layer.actor.crypto_broker.developer.bitdubai.version_1.structure.QuotesExtraDataInformation;
 
@@ -261,18 +264,69 @@ public class CryptoBrokerActorDao {
                 table.loadToMemory();
                 List<DatabaseTableRecord> records = table.getRecords();
                 table.clearAllFilters();
+                Collection<ActorExtraData> actoresExtraDatas =  new ArrayList<ActorExtraData>();
                 for (DatabaseTableRecord record : records) {
                     String alias = record.getStringValue(CryptoBrokerActorDatabaseConstants.ACTOR_EXTRA_DATA_ALIAS_COLUMN_NAME);
                     String publicKey = record.getStringValue(CryptoBrokerActorDatabaseConstants.ACTOR_EXTRA_DATA_BROKER_PUBLIC_KEY_COLUMN_NAME);
-
                     ActorIdentity identity = new ActorExtraDataIdentity(alias, publicKey);
                     Collection<QuotesExtraData> quotes = this.getQuotesByIdentity(publicKey);
-
+                    Map<Currency, Collection<Platforms>> currencies =  getPlatformsByIdentity(publicKey);
+                    ActorExtraData data = new ActorExtraDataInformation(
+                            identity,
+                            quotes,
+                            currencies
+                    );
+                    actoresExtraDatas.add(data);
                 }
+                return actoresExtraDatas;
+            } catch (CantLoadTableToMemoryException e) {
+                throw new CantGetListActorExtraDataException(e.DEFAULT_MESSAGE, e, "", "");
+            }
+        }
 
+        public ActorExtraData getActorExtraDataByPublicKey(String _publicKey) throws CantGetListActorExtraDataException {
+            try {
+                DatabaseTable table = this.database.getTable(CryptoBrokerActorDatabaseConstants.ACTOR_EXTRA_DATA_TABLE_NAME);
+                table.loadToMemory();
+                List<DatabaseTableRecord> records = table.getRecords();
+                table.clearAllFilters();
+                for (DatabaseTableRecord record : records) {
+                    String alias = record.getStringValue(CryptoBrokerActorDatabaseConstants.ACTOR_EXTRA_DATA_ALIAS_COLUMN_NAME);
+                    String publicKey = record.getStringValue(CryptoBrokerActorDatabaseConstants.ACTOR_EXTRA_DATA_BROKER_PUBLIC_KEY_COLUMN_NAME);
+                    ActorIdentity identity = new ActorExtraDataIdentity(alias, publicKey);
+                    Collection<QuotesExtraData> quotes = this.getQuotesByIdentity(publicKey);
+                    Map<Currency, Collection<Platforms>> currencies =  getPlatformsByIdentity(publicKey);
+                    ActorExtraData data = new ActorExtraDataInformation(
+                            identity,
+                            quotes,
+                            currencies
+                    );
+
+                    return data;
+                }
                 return null;
             } catch (CantLoadTableToMemoryException e) {
                 throw new CantGetListActorExtraDataException(e.DEFAULT_MESSAGE, e, "", "");
+            }
+        }
+
+        public Collection<Platforms> getPlatformsSupport(String brokerPublicKey, Currency currency) throws CantGetListPlatformsException {
+            try {
+                DatabaseTable table = this.database.getTable(CryptoBrokerActorDatabaseConstants.PLATFORMS_EXTRA_DATA_TABLE_NAME);
+                table.clearAllFilters();
+                table.addStringFilter(CryptoBrokerActorDatabaseConstants.PLATFORMS_EXTRA_DATA_BROKER_PUBLIC_KEY_COLUMN_NAME, brokerPublicKey, DatabaseFilterType.EQUAL);
+                table.addStringFilter(CryptoBrokerActorDatabaseConstants.PLATFORMS_EXTRA_DATA_CURRENCY_COLUMN_NAME, currency.getCode(), DatabaseFilterType.EQUAL);
+                table.loadToMemory();
+                List<DatabaseTableRecord> records2 = table.getRecords();
+                Collection<Platforms> platform = new ArrayList<>();
+                for (DatabaseTableRecord record : records2) {
+                    platform.add( Platforms.getByCode(record.getStringValue(CryptoBrokerActorDatabaseConstants.PLATFORMS_EXTRA_DATA_PLATFORM_COLUMN_NAME)) );
+                }
+                return platform;
+            } catch (CantLoadTableToMemoryException e) {
+                throw new CantGetListPlatformsException(e.DEFAULT_MESSAGE, e, "", "");
+            } catch (InvalidParameterException e) {
+                throw new CantGetListPlatformsException(e.DEFAULT_MESSAGE, e, "", "");
             }
         }
 
@@ -318,31 +372,44 @@ public class CryptoBrokerActorDao {
         private Map<Currency, Collection<Platforms>> getPlatformsByIdentity(String publicKey) throws CantGetListActorExtraDataException {
             try {
                 DatabaseTable table = this.database.getTable(CryptoBrokerActorDatabaseConstants.PLATFORMS_EXTRA_DATA_TABLE_NAME);
-                table.addStringFilter(CryptoBrokerActorDatabaseConstants.PLATFORMS_EXTRA_DATA_PLATFORM_ID_COLUMN_NAME, publicKey, DatabaseFilterType.EQUAL);
-                table.loadToMemory();
-                List<DatabaseTableRecord> records = table.getRecords();
-                table.clearAllFilters();
+                String Query = "SELECT DISTINCT " +
+                        CryptoBrokerActorDatabaseConstants.PLATFORMS_EXTRA_DATA_CURRENCY_COLUMN_NAME +
+                        " FROM " +
+                        CryptoBrokerActorDatabaseConstants.PLATFORMS_EXTRA_DATA_TABLE_NAME;
 
-                Map<Currency, Collection<Platforms>> currencies = new HashMap<Currency, Collection<Platforms>>();
-
+                Collection<DatabaseTableRecord> records = null;
+                records = table.customQuery(Query, true);
+                Collection<Currency> resultados = new ArrayList<>();
                 for (DatabaseTableRecord record : records) {
                     Currency currency = null;
                     try {
-                        currency = FiatCurrency.getByCode(record.getStringValue(CryptoBrokerActorDatabaseConstants.PLATFORMS_EXTRA_DATA_CURRENCY_COLUMN_NAME));
+                        currency = FiatCurrency.getByCode(record.getStringValue("Column0"));
                     } catch (InvalidParameterException e) {
                         try {
-                            currency = CryptoCurrency.getByCode(record.getStringValue(CryptoBrokerActorDatabaseConstants.PLATFORMS_EXTRA_DATA_CURRENCY_COLUMN_NAME));
+                            currency = CryptoCurrency.getByCode(record.getStringValue("Column0"));
                         } catch (InvalidParameterException e1) {
                             throw new CantGetListActorExtraDataException(e.DEFAULT_MESSAGE, e1, "", "");
                         }
                     }
-
-                    // TODO: terminal la implementacion del metodo
+                    resultados.add(currency);
                 }
-
-                return null;
-
+                Map<Currency, Collection<Platforms>> currencies = new HashMap<Currency, Collection<Platforms>>();
+                for(Currency currency : resultados){
+                    table.clearAllFilters();
+                    table.addStringFilter(CryptoBrokerActorDatabaseConstants.PLATFORMS_EXTRA_DATA_BROKER_PUBLIC_KEY_COLUMN_NAME, publicKey, DatabaseFilterType.EQUAL);
+                    table.addStringFilter(CryptoBrokerActorDatabaseConstants.PLATFORMS_EXTRA_DATA_CURRENCY_COLUMN_NAME, currency.getCode(), DatabaseFilterType.EQUAL);
+                    table.loadToMemory();
+                    List<DatabaseTableRecord> records2 = table.getRecords();
+                    Collection<Platforms> platform = new ArrayList<>();
+                    for (DatabaseTableRecord record : records2) {
+                            platform.add( Platforms.getByCode(record.getStringValue(CryptoBrokerActorDatabaseConstants.PLATFORMS_EXTRA_DATA_PLATFORM_COLUMN_NAME)) );
+                    }
+                    currencies.put(currency, platform);
+                }
+                return currencies;
             } catch (CantLoadTableToMemoryException e) {
+                throw new CantGetListActorExtraDataException(e.DEFAULT_MESSAGE, e, "", "");
+            } catch (InvalidParameterException e) {
                 throw new CantGetListActorExtraDataException(e.DEFAULT_MESSAGE, e, "", "");
             }
         }
