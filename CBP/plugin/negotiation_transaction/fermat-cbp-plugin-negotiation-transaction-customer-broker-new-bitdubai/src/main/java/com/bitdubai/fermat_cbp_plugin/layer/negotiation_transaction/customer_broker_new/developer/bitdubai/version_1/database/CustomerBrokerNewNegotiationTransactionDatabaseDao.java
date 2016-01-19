@@ -358,6 +358,35 @@ public class CustomerBrokerNewNegotiationTransactionDatabaseDao {
 
     }
 
+    //GET LIST PENDING EVENT
+    public List<String> getAllEvents() throws UnexpectedResultReturnedFromDatabaseException, CantGetNegotiationTransactionListException {
+
+        try{
+
+            DatabaseTable table = this.database.getTable(CustomerBrokerNewNegotiationTransactionDatabaseConstants.CUSTOMER_BROKER_NEW_EVENT_TABLE_NAME);
+            List<String> eventTypeList=new ArrayList<>();
+            String eventString;
+            table.loadToMemory();
+            List<DatabaseTableRecord> records = table.getRecords();
+            if(records.isEmpty())
+                return eventTypeList;
+            for(DatabaseTableRecord databaseTableRecord : records){
+                eventString =   "\n - ID = "+databaseTableRecord.getUUIDValue(CustomerBrokerNewNegotiationTransactionDatabaseConstants.CUSTOMER_BROKER_NEW_EVENT_ID_COLUMN_NAME)+
+                                "\n - STATUS = "+databaseTableRecord.getUUIDValue(CustomerBrokerNewNegotiationTransactionDatabaseConstants.CUSTOMER_BROKER_NEW_EVENT_STATUS_COLUMN_NAME)+", "+
+                                "\n - TYPE = "+databaseTableRecord.getUUIDValue(CustomerBrokerNewNegotiationTransactionDatabaseConstants.CUSTOMER_BROKER_NEW_EVENT_TYPE_COLUMN_NAME)
+                ;
+
+                eventTypeList.add(eventString);
+            }
+
+            return eventTypeList;
+
+        } catch (CantLoadTableToMemoryException e) {
+            throw new CantGetNegotiationTransactionListException(CantGetNegotiationTransactionListException.DEFAULT_MESSAGE,e,"Getting events in EventStatus.PENDING","Cannot load the table into memory");
+        }
+
+    }
+
     //GET EVENT TYPE OF TRANSACTION
     public String getEventType(UUID eventId) throws UnexpectedResultReturnedFromDatabaseException {
 
@@ -369,6 +398,27 @@ public class CustomerBrokerNewNegotiationTransactionDatabaseDao {
             List<DatabaseTableRecord> records = table.getRecords();
             checkDatabaseRecords(records);
             String value=records.get(0).getStringValue(CustomerBrokerNewNegotiationTransactionDatabaseConstants.CUSTOMER_BROKER_NEW_EVENT_TYPE_COLUMN_NAME);
+
+            return value;
+
+        } catch (CantLoadTableToMemoryException e) {
+            throw new UnexpectedResultReturnedFromDatabaseException(e,"Getting value from database","Cannot load the database table");
+        }
+
+    }
+
+    //GET EVENT TYPE OF TRANSACTION
+    public String getEvent(UUID eventId) throws UnexpectedResultReturnedFromDatabaseException {
+
+        try{
+
+            DatabaseTable table = this.database.getTable(CustomerBrokerNewNegotiationTransactionDatabaseConstants.CUSTOMER_BROKER_NEW_EVENT_TABLE_NAME);
+            table.addUUIDFilter(CustomerBrokerNewNegotiationTransactionDatabaseConstants.CUSTOMER_BROKER_NEW_EVENT_ID_COLUMN_NAME, eventId, DatabaseFilterType.EQUAL);
+            table.loadToMemory();
+            List<DatabaseTableRecord> records = table.getRecords();
+            checkDatabaseRecords(records);
+            String value=records.get(0).getStringValue(CustomerBrokerNewNegotiationTransactionDatabaseConstants.CUSTOMER_BROKER_NEW_EVENT_TYPE_COLUMN_NAME)+", "+
+                    records.get(0).getStringValue(CustomerBrokerNewNegotiationTransactionDatabaseConstants.CUSTOMER_BROKER_NEW_EVENT_STATUS_COLUMN_NAME);
 
             return value;
 

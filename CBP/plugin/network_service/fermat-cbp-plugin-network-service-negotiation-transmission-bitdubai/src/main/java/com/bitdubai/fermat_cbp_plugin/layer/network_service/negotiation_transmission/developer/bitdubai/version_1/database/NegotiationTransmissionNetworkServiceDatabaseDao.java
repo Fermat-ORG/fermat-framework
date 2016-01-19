@@ -172,10 +172,9 @@ public class NegotiationTransmissionNetworkServiceDatabaseDao {
             NegotiationTransmissionState state = NegotiationTransmissionState.DONE;
             this.changeState(transmissionId, state);
             System.out.print("\n\n**** 19.2.2) MOCK NEGOTIATION TRANSACTION - NEGOTIATION TRANSMISSION - DAO - REGISTER NEW EVENT, CONFIRM TRANSAMISSION ****\n");
-        } catch (CantRegisterSendNegotiationTransmissionException e) {
-            StringBuffer contextBuffer = new StringBuffer();
-            contextBuffer.append("Table Name: " + NegotiationTransmissionNetworkServiceDatabaseConstants.NEGOTIATION_TRANSMISSION_NETWORK_SERVICE_TABLE_NAME);
-            throw new CantRegisterSendNegotiationTransmissionException (CantRegisterSendNegotiationTransmissionException.DEFAULT_MESSAGE + ". CAN'T CONFIRM RECEPTION IN REGISTER OF DATABSE NEGOTIATION TRANSMISSION", e, contextBuffer.toString(), "The record do not exist");
+            
+        } catch (CantRegisterSendNegotiationTransmissionException | CantUpdateRecordException e) {
+            throw new CantRegisterSendNegotiationTransmissionException(e.DEFAULT_MESSAGE, e, "Customer Broker New Negotiation Transaction Update Event Status Not Found", "unknown failure");
         }
     }
 
@@ -293,12 +292,26 @@ public class NegotiationTransmissionNetworkServiceDatabaseDao {
         return list;
     }
 
-    /**
-     * Method that update an CryptoTransmissionMetadata in the data base.
-     *
-     * @throws CantRegisterSendNegotiationTransmissionException
-     */
-    public void changeState(UUID transmissionId, NegotiationTransmissionState negotiationTransmissionState) throws CantRegisterSendNegotiationTransmissionException {
+    public void changeState(UUID transmissionId, NegotiationTransmissionState negotiationTransmissionState) throws CantRegisterSendNegotiationTransmissionException, CantUpdateRecordException{
+
+        try{
+
+            if (!transmissionExists(transmissionId))
+                throw new CantRegisterSendNegotiationTransmissionException("Cant Update State in Network Service Negotiation Transmission, Transmission Id not exists.", "Network Service Negotiation Transmission, Update Transmission State", "Cant Update Transmission State in Network Service Negotiation Transmission, Id not exists");
+
+            DatabaseTable table = this.database.getTable(NegotiationTransmissionNetworkServiceDatabaseConstants.NEGOTIATION_TRANSMISSION_NETWORK_SERVICE_TABLE_NAME);
+            table.addUUIDFilter(NegotiationTransmissionNetworkServiceDatabaseConstants.NEGOTIATION_TRANSMISSION_NETWORK_SERVICE_TRANSMISSION_ID_COLUMN_NAME, transmissionId, DatabaseFilterType.EQUAL);
+            table.loadToMemory();
+            DatabaseTableRecord record = table.getEmptyRecord();
+            record.setStringValue(NegotiationTransmissionNetworkServiceDatabaseConstants.NEGOTIATION_TRANSMISSION_NETWORK_SERVICE_TRANSMISSION_STATE_COLUMN_NAME, negotiationTransmissionState.getCode());
+
+            table.updateRecord(record);
+
+        }  catch (CantLoadTableToMemoryException e) {
+            throw new CantRegisterSendNegotiationTransmissionException(e.DEFAULT_MESSAGE, e, "Customer Broker New Negotiation Transaction Update Event Status Not Found", "unknown failure");
+        }
+    }
+    /*public void changeState(UUID transmissionId, NegotiationTransmissionState negotiationTransmissionState) throws CantRegisterSendNegotiationTransmissionException {
 
         if (transmissionId == null) {
             throw new IllegalArgumentException("The entity is required, can not be null");
@@ -328,7 +341,7 @@ public class NegotiationTransmissionNetworkServiceDatabaseDao {
             e.printStackTrace();
         }
 
-    }
+    }*/
 
     public void changeState(NegotiationTransmission negotiationTransmission) throws CantRegisterSendNegotiationTransmissionException {
 
@@ -415,6 +428,26 @@ public class NegotiationTransmissionNetworkServiceDatabaseDao {
     }
 
     /*PRIVATE*/
+    private boolean transmissionExists(UUID transmissionId) throws CantRegisterSendNegotiationTransmissionException {
+
+        try {
+
+            DatabaseTable table = this.database.getTable(NegotiationTransmissionNetworkServiceDatabaseConstants.NEGOTIATION_TRANSMISSION_NETWORK_SERVICE_TABLE_NAME);
+            if (table == null)
+                throw new CantRegisterSendNegotiationTransmissionException("Cant check if event tablet exists", "Network Service Negotition Transmission", "");
+
+            table.addUUIDFilter(NegotiationTransmissionNetworkServiceDatabaseConstants.NEGOTIATION_TRANSMISSION_NETWORK_SERVICE_TRANSMISSION_ID_COLUMN_NAME, transmissionId, DatabaseFilterType.EQUAL);
+            table.loadToMemory();
+            return table.getRecords().size() > 0;
+
+        } catch (CantLoadTableToMemoryException em) {
+            throw new CantRegisterSendNegotiationTransmissionException(em.getMessage(), em, "Network Service Negotition Transmission, Transmission Id Not Exists", "Cant load " + NegotiationTransmissionNetworkServiceDatabaseConstants.NEGOTIATION_TRANSMISSION_NETWORK_SERVICE_TABLE_NAME + " table in memory.");
+        } catch (Exception e) {
+            throw new CantRegisterSendNegotiationTransmissionException(e.getMessage(), FermatException.wrapException(e), "Network Service Negotition Transmission, Transmission Id Not Exists", "unknown failure.");
+        }
+
+    }
+
     private NegotiationTransmission getNegotiationTransmissionFromRecord(DatabaseTableRecord record) throws InvalidParameterException{
         NegotiationTransmission negotiationTransmission = null;
         UUID                            transmissionId          =   record.getUUIDValue(NegotiationTransmissionNetworkServiceDatabaseConstants.NEGOTIATION_TRANSMISSION_NETWORK_SERVICE_TRANSMISSION_ID_COLUMN_NAME);

@@ -215,7 +215,7 @@ public class NegotiationTransactionCustomerBrokerNewPluginRoot extends AbstractP
 //            getNegotiationsByIdTest(UUID.fromString("eac97ab3-034e-4e57-93dc-b9f4ccaf1a74"));
 
             //TEST EVENT REGISTER
-//            registerEventTest();
+            registerEventTest();
 
             //TEST GET ALL EVENT
 //            getAllEvent();
@@ -458,14 +458,9 @@ public class NegotiationTransactionCustomerBrokerNewPluginRoot extends AbstractP
 
             System.out.print("\n**** MOCK CUSTOMER BROKER NEW. EVENT . GET ALL EVENT. ****\n");
 
-            List<UUID> eventList = customerBrokerNewNegotiationTransactionDatabaseDao.getPendingEvents();
-            for (UUID eventId: eventList){
-                String eventTypeCode = customerBrokerNewNegotiationTransactionDatabaseDao.getEventType(eventId);
-                System.out.print("\n**** MOCK CUSTOMER BROKER NEW. EVENT. ****\n" +
-                        "\n - EVENT ID = " + eventId +
-                        "\n - EVENT TYPE = " +eventTypeCode
-                );
-
+            List<String> eventList = customerBrokerNewNegotiationTransactionDatabaseDao.getAllEvents();
+            for (String event: eventList){
+                System.out.print("\n**** MOCK CUSTOMER BROKER NEW. EVENT. ****\n"+"EVENT DATE\n "+event);
             }
 
 

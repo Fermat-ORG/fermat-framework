@@ -232,8 +232,40 @@ public class NetworkServiceNegotiationTransmissionPluginRoot extends AbstractNet
             //TEST EVENT
 //            eventTest();
 
-            //TEST RECEIVE NEGOTIATION
-//            receiveNegotiationTransmissionTest();
+            //TEST RECEIVE PURCHASE NEGOTIATION CUSTOMER BROKER NEW
+//            receiveNegotiationTransmissionTest(
+//                NegotiationTransactionType.CUSTOMER_BROKER_NEW,
+//                NegotiationTransmissionType.TRANSMISSION_NEGOTIATION,
+//                NegotiationType.PURCHASE
+//            );
+
+            //TEST RECEIVE PURCHASE NEGOTIATION CUSTOMER BROKER UPDATE
+//            receiveNegotiationTransmissionTest(
+//                NegotiationTransactionType.CUSTOMER_BROKER_UPDATE,
+//                NegotiationTransmissionType.TRANSMISSION_NEGOTIATION,
+//                NegotiationType.PURCHASE
+//            );
+
+            //TEST RECEIVE PURCHASE NEGOTIATION CUSTOMER BROKER CLOSE
+//            receiveNegotiationTransmissionTest(
+//                NegotiationTransactionType.CUSTOMER_BROKER_CLOSE,
+//                NegotiationTransmissionType.TRANSMISSION_NEGOTIATION,
+//                NegotiationType.PURCHASE
+//            );
+
+            //TEST RECEIVE SALE NEGOTIATION CUSTOMER BROKER UPDATE
+//            receiveNegotiationTransmissionTest(
+//                NegotiationTransactionType.CUSTOMER_BROKER_UPDATE,
+//                NegotiationTransmissionType.TRANSMISSION_NEGOTIATION,
+//                NegotiationType.SALE
+//            );
+
+            //TEST RECEIVE SALE NEGOTIATION CUSTOMER BROKER CLOSE
+//            receiveNegotiationTransmissionTest(
+//                NegotiationTransactionType.CUSTOMER_BROKER_CLOSE,
+//                NegotiationTransmissionType.TRANSMISSION_NEGOTIATION,
+//                NegotiationType.SALE
+//            );
 
             //Initilize service
             this.serviceStatus = ServiceStatus.STARTED;
@@ -951,23 +983,38 @@ public class NetworkServiceNegotiationTransmissionPluginRoot extends AbstractNet
 
     }
 
-    private void receiveNegotiationTransmissionTest(){
 
+    private void receiveNegotiationTransmissionTest(
+            NegotiationTransactionType negotiationTransactionType,
+            NegotiationTransmissionType negotiationTransmissionType,
+            NegotiationType negotiationType
+    ){
         try {
             System.out.print("\n**** 11) MOCK NEGOTIATION TRANSMISSION. RECEIVE MESSAGE TEST ****\n");
 
+            Negotiation negotiation = null;
+            PlatformComponentType actorSendType = null;
+
+            if(negotiationType.getCode().equals(NegotiationType.PURCHASE.getCode())){
+                negotiation = purchaseNegotiationMockTest();
+                actorSendType = PlatformComponentType.ACTOR_CRYPTO_CUSTOMER;
+            }else{
+                negotiation = saleNegotiationMockTest();
+                actorSendType = PlatformComponentType.ACTOR_CRYPTO_BROKER;
+            }
+
             NegotiationMessage negotiationMessage = negotiationMessageTest(
-                    saleNegotiationMockTest(),
-                    PlatformComponentType.ACTOR_CRYPTO_CUSTOMER,
-                    NegotiationTransactionType.CUSTOMER_BROKER_NEW,
-                    NegotiationTransmissionType.TRANSMISSION_NEGOTIATION,
+                    negotiation,
+                    actorSendType,
+                    negotiationTransactionType,
+                    negotiationTransmissionType,
                     NegotiationTransmissionState.PENDING_ACTION,
-                    NegotiationType.PURCHASE
+                    negotiationType
             );
 
             System.out.print("\n**** 11) MOCK NEGOTIATION TRANSMISSION. RECEIVE MESSAGE TEST DATE: ****\n" +
-                    "- ActorReceive = "+ negotiationMessage.getPublicKeyActorReceive() +
-                    "- ActorSend = "+ negotiationMessage.getPublicKeyActorSend()
+                            "- ActorReceive = "+ negotiationMessage.getPublicKeyActorReceive() +
+                            "- ActorSend = "+ negotiationMessage.getPublicKeyActorSend()
             );
 
             receiveNegotiation(negotiationMessage);
@@ -975,6 +1022,7 @@ public class NetworkServiceNegotiationTransmissionPluginRoot extends AbstractNet
         } catch (CantHandleNewMessagesException e){
             System.out.print("\n**** MOCK NEGOTIATION TRANSMISSION. RECEIVE MESSAGE TEST, ERROR, NOT FOUNT ****\n");
         }
+
 
     }
 
@@ -997,15 +1045,15 @@ public class NetworkServiceNegotiationTransmissionPluginRoot extends AbstractNet
         UUID transactionId      = UUID.randomUUID();
         String negotiationXML   = XMLParser.parseObject(negotiation);
 
-//        if(actorSendType.getCode().equals(PlatformComponentType.ACTOR_CRYPTO_CUSTOMER.getCode())){
+        if(actorSendType.getCode().equals(PlatformComponentType.ACTOR_CRYPTO_CUSTOMER.getCode())){
             publicKeyActorSend      = negotiation.getCustomerPublicKey();
             publicKeyActorReceive   = negotiation.getBrokerPublicKey();
             actorReceiveType        = PlatformComponentType.ACTOR_CRYPTO_BROKER;
-//        }else{
-//            publicKeyActorSend      = negotiation.getBrokerPublicKey();
-//            publicKeyActorReceive   = negotiation.getCustomerPublicKey();
-//            actorReceiveType        = PlatformComponentType.ACTOR_CRYPTO_CUSTOMER;
-//        }
+        }else{
+            publicKeyActorSend      = negotiation.getBrokerPublicKey();
+            publicKeyActorReceive   = negotiation.getCustomerPublicKey();
+            actorReceiveType        = PlatformComponentType.ACTOR_CRYPTO_CUSTOMER;
+        }
 
         return new NegotiationMessage(
             transmissionId,
