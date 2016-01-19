@@ -47,6 +47,7 @@ import com.google.gson.JsonParser;
 import com.google.gson.reflect.TypeToken;
 
 import org.glassfish.tyrus.client.ClientManager;
+import org.glassfish.tyrus.client.ClientProperties;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
@@ -67,6 +68,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import javax.websocket.CloseReason;
 import javax.websocket.ContainerProvider;
 import javax.websocket.DeploymentException;
 import javax.websocket.WebSocketContainer;
@@ -99,7 +101,7 @@ public class WsCommunicationsTyrusCloudClientConnection implements Communication
     /**
      * Represent the webSocketContainer
      */
-    private WebSocketContainer webSocketContainer;
+    private ClientManager webSocketContainer;
 
     /**
      * Represent the locationManager
@@ -123,7 +125,7 @@ public class WsCommunicationsTyrusCloudClientConnection implements Communication
         this.wsCommunicationsTyrusCloudClientChannel = new WsCommunicationsTyrusCloudClientChannel(this, eventManager, clientIdentity);
         this.wsCommunicationVPNClientManagerAgent    = WsCommunicationVPNClientManagerAgent.getInstance();
         this.locationManager                         = locationManager;
-        this.webSocketContainer = ContainerProvider.getWebSocketContainer();
+        this.webSocketContainer = ClientManager.createClient();
     }
 
     /**
@@ -166,6 +168,24 @@ public class WsCommunicationsTyrusCloudClientConnection implements Communication
          * Register the processors
          */
         registerFermatPacketProcessors();
+
+        ClientManager.ReconnectHandler reconnectHandler = new ClientManager.ReconnectHandler() {
+
+            @Override
+            public boolean onDisconnect(CloseReason closeReason) {
+                    System.out.println("### Reconnecting... ");
+                    return true;
+            }
+
+            @Override
+            public boolean onConnectFailure(Exception exception) {
+                // Thread.sleep(...) to avoid potential DDoS when you don't limit number of reconnects.
+                return true;
+            }
+
+        };
+
+        webSocketContainer.getProperties().put(ClientProperties.RECONNECT_HANDLER, reconnectHandler);
 
         /*
          * Connect
