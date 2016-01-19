@@ -836,10 +836,10 @@ public class AssetIssuerWalletDao {
                 throw new RecordsNotFoundException(null, context, "");
             }
 
-            for (DatabaseTableRecord record : assetStatisticTable.getRecords()) {
-                record.setStringValue(columnName, value);
-                assetStatisticTable.updateRecord(record);
-            }
+            DatabaseTableRecord record = assetStatisticTable.getRecords().get(0);
+
+            record.setStringValue(columnName, value);
+            assetStatisticTable.updateRecord(record);
         } catch (CantLoadTableToMemoryException exception) {
             throw new CantGetAssetStatisticException(exception, context, "Cannot load table to memory.");
         } catch (CantUpdateRecordException exception) {
