@@ -148,8 +148,8 @@ public class RequestSendHistoryFragment extends FermatWalletListFragment<Payment
 
         frameLayout.setLayoutParams(lbs);
 
-        ImageView icon = new ImageView(getActivity()); // Create an icon
-        icon.setImageResource(R.drawable.btn_drawer_icon_request_fluor);
+        //ImageView icon = new ImageView(getActivity());  Create an icon
+        //icon.setImageResource(R.drawable.btn_request_selector);
         //icon.setImageResource(R.drawable.ic_contact_newcontact);
 
         View.OnClickListener onClickListener = new View.OnClickListener() {
@@ -158,13 +158,15 @@ public class RequestSendHistoryFragment extends FermatWalletListFragment<Payment
                 changeActivity(Activities.CCP_BITCOIN_WALLET_REQUEST_FORM_ACTIVITY);
             }
         };
+        View view = new View(getActivity());
+        view.setLayoutParams(lbs);
 
-        frameLayout.addView(icon);
+        frameLayout.addView(view);
         frameLayout.setOnClickListener(onClickListener);
-        icon.setOnClickListener(onClickListener);
+        view.setOnClickListener(onClickListener);
 
         com.oguzdev.circularfloatingactionmenu.library.FloatingActionButton actionButton = new com.oguzdev.circularfloatingactionmenu.library.FloatingActionButton.Builder(getActivity())
-                .setContentView(frameLayout)
+                .setContentView(frameLayout).setBackgroundDrawable(R.drawable.btn_request_selector)
                 .build();
 
         FloatingActionMenu actionMenu = new FloatingActionMenu.Builder(getActivity())
