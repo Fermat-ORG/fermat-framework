@@ -2959,7 +2959,7 @@ public class WalletRuntimeEnginePluginRoot extends AbstractPlugin implements
         //runtimeWalletNavigationStructure.setStartActivity(Activities.BNK_BANK_MONEY_WALLET_HOME);
 
         runtimeTitleBar = new TitleBar();
-        runtimeTitleBar.setLabel("Banking Wallet");
+        runtimeTitleBar.setLabel("BANK WALLET");
         runtimeTitleBar.setLabelSize(titleBarLabelSize);
         runtimeTitleBar.setTitleColor(titleBarLabelColor);
         runtimeTitleBar.setIsTitleTextStatic(true);
@@ -2987,6 +2987,7 @@ public class WalletRuntimeEnginePluginRoot extends AbstractPlugin implements
         runtimeTitleBar.setLabelSize(titleBarLabelSize);
         runtimeTitleBar.setTitleColor(titleBarLabelColor);
         runtimeTitleBar.setIsTitleTextStatic(true);
+        runtimeTitleBar.setIconName("back");
         runtimeActivity.setTitleBar(runtimeTitleBar);
 
         runtimeStatusBar = new StatusBar();
