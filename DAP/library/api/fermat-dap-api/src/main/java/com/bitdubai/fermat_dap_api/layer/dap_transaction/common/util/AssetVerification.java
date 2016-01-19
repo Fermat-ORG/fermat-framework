@@ -17,7 +17,6 @@ import com.bitdubai.fermat_dap_api.layer.all_definition.exceptions.ObjectNotSetE
 import com.bitdubai.fermat_dap_api.layer.all_definition.util.Validate;
 
 import java.sql.Timestamp;
-import java.util.LinkedHashMap;
 import java.util.List;
 
 /**
@@ -78,19 +77,17 @@ public final class AssetVerification {
 
     public static boolean isDigitalAssetHashValid(BitcoinNetworkManager bitcoinNetworkManager, DigitalAssetMetadata digitalAssetMetadata) throws CantGetCryptoTransactionException, DAPException {
         String digitalAssetMetadataHash = digitalAssetMetadata.getDigitalAssetHash();
-        String digitalAssetGenesisTransaction = digitalAssetMetadata.getGenesisTransaction();
-        String genesisBlockHash = digitalAssetMetadata.getGenesisBlock();
-        CryptoTransaction cryptoTransaction = getCryptoTransactionFromCryptoNetwork(bitcoinNetworkManager, digitalAssetGenesisTransaction, genesisBlockHash);
+        CryptoTransaction cryptoTransaction = getCryptoTransactionFromCryptoNetwork(bitcoinNetworkManager, digitalAssetMetadata);
         String hashFromCryptoTransaction = cryptoTransaction.getOp_Return();
         return digitalAssetMetadataHash.equals(hashFromCryptoTransaction);
     }
 
-    private static CryptoTransaction getCryptoTransactionFromCryptoNetwork(BitcoinNetworkManager bitcoinNetworkManager, String genesisTransaction, String genesisBlock) throws DAPException, CantGetCryptoTransactionException {
-        return bitcoinNetworkManager.getCryptoTransactionFromBlockChain(genesisTransaction, genesisBlock);
+    private static CryptoTransaction getCryptoTransactionFromCryptoNetwork(BitcoinNetworkManager bitcoinNetworkManager, DigitalAssetMetadata digitalAssetMetadata) throws DAPException, CantGetCryptoTransactionException {
+        return bitcoinNetworkManager.getGenesisCryptoTransaction(null, digitalAssetMetadata.getTransactionChain());
     }
 
-    public static CryptoTransaction getCryptoTransactionFromCryptoNetworkByCryptoStatus(BitcoinNetworkManager bitcoinNetworkManager, LinkedHashMap<String, String> transactionChain, CryptoStatus cryptoStatus) throws CantGetCryptoTransactionException {
-        List<CryptoTransaction> transactionListFromCryptoNetwork = bitcoinNetworkManager.getGenesisCryptoTransaction(null, transactionChain);
+    public static CryptoTransaction getCryptoTransactionFromCryptoNetworkByCryptoStatus(BitcoinNetworkManager bitcoinNetworkManager, DigitalAssetMetadata digitalAssetMetadata, CryptoStatus cryptoStatus) throws CantGetCryptoTransactionException {
+        List<CryptoTransaction> transactionListFromCryptoNetwork = bitcoinNetworkManager.getCryptoTransactions(digitalAssetMetadata.getLastTransactionHash());
         return matchStatus(transactionListFromCryptoNetwork, cryptoStatus);
     }
 
