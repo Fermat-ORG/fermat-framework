@@ -49,6 +49,13 @@ public interface BitcoinNetworkManager extends TransactionSender<CryptoTransacti
      */
     List<CryptoTransaction> getCryptoTransactions(String txHash) throws CantGetCryptoTransactionException;
 
+    /**
+     * gets the current Crypto Status for the specified Transaction ID
+     * @param txHash the Bitcoin transaction hash
+     * @return the last crypto status
+     * @throws CantGetTransactionCryptoStatusException
+     */
+    CryptoStatus getCryptoStatus(String txHash) throws CantGetTransactionCryptoStatusException;
 
     /**
      * Will get the CryptoTransaction directly from the blockchain by requesting it to a peer.
@@ -140,13 +147,6 @@ public interface BitcoinNetworkManager extends TransactionSender<CryptoTransacti
     List<Transaction> getBitcoinTransactions(BlockchainNetworkType blockchainNetworkType);
 
 
-     /**
-     * gets the current Crypto Status for the specified Transaction ID
-     * @param txHash the Bitcoin transaction hash
-     * @return the last crypto status
-     * @throws CantGetTransactionCryptoStatusException
-     */
-    CryptoStatus getCryptoStatus(String txHash) throws CantGetTransactionCryptoStatusException;
 
 
     /**
@@ -185,5 +185,5 @@ public interface BitcoinNetworkManager extends TransactionSender<CryptoTransacti
      * @return all the CryptoTransactions originated at the genesis transaction
      * @throws CantGetCryptoTransactionException
      */
-    List<CryptoTransaction> getGenesisCryptoTransaction(@Nullable BlockchainNetworkType blockchainNetworkType, LinkedHashMap<String, String> transactionChain) throws CantGetCryptoTransactionException;
+    CryptoTransaction getGenesisCryptoTransaction(@Nullable BlockchainNetworkType blockchainNetworkType, LinkedHashMap<String, String> transactionChain) throws CantGetCryptoTransactionException;
 }

@@ -899,10 +899,10 @@ public class BitcoinCryptoNetworkManager implements TransactionProtocolManager, 
      * @return all the CryptoTransactions originated at the genesis transaction
      * @throws CantGetCryptoTransactionException
      */
-    public List<CryptoTransaction> getGenesisCryptoTransaction(@Nullable BlockchainNetworkType blockchainNetworkType, LinkedHashMap<String, String> transactionChain) throws CantGetCryptoTransactionException {
+    public CryptoTransaction getGenesisCryptoTransaction(@Nullable BlockchainNetworkType blockchainNetworkType, LinkedHashMap<String, String> transactionChain) throws CantGetCryptoTransactionException {
         try {
             CryptoTransaction cryptoTransaction = CryptoTransaction.getCryptoTransaction(this.getGenesisTransaction(blockchainNetworkType, transactionChain));
-            return getCryptoTransactionWithAllCryptoStatus(cryptoTransaction);
+            return cryptoTransaction;
         } catch (CantGetTransactionException e) {
             throw new CantGetCryptoTransactionException(CantGetCryptoTransactionException.DEFAULT_MESSAGE, e, null, null);
         }
