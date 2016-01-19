@@ -1776,7 +1776,7 @@ public class SubAppRuntimeEnginePluginRoot extends AbstractPlugin implements Sub
         runtimeActivity = new Activity();
         runtimeActivity.setType(Activities.CBP_SUB_APP_CRYPTO_BROKER_COMMUNITY_CONNECTION_WORLD);
         runtimeActivity.setActivityType(Activities.CBP_SUB_APP_CRYPTO_BROKER_COMMUNITY_CONNECTION_WORLD.getCode());
-        subAppBrokerCommunity.setStartActivity(Activities.CBP_SUB_APP_CRYPTO_BROKER_COMMUNITY_CONNECTION_WORLD);
+        subAppBrokerCommunity.addPosibleStartActivity(Activities.CBP_SUB_APP_CRYPTO_BROKER_COMMUNITY_CONNECTION_WORLD);
         runtimeActivity.setColor("#FF0B46F0");
 
         statusBar = new com.bitdubai.fermat_api.layer.all_definition.navigation_structure.StatusBar();
@@ -2006,7 +2006,7 @@ public class SubAppRuntimeEnginePluginRoot extends AbstractPlugin implements Sub
         runtimeActivity = new Activity();
         runtimeActivity.setType(Activities.CHT_CHAT_OPEN_CHATLIST);
         runtimeActivity.setActivityType(Activities.CHT_CHAT_OPEN_CHATLIST.getCode());
-        chtChat.setStartActivity(Activities.CHT_CHAT_OPEN_CHATLIST);
+        chtChat.addPosibleStartActivity(Activities.CHT_CHAT_OPEN_CHATLIST);
         //chtChat.addActivity(runtimeActivity);
 
         statusBar = new com.bitdubai.fermat_api.layer.all_definition.navigation_structure.StatusBar();
