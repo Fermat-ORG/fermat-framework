@@ -8,6 +8,8 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Toast;
+
+import com.bitdubai.fermat_android_api.ui.Views.PresentationDialog;
 import com.bitdubai.fermat_android_api.ui.adapters.FermatAdapter;
 import com.bitdubai.fermat_android_api.ui.enums.FermatRefreshTypes;
 import com.bitdubai.fermat_android_api.ui.fragments.FermatWalletListFragment;
@@ -48,6 +50,8 @@ public class AccountsListFragment extends FermatWalletListFragment<BankAccountNu
     }
 
     private View emtyView;
+
+    private PresentationDialog presentationDialog;
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -68,7 +72,11 @@ public class AccountsListFragment extends FermatWalletListFragment<BankAccountNu
         super.initViews(layout);
         configureToolbar();
         this.emtyView =  layout.findViewById(R.id.bw_empty_accounts_view);
+        presentationDialog = new PresentationDialog(getActivity(),appSession,appResourcesProviderManager);
         showOrHideNoAccountListView(accountsList.isEmpty());
+        if(accountsList.isEmpty())
+            presentationDialog.show();
+
     }
 
     private void configureToolbar() {
