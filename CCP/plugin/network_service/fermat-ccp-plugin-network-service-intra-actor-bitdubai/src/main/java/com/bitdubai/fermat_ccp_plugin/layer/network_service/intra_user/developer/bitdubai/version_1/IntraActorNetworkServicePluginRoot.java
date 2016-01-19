@@ -927,11 +927,13 @@ public class IntraActorNetworkServicePluginRoot extends AbstractPlugin implement
                     actorNetworkServiceRecord.changeState(ActorProtocolState.DONE);
                     getOutgoingNotificationDao().update(actorNetworkServiceRecord);
 
+                    //create incoming notification
+
                     actorNetworkServiceRecord.changeState(ActorProtocolState.PROCESSING_RECEIVE);
                     actorNetworkServiceRecord.setFlagReadead(false);
                     getIncomingNotificationsDao().createNotification(actorNetworkServiceRecord);
                     System.out.println("----------------------------\n" +
-                            "MENSAJE ACCEPTED LLEGÓ BIEN: CASE ACCEPTED" + actorNetworkServiceRecord
+                            "MENSAJE ACCEPTED LLEGÓ BIEN: CASE ACCEPTED" + actorNetworkServiceRecord.getActorSenderAlias()
                             + "\n-------------------------------------------------");
 
 
@@ -947,7 +949,9 @@ public class IntraActorNetworkServicePluginRoot extends AbstractPlugin implement
                             "INTRA ACTOR NETWORK SERVICE" +
                             "THE RECORD WAS CHANGE TO THE STATE OF DELIVERY" + actorNetworkServiceRecord.getActorSenderAlias()
                             + "\n-------------------------------------------------");
-                    getOutgoingNotificationDao().changeProtocolState(actorNetworkServiceRecord.getId(), ActorProtocolState.DELIVERY);
+                    //TODO: ver porqué esta en delivery
+                    getOutgoingNotificationDao().changeProtocolState(actorNetworkServiceRecord.getId(), ActorProtocolState.DONE);
+                    actorNetworkServiceRecord.changeState(ActorProtocolState.DONE);
                     if (actorNetworkServiceRecord.getActorProtocolState().getCode().equals(ActorProtocolState.DONE)){
                         // close connection, sender is the destination
                         System.out.println("----------------------------\n" +
@@ -2082,6 +2086,9 @@ public class IntraActorNetworkServicePluginRoot extends AbstractPlugin implement
         catch(CantListIntraWalletUsersException | CantUpdateRecordDataBaseException| CantUpdateRecordException| RequestNotFoundException
                 e)
         {
+            System.out.print("INTRA USER NS EXCEPCION REPROCESANDO MESSAGEs");
+            e.printStackTrace();
+        } catch (Exception e) {
             System.out.print("INTRA USER NS EXCEPCION REPROCESANDO MESSAGEs");
             e.printStackTrace();
         }

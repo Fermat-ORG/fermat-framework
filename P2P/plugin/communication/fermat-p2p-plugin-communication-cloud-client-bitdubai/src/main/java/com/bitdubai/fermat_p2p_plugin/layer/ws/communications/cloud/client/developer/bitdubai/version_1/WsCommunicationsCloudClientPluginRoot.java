@@ -35,8 +35,6 @@ import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.Un
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfaces.EventManager;
 
-import org.java_websocket.WebSocketImpl;
-
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
