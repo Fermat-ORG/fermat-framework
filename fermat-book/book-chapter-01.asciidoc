@@ -3,7 +3,7 @@ image::https://raw.githubusercontent.com/bitDubai/media-kit/master/MediaKit/Ferm
 
 == Chapter 1: Fermat Master Plan
 
-Fermat has its own vision of how to carry out the collaborative project of their Open Source software. The main concept is to define a large master plan far into the future, and start building it by phases, adjusting the target when needed. It is designed this way to absorb the efforts of thousands of contributors over the years into a unified architectural vision. It is somehow translating into the industry the useful experience of building a "concept city" like Dubai starting by designing a master plan to guide the necessary tasks and development phases.+
+Fermat has its own vision of how to carry out the collaborative project of their Open Source software. The main concept is to define a large master plan far into the future, and start building it by phases, adjusting the target when needed. It is designed this way to absorb the efforts of thousands of contributors over the years into a unified architectural vision. It is somehow translating into the industry the useful experience of building a "concept city" like Dubai starting by designing a master plan to guide the necessary tasks and development phases. +
 
 === Phase I: Foundations 
 The goal is to have a framework for developing financial applications in a trust-less environment. What are the services that had to be granted at the lower levels to enable this?
