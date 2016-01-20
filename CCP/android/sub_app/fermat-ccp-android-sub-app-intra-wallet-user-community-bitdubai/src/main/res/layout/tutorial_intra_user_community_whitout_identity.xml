@@ -40,36 +40,37 @@
 
 
                 <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
+                    android:id="@+id/txt_title"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:id="@+id/txt_title"
-                    android:text="Welcome!"
-                    android:paddingLeft="5dp"
-                    android:layout_weight="1"
-                    android:textSize="20sp"
-                    android:textColor="#00a99d"
-                    app:typeface="CAVIAR_DREAMS_BOLD"
-                    android:gravity="left"
                     android:layout_gravity="center"
+                    android:layout_weight="1"
+                    android:gravity="left"
+                    android:paddingLeft="5dp"
+                    android:text="Welcome!"
+                    android:textColor="#00a99d"
+                    android:textSize="20sp"
+                    app:typeface="CAVIAR_DREAMS_BOLD"
 
-                    />
+                    tools:ignore="HardcodedText,RtlHardcoded,RtlSymmetry" />
 
                 <ImageView
                     android:layout_width="40dp"
                     android:layout_height="40dp"
                     android:layout_weight="0.4"
+                    android:paddingBottom="2dp"
                     android:src="@drawable/bitcoin_wallet_2"
-                    android:paddingBottom="2dp"/>
+                    tools:ignore="ContentDescription" />
 
             </LinearLayout>
 
             <View
                 android:layout_width="match_parent"
                 android:layout_height="0.7dp"
+                android:layout_marginBottom="12dp"
                 android:layout_marginLeft="5dp"
                 android:layout_marginRight="5dp"
                 android:background="@drawable/round_corner_line_dialog"
-                android:layout_marginBottom="12dp"
                 />
 
 
@@ -82,7 +83,8 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:scaleType="fitXY"
-                    android:src="@drawable/community_banner"/>
+                    android:src="@drawable/community_banner"
+                    tools:ignore="ContentDescription" />
             </RelativeLayout>
 
 

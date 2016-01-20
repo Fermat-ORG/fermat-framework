@@ -45,6 +45,11 @@ android {
         main {
             res.srcDirs = ['src/main/structured_res/app/shell/version_1',
                            'src/main/res']
+            java {
+                include 'com/ourcompany/somepackage/activityadapter/**'
+                include 'com/ourcompany/someotherpackage/**'
+                exclude 'javax/websocket/**'
+            }
         }
     }
     buildTypes {
@@ -135,5 +140,11 @@ dependencies {
     compile 'com.android.support:design:23.1.0'
     compile 'com.github.PhilJay:MPAndroidChart:v2.1.6'
     // compile files('src/main/libs/beans.jar')
+
+    configurations {
+        all {
+            exclude module: ':fermat-p2p-plugin-communication-cloud-server-bitdubai'
+        }
+    }
 
 }

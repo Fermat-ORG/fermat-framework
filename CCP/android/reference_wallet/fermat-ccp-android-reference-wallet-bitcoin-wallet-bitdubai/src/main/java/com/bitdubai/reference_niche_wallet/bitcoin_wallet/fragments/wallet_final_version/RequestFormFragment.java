@@ -100,6 +100,8 @@ public class RequestFormFragment extends AbstractFermatFragment implements View.
     private ImageView spinnerArrow;
 
 
+
+
     public static RequestFormFragment newInstance() {
         return new RequestFormFragment();
     }
@@ -256,6 +258,13 @@ public class RequestFormFragment extends AbstractFermatFragment implements View.
                                 appSession.getAppPublicKey() ,
                                 CryptoCurrency.BITCOIN,
                                 BlockchainNetworkType.TEST);
+                    walletContact.name = cryptoWalletWalletContact.getActorName();
+                    walletContact.actorPublicKey = cryptoWalletWalletContact.getActorPublicKey();
+                    walletContact.address = cryptoWalletWalletContact.getReceivedCryptoAddress().get(0).getAddress();
+                    walletContact.contactId = cryptoWalletWalletContact.getContactId();
+                    walletContact.profileImage = cryptoWalletWalletContact.getProfilePicture();
+                    walletContact.isConnection = cryptoWalletWalletContact.isConnection();
+
                     setUpUIData();
 
                 } catch(CantCreateWalletContactException e) {
@@ -372,6 +381,7 @@ public class RequestFormFragment extends AbstractFermatFragment implements View.
             }
         });
 
+        setUpContactAddapter();
         /**
          * Selector
          */

@@ -3293,7 +3293,6 @@ public class WalletRuntimeEnginePluginRoot extends AbstractPlugin implements
         runtimeHeader.setLabel("Balance");
         runtimeActivity.setHeader(runtimeHeader);
 
-
         runtimeTitleBar = new TitleBar();
         runtimeTitleBar.setLabel("Bitcoin wallet");
         runtimeTitleBar.setLabelSize(18);

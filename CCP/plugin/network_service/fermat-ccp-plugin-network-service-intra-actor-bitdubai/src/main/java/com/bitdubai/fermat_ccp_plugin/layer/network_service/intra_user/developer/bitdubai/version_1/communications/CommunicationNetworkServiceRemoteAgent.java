@@ -287,7 +287,7 @@ public class CommunicationNetworkServiceRemoteAgent extends Observable {
                     for (FermatMessage message: messages){
 
 
-                        if (communicationsVPNConnection.isActive() && (message.getFermatMessagesStatus() != FermatMessagesStatus.SENT)) {
+                        if (communicationsVPNConnection.isActive() && (message.getFermatMessagesStatus() != FermatMessagesStatus.SENT) && communicationsVPNConnection.isConnected()) {
 
                             /*
                              * Encrypt the content of the message whit the remote network service public key
