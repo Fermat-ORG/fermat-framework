@@ -13,6 +13,9 @@ import java.util.UUID;
  */
 public interface ChatManager extends FermatManager, TransactionProtocolManager<ChatMetadata> {
 
+   // String getNetWorkServicePublicKey();
+
+
     //TODO IN CONSTRUCTION
     void sendChatMetadata(String localActorPubKey, String remoteActorPubKey, ChatMetadata chatMetadata) throws CantSendChatMessageMetadataException;
 

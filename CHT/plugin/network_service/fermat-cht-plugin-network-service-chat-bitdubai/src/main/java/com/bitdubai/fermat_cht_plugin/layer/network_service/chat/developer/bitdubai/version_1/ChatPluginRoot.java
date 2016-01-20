@@ -41,6 +41,8 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.Data
 import com.bitdubai.fermat_api.layer.osa_android.location_system.Location;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogLevel;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogManager;
+import com.bitdubai.fermat_cht_api.all_definition.enums.MessageStatus;
+import com.bitdubai.fermat_cht_api.layer.network_service.chat.enums.ChatMessageStatus;
 import com.bitdubai.fermat_cht_api.layer.network_service.chat.enums.DistributionStatus;
 import com.bitdubai.fermat_cht_api.layer.network_service.chat.exceptions.CantInitializeCommunicationNetworkServiceConnectionManagerException;
 import com.bitdubai.fermat_cht_api.layer.network_service.chat.exceptions.CantSendChatMessageMetadataException;
@@ -734,12 +736,27 @@ public class ChatPluginRoot extends AbstractPlugin implements
 
     }
 
+//    @Override
+//    public String getNetWorkServicePublicKey() {
+//        return getIdentityPublicKey();
+//    }
+
     @Override
     public void sendChatMetadata(String localActorPubKey, String remoteActorPubKey, ChatMetadata chatMetadata) throws CantSendChatMessageMetadataException {
 
 
         ChatMetadataTransactionRecord chatMetadaTransactionRecord = new ChatMetadataTransactionRecord();
         try {
+
+            if(chatMetadata == null){
+                throw new IllegalArgumentException("Argument chatMetadata can not be null");
+            }
+            if(localActorPubKey == null || localActorPubKey.length() ==0){
+                throw new IllegalArgumentException("Argument localActorPubKey can not be null");
+            }
+            if(remoteActorPubKey == null || remoteActorPubKey.length() ==0){
+                throw new IllegalArgumentException("Argument remoteActorPubKey can not be null");
+            }
             System.out.println("ChatPLuginRoot - Starting method sendChatMetadata");
 
             /*
@@ -761,6 +778,7 @@ public class ChatPluginRoot extends AbstractPlugin implements
             String msjContent = EncodeMsjContent.encodeMSjContentChatMetadataTransmit(chatMetadata, chatMetadata.getLocalActorType(), chatMetadata.getRemoteActorType());
             System.out.println("ChatPluginRoot - Message encoded:\n"+msjContent);
 
+            chatMetadaTransactionRecord.setTransactionId(getChatMetaDataDao().getNewUUID(UUID.randomUUID().toString()));
             chatMetadaTransactionRecord.setChatId(chatMetadata.getChatId());
             chatMetadaTransactionRecord.setObjectId(chatMetadata.getObjectId());
             chatMetadaTransactionRecord.setLocalActorType(chatMetadata.getLocalActorType());
@@ -859,6 +877,25 @@ public class ChatPluginRoot extends AbstractPlugin implements
     public void sendChatMessageNewStatusNotification(String localActorPubKey, PlatformComponentType senderType, String remoteActorPubKey, PlatformComponentType receiverType, DistributionStatus newDistributionStatus, UUID chatId) throws CantSendChatMessageNewStatusNotificationException {
 
         try {
+
+            if(localActorPubKey == null || localActorPubKey.length() == 0){
+                throw new IllegalArgumentException("Argument localActorPubKey can not be null");
+            }
+            if(senderType == null){
+                throw new IllegalArgumentException("Argument senderType can not be null");
+            }
+            if(remoteActorPubKey == null || remoteActorPubKey.length() == 0){
+                throw new IllegalArgumentException("Argument remoteActorPubKey can not be null");
+            }
+            if(receiverType == null){
+                throw new IllegalArgumentException("Argument receiverType can not be null");
+            }
+            if(newDistributionStatus == null){
+                throw new IllegalArgumentException("Argument newDistributionStatus can not be null");
+            }
+            if(chatId == null){
+                throw  new IllegalArgumentException("Argument chatId can not be null");
+            }
 
 
             System.out.println("ChatPLuginRoot - Actor Sender: PK : " + localActorPubKey + " - Type: " + senderType.getCode());
@@ -1032,6 +1069,29 @@ public class ChatPluginRoot extends AbstractPlugin implements
     @Override
     public void confirmReception(UUID transactionID) throws CantConfirmTransactionException {
 
+        try {
+
+            ChatMetadataTransactionRecord chatMetadataTransactionRecord = getChatMetaDataDao().findById(transactionID.toString());
+            chatMetadataTransactionRecord.setDistributionStatus(DistributionStatus.DELIVERED);
+            chatMetadataTransactionRecord.setChatMessageStatus(ChatMessageStatus.CREATED_CHAT);
+            chatMetadataTransactionRecord.setMessageStatus(MessageStatus.DELIVERED);
+            getChatMetaDataDao().create(chatMetadataTransactionRecord);
+
+        } catch (Exception e) {
+            StringBuilder contextBuffer = new StringBuilder();
+            contextBuffer.append("Plugin ID: " + pluginId);
+            contextBuffer.append(CantStartPluginException.CONTEXT_CONTENT_SEPARATOR);
+            contextBuffer.append("wsCommunicationsCloudClientManager: " + wsCommunicationsCloudClientManager);
+            contextBuffer.append(CantStartPluginException.CONTEXT_CONTENT_SEPARATOR);
+            contextBuffer.append("pluginDatabaseSystem: " + pluginDatabaseSystem);
+            contextBuffer.append(CantStartPluginException.CONTEXT_CONTENT_SEPARATOR);
+            contextBuffer.append("errorManager: " + errorManager);
+            contextBuffer.append(CantStartPluginException.CONTEXT_CONTENT_SEPARATOR);
+            contextBuffer.append("eventManager: " + eventManager);
+            throw new CantConfirmTransactionException(CantConfirmTransactionException.DEFAULT_MESSAGE, e, contextBuffer.toString(), "Database error");
+        }
+
+
     }
 
     @Override
@@ -1046,7 +1106,7 @@ public class ChatPluginRoot extends AbstractPlugin implements
 
                 for (ChatMetadataTransactionRecord chatMetadataTransactionRecord : pendingChatMetadataTransactions) {
 
-                    Transaction<ChatMetadata> transaction = new Transaction<>(chatMetadataTransactionRecord.getChatId(),
+                    Transaction<ChatMetadata> transaction = new Transaction<>(chatMetadataTransactionRecord.getTransactionId(),
                             (ChatMetadata) chatMetadataTransactionRecord,
                             Action.APPLY,
                             chatMetadataTransactionRecord.getDate().getTime());

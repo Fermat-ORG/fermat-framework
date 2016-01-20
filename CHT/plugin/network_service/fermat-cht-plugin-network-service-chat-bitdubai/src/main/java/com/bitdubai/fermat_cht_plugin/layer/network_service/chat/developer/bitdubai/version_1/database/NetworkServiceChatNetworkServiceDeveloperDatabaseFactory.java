@@ -151,6 +151,7 @@ public class NetworkServiceChatNetworkServiceDeveloperDatabaseFactory implements
          */
         List<String> outgoingChatColumns = new ArrayList<String>();
 
+        outgoingChatColumns.add(NetworkServiceChatNetworkServiceDatabaseConstants.CHAT_TRANSACTION_ID_COLUMN_NAME);
         outgoingChatColumns.add(NetworkServiceChatNetworkServiceDatabaseConstants.CHAT_IDCHAT_COLUMN_NAME);
         outgoingChatColumns.add(NetworkServiceChatNetworkServiceDatabaseConstants.CHAT_IDOBJECTO_COLUMN_NAME);
         outgoingChatColumns.add(NetworkServiceChatNetworkServiceDatabaseConstants.CHAT_LOCALACTORTYPE_COLUMN_NAME);
