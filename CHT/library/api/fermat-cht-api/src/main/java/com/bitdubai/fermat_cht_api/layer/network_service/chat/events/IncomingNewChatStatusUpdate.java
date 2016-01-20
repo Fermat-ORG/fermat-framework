@@ -1,6 +1,6 @@
 package com.bitdubai.fermat_cht_api.layer.network_service.chat.events;
 
-import com.bitdubai.fermat_api.layer.all_definition.network_service.interfaces.NetworkService;
+import com.bitdubai.fermat_p2p_api.layer.all_definition.common.network_services.interfaces.NetworkService;
 import com.bitdubai.fermat_cht_api.all_definition.events.AbstractCHTFermatEvent;
 import com.bitdubai.fermat_cht_api.all_definition.events.enums.EventType;
 

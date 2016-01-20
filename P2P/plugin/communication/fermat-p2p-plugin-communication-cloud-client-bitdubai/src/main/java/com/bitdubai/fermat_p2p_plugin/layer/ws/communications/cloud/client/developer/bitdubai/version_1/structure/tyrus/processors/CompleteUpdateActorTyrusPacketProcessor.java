@@ -4,7 +4,7 @@
  * You may not modify, use, reproduce or distribute this software.
 * BITDUBAI/CONFIDENTIAL
 */
-package com.bitdubai.fermat_p2p_plugin.layer.ws.communications.cloud.client.developer.bitdubai.version_1.structure.jetty.processors;
+package com.bitdubai.fermat_p2p_plugin.layer.ws.communications.cloud.client.developer.bitdubai.version_1.structure.tyrus.processors;
 
 import com.bitdubai.fermat_api.layer.all_definition.components.interfaces.PlatformComponentProfile;
 import com.bitdubai.fermat_api.layer.all_definition.crypto.asymmetric.AsymmetricCryptography;
@@ -17,20 +17,20 @@ import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.events.Com
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.contents.FermatPacket;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.enums.FermatPacketType;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.enums.JsonAttNamesConstants;
-import com.bitdubai.fermat_p2p_plugin.layer.ws.communications.cloud.client.developer.bitdubai.version_1.structure.jetty.WsCommunicationsJettyCloudClientChannel;
+import com.bitdubai.fermat_p2p_plugin.layer.ws.communications.cloud.client.developer.bitdubai.version_1.structure.tyrus.WsCommunicationsTyrusCloudClientChannel;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 
 /**
- * The Class <code>com.bitdubai.fermat_p2p_plugin.layer.ws.communications.cloud.client.developer.bitdubai.version_1.structure.processors.CompleteUpdateActorJettyPacketProcessor</code>
+ * The Class <code>com.bitdubai.fermat_p2p_plugin.layer.ws.communications.cloud.client.developer.bitdubai.version_1.structure.processors.CompleteUpdateActorTyrusPacketProcessor</code>
  * <p/>
  * Created by Hendry Rodriguez - (elnegroevaristo@gmail.com) on 06/01/16.
  *
  * @version 1.0
  * @since Java JDK 1.7
  */
-public class CompleteUpdateActorJettyPacketProcessor extends FermatJettyPacketProcessor {
+public class CompleteUpdateActorTyrusPacketProcessor extends FermatTyrusPacketProcessor {
 
     /**
      * Represent the gson
@@ -45,8 +45,8 @@ public class CompleteUpdateActorJettyPacketProcessor extends FermatJettyPacketPr
     /**
      * Constructor
      */
-    public CompleteUpdateActorJettyPacketProcessor(WsCommunicationsJettyCloudClientChannel wsCommunicationsJettyCloudClientChannel){
-        super(wsCommunicationsJettyCloudClientChannel);
+    public CompleteUpdateActorTyrusPacketProcessor(WsCommunicationsTyrusCloudClientChannel wsCommunicationsTyrusCloudClientChannel){
+        super(wsCommunicationsTyrusCloudClientChannel);
         gson = new Gson();
         jsonParser = new JsonParser();
     }
@@ -56,13 +56,13 @@ public class CompleteUpdateActorJettyPacketProcessor extends FermatJettyPacketPr
 
         String messageContentJsonStringRepresentation = null;
 
-        if (getWsCommunicationsJettyCloudClientChannel().isRegister()){
+        if (getWsCommunicationsTyrusCloudClientChannel().isRegister()){
 
             /*
             * Get the platformComponentProfile from the message content and decrypt
             */
-            //System.out.println(" CompleteRegistrationComponentJettyPacketProcessor - decoding fermatPacket with client-identity ");
-            messageContentJsonStringRepresentation = AsymmetricCryptography.decryptMessagePrivateKey(receiveFermatPacket.getMessageContent(), getWsCommunicationsJettyCloudClientChannel().getClientIdentity().getPrivateKey());
+            //System.out.println(" CompleteRegistrationComponentTyrusPacketProcessor - decoding fermatPacket with client-identity ");
+            messageContentJsonStringRepresentation = AsymmetricCryptography.decryptMessagePrivateKey(receiveFermatPacket.getMessageContent(), getWsCommunicationsTyrusCloudClientChannel().getClientIdentity().getPrivateKey());
 
         }else {
 
@@ -73,8 +73,8 @@ public class CompleteUpdateActorJettyPacketProcessor extends FermatJettyPacketPr
             * ---------------------------------------------------------------------------------------------------
             * Get the platformComponentProfile from the message content and decrypt
             */
-            //System.out.println(" CompleteRegistrationComponentJettyPacketProcessor - decoding fermatPacket with temp-identity ");
-            messageContentJsonStringRepresentation = AsymmetricCryptography.decryptMessagePrivateKey(receiveFermatPacket.getMessageContent(), getWsCommunicationsJettyCloudClientChannel().getTemporalIdentity().getPrivateKey());
+            //System.out.println(" CompleteRegistrationComponentTyrusPacketProcessor - decoding fermatPacket with temp-identity ");
+            messageContentJsonStringRepresentation = AsymmetricCryptography.decryptMessagePrivateKey(receiveFermatPacket.getMessageContent(), getWsCommunicationsTyrusCloudClientChannel().getTemporalIdentity().getPrivateKey());
 
         }
 
@@ -102,8 +102,8 @@ public class CompleteUpdateActorJettyPacketProcessor extends FermatJettyPacketPr
         /*
          * Raise the event
          */
-        //System.out.println("CompleteRegistrationComponentJettyPacketProcessor - Raised a event = P2pEventType.COMPLETE_COMPONENT_REGISTRATION_NOTIFICATION");
-        getWsCommunicationsJettyCloudClientChannel().getEventManager().raiseEvent(event);
+        //System.out.println("CompleteRegistrationComponentTyrusPacketProcessor - Raised a event = P2pEventType.COMPLETE_COMPONENT_REGISTRATION_NOTIFICATION");
+        getWsCommunicationsTyrusCloudClientChannel().getEventManager().raiseEvent(event);
 
     }
 
