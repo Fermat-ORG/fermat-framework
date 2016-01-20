@@ -61,14 +61,6 @@ public class ChatMetadataTransmitMessageReceiverProcessor extends FermatMessageP
              * Get the XML representation of the Chat Message MetaData
              */
             String chatMetadataXml                  = jsonMsjContent.get(ChatTransmissionJsonAttNames.CHAT_METADATA).getAsString();
-//            UUID idChat                             = gson.fromJson(jsonMsjContent.get(ChatTransmissionJsonAttNames.ID_CHAT).getAsString(), UUID.class);
-//
-//            PlatformComponentType senderType        = gson.fromJson(jsonMsjContent.get(ChatTransmissionJsonAttNames.SENDER_TYPE).getAsString(), PlatformComponentType.class);
-//            PlatformComponentType receiverType      = gson.fromJson(jsonMsjContent.get(ChatTransmissionJsonAttNames.RECEIVER_TYPE).getAsString(), PlatformComponentType.class);
-//
-//            DistributionStatus distributionStatus   = gson.fromJson(jsonMsjContent.get(ChatTransmissionJsonAttNames.DISTRIBUTION_STATUS).getAsString(),DistributionStatus.class);
-//            MessageStatus messageStatus             = gson.fromJson(jsonMsjContent.get(ChatTransmissionJsonAttNames.MESSAGE_STATUS).getAsString(),MessageStatus.class);
-//            ChatMessageStatus chatMessageStatus     = gson.fromJson(jsonMsjContent.get(ChatTransmissionJsonAttNames.CHAT_STATUS).getAsString(),ChatMessageStatus.class);
             /*
              * Convert the xml to object
              */
