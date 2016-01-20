@@ -11,7 +11,7 @@ import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.enums.FermatP
 import com.bitdubai.fermat_p2p_plugin.layer.ws.communications.cloud.client.developer.bitdubai.version_1.structure.WsCommunicationsCloudClientChannel;
 
 /**
- * The interface <code>com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.client.FermatPacketProcessor</code> define
+ * The interface <code>com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.client.FermatJettyPacketProcessor</code> define
  * the methods that have to implements a fermat packet processor class, side of the client
  * <p/>
  *

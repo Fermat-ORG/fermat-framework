@@ -919,6 +919,8 @@ public final class CryptoPaymentRequestNetworkServicePluginRoot extends Abstract
 
             if(vpnConnectionCloseNotificationEvent.getNetworkServiceApplicant() == getNetworkServiceType()){
 
+                reprocessMessage();
+
                 if(communicationNetworkServiceConnectionManager != null)
                     communicationNetworkServiceConnectionManager.closeConnection(vpnConnectionCloseNotificationEvent.getRemoteParticipant().getIdentityPublicKey());
 
@@ -936,21 +938,8 @@ public final class CryptoPaymentRequestNetworkServicePluginRoot extends Abstract
     public void handleClientConnectionCloseNotificationEvent(FermatEvent fermatEvent) {
 
         if(fermatEvent instanceof ClientConnectionCloseNotificationEvent){
-//
-//            try {
-//
-//                List<CryptoPaymentRequest> cryptoAddressRequestList = cryptoPaymentRequestNetworkServiceDao.listRequestsByProtocolState(RequestProtocolState.WAITING_RESPONSE);
-//
-//                for(CryptoPaymentRequest record : cryptoAddressRequestList) {
-//
-//                    cryptoPaymentRequestNetworkServiceDao.changeProtocolState(record.getRequestId(),RequestProtocolState.PROCESSING_SEND);
-//                }
-//            }
-//            catch(CantListRequestsException | CantChangeRequestProtocolStateException |RequestNotFoundException e)
-//            {
-//                System.out.print("EXCEPCION REPROCESANDO WAIT MESSAGE");
-//                e.printStackTrace();
-//            }
+
+          reprocessMessage();
 
             this.register = false;
             if(communicationNetworkServiceConnectionManager != null)

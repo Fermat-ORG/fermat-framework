@@ -17,4 +17,5 @@ public class NotificationNotFoundException extends FermatException {
     public NotificationNotFoundException(String message, Exception cause, String context, String possibleReason) {
         super(message, cause, context, possibleReason);
     }
+
 }

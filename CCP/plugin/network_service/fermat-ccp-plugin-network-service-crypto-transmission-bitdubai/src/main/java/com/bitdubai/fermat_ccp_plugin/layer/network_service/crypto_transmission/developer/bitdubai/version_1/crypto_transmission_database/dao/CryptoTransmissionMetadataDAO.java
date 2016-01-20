@@ -115,16 +115,23 @@ public class CryptoTransmissionMetadataDAO {
 
         try {
 
-            DatabaseTable addressExchangeRequestTable = database.getTable(CryptoTransmissionNetworkServiceDatabaseConstants.CRYPTO_TRANSMISSION_METADATA_TABLE_NAME);
-            DatabaseTableRecord entityRecord = addressExchangeRequestTable.getEmptyRecord();
+            if(!existMetadata(cryptoTransmissionMetadata.getTransactionId()))
+            {
+                DatabaseTable addressExchangeRequestTable = database.getTable(CryptoTransmissionNetworkServiceDatabaseConstants.CRYPTO_TRANSMISSION_METADATA_TABLE_NAME);
+                DatabaseTableRecord entityRecord = addressExchangeRequestTable.getEmptyRecord();
 
-            entityRecord = buildDatabaseRecord(entityRecord, cryptoTransmissionMetadata);
+                entityRecord = buildDatabaseRecord(entityRecord, cryptoTransmissionMetadata);
 
-            addressExchangeRequestTable.insertRecord(entityRecord);
+                addressExchangeRequestTable.insertRecord(entityRecord);
+            }
+
 
         } catch (CantInsertRecordException e) {
 
             throw new CantSaveCryptoTransmissionMetadatatException("",e, "Exception not handled by the plugin, there is a problem in database and i cannot insert the record.","");
+        }  catch (CantGetCryptoTransmissionMetadataException e) {
+            throw new CantSaveCryptoTransmissionMetadatatException("",e, "Cant Get Crypto Transmission Metadata Exception","");
+
         }
     }
 
@@ -162,6 +169,30 @@ public class CryptoTransmissionMetadataDAO {
     }
 
 
+
+    public boolean existMetadata(UUID transmissionId) throws CantGetCryptoTransmissionMetadataException{
+
+          try {
+
+            DatabaseTable metadataTable = database.getTable(CryptoTransmissionNetworkServiceDatabaseConstants.CRYPTO_TRANSMISSION_METADATA_TABLE_NAME);
+
+            metadataTable.addUUIDFilter(CryptoTransmissionNetworkServiceDatabaseConstants.CRYPTO_TRANSMISSION_METADATA_TRANSMISSION_ID_COLUMN_NAME, transmissionId, DatabaseFilterType.EQUAL);
+
+            metadataTable.loadToMemory();
+
+            List<DatabaseTableRecord> records = metadataTable.getRecords();
+
+
+            if (!records.isEmpty())
+                return true;
+            else
+               return false;
+
+        } catch (CantLoadTableToMemoryException exception) {
+
+            throw new CantGetCryptoTransmissionMetadataException("",exception, "Exception not handled by the plugin, there is a problem in database and i cannot load the table.","");
+        }
+    }
     /**
      * Method that list the all entities on the data base. The valid value of
      * the column name are the att of the <code>TemplateNetworkServiceDatabaseConstants</code>

@@ -81,4 +81,9 @@ public class WalletManagerPreferenceSettings implements SubAppSettings {
     public String getPreferenceSettings(String walletPublicKey) throws CantLoadSubAppSettings {
         return null;
     }
+
+    @Override
+    public void setIsPresentationHelpEnabled(boolean b) {
+
+    }
 }

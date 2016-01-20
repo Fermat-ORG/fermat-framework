@@ -448,9 +448,6 @@ public class ConnectionsWorldFragment extends AbstractFermatFragment implements
 
     private void updateNotificationsBadge(int count) {
         mNotificationsCount = count;
-
-        // force the ActionBar to relayout its MenuItems.
-        // onCreateOptionsMenu(Menu) will be called again.
         getActivity().invalidateOptionsMenu();
     }
 
