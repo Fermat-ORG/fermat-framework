@@ -25,6 +25,8 @@ import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEven
 import com.bitdubai.fermat_api.layer.all_definition.money.CryptoAddress;
 import com.bitdubai.fermat_api.layer.all_definition.util.Version;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
+import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantLoadTableToMemoryException;
+import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantUpdateRecordException;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
 import com.bitdubai.fermat_bch_api.layer.crypto_module.crypto_address_book.exceptions.CantRegisterCryptoAddressBookRecordException;
 import com.bitdubai.fermat_bch_api.layer.crypto_module.crypto_address_book.interfaces.CryptoAddressBookManager;
@@ -35,6 +37,7 @@ import com.bitdubai.fermat_bch_api.layer.crypto_vault.watch_only_vault.interface
 import com.bitdubai.fermat_dap_api.layer.all_definition.enums.DAPConnectionState;
 import com.bitdubai.fermat_dap_api.layer.all_definition.enums.DAPMessageType;
 import com.bitdubai.fermat_dap_api.layer.all_definition.enums.EventType;
+import com.bitdubai.fermat_dap_api.layer.all_definition.exceptions.CantGetUserDeveloperIdentitiesException;
 import com.bitdubai.fermat_dap_api.layer.all_definition.exceptions.CantSetObjectException;
 import com.bitdubai.fermat_dap_api.layer.all_definition.network_service_message.DAPMessage;
 import com.bitdubai.fermat_dap_api.layer.all_definition.network_service_message.content_message.AssetExtendedPublickKeyContentMessage;
@@ -186,7 +189,8 @@ public class AssetIssuerActorPluginRoot extends AbstractPlugin implements
                         System.currentTimeMillis(),
                         System.currentTimeMillis(),
                         assetIssuerActorProfileImage,
-                        description);
+                        description,
+                        "-");
 
                 assetIssuerActorDao.createNewAssetIssuer(record);
 
@@ -210,7 +214,8 @@ public class AssetIssuerActorPluginRoot extends AbstractPlugin implements
                         actorAssetIssuer.getRegistrationDate(),
                         System.currentTimeMillis(),
                         assetIssuerActorProfileImage,
-                        description);
+                        description,
+                        "-");
 
                 assetIssuerActorDao.updateAssetIssuer(record);
 
@@ -275,6 +280,19 @@ public class AssetIssuerActorPluginRoot extends AbstractPlugin implements
         List<ActorAssetIssuer> list; // Asset Issuer Actor list.
         try {
             list = this.assetIssuerActorDao.getAllAssetIssuerActorConnected();
+        } catch (CantGetAssetIssuersListException e) {
+            throw new CantGetAssetIssuerActorsException("CAN'T GET ASSET USER ACTORS CONNECTED WITH CRYPTOADDRESS ", e, "", "");
+        }
+
+        return list;
+    }
+
+
+    @Override
+    public List<ActorAssetIssuer> getAllAssetIssuerActorConnectedWithExtendedPublicKey() throws CantGetAssetIssuerActorsException {
+        List<ActorAssetIssuer> list; // Asset Issuer Actor list.
+        try {
+            list = this.assetIssuerActorDao.getAllAssetIssuerActorConnectedWithExtendedpk();
         } catch (CantGetAssetIssuersListException e) {
             throw new CantGetAssetIssuerActorsException("CAN'T GET ASSET USER ACTORS CONNECTED WITH CRYPTOADDRESS ", e, "", "");
         }
@@ -384,6 +402,11 @@ public class AssetIssuerActorPluginRoot extends AbstractPlugin implements
          * I will create a new Message with the extended public Key.
          */
         if (extendedPublicKey != null) {
+            try {
+                assetIssuerActorDao.updateExtendedPublicKey(issuer.getActorPublicKey(), extendedPublicKey.toString());
+            } catch (CantGetUserDeveloperIdentitiesException | CantLoadTableToMemoryException | CantUpdateRecordException e) {
+                e.printStackTrace();
+            }
             AssetExtendedPublickKeyContentMessage assetExtendedPublickKeyContentMessage = new AssetExtendedPublickKeyContentMessage(extendedPublicKey, redeemPoint.getActorPublicKey());
             /**
              * once the extended Key has been generated, I will start the agent that will register any derived key from this extended KEy
