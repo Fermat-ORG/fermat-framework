@@ -152,6 +152,7 @@ public class HoldCryptoMoneyTransactionMonitorAgent implements Agent{
                     holdCryptoMoneyTransactionManager.saveHoldCryptoMoneyTransactionData(cryptoHoldTransaction);
                 }else{
                     cryptoHoldTransaction.setStatus(CryptoTransactionStatus.REJECTED);
+                    cryptoHoldTransaction.setMemo("REJECTED AVAILABLE BALANCE");
                     cryptoHoldTransaction.setTimestampConfirmedRejected(new Date().getTime() / 1000);
                     holdCryptoMoneyTransactionManager.saveHoldCryptoMoneyTransactionData(cryptoHoldTransaction);
                 }

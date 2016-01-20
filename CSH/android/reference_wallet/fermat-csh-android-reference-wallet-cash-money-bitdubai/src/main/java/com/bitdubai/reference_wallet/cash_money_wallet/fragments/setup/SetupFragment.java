@@ -49,6 +49,8 @@ public class SetupFragment extends AbstractFermatFragment implements View.OnClic
     List<String> fiatCurrenciesFriendly =  new ArrayList<>();
     List<String> fiatCurrencies =  new ArrayList<>();
     FiatCurrency selectedCurrency;
+    private CashMoneyWalletPreferenceSettings walletSettings;
+
 
     //UI
     LinearLayout setupContainer;
@@ -69,10 +71,28 @@ public class SetupFragment extends AbstractFermatFragment implements View.OnClic
             moduleManager = walletSession.getModuleManager();
             settingsManager = moduleManager.getSettingsManager();
             errorManager = appSession.getErrorManager();
+
         } catch (Exception e) {
             if (errorManager != null)
                 errorManager.reportUnexpectedWalletException(Wallets.CSH_CASH_WALLET, UnexpectedWalletExceptionSeverity.DISABLES_THIS_FRAGMENT, e);
         }
+
+        //Obtain walletSettings or create new wallet settings if first time opening wallet
+        walletSettings = null;
+        try {
+            walletSettings = this.settingsManager.loadAndGetSettings(walletSession.getAppPublicKey());
+        }catch (Exception e){ walletSettings = null; }
+
+        if(walletSettings == null){
+            walletSettings = new CashMoneyWalletPreferenceSettings();
+            walletSettings.setIsHomeTutorialDialogEnabled(true);
+            try {
+                settingsManager.persistSettings(walletSession.getAppPublicKey(),walletSettings);
+            }catch (Exception e){
+                e.printStackTrace();
+            }
+        }
+
 
         //Get fermat FiatCurrencies
         for (FiatCurrency f : FiatCurrency.values()) {
@@ -114,14 +134,6 @@ public class SetupFragment extends AbstractFermatFragment implements View.OnClic
                     Animation fadeInAnimation = AnimationUtils.loadAnimation(getActivity(), R.anim.fade_in);
                     setupContainer.setVisibility(View.VISIBLE);
                     setupContainer.startAnimation(fadeInAnimation);
-
-                    /*try{
-                        String pkey = walletSession.getAppPublicKey();
-                        CashMoneyWalletPreferenceSettings walletSettings = settingsManager.loadAndGetSettings(pkey);
-                        walletSettings.setIsHomeTutorialDialogEnabled(true);
-                    } catch (CantGetSettingsException | SettingsNotFoundException e){
-                        errorManager.reportUnexpectedWalletException(Wallets.CSH_CASH_WALLET, UnexpectedWalletExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
-                    }*/
 
                 }
             }

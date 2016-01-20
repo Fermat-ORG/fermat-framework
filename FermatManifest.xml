@@ -3987,13 +3987,37 @@
     </platforms>
     <super_layers>
         <super_layer code="CER" name="Currency Exchange Rates" dependsOn="COR">
-            <layer name="Provider" language="java">
+            <layer name="Search" language="java">
                 <plugins>
-                    <plugin name="Dolar Today" description="" difficulty="5" code-level="development">
+                    <plugin name="Provider Filter" description="" difficulty="10" code-level="production">
                         <authors>
                             <author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
                             <author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
-                            <author name="abicelis" scope="implementation" percentage="10"></author>
+                            <author name="abicelis" scope="implementation" percentage="100"></author>
+                        </authors>
+                        <maintainers>
+                            <maintainer name="abicelis"></maintainer>
+                        </maintainers>
+                        <certifications> </certifications>
+                    </plugin>
+                </plugins>
+            </layer>
+            <layer name="Provider" language="java">
+            	<plugins>
+                    <plugin name="Bitcoin Venezuela" description="" difficulty="5" code-level="production">
+                        <authors>
+                            <author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
+                            <author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
+                            <author name="abicelis" scope="implementation" percentage="100"></author>
+                        </authors>
+                        <maintainers> </maintainers>
+                        <certifications> </certifications>
+                    </plugin>                    
+                    <plugin name="DolarToday" description="" difficulty="5" code-level="production">
+                        <authors>
+                            <author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
+                            <author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
+                            <author name="abicelis" scope="implementation" percentage="100"></author>
                         </authors>
                         <maintainers> </maintainers>
                         <certifications> </certifications>
@@ -4002,7 +4026,7 @@
                         <authors>
                             <author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
                             <author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
-                            <author name="abicelis" scope="implementation" percentage="10"></author>
+                            <author name="abicelis" scope="implementation" percentage="100"></author>
                         </authors>
                         <maintainers> </maintainers>
                         <certifications> </certifications>
@@ -4011,7 +4035,7 @@
                         <authors>
                             <author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
                             <author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
-                            <author name="abicelis" scope="implementation" percentage="10"></author>
+                            <author name="abicelis" scope="implementation" percentage="100"></author>
                         </authors>
                         <maintainers> </maintainers>
                         <certifications> </certifications>
@@ -4020,7 +4044,7 @@
                         <authors>
                             <author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
                             <author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
-                            <author name="abicelis" scope="implementation" percentage="10"></author>
+                            <author name="abicelis" scope="implementation" percentage="100"></author>
                         </authors>
                         <maintainers> </maintainers>
                         <certifications> </certifications>
@@ -4029,16 +4053,7 @@
                         <authors>
                             <author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
                             <author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
-                            <author name="abicelis" scope="implementation" percentage="10"></author>
-                        </authors>
-                        <maintainers> </maintainers>
-                        <certifications> </certifications>
-                    </plugin>
-                    <plugin name="SurBitcoin" description="" difficulty="5" code-level="development">
-                        <authors>
-                            <author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
-                            <author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
-                            <author name="abicelis" scope="implementation" percentage="10"></author>
+                            <author name="abicelis" scope="implementation" percentage="100"></author>
                         </authors>
                         <maintainers> </maintainers>
                         <certifications> </certifications>
@@ -4047,7 +4062,7 @@
                         <authors>
                             <author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
                             <author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
-                            <author name="abicelis" scope="implementation" percentage="10"></author>
+                            <author name="abicelis" scope="implementation" percentage="0"></author>
                         </authors>
                         <maintainers> </maintainers>
                         <certifications> </certifications>

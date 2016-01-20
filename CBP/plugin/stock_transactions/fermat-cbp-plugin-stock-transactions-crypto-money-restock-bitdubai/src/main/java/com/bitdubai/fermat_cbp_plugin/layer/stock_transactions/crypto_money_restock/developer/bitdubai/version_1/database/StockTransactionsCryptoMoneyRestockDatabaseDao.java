@@ -75,7 +75,7 @@ public class StockTransactionsCryptoMoneyRestockDatabaseDao {
         DatabaseTable databaseTable = getDatabaseTable(StockTransactionsCrpytoMoneyRestockDatabaseConstants.CRYPTO_MONEY_RESTOCK_TABLE_NAME);
         DatabaseTableRecord record = databaseTable.getEmptyRecord();
 
-        record.setUUIDValue(StockTransactionsCrpytoMoneyRestockDatabaseConstants.CRYPTO_MONEY_RESTOCK_CONCEPT_COLUMN_NAME, cryptoMoneyTransaction.getTransactionId());
+        record.setUUIDValue(StockTransactionsCrpytoMoneyRestockDatabaseConstants.CRYPTO_MONEY_RESTOCK_TRANSACTION_ID_COLUMN_NAME, cryptoMoneyTransaction.getTransactionId());
         record.setStringValue(StockTransactionsCrpytoMoneyRestockDatabaseConstants.CRYPTO_MONEY_RESTOCK_PUBLIC_KEY_ACTOR_COLUMN_NAME, cryptoMoneyTransaction.getActorPublicKey());
         record.setStringValue(StockTransactionsCrpytoMoneyRestockDatabaseConstants.CRYPTO_MONEY_RESTOCK_CRYPTO_CURRENCY_COLUMN_NAME, cryptoMoneyTransaction.getCryptoCurrency().getCode());
         record.setStringValue(StockTransactionsCrpytoMoneyRestockDatabaseConstants.CRYPTO_MONEY_RESTOCK_CBP_WALLET_PUBLIC_KEY_COLUMN_NAME, cryptoMoneyTransaction.getCbpWalletPublicKey());
@@ -138,6 +138,8 @@ public class StockTransactionsCryptoMoneyRestockDatabaseDao {
             database = openDatabase();
             DatabaseTransaction transaction = database.newTransaction();
 
+            //TODO: Solo para prueba ya que priceReference viene null desde android revisar con Nelson
+            cryptoMoneyTransaction.setPriceReference(new BigDecimal(0));
             DatabaseTable table = getDatabaseTable(StockTransactionsCrpytoMoneyRestockDatabaseConstants.CRYPTO_MONEY_RESTOCK_TABLE_NAME);
             DatabaseTableRecord bankMoneyRestockRecord = getBankMoneyRestockRecord(cryptoMoneyTransaction);
             DatabaseTableFilter filter = table.getEmptyTableFilter();

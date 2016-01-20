@@ -154,7 +154,7 @@ public class CommunicationNetworkServiceRemoteAgent extends Observable {
         toReceive.start();
         toSend.start();
 
-        System.out.println("CommunicationNetworkServiceRemoteAgent - started ");
+        System.out.println("ChatPluginRoot - CommunicationNetworkServiceRemoteAgent - started ");
 
     }
 
@@ -194,7 +194,7 @@ public class CommunicationNetworkServiceRemoteAgent extends Observable {
 
         try {
 
-            // System.out.println("CommunicationNetworkServiceRemoteAgent - "+communicationsVPNConnection.isActive());
+             System.out.println("ChatPluginRoot - CommunicationNetworkServiceRemoteAgent - "+communicationsVPNConnection.isActive());
 
             /**
              * Verified the status of the connection
@@ -284,7 +284,7 @@ public class CommunicationNetworkServiceRemoteAgent extends Observable {
                 for (FermatMessage message: messages){
 
 
-                    if (communicationsVPNConnection.isActive() && (message.getFermatMessagesStatus() != FermatMessagesStatus.SENT)) {
+                    if (communicationsVPNConnection.isActive() && (message.getFermatMessagesStatus() != FermatMessagesStatus.SENT) && communicationsVPNConnection.isConnected()) {
 
                             /*
                              * Encrypt the content of the message whit the remote network service public key

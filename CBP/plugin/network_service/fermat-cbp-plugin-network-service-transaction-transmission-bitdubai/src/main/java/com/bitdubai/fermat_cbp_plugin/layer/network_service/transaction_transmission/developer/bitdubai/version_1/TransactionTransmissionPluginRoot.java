@@ -37,6 +37,7 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.Data
 import com.bitdubai.fermat_api.layer.osa_android.location_system.Location;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogLevel;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogManager;
+import com.bitdubai.fermat_cbp_api.all_definition.enums.ContractTransactionStatus;
 import com.bitdubai.fermat_cbp_api.all_definition.events.enums.EventType;
 import com.bitdubai.fermat_cbp_api.all_definition.exceptions.CantInitializeDatabaseException;
 import com.bitdubai.fermat_cbp_api.layer.network_service.transaction_transmission.enums.BusinessTransactionTransactionType;
@@ -55,6 +56,8 @@ import com.bitdubai.fermat_cbp_plugin.layer.network_service.transaction_transmis
 import com.bitdubai.fermat_cbp_plugin.layer.network_service.transaction_transmission.developer.bitdubai.version_1.event_handlers.ClientConnectionCloseNotificationEventHandler;
 import com.bitdubai.fermat_cbp_plugin.layer.network_service.transaction_transmission.developer.bitdubai.version_1.event_handlers.ClientConnectionLooseNotificationEventHandler;
 import com.bitdubai.fermat_cbp_plugin.layer.network_service.transaction_transmission.developer.bitdubai.version_1.event_handlers.ClientSuccessfullReconnectNotificationEventHandler;
+import com.bitdubai.fermat_cbp_plugin.layer.network_service.transaction_transmission.developer.bitdubai.version_1.event_handlers.CompleteComponentConnectionRequestNotificationEventHandler;
+import com.bitdubai.fermat_cbp_plugin.layer.network_service.transaction_transmission.developer.bitdubai.version_1.event_handlers.CompleteComponentRegistrationNotificationEventHandler;
 import com.bitdubai.fermat_cbp_plugin.layer.network_service.transaction_transmission.developer.bitdubai.version_1.event_handlers.NewReceiveMessagesNotificationEventHandler;
 import com.bitdubai.fermat_cbp_plugin.layer.network_service.transaction_transmission.developer.bitdubai.version_1.event_handlers.VPNConnectionCloseNotificationEventHandler;
 import com.bitdubai.fermat_cbp_plugin.layer.network_service.transaction_transmission.developer.bitdubai.version_1.exceptions.CantInsertRecordDataBaseException;
@@ -84,6 +87,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.regex.Pattern;
@@ -323,6 +327,30 @@ public class TransactionTransmissionPluginRoot extends AbstractNetworkService im
 //        fermatEventListener.setEventHandler(new IncomingNewContractStatusUpdateEventHandler());
 //        eventManager.addListener(fermatEventListener);
 //        listenersAdded.add(fermatEventListener);
+        /**
+         * Listen and handle Complete Component Registration Notification Event
+         */
+        FermatEventListener fermatEventListener = eventManager.getNewListener(P2pEventType.COMPLETE_COMPONENT_REGISTRATION_NOTIFICATION);
+        fermatEventListener.setEventHandler(new CompleteComponentRegistrationNotificationEventHandler(this));
+        eventManager.addListener(fermatEventListener);
+        listenersAdded.add(fermatEventListener);
+
+
+        /**
+         * Listen and handle Complete Request List Component Registered Notification Event
+         */
+        fermatEventListener = eventManager.getNewListener(P2pEventType.COMPLETE_COMPONENT_CONNECTION_REQUEST_NOTIFICATION);
+        fermatEventListener.setEventHandler(new CompleteComponentConnectionRequestNotificationEventHandler(this));
+        eventManager.addListener(fermatEventListener);
+        listenersAdded.add(fermatEventListener);
+
+        /**
+         * new message
+         */
+        fermatEventListener = eventManager.getNewListener(P2pEventType.NEW_NETWORK_SERVICE_MESSAGE_RECEIVE_NOTIFICATION);
+        fermatEventListener.setEventHandler(new NewReceiveMessagesNotificationEventHandler(this));
+        eventManager.addListener(fermatEventListener);
+        listenersAdded.add(fermatEventListener);
     }
 
     /**
@@ -408,11 +436,11 @@ public class TransactionTransmissionPluginRoot extends AbstractNetworkService im
             String context = contextBuffer.toString();
             String possibleCause = "Plugin was not registered";
 
-            FermatException ex = new FermatException(FermatException.DEFAULT_MESSAGE, e,"","I can't List the resquest");
+            FermatException ex = new FermatException(FermatException.DEFAULT_MESSAGE, e,"","I can't List the request");
             errorManager.reportUnexpectedPluginException(Plugins.TRANSACTION_TRANSMISSION, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, ex);
 
         }catch (Exception e) {
-            FermatException ex = new FermatException(FermatException.DEFAULT_MESSAGE, e,"","I can't List the resquest");
+            FermatException ex = new FermatException(FermatException.DEFAULT_MESSAGE, e,"","I can't List the request");
             errorManager.reportUnexpectedPluginException(Plugins.TRANSACTION_TRANSMISSION, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, ex);
 
         }
@@ -904,7 +932,7 @@ public class TransactionTransmissionPluginRoot extends AbstractNetworkService im
             this.serviceStatus = ServiceStatus.STARTED;
             //System.out.println("Transaction Transmission started");
             //launchNotificationTest();
-
+            //sendMetadataTest();
         } catch (CantInitializeDatabaseException exception) {
 
             StringBuffer contextBuffer = new StringBuffer();
@@ -1117,6 +1145,52 @@ public class TransactionTransmissionPluginRoot extends AbstractNetworkService im
         IncomingNewContractStatusUpdate incomingNewContractStatusUpdate = (IncomingNewContractStatusUpdate) fermatEvent;
         incomingNewContractStatusUpdate.setSource(EventSource.NETWORK_SERVICE_TRANSACTION_TRANSMISSION);
         eventManager.raiseEvent(incomingNewContractStatusUpdate);
+    }
+
+    private void sendMetadataTest(){
+        try{
+            String contractHash="888052D7D718420BD197B647F3BB04128C9B71BC99DBB7BC60E78BDAC4DFC6E2";
+            ContractTransactionStatus contractTransactionStatus=ContractTransactionStatus.CONTRACT_OPENED;
+            String receiverId="04B8F71BC0272800024360F887A409FF1ADE489BE88820B8AD542D749771B58037DE7773F0461CF8027B784794A9DB3490CBC60EC8500D14DEB8388200F575B536";
+            PlatformComponentType receiverType=PlatformComponentType.NETWORK_SERVICE;
+            String senderId="senderId";
+            PlatformComponentType senderType=PlatformComponentType.NETWORK_SERVICE;
+            String contractId="888052D7D718420BD197B647F3BB04128C9B71BC99DBB7BC60E78BDAC4DFC6E2";
+            String negotiationId="550e8400-e29b-41d4-a716-446655440000";
+            BusinessTransactionTransactionType transactionType=BusinessTransactionTransactionType.TRANSACTION_HASH;
+            Long timestamp=2016l;
+            UUID transactionId=UUID.fromString("550e8400-e29b-41d4-a716-446655440000");
+            TransactionTransmissionStates transactionTransmissionStates=TransactionTransmissionStates.SENDING_HASH;
+            BusinessTransactionMetadata businessTransactionMetadata=new
+                    BusinessTransactionMetadataRecord(
+                    contractHash,
+                    contractTransactionStatus,
+                    receiverId,
+                    receiverType,
+                    senderId,
+                    senderType,
+                    contractId,
+                    negotiationId,
+                    transactionType,
+                    timestamp,
+                    transactionId,
+                    transactionTransmissionStates
+            );
+            transactionTransmissionNetworkServiceManager.sendContractHash(
+                    transactionId,
+                    senderId,
+                    receiverId,
+                    contractHash,
+                    negotiationId
+            );
+        } catch(Exception e){
+            System.out.println("Exception in Transaction transmission test");
+            e.printStackTrace();
+            errorManager.reportUnexpectedPluginException(
+                    Plugins.TRANSACTION_TRANSMISSION,
+                    UnexpectedPluginExceptionSeverity.NOT_IMPORTANT,
+                    e);
+        }
     }
 
 }

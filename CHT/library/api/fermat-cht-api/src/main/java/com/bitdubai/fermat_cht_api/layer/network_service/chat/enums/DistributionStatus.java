@@ -24,7 +24,7 @@ public enum DistributionStatus implements FermatEnum {
 
     @Override
     public String getCode() {
-        return null;
+        return this.code;
     }
     public static DistributionStatus getByCode(String code) throws InvalidParameterException {
         switch (code){

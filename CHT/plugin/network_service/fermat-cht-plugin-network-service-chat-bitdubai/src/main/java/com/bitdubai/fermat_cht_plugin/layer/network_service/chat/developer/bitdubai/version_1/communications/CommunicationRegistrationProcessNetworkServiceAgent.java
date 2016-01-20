@@ -101,7 +101,7 @@ public class CommunicationRegistrationProcessNetworkServiceAgent extends Thread 
                     try {
                         sleep(SLEEP_TIME);
                     } catch (InterruptedException e) {
-                        e.printStackTrace();
+                        System.out.println(e.getMessage());
                         active = Boolean.FALSE;
                     }
 
@@ -111,10 +111,10 @@ public class CommunicationRegistrationProcessNetworkServiceAgent extends Thread 
 
             }catch (Exception e){
                 try {
-                    e.printStackTrace();
+                    System.out.println(e.getMessage());
                     sleep(MAX_SLEEP_TIME);
                 } catch (InterruptedException e1) {
-                    e1.printStackTrace();
+                    System.out.println(e1.getMessage());
                     active = Boolean.FALSE;
                 }
             }

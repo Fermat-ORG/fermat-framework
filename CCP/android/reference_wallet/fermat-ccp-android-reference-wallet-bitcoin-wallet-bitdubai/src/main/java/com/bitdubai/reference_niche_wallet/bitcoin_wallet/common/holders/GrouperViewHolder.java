@@ -112,7 +112,7 @@ public class GrouperViewHolder extends ParentViewHolder {
 
         SimpleDateFormat sdf = new SimpleDateFormat("HH:mm", Locale.getDefault());
         txt_time.setText(sdf.format(cryptoWalletTransaction.getTimestamp()) + " hs");
-        txt_total_number_transactions.setText(String.valueOf(childCount)+ " records");
+        txt_total_number_transactions.setText(String.valueOf(childCount-1)+ " records");
 
         //TODO me falta el total
         //txt_total_balance.setText();

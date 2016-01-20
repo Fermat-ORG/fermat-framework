@@ -109,33 +109,42 @@ public final class CryptoPaymentRequestNetworkServiceDao {
                                                  final int sentNumber) throws CantCreateCryptoPaymentRequestException {
 
         try {
-            DatabaseTable cryptoPaymentRequestTable = database.getTable(CryptoPaymentRequestNetworkServiceDatabaseConstants.CRYPTO_PAYMENT_REQUEST_TABLE_NAME);
 
-            DatabaseTableRecord entityRecord = cryptoPaymentRequestTable.getEmptyRecord();
+            if(!existRequest(requestId))
+            {
+                DatabaseTable cryptoPaymentRequestTable = database.getTable(CryptoPaymentRequestNetworkServiceDatabaseConstants.CRYPTO_PAYMENT_REQUEST_TABLE_NAME);
 
-            CryptoPaymentRequestNetworkServiceRecord cryptoPaymentRequestRecord = new CryptoPaymentRequestNetworkServiceRecord(
-                    requestId        ,
-                    identityPublicKey,
-                    identityType     ,
-                    actorPublicKey   ,
-                    actorType        ,
-                    description      ,
-                    cryptoAddress    ,
-                    amount           ,
-                    startTimeStamp   ,
-                    type             ,
-                    action           ,
-                    protocolState    ,
-                    networkType,
-                    referenceWallet,
-                    sentNumber
-            );
+                DatabaseTableRecord entityRecord = cryptoPaymentRequestTable.getEmptyRecord();
 
-            cryptoPaymentRequestTable.insertRecord(buildDatabaseRecord(entityRecord, cryptoPaymentRequestRecord));
+                CryptoPaymentRequestNetworkServiceRecord cryptoPaymentRequestRecord = new CryptoPaymentRequestNetworkServiceRecord(
+                        requestId        ,
+                        identityPublicKey,
+                        identityType     ,
+                        actorPublicKey   ,
+                        actorType        ,
+                        description      ,
+                        cryptoAddress    ,
+                        amount           ,
+                        startTimeStamp   ,
+                        type             ,
+                        action           ,
+                        protocolState    ,
+                        networkType,
+                        referenceWallet,
+                        sentNumber
+                );
+
+                cryptoPaymentRequestTable.insertRecord(buildDatabaseRecord(entityRecord, cryptoPaymentRequestRecord));
+            }
+
 
         } catch (CantInsertRecordException e) {
 
             throw new CantCreateCryptoPaymentRequestException(e, "", "Exception not handled by the plugin, there is a problem in database and i cannot insert the record.");
+
+        } catch (CantGetRequestException e) {
+            throw new CantCreateCryptoPaymentRequestException(e, "", "Exception not handled by the plugin, there is a problem in database.");
+
         }
     }
 
@@ -193,6 +202,32 @@ public final class CryptoPaymentRequestNetworkServiceDao {
             throw new CantGetRequestException(exception, "", "Check the cause."                                                                                );
         }
     }
+
+    public boolean existRequest(final UUID requestId) throws CantGetRequestException  {
+
+
+        try {
+
+            DatabaseTable cryptoPaymentRequestTable = database.getTable(CryptoPaymentRequestNetworkServiceDatabaseConstants.CRYPTO_PAYMENT_REQUEST_TABLE_NAME);
+
+            cryptoPaymentRequestTable.addUUIDFilter(CryptoPaymentRequestNetworkServiceDatabaseConstants.CRYPTO_PAYMENT_REQUEST_REQUEST_ID_COLUMN_NAME, requestId, DatabaseFilterType.EQUAL);
+
+            cryptoPaymentRequestTable.loadToMemory();
+
+            List<DatabaseTableRecord> records = cryptoPaymentRequestTable.getRecords();
+
+
+            if (!records.isEmpty())
+                return true;
+            else
+                return false;
+
+        } catch (CantLoadTableToMemoryException exception) {
+
+            throw new CantGetRequestException(exception, "", "Exception not handled by the plugin, there is a problem in database and i cannot load the table.");
+        }
+    }
+
 
     public void takeAction(final UUID                       requestId    ,
                            final RequestAction              action       ,

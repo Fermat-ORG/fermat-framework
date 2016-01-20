@@ -240,10 +240,10 @@ public class ConnectionsWorldFragment extends AbstractFermatFragment<CryptoBroke
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
 
-        super.onCreateOptionsMenu(menu, inflater);
+        /*super.onCreateOptionsMenu(menu, inflater);
 
         menu.add(0, Constants.SELECT_IDENTITY, 0, "send").setIcon(R.drawable.ic_actionbar_send)
-                .setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
+                .setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);*/
     }
 
     @Override

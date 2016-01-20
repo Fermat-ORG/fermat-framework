@@ -303,7 +303,7 @@ public class BrokerSubmitOfflineMerchandiseMonitorAgent implements
                         brokerSubmitOfflineMerchandiseBusinessTransactionDao.getPendingToSubmitNotificationList();
                 for(BusinessTransactionRecord pendingToSubmitNotificationRecord : pendingToSubmitNotificationList){
                     contractHash=pendingToSubmitNotificationRecord.getTransactionHash();
-                    transactionTransmissionManager.sendContractStatusNotificationToCryptoBroker(
+                    transactionTransmissionManager.sendContractStatusNotification(
                             pendingToSubmitNotificationRecord.getBrokerPublicKey(),
                             pendingToSubmitNotificationRecord.getCustomerPublicKey(),
                             contractHash,
@@ -324,7 +324,7 @@ public class BrokerSubmitOfflineMerchandiseMonitorAgent implements
                         brokerSubmitOfflineMerchandiseBusinessTransactionDao.getPendingToSubmitNotificationList();
                 for(BusinessTransactionRecord pendingToSubmitConfirmationRecord : pendingToSubmitConfirmationList){
                     contractHash=pendingToSubmitConfirmationRecord.getTransactionHash();
-                    transactionTransmissionManager.sendContractStatusNotificationToCryptoBroker(
+                    transactionTransmissionManager.sendContractStatusNotification(
                             pendingToSubmitConfirmationRecord.getCustomerPublicKey(),
                             pendingToSubmitConfirmationRecord.getBrokerPublicKey(),
                             contractHash,

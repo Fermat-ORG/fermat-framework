@@ -84,8 +84,8 @@ public class BankMoneyWalletImpl implements BankMoneyWallet {
     @Override
     public void hold(BankMoneyTransactionRecord bankMoneyTransactionRecord) throws CantRegisterHoldException {
         try {
-            bankMoneyWalletDao.makeHold(bankMoneyTransactionRecord, BalanceType.AVAILABLE);
-        }catch (CantMakeHoldException e){
+            getAvailableBalance().debit(bankMoneyTransactionRecord);
+        }catch (FermatException e){
 
         }
     }
@@ -93,8 +93,8 @@ public class BankMoneyWalletImpl implements BankMoneyWallet {
     @Override
     public void unhold(BankMoneyTransactionRecord bankMoneyTransactionRecord) throws CantRegisterUnholdException {
         try {
-            bankMoneyWalletDao.makeUnhold(bankMoneyTransactionRecord, BalanceType.AVAILABLE);
-        }catch (CantMakeUnholdException e){
+            getAvailableBalance().credit(bankMoneyTransactionRecord);
+        }catch (FermatException e){
 
         }
     }
