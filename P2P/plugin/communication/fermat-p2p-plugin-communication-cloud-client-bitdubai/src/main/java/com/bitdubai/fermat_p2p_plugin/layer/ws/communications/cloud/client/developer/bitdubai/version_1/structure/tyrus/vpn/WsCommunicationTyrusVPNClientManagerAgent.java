@@ -127,6 +127,7 @@ public class WsCommunicationTyrusVPNClientManagerAgent{
 
         ClientManager clientManager = ClientManager.createClient();
 
+        /*
         ClientManager.ReconnectHandler reconnectHandler = new ClientManager.ReconnectHandler() {
 
             @Override
@@ -146,7 +147,8 @@ public class WsCommunicationTyrusVPNClientManagerAgent{
         /*
          *  Add Property RECONNECT_HANDLER to reconect automatically
          */
-        clientManager.getProperties().put(ClientProperties.RECONNECT_HANDLER, reconnectHandler);
+       /* clientManager.getProperties().put(ClientProperties.RECONNECT_HANDLER, reconnectHandler);
+        */
 
         clientManager.connectToServer(newPpnClient, clientConfig, serverURI);
 
