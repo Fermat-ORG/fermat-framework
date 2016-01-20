@@ -38,6 +38,10 @@ import com.bitdubai.fermat_dap_api.layer.dap_module.wallet_asset_issuer.exceptio
 import com.bitdubai.fermat_dap_api.layer.dap_module.wallet_asset_issuer.interfaces.AssetIssuerWalletSupAppModuleManager;
 import com.bitdubai.fermat_dap_api.layer.dap_transaction.asset_distribution.exceptions.CantDistributeDigitalAssetsException;
 import com.bitdubai.fermat_dap_api.layer.dap_transaction.asset_distribution.interfaces.AssetDistributionManager;
+import com.bitdubai.fermat_dap_api.layer.dap_transaction.common.exceptions.CantExecuteAppropriationTransactionException;
+import com.bitdubai.fermat_dap_api.layer.dap_transaction.common.exceptions.NotEnoughAcceptsException;
+import com.bitdubai.fermat_dap_api.layer.dap_transaction.common.exceptions.TransactionAlreadyStartedException;
+import com.bitdubai.fermat_dap_api.layer.dap_transaction.issuer_appropriation.interfaces.IssuerAppropriationManager;
 import com.bitdubai.fermat_dap_api.layer.dap_wallet.asset_issuer_wallet.interfaces.AssetIssuerWallet;
 import com.bitdubai.fermat_dap_api.layer.dap_wallet.asset_issuer_wallet.interfaces.AssetIssuerWalletList;
 import com.bitdubai.fermat_dap_api.layer.dap_wallet.asset_issuer_wallet.interfaces.AssetIssuerWalletManager;
@@ -48,6 +52,9 @@ import com.bitdubai.fermat_dap_api.layer.dap_wallet.common.exceptions.CantLoadWa
 import com.bitdubai.fermat_dap_plugin.layer.module.asset.issuer.developer.bitdubai.version_1.structure.AssetIssuerWalletModuleManager;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedPluginExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
+import com.bitdubai.fermat_wpd_api.layer.wpd_middleware.wallet_manager.exceptions.CantListWalletsException;
+import com.bitdubai.fermat_wpd_api.layer.wpd_middleware.wallet_manager.interfaces.InstalledWallet;
+import com.bitdubai.fermat_wpd_api.layer.wpd_middleware.wallet_manager.interfaces.WalletManagerManager;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -81,6 +88,12 @@ public class AssetIssuerWalletModulePluginRoot extends AbstractPlugin implements
     @NeededPluginReference(platform = Platforms.DIGITAL_ASSET_PLATFORM, layer = Layers.IDENTITY       , plugin = Plugins.ASSET_ISSUER  )
     IdentityAssetIssuerManager identityAssetIssuerManager;
 
+    @NeededPluginReference(platform = Platforms.CRYPTO_CURRENCY_PLATFORM, layer = Layers.MIDDLEWARE, plugin = Plugins.WALLET_MANAGER)
+    private WalletManagerManager walletMiddlewareManager;
+
+    @NeededPluginReference(platform = Platforms.DIGITAL_ASSET_PLATFORM, layer = Layers.DIGITAL_ASSET_TRANSACTION, plugin = Plugins.ASSET_APPROPRIATION)
+    private IssuerAppropriationManager issuerAppropriationManager;
+
     private AssetIssuerWallet wallet;
 
     private List<ActorAssetUser> selectedUsersToDeliver;
@@ -111,6 +124,7 @@ public class AssetIssuerWalletModulePluginRoot extends AbstractPlugin implements
                     assetIssuerWalletManager,
                     actorAssetUserManager,
                     assetDistributionManager,
+                    issuerAppropriationManager,
                     identityAssetIssuerManager,
                     pluginId,
                     pluginFileSystem
@@ -248,6 +262,22 @@ public class AssetIssuerWalletModulePluginRoot extends AbstractPlugin implements
     public void distributionAssets(String assetPublicKey, String walletPublicKey) throws
             CantDistributeDigitalAssetsException, CantGetTransactionsException, CantCreateFileException, FileNotFoundException, CantLoadWalletException {
         assetIssuerWalletModuleManager.distributionAssets(assetPublicKey, walletPublicKey, selectedUsersToDeliver);
+    }
+
+    @Override
+    public void appropriateAsset(String digitalAssetPublicKey, String bitcoinWalletPublicKey) throws CantExecuteAppropriationTransactionException, TransactionAlreadyStartedException, NotEnoughAcceptsException {
+        try {
+            List<InstalledWallet> installedWallets = walletMiddlewareManager.getInstalledWallets();
+            if (installedWallets.isEmpty()) {
+                System.out.println("NO INSTALLED WALLETS, CANNOT PROCEED.");
+                return;
+            }
+            //TODO REMOVE HARDCODE
+            InstalledWallet installedWallet = installedWallets.get(0);
+            assetIssuerWalletModuleManager.appropriateAsset(digitalAssetPublicKey, installedWallet.getWalletPublicKey());
+        } catch (CantListWalletsException e) {
+            e.printStackTrace();
+        }
     }
 
     @Override

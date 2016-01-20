@@ -11,13 +11,15 @@ import com.bitdubai.fermat_dap_api.layer.dap_identity.asset_issuer.interfaces.Id
 import com.bitdubai.fermat_dap_api.layer.dap_identity.asset_issuer.interfaces.IdentityAssetIssuerManager;
 import com.bitdubai.fermat_dap_api.layer.dap_transaction.asset_distribution.exceptions.CantDistributeDigitalAssetsException;
 import com.bitdubai.fermat_dap_api.layer.dap_transaction.asset_distribution.interfaces.AssetDistributionManager;
+import com.bitdubai.fermat_dap_api.layer.dap_transaction.common.exceptions.CantExecuteAppropriationTransactionException;
 import com.bitdubai.fermat_dap_api.layer.dap_transaction.common.exceptions.CantGetDigitalAssetFromLocalStorageException;
+import com.bitdubai.fermat_dap_api.layer.dap_transaction.common.exceptions.NotEnoughAcceptsException;
+import com.bitdubai.fermat_dap_api.layer.dap_transaction.common.exceptions.TransactionAlreadyStartedException;
+import com.bitdubai.fermat_dap_api.layer.dap_transaction.issuer_appropriation.interfaces.IssuerAppropriationManager;
 import com.bitdubai.fermat_dap_api.layer.dap_wallet.asset_issuer_wallet.interfaces.AssetIssuerWallet;
 import com.bitdubai.fermat_dap_api.layer.dap_wallet.asset_issuer_wallet.interfaces.AssetIssuerWalletList;
 import com.bitdubai.fermat_dap_api.layer.dap_wallet.asset_issuer_wallet.interfaces.AssetIssuerWalletManager;
 import com.bitdubai.fermat_dap_api.layer.dap_wallet.asset_issuer_wallet.interfaces.AssetIssuerWalletTransaction;
-import com.bitdubai.fermat_dap_api.layer.dap_wallet.common.enums.BalanceType;
-import com.bitdubai.fermat_dap_api.layer.dap_wallet.common.enums.TransactionType;
 import com.bitdubai.fermat_dap_api.layer.dap_wallet.common.exceptions.CantGetTransactionsException;
 import com.bitdubai.fermat_dap_api.layer.dap_wallet.common.exceptions.CantLoadWalletException;
 
@@ -35,19 +37,27 @@ public class AssetIssuerWalletModuleManager {
     AssetDistributionManager assetDistributionManager;
     UUID pluginId;
     PluginFileSystem pluginFileSystem;
+    IssuerAppropriationManager issuerAppropriationManager;
 
     /**
      * constructor
      *
      * @param assetIssuerWalletManager
      */
-    public AssetIssuerWalletModuleManager(AssetIssuerWalletManager assetIssuerWalletManager, ActorAssetUserManager actorAssetUserManager, AssetDistributionManager assetDistributionManager, IdentityAssetIssuerManager identityAssetIssuerManager, UUID pluginId, PluginFileSystem pluginFileSystem) {
+    public AssetIssuerWalletModuleManager(AssetIssuerWalletManager assetIssuerWalletManager,
+                                          ActorAssetUserManager actorAssetUserManager,
+                                          AssetDistributionManager assetDistributionManager,
+                                          IssuerAppropriationManager issuerAppropriationManager,
+                                          IdentityAssetIssuerManager identityAssetIssuerManager,
+                                          UUID pluginId,
+                                          PluginFileSystem pluginFileSystem) {
         this.assetIssuerWalletManager = assetIssuerWalletManager;
         this.actorAssetUserManager = actorAssetUserManager;
         this.assetDistributionManager = assetDistributionManager;
         this.identityAssetIssuerManager = identityAssetIssuerManager;
         this.pluginId = pluginId;
         this.pluginFileSystem = pluginFileSystem;
+        this.issuerAppropriationManager = issuerAppropriationManager;
     }
 
     public List<AssetIssuerWalletList> getAssetIssuerWalletBalances(String publicKey) throws CantLoadWalletException {
@@ -71,6 +81,22 @@ public class AssetIssuerWalletModuleManager {
 
         } catch (Exception exception) {
             throw new CantLoadWalletException("Error distribution Assets", exception, "Method: distributionAssets", "Class: AssetIssuerWalletModuleManager");
+        }
+    }
+
+    public void appropriateAsset(String digitalAssetPublicKey, String bitcoinWalletPublicKey) throws CantExecuteAppropriationTransactionException, TransactionAlreadyStartedException, NotEnoughAcceptsException {
+        String context = "Asset Public Key: " + digitalAssetPublicKey + " - BTC Wallet Public Key: " + bitcoinWalletPublicKey;
+        try {
+            AssetIssuerWallet wallet = assetIssuerWalletManager.loadAssetIssuerWallet("walletPublicKeyTest");
+            List<AssetIssuerWalletTransaction> transactions = wallet.getAvailableTransactions(digitalAssetPublicKey);
+            if (transactions.isEmpty())
+                throw new NotEnoughAcceptsException(null, context, "We don't have any asset to appropriate.");
+            for (AssetIssuerWalletTransaction transaction : transactions) {
+                DigitalAssetMetadata assetMetadata = wallet.getDigitalAssetMetadata(transaction.getTransactionHash());
+                issuerAppropriationManager.appropriateAsset(assetMetadata, "walletPublicKeyTest", bitcoinWalletPublicKey);
+            }
+        } catch (CantGetDigitalAssetFromLocalStorageException | CantLoadWalletException | CantGetTransactionsException e) {
+            throw new CantExecuteAppropriationTransactionException(e, context, null);
         }
     }
 
