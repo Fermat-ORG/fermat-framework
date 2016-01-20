@@ -95,7 +95,7 @@ public class WsCommunicationsCloudClientPluginRoot extends AbstractPlugin implem
     /**
      * Represent the uri
      */
-    private URI uri;x
+    private URI uri;
 
     /**
      * Represent the clientIdentity
