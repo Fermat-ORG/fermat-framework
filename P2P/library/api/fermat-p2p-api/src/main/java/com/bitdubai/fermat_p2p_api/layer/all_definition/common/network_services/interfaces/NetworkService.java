@@ -1,4 +1,4 @@
-package com.bitdubai.fermat_api.layer.all_definition.network_service.interfaces;
+package com.bitdubai.fermat_p2p_api.layer.all_definition.common.network_services.interfaces;
 
 import com.bitdubai.fermat_api.layer.all_definition.components.enums.PlatformComponentType;
 import com.bitdubai.fermat_api.layer.all_definition.components.interfaces.DiscoveryQueryParameters;
@@ -6,7 +6,9 @@ import com.bitdubai.fermat_api.layer.all_definition.components.interfaces.Platfo
 import com.bitdubai.fermat_api.layer.all_definition.events.EventSource;
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEvent;
 import com.bitdubai.fermat_api.layer.all_definition.network_service.enums.NetworkServiceType;
+import com.bitdubai.fermat_api.layer.all_definition.network_service.interfaces.NetworkServiceConnectionManager;
 import com.bitdubai.fermat_api.layer.osa_android.location_system.Location;
+import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.contents.FermatMessage;
 
 import java.util.List;
 import java.util.UUID;
@@ -131,6 +133,7 @@ public interface NetworkService {
      * @param fermatEvent
      */
     void handleVpnConnectionCloseNotificationEvent(FermatEvent fermatEvent);
+    
 
     boolean isRegister();
 
@@ -146,4 +149,5 @@ public interface NetworkService {
 
     String getExtraData();
 
+    void handleNewMessages(FermatMessage incomingMessage);
 }

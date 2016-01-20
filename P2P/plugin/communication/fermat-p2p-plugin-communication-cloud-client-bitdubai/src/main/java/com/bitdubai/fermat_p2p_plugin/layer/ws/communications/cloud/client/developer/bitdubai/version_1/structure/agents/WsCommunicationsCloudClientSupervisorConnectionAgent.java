@@ -59,7 +59,7 @@ public class WsCommunicationsCloudClientSupervisorConnectionAgent extends Thread
 
                 if (!getConnection().isOpen()) {
                     System.out.println(" WsCommunicationsCloudClientSupervisorConnectionAgent - Trying to reconnect whit cloud server ");
-                    wsCommunicationsCloudClientPluginRoot.connectClient();
+                    //wsCommunicationsCloudClientPluginRoot.connectClient();
                 }else {
 
                     try {
@@ -78,13 +78,14 @@ public class WsCommunicationsCloudClientSupervisorConnectionAgent extends Thread
 
             }
 
-        } catch (URISyntaxException e) {
-            e.printStackTrace();
-        } catch (DeploymentException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
+//        } catch (DeploymentException e) {
+//            e.printStackTrace();
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//        }
     }
 
     /**

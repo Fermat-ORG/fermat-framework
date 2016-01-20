@@ -31,7 +31,7 @@ import com.bitdubai.fermat_api.layer.all_definition.events.EventSource;
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEvent;
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEventListener;
 import com.bitdubai.fermat_api.layer.all_definition.network_service.enums.NetworkServiceType;
-import com.bitdubai.fermat_api.layer.all_definition.network_service.interfaces.NetworkService;
+import com.bitdubai.fermat_p2p_api.layer.all_definition.common.network_services.interfaces.NetworkService;
 import com.bitdubai.fermat_api.layer.all_definition.network_service.interfaces.NetworkServiceConnectionManager;
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.Action;
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.Specialist;
@@ -86,7 +86,6 @@ import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.co
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.contents.FermatMessageCommunicationFactory;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.enums.P2pEventType;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.events.ClientConnectionCloseNotificationEvent;
-import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.events.ClientSuccessReconnectNotificationEvent;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.events.VPNConnectionCloseNotificationEvent;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.MessagesStatus;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.WsCommunicationsCloudClientManager;
@@ -274,6 +273,11 @@ public class AssetTransmissionNetworkServicePluginRoot extends AbstractPlugin im
      */
     public String getExtraData() {
         return extraData;
+    }
+
+    @Override
+    public void handleNewMessages(FermatMessage incomingMessage) {
+        //TODO: implementar el handler de los mensajes acá por favor ;)
     }
 
     /**
@@ -639,6 +643,7 @@ public class AssetTransmissionNetworkServicePluginRoot extends AbstractPlugin im
 
         System.out.println(" CommunicationNetworkServiceConnectionManager - Starting method handleCompleteComponentRegistrationNotificationEvent");
 
+
         if (platformComponentProfileRegistered.getPlatformComponentType() == PlatformComponentType.COMMUNICATION_CLOUD_CLIENT && this.register){
 
             if(communicationRegistrationProcessNetworkServiceAgent.isAlive()){
@@ -802,12 +807,12 @@ public class AssetTransmissionNetworkServicePluginRoot extends AbstractPlugin im
             communicationNetworkServiceConnectionManager.restart();
         }
 
-        if(!this.register){
+        if(communicationRegistrationProcessNetworkServiceAgent != null && !this.register){
 
             if(communicationRegistrationProcessNetworkServiceAgent.isAlive()){
-
                 communicationRegistrationProcessNetworkServiceAgent.interrupt();
                 communicationRegistrationProcessNetworkServiceAgent = null;
+            }
 
                    /*
                  * Construct my profile and register me
@@ -839,7 +844,7 @@ public class AssetTransmissionNetworkServicePluginRoot extends AbstractPlugin im
                  */
                 this.initializeCommunicationNetworkServiceConnectionManager();
 
-            }
+
 
         }
 
