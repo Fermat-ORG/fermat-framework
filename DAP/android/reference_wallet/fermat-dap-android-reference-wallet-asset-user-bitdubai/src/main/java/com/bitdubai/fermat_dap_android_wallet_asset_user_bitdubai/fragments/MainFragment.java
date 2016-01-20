@@ -160,7 +160,7 @@ public class MainFragment extends AbstractFermatFragment
                 @Override
                 protected Object doInBackground() throws Exception {
                     //TODO GET THE AMOUNT TO APPROPRIATE.
-                    manager.appropriateAsset(asset.getAssetPublicKey(), null, 1);
+                    manager.appropriateAsset(asset.getAssetPublicKey(), null);
                     return true;
                 }
             };
