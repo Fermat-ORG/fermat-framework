@@ -84,7 +84,6 @@ public class WsCommunicationsCloudClientPluginRoot extends AbstractPlugin implem
 
 
 
-
     /**
      * Represent the executor
      */
