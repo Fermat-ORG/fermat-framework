@@ -912,7 +912,7 @@ public class IntraActorNetworkServicePluginRoot extends AbstractPlugin implement
                             "CREANDO REGISTRO EN EL INCOMING NOTIFICATION DAO:"
                             + "\n-------------------------------------------------");
 
-
+                    actorNetworkServiceRecord.setFlagReadead(false);
                     getIncomingNotificationsDao().createNotification(actorNetworkServiceRecord);
 
                     //NOTIFICATION LAUNCH
