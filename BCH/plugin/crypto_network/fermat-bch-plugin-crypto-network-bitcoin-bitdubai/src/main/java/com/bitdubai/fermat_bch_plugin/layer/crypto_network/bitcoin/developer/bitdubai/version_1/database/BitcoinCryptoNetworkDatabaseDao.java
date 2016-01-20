@@ -1025,7 +1025,7 @@ public class BitcoinCryptoNetworkDatabaseDao {
         DatabaseTable databaseTable = database.getTable(BitcoinCryptoNetworkDatabaseConstants.BROADCAST_TABLE_NAME);
 
         /**
-         * I will verify that I don't have this transaction already stored, if so I will thrown an error
+         * I will verify that I don't have this transaction already stored, if so I will delete it
          */
         databaseTable.addStringFilter(BitcoinCryptoNetworkDatabaseConstants.TRANSACTIONS_HASH_COLUMN_NAME, txHash, DatabaseFilterType.EQUAL);
         try {
@@ -1034,11 +1034,11 @@ public class BitcoinCryptoNetworkDatabaseDao {
             throwLoadToMemoryException(e, databaseTable.getTableName());
         }
 
+        /**
+         * delete if already exists.
+         */
         if (!databaseTable.getRecords().isEmpty()){
-            StringBuilder output = new StringBuilder("Transaction already stored in Broadcast Table.");
-            output.append(System.lineSeparator());
-            output.append("The transaction " + txHash + " is already stored.");
-            throw new CantExecuteDatabaseOperationException("Inconsistent data detected.",null, output.toString(), null);
+            this.deleteStoredBitcoinTransaction(txHash);
         }
 
         /**

@@ -262,15 +262,13 @@ public class BitcoinCryptoNetworkMonitor implements Agent {
                     UUID transactionId = getDao().getBroadcastedTransactionId(BLOCKCHAIN_NETWORKTYPE, txHash);
                     storeOutgoingTransaction(wallet, transaction, transactionId);
 
-                    /**
-                     * commits the transaction to trigger the events.
-                     */
-                    wallet.maybeCommitTx(transaction);
 
                     /**
                      * saves the wallet again.
                      */
                     wallet.saveToFile(walletFileName);
+
+                    System.out.println("Transaction succesfully broadcasted: " + transaction.getHashAsString());
                 } catch (CantExecuteDatabaseOperationException e) {
                     e.printStackTrace();
                 } catch (IOException e) {
@@ -439,6 +437,8 @@ public class BitcoinCryptoNetworkMonitor implements Agent {
              */
             wallet.maybeCommitTx(tx);
             wallet.saveToFile(walletFileName);
+
+            System.out.println("Transaction succesfully stored for broadcasting: " + tx.getHashAsString());
         } catch (CantExecuteDatabaseOperationException e) {
             throw new CantStoreBitcoinTransactionException(CantStoreBitcoinTransactionException.DEFAULT_MESSAGE, e, "There was an error storing the transaction in the database", null);
         } catch (Exception e) {
