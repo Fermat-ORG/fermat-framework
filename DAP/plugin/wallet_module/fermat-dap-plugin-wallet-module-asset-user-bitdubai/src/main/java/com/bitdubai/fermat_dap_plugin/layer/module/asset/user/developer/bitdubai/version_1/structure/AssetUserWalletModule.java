@@ -9,6 +9,7 @@ import com.bitdubai.fermat_dap_api.layer.dap_identity.asset_user.interfaces.Iden
 import com.bitdubai.fermat_dap_api.layer.dap_transaction.asset_appropriation.interfaces.AssetAppropriationManager;
 import com.bitdubai.fermat_dap_api.layer.dap_transaction.common.exceptions.CantExecuteAppropriationTransactionException;
 import com.bitdubai.fermat_dap_api.layer.dap_transaction.common.exceptions.CantGetDigitalAssetFromLocalStorageException;
+import com.bitdubai.fermat_dap_api.layer.dap_transaction.common.exceptions.NotEnoughAcceptsException;
 import com.bitdubai.fermat_dap_api.layer.dap_transaction.common.exceptions.TransactionAlreadyStartedException;
 import com.bitdubai.fermat_dap_api.layer.dap_transaction.user_redemption.exceptions.CantRedeemDigitalAssetException;
 import com.bitdubai.fermat_dap_api.layer.dap_transaction.user_redemption.interfaces.UserRedemptionManager;
@@ -47,7 +48,7 @@ public class AssetUserWalletModule {
     }
 
 
-    public void redeemAssetToRedeemPoint(String digitalAssetPublicKey, String walletPublicKey, List<ActorAssetRedeemPoint> actorAssetRedeemPoint) throws CantRedeemDigitalAssetException {
+    public void redeemAssetToRedeemPoint(String digitalAssetPublicKey, String walletPublicKey, List<ActorAssetRedeemPoint> actorAssetRedeemPoint) throws CantRedeemDigitalAssetException, NotEnoughAcceptsException {
         String context = "Asset Public Key: " + digitalAssetPublicKey + " - ActorAssetRedeemPoint: " + actorAssetRedeemPoint;
         try {
             if (actorAssetRedeemPoint.isEmpty()) {
@@ -62,12 +63,14 @@ public class AssetUserWalletModule {
     }
 
 
-    private HashMap<DigitalAssetMetadata, ActorAssetRedeemPoint> createRedemptionMap(String walletPublicKey, String assetPublicKey, List<ActorAssetRedeemPoint> redeemPoints) throws CantGetTransactionsException, FileNotFoundException, CantCreateFileException, CantLoadWalletException, CantGetDigitalAssetFromLocalStorageException {
+    private HashMap<DigitalAssetMetadata, ActorAssetRedeemPoint> createRedemptionMap(String walletPublicKey, String assetPublicKey, List<ActorAssetRedeemPoint> redeemPoints) throws CantGetTransactionsException, FileNotFoundException, CantCreateFileException, CantLoadWalletException, CantGetDigitalAssetFromLocalStorageException, NotEnoughAcceptsException {
+        String context = "Asset Public Key: " + assetPublicKey + " - BTC Wallet Public Key: " + walletPublicKey + " - RedeemPoints: " + redeemPoints;
+
         HashMap<DigitalAssetMetadata, ActorAssetRedeemPoint> hashMap = new HashMap<>();
         AssetUserWallet wallet = assetUserWalletManager.loadAssetUserWallet(walletPublicKey);
         List<AssetUserWalletTransaction> availableTransactions = wallet.getAllAvailableTransactions(assetPublicKey);
         if (redeemPoints.size() > availableTransactions.size())
-            throw new IllegalStateException("WE DON'T HAVE ENOUGH ASSETS!!");
+            throw new NotEnoughAcceptsException(null, context, "WE DON'T HAVE ENOUGH ASSETS!!");
         for (int i = 0; i < redeemPoints.size(); i++) {
             DigitalAssetMetadata digitalAssetMetadata = wallet.getDigitalAssetMetadata(availableTransactions.get(i).getTransactionHash());
             hashMap.put(digitalAssetMetadata, redeemPoints.get(i));
@@ -76,15 +79,15 @@ public class AssetUserWalletModule {
     }
 
 
-    public void appropriateAsset(String digitalAssetPublicKey, String bitcoinWalletPublicKey, int amountToAppropriate) throws CantExecuteAppropriationTransactionException, TransactionAlreadyStartedException {
+    public void appropriateAsset(String digitalAssetPublicKey, String bitcoinWalletPublicKey) throws CantExecuteAppropriationTransactionException, TransactionAlreadyStartedException, NotEnoughAcceptsException {
         String context = "Asset Public Key: " + digitalAssetPublicKey + " - BTC Wallet Public Key: " + bitcoinWalletPublicKey;
         try {
             AssetUserWallet wallet = assetUserWalletManager.loadAssetUserWallet("walletPublicKeyTest");
             List<AssetUserWalletTransaction> transactions = wallet.getAllAvailableTransactions(digitalAssetPublicKey);
-            if (amountToAppropriate > transactions.size())
-                throw new IllegalStateException("NOT ENOUGH ASSETS!");
-            for (int i = 0; i < amountToAppropriate; i++) {
-                DigitalAssetMetadata assetMetadata = wallet.getDigitalAssetMetadata(transactions.get(i).getTransactionHash());
+            if (transactions.isEmpty())
+                throw new NotEnoughAcceptsException(null, context, "There are no assets available to appropriate!!");
+            for (AssetUserWalletTransaction transaction : transactions) {
+                DigitalAssetMetadata assetMetadata = wallet.getDigitalAssetMetadata(transaction.getTransactionHash());
                 assetAppropriationManager.appropriateAsset(assetMetadata, "walletPublicKeyTest", bitcoinWalletPublicKey);
             }
         } catch (CantGetDigitalAssetFromLocalStorageException | CantGetTransactionsException | CantLoadWalletException e) {
