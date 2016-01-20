@@ -442,7 +442,9 @@ public class AssetEditorFragment extends AbstractFermatFragment implements View.
             public void onPostExecute(Object... result) {
                 dialog.dismiss();
                 if (getActivity() != null) {
-                    Toast.makeText(getActivity(), String.format("Asset %s has been created", asset.getName()), Toast.LENGTH_SHORT).show();
+                    if (!isEdit) {
+                        Toast.makeText(getActivity(), String.format("Asset %s has been created", asset.getName()), Toast.LENGTH_SHORT).show();
+                    }
                     changeActivity(Activities.DAP_MAIN.getCode(), appSession.getAppPublicKey());
                 }
             }

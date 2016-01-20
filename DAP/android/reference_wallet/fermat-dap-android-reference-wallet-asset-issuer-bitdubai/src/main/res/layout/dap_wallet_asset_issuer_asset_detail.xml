@@ -139,16 +139,56 @@
         </RelativeLayout>
 
         <RelativeLayout
-            android:id="@+id/assetDetailRemainingLayout"
+            android:id="@+id/assetDetailDeliverLayout"
+            android:layout_width="match_parent"
+            android:layout_height="75dp"
+            android:background="#24202E">
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/bg_delivery_button"
+                android:paddingLeft="20dp"
+                android:paddingRight="20dp"/>
+            <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
+                android:id="@+id/assetDetailDeliverAssetText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Deliver Assets"
+                android:layout_centerInParent="true"
+                android:fontFamily="regular"
+                android:textSize="17sp"
+                android:textColor="#00aeef"/>
+
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/img_detail_divider"
+                android:layout_alignParentBottom="true"
+                android:id="@+id/imageView4" />
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/bg_delivery_button"
+                android:paddingLeft="20dp"
+                android:paddingRight="20dp"
+                android:layout_alignTop="@+id/imageView4"
+                android:layout_centerHorizontal="true" />
+
+        </RelativeLayout>
+        <RelativeLayout
+            android:id="@+id/assetDetailAppropiateBtnLayout"
             android:layout_width="match_parent"
             android:layout_height="75dp"
             android:background="#24202E">
 
             <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
-                android:id="@+id/assetDetailRemainingText"
+                android:id="@+id/assetDetailAppropiateAssetText"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="94 Assets Remaining"
+                android:text="Appropiate Assets"
                 android:layout_centerInParent="true"
                 android:fontFamily="regular"
                 android:textSize="17sp"
@@ -161,11 +201,23 @@
                 android:paddingLeft="20dp"
                 android:paddingRight="20dp"/>
 
+
+
             <ImageView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:src="@drawable/img_detail_divider"
-                android:layout_alignParentBottom="true"/>
+                android:layout_alignParentBottom="true"
+                android:id="@+id/imageView5" />
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/bg_delivery_button"
+                android:paddingLeft="20dp"
+                android:paddingRight="20dp"
+                android:layout_alignTop="@+id/imageView5"
+                android:layout_centerHorizontal="true" />
 
         </RelativeLayout>
 
@@ -215,7 +267,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:src="@drawable/img_detail_divider"
-                android:layout_alignParentBottom="true"/>
+                android:layout_alignParentBottom="true"
+                android:id="@+id/imageView" />
 
         </RelativeLayout>
 
