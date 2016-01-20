@@ -30,6 +30,7 @@ import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.A
 import com.bitdubai.fermat_api.layer.modules.exceptions.CantGetSelectedActorIdentityException;
 import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_broker_community.interfaces.CryptoBrokerCommunityInformation;
 import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_broker_community.interfaces.CryptoBrokerCommunitySearch;
+import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_broker_community.interfaces.CryptoBrokerCommunitySelectableIdentity;
 import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_broker_community.interfaces.CryptoBrokerCommunitySubAppModuleManager;
 import com.bitdubai.fermat_ccp_api.layer.module.intra_user.exceptions.CantGetActiveLoginIdentityException;
 import com.bitdubai.fermat_pip_api.layer.network_service.subapp_resources.SubAppResourcesProviderManager;
@@ -107,8 +108,9 @@ public class ConnectionsWorldFragment extends AbstractFermatFragment<CryptoBroke
             moduleManager = appSession.getModuleManager();
             errorManager = appSession.getErrorManager();
 
-            mNotificationsCount = moduleManager.listCryptoBrokersPendingLocalAction(moduleManager.getSelectedActorIdentity(),MAX, offset).size();
-
+            mNotificationsCount = moduleManager.listCryptoBrokersPendingLocalAction(moduleManager.getSelectedActorIdentity(), MAX, offset).size();
+            //List<CryptoBrokerCommunityInformation> asd = moduleManager.listAllConnectedCryptoBrokers(moduleManager.getSelectedActorIdentity(),MAX, offset);
+            //List<CryptoBrokerCommunitySelectableIdentity> asss = moduleManager.listSelectableIdentities();
 
             // TODO: display unread notifications.
             new FetchCountTask().execute();
