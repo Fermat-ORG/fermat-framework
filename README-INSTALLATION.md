@@ -69,7 +69,7 @@ When the scripts finishes, then follow with <<Cloning Repository>>
 
 
 <br>
-[[Manual]]
+<a name="Manual"></a>
 #### B.- Manual installation (if automatic installation did no work properly)
 
 In case the script goes wrong or does not fullfill its intended job, you can follow next steps to manually set up of the environment.

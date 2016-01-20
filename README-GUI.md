@@ -906,7 +906,7 @@ it is temporarily located in the /android-core/common/version_1/ProvisoryData cl
 #### Put an Icon from your app in the Main screen
 #### Interacting with the Session and the FragmentFactory﻿
 
-#### Steps to Create a Reference Wallet or Sub-App from Scratch
+### Steps to Create a Reference Wallet or Sub-App from Scratch
 
 1. Create the Android Reference Wallet code base: 
 
@@ -948,3 +948,4 @@ it is temporarily located in the /android-core/common/version_1/ProvisoryData cl
 - How to Create a wallet/subapp from scratch: https://www.youtube.com/watch?v=-gIZqKwvhac
 - The AppConection class, What it is and How to use it: https://www.youtube.com/watch?v=S0hqL3Smcko
 - Where to put the Icons in the Fermat Desktop: https://www.youtube.com/watch?v=vhI-bq0Nz0Y
+- Android api - Dialog Presentation Template: https://www.youtube.com/watch?v=oTDJN7RKajw
