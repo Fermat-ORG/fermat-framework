@@ -22,7 +22,7 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 
 /**
- * The Class <code>com.bitdubai.fermat_p2p_plugin.layer.ws.communications.cloud.client.developer.bitdubai.version_1.structure.processors.CompleteUpdateActorPacketProcessor</code>
+ * The Class <code>com.bitdubai.fermat_p2p_plugin.layer.ws.communications.cloud.client.developer.bitdubai.version_1.structure.processors.CompleteUpdateActorJettyPacketProcessor</code>
  * <p/>
  * Created by Hendry Rodriguez - (elnegroevaristo@gmail.com) on 06/01/16.
  *
@@ -60,7 +60,7 @@ public class CompleteUpdateActorPacketProcessor extends FermatPacketProcessor {
             /*
             * Get the platformComponentProfile from the message content and decrypt
             */
-            //System.out.println(" CompleteRegistrationComponentPacketProcessor - decoding fermatPacket with client-identity ");
+            //System.out.println(" CompleteRegistrationComponentJettyPacketProcessor - decoding fermatPacket with client-identity ");
             messageContentJsonStringRepresentation = AsymmetricCryptography.decryptMessagePrivateKey(receiveFermatPacket.getMessageContent(), getWsCommunicationsCloudClientChannel().getClientIdentity().getPrivateKey());
 
         }else {
@@ -72,7 +72,7 @@ public class CompleteUpdateActorPacketProcessor extends FermatPacketProcessor {
             * ---------------------------------------------------------------------------------------------------
             * Get the platformComponentProfile from the message content and decrypt
             */
-            //System.out.println(" CompleteRegistrationComponentPacketProcessor - decoding fermatPacket with temp-identity ");
+            //System.out.println(" CompleteRegistrationComponentJettyPacketProcessor - decoding fermatPacket with temp-identity ");
             messageContentJsonStringRepresentation = AsymmetricCryptography.decryptMessagePrivateKey(receiveFermatPacket.getMessageContent(), getWsCommunicationsCloudClientChannel().getTemporalIdentity().getPrivateKey());
 
         }
@@ -101,7 +101,7 @@ public class CompleteUpdateActorPacketProcessor extends FermatPacketProcessor {
         /*
          * Raise the event
          */
-        //System.out.println("CompleteRegistrationComponentPacketProcessor - Raised a event = P2pEventType.COMPLETE_COMPONENT_REGISTRATION_NOTIFICATION");
+        //System.out.println("CompleteRegistrationComponentJettyPacketProcessor - Raised a event = P2pEventType.COMPLETE_COMPONENT_REGISTRATION_NOTIFICATION");
         getWsCommunicationsCloudClientChannel().getEventManager().raiseEvent(event);
 
     }

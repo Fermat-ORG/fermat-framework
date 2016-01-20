@@ -22,7 +22,7 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 
 /**
- * The Class <code>com.bitdubai.fermat_p2p_plugin.layer.ws.communications.cloud.client.developer.bitdubai.version_1.structure.processors.CompleteComponentConnectionRequestPacketProcessor</code> implement
+ * The Class <code>com.bitdubai.fermat_p2p_plugin.layer.ws.communications.cloud.client.developer.bitdubai.version_1.structure.processors.CompleteComponentConnectionRequestJettyPacketProcessor</code> implement
  * the logic to process the packet when a packet type <code>com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.enums.FermatPacketType.COMPLETE_COMPONENT_CONNECTION_REQUEST</code> is receive by the server.
  * <p/>
  *
@@ -40,14 +40,14 @@ public class CompleteComponentConnectionRequestPacketProcessor extends FermatPac
     @Override
     public void processingPackage(FermatPacket receiveFermatPacket){
 
-        System.out.println("CompleteComponentConnectionRequestPacketProcessor - processingPackage = ");
+        System.out.println("CompleteComponentConnectionRequestJettyPacketProcessor - processingPackage = ");
 
         /*
          * Get the filters from the message content and decrypt
          */
         String messageContentJsonStringRepresentation = AsymmetricCryptography.decryptMessagePrivateKey(receiveFermatPacket.getMessageContent(), getWsCommunicationsCloudClientChannel().getClientIdentity().getPrivateKey());
 
-       // System.out.println("CompleteComponentConnectionRequestPacketProcessor - messageContentJsonStringRepresentation = "+messageContentJsonStringRepresentation);
+       // System.out.println("CompleteComponentConnectionRequestJettyPacketProcessor - messageContentJsonStringRepresentation = "+messageContentJsonStringRepresentation);
 
         /*
          * Construct the json object
@@ -60,9 +60,9 @@ public class CompleteComponentConnectionRequestPacketProcessor extends FermatPac
         PlatformComponentProfile applicantComponent = gson.fromJson(respond.get(JsonAttNamesConstants.APPLICANT_PARTICIPANT_VPN).getAsString(), PlatformComponentProfileCommunication.class);
         PlatformComponentProfile remoteComponent = gson.fromJson(respond.get(JsonAttNamesConstants.REMOTE_PARTICIPANT_VPN).getAsString(), PlatformComponentProfileCommunication.class);
 
-        System.out.println("CompleteComponentConnectionRequestPacketProcessor - networkServiceType = "+networkServiceType);
-        System.out.println("CompleteComponentConnectionRequestPacketProcessor - applicantComponent = "+applicantComponent.getAlias() + "["+applicantComponent.getIdentityPublicKey() +"]");
-        System.out.println("CompleteComponentConnectionRequestPacketProcessor - remoteComponent    = "+remoteComponent.getAlias()    + "["+remoteComponent.getIdentityPublicKey()    +"]");
+        System.out.println("CompleteComponentConnectionRequestJettyPacketProcessor - networkServiceType = "+networkServiceType);
+        System.out.println("CompleteComponentConnectionRequestJettyPacketProcessor - applicantComponent = "+applicantComponent.getAlias() + "["+applicantComponent.getIdentityPublicKey() +"]");
+        System.out.println("CompleteComponentConnectionRequestJettyPacketProcessor - remoteComponent    = "+remoteComponent.getAlias()    + "["+remoteComponent.getIdentityPublicKey()    +"]");
 
         /*
          * Create a new event whit the networkServiceType and remoteIdentity
@@ -80,7 +80,7 @@ public class CompleteComponentConnectionRequestPacketProcessor extends FermatPac
         /*
          * Raise the event
          */
-        System.out.println("CompleteComponentConnectionRequestPacketProcessor - Raised a event = P2pEventType.COMPLETE_COMPONENT_CONNECTION_REQUEST_NOTIFICATION");
+        System.out.println("CompleteComponentConnectionRequestJettyPacketProcessor - Raised a event = P2pEventType.COMPLETE_COMPONENT_CONNECTION_REQUEST_NOTIFICATION");
         getWsCommunicationsCloudClientChannel().getEventManager().raiseEvent(event);
 
     }

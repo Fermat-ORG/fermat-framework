@@ -13,6 +13,7 @@ import com.bitdubai.sub_app.intra_user_community.holders.AppWorldHolder;
 
 import java.util.List;
 
+@SuppressWarnings("unused")
 public class AppListAdapter extends FermatAdapter<IntraUserInformation, AppWorldHolder> {
 
 

@@ -1,6 +1,7 @@
 package com.bitdubai.fermat_dap_android_wallet_asset_issuer_bitdubai.fragments;
 
 
+import android.content.DialogInterface;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
@@ -13,27 +14,33 @@ import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
+import com.bitdubai.fermat_android_api.ui.Views.PresentationDialog;
 import com.bitdubai.fermat_android_api.ui.adapters.FermatAdapter;
 import com.bitdubai.fermat_android_api.ui.enums.FermatRefreshTypes;
 import com.bitdubai.fermat_android_api.ui.fragments.FermatWalletListFragment;
 import com.bitdubai.fermat_android_api.ui.interfaces.FermatListItemListeners;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Wallets;
+import com.bitdubai.fermat_api.layer.all_definition.settings.exceptions.CantGetSettingsException;
+import com.bitdubai.fermat_api.layer.all_definition.settings.exceptions.CantPersistSettingsException;
+import com.bitdubai.fermat_api.layer.all_definition.settings.exceptions.SettingsNotFoundException;
+import com.bitdubai.fermat_api.layer.all_definition.settings.structure.SettingsManager;
 import com.bitdubai.fermat_api.layer.modules.common_classes.ActiveActorIdentityInformation;
+import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.BitcoinWalletSettings;
 import com.bitdubai.fermat_dap_android_wallet_asset_issuer_bitdubai.R;
 import com.bitdubai.fermat_dap_android_wallet_asset_issuer_bitdubai.common.adapters.MyAssetsAdapter;
 import com.bitdubai.fermat_dap_android_wallet_asset_issuer_bitdubai.models.Data;
 import com.bitdubai.fermat_dap_android_wallet_asset_issuer_bitdubai.models.DigitalAsset;
 import com.bitdubai.fermat_dap_android_wallet_asset_issuer_bitdubai.sessions.AssetIssuerSession;
+import com.bitdubai.fermat_dap_android_wallet_asset_issuer_bitdubai.sessions.SessionConstantsAssetIssuer;
 import com.bitdubai.fermat_dap_android_wallet_asset_issuer_bitdubai.util.CommonLogger;
+import com.bitdubai.fermat_dap_api.layer.all_definition.exceptions.CantGetIdentityAssetIssuerException;
 import com.bitdubai.fermat_dap_api.layer.dap_identity.asset_issuer.interfaces.IdentityAssetIssuer;
+import com.bitdubai.fermat_dap_api.layer.dap_module.wallet_asset_issuer.AssetIssuerSettings;
 import com.bitdubai.fermat_dap_api.layer.dap_module.wallet_asset_issuer.interfaces.AssetIssuerWalletSupAppModuleManager;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedWalletExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
@@ -57,6 +64,7 @@ public class MyAssetsActivityFragment extends FermatWalletListFragment<DigitalAs
     // Fermat Managers
     private AssetIssuerWalletSupAppModuleManager moduleManager;
     private ErrorManager errorManager;
+    SettingsManager<AssetIssuerSettings> settingsManager;
 
     // Data
     private List<DigitalAsset> digitalAssets;
@@ -74,6 +82,7 @@ public class MyAssetsActivityFragment extends FermatWalletListFragment<DigitalAs
 
         moduleManager = ((AssetIssuerSession) appSession).getModuleManager();
         errorManager = appSession.getErrorManager();
+        settingsManager = appSession.getModuleManager().getSettingsManager();
 
         digitalAssets = (List) getMoreDataAsync(FermatRefreshTypes.NEW, 0);
     }
@@ -86,28 +95,93 @@ public class MyAssetsActivityFragment extends FermatWalletListFragment<DigitalAs
         configureToolbar();
         noAssetsView = layout.findViewById(R.id.dap_wallet_no_assets);
         showOrHideNoAssetsView(digitalAssets.isEmpty());
+
+        //Initialize settings
+        settingsManager = appSession.getModuleManager().getSettingsManager();
+        AssetIssuerSettings settings = null;
+        try {
+            settings = settingsManager.loadAndGetSettings(appSession.getAppPublicKey());
+        }catch (Exception e){
+            settings = null;
+        }
+        if(settings == null){
+            settings = new AssetIssuerSettings();
+            settings.setIsPresentationHelpEnabled(true);
+            try {
+                settingsManager.persistSettings(appSession.getAppPublicKey(), settings);
+            } catch (CantPersistSettingsException e) {
+                e.printStackTrace();
+            }
+        }
+
+        try {
+            boolean isPresentationHelpEnabled = settingsManager.loadAndGetSettings(appSession.getAppPublicKey()).isPresentationHelpEnabled();
+
+            if (isPresentationHelpEnabled) {
+                PresentationDialog presentationDialog = new PresentationDialog.Builder(getActivity(), appSession)
+                        .setBannerRes(R.drawable.banner_asset_issuer_wallet)
+                        .setIconRes(R.drawable.asset_issuer)
+                        .setSubTitle("Welcome to the Asset Issuer Wallet.")
+                        .setBody("From this wallet you will be able to distribute your assets to the world and collect statistics of their usage.")
+                        .setTextFooter("We will be creating an avatar for you in order to identify you in the system as an Asset Issuer, name and more details later in the Asset Issuer Identity sub app.")
+                        .setTemplateType((moduleManager.getActiveAssetIssuerIdentity() == null) ? PresentationDialog.TemplateType.TYPE_PRESENTATION : PresentationDialog.TemplateType.TYPE_PRESENTATION_WITHOUT_IDENTITIES)
+                        .setIsCheckEnabled(settingsManager.loadAndGetSettings(appSession.getAppPublicKey()).isPresentationHelpEnabled())
+                        .build();
+
+                presentationDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
+                    @Override
+                    public void onDismiss(DialogInterface dialog) {
+                        Object o = appSession.getData(SessionConstantsAssetIssuer.PRESENTATION_IDENTITY_CREATED);
+                        if (o != null) {
+                            if ((Boolean) (o)) {
+                                //invalidate();
+                                appSession.removeData(SessionConstantsAssetIssuer.PRESENTATION_IDENTITY_CREATED);
+                            }
+                        }
+                        try {
+                            IdentityAssetIssuer identityAssetIssuer = moduleManager.getActiveAssetIssuerIdentity();
+                            if (identityAssetIssuer == null) {
+                                getActivity().onBackPressed();
+                            } else {
+                                invalidate();
+                            }
+                        } catch (CantGetIdentityAssetIssuerException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                });
+
+                presentationDialog.show();
+            }
+        } catch (CantGetIdentityAssetIssuerException e) {
+            e.printStackTrace();
+        } catch (CantGetSettingsException e) {
+            e.printStackTrace();
+        } catch (SettingsNotFoundException e) {
+            e.printStackTrace();
+        }
     }
 
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
-        checkIdentity();
+//        checkIdentity();
     }
 
-    private void checkIdentity() {
-        ActiveActorIdentityInformation identity = null;
-        try {
-            identity = moduleManager.getSelectedActorIdentity();
-        } catch(Exception e) {
-            e.printStackTrace();
-        }
-        if (identity == null) {
-            makeText(getActivity(), "Identity must be created",
-                    LENGTH_SHORT).show();
-            getActivity().onBackPressed();
-        }
-    }
+//    private void checkIdentity() {
+//        ActiveActorIdentityInformation identity = null;
+//        try {
+//            identity = moduleManager.getSelectedActorIdentity();
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//        }
+//        if (identity == null) {
+//            makeText(getActivity(), "Identity must be created",
+//                    LENGTH_SHORT).show();
+//            getActivity().onBackPressed();
+//        }
+//    }
 
     private void configureToolbar() {
         Toolbar toolbar = getToolbar();
@@ -139,7 +213,7 @@ public class MyAssetsActivityFragment extends FermatWalletListFragment<DigitalAs
 
             @Override
             protected void onPreExecute() {
-                view = new WeakReference(rootView) ;
+                view = new WeakReference(rootView);
             }
 
             @Override
@@ -150,8 +224,8 @@ public class MyAssetsActivityFragment extends FermatWalletListFragment<DigitalAs
                     options.inScaled = true;
                     options.inSampleSize = 5;
                     drawable = BitmapFactory.decodeResource(
-                            getResources(), R.drawable.bg_app_image,options);
-                }catch (OutOfMemoryError error){
+                            getResources(), R.drawable.bg_app_image, options);
+                } catch (OutOfMemoryError error) {
                     error.printStackTrace();
                 }
                 return drawable;
@@ -159,11 +233,11 @@ public class MyAssetsActivityFragment extends FermatWalletListFragment<DigitalAs
 
             @Override
             protected void onPostExecute(Bitmap drawable) {
-                if (drawable!= null) {
-                    view.get().setBackground(new BitmapDrawable(getResources(),drawable));
+                if (drawable != null) {
+                    view.get().setBackground(new BitmapDrawable(getResources(), drawable));
                 }
             }
-        } ;
+        };
         asyncTask.execute();
     }
 

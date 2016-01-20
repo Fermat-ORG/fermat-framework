@@ -2,7 +2,6 @@ package com.bitdubai.fermat_dap_plugin.layer.wallet.wallet.redeem.point.develope
 
 import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
-import com.bitdubai.fermat_api.layer.all_definition.enums.Genders;
 import com.bitdubai.fermat_api.layer.all_definition.money.CryptoAddress;
 import com.bitdubai.fermat_api.layer.all_definition.util.XMLParser;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
@@ -22,15 +21,13 @@ import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginTextFile;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantCreateFileException;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.FileNotFoundException;
-import com.bitdubai.fermat_api.layer.osa_android.location_system.Location;
 import com.bitdubai.fermat_dap_api.layer.all_definition.digital_asset.DigitalAsset;
 import com.bitdubai.fermat_dap_api.layer.all_definition.digital_asset.DigitalAssetMetadata;
-import com.bitdubai.fermat_dap_api.layer.all_definition.enums.DAPConnectionState;
-import com.bitdubai.fermat_dap_api.layer.all_definition.util.Validate;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.exceptions.CantAssetUserActorNotFoundException;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.exceptions.CantGetAssetUserActorsException;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.interfaces.ActorAssetUser;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.interfaces.ActorAssetUserManager;
+import com.bitdubai.fermat_dap_api.layer.dap_actor_network_service.asset_user.interfaces.AssetUserActorNetworkServiceManager;
 import com.bitdubai.fermat_dap_api.layer.dap_transaction.common.exceptions.CantGetDigitalAssetFromLocalStorageException;
 import com.bitdubai.fermat_dap_api.layer.dap_transaction.common.exceptions.RecordsNotFoundException;
 import com.bitdubai.fermat_dap_api.layer.dap_wallet.asset_issuer_wallet.exceptions.CantCalculateBalanceException;
@@ -67,16 +64,19 @@ public class AssetRedeemPointWalletDao implements DealsWithPluginFileSystem {
     private UUID plugin;
     private Database database;
     private ActorAssetUserManager actorAssetUserManager;
-
+    private AssetUserActorNetworkServiceManager assetUserActorNetworkServiceManager;
 
     public AssetRedeemPointWalletDao(Database database,
                                      PluginFileSystem pluginFileSystem,
                                      UUID plugin,
-                                     ActorAssetUserManager actorAssetUserManager) {
+                                     ActorAssetUserManager actorAssetUserManager,
+                                     AssetUserActorNetworkServiceManager assetUserActorNetworkServiceManager) {
+
         this.database = database;
         this.pluginFileSystem = pluginFileSystem;
         this.plugin = plugin;
         this.actorAssetUserManager = actorAssetUserManager;
+        this.assetUserActorNetworkServiceManager = assetUserActorNetworkServiceManager;
     }
 
     public void setPlugin(UUID plugin) {
@@ -647,76 +647,13 @@ public class AssetRedeemPointWalletDao implements DealsWithPluginFileSystem {
     }
 
     private ActorAssetUser getActorAssetUser(final String userPublicKey) {
+        ActorAssetUser actorAssetUser = null;
         try {
-            return actorAssetUserManager.getActorRegisteredByPublicKey(userPublicKey);
+            actorAssetUser = actorAssetUserManager.getActorRegisteredByPublicKey(userPublicKey);
         } catch (CantGetAssetUserActorsException | CantAssetUserActorNotFoundException e) {
-            System.out.println("COULDN'T FIND THE ACTOR ASSET USER, RETRIEVING AN UNKNOWN USER.");
-            return new ActorAssetUser() {
-                @Override
-                public String getPublicLinkedIdentity() {
-                    return null;
-                }
-
-                @Override
-                public String getAge() {
-                    return Validate.DEFAULT_STRING;
-                }
-
-                @Override
-                public Genders getGenders() {
-                    return Genders.INDEFINITE;
-                }
-
-                @Override
-                public long getRegistrationDate() {
-                    return 0;
-                }
-
-                @Override
-                public long getLastConnectionDate() {
-                    return 0;
-                }
-
-                @Override
-                public DAPConnectionState getDapConnectionState() {
-                    return DAPConnectionState.REGISTERED_LOCALLY;
-                }
-
-                @Override
-                public Location getLocation() {
-                    return null;
-                }
-
-                @Override
-                public Double getLocationLatitude() {
-                    return null;
-                }
-
-                @Override
-                public Double getLocationLongitude() {
-                    return null;
-                }
-
-                @Override
-                public CryptoAddress getCryptoAddress() {
-                    return null;
-                }
-
-                @Override
-                public String getActorPublicKey() {
-                    return userPublicKey;
-                }
-
-                @Override
-                public String getName() {
-                    return Validate.DEFAULT_STRING;
-                }
-
-                @Override
-                public byte[] getProfileImage() {
-                    return new byte[0];
-                }
-            };
+                System.out.println("COULDN'T FIND THE ACTOR ASSET USER, RETRIEVING AN UNKNOWN USER.");
+            e.printStackTrace();
         }
+        return actorAssetUser;
     }
 }
