@@ -916,9 +916,9 @@ public class WsCommunicationsCloudClientConnection implements CommunicationsClie
     public void closeMainConnection() {
 
         if(isConnected()){
-            if(wsCommunicationVPNClientManagerAgent.isRunning()){
+
                 wsCommunicationVPNClientManagerAgent.closeAllVpnConnections();
-            }
+
             wsCommunicationsCloudClientChannel.getConnection().close();
         }
 

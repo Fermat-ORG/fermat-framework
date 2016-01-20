@@ -48,17 +48,12 @@ import javax.websocket.server.ServerEndpointConfig;
 public class WsCommunicationTyrusVPNClientManagerAgent{
 
     /**
-     * Represent the SLEEP_TIME
-     */
-    private static long SLEEP_TIME = 160000;
-
-    /**
      *  Represent the instance
      */
     private static WsCommunicationTyrusVPNClientManagerAgent instance = new WsCommunicationTyrusVPNClientManagerAgent();
 
     /**
-     * Represent the vpnClientActiveCache;
+     * Represent the instance.vpnClientActiveCache;
      */
     private Map<NetworkServiceType, Map<String, WsCommunicationTyrusVPNClient>> vpnClientActiveCache;
 
@@ -111,15 +106,15 @@ public class WsCommunicationTyrusVPNClientManagerAgent{
         /*
          * Add to the vpn client active
          */
-        if (vpnClientActiveCache.containsKey(remoteParticipantNetworkService.getNetworkServiceType())){
+        if (instance.vpnClientActiveCache.containsKey(remoteParticipantNetworkService.getNetworkServiceType())){
 
-            vpnClientActiveCache.get(remoteParticipantNetworkService.getNetworkServiceType()).put(remotePlatformComponentProfile.getIdentityPublicKey(), newPpnClient);
+            instance.vpnClientActiveCache.get(remoteParticipantNetworkService.getNetworkServiceType()).put(remotePlatformComponentProfile.getIdentityPublicKey(), newPpnClient);
 
         }else {
 
             Map<String, WsCommunicationTyrusVPNClient> newMap = new ConcurrentHashMap<>();
             newMap.put(remotePlatformComponentProfile.getIdentityPublicKey(), newPpnClient);
-            vpnClientActiveCache.put(remoteParticipantNetworkService.getNetworkServiceType(), newMap);
+            instance.vpnClientActiveCache.put(remoteParticipantNetworkService.getNetworkServiceType(), newMap);
         }
 
         CloudClientVpnConfigurator cloudClientVpnConfigurator = new CloudClientVpnConfigurator(vpnClientIdentity, remoteParticipantNetworkService, participant, remotePlatformComponentProfile);
@@ -174,21 +169,21 @@ public class WsCommunicationTyrusVPNClientManagerAgent{
         System.out.println("WsCommunicationVPNClientManagerAgent getActiveVpnConnection - remotePlatformComponentProfile = "+remotePlatformComponentProfile.getAlias());
         System.out.println("WsCommunicationVPNClientManagerAgent getActiveVpnConnection - applicantNetworkServiceType = "+applicantNetworkServiceType);
 
-        for (NetworkServiceType networkServiceType: vpnClientActiveCache.keySet()) {
+        for (NetworkServiceType networkServiceType: instance.vpnClientActiveCache.keySet()) {
             System.out.println("WsCommunicationVPNClientManagerAgent networkServiceType available= "+networkServiceType);
         }
 
-        System.out.println("WsCommunicationVPNClientManagerAgent vpnClientActiveCache.containsKey(applicantNetworkServiceType) = "+vpnClientActiveCache.containsKey(applicantNetworkServiceType));
+        System.out.println("WsCommunicationVPNClientManagerAgent instance.vpnClientActiveCache.containsKey(applicantNetworkServiceType) = "+instance.vpnClientActiveCache.containsKey(applicantNetworkServiceType));
 
-        if (vpnClientActiveCache.containsKey(applicantNetworkServiceType)){
+        if (instance.vpnClientActiveCache.containsKey(applicantNetworkServiceType)){
 
-            System.out.println("WsCommunicationVPNClientManagerAgent - vpnClientActiveCache.get(applicantNetworkServiceType).size() = "+vpnClientActiveCache.get(applicantNetworkServiceType).size());
+            System.out.println("WsCommunicationVPNClientManagerAgent - instance.vpnClientActiveCache.get(applicantNetworkServiceType).size() = "+instance.vpnClientActiveCache.get(applicantNetworkServiceType).size());
 
-            System.out.println("---------------------CLAVE DISPONIBLES:"+vpnClientActiveCache.keySet().toString()+"------------------------------------");
+            System.out.println("---------------------CLAVE DISPONIBLES:"+instance.vpnClientActiveCache.keySet().toString()+"------------------------------------");
             System.out.println("---------------------CLAVES BUSCADA:"+remotePlatformComponentProfile.getIdentityPublicKey()+"------------------------------------");
 
-            if (vpnClientActiveCache.get(applicantNetworkServiceType).containsKey(remotePlatformComponentProfile.getIdentityPublicKey())){
-                return vpnClientActiveCache.get(applicantNetworkServiceType).get(remotePlatformComponentProfile.getIdentityPublicKey());
+            if (instance.vpnClientActiveCache.get(applicantNetworkServiceType).containsKey(remotePlatformComponentProfile.getIdentityPublicKey())){
+                return instance.vpnClientActiveCache.get(applicantNetworkServiceType).get(remotePlatformComponentProfile.getIdentityPublicKey());
             }else {
 
                 System.out.println("WsCommunicationVPNClientManagerAgent getActiveVpnConnection - pk = "+remotePlatformComponentProfile.getIdentityPublicKey());
@@ -209,14 +204,14 @@ public class WsCommunicationTyrusVPNClientManagerAgent{
 
             System.out.println("WsCommunicationVPNClientManagerAgent - closeAllVpnConnections()");
 
-            if (!vpnClientActiveCache.isEmpty()) {
+            if (!instance.vpnClientActiveCache.isEmpty()) {
 
-                for (NetworkServiceType networkServiceType : vpnClientActiveCache.keySet()) {
+                for (NetworkServiceType networkServiceType : instance.vpnClientActiveCache.keySet()) {
 
-                    for (String remote : vpnClientActiveCache.get(networkServiceType).keySet()) {
-                        WsCommunicationTyrusVPNClient wsCommunicationVPNClient = vpnClientActiveCache.get(networkServiceType).get(remote);
+                    for (String remote : instance.vpnClientActiveCache.get(networkServiceType).keySet()) {
+                        WsCommunicationTyrusVPNClient wsCommunicationVPNClient = instance.vpnClientActiveCache.get(networkServiceType).get(remote);
                         wsCommunicationVPNClient.close();
-                        vpnClientActiveCache.get(networkServiceType).remove(remote);
+                        instance.vpnClientActiveCache.get(networkServiceType).remove(remote);
                     }
                 }
 
