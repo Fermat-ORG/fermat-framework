@@ -370,10 +370,11 @@ public class CustomerBrokerNewNegotiationTransactionDatabaseDao {
             List<DatabaseTableRecord> records = table.getRecords();
             if(records.isEmpty())
                 return eventTypeList;
+
             for(DatabaseTableRecord databaseTableRecord : records){
                 eventString =   "\n - ID = "+databaseTableRecord.getUUIDValue(CustomerBrokerNewNegotiationTransactionDatabaseConstants.CUSTOMER_BROKER_NEW_EVENT_ID_COLUMN_NAME)+
-                                "\n - STATUS = "+databaseTableRecord.getUUIDValue(CustomerBrokerNewNegotiationTransactionDatabaseConstants.CUSTOMER_BROKER_NEW_EVENT_STATUS_COLUMN_NAME)+", "+
-                                "\n - TYPE = "+databaseTableRecord.getUUIDValue(CustomerBrokerNewNegotiationTransactionDatabaseConstants.CUSTOMER_BROKER_NEW_EVENT_TYPE_COLUMN_NAME)
+                                "\n - STATUS = "+databaseTableRecord.getStringValue(CustomerBrokerNewNegotiationTransactionDatabaseConstants.CUSTOMER_BROKER_NEW_EVENT_STATUS_COLUMN_NAME)+", "+
+                                "\n - TYPE = "+databaseTableRecord.getStringValue(CustomerBrokerNewNegotiationTransactionDatabaseConstants.CUSTOMER_BROKER_NEW_EVENT_TYPE_COLUMN_NAME)
                 ;
 
                 eventTypeList.add(eventString);
