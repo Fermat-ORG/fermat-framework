@@ -154,6 +154,11 @@ public class WalletSettingsSettings implements WalletSettings {
             throw new CantLoadWalletSettings("CANT LOAD WALLET SETTINGS",e,"cant LOAD "+filename,"");        }
     }
 
+    @Override
+    public void setIsPresentationHelpEnabled(boolean b) {
+
+    }
+
     /**
      * This method let us get the preference settings for a wallet
      *

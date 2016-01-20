@@ -77,17 +77,17 @@ public class DesktopActivity extends FermatActivity implements FermatScreenSwapp
 //        startService(i);
 
 
-        RemoteViews mContentView = new RemoteViews(getPackageName(), R.layout.test_tt);
-        Notification notification = new Notification.Builder(this).setSmallIcon(R.drawable.fermat_bitcoin2).setTicker("ticker")
-                .setPriority(Notification.PRIORITY_HIGH)
-                .setAutoCancel(false)
-                .setOngoing(true)
-                .setContent(mContentView)
-                .setWhen(System.currentTimeMillis()).build();
-
-        NotificationManager mNotificationManager =
-                (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
-        mNotificationManager.notify(3,notification);
+//        RemoteViews mContentView = new RemoteViews(getPackageName(), R.layout.test_tt);
+//        Notification notification = new Notification.Builder(this).setSmallIcon(R.drawable.fermat_bitcoin2).setTicker("ticker")
+//                .setPriority(Notification.PRIORITY_HIGH)
+//                .setAutoCancel(false)
+//                .setOngoing(true)
+//                .setContent(mContentView)
+//                .setWhen(System.currentTimeMillis()).build();
+//
+//        NotificationManager mNotificationManager =
+//                (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+//        mNotificationManager.notify(3,notification);
         try {
 
             loadUI();

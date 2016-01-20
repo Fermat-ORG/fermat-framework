@@ -22,6 +22,14 @@ public interface AssetRedeemPointActorNetworkServiceManager extends FermatManage
     void registerActorAssetRedeemPoint(ActorAssetRedeemPoint actorAssetRedeemPointToRegister) throws CantRegisterActorAssetRedeemPointException;
 
     /**
+     * Update the ActorAssetUser in the cloud server like online
+     *
+     * @param actorAssetRedeemPointToRegister
+     * @throws CantRegisterActorAssetRedeemPointException
+     */
+    void updateActorAssetRedeemPoint(ActorAssetRedeemPoint actorAssetRedeemPointToRegister) throws CantRegisterActorAssetRedeemPointException;
+
+    /**
      *
      * @param dapMessage  Object message content
      *
