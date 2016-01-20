@@ -66,18 +66,6 @@
 
     </LinearLayout>
 
-    <android.support.design.widget.FloatingActionButton
-        android:layout_width="75dp"
-        android:layout_height="75dp"
-        android:id="@+id/fab_request"
-        android:src="@drawable/img_home_empty_send"
-        android:layout_alignParentEnd="true"
-        android:layout_alignParentBottom="true"
-        android:layout_marginRight="24dp"
-        android:layout_marginBottom="24dp"
-        />
-
-
     </RelativeLayout>
 
 

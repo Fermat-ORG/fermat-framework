@@ -10,11 +10,12 @@ import com.bitdubai.fermat_ccp_plugin.layer.network_service.intra_user.developer
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.client.CommunicationsClientConnection;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.client.CommunicationsVPNConnection;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.exceptions.CantEstablishConnectionException;
-import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedPluginExceptionSeverity;
+import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfaces.EventManager;
 
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Map;
 
 
@@ -156,8 +157,13 @@ public class CommunicationNetworkServiceConnectionManager implements NetworkServ
     @Override
     public void closeAllConnection() {
 
-        for (String key : communicationNetworkServiceRemoteAgentsCache.keySet()) {
-            closeConnection(key);
+        //Lo cambié por un iterator haber si solucionamos un tema
+//        for (String key : communicationNetworkServiceRemoteAgentsCache.keySet()) {
+//            closeConnection(key);
+//        }
+        Iterator<String> it = communicationNetworkServiceRemoteAgentsCache.keySet().iterator();
+        while (it.hasNext()){
+            closeConnection(it.next());
         }
 
     }

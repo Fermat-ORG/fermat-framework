@@ -10,6 +10,8 @@ import com.bitdubai.fermat_android_api.ui.adapters.FermatAdapter;
 import com.bitdubai.fermat_android_api.ui.interfaces.FermatWorkerCallBack;
 import com.bitdubai.fermat_android_api.ui.util.FermatWorker;
 import com.bitdubai.fermat_api.layer.all_definition.resources_structure.Resource;
+import com.bitdubai.fermat_api.layer.all_definition.util.BitcoinConverter;
+import static com.bitdubai.fermat_api.layer.all_definition.util.BitcoinConverter.Currency.*;
 import com.bitdubai.fermat_dap_android_sub_app_asset_factory_bitdubai.R;
 import com.bitdubai.fermat_dap_android_sub_app_asset_factory_bitdubai.holders.AssetHolder;
 import com.bitdubai.fermat_dap_android_sub_app_asset_factory_bitdubai.interfaces.PopupMenu;
@@ -127,7 +129,7 @@ public class AssetFactoryAdapter extends FermatAdapter<AssetFactory, AssetHolder
         holder.name.setText(data.getName() != null ? data.getName() : context.getString(R.string.app_unnamed));
         holder.state.setText(R.string.home_asset_state_publishing);
         holder.amount.setText(String.format(context.getString(R.string.home_row_asset_amount), data.getQuantity()));
-        holder.bitcoins.setText(String.format(context.getString(R.string.home_row_asset_bitcoins), data.getAmount()));
+        holder.bitcoins.setText(String.format(context.getString(R.string.home_row_asset_bitcoins), BitcoinConverter.convert(Double.valueOf(data.getAmount()), SATOSHI, BITCOIN)));
     }
 
     private void renderFinal(AssetHolder holder, AssetFactory data, int position) {
@@ -142,7 +144,7 @@ public class AssetFactoryAdapter extends FermatAdapter<AssetFactory, AssetHolder
         holder.name.setText(data.getName() != null ? data.getName() : context.getString(R.string.app_unnamed));
         holder.state.setText(R.string.home_asset_state_published);
         holder.amount.setText(String.format(context.getString(R.string.home_row_asset_amount), data.getQuantity()));
-        holder.bitcoins.setText(String.format(context.getString(R.string.home_row_asset_bitcoins), data.getAmount()));
+        holder.bitcoins.setText(String.format(context.getString(R.string.home_row_asset_bitcoins), BitcoinConverter.convert(Double.valueOf(data.getAmount()), SATOSHI, BITCOIN)));
     }
 
     private void renderDraf(AssetHolder holder, AssetFactory data, int position) {
@@ -157,7 +159,7 @@ public class AssetFactoryAdapter extends FermatAdapter<AssetFactory, AssetHolder
         holder.name.setText(data.getName() != null ? data.getName() : context.getString(R.string.app_unnamed));
         holder.state.setText(R.string.home_asset_state_editable);
         holder.amount.setText(String.format(context.getString(R.string.home_row_asset_amount), data.getQuantity()));
-        holder.bitcoins.setText(String.format(context.getString(R.string.home_row_asset_bitcoins), data.getAmount()));
+        holder.bitcoins.setText(String.format(context.getString(R.string.home_row_asset_bitcoins), BitcoinConverter.convert(Double.valueOf(data.getAmount()), SATOSHI, BITCOIN)));
     }
 
     public void setMenuItemClick(PopupMenu menuItemClick) {

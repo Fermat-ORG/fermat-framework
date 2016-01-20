@@ -1,5 +1,6 @@
 package com.bitdubai.fermat_dap_android_wallet_asset_issuer_bitdubai.fragments;
 
+import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
@@ -16,6 +17,7 @@ import android.widget.ImageView;
 
 import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractFermatFragment;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView;
+import com.bitdubai.fermat_android_api.ui.util.BitmapWorkerTask;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
 import com.bitdubai.fermat_dap_android_wallet_asset_issuer_bitdubai.R;
 import com.bitdubai.fermat_dap_android_wallet_asset_issuer_bitdubai.models.Data;
@@ -38,6 +40,7 @@ public class AssetDetailActivityFragment extends AbstractFermatFragment {
 
     private View rootView;
     private Toolbar toolbar;
+    private Resources res;
     private View assetDetailRemainingLayout;
     private View assetDetailAvailableLayout;
 
@@ -80,6 +83,7 @@ public class AssetDetailActivityFragment extends AbstractFermatFragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         rootView = inflater.inflate(R.layout.dap_wallet_asset_issuer_asset_detail, container, false);
+        res = rootView.getResources();
 
         setupUI();
         setupUIData();
@@ -124,6 +128,12 @@ public class AssetDetailActivityFragment extends AbstractFermatFragment {
                 changeActivity(Activities.DAP_WALLET_ASSET_ISSUER_USER_REDEEMED_LIST, appSession.getAppPublicKey());
             }
         });
+
+        assetDetailRemainingLayout.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                changeActivity(Activities.DAP_WALLET_ASSET_ISSUER_ASSET_DELIVERY, appSession.getAppPublicKey());
+            }
+        });
     }
 
     private void setupBackgroundBitmap() {
@@ -162,9 +172,10 @@ public class AssetDetailActivityFragment extends AbstractFermatFragment {
     }
 
     private void setupUIData() {
-        digitalAsset = (DigitalAsset) appSession.getData("asset_data");
-
+//        digitalAsset = (DigitalAsset) appSession.getData("asset_data");
+        String digitalAssetPublicKey = ((DigitalAsset) appSession.getData("asset_data")).getAssetPublicKey();
         try {
+            digitalAsset = Data.getDigitalAsset(moduleManager, digitalAssetPublicKey);
             Data.setStatistics("walletPublicKeyTest", digitalAsset, moduleManager);
         } catch (CantGetAssetStatisticException e) {
             e.printStackTrace();
@@ -174,22 +185,17 @@ public class AssetDetailActivityFragment extends AbstractFermatFragment {
 
         toolbar.setTitle(digitalAsset.getName());
 
-        if (digitalAsset.getImage() != null) {
-            assetImageDetail.setImageBitmap(BitmapFactory.decodeStream(new ByteArrayInputStream(digitalAsset.getImage())));
-        } else {
-            assetImageDetail.setImageDrawable(rootView.getResources().getDrawable(R.drawable.img_asset_without_image));
-        }
+//        if (digitalAsset.getImage() != null) {
+//            assetImageDetail.setImageBitmap(BitmapFactory.decodeStream(new ByteArrayInputStream(digitalAsset.getImage())));
+//        } else {
+//            assetImageDetail.setImageDrawable(rootView.getResources().getDrawable(R.drawable.img_asset_without_image));
+//        }
 
-        if (digitalAsset.getAvailableBalanceQuantity() > 0) {
-            assetDetailRemainingText.setTextColor(Color.parseColor("#00aeef"));
-            assetDetailRemainingLayout.setOnClickListener(new View.OnClickListener() {
-                public void onClick(View v) {
-                    changeActivity(Activities.DAP_WALLET_ASSET_ISSUER_ASSET_DELIVERY, appSession.getAppPublicKey());
-                }
-            });
-        } else {
-            assetDetailRemainingText.setTextColor(Color.parseColor("#CCFFFFFF"));
-        }
+        byte[] img = (digitalAsset.getImage() == null) ? new byte[0] : digitalAsset.getImage();
+        BitmapWorkerTask bitmapWorkerTask = new BitmapWorkerTask(assetImageDetail, res, R.drawable.img_asset_without_image, false);
+        bitmapWorkerTask.execute(img);
+
+        assetDetailRemainingLayout.setVisibility((digitalAsset.getAvailableBalanceQuantity() > 0) ? View.VISIBLE : View.GONE);
 
         assetDetailNameText.setText(digitalAsset.getName());
         assetDetailExpDateText.setText(digitalAsset.getFormattedExpDate());

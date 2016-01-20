@@ -118,6 +118,7 @@
             android:layout_height="wrap_content"
             android:paddingLeft="7dip"
             android:paddingBottom="3dip"
+            android:orientation="horizontal"
             android:paddingTop="3dip"
             android:paddingRight="7dip"
             android:id="@+id/linear_notes">
@@ -126,7 +127,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="40dp"
                 android:gravity="center_vertical"
-                android:textSize="15sp"
+                android:textSize="14sp"
                 android:textStyle="normal"
                 android:textColor="#4f4f4f"
                 android:textColorHint="#4f4f4f"
@@ -138,7 +139,16 @@
                 android:state_selected = "false"
                 android:text="Waiting..."
                 app:typeface="ROBOTO_REGULAR"
+                android:layout_weight="1"
                 android:background="@null"/>
+
+            <ImageView
+                android:layout_width="32dp"
+                android:layout_height="32dp"
+                android:layout_weight="1"
+                android:visibility="gone"
+                android:id="@+id/img_update"
+                android:src="@drawable/ic_contact_update"/>
         </LinearLayout>
 
             <View

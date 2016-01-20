@@ -53,9 +53,9 @@ import com.bitdubai.fermat_dap_api.layer.dap_wallet.common.exceptions.CantGetTra
 import com.bitdubai.fermat_dap_api.layer.dap_wallet.common.exceptions.CantLoadWalletException;
 import com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.user_redemption.bitdubai.version_1.UserRedemptionDigitalAssetTransactionPluginRoot;
 import com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.user_redemption.bitdubai.version_1.exceptions.CantCheckAssetUserRedemptionProgressException;
+import com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.user_redemption.bitdubai.version_1.structure.database.UserRedemptionDao;
 import com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.user_redemption.bitdubai.version_1.structure.functional.DeliverRecord;
 import com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.user_redemption.bitdubai.version_1.structure.functional.DigitalAssetUserRedemptionVault;
-import com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.user_redemption.bitdubai.version_1.structure.database.UserRedemptionDao;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.DealsWithErrors;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedPluginExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
@@ -223,23 +223,25 @@ public class UserRedemptionMonitorAgent implements Agent, DealsWithLogger, Deals
 
         private void checkNetworkLayerEvents() throws CantConfirmTransactionException, CantExecuteQueryException, UnexpectedResultReturnedFromDatabaseException, CantCheckAssetUserRedemptionProgressException, CantGetDigitalAssetFromLocalStorageException, CantSendAssetBitcoinsToUserException, CantGetCryptoTransactionException, CantDeliverDigitalAssetToAssetWalletException, CantDistributeDigitalAssetsException, CantDeliverPendingTransactionsException, RecordsNotFoundException {
             List<Transaction<DigitalAssetMetadataTransaction>> pendingEventsList = assetTransmissionManager.getPendingTransactions(Specialist.ASSET_ISSUER_SPECIALIST);
-            for (Transaction<DigitalAssetMetadataTransaction> transaction : pendingEventsList) {
-                if (transaction.getInformation().getReceiverType() == PlatformComponentType.ACTOR_ASSET_USER) {
-                    DigitalAssetMetadataTransaction digitalAssetMetadataTransaction = transaction.getInformation();
-                    System.out.println("ASSET USER REDEMPTION Digital Asset Metadata Transaction: " + digitalAssetMetadataTransaction);
-                    DigitalAssetMetadataTransactionType digitalAssetMetadataTransactionType = digitalAssetMetadataTransaction.getType();
-                    System.out.println("ASSET USER REDEMPTION Digital Asset Metadata Transaction Type: " + digitalAssetMetadataTransactionType);
-                    String userId = digitalAssetMetadataTransaction.getSenderId();
-                    System.out.println("ASSET USER REDEMPTION User Id: " + userId);
-                    String genesisTransaction = digitalAssetMetadataTransaction.getGenesisTransaction();
-                    System.out.println("ASSET USER REDEMPTION Genesis Transaction: " + genesisTransaction);
-                    if (!userRedemptionDao.isGenesisTransactionRegistered(genesisTransaction)) {
-                        System.out.println("ASSET USET REDEMPTION THIS IS NOT FOR ME!!");
-                        break;
+            if (!userRedemptionDao.getPendingNetworkLayerEvents().isEmpty()) {
+                for (Transaction<DigitalAssetMetadataTransaction> transaction : pendingEventsList) {
+                    if (transaction.getInformation().getReceiverType() == PlatformComponentType.ACTOR_ASSET_USER && transaction.getInformation().getSenderType() == PlatformComponentType.ACTOR_ASSET_REDEEM_POINT) {
+                        DigitalAssetMetadataTransaction digitalAssetMetadataTransaction = transaction.getInformation();
+                        System.out.println("ASSET USER REDEMPTION Digital Asset Metadata Transaction: " + digitalAssetMetadataTransaction);
+                        DigitalAssetMetadataTransactionType digitalAssetMetadataTransactionType = digitalAssetMetadataTransaction.getType();
+                        System.out.println("ASSET USER REDEMPTION Digital Asset Metadata Transaction Type: " + digitalAssetMetadataTransactionType);
+                        String userId = digitalAssetMetadataTransaction.getSenderId();
+                        System.out.println("ASSET USER REDEMPTION User Id: " + userId);
+                        String genesisTransaction = digitalAssetMetadataTransaction.getGenesisTransaction();
+                        System.out.println("ASSET USER REDEMPTION Genesis Transaction: " + genesisTransaction);
+                        if (!userRedemptionDao.isGenesisTransactionRegistered(genesisTransaction)) {
+                            System.out.println("ASSET USET REDEMPTION THIS IS NOT FOR ME!!");
+                            break;
+                        }
+                        DistributionStatus distributionStatus = digitalAssetMetadataTransaction.getDistributionStatus();
+                        userRedemptionDao.updateDistributionStatusByGenesisTransaction(distributionStatus, genesisTransaction);
+                        assetTransmissionManager.confirmReception(transaction.getTransactionID());
                     }
-                    DistributionStatus distributionStatus = digitalAssetMetadataTransaction.getDistributionStatus();
-                    userRedemptionDao.updateDistributionStatusByGenesisTransaction(distributionStatus, genesisTransaction);
-                    assetTransmissionManager.confirmReception(transaction.getTransactionID());
                 }
                 userRedemptionDao.updateEventStatus(userRedemptionDao.getPendingNetworkLayerEvents().get(0));
             }
@@ -253,14 +255,15 @@ public class UserRedemptionMonitorAgent implements Agent, DealsWithLogger, Deals
                 System.out.println("ASSET USER REDEMPTION cryptoAddressTo: " + cryptoAddressTo);
                 updateDistributionStatus(DistributionStatus.SENDING_CRYPTO, assetAcceptedGenesisTransaction);
 
-                DigitalAssetMetadata metadata = digitalAssetUserRedemptionVault.getDigitalAssetMetadataFromLocalStorage(userRedemptionDao.getTransactionIdByGenesisTransaction(assetAcceptedGenesisTransaction));
-                sendCryptoAmountToRemoteActor(assetAcceptedGenesisTransaction, cryptoAddressTo, metadata.getGenesisBlock());
+                DigitalAssetMetadata metadata = digitalAssetUserRedemptionVault.getDigitalAssetMetadataFromLocalStorage(assetAcceptedGenesisTransaction);
+                String genesisTxBitcoinsSent = sendCryptoAmountToRemoteActor(assetAcceptedGenesisTransaction, cryptoAddressTo, metadata.getGenesisBlock());
+                userRedemptionDao.sendingBitcoins(assetAcceptedGenesisTransaction, genesisTxBitcoinsSent);
                 userRedemptionDao.updateDigitalAssetCryptoStatusByGenesisTransaction(assetAcceptedGenesisTransaction, CryptoStatus.PENDING_SUBMIT);
             }
             List<String> assetRejectedByContractGenesisTransactionList = userRedemptionDao.getGenesisTransactionByAssetRejectedByContractStatus();
             for (String assetRejectedGenesisTransaction : assetRejectedByContractGenesisTransactionList) {
                 String internalId = userRedemptionDao.getTransactionIdByGenesisTransaction(assetRejectedGenesisTransaction);
-                List<CryptoTransaction> genesisTransactionList = bitcoinNetworkManager.getCryptoTransaction(assetRejectedGenesisTransaction);
+                List<CryptoTransaction> genesisTransactionList = bitcoinNetworkManager.getCryptoTransactions(assetRejectedGenesisTransaction);
                 if (genesisTransactionList == null || genesisTransactionList.isEmpty()) {
                     throw new CantCheckAssetUserRedemptionProgressException("Cannot get the CryptoTransaction from Crypto Network for " + assetRejectedGenesisTransaction);
                 }
@@ -271,7 +274,7 @@ public class UserRedemptionMonitorAgent implements Agent, DealsWithLogger, Deals
             List<String> assetRejectedByHashGenesisTransactionList = userRedemptionDao.getGenesisTransactionByAssetRejectedByHashStatus();
             for (String assetRejectedGenesisTransaction : assetRejectedByHashGenesisTransactionList) {
                 String internalId = userRedemptionDao.getTransactionIdByGenesisTransaction(assetRejectedGenesisTransaction);
-                List<CryptoTransaction> genesisTransactionList = bitcoinNetworkManager.getCryptoTransaction(assetRejectedGenesisTransaction);
+                List<CryptoTransaction> genesisTransactionList = bitcoinNetworkManager.getCryptoTransactions(assetRejectedGenesisTransaction);
                 if (genesisTransactionList == null || genesisTransactionList.isEmpty()) {
                     throw new CantCheckAssetUserRedemptionProgressException("Cannot get the CryptoTransaction from Crypto Network for " + assetRejectedGenesisTransaction);
                 }
@@ -292,12 +295,11 @@ public class UserRedemptionMonitorAgent implements Agent, DealsWithLogger, Deals
          */
         private void checkPendingTransactions() throws CantExecuteQueryException, CantCheckAssetUserRedemptionProgressException, CantGetCryptoTransactionException, UnexpectedResultReturnedFromDatabaseException, CantGetDigitalAssetFromLocalStorageException, CantDeliverDigitalAssetToAssetWalletException, CantGetTransactionCryptoStatusException, RecordsNotFoundException, CantGetBroadcastStatusException, CantCancellBroadcastTransactionException, CantBroadcastTransactionException, CantGetTransactionsException, CantGetAssetUserActorsException, CantRegisterDebitException, CantAssetUserActorNotFoundException, CantLoadWalletException, CantGetAssetIssuerActorsException, CantRegisterCreditException {
             for (DeliverRecord record : userRedemptionDao.getDeliveredRecords()) {
-                String transactionInternalId = userRedemptionDao.getTransactionIdByGenesisTransaction(record.getGenesisTransaction());
                 switch (bitcoinNetworkManager.getCryptoStatus(record.getGenesisTransactionSent())) {
                     case ON_BLOCKCHAIN:
                     case IRREVERSIBLE:
                         CryptoTransaction transactionOnBlockChain = AssetVerification.getCryptoTransactionFromCryptoNetworkByCryptoStatus(bitcoinNetworkManager, record.getGenesisTransactionSent(), CryptoStatus.ON_BLOCKCHAIN);
-                        digitalAssetUserRedemptionVault.setDigitalAssetMetadataAssetIssuerWalletTransaction(transactionOnBlockChain, transactionInternalId, AssetBalanceType.BOOK, TransactionType.DEBIT, DAPTransactionType.DISTRIBUTION, record.getRedeemPointPublicKey());
+                        digitalAssetUserRedemptionVault.setDigitalAssetMetadataAssetIssuerWalletTransaction(transactionOnBlockChain, record.getGenesisTransaction(), AssetBalanceType.BOOK, TransactionType.DEBIT, DAPTransactionType.RECEPTION, record.getRedeemPointPublicKey());
                         userRedemptionDao.updateDeliveringStatusForTxId(record.getTransactionId(), DistributionStatus.DISTRIBUTION_FINISHED);
                         break;
                     case REVERSED_ON_BLOCKCHAIN:
@@ -340,9 +342,9 @@ public class UserRedemptionMonitorAgent implements Agent, DealsWithLogger, Deals
             userRedemptionDao.updateDistributionStatusByGenesisTransaction(distributionStatus, genesisTransaction);
         }
 
-        private void sendCryptoAmountToRemoteActor(String genesisTransaction, CryptoAddress cryptoAddressTo, String genesisBlock) throws CantSendAssetBitcoinsToUserException {
+        private String sendCryptoAmountToRemoteActor(String genesisTransaction, CryptoAddress cryptoAddressTo, String genesisBlock) throws CantSendAssetBitcoinsToUserException {
             System.out.println("ASSET USER REDEMPTION sending genesis amount from asset vault");
-            assetVaultManager.sendAssetBitcoins(genesisTransaction, genesisBlock, cryptoAddressTo);
+            return assetVaultManager.sendAssetBitcoins(genesisTransaction, genesisBlock, cryptoAddressTo);
         }
     }
 

@@ -11,7 +11,8 @@ public enum ServiceStatus implements FermatEnum {
     CREATED("CREATED"),
     STARTED("STARTED"),
     PAUSED("PAUSED"),
-    STOPPED("STOPPED");
+    STOPPED("STOPPED"),
+    STARTING("STARTING");
 
     public String code;
 
@@ -30,6 +31,7 @@ public enum ServiceStatus implements FermatEnum {
             case "STARTED": return ServiceStatus.STARTED;
             case "PAUSED":  return ServiceStatus.PAUSED;
             case "STOPPED": return ServiceStatus.STOPPED;
+            case "STARTING": return ServiceStatus.STARTING;
             default:
                 throw new InvalidParameterException(InvalidParameterException.DEFAULT_MESSAGE, null, "Code Received: " + code, "This Code Is Not Valid for the ServiceStatus enum");
         }

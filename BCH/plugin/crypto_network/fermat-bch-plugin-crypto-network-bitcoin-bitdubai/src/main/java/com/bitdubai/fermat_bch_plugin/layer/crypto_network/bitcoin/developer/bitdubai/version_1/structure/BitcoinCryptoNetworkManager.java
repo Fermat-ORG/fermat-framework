@@ -2,6 +2,8 @@ package com.bitdubai.fermat_bch_plugin.layer.crypto_network.bitcoin.developer.bi
 
 import com.bitdubai.fermat_api.CantStartAgentException;
 import com.bitdubai.fermat_api.layer.all_definition.enums.BlockchainNetworkType;
+import com.bitdubai.fermat_api.layer.all_definition.enums.CryptoCurrency;
+import com.bitdubai.fermat_api.layer.all_definition.money.CryptoAddress;
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.ProtocolStatus;
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.Specialist;
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.TransactionProtocolManager;
@@ -142,19 +144,48 @@ public class BitcoinCryptoNetworkManager implements TransactionProtocolManager, 
              * add new keys (if any).
              */
             boolean isWalletReset = false;
-            if (areNewKeysAdded(wallet, keyList)){
-                wallet.importKeys(keyList);
-                try {
-                    wallet.saveToFile(walletFile);
-                } catch (IOException e) {
-                    e.printStackTrace();
+
+            /**
+             * if this is the Watch Only Vault, I won't be importing keys, I will be watching them
+             */
+            if (cryptoVault == CryptoVaults.BITCOIN_WATCH_ONLY){
+                if (areNewKeysWatched(wallet, keyList, blockchainNetworkType)){
+                    NetworkParameters networkParameters = BitcoinNetworkSelector.getNetworkParameter(blockchainNetworkType);
+                    for (ECKey ecKey : keyList){
+                        wallet.addWatchedAddress(ecKey.toAddress(networkParameters));
+                    }
+
+                    try {
+                        wallet.saveToFile(walletFile);
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+
+                    /**
+                     * I do not need to reset the wallet because I will
+                     * always be importing fresh (unused) keys.
+                     */
+                    isWalletReset = true;
                 }
+            } else{
                 /**
-                 * I do not need to reset the wallet because I will
-                 * always be importing fresh (unused) keys.
+                 * regulat vault, so will try to import new keys if any
                  */
-                isWalletReset = true;
+                if (areNewKeysAdded(wallet, keyList)){
+                    wallet.importKeys(keyList);
+                    try {
+                        wallet.saveToFile(walletFile);
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                    /**
+                     * I do not need to reset the wallet because I will
+                     * always be importing fresh (unused) keys.
+                     */
+                    isWalletReset = true;
+                }
             }
+
 
             /**
              * If the agent for this network is already running...
@@ -195,6 +226,31 @@ public class BitcoinCryptoNetworkManager implements TransactionProtocolManager, 
             List<ECKey> importedKEys = wallet.getImportedKeys();
             updateDetailedCryptoStats(cryptoVault, blockchainNetworkType, importedKEys);
         }
+    }
+
+    /**
+     * Will compare if from the passed KeyList there is a missing watched address in the wallet
+     * @param wallet
+     * @param keyList
+     * @return
+     */
+    private boolean areNewKeysWatched(Wallet wallet, List<ECKey> keyList, BlockchainNetworkType blockchainNetworkType) {
+        List<Address> watchedAddresses= wallet.getWatchedAddresses();
+        List<Address> newAddresses = new ArrayList<>();
+
+        NetworkParameters networkParameters = BitcoinNetworkSelector.getNetworkParameter(blockchainNetworkType);
+        for (ECKey ecKey : keyList){
+            newAddresses.add(ecKey.toAddress(networkParameters));
+        }
+
+        /**
+         * I compare both lists.
+         */
+        newAddresses.removeAll(watchedAddresses);
+        if (newAddresses.isEmpty())
+            return false;
+        else
+            return true;
     }
 
     /**
@@ -823,5 +879,30 @@ public class BitcoinCryptoNetworkManager implements TransactionProtocolManager, 
             }
         }
         return null;
+    }
+
+    /**
+     * Starting from the parentTransaction, I will navigate up until the last transaction, and return the CryptoTransaction
+     * @blockchainNetworkType the network in which we will be executing this. If none provided, DEFAULT will be used.
+     * @param parentTransactionHash The starting point transaction hash.
+     * @param transactionBlockHash the block where this transaction is.
+     * @return the Last child transaction.
+     */
+    public CryptoTransaction getLastChildCryptoTransaction(@Nullable BlockchainNetworkType blockchainNetworkType, String parentTransactionHash, String transactionBlockHash) throws CantGetCryptoTransactionException {
+        return CryptoTransaction.getCryptoTransaction(this.getBitcoinTransactions(BlockchainNetworkType.DEFAULT).get(0));
+    }
+
+    /**
+     * Gets a stored CryptoTransaction in wathever network.
+     * @param txHash the transaction hash we want to get the CryptoTransaction
+     * @return the last recorded CryptoTransaction.
+     * @throws CantGetCryptoTransactionException
+     */
+    public CryptoTransaction getCryptoTransaction(String txHash) throws CantGetCryptoTransactionException {
+        try {
+            return getDao().getCryptoTransaction(txHash);
+        } catch (CantExecuteDatabaseOperationException e) {
+            throw new CantGetCryptoTransactionException(CantGetCryptoTransactionException.DEFAULT_MESSAGE, e, "database error getting the last crypto transaction.", "database error");
+        }
     }
 }

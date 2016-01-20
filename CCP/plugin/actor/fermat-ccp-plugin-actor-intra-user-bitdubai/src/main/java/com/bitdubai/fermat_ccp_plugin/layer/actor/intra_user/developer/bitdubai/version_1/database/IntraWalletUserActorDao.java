@@ -104,6 +104,8 @@ public class IntraWalletUserActorDao {
 
         try {
 
+            if (getIntraUserConnectedInfo(intraUserToAddPublicKey)==null){
+
 
                 /**
                  * Get actual date
@@ -129,6 +131,11 @@ public class IntraWalletUserActorDao {
                  * Persist profile image on a file
                  */
                 if(profileImage!=null && profileImage.length > 0) persistNewUserProfileImage(intraUserToAddPublicKey, profileImage);
+
+
+            }else {
+                System.out.println("THE INTRA WALLET USER IS ALREADY CREATED IN THE DB");
+            }
 
 
 
