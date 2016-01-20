@@ -53,6 +53,7 @@ public class AssetRedeemPointWalletImpl implements AssetRedeemPointWallet {
     public static final String PATH_DIRECTORY = "assetredeem-point/assets";
     private static final String ASSET_REDEEM_POINT_WALLET_FILE_NAME = "walletsIds";
 
+
     /**
      * AssetIssuerWallet member variables.
      */
