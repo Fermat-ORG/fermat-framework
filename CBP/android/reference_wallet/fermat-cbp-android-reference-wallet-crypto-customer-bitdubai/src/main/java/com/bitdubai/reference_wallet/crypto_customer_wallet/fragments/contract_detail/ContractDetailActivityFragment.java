@@ -17,6 +17,7 @@ import android.widget.ImageView;
 
 import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractFermatFragment;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.utils.ImagesUtils;
+import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatButton;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Wallets;
 import com.bitdubai.fermat_api.layer.pip_engine.interfaces.ResourceProviderManager;
@@ -28,7 +29,6 @@ import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_customer.interface
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedWalletExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 import com.bitdubai.reference_wallet.crypto_customer_wallet.common.adapters.ContractDetailAdapter;
-import com.bitdubai.reference_wallet.crypto_customer_wallet.common.adapters.StartNegotiationAdapter;
 import com.bitdubai.reference_wallet.crypto_customer_wallet.common.holders.start_negotiation.ClauseViewHolder;
 import com.bitdubai.reference_wallet.crypto_customer_wallet.common.holders.start_negotiation.FooterViewHolder;
 import com.bitdubai.reference_wallet.crypto_customer_wallet.common.models.EmptyCustomerBrokerNegotiationInformation;
@@ -54,8 +54,11 @@ public class ContractDetailActivityFragment extends AbstractFermatFragment<Crypt
     private ArrayList<Currency> currencies; // test data
 
     private ImageView brokerImage;
-    private FermatTextView sellingDetails;
+    private FermatTextView sellingSummary;
+    private FermatTextView detailDate;
+    private FermatTextView detailRate;
     private FermatTextView brokerName;
+    private FermatButton negotiationButton;
     private RecyclerView recyclerView;
     private ContractDetailAdapter adapter;
 
@@ -113,10 +116,13 @@ public class ContractDetailActivityFragment extends AbstractFermatFragment<Crypt
     //TODO: analize the following methods
     private void initViews(View rootView) {
 
-        brokerImage = (ImageView) rootView.findViewById(R.id.ccw_broker_image);
-        brokerName = (FermatTextView) rootView.findViewById(R.id.ccw_broker_name);
-        sellingDetails = (FermatTextView) rootView.findViewById(R.id.ccw_selling_summary);
-        recyclerView = (RecyclerView) rootView.findViewById(R.id.ccw_negotiation_steps_recycler_view);
+        brokerImage = (ImageView) rootView.findViewById(R.id.ccw_contract_details_broker_image);
+        brokerName = (FermatTextView) rootView.findViewById(R.id.ccw_contract_details_broker_name);
+        sellingSummary = (FermatTextView) rootView.findViewById(R.id.ccw_selling_summary);
+        detailDate = (FermatTextView) rootView.findViewById(R.id.ccw_contract_details_date);
+        detailRate = (FermatTextView) rootView.findViewById(R.id.ccw_contract_details_rate);
+        negotiationButton = (FermatButton) rootView.findViewById(R.id.ccw_contract_details_negotiation_details);
+        recyclerView = (RecyclerView) rootView.findViewById(R.id.ccw_contract_details_contract_steps_recycler_view);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false));
     }
 
@@ -133,20 +139,20 @@ public class ContractDetailActivityFragment extends AbstractFermatFragment<Crypt
     }
 
     private void bindData() {
-        ActorIdentity broker = appSession.getSelectedBrokerIdentity();
+        /*ActorIdentity broker = appSession.getSelectedBrokerIdentity();
         Currency currencyToBuy = appSession.getCurrencyToBuy();
 
         //Negotiation Summary
         Drawable brokerImg = getImgDrawable(broker.getProfileImage());
         brokerImage.setImageDrawable(brokerImg);
         brokerName.setText(broker.getAlias());
-        sellingDetails.setText(getResources().getString(R.string.ccw_start_selling_details, currencyToBuy.getFriendlyName()));
+        sellingSummary.setText(getResources().getString(R.string.ccw_start_selling_details, currencyToBuy.getFriendlyName()));
 
         adapter = new ContractDetailAdapter(getActivity(), negotiationInfo);
         adapter.setFooterListener(this);
         adapter.setClauseListener(this);
 
-        recyclerView.setAdapter(adapter);
+        recyclerView.setAdapter(adapter);*/
     }
 
     private EmptyCustomerBrokerNegotiationInformation createNewEmptyNegotiationInfo() {
