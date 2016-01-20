@@ -9,11 +9,17 @@ package com.bitdubai.fermat_p2p_plugin.layer.ws.communications.cloud.client.deve
 import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
 import com.bitdubai.fermat_p2p_plugin.layer.ws.communications.cloud.client.developer.bitdubai.version_1.WsCommunicationsCloudClientPluginRoot;
 import com.bitdubai.fermat_p2p_plugin.layer.ws.communications.cloud.client.developer.bitdubai.version_1.structure.WsCommunicationsCloudClientConnection;
+import com.bitdubai.fermat_p2p_plugin.layer.ws.communications.cloud.client.developer.bitdubai.version_1.structure.tyrus.WsCommunicationsTyrusCloudClientChannel;
+import com.bitdubai.fermat_p2p_plugin.layer.ws.communications.cloud.client.developer.bitdubai.version_1.structure.tyrus.WsCommunicationsTyrusCloudClientConnection;
 
 import org.java_websocket.WebSocket;
 
+import java.io.IOException;
 import java.net.URISyntaxException;
 import java.nio.ByteBuffer;
+
+import javax.websocket.DeploymentException;
+import javax.websocket.Session;
 
 /**
  * The Class <code>com.bitdubai.fermat_p2p_plugin.layer.ws.communications.cloud.client.developer.bitdubai.version_1.structure.agents.WsCommunicationsCloudClientSupervisorConnectionAgent</code>
@@ -49,9 +55,9 @@ public class WsCommunicationsCloudClientSupervisorConnectionAgent extends Thread
 
             if(wsCommunicationsCloudClientPluginRoot.getStatus() == ServiceStatus.STARTED){
 
-                System.out.println(" WsCommunicationsCloudClientSupervisorConnectionAgent - Connection ready state "+getConnection().getReadyState());
+                System.out.println(" WsCommunicationsCloudClientSupervisorConnectionAgent - Connection is Open = "+getConnection().isOpen());
 
-                if (getConnection().getReadyState() == WebSocket.READYSTATE.CLOSED) {
+                if (!getConnection().isOpen()) {
                     System.out.println(" WsCommunicationsCloudClientSupervisorConnectionAgent - Trying to reconnect whit cloud server ");
                     wsCommunicationsCloudClientPluginRoot.connectClient();
                 }else {
@@ -59,19 +65,12 @@ public class WsCommunicationsCloudClientSupervisorConnectionAgent extends Thread
                     try {
 
                         if (getConnection().isOpen()){
-
-                            System.out.println(" WsCommunicationsCloudClientSupervisorConnectionAgent - Sending ping to the node...");
-
-                            String pingString = "PING";
-                            ByteBuffer pingData = ByteBuffer.allocate(pingString.getBytes().length);
-                            pingData.put(pingString.getBytes()).flip();
-
-                            getConnection().send(pingData);
+                            getWsCommunicationsTyrusCloudClientChannel().sendPing();
                         }
 
                     } catch (Exception ex) {
                         System.out.println(" WsCommunicationsCloudClientSupervisorConnectionAgent - Error occurred sending ping to the node, closing the connection to remote node");
-                        getConnection().close();
+                        getWsCommunicationsTyrusCloudClientChannel().closeConnection();
                         ((WsCommunicationsCloudClientConnection)wsCommunicationsCloudClientPluginRoot.getCommunicationsCloudClientConnection()).getWsCommunicationsCloudClientChannel().setIsRegister(Boolean.FALSE);
                         ((WsCommunicationsCloudClientConnection)wsCommunicationsCloudClientPluginRoot.getCommunicationsCloudClientConnection()).getWsCommunicationsCloudClientChannel().raiseClientConnectionLooseNotificationEvent();
                     }
@@ -81,15 +80,27 @@ public class WsCommunicationsCloudClientSupervisorConnectionAgent extends Thread
 
         } catch (URISyntaxException e) {
             e.printStackTrace();
+        } catch (DeploymentException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
         }
     }
 
     /**
      * Get the connection
-     * @return WebSocket
+     * @return Session
      */
-    private WebSocket getConnection(){
-        return ((WsCommunicationsCloudClientConnection)wsCommunicationsCloudClientPluginRoot.getCommunicationsCloudClientConnection()).getWsCommunicationsCloudClientChannel().getConnection();
+    private Session getConnection(){
+        return ((WsCommunicationsTyrusCloudClientConnection)wsCommunicationsCloudClientPluginRoot.getCommunicationsCloudClientConnection()).getWsCommunicationsTyrusCloudClientChannel().getClientConnection();
+    }
+
+    /**
+     * Get the WsCommunicationsTyrusCloudClientChannel
+     * @return WsCommunicationsTyrusCloudClientChannel
+     */
+    private WsCommunicationsTyrusCloudClientChannel getWsCommunicationsTyrusCloudClientChannel(){
+        return ((WsCommunicationsTyrusCloudClientConnection)wsCommunicationsCloudClientPluginRoot.getCommunicationsCloudClientConnection()).getWsCommunicationsTyrusCloudClientChannel();
     }
 
 }

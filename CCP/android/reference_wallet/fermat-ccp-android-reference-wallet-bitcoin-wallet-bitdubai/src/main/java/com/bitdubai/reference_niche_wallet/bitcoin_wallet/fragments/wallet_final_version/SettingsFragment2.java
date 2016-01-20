@@ -12,31 +12,35 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.ArrayAdapter;
 import android.widget.EditText;
+import android.widget.ImageView;
+import android.widget.Spinner;
 import android.widget.Switch;
 import android.widget.Toast;
 
 import com.bitdubai.android_fermat_ccp_wallet_bitcoin.R;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractFermatFragment;
+import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatEditText;
 import com.bitdubai.fermat_api.layer.all_definition.enums.UISource;
-import com.bitdubai.fermat_api.layer.all_definition.identities.ActiveIdentity;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Wallets;
 import com.bitdubai.fermat_ccp_api.layer.module.intra_user.exceptions.CantGetActiveLoginIdentityException;
-import com.bitdubai.fermat_ccp_api.layer.module.intra_user.interfaces.IntraUserLoginIdentity;
-import com.bitdubai.fermat_ccp_api.layer.module.intra_user.interfaces.IntraUserModuleManager;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.exceptions.CantGetCryptoWalletException;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.interfaces.CryptoWallet;
-import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.interfaces.CryptoWalletIntraUserIdentity;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedUIExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedWalletExceptionSeverity;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.bar_code_scanner.IntentIntegrator;
-import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.navigation_drawer.BitcoinWalletNavigationViewPainter;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.session.ReferenceWalletSession;
+
+import java.util.ArrayList;
+import java.util.List;
+
 import static android.widget.Toast.makeText;
 import static com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.utils.WalletUtils.showMessage;
 
 /**
  * Created by Matias Furszyfer on 2015.11.05..
+ * Modified by Jose Manuel De Sousa Dos Santos on 2016.18.01
  */
 public class SettingsFragment2 extends AbstractFermatFragment implements View.OnClickListener{
 
@@ -55,6 +59,10 @@ public class SettingsFragment2 extends AbstractFermatFragment implements View.On
     private Switch mSwitchNotifications;
 
     private ColorStateList mSwitchTrackStateList;
+    private Spinner spinner;
+    private ImageView spinnerArrow;
+    private FermatEditText ipAdress;
+    private FermatEditText port;
 
 
     public static SettingsFragment2 newInstance() {
@@ -99,8 +107,26 @@ public class SettingsFragment2 extends AbstractFermatFragment implements View.On
     private void setUpUI() throws CantGetActiveLoginIdentityException {
         //WalletUtils.setNavigatitDrawer(getPaintActivtyFeactures(), referenceWalletSession.getIntraUserModuleManager().getActiveIntraUserIdentity());
 
-        mSwitchNotifications = (Switch) rootView.findViewById(R.id.switch_notifications);
+        mSwitchNotifications = (Switch) rootView.findViewById(R.id.switch_notification);
         mSwitchNotifications.setBackgroundTintList(getSwitchTrackColorStateList());
+        port = (FermatEditText) rootView.findViewById(R.id.edit_text_port);
+        spinnerArrow = (ImageView) rootView.findViewById(R.id.spinner_open);
+        ipAdress = (FermatEditText) rootView.findViewById(R.id.edit_text_ip_adress);
+        spinner = (Spinner) rootView.findViewById(R.id.spinner);
+        List<String> list = new ArrayList<String>();
+        list.add("Bits");
+        list.add("BTC");
+        list.add("Satoshis");
+        ArrayAdapter<String> dataAdapter = new ArrayAdapter<>(getActivity(),
+                R.layout.list_item_spinner, list);
+        dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        spinner.setAdapter(dataAdapter);
+        spinnerArrow.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                spinner.performClick();
+            }
+        });
     }
 
     private void setUpActions(){

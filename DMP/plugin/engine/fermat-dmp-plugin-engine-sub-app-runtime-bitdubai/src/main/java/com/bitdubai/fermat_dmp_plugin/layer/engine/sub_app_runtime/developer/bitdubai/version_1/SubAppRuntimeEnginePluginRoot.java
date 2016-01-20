@@ -726,14 +726,16 @@ public class SubAppRuntimeEnginePluginRoot extends AbstractPlugin implements Sub
              */
 
             // DAP
+            String dapFactoryPublicKey = "public_key_dap_factory";
             RuntimeSubApp dapFactory = new RuntimeSubApp();
             dapFactory.setType(SubApps.DAP_ASSETS_FACTORY);
             dapFactory.addPosibleStartActivity(Activities.DAP_MAIN);
-            dapFactory.setPublicKey("public_key_dap_factory");
+            dapFactory.setPublicKey(dapFactoryPublicKey);
 
             runtimeActivity = new Activity();
             runtimeActivity.setType(Activities.DAP_MAIN);
             runtimeActivity.setColor("#1d1d25");
+            runtimeActivity.setBackPublicKey(dapFactoryPublicKey);
 
             statusBar = new com.bitdubai.fermat_api.layer.all_definition.navigation_structure.StatusBar();
             statusBar.setColor("#1d1d25");
@@ -773,6 +775,7 @@ public class SubAppRuntimeEnginePluginRoot extends AbstractPlugin implements Sub
             runtimeActivity = new Activity();
             runtimeActivity.setType(Activities.DAP_ASSET_EDITOR_ACTIVITY);
             runtimeActivity.setBackActivity(Activities.DAP_MAIN);
+            runtimeActivity.setBackPublicKey(dapFactoryPublicKey);
             runtimeActivity.setColor("#1d1d25");
 
             statusBar = new com.bitdubai.fermat_api.layer.all_definition.navigation_structure.StatusBar();
