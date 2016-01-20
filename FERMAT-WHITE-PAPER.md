@@ -34,7 +34,6 @@ We propose a peer-to-peer network for transporting meta-data and inter-connect n
 
 We propose a framework to replace the standalone wallet application. This framework handles the full stack on top of crypto networks up to the user interface and it is intended to easily build and run APPs designed for that framework. In this way we enable the development of peer-to-peer financial applications that are both crypto-currency and digital-asset-enabled, and that does not require a trusted third party of any sort.
 
-1 See a short description of fiat money and cryptocurrency in link:book-z-appendix-03-money.asciidoc[Appendix: Money and Crypto Currency]
 <br>
 ## Introduction
 
