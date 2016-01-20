@@ -970,10 +970,9 @@ public class CryptoTransmissionNetworkServicePluginRoot extends AbstractNetworkS
                 communicationNetworkServiceConnectionManager.restart();
             }
 
-           if(!this.register){
+           if(communicationRegistrationProcessNetworkServiceAgent != null && !this.register){
 
                 if(communicationRegistrationProcessNetworkServiceAgent.isRunning()) {
-
                     communicationRegistrationProcessNetworkServiceAgent.stop();
                     communicationRegistrationProcessNetworkServiceAgent = null;
                 }

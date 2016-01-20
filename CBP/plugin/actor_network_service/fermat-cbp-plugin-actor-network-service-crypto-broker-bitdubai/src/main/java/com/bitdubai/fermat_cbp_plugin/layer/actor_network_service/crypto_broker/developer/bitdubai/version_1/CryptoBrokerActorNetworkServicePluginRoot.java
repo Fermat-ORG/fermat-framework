@@ -15,6 +15,7 @@ import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperDatabaseT
 import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperDatabaseTableRecord;
 import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperObjectFactory;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Addons;
+import com.bitdubai.fermat_api.layer.all_definition.enums.AgentStatus;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Layers;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
@@ -550,7 +551,7 @@ public class CryptoBrokerActorNetworkServicePluginRoot extends AbstractNetworkSe
 
         if (platformComponentProfileRegistered.getPlatformComponentType() == PlatformComponentType.COMMUNICATION_CLOUD_CLIENT && this.register){
 
-            if(communicationRegistrationProcessNetworkServiceAgent != null){
+            if(communicationRegistrationProcessNetworkServiceAgent.isRunning()){
                 communicationRegistrationProcessNetworkServiceAgent.stop();
                 communicationRegistrationProcessNetworkServiceAgent = null;
             }
@@ -678,11 +679,13 @@ public class CryptoBrokerActorNetworkServicePluginRoot extends AbstractNetworkSe
                 communicationNetworkServiceConnectionManager.restart();
             }
 
-            if(!this.register){
-                if(communicationRegistrationProcessNetworkServiceAgent != null) {
+            if(communicationRegistrationProcessNetworkServiceAgent != null && !this.register){
+
+                if(communicationRegistrationProcessNetworkServiceAgent.isRunning()) {
 
                     communicationRegistrationProcessNetworkServiceAgent.stop();
                     communicationRegistrationProcessNetworkServiceAgent = null;
+                }
 
                        /*
                  * Construct my profile and register me
@@ -714,7 +717,7 @@ public class CryptoBrokerActorNetworkServicePluginRoot extends AbstractNetworkSe
                  */
                     this.initializeCommunicationNetworkServiceConnectionManager();
 
-                }
+
             }
 
 
