@@ -4,10 +4,10 @@
  * You may not modify, use, reproduce or distribute this software.
  * BITDUBAI/CONFIDENTIAL
  */
-package com.bitdubai.fermat_p2p_plugin.layer.ws.communications.cloud.client.developer.bitdubai.version_1.structure.vpn;
+package com.bitdubai.fermat_p2p_plugin.layer.ws.communications.cloud.client.developer.bitdubai.version_1.structure.tyrus.vpn;
 
 import com.bitdubai.fermat_api.layer.all_definition.components.interfaces.PlatformComponentProfile;
-import com.bitdubai.fermat_api.layer.all_definition.crypto.asymmetric.AsymmetricCryptography;
+
 import com.bitdubai.fermat_api.layer.all_definition.crypto.asymmetric.ECCKeyPair;
 import com.bitdubai.fermat_api.layer.all_definition.events.EventSource;
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEvent;
@@ -16,14 +16,26 @@ import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.co
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.enums.P2pEventType;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.events.VPNConnectionCloseNotificationEvent;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.events.VPNConnectionLooseNotificationEvent;
-import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.enums.JsonAttNamesConstants;
-import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfaces.EventManager;
-import com.google.gson.JsonObject;
 
+import com.bitdubai.fermat_p2p_plugin.layer.ws.communications.cloud.client.developer.bitdubai.version_1.structure.tyrus.conf.CloudClientVpnConfigurator;
+import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfaces.EventManager;
+
+
+import org.glassfish.tyrus.client.ClientManager;
+
+import java.io.IOException;
 import java.net.URI;
-import java.util.HashMap;
+
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
+
+import javax.websocket.ClientEndpointConfig;
+import javax.websocket.ContainerProvider;
+import javax.websocket.DeploymentException;
+import javax.websocket.Endpoint;
+import javax.websocket.Session;
+import javax.websocket.WebSocketContainer;
+import javax.websocket.server.ServerEndpointConfig;
 
 /**
  * The Class <code>com.bitdubai.fermat_p2p_plugin.layer.ws.communications.cloud.client.developer.bitdubai.version_1.structure.vpn.WsCommunicationVPNClientManagerAgent</code>
@@ -33,17 +45,17 @@ import java.util.concurrent.ConcurrentHashMap;
  * @version 1.0
  * @since Java JDK 1.7
  */
-public class WsCommunicationVPNClientManagerAgent extends Thread{
+public class WsCommunicationTyrusVPNClientManagerAgent{
 
     /**
      *  Represent the instance
      */
-    private static WsCommunicationVPNClientManagerAgent instance = new WsCommunicationVPNClientManagerAgent();
+    private static WsCommunicationTyrusVPNClientManagerAgent instance = new WsCommunicationTyrusVPNClientManagerAgent();
 
     /**
-     * Represent the vpnClientActiveCache;
+     * Represent the instance.vpnClientActiveCache;
      */
-    private Map<NetworkServiceType, Map<String, WsCommunicationVPNClient>> vpnClientActiveCache;
+    private Map<NetworkServiceType, Map<String, WsCommunicationTyrusVPNClient>> vpnClientActiveCache;
 
     /**
      * Represent the eventManager
@@ -53,7 +65,7 @@ public class WsCommunicationVPNClientManagerAgent extends Thread{
     /**
      * Constructor
      */
-    private WsCommunicationVPNClientManagerAgent(){
+    private WsCommunicationTyrusVPNClientManagerAgent(){
        this.vpnClientActiveCache = new ConcurrentHashMap<>();
     }
 
@@ -64,17 +76,13 @@ public class WsCommunicationVPNClientManagerAgent extends Thread{
      * @param vpnServerIdentity
      * @param remotePlatformComponentProfile
      */
-    public void createNewWsCommunicationVPNClient(URI serverURI, String vpnServerIdentity, PlatformComponentProfile participant, PlatformComponentProfile remotePlatformComponentProfile, PlatformComponentProfile remoteParticipantNetworkService, EventManager eventManager) {
+    public void createNewWsCommunicationVPNClient(URI serverURI, String vpnServerIdentity, PlatformComponentProfile participant, PlatformComponentProfile remotePlatformComponentProfile, PlatformComponentProfile remoteParticipantNetworkService, EventManager eventManager) throws IOException, DeploymentException {
 
         /*
          * Create the identity
          */
         ECCKeyPair vpnClientIdentity = new ECCKeyPair();
 
-        /*
-         * Create a new headers
-         */
-        Map<String, String> headers = new HashMap<>();
 
         /*
          * Clean the extra data to reduce size
@@ -83,23 +91,9 @@ public class WsCommunicationVPNClientManagerAgent extends Thread{
         registerParticipant.setExtraData(null);
 
         /*
-         * Get json representation
-         */
-        JsonObject jsonObject = new JsonObject();
-        jsonObject.addProperty(JsonAttNamesConstants.NETWORK_SERVICE_TYPE, remoteParticipantNetworkService.getNetworkServiceType().toString());
-        jsonObject.addProperty(JsonAttNamesConstants.CLIENT_IDENTITY_VPN, vpnClientIdentity.getPublicKey());
-        jsonObject.addProperty(JsonAttNamesConstants.APPLICANT_PARTICIPANT_VPN, registerParticipant.toJson());
-        jsonObject.addProperty(JsonAttNamesConstants.REMOTE_PARTICIPANT_VPN, remotePlatformComponentProfile.getIdentityPublicKey());
-
-        /*
-         * Add the att to the header
-         */
-        headers.put(JsonAttNamesConstants.HEADER_ATT_NAME_TI, AsymmetricCryptography.encryptMessagePublicKey(jsonObject.toString(), vpnServerIdentity));
-
-        /*
          * Construct the vpn client
          */
-        final WsCommunicationVPNClient vpnClient = new WsCommunicationVPNClient(this, vpnClientIdentity, serverURI, remotePlatformComponentProfile, remoteParticipantNetworkService, vpnServerIdentity, headers);
+        WsCommunicationTyrusVPNClient newPpnClient = new WsCommunicationTyrusVPNClient(this, vpnClientIdentity, remotePlatformComponentProfile, remoteParticipantNetworkService, vpnServerIdentity);
 
         /*
          * Configure the event manager
@@ -114,28 +108,24 @@ public class WsCommunicationVPNClientManagerAgent extends Thread{
          */
         if (instance.vpnClientActiveCache.containsKey(remoteParticipantNetworkService.getNetworkServiceType())){
 
-            instance.vpnClientActiveCache.get(remoteParticipantNetworkService.getNetworkServiceType()).put(remotePlatformComponentProfile.getIdentityPublicKey(), vpnClient);
+            instance.vpnClientActiveCache.get(remoteParticipantNetworkService.getNetworkServiceType()).put(remotePlatformComponentProfile.getIdentityPublicKey(), newPpnClient);
 
         }else {
 
-            Map<String, WsCommunicationVPNClient> newMap = new ConcurrentHashMap<>();
-            newMap.put(remotePlatformComponentProfile.getIdentityPublicKey(), vpnClient);
+            Map<String, WsCommunicationTyrusVPNClient> newMap = new ConcurrentHashMap<>();
+            newMap.put(remotePlatformComponentProfile.getIdentityPublicKey(), newPpnClient);
             instance.vpnClientActiveCache.put(remoteParticipantNetworkService.getNetworkServiceType(), newMap);
         }
 
-        /*
-         * call the connect
-         */
-        vpnClient.connect();
-    }
+        CloudClientVpnConfigurator cloudClientVpnConfigurator = new CloudClientVpnConfigurator(vpnClientIdentity, remoteParticipantNetworkService, participant, remotePlatformComponentProfile);
 
+        ClientEndpointConfig clientConfig = ClientEndpointConfig.Builder.create()
+                                                                        .configurator(cloudClientVpnConfigurator)
+                                                                        .build();
 
-    /**
-     * (non-javadoc)
-     * @see Thread#run()
-     */
-    @Override
-    public void run() {
+        WebSocketContainer container = ContainerProvider.getWebSocketContainer();
+        container.connectToServer(newPpnClient, clientConfig, serverURI);
+
     }
 
     /**
@@ -169,21 +159,12 @@ public class WsCommunicationVPNClientManagerAgent extends Thread{
     }
 
     /**
-     * (non-javadoc)
-     * @see Thread#start()
-     */
-    @Override
-    public synchronized void start() {
-        super.start();
-    }
-
-    /**
      * Return the active connection
      *
      * @param applicantNetworkServiceType
      * @return WsCommunicationVPNClient
      */
-    public synchronized WsCommunicationVPNClient getActiveVpnConnection(NetworkServiceType applicantNetworkServiceType, PlatformComponentProfile remotePlatformComponentProfile){
+    public synchronized WsCommunicationTyrusVPNClient getActiveVpnConnection(NetworkServiceType applicantNetworkServiceType, PlatformComponentProfile remotePlatformComponentProfile){
 
         System.out.println("WsCommunicationVPNClientManagerAgent getActiveVpnConnection - remotePlatformComponentProfile = "+remotePlatformComponentProfile.getAlias());
         System.out.println("WsCommunicationVPNClientManagerAgent getActiveVpnConnection - applicantNetworkServiceType = "+applicantNetworkServiceType);
@@ -192,13 +173,13 @@ public class WsCommunicationVPNClientManagerAgent extends Thread{
             System.out.println("WsCommunicationVPNClientManagerAgent networkServiceType available= "+networkServiceType);
         }
 
-        System.out.println("WsCommunicationVPNClientManagerAgent vpnClientActiveCache.containsKey(applicantNetworkServiceType) = "+instance.vpnClientActiveCache.containsKey(applicantNetworkServiceType));
+        System.out.println("WsCommunicationVPNClientManagerAgent instance.vpnClientActiveCache.containsKey(applicantNetworkServiceType) = "+instance.vpnClientActiveCache.containsKey(applicantNetworkServiceType));
 
         if (instance.vpnClientActiveCache.containsKey(applicantNetworkServiceType)){
 
-            System.out.println("WsCommunicationVPNClientManagerAgent - vpnClientActiveCache.get(applicantNetworkServiceType).size() = "+instance.vpnClientActiveCache.get(applicantNetworkServiceType).size());
+            System.out.println("WsCommunicationVPNClientManagerAgent - instance.vpnClientActiveCache.get(applicantNetworkServiceType).size() = "+instance.vpnClientActiveCache.get(applicantNetworkServiceType).size());
 
-            System.out.println("---------------------CLAVE DISPONIBLES:"+vpnClientActiveCache.keySet().toString()+"------------------------------------");
+            System.out.println("---------------------CLAVE DISPONIBLES:"+instance.vpnClientActiveCache.keySet().toString()+"------------------------------------");
             System.out.println("---------------------CLAVES BUSCADA:"+remotePlatformComponentProfile.getIdentityPublicKey()+"------------------------------------");
 
             if (instance.vpnClientActiveCache.get(applicantNetworkServiceType).containsKey(remotePlatformComponentProfile.getIdentityPublicKey())){
@@ -223,13 +204,14 @@ public class WsCommunicationVPNClientManagerAgent extends Thread{
 
             System.out.println("WsCommunicationVPNClientManagerAgent - closeAllVpnConnections()");
 
-            if (!vpnClientActiveCache.isEmpty()) {
+            if (!instance.vpnClientActiveCache.isEmpty()) {
 
-                for (NetworkServiceType networkServiceType : vpnClientActiveCache.keySet()) {
-                    for (String remote : vpnClientActiveCache.get(networkServiceType).keySet()) {
-                        WsCommunicationVPNClient wsCommunicationVPNClient = vpnClientActiveCache.get(networkServiceType).get(remote);
+                for (NetworkServiceType networkServiceType : instance.vpnClientActiveCache.keySet()) {
+
+                    for (String remote : instance.vpnClientActiveCache.get(networkServiceType).keySet()) {
+                        WsCommunicationTyrusVPNClient wsCommunicationVPNClient = instance.vpnClientActiveCache.get(networkServiceType).get(remote);
                         wsCommunicationVPNClient.close();
-                        vpnClientActiveCache.get(networkServiceType).remove(remote);
+                        instance.vpnClientActiveCache.get(networkServiceType).remove(remote);
                     }
                 }
 
@@ -246,7 +228,7 @@ public class WsCommunicationVPNClientManagerAgent extends Thread{
      *
      * @return instance current value
      */
-    public static WsCommunicationVPNClientManagerAgent getInstance() {
+    public static WsCommunicationTyrusVPNClientManagerAgent getInstance() {
         return instance;
     }
 }

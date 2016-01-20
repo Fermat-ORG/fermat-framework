@@ -4,7 +4,7 @@
  * You may not modify, use, reproduce or distribute this software.
  * BITDUBAI/CONFIDENTIAL
  */
-package com.bitdubai.fermat_p2p_plugin.layer.ws.communications.cloud.client.developer.bitdubai.version_1.structure.jetty.processors;
+package com.bitdubai.fermat_p2p_plugin.layer.ws.communications.cloud.client.developer.bitdubai.version_1.structure.tyrus.processors;
 
 import com.bitdubai.fermat_api.layer.all_definition.components.interfaces.DiscoveryQueryParameters;
 import com.bitdubai.fermat_api.layer.all_definition.crypto.asymmetric.AsymmetricCryptography;
@@ -17,13 +17,13 @@ import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.events.Fai
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.contents.FermatPacket;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.enums.FermatPacketType;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.enums.JsonAttNamesConstants;
-import com.bitdubai.fermat_p2p_plugin.layer.ws.communications.cloud.client.developer.bitdubai.version_1.structure.jetty.WsCommunicationsJettyCloudClientChannel;
+import com.bitdubai.fermat_p2p_plugin.layer.ws.communications.cloud.client.developer.bitdubai.version_1.structure.tyrus.WsCommunicationsTyrusCloudClientChannel;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 
 /**
- * The Class <code>com.bitdubai.fermat_p2p_plugin.layer.ws.communications.cloud.client.developer.bitdubai.version_1.structure.processors.FailureComponentRegistrationRequestJettyPacketProcessor</code> implement
+ * The Class <code>com.bitdubai.fermat_p2p_plugin.layer.ws.communications.cloud.client.developer.bitdubai.version_1.structure.processors.FailureComponentRegistrationRequestTyrusPacketProcessor</code> implement
  * the logic to process the packet when a packet type <code>com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.enums.FermatPacketType.FAILURE_COMPONENT_CONNECTION_REQUEST</code> is receive by the server.
  * <p/>
  *
@@ -32,7 +32,7 @@ import com.google.gson.JsonParser;
  * @version 1.0
  * @since Java JDK 1.7
  */
-public class FailureRequestedListNoAvailbleJettyPacketProcessor extends FermatJettyPacketProcessor {
+public class FailureRequestedListNoAvailbleTyrusPacketProcessor extends FermatTyrusPacketProcessor {
 
     /**
      * Represent the jsonParser
@@ -47,15 +47,15 @@ public class FailureRequestedListNoAvailbleJettyPacketProcessor extends FermatJe
     /**
      * Constructor
      */
-    public FailureRequestedListNoAvailbleJettyPacketProcessor(WsCommunicationsJettyCloudClientChannel wsCommunicationsJettyCloudClientChannel){
-        super(wsCommunicationsJettyCloudClientChannel);
+    public FailureRequestedListNoAvailbleTyrusPacketProcessor(WsCommunicationsTyrusCloudClientChannel wsCommunicationsTyrusCloudClientChannel){
+        super(wsCommunicationsTyrusCloudClientChannel);
         jsonParser = new JsonParser();
         gson = new Gson();
     }
 
     /**
      * (no-javadoc)
-     * @see FermatJettyPacketProcessor#processingPackage(FermatPacket)
+     * @see FermatTyrusPacketProcessor#processingPackage(FermatPacket)
      */
     @Override
     public void processingPackage(FermatPacket receiveFermatPacket){
@@ -63,9 +63,9 @@ public class FailureRequestedListNoAvailbleJettyPacketProcessor extends FermatJe
         /*
          * Get the filters from the message content and decrypt
          */
-        String messageContentJsonStringRepresentation = AsymmetricCryptography.decryptMessagePrivateKey(receiveFermatPacket.getMessageContent(), getWsCommunicationsJettyCloudClientChannel().getClientIdentity().getPrivateKey());
+        String messageContentJsonStringRepresentation = AsymmetricCryptography.decryptMessagePrivateKey(receiveFermatPacket.getMessageContent(), getWsCommunicationsTyrusCloudClientChannel().getClientIdentity().getPrivateKey());
 
-        //System.out.println("FailureComponentRegistrationRequestJettyPacketProcessor - messageContentJsonStringRepresentation = "+messageContentJsonStringRepresentation);
+        //System.out.println("FailureComponentRegistrationRequestTyrusPacketProcessor - messageContentJsonStringRepresentation = "+messageContentJsonStringRepresentation);
 
         /*
          * Construct the json object
@@ -74,7 +74,7 @@ public class FailureRequestedListNoAvailbleJettyPacketProcessor extends FermatJe
         NetworkServiceType networkServiceApplicant  = gson.fromJson(packetContent.get(JsonAttNamesConstants.APPLICANT_PARTICIPANT_NS_VPN).getAsString(), NetworkServiceType.class);
         DiscoveryQueryParameters discoveryQueryParameters = new DiscoveryQueryParametersCommunication().fromJson(packetContent.get(JsonAttNamesConstants.DISCOVERY_PARAM).getAsString());
 
-        //System.out.println("FailureComponentRegistrationRequestJettyPacketProcessor - networkServiceApplicant " + networkServiceApplicant);
+        //System.out.println("FailureComponentRegistrationRequestTyrusPacketProcessor - networkServiceApplicant " + networkServiceApplicant);
 
         /*
          * Create a new event whit the networkServiceType and remoteIdentity
@@ -91,14 +91,14 @@ public class FailureRequestedListNoAvailbleJettyPacketProcessor extends FermatJe
         /*
          * Raise the event
          */
-        //System.out.println("FailureComponentRegistrationRequestJettyPacketProcessor - Raised a event = P2pEventType.FAILURE_COMPONENT_REGISTRATION_REQUEST_NOTIFICATION");
-        getWsCommunicationsJettyCloudClientChannel().getEventManager().raiseEvent(event);
+        //System.out.println("FailureComponentRegistrationRequestTyrusPacketProcessor - Raised a event = P2pEventType.FAILURE_COMPONENT_REGISTRATION_REQUEST_NOTIFICATION");
+        getWsCommunicationsTyrusCloudClientChannel().getEventManager().raiseEvent(event);
 
     }
 
     /**
      * (no-javadoc)
-     * @see FermatJettyPacketProcessor#getFermatPacketType()
+     * @see FermatTyrusPacketProcessor#getFermatPacketType()
      */
     @Override
     public FermatPacketType getFermatPacketType() {
