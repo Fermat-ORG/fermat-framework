@@ -90,4 +90,8 @@ public class CryptoBrokerCommunitySettings implements SubAppSettings {
         return null;
     }
 
+    @Override
+    public void setIsPresentationHelpEnabled(boolean b) {
+
+    }
 }

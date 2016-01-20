@@ -81,4 +81,9 @@ public class DesktopPreferenceSettings implements DesktopSettings {
     public String getPreferenceSettings(String walletPublicKey) throws CantLoadWalletSettings {
         return null;
     }
+
+    @Override
+    public void setIsPresentationHelpEnabled(boolean b) {
+
+    }
 }

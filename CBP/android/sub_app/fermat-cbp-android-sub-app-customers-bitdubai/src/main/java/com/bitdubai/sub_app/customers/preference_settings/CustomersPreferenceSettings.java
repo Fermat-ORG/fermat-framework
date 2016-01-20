@@ -79,4 +79,9 @@ public class CustomersPreferenceSettings implements SubAppSettings {
     public String getPreferenceSettings(String walletPublicKey){
         return null;
     }
+
+    @Override
+    public void setIsPresentationHelpEnabled(boolean b) {
+
+    }
 }

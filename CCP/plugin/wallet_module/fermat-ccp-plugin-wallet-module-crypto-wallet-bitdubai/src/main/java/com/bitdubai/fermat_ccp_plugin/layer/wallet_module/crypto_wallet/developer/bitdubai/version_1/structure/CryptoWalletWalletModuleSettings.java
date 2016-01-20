@@ -41,4 +41,9 @@ public class CryptoWalletWalletModuleSettings implements FermatSettings, com.bit
     public boolean isVisibleContactsHelp() {
         return isVisibleContactsHelp;
     }
+
+    @Override
+    public void setIsPresentationHelpEnabled(boolean b) {
+        this.isVisiblePresentationHelp = b;
+    }
 }
