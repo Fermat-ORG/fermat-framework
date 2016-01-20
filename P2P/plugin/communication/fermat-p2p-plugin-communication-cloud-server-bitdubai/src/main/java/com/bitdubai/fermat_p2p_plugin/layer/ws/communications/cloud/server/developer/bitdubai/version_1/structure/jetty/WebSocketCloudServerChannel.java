@@ -192,30 +192,8 @@ public class WebSocketCloudServerChannel {
     }
 
     @OnMessage
-    public void onPingMessage(ByteBuffer buffer) {
-
-        try {
-
-            String pingString = new String(buffer.array());
-            LOG.debug("PingMessage = " + pingString);
-
-            if(pingString.equals("PING")){
-
-                String pongString = "PONG";
-                ByteBuffer pongData = ByteBuffer.allocate(pongString.getBytes().length);
-                pongData.put(pongString.getBytes()).flip();
-                activeClientConnection.getSession().getBasicRemote().sendPong(pongData);
-            }
-
-        } catch (IOException e) {
-            LOG.error("onPingMessage error = " + e.getMessage());
-        }
-    }
-
-    @OnMessage
     public void onPongMessage(PongMessage message) {
-        LOG.info("PongMessage = " + message);
-        LOG.info("Pong message receive from server = " + new String(message.getApplicationData().array()));
+        LOG.info("Pong message receive from server = " + message);
     }
 
     @OnClose
