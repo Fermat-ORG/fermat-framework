@@ -119,7 +119,7 @@ public class MyAssetsActivityFragment extends FermatWalletListFragment<DigitalAs
 
             if (isPresentationHelpEnabled) {
                 PresentationDialog presentationDialog = new PresentationDialog.Builder(getActivity(), appSession)
-                        .setBannerRes(R.drawable.banner)
+                        .setBannerRes(R.drawable.banner_asset_issuer_wallet)
                         .setIconRes(R.drawable.asset_issuer)
                         .setSubTitle("Welcome to the Asset Issuer Wallet.")
                         .setBody("From this wallet you will be able to distribute your assets to the world and collect statistics of their usage.")
