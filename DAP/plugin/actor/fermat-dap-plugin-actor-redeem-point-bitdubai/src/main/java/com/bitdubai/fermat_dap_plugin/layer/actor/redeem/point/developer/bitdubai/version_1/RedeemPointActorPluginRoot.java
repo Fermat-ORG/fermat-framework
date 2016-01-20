@@ -21,7 +21,10 @@ import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEven
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEventListener;
 import com.bitdubai.fermat_api.layer.all_definition.util.Version;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
+import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantInsertRecordException;
+import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantLoadTableToMemoryException;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
+import com.bitdubai.fermat_bch_api.layer.crypto_vault.asset_vault.exceptions.CantGetExtendedPublicKeyException;
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.watch_only_vault.ExtendedPublicKey;
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.watch_only_vault.exceptions.CantInitializeWatchOnlyVaultException;
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.watch_only_vault.interfaces.WatchOnlyVaultManager;
@@ -38,7 +41,6 @@ import com.bitdubai.fermat_dap_api.layer.all_definition.enums.EventType;
 import com.bitdubai.fermat_dap_api.layer.all_definition.exceptions.CantSetObjectException;
 import com.bitdubai.fermat_dap_api.layer.all_definition.network_service_message.DAPMessage;
 import com.bitdubai.fermat_dap_api.layer.all_definition.network_service_message.content_message.AssetExtendedPublickKeyContentMessage;
-import com.bitdubai.fermat_dap_api.layer.dap_actor.DAPActor;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_issuer.interfaces.ActorAssetIssuer;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.exceptions.CantConnectToActorAssetUserException;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.redeem_point.RedeemPointActorRecord;
@@ -161,8 +163,8 @@ public class RedeemPointActorPluginRoot extends AbstractPlugin implements
 
             if (actorAssetRedeemPoint == null) {
 
-            Double locationLatitude = new Random().nextDouble();
-            Double locationLongitude = new Random().nextDouble();
+                Double locationLatitude = new Random().nextDouble();
+                Double locationLongitude = new Random().nextDouble();
 
                 RedeemPointActorRecord record = new RedeemPointActorRecord(
                         assetRedeemPointActorPublicKey,
@@ -424,9 +426,9 @@ public class RedeemPointActorPluginRoot extends AbstractPlugin implements
     }
 
     public void handleNewReceiveMessageActorNotificationEvent(DAPMessage dapMessage) {
-        DAPActor dapActorSender = dapMessage.getActorSender();
+        ActorAssetIssuer dapActorSender = (ActorAssetIssuer) dapMessage.getActorSender();
         System.out.println("*****Actor Asset Redeem Point Recibe*****");
-        System.out.println("Actor Asset Redeem Point name: " + dapActorSender.getName());
+        System.out.println("Actor Asset Redeem Point Sender name: " + dapActorSender.getName());
         System.out.println("Actor Asset Redeem Point message: " + dapMessage.getMessageType());
         System.out.println("***************************************************************");
 
@@ -449,6 +451,12 @@ public class RedeemPointActorPluginRoot extends AbstractPlugin implements
              * I will start the Bitcoin Watch only Vault on the redeem Point.
              */
             try {
+                redeemPointActorDao.newExtendedPublicKeyRegistered(getActorAssetRedeemPoint().getActorPublicKey(), extendedPublicKey.toString());
+            } catch (CantInsertRecordException | CantGetAssetRedeemPointActorsException e) {
+                e.printStackTrace();
+            }
+
+            try {
                 watchOnlyVaultManager.initialize(extendedPublicKey);
             } catch (CantInitializeWatchOnlyVaultException e) {
                 //handle this.
@@ -456,6 +464,16 @@ public class RedeemPointActorPluginRoot extends AbstractPlugin implements
         }
 
 
+    }
+
+    public List<String> getAllExtendedPublicKeyForRedeemPoint() throws CantGetExtendedPublicKeyException {
+        List<String> toReturn = new ArrayList<>();
+        try {
+            toReturn = redeemPointActorDao.getAllExtendedPublicKeyForRedeemPoint(getActorAssetRedeemPoint().getActorPublicKey());
+        } catch (CantLoadTableToMemoryException | CantGetAssetRedeemPointActorsException e) {
+            throw new CantGetExtendedPublicKeyException(null, e, null, null);
+        }
+        return toReturn;
     }
 
     @Override

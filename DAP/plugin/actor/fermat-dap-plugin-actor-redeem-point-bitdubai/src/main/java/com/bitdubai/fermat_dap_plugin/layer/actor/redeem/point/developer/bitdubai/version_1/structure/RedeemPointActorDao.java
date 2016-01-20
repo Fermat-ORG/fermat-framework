@@ -239,6 +239,29 @@ public class RedeemPointActorDao implements Serializable {
         }
     }
 
+    public void newExtendedPublicKeyRegistered(String redeemPointPublicKey, String extendedPublicKey) throws CantInsertRecordException {
+        DatabaseTable table = getRegisteredIssuersTable();
+        DatabaseTableRecord newRecord = table.getEmptyRecord();
+        newRecord.setStringValue(RedeemPointActorDatabaseConstants.REGISTERED_ASSET_ISSUERS_REDEEM_POINT_PUBLICKEY_COLUMN, redeemPointPublicKey);
+        newRecord.setStringValue(RedeemPointActorDatabaseConstants.REGISTERED_ASSET_ISSUERS_ISSUER_EXTENDED_PUBLICKEY_COLUMN, extendedPublicKey);
+        table.insertRecord(newRecord);
+    }
+
+    public List<String> getAllExtendedPublicKeyForRedeemPoint(String redeemPointPublicKey) throws CantLoadTableToMemoryException {
+        DatabaseTable table = getRegisteredIssuersTable();
+        table.addStringFilter(RedeemPointActorDatabaseConstants.REGISTERED_ASSET_ISSUERS_REDEEM_POINT_PUBLICKEY_COLUMN, redeemPointPublicKey, DatabaseFilterType.EQUAL);
+        table.loadToMemory();
+        List<String> toReturn = new ArrayList<>();
+        for (DatabaseTableRecord record : table.getRecords()) {
+            toReturn.add(record.getStringValue(RedeemPointActorDatabaseConstants.REGISTERED_ASSET_ISSUERS_ISSUER_EXTENDED_PUBLICKEY_COLUMN));
+        }
+        return toReturn;
+    }
+
+    private DatabaseTable getRegisteredIssuersTable() {
+        return database.getTable(RedeemPointActorDatabaseConstants.REGISTERED_ASSET_ISSUERS_TABLE_NAME);
+    }
+
     public void updateRedeemPointDAPConnectionState(String redeemPointToAddPublicKey, DAPConnectionState connectionState) throws CantUpdateRedeemPointException {
 
         DatabaseTable table;
