@@ -244,8 +244,6 @@ public class BitcoinCryptoNetworkMonitor implements Agent {
          TransactionBroadcast transactionBroadcast = peerGroup.broadcastTransaction(transaction);
          transactionBroadcast.setMinConnections(BitcoinNetworkConfiguration.MIN_BROADCAST_CONNECTIONS);
 
-
-
          ListenableFuture<Transaction> future = transactionBroadcast.future();
         /**
          * I add the future that will get the broadcast result into a call back to respond to it.
@@ -287,36 +285,36 @@ public class BitcoinCryptoNetworkMonitor implements Agent {
         });
 
 
-        /**
-         * Will set the time out for this broadcast attempt.
-         */
-        try {
-            future.get(BitcoinNetworkConfiguration.TRANSACTION_BROADCAST_TIMEOUT, TimeUnit.MINUTES);
-        } catch (InterruptedException e) {
-            try {
-                getDao().setBroadcastStatus(Status.WITH_ERROR, connectedPeers, e, txHash);
-            } catch (CantExecuteDatabaseOperationException e1) {
-                e1.printStackTrace();
-            }
-        } catch (ExecutionException e) {
-            try {
-                getDao().setBroadcastStatus(Status.WITH_ERROR, connectedPeers, e, txHash);
-            } catch (CantExecuteDatabaseOperationException e1) {
-                e1.printStackTrace();
-            }
-        } catch (TimeoutException e) {
-            try {
-                getDao().setBroadcastStatus(Status.WITH_ERROR, connectedPeers, e, txHash);
-            } catch (CantExecuteDatabaseOperationException e1) {
-                e1.printStackTrace();
-            }
-        } catch (Exception e){
-            try {
-                getDao().setBroadcastStatus(Status.WITH_ERROR, connectedPeers, e, txHash);
-            } catch (CantExecuteDatabaseOperationException e1) {
-                e1.printStackTrace();
-            }
-        }
+//        /**
+//         * Will set the time out for this broadcast attempt.
+//         */
+//        try {
+//            future.get(BitcoinNetworkConfiguration.TRANSACTION_BROADCAST_TIMEOUT, TimeUnit.MINUTES);
+//        } catch (InterruptedException e) {
+//            try {
+//                getDao().setBroadcastStatus(Status.WITH_ERROR, connectedPeers, e, txHash);
+//            } catch (CantExecuteDatabaseOperationException e1) {
+//                e1.printStackTrace();
+//            }
+//        } catch (ExecutionException e) { a
+//            try {
+//                getDao().setBroadcastStatus(Status.WITH_ERROR, connectedPeers, e, txHash);
+//            } catch (CantExecuteDatabaseOperationException e1) {
+//                e1.printStackTrace();
+//            }
+//        } catch (TimeoutException e) {
+//            try {
+//                getDao().setBroadcastStatus(Status.WITH_ERROR, connectedPeers, e, txHash);
+//            } catch (CantExecuteDatabaseOperationException e1) {
+//                e1.printStackTrace();
+//            }
+//        } catch (Exception e){
+//            try {
+//                getDao().setBroadcastStatus(Status.WITH_ERROR, connectedPeers, e, txHash);
+//            } catch (CantExecuteDatabaseOperationException e1) {
+//                e1.printStackTrace();
+//            }
+//        }
     }
 
 
