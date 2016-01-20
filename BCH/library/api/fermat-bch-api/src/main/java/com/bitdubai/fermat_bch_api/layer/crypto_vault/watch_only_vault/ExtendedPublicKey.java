@@ -39,6 +39,6 @@ public class ExtendedPublicKey {
 
     @Override
     public String toString() {
-        return actorPublicKey + pubKeyBytes.toString() + chainCode.toString();
+        return pubKeyBytes.toString() + chainCode.toString();
     }
 }
