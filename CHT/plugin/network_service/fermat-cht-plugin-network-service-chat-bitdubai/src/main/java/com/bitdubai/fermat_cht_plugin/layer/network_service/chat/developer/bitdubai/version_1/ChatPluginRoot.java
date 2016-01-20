@@ -208,10 +208,10 @@ public class ChatPluginRoot extends AbstractPlugin implements
     /**
      * Represent the OutgoinChatMetaDataDao
      */
-   // private OutgoinChatMetaDataDao outgoinChatMetaDataDao;
+    // private OutgoinChatMetaDataDao outgoinChatMetaDataDao;
 
     //public OutgoinChatMetaDataDao getOutgoinChatMetaDataDao() {
-      //  return outgoinChatMetaDataDao;
+    //  return outgoinChatMetaDataDao;
     //}
 
     /**
@@ -869,7 +869,7 @@ public class ChatPluginRoot extends AbstractPlugin implements
          * Listen and handle new message sent
          */
         fermatEventListener = eventManager.getNewListener(P2pEventType.NEW_NETWORK_SERVICE_MESSAGE_SENT_NOTIFICATION);
-        fermatEventListener.setEventHandler(new NewSentMessagesNotificationEventHandler());
+        fermatEventListener.setEventHandler(new NewSentMessagesNotificationEventHandler(this));
         eventManager.addListener(fermatEventListener);
         listenersAdded.add(fermatEventListener);
 
@@ -996,6 +996,11 @@ public class ChatPluginRoot extends AbstractPlugin implements
     }
 
     @Override
+    public void sendChatMessageNewStatusNotification(String localActorPubKey, PlatformComponentType senderType, String remoteActorPubKey, PlatformComponentType receiverType, DistributionStatus newDistributionStatus, UUID chatId) throws CantSendChatMessageNewStatusNotificationException {
+
+    }
+
+    //@Override
     public void sendChatMessageNewStatusNotification(UUID localActorPubKey, PlatformComponentType senderType, UUID remoteActorPubKey, PlatformComponentType receiverType, DistributionStatus newDistributionStatus) throws CantSendChatMessageNewStatusNotificationException {
 
     }

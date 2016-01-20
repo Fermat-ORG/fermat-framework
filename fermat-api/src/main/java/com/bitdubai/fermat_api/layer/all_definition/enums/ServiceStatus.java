@@ -18,6 +18,7 @@ public enum ServiceStatus implements FermatEnum {
 
     ;
 
+
     public String code;
 
     ServiceStatus(String code) {

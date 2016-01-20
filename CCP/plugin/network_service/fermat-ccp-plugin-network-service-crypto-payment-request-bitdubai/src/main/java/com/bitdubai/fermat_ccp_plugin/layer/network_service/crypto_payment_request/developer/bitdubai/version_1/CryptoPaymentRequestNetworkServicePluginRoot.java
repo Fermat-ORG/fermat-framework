@@ -153,6 +153,10 @@ public final class CryptoPaymentRequestNetworkServicePluginRoot extends Abstract
 
     private  boolean beforeRegistered;
 
+    private long reprocessTimer =   1* 3600 * 1000; //one hours
+
+    private Timer timer = new Timer();
+
     /**
      * Constructor
      */
@@ -498,15 +502,9 @@ public final class CryptoPaymentRequestNetworkServicePluginRoot extends Abstract
             reprocessMessage();
 
             //declare a schedule to process waiting request message
-            Timer timer = new Timer();
 
-            timer.schedule(new TimerTask() {
-                @Override
-                public void run() {
-                    // change message state to process retry later
-                    reprocessMessage();
-                }
-            }, 2 * 3600 * 1000);
+
+          this.startTimer();
 
 
             /*
@@ -919,6 +917,8 @@ public final class CryptoPaymentRequestNetworkServicePluginRoot extends Abstract
 
             if(vpnConnectionCloseNotificationEvent.getNetworkServiceApplicant() == getNetworkServiceType()){
 
+                reprocessMessage();
+
                 if(communicationNetworkServiceConnectionManager != null)
                     communicationNetworkServiceConnectionManager.closeConnection(vpnConnectionCloseNotificationEvent.getRemoteParticipant().getIdentityPublicKey());
 
@@ -936,21 +936,8 @@ public final class CryptoPaymentRequestNetworkServicePluginRoot extends Abstract
     public void handleClientConnectionCloseNotificationEvent(FermatEvent fermatEvent) {
 
         if(fermatEvent instanceof ClientConnectionCloseNotificationEvent){
-//
-//            try {
-//
-//                List<CryptoPaymentRequest> cryptoAddressRequestList = cryptoPaymentRequestNetworkServiceDao.listRequestsByProtocolState(RequestProtocolState.WAITING_RESPONSE);
-//
-//                for(CryptoPaymentRequest record : cryptoAddressRequestList) {
-//
-//                    cryptoPaymentRequestNetworkServiceDao.changeProtocolState(record.getRequestId(),RequestProtocolState.PROCESSING_SEND);
-//                }
-//            }
-//            catch(CantListRequestsException | CantChangeRequestProtocolStateException |RequestNotFoundException e)
-//            {
-//                System.out.print("EXCEPCION REPROCESANDO WAIT MESSAGE");
-//                e.printStackTrace();
-//            }
+
+          reprocessMessage();
 
             this.register = false;
             if(communicationNetworkServiceConnectionManager != null)
@@ -1183,6 +1170,8 @@ public final class CryptoPaymentRequestNetworkServicePluginRoot extends Abstract
                     {
                         //update state and process again later
                         cryptoPaymentRequestNetworkServiceDao.changeProtocolState(record.getRequestId(),RequestProtocolState.WAITING_RESPONSE);
+
+
                     }
                     else
                     {
@@ -1237,6 +1226,16 @@ public final class CryptoPaymentRequestNetworkServicePluginRoot extends Abstract
             System.out.print("Payment Request NS EXCEPCION REPROCESANDO WAIT MESSAGE");
             e.printStackTrace();
         }
+    }
+
+    private void startTimer(){
+        timer.schedule(new TimerTask() {
+            @Override
+            public void run() {
+                // change message state to process retry later
+                reprocessMessage();
+            }
+        }, reprocessTimer);
     }
 
 

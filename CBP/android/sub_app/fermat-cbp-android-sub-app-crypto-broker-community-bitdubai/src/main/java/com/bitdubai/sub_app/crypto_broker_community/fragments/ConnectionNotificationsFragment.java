@@ -120,7 +120,6 @@ public class ConnectionNotificationsFragment extends AbstractFermatFragment impl
 
         }
 
-
         return rootView;
     }
 
