@@ -23,6 +23,10 @@ import com.bitdubai.fermat_android_api.ui.fragments.FermatWalletListFragment;
 import com.bitdubai.fermat_android_api.ui.interfaces.FermatListItemListeners;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Wallets;
+import com.bitdubai.fermat_api.layer.all_definition.settings.exceptions.CantGetSettingsException;
+import com.bitdubai.fermat_api.layer.all_definition.settings.exceptions.CantPersistSettingsException;
+import com.bitdubai.fermat_api.layer.all_definition.settings.exceptions.SettingsNotFoundException;
+import com.bitdubai.fermat_api.layer.all_definition.settings.structure.SettingsManager;
 import com.bitdubai.fermat_api.layer.modules.common_classes.ActiveActorIdentityInformation;
 import com.bitdubai.fermat_dap_android_wallet_redeem_point_bitdubai.R;
 import com.bitdubai.fermat_dap_android_wallet_redeem_point_bitdubai.adapters.MyAssetsAdapter;
@@ -33,6 +37,7 @@ import com.bitdubai.fermat_dap_android_wallet_redeem_point_bitdubai.sessions.Ses
 import com.bitdubai.fermat_dap_android_wallet_redeem_point_bitdubai.util.CommonLogger;
 import com.bitdubai.fermat_dap_api.layer.all_definition.exceptions.CantGetIdentityRedeemPointException;
 import com.bitdubai.fermat_dap_api.layer.dap_identity.redeem_point.interfaces.RedeemPointIdentity;
+import com.bitdubai.fermat_dap_api.layer.dap_module.wallet_asset_redeem_point.RedeemPointSettings;
 import com.bitdubai.fermat_dap_api.layer.dap_module.wallet_asset_redeem_point.interfaces.AssetRedeemPointWalletSubAppModule;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedWalletExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
@@ -56,7 +61,7 @@ public class RedeemPointMainActivityFragment extends FermatWalletListFragment<Di
     // Fermat Managers
     private AssetRedeemPointWalletSubAppModule moduleManager;
     private ErrorManager errorManager;
-
+    SettingsManager<RedeemPointSettings> settingsManager;
     // Data
     private List<DigitalAsset> digitalAssets;
 
@@ -74,6 +79,7 @@ public class RedeemPointMainActivityFragment extends FermatWalletListFragment<Di
         try {
             moduleManager = ((RedeemPointSession) appSession).getModuleManager();
             errorManager = appSession.getErrorManager();
+            settingsManager = appSession.getModuleManager().getSettingsManager();
 
             digitalAssets = (List) getMoreDataAsync(FermatRefreshTypes.NEW, 0);
         } catch (Exception ex) {
@@ -93,38 +99,70 @@ public class RedeemPointMainActivityFragment extends FermatWalletListFragment<Di
         noAssetsView = layout.findViewById(R.id.dap_wallet_no_assets);
         showOrHideNoAssetsView(digitalAssets.isEmpty());
 
-        PresentationDialog presentationDialog = new PresentationDialog.Builder(getActivity(), appSession)
-                .setBannerRes(R.drawable.banner)
-                .setIconRes(R.drawable.redeem_point)
-                .setSubTitle("Welcome to the RedeemPoint Wallet.")
-                .setBody("From this wallet you will be able to verify the assets that users redeem with you and get statistic from them.")
-                .setTextFooter("We will be creating an avatar for you in order to identify you in the system as a Redeem Point, name and more details later in the Redeem Point Identity sub app.")
-                .build();
-
-        presentationDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
-            @Override
-            public void onDismiss(DialogInterface dialog) {
-                Object o = appSession.getData(SessionConstantsRedeemPoint.PRESENTATION_IDENTITY_CREATED);
-                if (o != null) {
-                    if ((Boolean) (o)) {
-                        //invalidate();
-                        appSession.removeData(SessionConstantsRedeemPoint.PRESENTATION_IDENTITY_CREATED);
-                    }
-                }
-                try {
-                    RedeemPointIdentity redeemPointIdentity = moduleManager.getActiveAssetRedeemPointIdentity();
-                    if (redeemPointIdentity == null) {
-                        getActivity().onBackPressed();
-                    } else {
-                        invalidate();
-                    }
-                } catch (CantGetIdentityRedeemPointException e) {
-                    e.printStackTrace();
-                }
+        //Initialize settings
+        settingsManager = appSession.getModuleManager().getSettingsManager();
+        RedeemPointSettings settings = null;
+        try {
+            settings = settingsManager.loadAndGetSettings(appSession.getAppPublicKey());
+        } catch (Exception e) {
+            settings = null;
+        }
+        if (settings == null) {
+            settings = new RedeemPointSettings();
+            settings.setIsPresentationHelpEnabled(true);
+            try {
+                settingsManager.persistSettings(appSession.getAppPublicKey(), settings);
+            } catch (CantPersistSettingsException e) {
+                e.printStackTrace();
             }
-        });
+        }
 
-        presentationDialog.show();
+        try {
+            boolean isPresentationHelpEnabled = settingsManager.loadAndGetSettings(appSession.getAppPublicKey()).isPresentationHelpEnabled();
+
+            if (isPresentationHelpEnabled) {
+                PresentationDialog presentationDialog = new PresentationDialog.Builder(getActivity(), appSession)
+                        .setBannerRes(R.drawable.banner_redeem_point)
+                        .setIconRes(R.drawable.redeem_point)
+                        .setSubTitle("Welcome to the RedeemPoint Wallet.")
+                        .setBody("From this wallet you will be able to verify the assets that users redeem with you and get statistic from them.")
+                        .setTextFooter("We will be creating an avatar for you in order to identify you in the system as a Redeem Point, name and more details later in the Redeem Point Identity sub app.")
+                        .setTemplateType((moduleManager.getActiveAssetRedeemPointIdentity() == null) ? PresentationDialog.TemplateType.TYPE_PRESENTATION : PresentationDialog.TemplateType.TYPE_PRESENTATION_WITHOUT_IDENTITIES)
+                        .setIsCheckEnabled(settingsManager.loadAndGetSettings(appSession.getAppPublicKey()).isPresentationHelpEnabled())
+                        .build();
+
+                presentationDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
+                    @Override
+                    public void onDismiss(DialogInterface dialog) {
+                        Object o = appSession.getData(SessionConstantsRedeemPoint.PRESENTATION_IDENTITY_CREATED);
+                        if (o != null) {
+                            if ((Boolean) (o)) {
+                                //invalidate();
+                                appSession.removeData(SessionConstantsRedeemPoint.PRESENTATION_IDENTITY_CREATED);
+                            }
+                        }
+                        try {
+                            RedeemPointIdentity redeemPointIdentity = moduleManager.getActiveAssetRedeemPointIdentity();
+                            if (redeemPointIdentity == null) {
+                                getActivity().onBackPressed();
+                            } else {
+                                invalidate();
+                            }
+                        } catch (CantGetIdentityRedeemPointException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                });
+
+                presentationDialog.show();
+            }
+        } catch (CantGetIdentityRedeemPointException e) {
+            e.printStackTrace();
+        } catch (CantGetSettingsException e) {
+            e.printStackTrace();
+        } catch (SettingsNotFoundException e) {
+            e.printStackTrace();
+        }
     }
 
     @Override
@@ -134,19 +172,19 @@ public class RedeemPointMainActivityFragment extends FermatWalletListFragment<Di
 //        checkIdentity();
     }
 
-    private void checkIdentity() {
-        ActiveActorIdentityInformation identity = null;
-        try {
-            identity = moduleManager.getSelectedActorIdentity();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        if (identity == null) {
-            makeText(getActivity(), "Identity must be created",
-                    LENGTH_SHORT).show();
-            getActivity().onBackPressed();
-        }
-    }
+//    private void checkIdentity() {
+//        ActiveActorIdentityInformation identity = null;
+//        try {
+//            identity = moduleManager.getSelectedActorIdentity();
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//        }
+//        if (identity == null) {
+//            makeText(getActivity(), "Identity must be created",
+//                    LENGTH_SHORT).show();
+//            getActivity().onBackPressed();
+//        }
+//    }
 
     private void configureToolbar() {
         Toolbar toolbar = getToolbar();

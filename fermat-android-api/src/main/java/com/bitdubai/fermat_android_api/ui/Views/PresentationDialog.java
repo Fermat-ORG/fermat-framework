@@ -4,9 +4,7 @@ import android.app.Activity;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
-import android.graphics.drawable.Drawable;
 import android.os.Bundle;
-import android.os.Handler;
 import android.view.View;
 import android.view.Window;
 import android.widget.Button;
@@ -14,7 +12,6 @@ import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
-import android.widget.Toast;
 
 import com.bitdubai.android_api.R;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.FermatSession;
@@ -26,16 +23,11 @@ import com.bitdubai.fermat_api.layer.all_definition.settings.exceptions.CantPers
 import com.bitdubai.fermat_api.layer.all_definition.settings.exceptions.SettingsNotFoundException;
 import com.bitdubai.fermat_api.layer.all_definition.settings.structure.SettingsManager;
 import com.bitdubai.fermat_api.layer.modules.interfaces.FermatSettings;
-import com.bitdubai.fermat_ccp_api.layer.identity.intra_user.exceptions.CantCreateNewIntraWalletUserException;
-import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.BitcoinWalletSettings;
-import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.exceptions.CantGetCryptoWalletException;
-import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.interfaces.CryptoWallet;
 import com.bitdubai.fermat_pip_api.layer.network_service.subapp_resources.SubAppResourcesProviderManager;
 
 
 import java.io.ByteArrayOutputStream;
 import java.lang.ref.WeakReference;
-import java.nio.ByteBuffer;
 
 /**
  * Created by Matias Furszyfer on 2015.11.27..
@@ -156,7 +148,7 @@ public class PresentationDialog extends FermatDialog<FermatSession,SubAppResourc
             case TYPE_PRESENTATION:
                 return R.layout.presentation_dialog;
             case TYPE_PRESENTATION_WITHOUT_IDENTITIES:
-                return R.layout.presentation_wallet_without_identities;
+                return R.layout.presentation_dialog_without_identities;
         }
         return 0;
     }
