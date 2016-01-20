@@ -27,7 +27,7 @@ Fermat is a *peer-to-peer financial application framework*. +
 
 It consists of three main parts: +
 
-.  a p2p network for interconnecting devices
+.  a P2P network for interconnecting devices
 .  a plug-in framework for developing and running distributed financial applications and link:https://github.com/bitDubai/fermat/blob/master/fermat-book/book-glossary.asciidoc#wallet[wallets]. +
 .  a system of integrated apps
 
