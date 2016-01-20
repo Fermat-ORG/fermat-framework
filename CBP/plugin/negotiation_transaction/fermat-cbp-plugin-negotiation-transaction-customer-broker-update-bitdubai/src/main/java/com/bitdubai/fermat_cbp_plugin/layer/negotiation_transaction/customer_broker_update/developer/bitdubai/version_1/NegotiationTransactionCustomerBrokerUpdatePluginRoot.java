@@ -193,7 +193,7 @@ public class NegotiationTransactionCustomerBrokerUpdatePluginRoot  extends Abstr
 //            createCustomerBrokerCancelSaleNegotiationTest();
 
             //TEST EVENT REGISTER
-//            registerEventTest();
+            registerEventTest();
 
             //TEST GET ALL EVENT
 //            getAllEvent();
@@ -707,7 +707,7 @@ public class NegotiationTransactionCustomerBrokerUpdatePluginRoot  extends Abstr
 
         try {
 
-            System.out.print("\n**** MOCK CUSTOMER BROKER NEW. REGISTER EVENT. EVENT REGISTER. ****\n");
+            System.out.print("\n**** MOCK CUSTOMER BROKER UPDATE. REGISTER EVENT. EVENT REGISTER. ****\n");
             IncomingNegotiationTransactionEvent eventTest = new IncomingNegotiationTransactionEvent(EventType.INCOMING_NEGOTIATION_TRANSMISSION_TRANSACTION_UPDATE);
             eventTest.setSource(EventSource.NETWORK_SERVICE_NEGOTIATION_TRANSMISSION);
 

@@ -376,7 +376,7 @@ public class CustomerBrokerUpdateNegotiationTransactionDatabaseDao {
 
             table.insertRecord(eventRecord);
 
-            //            System.out.print("\n\n**** 17) MOCK NEGOTIATION TRANSACTION - NEGOTIATION TRANSMISSION - DAO - REGISTER NEW EVENT ****\n");
+            System.out.print("\n**** 17) MOCK NEGOTIATION TRANSACTION - NEGOTIATION TRANSMISSION - DAO - REGISTER NEW EVENT ****\n");
 
         } catch (CantInsertRecordException exception) {
             throw new CantSaveEventException(exception, "Saving new event.", "Cannot insert a record in Asset Distribution database");
