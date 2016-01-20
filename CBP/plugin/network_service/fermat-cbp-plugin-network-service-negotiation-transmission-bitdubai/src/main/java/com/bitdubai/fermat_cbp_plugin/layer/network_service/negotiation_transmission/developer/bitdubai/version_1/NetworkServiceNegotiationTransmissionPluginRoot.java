@@ -246,18 +246,18 @@ public class NetworkServiceNegotiationTransmissionPluginRoot extends AbstractNet
 //                NegotiationType.PURCHASE
 //            );
 
-            //TEST RECEIVE PURCHASE NEGOTIATION CUSTOMER BROKER CLOSE
-//            receiveNegotiationTransmissionTest(
-//                NegotiationTransactionType.CUSTOMER_BROKER_CLOSE,
-//                NegotiationTransmissionType.TRANSMISSION_NEGOTIATION,
-//                NegotiationType.PURCHASE
-//            );
-
             //TEST RECEIVE SALE NEGOTIATION CUSTOMER BROKER UPDATE
 //            receiveNegotiationTransmissionTest(
 //                NegotiationTransactionType.CUSTOMER_BROKER_UPDATE,
 //                NegotiationTransmissionType.TRANSMISSION_NEGOTIATION,
 //                NegotiationType.SALE
+//            );
+
+            //TEST RECEIVE PURCHASE NEGOTIATION CUSTOMER BROKER CLOSE
+//            receiveNegotiationTransmissionTest(
+//                NegotiationTransactionType.CUSTOMER_BROKER_CLOSE,
+//                NegotiationTransmissionType.TRANSMISSION_NEGOTIATION,
+//                NegotiationType.PURCHASE
 //            );
 
             //TEST RECEIVE SALE NEGOTIATION CUSTOMER BROKER CLOSE

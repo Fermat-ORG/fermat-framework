@@ -14,6 +14,7 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.Cant
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantOpenDatabaseException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantUpdateRecordException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.DatabaseNotFoundException;
+import com.bitdubai.fermat_cbp_api.all_definition.enums.NegotiationStatus;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.NegotiationTransactionStatus;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.NegotiationTransmissionState;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.NegotiationType;
@@ -96,7 +97,11 @@ public class CustomerBrokerUpdateNegotiationTransactionDatabaseDao {
             table.insertRecord(record);
 
             if(statusTransaction.getCode() == NegotiationTransactionStatus.PENDING_SUBMIT_CONFIRM.getCode()) {
-                    System.out.print("\n\n**** 23) MOCK NEGOTIATION TRANSACTION - CUSTOMER BROKER UPDATE - DAO. CONFIRM negotiationType: " + negotiationType.getCode() + " transactionId: " + transactionId + " ****\n");
+                if(negotiation.getStatus().getCode().equals(NegotiationStatus.CANCELLED.getCode())) {
+                    System.out.print("\n\n**** 22) MOCK NEGOTIATION TRANSACTION - CUSTOMER BROKER CANCEL - DAO. CONFIRM negotiationType: " + negotiationType.getCode() + " transactionId: " + transactionId + " ****\n");
+                }else{
+                    System.out.print("\n\n**** 22) MOCK NEGOTIATION TRANSACTION - CUSTOMER BROKER UPDATE - DAO. CONFIRM negotiationType: " + negotiationType.getCode() + " transactionId: " + transactionId + " ****\n");
+                }
             }else{
                 System.out.print("\n\n**** 4) MOCK NEGOTIATION TRANSACTION - CUSTOMER BROKER UPDATE - DAO. NEGOTIATION negotiationType: " + negotiationType.getCode() + "transactionId: " + transactionId + " ****\n");
             }
@@ -121,7 +126,7 @@ public class CustomerBrokerUpdateNegotiationTransactionDatabaseDao {
             record.setStringValue(CustomerBrokerUpdateNegotiationTransactionDatabaseConstants.CUSTOMER_BROKER_UPDATE_STATUS_TRANSACTION_COLUMN_NAME, statusTransaction.getCode());
             table.updateRecord(record);
 
-            System.out.print("\n\n**** 8) MOCK NEGOTIATION TRANSACTION - CUSTOMER BROKER UPDATE - DAO - UPDATE STATUS SALE NEGOTIATION STATUS : " + NegotiationTransactionStatus.SENDING_NEGOTIATION.getCode() + " ****\n");
+//            System.out.print("\n\n**** 8) MOCK NEGOTIATION TRANSACTION - CUSTOMER BROKER UPDATE - DAO - UPDATE STATUS SALE NEGOTIATION STATUS : " + NegotiationTransactionStatus.SENDING_NEGOTIATION.getCode() + " ****\n");
         } catch (CantUpdateRecordException e) {
             throw new CantRegisterCustomerBrokerUpdateNegotiationTransactionException(e.getMessage(), e, "Customer Broker New Negotiation Transaction, Update State", "Cant Update State Customer Broker New Negotiation Transaction, update database problems.");
         } catch (Exception e) {
@@ -329,6 +334,36 @@ public class CustomerBrokerUpdateNegotiationTransactionDatabaseDao {
                         CustomerBrokerUpdateNegotiationTransactionDatabaseConstants.CUSTOMER_BROKER_UPDATE_EVENT_ID_COLUMN_NAME);
                 eventTypeList.add(eventId);
             }
+            return eventTypeList;
+
+        } catch (CantLoadTableToMemoryException e) {
+            throw new CantGetNegotiationTransactionListException(CantGetNegotiationTransactionListException.DEFAULT_MESSAGE,e,"Getting events in EventStatus.PENDING","Cannot load the table into memory");
+        }
+
+    }
+
+    //GET LIST PENDING EVENT
+    public List<String> getAllEvents() throws UnexpectedResultReturnedFromDatabaseException, CantGetNegotiationTransactionListException {
+
+        try{
+
+            DatabaseTable table = this.database.getTable(CustomerBrokerUpdateNegotiationTransactionDatabaseConstants.CUSTOMER_BROKER_UPDATE_EVENT_TABLE_NAME);
+            List<String> eventTypeList=new ArrayList<>();
+            String eventString;
+            table.loadToMemory();
+            List<DatabaseTableRecord> records = table.getRecords();
+            if(records.isEmpty())
+                return eventTypeList;
+
+            for(DatabaseTableRecord databaseTableRecord : records){
+                eventString =   "\n - ID = "+databaseTableRecord.getUUIDValue(CustomerBrokerUpdateNegotiationTransactionDatabaseConstants.CUSTOMER_BROKER_UPDATE_EVENT_ID_COLUMN_NAME)+
+                        "\n - STATUS = "+databaseTableRecord.getStringValue(CustomerBrokerUpdateNegotiationTransactionDatabaseConstants.CUSTOMER_BROKER_UPDATE_EVENT_STATUS_COLUMN_NAME)+", "+
+                        "\n - TYPE = "+databaseTableRecord.getStringValue(CustomerBrokerUpdateNegotiationTransactionDatabaseConstants.CUSTOMER_BROKER_UPDATE_EVENT_TYPE_COLUMN_NAME)
+                ;
+
+                eventTypeList.add(eventString);
+            }
+
             return eventTypeList;
 
         } catch (CantLoadTableToMemoryException e) {

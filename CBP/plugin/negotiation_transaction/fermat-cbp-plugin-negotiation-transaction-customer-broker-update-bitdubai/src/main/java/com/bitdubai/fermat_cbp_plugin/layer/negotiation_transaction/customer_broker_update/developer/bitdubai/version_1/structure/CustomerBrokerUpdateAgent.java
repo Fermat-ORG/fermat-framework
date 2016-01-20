@@ -338,12 +338,12 @@ public class CustomerBrokerUpdateAgent implements
 
                         switch (negotiationType) {
                             case PURCHASE:
-                                System.out.print("\n**** 24) MOCK NEGOTIATION TRANSACTION - CUSTOMER BROKER UPDATE - AGENT - CONFIRMATION SEND PURCHASE NEGOTIATION negotiationId(XML): " + negotiationTransaction.getTransactionId() + " ****\n");
+                                System.out.print("\n**** 23) MOCK NEGOTIATION TRANSACTION - CUSTOMER BROKER UPDATE - AGENT - CONFIRMATION SEND PURCHASE NEGOTIATION negotiationId(XML): " + negotiationTransaction.getTransactionId() + " ****\n");
                                 //SEND CONFIRM NEGOTIATION TO BROKER
                                 negotiationTransmissionManager.sendConfirmNegotiatioToCryptoBroker(negotiationTransaction, NegotiationTransactionType.CUSTOMER_BROKER_UPDATE);
                                 break;
                             case SALE:
-                                System.out.print("\n**** 24) MOCK NEGOTIATION TRANSACTION - CUSTOMER BROKER UPDATE - AGENT - CONFIRMATION SEND SALE NEGOTIATION negotiationId(XML): " + negotiationTransaction.getTransactionId() + " ****\n");
+                                System.out.print("\n**** 23) MOCK NEGOTIATION TRANSACTION - CUSTOMER BROKER UPDATE - AGENT - CONFIRMATION SEND SALE NEGOTIATION negotiationId(XML): " + negotiationTransaction.getTransactionId() + " ****\n");
                                 //SEND NEGOTIATION TO CUSTOMER
                                 negotiationTransmissionManager.sendConfirmNegotiatioToCryptoCustomer(negotiationTransaction, NegotiationTransactionType.CUSTOMER_BROKER_UPDATE);
                                 break;
@@ -460,6 +460,7 @@ public class CustomerBrokerUpdateAgent implements
                                         break;
                                 }
 
+                                //TODO. UNA EXCEPCION OCURRIDA ANTES DE ESTO, HARA QUE LA TRANSMISSION EN CUESTION SE REPITA EN EL CICLO, POR NO CAMBIAR DE ESTADO.
                                 //NOTIFIED EVENT
                                 customerBrokerUpdateNegotiationTransactionDatabaseDao.updateEventTansactionStatus(eventId, EventStatus.NOTIFIED);
                                 //CONFIRM TRANSMISSION
