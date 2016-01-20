@@ -14,6 +14,7 @@ import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.enums.FermatP
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.enums.JsonAttNamesConstants;
 import com.bitdubai.fermat_p2p_plugin.layer.ws.communications.cloud.client.developer.bitdubai.version_1.WsCommunicationsCloudClientPluginRoot;
 import com.bitdubai.fermat_p2p_plugin.layer.ws.communications.cloud.client.developer.bitdubai.version_1.structure.tyrus.WsCommunicationsTyrusCloudClientChannel;
+import com.bitdubai.fermat_p2p_plugin.layer.ws.communications.cloud.client.developer.bitdubai.version_1.structure.tyrus.vpn.WsCommunicationTyrusVPNClientManagerAgent;
 import com.bitdubai.fermat_p2p_plugin.layer.ws.communications.cloud.client.developer.bitdubai.version_1.structure.util.ServerConf;
 import com.bitdubai.fermat_p2p_plugin.layer.ws.communications.cloud.client.developer.bitdubai.version_1.structure.vpn.WsCommunicationVPNClientManagerAgent;
 import com.google.gson.Gson;
@@ -83,12 +84,12 @@ public class ComponentConnectionRespondTyrusPacketProcessor extends FermatTyrusP
             /*
              * Get the  wsCommunicationVPNClientManagerAgent
              */
-            WsCommunicationVPNClientManagerAgent wsCommunicationVPNClientManagerAgent = getWsCommunicationsTyrusCloudClientChannel().getWsCommunicationsTyrusCloudClientConnection().getWsCommunicationVPNClientManagerAgent();
+            WsCommunicationTyrusVPNClientManagerAgent wsCommunicationTyrusVPNClientManagerAgent = WsCommunicationTyrusVPNClientManagerAgent.getInstance();
 
             /*
              * Create a new VPN client
              */
-            wsCommunicationVPNClientManagerAgent.createNewWsCommunicationVPNClient(vpnServerUri, vpnServerIdentity, participantVpn, remotePlatformComponentProfile, remoteNsPlatformComponentProfile, getWsCommunicationsTyrusCloudClientChannel().getEventManager());
+            wsCommunicationTyrusVPNClientManagerAgent.createNewWsCommunicationVPNClient(vpnServerUri, vpnServerIdentity, participantVpn, remotePlatformComponentProfile, remoteNsPlatformComponentProfile, getWsCommunicationsTyrusCloudClientChannel().getEventManager());
 
         } catch (Exception e) {
            throw new RuntimeException(e);

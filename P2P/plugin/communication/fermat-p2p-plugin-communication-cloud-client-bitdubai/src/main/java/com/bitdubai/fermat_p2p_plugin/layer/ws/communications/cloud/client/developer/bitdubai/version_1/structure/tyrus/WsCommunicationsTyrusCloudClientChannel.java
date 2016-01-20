@@ -195,6 +195,8 @@ public class WsCommunicationsTyrusCloudClientChannel {
 
         System.out.println(" --------------------------------------------------------------------- ");
         System.out.println(" WsCommunicationsTyrusCloudClientChannel - Starting method onClose");
+        System.out.println("Socket " + session.getId() + " is disconnect! code = " + reason.getCloseCode() + "[" + reason.getCloseCode().getCode() + "] reason = " + reason.getReasonPhrase());
+
 
         try {
             switch (reason.getCloseCode().getCode()) {
@@ -231,9 +233,11 @@ public class WsCommunicationsTyrusCloudClientChannel {
 
     @OnError
     public void onError(Session session, Throwable t) {
+
         System.out.println(" --------------------------------------------------------------------- ");
         System.out.println(" WsCommunicationsTyrusCloudClientChannel - Starting method onError");
         t.printStackTrace();
+        onClose(clientConnection, new CloseReason(CloseReason.CloseCodes.PROTOCOL_ERROR, t.getMessage()));
     }
 
 
