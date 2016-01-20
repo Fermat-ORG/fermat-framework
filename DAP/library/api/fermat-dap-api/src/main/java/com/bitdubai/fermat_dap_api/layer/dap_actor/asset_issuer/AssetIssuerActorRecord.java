@@ -63,38 +63,6 @@ public class AssetIssuerActorRecord implements ActorAssetIssuer {
 
     }
 
-    public AssetIssuerActorRecord(String actorPublicKey,
-                                  String name,
-                                  byte[] profileImage,
-                                  long registrationDate) {
-
-        this.name               = name                                  ;
-        this.actorPublicKey     = actorPublicKey                        ;
-        this.profileImage       = profileImage.clone()                  ;
-        this.registrationDate   = registrationDate                      ;
-        this.dapConnectionState = DAPConnectionState.REGISTERED_ONLINE  ;
-    }
-
-    public AssetIssuerActorRecord(String actorPublicKey,
-                                  String name,
-                                  DAPConnectionState dapConnectionState,
-                                  double locationLatitude,
-                                  double locationLongitude,
-                                  long registrationDate,
-                                  byte[] profileImage,
-                                  String description) {
-
-        this.actorPublicKey         = actorPublicKey        ;
-        this.name                   = name                  ;
-        this.dapConnectionState     = dapConnectionState    ;
-        this.locationLatitude       = locationLatitude      ;
-        this.locationLongitude      = locationLongitude     ;
-        this.registrationDate       = registrationDate      ;
-        this.profileImage           = profileImage.clone()  ;
-        if(!description.isEmpty())
-            this.description        = description           ;
-    }
-
     public AssetIssuerActorRecord(final String actorPublicKey,
                                   final String name,
                                   final DAPConnectionState dapConnectionState,
@@ -114,7 +82,6 @@ public class AssetIssuerActorRecord implements ActorAssetIssuer {
         this.lastConnectionDate     =       lastConnectionDate      ;
         this.profileImage           =       profileImage.clone()    ;
         this.description            =       description             ;
-
     }
 
 

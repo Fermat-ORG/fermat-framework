@@ -1,5 +1,6 @@
 package com.bitdubai.sub_app.intra_user_community.common.popups;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.os.Bundle;
 import android.view.View;
@@ -24,6 +25,7 @@ import com.bitdubai.sub_app.intra_user_community.session.SessionConstants;
  * Created by Joaquin C on 12/11/15.
  * Modified by Jose Manuel De Sousa 08/12/2015
  */
+@SuppressWarnings("FieldCanBeLocal")
 public class AcceptDialog extends FermatDialog<IntraUserSubAppSession, SubAppResourcesProviderManager> implements View.OnClickListener {
 
     /**
@@ -51,6 +53,7 @@ public class AcceptDialog extends FermatDialog<IntraUserSubAppSession, SubAppRes
     }
 
 
+    @SuppressLint("SetTextI18n")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

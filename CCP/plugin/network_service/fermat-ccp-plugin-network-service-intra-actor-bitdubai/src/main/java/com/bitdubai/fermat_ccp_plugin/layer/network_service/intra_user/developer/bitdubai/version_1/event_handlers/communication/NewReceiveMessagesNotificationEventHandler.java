@@ -27,7 +27,11 @@ public class NewReceiveMessagesNotificationEventHandler extends AbstractCommunic
 
         //System.out.print("NOTIFICACION EVENTO LLEGADA MENSAJE A INTRA USER NETWORK SERVICE!!!!");
 
-        ((IntraActorNetworkServicePluginRoot)networkService).handleNewMessages((FermatMessage) event.getData());
+        //(networkService).handleNewMessages((FermatMessage) event.getData());
+        if(networkService!=null) networkService.handleNewMessages((FermatMessage) event.getData());
+        else if (ns!=null) {
+            ((IntraActorNetworkServicePluginRoot)ns).handleNewMessages((FermatMessage)event.getData());
+        }
     }
 
 }

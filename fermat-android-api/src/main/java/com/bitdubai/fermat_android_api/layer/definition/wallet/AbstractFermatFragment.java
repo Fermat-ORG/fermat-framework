@@ -25,6 +25,7 @@ import com.bitdubai.fermat_android_api.ui.inflater.ViewInflater;
 import com.bitdubai.fermat_android_api.ui.interfaces.FermatWizardActivity;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Engine;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
+import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.interfaces.FermatRuntime;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.interfaces.FermatScreenSwapper;
 import com.bitdubai.fermat_api.layer.dmp_module.sub_app_manager.InstalledSubApp;
 import com.bitdubai.fermat_api.layer.dmp_module.wallet_manager.InstalledWallet;
@@ -52,7 +53,6 @@ public abstract class AbstractFermatFragment<S extends FermatSession,R extends R
      */
     protected ViewInflater viewInflater;
     private WizardConfiguration context;
-    private String changeBackActivity;
 
 
     @Override
@@ -229,6 +229,10 @@ public abstract class AbstractFermatFragment<S extends FermatSession,R extends R
 
     protected final void setChangeBackActivity(Activities backActivity){
         getFermatScreenSwapper().setChangeBackActivity(backActivity);
+    }
+
+    protected final FermatRuntime getRuntimeManager(){
+        return (FermatRuntime)getActivity();
     }
 
 }

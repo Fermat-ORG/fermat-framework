@@ -16,15 +16,15 @@ To accomplish its mission, a GUI component must have a wireframe.
 
 ### Wallet
 
-A Wallet is a GUI Component that allows a user to carry out financial transactions, like sending and receiving crypto currencies, using different plug-ins that Fermat offers through Modules. Each Module Wallet has an associated Module, thus, there is a one-on-one relationship between a Wallet and its Module.
+A Wallet is a GUI Component that allows a user to carry out financial transactions, like sending and receiving crypto currencies, using different Plug-ins that Fermat offers through Modules. Each Module Wallet has an associated Module, thus, there is a one-on-one relationship between a Wallet and its Module.
 
-### Sub-App
+### SubApp
 
-A SubApp is a GUI Component that allows a user to carry out non-financial operations, such as creating identities within the platform, administrative tasks, among others. All of this, using various plug-ins that Fermat offers through Modules. Sub-Apps serve generally to complement the functionality of a wallet. Just like Wallets, each Sub-App has an associated Module (there is also a one-on-one relationship between a SubApp and a Module).
+A SubApp is a GUI Component that allows a user to carry out non-financial operations, such as creating identities within the platform, administrative tasks, among others. All of this, using various Plug-ins that Fermat offers through Modules. SubApps serve generally to complement the functionality of a wallet. Just like Wallets, each SubApp has an associated Module (there is also a one-on-one relationship between a SubApp and a Module).
 
 ### Modules
  
-A GUI component in Fermat is divided into 2 Plug-ins, the graphic interfaces and the module of such interface. This last one has the following funtionalities:
+A GUI component in Fermat is divided into 2 Plug-ins, the graphic interfaces and the module of such interface. This last one has the following functionalities:
 
 - Works as a connection between the Plug-ins of the platform, cosuming the services that they provide.
 - It covers the logic of the presentation, gathering, organizing and grouping Plug-in data.
@@ -36,11 +36,11 @@ For more information about how to create a Module refer to [this documentation](
 
 ### Session
 
-One of the problems when using fragments to construct wallets or sub-apps is the sharing of information between fragments on a fermat app life cycle, since a fragment is eliminated when not visible, and has to be re-created when it regains focus. This data must be saved in some place just in case a user wants to change something in a Wallet, and leave the session open. 
+One of the problems when using fragments to construct wallets or subApps is the sharing of information between fragments on a fermat app life cycle, since a fragment is eliminated when not visible, and has to be recreated when it regains focus. This data must be saved in some place just in case a user wants to change something in a Wallet, and leave the session open. 
 
-To resolve this, there exists something called Sessions: Objects that works like shared memory between the different screens that your Wallet or SubApp may have. These apps must have they're own session object to share any information they need to share. There is also data that every session always shares, such as the Module of the Wallet or SubApp, its Public Key, a reference to the Error Manager (object that handles exceptions generated in the platform) and a Map (<Key,Value> pair object) that lets an app hold the data it needs to share.
+To resolve this, there exists something called Sessions: Objects that works like shared memory between the different screens that your Wallet or SubApp may have. These apps must have their own session object to share any information they need to share. There is also data that every session always shares, such as the Module of the Wallet or SubApp, its Public Key, a reference to the Error Manager (object that handles exceptions generated in the platform) and a Map (<Key,Value> pair object) that lets an app hold the data it needs to share.
 
-Managing fermat sessions is done using a Wallet Manager or a SubApp Manager. These objects hold the state of a Wallet or a Sub-App ready for when the user switches back to the Wallet ot Sub-App's screen.
+Managing fermat sessions is done by using a Wallet Manager or a SubApp Manager. These objects hold the state of a Wallet or a SubApp ready for when the user switches back to the Wallet ot SubApp screen.
 
 Every class made to represent a Session has to extend its functionality from `AbstractFermatSession`. Here's an example: 
 
@@ -52,8 +52,8 @@ public class ReferenceWalletSession extends AbstractFermatSession<InstalledWalle
 ```
 Where:
 - `InstalledWallet` holds a reference to the installed wallet.
-- `CryptoWalletManager` is the module corresponding to said wallet.
-- `ProviderManager` (unused at this time) is a Fermat equivalent to android's R class.
+- `CryptoWalletManager` is the module corresponding to the wallet mentioned.
+- `ProviderManager` (not used at this time) is a Fermat equivalent to android's R class.
 
 <br>
 
@@ -638,8 +638,8 @@ Where:
 
 - **platform_Name**: Refers to the platform where you will create your components.
 - **client_type**: Refers to the device where the client is going to create, either Android, IPhone, a web or desktop application, etc. At the moment the client we are using is Android, therefore the name of this folder is “android”.
-- **project_type**: Refers to the type of project you’re goint to create GUI components for. They could be **desktop**, **reference-wallet** or **sub-app**.  
-- **name_of_the_project**: This is the name of the project. For example: if your project is named **Crypto Broker Community** then you have to name it **crypto-broker-community**.
+- **project_type**: Refers to the type of project you’re goint to create GUI components for. They could be **desktop**, **reference wallet** or **SubApp**.  
+- **name_of_the_project**: This is the name of the project. For example: if your project is named **Crypto Broker Community** then you have to name it **crypto broker community**.
 - **org_name**: This is the name of the developer organization o company that is creating the project, for example: **bitdubai**.  
  
 Here’s an example:

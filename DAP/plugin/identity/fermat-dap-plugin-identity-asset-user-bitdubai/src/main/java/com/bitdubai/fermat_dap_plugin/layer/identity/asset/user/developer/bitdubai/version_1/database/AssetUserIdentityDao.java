@@ -252,7 +252,7 @@ public class AssetUserIdentityDao implements DealsWithPluginDatabaseSystem {
                 IdentityAssetUserrRecord = new IdentityAssetUsermpl(
                         record.getStringValue(AssetUserIdentityDatabaseConstants.ASSET_USER_IDENTITY_ALIAS_COLUMN_NAME),
                         record.getStringValue(AssetUserIdentityDatabaseConstants.ASSET_USER_IDENTITY_PUBLIC_KEY_COLUMN_NAME),
-                        getAssetUserProfileImagePrivateKey(record.getStringValue(AssetUserIdentityDatabaseConstants.ASSET_USER_IDENTITY_DEVICE_USER_PUBLIC_KEY_COLUMN_NAME)));
+                        getAssetUserProfileImagePrivateKey(record.getStringValue(AssetUserIdentityDatabaseConstants.ASSET_USER_IDENTITY_PUBLIC_KEY_COLUMN_NAME)));
             }
         } catch (CantLoadTableToMemoryException e) {
             throw new CantGetAssetUserIdentitiesException(e.getMessage(), e, "Asset User Identity", "Cant load " + AssetUserIdentityDatabaseConstants.ASSET_USER_IDENTITY_TABLE_NAME + " table in memory.");
@@ -299,7 +299,7 @@ public class AssetUserIdentityDao implements DealsWithPluginDatabaseSystem {
                 list.add(new IdentityAssetUsermpl(record.getStringValue(AssetUserIdentityDatabaseConstants.ASSET_USER_IDENTITY_ALIAS_COLUMN_NAME),
                         record.getStringValue(AssetUserIdentityDatabaseConstants.ASSET_USER_IDENTITY_PUBLIC_KEY_COLUMN_NAME),
                         getAssetUserIdentityPrivateKey(record.getStringValue(AssetUserIdentityDatabaseConstants.ASSET_USER_IDENTITY_PUBLIC_KEY_COLUMN_NAME)),
-                        getAssetUserProfileImagePrivateKey(record.getStringValue(AssetUserIdentityDatabaseConstants.ASSET_USER_IDENTITY_DEVICE_USER_PUBLIC_KEY_COLUMN_NAME)),
+                        getAssetUserProfileImagePrivateKey(record.getStringValue(AssetUserIdentityDatabaseConstants.ASSET_USER_IDENTITY_PUBLIC_KEY_COLUMN_NAME)),
                         pluginFileSystem,
                         pluginId));
             }
@@ -327,16 +327,13 @@ public class AssetUserIdentityDao implements DealsWithPluginDatabaseSystem {
                     FileLifeSpan.PERMANENT
             );
 
-
             file.loadFromMedia();
 
             profileImage = file.getContent();
 
         } catch (CantLoadFileException e) {
             throw new CantGetAssetUserIdentityProfileImageException("CAN'T GET IMAGE PROFILE ", e, "Error loaded file.", null);
-
         } catch (FileNotFoundException | CantCreateFileException e) {
-            //Not image found return byte null
             profileImage = new byte[0];
             // throw new CantGetIntraWalletUserIdentityProfileImageException("CAN'T GET IMAGE PROFILE ", e, "Error getting developer identity private keys file.", null);
         } catch (Exception e) {
@@ -364,7 +361,6 @@ public class AssetUserIdentityDao implements DealsWithPluginDatabaseSystem {
             file.persistToMedia();
         } catch (CantPersistFileException e) {
             throw new CantPersistPrivateKeyException("CAN'T PERSIST PRIVATE KEY ", e, "Error persist file.", null);
-
         } catch (CantCreateFileException e) {
             throw new CantPersistPrivateKeyException("CAN'T PERSIST PRIVATE KEY ", e, "Error creating file.", null);
         } catch (Exception e) {
@@ -386,7 +382,6 @@ public class AssetUserIdentityDao implements DealsWithPluginDatabaseSystem {
             file.persistToMedia();
         } catch (CantPersistFileException e) {
             throw new CantPersistProfileImageException("CAN'T PERSIST PROFILE IMAGE ", e, "Error persist file.", null);
-
         } catch (CantCreateFileException e) {
             throw new CantPersistProfileImageException("CAN'T PERSIST PROFILE IMAGE ", e, "Error creating file.", null);
         } catch (Exception e) {

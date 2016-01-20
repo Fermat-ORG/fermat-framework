@@ -244,6 +244,11 @@ public class CashMoneyWalletModulePluginRoot extends AbstractPlugin implements L
     }
 
     @Override
+    public void createIdentity(String name, String phrase, byte[] profile_img) throws Exception {
+
+    }
+
+    @Override
     public void setAppPublicKey(String publicKey) {
 
     }
