@@ -99,5 +99,3 @@ task testCoverage(dependsOn: jacocoTestReport) << {
 
 tasks.assemble.dependsOn clean
 tasks.assemble.mustRunAfter clean
-
-
