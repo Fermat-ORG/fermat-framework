@@ -9,7 +9,7 @@ public class NotEnoughAcceptsException extends DAPException {
 
     //VARIABLE DECLARATION
 
-    public static final String DEFAULT_MESSAGE = "Couldn't find any record in database to update or delete.";
+    public static final String DEFAULT_MESSAGE = "There are no available assets in this wallet.";
 
     //CONSTRUCTORS
 
