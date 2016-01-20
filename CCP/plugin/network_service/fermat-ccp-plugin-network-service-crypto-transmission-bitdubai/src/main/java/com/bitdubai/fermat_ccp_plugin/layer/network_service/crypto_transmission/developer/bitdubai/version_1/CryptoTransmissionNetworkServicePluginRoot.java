@@ -49,6 +49,7 @@ import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogLevel;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogManager;
 import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_addresses.exceptions.PendingRequestNotFoundException;
 import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_payment_request.enums.RequestProtocolState;
+import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_transmission.enums.CryptoTransmissionMetadataState;
 import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_transmission.enums.CryptoTransmissionStates;
 import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_transmission.exceptions.CantAcceptCryptoRequestException;
 import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_transmission.exceptions.CantConfirmMetaDataNotificationException;
@@ -1020,9 +1021,9 @@ public class CryptoTransmissionNetworkServicePluginRoot extends AbstractNetworkS
     public void handleNewSentMessageNotificationEvent(FermatMessage data) {
         Gson gson = new Gson();
         CryptoTransmissionMetadata cryptoTransmissionMetadata = gson.fromJson(data.getContent(),CryptoTransmissionMetadata.class);
-        if(cryptoTransmissionMetadata.getCryptoTransmissionStates() == CryptoTransmissionStates.SENT){
-            cryptoTransmissionAgent.addToTimer(data.getReceiver(),data.getId());
-        }
+        //if(cryptoTransmissionMetadata.getCryptoTransmissionStates() == CryptoTransmissionStates.SENT){
+         //   cryptoTransmissionAgent.addToTimer(data.getReceiver(),data.getId());
+        //}
     }
 
     /**
@@ -1131,7 +1132,8 @@ public class CryptoTransmissionNetworkServicePluginRoot extends AbstractNetworkS
 
         try
         {
-            cryptoTransmissionMetadataDAO.changeState(transaction_id, CryptoTransmissionStates.CREDITED_IN_DESTINATION_WALLET);
+            cryptoTransmissionMetadataDAO.changeDeliveryState(transaction_id, CryptoTransmissionStates.PRE_PROCESSING_SEND);
+            cryptoTransmissionMetadataDAO.changeNotificationState(transaction_id,CryptoTransmissionMetadataState.CRYPTO_TRANSMISSION_METADATA_STATE_CREDITED_IN_DESTINATION_WALLET);
         }
         catch(CantUpdateRecordDataBaseException e)
         {
@@ -1146,7 +1148,9 @@ public class CryptoTransmissionNetworkServicePluginRoot extends AbstractNetworkS
 
         try
         {
-            cryptoTransmissionMetadataDAO.changeState(transaction_id, CryptoTransmissionStates.SEEN_BY_DESTINATION_VAULT);
+            //change status to send , to inform Seen
+            cryptoTransmissionMetadataDAO.changeDeliveryState(transaction_id, CryptoTransmissionStates.PRE_PROCESSING_SEND);
+            cryptoTransmissionMetadataDAO.changeNotificationState(transaction_id, CryptoTransmissionMetadataState.CRYPTO_TRANSMISSION_METADATA_STATE_SEEN_BY_DESTINATION_VAULT);
         }
         catch(CantUpdateRecordDataBaseException e)
         {
@@ -1172,7 +1176,8 @@ public class CryptoTransmissionNetworkServicePluginRoot extends AbstractNetworkS
                 senderPublicKey
                 ,transactionId,
                 CryptoTransmissionStates.PRE_PROCESSING_SEND,
-                CryptoTransmissionMetadataType.METADATA_SEND,0
+                CryptoTransmissionMetadataType.METADATA_SEND,0,
+                CryptoTransmissionMetadataState.CRYPTO_TRANSMISSION_METADATA_STATE_PROCESSING
         );
 
         try {
@@ -1208,7 +1213,8 @@ public class CryptoTransmissionNetworkServicePluginRoot extends AbstractNetworkS
                 ,transactionId,
                 CryptoTransmissionStates.PRE_PROCESSING_SEND,
                 CryptoTransmissionMetadataType.METADATA_SEND,
-                0
+                0,
+                CryptoTransmissionMetadataState.CRYPTO_TRANSMISSION_METADATA_STATE_PROCESSING
         );
 
         try {
@@ -1331,31 +1337,38 @@ public class CryptoTransmissionNetworkServicePluginRoot extends AbstractNetworkS
                     CryptoTransmissionResponseMessage cryptoTransmissionResponseMessage =  gson.fromJson(fermatMessage.getContent(), CryptoTransmissionResponseMessage.class);
 
                     //UUID transcation_id = UUID.fromString( innerObject.get("transaction_id").getAsString());
-                    switch (cryptoTransmissionResponseMessage.getCryptoTransmissionStates()){
+                    switch (cryptoTransmissionResponseMessage.getCryptoTransmissionMetadataState()){
 
-                        case SEEN_BY_DESTINATION_NETWORK_SERVICE:
-                            cryptoTransmissionMetadataDAO.changeState(cryptoTransmissionResponseMessage.getTransactionId(), CryptoTransmissionStates.SEEN_BY_DESTINATION_NETWORK_SERVICE);
+                        case CRYPTO_TRANSMISSION_METADATA_STATE_SEEN_BY_DESTINATION_NETWORK_SERVICE:
+                            cryptoTransmissionMetadataDAO.changeDeliveryState(cryptoTransmissionResponseMessage.getTransactionId(), CryptoTransmissionStates.PROCESSING_RECEIVE);
+                            cryptoTransmissionMetadataDAO.changeNotificationState(cryptoTransmissionResponseMessage.getTransactionId(), CryptoTransmissionMetadataState.CRYPTO_TRANSMISSION_METADATA_STATE_SEEN_BY_DESTINATION_NETWORK_SERVICE);
+
+
                             System.out.print("-----------------------\n" +
                                     "RECIVIENDO RESPUESTA CRYPTO METADATA!!!!! -----------------------\n" +
-                                    "-----------------------\n STATE: " + CryptoTransmissionStates.SEEN_BY_DESTINATION_NETWORK_SERVICE);
+                                    "-----------------------\n STATE: SEEN_BY_DESTINATION_NETWORK_SERVICE ") ;
                             System.out.print("CryptoTransmission SEEN_BY_DESTINATION_NETWORK_SERVICE event");
 
                             break;
-                        case SEEN_BY_DESTINATION_VAULT:
+                        case  CRYPTO_TRANSMISSION_METADATA_STATE_SEEN_BY_DESTINATION_VAULT:
                             // deberia ver si tengo que lanzar un evento acá
-                            cryptoTransmissionMetadataDAO.changeState(cryptoTransmissionResponseMessage.getTransactionId(),CryptoTransmissionStates.SEEN_BY_DESTINATION_VAULT);
+                            cryptoTransmissionMetadataDAO.changeDeliveryState(cryptoTransmissionResponseMessage.getTransactionId(), CryptoTransmissionStates.PROCESSING_RECEIVE);
+                            cryptoTransmissionMetadataDAO.changeNotificationState(cryptoTransmissionResponseMessage.getTransactionId(), CryptoTransmissionMetadataState.CRYPTO_TRANSMISSION_METADATA_STATE_SEEN_BY_DESTINATION_VAULT);
+
                             System.out.print("-----------------------\n" +
                                     "RECIVIENDO RESPUESTA CRYPTO METADATA!!!!! -----------------------\n" +
-                                    "-----------------------\n STATE: " + CryptoTransmissionStates.SEEN_BY_DESTINATION_VAULT);
+                                    "-----------------------\n STATE: SEEN_BY_DESTINATION_VAULT " );
                             System.out.print("CryptoTransmission SEEN_BY_DESTINATION_VAULT event");
                             break;
 
-                        case CREDITED_IN_DESTINATION_WALLET:
+                        case CRYPTO_TRANSMISSION_METADATA_STATE_CREDITED_IN_DESTINATION_WALLET:
                             // Guardo estado
-                            cryptoTransmissionMetadataDAO.changeState(cryptoTransmissionResponseMessage.getTransactionId(), CryptoTransmissionStates.CREDITED_IN_DESTINATION_WALLET);
+                            cryptoTransmissionMetadataDAO.changeDeliveryState(cryptoTransmissionResponseMessage.getTransactionId(), CryptoTransmissionStates.DONE);
+                            cryptoTransmissionMetadataDAO.changeNotificationState(cryptoTransmissionResponseMessage.getTransactionId(), CryptoTransmissionMetadataState.CRYPTO_TRANSMISSION_METADATA_STATE_CREDITED_IN_DESTINATION_WALLET);
+
                             System.out.print("-----------------------\n" +
                                     "RECIVIENDO RESPUESTA CRYPTO METADATA!!!!! -----------------------\n" +
-                                    "-----------------------\n STATE: " + CryptoTransmissionStates.CREDITED_IN_DESTINATION_WALLET);
+                                    "-----------------------\n STATE: CREDITED_IN_DESTINATION_WALLET ");
                             // deberia ver si tengo que lanzar un evento acá
                             System.out.print("CryptoTransmission CREDITED_IN_DESTINATION_WALLET event");
 
@@ -1405,7 +1418,7 @@ public class CryptoTransmissionNetworkServicePluginRoot extends AbstractNetworkS
                     if(record.getSentCount() > 10)
                     {
                         //update state and process again later
-                        cryptoTransmissionMetadataDAO.changeState(record.getTransactionId(), CryptoTransmissionStates.WAITING_RESPONSE);
+                        cryptoTransmissionMetadataDAO.changeDeliveryState(record.getTransactionId(), CryptoTransmissionStates.WAITING_RESPONSE);
                     }
                     else
                     {
@@ -1457,7 +1470,7 @@ public class CryptoTransmissionNetworkServicePluginRoot extends AbstractNetworkS
 
             for(CryptoTransmissionMetadata record : lstCryptoTransmissionMetadata) {
 
-                     cryptoTransmissionMetadataDAO.changeState(record.getTransactionId(), CryptoTransmissionStates.PRE_PROCESSING_SEND);
+                     cryptoTransmissionMetadataDAO.changeDeliveryState(record.getTransactionId(), CryptoTransmissionStates.PRE_PROCESSING_SEND);
 
             }
 

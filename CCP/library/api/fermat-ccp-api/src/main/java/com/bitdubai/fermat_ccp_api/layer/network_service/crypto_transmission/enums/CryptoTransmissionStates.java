@@ -13,10 +13,11 @@ public enum CryptoTransmissionStates {
     PRE_PROCESSING_SEND("PPS"),
     PROCESSING_SEND_COMMUNICATION_TEMPLATE("PSCT"),
     SENT("S"),
-    SEEN_BY_DESTINATION_NETWORK_SERVICE("SBDNS"),
     SEEN_BY_DESTINATION_VAULT("SBDV"),
-    CREDITED_IN_DESTINATION_WALLET("CIDW"),
+    PROCESSING_RECEIVE ("PRR"),
     WAITING_RESPONSE("WRE"),
+
+    DONE("DON"),
 
     /**
      * Receiving states
@@ -25,6 +26,10 @@ public enum CryptoTransmissionStates {
     SEEN_BY_OWN_VAULT("SBOV"),
     CREDITED_IN_OWN_WALLET("CIOW"),
     ;
+
+    // SEEN_BY_DESTINATION_NETWORK_SERVICE("SBDNS"),
+    // SEEN_BY_DESTINATION_VAULT("SBDV"),
+    //CREDITED_IN_DESTINATION_WALLET("CIDW"),
 
     String code;
 

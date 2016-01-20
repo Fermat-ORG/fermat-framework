@@ -384,7 +384,7 @@ public class CryptoWalletWalletModuleManager implements CryptoWallet {
         try{
 
             try {
-                WalletContactRecord walletContactRecord = walletContactsRegistry.getWalletContactByAliasAndWalletPublicKey(actorAlias, walletPublicKey);
+                WalletContactRecord walletContactRecord = walletContactsRegistry.getWalletContactByActorAndWalletPublicKey(actorConnectedPublicKey, walletPublicKey);
 
                 //get to Crypto Address NS the intra user actor address
                 cryptoAddressesNSManager.sendAddressExchangeRequest(walletPublicKey,

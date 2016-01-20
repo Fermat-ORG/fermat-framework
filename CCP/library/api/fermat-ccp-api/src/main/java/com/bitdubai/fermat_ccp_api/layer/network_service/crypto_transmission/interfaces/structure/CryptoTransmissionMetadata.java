@@ -1,6 +1,7 @@
 package com.bitdubai.fermat_ccp_api.layer.network_service.crypto_transmission.interfaces.structure;
 
 import com.bitdubai.fermat_api.layer.all_definition.enums.CryptoCurrency;
+import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_transmission.enums.CryptoTransmissionMetadataState;
 import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_transmission.enums.CryptoTransmissionStates;
 
 import java.util.UUID;
@@ -30,7 +31,9 @@ public interface CryptoTransmissionMetadata {
 
     public CryptoTransmissionMetadataType getCryptoTransmissionMetadataType();
 
-    public void changeState(CryptoTransmissionStates cryptoTransmissionStates);
+    public void changeDeliveryState(CryptoTransmissionStates cryptoTransmissionStates);
+
+    void changeMetadataState(CryptoTransmissionMetadataState cryptoTransmissionNotificationStates);
 
     public void setTypeMetadata(CryptoTransmissionMetadataType cryptoTransmissionMetadataType);
 
@@ -42,6 +45,7 @@ public interface CryptoTransmissionMetadata {
 
     int getSentCount();
 
+    CryptoTransmissionMetadataState getCryptoTransmissionMetadataStates();
 
     void setPendingToRead(boolean pending);
 }

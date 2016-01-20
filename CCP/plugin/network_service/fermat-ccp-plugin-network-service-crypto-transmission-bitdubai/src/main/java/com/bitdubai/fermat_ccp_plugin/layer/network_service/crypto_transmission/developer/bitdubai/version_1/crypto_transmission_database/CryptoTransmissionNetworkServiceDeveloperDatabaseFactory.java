@@ -123,11 +123,12 @@ public class CryptoTransmissionNetworkServiceDeveloperDatabaseFactory implements
               cRYPTOTRANSMISSIONMETADATAColumns.add(CryptoTransmissionNetworkServiceDatabaseConstants.CRYPTO_TRANSMISSION_METADATA_REQUEST_ID_COLUMN_NAME);
               cRYPTOTRANSMISSIONMETADATAColumns.add(CryptoTransmissionNetworkServiceDatabaseConstants.CRYPTO_TRANSMISSION_METADATA_CRYPTO_CURRENCY_COLUMN_NAME);
               cRYPTOTRANSMISSIONMETADATAColumns.add(CryptoTransmissionNetworkServiceDatabaseConstants.CRYPTO_TRANSMISSION_METADATA_CRYPTO_AMOUNT_COLUMN_NAME);
-              cRYPTOTRANSMISSIONMETADATAColumns.add(CryptoTransmissionNetworkServiceDatabaseConstants.CRYPTO_TRANSMISSION_METADATA_SENDER_PUBLICK_KEY_COLUMN_NAME);
+              cRYPTOTRANSMISSIONMETADATAColumns.add(CryptoTransmissionNetworkServiceDatabaseConstants.CRYPTO_TRANSMISSION_METADATA_SENDER_PUBLIC_KEY_COLUMN_NAME);
               cRYPTOTRANSMISSIONMETADATAColumns.add(CryptoTransmissionNetworkServiceDatabaseConstants.CRYPTO_TRANSMISSION_METADATA_DESTINATION_PUBLIC_KEY_COLUMN_NAME);
               cRYPTOTRANSMISSIONMETADATAColumns.add(CryptoTransmissionNetworkServiceDatabaseConstants.CRYPTO_TRANSMISSION_METADATA_ASSOCIATED_CRYPTO_TRANSACTION_HASH_COLUMN_NAME);
               cRYPTOTRANSMISSIONMETADATAColumns.add(CryptoTransmissionNetworkServiceDatabaseConstants.CRYPTO_TRANSMISSION_METADATA_PAYMENT_DESCRIPTION_COLUMN_NAME);
               cRYPTOTRANSMISSIONMETADATAColumns.add(CryptoTransmissionNetworkServiceDatabaseConstants.CRYPTO_TRANSMISSION_METADATA_STATUS_COLUMN_NAME);
+             cRYPTOTRANSMISSIONMETADATAColumns.add(CryptoTransmissionNetworkServiceDatabaseConstants.CRYPTO_TRANSMISSION_METADATA_NOTIFICATION_DESCRIPTOR_COLUMN_NAME);
               cRYPTOTRANSMISSIONMETADATAColumns.add(CryptoTransmissionNetworkServiceDatabaseConstants.CRYPTO_TRANSMISSION_METADATA_SENT_COUNT_COLUMN_NAME);
 
 
