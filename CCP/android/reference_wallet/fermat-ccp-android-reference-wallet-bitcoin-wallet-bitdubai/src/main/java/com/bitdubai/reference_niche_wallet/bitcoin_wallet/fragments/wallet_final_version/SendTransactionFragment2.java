@@ -30,6 +30,7 @@ import com.bitdubai.android_fermat_ccp_wallet_bitcoin.R;
 
 import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView;
 import com.bitdubai.fermat_android_api.ui.Views.CircularProgressBar;
+import com.bitdubai.fermat_android_api.ui.Views.PresentationDialog;
 import com.bitdubai.fermat_android_api.ui.enums.FermatRefreshTypes;
 import com.bitdubai.fermat_android_api.ui.expandableRecicler.ExpandableRecyclerAdapter;
 import com.bitdubai.fermat_android_api.ui.fragments.FermatWalletExpandableListFragment;
@@ -229,6 +230,15 @@ public class SendTransactionFragment2 extends FermatWalletExpandableListFragment
                         null,
                         (moduleManager.getActiveIdentities().isEmpty()) ? PresentationBitcoinWalletDialog.TYPE_PRESENTATION : PresentationBitcoinWalletDialog.TYPE_PRESENTATION_WITHOUT_IDENTITIES,
                         checkButton);
+
+//        PresentationDialog presentationDialog = new PresentationDialog.Builder(getActivity(),appSession)
+//                .setBannerRes(R.drawable.banner_bitcoin_wallet)
+//                .setIconRes(R.drawable.bitcoin_wallet_2)
+//                .setBody("Hola que tal")
+//                .setSubTitle("Soy un subtitulo")
+//                .setTextFooter("soy un footer y me la re banco")
+//                .build();
+
         presentationBitcoinWalletDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
             @Override
             public void onDismiss(DialogInterface dialog) {

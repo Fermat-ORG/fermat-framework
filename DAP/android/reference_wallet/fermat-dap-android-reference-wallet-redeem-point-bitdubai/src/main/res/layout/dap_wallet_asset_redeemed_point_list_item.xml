@@ -11,23 +11,24 @@
         android:textSize="16sp"
         android:fontFamily="regular"
         android:textColor="#2A3F52"
-        android:layout_alignParentTop="true"
-        android:layout_alignParentLeft="true"
         android:paddingTop="10dp"
-        android:paddingLeft="10dp"/>
+        android:paddingLeft="10dp"
+        android:layout_alignBottom="@+id/redeemedListRedeemedDate"
+        android:layout_alignParentLeft="true" />
 
     <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
         android:id="@+id/redeemedListRedeemedDate"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="25 Nov 2015"
-        android:textSize="12sp"
+        android:textSize="14sp"
         android:fontFamily="normal"
         android:textColor="#9E9E9E"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentLeft="true"
-        android:paddingBottom="10dp"
-        android:paddingLeft="10dp"/>
+        android:paddingLeft="10dp"
+        android:layout_marginRight="38dp"
+        android:paddingTop="10dp"
+        android:layout_centerVertical="true"
+        android:layout_alignParentRight="true" />
 
     <View
         android:layout_width="fill_parent"

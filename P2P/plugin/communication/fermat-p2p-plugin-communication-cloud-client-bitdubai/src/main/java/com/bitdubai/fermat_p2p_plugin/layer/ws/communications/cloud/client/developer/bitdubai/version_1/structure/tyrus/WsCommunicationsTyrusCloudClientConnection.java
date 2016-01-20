@@ -38,6 +38,7 @@ import com.bitdubai.fermat_p2p_plugin.layer.ws.communications.cloud.client.devel
 import com.bitdubai.fermat_p2p_plugin.layer.ws.communications.cloud.client.developer.bitdubai.version_1.structure.tyrus.processors.FailureUpdateActorTyrusPacketProcessor;
 import com.bitdubai.fermat_p2p_plugin.layer.ws.communications.cloud.client.developer.bitdubai.version_1.structure.tyrus.processors.RequestListComponentRegisterTyrusPacketProcessor;
 import com.bitdubai.fermat_p2p_plugin.layer.ws.communications.cloud.client.developer.bitdubai.version_1.structure.tyrus.processors.ServerHandshakeRespondTyrusPacketProcessor;
+import com.bitdubai.fermat_p2p_plugin.layer.ws.communications.cloud.client.developer.bitdubai.version_1.structure.tyrus.vpn.WsCommunicationTyrusVPNClientManagerAgent;
 import com.bitdubai.fermat_p2p_plugin.layer.ws.communications.cloud.client.developer.bitdubai.version_1.structure.util.ServerConf;
 import com.bitdubai.fermat_p2p_plugin.layer.ws.communications.cloud.client.developer.bitdubai.version_1.structure.vpn.WsCommunicationVPNClientManagerAgent;
 import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfaces.EventManager;
@@ -94,9 +95,9 @@ public class WsCommunicationsTyrusCloudClientConnection implements Communication
     private WsCommunicationsTyrusCloudClientChannel wsCommunicationsTyrusCloudClientChannel;
 
     /**
-     * Represent the wsCommunicationVPNClientManagerAgent
+     * Represent the wsCommunicationTyrusVPNClientManagerAgent
      */
-    private WsCommunicationVPNClientManagerAgent wsCommunicationVPNClientManagerAgent;
+    private WsCommunicationTyrusVPNClientManagerAgent wsCommunicationTyrusVPNClientManagerAgent;
 
     /**
      * Represent the webSocketContainer
@@ -123,7 +124,7 @@ public class WsCommunicationsTyrusCloudClientConnection implements Communication
         super();
         this.uri = uri;
         this.wsCommunicationsTyrusCloudClientChannel = new WsCommunicationsTyrusCloudClientChannel(this, eventManager, clientIdentity);
-        this.wsCommunicationVPNClientManagerAgent    = WsCommunicationVPNClientManagerAgent.getInstance();
+        this.wsCommunicationTyrusVPNClientManagerAgent    = WsCommunicationTyrusVPNClientManagerAgent.getInstance();
         this.locationManager                         = locationManager;
         this.webSocketContainer = ClientManager.createClient();
     }
@@ -945,7 +946,7 @@ public class WsCommunicationsTyrusCloudClientConnection implements Communication
      */
     @Override
     public CommunicationsVPNConnection getCommunicationsVPNConnectionStablished(NetworkServiceType networkServiceType, PlatformComponentProfile remotePlatformComponentProfile) {
-        return wsCommunicationVPNClientManagerAgent.getActiveVpnConnection(networkServiceType, remotePlatformComponentProfile);
+        return wsCommunicationTyrusVPNClientManagerAgent.getActiveVpnConnection(networkServiceType, remotePlatformComponentProfile);
     }
 
     /*
@@ -955,9 +956,7 @@ public class WsCommunicationsTyrusCloudClientConnection implements Communication
     public void closeMainConnection() {
 
         if(isConnected()){
-            if(wsCommunicationVPNClientManagerAgent.isRunning()){
-                wsCommunicationVPNClientManagerAgent.closeAllVpnConnections();
-            }
+            wsCommunicationTyrusVPNClientManagerAgent.closeAllVpnConnections();
             wsCommunicationsTyrusCloudClientChannel.closeConnection();
         }
 
@@ -970,14 +969,6 @@ public class WsCommunicationsTyrusCloudClientConnection implements Communication
      */
     public WsCommunicationsTyrusCloudClientChannel getWsCommunicationsTyrusCloudClientChannel() {
         return wsCommunicationsTyrusCloudClientChannel;
-    }
-
-    /**
-     * Get the WsCommunicationVPNClientManagerAgent
-     * @return WsCommunicationVPNClientManagerAgent
-     */
-    public WsCommunicationVPNClientManagerAgent getWsCommunicationVPNClientManagerAgent() {
-        return wsCommunicationVPNClientManagerAgent;
     }
 
     /**

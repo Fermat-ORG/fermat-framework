@@ -1,4 +1,4 @@
-package com.bitdubai.fermat_dap_android_sub_app_redeem_point_identity_bitdubai.fragments;
+package com.bitdubai.fermat_dap_android_sub_app_asset_user_identity_bitdubai.fragments;
 
 import android.app.Activity;
 import android.app.Fragment;
@@ -24,14 +24,14 @@ import android.widget.Toast;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractFermatFragment;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.utils.ImagesUtils;
 import com.bitdubai.fermat_api.layer.all_definition.enums.UISource;
-import com.bitdubai.fermat_dap_android_sub_app_redeem_point_identity_bitdubai.R;
-import com.bitdubai.fermat_dap_android_sub_app_redeem_point_identity_bitdubai.session.RedeemPointIdentitySubAppSession;
-import com.bitdubai.fermat_dap_android_sub_app_redeem_point_identity_bitdubai.session.SessionConstants;
-import com.bitdubai.fermat_dap_android_sub_app_redeem_point_identity_bitdubai.util.CommonLogger;
-import com.bitdubai.fermat_dap_api.layer.dap_identity.redeem_point.exceptions.CantCreateNewRedeemPointException;
-import com.bitdubai.fermat_dap_api.layer.dap_identity.redeem_point.exceptions.CantUpdateIdentityRedeemPointException;
-import com.bitdubai.fermat_dap_api.layer.dap_identity.redeem_point.interfaces.RedeemPointIdentity;
-import com.bitdubai.fermat_dap_api.layer.dap_identity.redeem_point.interfaces.RedeemPointIdentityManager;
+import com.bitdubai.fermat_dap_android_sub_app_asset_user_identity_bitdubai.R;
+import com.bitdubai.fermat_dap_android_sub_app_asset_user_identity_bitdubai.session.SessionConstants;
+import com.bitdubai.fermat_dap_android_sub_app_asset_user_identity_bitdubai.session.UserIdentitySubAppSession;
+import com.bitdubai.fermat_dap_android_sub_app_asset_user_identity_bitdubai.util.CommonLogger;
+import com.bitdubai.fermat_dap_api.layer.dap_identity.asset_user.exceptions.CantCreateNewIdentityAssetUserException;
+import com.bitdubai.fermat_dap_api.layer.dap_identity.asset_user.exceptions.CantUpdateIdentityAssetUserException;
+import com.bitdubai.fermat_dap_api.layer.dap_identity.asset_user.interfaces.IdentityAssetUser;
+import com.bitdubai.fermat_dap_api.layer.dap_identity.asset_user.interfaces.IdentityAssetUserManager;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedUIExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 
@@ -41,8 +41,8 @@ import java.util.List;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class CreateIdentityFragment extends AbstractFermatFragment {
-    private static final String TAG = "CreateRedeemPointIdentityFragment";
+public class CreateUserIdentityFragment extends AbstractFermatFragment {
+    private static final String TAG = "CreateAssetUserIdentity";
 
     private static final int CREATE_IDENTITY_FAIL_MODULE_IS_NULL = 0;
     private static final int CREATE_IDENTITY_FAIL_NO_VALID_DATA = 1;
@@ -54,22 +54,22 @@ public class CreateIdentityFragment extends AbstractFermatFragment {
 
     private static final int CONTEXT_MENU_CAMERA = 1;
     private static final int CONTEXT_MENU_GALLERY = 2;
-    RedeemPointIdentitySubAppSession redeemPointIdentitySubAppSession;
 
     private byte[] brokerImageByteArray;
 
-    private RedeemPointIdentityManager moduleManager;
+    private IdentityAssetUserManager moduleManager;
     private ErrorManager errorManager;
 
     private Button createButton;
     private EditText mIdentityName;
     private ImageView mIdentityImage;
 
-    private RedeemPointIdentity identitySelected;
+    UserIdentitySubAppSession userIdentitySubAppSession;
+    private IdentityAssetUser identitySelected;
     private boolean isUpdate = false;
 
-    public static CreateIdentityFragment newInstance() {
-        return new CreateIdentityFragment();
+    public static CreateUserIdentityFragment newInstance() {
+        return new CreateUserIdentityFragment();
     }
 
     @Override
@@ -77,12 +77,12 @@ public class CreateIdentityFragment extends AbstractFermatFragment {
         super.onCreate(savedInstanceState);
 
         try {
-            redeemPointIdentitySubAppSession = (RedeemPointIdentitySubAppSession) appSession;
-            moduleManager = redeemPointIdentitySubAppSession.getModuleManager();
+            userIdentitySubAppSession = (UserIdentitySubAppSession) appSession;
+            moduleManager = userIdentitySubAppSession.getModuleManager();
             errorManager = appSession.getErrorManager();
 
-//            if(moduleManager.getRedeemPointsFromCurrentDeviceUser().isEmpty()){
-//                moduleManager.createNewRedeemPoint("Asset Redeem Point John Doe", null);
+//            if(moduleManager.getIdentityAssetUsersFromCurrentDeviceUser().isEmpty()){
+//                moduleManager.createNewIdentityAssetUser("Asset User John Doe", null);
 //            }
         } catch (Exception ex) {
             CommonLogger.exception(TAG, ex.getMessage(), ex);
@@ -93,7 +93,7 @@ public class CreateIdentityFragment extends AbstractFermatFragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View rootLayout = inflater.inflate(R.layout.fragment_dap_create_redeem_point_identity, container, false);
+        View rootLayout = inflater.inflate(R.layout.fragment_dap_create_user_identity, container, false);
         initViews(rootLayout);
         setUpIdentity();
 
@@ -106,9 +106,9 @@ public class CreateIdentityFragment extends AbstractFermatFragment {
      * @param layout el layout de este Fragment que contiene las vistas
      */
     private void initViews(View layout) {
-        createButton = (Button) layout.findViewById(R.id.create_crypto_broker_button);
-        mIdentityName = (EditText) layout.findViewById(R.id.crypto_broker_name);
-        mIdentityImage = (ImageView) layout.findViewById(R.id.crypto_broker_image);
+        createButton = (Button) layout.findViewById(R.id.dap_user_button);
+        mIdentityName = (EditText) layout.findViewById(R.id.dap_user_name);
+        mIdentityImage = (ImageView) layout.findViewById(R.id.dap_user_image);
 
         createButton.setText((!isUpdate) ? "Create" : "Update");
 
@@ -130,7 +130,7 @@ public class CreateIdentityFragment extends AbstractFermatFragment {
                 int resultKey = createNewIdentity();
                 switch (resultKey) {
                     case CREATE_IDENTITY_SUCCESS:
-//                        changeActivity(Activities.DAP_SUB_APP_REDEEM_POINT_IDENTITY.getCode(), appSession.getAppPublicKey());
+//                        changeActivity(Activities.DAP_SUB_APP_ASSET_USER_IDENTITY.getCode(), appSession.getAppPublicKey());
                         if (!isUpdate) {
                             Toast.makeText(getActivity(), "Identity created", Toast.LENGTH_SHORT).show();
                         } else {
@@ -154,12 +154,12 @@ public class CreateIdentityFragment extends AbstractFermatFragment {
     private void setUpIdentity() {
         try {
 
-            identitySelected = (RedeemPointIdentity) redeemPointIdentitySubAppSession.getData(SessionConstants.IDENTITY_SELECTED);
+            identitySelected = (IdentityAssetUser) userIdentitySubAppSession.getData(SessionConstants.IDENTITY_SELECTED);
 
             if (identitySelected != null) {
                 loadIdentity();
             } else {
-                List<RedeemPointIdentity> lst = moduleManager.getRedeemPointsFromCurrentDeviceUser();
+                List<IdentityAssetUser> lst = moduleManager.getIdentityAssetUsersFromCurrentDeviceUser();
                 if (!lst.isEmpty()) {
                     identitySelected = lst.get(0);
                 }
@@ -181,9 +181,9 @@ public class CreateIdentityFragment extends AbstractFermatFragment {
                 bitmap = BitmapFactory.decodeByteArray(identitySelected.getImage(), 0, identitySelected.getImage().length);
 //                bitmap = Bitmap.createScaledBitmap(bitmap, mBrokerImage.getWidth(), mBrokerImage.getHeight(), true);
             } else {
-                bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.profile_image);
+                bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.ic_profile_male);
 
-                //Picasso.with(getActivity()).load(R.drawable.profile_image).into(mBrokerImage);
+                //Picasso.with(getActivity()).load(R.drawable.ic_profile_male).into(mBrokerImage);
             }
             bitmap = Bitmap.createScaledBitmap(bitmap, 100, 100, true);
             brokerImageByteArray = toByteArray(bitmap);
@@ -267,12 +267,12 @@ public class CreateIdentityFragment extends AbstractFermatFragment {
             if (moduleManager != null) {
                 try {
                     if (!isUpdate)
-                        moduleManager.createNewRedeemPoint(brokerNameText, (brokerImageByteArray == null) ? convertImage(R.drawable.ic_profile_male) : brokerImageByteArray);
+                        moduleManager.createNewIdentityAssetUser(brokerNameText, (brokerImageByteArray == null) ? convertImage(R.drawable.ic_profile_male) : brokerImageByteArray);
                     else
-                        moduleManager.updateIdentityRedeemPoint(identitySelected.getPublicKey(), brokerNameText, brokerImageByteArray);
-                } catch (CantCreateNewRedeemPointException e) {
+                        moduleManager.updateIdentityAssetUser(identitySelected.getPublicKey(), brokerNameText, brokerImageByteArray);
+                } catch (CantCreateNewIdentityAssetUserException e) {
                     errorManager.reportUnexpectedUIException(UISource.VIEW, UnexpectedUIExceptionSeverity.UNSTABLE, e);
-                } catch (CantUpdateIdentityRedeemPointException e) {
+                } catch (CantUpdateIdentityAssetUserException e) {
                     errorManager.reportUnexpectedUIException(UISource.VIEW, UnexpectedUIExceptionSeverity.UNSTABLE, e);
                 }
                 return CREATE_IDENTITY_SUCCESS;
@@ -283,10 +283,10 @@ public class CreateIdentityFragment extends AbstractFermatFragment {
 
     }
 
-    private byte[] convertImage(int resImage){
+    private byte[] convertImage(int resImage) {
         Bitmap bitmap = BitmapFactory.decodeResource(getActivity().getResources(), resImage);
         ByteArrayOutputStream stream = new ByteArrayOutputStream();
-        bitmap.compress(Bitmap.CompressFormat.JPEG,80,stream);
+        bitmap.compress(Bitmap.CompressFormat.JPEG, 80, stream);
         //bitmap.compress(Bitmap.CompressFormat.PNG, 100, stream);
         return stream.toByteArray();
     }

@@ -195,7 +195,6 @@ public class WsCommunicationsTyrusCloudClientChannel {
 
         System.out.println(" --------------------------------------------------------------------- ");
         System.out.println(" WsCommunicationsTyrusCloudClientChannel - Starting method onClose");
-        System.out.println("Socket " + session.getId() + " is disconnect! code = " + reason.getCloseCode() + "[" + reason.getCloseCode().getCode() + "] reason = " + reason.getReasonPhrase());
 
 
         try {
@@ -255,7 +254,7 @@ public class WsCommunicationsTyrusCloudClientChannel {
 
     @OnMessage
     public void onPongMessage(PongMessage message) {
-        System.out.println(" WsCommunicationsTyrusCloudClientChannel - Pong message receive from server = " + new String(message.getApplicationData().array()));
+        System.out.println(" WsCommunicationsTyrusCloudClientChannel - Pong message receive from server = " + message.getApplicationData().asCharBuffer().toString());
     }
 
 

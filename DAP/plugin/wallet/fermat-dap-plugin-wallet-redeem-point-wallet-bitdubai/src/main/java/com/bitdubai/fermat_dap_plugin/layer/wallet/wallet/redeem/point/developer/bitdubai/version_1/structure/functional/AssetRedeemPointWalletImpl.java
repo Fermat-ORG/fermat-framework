@@ -88,11 +88,11 @@ public class AssetRedeemPointWalletImpl implements AssetRedeemPointWallet {
 
         try {
             database = this.pluginDatabaseSystem.openDatabase(this.pluginId, walletId.toString());
-            assetRedeemPointWalletDao = new AssetRedeemPointWalletDao(database, pluginFileSystem, walletId, actorAssetUserManager);
+            assetRedeemPointWalletDao = new AssetRedeemPointWalletDao(database, pluginFileSystem, pluginId, actorAssetUserManager);
         } catch (CantOpenDatabaseException cantOpenDatabaseException) {
-            throw new CantInitializeRedeemPointWalletException("I can't open database", cantOpenDatabaseException, "WalletId: " + walletId.toString(), "");
+            throw new CantInitializeRedeemPointWalletException("I can't open database", cantOpenDatabaseException, "WalletId: " + pluginId.toString(), "");
         } catch (DatabaseNotFoundException databaseNotFoundException) {
-            throw new CantInitializeRedeemPointWalletException("Database does not exists", databaseNotFoundException, "WalletId: " + walletId.toString(), "");
+            throw new CantInitializeRedeemPointWalletException("Database does not exists", databaseNotFoundException, "WalletId: " + pluginId.toString(), "");
         } catch (Exception exception) {
             throw new CantInitializeRedeemPointWalletException(CantInitializeRedeemPointWalletException.DEFAULT_MESSAGE, FermatException.wrapException(exception), null, null);
         }
