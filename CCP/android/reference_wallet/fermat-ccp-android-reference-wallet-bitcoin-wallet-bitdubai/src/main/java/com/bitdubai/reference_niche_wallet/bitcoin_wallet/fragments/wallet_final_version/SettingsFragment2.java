@@ -107,7 +107,7 @@ public class SettingsFragment2 extends AbstractFermatFragment implements View.On
     private void setUpUI() throws CantGetActiveLoginIdentityException {
         //WalletUtils.setNavigatitDrawer(getPaintActivtyFeactures(), referenceWalletSession.getIntraUserModuleManager().getActiveIntraUserIdentity());
 
-        mSwitchNotifications = (Switch) rootView.findViewById(R.id.switch_notifications);
+        mSwitchNotifications = (Switch) rootView.findViewById(R.id.switch_notification);
         mSwitchNotifications.setBackgroundTintList(getSwitchTrackColorStateList());
         port = (FermatEditText) rootView.findViewById(R.id.edit_text_port);
         spinnerArrow = (ImageView) rootView.findViewById(R.id.spinner_open);
