@@ -170,6 +170,7 @@ public enum Activities implements FermatEnum {
     BNK_BANK_MONEY_WALLET_SETUP("BNKBMWS"),
     BNK_BANK_MONEY_WALLET_ACCOUNT_DETAILS("BNKBMWAD"),
     BNK_BANK_MONEY_WALLET_ADD_ACCOUNT("BNKBMWAA"),
+    BNK_BANK_MONEY_WALLET_UPDATE_RECORD("BNKBMWU"),
 
     // Cash Money Wallet
     CSH_CASH_MONEY_WALLET_HOME("CSHCMWH"),
@@ -583,7 +584,8 @@ public enum Activities implements FermatEnum {
 
             case "BNKBMWAA":
                 return BNK_BANK_MONEY_WALLET_ADD_ACCOUNT;
-
+            case "BNKBMWU":
+                return BNK_BANK_MONEY_WALLET_UPDATE_RECORD;
             case "DWAIUAL":
                 return DAP_WALLET_ASSET_ISSUER_USER_APPROPIATE_LIST;
 
