@@ -114,43 +114,46 @@ public class MyAssetsActivityFragment extends FermatWalletListFragment<DigitalAs
             }
         }
 
-        PresentationDialog presentationDialog = null;
         try {
-            presentationDialog = new PresentationDialog.Builder(getActivity(), appSession)
-                    .setBannerRes(R.drawable.banner)
-                    .setIconRes(R.drawable.asset_issuer)
-                    .setSubTitle("Welcome to the Asset Issuer Wallet.")
-                    .setBody("From this wallet you will be able to distribute your assets to the world and collect statistics of their usage.")
-                    .setTextFooter("We will be creating an avatar for you in order to identify you in the system as an Asset Issuer, name and more details later in the Asset Issuer Identity sub app.")
-                    .setTemplateType(PresentationDialog.TemplateType.TYPE_PRESENTATION)
-                    .setTemplateType((moduleManager.getActiveAssetIssuerIdentity() == null) ? PresentationDialog.TemplateType.TYPE_PRESENTATION : PresentationDialog.TemplateType.TYPE_PRESENTATION_WITHOUT_IDENTITIES)
-                    .setIsCheckEnabled(settingsManager.loadAndGetSettings(appSession.getAppPublicKey()).isPresentationHelpEnabled())
-                    .build();
+            boolean isPresentationHelpEnabled = settingsManager.loadAndGetSettings(appSession.getAppPublicKey()).isPresentationHelpEnabled();
 
-            presentationDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
-                @Override
-                public void onDismiss(DialogInterface dialog) {
-                    Object o = appSession.getData(SessionConstantsAssetIssuer.PRESENTATION_IDENTITY_CREATED);
-                    if (o != null) {
-                        if ((Boolean) (o)) {
-                            //invalidate();
-                            appSession.removeData(SessionConstantsAssetIssuer.PRESENTATION_IDENTITY_CREATED);
+            if (isPresentationHelpEnabled) {
+                PresentationDialog presentationDialog = new PresentationDialog.Builder(getActivity(), appSession)
+                        .setBannerRes(R.drawable.banner)
+                        .setIconRes(R.drawable.asset_issuer)
+                        .setSubTitle("Welcome to the Asset Issuer Wallet.")
+                        .setBody("From this wallet you will be able to distribute your assets to the world and collect statistics of their usage.")
+                        .setTextFooter("We will be creating an avatar for you in order to identify you in the system as an Asset Issuer, name and more details later in the Asset Issuer Identity sub app.")
+                        .setTemplateType(PresentationDialog.TemplateType.TYPE_PRESENTATION)
+                        .setTemplateType((moduleManager.getActiveAssetIssuerIdentity() == null) ? PresentationDialog.TemplateType.TYPE_PRESENTATION : PresentationDialog.TemplateType.TYPE_PRESENTATION_WITHOUT_IDENTITIES)
+                        .setIsCheckEnabled(settingsManager.loadAndGetSettings(appSession.getAppPublicKey()).isPresentationHelpEnabled())
+                        .build();
+
+                presentationDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
+                    @Override
+                    public void onDismiss(DialogInterface dialog) {
+                        Object o = appSession.getData(SessionConstantsAssetIssuer.PRESENTATION_IDENTITY_CREATED);
+                        if (o != null) {
+                            if ((Boolean) (o)) {
+                                //invalidate();
+                                appSession.removeData(SessionConstantsAssetIssuer.PRESENTATION_IDENTITY_CREATED);
+                            }
+                        }
+                        try {
+                            IdentityAssetIssuer identityAssetIssuer = moduleManager.getActiveAssetIssuerIdentity();
+                            if (identityAssetIssuer == null) {
+                                getActivity().onBackPressed();
+                            } else {
+                                invalidate();
+                            }
+                        } catch (CantGetIdentityAssetIssuerException e) {
+                            e.printStackTrace();
                         }
                     }
-                    try {
-                        IdentityAssetIssuer identityAssetIssuer = moduleManager.getActiveAssetIssuerIdentity();
-                        if (identityAssetIssuer == null) {
-                            getActivity().onBackPressed();
-                        } else {
-                            invalidate();
-                        }
-                    } catch (CantGetIdentityAssetIssuerException e) {
-                        e.printStackTrace();
-                    }
-                }
-            });
+                });
 
-            presentationDialog.show();
+                presentationDialog.show();
+            }
         } catch (CantGetIdentityAssetIssuerException e) {
             e.printStackTrace();
         } catch (CantGetSettingsException e) {
