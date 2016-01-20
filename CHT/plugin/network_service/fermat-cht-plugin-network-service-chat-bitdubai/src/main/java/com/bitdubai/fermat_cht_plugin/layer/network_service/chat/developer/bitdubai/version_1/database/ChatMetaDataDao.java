@@ -386,6 +386,14 @@ public class ChatMetaDataDao {
         return dataBase.getTable(tableName);
     }
 
+    private boolean isNewRecord(DatabaseTable table, DatabaseTableFilter filter) throws CantLoadTableToMemoryException {
+        table.addStringFilter(filter.getColumn(), filter.getValue(), filter.getType());
+        table.loadToMemory();
+        if (table.getRecords().isEmpty())
+            return true;
+        else
+            return false;
+    }
 
     /**
      * Method that create a new entity in the data base.
@@ -393,7 +401,7 @@ public class ChatMetaDataDao {
      * @param entity ChatMetadataTransactionRecord to create.
      * @throws CantInsertRecordDataBaseException
      */
-    public void create(ChatMetadataTransactionRecord entity) throws CantInsertRecordDataBaseException {
+    public void create(ChatMetadataTransactionRecord entity) throws CantInsertRecordDataBaseException, CantUpdateRecordDataBaseException {
 
         if (entity == null) {
             throw new IllegalArgumentException("The entity is required, can not be null");
@@ -407,8 +415,17 @@ public class ChatMetaDataDao {
              */
             DatabaseTableRecord entityRecord = constructFrom(entity);
             DatabaseTable table = getDatabaseTable(NetworkServiceChatNetworkServiceDatabaseConstants.CHAT_TABLE_NAME);
+            DatabaseTableFilter filter = table.getEmptyTableFilter();
+            filter.setType(DatabaseFilterType.EQUAL);
+            filter.setValue(entity.getChatId().toString());
+            filter.setColumn(NetworkServiceChatNetworkServiceDatabaseConstants.CHAT_FIRST_KEY_COLUMN);
 
-            transaction.addRecordToInsert(table, entityRecord);
+            if (isNewRecord(table, filter))
+                transaction.addRecordToInsert(table, entityRecord);
+            else {
+                table.addStringFilter(filter.getColumn(), filter.getValue(), filter.getType());
+                transaction.addRecordToUpdate(table, entityRecord);
+            }
             getDataBase().executeTransaction(transaction);
 
         } catch (DatabaseTransactionFailedException databaseTransactionFailedException) {
