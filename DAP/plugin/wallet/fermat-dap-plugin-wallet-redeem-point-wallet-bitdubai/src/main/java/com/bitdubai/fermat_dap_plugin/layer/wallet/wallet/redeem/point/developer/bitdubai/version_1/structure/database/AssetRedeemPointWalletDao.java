@@ -71,6 +71,7 @@ public class AssetRedeemPointWalletDao implements DealsWithPluginFileSystem {
                                      UUID plugin,
                                      ActorAssetUserManager actorAssetUserManager,
                                      AssetUserActorNetworkServiceManager assetUserActorNetworkServiceManager) {
+
         this.database = database;
         this.pluginFileSystem = pluginFileSystem;
         this.plugin = plugin;

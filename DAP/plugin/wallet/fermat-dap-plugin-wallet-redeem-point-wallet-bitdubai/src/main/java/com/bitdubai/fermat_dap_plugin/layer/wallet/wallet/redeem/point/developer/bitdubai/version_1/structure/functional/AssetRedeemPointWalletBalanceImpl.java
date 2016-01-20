@@ -24,6 +24,7 @@ public class AssetRedeemPointWalletBalanceImpl implements com.bitdubai.fermat_da
     private UUID plugin;
     private PluginFileSystem pluginFileSystem;
 
+
     /**
      * Constructor.
      */

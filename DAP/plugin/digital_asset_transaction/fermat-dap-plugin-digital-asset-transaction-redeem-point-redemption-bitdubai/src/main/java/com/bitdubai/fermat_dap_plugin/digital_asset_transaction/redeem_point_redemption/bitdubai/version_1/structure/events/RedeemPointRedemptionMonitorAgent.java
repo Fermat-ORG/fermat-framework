@@ -20,9 +20,13 @@ import com.bitdubai.fermat_dap_api.layer.all_definition.enums.DistributionStatus
 import com.bitdubai.fermat_dap_api.layer.all_definition.enums.EventStatus;
 import com.bitdubai.fermat_dap_api.layer.all_definition.exceptions.CantSetObjectException;
 import com.bitdubai.fermat_dap_api.layer.all_definition.util.Validate;
+import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.exceptions.CantCreateAssetUserActorException;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.exceptions.CantGetAssetUserActorsException;
+import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.interfaces.ActorAssetUser;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.interfaces.ActorAssetUserManager;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.redeem_point.interfaces.ActorAssetRedeemPointManager;
+import com.bitdubai.fermat_dap_api.layer.dap_actor_network_service.asset_user.exceptions.CantRequestListActorAssetUserRegisteredException;
+import com.bitdubai.fermat_dap_api.layer.dap_actor_network_service.asset_user.interfaces.AssetUserActorNetworkServiceManager;
 import com.bitdubai.fermat_dap_api.layer.dap_network_services.asset_transmission.interfaces.AssetTransmissionNetworkServiceManager;
 import com.bitdubai.fermat_dap_api.layer.dap_network_services.asset_transmission.interfaces.DigitalAssetMetadataTransaction;
 import com.bitdubai.fermat_dap_api.layer.dap_transaction.common.AssetRedeemPointWalletTransactionRecordWrapper;
@@ -70,6 +74,7 @@ public class RedeemPointRedemptionMonitorAgent implements Agent {
     private volatile ActorAssetRedeemPointManager actorAssetRedeemPointManager;
     private volatile AssetRedeemPointWalletManager assetRedeemPointWalletManager;
     private volatile ActorAssetUserManager actorAssetUserManager;
+    private volatile AssetUserActorNetworkServiceManager assetUserActorNetworkServiceManager;
     private volatile BitcoinNetworkManager bitcoinNetworkManager;
     private volatile CountDownLatch latch;
 
@@ -85,6 +90,7 @@ public class RedeemPointRedemptionMonitorAgent implements Agent {
                                              ActorAssetRedeemPointManager actorAssetRedeemPointManager,
                                              AssetRedeemPointWalletManager assetRedeemPointWalletManager,
                                              ActorAssetUserManager actorAssetUserManager,
+                                             AssetUserActorNetworkServiceManager assetUserActorNetworkServiceManager,
                                              BitcoinNetworkManager bitcoinNetworkManager) throws CantSetObjectException {
         this.errorManager = Validate.verifySetter(errorManager, "errorManager is null");
         this.logManager = Validate.verifySetter(logManager, "logManager is null");
@@ -95,6 +101,7 @@ public class RedeemPointRedemptionMonitorAgent implements Agent {
         this.actorAssetRedeemPointManager = Validate.verifySetter(actorAssetRedeemPointManager, "actorAssetRedeemPointManager is null");
         this.assetRedeemPointWalletManager = Validate.verifySetter(assetRedeemPointWalletManager, "assetRedeemPointWalletManager is null");
         this.actorAssetUserManager = Validate.verifySetter(actorAssetUserManager, "actorAssetUserManager is null");
+        this.assetUserActorNetworkServiceManager = Validate.verifySetter(assetUserActorNetworkServiceManager, "assetUserActorNetworkServiceManager is null");
         this.bitcoinNetworkManager = Validate.verifySetter(bitcoinNetworkManager, "bitcoinNetworkManager is null");
     }
 
@@ -279,12 +286,13 @@ public class RedeemPointRedemptionMonitorAgent implements Agent {
 
                         case INCOMING_ASSET_ON_BLOCKCHAIN_WAITING_TRANSFERENCE_REDEEM_POINT:
                             boolean notifyEventOnBlockChain = false;
+                            String userPublicKey = "";
                             debug("new transaction on blockchain");
                             for (String transactionId : dao.getOnCryptoNetworkGenesisTransactions()) {
                                 DigitalAssetMetadata metadata = getDigitalAssetMetadataFromLocalStorage(transactionId);
                                 debug("searching the crypto transaction");
                                 CryptoTransaction cryptoTransaction = bitcoinNetworkManager.getLastChildCryptoTransaction(null, metadata.getGenesisTransaction(), metadata.getGenesisBlock());
-                                String userPublicKey = dao.getSenderPublicKeyById(transactionId);
+                                userPublicKey = dao.getSenderPublicKeyById(transactionId);
                                 //TODO LOAD WALLET! I SHOULD SEARCH FOR THE WALLET PUBLIC KEY
                                 //BUT THAT'S NOT YET IMPLEMENTED.
                                 debug("loading wallet, public key is hardcoded");
@@ -310,6 +318,15 @@ public class RedeemPointRedemptionMonitorAgent implements Agent {
                             if (notifyEventOnBlockChain) {
                                 dao.updateEventStatus(EventStatus.NOTIFIED, eventId);
                             }
+
+                            getActorAsset(userPublicKey);
+
+//                            List<ActorAssetUser> actorAssetUsers;
+//                            System.out.println("ACTOR ASSET USER A BUSCAR - PublicKey: "+ userPublicKey);
+//                            actorAssetUsers = assetUserActorNetworkServiceManager.getActorAssetUserRegistered(userPublicKey);
+//                            System.out.println("ACTOR ASSET USER ENCONTRADO - PublicKey: "+ actorAssetUsers.size());
+//
+//                            actorAssetUserManager.createActorAssetUserRegisterInNetworkService(actorAssetUsers);
                             break;
 
                         case INCOMING_ASSET_REVERSED_ON_CRYPTO_NETWORK_WAITING_TRANSFERENCE_REDEEM_POINT:
@@ -332,6 +349,24 @@ public class RedeemPointRedemptionMonitorAgent implements Agent {
                 errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_REDEEM_POINT_REDEMPTION_TRANSACTION, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
             } catch (Exception e) {
                 errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_REDEEM_POINT_REDEMPTION_TRANSACTION, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
+            }
+        }
+
+        public void getActorAsset(String userPublicKey) {
+            List<ActorAssetUser> actorAssetUsers;
+
+            System.out.println("ACTOR ASSET USER A BUSCAR - PublicKey: "+ userPublicKey);
+            try {
+                actorAssetUsers = assetUserActorNetworkServiceManager.getActorAssetUserRegistered(userPublicKey);
+
+                actorAssetUserManager.createActorAssetUserRegisterInNetworkService(actorAssetUsers);
+
+                System.out.println("ACTOR ASSET USER ENCONTRADO - PublicKey: "+ actorAssetUsers.size());
+
+            } catch (CantRequestListActorAssetUserRegisteredException e) {
+                e.printStackTrace();
+            } catch (CantCreateAssetUserActorException e) {
+                e.printStackTrace();
             }
         }
 
