@@ -304,6 +304,6 @@ public class BitcoinCryptoNetworkPluginRoot extends AbstractPlugin implements
      */
     @Override
     public List<CryptoTransaction> getChildTransactionsFromParent(String parentTransactionHash) throws CantGetCryptoTransactionException {
-        return null;
+        return bitcoinCryptoNetworkManager.getChildTransactionsFromParent(parentTransactionHash);
     }
 }
