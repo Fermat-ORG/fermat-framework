@@ -1,10 +1,8 @@
-package com.bitdubai.fermat_dap_android_wallet_asset_user_bitdubai.settings;
+package com.bitdubai.fermat_dap_api.layer.dap_module.wallet_asset_user;
 
-import com.bitdubai.fermat_wpd_api.layer.wpd_middleware.wallet_settings.PreferenceWalletSettings;
 import com.bitdubai.fermat_wpd_api.layer.wpd_middleware.wallet_settings.exceptions.CantGetDefaultLanguageException;
 import com.bitdubai.fermat_wpd_api.layer.wpd_middleware.wallet_settings.exceptions.CantGetDefaultSkinException;
 import com.bitdubai.fermat_wpd_api.layer.wpd_middleware.wallet_settings.exceptions.CantLoadWalletSettings;
-import com.bitdubai.fermat_wpd_api.layer.wpd_middleware.wallet_settings.exceptions.CantSaveWalletSettings;
 import com.bitdubai.fermat_wpd_api.layer.wpd_middleware.wallet_settings.exceptions.CantSetDefaultLanguageException;
 import com.bitdubai.fermat_wpd_api.layer.wpd_middleware.wallet_settings.exceptions.CantSetDefaultSkinException;
 import com.bitdubai.fermat_wpd_api.layer.wpd_middleware.wallet_settings.interfaces.WalletSettings;
@@ -18,6 +16,12 @@ import java.util.UUID;
  * @version 1.0
  */
 public class AssetUserSettings implements WalletSettings {
+
+    private boolean isPresentationHelpEnabled;
+
+    public boolean isPresentationHelpEnabled() {
+        return isPresentationHelpEnabled;
+    }
 
     @Override
     public UUID getDefaultLanguage() throws CantGetDefaultLanguageException, CantLoadWalletSettings {
@@ -40,7 +44,7 @@ public class AssetUserSettings implements WalletSettings {
     }
 
     @Override
-    public void setIsPresentationHelpEnabled(boolean b) {
-
+    public void setIsPresentationHelpEnabled(boolean isPresentationHelpEnabled) {
+        this.isPresentationHelpEnabled = isPresentationHelpEnabled;
     }
 }

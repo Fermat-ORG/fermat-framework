@@ -43,6 +43,7 @@ public class AssetIssuerSettings implements WalletSettings {
 
     }
 
+    @Override
     public void setIsPresentationHelpEnabled(boolean isPresentationHelpEnabled) {
         this.isPresentationHelpEnabled = isPresentationHelpEnabled;
     }
