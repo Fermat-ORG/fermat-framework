@@ -19,7 +19,7 @@ apply from: 'PIP/settings.gradle'
 apply from: 'WPD/settings.gradle'
 
 
-include ':fermat-android-api'
+include ':fermat-android-api', ':fermat-pip-plugin-android-core-module-developer-bitdubai'
 include ':fermat-android-core'
 include ':fermat-api'
 include ':fermat-core'
@@ -83,3 +83,4 @@ project(':fermat-shp-plugin-identity-brand-bitdubai').projectDir = new File('SHP
 
 
 //project(':fermat-ccp-plugin-module-intra-user-identity-bitdubai').projectDir = new File('CCP/plugin/module/fermat-ccp-plugin-module-intra-user-identity-bitdubai')
+project(':fermat-pip-plugin-android-core-module-developer-bitdubai').projectDir = new File('PIP/plugin/module/fermat-pip-plugin-android-core-module-developer-bitdubai')

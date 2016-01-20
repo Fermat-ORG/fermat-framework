@@ -447,7 +447,7 @@ public class NotificationSubAppModulePluginRoot extends AbstractPlugin implement
 
 
         poolNotification.add(notification);
-        notificationListener.notificate(notification);
+       // notificationListener.notificate(notification);
     }
 
     @Override
@@ -531,7 +531,7 @@ public class NotificationSubAppModulePluginRoot extends AbstractPlugin implement
 
 
     @Override
-    public Queue<NotificationEvent> getPoolNotification() {
+    public synchronized Queue<NotificationEvent> getPoolNotification() {
         return poolNotification;
     }
 

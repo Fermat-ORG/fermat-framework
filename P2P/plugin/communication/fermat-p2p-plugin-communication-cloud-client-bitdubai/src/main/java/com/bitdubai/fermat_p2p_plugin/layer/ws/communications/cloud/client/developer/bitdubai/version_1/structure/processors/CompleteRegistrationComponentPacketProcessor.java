@@ -23,7 +23,7 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 
 /**
- * The Class <code>com.bitdubai.fermat_p2p_plugin.layer.ws.communications.cloud.client.developer.bitdubai.version_1.structure.processors.CompleteRegistrationComponentPacketProcessor</code>
+ * The Class <code>com.bitdubai.fermat_p2p_plugin.layer.ws.communications.cloud.client.developer.bitdubai.version_1.structure.processors.CompleteRegistrationComponentTyrusPacketProcessor</code>
  * <p/>
  * Created by Roberto Requena - (rart3001@gmail.com) on 07/09/15.
  *
@@ -42,6 +42,8 @@ public class CompleteRegistrationComponentPacketProcessor extends FermatPacketPr
      */
     private JsonParser jsonParser;
 
+
+
     /**
      * Constructor
      */
@@ -49,6 +51,7 @@ public class CompleteRegistrationComponentPacketProcessor extends FermatPacketPr
         super();
         gson = new Gson();
         jsonParser = new JsonParser();
+
     }
 
     /**
@@ -59,7 +62,7 @@ public class CompleteRegistrationComponentPacketProcessor extends FermatPacketPr
     public void processingPackage(FermatPacket receiveFermatPacket) {
 
         //System.out.println(" --------------------------------------------------------------------- ");
-        //System.out.println("CompleteRegistrationComponentPacketProcessor - processingPackage");
+        System.out.println("CompleteRegistrationComponentTyrusPacketProcessor - processingPackage");
 
         String messageContentJsonStringRepresentation = null;
 
@@ -68,7 +71,7 @@ public class CompleteRegistrationComponentPacketProcessor extends FermatPacketPr
             /*
             * Get the platformComponentProfile from the message content and decrypt
             */
-            //System.out.println(" CompleteRegistrationComponentPacketProcessor - decoding fermatPacket with client-identity ");
+            //System.out.println(" CompleteRegistrationComponentTyrusPacketProcessor - decoding fermatPacket with client-identity ");
             messageContentJsonStringRepresentation = AsymmetricCryptography.decryptMessagePrivateKey(receiveFermatPacket.getMessageContent(), getWsCommunicationsCloudClientChannel().getClientIdentity().getPrivateKey());
 
         }else {
@@ -80,12 +83,12 @@ public class CompleteRegistrationComponentPacketProcessor extends FermatPacketPr
             * ---------------------------------------------------------------------------------------------------
             * Get the platformComponentProfile from the message content and decrypt
             */
-            //System.out.println(" CompleteRegistrationComponentPacketProcessor - decoding fermatPacket with temp-identity ");
+            //System.out.println(" CompleteRegistrationComponentTyrusPacketProcessor - decoding fermatPacket with temp-identity ");
             messageContentJsonStringRepresentation = AsymmetricCryptography.decryptMessagePrivateKey(receiveFermatPacket.getMessageContent(), getWsCommunicationsCloudClientChannel().getTemporalIdentity().getPrivateKey());
 
         }
 
-        //System.out.println("CompleteRegistrationComponentPacketProcessor - messageContentJsonStringRepresentation = "+messageContentJsonStringRepresentation);
+        //System.out.println("CompleteRegistrationComponentTyrusPacketProcessor - messageContentJsonStringRepresentation = "+messageContentJsonStringRepresentation);
 
 
         /*
@@ -102,9 +105,12 @@ public class CompleteRegistrationComponentPacketProcessor extends FermatPacketPr
              * Mark as register
              */
             getWsCommunicationsCloudClientChannel().setIsRegister(Boolean.TRUE);
+            System.out.println("CompleteRegistrationComponentTyrusPacketProcessor - getWsCommunicationsCloudClientChannel().isRegister() " + getWsCommunicationsCloudClientChannel().isRegister());
             // getWsCommunicationsCloudClientChannel().launchCompleteClientComponentRegistrationNotificationEvent();
-            // System.out.println("CompleteRegistrationComponentPacketProcessor - Raised a event = P2pEventType.COMPLETE_CLIENT_COMPONENT_REGISTRATION_NOTIFICATION");
-            //System.out.println("CompleteRegistrationComponentPacketProcessor - getWsCommunicationsCloudClientChannel().isRegister() = "+ getWsCommunicationsCloudClientChannel().isRegister());
+            // System.out.println("CompleteRegistrationComponentTyrusPacketProcessor - Raised a event = P2pEventType.COMPLETE_CLIENT_COMPONENT_REGISTRATION_NOTIFICATION");
+            //System.out.println("CompleteRegistrationComponentTyrusPacketProcessor - getWsCommunicationsCloudClientChannel().isRegister() = "+ getWsCommunicationsCloudClientChannel().isRe            .raiseEvent(event);
+
+
         }
 
         /*
@@ -122,7 +128,7 @@ public class CompleteRegistrationComponentPacketProcessor extends FermatPacketPr
         /*
          * Raise the event
          */
-        //System.out.println("CompleteRegistrationComponentPacketProcessor - Raised a event = P2pEventType.COMPLETE_COMPONENT_REGISTRATION_NOTIFICATION");
+        System.out.println("CompleteRegistrationComponentTyrusPacketProcessor - Raised a event = P2pEventType.COMPLETE_COMPONENT_REGISTRATION_NOTIFICATION");
         getWsCommunicationsCloudClientChannel().getEventManager().raiseEvent(event);
 
     }

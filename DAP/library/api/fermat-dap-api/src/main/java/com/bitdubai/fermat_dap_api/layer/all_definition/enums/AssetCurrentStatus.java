@@ -9,19 +9,21 @@ import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterE
 public enum AssetCurrentStatus implements FermatEnum {
 
     //ENUM DECLARATION
-    ASSET_CREATED("ASCR"),
-    ASSET_APPROPRIATED("ASAP"),
-    ASSET_REDEEMED("ASRE"),
-    ASSET_UNUSED("ASUN");
+    ASSET_CREATED("ASCR", "Created"),
+    ASSET_APPROPRIATED("ASAP", "Appropriated"),
+    ASSET_REDEEMED("ASRE", "Redeemed"),
+    ASSET_UNUSED("ASUN", "Unused");
 
     //VARIABLE DECLARATION
 
     private String code;
+    private String description;
 
     //CONSTRUCTORS
 
-    AssetCurrentStatus(String code) {
+    AssetCurrentStatus(String code, String description) {
         this.code = code;
+        this.description = description;
     }
 
     //PUBLIC METHODS
@@ -40,5 +42,9 @@ public enum AssetCurrentStatus implements FermatEnum {
     @Override
     public String getCode() {
         return code;
+    }
+
+    public String getDescription() {
+        return description;
     }
 }

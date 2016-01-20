@@ -61,6 +61,7 @@ public class MarketRateStatisticsFragment extends AbstractFermatFragment {
         mChart.getLegend().setEnabled(false);
         mChart.getXAxis().setEnabled(false);
         mChart.getAxisRight().setEnabled(false);
+        mChart.setAutoScaleMinMaxEnabled(true);
 
         YAxis yAxis = mChart.getAxisLeft();
         yAxis.setDrawAxisLine(true);

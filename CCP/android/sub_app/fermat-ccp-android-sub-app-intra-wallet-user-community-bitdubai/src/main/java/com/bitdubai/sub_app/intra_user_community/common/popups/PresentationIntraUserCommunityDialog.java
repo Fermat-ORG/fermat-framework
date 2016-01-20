@@ -95,6 +95,8 @@ public class PresentationIntraUserCommunityDialog extends FermatDialog<IntraUser
                 startCommunity.setOnClickListener(this);
                 break;
         }
+
+        dontShowAgainCheckBox.setChecked(true);
     }
 
     @Override
@@ -165,11 +167,7 @@ public class PresentationIntraUserCommunityDialog extends FermatDialog<IntraUser
                         IntraUserWalletSettings intraUserWalletSettings = settingsManager.loadAndGetSettings(getSession().getAppPublicKey());
                         intraUserWalletSettings.setIsPresentationHelpEnabled(!dontShowAgainCheckBox.isChecked());
                         settingsManager.persistSettings(getSession().getAppPublicKey(),intraUserWalletSettings);
-                    } catch (CantGetSettingsException e) {
-                        e.printStackTrace();
-                    } catch (SettingsNotFoundException e) {
-                        e.printStackTrace();
-                    } catch (CantPersistSettingsException e) {
+                    } catch (CantGetSettingsException | SettingsNotFoundException | CantPersistSettingsException e) {
                         e.printStackTrace();
                     }
                 }
@@ -184,8 +182,8 @@ public class PresentationIntraUserCommunityDialog extends FermatDialog<IntraUser
     private byte[] convertImage(int resImage) {
         Bitmap bitmap = BitmapFactory.decodeResource(activity.getResources(), resImage);
         ByteArrayOutputStream stream = new ByteArrayOutputStream();
-        bitmap.compress(Bitmap.CompressFormat.JPEG, 80, stream);
-        //bitmap.compress(Bitmap.CompressFormat.PNG, 100, stream);
+       // bitmap.compress(Bitmap.CompressFormat.JPEG, 80, stream);
+        bitmap.compress(Bitmap.CompressFormat.PNG, 100, stream);
         return stream.toByteArray();
     }
 
