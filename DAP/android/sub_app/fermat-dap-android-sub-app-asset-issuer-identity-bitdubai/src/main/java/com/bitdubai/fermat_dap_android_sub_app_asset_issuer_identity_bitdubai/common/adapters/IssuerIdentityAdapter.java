@@ -42,7 +42,7 @@ public class IssuerIdentityAdapter extends FermatAdapter<IdentityAssetIssuer, Is
 
         byte[] profileImage = data.getImage();
         Bitmap imageBitmap = profileImage == null ?
-                BitmapFactory.decodeResource(context.getResources(), R.drawable.profile_image) :
+                BitmapFactory.decodeResource(context.getResources(), R.drawable.ic_profile_male) :
                 BitmapFactory.decodeByteArray(profileImage, 0, profileImage.length);
 
         Bitmap roundedBitmap = UtilsFuncs.getRoundedShape(imageBitmap);

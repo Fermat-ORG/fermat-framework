@@ -1,4 +1,4 @@
-package com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.utils;
+package com.bitdubai.fermat_ccp_api.all_definition.util;
 
 import java.math.BigDecimal;
 

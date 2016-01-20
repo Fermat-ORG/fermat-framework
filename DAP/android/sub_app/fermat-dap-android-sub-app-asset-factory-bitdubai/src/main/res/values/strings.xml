@@ -5,7 +5,7 @@
     <string name="home_asset_state_editable">Editable</string>
     <string name="app_unnamed">No name given&#8230;</string>
     <string name="home_row_asset_amount">Amount: %1$d</string>
-    <string name="home_row_asset_bitcoins">BitCoins: %1$d BTC</string>
+    <string name="home_row_asset_bitcoins">BitCoins: "%.6f" BTC</string>
     <string name="home_asset_state_publishing">Publishing</string>
     <string name="home_asset_state_published">Published</string>
     <string name="dap_asset_factory_delete_menu_item">Delete</string>

@@ -37,8 +37,13 @@ import com.bitdubai.fermat_dap_android_wallet_redeem_point_bitdubai.sessions.Red
 import com.bitdubai.fermat_dap_api.layer.dap_module.wallet_asset_redeem_point.interfaces.AssetRedeemPointWalletSubAppModule;
 import com.bitdubai.fermat_dap_android_wallet_redeem_point_bitdubai.adapters.UserRedeemedPointListAdapter;
 import com.bitdubai.fermat_dap_android_wallet_redeem_point_bitdubai.util.CommonLogger;
+import com.bitdubai.fermat_dap_api.layer.dap_wallet.asset_redeem_point.interfaces.AssetRedeemPointWallet;
+import com.bitdubai.fermat_dap_api.layer.dap_wallet.asset_redeem_point.interfaces.RedeemPointStatistic;
+import com.bitdubai.fermat_dap_plugin.layer.wallet.wallet.redeem.point.developer.bitdubai.version_1.structure.functional.RedeemPointStatisticImpl;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedWalletExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
+
+import org.apache.commons.collections.ArrayStack;
 
 import java.io.ByteArrayInputStream;
 import java.lang.ref.WeakReference;
@@ -58,8 +63,6 @@ public class RedeemPointDetailActivityFragment extends FermatWalletListFragment<
     private List<UserRedeemed> users;
     private View rootView;
     private Toolbar toolbar;
-    private View assetDetailRedeemLayout;
-    private View assetDetailAppropriateLayout;
     private View noUsersView;
     private ErrorManager errorManager;
 
@@ -85,10 +88,6 @@ public class RedeemPointDetailActivityFragment extends FermatWalletListFragment<
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-
-        configureToolbar();
-
-
         try {
             assetUserSession = (RedeemPointSession) appSession;
             moduleManager = assetUserSession.getModuleManager();
@@ -98,12 +97,27 @@ public class RedeemPointDetailActivityFragment extends FermatWalletListFragment<
         } catch (Exception ex) {
             CommonLogger.exception(TAG, ex.getMessage(), ex);
             if (errorManager != null)
-                errorManager.reportUnexpectedWalletException(Wallets.DAP_ASSET_ISSUER_WALLET,
+                errorManager.reportUnexpectedWalletException(Wallets.DAP_REDEEM_POINT_WALLET,
                         UnexpectedWalletExceptionSeverity.DISABLES_THIS_FRAGMENT, ex);
         }
     }
 
     @Override
+    protected void initViews(View layout) {
+        super.initViews(layout);
+
+        //setupBackgroundBitmap(layout);
+        configureToolbar();
+
+        rootView = layout;
+        setupUI();
+        setupUIData();
+
+        noUsersView = layout.findViewById(R.id.dap_wallet_asset_issuer_no_users);
+
+        showOrHideNoUsersView(users.isEmpty());
+    }
+ /*   @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         rootView = inflater.inflate(R.layout.dap_wallet_asset_redeem_point_detail, container, false);
@@ -115,7 +129,7 @@ public class RedeemPointDetailActivityFragment extends FermatWalletListFragment<
 
         return rootView;
     }
-
+*/
     @Override
     protected boolean hasMenu() {
         return false;
@@ -282,12 +296,14 @@ public class RedeemPointDetailActivityFragment extends FermatWalletListFragment<
         if (moduleManager != null) {
             try {
                 if (digitalAsset == null) digitalAsset = (DigitalAsset) appSession.getData("asset_data");
-                //users = Data.getUserRedeemedPointList("walletPublicKeyTest", digitalAsset, moduleManager);
+
+                users = Data.getUserRedeemedPointList("walletPublicKeyTest",digitalAsset,moduleManager);
+
             } catch (Exception ex) {
                 CommonLogger.exception(TAG, ex.getMessage(), ex);
                 if (errorManager != null)
                     errorManager.reportUnexpectedWalletException(
-                            Wallets.DAP_ASSET_ISSUER_WALLET,
+                            Wallets.DAP_REDEEM_POINT_WALLET,
                             UnexpectedWalletExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT,
                             ex);
             }
