@@ -83,7 +83,7 @@ public class ChatMetadataTransmitMessageReceiverProcessor extends FermatMessageP
             /*
              * Save into data base for audit control
              */
-            getChatPluginRoot().getChatMetaDataDao().create(chatMetadaTransactionRecord);
+           // getChatPluginRoot().getChatMetaDataDao().create(chatMetadaTransactionRecord);
 
             /*
              * Mark the message as read

@@ -24,7 +24,7 @@ public class DeveloperBitDubai extends AbstractPluginDeveloper implements Plugin
     public void start() throws CantStartPluginDeveloperException {
         try {
 
-            this.registerVersion(new WsCommunicationsCloudClientPluginRoot());
+            this.registerVersion(WsCommunicationsCloudClientPluginRoot.getInstance());
 
         } catch (CantRegisterVersionException e) {
 

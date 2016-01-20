@@ -101,7 +101,7 @@ public class CreateIntraUserIdentityFragment extends AbstractFermatFragment {
             intraUserIdentitySubAppSession = (IntraUserIdentitySubAppSession) appSession;
             moduleManager = intraUserIdentitySubAppSession.getModuleManager();
             errorManager = appSession.getErrorManager();
-
+            setHasOptionsMenu(true);
             settingsManager = intraUserIdentitySubAppSession.getModuleManager().getSettingsManager();
 
             try {
@@ -397,18 +397,44 @@ public class CreateIntraUserIdentityFragment extends AbstractFermatFragment {
         return stream.toByteArray();
     }
 
-// TODO: HAY QUE DESCOMENTAR ESTO PARA QUE FUNCIONE EL ICONO DE ITEM SELECTED
+
     public void showDialog(){
-        PresentationIntraUserIdentityDialog presentationIntraUserCommunityDialog = new PresentationIntraUserIdentityDialog(getActivity(), null, null,moduleManager);
+        PresentationIntraUserIdentityDialog presentationIntraUserCommunityDialog = new PresentationIntraUserIdentityDialog(getActivity(),intraUserIdentitySubAppSession, null,moduleManager);
         presentationIntraUserCommunityDialog.show();
     }
+
+    @Override
+    public void onCreateOptionsMenu(final Menu menu, MenuInflater inflater) {
+        super.onCreateOptionsMenu(menu, inflater);
+        //inflater.inflate(R.menu.menu_main, menu);
+
+        try {
+            menu.add(1, 99, 1, "help").setIcon(R.drawable.help_icon)
+                    .setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
+
+            final MenuItem action_help = menu.findItem(R.id.action_help);
+            menu.findItem(R.id.action_help).setVisible(true);
+            action_help.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
+                @Override
+                public boolean onMenuItemClick(MenuItem item) {
+                    menu.findItem(R.id.action_help).setVisible(false);
+                    return false;
+                }
+            });
+
+        } catch (Exception e) {
+
+        }
+
+    }
+
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         try {
             int id = item.getItemId();
 
-            if (id == R.id.action_help)
+            if (id == 99)
                 showDialog();
 
 

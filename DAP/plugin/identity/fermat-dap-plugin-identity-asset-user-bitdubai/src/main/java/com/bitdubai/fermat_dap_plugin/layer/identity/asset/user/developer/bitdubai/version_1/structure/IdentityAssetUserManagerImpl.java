@@ -10,6 +10,7 @@ import com.bitdubai.fermat_api.layer.osa_android.logger_system.DealsWithLogger;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogManager;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.exceptions.CantCreateAssetUserActorException;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.interfaces.ActorAssetUserManager;
+import com.bitdubai.fermat_dap_api.layer.dap_actor_network_service.asset_user.exceptions.CantRegisterActorAssetUserException;
 import com.bitdubai.fermat_dap_api.layer.dap_identity.asset_user.exceptions.CantCreateNewIdentityAssetUserException;
 import com.bitdubai.fermat_dap_api.layer.dap_identity.asset_user.exceptions.CantGetAssetUserIdentitiesException;
 import com.bitdubai.fermat_dap_api.layer.dap_identity.asset_user.exceptions.CantListAssetUsersException;
@@ -155,7 +156,11 @@ public class IdentityAssetUserManagerImpl implements DealsWithErrors, DealsWithL
     public void updateIdentityAssetUser(String identityPublicKey, String identityAlias, byte[] profileImage) throws CantUpdateIdentityAssetUserException {
         try {
             getAssetUserIdentityDao().updateIdentityAssetUser(identityPublicKey, identityAlias, profileImage);
+
+            registerIdentities();
         } catch (CantInitializeAssetUserIdentityDatabaseException e) {
+            e.printStackTrace();
+        } catch (CantListAssetUserIdentitiesException e) {
             e.printStackTrace();
         }
     }
@@ -203,6 +208,14 @@ public class IdentityAssetUserManagerImpl implements DealsWithErrors, DealsWithL
             throw new CantListAssetUserIdentitiesException("CAN'T GET IF ASSET USER IDENTITIES  EXISTS", e, "Cant Create Actor Asset User", "");
         } catch (CantInitializeAssetUserIdentityDatabaseException e) {
             throw new CantListAssetUserIdentitiesException("CAN'T GET IF ASSET USER IDENTITIES  EXISTS", e, "Cant Initialize Asset User Identity Database", "");
+        }
+    }
+
+    public void registerIdentitiesANS() throws CantRegisterActorAssetUserException {
+        try {
+            actorAssetUserManager.registerActorInActorNetworkService();
+        } catch (CantRegisterActorAssetUserException e) {
+            e.printStackTrace();
         }
     }
 }

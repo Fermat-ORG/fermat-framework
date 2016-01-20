@@ -233,6 +233,15 @@ public class BankNotesNetworkServicePluginRoot implements Service, NetworkServic
 //        if(communicationNetworkServiceConnectionManager != null)
 //            communicationNetworkServiceConnectionManager.restart();
 
+//        if(!this.register){
+//
+//            if(communicationRegistrationProcessNetworkServiceAgent == null){
+//                communicationRegistrationProcessNetworkServiceAgent = new CommunicationRegistrationProcessNetworkServiceAgent(this, wsCommunicationsCloudClientManager.getCommunicationsCloudClientConnection());
+//            }
+//
+//            communicationRegistrationProcessNetworkServiceAgent.start();
+//        }
+
     }
 
     @Override
