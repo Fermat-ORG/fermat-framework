@@ -215,10 +215,10 @@ public class NegotiationTransactionCustomerBrokerNewPluginRoot extends AbstractP
 //            getNegotiationsByIdTest(UUID.fromString("eac97ab3-034e-4e57-93dc-b9f4ccaf1a74"));
 
             //TEST EVENT REGISTER
-            registerEventTest();
+//            registerEventTest();
 
             //TEST GET ALL EVENT
-//            getAllEvent();
+            getAllEvent();
 
             //Startes Service
             this.serviceStatus = ServiceStatus.STARTED;

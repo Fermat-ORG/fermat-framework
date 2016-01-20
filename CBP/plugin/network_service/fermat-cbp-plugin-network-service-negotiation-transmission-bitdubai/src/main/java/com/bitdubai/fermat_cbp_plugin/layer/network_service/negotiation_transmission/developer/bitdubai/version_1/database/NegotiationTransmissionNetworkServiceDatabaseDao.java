@@ -172,7 +172,7 @@ public class NegotiationTransmissionNetworkServiceDatabaseDao {
             NegotiationTransmissionState state = NegotiationTransmissionState.DONE;
             this.changeState(transmissionId, state);
             System.out.print("\n\n**** 19.2.2) MOCK NEGOTIATION TRANSACTION - NEGOTIATION TRANSMISSION - DAO - REGISTER NEW EVENT, CONFIRM TRANSAMISSION ****\n");
-            
+
         } catch (CantRegisterSendNegotiationTransmissionException | CantUpdateRecordException e) {
             throw new CantRegisterSendNegotiationTransmissionException(e.DEFAULT_MESSAGE, e, "Customer Broker New Negotiation Transaction Update Event Status Not Found", "unknown failure");
         }
