@@ -229,7 +229,7 @@ public class AssetAppropriationMonitorAgent implements Agent {
                             if(cryptoTransaction == null) continue;
                             AssetUserWallet userWallet = assetUserWalletManager.loadAssetUserWallet(record.walletPublicKey());
                             AssetUserWalletBalance balance = userWallet.getBalance();
-                            AssetUserWalletTransactionRecordWrapper walletRecord = new AssetUserWalletTransactionRecordWrapper(record.digitalAsset(),
+                            AssetUserWalletTransactionRecordWrapper walletRecord = new AssetUserWalletTransactionRecordWrapper(record.assetMetadata(),
                                     cryptoTransaction,
                                     record.digitalAsset().getPublicKey(),
                                     Actors.DAP_ASSET_USER,
@@ -246,7 +246,7 @@ public class AssetAppropriationMonitorAgent implements Agent {
                             if(cryptoTransaction == null) continue;
                             AssetUserWallet userWallet = assetUserWalletManager.loadAssetUserWallet(record.walletPublicKey());
                             AssetUserWalletBalance balance = userWallet.getBalance();
-                            AssetUserWalletTransactionRecordWrapper walletRecord = new AssetUserWalletTransactionRecordWrapper(record.digitalAsset(),
+                            AssetUserWalletTransactionRecordWrapper walletRecord = new AssetUserWalletTransactionRecordWrapper(record.assetMetadata(),
                                     cryptoTransaction,
                                     record.digitalAsset().getPublicKey(),
                                     Actors.DAP_ASSET_USER,
