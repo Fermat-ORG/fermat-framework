@@ -3,6 +3,7 @@ package com.bitdubai.fermat_dap_plugin.layer.wallet.wallet.redeem.point.develope
 import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Genders;
+import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterException;
 import com.bitdubai.fermat_api.layer.all_definition.money.CryptoAddress;
 import com.bitdubai.fermat_api.layer.all_definition.util.XMLParser;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
@@ -482,7 +483,7 @@ public class AssetRedeemPointWalletDao implements DealsWithPluginFileSystem {
     }
 
     // Read record data and create transactions list
-    private List<AssetRedeemPointWalletTransaction> createTransactionList(final Collection<DatabaseTableRecord> records) {
+    private List<AssetRedeemPointWalletTransaction> createTransactionList(final Collection<DatabaseTableRecord> records) throws InvalidParameterException {
 
         List<AssetRedeemPointWalletTransaction> transactions = new ArrayList<>();
 
@@ -493,7 +494,7 @@ public class AssetRedeemPointWalletDao implements DealsWithPluginFileSystem {
     }
 
 
-    private AssetRedeemPointWalletTransaction constructAssetRedeemPointWalletTransactionFromRecord(DatabaseTableRecord record) {
+    private AssetRedeemPointWalletTransaction constructAssetRedeemPointWalletTransactionFromRecord(DatabaseTableRecord record) throws InvalidParameterException {
 
         String transactionId = record.getStringValue(AssetWalletRedeemPointDatabaseConstant.ASSET_WALLET_REDEEM_POINT_TABLE_ID_COLUMN_NAME);
         String assetPublicKey = record.getStringValue(AssetWalletRedeemPointDatabaseConstant.ASSET_WALLET_REDEEM_POINT_POINT_BALANCE_TABLE_ASSET_PUBLIC_KEY_COLUMN_NAME);

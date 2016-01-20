@@ -290,10 +290,11 @@ public abstract class AbstractDigitalAssetVault implements DigitalAssetVault {
         }
     }
 
-    public void updateMetadataTransactionChain(String genesisTx, String txHash, String blockHash) throws CantCreateDigitalAssetFileException, CantGetDigitalAssetFromLocalStorageException {
+    public DigitalAssetMetadata updateMetadataTransactionChain(String genesisTx, String txHash, String blockHash) throws CantCreateDigitalAssetFileException, CantGetDigitalAssetFromLocalStorageException {
         DigitalAssetMetadata digitalAssetMetadata = getDigitalAssetMetadataFromLocalStorage(genesisTx);
         digitalAssetMetadata.addNewTransaction(txHash, blockHash);
         persistDigitalAssetMetadataInLocalStorage(digitalAssetMetadata, genesisTx);
+        return digitalAssetMetadata;
     }
 
     public void updateWalletBalance(DigitalAssetMetadata digitalAssetMetadata, CryptoTransaction genesisTransaction, BalanceType balanceType, TransactionType transactionType, DAPTransactionType dapTransactionType, String externalActorPublicKey) throws CantLoadWalletException, CantGetTransactionsException, CantRegisterCreditException, CantRegisterDebitException, CantGetAssetIssuerActorsException, CantAssetUserActorNotFoundException, CantGetAssetUserActorsException {

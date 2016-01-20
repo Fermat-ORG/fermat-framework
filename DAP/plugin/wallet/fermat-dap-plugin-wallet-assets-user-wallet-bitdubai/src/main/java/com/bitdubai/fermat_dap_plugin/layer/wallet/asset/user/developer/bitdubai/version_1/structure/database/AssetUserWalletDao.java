@@ -2,6 +2,7 @@ package com.bitdubai.fermat_dap_plugin.layer.wallet.asset.user.developer.bitduba
 
 import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
+import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterException;
 import com.bitdubai.fermat_api.layer.all_definition.money.CryptoAddress;
 import com.bitdubai.fermat_api.layer.all_definition.util.XMLParser;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
@@ -354,7 +355,7 @@ public class AssetUserWalletDao implements DealsWithPluginFileSystem {
     }
 
     // Read record data and create transactions list
-    private List<AssetUserWalletTransaction> createTransactionList(final Collection<DatabaseTableRecord> records) {
+    private List<AssetUserWalletTransaction> createTransactionList(final Collection<DatabaseTableRecord> records) throws InvalidParameterException {
         List<AssetUserWalletTransaction> transactions = new ArrayList<>();
 
         for (DatabaseTableRecord record : records)
@@ -363,7 +364,7 @@ public class AssetUserWalletDao implements DealsWithPluginFileSystem {
         return transactions;
     }
 
-    private AssetUserWalletTransaction constructAsseUserWalletTransactionFromRecord(DatabaseTableRecord record) {
+    private AssetUserWalletTransaction constructAsseUserWalletTransactionFromRecord(DatabaseTableRecord record) throws InvalidParameterException {
         String transactionId = record.getStringValue(AssetUserWalletDatabaseConstant.ASSET_WALLET_USER_VERIFICATION_ID_COLUMN_NAME);
         String assetPublicKey = record.getStringValue(AssetUserWalletDatabaseConstant.ASSET_WALLET_USER_BALANCE_TABLE_ASSET_PUBLIC_KEY_COLUMN_NAME);
         String transactionHash = record.getStringValue(AssetUserWalletDatabaseConstant.ASSET_WALLET_USER_TRANSACTION_HASH_COLUMN_NAME);

@@ -301,7 +301,6 @@ public class AssetReceptionMonitorAgent implements Agent {
                             DigitalAssetMetadata metadata = digitalAssetReceptionVault.getDigitalAssetMetadataFromLocalStorage(genesisTransaction);
                             CryptoTransaction cryptoGenesisTransaction = AssetVerification.getCryptoTransactionFromCryptoNetworkByCryptoStatus(bitcoinNetworkManager, metadata, CryptoStatus.ON_BLOCKCHAIN);
                             if (cryptoGenesisTransaction == null) {
-                                //throw new CantCheckAssetIssuingProgressException("Cannot get the crypto status from crypto network");
                                 System.out.println("ASSET RECEPTION the genesis transaction from Crypto Network is null");
                                 continue;
                             }
