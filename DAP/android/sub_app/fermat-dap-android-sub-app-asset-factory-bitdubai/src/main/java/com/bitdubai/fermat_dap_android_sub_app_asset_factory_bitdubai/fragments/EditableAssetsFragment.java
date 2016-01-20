@@ -246,12 +246,13 @@ public class EditableAssetsFragment extends AbstractFermatFragment implements
 
             if (isPresentationHelpEnabled) {
                 PresentationDialog presentationDialog = new PresentationDialog.Builder(getActivity(), appSession)
-                        .setBannerRes(R.drawable.banner)
+                        .setBannerRes(R.drawable.banner_asset_factory)
                         .setIconRes(R.drawable.asset_factory)
+                        .setVIewColor(R.color.dap_asset_factory_view_color)
+                        .setTitleTextColor(R.color.dap_asset_factory_view_color)
                         .setSubTitle("Welcome to the Asset Factory application.")
                         .setBody("From here you will be able to create, define and publish all your assets.")
-                        .setTextFooter("First things first!. We will be creating an avatar for you in order to identify you in the system as an Asset Issuer. You will be able to add your picture, name and more details later in the Asset Issuer Identity sub app.")
-                        .setTemplateType(PresentationDialog.TemplateType.TYPE_PRESENTATION)
+                        .setTextFooter("We will be creating an avatar for you in order to identify you in the system as an Asset Issuer, name and more details later in the Asset Issuer Identity sub app.")
                         .setTemplateType((manager.getLoggedIdentityAssetIssuer() == null) ? PresentationDialog.TemplateType.TYPE_PRESENTATION : PresentationDialog.TemplateType.TYPE_PRESENTATION_WITHOUT_IDENTITIES)
                         .setIsCheckEnabled(settingsManager.loadAndGetSettings(appSession.getAppPublicKey()).isPresentationHelpEnabled())
                         .build();
