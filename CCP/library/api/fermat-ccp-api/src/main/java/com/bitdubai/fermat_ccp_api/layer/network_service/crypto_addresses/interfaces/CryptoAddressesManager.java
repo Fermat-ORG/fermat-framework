@@ -1,5 +1,6 @@
 package com.bitdubai.fermat_ccp_api.layer.network_service.crypto_addresses.interfaces;
 
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.FermatManager;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
 import com.bitdubai.fermat_api.layer.all_definition.enums.CryptoCurrency;
 import com.bitdubai.fermat_api.layer.all_definition.money.CryptoAddress;
@@ -22,7 +23,7 @@ import java.util.UUID;
  *
  * Created by Leon Acosta - (laion.cj91@gmail.com) on 22/09/2015.
  */
-public interface CryptoAddressesManager {
+public interface CryptoAddressesManager extends FermatManager {
 
     /**
      * The method <code>sendAddressExchangeRequest</code> sends to an actor a request for a crypto address.

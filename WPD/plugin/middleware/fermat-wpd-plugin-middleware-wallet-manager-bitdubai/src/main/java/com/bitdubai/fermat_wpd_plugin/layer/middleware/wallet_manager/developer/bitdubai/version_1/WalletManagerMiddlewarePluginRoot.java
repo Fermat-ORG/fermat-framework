@@ -32,9 +32,9 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseS
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantCreateDatabaseException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantOpenDatabaseException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.DatabaseNotFoundException;
-import com.bitdubai.fermat_pip_api.layer.pip_user.device_user.interfaces.DeviceUserManager;
-import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.ErrorManager;
-import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.UnexpectedPluginExceptionSeverity;
+import com.bitdubai.fermat_pip_api.layer.user.device_user.interfaces.DeviceUserManager;
+import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
+import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedPluginExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.enums.EventType;
 import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.events.WalletInstalledEvent;
 import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfaces.EventManager;
@@ -281,6 +281,8 @@ public class WalletManagerMiddlewarePluginRoot extends AbstractPlugin implements
 
 
         // Harcoded para testear el circuito más arriba
+        List<InstalledWallet> lstInstalledWallet = new ArrayList<InstalledWallet>();
+
         InstalledWallet installedWallet= new WalletManagerMiddlewareInstalledWallet(
 
                 WalletCategory.REFERENCE_WALLET, // CATEGORY
@@ -298,9 +300,48 @@ public class WalletManagerMiddlewarePluginRoot extends AbstractPlugin implements
                 "bitDubai",
                 ""
         );
-
-        List<InstalledWallet> lstInstalledWallet = new ArrayList<InstalledWallet>();
         lstInstalledWallet.add(installedWallet);
+
+        installedWallet= new WalletManagerMiddlewareInstalledWallet(
+
+                WalletCategory.REFERENCE_WALLET, // CATEGORY
+                new ArrayList<InstalledSkin>(),
+                new ArrayList<InstalledLanguage>(),
+                "reference_wallet_icon", // ICOIN
+                "Banking wallet", // WALLET NAME
+                "banking_wallet", // PUBLIC KEY
+                "BWBWB", //  WALLET PLATFORM IDENTIFIER
+                new Version(1,0,0), //VERSION
+                WalletType.REFERENCE, // WALLET TYPE
+                "medium",
+                "1.0.0",
+                null,
+                "bitDubai",
+                "",
+                Platforms.BANKING_PLATFORM
+        );
+        lstInstalledWallet.add(installedWallet);
+
+        installedWallet= new WalletManagerMiddlewareInstalledWallet(
+
+                WalletCategory.REFERENCE_WALLET, // CATEGORY
+                new ArrayList<InstalledSkin>(),
+                new ArrayList<InstalledLanguage>(),
+                "reference_wallet_icon", // ICOIN
+                "Cash wallet", // WALLET NAME
+                "cash_wallet", // PUBLIC KEY
+                "BWBWBW", //  WALLET PLATFORM IDENTIFIER
+                new Version(1,0,0), //VERSION
+                WalletType.REFERENCE, // WALLET TYPE
+                "medium",
+                "1.0.0",
+                null,
+                "bitDubai",
+                "",
+                Platforms.CASH_PLATFORM
+        );
+        lstInstalledWallet.add(installedWallet);
+
         return lstInstalledWallet;
 
     }

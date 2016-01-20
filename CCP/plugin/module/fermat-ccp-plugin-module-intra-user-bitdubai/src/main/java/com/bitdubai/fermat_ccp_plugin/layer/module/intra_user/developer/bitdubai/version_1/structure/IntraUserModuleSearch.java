@@ -1,6 +1,8 @@
 package com.bitdubai.fermat_ccp_plugin.layer.module.intra_user.developer.bitdubai.version_1.structure;
 
 import com.bitdubai.fermat_api.FermatException;
+import com.bitdubai.fermat_api.layer.actor_connection.common.enums.ConnectionState;
+import com.bitdubai.fermat_ccp_api.layer.actor.intra_user.interfaces.IntraWalletUserActorManager;
 import com.bitdubai.fermat_ccp_api.layer.identity.intra_user.exceptions.CantListIntraWalletUsersException;
 import com.bitdubai.fermat_ccp_api.layer.identity.intra_user.interfaces.IntraWalletUserIdentity;
 import com.bitdubai.fermat_ccp_api.layer.identity.intra_user.interfaces.IntraWalletUserIdentityManager;
@@ -34,15 +36,19 @@ public class IntraUserModuleSearch implements IntraUserSearch {
 
     IntraWalletUserIdentityManager intraWalletUserIdentityManager;
 
+    IntraWalletUserActorManager intraWalletUserManager;
+
     private String nameToSearch;
+    private String publicKeyToSearch;
 
     /**
      * Constructor
      */
 
-   public IntraUserModuleSearch(IntraUserManager intraUserNSManager, IntraWalletUserIdentityManager intraWalletUserIdentityManager){
+   public IntraUserModuleSearch(IntraUserManager intraUserNSManager, IntraWalletUserIdentityManager intraWalletUserIdentityManager,IntraWalletUserActorManager intraWalletUserManager){
        this.intraUserNSManager = intraUserNSManager;
        this.intraWalletUserIdentityManager = intraWalletUserIdentityManager;
+       this.intraWalletUserManager = intraWalletUserManager;
 
    }
     /**
@@ -67,13 +73,19 @@ public class IntraUserModuleSearch implements IntraUserSearch {
             /**
              * search intra users by name from intra user network service
              */
-            List<IntraUserInformation> intraUserList = this.intraUserNSManager.searchIntraUserByName(this.nameToSearch);
+        //TODO: Esto deberia estar por parametros ya que se le van a poder pasar muchos o uno solo
+            List<IntraUserInformation> intraUserList = new ArrayList<>();
+            if(nameToSearch!=null)
+                intraUserList = this.intraUserNSManager.searchIntraUserByName(this.nameToSearch);
+            if (publicKeyToSearch!=null) {
+                //intraUserList =intraWalletUserIdentityManager.searchIntraUserByPublicKey(publicKeyToSearch);
+            }
 
             /**
              * search Device User intra users  from intra user identity
              */
 
-        //TODO Harcoder
+
             List<IntraWalletUserIdentity> intraWalletUserList = this.intraWalletUserIdentityManager.getAllIntraWalletUsersFromCurrentDeviceUser();
 
 
@@ -83,8 +95,12 @@ public class IntraUserModuleSearch implements IntraUserSearch {
             for (IntraUserInformation intraUser : intraUserList) {
 
                 for (IntraWalletUserIdentity intraWalletUser : intraWalletUserList) {
-                   if(intraWalletUser.getPublicKey().equals(intraUser.getPublicKey()) )
-                       intraUserInformationList.add(new IntraUserModuleInformation(intraWalletUser.getAlias(), intraWalletUser.getPublicKey(), intraWalletUser.getProfileImage()));
+                   if(intraWalletUser.getPublicKey().equals(intraUser.getPublicKey()) ){
+                       ConnectionState connectionState = this.intraWalletUserManager.getIntraUsersConnectionStatus(intraUser.getPublicKey());
+
+                       intraUserInformationList.add(new IntraUserModuleInformation(intraWalletUser.getAlias(),intraWalletUser.getPhrase(), intraWalletUser.getPublicKey(), intraWalletUser.getImage(), connectionState));
+
+                   }
 
                 }
              }
@@ -104,5 +120,10 @@ public class IntraUserModuleSearch implements IntraUserSearch {
             throw new CantGetIntraUserSearchResult("CAN'T GET INTRA USERS SEARCH RESULT", FermatException.wrapException(e),"","unknown exception");
         }
 
+    }
+
+    @Override
+    public void setPublicKeyToSearch(String publicKey) {
+        this.publicKeyToSearch = publicKey;
     }
 }

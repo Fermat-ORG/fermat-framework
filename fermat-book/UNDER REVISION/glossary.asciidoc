@@ -2,15 +2,13 @@
 :numbered!:
 == Quick Glossary
 
-This quick glossary contains many of the terms used in relation to FERMAT, blockchain technology and cryptoworld.
+This quick glossary contains many of the terms used in relation to *Fermat*, *blockchain technology* and *cryptoworld*.
 
 These terms are used throughout the book, so bookmark this for a quick reference.
 
-address::
-    A bitcoin address looks like +1DSrfJdB2AnWaFNgSbv3MZC2m74996JafV+. It consists of a string of letters and numbers starting with a "1" (number one). Just like you ask others to send an email to your email address, you would ask others to send you bitcoin to your bitcoin address.((("bitcoin address")))((("address", see="bitcoin address")))((("public key", see="bitcoin address")))
+address (aka crypto address) ::
+    A crypto address looks like +1DSrfJdB2AnWaFNgSbv3MZC2m74996JafV+. It consists of a string of letters and numbers starting with a "1" (number one). You use an cryptoaddress to send others cryptocurrency or to receive it in your wallet.
 
-bitcoin::
-    The name of the currency unit (the coin), the network, and the software.((("bitcoin"))) 
 
 block::
     A grouping of transactions, marked with a timestamp, and a fingerprint of the previous block. The block header is hashed to produce a proof of work, thereby validating the transactions. Valid blocks are added to the main blockchain by network consensus.((("block")))
@@ -18,29 +16,16 @@ block::
 blockchain::
 	A list of validated blocks, each linking to its predecessor all the way to the genesis block.((("blockchain")))
 	
-confirmations::
-	Once a transaction is included in a block, it has one confirmation. As soon as _another_ block is mined on the same blockchain, the transaction has two confirmations, and so on. Six or more confirmations is considered sufficient proof that a transaction cannot be reversed.((("confirmations")))
+blockchain technology::
 
-fees::
-	The sender of a transaction often includes a fee to the network for processing the requested transaction.  Most transactions require a minimum fee of 0.5 mBTC.((("fees")))
-
-miner::
-A network node that finds valid proof of work for new blocks, by repeated hashing.((("miner")))
-
-network::
-A peer-to-peer network that propagates transactions and blocks to every bitcoin node on the network.((("network")))
+crypto network::
+A peer-to-peer network that propagates crypto transactions and blocks to every node runninmg a specific crypto currency protocol.
 	
-Proof-Of-Work::
-	A piece of data that requires significant computation to find. In bitcoin, miners must find a numeric solution to the SHA256 algorithm that meets a network-wide target, the difficulty target. ((("proof-of-work")))
-
-reward::
-An amount included in each new block as a reward by the network to the miner who found the Proof-Of-Work solution. It is currently 25BTC per block.((("reward")))
-
 secret key (aka private key)::
-	The secret number that unlocks bitcoins sent to the corresponding address.  A secret key looks like +5J76sF8L5jTtzE96r66Sf8cka9y44wdpJjMwCxR3tzLh3ibVPxh+.((("secret key")))((("private key", see="secret key")))
+	The secret number that unlocks the cryptocurrency sent to the corresponding crypto address.  A secret key looks like +5J76sF8L5jTtzE96r66Sf8cka9y44wdpJjMwCxR3tzLh3ibVPxh+.((("secret key")))((("private key", see="secret key")))
 	
 transaction::
-In simple terms, a transfer of bitcoins from one address to another. More precisely, a transaction is a signed data structure expressing a transfer of value. Transactions are transmitted over the bitcoin network, collected by miners, and included into blocks, made permanent on the blockchain.((("transaction")))
+In simple terms, a transfer of crypto currency from one address to another. More precisely, a transaction is a signed data structure expressing a transfer of value. Transactions are transmitted over the crypto network, collected by miners, and included into blocks, made permanent on the blockchain.((("transaction")))
 
 wallet::
-Software that holds all your bitcoin addresses and secret keys. Use it to send, receive, and store your bitcoin.((("wallet"))) 
+Software that holds all your crypto addresses and secret keys. Use it to send, receive, and store your crypto currency.

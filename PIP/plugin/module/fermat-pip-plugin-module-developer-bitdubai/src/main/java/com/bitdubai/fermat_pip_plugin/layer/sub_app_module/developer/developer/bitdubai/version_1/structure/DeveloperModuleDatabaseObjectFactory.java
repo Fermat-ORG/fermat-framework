@@ -12,7 +12,6 @@ import java.util.List;
  */
 public class DeveloperModuleDatabaseObjectFactory implements DeveloperObjectFactory {
 
-
     @Override
     public DeveloperDatabase getNewDeveloperDatabase(String name, String Id) {
        return new DeveloperModuleDeveloperDatabase(name,Id);

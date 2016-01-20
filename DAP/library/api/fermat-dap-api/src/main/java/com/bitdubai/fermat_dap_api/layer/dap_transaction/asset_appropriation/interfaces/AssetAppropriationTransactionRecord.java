@@ -2,6 +2,7 @@ package com.bitdubai.fermat_dap_api.layer.dap_transaction.asset_appropriation.in
 
 import com.bitdubai.fermat_api.layer.all_definition.money.CryptoAddress;
 import com.bitdubai.fermat_dap_api.layer.all_definition.digital_asset.DigitalAsset;
+import com.bitdubai.fermat_dap_api.layer.all_definition.digital_asset.DigitalAssetMetadata;
 import com.bitdubai.fermat_dap_api.layer.all_definition.enums.AppropriationStatus;
 
 import java.util.Date;
@@ -18,6 +19,8 @@ public interface AssetAppropriationTransactionRecord {
     AppropriationStatus status();
 
     DigitalAsset digitalAsset();
+
+    DigitalAssetMetadata assetMetadata();
 
     String btcWalletPublicKey();
 

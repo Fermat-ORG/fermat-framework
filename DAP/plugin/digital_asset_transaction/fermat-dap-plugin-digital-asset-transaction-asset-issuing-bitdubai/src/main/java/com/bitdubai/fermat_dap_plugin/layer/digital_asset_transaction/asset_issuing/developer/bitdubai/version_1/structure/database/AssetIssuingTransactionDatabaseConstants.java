@@ -49,6 +49,7 @@ public class AssetIssuingTransactionDatabaseConstants {
     //Es posible que elimine este id en un futuro, por ahora lo voy a usar como index de la tabla.
     public static final String DIGITAL_ASSET_TRANSACTION_ASSET_ISSUING_TRANSACTION_ID_COLUMN_NAME ="transaction_id";
     public static final String DIGITAL_ASSET_TRANSACTION_ASSET_ISSUING_GENESIS_TRANSACTION_COLUMN_NAME = "digital_asset_genesis_transaction";
+    public static final String DIGITAL_ASSET_TRANSACTION_ASSET_ISSUING_GENESIS_BLOCK_COLUMN_NAME = "digital_asset_genesis_block";
     public static final String DIGITAL_ASSET_TRANSACTION_ASSET_ISSUING_GENESIS_ADDRESS_COLUMN_NAME = "digital_asset_genesis_address";
     public static final String DIGITAL_ASSET_TRANSACTION_ASSET_ISSUING_TRANSACTION_STATE_COLUMN_NAME = "digital_asset_transaction_state";
     public static final String DIGITAL_ASSET_TRANSACTION_ASSET_ISSUING_CRYPTO_STATUS_COLUMN_NAME = "digital_asset_crypto_status";

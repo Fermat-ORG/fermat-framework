@@ -44,6 +44,7 @@ public class FermatDividerItemDecoration extends RecyclerView.ItemDecoration {
     private Drawable mDivider;
 
     private int mOrientation;
+    private int leftMargin;
 
 
     /**
@@ -130,9 +131,13 @@ public class FermatDividerItemDecoration extends RecyclerView.ItemDecoration {
             final int left = child.getRight() + params.rightMargin;
             final int right = left + mDivider.getIntrinsicHeight();
 
-            mDivider.setBounds(left, top, right, bottom);
+            mDivider.setBounds(left + leftMargin, top, right, bottom);
             mDivider.draw(canvas);
         }
+    }
+
+    public void setMargin(int left,int top,int rigth,int bottom){
+        this.leftMargin = left;
     }
 
     @Override

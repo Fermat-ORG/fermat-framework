@@ -88,19 +88,19 @@ public class SubAppDesktopFragment extends Fragment {
                 };
 
         mlist = new ArrayList<>();
-        InstalledSubApp installedSubApp = new InstalledSubApp(SubApps.DAP_ASSETS_FACTORY, null, null, "sub-app-asset-factory", "Assets factory", "sub-app-asset-factory", "sub-app-asset-factory", new Version(1, 0, 0));
+        InstalledSubApp installedSubApp = new InstalledSubApp(SubApps.DAP_ASSETS_FACTORY, null, null, "sub-app-asset-factory", "Assets factory", "public_key_dap_factory", "sub-app-asset-factory", new Version(1, 0, 0));
         mlist.add(installedSubApp);
-        installedSubApp = new InstalledSubApp(SubApps.DAP_ASSETS_COMMUNITY_ISSUER, null, null, "sub-app-asset-community-issuer", "Asset Community Issuer", "sub-app-asset-community-issuer", "sub-app-asset-community-issuer", new Version(1, 0, 0));
+        installedSubApp = new InstalledSubApp(SubApps.DAP_ASSETS_COMMUNITY_ISSUER, null, null, "sub-app-asset-community-issuer", "Asset Community Issuer", "public_key_dap_issuer_community", "sub-app-asset-community-issuer", new Version(1, 0, 0));
         mlist.add(installedSubApp);
-        installedSubApp = new InstalledSubApp(SubApps.DAP_ASSETS_COMMUNITY_USER, null, null, "sub-app-asset-community-user", "Asset Community User", "sub-app-asset-community-user", "sub-app-asset-community-user", new Version(1, 0, 0));
+        installedSubApp = new InstalledSubApp(SubApps.DAP_ASSETS_COMMUNITY_USER, null, null, "sub-app-asset-community-user", "Asset Community User", "public_key_dap_user_community", "sub-app-asset-community-user", new Version(1, 0, 0));
         mlist.add(installedSubApp);
-        installedSubApp = new InstalledSubApp(SubApps.DAP_ASSETS_COMMUNITY_REDEEM_POINT, null, null, "sub-app-asset-community-redeem-point", "Asset Community Redeem Point", "sub-app-asset-community-redeem-point", "sub-app-asset-community-redeem-point", new Version(1, 0, 0));
+        installedSubApp = new InstalledSubApp(SubApps.DAP_ASSETS_COMMUNITY_REDEEM_POINT, null, null, "sub-app-asset-community-redeem-point", "Asset Community Redeem Point", "public_key_dap_reedem_point_community", "sub-app-asset-community-redeem-point", new Version(1, 0, 0));
         mlist.add(installedSubApp);
-        installedSubApp = new InstalledSubApp(SubApps.DAP_ASSETS_IDENTITY_ISSUER, null, null, "sub-app-asset-identity-issuer", "Asset Identity Issuer", "sub-app-asset-identity-issuer", "sub-app-asset-identity-issuer", new Version(1, 0, 0));
+        installedSubApp = new InstalledSubApp(SubApps.DAP_ASSETS_IDENTITY_ISSUER, null, null, "sub-app-asset-identity-issuer", "Asset Identity Issuer", "public_key_dap_asset_issuer_identity", "sub-app-asset-identity-issuer", new Version(1, 0, 0));
         mlist.add(installedSubApp);
-        installedSubApp = new InstalledSubApp(SubApps.DAP_ASSETS_IDENTITY_USER, null, null, "sub-app-asset-identity-user", "Asset Identity User", "sub-app-asset-identity-user", "sub-app-asset-identity-user", new Version(1, 0, 0));
+        installedSubApp = new InstalledSubApp(SubApps.DAP_ASSETS_IDENTITY_USER, null, null, "sub-app-asset-identity-user", "Asset Identity User", "public_key_dap_asset_user_identity", "sub-app-asset-identity-user", new Version(1, 0, 0));
         mlist.add(installedSubApp);
-        installedSubApp = new InstalledSubApp(SubApps.DAP_REDEEM_POINT_IDENTITY, null, null, "sub-app-asset-identity-redeem-point", "Asset Redeem Point Identity", "sub-app-asset-identity-redeem-point", "sub-app-asset-identity-redeem-point", new Version(1, 0, 0));
+        installedSubApp = new InstalledSubApp(SubApps.DAP_REDEEM_POINT_IDENTITY, null, null, "sub-app-asset-identity-redeem-point", "Asset Redeem Point Identity", "public_key_dap_redeem_point_identity", "sub-app-asset-identity-redeem-point", new Version(1, 0, 0));
         mlist.add(installedSubApp);
 
         GridView gridView = new GridView(getActivity());
@@ -199,7 +199,7 @@ public class SubAppDesktopFragment extends Fragment {
             LinearLayout linearLayout = (LinearLayout) convertView.findViewById(R.id.sub_apps);
             switch (installedSubApp.getSubAppIcon()) {
                 case "sub-app-asset-identity-redeem-point":
-                    holder.imageView.setImageResource(R.drawable.intra_user);
+                    holder.imageView.setImageResource(R.drawable.redeem_point_identity);
                     holder.imageView.setTag("DevelopersActivity|1");
                     linearLayout.setTag("DevelopersActivity|1");
                     holder.imageView.setOnClickListener(new View.OnClickListener() {
@@ -213,7 +213,7 @@ public class SubAppDesktopFragment extends Fragment {
                     });
                     break;
                 case "sub-app-asset-identity-user":
-                    holder.imageView.setImageResource(R.drawable.intra_user);
+                    holder.imageView.setImageResource(R.drawable.asset_user_identity);
                     holder.imageView.setTag("DevelopersActivity|1");
                     linearLayout.setTag("DevelopersActivity|1");
                     holder.imageView.setOnClickListener(new View.OnClickListener() {
@@ -227,7 +227,7 @@ public class SubAppDesktopFragment extends Fragment {
                     });
                     break;
                 case "sub-app-asset-identity-issuer":
-                    holder.imageView.setImageResource(R.drawable.intra_user);
+                    holder.imageView.setImageResource(R.drawable.asset_issuer_identity);
                     holder.imageView.setTag("DevelopersActivity|1");
                     linearLayout.setTag("DevelopersActivity|1");
                     holder.imageView.setOnClickListener(new View.OnClickListener() {
@@ -241,7 +241,7 @@ public class SubAppDesktopFragment extends Fragment {
                     });
                     break;
                 case "sub-app-asset-factory":
-                    holder.imageView.setImageResource(R.drawable.factory_nuevo);
+                    holder.imageView.setImageResource(R.drawable.asset_factory);
                     holder.imageView.setTag("DevelopersActivity|1");
                     linearLayout.setTag("DevelopersActivity|1");
                     holder.imageView.setOnClickListener(new View.OnClickListener() {
@@ -262,7 +262,7 @@ public class SubAppDesktopFragment extends Fragment {
                     });
                     break;
                 case "sub-app-asset-community-issuer":
-                    holder.imageView.setImageResource(R.drawable.intra_user);
+                    holder.imageView.setImageResource(R.drawable.asset_issuer_comunity);
                     holder.imageView.setTag("DevelopersActivity|1");
                     linearLayout.setTag("DevelopersActivity|1");
                     holder.imageView.setOnClickListener(new View.OnClickListener() {
@@ -276,7 +276,7 @@ public class SubAppDesktopFragment extends Fragment {
                     });
                     break;
                 case "sub-app-asset-community-user":
-                    holder.imageView.setImageResource(R.drawable.intra_user);
+                    holder.imageView.setImageResource(R.drawable.asset_user_comunity);
                     holder.imageView.setTag("DevelopersActivity|1");
                     linearLayout.setTag("DevelopersActivity|1");
                     holder.imageView.setOnClickListener(new View.OnClickListener() {
@@ -298,7 +298,7 @@ public class SubAppDesktopFragment extends Fragment {
                     });
                     break;
                 case "sub-app-asset-community-redeem-point":
-                    holder.imageView.setImageResource(R.drawable.intra_user);
+                    holder.imageView.setImageResource(R.drawable.reddem_point_community);
                     holder.imageView.setTag("DevelopersActivity|1");
                     linearLayout.setTag("DevelopersActivity|1");
                     holder.imageView.setOnClickListener(new View.OnClickListener() {
@@ -312,7 +312,7 @@ public class SubAppDesktopFragment extends Fragment {
                     });
                     break;
                 case "wallet_factory":
-                    holder.imageView.setImageResource(R.drawable.factory_nuevo);
+                    holder.imageView.setImageResource(R.drawable.wallet_factory);
                     holder.imageView.setTag("FactoryActivity|1");
                     linearLayout.setTag("FactoryActivity|1");
                     holder.imageView.setOnClickListener(new View.OnClickListener() {
@@ -325,7 +325,7 @@ public class SubAppDesktopFragment extends Fragment {
                     break;
 
                 case "wallet_publisher":
-                    holder.imageView.setImageResource(R.drawable.publisher_nuevo);
+                    holder.imageView.setImageResource(R.drawable.wallet_publisher);
                     holder.imageView.setTag("PublisherActivity|1");
                     linearLayout.setTag("PublisherActivity|1");
                     holder.imageView.setOnClickListener(new View.OnClickListener() {
@@ -339,7 +339,7 @@ public class SubAppDesktopFragment extends Fragment {
                     break;
 
                 case "wallet_store":
-                    holder.imageView.setImageResource(R.drawable.store_nuevo);
+                    holder.imageView.setImageResource(R.drawable.wallet_store);
                     holder.imageView.setTag("StoreFrontActivity|1");
                     linearLayout.setTag("StoreFrontActivity|1");
                     holder.imageView.setOnClickListener(new View.OnClickListener() {

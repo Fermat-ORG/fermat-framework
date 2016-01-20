@@ -3,25 +3,12 @@ package com.bitdubai.fermat_dap_api.layer.dap_actor.redeem_point.interfaces;
 import com.bitdubai.fermat_api.layer.all_definition.money.CryptoAddress;
 import com.bitdubai.fermat_api.layer.osa_android.location_system.Location;
 import com.bitdubai.fermat_dap_api.layer.all_definition.enums.DAPConnectionState;
+import com.bitdubai.fermat_dap_api.layer.dap_actor.DAPActor;
 
 /**
  * Created by Nerio on 10/09/15.
  */
-public interface ActorAssetRedeemPoint {
-
-    /**
-     * The metho <code>getPublicKey</code> gives us the public key of the represented Redeem Point
-     *
-     * @return the public key
-     */
-    String getPublicKey();
-
-    /**
-     * The method <code>getName</code> gives us the name of the represented Redeem Point
-     *
-     * @return the name of the intra user
-     */
-    String getName();
+public interface ActorAssetRedeemPoint extends DAPActor {
 
     /**
      * The method <code>getRegistrationDate</code> gives us the date when both Redeem Points
@@ -32,11 +19,12 @@ public interface ActorAssetRedeemPoint {
     long getRegistrationDate();
 
     /**
-     * The method <coda>getProfileImage</coda> gives us the profile image of the represented Redeem Point
+     * The method <code>getLastConnectionDate</code> gives us the Las Connection Date of the represented
+     * Asset Issuer
      *
-     * @return the image
+     * @return the Connection Date
      */
-    byte[] getProfileImage();
+    long getLastConnectionDate();
 
     /**
      * The method <code>getConnectionState</code> gives us the connection state of the represented

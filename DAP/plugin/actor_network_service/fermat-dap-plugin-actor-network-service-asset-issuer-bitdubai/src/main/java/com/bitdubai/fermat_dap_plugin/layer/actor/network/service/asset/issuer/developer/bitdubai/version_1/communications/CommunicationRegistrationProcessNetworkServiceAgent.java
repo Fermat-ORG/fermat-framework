@@ -2,6 +2,7 @@ package com.bitdubai.fermat_dap_plugin.layer.actor.network.service.asset.issuer.
 
 import com.bitdubai.fermat_api.layer.all_definition.components.interfaces.PlatformComponentProfile;
 import com.bitdubai.fermat_dap_plugin.layer.actor.network.service.asset.issuer.developer.bitdubai.version_1.AssetIssuerActorNetworkServicePluginRoot;
+import com.bitdubai.fermat_p2p_api.layer.p2p_communication.WsCommunicationsCloudClientManager;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.client.CommunicationsClientConnection;
 
 /**
@@ -10,8 +11,8 @@ import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.client.Commun
 public class CommunicationRegistrationProcessNetworkServiceAgent extends Thread {
 
     /*
-* Represent the sleep time for the read or send (5000 milliseconds)
-*/
+     * Represent the sleep time for the read or send (5000 milliseconds)
+     */
     private static final long SLEEP_TIME = 5000;
     private static final long MAX_SLEEP_TIME = 20000;
 
@@ -23,7 +24,7 @@ public class CommunicationRegistrationProcessNetworkServiceAgent extends Thread 
     /**
      * Represent the communicationsClientConnection
      */
-    private CommunicationsClientConnection communicationsClientConnection;
+    private WsCommunicationsCloudClientManager communicationsClientConnection;
 
     /**
      * Represent the active
@@ -35,7 +36,7 @@ public class CommunicationRegistrationProcessNetworkServiceAgent extends Thread 
      * @param assetUserActorNetworkServicePluginRoot
      * @param communicationsClientConnection
      */
-    public CommunicationRegistrationProcessNetworkServiceAgent(AssetIssuerActorNetworkServicePluginRoot assetUserActorNetworkServicePluginRoot, CommunicationsClientConnection communicationsClientConnection) {
+    public CommunicationRegistrationProcessNetworkServiceAgent(AssetIssuerActorNetworkServicePluginRoot assetUserActorNetworkServicePluginRoot, WsCommunicationsCloudClientManager communicationsClientConnection) {
         this.assetIssuerActorNetworkServicePluginRoot = assetUserActorNetworkServicePluginRoot;
         this.communicationsClientConnection = communicationsClientConnection;
         this.active = Boolean.FALSE;
@@ -48,16 +49,15 @@ public class CommunicationRegistrationProcessNetworkServiceAgent extends Thread 
     @Override
     public void run() {
 
-        while (active){
-
+        while (active) {
             try {
 
-                if (communicationsClientConnection.isRegister() && !assetIssuerActorNetworkServicePluginRoot.isRegister()){
+                if (communicationsClientConnection.getCommunicationsCloudClientConnection().isRegister() && !assetIssuerActorNetworkServicePluginRoot.isRegister()){
 
                     /*
                      * Construct my profile and register me
                      */
-                    PlatformComponentProfile platformComponentProfile =  communicationsClientConnection.constructPlatformComponentProfileFactory(assetIssuerActorNetworkServicePluginRoot.getIdentityPublicKey(),
+                    PlatformComponentProfile platformComponentProfile =  communicationsClientConnection.getCommunicationsCloudClientConnection().constructPlatformComponentProfileFactory(assetIssuerActorNetworkServicePluginRoot.getIdentityPublicKey(),
                             assetIssuerActorNetworkServicePluginRoot.getAlias().toLowerCase(),
                             assetIssuerActorNetworkServicePluginRoot.getName(),
                             assetIssuerActorNetworkServicePluginRoot.getNetworkServiceType(),
@@ -67,7 +67,7 @@ public class CommunicationRegistrationProcessNetworkServiceAgent extends Thread 
                     /*
                      * Register me
                      */
-                    communicationsClientConnection.registerComponentForCommunication(assetIssuerActorNetworkServicePluginRoot.getNetworkServiceType(), platformComponentProfile);
+                    communicationsClientConnection.getCommunicationsCloudClientConnection().registerComponentForCommunication(assetIssuerActorNetworkServicePluginRoot.getNetworkServiceType(), platformComponentProfile);
 
                     /*
                      * Configure my new profile
@@ -89,7 +89,7 @@ public class CommunicationRegistrationProcessNetworkServiceAgent extends Thread 
                     try {
                         sleep(CommunicationRegistrationProcessNetworkServiceAgent.SLEEP_TIME);
                     } catch (InterruptedException e) {
-                        e.printStackTrace();
+                        System.out.println(e.getMessage());
                         active = Boolean.FALSE;
                     }
 
@@ -99,14 +99,13 @@ public class CommunicationRegistrationProcessNetworkServiceAgent extends Thread 
 
             }catch (Exception e){
                 try {
-                    e.printStackTrace();
+                    System.out.println(e.getMessage());
                     sleep(CommunicationRegistrationProcessNetworkServiceAgent.MAX_SLEEP_TIME);
                 } catch (InterruptedException e1) {
-                    e1.printStackTrace();
+                    System.out.println(e1.getMessage());
                     active = Boolean.FALSE;
                 }
             }
-
         }
     }
 

@@ -1,5 +1,8 @@
 package com.bitdubai.sub_app.developer.common;
 
+import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.PluginVersionReference;
+import com.bitdubai.fermat_api.layer.all_definition.enums.interfaces.FermatPluginsEnum;
+
 import java.io.Serializable;
 
 public class Resource implements Serializable {
@@ -15,6 +18,8 @@ public class Resource implements Serializable {
         public String label;
 
         public String code;
+
+        public PluginVersionReference pluginVersionReference;
 
         public String developer;
 
@@ -36,12 +41,26 @@ public class Resource implements Serializable {
                 this.type = type;
         }
 
+        public Resource(final String picture  ,
+                        final String label    ,
+                        final PluginVersionReference pluginVersionReference     ,
+                        final String developer,
+                        final int    type     ) {
+
+                this.picture = picture;
+                this.label = label;
+                this.pluginVersionReference = pluginVersionReference;
+                this.developer = developer;
+                this.type = type;
+        }
+
         @Override
         public String toString() {
                 return "Resource{" +
                         "picture=\'" + picture + "\'" +
                         ", label=\'" + label + "\'" +
                         ", code=\'" + code + "\'" +
+                        ", pluginVersionReference=\'" + pluginVersionReference + "\'" +
                         ", developer=\'" + developer + "\'" +
                         ", type=" + type +
                         '}';

@@ -2,7 +2,7 @@ package com.bitdubai.fermat_cbp_plugin.layer.request.customer_broker_purchase.de
 
 import com.bitdubai.fermat_cbp_api.all_definition.enums.CurrencyType;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.RequestStatus;
-import com.bitdubai.fermat_cbp_api.layer.cbp_request.customer_broker_purchase.interfaces.RequestCustomerBrokerPurchase;
+import com.bitdubai.fermat_cbp_api.layer.request.customer_broker_purchase.interfaces.RequestCustomerBrokerPurchase;
 
 import java.util.UUID;
 

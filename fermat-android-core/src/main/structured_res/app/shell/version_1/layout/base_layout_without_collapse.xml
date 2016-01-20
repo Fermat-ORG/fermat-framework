@@ -33,11 +33,113 @@
                 />
         </android.support.design.widget.AppBarLayout>
 
-        <android.support.v4.view.ViewPager
-            android:id="@+id/pager"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            />
+
+            <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="20"
+                android:id="@+id/container_main">
+
+                <android.support.v4.view.ViewPager
+                    android:id="@+id/pager"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    />
+
+
+                <include layout="@layout/reveal_top"/>
+
+            <RadioGroup
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal|bottom"
+                android:orientation="horizontal"
+                android:id="@+id/radiogroup"
+                android:visibility="gone"
+                android:paddingBottom="12dp">
+
+                <RadioButton
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/radioButton"
+                    android:button="@drawable/pager_selector"
+                    android:checked="true" />
+
+                <RadioButton
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:button="@drawable/pager_selector"
+                    android:id="@+id/radioButton2"
+                    android:layout_marginLeft="6dp"/>
+
+            </RadioGroup>
+
+                <SlidingDrawer
+                    android:layout_width="match_parent"
+                    android:id="@+id/SlidingDrawer"
+                    android:handle="@+id/slide_container"
+                    android:content="@+id/contentLayout"
+                    android:layout_gravity="bottom"
+                    android:padding="10dip"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:visibility="gone">
+                    <FrameLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/slide_container"
+                        android:background="@drawable/ic_arrow_down_expanded">
+
+
+                    </FrameLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:id="@+id/contentLayout"
+                        android:orientation="vertical"
+                        android:gravity="center"
+                        android:padding="17dip"
+                        android:background="#21ab23"
+                        android:layout_height="wrap_content">
+
+                        <RelativeLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:id="@+id/footer_container">
+
+
+                        </RelativeLayout>
+
+
+
+                    </LinearLayout>
+                </SlidingDrawer>
+
+        </FrameLayout>
+
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="95dp"
+                android:orientation="vertical"
+                android:paddingLeft="1dp"
+                android:paddingRight="1dp"
+                android:paddingStart="1dp"
+                android:id="@+id/bottom_navigation_container"
+                >
+
+
+                <android.support.v7.widget.RecyclerView
+                    android:id="@+id/bottom_navigation_recycler"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:overScrollMode="never"
+                    android:layout_gravity="center"
+                    />
+
+
+
+            </LinearLayout>
 
     </LinearLayout>
 
@@ -49,30 +151,9 @@
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
         android:layout_gravity="start"
-        android:background="#fff"
         >
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical">
-
-            <FrameLayout
-                android:layout_width="match_parent"
-                android:layout_height="180dp"
-                android:id="@+id/navigation_view_header"
-                android:visibility="visible">
-
-            </FrameLayout>
-
-            <android.support.v7.widget.RecyclerView
-                android:id="@+id/navigation_recycler_view"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="4dp"/>
-
-
-        </LinearLayout>
+        <include layout="@layout/navigation_view"></include>
 
     </android.support.design.widget.NavigationView>
 

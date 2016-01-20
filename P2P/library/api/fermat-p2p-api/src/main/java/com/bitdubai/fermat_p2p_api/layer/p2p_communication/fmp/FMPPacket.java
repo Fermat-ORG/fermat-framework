@@ -6,7 +6,7 @@
  */
 package com.bitdubai.fermat_p2p_api.layer.p2p_communication.fmp;
 
-import com.bitdubai.fermat_api.layer.all_definition.enums.NetworkServices;
+import com.bitdubai.fermat_p2p_api.layer.all_definition.common.network_services.enums.NetworkServices;
 
 /**
  * The Class <code>com.bitdubai.fermat_p2p_api.layer.all_definition.communication.cloud.FermatPacketCommunication</code> represent

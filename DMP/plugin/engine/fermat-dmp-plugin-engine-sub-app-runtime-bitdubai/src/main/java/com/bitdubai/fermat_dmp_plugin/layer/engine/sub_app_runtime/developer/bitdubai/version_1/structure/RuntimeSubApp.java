@@ -3,14 +3,15 @@ package com.bitdubai.fermat_dmp_plugin.layer.engine.sub_app_runtime.developer.bi
 
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.Activity;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.LanguagePackage;
-import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.Wallet;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Wallets;
 import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.SubApp;
 import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.enums.SubApps;
 
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -25,7 +26,8 @@ public class RuntimeSubApp implements SubApp {
 
     Map<Activities, Activity> activities = new  HashMap<Activities, Activity>();
 
-    Activities startActivity;
+    private List<Activities> startActivities = new ArrayList<>();;
+    private int actualStart = 0;
 
     Activities lastActivity;
 
@@ -78,22 +80,40 @@ public class RuntimeSubApp implements SubApp {
     }
 
     @Override
+    public Activity getStartActivity() {
+        if(!startActivities.isEmpty())
+        return activities.get(startActivities.get(actualStart));
+        else return activities.get(0);
+    }
+
+    @Override
     public Activity getLastActivity() {
         if(lastActivity==null){
-            return activities.get(startActivity);
+            return activities.get(startActivities.get(actualStart));
         }
         return activities.get(lastActivity);
     }
 
     @Override
-    public void setStartActivity(Activities activity) {
-        this.startActivity=activity;
+    public void changeActualStartActivity(int option)throws IllegalArgumentException{
+        if(option>activities.size() || option<0) throw new IllegalArgumentException();
+        this.actualStart = option;
+    }
+
+    @Override
+    public void addPosibleStartActivity(Activities activity) {
+        this.startActivities.add(activity);
     }
 
 
     @Override
     public Map<String,LanguagePackage> getLanguagePackages(){
         return languagePackages;
+    }
+
+    @Override
+    public String getAppName() {
+        return type.getCode();
     }
 
     @Override

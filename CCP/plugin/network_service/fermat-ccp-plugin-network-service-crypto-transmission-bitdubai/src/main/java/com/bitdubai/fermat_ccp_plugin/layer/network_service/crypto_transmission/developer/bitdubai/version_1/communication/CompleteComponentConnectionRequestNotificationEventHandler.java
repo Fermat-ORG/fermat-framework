@@ -11,6 +11,7 @@ import com.bitdubai.fermat_api.Service;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEvent;
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEventHandler;
+import com.bitdubai.fermat_api.layer.all_definition.network_service.enums.NetworkServiceType;
 import com.bitdubai.fermat_api.layer.all_definition.network_service.interfaces.NetworkService;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.events.CompleteComponentConnectionRequestNotificationEvent;
 
@@ -55,11 +56,14 @@ public class CompleteComponentConnectionRequestNotificationEventHandler implemen
 
         if (((Service) this.networkService).getStatus() == ServiceStatus.STARTED) {
 
+
             CompleteComponentConnectionRequestNotificationEvent completeComponentConnectionRequestNotificationEvent = (CompleteComponentConnectionRequestNotificationEvent) platformEvent;
 
+            NetworkServiceType networkServiceTypeApplicant = completeComponentConnectionRequestNotificationEvent.getNetworkServiceTypeApplicant();
+            NetworkServiceType networkServiceTypeRoot = networkService.getNetworkServiceType();
 
 
-            if(completeComponentConnectionRequestNotificationEvent.getNetworkServiceTypeApplicant() == networkService.getPlatformComponentProfilePluginRoot().getNetworkServiceType()){
+            if(networkServiceTypeApplicant == networkServiceTypeRoot){
 
                 /*
                  *  networkService make the job

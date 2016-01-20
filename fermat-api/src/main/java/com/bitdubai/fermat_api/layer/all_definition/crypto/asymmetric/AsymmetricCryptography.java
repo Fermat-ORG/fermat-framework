@@ -23,7 +23,7 @@ public class AsymmetricCryptography {
 		BigInteger message = new BigInteger(messageHash, 16);
 
 		Signature signature = new AsymmetricSignature(privateKey, message, randomizer.generateRandom());*/
-		return messageHash;
+		return "";
 	}
 	
 	public static boolean verifyMessageSignature(final String signature, final String encryptedMessage, final String hexPublicKey) throws IllegalArgumentException{

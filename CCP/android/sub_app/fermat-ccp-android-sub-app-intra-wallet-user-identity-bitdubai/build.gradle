@@ -29,7 +29,6 @@ dependencies {
     dependencies {
         // Fermat
         compile project(':fermat-api')
-        compile project(':fermat-cbp-api')
         compile project(':fermat-android-api')
         compile fileTree(include: ['*.jar'], dir: 'libs')
 
@@ -39,6 +38,7 @@ dependencies {
         compile 'com.android.support:recyclerview-v7:21.0.3'
         compile 'com.android.support:support-v13:21.0.3'
         compile 'com.melnykov:floatingactionbutton:1.3.0'
+        compile 'com.squareup.picasso:picasso:2.3.2'
 
         // RoboLectric y JUnit
         testCompile 'org.robolectric:robolectric:3.0'

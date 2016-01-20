@@ -11,7 +11,7 @@ import java.util.List;
  * Created by Matias Furszyfer on 2015.08.19..
  */
 
-public class InstalledSubApp implements com.bitdubai.fermat_api.layer.dmp_module.wallet_manager.InstalledSubApp {
+public class InstalledSubApp implements com.bitdubai.fermat_api.layer.dmp_module.sub_app_manager.InstalledSubApp {
 
     private SubApps subApps;
     private List<InstalledSkin> skinsId;
@@ -83,6 +83,11 @@ public class InstalledSubApp implements com.bitdubai.fermat_api.layer.dmp_module
     @Override
     public String getSubAppIcon() {
         return walletIcon;
+    }
+
+    @Override
+    public String getAppName() {
+        return getSubAppType().getCode();
     }
 
     /**

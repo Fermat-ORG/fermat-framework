@@ -2,6 +2,7 @@ package com.bitdubai.fermat_dap_android_sub_app_asset_factory_bitdubai.holders;
 
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 
 import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView;
 import com.bitdubai.fermat_android_api.ui.holders.FermatViewHolder;
@@ -12,10 +13,14 @@ import com.bitdubai.fermat_dap_android_sub_app_asset_factory_bitdubai.R;
  */
 public class AssetHolder extends FermatViewHolder {
 
-    public FermatTextView title;
-    public FermatTextView description;
+
+    public LinearLayout rowView;
+    public View bottomLine;
+    public ImageView thumbnail;
+    public FermatTextView name;
     public FermatTextView state;
-    public ImageView options;
+    public FermatTextView amount;
+    public FermatTextView bitcoins;
 
     /**
      * Constructor
@@ -24,9 +29,12 @@ public class AssetHolder extends FermatViewHolder {
      */
     public AssetHolder(View itemView) {
         super(itemView);
-        title = (FermatTextView) itemView.findViewById(R.id.title);
-        description = (FermatTextView) itemView.findViewById(R.id.description);
+        rowView = (LinearLayout) itemView.findViewById(R.id.row_view);
+        bottomLine = itemView.findViewById(R.id.bottom_line);
+        thumbnail = (ImageView) itemView.findViewById(R.id.asset_image);
+        name = (FermatTextView) itemView.findViewById(R.id.asset_name);
         state = (FermatTextView) itemView.findViewById(R.id.state);
-        options = (ImageView) itemView.findViewById(R.id.options);
+        amount = (FermatTextView) itemView.findViewById(R.id.asset_amount);
+        bitcoins = (FermatTextView) itemView.findViewById(R.id.asset_bitcoins);
     }
 }

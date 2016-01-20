@@ -18,8 +18,8 @@ public class SideMenu implements FermatSideMenu {
      */
     List<MenuItem> menuItems = new ArrayList<>();
     private String backgroundColor;
-    private String backgroudColor;
     private String navigationIconColor;
+    private boolean hasFooter=false;
 
     /**
      * SideMenu class constructors
@@ -55,14 +55,41 @@ public class SideMenu implements FermatSideMenu {
     }
 
     public String getBackgroudColor() {
-        return backgroudColor;
+        return backgroundColor;
     }
 
     public void setNavigationIconColor(String navigationIconColor) {
         this.navigationIconColor = navigationIconColor;
     }
 
+    @Override
+    public boolean hasFooter() {
+        return hasFooter;
+    }
+
+    @Override
+    public void clearSelected() {
+        for(MenuItem item : menuItems){
+            item.setSelected(false);
+        }
+    }
+
+    public void setHasFooter(boolean hasFooter) {
+        this.hasFooter = hasFooter;
+    }
+
     public String getNavigationIconColor() {
         return navigationIconColor;
+    }
+
+    public void setNotifications(int[] notifications) {
+        try {
+            if (notifications != null && notifications.length != 0)
+                for (int i = 0; i < menuItems.size(); i++) {
+                    menuItems.get(i).setNotifications(notifications[i]);
+                }
+        }catch (Exception e){
+            e.printStackTrace();
+        }
     }
 }

@@ -5,7 +5,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="fill_parent"
-    android:background="#ffffff"
+    android:background="@drawable/background_gradient"
     android:orientation="vertical"
     xmlns:tools="http://schemas.android.com/tools">
 
@@ -14,30 +14,36 @@
         android:id="@+id/fragment_container2"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="#1173aa"
-        android:orientation="horizontal">
+        android:background="@drawable/search_contacts_container"
+        android:layout_marginRight="10dp"
+        android:layout_marginLeft="10dp"
+        android:layout_marginTop="15dp"
+        android:orientation="horizontal"
+        >
 
         <ImageView
-            android:layout_width="35dp"
-            android:layout_height="35dp"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
             android:src="@drawable/ic_contact_search"
-            android:paddingTop="10dp"
             android:layout_marginLeft="10dp"
-            android:layout_marginTop="10dp" />
+            android:paddingTop="3dp"
+            android:paddingBottom="3dp"
+            android:layout_gravity="center_vertical"/>
 
         <EditText
-
             android:id="@+id/search_view"
-            android:layout_width="fill_parent"
-            android:layout_height="50dp"
-            android:layout_margin="6dp"
+            android:layout_width="match_parent"
+            android:layout_height="35dp"
             android:layout_toLeftOf="@+id/clear_search_image_button"
             android:layout_toStartOf="@+id/clear_search_image_button"
+            android:paddingLeft="20dp"
             android:hint="@string/search_hint"
             android:textColorHint="#fff"
             android:textSize="14sp"
             android:textColor="#ffffff"
+            android:layout_gravity="center"
             android:singleLine="true"
+            android:background="@null"
             />
 
         <ImageButton
@@ -66,44 +72,65 @@
 
         <include layout="@layout/loading_empty_view"/>
 
-        <com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.Views.views_contacts_fragment.PinnedHeaderListView
-            android:id="@+id/list_view"
-            android:layout_width="fill_parent"
-            android:layout_height="fill_parent"
-            android:scrollingCache="false"
-            />
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.Views.views_contacts_fragment.PinnedHeaderListView
+                android:id="@+id/list_view"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:scrollingCache="false"
+                android:drawSelectorOnTop="true"
+                />
+
+
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical"
+                android:id="@+id/empty_view"
+                android:layout_gravity="center_horizontal"
+                android:gravity="center"
+                android:visibility="gone">
+
+                <ImageView
+                    android:layout_width="125dp"
+                    android:layout_height="125dp"
+                    android:src="@drawable/contacts_empty_icon"
+                    />
+
+
+                <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
+                    android:gravity="center"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerHorizontal="true"
+                    android:padding="15dp"
+                    app:typeface="ROBOTO_REGULAR"
+                    android:text="Click me to\nsearch contacts!"
+                    android:textAppearance="?android:attr/textAppearanceLarge"
+                    android:textColor="#fff"
+                    />
+
+            </LinearLayout>
+
+
+
+        </FrameLayout>
+
+
+
+
+
+
 
     </FrameLayout>
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical"
-        android:id="@+id/empty_view"
-        android:layout_gravity="center_horizontal"
-        android:gravity="center"
-        android:visibility="visible">
-
-        <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:src="@drawable/img_contact_empty"
-            />
 
 
-        <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
-            android:gravity="center"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerHorizontal="true"
-            android:padding="15dp"
-            app:typeface="ROBOTO_REGULAR"
-            android:text="Click me to\nsearch contacts!"
-            android:textAppearance="?android:attr/textAppearanceLarge"
-            android:textColor="@color/color_black_light"
-            />
 
-    </LinearLayout>
 
 
 </LinearLayout>

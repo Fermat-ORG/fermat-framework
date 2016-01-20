@@ -23,7 +23,7 @@ public class CantUpdateRecordDataBaseException extends FermatException {
     /**
      * Represent the default message
      */
-    public static final String DEFAULT_MESSAGE = "CAN'T UPDATE RECORD ON DATABASE";
+    public static final String DEFAULT_MESSAGE = "CAN'T UPDATE TRANSMISSION METADATA RECORD ON DATABASE";
 
     /**
      * Constructor with parameters

@@ -46,8 +46,8 @@ public class CompleteComponentConnectionRequestNotificationEventHandler implemen
             CompleteComponentConnectionRequestNotificationEvent completeComponentConnectionRequestNotificationEvent = (CompleteComponentConnectionRequestNotificationEvent) platformEvent;
 
 
-            if (completeComponentConnectionRequestNotificationEvent.getRemoteComponent().getPlatformComponentType()  == networkService.getPlatformComponentType() &&
-                    completeComponentConnectionRequestNotificationEvent.getRemoteComponent().getNetworkServiceType() == networkService.getNetworkServiceType()){
+            if (completeComponentConnectionRequestNotificationEvent.getNetworkServiceTypeApplicant() ==
+                    this.networkService.getPlatformComponentProfilePluginRoot().getNetworkServiceType()){
 
                 /*
                  *  networkService make the job

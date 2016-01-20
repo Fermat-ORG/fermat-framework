@@ -1,39 +1,75 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    android:layout_marginEnd="1dp"
-    android:layout_marginLeft="1dp"
-    android:layout_marginRight="1dp"
-    android:layout_marginStart="1dp"
-    android:layout_marginTop="2dp"
+    android:layout_margin="1dp"
+    android:background="#d9d6d6"
     android:orientation="vertical">
 
-    <com.bitdubai.fermat_android_api.ui.Views.SquareImageView
-        android:id="@+id/thumbnail"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:adjustViewBounds="true"
-        android:scaleType="fitXY"
-        android:src="@drawable/sad_face" />
+    <RelativeLayout
+        android:layout_width="120dp"
+        android:layout_height="120dp">
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:background="#cc000000"
-        android:padding="8dp">
+        <com.bitdubai.fermat_android_api.ui.Views.SquareImageView
+            android:id="@+id/profile_image"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:scaleType="centerCrop"
+            android:src="@drawable/profile_image_standard" />
 
         <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
-            android:id="@+id/name"
+            android:id="@+id/community_name"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="20dp"
+            android:layout_alignParentBottom="true"
+            android:background="#B3000000"
             android:ellipsize="end"
-            android:singleLine="true"
-            android:text="Francisco Vasquez"
-            android:textColor="#fff"
-            android:textSize="12sp" />
+            android:gravity="start"
+            android:paddingBottom="2dp"
+            android:paddingLeft="8dp"
+            android:paddingRight="8dp"
+            android:singleLine="false"
+            android:text="Anna"
+            android:textColor="#FFFFFFFF"
+            android:textSize="16sp"
+            app:typeface="ROBOTO_REGULAR"
+            tools:ignore="HardcodedText" />
 
-    </LinearLayout>
+        <CheckBox
+            android:id="@+id/connect"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:clickable="false"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentRight="true" />
+    </RelativeLayout>
 
-</RelativeLayout>
+    <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
+        android:id="@+id/status"
+        android:layout_width="match_parent"
+        android:layout_height="18dp"
+        android:background="#0072bb"
+        android:gravity="center_vertical"
+        android:paddingLeft="8dp"
+        android:paddingStart="8dp"
+        android:text="Online"
+        android:textColor="#ffffff"
+        android:textSize="10sp"
+        tools:ignore="HardcodedText,RtlSymmetry,SmallSp" />
+
+    <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
+        android:id="@+id/crypto"
+        android:layout_width="match_parent"
+        android:layout_height="18dp"
+        android:background="#ffffff"
+        android:gravity="center_vertical"
+        android:paddingLeft="8dp"
+        android:paddingStart="8dp"
+        android:text="CryptoAddress: "
+        android:textColor="#000000"
+        android:textSize="10sp"
+        tools:ignore="HardcodedText,RtlSymmetry,SmallSp" />
+</LinearLayout>

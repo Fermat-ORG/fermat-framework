@@ -1,5 +1,0 @@
-= Fermat-P2P System Layers
-
-:leveloffset: 1
-include::communication/communicationLayer.asciidoc[]
-

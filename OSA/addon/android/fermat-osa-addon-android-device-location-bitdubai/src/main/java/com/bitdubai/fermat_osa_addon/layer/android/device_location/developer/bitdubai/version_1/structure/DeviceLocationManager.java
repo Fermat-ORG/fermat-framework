@@ -30,6 +30,7 @@ public class DeviceLocationManager implements LocationManager, LocationListener 
         this.context = context;
     }
 
+
     /**
      * LocationListener Interface member variables.
      */
@@ -56,16 +57,16 @@ public class DeviceLocationManager implements LocationManager, LocationListener 
         try {
             locationManager = (android.location.LocationManager) context.getSystemService(Context.LOCATION_SERVICE);
 
-               // getting GPS status
+            // getting GPS status
             if (locationManager.isProviderEnabled(android.location.LocationManager.GPS_PROVIDER)) {
-                locationManager.requestLocationUpdates(android.location.LocationManager.GPS_PROVIDER,MIN_TIME_BW_UPDATES,MIN_DISTANCE_CHANGE_FOR_UPDATES, this,Looper.getMainLooper());
+                locationManager.requestLocationUpdates(android.location.LocationManager.GPS_PROVIDER,MIN_TIME_BW_UPDATES,MIN_DISTANCE_CHANGE_FOR_UPDATES, this, Looper.getMainLooper());
                 //"GPS Enabled"
                 if (locationManager != null)
                 {
                     deviceLocation = locationManager.getLastKnownLocation(android.location.LocationManager.GPS_PROVIDER);
                     if (deviceLocation != null) {
 
-                        location = new DeviceLocation(deviceLocation.getLatitude(),deviceLocation.getLongitude(),deviceLocation.getTime(),deviceLocation.getAltitude(),LocationProvider.GPS);
+                        location = new DeviceLocation(deviceLocation.getLatitude(),deviceLocation.getLongitude(),deviceLocation.getTime(),deviceLocation.getAltitude(), LocationProvider.GPS);
 
                     }
                     else{

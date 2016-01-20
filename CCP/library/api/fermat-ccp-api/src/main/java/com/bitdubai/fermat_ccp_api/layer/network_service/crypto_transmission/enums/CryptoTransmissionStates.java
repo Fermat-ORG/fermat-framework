@@ -16,6 +16,7 @@ public enum CryptoTransmissionStates {
     SEEN_BY_DESTINATION_NETWORK_SERVICE("SBDNS"),
     SEEN_BY_DESTINATION_VAULT("SBDV"),
     CREDITED_IN_DESTINATION_WALLET("CIDW"),
+    WAITING_RESPONSE("WRE"),
 
     /**
      * Receiving states

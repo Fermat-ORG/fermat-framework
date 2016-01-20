@@ -1,4 +1,0 @@
-[[Platform-SubApps-Designer]]
-= Designer
-
-This subapp is initially intended to let developers contact user interface designers.

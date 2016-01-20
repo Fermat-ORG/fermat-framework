@@ -11,7 +11,7 @@ import com.bitdubai.fermat_android_api.layer.definition.wallet.utils.ImagesUtils
 import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView;
 import com.bitdubai.fermat_android_api.ui.holders.FermatViewHolder;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.ContractStatus;
-import com.bitdubai.fermat_cbp_api.layer.cbp_wallet_module.crypto_broker.interfaces.ContractBasicInformation;
+import com.bitdubai.fermat_cbp_api.layer.wallet_module.common.interfaces.ContractBasicInformation;
 import com.bitdubai.reference_wallet.crypto_broker_wallet.R;
 
 import java.text.DecimalFormat;
@@ -82,7 +82,7 @@ public class ContractListViewHolder extends FermatViewHolder {
         String exchangeAmount = decimalFormat.format(itemInfo.getExchangeRateAmount());
         String paymentCurrency = itemInfo.getPaymentCurrency();
 
-        return res.getString(R.string.cbw_exchange_rate_amount_and_currency, merchandise, exchangeAmount, paymentCurrency);
+        return res.getString(R.string.cbw_exchange_rate_summary, merchandise, exchangeAmount, paymentCurrency);
     }
 
     private int getStatusBackgroundColor(ContractStatus status) {

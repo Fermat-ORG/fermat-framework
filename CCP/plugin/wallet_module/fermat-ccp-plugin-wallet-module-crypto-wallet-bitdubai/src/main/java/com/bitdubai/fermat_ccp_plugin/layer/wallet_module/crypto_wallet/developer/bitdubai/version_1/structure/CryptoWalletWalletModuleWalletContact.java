@@ -41,7 +41,7 @@ public class CryptoWalletWalletModuleWalletContact implements CryptoWalletWallet
         this.receivedCryptoAddress = walletContactRecord.getCryptoAddresses()              ;
         this.actorPublicKey        = walletContactRecord.getActorPublicKey()               ;
         this.actorName             = walletContactRecord.getActorAlias()                   ;
-        this.profilePicture        = profilePicture != null ? profilePicture.clone() : null;
+        this.profilePicture        = profilePicture != null ? profilePicture : null;
         this.compatibility         = walletContactRecord.getCompatibility()                ;
         this.isConnection          = false;
     }
@@ -92,7 +92,7 @@ public class CryptoWalletWalletModuleWalletContact implements CryptoWalletWallet
 
     @Override
     public byte[] getProfilePicture() {
-        return profilePicture != null ? profilePicture.clone() : new byte[0];
+        return profilePicture != null ? profilePicture : new byte[0];
     }
 
     @Override

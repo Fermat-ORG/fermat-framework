@@ -1,4 +1,4 @@
-![alt text](https://github.com/bitDubai/media-kit/blob/master/Readme%20Image/Fermat%20Logotype/Fermat_Logo_3D.png "Fermat Logo")
+![alt text](https://github.com/bitDubai/media-kit/blob/master/MediaKit/Fermat%20Branding/Fermat%20Logotype/Fermat_Logo_3D.png "Fermat Logo")
 
 
 <br><br>
@@ -112,7 +112,7 @@ Where we refer to '_Plugin Name_' what we expect is the following information:
 
 All of them separated by " - ". 
 
-##### Linking to parent Issue
+##### Linking to a parent Issue
 
 Issues that need to be linked to its parent must have their first line starting with "Parent: " + http link to parent issue. 
 
@@ -527,8 +527,10 @@ Here are some examples:
 
 Additionally, if that information is required the database can be displayed through the SubApp Develop, present at runtime on the App Fermat, the implementation of the class' name plug-in'DeveloperDatabaseFactory is required. This class will be instantiated by the PluginRoot class Plug-in for achieving the aforementioned display.
 
-To facilitate the work of creating these classes, Fermat has developed a script in Groovy, which automates the creation of these classes, following the established design, this plug-in is available at: https://github.com/bitDubai/fermat/blob/master/fermat-documentation/scripts/database/database_classes_generator/documentation_en.md and https://github.com/bitDubai/fermat/blob/master/fermat-documentation/scripts/database/database_classes_generator/script.groovy
-
+To facilitate the work of creating these classes, Fermat has developed a script in Groovy, which automates the creation of these classes, following the established design, this plug-in is available at:
+[Script in Groovy Documentation](https://github.com/bitDubai/fermat/blob/master/scripts/database/database_classes_generator/documentation_en.md)
+ and 
+ [Script Groovy](https://github.com/bitDubai/fermat/blob/master/scripts/database/database_classes_generator/script.groovy)
 <br>
 #### Agents
 
@@ -758,21 +760,430 @@ public class WsCommunicationVpnServerManagerAgent extends Thread{
 
 <br>
 
+##Test Packages
+
+To perform the test unit should establish a packet structure comprising:
+
+* A package called "test" in the "src" directory.
+Within the package "test" should create a package called "java".
+within the "java" package should create a package with the following structure:
+```java
+unit.com.bitdubai."Plugin Name"
+```
+It should be created within this structure a package for each class to be tested. These packages must be called with the name of the class to be tested.
+* Finally within this package must create a class for each test method with the method name followed with the legend "Test"
+ <br>
+For example:
+My method is called "myMethod" when tested should would create a class named "MyMethodTest"
+
+<br>
+
+##The Database Script
+
+Within the database package should define the following classes:
+
+**DatabaseConstants:** Within this should define constants table names, column names, and primary keys.
+
+**DatabaseFactory:** Class to create the database and tables.
+
+**DeveloperDatabaseFactory:** Contains methods for queries from the developer Sub-App.
+
+**DatabaseDao:** Contains all methods for inserting, queries, update, delete data in tables of the database.
+<br>
+##ConstantsDatabase:
+
+This class must be defined with the main name of the plugin followed by
+legend "databaseConstants".
+<br>
+For example:
+```java
+"MyPluginDatabaseConstants"
+```
+Inside the class must be defined constant for the name of the database table names, column names and names of primary keys.
+The name must be in upper case continued the legend that says you element being defined.
+<br>
+For example:
+```java
+public class ”MyPluginName”DatabaseConstants {    
+/**define database name**/
+	public static final String “DECLARE_NAME_OF_THE_DATABASE”_DATABASE_NAME ="declare_name_of_the_database";
+/**define table name**/
+      public static final String “DECLARING_THE_TABLE_NAME”_TABLE_NAME ="declaring_the_table_name";
+      /**define column name**/
+      static final String “DECLARE_THE_COLUMN_NAME”_COLUMN_NAME="declare_the_column_name";
+      /**define primary key name**/
+      static final String “DECLARE_THE_PRIMARY_KEY_NAME”_FIRST_KEY_COLUMN ="the_primary_key_name";
+}
+```
+
+##DatabaseFactory:
+
+This class is responsible for creating the database and tables.
+The name of the class must be defined with the name followed by the words "DatabaseFactory" plugin.
+<br>
+Inside the class must implement the interface "DealsWithPluginDatabaseSystem"
+where the method is implemented:
+<br>
+```java
+@Override 
+    public void setPluginDatabaseSystem(PluginDatabaseSystem pluginDatabaseSystem) { 
+        this.pluginDatabaseSystem = pluginDatabaseSystem; 
+    }
+```
+Inside the class should be created createDatabase () method, where the creation of the database and the tables are well defined.
+In this case the DatabaseConstants class is used to obtain the name of the database table names and column names.
+<br>
+The code should be formatted as follows:
+<br>
+```java
+package   com.bitdubai.fermat_ccp_plugin.layer.identity.intra_user.developer.bitdubai.version_1.database; 
+import com.bitdubai.fermat_api.layer.osa_android.database_system.Database; 
+import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseDataType; 
+import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseFactory; 
+import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTableFactory; 
+import com.bitdubai.fermat_api.layer.osa_android.database_system.DealsWithPluginDatabaseSystem; 
+import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem; 
+import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantCreateDatabaseException; 
+import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantCreateTableException; 
+import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.InvalidOwnerIdException; 
+import java.util.UUID; 
+/** 
+ *  The Class  <code>com.bitdubai.fermat_ccp_plugin.layer.identity.intra_user.developer.bitdubai.version_1.database.Intra UserIdentityDatabaseFactory</code> 
+ * is responsible for creating the tables in the database where it is to keep the information. 
+ * <p/> 
+ * 
+ * Created by Leon Acosta - () on 20/11/15. 
+ * 
+ * @version 1.0 
+ * @since Java JDK 1.7 
+ */ 
+public class IntraUserIdentityDatabaseFactory implements DealsWithPluginDatabaseSystem { 
+    /** 
+     * DealsWithPluginDatabaseSystem Interface member variables. 
+     */ 
+    private PluginDatabaseSystem pluginDatabaseSystem; 
+    /** 
+     * Constructor with parameters to instantiate class 
+     * . 
+     * 
+     * @param pluginDatabaseSystem DealsWithPluginDatabaseSystem 
+     */ 
+    public IntraUserIdentityDatabaseFactory(PluginDatabaseSystem pluginDatabaseSystem) { 
+        this.pluginDatabaseSystem = pluginDatabaseSystem; 
+    } 
+    /** 
+     * Create the database 
+     * 
+     * @param ownerId      the owner id 
+     * @param databaseName the database name 
+     * @return Database 
+     * @throws CantCreateDatabaseException 
+     */ 
+    protected Database createDatabase(UUID ownerId, String databaseName) throws CantCreateDatabaseException { 
+        Database database; 
+        /** 
+         * I will create the database where I am going to store the information of this wallet. 
+         */ 
+        try { 
+            database = this.pluginDatabaseSystem.createDatabase(ownerId, databaseName); 
+        } catch (CantCreateDatabaseException cantCreateDatabaseException) { 
+            /** 
+             * I can not handle this situation. 
+             */ 
+            throw new CantCreateDatabaseException(CantCreateDatabaseException.DEFAULT_MESSAGE, cantCreateDatabaseException, "", "Exception not handled by the plugin, There is a problem and i cannot create the database."); 
+        } 
+        /** 
+         * Next, I will add the needed tables. 
+         */ 
+        try { 
+            DatabaseTableFactory table; 
+            DatabaseFactory databaseFactory = database.getDatabaseFactory(); 
+           /** 
+            * Create Intra User table. 
+            */ 
+           table = databaseFactory.newTableFactory(ownerId, IntraUserIdentityDatabaseConstants.INTRA_USER_TABLE_NAME); 
+
+            table.addColumn(IntraUserIdentityDatabaseConstants.INTRA_USER_INTRA_USER_PUBLIC_KEY_COLUMN_NAME, DatabaseDataType.STRING, 100, Boolean.TRUE); 
+            table.addColumn(IntraUserIdentityDatabaseConstants.INTRA_USER_ALIAS_COLUMN_NAME, DatabaseDataType.STRING, 100, Boolean.FALSE); 
+            table.addColumn(IntraUserIdentityDatabaseConstants.INTRA_USER_DEVICE_USER_PUBLIC_KEY_COLUMN_NAME, DatabaseDataType.STRING, 100, Boolean.FALSE); 
+
+             table.addIndex(IntraUserIdentityDatabaseConstants.INTRA_USER_FIRST_KEY_COLUMN); 
+
+            try { 
+                //Create the table 
+                databaseFactory.createTable(ownerId, table); 
+            } catch (CantCreateTableException cantCreateTableException) { 
+                throw new CantCreateDatabaseException(CantCreateDatabaseException.DEFAULT_MESSAGE, cantCreateTableException, "", "Exception not handled by the plugin, There is a problem and i cannot create the table."); 
+            } 
+} catch (InvalidOwnerIdException invalidOwnerId) { 
+            /** 
+             * This shouldn't happen here because I was the one who gave the owner id to the database file system, 
+             * but anyway, if this happens, I can not continue. 
+             */ 
+            throw new CantCreateDatabaseException(CantCreateDatabaseException.DEFAULT_MESSAGE, invalidOwnerId, "", "There is a problem with the ownerId of the database."); 
+        } 
+        return database; 
+    } 
+    /** 
+     * DealsWithPluginDatabaseSystem Interface implementation. 
+     */ 
+    @Override 
+    public void setPluginDatabaseSystem(PluginDatabaseSystem pluginDatabaseSystem) { 
+        this.pluginDatabaseSystem = pluginDatabaseSystem; 
+    } 
+}
+```
+##Developer DatabaseFactory
+
+Inside the class methods must be created to query the database created from the Developer SubApp
+It must contain the initializeDatabase () method, which opens the database, if it exists, or it will create not exist. Also a method to query the database.
+<br>
+The following code illustrates how should be the format of the template:
+<br>
+```java
+public class IntraUserIdentityDeveloperDatabaseFactory implements DealsWithPluginDatabaseSystem, DealsWithPluginIdentity { 
+    /** 
+     * DealsWithPluginDatabaseSystem Interface member variables. 
+     */ 
+    PluginDatabaseSystem pluginDatabaseSystem; 
+    /** 
+     * DealsWithPluginIdentity Interface member variables. 
+     */ 
+    UUID pluginId; 
+    Database database; 
+    /** 
+     * Constructor 
+     * 
+     * @param pluginDatabaseSystem 
+     * @param pluginId 
+     */ 
+    public IntraUserIdentityDeveloperDatabaseFactory(PluginDatabaseSystem pluginDatabaseSystem, UUID pluginId) { 
+        this.pluginDatabaseSystem = pluginDatabaseSystem; 
+        this.pluginId = pluginId; 
+    } 
+    /** 
+     * This method open or creates the database i'll be working with 
+     * 
+     * @throws CantInitializeIntraUserIdentityDatabaseException 
+     */ 
+    public void initializeDatabase() throws CantInitializeIntraUserIdentityDatabaseException { 
+        try { 
+             /* 
+              * Open new database connection 
+              */ 
+            database = this.pluginDatabaseSystem.openDatabase(pluginId, pluginId.toString()); 
+        } catch (CantOpenDatabaseException cantOpenDatabaseException) { 
+             /* 
+              * The database exists but cannot be open. I can not handle this situation. 
+              */ 
+            throw new CantInitializeIntraUserIdentityDatabaseException(cantOpenDatabaseException.getMessage()); 
+        } catch (DatabaseNotFoundException e) { 
+             /* 
+              * The database no exist may be the first time the plugin is running on this device, 
+              * We need to create the new database 
+              */ 
+            IntraUserIdentityDatabaseFactory intraUserIdentityDatabaseFactory = new IntraUserIdentityDatabaseFactory(pluginDatabaseSystem); 
+            try { 
+                  /* 
+                   * We create the new database 
+                   */ 
+                database = intraUserIdentityDatabaseFactory.createDatabase(pluginId, pluginId.toString()); 
+            } catch (CantCreateDatabaseException cantCreateDatabaseException) { 
+                  /* 
+                   * The database cannot be created. I can not handle this situation. 
+                   */ 
+                throw new CantInitializeIntraUserIdentityDatabaseException(cantCreateDatabaseException.getMessage()); 
+            } 
+        } 
+    } 
+    public List<DeveloperDatabase> getDatabaseList(DeveloperObjectFactory developerObjectFactory) { 
+        /** 
+         * I only have one database on my plugin. I will return its name. 
+         */ 
+        List<DeveloperDatabase> databases = new ArrayList<DeveloperDatabase>(); 
+        databases.add(developerObjectFactory.getNewDeveloperDatabase("Intra User", this.pluginId.toString())); 
+        return databases; 
+    } 
+    public List<DeveloperDatabaseTable> getDatabaseTableList(DeveloperObjectFactory developerObjectFactory) { 
+        List<DeveloperDatabaseTable> tables = new ArrayList<DeveloperDatabaseTable>(); 
+           /** 
+            * Table Intra User columns. 
+            */ 
+           List<String> intraUserColumns = new ArrayList<String>(); 
+
+              intraUserColumns.add(IntraUserIdentityDatabaseConstants.INTRA_USER_INTRA_USER_PUBLIC_KEY_COLUMN_NAME); 
+              intraUserColumns.add(IntraUserIdentityDatabaseConstants.INTRA_USER_ALIAS_COLUMN_NAME); 
+              intraUserColumns.add(IntraUserIdentityDatabaseConstants.INTRA_USER_DEVICE_USER_PUBLIC_KEY_COLUMN_NAME); 
+           /** 
+            * Table Intra User addition. 
+            */ 
+                   DeveloperDatabaseTable intraUserTable = developerObjectFactory.getNewDeveloperDatabaseTable(IntraUserIdentityDatabaseConstants.INTRA_USER_TABLE_NAME, intraUserColumns); 
+                   tables.add(intraUserTable); 
 
 
+        return tables; 
+    } 
+    public List<DeveloperDatabaseTableRecord> getDatabaseTableContent(DeveloperObjectFactory developerObjectFactory, DeveloperDatabaseTable developerDatabaseTable) { 
+        /** 
+         * Will get the records for the given table 
+         */ 
+        List<DeveloperDatabaseTableRecord> returnedRecords = new ArrayList<DeveloperDatabaseTableRecord>(); 
+        /** 
+         * I load the passed table name from the SQLite database. 
+         */ 
+        DatabaseTable selectedTable = database.getTable(developerDatabaseTable.getName()); 
+        try { 
+            selectedTable.loadToMemory(); 
+            List<DatabaseTableRecord> records = selectedTable.getRecords(); 
+            for (DatabaseTableRecord row: records){ 
+                List<String> developerRow = new ArrayList<String>(); 
+                /** 
+                 * for each row in the table list 
+                 */ 
+                for (DatabaseRecord field : row.getValues()){ 
+                    /** 
+                     * I get each row and save them into a List<String> 
+                     */ 
+                    developerRow.add(field.getValue()); 
+                } 
+                /** 
+                 * I create the Developer Database record 
+                 */ 
+                returnedRecords.add(developerObjectFactory.getNewDeveloperDatabaseTableRecord(developerRow)); 
+            } 
+            /** 
+             * return the list of DeveloperRecords for the passed table. 
+             */ 
+        } catch (CantLoadTableToMemoryException cantLoadTableToMemory) { 
+            /** 
+             * if there was an error, I will returned an empty list. 
+             */ 
+            database.closeDatabase(); 
+            return returnedRecords; 
+        } catch (Exception e){ 
+            database.closeDatabase(); 
+            return returnedRecords; 
+        } 
+        database.closeDatabase(); 
+        return returnedRecords; 
+    }
+```
+##Database Dao
+within the class should define the logic for queries, update, delete, inserts, also the method initializeDatabase (), which opens the database, if present, or created if not exist. The logic depends on the logic of the plugin.
+<br><br>
+In the documentation of Fermat there is a tutorial, which has defined a script to create the classes mentioned, less DatabaseDao class.
+<br>
+The following link is the template of how these classes should be defined.
+[Database Classes Generator](https://github.com/bitDubai/fermat/tree/2a20518c484322846d5727499dfff16c8ddc0bd2/fermat-documentation/scripts/database/database_classes_generator)
 
+###Folder Structure
+<br>
+The Folder Structure must be comprised of a main directory that contains three letters in upper case summarizing the plugin name.
+<br>
+For example:
+If the plugin is called Bank, the name of the main directory should be BNK.
+<br>
+On the main directory should create at least two directory required. One will be called "library" and the other called "plugin".
+<br>
+* **"library"**
+<br>
+Inside the "library" directory will contain the api where you may define the public interfaces that connect the components of the platform.
+<br>
+For this it is necessary to define a directory called "api" in creating a module package, it should be called as the plugin. The rule must be respected to define the package name consists of placing the name "Fermat" followed by the initials three letters of the legend followed by "api" plugin. They must be inserted by means of a hyphen between separate legend.
+For example:
+<br>
+```java
+"fermat-bnk-api"
+```
+* **"plugin"**
+<br>
+Inside the "plugin" directory must be defined modules that have the Plugin. These should be defined as java packages.
+<br>
+The name of the java package should consist of the words "Fermat" followed by three letters of identifying the Plugin followed the legend "plugin" followed with leyeda identifying the module and finally ends with the words "bitdubai".
+An Example How should the packet format:
+```java
+"fermat-bnk-plugin-wallet-bank-money-bitdubai"
+```
+##The build.gradle File
+Normally it is necessary to respect a defined structure, but this always depends on the libraries that are used or required.
+<br>
+However, there are dependencies, settings, tasks and other parameters that must be defined in the file for the correct build.gradle other operations must be respected componentes.
+<br>
+Dependencies, task and configurations to be defined by default:
+```java
+apply plugin: 'java'
+apply plugin: 'jacoco'
+apply plugin: 'findbugs'
+apply plugin: 'checkstyle'
+apply plugin: 'pmd'
 
+sourceCompatibility = 1.7
+version = '1.0'
 
+repositories {
+    mavenCentral()
+}
 
+configurations {
+    cucumberRuntime {
+        extendsFrom testRuntime
+    }
+}
 
+dependencies {
+    compile project(':fermat-api')
+    compile project(':fermat-bnk-api')
+    compile project(':fermat-pip-api')
 
+    testCompile group: 'junit', name: 'junit', version: '4.11'
+    testCompile group: 'org.easytesting', name: 'fest-assert-core', version: '2.0M10'
+    testCompile group: 'com.googlecode.catch-exception', name: 'catch-exception', version: '1.2.0'
+    testCompile 'info.cukes:cucumber-java:1.2.4'
+    testCompile 'info.cukes:cucumber-junit:1.2.4'
+}
 
+pmd {
+    toolVersion = '5.1.3'
+}
 
+tasks.withType (FindBugs) {
+    reports {
+        xml.enabled = false
+        html.enabled = true
+    }
+}
 
+def jacocoHtmlReport = ""
 
+jacocoTestReport{
+    reports{
+        jacocoHtmlReport = "Code Coverage HTML Report: file://" + html.destination + "/index.html"
+    }
+}
 
+task cucumber() {
+    dependsOn assemble, compileTestJava
+    doLast {
+        javaexec {
+            main = "cucumber.api.cli.Main"
+            classpath = configurations.cucumberRuntime + sourceSets.main.output + sourceSets.test.output
+            args = ['--plugin', 'pretty', '--glue', 'gradle.cucumber', 'src/test/resources']
+        }
+    }
+}
 
+task testCoverage(dependsOn: jacocoTestReport) << {
+    println jacocoHtmlReport
+}
 
+jacocoTestReport.dependsOn clean, test
+jacocoTestReport.mustRunAfter test
+test.mustRunAfter clean
+```
+Inside file, defined libraries and parameters for testing on plugin.
+These library and parameters are important because they are responsible for the test tasks and generate reports of test coverage.
+<br>
+Inside the document Unit Testing is detailed how these parameters must be declared in the build.gradle file
 <br><br><br><br><br><br><br>
 
 

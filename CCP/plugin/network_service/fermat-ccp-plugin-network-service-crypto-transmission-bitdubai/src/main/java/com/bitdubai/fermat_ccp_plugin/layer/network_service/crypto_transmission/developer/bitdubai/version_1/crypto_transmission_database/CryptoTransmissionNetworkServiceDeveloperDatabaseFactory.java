@@ -69,7 +69,7 @@ public class CryptoTransmissionNetworkServiceDeveloperDatabaseFactory implements
              /*
               * Open new database connection
               */
-            database = this.pluginDatabaseSystem.openDatabase(pluginId, pluginId.toString());
+            database = this.pluginDatabaseSystem.openDatabase(pluginId, CryptoTransmissionNetworkServiceDatabaseConstants.DATABASE_NAME);
 
         } catch (CantOpenDatabaseException cantOpenDatabaseException) {
 
@@ -90,7 +90,7 @@ public class CryptoTransmissionNetworkServiceDeveloperDatabaseFactory implements
                   /*
                    * We create the new database
                    */
-                database = cryptoTransmissionNetworkServiceDatabaseFactory.createDatabase(pluginId, pluginId.toString());
+                database = cryptoTransmissionNetworkServiceDatabaseFactory.createDatabase(pluginId, CryptoTransmissionNetworkServiceDatabaseConstants.DATABASE_NAME);
             } catch (CantCreateDatabaseException cantCreateDatabaseException) {
                   /*
                    * The database cannot be created. I can not handle this situation.
@@ -106,7 +106,7 @@ public class CryptoTransmissionNetworkServiceDeveloperDatabaseFactory implements
          * I only have one database on my plugin. I will return its name.
          */
         List<DeveloperDatabase> databases = new ArrayList<DeveloperDatabase>();
-        databases.add(developerObjectFactory.getNewDeveloperDatabase("CryptoTransmission", this.pluginId.toString()));
+        databases.add(developerObjectFactory.getNewDeveloperDatabase(CryptoTransmissionNetworkServiceDatabaseConstants.DATABASE_NAME, this.pluginId.toString()));
         return databases;
     }
 
@@ -128,9 +128,12 @@ public class CryptoTransmissionNetworkServiceDeveloperDatabaseFactory implements
               cRYPTOTRANSMISSIONMETADATAColumns.add(CryptoTransmissionNetworkServiceDatabaseConstants.CRYPTO_TRANSMISSION_METADATA_ASSOCIATED_CRYPTO_TRANSACTION_HASH_COLUMN_NAME);
               cRYPTOTRANSMISSIONMETADATAColumns.add(CryptoTransmissionNetworkServiceDatabaseConstants.CRYPTO_TRANSMISSION_METADATA_PAYMENT_DESCRIPTION_COLUMN_NAME);
               cRYPTOTRANSMISSIONMETADATAColumns.add(CryptoTransmissionNetworkServiceDatabaseConstants.CRYPTO_TRANSMISSION_METADATA_STATUS_COLUMN_NAME);
-           /**
-            * Table CRYPTO TRANSMISSION METADATA addition.
-            */
+              cRYPTOTRANSMISSIONMETADATAColumns.add(CryptoTransmissionNetworkServiceDatabaseConstants.CRYPTO_TRANSMISSION_METADATA_SENT_COUNT_COLUMN_NAME);
+
+
+        /**
+         * Table CRYPTO TRANSMISSION METADATA addition.
+         */
                    DeveloperDatabaseTable cRYPTOTRANSMISSIONMETADATATable = developerObjectFactory.getNewDeveloperDatabaseTable(CryptoTransmissionNetworkServiceDatabaseConstants.CRYPTO_TRANSMISSION_METADATA_TABLE_NAME, cRYPTOTRANSMISSIONMETADATAColumns);
                    tables.add(cRYPTOTRANSMISSIONMETADATATable);
 

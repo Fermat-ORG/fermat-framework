@@ -1,12 +1,9 @@
 package com.bitdubai.sub_app.developer.FragmentFactory;
 
-import android.app.Fragment;
-
-import com.bitdubai.fermat_android_api.engine.FermatSubAppFragmentFactory;
-import com.bitdubai.fermat_android_api.layer.definition.wallet.FermatFragment;
+import com.bitdubai.fermat_android_api.engine.FermatFragmentFactory;
+import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractFermatFragment;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.exceptions.FragmentNotFoundException;
-import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.SubAppFragmentFactory;
-import com.bitdubai.fermat_pip_api.layer.pip_network_service.subapp_resources.SubAppResourcesProviderManager;
+import com.bitdubai.fermat_pip_api.layer.network_service.subapp_resources.SubAppResourcesProviderManager;
 import com.bitdubai.sub_app.developer.fragment.DatabaseToolsDatabaseListFragment;
 import com.bitdubai.sub_app.developer.fragment.DatabaseToolsDatabaseTableListFragment;
 import com.bitdubai.sub_app.developer.fragment.DatabaseToolsDatabaseTableRecordListFragment;
@@ -22,12 +19,12 @@ import com.bitdubai.sub_app.developer.session.DeveloperSubAppSession;
  * Created by Matias Furszyfer on 2015.19.22..
  */
 
-public class DeveloperSubAppFragmentFactory extends FermatSubAppFragmentFactory<DeveloperSubAppSession,DeveloperPreferenceSettings,DeveloperFragmentsEnumType> {
+public class DeveloperSubAppFragmentFactory extends FermatFragmentFactory<DeveloperSubAppSession, SubAppResourcesProviderManager, DeveloperFragmentsEnumType> {
 
     public DeveloperSubAppFragmentFactory(){}
 
     @Override
-    public FermatFragment getFermatFragment(DeveloperFragmentsEnumType fragments) throws FragmentNotFoundException {
+    public AbstractFermatFragment getFermatFragment(DeveloperFragmentsEnumType fragments) throws FragmentNotFoundException {
 
         switch (fragments){
             case CWP_WALLET_DEVELOPER_TOOL_DATABASE_LIST_FRAGMENT:

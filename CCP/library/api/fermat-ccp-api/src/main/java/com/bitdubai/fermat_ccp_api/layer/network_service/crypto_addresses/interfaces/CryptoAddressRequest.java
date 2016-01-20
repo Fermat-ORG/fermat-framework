@@ -5,6 +5,7 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.BlockchainNetworkType;
 import com.bitdubai.fermat_api.layer.all_definition.enums.CryptoCurrency;
 import com.bitdubai.fermat_api.layer.all_definition.money.CryptoAddress;
 import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_addresses.enums.CryptoAddressDealers;
+import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_addresses.enums.ProtocolState;
 import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_addresses.enums.RequestAction;
 
 import java.util.UUID;
@@ -38,5 +39,11 @@ public interface CryptoAddressRequest {
     CryptoAddressDealers getCryptoAddressDealer();
 
     BlockchainNetworkType getBlockchainNetworkType();
+
+    ProtocolState getState();
+
+    int getSentNumber();
+
+    long getSentDate();
 
 }

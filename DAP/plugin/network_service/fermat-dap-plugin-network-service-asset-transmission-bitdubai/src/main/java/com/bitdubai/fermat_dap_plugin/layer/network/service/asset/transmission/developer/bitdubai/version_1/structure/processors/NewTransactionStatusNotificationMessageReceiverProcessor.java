@@ -19,7 +19,7 @@ import com.bitdubai.fermat_dap_plugin.layer.network.service.asset.transmission.d
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.contents.FermatMessageCommunication;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.contents.FermatMessage;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.enums.FermatMessagesStatus;
-import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.UnexpectedPluginExceptionSeverity;
+import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedPluginExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.enums.EventType;
 import com.google.gson.JsonObject;
 
@@ -76,26 +76,26 @@ public class NewTransactionStatusNotificationMessageReceiverProcessor extends Fe
                 digitalAssetMetadataTransactionImpl.setReceiverType(receiverType);
                 digitalAssetMetadataTransactionImpl.setDistributionStatus(distributionStatus);
                 digitalAssetMetadataTransactionImpl.setProcessed(DigitalAssetMetadataTransactionImpl.NO_PROCESSED);
+                digitalAssetMetadataTransactionImpl.setType(DigitalAssetMetadataTransactionType.TRANSACTION_STATUS_UPDATE);
+
+                /*
+                * Save into data base like a new transaction
+                */
+                getAssetTransmissionNetworkServicePluginRoot().getDigitalAssetMetaDataTransactionDao().create(digitalAssetMetadataTransactionImpl);
+
+                /*
+                * Mark the message as read
+                */
+                ((FermatMessageCommunication)fermatMessage).setFermatMessagesStatus(FermatMessagesStatus.READ);
+                ((CommunicationNetworkServiceConnectionManager) getAssetTransmissionNetworkServicePluginRoot().getNetworkServiceConnectionManager()).getIncomingMessageDao().update(fermatMessage);
+
+                /*
+                * Notify to the interested
+                */
+                FermatEvent event =  getAssetTransmissionNetworkServicePluginRoot().getEventManager().getNewEvent(EventType.RECEIVED_NEW_TRANSACTION_STATUS_NOTIFICATION);
+                event.setSource(AssetTransmissionNetworkServicePluginRoot.EVENT_SOURCE);
+                getAssetTransmissionNetworkServicePluginRoot().getEventManager().raiseEvent(event);
             }
-
-            /*
-             * Save into data base like a new transaction
-             */
-            getAssetTransmissionNetworkServicePluginRoot().getDigitalAssetMetaDataTransactionDao().create(digitalAssetMetadataTransactionImpl);
-
-            /*
-             * Mark the message as read
-             */
-            ((FermatMessageCommunication)fermatMessage).setFermatMessagesStatus(FermatMessagesStatus.READ);
-            ((CommunicationNetworkServiceConnectionManager) getAssetTransmissionNetworkServicePluginRoot().getNetworkServiceConnectionManager()).getIncomingMessageDao().update(fermatMessage);
-
-            /*
-             * Notify to the interested
-             */
-            FermatEvent event =  getAssetTransmissionNetworkServicePluginRoot().getEventManager().getNewEvent(EventType.RECEIVED_NEW_TRANSACTION_STATUS_NOTIFICATION);
-            event.setSource(AssetTransmissionNetworkServicePluginRoot.EVENT_SOURCE);
-            getAssetTransmissionNetworkServicePluginRoot().getEventManager().raiseEvent(event);
-
         } catch (Exception e) {
             getAssetTransmissionNetworkServicePluginRoot().getErrorManager().reportUnexpectedPluginException(Plugins.BITDUBAI_DAP_ASSET_TRANSMISSION_NETWORK_SERVICE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
         }
@@ -109,6 +109,6 @@ public class NewTransactionStatusNotificationMessageReceiverProcessor extends Fe
      */
     @Override
     public DigitalAssetMetadataTransactionType getDigitalAssetMetadataTransactionType() {
-        return DigitalAssetMetadataTransactionType.META_DATA_TRANSMIT;
+        return DigitalAssetMetadataTransactionType.TRANSACTION_STATUS_UPDATE;
     }
 }

@@ -1,5 +1,7 @@
 package com.bitdubai.fermat_dap_api.layer.dap_wallet.asset_user_wallet.interfaces;
 
+import com.bitdubai.fermat_dap_api.layer.all_definition.digital_asset.DigitalAssetMetadata;
+import com.bitdubai.fermat_dap_api.layer.dap_transaction.common.exceptions.CantGetDigitalAssetFromLocalStorageException;
 import com.bitdubai.fermat_dap_api.layer.dap_wallet.common.enums.BalanceType;
 import com.bitdubai.fermat_dap_api.layer.dap_wallet.common.enums.TransactionType;
 import com.bitdubai.fermat_dap_api.layer.dap_wallet.common.exceptions.CantFindTransactionException;
@@ -17,28 +19,28 @@ public interface AssetUserWallet {
 
     //TODO:Documentar y manejo de excepciones
 
-    AssetUserWalletBalance getBookBalance(BalanceType balanceType) throws CantGetTransactionsException;
+    AssetUserWalletBalance getBalance() throws CantGetTransactionsException;
 
     List<AssetUserWalletTransaction> getTransactions(BalanceType balanceType,
-                                                       TransactionType transactionType,
-                                                       int max,
-                                                       int offset, String assetPublicKey) throws CantGetTransactionsException;
+                                                     TransactionType transactionType,
+                                                     int max,
+                                                     int offset, String assetPublicKey) throws CantGetTransactionsException;
 
     List<AssetUserWalletTransaction> getTransactionsByActor(String actorPublicKey,
-                                                              BalanceType balanceType,
-                                                              int max,
-                                                              int offset) throws CantGetTransactionsException;
+                                                            BalanceType balanceType,
+                                                            int max,
+                                                            int offset) throws CantGetTransactionsException;
 
     List<AssetUserWalletTransaction> gettLastActorTransactionsByTransactionType(BalanceType balanceType,
-                                                                                  TransactionType transactionType,
-                                                                                  int max,
-                                                                                  int offset) throws CantGetTransactionsException;
+                                                                                TransactionType transactionType,
+                                                                                int max,
+                                                                                int offset) throws CantGetTransactionsException;
 
     void setTransactionDescription(UUID transactionID,
                                    String description) throws CantFindTransactionException, CantStoreMemoException;
 
     AssetUserWalletTransactionSummary getActorTransactionSummary(String actorPublicKey,
-                                                                   BalanceType balanceType) throws CantGetActorTransactionSummaryException;
+                                                                 BalanceType balanceType) throws CantGetActorTransactionSummaryException;
 
-
+    DigitalAssetMetadata getDigitalAssetMetadata(String digitalAssetPublicKey) throws CantGetDigitalAssetFromLocalStorageException;
 }

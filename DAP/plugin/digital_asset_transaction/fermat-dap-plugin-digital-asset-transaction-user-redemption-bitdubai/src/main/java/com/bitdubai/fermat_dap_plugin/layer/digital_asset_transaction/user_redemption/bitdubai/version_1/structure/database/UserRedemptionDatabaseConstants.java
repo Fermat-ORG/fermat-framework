@@ -9,7 +9,7 @@ public class UserRedemptionDatabaseConstants {
     /**
      * Asset Distribution database table definition.
      */
-    public static final String USER_REDEMPTION_TABLE_NAME = "asset_distribution";
+    public static final String USER_REDEMPTION_TABLE_NAME = "asset_redeemption";
 
     public static final String USER_REDEMPTION_GENESIS_TRANSACTION_COLUMN_NAME = "genesis_transaction";
     public static final String USER_REDEMPTION_DIGITAL_ASSET_HASH_COLUMN_NAME = "digital_asset_hash";
@@ -26,7 +26,7 @@ public class UserRedemptionDatabaseConstants {
     /**
      * Events recorded database table definition.
      */
-    public static final String USER_REDEMPTION_EVENTS_RECORDED_TABLE_NAME = "distribution_events_recorded";
+    public static final String USER_REDEMPTION_EVENTS_RECORDED_TABLE_NAME = "redeemption_events_recorded";
 
     public static final String USER_REDEMPTION_EVENTS_RECORDED_ID_COLUMN_NAME = "event_id";
     public static final String USER_REDEMPTION_EVENTS_RECORDED_EVENT_COLUMN_NAME = "event";
@@ -41,12 +41,16 @@ public class UserRedemptionDatabaseConstants {
      */
     public static final String USER_REDEMPTION_DELIVERING_TABLE_NAME="delivering";
 
-    public static final String USER_REDEMPTION_DELIVERING_MESSAGE_ID_COLUMN_NAME="message_id";
+    public static final String USER_REDEMPTION_DELIVERING_TRANSACTION_ID_COLUMN_NAME ="transaction_id";
     public static final String USER_REDEMPTION_DELIVERING_GENESIS_TRANSACTION_COLUMN_NAME="delivering_genesis_transaction";
-    public static final String USER_REDEMPTION_DELIVERING_MESSAGE_TYPE_COLUMN_NAME="message_type";
-    public static final String USER_REDEMPTION_DELIVERING_TIMESTAMP_COLUMN_NAME="delivering_timestamp";
-    public static final String USER_REDEMPTION_DELIVERING_EVENT_ID_COLUMN_NAME="delivering_event_id";
+    public static final String USER_REDEMPTION_DELIVERING_ASSET_PUBLICKEY_COLUMN_NAME ="asset_publickey";
+    public static final String USER_REDEMPTION_DELIVERING_REPO_PUBLICKEY_COLUMN_NAME ="repo_publickey";
+    public static final String USER_REDEMPTION_DELIVERING_START_TIME_COLUMN_NAME ="start_time";
+    public static final String USER_REDEMPTION_DELIVERING_TIMEOUT_COLUMN_NAME ="timeut";
+    public static final String USER_REDEMPTION_DELIVERING_STATE_COLUMN_NAME ="state";
+    public static final String USER_REDEMPTION_DELIVERING_SENT_GENESISTX_COLUMN_NAME ="sent_genesistx";
+    public static final String USER_REDEMPTION_DELIVERING_ATTEMPT_NUMBER_COLUMN_NAME ="attempt_number";
 
-    public static final String USER_REDEMPTION_DELIVERING_TABLE_FIRST_KEY_COLUMN="message_id";
-    
+    public static final String USER_REDEMPTION_DELIVERING_TABLE_FIRST_KEY_COLUMN=USER_REDEMPTION_DELIVERING_TRANSACTION_ID_COLUMN_NAME;
+
 }

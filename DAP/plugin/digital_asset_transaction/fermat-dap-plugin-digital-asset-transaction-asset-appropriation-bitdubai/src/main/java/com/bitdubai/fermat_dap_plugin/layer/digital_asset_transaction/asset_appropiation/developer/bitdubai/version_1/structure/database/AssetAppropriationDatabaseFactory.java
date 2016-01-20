@@ -60,7 +60,7 @@ public class AssetAppropriationDatabaseFactory implements DealsWithPluginDatabas
              */
             DatabaseTableFactory eventsRecorderTable = databaseFactory.newTableFactory(ownerId, AssetAppropriationDatabaseConstants.ASSET_APPROPRIATION_EVENTS_RECORDED_TABLE_NAME);
 
-            eventsRecorderTable.addColumn(AssetAppropriationDatabaseConstants.ASSET_APPROPRIATION_EVENTS_RECORDED_ID_COLUMN_NAME, DatabaseDataType.STRING, 36, Boolean.TRUE);
+            eventsRecorderTable.addColumn(AssetAppropriationDatabaseConstants.ASSET_APPROPRIATION_EVENTS_RECORDED_ID_COLUMN_NAME, DatabaseDataType.STRING, 255, Boolean.TRUE);
             eventsRecorderTable.addColumn(AssetAppropriationDatabaseConstants.ASSET_APPROPRIATION_EVENTS_RECORDED_EVENT_COLUMN_NAME, DatabaseDataType.STRING, 15, Boolean.FALSE);
             eventsRecorderTable.addColumn(AssetAppropriationDatabaseConstants.ASSET_APPROPRIATION_EVENTS_RECORDED_SOURCE_COLUMN_NAME, DatabaseDataType.STRING, 15, Boolean.FALSE);
             eventsRecorderTable.addColumn(AssetAppropriationDatabaseConstants.ASSET_APPROPRIATION_EVENTS_RECORDED_STATUS_COLUMN_NAME, DatabaseDataType.STRING, 15, Boolean.FALSE);
@@ -77,7 +77,7 @@ public class AssetAppropriationDatabaseFactory implements DealsWithPluginDatabas
 
             DatabaseTableFactory transactionMetadataTable = databaseFactory.newTableFactory(ownerId, AssetAppropriationDatabaseConstants.ASSET_APPROPRIATION_TRANSACTION_METADATA_TABLE_NAME);
 
-            transactionMetadataTable.addColumn(AssetAppropriationDatabaseConstants.ASSET_APPROPRIATION_TRANSACTION_METADATA_ID_COLUMN_NAME, DatabaseDataType.STRING, 36, Boolean.TRUE);
+            transactionMetadataTable.addColumn(AssetAppropriationDatabaseConstants.ASSET_APPROPRIATION_TRANSACTION_METADATA_ID_COLUMN_NAME, DatabaseDataType.STRING, 255, Boolean.TRUE);
             transactionMetadataTable.addColumn(AssetAppropriationDatabaseConstants.ASSET_APPROPRIATION_TRANSACTION_METADATA_STATUS_COLUMN_NAME, DatabaseDataType.STRING, 15, Boolean.FALSE);
             transactionMetadataTable.addColumn(AssetAppropriationDatabaseConstants.ASSET_APPROPRIATION_TRANSACTION_METADATA_DA_PUBLIC_KEY_COLUMN_NAME, DatabaseDataType.STRING, 36, Boolean.FALSE);
             transactionMetadataTable.addColumn(AssetAppropriationDatabaseConstants.ASSET_APPROPRIATION_TRANSACTION_METADATA_USER_WALLET_KEY_TO_COLUMN_NAME, DatabaseDataType.STRING, 36, Boolean.FALSE);

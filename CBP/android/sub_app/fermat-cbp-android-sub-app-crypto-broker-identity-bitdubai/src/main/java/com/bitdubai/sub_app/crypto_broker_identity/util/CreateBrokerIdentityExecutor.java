@@ -1,12 +1,12 @@
 package com.bitdubai.sub_app.crypto_broker_identity.util;
 
-import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.SubAppsSession;
+import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.FermatSession;
 import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.enums.SubApps;
-import com.bitdubai.fermat_cbp_api.layer.cbp_sub_app_module.crypto_broker_identity.exceptions.CouldNotCreateCryptoBrokerException;
-import com.bitdubai.fermat_cbp_api.layer.cbp_sub_app_module.crypto_broker_identity.interfaces.CryptoBrokerIdentityInformation;
-import com.bitdubai.fermat_cbp_api.layer.cbp_sub_app_module.crypto_broker_identity.interfaces.CryptoBrokerIdentityModuleManager;
-import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.ErrorManager;
-import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.UnexpectedSubAppExceptionSeverity;
+import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_broker_identity.exceptions.CantCreateCryptoBrokerException;
+import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_broker_identity.interfaces.CryptoBrokerIdentityInformation;
+import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_broker_identity.interfaces.CryptoBrokerIdentityModuleManager;
+import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
+import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedSubAppExceptionSeverity;
 import com.bitdubai.sub_app.crypto_broker_identity.session.CryptoBrokerIdentitySubAppSession;
 
 /**
@@ -18,6 +18,7 @@ public class CreateBrokerIdentityExecutor {
     public static final int EXCEPTION_THROWN = 3;
     public static final int SUCCESS = 1;
     public static final int INVALID_ENTRY_DATA = 2;
+    public static final int MISSING_IMAGE = 4;
 
     private byte[] imageInBytes;
     private String identityName;
@@ -39,7 +40,7 @@ public class CreateBrokerIdentityExecutor {
         identity = null;
     }
 
-    public CreateBrokerIdentityExecutor(SubAppsSession session, String identityName, byte[] imageInBytes) {
+    public CreateBrokerIdentityExecutor(FermatSession session, String identityName, byte[] imageInBytes) {
         this(imageInBytes, identityName);
         identity = null;
 
@@ -51,13 +52,17 @@ public class CreateBrokerIdentityExecutor {
     }
 
     public int execute() {
+
+        if (imageIsInvalid())
+            return MISSING_IMAGE;
+
         if (entryDataIsInvalid())
             return INVALID_ENTRY_DATA;
 
         try {
             identity = moduleManager.createCryptoBrokerIdentity(identityName, imageInBytes);
 
-        } catch (CouldNotCreateCryptoBrokerException ex) {
+        } catch (CantCreateCryptoBrokerException ex) {
             if (errorManager != null)
                 errorManager.reportUnexpectedSubAppException(
                         SubApps.CBP_CRYPTO_BROKER_IDENTITY,
@@ -72,6 +77,12 @@ public class CreateBrokerIdentityExecutor {
 
     public CryptoBrokerIdentityInformation getIdentity() {
         return identity;
+    }
+
+    private boolean imageIsInvalid() {
+        if (imageInBytes == null) return true;
+        if (imageInBytes.length == 0) return true;
+        return false;
     }
 
     private boolean entryDataIsInvalid() {

@@ -21,7 +21,7 @@ import java.util.UUID;
  * @version 1.0
  * @since Java JDK 1.7
  */
-public class CryptoAddressesNetworkServiceDatabaseFactory  {
+public final class CryptoAddressesNetworkServiceDatabaseFactory  {
 
     private final PluginDatabaseSystem pluginDatabaseSystem;
 
@@ -61,6 +61,10 @@ public class CryptoAddressesNetworkServiceDatabaseFactory  {
             table.addColumn(CryptoAddressesNetworkServiceDatabaseConstants.ADDRESS_EXCHANGE_REQUEST_ACTION_COLUMN_NAME                        , DatabaseDataType.STRING,  10, Boolean.FALSE);
             table.addColumn(CryptoAddressesNetworkServiceDatabaseConstants.ADDRESS_EXCHANGE_REQUEST_DEALER_COLUMN_NAME                        , DatabaseDataType.STRING,  10, Boolean.FALSE);
             table.addColumn(CryptoAddressesNetworkServiceDatabaseConstants.ADDRESS_EXCHANGE_REQUEST_BLOCKCHAIN_NETWORK_TYPE_COLUMN_NAME       , DatabaseDataType.STRING,  10, Boolean.FALSE);
+            table.addColumn(CryptoAddressesNetworkServiceDatabaseConstants.ADDRESS_EXCHANGE_REQUEST_SENT_NUMBER_COLUMN_NAME                   , DatabaseDataType.INTEGER,  0, Boolean.FALSE);
+            table.addColumn(CryptoAddressesNetworkServiceDatabaseConstants.ADDRESS_EXCHANGE_REQUEST_TIMESTAMP_COLUMN_NAME            , DatabaseDataType.LONG_INTEGER,  0, Boolean.FALSE);
+
+
 
             table.addIndex(CryptoAddressesNetworkServiceDatabaseConstants.ADDRESS_EXCHANGE_REQUEST_FIRST_KEY_COLUMN);
 

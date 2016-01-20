@@ -1,5 +1,0 @@
-= Developer Interface
-
-Las clases Developer deberían implementar una interfaz que provea la siguiente información:
-
-* Clave pública del desarrollador

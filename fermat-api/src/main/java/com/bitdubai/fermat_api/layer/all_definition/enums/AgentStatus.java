@@ -5,9 +5,10 @@ import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterE
 
 /**
  * The enum <code>com.bitdubai.fermat_cry_api.layer.definition.enums.AgentStatus</code>
- * represent the different status of an agent.<p/>
+ * Represents the different status of an agent.
  * <p/>
  * Created by Leon Acosta - (laion.cj91@gmail.com) on 13/10/2015.
+ * Modified by pmgesualdi - (pmgesualdi@hotmail.com) on 30/11/2015.
  *
  * @version 1.0
  * @since Java JDK 1.7
@@ -15,16 +16,18 @@ import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterE
 public enum AgentStatus implements FermatEnum {
 
     /**
-     * Please for doing the code more readable, keep the elements of the enum ordered.
+     * To make the code more readable, please keep the elements in the Enum sorted alphabetically.
      */
-    CREATED("CREATED"),
-    PAUSED("PAUSED"),
-    STARTED("STARTED"),
-    STOPPED("STOPPED");
+    CREATED     ("CREATED"),
+    PAUSED      ("PAUSED"),
+    STARTED     ("STARTED"),
+    STOPPED     ("STOPPED")
 
-    public String code;
+    ;
 
-    AgentStatus(String code) {
+    public final String code;
+
+    AgentStatus(final String code) {
         this.code = code;
     }
 

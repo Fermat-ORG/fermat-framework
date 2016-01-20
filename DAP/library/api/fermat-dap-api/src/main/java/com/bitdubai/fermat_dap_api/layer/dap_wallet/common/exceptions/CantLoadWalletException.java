@@ -6,6 +6,13 @@ import com.bitdubai.fermat_api.FermatException;
  * Created by franklin on 24/09/15.
  */
 public class CantLoadWalletException extends FermatException {
+
+    public static final String DEFAULT_MESSAGE = "There was an exception while loading this wallet.";
+
+    public CantLoadWalletException(Exception cause) {
+        this(DEFAULT_MESSAGE, cause, null, null);
+    }
+
     /**
      * This is the constructor that every inherited FermatException must implement
      *
@@ -17,4 +24,5 @@ public class CantLoadWalletException extends FermatException {
     public CantLoadWalletException(String message, Exception cause, String context, String possibleReason) {
         super(message, cause, context, possibleReason);
     }
+
 }

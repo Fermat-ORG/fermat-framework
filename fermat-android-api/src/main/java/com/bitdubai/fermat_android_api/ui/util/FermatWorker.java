@@ -107,6 +107,10 @@ public abstract class FermatWorker extends Thread {
         return executor;
     }
 
+    public void shutdownNow(){
+        interrupt();
+    }
+
     /**
      * Set Context
      *

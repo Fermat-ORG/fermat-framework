@@ -23,6 +23,13 @@ public interface IntraWalletUserActor {
      */
     String getName();
 
+
+    /**
+     * The method <code>getPhrase</code> gives us the phrase of the represented intra wallet user
+     * @return phrase string
+     */
+    String getPhrase();
+
     /**
      * The method <code>getContactRegistrationDate</code> gives us the date when both intra wallet users
      * exchanged their information and accepted each other as contacts.

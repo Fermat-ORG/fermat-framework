@@ -166,7 +166,7 @@ public class SubAppResourcesInstallationNetworkServiceDAO {
 
             DatabaseTable repoTable= database.getTable(SubAppResourcesNetworkServiceDatabaseConstants.REPOSITORIES_TABLE_NAME);
 
-            repoTable.setUUIDFilter(SubAppResourcesNetworkServiceDatabaseConstants.REPOSITORIES_SKIN_ID_COLUMN_NAME, skinId, DatabaseFilterType.EQUAL);
+            repoTable.addUUIDFilter(SubAppResourcesNetworkServiceDatabaseConstants.REPOSITORIES_SKIN_ID_COLUMN_NAME, skinId, DatabaseFilterType.EQUAL);
 
             repoTable.loadToMemory();
             List<DatabaseTableRecord> databaseTableRecordList = repoTable.getRecords();
@@ -204,8 +204,8 @@ public class SubAppResourcesInstallationNetworkServiceDAO {
      * @throws RepositoryNotFoundException
      */
     private DatabaseTableRecord getRepositoryDatabaseTableRecord(DatabaseTable repositoryTable,UUID skinId,String repositoryName) throws CantLoadTableToMemoryException, RepositoryNotFoundException {
-        repositoryTable.setUUIDFilter(SubAppResourcesNetworkServiceDatabaseConstants.REPOSITORIES_SKIN_ID_COLUMN_NAME, skinId, DatabaseFilterType.EQUAL);
-        repositoryTable.setStringFilter(SubAppResourcesNetworkServiceDatabaseConstants.REPOSITORIES_NAME_COLUMN_NAME, repositoryName, DatabaseFilterType.EQUAL);
+        repositoryTable.addUUIDFilter(SubAppResourcesNetworkServiceDatabaseConstants.REPOSITORIES_SKIN_ID_COLUMN_NAME, skinId, DatabaseFilterType.EQUAL);
+        repositoryTable.addStringFilter(SubAppResourcesNetworkServiceDatabaseConstants.REPOSITORIES_NAME_COLUMN_NAME, repositoryName, DatabaseFilterType.EQUAL);
         repositoryTable.loadToMemory();
         List<DatabaseTableRecord> databaseTableRecordList = repositoryTable.getRecords();
 

@@ -1,6 +1,0 @@
-= Money Request - Request Layer
-
-Este plugin lleva el registro de todos los requerimientos de pago hechos y recibidos por las distintas
-identidades de intra user que viven en el dispositivo.
-Es este módulo quien recibe los eventos del network service Money Request, actualiza su información
-interna y envía notificaciones al usuario si es necesario.

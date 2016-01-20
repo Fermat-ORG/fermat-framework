@@ -1,6 +1,7 @@
 package com.bitdubai.fermat_wpd_api.layer.wpd_network_service.wallet_resources.interfaces;
 
 
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.FermatManager;
 import com.bitdubai.fermat_api.layer.all_definition.resources_structure.enums.InstalationProgress;
 import com.bitdubai.fermat_wpd_api.layer.wpd_network_service.wallet_resources.exceptions.WalletResourcesUnninstallException;
 import com.bitdubai.fermat_wpd_api.layer.wpd_network_service.wallet_resources.exceptions.WalletResourcesInstalationException;
@@ -16,7 +17,7 @@ import java.util.UUID;
  *  @author  Matias Furszyfer
  *  @since   4/08/15.
  * */
-public interface WalletResourcesInstalationManager {
+public interface WalletResourcesInstalationManager extends FermatManager {
 
 
     /**

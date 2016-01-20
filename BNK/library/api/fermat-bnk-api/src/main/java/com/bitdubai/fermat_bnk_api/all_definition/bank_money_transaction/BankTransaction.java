@@ -2,6 +2,7 @@ package com.bitdubai.fermat_bnk_api.all_definition.bank_money_transaction;
 
 import com.bitdubai.fermat_api.layer.all_definition.enums.FiatCurrency;
 import com.bitdubai.fermat_bnk_api.all_definition.enums.BankOperationType;
+import com.bitdubai.fermat_bnk_api.all_definition.enums.BankTransactionStatus;
 import com.bitdubai.fermat_bnk_api.all_definition.enums.TransactionType;
 
 import java.util.UUID;
@@ -24,7 +25,7 @@ public interface BankTransaction {
     float getAmount();
 
 
-    long getAccountNumber();
+    String getAccountNumber();
 
 
     FiatCurrency getCurrency();
@@ -38,4 +39,5 @@ public interface BankTransaction {
 
     long getTimestamp();
 
+    BankTransactionStatus getBankTransactionStatus();
 }

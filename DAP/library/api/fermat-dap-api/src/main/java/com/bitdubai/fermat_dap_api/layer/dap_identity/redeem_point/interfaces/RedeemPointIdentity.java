@@ -1,31 +1,14 @@
 package com.bitdubai.fermat_dap_api.layer.dap_identity.redeem_point.interfaces;
 
 import com.bitdubai.fermat_api.layer.all_definition.identities.ActiveIdentity;
+import com.bitdubai.fermat_api.layer.modules.common_classes.ActiveActorIdentityInformation;
 import com.bitdubai.fermat_dap_api.layer.dap_identity.redeem_point.exceptions.CantSingMessageException;
 
 /**
  * Created by Nerio on 07/09/15.
  * Modified by Franklin 03/11/2015
  */
-public interface RedeemPointIdentity extends ActiveIdentity {
-    /**
-     * The method <code>getAlias</code> returns the alias of the represented intra user
-     *
-     * @return the alias of the represented intra user
-     */
-    String getAlias();
-
-    /**
-     * The method <code>getPublicKey</code> returns the public key of the represented intra user
-     * @return the public key of the represented intra user
-     */
-    String getPublicKey();
-
-    /**
-     * The method <code>getProfileImage</code> gives us the profile image of the represented intra user
-     * @return the profile image of the represented intra user
-     */
-    byte[] getProfileImage();
+public interface RedeemPointIdentity extends ActiveActorIdentityInformation {
 
     /**
      * The method <code>setNewProfileImage</code> let the user set a new profile image

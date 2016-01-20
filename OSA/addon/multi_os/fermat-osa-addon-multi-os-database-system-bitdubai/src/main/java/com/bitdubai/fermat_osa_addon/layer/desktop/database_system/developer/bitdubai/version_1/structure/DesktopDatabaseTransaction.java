@@ -70,6 +70,11 @@ public class DesktopDatabaseTransaction implements DatabaseTransaction {
         insertRecords.add(record);
     }
 
+    @Override
+    public void addRecordToSelect(DatabaseTable selectTable, DatabaseTableRecord selectRecord) {
+
+    }
+
     /**
      * <p>This method gets list of DatabaseTableRecord object that will be modified
      *
@@ -78,6 +83,11 @@ public class DesktopDatabaseTransaction implements DatabaseTransaction {
     @Override
     public List<DatabaseTableRecord> getRecordsToUpdate(){
        return updateRecords;
+    }
+
+    @Override
+    public List<DatabaseTableRecord> getRecordsToSelect() {
+        return null;
     }
 
     /**
@@ -110,6 +120,11 @@ public class DesktopDatabaseTransaction implements DatabaseTransaction {
     public List<DatabaseTable> getTablesToInsert(){
 
         return insertTables;
+    }
+
+    @Override
+    public List<DatabaseTable> getTablesToSelect() {
+        return null;
     }
 
 }

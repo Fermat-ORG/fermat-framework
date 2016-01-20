@@ -13,7 +13,7 @@ import android.view.ViewGroup;
  */
 public abstract class HeaderFactory <OCL extends View.OnClickListener>{
 
-    private ViewGroup mRootView;
+    protected ViewGroup mRootView;
     private View mHeader;
     protected OCL onClickListener;
 

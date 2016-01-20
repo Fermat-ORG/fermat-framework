@@ -12,7 +12,7 @@ import java.util.UUID;
  */
 public interface ReceiveCashOnHandManager {
     List<ReceiveCashOnHand> getAllReceiveCashOnHandFromCurrentDeviceUser() throws CantGetReceiveCashOnHandException;
-
+//TODO: deleteeeee
     ReceiveCashOnHand createReceiveCashOnHand(
              final String publicKeyCustomer
             ,final String publicKeyBroker

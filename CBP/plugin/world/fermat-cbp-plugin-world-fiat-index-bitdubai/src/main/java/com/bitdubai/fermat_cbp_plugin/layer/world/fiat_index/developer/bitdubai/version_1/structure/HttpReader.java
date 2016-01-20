@@ -12,7 +12,7 @@ import java.nio.charset.Charset;
 import org.json.JSONObject;
 
 /**
- * Created by Alex on 11/2/2015.
+ * Created by Alejandro Bicelis on 11/2/2015.
  * This class deals with fetching JSON Objects from URL addresses
  */
 public class HttpReader {

@@ -54,6 +54,11 @@ public class ExtraUserActorRecord implements Actor {
     }
 
     @Override
+    public String getPhrase() {
+        return "";
+    }
+
+    @Override
     public byte[] getPhoto() {
         return this.photo.clone();
     }

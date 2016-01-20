@@ -18,6 +18,7 @@ public class OutgoingIntraActorTransactionWrapper implements BitcoinWalletTransa
      * BitcoinWalletTransactionRecord Interface member variables
      */
     private UUID          transactionId;
+    private UUID          requestId;
     private String        actorFromPublicKey;
     private String        actorToPublicKey;
     private Actors        actorFromType;
@@ -29,6 +30,7 @@ public class OutgoingIntraActorTransactionWrapper implements BitcoinWalletTransa
     private String        op_Return;
     private long          timestamp;
     private String        memo;
+    private boolean sameDevice;
 
     @Override
     public CryptoAddress getAddressFrom() {
@@ -44,6 +46,14 @@ public class OutgoingIntraActorTransactionWrapper implements BitcoinWalletTransa
         return this.transactionId;
     }
 
+    @Override
+    public UUID getRequestId() {
+        return this.requestId;
+    }
+
+    public void setIdRequest(UUID id) {
+        this.requestId = id;
+    }
 
     public void setIdTransaction(UUID id) {
         this.transactionId = id;
@@ -165,5 +175,13 @@ public class OutgoingIntraActorTransactionWrapper implements BitcoinWalletTransa
 
     public ReferenceWallet getReferenceWallet() {
         return this.referenceWallet;
+    }
+
+    public boolean isSameDevice() {
+        return sameDevice;
+    }
+
+    public void setSameDevice(boolean sameDevice) {
+        this.sameDevice = sameDevice;
     }
 }

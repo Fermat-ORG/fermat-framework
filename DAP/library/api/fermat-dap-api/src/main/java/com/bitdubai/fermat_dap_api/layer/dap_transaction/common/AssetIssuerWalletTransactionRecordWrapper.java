@@ -29,7 +29,10 @@ public class AssetIssuerWalletTransactionRecordWrapper implements AssetIssuerWal
     private final long timeStamp;
     private final String memo;
     private final String digitalAssetMetadataHash;
+    private final String genesisBlock;
     private final String transactionId;
+    private final String genesisTransaction;
+    private DigitalAssetMetadata digitalAssetMetadata;
 
     AssetIssuerWalletTransactionRecordWrapper(DigitalAsset digitalAsset,
                                               String digitalAssetPublicKey,
@@ -45,7 +48,9 @@ public class AssetIssuerWalletTransactionRecordWrapper implements AssetIssuerWal
                                               long timeStamp,
                                               String memo,
                                               String digitalAssetMetadataHash,
-                                              String transactionId){
+                                              String genesisBlock,
+                                              String transactionId,
+                                              String genesisTransaction){
         this.digitalAsset = digitalAsset;
         this.digitalAssetPublicKey = digitalAssetPublicKey;
         this.name = name;
@@ -60,7 +65,13 @@ public class AssetIssuerWalletTransactionRecordWrapper implements AssetIssuerWal
         this.timeStamp = timeStamp;
         this.memo = memo;
         this.digitalAssetMetadataHash = digitalAssetMetadataHash;
+        this.genesisBlock = genesisBlock;
         this.transactionId = transactionId;
+        this.genesisTransaction = genesisTransaction;
+
+        this.digitalAssetMetadata = new DigitalAssetMetadata(this.digitalAsset);
+        digitalAssetMetadata.setGenesisBlock(genesisBlock);
+        digitalAssetMetadata.setGenesisTransaction(this.genesisTransaction);
     }
 
     public AssetIssuerWalletTransactionRecordWrapper(DigitalAssetMetadata digitalAssetMetadata,
@@ -80,9 +91,12 @@ public class AssetIssuerWalletTransactionRecordWrapper implements AssetIssuerWal
         this.amount = cryptoGenesisTransaction.getCryptoAmount();
         this.digitalAssetMetadataHash = digitalAssetMetadata.getDigitalAssetHash();
         this.transactionId = cryptoGenesisTransaction.getTransactionHash();
+        this.genesisBlock = digitalAssetMetadata.getGenesisBlock();
+        this.genesisTransaction = digitalAssetMetadata.getGenesisTransaction();
         Date date= new Date();
         this.timeStamp = date.getTime();
         this.memo = "Digital Asset delivered at"+this.timeStamp;
+        this.digitalAssetMetadata = digitalAssetMetadata;
     }
 
     @Override
@@ -158,5 +172,15 @@ public class AssetIssuerWalletTransactionRecordWrapper implements AssetIssuerWal
     @Override
     public String getDigitalAssetMetadataHash() {
         return digitalAssetMetadataHash;
+    }
+
+    @Override
+    public String getGenesisBlock() {
+        return this.getGenesisBlock();
+    }
+
+    @Override
+    public DigitalAssetMetadata getDigitalAssetMetadata() {
+        return this.digitalAssetMetadata;
     }
 }

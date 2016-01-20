@@ -1,68 +1,100 @@
-String developerName = "Jorge Gonzalez"
-String developerMail = "jorgeejgonzalez@gmail.com"
+String developerName = "Angel Veloz"
+String developerMail = "vlzangel91@gmail.com"
 String pluginName = "Customer Broker Sale"
 String layerName = "Negotiation"
 String packageRoot = "com.bitdubai.fermat_cbp_plugin"
 String jdkVersion = "1.7"
 
+
 List databaseTables = []
 
 // Table Definition Example
 databaseTables << [
-        name: "Negotiations",
-        columns: [
-                ["Negotiation Id", "STRING", "100", "true"],
+        name    : "Negotiations Sale",
+        columns : [
+                ["Negotiation Id", "STRING", "36", "true"],
                 ["Crypto Customer Public Key", "STRING", "64", "false"],
                 ["Crypto Broker Public Key", "STRING", "64", "false"],
-                ["Start DateTime", "LONG_INTEGER", "100", "false"],
-                ["Status", "STRING", "20", "false"]
-        ],
-        firstKey:"Negotiation Id"
-]
+                ["Start Date Time", "LONG_INTEGER", "100", "false"],
+                ["Expiration Date Time", "LONG_INTEGER", "100", "false"],
+                ["Status", "STRING", "20", "false"],
+                ["Memo", "STRING", "300", "false"],
+                ["Cancel Reason", "STRING", "300", "false"],
+                ["Near Expiration Date Time", "STRING", "1", "false"]
 
-databaseTables << [
-        name: "Clauses",
-        columns: [
-                ["Clause Id", "STRING", "100", "true"],
-                ["Negotiation Id", "STRING", "100", "false"],
+        ],
+        firstKey: "Negotiation Id"
+] << [
+        name    : "Clauses Sale",
+        columns : [
+                ["Clause Id", "STRING", "36", "true"],
+                ["Negotiation Id", "STRING", "36", "false"],
                 ["Type", "STRING", "20", "false"],
-                ["Value", "STRING", "255", "false"],
+                ["Value", "STRING", "20", "false"],
                 ["Status", "STRING", "20", "false"],
-                ["Proposed By", "STRING", "64", "false"],
-                ["Index Order", "INTEGER", "100", "false"]
+                ["proposed_by", "STRING", "64", "false"],
+                ["Index_Order", "INTEGER", "20", "false"]
         ],
-        firstKey:"Clause Id"
-]
-
-databaseTables << [
-        name: "Clause Status Log",
-        columns: [
-                ["Change Id", "STRING", "100", "true"],
-                ["Clause Id", "STRING", "100", "false"],
+        firstKey: "Clause Id"
+] << [
+        name    : "Changes Sale",
+        columns : [
+                ["Change Id", "STRING", "36", "true"],
+                ["Clause Id", "STRING", "36", "false"],
                 ["Status", "STRING", "20", "false"],
-                ["Change DateTime", "LONG_INTEGER", "100", "false"]
+                ["Start Date Time", "LONG_INTEGER", "100", "false"]
         ],
-        firstKey:"Change Id"
+        firstKey: "Change Id"
+] << [
+        name    : "Locations Broker",
+        columns : [
+                ["Location Id", "STRING", "36", "true"],
+                ["Location", "STRING", "300", "false"],
+                ["URI", "STRING", "200", "false"]
+        ],
+        firstKey: "Location Id"
+] << [
+        name    : "Bank Accounts Broker",
+        columns : [
+                ["Bank Accounts Id", "STRING", "36", "true"],
+                ["Bank Accounts", "STRING", "300", "false"],
+                ["Bank Accounts Type", "STRING", "20", "false"]
+        ],
+        firstKey: "Bank Accounts Id"
+] << [
+        name    : "Payment Currencies Broker",
+        columns : [
+                ["Payment Currencies Id", "STRING", "36", "true"],
+                ["Payment Type", "STRING", "20", "false"],
+                ["Payment Currencies", "STRING", "20", "false"]
+        ],
+        firstKey: "Payment Currencies Id"
 ]
 
 /**
  * No more changes from here.
  */
 
-String upperCaseUnderscore(String  string) {
+String upperCaseUnderscore(String string) {
     return string.replaceAll(" ", "_").toUpperCase()
 }
 
-String lowerCaseUnderscore(String  string) {
+String lowerCaseUnderscore(String string) {
     return string.replaceAll(" ", "_").toLowerCase()
 }
 
-String constantsClassName = """${pluginName.replaceAll(" ", "")}${layerName.replaceAll(" ", "")}DatabaseConstants"""
+String constantsClassName = """${pluginName.replaceAll(" ", "")}${
+    layerName.replaceAll(" ", "")
+}DatabaseConstants"""
 
-def templateConstants = """package ${packageRoot}.layer.${lowerCaseUnderscore(layerName)}.${lowerCaseUnderscore(pluginName)}.developer.bitdubai.version_1.database;
+def templateConstants = """package ${packageRoot}.layer.${lowerCaseUnderscore(layerName)}.${
+    lowerCaseUnderscore(pluginName)
+}.developer.bitdubai.version_1.database;
 
 /**
- * The Class <code>${packageRoot}.layer.${lowerCaseUnderscore(layerName)}.${lowerCaseUnderscore(pluginName)}.developer.bitdubai.version_1.database.${constantsClassName}</code>
+ * The Class <code>${packageRoot}.layer.${lowerCaseUnderscore(layerName)}.${
+    lowerCaseUnderscore(pluginName)
+}.developer.bitdubai.version_1.database.${constantsClassName}</code>
  * keeps constants the column names of the database.<p/>
  * <p/>
  *
@@ -74,24 +106,32 @@ def templateConstants = """package ${packageRoot}.layer.${lowerCaseUnderscore(la
 public class ${constantsClassName} {
 
 """
-databaseTables.each{ table ->
+databaseTables.each { table ->
     templateConstants += """    /**
      * $table.name database table definition.
      */
-    static final String ${upperCaseUnderscore(table.name)}_TABLE_NAME = "${lowerCaseUnderscore(table.name)}";\n\n"""
+    static final String ${upperCaseUnderscore(table.name)}_TABLE_NAME = "${
+        lowerCaseUnderscore(table.name)
+    }";\n\n"""
     table.columns.each { column ->
-        templateConstants += """    static final String ${upperCaseUnderscore(table.name)}_${upperCaseUnderscore(column[0])}_COLUMN_NAME = "${lowerCaseUnderscore(column[0])}";\n"""
+        templateConstants += """    static final String ${upperCaseUnderscore(table.name)}_${
+            upperCaseUnderscore(column[0])
+        }_COLUMN_NAME = "${lowerCaseUnderscore(column[0])}";\n"""
     }
     if (table.firstKey) {
-        templateConstants += """\n    static final String ${upperCaseUnderscore(table.name)}_FIRST_KEY_COLUMN = "${lowerCaseUnderscore(table.firstKey)}";\n\n"""
+        templateConstants += """\n    static final String ${
+            upperCaseUnderscore(table.name)
+        }_FIRST_KEY_COLUMN = "${lowerCaseUnderscore(table.firstKey)}";\n\n"""
     }
 }
 
-println templateConstants+"}"
+println templateConstants + "}"
 
 println "\n***************************************************************\n********************************************************\n"
 
-def templateFactory = """package   ${packageRoot}.layer.${lowerCaseUnderscore(layerName)}.${lowerCaseUnderscore(pluginName)}.developer.bitdubai.version_1.database;
+def templateFactory = """package   ${packageRoot}.layer.${lowerCaseUnderscore(layerName)}.${
+    lowerCaseUnderscore(pluginName)
+}.developer.bitdubai.version_1.database;
 
 import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseDataType;
@@ -106,7 +146,11 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.Inva
 import java.util.UUID;
 
 /**
- *  The Class  <code>${packageRoot}.layer.${lowerCaseUnderscore(layerName)}.${lowerCaseUnderscore(pluginName)}.developer.bitdubai.version_1.database.${pluginName.replaceAll("  ", "")}${layerName.replaceAll(" ", "")}DatabaseFactory</code>
+ *  The Class  <code>${packageRoot}.layer.${lowerCaseUnderscore(layerName)}.${
+    lowerCaseUnderscore(pluginName)
+}.developer.bitdubai.version_1.database.${pluginName.replaceAll("  ", "")}${
+    layerName.replaceAll(" ", "")
+}DatabaseFactory</code>
  * is responsible for creating the tables in the database where it is to keep the information.
  * <p/>
  *
@@ -164,16 +208,24 @@ public class ${pluginName.replaceAll(" ", "")}${layerName.replaceAll(" ", "")}Da
 
 """
 
-databaseTables.each{ table ->
+databaseTables.each { table ->
     templateFactory += """           /**
             * Create $table.name table.
             */
-           table = databaseFactory.newTableFactory(ownerId, ${constantsClassName}.${upperCaseUnderscore(table.name)}_TABLE_NAME);\n\n"""
+           table = databaseFactory.newTableFactory(ownerId, ${constantsClassName}.${
+        upperCaseUnderscore(table.name)
+    }_TABLE_NAME);\n\n"""
     table.columns.each { column ->
-        templateFactory += """            table.addColumn(${constantsClassName}.${upperCaseUnderscore(table.name)}_${upperCaseUnderscore(column[0])}_COLUMN_NAME, DatabaseDataType.${column[1]}, ${column[2]}, Boolean.${column[3].toUpperCase()});\n"""
+        templateFactory += """            table.addColumn(${constantsClassName}.${
+            upperCaseUnderscore(table.name)
+        }_${upperCaseUnderscore(column[0])}_COLUMN_NAME, DatabaseDataType.${column[1]}, ${
+            column[2]
+        }, Boolean.${column[3].toUpperCase()});\n"""
     }
     if (table.firstKey) {
-        templateFactory += """\n             table.addIndex(${constantsClassName}.${upperCaseUnderscore(table.name)}_FIRST_KEY_COLUMN);\n\n"""
+        templateFactory += """\n             table.addIndex(${constantsClassName}.${
+            upperCaseUnderscore(table.name)
+        }_FIRST_KEY_COLUMN);\n\n"""
     }
 
     templateFactory += """            try {
@@ -214,7 +266,11 @@ package ${packageRoot}.layer.${lowerCaseUnderscore(layerName)}.${lowerCaseUnders
 
 import com.bitdubai.fermat_api.FermatException;
 /**
- * The Class <code>package ${packageRoot}.layer.${lowerCaseUnderscore(layerName)}.${lowerCaseUnderscore(pluginName)}.developer.bitdubai.version_1.exceptions.CantInitialize${pluginName.replaceAll(" ", "")}${layerName.replaceAll(" ", "")}DatabaseException</code>
+ * The Class <code>package ${packageRoot}.layer.${lowerCaseUnderscore(layerName)}.${
+    lowerCaseUnderscore(pluginName)
+}.developer.bitdubai.version_1.exceptions.CantInitialize${pluginName.replaceAll(" ", "")}${
+    layerName.replaceAll(" ", "")
+}DatabaseException</code>
  * is thrown when an error occurs initializing database
  * <p/>
  *
@@ -225,7 +281,9 @@ import com.bitdubai.fermat_api.FermatException;
  */
 public class CantInitialize${pluginName.replaceAll(" ", "")}${layerName.replaceAll(" ", "")}DatabaseException extends FermatException {
 
-    public static final String DEFAULT_MESSAGE = "CAN'T INTIALIZE ${pluginName.toUpperCase()} ${layerName.toUpperCase()} DATABASE EXCEPTION";
+    public static final String DEFAULT_MESSAGE = "CAN'T INTIALIZE ${pluginName.toUpperCase()} ${
+    layerName.toUpperCase()
+} DATABASE EXCEPTION";
 
     public CantInitialize${pluginName.replaceAll(" ", "")}${layerName.replaceAll(" ", "")}DatabaseException(final String message, final Exception cause, final String context, final String possibleReason) {
         super(message, cause, context, possibleReason);
@@ -250,7 +308,9 @@ println templateDatabaseException
 println "\n***************************************************************\n********************************************************\n"
 
 
-def templateDeveloperFactory = """package ${packageRoot}.layer.${lowerCaseUnderscore(layerName)}.${lowerCaseUnderscore(pluginName)}.developer.bitdubai.version_1.database;
+def templateDeveloperFactory = """package ${packageRoot}.layer.${lowerCaseUnderscore(layerName)}.${
+    lowerCaseUnderscore(pluginName)
+}.developer.bitdubai.version_1.database;
 
 import com.bitdubai.fermat_api.DealsWithPluginIdentity;
 import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperDatabase;
@@ -267,14 +327,22 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.Cant
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantLoadTableToMemoryException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.DatabaseNotFoundException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantOpenDatabaseException;
-import ${packageRoot}.layer.${lowerCaseUnderscore(layerName)}.${lowerCaseUnderscore(pluginName)}.developer.bitdubai.version_1.exceptions.CantInitialize${pluginName.replaceAll(" ", "")}${layerName.replaceAll(" ", "")}DatabaseException;
+import ${packageRoot}.layer.${lowerCaseUnderscore(layerName)}.${
+    lowerCaseUnderscore(pluginName)
+}.developer.bitdubai.version_1.exceptions.CantInitialize${pluginName.replaceAll(" ", "")}${
+    layerName.replaceAll(" ", "")
+}DatabaseException;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
 /**
- * The Class <code>${packageRoot}.layer.${lowerCaseUnderscore(layerName)}.${lowerCaseUnderscore(pluginName)}.developer.bitdubai.version_1.database.${pluginName.replaceAll(" ", "")}${layerName.replaceAll(" ", "")}DeveloperDatabaseFactory</code> have
+ * The Class <code>${packageRoot}.layer.${lowerCaseUnderscore(layerName)}.${
+    lowerCaseUnderscore(pluginName)
+}.developer.bitdubai.version_1.database.${pluginName.replaceAll(" ", "")}${
+    layerName.replaceAll(" ", "")
+}DeveloperDatabaseFactory</code> have
  * contains the methods that the Developer Database Tools uses to show the information.
  * <p/>
  *
@@ -315,7 +383,9 @@ public class ${pluginName.replaceAll(" ", "")}${layerName.replaceAll(" ", "")}De
      *
      * @throws CantInitialize${pluginName.replaceAll(" ", "")}${layerName.replaceAll(" ", "")}DatabaseException
      */
-    public void initializeDatabase() throws CantInitialize${pluginName.replaceAll(" ", "")}${layerName.replaceAll(" ", "")}DatabaseException {
+    public void initializeDatabase() throws CantInitialize${pluginName.replaceAll(" ", "")}${
+    layerName.replaceAll(" ", "")
+}DatabaseException {
         try {
 
              /*
@@ -328,7 +398,9 @@ public class ${pluginName.replaceAll(" ", "")}${layerName.replaceAll(" ", "")}De
              /*
               * The database exists but cannot be open. I can not handle this situation.
               */
-            throw new CantInitialize${pluginName.replaceAll(" ", "")}${layerName.replaceAll(" ", "")}DatabaseException(cantOpenDatabaseException.getMessage());
+            throw new CantInitialize${pluginName.replaceAll(" ", "")}${
+    layerName.replaceAll(" ", "")
+}DatabaseException(cantOpenDatabaseException.getMessage());
 
         } catch (DatabaseNotFoundException e) {
 
@@ -336,18 +408,26 @@ public class ${pluginName.replaceAll(" ", "")}${layerName.replaceAll(" ", "")}De
               * The database no exist may be the first time the plugin is running on this device,
               * We need to create the new database
               */
-            ${pluginName.replaceAll(" ", "")}${layerName.replaceAll(" ", "")}DatabaseFactory ${pluginName.replaceAll(" ", "")[0].toLowerCase()}${pluginName.replaceAll(" ", "")[1..-1]}${layerName.replaceAll(" ", "")}DatabaseFactory = new ${pluginName.replaceAll(" ", "")}${layerName.replaceAll(" ", "")}DatabaseFactory(pluginDatabaseSystem);
+            ${pluginName.replaceAll(" ", "")}${layerName.replaceAll(" ", "")}DatabaseFactory ${
+    pluginName.replaceAll(" ", "")[0].toLowerCase()
+}${pluginName.replaceAll(" ", "")[1..-1]}${layerName.replaceAll(" ", "")}DatabaseFactory = new ${
+    pluginName.replaceAll(" ", "")
+}${layerName.replaceAll(" ", "")}DatabaseFactory(pluginDatabaseSystem);
 
             try {
                   /*
                    * We create the new database
                    */
-                database = ${pluginName.replaceAll(" ", "")[0].toLowerCase()}${pluginName.replaceAll(" ", "")[1..-1]}${layerName.replaceAll(" ", "")}DatabaseFactory.createDatabase(pluginId, pluginId.toString());
+                database = ${pluginName.replaceAll(" ", "")[0].toLowerCase()}${
+    pluginName.replaceAll(" ", "")[1..-1]
+}${layerName.replaceAll(" ", "")}DatabaseFactory.createDatabase(pluginId, pluginId.toString());
             } catch (CantCreateDatabaseException cantCreateDatabaseException) {
                   /*
                    * The database cannot be created. I can not handle this situation.
                    */
-                throw new CantInitialize${pluginName.replaceAll(" ", "")}${layerName.replaceAll(" ", "")}DatabaseException(cantCreateDatabaseException.getMessage());
+                throw new CantInitialize${pluginName.replaceAll(" ", "")}${
+    layerName.replaceAll(" ", "")
+}DatabaseException(cantCreateDatabaseException.getMessage());
             }
         }
     }
@@ -368,19 +448,33 @@ public class ${pluginName.replaceAll(" ", "")}${layerName.replaceAll(" ", "")}De
 
 """
 
-databaseTables.each{ table ->
+databaseTables.each { table ->
     templateDeveloperFactory += """           /**
             * Table $table.name columns.
             */
-           List<String> ${table.name[0].replaceAll(" ", "").toLowerCase()}${table.name[1..-1].replaceAll(" ", "")}Columns = new ArrayList<String>();\n\n"""
+           List<String> ${table.name[0].replaceAll(" ", "").toLowerCase()}${
+        table.name[1..-1].replaceAll(" ", "")
+    }Columns = new ArrayList<String>();\n\n"""
     table.columns.each { column ->
-        templateDeveloperFactory += """              ${table.name[0].replaceAll(" ", "").toLowerCase()}${table.name[1..-1].replaceAll(" ", "")}Columns.add(${constantsClassName}.${upperCaseUnderscore(table.name)}_${upperCaseUnderscore(column[0])}_COLUMN_NAME);\n"""
+        templateDeveloperFactory += """              ${
+            table.name[0].replaceAll(" ", "").toLowerCase()
+        }${table.name[1..-1].replaceAll(" ", "")}Columns.add(${constantsClassName}.${
+            upperCaseUnderscore(table.name)
+        }_${upperCaseUnderscore(column[0])}_COLUMN_NAME);\n"""
     }
     templateDeveloperFactory += """           /**
             * Table $table.name addition.
             */
-                   DeveloperDatabaseTable ${table.name[0].replaceAll(" ", "").toLowerCase()}${table.name[1..-1].replaceAll(" ", "")}Table = developerObjectFactory.getNewDeveloperDatabaseTable(${constantsClassName}.${upperCaseUnderscore(table.name)}_TABLE_NAME, ${table.name[0].replaceAll(" ", "").toLowerCase()}${table.name[1..-1].replaceAll(" ", "")}Columns);
-                   tables.add(${table.name[0].replaceAll(" ", "").toLowerCase()}${table.name[1..-1].replaceAll(" ", "")}Table);\n\n"""
+                   DeveloperDatabaseTable ${table.name[0].replaceAll(" ", "").toLowerCase()}${
+        table.name[1..-1].replaceAll(" ", "")
+    }Table = developerObjectFactory.getNewDeveloperDatabaseTable(${constantsClassName}.${
+        upperCaseUnderscore(table.name)
+    }_TABLE_NAME, ${table.name[0].replaceAll(" ", "").toLowerCase()}${
+        table.name[1..-1].replaceAll(" ", "")
+    }Columns);
+                   tables.add(${table.name[0].replaceAll(" ", "").toLowerCase()}${
+        table.name[1..-1].replaceAll(" ", "")
+    }Table);\n\n"""
 }
 
 templateDeveloperFactory += """
@@ -394,43 +488,43 @@ templateDeveloperFactory += """
          * Will get the records for the given table
          */
         List<DeveloperDatabaseTableRecord> returnedRecords = new ArrayList<DeveloperDatabaseTableRecord>();
-
-
         /**
          * I load the passed table name from the SQLite database.
          */
         DatabaseTable selectedTable = database.getTable(developerDatabaseTable.getName());
         try {
             selectedTable.loadToMemory();
+            List<DatabaseTableRecord> records = selectedTable.getRecords();
+            for (DatabaseTableRecord row: records){
+                List<String> developerRow = new ArrayList<String>();
+                /**
+                 * for each row in the table list
+                 */
+                for (DatabaseRecord field : row.getValues()){
+                    /**
+                     * I get each row and save them into a List<String>
+                     */
+                    developerRow.add(field.getValue());
+                }
+                /**
+                 * I create the Developer Database record
+                 */
+                returnedRecords.add(developerObjectFactory.getNewDeveloperDatabaseTableRecord(developerRow));
+            }
+            /**
+             * return the list of DeveloperRecords for the passed table.
+             */
         } catch (CantLoadTableToMemoryException cantLoadTableToMemory) {
             /**
              * if there was an error, I will returned an empty list.
              */
+            database.closeDatabase();
+            return returnedRecords;
+        } catch (Exception e){
+            database.closeDatabase();
             return returnedRecords;
         }
-
-        List<DatabaseTableRecord> records = selectedTable.getRecords();
-        for (DatabaseTableRecord row : records) {
-            List<String> developerRow = new ArrayList<String>();
-            /**
-             * for each row in the table list
-             */
-            for (DatabaseRecord field : row.getValues()) {
-                /**
-                 * I get each row and save them into a List<String>
-                 */
-                developerRow.add(field.getValue().toString());
-            }
-            /**
-             * I create the Developer Database record
-             */
-            returnedRecords.add(developerObjectFactory.getNewDeveloperDatabaseTableRecord(developerRow));
-        }
-
-
-        /**
-         * return the list of DeveloperRecords for the passed table.
-         */
+        database.closeDatabase();
         return returnedRecords;
     }
 

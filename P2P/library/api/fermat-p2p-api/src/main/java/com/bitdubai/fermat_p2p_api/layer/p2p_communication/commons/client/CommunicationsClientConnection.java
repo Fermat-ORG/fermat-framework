@@ -43,7 +43,7 @@ public interface CommunicationsClientConnection {
      *
      * @return PlatformComponentProfile
      */
-    public PlatformComponentProfile constructPlatformComponentProfileFactory(String identityPublicKey, String alias, String name, NetworkServiceType networkServiceType, PlatformComponentType platformComponentType, String extraData);
+    public PlatformComponentProfile constructPlatformComponentProfileFactory(String identityPublicKey, String alias,String name, NetworkServiceType networkServiceType, PlatformComponentType platformComponentType, String extraData);
 
     /**
      * Construct a PlatformComponentProfile instance, for use in the process
@@ -88,6 +88,16 @@ public interface CommunicationsClientConnection {
     public void registerComponentForCommunication(NetworkServiceType networkServiceNetworkServiceTypeApplicant, PlatformComponentProfile platformComponentProfile) throws CantRegisterComponentException;
 
     /**
+     * Method that update a actor profile with for Communication like online
+     *
+     * @param networkServiceNetworkServiceTypeApplicant
+     * @param platformComponentProfile
+     * @throws CantRegisterComponentException
+     */
+    public void updateRegisterActorProfile(NetworkServiceType networkServiceNetworkServiceTypeApplicant, PlatformComponentProfile platformComponentProfile) throws CantRegisterComponentException;
+
+
+    /**
      * Method that request to the communication cloud server the list of component registered that match
      * whit the discovery query params, this method is asynchronous
      *
@@ -105,6 +115,16 @@ public interface CommunicationsClientConnection {
      * @throws CantRequestListException this exception means the list receive is empty or a internal error
      */
     public List<PlatformComponentProfile> requestListComponentRegistered(DiscoveryQueryParameters discoveryQueryParameters) throws CantRequestListException;
+
+    /**
+     * Method that request to the communication cloud server the list of component registered that match
+     * whit the discovery query params
+     *
+     * @param discoveryQueryParameters
+     * @throws CantRequestListException this exception means the list receive is empty or a internal error
+     */
+    public List<PlatformComponentProfile> requestListComponentRegisteredSocket(DiscoveryQueryParameters discoveryQueryParameters) throws CantRequestListException;
+
 
     /**
      * Method that request to the communication cloud server create a vpn connection between the applicant and
@@ -150,5 +170,10 @@ public interface CommunicationsClientConnection {
      * @return CommunicationsVPNConnection
      */
     public CommunicationsVPNConnection getCommunicationsVPNConnectionStablished(NetworkServiceType networkServiceType, PlatformComponentProfile remotePlatformComponentProfile);
+
+    /*
+    * Close the main connection when is closing the App
+     */
+    public void closeMainConnection();
 
 }

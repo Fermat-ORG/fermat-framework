@@ -35,6 +35,9 @@ public class WalletManagerModuleInstalledWallet implements InstalledWallet, Seri
     private String publicKey;
     private String walletPlatformIdentifier;
     private Version version;
+    private int iconResource;
+    private int position;
+    private int notifications;
 
 
     public WalletManagerModuleInstalledWallet(WalletCategory walletCategory,WalletType walletType, List<InstalledSkin> skinsId, List<InstalledLanguage> languajesId, String walletIcon, String walletName, String publicKey, String walletPlatformIdentifier, Version version) {
@@ -47,6 +50,10 @@ public class WalletManagerModuleInstalledWallet implements InstalledWallet, Seri
         this.walletPlatformIdentifier = walletPlatformIdentifier;
         this.version = version;
         this.walletType=walletType;
+    }
+
+    public void setIconResource(int iconResource) {
+        this.iconResource = iconResource;
     }
 
     /**
@@ -94,6 +101,30 @@ public class WalletManagerModuleInstalledWallet implements InstalledWallet, Seri
         return walletIcon;
     }
 
+    @Override
+    public int getIconResource() {
+        return iconResource;
+    }
+
+    @Override
+    public int getPosition() {
+        return position;
+    }
+
+    @Override
+    public void setPosition(int position) {
+        this.position = position;
+    }
+
+    public void setNotifications(int notifications) {
+        this.notifications = notifications;
+    }
+
+    @Override
+    public int getNotifications() {
+        return notifications;
+    }
+
     /**
      * This method gives us the public key of the wallet in this device. It is used as identifier of
      * the wallet
@@ -129,6 +160,11 @@ public class WalletManagerModuleInstalledWallet implements InstalledWallet, Seri
         return this.walletType;
     }
 
+
+    @Override
+    public String getAppName() {
+        return walletName;
+    }
 
     @Override
     public String getAppPublicKey() {

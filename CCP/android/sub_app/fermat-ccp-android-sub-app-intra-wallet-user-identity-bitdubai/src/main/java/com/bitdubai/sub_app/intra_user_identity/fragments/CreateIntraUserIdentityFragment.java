@@ -3,17 +3,21 @@ package com.bitdubai.sub_app.intra_user_identity.fragments;
 import android.app.Activity;
 import android.app.Fragment;
 import android.content.ContentResolver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.ContextMenu;
 import android.view.LayoutInflater;
 import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
@@ -22,25 +26,42 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Toast;
 
-import com.bitdubai.fermat_android_api.layer.definition.wallet.FermatFragment;
+import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractFermatFragment;
+import com.bitdubai.fermat_android_api.layer.definition.wallet.utils.ImagesUtils;
+import com.bitdubai.fermat_android_api.ui.interfaces.FermatWorkerCallBack;
+import com.bitdubai.fermat_android_api.ui.util.FermatWorker;
+import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.enums.UISource;
-import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
+import com.bitdubai.fermat_api.layer.all_definition.settings.structure.SettingsManager;
+import com.bitdubai.fermat_ccp_api.layer.actor.intra_user.interfaces.IntraUserWalletSettings;
 import com.bitdubai.fermat_ccp_api.layer.identity.intra_user.exceptions.CantCreateNewIntraWalletUserException;
+import com.bitdubai.fermat_ccp_api.layer.identity.intra_user.exceptions.CantUpdateIdentityException;
+import com.bitdubai.fermat_ccp_api.layer.identity.intra_user.interfaces.IntraUserIdentitySettings;
 import com.bitdubai.fermat_ccp_api.layer.identity.intra_user.interfaces.IntraWalletUserIdentity;
 import com.bitdubai.fermat_ccp_api.layer.identity.intra_user.interfaces.IntraWalletUserIdentityManager;
-import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.ErrorManager;
-import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.UnexpectedUIExceptionSeverity;
+import com.bitdubai.fermat_ccp_api.layer.module.intra_user_identity.exceptions.CantCreateNewIntraUserIdentityException;
+import com.bitdubai.fermat_ccp_api.layer.module.intra_user_identity.exceptions.CantUpdateIntraUserIdentityException;
+import com.bitdubai.fermat_ccp_api.layer.module.intra_user_identity.interfaces.IntraUserIdentityModuleManager;
+import com.bitdubai.fermat_ccp_api.layer.module.intra_user_identity.interfaces.IntraUserModuleIdentity;
+import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedUIExceptionSeverity;
+import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 import com.bitdubai.sub_app.intra_user_identity.R;
+import com.bitdubai.sub_app.intra_user_identity.common.popup.PresentationIntraUserIdentityDialog;
 import com.bitdubai.sub_app.intra_user_identity.session.IntraUserIdentitySubAppSession;
 import com.bitdubai.sub_app.intra_user_identity.session.SessionConstants;
 import com.bitdubai.sub_app.intra_user_identity.util.CommonLogger;
 
 import java.io.ByteArrayOutputStream;
+import java.util.ArrayList;
+import java.util.List;
+
+import static android.widget.Toast.LENGTH_LONG;
+import static android.widget.Toast.makeText;
 
 /**
  * A simple {@link Fragment} subclass.
  */
-public class CreateIntraUserIdentityFragment extends FermatFragment {
+public class CreateIntraUserIdentityFragment extends AbstractFermatFragment {
     private static final String TAG = "CreateBrokerIdentity";
 
     private static final int CREATE_IDENTITY_FAIL_MODULE_IS_NULL = 0;
@@ -53,18 +74,19 @@ public class CreateIntraUserIdentityFragment extends FermatFragment {
 
     private static final int CONTEXT_MENU_CAMERA = 1;
     private static final int CONTEXT_MENU_GALLERY = 2;
-
+    IntraUserIdentitySubAppSession intraUserIdentitySubAppSession;
     private byte[] brokerImageByteArray;
-
-    private IntraWalletUserIdentityManager moduleManager;
+    private IntraUserIdentityModuleManager moduleManager;
     private ErrorManager errorManager;
-
     private Button createButton;
     private EditText mBrokerName;
     private ImageView mBrokerImage;
-
-    IntraUserIdentitySubAppSession intraUserIdentitySubAppSession ;
-    private IntraWalletUserIdentity identitySelected;
+    private Menu menuHelp;
+    private IntraUserModuleIdentity identitySelected;
+    private boolean isUpdate = false;
+    private EditText mBrokerPhrase;
+    SettingsManager<IntraUserIdentitySettings> settingsManager;
+    IntraUserIdentitySettings intraUserIdentitySettings = null;
 
 
     public static CreateIntraUserIdentityFragment newInstance() {
@@ -76,9 +98,38 @@ public class CreateIntraUserIdentityFragment extends FermatFragment {
         super.onCreate(savedInstanceState);
 
         try {
-            intraUserIdentitySubAppSession = (IntraUserIdentitySubAppSession) subAppsSession;
+            intraUserIdentitySubAppSession = (IntraUserIdentitySubAppSession) appSession;
             moduleManager = intraUserIdentitySubAppSession.getModuleManager();
-            errorManager = subAppsSession.getErrorManager();
+            errorManager = appSession.getErrorManager();
+            setHasOptionsMenu(true);
+            settingsManager = intraUserIdentitySubAppSession.getModuleManager().getSettingsManager();
+
+            try {
+                if (intraUserIdentitySubAppSession.getAppPublicKey()!= null){
+                    intraUserIdentitySettings = settingsManager.loadAndGetSettings(intraUserIdentitySubAppSession.getAppPublicKey());
+                }else{
+                    //TODO: Joaquin: Lo estoy poniendo con un public key hardcoded porque en este punto no posee public key.
+                    intraUserIdentitySettings = settingsManager.loadAndGetSettings("123456789");
+                }
+
+            } catch (Exception e) {
+                intraUserIdentitySettings = null;
+            }
+
+            if (intraUserIdentitySettings == null) {
+                intraUserIdentitySettings = new IntraUserIdentitySettings();
+                intraUserIdentitySettings.setIsPresentationHelpEnabled(true);
+                if (intraUserIdentitySubAppSession.getAppPublicKey()!=null){
+                    settingsManager.persistSettings(intraUserIdentitySubAppSession.getAppPublicKey(), intraUserIdentitySettings);
+                }else{
+                    settingsManager.persistSettings("123456789", intraUserIdentitySettings);
+                }
+
+            }
+
+//            if(moduleManager.getAllIntraWalletUsersFromCurrentDeviceUser().isEmpty()){
+//                moduleManager.createNewIntraWalletUser("John Doe", null);
+//            }
         } catch (Exception ex) {
             CommonLogger.exception(TAG, ex.getMessage(), ex);
         }
@@ -91,20 +142,32 @@ public class CreateIntraUserIdentityFragment extends FermatFragment {
         View rootLayout = inflater.inflate(R.layout.fragment_create_intra_user_identity, container, false);
         initViews(rootLayout);
         setUpIdentity();
+        SharedPreferences pref = getActivity().getSharedPreferences("dont show dialog more", Context.MODE_PRIVATE);
+//        if (!pref.getBoolean("isChecked", false)) {
+//            PresentationIntraUserIdentityDialog presentationIntraUserCommunityDialog = new PresentationIntraUserIdentityDialog(getActivity(), null, null);
+//            presentationIntraUserCommunityDialog.show();
+//        }
+
+        if (intraUserIdentitySettings.isPresentationHelpEnabled()) {
+            PresentationIntraUserIdentityDialog presentationIntraUserCommunityDialog = new PresentationIntraUserIdentityDialog(getActivity(),intraUserIdentitySubAppSession, null,moduleManager);
+            presentationIntraUserCommunityDialog.show();
+        }
 
         return rootLayout;
     }
 
 
-
     /**
      * Inicializa las vistas de este Fragment
+     *
      * @param layout el layout de este Fragment que contiene las vistas
      */
     private void initViews(View layout) {
         createButton = (Button) layout.findViewById(R.id.create_crypto_broker_button);
         mBrokerName = (EditText) layout.findViewById(R.id.crypto_broker_name);
+        mBrokerPhrase = (EditText) layout.findViewById(R.id.crypto_broker_phrase);
         mBrokerImage = (ImageView) layout.findViewById(R.id.crypto_broker_image);
+        createButton.setText((!isUpdate) ? "Create" : "Update");
 
         mBrokerName.requestFocus();
 
@@ -126,7 +189,12 @@ public class CreateIntraUserIdentityFragment extends FermatFragment {
                 int resultKey = createNewIdentity();
                 switch (resultKey) {
                     case CREATE_IDENTITY_SUCCESS:
-                        changeActivity(Activities.CCP_SUB_APP_INTRA_USER_IDENTITY.getCode(),subAppsSession.getAppPublicKey());
+//                        changeActivity(Activities.CCP_SUB_APP_INTRA_USER_IDENTITY.getCode(), appSession.getAppPublicKey());
+                        if (!isUpdate) {
+                            Toast.makeText(getActivity(), "Identity created", Toast.LENGTH_SHORT).show();
+                        } else {
+                            Toast.makeText(getActivity(), "Changes saved", Toast.LENGTH_SHORT).show();
+                        }
                         break;
                     case CREATE_IDENTITY_FAIL_MODULE_EXCEPTION:
                         Toast.makeText(getActivity(), "Error al crear la identidad", Toast.LENGTH_LONG).show();
@@ -143,22 +211,51 @@ public class CreateIntraUserIdentityFragment extends FermatFragment {
     }
 
     private void setUpIdentity() {
-        identitySelected = (IntraWalletUserIdentity)intraUserIdentitySubAppSession.getData(SessionConstants.IDENTITY_SELECTED);
+        try {
 
-        if(identitySelected!=null){
-            if(identitySelected.getProfileImage()!=null){
-                if(identitySelected.getProfileImage().length>0){
-                    Bitmap bitmap = BitmapFactory.decodeByteArray(identitySelected.getProfileImage(),0,identitySelected.getProfileImage().length);
-                    bitmap = Bitmap.createScaledBitmap(bitmap, mBrokerImage.getWidth(), mBrokerImage.getHeight(), true);
-                    brokerImageByteArray = toByteArray(bitmap);
+            identitySelected = (IntraUserModuleIdentity) intraUserIdentitySubAppSession.getData(SessionConstants.IDENTITY_SELECTED);
+
+
+            if (identitySelected != null) {
+                loadIdentity();
+            } else {
+                List<IntraUserModuleIdentity> lst = moduleManager.getAllIntraWalletUsersFromCurrentDeviceUser();
+                if(!lst.isEmpty()){
+                    identitySelected = lst.get(0);
+                }
+                if (identitySelected != null) {
+                    loadIdentity();
+                    isUpdate = true;
+                    createButton.setText("Save changes");
                 }
             }
-            mBrokerName.setText(identitySelected.getAlias());
+        } catch (Exception e) {
+            e.printStackTrace();
         }
+    }
+
+    private void loadIdentity(){
+        if (identitySelected.getImage() != null) {
+            Bitmap bitmap = null;
+            if (identitySelected.getImage().length > 0) {
+                bitmap = BitmapFactory.decodeByteArray(identitySelected.getImage(), 0, identitySelected.getImage().length);
+//                bitmap = Bitmap.createScaledBitmap(bitmap, mBrokerImage.getWidth(), mBrokerImage.getHeight(), true);
+            } else {
+                bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.ic_profile_male);
+
+                //Picasso.with(getActivity()).load(R.drawable.profile_image).into(mBrokerImage);
+            }
+            bitmap = Bitmap.createScaledBitmap(bitmap, 100, 100, true);
+            brokerImageByteArray = toByteArray(bitmap);
+            mBrokerImage.setImageDrawable(ImagesUtils.getRoundedBitmap(getResources(), bitmap));
+        }
+        mBrokerName.setText(identitySelected.getAlias());
+        mBrokerPhrase.setText(identitySelected.getPhrase());
     }
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
         if (resultCode == Activity.RESULT_OK) {
             Bitmap imageBitmap = null;
             ImageView pictureView = mBrokerImage;
@@ -185,7 +282,8 @@ public class CreateIntraUserIdentityFragment extends FermatFragment {
             }
 
             if (pictureView != null && imageBitmap != null)
-                pictureView.setImageDrawable(new BitmapDrawable(getResources(), imageBitmap));
+                //pictureView.setImageDrawable(new BitmapDrawable(getResources(), imageBitmap));
+                pictureView.setImageDrawable(ImagesUtils.getRoundedBitmap(getResources(), imageBitmap));
         }
     }
 
@@ -224,14 +322,23 @@ public class CreateIntraUserIdentityFragment extends FermatFragment {
     private int createNewIdentity() {
 
         String brokerNameText = mBrokerName.getText().toString();
-        boolean dataIsValid = validateIdentityData(brokerNameText, brokerImageByteArray);
+        String brokerPhraseText = mBrokerPhrase.getText().toString();
+
+        boolean dataIsValid = validateIdentityData(brokerNameText, brokerPhraseText, brokerImageByteArray);
 
         if (dataIsValid) {
             if (moduleManager != null) {
                 try {
-                    moduleManager.createNewIntraWalletUser(brokerNameText, brokerImageByteArray);
-                } catch (CantCreateNewIntraWalletUserException e) {
-                    errorManager.reportUnexpectedUIException(UISource.VIEW, UnexpectedUIExceptionSeverity.UNSTABLE,e);
+                    if (!isUpdate)
+                        moduleManager.createNewIntraWalletUser(brokerNameText, brokerPhraseText, (brokerImageByteArray == null) ? convertImage(R.drawable.ic_profile_male) : brokerImageByteArray);
+                    else
+                        moduleManager.updateIntraUserIdentity(identitySelected.getPublicKey(), brokerNameText, brokerPhraseText, brokerImageByteArray);
+                 } catch (CantCreateNewIntraUserIdentityException e) {
+                    errorManager.reportUnexpectedUIException(UISource.VIEW, UnexpectedUIExceptionSeverity.UNSTABLE, e);
+
+                } catch (CantUpdateIntraUserIdentityException e) {
+                    errorManager.reportUnexpectedUIException(UISource.VIEW, UnexpectedUIExceptionSeverity.UNSTABLE, e);
+
                 }
                 return CREATE_IDENTITY_SUCCESS;
             }
@@ -239,6 +346,14 @@ public class CreateIntraUserIdentityFragment extends FermatFragment {
         }
         return CREATE_IDENTITY_FAIL_NO_VALID_DATA;
 
+    }
+
+    private byte[] convertImage(int resImage){
+        Bitmap bitmap = BitmapFactory.decodeResource(getActivity().getResources(), resImage);
+        ByteArrayOutputStream stream = new ByteArrayOutputStream();
+        bitmap.compress(Bitmap.CompressFormat.JPEG,80,stream);
+        //bitmap.compress(Bitmap.CompressFormat.PNG, 100, stream);
+        return stream.toByteArray();
     }
 
     private void dispatchTakePictureIntent() {
@@ -257,8 +372,10 @@ public class CreateIntraUserIdentityFragment extends FermatFragment {
         startActivityForResult(loadImageIntent, REQUEST_LOAD_IMAGE);
     }
 
-    private boolean validateIdentityData(String brokerNameText, byte[] brokerImageBytes) {
+    private boolean validateIdentityData(String brokerNameText, String brokerPhraseText, byte[] brokerImageBytes) {
         if (brokerNameText.isEmpty())
+            return false;
+        if (brokerPhraseText.isEmpty())
             return false;
         if (brokerImageBytes == null)
             return true;
@@ -278,5 +395,54 @@ public class CreateIntraUserIdentityFragment extends FermatFragment {
         ByteArrayOutputStream stream = new ByteArrayOutputStream();
         bitmap.compress(Bitmap.CompressFormat.PNG, 100, stream);
         return stream.toByteArray();
+    }
+
+
+    public void showDialog(){
+        PresentationIntraUserIdentityDialog presentationIntraUserCommunityDialog = new PresentationIntraUserIdentityDialog(getActivity(),intraUserIdentitySubAppSession, null,moduleManager);
+        presentationIntraUserCommunityDialog.show();
+    }
+
+    @Override
+    public void onCreateOptionsMenu(final Menu menu, MenuInflater inflater) {
+        super.onCreateOptionsMenu(menu, inflater);
+        //inflater.inflate(R.menu.menu_main, menu);
+
+        try {
+            menu.add(1, 99, 1, "help").setIcon(R.drawable.help_icon)
+                    .setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
+
+            final MenuItem action_help = menu.findItem(R.id.action_help);
+            menu.findItem(R.id.action_help).setVisible(true);
+            action_help.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
+                @Override
+                public boolean onMenuItemClick(MenuItem item) {
+                    menu.findItem(R.id.action_help).setVisible(false);
+                    return false;
+                }
+            });
+
+        } catch (Exception e) {
+
+        }
+
+    }
+
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        try {
+            int id = item.getItemId();
+
+            if (id == 99)
+                showDialog();
+
+
+        } catch (Exception e) {
+            errorManager.reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.UNSTABLE, FermatException.wrapException(e));
+            makeText(getActivity(), "Oooops! recovering from system error",
+                    LENGTH_LONG).show();
+        }
+        return super.onOptionsItemSelected(item);
     }
 }

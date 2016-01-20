@@ -26,7 +26,7 @@ import java.util.UUID;
  * contains the methods that the Developer Database Tools uses to show the information.
  * <p/>
  *
- * Created by Yordin Alayn - (y.alayn@gmail.com) on 16/11/15.
+ * Created by Yordin Alayn - (y.alayn@gmail.com) on 21/11/15.
  *
  * @version 1.0
  * @since Java JDK 1.7
@@ -122,7 +122,9 @@ public class CryptoCustomerActorDeveloperDatabaseFactory implements DealsWithPlu
         cryptoCustomerActorColumns.add(CryptoCustomerActorDatabaseConstants.CRYPTO_CUSTOMER_ACTOR_ACTOR_ID_COLUMN_NAME);
         cryptoCustomerActorColumns.add(CryptoCustomerActorDatabaseConstants.CRYPTO_CUSTOMER_ACTOR_PUBLIC_KEY_ACTOR_COLUMN_NAME);
         cryptoCustomerActorColumns.add(CryptoCustomerActorDatabaseConstants.CRYPTO_CUSTOMER_ACTOR_PUBLIC_KEY_IDENTITY_COLUMN_NAME);
-        cryptoCustomerActorColumns.add(CryptoCustomerActorDatabaseConstants.CRYPTO_CUSTOMER_ACTOR_DESCRIPTION_ACTOR_COLUMN_NAME);
+        cryptoCustomerActorColumns.add(CryptoCustomerActorDatabaseConstants.CRYPTO_CUSTOMER_ACTOR_NAME_ACTOR_COLUMN_NAME);
+        cryptoCustomerActorColumns.add(CryptoCustomerActorDatabaseConstants.CRYPTO_CUSTOMER_ACTOR_CONNECTION_STATE_COLUMN_NAME);
+        cryptoCustomerActorColumns.add(CryptoCustomerActorDatabaseConstants.CRYPTO_CUSTOMER_ACTOR_TIMESTAMP_COLUMN_NAME);
         /**
          * Table Crypto Customer Actor addition.
          */
@@ -143,23 +145,6 @@ public class CryptoCustomerActorDeveloperDatabaseFactory implements DealsWithPlu
          */
         DeveloperDatabaseTable cryptoCustomerIdentityWalletRelationshipTable = developerObjectFactory.getNewDeveloperDatabaseTable(CryptoCustomerActorDatabaseConstants.CRYPTO_CUSTOMER_IDENTITY_WALLET_RELATIONSHIP_TABLE_NAME, cryptoCustomerIdentityWalletRelationshipColumns);
         tables.add(cryptoCustomerIdentityWalletRelationshipTable);
-
-        /**
-         * Table Crypto Customer Operation columns.
-         */
-        List<String> cryptoCustomerOperationColumns = new ArrayList<String>();
-
-        cryptoCustomerOperationColumns.add(CryptoCustomerActorDatabaseConstants.CRYPTO_CUSTOMER_OPERATION_OPERATION_ID_COLUMN_NAME);
-        cryptoCustomerOperationColumns.add(CryptoCustomerActorDatabaseConstants.CRYPTO_CUSTOMER_OPERATION_OPERATION_ID_DOC_COLUMN_NAME);
-        cryptoCustomerOperationColumns.add(CryptoCustomerActorDatabaseConstants.CRYPTO_CUSTOMER_OPERATION_OPERATION_TYPE_COLUMN_NAME);
-        cryptoCustomerOperationColumns.add(CryptoCustomerActorDatabaseConstants.CRYPTO_CUSTOMER_OPERATION_OPERATION_ACCION_COLUMN_NAME);
-        cryptoCustomerOperationColumns.add(CryptoCustomerActorDatabaseConstants.CRYPTO_CUSTOMER_OPERATION_PUBLIC_KEY_BROKER_COLUMN_NAME);
-        cryptoCustomerOperationColumns.add(CryptoCustomerActorDatabaseConstants.CRYPTO_CUSTOMER_OPERATION_TIMESTAMP_COLUMN_NAME);
-        /**
-         * Table Crypto Customer Operation addition.
-         */
-        DeveloperDatabaseTable cryptoCustomerOperationTable = developerObjectFactory.getNewDeveloperDatabaseTable(CryptoCustomerActorDatabaseConstants.CRYPTO_CUSTOMER_OPERATION_TABLE_NAME, cryptoCustomerOperationColumns);
-        tables.add(cryptoCustomerOperationTable);
 
 
 

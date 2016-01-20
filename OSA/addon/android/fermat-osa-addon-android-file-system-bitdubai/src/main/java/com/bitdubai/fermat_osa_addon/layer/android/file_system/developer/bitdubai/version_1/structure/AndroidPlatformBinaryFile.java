@@ -155,26 +155,32 @@ public class AndroidPlatformBinaryFile implements PlatformBinaryFile {
          */
         File file = new File(path + "/" + this.directoryName + "/" + this.fileName);
 
+            if(file.exists()) {
+                /**
+                 * Read the content.
+                 */
+                binaryStream = new FileInputStream(file);
+                ByteArrayOutputStream buffer = new ByteArrayOutputStream();
 
-            /**
-             * Read the content.
-             */
-            binaryStream = new FileInputStream(file);
-            ByteArrayOutputStream buffer = new ByteArrayOutputStream();
+                int nRead;
+                byte[] data = new byte[16384];
 
-            int nRead;
-            byte[] data = new byte[16384];
+                while ((nRead = binaryStream.read(data, 0, data.length)) != -1) {
+                    buffer.write(data, 0, nRead);
+                }
 
-            while ((nRead = binaryStream.read(data, 0, data.length)) != -1) {
-                buffer.write(data, 0, nRead);
+                buffer.flush();
+
+                /**
+                 * return content.
+                 */
+                this.content =buffer.toByteArray();
+            }
+            else
+            {
+                this.content = new byte[0];
             }
 
-            buffer.flush();
-
-            /**
-             * return content.
-             */
-            this.content =buffer.toByteArray();
 
         } catch (Exception e) {
             throw new CantLoadFileException(CantLoadFileException.DEFAULT_MESSAGE, e, "", "Check the cause");

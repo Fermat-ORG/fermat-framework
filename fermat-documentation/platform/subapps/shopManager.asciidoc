@@ -1,7 +1,0 @@
-[[Platform-SubApps-ShopManager]]
-= Shop Manager
-
-Similar to the <<Platform-SubApps-WalletManager, wallet manager>> this subapp let shop owners administrate their different shops in this platform. +
-The shops are individually managed using the <<Platform-SubApps-shop,shop subapp>>.
-
-

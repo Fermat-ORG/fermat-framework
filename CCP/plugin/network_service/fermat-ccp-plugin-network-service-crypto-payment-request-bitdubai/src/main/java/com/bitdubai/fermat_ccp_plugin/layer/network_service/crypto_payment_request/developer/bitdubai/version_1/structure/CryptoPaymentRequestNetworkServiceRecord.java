@@ -2,6 +2,7 @@ package com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_payment_requ
 
 import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
 import com.bitdubai.fermat_api.layer.all_definition.enums.BlockchainNetworkType;
+import com.bitdubai.fermat_api.layer.all_definition.enums.ReferenceWallet;
 import com.bitdubai.fermat_api.layer.all_definition.money.CryptoAddress;
 import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_payment_request.enums.RequestAction;
 import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_payment_request.enums.RequestType;
@@ -18,47 +19,53 @@ import java.util.UUID;
  */
 public class CryptoPaymentRequestNetworkServiceRecord implements CryptoPaymentRequest {
 
-    private final UUID                          requestId        ;
-    private final String                        identityPublicKey;
-    private final Actors                        identityType     ;
-    private final String                        actorPublicKey   ;
-    private final Actors                        actorType        ;
-    private final String                        description      ;
-    private final CryptoAddress                 cryptoAddress    ;
-    private final long                          amount           ;
-    private final long                          startTimeStamp   ;
-    private final RequestType direction        ;
-    private final RequestAction                 action           ;
-    private final RequestProtocolState          protocolState    ;
-    private final BlockchainNetworkType         networkType      ;
+    private final UUID requestId;
+    private final String identityPublicKey;
+    private final Actors identityType;
+    private final String actorPublicKey;
+    private final Actors actorType;
+    private final String description;
+    private final CryptoAddress cryptoAddress;
+    private final long amount;
+    private final long startTimeStamp;
+    private final RequestType direction;
+    private final RequestAction action;
+    private final RequestProtocolState protocolState;
+    private final BlockchainNetworkType networkType;
+    private final ReferenceWallet referenceWallet;
+    private final int sentNumber;
 
-    public CryptoPaymentRequestNetworkServiceRecord(final UUID                          requestId        ,
-                                                    final String                        identityPublicKey,
-                                                    final Actors                        identityType     ,
-                                                    final String                        actorPublicKey   ,
-                                                    final Actors                        actorType        ,
-                                                    final String                        description      ,
-                                                    final CryptoAddress                 cryptoAddress    ,
-                                                    final long                          amount           ,
-                                                    final long                          startTimeStamp   ,
-                                                    final RequestType direction        ,
-                                                    final RequestAction                 action           ,
-                                                    final RequestProtocolState          protocolState    ,
-                                                    final BlockchainNetworkType         networkType      ) {
+    public CryptoPaymentRequestNetworkServiceRecord(final UUID requestId,
+                                                    final String identityPublicKey,
+                                                    final Actors identityType,
+                                                    final String actorPublicKey,
+                                                    final Actors actorType,
+                                                    final String description,
+                                                    final CryptoAddress cryptoAddress,
+                                                    final long amount,
+                                                    final long startTimeStamp,
+                                                    final RequestType direction,
+                                                    final RequestAction action,
+                                                    final RequestProtocolState protocolState,
+                                                    final BlockchainNetworkType networkType,
+                                                    final ReferenceWallet referenceWallet,
+                                                    final int sentNumber) {
 
-        this.requestId         = requestId        ;
+        this.requestId = requestId;
         this.identityPublicKey = identityPublicKey;
-        this.identityType      = identityType     ;
-        this.actorPublicKey    = actorPublicKey   ;
-        this.actorType         = actorType        ;
-        this.description       = description      ;
-        this.cryptoAddress     = cryptoAddress    ;
-        this.amount            = amount           ;
-        this.startTimeStamp    = startTimeStamp   ;
-        this.direction         = direction        ;
-        this.action            = action           ;
-        this.protocolState     = protocolState    ;
-        this.networkType       = networkType      ;
+        this.identityType = identityType;
+        this.actorPublicKey = actorPublicKey;
+        this.actorType = actorType;
+        this.description = description;
+        this.cryptoAddress = cryptoAddress;
+        this.amount = amount;
+        this.startTimeStamp = startTimeStamp;
+        this.direction = direction;
+        this.action = action;
+        this.protocolState = protocolState;
+        this.networkType = networkType;
+        this.referenceWallet = referenceWallet;
+        this.sentNumber = sentNumber;
     }
 
     @Override
@@ -125,6 +132,18 @@ public class CryptoPaymentRequestNetworkServiceRecord implements CryptoPaymentRe
     public BlockchainNetworkType getNetworkType() {
         return networkType;
     }
+
+    @Override
+    public ReferenceWallet getReferenceWallet() {
+        return referenceWallet;
+    }
+
+    @Override
+    public int getSentNumber() {
+        return sentNumber;
+    }
+
+
 
     @Override
     public String toString() {

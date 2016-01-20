@@ -69,7 +69,7 @@ public class IntraWalletUserIdentityDeveloperDatabaseFactory implements DealsWit
              /*
               * Open new database connection
               */
-            database = this.pluginDatabaseSystem.openDatabase(pluginId, pluginId.toString());
+            database = this.pluginDatabaseSystem.openDatabase(pluginId, IntraWalletUserIdentityDatabaseConstants.INTRA_WALLET_USER_DATABASE_NAME);
             database.closeDatabase();
 
         } catch (CantOpenDatabaseException cantOpenDatabaseException) {
@@ -91,7 +91,7 @@ public class IntraWalletUserIdentityDeveloperDatabaseFactory implements DealsWit
                   /*
                    * We create the new database
                    */
-                database = intraWalletUserIdentityDatabaseFactory.createDatabase(pluginId, pluginId.toString());
+                database = intraWalletUserIdentityDatabaseFactory.createDatabase(pluginId, IntraWalletUserIdentityDatabaseConstants.INTRA_WALLET_USER_DATABASE_NAME);
                 database.closeDatabase();
             } catch (CantCreateDatabaseException cantCreateDatabaseException) {
                   /*
@@ -127,7 +127,10 @@ public class IntraWalletUserIdentityDeveloperDatabaseFactory implements DealsWit
 
         intraUserColumns.add(IntraWalletUserIdentityDatabaseConstants.INTRA_WALLET_USER_PUBLIC_KEY_COLUMN_NAME);
         intraUserColumns.add(IntraWalletUserIdentityDatabaseConstants.INTRA_WALLET_USER_ALIAS_COLUMN_NAME);
+        intraUserColumns.add(IntraWalletUserIdentityDatabaseConstants.INTRA_WALLET_USER_PHRASE_COLUMN_NAME);
         intraUserColumns.add(IntraWalletUserIdentityDatabaseConstants.INTRA_WALLET_USER_DEVICE_USER_PUBLIC_KEY_COLUMN_NAME);
+        intraUserColumns.add(IntraWalletUserIdentityDatabaseConstants.INTRA_WALLET_USER_ACTIVE_COLUMN_NAME);
+
         /**
          * Table Intra User addition.
          */

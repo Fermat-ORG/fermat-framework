@@ -1,9 +1,0 @@
-[[Platform-SubApps-Shell]]
-= Shell
-
-Brings the available functionality when no user has logged in. +
-Some trivial functionalities are the login functionality, account creation, forgotten password, etc. +
-
-The login policies are pending to be discussed. One initial idea is that the login should not be done every time the user opens the Fermat app or turn on the device. However we should consider that this could be a kind of security mechanism, we could also have expiration session times. +
-
-Another idea is to set a limit in the amount of money the user can manage without logging in. 

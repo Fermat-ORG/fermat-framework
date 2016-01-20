@@ -1,3 +1,8 @@
 <resources>
     <string name="app_name">fermat-dap-android-sub-app-asset-issuer-community-bitdubai</string>
+    <string name="connect">Connect</string>
+
+    <string name="status_online">Online</string>
+    <string name="status_offline">Offline</string>
+    <string name="status_connecting">Connecting</string>
 </resources>

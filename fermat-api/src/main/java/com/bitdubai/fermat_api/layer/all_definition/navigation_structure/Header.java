@@ -8,6 +8,7 @@ import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.interfa
 public class Header implements FermatHeader{
 
     String label;
+    boolean hasExpandable = false;
 
 
     public Header() {
@@ -16,6 +17,15 @@ public class Header implements FermatHeader{
     @Override
     public String getLabel() {
         return label;
+    }
+
+    @Override
+    public boolean hasExpandable() {
+        return hasExpandable;
+    }
+
+    public void setHasExpandable(boolean hasExpandable) {
+        this.hasExpandable = hasExpandable;
     }
 
     public void setLabel(String label) {

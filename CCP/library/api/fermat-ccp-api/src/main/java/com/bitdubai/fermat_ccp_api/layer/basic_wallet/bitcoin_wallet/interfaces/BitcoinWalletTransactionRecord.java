@@ -14,6 +14,8 @@ public interface BitcoinWalletTransactionRecord {
 
     UUID getTransactionId();
 
+    UUID getRequestId();
+
     CryptoAddress getAddressTo();
 
     long getAmount();

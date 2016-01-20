@@ -270,7 +270,15 @@ public class DesktopPluginTextFile implements PluginTextFile {
         }
     }
 
-    
+    @Override
+    public void delete() {
+        String path = "";
+
+        File file = new File(path +"/" + ownerId.toString() +"/"+ this.directoryName, this.fileName);
+        file.delete();
+    }
+
+
     /**
      * Private Encrypting Method.
      */

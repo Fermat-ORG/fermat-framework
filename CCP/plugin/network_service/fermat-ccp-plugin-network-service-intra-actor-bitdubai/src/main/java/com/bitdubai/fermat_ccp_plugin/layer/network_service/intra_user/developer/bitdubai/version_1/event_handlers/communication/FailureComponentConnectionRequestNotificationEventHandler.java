@@ -50,7 +50,7 @@ public class FailureComponentConnectionRequestNotificationEventHandler implement
     @Override
     public void handleEvent(FermatEvent platformEvent) throws FermatException {
 
-        System.out.println("FailureComponentConnectionRequestNotificationEventListener - handleEvent platformEvent ="+platformEvent.getEventType() );
+        //System.out.println("FailureComponentConnectionRequestNotificationEventListener - handleEvent platformEvent ="+platformEvent.getEventType() );
 
         if (((Service) this.networkService).getStatus() == ServiceStatus.STARTED) {
 

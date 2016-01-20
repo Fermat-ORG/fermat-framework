@@ -68,6 +68,7 @@ private PluginDatabaseSystem pluginDatabaseSystem;
                 table.addColumn(IntraWalletUserActorDatabaseConstants.INTRA_WALLET_USER_CONTACT_STATE_COLUMN_NAME, DatabaseDataType.STRING, 50, Boolean.FALSE);
                 table.addColumn(IntraWalletUserActorDatabaseConstants.INTRA_WALLET_USER_REGISTRATION_DATE_COLUMN_NAME, DatabaseDataType.LONG_INTEGER, 0, Boolean.FALSE);
                 table.addColumn(IntraWalletUserActorDatabaseConstants.INTRA_WALLET_USER_MODIFIED_DATE_COLUMN_NAME, DatabaseDataType.LONG_INTEGER, 0, Boolean.FALSE);
+                table.addColumn(IntraWalletUserActorDatabaseConstants.INTRA_WALLET_USER_PHRASE_COLUMN_NAME, DatabaseDataType.STRING, 200, Boolean.FALSE);
 
                 table.addIndex(IntraWalletUserActorDatabaseConstants.INTRA_WALLET_USER_FIRST_KEY_COLUMN);
 

@@ -1,5 +1,6 @@
 package com.bitdubai.fermat_ccp_api.layer.request.crypto_payment.interfaces;
 
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.FermatManager;
 import com.bitdubai.fermat_ccp_api.layer.request.crypto_payment.exceptions.CantGetCryptoPaymentRegistryException;
 
 /**
@@ -8,7 +9,7 @@ import com.bitdubai.fermat_ccp_api.layer.request.crypto_payment.exceptions.CantG
  * <p>
  * Created by Leon Acosta - (laion.cj91@gmail.com) on 02/10/2015.
  */
-public interface CryptoPaymentManager {
+public interface CryptoPaymentManager extends FermatManager {
 
     CryptoPaymentRegistry getCryptoPaymentRegistry() throws CantGetCryptoPaymentRegistryException;
 

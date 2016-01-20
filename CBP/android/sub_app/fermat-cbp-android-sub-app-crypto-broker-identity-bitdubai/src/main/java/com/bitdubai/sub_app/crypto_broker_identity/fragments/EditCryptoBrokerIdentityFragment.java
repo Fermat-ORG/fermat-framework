@@ -21,31 +21,22 @@ import android.widget.CompoundButton;
 import android.widget.ImageView;
 import android.widget.Toast;
 
-import com.bitdubai.fermat_android_api.layer.definition.wallet.FermatFragment;
+import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractFermatFragment;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.utils.ImagesUtils;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatCheckBox;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView;
-import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
-import com.bitdubai.fermat_cbp_api.layer.cbp_sub_app_module.crypto_broker_identity.interfaces.CryptoBrokerIdentityInformation;
-import com.bitdubai.fermat_cbp_api.layer.cbp_sub_app_module.crypto_broker_identity.interfaces.CryptoBrokerIdentityModuleManager;
-import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.ErrorManager;
+import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_broker_identity.interfaces.CryptoBrokerIdentityInformation;
+import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 import com.bitdubai.sub_app.crypto_broker_identity.R;
-import com.bitdubai.sub_app.crypto_broker_identity.session.CryptoBrokerIdentitySubAppSession;
 import com.bitdubai.sub_app.crypto_broker_identity.util.CommonLogger;
-import com.bitdubai.sub_app.crypto_broker_identity.util.PublishIdentityExecutor;
-
-import java.io.ByteArrayOutputStream;
 
 import static com.bitdubai.sub_app.crypto_broker_identity.session.CryptoBrokerIdentitySubAppSession.IDENTITY_INFO;
-import static com.bitdubai.sub_app.crypto_broker_identity.util.PublishIdentityExecutor.DATA_NOT_CHANGED;
-import static com.bitdubai.sub_app.crypto_broker_identity.util.PublishIdentityExecutor.EXCEPTION_THROWN;
-import static com.bitdubai.sub_app.crypto_broker_identity.util.PublishIdentityExecutor.SUCCESS;
 
 
 /**
  * A simple {@link Fragment} subclass.
  */
-public class EditCryptoBrokerIdentityFragment extends FermatFragment {
+public class EditCryptoBrokerIdentityFragment extends AbstractFermatFragment {
     // Constants
     private static final String TAG = "EditBrokerIdentity";
     private static final int REQUEST_IMAGE_CAPTURE = 1;
@@ -55,18 +46,8 @@ public class EditCryptoBrokerIdentityFragment extends FermatFragment {
 
     // data
     private Bitmap cryptoBrokerBitmap;
-    private boolean wantPublishIdentity;
 
-    // Managers
-    private CryptoBrokerIdentityModuleManager moduleManager;
-    private ErrorManager errorManager;
-
-    // UI
-    private Button mUpdateButton;
-    private FermatTextView mBrokerName;
     private ImageView mBrokerImage;
-    private FermatCheckBox publishIdentityCheckBox;
-
 
     public static EditCryptoBrokerIdentityFragment newInstance() {
         return new EditCryptoBrokerIdentityFragment();
@@ -75,13 +56,6 @@ public class EditCryptoBrokerIdentityFragment extends FermatFragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-        try {
-            moduleManager = ((CryptoBrokerIdentitySubAppSession) subAppsSession).getModuleManager();
-            errorManager = subAppsSession.getErrorManager();
-        } catch (Exception ex) {
-            CommonLogger.exception(TAG, ex.getMessage(), ex);
-        }
     }
 
     @Override
@@ -90,7 +64,6 @@ public class EditCryptoBrokerIdentityFragment extends FermatFragment {
         // Inflate the layout for this fragment
         View rootLayout = inflater.inflate(R.layout.fragment_edit_crypto_broker_identity, container, false);
         initViews(rootLayout);
-
 
         return rootLayout;
     }
@@ -101,15 +74,19 @@ public class EditCryptoBrokerIdentityFragment extends FermatFragment {
      * @param layout el layout de este Fragment que contiene las vistas
      */
     private void initViews(View layout) {
-        mUpdateButton = (Button) layout.findViewById(R.id.update_crypto_broker_button);
-        mBrokerName = (FermatTextView) layout.findViewById(R.id.crypto_broker_name);
+        Button mUpdateButton = (Button) layout.findViewById(R.id.update_crypto_broker_button);
+        FermatTextView mBrokerName = (FermatTextView) layout.findViewById(R.id.crypto_broker_name);
+        FermatTextView mIsPublished = (FermatTextView) layout.findViewById(R.id.is_published);
         mBrokerImage = (ImageView) layout.findViewById(R.id.crypto_broker_image);
-        publishIdentityCheckBox = (FermatCheckBox) layout.findViewById(R.id.publish_identity);
 
-        CryptoBrokerIdentityInformation identityInfo = (CryptoBrokerIdentityInformation) subAppsSession.getData(IDENTITY_INFO);
+        final CryptoBrokerIdentityInformation identityInfo = (CryptoBrokerIdentityInformation) appSession.getData(IDENTITY_INFO);
 
         if (identityInfo != null) {
             mBrokerName.setText(identityInfo.getAlias());
+            if (identityInfo.isPublished())
+                mIsPublished.setText(R.string.published);
+            else
+                mIsPublished.setText(R.string.not_published);
 
             byte[] profileImage = identityInfo.getProfileImage();
             RoundedBitmapDrawable roundedBitmap = (profileImage != null) ?
@@ -117,18 +94,7 @@ public class EditCryptoBrokerIdentityFragment extends FermatFragment {
                     ImagesUtils.getRoundedBitmap(getResources(), R.drawable.img_new_user_camera);
 
             mBrokerImage.setImageDrawable(roundedBitmap);
-
-            wantPublishIdentity = identityInfo.isPublished();
-            publishIdentityCheckBox.setChecked(wantPublishIdentity);
         }
-
-        publishIdentityCheckBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton compoundButton, boolean value) {
-                CommonLogger.debug(TAG, "IN publishIdentityCheckBox.setOnCheckedChangeListener");
-                wantPublishIdentity = value;
-            }
-        });
 
         mBrokerImage.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -150,6 +116,7 @@ public class EditCryptoBrokerIdentityFragment extends FermatFragment {
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(  requestCode, resultCode, data);
         if (resultCode == Activity.RESULT_OK) {
             ImageView pictureView = mBrokerImage;
 
@@ -168,7 +135,7 @@ public class EditCryptoBrokerIdentityFragment extends FermatFragment {
                         }
                     } catch (Exception e) {
                         e.printStackTrace();
-                        Toast.makeText(getActivity().getApplicationContext(), "Error cargando la imagen", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getActivity().getApplicationContext(), "Error loading image.", Toast.LENGTH_SHORT).show();
                     }
                     break;
             }
@@ -209,16 +176,6 @@ public class EditCryptoBrokerIdentityFragment extends FermatFragment {
     private void editIdentityInfo() {
 
         // TODO falta implementar funcionalidad para editar info del identity en el backend
-
-        PublishIdentityExecutor executor = new PublishIdentityExecutor(subAppsSession, wantPublishIdentity);
-        int resultCode = executor.execute();
-
-        if (resultCode == SUCCESS || resultCode == DATA_NOT_CHANGED) {
-            //changeActivity(Activities.CBP_SUB_APP_CRYPTO_BROKER_IDENTITY.getCode(),re);
-
-        } else if (resultCode == EXCEPTION_THROWN) {
-            Toast.makeText(getActivity(), "No se pudieron editar los datos", Toast.LENGTH_LONG).show();
-        }
     }
 
 
@@ -238,15 +195,4 @@ public class EditCryptoBrokerIdentityFragment extends FermatFragment {
         startActivityForResult(loadImageIntent, REQUEST_LOAD_IMAGE);
     }
 
-    /**
-     * Bitmap to byte[]
-     *
-     * @param bitmap Bitmap
-     * @return byte array
-     */
-    private byte[] toByteArray(Bitmap bitmap) {
-        ByteArrayOutputStream stream = new ByteArrayOutputStream();
-        bitmap.compress(Bitmap.CompressFormat.PNG, 100, stream);
-        return stream.toByteArray();
-    }
 }

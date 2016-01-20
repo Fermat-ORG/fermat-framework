@@ -43,5 +43,9 @@ public interface FermatWizardActivity {
      */
     void setWizardActivity(CharSequence title);
 
+    void backScreen();
+
+    void nextScreen();
+
 
 }

@@ -1,7 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ImageView xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
+<ImageView
     android:id="@+id/screenshot"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="200dp"
-    android:layout_height="280dp"
-    tools:src="@drawable/wallet_screenshot_2" />
+    android:layout_height="@dimen/ws_screenshot_img_height"
+    android:layout_marginEnd="16dp"
+    android:layout_marginRight="16dp"
+    tools:src="@drawable/broker_screenshot_1"/>

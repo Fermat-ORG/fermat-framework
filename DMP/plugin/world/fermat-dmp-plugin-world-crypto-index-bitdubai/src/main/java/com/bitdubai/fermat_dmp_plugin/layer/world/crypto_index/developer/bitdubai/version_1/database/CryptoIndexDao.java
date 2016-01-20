@@ -15,7 +15,7 @@ import com.bitdubai.fermat_dmp_plugin.layer.world.crypto_index.developer.bitduba
 import com.bitdubai.fermat_dmp_plugin.layer.world.crypto_index.developer.bitdubai.version_1.exceptions.CantInitializeCryptoIndexDatabaseException;
 import com.bitdubai.fermat_dmp_plugin.layer.world.crypto_index.developer.bitdubai.version_1.exceptions.CantSaveLastRateExchangeException;
 import com.bitdubai.fermat_dmp_plugin.layer.world.crypto_index.developer.bitdubai.version_1.interfaces.CryptoIndexInterface;
-import com.bitdubai.fermat_dmp_plugin.layer.world.crypto_index.developer.bitdubai.version_1.structure.CryptoIndex;
+import com.bitdubai.fermat_dmp_plugin.layer.world.crypto_index.developer.bitdubai.version_1.structure.CryptoIndexList;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -111,12 +111,12 @@ public class CryptoIndexDao implements Serializable {
              */
             throw new CantGetCryptoIndexIdentitiesException("Cant get Crypto Index list, table not found.", "Crypto Index", "");
         }
-            table.setStringFilter(CryptoIndexDatabaseConstants.CRYPTO_INDEX_CRYPTO_CURRENCY_COLUMN_NAME, crypto, DatabaseFilterType.EQUAL);
-            table.setStringFilter(CryptoIndexDatabaseConstants.CRYPTO_INDEX_FIAT_CURRENCY_COLUMN_NAME, fiat, DatabaseFilterType.EQUAL);
+            table.addStringFilter(CryptoIndexDatabaseConstants.CRYPTO_INDEX_CRYPTO_CURRENCY_COLUMN_NAME, crypto, DatabaseFilterType.EQUAL);
+            table.addStringFilter(CryptoIndexDatabaseConstants.CRYPTO_INDEX_FIAT_CURRENCY_COLUMN_NAME, fiat, DatabaseFilterType.EQUAL);
 
             table.loadToMemory();
             for (DatabaseTableRecord record : table.getRecords()){
-                LastExchangeRateList.add(new CryptoIndex(
+                LastExchangeRateList.add(new CryptoIndexList(
                         record.getStringValue(CryptoIndexDatabaseConstants.CRYPTO_INDEX_CRYPTO_CURRENCY_COLUMN_NAME),
                         record.getStringValue(CryptoIndexDatabaseConstants.CRYPTO_INDEX_FIAT_CURRENCY_COLUMN_NAME),
                         record.getStringValue(CryptoIndexDatabaseConstants.CRYPTO_INDEX_TIME_COLUMN_NAME),
@@ -141,14 +141,14 @@ public class CryptoIndexDao implements Serializable {
                  */
                 throw new CantGetCryptoIndexIdentitiesException("Cant get Crypto Index list, table not found.", "Crypto Index", "");
             }
-            table.setStringFilter(CryptoIndexDatabaseConstants.CRYPTO_INDEX_CRYPTO_CURRENCY_COLUMN_NAME,crypto,DatabaseFilterType.EQUAL);
-            table.setStringFilter(CryptoIndexDatabaseConstants.CRYPTO_INDEX_CRYPTO_CURRENCY_COLUMN_NAME,fiat,DatabaseFilterType.EQUAL);
-            table.setStringFilter(CryptoIndexDatabaseConstants.CRYPTO_INDEX_TIME_COLUMN_NAME, String.valueOf(time),DatabaseFilterType.EQUAL);
+            table.addStringFilter(CryptoIndexDatabaseConstants.CRYPTO_INDEX_CRYPTO_CURRENCY_COLUMN_NAME, crypto, DatabaseFilterType.EQUAL);
+            table.addStringFilter(CryptoIndexDatabaseConstants.CRYPTO_INDEX_CRYPTO_CURRENCY_COLUMN_NAME, fiat, DatabaseFilterType.EQUAL);
+            table.addStringFilter(CryptoIndexDatabaseConstants.CRYPTO_INDEX_TIME_COLUMN_NAME, String.valueOf(time), DatabaseFilterType.EQUAL);
 
             table.loadToMemory();
             System.out.println(table.getRecords().get(0));
             for (DatabaseTableRecord record : table.getRecords()){
-                HistoricalExchangeRateList.add(new CryptoIndex(
+                HistoricalExchangeRateList.add(new CryptoIndexList(
                        record.getStringValue(CryptoIndexDatabaseConstants.CRYPTO_INDEX_CRYPTO_CURRENCY_COLUMN_NAME),
                        record.getStringValue(CryptoIndexDatabaseConstants.CRYPTO_INDEX_FIAT_CURRENCY_COLUMN_NAME),
                        record.getStringValue(CryptoIndexDatabaseConstants.CRYPTO_INDEX_TIME_COLUMN_NAME),

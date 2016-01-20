@@ -13,6 +13,7 @@ import java.util.UUID;
 public class IncomingIntraUserTransactionWrapper implements BitcoinWalletTransactionRecord {
 
     private final UUID          transactionId     ;
+    private final UUID          requestId     ;
     private final String        actorFromPublicKey;
     private final String        actorToPublicKey  ;
     private final Actors        actorFromType     ;
@@ -25,6 +26,7 @@ public class IncomingIntraUserTransactionWrapper implements BitcoinWalletTransac
     private final String        memo              ;
 
     public IncomingIntraUserTransactionWrapper(final UUID          transactionId     ,
+                                               final UUID          requestId     ,
                                                final String        actorFromPublicKey,
                                                final String        actorToPublicKey  ,
                                                final Actors        actorFromType     ,
@@ -37,6 +39,7 @@ public class IncomingIntraUserTransactionWrapper implements BitcoinWalletTransac
                                                final String        memo              ) {
 
         this.transactionId      = transactionId     ;
+        this.requestId          = requestId         ;
         this.actorFromPublicKey = actorFromPublicKey;
         this.actorToPublicKey   = actorToPublicKey  ;
         this.actorFromType      = actorFromType     ;
@@ -52,6 +55,11 @@ public class IncomingIntraUserTransactionWrapper implements BitcoinWalletTransac
     @Override
     public UUID getTransactionId() {
         return transactionId;
+    }
+
+    @Override
+    public UUID getRequestId() {
+        return requestId;
     }
 
     @Override

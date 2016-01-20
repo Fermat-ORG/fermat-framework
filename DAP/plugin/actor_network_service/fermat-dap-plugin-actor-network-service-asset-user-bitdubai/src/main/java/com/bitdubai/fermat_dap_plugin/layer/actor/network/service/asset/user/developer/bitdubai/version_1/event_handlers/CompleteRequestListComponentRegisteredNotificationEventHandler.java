@@ -54,12 +54,9 @@ public class CompleteRequestListComponentRegisteredNotificationEventHandler impl
 
         System.out.println("CompleteRequestListComponentRegisteredNotificationEventHandler - handleEvent platformEvent ="+platformEvent );
 
-
         if (((Service) this.networkService).getStatus() == ServiceStatus.STARTED) {
 
             CompleteRequestListComponentRegisteredNotificationEvent completeRequestListComponentRegisteredNotificationEvent = (CompleteRequestListComponentRegisteredNotificationEvent) platformEvent;
-
-
 
             if ((completeRequestListComponentRegisteredNotificationEvent.getPlatformComponentType()  == PlatformComponentType.NETWORK_SERVICE &&
                     completeRequestListComponentRegisteredNotificationEvent.getNetworkServiceTypeApplicant() == NetworkServiceType.ASSET_USER_ACTOR)
@@ -69,17 +66,13 @@ public class CompleteRequestListComponentRegisteredNotificationEventHandler impl
                     (completeRequestListComponentRegisteredNotificationEvent.getPlatformComponentType()  == PlatformComponentType.ACTOR_ASSET_USER &&
                             completeRequestListComponentRegisteredNotificationEvent.getNetworkServiceTypeApplicant() == NetworkServiceType.UNDEFINED)
 
-                    ){
+                    ) {
 
-
-                 /*
+                /*
                  *  networkService make the job
                  */
                 this.networkService.handleCompleteRequestListComponentRegisteredNotificationEvent(completeRequestListComponentRegisteredNotificationEvent.getRegisteredComponentList());
-
             }
-
-
         }
     }
 }

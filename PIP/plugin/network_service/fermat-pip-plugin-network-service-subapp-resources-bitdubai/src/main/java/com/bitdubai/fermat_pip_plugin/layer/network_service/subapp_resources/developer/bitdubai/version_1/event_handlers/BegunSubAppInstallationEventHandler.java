@@ -5,8 +5,8 @@ import com.bitdubai.fermat_api.Service;
 
 import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEvent;
-import com.bitdubai.fermat_pip_api.layer.pip_network_service.CantCheckResourcesException;
-import com.bitdubai.fermat_pip_api.layer.pip_network_service.subapp_resources.SubAppResourcesInstalationManager;
+import com.bitdubai.fermat_pip_api.layer.network_service.CantCheckResourcesException;
+import com.bitdubai.fermat_pip_api.layer.network_service.subapp_resources.SubAppResourcesInstalationManager;
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEventHandler;
 
 

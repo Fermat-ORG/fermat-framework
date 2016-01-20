@@ -1,0 +1,59 @@
+apply plugin: 'java'
+apply plugin: 'jacoco'
+apply plugin: 'findbugs'
+apply plugin: 'checkstyle'
+apply plugin: 'pmd'
+
+sourceCompatibility = 1.7
+version = '1.0'
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+
+    compile project(':fermat-api')
+    compile project(':fermat-core-api')
+
+    //Providers
+    compile project(':fermat-cer-plugin-provider-bitcoinvenezuela-bitdubai')
+    compile project(':fermat-cer-plugin-provider-dolartoday-bitdubai')
+    compile project(':fermat-cer-plugin-provider-elcronista-bitdubai')
+    compile project(':fermat-cer-plugin-provider-europeancentralbank-bitdubai')
+    compile project(':fermat-cer-plugin-provider-lanacion-bitdubai')
+    compile project(':fermat-cer-plugin-provider-yahoo-bitdubai')
+
+    //ProviderFilter
+    compile project(':fermat-cer-plugin-search-provider-filter-bitdubai')
+
+
+    testCompile group: 'junit', name: 'junit', version: '4.11'
+}
+
+pmd {
+    toolVersion = '5.1.3'
+}
+
+tasks.withType (FindBugs) {
+    reports {
+        xml.enabled = false
+        html.enabled = true
+    }
+}
+
+def jacocoHtmlReport = ""
+
+jacocoTestReport{
+    reports{
+        jacocoHtmlReport = "Code Coverage HTML Report: file://" + html.destination + "/index.html"
+    }
+}
+
+task testCoverage(dependsOn: jacocoTestReport) << {
+    println jacocoHtmlReport
+}
+
+jacocoTestReport.dependsOn clean, test
+jacocoTestReport.mustRunAfter test
+test.mustRunAfter clean

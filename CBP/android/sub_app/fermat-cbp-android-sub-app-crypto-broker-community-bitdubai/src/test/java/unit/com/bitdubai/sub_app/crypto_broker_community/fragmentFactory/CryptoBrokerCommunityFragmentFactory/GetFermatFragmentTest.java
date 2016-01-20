@@ -1,6 +1,6 @@
 package unit.com.bitdubai.sub_app.crypto_broker_community.fragmentFactory.CryptoBrokerCommunityFragmentFactory;
 
-import com.bitdubai.fermat_android_api.layer.definition.wallet.FermatFragment;
+import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractFermatFragment;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.exceptions.FragmentNotFoundException;
 import com.bitdubai.sub_app.crypto_broker_community.fragmentFactory.CryptoBrokerCommunityFragmentFactory;
 import com.bitdubai.sub_app.crypto_broker_community.fragmentFactory.CryptoBrokerCommunityFragmentsEnumType;
@@ -28,9 +28,9 @@ public class GetFermatFragmentTest {
     @Test
     public void fragmentFound() throws Exception {
         CryptoBrokerCommunityFragmentsEnumType enumType = fragmentFactory.getFermatFragmentEnumType(ENUM_TYPE_CODE);
-        FermatFragment actualFragment = fragmentFactory.getFermatFragment(enumType);
+        AbstractFermatFragment actualFragment = fragmentFactory.getFermatFragment(enumType);
 
-        assertThat(actualFragment).isInstanceOf(FermatFragment.class);
+        assertThat(actualFragment).isInstanceOf(AbstractFermatFragment.class);
     }
 
     @Test

@@ -54,7 +54,7 @@ public class ConnectionWithCommunityDialog extends FermatDialog<ReferenceWalletS
     }
 
     @Override
-    protected int setWindowFeacture() {
+    protected int setWindowFeature() {
         return Window.FEATURE_NO_TITLE;
     }
 
@@ -63,9 +63,12 @@ public class ConnectionWithCommunityDialog extends FermatDialog<ReferenceWalletS
         int id = v.getId();
 
         if(id == R.id.search_contact_btn){
-            Object[] objects =new Object[2];
-            objects[0] = getSession().getLastContactSelected();
-            ((FermatScreenSwapper) activity).connectWithOtherApp(Engine.BITCOIN_WALLET_CALL_INTRA_USER_COMMUNITY,objects);
+            try {
+                Object[] object = new Object[2];
+                changeApp(Engine.BITCOIN_WALLET_CALL_INTRA_USER_COMMUNITY, getSession().getCommunityConnection(), object);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
         else if(id == R.id.cancel_btn){
             dismiss();

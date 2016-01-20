@@ -1,6 +1,7 @@
 package com.bitdubai.fermat_cbp_plugin.layer.request.customer_broker_sale.developer.bitdubai.version_1.database;
 
 import com.bitdubai.fermat_api.FermatException;
+import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseFilterType;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTable;
@@ -13,12 +14,11 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.Cant
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.DatabaseNotFoundException;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.CurrencyType;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.RequestStatus;
-import com.bitdubai.fermat_cbp_api.all_definition.exceptions.InvalidParameterException;
-import com.bitdubai.fermat_cbp_api.layer.cbp_request.customer_broker_sale.exceptions.CantGetRequestListException;
-import com.bitdubai.fermat_cbp_api.layer.cbp_request.customer_broker_sale.exceptions.CantRequestCustomerBrokerSaleException;
-import com.bitdubai.fermat_cbp_api.layer.cbp_request.customer_broker_sale.exceptions.FailedToRejectTheRequestSaleException;
-import com.bitdubai.fermat_cbp_api.layer.cbp_request.customer_broker_sale.exceptions.RequestUnexpectedErrorException;
-import com.bitdubai.fermat_cbp_api.layer.cbp_request.customer_broker_sale.interfaces.RequestCustomerBrokerSale;
+import com.bitdubai.fermat_cbp_api.layer.request.customer_broker_sale.exceptions.CantGetRequestListException;
+import com.bitdubai.fermat_cbp_api.layer.request.customer_broker_sale.exceptions.CantRequestCustomerBrokerSaleException;
+import com.bitdubai.fermat_cbp_api.layer.request.customer_broker_sale.exceptions.FailedToRejectTheRequestSaleException;
+import com.bitdubai.fermat_cbp_api.layer.request.customer_broker_sale.exceptions.RequestUnexpectedErrorException;
+import com.bitdubai.fermat_cbp_api.layer.request.customer_broker_sale.interfaces.RequestCustomerBrokerSale;
 import com.bitdubai.fermat_cbp_plugin.layer.request.customer_broker_sale.developer.bitdubai.version_1.exceptions.CantInitializeCustomerBrokerSaleRequestDaoException;
 import com.bitdubai.fermat_cbp_plugin.layer.request.customer_broker_sale.developer.bitdubai.version_1.structure.CustomerBrokerSaleRequest;
 
@@ -134,7 +134,7 @@ public class CustomerBrokerSaleRequestDao {
 
     List<RequestCustomerBrokerSale> getRequestSaleSent(String requestSenderPublicKey) throws CantGetRequestListException, CantLoadTableToMemoryException, InvalidParameterException {
         DatabaseTable RequestSaleTable = this.database.getTable(CustomerBrokerSaleRequestDatabaseConstants.REQUEST_CUSTOMER_BROKER_SALE_TABLE_NAME);
-        RequestSaleTable.setStringFilter(CustomerBrokerSaleRequestDatabaseConstants.REQUEST_CUSTOMER_BROKER_SALE_REQUEST_SENDER_PUBLIC_KEY_COLUMN_NAME, requestSenderPublicKey, DatabaseFilterType.EQUAL);
+        RequestSaleTable.addStringFilter(CustomerBrokerSaleRequestDatabaseConstants.REQUEST_CUSTOMER_BROKER_SALE_REQUEST_SENDER_PUBLIC_KEY_COLUMN_NAME, requestSenderPublicKey, DatabaseFilterType.EQUAL);
         RequestSaleTable.loadToMemory();
 
         List<DatabaseTableRecord> records = RequestSaleTable.getRecords();
@@ -151,7 +151,7 @@ public class CustomerBrokerSaleRequestDao {
 
     List<RequestCustomerBrokerSale> getReceivedRequestSale(String requestSenderPublicKey) throws CantGetRequestListException, CantLoadTableToMemoryException, InvalidParameterException {
         DatabaseTable RequestSaleTable = this.database.getTable(CustomerBrokerSaleRequestDatabaseConstants.REQUEST_CUSTOMER_BROKER_SALE_TABLE_NAME);
-        RequestSaleTable.setStringFilter(CustomerBrokerSaleRequestDatabaseConstants.REQUEST_CUSTOMER_BROKER_SALE_REQUEST_SENDER_PUBLIC_KEY_COLUMN_NAME, requestSenderPublicKey, DatabaseFilterType.EQUAL);
+        RequestSaleTable.addStringFilter(CustomerBrokerSaleRequestDatabaseConstants.REQUEST_CUSTOMER_BROKER_SALE_REQUEST_SENDER_PUBLIC_KEY_COLUMN_NAME, requestSenderPublicKey, DatabaseFilterType.EQUAL);
         RequestSaleTable.loadToMemory();
 
         List<DatabaseTableRecord> records = RequestSaleTable.getRecords();

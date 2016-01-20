@@ -7,8 +7,6 @@ import com.bitdubai.fermat_dap_api.layer.all_definition.digital_asset.DigitalAss
 import com.bitdubai.fermat_dap_api.layer.all_definition.digital_asset.DigitalAssetMetadata;
 import com.bitdubai.fermat_dap_api.layer.dap_wallet.asset_user_wallet.interfaces.AssetUserWalletTransactionRecord;
 
-import java.util.Date;
-
 /**
  * Created by Manuel Perez (darkpriestrelative@gmail.com) on 29/10/15.
  */
@@ -25,41 +23,19 @@ public class AssetUserWalletTransactionRecordWrapper implements AssetUserWalletT
     private final Actors actorToType;
     private final long amount;
     private final long timeStamp;
-    private final String memo;
-    private final String digitalAssetMetadataHash;
-    private final String transactionId;
 
-    AssetUserWalletTransactionRecordWrapper(DigitalAsset digitalAsset,
-                                            String digitalAssetPublicKey,
-                                            String name,
-                                            String description,
-                                            CryptoAddress addressFrom,
-                                            CryptoAddress addressTo,
-                                            String actorFromPublicKey,
-                                            String actorToPublicKey,
-                                            Actors actorFromType,
-                                            Actors actorToType,
-                                            long amount,
-                                            long timeStamp,
-                                            String memo,
-                                            String digitalAssetMetadataHash,
-                                            String transactionId) {
-        this.digitalAsset = digitalAsset;
-        this.digitalAssetPublicKey = digitalAssetPublicKey;
-        this.name = name;
-        this.description = description;
-        this.addressFrom = addressFrom;
-        this.addressTo = addressTo;
-        this.actorFromPublicKey = actorFromPublicKey;
-        this.actorToPublicKey = actorToPublicKey;
-        this.actorFromType = actorFromType;
-        this.actorToType = actorToType;
-        this.amount = amount;
-        this.timeStamp = timeStamp;
-        this.memo = memo;
-        this.digitalAssetMetadataHash = digitalAssetMetadataHash;
-        this.transactionId = transactionId;
+    {
+        timeStamp = System.currentTimeMillis();
     }
+
+    private final String memo;
+
+    {
+        this.memo = "Digital Asset delivered at" + this.timeStamp;
+    }
+
+    private final String transactionId;
+    private final DigitalAssetMetadata digitalAssetMetadata;
 
     public AssetUserWalletTransactionRecordWrapper(DigitalAssetMetadata digitalAssetMetadata,
                                                    CryptoTransaction cryptoGenesisTransaction,
@@ -76,13 +52,30 @@ public class AssetUserWalletTransactionRecordWrapper implements AssetUserWalletT
         this.actorFromType = Actors.INTRA_USER;
         this.actorToType = Actors.DAP_ASSET_ISSUER;
         this.amount = cryptoGenesisTransaction.getCryptoAmount();
-        this.digitalAssetMetadataHash = digitalAssetMetadata.getDigitalAssetHash();
         this.transactionId = cryptoGenesisTransaction.getTransactionHash();
-        Date date = new Date();
-        this.timeStamp = date.getTime();
-        this.memo = "Digital Asset delivered at" + this.timeStamp;
+        this.digitalAssetMetadata = digitalAssetMetadata;
     }
 
+    public AssetUserWalletTransactionRecordWrapper(DigitalAssetMetadata digitalAssetMetadata,
+                                                   CryptoTransaction cryptoGenesisTransaction,
+                                                   String actorFromPublicKey,
+                                                   Actors actorFromType,
+                                                   String actorToPublicKey,
+                                                   Actors actorToType) {
+        this.digitalAsset = digitalAssetMetadata.getDigitalAsset();
+        this.digitalAssetPublicKey = this.digitalAsset.getPublicKey();
+        this.name = this.digitalAsset.getName();
+        this.description = this.digitalAsset.getDescription();
+        this.addressFrom = cryptoGenesisTransaction.getAddressFrom();
+        this.addressTo = cryptoGenesisTransaction.getAddressTo();
+        this.actorFromPublicKey = actorFromPublicKey;
+        this.actorToPublicKey = actorToPublicKey;
+        this.actorFromType = actorFromType;
+        this.actorToType = actorToType;
+        this.amount = cryptoGenesisTransaction.getCryptoAmount();
+        this.transactionId = cryptoGenesisTransaction.getTransactionHash();
+        this.digitalAssetMetadata = digitalAssetMetadata;
+    }
     public AssetUserWalletTransactionRecordWrapper(DigitalAsset digitalAsset,
                                                    CryptoTransaction cryptoGenesisTransaction,
                                                    String actorFromPublicKey,
@@ -100,11 +93,10 @@ public class AssetUserWalletTransactionRecordWrapper implements AssetUserWalletT
         this.actorFromType = actorFromType;
         this.actorToType = actorToType;
         this.amount = cryptoGenesisTransaction.getCryptoAmount();
-        this.digitalAssetMetadataHash = new DigitalAssetMetadata(digitalAsset).getDigitalAssetHash();
+        this.digitalAssetMetadata = new DigitalAssetMetadata(digitalAsset);
+        digitalAssetMetadata.setGenesisTransaction(cryptoGenesisTransaction.getTransactionHash());
+        digitalAssetMetadata.setGenesisBlock(cryptoGenesisTransaction.getBlockHash());
         this.transactionId = cryptoGenesisTransaction.getTransactionHash();
-        Date date = new Date();
-        this.timeStamp = date.getTime();
-        this.memo = "Digital Asset delivered at" + this.timeStamp;
     }
 
     @Override
@@ -179,6 +171,11 @@ public class AssetUserWalletTransactionRecordWrapper implements AssetUserWalletT
 
     @Override
     public String getDigitalAssetMetadataHash() {
-        return digitalAssetMetadataHash;
+        return digitalAssetMetadata.getDigitalAssetHash();
+    }
+
+    @Override
+    public DigitalAssetMetadata getDigitalAssetMetadata() {
+        return digitalAssetMetadata;
     }
 }

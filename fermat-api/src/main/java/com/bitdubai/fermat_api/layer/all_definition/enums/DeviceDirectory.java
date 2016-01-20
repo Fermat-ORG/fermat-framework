@@ -4,13 +4,16 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.interfaces.FermatEnum;
 import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterException;
 
 /**
+ * The enum <code>com.bitdubai.fermat_api.layer.all_definition.enums.DeviceDirectory</code>
+ * Lists all device directories in Fermat.
  * Created by ciencias on 25.01.15.
  * Modified by lnacosta (laion.cj91@gmail.com) on 20/10/2015.
+ * Modified by pmgesualdi - (pmgesualdi@hotmail.com) on 01/12/2015.
  */
 public enum DeviceDirectory implements FermatEnum {
 
     /**
-     * For doing the code more readable, please keep the elements in the Enum sorted alphabetically.
+     * To make the code more readable, please keep the elements in the Enum sorted alphabetically.
      */
     LOCAL_USERS   ("LUS", "localusers"             ),
     LOCAL_WALLETS ("LWA", "localwallets"           ),
@@ -18,8 +21,8 @@ public enum DeviceDirectory implements FermatEnum {
 
     ;
 
-    private String code;
-    private String name;
+    private final String code;
+    private final String name;
 
     DeviceDirectory(final String code,
                     final String name) {
@@ -33,7 +36,9 @@ public enum DeviceDirectory implements FermatEnum {
             case "com/bitdubai/fermat_api": return SYSTEM       ;
             case "localusers"             : return LOCAL_USERS  ;
             case "localwallets"           : return LOCAL_WALLETS;
-            default: throw new InvalidParameterException(
+
+            default:
+                throw new InvalidParameterException(
                     "Name received: " + name,
                     "The name received is not valid for the DeviceDirectory enum"
             );
@@ -46,15 +51,17 @@ public enum DeviceDirectory implements FermatEnum {
             case "LUS": return LOCAL_USERS  ;
             case "LWA": return LOCAL_WALLETS;
             case "SYS": return SYSTEM       ;
-
-            default: throw new InvalidParameterException(
+            default:
+                throw new InvalidParameterException(
                     "Code received: " + code,
                     "The code received is not valid for the DeviceDirectory enum"
             );
         }
     }
 
-    public String getName() { return this.name; }
+    public String getName() {
+        return this.name;
+    }
 
     @Override
     public String getCode() {

@@ -1,5 +1,6 @@
 package com.bitdubai.fermat_api.layer.osa_android.location_system;
 
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.FermatManager;
 import com.bitdubai.fermat_api.layer.osa_android.location_system.exceptions.CantGetDeviceLocationException;
 
 /**
@@ -12,7 +13,7 @@ import com.bitdubai.fermat_api.layer.osa_android.location_system.exceptions.Cant
  *  Modified by lnacosta (laion.cj91@gmail.com) on 27/10/2015.
  *  @version 1.0.0
  * */
-public interface LocationManager {
+public interface LocationManager extends FermatManager {
 
     /**
      * Throw the method <code>getLocation</code> you can get the must updated gps coordinates

@@ -6,17 +6,16 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
-import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteException;
 
 import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
+import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseAggregateFunction;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseDataType;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseFactory;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseRecord;
-import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseSelectOperator;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTable;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTableColumn;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTableFactory;
@@ -48,11 +47,9 @@ public class AndroidDatabase implements Database, DatabaseFactory, Serializable 
     /**
      * database Interface member variables.
      */
-    private String path;
-
-    private String databaseName;
-
-    private UUID ownerId;
+    private final String path        ;
+    private final String databaseName;
+    private       UUID   ownerId     ;
 
     /**
      * <p>Plugin implementation constructor
@@ -61,9 +58,12 @@ public class AndroidDatabase implements Database, DatabaseFactory, Serializable 
      * @param ownerId      PlugIn owner id
      * @param databaseName name database using
      */
-    public AndroidDatabase(String path, UUID ownerId, String databaseName) {
-        this.path = path;
-        this.ownerId = ownerId;
+    public AndroidDatabase(final String path        ,
+                           final UUID   ownerId     ,
+                           final String databaseName) {
+
+        this.path         = path        ;
+        this.ownerId      = ownerId     ;
         this.databaseName = databaseName;
     }
 
@@ -73,17 +73,15 @@ public class AndroidDatabase implements Database, DatabaseFactory, Serializable 
      * @param path         Android path
      * @param databaseName name database using
      */
-    public AndroidDatabase(String path, String databaseName) {
-        this.path = path;
+    public AndroidDatabase(final String path        ,
+                           final String databaseName) {
+
+        this.path         = path        ;
         this.databaseName = databaseName;
     }
 
     public String getDatabaseName() {
         return databaseName;
-    }
-
-    public void setDatabaseName(String databaseName) {
-        this.databaseName = databaseName;
     }
 
     /**
@@ -193,14 +191,19 @@ public class AndroidDatabase implements Database, DatabaseFactory, Serializable 
         }
     }
 
-    public List<DatabaseVariable> selectTransactionRecord(SQLiteDatabase database, DatabaseTable table, DatabaseTableRecord record) throws CantSelectRecordException {
+    public List<DatabaseVariable> selectTransactionRecord(final SQLiteDatabase      database,
+                                                          final DatabaseTable       table   ,
+                                                          final DatabaseTableRecord record  ) throws CantSelectRecordException {
+
         List<DatabaseVariable> variablesResult = new ArrayList<>();
+
         try {
+
             StringBuilder strRecords = new StringBuilder("");
 
             List<DatabaseRecord> records = record.getValues();
 
-            List<DatabaseSelectOperator> tableSelectOperator = table.getTableSelectOperator();
+            List<DatabaseAggregateFunction> tableSelectOperator = table.getTableAggregateFunction();
 
             //check if declared operators to apply on select or only define some fields
 

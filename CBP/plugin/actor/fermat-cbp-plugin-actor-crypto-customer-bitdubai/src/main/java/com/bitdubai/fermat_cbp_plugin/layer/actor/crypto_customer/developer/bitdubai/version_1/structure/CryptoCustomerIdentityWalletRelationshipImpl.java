@@ -1,40 +1,104 @@
 package com.bitdubai.fermat_cbp_plugin.layer.actor.crypto_customer.developer.bitdubai.version_1.structure;
 
-import com.bitdubai.fermat_cbp_api.layer.cbp_actor.crypto_customer.interfaces.CustomerIdentityWalletRelationship;
-import com.bitdubai.fermat_cbp_api.layer.cbp_wallet.crypto_broker.interfaces.CryptoBrokerStockTransactionRecord;
+import com.bitdubai.fermat_cbp_api.layer.actor.crypto_customer.exceptions.CantCreateCustomerIdentiyWalletRelationshipException;
+import com.bitdubai.fermat_cbp_api.layer.actor.crypto_customer.exceptions.CantDeleteCustomerIdentiyWalletRelationshipException;
+import com.bitdubai.fermat_cbp_api.layer.actor.crypto_customer.exceptions.CantGetCustomerIdentiyWalletRelationshipException;
+import com.bitdubai.fermat_cbp_api.layer.actor.crypto_customer.exceptions.CantUpdateCustomerIdentiyWalletRelationshipException;
+import com.bitdubai.fermat_cbp_api.layer.actor.crypto_customer.interfaces.CryptoCustomerIdentityWalletRelationship;
+import com.bitdubai.fermat_cbp_api.layer.actor.crypto_customer.interfaces.CryptoCustomerIdentityWalletRelationshipRecord;
+import com.bitdubai.fermat_cbp_plugin.layer.actor.crypto_customer.developer.bitdubai.version_1.database.CryptoCustomerActorDatabaseDao;
+import com.bitdubai.fermat_cbp_plugin.layer.actor.crypto_customer.developer.bitdubai.version_1.exceptions.CantRegisterCryptoCustomerIdentityWalletRelationshipException;
+
+import java.util.Collection;
+import java.util.UUID;
 
 /**
- * Created by Yordin Alayn on 16.11.15.
+ * Created by jorge on 30-10-2015.
+ * Modified by Yordin Alayn 11.11.2015
  */
-public class CryptoCustomerIdentityWalletRelationshipImpl implements CustomerIdentityWalletRelationship{
+public class CryptoCustomerIdentityWalletRelationshipImpl implements CryptoCustomerIdentityWalletRelationship {
 
-    //TODO: CAMBIAR NUMEROS PRIMOS
-    private static final int HASH_PRIME_NUMBER_PRODUCT = 3061;
-    private static final int HASH_PRIME_NUMBER_ADD = 7213;
+    private final CryptoCustomerActorDatabaseDao databaseDao;
 
-    private String walletPublicKey;
-    private String identityPublicKey;
-    public CryptoCustomerIdentityWalletRelationshipImpl(String walletPublicKey, String identityPublicKey){
-        this.walletPublicKey = walletPublicKey;
-        this.identityPublicKey = identityPublicKey;
+    public CryptoCustomerIdentityWalletRelationshipImpl(CryptoCustomerActorDatabaseDao databaseDao){
+        this.databaseDao = databaseDao;
     }
 
-    public String getWalletPublicKey(){ return this.walletPublicKey; }
-
-    public String getIdentityPublicKey(){ return this.identityPublicKey; }
-
-    public boolean equals(Object o){
-        if(!(o instanceof CustomerIdentityWalletRelationship))
-            return false;
-        CustomerIdentityWalletRelationship compare = (CustomerIdentityWalletRelationship) o;
-        return walletPublicKey.equals(compare.getWalletPublicKey()) && identityPublicKey.equals(compare.getIdentityPublicKey());
+    //RELATIONSHIP IDENTIDAD-WALLET
+    @Override
+    public CryptoCustomerIdentityWalletRelationshipRecord createCustomerIdentityWalletRelationship(String walletPublicKey, String identityPublicKey) throws CantCreateCustomerIdentiyWalletRelationshipException{
+        try {
+            return databaseDao.createRegisterCustomerIdentityWalletRelationship(walletPublicKey, identityPublicKey);
+        } catch (CantRegisterCryptoCustomerIdentityWalletRelationshipException e){
+            throw new CantCreateCustomerIdentiyWalletRelationshipException("CRYPTO CUSTOMER ACTOR", e, "CAN'T CREATE NEW RELATIONSHIP IDENTITY WALLET CRYPTO CUSTOMER ACTOR", "");
+        } catch (Exception e){
+            throw new CantCreateCustomerIdentiyWalletRelationshipException("CRYPTO CUSTOMER ACTOR", e, "CAN'T CREATE NEW RELATIONSHIP IDENTITY WALLET CRYPTO CUSTOMER ACTOR", "");
+        }
     }
 
     @Override
-    public int hashCode(){
-        int c = 0;
-        c += walletPublicKey.hashCode();
-        c += identityPublicKey.hashCode();
-        return 	HASH_PRIME_NUMBER_PRODUCT * HASH_PRIME_NUMBER_ADD + c;
+    public CryptoCustomerIdentityWalletRelationshipRecord updateCustomerIdentityWalletRelationship(UUID relationshipId, String walletPublicKey, String identityPublicKey) throws CantUpdateCustomerIdentiyWalletRelationshipException {
+        try {
+            return databaseDao.updateRegisterCustomerIdentityWalletRelationship(relationshipId, walletPublicKey, identityPublicKey);
+        } catch (CantRegisterCryptoCustomerIdentityWalletRelationshipException e){
+            throw new CantUpdateCustomerIdentiyWalletRelationshipException("CRYPTO CUSTOMER ACTOR", e, "CAN'T UPDATE RELATIONSHIP IDENTITY WALLET CRYPTO CUSTOMER ACTOR", "");
+        } catch (Exception e){
+            throw new CantUpdateCustomerIdentiyWalletRelationshipException("CRYPTO CUSTOMER ACTOR", e, "CAN'T UPDATE RELATIONSHIP IDENTITY WALLET CRYPTO CUSTOMER ACTOR", "");
+        }
+    }
+
+    /*@Override
+    public void deleteCustomerIdentityWalletRelationship(UUID relationshipId) throws CantDeleteCustomerIdentiyWalletRelationshipException {
+        try {
+            databaseDao.deleteRegisterCustomerIdentityWalletRelationship(relationshipId);
+        } catch (CantRegisterCryptoCustomerIdentityWalletRelationshipException e){
+            throw new CantDeleteCustomerIdentiyWalletRelationshipException("CRYPTO CUSTOMER ACTOR", e, "CAN'T DELETE RELATIONSHIP IDENTITY WALLET CRYPTO CUSTOMER ACTOR", "");
+        } catch (Exception e){
+            throw new CantDeleteCustomerIdentiyWalletRelationshipException("CRYPTO CUSTOMER ACTOR", e, "CAN'T DELETE RELATIONSHIP IDENTITY WALLET CRYPTO CUSTOMER ACTOR", "");
+        }
+    }*/
+
+    @Override
+    public Collection<CryptoCustomerIdentityWalletRelationshipRecord> getAllCustomerIdentityWalletRelationships() throws CantGetCustomerIdentiyWalletRelationshipException {
+        try {
+            return databaseDao.getAllRegisterCustomerIdentityWalletRelationships();
+        } catch (CantRegisterCryptoCustomerIdentityWalletRelationshipException e){
+            throw new CantGetCustomerIdentiyWalletRelationshipException("CRYPTO CUSTOMER ACTOR", e, "CAN'T GET RELATIONSHIP IDENTITY WALLET CRYPTO CUSTOMER ACTOR", "");
+        } catch (Exception e){
+            throw new CantGetCustomerIdentiyWalletRelationshipException("CRYPTO CUSTOMER ACTOR", e, "CAN'T GET RELATIONSHIP IDENTITY WALLET CRYPTO CUSTOMER ACTOR", "");
+        }
+    }
+
+    @Override
+    public CryptoCustomerIdentityWalletRelationshipRecord getCustomerIdentityWalletRelationships(UUID relationshipId) throws CantGetCustomerIdentiyWalletRelationshipException{
+        try {
+            return databaseDao.getRegisterCustomerIdentityWalletRelationships(relationshipId);
+        } catch (CantRegisterCryptoCustomerIdentityWalletRelationshipException e){
+            throw new CantGetCustomerIdentiyWalletRelationshipException("CRYPTO CUSTOMER ACTOR", e, "CAN'T GET RELATIONSHIP IDENTITY WALLET CRYPTO CUSTOMER ACTOR", "");
+        } catch (Exception e){
+            throw new CantGetCustomerIdentiyWalletRelationshipException("CRYPTO CUSTOMER ACTOR", e, "CAN'T GET RELATIONSHIP IDENTITY WALLET CRYPTO CUSTOMER ACTOR", "");
+        }
+    }
+
+    @Override
+    public CryptoCustomerIdentityWalletRelationshipRecord getCustomerIdentityWalletRelationshipsByIdentity(String identityPublicKey) throws CantGetCustomerIdentiyWalletRelationshipException{
+        try {
+            return databaseDao.getRegisterCustomerIdentityWalletRelationshipsByIdentity(identityPublicKey);
+        } catch (CantRegisterCryptoCustomerIdentityWalletRelationshipException e){
+            throw new CantGetCustomerIdentiyWalletRelationshipException("CRYPTO CUSTOMER ACTOR", e, "CAN'T GET RELATIONSHIP IDENTITY WALLET CRYPTO CUSTOMER ACTOR", "");
+        } catch (Exception e){
+            throw new CantGetCustomerIdentiyWalletRelationshipException("CRYPTO CUSTOMER ACTOR", e, "CAN'T GET RELATIONSHIP IDENTITY WALLET CRYPTO CUSTOMER ACTOR", "");
+        }
+    }
+
+    @Override
+    public CryptoCustomerIdentityWalletRelationshipRecord getCustomerIdentityWalletRelationshipsByWallet(String walletPublicKey) throws CantGetCustomerIdentiyWalletRelationshipException{
+        try {
+            return databaseDao.getRegisterCustomerIdentityWalletRelationshipsByWallet(walletPublicKey);
+        } catch (CantRegisterCryptoCustomerIdentityWalletRelationshipException e){
+            throw new CantGetCustomerIdentiyWalletRelationshipException("CRYPTO CUSTOMER ACTOR", e, "CAN'T GET RELATIONSHIP IDENTITY WALLET CRYPTO CUSTOMER ACTOR", "");
+        } catch (Exception e){
+            throw new CantGetCustomerIdentiyWalletRelationshipException("CRYPTO CUSTOMER ACTOR", e, "CAN'T GET RELATIONSHIP IDENTITY WALLET CRYPTO CUSTOMER ACTOR", "");
+        }
     }
 }

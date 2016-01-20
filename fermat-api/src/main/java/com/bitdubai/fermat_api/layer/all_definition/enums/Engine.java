@@ -7,7 +7,8 @@ import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterE
  */
 public enum Engine {
 
-    BITCOIN_WALLET_CALL_INTRA_USER_COMMUNITY("BWCIUC");
+    BITCOIN_WALLET_CALL_INTRA_USER_COMMUNITY("BWCIUC"),
+    BITCOIN_WALLET_CALL_INTRA_USER_IDENTITY("BWCIUI");
 
     private String code;
 

@@ -104,7 +104,7 @@ public class CryptoTransmissionConnectionsDAO {
 
                     DatabaseTable metadataTable = database.getTable(CryptoTransmissionNetworkServiceDatabaseConstants.COMPONENT_VERSIONS_DETAILS_TABLE_NAME);
 
-                    metadataTable.setUUIDFilter(CryptoTransmissionNetworkServiceDatabaseConstants.COMPONENT_VERSIONS_DETAILS_ID_COLUMN_NAME, transmissionId, DatabaseFilterType.EQUAL);
+                    metadataTable.addUUIDFilter(CryptoTransmissionNetworkServiceDatabaseConstants.COMPONENT_VERSIONS_DETAILS_ID_COLUMN_NAME, transmissionId, DatabaseFilterType.EQUAL);
 
                     metadataTable.loadToMemory();
 
