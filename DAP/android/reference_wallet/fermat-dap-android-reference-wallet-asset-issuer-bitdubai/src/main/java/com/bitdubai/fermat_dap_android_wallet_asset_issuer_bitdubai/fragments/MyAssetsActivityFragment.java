@@ -1,6 +1,7 @@
 package com.bitdubai.fermat_dap_android_wallet_asset_issuer_bitdubai.fragments;
 
 
+import android.content.DialogInterface;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
@@ -13,9 +14,6 @@ import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
@@ -33,7 +31,9 @@ import com.bitdubai.fermat_dap_android_wallet_asset_issuer_bitdubai.common.adapt
 import com.bitdubai.fermat_dap_android_wallet_asset_issuer_bitdubai.models.Data;
 import com.bitdubai.fermat_dap_android_wallet_asset_issuer_bitdubai.models.DigitalAsset;
 import com.bitdubai.fermat_dap_android_wallet_asset_issuer_bitdubai.sessions.AssetIssuerSession;
+import com.bitdubai.fermat_dap_android_wallet_asset_issuer_bitdubai.sessions.SessionConstantsAssetIssuer;
 import com.bitdubai.fermat_dap_android_wallet_asset_issuer_bitdubai.util.CommonLogger;
+import com.bitdubai.fermat_dap_api.layer.all_definition.exceptions.CantGetIdentityAssetIssuerException;
 import com.bitdubai.fermat_dap_api.layer.dap_identity.asset_issuer.interfaces.IdentityAssetIssuer;
 import com.bitdubai.fermat_dap_api.layer.dap_module.wallet_asset_issuer.interfaces.AssetIssuerWalletSupAppModuleManager;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedWalletExceptionSeverity;
@@ -91,10 +91,33 @@ public class MyAssetsActivityFragment extends FermatWalletListFragment<DigitalAs
         PresentationDialog presentationDialog = new PresentationDialog.Builder(getActivity(), appSession)
                 .setBannerRes(R.drawable.banner)
                 .setIconRes(R.drawable.asset_issuer)
-                .setSubTitle("Welcome to the Asset Issuer Wallet. The wallet that will store all the assets created by you.")
+                .setSubTitle("Welcome to the Asset Issuer Wallet.")
                 .setBody("From this wallet you will be able to distribute your assets to the world and collect statistics of their usage.")
-                .setTextFooter("First things first!. We will be creating an avatar for you in order to identify you in the system as an Asset Issuer. You will be able to add your picture, name and more details later in the Asset Issuer Identity sub app.")
+                .setTextFooter("We will be creating an avatar for you in order to identify you in the system as an Asset Issuer, name and more details later in the Asset Issuer Identity sub app.")
                 .build();
+
+        presentationDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
+            @Override
+            public void onDismiss(DialogInterface dialog) {
+                Object o = appSession.getData(SessionConstantsAssetIssuer.PRESENTATION_IDENTITY_CREATED);
+                if (o != null) {
+                    if ((Boolean) (o)) {
+                        //invalidate();
+                        appSession.removeData(SessionConstantsAssetIssuer.PRESENTATION_IDENTITY_CREATED);
+                    }
+                }
+                try {
+                    IdentityAssetIssuer identityAssetIssuer = moduleManager.getActiveAssetIssuerIdentity();
+                    if (identityAssetIssuer == null) {
+                        getActivity().onBackPressed();
+                    } else {
+                        invalidate();
+                    }
+                } catch (CantGetIdentityAssetIssuerException e) {
+                    e.printStackTrace();
+                }
+            }
+        });
 
         presentationDialog.show();
     }
@@ -103,14 +126,14 @@ public class MyAssetsActivityFragment extends FermatWalletListFragment<DigitalAs
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
-        checkIdentity();
+//        checkIdentity();
     }
 
     private void checkIdentity() {
         ActiveActorIdentityInformation identity = null;
         try {
             identity = moduleManager.getSelectedActorIdentity();
-        } catch(Exception e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
         if (identity == null) {
@@ -150,7 +173,7 @@ public class MyAssetsActivityFragment extends FermatWalletListFragment<DigitalAs
 
             @Override
             protected void onPreExecute() {
-                view = new WeakReference(rootView) ;
+                view = new WeakReference(rootView);
             }
 
             @Override
@@ -161,8 +184,8 @@ public class MyAssetsActivityFragment extends FermatWalletListFragment<DigitalAs
                     options.inScaled = true;
                     options.inSampleSize = 5;
                     drawable = BitmapFactory.decodeResource(
-                            getResources(), R.drawable.bg_app_image,options);
-                }catch (OutOfMemoryError error){
+                            getResources(), R.drawable.bg_app_image, options);
+                } catch (OutOfMemoryError error) {
                     error.printStackTrace();
                 }
                 return drawable;
@@ -170,11 +193,11 @@ public class MyAssetsActivityFragment extends FermatWalletListFragment<DigitalAs
 
             @Override
             protected void onPostExecute(Bitmap drawable) {
-                if (drawable!= null) {
-                    view.get().setBackground(new BitmapDrawable(getResources(),drawable));
+                if (drawable != null) {
+                    view.get().setBackground(new BitmapDrawable(getResources(), drawable));
                 }
             }
-        } ;
+        };
         asyncTask.execute();
     }
 

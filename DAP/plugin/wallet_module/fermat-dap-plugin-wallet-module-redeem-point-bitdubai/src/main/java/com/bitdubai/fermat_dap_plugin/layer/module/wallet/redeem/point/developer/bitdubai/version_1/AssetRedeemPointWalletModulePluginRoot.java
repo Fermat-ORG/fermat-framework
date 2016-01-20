@@ -122,7 +122,7 @@ public class AssetRedeemPointWalletModulePluginRoot extends AbstractPlugin imple
 
     @Override
     public void createIdentity(String name, String phrase, byte[] profile_img) throws Exception {
-
+        redeemPointIdentityManager.createNewRedeemPoint(name,profile_img);
     }
 
 

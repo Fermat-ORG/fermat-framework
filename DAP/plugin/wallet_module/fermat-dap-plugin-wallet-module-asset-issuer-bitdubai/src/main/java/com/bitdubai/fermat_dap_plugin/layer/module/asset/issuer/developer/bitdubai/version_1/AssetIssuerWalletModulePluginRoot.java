@@ -300,7 +300,7 @@ public class AssetIssuerWalletModulePluginRoot extends AbstractPlugin implements
 
     @Override
     public void createIdentity(String name, String phrase, byte[] profile_img) throws Exception {
-
+        identityAssetIssuerManager.createNewIdentityAssetIssuer(name, profile_img);
     }
 
     @Override
