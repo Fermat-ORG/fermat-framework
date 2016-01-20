@@ -124,6 +124,8 @@ public class RedeemPointMainActivityFragment extends FermatWalletListFragment<Di
                 PresentationDialog presentationDialog = new PresentationDialog.Builder(getActivity(), appSession)
                         .setBannerRes(R.drawable.banner_redeem_point)
                         .setIconRes(R.drawable.redeem_point)
+                        .setVIewColor(R.color.dap_redeem_point_view_color)
+                        .setTitleTextColor(R.color.dap_redeem_point_view_color)
                         .setSubTitle("Welcome to the RedeemPoint Wallet.")
                         .setBody("From this wallet you will be able to verify the assets that users redeem with you and get statistic from them.")
                         .setTextFooter("We will be creating an avatar for you in order to identify you in the system as a Redeem Point, name and more details later in the Redeem Point Identity sub app.")
