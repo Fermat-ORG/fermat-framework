@@ -315,7 +315,7 @@ public class EditableAssetsFragment extends AbstractFermatFragment implements
                             dialog.dismiss();
                             selectedAsset = null;
                             if (getActivity() != null) {
-                                Toast.makeText(getActivity(), "Ups, some error occurred publishing this asset", Toast.LENGTH_SHORT).show();
+                                Toast.makeText(getActivity(), "You need to define all mandatory properties in your asset before publishing it. Edit the asset and complete all the needed information.", Toast.LENGTH_SHORT).show();
                                 onRefresh();
                             }
                             ex.printStackTrace();
