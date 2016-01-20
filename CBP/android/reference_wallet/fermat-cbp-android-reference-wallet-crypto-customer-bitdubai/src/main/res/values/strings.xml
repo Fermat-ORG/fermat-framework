@@ -33,7 +33,9 @@
     <string name="ccw_cash">Cash</string>
     <string name="ccw_check_negotiation_details">Check Negotiation Details</string>
     <string name="ccw_city">City</string>
+    <string name="ccw_contract_details_contract_title">SELLING BTC</string>
     <string name="ccw_contract_details_last_update_date">At Date: %1$s</string>
+    <string name="ccw_contract_details_negotiation_details">NEGOTIATION DETAILS</string>
     <string name="ccw_contract_details_payment_method">Payment Method</string>
     <string name="ccw_contract_history_action_no_filter_text">No filter</string>
     <string name="ccw_contract_history_action_filter_succeed_text">Succeed</string>

@@ -17,6 +17,7 @@ import com.bitdubai.fermat_api.layer.osa_android.logger_system.DealsWithLogger;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogManager;
 import com.bitdubai.fermat_cht_api.all_definition.agent.CHTTransactionAgent;
 import com.bitdubai.fermat_cht_api.all_definition.enums.MessageStatus;
+import com.bitdubai.fermat_cht_api.all_definition.enums.TypeMessage;
 import com.bitdubai.fermat_cht_api.all_definition.events.enums.EventStatus;
 import com.bitdubai.fermat_cht_api.all_definition.events.enums.EventType;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantGetChatException;
@@ -29,6 +30,7 @@ import com.bitdubai.fermat_cht_api.all_definition.exceptions.UnexpectedResultRet
 import com.bitdubai.fermat_cht_api.layer.middleware.interfaces.Chat;
 import com.bitdubai.fermat_cht_api.layer.middleware.interfaces.Message;
 import com.bitdubai.fermat_cht_api.layer.middleware.utils.EventRecord;
+import com.bitdubai.fermat_cht_api.layer.middleware.utils.MessageImpl;
 import com.bitdubai.fermat_cht_api.layer.network_service.chat.enums.ChatMessageStatus;
 import com.bitdubai.fermat_cht_api.layer.network_service.chat.enums.DistributionStatus;
 import com.bitdubai.fermat_cht_api.layer.network_service.chat.exceptions.CantSendChatMessageMetadataException;
@@ -337,7 +339,7 @@ public class ChatMiddlewareMonitorAgent implements
                 }
                 for(Transaction<ChatMetadata> pendingTransaction : pendingTransactionList){
                     incomingChatMetadata=pendingTransaction.getInformation();
-                    incomingTransactionChatId=incomingChatMetadata.getIdChat();
+                    incomingTransactionChatId=incomingChatMetadata.getChatId();
                     if(eventChatId.toString().equals(incomingTransactionChatId.toString())){
                         //If message exists in database, this message will be updated
                         saveMessage(incomingChatMetadata);
@@ -394,7 +396,7 @@ public class ChatMiddlewareMonitorAgent implements
                 }
                 for(Transaction<ChatMetadata> pendingTransaction : pendingTransactionList){
                     incomingChatMetadata=pendingTransaction.getInformation();
-                    incomingTransactionChatId=incomingChatMetadata.getIdChat();
+                    incomingTransactionChatId=incomingChatMetadata.getChatId();
                     if(eventChatId.toString().equals(incomingTransactionChatId.toString())){
                         //Check if metadata exists in database
                         checkChatMetadata(incomingChatMetadata);
@@ -457,11 +459,11 @@ public class ChatMiddlewareMonitorAgent implements
         private boolean checkChatMetadata(ChatMetadata chatMetadata) throws
                 CantGetChatException,
                 CantGetPendingTransactionException {
-            UUID chatId=chatMetadata.getIdChat();
+            UUID chatId=chatMetadata.getChatId();
             UUID messageId;
             if(chatMiddlewareDatabaseDao.chatIdExists(
                     chatId)){
-                messageId=chatMetadata.getIdMessage();
+                messageId=chatMetadata.getMessageId();
                 if(chatMiddlewareDatabaseDao.messageIdExists(messageId)){
                     return true;
                 }else{
@@ -488,9 +490,30 @@ public class ChatMiddlewareMonitorAgent implements
                 DatabaseOperationException,
                 CantSaveMessageException,
                 CantGetMessageException {
-            UUID messageId=chatMetadata.getIdMessage();
+            UUID messageId=chatMetadata.getMessageId();
             Message messageRecorded=chatMiddlewareDatabaseDao.getMessageByMessageId(messageId);
+            if(messageRecorded==null){
+                /**
+                 * In this case, the message is not created in database, so, is an incoming message,
+                 * I need to create a new message
+                 */
+                messageRecorded=getMessageFromChatMetadata(
+                        chatMetadata);
+            }
             chatMiddlewareDatabaseDao.saveMessage(messageRecorded);
+        }
+
+        /**
+         * This method creates a new Message from incoming metadata
+         * @param chatMetadata
+         * @return
+         */
+        private Message getMessageFromChatMetadata(ChatMetadata chatMetadata){
+            Message message=new MessageImpl(
+                    chatMetadata,
+                    MessageStatus.CREATED,
+                    TypeMessage.INCOMMING);
+            return message;
         }
 
         /**
@@ -505,7 +528,7 @@ public class ChatMiddlewareMonitorAgent implements
                 DatabaseOperationException,
                 CantSaveMessageException,
                 CantGetMessageException {
-            UUID messageId=chatMetadata.getIdMessage();
+            UUID messageId=chatMetadata.getMessageId();
             Message messageRecorded=chatMiddlewareDatabaseDao.getMessageByMessageId(messageId);
             messageRecorded.setStatus(chatMetadata.getMessageStatus());
             chatMiddlewareDatabaseDao.saveMessage(messageRecorded);

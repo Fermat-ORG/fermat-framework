@@ -69,142 +69,18 @@ public class NetworkServiceChatNetworkServiceDatabaseFactory implements DealsWit
         try {
             DatabaseTableFactory table;
             DatabaseFactory databaseFactory = database.getDatabaseFactory();
-
-            /**
-             * Create Outgoing Chat table.
-             */
-            table = databaseFactory.newTableFactory(ownerId, NetworkServiceChatNetworkServiceDatabaseConstants.CHAT_TABLE_NAME);
-
-            table.addColumn(NetworkServiceChatNetworkServiceDatabaseConstants.CHAT_IDCHAT_COLUMN_NAME, DatabaseDataType.INTEGER, 100, Boolean.TRUE);
-            table.addColumn(NetworkServiceChatNetworkServiceDatabaseConstants.CHAT_IDOBJECTO_COLUMN_NAME, DatabaseDataType.INTEGER, 100, Boolean.FALSE);
-            table.addColumn(NetworkServiceChatNetworkServiceDatabaseConstants.CHAT_LOCALACTORTYPE_COLUMN_NAME, DatabaseDataType.STRING, 100, Boolean.FALSE);
-            table.addColumn(NetworkServiceChatNetworkServiceDatabaseConstants.CHAT_LOCALACTORPUBKEY_COLUMN_NAME, DatabaseDataType.STRING, 100, Boolean.FALSE);
-            table.addColumn(NetworkServiceChatNetworkServiceDatabaseConstants.CHAT_REMOTEACTORTYPE_COLUMN_NAME, DatabaseDataType.STRING, 100, Boolean.FALSE);
-            table.addColumn(NetworkServiceChatNetworkServiceDatabaseConstants.CHAT_REMOTEACTORPUBKEY_COLUMN_NAME, DatabaseDataType.STRING, 100, Boolean.FALSE);
-            table.addColumn(NetworkServiceChatNetworkServiceDatabaseConstants.CHAT_CHATNAME_COLUMN_NAME, DatabaseDataType.STRING, 100, Boolean.FALSE);
-            table.addColumn(NetworkServiceChatNetworkServiceDatabaseConstants.CHAT_CHATSTATUS_COLUMN_NAME, DatabaseDataType.STRING, 100, Boolean.FALSE);
-            table.addColumn(NetworkServiceChatNetworkServiceDatabaseConstants.CHAT_MESSAGE_STATUS_COLUMN_NAME, DatabaseDataType.STRING, 100, Boolean.FALSE);
-            table.addColumn(NetworkServiceChatNetworkServiceDatabaseConstants.CHAT_DATE_COLUMN_NAME, DatabaseDataType.STRING, 100, Boolean.FALSE);
-            table.addColumn(NetworkServiceChatNetworkServiceDatabaseConstants.CHAT_IDMENSAJE_COLUMN_NAME, DatabaseDataType.INTEGER, 100, Boolean.FALSE);
-            table.addColumn(NetworkServiceChatNetworkServiceDatabaseConstants.CHAT_MESSAGE_COLUMN_NAME, DatabaseDataType.STRING, 100, Boolean.FALSE);
-            table.addColumn(NetworkServiceChatNetworkServiceDatabaseConstants.CHAT_DISTRIBUTIONSTATUS_COLUMN_NAME, DatabaseDataType.STRING, 100, Boolean.FALSE);
-
-            table.addIndex(NetworkServiceChatNetworkServiceDatabaseConstants.CHAT_FIRST_KEY_COLUMN);
-
-            try {
-                //Create the table
-                databaseFactory.createTable(ownerId, table);
-            } catch (CantCreateTableException cantCreateTableException) {
-                throw new CantCreateDatabaseException(CantCreateDatabaseException.DEFAULT_MESSAGE, cantCreateTableException, "", "Exception not handled by the plugin, There is a problem and i cannot create the table.");
-            }           /**
-             * Create Incoming Chat table.
-             */
-            table = databaseFactory.newTableFactory(ownerId, NetworkServiceChatNetworkServiceDatabaseConstants.INCOMING_CHAT_TABLE_NAME);
-
-            table.addColumn(NetworkServiceChatNetworkServiceDatabaseConstants.INCOMING_CHAT_IDCHAT_COLUMN_NAME, DatabaseDataType.INTEGER, 100, Boolean.TRUE);
-            table.addColumn(NetworkServiceChatNetworkServiceDatabaseConstants.INCOMING_CHAT_IDOBJECTO_COLUMN_NAME, DatabaseDataType.INTEGER, 100, Boolean.FALSE);
-            table.addColumn(NetworkServiceChatNetworkServiceDatabaseConstants.INCOMING_CHAT_LOCALACTORTYPE_COLUMN_NAME, DatabaseDataType.STRING, 100, Boolean.FALSE);
-            table.addColumn(NetworkServiceChatNetworkServiceDatabaseConstants.INCOMING_CHAT_LOCALACTORPUBKEY_COLUMN_NAME, DatabaseDataType.STRING, 100, Boolean.FALSE);
-            table.addColumn(NetworkServiceChatNetworkServiceDatabaseConstants.INCOMING_CHAT_REMOTEACTORTYPE_COLUMN_NAME, DatabaseDataType.STRING, 100, Boolean.FALSE);
-            table.addColumn(NetworkServiceChatNetworkServiceDatabaseConstants.INCOMING_CHAT_REMOTEACTORPUBKEY_COLUMN_NAME, DatabaseDataType.STRING, 100, Boolean.FALSE);
-            table.addColumn(NetworkServiceChatNetworkServiceDatabaseConstants.INCOMING_CHAT_CHATNAME_COLUMN_NAME, DatabaseDataType.STRING, 100, Boolean.FALSE);
-            table.addColumn(NetworkServiceChatNetworkServiceDatabaseConstants.INCOMING_CHAT_CHATSTATUS_COLUMN_NAME, DatabaseDataType.STRING, 100, Boolean.FALSE);
-            table.addColumn(NetworkServiceChatNetworkServiceDatabaseConstants.INCOMING_CHAT_MESSAGE_STATUS_COLUMN_NAME, DatabaseDataType.STRING, 100, Boolean.FALSE);
-            table.addColumn(NetworkServiceChatNetworkServiceDatabaseConstants.INCOMING_CHAT_DATE_COLUMN_NAME, DatabaseDataType.STRING, 100, Boolean.FALSE);
-            table.addColumn(NetworkServiceChatNetworkServiceDatabaseConstants.INCOMING_CHAT_IDMENSAJE_COLUMN_NAME, DatabaseDataType.INTEGER, 100, Boolean.FALSE);
-            table.addColumn(NetworkServiceChatNetworkServiceDatabaseConstants.INCOMING_CHAT_MESSAGE_COLUMN_NAME, DatabaseDataType.STRING, 100, Boolean.FALSE);
-            table.addColumn(NetworkServiceChatNetworkServiceDatabaseConstants.INCOMING_CHAT_DISTRIBUTIONSTATUS_COLUMN_NAME, DatabaseDataType.STRING, 100, Boolean.FALSE);
-
-            table.addIndex(NetworkServiceChatNetworkServiceDatabaseConstants.INCOMING_CHAT_FIRST_KEY_COLUMN);
-
-            try {
-                //Create the table
-                databaseFactory.createTable(ownerId, table);
-            } catch (CantCreateTableException cantCreateTableException) {
-                throw new CantCreateDatabaseException(CantCreateDatabaseException.DEFAULT_MESSAGE, cantCreateTableException, "", "Exception not handled by the plugin, There is a problem and i cannot create the table.");
-            }           /**
-             * Create Incoming Chat Message table.
-             */
-            table = databaseFactory.newTableFactory(ownerId, NetworkServiceChatNetworkServiceDatabaseConstants.INCOMING_CHAT_MESSAGE_TABLE_NAME);
-
-            table.addColumn(NetworkServiceChatNetworkServiceDatabaseConstants.INCOMING_CHAT_MESSAGE_IDMENSAJE_COLUMN_NAME, DatabaseDataType.INTEGER, 100, Boolean.TRUE);
-            table.addColumn(NetworkServiceChatNetworkServiceDatabaseConstants.INCOMING_CHAT_MESSAGE_IDCHAT_COLUMN_NAME, DatabaseDataType.INTEGER, 100, Boolean.TRUE);
-            table.addColumn(NetworkServiceChatNetworkServiceDatabaseConstants.INCOMING_CHAT_MESSAGE_MESSAGE_COLUMN_NAME, DatabaseDataType.STRING, 100, Boolean.FALSE);
-            table.addColumn(NetworkServiceChatNetworkServiceDatabaseConstants.INCOMING_CHAT_MESSAGE_DATE_COLUMN_NAME, DatabaseDataType.STRING, 100, Boolean.FALSE);
-            table.addColumn(NetworkServiceChatNetworkServiceDatabaseConstants.INCOMING_CHAT_MESSAGE_DISTRIBUTIONSTATUS_COLUMN_NAME, DatabaseDataType.STRING, 100, Boolean.FALSE);
-
-            table.addIndex(NetworkServiceChatNetworkServiceDatabaseConstants.INCOMING_CHAT_MESSAGE_FIRST_KEY_COLUMN);
-
-            try {
-                //Create the table
-                databaseFactory.createTable(ownerId, table);
-            } catch (CantCreateTableException cantCreateTableException) {
-                throw new CantCreateDatabaseException(CantCreateDatabaseException.DEFAULT_MESSAGE, cantCreateTableException, "", "Exception not handled by the plugin, There is a problem and i cannot create the table.");
-            }           /**
-             * Create Outgoing Chat Message table.
-             */
-            table = databaseFactory.newTableFactory(ownerId, NetworkServiceChatNetworkServiceDatabaseConstants.OUTGOING_CHAT_MESSAGE_TABLE_NAME);
-
-            table.addColumn(NetworkServiceChatNetworkServiceDatabaseConstants.OUTGOING_CHAT_MESSAGE_IDMENSAJE_COLUMN_NAME, DatabaseDataType.INTEGER, 100, Boolean.TRUE);
-            table.addColumn(NetworkServiceChatNetworkServiceDatabaseConstants.OUTGOING_CHAT_MESSAGE_IDCHAT_COLUMN_NAME, DatabaseDataType.INTEGER, 100, Boolean.TRUE);
-            table.addColumn(NetworkServiceChatNetworkServiceDatabaseConstants.OUTGOING_CHAT_MESSAGE_MESSAGE_COLUMN_NAME, DatabaseDataType.STRING, 100, Boolean.FALSE);
-            table.addColumn(NetworkServiceChatNetworkServiceDatabaseConstants.OUTGOING_CHAT_MESSAGE_DATE_COLUMN_NAME, DatabaseDataType.STRING, 100, Boolean.FALSE);
-            table.addColumn(NetworkServiceChatNetworkServiceDatabaseConstants.OUTGOING_CHAT_MESSAGE_DISTRIBUTIONSTATUS_COLUMN_NAME, DatabaseDataType.STRING, 100, Boolean.FALSE);
-
-            table.addIndex(NetworkServiceChatNetworkServiceDatabaseConstants.OUTGOING_CHAT_MESSAGE_FIRST_KEY_COLUMN);
-
-            try {
-                //Create the table
-                databaseFactory.createTable(ownerId, table);
-            } catch (CantCreateTableException cantCreateTableException) {
-                throw new CantCreateDatabaseException(CantCreateDatabaseException.DEFAULT_MESSAGE, cantCreateTableException, "", "Exception not handled by the plugin, There is a problem and i cannot create the table.");
-            }           /**
-             * Create Incoming Chat Message Notification Status table.
-             */
-            table = databaseFactory.newTableFactory(ownerId, NetworkServiceChatNetworkServiceDatabaseConstants.INCOMING_CHAT_MESSAGE_NOTIFICATION_STATUS_TABLE_NAME);
-
-            table.addColumn(NetworkServiceChatNetworkServiceDatabaseConstants.INCOMING_CHAT_MESSAGE_NOTIFICATION_STATUS_IDMENSAJE_COLUMN_NAME, DatabaseDataType.INTEGER, 100, Boolean.TRUE);
-            table.addColumn(NetworkServiceChatNetworkServiceDatabaseConstants.INCOMING_CHAT_MESSAGE_NOTIFICATION_STATUS_IDCHAT_COLUMN_NAME, DatabaseDataType.INTEGER, 100, Boolean.TRUE);
-            table.addColumn(NetworkServiceChatNetworkServiceDatabaseConstants.INCOMING_CHAT_MESSAGE_NOTIFICATION_STATUS_DATE_COLUMN_NAME, DatabaseDataType.STRING, 100, Boolean.FALSE);
-            table.addColumn(NetworkServiceChatNetworkServiceDatabaseConstants.INCOMING_CHAT_MESSAGE_NOTIFICATION_STATUS_DISTRIBUTIONSTATUS_COLUMN_NAME, DatabaseDataType.STRING, 100, Boolean.FALSE);
-
-            table.addIndex(NetworkServiceChatNetworkServiceDatabaseConstants.INCOMING_CHAT_MESSAGE_NOTIFICATION_STATUS_FIRST_KEY_COLUMN);
-
-            try {
-                //Create the table
-                databaseFactory.createTable(ownerId, table);
-            } catch (CantCreateTableException cantCreateTableException) {
-                throw new CantCreateDatabaseException(CantCreateDatabaseException.DEFAULT_MESSAGE, cantCreateTableException, "", "Exception not handled by the plugin, There is a problem and i cannot create the table.");
-            }           /**
-             * Create Outgoing Chat Message Notification Status table.
-             */
-            table = databaseFactory.newTableFactory(ownerId, NetworkServiceChatNetworkServiceDatabaseConstants.OUTGOING_CHAT_MESSAGE_NOTIFICATION_STATUS_TABLE_NAME);
-
-            table.addColumn(NetworkServiceChatNetworkServiceDatabaseConstants.OUTGOING_CHAT_MESSAGE_NOTIFICATION_STATUS_IDMENSAJE_COLUMN_NAME, DatabaseDataType.INTEGER, 100, Boolean.TRUE);
-            table.addColumn(NetworkServiceChatNetworkServiceDatabaseConstants.OUTGOING_CHAT_MESSAGE_NOTIFICATION_STATUS_IDCHAT_COLUMN_NAME, DatabaseDataType.INTEGER, 100, Boolean.TRUE);
-            table.addColumn(NetworkServiceChatNetworkServiceDatabaseConstants.OUTGOING_CHAT_MESSAGE_NOTIFICATION_STATUS_DATE_COLUMN_NAME, DatabaseDataType.STRING, 100, Boolean.FALSE);
-            table.addColumn(NetworkServiceChatNetworkServiceDatabaseConstants.OUTGOING_CHAT_MESSAGE_NOTIFICATION_STATUS_DISTRIBUTIONSTATUS_COLUMN_NAME, DatabaseDataType.STRING, 100, Boolean.FALSE);
-
-            table.addIndex(NetworkServiceChatNetworkServiceDatabaseConstants.OUTGOING_CHAT_MESSAGE_NOTIFICATION_STATUS_FIRST_KEY_COLUMN);
-
-            try {
-                //Create the table
-                databaseFactory.createTable(ownerId, table);
-            } catch (CantCreateTableException cantCreateTableException) {
-                throw new CantCreateDatabaseException(CantCreateDatabaseException.DEFAULT_MESSAGE, cantCreateTableException, "", "Exception not handled by the plugin, There is a problem and i cannot create the table.");
-            }
             /**
              * Create incoming messages table.
              */
             table = databaseFactory.newTableFactory(ownerId, NetworkServiceChatNetworkServiceDatabaseConstants.INCOMING_MESSAGES_TABLE_NAME);
 
-            table.addColumn(NetworkServiceChatNetworkServiceDatabaseConstants.INCOMING_MESSAGES_ID_COLUMN_NAME, DatabaseDataType.STRING, 100, Boolean.FALSE);
+            table.addColumn(NetworkServiceChatNetworkServiceDatabaseConstants.INCOMING_MESSAGES_ID_COLUMN_NAME, DatabaseDataType.STRING, 100, Boolean.TRUE);
             table.addColumn(NetworkServiceChatNetworkServiceDatabaseConstants.INCOMING_MESSAGES_SENDER_ID_COLUMN_NAME, DatabaseDataType.STRING, 100, Boolean.FALSE);
-            table.addColumn(NetworkServiceChatNetworkServiceDatabaseConstants.INCOMING_MESSAGES_RECEIVER_ID_COLUMN_NAME, DatabaseDataType.STRING, 10, Boolean.FALSE);
-            table.addColumn(NetworkServiceChatNetworkServiceDatabaseConstants.INCOMING_MESSAGES_TEXT_CONTENT_COLUMN_NAME, DatabaseDataType.STRING, 255, Boolean.FALSE);
+            table.addColumn(NetworkServiceChatNetworkServiceDatabaseConstants.INCOMING_MESSAGES_RECEIVER_ID_COLUMN_NAME, DatabaseDataType.STRING, 100, Boolean.FALSE);
+            table.addColumn(NetworkServiceChatNetworkServiceDatabaseConstants.INCOMING_MESSAGES_TEXT_CONTENT_COLUMN_NAME, DatabaseDataType.STRING, 4000, Boolean.FALSE);
             table.addColumn(NetworkServiceChatNetworkServiceDatabaseConstants.INCOMING_MESSAGES_TYPE_COLUMN_NAME, DatabaseDataType.STRING, 100, Boolean.FALSE);
-            table.addColumn(NetworkServiceChatNetworkServiceDatabaseConstants.INCOMING_MESSAGES_SHIPPING_TIMESTAMP_COLUMN_NAME, DatabaseDataType.STRING, 100, Boolean.FALSE);
-            table.addColumn(NetworkServiceChatNetworkServiceDatabaseConstants.INCOMING_MESSAGES_DELIVERY_TIMESTAMP_COLUMN_NAME, DatabaseDataType.STRING, 255, Boolean.FALSE);
+            table.addColumn(NetworkServiceChatNetworkServiceDatabaseConstants.INCOMING_MESSAGES_SHIPPING_TIMESTAMP_COLUMN_NAME, DatabaseDataType.LONG_INTEGER, 0, Boolean.FALSE);
+            table.addColumn(NetworkServiceChatNetworkServiceDatabaseConstants.INCOMING_MESSAGES_DELIVERY_TIMESTAMP_COLUMN_NAME, DatabaseDataType.LONG_INTEGER, 0, Boolean.FALSE);
             table.addColumn(NetworkServiceChatNetworkServiceDatabaseConstants.INCOMING_MESSAGES_STATUS_COLUMN_NAME, DatabaseDataType.STRING, 100, Boolean.FALSE);
 
             table.addIndex(NetworkServiceChatNetworkServiceDatabaseConstants.INCOMING_MESSAGES_FIRST_KEY_COLUMN);
@@ -214,18 +90,21 @@ public class NetworkServiceChatNetworkServiceDatabaseFactory implements DealsWit
                 databaseFactory.createTable(ownerId, table);
             } catch (CantCreateTableException cantCreateTableException) {
                 throw new CantCreateDatabaseException(CantCreateDatabaseException.DEFAULT_MESSAGE, cantCreateTableException, "", "Exception not handled by the plugin, There is a problem and i cannot create the table.");
-            }           /**
+            } catch(Exception e){
+                throw new CantCreateDatabaseException(CantCreateDatabaseException.DEFAULT_MESSAGE, e, "", e.getMessage());
+            }
+            /**
              * Create outgoing messages table.
              */
             table = databaseFactory.newTableFactory(ownerId, NetworkServiceChatNetworkServiceDatabaseConstants.OUTGOING_MESSAGES_TABLE_NAME);
 
-            table.addColumn(NetworkServiceChatNetworkServiceDatabaseConstants.OUTGOING_MESSAGES_ID_COLUMN_NAME, DatabaseDataType.STRING, 100, Boolean.FALSE);
+            table.addColumn(NetworkServiceChatNetworkServiceDatabaseConstants.OUTGOING_MESSAGES_ID_COLUMN_NAME, DatabaseDataType.STRING, 100, Boolean.TRUE);
             table.addColumn(NetworkServiceChatNetworkServiceDatabaseConstants.OUTGOING_MESSAGES_SENDER_ID_COLUMN_NAME, DatabaseDataType.STRING, 100, Boolean.FALSE);
-            table.addColumn(NetworkServiceChatNetworkServiceDatabaseConstants.OUTGOING_MESSAGES_RECEIVER_ID_COLUMN_NAME, DatabaseDataType.STRING, 10, Boolean.FALSE);
-            table.addColumn(NetworkServiceChatNetworkServiceDatabaseConstants.OUTGOING_MESSAGES_TEXT_CONTENT_COLUMN_NAME, DatabaseDataType.STRING, 255, Boolean.FALSE);
+            table.addColumn(NetworkServiceChatNetworkServiceDatabaseConstants.OUTGOING_MESSAGES_RECEIVER_ID_COLUMN_NAME, DatabaseDataType.STRING, 100, Boolean.FALSE);
+            table.addColumn(NetworkServiceChatNetworkServiceDatabaseConstants.OUTGOING_MESSAGES_TEXT_CONTENT_COLUMN_NAME, DatabaseDataType.STRING, 4000, Boolean.FALSE);
             table.addColumn(NetworkServiceChatNetworkServiceDatabaseConstants.OUTGOING_MESSAGES_TYPE_COLUMN_NAME, DatabaseDataType.STRING, 100, Boolean.FALSE);
-            table.addColumn(NetworkServiceChatNetworkServiceDatabaseConstants.OUTGOING_MESSAGES_SHIPPING_TIMESTAMP_COLUMN_NAME, DatabaseDataType.STRING, 100, Boolean.FALSE);
-            table.addColumn(NetworkServiceChatNetworkServiceDatabaseConstants.OUTGOING_MESSAGES_DELIVERY_TIMESTAMP_COLUMN_NAME, DatabaseDataType.STRING, 255, Boolean.FALSE);
+            table.addColumn(NetworkServiceChatNetworkServiceDatabaseConstants.OUTGOING_MESSAGES_SHIPPING_TIMESTAMP_COLUMN_NAME, DatabaseDataType.LONG_INTEGER, 0, Boolean.FALSE);
+            table.addColumn(NetworkServiceChatNetworkServiceDatabaseConstants.OUTGOING_MESSAGES_DELIVERY_TIMESTAMP_COLUMN_NAME, DatabaseDataType.LONG_INTEGER, 0, Boolean.FALSE);
             table.addColumn(NetworkServiceChatNetworkServiceDatabaseConstants.OUTGOING_MESSAGES_STATUS_COLUMN_NAME, DatabaseDataType.STRING, 100, Boolean.FALSE);
 
             table.addIndex(NetworkServiceChatNetworkServiceDatabaseConstants.OUTGOING_MESSAGES_FIRST_KEY_COLUMN);
@@ -235,6 +114,40 @@ public class NetworkServiceChatNetworkServiceDatabaseFactory implements DealsWit
                 databaseFactory.createTable(ownerId, table);
             } catch (CantCreateTableException cantCreateTableException) {
                 throw new CantCreateDatabaseException(CantCreateDatabaseException.DEFAULT_MESSAGE, cantCreateTableException, "", "Exception not handled by the plugin, There is a problem and i cannot create the table.");
+            }
+            catch(Exception e){
+                throw new CantCreateDatabaseException(CantCreateDatabaseException.DEFAULT_MESSAGE, e, "", e.getMessage());
+            }
+
+            /**
+             * Create Chat table.
+             */
+            table = databaseFactory.newTableFactory(ownerId, NetworkServiceChatNetworkServiceDatabaseConstants.CHAT_TABLE_NAME);
+
+            table.addColumn(NetworkServiceChatNetworkServiceDatabaseConstants.CHAT_IDCHAT_COLUMN_NAME, DatabaseDataType.STRING, 100, Boolean.FALSE);
+            table.addColumn(NetworkServiceChatNetworkServiceDatabaseConstants.CHAT_IDOBJECTO_COLUMN_NAME, DatabaseDataType.STRING, 100, Boolean.FALSE);
+            table.addColumn(NetworkServiceChatNetworkServiceDatabaseConstants.CHAT_LOCALACTORTYPE_COLUMN_NAME, DatabaseDataType.STRING, 100, Boolean.FALSE);
+            table.addColumn(NetworkServiceChatNetworkServiceDatabaseConstants.CHAT_LOCALACTORPUBKEY_COLUMN_NAME, DatabaseDataType.STRING, 255, Boolean.FALSE);
+            table.addColumn(NetworkServiceChatNetworkServiceDatabaseConstants.CHAT_REMOTEACTORTYPE_COLUMN_NAME, DatabaseDataType.STRING, 100, Boolean.FALSE);
+            table.addColumn(NetworkServiceChatNetworkServiceDatabaseConstants.CHAT_REMOTEACTORPUBKEY_COLUMN_NAME, DatabaseDataType.STRING, 255, Boolean.FALSE);
+            table.addColumn(NetworkServiceChatNetworkServiceDatabaseConstants.CHAT_CHATNAME_COLUMN_NAME, DatabaseDataType.STRING, 100, Boolean.FALSE);
+            table.addColumn(NetworkServiceChatNetworkServiceDatabaseConstants.CHAT_CHATSTATUS_COLUMN_NAME, DatabaseDataType.STRING, 100, Boolean.FALSE);
+            table.addColumn(NetworkServiceChatNetworkServiceDatabaseConstants.CHAT_MESSAGE_STATUS_COLUMN_NAME, DatabaseDataType.STRING, 100, Boolean.FALSE);
+            table.addColumn(NetworkServiceChatNetworkServiceDatabaseConstants.CHAT_DATE_COLUMN_NAME, DatabaseDataType.STRING, 200, Boolean.FALSE);
+            table.addColumn(NetworkServiceChatNetworkServiceDatabaseConstants.CHAT_IDMENSAJE_COLUMN_NAME, DatabaseDataType.STRING, 100, Boolean.FALSE);
+            table.addColumn(NetworkServiceChatNetworkServiceDatabaseConstants.CHAT_MESSAGE_COLUMN_NAME, DatabaseDataType.STRING, 4000, Boolean.FALSE);
+            table.addColumn(NetworkServiceChatNetworkServiceDatabaseConstants.CHAT_DISTRIBUTIONSTATUS_COLUMN_NAME, DatabaseDataType.STRING, 100, Boolean.FALSE);
+
+            table.addIndex(NetworkServiceChatNetworkServiceDatabaseConstants.CHAT_FIRST_KEY_COLUMN);
+
+            try {
+                //Create the table
+                databaseFactory.createTable(ownerId, table);
+                System.out.println("ChatPluginRoot - table:" + table);
+            } catch (CantCreateTableException cantCreateTableException) {
+                throw new CantCreateDatabaseException(CantCreateDatabaseException.DEFAULT_MESSAGE, cantCreateTableException, "", "Exception not handled by the plugin, There is a problem and i cannot create the table.");
+            }catch(Exception e){
+                throw new CantCreateDatabaseException(CantCreateDatabaseException.DEFAULT_MESSAGE, e, "", e.getMessage());
             }
         } catch (InvalidOwnerIdException invalidOwnerId) {
             /**
@@ -246,9 +159,6 @@ public class NetworkServiceChatNetworkServiceDatabaseFactory implements DealsWit
         return database;
     }
 
-    /**
-     * DealsWithPluginDatabaseSystem Interface implementation.
-     */
     @Override
     public void setPluginDatabaseSystem(PluginDatabaseSystem pluginDatabaseSystem) {
         this.pluginDatabaseSystem = pluginDatabaseSystem;
