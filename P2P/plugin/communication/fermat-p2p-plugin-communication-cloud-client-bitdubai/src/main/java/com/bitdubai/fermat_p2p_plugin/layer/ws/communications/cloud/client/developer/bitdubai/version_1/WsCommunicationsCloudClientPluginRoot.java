@@ -80,10 +80,8 @@ public class WsCommunicationsCloudClientPluginRoot extends AbstractPlugin implem
      * Represent the SERVER_IP
      */
 
-
-    //public static final String SERVER_IP = ServerConf.SERVER_IP_DEVELOPER_LOCAL;
-
     public static final String SERVER_IP = ServerConf.SERVER_IP_PRODUCTION;
+
 
 
 
@@ -95,7 +93,7 @@ public class WsCommunicationsCloudClientPluginRoot extends AbstractPlugin implem
     /**
      * Represent the uri
      */
-    private URI uri;x
+    private URI uri;
 
     /**
      * Represent the clientIdentity
