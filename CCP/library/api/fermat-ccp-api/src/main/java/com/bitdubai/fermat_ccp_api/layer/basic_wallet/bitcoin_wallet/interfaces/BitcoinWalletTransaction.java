@@ -1,6 +1,7 @@
 package com.bitdubai.fermat_ccp_api.layer.basic_wallet.bitcoin_wallet.interfaces;
 
 import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
+import com.bitdubai.fermat_api.layer.all_definition.enums.BlockchainNetworkType;
 import com.bitdubai.fermat_api.layer.all_definition.money.CryptoAddress;
 import com.bitdubai.fermat_ccp_api.layer.basic_wallet.common.enums.BalanceType;
 
@@ -40,5 +41,7 @@ public interface BitcoinWalletTransaction {
     public long getRunningAvailableBalance();
 
     public String getMemo();
+
+    BlockchainNetworkType getBlockchainNetworkType();
 
 }
