@@ -1,8 +1,8 @@
 package com.bitdubai.fermat_dap_android_wallet_asset_issuer_bitdubai.models;
 
+import com.bitdubai.fermat_dap_api.layer.all_definition.util.DAPStandardFormats;
+
 import java.sql.Timestamp;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 
 /**
  * Created by frank on 12/22/15.
@@ -36,8 +36,7 @@ public class UserDelivery {
 
     public String getFormattedDeliveryDate() {
         if (deliveryDate == null) return "No date";
-        DateFormat df = new SimpleDateFormat("dd MMM yyyy");
-        return df.format(deliveryDate);
+        return DAPStandardFormats.DATE_FORMAT.format(deliveryDate);
     }
 
     public void setDeliveryDate(Timestamp deliveryDate) {

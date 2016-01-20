@@ -160,6 +160,7 @@ public class WizardPageSetBankAccountsFragment extends AbstractFermatFragment
             }
         }
 
+        appSession.setData(CryptoCustomerWalletSession.CONFIGURED_DATA, true); // TODO: solo para testing, quitar despues
         changeActivity(Activities.CBP_CRYPTO_CUSTOMER_WALLET_HOME, appSession.getAppPublicKey());
     }
 

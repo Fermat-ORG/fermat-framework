@@ -22,7 +22,7 @@ public class WsCommunicationsCloudClientPingAgent extends Thread {
     /*
      * Represent the sleep time for send new ping (120000 milliseconds)
      */
-    private static final long SLEEP_TIME = 30000;
+    private static final long SLEEP_TIME = 130000;
     private boolean running;
     /**
      * Represent the wsCommunicationsCloudClientChannel

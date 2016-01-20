@@ -7,7 +7,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.bitdubai.fermat_android_api.layer.definition.wallet.abstracts.AbstractFermatSession;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.FermatSession;
 import com.bitdubai.fermat_android_api.ui.holders.FermatViewHolder;
 import com.bitdubai.fermat_api.FermatException;
@@ -16,7 +15,6 @@ import com.bitdubai.fermat_cbp_api.all_definition.enums.ClauseType;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.NegotiationStepType;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.NegotiationType;
 import com.bitdubai.fermat_cbp_api.all_definition.negotiation.NegotiationLocations;
-import com.bitdubai.fermat_cbp_api.layer.negotiation.customer_broker_sale.exceptions.CantGetListLocationsSaleException;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.common.interfaces.AmountToSellStep;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.common.interfaces.CustomerBrokerNegotiationInformation;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.common.interfaces.ExchangeRateStep;
@@ -89,17 +87,17 @@ public class NegotiationDetailsAdapter extends RecyclerView.Adapter<FermatViewHo
     private int getCardViewResource(int type) {
         switch (type) {
             case TYPE_HEADER:
-                return R.layout.notes_item;
+                return R.layout.cbw_notes_item;
             case TYPE_ITEM_SINGLE_CHOICE:
-                return R.layout.single_choice_item;
+                return R.layout.cbw_single_choice_item;
             case TYPE_ITEM_DATE_TIME:
-                return R.layout.date_time_item;
+                return R.layout.cbw_date_time_item;
             case TYPE_ITEM_EXCHANGE_RATE:
-                return R.layout.exchange_rate_item;
+                return R.layout.cbw_exchange_rate_item;
             case TYPE_ITEM_AMOUNT_TO_SELL:
-                return R.layout.amount_to_sell_item;
+                return R.layout.cbw_amount_to_sell_item;
             case TYPE_FOOTER:
-                return R.layout.footer_item;
+                return R.layout.cbw_footer_item;
             default:
                 throw new NoSuchElementException("Incorrect type value");
         }

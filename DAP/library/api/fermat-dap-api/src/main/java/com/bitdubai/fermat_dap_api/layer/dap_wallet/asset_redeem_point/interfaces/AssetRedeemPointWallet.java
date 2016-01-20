@@ -2,6 +2,9 @@ package com.bitdubai.fermat_dap_api.layer.dap_wallet.asset_redeem_point.interfac
 
 import com.bitdubai.fermat_dap_api.layer.all_definition.digital_asset.DigitalAssetMetadata;
 import com.bitdubai.fermat_dap_api.layer.dap_transaction.common.exceptions.CantGetDigitalAssetFromLocalStorageException;
+import com.bitdubai.fermat_dap_api.layer.dap_transaction.common.exceptions.RecordsNotFoundException;
+import com.bitdubai.fermat_dap_api.layer.dap_wallet.asset_redeem_point.exceptions.CantGetRedeemPointStatisticsException;
+import com.bitdubai.fermat_dap_api.layer.dap_wallet.asset_redeem_point.exceptions.CantSaveRedeemPointStatisticException;
 import com.bitdubai.fermat_dap_api.layer.dap_wallet.common.enums.BalanceType;
 import com.bitdubai.fermat_dap_api.layer.dap_wallet.common.enums.TransactionType;
 import com.bitdubai.fermat_dap_api.layer.dap_wallet.common.exceptions.CantFindTransactionException;
@@ -22,25 +25,35 @@ public interface AssetRedeemPointWallet {
     AssetRedeemPointWalletBalance getBalance() throws CantGetTransactionsException;
 
     List<AssetRedeemPointWalletTransaction> getTransactions(BalanceType balanceType,
-                                                     TransactionType transactionType,
-                                                     int max,
-                                                     int offset, String assetPublicKey) throws CantGetTransactionsException;
+                                                            TransactionType transactionType,
+                                                            int max,
+                                                            int offset, String assetPublicKey) throws CantGetTransactionsException;
 
     List<AssetRedeemPointWalletTransaction> getTransactionsByActor(String actorPublicKey,
-                                                            BalanceType balanceType,
-                                                            int max,
-                                                            int offset) throws CantGetTransactionsException;
+                                                                   BalanceType balanceType,
+                                                                   int max,
+                                                                   int offset) throws CantGetTransactionsException;
 
     List<AssetRedeemPointWalletTransaction> gettLastActorTransactionsByTransactionType(BalanceType balanceType,
-                                                                                TransactionType transactionType,
-                                                                                int max,
-                                                                                int offset) throws CantGetTransactionsException;
+                                                                                       TransactionType transactionType,
+                                                                                       int max,
+                                                                                       int offset) throws CantGetTransactionsException;
 
     void setTransactionDescription(UUID transactionID,
                                    String description) throws CantFindTransactionException, CantStoreMemoException;
 
     AssetRedeemPointWalletTransactionSummary getActorTransactionSummary(String actorPublicKey,
-                                                                 BalanceType balanceType) throws CantGetActorTransactionSummaryException;
+                                                                        BalanceType balanceType) throws CantGetActorTransactionSummaryException;
 
     DigitalAssetMetadata getDigitalAssetMetadata(String assetPublicKey) throws CantGetDigitalAssetFromLocalStorageException;
+
+    void newAssetRedeemed(String userPublicKey, String assetPublicKey) throws CantSaveRedeemPointStatisticException;
+
+    List<RedeemPointStatistic> getAllStatistics() throws CantGetRedeemPointStatisticsException, RecordsNotFoundException;
+
+    List<RedeemPointStatistic> getStatisticsByUser(String userPublicKey) throws CantGetRedeemPointStatisticsException, RecordsNotFoundException;
+
+    List<RedeemPointStatistic> getStatisticsByAssetPublicKey(String assetPublicKey) throws CantGetRedeemPointStatisticsException, RecordsNotFoundException;
+
+    List<RedeemPointStatistic> getStatisticsByAssetAndUser(String assetPublicKey, String userPublicKey) throws CantGetRedeemPointStatisticsException, RecordsNotFoundException;
 }

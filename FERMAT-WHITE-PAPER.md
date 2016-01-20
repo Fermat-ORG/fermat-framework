@@ -1,12 +1,13 @@
 ![alt text](https://github.com/bitDubai/media-kit/blob/master/MediaKit/Fermat%20Branding/Fermat%20Logotype/Fermat_Logo_3D.png "Fermat Logo")
 
-#--draft--
 
 # Fermat
 
 ## A Peer-to-Peer Financial Application Framework
 
-**Contributors** : Luis Fernando Molina
+**Author** : [Luis Fernando Molina](https://github.com/Luis-Fernando-Molina)
+
+**Contributors** :
 
 **Advisors** :
 
@@ -15,6 +16,12 @@
 November 2015
 
 _www.fermat.org_
+
+<br>
+## Status of the Document
+
+This document is a DRAFT with no formal reviews yet. Some changes are being done from time to time. If you want, you  can make a formal review of this document. We will be happy to add you at the _reviewers_ section. 
+
 
 <br>
 ## Abstract
@@ -38,7 +45,7 @@ Fermat is a Framework, a p2p Network and an Ecosystem of Fermat APPs. The Fermat
 
 By choosing a plug-in architecture for the Framework we make it possible for any developer to add their own reusable components. We define the micro use licensing scheme as the mechanism for developers to monetize their work. The Framework itself enforces these micro use licenses and guarantees developers a revenue stream.
 
-The Fermat P2P network interconnects Android devices between each other in order to exchange application data without needing to go through a centralized service.
+The Fermat P2P network interconnects devices between each other in order to exchange application data without needing to go through a centralized service.
 
 The Ecosystem of Fermat APPs offers different products to end users. From the outside it may seem like a set of APPs targeting different use cases for different people, but on the inside there is a system built from hundreds of components collaborating between each other. These APPs are just the user interfaces, or skins of the underlying mechanisms.
 
@@ -101,14 +108,14 @@ A Fermat APP is an APP designed to run on top of the Fermat Framework. Fermat AP
 
 These components are part of an ever incresing pool of re-usable components. Some new Fermat APPs add more components to this pool, some others just re-use components that are already there.
 
-Underneeth the sight of end users all these components collaborate between each other to provide the functionality of all Fermat APPs in the ecosystem. Their interactions are divided in _workflows_. Fermat APPs and all their components are part of a big master plan designed to maximaze re-usability.
+Underneath the sight of end users all these components collaborate between each other to provide the functionality of all Fermat APPs in the ecosystem. Their interactions are divided in _workflows_. Fermat APPs and all their components are part of a big master plan designed to maximaze re-usability.
 
 <br>
 ## Fermat Application Tokens
 
 Fermat generates its tokens, the _fermats_, with a predetermined algorithm that cannot be changed, and those tokens are necessary for Fermat to function. Fermat miners are rewarded with _fermats_ for their contributions in running the Fermat network.
 
-These application tokens are native to the Fermat system and are necessary for access to the application. Contribution of value from miners are rewarded in the application’s tokens as well as developers which are rewarded with tokens for the plug-ins they build for the system. Fermat's blockchain only records the issuing of new fermats and outsources the transaction processing from the bitcoin network. In this sense Fermat is a type II Dapp.[2]
+These application tokens are native to the Fermat system and are necessary to access to the application. Contribution of value from miners are rewarded in the application’s tokens as well as developers which are rewarded with tokens for the plug-ins they build for the system. Fermat's blockchain only records the issuing of new fermats and outsources the transaction processing from the bitcoin network. In this sense Fermat is a type II Dapp.[2]
 
 ![alt text](https://github.com/bitDubai/media-kit/blob/master/MediaKit/Tokens/Fermat%20App%20Token/PerspView/HQ_1920x1080.jpg "Fermat Application Token")
 
@@ -122,7 +129,7 @@ Fermat implement three different mechanisms for token generation and distributio
 
 #### Fund-raising Mechanism
 
-With the fund-raising mechanism, tokens are distributed to those who fund the initial development of the Fermat System. The funds collected are used to fund the development of the core of the Fermat System (core libriaries, api libraries, add-ons and the fermat.org web site). The tokens generated during the fund-raising are recorded as the genesis transaction of the Fermat's blockchain.
+With the fund-raising mechanism, tokens are distributed to those who fund the initial development of the Fermat System. The funds collected are used to fund the development of the core of the Fermat System (core libraries, api libraries, add-ons and the fermat.org web site). The tokens generated during the fund-raising are recorded as the genesis transaction of the Fermat's blockchain.
 
 #### Development Mechanism
 
@@ -177,7 +184,9 @@ End users pay with fermats to receive personalized technical support from Fermat
 <br>
 ## Fermat Blockchain
 
-Fermat's blockchain inherits many of the characteristics of the bitcoin blockchain and it is highly coupled with it. The data structure is an ordered, back-linked list of blocks of transactions. In our case all the transactions are _coinbase_ transactions, meaning that they are transactions where new fermats are issued by the protocol. Blocks are linked "back" each referring to the previous block in the chain.
+Fermat's blockchain keeps track of all Fermat Tokens issued. Fermat outsources the transaction procesing of Fermat Tokens to one ore more crypto networks. This means that Fermat newly issued tokens are registered at some crypto network with a technique similar to a _digital asset_ or _colored coin_, and the transactions representing the transfers of ownership are handled directly by these crypto networks with no intervention of the Fermat Blockchain or Fermat Network whatsoever. The first implementation of Fermat Tokens is using only the bitcoin network as it is the most reliable at present time. Later, however, the decision where to register new fermats will be taken by the miners winning the block reward. They will be able to choose between all the crypto networks integrated into the Fermat system at the moment of that event happening. During the rest of this document all further explanations will be refering to the bitcoin network as it is the first of one of multiple possible future implementations.  
+
+The data structure is an ordered, back-linked list of blocks of transactions. In our case all the transactions are _coinbase_ transactions, meaning that they are transactions where new fermats are issued by the protocol. Blocks are linked "back" each referring to the previous block in the chain.
 
 Each block within the blockchain:
 

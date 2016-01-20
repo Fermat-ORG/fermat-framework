@@ -12,4 +12,6 @@ public class Constants {
     public static final String BROADCAST_CONNECTED_UPDATE = "sub.app.intra.user.community.broacast.connected";
     public static final String BROADCAST_DISCONNECTED_UPDATE = "sub.app.intra.user.community.broacast.disconnected";
 
+    public static final int SELECT_IDENTITY = 0;
+
 };

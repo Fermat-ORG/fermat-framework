@@ -567,8 +567,7 @@ public class CryptoTransmissionMetadataDAO {
 
             DatabaseTable cryptoTransmissiontTable = database.getTable(CryptoTransmissionNetworkServiceDatabaseConstants.CRYPTO_TRANSMISSION_METADATA_TABLE_NAME);
 
-            cryptoTransmissiontTable.addStringFilter(CryptoTransmissionNetworkServiceDatabaseConstants.CRYPTO_TRANSMISSION_METADATA_STATUS_COLUMN_NAME, CryptoTransmissionStates.SEEN_BY_DESTINATION_NETWORK_SERVICE.getCode(), DatabaseFilterType.NOT_EQUALS);
-            cryptoTransmissiontTable.addStringFilter(CryptoTransmissionNetworkServiceDatabaseConstants.CRYPTO_TRANSMISSION_METADATA_STATUS_COLUMN_NAME, CryptoTransmissionStates.SEEN_BY_DESTINATION_VAULT.getCode(), DatabaseFilterType.NOT_EQUALS);
+            cryptoTransmissiontTable.addStringFilter(CryptoTransmissionNetworkServiceDatabaseConstants.CRYPTO_TRANSMISSION_METADATA_STATUS_COLUMN_NAME, CryptoTransmissionStates.PRE_PROCESSING_SEND.getCode(), DatabaseFilterType.NOT_EQUALS);
             cryptoTransmissiontTable.addStringFilter(CryptoTransmissionNetworkServiceDatabaseConstants.CRYPTO_TRANSMISSION_METADATA_STATUS_COLUMN_NAME, CryptoTransmissionStates.CREDITED_IN_DESTINATION_WALLET.getCode(), DatabaseFilterType.NOT_EQUALS);
 
             cryptoTransmissiontTable.loadToMemory();

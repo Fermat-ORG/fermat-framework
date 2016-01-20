@@ -2,6 +2,8 @@ package com.bitdubai.fermat_bch_plugin.layer.crypto_network.bitcoin.developer.bi
 
 import com.bitdubai.fermat_api.CantStartAgentException;
 import com.bitdubai.fermat_api.layer.all_definition.enums.BlockchainNetworkType;
+import com.bitdubai.fermat_api.layer.all_definition.enums.CryptoCurrency;
+import com.bitdubai.fermat_api.layer.all_definition.money.CryptoAddress;
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.ProtocolStatus;
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.Specialist;
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.TransactionProtocolManager;
@@ -20,6 +22,7 @@ import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.exceptions.CantG
 import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.exceptions.CantGetBroadcastStatusException;
 import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.exceptions.CantGetCryptoTransactionException;
 import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.exceptions.CantGetTransactionCryptoStatusException;
+import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.exceptions.CantGetTransactionException;
 import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.exceptions.CantStoreBitcoinTransactionException;
 import com.bitdubai.fermat_bch_api.layer.crypto_network.enums.Status;
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.enums.CryptoVaults;
@@ -27,6 +30,7 @@ import com.bitdubai.fermat_bch_plugin.layer.crypto_network.bitcoin.developer.bit
 import com.bitdubai.fermat_bch_plugin.layer.crypto_network.bitcoin.developer.bitdubai.version_1.exceptions.BlockchainException;
 import com.bitdubai.fermat_bch_plugin.layer.crypto_network.bitcoin.developer.bitdubai.version_1.exceptions.CantExecuteDatabaseOperationException;
 import com.bitdubai.fermat_bch_plugin.layer.crypto_network.bitcoin.developer.bitdubai.version_1.util.TransactionProtocolData;
+import com.bitdubai.fermat_dap_api.layer.dap_wallet.common.exceptions.CantGetTransactionsException;
 import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfaces.EventManager;
 
 import org.bitcoinj.core.Address;
@@ -140,19 +144,48 @@ public class BitcoinCryptoNetworkManager implements TransactionProtocolManager, 
              * add new keys (if any).
              */
             boolean isWalletReset = false;
-            if (areNewKeysAdded(wallet, keyList)){
-                wallet.importKeys(keyList);
-                try {
-                    wallet.saveToFile(walletFile);
-                } catch (IOException e) {
-                    e.printStackTrace();
+
+            /**
+             * if this is the Watch Only Vault, I won't be importing keys, I will be watching them
+             */
+            if (cryptoVault == CryptoVaults.BITCOIN_WATCH_ONLY){
+                if (areNewKeysWatched(wallet, keyList, blockchainNetworkType)){
+                    NetworkParameters networkParameters = BitcoinNetworkSelector.getNetworkParameter(blockchainNetworkType);
+                    for (ECKey ecKey : keyList){
+                        wallet.addWatchedAddress(ecKey.toAddress(networkParameters));
+                    }
+
+                    try {
+                        wallet.saveToFile(walletFile);
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+
+                    /**
+                     * I do not need to reset the wallet because I will
+                     * always be importing fresh (unused) keys.
+                     */
+                    isWalletReset = true;
                 }
+            } else{
                 /**
-                 * I do not need to reset the wallet because I will
-                 * always be importing fresh (unused) keys.
+                 * regulat vault, so will try to import new keys if any
                  */
-                isWalletReset = true;
+                if (areNewKeysAdded(wallet, keyList)){
+                    wallet.importKeys(keyList);
+                    try {
+                        wallet.saveToFile(walletFile);
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                    /**
+                     * I do not need to reset the wallet because I will
+                     * always be importing fresh (unused) keys.
+                     */
+                    isWalletReset = true;
+                }
             }
+
 
             /**
              * If the agent for this network is already running...
@@ -193,6 +226,31 @@ public class BitcoinCryptoNetworkManager implements TransactionProtocolManager, 
             List<ECKey> importedKEys = wallet.getImportedKeys();
             updateDetailedCryptoStats(cryptoVault, blockchainNetworkType, importedKEys);
         }
+    }
+
+    /**
+     * Will compare if from the passed KeyList there is a missing watched address in the wallet
+     * @param wallet
+     * @param keyList
+     * @return
+     */
+    private boolean areNewKeysWatched(Wallet wallet, List<ECKey> keyList, BlockchainNetworkType blockchainNetworkType) {
+        List<Address> watchedAddresses= wallet.getWatchedAddresses();
+        List<Address> newAddresses = new ArrayList<>();
+
+        NetworkParameters networkParameters = BitcoinNetworkSelector.getNetworkParameter(blockchainNetworkType);
+        for (ECKey ecKey : keyList){
+            newAddresses.add(ecKey.toAddress(networkParameters));
+        }
+
+        /**
+         * I compare both lists.
+         */
+        newAddresses.removeAll(watchedAddresses);
+        if (newAddresses.isEmpty())
+            return false;
+        else
+            return true;
     }
 
     /**
@@ -529,6 +587,24 @@ public class BitcoinCryptoNetworkManager implements TransactionProtocolManager, 
         return null;
     }
 
+    private Transaction getTransactionFromBlockChain(String parentTransactionHash, String transactionBlockHash) throws CantGetTransactionsException{
+        /**
+         * I will get the CryptoTransaction from all agents running. Only one will return the CryptoTransaction
+         */
+        for (BitcoinCryptoNetworkMonitor monitor : runningAgents.values()){
+            try {
+                return monitor.getTransactionFromBlockChain(parentTransactionHash, transactionBlockHash);
+            } catch (CantGetTransactionException e) {
+                throw new CantGetTransactionsException(CantGetTransactionsException.DEFAULT_MESSAGE, e, "Error getting the parent transaction from the blockchain.", "Blockchain error");
+            }
+        }
+
+        /**
+         * if no agents are running, then no CryptoTransaction to return.
+         */
+        return null;
+    }
+
     /**
      * Will get all the CryptoTransactions stored in the CryptoNetwork which are a child of a parent Transaction
      * @param parentHash
@@ -746,5 +822,87 @@ public class BitcoinCryptoNetworkManager implements TransactionProtocolManager, 
      */
     public BlockchainConnectionStatus getBlockchainConnectionStatus(BlockchainNetworkType blockchainNetworkType) throws CantGetBlockchainConnectionStatusException {
         return runningAgents.get(blockchainNetworkType).getBlockchainConnectionStatus();
+    }
+
+    /**
+     * Starting from the parentTransaction, I will navigate up until the last transaction, and return it.
+     * @blockchainNetworkType the network in which we will be executing this. If none provided, DEFAULT will be used.
+     * @param parentTransactionHash The starting point transaction hash.
+     * @param transactionBlockHash the block where this transaction is.
+     * @return the Last child transaction.
+     */
+    public Transaction getLastChildTransaction(@Nullable BlockchainNetworkType blockchainNetworkType, String parentTransactionHash, String transactionBlockHash) throws CantGetTransactionException {
+        /**
+         * if no blockchain network type info provided, then I will use default.
+         */
+        if (blockchainNetworkType == null)
+            blockchainNetworkType = BlockchainNetworkType.DEFAULT;
+
+        /**
+         * I will get the parent transaction, locally or remotely.
+         */
+        Transaction parentTransaction;
+        try {
+            parentTransaction = this.getTransactionFromBlockChain(parentTransactionHash, transactionBlockHash);
+        } catch (CantGetTransactionsException e) {
+            throw new CantGetTransactionException(CantGetTransactionException.DEFAULT_MESSAGE, e, "Error getting the parent transaction from the blockchain.", "Blockchain error.");
+        }
+
+        /**
+         * If I couldn't get it, then the nothing else to do.
+         */
+        if (parentTransaction == null)
+            return null;
+
+        /**
+         * Now that I have the parent transaction, I will navigate down one level
+         */
+        for (TransactionOutput output : parentTransaction.getOutputs()){
+            /**
+             * I will only consider the output that is for sending bitcoins to someone else.
+             */
+            if (output.getScriptPubKey().isSentToAddress() && !output.isMine(getWallet(blockchainNetworkType, null))){
+                Transaction childTransaction = output.getSpentBy().getParentTransaction();
+                /**
+                 * if there are no inputs associated to this transaction's output, the this is the last trasaction of the key
+                 */
+                if (childTransaction == null)
+                    return parentTransaction;
+                else{
+                    /**
+                     * I will get the block in which this transaction appears and call this function again.
+                     */
+                    transactionBlockHash = childTransaction.getAppearsInHashes().keySet().toString();
+                    this.getLastChildTransaction(blockchainNetworkType, childTransaction.getHashAsString(), transactionBlockHash);
+                }
+
+            }
+        }
+        return null;
+    }
+
+    /**
+     * Starting from the parentTransaction, I will navigate up until the last transaction, and return the CryptoTransaction
+     * @blockchainNetworkType the network in which we will be executing this. If none provided, DEFAULT will be used.
+     * @param parentTransactionHash The starting point transaction hash.
+     * @param transactionBlockHash the block where this transaction is.
+     * @return the Last child transaction.
+     */
+    public CryptoTransaction getLastChildCryptoTransaction(@Nullable BlockchainNetworkType blockchainNetworkType, String parentTransactionHash, String transactionBlockHash) throws CantGetCryptoTransactionException {
+        return CryptoTransaction.getCryptoTransaction(this.getBitcoinTransactions(BlockchainNetworkType.DEFAULT).get(0));
+    }
+
+    /**
+     * Gets a stored CryptoTransaction in wathever network.
+     * @param txHash the transaction hash we want to get the CryptoTransaction
+     * @return the last recorded CryptoTransaction.
+     * @throws CantGetCryptoTransactionException
+     */
+    public CryptoTransaction getCryptoTransaction(String txHash) throws CantGetCryptoTransactionException {
+        try {
+            return getDao().getCryptoTransaction(txHash);
+        } catch (CantExecuteDatabaseOperationException e) {
+            throw new CantGetCryptoTransactionException(CantGetCryptoTransactionException.DEFAULT_MESSAGE, e, "database error getting the last crypto transaction.", "database error");
+        }
     }
 }

@@ -13,6 +13,7 @@ import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.exceptions.CantB
 import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.exceptions.CantCancellBroadcastTransactionException;
 import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.exceptions.CantGetBlockchainConnectionStatusException;
 import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.exceptions.CantGetCryptoTransactionException;
+import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.exceptions.CantGetTransactionException;
 import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.exceptions.CantStoreBitcoinTransactionException;
 import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.exceptions.ErrorBroadcastingTransactionException;
 import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.interfaces.BitcoinNetworkConfiguration;
@@ -420,58 +421,13 @@ public class BitcoinCryptoNetworkMonitor implements Agent {
      */
 
     public CryptoTransaction getCryptoTransactionFromBlockChain(String txHash, String blockHash) throws CantGetCryptoTransactionException {
-        /**
-         * I will check I don't get nulls in the parameters
-         */
-        if (txHash == null )
-            throw new CantGetCryptoTransactionException(CantGetCryptoTransactionException.DEFAULT_MESSAGE, null, "TxHash parameters can't be null", null);
-
-        /**
-         * I will get the transaction from our own database if we have it.
-         */
-        Sha256Hash transactionSha256Hash = Sha256Hash.wrap(txHash);
-        Transaction storedTransaction = wallet.getTransaction(transactionSha256Hash);
-
-        if (storedTransaction != null)
-            return getCryptoTransactionFromBitcoinTransaction(storedTransaction);
-
-
-        /**
-         * I don't have it locally, so I will request it to a peer.
-         */
-        if (blockHash == null )
-            throw new CantGetCryptoTransactionException(CantGetCryptoTransactionException.DEFAULT_MESSAGE, null, "BlockHash parameters can't be null", null);
-        try{
-            /**
-             * I get the hash of the block
-             */
-            Sha256Hash blockSha256Hash = Sha256Hash.wrap(blockHash);
-
-
-            /**
-             * If I don't have this block, then I will get the block from the peer
-             */
-            Block genesisBlock = getBlockFromPeer(blockSha256Hash);
-
-            /**
-             * Will search all transactions from the block until I find my own.
-             */
-            for (Transaction transaction : genesisBlock.getTransactions()){
-                if (transaction.getHashAsString().contentEquals(txHash)){
-                    /**
-                     * I form the CryptoTransaction and return it.
-                     */
-                    return getCryptoTransactionFromBitcoinTransaction(transaction);
-                }
-            }
-
-            /**
-             * If I couldn't find it. then I will return null.
-             * */
-            return null;
-        } catch (Exception e){
-            throw new CantGetCryptoTransactionException(CantGetCryptoTransactionException.DEFAULT_MESSAGE, e, null, null);
+        Transaction transaction = null;
+        try {
+            transaction = this.getTransactionFromBlockChain(txHash, blockHash);
+        } catch (Exception e) {
+            throw new CantGetCryptoTransactionException(CantGetCryptoTransactionException.DEFAULT_MESSAGE, e, "Error getting the transaction from the blockchain.", null);
         }
+        return this.getCryptoTransactionFromBitcoinTransaction(transaction);
     }
 
     /**
@@ -488,11 +444,11 @@ public class BitcoinCryptoNetworkMonitor implements Agent {
      * @param blockHash
      * @return
      */
-    private Block getBlockFromPeer(Sha256Hash blockHash) throws CantGetCryptoTransactionException {
+    private Block getBlockFromPeer(Sha256Hash blockHash) throws CantGetTransactionException {
         try {
             return peerGroup.getDownloadPeer().getBlock(blockHash).get(1, TimeUnit.MINUTES);
         } catch (InterruptedException | ExecutionException | TimeoutException e) {
-            throw new CantGetCryptoTransactionException(CantGetCryptoTransactionException.DEFAULT_MESSAGE, e, "There was a problem trying to get the block from the Peer.", null);
+            throw new CantGetTransactionException(CantGetTransactionException.DEFAULT_MESSAGE, e, "There was a problem trying to get the block from the Peer.", null);
         }
     }
 
@@ -580,5 +536,65 @@ public class BitcoinCryptoNetworkMonitor implements Agent {
             throw new CantGetBlockchainConnectionStatusException(CantGetBlockchainConnectionStatusException.DEFAULT_MESSAGE, e, "Error getting connection status from peers.", null);
         }
 
+    }
+
+    /**
+     * Gets the specified Transaction from the Blockchain by looking it locally, or on the blockchain using the block hash
+     * @param parentTransactionHash
+     * @param transactionBlockHash
+     * @return
+     * @throws CantGetTransactionException
+     */
+    public Transaction getTransactionFromBlockChain(String parentTransactionHash, String transactionBlockHash) throws CantGetTransactionException {
+        /**
+         * I will check I don't get nulls in the parameters
+         */
+        if (parentTransactionHash == null )
+            throw new CantGetTransactionException(CantGetTransactionException.DEFAULT_MESSAGE, null, "TxHash parameters can't be null", null);
+
+        /**
+         * I will get the transaction from our own database if we have it.
+         */
+        Sha256Hash transactionSha256Hash = Sha256Hash.wrap(parentTransactionHash);
+        Transaction storedTransaction = wallet.getTransaction(transactionSha256Hash);
+
+        if (storedTransaction != null)
+            return storedTransaction;
+
+
+        /**
+         * I don't have it locally, so I will request it to a peer.
+         */
+        if (transactionBlockHash == null )
+            throw new CantGetTransactionException(CantGetTransactionException.DEFAULT_MESSAGE, null, "BlockHash parameters can't be null", null);
+
+        try {
+            /**
+             * I get the hash of the block
+             */
+            Sha256Hash blockSha256Hash = Sha256Hash.wrap(transactionBlockHash);
+
+
+            /**
+             * If I don't have this block, then I will get the block from the peer
+             */
+            Block genesisBlock = getBlockFromPeer(blockSha256Hash);
+
+            /**
+             * Will search all transactions from the block until I find my own.
+             */
+            for (Transaction transaction : genesisBlock.getTransactions()) {
+                if (transaction.getHashAsString().contentEquals(parentTransactionHash)) {
+                    /**
+                     * I form the CryptoTransaction and return it.
+                     */
+                    return transaction;
+                }
+            }
+        } catch (Exception e) {
+            throw new CantGetTransactionException(CantGetTransactionException.DEFAULT_MESSAGE, e, "error getting the Transaction from the blockchain" , null);
+        }
+
+        return null;
     }
 }

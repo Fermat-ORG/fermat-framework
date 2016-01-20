@@ -1,6 +1,5 @@
 package com.bitdubai.fermat_dap_android_sub_app_asset_factory_bitdubai.fragments;
 
-import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.DatePickerDialog;
 import android.app.ProgressDialog;
@@ -44,6 +43,7 @@ import com.bitdubai.fermat_dap_android_sub_app_asset_factory_bitdubai.R;
 import com.bitdubai.fermat_dap_android_sub_app_asset_factory_bitdubai.sessions.AssetFactorySession;
 import com.bitdubai.fermat_dap_android_sub_app_asset_factory_bitdubai.util.CommonLogger;
 import com.bitdubai.fermat_dap_api.layer.all_definition.enums.State;
+import com.bitdubai.fermat_dap_api.layer.all_definition.util.DAPStandardFormats;
 import com.bitdubai.fermat_dap_api.layer.dap_middleware.dap_asset_factory.enums.AssetBehavior;
 import com.bitdubai.fermat_dap_api.layer.dap_middleware.dap_asset_factory.interfaces.AssetFactory;
 import com.bitdubai.fermat_dap_api.layer.dap_module.asset_factory.interfaces.AssetFactoryModuleManager;
@@ -51,12 +51,11 @@ import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfac
 import com.bitdubai.fermat_wpd_api.layer.wpd_middleware.wallet_manager.interfaces.InstalledWallet;
 
 import java.io.ByteArrayOutputStream;
-import java.text.SimpleDateFormat;
+import java.text.DateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
-import java.util.TimeZone;
 import java.util.UUID;
 
 /**
@@ -88,17 +87,10 @@ public class AssetEditorFragment extends AbstractFermatFragment implements View.
 
     private ImageView takePicture;
 
-    private int year = 0;
-    private int month = 0;
-    private int day = 0;
 
-    private int hour = 0;
-    private int minutes = 0;
-
-
-    private boolean initializingDate = false;
-    private boolean initializingMonth = false;
-    private boolean initializingTime = false;
+    private Calendar expirationTimeCalendar;
+    private DateFormat dateFormat = DAPStandardFormats.DATE_FORMAT;
+    private DateFormat timeFormat = DAPStandardFormats.TIME_FORMAT;
     private boolean isEdit;
     private boolean hasResource;
 
@@ -106,7 +98,8 @@ public class AssetEditorFragment extends AbstractFermatFragment implements View.
         AssetEditorFragment fragment = new AssetEditorFragment();
         fragment.setAsset(asset);
         fragment.setIsEdit(asset != null);
-        fragment.setInitializing(true);
+        fragment.expirationTimeCalendar = Calendar.getInstance();
+        fragment.expirationTimeCalendar.setTime(new Date());
         return fragment;
     }
 
@@ -198,40 +191,20 @@ public class AssetEditorFragment extends AbstractFermatFragment implements View.
         if (isEdit)
             isRedeemableView.setChecked(asset.getIsRedeemable());
 
-        Calendar calendar = Calendar.getInstance();
-        calendar.setTimeZone(TimeZone.getDefault());
-        calendar.setTime(new Date());
-        expirationDate.setText(String.format("%d/%d/%d", calendar.get(Calendar.DAY_OF_MONTH),
-                calendar.get(Calendar.MONTH), calendar.get(Calendar.YEAR)));
-        expirationTime.setText(String.format("%d:%d", calendar.get(Calendar.HOUR),
-                calendar.get(Calendar.MINUTE)));
+        expirationDate.setText(dateFormat.format(expirationTimeCalendar.getTime()));
+        expirationTime.setText(timeFormat.format(expirationTimeCalendar.getTime()));
         expirationDate.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (initializingDate) {
-                    Calendar calendar = Calendar.getInstance();
-                    calendar.setTimeZone(TimeZone.getDefault());
-                    calendar.setTime(new Date());
-                    day = calendar.get(Calendar.DAY_OF_MONTH);
-                    month = calendar.get(Calendar.MONTH);
-                    year = calendar.get(Calendar.YEAR);
-                    initializingDate = false;
-                    initializingMonth = true;
-                }
-                int monthToShow = initializingMonth ? month + 1 : month;
-                initializingMonth = false;
                 DatePickerDialog pickerDialog = new DatePickerDialog(getActivity(), new DatePickerDialog.OnDateSetListener() {
                     @Override
                     public void onDateSet(DatePicker datePicker, int year, int month, int day) {
-                        AssetEditorFragment.this.year = year;
-                        AssetEditorFragment.this.month = month + 1;
-                        AssetEditorFragment.this.day = day;
-                        expirationDate.setText(String.format("%s/%s/%s",
-                                day < 10 ? "0" + String.valueOf(day) : String.valueOf(day),
-                                month + 1 < 10 ? "0" + String.valueOf(month + 1) : String.valueOf(month + 1),
-                                String.valueOf(year)));
+                        expirationTimeCalendar.set(Calendar.YEAR, year);
+                        expirationTimeCalendar.set(Calendar.MONTH, month);
+                        expirationTimeCalendar.set(Calendar.DAY_OF_MONTH, day);
+                        expirationDate.setText(dateFormat.format(expirationTimeCalendar.getTime()));
                     }
-                }, year, monthToShow, day);
+                }, expirationTimeCalendar.get(Calendar.YEAR), expirationTimeCalendar.get(Calendar.MONTH), expirationTimeCalendar.get(Calendar.DAY_OF_MONTH));
                 pickerDialog.show();
                 CommonLogger.debug("DatePickerDialog", "Showing DatePickerDialog...");
             }
@@ -239,25 +212,15 @@ public class AssetEditorFragment extends AbstractFermatFragment implements View.
         expirationTime.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (initializingTime) {
-                    Calendar calendar = Calendar.getInstance();
-                    calendar.setTimeZone(TimeZone.getDefault());
-                    calendar.setTime(new Date());
-                    hour = calendar.get(Calendar.HOUR);
-                    minutes = calendar.get(Calendar.MINUTE);
-                    initializingTime = false;
-                }
                 TimePickerDialog timePickerDialog = new TimePickerDialog(getActivity(), new TimePickerDialog.OnTimeSetListener() {
 
                     @Override
                     public void onTimeSet(TimePicker timePicker, int hour, int minute) {
-                        AssetEditorFragment.this.hour = hour;
-                        AssetEditorFragment.this.minutes = minute;
-                        expirationTime.setText(String.format("%s:%s",
-                                hour < 10 ? "0" + String.valueOf(hour) : String.valueOf(hour),
-                                minute < 10 ? "0" + String.valueOf(minute) : String.valueOf(minute)));
+                        expirationTimeCalendar.set(Calendar.HOUR_OF_DAY, hour);
+                        expirationTimeCalendar.set(Calendar.MINUTE, minute);
+                        expirationTime.setText(timeFormat.format(expirationTimeCalendar.getTime()));
                     }
-                }, hour, minutes, true);
+                }, expirationTimeCalendar.get(Calendar.HOUR_OF_DAY), expirationTimeCalendar.get(Calendar.MINUTE), true);
                 timePickerDialog.show();
                 CommonLogger.debug("DatePickerDialog", "Showing TimerPickerDialog...");
             }
@@ -275,11 +238,8 @@ public class AssetEditorFragment extends AbstractFermatFragment implements View.
 
         if (isEdit && asset.getExpirationDate() != null) {
             hasExpirationDate.setActivated(true);
-            calendar.setTime(asset.getExpirationDate());
-            expirationDate.setText(String.format("%d/%d/%d", calendar.get(Calendar.DAY_OF_MONTH),
-                    calendar.get(Calendar.MONTH), calendar.get(Calendar.YEAR)));
-            expirationTime.setText(String.format("%d/%d", calendar.get(Calendar.HOUR),
-                    calendar.get(Calendar.MINUTE)));
+            expirationDate.setText(dateFormat.format(asset.getExpirationDate()));
+            expirationTime.setText(timeFormat.format(asset.getExpirationDate()));
         }
 
         return rootView;
@@ -287,7 +247,7 @@ public class AssetEditorFragment extends AbstractFermatFragment implements View.
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult( requestCode, resultCode, data);
+        super.onActivityResult(requestCode, resultCode, data);
         if (resultCode == Activity.RESULT_OK) {
             Bitmap imageBitmap = null;
             switch (requestCode) {
@@ -455,12 +415,8 @@ public class AssetEditorFragment extends AbstractFermatFragment implements View.
         if (hasExpirationDate.isActivated()) {
             if (!expirationDate.getText().toString().trim().isEmpty()) {
                 try {
-                    @SuppressLint("SimpleDateFormat")
-                    SimpleDateFormat format = new SimpleDateFormat("dd/MM/yyyy HH:mm");
-                    String dateTime = expirationDate.getText().toString().trim() + " " + expirationTime.getText().toString().trim();
-                    asset.setExpirationDate(new java.sql.Timestamp(format.parse(dateTime).getTime()));
-                    long now = new Date().getTime();
-                    asset.setCreationTimestamp(new java.sql.Timestamp(now));
+                    asset.setExpirationDate(new java.sql.Timestamp(expirationTimeCalendar.getTime().getTime()));
+                    asset.setCreationTimestamp(new java.sql.Timestamp(System.currentTimeMillis()));
                 } catch (Exception ex) {
                     CommonLogger.exception(TAG, ex.getMessage(), ex);
                 }
@@ -505,11 +461,6 @@ public class AssetEditorFragment extends AbstractFermatFragment implements View.
 
     public void setIsEdit(boolean isEdit) {
         this.isEdit = isEdit;
-    }
-
-    public void setInitializing(boolean initializing) {
-        this.initializingDate = initializing;
-        this.initializingTime = initializing;
     }
 
     /**

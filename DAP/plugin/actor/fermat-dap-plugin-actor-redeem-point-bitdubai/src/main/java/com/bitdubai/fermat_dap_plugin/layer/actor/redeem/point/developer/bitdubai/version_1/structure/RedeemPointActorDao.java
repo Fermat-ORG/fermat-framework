@@ -100,7 +100,7 @@ public class RedeemPointActorDao implements Serializable {
               * Open new database connection
               */
             database = this.pluginDatabaseSystem.openDatabase(this.pluginId, RedeemPointActorDatabaseConstants.REDEEM_POINT_DATABASE_NAME);
-            database.closeDatabase();
+
         } catch (CantOpenDatabaseException cantOpenDatabaseException) {
             throw new CantInitializeRedeemPointActorDatabaseException(CantInitializeRedeemPointActorDatabaseException.DEFAULT_MESSAGE, cantOpenDatabaseException, "", "Exception not handled by the plugin, there is a problem and i cannot open the database.");
         } catch (DatabaseNotFoundException e) {
@@ -114,7 +114,7 @@ public class RedeemPointActorDao implements Serializable {
                    * We create the new database
                    */
                 database = databaseFactory.createDatabase(this.pluginId, RedeemPointActorDatabaseConstants.REDEEM_POINT_DATABASE_NAME);
-                database.closeDatabase();
+
             } catch (CantCreateDatabaseException cantCreateDatabaseException) {
                   /*
                    * The database cannot be created. I can not handle this situation.
@@ -158,7 +158,7 @@ public class RedeemPointActorDao implements Serializable {
             // Failure unknown.
             throw new CantAddPendingRedeemPointException("CAN'T INSERT REDEEM POINT", FermatException.wrapException(e), "", "Cant create new REDEEM POINT, unknown failure.");
         } finally {
-            database.closeDatabase();
+
         }
     }
 
@@ -194,8 +194,6 @@ public class RedeemPointActorDao implements Serializable {
         } catch (Exception e) {
             // Failure unknown.
             throw new CantAddPendingRedeemPointException("CAN'T INSERT REDEEM POINT", FermatException.wrapException(e), "", "Cant create new REDEEM POINT, unknown failure.");
-        } finally {
-            database.closeDatabase();
         }
     }
 
@@ -237,7 +235,7 @@ public class RedeemPointActorDao implements Serializable {
         } catch (Exception e) {
             throw new CantUpdateRedeemPointException(e.getMessage(), FermatException.wrapException(e), "Redeem Point Actor", "Cant get developer identity list, unknown failure.");
         } finally {
-            database.closeDatabase();
+
         }
     }
 
@@ -278,7 +276,7 @@ public class RedeemPointActorDao implements Serializable {
         } catch (Exception e) {
             throw new CantUpdateRedeemPointException(e.getMessage(), FermatException.wrapException(e), "Redeem Point Actor", "Cant get developer identity list, unknown failure.");
         } finally {
-            database.closeDatabase();
+
         }
     }
 
@@ -318,7 +316,7 @@ public class RedeemPointActorDao implements Serializable {
         } catch (Exception e) {
             throw new CantUpdateRedeemPointException(e.getMessage(), FermatException.wrapException(e), "Redeem Point Actor", "Cant get developer identity list, unknown failure.");
         } finally {
-            database.closeDatabase();
+
         }
     }
 
@@ -388,7 +386,7 @@ public class RedeemPointActorDao implements Serializable {
                 this.updateAssetRedeemPointDAPConnectionStateActorNetworService(DAPConnectionState.REGISTERED_OFFLINE);
             }
 
-            database.closeDatabase();
+
         } catch (CantInsertRecordException e) {
             throw new CantAddPendingRedeemPointException("CAN'T INSERT REDEEM POINT REGISTERED IN ACTOR NETWORK SERVICE", e, "", "Cant create new ASSET ISSUER REGISTERED IN ACTOR NETWORK SERVICE, insert database problems.");
         } catch (CantUpdateRedeemPointException e) {
@@ -396,7 +394,7 @@ public class RedeemPointActorDao implements Serializable {
         } catch (Exception e) {
             throw new CantAddPendingRedeemPointException("CAN'T INSERT REDEEM POINT", FermatException.wrapException(e), "", "Cant create new ASSET USER, unknown failure.");
         } finally {
-            database.closeDatabase();
+
         }
         return recordInsert;
     }
@@ -531,7 +529,7 @@ public class RedeemPointActorDao implements Serializable {
         } catch (Exception e) {
             throw new CantGetRedeemPointsListException(e.getMessage(), FermatException.wrapException(e), "Redeem Point Actor", "Cant get Redeem Point Actor list, unknown failure.");
         } finally {
-            database.closeDatabase();
+
         }
         // Return the list values.
         return list;
@@ -576,7 +574,7 @@ public class RedeemPointActorDao implements Serializable {
         } catch (Exception e) {
             throw new CantGetRedeemPointsListException(e.getMessage(), FermatException.wrapException(e), "Redeem Points Actor", "Cant get Redeem Point Actor list, unknown failure.");
         } finally {
-            database.closeDatabase();
+
         }
         // Return the list values.
         return list;
@@ -602,7 +600,7 @@ public class RedeemPointActorDao implements Serializable {
             table.loadToMemory();
             // 3) Get Asset Users Record.
             actorAssetRedeemPoint = this.addRecords(table.getRecords());
-            database.closeDatabase();
+
         } catch (CantLoadTableToMemoryException e) {
             throw new CantGetAssetRedeemPointActorsException(e.getMessage(), e, "Asset User Actor", "Cant load " + RedeemPointActorDatabaseConstants.REDEEM_POINT_TABLE_NAME + " table in memory.");
         } catch (CantGetRedeemPointActorProfileImageException e) {
@@ -610,7 +608,7 @@ public class RedeemPointActorDao implements Serializable {
         } catch (Exception e) {
             throw new CantGetAssetRedeemPointActorsException(e.getMessage(), FermatException.wrapException(e), "Asset User Actor", "Cant get Asset User Actor list, unknown failure.");
         } finally {
-            database.closeDatabase();
+
         }
         // Return the values.
         return actorAssetRedeemPoint;
@@ -637,7 +635,7 @@ public class RedeemPointActorDao implements Serializable {
             table.loadToMemory();
             // 3) Get Asset Users Record.
             actorAssetRedeemPoint = this.addRecords(table.getRecords());
-            database.closeDatabase();
+
         } catch (CantLoadTableToMemoryException e) {
             throw new CantGetAssetRedeemPointActorsException(e.getMessage(), e, "Asset User Actor", "Cant load " + RedeemPointActorDatabaseConstants.REDEEM_POINT_TABLE_NAME + " table in memory.");
         } catch (CantGetRedeemPointActorProfileImageException e) {
@@ -645,7 +643,7 @@ public class RedeemPointActorDao implements Serializable {
         } catch (Exception e) {
             throw new CantGetAssetRedeemPointActorsException(e.getMessage(), FermatException.wrapException(e), "Asset User Actor", "Cant get Asset User Actor list, unknown failure.");
         } finally {
-            database.closeDatabase();
+
         }
         // Return the values.
         return actorAssetRedeemPoint;
@@ -673,7 +671,7 @@ public class RedeemPointActorDao implements Serializable {
             table.loadToMemory();
             // 3) Get Asset Users Record.
             this.addRecordsTableRegisteredToList(list, table.getRecords());
-            database.closeDatabase();
+
         } catch (CantLoadTableToMemoryException e) {
             throw new CantGetRedeemPointsListException(e.getMessage(), e, "Redeem Point Actor Registered", "Cant load " + RedeemPointActorDatabaseConstants.REDEEM_POINT_REGISTERED_TABLE_NAME + " table in memory.");
         } catch (CantGetRedeemPointActorProfileImageException e) {
@@ -681,7 +679,7 @@ public class RedeemPointActorDao implements Serializable {
         } catch (Exception e) {
             throw new CantGetRedeemPointsListException(e.getMessage(), FermatException.wrapException(e), "Redeem Point Actor Registered", "Cant get Redeem Point Actor Registered list, unknown failure.");
         } finally {
-            database.closeDatabase();
+
         }
         // Return the list values.
         return list;
@@ -746,29 +744,36 @@ public class RedeemPointActorDao implements Serializable {
                  */
                 throw new CantGetUserDeveloperIdentitiesException("Cant get asset Issuer identity list, table not found.", "Plugin Identity", "Cant get asset user identity list, table not found.");
             }
-//            table.addStringFilter(RedeemPointActorDatabaseConstants.REDEEM_POINT_CONNECTION_STATE_COLUMN_NAME, DAPConnectionState.CONNECTED_ONLINE.getCode(), DatabaseFilterType.EQUAL);
+            table.addStringFilter(RedeemPointActorDatabaseConstants.REDEEM_POINT_REGISTERED_CONNECTION_STATE_COLUMN_NAME, DAPConnectionState.CONNECTED_ONLINE.getCode(), DatabaseFilterType.EQUAL);
 
 
             table.loadToMemory();
 
             // 3) Get Asset Issuer Recorod.
             for (DatabaseTableRecord record : table.getRecords()) {
-                // Add records to list.
-                list.add(new RedeemPointActorRecord(record.getStringValue(RedeemPointActorDatabaseConstants.REDEEM_POINT_REGISTERED_NAME_COLUMN_NAME),
+                RedeemPointActorRecord redeemPointActorRecord = new RedeemPointActorRecord(
+                        record.getStringValue(RedeemPointActorDatabaseConstants.REDEEM_POINT_REGISTERED_NAME_COLUMN_NAME),
                         record.getStringValue(RedeemPointActorDatabaseConstants.REDEEM_POINT_REGISTERED_PUBLIC_KEY_COLUMN_NAME),
                         getRedeemPointProfileImagePrivateKey(record.getStringValue(RedeemPointActorDatabaseConstants.REDEEM_POINT_REGISTERED_PUBLIC_KEY_COLUMN_NAME)),
-                        record.getLongValue(RedeemPointActorDatabaseConstants.REDEEM_POINT_REGISTERED_REGISTRATION_DATE_COLUMN_NAME)));           }
+                        record.getLongValue(RedeemPointActorDatabaseConstants.REDEEM_POINT_REGISTERED_REGISTRATION_DATE_COLUMN_NAME));
 
-            database.closeDatabase();
+                CryptoAddress cryptoAddress = new CryptoAddress(record.getStringValue(RedeemPointActorDatabaseConstants.REDEEM_POINT_REGISTERED_CRYPTO_ADDRESS_COLUMN_NAME), CryptoCurrency.BITCOIN);
+                redeemPointActorRecord.setCryptoAddress(cryptoAddress);
+
+                // Add records to list.
+                list.add(redeemPointActorRecord);
+            }
+
+
         } catch (CantLoadTableToMemoryException e) {
-            database.closeDatabase();
+
             throw new CantGetRedeemPointsListException(e.getMessage(), e, "Redeem Point Actor Registered", "Cant load " + RedeemPointActorDatabaseConstants.REDEEM_POINT_REGISTERED_TABLE_NAME + " table in memory.");
         } catch (CantGetRedeemPointActorProfileImageException e) {
-            database.closeDatabase();
+
             // Failure unknown.
             throw new CantGetRedeemPointsListException(e.getMessage(), e, "Redeem Point Actor Registered", "Can't get profile ImageMiddleware.");
         } catch (Exception e) {
-            database.closeDatabase();
+
             throw new CantGetRedeemPointsListException(e.getMessage(), FermatException.wrapException(e), "Redeem Point Actor Registered", "Cant get Redeem Point Actor Registered list, unknown failure.");
         }
         // Return the list values.

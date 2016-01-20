@@ -140,7 +140,7 @@ public class AvailableProjectsFragmentOld extends AbstractFermatFragment impleme
         runtimeActivity.setType(Activities.CWP_WALLET_RUNTIME_WALLET_BASIC_WALLET_BITDUBAI_VERSION_1_MAIN);
         runtimeActivity.setColor("#8bba9e");
         runtimeWalletNavigationStructure.addActivity(runtimeActivity);
-        runtimeWalletNavigationStructure.setStartActivity(runtimeActivity.getType());
+        runtimeWalletNavigationStructure.addPosibleStartActivity(runtimeActivity.getType());
 
         runtimeTitleBar = new TitleBar();
         runtimeTitleBar.setLabel("bitDubai bitcoin Wallet");

@@ -1051,7 +1051,7 @@ public class AssetUserActorDao implements Serializable {
                 table.addStringFilter(AssetUserActorDatabaseConstants.ASSET_USER_GROUP_MEMBER_USER_REGISTERED_PUBLIC_KEY_COLUMN_NAME, assetUserGroupMemberRecord.getActorPublicKey(), DatabaseFilterType.EQUAL);
                 table.loadToMemory();
 
-                return table.getRecords().isEmpty();
+                return !table.getRecords().isEmpty();
             }
 
         } catch (Exception e) {
