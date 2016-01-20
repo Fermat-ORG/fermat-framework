@@ -348,20 +348,24 @@ public class PresentationDialog extends FermatDialog<FermatSession,SubAppResourc
             return this;
         }
 
-        public void setIsCheckEnabled(boolean isCheckEnabled) {
+        public Builder setIsCheckEnabled(boolean isCheckEnabled) {
             this.isCheckEnabled = isCheckEnabled;
+            return this;
         }
 
-        public void setCallback(PresentationCallback callback) {
+        public Builder setCallback(PresentationCallback callback) {
             this.callback = callback;
+            return this;
         }
 
-        public void setTemplateType(TemplateType templateType) {
+        public Builder setTemplateType(TemplateType templateType) {
             this.templateType = templateType;
+            return this;
         }
 
-        public void setTextColor(String textColorInHexa) {
+        public Builder setTextColor(String textColorInHexa) {
             this.textColor = textColorInHexa;
+            return this;
         }
     }
 

@@ -25,7 +25,12 @@ import com.bitdubai.fermat_android_api.ui.fragments.FermatWalletListFragment;
 import com.bitdubai.fermat_android_api.ui.interfaces.FermatListItemListeners;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Wallets;
+import com.bitdubai.fermat_api.layer.all_definition.settings.exceptions.CantGetSettingsException;
+import com.bitdubai.fermat_api.layer.all_definition.settings.exceptions.CantPersistSettingsException;
+import com.bitdubai.fermat_api.layer.all_definition.settings.exceptions.SettingsNotFoundException;
+import com.bitdubai.fermat_api.layer.all_definition.settings.structure.SettingsManager;
 import com.bitdubai.fermat_api.layer.modules.common_classes.ActiveActorIdentityInformation;
+import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.BitcoinWalletSettings;
 import com.bitdubai.fermat_dap_android_wallet_asset_issuer_bitdubai.R;
 import com.bitdubai.fermat_dap_android_wallet_asset_issuer_bitdubai.common.adapters.MyAssetsAdapter;
 import com.bitdubai.fermat_dap_android_wallet_asset_issuer_bitdubai.models.Data;
@@ -35,6 +40,7 @@ import com.bitdubai.fermat_dap_android_wallet_asset_issuer_bitdubai.sessions.Ses
 import com.bitdubai.fermat_dap_android_wallet_asset_issuer_bitdubai.util.CommonLogger;
 import com.bitdubai.fermat_dap_api.layer.all_definition.exceptions.CantGetIdentityAssetIssuerException;
 import com.bitdubai.fermat_dap_api.layer.dap_identity.asset_issuer.interfaces.IdentityAssetIssuer;
+import com.bitdubai.fermat_dap_api.layer.dap_module.wallet_asset_issuer.AssetIssuerSettings;
 import com.bitdubai.fermat_dap_api.layer.dap_module.wallet_asset_issuer.interfaces.AssetIssuerWalletSupAppModuleManager;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedWalletExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
@@ -58,6 +64,7 @@ public class MyAssetsActivityFragment extends FermatWalletListFragment<DigitalAs
     // Fermat Managers
     private AssetIssuerWalletSupAppModuleManager moduleManager;
     private ErrorManager errorManager;
+    SettingsManager<AssetIssuerSettings> settingsManager;
 
     // Data
     private List<DigitalAsset> digitalAssets;
@@ -75,6 +82,7 @@ public class MyAssetsActivityFragment extends FermatWalletListFragment<DigitalAs
 
         moduleManager = ((AssetIssuerSession) appSession).getModuleManager();
         errorManager = appSession.getErrorManager();
+        settingsManager = appSession.getModuleManager().getSettingsManager();
 
         digitalAssets = (List) getMoreDataAsync(FermatRefreshTypes.NEW, 0);
     }
@@ -88,38 +96,68 @@ public class MyAssetsActivityFragment extends FermatWalletListFragment<DigitalAs
         noAssetsView = layout.findViewById(R.id.dap_wallet_no_assets);
         showOrHideNoAssetsView(digitalAssets.isEmpty());
 
-        PresentationDialog presentationDialog = new PresentationDialog.Builder(getActivity(), appSession)
-                .setBannerRes(R.drawable.banner)
-                .setIconRes(R.drawable.asset_issuer)
-                .setSubTitle("Welcome to the Asset Issuer Wallet.")
-                .setBody("From this wallet you will be able to distribute your assets to the world and collect statistics of their usage.")
-                .setTextFooter("We will be creating an avatar for you in order to identify you in the system as an Asset Issuer, name and more details later in the Asset Issuer Identity sub app.")
-                .build();
-
-        presentationDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
-            @Override
-            public void onDismiss(DialogInterface dialog) {
-                Object o = appSession.getData(SessionConstantsAssetIssuer.PRESENTATION_IDENTITY_CREATED);
-                if (o != null) {
-                    if ((Boolean) (o)) {
-                        //invalidate();
-                        appSession.removeData(SessionConstantsAssetIssuer.PRESENTATION_IDENTITY_CREATED);
-                    }
-                }
-                try {
-                    IdentityAssetIssuer identityAssetIssuer = moduleManager.getActiveAssetIssuerIdentity();
-                    if (identityAssetIssuer == null) {
-                        getActivity().onBackPressed();
-                    } else {
-                        invalidate();
-                    }
-                } catch (CantGetIdentityAssetIssuerException e) {
-                    e.printStackTrace();
-                }
+        //Initialize settings
+        settingsManager = appSession.getModuleManager().getSettingsManager();
+        AssetIssuerSettings settings = null;
+        try {
+            settings = settingsManager.loadAndGetSettings(appSession.getAppPublicKey());
+        }catch (Exception e){
+            settings = null;
+        }
+        if(settings == null){
+            settings = new AssetIssuerSettings();
+            settings.setIsPresentationHelpEnabled(true);
+            try {
+                settingsManager.persistSettings(appSession.getAppPublicKey(), settings);
+            } catch (CantPersistSettingsException e) {
+                e.printStackTrace();
             }
-        });
+        }
 
-        presentationDialog.show();
+        PresentationDialog presentationDialog = null;
+        try {
+            presentationDialog = new PresentationDialog.Builder(getActivity(), appSession)
+                    .setBannerRes(R.drawable.banner)
+                    .setIconRes(R.drawable.asset_issuer)
+                    .setSubTitle("Welcome to the Asset Issuer Wallet.")
+                    .setBody("From this wallet you will be able to distribute your assets to the world and collect statistics of their usage.")
+                    .setTextFooter("We will be creating an avatar for you in order to identify you in the system as an Asset Issuer, name and more details later in the Asset Issuer Identity sub app.")
+                    .setTemplateType(PresentationDialog.TemplateType.TYPE_PRESENTATION)
+                    .setTemplateType((moduleManager.getActiveAssetIssuerIdentity() == null) ? PresentationDialog.TemplateType.TYPE_PRESENTATION : PresentationDialog.TemplateType.TYPE_PRESENTATION_WITHOUT_IDENTITIES)
+                    .setIsCheckEnabled(settingsManager.loadAndGetSettings(appSession.getAppPublicKey()).isPresentationHelpEnabled())
+                    .build();
+
+            presentationDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
+                @Override
+                public void onDismiss(DialogInterface dialog) {
+                    Object o = appSession.getData(SessionConstantsAssetIssuer.PRESENTATION_IDENTITY_CREATED);
+                    if (o != null) {
+                        if ((Boolean) (o)) {
+                            //invalidate();
+                            appSession.removeData(SessionConstantsAssetIssuer.PRESENTATION_IDENTITY_CREATED);
+                        }
+                    }
+                    try {
+                        IdentityAssetIssuer identityAssetIssuer = moduleManager.getActiveAssetIssuerIdentity();
+                        if (identityAssetIssuer == null) {
+                            getActivity().onBackPressed();
+                        } else {
+                            invalidate();
+                        }
+                    } catch (CantGetIdentityAssetIssuerException e) {
+                        e.printStackTrace();
+                    }
+                }
+            });
+
+            presentationDialog.show();
+        } catch (CantGetIdentityAssetIssuerException e) {
+            e.printStackTrace();
+        } catch (CantGetSettingsException e) {
+            e.printStackTrace();
+        } catch (SettingsNotFoundException e) {
+            e.printStackTrace();
+        }
     }
 
     @Override
