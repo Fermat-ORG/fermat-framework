@@ -3032,9 +3032,14 @@ public class WalletRuntimeEnginePluginRoot extends AbstractPlugin implements
         Activity runtimeActivity;
         Fragment runtimeFragment;
         StatusBar runtimeStatusBar;
+        TitleBar runtimeTitleBar;
+
 
         final String publicKey = "cash_wallet";
         final String statusBarColor = "#00b9ff";
+        final String titleBarLabelColor = "#FFFFFF";
+        final String titleBarColor = "#00b9ff";
+        final int titleBarLabelSize = 20;
 
         runtimeWalletNavigationStructure = new WalletNavigationStructure();
         runtimeWalletNavigationStructure.setWalletCategory(WalletCategory.REFERENCE_WALLET.getCode());
@@ -3085,6 +3090,15 @@ public class WalletRuntimeEnginePluginRoot extends AbstractPlugin implements
         runtimeActivity.setBackActivity(Activities.CSH_CASH_MONEY_WALLET_HOME);
         runtimeActivity.setBackPublicKey(publicKey);
         runtimeWalletNavigationStructure.addActivity(runtimeActivity);
+
+        runtimeTitleBar = new TitleBar();
+        runtimeTitleBar.setIconName("back");
+        runtimeTitleBar.setLabel("Transaction detail");
+        runtimeTitleBar.setLabelSize(titleBarLabelSize);
+        runtimeTitleBar.setTitleColor(titleBarLabelColor);
+        runtimeTitleBar.setColor(titleBarColor);
+        runtimeTitleBar.setIsTitleTextStatic(true);
+        runtimeActivity.setTitleBar(runtimeTitleBar);
 
         runtimeStatusBar = new StatusBar();
         runtimeStatusBar.setColor(statusBarColor);

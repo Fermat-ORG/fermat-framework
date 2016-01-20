@@ -95,10 +95,10 @@ public class TransactionDetailFragment extends AbstractFermatFragment implements
         transactionType = (FermatTextView) layout.findViewById(R.id.csh_transaction_details_transaction_type);
 
 
-        amount.setText("Amount: " + transaction.getAmount().toPlainString());
-        memo.setText("Memo: " + transaction.getMemo());
-        date.setText("Date: " + DateHelper.getDateStringFromTimestamp(transaction.getTimestamp()) + " - " + getPrettyTime(transaction.getTimestamp()));
-        transactionType.setText("Transaction Type: " + getTransactionTypeText(transaction.getTransactionType()));
+        amount.setText(transaction.getAmount().toPlainString());
+        memo.setText(transaction.getMemo());
+        date.setText(DateHelper.getDateStringFromTimestamp(transaction.getTimestamp()) + " - " + getPrettyTime(transaction.getTimestamp()));
+        transactionType.setText(getTransactionTypeText(transaction.getTransactionType()));
         return layout;
     }
 
