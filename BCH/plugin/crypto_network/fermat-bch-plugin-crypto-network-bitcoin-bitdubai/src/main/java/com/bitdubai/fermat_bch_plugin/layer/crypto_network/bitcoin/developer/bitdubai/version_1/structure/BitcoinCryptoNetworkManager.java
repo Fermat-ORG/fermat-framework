@@ -983,6 +983,9 @@ public class BitcoinCryptoNetworkManager implements TransactionProtocolManager {
                     transactions.add(transaction);
             }
         }
+        /**
+         * I'm not removing duplicates
+         */
         return transactions;
     }
 }

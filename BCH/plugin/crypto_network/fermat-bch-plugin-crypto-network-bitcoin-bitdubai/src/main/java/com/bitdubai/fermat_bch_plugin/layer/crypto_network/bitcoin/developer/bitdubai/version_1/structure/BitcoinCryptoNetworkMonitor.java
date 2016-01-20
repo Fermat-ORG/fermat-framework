@@ -195,21 +195,23 @@ public class BitcoinCryptoNetworkMonitor implements Agent {
      * Will get all transactions hashes in Broadcasting status to resume them.
      */
     private void resumeBroadcastOfPendingTransactions(BlockchainNetworkType blockchainNetworkType) {
-        try {
-            for (String txHash : getDao().getBroadcastTransactionsByStatus(blockchainNetworkType, Status.BROADCASTING)){
+        /**
+         * will get all the trasactions from the wallet in pending status and broadcast them
+         */
+        for (Transaction transaction : wallet.getPendingTransactions()){
+            try {
+                this.broadcastTransaction(transaction.getHashAsString());
+            } catch (CantBroadcastTransactionException e) {
+                /**
+                 * if there was an error, I will mark the transaction as WITH_ERROR
+                 */
                 try {
-                    this.broadcastTransaction(txHash);
-                } catch (CantBroadcastTransactionException e) {
-                    /**
-                     * if there was an error, I will mark the transaction as WITH_ERROR
-                     */
-                    getDao().setBroadcastStatus(Status.WITH_ERROR, peerGroup.getConnectedPeers().size(), e, txHash);
+                    getDao().setBroadcastStatus(Status.WITH_ERROR, peerGroup.getConnectedPeers().size(), e, transaction.getHashAsString());
+                } catch (CantExecuteDatabaseOperationException e1) {
+                    e1.printStackTrace();
                 }
             }
-        } catch (CantExecuteDatabaseOperationException e) {
-            e.printStackTrace();
         }
-
     }
 
     /**
@@ -241,6 +243,7 @@ public class BitcoinCryptoNetworkMonitor implements Agent {
          final Transaction transaction = wallet.getTransaction(sha256Hash);
          TransactionBroadcast transactionBroadcast = peerGroup.broadcastTransaction(transaction);
          transactionBroadcast.setMinConnections(BitcoinNetworkConfiguration.MIN_BROADCAST_CONNECTIONS);
+
 
 
          ListenableFuture<Transaction> future = transactionBroadcast.future();
