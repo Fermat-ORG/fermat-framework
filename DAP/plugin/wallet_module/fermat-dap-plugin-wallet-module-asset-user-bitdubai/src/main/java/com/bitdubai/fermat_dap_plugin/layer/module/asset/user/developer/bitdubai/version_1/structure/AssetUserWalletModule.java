@@ -79,9 +79,15 @@ public class AssetUserWalletModule {
     public void appropriateAsset(String digitalAssetPublicKey, String bitcoinWalletPublicKey, int amountToAppropriate) throws CantExecuteAppropriationTransactionException, TransactionAlreadyStartedException {
         String context = "Asset Public Key: " + digitalAssetPublicKey + " - BTC Wallet Public Key: " + bitcoinWalletPublicKey;
         try {
-            DigitalAssetMetadata assetMetadata = assetUserWalletManager.loadAssetUserWallet("walletPublicKeyTest").getDigitalAssetMetadata(digitalAssetPublicKey);
-            assetAppropriationManager.appropriateAsset(assetMetadata, "walletPublicKeyTest", bitcoinWalletPublicKey, amountToAppropriate);
-        } catch (CantGetDigitalAssetFromLocalStorageException | CantLoadWalletException e) {
+            AssetUserWallet wallet = assetUserWalletManager.loadAssetUserWallet("walletPublicKeyTest");
+            List<AssetUserWalletTransaction> transactions = wallet.getAllAvailableTransactions(digitalAssetPublicKey);
+            if (amountToAppropriate > transactions.size())
+                throw new IllegalStateException("NOT ENOUGH ASSETS!");
+            for (int i = 0; i < amountToAppropriate; i++) {
+                DigitalAssetMetadata assetMetadata = wallet.getDigitalAssetMetadata(transactions.get(i).getTransactionHash());
+                assetAppropriationManager.appropriateAsset(assetMetadata, "walletPublicKeyTest", bitcoinWalletPublicKey);
+            }
+        } catch (CantGetDigitalAssetFromLocalStorageException | CantGetTransactionsException | CantLoadWalletException e) {
             throw new CantExecuteAppropriationTransactionException(e, context, null);
         }
     }
