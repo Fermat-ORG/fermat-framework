@@ -44,9 +44,9 @@ public class AssetUserSession extends AbstractFermatSession<InstalledWallet,Asse
     }
 
     public AssetUserSession() {
-
+        data = new HashMap<String, Object>();
+        installedWallet = null;
     }
-
 
     public InstalledWallet getWalletSessionType() {
         return installedWallet;
@@ -54,12 +54,8 @@ public class AssetUserSession extends AbstractFermatSession<InstalledWallet,Asse
 
     @Override
     public void setData(String key, Object object) {
-        if (data == null)
-            data = new HashMap<>();
         data.put(key, object);
     }
-
-
 
     @Override
     public Object getData(String key) {
@@ -75,7 +71,6 @@ public class AssetUserSession extends AbstractFermatSession<InstalledWallet,Asse
     public WalletResourcesProviderManager getWalletResourcesProviderManager() {
         return resourceManager;
     }
-
 
     public AssetUserWalletSubAppModuleManager getWalletManager() {
         return walletManager;

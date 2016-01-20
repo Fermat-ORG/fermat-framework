@@ -1,10 +1,9 @@
-package com.bitdubai.fermat_dap_android_wallet_redeem_point_bitdubai.settings;
+package com.bitdubai.fermat_dap_api.layer.dap_module.wallet_asset_redeem_point;
 
 import com.bitdubai.fermat_wpd_api.layer.wpd_middleware.wallet_settings.PreferenceWalletSettings;
 import com.bitdubai.fermat_wpd_api.layer.wpd_middleware.wallet_settings.exceptions.CantGetDefaultLanguageException;
 import com.bitdubai.fermat_wpd_api.layer.wpd_middleware.wallet_settings.exceptions.CantGetDefaultSkinException;
 import com.bitdubai.fermat_wpd_api.layer.wpd_middleware.wallet_settings.exceptions.CantLoadWalletSettings;
-import com.bitdubai.fermat_wpd_api.layer.wpd_middleware.wallet_settings.exceptions.CantSaveWalletSettings;
 import com.bitdubai.fermat_wpd_api.layer.wpd_middleware.wallet_settings.exceptions.CantSetDefaultLanguageException;
 import com.bitdubai.fermat_wpd_api.layer.wpd_middleware.wallet_settings.exceptions.CantSetDefaultSkinException;
 import com.bitdubai.fermat_wpd_api.layer.wpd_middleware.wallet_settings.interfaces.WalletSettings;
@@ -21,8 +20,11 @@ public class RedeemPointSettings implements WalletSettings {
 
     private UUID languageId;
     private UUID skinId;
-    private PreferenceWalletSettings preferenceWalletSettings;
+    private boolean isPresentationHelpEnabled;
 
+    public boolean isPresentationHelpEnabled() {
+        return isPresentationHelpEnabled;
+    }
 
     @Override
     public UUID getDefaultLanguage() throws CantGetDefaultLanguageException, CantLoadWalletSettings {
@@ -45,7 +47,7 @@ public class RedeemPointSettings implements WalletSettings {
     }
 
     @Override
-    public void setIsPresentationHelpEnabled(boolean b) {
-
+    public void setIsPresentationHelpEnabled(boolean isPresentationHelpEnabled) {
+        this.isPresentationHelpEnabled = isPresentationHelpEnabled;
     }
 }
