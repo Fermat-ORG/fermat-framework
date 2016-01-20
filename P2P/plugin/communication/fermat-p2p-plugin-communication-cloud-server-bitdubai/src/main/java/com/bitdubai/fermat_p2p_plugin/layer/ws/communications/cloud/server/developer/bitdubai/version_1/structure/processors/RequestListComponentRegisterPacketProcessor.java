@@ -36,7 +36,7 @@ import java.util.Map;
 import java.util.TreeMap;
 
 /**
- * The Class <code>com.bitdubai.fermat_p2p_plugin.layer.ws.communications.cloud.server.developer.bitdubai.version_1.structure.processors.RequestListComponentRegisterPacketProcessor</code> implement
+ * The Class <code>com.bitdubai.fermat_p2p_plugin.layer.ws.communications.cloud.server.developer.bitdubai.version_1.structure.processors.RequestListComponentRegisterJettyPacketProcessor</code> implement
  * the logic to process the packet when a packet type <code>com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.enums.FermatPacketType.REQUEST_LIST_COMPONENT_REGISTERED</code> is receive by the server.
  * <p/>
  * Created by Roberto Requena - (rart3001@gmail.com) on 06/09/15.
@@ -394,7 +394,7 @@ public class RequestListComponentRegisterPacketProcessor extends FermatPacketPro
      */
     private  List<PlatformComponentProfile> applyDiscoveryQueryParametersFromOtherComponent(DiscoveryQueryParameters discoveryQueryParameters, FermatPacket receiveFermatPacket){
 
-        System.out.println("RequestListComponentRegisterPacketProcessor - applyDiscoveryQueryParametersFromOtherComponent    = ");
+        System.out.println("RequestListComponentRegisterJettyPacketProcessor - applyDiscoveryQueryParametersFromOtherComponent    = ");
 
         List<PlatformComponentProfile>  filteredListFromOtherComponentType = new ArrayList<>();
 

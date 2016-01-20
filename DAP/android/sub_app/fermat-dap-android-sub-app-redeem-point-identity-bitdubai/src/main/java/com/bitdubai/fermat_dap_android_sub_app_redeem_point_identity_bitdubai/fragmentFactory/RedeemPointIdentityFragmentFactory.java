@@ -4,9 +4,8 @@ import com.bitdubai.fermat_android_api.engine.FermatFragmentFactory;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractFermatFragment;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.enums.FermatFragmentsEnumType;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.exceptions.FragmentNotFoundException;
-import com.bitdubai.fermat_dap_android_sub_app_redeem_point_identity_bitdubai.fragments.CreateIdentityFragment;
+import com.bitdubai.fermat_dap_android_sub_app_redeem_point_identity_bitdubai.fragments.CreateRedeemPointIdentityFragment;
 import com.bitdubai.fermat_dap_android_sub_app_redeem_point_identity_bitdubai.fragments.IdentityListFragment;
-import com.bitdubai.fermat_dap_android_sub_app_redeem_point_identity_bitdubai.preference_settings.RedeemPointIdentitySubAppSettings;
 import com.bitdubai.fermat_dap_android_sub_app_redeem_point_identity_bitdubai.session.RedeemPointIdentitySubAppSession;
 import com.bitdubai.fermat_pip_api.layer.network_service.subapp_resources.SubAppResourcesProviderManager;
 
@@ -23,7 +22,7 @@ public class RedeemPointIdentityFragmentFactory extends FermatFragmentFactory<Re
             return IdentityListFragment.newInstance();
 
         if (fragments.equals(RedeemPointIdentityFragmentEnumType.DAP_SUB_APP_REDEEM_POINT_IDENTITY_CREATE_IDENTITY_FRAGMENT))
-            return CreateIdentityFragment.newInstance();
+            return CreateRedeemPointIdentityFragment.newInstance();
 
 
         throw createFragmentNotFoundException(fragments);

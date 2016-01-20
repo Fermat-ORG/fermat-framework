@@ -243,34 +243,32 @@ public class RedeemPointRedemptionMonitorAgent implements Agent {
                             debug("new transaction on crypto network");
                             boolean notifyEventOnCryptoNetwork = false;
                             for (String transactionId : dao.getPendingSubmitGenesisTransactions()) {
-                                for (CryptoTransaction cryptoTransaction : bitcoinNetworkManager.getCryptoTransaction(transactionId)) {
-                                    debug("verifying transactions");
-                                    if (cryptoTransaction.getCryptoStatus() == CryptoStatus.ON_CRYPTO_NETWORK) {
-                                        //TODO LOAD WALLET! I SHOULD SEARCH FOR THE WALLET PUBLIC KEY
-                                        //BUT THAT'S NOT YET IMPLEMENTED.
-                                        debug("loading redeem point wallet, public key is hardcoded");
-                                        AssetRedeemPointWallet wallet = assetRedeemPointWalletManager.loadAssetRedeemPointWallet("walletPublicKeyTest");
-                                        debug("searching digital asset metadata");
-                                        DigitalAssetMetadata digitalAssetMetadata = getDigitalAssetMetadataFromLocalStorage(transactionId);
+                                debug("searching digital asset metadata");
+                                DigitalAssetMetadata digitalAssetMetadata = getDigitalAssetMetadataFromLocalStorage(transactionId);
+                                debug("searching the crypto transaction");
 
-                                        String userPublicKey = dao.getSenderPublicKeyById(transactionId);
-                                        AssetRedeemPointWalletTransactionRecord assetRedeemPointWalletTransactionRecord;
-                                        assetRedeemPointWalletTransactionRecord = new AssetRedeemPointWalletTransactionRecordWrapper(
-                                                digitalAssetMetadata,
-                                                cryptoTransaction,
-                                                userPublicKey,
-                                                actorAssetRedeemPointManager.getActorAssetRedeemPoint().getActorPublicKey());
+                                CryptoTransaction cryptoTransaction = bitcoinNetworkManager.getLastChildCryptoTransaction(null, digitalAssetMetadata.getGenesisTransaction(), digitalAssetMetadata.getGenesisBlock());
+                                //TODO LOAD WALLET! I SHOULD SEARCH FOR THE WALLET PUBLIC KEY
+                                //BUT THAT'S NOT YET IMPLEMENTED.
+                                debug("loading redeem point wallet, public key is hardcoded");
+                                AssetRedeemPointWallet wallet = assetRedeemPointWalletManager.loadAssetRedeemPointWallet("walletPublicKeyTest");
 
-                                        AssetRedeemPointWalletBalance walletBalance = wallet.getBalance();
-                                        debug("adding credit on book balance");
-                                        //CREDIT ON BOOK BALANCE
-                                        walletBalance.credit(assetRedeemPointWalletTransactionRecord, BalanceType.BOOK);
-                                        //UPDATE TRANSACTION CRYPTO STATUS.
-                                        debug("update transaction status");
-                                        dao.updateTransactionCryptoStatusById(CryptoStatus.ON_CRYPTO_NETWORK, transactionId);
-                                        notifyEventOnCryptoNetwork = true; //Without this I'd have to put the update in there and it can result on unnecessary updates.
-                                    }
-                                }
+                                String userPublicKey = dao.getSenderPublicKeyById(transactionId);
+                                AssetRedeemPointWalletTransactionRecord assetRedeemPointWalletTransactionRecord;
+                                assetRedeemPointWalletTransactionRecord = new AssetRedeemPointWalletTransactionRecordWrapper(
+                                        digitalAssetMetadata,
+                                        cryptoTransaction,
+                                        userPublicKey,
+                                        actorAssetRedeemPointManager.getActorAssetRedeemPoint().getActorPublicKey());
+
+                                AssetRedeemPointWalletBalance walletBalance = wallet.getBalance();
+                                debug("adding credit on book balance");
+                                //CREDIT ON BOOK BALANCE
+                                walletBalance.credit(assetRedeemPointWalletTransactionRecord, BalanceType.BOOK);
+                                //UPDATE TRANSACTION CRYPTO STATUS.
+                                debug("update transaction status");
+                                dao.updateTransactionCryptoStatusById(CryptoStatus.ON_CRYPTO_NETWORK, transactionId);
+                                notifyEventOnCryptoNetwork = true; //Without this I'd have to put the update in there and it can result on unnecessary updates.
                             }
 
                             if (notifyEventOnCryptoNetwork) {
@@ -283,35 +281,31 @@ public class RedeemPointRedemptionMonitorAgent implements Agent {
                             boolean notifyEventOnBlockChain = false;
                             debug("new transaction on blockchain");
                             for (String transactionId : dao.getOnCryptoNetworkGenesisTransactions()) {
-                                for (CryptoTransaction cryptoTransaction : bitcoinNetworkManager.getCryptoTransaction(transactionId)) {
-                                    debug("verifying transactions");
-                                    if (cryptoTransaction.getCryptoStatus() == CryptoStatus.ON_BLOCKCHAIN) {
-                                        String userPublicKey = dao.getSenderPublicKeyById(transactionId);
+                                DigitalAssetMetadata metadata = getDigitalAssetMetadataFromLocalStorage(transactionId);
+                                debug("searching the crypto transaction");
+                                CryptoTransaction cryptoTransaction = bitcoinNetworkManager.getLastChildCryptoTransaction(null, metadata.getGenesisTransaction(), metadata.getGenesisBlock());
+                                String userPublicKey = dao.getSenderPublicKeyById(transactionId);
+                                //TODO LOAD WALLET! I SHOULD SEARCH FOR THE WALLET PUBLIC KEY
+                                //BUT THAT'S NOT YET IMPLEMENTED.
+                                debug("loading wallet, public key is hardcoded");
+                                AssetRedeemPointWallet wallet = assetRedeemPointWalletManager.loadAssetRedeemPointWallet("walletPublicKeyTest");
 
-                                        //TODO LOAD WALLET! I SHOULD SEARCH FOR THE WALLET PUBLIC KEY
-                                        //BUT THAT'S NOT YET IMPLEMENTED.
-                                        debug("loading wallet, public key is hardcoded");
-                                        AssetRedeemPointWallet wallet = assetRedeemPointWalletManager.loadAssetRedeemPointWallet("walletPublicKeyTest");
+                                AssetRedeemPointWalletTransactionRecord assetRedeemPointWalletTransactionRecord;
+                                assetRedeemPointWalletTransactionRecord = new AssetRedeemPointWalletTransactionRecordWrapper(
+                                        metadata,
+                                        cryptoTransaction,
+                                        userPublicKey,
+                                        actorAssetRedeemPointManager.getActorAssetRedeemPoint().getActorPublicKey());
 
-                                        DigitalAssetMetadata metadata = getDigitalAssetMetadataFromLocalStorage(transactionId);
-                                        AssetRedeemPointWalletTransactionRecord assetRedeemPointWalletTransactionRecord;
-                                        assetRedeemPointWalletTransactionRecord = new AssetRedeemPointWalletTransactionRecordWrapper(
-                                                metadata,
-                                                cryptoTransaction,
-                                                userPublicKey,
-                                                actorAssetRedeemPointManager.getActorAssetRedeemPoint().getActorPublicKey());
-
-                                        //CREDIT ON AVAILABLE BALANCE.
-                                        debug("adding credit on available balance");
-                                        AssetRedeemPointWalletBalance walletBalance = wallet.getBalance();
-                                        walletBalance.credit(assetRedeemPointWalletTransactionRecord, BalanceType.AVAILABLE);
-                                        wallet.newAssetRedeemed(userPublicKey, metadata.getDigitalAsset().getPublicKey());
-                                        //I GOT IT, EVERYTHING WENT OK!
-                                        debug("update status");
-                                        dao.updateTransactionCryptoStatusById(CryptoStatus.ON_BLOCKCHAIN, transactionId);
-                                        notifyEventOnBlockChain = true;
-                                    }
-                                }
+                                //CREDIT ON AVAILABLE BALANCE.
+                                debug("adding credit on available balance");
+                                AssetRedeemPointWalletBalance walletBalance = wallet.getBalance();
+                                walletBalance.credit(assetRedeemPointWalletTransactionRecord, BalanceType.AVAILABLE);
+                                wallet.newAssetRedeemed(userPublicKey, metadata.getDigitalAsset().getPublicKey());
+                                //I GOT IT, EVERYTHING WENT OK!
+                                debug("update status");
+                                dao.updateTransactionCryptoStatusById(CryptoStatus.ON_BLOCKCHAIN, transactionId);
+                                notifyEventOnBlockChain = true;
                             }
                             if (notifyEventOnBlockChain) {
                                 dao.updateEventStatus(EventStatus.NOTIFIED, eventId);

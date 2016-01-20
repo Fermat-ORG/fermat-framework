@@ -5,7 +5,9 @@ import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.interfa
 import com.bitdubai.fermat_api.layer.pip_Identity.developer.interfaces.DeveloperIdentity;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 
@@ -38,7 +40,7 @@ public class WalletNavigationStructure implements FermatWallet,Serializable{
      * Main screen of the wallet
      */
 
-    private Activities startActivity;
+    private List<Activities> startActivities = new ArrayList<>();
 
     /**
      * Activity used to block something
@@ -55,6 +57,7 @@ public class WalletNavigationStructure implements FermatWallet,Serializable{
 
 
     private DeveloperIdentity developer;
+    private int actualStart = 0;
 
     /**
      * WalletNavigationStructure constructor
@@ -97,7 +100,7 @@ public class WalletNavigationStructure implements FermatWallet,Serializable{
      */
     @Override
     public Activity getStartActivity() {
-        return activities.get(startActivity);
+        return activities.get(startActivities.get(actualStart));
     }
 
     /**
@@ -106,8 +109,8 @@ public class WalletNavigationStructure implements FermatWallet,Serializable{
      * @param activity
      */
     @Override
-    public void setStartActivity(Activities activity) {
-        this.startActivity=activity;
+    public void addPosibleStartActivity(Activities activity) {
+        this.startActivities.add(activity);
     }
 
     /**
@@ -117,9 +120,15 @@ public class WalletNavigationStructure implements FermatWallet,Serializable{
     @Override
     public Activity getLastActivity() {
         if (lastActivity == null) {
-            return activities.get(startActivity);
+            return activities.get(startActivities.get(actualStart));
         }
         return activities.get(lastActivity);
+    }
+
+    @Override
+    public void changeActualStartActivity(int option)throws IllegalArgumentException{
+        if(option>activities.size() || option<0) throw new IllegalArgumentException();
+        this.actualStart = option;
     }
 
     @Override

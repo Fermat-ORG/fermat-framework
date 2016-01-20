@@ -33,7 +33,8 @@
             android:paddingTop="14dp"
             android:text="Second Identity"
             android:textColor="#ffffff"
-            android:textSize="16sp" />
+            android:textSize="16sp"
+            tools:ignore="HardcodedText,RtlHardcoded,RtlSymmetry" />
 
     </LinearLayout>
 
