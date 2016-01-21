@@ -1,5 +1,6 @@
 package com.bitdubai.fermat_dap_plugin.layer.module.asset.user.developer.bitdubai.version_1.structure;
 
+import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantCreateFileException;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.FileNotFoundException;
 import com.bitdubai.fermat_dap_api.layer.all_definition.digital_asset.DigitalAssetMetadata;
@@ -19,6 +20,7 @@ import com.bitdubai.fermat_dap_api.layer.dap_wallet.common.exceptions.CantLoadWa
 
 import java.util.HashMap;
 import java.util.List;
+import java.util.UUID;
 
 /**
  * Created by franklin on 16/10/15.
@@ -28,12 +30,16 @@ public class AssetUserWalletModule {
     AssetAppropriationManager assetAppropriationManager;
     UserRedemptionManager userRedemptionManager;
     IdentityAssetUserManager identityAssetUserManager;
+    UUID pluginId;
+    PluginFileSystem pluginFileSystem;
 
-    public AssetUserWalletModule(AssetUserWalletManager assetUserWalletManager, AssetAppropriationManager assetAppropriationManager, UserRedemptionManager userRedemptionManager, IdentityAssetUserManager identityAssetUserManager) {
+    public AssetUserWalletModule(AssetUserWalletManager assetUserWalletManager, AssetAppropriationManager assetAppropriationManager, UserRedemptionManager userRedemptionManager, IdentityAssetUserManager identityAssetUserManager, UUID pluginId, PluginFileSystem pluginFileSystem) {
         this.assetUserWalletManager     = assetUserWalletManager;
         this.assetAppropriationManager  = assetAppropriationManager;
         this.userRedemptionManager      = userRedemptionManager;
         this.identityAssetUserManager   = identityAssetUserManager;
+        this.pluginId = pluginId;
+        this.pluginFileSystem = pluginFileSystem;
     }
 
     public List<AssetUserWalletList> getAssetUserWalletBalances(String publicKey) throws CantLoadWalletException {

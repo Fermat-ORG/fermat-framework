@@ -316,7 +316,7 @@ public class WsCommunicationsCloudClientChannel extends WebSocketClient {
     }
 
     /**
-     * This method register a FermatPacketProcessor object with this
+     * This method register a FermatJettyPacketProcessor object with this
      * server
      */
     public void registerFermatPacketProcessor(FermatPacketProcessor fermatPacketProcessor) {

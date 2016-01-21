@@ -85,31 +85,61 @@ public class IncomingNotificationDao implements DAO {
 
         try {
 
-            final DatabaseTable table = getDatabaseTable();
+            ActorNetworkServiceRecord incomingNotificationRecord = null;
+            if(!existNotification(notificationId))
+            {
+                final DatabaseTable table = getDatabaseTable();
 
-            final DatabaseTableRecord entityRecord = table.getEmptyRecord();
+                final DatabaseTableRecord entityRecord = table.getEmptyRecord();
 
 
-            ActorNetworkServiceRecord cryptoPaymentRequestRecord = new ActorNetworkServiceRecord(
-                    notificationId      ,
-                    senderAlias         ,
-                    senderPhrase,
-                    senderProfileImage  ,
-                    descriptor          ,
-                    destinationType     ,
-                    senderType          ,
-                    senderPublicKey     ,
-                    destinationPublicKey,
-                    timestamp           ,
-                    protocolState       ,
-                    flagReaded,
-                    0
+                incomingNotificationRecord = new ActorNetworkServiceRecord(
+                        notificationId      ,
+                        senderAlias         ,
+                        senderPhrase,
+                        senderProfileImage  ,
+                        descriptor          ,
+                        destinationType     ,
+                        senderType          ,
+                        senderPublicKey     ,
+                        destinationPublicKey,
+                        timestamp           ,
+                        protocolState       ,
+                        flagReaded,
+                        0
 
-            );
+                );
 
-            table.insertRecord(buildDatabaseRecord(entityRecord, cryptoPaymentRequestRecord));
+                table.insertRecord(buildDatabaseRecord(entityRecord, incomingNotificationRecord));
 
-            return cryptoPaymentRequestRecord;
+
+            }
+            return incomingNotificationRecord;
+
+        } catch (CantInsertRecordException e) {
+
+            throw new CantCreateNotificationException( "",e, "Exception not handled by the plugin, there is a problem in database and i cannot insert the record.","");
+        } catch (CantBuildDataBaseRecordException e) {
+            throw new CantCreateNotificationException( "",e, "Exception not handled by the plugin, there is a problem in database and i cannot insert the record.","");
+
+        } catch (CantGetNotificationException e) {
+            throw new CantCreateNotificationException( "",e, "Exception not handled by the plugin, there is a problem in database","");
+
+        }
+    }
+    public void createNotification(ActorNetworkServiceRecord actorNetworkServiceRecord) throws CantCreateNotificationException {
+
+        try {
+            if(!existNotification(actorNetworkServiceRecord.getId()))
+            {
+                DatabaseTable incomingNotificationTable = getDatabaseTable();
+
+                DatabaseTableRecord entityRecord = incomingNotificationTable.getEmptyRecord();
+
+                incomingNotificationTable.insertRecord(buildDatabaseRecord(entityRecord, actorNetworkServiceRecord));
+            }
+
+
 
         } catch (CantInsertRecordException e) {
 
@@ -118,21 +148,8 @@ public class IncomingNotificationDao implements DAO {
             throw new CantCreateNotificationException( "",e, "Exception not handled by the plugin, there is a problem in database and i cannot insert the record.","");
 
         }
-    }
-    public void createNotification(ActorNetworkServiceRecord actorNetworkServiceRecord) throws CantCreateNotificationException {
-
-        try {
-            DatabaseTable cryptoPaymentRequestTable = getDatabaseTable();
-
-            DatabaseTableRecord entityRecord = cryptoPaymentRequestTable.getEmptyRecord();
-
-            cryptoPaymentRequestTable.insertRecord(buildDatabaseRecord(entityRecord, actorNetworkServiceRecord));
-
-        } catch (CantInsertRecordException e) {
-
-            throw new CantCreateNotificationException( "",e, "Exception not handled by the plugin, there is a problem in database and i cannot insert the record.","");
-        } catch (CantBuildDataBaseRecordException e) {
-            throw new CantCreateNotificationException( "",e, "Exception not handled by the plugin, there is a problem in database and i cannot insert the record.","");
+        catch (CantGetNotificationException e) {
+            throw new CantCreateNotificationException( "",e, "Exception not handled by the plugin, there is a problem in database","");
 
         }
     }
@@ -196,6 +213,7 @@ public class IncomingNotificationDao implements DAO {
 
         try {
 
+            DatabaseTable incomingNotificationtable = getDatabaseTable();
 
             DatabaseTableRecord emptyRecord = getDatabaseTable().getEmptyRecord();
             /*
@@ -207,7 +225,11 @@ public class IncomingNotificationDao implements DAO {
              * 2.- Create a new transaction and execute
              */
             DatabaseTransaction transaction = database.newTransaction();
-            transaction.addRecordToUpdate(getDatabaseTable(), entityRecord);
+
+            //Set filter
+            incomingNotificationtable.addUUIDFilter(CommunicationNetworkServiceDatabaseConstants.INCOMING_NOTIFICATION_ID_COLUMN_NAME,entity.getId(),DatabaseFilterType.EQUAL);
+
+            transaction.addRecordToUpdate(incomingNotificationtable, entityRecord);
             database.executeTransaction(transaction);
 
         } catch (DatabaseTransactionFailedException databaseTransactionFailedException) {
@@ -258,6 +280,32 @@ public class IncomingNotificationDao implements DAO {
     }
 
 
+
+    public boolean existNotification(final UUID notificationId) throws CantGetNotificationException {
+
+
+        try {
+
+            DatabaseTable cryptoPaymentRequestTable = getDatabaseTable();
+
+            cryptoPaymentRequestTable.addUUIDFilter(CommunicationNetworkServiceDatabaseConstants.INCOMING_NOTIFICATION_ID_COLUMN_NAME, notificationId, DatabaseFilterType.EQUAL);
+
+            cryptoPaymentRequestTable.loadToMemory();
+
+            List<DatabaseTableRecord> records = cryptoPaymentRequestTable.getRecords();
+
+
+            if (!records.isEmpty())
+                return true;
+            else
+                return false;
+
+        } catch (CantLoadTableToMemoryException exception) {
+
+            throw new CantGetNotificationException( "",exception, "Exception not handled by the plugin, there is a problem in database and i cannot load the table.","");
+        }
+
+    }
 
 
     public void changeProtocolState(final UUID               requestId    ,

@@ -60,7 +60,7 @@ public class WsCommunicationsCloudClientSupervisorConnectionAgent extends Thread
 
                         if (getConnection().isOpen()){
 
-                            System.out.println(" WsCommunicationsCloudClientPingAgent - Sending ping to the node...");
+                            System.out.println(" WsCommunicationsCloudClientSupervisorConnectionAgent - Sending ping to the node...");
 
                             String pingString = "PING";
                             ByteBuffer pingData = ByteBuffer.allocate(pingString.getBytes().length);
@@ -70,7 +70,7 @@ public class WsCommunicationsCloudClientSupervisorConnectionAgent extends Thread
                         }
 
                     } catch (Exception ex) {
-                        System.out.println(" WsCommunicationsCloudClientPingAgent - Error occurred sending ping to the node, closing the connection to remote node");
+                        System.out.println(" WsCommunicationsCloudClientSupervisorConnectionAgent - Error occurred sending ping to the node, closing the connection to remote node");
                         getConnection().close();
                         ((WsCommunicationsCloudClientConnection)wsCommunicationsCloudClientPluginRoot.getCommunicationsCloudClientConnection()).getWsCommunicationsCloudClientChannel().setIsRegister(Boolean.FALSE);
                         ((WsCommunicationsCloudClientConnection)wsCommunicationsCloudClientPluginRoot.getCommunicationsCloudClientConnection()).getWsCommunicationsCloudClientChannel().raiseClientConnectionLooseNotificationEvent();

@@ -17,7 +17,7 @@ import com.bitdubai.sub_app.intra_user_community.session.IntraUserSubAppSession;
  * Created by Matias Furszyfer on 2015.08.12..
  * Changed by Jose Manuel De Sousa Dos Santos on 2015.12.03
  */
-@SuppressWarnings("FieldCanBeLocal")
+@SuppressWarnings({"FieldCanBeLocal", "unused"})
 public class ErrorConnectingFermatNetworkDialog extends FermatDialog<IntraUserSubAppSession, SubAppResourcesProviderManager> implements View.OnClickListener {
 
     /**
