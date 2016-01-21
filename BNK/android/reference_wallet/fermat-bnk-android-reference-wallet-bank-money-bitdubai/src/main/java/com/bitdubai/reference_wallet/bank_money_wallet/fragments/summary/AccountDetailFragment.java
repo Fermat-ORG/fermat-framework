@@ -224,6 +224,7 @@ public class AccountDetailFragment extends FermatWalletListFragment<BankMoneyTra
 
     @Override
     public void onItemClickListener(BankMoneyTransactionRecord data, int position) {
+        appSession.setData("transaction_data",data);
         changeActivity(Activities.BNK_BANK_MONEY_WALLET_UPDATE_RECORD,appSession.getAppPublicKey());
     }
 

@@ -1,5 +1,6 @@
 package com.bitdubai.reference_wallet.bank_money_wallet.fragments.home;
 
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -9,6 +10,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Toast;
 
+import com.bitdubai.fermat_android_api.ui.Views.PresentationCallback;
 import com.bitdubai.fermat_android_api.ui.Views.PresentationDialog;
 import com.bitdubai.fermat_android_api.ui.adapters.FermatAdapter;
 import com.bitdubai.fermat_android_api.ui.enums.FermatRefreshTypes;
@@ -73,10 +75,26 @@ public class AccountsListFragment extends FermatWalletListFragment<BankAccountNu
         super.initViews(layout);
         configureToolbar();
         this.emtyView =  layout.findViewById(R.id.bw_empty_accounts_view);
-        presentationDialog = new PresentationDialog(getActivity(),appSession,appResourcesProviderManager);
+        presentationDialog = new PresentationDialog.Builder(getActivity(),appSession)
+                .setBannerRes(R.drawable.bw_banner)
+                .setBody("prueba Body")
+                .setTitle("prueba Title")
+                .setSubTitle("prueba subtitle")
+                .setTextFooter("prueba footer").build();
         showOrHideNoAccountListView(accountsList.isEmpty());
-        if(accountsList.isEmpty())
-            presentationDialog.show();
+        /*presentationDialog.findViewById(R.id.btn_dismiss).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                System.out.println("presentation dialog button close");
+            }
+        });*/
+        presentationDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
+            @Override
+            public void onDismiss(DialogInterface dialogInterface) {
+                System.out.println("presentation dialog dismiss");
+            }
+        });
+        presentationDialog.show();
 
     }
 
