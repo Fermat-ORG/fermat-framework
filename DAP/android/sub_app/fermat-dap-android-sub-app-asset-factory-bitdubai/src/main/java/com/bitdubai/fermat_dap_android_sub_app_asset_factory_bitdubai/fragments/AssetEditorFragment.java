@@ -416,75 +416,103 @@ public class AssetEditorFragment extends AbstractFermatFragment implements View.
         if (asset.getFactoryId() == null) {
             asset.setFactoryId(UUID.randomUUID().toString());
         }
-        asset.setName(nameView.getText().toString().trim());
-        asset.setDescription(descriptionView.getText().toString().trim());
-        asset.setQuantity(Integer.parseInt(quantityView.getText().toString().trim().isEmpty() ? "0" : quantityView.getText().toString().trim()));
-        asset.setTotalQuantity(Integer.parseInt(quantityView.getText().toString().trim().isEmpty() ? "0" : quantityView.getText().toString().trim()));
-        asset.setAmount(Long.parseLong(bitcoinsView.getText().toString().trim().isEmpty() ? "0" : bitcoinsView.getText().toString().trim()));
-        asset.setIsRedeemable(isRedeemableView.isChecked());
-        asset.setState(State.DRAFT);
-        //// TODO: 02/10/15 Asset behaviour is given from the final user through dropdown control list
-        asset.setAssetBehavior(AssetBehavior.REGENERATION_ASSET);
-        if (hasResource) {
-            List<Resource> resources = new ArrayList<>();
-            Resource resource = new Resource();
-            if (asset.getResources() != null && asset.getResources().size() > 0) {
-                resource.setId(asset.getResources().get(0).getId());
-            } else {
-                resource.setId(UUID.randomUUID());
-            }
-            resource.setResourceType(ResourceType.IMAGE);
-            resource.setResourceDensity(ResourceDensity.HDPI);
-            resource.setResourceBinayData(toByteArray(takePicture));
-            resources.add(resource);
-            asset.setResources(resources);
-        } else
-            asset.setResources(null);
-        if (hasExpirationDate.isActivated()) {
-            if (!expirationDate.getText().toString().trim().isEmpty()) {
-                try {
-                    asset.setExpirationDate(new java.sql.Timestamp(expirationTimeCalendar.getTime().getTime()));
-                    asset.setCreationTimestamp(new java.sql.Timestamp(System.currentTimeMillis()));
-                } catch (Exception ex) {
-                    CommonLogger.exception(TAG, ex.getMessage(), ex);
-                }
-            }
-        } else // this asset hasn't expiration date
-            asset.setExpirationDate(null);
 
-        final ProgressDialog dialog = new ProgressDialog(getActivity());
-        dialog.setTitle("Saving asset");
-        dialog.setMessage("Please wait...");
-        dialog.setCancelable(false);
-        dialog.show();
-        FermatWorker worker = new FermatWorker() {
-            @Override
-            protected Object doInBackground() throws Exception {
-                manager.saveAssetFactory(asset);
+        if (validValues()) {
+            asset.setName(nameView.getText().toString().trim());
+            asset.setDescription(descriptionView.getText().toString().trim());
+            asset.setQuantity(Integer.parseInt(quantityView.getText().toString().trim().isEmpty() ? "0" : quantityView.getText().toString().trim()));
+            asset.setTotalQuantity(Integer.parseInt(quantityView.getText().toString().trim().isEmpty() ? "0" : quantityView.getText().toString().trim()));
+            asset.setAmount(Long.parseLong(bitcoinsView.getText().toString().trim().isEmpty() ? "0" : bitcoinsView.getText().toString().trim()));
+            asset.setIsRedeemable(isRedeemableView.isChecked());
+            asset.setState(State.DRAFT);
+            //// TODO: 02/10/15 Asset behaviour is given from the final user through dropdown control list
+            asset.setAssetBehavior(AssetBehavior.REGENERATION_ASSET);
+            if (hasResource) {
+                List<Resource> resources = new ArrayList<>();
+                Resource resource = new Resource();
+                if (asset.getResources() != null && asset.getResources().size() > 0) {
+                    resource.setId(asset.getResources().get(0).getId());
+                } else {
+                    resource.setId(UUID.randomUUID());
+                }
+                resource.setResourceType(ResourceType.IMAGE);
+                resource.setResourceDensity(ResourceDensity.HDPI);
+                resource.setResourceBinayData(toByteArray(takePicture));
+                resources.add(resource);
+                asset.setResources(resources);
+            } else
+                asset.setResources(null);
+            if (hasExpirationDate.isActivated()) {
+                if (!expirationDate.getText().toString().trim().isEmpty()) {
+                    try {
+                        asset.setExpirationDate(new java.sql.Timestamp(expirationTimeCalendar.getTime().getTime()));
+                        asset.setCreationTimestamp(new java.sql.Timestamp(System.currentTimeMillis()));
+                    } catch (Exception ex) {
+                        CommonLogger.exception(TAG, ex.getMessage(), ex);
+                    }
+                }
+            } else // this asset hasn't expiration date
+                asset.setExpirationDate(null);
+
+            final ProgressDialog dialog = new ProgressDialog(getActivity());
+            dialog.setTitle("Saving asset");
+            dialog.setMessage("Please wait...");
+            dialog.setCancelable(false);
+            dialog.show();
+            FermatWorker worker = new FermatWorker() {
+                @Override
+                protected Object doInBackground() throws Exception {
+                    manager.saveAssetFactory(asset);
+                    return true;
+                }
+            };
+            worker.setContext(getActivity());
+            worker.setCallBack(new FermatWorkerCallBack() {
+                @Override
+                public void onPostExecute(Object... result) {
+                    dialog.dismiss();
+                    if (getActivity() != null) {
+                        if (!isEdit) {
+                            Toast.makeText(getActivity(), String.format("Asset %s has been created", asset.getName()), Toast.LENGTH_SHORT).show();
+                        }
+                        changeActivity(Activities.DAP_MAIN.getCode(), appSession.getAppPublicKey());
+                    }
+                }
+
+                @Override
+                public void onErrorOccurred(Exception ex) {
+                    dialog.dismiss();
+                    if (getActivity() != null) {
+                        CommonLogger.exception(TAG, ex.getMessage(), ex);
+                        Toast.makeText(getActivity(), "There was an error creating this asset", Toast.LENGTH_SHORT).show();
+                    }
+                }
+            });
+            worker.execute();
+        }
+    }
+
+    private boolean validValues() {
+
+        try {
+            Integer bitcoins = Integer.parseInt(bitcoinsView.getText().toString().trim().isEmpty() ? "0" : bitcoinsView.getText().toString().trim());
+            if (bitcoins >= 50000) {
                 return true;
             }
-        };
-        worker.setContext(getActivity());
-        worker.setCallBack(new FermatWorkerCallBack() {
-            @Override
-            public void onPostExecute(Object... result) {
-                dialog.dismiss();
-                if (getActivity() != null) {
-                    Toast.makeText(getActivity(), String.format("Asset %s has been created", asset.getName()), Toast.LENGTH_SHORT).show();
-                    changeActivity(Activities.DAP_MAIN.getCode(), appSession.getAppPublicKey());
-                }
-            }
+            else {
+                Toast.makeText(getActivity(), "The minimun monetary amount for any Asset is 50000 satoshis", Toast.LENGTH_SHORT).show();
+                return false;
 
-            @Override
-            public void onErrorOccurred(Exception ex) {
-                dialog.dismiss();
-                if (getActivity() != null) {
-                    CommonLogger.exception(TAG, ex.getMessage(), ex);
-                    Toast.makeText(getActivity(), "There was an error creating this asset", Toast.LENGTH_SHORT).show();
-                }
             }
-        });
-        worker.execute();
+        }
+        catch (NumberFormatException ex)
+        {
+            CommonLogger.exception(TAG, ex.getMessage(), ex);
+            Toast.makeText(getActivity(), "Invalid monetary amount", Toast.LENGTH_SHORT).show();
+        }
+
+        return false;
+
     }
 
     public void setIsEdit(boolean isEdit) {

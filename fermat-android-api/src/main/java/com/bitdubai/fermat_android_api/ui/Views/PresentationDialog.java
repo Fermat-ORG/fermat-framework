@@ -25,19 +25,18 @@ import com.bitdubai.fermat_api.layer.all_definition.settings.structure.SettingsM
 import com.bitdubai.fermat_api.layer.modules.interfaces.FermatSettings;
 import com.bitdubai.fermat_pip_api.layer.network_service.subapp_resources.SubAppResourcesProviderManager;
 
-
 import java.io.ByteArrayOutputStream;
 import java.lang.ref.WeakReference;
 
 /**
  * Created by Matias Furszyfer on 2015.11.27..
  */
-public class PresentationDialog extends FermatDialog<FermatSession,SubAppResourcesProviderManager> implements View.OnClickListener, CompoundButton.OnCheckedChangeListener {
+public class PresentationDialog extends FermatDialog<FermatSession, SubAppResourcesProviderManager> implements View.OnClickListener, CompoundButton.OnCheckedChangeListener {
 
     private PresentationCallback callback;
 
-    public enum TemplateType{
-        TYPE_PRESENTATION,TYPE_PRESENTATION_WITHOUT_IDENTITIES
+    public enum TemplateType {
+        TYPE_PRESENTATION, TYPE_PRESENTATION_WITHOUT_IDENTITIES
     }
 
     public static final String PRESENTATION_IDENTITY_CREATED = "presentation_identity_created";
@@ -55,6 +54,8 @@ public class PresentationDialog extends FermatDialog<FermatSession,SubAppResourc
     String body;
     String textFooter;
     private String textColor;
+    private int titleTextColor;
+    private int viewColor = -1;
     int resBannerimage;
     private int iconRes = -1;
 
@@ -75,6 +76,8 @@ public class PresentationDialog extends FermatDialog<FermatSession,SubAppResourc
     private Button btn_right;
     private FermatButton btn_dismiss;
     private ImageView img_icon;
+    private View view_color;
+
     /**
      * Constructor using Session and Resources
      *
@@ -82,7 +85,7 @@ public class PresentationDialog extends FermatDialog<FermatSession,SubAppResourc
      * @param fermatSession parent class of walletSession and SubAppSession
      * @param resources     parent class of WalletResources and SubAppResources
      */
-    private PresentationDialog(Activity activity, FermatSession fermatSession, SubAppResourcesProviderManager resources,TemplateType type,boolean checkButton) {
+    private PresentationDialog(Activity activity, FermatSession fermatSession, SubAppResourcesProviderManager resources, TemplateType type, boolean checkButton) {
         super(activity, fermatSession, resources);
         this.activity = activity;
         this.type = type;
@@ -101,6 +104,7 @@ public class PresentationDialog extends FermatDialog<FermatSession,SubAppResourc
             checkbox_not_show = (CheckBox) findViewById(R.id.checkbox_not_show);
             checkbox_not_show.setChecked(checkButton);
             img_icon = (ImageView) findViewById(R.id.img_icon);
+            view_color = findViewById(R.id.view_color);
             setUpBasics();
             switch (type) {
                 case TYPE_PRESENTATION:
@@ -117,18 +121,21 @@ public class PresentationDialog extends FermatDialog<FermatSession,SubAppResourc
                     btn_dismiss.setOnClickListener(this);
                     break;
             }
-        }catch (Exception e){
-            if(callback!=null) callback.onError(e);
+        } catch (Exception e) {
+            if (callback != null) callback.onError(e);
         }
     }
 
-    private void setUpBasics(){
-        if(iconRes!=-1 && img_icon!=null) img_icon.setImageResource(iconRes);
-        if(resBannerimage!=-1 && image_banner!=null) image_banner.setImageResource(resBannerimage);
-        if(txt_sub_title != null) txt_sub_title.setText(subTitle);
-        if(txt_body!=null) txt_body.setText(body);
-        if(footer_title!=null)footer_title.setText(textFooter);
-        if(textColor!=null){
+    private void setUpBasics() {
+        if (iconRes != -1 && img_icon != null) img_icon.setImageResource(iconRes);
+        if (resBannerimage != -1 && image_banner != null)
+            image_banner.setImageResource(resBannerimage);
+        if (txt_sub_title != null) txt_sub_title.setText(subTitle);
+        if (txt_body != null) txt_body.setText(body);
+        if (footer_title != null) footer_title.setText(textFooter);
+        if (view_color != null) view_color.setBackgroundColor(viewColor);
+        if (titleTextColor != -1) txt_title.setTextColor(titleTextColor);
+        if (textColor != null) {
             int color = Color.parseColor(textColor);
             txt_sub_title.setTextColor(color);
             txt_body.setTextColor(color);
@@ -136,7 +143,7 @@ public class PresentationDialog extends FermatDialog<FermatSession,SubAppResourc
         }
     }
 
-    private void setUpListenersPresentation(){
+    private void setUpListenersPresentation() {
         btn_left.setOnClickListener(this);
         btn_right.setOnClickListener(this);
         checkbox_not_show.setOnCheckedChangeListener(this);
@@ -144,7 +151,7 @@ public class PresentationDialog extends FermatDialog<FermatSession,SubAppResourc
 
     @Override
     protected int setLayoutId() {
-        switch (type){
+        switch (type) {
             case TYPE_PRESENTATION:
                 return R.layout.presentation_dialog;
             case TYPE_PRESENTATION_WITHOUT_IDENTITIES:
@@ -162,26 +169,25 @@ public class PresentationDialog extends FermatDialog<FermatSession,SubAppResourc
     public void onClick(View v) {
         int id = v.getId();
 
-        if(id == R.id.btn_left){
+        if (id == R.id.btn_left) {
             try {
-                getSession().getModuleManager().createIdentity("John Doe","Available",convertImage(R.drawable.ic_profile_male));
+                getSession().getModuleManager().createIdentity("John Doe", "Available", convertImage(R.drawable.ic_profile_male));
                 getSession().setData(PRESENTATION_IDENTITY_CREATED, Boolean.TRUE);
             } catch (Exception e) {
-                if(callback!=null) callback.onError(e);
+                if (callback != null) callback.onError(e);
             }
             saveSettings();
             dismiss();
-        }
-        else if(id == R.id.btn_right){
+        } else if (id == R.id.btn_right) {
             try {
                 getSession().getModuleManager().createIdentity("Jane Doe", "Available", convertImage(R.drawable.img_profile_female));
                 getSession().setData(PRESENTATION_IDENTITY_CREATED, Boolean.TRUE);
             } catch (Exception e) {
-                if(callback!=null) callback.onError(e);
+                if (callback != null) callback.onError(e);
             }
             saveSettings();
             dismiss();
-        } else if ( id == R.id.btn_dismiss){
+        } else if (id == R.id.btn_dismiss) {
             saveSettings();
             dismiss();
         }
@@ -197,13 +203,13 @@ public class PresentationDialog extends FermatDialog<FermatSession,SubAppResourc
                         bitcoinWalletSettings.setIsPresentationHelpEnabled(false);
                         settingsManager.persistSettings(getSession().getAppPublicKey(), bitcoinWalletSettings);
                     } catch (CantGetSettingsException | SettingsNotFoundException | CantPersistSettingsException e) {
-                        if(callback!=null) callback.onError(e);
+                        if (callback != null) callback.onError(e);
                     }
                 }
         }
     }
 
-    private byte[] convertImage(int resImage){
+    private byte[] convertImage(int resImage) {
         Bitmap bitmap = BitmapFactory.decodeResource(activity.getResources(), resImage);
         ByteArrayOutputStream stream = new ByteArrayOutputStream();
         bitmap.compress(Bitmap.CompressFormat.JPEG, 100, stream);
@@ -212,10 +218,10 @@ public class PresentationDialog extends FermatDialog<FermatSession,SubAppResourc
 
     @Override
     public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-        if(isChecked){
-            getSession().setData(PRESENTATION_SCREEN_ENABLED,Boolean.TRUE);
-        }else {
-           getSession().setData(PRESENTATION_SCREEN_ENABLED,Boolean.FALSE);
+        if (isChecked) {
+            getSession().setData(PRESENTATION_SCREEN_ENABLED, Boolean.TRUE);
+        } else {
+            getSession().setData(PRESENTATION_SCREEN_ENABLED, Boolean.FALSE);
         }
 
     }
@@ -250,15 +256,23 @@ public class PresentationDialog extends FermatDialog<FermatSession,SubAppResourc
         this.resBannerimage = resBannerimage;
     }
 
+    public void setTitleTextColor(int titleTextColor) {
+        this.titleTextColor = titleTextColor;
+    }
+
     public void setTextColor(String textColor) {
         this.textColor = textColor;
+    }
+
+    public void setVIewColor(int viewColor) {
+        this.viewColor = viewColor;
     }
 
     public void setCallback(PresentationCallback callback) {
         this.callback = callback;
     }
 
-    public static class Builder{
+    public static class Builder {
 
         /**
          * Members
@@ -266,7 +280,7 @@ public class PresentationDialog extends FermatDialog<FermatSession,SubAppResourc
         private final WeakReference<Activity> activity;
         private final WeakReference<FermatSession> fermatSession;
         private TemplateType templateType = TemplateType.TYPE_PRESENTATION;
-        private boolean isCheckEnabled=true;
+        private boolean isCheckEnabled = true;
         private PresentationCallback callback;
         private String title;
         private String subTitle;
@@ -274,7 +288,9 @@ public class PresentationDialog extends FermatDialog<FermatSession,SubAppResourc
         private String textFooter;
         private int bannerRes = -1;
         private int iconRes = -1;
+        private int titleTextColor;
         private String textColor;
+        private int viewColor;
 
         public PresentationDialog build() {
             PresentationDialog presentationDialog = new PresentationDialog(activity.get(), fermatSession.get(), null, templateType, isCheckEnabled);
@@ -296,8 +312,14 @@ public class PresentationDialog extends FermatDialog<FermatSession,SubAppResourc
             if (iconRes != -1) {
                 presentationDialog.setIconRes(iconRes);
             }
+            if (titleTextColor != -1) {
+                presentationDialog.setTitleTextColor(titleTextColor);
+            }
             if (textColor != null) {
                 presentationDialog.setTextColor(textColor);
+            }
+            if (viewColor != -1) {
+                presentationDialog.setVIewColor(viewColor);
             }
             if (callback != null) {
                 presentationDialog.setCallback(callback);
@@ -305,7 +327,7 @@ public class PresentationDialog extends FermatDialog<FermatSession,SubAppResourc
             return presentationDialog;
         }
 
-        public Builder(Activity activity,FermatSession fermatSession) {
+        public Builder(Activity activity, FermatSession fermatSession) {
             this.activity = new WeakReference<Activity>(activity);
             this.fermatSession = new WeakReference<FermatSession>(fermatSession);
         }
@@ -355,8 +377,18 @@ public class PresentationDialog extends FermatDialog<FermatSession,SubAppResourc
             return this;
         }
 
+        public Builder setTitleTextColor(int TitletextColorInHexa) {
+            this.titleTextColor = TitletextColorInHexa;
+            return this;
+        }
+
         public Builder setTextColor(String textColorInHexa) {
             this.textColor = textColorInHexa;
+            return this;
+        }
+
+        public Builder setVIewColor(int viewColorInHexa) {
+            this.viewColor = viewColorInHexa;
             return this;
         }
     }
