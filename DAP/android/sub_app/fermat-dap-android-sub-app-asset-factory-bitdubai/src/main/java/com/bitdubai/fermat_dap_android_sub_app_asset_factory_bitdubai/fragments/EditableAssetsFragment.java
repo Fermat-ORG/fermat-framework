@@ -5,6 +5,7 @@ import android.content.DialogInterface;
 import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.GridLayoutManager;
@@ -13,6 +14,7 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -26,7 +28,9 @@ import com.bitdubai.fermat_android_api.ui.Views.PresentationDialog;
 import com.bitdubai.fermat_android_api.ui.inflater.ViewInflater;
 import com.bitdubai.fermat_android_api.ui.interfaces.FermatWorkerCallBack;
 import com.bitdubai.fermat_android_api.ui.util.FermatWorker;
+import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.enums.BlockchainNetworkType;
+import com.bitdubai.fermat_api.layer.all_definition.enums.UISource;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
 import com.bitdubai.fermat_api.layer.all_definition.resources_structure.Resource;
 import com.bitdubai.fermat_api.layer.all_definition.settings.exceptions.CantGetSettingsException;
@@ -43,14 +47,14 @@ import com.bitdubai.fermat_dap_android_sub_app_asset_factory_bitdubai.sessions.A
 import com.bitdubai.fermat_dap_android_sub_app_asset_factory_bitdubai.sessions.SessionConstantsAssetFactory;
 import com.bitdubai.fermat_dap_android_sub_app_asset_factory_bitdubai.util.CommonLogger;
 import com.bitdubai.fermat_dap_api.layer.all_definition.enums.State;
-import com.bitdubai.fermat_dap_api.layer.all_definition.exceptions.CantGetIdentityAssetIssuerException;
 import com.bitdubai.fermat_dap_api.layer.dap_identity.asset_issuer.interfaces.IdentityAssetIssuer;
 import com.bitdubai.fermat_dap_api.layer.dap_middleware.dap_asset_factory.exceptions.CantGetAssetFactoryException;
 import com.bitdubai.fermat_dap_api.layer.dap_middleware.dap_asset_factory.exceptions.CantPublishAssetFactoy;
 import com.bitdubai.fermat_dap_api.layer.dap_middleware.dap_asset_factory.interfaces.AssetFactory;
 import com.bitdubai.fermat_dap_api.layer.dap_module.asset_factory.AssetFactorySettings;
 import com.bitdubai.fermat_dap_api.layer.dap_module.asset_factory.interfaces.AssetFactoryModuleManager;
-import com.bitdubai.fermat_dap_api.layer.dap_module.wallet_asset_issuer.AssetIssuerSettings;
+import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedUIExceptionSeverity;
+import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 import com.bitdubai.fermat_wpd_api.layer.wpd_middleware.wallet_manager.interfaces.InstalledWallet;
 import com.software.shell.fab.ActionButton;
 
@@ -80,6 +84,8 @@ public class EditableAssetsFragment extends AbstractFermatFragment implements
     private RecyclerView recyclerView;
     private LinearLayoutManager layoutManager;
     private AssetFactoryAdapter adapter;
+    private ErrorManager errorManager;
+
     // custom inflater
     private ViewInflater viewInflater;
 
@@ -100,9 +106,13 @@ public class EditableAssetsFragment extends AbstractFermatFragment implements
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setHasOptionsMenu(true);
+
         try {
             selectedAsset = null;
             manager = ((AssetFactorySession) appSession).getModuleManager();
+            errorManager = appSession.getErrorManager();
+
             settingsManager = appSession.getModuleManager().getSettingsManager();
             //viewInflater = new ViewInflater(getActivity(), appResourcesProviderManager);
         } catch (Exception ex) {
@@ -228,11 +238,12 @@ public class EditableAssetsFragment extends AbstractFermatFragment implements
         AssetFactorySettings settings = null;
         try {
             settings = settingsManager.loadAndGetSettings(appSession.getAppPublicKey());
-        }catch (Exception e){
+        } catch (Exception e) {
             settings = null;
         }
-        if(settings == null){
+        if (settings == null) {
             settings = new AssetFactorySettings();
+            settings.setIsContactsHelpEnabled(true);
             settings.setIsPresentationHelpEnabled(true);
             try {
                 settingsManager.persistSettings(appSession.getAppPublicKey(), settings);
@@ -241,6 +252,19 @@ public class EditableAssetsFragment extends AbstractFermatFragment implements
             }
         }
 
+        final AssetFactorySettings assetFactorySettingsTemp = settings;
+
+        Handler handlerTimer = new Handler();
+        handlerTimer.postDelayed(new Runnable() {
+            public void run() {
+                if (assetFactorySettingsTemp.isPresentationHelpEnabled()) {
+                    setUpPresentation(false);
+                }
+            }
+        }, 500);
+    }
+
+    private void setUpPresentation(boolean checkButton) {
         try {
             boolean isPresentationHelpEnabled = settingsManager.loadAndGetSettings(appSession.getAppPublicKey()).isPresentationHelpEnabled();
 
@@ -254,7 +278,7 @@ public class EditableAssetsFragment extends AbstractFermatFragment implements
                         .setBody("From here you will be able to create, define and publish all your assets.")
                         .setTextFooter("We will be creating an avatar for you in order to identify you in the system as an Asset Issuer, name and more details later in the Asset Issuer Identity sub app.")
                         .setTemplateType((manager.getLoggedIdentityAssetIssuer() == null) ? PresentationDialog.TemplateType.TYPE_PRESENTATION : PresentationDialog.TemplateType.TYPE_PRESENTATION_WITHOUT_IDENTITIES)
-                        .setIsCheckEnabled(settingsManager.loadAndGetSettings(appSession.getAppPublicKey()).isPresentationHelpEnabled())
+                        .setIsCheckEnabled(checkButton)
                         .build();
 
                 presentationDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
@@ -283,6 +307,29 @@ public class EditableAssetsFragment extends AbstractFermatFragment implements
         } catch (SettingsNotFoundException e) {
             e.printStackTrace();
         }
+    }
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        super.onCreateOptionsMenu(menu, inflater);
+        inflater.inflate(R.menu.dap_asset_factory_home_menu, menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        try {
+
+            if (item.getItemId() == R.id.action_asset_factory_help) {
+                setUpPresentation(settingsManager.loadAndGetSettings(appSession.getAppPublicKey()).isPresentationHelpEnabled());
+                return true;
+            }
+
+        } catch (Exception e) {
+            errorManager.reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.UNSTABLE, FermatException.wrapException(e));
+            makeText(getActivity(), "Asset Issuer system error",
+                    Toast.LENGTH_SHORT).show();
+        }
+        return super.onOptionsItemSelected(item);
     }
 
     @SuppressWarnings("unchecked")
@@ -324,9 +371,9 @@ public class EditableAssetsFragment extends AbstractFermatFragment implements
         if (pendingFinalItems != null && !pendingFinalItems.isEmpty())
             items.addAll(pendingFinalItems);
         List<Resource> resources;
-        for(AssetFactory item : items) {
+        for (AssetFactory item : items) {
             resources = item.getResources();
-            for(Resource resource : resources) {
+            for (Resource resource : resources) {
                 resource.setResourceBinayData(manager.getAssetFactoryResource(resource).getContent());
             }
         }
@@ -420,7 +467,7 @@ public class EditableAssetsFragment extends AbstractFermatFragment implements
         ActiveActorIdentityInformation identity = null;
         try {
             identity = manager.getSelectedActorIdentity();
-        } catch(Exception e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
         if (identity == null) {

@@ -102,7 +102,7 @@ public class PresentationDialog extends FermatDialog<FermatSession, SubAppResour
             txt_body = (FermatTextView) findViewById(R.id.txt_body);
             footer_title = (FermatTextView) findViewById(R.id.footer_title);
             checkbox_not_show = (CheckBox) findViewById(R.id.checkbox_not_show);
-            checkbox_not_show.setChecked(checkButton);
+            checkbox_not_show.setChecked(!checkButton);
             img_icon = (ImageView) findViewById(R.id.img_icon);
             view_color = findViewById(R.id.view_color);
             setUpBasics();

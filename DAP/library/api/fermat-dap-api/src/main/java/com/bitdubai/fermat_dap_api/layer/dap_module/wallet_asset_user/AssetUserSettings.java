@@ -18,6 +18,11 @@ import java.util.UUID;
 public class AssetUserSettings implements WalletSettings {
 
     private boolean isPresentationHelpEnabled;
+    private boolean isContactsHelpEnabled;
+
+    public boolean isContactsHelpEnabled() {
+        return isContactsHelpEnabled;
+    }
 
     public boolean isPresentationHelpEnabled() {
         return isPresentationHelpEnabled;
@@ -41,6 +46,10 @@ public class AssetUserSettings implements WalletSettings {
     @Override
     public void setDefaultSkin(UUID skinId) throws CantSetDefaultSkinException, CantLoadWalletSettings {
 
+    }
+
+    public void setIsContactsHelpEnabled(boolean isContactsHelpEnabled) {
+        this.isContactsHelpEnabled = isContactsHelpEnabled;
     }
 
     @Override

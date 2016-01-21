@@ -9,4 +9,6 @@ public class SessionConstantsAssetIssuer {
     public static final String PRESENTATION_IDENTITY_CREATED = "identity_created";
     public static final String PRESENTATION_SCREEN_ENABLED = "presentation_screen_enabled";
     public static final String BACK_WITHOUT_IDENTITY = "back_without_identity";
+    public static final int IC_ACTION_HELP_PRESENTATION = 102;
+
 }
