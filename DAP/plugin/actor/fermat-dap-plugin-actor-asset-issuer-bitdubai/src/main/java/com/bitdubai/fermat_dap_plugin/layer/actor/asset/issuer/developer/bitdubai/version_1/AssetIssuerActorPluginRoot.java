@@ -46,6 +46,7 @@ import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_issuer.AssetIssuerActor
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_issuer.exceptions.CantAssetIssuerActorNotFoundException;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_issuer.exceptions.CantCreateActorAssetIssuerException;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_issuer.exceptions.CantGetAssetIssuerActorsException;
+import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_issuer.exceptions.CantUpdateActorAssetIssuerException;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_issuer.interfaces.ActorAssetIssuer;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_issuer.interfaces.ActorAssetIssuerManager;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.redeem_point.exceptions.CantConnectToActorAssetRedeemPointException;
@@ -320,6 +321,16 @@ public class AssetIssuerActorPluginRoot extends AbstractPlugin implements
         }
     }
 
+    @Override
+    public void updateExtendedPublicKey(String issuerPublicKey, String extendedPublicKey) throws CantUpdateActorAssetIssuerException {
+        String context = "Issuer PK: " + issuerPublicKey + " - Extended PK: " + extendedPublicKey;
+        try {
+            assetIssuerActorDao.updateExtendedPublicKey(issuerPublicKey, extendedPublicKey);
+        } catch (CantGetUserDeveloperIdentitiesException | CantLoadTableToMemoryException | CantUpdateRecordException e) {
+            throw new CantUpdateActorAssetIssuerException(e, context, "Probably this issuer pk wasn't registered...");
+        }
+    }
+
     public void registerActorInActorNetworkService() throws CantRegisterActorAssetIssuerException {
         try {
             /*
@@ -402,11 +413,6 @@ public class AssetIssuerActorPluginRoot extends AbstractPlugin implements
          * I will create a new Message with the extended public Key.
          */
         if (extendedPublicKey != null) {
-            try {
-                assetIssuerActorDao.updateExtendedPublicKey(issuer.getActorPublicKey(), extendedPublicKey.toString());
-            } catch (CantGetUserDeveloperIdentitiesException | CantLoadTableToMemoryException | CantUpdateRecordException e) {
-                e.printStackTrace();
-            }
             AssetExtendedPublickKeyContentMessage assetExtendedPublickKeyContentMessage = new AssetExtendedPublickKeyContentMessage(extendedPublicKey, redeemPoint.getActorPublicKey());
             /**
              * once the extended Key has been generated, I will start the agent that will register any derived key from this extended KEy
