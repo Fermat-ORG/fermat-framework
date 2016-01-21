@@ -1,7 +1,6 @@
 package com.bitdubai.fermat_dap_api.layer.dap_actor.redeem_point.interfaces;
 
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.FermatManager;
-import com.bitdubai.fermat_bch_api.layer.crypto_vault.asset_vault.exceptions.CantGetExtendedPublicKeyException;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_issuer.interfaces.ActorAssetIssuer;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.exceptions.CantConnectToActorAssetUserException;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.redeem_point.exceptions.CantAssetRedeemPointActorNotFoundException;
@@ -80,14 +79,8 @@ public interface ActorAssetRedeemPointManager extends FermatManager {
      */
     List<ActorAssetRedeemPoint> getAllRedeemPointActorConnected() throws CantGetAssetRedeemPointActorsException;
 
-    /**
-     * This method works on the redeem point device when it have an identity created, and returns
-     * all the extended public key of the issuers that he have registered.
-     *
-     * @return a list filled with all the extended public keys associated to this redeem point.
-     * @throws CantGetExtendedPublicKeyException
-     */
-    List<String> getAllExtendedPublicKeyForRedeemPoint() throws CantGetExtendedPublicKeyException;
+    List<ActorAssetRedeemPoint> getAllRedeemPointActorConnectedForIssuer(String issuerPublicKey) throws CantGetAssetRedeemPointActorsException;
+
     /**
      * The method <code>sendMessage</code> Stablish Connection
      * with Requester and Lists Issuers Delivered
