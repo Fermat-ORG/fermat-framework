@@ -210,7 +210,6 @@ public final class CryptoAddressesNetworkServiceDao {
             DatabaseTable addressExchangeRequestTable = database.getTable(CryptoAddressesNetworkServiceDatabaseConstants.ADDRESS_EXCHANGE_REQUEST_TABLE_NAME);
 
             addressExchangeRequestTable.addStringFilter(CryptoAddressesNetworkServiceDatabaseConstants.ADDRESS_EXCHANGE_REQUEST_STATE_COLUMN_NAME, protocolState.getCode(), DatabaseFilterType.EQUAL);
-            addressExchangeRequestTable.addStringFilter(CryptoAddressesNetworkServiceDatabaseConstants.ADDRESS_EXCHANGE_REQUEST_MESSAGE_TYPE_COLUMN_NAME, "OUT", DatabaseFilterType.EQUAL);
 
 
             addressExchangeRequestTable.loadToMemory();
