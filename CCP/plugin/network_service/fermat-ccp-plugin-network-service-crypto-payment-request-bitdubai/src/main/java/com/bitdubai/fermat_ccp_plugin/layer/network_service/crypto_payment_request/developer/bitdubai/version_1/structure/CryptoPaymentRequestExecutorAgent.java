@@ -118,11 +118,8 @@ public class CryptoPaymentRequestExecutorAgent extends FermatAgent {
     @Override
     public void stop() {
         agentThread.interrupt();
-        try {
-            super.stop();
-        } catch (CantStopAgentException e) {
-            e.printStackTrace();
-        }
+        this.status = AgentStatus.STOPPED;
+
     }
 
     public void sendCycle() {
