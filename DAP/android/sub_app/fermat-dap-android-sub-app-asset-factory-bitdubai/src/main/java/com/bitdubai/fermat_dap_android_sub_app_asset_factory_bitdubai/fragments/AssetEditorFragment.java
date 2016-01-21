@@ -33,12 +33,17 @@ import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractFermatFra
 import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatButton;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatCheckBox;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatEditText;
+import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView;
 import com.bitdubai.fermat_android_api.ui.interfaces.FermatWorkerCallBack;
 import com.bitdubai.fermat_android_api.ui.util.FermatWorker;
+import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
 import com.bitdubai.fermat_api.layer.all_definition.resources_structure.Resource;
 import com.bitdubai.fermat_api.layer.all_definition.resources_structure.enums.ResourceDensity;
 import com.bitdubai.fermat_api.layer.all_definition.resources_structure.enums.ResourceType;
+import com.bitdubai.fermat_api.layer.all_definition.util.BitcoinConverter;
+import com.bitdubai.fermat_ccp_api.layer.basic_wallet.common.exceptions.CantCalculateBalanceException;
+import com.bitdubai.fermat_ccp_api.layer.basic_wallet.common.exceptions.CantLoadWalletException;
 import com.bitdubai.fermat_dap_android_sub_app_asset_factory_bitdubai.R;
 import com.bitdubai.fermat_dap_android_sub_app_asset_factory_bitdubai.sessions.AssetFactorySession;
 import com.bitdubai.fermat_dap_android_sub_app_asset_factory_bitdubai.util.CommonLogger;
@@ -48,7 +53,9 @@ import com.bitdubai.fermat_dap_api.layer.dap_middleware.dap_asset_factory.enums.
 import com.bitdubai.fermat_dap_api.layer.dap_middleware.dap_asset_factory.interfaces.AssetFactory;
 import com.bitdubai.fermat_dap_api.layer.dap_module.asset_factory.interfaces.AssetFactoryModuleManager;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
+import com.bitdubai.fermat_wpd_api.layer.wpd_middleware.wallet_manager.exceptions.CantListWalletsException;
 import com.bitdubai.fermat_wpd_api.layer.wpd_middleware.wallet_manager.interfaces.InstalledWallet;
+import static com.bitdubai.fermat_api.layer.all_definition.util.BitcoinConverter.Currency.*;
 
 import java.io.ByteArrayOutputStream;
 import java.text.DateFormat;
@@ -80,6 +87,7 @@ public class AssetEditorFragment extends AbstractFermatFragment implements View.
     private FermatEditText descriptionView;
     private FermatEditText quantityView;
     private FermatEditText bitcoinsView;
+    private FermatTextView bitcoinBalanceText;
     private FermatButton expirationDate;
     private FermatButton expirationTime;
     private FermatCheckBox isRedeemableView;
@@ -167,6 +175,7 @@ public class AssetEditorFragment extends AbstractFermatFragment implements View.
         isRedeemableView = (FermatCheckBox) rootView.findViewById(R.id.isRedeemable);
         hasExpirationDate = (LinearLayout) rootView.findViewById(R.id.hasExpiration);
         takePicture = (ImageView) rootView.findViewById(R.id.picture);
+        bitcoinBalanceText = (FermatTextView) rootView.findViewById(R.id.bitcoinBalanceText);
 
         takePicture.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -242,7 +251,26 @@ public class AssetEditorFragment extends AbstractFermatFragment implements View.
             expirationTime.setText(timeFormat.format(asset.getExpirationDate()));
         }
 
+        try {
+            long satoshis = manager.getBitcoinWalletBalance(getBitcoinWalletPublicKey());
+            double btc = BitcoinConverter.convert(satoshis, SATOSHI, BITCOIN);
+            bitcoinBalanceText.setText(String.format("%.6f BTC", btc));
+        } catch (Exception e) {
+            bitcoinBalanceText.setText("No Available");
+        }
+
         return rootView;
+    }
+
+    private String getBitcoinWalletPublicKey() throws CantListWalletsException {
+        List<InstalledWallet> installedWallets = manager.getInstallWallets();
+        for (InstalledWallet installedWallet :
+                installedWallets) {
+            if (installedWallet.getPlatform().equals(Platforms.CRYPTO_CURRENCY_PLATFORM)) {
+                return installedWallet.getWalletPublicKey();
+            }
+        }
+        return null;
     }
 
     @Override

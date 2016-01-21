@@ -22,6 +22,10 @@ import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantCreateFileException;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantPersistFileException;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.FileNotFoundException;
+import com.bitdubai.fermat_ccp_api.layer.basic_wallet.bitcoin_wallet.interfaces.BitcoinWalletManager;
+import com.bitdubai.fermat_ccp_api.layer.basic_wallet.common.enums.BalanceType;
+import com.bitdubai.fermat_ccp_api.layer.basic_wallet.common.exceptions.CantCalculateBalanceException;
+import com.bitdubai.fermat_ccp_api.layer.basic_wallet.common.exceptions.CantLoadWalletException;
 import com.bitdubai.fermat_dap_api.layer.all_definition.contracts.settings.BasicSubAppSettings;
 import com.bitdubai.fermat_dap_api.layer.all_definition.enums.State;
 import com.bitdubai.fermat_dap_api.layer.dap_identity.asset_issuer.interfaces.IdentityAssetIssuer;
@@ -61,6 +65,9 @@ public final class AssetFactorySubAppModulePluginRoot extends AbstractPlugin imp
 
     @NeededPluginReference(platform = Platforms.DIGITAL_ASSET_PLATFORM, layer = Layers.IDENTITY       , plugin = Plugins.ASSET_ISSUER  )
     IdentityAssetIssuerManager identityAssetIssuerManager;
+
+    @NeededPluginReference(platform = Platforms.CRYPTO_CURRENCY_PLATFORM, layer = Layers.BASIC_WALLET, plugin = Plugins.BITCOIN_WALLET)
+    BitcoinWalletManager bitcoinWalletManager;
 
     private SettingsManager<AssetIssuerSettings> settingsManager;
 
@@ -144,6 +151,11 @@ public final class AssetFactorySubAppModulePluginRoot extends AbstractPlugin imp
     @Override
     public boolean isReadyToPublish(String assetPublicKey) throws CantPublishAssetFactoy {
         return assetFactorySupAppModuleManager.isReadyToPublish(assetPublicKey);
+    }
+
+    @Override
+    public long getBitcoinWalletBalance(String walletPublicKey) throws CantLoadWalletException, CantCalculateBalanceException {
+        return bitcoinWalletManager.loadWallet(walletPublicKey).getBalance(BalanceType.AVAILABLE).getBalance();
     }
 
     public List<AssetFactory> test(){
