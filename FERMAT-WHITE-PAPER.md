@@ -20,7 +20,7 @@ _www.fermat.org_
 <br>
 ## Status of the Document
 
-This document is a DRAFT with no formal reviews yet. Some changes are being done from time to time. If you want, you  can make a formal review of this document. We will be happy to add you at the _reviewers_ section. 
+This document is a DRAFT with no formal reviews yet. Some changes are being done from time to time. If you want, you  can make a formal review of this document. We will be happy to add you at the _reviewers_ section.
 
 
 <br>
@@ -28,7 +28,7 @@ This document is a DRAFT with no formal reviews yet. Some changes are being done
 
 A peer-to-peer financial application framework could allow standalone crypto wallets to evolve into any kind of peer-to-peer financial applications.
 
-Developing peer-to-peer financial applications is challenging. Bitcoin provides part of the solution as a p2p system of electronic cash [1], but the main benefits are lost if a trusted third party is still required to transport meta-data, synchronize devices, hold wallets files or keys, manage identities, interface crypto networks or the legacy financial system.
+Developing peer-to-peer financial applications is challenging. Bitcoin provides part of the solution as a P2P system of electronic cash [1], but the main benefits are lost if a trusted third party is still required to transport meta-data, synchronize devices, hold wallets files or keys, manage identities, interface crypto networks or the legacy financial system.
 
 We propose a peer-to-peer network for transporting meta-data and inter-connect network clients between each other. A synchronization scheme running on top of it transforms a standalone app into a distributed application across several devices still owned by the same user.
 
@@ -37,11 +37,11 @@ We propose a framework to replace the standalone wallet application. This framew
 <br>
 ## Introduction
 
-Standalone bitcoin wallets were the first generation of trust-less financial applications since they didn't require to trust any third party, inheriting this property from the bitcoin network itself. As the ecosystem evolved, trusted third parties were introduced again and they took over the wallet space because of technical capabilities that are easier to build in a centralized way: communication between wallets, synchronization between devices, interfacing the legacy financial system, securing funds, etc., and they consistently took the biggest share of funding, leaving standalone wallets far behind and at the same time trashing the benefit of bitcoin of not relying on trust, one of its key features. Applications trying to use the blockchain to transport meta-data were considered spammers and standalone wallets were effectively left behind.
+Standalone Bitcoin wallets were the first generation of trust-less financial applications since they didn't require to trust any third party, inheriting this property from the Bitcoin network itself. As the ecosystem evolved, trusted third parties were introduced again and they took over the wallet space because of technical capabilities that are easier to build in a centralized way: communication between wallets, synchronization between devices, interfacing the legacy financial system, securing funds, etc., and they consistently took the biggest share of funding, leaving standalone wallets far behind and at the same time trashing the benefit of Bitcoin of not relying on trust, one of its key features. Applications trying to use the blockchain to transport meta-data were considered spammers and standalone wallets were effectively left behind.
 
-What is needed on top of all existing protocols is a layer that faces end users and that finishes the job bitcoin started regarding its core principles of openness, decentralization and privacy. Using crypto networks for transporting value or as a registry for digital assets and a new P2P Network for transporting the required meta-data at a network client level. This would allow financial apps to run any user level interconnected functionality without ever going through a trusted third party.
+What is needed on top of all existing protocols is a layer that faces end users and that finishes the job Bitcoin started regarding its core principles of openness, decentralization and privacy. Using crypto networks for transporting value or as a registry for digital assets and a new P2P Network for transporting the required meta-data at a network client level. This would allow financial apps to run any user level interconnected functionality without ever going through a trusted third party.
 
-Fermat is a Framework, a p2p Network and an Ecosystem of Fermat APPs. The Fermat Framework is an open source software that runs on end user devices. This software can run Fermat APPs, which are like mobile APPs but running on top of the Fermat Framework.
+Fermat is a Framework, a P2P Network and an Ecosystem of Fermat APPs. The Fermat Framework is an open source software that runs on end user devices. This software can run Fermat APPs, which are like mobile APPs but running on top of the Fermat Framework.
 
 By choosing a plug-in architecture for the Framework we make it possible for any developer to add their own reusable components. We define the micro use licensing scheme as the mechanism for developers to monetize their work. The Framework itself enforces these micro use licenses and guarantees developers a revenue stream.
 
