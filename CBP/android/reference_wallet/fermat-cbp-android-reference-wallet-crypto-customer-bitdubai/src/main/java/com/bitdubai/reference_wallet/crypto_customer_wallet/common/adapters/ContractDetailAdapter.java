@@ -9,10 +9,13 @@ import com.bitdubai.fermat_android_api.ui.adapters.FermatAdapter;
 import com.bitdubai.fermat_android_api.ui.holders.FermatViewHolder;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.ClauseType;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.common.interfaces.ClauseInformation;
+import com.bitdubai.fermat_cbp_api.layer.wallet_module.common.interfaces.ContractBasicInformation;
+import com.bitdubai.fermat_cbp_api.layer.wallet_module.common.interfaces.ContractInformation;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.common.interfaces.CustomerBrokerNegotiationInformation;
 import com.bitdubai.reference_wallet.crypto_customer_wallet.common.holders.start_negotiation.ClauseViewHolder;
 import com.bitdubai.reference_wallet.crypto_customer_wallet.common.holders.start_negotiation.FooterViewHolder;
 import com.bitdubai.reference_wallet.crypto_customer_wallet.common.holders.start_negotiation.SingleChoiceViewHolder;
+import com.bitdubai.reference_wallet.crypto_customer_wallet.common.models.EmptyContractInformation;
 import com.bitdubai.reference_wallet.crypto_customer_wallet.common.models.EmptyCustomerBrokerNegotiationInformation;
 import com.bitdubai.reference_wallet.crypto_customer_wallet.fragments.contract_detail.ContractDetailActivityFragment;
 import com.bitdubai.reference_wallet.crypto_customer_wallet.util.FragmentsCommons;
@@ -37,23 +40,23 @@ public class ContractDetailAdapter extends FermatAdapter<ClauseInformation, Ferm
     private static final int TYPE_FOOTER = 5;
 
     //TODO: analize this
-    private CustomerBrokerNegotiationInformation negotiationInformation;
+    private ContractBasicInformation contractInformation;
     private ContractDetailActivityFragment footerListener;
     ClauseViewHolder.Listener clauseListener;
 
 
     public ContractDetailAdapter(Context context,
-                                 CustomerBrokerNegotiationInformation negotiationInformation) {
+                                 ContractBasicInformation contractInformation) {
         super(context);
 
-        this.negotiationInformation = negotiationInformation;
+        this.contractInformation = contractInformation;
 
         dataSet = new ArrayList<>();
         dataSet.addAll(buildListOfItems());
     }
 
-    public void changeDataSet(EmptyCustomerBrokerNegotiationInformation negotiationInfo) {
-        this.negotiationInformation = negotiationInfo;
+    public void changeDataSet(EmptyContractInformation contractInformation) {
+        this.contractInformation = contractInformation;
 
         final List<ClauseInformation> items = buildListOfItems();
         super.changeDataSet(items);
@@ -135,8 +138,8 @@ public class ContractDetailAdapter extends FermatAdapter<ClauseInformation, Ferm
 
     @Override
     protected void bindHolder(FermatViewHolder holder, ClauseInformation clause, int position) {
-        final ClauseViewHolder clauseViewHolder = (ClauseViewHolder) holder;
-        clauseViewHolder.bindData(negotiationInformation, clause, position);
+       /* final ClauseViewHolder clauseViewHolder = (ClauseViewHolder) holder;
+        clauseViewHolder.bindData(contractInformation, clause, position);
         clauseViewHolder.getConfirmButton().setVisibility(View.GONE);
         clauseViewHolder.setListener(clauseListener);
 
@@ -159,7 +162,7 @@ public class ContractDetailAdapter extends FermatAdapter<ClauseInformation, Ferm
             case BROKER_PAYMENT_METHOD:
                 clauseViewHolder.setViewResources(R.string.reception_methods_title, clauseNumberImageRes, R.string.payment_method);
                 break;
-        }
+        }*/
     }
 
     public void changeItem(int position, ClauseInformation clause) {
@@ -176,16 +179,17 @@ public class ContractDetailAdapter extends FermatAdapter<ClauseInformation, Ferm
     }
 
     private List<ClauseInformation> buildListOfItems() {
-        final int TOTAL_STEPS = 5;
+        final ClauseInformation[] data=new ClauseInformation[1];
+        /*final int TOTAL_STEPS = 5;
 
-        Map<ClauseType, ClauseInformation> clauses = negotiationInformation.getClauses();
+        Map<ClauseType, ClauseInformation> clauses = contractInformation.getClauses();
         final ClauseInformation[] data = new ClauseInformation[TOTAL_STEPS];
 
         data[0] = clauses.get(ClauseType.CUSTOMER_CURRENCY_QUANTITY);
         data[1] = clauses.get(ClauseType.EXCHANGE_RATE);
         data[2] = clauses.get(ClauseType.BROKER_CURRENCY);
         data[3] = clauses.get(ClauseType.CUSTOMER_PAYMENT_METHOD);
-        data[4] = clauses.get(ClauseType.BROKER_PAYMENT_METHOD);
+        data[4] = clauses.get(ClauseType.BROKER_PAYMENT_METHOD);*/
 
         return Arrays.asList(data);
     }
