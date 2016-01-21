@@ -17,7 +17,8 @@ public class CryptoTransmissionNetworkServiceDatabaseConstants {
     /**
      * CRYPTO TRANSMISSION METADATA database table definition.
      */
-    public static final String CRYPTO_TRANSMISSION_METADATA_TABLE_NAME = "crypto_transmission_metadata";
+    public static final String INCOMING_CRYPTO_TRANSMISSION_METADATA_TABLE_NAME = "incoming_crypto_transmission_metadata";
+    public static final String OUTGOING_CRYPTO_TRANSMISSION_METADATA_TABLE_NAME = "outgoing_crypto_transmission_metadata";
 
     public static final String CRYPTO_TRANSMISSION_METADATA_TRANSMISSION_ID_COLUMN_NAME = "transmission_id";
     public static final String CRYPTO_TRANSMISSION_METADATA_REQUEST_ID_COLUMN_NAME = "request_id";
@@ -47,6 +48,7 @@ public class CryptoTransmissionNetworkServiceDatabaseConstants {
     public static final String COMPONENT_VERSIONS_DETAILS_LAST_CONNECTION_COLUMN_NAME = "last_connection";
 
    public static final String COMPONENT_VERSIONS_DETAILS_FIRST_KEY_COLUMN = "id";
+
 
 
 }
