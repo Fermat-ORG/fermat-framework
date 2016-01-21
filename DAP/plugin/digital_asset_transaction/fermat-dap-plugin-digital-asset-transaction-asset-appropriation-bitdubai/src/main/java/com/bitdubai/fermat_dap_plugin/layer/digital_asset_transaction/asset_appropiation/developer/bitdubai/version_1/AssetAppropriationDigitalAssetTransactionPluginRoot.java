@@ -142,13 +142,11 @@ public class AssetAppropriationDigitalAssetTransactionPluginRoot extends Abstrac
      * @throws TransactionAlreadyStartedException           in case for some reason you try to appropriate the same asset twice.
      */
     @Override
-    public void appropriateAsset(DigitalAssetMetadata digitalAssetMetadata, String assetUserWalletPublicKey, String bitcoinWalletPublicKey, int amountToAppropriate) throws CantExecuteAppropriationTransactionException, TransactionAlreadyStartedException {
+    public void appropriateAsset(DigitalAssetMetadata digitalAssetMetadata, String assetUserWalletPublicKey, String bitcoinWalletPublicKey) throws CantExecuteAppropriationTransactionException, TransactionAlreadyStartedException {
         String context = "Asset: " + digitalAssetMetadata + " - User Wallet: " + assetUserWalletPublicKey + " - BTC Wallet: " + bitcoinWalletPublicKey;
 
         try (AssetAppropriationDAO dao = new AssetAppropriationDAO(pluginDatabaseSystem, pluginId, assetVault)) {
-            for (int i = 0; i < amountToAppropriate; i++) {
-                String transactionId = dao.startAppropriation(digitalAssetMetadata, assetUserWalletPublicKey, bitcoinWalletPublicKey);
-            }
+            String transactionId = dao.startAppropriation(digitalAssetMetadata, assetUserWalletPublicKey, bitcoinWalletPublicKey);
         } catch (TransactionAlreadyStartedException | CantExecuteAppropriationTransactionException e) {
             throw e;
         } catch (Exception e) {

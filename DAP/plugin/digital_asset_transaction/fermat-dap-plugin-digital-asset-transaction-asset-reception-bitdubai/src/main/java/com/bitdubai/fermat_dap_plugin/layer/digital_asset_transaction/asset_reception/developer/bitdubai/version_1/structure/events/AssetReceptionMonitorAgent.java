@@ -175,6 +175,7 @@ public class AssetReceptionMonitorAgent implements Agent {
                             String genesisTransaction = digitalAssetMetadataReceived.getGenesisTransaction();
                             switch (digitalAssetMetadataTransactionType) {
                                 case META_DATA_TRANSMIT:
+                                    digitalAssetMetadataReceived.setLastOwner(actorAssetUserManager.getActorAssetUser());
                                     if (assetReceptionDao.isGenesisTransactionRegistered(genesisTransaction)) {
                                         System.out.println("ASSET RECEPTION This genesisTransaction is already registered in database: " + genesisTransaction);
                                         digitalAssetReceptor.verifyAsset(digitalAssetMetadataReceived);

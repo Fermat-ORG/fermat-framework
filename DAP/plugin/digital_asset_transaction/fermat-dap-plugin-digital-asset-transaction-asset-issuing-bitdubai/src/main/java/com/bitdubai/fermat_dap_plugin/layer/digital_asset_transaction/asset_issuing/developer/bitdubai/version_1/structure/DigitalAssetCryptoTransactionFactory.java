@@ -580,7 +580,7 @@ public class DigitalAssetCryptoTransactionFactory implements DealsWithErrors {
             throw new SendingCryptoException(e, "Sending crypto", "Error getting digital asset metadata from genesis address");
         } catch (CantCheckAssetIssuingProgressException | CantExecuteQueryException e) {
             throw new SendingCryptoException(e, "Sending crypto", "Error in database transaction");
-        } catch (UnexpectedResultReturnedFromDatabaseException e) {
+        } catch (UnexpectedResultReturnedFromDatabaseException | CantGetAssetIssuerActorsException e) {
             throw new SendingCryptoException(e, "Sending crypto", "Unexpected returned value");
         } catch (CantIssueDigitalAssetException e) {
             throw new SendingCryptoException(e, "Sending crypto", "Can't issue digital asset. The digital asset obtained is different than generated");
@@ -653,8 +653,9 @@ public class DigitalAssetCryptoTransactionFactory implements DealsWithErrors {
      * @throws CantPersistsGenesisTransactionException
      * @throws UnexpectedResultReturnedFromDatabaseException
      */
-    private DigitalAssetMetadata setDigitalAssetGenesisTransaction(String transactionID, String genesisTransaction, DigitalAssetMetadata digitalAssetMetadata) throws CantPersistsGenesisTransactionException, UnexpectedResultReturnedFromDatabaseException {
+    private DigitalAssetMetadata setDigitalAssetGenesisTransaction(String transactionID, String genesisTransaction, DigitalAssetMetadata digitalAssetMetadata) throws CantPersistsGenesisTransactionException, UnexpectedResultReturnedFromDatabaseException, CantGetAssetIssuerActorsException {
         digitalAssetMetadata.addNewTransaction(genesisTransaction, null);
+        digitalAssetMetadata.setLastOwner(actorAssetIssuerManager.getActorAssetIssuer());
         this.assetIssuingTransactionDao.persistGenesisTransaction(transactionID, genesisTransaction);
         return digitalAssetMetadata;
     }

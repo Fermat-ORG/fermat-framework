@@ -20,6 +20,7 @@ import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginBinaryFile;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantCreateFileException;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.FileNotFoundException;
+import com.bitdubai.fermat_dap_api.layer.all_definition.digital_asset.DigitalAsset;
 import com.bitdubai.fermat_dap_api.layer.all_definition.exceptions.CantGetIdentityAssetUserException;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.redeem_point.exceptions.CantGetAssetRedeemPointActorsException;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.redeem_point.interfaces.ActorAssetRedeemPoint;
@@ -34,6 +35,8 @@ import com.bitdubai.fermat_dap_api.layer.dap_module.wallet_asset_user.AssetUserS
 import com.bitdubai.fermat_dap_api.layer.dap_module.wallet_asset_user.interfaces.AssetUserWalletSubAppModuleManager;
 import com.bitdubai.fermat_dap_api.layer.dap_transaction.asset_appropriation.interfaces.AssetAppropriationManager;
 import com.bitdubai.fermat_dap_api.layer.dap_transaction.common.exceptions.CantExecuteAppropriationTransactionException;
+import com.bitdubai.fermat_dap_api.layer.dap_transaction.common.exceptions.CantGetDigitalAssetFromLocalStorageException;
+import com.bitdubai.fermat_dap_api.layer.dap_transaction.common.exceptions.NotEnoughAcceptsException;
 import com.bitdubai.fermat_dap_api.layer.dap_transaction.common.exceptions.TransactionAlreadyStartedException;
 import com.bitdubai.fermat_dap_api.layer.dap_transaction.user_redemption.exceptions.CantRedeemDigitalAssetException;
 import com.bitdubai.fermat_dap_api.layer.dap_transaction.user_redemption.interfaces.UserRedemptionManager;
@@ -86,6 +89,8 @@ public class AssetUserWalletModulePluginRoot extends AbstractPlugin implements
     @NeededPluginReference(platform = Platforms.DIGITAL_ASSET_PLATFORM, layer = Layers.MIDDLEWARE, plugin = Plugins.ASSET_FACTORY)
     AssetFactoryManager assetFactoryManager;
 
+    private AssetUserWallet wallet;
+
     //TODO MAKE USE OF THE ERROR MANAGER
 
     private AssetUserWalletModule assetUserWalletModule;
@@ -119,7 +124,6 @@ public class AssetUserWalletModulePluginRoot extends AbstractPlugin implements
     @Override
     public List<AssetUserWalletList> getAssetUserWalletBalances(String publicKey) throws CantLoadWalletException {
         //TODO MAKE USE OF THE ERROR MANAGER
-
         return assetUserWalletModule.getAssetUserWalletBalances(publicKey);
     }
 
@@ -129,8 +133,20 @@ public class AssetUserWalletModulePluginRoot extends AbstractPlugin implements
     }
 
     @Override
+    public List<ActorAssetRedeemPoint> getRedeemPointsConnectedForAsset(String assetPublicKey) throws CantGetAssetRedeemPointActorsException {
+        String context = "Asset PK: " + assetPublicKey;
+        try {
+            DigitalAsset digitalAsset = wallet.getDigitalAsset(assetPublicKey);
+            return actorAssetRedeemPointManager.getAllRedeemPointActorConnectedForIssuer(digitalAsset.getIdentityAssetIssuer().getPublicKey());
+        } catch (CantGetDigitalAssetFromLocalStorageException e) {
+            throw new CantGetAssetRedeemPointActorsException(CantGetAssetRedeemPointActorsException.DEFAULT_MESSAGE, e, context, null);
+        }
+    }
+
+    @Override
     public AssetUserWallet loadAssetUserWallet(String walletPublicKey) throws CantLoadWalletException {
-        return assetUserWalletManager.loadAssetUserWallet(walletPublicKey);
+        wallet = assetUserWalletManager.loadAssetUserWallet(walletPublicKey);
+        return wallet;
     }
 
     @Override
@@ -148,12 +164,12 @@ public class AssetUserWalletModulePluginRoot extends AbstractPlugin implements
     }
 
     @Override
-    public void redeemAssetToRedeemPoint(String digitalAssetPublicKey, String walletPublicKey, List<ActorAssetRedeemPoint> actorAssetRedeemPoints) throws CantRedeemDigitalAssetException {
+    public void redeemAssetToRedeemPoint(String digitalAssetPublicKey, String walletPublicKey, List<ActorAssetRedeemPoint> actorAssetRedeemPoints) throws CantRedeemDigitalAssetException, NotEnoughAcceptsException {
         assetUserWalletModule.redeemAssetToRedeemPoint(digitalAssetPublicKey, walletPublicKey, actorAssetRedeemPoints);
     }
 
     @Override
-    public void appropriateAsset(String digitalAssetPublicKey, String bitcoinWalletPublicKey, int amountToAppropriate) throws CantExecuteAppropriationTransactionException, TransactionAlreadyStartedException {
+    public void appropriateAsset(String digitalAssetPublicKey, String bitcoinWalletPublicKey) throws CantExecuteAppropriationTransactionException, TransactionAlreadyStartedException, NotEnoughAcceptsException {
 
         try {
             List<InstalledWallet> installedWallets = walletMiddlewareManager.getInstalledWallets();
@@ -163,7 +179,7 @@ public class AssetUserWalletModulePluginRoot extends AbstractPlugin implements
             }
             //TODO REMOVE HARDCODE
             InstalledWallet installedWallet = installedWallets.get(0);
-            assetUserWalletModule.appropriateAsset(digitalAssetPublicKey, installedWallet.getWalletPublicKey(), amountToAppropriate);
+            assetUserWalletModule.appropriateAsset(digitalAssetPublicKey, installedWallet.getWalletPublicKey());
         } catch (CantListWalletsException e) {
             e.printStackTrace();
         }
