@@ -116,12 +116,8 @@ public final class CryptoAddressesExecutorAgent extends FermatAgent {
     @Override
     public void stop() {
         agentThread.interrupt();
-        //TODO check this
-        try {
-            super.stop();
-        } catch (CantStopAgentException e) {
-            e.printStackTrace();
-        }
+        this.status = AgentStatus.PAUSED;
+
     }
 
     private void sendCycle() {
