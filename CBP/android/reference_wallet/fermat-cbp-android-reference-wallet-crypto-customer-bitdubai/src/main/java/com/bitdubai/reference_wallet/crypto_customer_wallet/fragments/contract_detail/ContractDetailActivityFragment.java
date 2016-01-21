@@ -1,7 +1,9 @@
 package com.bitdubai.reference_wallet.crypto_customer_wallet.fragments.contract_detail;
 
 import android.content.res.Resources;
+import android.graphics.Bitmap;
 import android.graphics.Color;
+import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.os.Bundle;
@@ -19,9 +21,14 @@ import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractFermatFra
 import com.bitdubai.fermat_android_api.layer.definition.wallet.utils.ImagesUtils;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatButton;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView;
+import com.bitdubai.fermat_api.layer.all_definition.enums.CryptoCurrency;
+import com.bitdubai.fermat_api.layer.all_definition.enums.FiatCurrency;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Wallets;
 import com.bitdubai.fermat_api.layer.pip_engine.interfaces.ResourceProviderManager;
 import com.bitdubai.fermat_api.layer.world.interfaces.Currency;
+import com.bitdubai.fermat_cbp_api.all_definition.enums.ContractDetailType;
+import com.bitdubai.fermat_cbp_api.all_definition.enums.ContractStatus;
+import com.bitdubai.fermat_cbp_api.all_definition.enums.CurrencyType;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.common.interfaces.ClauseInformation;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_customer.interfaces.CryptoCustomerWalletManager;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_customer.interfaces.CryptoCustomerWalletModuleManager;
@@ -30,6 +37,7 @@ import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfac
 import com.bitdubai.reference_wallet.crypto_customer_wallet.common.adapters.ContractDetailAdapter;
 import com.bitdubai.reference_wallet.crypto_customer_wallet.common.holders.start_negotiation.ClauseViewHolder;
 import com.bitdubai.reference_wallet.crypto_customer_wallet.common.holders.start_negotiation.FooterViewHolder;
+import com.bitdubai.reference_wallet.crypto_customer_wallet.common.models.ContractDetail;
 import com.bitdubai.reference_wallet.crypto_customer_wallet.common.models.EmptyContractInformation;
 import com.bitdubai.reference_wallet.crypto_customer_wallet.common.models.EmptyCustomerBrokerNegotiationInformation;
 import com.bitdubai.reference_wallet.crypto_customer_wallet.session.CryptoCustomerWalletSession;
@@ -37,19 +45,20 @@ import com.bitdubai.reference_wallet.crypto_customer_wallet.session.CryptoCustom
 
 import com.bitdubai.reference_wallet.crypto_customer_wallet.R;
 
+import java.io.ByteArrayOutputStream;
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by Manuel Perez (darkpriestrelative@gmail.com) on 18/01/16.
  */
-public class ContractDetailActivityFragment extends AbstractFermatFragment<CryptoCustomerWalletSession, ResourceProviderManager>
-        implements FooterViewHolder.OnFooterButtonsClickListener, ClauseViewHolder.Listener {
+public class ContractDetailActivityFragment extends AbstractFermatFragment<CryptoCustomerWalletSession, ResourceProviderManager> {
 
     private static final String TAG = "ContractDetailFrag";
 
     private CryptoCustomerWalletManager walletManager;
     private ErrorManager errorManager;
-    private EmptyContractInformation contractInformation;
+    private List<ContractDetail> contractInformation;
     private ArrayList<String> paymentMethods; // test data
     private ArrayList<Currency> currencies; // test data
 
@@ -98,21 +107,6 @@ public class ContractDetailActivityFragment extends AbstractFermatFragment<Crypt
         return layout;
     }
 
-    @Override
-    public void onClauseCLicked(Button triggerView, ClauseInformation clause, int clausePosition) {
-        //TODO: show the contract clause detail
-    }
-
-    @Override
-    public void onAddNoteButtonClicked() {
-        //TODO: look if this is necessary
-    }
-
-    @Override
-    public void onSendButtonClicked() {
-        //TODO: Send notifications through the module
-    }
-
     //TODO: analize the following methods
     private void initViews(View rootView) {
 
@@ -149,10 +143,43 @@ public class ContractDetailActivityFragment extends AbstractFermatFragment<Crypt
         sellingSummary.setText(getResources().getString(R.string.ccw_start_selling_details, currencyToBuy.getFriendlyName()));*/
 
         adapter = new ContractDetailAdapter(getActivity(), contractInformation);
-        adapter.setFooterListener(this);
-        adapter.setClauseListener(this);
+        //adapter.setFooterListener(this);
+        //adapter.setClauseListener(this);
 
         recyclerView.setAdapter(adapter);
+    }
+
+    private List<ContractDetail> createContractDetails(){
+        List<ContractDetail> contractDetails=new ArrayList<>();
+        ContractDetail contractDetail;
+        /**
+         * TODO: this contract details is only for testing, please, implement this date from database.
+         */
+        //Customer Broker
+        contractDetail=new ContractDetail(
+                ContractDetailType.CUSTOMER_DETAIL,
+                CurrencyType.BANK_MONEY,
+                FiatCurrency.CHINESE_YUAN.getFriendlyName(),
+                12,
+                ContractStatus.PAYMENT_SUBMIT,
+                "BTC Broker",
+                getByteArrayFromImageView(brokerImage),
+                1961,
+                2016);
+        contractDetails.add(contractDetail);
+        //Testing Broker
+        contractDetail=new ContractDetail(
+                ContractDetailType.BROKER_DETAIL,
+                CurrencyType.CRYPTO_MONEY,
+                CryptoCurrency.BITCOIN.getFriendlyName(),
+                12,
+                ContractStatus.PENDING_MERCHANDISE,
+                "BTC Broker",
+                getByteArrayFromImageView(brokerImage),
+                1961,
+                2016);
+        contractDetails.add(contractDetail);
+        return contractDetails;
     }
 
     private EmptyCustomerBrokerNegotiationInformation createNewEmptyNegotiationInfo() {
@@ -195,6 +222,18 @@ public class ContractDetailActivityFragment extends AbstractFermatFragment<Crypt
             return ImagesUtils.getRoundedBitmap(res, customerImg);
 
         return ImagesUtils.getRoundedBitmap(res, R.drawable.person);
+    }
+
+    /**
+     * This method is for testing
+     * @param image
+     * @return
+     */
+    private byte[] getByteArrayFromImageView(ImageView image){
+        Bitmap bitmap = ((BitmapDrawable)image.getDrawable()).getBitmap();
+        ByteArrayOutputStream stream=new ByteArrayOutputStream();
+        bitmap.compress(Bitmap.CompressFormat.PNG, 90, stream);
+        return stream.toByteArray();
     }
 
 }
