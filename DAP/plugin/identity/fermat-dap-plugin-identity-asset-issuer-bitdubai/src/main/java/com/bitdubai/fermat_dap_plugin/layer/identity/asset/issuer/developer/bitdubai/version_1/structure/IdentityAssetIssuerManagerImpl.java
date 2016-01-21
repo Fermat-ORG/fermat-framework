@@ -10,6 +10,7 @@ import com.bitdubai.fermat_api.layer.osa_android.logger_system.DealsWithLogger;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogManager;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_issuer.exceptions.CantCreateActorAssetIssuerException;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_issuer.interfaces.ActorAssetIssuerManager;
+import com.bitdubai.fermat_dap_api.layer.dap_actor_network_service.asset_issuer.exceptions.CantRegisterActorAssetIssuerException;
 import com.bitdubai.fermat_dap_api.layer.dap_identity.asset_issuer.exceptions.CantCreateNewIdentityAssetIssuerException;
 import com.bitdubai.fermat_dap_api.layer.dap_identity.asset_issuer.exceptions.CantGetAssetIssuerIdentitiesException;
 import com.bitdubai.fermat_dap_api.layer.dap_identity.asset_issuer.exceptions.CantListAssetIssuersException;
@@ -154,7 +155,11 @@ public class IdentityAssetIssuerManagerImpl implements DealsWithErrors, DealsWit
     public void updateIdentityAssetIssuer(String identityPublicKey, String identityAlias, byte[] profileImage) throws CantUpdateIdentityAssetIssuerException {
         try {
             getAssetIssuerIdentityDao().updateIdentityAssetIssuer(identityPublicKey, identityAlias, profileImage);
+
+            registerIdentities();
         } catch (CantInitializeAssetIssuerIdentityDatabaseException e) {
+            e.printStackTrace();
+        } catch (CantListAssetIssuerIdentitiesException e) {
             e.printStackTrace();
         }
     }
@@ -202,6 +207,14 @@ public class IdentityAssetIssuerManagerImpl implements DealsWithErrors, DealsWit
             throw new CantListAssetIssuerIdentitiesException("CAN'T GET IF ASSET ISSUER IDENTITIES  EXISTS", e, "Cant Create ActorAsset Issuer", "");
         } catch (CantInitializeAssetIssuerIdentityDatabaseException e) {
             throw new CantListAssetIssuerIdentitiesException("CAN'T GET IF ASSET ISSUER IDENTITIES  EXISTS", e, "Cant Initialize Asset Issuer Identity Database", "");
+        }
+    }
+
+    public void registerIdentitiesANS() throws CantRegisterActorAssetIssuerException {
+        try {
+            actorAssetIssuerManager.registerActorInActorNetworkService();
+        } catch (CantRegisterActorAssetIssuerException e) {
+            throw new CantRegisterActorAssetIssuerException("CAN'T REGISTER IDENTITY TO ACTOR NETWORK SERVICE", FermatException.wrapException(e), "", "");
         }
     }
 }

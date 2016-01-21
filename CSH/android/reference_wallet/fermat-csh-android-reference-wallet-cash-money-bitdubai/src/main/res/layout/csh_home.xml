@@ -25,11 +25,12 @@
                 android:layout_weight="1"
                 android:gravity="center_vertical|right"
                 android:text="@string/csh_home_titlebar_title"
-                android:textStyle="bold"
                 android:textSize="@dimen/csh_large_text_size"
                 android:textColor="@color/csh_text_white"
                 android:layout_marginTop="@dimen/csh_home_titlebar_margin_top"
                 android:layout_marginBottom="@dimen/csh_home_titlebar_margin_bottom"
+                android:fontFamily="sans-serif"
+                android:textStyle="bold"
                 />
 
             <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView

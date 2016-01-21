@@ -171,11 +171,12 @@ public class AssetIssuerActorPluginRoot extends AbstractPlugin implements
         try {
             ActorAssetIssuer actorAssetIssuer = this.assetIssuerActorDao.getActorAssetIssuer();
 
-            Double locationLatitude = new Random().nextDouble();
-            Double locationLongitude = new Random().nextDouble();
-            String description = "Asset Issuer Skynet Test";
-
             if (actorAssetIssuer == null) {
+
+                Double locationLatitude = new Random().nextDouble();
+                Double locationLongitude = new Random().nextDouble();
+                String description = "Asset Issuer Skynet Test";
+
                 AssetIssuerActorRecord record = new AssetIssuerActorRecord(
                         assetIssuerActorPublicKey,
                         assetIssuerActorName,
@@ -183,15 +184,40 @@ public class AssetIssuerActorPluginRoot extends AbstractPlugin implements
                         locationLatitude,
                         locationLongitude,
                         System.currentTimeMillis(),
+                        System.currentTimeMillis(),
                         assetIssuerActorProfileImage,
                         description);
 
                 assetIssuerActorDao.createNewAssetIssuer(record);
+
+                actorAssetIssuer = this.assetIssuerActorDao.getActorAssetIssuer();
+
+                assetIssuerActorNetworkServiceManager.registerActorAssetIssuer(actorAssetIssuer);
+            } else {
+
+                actorAssetIssuer = this.assetIssuerActorDao.getActorAssetIssuer();
+
+                Double locationLatitude = new Random().nextDouble();
+                Double locationLongitude = new Random().nextDouble();
+                String description = "Asset Issuer Skynet Test";
+
+                AssetIssuerActorRecord record = new AssetIssuerActorRecord(
+                        actorAssetIssuer.getActorPublicKey(),
+                        assetIssuerActorName,
+                        actorAssetIssuer.getDapConnectionState(),
+                        locationLatitude,
+                        locationLongitude,
+                        actorAssetIssuer.getRegistrationDate(),
+                        System.currentTimeMillis(),
+                        assetIssuerActorProfileImage,
+                        description);
+
+                assetIssuerActorDao.updateAssetIssuer(record);
+
+                actorAssetIssuer = this.assetIssuerActorDao.getActorAssetIssuer();
+
+                assetIssuerActorNetworkServiceManager.updateActorAssetIssuer(actorAssetIssuer);
             }
-
-            registerActorInActorNetowrkSerice();
-
-            actorAssetIssuer = this.assetIssuerActorDao.getActorAssetIssuer();
 
             if (actorAssetIssuer != null) {
                 System.out.println("*********************Actor Asset Issuer************************");
@@ -276,7 +302,7 @@ public class AssetIssuerActorPluginRoot extends AbstractPlugin implements
         }
     }
 
-    public void registerActorInActorNetowrkSerice() throws CantRegisterActorAssetIssuerException {
+    public void registerActorInActorNetworkService() throws CantRegisterActorAssetIssuerException {
         try {
             /*
              * Send the Actor Asset Issuer Local for Register in Actor Network Service

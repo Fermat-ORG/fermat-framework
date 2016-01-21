@@ -8,7 +8,7 @@ import com.bitdubai.fermat_api.FermatException;
 
 public class CantGetListActorExtraDataException extends FermatException {
 
-    public static final String DEFAULT_MESSAGE = "CAN'T GET LIST BROKER SETTINGS EXCEPTION";
+    public static final String DEFAULT_MESSAGE = "CAN'T GET LIST ACTOR EXTRA DATA EXCEPTION";
 
     /**
      * This is the constructor that every inherited FermatException must implement

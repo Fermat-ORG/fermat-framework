@@ -12,6 +12,9 @@ import java.util.UUID;
  * Created by Manuel Perez (darkpriestrelative@gmail.com) on 13/01/16.
  */
 public class ChatMock implements Chat {
+
+    private String localActorPubKey = "TestLocalActorPublicKey";
+    private String remoteActorPubKey = "RemoteActorPublicKey";
     @Override
     public UUID getChatId() {
         return UUID.fromString("52d7fab8-a423-458f-bcc9-49cdb3e9ba8f");
@@ -44,7 +47,7 @@ public class ChatMock implements Chat {
 
     @Override
     public String getLocalActorPublicKey() {
-        return "TestLocalActorPublicKey";
+        return this.localActorPubKey;
     }
 
     @Override
@@ -64,7 +67,7 @@ public class ChatMock implements Chat {
 
     @Override
     public String getRemoteActorPublicKey() {
-        return "RemoteActorPublicKey";
+        return this.remoteActorPubKey;
     }
 
     @Override

@@ -101,7 +101,7 @@ public class DigitalAssetDistributor extends AbstractDigitalAssetSwap {
             String genesisTransactionFromDigitalAssetMetadata = digitalAssetMetadata.getGenesisTransaction();
             this.assetDistributionDao.updateDistributionStatusByGenesisTransaction(DistributionStatus.CHECKING_HASH, genesisTransactionFromDigitalAssetMetadata);
             String digitalAssetMetadataHash = digitalAssetMetadata.getDigitalAssetHash();
-            List<CryptoTransaction> cryptoTransactionList = bitcoinNetworkManager.getCryptoTransaction(genesisTransactionFromDigitalAssetMetadata);
+            List<CryptoTransaction> cryptoTransactionList = bitcoinNetworkManager.getCryptoTransactions(genesisTransactionFromDigitalAssetMetadata);
             if (cryptoTransactionList == null || cryptoTransactionList.isEmpty()) {
                 throw new CantGetCryptoTransactionException(CantGetCryptoTransactionException.DEFAULT_MESSAGE, null, "Getting the genesis transaction from Crypto Network", "The crypto transaction received is null");
             }

@@ -33,6 +33,13 @@ public class WebServicesApplication extends Application {
     private WsCommunicationCloudServer wsCommunicationCloudServer;
 
     /**
+     * Constructor
+     */
+    public WebServicesApplication(){
+        super();
+    }
+
+    /**
      * Constructor whit parameter
      * @param wsCommunicationCloudServer
      */
