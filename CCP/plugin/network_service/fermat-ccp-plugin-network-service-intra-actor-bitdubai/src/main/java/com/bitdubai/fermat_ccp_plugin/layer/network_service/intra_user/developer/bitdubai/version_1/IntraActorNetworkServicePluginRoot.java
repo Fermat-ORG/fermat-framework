@@ -1256,17 +1256,12 @@ public class IntraActorNetworkServicePluginRoot extends AbstractPlugin implement
             if(vpnConnectionCloseNotificationEvent.getNetworkServiceApplicant() == getNetworkServiceType()){
 
 
-                System.out.println("----------------------------\n" +
-                        "CHANGING OUTGOING NOTIFICATIONS RECORDS " +
-                        "THAT HAVE THE PROTOCOL STATE SET TO SENT" +
-                        "TO PROCESSING SEND IN ORDER TO ENSURE PROPER RECEPTION :"
-                        + "\n-------------------------------------------------");
-
-                reprocessMessage();
-
-
                 if(communicationNetworkServiceConnectionManager != null)
+                {
+                    reprocessMessage(vpnConnectionCloseNotificationEvent.getRemoteParticipant().getIdentityPublicKey());
                     communicationNetworkServiceConnectionManager.closeConnection(vpnConnectionCloseNotificationEvent.getRemoteParticipant().getIdentityPublicKey());
+
+                }
 
             }
 
@@ -2076,6 +2071,27 @@ public class IntraActorNetworkServicePluginRoot extends AbstractPlugin implement
         try {
 
             List<ActorNetworkServiceRecord> lstActorRecord = outgoingNotificationDao.listNotSentNotifications();
+            for(ActorNetworkServiceRecord record : lstActorRecord) {
+
+                outgoingNotificationDao.changeProtocolState(record.getId(), ActorProtocolState.PROCESSING_SEND);
+            }
+        }
+        catch(CantListIntraWalletUsersException | CantUpdateRecordDataBaseException| CantUpdateRecordException| RequestNotFoundException
+                e)
+        {
+            System.out.print("INTRA USER NS EXCEPCION REPROCESANDO MESSAGEs");
+            e.printStackTrace();
+        } catch (Exception e) {
+            System.out.print("INTRA USER NS EXCEPCION REPROCESANDO MESSAGEs");
+            e.printStackTrace();
+        }
+    }
+
+    private void reprocessMessage(String receiveIdentityKey)
+    {
+        try {
+
+            List<ActorNetworkServiceRecord> lstActorRecord = outgoingNotificationDao.listNotSentNotifications(receiveIdentityKey);
             for(ActorNetworkServiceRecord record : lstActorRecord) {
 
                 outgoingNotificationDao.changeProtocolState(record.getId(), ActorProtocolState.PROCESSING_SEND);

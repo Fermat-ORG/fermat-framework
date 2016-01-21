@@ -217,7 +217,7 @@ public final class CryptoPaymentRequestNetworkServicePluginRoot extends Abstract
                     protocolState,
                     networkType,
                     referenceWallet,
-                    0
+                    0, "OUT"
             );
 
             System.out.println("********** Crypto Payment Request NS -> sending request. PROCESSING_SEND - REQUEST - SENT - OK.");
@@ -913,10 +913,13 @@ public final class CryptoPaymentRequestNetworkServicePluginRoot extends Abstract
 
             if(vpnConnectionCloseNotificationEvent.getNetworkServiceApplicant() == getNetworkServiceType()){
 
-                reprocessMessage();
 
                 if(communicationNetworkServiceConnectionManager != null)
+                {
+                    reprocessMessage(vpnConnectionCloseNotificationEvent.getRemoteParticipant().getIdentityPublicKey());
                     communicationNetworkServiceConnectionManager.closeConnection(vpnConnectionCloseNotificationEvent.getRemoteParticipant().getIdentityPublicKey());
+
+                }
 
             }
 
@@ -1089,7 +1092,7 @@ public final class CryptoPaymentRequestNetworkServicePluginRoot extends Abstract
                     protocolState,
                     requestMessage.getNetworkType(),
                     requestMessage.getReferenceWallet(),
-                    0
+                    0, "INC"
             );
 
         } catch(CantCreateCryptoPaymentRequestException e) {
@@ -1211,6 +1214,24 @@ public final class CryptoPaymentRequestNetworkServicePluginRoot extends Abstract
         try {
 
             List<CryptoPaymentRequest> cryptoAddressRequestList = cryptoPaymentRequestNetworkServiceDao.listUncompletedRequest();
+
+            for(CryptoPaymentRequest record : cryptoAddressRequestList) {
+
+                cryptoPaymentRequestNetworkServiceDao.changeProtocolState(record.getRequestId(),RequestProtocolState.PROCESSING_SEND);
+            }
+        }
+        catch(CantListRequestsException | CantChangeRequestProtocolStateException |RequestNotFoundException e)
+        {
+            System.out.print("Payment Request NS EXCEPCION REPROCESANDO WAIT MESSAGE");
+            e.printStackTrace();
+        }
+    }
+
+    private void reprocessMessage(String remoteIdentityKey)
+    {
+        try {
+
+            List<CryptoPaymentRequest> cryptoAddressRequestList = cryptoPaymentRequestNetworkServiceDao.listUncompletedRequest(remoteIdentityKey);
 
             for(CryptoPaymentRequest record : cryptoAddressRequestList) {
 

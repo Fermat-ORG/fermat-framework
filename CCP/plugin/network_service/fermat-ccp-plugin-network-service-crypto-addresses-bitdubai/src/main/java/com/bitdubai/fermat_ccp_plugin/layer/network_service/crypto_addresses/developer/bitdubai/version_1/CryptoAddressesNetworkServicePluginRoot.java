@@ -517,7 +517,8 @@ public class CryptoAddressesNetworkServicePluginRoot extends AbstractNetworkServ
                     dealer,
                     blockchainNetworkType,
                     1,
-                    System.currentTimeMillis()
+                    System.currentTimeMillis(),
+                    "OUT"
             );
 
             System.out.println("********* Crypto Addresses: Successful Address Exchange Request creation. ");
@@ -923,10 +924,11 @@ public class CryptoAddressesNetworkServicePluginRoot extends AbstractNetworkServ
 
             if(vpnConnectionCloseNotificationEvent.getNetworkServiceApplicant() == getNetworkServiceType()){
 
-                reprocessMessage();
+
 
                 if(communicationNetworkServiceConnectionManager != null) {
                     communicationNetworkServiceConnectionManager.closeConnection(vpnConnectionCloseNotificationEvent.getRemoteParticipant().getIdentityPublicKey());
+                    reprocessMessage(vpnConnectionCloseNotificationEvent.getRemoteParticipant().getIdentityPublicKey());
                 }
             }
 
@@ -1097,7 +1099,8 @@ public class CryptoAddressesNetworkServicePluginRoot extends AbstractNetworkServ
                     requestMessage.getCryptoAddressDealer(),
                     requestMessage.getBlockchainNetworkType(),
                     1,
-                    System.currentTimeMillis()
+                    System.currentTimeMillis(),
+                    "INT"
             );
 
         } catch(CantCreateRequestException e) {
@@ -1242,6 +1245,23 @@ public class CryptoAddressesNetworkServicePluginRoot extends AbstractNetworkServ
     }
 
 
+    private void reprocessMessage(String remoteIdentityKey)
+    {
+        try {
+
+            List<CryptoAddressRequest> cryptoAddressRequestList = cryptoAddressesNetworkServiceDao.listUncompletedRequest(remoteIdentityKey);
+
+            for(CryptoAddressRequest record : cryptoAddressRequestList) {
+
+                cryptoAddressesNetworkServiceDao.changeProtocolState(record.getRequestId(),ProtocolState.PROCESSING_SEND);
+            }
+        }
+        catch(CantListPendingCryptoAddressRequestsException | CantChangeProtocolStateException |PendingRequestNotFoundException e)
+        {
+            System.out.print("ADDRESS NS EXCEPCION REPROCESANDO WAIT MESSAGE");
+            e.printStackTrace();
+        }
+    }
 
 
 }
