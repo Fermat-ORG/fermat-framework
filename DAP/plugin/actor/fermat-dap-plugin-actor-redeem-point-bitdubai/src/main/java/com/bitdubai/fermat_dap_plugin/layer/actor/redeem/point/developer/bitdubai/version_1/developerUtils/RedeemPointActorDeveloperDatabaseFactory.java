@@ -167,7 +167,7 @@ public class RedeemPointActorDeveloperDatabaseFactory implements DealsWithPlugin
         List<String> registeredIssuersColumns = new ArrayList<String>();
 
         registeredIssuersColumns.add(RedeemPointActorDatabaseConstants.REGISTERED_ASSET_ISSUERS_REDEEM_POINT_PUBLICKEY_COLUMN);
-        registeredIssuersColumns.add(RedeemPointActorDatabaseConstants.REGISTERED_ASSET_ISSUERS_ISSUER_EXTENDED_PUBLICKEY_COLUMN);
+        registeredIssuersColumns.add(RedeemPointActorDatabaseConstants.REGISTERED_ASSET_ISSUERS_ISSUER_PUBLICKEY_COLUMN);
 
         DeveloperDatabaseTable registeredIssuerTable = developerObjectFactory.getNewDeveloperDatabaseTable(RedeemPointActorDatabaseConstants.REGISTERED_ASSET_ISSUERS_TABLE_NAME, registeredIssuersColumns);
         tables.add(registeredIssuerTable);
