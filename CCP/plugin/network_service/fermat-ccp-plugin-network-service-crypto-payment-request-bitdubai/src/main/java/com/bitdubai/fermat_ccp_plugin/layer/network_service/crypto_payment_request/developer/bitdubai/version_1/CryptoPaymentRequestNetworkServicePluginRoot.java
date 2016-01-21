@@ -81,9 +81,11 @@ import com.bitdubai.fermat_p2p_api.layer.all_definition.common.network_services.
 import com.bitdubai.fermat_p2p_api.layer.all_definition.common.network_services.template.exceptions.CantInitializeNetworkServiceDatabaseException;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.enums.P2pEventType;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.events.ClientConnectionCloseNotificationEvent;
+import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.events.ClientSuccessReconnectNotificationEvent;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.events.VPNConnectionCloseNotificationEvent;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.WsCommunicationsCloudClientManager;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.contents.FermatMessage;
+import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.exceptions.CantRegisterComponentException;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.exceptions.CantRequestListException;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedPluginExceptionSeverity;
@@ -149,6 +151,12 @@ public final class CryptoPaymentRequestNetworkServicePluginRoot extends Abstract
 
     private CryptoPaymentRequestNetworkServiceDao cryptoPaymentRequestNetworkServiceDao;
 
+    private  boolean beforeRegistered;
+
+    private long reprocessTimer =   1* 3600 * 1000; //one hours
+
+    private Timer timer = new Timer();
+
     /**
      * Constructor
      */
@@ -165,6 +173,7 @@ public final class CryptoPaymentRequestNetworkServicePluginRoot extends Abstract
 
         this.remoteNetworkServicesRegisteredList = new CopyOnWriteArrayList<>();
         this.listenersAdded = new ArrayList<>();
+        beforeRegistered = Boolean.FALSE;
     }
 
     /**
@@ -483,7 +492,7 @@ public final class CryptoPaymentRequestNetworkServicePluginRoot extends Abstract
                 /*
                  * Initialize the agent and start
                  */
-                communicationRegistrationProcessNetworkServiceAgent = new CommunicationRegistrationProcessNetworkServiceAgent(this, wsCommunicationsCloudClientManager.getCommunicationsCloudClientConnection());
+                communicationRegistrationProcessNetworkServiceAgent = new CommunicationRegistrationProcessNetworkServiceAgent(this, wsCommunicationsCloudClientManager);
                 communicationRegistrationProcessNetworkServiceAgent.start();
             }
 
@@ -493,15 +502,9 @@ public final class CryptoPaymentRequestNetworkServicePluginRoot extends Abstract
             reprocessMessage();
 
             //declare a schedule to process waiting request message
-            Timer timer = new Timer();
 
-            timer.schedule(new TimerTask() {
-                @Override
-                public void run() {
-                    // change message state to process retry later
-                    reprocessMessage();
-                }
-            }, 2 * 3600 * 1000);
+
+          this.startTimer();
 
 
             /*
@@ -610,9 +613,9 @@ public final class CryptoPaymentRequestNetworkServicePluginRoot extends Abstract
          * Listen and handle Complete Request List Component Registered Notification Event
          */
         fermatEventListener = eventManager.getNewListener(P2pEventType.COMPLETE_REQUEST_LIST_COMPONENT_REGISTERED_NOTIFICATION);
-        fermatEventListener.setEventHandler(new CompleteRequestListComponentRegisteredNotificationEventHandler(this));
-        eventManager.addListener(fermatEventListener);
-        listenersAdded.add(fermatEventListener);
+//        fermatEventListener.setEventHandler(new CompleteRequestListComponentRegisteredNotificationEventHandler(this));
+//        eventManager.addListener(fermatEventListener);
+//        listenersAdded.add(fermatEventListener);
 
         /*
          * Listen and handle Complete Request List Component Registered Notification Event
@@ -817,6 +820,35 @@ public final class CryptoPaymentRequestNetworkServicePluginRoot extends Abstract
      */
     public void handleCompleteComponentRegistrationNotificationEvent(final PlatformComponentProfile platformComponentProfileRegistered) {
 
+        if (platformComponentProfileRegistered.getPlatformComponentType() == PlatformComponentType.COMMUNICATION_CLOUD_CLIENT && this.register){
+
+            if(communicationRegistrationProcessNetworkServiceAgent!=null){
+                communicationRegistrationProcessNetworkServiceAgent.stop();
+                communicationRegistrationProcessNetworkServiceAgent = null;
+            }
+            beforeRegistered = Boolean.TRUE;
+                              /*
+                 * Construct my profile and register me
+                 */
+            PlatformComponentProfile platformComponentProfileToReconnect =  wsCommunicationsCloudClientManager.getCommunicationsCloudClientConnection().constructPlatformComponentProfileFactory(this.getIdentityPublicKey(),
+                    this.getAlias().toLowerCase(),
+                    this.getName(),
+                    this.getNetworkServiceType(),
+                    this.getPlatformComponentType(),
+                    this.getExtraData());
+
+            try {
+                    /*
+                     * Register me
+                     */
+                wsCommunicationsCloudClientManager.getCommunicationsCloudClientConnection().registerComponentForCommunication(this.getNetworkServiceType(), platformComponentProfileToReconnect);
+
+            } catch (CantRegisterComponentException e) {
+                e.printStackTrace();
+            }
+
+        }
+
         /*
          * If the component registered have my profile and my identity public key
          */
@@ -829,23 +861,25 @@ public final class CryptoPaymentRequestNetworkServicePluginRoot extends Abstract
              */
             this.register = Boolean.TRUE;
 
-            try {
+            if(!beforeRegistered) {
+                try {
 
-                cryptoPaymentRequestExecutorAgent = new CryptoPaymentRequestExecutorAgent(
-                        this,
-                        errorManager,
-                        eventManager,
-                        cryptoPaymentRequestNetworkServiceDao,
-                        wsCommunicationsCloudClientManager,
-                        getPluginVersionReference()
-                );
+                    cryptoPaymentRequestExecutorAgent = new CryptoPaymentRequestExecutorAgent(
+                            this,
+                            errorManager,
+                            eventManager,
+                            cryptoPaymentRequestNetworkServiceDao,
+                            wsCommunicationsCloudClientManager,
+                            getPluginVersionReference()
+                    );
 
-                cryptoPaymentRequestExecutorAgent.start();
+                    cryptoPaymentRequestExecutorAgent.start();
 
-            } catch(CantStartAgentException e) {
+                } catch (CantStartAgentException e) {
 
-                CantStartPluginException pluginStartException = new CantStartPluginException(e, "", "Problem initializing crypto payment request dao.");
-                errorManager.reportUnexpectedPluginException(this.getPluginVersionReference(), UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, pluginStartException);
+                    CantStartPluginException pluginStartException = new CantStartPluginException(e, "", "Problem initializing crypto payment request dao.");
+                    errorManager.reportUnexpectedPluginException(this.getPluginVersionReference(), UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, pluginStartException);
+                }
             }
 
         }
@@ -883,6 +917,8 @@ public final class CryptoPaymentRequestNetworkServicePluginRoot extends Abstract
 
             if(vpnConnectionCloseNotificationEvent.getNetworkServiceApplicant() == getNetworkServiceType()){
 
+                reprocessMessage();
+
                 if(communicationNetworkServiceConnectionManager != null)
                     communicationNetworkServiceConnectionManager.closeConnection(vpnConnectionCloseNotificationEvent.getRemoteParticipant().getIdentityPublicKey());
 
@@ -900,21 +936,8 @@ public final class CryptoPaymentRequestNetworkServicePluginRoot extends Abstract
     public void handleClientConnectionCloseNotificationEvent(FermatEvent fermatEvent) {
 
         if(fermatEvent instanceof ClientConnectionCloseNotificationEvent){
-//
-//            try {
-//
-//                List<CryptoPaymentRequest> cryptoAddressRequestList = cryptoPaymentRequestNetworkServiceDao.listRequestsByProtocolState(RequestProtocolState.WAITING_RESPONSE);
-//
-//                for(CryptoPaymentRequest record : cryptoAddressRequestList) {
-//
-//                    cryptoPaymentRequestNetworkServiceDao.changeProtocolState(record.getRequestId(),RequestProtocolState.PROCESSING_SEND);
-//                }
-//            }
-//            catch(CantListRequestsException | CantChangeRequestProtocolStateException |RequestNotFoundException e)
-//            {
-//                System.out.print("EXCEPCION REPROCESANDO WAIT MESSAGE");
-//                e.printStackTrace();
-//            }
+
+          reprocessMessage();
 
             this.register = false;
             if(communicationNetworkServiceConnectionManager != null)
@@ -940,8 +963,49 @@ public final class CryptoPaymentRequestNetworkServicePluginRoot extends Abstract
     @Override
     public void handleClientSuccessfullReconnectNotificationEvent(FermatEvent fermatEvent) {
 
-        if(communicationNetworkServiceConnectionManager != null)
-            communicationNetworkServiceConnectionManager.restart();
+
+            if(communicationNetworkServiceConnectionManager != null) {
+                communicationNetworkServiceConnectionManager.restart();
+            }
+
+            if(!this.register){
+                if(communicationRegistrationProcessNetworkServiceAgent != null) {
+
+                    communicationRegistrationProcessNetworkServiceAgent.stop();
+                    communicationRegistrationProcessNetworkServiceAgent = null;
+
+                       /*
+                 * Construct my profile and register me
+                 */
+                    PlatformComponentProfile platformComponentProfileToReconnect =  wsCommunicationsCloudClientManager.getCommunicationsCloudClientConnection().constructPlatformComponentProfileFactory(this.getIdentityPublicKey(),
+                            this.getAlias().toLowerCase(),
+                            this.getName(),
+                            this.getNetworkServiceType(),
+                            this.getPlatformComponentType(),
+                            this.getExtraData());
+
+                    try {
+                    /*
+                     * Register me
+                     */
+                        wsCommunicationsCloudClientManager.getCommunicationsCloudClientConnection().registerComponentForCommunication(this.getNetworkServiceType(), platformComponentProfileToReconnect);
+
+                    } catch (CantRegisterComponentException e) {
+                        e.printStackTrace();
+                    }
+
+                /*
+                 * Configure my new profile
+                 */
+                    this.setPlatformComponentProfilePluginRoot(platformComponentProfileToReconnect);
+
+                /*
+                 * Initialize the connection manager
+                 */
+                    this.initializeCommunicationNetworkServiceConnectionManager();
+
+                }
+            }
 
     }
 
@@ -1106,6 +1170,8 @@ public final class CryptoPaymentRequestNetworkServicePluginRoot extends Abstract
                     {
                         //update state and process again later
                         cryptoPaymentRequestNetworkServiceDao.changeProtocolState(record.getRequestId(),RequestProtocolState.WAITING_RESPONSE);
+
+
                     }
                     else
                     {
@@ -1160,6 +1226,16 @@ public final class CryptoPaymentRequestNetworkServicePluginRoot extends Abstract
             System.out.print("Payment Request NS EXCEPCION REPROCESANDO WAIT MESSAGE");
             e.printStackTrace();
         }
+    }
+
+    private void startTimer(){
+        timer.schedule(new TimerTask() {
+            @Override
+            public void run() {
+                // change message state to process retry later
+                reprocessMessage();
+            }
+        }, reprocessTimer);
     }
 
 

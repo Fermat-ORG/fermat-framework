@@ -1,64 +1,206 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:id="@+id/settings_container">
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/settings_container"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
 
 
-    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    <LinearLayout
+        android:id="@+id/linear_layout_setting_container"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="#ffffff"
         android:orientation="vertical"
-        android:paddingLeft="7dip"
-        android:paddingRight="7dip"
-        android:id="@+id/linear_layout_setting_container"
-        >
+        tools:ignore="UselessParent">
 
         <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:id="@+id/txt_view_notification_title"
-            android:text="Notifications"
+            android:layout_marginTop="30dp"
             android:background="#f3f3f4"
-            android:textColor="#12aca1"
-            android:paddingTop="7dp"
-            android:paddingBottom="7dp"
+            android:paddingBottom="8dp"
+            android:paddingEnd="20dp"
             android:paddingLeft="20dp"
+            android:paddingRight="20dp"
+            android:paddingStart="20dp"
+            android:paddingTop="8dp"
+            android:text="BitCoin Network"
+            android:textColor="#12aca1"
             app:typeface="ROBOTO_REGULAR"
-            android:layout_marginTop="30dp"/>
+            tools:ignore="HardcodedText" />
 
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:paddingTop="24dp">
+            android:orientation="horizontal">
 
-
-
-            <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
-                android:layout_width="wrap_content"
+            <LinearLayout
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:id="@+id/txt_view_notification_item"
-                android:text="Phone notifications"
-                android:textColor="#4f4f4f"
-                app:typeface="ROBOTO_REGULAR"
-                android:layout_marginLeft="20dp"/>
+                android:gravity="center"
+                android:orientation="horizontal"
+                android:padding="16dp">
 
+                <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_weight="1"
+                    android:text="Select Network"
+                    android:textColor="#4f4f4f"
+                    app:typeface="ROBOTO_REGULAR"
+                    tools:ignore="HardcodedText" />
 
-            <Switch
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:id="@+id/switch_notifications"
-                android:layout_alignParentEnd="true"
-                android:layout_marginRight="30dp"
-                />
+                <LinearLayout
+                    android:layout_width="160dp"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
 
+                    <Spinner
+                        android:id="@+id/spinner"
+                        android:layout_width="160dp"
+                        android:layout_height="45dp"
+                        android:background="#ffffff" />
 
+                    <View
+                        android:layout_width="wrap_content"
+                        android:layout_height="0.5dp"
+                        android:background="#bbccc7" />
+
+                </LinearLayout>
+
+                <ImageView
+                    android:id="@+id/spinner_open"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/ic_spinner_arrow"
+                    tools:ignore="ContentDescription" />
+            </LinearLayout>
 
 
         </RelativeLayout>
+
+        <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="#f3f3f4"
+            android:paddingBottom="8dp"
+            android:paddingEnd="20dp"
+            android:paddingLeft="20dp"
+            android:paddingRight="20dp"
+            android:paddingStart="20dp"
+            android:paddingTop="8dp"
+            android:text="Network"
+            android:textColor="#12aca1"
+            app:typeface="ROBOTO_REGULAR"
+            tools:ignore="HardcodedText" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:paddingBottom="8dp"
+            android:paddingTop="8dp">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:paddingBottom="8dp"
+                android:paddingEnd="16dp"
+                android:paddingLeft="16dp"
+                android:paddingRight="16dp"
+                android:paddingStart="16dp"
+                android:paddingTop="8dp">
+
+                <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="Ip Adress"
+                    android:textColor="#4f4f4f"
+                    app:typeface="ROBOTO_REGULAR"
+                    tools:ignore="HardcodedText" />
+
+                <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatEditText
+                    android:id="@+id/edit_text_ip_adress"
+                    android:layout_width="170dp"
+                    android:layout_height="45dp"
+                    android:background="#e7f7f5" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:paddingBottom="8dp"
+                android:paddingEnd="16dp"
+                android:paddingLeft="16dp"
+                android:paddingRight="16dp"
+                android:paddingStart="16dp"
+                android:paddingTop="8dp">
+
+                <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="Port"
+                    android:textColor="#4f4f4f"
+                    app:typeface="ROBOTO_REGULAR"
+                    tools:ignore="HardcodedText" />
+
+                <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatEditText
+                    android:id="@+id/edit_text_port"
+                    android:layout_width="170dp"
+                    android:layout_height="45dp"
+                    android:background="#e7f7f5" />
+            </LinearLayout>
+
+        </LinearLayout>
+
+        <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
+            android:id="@+id/txt_view_notification_title"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="#f3f3f4"
+            android:paddingBottom="8dp"
+            android:paddingEnd="20dp"
+            android:paddingLeft="20dp"
+            android:paddingRight="20dp"
+            android:paddingStart="20dp"
+            android:paddingTop="8dp"
+            android:text="Notifications"
+            android:textColor="#12aca1"
+            app:typeface="ROBOTO_REGULAR"
+            tools:ignore="HardcodedText" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:padding="20dp">
+
+
+            <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
+                android:id="@+id/txt_view_notification_item"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Phone notifications"
+                android:textColor="#4f4f4f"
+                app:typeface="ROBOTO_REGULAR"
+                tools:ignore="HardcodedText" />
+
+            <Switch
+                android:id="@+id/switch_notification"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+
+
+        </LinearLayout>
 
     </LinearLayout>
 

@@ -17,6 +17,7 @@ import com.bitdubai.fermat_api.layer.osa_android.logger_system.DealsWithLogger;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogManager;
 import com.bitdubai.fermat_cht_api.all_definition.agent.CHTTransactionAgent;
 import com.bitdubai.fermat_cht_api.all_definition.enums.MessageStatus;
+import com.bitdubai.fermat_cht_api.all_definition.enums.TypeMessage;
 import com.bitdubai.fermat_cht_api.all_definition.events.enums.EventStatus;
 import com.bitdubai.fermat_cht_api.all_definition.events.enums.EventType;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantGetChatException;
@@ -29,6 +30,7 @@ import com.bitdubai.fermat_cht_api.all_definition.exceptions.UnexpectedResultRet
 import com.bitdubai.fermat_cht_api.layer.middleware.interfaces.Chat;
 import com.bitdubai.fermat_cht_api.layer.middleware.interfaces.Message;
 import com.bitdubai.fermat_cht_api.layer.middleware.utils.EventRecord;
+import com.bitdubai.fermat_cht_api.layer.middleware.utils.MessageImpl;
 import com.bitdubai.fermat_cht_api.layer.network_service.chat.enums.ChatMessageStatus;
 import com.bitdubai.fermat_cht_api.layer.network_service.chat.enums.DistributionStatus;
 import com.bitdubai.fermat_cht_api.layer.network_service.chat.exceptions.CantSendChatMessageMetadataException;
@@ -490,7 +492,28 @@ public class ChatMiddlewareMonitorAgent implements
                 CantGetMessageException {
             UUID messageId=chatMetadata.getMessageId();
             Message messageRecorded=chatMiddlewareDatabaseDao.getMessageByMessageId(messageId);
+            if(messageRecorded==null){
+                /**
+                 * In this case, the message is not created in database, so, is an incoming message,
+                 * I need to create a new message
+                 */
+                messageRecorded=getMessageFromChatMetadata(
+                        chatMetadata);
+            }
             chatMiddlewareDatabaseDao.saveMessage(messageRecorded);
+        }
+
+        /**
+         * This method creates a new Message from incoming metadata
+         * @param chatMetadata
+         * @return
+         */
+        private Message getMessageFromChatMetadata(ChatMetadata chatMetadata){
+            Message message=new MessageImpl(
+                    chatMetadata,
+                    MessageStatus.CREATED,
+                    TypeMessage.INCOMMING);
+            return message;
         }
 
         /**

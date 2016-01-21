@@ -428,12 +428,20 @@ public class ChatMiddlewareDatabaseDao {
 
             database.closeDatabase();
 
+            if(messages.isEmpty()){
+                return null;
+            }
+
             return messages.get(0);
         }
         catch (Exception e) {
             if (database != null)
                 database.closeDatabase();
-            throw new DatabaseOperationException(DatabaseOperationException.DEFAULT_MESSAGE, e, "error trying to get Message from the database with filter: " + messageId.toString(), null);
+            throw new DatabaseOperationException(
+                    DatabaseOperationException.DEFAULT_MESSAGE,
+                    e,
+                    "error trying to get Message from the database with filter: " + messageId.toString(),
+                    null);
         }
     }
 

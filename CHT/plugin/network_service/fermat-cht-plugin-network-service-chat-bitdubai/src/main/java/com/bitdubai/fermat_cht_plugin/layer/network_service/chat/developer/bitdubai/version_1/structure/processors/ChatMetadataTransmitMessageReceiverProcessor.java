@@ -74,6 +74,7 @@ public class ChatMetadataTransmitMessageReceiverProcessor extends FermatMessageP
             /*
              * Save into data base for audit control
              */
+            getChatPluginRoot().getChatMetaDataDao().create(chatMetadaTransactionRecord);
 
             //get the transactions an UUID
             chatMetadaTransactionRecord.setTransactionId(getChatPluginRoot().getChatMetaDataDao().getNewUUID(UUID.randomUUID().toString()));

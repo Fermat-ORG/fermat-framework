@@ -75,7 +75,8 @@ public class NewTransactionStatusNotificationMessageReceiverProcessor extends Fe
              * Get the digitalAssetMetadataTransaction
              */
 
-            List<ChatMetadataTransactionRecord> list =  getChatPluginRoot().getChatMetaDataDao().findAll(NetworkServiceChatNetworkServiceDatabaseConstants.CHAT_IDCHAT_COLUMN_NAME, idChat.toString());
+            //TODO: FROM MANUEL, I commented this line for compilation
+            List<ChatMetadataTransactionRecord> list =  null;//getChatPluginRoot().getChatMetaDataDao().findAll(NetworkServiceChatNetworkServiceDatabaseConstants.CHAT_IDCHAT_COLUMN_NAME, idChat.toString());
 
             ChatMetadataTransactionRecord chatMetadataTransactionRecord = null;
             if(list.size()>0){
@@ -84,6 +85,7 @@ public class NewTransactionStatusNotificationMessageReceiverProcessor extends Fe
                     //chatMetadataTransactionRecord.setDistributionStatus(DistributionStatus.DELIVERED);
                    // chatMetadataTransactionRecord.setChatMessageStatus(ChatMessageStatus.CREATED_CHAT);
 
+                    //TODO: FROM MANUEL, I commented this line for compilation
                 getChatPluginRoot().getChatMetaDataDao().update(chatMetadataTransactionRecord);
 
 
