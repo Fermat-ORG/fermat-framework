@@ -1,5 +1,6 @@
 package com.bitdubai.fermat_dap_api.layer.dap_wallet.asset_user_wallet.interfaces;
 
+import com.bitdubai.fermat_dap_api.layer.all_definition.digital_asset.DigitalAsset;
 import com.bitdubai.fermat_dap_api.layer.all_definition.digital_asset.DigitalAssetMetadata;
 import com.bitdubai.fermat_dap_api.layer.dap_transaction.common.exceptions.CantGetDigitalAssetFromLocalStorageException;
 import com.bitdubai.fermat_dap_api.layer.dap_wallet.common.enums.BalanceType;
@@ -51,4 +52,6 @@ public interface AssetUserWallet {
                                                                  BalanceType balanceType) throws CantGetActorTransactionSummaryException;
 
     DigitalAssetMetadata getDigitalAssetMetadata(String transactionHash) throws CantGetDigitalAssetFromLocalStorageException;
+
+    DigitalAsset getDigitalAsset(String assetPublicKey) throws CantGetDigitalAssetFromLocalStorageException;
 }

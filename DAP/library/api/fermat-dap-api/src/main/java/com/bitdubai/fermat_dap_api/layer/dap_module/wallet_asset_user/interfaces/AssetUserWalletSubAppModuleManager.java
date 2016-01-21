@@ -30,11 +30,14 @@ import java.util.List;
 public interface AssetUserWalletSubAppModuleManager extends ModuleManager<FermatSettings, ActiveActorIdentityInformation> {
     /**
      * (non-Javadoc)
+     *
      * @see List<AssetUserWalletList> getAssetIssuerWalletBalancesBook(String publicKey)
      */
     List<AssetUserWalletList> getAssetUserWalletBalances(String publicKey) throws CantLoadWalletException;
 
     List<ActorAssetRedeemPoint> getAllActorAssetRedeemPointConnected() throws CantGetAssetRedeemPointActorsException;
+
+    List<ActorAssetRedeemPoint> getRedeemPointsConnectedForAsset(String assetPublicKey) throws CantGetAssetRedeemPointActorsException;
 
     AssetUserWallet loadAssetUserWallet(String walletPublicKey) throws CantLoadWalletException;
 
