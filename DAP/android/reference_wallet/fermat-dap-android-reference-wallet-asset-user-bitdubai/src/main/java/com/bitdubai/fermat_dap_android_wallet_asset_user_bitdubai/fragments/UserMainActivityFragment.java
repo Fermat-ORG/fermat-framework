@@ -122,6 +122,8 @@ public class UserMainActivityFragment extends FermatWalletListFragment<DigitalAs
                 PresentationDialog presentationDialog = new PresentationDialog.Builder(getActivity(), appSession)
                         .setBannerRes(R.drawable.banner_asset_user_wallet)
                         .setIconRes(R.drawable.asset_user_wallet)
+                        .setVIewColor(R.color.dap_user_view_color)
+                        .setTitleTextColor(R.color.dap_user_view_color)
                         .setSubTitle("Welcome to the Asset User Wallet.")
                         .setBody("From this wallet you will be able to redeem your assets or even get the monetary value associated with them.")
                         .setTextFooter("We will be creating an avatar for you in order to identify you in the system as an Asset User, name and more details later in the Asset Issuer Identity sub app.")

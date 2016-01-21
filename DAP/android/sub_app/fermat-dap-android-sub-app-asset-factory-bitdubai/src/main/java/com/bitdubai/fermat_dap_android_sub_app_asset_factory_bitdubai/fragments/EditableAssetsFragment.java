@@ -1,6 +1,7 @@
 package com.bitdubai.fermat_dap_android_sub_app_asset_factory_bitdubai.fragments;
 
 import android.app.ProgressDialog;
+import android.content.DialogInterface;
 import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
@@ -21,12 +22,17 @@ import android.view.animation.AnimationUtils;
 import android.widget.Toast;
 
 import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractFermatFragment;
+import com.bitdubai.fermat_android_api.ui.Views.PresentationDialog;
 import com.bitdubai.fermat_android_api.ui.inflater.ViewInflater;
 import com.bitdubai.fermat_android_api.ui.interfaces.FermatWorkerCallBack;
 import com.bitdubai.fermat_android_api.ui.util.FermatWorker;
 import com.bitdubai.fermat_api.layer.all_definition.enums.BlockchainNetworkType;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
 import com.bitdubai.fermat_api.layer.all_definition.resources_structure.Resource;
+import com.bitdubai.fermat_api.layer.all_definition.settings.exceptions.CantGetSettingsException;
+import com.bitdubai.fermat_api.layer.all_definition.settings.exceptions.CantPersistSettingsException;
+import com.bitdubai.fermat_api.layer.all_definition.settings.exceptions.SettingsNotFoundException;
+import com.bitdubai.fermat_api.layer.all_definition.settings.structure.SettingsManager;
 import com.bitdubai.fermat_api.layer.modules.common_classes.ActiveActorIdentityInformation;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantCreateFileException;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.FileNotFoundException;
@@ -34,12 +40,17 @@ import com.bitdubai.fermat_dap_android_sub_app_asset_factory_bitdubai.R;
 import com.bitdubai.fermat_dap_android_sub_app_asset_factory_bitdubai.adapters.AssetFactoryAdapter;
 import com.bitdubai.fermat_dap_android_sub_app_asset_factory_bitdubai.interfaces.PopupMenu;
 import com.bitdubai.fermat_dap_android_sub_app_asset_factory_bitdubai.sessions.AssetFactorySession;
+import com.bitdubai.fermat_dap_android_sub_app_asset_factory_bitdubai.sessions.SessionConstantsAssetFactory;
 import com.bitdubai.fermat_dap_android_sub_app_asset_factory_bitdubai.util.CommonLogger;
 import com.bitdubai.fermat_dap_api.layer.all_definition.enums.State;
+import com.bitdubai.fermat_dap_api.layer.all_definition.exceptions.CantGetIdentityAssetIssuerException;
+import com.bitdubai.fermat_dap_api.layer.dap_identity.asset_issuer.interfaces.IdentityAssetIssuer;
 import com.bitdubai.fermat_dap_api.layer.dap_middleware.dap_asset_factory.exceptions.CantGetAssetFactoryException;
 import com.bitdubai.fermat_dap_api.layer.dap_middleware.dap_asset_factory.exceptions.CantPublishAssetFactoy;
 import com.bitdubai.fermat_dap_api.layer.dap_middleware.dap_asset_factory.interfaces.AssetFactory;
+import com.bitdubai.fermat_dap_api.layer.dap_module.asset_factory.AssetFactorySettings;
 import com.bitdubai.fermat_dap_api.layer.dap_module.asset_factory.interfaces.AssetFactoryModuleManager;
+import com.bitdubai.fermat_dap_api.layer.dap_module.wallet_asset_issuer.AssetIssuerSettings;
 import com.bitdubai.fermat_wpd_api.layer.wpd_middleware.wallet_manager.interfaces.InstalledWallet;
 import com.software.shell.fab.ActionButton;
 
@@ -72,6 +83,8 @@ public class EditableAssetsFragment extends AbstractFermatFragment implements
     // custom inflater
     private ViewInflater viewInflater;
 
+    SettingsManager<AssetFactorySettings> settingsManager;
+
 
     private boolean isRefreshing = false;
 
@@ -90,6 +103,7 @@ public class EditableAssetsFragment extends AbstractFermatFragment implements
         try {
             selectedAsset = null;
             manager = ((AssetFactorySession) appSession).getModuleManager();
+            settingsManager = appSession.getModuleManager().getSettingsManager();
             //viewInflater = new ViewInflater(getActivity(), appResourcesProviderManager);
         } catch (Exception ex) {
             CommonLogger.exception(TAG, ex.getMessage(), ex);
@@ -204,6 +218,71 @@ public class EditableAssetsFragment extends AbstractFermatFragment implements
         });
         create.setAnimation(AnimationUtils.loadAnimation(getActivity(), R.anim.fab_jump_from_down));
         create.setVisibility(View.VISIBLE);
+
+        showPresentationDialog();
+    }
+
+    private void showPresentationDialog() {
+        //Initialize settings
+        settingsManager = appSession.getModuleManager().getSettingsManager();
+        AssetFactorySettings settings = null;
+        try {
+            settings = settingsManager.loadAndGetSettings(appSession.getAppPublicKey());
+        }catch (Exception e){
+            settings = null;
+        }
+        if(settings == null){
+            settings = new AssetFactorySettings();
+            settings.setIsPresentationHelpEnabled(true);
+            try {
+                settingsManager.persistSettings(appSession.getAppPublicKey(), settings);
+            } catch (CantPersistSettingsException e) {
+                e.printStackTrace();
+            }
+        }
+
+        try {
+            boolean isPresentationHelpEnabled = settingsManager.loadAndGetSettings(appSession.getAppPublicKey()).isPresentationHelpEnabled();
+
+            if (isPresentationHelpEnabled) {
+                PresentationDialog presentationDialog = new PresentationDialog.Builder(getActivity(), appSession)
+                        .setBannerRes(R.drawable.banner_asset_factory)
+                        .setIconRes(R.drawable.asset_factory)
+                        .setVIewColor(R.color.dap_asset_factory_view_color)
+                        .setTitleTextColor(R.color.dap_asset_factory_view_color)
+                        .setSubTitle("Welcome to the Asset Factory application.")
+                        .setBody("From here you will be able to create, define and publish all your assets.")
+                        .setTextFooter("We will be creating an avatar for you in order to identify you in the system as an Asset Issuer, name and more details later in the Asset Issuer Identity sub app.")
+                        .setTemplateType((manager.getLoggedIdentityAssetIssuer() == null) ? PresentationDialog.TemplateType.TYPE_PRESENTATION : PresentationDialog.TemplateType.TYPE_PRESENTATION_WITHOUT_IDENTITIES)
+                        .setIsCheckEnabled(settingsManager.loadAndGetSettings(appSession.getAppPublicKey()).isPresentationHelpEnabled())
+                        .build();
+
+                presentationDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
+                    @Override
+                    public void onDismiss(DialogInterface dialog) {
+                        Object o = appSession.getData(SessionConstantsAssetFactory.PRESENTATION_IDENTITY_CREATED);
+                        if (o != null) {
+                            if ((Boolean) (o)) {
+                                //invalidate();
+                                appSession.removeData(SessionConstantsAssetFactory.PRESENTATION_IDENTITY_CREATED);
+                            }
+                        }
+                        IdentityAssetIssuer identityAssetIssuer = manager.getLoggedIdentityAssetIssuer();
+                        if (identityAssetIssuer == null) {
+                            getActivity().onBackPressed();
+                        } else {
+                            invalidate();
+                        }
+                    }
+                });
+
+                presentationDialog.show();
+            }
+        } catch (CantGetSettingsException e) {
+            e.printStackTrace();
+        } catch (SettingsNotFoundException e) {
+            e.printStackTrace();
+        }
     }
 
     @SuppressWarnings("unchecked")
@@ -315,7 +394,7 @@ public class EditableAssetsFragment extends AbstractFermatFragment implements
                             dialog.dismiss();
                             selectedAsset = null;
                             if (getActivity() != null) {
-                                Toast.makeText(getActivity(), "Ups, some error occurred publishing this asset", Toast.LENGTH_SHORT).show();
+                                Toast.makeText(getActivity(), "You need to define all mandatory properties in your asset before publishing it. Edit the asset and complete all the needed information.", Toast.LENGTH_SHORT).show();
                                 onRefresh();
                             }
                             ex.printStackTrace();
@@ -334,7 +413,7 @@ public class EditableAssetsFragment extends AbstractFermatFragment implements
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        checkIdentity();
+//        checkIdentity();
     }
 
     private void checkIdentity() {
