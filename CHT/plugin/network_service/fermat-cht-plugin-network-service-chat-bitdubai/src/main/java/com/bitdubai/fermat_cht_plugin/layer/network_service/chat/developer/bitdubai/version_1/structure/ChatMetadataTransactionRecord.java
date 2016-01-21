@@ -15,6 +15,8 @@ import java.util.UUID;
  */
 public class ChatMetadataTransactionRecord implements ChatMetadata{
 
+    private UUID transactionId;
+
     private UUID chatId;
 
     private UUID objectId;
@@ -40,6 +42,14 @@ public class ChatMetadataTransactionRecord implements ChatMetadata{
     private String message;
 
     private DistributionStatus distributionStatus;
+
+    public UUID getTransactionId() {
+        return transactionId;
+    }
+
+    public void setTransactionId(UUID transactionId) {
+        this.transactionId = transactionId;
+    }
 
     @Override
     public UUID getChatId() {

@@ -22,7 +22,6 @@ import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextV
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Wallets;
 import com.bitdubai.fermat_api.layer.pip_engine.interfaces.ResourceProviderManager;
 import com.bitdubai.fermat_api.layer.world.interfaces.Currency;
-import com.bitdubai.fermat_cbp_api.all_definition.identity.ActorIdentity;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.common.interfaces.ClauseInformation;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_customer.interfaces.CryptoCustomerWalletManager;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_customer.interfaces.CryptoCustomerWalletModuleManager;
@@ -31,6 +30,7 @@ import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfac
 import com.bitdubai.reference_wallet.crypto_customer_wallet.common.adapters.ContractDetailAdapter;
 import com.bitdubai.reference_wallet.crypto_customer_wallet.common.holders.start_negotiation.ClauseViewHolder;
 import com.bitdubai.reference_wallet.crypto_customer_wallet.common.holders.start_negotiation.FooterViewHolder;
+import com.bitdubai.reference_wallet.crypto_customer_wallet.common.models.EmptyContractInformation;
 import com.bitdubai.reference_wallet.crypto_customer_wallet.common.models.EmptyCustomerBrokerNegotiationInformation;
 import com.bitdubai.reference_wallet.crypto_customer_wallet.session.CryptoCustomerWalletSession;
 
@@ -49,7 +49,7 @@ public class ContractDetailActivityFragment extends AbstractFermatFragment<Crypt
 
     private CryptoCustomerWalletManager walletManager;
     private ErrorManager errorManager;
-    private EmptyCustomerBrokerNegotiationInformation negotiationInfo;
+    private EmptyContractInformation contractInformation;
     private ArrayList<String> paymentMethods; // test data
     private ArrayList<Currency> currencies; // test data
 
@@ -146,38 +146,38 @@ public class ContractDetailActivityFragment extends AbstractFermatFragment<Crypt
         Drawable brokerImg = getImgDrawable(broker.getProfileImage());
         brokerImage.setImageDrawable(brokerImg);
         brokerName.setText(broker.getAlias());
-        sellingSummary.setText(getResources().getString(R.string.ccw_start_selling_details, currencyToBuy.getFriendlyName()));
+        sellingSummary.setText(getResources().getString(R.string.ccw_start_selling_details, currencyToBuy.getFriendlyName()));*/
 
-        adapter = new ContractDetailAdapter(getActivity(), negotiationInfo);
+        adapter = new ContractDetailAdapter(getActivity(), contractInformation);
         adapter.setFooterListener(this);
         adapter.setClauseListener(this);
 
-        recyclerView.setAdapter(adapter);*/
+        recyclerView.setAdapter(adapter);
     }
 
     private EmptyCustomerBrokerNegotiationInformation createNewEmptyNegotiationInfo() {
         try {
-            /*EmptyCustomerBrokerNegotiationInformation negotiationInfo = TestData.newEmptyNegotiationInformation();
-            negotiationInfo.setStatus(NegotiationStatus.WAITING_FOR_BROKER);
+            /*EmptyCustomerBrokerNegotiationInformation contractInformation = TestData.newEmptyNegotiationInformation();
+            contractInformation.setStatus(NegotiationStatus.WAITING_FOR_BROKER);
 
             final Currency currency = appSession.getCurrencyToBuy();
-            negotiationInfo.putClause(ClauseType.CUSTOMER_CURRENCY, currency.getCode());
-            negotiationInfo.putClause(ClauseType.BROKER_CURRENCY, currencies.get(0).getCode());
-            negotiationInfo.putClause(ClauseType.CUSTOMER_CURRENCY_QUANTITY, "0.0");
-            negotiationInfo.putClause(ClauseType.BROKER_CURRENCY_QUANTITY, "0.0");
-            negotiationInfo.putClause(ClauseType.EXCHANGE_RATE, "0.0");
-            negotiationInfo.putClause(ClauseType.CUSTOMER_PAYMENT_METHOD, paymentMethods.get(0));
-            negotiationInfo.putClause(ClauseType.BROKER_PAYMENT_METHOD, paymentMethods.get(0));
+            contractInformation.putClause(ClauseType.CUSTOMER_CURRENCY, currency.getCode());
+            contractInformation.putClause(ClauseType.BROKER_CURRENCY, currencies.get(0).getCode());
+            contractInformation.putClause(ClauseType.CUSTOMER_CURRENCY_QUANTITY, "0.0");
+            contractInformation.putClause(ClauseType.BROKER_CURRENCY_QUANTITY, "0.0");
+            contractInformation.putClause(ClauseType.EXCHANGE_RATE, "0.0");
+            contractInformation.putClause(ClauseType.CUSTOMER_PAYMENT_METHOD, paymentMethods.get(0));
+            contractInformation.putClause(ClauseType.BROKER_PAYMENT_METHOD, paymentMethods.get(0));
 
             final ActorIdentity brokerIdentity = appSession.getSelectedBrokerIdentity();
             if (brokerIdentity != null)
-                negotiationInfo.setBroker(brokerIdentity);
+                contractInformation.setBroker(brokerIdentity);
 
             final CryptoCustomerIdentity customerIdentity = walletManager.getAssociatedIdentity();
             if (customerIdentity != null)
-                negotiationInfo.setCustomer(customerIdentity);
+                contractInformation.setCustomer(customerIdentity);
 
-            return negotiationInfo;*/
+            return contractInformation;*/
 
         } catch (Exception e) {
             if (errorManager != null)
