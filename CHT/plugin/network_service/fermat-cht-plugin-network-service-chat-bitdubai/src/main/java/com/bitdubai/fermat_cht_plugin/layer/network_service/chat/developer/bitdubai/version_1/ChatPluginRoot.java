@@ -334,7 +334,7 @@ public class ChatPluginRoot extends AbstractPlugin implements
 
     @Override
     public void requestRemoteNetworkServicesRegisteredList(DiscoveryQueryParameters discoveryQueryParameters) {
-        System.out.println("ChatPluginRoot - TemplateNetworkServiceRoot - requestRemoteNetworkServicesRegisteredList");
+        System.out.println("ChatPluginRoot - requestRemoteNetworkServicesRegisteredList");
 
          /*
          * Request the list of component registers
@@ -410,7 +410,7 @@ public class ChatPluginRoot extends AbstractPlugin implements
                      * Register me
                      */
                 wsCommunicationsCloudClientManager.getCommunicationsCloudClientConnection().registerComponentForCommunication(this.getNetworkServiceType(), platformComponentProfileToReconnect);
-
+                System.out.println("------------------CHATPLUGINROOT NETWORK SERVICE REGISTED------------------------------------");
             } catch (CantRegisterComponentException e) {
                 e.printStackTrace();
             }
@@ -629,7 +629,8 @@ public class ChatPluginRoot extends AbstractPlugin implements
             */
             this.serviceStatus = ServiceStatus.STARTED;
 
-            toString();
+
+            System.out.print("-----------------------\n ChatPluginRoot NetworkService: Successful start.\n-----------------------\n");
 
         }catch (CantInitializeChatNetworkServiceDatabaseException exception) {
 
@@ -686,6 +687,7 @@ public class ChatPluginRoot extends AbstractPlugin implements
              * Open new database connection
              */
             this.dataBase = this.pluginDatabaseSystem.openDatabase(pluginId, NetworkServiceChatNetworkServiceDatabaseConstants.DATA_BASE_NAME);
+            this.chatMetaDataDao = new ChatMetaDataDao(dataBase,pluginDatabaseSystem,pluginId);
 
         } catch (CantOpenDatabaseException cantOpenDatabaseException) {
 
@@ -709,6 +711,7 @@ public class ChatPluginRoot extends AbstractPlugin implements
                  * We create the new database
                  */
                 this.dataBase = communicationNetworkServiceDatabaseFactory.createDatabase(pluginId, NetworkServiceChatNetworkServiceDatabaseConstants.DATA_BASE_NAME);
+                this.chatMetaDataDao = new ChatMetaDataDao(dataBase,pluginDatabaseSystem,pluginId);
 
             } catch (CantCreateDatabaseException cantOpenDatabaseException) {
 
@@ -1097,11 +1100,6 @@ public class ChatPluginRoot extends AbstractPlugin implements
             }
         }
 
-
-    }
-
-
-    public void sendChatMessageNewStatusNotification() throws CantSendChatMessageNewStatusNotificationException {
 
     }
 
