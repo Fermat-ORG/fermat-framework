@@ -450,8 +450,11 @@ public class CryptoTransmissionAgent {
                             case SEEN_BY_DESTINATION_NETWORK_SERVICE:
                                 //guardo estado
                                 // deberia ver si tengo que lanzar un evento acá
-
-
+                                incomingCryptoTransmissionMetadataDAO.changeCryptoTransmissionProtocolState(
+                                        cryptoTransmissionMetadata.getTransactionId(),
+                                        CryptoTransmissionProtocolState.RECEIVED);
+                                //TODO: for test reason
+                                lauchNotification();
                                 System.out.print("-----------------------\n" +
                                         "ACA DEBERIA LANZAR EVENTO NO CREO  -----------------------\n" +
                                         "-----------------------\n STATE: " + cryptoTransmissionMetadata.getCryptoTransmissionMetadataStates());
@@ -538,7 +541,6 @@ public class CryptoTransmissionAgent {
                                         "-----------------------\n STATE: " + cryptoTransmissionMetadata.getCryptoTransmissionProtocolState());
                                 break;
                         }
-                        //  cacheResponseMetadataFromRemotes.put(cryptoTransmissionMetadata.getDestinationPublicKey(), cryptoTransmissionMetadata.getCryptoTransmissionStates());
 
                     } catch (Exception e){
                         e.printStackTrace();
