@@ -12,6 +12,7 @@ import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractFermatFragment;
+import com.bitdubai.fermat_android_api.ui.Views.PresentationDialog;
 import com.bitdubai.fermat_android_api.ui.adapters.FermatAdapter;
 import com.bitdubai.fermat_android_api.ui.enums.FermatRefreshTypes;
 import com.bitdubai.fermat_android_api.ui.fragments.FermatWalletListFragment;
@@ -58,6 +59,7 @@ public class WizardPageSetIdentityFragment extends FermatWalletListFragment<Cryp
             errorManager = appSession.getErrorManager();
 
             identities = getMoreDataAsync(FermatRefreshTypes.NEW, 0);
+
         } catch (FermatException ex) {
             Log.e(TAG, ex.getMessage(), ex);
         }
@@ -81,8 +83,9 @@ public class WizardPageSetIdentityFragment extends FermatWalletListFragment<Cryp
                     walletManager.associateIdentity(selectedIdentity.getPublicKey());
 
                     changeActivity(Activities.CBP_CRYPTO_BROKER_WALLET_SET_MERCHANDISES, appSession.getAppPublicKey());
-                } else {
-                    Toast.makeText(getActivity(), R.string.cbw_select_identity_warning_msg, Toast.LENGTH_LONG).show();
+                } else{
+                    Toast.makeText(WizardPageSetIdentityFragment.this.getActivity(), "Select one identity...", Toast.LENGTH_SHORT).show();
+
                 }
             }
         });
@@ -107,18 +110,43 @@ public class WizardPageSetIdentityFragment extends FermatWalletListFragment<Cryp
                     if (errorManager != null)
                         errorManager.reportUnexpectedWalletException(Wallets.CBP_CRYPTO_BROKER_WALLET,
                                 UnexpectedWalletExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, ex);
+
                 }
 
                 if (walletConfigured) {
                     changeActivity(Activities.CBP_CRYPTO_BROKER_WALLET_HOME, appSession.getAppPublicKey());
+
                 } else {
                     Animation fadeInAnimation = AnimationUtils.loadAnimation(getActivity(), R.anim.fade_in);
                     container.setVisibility(View.VISIBLE);
                     container.startAnimation(fadeInAnimation);
+                    PresentationDialog presentationDialog = new PresentationDialog.Builder(getActivity(), appSession)
+                            .setTemplateType(PresentationDialog.TemplateType.TYPE_PRESENTATION_WITHOUT_IDENTITIES)
+                            .setBannerRes(R.drawable.banner_crypto_broker)
+                            .setIconRes(R.drawable.crypto_broker)
+                            .setBody("Custom text support for dialog in the wizard identities help")
+                            .setSubTitle("Subtitle text of identities dialog help")
+                            .setTextFooter("Text footer indetities dialog help")
+                            .build();
+                    presentationDialog.show();
+
+
                 }
 
             }
         }, 500);
+    }
+
+    public void DialogIdentity(){
+            PresentationDialog presentationDialog = new PresentationDialog.Builder(getActivity(), appSession)
+                    .setTemplateType(PresentationDialog.TemplateType.TYPE_PRESENTATION)
+                    .setBannerRes(R.drawable.banner_crypto_broker)
+                    .setIconRes(R.drawable.crypto_broker)
+                    .setBody("Custom text support for dialog in the wizard identities help 2")
+                    .setSubTitle("Subtitle text of identities dialog help -> " + identities)
+                    .setTextFooter("Text footer indetities dialog help")
+                    .build();
+            presentationDialog.show();
     }
 
     @Override
@@ -154,6 +182,8 @@ public class WizardPageSetIdentityFragment extends FermatWalletListFragment<Cryp
         try {
             data.addAll(walletManager.getListOfIdentities());
 
+
+
         } catch (FermatException ex) {
 
             Log.e(TAG, ex.getMessage(), ex);
@@ -177,6 +207,10 @@ public class WizardPageSetIdentityFragment extends FermatWalletListFragment<Cryp
                 identities = (ArrayList) result[0];
                 if (adapter != null)
                     adapter.changeDataSet(identities);
+
+
+            }else{
+
             }
         }
     }

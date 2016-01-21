@@ -15,6 +15,7 @@ import android.widget.Toast;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractFermatFragment;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatCheckBox;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView;
+import com.bitdubai.fermat_android_api.ui.Views.PresentationDialog;
 import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.enums.FiatCurrency;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
@@ -96,7 +97,15 @@ public class WizardPageSetMerchandisesFragment extends AbstractFermatFragment
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         super.onCreateView(inflater, container, savedInstanceState);
-
+        PresentationDialog presentationDialog = new PresentationDialog.Builder(getActivity(), appSession)
+                .setBody("Custom text support for dialog in the wizard Merchandises help")
+                .setSubTitle("Subtitle text of Merchandises dialog help")
+                .setTextFooter("Text footer Merchandises dialog help")
+                .setTemplateType(PresentationDialog.TemplateType.TYPE_PRESENTATION_WITHOUT_IDENTITIES)
+                .setBannerRes(R.drawable.banner_crypto_broker)
+                .setIconRes(R.drawable.crypto_broker)
+                .build();
+        presentationDialog.show();
         final View layout = inflater.inflate(R.layout.cbw_wizard_step_set_merchandises, container, false);
 
         recyclerView = (RecyclerView) layout.findViewById(R.id.cbw_selected_stock_wallets_recycler_view);
@@ -263,12 +272,6 @@ public class WizardPageSetMerchandisesFragment extends AbstractFermatFragment
         }
 
         try {
-            CryptoBrokerWalletSettingSpread walletSetting = walletManager.newEmptyCryptoBrokerWalletSetting();
-            walletSetting.setId(null);
-            walletSetting.setBrokerPublicKey(appSession.getAppPublicKey());
-            walletSetting.setSpread(spreadValue);
-            walletSetting.setRestockAutomatic(automaticRestock);
-            walletManager.saveWalletSetting(walletSetting, appSession.getAppPublicKey());
 
 
             for (InstalledWallet wallet : stockWallets) {
