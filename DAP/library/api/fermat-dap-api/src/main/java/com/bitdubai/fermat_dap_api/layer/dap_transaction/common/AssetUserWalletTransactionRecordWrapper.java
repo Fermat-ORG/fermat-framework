@@ -76,28 +76,6 @@ public class AssetUserWalletTransactionRecordWrapper implements AssetUserWalletT
         this.transactionId = cryptoGenesisTransaction.getTransactionHash();
         this.digitalAssetMetadata = digitalAssetMetadata;
     }
-    public AssetUserWalletTransactionRecordWrapper(DigitalAsset digitalAsset,
-                                                   CryptoTransaction cryptoGenesisTransaction,
-                                                   String actorFromPublicKey,
-                                                   Actors actorFromType,
-                                                   String actorToPublicKey,
-                                                   Actors actorToType) {
-        this.digitalAsset = digitalAsset;
-        this.digitalAssetPublicKey = this.digitalAsset.getPublicKey();
-        this.name = this.digitalAsset.getName();
-        this.description = this.digitalAsset.getDescription();
-        this.addressFrom = cryptoGenesisTransaction.getAddressFrom();
-        this.addressTo = cryptoGenesisTransaction.getAddressTo();
-        this.actorFromPublicKey = actorFromPublicKey;
-        this.actorToPublicKey = actorToPublicKey;
-        this.actorFromType = actorFromType;
-        this.actorToType = actorToType;
-        this.amount = cryptoGenesisTransaction.getCryptoAmount();
-        this.digitalAssetMetadata = new DigitalAssetMetadata(digitalAsset);
-        digitalAssetMetadata.setGenesisTransaction(cryptoGenesisTransaction.getTransactionHash());
-        digitalAssetMetadata.setGenesisBlock(cryptoGenesisTransaction.getBlockHash());
-        this.transactionId = cryptoGenesisTransaction.getTransactionHash();
-    }
 
     @Override
     public DigitalAsset getDigitalAsset() {

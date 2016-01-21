@@ -25,6 +25,8 @@ import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEven
 import com.bitdubai.fermat_api.layer.all_definition.money.CryptoAddress;
 import com.bitdubai.fermat_api.layer.all_definition.util.Version;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
+import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantLoadTableToMemoryException;
+import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantUpdateRecordException;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
 import com.bitdubai.fermat_bch_api.layer.crypto_module.crypto_address_book.exceptions.CantRegisterCryptoAddressBookRecordException;
 import com.bitdubai.fermat_bch_api.layer.crypto_module.crypto_address_book.interfaces.CryptoAddressBookManager;
@@ -35,6 +37,7 @@ import com.bitdubai.fermat_bch_api.layer.crypto_vault.watch_only_vault.interface
 import com.bitdubai.fermat_dap_api.layer.all_definition.enums.DAPConnectionState;
 import com.bitdubai.fermat_dap_api.layer.all_definition.enums.DAPMessageType;
 import com.bitdubai.fermat_dap_api.layer.all_definition.enums.EventType;
+import com.bitdubai.fermat_dap_api.layer.all_definition.exceptions.CantGetUserDeveloperIdentitiesException;
 import com.bitdubai.fermat_dap_api.layer.all_definition.exceptions.CantSetObjectException;
 import com.bitdubai.fermat_dap_api.layer.all_definition.network_service_message.DAPMessage;
 import com.bitdubai.fermat_dap_api.layer.all_definition.network_service_message.content_message.AssetExtendedPublickKeyContentMessage;
@@ -43,6 +46,7 @@ import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_issuer.AssetIssuerActor
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_issuer.exceptions.CantAssetIssuerActorNotFoundException;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_issuer.exceptions.CantCreateActorAssetIssuerException;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_issuer.exceptions.CantGetAssetIssuerActorsException;
+import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_issuer.exceptions.CantUpdateActorAssetIssuerException;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_issuer.interfaces.ActorAssetIssuer;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_issuer.interfaces.ActorAssetIssuerManager;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.redeem_point.exceptions.CantConnectToActorAssetRedeemPointException;
@@ -186,7 +190,8 @@ public class AssetIssuerActorPluginRoot extends AbstractPlugin implements
                         System.currentTimeMillis(),
                         System.currentTimeMillis(),
                         assetIssuerActorProfileImage,
-                        description);
+                        description,
+                        "-");
 
                 assetIssuerActorDao.createNewAssetIssuer(record);
 
@@ -210,7 +215,8 @@ public class AssetIssuerActorPluginRoot extends AbstractPlugin implements
                         actorAssetIssuer.getRegistrationDate(),
                         System.currentTimeMillis(),
                         assetIssuerActorProfileImage,
-                        description);
+                        description,
+                        "-");
 
                 assetIssuerActorDao.updateAssetIssuer(record);
 
@@ -282,6 +288,19 @@ public class AssetIssuerActorPluginRoot extends AbstractPlugin implements
         return list;
     }
 
+
+    @Override
+    public List<ActorAssetIssuer> getAllAssetIssuerActorConnectedWithExtendedPublicKey() throws CantGetAssetIssuerActorsException {
+        List<ActorAssetIssuer> list; // Asset Issuer Actor list.
+        try {
+            list = this.assetIssuerActorDao.getAllAssetIssuerActorConnectedWithExtendedpk();
+        } catch (CantGetAssetIssuersListException e) {
+            throw new CantGetAssetIssuerActorsException("CAN'T GET ASSET USER ACTORS CONNECTED WITH CRYPTOADDRESS ", e, "", "");
+        }
+
+        return list;
+    }
+
     @Override
     public void sendMessage(ActorAssetIssuer requester, List<ActorAssetRedeemPoint> actorAssetRedeemPoints) throws CantConnectToActorAssetRedeemPointException {
         for (ActorAssetRedeemPoint actorAssetRedeemPoint : actorAssetRedeemPoints) {
@@ -299,6 +318,16 @@ public class AssetIssuerActorPluginRoot extends AbstractPlugin implements
             } catch (CantSetObjectException e) {
                 e.printStackTrace();
             }
+        }
+    }
+
+    @Override
+    public void updateExtendedPublicKey(String issuerPublicKey, String extendedPublicKey) throws CantUpdateActorAssetIssuerException {
+        String context = "Issuer PK: " + issuerPublicKey + " - Extended PK: " + extendedPublicKey;
+        try {
+            assetIssuerActorDao.updateExtendedPublicKey(issuerPublicKey, extendedPublicKey);
+        } catch (CantGetUserDeveloperIdentitiesException | CantLoadTableToMemoryException | CantUpdateRecordException e) {
+            throw new CantUpdateActorAssetIssuerException(e, context, "Probably this issuer pk wasn't registered...");
         }
     }
 

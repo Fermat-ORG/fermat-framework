@@ -1025,7 +1025,7 @@ public class BitcoinCryptoNetworkDatabaseDao {
         DatabaseTable databaseTable = database.getTable(BitcoinCryptoNetworkDatabaseConstants.BROADCAST_TABLE_NAME);
 
         /**
-         * I will verify that I don't have this transaction already stored, if so I will thrown an error
+         * I will verify that I don't have this transaction already stored, if so I will delete it
          */
         databaseTable.addStringFilter(BitcoinCryptoNetworkDatabaseConstants.TRANSACTIONS_HASH_COLUMN_NAME, txHash, DatabaseFilterType.EQUAL);
         try {
@@ -1034,11 +1034,11 @@ public class BitcoinCryptoNetworkDatabaseDao {
             throwLoadToMemoryException(e, databaseTable.getTableName());
         }
 
+        /**
+         * delete if already exists.
+         */
         if (!databaseTable.getRecords().isEmpty()){
-            StringBuilder output = new StringBuilder("Transaction already stored in Broadcast Table.");
-            output.append(System.lineSeparator());
-            output.append("The transaction " + txHash + " is already stored.");
-            throw new CantExecuteDatabaseOperationException("Inconsistent data detected.",null, output.toString(), null);
+            this.deleteStoredBitcoinTransaction(txHash);
         }
 
         /**
@@ -1335,5 +1335,27 @@ public class BitcoinCryptoNetworkDatabaseDao {
 
         //this should never happen
         return null;
+    }
+
+    /**
+     * Will get the BlockchainNetworkType the passed trasaction was registered from
+     * @param txHash
+     * @return
+     */
+    public BlockchainNetworkType getBlockchainNetworkTypeFromBroadcast(String txHash) throws CantExecuteDatabaseOperationException{
+        DatabaseTable databaseTable = database.getTable(BitcoinCryptoNetworkDatabaseConstants.BROADCAST_TABLE_NAME);
+        databaseTable.addStringFilter(BitcoinCryptoNetworkDatabaseConstants.BROADCAST_TX_HASH, txHash, DatabaseFilterType.EQUAL);
+
+        try {
+            databaseTable.loadToMemory();
+        } catch (CantLoadTableToMemoryException e) {
+            throwLoadToMemoryException(e, databaseTable.getTableName());
+        }
+
+        if (databaseTable.getRecords().size() != 1)
+            throw new CantExecuteDatabaseOperationException(CantExecuteDatabaseOperationException.DEFAULT_MESSAGE, null, "unexpected result obtained. The passed tx is not broadcasting.", null);
+
+        BlockchainNetworkType blockchainNetworkType = BlockchainNetworkType.getByCode(databaseTable.getRecords().get(0).getStringValue(BitcoinCryptoNetworkDatabaseConstants.BROADCAST_NETWORK));
+        return blockchainNetworkType;
     }
 }

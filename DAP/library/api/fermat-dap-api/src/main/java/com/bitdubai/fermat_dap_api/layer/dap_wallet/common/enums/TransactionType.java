@@ -1,31 +1,43 @@
 package com.bitdubai.fermat_dap_api.layer.dap_wallet.common.enums;
 
+import com.bitdubai.fermat_api.layer.all_definition.enums.interfaces.FermatEnum;
+import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterException;
+
 /**
- * Created by franklin on 24/09/15.
+ * Created by Víctor A. Mars M. (marsvicam@gmail.com) on 19/01/16.
  */
-public enum TransactionType {
+public enum TransactionType implements FermatEnum {
+
+    //ENUM DECLARATION
 
     DEBIT("DEBIT"),
     CREDIT("CREDIT");
 
-    private final String code;
+    //VARIABLE DECLARATION
+
+    private String code;
+
+    //CONSTRUCTORS
 
     TransactionType(String code) {
         this.code = code;
     }
 
-    public String getCode()   { return this.code ; }
+    //PUBLIC METHODS
 
-    public static TransactionType getByCode(String code) {
-
-        switch (code) {
-            case "DEBIT": return TransactionType.DEBIT;
-            case "CREDIT": return TransactionType.CREDIT;
+    public static TransactionType getByCode(String code) throws InvalidParameterException {
+        for (TransactionType fenum : values()) {
+            if (fenum.getCode().equals(code)) return fenum;
         }
+        throw new InvalidParameterException(InvalidParameterException.DEFAULT_MESSAGE, null, "Code Received: " + code, "This Code Is Not Valid for the TransactionType enum.");
+    }
 
-        /**
-         * Return by default.
-         */
-        return TransactionType.CREDIT;
+    //PRIVATE METHODS
+
+    //GETTER AND SETTERS
+
+    @Override
+    public String getCode() {
+        return code;
     }
 }

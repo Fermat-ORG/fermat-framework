@@ -32,7 +32,7 @@ public class AssetRedeemPointWalletBalanceImpl implements com.bitdubai.fermat_da
         this.database = database;
         this.plugin = plugin;
         this.pluginFileSystem = pluginFileSystem;
-        assetRedeemPointWalletDao = new AssetRedeemPointWalletDao(database, pluginFileSystem, plugin, actorAssetUserManager, assetUserActorNetworkServiceManager);
+        assetRedeemPointWalletDao = new AssetRedeemPointWalletDao(database, pluginFileSystem, plugin, actorAssetUserManager);
     }
 
     @Override

@@ -8,6 +8,7 @@ import com.bitdubai.fermat_dap_core.layer.digital_asset_transaction.asset_approp
 import com.bitdubai.fermat_dap_core.layer.digital_asset_transaction.asset_distribution.AssetDistributionPluginSubsystem;
 import com.bitdubai.fermat_dap_core.layer.digital_asset_transaction.asset_issuing.AssetIssuingPluginSubsystem;
 import com.bitdubai.fermat_dap_core.layer.digital_asset_transaction.asset_reception.AssetReceptionPluginSubsystem;
+import com.bitdubai.fermat_dap_core.layer.digital_asset_transaction.issuer_appropriation.IssuerAppropriationPluginSubsystem;
 import com.bitdubai.fermat_dap_core.layer.digital_asset_transaction.issuer_redemption.IssuerRedemptionPluginSubsystem;
 import com.bitdubai.fermat_dap_core.layer.digital_asset_transaction.redeem_point_redemption.RedeemPointRedemptionPluginSubsystem;
 import com.bitdubai.fermat_dap_core.layer.digital_asset_transaction.user_redemption.UserRedemptionPluginSubsystem;
@@ -32,6 +33,7 @@ public class DigitalAssetTransactionLayer extends AbstractLayer {
             registerPlugin(new AssetDistributionPluginSubsystem());
             registerPlugin(new AssetIssuingPluginSubsystem());
             registerPlugin(new AssetReceptionPluginSubsystem());
+            registerPlugin(new IssuerAppropriationPluginSubsystem());
             registerPlugin(new IssuerRedemptionPluginSubsystem());
             registerPlugin(new RedeemPointRedemptionPluginSubsystem());
             registerPlugin(new UserRedemptionPluginSubsystem());
