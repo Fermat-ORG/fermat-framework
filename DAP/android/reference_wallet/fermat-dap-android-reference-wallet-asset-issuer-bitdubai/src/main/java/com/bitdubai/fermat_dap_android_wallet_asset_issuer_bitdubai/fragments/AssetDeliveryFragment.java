@@ -107,7 +107,9 @@ public class AssetDeliveryFragment extends AbstractFermatFragment {
 //        layout = rootView.findViewById(R.id.assetDetailRemainingLayout);
         deliverAssetsButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                if (digitalAsset.getAvailableBalanceQuantity() == 0) {
+                if (assetsToDeliverEditText.getText().length() == 0) {
+                    Toast.makeText(activity, "Must be enter the number of assets to deliver", Toast.LENGTH_SHORT).show();
+                } else if (digitalAsset.getAvailableBalanceQuantity() == 0) {
                     Toast.makeText(activity, "There is not assets to distribute", Toast.LENGTH_SHORT).show();
                 } else if (selectedUsersCount == 0) {
                     Toast.makeText(activity, "No users selected", Toast.LENGTH_SHORT).show();
