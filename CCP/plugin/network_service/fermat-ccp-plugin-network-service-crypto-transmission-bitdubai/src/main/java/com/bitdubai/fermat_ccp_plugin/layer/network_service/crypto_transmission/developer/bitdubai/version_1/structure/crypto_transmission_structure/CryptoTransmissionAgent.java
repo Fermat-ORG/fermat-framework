@@ -348,7 +348,7 @@ public class CryptoTransmissionAgent {
 
                             //cryptoTransmissionMetadata.changeState(CryptoTransmissionStates.PROCESSING_SEND_COMMUNICATION_TEMPLATE);
 
-                           // cryptoTransmissionMetadataDAO.changeState(cryptoTransmissionMetadata);
+                            cryptoTransmissionMetadataDAO.changeState(cryptoTransmissionMetadata);
 
                             System.out.print("-----------------------\n" +
                                     "CRYPTO METADATA!!!!! -----------------------\n" +
