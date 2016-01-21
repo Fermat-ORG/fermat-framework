@@ -36,5 +36,20 @@
         android:singleLine="true"
         android:textColor="@color/crypto_broker_identity_name_item"
         android:textSize="20sp"
-        tools:text="Nelson Alfonso Ramirez Noguera" />
+        tools:text="Saxofon" />
+
+    <View
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_weight="1"/>
+
+    <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatCheckBox
+        android:id="@+id/crypto_broker_identity_publish_identity"
+        android:button="@drawable/switch_button_states"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        tools:checked="true"
+        android:layout_marginEnd="16dp"
+        android:layout_marginRight="16dp"
+        android:layout_marginTop="9dp"/>
 </LinearLayout>

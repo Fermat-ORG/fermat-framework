@@ -10,6 +10,7 @@ import com.bitdubai.fermat_api.layer.all_definition.components.interfaces.Platfo
 import com.bitdubai.fermat_api.layer.all_definition.crypto.asymmetric.AsymmetricCryptography;
 import com.bitdubai.fermat_api.layer.all_definition.events.EventSource;
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEvent;
+import com.bitdubai.fermat_api.layer.all_definition.network_service.enums.NetworkServiceType;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.components.PlatformComponentProfileCommunication;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.enums.P2pEventType;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.events.FailureComponentRegistrationNotificationEvent;
@@ -21,7 +22,7 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 
 /**
- * The Class <code>com.bitdubai.fermat_p2p_plugin.layer.ws.communications.cloud.client.developer.bitdubai.version_1.structure.processors.FailureComponentRegistrationRequestPacketProcessor</code> implement
+ * The Class <code>com.bitdubai.fermat_p2p_plugin.layer.ws.communications.cloud.client.developer.bitdubai.version_1.structure.processors.FailureComponentRegistrationRequestTyrusPacketProcessor</code> implement
  * the logic to process the packet when a packet type <code>com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.enums.FermatPacketType.FAILURE_COMPONENT_CONNECTION_REQUEST</code> is receive by the server.
  * <p/>
  *
@@ -62,16 +63,17 @@ public class FailureComponentRegistrationRequestPacketProcessor extends FermatPa
          */
         String messageContentJsonStringRepresentation = AsymmetricCryptography.decryptMessagePrivateKey(receiveFermatPacket.getMessageContent(), getWsCommunicationsCloudClientChannel().getClientIdentity().getPrivateKey());
 
-        //System.out.println("FailureComponentRegistrationRequestPacketProcessor - messageContentJsonStringRepresentation = "+messageContentJsonStringRepresentation);
+        //System.out.println("FailureComponentRegistrationRequestTyrusPacketProcessor - messageContentJsonStringRepresentation = "+messageContentJsonStringRepresentation);
 
         /*
          * Construct the json object
          */
         JsonObject packetContent = jsonParser.parse(messageContentJsonStringRepresentation).getAsJsonObject();
-        PlatformComponentProfile networkServiceApplicant  = gson.fromJson(packetContent.get(JsonAttNamesConstants.APPLICANT_PARTICIPANT_NS_VPN).getAsString(), PlatformComponentProfile.class);
+        NetworkServiceType networkServiceApplicant  = gson.fromJson(packetContent.get(JsonAttNamesConstants.NETWORK_SERVICE_TYPE).getAsString(), NetworkServiceType.class);
         PlatformComponentProfile platformComponentProfile = new PlatformComponentProfileCommunication().fromJson(packetContent.get(JsonAttNamesConstants.PROFILE_TO_REGISTER).getAsString());
+        String errorMsj = packetContent.get(JsonAttNamesConstants.FAILURE_VPN_MSJ).getAsString();
 
-        //System.out.println("FailureComponentRegistrationRequestPacketProcessor - networkServiceApplicant "+networkServiceApplicant);
+        System.out.println("FailureComponentRegistrationRequestTyrusPacketProcessor - errorMsj "+errorMsj);
 
         /*
          * Create a new event whit the networkServiceType and remoteIdentity
@@ -82,13 +84,14 @@ public class FailureComponentRegistrationRequestPacketProcessor extends FermatPa
         /*
          * Configure the values
          */
-        ((FailureComponentRegistrationNotificationEvent)event).setNetworkServiceApplicant(networkServiceApplicant.getNetworkServiceType());
+        ((FailureComponentRegistrationNotificationEvent)event).setNetworkServiceApplicant(networkServiceApplicant);
         ((FailureComponentRegistrationNotificationEvent)event).setPlatformComponentProfile(platformComponentProfile);
+        ((FailureComponentRegistrationNotificationEvent)event).setErrorMsj(errorMsj);
 
         /*
          * Raise the event
          */
-        //System.out.println("FailureComponentRegistrationRequestPacketProcessor - Raised a event = P2pEventType.FAILURE_COMPONENT_REGISTRATION_REQUEST_NOTIFICATION");
+        //System.out.println("FailureComponentRegistrationRequestTyrusPacketProcessor - Raised a event = P2pEventType.FAILURE_COMPONENT_REGISTRATION_REQUEST_NOTIFICATION");
         getWsCommunicationsCloudClientChannel().getEventManager().raiseEvent(event);
 
     }

@@ -70,7 +70,7 @@ public class AssetIssuerWalletDao {
 
 
     /*
-     * getBookBalance must get actual Book Balance global of Asset Issuer wallet, select record from balances table
+     * getBalance must get actual Book Balance global of Asset Issuer wallet, select record from balances table
      */
     public long getBookBalance() throws CantCalculateBalanceException {
         try {
@@ -84,7 +84,7 @@ public class AssetIssuerWalletDao {
     }
 
     /*
-     * getBookBalance must get actual Book Balance global of Asset Issuer wallet, select record from balances table
+     * getBalance must get actual Book Balance global of Asset Issuer wallet, select record from balances table
      */
     public List<AssetIssuerWalletList> getBalanceByAssets() throws CantCalculateBalanceException {
         try {
@@ -98,7 +98,7 @@ public class AssetIssuerWalletDao {
     }
 
     /*
-    * getBookBalance must get actual Book Balance global of Asset Issuer wallet, select record from balances table
+    * getBalance must get actual Book Balance global of Asset Issuer wallet, select record from balances table
     */
     public long getAvailableBalance() throws CantCalculateBalanceException {
         try {
@@ -523,9 +523,17 @@ public class AssetIssuerWalletDao {
         List<AssetIssuerWalletList> issuerWalletBalances = new ArrayList<>();
         for (DatabaseTableRecord record : getBalancesRecord()) {
             AssetIssuerWalletList assetIssuerWalletBalance = new AssetIssuerWalletBalance();
-            assetIssuerWalletBalance.setName(record.getStringValue(AssetWalletIssuerDatabaseConstant.ASSET_WALLET_ISSUER_BALANCE_TABLE_NAME_COLUMN_NAME));
-            assetIssuerWalletBalance.setDescription(record.getStringValue(AssetWalletIssuerDatabaseConstant.ASSET_WALLET_ISSUER_BALANCE_TABLE_DESCRIPTION_COLUMN_NAME));
-            assetIssuerWalletBalance.setAssetPublicKey(record.getStringValue(AssetWalletIssuerDatabaseConstant.ASSET_WALLET_ISSUER_BALANCE_TABLE_ASSET_PUBLIC_KEY_COLUMN_NAME));
+            DigitalAsset asset;
+            try {
+                PluginTextFile pluginTextFile = pluginFileSystem.getTextFile(plugin, PATH_DIRECTORY, record.getStringValue(AssetWalletIssuerDatabaseConstant.ASSET_WALLET_ISSUER_BALANCE_TABLE_ASSET_PUBLIC_KEY_COLUMN_NAME), FilePrivacy.PRIVATE, FileLifeSpan.PERMANENT);
+                asset = (DigitalAsset) XMLParser.parseXML(pluginTextFile.getContent(), new DigitalAsset());
+            } catch (FileNotFoundException | CantCreateFileException e) {
+                asset = new DigitalAsset();
+                asset.setName(record.getStringValue(AssetWalletIssuerDatabaseConstant.ASSET_WALLET_ISSUER_BALANCE_TABLE_NAME_COLUMN_NAME));
+                asset.setDescription(record.getStringValue(AssetWalletIssuerDatabaseConstant.ASSET_WALLET_ISSUER_BALANCE_TABLE_DESCRIPTION_COLUMN_NAME));
+                asset.setPublicKey(record.getStringValue(AssetWalletIssuerDatabaseConstant.ASSET_WALLET_ISSUER_BALANCE_TABLE_ASSET_PUBLIC_KEY_COLUMN_NAME));
+            }
+            assetIssuerWalletBalance.setDigitalAsset(asset);
             assetIssuerWalletBalance.setBookBalance(record.getLongValue(AssetWalletIssuerDatabaseConstant.ASSET_WALLET_ISSUER_BALANCE_TABLE_BOOK_BALANCE_COLUMN_NAME));
             assetIssuerWalletBalance.setAvailableBalance(record.getLongValue(AssetWalletIssuerDatabaseConstant.ASSET_WALLET_ISSUER_BALANCE_TABLE_AVAILABLE_BALANCE_COLUMN_NAME));
             assetIssuerWalletBalance.setQuantityBookBalance(record.getLongValue(AssetWalletIssuerDatabaseConstant.ASSET_WALLET_ISSUER_BALANCE_TABLE_QUANTITY_BOOK_BALANCE_COLUMN_NAME));
@@ -595,7 +603,9 @@ public class AssetIssuerWalletDao {
     public void assetRedeemed(String assetPublicKey, String userPublicKey, String redeemPointPublicKey) throws RecordsNotFoundException, CantGetAssetStatisticException {
         updateStringFieldByAssetPublicKey(AssetWalletIssuerDatabaseConstant.ASSET_STATISTIC_ASSET_CURRENT_STATUS_COLUMN_NAME, AssetCurrentStatus.ASSET_REDEEMED.getCode(), assetPublicKey);
         updateStringFieldByAssetPublicKey(AssetWalletIssuerDatabaseConstant.ASSET_STATISTIC_REDEEM_POINT_PUBLIC_KEY_COLUMN_NAME, redeemPointPublicKey, assetPublicKey);
-        updateStringFieldByAssetPublicKey(AssetWalletIssuerDatabaseConstant.ASSET_STATISTIC_ACTOR_USER_PUBLIC_KEY_COLUMN_NAME, userPublicKey, assetPublicKey);
+        if (userPublicKey != null) {
+            updateStringFieldByAssetPublicKey(AssetWalletIssuerDatabaseConstant.ASSET_STATISTIC_ACTOR_USER_PUBLIC_KEY_COLUMN_NAME, userPublicKey, assetPublicKey);
+        }
         updateLongFieldByAssetPublicKey(AssetWalletIssuerDatabaseConstant.ASSET_STATISTIC_ASSET_USAGE_DATE_COLUMN_NAME, System.currentTimeMillis(), assetPublicKey);
     }
 
@@ -798,7 +808,9 @@ public class AssetIssuerWalletDao {
         try {
             DatabaseTable assetStatisticTable;
             assetStatisticTable = database.getTable(AssetWalletIssuerDatabaseConstant.ASSET_STATISTIC_TABLE_NAME);
-            DatabaseTableRecord record = assetStatisticTable.getRecordFromPk(assetPublicKey);
+            assetStatisticTable.addStringFilter(AssetWalletIssuerDatabaseConstant.ASSET_STATISTIC_ASSET_PUBLIC_KEY_COLUMN_NAME, assetPublicKey, DatabaseFilterType.EQUAL);
+            assetStatisticTable.loadToMemory();
+            DatabaseTableRecord record = assetStatisticTable.getRecords().get(0);
 
             if (record == null) {
                 throw new RecordsNotFoundException(null, context, "");
@@ -824,10 +836,10 @@ public class AssetIssuerWalletDao {
                 throw new RecordsNotFoundException(null, context, "");
             }
 
-            for (DatabaseTableRecord record : assetStatisticTable.getRecords()) {
-                record.setStringValue(columnName, value);
-                assetStatisticTable.updateRecord(record);
-            }
+            DatabaseTableRecord record = assetStatisticTable.getRecords().get(0);
+
+            record.setStringValue(columnName, value);
+            assetStatisticTable.updateRecord(record);
         } catch (CantLoadTableToMemoryException exception) {
             throw new CantGetAssetStatisticException(exception, context, "Cannot load table to memory.");
         } catch (CantUpdateRecordException exception) {

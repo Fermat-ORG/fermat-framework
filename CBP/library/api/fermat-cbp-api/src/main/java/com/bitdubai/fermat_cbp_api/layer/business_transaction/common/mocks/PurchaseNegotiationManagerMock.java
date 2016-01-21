@@ -70,7 +70,10 @@ public class PurchaseNegotiationManagerMock implements CustomerBrokerPurchaseNeg
 
     @Override
     public CustomerBrokerPurchaseNegotiation getNegotiationsByNegotiationId(UUID negotiationId) throws CantGetListPurchaseNegotiationsException {
-        return new PurchaseNegotiationMock();
+        //For testing offline business transactions
+        //return new PurchaseNegotiationOfflineMock();
+        //For testing online business transactions
+        return new PurchaseNegotiationOnlineMock();
     }
 
     @Override
@@ -121,6 +124,11 @@ public class PurchaseNegotiationManagerMock implements CustomerBrokerPurchaseNeg
     @Override
     public void deleteBankAccount(NegotiationBankAccount bankAccount) throws CantDeleteBankAccountPurchaseException {
 
+    }
+
+    @Override
+    public Collection<NegotiationBankAccount> getAllBankAccount() throws CantGetListBankAccountsPurchaseException {
+        return null;
     }
 
     @Override

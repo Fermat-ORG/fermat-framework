@@ -69,9 +69,10 @@ public class ApplicationSession extends MultiDexApplication implements Serializa
     public ApplicationSession() {
         super();
 
-        fermatSystem = new FermatSystem();
+        fermatSystem = FermatSystem.getInstance();
         subAppSessionManager=new SubAppSessionManager();
         walletSessionManager = new WalletSessionManager();
+
     }
 
 
@@ -132,5 +133,8 @@ public class ApplicationSession extends MultiDexApplication implements Serializa
     public void onTerminate(){
         super.onTerminate();
     }
+
+
+
 
 }

@@ -9,6 +9,9 @@ import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Toast;
 
@@ -16,11 +19,11 @@ import com.bitdubai.fermat_android_api.ui.adapters.FermatAdapter;
 import com.bitdubai.fermat_android_api.ui.enums.FermatRefreshTypes;
 import com.bitdubai.fermat_android_api.ui.fragments.FermatWalletListFragment;
 import com.bitdubai.fermat_android_api.ui.interfaces.FermatListItemListeners;
+import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Wallets;
 import com.bitdubai.fermat_dap_android_wallet_asset_issuer_bitdubai.R;
 import com.bitdubai.fermat_dap_android_wallet_asset_issuer_bitdubai.common.adapters.AssetDeliverySelectUsersAdapter;
 import com.bitdubai.fermat_dap_android_wallet_asset_issuer_bitdubai.models.Data;
-import com.bitdubai.fermat_dap_android_wallet_asset_issuer_bitdubai.models.DigitalAsset;
 import com.bitdubai.fermat_dap_android_wallet_asset_issuer_bitdubai.models.User;
 import com.bitdubai.fermat_dap_android_wallet_asset_issuer_bitdubai.sessions.AssetIssuerSession;
 import com.bitdubai.fermat_dap_android_wallet_asset_issuer_bitdubai.util.CommonLogger;
@@ -79,7 +82,7 @@ public class AssetDeliverySelectUsersFragment extends FermatWalletListFragment<U
 
         noUsersView = layout.findViewById(R.id.dap_wallet_asset_issuer_delivery_no_users);
 
-        showOrHideNoAssetsView(users.isEmpty());
+        showOrHideNoUsersView(users.isEmpty());
     }
 
     @Override
@@ -118,7 +121,7 @@ public class AssetDeliverySelectUsersFragment extends FermatWalletListFragment<U
 
     @Override
     protected boolean hasMenu() {
-        return false;
+        return true;
     }
 
     @Override
@@ -151,7 +154,7 @@ public class AssetDeliverySelectUsersFragment extends FermatWalletListFragment<U
                 if (adapter != null)
                     adapter.changeDataSet(users);
 
-                showOrHideNoAssetsView(users.isEmpty());
+                showOrHideNoUsersView(users.isEmpty());
             }
         }
     }
@@ -198,7 +201,7 @@ public class AssetDeliverySelectUsersFragment extends FermatWalletListFragment<U
         List<User> users = new ArrayList<>();
         if (moduleManager != null) {
             try {
-                users = Data.getConnectedUsers(moduleManager);
+                users = Data.getConnectedUsers(moduleManager, users);
 
                 appSession.setData("users", users);
 
@@ -219,7 +222,7 @@ public class AssetDeliverySelectUsersFragment extends FermatWalletListFragment<U
         return users;
     }
 
-    private void showOrHideNoAssetsView(boolean show) {
+    private void showOrHideNoUsersView(boolean show) {
         if (show) {
             recyclerView.setVisibility(View.GONE);
             noUsersView.setVisibility(View.VISIBLE);

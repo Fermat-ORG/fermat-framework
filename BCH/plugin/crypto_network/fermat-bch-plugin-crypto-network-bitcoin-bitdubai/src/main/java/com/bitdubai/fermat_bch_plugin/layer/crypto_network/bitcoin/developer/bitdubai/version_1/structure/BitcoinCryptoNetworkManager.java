@@ -2,6 +2,8 @@ package com.bitdubai.fermat_bch_plugin.layer.crypto_network.bitcoin.developer.bi
 
 import com.bitdubai.fermat_api.CantStartAgentException;
 import com.bitdubai.fermat_api.layer.all_definition.enums.BlockchainNetworkType;
+import com.bitdubai.fermat_api.layer.all_definition.enums.CryptoCurrency;
+import com.bitdubai.fermat_api.layer.all_definition.money.CryptoAddress;
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.ProtocolStatus;
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.Specialist;
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.TransactionProtocolManager;
@@ -10,19 +12,25 @@ import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_pro
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.exceptions.CantConfirmTransactionException;
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.exceptions.CantDeliverPendingTransactionsException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
-import com.bitdubai.fermat_bch_api.layer.crypto_network.BroadcastStatus;
+import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.BroadcastStatus;
 import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.BitcoinNetworkSelector;
+import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.BlockchainConnectionStatus;
 import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.exceptions.CantBroadcastTransactionException;
+import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.exceptions.CantCancellBroadcastTransactionException;
 import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.exceptions.CantFixTransactionInconsistenciesException;
+import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.exceptions.CantGetBlockchainConnectionStatusException;
 import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.exceptions.CantGetBroadcastStatusException;
 import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.exceptions.CantGetCryptoTransactionException;
 import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.exceptions.CantGetTransactionCryptoStatusException;
+import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.exceptions.CantGetTransactionException;
 import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.exceptions.CantStoreBitcoinTransactionException;
+import com.bitdubai.fermat_bch_api.layer.crypto_network.enums.Status;
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.enums.CryptoVaults;
 import com.bitdubai.fermat_bch_plugin.layer.crypto_network.bitcoin.developer.bitdubai.version_1.database.BitcoinCryptoNetworkDatabaseDao;
 import com.bitdubai.fermat_bch_plugin.layer.crypto_network.bitcoin.developer.bitdubai.version_1.exceptions.BlockchainException;
 import com.bitdubai.fermat_bch_plugin.layer.crypto_network.bitcoin.developer.bitdubai.version_1.exceptions.CantExecuteDatabaseOperationException;
 import com.bitdubai.fermat_bch_plugin.layer.crypto_network.bitcoin.developer.bitdubai.version_1.util.TransactionProtocolData;
+import com.bitdubai.fermat_dap_api.layer.dap_wallet.common.exceptions.CantGetTransactionsException;
 import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfaces.EventManager;
 
 import org.bitcoinj.core.Address;
@@ -38,6 +46,7 @@ import org.bitcoinj.core.UTXOProviderException;
 import org.bitcoinj.core.Wallet;
 import org.bitcoinj.params.RegTestParams;
 import org.bitcoinj.store.UnreadableWalletException;
+import org.bitcoinj.wallet.WalletTransaction;
 
 import java.io.File;
 import java.io.IOException;
@@ -45,7 +54,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.UUID;
-import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 
 import javax.annotation.Nullable;
@@ -136,19 +144,48 @@ public class BitcoinCryptoNetworkManager implements TransactionProtocolManager, 
              * add new keys (if any).
              */
             boolean isWalletReset = false;
-            if (areNewKeysAdded(wallet, keyList)){
-                wallet.importKeys(keyList);
-                try {
-                    wallet.saveToFile(walletFile);
-                } catch (IOException e) {
-                    e.printStackTrace();
+
+            /**
+             * if this is the Watch Only Vault, I won't be importing keys, I will be watching them
+             */
+            if (cryptoVault == CryptoVaults.BITCOIN_WATCH_ONLY){
+                if (areNewKeysWatched(wallet, keyList, blockchainNetworkType)){
+                    NetworkParameters networkParameters = BitcoinNetworkSelector.getNetworkParameter(blockchainNetworkType);
+                    for (ECKey ecKey : keyList){
+                        wallet.addWatchedAddress(ecKey.toAddress(networkParameters));
+                    }
+
+                    try {
+                        wallet.saveToFile(walletFile);
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+
+                    /**
+                     * I do not need to reset the wallet because I will
+                     * always be importing fresh (unused) keys.
+                     */
+                    isWalletReset = true;
                 }
+            } else{
                 /**
-                 * I do not need to reset the wallet because I will
-                 * always be importing fresh (unused) keys.
+                 * regulat vault, so will try to import new keys if any
                  */
-                isWalletReset = true;
+                if (areNewKeysAdded(wallet, keyList)){
+                    wallet.importKeys(keyList);
+                    try {
+                        wallet.saveToFile(walletFile);
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                    /**
+                     * I do not need to reset the wallet because I will
+                     * always be importing fresh (unused) keys.
+                     */
+                    isWalletReset = true;
+                }
             }
+
 
             /**
              * If the agent for this network is already running...
@@ -192,6 +229,31 @@ public class BitcoinCryptoNetworkManager implements TransactionProtocolManager, 
     }
 
     /**
+     * Will compare if from the passed KeyList there is a missing watched address in the wallet
+     * @param wallet
+     * @param keyList
+     * @return
+     */
+    private boolean areNewKeysWatched(Wallet wallet, List<ECKey> keyList, BlockchainNetworkType blockchainNetworkType) {
+        List<Address> watchedAddresses= wallet.getWatchedAddresses();
+        List<Address> newAddresses = new ArrayList<>();
+
+        NetworkParameters networkParameters = BitcoinNetworkSelector.getNetworkParameter(blockchainNetworkType);
+        for (ECKey ecKey : keyList){
+            newAddresses.add(ecKey.toAddress(networkParameters));
+        }
+
+        /**
+         * I compare both lists.
+         */
+        newAddresses.removeAll(watchedAddresses);
+        if (newAddresses.isEmpty())
+            return false;
+        else
+            return true;
+    }
+
+    /**
      * Updates the detailed stats with the passed information
      * @param cryptoVault
      * @param blockchainNetworkType
@@ -214,7 +276,7 @@ public class BitcoinCryptoNetworkManager implements TransactionProtocolManager, 
      * by forming the name wallet_[NETWORK]. If it doesn't exists, then I will create a new object for this network.
      * @return
      */
-    private Wallet getWallet(BlockchainNetworkType blockchainNetworkType, @Nullable List<ECKey> keyList){
+    private synchronized Wallet getWallet(BlockchainNetworkType blockchainNetworkType, @Nullable List<ECKey> keyList){
         Wallet wallet;
         String fileName = WALLET_FILENAME + blockchainNetworkType.getCode();
         walletFile = new File(fileName);
@@ -381,7 +443,7 @@ public class BitcoinCryptoNetworkManager implements TransactionProtocolManager, 
      * @param transactionId the internal fermat transaction id
      * @throws CantBroadcastTransactionException
      */
-    public void broadcastTransaction(BlockchainNetworkType blockchainNetworkType, Transaction tx, UUID transactionId) throws CantBroadcastTransactionException {
+    public synchronized void broadcastTransaction(BlockchainNetworkType blockchainNetworkType, Transaction tx, UUID transactionId) throws CantBroadcastTransactionException {
         runningAgents.get(blockchainNetworkType).broadcastTransaction(tx, transactionId);
     }
 
@@ -390,7 +452,7 @@ public class BitcoinCryptoNetworkManager implements TransactionProtocolManager, 
      * @param txHash
      * @throws CantBroadcastTransactionException
      */
-    public void broadcastTransaction(String txHash) throws CantBroadcastTransactionException{
+    public synchronized void broadcastTransaction(String txHash) throws CantBroadcastTransactionException{
         runningAgents.get(BlockchainNetworkType.DEFAULT).broadcastTransaction(txHash);
     }
 
@@ -493,6 +555,13 @@ public class BitcoinCryptoNetworkManager implements TransactionProtocolManager, 
     public List<Transaction> getBitcoinTransactions(BlockchainNetworkType blockchainNetworkType){
         Wallet wallet = getWallet(blockchainNetworkType, null);
         return wallet.getTransactionsByTime();
+
+    }
+
+    public synchronized List<Transaction> getUnspentBitcoinTransactions(BlockchainNetworkType blockchainNetworkType){
+        Wallet wallet = getWallet(blockchainNetworkType, null);
+        List<Transaction> transactions = new ArrayList<>(wallet.getTransactionPool(WalletTransaction.Pool.UNSPENT).values());
+        return transactions;
     }
 
     /**
@@ -510,6 +579,24 @@ public class BitcoinCryptoNetworkManager implements TransactionProtocolManager, 
          */
         for (BitcoinCryptoNetworkMonitor monitor : runningAgents.values()){
             return monitor.getCryptoTransactionFromBlockChain(txHash, blockHash);
+        }
+
+        /**
+         * if no agents are running, then no CryptoTransaction to return.
+         */
+        return null;
+    }
+
+    private Transaction getTransactionFromBlockChain(String parentTransactionHash, String transactionBlockHash) throws CantGetTransactionsException{
+        /**
+         * I will get the CryptoTransaction from all agents running. Only one will return the CryptoTransaction
+         */
+        for (BitcoinCryptoNetworkMonitor monitor : runningAgents.values()){
+            try {
+                return monitor.getTransactionFromBlockChain(parentTransactionHash, transactionBlockHash);
+            } catch (CantGetTransactionException e) {
+                throw new CantGetTransactionsException(CantGetTransactionsException.DEFAULT_MESSAGE, e, "Error getting the parent transaction from the blockchain.", "Blockchain error");
+            }
         }
 
         /**
@@ -602,8 +689,7 @@ public class BitcoinCryptoNetworkManager implements TransactionProtocolManager, 
      * @throws CantGetCryptoTransactionException
      */
     public List<CryptoTransaction> getChildCryptoTransaction(String parentHash, int depth) throws CantGetCryptoTransactionException {
-        //todo implementar esto lo voy a necesitar cuando el redeem point recibe el digital asset metadata y quiere buscar la transaccion.
-        return null;
+       return null;
     }
 
     /**
@@ -686,7 +772,7 @@ public class BitcoinCryptoNetworkManager implements TransactionProtocolManager, 
      * @param transactionId
      * @throws CantStoreBitcoinTransactionException
      */
-    public void storeBitcoinTransaction(BlockchainNetworkType blockchainNetworkType, Transaction tx, UUID transactionId) throws CantStoreBitcoinTransactionException {
+    public synchronized void storeBitcoinTransaction(BlockchainNetworkType blockchainNetworkType, Transaction tx, UUID transactionId) throws CantStoreBitcoinTransactionException {
         runningAgents.get(blockchainNetworkType).storeBitcoinTransaction(tx, transactionId);
     }
 
@@ -701,6 +787,122 @@ public class BitcoinCryptoNetworkManager implements TransactionProtocolManager, 
             return getDao().getBroadcastStatus(txHash);
         } catch (CantExecuteDatabaseOperationException e) {
             throw new CantGetBroadcastStatusException (CantGetBroadcastStatusException.DEFAULT_MESSAGE, e, "There was a database error getting the status", "database issue");
+        }
+    }
+
+    /**
+     * Will mark the passed transaction as cancelled, and it won't be broadcasted again.
+     * @param txHash
+     * @throws CantCancellBroadcastTransactionException
+     */
+    public void cancelBroadcast(String txHash) throws CantCancellBroadcastTransactionException {
+
+        /**
+         * Will invalidate the transaction in the wallet
+         */
+        runningAgents.get(BlockchainNetworkType.DEFAULT).cancelBroadcast(txHash);
+
+        /**
+         * marks the transaction as cancelled in the database
+         */
+        try {
+            getDao().setBroadcastStatus(Status.CANCELLED, 0, null, txHash);
+        } catch (CantExecuteDatabaseOperationException e) {
+            throw new CantCancellBroadcastTransactionException(CantCancellBroadcastTransactionException.DEFAULT_MESSAGE, e, "Database error while cancelling transaction.", "database issue");
+        }
+
+    }
+
+    /**
+     * Will get the BlockchainConnectionStatus for the specified network.
+     * @param blockchainNetworkType the Network type we won't to get info from. If the passed network is not currently activated,
+     *                              then we will receive null.
+     * @return BlockchainConnectionStatus with information of amount of peers currently connected, etc.
+     * @exception CantGetBlockchainConnectionStatusException
+     */
+    public BlockchainConnectionStatus getBlockchainConnectionStatus(BlockchainNetworkType blockchainNetworkType) throws CantGetBlockchainConnectionStatusException {
+        return runningAgents.get(blockchainNetworkType).getBlockchainConnectionStatus();
+    }
+
+    /**
+     * Starting from the parentTransaction, I will navigate up until the last transaction, and return it.
+     * @blockchainNetworkType the network in which we will be executing this. If none provided, DEFAULT will be used.
+     * @param parentTransactionHash The starting point transaction hash.
+     * @param transactionBlockHash the block where this transaction is.
+     * @return the Last child transaction.
+     */
+    public Transaction getLastChildTransaction(@Nullable BlockchainNetworkType blockchainNetworkType, String parentTransactionHash, String transactionBlockHash) throws CantGetTransactionException {
+        /**
+         * if no blockchain network type info provided, then I will use default.
+         */
+        if (blockchainNetworkType == null)
+            blockchainNetworkType = BlockchainNetworkType.DEFAULT;
+
+        /**
+         * I will get the parent transaction, locally or remotely.
+         */
+        Transaction parentTransaction;
+        try {
+            parentTransaction = this.getTransactionFromBlockChain(parentTransactionHash, transactionBlockHash);
+        } catch (CantGetTransactionsException e) {
+            throw new CantGetTransactionException(CantGetTransactionException.DEFAULT_MESSAGE, e, "Error getting the parent transaction from the blockchain.", "Blockchain error.");
+        }
+
+        /**
+         * If I couldn't get it, then the nothing else to do.
+         */
+        if (parentTransaction == null)
+            return null;
+
+        /**
+         * Now that I have the parent transaction, I will navigate down one level
+         */
+        for (TransactionOutput output : parentTransaction.getOutputs()){
+            /**
+             * I will only consider the output that is for sending bitcoins to someone else.
+             */
+            if (output.getScriptPubKey().isSentToAddress() && !output.isMine(getWallet(blockchainNetworkType, null))){
+                Transaction childTransaction = output.getSpentBy().getParentTransaction();
+                /**
+                 * if there are no inputs associated to this transaction's output, the this is the last trasaction of the key
+                 */
+                if (childTransaction == null)
+                    return parentTransaction;
+                else{
+                    /**
+                     * I will get the block in which this transaction appears and call this function again.
+                     */
+                    transactionBlockHash = childTransaction.getAppearsInHashes().keySet().toString();
+                    this.getLastChildTransaction(blockchainNetworkType, childTransaction.getHashAsString(), transactionBlockHash);
+                }
+
+            }
+        }
+        return null;
+    }
+
+    /**
+     * Starting from the parentTransaction, I will navigate up until the last transaction, and return the CryptoTransaction
+     * @blockchainNetworkType the network in which we will be executing this. If none provided, DEFAULT will be used.
+     * @param parentTransactionHash The starting point transaction hash.
+     * @param transactionBlockHash the block where this transaction is.
+     * @return the Last child transaction.
+     */
+    public CryptoTransaction getLastChildCryptoTransaction(@Nullable BlockchainNetworkType blockchainNetworkType, String parentTransactionHash, String transactionBlockHash) throws CantGetCryptoTransactionException {
+        return CryptoTransaction.getCryptoTransaction(this.getBitcoinTransactions(BlockchainNetworkType.DEFAULT).get(0));
+    }
+
+    /**
+     * Gets a stored CryptoTransaction in wathever network.
+     * @param txHash the transaction hash we want to get the CryptoTransaction
+     * @return the last recorded CryptoTransaction.
+     * @throws CantGetCryptoTransactionException
+     */
+    public CryptoTransaction getCryptoTransaction(String txHash) throws CantGetCryptoTransactionException {
+        try {
+            return getDao().getCryptoTransaction(txHash);
+        } catch (CantExecuteDatabaseOperationException e) {
+            throw new CantGetCryptoTransactionException(CantGetCryptoTransactionException.DEFAULT_MESSAGE, e, "database error getting the last crypto transaction.", "database error");
         }
     }
 }

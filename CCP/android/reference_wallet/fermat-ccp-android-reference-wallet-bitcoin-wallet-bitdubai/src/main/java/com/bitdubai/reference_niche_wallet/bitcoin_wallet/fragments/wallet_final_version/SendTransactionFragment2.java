@@ -6,6 +6,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -29,6 +30,7 @@ import com.bitdubai.android_fermat_ccp_wallet_bitcoin.R;
 
 import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView;
 import com.bitdubai.fermat_android_api.ui.Views.CircularProgressBar;
+import com.bitdubai.fermat_android_api.ui.Views.PresentationDialog;
 import com.bitdubai.fermat_android_api.ui.enums.FermatRefreshTypes;
 import com.bitdubai.fermat_android_api.ui.expandableRecicler.ExpandableRecyclerAdapter;
 import com.bitdubai.fermat_android_api.ui.fragments.FermatWalletExpandableListFragment;
@@ -92,7 +94,9 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
 import static android.widget.Toast.LENGTH_SHORT;
@@ -103,7 +107,7 @@ import static android.widget.Toast.makeText;
  * Fragment the show the list of open negotiations waiting for the broker and the customer un the Home activity
  *
  * @author Nelson Ramirez
- * @version 1.0
+ * @version 1.0refresh
  * @since 20/10/2015
  */
 public class SendTransactionFragment2 extends FermatWalletExpandableListFragment<GrouperItem>
@@ -136,6 +140,7 @@ public class SendTransactionFragment2 extends FermatWalletExpandableListFragment
     private FermatTextView txt_balance_amount_type;
     SettingsManager<BitcoinWalletSettings> settingsManager;
     private int progress1=1;
+    private  Map<Long, Long> runningDailyBalance;
 
     public static SendTransactionFragment2 newInstance() {
         return new SendTransactionFragment2();
@@ -151,7 +156,18 @@ public class SendTransactionFragment2 extends FermatWalletExpandableListFragment
 
         lstCryptoWalletTransactionsBook = new ArrayList<>();
 
-
+        getExecutor().execute(new Runnable() {
+            @Override
+            public void run() {
+                final Drawable drawable = getResources().getDrawable(R.drawable.background_gradient, null);
+                getActivity().runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        getPaintActivtyFeactures().setActivityBackgroundColor(drawable);
+                    }
+                });
+            }
+        });
 
         try {
             referenceWalletSession = (ReferenceWalletSession) appSession;
@@ -162,21 +178,24 @@ public class SendTransactionFragment2 extends FermatWalletExpandableListFragment
 //                startWizard(WizardTypes.CCP_WALLET_BITCOIN_START_WIZARD.getKey(),appSession, walletSettings, walletResourcesProviderManager, null);
 //            }
              settingsManager = referenceWalletSession.getModuleManager().getSettingsManager();
+
+
             BitcoinWalletSettings bitcoinWalletSettings = null;
             try {
                  bitcoinWalletSettings = settingsManager.loadAndGetSettings(referenceWalletSession.getAppPublicKey());
             }catch (Exception e){
                 bitcoinWalletSettings = null;
             }
-
             if(bitcoinWalletSettings == null){
                 bitcoinWalletSettings = new BitcoinWalletSettings();
                 bitcoinWalletSettings.setIsContactsHelpEnabled(true);
                 bitcoinWalletSettings.setIsPresentationHelpEnabled(true);
+
                 settingsManager.persistSettings(referenceWalletSession.getAppPublicKey(),bitcoinWalletSettings);
             }
 
             final BitcoinWalletSettings bitcoinWalletSettingsTemp = bitcoinWalletSettings;
+
 
             Handler handlerTimer = new Handler();
             handlerTimer.postDelayed(new Runnable(){
@@ -192,6 +211,8 @@ public class SendTransactionFragment2 extends FermatWalletExpandableListFragment
 //
 //                    }
                 }}, 500);
+
+            setRunningDailyBalance();
         } catch (Exception ex) {
             if (errorManager != null)
                 errorManager.reportUnexpectedWalletException(Wallets.CWP_WALLET_RUNTIME_WALLET_BITCOIN_WALLET_ALL_BITDUBAI,
@@ -209,6 +230,15 @@ public class SendTransactionFragment2 extends FermatWalletExpandableListFragment
                         null,
                         (moduleManager.getActiveIdentities().isEmpty()) ? PresentationBitcoinWalletDialog.TYPE_PRESENTATION : PresentationBitcoinWalletDialog.TYPE_PRESENTATION_WITHOUT_IDENTITIES,
                         checkButton);
+
+//        PresentationDialog presentationDialog = new PresentationDialog.Builder(getActivity(),appSession)
+//                .setBannerRes(R.drawable.banner_bitcoin_wallet)
+//                .setIconRes(R.drawable.bitcoin_wallet_2)
+//                .setBody("Hola que tal")
+//                .setSubTitle("Soy un subtitulo")
+//                .setTextFooter("soy un footer y me la re banco")
+//                .build();
+
         presentationBitcoinWalletDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
             @Override
             public void onDismiss(DialogInterface dialog) {
@@ -286,7 +316,8 @@ public class SendTransactionFragment2 extends FermatWalletExpandableListFragment
     CircularProgressBar circularProgressBar;
     Thread background;
 
-    private void setUpDonut(LayoutInflater inflater){
+    private void setUpDonut(LayoutInflater inflater)  {
+        try {
         final RelativeLayout container_header_balance = getToolbarHeader();
         try {
             container_header_balance.removeAllViews();
@@ -336,8 +367,10 @@ public class SendTransactionFragment2 extends FermatWalletExpandableListFragment
 
         circularProgressBar = (CircularProgressBar) balance_header.findViewById(R.id.progress);
 
-        circularProgressBar.setProgressValue(progress1);
-        circularProgressBar.setProgressValue2(3);
+        String runningBalance = WalletUtils.formatBalanceStringNotDecimal(moduleManager.getBalance(BalanceType.AVAILABLE, referenceWalletSession.getAppPublicKey()),ShowMoneyType.BITCOIN.getCode());
+
+        circularProgressBar.setProgressValue(Integer.valueOf(runningBalance));
+        circularProgressBar.setProgressValue2(getBalanceAverage());
         circularProgressBar.setBackgroundProgressColor(Color.parseColor("#022346"));
         circularProgressBar.setProgressColor(Color.parseColor("#05ddd2"));
         circularProgressBar.setProgressColor2(Color.parseColor("#05537c"));
@@ -484,8 +517,15 @@ public class SendTransactionFragment2 extends FermatWalletExpandableListFragment
         }
 
         txt_balance_amount_type = (FermatTextView) balance_header.findViewById(R.id.txt_balance_amount_type);
+        }
+        catch (Exception e){
 
+            errorManager.reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.CRASH, FermatException.wrapException(e));
+
+        }
     }
+
+
     private String getWalletAddress(String actorPublicKey) {
         String walletAddres="";
         try {
@@ -551,41 +591,23 @@ public class SendTransactionFragment2 extends FermatWalletExpandableListFragment
                             CryptoWalletWalletContact cryptoWalletWalletContact = null;
                             try {
                                 cryptoWalletWalletContact = moduleManager.createWalletContact(cryptoAddress, "mati_bitcoins", "", "", Actors.EXTRA_USER, appSession.getAppPublicKey());
-                            } catch (CantCreateWalletContactException e) {
+                            } catch (CantCreateWalletContactException | ContactNameAlreadyExistsException e) {
                                 try {
                                     cryptoWalletWalletContact = moduleManager.findWalletContactByName("mati_bitcoins", appSession.getAppPublicKey(), referenceWalletSession.getIntraUserModuleManager().getPublicKey());
-                                } catch (CantFindWalletContactException e3) {
-
-                                } catch (WalletContactNotFoundException e1) {
-
-                                } catch (CantListCryptoWalletIntraUserIdentityException e1) {
-
-                                } catch (CantGetCryptoWalletException e1) {
-                                }
-                            } catch (ContactNameAlreadyExistsException e) {
-                                try {
-                                    cryptoWalletWalletContact = moduleManager.findWalletContactByName("mati_bitcoins", appSession.getAppPublicKey(), referenceWalletSession.getIntraUserModuleManager().getPublicKey());
-                                } catch (CantFindWalletContactException e1) {
-
-                                } catch (WalletContactNotFoundException e1) {
-
-                                } catch (CantListCryptoWalletIntraUserIdentityException e1) {
-
-                                } catch (CantGetCryptoWalletException e1) {
+                                } catch (CantFindWalletContactException | CantListCryptoWalletIntraUserIdentityException | WalletContactNotFoundException | CantGetCryptoWalletException e3) {
 
                                 }
                             } catch (Exception e) {
 
                             }
 
+                            assert cryptoWalletWalletContact != null;
                             String myCryptoAddress = getWalletAddress(cryptoWalletWalletContact.getActorPublicKey());
                             HttpGet httpget = new HttpGet("http://52.27.68.19:15400/mati/hello/?address=" + myCryptoAddress);
                             ResponseHandler<String> responseHandler = new BasicResponseHandler();
                             SetServerString = Client.execute(httpget, responseHandler);
 
                             response = SetServerString;
-                        } catch (ClientProtocolException e) {
-
                         } catch (IOException e) {
 
                         }
@@ -658,7 +680,7 @@ public class SendTransactionFragment2 extends FermatWalletExpandableListFragment
         menu.add(0, BitcoinWalletConstants.IC_ACTION_SEND, 0, "send").setIcon(R.drawable.ic_actionbar_send)
                 .setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
 
-        menu.add(1, BitcoinWalletConstants.IC_ACTION_HELP_PRESENTATION, 1, "help").setIcon(R.drawable.ic_contact_question)
+        menu.add(1, BitcoinWalletConstants.IC_ACTION_HELP_PRESENTATION, 1, "help").setIcon(R.drawable.help_icon)
                 .setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
         //inflater.inflate(R.menu.home_menu, menu);
     }
@@ -912,6 +934,7 @@ public class SendTransactionFragment2 extends FermatWalletExpandableListFragment
     }
 
     private void changeAmountType(){
+
         ShowMoneyType showMoneyType = (referenceWalletSession.getTypeAmount()== ShowMoneyType.BITCOIN.getCode()) ? ShowMoneyType.BITS : ShowMoneyType.BITCOIN;
         referenceWalletSession.setTypeAmount(showMoneyType);
         String moneyTpe = "";
@@ -923,6 +946,7 @@ public class SendTransactionFragment2 extends FermatWalletExpandableListFragment
                 moneyTpe = "bits";
                 break;
         }
+
         txt_balance_amount_type.setText(moneyTpe);
         updateBalances();
     }
@@ -933,7 +957,8 @@ public class SendTransactionFragment2 extends FermatWalletExpandableListFragment
      * Method to change the balance type
      */
     private void changeBalanceType(TextView txt_type_balance,TextView txt_balance_amount) {
-
+        updateBalances();
+        setRunningDailyBalance();
         try {
             if (((ReferenceWalletSession)appSession).getBalanceTypeSelected().equals(BalanceType.AVAILABLE.getCode())) {
                 balanceAvailable = loadBalance(BalanceType.AVAILABLE);
@@ -978,7 +1003,152 @@ public class SendTransactionFragment2 extends FermatWalletExpandableListFragment
     }
 
 
+    private int getBalanceAverage(){
+        int cant = runningDailyBalance.size();
+        long balanceSum = 0;
+        int average = 0;
+        try {
 
+            for (Map.Entry<Long, Long> entry :  runningDailyBalance.entrySet())
+            {
+                balanceSum += Integer.valueOf(WalletUtils.formatBalanceStringNotDecimal(entry.getValue(), ShowMoneyType.BITCOIN.getCode()));
+            }
+
+            if(balanceSum > 0 )
+                average = (int) ((Integer.valueOf(WalletUtils.formatBalanceStringNotDecimal(getBalanceValue(runningDailyBalance.size() - 1), ShowMoneyType.BITCOIN.getCode())) * 100) / balanceSum);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return average;
+    }
+
+    private void setRunningDailyBalance()
+    {
+        try {
+
+            long currentTime = System.currentTimeMillis();
+            runningDailyBalance = new HashMap<Long, Long>();
+
+            BitcoinWalletSettings bitcoinWalletSettings = null;
+            try {
+                bitcoinWalletSettings = settingsManager.loadAndGetSettings(referenceWalletSession.getAppPublicKey());
+            }catch (Exception e){
+                bitcoinWalletSettings = null;
+            }
+
+            if(bitcoinWalletSettings == null){
+
+                runningDailyBalance.put(currentTime,  moduleManager.getBalance(BalanceType.AVAILABLE,referenceWalletSession.getAppPublicKey()));
+                bitcoinWalletSettings.setRunningDailyBalance(runningDailyBalance);
+                settingsManager.persistSettings(referenceWalletSession.getAppPublicKey(),bitcoinWalletSettings);
+            }
+            else {
+
+                if (bitcoinWalletSettings.getRunningDailyBalance() == null){
+                    runningDailyBalance.put(currentTime,  moduleManager.getBalance(BalanceType.AVAILABLE,referenceWalletSession.getAppPublicKey()));
+                }
+                else
+                {
+                    runningDailyBalance = bitcoinWalletSettings.getRunningDailyBalance();
+
+
+                    //verify that I have this day added
+                    long lastDate = getKeyDate(runningDailyBalance.size()-1);
+
+                    long dif = currentTime - lastDate;
+
+                    double dias = Math.floor(dif / (1000 * 60 * 60 * 24));
+                    if(dias > 1)
+                    {
+                        //if I have 30 days I start counting again
+                        if(runningDailyBalance.size() == 30)
+                            runningDailyBalance = new HashMap<Long, Long>();
+
+                        runningDailyBalance.put(currentTime, moduleManager.getBalance(BalanceType.AVAILABLE, referenceWalletSession.getAppPublicKey()));
+
+                    }
+                    else
+                    {
+                        //update balance
+                        this.updateDailyBalance(runningDailyBalance.size()-1,moduleManager.getBalance(BalanceType.AVAILABLE, referenceWalletSession.getAppPublicKey()));
+                    }
+
+
+
+                }
+
+
+                bitcoinWalletSettings.setRunningDailyBalance(runningDailyBalance);
+                settingsManager.persistSettings(referenceWalletSession.getAppPublicKey(), bitcoinWalletSettings);
+
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+
+
+    private long getKeyDate(int pos){
+        int i = 0;
+        long date = 0;
+
+        try {
+
+            for (Map.Entry<Long, Long> entry :  runningDailyBalance.entrySet())
+            {
+                if(i == pos)
+                    date += entry.getKey();
+
+                i++;
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return date;
+    }
+
+    private long getBalanceValue(int pos){
+        int i = 0;
+        long date = 0;
+
+        try {
+
+            for (Map.Entry<Long, Long> entry :  runningDailyBalance.entrySet())
+            {
+                if(i == pos)
+                    date += entry.getValue();
+
+                i++;
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return date;
+    }
+
+    private long updateDailyBalance(int pos, long balance){
+        int i = 0;
+        long date = 0;
+
+        try {
+
+            for (Map.Entry<Long, Long> entry :  runningDailyBalance.entrySet())
+            {
+                if(i == pos)
+                {
+                    entry.setValue(balance);
+                    break;
+                }
+
+                i++;
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return date;
+    }
 
 
 }

@@ -69,7 +69,7 @@ public class IntraWalletUserIdentityDeveloperDatabaseFactory implements DealsWit
              /*
               * Open new database connection
               */
-            database = this.pluginDatabaseSystem.openDatabase(pluginId, pluginId.toString());
+            database = this.pluginDatabaseSystem.openDatabase(pluginId, IntraWalletUserIdentityDatabaseConstants.INTRA_WALLET_USER_DATABASE_NAME);
             database.closeDatabase();
 
         } catch (CantOpenDatabaseException cantOpenDatabaseException) {
@@ -91,7 +91,7 @@ public class IntraWalletUserIdentityDeveloperDatabaseFactory implements DealsWit
                   /*
                    * We create the new database
                    */
-                database = intraWalletUserIdentityDatabaseFactory.createDatabase(pluginId, pluginId.toString());
+                database = intraWalletUserIdentityDatabaseFactory.createDatabase(pluginId, IntraWalletUserIdentityDatabaseConstants.INTRA_WALLET_USER_DATABASE_NAME);
                 database.closeDatabase();
             } catch (CantCreateDatabaseException cantCreateDatabaseException) {
                   /*

@@ -5,6 +5,7 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.CryptoCurrency;
 import com.bitdubai.fermat_api.layer.all_definition.money.CryptoAddress;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
 import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.BitcoinNetworkSelector;
+import com.bitdubai.fermat_bch_api.layer.crypto_vault.classes.HierarchyAccount.HierarchyAccount;
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.exceptions.GetNewCryptoAddressException;
 import com.bitdubai.fermat_bch_plugin.layer.asset_vault.developer.bitdubai.version_1.database.AssetsOverBitcoinCryptoVaultDao;
 import com.bitdubai.fermat_bch_plugin.layer.asset_vault.developer.bitdubai.version_1.exceptions.CantExecuteDatabaseOperationException;
@@ -22,6 +23,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
+
+import javax.annotation.Nullable;
 
 /**
  * The Class <code>com.bitdubai.fermat_bch_plugin.layer.cryptovault.assetsoverbitcoin.developer.bitdubai.version_1.structure.VaultKeyHierarchy</code>
@@ -169,11 +172,26 @@ class VaultKeyHierarchy extends DeterministicHierarchy {
      * @return
      */
     public ECKey getNextAvailableKey(com.bitdubai.fermat_bch_api.layer.crypto_vault.classes.HierarchyAccount.HierarchyAccount account) throws CantExecuteDatabaseOperationException {
+        return getNextAvailableKey(account, 0);
+    }
+
+    /**
+     * gets the next available key from the specified account at the given position
+     * @param account
+     * @param position
+     * @return
+     * @throws CantExecuteDatabaseOperationException
+     */
+    public ECKey getNextAvailableKey(com.bitdubai.fermat_bch_api.layer.crypto_vault.classes.HierarchyAccount.HierarchyAccount account, int position) throws CantExecuteDatabaseOperationException {
         /**
          * I get from database the next available key depth
          */
-        int keyDepth = 0;
-        keyDepth = getNextAvailableKeyDepth(account);
+        int keyDepth;
+        if (position == 0){
+            keyDepth = getNextAvailableKeyDepth(account);
+        } else
+            keyDepth = position;
+
 
         /**
          * I will derive a new Key from this account
@@ -264,5 +282,24 @@ class VaultKeyHierarchy extends DeterministicHierarchy {
         }
 
         return childKeys;
+    }
+
+    public CryptoAddress getRedeemPointBitcoinAddress(HierarchyAccount hierarchyAccount, int position) throws GetNewCryptoAddressException {
+        /**
+         * I get the available key for this account at the given position
+         */
+        ECKey ecKey = null;
+        try {
+            ecKey = getNextAvailableKey(hierarchyAccount, position);
+        } catch (CantExecuteDatabaseOperationException e) {
+            throw new GetNewCryptoAddressException(GetNewCryptoAddressException.DEFAULT_MESSAGE, e, "There was an error getting the actual unused Key depth to derive a new key.", "database problem.");
+        }
+        /**
+         * I will create the CryptoAddress with the key I just got
+         */
+        String address = ecKey.toAddress(BitcoinNetworkSelector.getNetworkParameter(BlockchainNetworkType.DEFAULT)).toString();
+        CryptoAddress cryptoAddress = new CryptoAddress(address, CryptoCurrency.BITCOIN);
+
+        return cryptoAddress;
     }
 }

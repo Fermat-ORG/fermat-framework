@@ -27,7 +27,7 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.Cant
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantUpdateRecordException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.DatabaseNotFoundException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.DatabaseTransactionFailedException;
-import com.bitdubai.fermat_bch_api.layer.crypto_network.BroadcastStatus;
+import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.BroadcastStatus;
 import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.BitcoinNetworkSelector;
 import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.exceptions.CantGetTransactionCryptoStatusException;
 import com.bitdubai.fermat_bch_api.layer.crypto_network.enums.Status;
@@ -43,7 +43,6 @@ import org.bitcoinj.core.Address;
 import org.bitcoinj.core.AddressFormatException;
 import org.bitcoinj.core.ECKey;
 import org.bitcoinj.core.NetworkParameters;
-import org.bitcoinj.core.Transaction;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -52,7 +51,6 @@ import java.util.Set;
 import java.util.UUID;
 
 import javax.annotation.Nullable;
-import javax.xml.crypto.Data;
 
 /**
  * Created by rodrigo on 10/9/15.
@@ -231,6 +229,16 @@ public class BitcoinCryptoNetworkDatabaseDao {
 
         DatabaseTable databaseTable = database.getTable(BitcoinCryptoNetworkDatabaseConstants.TRANSACTIONS_TABLE_NAME);
         DatabaseTableRecord record = databaseTable.getEmptyRecord();
+
+        /**
+         * if the transaction hash already exists with the same crypto Status, then I won't insert it.
+         * Issue #4501
+         * This is because the wallet is not detecting as own our outgoing transactions and the commit launches the incoming bitcoins
+         * event. A transaction that we are sending may be actually recorded as incoming. The important thing at this point is not to
+         * duplicate transactions
+         */
+        if (!this.isNewTransaction(hash, cryptoStatus))
+            return;
 
         /**
          * generates the trx_id if this is an incoming transaction or used the passed one.
@@ -975,6 +983,7 @@ public class BitcoinCryptoNetworkDatabaseDao {
             return;
 
         DatabaseTable databaseTable = database.getTable(BitcoinCryptoNetworkDatabaseConstants.CRYPTOVAULTS_DETAILED_STATS_TABLE_NAME);
+        databaseTable.addStringFilter(BitcoinCryptoNetworkDatabaseConstants.CRYPTOVAULTS_DETAILED_STATS_CRYPTO_VAULT_COLUMN_NAME, cryptoVault.getCode(), DatabaseFilterType.EQUAL);
         try {
             databaseTable.loadToMemory();
         } catch (CantLoadTableToMemoryException e) {
@@ -1290,5 +1299,41 @@ public class BitcoinCryptoNetworkDatabaseDao {
         DatabaseTableRecord record = databaseTable.getRecords().get(0);
 
         return record.getUUIDValue(BitcoinCryptoNetworkDatabaseConstants.TRANSACTIONS_TRX_ID_COLUMN_NAME);
+    }
+
+    /**
+     * Gets the last CryptoTransaction that we have locally.
+     * @param txHash
+     * @return
+     */
+    public CryptoTransaction getCryptoTransaction(String txHash) throws CantExecuteDatabaseOperationException{
+        /**
+         * I get the list of stored cryptoTransactions with all their crypto Status
+         */
+        List<CryptoTransaction> cryptoTransactions = this.getIncomingCryptoTransaction(txHash);
+
+        /**
+         * I get the last available crypto Status
+         */
+        CryptoStatus lastCryptoStatus = null;
+        for (CryptoTransaction cryptoTransaction: cryptoTransactions){
+            CryptoStatus cryptoStatus = cryptoTransaction.getCryptoStatus();
+
+            if (lastCryptoStatus == null)
+                lastCryptoStatus = cryptoStatus;
+            else if (lastCryptoStatus.getOrder() < cryptoStatus.getOrder())
+                lastCryptoStatus = cryptoStatus;
+        }
+
+        /**
+         * I return the CryptoTranasction with the last cryptoStatus
+         */
+        for (CryptoTransaction cryptoTransaction: cryptoTransactions){
+            if (cryptoTransaction.getCryptoStatus() == lastCryptoStatus)
+                return cryptoTransaction;
+        }
+
+        //this should never happen
+        return null;
     }
 }

@@ -20,6 +20,7 @@ import com.bitdubai.fermat.R;
 import com.bitdubai.fermat_android_api.engine.FermatFragmentFactory;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.exceptions.FragmentNotFoundException;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.FermatAppConnection;
+import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.FermatSession;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.WizardPageListener;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView;
 import com.bitdubai.fermat_android_api.ui.interfaces.FermatWizardActivity;
@@ -32,6 +33,7 @@ import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.WizardP
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.interfaces.FermatCallback;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.interfaces.FermatScreenSwapper;
+import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.interfaces.FermatStructure;
 import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.SubApp;
 import com.bitdubai.fermat_api.layer.dmp_module.sub_app_manager.InstalledSubApp;
 import com.bitdubai.fermat_api.layer.dmp_module.wallet_manager.InstalledWallet;
@@ -165,33 +167,15 @@ public class WizardActivity extends FermatActivity
         if (wizarType != null) {
             try {
                 WalletNavigationStructure wallet = getWalletRuntimeManager().getLastWallet();
+                FermatSession fermatSession = getWalletSessionManager().getWalletSession(wallet.getPublicKey());
 
 //                FermatAppConnection fermatAppConnection = FermatAppConnectionManager.getFermatAppConnection(wallet.getPublicKey(),this,getIntraUserModuleManager().getActiveIntraUserIdentity(), this.getAssetIssuerWalletModuleManager().getActiveAssetIssuerIdentity(), this.getAssetUserWalletModuleManager().getActiveAssetUserIdentity(), this.getAssetRedeemPointWalletModuleManager().getActiveAssetRedeemPointIdentity());
 
-                FermatAppConnection fermatAppConnection = FermatAppConnectionManager.getFermatAppConnection(wallet.getPublicKey(),this);
+                FermatAppConnection fermatAppConnection = FermatAppConnectionManager.getFermatAppConnection(wallet.getPublicKey(),this,fermatSession);
 
                 FermatFragmentFactory walletFragmentFactory = fermatAppConnection.getFragmentFactory(); //WalletFragmentFactory.getFragmentFactoryByWalletType(wallet.getWalletCategory(), wallet.getWalletType(), wallet.getPublicKey());
                 for (WizardPage page : wizarType.getPages()) {
-                    fragments.add(walletFragmentFactory.getFragment(page.getFragment(), getWalletSessionManager().getWalletSession(wallet.getPublicKey()), getWalletResourcesProviderManager()));
-//                    switch (page.getType()) {
-//                        case CWP_WALLET_FACTORY_CREATE_STEP_1:
-//                            fragments.add(new CreateWalletFragment());
-//                            break;
-//                        case CWP_WALLET_FACTORY_CREATE_STEP_2:
-//                            fragments.add(new SetupNavigationFragment());
-//                            break;
-//                        case CWP_WALLET_PUBLISHER_PUBLISH_STEP_1:
-//                            fragments.add(PublishFactoryProjectStep1.newInstance(args));
-//                            break;
-//                        case CWP_WALLET_PUBLISHER_PUBLISH_STEP_2:
-//                            fragments.add(PublishFactoryProjectStep2.newInstance(args));
-//                            break;
-//                        case CWP_WALLET_PUBLISHER_PUBLISH_STEP_3:
-//                            fragments.add(PublishFactoryProjectSummary.newInstance(args));
-//                            break;
-//                        default:
-//                            break;
-//                    }
+                    fragments.add(walletFragmentFactory.getFragment(page.getFragment(), fermatSession, getWalletResourcesProviderManager()));
                 }
             } catch (FragmentNotFoundException e) {
                 e.printStackTrace();
@@ -301,6 +285,18 @@ public class WizardActivity extends FermatActivity
         super.onDestroy();
         args = null;
         wizarType = null;
+    }
+
+    @Override
+    protected FermatStructure getAppInUse() {
+        //TODO: a implementar
+        return null;
+    }
+
+    @Override
+    protected FermatSession getFermatSessionInUse(String appPublicKey) {
+        //TODO: obtener la session de forma indistinta
+        return null;
     }
 
     @Override

@@ -17,7 +17,7 @@ import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.events.Com
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.contents.FermatPacket;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.enums.FermatPacketType;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.enums.JsonAttNamesConstants;
-import com.bitdubai.fermat_p2p_plugin.layer.ws.communications.cloud.client.developer.bitdubai.version_1.structure.agents.WsCommunicationsCloudClientAgent;
+import com.bitdubai.fermat_p2p_plugin.layer.ws.communications.cloud.client.developer.bitdubai.version_1.structure.agents.WsCommunicationsCloudClientSupervisorConnectionAgent;
 import com.bitdubai.fermat_p2p_plugin.layer.ws.communications.cloud.client.developer.bitdubai.version_1.structure.processors.FermatPacketProcessor;
 import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfaces.EventManager;
 import com.google.gson.JsonObject;
@@ -26,7 +26,6 @@ import org.java_websocket.WebSocket;
 import org.java_websocket.client.WebSocketClient;
 import org.java_websocket.drafts.Draft;
 import org.java_websocket.framing.Framedata;
-import org.java_websocket.framing.FramedataImpl1;
 import org.java_websocket.handshake.ServerHandshake;
 
 import java.net.URI;
@@ -60,10 +59,10 @@ public class WsCommunicationsCloudClientChannel extends WebSocketClient {
      */
     private WsCommunicationsCloudClientConnection wsCommunicationsCloudClientConnection;
 
-    /*
-     * Represent the wsCommunicationsCloudClientAgent
+    /**
+     * Represent the wsCommunicationsCloudClientSupervisorConnectionAgent
      */
-    private WsCommunicationsCloudClientAgent wsCommunicationsCloudClientAgent;
+    private WsCommunicationsCloudClientSupervisorConnectionAgent wsCommunicationsCloudClientSupervisorConnectionAgent;
 
     /**
      * Represent the temporalIdentity
@@ -96,11 +95,6 @@ public class WsCommunicationsCloudClientChannel extends WebSocketClient {
     private boolean isRegister;
 
     /**
-     * Represent is the PongMessagePending
-     */
-    private boolean isPongMessagePending;
-
-    /**
      * Constructor with parameters
      *
      * @param serverUri
@@ -108,29 +102,16 @@ public class WsCommunicationsCloudClientChannel extends WebSocketClient {
      * @param headers
      * @param connectTimeout
      */
-    private WsCommunicationsCloudClientChannel(URI serverUri, Draft draft, Map<String, String> headers, int connectTimeout, ECCKeyPair temporalIdentity, WsCommunicationsCloudClientConnection wsCommunicationsCloudClientConnection, EventManager eventManager) {
+    private WsCommunicationsCloudClientChannel(URI serverUri, Draft draft, Map<String, String> headers, int connectTimeout, ECCKeyPair temporalIdentity, WsCommunicationsCloudClientConnection wsCommunicationsCloudClientConnection, EventManager eventManager, ECCKeyPair clientIdentity) {
         super(serverUri, draft, headers, connectTimeout);
-        this.clientIdentity = new ECCKeyPair();
+        this.clientIdentity = clientIdentity;
         this.temporalIdentity = temporalIdentity;
         this.packetProcessorsRegister = new ConcurrentHashMap<>();
         this.wsCommunicationsCloudClientConnection = wsCommunicationsCloudClientConnection;
         this.eventManager = eventManager;
         this.isRegister = Boolean.FALSE;
-        this.isPongMessagePending = Boolean.FALSE;
     }
 
-    /**
-     * Send ping message to the remote node, to verify is connection
-     * alive
-     */
-    public void sendPingMessage(){
-
-        System.out.println(" WsCommunicationVPNClient - Sending ping message to remote node (" + getConnection().getRemoteSocketAddress() + ")");
-        FramedataImpl1 frame = new FramedataImpl1(Framedata.Opcode.PING);
-        frame.setFin(true);
-        getConnection().sendFrame(frame);
-        this.isPongMessagePending = Boolean.TRUE;
-    }
 
     /**
      * Receive pong message from the remote node, to verify is connection
@@ -141,10 +122,7 @@ public class WsCommunicationsCloudClientChannel extends WebSocketClient {
      */
     @Override
     public void onWebsocketPong(WebSocket conn, Framedata f) {
-        if (f.getOpcode() == Framedata.Opcode.PONG){
-            System.out.println(" WsCommunicationVPNClient - Pong message receiveRemote from node ("+conn.getLocalSocketAddress()+") connection is alive");
-            this.isPongMessagePending = Boolean.FALSE;
-        }
+        System.out.println(" WsCommunicationsCloudClientChannel - onWebsocketPong = " + new String(f.getPayloadData().array()));
     }
 
     /**
@@ -154,7 +132,7 @@ public class WsCommunicationsCloudClientChannel extends WebSocketClient {
      * @param draft
      * @return WsCommunicationsCloudClientChannel instance
      */
-    public static WsCommunicationsCloudClientChannel constructWsCommunicationsCloudClientFactory(URI serverUri, Draft draft, WsCommunicationsCloudClientConnection wsCommunicationsCloudClientConnection,EventManager eventManager){
+    public static WsCommunicationsCloudClientChannel constructWsCommunicationsCloudClientFactory(URI serverUri, Draft draft, WsCommunicationsCloudClientConnection wsCommunicationsCloudClientConnection,EventManager eventManager, ECCKeyPair clientIdentity){
 
         /*
          * Create a new temporal identity
@@ -177,12 +155,12 @@ public class WsCommunicationsCloudClientChannel extends WebSocketClient {
          */
         headers.put(JsonAttNamesConstants.HEADER_ATT_NAME_TI, jsonObject.toString());
 
-        System.out.println(" WsCommunicationsCloudClientChannel - headers = "+headers);
+        //System.out.println(" WsCommunicationsCloudClientChannel - headers = "+headers);
 
         /*
          * Construct the instance with the required parameters
          */
-        return new WsCommunicationsCloudClientChannel(serverUri, draft, headers, WsCommunicationsCloudClientChannel.DEFAULT_CONNECTION_TIMEOUT, tempIdentity, wsCommunicationsCloudClientConnection, eventManager);
+        return new WsCommunicationsCloudClientChannel(serverUri, draft, headers, WsCommunicationsCloudClientChannel.DEFAULT_CONNECTION_TIMEOUT, tempIdentity, wsCommunicationsCloudClientConnection, eventManager, clientIdentity);
     }
 
     /**
@@ -194,8 +172,8 @@ public class WsCommunicationsCloudClientChannel extends WebSocketClient {
 
         System.out.println(" --------------------------------------------------------------------- ");
         System.out.println(" WsCommunicationsCloudClientChannel - Starting method onOpen");
-        System.out.println(" WsCommunicationsCloudClientChannel - Server hand Shake Data = " + handShakeData);
-        System.out.println(" WsCommunicationsCloudClientChannel - Server getReadyState() = " + getReadyState());
+        System.out.println(" WsCommunicationsCloudClientChannel - ready state = "+getReadyState());
+
     }
 
     /**
@@ -274,15 +252,27 @@ public class WsCommunicationsCloudClientChannel extends WebSocketClient {
         System.out.println(" WsCommunicationsCloudClientChannel - Starting method onClose");
         System.out.println(" WsCommunicationsCloudClientChannel -  code   = " + code + " reason = " + reason + " remote = " + remote);
 
-        /*
-         * Start the agent to try the reconnect
-         */
-        setIsRegister(Boolean.FALSE);
-        wsCommunicationsCloudClientAgent.setIsConnected(Boolean.FALSE);
-        wsCommunicationsCloudClientAgent.run();
-
         try {
-            raiseClientConnectionCloseNotificationEvent();
+            switch (code) {
+
+                case 1002:
+                case 1006:
+                        raiseClientConnectionLooseNotificationEvent();
+                        System.out.println(" WsCommunicationsCloudClientChannel - Connection loose");
+                    break;
+
+                default:
+
+                        if (reason.contains("ENETUNREACH") || reason.contains("connect failed:ETIMEDOUT (Connection timed out)")){
+                            raiseClientConnectionLooseNotificationEvent();
+                        }else{
+                            raiseClientConnectionCloseNotificationEvent();
+                            setIsRegister(Boolean.FALSE);
+                        }
+
+                    break;
+            }
+
         }catch (Exception e){
             e.printStackTrace();
         }
@@ -295,12 +285,10 @@ public class WsCommunicationsCloudClientChannel extends WebSocketClient {
      */
     @Override
     public void onError(Exception ex) {
-
         System.out.println(" --------------------------------------------------------------------- ");
         System.out.println(" WsCommunicationsCloudClientChannel - Starting method onError");
         ex.printStackTrace();
-        getConnection().closeConnection(1000, ex.getLocalizedMessage());
-
+        getConnection().closeConnection(1002, ex.getLocalizedMessage());
     }
 
     /**
@@ -328,7 +316,7 @@ public class WsCommunicationsCloudClientChannel extends WebSocketClient {
     }
 
     /**
-     * This method register a FermatPacketProcessor object with this
+     * This method register a FermatTyrusPacketProcessor object with this
      * server
      */
     public void registerFermatPacketProcessor(FermatPacketProcessor fermatPacketProcessor) {
@@ -437,11 +425,11 @@ public class WsCommunicationsCloudClientChannel extends WebSocketClient {
     }
 
     /**
-     * Set the wsCommunicationsCloudClientAgent
-     * @param wsCommunicationsCloudClientAgent
+     * Set the wsCommunicationsCloudClientSupervisorConnectionAgent
+     * @param wsCommunicationsCloudClientSupervisorConnectionAgent
      */
-    public void setWsCommunicationsCloudClientAgent(WsCommunicationsCloudClientAgent wsCommunicationsCloudClientAgent) {
-        this.wsCommunicationsCloudClientAgent = wsCommunicationsCloudClientAgent;
+    public void setWsCommunicationsCloudClientSupervisorConnectionAgent(WsCommunicationsCloudClientSupervisorConnectionAgent wsCommunicationsCloudClientSupervisorConnectionAgent) {
+        this.wsCommunicationsCloudClientSupervisorConnectionAgent = wsCommunicationsCloudClientSupervisorConnectionAgent;
     }
 
     /**
@@ -486,18 +474,22 @@ public class WsCommunicationsCloudClientChannel extends WebSocketClient {
     }
 
     /**
+     * Notify when cloud client is disconnected
+     */
+    public void raiseClientConnectionLooseNotificationEvent() {
+
+        System.out.println("WsCommunicationsCloudClientChannel - raiseClientConnectionLooseNotificationEvent");
+        FermatEvent platformEvent = eventManager.getNewEvent(P2pEventType.CLIENT_CONNECTION_LOOSE);
+        platformEvent.setSource(EventSource.WS_COMMUNICATION_CLOUD_CLIENT_PLUGIN);
+        eventManager.raiseEvent(platformEvent);
+        System.out.println("WsCommunicationsCloudClientChannel - Raised Event = P2pEventType.CLIENT_CONNECTION_LOOSE");
+    }
+
+    /**
      * Get the IdentityPublicKey
      * @return String
      */
     public String getIdentityPublicKey(){
         return clientIdentity.getPublicKey();
-    }
-
-    /**
-     * Is Pong Message Pending
-     * @return boolean
-     */
-    public boolean isPongMessagePending() {
-        return isPongMessagePending;
     }
 }

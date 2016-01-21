@@ -149,6 +149,32 @@ public class WalletStatisticsNetworkServicePluginRoot extends AbstractPlugin imp
 
     }
 
+    /*
+    * Handles the events ClientConnectionLooseNotificationEvent
+    */
+    @Override
+    public void handleClientConnectionLooseNotificationEvent(FermatEvent fermatEvent) {
+
+//        if(communicationNetworkServiceConnectionManager != null)
+//            communicationNetworkServiceConnectionManager.stop();
+
+    }
+
+    /*
+     * Handles the events ClientSuccessfullReconnectNotificationEvent
+     */
+    @Override
+    public void handleClientSuccessfullReconnectNotificationEvent(FermatEvent fermatEvent) {
+
+//        if(communicationNetworkServiceConnectionManager != null)
+//            communicationNetworkServiceConnectionManager.restart();
+
+//        if(!this.register){
+//            communicationRegistrationProcessNetworkServiceAgent.start();
+//        }
+
+    }
+
     @Override
     public boolean isRegister() {
         return false;

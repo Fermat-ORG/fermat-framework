@@ -1,6 +1,7 @@
 package com.bitdubai.fermat_ccp_plugin.layer.network_service.intra_user.developer.bitdubai.version_1.structure;
 
 import com.bitdubai.fermat_api.CantStartAgentException;
+import com.bitdubai.fermat_api.CantStopAgentException;
 import com.bitdubai.fermat_api.FermatAgent;
 import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.components.enums.PlatformComponentType;
@@ -92,6 +93,7 @@ public class ActorNetworkServiceRecordedAgent extends FermatAgent{
         });
     }
 
+
     public void start() throws CantStartAgentException {
 
         try {
@@ -105,6 +107,20 @@ public class ActorNetworkServiceRecordedAgent extends FermatAgent{
         } catch (Exception exception) {
 
             throw new CantStartAgentException(FermatException.wrapException(exception), null, "You should inspect the cause.");
+        }
+    }
+    public void stop() throws CantStopAgentException {
+        try {
+
+            toSend.interrupt();
+
+            toReceive.interrupt();
+
+            this.status = AgentStatus.PAUSED;
+
+        } catch (Exception exception) {
+
+            throw new CantStopAgentException(FermatException.wrapException(exception), null, "You should inspect the cause.");
         }
     }
 
@@ -137,7 +153,7 @@ public class ActorNetworkServiceRecordedAgent extends FermatAgent{
     private void processSend() {
         try {
 
-            List<ActorNetworkServiceRecord> lstActorRecord = actorNetworkServicePluginRoot.getOutgoingNotificationDao().listRequestsByProtocolStateAndType(
+            List<ActorNetworkServiceRecord> lstActorRecord = actorNetworkServicePluginRoot.getOutgoingNotificationDao().listRequestsByProtocolState(
                     ActorProtocolState.PROCESSING_SEND
             );
 
@@ -206,7 +222,7 @@ public class ActorNetworkServiceRecordedAgent extends FermatAgent{
                 switch (cpr.getNotificationDescriptor()) {
                     case ASKFORACCEPTANCE:
                         System.out.println("----------------------------\n" +
-                                "MENSAJE PROCESANDOSE:" + cpr
+                                "MENSAJE PROCESANDOSE:" + cpr.getActorDestinationPublicKey()
                                 + "\n-------------------------------------------------");
 
                         lauchNotification();
@@ -226,7 +242,7 @@ public class ActorNetworkServiceRecordedAgent extends FermatAgent{
 
                         System.out.print("-----------------------\n" +
                                 "ACEPTARON EL REQUEST!!!!!-----------------------\n" +
-                                "-----------------------\n NOTIFICAION: " + cpr);
+                                "-----------------------\n NOTIFICAION: " + cpr.getActorDestinationPublicKey());
 
                         lauchNotification();
 
@@ -246,7 +262,7 @@ public class ActorNetworkServiceRecordedAgent extends FermatAgent{
                     case DISCONNECTED:
                         System.out.print("-----------------------\n" +
                                 "REQUEST PARA DESCONEXION!!!!!-----------------------\n" +
-                                "-----------------------\n NOTIFICAION: " + cpr);
+                                "-----------------------\n NOTIFICAION: " + cpr.getActorDestinationPublicKey());
 
                         lauchNotification();
 
@@ -271,7 +287,7 @@ public class ActorNetworkServiceRecordedAgent extends FermatAgent{
                     case DENIED:
                         System.out.print("-----------------------\n" +
                                 "DENEGARON EL REQUEST!!!!!-----------------------\n" +
-                                "-----------------------\n NOTIFICAION: " + cpr);
+                                "-----------------------\n NOTIFICAION: " + cpr.getActorDestinationPublicKey());
 
                         lauchNotification();
 
@@ -292,6 +308,7 @@ public class ActorNetworkServiceRecordedAgent extends FermatAgent{
             }
 
 
+
        } catch (CantListIntraWalletUsersException e) {
            e.printStackTrace();
        }
@@ -307,15 +324,19 @@ public class ActorNetworkServiceRecordedAgent extends FermatAgent{
                         if (actorNetworkServicePluginRoot.getPlatformComponentProfilePluginRoot() != null) {
 
                             PlatformComponentProfile applicantParticipant = wsCommunicationsCloudClientManager.getCommunicationsCloudClientConnection()
-                                    .constructBasicPlatformComponentProfileFactory(
+                                    .constructPlatformComponentProfileFactory(
                                             actorNetworkServiceRecord.getActorSenderPublicKey(),
+                                            actorNetworkServiceRecord.getActorSenderAlias(),
+                                            actorNetworkServiceRecord.getActorSenderAlias(),
                                             NetworkServiceType.UNDEFINED,
-                                            PlatformComponentType.ACTOR_INTRA_USER);
+                                            PlatformComponentType.ACTOR_INTRA_USER,"");
                             PlatformComponentProfile remoteParticipant = wsCommunicationsCloudClientManager.getCommunicationsCloudClientConnection()
-                                    .constructBasicPlatformComponentProfileFactory(
+                                    .constructPlatformComponentProfileFactory(
                                             actorNetworkServiceRecord.getActorDestinationPublicKey(),
+                                            actorNetworkServiceRecord.getActorSenderAlias(),
+                                            actorNetworkServiceRecord.getActorSenderAlias(),
                                             NetworkServiceType.UNDEFINED,
-                                            PlatformComponentType.ACTOR_INTRA_USER);
+                                            PlatformComponentType.ACTOR_INTRA_USER,"");
 
                             communicationNetworkServiceConnectionManager.connectTo(
                                     applicantParticipant,
@@ -332,15 +353,14 @@ public class ActorNetworkServiceRecordedAgent extends FermatAgent{
                     NetworkServiceLocal communicationNetworkServiceLocal = actorNetworkServicePluginRoot.getNetworkServiceConnectionManager().getNetworkServiceLocalInstance(actorNetworkServiceRecord.getActorDestinationPublicKey());
 
                     System.out.println("----------------------------\n" +
-                            "ENVIANDO MENSAJE:" + actorNetworkServiceRecord
+                            "ENVIANDO MENSAJE:" + actorNetworkServiceRecord.getActorDestinationPublicKey()
                             + "\n-------------------------------------------------");
 
-                    Gson gson = new Gson();
 
                     communicationNetworkServiceLocal.sendMessage(
                             actorNetworkServiceRecord.getActorSenderPublicKey(),
                             actorNetworkServiceRecord.getActorDestinationPublicKey(),
-                            gson.toJson(actorNetworkServiceRecord)
+                           actorNetworkServiceRecord.toJson()
                     );
 
                     actorNetworkServicePluginRoot.getOutgoingNotificationDao().changeProtocolState(actorNetworkServiceRecord.getId(), ActorProtocolState.SENT);
@@ -356,15 +376,14 @@ public class ActorNetworkServiceRecordedAgent extends FermatAgent{
                     try {
 
                         System.out.println("----------------------------\n" +
-                                "ENVIANDO MENSAJE:" + actorNetworkServiceRecord
+                                "ENVIANDO MENSAJE:" + actorNetworkServiceRecord.getActorDestinationPublicKey()
                                 + "\n-------------------------------------------------");
 
-                        Gson gson = new Gson();
 
                         communicationNetworkServiceLocal.sendMessage(
                                 actorNetworkServiceRecord.getActorSenderPublicKey(),
                                 actorNetworkServiceRecord.getActorDestinationPublicKey(),
-                                gson.toJson(actorNetworkServiceRecord)
+                                actorNetworkServiceRecord.toJson()
                         );
 
                         actorNetworkServicePluginRoot.getOutgoingNotificationDao().changeProtocolState(actorNetworkServiceRecord.getId(), ActorProtocolState.SENT);

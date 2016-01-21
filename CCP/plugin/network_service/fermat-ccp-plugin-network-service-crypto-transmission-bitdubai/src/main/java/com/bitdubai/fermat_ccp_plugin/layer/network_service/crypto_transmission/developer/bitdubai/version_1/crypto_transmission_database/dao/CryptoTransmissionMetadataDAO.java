@@ -115,16 +115,23 @@ public class CryptoTransmissionMetadataDAO {
 
         try {
 
-            DatabaseTable addressExchangeRequestTable = database.getTable(CryptoTransmissionNetworkServiceDatabaseConstants.CRYPTO_TRANSMISSION_METADATA_TABLE_NAME);
-            DatabaseTableRecord entityRecord = addressExchangeRequestTable.getEmptyRecord();
+            if(!existMetadata(cryptoTransmissionMetadata.getTransactionId()))
+            {
+                DatabaseTable addressExchangeRequestTable = database.getTable(CryptoTransmissionNetworkServiceDatabaseConstants.CRYPTO_TRANSMISSION_METADATA_TABLE_NAME);
+                DatabaseTableRecord entityRecord = addressExchangeRequestTable.getEmptyRecord();
 
-            entityRecord = buildDatabaseRecord(entityRecord, cryptoTransmissionMetadata);
+                entityRecord = buildDatabaseRecord(entityRecord, cryptoTransmissionMetadata);
 
-            addressExchangeRequestTable.insertRecord(entityRecord);
+                addressExchangeRequestTable.insertRecord(entityRecord);
+            }
+
 
         } catch (CantInsertRecordException e) {
 
             throw new CantSaveCryptoTransmissionMetadatatException("",e, "Exception not handled by the plugin, there is a problem in database and i cannot insert the record.","");
+        }  catch (CantGetCryptoTransmissionMetadataException e) {
+            throw new CantSaveCryptoTransmissionMetadatatException("",e, "Cant Get Crypto Transmission Metadata Exception","");
+
         }
     }
 
@@ -162,6 +169,30 @@ public class CryptoTransmissionMetadataDAO {
     }
 
 
+
+    public boolean existMetadata(UUID transmissionId) throws CantGetCryptoTransmissionMetadataException{
+
+          try {
+
+            DatabaseTable metadataTable = database.getTable(CryptoTransmissionNetworkServiceDatabaseConstants.CRYPTO_TRANSMISSION_METADATA_TABLE_NAME);
+
+            metadataTable.addUUIDFilter(CryptoTransmissionNetworkServiceDatabaseConstants.CRYPTO_TRANSMISSION_METADATA_TRANSMISSION_ID_COLUMN_NAME, transmissionId, DatabaseFilterType.EQUAL);
+
+            metadataTable.loadToMemory();
+
+            List<DatabaseTableRecord> records = metadataTable.getRecords();
+
+
+            if (!records.isEmpty())
+                return true;
+            else
+               return false;
+
+        } catch (CantLoadTableToMemoryException exception) {
+
+            throw new CantGetCryptoTransmissionMetadataException("",exception, "Exception not handled by the plugin, there is a problem in database and i cannot load the table.","");
+        }
+    }
     /**
      * Method that list the all entities on the data base. The valid value of
      * the column name are the att of the <code>TemplateNetworkServiceDatabaseConstants</code>
@@ -557,6 +588,39 @@ public class CryptoTransmissionMetadataDAO {
         return findAll(CryptoTransmissionNetworkServiceDatabaseConstants.CRYPTO_TRANSMISSION_METADATA_PENDING_FLAG_COLUMN_NAME,"false");
     }
 
+
+
+    public  List<CryptoTransmissionMetadata> getNotSentRecord() throws CantUpdateRecordDataBaseException {
+
+        try {
+
+            List<CryptoTransmissionMetadata> list = new ArrayList<>();
+
+            DatabaseTable cryptoTransmissiontTable = database.getTable(CryptoTransmissionNetworkServiceDatabaseConstants.CRYPTO_TRANSMISSION_METADATA_TABLE_NAME);
+
+            cryptoTransmissiontTable.addStringFilter(CryptoTransmissionNetworkServiceDatabaseConstants.CRYPTO_TRANSMISSION_METADATA_STATUS_COLUMN_NAME, CryptoTransmissionStates.PRE_PROCESSING_SEND.getCode(), DatabaseFilterType.NOT_EQUALS);
+            cryptoTransmissiontTable.addStringFilter(CryptoTransmissionNetworkServiceDatabaseConstants.CRYPTO_TRANSMISSION_METADATA_STATUS_COLUMN_NAME, CryptoTransmissionStates.CREDITED_IN_DESTINATION_WALLET.getCode(), DatabaseFilterType.NOT_EQUALS);
+
+            cryptoTransmissiontTable.loadToMemory();
+
+
+            for (DatabaseTableRecord record : cryptoTransmissiontTable.getRecords()) {
+                CryptoTransmissionMetadata outgoingTemplateNetworkServiceMessage = buildCryptoTransmissionRecord(record);
+                list.add(outgoingTemplateNetworkServiceMessage);
+            }
+
+            return list;
+
+        } catch (CantLoadTableToMemoryException e) {
+
+            throw new CantUpdateRecordDataBaseException(CantUpdateRecordDataBaseException.DEFAULT_MESSAGE,e, "", "Exception not handled by the plugin, there is a problem in database and i cannot load the table.");
+
+        } catch (InvalidParameterException e) {
+            throw new CantUpdateRecordDataBaseException(CantUpdateRecordDataBaseException.DEFAULT_MESSAGE,e, "", "Cant get crypto transmission record data.");
+
+        }
+
+    }
 
 
     private CryptoTransmissionMetadata buildCryptoTransmissionRecord(DatabaseTableRecord record) throws InvalidParameterException {

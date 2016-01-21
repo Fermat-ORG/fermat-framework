@@ -27,4 +27,6 @@
     <color name="cbw_list_divider">#a7a7a7</color>
     <color name="cbw_header_start_background">#097168</color>
     <color name="cbw_header_end_background">#09364d</color>
+    <color name="bg_community_user">#010c12</color>
+
 </resources>

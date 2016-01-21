@@ -25,28 +25,18 @@ import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractFermatFra
 import com.bitdubai.fermat_android_api.layer.definition.wallet.utils.ImagesUtils;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatCheckBox;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView;
-import com.bitdubai.fermat_android_api.ui.interfaces.FermatWorkerCallBack;
-import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
-import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.enums.SubApps;
 import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_broker_identity.interfaces.CryptoBrokerIdentityInformation;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
-import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedSubAppExceptionSeverity;
 import com.bitdubai.sub_app.crypto_broker_identity.R;
 import com.bitdubai.sub_app.crypto_broker_identity.util.CommonLogger;
-import com.bitdubai.sub_app.crypto_broker_identity.util.PublishIdentityWorker;
-
-import java.util.concurrent.ExecutorService;
 
 import static com.bitdubai.sub_app.crypto_broker_identity.session.CryptoBrokerIdentitySubAppSession.IDENTITY_INFO;
-import static com.bitdubai.sub_app.crypto_broker_identity.util.PublishIdentityWorker.DATA_NOT_CHANGED;
-import static com.bitdubai.sub_app.crypto_broker_identity.util.PublishIdentityWorker.INVALID_ENTRY_DATA;
-import static com.bitdubai.sub_app.crypto_broker_identity.util.PublishIdentityWorker.SUCCESS;
 
 
 /**
  * A simple {@link Fragment} subclass.
  */
-public class EditCryptoBrokerIdentityFragment extends AbstractFermatFragment implements FermatWorkerCallBack {
+public class EditCryptoBrokerIdentityFragment extends AbstractFermatFragment {
     // Constants
     private static final String TAG = "EditBrokerIdentity";
     private static final int REQUEST_IMAGE_CAPTURE = 1;
@@ -56,15 +46,8 @@ public class EditCryptoBrokerIdentityFragment extends AbstractFermatFragment imp
 
     // data
     private Bitmap cryptoBrokerBitmap;
-    private boolean wantPublishIdentity;
-
-    // Managers
-    private ErrorManager errorManager;
 
     private ImageView mBrokerImage;
-
-    private ExecutorService executor;
-
 
     public static EditCryptoBrokerIdentityFragment newInstance() {
         return new EditCryptoBrokerIdentityFragment();
@@ -73,12 +56,6 @@ public class EditCryptoBrokerIdentityFragment extends AbstractFermatFragment imp
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-        try {
-            errorManager = appSession.getErrorManager();
-        } catch (Exception ex) {
-            CommonLogger.exception(TAG, ex.getMessage(), ex);
-        }
     }
 
     @Override
@@ -87,7 +64,6 @@ public class EditCryptoBrokerIdentityFragment extends AbstractFermatFragment imp
         // Inflate the layout for this fragment
         View rootLayout = inflater.inflate(R.layout.fragment_edit_crypto_broker_identity, container, false);
         initViews(rootLayout);
-
 
         return rootLayout;
     }
@@ -100,13 +76,17 @@ public class EditCryptoBrokerIdentityFragment extends AbstractFermatFragment imp
     private void initViews(View layout) {
         Button mUpdateButton = (Button) layout.findViewById(R.id.update_crypto_broker_button);
         FermatTextView mBrokerName = (FermatTextView) layout.findViewById(R.id.crypto_broker_name);
+        FermatTextView mIsPublished = (FermatTextView) layout.findViewById(R.id.is_published);
         mBrokerImage = (ImageView) layout.findViewById(R.id.crypto_broker_image);
-        FermatCheckBox publishIdentityCheckBox = (FermatCheckBox) layout.findViewById(R.id.publish_identity);
 
         final CryptoBrokerIdentityInformation identityInfo = (CryptoBrokerIdentityInformation) appSession.getData(IDENTITY_INFO);
 
         if (identityInfo != null) {
             mBrokerName.setText(identityInfo.getAlias());
+            if (identityInfo.isPublished())
+                mIsPublished.setText(R.string.published);
+            else
+                mIsPublished.setText(R.string.not_published);
 
             byte[] profileImage = identityInfo.getProfileImage();
             RoundedBitmapDrawable roundedBitmap = (profileImage != null) ?
@@ -114,18 +94,7 @@ public class EditCryptoBrokerIdentityFragment extends AbstractFermatFragment imp
                     ImagesUtils.getRoundedBitmap(getResources(), R.drawable.img_new_user_camera);
 
             mBrokerImage.setImageDrawable(roundedBitmap);
-
-            wantPublishIdentity = identityInfo.isPublished();
-            publishIdentityCheckBox.setChecked(wantPublishIdentity);
         }
-
-        publishIdentityCheckBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton compoundButton, boolean value) {
-                CommonLogger.debug(TAG, "IN publishIdentityCheckBox.setOnCheckedChangeListener");
-                wantPublishIdentity = value;
-            }
-        });
 
         mBrokerImage.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -147,6 +116,7 @@ public class EditCryptoBrokerIdentityFragment extends AbstractFermatFragment imp
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(  requestCode, resultCode, data);
         if (resultCode == Activity.RESULT_OK) {
             ImageView pictureView = mBrokerImage;
 
@@ -206,10 +176,6 @@ public class EditCryptoBrokerIdentityFragment extends AbstractFermatFragment imp
     private void editIdentityInfo() {
 
         // TODO falta implementar funcionalidad para editar info del identity en el backend
-
-        PublishIdentityWorker publishIdentityWorker = new PublishIdentityWorker(getActivity(), appSession, wantPublishIdentity, this);
-
-        executor = publishIdentityWorker.execute();
     }
 
 
@@ -229,40 +195,4 @@ public class EditCryptoBrokerIdentityFragment extends AbstractFermatFragment imp
         startActivityForResult(loadImageIntent, REQUEST_LOAD_IMAGE);
     }
 
-    @Override
-    public void onPostExecute(Object... result) {
-        if (executor != null) {
-            executor.shutdown();
-            executor = null;
-        }
-
-        if (result.length > 0) {
-            int resultCode = (int) result[0];
-
-            if (resultCode == SUCCESS || resultCode == DATA_NOT_CHANGED) {
-                changeActivity(Activities.CBP_SUB_APP_CRYPTO_BROKER_IDENTITY.getCode(), appSession.getAppPublicKey());
-
-            } else if (resultCode == INVALID_ENTRY_DATA) {
-                Toast.makeText(getActivity(), "Please check the submitted data", Toast.LENGTH_LONG).show();
-            }
-        }
-    }
-
-    @Override
-    public void onErrorOccurred(Exception ex) {
-        if (executor != null) {
-            executor.shutdown();
-            executor = null;
-        }
-
-        Toast.makeText(getActivity().getApplicationContext(),
-                "Error trying to change the exposure level.",
-                Toast.LENGTH_SHORT).
-                show();
-
-        errorManager.reportUnexpectedSubAppException(
-                SubApps.CBP_CRYPTO_BROKER_IDENTITY,
-                UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT,
-                ex);
-    }
 }

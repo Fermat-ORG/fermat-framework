@@ -15,7 +15,7 @@ import java.util.UUID;
 /**
  * Created by Yordin Alayn on 16.12.15.
  */
-public class CustomerBrokerNewPurchaseNegotiationTransaction {
+public class    CustomerBrokerNewPurchaseNegotiationTransaction {
 
     /*Represent the Negotiation Purchase*/
     private CustomerBrokerPurchaseNegotiationManager    customerBrokerPurchaseNegotiationManager;
@@ -37,6 +37,14 @@ public class CustomerBrokerNewPurchaseNegotiationTransaction {
         try {
 
             UUID transactionId = UUID.randomUUID();
+
+            System.out.print("\n\n**** 3) MOCK NEGOTIATION TRANSACTION - CUSTOMER BROKER NEW - PURCHASE NEGOTIATION - CUSTOMER BROKER NEW PURCHASE NEGOTIATION TRANSACTION. transactionId: " + transactionId + " ****\n");
+
+            System.out.print("\n\n --- Negotiation Mock XML Date" +
+                            "\n- NegotiationId = " + customerBrokerPurchaseNegotiation.getNegotiationId() +
+                            "\n- CustomerPublicKey = " + customerBrokerPurchaseNegotiation.getCustomerPublicKey() +
+                            "\n- BrokerPublicKey = " + customerBrokerPurchaseNegotiation.getCustomerPublicKey()
+            );
 
             //CREATE NEGOTIATION
             this.customerBrokerPurchaseNegotiationManager.createCustomerBrokerPurchaseNegotiation(customerBrokerPurchaseNegotiation);

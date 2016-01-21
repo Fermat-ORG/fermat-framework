@@ -1,5 +1,6 @@
 package com.bitdubai.fermat_cbp_plugin.layer.wallet.crypto_broker.developer.bitdubai.version_1.structure.util;
 
+import com.bitdubai.fermat_api.layer.all_definition.enums.FiatCurrency;
 import com.bitdubai.fermat_api.layer.all_definition.enums.interfaces.FermatEnum;
 import com.bitdubai.fermat_cbp_api.layer.wallet.crypto_broker.interfaces.FiatIndex;
 
@@ -9,12 +10,14 @@ import com.bitdubai.fermat_cbp_api.layer.wallet.crypto_broker.interfaces.FiatInd
 public class FiatIndexImpl implements FiatIndex {
     //Documentar
     FermatEnum merchandise;
-    float      salePrice;
-    float      purchasePrice;
-    float      salePriceUpSpread;
-    float      salePriceDownSpread;
-    float      purchasePriceUpSpread;
-    float      purchasePriceDownSpread;
+    float        salePrice;
+    float        purchasePrice;
+    float        salePriceUpSpread;
+    float        salePriceDownSpread;
+    float        purchasePriceUpSpread;
+    float        purchasePriceDownSpread;
+    float        priceReference;
+    FiatCurrency fiatCurrency;
 
     public FiatIndexImpl(FermatEnum merchandise,
                          float      salePrice,
@@ -22,7 +25,9 @@ public class FiatIndexImpl implements FiatIndex {
                          float      salePriceUpSpread,
                          float      salePriceDownSpread,
                          float      purchasePriceUpSpread,
-                         float      purchasePriceDownSpread)
+                         float      purchasePriceDownSpread,
+                         float      priceReference,
+                         FiatCurrency fiatCurrency)
     {
         this.merchandise                = merchandise;
         this.salePrice                  = salePrice;
@@ -31,6 +36,8 @@ public class FiatIndexImpl implements FiatIndex {
         this.salePriceDownSpread        = salePriceDownSpread;
         this.purchasePriceUpSpread      = purchasePriceUpSpread;
         this.purchasePriceDownSpread    = purchasePriceDownSpread;
+        this.priceReference             = priceReference;
+        this.fiatCurrency               = fiatCurrency;
     }
 
     @Override
@@ -66,5 +73,15 @@ public class FiatIndexImpl implements FiatIndex {
     @Override
     public float getPurchasePurchaseDownSpread() {
         return purchasePriceDownSpread;
+    }
+
+    @Override
+    public float getPriceReference() {
+        return priceReference;
+    }
+
+    @Override
+    public FiatCurrency getFiatCurrency() {
+        return fiatCurrency;
     }
 }

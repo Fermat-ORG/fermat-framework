@@ -125,7 +125,7 @@ public class WsCommunicationVpnServerManagerAgent extends Thread{
 
                         LOG.error("Some Connection of the participant maybe not active");
                         //Close all connection and stop the vpn server
-                        wsCommunicationVPNServer.closeAllConnections();
+                        wsCommunicationVPNServer.closeAllConnections(ex);
                         wsCommunicationVPNServer.stop();
                         vpnServersActivesCache.remove(wsCommunicationVPNServer);
                     }

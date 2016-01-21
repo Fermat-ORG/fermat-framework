@@ -29,6 +29,7 @@ public class BrokerAckOnlinePaymentTransactionManager implements BrokerAckOnline
             BrokerAckOnlinePaymentBusinessTransactionDao brokerAckOnlinePaymentBusinessTransactionDao,
             ErrorManager errorManager){
         this.brokerAckOnlinePaymentBusinessTransactionDao=brokerAckOnlinePaymentBusinessTransactionDao;
+        this.errorManager=errorManager;
 
     }
 

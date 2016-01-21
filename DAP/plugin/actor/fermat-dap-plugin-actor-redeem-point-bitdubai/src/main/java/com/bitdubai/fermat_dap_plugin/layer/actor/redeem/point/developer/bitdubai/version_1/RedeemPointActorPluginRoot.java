@@ -159,10 +159,10 @@ public class RedeemPointActorPluginRoot extends AbstractPlugin implements
         try {
             ActorAssetRedeemPoint actorAssetRedeemPoint = this.redeemPointActorDao.getActorAssetRedeemPoint();
 
+            if (actorAssetRedeemPoint == null) {
+
             Double locationLatitude = new Random().nextDouble();
             Double locationLongitude = new Random().nextDouble();
-
-            if (actorAssetRedeemPoint == null) {
 
                 RedeemPointActorRecord record = new RedeemPointActorRecord(
                         assetRedeemPointActorPublicKey,
@@ -170,13 +170,11 @@ public class RedeemPointActorPluginRoot extends AbstractPlugin implements
                         DAPConnectionState.REGISTERED_LOCALLY,
                         locationLatitude,
                         locationLongitude,
+                        null,
+                        System.currentTimeMillis(),
                         System.currentTimeMillis(),
                         assetRedeemPointActorprofileImage);
 
-//                RedeemPointActorRecord record = new RedeemPointActorRecord("RedeemP_" + i, publicKey);
-//                record.setDAPConnectionState(DAPConnectionState.CONNECTED);
-//                record.setProfileImage(new byte[0]);
-//                record.setLocation(location);
 //                RedeemPointActorAddress address = new RedeemPointActorAddress();
 //                address.setCountryName("Venezuela");
 //                address.setProvinceName("Zulia");
@@ -189,11 +187,45 @@ public class RedeemPointActorPluginRoot extends AbstractPlugin implements
 //                record.setHoursOfOperation("08:00 am a 05:30pm");
 //                record.setContactInformation("marsvicam@gmail.com");
                 redeemPointActorDao.createNewRedeemPoint(record);
+
+                actorAssetRedeemPoint = this.redeemPointActorDao.getActorAssetRedeemPoint();
+
+                assetRedeemPointActorNetworkServiceManager.registerActorAssetRedeemPoint(actorAssetRedeemPoint);
+            } else {
+
+                actorAssetRedeemPoint = this.redeemPointActorDao.getActorAssetRedeemPoint();
+
+                Double locationLatitude = new Random().nextDouble();
+                Double locationLongitude = new Random().nextDouble();
+
+                RedeemPointActorRecord record = new RedeemPointActorRecord(
+                        actorAssetRedeemPoint.getActorPublicKey(),
+                        assetRedeemPointActorName,
+                        actorAssetRedeemPoint.getDapConnectionState(),
+                        locationLatitude,
+                        locationLongitude,
+                        actorAssetRedeemPoint.getCryptoAddress(),
+                        actorAssetRedeemPoint.getRegistrationDate(),
+                        System.currentTimeMillis(),
+                        assetRedeemPointActorprofileImage);
+
+//                RedeemPointActorAddress address = new RedeemPointActorAddress();
+//                address.setCountryName("Venezuela");
+//                address.setProvinceName("Zulia");
+//                address.setPostalCode("4019");
+//                address.setCityName("Ciudad Ojeda");
+//                address.setStreetName("Avenida 8");
+//                address.setHouseNumber("#712");
+//                record.setAddress(address);
+//                record.setCryptoAddress(cryptoAddress);
+//                record.setHoursOfOperation("08:00 am a 05:30pm");
+//                record.setContactInformation("marsvicam@gmail.com");
+                redeemPointActorDao.updateRedeemPoint(record);
+
+                actorAssetRedeemPoint = this.redeemPointActorDao.getActorAssetRedeemPoint();
+
+                assetRedeemPointActorNetworkServiceManager.updateActorAssetRedeemPoint(actorAssetRedeemPoint);
             }
-
-            registerActorInActorNetowrkSerice();
-
-            actorAssetRedeemPoint = this.redeemPointActorDao.getActorAssetRedeemPoint();
 
             if (actorAssetRedeemPoint != null) {
                 System.out.println("*********************Actor Asset Redeem Point************************");
@@ -207,6 +239,23 @@ public class RedeemPointActorPluginRoot extends AbstractPlugin implements
             throw new CantCreateActorRedeemPointException("CAN'T GET ACTOR ASSET REDEEM POINT", FermatException.wrapException(e), "", "");
         } catch (Exception e) {
             throw new CantCreateActorRedeemPointException("CAN'T ADD NEW ACTOR ASSET REDEEM POINT", FermatException.wrapException(e), "", "");
+        }
+    }
+
+    /**
+     * This method saves an already existing redeem point in the registered redeem point database,
+     * usually uses when the redeem point request the issuer an extended public key, we save in
+     * the issuer side this redeem point so we can retrieve its information on future uses.
+     *
+     * @param redeemPoint The already existing redeem point with all its information
+     * @throws CantCreateActorRedeemPointException
+     */
+    @Override
+    public void saveRegisteredActorRedeemPoint(ActorAssetRedeemPoint redeemPoint) throws CantCreateActorRedeemPointException {
+        try {
+            redeemPointActorDao.createNewRedeemPointRegisterInNetworkService(redeemPoint);
+        } catch (CantAddPendingRedeemPointException e) {
+            throw new CantCreateActorRedeemPointException();
         }
     }
 
@@ -256,12 +305,13 @@ public class RedeemPointActorPluginRoot extends AbstractPlugin implements
         return list;
     }
 
-    public void registerActorInActorNetowrkSerice() throws CantRegisterActorAssetRedeemPointException {
+    public void registerActorInActorNetworkService() throws CantRegisterActorAssetRedeemPointException {
         try {
             /*
-             * Send the Actor Asset Issuer Local for Register in Actor Network Service
+             * Send the Actor Asset Redeem Point Local for Register in Actor Network Service
              */
             ActorAssetRedeemPoint actorAssetRedeemPoint = this.redeemPointActorDao.getActorAssetRedeemPoint();
+
             if (actorAssetRedeemPoint != null)
                 assetRedeemPointActorNetworkServiceManager.registerActorAssetRedeemPoint(actorAssetRedeemPoint);
 
@@ -316,7 +366,7 @@ public class RedeemPointActorPluginRoot extends AbstractPlugin implements
                     + "\n-------------------------------------------------");
             for (final CryptoAddressRequest request : list) {
 
-                if (request.getCryptoAddressDealer().equals(CryptoAddressDealers.DAP_WATCH_ONLY)) {
+                if (request.getCryptoAddressDealer() == CryptoAddressDealers.DAP_WATCH_ONLY || request.getCryptoAddressDealer() == CryptoAddressDealers.DAP_ASSET) {
 
                     if (request.getAction().equals(RequestAction.ACCEPT))
                         this.handleCryptoAddressReceivedEvent(request);
@@ -339,7 +389,7 @@ public class RedeemPointActorPluginRoot extends AbstractPlugin implements
             if (request.getCryptoAddress() != null) {
                 System.out.println("*****Actor Redeem Point Recibiendo Crypto Localmente*****");
 
-                this.redeemPointActorDao.updateAssetRedeemPointDAPConnectionStateActorNetworService(request.getIdentityPublicKeyResponding(), DAPConnectionState.CONNECTED_ONLINE, request.getCryptoAddress());
+                this.redeemPointActorDao.updateAssetRedeemPointPConnectionStateCryptoAddress(request.getIdentityPublicKeyResponding(), DAPConnectionState.CONNECTED_ONLINE, request.getCryptoAddress());
 
                 List<ActorAssetRedeemPoint> actorAssetRedeemPoints = this.redeemPointActorDao.getAssetRedeemPointRegistered(request.getIdentityPublicKeyResponding());
 
@@ -383,27 +433,29 @@ public class RedeemPointActorPluginRoot extends AbstractPlugin implements
         /**
          * we will extract the ExtendedPublicKey from the message
          */
-        ExtendedPublicKey extendedPublicKey= null;
-        try{
+        ExtendedPublicKey extendedPublicKey = null;
+        try {
             AssetExtendedPublickKeyContentMessage assetExtendedPublickKeyContentMessage = (AssetExtendedPublickKeyContentMessage) dapMessage.getMessageContent();
             extendedPublicKey = assetExtendedPublickKeyContentMessage.getExtendedPublicKey();
 
-        } catch (Exception e){
+        } catch (Exception e) {
             //handle this. I might have a Class Cast exception
         }
 
-        if (extendedPublicKey == null){
+        if (extendedPublicKey == null) {
             System.out.println("*** Actor Asset Redeem Point  *** The extended public Key received by " + dapActorSender.getName() + " is null.");
+        } else {
+            /**
+             * I will start the Bitcoin Watch only Vault on the redeem Point.
+             */
+            try {
+                watchOnlyVaultManager.initialize(extendedPublicKey);
+            } catch (CantInitializeWatchOnlyVaultException e) {
+                //handle this.
+            }
         }
 
-        /**
-         * I will start the Bitcoin Watch only Vault on the redeem Point.
-         */
-        try {
-            watchOnlyVaultManager.initialize(extendedPublicKey);
-        } catch (CantInitializeWatchOnlyVaultException e) {
-            //handle this.
-        }
+
     }
 
     @Override

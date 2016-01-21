@@ -25,11 +25,10 @@ import org.apache.commons.lang.ClassUtils;
 import org.apache.log4j.Logger;
 import org.java_websocket.WebSocket;
 
-
 import java.util.List;
 
 /**
- * The Class <code>com.bitdubai.fermat_p2p_plugin.layer.ws.communications.cloud.server.developer.bitdubai.version_1.structure.processors.ComponentConnectionRequestPacketProcessor</code>
+ * The Class <code>com.bitdubai.fermat_p2p_plugin.layer.ws.communications.cloud.server.developer.bitdubai.version_1.structure.processors.ComponentConnectionRequestJettyPacketProcessor</code>
  * <p/>
  * Created by Roberto Requena - (rart3001@gmail.com) on 12/09/15.
  *

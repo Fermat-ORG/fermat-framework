@@ -1,6 +1,7 @@
 package com.bitdubai.fermat_cbp_api.layer.desktop_module.sub_app_manager.interfaces;
 
 
+import com.bitdubai.fermat_api.layer.modules.interfaces.ModuleManager;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.SubAppCategory;
 import com.bitdubai.fermat_cbp_api.all_definition.util.Version;
 import com.bitdubai.fermat_cbp_api.layer.desktop_module.sub_app_manager.exceptions.CantListSubAppsException;
@@ -22,7 +23,7 @@ import java.util.UUID;
  * The interface <code>CryptoDesktopSubAppModuleManager</code>
  * provides the methods for the Crypto Broker SubApps Installed sub app.
  */
-public interface CryptoDesktopSubAppModuleManager {
+public interface CryptoDesktopSubAppModuleManager extends ModuleManager {
 
     /**
      * The method <code>getAllSubAppInstalled</code> returns the list of all crypto SubApp installed

@@ -3,8 +3,6 @@ package com.bitdubai.reference_wallet.cash_money_wallet.common.dialogs;
 import android.app.Activity;
 import android.app.Dialog;
 import android.content.res.Resources;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.text.InputFilter;
 import android.view.View;
@@ -46,9 +44,6 @@ public class CreateTransactionFragmentDialog extends Dialog implements
     public Activity activity;
     public Dialog d;
 
-    //private CreateContactDialogCallback createContactDialogCallback;
-
-
     /**
      * Resources
      */
@@ -56,12 +51,6 @@ public class CreateTransactionFragmentDialog extends Dialog implements
     private CashMoneyWalletSession cashMoneyWalletSession;
     private Resources resources;
     private TransactionType transactionType;
-
-    /**
-     *  Contact member
-     */
-    //private WalletContact walletContact;
-    //private String user_address_wallet = "";
 
     /**
      *  UI components
@@ -72,20 +61,6 @@ public class CreateTransactionFragmentDialog extends Dialog implements
     AutoCompleteTextView memoText;
     Button applyBtn;
     Button cancelBtn;
-
-
-    /**
-     * Allow the zxing engine use the default argument for the margin variable
-     */
-    //private Bitmap contactPicture;
-    //private EditText txt_address;
-
-   //private Typeface tf;
-    /**
-     *
-     * @param a
-     * @param
-     */
 
 
     public CreateTransactionFragmentDialog(Activity a, CashMoneyWalletSession cashMoneyWalletSession, Resources resources, TransactionType transactionType) {
@@ -109,7 +84,7 @@ public class CreateTransactionFragmentDialog extends Dialog implements
 
         try {
             requestWindowFeature(Window.FEATURE_NO_TITLE);
-            setContentView(R.layout.create_transaction_dialog);
+            setContentView(R.layout.csh_create_transaction_dialog);
 
 
             dialogTitleLayout = (LinearLayout) findViewById(R.id.csh_ctd_title_layout);
@@ -127,32 +102,6 @@ public class CreateTransactionFragmentDialog extends Dialog implements
             cancelBtn.setOnClickListener(this);
             applyBtn.setOnClickListener(this);
 
-            /*if(contactImageBitmap!=null){
-                contactImageBitmap = Bitmap.createScaledBitmap(contactImageBitmap,65,65,true);
-                take_picture_btn.setBackground(new BitmapDrawable(contactImageBitmap));
-                take_picture_btn.setImageDrawable(null);
-            }*/
-
-            //take_picture_btn.setOnClickListener(this);
-
-            //ImageView scanImage = (ImageView) findViewById(R.id.scan_qr);
-
-            /*scanImage.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    IntentIntegrator integrator = new IntentIntegrator(activity, (EditText) findViewById(R.id.contact_address));
-                    integrator.initiateScan();
-                }
-            });*/
-
-            // paste_button button definition
-            /*ImageView pasteFromClipboardButton = (ImageView) findViewById(R.id.paste_from_clipboard_btn);
-            pasteFromClipboardButton.setOnClickListener(new View.OnClickListener() {
-                public void onClick(View v) {
-                    pasteFromClipboard();
-                }
-            });*/
-            //getWindow().setBackgroundDrawable(new ColorDrawable(0));
         }catch (Exception e){
             e.printStackTrace();
         }
@@ -163,9 +112,9 @@ public class CreateTransactionFragmentDialog extends Dialog implements
     private String getTransactionTitleText()
     {
         if (transactionType == TransactionType.DEBIT)
-            return resources.getString(R.string.withdrawal_transaction_text);
+            return resources.getString(R.string.csh_withdrawal_transaction_text);
         else
-            return resources.getString(R.string.deposit_transaction_text);
+            return resources.getString(R.string.csh_deposit_transaction_text);
     }
 
     private int getTransactionTitleColor()
