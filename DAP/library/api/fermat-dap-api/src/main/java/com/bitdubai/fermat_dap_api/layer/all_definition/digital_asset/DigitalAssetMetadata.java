@@ -3,6 +3,7 @@ package com.bitdubai.fermat_dap_api.layer.all_definition.digital_asset;
 import com.bitdubai.fermat_api.layer.all_definition.crypto.util.CryptoHasher;
 import com.bitdubai.fermat_api.layer.all_definition.util.XMLParser;
 import com.bitdubai.fermat_dap_api.layer.all_definition.enums.State;
+import com.bitdubai.fermat_dap_api.layer.dap_actor.DAPActor;
 import com.thoughtworks.xstream.XStream;
 
 import java.util.LinkedHashMap;
@@ -52,6 +53,8 @@ public class DigitalAssetMetadata {
         transactionChain = new LinkedHashMap<>();
     }
 
+    private DAPActor lastOwner;
+
     //CONSTRUCTORS
 
     public DigitalAssetMetadata(DigitalAsset digitalAsset) {
@@ -62,10 +65,14 @@ public class DigitalAssetMetadata {
         this.digitalAsset = null;
     }
 
-    public DigitalAssetMetadata(UUID metadataId, DigitalAsset digitalAsset, LinkedHashMap<String, String> transactionChain) {
+    public DigitalAssetMetadata(UUID metadataId,
+                                DigitalAsset digitalAsset,
+                                LinkedHashMap<String, String> transactionChain,
+                                DAPActor lastOwner) {
         this.metadataId = metadataId;
         this.digitalAsset = digitalAsset;
         this.transactionChain = transactionChain;
+        this.lastOwner = lastOwner;
     }
 
     //PRIVATE METHODS
@@ -167,5 +174,13 @@ public class DigitalAssetMetadata {
 
     public LinkedHashMap<String, String> getTransactionChain() {
         return transactionChain;
+    }
+
+    public DAPActor getLastOwner() {
+        return lastOwner;
+    }
+
+    public void setLastOwner(DAPActor lastOwner) {
+        this.lastOwner = lastOwner;
     }
 }
