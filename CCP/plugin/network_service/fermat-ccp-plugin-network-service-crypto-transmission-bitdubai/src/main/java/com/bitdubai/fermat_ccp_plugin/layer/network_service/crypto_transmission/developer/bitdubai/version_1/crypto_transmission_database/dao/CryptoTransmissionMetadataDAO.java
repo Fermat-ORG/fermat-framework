@@ -388,8 +388,12 @@ public class CryptoTransmissionMetadataDAO {
             /*
              * 2.- Create a new transaction and execute
              */
+            //set filter by id
+            DatabaseTable transmissionTable =  getDatabaseTable();
+            transmissionTable.addUUIDFilter(CryptoTransmissionNetworkServiceDatabaseConstants.CRYPTO_TRANSMISSION_METADATA_TRANSMISSION_ID_COLUMN_NAME,cryptoTransmissionMetadata.getTransactionId(),DatabaseFilterType.EQUAL);
+
             DatabaseTransaction transaction = getDataBase().newTransaction();
-            transaction.addRecordToUpdate(getDatabaseTable(), cryptoTransmissionMetadataRecord);
+            transaction.addRecordToUpdate(transmissionTable, cryptoTransmissionMetadataRecord);
             getDataBase().executeTransaction(transaction);
 
         } catch (DatabaseTransactionFailedException databaseTransactionFailedException) {
@@ -433,8 +437,12 @@ public class CryptoTransmissionMetadataDAO {
             /*
              * 2.- Create a new transaction and execute
              */
+            //set filter by id
+            DatabaseTable transmissionTable =  getDatabaseTable();
+            transmissionTable.addUUIDFilter(CryptoTransmissionNetworkServiceDatabaseConstants.CRYPTO_TRANSMISSION_METADATA_TRANSMISSION_ID_COLUMN_NAME,cryptoTransmissionMetadata.getTransactionId(),DatabaseFilterType.EQUAL);
+
             DatabaseTransaction transaction = getDataBase().newTransaction();
-            transaction.addRecordToUpdate(getDatabaseTable(), cryptoTransmissionMetadataRecord);
+            transaction.addRecordToUpdate(transmissionTable, cryptoTransmissionMetadataRecord);
             getDataBase().executeTransaction(transaction);
 
         } catch (DatabaseTransactionFailedException databaseTransactionFailedException) {
@@ -478,8 +486,14 @@ public class CryptoTransmissionMetadataDAO {
             /*
              * 2.- Create a new transaction and execute
              */
+
+            //set filter by id
+            DatabaseTable transmissionTable =  getDatabaseTable();
+            transmissionTable.addUUIDFilter(CryptoTransmissionNetworkServiceDatabaseConstants.CRYPTO_TRANSMISSION_METADATA_TRANSMISSION_ID_COLUMN_NAME,cryptoTransmissionMetadata.getTransactionId(),DatabaseFilterType.EQUAL);
+
+
             DatabaseTransaction transaction = getDataBase().newTransaction();
-            transaction.addRecordToUpdate(getDatabaseTable(), cryptoTransmissionMetadataRecord);
+            transaction.addRecordToUpdate(transmissionTable, cryptoTransmissionMetadataRecord);
             getDataBase().executeTransaction(transaction);
 
         } catch (DatabaseTransactionFailedException databaseTransactionFailedException) {
@@ -640,7 +654,7 @@ public class CryptoTransmissionMetadataDAO {
 
 
 
-    public  List<CryptoTransmissionMetadata> getNotSentRecord() throws CantUpdateRecordDataBaseException {
+    public  List<CryptoTransmissionMetadata> getNotSentRecord() throws CantReadRecordDataBaseException {
 
         try {
 
@@ -663,10 +677,10 @@ public class CryptoTransmissionMetadataDAO {
 
         } catch (CantLoadTableToMemoryException e) {
 
-            throw new CantUpdateRecordDataBaseException(CantUpdateRecordDataBaseException.DEFAULT_MESSAGE,e, "", "Exception not handled by the plugin, there is a problem in database and i cannot load the table.");
+            throw new CantReadRecordDataBaseException(CantReadRecordDataBaseException.DEFAULT_MESSAGE,e, "", "Exception not handled by the plugin, there is a problem in database and i cannot load the table.");
 
         } catch (InvalidParameterException e) {
-            throw new CantUpdateRecordDataBaseException(CantUpdateRecordDataBaseException.DEFAULT_MESSAGE,e, "", "Cant get crypto transmission record data.");
+            throw new CantReadRecordDataBaseException(CantReadRecordDataBaseException.DEFAULT_MESSAGE,e, "", "Cant get crypto transmission record data.");
 
         }
 
