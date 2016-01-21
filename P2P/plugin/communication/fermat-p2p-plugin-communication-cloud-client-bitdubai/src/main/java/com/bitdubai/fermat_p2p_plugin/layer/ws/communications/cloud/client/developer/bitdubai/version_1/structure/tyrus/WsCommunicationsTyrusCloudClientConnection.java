@@ -163,36 +163,53 @@ public class WsCommunicationsTyrusCloudClientConnection implements Communication
      */
     public void initializeAndConnect() throws IOException, DeploymentException {
 
-        System.out.println("WsCommunicationsCloudClientConnection - initializeAndConnect ");
+        System.out.println("***********************************************************************");
+        System.out.println("* WsCommunicationsCloudClientConnection - Initializing And Connecting *");
+        System.out.println("***********************************************************************");
 
         /*
          * Register the processors
          */
         registerFermatPacketProcessors();
 
+        /*
+         * Create a ReconnectHandler
+         */
         ClientManager.ReconnectHandler reconnectHandler = new ClientManager.ReconnectHandler() {
 
             @Override
             public boolean onDisconnect(CloseReason closeReason) {
-                    System.out.println("### Reconnecting... ");
+                    System.out.println("############################################################");
+                    System.out.println("#  WsCommunicationsCloudClientConnection - Reconnecting... #");
+                    System.out.println("############################################################");
                     return true;
             }
 
             @Override
             public boolean onConnectFailure(Exception exception) {
-                // Thread.sleep(...) to avoid potential DDoS when you don't limit number of reconnects.
+                try {
+
+                    System.out.println("#  WsCommunicationsCloudClientConnection - Reconnect Failure :"+exception.getMessage());
+                    // To avoid potential DDoS when you don't limit number of reconnects, wait to the next try.
+                    Thread.sleep(10000);
+
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
                 return true;
             }
 
         };
 
+        /*
+         * Register the ReconnectHandler
+         */
         webSocketContainer.getProperties().put(ClientProperties.RECONNECT_HANDLER, reconnectHandler);
 
         /*
          * Connect
          */
         webSocketContainer.connectToServer(wsCommunicationsTyrusCloudClientChannel, uri);
-
         System.out.println("WsCommunicationsCloudClientConnection - final initializeAndConnect ");
 
     }
