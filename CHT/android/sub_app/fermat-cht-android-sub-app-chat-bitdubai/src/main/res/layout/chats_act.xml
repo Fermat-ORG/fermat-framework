@@ -23,7 +23,7 @@
 
                 <include
                     android:id="@+id/chats_toolbar"
-                    layout="@layout/toolbar" />
+                    layout="@layout/chat_toolbar" />
 
                 <FrameLayout
                     android:id="@+id/chat_list"

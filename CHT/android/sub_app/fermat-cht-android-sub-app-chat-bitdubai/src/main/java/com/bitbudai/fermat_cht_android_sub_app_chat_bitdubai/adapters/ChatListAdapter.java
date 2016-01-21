@@ -10,35 +10,75 @@ import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import net.mobindustry.mobigram.R;
-import net.mobindustry.mobigram.model.holder.MessagesFragmentHolder;
-import net.mobindustry.mobigram.ui.emoji.Emoji;
-import net.mobindustry.mobigram.ui.emoji.EmojiParser;
-import net.mobindustry.mobigram.utils.Const;
-import net.mobindustry.mobigram.utils.Utils;
+import com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.holders.ChatHolder;
+import com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.holders.ChatsListHolder;
+import com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.models.ChatsList;
+import com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.util.Utils;
+import com.bitdubai.fermat_android_api.ui.adapters.FermatAdapter;
+import com.bitdubai.fermat_cht_android_sub_app_chat_bitdubai.R;
 
-import org.drinkless.td.libcore.telegram.TdApi;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Date;
 
-public class ChatListAdapter extends ArrayAdapter<TdApi.Chat> {
+/**
+ * Chat List Adapter
+ *
+ * @author Jose Cardozo josejcb (josejcb89@gmail.com) on 19/01/16.
+ * @version 1.0
+ *
+ */
 
-    private final LayoutInflater inflater;
-    private EmojiParser emojiParser;
+public class ChatListAdapter extends FermatAdapter<ChatsList, ChatsListHolder> {//ChatFactory
+
+    //private final LayoutInflater inflater;
+    List<ChatsList> chatsList = new ArrayList<>();
 
     public ChatListAdapter(Context context) {
-        super(context, 0);
-        inflater = LayoutInflater.from(context);
-        Emoji emoji = MessagesFragmentHolder.getInstance().getEmoji();
-        emojiParser = new EmojiParser(emoji);
+        super(context);
+    }
+
+    public ChatListAdapter(Context context, List<ChatsList> chatsList) {
+        super(context, chatsList);
+        //inflater = LayoutInflater.from(context);
     }
 
     @Override
-    public View getView(int position, View convertView, ViewGroup parent) {
+    protected ChatsListHolder createHolder(View itemView, int type) {
+        return new ChatsListHolder(itemView);
+    }
 
-        if (convertView == null) {
-            convertView = inflater.inflate(R.layout.chat_item, parent, false);
+    protected int getCardViewResource() {return R.layout.chats_item;  }
+
+    @Override
+    protected void bindHolder(ChatsListHolder holder, ChatsList data, int position) {
+        View convertView = getView();
+        /*if (convertView == null) {
+            convertView = inflater.inflate(R.layout.chat_list_item, parent, false);
+        }*/
+        LayoutInflater vi = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+
+        if (data == null) {
+            convertView = vi.inflate(R.layout.chat_list_item, null);
+            holder = createHolder(convertView, position);
+            convertView.setTag(holder);
+        } else {
+            holder = (ChatsListHolder) convertView.getTag();
         }
+
+        //holder.message_icon_text.setText(data.getId());
+        holder.firstLastName.setText(data.getName());
+        holder.lastMessage.setText(data.getLastMessage());
+        holder.contactItemTime.setText(data.getDate());
+
+    }
+
+    public View getView() {
+
+        View convertView;
+        LayoutInflater vi = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        convertView = vi.inflate(R.layout.chats_item, null);
 
         TextView icon = (TextView) convertView.findViewById(R.id.message_icon_text);
         TextView firstLastName = (TextView) convertView.findViewById(R.id.firstLastName);
@@ -48,12 +88,12 @@ public class ChatListAdapter extends ArrayAdapter<TdApi.Chat> {
 
         final ImageView imageIcon = (ImageView) convertView.findViewById(R.id.message_icon_image);
 
-        imageIcon.setImageResource(R.drawable.ic_mobigram_placeholder);
+        imageIcon.setImageResource(R.drawable.cht_ic_placeholder);
         lastMessage.setText("");
         icon.setText("");
 
         Utils.verifySetBackground(icon, null);
-
+/*
         TdApi.Chat item = getItem(position);
         TdApi.ChatInfo info = item.type;
 
@@ -65,7 +105,7 @@ public class ChatListAdapter extends ArrayAdapter<TdApi.Chat> {
 
         if (message.message instanceof TdApi.MessageText) {
             text = (TdApi.MessageText) message.message;
-            emojiParser.parse(text);
+
 
             lastMessage.setTextColor(Color.BLACK);
             lastMessage.setText(text.textWithSmilesAndUserRefs);
@@ -128,7 +168,11 @@ public class ChatListAdapter extends ArrayAdapter<TdApi.Chat> {
 
         firstLastName.setText(userFirstName + " " + userLastName);
         time.setText(Utils.getDateFormat(Const.TIME_PATTERN).format(date));
-
+*/
         return convertView;
+    }
+
+    public void add(ChatsList chats) {
+        chatsList.add(chats);
     }
 }

@@ -14,7 +14,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center" />
 
-        <TextView
+        <FermatTextView
             android:id="@+id/no_chats"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -39,5 +39,5 @@
         android:layout_gravity="bottom|right"
         android:layout_margin="@dimen/margin_16dp"
         android:background="@drawable/message_icon_bg"
-        android:src="@drawable/floating_pencil" />
+        android:src="@drawable/cht_floating_pencil" />
 </FrameLayout>
