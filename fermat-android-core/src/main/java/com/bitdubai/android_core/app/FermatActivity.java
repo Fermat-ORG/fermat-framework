@@ -52,6 +52,7 @@ import android.widget.LinearLayout;
 import android.widget.RadioGroup;
 import android.widget.RelativeLayout;
 import android.widget.RemoteViews;
+import android.widget.SlidingDrawer;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -504,11 +505,13 @@ public abstract class FermatActivity extends AppCompatActivity
 
     private void paintFooter(FermatFooter footer,FooterViewPainter footerViewPainter) {
         try {
+            SlidingDrawer slidingDrawer = (SlidingDrawer) findViewById(R.id.SlidingDrawer);
             FrameLayout slide_container = (FrameLayout) findViewById(R.id.slide_container);
             RelativeLayout footer_container = (RelativeLayout) findViewById(R.id.footer_container);
             if (footer != null && footerViewPainter != null) {
                 slide_container.setVisibility(View.VISIBLE);
                 footer_container.setVisibility(View.VISIBLE);
+                slidingDrawer.setVisibility(View.VISIBLE);
                 if (footer.getBackgroundColor() != null) {
                     footer_container.setBackgroundColor(Color.parseColor(footer.getBackgroundColor()));
                 }
@@ -1577,7 +1580,7 @@ public abstract class FermatActivity extends AppCompatActivity
     }
 
     public void addDesktopCallBack(DesktopHolderClickCallback desktopHolderClickCallback ){
-        bottomNavigation.setDesktopHolderClickCallback(desktopHolderClickCallback);
+        if(bottomNavigation!=null) bottomNavigation.setDesktopHolderClickCallback(desktopHolderClickCallback);
     }
 
 
@@ -1751,7 +1754,7 @@ public abstract class FermatActivity extends AppCompatActivity
     }
     @Override
     public void setActivityBackgroundColor(Drawable drawable){
-        if(drawable!=null) coordinatorLayout.setBackground(drawable);
+        if(drawable!=null) pagertabs.setBackground(drawable);
 
     }
 

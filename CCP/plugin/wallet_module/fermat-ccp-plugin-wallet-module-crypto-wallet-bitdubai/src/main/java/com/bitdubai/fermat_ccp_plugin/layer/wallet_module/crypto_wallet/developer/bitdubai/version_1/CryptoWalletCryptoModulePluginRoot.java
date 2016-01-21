@@ -235,6 +235,11 @@ public class CryptoWalletCryptoModulePluginRoot extends AbstractPlugin implement
     }
 
     @Override
+    public void createIdentity(String name, String phrase, byte[] profile_img) throws Exception {
+        getCryptoWallet().createIntraUser(name, phrase, profile_img);
+    }
+
+    @Override
     public void setAppPublicKey(String publicKey) {
         this.appPublicKey = publicKey;
     }

@@ -24,6 +24,7 @@ import com.bitdubai.fermat_android_api.ui.util.FermatWorker;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
 import com.bitdubai.fermat_dap_android_sub_app_asset_user_community_bitdubai.R;
 import com.bitdubai.fermat_dap_android_sub_app_asset_user_community_bitdubai.adapters.UserCommunityAdapter;
+import com.bitdubai.fermat_dap_android_sub_app_asset_user_community_bitdubai.dialogs.ConfirmDeleteDialog;
 import com.bitdubai.fermat_dap_android_sub_app_asset_user_community_bitdubai.interfaces.AdapterChangeListener;
 import com.bitdubai.fermat_dap_android_sub_app_asset_user_community_bitdubai.models.Actor;
 import com.bitdubai.fermat_dap_android_sub_app_asset_user_community_bitdubai.models.Group;
@@ -31,8 +32,10 @@ import com.bitdubai.fermat_dap_android_sub_app_asset_user_community_bitdubai.ses
 import com.bitdubai.fermat_dap_api.layer.all_definition.exceptions.CantGetIdentityAssetUserException;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.AssetUserActorRecord;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.AssetUserGroupMemberRecord;
+import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.exceptions.CantDeleteAssetUserGroupException;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.interfaces.ActorAssetUser;
 import com.bitdubai.fermat_dap_api.layer.dap_sub_app_module.asset_user_community.interfaces.AssetUserCommunitySubAppModuleManager;
+import com.bitdubai.fermat_dap_api.layer.dap_transaction.common.exceptions.RecordsNotFoundException;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 import com.software.shell.fab.ActionButton;
 
@@ -156,49 +159,35 @@ public class UserCommuinityGroupUsersFragment extends AbstractFermatFragment imp
         menuItemDelete.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
             @Override
             public boolean onMenuItemClick(MenuItem item) {
-                final ProgressDialog dialog = new ProgressDialog(getActivity());
-                dialog.setMessage("Deleting users from group...");
-                dialog.setCancelable(false);
-                dialog.show();
-                FermatWorker worker = new FermatWorker() {
-                    @Override
-                    protected Object doInBackground() throws Exception {
 
-                        for (Actor actor : actors) {
-                            if (actor.selected)
-                            {   AssetUserGroupMemberRecord actorGroup = new AssetUserGroupMemberRecord();
-                                actorGroup.setGroupId(group.getGroupId());
-                                actorGroup.setActorPublicKey(actor.getActorPublicKey());
-                                manager.removeActorAssetUserFromGroup(actorGroup);
+                ConfirmDeleteDialog dialog = new ConfirmDeleteDialog(getActivity(), (AssetUserCommunitySubAppSession) appSession, appResourcesProviderManager);
+                dialog.setYesBtnListener(new ConfirmDeleteDialog.OnClickAcceptListener() {
+                    @Override
+                    public void onClick() {
+                        try {
+                            for (Actor actor : actors) {
+                                if (actor.selected)
+                                {   AssetUserGroupMemberRecord actorGroup = new AssetUserGroupMemberRecord();
+                                    actorGroup.setGroupId(group.getGroupId());
+                                    actorGroup.setActorPublicKey(actor.getActorPublicKey());
+                                    manager.removeActorAssetUserFromGroup(actorGroup);
+                                }
                             }
+                            Toast.makeText(getActivity(), "Selected users deleted from the group", Toast.LENGTH_SHORT).show();
+                            onRefresh();
+                            menuItemDelete.setVisible(false);
+                        } catch (CantDeleteAssetUserGroupException e) {
+                            e.printStackTrace();
+                            Toast.makeText(getActivity(), "This users couldn't be deleted.", Toast.LENGTH_SHORT).show();
+                        } catch (RecordsNotFoundException e) {
+                            Toast.makeText(getActivity(), "Records not found.", Toast.LENGTH_SHORT).show();
                         }
-
-                        return true;
-                    }
-                };
-                worker.setContext(getActivity());
-                worker.setCallBack(new FermatWorkerCallBack() {
-                    @Override
-                    public void onPostExecute(Object... result) {
-                        dialog.dismiss();
-                        Toast.makeText(getActivity(), "Selected users deleted from the group", Toast.LENGTH_SHORT).show();
-                        onRefresh();
-                        menuItemDelete.setVisible(false);
-                    }
-
-                    @Override
-                    public void onErrorOccurred(Exception ex) {
-                        dialog.dismiss();
-                        Toast.makeText(getActivity(), String.format("An exception has been thrown: %s", ex.getMessage()), Toast.LENGTH_LONG).show();
-                        ex.printStackTrace();
                     }
                 });
-                worker.execute();
-                return false;
+                dialog.show();
+                return true;
             }
-
         });
-
 
     }
 

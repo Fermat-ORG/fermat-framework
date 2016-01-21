@@ -30,6 +30,7 @@ import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantLoad
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantPersistFileException;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.FileNotFoundException;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.interfaces.ActorAssetUserManager;
+import com.bitdubai.fermat_dap_api.layer.dap_actor_network_service.asset_user.interfaces.AssetUserActorNetworkServiceManager;
 import com.bitdubai.fermat_dap_api.layer.dap_transaction.common.exceptions.CantDeliverDatabaseException;
 import com.bitdubai.fermat_dap_api.layer.dap_wallet.asset_redeem_point.exceptions.CantInitializeRedeemPointWalletException;
 import com.bitdubai.fermat_dap_api.layer.dap_wallet.asset_redeem_point.interfaces.AssetRedeemPointWallet;
@@ -66,6 +67,9 @@ public class AssetRedeemPointWalletPluginRoot extends AbstractPlugin implements
 
     @NeededPluginReference(platform = Platforms.DIGITAL_ASSET_PLATFORM, layer = Layers.ACTOR, plugin = Plugins.ASSET_USER)
     private ActorAssetUserManager actorAssetUserManager;
+
+    @NeededPluginReference(platform = Platforms.DIGITAL_ASSET_PLATFORM, layer = Layers.ACTOR_NETWORK_SERVICE, plugin = Plugins.ASSET_USER)
+    private AssetUserActorNetworkServiceManager assetUserActorNetworkServiceManager;
 
     public static final String PATH_DIRECTORY = "asset-redeem-point-swap/";
 
@@ -140,7 +144,7 @@ public class AssetRedeemPointWalletPluginRoot extends AbstractPlugin implements
     @Override
     public AssetRedeemPointWallet loadAssetRedeemPointWallet(String walletPublicKey) throws CantLoadWalletException {
         try {
-            AssetRedeemPointWalletImpl assetRedeemPointWallet = new AssetRedeemPointWalletImpl(errorManager, pluginDatabaseSystem, pluginFileSystem, pluginId, actorAssetUserManager);
+            AssetRedeemPointWalletImpl assetRedeemPointWallet = new AssetRedeemPointWalletImpl(errorManager, pluginDatabaseSystem, pluginFileSystem, pluginId, actorAssetUserManager, assetUserActorNetworkServiceManager);
 
             UUID internalAssetRedeemPointWalletId = walletRedeemPoint.get(walletPublicKey);
             assetRedeemPointWallet.initialize(internalAssetRedeemPointWalletId);
@@ -157,7 +161,7 @@ public class AssetRedeemPointWalletPluginRoot extends AbstractPlugin implements
     @Override
     public void createWalletAssetRedeemPoint(String walletPublicKey) throws CantCreateWalletException {
         try {
-            AssetRedeemPointWalletImpl assetRedeemPointWallet = new AssetRedeemPointWalletImpl(errorManager, pluginDatabaseSystem, pluginFileSystem, pluginId, actorAssetUserManager);
+            AssetRedeemPointWalletImpl assetRedeemPointWallet = new AssetRedeemPointWalletImpl(errorManager, pluginDatabaseSystem, pluginFileSystem, pluginId, actorAssetUserManager, assetUserActorNetworkServiceManager);
             UUID internalAssetRedeemPointWalletId = assetRedeemPointWallet.create(walletPublicKey);
             walletRedeemPoint.put(walletPublicKey, internalAssetRedeemPointWalletId);
         } catch (CantCreateWalletException exception) {
