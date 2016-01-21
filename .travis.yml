@@ -41,6 +41,5 @@ install:
   - 'echo "Download Gradle Wrapper"; chmod +x ./gradlew; ls -l gradlew; ./gradlew -v'
 
 script:
-  - ./gradlew assemble
-  - ./gradlew build
+  - ./gradlew :fermat-android-core:assembleDebug -PdevMode --parallel -x test
 
