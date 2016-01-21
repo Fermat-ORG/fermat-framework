@@ -3,27 +3,30 @@ package com.bitdubai.fermat_ccp_api.layer.network_service.crypto_transmission.en
 import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterException;
 
 /**
- * Created by Matias Furszyfer on 2015.10.04..
+ * Created by mati on 2016.01.21..
  */
-public enum CryptoTransmissionMetadataState {
+public enum CryptoTransmissionProtocolState {
 
-    SEEN_BY_DESTINATION_NETWORK_SERVICE("SBDNS"),
-    SEEN_BY_DESTINATION_VAULT("SBDV"),
-    CREDITED_IN_DESTINATION_WALLET("CIDW"),
+    PRE_PROCESSING_SEND("PCS"),
+    SENT("SNT"),
+    PROCESSING_RECEIVE ("PRR"),
+    RECEIVED("RCD"),
+    WAITING_FOR_RESPONSE("WFR"),
+    DONE("D"),
+    SENT_TO_COMMUNICATION_TEMPLATE("STCT");
 
-    SEEN_BY_OWN_NETWORK_SERVICE_WAITING_FOR_RESPONSE("SBONSWFR"),;
 
 
     private String code;
 
 
-    CryptoTransmissionMetadataState(String code) {
+    CryptoTransmissionProtocolState(String code) {
         this.code = code;
     }
 
-    public static CryptoTransmissionMetadataState getByCode(String code) throws InvalidParameterException {
+    public static CryptoTransmissionProtocolState getByCode(String code) throws InvalidParameterException {
 
-        for (CryptoTransmissionMetadataState cryptoTransmissionMetadataState : CryptoTransmissionMetadataState.values()) {
+        for (CryptoTransmissionProtocolState cryptoTransmissionMetadataState : CryptoTransmissionProtocolState.values()) {
             if (cryptoTransmissionMetadataState.getCode().equals(code))
                 return cryptoTransmissionMetadataState;
         }

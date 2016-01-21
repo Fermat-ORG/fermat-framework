@@ -6,7 +6,6 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.graphics.drawable.BitmapDrawable;
-import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -27,10 +26,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bitdubai.android_fermat_ccp_wallet_bitcoin.R;
-
 import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView;
 import com.bitdubai.fermat_android_api.ui.Views.CircularProgressBar;
-import com.bitdubai.fermat_android_api.ui.Views.PresentationDialog;
 import com.bitdubai.fermat_android_api.ui.enums.FermatRefreshTypes;
 import com.bitdubai.fermat_android_api.ui.expandableRecicler.ExpandableRecyclerAdapter;
 import com.bitdubai.fermat_android_api.ui.fragments.FermatWalletExpandableListFragment;
@@ -66,10 +63,10 @@ import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.interfaces.
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.interfaces.CryptoWalletIntraUserIdentity;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.interfaces.CryptoWalletTransaction;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.interfaces.CryptoWalletWalletContact;
-import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedPluginExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedUIExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedWalletExceptionSeverity;
+import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.BitcoinWalletConstants;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.adapters.ReceivetransactionsExpandableAdapter;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.animation.AnimationManager;
@@ -92,14 +89,12 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
-import static android.widget.Toast.LENGTH_SHORT;
 import static android.widget.Toast.makeText;
 
 
@@ -114,14 +109,18 @@ public class SendTransactionFragment2 extends FermatWalletExpandableListFragment
         implements FermatListItemListeners<CryptoWalletTransaction>{
 
 
-    private int MAX_TRANSACTIONS = 20;
-
     final TransactionType transactionType = TransactionType.DEBIT;
-
+    ReferenceWalletSession referenceWalletSession;
+    SettingsManager<BitcoinWalletSettings> settingsManager;
+    long before = 0;
+    long after = 0;
+    boolean pressed = false;
+    CircularProgressBar circularProgressBar;
+    Thread background;
+    private int MAX_TRANSACTIONS = 20;
     // Fermat Managers
     private CryptoWallet moduleManager;
     private ErrorManager errorManager;
-
     // Data
     private List<GrouperItem> openNegotiationList;
     private TextView txt_type_balance;
@@ -132,18 +131,55 @@ public class SendTransactionFragment2 extends FermatWalletExpandableListFragment
     private List<CryptoWalletTransaction> lstCryptoWalletTransactionsBook;
     private int available_offset=0;
     private int book_offset=0;
-
-    ReferenceWalletSession referenceWalletSession;
     private long bookBalance;
     private LinearLayout emptyListViewsContainer;
     private AnimationManager animationManager;
     private FermatTextView txt_balance_amount_type;
-    SettingsManager<BitcoinWalletSettings> settingsManager;
     private int progress1=1;
     private  Map<Long, Long> runningDailyBalance;
 
     public static SendTransactionFragment2 newInstance() {
         return new SendTransactionFragment2();
+    }
+
+    public static String GET(String url){
+        InputStream inputStream = null;
+        String result = "";
+        try {
+
+            // create HttpClient
+            HttpClient httpclient = new DefaultHttpClient();
+
+            // make GET request to the given URL
+            HttpResponse httpResponse = httpclient.execute(new HttpGet(url));
+
+            // receive response as inputStream
+            inputStream = httpResponse.getEntity().getContent();
+
+            // convert inputstream to string
+            if(inputStream != null)
+                result = convertInputStreamToString(inputStream);
+            else
+                result = "Did not work!";
+
+        } catch (Exception e) {
+            Log.d("InputStream", e.getLocalizedMessage());
+        }
+
+        return result;
+    }
+
+    // convert inputstream to String
+    private static String convertInputStreamToString(InputStream inputStream) throws IOException {
+        BufferedReader bufferedReader = new BufferedReader( new InputStreamReader(inputStream));
+        String line = "";
+        String result = "";
+        while((line = bufferedReader.readLine()) != null)
+            result += line;
+
+        inputStream.close();
+        return result;
+
     }
 
     @Override
@@ -159,11 +195,12 @@ public class SendTransactionFragment2 extends FermatWalletExpandableListFragment
         getExecutor().execute(new Runnable() {
             @Override
             public void run() {
-                final Drawable drawable = getResources().getDrawable(R.drawable.background_gradient, null);
+                //TODO error geting drawable
+            //    final Drawable drawable = getResources().getDrawable(R.drawable.background_gradient, null);
                 getActivity().runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
-                        getPaintActivtyFeactures().setActivityBackgroundColor(drawable);
+   //                     getPaintActivtyFeactures().setActivityBackgroundColor(drawable);
                     }
                 });
             }
@@ -288,6 +325,7 @@ public class SendTransactionFragment2 extends FermatWalletExpandableListFragment
 
         return rootView;
     }
+
     private void setUp(LayoutInflater inflater){
         try {
             //setUpHeader(inflater);
@@ -308,13 +346,6 @@ public class SendTransactionFragment2 extends FermatWalletExpandableListFragment
         }
 
     }
-
-
-    long before = 0;
-    long after = 0;
-    boolean pressed = false;
-    CircularProgressBar circularProgressBar;
-    Thread background;
 
     private void setUpDonut(LayoutInflater inflater)  {
         try {
@@ -525,7 +556,6 @@ public class SendTransactionFragment2 extends FermatWalletExpandableListFragment
         }
     }
 
-
     private String getWalletAddress(String actorPublicKey) {
         String walletAddres="";
         try {
@@ -631,45 +661,6 @@ public class SendTransactionFragment2 extends FermatWalletExpandableListFragment
         } catch (CantGetBalanceException e) {
             e.printStackTrace();
         }
-    }
-
-    public static String GET(String url){
-        InputStream inputStream = null;
-        String result = "";
-        try {
-
-            // create HttpClient
-            HttpClient httpclient = new DefaultHttpClient();
-
-            // make GET request to the given URL
-            HttpResponse httpResponse = httpclient.execute(new HttpGet(url));
-
-            // receive response as inputStream
-            inputStream = httpResponse.getEntity().getContent();
-
-            // convert inputstream to string
-            if(inputStream != null)
-                result = convertInputStreamToString(inputStream);
-            else
-                result = "Did not work!";
-
-        } catch (Exception e) {
-            Log.d("InputStream", e.getLocalizedMessage());
-        }
-
-        return result;
-    }
-    // convert inputstream to String
-    private static String convertInputStreamToString(InputStream inputStream) throws IOException {
-        BufferedReader bufferedReader = new BufferedReader( new InputStreamReader(inputStream));
-        String line = "";
-        String result = "";
-        while((line = bufferedReader.readLine()) != null)
-            result += line;
-
-        inputStream.close();
-        return result;
-
     }
 
     @Override

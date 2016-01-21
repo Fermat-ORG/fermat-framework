@@ -9,7 +9,7 @@ import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_pro
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.exceptions.CantDeliverPendingTransactionsException;
 import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_addresses.exceptions.PendingRequestNotFoundException;
 import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_transmission.interfaces.structure.CryptoTransmissionMetadata;
-import com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_transmission.developer.bitdubai.version_1.crypto_transmission_database.dao.CryptoTransmissionMetadataDAO;
+import com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_transmission.developer.bitdubai.version_1.crypto_transmission_database.dao.CryptoTransmissionMetadataDAO_V2;
 import com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_transmission.developer.bitdubai.version_1.crypto_transmission_database.exceptions.CantGetCryptoTransmissionMetadataException;
 import com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_transmission.developer.bitdubai.version_1.exceptions.CantReadRecordDataBaseException;
 import com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_transmission.developer.bitdubai.version_1.exceptions.CantUpdateRecordDataBaseException;
@@ -23,9 +23,9 @@ import java.util.UUID;
  */
 public class CryptoTransmissionTransactionProtocolManager implements TransactionProtocolManager<FermatCryptoTransaction> {
 
-    CryptoTransmissionMetadataDAO cryptoTransmissionMetadataDAO;
+    CryptoTransmissionMetadataDAO_V2 cryptoTransmissionMetadataDAO;
 
-    public CryptoTransmissionTransactionProtocolManager(CryptoTransmissionMetadataDAO cryptoTransmissionMetadataDAO) {
+    public CryptoTransmissionTransactionProtocolManager(CryptoTransmissionMetadataDAO_V2 cryptoTransmissionMetadataDAO) {
         this.cryptoTransmissionMetadataDAO = cryptoTransmissionMetadataDAO;
     }
 
