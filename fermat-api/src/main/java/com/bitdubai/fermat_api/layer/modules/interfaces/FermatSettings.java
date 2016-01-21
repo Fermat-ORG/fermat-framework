@@ -5,4 +5,5 @@ package com.bitdubai.fermat_api.layer.modules.interfaces;
  */
 public interface FermatSettings {
     void setIsPresentationHelpEnabled(boolean b);
+
 }

@@ -1,5 +1,6 @@
 package com.bitdubai.fermat_ccp_plugin.layer.crypto_transaction.incoming_intra_user.developer.bitdubai.version_1.util;
 
+import com.bitdubai.fermat_api.layer.all_definition.enums.BlockchainNetworkType;
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.Transaction;
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.crypto_transactions.CryptoTransaction;
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.crypto_transactions.FermatCryptoTransaction;
@@ -52,7 +53,9 @@ public class TransactionCompleteInformation {
                     cryptoTransaction         .getAddressTo()                ,
                     cryptoTransaction         .getCryptoAmount()             ,
                     timestamp                                                ,
-                    memo
+                    memo,
+                    BlockchainNetworkType.REG_TEST
+
             );
 
         } catch (CantGetCryptoAddressBookRecordException e) {
