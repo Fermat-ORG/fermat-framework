@@ -173,7 +173,6 @@ public class RedeemPointRedemptionDigitalAssetTransactionPluginRoot extends Abst
                 actorAssetRedeemPointManager,
                 assetRedeemPointWalletManager,
                 actorAssetUserManager,
-                assetUserActorNetworkServiceManager,
                 bitcoinNetworkManager);
     }
 
