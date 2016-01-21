@@ -1,5 +1,6 @@
 package com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_transmission.developer.bitdubai.version_1.structure.crypto_transmission_structure;
 
+import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_transmission.enums.CryptoTransmissionMetadataState;
 import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_transmission.enums.CryptoTransmissionStates;
 import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_transmission.interfaces.structure.CryptoTransmissionMetadataType;
 
@@ -13,12 +14,13 @@ public class CryptoTransmissionResponseMessage {
     private UUID transactionId;
     private CryptoTransmissionStates cryptoTransmissionStates;
     private CryptoTransmissionMetadataType cryptoTransmissionMetadataType;
+    private CryptoTransmissionMetadataState cryptoTransmissionMetadataState;
 
-
-    public CryptoTransmissionResponseMessage(UUID transactionId, CryptoTransmissionStates cryptoTransmissionStates, CryptoTransmissionMetadataType cryptoTransmissionMetadataType) {
+    public CryptoTransmissionResponseMessage(UUID transactionId, CryptoTransmissionStates cryptoTransmissionStates, CryptoTransmissionMetadataType cryptoTransmissionMetadataType,CryptoTransmissionMetadataState cryptoTransmissionMetadataState) {
         this.transactionId = transactionId;
         this.cryptoTransmissionStates = cryptoTransmissionStates;
         this.cryptoTransmissionMetadataType = cryptoTransmissionMetadataType;
+        this.cryptoTransmissionMetadataState = cryptoTransmissionMetadataState;
     }
 
     public UUID getTransactionId() {
@@ -39,6 +41,10 @@ public class CryptoTransmissionResponseMessage {
 
     public CryptoTransmissionMetadataType getCryptoTransmissionMetadataType() {
         return cryptoTransmissionMetadataType;
+    }
+
+    public CryptoTransmissionMetadataState getCryptoTransmissionMetadataState() {
+        return cryptoTransmissionMetadataState;
     }
 
     @Override

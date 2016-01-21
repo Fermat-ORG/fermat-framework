@@ -7,6 +7,7 @@ import com.bitdubai.fermat_api.layer.all_definition.events.EventSource;
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEvent;
 import com.bitdubai.fermat_api.layer.all_definition.network_service.enums.NetworkServiceType;
 import com.bitdubai.fermat_api.layer.all_definition.network_service.interfaces.NetworkServiceLocal;
+import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_transmission.enums.CryptoTransmissionMetadataState;
 import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_transmission.enums.CryptoTransmissionStates;
 import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_transmission.interfaces.structure.CryptoTransmissionMetadata;
 import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_transmission.interfaces.structure.CryptoTransmissionMetadataType;
@@ -330,7 +331,8 @@ public class CryptoTransmissionAgent {
 
 
                             //Cambio estado de base de datos a PROCESSING_SEND_COMMUNICATION_DATABASE
-                            cryptoTransmissionMetadata.changeState(CryptoTransmissionStates.SENT);
+                            cryptoTransmissionMetadata.changeDeliveryState(CryptoTransmissionStates.SENT);
+                            cryptoTransmissionMetadata.changeMetadataState(CryptoTransmissionMetadataState.CRYPTO_TRANSMISSION_METADATA_STATE_SENT);
 
                             System.out.print("-----------------------\n" +
                                     "ENVIANDO CRYPTO METADATA!!!!! -----------------------\n" +
@@ -346,14 +348,15 @@ public class CryptoTransmissionAgent {
 
                             //cryptoTransmissionMetadata.changeState(CryptoTransmissionStates.PROCESSING_SEND_COMMUNICATION_TEMPLATE);
 
+                            //update metadata status
                             cryptoTransmissionMetadataDAO.changeState(cryptoTransmissionMetadata);
 
                             System.out.print("-----------------------\n" +
                                     "CRYPTO METADATA!!!!! -----------------------\n" +
                                     "-----------------------\n STATE: " + cryptoTransmissionMetadata.getCryptoTransmissionStates());
 
-                        } catch (CantUpdateRecordDataBaseException e) {
-                            e.printStackTrace();
+                        //} catch (CantUpdateRecordDataBaseException e) {
+                          //  e.printStackTrace();
                         } catch (Exception e) {
                             e.printStackTrace();
                         }
@@ -362,111 +365,6 @@ public class CryptoTransmissionAgent {
                     }
                 }
             }
-
-
-
-
-
-            //wsCommunicationsCloudClientManager.getCommunicationsCloudClientConnection().requestListComponentRegistered(discoveryQueryParameters);
-
-            /**
-             *  De los componentes registrados me fijo cuales trae el discovery y cuales tengo que chequear si se encuentran conectados o los tengo que conectar
-             */
-
-            /**
-             * Primero me fijo y las conecto
-             //             */
-//            for (PlatformComponentProfile remoteComponentProfile:remoteNetworkServicesRegisteredList){
-//
-//                boolean flag=false;
-//                int counter = 0;
-//                while(!flag && counter<lstCryptoTransmissionMetadata.size()){
-//
-//                    CryptoTransmissionMetadata cryptoTransmissionMetadata = lstCryptoTransmissionMetadata.get(counter);
-//
-//                    //TODO: chequear si el componente proviene de ese actor, si proviene y no está conectado tengo que hacer la conexión, si está conectado tengo que hacer el send
-//                    //TODO: estoy tomando el getIdentityPublicKey como si fuera la key del actor, cuando Robert lo tenga lo cambió
-//
-//                    //TODO: LISTO
-//                    if(remoteComponentProfile.getIdentityPublicKey().equals(cryptoTransmissionNetworkServicePluginRoot.isRegisteredConnectionForActorPK(cryptoTransmissionMetadata.getDestinationPublicKey()))){
-//                        /*
-//                        * Get the local representation of the remote network service
-//                        *
-//                        *  Te devuelve nullsi no existe la oonexion, si cryptoTransmissionNetworkServiceLocal te devuelve algo diferente quiere decir que está conectado
-//                        */
-//                        CommunicationNetworkServiceLocal communicationNetworkServiceLocal = communicationNetworkServiceConnectionManager.getNetworkServiceLocalInstance(remoteComponentProfile.getIdentityPublicKey());
-//
-//                        if(communicationNetworkServiceLocal==null){
-//
-//                            if(!connectionsCounters.containsKey(remoteComponentProfile.getIdentityPublicKey())){
-//                                connectionsCounters.put(remoteComponentProfile.getIdentityPublicKey(),0);
-//                            }else{
-//
-//                                int connectionCounter = connectionsCounters.get(remoteComponentProfile.getIdentityPublicKey());
-//
-//                                if(connectionCounter>5 && connectionCounter<10){
-//                                    connectionCounter++;
-//                                    continue;
-//                                }else if(connectionCounter>10){
-//                                    connectionCounter++;
-//                                    // lo paso a los de espera
-//                                    CryptoTransmissionPlatformComponentProfilePlusWaitTime cryptoTransmissionPlatformComponentProfilePlusWaitTime = new CryptoTransmissionPlatformComponentProfilePlusWaitTime(
-//                                            remoteComponentProfile,
-//                                            CryptoTransmissionPlatformComponentProfilePlusWaitTime.WAIT_TIME_MIN);
-//
-//                                    waitingPlatformComponentProfile.put(cryptoTransmissionMetadata.getDestinationPublicKey(),cryptoTransmissionPlatformComponentProfilePlusWaitTime);
-//                                    remoteNetworkServicesRegisteredList.remove(remoteComponentProfile);
-//
-//                                }
-//                            }
-//                            // Contador de intentos por componentes profile para subir el tiempo de espera del hilo
-//
-//
-//                            // Establezco la conexion
-//                            communicationNetworkServiceConnectionManager.connectTo(remoteComponentProfile);
-//
-//
-//
-//
-//
-//                        }else{
-//
-//                            try {
-//                            // Si se encuentra conectado paso la metadata al dao de la capa de comunicacion para que lo envie
-//                            Gson gson = new Gson();
-//                            String jsonMetadata = gson.toJson(cryptoTransmissionMetadata);
-//
-//                            // Envio el mensaje a la capa de comunicacion
-//
-//                                communicationNetworkServiceLocal.sendMessage(jsonMetadata, identity);
-//
-//                            //Cambio estado de base de datos a PROCESSING_SEND_COMMUNICATION_DATABASE
-//                            cryptoTransmissionMetadata.changeState(CryptoTransmissionStates.PROCESSING_SEND_COMMUNICATION_TEMPLATE);
-//
-//                                System.out.print("-----------------------\n" +
-//                                        "ENVIANDO CRYPTO METADATA!!!!! -----------------------\n" +
-//                                        "-----------------------\n A: " + cryptoTransmissionMetadata.getDestinationPublicKey());
-//
-//                                cryptoTransmissionMetadata.changeState(CryptoTransmissionStates.PROCESSING_SEND_COMMUNICATION_TEMPLATE);
-//
-//                                cryptoTransmissionMetadataDAO.changeState(cryptoTransmissionMetadata);
-//
-//                                System.out.print("-----------------------\n" +
-//                                        "CRYPTO METADATA!!!!! -----------------------\n" +
-//                                        "-----------------------\n STATE: " + cryptoTransmissionMetadata.getCryptoTransmissionStates());
-//
-//                            } catch (CantUpdateRecordDataBaseException e) {
-//                                e.printStackTrace();
-//                            } catch (Exception e){
-//                                e.printStackTrace();
-//                            }
-//                        }
-//
-//                    }
-//                    counter++;
-//                }
-
-            //}
 
 
         } catch (CantReadRecordDataBaseException e) {
@@ -544,9 +442,9 @@ public class CryptoTransmissionAgent {
                         // lo cambio directo porque la metadata viene con un mensaje de estado distinto, actualizado
 
 
-                        switch (cryptoTransmissionMetadata.getCryptoTransmissionStates()) {
+                        switch (cryptoTransmissionMetadata.getCryptoTransmissionMetadataStates()) {
 
-                            case SEEN_BY_DESTINATION_NETWORK_SERVICE:
+                            case CRYPTO_TRANSMISSION_METADATA_STATE_SEEN_BY_DESTINATION_NETWORK_SERVICE:
                                 //guardo estado
                                 // deberia ver si tengo que lanzar un evento acá
 
@@ -557,14 +455,15 @@ public class CryptoTransmissionAgent {
                                 System.out.print("CryptoTransmission SEEN_BY_DESTINATION_NETWORK_SERVICE event");
                                 break;
 
-                            case SEEN_BY_DESTINATION_VAULT:
+                            case CRYPTO_TRANSMISSION_METADATA_STATE_SEEN_BY_DESTINATION_VAULT:
                                 // deberia ver si tengo que lanzar un evento acá
                                 System.out.print("-----------------------\n" +
                                         "ACA DEBERIA LANZAR EVENTO NO CREO -----------------------\n" +
                                         "-----------------------\n STATE: " + cryptoTransmissionMetadata.getCryptoTransmissionStates());
                                 System.out.print("CryptoTransmission SEEN_BY_DESTINATION_VAULT event");
 
-                                cryptoTransmissionMetadata.changeState(CryptoTransmissionStates.SEEN_BY_DESTINATION_VAULT);
+                                cryptoTransmissionMetadata.changeDeliveryState(CryptoTransmissionStates.SEEN_BY_DESTINATION_VAULT);
+                                cryptoTransmissionMetadata.changeMetadataState(CryptoTransmissionMetadataState.CRYPTO_TRANSMISSION_METADATA_STATE_SEEN_BY_DESTINATION_VAULT);
                                 cryptoTransmissionMetadata.setTypeMetadata(CryptoTransmissionMetadataType.METADATA_RECEIVE);
                                 cryptoTransmissionMetadataDAO.update(cryptoTransmissionMetadata);
 
@@ -575,7 +474,7 @@ public class CryptoTransmissionAgent {
                                 lauchNotification();
                                 break;
 
-                            case CREDITED_IN_DESTINATION_WALLET:
+                            case CRYPTO_TRANSMISSION_METADATA_STATE_CREDITED_IN_DESTINATION_WALLET:
                                 // Guardo estado
                                 System.out.print("-----------------------\n" +
                                         "ACA DEBERIA LANZAR EVENTO NO CREO -----------------------\n" +
@@ -583,9 +482,11 @@ public class CryptoTransmissionAgent {
                                 // deberia ver si tengo que lanzar un evento acá
                                 //para el outgoing intra user
 
-                                //  cryptoTransmissionMetadata.changeState(CryptoTransmissionStates.CREDITED_IN_DESTINATION_WALLET);
-                                //  cryptoTransmissionMetadata.setTypeMetadata(CryptoTransmissionMetadataType.METADATA_SEND);
-                                //  cryptoTransmissionMetadataDAO.update(cryptoTransmissionMetadata);
+                                 cryptoTransmissionMetadata.changeDeliveryState(CryptoTransmissionStates.DONE);
+                                cryptoTransmissionMetadata.changeMetadataState(CryptoTransmissionMetadataState.CRYPTO_TRANSMISSION_METADATA_STATE_CREDITED_IN_DESTINATION_WALLET);
+
+                                cryptoTransmissionMetadata.setTypeMetadata(CryptoTransmissionMetadataType.METADATA_RECEIVE);
+                                 cryptoTransmissionMetadataDAO.update(cryptoTransmissionMetadata);
 
                                 System.out.print("-----------------------\n" +
                                         "RECIVIENDO CRYPTO METADATA!!!!! -----------------------\n" +
@@ -596,9 +497,9 @@ public class CryptoTransmissionAgent {
                                 this.poolConnectionsWaitingForResponse.remove(cryptoTransmissionMetadata.getDestinationPublicKey());
                                 break;
                             // si el mensaje viene con un estado de SENT es porque es la primera vez que llega, por lo que tengo que guardarlo en la bd y responder
-                            case SENT:
+                            case CRYPTO_TRANSMISSION_METADATA_STATE_SENT:
 
-                                cryptoTransmissionMetadata.changeState(CryptoTransmissionStates.SEEN_BY_OWN_NETWORK_SERVICE);
+                                cryptoTransmissionMetadata.changeDeliveryState(CryptoTransmissionStates.SEEN_BY_OWN_NETWORK_SERVICE);
                                 cryptoTransmissionMetadata.setTypeMetadata(CryptoTransmissionMetadataType.METADATA_RECEIVE);
                                 cryptoTransmissionMetadataDAO.update(cryptoTransmissionMetadata);
 
@@ -611,8 +512,9 @@ public class CryptoTransmissionAgent {
                                 // Notifico recepcion de metadata
                                 CryptoTransmissionResponseMessage cryptoTransmissionResponseMessage = new CryptoTransmissionResponseMessage(
                                         cryptoTransmissionMetadata.getTransactionId(),
-                                        CryptoTransmissionStates.SEEN_BY_DESTINATION_NETWORK_SERVICE,
-                                        CryptoTransmissionMetadataType.METADATA_SEND);
+                                        CryptoTransmissionStates.SENT,
+                                        CryptoTransmissionMetadataType.METADATA_SEND,
+                                        CryptoTransmissionMetadataState.CRYPTO_TRANSMISSION_METADATA_STATE_SEEN_BY_DESTINATION_VAULT);
                                 Gson gson = new Gson();
 
                                 String message = gson.toJson(cryptoTransmissionResponseMessage);
@@ -676,30 +578,6 @@ public class CryptoTransmissionAgent {
         eventManager.raiseEvent(incomingCryptoMetadataReceive);
     }
 
-    public void addToTimer(String connectionDestionation, final UUID metadataId) {
-        final ScheduledExecutorService scheduledExecutorService =
-                Executors.newScheduledThreadPool(2);
-                scheduledExecutorService.schedule(new Runnable() {
-                                                      public void run() {
-                                                          try {
-                                                              CryptoTransmissionMetadata cryptoTransmissionMetadata = cryptoTransmissionMetadataDAO.getMetadata(metadataId);
-                                                              if (cryptoTransmissionMetadata.getCryptoTransmissionStates() != CryptoTransmissionStates.SEEN_BY_DESTINATION_NETWORK_SERVICE ||
-                                                                      cryptoTransmissionMetadata.getCryptoTransmissionStates() != CryptoTransmissionStates.SEEN_BY_DESTINATION_VAULT ||
-                                                                      cryptoTransmissionMetadata.getCryptoTransmissionStates() != CryptoTransmissionStates.CREDITED_IN_DESTINATION_WALLET) {
-                                                                  cryptoTransmissionMetadata.changeState(CryptoTransmissionStates.PRE_PROCESSING_SEND);
-                                                                  cryptoTransmissionMetadata.setPendingToRead(true);
-                                                                  cryptoTransmissionMetadataDAO.changeState(cryptoTransmissionMetadata);
-                                                              }
-                                                          }catch (Exception e){
-                                                              e.printStackTrace();
-                                                              scheduledExecutorService.shutdown();
-                                                          }
-                                                          scheduledExecutorService.shutdown();
-                                                      }
-                                                  },
-                        1,
-                        TimeUnit.HOURS);
 
-    }
 
 }

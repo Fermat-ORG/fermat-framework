@@ -23,11 +23,12 @@ public class CryptoTransmissionNetworkServiceDatabaseConstants {
     public static final String CRYPTO_TRANSMISSION_METADATA_REQUEST_ID_COLUMN_NAME = "request_id";
     public static final String CRYPTO_TRANSMISSION_METADATA_CRYPTO_CURRENCY_COLUMN_NAME = "crypto_currency";
     public static final String CRYPTO_TRANSMISSION_METADATA_CRYPTO_AMOUNT_COLUMN_NAME = "crypto_amount";
-    public static final String CRYPTO_TRANSMISSION_METADATA_SENDER_PUBLICK_KEY_COLUMN_NAME = "sender_publick_key";
+    public static final String CRYPTO_TRANSMISSION_METADATA_SENDER_PUBLIC_KEY_COLUMN_NAME = "sender_publick_key";
     public static final String CRYPTO_TRANSMISSION_METADATA_DESTINATION_PUBLIC_KEY_COLUMN_NAME = "destination_public_key";
     public static final String CRYPTO_TRANSMISSION_METADATA_ASSOCIATED_CRYPTO_TRANSACTION_HASH_COLUMN_NAME = "associated_crypto_transaction_hash";
     public static final String CRYPTO_TRANSMISSION_METADATA_PAYMENT_DESCRIPTION_COLUMN_NAME = "payment_description";
     public static final String CRYPTO_TRANSMISSION_METADATA_STATUS_COLUMN_NAME = "status";
+    public static final String CRYPTO_TRANSMISSION_METADATA_NOTIFICATION_DESCRIPTOR_COLUMN_NAME = "notification_descriptor";
     public static final String CRYPTO_TRANSMISSION_METADATA_TYPE_COLUMN_NAME = "type";
     public static final String CRYPTO_TRANSMISSION_METADATA_PENDING_FLAG_COLUMN_NAME = "pending_flag";
     public static final String CRYPTO_TRANSMISSION_METADATA_TIMESTAMP_COLUMN_NAME = "timestamp";
