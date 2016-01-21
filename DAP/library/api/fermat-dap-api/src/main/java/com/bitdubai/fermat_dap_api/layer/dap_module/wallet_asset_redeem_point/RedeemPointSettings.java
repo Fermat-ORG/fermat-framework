@@ -21,6 +21,11 @@ public class RedeemPointSettings implements WalletSettings {
     private UUID languageId;
     private UUID skinId;
     private boolean isPresentationHelpEnabled;
+    private boolean isContactsHelpEnabled;
+
+    public boolean isContactsHelpEnabled() {
+        return isContactsHelpEnabled;
+    }
 
     public boolean isPresentationHelpEnabled() {
         return isPresentationHelpEnabled;
@@ -44,6 +49,10 @@ public class RedeemPointSettings implements WalletSettings {
     @Override
     public void setDefaultSkin(UUID skinId) throws CantSetDefaultSkinException, CantLoadWalletSettings {
         this.skinId = skinId;
+    }
+
+    public void setIsContactsHelpEnabled(boolean isContactsHelpEnabled) {
+        this.isContactsHelpEnabled = isContactsHelpEnabled;
     }
 
     @Override

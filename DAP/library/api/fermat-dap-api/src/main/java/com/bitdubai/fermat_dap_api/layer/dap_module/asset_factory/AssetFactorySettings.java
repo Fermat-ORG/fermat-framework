@@ -13,7 +13,13 @@ import java.util.UUID;
  * Created by Frank Contreras (contrerasfrank@gmail.com) on 1/20/16.
  */
 public class AssetFactorySettings implements WalletSettings {
+
     private boolean isPresentationHelpEnabled;
+    private boolean isContactsHelpEnabled;
+
+    public boolean isContactsHelpEnabled() {
+        return isContactsHelpEnabled;
+    }
 
     public boolean isPresentationHelpEnabled() {
         return isPresentationHelpEnabled;
@@ -38,6 +44,11 @@ public class AssetFactorySettings implements WalletSettings {
 
     }
 
+    public void setIsContactsHelpEnabled(boolean isContactsHelpEnabled) {
+        this.isContactsHelpEnabled = isContactsHelpEnabled;
+    }
+
+    @Override
     public void setIsPresentationHelpEnabled(boolean isPresentationHelpEnabled) {
         this.isPresentationHelpEnabled = isPresentationHelpEnabled;
     }
