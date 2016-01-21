@@ -82,11 +82,11 @@ public class NewTransactionStatusNotificationMessageReceiverProcessor extends Fe
             if(list.size()>0){
                 for (int i = 0; i < list.size(); i++) {
                     chatMetadataTransactionRecord = list.get(i);
-                    chatMetadataTransactionRecord.setDistributionStatus(DistributionStatus.DELIVERED);
-                    chatMetadataTransactionRecord.setChatMessageStatus(ChatMessageStatus.CREATED_CHAT);
+                    //chatMetadataTransactionRecord.setDistributionStatus(DistributionStatus.DELIVERED);
+                   // chatMetadataTransactionRecord.setChatMessageStatus(ChatMessageStatus.CREATED_CHAT);
 
                     //TODO: FROM MANUEL, I commented this line for compilation
-                //getChatPluginRoot().getChatMetaDataDao().update(chatMetadataTransactionRecord);
+                getChatPluginRoot().getChatMetaDataDao().update(chatMetadataTransactionRecord);
 
 
                 /*

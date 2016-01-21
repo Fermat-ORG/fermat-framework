@@ -124,6 +124,7 @@ public class NetworkServiceChatNetworkServiceDatabaseFactory implements DealsWit
              */
             table = databaseFactory.newTableFactory(ownerId, NetworkServiceChatNetworkServiceDatabaseConstants.CHAT_TABLE_NAME);
 
+            table.addColumn(NetworkServiceChatNetworkServiceDatabaseConstants.CHAT_TRANSACTION_ID_COLUMN_NAME, DatabaseDataType.STRING, 100, Boolean.TRUE);
             table.addColumn(NetworkServiceChatNetworkServiceDatabaseConstants.CHAT_IDCHAT_COLUMN_NAME, DatabaseDataType.STRING, 100, Boolean.FALSE);
             table.addColumn(NetworkServiceChatNetworkServiceDatabaseConstants.CHAT_IDOBJECTO_COLUMN_NAME, DatabaseDataType.STRING, 100, Boolean.FALSE);
             table.addColumn(NetworkServiceChatNetworkServiceDatabaseConstants.CHAT_LOCALACTORTYPE_COLUMN_NAME, DatabaseDataType.STRING, 100, Boolean.FALSE);

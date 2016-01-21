@@ -71,12 +71,17 @@ public class ChatMetadataTransmitMessageReceiverProcessor extends FermatMessageP
              * Construct a new digitalAssetMetadataTransaction
             */
 
-
-            chatMetadaTransactionRecord.setDistributionStatus(DistributionStatus.DELIVERED);
             /*
              * Save into data base for audit control
              */
-           // getChatPluginRoot().getChatMetaDataDao().create(chatMetadaTransactionRecord);
+            getChatPluginRoot().getChatMetaDataDao().create(chatMetadaTransactionRecord);
+
+            //get the transactions an UUID
+            chatMetadaTransactionRecord.setTransactionId(getChatPluginRoot().getChatMetaDataDao().getNewUUID(UUID.randomUUID().toString()));
+            chatMetadaTransactionRecord.setChatMessageStatus(ChatMessageStatus.CREATED_CHAT);
+            chatMetadaTransactionRecord.setMessageStatus(MessageStatus.SEND);
+            chatMetadaTransactionRecord.setDistributionStatus(DistributionStatus.DELIVERING);
+            getChatPluginRoot().getChatMetaDataDao().create(chatMetadaTransactionRecord);
 
             /*
              * Mark the message as read
