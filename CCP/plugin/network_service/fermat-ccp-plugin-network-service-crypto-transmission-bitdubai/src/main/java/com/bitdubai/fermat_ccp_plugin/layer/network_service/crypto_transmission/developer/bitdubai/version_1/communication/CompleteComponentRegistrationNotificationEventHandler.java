@@ -58,8 +58,9 @@ public class CompleteComponentRegistrationNotificationEventHandler implements Fe
 
             CompleteComponentRegistrationNotificationEvent completeComponentRegistrationNotificationEvent = (CompleteComponentRegistrationNotificationEvent) platformEvent;
 
-            if (completeComponentRegistrationNotificationEvent.getPlatformComponentProfileRegistered().getNetworkServiceType() == networkService.getNetworkServiceType()
-                    || completeComponentRegistrationNotificationEvent.getPlatformComponentProfileRegistered().getPlatformComponentType() == PlatformComponentType.COMMUNICATION_CLOUD_CLIENT) {
+            //TODO: saqué eso de abajo que me parecia muy mal a esta hora de la madrugada
+            if (completeComponentRegistrationNotificationEvent.getPlatformComponentProfileRegistered().getNetworkServiceType() == networkService.getNetworkServiceType()){
+            //        || completeComponentRegistrationNotificationEvent.getPlatformComponentProfileRegistered().getPlatformComponentType() == PlatformComponentType.) {
 
                 /*
                  *  networkService make the job
