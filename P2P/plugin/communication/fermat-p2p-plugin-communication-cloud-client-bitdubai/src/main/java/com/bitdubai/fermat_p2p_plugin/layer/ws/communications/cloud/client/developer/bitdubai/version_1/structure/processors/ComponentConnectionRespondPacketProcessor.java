@@ -22,7 +22,7 @@ import com.google.gson.JsonParser;
 import java.net.URI;
 
 /**
- * The Class <code>com.bitdubai.fermat_p2p_plugin.layer.ws.communications.cloud.client.developer.bitdubai.version_1.structure.processors.ComponentConnectionRespondPacketProcessor</code> implement
+ * The Class <code>com.bitdubai.fermat_p2p_plugin.layer.ws.communications.cloud.client.developer.bitdubai.version_1.structure.processors.ComponentConnectionRespondJettyPacketProcessor</code> implement
  * the logic to process the packet when a packet type <code>com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.enums.FermatPacketType.COMPONENT_CONNECTION_RESPOND</code> is receive by the server.
  * <p/>
  * Created by Roberto Requena - (rart3001@gmail.com) on 13/09/15.
@@ -40,7 +40,7 @@ public class ComponentConnectionRespondPacketProcessor extends FermatPacketProce
     public void processingPackage(FermatPacket receiveFermatPacket) {
 
         //System.out.println(" --------------------------------------------------------------------- ");
-       //System.out.println("ComponentConnectionRespondPacketProcessor - Starting processingPackage");
+       //System.out.println("ComponentConnectionRespondJettyPacketProcessor - Starting processingPackage");
 
         /*
          * Get the message content and decrypt
@@ -48,7 +48,7 @@ public class ComponentConnectionRespondPacketProcessor extends FermatPacketProce
         String messageContentJsonStringRepresentation = AsymmetricCryptography.decryptMessagePrivateKey(receiveFermatPacket.getMessageContent(), getWsCommunicationsCloudClientChannel().getClientIdentity().getPrivateKey());
 
 
-        //System.out.println("ComponentConnectionRespondPacketProcessor - messageContentJsonStringRepresentation = "+messageContentJsonStringRepresentation);
+        //System.out.println("ComponentConnectionRespondJettyPacketProcessor - messageContentJsonStringRepresentation = "+messageContentJsonStringRepresentation);
 
         /*
          * Construct the json object
@@ -68,7 +68,7 @@ public class ComponentConnectionRespondPacketProcessor extends FermatPacketProce
 
             vpnServerUri = new URI(ServerConf.WS_PROTOCOL + WsCommunicationsCloudClientPluginRoot.SERVER_IP + ":" + ServerConf.DEFAULT_PORT + vpnServerUri);
 
-            System.out.println("ComponentConnectionRespondPacketProcessor - vpnServerUri to connect = "+vpnServerUri);
+            System.out.println("ComponentConnectionRespondJettyPacketProcessor - vpnServerUri to connect = "+vpnServerUri);
 
             /*
              * Get the  wsCommunicationVPNClientManagerAgent

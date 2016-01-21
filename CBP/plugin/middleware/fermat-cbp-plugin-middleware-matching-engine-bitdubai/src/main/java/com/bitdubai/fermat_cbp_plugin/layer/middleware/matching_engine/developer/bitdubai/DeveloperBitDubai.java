@@ -2,7 +2,12 @@ package com.bitdubai.fermat_cbp_plugin.layer.middleware.matching_engine.develope
 
 import com.bitdubai.fermat_api.Plugin;
 import com.bitdubai.fermat_api.PluginDeveloper;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.abstract_classes.AbstractPluginDeveloper;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.exceptions.CantRegisterVersionException;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.exceptions.CantStartPluginDeveloperException;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.PluginDeveloperReference;
 import com.bitdubai.fermat_api.layer.all_definition.enums.CryptoCurrency;
+import com.bitdubai.fermat_api.layer.all_definition.enums.Developers;
 import com.bitdubai.fermat_api.layer.all_definition.enums.TimeFrequency;
 import com.bitdubai.fermat_api.layer.all_definition.license.PluginLicensor;
 import com.bitdubai.fermat_cbp_plugin.layer.middleware.matching_engine.developer.bitdubai.version_1.MatchingEngineMiddlewarePluginRoot;
@@ -22,14 +27,14 @@ public class DeveloperBitDubai extends AbstractPluginDeveloper implements Plugin
     @Override
     public void start() throws CantStartPluginDeveloperException {
 
-        try {
-
-            this.registerVersion(new MatchingEngineMiddlewarePluginRoot());
-
-        } catch (CantRegisterVersionException e) {
-
-            throw new CantStartPluginDeveloperException(e, "", "Error registering plugin versions for the developer.");
-        }
+//        try {
+//
+//            this.registerVersion(new MatchingEngineMiddlewarePluginRoot());
+//
+//        } catch (CantRegisterVersionException e) {
+//
+//            throw new CantStartPluginDeveloperException(e, "", "Error registering plugin versions for the developer.");
+//        }
     }
 
 

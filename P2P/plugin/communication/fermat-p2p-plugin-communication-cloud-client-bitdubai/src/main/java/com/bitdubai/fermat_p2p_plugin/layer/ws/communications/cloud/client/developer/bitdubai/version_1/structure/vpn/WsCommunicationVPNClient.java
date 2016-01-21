@@ -413,6 +413,11 @@ public class WsCommunicationVPNClient extends WebSocketClient implements Communi
         return remoteParticipantNetworkService;
     }
 
+    @Override
+    public boolean isConnected() {
+        return getConnection().isOpen();
+    }
+
     /**
      * Is Pong Message Pending
      * @return boolean
