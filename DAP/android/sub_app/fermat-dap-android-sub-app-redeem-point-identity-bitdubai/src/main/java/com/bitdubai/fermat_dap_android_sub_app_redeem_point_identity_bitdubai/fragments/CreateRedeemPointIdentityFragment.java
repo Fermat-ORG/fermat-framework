@@ -75,6 +75,7 @@ public class CreateRedeemPointIdentityFragment extends AbstractFermatFragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setHasOptionsMenu(true);
 
         try {
             redeemPointIdentitySubAppSession = (RedeemPointIdentitySubAppSession) appSession;

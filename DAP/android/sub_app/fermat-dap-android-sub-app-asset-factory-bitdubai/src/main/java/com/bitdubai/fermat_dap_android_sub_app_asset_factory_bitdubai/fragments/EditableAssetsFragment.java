@@ -33,9 +33,7 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.BlockchainNetworkType;
 import com.bitdubai.fermat_api.layer.all_definition.enums.UISource;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
 import com.bitdubai.fermat_api.layer.all_definition.resources_structure.Resource;
-import com.bitdubai.fermat_api.layer.all_definition.settings.exceptions.CantGetSettingsException;
 import com.bitdubai.fermat_api.layer.all_definition.settings.exceptions.CantPersistSettingsException;
-import com.bitdubai.fermat_api.layer.all_definition.settings.exceptions.SettingsNotFoundException;
 import com.bitdubai.fermat_api.layer.all_definition.settings.structure.SettingsManager;
 import com.bitdubai.fermat_api.layer.modules.common_classes.ActiveActorIdentityInformation;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantCreateFileException;
@@ -266,45 +264,39 @@ public class EditableAssetsFragment extends AbstractFermatFragment implements
 
     private void setUpPresentation(boolean checkButton) {
         try {
-            boolean isPresentationHelpEnabled = settingsManager.loadAndGetSettings(appSession.getAppPublicKey()).isPresentationHelpEnabled();
+            PresentationDialog presentationDialog = new PresentationDialog.Builder(getActivity(), appSession)
+                    .setBannerRes(R.drawable.banner_asset_factory)
+                    .setIconRes(R.drawable.asset_factory)
+                    .setVIewColor(R.color.dap_asset_factory_view_color)
+                    .setTitleTextColor(R.color.dap_asset_factory_view_color)
+                    .setSubTitle("Welcome to the Asset Factory application.")
+                    .setBody("From here you will be able to create, define and publish all your assets.")
+                    .setTextFooter("We will be creating an avatar for you in order to identify you in the system as an Asset Issuer, name and more details later in the Asset Issuer Identity sub app.")
+                    .setTemplateType((manager.getLoggedIdentityAssetIssuer() == null) ? PresentationDialog.TemplateType.TYPE_PRESENTATION : PresentationDialog.TemplateType.TYPE_PRESENTATION_WITHOUT_IDENTITIES)
+                    .setIsCheckEnabled(checkButton)
+                    .build();
 
-            if (isPresentationHelpEnabled) {
-                PresentationDialog presentationDialog = new PresentationDialog.Builder(getActivity(), appSession)
-                        .setBannerRes(R.drawable.banner_asset_factory)
-                        .setIconRes(R.drawable.asset_factory)
-                        .setVIewColor(R.color.dap_asset_factory_view_color)
-                        .setTitleTextColor(R.color.dap_asset_factory_view_color)
-                        .setSubTitle("Welcome to the Asset Factory application.")
-                        .setBody("From here you will be able to create, define and publish all your assets.")
-                        .setTextFooter("We will be creating an avatar for you in order to identify you in the system as an Asset Issuer, name and more details later in the Asset Issuer Identity sub app.")
-                        .setTemplateType((manager.getLoggedIdentityAssetIssuer() == null) ? PresentationDialog.TemplateType.TYPE_PRESENTATION : PresentationDialog.TemplateType.TYPE_PRESENTATION_WITHOUT_IDENTITIES)
-                        .setIsCheckEnabled(checkButton)
-                        .build();
-
-                presentationDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
-                    @Override
-                    public void onDismiss(DialogInterface dialog) {
-                        Object o = appSession.getData(SessionConstantsAssetFactory.PRESENTATION_IDENTITY_CREATED);
-                        if (o != null) {
-                            if ((Boolean) (o)) {
-                                //invalidate();
-                                appSession.removeData(SessionConstantsAssetFactory.PRESENTATION_IDENTITY_CREATED);
-                            }
-                        }
-                        IdentityAssetIssuer identityAssetIssuer = manager.getLoggedIdentityAssetIssuer();
-                        if (identityAssetIssuer == null) {
-                            getActivity().onBackPressed();
-                        } else {
-                            invalidate();
+            presentationDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
+                @Override
+                public void onDismiss(DialogInterface dialog) {
+                    Object o = appSession.getData(SessionConstantsAssetFactory.PRESENTATION_IDENTITY_CREATED);
+                    if (o != null) {
+                        if ((Boolean) (o)) {
+                            //invalidate();
+                            appSession.removeData(SessionConstantsAssetFactory.PRESENTATION_IDENTITY_CREATED);
                         }
                     }
-                });
+                    IdentityAssetIssuer identityAssetIssuer = manager.getLoggedIdentityAssetIssuer();
+                    if (identityAssetIssuer == null) {
+                        getActivity().onBackPressed();
+                    } else {
+                        invalidate();
+                    }
+                }
+            });
 
-                presentationDialog.show();
-            }
-        } catch (CantGetSettingsException e) {
-            e.printStackTrace();
-        } catch (SettingsNotFoundException e) {
+            presentationDialog.show();
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }

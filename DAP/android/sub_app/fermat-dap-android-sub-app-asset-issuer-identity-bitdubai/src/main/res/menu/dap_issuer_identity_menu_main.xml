@@ -7,4 +7,10 @@
         android:orderInCategory="100"
         android:title="@string/action_settings"
         app:showAsAction="never" />
+
+    <item
+        android:id="@+id/action_asset_factory_help"
+        android:title="@string/help"
+        android:icon="@drawable/dap_identity_issuer_help_icon"
+        app:showAsAction="always" />
 </menu>

@@ -75,6 +75,7 @@ public class CreateUserIdentityFragment extends AbstractFermatFragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setHasOptionsMenu(true);
 
         try {
             userIdentitySubAppSession = (UserIdentitySubAppSession) appSession;
