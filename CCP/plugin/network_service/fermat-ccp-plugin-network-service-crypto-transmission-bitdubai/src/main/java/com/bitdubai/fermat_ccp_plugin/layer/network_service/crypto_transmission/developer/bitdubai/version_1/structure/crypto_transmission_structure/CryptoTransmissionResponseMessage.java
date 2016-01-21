@@ -1,7 +1,7 @@
 package com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_transmission.developer.bitdubai.version_1.structure.crypto_transmission_structure;
 
 import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_transmission.enums.CryptoTransmissionMetadataState;
-import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_transmission.enums.CryptoTransmissionStates;
+import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_transmission.enums.CryptoTransmissionProtocolState;
 import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_transmission.interfaces.structure.CryptoTransmissionMetadataType;
 
 import java.util.UUID;
@@ -12,11 +12,11 @@ import java.util.UUID;
 public class CryptoTransmissionResponseMessage {
 
     private UUID transactionId;
-    private CryptoTransmissionStates cryptoTransmissionStates;
+    private CryptoTransmissionProtocolState cryptoTransmissionStates;
     private CryptoTransmissionMetadataType cryptoTransmissionMetadataType;
     private CryptoTransmissionMetadataState cryptoTransmissionMetadataState;
 
-    public CryptoTransmissionResponseMessage(UUID transactionId, CryptoTransmissionStates cryptoTransmissionStates, CryptoTransmissionMetadataType cryptoTransmissionMetadataType,CryptoTransmissionMetadataState cryptoTransmissionMetadataState) {
+    public CryptoTransmissionResponseMessage(UUID transactionId, CryptoTransmissionProtocolState cryptoTransmissionStates, CryptoTransmissionMetadataType cryptoTransmissionMetadataType,CryptoTransmissionMetadataState cryptoTransmissionMetadataState) {
         this.transactionId = transactionId;
         this.cryptoTransmissionStates = cryptoTransmissionStates;
         this.cryptoTransmissionMetadataType = cryptoTransmissionMetadataType;
@@ -31,11 +31,11 @@ public class CryptoTransmissionResponseMessage {
         this.transactionId = transactionId;
     }
 
-    public CryptoTransmissionStates getCryptoTransmissionStates() {
+    public CryptoTransmissionProtocolState getCryptoTransmissionProtocolState() {
         return cryptoTransmissionStates;
     }
 
-    public void setCryptoTransmissionStates(CryptoTransmissionStates cryptoTransmissionStates) {
+    public void setCryptoTransmissionProtocolState(CryptoTransmissionProtocolState cryptoTransmissionStates) {
         this.cryptoTransmissionStates = cryptoTransmissionStates;
     }
 
