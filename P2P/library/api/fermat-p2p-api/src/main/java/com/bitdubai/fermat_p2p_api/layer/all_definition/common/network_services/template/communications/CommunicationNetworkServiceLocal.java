@@ -166,11 +166,12 @@ public class CommunicationNetworkServiceLocal implements Observer, NetworkServic
         /**
          * Put the message on a event and fire new event
          */
-        FermatEvent fermatEvent = eventManager.getNewEvent(P2pEventType.NEW_NETWORK_SERVICE_MESSAGE_RECEIVE_NOTIFICATION);
-        fermatEvent.setSource((networkServicePluginRoot!=null)?networkServicePluginRoot.getEventSource():abstractNetworkServiceV2.getEventSource());
-        ((NewNetworkServiceMessageReceivedNotificationEvent) fermatEvent).setData(incomingMessage);
-        ((NewNetworkServiceMessageReceivedNotificationEvent) fermatEvent).setNetworkServiceTypeApplicant(networkServiceTypePluginRoot);
-        eventManager.raiseEvent(fermatEvent);
+        networkServicePluginRoot.handleNewMessages(incomingMessage);
+//        FermatEvent fermatEvent = eventManager.getNewEvent(P2pEventType.NEW_NETWORK_SERVICE_MESSAGE_RECEIVE_NOTIFICATION);
+//        fermatEvent.setSource((networkServicePluginRoot!=null)?networkServicePluginRoot.getEventSource():abstractNetworkServiceV2.getEventSource());
+//        ((NewNetworkServiceMessageReceivedNotificationEvent) fermatEvent).setData(incomingMessage);
+//        ((NewNetworkServiceMessageReceivedNotificationEvent) fermatEvent).setNetworkServiceTypeApplicant(networkServiceTypePluginRoot);
+//        eventManager.raiseEvent(fermatEvent);
 
     }
 
