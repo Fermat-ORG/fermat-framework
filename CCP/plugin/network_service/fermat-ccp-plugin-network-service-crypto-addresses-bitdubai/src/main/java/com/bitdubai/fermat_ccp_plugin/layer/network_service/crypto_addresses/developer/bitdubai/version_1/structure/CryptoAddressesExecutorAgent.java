@@ -361,7 +361,9 @@ public final class CryptoAddressesExecutorAgent extends FermatAgent {
 
         return new AcceptMessage(
                 aer.getRequestId(),
-                aer.getCryptoAddress()
+                aer.getCryptoAddress(),
+                aer.getIdentityPublicKeyResponding(),
+                aer.getIdentityPublicKeyRequesting()
         ).toJson();
     }
 
@@ -369,7 +371,9 @@ public final class CryptoAddressesExecutorAgent extends FermatAgent {
 
         return new DenyMessage(
                 aer.getRequestId(),
-                "Denied by Incompatibility"
+                "Denied by Incompatibility",
+                aer.getIdentityPublicKeyResponding(),
+                aer.getIdentityPublicKeyRequesting()
         ).toJson();
     }
 
@@ -409,8 +413,11 @@ public final class CryptoAddressesExecutorAgent extends FermatAgent {
         errorManager.reportUnexpectedPluginException(cryptoAddressesNetworkServicePluginRoot.getPluginVersionReference(), UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
     }
 
-    public void connectionFailure(final String identityPublicKey){
-        this.poolConnectionsWaitingForResponse.remove(identityPublicKey);
+    public void connectionFailure(final String destinationPublicKey){
+        this.poolConnectionsWaitingForResponse.remove(destinationPublicKey);
     }
 
+    public boolean isConnectionOpen(String destinationPublicKey) {
+        return poolConnectionsWaitingForResponse.containsKey(destinationPublicKey);
+    }
 }

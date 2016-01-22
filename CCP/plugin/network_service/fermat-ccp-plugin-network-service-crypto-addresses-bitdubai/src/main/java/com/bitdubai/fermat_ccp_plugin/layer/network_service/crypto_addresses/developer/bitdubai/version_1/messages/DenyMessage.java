@@ -16,9 +16,11 @@ public class DenyMessage extends NetworkServiceMessage {
     private final String reason   ;
 
     public DenyMessage(final UUID   requestId,
-                       final String reason   ) {
+                       final String reason,
+                       String identitySender,
+                       String actorDestination) {
 
-        super(MessageTypes.DENY);
+        super(requestId,MessageTypes.DENY,identitySender,actorDestination);
 
         this.requestId = requestId;
         this.reason = reason;

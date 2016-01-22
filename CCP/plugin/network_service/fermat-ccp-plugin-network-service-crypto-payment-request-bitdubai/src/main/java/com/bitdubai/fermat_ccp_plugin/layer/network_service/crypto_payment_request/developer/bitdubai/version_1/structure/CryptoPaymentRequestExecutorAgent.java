@@ -445,8 +445,11 @@ public class CryptoPaymentRequestExecutorAgent extends FermatAgent {
         errorManager.reportUnexpectedPluginException(pluginVersionReference, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
     }
 
-    public void connectionFailure(String identityPublicKey){
-        this.poolConnectionsWaitingForResponse.remove(identityPublicKey);
+    public void connectionFailure(String remotePublicKey){
+        this.poolConnectionsWaitingForResponse.remove(remotePublicKey);
     }
 
+    public boolean isConnectionOpen(String remotePublicKey) {
+        return poolConnectionsWaitingForResponse.containsKey(remotePublicKey);
+    }
 }
