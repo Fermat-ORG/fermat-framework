@@ -1,8 +1,7 @@
 package com.bitdubai.fermat_csh_plugin.layer.wallet_module.cash_money.developer.bitdubai.version_1.structure;
 
 import com.bitdubai.fermat_csh_api.layer.csh_cash_money_transaction.deposit.exceptions.CantCreateDepositTransactionException;
-import com.bitdubai.fermat_csh_api.layer.csh_cash_money_transaction.deposit.interfaces.CashDepositTransactionParameters;
-import com.bitdubai.fermat_csh_api.layer.csh_wallet.interfaces.CashMoneyWalletTransaction;
+import com.bitdubai.fermat_csh_api.all_definition.interfaces.CashTransactionParameters;
 import com.bitdubai.fermat_csh_api.layer.csh_wallet_module.AsyncTransactionAgent;
 import com.bitdubai.fermat_csh_api.layer.csh_wallet_module.interfaces.CashMoneyWalletModuleManager;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
@@ -10,7 +9,7 @@ import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfac
 /**
  * Created by Alex on 21/1/2016.
  */
-public class CashWalletModuleAsyncAgent extends AsyncTransactionAgent<CashDepositTransactionParameters> {
+public class CashWalletModuleAsyncAgent extends AsyncTransactionAgent<CashTransactionParameters> {
 
     ErrorManager errorManager;
     CashMoneyWalletModuleManager cashMoneyWalletModuleManager;
@@ -25,13 +24,13 @@ public class CashWalletModuleAsyncAgent extends AsyncTransactionAgent<CashDeposi
 
 
 
-    public void addTransaction(CashDepositTransactionParameters transaction)
+    public void addTransaction(CashTransactionParameters transaction)
     {
         this.addNewTransaction(transaction);
     }
 
     @Override
-    public void processTransaction(CashDepositTransactionParameters transaction) {
+    public void processTransaction(CashTransactionParameters transaction) {
 
         try{
             cashMoneyWalletModuleManager.createCashDepositTransaction(transaction);
@@ -44,7 +43,7 @@ public class CashWalletModuleAsyncAgent extends AsyncTransactionAgent<CashDeposi
     }
 
     @Override
-    public void transactionFailed(CashDepositTransactionParameters transaction, Exception exception) {
+    public void transactionFailed(CashTransactionParameters transaction, Exception exception) {
         //TODO: Evento al GUI que indica que la transaccion fallo, podrian ser insufficient funds.. revisar la exception
     }
 

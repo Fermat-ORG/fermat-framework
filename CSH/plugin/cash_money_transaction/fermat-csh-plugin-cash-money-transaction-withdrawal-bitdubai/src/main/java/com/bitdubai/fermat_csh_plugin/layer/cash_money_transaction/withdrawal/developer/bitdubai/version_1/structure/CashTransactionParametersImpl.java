@@ -1,7 +1,7 @@
-package com.bitdubai.reference_wallet.cash_money_wallet.common;
+package com.bitdubai.fermat_csh_plugin.layer.cash_money_transaction.withdrawal.developer.bitdubai.version_1.structure;
 
 import com.bitdubai.fermat_api.layer.all_definition.enums.FiatCurrency;
-import com.bitdubai.fermat_csh_api.layer.csh_cash_money_transaction.deposit.interfaces.CashDepositTransactionParameters;
+import com.bitdubai.fermat_csh_api.all_definition.interfaces.CashTransactionParameters;
 
 import java.math.BigDecimal;
 import java.util.UUID;
@@ -9,7 +9,7 @@ import java.util.UUID;
 /**
  * Created by Alejandro Bicelis on 11/27/2015.
  */
-public class CashDepositTransactionParametersImpl implements CashDepositTransactionParameters {
+public class CashTransactionParametersImpl implements CashTransactionParameters {
 
     private UUID transactionId;
     private String publicKeyWallet;
@@ -20,8 +20,8 @@ public class CashDepositTransactionParametersImpl implements CashDepositTransact
     private String memo;
 
 
-    public CashDepositTransactionParametersImpl(UUID transactionId, String publicKeyWallet, String publicKeyActor,
-                                                String publicKeyPlugin, BigDecimal amount, FiatCurrency currency, String memo)
+    public CashTransactionParametersImpl(UUID transactionId, String publicKeyWallet, String publicKeyActor,
+                                                   String publicKeyPlugin, BigDecimal amount, FiatCurrency currency, String memo)
     {
         this.transactionId = transactionId;
         this.publicKeyWallet = publicKeyWallet;
