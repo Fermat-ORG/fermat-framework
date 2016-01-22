@@ -864,8 +864,8 @@ public final class CryptoPaymentRequestNetworkServicePluginRoot extends Abstract
         /*
          * If the component registered have my profile and my identity public key
          */
-        if (platformComponentProfileRegistered.getPlatformComponentType() == PlatformComponentType.NETWORK_SERVICE &&
-            platformComponentProfileRegistered.getNetworkServiceType()    == NetworkServiceType   .CRYPTO_PAYMENT_REQUEST    &&
+        if (platformComponentProfileRegistered.getPlatformComponentType() == getPlatformComponentType() &&
+            platformComponentProfileRegistered.getNetworkServiceType()    == getNetworkServiceType()   &&
             platformComponentProfileRegistered.getIdentityPublicKey().equals(identity.getPublicKey())                        ) {
 
             /*
