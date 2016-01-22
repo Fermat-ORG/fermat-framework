@@ -117,6 +117,8 @@ public class AssetIssuerActorPluginRoot extends AbstractPlugin implements
 
     private ActorAssetIssuerMonitorAgent actorAssetIssuerMonitorAgent;
 
+    private ActorAssetIssuer actorAssetIssuer;
+
     List<FermatEventListener> listenersAdded = new ArrayList<>();
 
     @Override
@@ -128,6 +130,24 @@ public class AssetIssuerActorPluginRoot extends AbstractPlugin implements
             assetIssuerActorDao = new AssetIssuerActorDao(this.pluginDatabaseSystem, this.pluginFileSystem, this.pluginId);
 
             initializeListener();
+
+            /**
+             * Will load (if any) the local asset issuer
+             */
+            actorAssetIssuer = this.assetIssuerActorDao.getActorAssetIssuer();
+            /**
+             * If I have it, will register it on the network
+             */
+            if (actorAssetIssuer != null){
+                try{
+                    assetIssuerActorNetworkServiceManager.registerActorAssetIssuer(actorAssetIssuer);
+                } catch (CantRegisterActorAssetIssuerException e){
+                    // I will continue if I couldn't register it now.
+                    e.printStackTrace();
+                }
+            }
+
+
 
             /**
              * Agent for Search Actor Asset User REGISTERED in Actor Network Service User

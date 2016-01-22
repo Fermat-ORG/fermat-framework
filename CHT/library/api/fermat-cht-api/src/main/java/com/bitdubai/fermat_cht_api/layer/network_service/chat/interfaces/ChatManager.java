@@ -14,8 +14,7 @@ import java.util.UUID;
 public interface ChatManager extends FermatManager, TransactionProtocolManager<ChatMetadata> {
 
     //TODO IN CONSTRUCTION
-    //TODO FROM Manuel: Please, refactor this interface, use UUID instead integer for Id, check the new version of chat middleware interface.
     void sendChatMetadata(String localActorPubKey, String remoteActorPubKey, ChatMetadata chatMetadata) throws CantSendChatMessageMetadataException;
 
-    void sendChatMessageNewStatusNotification(UUID localActorPubKey, PlatformComponentType senderType, UUID remoteActorPubKey, PlatformComponentType receiverType, DistributionStatus newDistributionStatus) throws CantSendChatMessageNewStatusNotificationException;
+    void sendChatMessageNewStatusNotification(String localActorPubKey, PlatformComponentType senderType, String remoteActorPubKey, PlatformComponentType receiverType, DistributionStatus newDistributionStatus, UUID chatId) throws CantSendChatMessageNewStatusNotificationException;
 }

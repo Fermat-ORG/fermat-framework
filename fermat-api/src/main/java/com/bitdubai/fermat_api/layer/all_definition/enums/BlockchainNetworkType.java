@@ -18,6 +18,7 @@ public enum BlockchainNetworkType implements FermatEnum {
     PRODUCTION  ("PROD"),
     REG_TEST    ("RTEST"),
     TEST        ("TEST"),
+    TEST_NET    ("TESTN"),
 
     ;
 
@@ -33,6 +34,7 @@ public enum BlockchainNetworkType implements FermatEnum {
             case "PROD":  return BlockchainNetworkType.PRODUCTION;
             case "RTEST": return BlockchainNetworkType.REG_TEST;
             case "TEST":  return BlockchainNetworkType.TEST;
+            case "TESTN": return BlockchainNetworkType.TEST_NET;
             default:      return BlockchainNetworkType.DEFAULT;
         }
     }

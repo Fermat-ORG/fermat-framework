@@ -29,11 +29,8 @@ import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.enums.UISource;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Wallets;
-import com.bitdubai.fermat_api.layer.all_definition.settings.exceptions.CantGetSettingsException;
 import com.bitdubai.fermat_api.layer.all_definition.settings.exceptions.CantPersistSettingsException;
-import com.bitdubai.fermat_api.layer.all_definition.settings.exceptions.SettingsNotFoundException;
 import com.bitdubai.fermat_api.layer.all_definition.settings.structure.SettingsManager;
-import com.bitdubai.fermat_api.layer.modules.common_classes.ActiveActorIdentityInformation;
 import com.bitdubai.fermat_dap_android_wallet_redeem_point_bitdubai.R;
 import com.bitdubai.fermat_dap_android_wallet_redeem_point_bitdubai.adapters.MyAssetsAdapter;
 import com.bitdubai.fermat_dap_android_wallet_redeem_point_bitdubai.models.Data;
@@ -53,7 +50,6 @@ import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.List;
 
-import static android.widget.Toast.LENGTH_SHORT;
 import static android.widget.Toast.makeText;
 
 /**
@@ -140,53 +136,46 @@ public class RedeemPointMainActivityFragment extends FermatWalletListFragment<Di
     }
 
     private void setUpPresentation(boolean checkButton) {
-
         try {
-            boolean isPresentationHelpEnabled = settingsManager.loadAndGetSettings(appSession.getAppPublicKey()).isPresentationHelpEnabled();
+            PresentationDialog presentationDialog = new PresentationDialog.Builder(getActivity(), appSession)
+                    .setBannerRes(R.drawable.banner_redeem_point)
+                    .setIconRes(R.drawable.redeem_point)
+                    .setImageLeft(R.drawable.redeem_point_identity)
+                    .setVIewColor(R.color.dap_redeem_point_view_color)
+                    .setTitleTextColor(R.color.dap_redeem_point_view_color)
+                    .setTextNameLeft("Example.com")
+                    .setSubTitle("Welcome to the RedeemPoint Wallet.")
+                    .setBody("From this wallet you will be able to verify the assets that users redeem with you and get statistic from them.")
+                    .setTextFooter("We will be creating an avatar for you in order to identify you in the system as a Redeem Point, name and more details later in the Redeem Point Identity sub app.")
+                    .setTemplateType((moduleManager.getActiveAssetRedeemPointIdentity() == null) ? PresentationDialog.TemplateType.DAP_TYPE_PRESENTATION : PresentationDialog.TemplateType.TYPE_PRESENTATION_WITHOUT_IDENTITIES)
+                    .setIsCheckEnabled(checkButton)
+                    .build();
 
-            if (isPresentationHelpEnabled) {
-                PresentationDialog presentationDialog = new PresentationDialog.Builder(getActivity(), appSession)
-                        .setBannerRes(R.drawable.banner_redeem_point)
-                        .setIconRes(R.drawable.redeem_point)
-                        .setVIewColor(R.color.dap_redeem_point_view_color)
-                        .setTitleTextColor(R.color.dap_redeem_point_view_color)
-                        .setSubTitle("Welcome to the RedeemPoint Wallet.")
-                        .setBody("From this wallet you will be able to verify the assets that users redeem with you and get statistic from them.")
-                        .setTextFooter("We will be creating an avatar for you in order to identify you in the system as a Redeem Point, name and more details later in the Redeem Point Identity sub app.")
-                        .setTemplateType((moduleManager.getActiveAssetRedeemPointIdentity() == null) ? PresentationDialog.TemplateType.TYPE_PRESENTATION : PresentationDialog.TemplateType.TYPE_PRESENTATION_WITHOUT_IDENTITIES)
-                        .setIsCheckEnabled(checkButton)
-                        .build();
-
-                presentationDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
-                    @Override
-                    public void onDismiss(DialogInterface dialog) {
-                        Object o = appSession.getData(SessionConstantsRedeemPoint.PRESENTATION_IDENTITY_CREATED);
-                        if (o != null) {
-                            if ((Boolean) (o)) {
-                                //invalidate();
-                                appSession.removeData(SessionConstantsRedeemPoint.PRESENTATION_IDENTITY_CREATED);
-                            }
-                        }
-                        try {
-                            RedeemPointIdentity redeemPointIdentity = moduleManager.getActiveAssetRedeemPointIdentity();
-                            if (redeemPointIdentity == null) {
-                                getActivity().onBackPressed();
-                            } else {
-                                invalidate();
-                            }
-                        } catch (CantGetIdentityRedeemPointException e) {
-                            e.printStackTrace();
+            presentationDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
+                @Override
+                public void onDismiss(DialogInterface dialog) {
+                    Object o = appSession.getData(SessionConstantsRedeemPoint.PRESENTATION_IDENTITY_CREATED);
+                    if (o != null) {
+                        if ((Boolean) (o)) {
+                            //invalidate();
+                            appSession.removeData(SessionConstantsRedeemPoint.PRESENTATION_IDENTITY_CREATED);
                         }
                     }
-                });
+                    try {
+                        RedeemPointIdentity redeemPointIdentity = moduleManager.getActiveAssetRedeemPointIdentity();
+                        if (redeemPointIdentity == null) {
+                            getActivity().onBackPressed();
+                        } else {
+                            invalidate();
+                        }
+                    } catch (CantGetIdentityRedeemPointException e) {
+                        e.printStackTrace();
+                    }
+                }
+            });
 
-                presentationDialog.show();
-            }
+            presentationDialog.show();
         } catch (CantGetIdentityRedeemPointException e) {
-            e.printStackTrace();
-        } catch (CantGetSettingsException e) {
-            e.printStackTrace();
-        } catch (SettingsNotFoundException e) {
             e.printStackTrace();
         }
     }

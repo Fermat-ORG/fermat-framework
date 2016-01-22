@@ -13,32 +13,30 @@ import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
-import android.widget.Switch;
 import android.widget.Toast;
 
 import com.bitdubai.android_fermat_ccp_wallet_bitcoin.R;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractFermatFragment;
+import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView;
 import com.bitdubai.fermat_api.layer.all_definition.enums.UISource;
-import com.bitdubai.fermat_api.layer.all_definition.identities.ActiveIdentity;
+import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Wallets;
 import com.bitdubai.fermat_ccp_api.layer.module.intra_user.exceptions.CantGetActiveLoginIdentityException;
-import com.bitdubai.fermat_ccp_api.layer.module.intra_user.interfaces.IntraUserLoginIdentity;
-import com.bitdubai.fermat_ccp_api.layer.module.intra_user.interfaces.IntraUserModuleManager;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.exceptions.CantGetCryptoWalletException;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.interfaces.CryptoWallet;
-import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.interfaces.CryptoWalletIntraUserIdentity;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedUIExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedWalletExceptionSeverity;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.bar_code_scanner.IntentIntegrator;
-import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.navigation_drawer.BitcoinWalletNavigationViewPainter;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.session.ReferenceWalletSession;
+
 import static android.widget.Toast.makeText;
 import static com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.utils.WalletUtils.showMessage;
 
 /**
  * Created by Matias Furszyfer on 2015.11.05..
+ * Modified by Jose Manuel De Sousa Dos Santos on 2016.18.01
  */
-public class SettingsFragment2 extends AbstractFermatFragment implements View.OnClickListener{
+public class SettingsFragment2 extends AbstractFermatFragment implements View.OnClickListener {
 
 
     /**
@@ -52,9 +50,10 @@ public class SettingsFragment2 extends AbstractFermatFragment implements View.On
      * UI
      */
     private View rootView;
-    private Switch mSwitchNotifications;
 
     private ColorStateList mSwitchTrackStateList;
+    private FermatTextView networkAction;
+    private FermatTextView notificationAction;
 
 
     public static SettingsFragment2 newInstance() {
@@ -84,7 +83,7 @@ public class SettingsFragment2 extends AbstractFermatFragment implements View.On
             setUpActions();
             setUpUIData();
             return rootView;
-        }catch (Exception e){
+        } catch (Exception e) {
             makeText(getActivity(), "Oooops! recovering from system error", Toast.LENGTH_SHORT).show();
             referenceWalletSession.getErrorManager().reportUnexpectedUIException(UISource.VIEW, UnexpectedUIExceptionSeverity.CRASH, e);
         }
@@ -93,21 +92,28 @@ public class SettingsFragment2 extends AbstractFermatFragment implements View.On
     }
 
 
-
-
     @TargetApi(Build.VERSION_CODES.LOLLIPOP)
     private void setUpUI() throws CantGetActiveLoginIdentityException {
-        //WalletUtils.setNavigatitDrawer(getPaintActivtyFeactures(), referenceWalletSession.getIntraUserModuleManager().getActiveIntraUserIdentity());
-
-        mSwitchNotifications = (Switch) rootView.findViewById(R.id.switch_notifications);
-        mSwitchNotifications.setBackgroundTintList(getSwitchTrackColorStateList());
+        networkAction = (FermatTextView) rootView.findViewById(R.id.network_action);
+        notificationAction = (FermatTextView) rootView.findViewById(R.id.notification_action);
     }
 
-    private void setUpActions(){
-
+    private void setUpActions() {
+        networkAction.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                changeActivity(Activities.CCP_BITCOIN_WALLET_SETTINGS_ACTIVITY_MAIN_NETWORK, referenceWalletSession.getAppPublicKey());
+            }
+        });
+        notificationAction.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                changeActivity(Activities.CCP_BITCOIN_WALLET_SETTINGS_ACTIVITY_NOTIFICATIONS, referenceWalletSession.getAppPublicKey());
+            }
+        });
     }
 
-    private void setUpUIData(){
+    private void setUpUIData() {
 
     }
 
@@ -115,7 +121,7 @@ public class SettingsFragment2 extends AbstractFermatFragment implements View.On
     public void onActivityCreated(Bundle savedInstanceState) {
         try {
             super.onActivityCreated(savedInstanceState);
-        } catch (Exception e){
+        } catch (Exception e) {
             makeText(getActivity(), "Oooops! recovering from system error", Toast.LENGTH_SHORT).show();
             referenceWalletSession.getErrorManager().reportUnexpectedUIException(UISource.VIEW, UnexpectedUIExceptionSeverity.CRASH, e);
         }
@@ -130,15 +136,13 @@ public class SettingsFragment2 extends AbstractFermatFragment implements View.On
         if (id == R.id.scan_qr) {
             IntentIntegrator integrator = new IntentIntegrator(getActivity(), (EditText) rootView.findViewById(R.id.address));
             integrator.initiateScan();
-        }
-        else if (id == R.id.send_button){
+        } else if (id == R.id.send_button) {
             InputMethodManager im = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
             if (getActivity().getCurrentFocus() != null && im.isActive(getActivity().getCurrentFocus())) {
                 im.hideSoftInputFromWindow(getActivity().getCurrentFocus().getWindowToken(), 0);
             }
 
-        }
-        else if (id == R.id.imageView_contact){
+        } else if (id == R.id.imageView_contact) {
             // if user press the profile image
         }
 
@@ -152,11 +156,11 @@ public class SettingsFragment2 extends AbstractFermatFragment implements View.On
             int i = 0;
 
             // Disabled state
-            states[i] = new int[] { -android.R.attr.state_enabled };
+            states[i] = new int[]{-android.R.attr.state_enabled};
             colors[i] = Color.RED;
             i++;
 
-            states[i] = new int[] { android.R.attr.state_checked };
+            states[i] = new int[]{android.R.attr.state_checked};
             colors[i] = Color.BLUE;
             i++;
 

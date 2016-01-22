@@ -1,12 +1,13 @@
 ![alt text](https://github.com/bitDubai/media-kit/blob/master/MediaKit/Fermat%20Branding/Fermat%20Logotype/Fermat_Logo_3D.png "Fermat Logo")
 
-#--draft--
 
 # Fermat
 
 ## A Peer-to-Peer Financial Application Framework
 
-**Contributors** : Luis Fernando Molina
+**Author** : [Luis Fernando Molina](https://github.com/Luis-Fernando-Molina)
+
+**Contributors** :
 
 **Advisors** :
 
@@ -17,11 +18,17 @@ November 2015
 _www.fermat.org_
 
 <br>
+## Status of the Document
+
+This document is a DRAFT with no formal reviews yet. Some changes are being done from time to time. If you want, you  can make a formal review of this document. We will be happy to add you at the _reviewers_ section.
+
+
+<br>
 ## Abstract
 
 A peer-to-peer financial application framework could allow standalone crypto wallets to evolve into any kind of peer-to-peer financial applications.
 
-Developing peer-to-peer financial applications is challenging. Bitcoin provides part of the solution as a p2p system of electronic cash [1], but the main benefits are lost if a trusted third party is still required to transport meta-data, synchronize devices, hold wallets files or keys, manage identities, interface crypto networks or the legacy financial system.
+Developing peer-to-peer financial applications is challenging. Bitcoin provides part of the solution as a P2P system of electronic cash [1], but the main benefits are lost if a trusted third party is still required to transport meta-data, synchronize devices, hold wallets files or keys, manage identities, interface crypto networks or the legacy financial system.
 
 We propose a peer-to-peer network for transporting meta-data and inter-connect network clients between each other. A synchronization scheme running on top of it transforms a standalone app into a distributed application across several devices still owned by the same user.
 
@@ -30,15 +37,15 @@ We propose a framework to replace the standalone wallet application. This framew
 <br>
 ## Introduction
 
-Standalone bitcoin wallets were the first generation of trust-less financial applications since they didn't require to trust any third party, inheriting this property from the bitcoin network itself. As the ecosystem evolved, trusted third parties were introduced again and they took over the wallet space because of technical capabilities that are easier to build in a centralized way: communication between wallets, synchronization between devices, interfacing the legacy financial system, securing funds, etc., and they consistently took the biggest share of funding, leaving standalone wallets far behind and at the same time trashing the benefit of bitcoin of not relying on trust, one of its key features. Applications trying to use the blockchain to transport meta-data were considered spammers and standalone wallets were effectively left behind.
+Standalone Bitcoin wallets were the first generation of trust-less financial applications since they didn't require to trust any third party, inheriting this property from the Bitcoin network itself. As the ecosystem evolved, trusted third parties were introduced again and they took over the wallet space because of technical capabilities that are easier to build in a centralized way: communication between wallets, synchronization between devices, interfacing the legacy financial system, securing funds, etc., and they consistently took the biggest share of funding, leaving standalone wallets far behind and at the same time trashing the benefit of Bitcoin of not relying on trust, one of its key features. Applications trying to use the blockchain to transport meta-data were considered spammers and standalone wallets were effectively left behind.
 
-What is needed on top of all existing protocols is a layer that faces end users and that finishes the job bitcoin started regarding its core principles of openness, decentralization and privacy. Using crypto networks for transporting value or as a registry for digital assets and a new P2P Network for transporting the required meta-data at a network client level. This would allow financial apps to run any user level interconnected functionality without ever going through a trusted third party.
+What is needed on top of all existing protocols is a layer that faces end users and that finishes the job Bitcoin started regarding its core principles of openness, decentralization and privacy. Using crypto networks for transporting value or as a registry for digital assets and a new P2P Network for transporting the required meta-data at a network client level. This would allow financial apps to run any user level interconnected functionality without ever going through a trusted third party.
 
-Fermat is a Framework, a p2p Network and an Ecosystem of Fermat APPs. The Fermat Framework is an open source software that runs on end user devices. This software can run Fermat APPs, which are like mobile APPs but running on top of the Fermat Framework.
+Fermat is a Framework, a P2P Network and an Ecosystem of Fermat APPs. The Fermat Framework is an open source software that runs on end user devices. This software can run Fermat APPs, which are like mobile APPs but running on top of the Fermat Framework.
 
 By choosing a plug-in architecture for the Framework we make it possible for any developer to add their own reusable components. We define the micro use licensing scheme as the mechanism for developers to monetize their work. The Framework itself enforces these micro use licenses and guarantees developers a revenue stream.
 
-The Fermat P2P network interconnects Android devices between each other in order to exchange application data without needing to go through a centralized service.
+The Fermat P2P network interconnects devices between each other in order to exchange application data without needing to go through a centralized service.
 
 The Ecosystem of Fermat APPs offers different products to end users. From the outside it may seem like a set of APPs targeting different use cases for different people, but on the inside there is a system built from hundreds of components collaborating between each other. These APPs are just the user interfaces, or skins of the underlying mechanisms.
 
@@ -177,7 +184,9 @@ End users pay with fermats to receive personalized technical support from Fermat
 <br>
 ## Fermat Blockchain
 
-Fermat's blockchain inherits many of the characteristics of the bitcoin blockchain and it is highly coupled with it. The data structure is an ordered, back-linked list of blocks of transactions. In our case all the transactions are _coinbase_ transactions, meaning that they are transactions where new fermats are issued by the protocol. Blocks are linked "back" each referring to the previous block in the chain.
+Fermat's blockchain keeps track of all Fermat Tokens issued. Fermat outsources the transaction procesing of Fermat Tokens to one ore more crypto networks. This means that Fermat newly issued tokens are registered at some crypto network with a technique similar to a _digital asset_ or _colored coin_, and the transactions representing the transfers of ownership are handled directly by these crypto networks with no intervention of the Fermat Blockchain or Fermat Network whatsoever. The first implementation of Fermat Tokens is using only the bitcoin network as it is the most reliable at present time. Later, however, the decision where to register new fermats will be taken by the miners winning the block reward. They will be able to choose between all the crypto networks integrated into the Fermat system at the moment of that event happening. During the rest of this document all further explanations will be refering to the bitcoin network as it is the first of one of multiple possible future implementations.  
+
+The data structure is an ordered, back-linked list of blocks of transactions. In our case all the transactions are _coinbase_ transactions, meaning that they are transactions where new fermats are issued by the protocol. Blocks are linked "back" each referring to the previous block in the chain.
 
 Each block within the blockchain:
 

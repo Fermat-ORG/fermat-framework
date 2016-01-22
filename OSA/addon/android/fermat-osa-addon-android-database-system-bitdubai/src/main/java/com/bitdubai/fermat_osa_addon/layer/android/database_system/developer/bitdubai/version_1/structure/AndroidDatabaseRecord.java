@@ -82,11 +82,14 @@ public class AndroidDatabaseRecord implements DatabaseTableRecord {
      */
     @Override
     public long getLongValue(String columnName) {
-
-        for (int i = 0; i < values.size(); i++) {
-            if(values.get(i).getName().equals(columnName)){
-                return Long.parseLong(values.get(i).getValue());
+        try {
+            for (int i = 0; i < values.size(); i++) {
+                if (values.get(i).getName().equals(columnName)) {
+                    return Long.parseLong(values.get(i).getValue());
+                }
             }
+        }catch (Exception e){
+            return 0;
         }
         return 0;
     }

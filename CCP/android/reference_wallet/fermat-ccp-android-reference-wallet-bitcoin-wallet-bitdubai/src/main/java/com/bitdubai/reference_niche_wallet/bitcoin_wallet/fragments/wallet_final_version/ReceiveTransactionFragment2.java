@@ -265,9 +265,9 @@ public class ReceiveTransactionFragment2 extends FermatWalletExpandableListFragm
 
                 available_offset = lstCryptoWalletTransactionsAvailable.size();
 
-                lstCryptoWalletTransactionsBook.addAll(moduleManager.listLastActorTransactionsByTransactionType(BalanceType.BOOK, TransactionType.CREDIT, referenceWalletSession.getAppPublicKey(), intraUserPk, MAX_TRANSACTIONS, book_offset));
+              //  lstCryptoWalletTransactionsBook.addAll(moduleManager.listLastActorTransactionsByTransactionType(BalanceType.BOOK, TransactionType.CREDIT, referenceWalletSession.getAppPublicKey(), intraUserPk, MAX_TRANSACTIONS, book_offset));
 
-                book_offset = lstCryptoWalletTransactionsBook.size();
+               // book_offset = lstCryptoWalletTransactionsBook.size();
 
                 //get transactions from actor public key to send me btc
                 for (CryptoWalletTransaction cryptoWalletTransaction : lstCryptoWalletTransactionsAvailable) {

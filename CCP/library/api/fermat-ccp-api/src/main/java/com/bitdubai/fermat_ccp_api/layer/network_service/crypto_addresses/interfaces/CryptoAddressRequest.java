@@ -46,4 +46,6 @@ public interface CryptoAddressRequest {
 
     long getSentDate();
 
+    String getMessageType();
+
 }

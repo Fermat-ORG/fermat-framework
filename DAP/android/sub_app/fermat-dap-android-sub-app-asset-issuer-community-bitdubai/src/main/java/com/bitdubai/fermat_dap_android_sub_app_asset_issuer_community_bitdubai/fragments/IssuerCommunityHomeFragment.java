@@ -3,6 +3,7 @@ package com.bitdubai.fermat_dap_android_sub_app_asset_issuer_community_bitdubai.
 import android.app.ProgressDialog;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
@@ -19,8 +20,13 @@ import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractFermatFragment;
+import com.bitdubai.fermat_android_api.ui.Views.PresentationDialog;
 import com.bitdubai.fermat_android_api.ui.interfaces.FermatWorkerCallBack;
 import com.bitdubai.fermat_android_api.ui.util.FermatWorker;
+import com.bitdubai.fermat_api.FermatException;
+import com.bitdubai.fermat_api.layer.all_definition.enums.UISource;
+import com.bitdubai.fermat_api.layer.all_definition.settings.exceptions.CantPersistSettingsException;
+import com.bitdubai.fermat_api.layer.all_definition.settings.structure.SettingsManager;
 import com.bitdubai.fermat_dap_android_sub_app_asset_issuer_community_bitdubai.R;
 import com.bitdubai.fermat_dap_android_sub_app_asset_issuer_community_bitdubai.adapters.IssuerCommunityAdapter;
 import com.bitdubai.fermat_dap_android_sub_app_asset_issuer_community_bitdubai.interfaces.AdapterChangeListener;
@@ -29,12 +35,16 @@ import com.bitdubai.fermat_dap_android_sub_app_asset_issuer_community_bitdubai.s
 import com.bitdubai.fermat_dap_api.layer.all_definition.exceptions.CantGetIdentityAssetIssuerException;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_issuer.AssetIssuerActorRecord;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_issuer.interfaces.ActorAssetIssuer;
+import com.bitdubai.fermat_dap_api.layer.dap_module.wallet_asset_issuer.AssetIssuerSettings;
 import com.bitdubai.fermat_dap_api.layer.dap_sub_app_module.asset_issuer_community.interfaces.AssetIssuerCommunitySubAppModuleManager;
+import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedUIExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 import com.software.shell.fab.ActionButton;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import static android.widget.Toast.makeText;
 
 /**
  * Created by francisco on 21/10/15.
@@ -53,6 +63,8 @@ public class IssuerCommunityHomeFragment extends AbstractFermatFragment implemen
     private View rootView;
     private LinearLayout emptyView;
 
+    SettingsManager<AssetIssuerSettings> settingsManager;
+
     /**
      * Flags
      */
@@ -66,9 +78,11 @@ public class IssuerCommunityHomeFragment extends AbstractFermatFragment implemen
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
+
         try {
             manager = ((AssetIssuerCommunitySubAppSession) appSession).getModuleManager();
             errorManager = appSession.getErrorManager();
+            settingsManager = appSession.getModuleManager().getSettingsManager();
         } catch (Exception ex) {
             ex.printStackTrace();
         }
@@ -101,7 +115,83 @@ public class IssuerCommunityHomeFragment extends AbstractFermatFragment implemen
         swipeRefreshLayout.setRefreshing(true);
         onRefresh();
 
+        //Initialize settings
+        settingsManager = appSession.getModuleManager().getSettingsManager();
+        AssetIssuerSettings settings = null;
+        try {
+            settings = settingsManager.loadAndGetSettings(appSession.getAppPublicKey());
+        } catch (Exception e) {
+            settings = null;
+        }
+        if (settings == null) {
+            settings = new AssetIssuerSettings();
+            settings.setIsContactsHelpEnabled(true);
+            settings.setIsPresentationHelpEnabled(true);
+
+            try {
+                settingsManager.persistSettings(appSession.getAppPublicKey(), settings);
+            } catch (CantPersistSettingsException e) {
+                e.printStackTrace();
+            }
+        }
+
+        final AssetIssuerSettings assetIssuerSettingsTemp = settings;
+
+
+        Handler handlerTimer = new Handler();
+        handlerTimer.postDelayed(new Runnable() {
+            public void run() {
+                if (assetIssuerSettingsTemp.isPresentationHelpEnabled()) {
+                    setUpPresentation(false);
+                }
+            }
+        }, 500);
+
         return rootView;
+    }
+
+    private void setUpPresentation(boolean checkButton) {
+//        try {
+        PresentationDialog presentationDialog = new PresentationDialog.Builder(getActivity(), appSession)
+//                    .setBannerRes(R.drawable.banner_asset_issuer_wallet)
+                .setIconRes(R.drawable.asset_issuer_comunity)
+                .setVIewColor(R.color.dap_community_issuer_view_color)
+                .setTitleTextColor(R.color.dap_community_issuer_view_color)
+                .setSubTitle("Welcome to the Asset Issuer Community.")
+                .setBody("From this wallet you will be able to distribute your assets to the world and collect statistics of their usage.")
+                .setTextFooter("We will be creating an avatar for you in order to identify you in the system as an Asset Issuer, name and more details later in the Asset Issuer Identity sub app.")
+                .setTemplateType(PresentationDialog.TemplateType.TYPE_PRESENTATION_WITHOUT_IDENTITIES)
+//                    .setTemplateType((moduleManager.getActiveAssetIssuerIdentity() == null) ? PresentationDialog.TemplateType.TYPE_PRESENTATION : PresentationDialog.TemplateType.TYPE_PRESENTATION_WITHOUT_IDENTITIES)
+                .setIsCheckEnabled(checkButton)
+                .build();
+
+//            presentationDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
+//                @Override
+//                public void onDismiss(DialogInterface dialog) {
+//                    Object o = appSession.getData(SessionConstantsAssetIssuer.PRESENTATION_IDENTITY_CREATED);
+//                    if (o != null) {
+//                        if ((Boolean) (o)) {
+//                            //invalidate();
+//                            appSession.removeData(SessionConstantsAssetIssuer.PRESENTATION_IDENTITY_CREATED);
+//                        }
+//                    }
+//                    try {
+//                        IdentityAssetIssuer identityAssetIssuer = moduleManager.getActiveAssetIssuerIdentity();
+//                        if (identityAssetIssuer == null) {
+//                            getActivity().onBackPressed();
+//                        } else {
+//                            invalidate();
+//                        }
+//                    } catch (CantGetIdentityAssetIssuerException e) {
+//                        e.printStackTrace();
+//                    }
+//                }
+//            });
+
+        presentationDialog.show();
+//        } catch (CantGetIdentityAssetIssuerException e) {
+//            e.printStackTrace();
+//        }
     }
 
     @Override
@@ -234,6 +324,17 @@ public class IssuerCommunityHomeFragment extends AbstractFermatFragment implemen
             });
             worker.execute();
             return true;
+        }
+
+        try {
+            if (item.getItemId() == R.id.action_community_issuer_help) {
+                setUpPresentation(settingsManager.loadAndGetSettings(appSession.getAppPublicKey()).isPresentationHelpEnabled());
+                return true;
+            }
+        } catch (Exception e) {
+            errorManager.reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.UNSTABLE, FermatException.wrapException(e));
+            makeText(getActivity(), "Asset Issuer system error",
+                    Toast.LENGTH_SHORT).show();
         }
         return super.onOptionsItemSelected(item);
     }

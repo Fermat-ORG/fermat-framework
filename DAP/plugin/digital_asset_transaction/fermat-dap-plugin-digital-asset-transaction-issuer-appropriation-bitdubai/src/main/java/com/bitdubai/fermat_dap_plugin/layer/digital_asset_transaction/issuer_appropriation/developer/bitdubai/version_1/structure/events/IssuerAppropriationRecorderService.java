@@ -15,7 +15,6 @@ import com.bitdubai.fermat_dap_api.layer.dap_transaction.common.interfaces.Asset
 import com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.issuer_appropriation.developer.bitdubai.version_1.structure.database.IssuerAppropriationDAO;
 import com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.issuer_appropriation.developer.bitdubai.version_1.structure.functional.IssuerAppropriationVault;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
-import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.enums.EventType;
 import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfaces.EventManager;
 
 import java.util.ArrayList;
@@ -75,16 +74,6 @@ public class IssuerAppropriationRecorderService implements AssetTransactionServi
         String context = "PluginDatabaseSystem: " + pluginDatabaseSystem + " - Plugin ID: " + pluginId + " Event Manager: " + eventManager;
 
         try {
-
-            //TODO CHANGE THESE EVENTS TO THE NEW ONES!!
-
-            FermatEventListener onCryptoNetwork = eventManager.getNewListener(EventType.INCOMING_ASSET_ON_CRYPTO_NETWORK_WAITING_TRANSFERENCE_ASSET_ISSUER);
-            onCryptoNetwork.setEventHandler(new IssuerAppropriationEventHandler(this));
-            addListener(onCryptoNetwork);
-
-            FermatEventListener onBlockChain = eventManager.getNewListener(EventType.INCOMING_ASSET_ON_BLOCKCHAIN_WAITING_TRANSFERENCE_ASSET_ISSUER);
-            onBlockChain.setEventHandler(new IssuerAppropriationEventHandler(this));
-            addListener(onBlockChain);
         } catch (Exception e) {
             throw new CantStartServiceException(e, context, "An unexpected exception happened while trying to start the AssetAppropriationRecordeService.");
         }

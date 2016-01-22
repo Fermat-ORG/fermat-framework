@@ -24,18 +24,12 @@ public interface ActorExtraData {
      *
      * @return all prices of goods Broker
      */
-    Collection<FiatIndex> getQuotes();
+    Collection<QuotesExtraData> getQuotes();
 
     /**
      *
      * @return all currencies handled with platforms that support them
      */
     Map<Currency, Collection<Platforms>> getCurrencies();
-
-    /**
-     *
-     * @return all currencies handled with platforms that support them
-     */
-    Collection<Platforms> getPlatformsSupport(Currency currency);
 
 }

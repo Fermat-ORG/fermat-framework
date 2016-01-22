@@ -1,5 +1,6 @@
 package com.bitdubai.fermat_cht_api.layer.middleware.mocks;
 
+import com.bitdubai.fermat_api.layer.all_definition.components.enums.PlatformComponentType;
 import com.bitdubai.fermat_cht_api.all_definition.enums.ChatStatus;
 import com.bitdubai.fermat_cht_api.layer.middleware.interfaces.Chat;
 
@@ -11,6 +12,9 @@ import java.util.UUID;
  * Created by Manuel Perez (darkpriestrelative@gmail.com) on 13/01/16.
  */
 public class ChatMock implements Chat {
+
+    private String localActorPubKey = "TestLocalActorPublicKey";
+    private String remoteActorPubKey = "RemoteActorPublicKey";
     @Override
     public UUID getChatId() {
         return UUID.fromString("52d7fab8-a423-458f-bcc9-49cdb3e9ba8f");
@@ -32,18 +36,18 @@ public class ChatMock implements Chat {
     }
 
     @Override
-    public String getLocalActorType() {
-        return "TestLocalActorType";
+    public PlatformComponentType getLocalActorType() {
+        return PlatformComponentType.NETWORK_SERVICE;
     }
 
     @Override
-    public void setLocalActorType(String localActorType) {
+    public void setLocalActorType(PlatformComponentType localActorType) {
 
     }
 
     @Override
     public String getLocalActorPublicKey() {
-        return "TestLocalActorPublicKey";
+        return this.localActorPubKey;
     }
 
     @Override
@@ -52,18 +56,18 @@ public class ChatMock implements Chat {
     }
 
     @Override
-    public String getRemoteActorType() {
-        return "TestRemoteActorType";
+    public PlatformComponentType getRemoteActorType() {
+        return PlatformComponentType.NETWORK_SERVICE;
     }
 
     @Override
-    public void setRemoteActorType(String remoteActorType) {
+    public void setRemoteActorType(PlatformComponentType remoteActorType) {
 
     }
 
     @Override
     public String getRemoteActorPublicKey() {
-        return "RemoteActorPublicKey";
+        return this.remoteActorPubKey;
     }
 
     @Override

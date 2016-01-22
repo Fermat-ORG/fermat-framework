@@ -96,8 +96,8 @@ dependencies {
     compile project(':fermat-dmp-android-sub-app-wallet-store-bitdubai')
     compile project(':fermat-dap-android-reference-wallet-asset-issuer-bitdubai')
     /*
-                    Sub APPs on the pipeline
-                    */
+                        Sub APPs on the pipeline
+                        */
     compile project(':fermat-pip-android-sub-app-sub-app-manager-bitdubai')
     // PIP Projects (Sub APPs)
     compile project(':fermat-pip-android-sub-app-developer-bitdubai')
@@ -127,7 +127,9 @@ dependencies {
     compile project(':fermat-bnk-android-reference-wallet-bank-money-bitdubai')
     //CSH wallet
     compile project(':fermat-csh-android-reference-wallet-cash-money-bitdubai')
-//    compile project(':fermat-dap-plugin-wallet-module-asset-issuer-bitdubai')
+    //CHT
+    compile project(':fermat-cht-android-sub-app-chat-bitdubai')
+    //    compile project(':fermat-dap-plugin-wallet-module-asset-issuer-bitdubai')
     compile fileTree(dir: 'libs', include: ['*.jar'])
     //compile 'com.android.support:appcompat-v7:21.0.3'
     compile 'com.android.support:support-v4:23.0.1'
