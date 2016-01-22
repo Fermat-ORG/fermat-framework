@@ -35,6 +35,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 
 /**
@@ -49,7 +50,18 @@ public class CryptoPaymentRequestExecutorAgent extends FermatAgent {
     private static final long SLEEP_TIME = 7500;
 
     // Represent the receive and send cycles for this agent.
-    private final Runnable agentTask;
+    private final Runnable agentTask= new Runnable() {
+        @Override
+        public void run() {
+            while (isRunning()) {
+                sendCycle();
+                receiveCycle();
+            }
+
+        }
+    };
+
+    ;
     private ExecutorService executorService;
     private Future<?> future;
 
@@ -81,17 +93,8 @@ public class CryptoPaymentRequestExecutorAgent extends FermatAgent {
 
         poolConnectionsWaitingForResponse = new HashMap<>();
 
-        //Create a thread to send the messages
-        agentTask = new Runnable() {
-            @Override
-            public void run() {
-                while (isRunning()) {
-                    sendCycle();
-                    receiveCycle();
-                }
+        executorService = Executors.newSingleThreadExecutor();
 
-            }
-        };
     }
 
     public void start() throws CantStartAgentException {
