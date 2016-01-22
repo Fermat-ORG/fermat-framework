@@ -135,18 +135,6 @@ public class AssetIssuerActorPluginRoot extends AbstractPlugin implements
              * Will load (if any) the local asset issuer
              */
             actorAssetIssuer = this.assetIssuerActorDao.getActorAssetIssuer();
-            /**
-             * If I have it, will register it on the network
-             */
-            if (actorAssetIssuer != null){
-                try{
-                    assetIssuerActorNetworkServiceManager.registerActorAssetIssuer(actorAssetIssuer);
-                } catch (CantRegisterActorAssetIssuerException e){
-                    // I will continue if I couldn't register it now.
-                    e.printStackTrace();
-                }
-            }
-
 
 
             /**
