@@ -182,6 +182,20 @@ public class ComponentRegistrationRequestJettyPacketProcessor extends FermatJett
              */
             if (MemoryCache.getInstance().getRegisteredCommunicationsCloudClientCache().containsKey(platformComponentProfileToRegister.getIdentityPublicKey())) {
 
+                /*
+                 * Remove key from the old reference
+                 * for no clean the reference when the
+                 * time up close de old socket
+                 */
+                ClientConnection clientConnectionOldReference = MemoryCache.getInstance().getRegisteredClientConnectionsCache().get(platformComponentProfileToRegister.getIdentityPublicKey()); //Add using the real client identity from profile
+                clientConnectionOldReference.setClientIdentity(null);
+
+                 /*
+                 * Add to the RegisteredClientConnectionsCache
+                 */
+                MemoryCache.getInstance().getRegisteredClientConnectionsCache().put(platformComponentProfileToRegister.getIdentityPublicKey(), clientConnection); //Add using the real client identity from profile
+
+
                  /*
                  * Construct a fermat packet whit reconnect notification
                  */
