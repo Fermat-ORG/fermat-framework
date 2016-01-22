@@ -20,6 +20,7 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
 import com.bitdubai.fermat_api.layer.all_definition.util.Version;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
+import com.bitdubai.fermat_csh_api.all_definition.enums.TransactionType;
 import com.bitdubai.fermat_csh_api.all_definition.exceptions.CashMoneyWalletInsufficientFundsException;
 import com.bitdubai.fermat_csh_api.all_definition.interfaces.CashTransactionParameters;
 import com.bitdubai.fermat_csh_api.layer.csh_cash_money_transaction.withdrawal.exceptions.CantCreateWithdrawalTransactionException;
@@ -80,12 +81,12 @@ public class CashMoneyTransactionWithdrawalPluginRoot extends AbstractPlugin imp
     private void testCreateCashWithdrawalTransaction() {
         //System.out.println("CASHWITHDRAWAL - testCreateCashWithdrawalTransaction CALLED");
 
-        CashTransactionParameters params = new CashTransactionParametersImpl(UUID.randomUUID(), "cash_wallet", "pkeyActor", "pkeyPlugin", new BigDecimal(1000), FiatCurrency.US_DOLLAR, "testWithdrawal AVAIL/BOOK 1000USD");
-        //CashTransactionParametersImpl params2 = new CashTransactionParametersImpl(UUID.randomUUID(), "cash_wallet", "pkeyActor", "pkeyPlugin", new BigDecimal(10000), FiatCurrency.US_DOLLAR, "testWithdrawal AVAIL/BOOK 10000USD");
+        CashTransactionParameters params = new CashTransactionParametersImpl(UUID.randomUUID(), "cash_wallet", "pkeyActor", "pkeyPlugin", new BigDecimal(1000), FiatCurrency.US_DOLLAR, "testWithdrawal AVAIL/BOOK 1000USD", TransactionType.DEBIT);
+        //CashTransactionParametersImpl params2 = new CashTransactionParametersImpl(UUID.randomUUID(), "cash_wallet", "pkeyActor", "pkeyPlugin", new BigDecimal(10000), FiatCurrency.US_DOLLAR, "testWithdrawal AVAIL/BOOK 10000USD", TransactionType.DEBIT);
 
         try {
             this.createCashWithdrawalTransaction(params);
-            //this.createCashWithdrawalTransaction(params2);
+            //this.createAsyncCashWithdrawalTransaction(params2);
         } catch (CantCreateWithdrawalTransactionException | CashMoneyWalletInsufficientFundsException e) {
             System.out.println("CASHWITHDRAWAL - testCreateCashWithdrawalTransaction() -  CantCreateWithdrawalTransactionException");
         }

@@ -1,6 +1,7 @@
 package com.bitdubai.fermat_csh_plugin.layer.cash_money_transaction.withdrawal.developer.bitdubai.version_1.structure;
 
 import com.bitdubai.fermat_api.layer.all_definition.enums.FiatCurrency;
+import com.bitdubai.fermat_csh_api.all_definition.enums.TransactionType;
 import com.bitdubai.fermat_csh_api.all_definition.interfaces.CashTransactionParameters;
 
 import java.math.BigDecimal;
@@ -18,10 +19,11 @@ public class CashTransactionParametersImpl implements CashTransactionParameters 
     private BigDecimal amount;
     FiatCurrency currency;
     private String memo;
+    private TransactionType transactionType;
 
 
     public CashTransactionParametersImpl(UUID transactionId, String publicKeyWallet, String publicKeyActor,
-                                                   String publicKeyPlugin, BigDecimal amount, FiatCurrency currency, String memo)
+                                                   String publicKeyPlugin, BigDecimal amount, FiatCurrency currency, String memo, TransactionType transactionType)
     {
         this.transactionId = transactionId;
         this.publicKeyWallet = publicKeyWallet;
@@ -64,5 +66,10 @@ public class CashTransactionParametersImpl implements CashTransactionParameters 
     @Override
     public String getMemo() {
         return memo;
+    }
+
+    @Override
+    public TransactionType getTransactionType() {
+        return transactionType;
     }
 }

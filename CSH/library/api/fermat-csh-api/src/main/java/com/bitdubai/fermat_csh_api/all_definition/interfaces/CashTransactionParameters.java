@@ -1,6 +1,7 @@
 package com.bitdubai.fermat_csh_api.all_definition.interfaces;
 
 import com.bitdubai.fermat_api.layer.all_definition.enums.FiatCurrency;
+import com.bitdubai.fermat_csh_api.all_definition.enums.TransactionType;
 
 import java.math.BigDecimal;
 import java.util.UUID;
@@ -51,5 +52,11 @@ public interface CashTransactionParameters {
      * @return      Memo of the transaction
      */
     String getMemo();
+
+    /**
+     * Returns the memo of the transaction
+     * @return      Memo of the transaction
+     */
+    TransactionType getTransactionType();
 
 }
