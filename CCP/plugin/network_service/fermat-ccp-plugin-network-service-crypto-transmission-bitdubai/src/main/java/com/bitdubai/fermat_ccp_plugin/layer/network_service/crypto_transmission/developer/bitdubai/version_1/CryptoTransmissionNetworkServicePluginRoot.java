@@ -1111,14 +1111,24 @@ public class CryptoTransmissionNetworkServicePluginRoot extends AbstractNetworkS
     @Override
     public void informTransactionCreditedInWallet(UUID transaction_id) throws CantSetToCreditedInWalletException {
         try {
-            outgoingCryptoTransmissionMetadataDAO.changeCryptoTransmissionProtocolStateAndNotificationState(
+            //change status to send , to inform Seen
+            CryptoTransmissionMetadata cryptoTransmissionMetadata = incomingCryptoTransmissionMetadataDAO.changeCryptoTransmissionProtocolStateAndNotificationState(
                     transaction_id,
-                    CryptoTransmissionProtocolState.PRE_PROCESSING_SEND,
-                    CryptoTransmissionMetadataState.CREDITED_IN_DESTINATION_WALLET);
+                    CryptoTransmissionProtocolState.DONE,
+                    CryptoTransmissionMetadataState.CREDITED_IN_OWN_WALLET);
+
+
+            // send inform to other ns
+            cryptoTransmissionMetadata.changeCryptoTransmissionProtocolState(CryptoTransmissionProtocolState.PRE_PROCESSING_SEND);
+            cryptoTransmissionMetadata.changeMetadataState(CryptoTransmissionMetadataState.CREDITED_IN_DESTINATION_WALLET);
+            cryptoTransmissionMetadata.setPendingToRead(false);
+            outgoingCryptoTransmissionMetadataDAO.saveCryptoTransmissionMetadata(cryptoTransmissionMetadata);
         }
         catch(CantUpdateRecordDataBaseException e) {
             throw  new CantSetToCreditedInWalletException("Can't Set Metadata To Credited In Wallet Exception",e,"","Can't update record");
         } catch (PendingRequestNotFoundException e) {
+            e.printStackTrace();
+        } catch (CantSaveCryptoTransmissionMetadatatException e) {
             e.printStackTrace();
         }
 
@@ -1129,15 +1139,24 @@ public class CryptoTransmissionNetworkServicePluginRoot extends AbstractNetworkS
     public void informTransactionSeenByVault(UUID transaction_id) throws CantSetToSeenByCryptoVaultException {
         try {
             //change status to send , to inform Seen
-            //CryptoTransmissionMetadata cryptoTransmissionMetadata = incomingCryptoTransmissionMetadataDAO.getMetadata(transaction_id);
-            incomingCryptoTransmissionMetadataDAO.changeCryptoTransmissionProtocolStateAndNotificationState(
+            CryptoTransmissionMetadata cryptoTransmissionMetadata = incomingCryptoTransmissionMetadataDAO.changeCryptoTransmissionProtocolStateAndNotificationState(
                     transaction_id,
-                    CryptoTransmissionProtocolState.PRE_PROCESSING_SEND,
-                    CryptoTransmissionMetadataState.SEEN_BY_DESTINATION_VAULT);
+                    CryptoTransmissionProtocolState.WAITING_FOR_RESPONSE,
+                    CryptoTransmissionMetadataState.SEEN_BY_OWN_VAULT);
+
+            // send inform to other ns
+            cryptoTransmissionMetadata.changeCryptoTransmissionProtocolState(CryptoTransmissionProtocolState.PRE_PROCESSING_SEND);
+            cryptoTransmissionMetadata.changeMetadataState(CryptoTransmissionMetadataState.SEEN_BY_DESTINATION_VAULT);
+            cryptoTransmissionMetadata.setPendingToRead(false);
+            outgoingCryptoTransmissionMetadataDAO.saveCryptoTransmissionMetadata(cryptoTransmissionMetadata);
+
+
         }
         catch(CantUpdateRecordDataBaseException e) {
             throw  new CantSetToSeenByCryptoVaultException("Can't Set Metadata To Seen By Crypto Vault Exception",e,"","Can't update record");
         } catch (PendingRequestNotFoundException e) {
+            e.printStackTrace();
+        } catch (CantSaveCryptoTransmissionMetadatatException e) {
             e.printStackTrace();
         }
     }
