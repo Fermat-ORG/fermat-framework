@@ -84,6 +84,7 @@ import com.bitdubai.fermat_wpd_api.layer.wpd_middleware.wallet_manager.interface
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -503,14 +504,49 @@ public class CryptoCustomerWalletModuleCryptoCustomerWalletManager implements Cr
     }
 
     @Override
-    public boolean startNegotiation(UUID customerId, UUID brokerId, Collection<ClauseInformation> clauses) throws CouldNotStartNegotiationException, CantCreateCustomerBrokerNewPurchaseNegotiationTransactionException {
+    public boolean startNegotiation(String customerPublicKey, String brokerPublicKey, Collection<ClauseInformation> clauses) throws CouldNotStartNegotiationException, CantCreateCustomerBrokerNewPurchaseNegotiationTransactionException {
         try {
+            /*
             CustomerBrokerPurchaseNegotiationImpl customerBrokerPurchaseNegotiation = new CustomerBrokerPurchaseNegotiationImpl();
-            customerBrokerPurchaseNegotiation.setClauses(null);
-            customerBrokerPurchaseNegotiation.setBrokerPublicKey(brokerId.toString());
-            customerBrokerPurchaseNegotiation.setCustomerPublicKey(customerId.toString());
+            customerBrokerPurchaseNegotiation.setClauses(getClause(clauses));
+            customerBrokerPurchaseNegotiation.setBrokerPublicKey(brokerPublicKey);
+            customerBrokerPurchaseNegotiation.setCustomerPublicKey(customerPublicKey);
             customerBrokerNewManager.createCustomerBrokerNewPurchaseNegotiationTranasction(customerBrokerPurchaseNegotiation);
             return true; //CustomerBrokerNewManager con la data minima
+            */
+            System.out.print("\n**** 1) MOCK MODULE CRYPTO CUSTOMER - PURCHASE NEGOTIATION****\n" +
+                    "\n-CUSTOMER: "+customerPublicKey+
+                    "\n-BROKER: "+brokerPublicKey);
+
+            Date time = new Date();
+
+            Collection<Clause> clauseNegotiation = getClause(clauses);
+            CustomerBrokerPurchaseNegotiationImpl customerBrokerPurchaseNegotiation = new CustomerBrokerPurchaseNegotiationImpl();
+            customerBrokerPurchaseNegotiation.setBrokerPublicKey(brokerPublicKey);
+            customerBrokerPurchaseNegotiation.setCustomerPublicKey(customerPublicKey);
+            customerBrokerPurchaseNegotiation.setNegotiationId(UUID.randomUUID());
+            customerBrokerPurchaseNegotiation.setStartDate(time.getTime());
+            customerBrokerPurchaseNegotiation.setStatus(NegotiationStatus.SENT_TO_BROKER);
+            customerBrokerPurchaseNegotiation.setClauses(clauseNegotiation);
+            customerBrokerPurchaseNegotiation.setNearExpirationDatetime(Boolean.FALSE);
+            customerBrokerPurchaseNegotiation.setNegotiationExpirationDate((long) 0);
+            customerBrokerPurchaseNegotiation.setLastNegotiationUpdateDate(time.getTime());
+
+            System.out.print("\n**** 1.1) MOCK MODULE CRYPTO CUSTOMER - PURCHASE NEGOTIATION - CLAUSES INFORMATION****\n");
+//            for (ClauseInformation information: clauses){
+//                System.out.print("\n**** 1.1.1) - CLAUSES: ****\n" +
+//                        "\n- "+information.getType().getCode()+": "+information.getValue()+" (STATUS: "+information.getStatus()+")");
+//            }
+
+            System.out.print("\n**** 1.2) MOCK MODULE CRYPTO CUSTOMER - PURCHASE NEGOTIATION - CLAUSES NEGOTIATION****\n");
+//            for (Clause information: clauseNegotiation){
+//                System.out.print("\n**** 1.2.1) - CLAUSES: ****\n" +
+//                        "\n- "+information.getType().getCode()+": "+information.getValue()+" (STATUS: "+information.getStatus()+")");
+//            }
+
+            customerBrokerNewManager.createCustomerBrokerNewPurchaseNegotiationTranasction(customerBrokerPurchaseNegotiation);
+
+            return true;
         }
         catch(Exception exception)
         {
@@ -843,5 +879,29 @@ public class CryptoCustomerWalletModuleCryptoCustomerWalletManager implements Cr
     @Override
     public int[] getMenuNotifications() {
         return new int[0];
+    }
+
+    private Collection<Clause> getClause(Collection<ClauseInformation> clauseInformation){
+
+        Collection<Clause> collectionClause = new ArrayList<>();
+        Clause clause;
+
+        for (ClauseInformation information: clauseInformation){
+            if(information != null) {
+
+                clause = new CryptoCustomerWalletModuleClausesImpl(
+                        information.getClauseID(),
+                        information.getType(),
+                        information.getValue(),
+                        information.getStatus(),
+                        "",
+                        (short) 1
+                );
+
+                collectionClause.add(clause);
+            }
+        }
+
+        return collectionClause;
     }
 }

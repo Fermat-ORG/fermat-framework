@@ -5,9 +5,9 @@ import com.bitdubai.fermat_api.FermatException;
 /**
  * Created by Yordin Alayn on 13.11.2015.
  */
-public class CantRegisterCustomerBrokerNewNegotiationTransactionException extends FermatException {
+public class CantRegisterCustomerBrokerNewEventException extends FermatException {
 
-    public static final String DEFAULT_MESSAGE = "CBP-NEGOTIATION TRANSACTION-CUSTOMER BROKER NEW. CAN'T REGISTER TRANSACTION";
+    public static final String DEFAULT_MESSAGE = "CBP-NEGOTIATION TRANSACTION-CUSTOMER BROKER NEW. CAN'T REGISTER EVENT";
 
     /**
      * This is the constructor that every inherited FermatException must implement
@@ -16,7 +16,7 @@ public class CantRegisterCustomerBrokerNewNegotiationTransactionException extend
      * @param context        a String that provides the values of the variables that could have affected the exception
      * @param possibleReason an explicative reason of why we believe this exception was most likely thrown
      */
-    public CantRegisterCustomerBrokerNewNegotiationTransactionException(String message, String context, String possibleReason) {
+    public CantRegisterCustomerBrokerNewEventException(String message, String context, String possibleReason) {
         this(message, null, context, possibleReason);
     }
     /**
@@ -27,7 +27,7 @@ public class CantRegisterCustomerBrokerNewNegotiationTransactionException extend
      * @param context        a String that provides the values of the variables that could have affected the exception
      * @param possibleReason an explicative reason of why we believe this exception was most likely thrown
      */
-    public CantRegisterCustomerBrokerNewNegotiationTransactionException(String message, Exception cause, String context, String possibleReason) {
+    public CantRegisterCustomerBrokerNewEventException(String message, Exception cause, String context, String possibleReason) {
         super(message, cause, context, possibleReason);
     }
 }
