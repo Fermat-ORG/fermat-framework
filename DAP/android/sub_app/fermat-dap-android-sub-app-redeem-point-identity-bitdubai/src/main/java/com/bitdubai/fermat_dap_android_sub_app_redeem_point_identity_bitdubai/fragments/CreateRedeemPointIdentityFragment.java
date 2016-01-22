@@ -25,7 +25,7 @@ import android.widget.Toast;
 
 import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractFermatFragment;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.utils.ImagesUtils;
-import com.bitdubai.fermat_android_api.ui.Views.PresentationDialogDAP;
+import com.bitdubai.fermat_android_api.ui.Views.PresentationDialog;
 import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.enums.UISource;
 import com.bitdubai.fermat_api.layer.all_definition.settings.structure.SettingsManager;
@@ -138,7 +138,7 @@ public class CreateRedeemPointIdentityFragment extends AbstractFermatFragment {
 
     private void setUpPresentation(boolean checkButton) {
         try {
-            PresentationDialogDAP presentationDialog = new PresentationDialogDAP.Builder(getActivity(), appSession)
+            PresentationDialog presentationDialog = new PresentationDialog.Builder(getActivity(), appSession)
 //                    .setBannerRes(R.drawable.banner_asset_factory)
                     .setIconRes(R.drawable.redeem_point)
                     .setVIewColor(R.color.dap_identity_redeem_view_color)
@@ -146,7 +146,7 @@ public class CreateRedeemPointIdentityFragment extends AbstractFermatFragment {
                     .setSubTitle("Welcome to the Redeem Point Identity.")
                     .setBody("From here you will be able to create.")
                     .setTextFooter("We will be creating an avatar for you in order to identify you in the system as an Asset Issuer, name and more details later in the Asset Issuer Identity sub app.")
-                    .setTemplateType(PresentationDialogDAP.TemplateType.TYPE_PRESENTATION_WITHOUT_IDENTITIES)
+                    .setTemplateType(PresentationDialog.TemplateType.TYPE_PRESENTATION_WITHOUT_IDENTITIES)
                     .setIsCheckEnabled(checkButton)
                     .build();
 

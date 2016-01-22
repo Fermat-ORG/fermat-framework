@@ -21,7 +21,7 @@ import android.view.ViewGroup;
 import android.view.Window;
 import android.widget.Toast;
 
-import com.bitdubai.fermat_android_api.ui.Views.PresentationDialogDAP;
+import com.bitdubai.fermat_android_api.ui.Views.PresentationDialog;
 import com.bitdubai.fermat_android_api.ui.adapters.FermatAdapter;
 import com.bitdubai.fermat_android_api.ui.enums.FermatRefreshTypes;
 import com.bitdubai.fermat_android_api.ui.fragments.FermatWalletListFragment;
@@ -140,15 +140,17 @@ public class UserMainActivityFragment extends FermatWalletListFragment<DigitalAs
 
     private void setUpPresentation(boolean checkButton) {
         try {
-            PresentationDialogDAP presentationDialog = new PresentationDialogDAP.Builder(getActivity(), appSession)
+            PresentationDialog presentationDialog = new PresentationDialog.Builder(getActivity(), appSession)
                     .setBannerRes(R.drawable.banner_asset_user_wallet)
                     .setIconRes(R.drawable.asset_user_wallet)
+                    .setImageLeft(R.drawable.asset_user_identity)
                     .setVIewColor(R.color.dap_user_view_color)
                     .setTitleTextColor(R.color.dap_user_view_color)
+                    .setTextNameLeft("Asset User")
                     .setSubTitle("Welcome to the Asset User Wallet.")
                     .setBody("From this wallet you will be able to redeem your assets or even get the monetary value associated with them.")
                     .setTextFooter("We will be creating an avatar for you in order to identify you in the system as an Asset User, name and more details later in the Asset Issuer Identity sub app.")
-                    .setTemplateType((moduleManager.getActiveAssetUserIdentity() == null) ? PresentationDialogDAP.TemplateType.TYPE_PRESENTATION : PresentationDialogDAP.TemplateType.TYPE_PRESENTATION_WITHOUT_IDENTITIES)
+                    .setTemplateType((moduleManager.getActiveAssetUserIdentity() == null) ? PresentationDialog.TemplateType.DAP_TYPE_PRESENTATION : PresentationDialog.TemplateType.TYPE_PRESENTATION_WITHOUT_IDENTITIES)
                     .setIsCheckEnabled(checkButton)
                     .build();
 

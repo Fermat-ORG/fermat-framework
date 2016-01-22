@@ -38,7 +38,6 @@ import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatCheck
 import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatEditText;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView;
 import com.bitdubai.fermat_android_api.ui.Views.PresentationDialog;
-import com.bitdubai.fermat_android_api.ui.Views.PresentationDialogDAP;
 import com.bitdubai.fermat_android_api.ui.interfaces.FermatWorkerCallBack;
 import com.bitdubai.fermat_android_api.ui.util.FermatWorker;
 import com.bitdubai.fermat_api.FermatException;
@@ -321,7 +320,7 @@ public class AssetEditorFragment extends AbstractFermatFragment implements View.
 
     private void setUpHelpEditor(boolean checkButton) {
         try {
-            PresentationDialogDAP presentationDialog = new PresentationDialogDAP.Builder(getActivity(), appSession)
+            PresentationDialog presentationDialog = new PresentationDialog.Builder(getActivity(), appSession)
 //                    .setBannerRes(R.drawable.banner_asset_factory)
                     .setIconRes(R.drawable.asset_factory)
                     .setVIewColor(R.color.dap_asset_factory_view_color)
@@ -329,7 +328,7 @@ public class AssetEditorFragment extends AbstractFermatFragment implements View.
                     .setSubTitle("Asset Factory Editor.")
                     .setBody("*Dark Vader: Welcome Luke \n*Luke: Ready to Die Dark Vader?\n*Dark Vader: No Luke, Call Me DAD!!!\n*Luke: Noooooooo!!!!")
 //                    .setTextFooter("Again, give me a Text")
-                    .setTemplateType(PresentationDialogDAP.TemplateType.TYPE_PRESENTATION_WITHOUT_IDENTITIES)
+                    .setTemplateType(PresentationDialog.TemplateType.TYPE_PRESENTATION_WITHOUT_IDENTITIES)
                     .setIsCheckEnabled(checkButton)
                     .build();
 

@@ -22,7 +22,7 @@ import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractFermatFragment;
-import com.bitdubai.fermat_android_api.ui.Views.PresentationDialogDAP;
+import com.bitdubai.fermat_android_api.ui.Views.PresentationDialog;
 import com.bitdubai.fermat_android_api.ui.interfaces.FermatWorkerCallBack;
 import com.bitdubai.fermat_android_api.ui.util.FermatWorker;
 import com.bitdubai.fermat_api.FermatException;
@@ -154,7 +154,7 @@ public class RedeemPointCommunityHomeFragment extends AbstractFermatFragment imp
 
     private void setUpPresentation(boolean checkButton) {
 //        try {
-        PresentationDialogDAP presentationDialog = new PresentationDialogDAP.Builder(getActivity(), appSession)
+        PresentationDialog presentationDialog = new PresentationDialog.Builder(getActivity(), appSession)
 //                    .setBannerRes(R.drawable.banner_asset_issuer_wallet)
                 .setIconRes(R.drawable.reddem_point_community)
                 .setVIewColor(R.color.dap_community_redeem_view_color)
@@ -162,7 +162,7 @@ public class RedeemPointCommunityHomeFragment extends AbstractFermatFragment imp
                 .setSubTitle("Welcome to the Redeem Point Community.")
                 .setBody("From this wallet you will be able to distribute your assets to the world and collect statistics of their usage.")
                 .setTextFooter("We will be creating an avatar for you in order to identify you in the system as an Asset Issuer, name and more details later in the Asset Issuer Identity sub app.")
-                .setTemplateType(PresentationDialogDAP.TemplateType.TYPE_PRESENTATION_WITHOUT_IDENTITIES)
+                .setTemplateType(PresentationDialog.TemplateType.TYPE_PRESENTATION_WITHOUT_IDENTITIES)
 //                    .setTemplateType((moduleManager.getActiveAssetIssuerIdentity() == null) ? PresentationDialog.TemplateType.TYPE_PRESENTATION : PresentationDialog.TemplateType.TYPE_PRESENTATION_WITHOUT_IDENTITIES)
                 .setIsCheckEnabled(checkButton)
                 .build();

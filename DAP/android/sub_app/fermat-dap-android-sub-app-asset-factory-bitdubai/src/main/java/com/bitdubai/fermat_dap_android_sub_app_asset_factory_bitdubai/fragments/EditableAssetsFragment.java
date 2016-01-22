@@ -24,7 +24,7 @@ import android.view.animation.AnimationUtils;
 import android.widget.Toast;
 
 import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractFermatFragment;
-import com.bitdubai.fermat_android_api.ui.Views.PresentationDialogDAP;
+import com.bitdubai.fermat_android_api.ui.Views.PresentationDialog;
 import com.bitdubai.fermat_android_api.ui.inflater.ViewInflater;
 import com.bitdubai.fermat_android_api.ui.interfaces.FermatWorkerCallBack;
 import com.bitdubai.fermat_android_api.ui.util.FermatWorker;
@@ -267,7 +267,7 @@ public class EditableAssetsFragment extends AbstractFermatFragment implements
 
     private void setUpPresentation(boolean checkButton) {
         try {
-            PresentationDialogDAP presentationDialog = new PresentationDialogDAP.Builder(getActivity(), appSession)
+            PresentationDialog presentationDialog = new PresentationDialog.Builder(getActivity(), appSession)
                     .setBannerRes(R.drawable.banner_asset_factory)
                     .setIconRes(R.drawable.asset_factory)
                     .setVIewColor(R.color.dap_asset_factory_view_color)
@@ -275,7 +275,7 @@ public class EditableAssetsFragment extends AbstractFermatFragment implements
                     .setSubTitle("Welcome to the Asset Factory application.")
                     .setBody("From here you will be able to create, define and publish all your assets.")
                     .setTextFooter("We will be creating an avatar for you in order to identify you in the system as an Asset Issuer, name and more details later in the Asset Issuer Identity sub app.")
-                    .setTemplateType((manager.getLoggedIdentityAssetIssuer() == null) ? PresentationDialogDAP.TemplateType.TYPE_PRESENTATION : PresentationDialogDAP.TemplateType.TYPE_PRESENTATION_WITHOUT_IDENTITIES)
+                    .setTemplateType((manager.getLoggedIdentityAssetIssuer() == null) ? PresentationDialog.TemplateType.TYPE_PRESENTATION : PresentationDialog.TemplateType.TYPE_PRESENTATION_WITHOUT_IDENTITIES)
                     .setIsCheckEnabled(checkButton)
                     .build();
 

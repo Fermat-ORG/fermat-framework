@@ -1,6 +1,5 @@
 package com.bitdubai.fermat_dap_android_wallet_asset_issuer_bitdubai.fragments;
 
-
 import android.content.DialogInterface;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -22,7 +21,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
-import com.bitdubai.fermat_android_api.ui.Views.PresentationDialogDAP;
+import com.bitdubai.fermat_android_api.ui.Views.PresentationDialog;
 import com.bitdubai.fermat_android_api.ui.adapters.FermatAdapter;
 import com.bitdubai.fermat_android_api.ui.enums.FermatRefreshTypes;
 import com.bitdubai.fermat_android_api.ui.fragments.FermatWalletListFragment;
@@ -136,15 +135,17 @@ public class MyAssetsActivityFragment extends FermatWalletListFragment<DigitalAs
 
     private void setUpPresentation(boolean checkButton) {
         try {
-            PresentationDialogDAP presentationDialog = new PresentationDialogDAP.Builder(getActivity(), appSession)
+            PresentationDialog presentationDialog = new PresentationDialog.Builder(getActivity(), appSession)
                     .setBannerRes(R.drawable.banner_asset_issuer_wallet)
                     .setIconRes(R.drawable.asset_issuer)
+                    .setImageLeft(R.drawable.asset_issuer_identity)
                     .setVIewColor(R.color.dap_issuer_view_color)
                     .setTitleTextColor(R.color.dap_issuer_view_color)
+                    .setTextNameLeft("Example.com")
                     .setSubTitle("Welcome to the Asset Issuer Wallet.")
                     .setBody("From this wallet you will be able to distribute your assets to the world and collect statistics of their usage.")
                     .setTextFooter("We will be creating an avatar for you in order to identify you in the system as an Asset Issuer, name and more details later in the Asset Issuer Identity sub app.")
-                    .setTemplateType((moduleManager.getActiveAssetIssuerIdentity() == null) ? PresentationDialogDAP.TemplateType.TYPE_PRESENTATION : PresentationDialogDAP.TemplateType.TYPE_PRESENTATION_WITHOUT_IDENTITIES)
+                    .setTemplateType((moduleManager.getActiveAssetIssuerIdentity() == null) ? PresentationDialog.TemplateType.DAP_TYPE_PRESENTATION : PresentationDialog.TemplateType.TYPE_PRESENTATION_WITHOUT_IDENTITIES)
                     .setIsCheckEnabled(checkButton)
                     .build();
 
