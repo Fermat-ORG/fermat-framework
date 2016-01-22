@@ -300,27 +300,32 @@ public class MemoryCache {
 
         try {
 
-            LOG.info("--------------------------------------------------------------------- ");
-            LOG.info("Starting method cleanReferences" );
-            LOG.info("ID = " + activeClientConnection.getSession().getId());
-            LOG.info("hashCode = " + activeClientConnection.getSession().hashCode());
-            removeNetworkServiceRegisteredByClientIdentity(activeClientConnection.getClientIdentity());
-            removeOtherPlatformComponentRegisteredByClientIdentity(activeClientConnection.getClientIdentity());
-            MemoryCache.getInstance().getPendingRegisterClientConnectionsCache().remove(activeClientConnection.getClientIdentity());
+            if (activeClientConnection.getClientIdentity() != null){
 
-            MemoryCache.getInstance().getRegisteredCommunicationsCloudClientCache().remove(activeClientConnection.getClientIdentity());
-            MemoryCache.getInstance().getRegisteredClientConnectionsCache().remove(activeClientConnection.getClientIdentity());
+                LOG.info("--------------------------------------------------------------------- ");
+                LOG.info("Starting method cleanReferences" );
+                LOG.info("ID = " + activeClientConnection.getSession().getId());
+                LOG.info("hashCode = " + activeClientConnection.getSession().hashCode());
+                removeNetworkServiceRegisteredByClientIdentity(activeClientConnection.getClientIdentity());
+                removeOtherPlatformComponentRegisteredByClientIdentity(activeClientConnection.getClientIdentity());
+                MemoryCache.getInstance().getPendingRegisterClientConnectionsCache().remove(activeClientConnection.getClientIdentity());
 
-            LOG.info("pendingRegisterClientConnectionsCache.size()    = " + MemoryCache.getInstance().getPendingRegisterClientConnectionsCache().size());
-            LOG.info("registeredCommunicationsCloudClientCache.size() = " + MemoryCache.getInstance().getRegisteredCommunicationsCloudClientCache().size());
-            LOG.info("registeredNetworkServicesCache.size()           = " + MemoryCache.getInstance().getRegisteredNetworkServicesCache().size());
-            for (NetworkServiceType networkServiceType: MemoryCache.getInstance().getRegisteredNetworkServicesCache().keySet()) {
-                LOG.info(networkServiceType + " = " + MemoryCache.getInstance().getRegisteredNetworkServicesCache().get(networkServiceType).size());
+                MemoryCache.getInstance().getRegisteredCommunicationsCloudClientCache().remove(activeClientConnection.getClientIdentity());
+                MemoryCache.getInstance().getRegisteredClientConnectionsCache().remove(activeClientConnection.getClientIdentity());
+
+                LOG.info("pendingRegisterClientConnectionsCache.size()    = " + MemoryCache.getInstance().getPendingRegisterClientConnectionsCache().size());
+                LOG.info("registeredCommunicationsCloudClientCache.size() = " + MemoryCache.getInstance().getRegisteredCommunicationsCloudClientCache().size());
+                LOG.info("registeredNetworkServicesCache.size()           = " + MemoryCache.getInstance().getRegisteredNetworkServicesCache().size());
+                for (NetworkServiceType networkServiceType: MemoryCache.getInstance().getRegisteredNetworkServicesCache().keySet()) {
+                    LOG.info(networkServiceType + " = " + MemoryCache.getInstance().getRegisteredNetworkServicesCache().get(networkServiceType).size());
+                }
+                LOG.info("registeredOtherPlatformComponentProfileCache.size()  = " + MemoryCache.getInstance().getRegisteredOtherPlatformComponentProfileCache().size());
+                for (PlatformComponentType platformComponentType: MemoryCache.getInstance().getRegisteredOtherPlatformComponentProfileCache().keySet()) {
+                    LOG.info(platformComponentType + " = " + MemoryCache.getInstance().getRegisteredOtherPlatformComponentProfileCache().get(platformComponentType).size());
+                }
+
             }
-            LOG.info("registeredOtherPlatformComponentProfileCache.size()  = " + MemoryCache.getInstance().getRegisteredOtherPlatformComponentProfileCache().size());
-            for (PlatformComponentType platformComponentType: MemoryCache.getInstance().getRegisteredOtherPlatformComponentProfileCache().keySet()) {
-                LOG.info(platformComponentType + " = " + MemoryCache.getInstance().getRegisteredOtherPlatformComponentProfileCache().get(platformComponentType).size());
-            }
+
 
         }catch (Exception e){
             e.printStackTrace();
@@ -333,29 +338,33 @@ public class MemoryCache {
      */
     public synchronized void putReferencesToStandBy(ClientConnection activeClientConnection){
 
-        try {
+        if (activeClientConnection.getClientIdentity() != null) {
 
-            LOG.info("--------------------------------------------------------------------- ");
-            LOG.info("Starting method putReferencesToStandBy");
-            LOG.info("ID = " + activeClientConnection.getSession().getId());
+            try {
 
-           /*
-             * Clean all the caches, remove data bind whit this connection and put
-             * on stand by, to wait to reconnect
-             */
-            MemoryCache.getInstance().getPendingRegisterClientConnectionsCache().remove(activeClientConnection.getClientIdentity());
-            MemoryCache.getInstance().getRegisteredCommunicationsCloudClientCache().remove(activeClientConnection.getClientIdentity());
-            MemoryCache.getInstance().getRegisteredClientConnectionsCache().remove(activeClientConnection.getClientIdentity());
+                LOG.info("--------------------------------------------------------------------- ");
+                LOG.info("Starting method putReferencesToStandBy");
+                LOG.info("ID = " + activeClientConnection.getSession().getId());
 
-            List<PlatformComponentProfile> removeProfile = removeNetworkServiceRegisteredByClientIdentity(activeClientConnection.getClientIdentity());
-            removeProfile.addAll(removeOtherPlatformComponentRegisteredByClientIdentity(activeClientConnection.getClientIdentity()));
+               /*
+                 * Clean all the caches, remove data bind whit this connection and put
+                 * on stand by, to wait to reconnect
+                 */
+                MemoryCache.getInstance().getPendingRegisterClientConnectionsCache().remove(activeClientConnection.getClientIdentity());
+                MemoryCache.getInstance().getRegisteredCommunicationsCloudClientCache().remove(activeClientConnection.getClientIdentity());
+                MemoryCache.getInstance().getRegisteredClientConnectionsCache().remove(activeClientConnection.getClientIdentity());
 
-            LOG.info("Number of profiles put into standby " + removeProfile.size());
-            MemoryCache.getInstance().getStandByProfileByClientIdentity().put(activeClientConnection.getClientIdentity(), removeProfile);
-            LOG.info("Number of list of profiles into standby cache = " + MemoryCache.getInstance().getStandByProfileByClientIdentity().size());
+                List<PlatformComponentProfile> removeProfile = removeNetworkServiceRegisteredByClientIdentity(activeClientConnection.getClientIdentity());
+                removeProfile.addAll(removeOtherPlatformComponentRegisteredByClientIdentity(activeClientConnection.getClientIdentity()));
 
-        }catch (Exception e){
-            e.printStackTrace();
+                LOG.info("Number of profiles put into standby " + removeProfile.size());
+                MemoryCache.getInstance().getStandByProfileByClientIdentity().put(activeClientConnection.getClientIdentity(), removeProfile);
+                LOG.info("Number of list of profiles into standby cache = " + MemoryCache.getInstance().getStandByProfileByClientIdentity().size());
+
+            }catch(Exception e){
+                e.printStackTrace();
+            }
+
         }
 
     }

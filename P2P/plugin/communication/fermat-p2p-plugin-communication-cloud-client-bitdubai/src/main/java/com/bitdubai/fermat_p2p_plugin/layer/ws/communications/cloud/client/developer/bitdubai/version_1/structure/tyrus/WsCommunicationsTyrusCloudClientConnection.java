@@ -191,7 +191,7 @@ public class WsCommunicationsTyrusCloudClientConnection implements Communication
 
                     System.out.println("#  WsCommunicationsCloudClientConnection - Reconnect Failure :"+exception.getMessage());
                     // To avoid potential DDoS when you don't limit number of reconnects, wait to the next try.
-                    Thread.sleep(10000);
+                    Thread.sleep(2000);
 
                 } catch (InterruptedException e) {
                     e.printStackTrace();
