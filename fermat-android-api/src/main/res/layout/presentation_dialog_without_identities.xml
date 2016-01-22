@@ -8,6 +8,7 @@
     android:background="@drawable/rounded_corners">
 
     <View
+        android:id="@+id/view_color"
         android:layout_width="match_parent"
         android:layout_height="4.5dp"
         android:background="@drawable/round_corner_line_dialog"
@@ -83,7 +84,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:scaleType="fitXY"
-                    android:id="@+id/banner"
+                    android:id="@+id/image_banner"
                     />
             </RelativeLayout>
 
@@ -92,6 +93,7 @@
             <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:id="@+id/txt_sub_title"
                 android:textSize="14sp"
                 android:paddingBottom="5dp"
                 android:paddingTop="7sp"
@@ -124,6 +126,7 @@
                 <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:id="@+id/txt_body"
                     android:textSize="12sp"
                     android:paddingBottom="5dp"
                     android:text="* See your balance.\n* Send and receive bitcoins.\n* Request bitcoins.\n* Browse your transaction history."
