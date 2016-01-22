@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.app.DatePickerDialog;
 import android.app.ProgressDialog;
 import android.app.TimePickerDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -12,6 +13,7 @@ import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
 import android.provider.MediaStore;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.Toolbar;
@@ -19,6 +21,7 @@ import android.util.Log;
 import android.view.ContextMenu;
 import android.view.LayoutInflater;
 import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
@@ -34,25 +37,37 @@ import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatButto
 import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatCheckBox;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatEditText;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView;
+import com.bitdubai.fermat_android_api.ui.Views.PresentationDialog;
+import com.bitdubai.fermat_android_api.ui.Views.PresentationDialogDAP;
 import com.bitdubai.fermat_android_api.ui.interfaces.FermatWorkerCallBack;
 import com.bitdubai.fermat_android_api.ui.util.FermatWorker;
+import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
+import com.bitdubai.fermat_api.layer.all_definition.enums.UISource;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
 import com.bitdubai.fermat_api.layer.all_definition.resources_structure.Resource;
 import com.bitdubai.fermat_api.layer.all_definition.resources_structure.enums.ResourceDensity;
 import com.bitdubai.fermat_api.layer.all_definition.resources_structure.enums.ResourceType;
+import com.bitdubai.fermat_api.layer.all_definition.settings.exceptions.CantPersistSettingsException;
+import com.bitdubai.fermat_api.layer.all_definition.settings.structure.SettingsManager;
 import com.bitdubai.fermat_api.layer.all_definition.util.BitcoinConverter;
 import com.bitdubai.fermat_dap_android_sub_app_asset_factory_bitdubai.R;
 import com.bitdubai.fermat_dap_android_sub_app_asset_factory_bitdubai.sessions.AssetFactorySession;
+import com.bitdubai.fermat_dap_android_sub_app_asset_factory_bitdubai.sessions.SessionConstantsAssetFactory;
 import com.bitdubai.fermat_dap_android_sub_app_asset_factory_bitdubai.util.CommonLogger;
 import com.bitdubai.fermat_dap_api.layer.all_definition.enums.State;
 import com.bitdubai.fermat_dap_api.layer.all_definition.util.DAPStandardFormats;
+import com.bitdubai.fermat_dap_api.layer.dap_identity.asset_issuer.interfaces.IdentityAssetIssuer;
 import com.bitdubai.fermat_dap_api.layer.dap_middleware.dap_asset_factory.enums.AssetBehavior;
 import com.bitdubai.fermat_dap_api.layer.dap_middleware.dap_asset_factory.interfaces.AssetFactory;
+import com.bitdubai.fermat_dap_api.layer.dap_module.asset_factory.AssetFactorySettings;
 import com.bitdubai.fermat_dap_api.layer.dap_module.asset_factory.interfaces.AssetFactoryModuleManager;
+import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedUIExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 import com.bitdubai.fermat_wpd_api.layer.wpd_middleware.wallet_manager.exceptions.CantListWalletsException;
 import com.bitdubai.fermat_wpd_api.layer.wpd_middleware.wallet_manager.interfaces.InstalledWallet;
+
+import static android.widget.Toast.makeText;
 import static com.bitdubai.fermat_api.layer.all_definition.util.BitcoinConverter.Currency.*;
 
 import java.io.ByteArrayOutputStream;
@@ -103,6 +118,8 @@ public class AssetEditorFragment extends AbstractFermatFragment implements View.
 
     private long satoshisWalletBalance = 0;
 
+    SettingsManager<AssetFactorySettings> settingsManager;
+
     public static AssetEditorFragment newInstance(AssetFactory asset) {
         AssetEditorFragment fragment = new AssetEditorFragment();
         fragment.setAsset(asset);
@@ -115,8 +132,13 @@ public class AssetEditorFragment extends AbstractFermatFragment implements View.
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setHasOptionsMenu(true);
+
         try {
             manager = ((AssetFactorySession) appSession).getModuleManager();
+
+            settingsManager = appSession.getModuleManager().getSettingsManager();
+
             errorManager = appSession.getErrorManager();
             if (!isEdit) {
                 final ProgressDialog dialog = new ProgressDialog(getActivity());
@@ -260,8 +282,105 @@ public class AssetEditorFragment extends AbstractFermatFragment implements View.
         } catch (Exception e) {
             bitcoinBalanceText.setText("No Available");
         }
-
+//        setUpHelpEditor(false);
+//        showPresentationDialog();
         return rootView;
+    }
+
+//    private void showPresentationDialog() {
+//        //Initialize settings
+//        settingsManager = appSession.getModuleManager().getSettingsManager();
+//        AssetFactorySettings settings = null;
+//        try {
+//            settings = settingsManager.loadAndGetSettings(appSession.getAppPublicKey());
+//        } catch (Exception e) {
+//            settings = null;
+//        }
+//        if (settings == null) {
+//            settings = new AssetFactorySettings();
+//            settings.setIsContactsHelpEnabled(true);
+//            settings.setIsPresentationHelpEnabled(true);
+//            try {
+//                settingsManager.persistSettings(appSession.getAppPublicKey(), settings);
+//            } catch (CantPersistSettingsException e) {
+//                e.printStackTrace();
+//            }
+//        }
+//
+//        final AssetFactorySettings assetFactorySettingsTemp = settings;
+//
+//        Handler handlerTimer = new Handler();
+//        handlerTimer.postDelayed(new Runnable() {
+//            public void run() {
+//                if (assetFactorySettingsTemp.isPresentationHelpEnabled()) {
+//                    setUpHelpEditor(false);
+//                }
+//            }
+//        }, 500);
+//    }
+
+    private void setUpHelpEditor(boolean checkButton) {
+        try {
+            PresentationDialogDAP presentationDialog = new PresentationDialogDAP.Builder(getActivity(), appSession)
+//                    .setBannerRes(R.drawable.banner_asset_factory)
+                    .setIconRes(R.drawable.asset_factory)
+                    .setVIewColor(R.color.dap_asset_factory_view_color)
+                    .setTitleTextColor(R.color.dap_asset_factory_view_color)
+                    .setSubTitle("Asset Factory Editor.")
+                    .setBody("*Dark Vader: Welcome Luke \n*Luke: Ready to Die Dark Vader?\n*Dark Vader: No Luke, Call Me DAD!!!\n*Luke: Noooooooo!!!!")
+//                    .setTextFooter("Again, give me a Text")
+                    .setTemplateType(PresentationDialogDAP.TemplateType.TYPE_PRESENTATION_WITHOUT_IDENTITIES)
+                    .setIsCheckEnabled(checkButton)
+                    .build();
+
+//            presentationDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
+//                @Override
+//                public void onDismiss(DialogInterface dialog) {
+//                    Object o = appSession.getData(SessionConstantsAssetFactory.PRESENTATION_IDENTITY_CREATED);
+//                    if (o != null) {
+//                        if ((Boolean) (o)) {
+//                            //invalidate();
+//                            appSession.removeData(SessionConstantsAssetFactory.PRESENTATION_IDENTITY_CREATED);
+//                        }
+//                    }
+//                    IdentityAssetIssuer identityAssetIssuer = manager.getLoggedIdentityAssetIssuer();
+//                    if (identityAssetIssuer == null) {
+//                        getActivity().onBackPressed();
+//                    } else {
+//                        invalidate();
+//                    }
+//                }
+//            });
+
+            presentationDialog.show();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        super.onCreateOptionsMenu(menu, inflater);
+        menu.add(0, SessionConstantsAssetFactory.IC_ACTION_EDITOR_ASSET, 0, "help").setIcon(R.drawable.dap_asset_factory_help_icon)
+                .setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        try {
+            int id = item.getItemId();
+
+            if (id == SessionConstantsAssetFactory.IC_ACTION_EDITOR_ASSET) {
+                setUpHelpEditor(settingsManager.loadAndGetSettings(appSession.getAppPublicKey()).isPresentationHelpEnabled());
+                return true;
+            }
+
+        } catch (Exception e) {
+            errorManager.reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.UNSTABLE, FermatException.wrapException(e));
+            makeText(getActivity(), "Asset Factory system error",
+                    Toast.LENGTH_SHORT).show();
+        }
+        return super.onOptionsItemSelected(item);
     }
 
     private String getBitcoinWalletPublicKey() throws CantListWalletsException {

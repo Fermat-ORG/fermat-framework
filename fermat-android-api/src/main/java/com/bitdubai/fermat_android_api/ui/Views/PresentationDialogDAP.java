@@ -31,7 +31,7 @@ import java.lang.ref.WeakReference;
 /**
  * Created by Matias Furszyfer on 2015.11.27..
  */
-public class PresentationDialog extends FermatDialog<FermatSession, SubAppResourcesProviderManager> implements View.OnClickListener, CompoundButton.OnCheckedChangeListener {
+public class PresentationDialogDAP extends FermatDialog<FermatSession, SubAppResourcesProviderManager> implements View.OnClickListener, CompoundButton.OnCheckedChangeListener {
 
     private PresentationCallback callback;
 
@@ -85,7 +85,7 @@ public class PresentationDialog extends FermatDialog<FermatSession, SubAppResour
      * @param fermatSession parent class of walletSession and SubAppSession
      * @param resources     parent class of WalletResources and SubAppResources
      */
-    private PresentationDialog(Activity activity, FermatSession fermatSession, SubAppResourcesProviderManager resources, TemplateType type, boolean checkButton) {
+    private PresentationDialogDAP(Activity activity, FermatSession fermatSession, SubAppResourcesProviderManager resources, TemplateType type, boolean checkButton) {
         super(activity, fermatSession, resources);
         this.activity = activity;
         this.type = type;
@@ -153,7 +153,7 @@ public class PresentationDialog extends FermatDialog<FermatSession, SubAppResour
     protected int setLayoutId() {
         switch (type) {
             case TYPE_PRESENTATION:
-                return R.layout.presentation_dialog;
+                return R.layout.dap_presentation_dialog;
             case TYPE_PRESENTATION_WITHOUT_IDENTITIES:
                 return R.layout.presentation_dialog_without_identities;
         }
@@ -292,8 +292,8 @@ public class PresentationDialog extends FermatDialog<FermatSession, SubAppResour
         private String textColor;
         private int viewColor = -1;
 
-        public PresentationDialog build() {
-            PresentationDialog presentationDialog = new PresentationDialog(activity.get(), fermatSession.get(), null, templateType, isCheckEnabled);
+        public PresentationDialogDAP build() {
+            PresentationDialogDAP presentationDialog = new PresentationDialogDAP(activity.get(), fermatSession.get(), null, templateType, isCheckEnabled);
             if (body != null) {
                 presentationDialog.setBody(body);
             }

@@ -24,7 +24,7 @@ import android.view.animation.AnimationUtils;
 import android.widget.Toast;
 
 import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractFermatFragment;
-import com.bitdubai.fermat_android_api.ui.Views.PresentationDialog;
+import com.bitdubai.fermat_android_api.ui.Views.PresentationDialogDAP;
 import com.bitdubai.fermat_android_api.ui.inflater.ViewInflater;
 import com.bitdubai.fermat_android_api.ui.interfaces.FermatWorkerCallBack;
 import com.bitdubai.fermat_android_api.ui.util.FermatWorker;
@@ -83,7 +83,8 @@ public class EditableAssetsFragment extends AbstractFermatFragment implements
     private LinearLayoutManager layoutManager;
     private AssetFactoryAdapter adapter;
     private ErrorManager errorManager;
-
+//    private MenuItem menuHelp;
+//    private Menu menu;
     // custom inflater
     private ViewInflater viewInflater;
 
@@ -221,6 +222,8 @@ public class EditableAssetsFragment extends AbstractFermatFragment implements
             public void onClick(View view) {
                 /* create new asset factory project */
                 selectedAsset = null;
+//                menuHelp = menu.findItem(R.id.action_asset_factory_help);
+//                menuHelp.setVisible(false);
                 changeActivity(Activities.DAP_ASSET_EDITOR_ACTIVITY.getCode(), appSession.getAppPublicKey(), getAssetForEdit());
             }
         });
@@ -264,7 +267,7 @@ public class EditableAssetsFragment extends AbstractFermatFragment implements
 
     private void setUpPresentation(boolean checkButton) {
         try {
-            PresentationDialog presentationDialog = new PresentationDialog.Builder(getActivity(), appSession)
+            PresentationDialogDAP presentationDialog = new PresentationDialogDAP.Builder(getActivity(), appSession)
                     .setBannerRes(R.drawable.banner_asset_factory)
                     .setIconRes(R.drawable.asset_factory)
                     .setVIewColor(R.color.dap_asset_factory_view_color)
@@ -272,7 +275,7 @@ public class EditableAssetsFragment extends AbstractFermatFragment implements
                     .setSubTitle("Welcome to the Asset Factory application.")
                     .setBody("From here you will be able to create, define and publish all your assets.")
                     .setTextFooter("We will be creating an avatar for you in order to identify you in the system as an Asset Issuer, name and more details later in the Asset Issuer Identity sub app.")
-                    .setTemplateType((manager.getLoggedIdentityAssetIssuer() == null) ? PresentationDialog.TemplateType.TYPE_PRESENTATION : PresentationDialog.TemplateType.TYPE_PRESENTATION_WITHOUT_IDENTITIES)
+                    .setTemplateType((manager.getLoggedIdentityAssetIssuer() == null) ? PresentationDialogDAP.TemplateType.TYPE_PRESENTATION : PresentationDialogDAP.TemplateType.TYPE_PRESENTATION_WITHOUT_IDENTITIES)
                     .setIsCheckEnabled(checkButton)
                     .build();
 
@@ -304,15 +307,17 @@ public class EditableAssetsFragment extends AbstractFermatFragment implements
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         super.onCreateOptionsMenu(menu, inflater);
-        inflater.inflate(R.menu.dap_asset_factory_home_menu, menu);
+        menu.add(0, SessionConstantsAssetFactory.IC_ACTION_HELP_FACTORY, 0, "help").setIcon(R.drawable.dap_asset_factory_help_icon)
+                .setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         try {
+            int id = item.getItemId();
 
-            if (item.getItemId() == R.id.action_asset_factory_help) {
-                setUpPresentation(settingsManager.loadAndGetSettings(appSession.getAppPublicKey()).isPresentationHelpEnabled());
+                if (id == SessionConstantsAssetFactory.IC_ACTION_HELP_FACTORY) {
+                    setUpPresentation(settingsManager.loadAndGetSettings(appSession.getAppPublicKey()).isPresentationHelpEnabled());
                 return true;
             }
 
