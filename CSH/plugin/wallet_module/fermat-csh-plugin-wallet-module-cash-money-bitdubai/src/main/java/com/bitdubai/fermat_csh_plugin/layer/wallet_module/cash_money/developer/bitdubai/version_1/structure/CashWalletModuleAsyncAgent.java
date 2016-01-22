@@ -19,18 +19,17 @@ public class CashWalletModuleAsyncAgent extends AsyncTransactionAgent<CashTransa
         this.errorManager = errorManager;
         this.cashMoneyWalletModuleManager = cashMoneyWalletModuleManager;
 
-        this.setTransactionDelayMillis(15000);
+        this.setTransactionDelayMillis(15);
     }
 
 
-
-    public void addTransaction(CashTransactionParameters transaction)
-    {
-        this.addNewTransaction(transaction);
-    }
 
     @Override
     public void processTransaction(CashTransactionParameters transaction) {
+
+
+        //TODO: falta discernir entre deposit y withdrawal transactions...
+
 
         try{
             cashMoneyWalletModuleManager.createCashDepositTransaction(transaction);
