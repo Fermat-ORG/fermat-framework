@@ -669,7 +669,6 @@ public class IntraActorNetworkServicePluginRoot extends AbstractPlugin implement
     }
 
     private void initializeIntraActorAgent() {
-
         try {
             actorNetworkServiceRecordedAgent = new ActorNetworkServiceRecordedAgent(
                     communicationNetworkServiceConnectionManager,
