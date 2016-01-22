@@ -57,6 +57,7 @@ import java.util.UUID;
 
 /**
  * A simple {@link Fragment} subclass.
+ * Modified by Yordin Alayn 21.01.16
  */
 public class StartNegotiationActivityFragment extends AbstractFermatFragment<CryptoCustomerWalletSession, ResourceProviderManager>
         implements FooterViewHolder.OnFooterButtonsClickListener, ClauseViewHolder.Listener {

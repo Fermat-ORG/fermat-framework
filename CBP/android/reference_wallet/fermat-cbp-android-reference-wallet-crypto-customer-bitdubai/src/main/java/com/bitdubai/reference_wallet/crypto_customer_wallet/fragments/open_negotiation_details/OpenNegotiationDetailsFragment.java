@@ -106,8 +106,6 @@ public class OpenNegotiationDetailsFragment extends AbstractFermatFragment<Crypt
         String paymentCurrency = clauses.get(ClauseType.BROKER_CURRENCY).getValue();
         String amount = clauses.get(ClauseType.CUSTOMER_CURRENCY_QUANTITY).getValue();
 
-
-        //Negotiation Summary
         Drawable brokerImg = getImgDrawable(broker.getProfileImage());
         brokerImage.setImageDrawable(brokerImg);
         brokerName.setText(broker.getAlias());
