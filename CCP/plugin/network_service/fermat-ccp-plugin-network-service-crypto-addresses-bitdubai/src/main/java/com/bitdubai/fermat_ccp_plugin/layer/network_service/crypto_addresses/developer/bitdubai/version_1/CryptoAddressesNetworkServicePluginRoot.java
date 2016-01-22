@@ -947,12 +947,21 @@ public class CryptoAddressesNetworkServicePluginRoot extends AbstractNetworkServ
 
             if(vpnConnectionCloseNotificationEvent.getNetworkServiceApplicant() == getNetworkServiceType()){
 
+                String remotePublicKey =  vpnConnectionCloseNotificationEvent.getRemoteParticipant().getIdentityPublicKey();
 
 
                 if(communicationNetworkServiceConnectionManager != null) {
-                    communicationNetworkServiceConnectionManager.closeConnection(vpnConnectionCloseNotificationEvent.getRemoteParticipant().getIdentityPublicKey());
-                    reprocessMessage(vpnConnectionCloseNotificationEvent.getRemoteParticipant().getIdentityPublicKey());
+                    communicationNetworkServiceConnectionManager.closeConnection(remotePublicKey);
                 }
+
+                /**
+                 * remove messages
+                 */
+
+                if (cryptoAddressesExecutorAgent.isConnectionOpen(remotePublicKey)){
+                    cryptoAddressesExecutorAgent.connectionFailure(remotePublicKey);
+                }
+                reprocessMessage(remotePublicKey);
             }
 
         }

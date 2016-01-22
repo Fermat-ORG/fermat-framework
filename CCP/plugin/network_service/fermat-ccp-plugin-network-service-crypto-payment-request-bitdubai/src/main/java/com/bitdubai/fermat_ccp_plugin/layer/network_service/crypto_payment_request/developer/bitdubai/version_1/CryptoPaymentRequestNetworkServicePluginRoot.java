@@ -930,14 +930,22 @@ public final class CryptoPaymentRequestNetworkServicePluginRoot extends Abstract
 
             if(vpnConnectionCloseNotificationEvent.getNetworkServiceApplicant() == getNetworkServiceType()){
 
+                String remotePublicKey = vpnConnectionCloseNotificationEvent.getRemoteParticipant().getIdentityPublicKey();
+                if(communicationNetworkServiceConnectionManager != null) {
 
-                if(communicationNetworkServiceConnectionManager != null)
-                {
-                    reprocessMessage(vpnConnectionCloseNotificationEvent.getRemoteParticipant().getIdentityPublicKey());
-                    communicationNetworkServiceConnectionManager.closeConnection(vpnConnectionCloseNotificationEvent.getRemoteParticipant().getIdentityPublicKey());
+                    communicationNetworkServiceConnectionManager.closeConnection(remotePublicKey);
 
                 }
 
+                /**
+                 * remove messages
+                 */
+
+                if (cryptoPaymentRequestExecutorAgent.isConnectionOpen(remotePublicKey)) {
+                    cryptoPaymentRequestExecutorAgent.connectionFailure(remotePublicKey);
+                }
+
+                reprocessMessage(remotePublicKey);
             }
 
         }
@@ -985,7 +993,7 @@ public final class CryptoPaymentRequestNetworkServicePluginRoot extends Abstract
             }
 
             if(!this.register){
-                if(communicationRegistrationProcessNetworkServiceAgent != null && communicationRegistrationProcessNetworkServiceAgent != null) {
+                if(communicationRegistrationProcessNetworkServiceAgent != null) {
 
                     communicationRegistrationProcessNetworkServiceAgent.stop();
                     communicationRegistrationProcessNetworkServiceAgent = null;
