@@ -304,4 +304,9 @@ public class WalletCommunityNetworkServicePluginRoot extends AbstractPlugin impl
     public void handleNewMessages(FermatMessage incomingMessage) {
         //TODO: completar con la llegada de mensajes
     }
+
+    @Override
+    public void handleNewSentMessageNotificationEvent(FermatMessage message) {
+
+    }
 }
