@@ -50,9 +50,7 @@ import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_issuer.exceptions.CantU
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_issuer.interfaces.ActorAssetIssuer;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_issuer.interfaces.ActorAssetIssuerManager;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.redeem_point.exceptions.CantConnectToActorAssetRedeemPointException;
-import com.bitdubai.fermat_dap_api.layer.dap_actor.redeem_point.exceptions.CantCreateActorRedeemPointException;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.redeem_point.interfaces.ActorAssetRedeemPoint;
-import com.bitdubai.fermat_dap_api.layer.dap_actor.redeem_point.interfaces.ActorAssetRedeemPointManager;
 import com.bitdubai.fermat_dap_api.layer.dap_actor_network_service.asset_issuer.exceptions.CantRegisterActorAssetIssuerException;
 import com.bitdubai.fermat_dap_api.layer.dap_actor_network_service.asset_issuer.interfaces.AssetIssuerActorNetworkServiceManager;
 import com.bitdubai.fermat_dap_api.layer.dap_actor_network_service.redeem_point.exceptions.CantSendMessageException;
@@ -114,9 +112,6 @@ public class AssetIssuerActorPluginRoot extends AbstractPlugin implements
 
     @NeededPluginReference(platform = Platforms.BLOCKCHAINS, layer = Layers.CRYPTO_MODULE, plugin = Plugins.CRYPTO_ADDRESS_BOOK)
     private CryptoAddressBookManager cryptoAddressBookManager;
-
-    @NeededPluginReference(platform = Platforms.DIGITAL_ASSET_PLATFORM, layer = Layers.ACTOR, plugin = Plugins.REDEEM_POINT)
-    private ActorAssetRedeemPointManager redeemPointManager;
 
     private AssetIssuerActorDao assetIssuerActorDao;
 
@@ -312,7 +307,6 @@ public class AssetIssuerActorPluginRoot extends AbstractPlugin implements
                         requester,
                         actorAssetRedeemPoint);
                 assetRedeemPointActorNetworkServiceManager.sendMessage(dapMessage);
-//                this.assetIssuerActorDao.updateAssetIssuerDAPConnectionStateRegistered(actorAssetIssuer.getActorPublicKey(), DAPConnectionState.CONNECTING);
             } catch (CantSendMessageException e) {
                 throw new CantConnectToActorAssetRedeemPointException("CAN'T SEND MESSAGE TO ACTOR ASSET REDEEM POINT", e, "", "");
             } catch (CantSetObjectException e) {
@@ -386,12 +380,6 @@ public class AssetIssuerActorPluginRoot extends AbstractPlugin implements
         System.out.println("Actor Asset Redeem Point name: " + redeemPoint.getName());
         System.out.println("Actor Asset Redeem Point message: " + dapMessage.getMessageType());
 
-        try {
-            System.out.println("Saving redeem point actor on registered table...");
-            redeemPointManager.saveRegisteredActorRedeemPoint(redeemPoint);
-        } catch (CantCreateActorRedeemPointException e) {
-            e.printStackTrace();
-        }
         /**
          * I will request a new ExtendedPublicKey from the Asset Vault.
          * The asset vault will create a new extendedPublic Key for this redeem point.

@@ -290,14 +290,6 @@
                 android:padding="16dp">
 
                 <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatButton
-                    android:id="@+id/action_delete"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginEnd="16dp"
-                    android:layout_marginRight="16dp"
-                    android:text="Delete" />
-
-                <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatButton
                     android:id="@+id/action_create"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"

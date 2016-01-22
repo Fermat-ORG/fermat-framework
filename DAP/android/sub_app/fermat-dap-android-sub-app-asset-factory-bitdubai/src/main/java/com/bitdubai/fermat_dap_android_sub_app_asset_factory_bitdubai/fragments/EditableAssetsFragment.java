@@ -24,6 +24,7 @@ import android.view.animation.AnimationUtils;
 import android.widget.Toast;
 
 import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractFermatFragment;
+import com.bitdubai.fermat_android_api.ui.Views.ConfirmDialog;
 import com.bitdubai.fermat_android_api.ui.Views.PresentationDialog;
 import com.bitdubai.fermat_android_api.ui.inflater.ViewInflater;
 import com.bitdubai.fermat_android_api.ui.interfaces.FermatWorkerCallBack;
@@ -399,62 +400,127 @@ public class EditableAssetsFragment extends AbstractFermatFragment implements
     @Override
     public boolean onMenuItemClick(MenuItem menuItem) {
         if (menuItem.getItemId() == R.id.action_edit) {
-            if (getAssetForEdit() != null && getAssetForEdit().getState() == State.DRAFT)
-                changeActivity(Activities.DAP_ASSET_EDITOR_ACTIVITY.getCode(), appSession.getAppPublicKey(), getAssetForEdit());
-            else
-                selectedAsset = null;
+            editAsset();
         } else if (menuItem.getItemId() == R.id.action_publish) {
-            try {
-                if (manager.isReadyToPublish(selectedAsset.getAssetPublicKey())) {
-                    final ProgressDialog dialog = new ProgressDialog(getActivity());
-                    dialog.setTitle("Asset Factory");
-                    dialog.setMessage("Publishing asset, please wait...");
-                    dialog.setCancelable(false);
-                    dialog.show();
-                    FermatWorker worker = new FermatWorker() {
+            new ConfirmDialog.Builder(getActivity(), appSession)
+                    .setTitle("Confirm")
+                    .setMessage("Are you sure you are ready to publish your Asset? Once published you won't be able to perform any changes to it.")
+                    .setColorStyle(getResources().getColor(R.color.bg_asset_factory))
+                    .setYesBtnListener(new ConfirmDialog.OnClickAcceptListener() {
                         @Override
-                        protected Object doInBackground() throws Exception {
-                            // for test
-                            for (InstalledWallet wallet : manager.getInstallWallets()) {
-                                selectedAsset.setWalletPublicKey(wallet.getWalletPublicKey());
-                                break;
-                            }
-                            manager.publishAsset(getAssetForEdit(), BlockchainNetworkType.TEST);
-                            selectedAsset = null;
-                            return true;
+                        public void onClick() {
+                            publishAsset();
                         }
-                    };
-                    worker.setContext(getActivity());
-                    worker.setCallBack(new FermatWorkerCallBack() {
-                        @Override
-                        public void onPostExecute(Object... result) {
-                            dialog.dismiss();
-                            selectedAsset = null;
-                            if (getActivity() != null) {
-                                onRefresh();
-                            }
-                            Toast.makeText(getActivity(), "The asset was successfully published.", Toast.LENGTH_SHORT).show();
-                        }
-
-                        @Override
-                        public void onErrorOccurred(Exception ex) {
-                            dialog.dismiss();
-                            selectedAsset = null;
-                            if (getActivity() != null) {
-                                Toast.makeText(getActivity(), "You need to define all mandatory properties in your asset before publishing it. Edit the asset and complete all the needed information.", Toast.LENGTH_SHORT).show();
-                                onRefresh();
-                            }
-                            ex.printStackTrace();
-                        }
-                    });
-                    worker.execute();
-                }
-            } catch (CantPublishAssetFactoy cantPublishAssetFactoy) {
-                cantPublishAssetFactoy.printStackTrace();
-                Toast.makeText(getActivity(), "You cannot publish this asset", Toast.LENGTH_SHORT).show();
-            }
+                    }).build().show();
+        } else if (menuItem.getItemId() == R.id.action_delete) {
+//            new ConfirmDialog.Builder(getActivity(), appSession)
+//                    .setTitle("Confirm")
+//                    .setMessage("Are you sure you want to delete this Asset? This action can't be undo.")
+//                    .setColorStyle(getResources().getColor(R.color.bg_asset_factory))
+//                    .setYesBtnListener(new ConfirmDialog.OnClickAcceptListener() {
+//                        @Override
+//                        public void onClick() {
+//                            deleteAsset();
+//                        }
+//                    }).build().show();
+            deleteAsset();
         }
         return false;
+    }
+
+    private void editAsset() {
+        if (getAssetForEdit() != null && getAssetForEdit().getState() == State.DRAFT)
+            changeActivity(Activities.DAP_ASSET_EDITOR_ACTIVITY.getCode(), appSession.getAppPublicKey(), getAssetForEdit());
+        else
+            selectedAsset = null;
+    }
+
+    private void publishAsset() {
+        try {
+            if (manager.isReadyToPublish(selectedAsset.getAssetPublicKey())) {
+                final ProgressDialog dialog = new ProgressDialog(getActivity());
+                dialog.setTitle("Asset Factory");
+                dialog.setMessage("Publishing asset, please wait...");
+                dialog.setCancelable(false);
+                dialog.show();
+                FermatWorker worker = new FermatWorker() {
+                    @Override
+                    protected Object doInBackground() throws Exception {
+                        // for test
+                        for (InstalledWallet wallet : manager.getInstallWallets()) {
+                            selectedAsset.setWalletPublicKey(wallet.getWalletPublicKey());
+                            break;
+                        }
+                        manager.publishAsset(getAssetForEdit(), BlockchainNetworkType.TEST);
+                        selectedAsset = null;
+                        return true;
+                    }
+                };
+                worker.setContext(getActivity());
+                worker.setCallBack(new FermatWorkerCallBack() {
+                    @Override
+                    public void onPostExecute(Object... result) {
+                        dialog.dismiss();
+                        selectedAsset = null;
+                        if (getActivity() != null) {
+                            onRefresh();
+                        }
+                        Toast.makeText(getActivity(), "The asset was successfully published.", Toast.LENGTH_SHORT).show();
+                    }
+
+                    @Override
+                    public void onErrorOccurred(Exception ex) {
+                        dialog.dismiss();
+                        selectedAsset = null;
+                        if (getActivity() != null) {
+                            Toast.makeText(getActivity(), "You need to define all mandatory properties in your asset before publishing it.", Toast.LENGTH_LONG).show();
+                            onRefresh();
+                        }
+                        ex.printStackTrace();
+                    }
+                });
+                worker.execute();
+            }
+        } catch (CantPublishAssetFactoy cantPublishAssetFactoy) {
+            cantPublishAssetFactoy.printStackTrace();
+            Toast.makeText(getActivity(), "You cannot publish this asset", Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    private void deleteAsset() {
+        final ProgressDialog dialog = new ProgressDialog(getActivity());
+        dialog.setTitle("Deleting asset");
+        dialog.setMessage("Please wait...");
+        dialog.setCancelable(false);
+        dialog.show();
+        FermatWorker worker = new FermatWorker() {
+            @Override
+            protected Object doInBackground() throws Exception {
+                manager.removeAssetFactory(selectedAsset.getAssetPublicKey());
+                return true;
+            }
+        };
+        worker.setContext(getActivity());
+        worker.setCallBack(new FermatWorkerCallBack() {
+            @Override
+            public void onPostExecute(Object... result) {
+                dialog.dismiss();
+                if (getActivity() != null) {
+                    Toast.makeText(getActivity(), "Asset deleted successfully", Toast.LENGTH_SHORT).show();
+                    changeActivity(Activities.DAP_MAIN.getCode(), appSession.getAppPublicKey());
+                }
+            }
+
+            @Override
+            public void onErrorOccurred(Exception ex) {
+                dialog.dismiss();
+                if (getActivity() != null) {
+                    CommonLogger.exception(TAG, ex.getMessage(), ex);
+                    Toast.makeText(getActivity(), "There was an error deleting this asset", Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
+        worker.execute();
     }
 
     @Override
