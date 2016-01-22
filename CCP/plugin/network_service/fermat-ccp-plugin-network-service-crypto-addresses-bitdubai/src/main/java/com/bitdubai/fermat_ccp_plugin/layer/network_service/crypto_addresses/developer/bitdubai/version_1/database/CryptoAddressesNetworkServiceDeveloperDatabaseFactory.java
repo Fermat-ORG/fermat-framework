@@ -72,7 +72,7 @@ public final class CryptoAddressesNetworkServiceDeveloperDatabaseFactory {
 
         databases.add(developerObjectFactory.getNewDeveloperDatabase("Crypto Addresses", this.pluginId.toString()));
 
-        databases.add(developerObjectFactory.getNewDeveloperDatabase("Communication", CommunicationNetworkServiceDatabaseConstants.DATA_BASE_NAME));
+        databases.add(developerObjectFactory.getNewDeveloperDatabase(CommunicationNetworkServiceDatabaseConstants.DATA_BASE_NAME, this.pluginId.toString()));
 
         return databases;
     }
