@@ -99,12 +99,12 @@ public interface CryptoCustomerWalletManager extends WalletManager {
     /**
      * Start a new negotiation with a crypto broker
      *
-     * @param customerId the crypto customer ID
-     * @param brokerId   the crypto broker ID
+     * @param customerPublicKey the crypto customer publicKey
+     * @param brokerPublicKey   the crypto broker publicKey
      * @param clauses    the initial and mandatory clauses to start a negotiation
      * @return true if the association was successful false otherwise
      */
-    boolean startNegotiation(UUID customerId, UUID brokerId, Collection<ClauseInformation> clauses) throws CouldNotStartNegotiationException, CantCreateCustomerBrokerNewPurchaseNegotiationTransactionException;
+    boolean startNegotiation(String customerPublicKey, String brokerPublicKey, Collection<ClauseInformation> clauses) throws CouldNotStartNegotiationException, CantCreateCustomerBrokerNewPurchaseNegotiationTransactionException;
 
     /**
      * This method list all wallet installed in device, start the transaction

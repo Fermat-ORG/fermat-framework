@@ -14,44 +14,47 @@ import java.util.UUID;
 public class NegotiationPurchaseRecord implements CustomerBrokerPurchaseNegotiation {
 
     UUID                negotiationId;
-    String              publicKeyCustomer;
-    String              publicKeyBroker;
-    Long                startDataTime;
+    String              customerPublicKey;
+    String              brokerPublicKey;
+//    String              publicKeyCustomer;
+//    String              publicKeyBroker;
+    Long                startDate;
+//    Long                startDataTime;
     Long                negotiationExpirationDate;
-    NegotiationStatus   statusNegotiation;
-    Collection<Clause>  clauses;
-
-    // TODO Revisar este campo, lo coloque para implementar el nuevo metodo getNearExpirationDatetime() que se agrego a CustomerBrokerPurchaseNegotiation
+    NegotiationStatus   status;
+//    NegotiationStatus   statusNegotiation;
     Boolean             nearExpirationDatetime;
-
+    Collection<Clause>  clauses;
     Long                lastNegotiationUpdateDate;
     String              cancelReason;
     String              memo;
 
     public UUID getNegotiationId(){ return this.negotiationId; }
 
-    public String getCustomerPublicKey(){ return this.publicKeyCustomer; }
+//    public String getCustomerPublicKey(){ return this.publicKeyCustomer; }
+    public String getCustomerPublicKey(){ return this.customerPublicKey; }
 
-    public String getBrokerPublicKey(){ return this.publicKeyBroker; }
+//    public String getBrokerPublicKey(){ return this.publicKeyBroker; }
+    public String getBrokerPublicKey(){ return this.brokerPublicKey; }
 
-    public Long getStartDate(){ return this.startDataTime; }
+//    public Long getStartDate(){ return this.startDataTime; }
+    public Long getStartDate(){ return this.startDate; }
 
     public Long getNegotiationExpirationDate(){ return this.negotiationExpirationDate; }
 
+//    public NegotiationStatus getStatus(){return this.statusNegotiation; }
     public NegotiationStatus getStatus(){
-        return this.statusNegotiation;
+        return this.status;
     }
 
     public Collection<Clause> getClauses() throws CantGetListClauseException{ return this.clauses; }
 
-    //TODO Revisar esta implementacion, este es el nuevo metodo getNearExpirationDatetime() que se agrego a CustomerBrokerPurchaseNegotiation
     public Boolean getNearExpirationDatetime() { return nearExpirationDatetime; }
 
     public Long getLastNegotiationUpdateDate(){ return this.lastNegotiationUpdateDate; }
 
     public void setLastNegotiationUpdateDate(Long lastNegotiationUpdateDate){ this.lastNegotiationUpdateDate = lastNegotiationUpdateDate; }
 
-    //TODO Revisar esta implementacion, lo coloque como un setter para el nuevo metodo getNearExpirationDatetime() que se agrego a CustomerBrokerPurchaseNegotiation
     public void setNearExpirationDatetime(Boolean nearExpirationDatetime) { this.nearExpirationDatetime = nearExpirationDatetime; }
 
     public void setCancelReason(String cancelReason){
