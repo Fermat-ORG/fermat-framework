@@ -49,9 +49,6 @@ public final class CryptoAddressesExecutorAgent extends FermatAgent {
     // Represent the sleep time for the cycles of receive and send in this agent, with both cycles send and receive 15000 millis.
     private static final long SLEEP_TIME = 7500;
     private final Runnable agentTask;
-
-    // Represent the receive and send cycles for this agent.
-
     private ExecutorService executorService;
 
     // network services registered
