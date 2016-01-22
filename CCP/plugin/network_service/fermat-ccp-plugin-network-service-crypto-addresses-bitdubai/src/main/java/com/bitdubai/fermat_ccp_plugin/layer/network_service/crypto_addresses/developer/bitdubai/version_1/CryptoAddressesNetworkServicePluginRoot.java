@@ -857,7 +857,7 @@ public class CryptoAddressesNetworkServicePluginRoot extends AbstractNetworkServ
 
     public void handleCompleteComponentRegistrationNotificationEvent(PlatformComponentProfile platformComponentProfileRegistered){
 
-        if (platformComponentProfileRegistered.getPlatformComponentType() == PlatformComponentType.COMMUNICATION_CLOUD_CLIENT && this.register && communicationRegistrationProcessNetworkServiceAgent.getStatus() == AgentStatus.STOPPED){
+        if (platformComponentProfileRegistered.getPlatformComponentType() == PlatformComponentType.COMMUNICATION_CLOUD_CLIENT && this.register){
 
             beforeRegistered = Boolean.TRUE;
 

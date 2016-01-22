@@ -110,14 +110,13 @@ public final class CryptoAddressesExecutorAgent extends FermatAgent {
     public void pause() {
         this.status = AgentStatus.PAUSED;
         future.cancel(true);
-        super.pause();
+
     }
 
     @Override
     public void resume() {
         this.status = AgentStatus.STARTED;
         future = executorService.submit(agentTask);
-        super.resume();
     }
 
     @Override

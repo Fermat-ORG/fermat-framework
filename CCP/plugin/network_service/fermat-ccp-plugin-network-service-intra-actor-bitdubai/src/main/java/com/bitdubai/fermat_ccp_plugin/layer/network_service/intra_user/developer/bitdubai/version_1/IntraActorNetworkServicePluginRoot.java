@@ -690,8 +690,6 @@ public class IntraActorNetworkServicePluginRoot extends AbstractPlugin implement
                     errorManager,
                     eventManager,
                     wsCommunicationsCloudClientManager);
-
-
             actorNetworkServiceRecordedAgent.start();
 
         } catch (CantStartAgentException e) {
@@ -760,8 +758,8 @@ public class IntraActorNetworkServicePluginRoot extends AbstractPlugin implement
              */
             this.register = Boolean.TRUE;
 
-            if(!beforeRegistered)
-                initializeIntraActorAgent();
+      //      if(!beforeRegistered)
+            initializeIntraActorAgent();
 
 
 
@@ -1376,7 +1374,18 @@ public class IntraActorNetworkServicePluginRoot extends AbstractPlugin implement
 
         }
 
+        if(actorNetworkServiceRecordedAgent!=null) {
+            try {
+                actorNetworkServiceRecordedAgent.start();
+            } catch (CantStartAgentException e) {
+                e.printStackTrace();
+            }
+        }else {
+            initializeIntraActorAgent();
+        }
+
     }
+
 
     public void handleCompleteUpdateActorNotificationEvent(PlatformComponentProfile platformComponentProfile){
         /*

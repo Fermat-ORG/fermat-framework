@@ -106,13 +106,13 @@ public class CryptoPaymentRequestExecutorAgent extends FermatAgent {
     @Override
     public void pause() {
         agentThread.interrupt();
-        super.pause();
+        status = AgentStatus.PAUSED;
     }
 
     @Override
     public void resume() {
         agentThread.start();
-        super.resume();
+        status = AgentStatus.STARTED;
     }
 
     @Override
