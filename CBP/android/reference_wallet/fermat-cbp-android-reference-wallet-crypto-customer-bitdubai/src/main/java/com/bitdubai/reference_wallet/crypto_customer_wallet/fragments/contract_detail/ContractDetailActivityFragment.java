@@ -29,6 +29,7 @@ import com.bitdubai.fermat_api.layer.world.interfaces.Currency;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.ContractDetailType;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.ContractStatus;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.CurrencyType;
+import com.bitdubai.fermat_cbp_api.all_definition.identity.ActorIdentity;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.common.interfaces.ClauseInformation;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_customer.interfaces.CryptoCustomerWalletManager;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_customer.interfaces.CryptoCustomerWalletModuleManager;
@@ -102,6 +103,7 @@ public class ContractDetailActivityFragment extends AbstractFermatFragment<Crypt
 
         configureToolbar();
         initViews(layout);
+        contractInformation=createContractDetails();
         bindData();
 
         return layout;
@@ -112,7 +114,7 @@ public class ContractDetailActivityFragment extends AbstractFermatFragment<Crypt
 
         brokerImage = (ImageView) rootView.findViewById(R.id.ccw_contract_details_broker_image);
         brokerName = (FermatTextView) rootView.findViewById(R.id.ccw_contract_details_broker_name);
-        sellingSummary = (FermatTextView) rootView.findViewById(R.id.ccw_selling_summary);
+        sellingSummary = (FermatTextView) rootView.findViewById(R.id.ccw_contract_details_selling_summary);
         detailDate = (FermatTextView) rootView.findViewById(R.id.ccw_contract_details_date);
         detailRate = (FermatTextView) rootView.findViewById(R.id.ccw_contract_details_rate);
         negotiationButton = (FermatButton) rootView.findViewById(R.id.ccw_contract_details_negotiation_details);
@@ -133,14 +135,37 @@ public class ContractDetailActivityFragment extends AbstractFermatFragment<Crypt
     }
 
     private void bindData() {
-        /*ActorIdentity broker = appSession.getSelectedBrokerIdentity();
+        ActorIdentity broker = appSession.getSelectedBrokerIdentity();
         Currency currencyToBuy = appSession.getCurrencyToBuy();
 
+        //Test implementation
+        currencyToBuy=new Currency() {
+            @Override
+            public String getFriendlyName() {
+                return "BTC";
+            }
+
+            @Override
+            public String getCode() {
+                return CurrencyType.CRYPTO_MONEY.getCode();
+            }
+        };
         //Negotiation Summary
-        Drawable brokerImg = getImgDrawable(broker.getProfileImage());
+        /*Drawable brokerImg = getImgDrawable(broker.getProfileImage());
         brokerImage.setImageDrawable(brokerImg);
         brokerName.setText(broker.getAlias());
         sellingSummary.setText(getResources().getString(R.string.ccw_start_selling_details, currencyToBuy.getFriendlyName()));*/
+        //Contract summary
+        //Drawable brokerImg = getImgDrawable(broker.getProfileImage());
+        //brokerImage.setImageDrawable(brokerImg);
+        //brokerName.setText(broker.getAlias());
+        brokerName.setText("Broker Name");
+        sellingSummary.setText(getResources().getString(
+                R.string.ccw_start_selling_details,
+                currencyToBuy.getFriendlyName()));
+        detailDate.setText("Date");
+        detailRate.setText("1 BTC @ 254 USD");
+
 
         adapter = new ContractDetailAdapter(getActivity(), contractInformation);
         //adapter.setFooterListener(this);
