@@ -39,6 +39,7 @@ public class CryptoAddressesNetworkServiceCryptoAddressRequest implements Crypto
     private final BlockchainNetworkType       blockchainNetworkType      ;
     private final int                          sentNumber;
     private final long                          sentDate;
+    private final String                      messageType;
 
     public CryptoAddressesNetworkServiceCryptoAddressRequest(final UUID                  requestId                  ,
                                                              final String                walletPublicKey            ,
@@ -54,7 +55,8 @@ public class CryptoAddressesNetworkServiceCryptoAddressRequest implements Crypto
                                                              final CryptoAddressDealers  cryptoAddressDealer        ,
                                                              final BlockchainNetworkType blockchainNetworkType     ,
                                                              final int sentNumber,
-                                                             final long sentDate) {
+                                                             final long sentDate,
+                                                             final String messageType) {
 
         this.requestId                   = requestId                  ;
         this.walletPublicKey             = walletPublicKey            ;
@@ -70,7 +72,8 @@ public class CryptoAddressesNetworkServiceCryptoAddressRequest implements Crypto
         this.cryptoAddressDealer         = cryptoAddressDealer        ;
         this.blockchainNetworkType       = blockchainNetworkType      ;
         this.sentNumber = sentNumber;
-        this.sentDate  = sentDate;
+        this.sentDate                   = sentDate;
+        this.messageType                = messageType;
     }
 
     public UUID getRequestId() {
@@ -127,6 +130,11 @@ public class CryptoAddressesNetworkServiceCryptoAddressRequest implements Crypto
 
     public long getSentDate() {
         return sentDate;
+    }
+
+    @Override
+    public String getMessageType() {
+        return this.messageType;
     }
 
     @Override

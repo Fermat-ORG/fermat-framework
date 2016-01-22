@@ -25,6 +25,8 @@ public class VpnClientConnection {
 
     private static final int MAX_MESSAGE_SIZE = 3000000;
 
+    private static final int MAX_IDLE_TIMEOUT = 60000;
+
     /**
      *  Represent the networkServiceType
      */
@@ -65,6 +67,7 @@ public class VpnClientConnection {
         this.networkServiceType = networkServiceType;
         this.session = session;
         this.session.setMaxTextMessageBufferSize(MAX_MESSAGE_SIZE);
+        this.session.setMaxIdleTimeout(MAX_IDLE_TIMEOUT);
     }
 
     /**
@@ -83,15 +86,6 @@ public class VpnClientConnection {
      */
     public PlatformComponentProfile getParticipant() {
         return participant;
-    }
-
-    /**
-     * Get the remoteParticipantIdentity value
-     *
-     * @return remoteParticipantIdentity current value
-     */
-    public String getRemoteParticipantIdentity() {
-        return remoteParticipantIdentity;
     }
 
     /**

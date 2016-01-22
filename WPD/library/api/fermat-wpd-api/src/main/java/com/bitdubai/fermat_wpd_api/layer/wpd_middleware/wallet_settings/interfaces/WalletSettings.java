@@ -53,4 +53,5 @@ public interface WalletSettings extends FermatSettings {
     void setDefaultSkin(UUID skinId) throws CantSetDefaultSkinException, CantLoadWalletSettings;
 
     void setIsPresentationHelpEnabled(boolean b);
+
 }
