@@ -402,7 +402,7 @@ public class CryptoTransmissionNetworkServicePluginRoot extends AbstractNetworkS
                 /*
                  * We create the new database
                  */
-                this.dataBase = communicationNetworkServiceDatabaseFactory.createDatabase(pluginId, CommunicationNetworkServiceDatabaseConstants.DATA_BASE_NAME);
+                this.dataBase = communicationNetworkServiceDatabaseFactory.createDatabase(pluginId, CryptoTransmissionNetworkServiceDatabaseConstants.DATABASE_NAME);
 
             } catch (CantCreateDatabaseException cantOpenDatabaseException) {
 
@@ -503,7 +503,7 @@ public class CryptoTransmissionNetworkServicePluginRoot extends AbstractNetworkS
             StringBuffer contextBuffer = new StringBuffer();
             contextBuffer.append("Plugin ID: " + pluginId);
             contextBuffer.append(CantStartPluginException.CONTEXT_CONTENT_SEPARATOR);
-            contextBuffer.append("Database Name: " + CommunicationNetworkServiceDatabaseConstants.DATA_BASE_NAME);
+            contextBuffer.append("Database Name: " + CryptoTransmissionNetworkServiceDatabaseConstants.DATABASE_NAME);
             String context = contextBuffer.toString();
             String possibleCause = "The Template Database triggered an unexpected problem that wasn't able to solve by itself";
             CantStartPluginException pluginStartException = new CantStartPluginException(CantStartPluginException.DEFAULT_MESSAGE, exception, context, possibleCause);
@@ -654,16 +654,15 @@ public class CryptoTransmissionNetworkServicePluginRoot extends AbstractNetworkS
 
     }
 
-    private void initializeCryptoTransmissionAgent(PlatformComponentProfile platformComponentProfileRegistered){
+    private void initializeCryptoTransmissionAgent(){
         try {
             cryptoTransmissionAgent = new CryptoTransmissionAgent(
                     this,
                     cryptoTransmissionConnectionsDAO,
-                    outgoingCryptoTransmissionMetadataDAO,
                     incomingCryptoTransmissionMetadataDAO,
+                    outgoingCryptoTransmissionMetadataDAO,
                     communicationNetworkServiceConnectionManager,
                     wsCommunicationsCloudClientManager,
-                    platformComponentProfileRegistered,
                     errorManager,
                     new ArrayList<PlatformComponentProfile>(),
                     identity,
@@ -726,7 +725,6 @@ public class CryptoTransmissionNetworkServicePluginRoot extends AbstractNetworkS
              * Mark as register
              */
             this.register = Boolean.TRUE;
-            setRegister(Boolean.TRUE);
 
             System.out.print("-----------------------\n" +
                     "CRYPTO TRANSMISSION REGISTRADO  -----------------------\n" +
@@ -734,12 +732,11 @@ public class CryptoTransmissionNetworkServicePluginRoot extends AbstractNetworkS
 
             setPlatformComponentProfilePluginRoot(platformComponentProfileRegistered);
 
-            if(!beforeRegistered) {
                 /**
                  * Inicialice de main agent
                  */
-                initializeCryptoTransmissionAgent(platformComponentProfileRegistered);
-            }
+                initializeCryptoTransmissionAgent();
+
         }
     }
 
@@ -918,6 +915,20 @@ public class CryptoTransmissionNetworkServicePluginRoot extends AbstractNetworkS
 
          }
 
+         /*
+             * Mark as register
+             */
+        this.register = Boolean.TRUE;
+        if(cryptoTransmissionAgent!=null) {
+            try {
+                cryptoTransmissionAgent.start();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }else {
+            initializeCryptoTransmissionAgent();
+        }
+
 
     }
 
@@ -1028,29 +1039,57 @@ public class CryptoTransmissionNetworkServicePluginRoot extends AbstractNetworkS
     @Override
     public void informTransactionCreditedInWallet(UUID transaction_id) throws CantSetToCreditedInWalletException {
         try {
-            outgoingCryptoTransmissionMetadataDAO.changeCryptoTransmissionProtocolStateAndNotificationState(
+            //change status to send , to inform Seen
+            CryptoTransmissionMetadata cryptoTransmissionMetadata = incomingCryptoTransmissionMetadataDAO.changeCryptoTransmissionProtocolStateAndNotificationState(
                     transaction_id,
-                    CryptoTransmissionProtocolState.PRE_PROCESSING_SEND,
-                    CryptoTransmissionMetadataState.CREDITED_IN_DESTINATION_WALLET);
+                    CryptoTransmissionProtocolState.DONE,
+                    CryptoTransmissionMetadataState.CREDITED_IN_OWN_WALLET);
+
+
+            // send inform to other ns
+            cryptoTransmissionMetadata.changeCryptoTransmissionProtocolState(CryptoTransmissionProtocolState.PRE_PROCESSING_SEND);
+            cryptoTransmissionMetadata.changeMetadataState(CryptoTransmissionMetadataState.CREDITED_IN_DESTINATION_WALLET);
+            cryptoTransmissionMetadata.setPendingToRead(false);
+            String pkAux = cryptoTransmissionMetadata.getDestinationPublicKey();
+            cryptoTransmissionMetadata.setDestinationPublickKey(cryptoTransmissionMetadata.getSenderPublicKey());
+            cryptoTransmissionMetadata.setSenderPublicKey(pkAux);
+            outgoingCryptoTransmissionMetadataDAO.saveCryptoTransmissionMetadata(cryptoTransmissionMetadata);
         }
         catch(CantUpdateRecordDataBaseException e) {
             throw  new CantSetToCreditedInWalletException("Can't Set Metadata To Credited In Wallet Exception",e,"","Can't update record");
+        } catch (PendingRequestNotFoundException e) {
+            e.printStackTrace();
+        } catch (CantSaveCryptoTransmissionMetadatatException e) {
+            e.printStackTrace();
         }
-
-
     }
 
     @Override
     public void informTransactionSeenByVault(UUID transaction_id) throws CantSetToSeenByCryptoVaultException {
         try {
             //change status to send , to inform Seen
-            outgoingCryptoTransmissionMetadataDAO.changeCryptoTransmissionProtocolStateAndNotificationState(
+            CryptoTransmissionMetadata cryptoTransmissionMetadata = incomingCryptoTransmissionMetadataDAO.changeCryptoTransmissionProtocolStateAndNotificationState(
                     transaction_id,
-                    CryptoTransmissionProtocolState.PRE_PROCESSING_SEND,
-                    CryptoTransmissionMetadataState.SEEN_BY_DESTINATION_VAULT);
+                    CryptoTransmissionProtocolState.WAITING_FOR_RESPONSE,
+                    CryptoTransmissionMetadataState.SEEN_BY_OWN_VAULT);
+
+            // send inform to other ns
+            cryptoTransmissionMetadata.changeCryptoTransmissionProtocolState(CryptoTransmissionProtocolState.PRE_PROCESSING_SEND);
+            cryptoTransmissionMetadata.changeMetadataState(CryptoTransmissionMetadataState.SEEN_BY_DESTINATION_VAULT);
+            cryptoTransmissionMetadata.setPendingToRead(false);
+            String pkAux = cryptoTransmissionMetadata.getDestinationPublicKey();
+            cryptoTransmissionMetadata.setDestinationPublickKey(cryptoTransmissionMetadata.getSenderPublicKey());
+            cryptoTransmissionMetadata.setSenderPublicKey(pkAux);
+            outgoingCryptoTransmissionMetadataDAO.saveCryptoTransmissionMetadata(cryptoTransmissionMetadata);
+
+
         }
         catch(CantUpdateRecordDataBaseException e) {
             throw  new CantSetToSeenByCryptoVaultException("Can't Set Metadata To Seen By Crypto Vault Exception",e,"","Can't update record");
+        } catch (PendingRequestNotFoundException e) {
+            e.printStackTrace();
+        } catch (CantSaveCryptoTransmissionMetadatatException e) {
+            e.printStackTrace();
         }
     }
 

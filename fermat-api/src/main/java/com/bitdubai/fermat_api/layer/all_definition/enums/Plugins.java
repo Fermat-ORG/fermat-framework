@@ -226,6 +226,7 @@ public enum Plugins implements FermatPluginsEnum {
     INTRA_IDENTITY_USER          ("IIA"),
     INTRA_WALLET_USER           ("IWU"),
     ISSUER_REDEMPTION           ("IR"),
+    ISSUER_APPROPRIATION("ISAP"),
     NOTIFICATION                ("NOT"),
     OUTGOING_EXTRA_USER         ("OEU"),
     OUTGOING_INTRA_ACTOR        ("OIA"),
@@ -348,6 +349,8 @@ public enum Plugins implements FermatPluginsEnum {
             case "IWU"  :   return INTRA_WALLET_USER        ;
             case "IIA"  :   return INTRA_IDENTITY_USER      ;
             case "IR"   :   return ISSUER_REDEMPTION        ;
+            case "ISAP":
+                return ISSUER_APPROPRIATION;
             case "NOT"  :   return NOTIFICATION             ;
             case "OEU"  :   return OUTGOING_EXTRA_USER      ;
             case "OIA"  :   return OUTGOING_INTRA_ACTOR     ;

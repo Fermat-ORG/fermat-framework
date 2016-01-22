@@ -79,10 +79,8 @@ public class WsCommunicationsCloudClientPluginRoot extends AbstractPlugin implem
     /**
      * Represent the SERVER_IP
      */
-
     public static final String SERVER_IP = ServerConf.SERVER_IP_PRODUCTION;
-
-
+ //   public static final String SERVER_IP = ServerConf.SERVER_IP_DEVELOPER_LOCAL;
 
     /**
      * Represent the executor
@@ -227,18 +225,17 @@ public class WsCommunicationsCloudClientPluginRoot extends AbstractPlugin implem
                                     wsCommunicationsTyrusCloudClientConnection = new WsCommunicationsTyrusCloudClientConnection(uri, eventManager, locationManager, clientIdentity);
                                     wsCommunicationsTyrusCloudClientConnection.initializeAndConnect();
 
-                                } catch (IOException e) {
-                                    e.printStackTrace();
-                                } catch (DeploymentException e) {
+                                    /*
+                                     * Scheduled the reconnection agent
+                                     */
+                                    scheduledExecutorService.scheduleAtFixedRate(new WsCommunicationsCloudClientSupervisorConnectionAgent((WsCommunicationsCloudClientPluginRoot) getInstance()), 10, 20, TimeUnit.SECONDS);
+
+                                } catch (Exception e) {
                                     e.printStackTrace();
                                 }
                             }
                         }).start();
 
-                        /*
-                         * Scheduled the reconnection agent
-                         */
-                        scheduledExecutorService.scheduleAtFixedRate(new WsCommunicationsCloudClientSupervisorConnectionAgent(this), 10, 20, TimeUnit.SECONDS);
 
                     } catch (Exception e) {
                         e.printStackTrace();

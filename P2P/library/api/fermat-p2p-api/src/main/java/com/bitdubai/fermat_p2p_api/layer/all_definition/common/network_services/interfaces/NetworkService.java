@@ -150,4 +150,6 @@ public interface NetworkService {
     String getExtraData();
 
     void handleNewMessages(FermatMessage incomingMessage);
+
+    void handleNewSentMessageNotificationEvent(FermatMessage message);
 }

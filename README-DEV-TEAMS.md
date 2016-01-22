@@ -100,18 +100,19 @@ Developers and team leaders in particular are classified by the deepness of the 
 
 ### The following rules apply:
 
-1. Standard team size is of 5 full-time members.
-2. One full-time member can be replaced by 2 part-time members.
-3. Developers can go up the category list and they can also go down in certain circumstances.
-4. Going up or down a category is decided by the developers's team leader or parent team leader according to these rules.
-5. To move up one category or to keep the current one, all the conditions of previous categories need to have been met.
-6. To be _awarded_ means to win the full bounty at the month targeted by the bounty program.
-7. When a criteria is met to go up a category, the developer will be moved up the following calendar month.
-8. When a full team has a child sub-team leaded by one of the current members:<br>
+1. **Team Size** : Standard team size is of 5 full-time members.
+2. **Part-Time & Full-Time** : One full-time member can be replaced by 2 part-time members.
+3. **Up & Down** : Developers can go up the category list and they can also go down in certain circumstances.
+4. **Approval** : Going up or down a category is decided by the developers's team leader or parent team leader in case a the one moving is already a team leader. In all cases these rules and the project director must approve the move.
+5. **Cumulative Conditions** : To move up one category or to keep the current one, all the conditions of previous categories need to have been met.
+6. **Awards Needed** : To be _awarded_ means to win the full bounty at the month targeted by the bounty program.
+7. **When** : When a criteria is met to go up a category, the developer will be moved up the following calendar month.
+8. **Replacement** : When a full team has a child sub-team leaded by one of the current members:<br>
     a. Their current team leader must add a full-time developer within the same month in order to keep his category.<br>
     b. Failing to do so, will move him down the next month to _Team Leader_.<br>
     c. Succeeding to get a full-time member will probably move him to _New Parent Team Leader_ if this was his first child.<br>
-9. Team leaders can remove members from their teams with a reasonable cause (lack of engagement, performance, etc.).
+9. **Removing Members** : Team leaders can remove members from their teams with a reasonable cause (lack of engagement, performance, etc.).
+10. **Changing Parents** : Team leaders might move their team and decendence to other parent if they don't fell supported by their biological or current parent. They need an authoritation by the project director for this to happen.
 
 <br>
 ## Teams presentations and members
@@ -404,7 +405,7 @@ In the Fermat ORG Sierra Team we look for the excellence in coding, following th
 * **Luis Fuenmayor [ORG Team Leader]**<br/>
 ---
     Email:   fuelusumar@gmail.com
-    Skype:   fuelusumar
+    Skype:   live:fuelusumar.
     Github:  https://github.com/fuelusumar
     
 * **German Mendoza [ORG Veteran Developer]**<br/>
@@ -418,6 +419,12 @@ In the Fermat ORG Sierra Team we look for the excellence in coding, following th
     Email:   campusprize@gmail.com
     Skype:   campol
     Github:  https://github.com/campol
+
+* **Erick Narvaez [ORG Developer]**<br/>
+---
+    Email:   ericknarvaez@hotmail.com 
+    Skype:   live:ericknarvaez
+    Github:  https://github.com/korik1
 
 <br/>
 
