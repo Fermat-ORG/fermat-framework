@@ -276,6 +276,9 @@ public class CryptoAddressesNetworkServicePluginRoot extends AbstractNetworkServ
             */
             this.serviceStatus = ServiceStatus.STARTED;
 
+            //todo Mati revisar porque no se esta iniciando el agente, entonces los mensaje se encolan. Lo fuerzo para que podamos utilizar este NS
+            initializeAgent();
+
         } catch (CantInitializeNetworkServiceDatabaseException exception) {
 
             StringBuffer contextBuffer = new StringBuffer();

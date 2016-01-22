@@ -131,6 +131,18 @@ public class RedeemPointActorDatabaseFactory implements DealsWithPluginDatabaseS
                 throw new CantCreateDatabaseException(CantCreateDatabaseException.DEFAULT_MESSAGE, cantCreateTableException, "", "Exception not handled by the plugin, There is a problem and i cannot create the table.");
             }
 
+            table = databaseFactory.newTableFactory(ownerId, RedeemPointActorDatabaseConstants.REGISTERED_ASSET_ISSUERS_TABLE_NAME);
+            //PUBLIC KEYS
+            table.addColumn(RedeemPointActorDatabaseConstants.REGISTERED_ASSET_ISSUERS_REDEEM_POINT_PUBLICKEY_COLUMN, DatabaseDataType.STRING, 256, Boolean.TRUE);
+            table.addColumn(RedeemPointActorDatabaseConstants.REGISTERED_ASSET_ISSUERS_ISSUER_PUBLICKEY_COLUMN, DatabaseDataType.STRING, 256, Boolean.FALSE);
+            table.addIndex(RedeemPointActorDatabaseConstants.REGISTERED_ASSET_ISSUERS_FIRST_KEY_COLUMN);
+            try {
+                //Create the table
+                databaseFactory.createTable(ownerId, table);
+            } catch (CantCreateTableException cantCreateTableException) {
+                throw new CantCreateDatabaseException(CantCreateDatabaseException.DEFAULT_MESSAGE, cantCreateTableException, "", "Exception not handled by the plugin, There is a problem and i cannot create the table.");
+            }
+
             /**
              * Create Asset Issuer relation Redeem Point Associate table.
              */

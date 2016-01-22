@@ -6,8 +6,6 @@ import com.bitdubai.fermat_dap_api.layer.dap_wallet.asset_issuer_wallet.interfac
 import com.bitdubai.fermat_dap_api.layer.dap_wallet.common.enums.BalanceType;
 import com.bitdubai.fermat_dap_api.layer.dap_wallet.common.enums.TransactionType;
 
-import java.util.UUID;
-
 /**
  * Created by franklin on 30/09/15.
  */
@@ -62,6 +60,28 @@ public class AssetIssuerWalletTransactionWrapper implements AssetIssuerWalletTra
         this.timeStamp = timeStamp;
         this.memo = memo;
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        AssetIssuerWalletTransactionWrapper that = (AssetIssuerWalletTransactionWrapper) o;
+
+        if (!getTransactionId().equals(that.getTransactionId())) return false;
+        if (!getTransactionHash().equals(that.getTransactionHash())) return false;
+        return getAssetPublicKey().equals(that.getAssetPublicKey());
+
+    }
+
+    @Override
+    public int hashCode() {
+        int result = getTransactionId().hashCode();
+        result = 31 * result + getTransactionHash().hashCode();
+        result = 31 * result + getAssetPublicKey().hashCode();
+        return result;
+    }
+
     @Override
     public String getAssetPublicKey() {
         return assetPublicKey;
