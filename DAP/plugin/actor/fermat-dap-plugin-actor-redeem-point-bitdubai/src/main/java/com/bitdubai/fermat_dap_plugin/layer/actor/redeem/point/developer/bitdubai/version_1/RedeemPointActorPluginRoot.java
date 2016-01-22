@@ -179,6 +179,17 @@ public class RedeemPointActorPluginRoot extends AbstractPlugin implements
                         System.currentTimeMillis(),
                         assetRedeemPointActorprofileImage);
 
+//                RedeemPointActorAddress address = new RedeemPointActorAddress();
+//                address.setCountryName("Venezuela");
+//                address.setProvinceName("Zulia");
+//                address.setPostalCode("4019");
+//                address.setCityName("Ciudad Ojeda");
+//                address.setStreetName("Avenida 8");
+//                address.setHouseNumber("#712");
+//                record.setAddress(address);
+//                record.setCryptoAddress(cryptoAddress);
+//                record.setHoursOfOperation("08:00 am a 05:30pm");
+//                record.setContactInformation("marsvicam@gmail.com");
                 redeemPointActorDao.createNewRedeemPoint(record);
 
                 actorAssetRedeemPoint = this.redeemPointActorDao.getActorAssetRedeemPoint();
@@ -200,6 +211,17 @@ public class RedeemPointActorPluginRoot extends AbstractPlugin implements
                         assetRedeemPointActorprofileImage,
                         actorAssetRedeemPoint.registeredIssuers());
 
+//                RedeemPointActorAddress address = new RedeemPointActorAddress();
+//                address.setCountryName("Venezuela");
+//                address.setProvinceName("Zulia");
+//                address.setPostalCode("4019");
+//                address.setCityName("Ciudad Ojeda");
+//                address.setStreetName("Avenida 8");
+//                address.setHouseNumber("#712");
+//                record.setAddress(address);
+//                record.setCryptoAddress(cryptoAddress);
+//                record.setHoursOfOperation("08:00 am a 05:30pm");
+//                record.setContactInformation("marsvicam@gmail.com");
                 redeemPointActorDao.updateRedeemPoint(record);
 
                 actorAssetRedeemPoint = this.redeemPointActorDao.getActorAssetRedeemPoint();
