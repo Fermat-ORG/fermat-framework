@@ -140,7 +140,7 @@ public class CommunicationNetworkServiceRemoteAgent extends Observable {
         this.outgoingMessageDao                  = outgoingMessageDao;
         this.communicationsVPNConnection         = communicationsVPNConnection;
 
-        ExecutorService executorService = Executors.newSingleThreadExecutor();
+        executorService = Executors.newFixedThreadPool(2);
 
     }
 
