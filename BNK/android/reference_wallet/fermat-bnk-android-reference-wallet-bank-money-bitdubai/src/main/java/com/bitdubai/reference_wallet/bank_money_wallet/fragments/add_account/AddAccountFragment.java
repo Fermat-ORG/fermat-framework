@@ -84,7 +84,12 @@ public class AddAccountFragment extends AbstractFermatFragment implements View.O
         currencySpinner = (Spinner) layout.findViewById(R.id.bnk_add_account_currency_spinner);
         currencySpinner.setAdapter(currencySpinnerAdapter);
         currencySpinner.setOnItemSelectedListener(this);
+        configureToolbar();
         return layout;
+    }
+
+    private void configureToolbar() {
+        getToolbar().setBackgroundColor(getResources().getColor(R.color.background_header_navy));
     }
 
     @Override

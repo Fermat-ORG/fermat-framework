@@ -10,6 +10,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Toast;
 
+import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView;
 import com.bitdubai.fermat_android_api.ui.Views.PresentationCallback;
 import com.bitdubai.fermat_android_api.ui.Views.PresentationDialog;
 import com.bitdubai.fermat_android_api.ui.adapters.FermatAdapter;
@@ -53,6 +54,7 @@ public class AccountsListFragment extends FermatWalletListFragment<BankAccountNu
     }
 
     private View emtyView;
+    private FermatTextView header;
 
     private PresentationDialog presentationDialog;
     @Override
@@ -75,6 +77,8 @@ public class AccountsListFragment extends FermatWalletListFragment<BankAccountNu
         super.initViews(layout);
         configureToolbar();
         this.emtyView =  layout.findViewById(R.id.bw_empty_accounts_view);
+        header = (FermatTextView)layout.findViewById(R.id.textView_header_text);
+        header.setText("Accounts:   "+moduleManager.getBankingWallet().getBankName());
         presentationDialog = new PresentationDialog.Builder(getActivity(),appSession)
                 .setBannerRes(R.drawable.bw_banner)
                 .setBody("prueba Body")
