@@ -1023,6 +1023,10 @@ public final class CryptoPaymentRequestNetworkServicePluginRoot extends Abstract
                 }
             }
 
+         /*
+             * Mark as register
+             */
+        this.register = Boolean.TRUE;
 
         if(cryptoPaymentRequestExecutorAgent!=null) {
             try {

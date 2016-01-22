@@ -654,16 +654,15 @@ public class CryptoTransmissionNetworkServicePluginRoot extends AbstractNetworkS
 
     }
 
-    private void initializeCryptoTransmissionAgent(PlatformComponentProfile platformComponentProfileRegistered){
+    private void initializeCryptoTransmissionAgent(){
         try {
             cryptoTransmissionAgent = new CryptoTransmissionAgent(
                     this,
                     cryptoTransmissionConnectionsDAO,
-                    outgoingCryptoTransmissionMetadataDAO,
                     incomingCryptoTransmissionMetadataDAO,
+                    outgoingCryptoTransmissionMetadataDAO,
                     communicationNetworkServiceConnectionManager,
                     wsCommunicationsCloudClientManager,
-                    platformComponentProfileRegistered,
                     errorManager,
                     new ArrayList<PlatformComponentProfile>(),
                     identity,
@@ -726,7 +725,6 @@ public class CryptoTransmissionNetworkServicePluginRoot extends AbstractNetworkS
              * Mark as register
              */
             this.register = Boolean.TRUE;
-            setRegister(Boolean.TRUE);
 
             System.out.print("-----------------------\n" +
                     "CRYPTO TRANSMISSION REGISTRADO  -----------------------\n" +
@@ -734,12 +732,11 @@ public class CryptoTransmissionNetworkServicePluginRoot extends AbstractNetworkS
 
             setPlatformComponentProfilePluginRoot(platformComponentProfileRegistered);
 
-            if(!beforeRegistered) {
                 /**
                  * Inicialice de main agent
                  */
-                initializeCryptoTransmissionAgent(platformComponentProfileRegistered);
-            }
+                initializeCryptoTransmissionAgent();
+
         }
     }
 
@@ -917,6 +914,20 @@ public class CryptoTransmissionNetworkServicePluginRoot extends AbstractNetworkS
 
 
          }
+
+         /*
+             * Mark as register
+             */
+        this.register = Boolean.TRUE;
+        if(cryptoTransmissionAgent!=null) {
+            try {
+                cryptoTransmissionAgent.start();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }else {
+            initializeCryptoTransmissionAgent();
+        }
 
 
     }
