@@ -17,6 +17,8 @@ import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.server.ServerConnector;
 import org.eclipse.jetty.servlet.ServletContextHandler;
 import org.eclipse.jetty.servlet.ServletHolder;
+import org.eclipse.jetty.util.log.Log;
+import org.eclipse.jetty.util.log.Slf4jLog;
 import org.eclipse.jetty.webapp.WebAppContext;
 import org.eclipse.jetty.websocket.jsr356.server.deploy.WebSocketServerContainerInitializer;
 import org.jboss.resteasy.plugins.server.servlet.HttpServlet30Dispatcher;
@@ -97,6 +99,8 @@ public class JettyEmbeddedAppServer {
     private void initialize() throws IOException, DeploymentException, ServletException {
 
         LOG.info("Initializing the internal Server");
+
+        Log.setLog(new Slf4jLog(Server.class.getName()));
 
         /*
          * Create and configure the server

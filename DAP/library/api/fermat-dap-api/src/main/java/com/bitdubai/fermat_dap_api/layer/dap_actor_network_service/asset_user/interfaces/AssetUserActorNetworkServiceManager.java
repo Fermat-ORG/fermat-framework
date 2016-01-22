@@ -25,6 +25,14 @@ public interface AssetUserActorNetworkServiceManager extends FermatManager {
     public void registerActorAssetUser(ActorAssetUser actorAssetUserToRegister) throws CantRegisterActorAssetUserException;
 
     /**
+     * Update the ActorAssetUser in the cloud server like online
+     *
+     * @param actorAssetUserToRegister
+     * @throws CantRegisterActorAssetUserException
+     */
+    public void updateActorAssetUser(ActorAssetUser actorAssetUserToRegister) throws CantRegisterActorAssetUserException;
+
+    /**
      * Request a Crypto Address to the ActorAssetUser
      *
      * @param actorAssetIssuerSender
@@ -50,4 +58,10 @@ public interface AssetUserActorNetworkServiceManager extends FermatManager {
      */
     public List<ActorAssetUser> getListActorAssetUserRegistered() throws CantRequestListActorAssetUserRegisteredException;
 
+    /**
+     * Get the the ActorAssetUser registered by Public key
+     *
+     * @return List<ActorAssetUser>
+     */
+    public List<ActorAssetUser> getActorAssetUserRegistered(String actorAssetUserPublicKey) throws CantRequestListActorAssetUserRegisteredException;
 }

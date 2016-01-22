@@ -450,6 +450,11 @@ public class CryptoBrokerCommunityManager implements CryptoBrokerCommunitySubApp
     }
 
     @Override
+    public void createIdentity(String name, String phrase, byte[] profile_img) throws Exception {
+        
+    }
+
+    @Override
     public void setAppPublicKey(final String publicKey) {
 
         this.subAppPublicKey = publicKey;

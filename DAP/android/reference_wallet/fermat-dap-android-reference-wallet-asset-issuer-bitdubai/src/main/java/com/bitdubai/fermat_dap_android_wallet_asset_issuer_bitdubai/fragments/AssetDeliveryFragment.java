@@ -13,9 +13,6 @@ import android.os.Build;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -29,6 +26,7 @@ import com.bitdubai.fermat_android_api.ui.util.BitmapWorkerTask;
 import com.bitdubai.fermat_android_api.ui.util.FermatWorker;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
 import com.bitdubai.fermat_dap_android_wallet_asset_issuer_bitdubai.R;
+import com.bitdubai.fermat_dap_android_wallet_asset_issuer_bitdubai.dialogs.DistributeAcceptDialog;
 import com.bitdubai.fermat_dap_android_wallet_asset_issuer_bitdubai.models.Data;
 import com.bitdubai.fermat_dap_android_wallet_asset_issuer_bitdubai.models.DigitalAsset;
 import com.bitdubai.fermat_dap_android_wallet_asset_issuer_bitdubai.models.User;
@@ -36,7 +34,6 @@ import com.bitdubai.fermat_dap_android_wallet_asset_issuer_bitdubai.sessions.Ass
 import com.bitdubai.fermat_dap_api.layer.dap_module.wallet_asset_issuer.interfaces.AssetIssuerWalletSupAppModuleManager;
 import com.bitdubai.fermat_dap_api.layer.dap_wallet.common.exceptions.CantLoadWalletException;
 
-import java.io.ByteArrayInputStream;
 import java.lang.ref.WeakReference;
 import java.util.List;
 
@@ -96,21 +93,6 @@ public class AssetDeliveryFragment extends AbstractFermatFragment {
         return rootView;
     }
 
-    @Override
-    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        super.onCreateOptionsMenu(menu, inflater);
-        inflater.inflate(R.menu.dap_wallet_asset_issuer_asset_delivery_select_users_menu, menu);
-        menu.clear();
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        if (item.getItemId() == R.id.action_select_users) {
-            changeActivity(Activities.DAP_WALLET_ASSET_ISSUER_ASSET_DELIVERY, appSession.getAppPublicKey());
-        }
-        return super.onOptionsItemSelected(item);
-    }
-
     private void setupUI() {
         setupBackgroundBitmap();
 
@@ -125,16 +107,29 @@ public class AssetDeliveryFragment extends AbstractFermatFragment {
 //        layout = rootView.findViewById(R.id.assetDetailRemainingLayout);
         deliverAssetsButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                if (selectedUsersCount > 0) {
+                if (assetsToDeliverEditText.getText().length() == 0) {
+                    Toast.makeText(activity, "Must be enter the number of assets to deliver", Toast.LENGTH_SHORT).show();
+                } else if (digitalAsset.getAvailableBalanceQuantity() == 0) {
+                    Toast.makeText(activity, "There is not assets to distribute", Toast.LENGTH_SHORT).show();
+                } else if (selectedUsersCount == 0) {
+                    Toast.makeText(activity, "No users selected", Toast.LENGTH_SHORT).show();
+                } else if (selectedUsersCount > digitalAsset.getAvailableBalanceQuantity()) {
+                    Toast.makeText(activity, "There is not enought assets to distribute", Toast.LENGTH_SHORT).show();
+                } else {
                     Object x = appSession.getData("users");
                     if (x != null) {
-                        List<User> users = (List<User>) x;
+                        final List<User> users = (List<User>) x;
                         if (users.size() > 0) {
-                            doDistribute(digitalAsset.getAssetPublicKey(), users);
+                            DistributeAcceptDialog dialog = new DistributeAcceptDialog(getActivity(), (AssetIssuerSession) appSession, appResourcesProviderManager);
+                            dialog.setYesBtnListener(new DistributeAcceptDialog.OnClickAcceptListener() {
+                                @Override
+                                public void onClick() {
+                                    doDistribute(digitalAsset.getAssetPublicKey(), users);
+                                }
+                            });
+                            dialog.show();
                         }
                     }
-                } else {
-                    Toast.makeText(activity, "No users selected", Toast.LENGTH_SHORT).show();
                 }
             }
         });
@@ -230,6 +225,7 @@ public class AssetDeliveryFragment extends AbstractFermatFragment {
             public void onPostExecute(Object... result) {
                 dialog.dismiss();
                 if (activity != null) {
+                    refreshUIData();
                     Toast.makeText(activity, "Everything ok...", Toast.LENGTH_SHORT).show();
                 }
             }
@@ -243,6 +239,23 @@ public class AssetDeliveryFragment extends AbstractFermatFragment {
             }
         });
         task.execute();
+    }
+
+    private void refreshUIData() {
+        String digitalAssetPublicKey = ((DigitalAsset) appSession.getData("asset_data")).getAssetPublicKey();
+        try {
+            digitalAsset = Data.getDigitalAsset(moduleManager, digitalAssetPublicKey);
+        } catch (CantLoadWalletException e) {
+            e.printStackTrace();
+        }
+
+        assetDeliveryNameText.setText(digitalAsset.getName());
+        assetsToDeliverEditText.setText(digitalAsset.getAvailableBalanceQuantity()+"");
+        assetDeliveryRemainingText.setText(digitalAsset.getAvailableBalanceQuantity() + " Assets Remaining");
+
+        if (digitalAsset.getAvailableBalanceQuantity() == 0) {
+            selectUsersButton.setOnClickListener(null);
+        }
     }
 
     private void setupUIData() {

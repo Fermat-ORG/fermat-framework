@@ -29,6 +29,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Observable;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
 
 /**
  * The Class <code>com.bitdubai.fermat_dmp_plugin.layer.network_service.template.developer.bitdubai.version_1.communications.CommunicationNetworkServiceRemoteAgent</code>
@@ -50,6 +53,9 @@ public class CommunicationNetworkServiceRemoteAgent<NS extends AbstractNetworkSe
      * Represent the sleep time for the read or send (2000 milliseconds)
      */
     private static final long SLEEP_TIME = 2000;
+
+    private static final int sendTask=0;
+    private static final int receiveTask=1;
 
     /**
      * Represent the communicationsVPNConnection
@@ -84,13 +90,30 @@ public class CommunicationNetworkServiceRemoteAgent<NS extends AbstractNetworkSe
     /**
      * Represent the read messages tread of this CommunicationNetworkServiceRemoteAgent
      */
-    private Thread toReceive;
+    private Runnable toReceive = new Runnable() {
+        @Override
+        public void run() {
+            while (running)
+                processMessageReceived();
+        }
+    };;
 
     /**
      * Represent the send messages tread of this CommunicationNetworkServiceRemoteAgent
      */
-    private Thread toSend;
+    private Runnable toSend = new Runnable() {
+        @Override
+        public void run() {
+            while (running)
+                processMessageToSend();
+        }
+    };;
 
+    /**
+     *
+     */
+    private ExecutorService executorService;
+    private Future<?>[] future = new Future[2];
     /**
      * Represent the eccKeyPair
      */
@@ -123,26 +146,7 @@ public class CommunicationNetworkServiceRemoteAgent<NS extends AbstractNetworkSe
         this.communicationsVPNConnection         = communicationsVPNConnection;
         this.networkServicePluginRoot = networkServicePluginRoot;
 
-
-        //Create a thread to receive the messages
-        this.toReceive = new Thread(new Runnable() {
-            @Override
-            public void run() {
-                while (running)
-                    processMessageReceived();
-            }
-        });
-
-        //Create a thread to send the messages
-        this.toSend = new Thread(new Runnable() {
-            @Override
-            public void run() {
-                while (running)
-                    processMessageToSend();
-            }
-        });
-
-//        ExecutorService executorService =
+        executorService = Executors.newSingleThreadExecutor();
 
     }
 
@@ -166,26 +170,7 @@ public class CommunicationNetworkServiceRemoteAgent<NS extends AbstractNetworkSe
         this.communicationsVPNConnection         = communicationsVPNConnection;
         this.abstractNetworkService = networkServicePluginRoot;
 
-
-        //Create a thread to receive the messages
-        this.toReceive = new Thread(new Runnable() {
-            @Override
-            public void run() {
-                while (running)
-                    processMessageReceived();
-            }
-        });
-
-        //Create a thread to send the messages
-        this.toSend = new Thread(new Runnable() {
-            @Override
-            public void run() {
-                while (running)
-                    processMessageToSend();
-            }
-        });
-
-//        ExecutorService executorService =
+        executorService = Executors.newSingleThreadExecutor();
 
     }
 
@@ -198,9 +183,8 @@ public class CommunicationNetworkServiceRemoteAgent<NS extends AbstractNetworkSe
         this.running  = Boolean.TRUE;
 
         //Start the Threads
-        toReceive.start();
-        toSend.start();
-
+        future[sendTask] = executorService.submit(toSend);
+        future[receiveTask] = executorService.submit(toReceive);
         System.out.println("CommunicationNetworkServiceRemoteAgent - started ");
 
     }
@@ -225,8 +209,8 @@ public class CommunicationNetworkServiceRemoteAgent<NS extends AbstractNetworkSe
     public void stop(){
 
         //Stop the Threads
-        toReceive.interrupt();
-        toSend.interrupt();
+        future[sendTask].cancel(true);
+        future[receiveTask].cancel(true);
 
         //Disconnect from the service
         communicationsVPNConnection.close();
@@ -296,13 +280,13 @@ public class CommunicationNetworkServiceRemoteAgent<NS extends AbstractNetworkSe
 
             }
 
-            if(toReceive.isInterrupted() == Boolean.FALSE) {
+            if(Thread.currentThread().isInterrupted() == Boolean.FALSE) {
                 //Sleep for a time
                 Thread.sleep(CommunicationNetworkServiceRemoteAgent.SLEEP_TIME);
             }
         } catch (InterruptedException e) {
             running = false;
-            toReceive.interrupt();
+            Thread.currentThread().interrupt();
             System.out.println("CommunicationNetworkServiceRemoteAgent - Thread Interrupted stopped ...  ");
         } catch (CantInsertRecordDataBaseException e) {
             errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_TEMPLATE_NETWORK_SERVICE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, new Exception("Can not process message received. Error reason: "+e.getMessage()));
@@ -335,7 +319,7 @@ public class CommunicationNetworkServiceRemoteAgent<NS extends AbstractNetworkSe
                     for (FermatMessage message: messages){
 
 
-                        if (communicationsVPNConnection.isActive() && (message.getFermatMessagesStatus() != FermatMessagesStatus.SENT)) {
+                        if (communicationsVPNConnection.isActive() && (message.getFermatMessagesStatus() != FermatMessagesStatus.SENT) && communicationsVPNConnection.isConnected()) {
 
                             /*
                              * Encrypt the content of the message whit the remote network service public key
@@ -375,14 +359,14 @@ public class CommunicationNetworkServiceRemoteAgent<NS extends AbstractNetworkSe
                 }
 
 
-            if(toSend.isInterrupted() == Boolean.FALSE){
+            if(Thread.currentThread().isInterrupted()  == Boolean.FALSE){
                 //Sleep for a time
                 Thread.sleep(CommunicationNetworkServiceRemoteAgent.SLEEP_TIME);
             }
 
         } catch (InterruptedException e) {
             running = false;
-            toSend.interrupt();
+            Thread.currentThread().interrupt();
             System.out.println("CommunicationNetworkServiceRemoteAgent - Thread Interrupted stopped ...  ");
         }
     }

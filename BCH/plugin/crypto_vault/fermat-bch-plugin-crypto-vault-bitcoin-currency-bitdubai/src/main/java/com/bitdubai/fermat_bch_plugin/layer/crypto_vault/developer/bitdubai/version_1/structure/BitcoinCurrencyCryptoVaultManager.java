@@ -415,26 +415,23 @@ public class BitcoinCurrencyCryptoVaultManager  {
         }
 
         /**
-         * If we are brocasting the transaction right now, then I will send it to the crypto network
+         * I will store the transaction in the crypto network
+         */
+        try {
+            bitcoinNetworkManager.storeBitcoinTransaction(networkType, sendRequest.tx, FermatTrId);
+        } catch (CantStoreBitcoinTransactionException e) {
+            throw new CouldNotSendMoneyException(CouldNotSendMoneyException.DEFAULT_MESSAGE, e, "There was an error storing the transaction in the Crypto Network-", "Crypto Network error or database error.");
+        }
+
+        /**
+         * If I'm requested to broadcast it now, then I will
          */
         if (broadcast){
             try {
-                bitcoinNetworkManager.broadcastTransaction(networkType, sendRequest.tx, FermatTrId);
+                bitcoinNetworkManager.broadcastTransaction(sendRequest.tx.getHashAsString());
             } catch (CantBroadcastTransactionException e) {
                 throw new CouldNotSendMoneyException(CouldNotSendMoneyException.DEFAULT_MESSAGE, e, "There was an error broadcasting the transaction.", "Crypto Network error");
-            } catch (Exception e){
-                throw new CouldNotSendMoneyException(CouldNotSendMoneyException.DEFAULT_MESSAGE, e, "There was an error broadcasting the transaction.", "Crypto Network error");
             }
-        } else {
-            /**
-             * if we are not broadcasting this, then a transactional component will manually broadcast it later to the crypto network
-             */
-            try {
-                bitcoinNetworkManager.storeBitcoinTransaction(networkType, sendRequest.tx, FermatTrId);
-            } catch (CantStoreBitcoinTransactionException e) {
-                throw new CouldNotSendMoneyException(CouldNotSendMoneyException.DEFAULT_MESSAGE, e, "There was an error storing the transaction in the Crypto Network-", "Crypto Network error or database error.");
-            }
-
         }
 
         return sendRequest.tx.getHashAsString();

@@ -26,14 +26,19 @@ import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.A
 import com.bitdubai.fermat_dap_android_sub_app_asset_user_community_bitdubai.R;
 import com.bitdubai.fermat_dap_android_sub_app_asset_user_community_bitdubai.adapters.GroupCommunityAdapter;
 import com.bitdubai.fermat_dap_android_sub_app_asset_user_community_bitdubai.adapters.UserCommunityAdapter;
+import com.bitdubai.fermat_dap_android_sub_app_asset_user_community_bitdubai.dialogs.ConfirmDeleteDialog;
 import com.bitdubai.fermat_dap_android_sub_app_asset_user_community_bitdubai.interfaces.AdapterChangeListener;
 import com.bitdubai.fermat_dap_android_sub_app_asset_user_community_bitdubai.interfaces.PopupMenu;
 import com.bitdubai.fermat_dap_android_sub_app_asset_user_community_bitdubai.models.Actor;
 import com.bitdubai.fermat_dap_android_sub_app_asset_user_community_bitdubai.models.Group;
 import com.bitdubai.fermat_dap_android_sub_app_asset_user_community_bitdubai.popup.CreateGroupFragmentDialog;
 import com.bitdubai.fermat_dap_android_sub_app_asset_user_community_bitdubai.sessions.AssetUserCommunitySubAppSession;
+import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.AssetUserGroupMemberRecord;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.exceptions.CantDeleteAssetUserGroupException;
+import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.exceptions.CantGetAssetUserActorsException;
+import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.interfaces.ActorAssetUser;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.interfaces.ActorAssetUserGroup;
+import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.interfaces.ActorAssetUserGroupMember;
 import com.bitdubai.fermat_dap_api.layer.dap_middleware.dap_asset_factory.exceptions.CantPublishAssetFactoy;
 import com.bitdubai.fermat_dap_api.layer.dap_middleware.dap_asset_factory.interfaces.AssetFactory;
 import com.bitdubai.fermat_dap_api.layer.dap_sub_app_module.asset_user_community.interfaces.AssetUserCommunitySubAppModuleManager;
@@ -344,16 +349,42 @@ public class UserCommunityGroupFragment extends AbstractFermatFragment implement
         }
         else if (item.getItemId() == R.id.action_delete)
         {
-            try {
-                manager.deleteGroup(selectedGroup.getGroupId());
-            } catch (CantDeleteAssetUserGroupException e) {
-                e.printStackTrace();
-                Toast.makeText(getActivity(), "This group couldn't be deleted.", Toast.LENGTH_SHORT).show();
-            } catch (RecordsNotFoundException e) {
-                Toast.makeText(getActivity(), "Group not found.", Toast.LENGTH_SHORT).show();
-            }
+            appSession.setData("group_ID", selectedGroup.getGroupId());
+            ConfirmDeleteDialog dialog = new ConfirmDeleteDialog(getActivity(), (AssetUserCommunitySubAppSession) appSession, appResourcesProviderManager);
+            dialog.setYesBtnListener(new ConfirmDeleteDialog.OnClickAcceptListener() {
+                @Override
+                public void onClick() {
+                    String groupSelectedID;
+                    try {
+                        groupSelectedID = (String) appSession.getData("group_ID");
+                        List<ActorAssetUser> userList = manager.getListActorAssetUserByGroups(groupSelectedID);
+                        for (ActorAssetUser user : userList){
 
-            Toast.makeText(getActivity(), "Group deleted.", Toast.LENGTH_SHORT).show();
+                            AssetUserGroupMemberRecord actorGroup = new AssetUserGroupMemberRecord();
+                            actorGroup.setGroupId(groupSelectedID);
+                            actorGroup.setActorPublicKey(user.getActorPublicKey());
+                            manager.removeActorAssetUserFromGroup(actorGroup);
+
+                        }
+
+                        manager.deleteGroup(groupSelectedID);
+                        Toast.makeText(getActivity(), "Group deleted.", Toast.LENGTH_SHORT).show();
+                        onRefresh();
+                    } catch (CantDeleteAssetUserGroupException e) {
+                        e.printStackTrace();
+                        Toast.makeText(getActivity(), "This group couldn't be deleted.", Toast.LENGTH_SHORT).show();
+                    } catch (RecordsNotFoundException e) {
+                        e.printStackTrace();
+                        Toast.makeText(getActivity(), "Group not found.", Toast.LENGTH_SHORT).show();
+                    }catch (CantGetAssetUserActorsException e) {
+                        e.printStackTrace();
+                        Toast.makeText(getActivity(), "Can't get users from group.", Toast.LENGTH_SHORT).show();
+                    }
+                }
+            });
+            dialog.show();
+
+            //Toast.makeText(getActivity(), "Group deleted.", Toast.LENGTH_SHORT).show();
         }
         else if (item.getItemId() == R.id.action_group_members)
         {

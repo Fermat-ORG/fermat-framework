@@ -1,14 +1,14 @@
 package com.bitdubai.fermat_dap_api.layer.dap_actor.redeem_point;
 
-import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
 import com.bitdubai.fermat_api.layer.all_definition.money.CryptoAddress;
 import com.bitdubai.fermat_api.layer.osa_android.location_system.Location;
 import com.bitdubai.fermat_dap_api.layer.all_definition.enums.DAPConnectionState;
-import com.bitdubai.fermat_dap_api.layer.dap_actor.DAPActor;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.redeem_point.interfaces.ActorAssetRedeemPoint;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.redeem_point.interfaces.Address;
 
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
 /**
  * Created by Nerio on 22/09/15.
@@ -28,6 +28,11 @@ public class RedeemPointActorRecord implements ActorAssetRedeemPoint {
     private String              hoursOfOperation    ;
     private Address             address             ;
     private byte[]              profileImage        ;
+    private List<String> registeredIssuers;
+
+    {
+        registeredIssuers = new ArrayList<>();
+    }
 
     /**
      * Constructor
@@ -43,7 +48,8 @@ public class RedeemPointActorRecord implements ActorAssetRedeemPoint {
     public RedeemPointActorRecord(String actorPublicKey,
                                   String name,
                                   byte[] profileImage,
-                                  Location location) {
+                                  Location location,
+                                  List<String> registeredIssuers) {
 
         this.name                   = name                                  ;
         this.actorPublicKey         = actorPublicKey                        ;
@@ -57,7 +63,7 @@ public class RedeemPointActorRecord implements ActorAssetRedeemPoint {
             this.locationLongitude  = (double) 0                            ;
         }
         this.dapConnectionState     = DAPConnectionState.REGISTERED_ONLINE  ;
-
+        this.registeredIssuers = registeredIssuers;
     }
 
     public RedeemPointActorRecord(String name,
@@ -80,53 +86,6 @@ public class RedeemPointActorRecord implements ActorAssetRedeemPoint {
 
     }
 
-    public RedeemPointActorRecord(String actorPublicKey,
-                                  String name,
-                                  DAPConnectionState dapConnectionState,
-                                  double locationLatitude,
-                                  double locationLongitude,
-                                  long registrationDate,
-                                  byte[] profileImage) {
-
-        this.actorPublicKey     = actorPublicKey        ;
-        this.name               = name                  ;
-        this.dapConnectionState = dapConnectionState    ;
-        this.locationLatitude   = locationLatitude      ;
-        this.locationLongitude  = locationLongitude     ;
-        this.registrationDate   = registrationDate      ;
-        this.profileImage       = profileImage.clone()  ;
-    }
-
-
-
-//    public RedeemPointActorRecord(String actorPublicKey,
-//                                  String name,
-//                                  DAPConnectionState dapConnectionState,
-//                                  Double locationLatitude,
-//                                  Double locationLongitude,
-//                                  CryptoAddress cryptoAddress,
-//                                  Long registrationDate,
-//                                  Long lastConnectionDate,
-//                                  byte[] profileImage) {
-//
-//        this.actorPublicKey         =       actorPublicKey          ;
-//        this.name                   =       name                    ;
-//        this.dapConnectionState     =       dapConnectionState      ;
-//
-//        if (locationLatitude != null)
-//            this.locationLatitude       = locationLatitude          ;
-//        if(locationLongitude != null)
-//            this.locationLongitude      = locationLongitude         ;
-//
-//        if(cryptoAddress != null)
-//            this.cryptoAddress          = cryptoAddress             ;
-//
-//        this.registrationDate       =       registrationDate        ;
-//        this.lastConnectionDate     =       lastConnectionDate      ;
-//        this.profileImage           =       profileImage.clone()    ;
-//
-//    }
-
     public RedeemPointActorRecord(final String actorPublicKey,
                                   final String name,
                                   final DAPConnectionState dapConnectionState,
@@ -136,6 +95,28 @@ public class RedeemPointActorRecord implements ActorAssetRedeemPoint {
                                   final Long registrationDate,
                                   final Long lastConnectionDate,
                                   final byte[] profileImage) {
+        this(actorPublicKey,
+                name,
+                dapConnectionState,
+                locationLatitude,
+                locationLongitude,
+                cryptoAddress,
+                registrationDate,
+                lastConnectionDate,
+                profileImage,
+                new ArrayList<String>());
+    }
+
+    public RedeemPointActorRecord(final String actorPublicKey,
+                                  final String name,
+                                  final DAPConnectionState dapConnectionState,
+                                  final Double locationLatitude,
+                                  final Double locationLongitude,
+                                  final CryptoAddress cryptoAddress,
+                                  final Long registrationDate,
+                                  final Long lastConnectionDate,
+                                  final byte[] profileImage,
+                                  final List<String> registeredIssuers) {
 
         this.actorPublicKey         =       actorPublicKey          ;
         this.name                   =       name                    ;
@@ -152,7 +133,7 @@ public class RedeemPointActorRecord implements ActorAssetRedeemPoint {
         this.registrationDate       =       registrationDate        ;
         this.lastConnectionDate     =       lastConnectionDate      ;
         this.profileImage           =       profileImage.clone()    ;
-
+        this.registeredIssuers = registeredIssuers;
     }
 
     /**
@@ -233,6 +214,11 @@ public class RedeemPointActorRecord implements ActorAssetRedeemPoint {
     @Override
     public CryptoAddress getCryptoAddress() {
         return cryptoAddress;
+    }
+
+    @Override
+    public List<String> registeredIssuers() {
+        return registeredIssuers;
     }
 
     public void setCryptoAddress(CryptoAddress cryptoAddress) {

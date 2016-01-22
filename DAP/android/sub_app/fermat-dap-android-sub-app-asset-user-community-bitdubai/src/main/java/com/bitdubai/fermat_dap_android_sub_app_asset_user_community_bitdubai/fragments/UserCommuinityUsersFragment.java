@@ -138,6 +138,50 @@ public class UserCommuinityUsersFragment extends AbstractFermatFragment implemen
         this.menu = menu;
         menuItemAdd = menu.findItem(R.id.action_add_to_group);
         menuItemAdd.setVisible(false);
+        menuItemAdd.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
+            @Override
+            public boolean onMenuItemClick(MenuItem item) {
+                final ProgressDialog dialog = new ProgressDialog(getActivity());
+                dialog.setMessage("Adding users to group...");
+                dialog.setCancelable(false);
+                dialog.show();
+                FermatWorker worker = new FermatWorker() {
+                    @Override
+                    protected Object doInBackground() throws Exception {
+
+                        for (Actor actor : actors) {
+                            if (actor.selected)
+                            {   AssetUserGroupMemberRecord actorGroup = new AssetUserGroupMemberRecord();
+                                actorGroup.setGroupId(group.getGroupId());
+                                actorGroup.setActorPublicKey(actor.getActorPublicKey());
+                                manager.addActorAssetUserToGroup(actorGroup);
+                            }
+                        }
+
+                        return true;
+                    }
+                };
+                worker.setContext(getActivity());
+                worker.setCallBack(new FermatWorkerCallBack() {
+                    @Override
+                    public void onPostExecute(Object... result) {
+                        dialog.dismiss();
+                        Toast.makeText(getActivity(), "Selected users added to the group", Toast.LENGTH_SHORT).show();
+                        appSession.setData("group_selected", group);
+                        changeActivity(Activities.DAP_ASSET_USER_COMMUNITY_ACTIVITY_ADMINISTRATIVE_GROUP_USERS_FRAGMENT, appSession.getAppPublicKey());
+                    }
+
+                    @Override
+                    public void onErrorOccurred(Exception ex) {
+                        dialog.dismiss();
+                        Toast.makeText(getActivity(), String.format("An exception has been thrown: %s", ex.getMessage()), Toast.LENGTH_LONG).show();
+                        ex.printStackTrace();
+                    }
+                });
+                worker.execute();
+                return false;
+            }
+        });
     }
 
 
@@ -151,53 +195,6 @@ public class UserCommuinityUsersFragment extends AbstractFermatFragment implemen
                     onRefresh();
                 }
             });
-    }
-
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        if (item.getItemId() == R.id.action_add_to_group) {
-            final ProgressDialog dialog = new ProgressDialog(getActivity());
-            dialog.setMessage("Adding users to group...");
-            dialog.setCancelable(false);
-            dialog.show();
-            FermatWorker worker = new FermatWorker() {
-                @Override
-                protected Object doInBackground() throws Exception {
-
-                    for (Actor actor : actors) {
-                        if (actor.selected)
-                        {   AssetUserGroupMemberRecord actorGroup = new AssetUserGroupMemberRecord();
-                            actorGroup.setGroupId(group.getGroupId());
-                            actorGroup.setActorPublicKey(actor.getActorPublicKey());
-                            manager.addActorAssetUserToGroup(actorGroup);
-                        }
-                    }
-
-                    return true;
-                }
-            };
-            worker.setContext(getActivity());
-            worker.setCallBack(new FermatWorkerCallBack() {
-                @Override
-                public void onPostExecute(Object... result) {
-                    dialog.dismiss();
-                    Toast.makeText(getActivity(), "Selected users added to the group", Toast.LENGTH_SHORT).show();
-                    appSession.setData("group_selected", group);
-                    changeActivity(Activities.DAP_ASSET_USER_COMMUNITY_ACTIVITY_ADMINISTRATIVE_GROUP_USERS_FRAGMENT, appSession.getAppPublicKey());
-                }
-
-                @Override
-                public void onErrorOccurred(Exception ex) {
-                    dialog.dismiss();
-                    Toast.makeText(getActivity(), String.format("An exception has been thrown: %s", ex.getMessage()), Toast.LENGTH_LONG).show();
-                    ex.printStackTrace();
-                }
-            });
-            worker.execute();
-            return true;
-        }
-        return super.onOptionsItemSelected(item);
     }
 
     public void showEmpty(boolean show, View emptyView) {
@@ -280,7 +277,7 @@ public class UserCommuinityUsersFragment extends AbstractFermatFragment implemen
         usersInGroup = manager.getListActorAssetUserByGroups(group.getGroupName());
         if (result != null && result.size() > 0) {
             for (AssetUserActorRecord record : result) {
-                if (!userInGroup(record.getActorPublicKey(),usersInGroup))
+                if (!userInGroup(record.getActorPublicKey(),usersInGroup) && record.getCryptoAddress() != null)
                 {
                     dataSet.add((new Actor(record)));
                 }

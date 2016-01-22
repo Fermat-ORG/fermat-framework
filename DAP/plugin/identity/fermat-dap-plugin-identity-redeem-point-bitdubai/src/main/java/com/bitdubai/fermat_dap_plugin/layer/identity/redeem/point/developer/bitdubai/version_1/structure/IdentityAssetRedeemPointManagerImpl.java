@@ -10,6 +10,7 @@ import com.bitdubai.fermat_api.layer.osa_android.logger_system.DealsWithLogger;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogManager;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.redeem_point.exceptions.CantCreateActorRedeemPointException;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.redeem_point.interfaces.ActorAssetRedeemPointManager;
+import com.bitdubai.fermat_dap_api.layer.dap_actor_network_service.redeem_point.exceptions.CantRegisterActorAssetRedeemPointException;
 import com.bitdubai.fermat_dap_api.layer.dap_identity.redeem_point.exceptions.CantCreateNewRedeemPointException;
 import com.bitdubai.fermat_dap_api.layer.dap_identity.redeem_point.exceptions.CantGetRedeemPointIdentitiesException;
 import com.bitdubai.fermat_dap_api.layer.dap_identity.redeem_point.exceptions.CantListAssetRedeemPointException;
@@ -165,7 +166,11 @@ public class IdentityAssetRedeemPointManagerImpl implements DealsWithErrors, Dea
     public void updateIdentityRedeemPoint(String identityPublicKey, String identityAlias, byte[] profileImage) throws CantUpdateIdentityRedeemPointException {
         try {
             getAssetRedeemPointIdentityDao().updateIdentityAssetUser(identityPublicKey, identityAlias, profileImage);
+
+            registerIdentities();
         } catch (CantInitializeAssetRedeemPointIdentityDatabaseException e) {
+            e.printStackTrace();
+        } catch (CantListAssetRedeemPointIdentitiesException e) {
             e.printStackTrace();
         }
     }
@@ -203,6 +208,14 @@ public class IdentityAssetRedeemPointManagerImpl implements DealsWithErrors, Dea
             throw new CantListAssetRedeemPointIdentitiesException("CAN'T GET IF ASSET REDEEM POINT IDENTITIES  EXISTS", e, "Cant Create Actor Redeem Point User", "");
         } catch (CantInitializeAssetRedeemPointIdentityDatabaseException e) {
             throw new CantListAssetRedeemPointIdentitiesException("CAN'T GET IF ASSET REDEEM POINT IDENTITIES  EXISTS", e, "Cant Initialize Asset Redeem Point Identity", "");
+        }
+    }
+
+    public void registerIdentitiesANS() throws CantRegisterActorAssetRedeemPointException {
+        try {
+            actorAssetRedeemPointManager.registerActorInActorNetworkService();
+        } catch (CantRegisterActorAssetRedeemPointException e) {
+            e.printStackTrace();
         }
     }
 }

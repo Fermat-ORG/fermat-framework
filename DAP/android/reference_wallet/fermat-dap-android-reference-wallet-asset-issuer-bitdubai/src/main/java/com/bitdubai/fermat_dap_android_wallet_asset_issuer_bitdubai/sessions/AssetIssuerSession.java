@@ -38,7 +38,7 @@ public class AssetIssuerSession extends AbstractFermatSession<InstalledWallet,As
     /**
      *  Wallet Settings
      */
-    private WalletSettings walletSettings;
+    private WalletSettings settings;
 
     /**
      * Constructor
@@ -60,10 +60,9 @@ public class AssetIssuerSession extends AbstractFermatSession<InstalledWallet,As
         installedWallet = null;
     }
 
-
-//    public InstalledWallet getWalletSessionType() {
-//        return null;
-//    }
+    public InstalledWallet getWalletSessionType() {
+        return installedWallet;
+    }
 
     @Override
     public void setData(String key, Object object) {
@@ -84,8 +83,6 @@ public class AssetIssuerSession extends AbstractFermatSession<InstalledWallet,As
 //        return null;
 //    }
 
-
-
     /**
      * Get Asset Issuer Wallet Manager instance
      *
@@ -94,4 +91,9 @@ public class AssetIssuerSession extends AbstractFermatSession<InstalledWallet,As
     public AssetIssuerWalletSupAppModuleManager getManager() {
         return manager;
     }
+
+    public void setSettings(WalletSettings settings) {
+        this.settings = settings;
+    }
+
 }

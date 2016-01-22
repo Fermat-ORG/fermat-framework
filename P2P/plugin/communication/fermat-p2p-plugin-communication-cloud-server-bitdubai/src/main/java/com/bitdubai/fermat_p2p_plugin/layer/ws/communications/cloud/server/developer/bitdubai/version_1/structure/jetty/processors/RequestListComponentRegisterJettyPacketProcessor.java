@@ -194,12 +194,6 @@ public class RequestListComponentRegisterJettyPacketProcessor extends FermatJett
          */
         switch (platformComponentType){
 
-            case COMMUNICATION_CLOUD_SERVER :
-                    if (!MemoryCache.getInstance().getRegisteredCommunicationsCloudServerCache().isEmpty()) {
-                        list = (List<PlatformComponentProfile>) new ArrayList<>(MemoryCache.getInstance().getRegisteredCommunicationsCloudServerCache().values()).clone();
-                    }
-                break;
-
             case COMMUNICATION_CLOUD_CLIENT :
                     if (!MemoryCache.getInstance().getRegisteredCommunicationsCloudClientCache().isEmpty()) {
                         list = (List<PlatformComponentProfile>) new ArrayList<>(MemoryCache.getInstance().getRegisteredCommunicationsCloudClientCache().values()).clone();
@@ -454,12 +448,6 @@ public class RequestListComponentRegisterJettyPacketProcessor extends FermatJett
          */
         switch (platformComponentType){
 
-            case COMMUNICATION_CLOUD_SERVER :
-                    if (!MemoryCache.getInstance().getRegisteredCommunicationsCloudServerCache().isEmpty()){
-                        temporalList = new ArrayList<>(MemoryCache.getInstance().getRegisteredCommunicationsCloudServerCache().values());
-                    }
-                break;
-
             case COMMUNICATION_CLOUD_CLIENT :
                     if (!MemoryCache.getInstance().getRegisteredCommunicationsCloudClientCache().isEmpty()){
                         temporalList = new ArrayList<>(MemoryCache.getInstance().getRegisteredCommunicationsCloudClientCache().values());
@@ -518,12 +506,6 @@ public class RequestListComponentRegisterJettyPacketProcessor extends FermatJett
          * Switch between platform component type
          */
         switch (platformComponentType){
-
-            case COMMUNICATION_CLOUD_SERVER :
-                    if (!MemoryCache.getInstance().getRegisteredCommunicationsCloudServerCache().isEmpty()) {
-                        temporalList = new ArrayList<>(MemoryCache.getInstance().getRegisteredCommunicationsCloudServerCache().values());
-                    }
-                break;
 
             case COMMUNICATION_CLOUD_CLIENT :
                     if (!MemoryCache.getInstance().getRegisteredCommunicationsCloudClientCache().isEmpty()){

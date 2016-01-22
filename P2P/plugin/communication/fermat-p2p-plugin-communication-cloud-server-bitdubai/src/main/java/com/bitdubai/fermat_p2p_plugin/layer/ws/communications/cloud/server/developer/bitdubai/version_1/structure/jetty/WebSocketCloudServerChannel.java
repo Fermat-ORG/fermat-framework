@@ -34,10 +34,12 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 import javax.websocket.CloseReason;
+import javax.websocket.MessageHandler;
 import javax.websocket.OnClose;
 import javax.websocket.OnError;
 import javax.websocket.OnMessage;
 import javax.websocket.OnOpen;
+import javax.websocket.PongMessage;
 import javax.websocket.Session;
 import javax.websocket.server.ServerEndpoint;
 
@@ -189,12 +191,17 @@ public class WebSocketCloudServerChannel {
         }
     }
 
+    @OnMessage
+    public void onPongMessage(PongMessage message) {
+        LOG.debug("Pong message receive from server = " + message);
+    }
+
     @OnClose
     public void onWebSocketClose(CloseReason reason)
     {
         LOG.info(" --------------------------------------------------------------------- ");
         LOG.info("Starting method onWebSocketClose");
-        LOG.info("Socket "+activeClientConnection.getSession().getId() + " is disconnect! code = " + reason.getCloseCode() + "["+reason.getCloseCode().getCode()+"] reason = " + reason.getReasonPhrase());
+        LOG.info("Socket " + activeClientConnection.getSession().getId() + " is disconnect! code = " + reason.getCloseCode() + "[" + reason.getCloseCode().getCode() + "] reason = " + reason.getReasonPhrase());
 
         if (reason.getCloseCode().equals(CloseReason.CloseCodes.CLOSED_ABNORMALLY)) {
             LOG.info("Waiting for client reconnect");
@@ -204,7 +211,7 @@ public class WebSocketCloudServerChannel {
 
             if (clientIdentity != null && clientIdentity != "") {
 
-                putReferencesToStandBy();
+                MemoryCache.getInstance().putReferencesToStandBy(activeClientConnection);
 
                 Timer timer = new Timer();
                 timer.schedule(new TimerTask() {
@@ -222,7 +229,7 @@ public class WebSocketCloudServerChannel {
             }
 
         } else {
-            cleanReferences();
+            MemoryCache.getInstance().cleanReferences(activeClientConnection);
         }
     }
 
@@ -232,199 +239,12 @@ public class WebSocketCloudServerChannel {
         LOG.info("--------------------------------------------------------------------- ");
         LOG.info("Starting method onWebSocketError");
         cause.printStackTrace();
-        cleanReferences();
+        MemoryCache.getInstance().cleanReferences(activeClientConnection);
+
         if (activeClientConnection.getSession().isOpen()) {
             activeClientConnection.getSession().close(new CloseReason(CloseReason.CloseCodes.UNEXPECTED_CONDITION, cause.getMessage()));
         }
 
     }
-
-    /**
-     * Send ping message to the remote node, to verify is connection
-     * alive
-     */
-    public void sendPingMessage(ClientConnection clientConnection){
-
-        LOG.debug("Sending ping message to remote node (" + clientConnection.getSession().getId() + ")");
-        try {
-            ByteBuffer payload = ByteBuffer.wrap("PING".getBytes());
-            clientConnection.getSession().getAsyncRemote().sendPing(payload);
-            clientConnection.setPendingPongMsg(Boolean.TRUE);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-    }
-
-
-    /**
-     * Clean all reference from the connection
-     */
-    private void cleanReferences(){
-
-        try {
-
-            LOG.info("--------------------------------------------------------------------- ");
-            LOG.info("Starting method cleanReferences" );
-            LOG.info("ID = " + activeClientConnection.getSession().getId());
-            LOG.info("hashCode = " + activeClientConnection.getSession().hashCode());
-            removeNetworkServiceRegisteredByClientIdentity(activeClientConnection.getClientIdentity());
-            removeOtherPlatformComponentRegisteredByClientIdentity(activeClientConnection.getClientIdentity());
-            MemoryCache.getInstance().getPendingRegisterClientConnectionsCache().remove(activeClientConnection.getClientIdentity());
-
-            PlatformComponentProfile clientProfile = MemoryCache.getInstance().getRegisteredCommunicationsCloudServerCache().remove(activeClientConnection.getClientIdentity());
-            LOG.info("Remove clientProfile " + clientProfile);
-
-            MemoryCache.getInstance().getRegisteredCommunicationsCloudClientCache().remove(activeClientConnection.getSession().hashCode());
-            MemoryCache.getInstance().getRegisteredClientConnectionsCache().remove(activeClientConnection.getClientIdentity());
-
-            LOG.info("pendingRegisterClientConnectionsCache.size()    = " + MemoryCache.getInstance().getPendingRegisterClientConnectionsCache().size());
-            LOG.info("registeredCommunicationsCloudServerCache.size() = " + MemoryCache.getInstance().getRegisteredCommunicationsCloudServerCache().size());
-            LOG.info("registeredCommunicationsCloudClientCache.size() = " + MemoryCache.getInstance().getRegisteredCommunicationsCloudClientCache().size());
-            LOG.info("registeredNetworkServicesCache.size()           = " + MemoryCache.getInstance().getRegisteredNetworkServicesCache().size());
-            for (NetworkServiceType networkServiceType: MemoryCache.getInstance().getRegisteredNetworkServicesCache().keySet()) {
-                LOG.info(networkServiceType + " = " + MemoryCache.getInstance().getRegisteredNetworkServicesCache().get(networkServiceType).size());
-            }
-            LOG.info("registeredOtherPlatformComponentProfileCache.size()  = " + MemoryCache.getInstance().getRegisteredOtherPlatformComponentProfileCache().size());
-            for (PlatformComponentType platformComponentType: MemoryCache.getInstance().getRegisteredOtherPlatformComponentProfileCache().keySet()) {
-                LOG.info(platformComponentType + " = " + MemoryCache.getInstance().getRegisteredOtherPlatformComponentProfileCache().get(platformComponentType).size());
-            }
-
-        }catch (Exception e){
-            e.printStackTrace();
-        }
-    }
-
-    /**
-     * Clean all reference from the registers cache into
-     * a standByCache to wait to reconnect
-     */
-    private void putReferencesToStandBy(){
-
-        try {
-
-            LOG.info("--------------------------------------------------------------------- ");
-            LOG.info("Starting method putReferencesToStandBy" );
-            LOG.info("ID = " + activeClientConnection.getSession().getId());
-
-           /*
-             * Clean all the caches, remove data bind whit this connection and put
-             * on stand by, to wait to reconnect
-             */
-            MemoryCache.getInstance().getPendingRegisterClientConnectionsCache().remove(activeClientConnection.getClientIdentity());
-            MemoryCache.getInstance().getRegisteredCommunicationsCloudServerCache().remove(activeClientConnection.getClientIdentity());
-            MemoryCache.getInstance().getRegisteredCommunicationsCloudClientCache().remove(activeClientConnection.getSession().hashCode());
-            MemoryCache.getInstance().getRegisteredClientConnectionsCache().remove(activeClientConnection.getClientIdentity());
-
-            List<PlatformComponentProfile> removeProfile = removeNetworkServiceRegisteredByClientIdentity(activeClientConnection.getClientIdentity());
-            removeProfile.addAll(removeOtherPlatformComponentRegisteredByClientIdentity(activeClientConnection.getClientIdentity()));
-
-            LOG.info("Number of profiles put into standby " + removeProfile.size());
-            MemoryCache.getInstance().getStandByProfileByClientIdentity().put(activeClientConnection.getClientIdentity(), removeProfile);
-            LOG.info("Number of list of profiles into standby cache = " + MemoryCache.getInstance().getStandByProfileByClientIdentity().size());
-
-        }catch (Exception e){
-            e.printStackTrace();
-        }
-
-    }
-
-    /**
-     * This method unregister network service component profile
-     * register
-     */
-    private List<PlatformComponentProfile> removeNetworkServiceRegisteredByClientIdentity(final String clientIdentity){
-
-        LOG.info("removeNetworkServiceRegisteredByClientIdentity ");
-
-        List<PlatformComponentProfile> removeProfile = new ArrayList<>();
-
-        Iterator<NetworkServiceType> iteratorNetworkServiceType = MemoryCache.getInstance().getRegisteredNetworkServicesCache().keySet().iterator();
-
-        while (iteratorNetworkServiceType.hasNext()){
-
-            NetworkServiceType networkServiceType = iteratorNetworkServiceType.next();
-            Iterator<PlatformComponentProfile> iterator = MemoryCache.getInstance().getRegisteredNetworkServicesCache().get(networkServiceType).iterator();
-            while (iterator.hasNext()){
-
-                /*
-                 * Remove the platformComponentProfileRegistered
-                 */
-                PlatformComponentProfile platformComponentProfileRegistered = iterator.next();
-
-                if(platformComponentProfileRegistered.getCommunicationCloudClientIdentity().equals(clientIdentity)){
-                    LOG.info("removing =" + platformComponentProfileRegistered.getName());
-                    removeProfile.add(platformComponentProfileRegistered);
-                    iterator.remove();
-                }
-            }
-
-            if (MemoryCache.getInstance().getRegisteredNetworkServicesCache().get(networkServiceType).isEmpty()){
-                MemoryCache.getInstance().getRegisteredNetworkServicesCache().remove(networkServiceType);
-            }
-        }
-
-        /*
-         * Remove the networkServiceType empty
-         */
-        for (NetworkServiceType networkServiceType : MemoryCache.getInstance().getRegisteredNetworkServicesCache().keySet()) {
-
-            if (MemoryCache.getInstance().getRegisteredNetworkServicesCache().get(networkServiceType).isEmpty()){
-                MemoryCache.getInstance().getRegisteredNetworkServicesCache().remove(networkServiceType);
-            }
-        }
-
-        return removeProfile;
-
-    }
-
-
-    /**
-     * This method unregister all platform component profile
-     * register
-     */
-    private List<PlatformComponentProfile> removeOtherPlatformComponentRegisteredByClientIdentity(final String clientIdentity){
-
-        LOG.info("removeOtherPlatformComponentRegisteredByClientIdentity ");
-
-        List<PlatformComponentProfile> removeProfile = new ArrayList<>();
-        Iterator<PlatformComponentType> iteratorPlatformComponentType = MemoryCache.getInstance().getRegisteredOtherPlatformComponentProfileCache().keySet().iterator();
-        while (iteratorPlatformComponentType.hasNext()){
-
-            PlatformComponentType platformComponentType = iteratorPlatformComponentType.next();
-            Iterator<PlatformComponentProfile> iterator = MemoryCache.getInstance().getRegisteredOtherPlatformComponentProfileCache().get(platformComponentType).iterator();
-            while (iterator.hasNext()){
-
-                /*
-                 * Remove the platformComponentProfileRegistered
-                 */
-                PlatformComponentProfile platformComponentProfileRegistered = iterator.next();
-                if(platformComponentProfileRegistered.getCommunicationCloudClientIdentity().equals(clientIdentity)){
-                    LOG.info("removing Other ="+platformComponentProfileRegistered.getName());
-                    removeProfile.add(platformComponentProfileRegistered);
-                    iterator.remove();
-                }
-            }
-
-            /*
-             * Remove the platformComponentType empty
-             */
-            if (MemoryCache.getInstance().getRegisteredOtherPlatformComponentProfileCache().get(platformComponentType).isEmpty()){
-                MemoryCache.getInstance().getRegisteredOtherPlatformComponentProfileCache().remove(platformComponentType);
-            }
-        }
-
-        return removeProfile;
-    }
-
-    /**
-     * Get the activeClientConnection value
-     *
-     * @return activeClientConnection current value
-     */
-    public ClientConnection getActiveClientConnection() {
-        return activeClientConnection;
-    }
-
 
 }

@@ -110,6 +110,7 @@ public class CryptoPaymentRequestNetworkServiceDeveloperDatabaseFactory {
         cryptoAddressRequestColumns.add(CryptoPaymentRequestNetworkServiceDatabaseConstants.CRYPTO_PAYMENT_REQUEST_NETWORK_TYPE_COLUMN_NAME       );
         cryptoAddressRequestColumns.add(CryptoPaymentRequestNetworkServiceDatabaseConstants.CRYPTO_PAYMENT_REQUEST_WALLET_REFERENCE_TYPE_COLUMN_NAME       );
         cryptoAddressRequestColumns.add(CryptoPaymentRequestNetworkServiceDatabaseConstants.CRYPTO_PAYMENT_REQUEST_SENT_COUNT_COLUMN_NAME       );
+        cryptoAddressRequestColumns.add(CryptoPaymentRequestNetworkServiceDatabaseConstants.CRYPTO_PAYMENT_REQUEST_MESSAGE_TYPE_COLUMN_NAME       );
 
         /**
          * Table Crypto Address Request addition.
