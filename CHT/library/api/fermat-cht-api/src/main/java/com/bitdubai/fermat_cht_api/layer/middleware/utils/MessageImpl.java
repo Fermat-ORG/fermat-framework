@@ -28,8 +28,8 @@ public class MessageImpl implements Message {
             MessageStatus messageStatus,
             TypeMessage typeMessage
     ){
-        messageId=chatMetadata.getIdMessage();
-        chatId=chatMetadata.getIdChat();
+        messageId=chatMetadata.getMessageId();
+        chatId=chatMetadata.getChatId();
         message=chatMetadata.getMessage();
         status=messageStatus;
         type=typeMessage;

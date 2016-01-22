@@ -164,6 +164,7 @@ public enum Activities implements FermatEnum {
     CBP_CRYPTO_CUSTOMER_WALLET_CREATE_NEW_BANK_ACCOUNT_IN_WIZARD("CBPCCWCNBAW"),
     CBP_CRYPTO_CUSTOMER_WALLET_SETTINGS_MY_LOCATIONS("CBPCCWSML"),
     CBP_CRYPTO_CUSTOMER_WALLET_CREATE_NEW_LOCATION_IN_SETTINGS("CBPCCWCNLIS"),
+    CBP_CRYPTO_CUSTOMER_WALLET_CONTRACT_DETAILS("CBPCCWCD"),
 
 
     // Bank Money Wallet
@@ -171,6 +172,7 @@ public enum Activities implements FermatEnum {
     BNK_BANK_MONEY_WALLET_SETUP("BNKBMWS"),
     BNK_BANK_MONEY_WALLET_ACCOUNT_DETAILS("BNKBMWAD"),
     BNK_BANK_MONEY_WALLET_ADD_ACCOUNT("BNKBMWAA"),
+    BNK_BANK_MONEY_WALLET_UPDATE_RECORD("BNKBMWU"),
 
     // Cash Money Wallet
     CSH_CASH_MONEY_WALLET_HOME("CSHCMWH"),
@@ -456,6 +458,8 @@ public enum Activities implements FermatEnum {
                 return CBP_CRYPTO_CUSTOMER_WALLET_CREATE_NEW_LOCATION_IN_SETTINGS;
             case "CBPCBWSSBA":
                 return CBP_CRYPTO_BROKER_WALLET_SETTINGS_BANK_ACCOUNT;
+            case "CBPCCWCD":
+                return CBP_CRYPTO_CUSTOMER_WALLET_CONTRACT_DETAILS;
             case "DAICAM":
                 return null; //TODO dejaron este case por fuera
             case "DAPAUCAM":
@@ -584,7 +588,8 @@ public enum Activities implements FermatEnum {
 
             case "BNKBMWAA":
                 return BNK_BANK_MONEY_WALLET_ADD_ACCOUNT;
-
+            case "BNKBMWU":
+                return BNK_BANK_MONEY_WALLET_UPDATE_RECORD;
             case "DWAIUAL":
                 return DAP_WALLET_ASSET_ISSUER_USER_APPROPIATE_LIST;
 

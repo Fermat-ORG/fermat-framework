@@ -11,21 +11,21 @@ import java.sql.Timestamp;
 import java.util.UUID;
 
 /**
- * Created by root on 06/01/16.
+ * Created by Gabriel Araujo on 06/01/16.
  */
-public class ChatMetadataTransactionRecord implements ChatMetadata,Serializable {
+public class ChatMetadataTransactionRecord implements ChatMetadata{
 
-    private UUID idChat;
+    private UUID chatId;
 
-    private UUID idObject;
+    private UUID objectId;
 
     private PlatformComponentType localActorType;
 
-    private String localActorPubKey;
+    private String localActorPublicKey;
 
     private PlatformComponentType remoteActorType;
 
-    private String remoteActorPubKey;
+    private String remoteActorPublicKey;
 
     private String chatName;
 
@@ -35,11 +35,20 @@ public class ChatMetadataTransactionRecord implements ChatMetadata,Serializable 
 
     private Timestamp date;
 
-    private UUID idMessage;
+    private UUID messageId;
 
     private String message;
 
     private DistributionStatus distributionStatus;
+
+    @Override
+    public UUID getChatId() {
+        return chatId;
+    }
+
+    public void setChatId(UUID chatId) {
+        this.chatId = chatId;
+    }
 
     @Override
     public MessageStatus getMessageStatus() {
@@ -62,16 +71,16 @@ public class ChatMetadataTransactionRecord implements ChatMetadata,Serializable 
     @Override
     public String toString() {
         return "ChatMetadataTransactionRecord{" +
-                "idChat=" + idChat +
-                ", idObject=" + idObject +
+                "chatId=" + chatId +
+                ", objectId=" + objectId +
                 ", localActorType='" + localActorType + '\'' +
-                ", localActorPubKey='" + localActorPubKey + '\'' +
+                ", localActorPublicKey='" + localActorPublicKey + '\'' +
                 ", remoteActorType='" + remoteActorType + '\'' +
-                ", remoteActorPubKey='" + remoteActorPubKey + '\'' +
+                ", remoteActorPublicKey='" + remoteActorPublicKey + '\'' +
                 ", chatName='" + chatName + '\'' +
                 ", chatMessageStatus=" + chatMessageStatus +
                 ", date=" + date +
-                ", idMessage=" + idMessage +
+                ", messageId=" + messageId +
                 ", message='" + message + '\'' +
                 '}';
     }
@@ -88,12 +97,12 @@ public class ChatMetadataTransactionRecord implements ChatMetadata,Serializable 
     }
 
     @Override
-    public String getLocalActorPubKey() {
-        return localActorPubKey;
+    public String getLocalActorPublicKey() {
+        return localActorPublicKey;
     }
 
-    public void setLocalActorPubKey(String localActorPubKey) {
-        this.localActorPubKey = localActorPubKey;
+    public void setLocalActorPublicKey(String localActorPublicKey) {
+        this.localActorPublicKey = localActorPublicKey;
     }
 
     @Override
@@ -106,12 +115,12 @@ public class ChatMetadataTransactionRecord implements ChatMetadata,Serializable 
     }
 
     @Override
-    public String getRemoteActorPubKey() {
-        return remoteActorPubKey;
+    public String getRemoteActorPublicKey() {
+        return remoteActorPublicKey;
     }
 
-    public void setRemoteActorPubKey(String remoteActorPubKey) {
-        this.remoteActorPubKey = remoteActorPubKey;
+    public void setRemoteActorPublicKey(String remoteActorPublicKey) {
+        this.remoteActorPublicKey = remoteActorPublicKey;
     }
 
     @Override
@@ -150,30 +159,22 @@ public class ChatMetadataTransactionRecord implements ChatMetadata,Serializable 
         this.message = message;
     }
 
-    @Override
-    public UUID getIdChat() {
-        return idChat;
-    }
-
-    public void setIdChat(UUID idChat) {
-        this.idChat = idChat;
-    }
 
     @Override
-    public UUID getIdObject() {
-        return idObject;
+    public UUID getObjectId() {
+        return objectId;
     }
 
-    public void setIdObject(UUID idObject) {
-        this.idObject = idObject;
+    public void setObjectId(UUID objectId) {
+        this.objectId = objectId;
     }
 
     @Override
-    public UUID getIdMessage() {
-        return idMessage;
+    public UUID getMessageId() {
+        return messageId;
     }
 
-    public void setIdMessage(UUID idMessage) {
-        this.idMessage = idMessage;
+    public void setMessageId(UUID messageId) {
+        this.messageId = messageId;
     }
 }
