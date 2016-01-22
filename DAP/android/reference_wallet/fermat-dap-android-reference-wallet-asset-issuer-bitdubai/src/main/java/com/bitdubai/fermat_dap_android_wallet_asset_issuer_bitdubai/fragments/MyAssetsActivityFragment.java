@@ -88,6 +88,7 @@ public class MyAssetsActivityFragment extends FermatWalletListFragment<DigitalAs
         settingsManager = appSession.getModuleManager().getSettingsManager();
 
         digitalAssets = (List) getMoreDataAsync(FermatRefreshTypes.NEW, 0);
+        appSession.setData("users",null);
     }
 
     @Override
