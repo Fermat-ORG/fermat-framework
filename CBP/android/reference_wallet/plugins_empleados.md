@@ -22,7 +22,7 @@
     - Mercancias:
       - Se usa para asignar valor a la Clausula `CUSTOMER_CURRENCY`
       - `List<Currency>`
-      - Se obtiene de la Broker Wallet. El tiene la lista de wallets asociadas y en concencia las mercancias
+      - Se obtiene de la Broker Wallet. El tiene la lista de wallets asociadas y en concecuencia las mercancias
     - Cotizacion
       - Se usa para asignar valor a la Clausula `EXCHANGE_RATE`
       - Sale de Broker Wallet, por el metodo FiatIndex getMarketRate(...)
@@ -31,7 +31,7 @@
     - Monedas de Pago
       - Se usa para asignar valor a la Clausula `BROKER_CURRENCY`
       - `List<Currency>`
-      - Se obtiene de Matching Engine. el tiene la lista de wallets asociadas para manejar las ganacias y en consecuencia dichas momendas
+      - son las mimas mercancias
     - Formas de Pago que acepta el broker
       - Se usa para asignar valor a la Clausula `CUSTOMER_PAYMENT_METHOD`
       - `Map<Currency, List<Platform>>`
