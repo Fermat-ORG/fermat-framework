@@ -48,4 +48,8 @@ public interface CryptoTransmissionMetadata {
     int getSentCount();
 
     void setPendingToRead(boolean pending);
+
+    void setDestinationPublickKey(String senderPublicKey);
+
+    void setSenderPublicKey(String senderPublicKey);
 }

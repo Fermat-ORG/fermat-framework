@@ -38,9 +38,9 @@ import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.interfaces.ActorAs
 import com.bitdubai.fermat_dap_api.layer.dap_actor_network_service.asset_issuer.exceptions.CantSendMessageException;
 import com.bitdubai.fermat_dap_api.layer.dap_actor_network_service.asset_issuer.interfaces.AssetIssuerActorNetworkServiceManager;
 import com.bitdubai.fermat_dap_api.layer.dap_transaction.asset_appropriation.exceptions.CantLoadAssetAppropriationTransactionListException;
-import com.bitdubai.fermat_dap_api.layer.dap_transaction.asset_appropriation.interfaces.AssetAppropriationTransactionRecord;
 import com.bitdubai.fermat_dap_api.layer.dap_transaction.common.AssetUserWalletTransactionRecordWrapper;
 import com.bitdubai.fermat_dap_api.layer.dap_transaction.common.exceptions.RecordsNotFoundException;
+import com.bitdubai.fermat_dap_api.layer.dap_transaction.common.interfaces.AppropriationTransactionRecord;
 import com.bitdubai.fermat_dap_api.layer.dap_transaction.common.util.AssetVerification;
 import com.bitdubai.fermat_dap_api.layer.dap_wallet.asset_issuer_wallet.exceptions.CantRegisterDebitException;
 import com.bitdubai.fermat_dap_api.layer.dap_wallet.asset_issuer_wallet.interfaces.AssetIssuerWallet;
@@ -219,17 +219,17 @@ public class AssetAppropriationMonitorAgent implements Agent {
                 switch (dao.getEventTypeById(eventId)) {
                     //TODO CHANGE THESE EVENTS TO THE NEW ONES.
                     case INCOMING_ASSET_ON_CRYPTO_NETWORK_WAITING_TRANSFERENCE_ASSET_USER:
-                        for (AssetAppropriationTransactionRecord record : dao.getTransactionsForStatus(AppropriationStatus.BITCOINS_SENT)) {
+                        for (AppropriationTransactionRecord record : dao.getTransactionsForStatus(AppropriationStatus.BITCOINS_SENT)) {
                             if ("-".equals(record.genesisTransaction())) {
                                 //If for some reason it wasn't updated then the bitcoins wasn't sent.
                                 dao.updateTransactionStatusCryptoAddressObtained(record.transactionRecordId());
                                 continue;
                             }
-                            CryptoTransaction cryptoTransaction = AssetVerification.getCryptoTransactionFromCryptoNetworkByCryptoStatus(bitcoinNetworkManager, record.genesisTransaction(), CryptoStatus.ON_CRYPTO_NETWORK);
+                            CryptoTransaction cryptoTransaction = AssetVerification.getCryptoTransactionFromCryptoNetworkByCryptoStatus(bitcoinNetworkManager, record.assetMetadata(), CryptoStatus.ON_CRYPTO_NETWORK);
                             if(cryptoTransaction == null) continue;
-                            AssetUserWallet userWallet = assetUserWalletManager.loadAssetUserWallet(record.userWalletPublicKey());
+                            AssetUserWallet userWallet = assetUserWalletManager.loadAssetUserWallet(record.walletPublicKey());
                             AssetUserWalletBalance balance = userWallet.getBalance();
-                            AssetUserWalletTransactionRecordWrapper walletRecord = new AssetUserWalletTransactionRecordWrapper(record.digitalAsset(),
+                            AssetUserWalletTransactionRecordWrapper walletRecord = new AssetUserWalletTransactionRecordWrapper(record.assetMetadata(),
                                     cryptoTransaction,
                                     record.digitalAsset().getPublicKey(),
                                     Actors.DAP_ASSET_USER,
@@ -241,12 +241,12 @@ public class AssetAppropriationMonitorAgent implements Agent {
                         break;
 
                     case INCOMING_ASSET_ON_BLOCKCHAIN_WAITING_TRANSFERENCE_ASSET_USER:
-                        for (AssetAppropriationTransactionRecord record : dao.getTransactionsForStatus(AppropriationStatus.ASSET_DEBITED)) {
-                            CryptoTransaction cryptoTransaction = AssetVerification.getCryptoTransactionFromCryptoNetworkByCryptoStatus(bitcoinNetworkManager, record.genesisTransaction(), CryptoStatus.ON_BLOCKCHAIN);
+                        for (AppropriationTransactionRecord record : dao.getTransactionsForStatus(AppropriationStatus.ASSET_DEBITED)) {
+                            CryptoTransaction cryptoTransaction = AssetVerification.getCryptoTransactionFromCryptoNetworkByCryptoStatus(bitcoinNetworkManager, record.assetMetadata(), CryptoStatus.ON_BLOCKCHAIN);
                             if(cryptoTransaction == null) continue;
-                            AssetUserWallet userWallet = assetUserWalletManager.loadAssetUserWallet(record.userWalletPublicKey());
+                            AssetUserWallet userWallet = assetUserWalletManager.loadAssetUserWallet(record.walletPublicKey());
                             AssetUserWalletBalance balance = userWallet.getBalance();
-                            AssetUserWalletTransactionRecordWrapper walletRecord = new AssetUserWalletTransactionRecordWrapper(record.digitalAsset(),
+                            AssetUserWalletTransactionRecordWrapper walletRecord = new AssetUserWalletTransactionRecordWrapper(record.assetMetadata(),
                                     cryptoTransaction,
                                     record.digitalAsset().getPublicKey(),
                                     Actors.DAP_ASSET_USER,
@@ -286,7 +286,7 @@ public class AssetAppropriationMonitorAgent implements Agent {
         }
 
         private void statusMonitoring(AssetAppropriationDAO dao) throws Exception {
-            for (AssetAppropriationTransactionRecord record : dao.getUnsendedTransactions()) {
+            for (AppropriationTransactionRecord record : dao.getUnsendedTransactions()) {
                 AssetAppropriationDigitalAssetTransactionPluginRoot.debugAssetAppropriation(dao.getUnsendedTransactions().size() + " unsended transactions were found.");
                 switch (record.status()) {
                     case APPROPRIATION_STARTED:

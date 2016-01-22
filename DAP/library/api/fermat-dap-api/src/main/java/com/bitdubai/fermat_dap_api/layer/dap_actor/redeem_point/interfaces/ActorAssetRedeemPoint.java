@@ -5,6 +5,8 @@ import com.bitdubai.fermat_api.layer.osa_android.location_system.Location;
 import com.bitdubai.fermat_dap_api.layer.all_definition.enums.DAPConnectionState;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.DAPActor;
 
+import java.util.List;
+
 /**
  * Created by Nerio on 10/09/15.
  */
@@ -103,4 +105,5 @@ public interface ActorAssetRedeemPoint extends DAPActor {
      */
     CryptoAddress getCryptoAddress();
 
+    List<String> registeredIssuers();
 }

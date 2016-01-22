@@ -350,20 +350,38 @@ public class CryptoTransmissionAgent {
 
                         try {
 
+                            Gson gson = new Gson();
+                            String jsonMetadata = null;
+                            CryptoTransmissionResponseMessage cryptoTransmissionResponseMessage = null;
+                            switch (cryptoTransmissionMetadata.getCryptoTransmissionMetadataStates()){
+                                case SEEN_BY_OWN_NETWORK_SERVICE_WAITING_FOR_RESPONSE:
+                                    jsonMetadata = gson.toJson(cryptoTransmissionMetadata);
+                                    break;
+                                case SEEN_BY_DESTINATION_VAULT:
+                                    // Notifico recepcion de metadata
+                                    cryptoTransmissionResponseMessage = new CryptoTransmissionResponseMessage(
+                                            cryptoTransmissionMetadata.getTransactionId(),
+                                            CryptoTransmissionProtocolState.SENT,
+                                            CryptoTransmissionMetadataType.METADATA_SEND,
+                                            CryptoTransmissionMetadataState.SEEN_BY_DESTINATION_VAULT);
+                                    jsonMetadata = gson.toJson(cryptoTransmissionResponseMessage);
+                                    break;
+                                case CREDITED_IN_DESTINATION_WALLET:
+                                    // Notifico recepcion de metadata
+                                    cryptoTransmissionResponseMessage = new CryptoTransmissionResponseMessage(
+                                            cryptoTransmissionMetadata.getTransactionId(),
+                                            CryptoTransmissionProtocolState.SENT,
+                                            CryptoTransmissionMetadataType.METADATA_SEND,
+                                            CryptoTransmissionMetadataState.CREDITED_IN_DESTINATION_WALLET);
+                                    jsonMetadata = gson.toJson(cryptoTransmissionResponseMessage);
+                                    break;
 
-
+                            }
                             System.out.print("-----------------------\n" +
                                     "ENVIANDO CRYPTO METADATA!!!!! -----------------------\n" +
                                     "-----------------------\n A: " + cryptoTransmissionMetadata.getDestinationPublicKey());
 
-                            // Si se encuentra conectado paso la metadata al dao de la capa de comunicacion para que lo envie
-                            Gson gson = new Gson();
-                            String jsonMetadata = gson.toJson(cryptoTransmissionMetadata);
-
-                            // Envio el mensaje a la capa de comunicacion
-
                             communicationNetworkServiceLocal.sendMessage(cryptoTransmissionMetadata.getSenderPublicKey(),cryptoTransmissionMetadata.getDestinationPublicKey(),jsonMetadata);
-
                             //Cambio estado de base de datos a PROCESSING_SEND_COMMUNICATION_DATABASE
                             outgoingCryptoTransmissionMetadataDAO.changeCryptoTransmissionProtocolState(
                                     cryptoTransmissionMetadata.getTransactionId(),
