@@ -184,4 +184,13 @@ public class CryptoTransmissionMetadataRecord implements CryptoTransmissionMetad
     public void setPendingToRead(boolean pending) {
         this.pendingFlag = pending;
     }
+
+    @Override
+    public void setDestinationPublickKey(String destinationPublicKey) {
+        this.destinationPublicKey = destinationPublicKey;
+    }
+    @Override
+    public void setSenderPublicKey(String senderPublicKey) {
+        this.senderPublicKey = senderPublicKey;
+    }
 }

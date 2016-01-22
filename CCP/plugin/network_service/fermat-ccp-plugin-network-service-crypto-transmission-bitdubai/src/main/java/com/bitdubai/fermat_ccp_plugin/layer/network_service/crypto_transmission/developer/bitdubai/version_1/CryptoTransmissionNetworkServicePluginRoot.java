@@ -1050,6 +1050,9 @@ public class CryptoTransmissionNetworkServicePluginRoot extends AbstractNetworkS
             cryptoTransmissionMetadata.changeCryptoTransmissionProtocolState(CryptoTransmissionProtocolState.PRE_PROCESSING_SEND);
             cryptoTransmissionMetadata.changeMetadataState(CryptoTransmissionMetadataState.CREDITED_IN_DESTINATION_WALLET);
             cryptoTransmissionMetadata.setPendingToRead(false);
+            String pkAux = cryptoTransmissionMetadata.getDestinationPublicKey();
+            cryptoTransmissionMetadata.setDestinationPublickKey(cryptoTransmissionMetadata.getSenderPublicKey());
+            cryptoTransmissionMetadata.setSenderPublicKey(pkAux);
             outgoingCryptoTransmissionMetadataDAO.saveCryptoTransmissionMetadata(cryptoTransmissionMetadata);
         }
         catch(CantUpdateRecordDataBaseException e) {
@@ -1059,8 +1062,6 @@ public class CryptoTransmissionNetworkServicePluginRoot extends AbstractNetworkS
         } catch (CantSaveCryptoTransmissionMetadatatException e) {
             e.printStackTrace();
         }
-
-
     }
 
     @Override
@@ -1076,6 +1077,9 @@ public class CryptoTransmissionNetworkServicePluginRoot extends AbstractNetworkS
             cryptoTransmissionMetadata.changeCryptoTransmissionProtocolState(CryptoTransmissionProtocolState.PRE_PROCESSING_SEND);
             cryptoTransmissionMetadata.changeMetadataState(CryptoTransmissionMetadataState.SEEN_BY_DESTINATION_VAULT);
             cryptoTransmissionMetadata.setPendingToRead(false);
+            String pkAux = cryptoTransmissionMetadata.getDestinationPublicKey();
+            cryptoTransmissionMetadata.setDestinationPublickKey(cryptoTransmissionMetadata.getSenderPublicKey());
+            cryptoTransmissionMetadata.setSenderPublicKey(pkAux);
             outgoingCryptoTransmissionMetadataDAO.saveCryptoTransmissionMetadata(cryptoTransmissionMetadata);
 
 
