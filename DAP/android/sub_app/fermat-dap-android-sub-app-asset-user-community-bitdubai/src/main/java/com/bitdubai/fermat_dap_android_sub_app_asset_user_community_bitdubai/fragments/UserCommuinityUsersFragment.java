@@ -277,7 +277,7 @@ public class UserCommuinityUsersFragment extends AbstractFermatFragment implemen
         usersInGroup = manager.getListActorAssetUserByGroups(group.getGroupName());
         if (result != null && result.size() > 0) {
             for (AssetUserActorRecord record : result) {
-                if (!userInGroup(record.getActorPublicKey(),usersInGroup))
+                if (!userInGroup(record.getActorPublicKey(),usersInGroup) && record.getCryptoAddress() != null)
                 {
                     dataSet.add((new Actor(record)));
                 }

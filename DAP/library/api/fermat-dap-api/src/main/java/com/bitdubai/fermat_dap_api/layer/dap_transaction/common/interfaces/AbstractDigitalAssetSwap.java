@@ -21,12 +21,12 @@ import java.util.UUID;
  */
 public abstract class AbstractDigitalAssetSwap implements DigitalAssetSwap {
 
-    AssetVaultManager assetVaultManager;
-    public BitcoinNetworkManager bitcoinNetworkManager;
-    PluginFileSystem pluginFileSystem;
-    UUID pluginId;
-    public AssetTransmissionNetworkServiceManager assetTransmissionNetworkServiceManager;
-    public CryptoTransaction cryptoTransaction;
+    protected AssetVaultManager assetVaultManager;
+    protected BitcoinNetworkManager bitcoinNetworkManager;
+    protected PluginFileSystem pluginFileSystem;
+    protected UUID pluginId;
+    protected AssetTransmissionNetworkServiceManager assetTransmissionNetworkServiceManager;
+    protected CryptoTransaction cryptoTransaction;
 
     public AbstractDigitalAssetSwap(UUID pluginId,
                                     PluginFileSystem pluginFileSystem) {

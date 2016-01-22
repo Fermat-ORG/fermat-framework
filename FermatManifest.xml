@@ -2064,7 +2064,7 @@
             </layer>
             <layer name="Sub App">
                 <androids>
-                    <android name="Asset Factory" description="" difficulty="4" code-level="development">
+                    <android name="Asset Factory" description="" difficulty="4" code-level="qa">
                         <authors>
                             <author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
                             <author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
@@ -2075,7 +2075,7 @@
                         </maintainers>
                         <certifications> </certifications>
                     </android>
-                    <android name="Asset Issuer Community" description="" difficulty="4" code-level="development">
+                    <android name="Asset Issuer Community" description="" difficulty="4" code-level="qa">
                         <authors>
                             <author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
                             <author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
@@ -2086,7 +2086,7 @@
                         </maintainers>
                         <certifications> </certifications>
                     </android>
-                    <android name="Asset User Community" description="" difficulty="4" code-level="development">
+                    <android name="Asset User Community" description="" difficulty="4" code-level="qa">
                         <authors>
                             <author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
                             <author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
@@ -2097,7 +2097,7 @@
                         </maintainers>
                         <certifications> </certifications>
                     </android>
-                    <android name="Redeem Point Community" description="" difficulty="4" code-level="development">
+                    <android name="Redeem Point Community" description="" difficulty="4" code-level="qa">
                         <authors>
                             <author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
                             <author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
@@ -2108,7 +2108,7 @@
                         </maintainers>
                         <certifications> </certifications>
                     </android>
-                    <android name="Asset Issuer Identity" description="" difficulty="3" code-level="development">
+                    <android name="Asset Issuer Identity" description="" difficulty="3" code-level="qa">
                         <authors>
                             <author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
                             <author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
@@ -2119,7 +2119,7 @@
                         </maintainers>
                         <certifications> </certifications>
                     </android>
-                    <android name="Asset User Identity" description="" difficulty="3" code-level="development">
+                    <android name="Asset User Identity" description="" difficulty="3" code-level="qa">
                         <authors>
                             <author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
                             <author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
@@ -2130,7 +2130,7 @@
                         </maintainers>
                         <certifications> </certifications>
                     </android>
-                    <android name="RedeemPoint Identity" description="" difficulty="3" code-level="development">
+                    <android name="Redeem Point Identity" description="" difficulty="3" code-level="qa">
                         <authors>
                             <author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
                             <author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
@@ -4173,7 +4173,7 @@
             </layer>
             <layer name="Crypto Vault" language="java">
                 <plugins>
-                    <plugin name="Bitcoin Currency" description="" difficulty="10" code-level="development">
+                    <plugin name="Bitcoin Currency" description="" difficulty="10" code-level="qa">
                         <authors>
                             <author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
                             <author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
@@ -4195,7 +4195,7 @@
                         </maintainers>
                         <certifications> </certifications>
                     </plugin>
-                    <plugin name="Bitcoin Watch Only" description="" difficulty="10" code-level="development">
+                    <plugin name="Bitcoin Watch Only" description="" difficulty="10" code-level="qa">
                         <authors>
                             <author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
                             <author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
