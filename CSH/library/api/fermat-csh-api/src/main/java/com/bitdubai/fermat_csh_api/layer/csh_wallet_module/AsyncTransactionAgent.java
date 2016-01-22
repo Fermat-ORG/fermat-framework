@@ -8,6 +8,7 @@ import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfac
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Map;
 
 /**
@@ -109,20 +110,20 @@ public abstract class AsyncTransactionAgent<T> extends FermatAgent {
     private void doTheMainTask() {
         System.out.println("CASH - Transaction Agent LOOP");
 
+        for(Iterator<Map.Entry<Long, T>> it = transactionList.entrySet().iterator(); it.hasNext(); ) {
+            Map.Entry<Long, T> transaction = it.next();
 
-        for (Map.Entry<Long, T> transaction : transactionList.entrySet()) {
             long timestamp = transaction.getKey().longValue();
 
             //Si ya han pasado n segundos
             if(transactionDelayExpired(transaction.getKey())){
 
-                this.processTransaction(transaction.getValue());                        //esta funcion debera enviar un evento al gui y aplicar la transaccion en la wallet abajo
+                this.processTransaction(transaction.getValue());
 
                 //sacar la transaccion del mapa
-                transactionList.remove(transaction.getKey());
+                it.remove();
 
             }
-
         }
 
         //Si no hay transacciones, frenar el agente.
@@ -144,8 +145,7 @@ public abstract class AsyncTransactionAgent<T> extends FermatAgent {
     /* HELPER METHODS */
     private boolean transactionDelayExpired(long timestamp)
     {
-        long currentTimestamp = (System.currentTimeMillis() / 1000L);
-        long timeDifference = currentTimestamp - timestamp;
+        long timeDifference = System.currentTimeMillis() - (timestamp * 1000L);
         return (timeDifference > this.TRANSACTION_DELAY);
 
     }
