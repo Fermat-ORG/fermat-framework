@@ -356,6 +356,12 @@ public class CryptoTransmissionAgent {
                             switch (cryptoTransmissionMetadata.getCryptoTransmissionMetadataStates()){
                                 case SEEN_BY_OWN_NETWORK_SERVICE_WAITING_FOR_RESPONSE:
                                     jsonMetadata = gson.toJson(cryptoTransmissionMetadata);
+                                    System.out.print("-----------------------\n" +
+                                            "ENVIANDO CRYPTO METADATA!!!!! -----------------------\n" +
+                                            "-----------------------\n A: " + cryptoTransmissionMetadata.getDestinationPublicKey());
+
+                                    communicationNetworkServiceLocal.sendMessage(cryptoTransmissionMetadata.getSenderPublicKey(),cryptoTransmissionMetadata.getDestinationPublicKey(),jsonMetadata);
+
                                     break;
                                 case SEEN_BY_DESTINATION_VAULT:
                                     // Notifico recepcion de metadata
@@ -365,6 +371,12 @@ public class CryptoTransmissionAgent {
                                             CryptoTransmissionMetadataType.METADATA_SEND,
                                             CryptoTransmissionMetadataState.SEEN_BY_DESTINATION_VAULT);
                                     jsonMetadata = gson.toJson(cryptoTransmissionResponseMessage);
+                                    System.out.print("-----------------------\n" +
+                                            "ENVIANDO RESPUESTA CRYPTO METADATA SEEN_BY_DESTINATION_VAULT -----------------------\n" +
+                                            "-----------------------\n A: " + cryptoTransmissionMetadata.getDestinationPublicKey());
+
+                                    communicationNetworkServiceLocal.sendMessage(cryptoTransmissionMetadata.getDestinationPublicKey(),cryptoTransmissionMetadata.getSenderPublicKey(),jsonMetadata);
+
                                     break;
                                 case CREDITED_IN_DESTINATION_WALLET:
                                     // Notifico recepcion de metadata
@@ -374,14 +386,16 @@ public class CryptoTransmissionAgent {
                                             CryptoTransmissionMetadataType.METADATA_SEND,
                                             CryptoTransmissionMetadataState.CREDITED_IN_DESTINATION_WALLET);
                                     jsonMetadata = gson.toJson(cryptoTransmissionResponseMessage);
+
+                                    System.out.print("-----------------------\n" +
+                                            "ENVIANDO RESPUESTA CRYPTO METADATA CREDITED_IN_DESTINATION_WALLET -----------------------\n" +
+                                            "-----------------------\n A: " + cryptoTransmissionMetadata.getDestinationPublicKey());
+
+                                    communicationNetworkServiceLocal.sendMessage(cryptoTransmissionMetadata.getDestinationPublicKey(),cryptoTransmissionMetadata.getSenderPublicKey(),jsonMetadata);
+
                                     break;
 
                             }
-                            System.out.print("-----------------------\n" +
-                                    "ENVIANDO CRYPTO METADATA!!!!! -----------------------\n" +
-                                    "-----------------------\n A: " + cryptoTransmissionMetadata.getDestinationPublicKey());
-
-                            communicationNetworkServiceLocal.sendMessage(cryptoTransmissionMetadata.getSenderPublicKey(),cryptoTransmissionMetadata.getDestinationPublicKey(),jsonMetadata);
                             //Cambio estado de base de datos a PROCESSING_SEND_COMMUNICATION_DATABASE
                             outgoingCryptoTransmissionMetadataDAO.changeCryptoTransmissionProtocolState(
                                     cryptoTransmissionMetadata.getTransactionId(),

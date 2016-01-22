@@ -169,10 +169,10 @@ public class CryptoPaymentRequestExecutorAgent extends FermatAgent {
                         System.out.println("********** Crypto Payment Request NS -> Executor Agent -> Sending Approval. PROCESSING_SEND -> CONFIRM REQUEST.");
                         if (sendMessageToActor(
                                 buildJsonInformationMessage(cpr),
-                                cpr.getIdentityPublicKey(),
-                                cpr.getIdentityType(),
                                 cpr.getActorPublicKey(),
-                                cpr.getActorType()
+                                cpr.getActorType(),
+                                cpr.getIdentityPublicKey(),
+                                cpr.getIdentityType()
                         )) {
                             confirmRequest(cpr.getRequestId());
                             System.out.println("********** Crypto Payment Request NS -> Executor Agent -> Sending Approval. PROCESSING_SEND -> CONFIRM REQUEST -> OK.");
@@ -184,10 +184,10 @@ public class CryptoPaymentRequestExecutorAgent extends FermatAgent {
                         System.out.println("********** Crypto Payment Request NS -> Executor Agent -> Sending Denial. PROCESSING_SEND -> CONFIRM REQUEST.");
                         if (sendMessageToActor(
                                 buildJsonInformationMessage(cpr),
-                                cpr.getIdentityPublicKey(),
-                                cpr.getIdentityType(),
                                 cpr.getActorPublicKey(),
-                                cpr.getActorType()
+                                cpr.getActorType(),
+                                cpr.getIdentityPublicKey(),
+                                cpr.getIdentityType()
                         )) {
                             confirmRequest(cpr.getRequestId());
                             System.out.println("********** Crypto Payment Request NS -> Executor Agent -> Sending Denial. PROCESSING_SEND -> CONFIRM REQUEST -> OK.");
@@ -199,10 +199,10 @@ public class CryptoPaymentRequestExecutorAgent extends FermatAgent {
                         System.out.println("********** Crypto Payment Request NS -> Executor Agent -> Sending Reception Inform. PROCESSING_SEND -> CONFIRM REQUEST.");
                         if (sendMessageToActor(
                                 buildJsonInformationMessage(cpr),
-                                cpr.getIdentityPublicKey(),
-                                cpr.getIdentityType(),
                                 cpr.getActorPublicKey(),
-                                cpr.getActorType()
+                                cpr.getActorType(),
+                                cpr.getIdentityPublicKey(),
+                                cpr.getIdentityType()
                         )) {
                             confirmRequest(cpr.getRequestId());
                             System.out.println("********** Crypto Payment Request NS -> Executor Agent -> Sending Reception Inform. PROCESSING_SEND -> CONFIRM REQUEST -> OK.");
@@ -214,8 +214,8 @@ public class CryptoPaymentRequestExecutorAgent extends FermatAgent {
                         System.out.println("********** Crypto Payment Request NS -> Executor Agent -> Sending Refusal. PROCESSING_SEND -> CONFIRM REQUEST.");
                         if (sendMessageToActor(
                                 buildJsonInformationMessage(cpr),
-                                cpr.getIdentityPublicKey(),
-                                cpr.getIdentityType(),
+                                cpr.getActorPublicKey(),
+                                cpr.getActorType(),
                                 cpr.getActorPublicKey(),
                                 cpr.getActorType()
                         )) {
@@ -445,8 +445,11 @@ public class CryptoPaymentRequestExecutorAgent extends FermatAgent {
         errorManager.reportUnexpectedPluginException(pluginVersionReference, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
     }
 
-    public void connectionFailure(String identityPublicKey){
-        this.poolConnectionsWaitingForResponse.remove(identityPublicKey);
+    public void connectionFailure(String remotePublicKey){
+        this.poolConnectionsWaitingForResponse.remove(remotePublicKey);
     }
 
+    public boolean isConnectionOpen(String remotePublicKey) {
+        return poolConnectionsWaitingForResponse.containsKey(remotePublicKey);
+    }
 }
