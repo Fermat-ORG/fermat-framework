@@ -1,18 +1,13 @@
-package com.bitdubai.fermat_csh_api.layer.csh_wallet_module;
+package com.bitdubai.fermat_api;
 
-import com.bitdubai.fermat_api.FermatAgent;
 import com.bitdubai.fermat_api.layer.all_definition.enums.AgentStatus;
-import com.bitdubai.fermat_csh_api.layer.csh_wallet_module.interfaces.CashMoneyWalletModuleManager;
-import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 
-import java.util.Calendar;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 
 /**
- * Created by Alex on 21/1/2016.
+ * Created by Alejandro Bicelis on 21/1/2016.
  */
 public abstract class AsyncTransactionAgent<T> extends FermatAgent {
 
@@ -37,20 +32,14 @@ public abstract class AsyncTransactionAgent<T> extends FermatAgent {
 
 
     /* Public methods */
-    public void addNewTransaction(T transaction){
+    public final void queueNewTransaction(T transaction){
         transactionList.put(System.currentTimeMillis() / 1000L, transaction);
 
         if (!isRunning())
             this.start();
     }
 
-
-    public abstract void processTransaction(T transaction);
-
-    public abstract void transactionFailed(T transaction, Exception exception);
-
-
-    public void setTransactionDelayMillis(int delay)
+    public final void setTransactionDelayMillis(int delay)
     {
         this.TRANSACTION_DELAY = delay;
 
@@ -58,13 +47,7 @@ public abstract class AsyncTransactionAgent<T> extends FermatAgent {
             SLEEP = TRANSACTION_DELAY;
     }
 
-
-
-
-
-
-
-
+    public abstract void processTransaction(T transaction);
 
 
 
@@ -73,21 +56,23 @@ public abstract class AsyncTransactionAgent<T> extends FermatAgent {
      * FermatAgent Interface implementation.
      */
     @Override
-    public void start() {
-        System.out.println("CASH - Transaction Agent START");
+    public final void start() {
+        //System.out.println("AsyncTransactionAgent - Transaction Agent START");
 
         this.transactionThread.start();
         this.status = AgentStatus.STARTED;
     }
 
     @Override
-    public void stop() {
+    public final void stop() {
+        //System.out.println("AsyncTransactionAgent - Transaction Agent STOP");
+
         if (isRunning())
             this.transactionThread.interrupt();
         this.status = AgentStatus.STOPPED;
     }
 
-    public void process() {
+    private final void process() {
 
         while (isRunning()) {
 
@@ -98,7 +83,7 @@ public abstract class AsyncTransactionAgent<T> extends FermatAgent {
                 return;
             }
 
-            doTheMainTask();
+            doProcess();
 
             if (transactionThread.isInterrupted()) {
                 cleanResources();
@@ -107,8 +92,8 @@ public abstract class AsyncTransactionAgent<T> extends FermatAgent {
         }
     }
 
-    private void doTheMainTask() {
-        System.out.println("CASH - Transaction Agent LOOP");
+    private final void doProcess() {
+        //System.out.println("AsyncTransactionAgent - Transaction Agent LOOP");
 
         for(Iterator<Map.Entry<Long, T>> it = transactionList.entrySet().iterator(); it.hasNext(); ) {
             Map.Entry<Long, T> transaction = it.next();
@@ -132,24 +117,19 @@ public abstract class AsyncTransactionAgent<T> extends FermatAgent {
 
     }
 
-    private void cleanResources() {
-        /**
-         * Disconnect from database and explicitly set all references to null.
-         */
+    private final void cleanResources() {
+        transactionList.clear();
     }
 
 
 
 
-
-    /* HELPER METHODS */
+    /* INTERNAL HELPER METHODS */
     private boolean transactionDelayExpired(long timestamp)
     {
         long timeDifference = System.currentTimeMillis() - (timestamp * 1000L);
         return (timeDifference > this.TRANSACTION_DELAY);
 
     }
-
-
 
 }
