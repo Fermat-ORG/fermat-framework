@@ -204,7 +204,7 @@ public class ConnectionsFragment extends AbstractFermatFragment implements Searc
         /**
          * Navigation view items
          */
-        AppNavigationAdapter appNavigationAdapter = new AppNavigationAdapter(getActivity(), null);
+        //AppNavigationAdapter appNavigationAdapter = new AppNavigationAdapter(getActivity(), null);
 //        setNavigationDrawer(appNavigationAdapter);
     }
 

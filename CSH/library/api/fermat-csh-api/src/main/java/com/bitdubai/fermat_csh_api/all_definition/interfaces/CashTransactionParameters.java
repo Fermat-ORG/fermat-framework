@@ -1,6 +1,7 @@
-package com.bitdubai.fermat_csh_api.layer.csh_cash_money_transaction.deposit.interfaces;
+package com.bitdubai.fermat_csh_api.all_definition.interfaces;
 
 import com.bitdubai.fermat_api.layer.all_definition.enums.FiatCurrency;
+import com.bitdubai.fermat_csh_api.all_definition.enums.TransactionType;
 
 import java.math.BigDecimal;
 import java.util.UUID;
@@ -8,7 +9,7 @@ import java.util.UUID;
 /**
  * Created by Alejandro Bicelis on 11/27/2015.
  */
-public interface CashDepositTransactionParameters {
+public interface CashTransactionParameters {
 
     /**
      * Returns the transaction's UUID
@@ -51,5 +52,11 @@ public interface CashDepositTransactionParameters {
      * @return      Memo of the transaction
      */
     String getMemo();
+
+    /**
+     * Returns the memo of the transaction
+     * @return      Memo of the transaction
+     */
+    TransactionType getTransactionType();
 
 }
