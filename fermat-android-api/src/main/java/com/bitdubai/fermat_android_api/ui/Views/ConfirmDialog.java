@@ -124,7 +124,7 @@ public class ConfirmDialog extends FermatDialog<FermatSession, ResourceProviderM
             if (message != null) {
                 confirmDialog.setMessage(message);
             }
-            if (colorStyle == 0) {
+            if (colorStyle != 0) {
                 confirmDialog.setColorStyle(colorStyle);
             }
             if (btnListener != null) {
