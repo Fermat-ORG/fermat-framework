@@ -236,7 +236,7 @@ public class AssetAppropriationDigitalAssetTransactionPluginRoot extends Abstrac
     public AppropriationTransactionRecord getTransaction(DigitalAssetMetadata digitalAssetMetadata, String assetUserWalletPublicKey, String bitcoinWalletPublicKey) throws RecordsNotFoundException, CantLoadAssetAppropriationTransactionListException {
         String context = "Asset: " + digitalAssetMetadata + " - User Wallet: " + assetUserWalletPublicKey + " - BTC Wallet: " + bitcoinWalletPublicKey;
         try (AssetAppropriationDAO dao = new AssetAppropriationDAO(pluginDatabaseSystem, pluginId, assetVault)) {
-            return dao.getTransaction(digitalAssetMetadata.getDigitalAsset(), assetUserWalletPublicKey, bitcoinWalletPublicKey);
+            return dao.getTransaction(digitalAssetMetadata, assetUserWalletPublicKey, bitcoinWalletPublicKey);
         } catch (RecordsNotFoundException | CantLoadAssetAppropriationTransactionListException e) { //If I don't catch these two they'll be elapsed by the exception catch block.
             throw e;
         } catch (Exception e) {

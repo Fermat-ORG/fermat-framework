@@ -355,20 +355,6 @@ public class RedeemPointActorDao implements Serializable {
                 if (redeemPointRegisteredExists(actorAssetRedeemPoint.getActorPublicKey())) {
                     this.updateAssetRedeemPointDAPConnectionStateActorNetworkService(actorAssetRedeemPoint, null, actorAssetRedeemPoint.getCryptoAddress());
                 } else {
-                    /**
-                     * Get actual date
-                     */
-//                Date d = new Date();
-//                long milliseconds = d.getTime();
-//                String locationLatitude, locationLongitude;
-//                if (location.getLatitude() == null || location.getLongitude() == null) {
-//                    locationLatitude = "-";
-//                    locationLongitude = "-";
-//                } else {
-//                    locationLatitude = location.getLatitude().toString();
-//                    locationLongitude = location.getLongitude().toString();
-//                }
-
                     DatabaseTable table = this.database.getTable(RedeemPointActorDatabaseConstants.REDEEM_POINT_REGISTERED_TABLE_NAME);
                     DatabaseTableRecord record = table.getEmptyRecord();
 
@@ -513,6 +499,8 @@ public class RedeemPointActorDao implements Serializable {
 
                 record.setLongValue(RedeemPointActorDatabaseConstants.REDEEM_POINT_REGISTERED_LAST_CONNECTION_DATE_COLUMN_NAME, System.currentTimeMillis());
                 table.updateRecord(record);
+
+                updateRegisteredIssuers(actorAssetRedeemPoint);
             }
 
             updateRedeemPointProfileImage(actorAssetRedeemPoint.getActorPublicKey(), actorAssetRedeemPoint.getProfileImage());
@@ -521,6 +509,27 @@ public class RedeemPointActorDao implements Serializable {
             throw new CantUpdateRedeemPointException(e.getMessage(), e, "ACTOR ASSET REDEEM POINT REGISTERED", "Cant load " + RedeemPointActorDatabaseConstants.REDEEM_POINT_REGISTERED_TABLE_NAME + " table in memory.");
         } catch (Exception e) {
             throw new CantUpdateRedeemPointException(e.getMessage(), FermatException.wrapException(e), "ACTOR ASSET REDEEM POINT REGISTERED", "Cant get developer identity list, unknown failure.");
+        }
+    }
+
+    private void updateRegisteredIssuers(ActorAssetRedeemPoint redeemPoint) throws CantUpdateRecordException{
+        try {
+            DatabaseTable issuers = getRegisteredIssuersTable();
+            issuers.addStringFilter(RedeemPointActorDatabaseConstants.REGISTERED_ASSET_ISSUERS_REDEEM_POINT_PUBLICKEY_COLUMN, redeemPoint.getActorPublicKey(), DatabaseFilterType.EQUAL);
+            issuers.loadToMemory();
+
+            List<DatabaseTableRecord> records = issuers.getRecords();
+            for (DatabaseTableRecord record : records) {
+                issuers.deleteRecord(record);
+            }
+            for (String issuerPk : redeemPoint.registeredIssuers()) {
+                DatabaseTableRecord newRecord = issuers.getEmptyRecord();
+                newRecord.setStringValue(RedeemPointActorDatabaseConstants.REGISTERED_ASSET_ISSUERS_REDEEM_POINT_PUBLICKEY_COLUMN, redeemPoint.getActorPublicKey());
+                newRecord.setStringValue(RedeemPointActorDatabaseConstants.REGISTERED_ASSET_ISSUERS_ISSUER_PUBLICKEY_COLUMN, issuerPk);
+                issuers.insertRecord(newRecord);
+            }
+        } catch(Exception e){
+            throw new CantUpdateRecordException(e);
         }
     }
 
