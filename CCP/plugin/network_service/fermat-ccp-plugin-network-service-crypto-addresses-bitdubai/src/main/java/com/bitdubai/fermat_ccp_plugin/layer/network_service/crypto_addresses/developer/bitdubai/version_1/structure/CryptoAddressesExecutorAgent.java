@@ -361,7 +361,9 @@ public final class CryptoAddressesExecutorAgent extends FermatAgent {
 
         return new AcceptMessage(
                 aer.getRequestId(),
-                aer.getCryptoAddress()
+                aer.getCryptoAddress(),
+                aer.getIdentityPublicKeyResponding(),
+                aer.getIdentityPublicKeyRequesting()
         ).toJson();
     }
 
@@ -369,7 +371,9 @@ public final class CryptoAddressesExecutorAgent extends FermatAgent {
 
         return new DenyMessage(
                 aer.getRequestId(),
-                "Denied by Incompatibility"
+                "Denied by Incompatibility",
+                aer.getIdentityPublicKeyResponding(),
+                aer.getIdentityPublicKeyRequesting()
         ).toJson();
     }
 

@@ -37,7 +37,7 @@ public class RequestMessage extends NetworkServiceMessage {
                           final CryptoAddressDealers  cryptoAddressDealer        ,
                           final BlockchainNetworkType blockchainNetworkType      ) {
 
-        super(MessageTypes.REQUEST);
+        super(requestId,MessageTypes.REQUEST,identityPublicKeyResponding,identityPublicKeyRequesting);
 
         this.requestId                   = requestId                  ;
         this.cryptoCurrency              = cryptoCurrency             ;

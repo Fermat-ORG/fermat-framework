@@ -847,11 +847,7 @@ public class IntraActorNetworkServicePluginRoot extends AbstractPlugin implement
     }
 
     public void handleNewSentMessageNotificationEvent(FermatMessage fermatMessage){
-        Gson gson = new Gson();
-
         try {
-            fermatMessage.toJson();
-
             ActorNetworkServiceRecord actorNetworkServiceRecord = ActorNetworkServiceRecord.fronJson(fermatMessage.getContent());
 
 
@@ -894,8 +890,6 @@ public class IntraActorNetworkServicePluginRoot extends AbstractPlugin implement
     }
 
     public void handleNewMessages(FermatMessage fermatMessage) {
-        Gson gson = new Gson();
-
         try {
             System.out.println("----------------------------\n" +
                     "CONVIERTIENDO MENSAJE ENTRANTE A GSON:" + fermatMessage.toJson()
