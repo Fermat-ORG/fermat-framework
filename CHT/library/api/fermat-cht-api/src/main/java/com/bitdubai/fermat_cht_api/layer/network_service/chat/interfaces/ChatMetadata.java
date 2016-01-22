@@ -8,21 +8,21 @@ import java.sql.Timestamp;
 import java.util.UUID;
 
 /**
- * Created by root on 05/01/16.
+ * Created by Gabriel Araujo on 05/01/16.
  */
 public interface ChatMetadata {
 
-    UUID getIdChat();
+    UUID getChatId();
 
-    UUID getIdObject();
+    UUID getObjectId();
 
     PlatformComponentType getLocalActorType();
 
-    String getLocalActorPubKey();
+    String getLocalActorPublicKey();
 
     PlatformComponentType getRemoteActorType();
 
-    String getRemoteActorPubKey();
+    String getRemoteActorPublicKey();
 
     String getChatName();
 
@@ -32,7 +32,7 @@ public interface ChatMetadata {
 
     Timestamp getDate();
 
-    UUID getIdMessage();
+    UUID getMessageId();
 
     String getMessage();
     DistributionStatus getDistributionStatus();

@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView;
@@ -12,6 +13,7 @@ import com.bitdubai.fermat_android_api.ui.adapters.FermatAdapter;
 import com.bitdubai.fermat_android_api.ui.enums.FermatRefreshTypes;
 import com.bitdubai.fermat_android_api.ui.fragments.FermatWalletListFragment;
 import com.bitdubai.fermat_android_api.ui.interfaces.FermatListItemListeners;
+import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Wallets;
 import com.bitdubai.fermat_bnk_api.all_definition.enums.TransactionType;
 import com.bitdubai.fermat_bnk_api.layer.bnk_wallet.bank_money.interfaces.BankAccountNumber;
@@ -53,6 +55,8 @@ public class AccountDetailFragment extends FermatWalletListFragment<BankMoneyTra
     private FermatTextView bookText;
     private FermatTextView aliasText;
     private FermatTextView accountText;
+    private ImageView imageView;
+    private  int imageAccount;
 
     private static final String TAG = "AccountListActivityFragment";
     public AccountDetailFragment() {
@@ -67,6 +71,7 @@ public class AccountDetailFragment extends FermatWalletListFragment<BankMoneyTra
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         BankAccountNumber data = (BankAccountNumber)appSession.getData("account_data");
+        imageAccount = (int) appSession.getData("account_image");
         try {
 
             moduleManager = ((BankMoneyWalletSession) appSession).getModuleManager();
@@ -86,6 +91,9 @@ public class AccountDetailFragment extends FermatWalletListFragment<BankMoneyTra
     protected void initViews(View layout) {
         super.initViews(layout);
         this.emtyView =  layout.findViewById(R.id.no_transactions);
+        imageView = (ImageView) layout.findViewById(R.id.bw_account_image);
+        imageView.setImageResource(imageAccount);
+        imageView.setVisibility(View.VISIBLE);
         this.fab = (com.getbase.floatingactionbutton.FloatingActionsMenu) layout.findViewById(R.id.bw_fab_multiple_actions);
         this.availableTextView = (FermatTextView) layout.findViewById(R.id.available_balance);
         this.bookTextView = (FermatTextView) layout.findViewById(R.id.book_balance);
@@ -216,7 +224,8 @@ public class AccountDetailFragment extends FermatWalletListFragment<BankMoneyTra
 
     @Override
     public void onItemClickListener(BankMoneyTransactionRecord data, int position) {
-
+        appSession.setData("transaction_data",data);
+        changeActivity(Activities.BNK_BANK_MONEY_WALLET_UPDATE_RECORD,appSession.getAppPublicKey());
     }
 
     @Override
