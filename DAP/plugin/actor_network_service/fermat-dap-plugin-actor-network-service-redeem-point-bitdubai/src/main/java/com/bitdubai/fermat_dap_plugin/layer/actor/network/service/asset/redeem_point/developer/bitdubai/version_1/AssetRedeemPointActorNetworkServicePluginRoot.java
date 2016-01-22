@@ -1103,7 +1103,7 @@ public class AssetRedeemPointActorNetworkServicePluginRoot extends AbstractNetwo
 
         JsonObject jsonObject = new JsonObject();
         jsonObject.addProperty(DAP_IMG_REDEEM_POINT, Base64.encodeToString(redeemPoint.getProfileImage(), Base64.DEFAULT));
-        jsonObject.addProperty(DAP_REGISTERED_ISSUERS, gson.toJson(redeemPoint.registeredIssuers()));
+        jsonObject.addProperty(DAP_REGISTERED_ISSUERS, gson.toJson(redeemPoint.getRegisteredIssuers()));
 
         String extraData = gson.toJson(jsonObject);
 
