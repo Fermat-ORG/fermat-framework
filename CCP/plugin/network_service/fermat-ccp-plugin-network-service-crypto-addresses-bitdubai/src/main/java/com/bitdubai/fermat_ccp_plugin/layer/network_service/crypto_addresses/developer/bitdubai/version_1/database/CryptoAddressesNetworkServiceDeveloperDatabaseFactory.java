@@ -66,6 +66,25 @@ public final class CryptoAddressesNetworkServiceDeveloperDatabaseFactory {
     }
 
 
+    public void initializeDatabaseCommunication() throws CantInitializeCryptoAddressesNetworkServiceDatabaseException {
+        try {
+
+            database = this.pluginDatabaseSystem.openDatabase(pluginId, CommunicationNetworkServiceDatabaseConstants.DATA_BASE_NAME);
+        } catch (CantOpenDatabaseException cantOpenDatabaseException) {
+
+            throw new CantInitializeCryptoAddressesNetworkServiceDatabaseException(cantOpenDatabaseException.getMessage());
+        } catch (DatabaseNotFoundException e) {
+
+            CryptoAddressesNetworkServiceDatabaseFactory cryptoAddressesNetworkServiceDatabaseFactory = new CryptoAddressesNetworkServiceDatabaseFactory(pluginDatabaseSystem);
+
+            try {
+                database = cryptoAddressesNetworkServiceDatabaseFactory.createDatabase(pluginId, pluginId.toString());
+            } catch (CantCreateDatabaseException cantCreateDatabaseException) {
+                throw new CantInitializeCryptoAddressesNetworkServiceDatabaseException(cantCreateDatabaseException.getMessage());
+            }
+        }
+    }
+
     public List<DeveloperDatabase> getDatabaseList(DeveloperObjectFactory developerObjectFactory) {
 
         List<DeveloperDatabase> databases = new ArrayList<>();
@@ -166,7 +185,11 @@ public final class CryptoAddressesNetworkServiceDeveloperDatabaseFactory {
 
         try {
 
-            initializeDatabase();
+             if(!developerDatabaseTable.getName().equals(CryptoAddressesNetworkServiceDatabaseConstants.ADDRESS_EXCHANGE_REQUEST_TABLE_NAME) )
+                initializeDatabaseCommunication();
+            else
+                initializeDatabase();
+
 
             final List<DeveloperDatabaseTableRecord> returnedRecords = new ArrayList<>();
 

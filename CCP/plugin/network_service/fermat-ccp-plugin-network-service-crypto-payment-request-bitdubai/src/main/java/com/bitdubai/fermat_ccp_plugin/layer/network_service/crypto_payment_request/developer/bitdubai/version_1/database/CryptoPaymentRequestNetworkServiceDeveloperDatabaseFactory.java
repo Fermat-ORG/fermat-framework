@@ -76,6 +76,35 @@ public class CryptoPaymentRequestNetworkServiceDeveloperDatabaseFactory {
     }
 
 
+    public void initializeDatabaseCommunication() throws CantInitializeCryptoPaymentRequestNetworkServiceDatabaseException {
+
+        try {
+
+            database = this.pluginDatabaseSystem.openDatabase(pluginId, CommunicationNetworkServiceDatabaseConstants.DATA_BASE_NAME);
+
+        } catch (CantOpenDatabaseException cantOpenDatabaseException) {
+
+            throw new CantInitializeCryptoPaymentRequestNetworkServiceDatabaseException(cantOpenDatabaseException);
+
+        } catch (DatabaseNotFoundException e) {
+
+            CryptoPaymentRequestNetworkServiceDatabaseFactory cryptoPaymentRequestNetworkServiceDatabaseFactory = new CryptoPaymentRequestNetworkServiceDatabaseFactory(pluginDatabaseSystem);
+
+            try {
+
+                database = cryptoPaymentRequestNetworkServiceDatabaseFactory.createDatabase(
+                        pluginId,
+                        pluginId.toString()
+                );
+
+            } catch (CantCreateDatabaseException cantCreateDatabaseException) {
+
+                throw new CantInitializeCryptoPaymentRequestNetworkServiceDatabaseException(cantCreateDatabaseException);
+
+            }
+        }
+    }
+
     public List<DeveloperDatabase> getDatabaseList(final DeveloperObjectFactory developerObjectFactory) {
 
         List<DeveloperDatabase> databases = new ArrayList<>();
@@ -175,7 +204,10 @@ public class CryptoPaymentRequestNetworkServiceDeveloperDatabaseFactory {
 
         try {
 
-            initializeDatabase();
+            if(!developerDatabaseTable.getName().equals(CryptoPaymentRequestNetworkServiceDatabaseConstants.CRYPTO_PAYMENT_REQUEST_TABLE_NAME))
+                initializeDatabaseCommunication();
+            else
+                initializeDatabase();
 
             DatabaseTable selectedTable = database.getTable(developerDatabaseTable.getName());
 
