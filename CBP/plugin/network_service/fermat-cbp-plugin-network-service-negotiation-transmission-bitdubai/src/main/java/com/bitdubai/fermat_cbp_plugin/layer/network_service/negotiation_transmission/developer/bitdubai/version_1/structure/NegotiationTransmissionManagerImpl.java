@@ -56,7 +56,7 @@ public class NegotiationTransmissionManagerImpl implements NegotiationTransmissi
                 System.out.print("\n\n**** 9) MOCK NEGOTIATION TRANSACTION CLOSE - NEGOTIATION TRANSMISSION - MANAGER - SEND NEGOTIATION TO CRYPTO CUSTOMER ****\n");
             }
 
-            System.out.print("\n--- 9) Negotiation Mock XML Date" +
+            System.out.print("\n--- 7/9) Negotiation Mock XML Date" +
                             "\n- NegotiationId = " + negotiationTransaction.getNegotiationId() +
                             "\n- TransactionId = " + negotiationTransaction.getTransactionId() +
                             "\n- CustomerPublicKey = " + negotiationTransaction.getPublicKeyCustomer() +
