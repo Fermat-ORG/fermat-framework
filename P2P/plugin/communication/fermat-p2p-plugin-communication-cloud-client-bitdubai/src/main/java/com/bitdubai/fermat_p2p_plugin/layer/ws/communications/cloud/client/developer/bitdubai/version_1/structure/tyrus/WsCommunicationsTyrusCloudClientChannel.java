@@ -225,7 +225,16 @@ public class WsCommunicationsTyrusCloudClientChannel {
 
 
     public void closeConnection(){
-        onClose(clientConnection, new CloseReason(CloseReason.CloseCodes.NORMAL_CLOSURE, "The cloud client close the connection, intentionally."));
+
+        try {
+
+            clientConnection.close(new CloseReason(CloseReason.CloseCodes.NORMAL_CLOSURE, "The cloud client close the connection, intentionally."));
+            raiseVpnConnectionLooseNotificationEvent();
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
     }
 
 
@@ -429,6 +438,18 @@ public class WsCommunicationsTyrusCloudClientChannel {
         platformEvent.setSource(EventSource.WS_COMMUNICATION_CLOUD_CLIENT_PLUGIN);
         eventManager.raiseEvent(platformEvent);
         System.out.println("WsCommunicationsTyrusCloudClientChannel - Raised Event = P2pEventType.CLIENT_CONNECTION_LOOSE");
+    }
+
+    /**
+     * Notify when cloud client is disconnected
+     */
+    public void raiseVpnConnectionLooseNotificationEvent() {
+
+        System.out.println("WsCommunicationsTyrusCloudClientChannel - raiseVpnConnectionLooseNotificationEvent");
+        FermatEvent platformEvent = eventManager.getNewEvent(P2pEventType.VPN_CONNECTION_CLOSE);
+        platformEvent.setSource(EventSource.WS_COMMUNICATION_CLOUD_CLIENT_PLUGIN);
+        eventManager.raiseEvent(platformEvent);
+        System.out.println("WsCommunicationsTyrusCloudClientChannel - Raised Event = P2pEventType.VPN_CONNECTION_CLOSE");
     }
 
     /**
