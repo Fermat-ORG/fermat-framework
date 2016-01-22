@@ -34,4 +34,6 @@ public interface WsCommunicationsCloudClientManager extends FermatManager {
      */
     public Boolean isDisable();
 
+    void setNetworkState(boolean state);
+
 }

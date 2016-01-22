@@ -263,7 +263,7 @@ public class CustomerOfflinePaymentMonitorAgent implements
                         customerOfflinePaymentBusinessTransactionDao.getPendingToSubmitNotificationList();
                 for(CustomerOfflinePaymentRecord pendingToSubmitNotificationRecord : pendingToSubmitNotificationList){
                     contractHash=pendingToSubmitNotificationRecord.getTransactionHash();
-                    transactionTransmissionManager.sendContractStatusNotificationToCryptoBroker(
+                    transactionTransmissionManager.sendContractStatusNotification(
                             pendingToSubmitNotificationRecord.getCustomerPublicKey(),
                             pendingToSubmitNotificationRecord.getBrokerPublicKey(),
                             contractHash,
@@ -283,7 +283,7 @@ public class CustomerOfflinePaymentMonitorAgent implements
                         customerOfflinePaymentBusinessTransactionDao.getPendingToSubmitNotificationList();
                 for(CustomerOfflinePaymentRecord pendingToSubmitConfirmationRecord : pendingToSubmitConfirmationList){
                     contractHash=pendingToSubmitConfirmationRecord.getTransactionHash();
-                    transactionTransmissionManager.sendContractStatusNotificationToCryptoCustomer(
+                    transactionTransmissionManager.sendContractStatusNotification(
                             pendingToSubmitConfirmationRecord.getBrokerPublicKey(),
                             pendingToSubmitConfirmationRecord.getCustomerPublicKey(),
                             contractHash,

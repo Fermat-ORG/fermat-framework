@@ -191,9 +191,9 @@ public class PaymentRequestHistoryAdapter  extends FermatAdapter<PaymentRequest,
                                 , referenceWalletSession.getIntraUserModuleManager().getPublicKey());
                         Toast.makeText(context, "Request accepted", Toast.LENGTH_SHORT).show();
                         notifyDataSetChanged();
-                        FermatAnimationsUtils.showEmpty(context, true, holder.getLinear_layour_container_state());
-                        FermatAnimationsUtils.showEmpty(context, false, holder.getLinear_layour_container_buttons());
-                        //onRefreshList.onRefresh();
+//                        FermatAnimationsUtils.showEmpty(context, true, holder.getLinear_layour_container_state());
+//                        FermatAnimationsUtils.showEmpty(context, false, holder.getLinear_layour_container_buttons());
+                        onRefreshList.onRefresh();
                     } catch (Exception e) {
                         showMessage(context, "Cant Accept or Denied Receive Payment Exception- " + e.getMessage());
                     }
@@ -208,8 +208,9 @@ public class PaymentRequestHistoryAdapter  extends FermatAdapter<PaymentRequest,
                     cryptoWallet.refuseRequest(data.getRequestId());
                     Toast.makeText(context, "Request denied", Toast.LENGTH_SHORT).show();
                     notifyDataSetChanged();
-                    FermatAnimationsUtils.showEmpty(context, true, holder.getLinear_layour_container_state());
-                    FermatAnimationsUtils.showEmpty(context, false, holder.getLinear_layour_container_buttons());
+//                    FermatAnimationsUtils.showEmpty(context, true, holder.getLinear_layour_container_state());
+//                    FermatAnimationsUtils.showEmpty(context, false, holder.getLinear_layour_container_buttons());
+                    onRefreshList.onRefresh();
                 } catch (Exception e) {
                     showMessage(context, "Cant Accept or Denied Receive Payment Exception- " + e.getMessage());
                 }

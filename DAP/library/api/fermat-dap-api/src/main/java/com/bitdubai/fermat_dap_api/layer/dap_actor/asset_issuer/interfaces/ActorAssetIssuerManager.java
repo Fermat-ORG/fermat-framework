@@ -4,9 +4,10 @@ import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.Fer
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_issuer.exceptions.CantAssetIssuerActorNotFoundException;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_issuer.exceptions.CantCreateActorAssetIssuerException;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_issuer.exceptions.CantGetAssetIssuerActorsException;
-import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.exceptions.CantCreateAssetUserActorException;
+import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_issuer.exceptions.CantUpdateActorAssetIssuerException;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.redeem_point.exceptions.CantConnectToActorAssetRedeemPointException;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.redeem_point.interfaces.ActorAssetRedeemPoint;
+import com.bitdubai.fermat_dap_api.layer.dap_actor_network_service.asset_issuer.exceptions.CantRegisterActorAssetIssuerException;
 
 import java.util.List;
 
@@ -34,6 +35,11 @@ public interface ActorAssetIssuerManager extends FermatManager {
      * @throws CantCreateActorAssetIssuerException
      */
     void createActorAssetIssuerFactory(String assetIssuerActorPublicKey, String assetIssuerActorName, byte[] assetIssuerActorprofileImage) throws CantCreateActorAssetIssuerException;
+
+    /**
+     * The method <code>registerActorInActorNetworkService</code> Register Actor in Actor Network Service
+     */
+    void registerActorInActorNetworkService() throws CantRegisterActorAssetIssuerException;
 
     /**
      * The method <code>createActorAssetIssuerRegisterInNetworkService</code> create Actor Registered
@@ -65,6 +71,8 @@ public interface ActorAssetIssuerManager extends FermatManager {
      */
     List<ActorAssetIssuer> getAllAssetIssuerActorConnected() throws CantGetAssetIssuerActorsException;
 
+
+    List<ActorAssetIssuer> getAllAssetIssuerActorConnectedWithExtendedPublicKey() throws CantGetAssetIssuerActorsException;
     /**
      * The method <code>sendMessage</code> Stablish Connection
      * with Requester and Lists Redeem Point associate
@@ -72,4 +80,6 @@ public interface ActorAssetIssuerManager extends FermatManager {
      * @throws CantConnectToActorAssetRedeemPointException
      */
     void sendMessage(ActorAssetIssuer requester, List<ActorAssetRedeemPoint> actorAssetRedeemPoints) throws CantConnectToActorAssetRedeemPointException;
+
+    void updateExtendedPublicKey(String issuerPublicKey, String extendedPublicKey) throws CantUpdateActorAssetIssuerException;
 }

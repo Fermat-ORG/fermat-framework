@@ -90,7 +90,7 @@ public class AssetDistributionDao {
         }
     }
 
-    public void persistDigitalAsset(String genesisTransaction,
+    public void persistDigitalAsset(String transactionHash,
                                     String localStoragePath,
                                     String digitalAssetHash,
                                     String actorReceiverPublicKey,
@@ -99,7 +99,7 @@ public class AssetDistributionDao {
 
             DatabaseTable databaseTable = getDatabaseTable(AssetDistributionDatabaseConstants.ASSET_DISTRIBUTION_TABLE_NAME);
             DatabaseTableRecord record = databaseTable.getEmptyRecord();
-            record.setStringValue(AssetDistributionDatabaseConstants.ASSET_DISTRIBUTION_GENESIS_TRANSACTION_COLUMN_NAME, genesisTransaction);
+            record.setStringValue(AssetDistributionDatabaseConstants.ASSET_DISTRIBUTION_GENESIS_TRANSACTION_COLUMN_NAME, transactionHash);
             record.setStringValue(AssetDistributionDatabaseConstants.ASSET_DISTRIBUTION_DIGITAL_ASSET_HASH_COLUMN_NAME, digitalAssetHash);
             record.setStringValue(AssetDistributionDatabaseConstants.ASSET_DISTRIBUTION_DIGITAL_ASSET_STORAGE_LOCAL_PATH_COLUMN_NAME, localStoragePath);
             record.setStringValue(AssetDistributionDatabaseConstants.ASSET_DISTRIBUTION_ACTOR_ASSET_USER_PUBLIC_KEY_COLUMN_NAME, actorReceiverPublicKey);
@@ -315,14 +315,6 @@ public class AssetDistributionDao {
         return records.get(records.size() - 1);
     }
 
-    public List<DeliverRecord> getDeliveringRecordsFromGenesisTransaction(String genesisTransaction) throws CantCheckAssetDistributionProgressException {
-        List<DeliverRecord> toReturn = new ArrayList<>();
-        for (String txId : getDeliveringIdByStatus(DistributionStatus.DELIVERING, genesisTransaction)) {
-            toReturn.add(constructRecordFromTransactionId(txId));
-        }
-        return toReturn;
-    }
-
     public List<DeliverRecord> getSendingCryptoRecords() throws CantCheckAssetDistributionProgressException {
         List<DeliverRecord> toReturn = new ArrayList<>();
         for (String txId : getValueListFromTableByColumn(DistributionStatus.SENDING_CRYPTO.getCode(),
@@ -408,13 +400,6 @@ public class AssetDistributionDao {
     //TODO HEREE
     private List<String> getDeliveringTransactionsFromGenesisTransaction(String genesisTransaction) throws CantCheckAssetDistributionProgressException {
         return getDeliveringIdByStatus(DistributionStatus.DELIVERING, genesisTransaction);
-    }
-
-    private List<String> getDeliveringTransactions() throws CantCheckAssetDistributionProgressException {
-        return getValueListFromTableByColumn(DistributionStatus.DELIVERING.getCode(),
-                AssetDistributionDatabaseConstants.ASSET_DISTRIBUTION_DELIVERING_TABLE_NAME,
-                AssetDistributionDatabaseConstants.ASSET_DISTRIBUTION_DELIVERING_STATE_COLUMN_NAME,
-                AssetDistributionDatabaseConstants.ASSET_DISTRIBUTION_DELIVERING_TRANSACTION_ID_COLUMN_NAME);
     }
 
     private DatabaseTable getDatabaseTable(String tableName) {

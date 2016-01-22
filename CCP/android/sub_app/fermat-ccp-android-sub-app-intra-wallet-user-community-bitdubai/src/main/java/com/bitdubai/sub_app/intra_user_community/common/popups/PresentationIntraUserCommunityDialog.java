@@ -19,17 +19,15 @@ import com.bitdubai.fermat_android_api.ui.dialogs.FermatDialog;
 import com.bitdubai.fermat_api.layer.all_definition.settings.exceptions.CantGetSettingsException;
 import com.bitdubai.fermat_api.layer.all_definition.settings.exceptions.CantPersistSettingsException;
 import com.bitdubai.fermat_api.layer.all_definition.settings.exceptions.SettingsNotFoundException;
+import com.bitdubai.fermat_api.layer.all_definition.settings.structure.SettingsManager;
 import com.bitdubai.fermat_ccp_api.layer.actor.intra_user.interfaces.IntraUserWalletSettings;
 import com.bitdubai.fermat_ccp_api.layer.module.intra_user.exceptions.CouldNotCreateIntraUserException;
 import com.bitdubai.fermat_ccp_api.layer.module.intra_user.interfaces.IntraUserModuleManager;
-import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.BitcoinWalletSettings;
 import com.bitdubai.fermat_pip_api.layer.network_service.subapp_resources.SubAppResourcesProviderManager;
 import com.bitdubai.sub_app.intra_user_community.R;
 import com.bitdubai.sub_app.intra_user_community.constants.Constants;
+import com.bitdubai.sub_app.intra_user_community.interfaces.RecreateView;
 import com.bitdubai.sub_app.intra_user_community.session.IntraUserSubAppSession;
-import com.bitdubai.fermat_api.layer.all_definition.settings.structure.SettingsManager;
-
-
 
 import java.io.ByteArrayOutputStream;
 
@@ -54,6 +52,7 @@ public class PresentationIntraUserCommunityDialog extends FermatDialog<IntraUser
     private FrameLayout container_jane_doe;
     private IntraUserSubAppSession intraUserSubAppSession;
     private IntraUserModuleManager moduleManager;
+    private RecreateView recreateView;
 
     /**
      * Constructor using Session and Resources
@@ -96,6 +95,8 @@ public class PresentationIntraUserCommunityDialog extends FermatDialog<IntraUser
                 startCommunity.setOnClickListener(this);
                 break;
         }
+
+        dontShowAgainCheckBox.setChecked(true);
     }
 
     @Override
@@ -122,6 +123,8 @@ public class PresentationIntraUserCommunityDialog extends FermatDialog<IntraUser
         if (id == R.id.btn_left) {
             try {
                 moduleManager.createIntraUser("Jhon Doe", "Available", convertImage(R.drawable.ic_profile_male));
+                if (recreateView != null)
+                    recreateView.recreate();
                 if (dontShowAgainCheckBox.isChecked()) {
                     pref.edit().putBoolean("isChecked", false).apply();
                 }
@@ -134,6 +137,9 @@ public class PresentationIntraUserCommunityDialog extends FermatDialog<IntraUser
         } else if (id == R.id.btn_right) {
             try {
                 moduleManager.createIntraUser("Jane Doe", "Available", convertImage(R.drawable.img_profile_female));
+                if (recreateView != null) {
+                    recreateView.recreate();
+                }
                 if (dontShowAgainCheckBox.isChecked()) {
                     pref.edit().putBoolean("isChecked", false).apply();
                 }
@@ -161,11 +167,7 @@ public class PresentationIntraUserCommunityDialog extends FermatDialog<IntraUser
                         IntraUserWalletSettings intraUserWalletSettings = settingsManager.loadAndGetSettings(getSession().getAppPublicKey());
                         intraUserWalletSettings.setIsPresentationHelpEnabled(!dontShowAgainCheckBox.isChecked());
                         settingsManager.persistSettings(getSession().getAppPublicKey(),intraUserWalletSettings);
-                    } catch (CantGetSettingsException e) {
-                        e.printStackTrace();
-                    } catch (SettingsNotFoundException e) {
-                        e.printStackTrace();
-                    } catch (CantPersistSettingsException e) {
+                    } catch (CantGetSettingsException | SettingsNotFoundException | CantPersistSettingsException e) {
                         e.printStackTrace();
                     }
                 }
@@ -180,8 +182,12 @@ public class PresentationIntraUserCommunityDialog extends FermatDialog<IntraUser
     private byte[] convertImage(int resImage) {
         Bitmap bitmap = BitmapFactory.decodeResource(activity.getResources(), resImage);
         ByteArrayOutputStream stream = new ByteArrayOutputStream();
-        bitmap.compress(Bitmap.CompressFormat.JPEG, 80, stream);
-        //bitmap.compress(Bitmap.CompressFormat.PNG, 100, stream);
+       // bitmap.compress(Bitmap.CompressFormat.JPEG, 80, stream);
+        bitmap.compress(Bitmap.CompressFormat.PNG, 100, stream);
         return stream.toByteArray();
+    }
+
+    public void setRecreateView(RecreateView recreateView) {
+        this.recreateView = recreateView;
     }
 }

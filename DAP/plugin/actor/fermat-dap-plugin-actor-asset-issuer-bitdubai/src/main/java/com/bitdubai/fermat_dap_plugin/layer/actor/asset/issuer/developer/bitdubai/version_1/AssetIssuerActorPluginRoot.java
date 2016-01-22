@@ -25,18 +25,19 @@ import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEven
 import com.bitdubai.fermat_api.layer.all_definition.money.CryptoAddress;
 import com.bitdubai.fermat_api.layer.all_definition.util.Version;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
+import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantLoadTableToMemoryException;
+import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantUpdateRecordException;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
 import com.bitdubai.fermat_bch_api.layer.crypto_module.crypto_address_book.exceptions.CantRegisterCryptoAddressBookRecordException;
 import com.bitdubai.fermat_bch_api.layer.crypto_module.crypto_address_book.interfaces.CryptoAddressBookManager;
-import com.bitdubai.fermat_bch_api.layer.crypto_vault.asset_vault.exceptions.CantGetActiveRedeemPointAddressesException;
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.asset_vault.exceptions.CantGetExtendedPublicKeyException;
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.asset_vault.interfaces.AssetVaultManager;
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.watch_only_vault.ExtendedPublicKey;
-import com.bitdubai.fermat_bch_api.layer.crypto_vault.watch_only_vault.exceptions.CantInitializeWatchOnlyVaultException;
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.watch_only_vault.interfaces.WatchOnlyVaultManager;
 import com.bitdubai.fermat_dap_api.layer.all_definition.enums.DAPConnectionState;
 import com.bitdubai.fermat_dap_api.layer.all_definition.enums.DAPMessageType;
 import com.bitdubai.fermat_dap_api.layer.all_definition.enums.EventType;
+import com.bitdubai.fermat_dap_api.layer.all_definition.exceptions.CantGetUserDeveloperIdentitiesException;
 import com.bitdubai.fermat_dap_api.layer.all_definition.exceptions.CantSetObjectException;
 import com.bitdubai.fermat_dap_api.layer.all_definition.network_service_message.DAPMessage;
 import com.bitdubai.fermat_dap_api.layer.all_definition.network_service_message.content_message.AssetExtendedPublickKeyContentMessage;
@@ -45,6 +46,7 @@ import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_issuer.AssetIssuerActor
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_issuer.exceptions.CantAssetIssuerActorNotFoundException;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_issuer.exceptions.CantCreateActorAssetIssuerException;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_issuer.exceptions.CantGetAssetIssuerActorsException;
+import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_issuer.exceptions.CantUpdateActorAssetIssuerException;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_issuer.interfaces.ActorAssetIssuer;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_issuer.interfaces.ActorAssetIssuerManager;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.redeem_point.exceptions.CantConnectToActorAssetRedeemPointException;
@@ -108,9 +110,8 @@ public class AssetIssuerActorPluginRoot extends AbstractPlugin implements
     @NeededPluginReference(platform = Platforms.BLOCKCHAINS, layer = Layers.CRYPTO_VAULT, plugin = Plugins.BITCOIN_WATCH_ONLY_VAULT)
     private WatchOnlyVaultManager WatchOnlyVaultManager;
 
-    @NeededPluginReference(platform = Platforms.BLOCKCHAINS        , layer = Layers.CRYPTO_MODULE   , plugin = Plugins.CRYPTO_ADDRESS_BOOK)
+    @NeededPluginReference(platform = Platforms.BLOCKCHAINS, layer = Layers.CRYPTO_MODULE, plugin = Plugins.CRYPTO_ADDRESS_BOOK)
     private CryptoAddressBookManager cryptoAddressBookManager;
-
 
     private AssetIssuerActorDao assetIssuerActorDao;
 
@@ -169,11 +170,12 @@ public class AssetIssuerActorPluginRoot extends AbstractPlugin implements
         try {
             ActorAssetIssuer actorAssetIssuer = this.assetIssuerActorDao.getActorAssetIssuer();
 
-            Double locationLatitude = new Random().nextDouble();
-            Double locationLongitude = new Random().nextDouble();
-            String description = "Asset Issuer Skynet Test";
-
             if (actorAssetIssuer == null) {
+
+                Double locationLatitude = new Random().nextDouble();
+                Double locationLongitude = new Random().nextDouble();
+                String description = "Asset Issuer Skynet Test";
+
                 AssetIssuerActorRecord record = new AssetIssuerActorRecord(
                         assetIssuerActorPublicKey,
                         assetIssuerActorName,
@@ -181,15 +183,42 @@ public class AssetIssuerActorPluginRoot extends AbstractPlugin implements
                         locationLatitude,
                         locationLongitude,
                         System.currentTimeMillis(),
+                        System.currentTimeMillis(),
                         assetIssuerActorProfileImage,
-                        description);
+                        description,
+                        "-");
 
                 assetIssuerActorDao.createNewAssetIssuer(record);
+
+                actorAssetIssuer = this.assetIssuerActorDao.getActorAssetIssuer();
+
+                assetIssuerActorNetworkServiceManager.registerActorAssetIssuer(actorAssetIssuer);
+            } else {
+
+                actorAssetIssuer = this.assetIssuerActorDao.getActorAssetIssuer();
+
+                Double locationLatitude = new Random().nextDouble();
+                Double locationLongitude = new Random().nextDouble();
+                String description = "Asset Issuer Skynet Test";
+
+                AssetIssuerActorRecord record = new AssetIssuerActorRecord(
+                        actorAssetIssuer.getActorPublicKey(),
+                        assetIssuerActorName,
+                        actorAssetIssuer.getDapConnectionState(),
+                        locationLatitude,
+                        locationLongitude,
+                        actorAssetIssuer.getRegistrationDate(),
+                        System.currentTimeMillis(),
+                        assetIssuerActorProfileImage,
+                        description,
+                        "-");
+
+                assetIssuerActorDao.updateAssetIssuer(record);
+
+                actorAssetIssuer = this.assetIssuerActorDao.getActorAssetIssuer();
+
+                assetIssuerActorNetworkServiceManager.updateActorAssetIssuer(actorAssetIssuer);
             }
-
-            registerActorInActorNetowrkSerice();
-
-            actorAssetIssuer = this.assetIssuerActorDao.getActorAssetIssuer();
 
             if (actorAssetIssuer != null) {
                 System.out.println("*********************Actor Asset Issuer************************");
@@ -254,6 +283,19 @@ public class AssetIssuerActorPluginRoot extends AbstractPlugin implements
         return list;
     }
 
+
+    @Override
+    public List<ActorAssetIssuer> getAllAssetIssuerActorConnectedWithExtendedPublicKey() throws CantGetAssetIssuerActorsException {
+        List<ActorAssetIssuer> list; // Asset Issuer Actor list.
+        try {
+            list = this.assetIssuerActorDao.getAllAssetIssuerActorConnectedWithExtendedpk();
+        } catch (CantGetAssetIssuersListException e) {
+            throw new CantGetAssetIssuerActorsException("CAN'T GET ASSET USER ACTORS CONNECTED WITH CRYPTOADDRESS ", e, "", "");
+        }
+
+        return list;
+    }
+
     @Override
     public void sendMessage(ActorAssetIssuer requester, List<ActorAssetRedeemPoint> actorAssetRedeemPoints) throws CantConnectToActorAssetRedeemPointException {
         for (ActorAssetRedeemPoint actorAssetRedeemPoint : actorAssetRedeemPoints) {
@@ -265,7 +307,6 @@ public class AssetIssuerActorPluginRoot extends AbstractPlugin implements
                         requester,
                         actorAssetRedeemPoint);
                 assetRedeemPointActorNetworkServiceManager.sendMessage(dapMessage);
-//                this.assetIssuerActorDao.updateAssetIssuerDAPConnectionStateRegistered(actorAssetIssuer.getActorPublicKey(), DAPConnectionState.CONNECTING);
             } catch (CantSendMessageException e) {
                 throw new CantConnectToActorAssetRedeemPointException("CAN'T SEND MESSAGE TO ACTOR ASSET REDEEM POINT", e, "", "");
             } catch (CantSetObjectException e) {
@@ -274,7 +315,17 @@ public class AssetIssuerActorPluginRoot extends AbstractPlugin implements
         }
     }
 
-    public void registerActorInActorNetowrkSerice() throws CantRegisterActorAssetIssuerException {
+    @Override
+    public void updateExtendedPublicKey(String issuerPublicKey, String extendedPublicKey) throws CantUpdateActorAssetIssuerException {
+        String context = "Issuer PK: " + issuerPublicKey + " - Extended PK: " + extendedPublicKey;
+        try {
+            assetIssuerActorDao.updateExtendedPublicKey(issuerPublicKey, extendedPublicKey);
+        } catch (CantGetUserDeveloperIdentitiesException | CantLoadTableToMemoryException | CantUpdateRecordException e) {
+            throw new CantUpdateActorAssetIssuerException(e, context, "Probably this issuer pk wasn't registered...");
+        }
+    }
+
+    public void registerActorInActorNetworkService() throws CantRegisterActorAssetIssuerException {
         try {
             /*
              * Send the Actor Asset Issuer Local for Register in Actor Network Service
@@ -322,7 +373,7 @@ public class AssetIssuerActorPluginRoot extends AbstractPlugin implements
     }
 
     private void receiveNewRequestExtendedPublicKey(DAPMessage dapMessage) {
-        final DAPActor redeemPoint = dapMessage.getActorSender();
+        final ActorAssetRedeemPoint redeemPoint = (ActorAssetRedeemPoint) dapMessage.getActorSender();
         final DAPActor issuer = dapMessage.getActorReceiver();
 
         System.out.println("*****Actor Asset Redeem Point Solicita*****");
@@ -355,7 +406,7 @@ public class AssetIssuerActorPluginRoot extends AbstractPlugin implements
              * once the extended Key has been generated, I will start the agent that will register any derived key from this extended KEy
              * into the address book.
              */
-            RedeemerAddressesMonitorAgent monitorAgent = new RedeemerAddressesMonitorAgent(cryptoAddressBookManager, assetVaultManager, issuer.getActorPublicKey() );
+            RedeemerAddressesMonitorAgent monitorAgent = new RedeemerAddressesMonitorAgent(cryptoAddressBookManager, assetVaultManager, issuer.getActorPublicKey());
             try {
                 monitorAgent.start();
             } catch (CantStartAgentException e) {
@@ -388,12 +439,13 @@ public class AssetIssuerActorPluginRoot extends AbstractPlugin implements
 
     /**
      * I will register the passed addresses in the address book
+     *
      * @param cryptoAddresses
      */
-    private void registerRedeemPointAddresses(List<CryptoAddress> cryptoAddresses,String issuerPublicKey,  String reddemPointPublicKey) {
-        for (CryptoAddress cryptoAddress : cryptoAddresses){
+    private void registerRedeemPointAddresses(List<CryptoAddress> cryptoAddresses, String issuerPublicKey, String reddemPointPublicKey) {
+        for (CryptoAddress cryptoAddress : cryptoAddresses) {
             try {
-                cryptoAddressBookManager.registerCryptoAddress(cryptoAddress,issuerPublicKey ,Actors.DAP_ASSET_ISSUER,reddemPointPublicKey, Actors.DAP_ASSET_REDEEM_POINT, Platforms.DIGITAL_ASSET_PLATFORM, VaultType.WATCH_ONLY_VAULT, "WatchOnlyVault", "", ReferenceWallet.BASIC_WALLET_BITCOIN_WALLET);
+                cryptoAddressBookManager.registerCryptoAddress(cryptoAddress, issuerPublicKey, Actors.DAP_ASSET_ISSUER, reddemPointPublicKey, Actors.DAP_ASSET_REDEEM_POINT, Platforms.DIGITAL_ASSET_PLATFORM, VaultType.WATCH_ONLY_VAULT, "WatchOnlyVault", "", ReferenceWallet.BASIC_WALLET_BITCOIN_WALLET);
             } catch (CantRegisterCryptoAddressBookRecordException e) {
                 e.printStackTrace();
             }

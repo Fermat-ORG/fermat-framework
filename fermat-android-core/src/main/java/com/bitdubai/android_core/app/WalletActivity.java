@@ -281,7 +281,7 @@ public class WalletActivity extends FermatActivity implements FermatScreenSwappe
                 initialisePaging();
             }
             if (activity.getTabStrip() != null) {
-                setPagerTabs(wallet, activity.getTabStrip(), walletSession,fermatFragmentFactory);
+                setPagerTabs(activity.getTabStrip(), walletSession,fermatFragmentFactory);
             }
             if (activity.getFragments().size() == 1) {
                 setOneFragmentInScreen(fermatFragmentFactory);
@@ -327,8 +327,7 @@ public class WalletActivity extends FermatActivity implements FermatScreenSwappe
                         walletFragmentFactory,
                         fragment,
                         walletSession,
-                        getWalletResourcesProviderManager(),
-                        getResources());
+                        getWalletResourcesProviderManager());
                 pagertabs.setAdapter(adapter);
 
 

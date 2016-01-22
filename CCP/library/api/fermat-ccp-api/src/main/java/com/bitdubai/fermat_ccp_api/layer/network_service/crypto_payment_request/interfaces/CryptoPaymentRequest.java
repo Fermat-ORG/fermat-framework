@@ -48,4 +48,6 @@ public interface CryptoPaymentRequest {
 
     int                           getSentNumber()   ;
 
+    String                        getMessageType();
+
 }

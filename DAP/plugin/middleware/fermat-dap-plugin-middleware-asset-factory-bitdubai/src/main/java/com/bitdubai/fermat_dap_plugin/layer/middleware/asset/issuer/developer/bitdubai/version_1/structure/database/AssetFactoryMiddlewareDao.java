@@ -327,7 +327,7 @@ public class AssetFactoryMiddlewareDao {
         return assetFactory;
     }
 
-    public void removeAssetFactory(AssetFactory assetFactory) throws CantDeleteAsserFactoryException {
+    public void removeAssetFactory(AssetFactory assetFactory, boolean removeResources) throws CantDeleteAsserFactoryException {
         try {
             database = openDatabase();
 
@@ -336,13 +336,15 @@ public class AssetFactoryMiddlewareDao {
             DatabaseTable tableResources = getDatabaseTable(AssertFactoryMiddlewareDatabaseConstant.ASSET_FACTORY_RESOURCE_TABLE_NAME);
             DatabaseTable tableIdentityUser = getDatabaseTable(AssertFactoryMiddlewareDatabaseConstant.ASSET_FACTORY_IDENTITY_ISSUER_TABLE_NAME);
             DatabaseTableRecord databaseTablerecord = getAssetFactoryProjectRecord(assetFactory);
-            table.addStringFilter(AssertFactoryMiddlewareDatabaseConstant.ASSET_FACTORY_ASSET_PUBLIC_KEY_COLUMN, assetFactory.getAssetPublicKey(), DatabaseFilterType.EQUAL);
+            table.addStringFilter(AssertFactoryMiddlewareDatabaseConstant.ASSET_FACTORY_ID_COLUMN, assetFactory.getFactoryId(), DatabaseFilterType.EQUAL);
             table.loadToMemory();
 
-            if (assetFactory.getResources() != null) {
-                for (Resource resources : assetFactory.getResources()) {
-                    DatabaseTableRecord record = getResourceDataRecord(assetFactory.getAssetPublicKey(), resources);
-                    tableResources.deleteRecord(record);
+            if (removeResources) {
+                if (assetFactory.getResources() != null) {
+                    for (Resource resources : assetFactory.getResources()) {
+                        DatabaseTableRecord record = getResourceDataRecord(assetFactory.getAssetPublicKey(), resources);
+                        tableResources.deleteRecord(record);
+                    }
                 }
             }
 

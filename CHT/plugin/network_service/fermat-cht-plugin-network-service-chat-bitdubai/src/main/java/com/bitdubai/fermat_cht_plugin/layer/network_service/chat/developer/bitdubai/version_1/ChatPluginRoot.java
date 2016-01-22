@@ -25,7 +25,7 @@ import com.bitdubai.fermat_api.layer.all_definition.events.EventSource;
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEvent;
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEventListener;
 import com.bitdubai.fermat_api.layer.all_definition.network_service.enums.NetworkServiceType;
-import com.bitdubai.fermat_api.layer.all_definition.network_service.interfaces.NetworkService;
+import com.bitdubai.fermat_p2p_api.layer.all_definition.common.network_services.interfaces.NetworkService;
 import com.bitdubai.fermat_api.layer.all_definition.network_service.interfaces.NetworkServiceConnectionManager;
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.Specialist;
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.Transaction;
@@ -46,15 +46,17 @@ import com.bitdubai.fermat_cht_api.layer.network_service.chat.exceptions.CantIni
 import com.bitdubai.fermat_cht_api.layer.network_service.chat.exceptions.CantSendChatMessageMetadataException;
 import com.bitdubai.fermat_cht_api.layer.network_service.chat.exceptions.CantSendChatMessageNewStatusNotificationException;
 import com.bitdubai.fermat_cht_api.layer.network_service.chat.interfaces.ChatManager;
-import com.bitdubai.fermat_cht_api.layer.network_service.chat.interfaces.ChatMetada;
+//import com.bitdubai.fermat_cht_api.layer.network_service.chat.interfaces.ChatMetada;
+import com.bitdubai.fermat_cht_api.layer.network_service.chat.interfaces.ChatMetadata;
 import com.bitdubai.fermat_cht_plugin.layer.network_service.chat.developer.bitdubai.version_1.communications.CommunicationNetworkServiceConnectionManager;
 import com.bitdubai.fermat_cht_plugin.layer.network_service.chat.developer.bitdubai.version_1.communications.CommunicationNetworkServiceLocal;
 import com.bitdubai.fermat_cht_plugin.layer.network_service.chat.developer.bitdubai.version_1.database.NetworkServiceChatNetworkServiceDatabaseConstants;
 import com.bitdubai.fermat_cht_plugin.layer.network_service.chat.developer.bitdubai.version_1.database.NetworkServiceChatNetworkServiceDatabaseFactory;
 import com.bitdubai.fermat_cht_plugin.layer.network_service.chat.developer.bitdubai.version_1.database.NetworkServiceChatNetworkServiceDeveloperDatabaseFactory;
-import com.bitdubai.fermat_cht_plugin.layer.network_service.chat.developer.bitdubai.version_1.database.OutgoinChatMetaDataDao;
-import com.bitdubai.fermat_cht_plugin.layer.network_service.chat.developer.bitdubai.version_1.database.OutgoingMessageDao;
+//import com.bitdubai.fermat_cht_plugin.layer.network_service.chat.developer.bitdubai.version_1.database.OutgoinChatMetaDataDao;
 import com.bitdubai.fermat_cht_plugin.layer.network_service.chat.developer.bitdubai.version_1.event_handlers.ClientConnectionCloseNotificationEventHandler;
+import com.bitdubai.fermat_cht_plugin.layer.network_service.chat.developer.bitdubai.version_1.event_handlers.ClientConnectionLooseNotificationEventHandler;
+import com.bitdubai.fermat_cht_plugin.layer.network_service.chat.developer.bitdubai.version_1.event_handlers.ClientSuccessfullReconnectNotificationEventHandler;
 import com.bitdubai.fermat_cht_plugin.layer.network_service.chat.developer.bitdubai.version_1.event_handlers.CompleteComponentConnectionRequestNotificationEventHandler;
 import com.bitdubai.fermat_cht_plugin.layer.network_service.chat.developer.bitdubai.version_1.event_handlers.CompleteComponentRegistrationNotificationEventHandler;
 import com.bitdubai.fermat_cht_plugin.layer.network_service.chat.developer.bitdubai.version_1.event_handlers.CompleteRequestListComponentRegisteredNotificationEventHandler;
@@ -62,18 +64,14 @@ import com.bitdubai.fermat_cht_plugin.layer.network_service.chat.developer.bitdu
 import com.bitdubai.fermat_cht_plugin.layer.network_service.chat.developer.bitdubai.version_1.event_handlers.NewSentMessagesNotificationEventHandler;
 import com.bitdubai.fermat_cht_plugin.layer.network_service.chat.developer.bitdubai.version_1.event_handlers.VPNConnectionCloseNotificationEventHandler;
 import com.bitdubai.fermat_cht_plugin.layer.network_service.chat.developer.bitdubai.version_1.exceptions.CantInitializeChatNetworkServiceDatabaseException;
-import com.bitdubai.fermat_cht_plugin.layer.network_service.chat.developer.bitdubai.version_1.structure.ChatMetadaTransactionRecord;
-import com.bitdubai.fermat_cht_plugin.layer.network_service.chat.developer.bitdubai.version_1.structure.EncodeMsjContent;
+//import com.bitdubai.fermat_cht_plugin.layer.network_service.chat.developer.bitdubai.version_1.structure.ChatMetadaTransactionRecord;
 import com.bitdubai.fermat_cht_plugin.layer.network_service.chat.developer.bitdubai.version_1.communications.CommunicationRegistrationProcessNetworkServiceAgent;
-import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.contents.FermatMessageCommunication;
-import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.contents.FermatMessageCommunicationFactory;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.enums.P2pEventType;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.events.ClientConnectionCloseNotificationEvent;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.events.VPNConnectionCloseNotificationEvent;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.WsCommunicationsCloudClientManager;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.contents.FermatMessage;
-import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.enums.FermatMessageContentType;
-import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.enums.FermatMessagesStatus;
+import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.exceptions.CantRegisterComponentException;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.exceptions.CantRequestListException;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedPluginExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
@@ -151,7 +149,7 @@ public class ChatPluginRoot extends AbstractPlugin implements
                 ", networkServiceType=" + networkServiceType +
                 ", platformComponentProfile=" + platformComponentProfile +
                 ", listenersAdded=" + listenersAdded +
-                ", outgoinChatMetaDataDao=" + outgoinChatMetaDataDao +
+                //", outgoinChatMetaDataDao=" + outgoinChatMetaDataDao +
                 ", platformComponentType=" + platformComponentType +
                 ", communicationNetworkServiceConnectionManager=" + communicationNetworkServiceConnectionManager +
                 ", remoteNetworkServicesRegisteredList=" + remoteNetworkServicesRegisteredList +
@@ -203,11 +201,11 @@ public class ChatPluginRoot extends AbstractPlugin implements
     /**
      * Represent the OutgoinChatMetaDataDao
      */
-    private OutgoinChatMetaDataDao outgoinChatMetaDataDao;
+    // private OutgoinChatMetaDataDao outgoinChatMetaDataDao;
 
-    public OutgoinChatMetaDataDao getOutgoinChatMetaDataDao() {
-        return outgoinChatMetaDataDao;
-    }
+    //public OutgoinChatMetaDataDao getOutgoinChatMetaDataDao() {
+    //  return outgoinChatMetaDataDao;
+    //}
 
     /**
      * Represent the platformComponentType
@@ -244,6 +242,7 @@ public class ChatPluginRoot extends AbstractPlugin implements
      */
     private NetworkServiceChatNetworkServiceDeveloperDatabaseFactory communicationNetworkServiceDeveloperDatabaseFactory;
 
+    private CommunicationRegistrationProcessNetworkServiceAgent communicationRegistrationProcessNetworkServiceAgent;
 
     /**
      * This method validate is all required resource are injected into
@@ -301,6 +300,16 @@ public class ChatPluginRoot extends AbstractPlugin implements
     @Override
     public String getExtraData() {
         return this.extraData;
+    }
+
+    @Override
+    public void handleNewMessages(FermatMessage incomingMessage) {
+        //TODO: implementar el handler de los mensajes acá por favor ;)
+    }
+
+    @Override
+    public void handleNewSentMessageNotificationEvent(FermatMessage message) {
+        //TODO: completar por favot
     }
 
     @Override
@@ -380,6 +389,37 @@ public class ChatPluginRoot extends AbstractPlugin implements
     public void handleCompleteComponentRegistrationNotificationEvent(PlatformComponentProfile platformComponentProfileRegistered) {
         System.out.println("ChatPLuginRoot - CommunicationNetworkServiceConnectionManager - Starting method handleCompleteComponentRegistrationNotificationEvent");
 
+
+        if (platformComponentProfileRegistered.getPlatformComponentType() == PlatformComponentType.COMMUNICATION_CLOUD_CLIENT && this.register){
+
+            if(communicationRegistrationProcessNetworkServiceAgent.isAlive()){
+                communicationRegistrationProcessNetworkServiceAgent.interrupt();
+                communicationRegistrationProcessNetworkServiceAgent = null;
+            }
+
+
+            /*
+             * Construct my profile and register me
+             */
+            PlatformComponentProfile platformComponentProfileToReconnect =  wsCommunicationsCloudClientManager.getCommunicationsCloudClientConnection().constructPlatformComponentProfileFactory(this.getIdentityPublicKey(),
+                    this.getAlias().toLowerCase(),
+                    this.getName(),
+                    this.getNetworkServiceType(),
+                    this.getPlatformComponentType(),
+                    this.getExtraData());
+
+            try {
+                    /*
+                     * Register me
+                     */
+                wsCommunicationsCloudClientManager.getCommunicationsCloudClientConnection().registerComponentForCommunication(this.getNetworkServiceType(), platformComponentProfileToReconnect);
+
+            } catch (CantRegisterComponentException e) {
+                e.printStackTrace();
+            }
+
+        }
+
         /*
          * If the component registered have my profile and my identity public key
          */
@@ -391,6 +431,9 @@ public class ChatPluginRoot extends AbstractPlugin implements
              * Mark as register
              */
             this.register = Boolean.TRUE;
+
+            communicationRegistrationProcessNetworkServiceAgent.interrupt();
+            communicationRegistrationProcessNetworkServiceAgent=null;
 
 
             /*-------------------------------------------------------------------------------------------------
@@ -580,7 +623,7 @@ public class ChatPluginRoot extends AbstractPlugin implements
                 /*
                  * Initialize the agent and start
                  */
-                CommunicationRegistrationProcessNetworkServiceAgent communicationRegistrationProcessNetworkServiceAgent = new CommunicationRegistrationProcessNetworkServiceAgent(this, wsCommunicationsCloudClientManager.getCommunicationsCloudClientConnection());
+                communicationRegistrationProcessNetworkServiceAgent = new CommunicationRegistrationProcessNetworkServiceAgent(this, wsCommunicationsCloudClientManager);
                 communicationRegistrationProcessNetworkServiceAgent.start();
             }
 
@@ -685,7 +728,6 @@ public class ChatPluginRoot extends AbstractPlugin implements
 
     }
 
-    @Override
     public void sendChatMetadata(Integer idChat, Integer idObjecto, String localActorType, String localActorPubKey, String remoteActorType, String remoteActorPubKey, String chatName, ChatMessageStatus chatStatus, Timestamp date, Integer idMessage, String message, DistributionStatus distributionStatus) throws CantSendChatMessageMetadataException {
         try {
             System.out.println(" ChatPLuginRoot - Starting method sendChatMetadata");
@@ -702,75 +744,75 @@ public class ChatPluginRoot extends AbstractPlugin implements
              */
             CommunicationNetworkServiceLocal communicationNetworkServiceLocal = communicationNetworkServiceConnectionManager.getNetworkServiceLocalInstance(remoteActorPubKey);
 
-            /*
-             * Construct the message content in json format
-             */
-            ChatMetadaTransactionRecord chatMetadaTransactionRecord = new ChatMetadaTransactionRecord();
-            chatMetadaTransactionRecord.setIdChat(idChat);
-            chatMetadaTransactionRecord.setIdObjecto(idObjecto);
-            chatMetadaTransactionRecord.setLocalActorType(localActorType);
-            chatMetadaTransactionRecord.setLocalActorPubKey(localActorPubKey);
-            chatMetadaTransactionRecord.setRemoteActorType(remoteActorType);
-            chatMetadaTransactionRecord.setRemoteActorPubKey(remoteActorPubKey);
-            chatMetadaTransactionRecord.setChatName(chatName);
-            chatMetadaTransactionRecord.setChatMessageStatus(chatStatus);
-            chatMetadaTransactionRecord.setDate(date);
-            chatMetadaTransactionRecord.setIdMessage(idMessage);
-            chatMetadaTransactionRecord.setMessage(message);
-            chatMetadaTransactionRecord.setDistributionStatus(distributionStatus);
-            String msjContent = EncodeMsjContent.encodeMSjContentChatMetadataTransmit(chatMetadaTransactionRecord, PlatformComponentType.getByCode(chatMetadaTransactionRecord.getLocalActorType()), PlatformComponentType.getByCode(chatMetadaTransactionRecord.getRemoteActorType()));
-
-            System.out.println("ChatPLuginRoot - Chat transaction: " + chatMetadaTransactionRecord);
-
-            /*
-             * Save into data base
-             */
-            getOutgoinChatMetaDataDao().create(chatMetadaTransactionRecord);
-
-            /*
-             * If not null
-             */
-            System.out.println("ChatPLuginRoot - Sending message.....");
-            if (communicationNetworkServiceLocal != null) {
-
-                //Send the message
-                communicationNetworkServiceLocal.sendMessage(chatMetadaTransactionRecord.getLocalActorPubKey(), chatMetadaTransactionRecord.getLocalActorPubKey(), msjContent);
-
-            } else {
-
-                /*
-                 * Created the message
-                 */
-                FermatMessage fermatMessage = FermatMessageCommunicationFactory.constructFermatMessage(chatMetadaTransactionRecord.getLocalActorPubKey(),//Sender
-                        chatMetadaTransactionRecord.getRemoteActorPubKey(), //Receiver
-                        msjContent, //Message Content
-                        FermatMessageContentType.TEXT);//Type
-                /*
-                 * Configure the correct status
-                 */
-                ((FermatMessageCommunication) fermatMessage).setFermatMessagesStatus(FermatMessagesStatus.PENDING_TO_SEND);
-
-                /*
-                 * Save to the data base table
-                 */
-                OutgoingMessageDao outgoingMessageDao = communicationNetworkServiceConnectionManager.getOutgoingMessageDao();
-                outgoingMessageDao.create(fermatMessage);
-
-                /*
-                 * Create the sender basic profile
-                 */
-                PlatformComponentProfile sender = wsCommunicationsCloudClientManager.getCommunicationsCloudClientConnection().constructBasicPlatformComponentProfileFactory(chatMetadaTransactionRecord.getLocalActorPubKey(), NetworkServiceType.UNDEFINED, PlatformComponentType.getByCode(chatMetadaTransactionRecord.getLocalActorType()));
-
-                /*
-                 * Create the receiver basic profile
-                 */
-                PlatformComponentProfile receiver = wsCommunicationsCloudClientManager.getCommunicationsCloudClientConnection().constructBasicPlatformComponentProfileFactory(chatMetadaTransactionRecord.getRemoteActorPubKey(), NetworkServiceType.UNDEFINED, PlatformComponentType.getByCode(chatMetadaTransactionRecord.getRemoteActorType()));
-
-                /*
-                 * Ask the client to connect
-                 */
-                communicationNetworkServiceConnectionManager.connectTo(sender, platformComponentProfile, receiver);
-            }
+//            /*
+//             * Construct the message content in json format
+//             */
+//            ChatMetadaTransactionRecord chatMetadaTransactionRecord = new ChatMetadaTransactionRecord();
+//            chatMetadaTransactionRecord.setIdChat(idChat);
+//            chatMetadaTransactionRecord.setIdObjecto(idObjecto);
+//            chatMetadaTransactionRecord.setLocalActorType(localActorType);
+//            chatMetadaTransactionRecord.setLocalActorPubKey(localActorPubKey);
+//            chatMetadaTransactionRecord.setRemoteActorType(remoteActorType);
+//            chatMetadaTransactionRecord.setRemoteActorPubKey(remoteActorPubKey);
+//            chatMetadaTransactionRecord.setChatName(chatName);
+//            chatMetadaTransactionRecord.setChatMessageStatus(chatStatus);
+//            chatMetadaTransactionRecord.setDate(date);
+//            chatMetadaTransactionRecord.setIdMessage(idMessage);
+//            chatMetadaTransactionRecord.setMessage(message);
+//            chatMetadaTransactionRecord.setDistributionStatus(distributionStatus);
+//            String msjContent = EncodeMsjContent.encodeMSjContentChatMetadataTransmit((ChatMetadata)chatMetadaTransactionRecord, PlatformComponentType.getByCode(chatMetadaTransactionRecord.getLocalActorType()), PlatformComponentType.getByCode(chatMetadaTransactionRecord.getRemoteActorType()));
+//
+//            System.out.println("ChatPLuginRoot - Chat transaction: " + chatMetadaTransactionRecord);
+//
+//            /*
+//             * Save into data base
+//             */
+//            getOutgoinChatMetaDataDao().create(chatMetadaTransactionRecord);
+//
+//            /*
+//             * If not null
+//             */
+//            System.out.println("ChatPLuginRoot - Sending message.....");
+//            if (communicationNetworkServiceLocal != null) {
+//
+//                //Send the message
+//                communicationNetworkServiceLocal.sendMessage(chatMetadaTransactionRecord.getLocalActorPubKey(), chatMetadaTransactionRecord.getLocalActorPubKey(), msjContent);
+//
+//            } else {
+//
+//                /*
+//                 * Created the message
+//                 */
+//                FermatMessage fermatMessage = FermatMessageCommunicationFactory.constructFermatMessage(chatMetadaTransactionRecord.getLocalActorPubKey(),//Sender
+//                        chatMetadaTransactionRecord.getRemoteActorPubKey(), //Receiver
+//                        msjContent, //Message Content
+//                        FermatMessageContentType.TEXT);//Type
+//                /*
+//                 * Configure the correct status
+//                 */
+//                ((FermatMessageCommunication) fermatMessage).setFermatMessagesStatus(FermatMessagesStatus.PENDING_TO_SEND);
+//
+//                /*
+//                 * Save to the data base table
+//                 */
+//                OutgoingMessageDao outgoingMessageDao = communicationNetworkServiceConnectionManager.getOutgoingMessageDao();
+//                outgoingMessageDao.create(fermatMessage);
+//
+//                /*
+//                 * Create the sender basic profile
+//                 */
+//                PlatformComponentProfile sender = wsCommunicationsCloudClientManager.getCommunicationsCloudClientConnection().constructBasicPlatformComponentProfileFactory(chatMetadaTransactionRecord.getLocalActorPubKey(), NetworkServiceType.UNDEFINED, PlatformComponentType.getByCode(chatMetadaTransactionRecord.getLocalActorType()));
+//
+//                /*
+//                 * Create the receiver basic profile
+//                 */
+//                PlatformComponentProfile receiver = wsCommunicationsCloudClientManager.getCommunicationsCloudClientConnection().constructBasicPlatformComponentProfileFactory(chatMetadaTransactionRecord.getRemoteActorPubKey(), NetworkServiceType.UNDEFINED, PlatformComponentType.getByCode(chatMetadaTransactionRecord.getRemoteActorType()));
+//
+//                /*
+//                 * Ask the client to connect
+//                 */
+//                communicationNetworkServiceConnectionManager.connectTo(sender, platformComponentProfile, receiver);
+//            }
             System.out.println("AssetTransmissionNetworkServicePluginRoot - Message sent.");
         } catch (Exception e) {
 
@@ -832,7 +874,7 @@ public class ChatPluginRoot extends AbstractPlugin implements
          * Listen and handle new message sent
          */
         fermatEventListener = eventManager.getNewListener(P2pEventType.NEW_NETWORK_SERVICE_MESSAGE_SENT_NOTIFICATION);
-        fermatEventListener.setEventHandler(new NewSentMessagesNotificationEventHandler());
+        fermatEventListener.setEventHandler(new NewSentMessagesNotificationEventHandler(this));
         eventManager.addListener(fermatEventListener);
         listenersAdded.add(fermatEventListener);
 
@@ -860,19 +902,85 @@ public class ChatPluginRoot extends AbstractPlugin implements
         eventManager.addListener(fermatEventListener);
         listenersAdded.add(fermatEventListener);
 
+                /*
+         * Listen and handle Client Connection Loose Notification Event
+         */
+        fermatEventListener = eventManager.getNewListener(P2pEventType.CLIENT_CONNECTION_LOOSE);
+        fermatEventListener.setEventHandler(new ClientConnectionLooseNotificationEventHandler(this));
+        eventManager.addListener(fermatEventListener);
+        listenersAdded.add(fermatEventListener);
+
+
+        /*
+         * Listen and handle Client Connection Success Reconnect Notification Event
+         */
+        fermatEventListener = eventManager.getNewListener(P2pEventType.CLIENT_SUCCESS_RECONNECT);
+        fermatEventListener.setEventHandler(new ClientSuccessfullReconnectNotificationEventHandler(this));
+        eventManager.addListener(fermatEventListener);
+        listenersAdded.add(fermatEventListener);
+
     }
 
     @Override
     public void handleClientConnectionLooseNotificationEvent(FermatEvent fermatEvent) {
-        // TODO COMPLETE -.
+
+        if(communicationNetworkServiceConnectionManager != null)
+            communicationNetworkServiceConnectionManager.stop();
     }
 
     @Override
     public void handleClientSuccessfullReconnectNotificationEvent(FermatEvent fermatEvent) {
-        // TODO COMPLETE -.
+
+
+        if(communicationNetworkServiceConnectionManager != null) {
+            communicationNetworkServiceConnectionManager.restart();
+        }
+
+        if(communicationRegistrationProcessNetworkServiceAgent != null && !this.register){
+
+            if(communicationRegistrationProcessNetworkServiceAgent.isAlive()){
+                communicationRegistrationProcessNetworkServiceAgent.interrupt();
+                communicationRegistrationProcessNetworkServiceAgent = null;
+            }
+
+                   /*
+                 * Construct my profile and register me
+                 */
+                PlatformComponentProfile platformComponentProfileToReconnect =  wsCommunicationsCloudClientManager.getCommunicationsCloudClientConnection().constructPlatformComponentProfileFactory(this.getIdentityPublicKey(),
+                        this.getAlias().toLowerCase(),
+                        this.getName(),
+                        this.getNetworkServiceType(),
+                        this.getPlatformComponentType(),
+                        this.getExtraData());
+
+                try {
+                    /*
+                     * Register me
+                     */
+                    wsCommunicationsCloudClientManager.getCommunicationsCloudClientConnection().registerComponentForCommunication(this.getNetworkServiceType(), platformComponentProfileToReconnect);
+
+                } catch (CantRegisterComponentException e) {
+                    e.printStackTrace();
+                }
+
+                /*
+                 * Configure my new profile
+                 */
+                this.setPlatformComponentProfilePluginRoot(platformComponentProfileToReconnect);
+
+                /*
+                 * Initialize the connection manager
+                 */
+                this.initializeCommunicationNetworkServiceConnectionManager();
+
+
+
+        }
+
+
     }
 
-    @Override
+
     public void sendChatMessageNewStatusNotification() throws CantSendChatMessageNewStatusNotificationException {
 
     }
@@ -883,7 +991,22 @@ public class ChatPluginRoot extends AbstractPlugin implements
     }
 
     @Override
-    public List<Transaction<ChatMetada>> getPendingTransactions(Specialist specialist) throws CantDeliverPendingTransactionsException {
+    public List<Transaction<ChatMetadata>> getPendingTransactions(Specialist specialist) throws CantDeliverPendingTransactionsException {
         return null;
+    }
+
+    @Override
+    public void sendChatMetadata(String localActorPubKey, String remoteActorPubKey, ChatMetadata chatMetadata) throws CantSendChatMessageMetadataException {
+
+    }
+
+    @Override
+    public void sendChatMessageNewStatusNotification(String localActorPubKey, PlatformComponentType senderType, String remoteActorPubKey, PlatformComponentType receiverType, DistributionStatus newDistributionStatus, UUID chatId) throws CantSendChatMessageNewStatusNotificationException {
+
+    }
+
+    //@Override
+    public void sendChatMessageNewStatusNotification(UUID localActorPubKey, PlatformComponentType senderType, UUID remoteActorPubKey, PlatformComponentType receiverType, DistributionStatus newDistributionStatus) throws CantSendChatMessageNewStatusNotificationException {
+
     }
 }

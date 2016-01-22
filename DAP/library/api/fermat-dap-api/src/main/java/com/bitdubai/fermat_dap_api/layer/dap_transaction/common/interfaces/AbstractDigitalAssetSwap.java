@@ -5,9 +5,7 @@ import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
 import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.exceptions.CantGetCryptoTransactionException;
 import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.interfaces.BitcoinNetworkManager;
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.asset_vault.interfaces.AssetVaultManager;
-import com.bitdubai.fermat_dap_api.layer.all_definition.contracts.ContractProperty;
 import com.bitdubai.fermat_dap_api.layer.all_definition.digital_asset.DigitalAssetContract;
-import com.bitdubai.fermat_dap_api.layer.all_definition.digital_asset.DigitalAssetContractPropertiesConstants;
 import com.bitdubai.fermat_dap_api.layer.all_definition.digital_asset.DigitalAssetMetadata;
 import com.bitdubai.fermat_dap_api.layer.all_definition.exceptions.DAPException;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.interfaces.ActorAssetUser;
@@ -16,10 +14,6 @@ import com.bitdubai.fermat_dap_api.layer.dap_transaction.common.exceptions.CantC
 import com.bitdubai.fermat_dap_api.layer.dap_transaction.common.exceptions.CantPersistDigitalAssetException;
 import com.bitdubai.fermat_dap_api.layer.dap_transaction.common.util.AssetVerification;
 
-import java.sql.Timestamp;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
 import java.util.UUID;
 
 /**
@@ -27,12 +21,12 @@ import java.util.UUID;
  */
 public abstract class AbstractDigitalAssetSwap implements DigitalAssetSwap {
 
-    AssetVaultManager assetVaultManager;
-    public BitcoinNetworkManager bitcoinNetworkManager;
-    PluginFileSystem pluginFileSystem;
-    UUID pluginId;
-    public AssetTransmissionNetworkServiceManager assetTransmissionNetworkServiceManager;
-    public CryptoTransaction cryptoTransaction;
+    protected AssetVaultManager assetVaultManager;
+    protected BitcoinNetworkManager bitcoinNetworkManager;
+    protected PluginFileSystem pluginFileSystem;
+    protected UUID pluginId;
+    protected AssetTransmissionNetworkServiceManager assetTransmissionNetworkServiceManager;
+    protected CryptoTransaction cryptoTransaction;
 
     public AbstractDigitalAssetSwap(UUID pluginId,
                                     PluginFileSystem pluginFileSystem) {
@@ -59,11 +53,7 @@ public abstract class AbstractDigitalAssetSwap implements DigitalAssetSwap {
     }
 
     public CryptoTransaction foundCryptoTransaction(DigitalAssetMetadata digitalAssetMetadata) throws CantGetCryptoTransactionException {
-        CryptoTransaction cryptoTransaction = bitcoinNetworkManager.getCryptoTransactionFromBlockChain(digitalAssetMetadata.getGenesisTransaction(), digitalAssetMetadata.getGenesisBlock());
-        if (cryptoTransaction == null) {
-            throw new CantGetCryptoTransactionException(CantGetCryptoTransactionException.DEFAULT_MESSAGE, null, "Getting the genesis transaction from Crypto Network", "The crypto transaction received is null");
-        }
-        return cryptoTransaction;
+        return AssetVerification.foundCryptoTransaction(bitcoinNetworkManager, digitalAssetMetadata);
     }
 
     public abstract void persistDigitalAsset(DigitalAssetMetadata digitalAssetMetadata, ActorAssetUser actorAssetUser) throws CantPersistDigitalAssetException, CantCreateDigitalAssetFileException;

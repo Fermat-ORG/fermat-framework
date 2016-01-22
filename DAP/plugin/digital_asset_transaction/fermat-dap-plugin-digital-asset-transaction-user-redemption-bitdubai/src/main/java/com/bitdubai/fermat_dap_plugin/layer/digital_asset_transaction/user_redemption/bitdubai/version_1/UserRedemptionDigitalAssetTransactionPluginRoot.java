@@ -42,18 +42,17 @@ import com.bitdubai.fermat_dap_api.layer.dap_transaction.user_redemption.excepti
 import com.bitdubai.fermat_dap_api.layer.dap_transaction.user_redemption.interfaces.UserRedemptionManager;
 import com.bitdubai.fermat_dap_api.layer.dap_wallet.asset_user_wallet.interfaces.AssetUserWalletManager;
 import com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.user_redemption.bitdubai.version_1.developers_utils.UserRedemptionDeveloperDatabaseFactory;
-import com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.user_redemption.bitdubai.version_1.structure.DigitalAssetUserRedemptionVault;
-import com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.user_redemption.bitdubai.version_1.structure.UserRedemptionTransactionManager;
 import com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.user_redemption.bitdubai.version_1.structure.database.UserRedemptionDao;
 import com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.user_redemption.bitdubai.version_1.structure.database.UserRedemptionDatabaseConstants;
 import com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.user_redemption.bitdubai.version_1.structure.database.UserRedemptionDatabaseFactory;
 import com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.user_redemption.bitdubai.version_1.structure.events.UserRedemptionMonitorAgent;
 import com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.user_redemption.bitdubai.version_1.structure.events.UserRedemptionRecorderService;
+import com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.user_redemption.bitdubai.version_1.structure.functional.DigitalAssetUserRedemptionVault;
+import com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.user_redemption.bitdubai.version_1.structure.functional.UserRedemptionRedeemer;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedPluginExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfaces.EventManager;
 import com.bitdubai.fermat_pip_api.layer.user.device_user.exceptions.CantGetLoggedInDeviceUserException;
-import com.bitdubai.fermat_pip_api.layer.user.device_user.interfaces.DeviceUserManager;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -69,6 +68,9 @@ public class UserRedemptionDigitalAssetTransactionPluginRoot extends AbstractPlu
         DatabaseManagerForDevelopers,
         LogManagerForDevelopers {
 
+    public static long DELIVERING_TIMEOUT = 1 /*MINUTES!!*/ * 40 * 1000;
+    public static long BROADCASTING_MAX_ATTEMPT_NUMBER = 10;
+
     @NeededPluginReference(platform = Platforms.DIGITAL_ASSET_PLATFORM, layer = Layers.ACTOR, plugin = Plugins.ASSET_USER)
     ActorAssetUserManager actorAssetUserManager;
 
@@ -80,9 +82,6 @@ public class UserRedemptionDigitalAssetTransactionPluginRoot extends AbstractPlu
 
     @NeededPluginReference(platform = Platforms.BLOCKCHAINS, layer = Layers.CRYPTO_NETWORK, plugin = Plugins.BITCOIN_NETWORK)
     BitcoinNetworkManager bitcoinNetworkManager;
-
-    @NeededAddonReference(platform = Platforms.PLUG_INS_PLATFORM, layer = Layers.USER, addon = Addons.DEVICE_USER)
-    DeviceUserManager deviceUserManager;
 
     @NeededPluginReference(platform = Platforms.BLOCKCHAINS, layer = Layers.CRYPTO_VAULT, plugin = Plugins.BITCOIN_ASSET_VAULT)
     AssetVaultManager assetVaultManager;
@@ -105,11 +104,9 @@ public class UserRedemptionDigitalAssetTransactionPluginRoot extends AbstractPlu
 
     static Map<String, LogLevel> newLoggingLevel = new HashMap<String, LogLevel>();
 
-    UserRedemptionTransactionManager userRedemptionManager;
-
+    private UserRedemptionRedeemer userRedemptionRedeemer;
     UserRedemptionMonitorAgent userRedemptionMonitorAgent;
     DigitalAssetUserRedemptionVault digitalAssetUserRedemptionVault;
-    Database userRedemptionDatabase;
 
     public UserRedemptionDigitalAssetTransactionPluginRoot() {
         super(new PluginVersionReference(new Version()));
@@ -117,7 +114,7 @@ public class UserRedemptionDigitalAssetTransactionPluginRoot extends AbstractPlu
 
     private void createAssetDistributionTransactionDatabase() throws CantCreateDatabaseException {
         UserRedemptionDatabaseFactory databaseFactory = new UserRedemptionDatabaseFactory(this.pluginDatabaseSystem);
-        userRedemptionDatabase = databaseFactory.createDatabase(pluginId, UserRedemptionDatabaseConstants.USER_REDEMPTION_DATABASE);
+        databaseFactory.createDatabase(pluginId, UserRedemptionDatabaseConstants.USER_REDEMPTION_DATABASE);
     }
 
     @Override
@@ -204,7 +201,7 @@ public class UserRedemptionDigitalAssetTransactionPluginRoot extends AbstractPlu
     public void start() throws CantStartPluginException {
         try {
             try {
-                this.userRedemptionDatabase = this.pluginDatabaseSystem.openDatabase(pluginId, UserRedemptionDatabaseConstants.USER_REDEMPTION_DATABASE);
+                this.pluginDatabaseSystem.openDatabase(pluginId, UserRedemptionDatabaseConstants.USER_REDEMPTION_DATABASE);
             } catch (CantOpenDatabaseException | DatabaseNotFoundException e) {
                 try {
                     createAssetDistributionTransactionDatabase();
@@ -212,15 +209,12 @@ public class UserRedemptionDigitalAssetTransactionPluginRoot extends AbstractPlu
                     throw new CantStartPluginException(CantCreateDatabaseException.DEFAULT_MESSAGE, innerException, "Starting Asset User Redemption plugin - " + this.pluginId, "Cannot open or create the plugin database");
                 }
             }
-            UserRedemptionDao userRedemptionDao = new UserRedemptionDao(pluginDatabaseSystem, pluginId);
-            this.digitalAssetUserRedemptionVault = new DigitalAssetUserRedemptionVault(
-                    this.pluginId,
-                    this.pluginFileSystem,
-                    this.errorManager
+            this.digitalAssetUserRedemptionVault = new DigitalAssetUserRedemptionVault(pluginId,
+                    pluginFileSystem,
+                    assetUserWalletManager,
+                    actorAssetUserManager
             );
-            this.digitalAssetUserRedemptionVault.setAssetUserWalletManager(this.assetUserWalletManager);
-            this.digitalAssetUserRedemptionVault.setErrorManager(this.errorManager);
-            this.digitalAssetUserRedemptionVault.setActorAssetUserManager(this.actorAssetUserManager);
+            UserRedemptionDao userRedemptionDao = new UserRedemptionDao(pluginDatabaseSystem, pluginId, digitalAssetUserRedemptionVault);
             //Starting Event Recorder
             UserRedemptionRecorderService userRedemptionRecorderService = new UserRedemptionRecorderService(userRedemptionDao, eventManager);
             try {
@@ -231,47 +225,26 @@ public class UserRedemptionDigitalAssetTransactionPluginRoot extends AbstractPlu
                 errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_USER_REDEMPTION_TRANSACTION, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, exception);
                 throw new CantStartPluginException("User redemption Event Recorded could not be started", exception, Plugins.BITDUBAI_USER_REDEMPTION_TRANSACTION.getCode(), "The plugin event recorder is not started");
             }
-            this.userRedemptionManager = new UserRedemptionTransactionManager(this.assetVaultManager,
+
+            userRedemptionRedeemer = new UserRedemptionRedeemer(
                     errorManager,
                     pluginId,
-                    pluginDatabaseSystem,
-                    pluginFileSystem);
-            this.userRedemptionManager.setAssetTransmissionNetworkServiceManager(this.assetTransmissionNetworkServiceManager);
-            this.userRedemptionManager.setUserRedemptionDao(userRedemptionDao);
-            this.userRedemptionManager.setDigitalAssetDistributionVault(this.digitalAssetUserRedemptionVault);
-            this.userRedemptionManager.setBitcoinManager(this.bitcoinNetworkManager);
-            this.userRedemptionManager.setActorAssetUserManager(this.actorAssetUserManager);
-
-        } catch (CantSetObjectException exception) {
+                    pluginFileSystem,
+                    assetTransmissionNetworkServiceManager,
+                    userRedemptionDao,
+                    digitalAssetUserRedemptionVault,
+                    bitcoinNetworkManager,
+                    actorAssetUserManager,
+                    assetVaultManager);
+            startMonitorAgent();
+        } catch (CantSetObjectException | CantGetAssetUserActorsException exception) {
             throw new CantStartPluginException(CantStartPluginException.DEFAULT_MESSAGE, exception, "Starting Asset User Redemption plugin", "Cannot set an object, probably is null");
         } catch (CantExecuteDatabaseOperationException exception) {
             throw new CantStartPluginException(CantStartPluginException.DEFAULT_MESSAGE, exception, "Starting Asset User Redemption plugin", "Cannot execute a database operation");
-        } catch (CantStartServiceException exception) {
+        } catch (CantStartServiceException | CantStartAgentException exception) {
             throw new CantStartPluginException(CantStartPluginException.DEFAULT_MESSAGE, exception, "Starting Asset User Redemption plugin", "Cannot start User redemption Event Recorded");
-        } catch (CantGetAssetUserActorsException exception) {
-            throw new CantStartPluginException(CantStartPluginException.DEFAULT_MESSAGE, exception, "Starting Asset User Redemption plugin", "Cannot get Asset user actor");
         }
         this.serviceStatus = ServiceStatus.STARTED;
-    }
-
-    //TODO: DELETE THIS USELESS METHOD
-    private void printSomething(String information) {
-        System.out.println("USER REDEMPTION: " + information);
-    }
-
-    @Override
-    public void redeemAssetToRedeemPoint(DigitalAssetMetadata digitalAssetMetadata, ActorAssetRedeemPoint actorAssetRedeemPoint, String walletPublicKey) throws CantRedeemDigitalAssetException {
-        try {
-            startMonitorAgent();
-            this.userRedemptionManager.redeemAssetToRedeemPoint(digitalAssetMetadata, actorAssetRedeemPoint, walletPublicKey);
-        } catch (CantGetLoggedInDeviceUserException exception) {
-            throw new CantRedeemDigitalAssetException(exception, "Redeeming a Digital Asset", "Cannot get logged in device");
-        } catch (CantSetObjectException exception) {
-            throw new CantRedeemDigitalAssetException(exception, "Redeeming a Digital Asset", "Cannot set an object, probably is null");
-        } catch (CantStartAgentException exception) {
-            throw new CantRedeemDigitalAssetException(exception, "Redeeming a Digital Asset", "Cannot start the monitor agent");
-        }
-
     }
 
     /**
@@ -281,24 +254,23 @@ public class UserRedemptionDigitalAssetTransactionPluginRoot extends AbstractPlu
      * @throws CantSetObjectException
      * @throws CantStartAgentException
      */
-    private void startMonitorAgent() throws CantGetLoggedInDeviceUserException, CantSetObjectException, CantStartAgentException {
+    private void startMonitorAgent() throws CantSetObjectException, CantStartAgentException, CantExecuteDatabaseOperationException {
         if (this.userRedemptionMonitorAgent == null) {
-            String userPublicKey = this.deviceUserManager.getLoggedInDeviceUser().getPublicKey();
-            this.userRedemptionMonitorAgent = new UserRedemptionMonitorAgent(this.eventManager,
-                    this.pluginDatabaseSystem,
-                    this.errorManager,
-                    this.pluginId,
-                    userPublicKey,
-                    this.assetVaultManager);
-            this.userRedemptionMonitorAgent.setLogManager(this.logManager);
-            this.userRedemptionMonitorAgent.setBitcoinNetworkManager(bitcoinNetworkManager);
-            this.userRedemptionMonitorAgent.setDigitalAssetUserRedemptionVault(this.digitalAssetUserRedemptionVault);
-            this.userRedemptionMonitorAgent.setAssetTransmissionManager(this.assetTransmissionNetworkServiceManager);
-            //this.assetDistributionMonitorAgent.setActorAssetUserManager(this.actorAssetUserManager);
-            this.userRedemptionMonitorAgent.start();
-        }/*else{
-            this.assetDistributionMonitorAgent.start();
-        }*/
+            this.userRedemptionMonitorAgent = new UserRedemptionMonitorAgent(pluginDatabaseSystem,
+                    errorManager,
+                    pluginId,
+                    assetVaultManager,
+                    logManager,
+                    bitcoinNetworkManager,
+                    digitalAssetUserRedemptionVault,
+                    assetTransmissionNetworkServiceManager);
+        }
+        this.userRedemptionMonitorAgent.start();
+    }
+
+    @Override
+    public void redeemAssetToRedeemPoint(Map<DigitalAssetMetadata, ActorAssetRedeemPoint> toRedeem, String walletPublicKey) throws CantRedeemDigitalAssetException {
+        this.userRedemptionRedeemer.deliverDigitalAssetToRemoteDevice(toRedeem, walletPublicKey);
     }
 }
 

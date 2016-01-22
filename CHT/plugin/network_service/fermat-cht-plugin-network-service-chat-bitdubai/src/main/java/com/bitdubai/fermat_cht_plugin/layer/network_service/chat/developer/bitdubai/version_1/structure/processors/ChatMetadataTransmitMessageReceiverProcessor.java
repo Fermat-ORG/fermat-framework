@@ -10,10 +10,13 @@ import com.bitdubai.fermat_api.layer.all_definition.components.enums.PlatformCom
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEvent;
 import com.bitdubai.fermat_api.layer.all_definition.util.XMLParser;
+import com.bitdubai.fermat_cht_api.all_definition.enums.MessageStatus;
+import com.bitdubai.fermat_cht_api.layer.network_service.chat.enums.ChatMessageStatus;
 import com.bitdubai.fermat_cht_api.layer.network_service.chat.enums.ChatMessageTransactionType;
+import com.bitdubai.fermat_cht_api.layer.network_service.chat.events.IncomingChat;
 import com.bitdubai.fermat_cht_plugin.layer.network_service.chat.developer.bitdubai.version_1.ChatPluginRoot;
 import com.bitdubai.fermat_cht_plugin.layer.network_service.chat.developer.bitdubai.version_1.communications.CommunicationNetworkServiceConnectionManager;
-import com.bitdubai.fermat_cht_plugin.layer.network_service.chat.developer.bitdubai.version_1.structure.ChatMetadaTransactionRecord;
+import com.bitdubai.fermat_cht_plugin.layer.network_service.chat.developer.bitdubai.version_1.structure.ChatMetadataTransactionRecord;
 import com.bitdubai.fermat_cht_plugin.layer.network_service.chat.developer.bitdubai.version_1.structure.ChatTransmissionJsonAttNames;
 import com.bitdubai.fermat_cht_api.layer.network_service.chat.enums.DistributionStatus;
 import com.bitdubai.fermat_cht_api.all_definition.events.enums.EventType;
@@ -22,6 +25,8 @@ import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.contents.Ferm
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.enums.FermatMessagesStatus;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedPluginExceptionSeverity;
 import com.google.gson.JsonObject;
+
+import java.util.UUID;
 
 /**
  * The Class <code>com.bitdubai.fermat_dap_plugin.layer.network.service.asset.transmission.developer.bitdubai.version_1.structure.processors.ChatMetadataTransmitMessageReceiverProcessor</code> is
@@ -53,37 +58,25 @@ public class ChatMetadataTransmitMessageReceiverProcessor extends FermatMessageP
         try {
 
             /*
-             * Get the XML representation of the Digital Asset Metadata
+             * Get the XML representation of the Chat Message MetaData
              */
-            String digitalAssetMetadataXml     = jsonMsjContent.get(ChatTransmissionJsonAttNames.CHAT_METADATA).getAsString();
-            PlatformComponentType senderType   = gson.fromJson(jsonMsjContent.get(ChatTransmissionJsonAttNames.SENDER_TYPE).getAsString(), PlatformComponentType.class);
-            PlatformComponentType receiverType = gson.fromJson(jsonMsjContent.get(ChatTransmissionJsonAttNames.RECEIVER_TYPE).getAsString(), PlatformComponentType.class);
-
+            String chatMetadataXml                  = jsonMsjContent.get(ChatTransmissionJsonAttNames.CHAT_METADATA).getAsString();
             /*
              * Convert the xml to object
              */
-            ChatMetadaTransactionRecord chatMetadaTransactionRecord = (ChatMetadaTransactionRecord) XMLParser.parseXML(digitalAssetMetadataXml, new ChatMetadaTransactionRecord());
+            ChatMetadataTransactionRecord chatMetadaTransactionRecord = (ChatMetadataTransactionRecord) XMLParser.parseXML(chatMetadataXml, new ChatMetadataTransactionRecord());
 
 
             /*
              * Construct a new digitalAssetMetadataTransaction
-
-            ChatMetadaTransactionRecord chatMetadaTransactionRecord1 = new DigitalAssetMetadataTransactionImpl();
-            chatMetadaTransactionRecord1.setGenesisTransaction(chatMetadaTransactionRecord.getGenesisTransaction());
-            chatMetadaTransactionRecord1.setSenderId(fermatMessage.getSender());
-            chatMetadaTransactionRecord1.setSenderType(senderType);
-            chatMetadaTransactionRecord1.setReceiverId(fermatMessage.getReceiver());
-            chatMetadaTransactionRecord1.setReceiverType(receiverType);
-            chatMetadaTransactionRecord1.setDigitalAssetMetadata(chatMetadaTransactionRecord);
-            chatMetadaTransactionRecord1.setDistributionStatus(DistributionStatus.ASSET_DISTRIBUTED);
-            chatMetadaTransactionRecord1.setType(DigitalAssetMetadataTransactionType.META_DATA_TRANSMIT);
-            chatMetadaTransactionRecord1.setProcessed(DigitalAssetMetadataTransactionImpl.NO_PROCESSED);
             */
+
+
             chatMetadaTransactionRecord.setDistributionStatus(DistributionStatus.DELIVERED);
             /*
              * Save into data base for audit control
              */
-            getChatPluginRoot().getOutgoinChatMetaDataDao().create(chatMetadaTransactionRecord);
+           // getChatPluginRoot().getChatMetaDataDao().create(chatMetadaTransactionRecord);
 
             /*
              * Mark the message as read
@@ -94,12 +87,14 @@ public class ChatMetadataTransmitMessageReceiverProcessor extends FermatMessageP
             /*
              * Notify to the interested
              */
-            FermatEvent event =  getChatPluginRoot().getEventManager().getNewEvent(EventType.INCOMING_CHAT);
+            IncomingChat event = (IncomingChat) getChatPluginRoot().getEventManager().getNewEvent(EventType.INCOMING_CHAT);
+            event.setChatId(chatMetadaTransactionRecord.getChatId());
             event.setSource(ChatPluginRoot.EVENT_SOURCE);
             getChatPluginRoot().getEventManager().raiseEvent(event);
+            System.out.println("ChatPluginRoot - Incoming Chat fired!");
 
         } catch (Exception e) {
-            getChatPluginRoot().getErrorManager().reportUnexpectedPluginException(Plugins.BITDUBAI_DAP_ASSET_TRANSMISSION_NETWORK_SERVICE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+            getChatPluginRoot().getErrorManager().reportUnexpectedPluginException(Plugins.CHAT_NETWORK_SERVICE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
         }
 
     }

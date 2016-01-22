@@ -54,7 +54,7 @@
                         android:layout_width="40dp"
                         android:layout_height="40dp"
                         android:paddingBottom="10dp"
-                        android:src="@drawable/ic_contact_question"
+                        android:src="@drawable/ic_menu_help"
                         android:layout_alignParentRight="true"/>
 
                 </RelativeLayout>
@@ -101,7 +101,7 @@
                     <ImageView
                         android:layout_width="50dp"
                         android:layout_height="50dp"
-                        android:src="@drawable/bitcoin_wallet_2"
+                        android:src="@drawable/intra_user_xxhdpi"
                         android:layout_gravity="center_vertical"
                         android:layout_marginLeft="15dp"
                         />
@@ -139,7 +139,7 @@
                     <ImageView
                         android:layout_width="50dp"
                         android:layout_height="50dp"
-                        android:src="@drawable/ic_04"
+                        android:src="@drawable/extra_user_xxhdpi"
                         android:layout_gravity="center_vertical"
                         android:layout_marginLeft="15dp"
                         />

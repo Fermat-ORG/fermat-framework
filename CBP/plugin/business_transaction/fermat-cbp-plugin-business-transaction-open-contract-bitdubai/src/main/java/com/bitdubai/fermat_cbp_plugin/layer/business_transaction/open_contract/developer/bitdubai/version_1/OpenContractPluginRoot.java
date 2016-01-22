@@ -35,7 +35,7 @@ import com.bitdubai.fermat_cbp_api.all_definition.exceptions.CantSetObjectExcept
 import com.bitdubai.fermat_cbp_api.all_definition.exceptions.CantStartServiceException;
 import com.bitdubai.fermat_cbp_api.layer.business_transaction.common.mocks.FiatIndexMock;
 import com.bitdubai.fermat_cbp_api.layer.business_transaction.common.mocks.PurchaseNegotiationOfflineMock;
-import com.bitdubai.fermat_cbp_api.layer.business_transaction.common.mocks.SaleNegotiationMock;
+import com.bitdubai.fermat_cbp_api.layer.business_transaction.common.mocks.SaleNegotiationOfflineMock;
 import com.bitdubai.fermat_cbp_api.layer.business_transaction.open_contract.exceptions.CantOpenContractException;
 import com.bitdubai.fermat_cbp_api.layer.contract.customer_broker_purchase.interfaces.CustomerBrokerContractPurchaseManager;
 import com.bitdubai.fermat_cbp_api.layer.contract.customer_broker_sale.interfaces.CustomerBrokerContractSaleManager;
@@ -394,7 +394,7 @@ public class OpenContractPluginRoot extends AbstractPlugin implements
     }
 
     private void openSaleContractTest(){
-        CustomerBrokerSaleNegotiation negotiationMock=new SaleNegotiationMock();
+        CustomerBrokerSaleNegotiation negotiationMock=new SaleNegotiationOfflineMock();
         FiatIndex fiatIndex=new FiatIndexMock();
         try {
             openContractTransactionManager.openSaleContract(negotiationMock,fiatIndex);

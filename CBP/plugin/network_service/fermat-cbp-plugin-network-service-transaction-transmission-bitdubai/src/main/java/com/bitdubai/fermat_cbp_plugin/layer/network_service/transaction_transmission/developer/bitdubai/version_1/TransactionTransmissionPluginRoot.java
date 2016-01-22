@@ -26,7 +26,7 @@ import com.bitdubai.fermat_api.layer.all_definition.events.EventSource;
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEvent;
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEventListener;
 import com.bitdubai.fermat_api.layer.all_definition.network_service.enums.NetworkServiceType;
-import com.bitdubai.fermat_api.layer.all_definition.network_service.interfaces.NetworkService;
+import com.bitdubai.fermat_p2p_api.layer.all_definition.common.network_services.interfaces.NetworkService;
 import com.bitdubai.fermat_api.layer.all_definition.network_service.interfaces.NetworkServiceConnectionManager;
 import com.bitdubai.fermat_api.layer.all_definition.util.Version;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
@@ -37,6 +37,7 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.Data
 import com.bitdubai.fermat_api.layer.osa_android.location_system.Location;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogLevel;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogManager;
+import com.bitdubai.fermat_cbp_api.all_definition.enums.ContractTransactionStatus;
 import com.bitdubai.fermat_cbp_api.all_definition.events.enums.EventType;
 import com.bitdubai.fermat_cbp_api.all_definition.exceptions.CantInitializeDatabaseException;
 import com.bitdubai.fermat_cbp_api.layer.network_service.transaction_transmission.enums.BusinessTransactionTransactionType;
@@ -55,6 +56,8 @@ import com.bitdubai.fermat_cbp_plugin.layer.network_service.transaction_transmis
 import com.bitdubai.fermat_cbp_plugin.layer.network_service.transaction_transmission.developer.bitdubai.version_1.event_handlers.ClientConnectionCloseNotificationEventHandler;
 import com.bitdubai.fermat_cbp_plugin.layer.network_service.transaction_transmission.developer.bitdubai.version_1.event_handlers.ClientConnectionLooseNotificationEventHandler;
 import com.bitdubai.fermat_cbp_plugin.layer.network_service.transaction_transmission.developer.bitdubai.version_1.event_handlers.ClientSuccessfullReconnectNotificationEventHandler;
+import com.bitdubai.fermat_cbp_plugin.layer.network_service.transaction_transmission.developer.bitdubai.version_1.event_handlers.CompleteComponentConnectionRequestNotificationEventHandler;
+import com.bitdubai.fermat_cbp_plugin.layer.network_service.transaction_transmission.developer.bitdubai.version_1.event_handlers.CompleteComponentRegistrationNotificationEventHandler;
 import com.bitdubai.fermat_cbp_plugin.layer.network_service.transaction_transmission.developer.bitdubai.version_1.event_handlers.NewReceiveMessagesNotificationEventHandler;
 import com.bitdubai.fermat_cbp_plugin.layer.network_service.transaction_transmission.developer.bitdubai.version_1.event_handlers.VPNConnectionCloseNotificationEventHandler;
 import com.bitdubai.fermat_cbp_plugin.layer.network_service.transaction_transmission.developer.bitdubai.version_1.exceptions.CantInsertRecordDataBaseException;
@@ -71,6 +74,7 @@ import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.events.Cli
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.events.VPNConnectionCloseNotificationEvent;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.WsCommunicationsCloudClientManager;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.contents.FermatMessage;
+import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.exceptions.CantRegisterComponentException;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.exceptions.CantRequestListException;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedPluginExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
@@ -81,6 +85,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.regex.Pattern;
@@ -116,6 +121,7 @@ public class TransactionTransmissionPluginRoot extends AbstractNetworkService im
                 null,
                 EventSource.NETWORK_SERVICE_TRANSACTION_TRANSMISSION);
         this.listenersAdded=new ArrayList<>();
+        beforeRegistered = false;
     }
 
     /**
@@ -156,6 +162,7 @@ public class TransactionTransmissionPluginRoot extends AbstractNetworkService im
 
     private TransactionTransmissionConnectionsDAO transactionTransmissionConnectionsDAO;
 
+    private  boolean beforeRegistered;
     /**
      * Represent the communicationRegistrationProcessNetworkServiceAgent
      */
@@ -318,6 +325,30 @@ public class TransactionTransmissionPluginRoot extends AbstractNetworkService im
 //        fermatEventListener.setEventHandler(new IncomingNewContractStatusUpdateEventHandler());
 //        eventManager.addListener(fermatEventListener);
 //        listenersAdded.add(fermatEventListener);
+        /**
+         * Listen and handle Complete Component Registration Notification Event
+         */
+        FermatEventListener fermatEventListener = eventManager.getNewListener(P2pEventType.COMPLETE_COMPONENT_REGISTRATION_NOTIFICATION);
+        fermatEventListener.setEventHandler(new CompleteComponentRegistrationNotificationEventHandler(this));
+        eventManager.addListener(fermatEventListener);
+        listenersAdded.add(fermatEventListener);
+
+
+        /**
+         * Listen and handle Complete Request List Component Registered Notification Event
+         */
+        fermatEventListener = eventManager.getNewListener(P2pEventType.COMPLETE_COMPONENT_CONNECTION_REQUEST_NOTIFICATION);
+        fermatEventListener.setEventHandler(new CompleteComponentConnectionRequestNotificationEventHandler(this));
+        eventManager.addListener(fermatEventListener);
+        listenersAdded.add(fermatEventListener);
+
+        /**
+         * new message
+         */
+        fermatEventListener = eventManager.getNewListener(P2pEventType.NEW_NETWORK_SERVICE_MESSAGE_RECEIVE_NOTIFICATION);
+        fermatEventListener.setEventHandler(new NewReceiveMessagesNotificationEventHandler(this));
+        eventManager.addListener(fermatEventListener);
+        listenersAdded.add(fermatEventListener);
     }
 
     /**
@@ -403,11 +434,11 @@ public class TransactionTransmissionPluginRoot extends AbstractNetworkService im
             String context = contextBuffer.toString();
             String possibleCause = "Plugin was not registered";
 
-            FermatException ex = new FermatException(FermatException.DEFAULT_MESSAGE, e,"","I can't List the resquest");
+            FermatException ex = new FermatException(FermatException.DEFAULT_MESSAGE, e,"","I can't List the request");
             errorManager.reportUnexpectedPluginException(Plugins.TRANSACTION_TRANSMISSION, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, ex);
 
         }catch (Exception e) {
-            FermatException ex = new FermatException(FermatException.DEFAULT_MESSAGE, e,"","I can't List the resquest");
+            FermatException ex = new FermatException(FermatException.DEFAULT_MESSAGE, e,"","I can't List the request");
             errorManager.reportUnexpectedPluginException(Plugins.TRANSACTION_TRANSMISSION, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, ex);
 
         }
@@ -433,6 +464,36 @@ public class TransactionTransmissionPluginRoot extends AbstractNetworkService im
     public void handleCompleteComponentRegistrationNotificationEvent(PlatformComponentProfile platformComponentProfileRegistered) {
         System.out.println("TransactionTransmissionNetworkServiceConnectionManager - Starting method handleCompleteComponentRegistrationNotificationEvent");
 
+        if (platformComponentProfileRegistered.getPlatformComponentType() == PlatformComponentType.COMMUNICATION_CLOUD_CLIENT && this.register){
+
+            if(communicationRegistrationProcessNetworkServiceAgent.isRunning()){
+                communicationRegistrationProcessNetworkServiceAgent.stop();
+                communicationRegistrationProcessNetworkServiceAgent = null;
+            }
+
+            beforeRegistered = true;
+                              /*
+                 * Construct my profile and register me
+                 */
+            PlatformComponentProfile platformComponentProfileToReconnect =  wsCommunicationsCloudClientManager.getCommunicationsCloudClientConnection().constructPlatformComponentProfileFactory(this.getIdentityPublicKey(),
+                    this.getAlias().toLowerCase(),
+                    this.getName(),
+                    this.getNetworkServiceType(),
+                    this.getPlatformComponentType(),
+                    this.getExtraData());
+
+            try {
+                    /*
+                     * Register me
+                     */
+                wsCommunicationsCloudClientManager.getCommunicationsCloudClientConnection().registerComponentForCommunication(this.getNetworkServiceType(), platformComponentProfileToReconnect);
+
+            } catch (CantRegisterComponentException e) {
+                e.printStackTrace();
+            }
+
+        }
+
         /*
          * If the component registered have my profile and my identity public key
          */
@@ -450,29 +511,30 @@ public class TransactionTransmissionPluginRoot extends AbstractNetworkService im
                         "TRANSACTION TRANSMISSION REGISTERED  -----------------------\n" +
                         "-----------------------\n TO: " + getName());
 
-                /**
-                 * Initialize the main agent
-                 */
-            //TODO implement the agent first
-                transactionTransmissionAgent = new TransactionTransmissionAgent(
-                        this,
-                        transactionTransmissionConnectionsDAO,
-                        transactionTransmissionContractHashDao,
-                        communicationNetworkServiceConnectionManager,
-                        wsCommunicationsCloudClientManager,
-                        platformComponentProfileRegistered,
-                        errorManager,
-                        new ArrayList<PlatformComponentProfile>(),
-                        identity,
-                        eventManager
-                );
+                if(!beforeRegistered) {
+                    /**
+                     * Initialize the main agent
+                     */
+                    //TODO implement the agent first
+                    transactionTransmissionAgent = new TransactionTransmissionAgent(
+                            this,
+                            transactionTransmissionConnectionsDAO,
+                            transactionTransmissionContractHashDao,
+                            communicationNetworkServiceConnectionManager,
+                            wsCommunicationsCloudClientManager,
+                            platformComponentProfileRegistered,
+                            errorManager,
+                            new ArrayList<PlatformComponentProfile>(),
+                            identity,
+                            eventManager
+                    );
 
-                // Initialize messages handlers
-                initializeMessagesListeners();
+                    // Initialize messages handlers
+                    initializeMessagesListeners();
 
-                // start main threads
-                transactionTransmissionAgent.start();
-
+                    // start main threads
+                    transactionTransmissionAgent.start();
+                }
 
             }
         }catch(Exception e){
@@ -719,8 +781,49 @@ public class TransactionTransmissionPluginRoot extends AbstractNetworkService im
     @Override
     public void handleClientSuccessfullReconnectNotificationEvent(FermatEvent fermatEvent) {
 
-        if(communicationNetworkServiceConnectionManager != null)
-            communicationNetworkServiceConnectionManager.restart();
+            if(communicationNetworkServiceConnectionManager != null) {
+                communicationNetworkServiceConnectionManager.restart();
+            }
+
+            if(communicationRegistrationProcessNetworkServiceAgent != null && !this.register){
+
+                if(communicationRegistrationProcessNetworkServiceAgent.isRunning()) {
+                    communicationRegistrationProcessNetworkServiceAgent.stop();
+                    communicationRegistrationProcessNetworkServiceAgent = null;
+                }
+
+                       /*
+                 * Construct my profile and register me
+                 */
+                    PlatformComponentProfile platformComponentProfileToReconnect =  wsCommunicationsCloudClientManager.getCommunicationsCloudClientConnection().constructPlatformComponentProfileFactory(this.getIdentityPublicKey(),
+                            this.getAlias().toLowerCase(),
+                            this.getName(),
+                            this.getNetworkServiceType(),
+                            this.getPlatformComponentType(),
+                            this.getExtraData());
+
+                    try {
+                    /*
+                     * Register me
+                     */
+                        wsCommunicationsCloudClientManager.getCommunicationsCloudClientConnection().registerComponentForCommunication(this.getNetworkServiceType(), platformComponentProfileToReconnect);
+
+                    } catch (CantRegisterComponentException e) {
+                        e.printStackTrace();
+                    }
+
+                /*
+                 * Configure my new profile
+                 */
+                    this.setPlatformComponentProfilePluginRoot(platformComponentProfileToReconnect);
+
+                /*
+                 * Initialize the connection manager
+                 */
+                    this.initializeCommunicationNetworkServiceConnectionManager();
+
+
+            }
 
     }
 
@@ -800,7 +903,7 @@ public class TransactionTransmissionPluginRoot extends AbstractNetworkService im
                 /*
                  * Initialize the agent and start
                  */
-                communicationRegistrationProcessNetworkServiceAgent = new TransactionTransmissionCommunicationRegistrationProcessNetworkServiceAgent(this, wsCommunicationsCloudClientManager.getCommunicationsCloudClientConnection());
+                communicationRegistrationProcessNetworkServiceAgent = new TransactionTransmissionCommunicationRegistrationProcessNetworkServiceAgent(this, wsCommunicationsCloudClientManager);
                 communicationRegistrationProcessNetworkServiceAgent.start();
             }
 
@@ -827,7 +930,7 @@ public class TransactionTransmissionPluginRoot extends AbstractNetworkService im
             this.serviceStatus = ServiceStatus.STARTED;
             //System.out.println("Transaction Transmission started");
             //launchNotificationTest();
-
+            //sendMetadataTest();
         } catch (CantInitializeDatabaseException exception) {
 
             StringBuffer contextBuffer = new StringBuffer();
@@ -1040,6 +1143,52 @@ public class TransactionTransmissionPluginRoot extends AbstractNetworkService im
         IncomingNewContractStatusUpdate incomingNewContractStatusUpdate = (IncomingNewContractStatusUpdate) fermatEvent;
         incomingNewContractStatusUpdate.setSource(EventSource.NETWORK_SERVICE_TRANSACTION_TRANSMISSION);
         eventManager.raiseEvent(incomingNewContractStatusUpdate);
+    }
+
+    private void sendMetadataTest(){
+        try{
+            String contractHash="888052D7D718420BD197B647F3BB04128C9B71BC99DBB7BC60E78BDAC4DFC6E2";
+            ContractTransactionStatus contractTransactionStatus=ContractTransactionStatus.CONTRACT_OPENED;
+            String receiverId="04B8F71BC0272800024360F887A409FF1ADE489BE88820B8AD542D749771B58037DE7773F0461CF8027B784794A9DB3490CBC60EC8500D14DEB8388200F575B536";
+            PlatformComponentType receiverType=PlatformComponentType.NETWORK_SERVICE;
+            String senderId="senderId";
+            PlatformComponentType senderType=PlatformComponentType.NETWORK_SERVICE;
+            String contractId="888052D7D718420BD197B647F3BB04128C9B71BC99DBB7BC60E78BDAC4DFC6E2";
+            String negotiationId="550e8400-e29b-41d4-a716-446655440000";
+            BusinessTransactionTransactionType transactionType=BusinessTransactionTransactionType.TRANSACTION_HASH;
+            Long timestamp=2016l;
+            UUID transactionId=UUID.fromString("550e8400-e29b-41d4-a716-446655440000");
+            TransactionTransmissionStates transactionTransmissionStates=TransactionTransmissionStates.SENDING_HASH;
+            BusinessTransactionMetadata businessTransactionMetadata=new
+                    BusinessTransactionMetadataRecord(
+                    contractHash,
+                    contractTransactionStatus,
+                    receiverId,
+                    receiverType,
+                    senderId,
+                    senderType,
+                    contractId,
+                    negotiationId,
+                    transactionType,
+                    timestamp,
+                    transactionId,
+                    transactionTransmissionStates
+            );
+            transactionTransmissionNetworkServiceManager.sendContractHash(
+                    transactionId,
+                    senderId,
+                    receiverId,
+                    contractHash,
+                    negotiationId
+            );
+        } catch(Exception e){
+            System.out.println("Exception in Transaction transmission test");
+            e.printStackTrace();
+            errorManager.reportUnexpectedPluginException(
+                    Plugins.TRANSACTION_TRANSMISSION,
+                    UnexpectedPluginExceptionSeverity.NOT_IMPORTANT,
+                    e);
+        }
     }
 
 }

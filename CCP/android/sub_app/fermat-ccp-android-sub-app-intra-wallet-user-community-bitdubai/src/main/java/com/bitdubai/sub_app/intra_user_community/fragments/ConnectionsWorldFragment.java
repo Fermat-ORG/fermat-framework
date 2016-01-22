@@ -1,9 +1,7 @@
 package com.bitdubai.sub_app.intra_user_community.fragments;
 
 
-import android.content.Context;
 import android.content.DialogInterface;
-import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -47,8 +45,10 @@ import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.Un
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 import com.bitdubai.sub_app.intra_user_community.R;
 import com.bitdubai.sub_app.intra_user_community.adapters.AppListAdapter;
+import com.bitdubai.sub_app.intra_user_community.common.popups.ErrorConnectingFermatNetworkDialog;
 import com.bitdubai.sub_app.intra_user_community.common.popups.PresentationIntraUserCommunityDialog;
 import com.bitdubai.sub_app.intra_user_community.constants.Constants;
+import com.bitdubai.sub_app.intra_user_community.interfaces.ErrorConnectingFermatNetwork;
 import com.bitdubai.sub_app.intra_user_community.session.IntraUserSubAppSession;
 import com.bitdubai.sub_app.intra_user_community.util.CommonLogger;
 
@@ -67,7 +67,7 @@ import static android.widget.Toast.makeText;
 
 public class ConnectionsWorldFragment extends AbstractFermatFragment implements
         AdapterView.OnItemClickListener,
-        SwipeRefreshLayout.OnRefreshListener, FermatListItemListeners<IntraUserInformation>, SearchView.OnQueryTextListener, SearchView.OnCloseListener {
+        SwipeRefreshLayout.OnRefreshListener, FermatListItemListeners<IntraUserInformation> {
 
 
     public static final String INTRA_USER_SELECTED = "intra_user";
@@ -83,18 +83,16 @@ public class ConnectionsWorldFragment extends AbstractFermatFragment implements
     FermatWorker worker;
     SettingsManager<IntraUserWalletSettings> settingsManager;
     IntraUserWalletSettings intraUserWalletSettings = null;
+    private ErrorConnectingFermatNetwork errorConnectingFermatNetwork;
     private int offset = 0;
     private int mNotificationsCount = 0;
     private SearchView mSearchView;
     private AppListAdapter adapter;
     private boolean isStartList = false;
-    //private ProgressDialog mDialog;
-    // recycler
     private RecyclerView recyclerView;
     private GridLayoutManager layoutManager;
-    //private ActorAdapter adapter;
     private SwipeRefreshLayout swipeRefresh;
-    private View logo;
+    private View searchView;
     // flags
     private boolean isRefreshing = false;
     private View rootView;
@@ -104,10 +102,12 @@ public class ConnectionsWorldFragment extends AbstractFermatFragment implements
     private ArrayList<IntraUserInformation> lstIntraUserInformations;
     private List<IntraUserInformation> dataSet = new ArrayList<>();
     private android.support.v7.widget.Toolbar toolbar;
-    private EditText search;
+    private EditText searchEditText;
     private List<IntraUserInformation> dataSetFiltered;
     private ImageView closeSearch;
     private LinearLayout searchEmptyView;
+    private LinearLayout noNetworkView;
+    private LinearLayout noFermatNetworkView;
 
     /**
      * Create a new instance of this fragment
@@ -137,11 +137,15 @@ public class ConnectionsWorldFragment extends AbstractFermatFragment implements
                 intraUserWalletSettings = null;
             }
 
-            if (intraUserWalletSettings == null) {
-                intraUserWalletSettings = new IntraUserWalletSettings();
-                intraUserWalletSettings.setIsPresentationHelpEnabled(true);
-                settingsManager.persistSettings(intraUserSubAppSession.getAppPublicKey(), intraUserWalletSettings);
+            if(intraUserSubAppSession.getAppPublicKey() != null) //the identity not exist yet
+            {
+                if (intraUserWalletSettings == null) {
+                    intraUserWalletSettings = new IntraUserWalletSettings();
+                    intraUserWalletSettings.setIsPresentationHelpEnabled(true);
+                    settingsManager.persistSettings(intraUserSubAppSession.getAppPublicKey(), intraUserWalletSettings);
+                }
             }
+
             mNotificationsCount = moduleManager.getIntraUsersWaitingYourAcceptanceCount();
             new FetchCountTask().execute();
 
@@ -173,9 +177,9 @@ public class ConnectionsWorldFragment extends AbstractFermatFragment implements
             toolbar = getToolbar();
             toolbar.setTitle("Cripto wallet users");
             setUpScreen(inflater);
-            logo = inflater.inflate(R.layout.search_edit_text, null);
-            search = (EditText) logo.findViewById(R.id.search);
-            closeSearch = (ImageView) logo.findViewById(R.id.close_search);
+            searchView = inflater.inflate(R.layout.search_edit_text, null);
+            searchEditText = (EditText) searchView.findViewById(R.id.search);
+            closeSearch = (ImageView) searchView.findViewById(R.id.close_search);
             recyclerView = (RecyclerView) rootView.findViewById(R.id.gridView);
             recyclerView.setHasFixedSize(true);
             layoutManager = new GridLayoutManager(getActivity(), 3, LinearLayoutManager.VERTICAL, false);
@@ -189,8 +193,9 @@ public class ConnectionsWorldFragment extends AbstractFermatFragment implements
             rootView.setBackgroundColor(Color.parseColor("#000b12"));
             emptyView = (LinearLayout) rootView.findViewById(R.id.empty_view);
             searchEmptyView = (LinearLayout) rootView.findViewById(R.id.search_empty_view);
+            noNetworkView = (LinearLayout) rootView.findViewById(R.id.no_connection_view);
+            noFermatNetworkView = (LinearLayout) rootView.findViewById(R.id.no_fermat_connection_view);
             dataSet.addAll(moduleManager.getCacheSuggestionsToContact(MAX, offset));
-            SharedPreferences pref = getActivity().getSharedPreferences(Constants.PRESENTATIO_DIALOG_CHECKED, Context.MODE_PRIVATE);
             if (intraUserWalletSettings.isPresentationHelpEnabled()) {
                 showDialogHelp();
             } else {
@@ -201,6 +206,42 @@ public class ConnectionsWorldFragment extends AbstractFermatFragment implements
             Toast.makeText(getActivity().getApplicationContext(), "Oooops! recovering from system error", Toast.LENGTH_SHORT).show();
         }
         return rootView;
+    }
+
+    public void showErrorNetworkDialog() {
+        ErrorConnectingFermatNetworkDialog errorConnectingFermatNetworkDialog = new ErrorConnectingFermatNetworkDialog(getActivity(), intraUserSubAppSession, null);
+        errorConnectingFermatNetworkDialog.setDescription("You are not connected  /n to the Fermat Network");
+        errorConnectingFermatNetworkDialog.setRightButton("Connect", new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+            }
+        });
+        errorConnectingFermatNetworkDialog.setLeftButton("Cancel", new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+            }
+        });
+        errorConnectingFermatNetworkDialog.show();
+    }
+
+    public void showErrorFermatNetworkDialog() {
+        ErrorConnectingFermatNetworkDialog errorConnectingFermatNetworkDialog = new ErrorConnectingFermatNetworkDialog(getActivity(), intraUserSubAppSession, null);
+        errorConnectingFermatNetworkDialog.setDescription("The access to the /n Fermat Network is disabled.");
+        errorConnectingFermatNetworkDialog.setRightButton("Enable", new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+            }
+        });
+        errorConnectingFermatNetworkDialog.setLeftButton("Cancel", new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+            }
+        });
+        errorConnectingFermatNetworkDialog.show();
     }
 
     @Override
@@ -287,7 +328,7 @@ public class ConnectionsWorldFragment extends AbstractFermatFragment implements
                     menu.findItem(R.id.action_search).setVisible(false);
                     toolbar = getToolbar();
                     toolbar.setTitle("");
-                    toolbar.addView(logo);
+                    toolbar.addView(searchView);
                     if (closeSearch != null)
                         closeSearch.setOnClickListener(new View.OnClickListener() {
                             @Override
@@ -295,13 +336,14 @@ public class ConnectionsWorldFragment extends AbstractFermatFragment implements
                                 menu.findItem(R.id.action_help).setVisible(true);
                                 menu.findItem(R.id.action_search).setVisible(true);
                                 toolbar = getToolbar();
-                                toolbar.removeView(logo);
+                                toolbar.removeView(searchView);
                                 toolbar.setTitle("Cripto wallet users");
                                 onRefresh();
                             }
                         });
-                    if (search != null)
-                        search.addTextChangedListener(new TextWatcher() {
+
+                    if (searchEditText != null) {
+                        searchEditText.addTextChangedListener(new TextWatcher() {
                             @Override
                             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
 
@@ -366,7 +408,7 @@ public class ConnectionsWorldFragment extends AbstractFermatFragment implements
                                     menu.findItem(R.id.action_help).setVisible(true);
                                     menu.findItem(R.id.action_search).setVisible(true);
                                     toolbar = getToolbar();
-                                    toolbar.removeView(logo);
+                                    toolbar.removeView(searchView);
                                     toolbar.setTitle("Cripto wallet users");
                                     onRefresh();
                                 }
@@ -377,6 +419,7 @@ public class ConnectionsWorldFragment extends AbstractFermatFragment implements
 
                             }
                         });
+                    }
                     return false;
                 }
             });
@@ -405,9 +448,6 @@ public class ConnectionsWorldFragment extends AbstractFermatFragment implements
 
     private void updateNotificationsBadge(int count) {
         mNotificationsCount = count;
-
-        // force the ActionBar to relayout its MenuItems.
-        // onCreateOptionsMenu(Menu) will be called again.
         getActivity().invalidateOptionsMenu();
     }
 
@@ -419,7 +459,7 @@ public class ConnectionsWorldFragment extends AbstractFermatFragment implements
 
     private synchronized List<IntraUserInformation> getQueryData(final CharSequence charSequence) {
         if (dataSet != null && !dataSet.isEmpty()) {
-            if (search != null && !search.getText().toString().isEmpty()) {
+            if (searchEditText != null && !searchEditText.getText().toString().isEmpty()) {
                 //noinspection unchecked
                 dataSetFiltered = (List<IntraUserInformation>) CollectionUtils.find(dataSet, new org.apache.commons.collections.Predicate() {
                     @Override
@@ -500,8 +540,10 @@ public class ConnectionsWorldFragment extends AbstractFermatFragment implements
                                 if (isBackPressed) {
                                     getActivity().finish();
                                 }
-                            } else
+                            } else {
                                 showCriptoUsersCache();
+                                invalidate();
+                            }
                         }
                     });
                 }
@@ -539,6 +581,7 @@ public class ConnectionsWorldFragment extends AbstractFermatFragment implements
                     swipeRefresh.setRefreshing(true);
                     onRefresh();
                 }
+
             });
         } else {
             adapter.changeDataSet(dataSet);
@@ -565,52 +608,11 @@ public class ConnectionsWorldFragment extends AbstractFermatFragment implements
             emptyView.setAnimation(anim);
             emptyView.setVisibility(View.GONE);
         }
+
     }
 
     private void setUpScreen(LayoutInflater layoutInflater) throws CantGetActiveLoginIdentityException {
 
-    }
-
-    @Override
-    public boolean onQueryTextSubmit(String name) {
-        //swipeRefreshLayout.setRefreshing(true);
-
-        // This method does not exist
-        mSearchView.onActionViewCollapsed();
-        //TODO: cuando esté el network service, esto va a descomentarse
-//        try {
-//            adapter.changeDataSet(intraUserSearch.getResult());
-//
-//        } catch (CantGetIntraUserSearchResult cantGetIntraUserSearchResult) {
-//            cantGetIntraUserSearchResult.printStackTrace();
-//        }
-
-
-        //adapter.setAddButtonVisible(true);
-        //adapter.changeDataSet(IntraUserConnectionListItem.getTestDataExample(getResources()));
-        //swipeRefreshLayout.setRefreshing(false);
-
-        return true;
-    }
-
-    @Override
-    public boolean onQueryTextChange(String s) {
-        //Toast.makeText(getActivity(), "Probando busqueda completa", Toast.LENGTH_SHORT).show();
-        if (s.length() == 0 && isStartList) {
-            //((IntraUserConnectionsAdapter)adapter).setAddButtonVisible(false);
-            //adapter.changeDataSet(IntraUserConnectionListItem.getTestData(getResources()));
-            return true;
-        }
-        return false;
-    }
-
-    @Override
-    public boolean onClose() {
-        if (!mSearchView.isActivated()) {
-            //adapter.changeDataSet(IntraUserConnectionListItem.getTestData(getResources()));
-        }
-
-        return true;
     }
 
     /*
