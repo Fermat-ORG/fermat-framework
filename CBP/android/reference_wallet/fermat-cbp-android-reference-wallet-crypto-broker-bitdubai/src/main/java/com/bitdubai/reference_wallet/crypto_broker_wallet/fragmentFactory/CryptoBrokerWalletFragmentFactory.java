@@ -21,10 +21,8 @@ import com.bitdubai.reference_wallet.crypto_broker_wallet.fragments.settings.Set
 import com.bitdubai.reference_wallet.crypto_broker_wallet.fragments.settings.SettingsActivityFragment;
 import com.bitdubai.reference_wallet.crypto_broker_wallet.fragments.settings.SetttingsStockManagementFragment;
 import com.bitdubai.reference_wallet.crypto_broker_wallet.fragments.wizard_pages.WizardPageOtherSettingsFragment;
-import com.bitdubai.reference_wallet.crypto_broker_wallet.fragments.wizard_pages.WizardPageSetBankAccountsFragment;
 import com.bitdubai.reference_wallet.crypto_broker_wallet.fragments.wizard_pages.WizardPageSetEarningsFragment;
 import com.bitdubai.reference_wallet.crypto_broker_wallet.fragments.wizard_pages.WizardPageSetIdentityFragment;
-import com.bitdubai.reference_wallet.crypto_broker_wallet.fragments.wizard_pages.WizardPageSetLocationsFragment;
 import com.bitdubai.reference_wallet.crypto_broker_wallet.fragments.wizard_pages.WizardPageSetMerchandisesFragment;
 import com.bitdubai.reference_wallet.crypto_broker_wallet.fragments.wizard_pages.WizardPageSetProvidersFragment;
 import com.bitdubai.reference_wallet.crypto_broker_wallet.session.CryptoBrokerWalletSession;
@@ -74,21 +72,19 @@ public class CryptoBrokerWalletFragmentFactory extends FermatFragmentFactory<Cry
             case CBP_CRYPTO_BROKER_WALLET_SET_PROVIDERS:
                 return WizardPageSetProvidersFragment.newInstance();
             case CBP_CRYPTO_BROKER_WALLET_SET_LOCATIONS:
-                return WizardPageSetLocationsFragment.newInstance();
-            case CBP_CRYPTO_BROKER_WALLET_SET_BANK_ACCOUNT:
-                return WizardPageSetBankAccountsFragment.newInstance();
+                return WizardPageOtherSettingsFragment.newInstance();
+            //case CBP_CRYPTO_BROKER_WALLET_SET_BANK_ACCOUNT:
+              //  return WizardPageSetBankAccountsFragment.newInstance();
             case CBP_CRYPTO_BROKER_WALLET_CREATE_NEW_LOCATION_IN_WIZARD:
                 return CreateNewLocationFragment.newInstance();
-            case CBP_CRYPTO_BROKER_WALLET_SETTINGS_MY_LOCATIONS:
-                return SettingsMylocationsFragment.newInstance();
+            case CBP_CRYPTO_BROKER_WALLET_OTHER_SETTINGS:
+                return WizardPageOtherSettingsFragment.newInstance();
             case CBP_CRYPTO_BROKER_WALLET_CREATE_NEW_LOCATION_IN_SETTINGS:
                 return CreateNewLocationFragment.newInstance();
             case CBP_CRYPTO_BROKER_WALLET_SETTINGS_BANK_ACCOUNT:
                 return SettingsBankAccountsFragment.newInstance();
             case CBP_CRYPTO_BROKER_WALLET_SETTINGS_STOCK_MERCHANDISES:
                 return SetttingsStockManagementFragment.newInstance();
-            case CBP_CRYPTO_BROKER_WALLET_OTHER_SETTINGS:
-                return WizardPageOtherSettingsFragment.newInstance();
             default:
                 throw createFragmentNotFoundException(fragment);
         }

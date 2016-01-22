@@ -52,8 +52,6 @@ public class WizardPageSetMerchandisesFragment extends AbstractFermatFragment
     // Constants
     private static final String TAG = "WizardPageSetMerchand";
 
-    private int spreadValue;
-    private boolean automaticRestock;
     private List<InstalledWallet> stockWallets;
     private Map<String, FiatCurrency> bankCurrencies;
     private Map<String, String> bankAccounts;
@@ -74,8 +72,7 @@ public class WizardPageSetMerchandisesFragment extends AbstractFermatFragment
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        spreadValue = 0;
-        automaticRestock = false;
+
         stockWallets = new ArrayList<>();
         bankCurrencies = new HashMap<>();
         bankAccounts = new HashMap<>();
@@ -105,6 +102,7 @@ public class WizardPageSetMerchandisesFragment extends AbstractFermatFragment
                 .setBannerRes(R.drawable.banner_crypto_broker)
                 .setIconRes(R.drawable.crypto_broker)
                 .build();
+
         presentationDialog.show();
         final View layout = inflater.inflate(R.layout.cbw_wizard_step_set_merchandises, container, false);
 
@@ -117,8 +115,6 @@ public class WizardPageSetMerchandisesFragment extends AbstractFermatFragment
 
         emptyView = (FermatTextView) layout.findViewById(R.id.cbw_selected_stock_wallets_empty_view);
 
-        final FermatTextView spreadTextView = (FermatTextView) layout.findViewById(R.id.cbw_spread_value_text);
-        spreadTextView.setText(String.format("%1$s %%", spreadValue));
 
         final View cryptoButton = layout.findViewById(R.id.cbw_select_crypto_wallets);
         cryptoButton.setOnClickListener(new View.OnClickListener() {
@@ -144,30 +140,7 @@ public class WizardPageSetMerchandisesFragment extends AbstractFermatFragment
             }
         });
 
-        final FermatCheckBox automaticRestockCheckBox = (FermatCheckBox) layout.findViewById(R.id.cbw_automatic_restock_check_box);
-        automaticRestockCheckBox.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                automaticRestock = automaticRestockCheckBox.isChecked();
-            }
-        });
 
-        final SeekBar spreadSeekBar = (SeekBar) layout.findViewById(R.id.cbw_spread_value_seek_bar);
-        spreadSeekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
-            @Override
-            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-                spreadValue = progress;
-                spreadTextView.setText(String.format("%1$s %%", spreadValue));
-            }
-
-            @Override
-            public void onStartTrackingTouch(SeekBar seekBar) {
-            }
-
-            @Override
-            public void onStopTrackingTouch(SeekBar seekBar) {
-            }
-        });
 
 
         final View nextStepButton = layout.findViewById(R.id.cbw_next_step_button);

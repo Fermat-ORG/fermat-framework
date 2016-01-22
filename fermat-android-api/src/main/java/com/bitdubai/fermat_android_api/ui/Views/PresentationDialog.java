@@ -104,7 +104,7 @@ public class PresentationDialog extends FermatDialog<FermatSession, SubAppResour
             checkbox_not_show = (CheckBox) findViewById(R.id.checkbox_not_show);
             checkbox_not_show.setChecked(!checkButton);
             img_icon = (ImageView) findViewById(R.id.img_icon);
-            //view_color = findViewById(R.id.view_color);
+            view_color = findViewById(R.id.view_color);
             setUpBasics();
             switch (type) {
                 case TYPE_PRESENTATION:
@@ -155,7 +155,7 @@ public class PresentationDialog extends FermatDialog<FermatSession, SubAppResour
             case TYPE_PRESENTATION:
                 return R.layout.presentation_dialog;
             case TYPE_PRESENTATION_WITHOUT_IDENTITIES:
-                return R.layout.presentation_wallet_without_identities;
+                return R.layout.presentation_dialog_without_identities;
         }
         return 0;
     }

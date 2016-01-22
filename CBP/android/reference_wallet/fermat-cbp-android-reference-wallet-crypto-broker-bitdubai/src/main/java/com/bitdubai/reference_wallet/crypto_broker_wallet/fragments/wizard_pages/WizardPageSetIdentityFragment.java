@@ -81,7 +81,6 @@ public class WizardPageSetIdentityFragment extends FermatWalletListFragment<Cryp
             public void onClick(View view) {
                 if (selectedIdentity != null) {
                     walletManager.associateIdentity(selectedIdentity.getPublicKey());
-
                     changeActivity(Activities.CBP_CRYPTO_BROKER_WALLET_SET_MERCHANDISES, appSession.getAppPublicKey());
                 } else{
                     Toast.makeText(WizardPageSetIdentityFragment.this.getActivity(), "Select one identity...", Toast.LENGTH_SHORT).show();
@@ -137,17 +136,9 @@ public class WizardPageSetIdentityFragment extends FermatWalletListFragment<Cryp
         }, 500);
     }
 
-    public void DialogIdentity(){
-            PresentationDialog presentationDialog = new PresentationDialog.Builder(getActivity(), appSession)
-                    .setTemplateType(PresentationDialog.TemplateType.TYPE_PRESENTATION)
-                    .setBannerRes(R.drawable.banner_crypto_broker)
-                    .setIconRes(R.drawable.crypto_broker)
-                    .setBody("Custom text support for dialog in the wizard identities help 2")
-                    .setSubTitle("Subtitle text of identities dialog help -> " + identities)
-                    .setTextFooter("Text footer indetities dialog help")
-                    .build();
-            presentationDialog.show();
-    }
+
+
+
 
     @Override
     public FermatAdapter getAdapter() {
@@ -181,7 +172,17 @@ public class WizardPageSetIdentityFragment extends FermatWalletListFragment<Cryp
 
         try {
             data.addAll(walletManager.getListOfIdentities());
-
+            if(walletManager.getListOfIdentities().isEmpty()) {
+                PresentationDialog presentationDialog = new PresentationDialog.Builder(getActivity(), appSession)
+                        .setTemplateType(PresentationDialog.TemplateType.TYPE_PRESENTATION)
+                        .setBannerRes(R.drawable.banner_crypto_broker)
+                        .setIconRes(R.drawable.crypto_broker)
+                        .setBody("Custom text support for dialog in the wizard identities help 2")
+                        .setSubTitle("Subtitle text of identities dialog help -> " + identities)
+                        .setTextFooter("Text footer indetities dialog help")
+                        .build();
+                presentationDialog.show();
+            }
 
 
         } catch (FermatException ex) {

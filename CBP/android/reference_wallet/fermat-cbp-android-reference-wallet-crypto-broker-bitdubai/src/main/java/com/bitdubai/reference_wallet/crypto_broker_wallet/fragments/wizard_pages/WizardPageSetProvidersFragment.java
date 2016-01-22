@@ -16,7 +16,6 @@ import android.widget.Toast;
 
 import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractFermatFragment;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView;
-import com.bitdubai.fermat_android_api.ui.Views.PresentationDialog;
 import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.enums.CryptoCurrency;
 import com.bitdubai.fermat_api.layer.all_definition.enums.FiatCurrency;
@@ -134,15 +133,6 @@ public class WizardPageSetProvidersFragment extends AbstractFermatFragment
                 saveSettingAndGoNextStep();
             }
         });
-        PresentationDialog presentationDialog = new PresentationDialog.Builder(getActivity(), appSession)
-                .setBody("Custom text support for dialog in the wizard Earnings help")
-                .setSubTitle("Subtitle text of Earnings dialog help")
-                .setTextFooter("Text footer Earnings dialog help")
-                .setTemplateType(PresentationDialog.TemplateType.TYPE_PRESENTATION_WITHOUT_IDENTITIES)
-                .setBannerRes(R.drawable.banner_crypto_broker)
-                .setIconRes(R.drawable.crypto_broker)
-                .build();
-        presentationDialog.show();
 
         return layout;
     }
@@ -223,7 +213,7 @@ public class WizardPageSetProvidersFragment extends AbstractFermatFragment
         }
 
         // TODO
-       changeActivity(Activities.CBP_CRYPTO_BROKER_WALLET_OTHER_SETTINGS, appSession.getAppPublicKey());
+        changeActivity(Activities.CBP_CRYPTO_BROKER_WALLET_SET_LOCATIONS, appSession.getAppPublicKey());
     }
 
     @Override
