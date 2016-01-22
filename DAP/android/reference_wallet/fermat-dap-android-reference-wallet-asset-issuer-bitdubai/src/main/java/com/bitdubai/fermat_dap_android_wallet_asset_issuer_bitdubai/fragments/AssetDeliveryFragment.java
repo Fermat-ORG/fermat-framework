@@ -62,6 +62,7 @@ public class AssetDeliveryFragment extends AbstractFermatFragment {
 
     int selectedUsersCount;
 
+
     public AssetDeliveryFragment() {
 
     }
@@ -226,7 +227,8 @@ public class AssetDeliveryFragment extends AbstractFermatFragment {
                 dialog.dismiss();
                 if (activity != null) {
                     refreshUIData();
-                    Toast.makeText(activity, "Everything ok...", Toast.LENGTH_SHORT).show();
+                    //Toast.makeText(activity, "Everything ok...", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(activity, "Delivering assets...", Toast.LENGTH_SHORT).show();
                 }
             }
 
@@ -250,7 +252,8 @@ public class AssetDeliveryFragment extends AbstractFermatFragment {
         }
 
         assetDeliveryNameText.setText(digitalAsset.getName());
-        assetsToDeliverEditText.setText(digitalAsset.getAvailableBalanceQuantity()+"");
+        //assetsToDeliverEditText.setText(digitalAsset.getAvailableBalanceQuantity()+"");
+        assetsToDeliverEditText.setText(selectedUsersCount+"");
         assetDeliveryRemainingText.setText(digitalAsset.getAvailableBalanceQuantity() + " Assets Remaining");
 
         if (digitalAsset.getAvailableBalanceQuantity() == 0) {
@@ -280,7 +283,8 @@ public class AssetDeliveryFragment extends AbstractFermatFragment {
         bitmapWorkerTask.execute(img);
 
         assetDeliveryNameText.setText(digitalAsset.getName());
-        assetsToDeliverEditText.setText(digitalAsset.getAvailableBalanceQuantity()+"");
+        //assetsToDeliverEditText.setText(digitalAsset.getAvailableBalanceQuantity()+"");
+        assetsToDeliverEditText.setText(selectedUsersCount+"");
         assetDeliveryRemainingText.setText(digitalAsset.getAvailableBalanceQuantity() + " Assets Remaining");
     }
 
