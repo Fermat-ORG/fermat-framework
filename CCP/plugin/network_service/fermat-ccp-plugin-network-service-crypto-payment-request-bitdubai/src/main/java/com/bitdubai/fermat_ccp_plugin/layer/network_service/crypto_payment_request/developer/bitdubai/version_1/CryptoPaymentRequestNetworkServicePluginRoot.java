@@ -27,6 +27,7 @@ import com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_payment_reque
 import com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_payment_request.developer.bitdubai.version_1.communication.event_handlers.ClientSuccessfullReconnectNotificationEventHandler;
 import com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_payment_request.developer.bitdubai.version_1.communication.event_handlers.FailureComponentConnectionRequestNotificationEventHandler;
 import com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_payment_request.developer.bitdubai.version_1.communication.event_handlers.VPNConnectionCloseNotificationEventHandler;
+import com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_payment_request.developer.bitdubai.version_1.database.CryptoPaymentRequestNetworkServiceDatabaseConstants;
 import com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_payment_request.developer.bitdubai.version_1.database.CryptoPaymentRequestNetworkServiceDeveloperDatabaseFactory;
 import com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_payment_request.developer.bitdubai.version_1.exceptions.CantChangeRequestProtocolStateException;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.common.network_services.abstract_classes.AbstractNetworkService;
@@ -1002,14 +1003,22 @@ public final class CryptoPaymentRequestNetworkServicePluginRoot extends Abstract
 
             if(vpnConnectionCloseNotificationEvent.getNetworkServiceApplicant() == getNetworkServiceType()){
 
+                String remotePublicKey = vpnConnectionCloseNotificationEvent.getRemoteParticipant().getIdentityPublicKey();
+                if(communicationNetworkServiceConnectionManager != null) {
 
-                if(communicationNetworkServiceConnectionManager != null)
-                {
-                    reprocessMessage(vpnConnectionCloseNotificationEvent.getRemoteParticipant().getIdentityPublicKey());
-                    communicationNetworkServiceConnectionManager.closeConnection(vpnConnectionCloseNotificationEvent.getRemoteParticipant().getIdentityPublicKey());
+                    communicationNetworkServiceConnectionManager.closeConnection(remotePublicKey);
 
                 }
 
+                /**
+                 * remove messages
+                 */
+
+                if (cryptoPaymentRequestExecutorAgent.isConnectionOpen(remotePublicKey)) {
+                    cryptoPaymentRequestExecutorAgent.connectionFailure(remotePublicKey);
+                }
+
+                reprocessMessage(remotePublicKey);
             }
 
         }
@@ -1057,7 +1066,7 @@ public final class CryptoPaymentRequestNetworkServicePluginRoot extends Abstract
             }
 
             if(!this.register){
-                if(communicationRegistrationProcessNetworkServiceAgent != null && communicationRegistrationProcessNetworkServiceAgent != null) {
+                if(communicationRegistrationProcessNetworkServiceAgent != null) {
 
                     communicationRegistrationProcessNetworkServiceAgent.stop();
                     communicationRegistrationProcessNetworkServiceAgent = null;
@@ -1237,13 +1246,22 @@ public final class CryptoPaymentRequestNetworkServicePluginRoot extends Abstract
 
     @Override
     public List<DeveloperDatabase> getDatabaseList(DeveloperObjectFactory developerObjectFactory) {
+
         return new CryptoPaymentRequestNetworkServiceDeveloperDatabaseFactory(pluginDatabaseSystem, pluginId).getDatabaseList(developerObjectFactory);
+
+
 
     }
 
     @Override
     public List<DeveloperDatabaseTable> getDatabaseTableList(DeveloperObjectFactory developerObjectFactory, DeveloperDatabase developerDatabase) {
-        return new CryptoPaymentRequestNetworkServiceDeveloperDatabaseFactory(pluginDatabaseSystem, pluginId).getDatabaseTableList(developerObjectFactory);
+
+        if(developerDatabase.getName() == "Crypto Payment Request")
+            return new CryptoPaymentRequestNetworkServiceDeveloperDatabaseFactory(pluginDatabaseSystem, pluginId).getDatabaseTableList(developerObjectFactory);
+        else
+            return new CryptoPaymentRequestNetworkServiceDeveloperDatabaseFactory(pluginDatabaseSystem, pluginId).getDatabaseTableListCommunication(developerObjectFactory);
+
+
     }
 
     @Override

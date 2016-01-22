@@ -17,31 +17,15 @@ import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.client.Commun
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.contents.FermatMessage;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.contents.FermatPacket;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.enums.FermatPacketType;
-import com.bitdubai.fermat_p2p_plugin.layer.ws.communications.cloud.client.developer.bitdubai.version_1.structure.tyrus.conf.CLoudClientConfigurator;
-import com.bitdubai.fermat_p2p_plugin.layer.ws.communications.cloud.client.developer.bitdubai.version_1.structure.tyrus.conf.CloudClientVpnConfigurator;
-import com.bitdubai.fermat_p2p_plugin.layer.ws.communications.cloud.client.developer.bitdubai.version_1.structure.vpn.WsCommunicationVPNClientManagerAgent;
 
-import org.java_websocket.WebSocket;
-import org.java_websocket.client.WebSocketClient;
-import org.java_websocket.drafts.Draft_17;
-import org.java_websocket.framing.Framedata;
-import org.java_websocket.framing.FramedataImpl1;
-import org.java_websocket.handshake.ServerHandshake;
-
-import java.net.URI;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
-import javax.websocket.ClientEndpoint;
 import javax.websocket.CloseReason;
 import javax.websocket.Endpoint;
 import javax.websocket.EndpointConfig;
 import javax.websocket.MessageHandler;
-import javax.websocket.OnClose;
-import javax.websocket.OnError;
-import javax.websocket.OnMessage;
-import javax.websocket.OnOpen;
 import javax.websocket.Session;
 
 /**
@@ -231,15 +215,29 @@ public class WsCommunicationTyrusVPNClient extends Endpoint implements Communica
     @Override
     public void onError(Session session, Throwable t) {
 
-        System.out.println(" --------------------------------------------------------------------- ");
-        System.out.println(" WsCommunicationVPNClient - Starting method onError");
-        t.printStackTrace();
-        onClose(vpnClientConnection, new CloseReason(CloseReason.CloseCodes.PROTOCOL_ERROR, t.getMessage()));
+        try {
+
+            System.out.println(" --------------------------------------------------------------------- ");
+            System.out.println(" WsCommunicationVPNClient - Starting method onError");
+            t.printStackTrace();
+            vpnClientConnection.close(new CloseReason(CloseReason.CloseCodes.PROTOCOL_ERROR, t.getMessage()));
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     @Override
     public void close() {
-        onClose(vpnClientConnection, new CloseReason(CloseReason.CloseCodes.NORMAL_CLOSURE, "The cloud client close the connection, intentionally."));
+        try {
+
+            System.out.println(" WsCommunicationVPNClient - close connection");
+            vpnClientConnection.close(new CloseReason(CloseReason.CloseCodes.NORMAL_CLOSURE, "The cloud client close the connection, intentionally."));
+            wsCommunicationTyrusVPNClientManagerAgent.riseVpnConnectionCloseNotificationEvent(remoteParticipantNetworkService.getNetworkServiceType(), remoteParticipant);
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     /**

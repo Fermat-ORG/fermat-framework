@@ -17,9 +17,11 @@ public class AcceptMessage extends NetworkServiceMessage {
     private final CryptoAddress cryptoAddress;
 
     public AcceptMessage(final UUID          requestId    ,
-                         final CryptoAddress cryptoAddress) {
+                         final CryptoAddress cryptoAddress,
+                         String identitySender,
+                         String actorDestination) {
 
-        super(MessageTypes.ACCEPT);
+        super(requestId,MessageTypes.ACCEPT,identitySender,actorDestination);
 
         this.requestId = requestId;
         this.cryptoAddress = cryptoAddress;

@@ -34,6 +34,7 @@ import com.bitdubai.fermat_api.layer.osa_android.file_system.FilePrivacy;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginTextFile;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantCreateFileException;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.FileNotFoundException;
+import com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_addresses.developer.bitdubai.version_1.communication.event_handlers.NewSentMessageNotificationEventHandler;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.common.network_services.interfaces.NetworkService;
 import com.bitdubai.fermat_api.layer.all_definition.network_service.interfaces.NetworkServiceConnectionManager;
 import com.bitdubai.fermat_api.layer.all_definition.util.Version;
@@ -97,6 +98,8 @@ import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfac
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedPluginExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfaces.EventManager;
 import com.google.gson.Gson;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -105,6 +108,7 @@ import java.util.TimerTask;
 import java.util.UUID;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.atomic.AtomicBoolean;
+
 
 /**
  * This plugin manages the exchange of crypto addresses between actors.
@@ -151,7 +155,11 @@ public class CryptoAddressesNetworkServicePluginRoot extends AbstractNetworkServ
 
     @Override
     public List<DeveloperDatabaseTable> getDatabaseTableList(DeveloperObjectFactory developerObjectFactory, DeveloperDatabase developerDatabase) {
-        return new CryptoAddressesNetworkServiceDeveloperDatabaseFactory(pluginDatabaseSystem, pluginId).getDatabaseTableList(developerObjectFactory);
+        if(developerDatabase.getName() == "Crypto Addresses")
+            return new CryptoAddressesNetworkServiceDeveloperDatabaseFactory(pluginDatabaseSystem, pluginId).getDatabaseTableList(developerObjectFactory);
+        else
+        return new CryptoAddressesNetworkServiceDeveloperDatabaseFactory(pluginDatabaseSystem, pluginId).getDatabaseTableListCommunication(developerObjectFactory);
+
     }
 
     @Override
@@ -409,7 +417,7 @@ public class CryptoAddressesNetworkServicePluginRoot extends AbstractNetworkServ
         eventManager.addListener(fermatEventListener);
         listenersAdded.add(fermatEventListener);
 
-        /**
+        /*
          *  failure connection
          */
 
@@ -418,7 +426,7 @@ public class CryptoAddressesNetworkServicePluginRoot extends AbstractNetworkServ
         eventManager.addListener(fermatEventListener);
         listenersAdded.add(fermatEventListener);
 
-        /**
+        /*
          * new message
          */
         fermatEventListener = eventManager.getNewListener(P2pEventType.NEW_NETWORK_SERVICE_MESSAGE_RECEIVE_NOTIFICATION);
@@ -426,7 +434,7 @@ public class CryptoAddressesNetworkServicePluginRoot extends AbstractNetworkServ
         eventManager.addListener(fermatEventListener);
         listenersAdded.add(fermatEventListener);
 
-        /**
+        /*
          * Listen and handle VPN Connection Close Notification Event
          */
         fermatEventListener = eventManager.getNewListener(P2pEventType.VPN_CONNECTION_CLOSE);
@@ -434,7 +442,7 @@ public class CryptoAddressesNetworkServicePluginRoot extends AbstractNetworkServ
         eventManager.addListener(fermatEventListener);
         listenersAdded.add(fermatEventListener);
 
-        /**
+        /*
          * Listen and handle Client Connection Close Notification Event
          */
         fermatEventListener = eventManager.getNewListener(P2pEventType.CLIENT_CONNECTION_CLOSE);
@@ -442,7 +450,7 @@ public class CryptoAddressesNetworkServicePluginRoot extends AbstractNetworkServ
         eventManager.addListener(fermatEventListener);
         listenersAdded.add(fermatEventListener);
 
-                /*
+        /*
          * Listen and handle Client Connection Loose Notification Event
          */
         fermatEventListener = eventManager.getNewListener(P2pEventType.CLIENT_CONNECTION_LOOSE);
@@ -456,6 +464,16 @@ public class CryptoAddressesNetworkServicePluginRoot extends AbstractNetworkServ
          */
         fermatEventListener = eventManager.getNewListener(P2pEventType.CLIENT_SUCCESS_RECONNECT);
         fermatEventListener.setEventHandler(new ClientSuccessfullReconnectNotificationEventHandler(this));
+        eventManager.addListener(fermatEventListener);
+        listenersAdded.add(fermatEventListener);
+
+        /**
+         * Listen and handle the sent messages
+         */
+
+
+        fermatEventListener = eventManager.getNewListener(P2pEventType.NEW_NETWORK_SERVICE_MESSAGE_SENT_NOTIFICATION);
+        fermatEventListener.setEventHandler(new NewSentMessageNotificationEventHandler(this));
         eventManager.addListener(fermatEventListener);
         listenersAdded.add(fermatEventListener);
     }
@@ -1004,12 +1022,21 @@ public class CryptoAddressesNetworkServicePluginRoot extends AbstractNetworkServ
 
             if(vpnConnectionCloseNotificationEvent.getNetworkServiceApplicant() == getNetworkServiceType()){
 
+                String remotePublicKey =  vpnConnectionCloseNotificationEvent.getRemoteParticipant().getIdentityPublicKey();
 
 
                 if(communicationNetworkServiceConnectionManager != null) {
-                    communicationNetworkServiceConnectionManager.closeConnection(vpnConnectionCloseNotificationEvent.getRemoteParticipant().getIdentityPublicKey());
-                    reprocessMessage(vpnConnectionCloseNotificationEvent.getRemoteParticipant().getIdentityPublicKey());
+                    communicationNetworkServiceConnectionManager.closeConnection(remotePublicKey);
                 }
+
+                /**
+                 * remove messages
+                 */
+
+                if (cryptoAddressesExecutorAgent.isConnectionOpen(remotePublicKey)){
+                    cryptoAddressesExecutorAgent.connectionFailure(remotePublicKey);
+                }
+                reprocessMessage(remotePublicKey);
             }
 
         }
@@ -1169,7 +1196,45 @@ public class CryptoAddressesNetworkServicePluginRoot extends AbstractNetworkServ
     }
 
     @Override
-    public void handleNewSentMessageNotificationEvent(FermatMessage data) {
+    public void handleNewSentMessageNotificationEvent(FermatMessage fermatMessage) {
+
+        try {
+
+            Gson gson = new Gson();
+
+            String jsonMessage = fermatMessage.getContent();
+
+            NetworkServiceMessage networkServiceMessage = gson.fromJson(jsonMessage, NetworkServiceMessage.class);
+
+            switch (networkServiceMessage.getMessageType()) {
+                case ACCEPT:
+                    AcceptMessage acceptMessage = gson.fromJson(jsonMessage, AcceptMessage.class);
+                    cryptoAddressesNetworkServiceDao.changeProtocolState(acceptMessage.getRequestId(), ProtocolState.DONE);
+                    communicationNetworkServiceConnectionManager.closeConnection(acceptMessage.getActorDestination());
+                    //remove from the waiting pool
+                    cryptoAddressesExecutorAgent.connectionFailure(acceptMessage.getActorDestination());
+                    break;
+                case DENY:
+                    DenyMessage denyMessage = gson.fromJson(jsonMessage, DenyMessage.class);
+                    cryptoAddressesNetworkServiceDao.changeProtocolState(denyMessage.getRequestId(), ProtocolState.DONE);
+                    communicationNetworkServiceConnectionManager.closeConnection(denyMessage.getActorDestination());
+                    //remove from the waiting pool
+                    cryptoAddressesExecutorAgent.connectionFailure(denyMessage.getActorDestination());
+                    break;
+                case REQUEST:
+                    // update the request to processing receive state with the given action.
+                    RequestMessage requestMessage = gson.fromJson(jsonMessage, RequestMessage.class);
+                    cryptoAddressesNetworkServiceDao.changeProtocolState(requestMessage.getRequestId(), ProtocolState.PENDING_ACTION);
+                    break;
+                default:
+                    throw new CantHandleNewMessagesException(
+                            "message type: " +networkServiceMessage.getMessageType().name(),
+                            "Message type not handled."
+                    );
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 
     }
 
