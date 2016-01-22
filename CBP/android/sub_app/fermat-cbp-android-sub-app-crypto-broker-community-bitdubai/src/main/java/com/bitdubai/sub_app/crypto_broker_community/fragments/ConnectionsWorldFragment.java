@@ -25,11 +25,14 @@ import com.bitdubai.fermat_android_api.ui.interfaces.FermatListItemListeners;
 import com.bitdubai.fermat_android_api.ui.interfaces.FermatWorkerCallBack;
 import com.bitdubai.fermat_android_api.ui.util.FermatWorker;
 import com.bitdubai.fermat_api.FermatException;
+import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
 import com.bitdubai.fermat_api.layer.all_definition.enums.UISource;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
 import com.bitdubai.fermat_api.layer.modules.exceptions.CantGetSelectedActorIdentityException;
+import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_broker_community.exceptions.CantSelectIdentityException;
 import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_broker_community.interfaces.CryptoBrokerCommunityInformation;
 import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_broker_community.interfaces.CryptoBrokerCommunitySearch;
+import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_broker_community.interfaces.CryptoBrokerCommunitySelectableIdentity;
 import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_broker_community.interfaces.CryptoBrokerCommunitySubAppModuleManager;
 import com.bitdubai.fermat_ccp_api.layer.module.intra_user.exceptions.CantGetActiveLoginIdentityException;
 import com.bitdubai.fermat_pip_api.layer.network_service.subapp_resources.SubAppResourcesProviderManager;
@@ -107,7 +110,39 @@ public class ConnectionsWorldFragment extends AbstractFermatFragment<CryptoBroke
             moduleManager = appSession.getModuleManager();
             errorManager = appSession.getErrorManager();
 
-            mNotificationsCount = moduleManager.listCryptoBrokersPendingLocalAction(moduleManager.getSelectedActorIdentity(),MAX, offset).size();
+            mNotificationsCount = moduleManager.listCryptoBrokersPendingLocalAction(moduleManager.getSelectedActorIdentity(), MAX, offset).size();
+            //List<CryptoBrokerCommunityInformation> asd = moduleManager.listAllConnectedCryptoBrokers(moduleManager.getSelectedActorIdentity(),MAX, offset);
+            //List<CryptoBrokerCommunitySelectableIdentity> asss = moduleManager.listSelectableIdentities();
+            CryptoBrokerCommunitySelectableIdentity cbsi = new CryptoBrokerCommunitySelectableIdentity() {
+                @Override
+                public void select() throws CantSelectIdentityException {
+
+                }
+
+                @Override
+                public String getPublicKey() {
+                    return null;
+                }
+
+                @Override
+                public Actors getActorType() {
+                    return Actors.CBP_CRYPTO_BROKER;
+                }
+
+                @Override
+                public String getAlias() {
+                    return "";
+                }
+
+                @Override
+                public byte[] getImage() {
+                    return new byte[0];
+                }
+            };
+
+            CryptoBrokerCommunitySearch asdss = moduleManager.searchNewCryptoBroker(cbsi);
+            List<CryptoBrokerCommunityInformation> blah = asdss.getResult();
+
 
 
             // TODO: display unread notifications.
@@ -240,10 +275,10 @@ public class ConnectionsWorldFragment extends AbstractFermatFragment<CryptoBroke
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
 
-        super.onCreateOptionsMenu(menu, inflater);
+        /*super.onCreateOptionsMenu(menu, inflater);
 
         menu.add(0, Constants.SELECT_IDENTITY, 0, "send").setIcon(R.drawable.ic_actionbar_send)
-                .setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
+                .setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);*/
     }
 
     @Override
@@ -289,7 +324,7 @@ public class ConnectionsWorldFragment extends AbstractFermatFragment<CryptoBroke
     public void onItemClickListener(CryptoBrokerCommunityInformation data, int position) {
 
         appSession.setData(ACTOR_SELECTED, data);
-        changeActivity(Activities.CCP_SUB_APP_INTRA_USER_COMMUNITY_CONNECTION_OTHER_PROFILE.getCode(), appSession.getAppPublicKey());
+        changeActivity(Activities.CBP_SUB_APP_CRYPTO_BROKER_COMMUNITY_CONNECTION_OTHER_PROFILE.getCode(), appSession.getAppPublicKey());
 
     }
 

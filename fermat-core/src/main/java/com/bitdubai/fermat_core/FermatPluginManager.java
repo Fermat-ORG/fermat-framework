@@ -298,7 +298,7 @@ public final class FermatPluginManager {
             return;
 
         try {
-            abstractPlugin.start();
+            abstractPlugin.startPlugin();
         } catch (com.bitdubai.fermat_api.CantStartPluginException e) {
 
             throw new CantStartPluginException(

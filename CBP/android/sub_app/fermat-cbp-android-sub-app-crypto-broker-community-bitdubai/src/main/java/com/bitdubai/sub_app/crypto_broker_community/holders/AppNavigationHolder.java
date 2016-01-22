@@ -22,8 +22,8 @@ public class AppNavigationHolder extends FermatViewHolder {
     public AppNavigationHolder(View itemView) {
         super(itemView);
 
-        label = (TextView) itemView.findViewById(R.id.textView_label);
-        icon = (ImageView) itemView.findViewById(R.id.imageView_icon);
+        label = (TextView) itemView.findViewById(R.id.cbc_textView_label);
+        icon = (ImageView) itemView.findViewById(R.id.cbc_imageView_icon);
 
 
     }

@@ -110,11 +110,12 @@ public final class CryptoAddressesNetworkServiceDao {
                                              CryptoAddressDealers  dealer                     ,
                                              BlockchainNetworkType blockchainNetworkType      ,
                                              int                    sentNumber,
-                                             long sentDate) throws CantCreateRequestException {
+                                             long sentDate,
+                                             String messageType) throws CantCreateRequestException {
 
         try {
-            //todo: ver esto
-           // if(!existPendingRequest(id)) {
+
+            if(!existPendingRequest(id)) {
                 CryptoAddressesNetworkServiceCryptoAddressRequest addressExchangeRequest = new CryptoAddressesNetworkServiceCryptoAddressRequest(
                         id                      ,
                         walletPublicKey            ,
@@ -130,7 +131,8 @@ public final class CryptoAddressesNetworkServiceDao {
                         dealer                     ,
                         blockchainNetworkType,
                         sentNumber,
-                        sentDate
+                        sentDate,
+                        messageType
                 );
 
                 DatabaseTable addressExchangeRequestTable = database.getTable(CryptoAddressesNetworkServiceDatabaseConstants.ADDRESS_EXCHANGE_REQUEST_TABLE_NAME);
@@ -140,16 +142,16 @@ public final class CryptoAddressesNetworkServiceDao {
                 entityRecord = buildDatabaseRecord(entityRecord, addressExchangeRequest);
 
                 addressExchangeRequestTable.insertRecord(entityRecord);
-            //}
+            }
 
 
         } catch (CantInsertRecordException e) {
 
             throw new CantCreateRequestException(e, "", "Exception not handled by the plugin, there is a problem in database and i cannot insert the record.");
-//
-//        } catch (CantGetPendingAddressExchangeRequestException e) {
-//            throw new CantCreateRequestException(e, "", "Exception not handled by the plugin, there is a problem in database");
-//
+
+       } catch (CantGetPendingAddressExchangeRequestException e) {
+           throw new CantCreateRequestException(e, "", "Exception not handled by the plugin, there is a problem in database");
+
         }
     }
 
@@ -209,6 +211,7 @@ public final class CryptoAddressesNetworkServiceDao {
 
             addressExchangeRequestTable.addStringFilter(CryptoAddressesNetworkServiceDatabaseConstants.ADDRESS_EXCHANGE_REQUEST_STATE_COLUMN_NAME, protocolState.getCode(), DatabaseFilterType.EQUAL);
 
+
             addressExchangeRequestTable.loadToMemory();
 
             List<DatabaseTableRecord> records = addressExchangeRequestTable.getRecords();
@@ -231,6 +234,37 @@ public final class CryptoAddressesNetworkServiceDao {
     }
 
 
+    public List<CryptoAddressRequest> listUncompletedRequest(String remoteIdentityKey) throws CantListPendingCryptoAddressRequestsException {
+
+
+        try {
+
+            DatabaseTable addressExchangeRequestTable = database.getTable(CryptoAddressesNetworkServiceDatabaseConstants.ADDRESS_EXCHANGE_REQUEST_TABLE_NAME);
+
+            addressExchangeRequestTable.addStringFilter(CryptoAddressesNetworkServiceDatabaseConstants.ADDRESS_EXCHANGE_REQUEST_STATE_COLUMN_NAME, ProtocolState.DONE.getCode(), DatabaseFilterType.NOT_EQUALS);
+            addressExchangeRequestTable.addStringFilter(CryptoAddressesNetworkServiceDatabaseConstants.ADDRESS_EXCHANGE_REQUEST_IDENTITY_TYPE_REQUESTING_COLUMN_NAME, remoteIdentityKey, DatabaseFilterType.EQUAL);
+
+            addressExchangeRequestTable.loadToMemory();
+
+            List<DatabaseTableRecord> records = addressExchangeRequestTable.getRecords();
+
+            List<CryptoAddressRequest> cryptoAddressRequests = new ArrayList<>();
+
+            for (DatabaseTableRecord record : records) {
+                cryptoAddressRequests.add(buildAddressExchangeRequestRecord(record));
+            }
+
+            return cryptoAddressRequests;
+
+        } catch (CantLoadTableToMemoryException exception) {
+
+            throw new CantListPendingCryptoAddressRequestsException(exception, "", "Exception not handled by the plugin, there is a problem in database and i cannot load the table.");
+        } catch (InvalidParameterException exception) {
+
+            throw new CantListPendingCryptoAddressRequestsException(exception, "", "Check the cause."                                                                                );
+        }
+    }
+
     public List<CryptoAddressRequest> listUncompletedRequest() throws CantListPendingCryptoAddressRequestsException {
 
 
@@ -239,6 +273,7 @@ public final class CryptoAddressesNetworkServiceDao {
             DatabaseTable addressExchangeRequestTable = database.getTable(CryptoAddressesNetworkServiceDatabaseConstants.ADDRESS_EXCHANGE_REQUEST_TABLE_NAME);
 
             addressExchangeRequestTable.addStringFilter(CryptoAddressesNetworkServiceDatabaseConstants.ADDRESS_EXCHANGE_REQUEST_STATE_COLUMN_NAME, ProtocolState.DONE.getCode(), DatabaseFilterType.NOT_EQUALS);
+            addressExchangeRequestTable.addStringFilter(CryptoAddressesNetworkServiceDatabaseConstants.ADDRESS_EXCHANGE_REQUEST_MESSAGE_TYPE_COLUMN_NAME, "OUT", DatabaseFilterType.EQUAL);
 
             addressExchangeRequestTable.loadToMemory();
 
@@ -269,7 +304,7 @@ public final class CryptoAddressesNetworkServiceDao {
 
             DatabaseTable addressExchangeRequestTable = database.getTable(CryptoAddressesNetworkServiceDatabaseConstants.ADDRESS_EXCHANGE_REQUEST_TABLE_NAME);
 
-            addressExchangeRequestTable.addStringFilter(CryptoAddressesNetworkServiceDatabaseConstants.ADDRESS_EXCHANGE_REQUEST_IDENTITY_PUBLIC_KEY_RESPONDING_COLUMN_NAME, identityPublicKey, DatabaseFilterType.EQUAL);
+            addressExchangeRequestTable.addStringFilter(CryptoAddressesNetworkServiceDatabaseConstants.ADDRESS_EXCHANGE_REQUEST_IDENTITY_PUBLIC_KEY_REQUESTING_COLUMN_NAME, identityPublicKey, DatabaseFilterType.EQUAL);
 
             addressExchangeRequestTable.loadToMemory();
 
@@ -720,7 +755,9 @@ public final class CryptoAddressesNetworkServiceDao {
         record.setIntegerValue(CryptoAddressesNetworkServiceDatabaseConstants.ADDRESS_EXCHANGE_REQUEST_SENT_NUMBER_COLUMN_NAME, addressExchangeRequest.getSentNumber());
         record.setIntegerValue(CryptoAddressesNetworkServiceDatabaseConstants.ADDRESS_EXCHANGE_REQUEST_SENT_NUMBER_COLUMN_NAME, addressExchangeRequest.getSentNumber());
         record.setIntegerValue(CryptoAddressesNetworkServiceDatabaseConstants.ADDRESS_EXCHANGE_REQUEST_SENT_NUMBER_COLUMN_NAME, addressExchangeRequest.getSentNumber());
-        record.setLongValue(CryptoAddressesNetworkServiceDatabaseConstants.ADDRESS_EXCHANGE_REQUEST_TIMESTAMP_COLUMN_NAME                  , addressExchangeRequest.getSentDate());
+        record.setLongValue(CryptoAddressesNetworkServiceDatabaseConstants.ADDRESS_EXCHANGE_REQUEST_TIMESTAMP_COLUMN_NAME, addressExchangeRequest.getSentDate());
+        record.setStringValue(CryptoAddressesNetworkServiceDatabaseConstants.ADDRESS_EXCHANGE_REQUEST_MESSAGE_TYPE_COLUMN_NAME, addressExchangeRequest.getMessageType());
+
 
         if (addressExchangeRequest.getCryptoAddress() != null)
             record.setStringValue(CryptoAddressesNetworkServiceDatabaseConstants.ADDRESS_EXCHANGE_REQUEST_CRYPTO_ADDRESS_COLUMN_NAME, addressExchangeRequest.getCryptoAddress().getAddress());
@@ -746,6 +783,8 @@ public final class CryptoAddressesNetworkServiceDao {
 
         int sentNumber                      = record.getIntegerValue(CryptoAddressesNetworkServiceDatabaseConstants.ADDRESS_EXCHANGE_REQUEST_SENT_NUMBER_COLUMN_NAME);
         long sentDate                     = record.getLongValue(CryptoAddressesNetworkServiceDatabaseConstants.ADDRESS_EXCHANGE_REQUEST_TIMESTAMP_COLUMN_NAME);
+        String messageType                 = record.getStringValue(CryptoAddressesNetworkServiceDatabaseConstants.ADDRESS_EXCHANGE_REQUEST_MESSAGE_TYPE_COLUMN_NAME);
+
 
         Actors                identityTypeRequesting = Actors               .getByCode(identityTypeRequestingString);
         Actors                identityTypeAccepting  = Actors               .getByCode(identityTypeRespondingString);
@@ -773,7 +812,8 @@ public final class CryptoAddressesNetworkServiceDao {
                 dealer                     ,
                 blockchainNetworkType,
                 sentNumber,
-                sentDate
+                sentDate,
+                messageType
         );
     }
 }

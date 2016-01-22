@@ -385,7 +385,7 @@ public class RedeemPointActorDao implements Serializable {
 
                     table.insertRecord(record);
                     DatabaseTable issuersRegisteredTable = getRegisteredIssuersTable();
-                    for (String registeredIssuer : actorAssetRedeemPoint.registeredIssuers()) {
+                    for (String registeredIssuer : actorAssetRedeemPoint.getRegisteredIssuers()) {
                         DatabaseTableRecord issuerRegisteredRecord = issuersRegisteredTable.getEmptyRecord();
                         issuerRegisteredRecord.setStringValue(RedeemPointActorDatabaseConstants.REGISTERED_ASSET_ISSUERS_ISSUER_PUBLICKEY_COLUMN, registeredIssuer);
                         issuerRegisteredRecord.setStringValue(RedeemPointActorDatabaseConstants.REGISTERED_ASSET_ISSUERS_REDEEM_POINT_PUBLICKEY_COLUMN, actorAssetRedeemPoint.getActorPublicKey());
