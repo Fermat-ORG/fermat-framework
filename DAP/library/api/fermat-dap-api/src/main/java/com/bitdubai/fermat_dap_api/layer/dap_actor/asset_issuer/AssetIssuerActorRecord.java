@@ -1,10 +1,8 @@
 package com.bitdubai.fermat_dap_api.layer.dap_actor.asset_issuer;
 
-import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
 import com.bitdubai.fermat_api.layer.all_definition.money.CryptoAddress;
 import com.bitdubai.fermat_api.layer.osa_android.location_system.Location;
 import com.bitdubai.fermat_dap_api.layer.all_definition.enums.DAPConnectionState;
-import com.bitdubai.fermat_dap_api.layer.dap_actor.DAPActor;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_issuer.interfaces.ActorAssetIssuer;
 
 import java.util.Arrays;
@@ -26,6 +24,7 @@ public class AssetIssuerActorRecord implements ActorAssetIssuer {
     private Double              locationLongitude       ;
     private CryptoAddress       cryptoAddress           ;
     private byte[]              profileImage            ;
+    private String extendedPublicKey;
 
     /**
      * Constructor
@@ -71,7 +70,8 @@ public class AssetIssuerActorRecord implements ActorAssetIssuer {
                                   final Long registrationDate,
                                   final Long lastConnectionDate,
                                   final byte[] profileImage,
-                                  final String description) {
+                                  final String description,
+                                  final String extendedPublicKey) {
 
         this.actorPublicKey         =       actorPublicKey          ;
         this.name                   =       name                    ;
@@ -82,6 +82,7 @@ public class AssetIssuerActorRecord implements ActorAssetIssuer {
         this.lastConnectionDate     =       lastConnectionDate      ;
         this.profileImage           =       profileImage.clone()    ;
         this.description            =       description             ;
+        this.extendedPublicKey = extendedPublicKey;
     }
 
 

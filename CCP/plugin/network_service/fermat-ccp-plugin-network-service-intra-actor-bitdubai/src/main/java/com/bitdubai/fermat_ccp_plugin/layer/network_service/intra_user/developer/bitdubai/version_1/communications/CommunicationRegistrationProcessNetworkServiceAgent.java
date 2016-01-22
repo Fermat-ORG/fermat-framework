@@ -9,7 +9,6 @@ package com.bitdubai.fermat_ccp_plugin.layer.network_service.intra_user.develope
 import com.bitdubai.fermat_api.layer.all_definition.components.interfaces.PlatformComponentProfile;
 import com.bitdubai.fermat_ccp_plugin.layer.network_service.intra_user.developer.bitdubai.version_1.IntraActorNetworkServicePluginRoot;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.WsCommunicationsCloudClientManager;
-import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.client.CommunicationsClientConnection;
 
 
 /**
@@ -111,11 +110,11 @@ public class CommunicationRegistrationProcessNetworkServiceAgent extends Thread 
                 }
 
             }catch (Exception e){
-                try {
-                    System.out.println(e.getMessage());
+                try { //TODO null pointer exc
+//                    System.out.println(e.getMessage());
                     sleep(CommunicationRegistrationProcessNetworkServiceAgent.MAX_SLEEP_TIME);
                 } catch (InterruptedException e1) {
-                    System.out.println(e1.getMessage());
+//                    System.out.println(e1.getMessage());
                     active = Boolean.FALSE;
                 }
             }

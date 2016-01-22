@@ -83,6 +83,7 @@ public class BitcoinWalletDatabaseFactory implements DealsWithPluginDatabaseSyst
         table.addColumn(BitcoinWalletDatabaseConstants.BITCOIN_WALLET_TABLE_TRANSACTION_HASH_COLUMN_NAME, DatabaseDataType.STRING, 100,false);
         table.addColumn(BitcoinWalletDatabaseConstants.BITCOIN_WALLET_TABLE_RUNNING_BOOK_BALANCE_COLUMN_NAME, DatabaseDataType.LONG_INTEGER, 0,false);
         table.addColumn(BitcoinWalletDatabaseConstants.BITCOIN_WALLET_TABLE_RUNNING_AVAILABLE_BALANCE_COLUMN_NAME, DatabaseDataType.LONG_INTEGER, 0, false);
+        table.addColumn(BitcoinWalletDatabaseConstants.BITCOIN_WALLET_TABLE_RUNNING_NETWORK_TYPE, DatabaseDataType.STRING, 200,false);
         return table;
     }
 
