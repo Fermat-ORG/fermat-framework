@@ -3,6 +3,8 @@
     <string name="action_new">New Action</string>
     <string name="dap_identity_alias_default_text">Redeem Point</string>
 
+    <string name="help">Help</string>
+
     <string name="no_assets">No Assets</string>
     <string name="no_users">No Users</string>
 </resources>

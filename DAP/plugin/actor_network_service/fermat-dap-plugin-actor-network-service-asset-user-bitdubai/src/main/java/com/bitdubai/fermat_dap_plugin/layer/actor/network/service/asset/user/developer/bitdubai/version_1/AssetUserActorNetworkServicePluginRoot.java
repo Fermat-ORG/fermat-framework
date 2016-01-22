@@ -668,6 +668,84 @@ public class AssetUserActorNetworkServicePluginRoot extends AbstractNetworkServi
         return actorAssetUserRegisteredList;
     }
 
+    @Override
+    public List<ActorAssetUser> getActorAssetUserRegistered(String actorAssetUserPublicKey) throws CantRequestListActorAssetUserRegisteredException {
+        try {
+//            if (actorAssetUserRegisteredList != null && !actorAssetUserRegisteredList.isEmpty()) {
+//                actorAssetUserRegisteredList.clear();
+//            }
+
+            DiscoveryQueryParameters discoveryQueryParametersAssetUser = wsCommunicationsCloudClientManager.getCommunicationsCloudClientConnection().
+                    constructDiscoveryQueryParamsFactory(PlatformComponentType.ACTOR_ASSET_USER, //applicant = who made the request
+                            NetworkServiceType.UNDEFINED,
+                            null,                     // alias
+                            actorAssetUserPublicKey,  // identityPublicKey
+                            null,                     // location
+                            null,                     // distance
+                            null,                     // name
+                            null,                     // extraData
+                            null,                     // offset
+                            null,                     // max
+                            null,                     // fromOtherPlatformComponentType, when use this filter apply the identityPublicKey
+                            null);
+
+            List<PlatformComponentProfile> platformComponentProfileRegisteredListRemote = wsCommunicationsCloudClientManager.getCommunicationsCloudClientConnection().requestListComponentRegistered(discoveryQueryParametersAssetUser);
+
+            if (platformComponentProfileRegisteredListRemote != null && !platformComponentProfileRegisteredListRemote.isEmpty()) {
+
+                for (PlatformComponentProfile platformComponentProfile : platformComponentProfileRegisteredListRemote) {
+
+                    String profileImage = "";
+                    if (!platformComponentProfile.getExtraData().equals("")) {
+                        try {
+                            JsonParser jParser = new JsonParser();
+                            JsonObject jsonObject = jParser.parse(platformComponentProfile.getExtraData()).getAsJsonObject();
+
+                            profileImage = jsonObject.get(DAP_IMG_USER).getAsString();
+                        } catch (Exception e) {
+                            profileImage = platformComponentProfile.getExtraData();
+                        }
+                    }
+
+                    byte[] imageByte = Base64.decode(profileImage, Base64.DEFAULT);
+
+                    ActorAssetUser actorAssetUserNew = new AssetUserActorRecord(
+                            platformComponentProfile.getIdentityPublicKey(),
+                            platformComponentProfile.getName(),
+                            imageByte,
+                            platformComponentProfile.getLocation());
+
+                    actorAssetUserRegisteredList.add(actorAssetUserNew);
+                }
+            } else {
+                return actorAssetUserRegisteredList;
+            }
+
+        } catch (CantRequestListException e) {
+
+            StringBuffer contextBuffer = new StringBuffer();
+            contextBuffer.append("Plugin ID: " + pluginId);
+            contextBuffer.append(CantStartPluginException.CONTEXT_CONTENT_SEPARATOR);
+            contextBuffer.append("wsCommunicationsCloudClientManager: " + wsCommunicationsCloudClientManager);
+            contextBuffer.append(CantStartPluginException.CONTEXT_CONTENT_SEPARATOR);
+            contextBuffer.append("pluginDatabaseSystem: " + pluginDatabaseSystem);
+            contextBuffer.append(CantStartPluginException.CONTEXT_CONTENT_SEPARATOR);
+            contextBuffer.append("errorManager: " + errorManager);
+            contextBuffer.append(CantStartPluginException.CONTEXT_CONTENT_SEPARATOR);
+            contextBuffer.append("eventManager: " + eventManager);
+
+            String context = contextBuffer.toString();
+            String possibleCause = "Cant Request List Actor Asset User Registered";
+
+            CantRequestListActorAssetUserRegisteredException pluginStartException = new CantRequestListActorAssetUserRegisteredException(CantRequestListActorAssetUserRegisteredException.DEFAULT_MESSAGE, null, context, possibleCause);
+
+            //errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_DAP_ASSET_USER_ACTOR_NETWORK_SERVICE, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, pluginStartException);
+
+            throw pluginStartException;
+        }
+        return actorAssetUserRegisteredList;
+    }
+
 
     @Override
     public void requestCryptoAddress(ActorAssetIssuer actorAssetIssuerSender, ActorAssetUser actorAssetUserDestination) throws CantRequestCryptoAddressException {

@@ -35,6 +35,8 @@ public interface AssetIssuerWallet {
                                                        int max,
                                                        int offset, String assetPublicKey) throws CantGetTransactionsException;
 
+    List<AssetIssuerWalletTransaction> getAvailableTransactions(String assetPublicKey) throws CantGetTransactionsException;
+
     List<AssetIssuerWalletTransaction> getTransactionsByActor(String actorPublicKey,
                                                               BalanceType balanceType,
                                                               int max,
@@ -53,7 +55,7 @@ public interface AssetIssuerWallet {
 
     List<AssetIssuerWalletTransaction> getTransactionsAssetAll(String assetPublicKey) throws CantGetTransactionsException;
 
-    DigitalAssetMetadata getDigitalAssetMetadata(String digitalAssetPublicKey) throws CantGetDigitalAssetFromLocalStorageException;
+    DigitalAssetMetadata getDigitalAssetMetadata(String transactionHash) throws CantGetDigitalAssetFromLocalStorageException;
 
     DigitalAsset getAssetByPublicKey(String assetPublicKey);
 
