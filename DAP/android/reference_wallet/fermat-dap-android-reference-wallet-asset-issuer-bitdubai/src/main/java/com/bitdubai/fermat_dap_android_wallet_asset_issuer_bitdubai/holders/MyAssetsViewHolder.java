@@ -23,7 +23,9 @@ public class MyAssetsViewHolder extends FermatViewHolder {
     public ImageView image;
     public FermatTextView nameText;
     public FermatTextView availableText;
-    public FermatTextView bookText;
+    public FermatTextView availableText2;
+    public FermatTextView pendingText;
+    public FermatTextView pendingText2;
     public FermatTextView btcText;
     public FermatTextView expDateText;
 
@@ -40,8 +42,10 @@ public class MyAssetsViewHolder extends FermatViewHolder {
 
         image = (ImageView) itemView.findViewById(R.id.asset_image);
         nameText = (FermatTextView) itemView.findViewById(R.id.assetNameText);
-        availableText = (FermatTextView) itemView.findViewById(R.id.assetAvailableText);
-        bookText = (FermatTextView) itemView.findViewById(R.id.assetBookText);
+        availableText = (FermatTextView) itemView.findViewById(R.id.assetAvailable1);
+        availableText2 = (FermatTextView) itemView.findViewById(R.id.assetAvailable2);
+        pendingText = (FermatTextView) itemView.findViewById(R.id.assetAvailable3);
+        pendingText2 = (FermatTextView) itemView.findViewById(R.id.assetAvailable4);
         btcText = (FermatTextView) itemView.findViewById(R.id.assetBtcText);
         expDateText = (FermatTextView) itemView.findViewById(R.id.assetExpDateText);
     }
@@ -57,9 +61,34 @@ public class MyAssetsViewHolder extends FermatViewHolder {
         bitmapWorkerTask.execute(img);
 
         nameText.setText(digitalAsset.getName());
-        availableText.setText(digitalAsset.getAvailableBalanceQuantity()+"");
-        bookText.setText(digitalAsset.getBookBalanceQuantity()+"");
+
+        long available = digitalAsset.getAvailableBalanceQuantity();
+        long book = digitalAsset.getBookBalanceQuantity();
+        availableText.setText(availableText(available));
+        availableText2.setText(availableText2(available));
+        if (available == book) {
+            pendingText.setVisibility(View.INVISIBLE);
+            pendingText2.setVisibility(View.INVISIBLE);
+        } else {
+            long pendingValue = Math.abs(available - book);
+            pendingText.setText(pendingText(pendingValue));
+            pendingText.setVisibility(View.VISIBLE);
+            pendingText2.setVisibility(View.VISIBLE);
+        }
+
         btcText.setText(digitalAsset.getFormattedAvailableBalanceBitcoin()+" BTC");
         expDateText.setText(digitalAsset.getFormattedExpDate());
+    }
+
+    private String availableText2(long available) {
+        return (available == 1) ? "                     Asset" : "                     Assets";
+    }
+
+    private String pendingText(long pendingValue) {
+        return "                         \n " + pendingValue;
+    }
+
+    private String availableText(long available) {
+        return "                 " + available;
     }
 }
