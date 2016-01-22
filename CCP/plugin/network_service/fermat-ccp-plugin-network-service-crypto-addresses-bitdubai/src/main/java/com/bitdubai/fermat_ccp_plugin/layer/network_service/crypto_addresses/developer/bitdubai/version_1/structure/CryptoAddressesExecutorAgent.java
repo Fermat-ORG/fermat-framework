@@ -33,6 +33,10 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
+import java.util.concurrent.Executor;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
 
 /**
  * The class <code>com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_addresses.developer.bitdubai.version_1.structure.CryptoAddressesExecutorAgent</code>
@@ -44,9 +48,11 @@ public final class CryptoAddressesExecutorAgent extends FermatAgent {
 
     // Represent the sleep time for the cycles of receive and send in this agent, with both cycles send and receive 15000 millis.
     private static final long SLEEP_TIME = 7500;
+    private final Runnable agentTask;
 
     // Represent the receive and send cycles for this agent.
-    private Thread agentThread;
+
+    private ExecutorService executorService;
 
     // network services registered
     private Map<String, String> poolConnectionsWaitingForResponse;
@@ -56,6 +62,7 @@ public final class CryptoAddressesExecutorAgent extends FermatAgent {
     private final EventManager                            eventManager                           ;
     private final CryptoAddressesNetworkServiceDao        dao                                    ;
     private final WsCommunicationsCloudClientManager      wsCommunicationsCloudClientManager     ;
+    private Future<?> future;
 
     public CryptoAddressesExecutorAgent(final CryptoAddressesNetworkServicePluginRoot cryptoAddressesNetworkServicePluginRoot,
                                         final ErrorManager                            errorManager                           ,
@@ -72,10 +79,10 @@ public final class CryptoAddressesExecutorAgent extends FermatAgent {
         this.status                                       = AgentStatus.CREATED                    ;
 
         this.poolConnectionsWaitingForResponse = new HashMap<>();
-
+        executorService = Executors.newSingleThreadExecutor();
 
 //        Create a thread to send the messages
-        this.agentThread = new Thread(new Runnable() {
+        this.agentTask = new Runnable() {
             @Override
             public void run() {
                 while (isRunning()) {
@@ -84,15 +91,13 @@ public final class CryptoAddressesExecutorAgent extends FermatAgent {
                     receiveCycle();
                 }
             }
-        });
+        };
     }
 
     public final void start() throws CantStartAgentException {
 
         try {
-
-            agentThread.start();
-
+            future = executorService.submit(agentTask);
             this.status = AgentStatus.STARTED;
 
         } catch (Exception exception) {
@@ -103,21 +108,26 @@ public final class CryptoAddressesExecutorAgent extends FermatAgent {
 
     @Override
     public void pause() {
-        agentThread.interrupt();
-        super.pause();
+        this.status = AgentStatus.PAUSED;
+        future.cancel(true);
+
     }
 
     @Override
     public void resume() {
-        agentThread.start();
-        super.resume();
+        this.status = AgentStatus.STARTED;
+        future = executorService.submit(agentTask);
     }
 
     @Override
     public void stop() {
-        agentThread.interrupt();
+        future.cancel(true);
         this.status = AgentStatus.PAUSED;
 
+    }
+
+    public void stopExecutor(){
+        executorService.shutdownNow();
     }
 
     private void sendCycle() {

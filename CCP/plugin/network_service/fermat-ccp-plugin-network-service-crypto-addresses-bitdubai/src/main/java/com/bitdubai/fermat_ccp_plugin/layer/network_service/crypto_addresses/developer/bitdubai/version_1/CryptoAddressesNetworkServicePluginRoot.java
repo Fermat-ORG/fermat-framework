@@ -560,6 +560,8 @@ public class CryptoAddressesNetworkServicePluginRoot extends AbstractNetworkServ
         // close all connections.
         communicationNetworkServiceConnectionManager.closeAllConnection();
 
+        cryptoAddressesExecutorAgent.stopExecutor();
+
         // set to not registered.
         register = Boolean.FALSE;
 
@@ -927,7 +929,7 @@ public class CryptoAddressesNetworkServicePluginRoot extends AbstractNetworkServ
 
     public void handleCompleteComponentRegistrationNotificationEvent(PlatformComponentProfile platformComponentProfileRegistered){
 
-        if (platformComponentProfileRegistered.getPlatformComponentType() == PlatformComponentType.COMMUNICATION_CLOUD_CLIENT && this.register && communicationRegistrationProcessNetworkServiceAgent.getStatus() == AgentStatus.STOPPED){
+        if (platformComponentProfileRegistered.getPlatformComponentType() == PlatformComponentType.COMMUNICATION_CLOUD_CLIENT && this.register){
 
             beforeRegistered = Boolean.TRUE;
 
@@ -962,7 +964,7 @@ public class CryptoAddressesNetworkServicePluginRoot extends AbstractNetworkServ
              */
             this.register = Boolean.TRUE;
 
-            if(!beforeRegistered)
+        //    if(!beforeRegistered)
               initializeAgent();
         }
 
@@ -981,23 +983,12 @@ public class CryptoAddressesNetworkServicePluginRoot extends AbstractNetworkServ
 
     }
 
-    public void handleCompleteComponentConnectionRequestNotificationEvent(PlatformComponentProfile applicantComponentProfile, PlatformComponentProfile remoteComponentProfile){
-
-        communicationNetworkServiceConnectionManager.handleEstablishedRequestedNetworkServiceConnection(remoteComponentProfile);
-    }
-
     /**
      * Handles the events CompleteRequestListComponentRegisteredNotificationEvent
      */
-    public void handleCompleteComponentConnectionRequestNotificationEvent(final PlatformComponentProfile remoteComponentProfile) {
 
-        /*
-         * Tell the manager to handler the new connection established
-         */
+    public void handleCompleteComponentConnectionRequestNotificationEvent(PlatformComponentProfile applicantComponentProfile, PlatformComponentProfile remoteComponentProfile){
         communicationNetworkServiceConnectionManager.handleEstablishedRequestedNetworkServiceConnection(remoteComponentProfile);
-
-        if (remoteNetworkServicesRegisteredList != null && !remoteNetworkServicesRegisteredList.isEmpty())
-            remoteNetworkServicesRegisteredList.add(remoteComponentProfile);
     }
 
     /**
@@ -1050,8 +1041,12 @@ public class CryptoAddressesNetworkServicePluginRoot extends AbstractNetworkServ
     @Override
     public void handleClientConnectionLooseNotificationEvent(FermatEvent fermatEvent) {
 
-        if(communicationNetworkServiceConnectionManager != null)
+        if(communicationNetworkServiceConnectionManager != null) {
             communicationNetworkServiceConnectionManager.stop();
+        }
+        if(cryptoAddressesExecutorAgent!=null) {
+            cryptoAddressesExecutorAgent.pause();
+        }
 
     }
 
@@ -1065,6 +1060,8 @@ public class CryptoAddressesNetworkServicePluginRoot extends AbstractNetworkServ
             if(communicationNetworkServiceConnectionManager != null) {
                 communicationNetworkServiceConnectionManager.restart();
             }
+
+
 
             if(communicationRegistrationProcessNetworkServiceAgent != null && !this.register){
                 if(communicationRegistrationProcessNetworkServiceAgent != null) {
@@ -1103,6 +1100,16 @@ public class CryptoAddressesNetworkServicePluginRoot extends AbstractNetworkServ
 
                 }
             }
+
+        if(cryptoAddressesExecutorAgent!=null) {
+            try {
+                cryptoAddressesExecutorAgent.start();
+            } catch (CantStartAgentException e) {
+                e.printStackTrace();
+            }
+        }else {
+            initializeAgent();
+        }
 
 
 
@@ -1351,6 +1358,7 @@ public class CryptoAddressesNetworkServicePluginRoot extends AbstractNetworkServ
             e.printStackTrace();
         }
     }
+
 
 
 }
