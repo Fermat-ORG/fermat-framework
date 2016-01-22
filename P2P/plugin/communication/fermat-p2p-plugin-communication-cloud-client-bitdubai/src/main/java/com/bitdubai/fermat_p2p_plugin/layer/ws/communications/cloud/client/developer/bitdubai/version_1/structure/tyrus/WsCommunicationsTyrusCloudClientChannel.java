@@ -11,9 +11,11 @@ import com.bitdubai.fermat_api.layer.all_definition.crypto.asymmetric.Asymmetric
 import com.bitdubai.fermat_api.layer.all_definition.crypto.asymmetric.ECCKeyPair;
 import com.bitdubai.fermat_api.layer.all_definition.events.EventSource;
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEvent;
+import com.bitdubai.fermat_api.layer.all_definition.network_service.enums.NetworkServiceType;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.contents.FermatPacketDecoder;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.enums.P2pEventType;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.events.CompleteClientComponentRegistrationNotificationEvent;
+import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.events.VPNConnectionCloseNotificationEvent;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.contents.FermatPacket;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.enums.FermatPacketType;
 import com.bitdubai.fermat_p2p_plugin.layer.ws.communications.cloud.client.developer.bitdubai.version_1.structure.tyrus.conf.CLoudClientConfigurator;
@@ -225,17 +227,30 @@ public class WsCommunicationsTyrusCloudClientChannel {
 
 
     public void closeConnection(){
-        onClose(clientConnection, new CloseReason(CloseReason.CloseCodes.NORMAL_CLOSURE, "The cloud client close the connection, intentionally."));
+
+        try {
+
+            System.out.println(" WsCommunicationsTyrusCloudClientChannel - close connection");
+            clientConnection.close(new CloseReason(CloseReason.CloseCodes.NORMAL_CLOSURE, "The cloud client close the connection, intentionally."));
+            raiseClientConnectionCloseNotificationEvent();
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
     }
 
 
     @OnError
     public void onError(Session session, Throwable t) {
-
-        System.out.println(" --------------------------------------------------------------------- ");
-        System.out.println(" WsCommunicationsTyrusCloudClientChannel - Starting method onError");
-        t.printStackTrace();
-        onClose(clientConnection, new CloseReason(CloseReason.CloseCodes.PROTOCOL_ERROR, t.getMessage()));
+        try {
+            System.out.println(" --------------------------------------------------------------------- ");
+            System.out.println(" WsCommunicationsTyrusCloudClientChannel - Starting method onError");
+            t.printStackTrace();
+            clientConnection.close(new CloseReason(CloseReason.CloseCodes.PROTOCOL_ERROR, t.getMessage()));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
 
