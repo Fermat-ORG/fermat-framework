@@ -1021,7 +1021,7 @@ public class IntraActorNetworkServicePluginRoot extends AbstractPlugin implement
                     //TODO: ver porqué esta en delivery
                     getOutgoingNotificationDao().changeProtocolState(actorNetworkServiceRecord.getId(), ActorProtocolState.DONE);
                     actorNetworkServiceRecord.changeState(ActorProtocolState.DONE);
-                    if (actorNetworkServiceRecord.getActorProtocolState().getCode().equals(ActorProtocolState.DONE)){
+                    if (actorNetworkServiceRecord.getActorProtocolState() == ActorProtocolState.DONE){
                         // close connection, sender is the destination
                         System.out.println("----------------------------\n" +
                                 "INTRA ACTOR NETWORK SERVICE" +
