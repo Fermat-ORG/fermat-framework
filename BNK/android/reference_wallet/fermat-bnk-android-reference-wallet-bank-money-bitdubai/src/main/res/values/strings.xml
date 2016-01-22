@@ -20,4 +20,9 @@
 
 
     <string name="add_account" translatable="false">Add Account</string>
+
+    <string name="transaction_type" translatable="false">Type: </string>
+    <string name="transaction_amount" translatable="false">Amount: </string>
+    <string name="transaction_date" translatable="false">Date: </string>
+    <string name="transaction_description" translatable="false">Concept: </string>
 </resources>
