@@ -47,7 +47,6 @@ import com.bitdubai.fermat_csh_api.layer.csh_wallet_module.exceptions.CantGetCas
 import com.bitdubai.fermat_csh_api.layer.csh_wallet_module.interfaces.CashMoneyWalletModuleManager;
 import com.bitdubai.fermat_csh_plugin.layer.wallet_module.cash_money.developer.bitdubai.version_1.structure.CashMoneyWalletModuleManagerImpl;
 import com.bitdubai.fermat_csh_plugin.layer.wallet_module.cash_money.developer.bitdubai.version_1.structure.CashTransactionParametersImpl;
-import com.bitdubai.fermat_csh_plugin.layer.wallet_module.cash_money.developer.bitdubai.version_1.structure.CashWalletModuleAsyncAgent;
 import com.bitdubai.fermat_csh_plugin.layer.wallet_module.cash_money.developer.bitdubai.version_1.structure.CurrencyPairImpl;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedPluginExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
@@ -94,7 +93,6 @@ public class CashMoneyWalletModulePluginRoot extends AbstractPlugin implements L
 
 
 
-    private CashWalletModuleAsyncAgent transactionAgent;
     private CashMoneyWalletModuleManager cashMoneyWalletModuleManager;
 
 
@@ -121,29 +119,10 @@ public class CashMoneyWalletModulePluginRoot extends AbstractPlugin implements L
             errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_CSH_MONEY_TRANSACTION_HOLD, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
             throw new CantStartPluginException(CantStartPluginException.DEFAULT_MESSAGE, FermatException.wrapException(e), null, null);
         }
-
-
-
-        transactionAgent = new CashWalletModuleAsyncAgent(errorManager, cashMoneyWalletModuleManager);
-        CashTransactionParameters params = new CashTransactionParametersImpl(UUID.randomUUID(), "cash_wallet", "pkeyActor", "pkeyPlugin", new BigDecimal(200.3), FiatCurrency.US_DOLLAR, "testDeposit AVAIL/BOOK 200.3USD");
-        //transactionAgent.addNewTransaction(params);
-        //transactionAgent.addNewTransaction(params);
-
-        //transactionAgent.start();
-
         serviceStatus = ServiceStatus.STARTED;
-
 
         //testCERPlatform();
     }
-
-    @Override
-    public void stop() {
-        //transactionAgent.stop();
-        this.serviceStatus = ServiceStatus.STOPPED;
-    }
-
-
 
 
 
@@ -163,13 +142,23 @@ public class CashMoneyWalletModulePluginRoot extends AbstractPlugin implements L
     }
 
     @Override
-    public CashDepositTransaction createCashDepositTransaction(CashTransactionParameters depositParameters) throws CantCreateDepositTransactionException {
-        return cashMoneyWalletModuleManager.createCashDepositTransaction(depositParameters);
+    public void createAsyncCashDepositTransaction(CashTransactionParameters depositParameters) {
+        cashMoneyWalletModuleManager.createAsyncCashDepositTransaction(depositParameters);
     }
 
     @Override
-    public CashWithdrawalTransaction createCashWithdrawalTransaction(CashTransactionParameters withdrawalParameters) throws CantCreateWithdrawalTransactionException, CashMoneyWalletInsufficientFundsException {
-        return cashMoneyWalletModuleManager.createCashWithdrawalTransaction(withdrawalParameters);
+    public void createAsyncCashWithdrawalTransaction(CashTransactionParameters withdrawalParameters) {
+        cashMoneyWalletModuleManager.createAsyncCashWithdrawalTransaction(withdrawalParameters);
+    }
+
+    @Override
+    public CashDepositTransaction doCreateCashDepositTransaction(CashTransactionParameters depositParameters) throws CantCreateDepositTransactionException {
+        return cashMoneyWalletModuleManager.doCreateCashDepositTransaction(depositParameters);
+    }
+
+    @Override
+    public CashWithdrawalTransaction doCreateCashWithdrawalTransaction(CashTransactionParameters withdrawalParameters) throws CantCreateWithdrawalTransactionException, CashMoneyWalletInsufficientFundsException {
+        return cashMoneyWalletModuleManager.doCreateCashWithdrawalTransaction(withdrawalParameters);
     }
 
     @Override

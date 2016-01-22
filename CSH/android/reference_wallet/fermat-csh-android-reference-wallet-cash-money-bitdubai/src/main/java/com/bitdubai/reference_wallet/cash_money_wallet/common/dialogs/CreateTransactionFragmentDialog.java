@@ -154,29 +154,29 @@ public class CreateTransactionFragmentDialog extends Dialog implements
 
 
             if (transactionType == TransactionType.DEBIT) {
-                CashTransactionParameters t = new CashTransactionParametersImpl(UUID.randomUUID(), "cash_wallet", "pkeyActorRefWallet", "pkeyPluginRefWallet", new BigDecimal(amount), FiatCurrency.US_DOLLAR, memo);
-                try {
-                    cashMoneyWalletSession.getModuleManager().createCashWithdrawalTransaction(t);
+                CashTransactionParameters t = new CashTransactionParametersImpl(UUID.randomUUID(), "cash_wallet", "pkeyActorRefWallet", "pkeyPluginRefWallet", new BigDecimal(amount), FiatCurrency.US_DOLLAR, memo, TransactionType.DEBIT);
+                //try {
+                    cashMoneyWalletSession.getModuleManager().createAsyncCashWithdrawalTransaction(t);
                     //updateWalletBalances(view.getRootView());
 
-                } catch (CantCreateWithdrawalTransactionException e) {
-                    Toast.makeText(activity.getApplicationContext(), "There's been an error, please try again", Toast.LENGTH_SHORT).show();
-                    return;
-                } catch (CashMoneyWalletInsufficientFundsException e) {
-                    Toast.makeText(activity.getApplicationContext(), "Insufficient funds, please try a lower value", Toast.LENGTH_SHORT).show();
-                    return;
-                }
+//                } catch (CantCreateWithdrawalTransactionException e) {
+//                    Toast.makeText(activity.getApplicationContext(), "There's been an error, please try again", Toast.LENGTH_SHORT).show();
+//                    return;
+//                } catch (CashMoneyWalletInsufficientFundsException e) {
+//                    Toast.makeText(activity.getApplicationContext(), "Insufficient funds, please try a lower value", Toast.LENGTH_SHORT).show();
+//                    return;
+//                }
             }
             else if(transactionType == TransactionType.CREDIT) {
-                CashTransactionParameters t = new CashTransactionParametersImpl(UUID.randomUUID(), "cash_wallet", "pkeyActorRefWallet", "pkeyPluginRefWallet", new BigDecimal(amount), FiatCurrency.US_DOLLAR, memo);
-                try {
-                    cashMoneyWalletSession.getModuleManager().createCashDepositTransaction(t);
+                CashTransactionParameters t = new CashTransactionParametersImpl(UUID.randomUUID(), "cash_wallet", "pkeyActorRefWallet", "pkeyPluginRefWallet", new BigDecimal(amount), FiatCurrency.US_DOLLAR, memo, TransactionType.CREDIT);
+                //try {
+                    cashMoneyWalletSession.getModuleManager().createAsyncCashDepositTransaction(t);
                     //updateWalletBalances(view.getRootView());
 
-                } catch (CantCreateDepositTransactionException e) {
-                    Toast.makeText(activity.getApplicationContext(), "There's been an error, please try again", Toast.LENGTH_SHORT).show();
-                    return;
-                }
+//                } catch (CantCreateDepositTransactionException e) {
+//                    Toast.makeText(activity.getApplicationContext(), "There's been an error, please try again", Toast.LENGTH_SHORT).show();
+//                    return;
+//                }
             }
 
         } catch (Exception e) {

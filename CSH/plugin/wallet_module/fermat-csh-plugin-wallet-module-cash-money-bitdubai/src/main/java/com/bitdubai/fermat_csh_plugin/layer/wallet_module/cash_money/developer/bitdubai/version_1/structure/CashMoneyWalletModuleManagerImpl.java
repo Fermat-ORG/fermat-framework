@@ -1,5 +1,6 @@
 package com.bitdubai.fermat_csh_plugin.layer.wallet_module.cash_money.developer.bitdubai.version_1.structure;
 
+import com.bitdubai.fermat_api.AsyncTransactionAgent;
 import com.bitdubai.fermat_api.layer.all_definition.enums.FiatCurrency;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.settings.structure.SettingsManager;
@@ -38,7 +39,7 @@ import java.util.UUID;
 /**
  * Created by Alex on 21/1/2016.
  */
-public class CashMoneyWalletModuleManagerImpl implements CashMoneyWalletModuleManager {
+public class CashMoneyWalletModuleManagerImpl extends AsyncTransactionAgent<CashTransactionParameters> implements CashMoneyWalletModuleManager  {
 
 
     private final ErrorManager errorManager;
@@ -58,11 +59,47 @@ public class CashMoneyWalletModuleManagerImpl implements CashMoneyWalletModuleMa
         this.cashMoneyWalletManager = cashMoneyWalletManager;
         this.cashDepositTransactionManager = cashDepositTransactionManager;
         this.cashWithdrawalTransactionManager = cashWithdrawalTransactionManager;
+
+        this.setTransactionDelayMillis(15);
+
+        //CashTransactionParameters params = new CashTransactionParametersImpl(UUID.randomUUID(), "cash_wallet", "pkeyActor", "pkeyPlugin", new BigDecimal(200.3), FiatCurrency.US_DOLLAR, "testDeposit AVAIL/BOOK 200.3USD", TransactionType.CREDIT);
+        //CashTransactionParameters params2 = new CashTransactionParametersImpl(UUID.randomUUID(), "cash_wallet", "pkeyActor", "pkeyPlugin", new BigDecimal(200.3), FiatCurrency.US_DOLLAR, "testDeposit AVAIL/BOOK 200.3USD", TransactionType.DEBIT);
+        //this.queueNewTransaction(params);
+        //this.queueNewTransaction(params2);
+    }
+
+
+    /*
+     * AsyncTransactionAgent abstract overrides
+     */
+    @Override
+    public void processTransaction(CashTransactionParameters transaction) {
+
+        try{
+            if(transaction.getTransactionType() == TransactionType.CREDIT)
+                this.doCreateCashDepositTransaction(transaction);
+            else
+                this.doCreateCashWithdrawalTransaction(transaction);
+
+            //TODO: Evento al GUI de actualizar la transaccion indicando que se realizo satisfactoriamente
+
+        }catch(CantCreateDepositTransactionException e){
+            //TODO: Evento al GUI de actualizar el deposito indicando que hubo una falla y no se pudo realizar
+
+        }catch(CantCreateWithdrawalTransactionException e){
+            //TODO: Evento al GUI de actualizar el retiro indicando que hubo una falla y no se pudo realizar
+
+        }catch(CashMoneyWalletInsufficientFundsException e){
+            //TODO: Evento al GUI de actualizar el retiro indicando que no hay fondos suficientes
+
+        }
     }
 
 
 
-
+    /*
+     * CashMoneyWalletModuleManager implementation
+     */
     @Override
     public CashWalletBalances getWalletBalances(String walletPublicKey) throws CantGetCashMoneyWalletBalancesException {
         CashMoneyWallet wallet;
@@ -107,12 +144,22 @@ public class CashMoneyWalletModuleManagerImpl implements CashMoneyWalletModuleMa
     }
 
     @Override
-    public CashDepositTransaction createCashDepositTransaction(CashTransactionParameters depositParameters) throws CantCreateDepositTransactionException {
+    public void createAsyncCashDepositTransaction(CashTransactionParameters depositParameters) {
+        this.queueNewTransaction(depositParameters);
+    }
+
+    @Override
+    public void createAsyncCashWithdrawalTransaction(CashTransactionParameters withdrawalParameters) {
+        this.queueNewTransaction(withdrawalParameters);
+    }
+
+    @Override
+    public CashDepositTransaction doCreateCashDepositTransaction(CashTransactionParameters depositParameters) throws CantCreateDepositTransactionException {
         return cashDepositTransactionManager.createCashDepositTransaction(depositParameters);
     }
 
     @Override
-    public CashWithdrawalTransaction createCashWithdrawalTransaction(CashTransactionParameters withdrawalParameters) throws CantCreateWithdrawalTransactionException, CashMoneyWalletInsufficientFundsException {
+    public CashWithdrawalTransaction doCreateCashWithdrawalTransaction(CashTransactionParameters withdrawalParameters) throws CantCreateWithdrawalTransactionException, CashMoneyWalletInsufficientFundsException {
         return cashWithdrawalTransactionManager.createCashWithdrawalTransaction(withdrawalParameters);
     }
 
