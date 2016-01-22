@@ -83,7 +83,7 @@ public class WizardPageSetIdentityFragment extends FermatWalletListFragment<Cryp
                     walletManager.associateIdentity(selectedIdentity.getPublicKey());
                     changeActivity(Activities.CBP_CRYPTO_BROKER_WALLET_SET_MERCHANDISES, appSession.getAppPublicKey());
                 } else{
-                    Toast.makeText(WizardPageSetIdentityFragment.this.getActivity(), "Select one identity...", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(WizardPageSetIdentityFragment.this.getActivity(), R.string.cbw_select_identity_warning_msg, Toast.LENGTH_LONG).show();
 
                 }
             }
