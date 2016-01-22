@@ -102,24 +102,21 @@ public final class CryptoBrokerExecutorAgent extends FermatAgent {
     @Override
     public void pause() {
         agentThread.interrupt();
-        super.pause();
+        status = AgentStatus.PAUSED;
     }
 
     @Override
     public void resume() {
         agentThread.start();
-        super.resume();
+        status = AgentStatus.STARTED;
     }
 
     @Override
     public void stop() {
         agentThread.interrupt();
         //TODO: fijense esto
-        try {
-            super.stop();
-        } catch (CantStopAgentException e) {
-            e.printStackTrace();
-        }
+        status = AgentStatus.STOPPED;
+
     }
 
     private void sendCycle() {

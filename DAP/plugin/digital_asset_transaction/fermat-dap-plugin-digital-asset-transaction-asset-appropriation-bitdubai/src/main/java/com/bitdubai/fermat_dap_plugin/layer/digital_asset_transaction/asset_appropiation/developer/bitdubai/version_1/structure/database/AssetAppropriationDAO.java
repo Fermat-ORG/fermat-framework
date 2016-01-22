@@ -25,14 +25,14 @@ import com.bitdubai.fermat_dap_api.layer.all_definition.digital_asset.DigitalAss
 import com.bitdubai.fermat_dap_api.layer.all_definition.enums.AppropriationStatus;
 import com.bitdubai.fermat_dap_api.layer.all_definition.enums.EventStatus;
 import com.bitdubai.fermat_dap_api.layer.all_definition.util.Validate;
-import com.bitdubai.fermat_dap_api.layer.dap_transaction.asset_appropriation.exceptions.CantExecuteAppropriationTransactionException;
 import com.bitdubai.fermat_dap_api.layer.dap_transaction.asset_appropriation.exceptions.CantLoadAssetAppropriationTransactionListException;
-import com.bitdubai.fermat_dap_api.layer.dap_transaction.asset_appropriation.exceptions.TransactionAlreadyStartedException;
-import com.bitdubai.fermat_dap_api.layer.dap_transaction.asset_appropriation.interfaces.AssetAppropriationTransactionRecord;
 import com.bitdubai.fermat_dap_api.layer.dap_transaction.common.exceptions.CantCreateDigitalAssetFileException;
+import com.bitdubai.fermat_dap_api.layer.dap_transaction.common.exceptions.CantExecuteAppropriationTransactionException;
 import com.bitdubai.fermat_dap_api.layer.dap_transaction.common.exceptions.CantGetDigitalAssetFromLocalStorageException;
 import com.bitdubai.fermat_dap_api.layer.dap_transaction.common.exceptions.CantSaveEventException;
 import com.bitdubai.fermat_dap_api.layer.dap_transaction.common.exceptions.RecordsNotFoundException;
+import com.bitdubai.fermat_dap_api.layer.dap_transaction.common.exceptions.TransactionAlreadyStartedException;
+import com.bitdubai.fermat_dap_api.layer.dap_transaction.common.interfaces.AppropriationTransactionRecord;
 import com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.asset_appropiation.developer.bitdubai.version_1.exceptions.CantLoadAssetAppropriationEventListException;
 import com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.asset_appropiation.developer.bitdubai.version_1.structure.functional.AssetAppropriationTransactionRecordImpl;
 import com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.asset_appropiation.developer.bitdubai.version_1.structure.functional.AssetAppropriationVault;
@@ -591,42 +591,42 @@ public class AssetAppropriationDAO implements AutoCloseable {
     /*
      * Transaction metadata table.
      */
-    public AssetAppropriationTransactionRecord getTransaction(DigitalAsset digitalAsset, String assetUserWalletPublicKey, String bitcoinWalletPublicKey) throws RecordsNotFoundException, CantLoadAssetAppropriationTransactionListException {
+    public AppropriationTransactionRecord getTransaction(DigitalAsset digitalAsset, String assetUserWalletPublicKey, String bitcoinWalletPublicKey) throws RecordsNotFoundException, CantLoadAssetAppropriationTransactionListException {
         return constructRecordFromId(getTransactionId(digitalAsset.getPublicKey(), assetUserWalletPublicKey, bitcoinWalletPublicKey));
     }
 
-    public AssetAppropriationTransactionRecord getTransaction(String genesisTransaction) throws RecordsNotFoundException, CantLoadAssetAppropriationTransactionListException {
+    public AppropriationTransactionRecord getTransaction(String genesisTransaction) throws RecordsNotFoundException, CantLoadAssetAppropriationTransactionListException {
         return constructRecordFromId(getTransactionIdByGenesisTransaction(genesisTransaction));
     }
 
-    public List<AssetAppropriationTransactionRecord> getTransactionsForUserWallet(String assetUserWalletPublicKey) throws CantLoadAssetAppropriationTransactionListException {
+    public List<AppropriationTransactionRecord> getTransactionsForUserWallet(String assetUserWalletPublicKey) throws CantLoadAssetAppropriationTransactionListException {
         try {
             List<String> transactionIds = getTransactionIdsForUserWallet(assetUserWalletPublicKey);
-            List<AssetAppropriationTransactionRecord> assetAppropriationTransactionRecords = new ArrayList<>(transactionIds.size());
+            List<AppropriationTransactionRecord> appropriationTransactionRecords = new ArrayList<>(transactionIds.size());
             for (String id : transactionIds) {
-                assetAppropriationTransactionRecords.add(constructRecordFromId(id));
+                appropriationTransactionRecords.add(constructRecordFromId(id));
             }
-            return assetAppropriationTransactionRecords;
+            return appropriationTransactionRecords;
         } catch (RecordsNotFoundException e) {
             return new ArrayList<>();
         }
     }
 
-    public List<AssetAppropriationTransactionRecord> getTransactionsForBitcoinWallet(String bitcoinWalletPublicKey) throws CantLoadAssetAppropriationTransactionListException {
+    public List<AppropriationTransactionRecord> getTransactionsForBitcoinWallet(String bitcoinWalletPublicKey) throws CantLoadAssetAppropriationTransactionListException {
         try {
             List<String> transactionIds = getTransactionIdsForBitcoinWallet(bitcoinWalletPublicKey);
-            List<AssetAppropriationTransactionRecord> assetAppropriationTransactionRecords = new ArrayList<>(transactionIds.size());
+            List<AppropriationTransactionRecord> appropriationTransactionRecords = new ArrayList<>(transactionIds.size());
             for (String id : transactionIds) {
-                assetAppropriationTransactionRecords.add(constructRecordFromId(id));
+                appropriationTransactionRecords.add(constructRecordFromId(id));
             }
-            return assetAppropriationTransactionRecords;
+            return appropriationTransactionRecords;
         } catch (RecordsNotFoundException e) {
             return new ArrayList<>();
         }
     }
 
-    public List<AssetAppropriationTransactionRecord> getUnsendedTransactions() throws CantLoadAssetAppropriationTransactionListException {
-        List<AssetAppropriationTransactionRecord> uncompleted = new ArrayList<>();
+    public List<AppropriationTransactionRecord> getUnsendedTransactions() throws CantLoadAssetAppropriationTransactionListException {
+        List<AppropriationTransactionRecord> uncompleted = new ArrayList<>();
         uncompleted.addAll(getTransactionsForStatus(AppropriationStatus.APPROPRIATION_STARTED));
         uncompleted.addAll(getTransactionsForStatus(AppropriationStatus.CRYPTOADDRESS_OBTAINED));
         uncompleted.addAll(getTransactionsForStatus(AppropriationStatus.CRYPTOADDRESS_REGISTERED));
@@ -634,14 +634,14 @@ public class AssetAppropriationDAO implements AutoCloseable {
         return uncompleted;
     }
 
-    public List<AssetAppropriationTransactionRecord> getTransactionsForStatus(AppropriationStatus status) throws CantLoadAssetAppropriationTransactionListException {
+    public List<AppropriationTransactionRecord> getTransactionsForStatus(AppropriationStatus status) throws CantLoadAssetAppropriationTransactionListException {
         try {
             List<String> transactionIds = getTransactionIdsForStatus(status);
-            List<AssetAppropriationTransactionRecord> assetAppropriationTransactionRecords = new ArrayList<>(transactionIds.size());
+            List<AppropriationTransactionRecord> appropriationTransactionRecords = new ArrayList<>(transactionIds.size());
             for (String id : transactionIds) {
-                assetAppropriationTransactionRecords.add(constructRecordFromId(id));
+                appropriationTransactionRecords.add(constructRecordFromId(id));
             }
-            return assetAppropriationTransactionRecords;
+            return appropriationTransactionRecords;
         } catch (RecordsNotFoundException e) {
             return new ArrayList<>();
         }
