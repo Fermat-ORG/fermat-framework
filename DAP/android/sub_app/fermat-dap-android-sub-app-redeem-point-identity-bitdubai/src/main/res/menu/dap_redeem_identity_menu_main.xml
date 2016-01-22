@@ -9,8 +9,8 @@
         <!--app:showAsAction="never" />-->
 
     <item
-        android:id="@+id/action_identity_issuer_help"
+        android:id="@+id/action_identity_redeem_help"
         android:title="@string/help"
-        android:icon="@drawable/dap_identity_issuer_help_icon"
+        android:icon="@drawable/dap_identity_redeem_help_icon"
         app:showAsAction="ifRoom" />
 </menu>
