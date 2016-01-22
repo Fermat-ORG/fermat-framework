@@ -209,7 +209,7 @@ public class RedeemPointActorPluginRoot extends AbstractPlugin implements
                         actorAssetRedeemPoint.getRegistrationDate(),
                         System.currentTimeMillis(),
                         assetRedeemPointActorprofileImage,
-                        actorAssetRedeemPoint.registeredIssuers());
+                        actorAssetRedeemPoint.getRegisteredIssuers());
 
 //                RedeemPointActorAddress address = new RedeemPointActorAddress();
 //                address.setCountryName("Venezuela");
