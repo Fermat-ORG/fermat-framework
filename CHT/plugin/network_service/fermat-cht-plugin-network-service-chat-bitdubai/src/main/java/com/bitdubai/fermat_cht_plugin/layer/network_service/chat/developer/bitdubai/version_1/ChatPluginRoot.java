@@ -308,6 +308,11 @@ public class ChatPluginRoot extends AbstractPlugin implements
     }
 
     @Override
+    public void handleNewSentMessageNotificationEvent(FermatMessage message) {
+        //TODO: completar por favot
+    }
+
+    @Override
     public PlatformComponentProfile getPlatformComponentProfilePluginRoot() {
         return platformComponentProfile;
     }

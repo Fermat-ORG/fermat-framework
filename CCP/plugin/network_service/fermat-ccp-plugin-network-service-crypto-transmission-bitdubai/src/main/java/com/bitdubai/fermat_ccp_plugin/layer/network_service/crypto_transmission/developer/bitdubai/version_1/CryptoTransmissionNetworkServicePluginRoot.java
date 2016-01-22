@@ -1046,6 +1046,8 @@ public class CryptoTransmissionNetworkServicePluginRoot extends AbstractNetworkS
         }
         catch(CantUpdateRecordDataBaseException e) {
             throw  new CantSetToCreditedInWalletException("Can't Set Metadata To Credited In Wallet Exception",e,"","Can't update record");
+        } catch (PendingRequestNotFoundException e) {
+            e.printStackTrace();
         }
 
 
@@ -1055,13 +1057,16 @@ public class CryptoTransmissionNetworkServicePluginRoot extends AbstractNetworkS
     public void informTransactionSeenByVault(UUID transaction_id) throws CantSetToSeenByCryptoVaultException {
         try {
             //change status to send , to inform Seen
-            outgoingCryptoTransmissionMetadataDAO.changeCryptoTransmissionProtocolStateAndNotificationState(
+            //CryptoTransmissionMetadata cryptoTransmissionMetadata = incomingCryptoTransmissionMetadataDAO.getMetadata(transaction_id);
+            incomingCryptoTransmissionMetadataDAO.changeCryptoTransmissionProtocolStateAndNotificationState(
                     transaction_id,
                     CryptoTransmissionProtocolState.PRE_PROCESSING_SEND,
                     CryptoTransmissionMetadataState.SEEN_BY_DESTINATION_VAULT);
         }
         catch(CantUpdateRecordDataBaseException e) {
             throw  new CantSetToSeenByCryptoVaultException("Can't Set Metadata To Seen By Crypto Vault Exception",e,"","Can't update record");
+        } catch (PendingRequestNotFoundException e) {
+            e.printStackTrace();
         }
     }
 
