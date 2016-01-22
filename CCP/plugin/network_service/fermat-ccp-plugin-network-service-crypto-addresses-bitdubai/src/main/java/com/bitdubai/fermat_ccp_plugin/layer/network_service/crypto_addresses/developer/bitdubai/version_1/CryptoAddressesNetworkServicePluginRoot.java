@@ -109,7 +109,6 @@ import java.util.UUID;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.atomic.AtomicBoolean;
 
-import jdk.nashorn.internal.parser.JSONParser;
 
 /**
  * This plugin manages the exchange of crypto addresses between actors.
@@ -418,7 +417,7 @@ public class CryptoAddressesNetworkServicePluginRoot extends AbstractNetworkServ
         eventManager.addListener(fermatEventListener);
         listenersAdded.add(fermatEventListener);
 
-        /**
+        /*
          *  failure connection
          */
 
@@ -427,7 +426,7 @@ public class CryptoAddressesNetworkServicePluginRoot extends AbstractNetworkServ
         eventManager.addListener(fermatEventListener);
         listenersAdded.add(fermatEventListener);
 
-        /**
+        /*
          * new message
          */
         fermatEventListener = eventManager.getNewListener(P2pEventType.NEW_NETWORK_SERVICE_MESSAGE_RECEIVE_NOTIFICATION);
@@ -435,7 +434,7 @@ public class CryptoAddressesNetworkServicePluginRoot extends AbstractNetworkServ
         eventManager.addListener(fermatEventListener);
         listenersAdded.add(fermatEventListener);
 
-        /**
+        /*
          * Listen and handle VPN Connection Close Notification Event
          */
         fermatEventListener = eventManager.getNewListener(P2pEventType.VPN_CONNECTION_CLOSE);
@@ -443,7 +442,7 @@ public class CryptoAddressesNetworkServicePluginRoot extends AbstractNetworkServ
         eventManager.addListener(fermatEventListener);
         listenersAdded.add(fermatEventListener);
 
-        /**
+        /*
          * Listen and handle Client Connection Close Notification Event
          */
         fermatEventListener = eventManager.getNewListener(P2pEventType.CLIENT_CONNECTION_CLOSE);
@@ -451,7 +450,7 @@ public class CryptoAddressesNetworkServicePluginRoot extends AbstractNetworkServ
         eventManager.addListener(fermatEventListener);
         listenersAdded.add(fermatEventListener);
 
-                /*
+        /*
          * Listen and handle Client Connection Loose Notification Event
          */
         fermatEventListener = eventManager.getNewListener(P2pEventType.CLIENT_CONNECTION_LOOSE);

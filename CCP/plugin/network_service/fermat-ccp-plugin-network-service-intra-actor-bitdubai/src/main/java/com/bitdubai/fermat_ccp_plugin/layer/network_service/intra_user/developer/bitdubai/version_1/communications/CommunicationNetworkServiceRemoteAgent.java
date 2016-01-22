@@ -15,8 +15,6 @@ import com.bitdubai.fermat_ccp_plugin.layer.network_service.intra_user.developer
 import com.bitdubai.fermat_ccp_plugin.layer.network_service.intra_user.developer.bitdubai.version_1.database.communications.IncomingMessageDao;
 import com.bitdubai.fermat_ccp_plugin.layer.network_service.intra_user.developer.bitdubai.version_1.database.communications.OutgoingMessageDao;
 import com.bitdubai.fermat_ccp_plugin.layer.network_service.intra_user.developer.bitdubai.version_1.exceptions.CantInsertRecordDataBaseException;
-import com.bitdubai.fermat_ccp_plugin.layer.network_service.intra_user.developer.bitdubai.version_1.exceptions.CantReadRecordDataBaseException;
-import com.bitdubai.fermat_ccp_plugin.layer.network_service.intra_user.developer.bitdubai.version_1.exceptions.CantUpdateRecordDataBaseException;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.contents.FermatMessageCommunication;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.enums.P2pEventType;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.events.NewNetworkServiceMessageSentNotificationEvent;
@@ -37,7 +35,7 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 
 /**
- * The Class <code>com.bitdubai.fermat_dmp_plugin.layer.network_service.template.developer.bitdubai.version_1.communications.CommunicationNetworkServiceRemoteAgent</code>
+ * The Class <code>com.bitdubai.fermat_dmp_plugin.layer.network_service.template.developer.bitdubai.version_1.communications.IntraCommunicationNetworkServiceRemoteAgent</code>
  * is the service toRead that maintaining the communication channel, read and wait for new message.
  *
  * This class extend of the <code>java.util.Observable</code> class,  its used on the software design pattern called: The observer pattern,
@@ -91,7 +89,7 @@ public class CommunicationNetworkServiceRemoteAgent extends Observable {
     private Boolean running;
 
     /**
-     * Represent the read messages tread of this CommunicationNetworkServiceRemoteAgent
+     * Represent the read messages tread of this IntraCommunicationNetworkServiceRemoteAgent
      */
     private Runnable toReceive = new Runnable() {
         @Override
@@ -102,7 +100,7 @@ public class CommunicationNetworkServiceRemoteAgent extends Observable {
     };
 
     /**
-     * Represent the send messages tread of this CommunicationNetworkServiceRemoteAgent
+     * Represent the send messages tread of this IntraCommunicationNetworkServiceRemoteAgent
      */
     private Runnable toSend = new Runnable() {
         @Override
@@ -156,7 +154,7 @@ public class CommunicationNetworkServiceRemoteAgent extends Observable {
         futures[SEND_TASK] = executorService.submit(toSend);
         futures[RECEIVE_TASK] = executorService.submit(toReceive);
 
-        System.out.println("CommunicationNetworkServiceRemoteAgent - started ");
+        System.out.println("IntraCommunicationNetworkServiceRemoteAgent - started ");
 
     }
 
@@ -185,6 +183,8 @@ public class CommunicationNetworkServiceRemoteAgent extends Observable {
 
         //Disconnect from the service
         communicationsVPNConnection.close();
+
+        System.out.println("IntraCommunicationNetworkServiceRemoteAgent - stopped ");
     }
 
     /**
@@ -196,14 +196,14 @@ public class CommunicationNetworkServiceRemoteAgent extends Observable {
 
         try {
 
-           // System.out.println("CommunicationNetworkServiceRemoteAgent - "+communicationsVPNConnection.isActive());
+           System.out.println("IntraCommunicationNetworkServiceRemoteAgent - processMessageReceived "+communicationsVPNConnection.isActive());
 
             /**
              * Verified the status of the connection
              */
             if (communicationsVPNConnection.isActive()){
 
-             //   System.out.println("CommunicationNetworkServiceRemoteAgent - "+communicationsVPNConnection.getUnreadMessagesCount());
+                System.out.println("IntraCommunicationNetworkServiceRemoteAgent - communicationsVPNConnection.getUnreadMessagesCount() = "+communicationsVPNConnection.getUnreadMessagesCount());
 
                 /**
                  * process all pending messages
@@ -214,7 +214,6 @@ public class CommunicationNetworkServiceRemoteAgent extends Observable {
                      * Read the next message in the queue
                      */
                     FermatMessage message = communicationsVPNConnection.readNextMessage();
-
 
                     /*
                      * Validate the message signature
@@ -258,7 +257,7 @@ public class CommunicationNetworkServiceRemoteAgent extends Observable {
         } catch (InterruptedException e) {
             running = false;
             Thread.currentThread().interrupt();
-            System.out.println("CommunicationNetworkServiceRemoteAgent - Thread Interrupted stopped ...  ");
+            System.out.println("IntraCommunicationNetworkServiceRemoteAgent - Thread Interrupted stopped ...  ");
         } catch (CantInsertRecordDataBaseException e) {
             errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_TEMPLATE_NETWORK_SERVICE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, new Exception("Can not process message received. Error reason: "+e.getMessage()));
         }
@@ -276,6 +275,9 @@ public class CommunicationNetworkServiceRemoteAgent extends Observable {
 
                 try {
 
+                    System.out.println("IntraCommunicationNetworkServiceRemoteAgent - processMessageToSend ");
+
+
                     Map<String, Object> filters = new HashMap<>();
                     filters.put(CommunicationNetworkServiceDatabaseConstants.OUTGOING_MESSAGES_STATUS_COLUMN_NAME, MessagesStatus.PENDING_TO_SEND.getCode());
                     filters.put(CommunicationNetworkServiceDatabaseConstants.OUTGOING_MESSAGES_RECEIVER_ID_COLUMN_NAME, communicationsVPNConnection.getRemoteParticipant().getIdentityPublicKey());
@@ -284,13 +286,16 @@ public class CommunicationNetworkServiceRemoteAgent extends Observable {
                      * Read all pending message from database
                      */
                     List<FermatMessage> messages = outgoingMessageDao.findAll(filters);
+
+                    System.out.println("IntraCommunicationNetworkServiceRemoteAgent - messages.size() "+messages.size());
+
                     /*
                      * For each message
                      */
                     for (FermatMessage message: messages){
 
 
-                        if (communicationsVPNConnection.isActive() && (message.getFermatMessagesStatus() != FermatMessagesStatus.SENT) && communicationsVPNConnection.isConnected()) {
+                        if (communicationsVPNConnection.isConnected() && (message.getFermatMessagesStatus() == FermatMessagesStatus.PENDING_TO_SEND)){
 
                             /*
                              * Encrypt the content of the message whit the remote network service public key
@@ -319,19 +324,20 @@ public class CommunicationNetworkServiceRemoteAgent extends Observable {
                              * Put the message on a event and fire new event
                              */
                             FermatEvent fermatEvent = eventManager.getNewEvent(P2pEventType.NEW_NETWORK_SERVICE_MESSAGE_SENT_NOTIFICATION);
-                            //TODO no source
-                         //   fermatEvent.setSource(IntraActorNetworkServicePluginRoot.EVENT_SOURCE);
+                            //fermatEvent.setSource(IntraActorNetworkServicePluginRoot.EVENT_SOURCE);
                             ((NewNetworkServiceMessageSentNotificationEvent) fermatEvent).setData(message);
                             eventManager.raiseEvent(fermatEvent);
+
+
+                        }else{
+                            System.out.println("IntraCommunicationNetworkServiceRemoteAgent - VPN connection is no connected = "+communicationsVPNConnection.isConnected());
                         }
+
                     }
 
-                } catch (CantUpdateRecordDataBaseException e) {
-                    errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_TEMPLATE_NETWORK_SERVICE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, new Exception("Can not process messages to send. Error reason: "+e.getMessage()));
-                } catch (CantReadRecordDataBaseException e) {
-                    errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_TEMPLATE_NETWORK_SERVICE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, new Exception("Can not process messages to send. Error reason: " + e.getMessage()));
+
                 }catch (Exception e){
-                    errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_TEMPLATE_NETWORK_SERVICE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, new Exception("Can not process messages to send. Error reason: " + e.getMessage()));
+                    System.out.println("IntraCommunicationNetworkServiceRemoteAgent - Error sending message: " + e.getMessage());
                 }
 
 
@@ -343,7 +349,7 @@ public class CommunicationNetworkServiceRemoteAgent extends Observable {
         } catch (InterruptedException e) {
             running = false;
             Thread.currentThread().interrupt();
-            System.out.println("CommunicationNetworkServiceRemoteAgent - Thread Interrupted stopped ...  ");
+            System.out.println("IntraCommunicationNetworkServiceRemoteAgent - Thread Interrupted stopped ...  ");
         }
     }
 }
