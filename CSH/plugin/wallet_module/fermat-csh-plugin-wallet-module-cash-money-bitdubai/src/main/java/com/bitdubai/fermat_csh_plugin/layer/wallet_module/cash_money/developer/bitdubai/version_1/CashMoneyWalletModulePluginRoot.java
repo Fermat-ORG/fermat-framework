@@ -48,6 +48,7 @@ import com.bitdubai.fermat_csh_api.layer.csh_wallet_module.CashMoneyWalletPrefer
 import com.bitdubai.fermat_csh_api.layer.csh_wallet_module.exceptions.CantGetCashMoneyWalletBalancesException;
 import com.bitdubai.fermat_csh_api.layer.csh_wallet_module.interfaces.CashMoneyWalletModuleManager;
 import com.bitdubai.fermat_csh_plugin.layer.wallet_module.cash_money.developer.bitdubai.version_1.structure.CashMoneyWalletModuleManagerImpl;
+import com.bitdubai.fermat_csh_plugin.layer.wallet_module.cash_money.developer.bitdubai.version_1.structure.CashWalletModuleAsyncAgent;
 import com.bitdubai.fermat_csh_plugin.layer.wallet_module.cash_money.developer.bitdubai.version_1.structure.CurrencyPairImpl;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedPluginExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
@@ -75,6 +76,7 @@ public class CashMoneyWalletModulePluginRoot extends AbstractPlugin implements L
     private PluginFileSystem pluginFileSystem;
 
 
+
     /* CASH PLUGINS */
     @NeededPluginReference(platform = Platforms.CASH_PLATFORM, layer = Layers.CASH_MONEY_TRANSACTION, plugin = Plugins.BITDUBAI_CSH_MONEY_TRANSACTION_WITHDRAWAL)
     private CashWithdrawalTransactionManager cashWithdrawalTransactionManager;
@@ -92,7 +94,7 @@ public class CashMoneyWalletModulePluginRoot extends AbstractPlugin implements L
 
 
 
-    private AsyncTransactionAgent<CashMoneyWalletTransaction> transactionAgent;
+    private CashWalletModuleAsyncAgent transactionAgent;
     private CashMoneyWalletModuleManager cashMoneyWalletModuleManager;
 
 
@@ -120,7 +122,7 @@ public class CashMoneyWalletModulePluginRoot extends AbstractPlugin implements L
             throw new CantStartPluginException(CantStartPluginException.DEFAULT_MESSAGE, FermatException.wrapException(e), null, null);
         }
 
-        //transactionAgent = new AsyncTransactionAgent(errorManager, cashMoneyWalletModuleManager);
+        //transactionAgent = new CashWalletModuleAsyncAgent(errorManager, cashMoneyWalletModuleManager);
         //transactionAgent.start();
 
         serviceStatus = ServiceStatus.STARTED;
