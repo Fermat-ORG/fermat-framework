@@ -1441,6 +1441,11 @@ public class IntraActorNetworkServicePluginRoot extends AbstractPlugin implement
 
         }
 
+         /*
+             * Mark as register
+             */
+        this.register = Boolean.TRUE;
+
         if(actorNetworkServiceRecordedAgent!=null) {
             try {
                 actorNetworkServiceRecordedAgent.start();

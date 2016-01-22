@@ -285,6 +285,11 @@ public class AssetTransmissionNetworkServicePluginRoot extends AbstractPlugin im
         //TODO: implementar el handler de los mensajes acá por favor ;)
     }
 
+    @Override
+    public void handleNewSentMessageNotificationEvent(FermatMessage message) {
+
+    }
+
     /**
      * Set the PlatformComponentProfile
      *

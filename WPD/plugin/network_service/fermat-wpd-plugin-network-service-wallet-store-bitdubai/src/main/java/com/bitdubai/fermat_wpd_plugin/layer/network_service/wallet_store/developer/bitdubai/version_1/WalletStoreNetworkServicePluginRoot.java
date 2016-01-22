@@ -537,6 +537,11 @@ public class WalletStoreNetworkServicePluginRoot extends AbstractPlugin implemen
         //TODO implement handle new message
     }
 
+    @Override
+    public void handleNewSentMessageNotificationEvent(FermatMessage message) {
+
+    }
+
     /**
      * LogManagerForDevelopers Interface implementation.
      */

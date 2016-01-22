@@ -465,7 +465,7 @@ public class CryptoTransmissionMetadataDAO_V2 {
 
     }
 
-    public void changeCryptoTransmissionProtocolStateAndNotificationState(UUID transaction_id, CryptoTransmissionProtocolState cryptoTransmissionProtocolState, CryptoTransmissionMetadataState cryptoTransmissionMetadataState) throws CantUpdateRecordDataBaseException {
+    public CryptoTransmissionMetadata changeCryptoTransmissionProtocolStateAndNotificationState(UUID transaction_id, CryptoTransmissionProtocolState cryptoTransmissionProtocolState, CryptoTransmissionMetadataState cryptoTransmissionMetadataState) throws CantUpdateRecordDataBaseException, PendingRequestNotFoundException {
         if (transaction_id == null) {
             throw new IllegalArgumentException("The entity is required, can not be null");
         }
@@ -488,11 +488,14 @@ public class CryptoTransmissionMetadataDAO_V2 {
              */
             //set filter by id
             DatabaseTable transmissionTable =  getDatabaseTable();
-            transmissionTable.addUUIDFilter(CryptoTransmissionNetworkServiceDatabaseConstants.CRYPTO_TRANSMISSION_METADATA_TRANSMISSION_ID_COLUMN_NAME,cryptoTransmissionMetadata.getTransactionId(),DatabaseFilterType.EQUAL);
+            transmissionTable.addUUIDFilter(CryptoTransmissionNetworkServiceDatabaseConstants.CRYPTO_TRANSMISSION_METADATA_TRANSMISSION_ID_COLUMN_NAME, cryptoTransmissionMetadata.getTransactionId(), DatabaseFilterType.EQUAL);
 
             DatabaseTransaction transaction = getDataBase().newTransaction();
             transaction.addRecordToUpdate(transmissionTable, cryptoTransmissionMetadataRecord);
             getDataBase().executeTransaction(transaction);
+
+
+            return cryptoTransmissionMetadata;
 
         } catch (DatabaseTransactionFailedException databaseTransactionFailedException) {
 
@@ -505,10 +508,12 @@ public class CryptoTransmissionMetadataDAO_V2 {
             throw cantUpdateRecordDataBaseException;
 
         } catch (PendingRequestNotFoundException e) {
-            e.printStackTrace();
+            throw new PendingRequestNotFoundException(e,"not found","");
         } catch (CantGetCryptoTransmissionMetadataException e) {
-            e.printStackTrace();
+            throw new PendingRequestNotFoundException(e,"not found","");
         }
+
+
     }
 
 
@@ -781,7 +786,7 @@ public class CryptoTransmissionMetadataDAO_V2 {
         }
     }
 
-    public void doneTransaction(UUID transactionId) throws CantUpdateRecordDataBaseException {
+    public void doneTransaction(UUID transactionId) throws CantUpdateRecordDataBaseException, PendingRequestNotFoundException {
         changeCryptoTransmissionProtocolStateAndNotificationState(
                 transactionId,
                 CryptoTransmissionProtocolState.DONE,

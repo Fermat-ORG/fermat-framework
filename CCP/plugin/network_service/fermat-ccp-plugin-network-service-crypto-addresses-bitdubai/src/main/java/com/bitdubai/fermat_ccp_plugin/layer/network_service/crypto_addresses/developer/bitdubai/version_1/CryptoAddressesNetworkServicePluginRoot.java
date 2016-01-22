@@ -955,8 +955,8 @@ public class CryptoAddressesNetworkServicePluginRoot extends AbstractNetworkServ
         /*
          * If the component registered have my profile and my identity public key
          */
-        if (platformComponentProfileRegistered.getPlatformComponentType()  == PlatformComponentType.NETWORK_SERVICE &&
-                platformComponentProfileRegistered.getNetworkServiceType()  == NetworkServiceType.CRYPTO_ADDRESSES &&
+        if (platformComponentProfileRegistered.getPlatformComponentType()  == getPlatformComponentType() &&
+                platformComponentProfileRegistered.getNetworkServiceType()  == getNetworkServiceType() &&
                 platformComponentProfileRegistered.getIdentityPublicKey().equals(identity.getPublicKey())){
 
             /*
@@ -1100,6 +1100,11 @@ public class CryptoAddressesNetworkServicePluginRoot extends AbstractNetworkServ
 
                 }
             }
+
+         /*
+             * Mark as register
+             */
+        this.register = Boolean.TRUE;
 
         if(cryptoAddressesExecutorAgent!=null) {
             try {

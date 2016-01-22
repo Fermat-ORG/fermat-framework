@@ -726,16 +726,15 @@ public class CryptoTransmissionNetworkServicePluginRoot extends AbstractNetworkS
 
     }
 
-    private void initializeCryptoTransmissionAgent(PlatformComponentProfile platformComponentProfileRegistered){
+    private void initializeCryptoTransmissionAgent(){
         try {
             cryptoTransmissionAgent = new CryptoTransmissionAgent(
                     this,
                     cryptoTransmissionConnectionsDAO,
-                    outgoingCryptoTransmissionMetadataDAO,
                     incomingCryptoTransmissionMetadataDAO,
+                    outgoingCryptoTransmissionMetadataDAO,
                     communicationNetworkServiceConnectionManager,
                     wsCommunicationsCloudClientManager,
-                    platformComponentProfileRegistered,
                     errorManager,
                     new ArrayList<PlatformComponentProfile>(),
                     identity,
@@ -798,7 +797,6 @@ public class CryptoTransmissionNetworkServicePluginRoot extends AbstractNetworkS
              * Mark as register
              */
             this.register = Boolean.TRUE;
-            setRegister(Boolean.TRUE);
 
             System.out.print("-----------------------\n" +
                     "CRYPTO TRANSMISSION REGISTRADO  -----------------------\n" +
@@ -806,12 +804,11 @@ public class CryptoTransmissionNetworkServicePluginRoot extends AbstractNetworkS
 
             setPlatformComponentProfilePluginRoot(platformComponentProfileRegistered);
 
-            if(!beforeRegistered) {
                 /**
                  * Inicialice de main agent
                  */
-                initializeCryptoTransmissionAgent(platformComponentProfileRegistered);
-            }
+                initializeCryptoTransmissionAgent();
+
         }
     }
 
@@ -990,6 +987,20 @@ public class CryptoTransmissionNetworkServicePluginRoot extends AbstractNetworkS
 
          }
 
+         /*
+             * Mark as register
+             */
+        this.register = Boolean.TRUE;
+        if(cryptoTransmissionAgent!=null) {
+            try {
+                cryptoTransmissionAgent.start();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }else {
+            initializeCryptoTransmissionAgent();
+        }
+
 
     }
 
@@ -1107,6 +1118,8 @@ public class CryptoTransmissionNetworkServicePluginRoot extends AbstractNetworkS
         }
         catch(CantUpdateRecordDataBaseException e) {
             throw  new CantSetToCreditedInWalletException("Can't Set Metadata To Credited In Wallet Exception",e,"","Can't update record");
+        } catch (PendingRequestNotFoundException e) {
+            e.printStackTrace();
         }
 
 
@@ -1116,13 +1129,16 @@ public class CryptoTransmissionNetworkServicePluginRoot extends AbstractNetworkS
     public void informTransactionSeenByVault(UUID transaction_id) throws CantSetToSeenByCryptoVaultException {
         try {
             //change status to send , to inform Seen
-            outgoingCryptoTransmissionMetadataDAO.changeCryptoTransmissionProtocolStateAndNotificationState(
+            //CryptoTransmissionMetadata cryptoTransmissionMetadata = incomingCryptoTransmissionMetadataDAO.getMetadata(transaction_id);
+            incomingCryptoTransmissionMetadataDAO.changeCryptoTransmissionProtocolStateAndNotificationState(
                     transaction_id,
                     CryptoTransmissionProtocolState.PRE_PROCESSING_SEND,
                     CryptoTransmissionMetadataState.SEEN_BY_DESTINATION_VAULT);
         }
         catch(CantUpdateRecordDataBaseException e) {
             throw  new CantSetToSeenByCryptoVaultException("Can't Set Metadata To Seen By Crypto Vault Exception",e,"","Can't update record");
+        } catch (PendingRequestNotFoundException e) {
+            e.printStackTrace();
         }
     }
 
