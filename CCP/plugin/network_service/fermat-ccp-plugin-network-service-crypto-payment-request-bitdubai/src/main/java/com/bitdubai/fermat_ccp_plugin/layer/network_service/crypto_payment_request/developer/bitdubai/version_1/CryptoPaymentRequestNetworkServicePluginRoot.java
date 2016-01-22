@@ -802,6 +802,8 @@ public final class CryptoPaymentRequestNetworkServicePluginRoot extends Abstract
         // set to not registered.
         register = Boolean.FALSE;
 
+        cryptoPaymentRequestExecutorAgent.stopExecutor();
+
         this.serviceStatus = ServiceStatus.STOPPED;
     }
 
@@ -905,7 +907,7 @@ public final class CryptoPaymentRequestNetworkServicePluginRoot extends Abstract
      */
     public void handleCompleteComponentRegistrationNotificationEvent(final PlatformComponentProfile platformComponentProfileRegistered) {
 
-        if (platformComponentProfileRegistered.getPlatformComponentType() == PlatformComponentType.COMMUNICATION_CLOUD_CLIENT && this.register && communicationRegistrationProcessNetworkServiceAgent.getStatus() == AgentStatus.STOPPED){
+        if (platformComponentProfileRegistered.getPlatformComponentType() == PlatformComponentType.COMMUNICATION_CLOUD_CLIENT && this.register){
 
             beforeRegistered = Boolean.TRUE;
 
@@ -943,27 +945,28 @@ public final class CryptoPaymentRequestNetworkServicePluginRoot extends Abstract
              */
             this.register = Boolean.TRUE;
 
-            if(!beforeRegistered) {
-                try {
+            initializeAgent();
 
-                    cryptoPaymentRequestExecutorAgent = new CryptoPaymentRequestExecutorAgent(
-                            this,
-                            errorManager,
-                            eventManager,
-                            cryptoPaymentRequestNetworkServiceDao,
-                            wsCommunicationsCloudClientManager,
-                            getPluginVersionReference()
-                    );
-
-                    cryptoPaymentRequestExecutorAgent.start();
-
-                } catch (CantStartAgentException e) {
-
-                    CantStartPluginException pluginStartException = new CantStartPluginException(e, "", "Problem initializing crypto payment request dao.");
-                    errorManager.reportUnexpectedPluginException(this.getPluginVersionReference(), UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, pluginStartException);
-                }
             }
+    }
 
+
+    private void initializeAgent(){
+        try {
+            cryptoPaymentRequestExecutorAgent = new CryptoPaymentRequestExecutorAgent(
+                    this,
+                    errorManager,
+                    eventManager,
+                    cryptoPaymentRequestNetworkServiceDao,
+                    wsCommunicationsCloudClientManager,
+                    getPluginVersionReference()
+            );
+            cryptoPaymentRequestExecutorAgent.start();
+
+        } catch (CantStartAgentException e) {
+
+            CantStartPluginException pluginStartException = new CantStartPluginException(e, "", "Problem initializing crypto payment request dao.");
+            errorManager.reportUnexpectedPluginException(this.getPluginVersionReference(), UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, pluginStartException);
         }
     }
 
@@ -1091,6 +1094,17 @@ public final class CryptoPaymentRequestNetworkServicePluginRoot extends Abstract
 
                 }
             }
+
+
+        if(cryptoPaymentRequestExecutorAgent!=null) {
+            try {
+                cryptoPaymentRequestExecutorAgent.start();
+            } catch (CantStartAgentException e) {
+                e.printStackTrace();
+            }
+        }else {
+            initializeAgent();
+        }
 
     }
 
