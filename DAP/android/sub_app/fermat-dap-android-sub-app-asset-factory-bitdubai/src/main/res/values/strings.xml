@@ -2,6 +2,7 @@
     <string name="app_name">fermat-dap-android-sub-app-asset-factory-bitdubai</string>
     <string name="asset_factory_main_publish_menu">Publish</string>
     <string name="asset_factory_main_edit_menu">Edit</string>
+    <string name="asset_factory_main_delete_menu">Delete</string>
     <string name="home_asset_state_editable">Editable</string>
     <string name="app_unnamed">No name given&#8230;</string>
     <string name="home_row_asset_amount">Amount: %1$d</string>

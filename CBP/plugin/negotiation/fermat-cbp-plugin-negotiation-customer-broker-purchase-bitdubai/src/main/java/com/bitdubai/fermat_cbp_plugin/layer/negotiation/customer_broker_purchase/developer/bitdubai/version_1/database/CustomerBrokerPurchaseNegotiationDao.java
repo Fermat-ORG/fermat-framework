@@ -83,8 +83,6 @@ public class CustomerBrokerPurchaseNegotiationDao implements NegotiationClauseMa
                 throw new CantInitializeCustomerBrokerPurchaseNegotiationDatabaseException(cantCreateDatabaseException.getMessage());
             }
         }
-
-        new pruebas(this);
     }
 
     public void createCustomerBrokerPurchaseNegotiation(CustomerBrokerPurchaseNegotiation negotiation) throws CantCreateCustomerBrokerPurchaseNegotiationException {
@@ -478,7 +476,7 @@ public class CustomerBrokerPurchaseNegotiationDao implements NegotiationClauseMa
             try {
                 DatabaseTable PurchaseLocationTable = this.database.getTable(CustomerBrokerPurchaseNegotiationDatabaseConstants.LOCATIONS_CUSTOMER_TABLE_NAME);
                 DatabaseTableRecord recordToDelete   = PurchaseLocationTable.getEmptyRecord();
-                PurchaseLocationTable.addUUIDFilter(CustomerBrokerPurchaseNegotiationDatabaseConstants.LOCATIONS_CUSTOMER_LOCATION_ID_COLUMN_NAME, location.getLocationId(), DatabaseFilterType.EQUAL);
+                recordToDelete.setUUIDValue(CustomerBrokerPurchaseNegotiationDatabaseConstants.LOCATIONS_CUSTOMER_LOCATION_ID_COLUMN_NAME, location.getLocationId());
                 PurchaseLocationTable.deleteRecord(recordToDelete);
             } catch (CantDeleteRecordException e) {
                 throw new CantDeleteLocationPurchaseException(e.DEFAULT_MESSAGE, e, "", "");
@@ -546,7 +544,7 @@ public class CustomerBrokerPurchaseNegotiationDao implements NegotiationClauseMa
             try {
                 DatabaseTable PurchaseBankTable = this.database.getTable(CustomerBrokerPurchaseNegotiationDatabaseConstants.BANK_ACCOUNTS_CUSTOMER_TABLE_NAME);
                 DatabaseTableRecord recordToDelete = PurchaseBankTable.getEmptyRecord();
-                PurchaseBankTable.addUUIDFilter(CustomerBrokerPurchaseNegotiationDatabaseConstants.BANK_ACCOUNTS_CUSTOMER_BANK_ACCOUNTS_ID_COLUMN_NAME, bankAccount.getBankAccountId(), DatabaseFilterType.EQUAL);
+                recordToDelete.setUUIDValue(CustomerBrokerPurchaseNegotiationDatabaseConstants.BANK_ACCOUNTS_CUSTOMER_BANK_ACCOUNTS_ID_COLUMN_NAME, bankAccount.getBankAccountId());
                 PurchaseBankTable.deleteRecord(recordToDelete);
             } catch (CantDeleteRecordException e) {
                 throw new CantDeleteBankAccountPurchaseException(e.DEFAULT_MESSAGE, e, "", "");
@@ -604,7 +602,7 @@ public class CustomerBrokerPurchaseNegotiationDao implements NegotiationClauseMa
                 records = PurchaseBanksTable.customQuery(Query, true);
                 Collection<FiatCurrency> resultados = new ArrayList<>();
                 for (DatabaseTableRecord record : records) {
-                    resultados.add(FiatCurrency.getByCode(record.getStringValue("Column2")));
+                    resultados.add(FiatCurrency.getByCode(record.getStringValue("Column0")));
                 }
                 return resultados;
             } catch (CantLoadTableToMemoryException e) {

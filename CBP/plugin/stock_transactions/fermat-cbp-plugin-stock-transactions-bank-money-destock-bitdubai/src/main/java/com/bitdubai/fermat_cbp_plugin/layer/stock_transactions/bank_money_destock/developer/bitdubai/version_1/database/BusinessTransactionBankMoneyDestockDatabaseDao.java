@@ -140,6 +140,12 @@ public class BusinessTransactionBankMoneyDestockDatabaseDao {
             database = openDatabase();
             DatabaseTransaction transaction = database.newTransaction();
 
+            //TODO: Solo para prueba ya que priceReference viene null desde android revisar con Nelson
+            bankMoneyTransaction.setPriceReference(new BigDecimal(0));
+
+            //TODO:Revisar con guillermo que el accountNumber viene null
+            bankMoneyTransaction.setBankAccount("123456");
+
             DatabaseTable table = getDatabaseTable(BussinessTransactionBankMoneyDestockDatabaseConstants.BANK_MONEY_DESTOCK_TABLE_NAME);
             DatabaseTableRecord bankMoneyRestockRecord = getBankMoneyDestockRecord(bankMoneyTransaction);
             DatabaseTableFilter filter = table.getEmptyTableFilter();
