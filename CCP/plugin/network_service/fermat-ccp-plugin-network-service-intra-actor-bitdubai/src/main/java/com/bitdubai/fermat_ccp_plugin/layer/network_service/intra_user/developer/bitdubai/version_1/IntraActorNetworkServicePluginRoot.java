@@ -102,6 +102,7 @@ import com.bitdubai.fermat_ccp_plugin.layer.network_service.intra_user.developer
 import com.bitdubai.fermat_ccp_plugin.layer.network_service.intra_user.developer.bitdubai.version_1.structure.Identity;
 import com.bitdubai.fermat_ccp_plugin.layer.network_service.intra_user.developer.bitdubai.version_1.structure.IntraActorNetworkServiceDao;
 import com.bitdubai.fermat_ccp_plugin.layer.network_service.intra_user.developer.bitdubai.version_1.structure.IntraUserNetworkService;
+import com.bitdubai.fermat_p2p_api.layer.all_definition.common.network_services.template.structure.CommunicationNetworkServiceConnectionManager_V2;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.contents.FermatMessageCommunication;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.enums.P2pEventType;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.events.ClientConnectionCloseNotificationEvent;
@@ -856,6 +857,18 @@ public class IntraActorNetworkServicePluginRoot extends AbstractPlugin implement
                 e.printStackTrace();
             }
 
+            if(communicationNetworkServiceConnectionManager==null) {
+
+                this.communicationNetworkServiceConnectionManager = new CommunicationNetworkServiceConnectionManager(
+                        this,
+                        getPlatformComponentProfilePluginRoot(),
+                        identity,
+                        wsCommunicationsCloudClientManager.getCommunicationsCloudClientConnection(),
+                        dataBase,
+                        errorManager,
+                        eventManager
+                );
+            }
 
         }
 

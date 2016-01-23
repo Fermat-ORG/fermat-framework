@@ -237,6 +237,8 @@ public class WsCommunicationTyrusVPNClient extends Endpoint implements Communica
 
         } catch (IOException e) {
             e.printStackTrace();
+        } catch (Exception e){
+            e.printStackTrace();
         }
     }
 
