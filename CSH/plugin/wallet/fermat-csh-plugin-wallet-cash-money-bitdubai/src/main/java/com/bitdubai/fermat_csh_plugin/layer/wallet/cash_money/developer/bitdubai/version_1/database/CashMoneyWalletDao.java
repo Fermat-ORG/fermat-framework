@@ -442,7 +442,7 @@ public class CashMoneyWalletDao {
                     + CashMoneyWalletDatabaseConstants.TRANSACTIONS_TABLE_NAME + " for id " + transactionId);
         }
 
-        return new CashMoneyWalletTransactionImpl(transactionId, publicKeyWallet, publicKeyActor, publicKeyPlugin, transactionType, balanceType, amount, memo, timestamp);
+        return new CashMoneyWalletTransactionImpl(transactionId, publicKeyWallet, publicKeyActor, publicKeyPlugin, transactionType, balanceType, amount, memo, timestamp, false);
     }
 
 }
