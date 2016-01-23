@@ -1246,8 +1246,8 @@ public class CryptoAddressesNetworkServicePluginRoot extends AbstractNetworkServ
 //                    break;
                 case REQUEST:
                     // update the request to processing receive state with the given action.
-                    RequestMessage requestMessage = gson.fromJson(jsonMessage, RequestMessage.class);
-                    cryptoAddressesNetworkServiceDao.changeProtocolState(requestMessage.getRequestId(), ProtocolState.PENDING_ACTION);
+                    //RequestMessage requestMessage = gson.fromJson(jsonMessage, RequestMessage.class);
+                    cryptoAddressesNetworkServiceDao.changeProtocolState(networkServiceMessage.getRequestId(), ProtocolState.PENDING_ACTION);
                     break;
                 default:
                     throw new CantHandleNewMessagesException(

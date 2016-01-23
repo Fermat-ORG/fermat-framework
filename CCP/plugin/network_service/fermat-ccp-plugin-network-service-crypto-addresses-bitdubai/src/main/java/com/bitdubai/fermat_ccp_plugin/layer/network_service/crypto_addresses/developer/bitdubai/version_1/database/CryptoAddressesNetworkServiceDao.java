@@ -669,6 +669,30 @@ public final class CryptoAddressesNetworkServiceDao {
         }
     }
 
+    public boolean isPendingRequestByProtocolStateAndMessageReceive(ProtocolState protocolState, RequestType received) throws CantListPendingCryptoAddressRequestsException {
+
+        if (protocolState == null || received == null) throw new CantListPendingCryptoAddressRequestsException(null, "", "actorType, can not be null");
+
+
+        try {
+
+            DatabaseTable table = database.getTable(CryptoAddressesNetworkServiceDatabaseConstants.ADDRESS_EXCHANGE_REQUEST_TABLE_NAME);
+
+            table.addStringFilter(CryptoAddressesNetworkServiceDatabaseConstants.ADDRESS_EXCHANGE_REQUEST_STATE_COLUMN_NAME, protocolState.getCode(), DatabaseFilterType.EQUAL);
+            table.addStringFilter(CryptoAddressesNetworkServiceDatabaseConstants.ADDRESS_EXCHANGE_REQUEST_TYPE_COLUMN_NAME, received.getCode(), DatabaseFilterType.EQUAL);
+
+            table.setFilterTop("1");
+
+            table.loadToMemory();
+
+            return (!table.getRecords().isEmpty());
+
+        } catch (CantLoadTableToMemoryException exception) {
+
+            throw new CantListPendingCryptoAddressRequestsException(exception, "", "Exception not handled by the plugin, there is a problem in database and i cannot load the table.");
+        }
+    }
+
     /**
      * change the protocol state
      *
@@ -701,7 +725,7 @@ public final class CryptoAddressesNetworkServiceDao {
             if (!records.isEmpty()) {
                 DatabaseTableRecord record = records.get(0);
 
-                record.setStringValue(CryptoAddressesNetworkServiceDatabaseConstants.ADDRESS_EXCHANGE_REQUEST_ACTION_COLUMN_NAME , action.getCode());
+                record.setStringValue(CryptoAddressesNetworkServiceDatabaseConstants.ADDRESS_EXCHANGE_REQUEST_ACTION_COLUMN_NAME, action.getCode());
 
                 addressExchangeRequestTable.updateRecord(record);
 
@@ -865,4 +889,6 @@ public final class CryptoAddressesNetworkServiceDao {
                 messageType
         );
     }
+
+
 }

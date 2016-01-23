@@ -15,6 +15,7 @@ import com.bitdubai.fermat_api.layer.all_definition.network_service.interfaces.N
 import com.bitdubai.fermat_ccp_api.all_definition.enums.EventType;
 import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_addresses.enums.ProtocolState;
 import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_addresses.enums.RequestAction;
+import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_addresses.enums.RequestType;
 import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_addresses.exceptions.CantConfirmAddressExchangeRequestException;
 import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_addresses.exceptions.CantListPendingCryptoAddressRequestsException;
 import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_addresses.exceptions.PendingRequestNotFoundException;
@@ -266,7 +267,7 @@ public final class CryptoAddressesExecutorAgent extends FermatAgent {
         try {
 
             // if there is pending actions i raise a crypto address news event.
-            if(dao.isPendingRequestByProtocolState(ProtocolState.PENDING_ACTION)) {
+            if(dao.isPendingRequestByProtocolStateAndMessageReceive(ProtocolState.PENDING_ACTION, RequestType.RECEIVED)) {
                 FermatEvent eventToRaise = eventManager.getNewEvent(EventType.CRYPTO_ADDRESSES_NEWS);
                 eventToRaise.setSource(cryptoAddressesNetworkServicePluginRoot.getEventSource());
                 eventManager.raiseEvent(eventToRaise);
