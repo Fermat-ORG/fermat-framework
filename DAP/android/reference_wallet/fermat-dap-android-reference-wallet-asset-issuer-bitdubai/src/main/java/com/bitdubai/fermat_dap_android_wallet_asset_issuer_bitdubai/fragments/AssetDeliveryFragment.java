@@ -56,7 +56,7 @@ import static android.widget.Toast.makeText;
 public class AssetDeliveryFragment extends AbstractFermatFragment {
 
     private Activity activity;
-
+    private static final int MAX_ASSET_QUANTITY = 200;
     private AssetIssuerSession assetIssuerSession;
     private AssetIssuerWalletSupAppModuleManager moduleManager;
     private ErrorManager errorManager;
@@ -176,6 +176,8 @@ public class AssetDeliveryFragment extends AbstractFermatFragment {
             public void onClick(View v) {
                 if (assetsToDeliverEditText.getText().length() == 0) {
                     Toast.makeText(activity, "Must be enter the number of assets to deliver", Toast.LENGTH_SHORT).show();
+                } else if (Integer.parseInt(assetsToDeliverEditText.getText().toString()) > MAX_ASSET_QUANTITY){
+                    Toast.makeText(activity, "Value can't be greater than "+MAX_ASSET_QUANTITY, Toast.LENGTH_SHORT).show();
                 } else if (digitalAsset.getAvailableBalanceQuantity() == 0) {
                     Toast.makeText(activity, "There is not assets to distribute", Toast.LENGTH_SHORT).show();
                 } else if (selectedUsersCount == 0) {

@@ -597,6 +597,20 @@ public class AssetEditorFragment extends AbstractFermatFragment implements View.
                 Toast.makeText(getActivity(), "There are insufficient available funds to perform the transaction.", Toast.LENGTH_SHORT).show();
                 return false;
             }
+            String name = nameView.getText().toString().trim();
+            if (name.length() == 0)
+            {
+                Toast.makeText(getActivity(), "Invalid Asset Name.", Toast.LENGTH_SHORT).show();
+                return false;
+
+            }
+            String description = descriptionView.getText().toString().trim();
+            if (description.length() == 0)
+            {
+                Toast.makeText(getActivity(), "Invalid Asset Description.", Toast.LENGTH_SHORT).show();
+                return false;
+
+            }
             return true;
         } catch (NumberFormatException ex) {
             CommonLogger.exception(TAG, ex.getMessage(), ex);
