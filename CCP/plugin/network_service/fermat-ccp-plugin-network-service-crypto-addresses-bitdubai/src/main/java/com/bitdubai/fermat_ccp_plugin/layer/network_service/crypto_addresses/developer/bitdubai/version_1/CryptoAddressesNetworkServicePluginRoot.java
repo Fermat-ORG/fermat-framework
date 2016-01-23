@@ -1276,7 +1276,7 @@ public class CryptoAddressesNetworkServicePluginRoot extends AbstractNetworkServ
 
             cryptoAddressesNetworkServiceDao.createAddressExchangeRequest(
                     requestMessage.getRequestId(),
-                    null,
+                    requestMessage.getWalletPublicKey(),
                     requestMessage.getCryptoCurrency(),
                     requestMessage.getIdentityTypeRequesting(),
                     requestMessage.getIdentityTypeResponding(),

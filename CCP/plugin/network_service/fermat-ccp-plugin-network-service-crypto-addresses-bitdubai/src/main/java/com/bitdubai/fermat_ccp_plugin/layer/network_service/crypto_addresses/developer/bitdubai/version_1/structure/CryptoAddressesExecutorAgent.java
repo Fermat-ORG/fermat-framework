@@ -415,7 +415,8 @@ public final class CryptoAddressesExecutorAgent extends FermatAgent {
                 aer.getIdentityPublicKeyRequesting(),
                 aer.getIdentityPublicKeyResponding(),
                 aer.getCryptoAddressDealer(),
-                aer.getBlockchainNetworkType()
+                aer.getBlockchainNetworkType(),
+                aer.getWalletPublicKey()
         ).toJson();
     }
 
