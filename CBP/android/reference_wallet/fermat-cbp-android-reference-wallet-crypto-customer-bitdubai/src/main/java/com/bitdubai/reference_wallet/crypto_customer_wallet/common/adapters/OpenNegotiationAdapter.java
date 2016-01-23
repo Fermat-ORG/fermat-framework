@@ -71,22 +71,13 @@ public class OpenNegotiationAdapter extends FermatAdapter<ClauseInformation, Fer
 
         switch (type) {
             case TYPE_ITEM_SINGLE_CHOICE:
-//                return new SingleChoiceViewHolder(itemView);
-                final SingleChoiceViewHolder singleChoiceViewHolder = new SingleChoiceViewHolder(itemView);
-//                singleChoiceViewHolder.getConfirmButton();
-                return singleChoiceViewHolder;
+                return new SingleChoiceViewHolder(itemView);
 
             case TYPE_ITEM_EXCHANGE_RATE:
-//                return new ExchangeRateViewHolder(itemView);
-                final ExchangeRateViewHolder exchangeRateViewHolder = new ExchangeRateViewHolder(itemView);
-//                exchangeRateViewHolder.getConfirmButton();
-                return exchangeRateViewHolder;
+                return new ExchangeRateViewHolder(itemView);
 
             case TYPE_ITEM_AMOUNT_TO_BUY:
-//                return new AmountToBuyViewHolder(itemView);
-                final AmountToBuyViewHolder amountToBuyViewHolder = new AmountToBuyViewHolder(itemView);
-//                amountToBuyViewHolder.getConfirmButton();
-                return amountToBuyViewHolder;
+                return new AmountToBuyViewHolder(itemView);
 
             case TYPE_FOOTER:
                 final FooterViewHolder footerViewHolder = new FooterViewHolder(itemView);
@@ -164,6 +155,7 @@ public class OpenNegotiationAdapter extends FermatAdapter<ClauseInformation, Fer
         final int clauseNumberImageRes = FragmentsCommons.getClauseNumberImageRes(clauseNumber);
 
         switch (clause.getType()) {
+            //BASIC CLAUSES
             case CUSTOMER_CURRENCY_QUANTITY:
                 clauseViewHolder.setViewResources(R.string.ccw_amount_to_buy, clauseNumberImageRes);
                 break;
@@ -180,6 +172,40 @@ public class OpenNegotiationAdapter extends FermatAdapter<ClauseInformation, Fer
             case BROKER_PAYMENT_METHOD:
                 clauseViewHolder.setViewResources(R.string.reception_methods_title, clauseNumberImageRes, R.string.payment_method);
                 break;
+            //BASIC CLAUSES (NOT USER)
+            case BROKER_CURRENCY_QUANTITY:
+                clauseViewHolder.setViewResources(R.string.ccw_amount_to_pay, clauseNumberImageRes, R.string.payment_method);
+                break;
+            case CUSTOMER_CURRENCY:
+                clauseViewHolder.setViewResources(R.string.ccw_currency_to_buy, clauseNumberImageRes, R.string.payment_method);
+                break;
+            //CRYPTO CLAUSES
+            case CUSTOMER_CRYPTO_ADDRESS:
+                clauseViewHolder.setViewResources(R.string.ccw_crypto_address_customer, clauseNumberImageRes);
+                break;
+            case BROKER_CRYPTO_ADDRESS:
+                clauseViewHolder.setViewResources(R.string.ccw_crypto_address_broker, clauseNumberImageRes);
+                break;
+            //BANK CLAUSES
+            case CUSTOMER_BANK_ACCOUNT:
+                clauseViewHolder.setViewResources(R.string.ccw_bank_account_customer, clauseNumberImageRes);
+                break;
+            case BROKER_BANK_ACCOUNT:
+                clauseViewHolder.setViewResources(R.string.ccw_bank_account_broker, clauseNumberImageRes);
+                break;
+            //CASH CLAUSES
+            case CUSTOMER_PLACE_TO_DELIVER:
+                clauseViewHolder.setViewResources(R.string.ccw_cash_place_to_delivery_customer, clauseNumberImageRes);
+                break;
+            case CUSTOMER_DATE_TIME_TO_DELIVER:
+                clauseViewHolder.setViewResources(R.string.ccw_cash_date_to_delivery_customer, clauseNumberImageRes);
+                break;
+            case BROKER_PLACE_TO_DELIVER:
+                clauseViewHolder.setViewResources(R.string.ccw_cash_place_to_delivery_broker, clauseNumberImageRes);
+                break;
+            case BROKER_DATE_TIME_TO_DELIVER:
+                clauseViewHolder.setViewResources(R.string.ccw_cash_date_to_delivery_broker, clauseNumberImageRes);
+                break;
         }
 
     }
@@ -194,7 +220,7 @@ public class OpenNegotiationAdapter extends FermatAdapter<ClauseInformation, Fer
 
     private List<ClauseInformation> buildListOfItems() {
 
-        int cont = 0;
+        int cont = 5;
 
         Map<ClauseType, ClauseInformation> clauses = negotiationInformation.getClauses();
 
@@ -202,28 +228,32 @@ public class OpenNegotiationAdapter extends FermatAdapter<ClauseInformation, Fer
 
         final ClauseInformation[] data = new ClauseInformation[TOTAL_STEPS];
 
-        /*for (Map.Entry<ClauseType, ClauseInformation> clauseInformation : clauses.entrySet()){
-            data[cont] = clauses.get(clauseInformation.getValue().getType());
-            cont++;
-        }*/
-
+        //BASIC CLAUSES
         data[0] = clauses.get(ClauseType.CUSTOMER_CURRENCY_QUANTITY);
         data[1] = clauses.get(ClauseType.EXCHANGE_RATE);
         data[2] = clauses.get(ClauseType.BROKER_CURRENCY);
         data[3] = clauses.get(ClauseType.CUSTOMER_PAYMENT_METHOD);
         data[4] = clauses.get(ClauseType.BROKER_PAYMENT_METHOD);
 
+        //OTHER CLAUSES
+        for (Map.Entry<ClauseType, ClauseInformation> clauseInformation : clauses.entrySet()) {
+            if (clauseInformation != null){
+                data[cont] = clauses.get(clauseInformation.getValue().getType());
+                cont++;
+            }
+        }
+
         return Arrays.asList(data);
     }
 
     private int getTotalSteps(Map<ClauseType, ClauseInformation> clauses){
 
-        /*int cont = 0;
+        int cont = 0;
         if(clauses != null)
-            for (Map.Entry<ClauseType, ClauseInformation> clauseInformation : clauses.entrySet()) cont++;
+            for (Map.Entry<ClauseType, ClauseInformation> clauseInformation : clauses.entrySet()) if(clauseInformation != null) cont++;
 
-        return cont;*/
-        return 5;
+        return cont;
+//        return 5;
 
     }
 
