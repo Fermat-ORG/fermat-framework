@@ -326,9 +326,9 @@ public class AssetEditorFragment extends AbstractFermatFragment implements View.
                     .setIconRes(R.drawable.asset_factory)
                     .setVIewColor(R.color.dap_asset_factory_view_color)
                     .setTitleTextColor(R.color.dap_asset_factory_view_color)
-                    .setSubTitle("Asset Editor screen.")
-                    .setBody("On this tab you are able to define all your assets properties.\n \n" +
-                            "A digital asset is formed by an image which represents it,\n" +
+                    .setSubTitle("Asset Editor section.")
+                    .setBody("On this section you are able to define all your assets properties.\n \n" +
+                            "A digital asset is formed by an image which represents it," +
                             "a set of properties like description, expiration date and quantity.\n" +
                             "And a value expressed in Bitcoins.\n \n" +
                             "You will be able to modify any of this properties as needed before publishing your asset.")

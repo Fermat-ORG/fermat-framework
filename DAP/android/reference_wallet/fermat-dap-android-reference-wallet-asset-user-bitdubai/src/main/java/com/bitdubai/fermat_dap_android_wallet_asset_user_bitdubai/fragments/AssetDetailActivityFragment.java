@@ -114,8 +114,11 @@ public class AssetDetailActivityFragment extends AbstractFermatFragment {
                     .setIconRes(R.drawable.asset_user_wallet)
                     .setVIewColor(R.color.dap_user_view_color)
                     .setTitleTextColor(R.color.dap_user_view_color)
-                    .setSubTitle("Asset User Detail.")
-                    .setBody("*GIVE ME A TEXT")
+                    .setSubTitle("Asset Detail.")
+                    .setBody("You can review detailed information about the selected asset.\n\n" +
+                            "You can also decide to redeem your asset in a connected Redeem Point. If you are not connected to any Redeem Point, " +
+                            "use the Redeem Point Community sub app to search for Redeem Points.\n\n" +
+                            "You can also appropriate the asset in order to get the Bitcoins associated with it. They will be sent to your Bitcoin wallet.")
                     .setTemplateType(PresentationDialog.TemplateType.TYPE_PRESENTATION_WITHOUT_IDENTITIES)
                     .setIsCheckEnabled(checkButton)
                     .build();
@@ -231,7 +234,7 @@ public class AssetDetailActivityFragment extends AbstractFermatFragment {
 //        }
         byte[] img = (digitalAsset.getImage() == null) ? new byte[0] : digitalAsset.getImage();
         BitmapWorkerTask bitmapWorkerTask = new BitmapWorkerTask(assetImageDetail, res, R.drawable.img_asset_without_image, false);
-        bitmapWorkerTask.execute(img);
+        //bitmapWorkerTask.execute(img); //todo comment to compile, please review.
 
         assetDetailRedeemLayout.setVisibility((digitalAsset.getAvailableBalanceQuantity() > 0) ? View.VISIBLE : View.GONE);
 
@@ -298,7 +301,7 @@ public class AssetDetailActivityFragment extends AbstractFermatFragment {
             public void onPostExecute(Object... result) {
                 dialog.dismiss();
                 if (activity != null) {
-                    Toast.makeText(activity, "Everything ok (appropriate)...", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(activity, "Appropriation of the asset has started successfully. The process will be completed in a couple of minutes.", Toast.LENGTH_LONG).show();
                 }
             }
 
@@ -306,7 +309,7 @@ public class AssetDetailActivityFragment extends AbstractFermatFragment {
             public void onErrorOccurred(Exception ex) {
                 dialog.dismiss();
                 if (activity != null)
-                    Toast.makeText(activity, "Fermat Has detected an exception",
+                    Toast.makeText(activity, "Fermat Has detected an exception. Please retry again.",
                             Toast.LENGTH_SHORT).show();
             }
         });

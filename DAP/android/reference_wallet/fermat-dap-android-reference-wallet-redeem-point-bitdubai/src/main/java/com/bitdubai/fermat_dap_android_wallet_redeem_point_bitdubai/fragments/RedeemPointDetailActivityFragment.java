@@ -141,8 +141,10 @@ public class RedeemPointDetailActivityFragment extends FermatWalletListFragment<
                     .setIconRes(R.drawable.redeem_point)
                     .setVIewColor(R.color.dap_redeem_point_view_color)
                     .setTitleTextColor(R.color.dap_redeem_point_view_color)
-                    .setSubTitle("Asset User Redeem Point Detail.")
-                    .setBody("*GIVE ME A TEXT")
+                    .setSubTitle("Assets Detail.")
+                    .setBody("You can review in more detail the asset that has been redeemed by an user.\n\n" +
+                            "An asset might be redeemed by many users so statistics and tracking of the users is shown here.\n\n " +
+                            "Every asset redeem at you, is also notified to the original creator of the Asset.")
                     .setTemplateType(PresentationDialog.TemplateType.TYPE_PRESENTATION_WITHOUT_IDENTITIES)
                     .setIsCheckEnabled(checkButton)
                     .build();
@@ -277,7 +279,7 @@ public class RedeemPointDetailActivityFragment extends FermatWalletListFragment<
 //        }
         byte[] img = (digitalAsset.getImage() == null) ? new byte[0] : digitalAsset.getImage();
         BitmapWorkerTask bitmapWorkerTask = new BitmapWorkerTask(assetImageDetail, res, R.drawable.img_asset_without_image, false);
-        bitmapWorkerTask.execute(img);
+        //bitmapWorkerTask.execute(img);
 
         assetDetailNameText.setText(digitalAsset.getName());
         assetDetailExpDateText.setText(digitalAsset.getFormattedExpDate());
