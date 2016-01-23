@@ -193,7 +193,8 @@ public class AssetDeliveryFragment extends AbstractFermatFragment {
                             dialog.setYesBtnListener(new DistributeAcceptDialog.OnClickAcceptListener() {
                                 @Override
                                 public void onClick() {
-                                    doDistribute(digitalAsset.getAssetPublicKey(), users);
+                                    int assetsAmount = Integer.parseInt(assetsToDeliverEditText.getText().toString());
+                                    doDistribute(digitalAsset.getAssetPublicKey(), users, assetsAmount);
                                 }
                             });
                             dialog.show();
@@ -267,7 +268,7 @@ public class AssetDeliveryFragment extends AbstractFermatFragment {
         return count;
     }
 
-    private void doDistribute(final String assetPublicKey, final List<User> users) {
+    private void doDistribute(final String assetPublicKey, final List<User> users, final int assetsAmount) {
         final ProgressDialog dialog = new ProgressDialog(activity);
         dialog.setMessage("Please wait...");
         dialog.setCancelable(false);
@@ -282,7 +283,7 @@ public class AssetDeliveryFragment extends AbstractFermatFragment {
                 }
                 if (users.size() > 0) {
                     //TODO: Solo para la prueba del Distribution
-                    moduleManager.distributionAssets(assetPublicKey, null);
+                    moduleManager.distributionAssets(assetPublicKey, null, assetsAmount);
                 }
                 return true;
             }
