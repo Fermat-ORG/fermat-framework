@@ -63,7 +63,7 @@ public class GroupCommunityAdapter extends FermatAdapter<Group, GroupViewHolder>
             holder.groupMembers.setText(R.string.group_members);
             holder.groupMembers.append(String.format("%s",data.getMembers()));
 
-        Picasso.with(context).load(R.drawable.profile_image_standard).into(holder.thumbnail);
+        Picasso.with(context).load(R.drawable.ic_group_image).into(holder.thumbnail);
 
         } catch (Exception ex) {
             ex.printStackTrace();

@@ -18,6 +18,8 @@
     <color name="secondary_text">#727272</color>
     <color name="primary_text">#212121</color>
 
+    <color name="dap_redeem_point_view_color">#005580</color>
+
     <color name="dap_wallet_redeem_point_gradient_start_color">#005580</color>
     <color name="dap_wallet_redeem_point_gradient_end_color">#005580</color>
 </resources>

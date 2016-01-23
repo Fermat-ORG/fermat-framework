@@ -58,4 +58,10 @@ public interface AssetUserActorNetworkServiceManager extends FermatManager {
      */
     public List<ActorAssetUser> getListActorAssetUserRegistered() throws CantRequestListActorAssetUserRegisteredException;
 
+    /**
+     * Get the the ActorAssetUser registered by Public key
+     *
+     * @return List<ActorAssetUser>
+     */
+    public List<ActorAssetUser> getActorAssetUserRegistered(String actorAssetUserPublicKey) throws CantRequestListActorAssetUserRegisteredException;
 }

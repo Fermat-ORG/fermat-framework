@@ -9,7 +9,6 @@ import com.bitdubai.fermat_dap_android_sub_app_asset_factory_bitdubai.fragments.
 import com.bitdubai.fermat_dap_android_sub_app_asset_factory_bitdubai.fragments.EditableAssetsFragment;
 import com.bitdubai.fermat_dap_android_sub_app_asset_factory_bitdubai.fragments.PublishedAssetsFragment;
 import com.bitdubai.fermat_dap_android_sub_app_asset_factory_bitdubai.sessions.AssetFactorySession;
-import com.bitdubai.fermat_dap_android_sub_app_asset_factory_bitdubai.settings.AssetFactorySettings;
 import com.bitdubai.fermat_pip_api.layer.network_service.subapp_resources.SubAppResourcesProviderManager;
 
 /**

@@ -193,7 +193,7 @@ public class WebSocketCloudServerChannel {
 
     @OnMessage
     public void onPongMessage(PongMessage message) {
-        LOG.info("Pong message receive from server = " + message);
+        LOG.debug("Pong message receive from server = " + message);
     }
 
     @OnClose

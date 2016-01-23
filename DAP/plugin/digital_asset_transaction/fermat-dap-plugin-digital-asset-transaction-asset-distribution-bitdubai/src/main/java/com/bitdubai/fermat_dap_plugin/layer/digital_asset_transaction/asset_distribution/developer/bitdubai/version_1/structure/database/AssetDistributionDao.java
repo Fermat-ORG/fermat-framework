@@ -90,7 +90,7 @@ public class AssetDistributionDao {
         }
     }
 
-    public void persistDigitalAsset(String genesisTransaction,
+    public void persistDigitalAsset(String transactionHash,
                                     String localStoragePath,
                                     String digitalAssetHash,
                                     String actorReceiverPublicKey,
@@ -99,7 +99,7 @@ public class AssetDistributionDao {
 
             DatabaseTable databaseTable = getDatabaseTable(AssetDistributionDatabaseConstants.ASSET_DISTRIBUTION_TABLE_NAME);
             DatabaseTableRecord record = databaseTable.getEmptyRecord();
-            record.setStringValue(AssetDistributionDatabaseConstants.ASSET_DISTRIBUTION_GENESIS_TRANSACTION_COLUMN_NAME, genesisTransaction);
+            record.setStringValue(AssetDistributionDatabaseConstants.ASSET_DISTRIBUTION_GENESIS_TRANSACTION_COLUMN_NAME, transactionHash);
             record.setStringValue(AssetDistributionDatabaseConstants.ASSET_DISTRIBUTION_DIGITAL_ASSET_HASH_COLUMN_NAME, digitalAssetHash);
             record.setStringValue(AssetDistributionDatabaseConstants.ASSET_DISTRIBUTION_DIGITAL_ASSET_STORAGE_LOCAL_PATH_COLUMN_NAME, localStoragePath);
             record.setStringValue(AssetDistributionDatabaseConstants.ASSET_DISTRIBUTION_ACTOR_ASSET_USER_PUBLIC_KEY_COLUMN_NAME, actorReceiverPublicKey);
