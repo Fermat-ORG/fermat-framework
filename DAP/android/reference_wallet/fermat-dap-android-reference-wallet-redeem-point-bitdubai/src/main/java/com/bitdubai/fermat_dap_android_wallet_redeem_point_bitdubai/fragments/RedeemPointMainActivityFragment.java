@@ -183,14 +183,16 @@ public class RedeemPointMainActivityFragment extends FermatWalletListFragment<Di
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         super.onCreateOptionsMenu(menu, inflater);
-        inflater.inflate(R.menu.dap_wallet_asset_redeem_home_menu, menu);
-    }
+        menu.add(0, SessionConstantsRedeemPoint.IC_ACTION_REDEEM_HELP_PRESENTATION, 0, "help").setIcon(R.drawable.dap_asset_redeem_help_icon)
+                .setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);    }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         try {
 
-            if (item.getItemId() == R.id.action_wallet_redeem_help) {
+            int id = item.getItemId();
+
+            if (id == SessionConstantsRedeemPoint.IC_ACTION_REDEEM_HELP_PRESENTATION) {
                 setUpPresentation(settingsManager.loadAndGetSettings(appSession.getAppPublicKey()).isPresentationHelpEnabled());
                 return true;
             }
