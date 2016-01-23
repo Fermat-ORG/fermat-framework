@@ -391,7 +391,7 @@ public class AssetRedeemPointActorNetworkServicePluginRoot extends AbstractNetwo
     public void registerActorAssetRedeemPoint(ActorAssetRedeemPoint actorAssetRedeemPointToRegister) throws CantRegisterActorAssetRedeemPointException {
         try {
 
-            CommunicationsClientConnection communicationsClientConnection = wsCommunicationsCloudClientManager.getCommunicationsCloudClientConnection();
+            final CommunicationsClientConnection communicationsClientConnection = wsCommunicationsCloudClientManager.getCommunicationsCloudClientConnection();
 
             /*
              * If register
@@ -401,11 +401,24 @@ public class AssetRedeemPointActorNetworkServicePluginRoot extends AbstractNetwo
                  * Construct the profile
                  */
 
-                PlatformComponentProfile platformComponentProfileAssetRedeemPoint = constructPlatformComponentProfile(actorAssetRedeemPointToRegister, communicationsClientConnection);
+                final PlatformComponentProfile platformComponentProfileAssetRedeemPoint = constructPlatformComponentProfile(actorAssetRedeemPointToRegister, communicationsClientConnection);
                 /*
                  * ask to the communication cloud client to register
                  */
-                communicationsClientConnection.registerComponentForCommunication(getNetworkServiceType(), platformComponentProfileAssetRedeemPoint);
+                /**
+                 * I need to add this in a new thread other than the main android thread
+                 */
+            new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    try {
+                        communicationsClientConnection.registerComponentForCommunication(getNetworkServiceType(), platformComponentProfileAssetRedeemPoint);
+                    } catch (CantRegisterComponentException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }).start();
+
             } else {
                 /*
                  * Construct the profile
@@ -414,6 +427,7 @@ public class AssetRedeemPointActorNetworkServicePluginRoot extends AbstractNetwo
                 /*
                  * Add to the list of pending to register
                  */
+
                 actorAssetRedeemPointPendingToRegistration.add(platformComponentProfileAssetRedeemPoint);
             }
         } catch (Exception e) {
