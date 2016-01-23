@@ -763,7 +763,7 @@ public class ChatPluginRoot extends AbstractPlugin implements
         return getIdentityPublicKey();
     }
     @Override
-    public void sendChatMetadata(String localActorPubKey, String remoteActorPubKey, ChatMetadata chatMetadata) throws CantSendChatMessageMetadataException {
+    public void sendChatMetadata(String localActorPubKey, String remoteActorPubKey, ChatMetadata chatMetadata) throws CantSendChatMessageMetadataException, IllegalArgumentException {
 
 
         ChatMetadataTransactionRecord chatMetadataTransactionRecord = new ChatMetadataTransactionRecord();
@@ -772,10 +772,10 @@ public class ChatPluginRoot extends AbstractPlugin implements
             if(chatMetadata == null){
                 throw new IllegalArgumentException("Argument chatMetadata can not be null");
             }
-            if(localActorPubKey == null || localActorPubKey.length() ==0){
+            if(localActorPubKey == null || localActorPubKey.length() ==0 || localActorPubKey.equals("null")){
                 throw new IllegalArgumentException("Argument localActorPubKey can not be null");
             }
-            if(remoteActorPubKey == null || remoteActorPubKey.length() ==0){
+            if(remoteActorPubKey == null || remoteActorPubKey.length() ==0 || remoteActorPubKey.equals("null")){
                 throw new IllegalArgumentException("Argument remoteActorPubKey can not be null");
             }
             System.out.println("ChatPLuginRoot - Starting method sendChatMetadata");
@@ -864,6 +864,11 @@ public class ChatPluginRoot extends AbstractPlugin implements
                 communicationNetworkServiceConnectionManager.connectTo(sender, platformComponentProfile, receiver);
             }
             System.out.println("ChatPluginRoot - Message sent.");
+        } catch(IllegalArgumentException e){
+
+            throw e;
+
+
         } catch (Exception e) {
 
             StringBuilder contextBuffer = new StringBuilder();

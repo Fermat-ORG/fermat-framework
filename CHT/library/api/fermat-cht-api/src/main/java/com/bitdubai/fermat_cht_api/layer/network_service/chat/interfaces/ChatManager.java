@@ -23,7 +23,7 @@ public interface ChatManager extends FermatManager, TransactionProtocolManager<C
 
     List<String> getRegisteredPubliKey() throws CantRequestListException;
     //TODO IN CONSTRUCTION
-    void sendChatMetadata(String localActorPubKey, String remoteActorPubKey, ChatMetadata chatMetadata) throws CantSendChatMessageMetadataException;
+    void sendChatMetadata(String localActorPubKey, String remoteActorPubKey, ChatMetadata chatMetadata) throws CantSendChatMessageMetadataException, IllegalArgumentException;
 
     //void sendChatMessageNewStatusNotification(String localActorPubKey, PlatformComponentType senderType, String remoteActorPubKey, PlatformComponentType receiverType, DistributionStatus newDistributionStatus, UUID chatId) throws CantSendChatMessageNewStatusNotificationException;
 }
