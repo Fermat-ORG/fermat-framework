@@ -15,6 +15,7 @@ import com.bitdubai.fermat_android_api.ui.fragments.FermatWalletListFragment;
 import com.bitdubai.fermat_android_api.ui.interfaces.FermatListItemListeners;
 import com.bitdubai.fermat_android_api.ui.util.FermatDividerItemDecoration;
 import com.bitdubai.fermat_api.layer.all_definition.enums.FiatCurrency;
+import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterException;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Wallets;
 import com.bitdubai.fermat_api.layer.all_definition.settings.exceptions.CantGetSettingsException;
@@ -245,6 +246,9 @@ implements FermatListItemListeners<CashMoneyWalletTransaction>, DialogInterface.
                 if (adapter != null)
                     adapter.changeDataSet(transactionList);
 
+                getWalletBalances();
+                updateWalletBalances();
+                handleWidhtrawalFabVisibilityAccordingToBalance();
                 showOrHideNoTransactionsView(transactionList.isEmpty());
             }
         }
@@ -366,6 +370,12 @@ implements FermatListItemListeners<CashMoneyWalletTransaction>, DialogInterface.
 
     @Override
     public void onItemClickListener(CashMoneyWalletTransaction data, int position) {
+        //Try to cancel transaction if it is pending
+        try{
+            moduleManager.cancelAsyncCashTransaction(transactionList.get(position));
+        } catch (InvalidParameterException e) {
+            //TODO: do something with this.
+        }
         appSession.setData("transaction", transactionList.get(position));
         changeActivity(Activities.CSH_CASH_MONEY_WALLET_TRANSACTION_DETAIL, appSession.getAppPublicKey());
     }
