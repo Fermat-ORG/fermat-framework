@@ -184,7 +184,8 @@ public class CommunicationNetworkServiceRemoteAgent extends Observable {
         futures[RECEIVE_TASK].cancel(true);
 
         //Disconnect from the service
-        communicationsVPNConnection.close();
+        if(communicationsVPNConnection.isConnected())
+            communicationsVPNConnection.close();
 
         System.out.println("IntraCommunicationNetworkServiceRemoteAgent - stopped ");
     }
