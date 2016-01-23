@@ -158,7 +158,9 @@ public class IssuerCommunityHomeFragment extends AbstractFermatFragment implemen
                 .setVIewColor(R.color.dap_community_issuer_view_color)
                 .setTitleTextColor(R.color.dap_community_issuer_view_color)
                 .setSubTitle("Welcome to the Asset Issuer Community.")
-                .setBody("From this wallet you will be able to distribute your assets to the world and collect statistics of their usage.")
+                .setBody("This application will help you discover and connect to Asset Issuers registered in our network.!\n\n" +
+                        "If you are identified as a Redeem Point, you will need to connect to Assets Issuers in order to get approval to redeem assets created by that " +
+                        "Asset Issuer.\n\nSelect any available Asset Issuer and click connect to start the process. If your network speed is low, you may have to retry several times.")
                 .setTextFooter("We will be creating an avatar for you in order to identify you in the system as an Asset Issuer, name and more details later in the Asset Issuer Identity sub app.")
                 .setTemplateType(PresentationDialog.TemplateType.TYPE_PRESENTATION_WITHOUT_IDENTITIES)
 //                    .setTemplateType((moduleManager.getActiveAssetIssuerIdentity() == null) ? PresentationDialog.TemplateType.TYPE_PRESENTATION : PresentationDialog.TemplateType.TYPE_PRESENTATION_WITHOUT_IDENTITIES)
@@ -236,7 +238,7 @@ public class IssuerCommunityHomeFragment extends AbstractFermatFragment implemen
                     @Override
                     public void onErrorOccurred(Exception ex) {
                         dialog.dismiss();
-                        Toast.makeText(getActivity(), String.format("An exception has been thrown: %s", ex.getMessage()), Toast.LENGTH_LONG).show();
+                        Toast.makeText(getActivity(), String.format("We have detected an error. Make sure you have created an Asset Issuer or Redeem Point identities using the corresponding Identity sub app."), Toast.LENGTH_LONG).show();
                         ex.printStackTrace();
                     }
                 });
