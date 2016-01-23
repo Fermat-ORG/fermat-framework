@@ -71,13 +71,22 @@ public class OpenNegotiationAdapter extends FermatAdapter<ClauseInformation, Fer
 
         switch (type) {
             case TYPE_ITEM_SINGLE_CHOICE:
-                return new SingleChoiceViewHolder(itemView);
+//                return new SingleChoiceViewHolder(itemView);
+                final SingleChoiceViewHolder singleChoiceViewHolder = new SingleChoiceViewHolder(itemView);
+//                singleChoiceViewHolder.getConfirmButton();
+                return singleChoiceViewHolder;
 
             case TYPE_ITEM_EXCHANGE_RATE:
-                return new ExchangeRateViewHolder(itemView);
+//                return new ExchangeRateViewHolder(itemView);
+                final ExchangeRateViewHolder exchangeRateViewHolder = new ExchangeRateViewHolder(itemView);
+//                exchangeRateViewHolder.getConfirmButton();
+                return exchangeRateViewHolder;
 
             case TYPE_ITEM_AMOUNT_TO_BUY:
-                return new AmountToBuyViewHolder(itemView);
+//                return new AmountToBuyViewHolder(itemView);
+                final AmountToBuyViewHolder amountToBuyViewHolder = new AmountToBuyViewHolder(itemView);
+//                amountToBuyViewHolder.getConfirmButton();
+                return amountToBuyViewHolder;
 
             case TYPE_FOOTER:
                 final FooterViewHolder footerViewHolder = new FooterViewHolder(itemView);
@@ -148,7 +157,7 @@ public class OpenNegotiationAdapter extends FermatAdapter<ClauseInformation, Fer
 
         final ClauseViewHolder clauseViewHolder = (ClauseViewHolder) holder;
         clauseViewHolder.bindData(negotiationInformation, clause, position);
-        clauseViewHolder.getConfirmButton().setVisibility(View.GONE);
+        clauseViewHolder.getConfirmButton().setVisibility(View.VISIBLE);
         clauseViewHolder.setListener(clauseListener);
 
         final int clauseNumber = position + 1;
