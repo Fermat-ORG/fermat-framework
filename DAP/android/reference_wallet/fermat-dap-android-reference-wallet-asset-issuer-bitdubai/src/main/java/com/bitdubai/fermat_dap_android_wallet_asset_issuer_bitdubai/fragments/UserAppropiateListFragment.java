@@ -122,8 +122,9 @@ public class UserAppropiateListFragment extends FermatWalletListFragment<UserApp
                     .setIconRes(R.drawable.asset_issuer)
                     .setVIewColor(R.color.dap_issuer_view_color)
                     .setTitleTextColor(R.color.dap_issuer_view_color)
-                    .setSubTitle("Asset Issuer Appropiate.")
-                    .setBody("*GIVE ME A TEXT")
+                    .setSubTitle("Asset Issuer appropriation list.")
+                    .setBody("Users that have decided to appropriate an asset instead of redeem it is also important data.\n\n" +
+                            "On this section, we are showing you those users that have decided to appropriate your selected asset.")
                     .setTemplateType(PresentationDialog.TemplateType.TYPE_PRESENTATION_WITHOUT_IDENTITIES)
                     .setIsCheckEnabled(checkButton)
                     .build();

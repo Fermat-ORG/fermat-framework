@@ -464,7 +464,8 @@ public class EditableAssetsFragment extends AbstractFermatFragment implements
                         if (getActivity() != null) {
                             onRefresh();
                         }
-                        Toast.makeText(getActivity(), "The asset was successfully published.", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getActivity(), "The publishing process has been started successfully.\n\n " +
+                                "You will be able to distribute this asset in a few minutes from your Asset Issuer Wallet.", Toast.LENGTH_LONG).show();
                     }
 
                     @Override
