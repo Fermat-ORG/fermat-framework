@@ -278,8 +278,10 @@ public class EditableAssetsFragment extends AbstractFermatFragment implements
                     .setVIewColor(R.color.dap_asset_factory_view_color)
                     .setTitleTextColor(R.color.dap_asset_factory_view_color)
                     .setTextNameLeft("Asset Issuer")
-                    .setSubTitle("Welcome to the Asset Factory.")
-                    .setBody("From here you will be able to create, define and publish all your assets.")
+                    .setSubTitle("Welcome to the Asset Factory application.")
+                    .setBody("From here you will be able to create, define and publish all your assets. \n\n" +
+                            "In order to start, tap over the + button below where you will be able to \n" +
+                            "define all the properties of your asset.")
                     .setTextFooter("We will be creating an avatar for you in order to identify you in the system as an Asset Issuer, name and more details later in the Asset Issuer Identity sub app.")
                     .setTemplateType((manager.getLoggedIdentityAssetIssuer() == null) ? PresentationDialog.TemplateType.DAP_TYPE_PRESENTATION : PresentationDialog.TemplateType.TYPE_PRESENTATION_WITHOUT_IDENTITIES)
                     .setIsCheckEnabled(checkButton)
@@ -467,7 +469,8 @@ public class EditableAssetsFragment extends AbstractFermatFragment implements
                         if (getActivity() != null) {
                             onRefresh();
                         }
-                        Toast.makeText(getActivity(), "The asset was successfully published.", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getActivity(), "The publishing process has been started successfully.\n\n " +
+                                "You will be able to distribute this asset in a few minutes from your Asset Issuer Wallet.", Toast.LENGTH_LONG).show();
                     }
 
                     @Override

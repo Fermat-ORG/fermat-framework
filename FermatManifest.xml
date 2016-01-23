@@ -4435,12 +4435,12 @@
                     <step id="4" type="direct call"></step>
                 </next>
             </step>
-            <step id="3" type="activity" title="Asset parameters define" description="The Asset information is entered, including the value on bitcoins for each asset" platform="DAP" superlayer="" layer="Sub App" name="Asset Factory">
+            <step id="3" type="activity" title="Asset parameters definition" description="The Asset information is entered, including the value on bitcoins for each asset" platform="DAP" superlayer="" layer="Sub App" name="Asset Factory">
                 <next>
                     <step id="4" type="direct call"></step>
                 </next>
             </step>
-            <step id="4" type="activity" title="Transaction Asset Issuing" description="We revalidate we have enought found in the wallet." platform="DAP" superlayer="" layer="Sub App" name="Asset Factory">
+            <step id="4" type="activity" title="Transaction Asset Issuing" description="We revalidate we have enough founds in the wallet." platform="DAP" superlayer="" layer="Sub App" name="Asset Factory">
                 <next>
                     <step id="5" type="direct call"></step>
                     <step id="20" type="direct call"></step>

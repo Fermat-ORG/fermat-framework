@@ -108,7 +108,9 @@ public class AssetDeliverySelectGroupsFragment extends FermatWalletListFragment<
                     .setVIewColor(R.color.dap_issuer_view_color)
                     .setTitleTextColor(R.color.dap_issuer_view_color)
                     .setSubTitle("Asset Issuer Deliver Groups.")
-                    .setBody("*GIVE ME A TEXT")
+                    .setBody("You can also deliver your assets to entire groups of users.\n\n" +
+                            "If you have many users you are already connected to, it may be better to organize them in groups.\n\n" +
+                            "You can accomplish this from the Asset User Community sub application.")
                     .setTemplateType(PresentationDialog.TemplateType.TYPE_PRESENTATION_WITHOUT_IDENTITIES)
                     .setIsCheckEnabled(checkButton)
                     .build();

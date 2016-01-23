@@ -121,8 +121,10 @@ public class AssetDeliveryFragment extends AbstractFermatFragment {
                     .setIconRes(R.drawable.asset_issuer)
                     .setVIewColor(R.color.dap_issuer_view_color)
                     .setTitleTextColor(R.color.dap_issuer_view_color)
-                    .setSubTitle("Asset Issuer Delivery.")
-                    .setBody("*GIVE ME A TEXT")
+                    .setSubTitle("Asset delivery section.")
+                    .setBody("On this section you will be able to identify the users you are going to deliver this asset to.\n\n" +
+                            "You can deliver as many assets as you have to any connected user. \n\n" +
+                            "If no users are available, you will have to connect to them using the User Community sub application.")
                     .setTemplateType(PresentationDialog.TemplateType.TYPE_PRESENTATION_WITHOUT_IDENTITIES)
                     .setIsCheckEnabled(checkButton)
                     .build();
@@ -344,7 +346,7 @@ public class AssetDeliveryFragment extends AbstractFermatFragment {
 
         byte[] img = (digitalAsset.getImage() == null) ? new byte[0] : digitalAsset.getImage();
         BitmapWorkerTask bitmapWorkerTask = new BitmapWorkerTask(assetDeliveryImage, res, R.drawable.img_asset_without_image, false);
-        bitmapWorkerTask.execute(img);
+        //bitmapWorkerTask.execute(img); //todo commenting to compile, please review
 
         assetDeliveryNameText.setText(digitalAsset.getName());
         //assetsToDeliverEditText.setText(digitalAsset.getAvailableBalanceQuantity()+"");
