@@ -58,9 +58,10 @@
                 android:textSize="14sp"
                 android:fontFamily="light"
                 android:textColor="#b3ffffff"
-                android:text="                 3"
-                android:layout_below="@+id/assetNameText"
-                android:paddingLeft="10dp"
+                android:text="3 Assets"
+                android:layout_toRightOf="@+id/assetBalanceText"
+                android:layout_alignTop="@+id/assetBalanceText"
+                android:paddingLeft="5dp"
                 android:paddingTop="10dp"/>
 
             <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
@@ -70,34 +71,10 @@
                 android:textSize="14sp"
                 android:fontFamily="light"
                 android:textColor="#b3ffffff"
-                android:text="                    Assets"
-                android:layout_below="@+id/assetNameText"
+                android:text="(2 pending confirmation)"
+                android:layout_below="@+id/assetAvailable1"
                 android:paddingLeft="10dp"
-                android:paddingTop="10dp"/>
-
-            <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
-                android:id="@+id/assetAvailable3"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textSize="14sp"
-                android:fontFamily="light"
-                android:textColor="#b3ffffff"
-                android:text="                         \n 2"
-                android:layout_below="@+id/assetNameText"
-                android:paddingLeft="10dp"
-                android:paddingTop="10dp"/>
-
-            <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
-                android:id="@+id/assetAvailable4"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textSize="14sp"
-                android:fontFamily="light"
-                android:textColor="#b3ffffff"
-                android:text="                        \n(   pending confirmation)"
-                android:layout_below="@+id/assetNameText"
-                android:paddingLeft="10dp"
-                android:paddingTop="10dp"/>
+                android:paddingTop="0dp"/>
 
             <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
                 android:id="@+id/assetBtcText"
@@ -108,7 +85,7 @@
                 android:textSize="14sp"
                 android:textColor="#ffffff"
                 android:gravity="center|bottom"
-                android:layout_below="@+id/assetAvailable4"
+                android:layout_below="@+id/assetAvailable2"
                 android:layout_marginTop="10dp"
                 android:layout_marginLeft="25dp"/>
 
@@ -116,7 +93,7 @@
                 android:layout_width="127dp"
                 android:layout_height="30dp"
                 android:src="@drawable/bg_asset_price"
-                android:layout_below="@+id/assetAvailable4"
+                android:layout_below="@+id/assetAvailable2"
                 android:paddingTop="10dp"
                 android:paddingLeft="7dp"/>
 
