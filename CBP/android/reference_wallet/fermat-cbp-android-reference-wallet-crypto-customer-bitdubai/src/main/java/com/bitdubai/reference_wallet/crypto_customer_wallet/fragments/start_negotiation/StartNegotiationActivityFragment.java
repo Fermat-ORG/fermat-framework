@@ -203,9 +203,6 @@ public class StartNegotiationActivityFragment extends AbstractFermatFragment<Cry
     @Override
     public void onSendButtonClicked() {
 
-        //TEST DATE
-        String infoCont = "";
-
         try {
 
             Map<ClauseType, ClauseInformation> mapClauses = negotiationInfo.getClauses();
@@ -218,13 +215,12 @@ public class StartNegotiationActivityFragment extends AbstractFermatFragment<Cry
                 if (validateClauses(mapClauses)) {
 
                     clauses = getClause(mapClauses);
-                    infoCont = getClauseTest(mapClauses);
 
                     if(walletManager.startNegotiation(customerPublicKey, brokerPublicKey, clauses)) {
-                        Toast.makeText(getActivity(), "Send negotiation. " + infoCont + " CUSTOMER_PUBLICKEY: "+ customerPublicKey +" BROKER_PUBLICKEY: "+ brokerPublicKey, Toast.LENGTH_LONG).show();
+                        Toast.makeText(getActivity(), "Send negotiation. " + getClauseTest(mapClauses) + " CUSTOMER_PUBLICKEY: "+ customerPublicKey +" BROKER_PUBLICKEY: "+ brokerPublicKey, Toast.LENGTH_LONG).show();
                         changeActivity(Activities.CBP_CRYPTO_CUSTOMER_WALLET_HOME, this.appSession.getAppPublicKey());
                     } else {
-                        Toast.makeText(getActivity(), "Error send negotiation. " + infoCont + " CUSTOMER_PUBLICKEY: "+ customerPublicKey +" BROKER_PUBLICKEY: "+ brokerPublicKey, Toast.LENGTH_LONG).show();
+                        Toast.makeText(getActivity(), "Error send negotiation. " + getClauseTest(mapClauses) + " CUSTOMER_PUBLICKEY: "+ customerPublicKey +" BROKER_PUBLICKEY: "+ brokerPublicKey, Toast.LENGTH_LONG).show();
                     }
 
                 }
@@ -398,12 +394,6 @@ public class StartNegotiationActivityFragment extends AbstractFermatFragment<Cry
         ClauseInformation information;
 
         if(mapClauses != null) {
-
-            /*for (Map.Entry<ClauseType, ClauseInformation> clauseInformation : mapClauses.entrySet()) {
-                information = clauseInformation.getValue();
-                clauses.add(information);
-                infoCont = information.getType().getCode() + ": " + information.getValue() + ", " + infoCont;
-            }*/
 
             for (Map.Entry<ClauseType, ClauseInformation> clauseInformation : mapClauses.entrySet()) {
 
