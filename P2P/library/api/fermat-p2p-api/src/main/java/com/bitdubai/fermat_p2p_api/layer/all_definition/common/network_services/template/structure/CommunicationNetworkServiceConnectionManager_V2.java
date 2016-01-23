@@ -183,39 +183,46 @@ public class CommunicationNetworkServiceConnectionManager_V2 implements NetworkS
         try {
 
             /*
+             * Validate if exist that Public Key Connection in the List, to avoid if it receives twice the notification of handleEstablishedRequestedNetworkServiceConnection
+             */
+            if(!communicationNetworkServiceRemoteAgentsCache.containsKey(remoteComponentProfile.getIdentityPublicKey())) {
+
+            /*
              * Get the active connection
              */
-            CommunicationsVPNConnection communicationsVPNConnection = communicationsClientConnection.getCommunicationsVPNConnectionStablished(platformComponentProfile.getNetworkServiceType(), remoteComponentProfile);
+                CommunicationsVPNConnection communicationsVPNConnection = communicationsClientConnection.getCommunicationsVPNConnectionStablished(platformComponentProfile.getNetworkServiceType(), remoteComponentProfile);
 
-            //Validate the connection
-            if (communicationsVPNConnection != null &&
-                    communicationsVPNConnection.isActive()) {
+                //Validate the connection
+                if (communicationsVPNConnection != null &&
+                        communicationsVPNConnection.isActive()) {
 
                  /*
                  * Instantiate the local reference
                  */
-                CommunicationNetworkServiceLocal communicationNetworkServiceLocal = new CommunicationNetworkServiceLocal(remoteComponentProfile, errorManager, eventManager, outgoingMessageDao,platformComponentProfile.getNetworkServiceType(),networkServicePluginRoot);
+                    CommunicationNetworkServiceLocal communicationNetworkServiceLocal = new CommunicationNetworkServiceLocal(remoteComponentProfile, errorManager, eventManager, outgoingMessageDao, platformComponentProfile.getNetworkServiceType(), networkServicePluginRoot);
 
                 /*
                  * Instantiate the remote reference
                  */
-                CommunicationNetworkServiceRemoteAgent communicationNetworkServiceRemoteAgent = new CommunicationNetworkServiceRemoteAgent(this,identity, communicationsVPNConnection, errorManager, eventManager, incomingMessageDao, outgoingMessageDao,networkServicePluginRoot);
+                    CommunicationNetworkServiceRemoteAgent communicationNetworkServiceRemoteAgent = new CommunicationNetworkServiceRemoteAgent(this, identity, communicationsVPNConnection, errorManager, eventManager, incomingMessageDao, outgoingMessageDao, networkServicePluginRoot);
 
                 /*
                  * Register the observer to the observable agent
                  */
-                communicationNetworkServiceRemoteAgent.addObserver(communicationNetworkServiceLocal);
+                    communicationNetworkServiceRemoteAgent.addObserver(communicationNetworkServiceLocal);
 
                 /*
                  * Start the service thread
                  */
-                communicationNetworkServiceRemoteAgent.start();
+                    communicationNetworkServiceRemoteAgent.start();
 
                 /*
                  * Add to the cache
                  */
-                communicationNetworkServiceLocalsCache.put(remoteComponentProfile.getIdentityPublicKey(), communicationNetworkServiceLocal);
-                communicationNetworkServiceRemoteAgentsCache.put(remoteComponentProfile.getIdentityPublicKey(), communicationNetworkServiceRemoteAgent);
+                    communicationNetworkServiceLocalsCache.put(remoteComponentProfile.getIdentityPublicKey(), communicationNetworkServiceLocal);
+                    communicationNetworkServiceRemoteAgentsCache.put(remoteComponentProfile.getIdentityPublicKey(), communicationNetworkServiceRemoteAgent);
+
+                }
 
             }
 
