@@ -14,6 +14,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.Toast;
 
 import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractFermatFragment;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.utils.ImagesUtils;
@@ -26,10 +27,15 @@ import com.bitdubai.fermat_cbp_api.layer.wallet_module.common.interfaces.ClauseI
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.common.interfaces.CustomerBrokerNegotiationInformation;
 import com.bitdubai.reference_wallet.crypto_customer_wallet.R;
 import com.bitdubai.reference_wallet.crypto_customer_wallet.common.adapters.OpenNegotiationAdapter;
+import com.bitdubai.reference_wallet.crypto_customer_wallet.common.dialogs.ClauseTextDialog;
 import com.bitdubai.reference_wallet.crypto_customer_wallet.common.holders.open_negotiation.ClauseViewHolder;
 import com.bitdubai.reference_wallet.crypto_customer_wallet.common.holders.open_negotiation.FooterViewHolder;
+import com.bitdubai.reference_wallet.crypto_customer_wallet.fragments.common.SimpleListDialogFragment;
 import com.bitdubai.reference_wallet.crypto_customer_wallet.session.CryptoCustomerWalletSession;
 
+import java.math.BigDecimal;
+import java.text.DecimalFormat;
+import java.util.ArrayList;
 import java.util.Map;
 import java.util.UUID;
 
@@ -51,6 +57,9 @@ public class OpenNegotiationDetailsFragment extends AbstractFermatFragment<Crypt
 
     private OpenNegotiationAdapter adapter;
     private CustomerBrokerNegotiationInformation negotiationInfo;
+
+    private ArrayList<String> paymentMethods; // test data
+    private ArrayList<Currency> currencies; // test data
 
     public OpenNegotiationDetailsFragment() {
         // Required empty public constructor
@@ -74,12 +83,14 @@ public class OpenNegotiationDetailsFragment extends AbstractFermatFragment<Crypt
 
     @Override
     public void onClauseCLicked(final Button triggerView, final ClauseInformation clause, final int position) {
-
+        Toast.makeText(getActivity(), "PROCESS CLAUSE.", Toast.LENGTH_LONG).show();
     }
 
     @Override
     public void onSendButtonClicked() {
-
+        Map<ClauseType, ClauseInformation> mapClauses = negotiationInfo.getClauses();
+        String contClause = Integer.toString(getTotalSteps(mapClauses));
+        Toast.makeText(getActivity(), "PROCESS SEND. TOT: "+ contClause, Toast.LENGTH_LONG).show();
     }
 
     @Override
@@ -126,8 +137,8 @@ public class OpenNegotiationDetailsFragment extends AbstractFermatFragment<Crypt
         String exchangeAmount = clauses.get(ClauseType.EXCHANGE_RATE).getValue();
         String paymentCurrency = clauses.get(ClauseType.BROKER_CURRENCY).getValue();
         String amount = clauses.get(ClauseType.CUSTOMER_CURRENCY_QUANTITY).getValue();
-
         Drawable brokerImg = getImgDrawable(broker.getProfileImage());
+
         brokerImage.setImageDrawable(brokerImg);
         brokerName.setText(broker.getAlias());
         sellingDetails.setText(getResources().getString(R.string.ccw_selling_details, amount, merchandise));
@@ -137,6 +148,7 @@ public class OpenNegotiationDetailsFragment extends AbstractFermatFragment<Crypt
         adapter.setClauseListener(this);
         adapter.setFooterListener(this);
 
+        recyclerView.setAdapter(adapter);
     }
 
     private Drawable getImgDrawable(byte[] customerImg) {
@@ -147,6 +159,16 @@ public class OpenNegotiationDetailsFragment extends AbstractFermatFragment<Crypt
             return ImagesUtils.getRoundedBitmap(res, customerImg);
 
         return ImagesUtils.getRoundedBitmap(res, R.drawable.person);
+
+    }
+
+    private int getTotalSteps(Map<ClauseType, ClauseInformation> mapClauses){
+
+        int cont = 0;
+        if(mapClauses != null)
+            for (Map.Entry<ClauseType, ClauseInformation> clauseInformation : mapClauses.entrySet()) cont++;
+
+        return cont;
 
     }
     /*END PRIVATE METHOD*/

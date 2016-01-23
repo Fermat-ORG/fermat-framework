@@ -140,11 +140,12 @@ public class OpenNegotiationAdapter extends FermatAdapter<ClauseInformation, Fer
 
         if (!isFooterPosition(position))
             super.onBindViewHolder(holder, position);
-        
+
     }
 
     @Override
     protected void bindHolder(FermatViewHolder holder, ClauseInformation clause, int position) {
+
         final ClauseViewHolder clauseViewHolder = (ClauseViewHolder) holder;
         clauseViewHolder.bindData(negotiationInformation, clause, position);
         clauseViewHolder.getConfirmButton().setVisibility(View.GONE);
@@ -164,12 +165,14 @@ public class OpenNegotiationAdapter extends FermatAdapter<ClauseInformation, Fer
                 clauseViewHolder.setViewResources(R.string.ccw_currency_to_pay, clauseNumberImageRes, R.string.ccw_currency_description);
                 break;
             case CUSTOMER_PAYMENT_METHOD:
+                //TODO ACA DIO EXCEPTION REVISAR
                 clauseViewHolder.setViewResources(R.string.payment_methods_title, clauseNumberImageRes, R.string.payment_method);
                 break;
             case BROKER_PAYMENT_METHOD:
                 clauseViewHolder.setViewResources(R.string.reception_methods_title, clauseNumberImageRes, R.string.payment_method);
                 break;
         }
+
     }
 
     public void setFooterListener(OpenNegotiationDetailsFragment footerListener) {
@@ -181,10 +184,19 @@ public class OpenNegotiationAdapter extends FermatAdapter<ClauseInformation, Fer
     }
 
     private List<ClauseInformation> buildListOfItems() {
-        final int TOTAL_STEPS = 5;
+
+        int cont = 0;
 
         Map<ClauseType, ClauseInformation> clauses = negotiationInformation.getClauses();
+
+        final int TOTAL_STEPS = getTotalSteps(clauses);
+
         final ClauseInformation[] data = new ClauseInformation[TOTAL_STEPS];
+
+        /*for (Map.Entry<ClauseType, ClauseInformation> clauseInformation : clauses.entrySet()){
+            data[cont] = clauses.get(clauseInformation.getValue().getType());
+            cont++;
+        }*/
 
         data[0] = clauses.get(ClauseType.CUSTOMER_CURRENCY_QUANTITY);
         data[1] = clauses.get(ClauseType.EXCHANGE_RATE);
@@ -193,6 +205,17 @@ public class OpenNegotiationAdapter extends FermatAdapter<ClauseInformation, Fer
         data[4] = clauses.get(ClauseType.BROKER_PAYMENT_METHOD);
 
         return Arrays.asList(data);
+    }
+
+    private int getTotalSteps(Map<ClauseType, ClauseInformation> clauses){
+
+        /*int cont = 0;
+        if(clauses != null)
+            for (Map.Entry<ClauseType, ClauseInformation> clauseInformation : clauses.entrySet()) cont++;
+
+        return cont;*/
+        return 5;
+
     }
 
     private boolean isFooterPosition(int position) {
