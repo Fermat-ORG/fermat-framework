@@ -15,6 +15,7 @@ import com.bitdubai.fermat_ccp_plugin.layer.network_service.intra_user.developer
 import com.bitdubai.fermat_ccp_plugin.layer.network_service.intra_user.developer.bitdubai.version_1.database.communications.IncomingMessageDao;
 import com.bitdubai.fermat_ccp_plugin.layer.network_service.intra_user.developer.bitdubai.version_1.database.communications.OutgoingMessageDao;
 import com.bitdubai.fermat_ccp_plugin.layer.network_service.intra_user.developer.bitdubai.version_1.exceptions.CantInsertRecordDataBaseException;
+import com.bitdubai.fermat_p2p_api.layer.all_definition.common.network_services.interfaces.NetworkService;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.contents.FermatMessageCommunication;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.enums.P2pEventType;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.events.NewNetworkServiceMessageSentNotificationEvent;
@@ -58,11 +59,17 @@ public class CommunicationNetworkServiceRemoteAgent extends Observable {
     private static final int SEND_TASK = 0;
     private static final int RECEIVE_TASK = 1;
 
+    private final NetworkService networkServicePluginRoot;
+
     /**
      * Represent the communicationsVPNConnection
      */
     private CommunicationsVPNConnection communicationsVPNConnection;
 
+    /**
+     * Manager
+     */
+    private CommunicationNetworkServiceConnectionManager communicationNetworkServiceConnectionManager;
     /**
      * DealsWithErrors Interface member variables.
      */
@@ -121,13 +128,13 @@ public class CommunicationNetworkServiceRemoteAgent extends Observable {
 
     /**
      * Constructor with parameters
-     *
-     * @param eccKeyPair from the plugin root
+     *  @param eccKeyPair from the plugin root
      * @param errorManager  instance
      * @param incomingMessageDao instance
      * @param outgoingMessageDao instance
+     * @param networkServicePluginRoot
      */
-    public CommunicationNetworkServiceRemoteAgent(ECCKeyPair eccKeyPair, CommunicationsVPNConnection communicationsVPNConnection, ErrorManager errorManager, EventManager eventManager, IncomingMessageDao incomingMessageDao, OutgoingMessageDao outgoingMessageDao) {
+    public CommunicationNetworkServiceRemoteAgent(CommunicationNetworkServiceConnectionManager communicationNetworkServiceConnectionManager,ECCKeyPair eccKeyPair, CommunicationsVPNConnection communicationsVPNConnection, ErrorManager errorManager, EventManager eventManager, IncomingMessageDao incomingMessageDao, OutgoingMessageDao outgoingMessageDao, NetworkService networkServicePluginRoot) {
 
         super();
         this.eccKeyPair                          = eccKeyPair;
@@ -137,7 +144,8 @@ public class CommunicationNetworkServiceRemoteAgent extends Observable {
         this.incomingMessageDao                  = incomingMessageDao;
         this.outgoingMessageDao                  = outgoingMessageDao;
         this.communicationsVPNConnection         = communicationsVPNConnection;
-
+        this.networkServicePluginRoot            = networkServicePluginRoot;
+        this.communicationNetworkServiceConnectionManager = communicationNetworkServiceConnectionManager;
         executorService = Executors.newFixedThreadPool(2);
 
     }
@@ -201,7 +209,7 @@ public class CommunicationNetworkServiceRemoteAgent extends Observable {
             /**
              * Verified the status of the connection
              */
-            if (communicationsVPNConnection.isActive()){
+            if (communicationsVPNConnection.isConnected()){
 
                 System.out.println("IntraCommunicationNetworkServiceRemoteAgent - communicationsVPNConnection.getUnreadMessagesCount() = "+communicationsVPNConnection.getUnreadMessagesCount());
 
@@ -248,6 +256,8 @@ public class CommunicationNetworkServiceRemoteAgent extends Observable {
 
                 }
 
+            }else{
+                communicationNetworkServiceConnectionManager.closeConnection(communicationsVPNConnection.getRemoteParticipant().getIdentityPublicKey());
             }
 
             if(Thread.currentThread().isInterrupted() == Boolean.FALSE) {
@@ -273,6 +283,7 @@ public class CommunicationNetworkServiceRemoteAgent extends Observable {
 
         try {
 
+            if (communicationsVPNConnection.isConnected()){
                 try {
 
                     System.out.println("IntraCommunicationNetworkServiceRemoteAgent - processMessageToSend ");
@@ -323,10 +334,11 @@ public class CommunicationNetworkServiceRemoteAgent extends Observable {
                             /*
                              * Put the message on a event and fire new event
                              */
-                            FermatEvent fermatEvent = eventManager.getNewEvent(P2pEventType.NEW_NETWORK_SERVICE_MESSAGE_SENT_NOTIFICATION);
-                            //fermatEvent.setSource(IntraActorNetworkServicePluginRoot.EVENT_SOURCE);
-                            ((NewNetworkServiceMessageSentNotificationEvent) fermatEvent).setData(message);
-                            eventManager.raiseEvent(fermatEvent);
+//                            FermatEvent fermatEvent = eventManager.getNewEvent(P2pEventType.NEW_NETWORK_SERVICE_MESSAGE_SENT_NOTIFICATION);
+//                            fermatEvent.setSource();
+//                            ((NewNetworkServiceMessageSentNotificationEvent) fermatEvent).setData(message);
+//                            eventManager.raiseEvent(fermatEvent);
+                            networkServicePluginRoot.handleNewSentMessageNotificationEvent(message);
 
 
                         }else{
@@ -339,6 +351,11 @@ public class CommunicationNetworkServiceRemoteAgent extends Observable {
                 }catch (Exception e){
                     System.out.println("IntraCommunicationNetworkServiceRemoteAgent - Error sending message: " + e.getMessage());
                 }
+
+
+            }else{
+                communicationNetworkServiceConnectionManager.closeConnection(communicationsVPNConnection.getRemoteParticipant().getIdentityPublicKey());
+            }
 
 
             if(Thread.currentThread().isInterrupted() == Boolean.FALSE){

@@ -1121,20 +1121,6 @@ public final class CryptoPaymentRequestNetworkServicePluginRoot extends Abstract
 
     }
 
-    /**
-     * Handles the events CompleteRequestListComponentRegisteredNotificationEvent
-     */
-    public void handleCompleteComponentConnectionRequestNotificationEvent(final PlatformComponentProfile remoteComponentProfile) {
-
-        /*
-         * Tell the manager to handler the new connection established
-         */
-        communicationNetworkServiceConnectionManager.handleEstablishedRequestedNetworkServiceConnection(remoteComponentProfile);
-
-        if (remoteNetworkServicesRegisteredList != null && !remoteNetworkServicesRegisteredList.isEmpty())
-            remoteNetworkServicesRegisteredList.add(remoteComponentProfile);
-    }
-
     @Override
     public void handleCompleteRequestListComponentRegisteredNotificationEvent(List<PlatformComponentProfile> platformComponentProfileRegisteredList) {
 
