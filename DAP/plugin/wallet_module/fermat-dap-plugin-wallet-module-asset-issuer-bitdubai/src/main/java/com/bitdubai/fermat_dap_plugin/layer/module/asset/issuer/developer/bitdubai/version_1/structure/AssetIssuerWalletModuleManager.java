@@ -68,7 +68,7 @@ public class AssetIssuerWalletModuleManager {
         }
     }
 
-    public void distributionAssets(String assetPublicKey, String walletPublicKey, List<ActorAssetUser> actorAssetUsers) throws CantDistributeDigitalAssetsException, CantGetTransactionsException, CantCreateFileException, FileNotFoundException, CantLoadWalletException {
+    public void distributionAssets(String assetPublicKey, String walletPublicKey, List<ActorAssetUser> actorAssetUsers, int assetsAmount) throws CantDistributeDigitalAssetsException, CantGetTransactionsException, CantCreateFileException, FileNotFoundException, CantLoadWalletException {
         try {
             String context = "Asset PublicKey: " + assetPublicKey + " - Wallet PublicKey: " + walletPublicKey + " - Users: " + actorAssetUsers.toString();
             if (actorAssetUsers.isEmpty()) {
@@ -76,7 +76,7 @@ public class AssetIssuerWalletModuleManager {
             }
             System.out.println("******* ASSET DISTRIBUTION TEST (Init Distribution)******");
             walletPublicKey = "walletPublicKeyTest"; //TODO: Solo para la prueba del Distribution
-            HashMap<DigitalAssetMetadata, ActorAssetUser> hashMap = createMapDistribution(walletPublicKey, assetPublicKey, actorAssetUsers);
+            HashMap<DigitalAssetMetadata, ActorAssetUser> hashMap = createMapDistribution(walletPublicKey, assetPublicKey, actorAssetUsers, assetsAmount);
             assetDistributionManager.distributeAssets(hashMap, walletPublicKey);
 
         } catch (Exception exception) {
@@ -116,14 +116,18 @@ public class AssetIssuerWalletModuleManager {
         }
     }
 
-    private HashMap<DigitalAssetMetadata, ActorAssetUser> createMapDistribution(String walletPublicKey, String assetPublicKey, List<ActorAssetUser> actorAssetUsers) throws CantGetTransactionsException, FileNotFoundException, CantCreateFileException, CantLoadWalletException, CantGetDigitalAssetFromLocalStorageException {
+    private HashMap<DigitalAssetMetadata, ActorAssetUser> createMapDistribution(String walletPublicKey, String assetPublicKey, List<ActorAssetUser> actorAssetUsers, int assetsAmount) throws CantGetTransactionsException, FileNotFoundException, CantCreateFileException, CantLoadWalletException, CantGetDigitalAssetFromLocalStorageException {
         HashMap<DigitalAssetMetadata, ActorAssetUser> hashMap = new HashMap<>();
         AssetIssuerWallet wallet = assetIssuerWalletManager.loadAssetIssuerWallet(walletPublicKey);
         List<AssetIssuerWalletTransaction> transactions = wallet.getAvailableTransactions(assetPublicKey);
         if (actorAssetUsers.size() > transactions.size())
             throw new IllegalStateException("WE DON'T HAVE ENOUGH ASSETS!!");
-        for (int i = 0; i < actorAssetUsers.size(); i++) {
-            hashMap.put(wallet.getDigitalAssetMetadata(transactions.get(i).getTransactionHash()), actorAssetUsers.get(i));
+        int j = 0;
+        while (j < assetsAmount) {
+            for (int i = 0; i < actorAssetUsers.size() && j < assetsAmount; i++) {
+                hashMap.put(wallet.getDigitalAssetMetadata(transactions.get(i).getTransactionHash()), actorAssetUsers.get(i));
+                j++;
+            }
         }
         return hashMap;
     }
