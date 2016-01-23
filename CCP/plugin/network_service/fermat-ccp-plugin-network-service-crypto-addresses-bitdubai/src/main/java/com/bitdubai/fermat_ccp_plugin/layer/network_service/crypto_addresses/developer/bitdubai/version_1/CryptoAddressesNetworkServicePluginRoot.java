@@ -35,6 +35,7 @@ import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginTextFile;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantCreateFileException;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.FileNotFoundException;
 import com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_addresses.developer.bitdubai.version_1.communication.event_handlers.NewSentMessageNotificationEventHandler;
+import com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_addresses.developer.bitdubai.version_1.messages.ReceivedMessage;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.common.network_services.interfaces.NetworkService;
 import com.bitdubai.fermat_api.layer.all_definition.network_service.interfaces.NetworkServiceConnectionManager;
 import com.bitdubai.fermat_api.layer.all_definition.util.Version;
@@ -109,7 +110,7 @@ import java.util.UUID;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.atomic.AtomicBoolean;
 
-import jdk.nashorn.internal.parser.JSONParser;
+
 
 /**
  * This plugin manages the exchange of crypto addresses between actors.
@@ -1182,6 +1183,14 @@ public class CryptoAddressesNetworkServicePluginRoot extends AbstractNetworkServ
                     receiveRequest(requestMessage);
                     break;
 
+                case RECEIVED:
+
+                    ReceivedMessage receivedMessage  =  gson.fromJson(jsonMessage, ReceivedMessage.class);
+                    receivedMessage(receivedMessage);
+
+                    break;
+
+
                 default:
                     throw new CantHandleNewMessagesException(
                             "message type: " +networkServiceMessage.getMessageType().name(),
@@ -1196,6 +1205,23 @@ public class CryptoAddressesNetworkServicePluginRoot extends AbstractNetworkServ
         }
     }
 
+
+    public void receivedMessage(final ReceivedMessage receivedMessage) throws CantReceiveRequestException {
+        try {
+
+            cryptoAddressesNetworkServiceDao.changeActionState(receivedMessage.getRequestId(), RequestAction.NONE);
+            cryptoAddressesNetworkServiceDao.changeProtocolState(receivedMessage.getRequestId(),ProtocolState.DONE);
+
+            communicationNetworkServiceConnectionManager.closeConnection(receivedMessage.getActorDestination());
+            //remove from the waiting pool
+            cryptoAddressesExecutorAgent.connectionFailure(receivedMessage.getActorDestination());
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+
+
+    }
+
     @Override
     public void handleNewSentMessageNotificationEvent(FermatMessage fermatMessage) {
 
@@ -1208,20 +1234,15 @@ public class CryptoAddressesNetworkServicePluginRoot extends AbstractNetworkServ
             NetworkServiceMessage networkServiceMessage = gson.fromJson(jsonMessage, NetworkServiceMessage.class);
 
             switch (networkServiceMessage.getMessageType()) {
-                case ACCEPT:
-                    AcceptMessage acceptMessage = gson.fromJson(jsonMessage, AcceptMessage.class);
-                    cryptoAddressesNetworkServiceDao.changeProtocolState(acceptMessage.getRequestId(), ProtocolState.DONE);
-                    communicationNetworkServiceConnectionManager.closeConnection(acceptMessage.getActorDestination());
-                    //remove from the waiting pool
-                    cryptoAddressesExecutorAgent.connectionFailure(acceptMessage.getActorDestination());
-                    break;
-                case DENY:
-                    DenyMessage denyMessage = gson.fromJson(jsonMessage, DenyMessage.class);
-                    cryptoAddressesNetworkServiceDao.changeProtocolState(denyMessage.getRequestId(), ProtocolState.DONE);
-                    communicationNetworkServiceConnectionManager.closeConnection(denyMessage.getActorDestination());
-                    //remove from the waiting pool
-                    cryptoAddressesExecutorAgent.connectionFailure(denyMessage.getActorDestination());
-                    break;
+//                case ACCEPT:
+//                    AcceptMessage acceptMessage = gson.fromJson(jsonMessage, AcceptMessage.class);
+//                    cryptoAddressesNetworkServiceDao.changeProtocolState(acceptMessage.getRequestId(), ProtocolState.DONE);
+//
+//                    break;
+//                case DENY:
+//                    DenyMessage denyMessage = gson.fromJson(jsonMessage, DenyMessage.class);
+//                    cryptoAddressesNetworkServiceDao.changeProtocolState(denyMessage.getRequestId(), ProtocolState.DONE);
+//                    break;
                 case REQUEST:
                     // update the request to processing receive state with the given action.
                     RequestMessage requestMessage = gson.fromJson(jsonMessage, RequestMessage.class);
@@ -1290,13 +1311,17 @@ public class CryptoAddressesNetworkServicePluginRoot extends AbstractNetworkServ
 
         try {
 
-            ProtocolState protocolState = ProtocolState.PENDING_ACTION;
+            ProtocolState protocolState = ProtocolState.PROCESSING_SEND;
 
             cryptoAddressesNetworkServiceDao.acceptAddressExchangeRequest(
                     acceptMessage.getRequestId(),
                     acceptMessage.getCryptoAddress(),
                     protocolState
             );
+
+            cryptoAddressesNetworkServiceDao.changeActionState(acceptMessage.getRequestId(),RequestAction.RECEIVED);
+
+
 
         } catch (CantAcceptAddressExchangeRequestException | PendingRequestNotFoundException e){
             // PendingRequestNotFoundException - THIS SHOULD' HAPPEN.
@@ -1318,12 +1343,14 @@ public class CryptoAddressesNetworkServicePluginRoot extends AbstractNetworkServ
 
         try {
 
-            ProtocolState protocolState = ProtocolState.PENDING_ACTION;
+            ProtocolState protocolState = ProtocolState.PROCESSING_SEND;
 
             cryptoAddressesNetworkServiceDao.denyAddressExchangeRequest(
                     denyMessage.getRequestId(),
                     protocolState
             );
+
+            cryptoAddressesNetworkServiceDao.changeActionState(denyMessage.getRequestId(), RequestAction.RECEIVED);
 
         } catch (CantDenyAddressExchangeRequestException | PendingRequestNotFoundException e){
             // PendingRequestNotFoundException - THIS SHOULD' HAPPEN.

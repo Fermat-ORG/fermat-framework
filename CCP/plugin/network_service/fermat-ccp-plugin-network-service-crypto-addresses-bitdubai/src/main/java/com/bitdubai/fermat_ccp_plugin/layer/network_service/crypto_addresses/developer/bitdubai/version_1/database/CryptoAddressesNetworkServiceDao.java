@@ -669,6 +669,55 @@ public final class CryptoAddressesNetworkServiceDao {
         }
     }
 
+    /**
+     * change the protocol state
+     *
+     * @param requestId id of the address exchange request we want to confirm.
+     * @param action     Request Action  to change
+     *
+     * @throws CantChangeProtocolStateException      if something goes wrong.
+     * @throws PendingRequestNotFoundException       if i can't find the record.
+     */
+    public void changeActionState(final UUID          requestId,
+                                    final  RequestAction action    ) throws CantChangeProtocolStateException,
+            PendingRequestNotFoundException  {
+
+        if (requestId == null)
+            throw new CantChangeProtocolStateException(null, "", "The requestId is required, can not be null");
+
+        if (action == null)
+            throw new CantChangeProtocolStateException(null, "", "The state is required, can not be null");
+
+        try {
+
+            DatabaseTable addressExchangeRequestTable = database.getTable(CryptoAddressesNetworkServiceDatabaseConstants.ADDRESS_EXCHANGE_REQUEST_TABLE_NAME);
+
+            addressExchangeRequestTable.addUUIDFilter(CryptoAddressesNetworkServiceDatabaseConstants.ADDRESS_EXCHANGE_REQUEST_ID_COLUMN_NAME, requestId, DatabaseFilterType.EQUAL);
+
+            addressExchangeRequestTable.loadToMemory();
+
+            List<DatabaseTableRecord> records = addressExchangeRequestTable.getRecords();
+
+            if (!records.isEmpty()) {
+                DatabaseTableRecord record = records.get(0);
+
+                record.setStringValue(CryptoAddressesNetworkServiceDatabaseConstants.ADDRESS_EXCHANGE_REQUEST_ACTION_COLUMN_NAME , action.getCode());
+
+                addressExchangeRequestTable.updateRecord(record);
+
+            } else
+                throw new PendingRequestNotFoundException(null, "requestId: "+requestId, "Cannot find an address exchange request with that requestId.");
+
+        } catch (CantUpdateRecordException e) {
+
+            throw new CantChangeProtocolStateException(e, "", "Exception not handled by the plugin, there is a problem in database and i cannot update the record.");
+        } catch (CantLoadTableToMemoryException e) {
+
+            throw new CantChangeProtocolStateException(e, "", "Exception not handled by the plugin, there is a problem in database and i cannot load the table.");
+
+        }
+    }
+
     public void changeSentNumber(final UUID          requestId,
                                     final int  sentNumber    ) throws CantChangeProtocolStateException,
             PendingRequestNotFoundException  {
