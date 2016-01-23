@@ -69,7 +69,7 @@ public interface AssetIssuerWalletSupAppModuleManager extends ModuleManager<Ferm
 
     List<ActorAssetUser> getSelectedUsersToDeliver();
 
-    void distributionAssets(String assetPublicKey, String walletPublicKey) throws CantDistributeDigitalAssetsException, CantGetTransactionsException, CantCreateFileException, FileNotFoundException, CantLoadWalletException;
+    void distributionAssets(String assetPublicKey, String walletPublicKey, int assetsAmount) throws CantDistributeDigitalAssetsException, CantGetTransactionsException, CantCreateFileException, FileNotFoundException, CantLoadWalletException;
 
     void appropriateAsset(String digitalAssetPublicKey, String bitcoinWalletPublicKey) throws CantExecuteAppropriationTransactionException, TransactionAlreadyStartedException, NotEnoughAcceptsException;
 
