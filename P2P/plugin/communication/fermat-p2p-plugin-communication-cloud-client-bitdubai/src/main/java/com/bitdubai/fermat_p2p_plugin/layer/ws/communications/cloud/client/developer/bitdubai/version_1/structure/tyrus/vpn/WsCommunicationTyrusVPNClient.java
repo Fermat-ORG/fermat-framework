@@ -172,9 +172,9 @@ public class WsCommunicationTyrusVPNClient extends Endpoint implements Communica
     @Override
     public void onClose(final Session session, final CloseReason reason)  {
 
-        if(!vpnClientConnection.isOpen()) {
-            return;
-        }
+//        if(!vpnClientConnection.isOpen()) {
+//            return;
+//        }
 
         System.out.println(" --------------------------------------------------------------------- ");
         System.out.println(" WsCommunicationVPNClient - Starting method onClose");
