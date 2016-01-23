@@ -1,13 +1,29 @@
 package com.bitdubai.reference_wallet.crypto_customer_wallet.common.adapters;
 
 import android.content.Context;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import com.bitdubai.fermat_android_api.ui.adapters.FermatAdapter;
 import com.bitdubai.fermat_android_api.ui.holders.FermatViewHolder;
+import com.bitdubai.fermat_cbp_api.all_definition.enums.ClauseType;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.common.interfaces.ClauseInformation;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.common.interfaces.CustomerBrokerNegotiationInformation;
+import com.bitdubai.reference_wallet.crypto_customer_wallet.R;
+import com.bitdubai.reference_wallet.crypto_customer_wallet.common.holders.open_negotiation.AmountToBuyViewHolder;
+import com.bitdubai.reference_wallet.crypto_customer_wallet.common.holders.open_negotiation.ClauseViewHolder;
+import com.bitdubai.reference_wallet.crypto_customer_wallet.common.holders.open_negotiation.ExchangeRateViewHolder;
+import com.bitdubai.reference_wallet.crypto_customer_wallet.common.holders.open_negotiation.FooterViewHolder;
+import com.bitdubai.reference_wallet.crypto_customer_wallet.common.holders.open_negotiation.SingleChoiceViewHolder;
+import com.bitdubai.reference_wallet.crypto_customer_wallet.fragments.open_negotiation_details.OpenNegotiationDetailsFragment;
+import com.bitdubai.reference_wallet.crypto_customer_wallet.util.FragmentsCommons;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Map;
+import java.util.NoSuchElementException;
 
 /**
  *Created by Yordin Alayn on 22.01.16.
@@ -21,6 +37,8 @@ public class OpenNegotiationAdapter extends FermatAdapter<ClauseInformation, Fer
     private static final int TYPE_FOOTER = 5;
 
     private CustomerBrokerNegotiationInformation negotiationInformation;
+    private OpenNegotiationDetailsFragment footerListener;
+    private ClauseViewHolder.Listener clauseListener;
 
     public OpenNegotiationAdapter (Context context, CustomerBrokerNegotiationInformation negotiationInformation) {
 
@@ -28,16 +46,30 @@ public class OpenNegotiationAdapter extends FermatAdapter<ClauseInformation, Fer
 
         this.negotiationInformation = negotiationInformation;
 
+        dataSet = new ArrayList<>();
+        dataSet.addAll(buildListOfItems());
+    }
+
+    public void changeDataSet(CustomerBrokerNegotiationInformation negotiationInfo) {
+
+        this.negotiationInformation = negotiationInfo;
+
+        final List<ClauseInformation> items = buildListOfItems();
+        super.changeDataSet(items);
+
     }
 
     @Override
     public FermatViewHolder onCreateViewHolder(ViewGroup viewGroup, int type) {
-        return null;
+
+        return createHolder(LayoutInflater.from(context).inflate(getCardViewResource(type), viewGroup, false), type);
+
     }
 
     @Override
     protected FermatViewHolder createHolder(View itemView, int type) {
-        /*switch (type) {
+
+        switch (type) {
             case TYPE_ITEM_SINGLE_CHOICE:
                 return new SingleChoiceViewHolder(itemView);
 
@@ -54,8 +86,25 @@ public class OpenNegotiationAdapter extends FermatAdapter<ClauseInformation, Fer
 
             default:
                 throw new IllegalArgumentException("Cant recognise the given value");
-        }*/
-        return  null;
+        }
+
+    }
+
+    private int getCardViewResource(int type) {
+
+        switch (type) {
+            case TYPE_ITEM_SINGLE_CHOICE:
+                return R.layout.ccw_single_choice_item;
+            case TYPE_ITEM_EXCHANGE_RATE:
+                return R.layout.ccw_exchange_rate_item;
+            case TYPE_ITEM_AMOUNT_TO_BUY:
+                return R.layout.ccw_amount_to_buy_item;
+            case TYPE_FOOTER:
+                return R.layout.ccw_footer_item;
+            default:
+                throw new NoSuchElementException("Incorrect type value");
+        }
+
     }
 
     @Override
@@ -80,7 +129,54 @@ public class OpenNegotiationAdapter extends FermatAdapter<ClauseInformation, Fer
 
     @Override
     protected void bindHolder(FermatViewHolder holder, ClauseInformation clause, int position) {
+        final ClauseViewHolder clauseViewHolder = (ClauseViewHolder) holder;
+        clauseViewHolder.bindData(negotiationInformation, clause, position);
+        clauseViewHolder.getConfirmButton().setVisibility(View.GONE);
+        clauseViewHolder.setListener(clauseListener);
 
+        final int clauseNumber = position + 1;
+        final int clauseNumberImageRes = FragmentsCommons.getClauseNumberImageRes(clauseNumber);
+
+        switch (clause.getType()) {
+            case CUSTOMER_CURRENCY_QUANTITY:
+                clauseViewHolder.setViewResources(R.string.ccw_amount_to_buy, clauseNumberImageRes);
+                break;
+            case EXCHANGE_RATE:
+                clauseViewHolder.setViewResources(R.string.exchange_rate_reference, clauseNumberImageRes);
+                break;
+            case BROKER_CURRENCY:
+                clauseViewHolder.setViewResources(R.string.ccw_currency_to_pay, clauseNumberImageRes, R.string.ccw_currency_description);
+                break;
+            case CUSTOMER_PAYMENT_METHOD:
+                clauseViewHolder.setViewResources(R.string.payment_methods_title, clauseNumberImageRes, R.string.payment_method);
+                break;
+            case BROKER_PAYMENT_METHOD:
+                clauseViewHolder.setViewResources(R.string.reception_methods_title, clauseNumberImageRes, R.string.payment_method);
+                break;
+        }
+    }
+
+    public void setFooterListener(OpenNegotiationDetailsFragment footerListener) {
+        this.footerListener = footerListener;
+    }
+
+    public void setClauseListener(ClauseViewHolder.Listener clauseListener) {
+        this.clauseListener = clauseListener;
+    }
+
+    private List<ClauseInformation> buildListOfItems() {
+        final int TOTAL_STEPS = 5;
+
+        Map<ClauseType, ClauseInformation> clauses = negotiationInformation.getClauses();
+        final ClauseInformation[] data = new ClauseInformation[TOTAL_STEPS];
+
+        data[0] = clauses.get(ClauseType.CUSTOMER_CURRENCY_QUANTITY);
+        data[1] = clauses.get(ClauseType.EXCHANGE_RATE);
+        data[2] = clauses.get(ClauseType.BROKER_CURRENCY);
+        data[3] = clauses.get(ClauseType.CUSTOMER_PAYMENT_METHOD);
+        data[4] = clauses.get(ClauseType.BROKER_PAYMENT_METHOD);
+
+        return Arrays.asList(data);
     }
 
 }

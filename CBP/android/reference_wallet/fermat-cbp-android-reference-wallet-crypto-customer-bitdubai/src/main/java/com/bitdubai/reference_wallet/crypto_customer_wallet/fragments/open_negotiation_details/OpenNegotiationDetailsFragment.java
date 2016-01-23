@@ -12,6 +12,7 @@ import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageView;
 
 import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractFermatFragment;
@@ -24,6 +25,8 @@ import com.bitdubai.fermat_cbp_api.all_definition.identity.ActorIdentity;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.common.interfaces.ClauseInformation;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.common.interfaces.CustomerBrokerNegotiationInformation;
 import com.bitdubai.reference_wallet.crypto_customer_wallet.R;
+import com.bitdubai.reference_wallet.crypto_customer_wallet.common.holders.open_negotiation.ClauseViewHolder;
+import com.bitdubai.reference_wallet.crypto_customer_wallet.common.holders.open_negotiation.FooterViewHolder;
 import com.bitdubai.reference_wallet.crypto_customer_wallet.session.CryptoCustomerWalletSession;
 
 import java.util.Map;
@@ -34,7 +37,8 @@ import java.util.UUID;
  * A simple {@link Fragment} subclass.
  * Modified by Yordin Alayn 22.01.16
  */
-public class OpenNegotiationDetailsFragment extends AbstractFermatFragment<CryptoCustomerWalletSession, ResourceProviderManager> {
+public class OpenNegotiationDetailsFragment extends AbstractFermatFragment<CryptoCustomerWalletSession, ResourceProviderManager>
+        implements FooterViewHolder.OnFooterButtonsClickListener, ClauseViewHolder.Listener{
 
     private static final String TAG = "OpenNegotiationFrag";
 
@@ -54,7 +58,7 @@ public class OpenNegotiationDetailsFragment extends AbstractFermatFragment<Crypt
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
+
         View layout = inflater.inflate(R.layout.ccw_fragment_open_negotiation_details_activity, container, false);
 
         configureToolbar();
@@ -62,11 +66,24 @@ public class OpenNegotiationDetailsFragment extends AbstractFermatFragment<Crypt
         bindData();
 
         return layout;
-//        return inflater.inflate(R.layout.fragment_main, container, false);
     }
 
-    /*PRIVATE METHOD*/
+    @Override
+    public void onClauseCLicked(final Button triggerView, final ClauseInformation clause, final int position) {
 
+    }
+
+    @Override
+    public void onSendButtonClicked() {
+
+    }
+
+    @Override
+    public void onAddNoteButtonClicked() {
+        // DO NOTHING..
+    }
+    
+    /*PRIVATE METHOD*/
     //VIEW TOOLBAR
     private void configureToolbar() {
 

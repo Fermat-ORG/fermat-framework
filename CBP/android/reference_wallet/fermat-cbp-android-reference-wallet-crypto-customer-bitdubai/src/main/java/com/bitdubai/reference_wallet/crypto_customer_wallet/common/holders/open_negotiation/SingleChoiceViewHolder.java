@@ -14,7 +14,7 @@ import com.bitdubai.reference_wallet.crypto_customer_wallet.R;
 
 /**
  *Created by Yordin Alayn on 22.01.16.
- * Based in SingleChoiceViewHolder of Star_negotiation by nelson
+ * Based in AmountToBuyViewHolder of Star_negotiation by nelson
  */
 public class SingleChoiceViewHolder extends ClauseViewHolder implements View.OnClickListener {
 
