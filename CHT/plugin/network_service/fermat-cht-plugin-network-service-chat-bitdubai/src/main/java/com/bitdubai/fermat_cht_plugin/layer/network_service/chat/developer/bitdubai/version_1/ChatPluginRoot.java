@@ -71,11 +71,15 @@ import com.bitdubai.fermat_cht_plugin.layer.network_service.chat.developer.bitdu
 import com.bitdubai.fermat_cht_plugin.layer.network_service.chat.developer.bitdubai.version_1.structure.ChatMetadataTransactionRecord;
 import com.bitdubai.fermat_cht_plugin.layer.network_service.chat.developer.bitdubai.version_1.structure.EncodeMsjContent;
 import com.bitdubai.fermat_cht_plugin.layer.network_service.chat.developer.bitdubai.version_1.communications.CommunicationRegistrationProcessNetworkServiceAgent;
+import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.contents.FermatMessageCommunication;
+import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.contents.FermatMessageCommunicationFactory;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.enums.P2pEventType;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.events.ClientConnectionCloseNotificationEvent;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.events.VPNConnectionCloseNotificationEvent;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.WsCommunicationsCloudClientManager;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.contents.FermatMessage;
+import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.enums.FermatMessageContentType;
+import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.enums.FermatMessagesStatus;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.exceptions.CantRegisterComponentException;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.exceptions.CantRequestListException;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedPluginExceptionSeverity;
@@ -96,7 +100,7 @@ public class ChatPluginRoot extends AbstractPlugin implements
         NetworkService,
         LogManagerForDevelopers,
         DatabaseManagerForDevelopers,
-        ChatManager{
+        ChatManager {
 
     @NeededAddonReference(platform = Platforms.PLUG_INS_PLATFORM, layer = Layers.PLATFORM_SERVICE, addon = Addons.ERROR_MANAGER)
     private ErrorManager errorManager;
@@ -205,10 +209,10 @@ public class ChatPluginRoot extends AbstractPlugin implements
     /**
      * Represent the OutgoinChatMetaDataDao
      */
-     private ChatMetaDataDao chatMetaDataDao;
+    private ChatMetaDataDao chatMetaDataDao;
 
     public ChatMetaDataDao getChatMetaDataDao() {
-      return chatMetaDataDao;
+        return chatMetaDataDao;
     }
 
     /**
@@ -227,13 +231,12 @@ public class ChatPluginRoot extends AbstractPlugin implements
 
     /**
      * Represent the communicationNetworkServiceConnectionManager
-
      */
     private CommunicationNetworkServiceConnectionManager communicationNetworkServiceConnectionManager;
 
 
     /**
-     *  Represent the remoteNetworkServicesRegisteredList
+     * Represent the remoteNetworkServicesRegisteredList
      */
     private List<PlatformComponentProfile> remoteNetworkServicesRegisteredList;
 
@@ -242,7 +245,7 @@ public class ChatPluginRoot extends AbstractPlugin implements
      */
     static Map<String, LogLevel> newLoggingLevel = new HashMap<>();
     /**
-     *   Represent the communicationNetworkServiceDeveloperDatabaseFactory
+     * Represent the communicationNetworkServiceDeveloperDatabaseFactory
      */
     private NetworkServiceChatNetworkServiceDeveloperDatabaseFactory communicationNetworkServiceDeveloperDatabaseFactory;
 
@@ -260,9 +263,9 @@ public class ChatPluginRoot extends AbstractPlugin implements
          * If all resources are inject
          */
         if (wsCommunicationsCloudClientManager == null ||
-                pluginDatabaseSystem  == null ||
-                errorManager      == null ||
-                eventManager  == null) {
+                pluginDatabaseSystem == null ||
+                errorManager == null ||
+                eventManager == null) {
 
             StringBuffer contextBuffer = new StringBuffer();
             contextBuffer.append("Plugin ID: " + pluginId);
@@ -286,6 +289,7 @@ public class ChatPluginRoot extends AbstractPlugin implements
         }
 
     }
+
     @Override
     public String getIdentityPublicKey() {
         return this.identity.getPublicKey();
@@ -364,16 +368,17 @@ public class ChatPluginRoot extends AbstractPlugin implements
             String context = contextBuffer.toString();
             String possibleCause = "Plugin was not registered";
 
-            FermatException ex = new FermatException(FermatException.DEFAULT_MESSAGE, e,"","I can't List the resquest");
+            FermatException ex = new FermatException(FermatException.DEFAULT_MESSAGE, e, "", "I can't List the resquest");
             errorManager.reportUnexpectedPluginException(Plugins.CHAT_NETWORK_SERVICE, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, ex);
 
-        }catch (Exception e) {
-            FermatException ex = new FermatException(FermatException.DEFAULT_MESSAGE, e,"","I can't List the resquest");
+        } catch (Exception e) {
+            FermatException ex = new FermatException(FermatException.DEFAULT_MESSAGE, e, "", "I can't List the resquest");
             errorManager.reportUnexpectedPluginException(Plugins.CHAT_NETWORK_SERVICE, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, ex);
 
         }
 
     }
+
     @Override
     public List<String> getRegisteredPubliKey() throws CantRequestListException {
 
@@ -394,14 +399,16 @@ public class ChatPluginRoot extends AbstractPlugin implements
                         null);                    // fromOtherNetworkServiceType,    when use this filter apply the identityPublicKey
 
         List<PlatformComponentProfile> registedPlatform = wsCommunicationsCloudClientManager.getCommunicationsCloudClientConnection().requestListComponentRegistered(discoveryQueryParameters);
-        System.out.println("-------------\nChatPluginRoot: registedPlatform"+registedPlatform.toString());
-        for(PlatformComponentProfile platformComponentProfile: registedPlatform){
+        System.out.println("-------------\nChatPluginRoot: registedPlatform" + registedPlatform.toString());
+        for (PlatformComponentProfile platformComponentProfile : registedPlatform) {
             publicKeys.add(platformComponentProfile.getIdentityPublicKey());
         }
         return publicKeys;
     }
+
     /**
      * (non-javadoc)
+     *
      * @see NetworkService#getNetworkServiceConnectionManager()
      */
     @Override
@@ -420,9 +427,9 @@ public class ChatPluginRoot extends AbstractPlugin implements
         System.out.println("ChatPLuginRoot - CommunicationNetworkServiceConnectionManager - Starting method handleCompleteComponentRegistrationNotificationEvent");
 
 
-        if (platformComponentProfileRegistered.getPlatformComponentType() == PlatformComponentType.COMMUNICATION_CLOUD_CLIENT && this.register){
+        if (platformComponentProfileRegistered.getPlatformComponentType() == PlatformComponentType.COMMUNICATION_CLOUD_CLIENT && this.register) {
 
-            if(communicationRegistrationProcessNetworkServiceAgent.isAlive()){
+            if (communicationRegistrationProcessNetworkServiceAgent.isAlive()) {
                 communicationRegistrationProcessNetworkServiceAgent.interrupt();
                 communicationRegistrationProcessNetworkServiceAgent = null;
             }
@@ -431,7 +438,7 @@ public class ChatPluginRoot extends AbstractPlugin implements
             /*
              * Construct my profile and register me
              */
-            PlatformComponentProfile platformComponentProfileToReconnect =  wsCommunicationsCloudClientManager.getCommunicationsCloudClientConnection().constructPlatformComponentProfileFactory(this.getIdentityPublicKey(),
+            PlatformComponentProfile platformComponentProfileToReconnect = wsCommunicationsCloudClientManager.getCommunicationsCloudClientConnection().constructPlatformComponentProfileFactory(this.getIdentityPublicKey(),
                     this.getAlias().toLowerCase(),
                     this.getName(),
                     this.getNetworkServiceType(),
@@ -466,7 +473,7 @@ public class ChatPluginRoot extends AbstractPlugin implements
                     "NETWORK SERVICE CHATPLUGINROOT REGISTERED  -----------------------\n" +
                     "-----------------------\n TO: " + getName());
             communicationRegistrationProcessNetworkServiceAgent.interrupt();
-            communicationRegistrationProcessNetworkServiceAgent=null;
+            communicationRegistrationProcessNetworkServiceAgent = null;
 
 
             /*-------------------------------------------------------------------------------------------------
@@ -570,11 +577,11 @@ public class ChatPluginRoot extends AbstractPlugin implements
      */
     @Override
     public void initializeCommunicationNetworkServiceConnectionManager() {
-        try{
+        try {
 
             this.communicationNetworkServiceConnectionManager = new CommunicationNetworkServiceConnectionManager(platformComponentProfile, identity, wsCommunicationsCloudClientManager.getCommunicationsCloudClientConnection(), dataBase, errorManager, eventManager);
 
-        }catch(Exception ex){
+        } catch (Exception ex) {
             StringBuffer contextBuffer = new StringBuffer();
             contextBuffer.append("Plugin ID: " + pluginId);
             contextBuffer.append(CantInitializeCommunicationNetworkServiceConnectionManagerException.CONTEXT_CONTENT_SEPARATOR);
@@ -670,7 +677,7 @@ public class ChatPluginRoot extends AbstractPlugin implements
 
             System.out.print("-----------------------\n ChatPluginRoot NetworkService: Successful start.\n-----------------------\n");
 
-        }catch (CantInitializeChatNetworkServiceDatabaseException exception) {
+        } catch (CantInitializeChatNetworkServiceDatabaseException exception) {
 
             StringBuffer contextBuffer = new StringBuffer();
             contextBuffer.append("Plugin ID: " + pluginId);
@@ -681,9 +688,9 @@ public class ChatPluginRoot extends AbstractPlugin implements
             String possibleCause = "The Template Database triggered an unexpected problem that wasn't able to solve by itself";
             CantStartPluginException pluginStartException = new CantStartPluginException(CantStartPluginException.DEFAULT_MESSAGE, exception, context, possibleCause);
 
-            errorManager.reportUnexpectedPluginException(Plugins.CHAT_NETWORK_SERVICE,UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, pluginStartException);
+            errorManager.reportUnexpectedPluginException(Plugins.CHAT_NETWORK_SERVICE, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, pluginStartException);
             throw pluginStartException;
-        }catch (Exception exception){
+        } catch (Exception exception) {
             StringBuffer contextBuffer = new StringBuffer();
             contextBuffer.append("Plugin ID: " + pluginId);
             String context = contextBuffer.toString();
@@ -695,24 +702,26 @@ public class ChatPluginRoot extends AbstractPlugin implements
 
     /**
      * Static method to get the logging level from any class under root.
+     *
      * @param className
      * @return
      */
-    public static LogLevel getLogLevelByClass(String className){
-        try{
+    public static LogLevel getLogLevelByClass(String className) {
+        try {
             /**
              * sometimes the classname may be passed dinamically with an $moretext
              * I need to ignore whats after this.
              */
             String[] correctedClass = className.split((Pattern.quote("$")));
             return ChatPluginRoot.newLoggingLevel.get(correctedClass[0]);
-        } catch (Exception e){
+        } catch (Exception e) {
             /**
              * If I couldn't get the correct loggin level, then I will set it to minimal.
              */
             return DEFAULT_LOG_LEVEL;
         }
     }
+
     /**
      * This method initialize the database
      *
@@ -725,7 +734,7 @@ public class ChatPluginRoot extends AbstractPlugin implements
              * Open new database connection
              */
             this.dataBase = this.pluginDatabaseSystem.openDatabase(pluginId, NetworkServiceChatNetworkServiceDatabaseConstants.DATA_BASE_NAME);
-            this.chatMetaDataDao = new ChatMetaDataDao(dataBase,pluginDatabaseSystem,pluginId);
+            this.chatMetaDataDao = new ChatMetaDataDao(dataBase, pluginDatabaseSystem, pluginId);
 
         } catch (CantOpenDatabaseException cantOpenDatabaseException) {
 
@@ -749,7 +758,7 @@ public class ChatPluginRoot extends AbstractPlugin implements
                  * We create the new database
                  */
                 this.dataBase = communicationNetworkServiceDatabaseFactory.createDatabase(pluginId, NetworkServiceChatNetworkServiceDatabaseConstants.DATA_BASE_NAME);
-                this.chatMetaDataDao = new ChatMetaDataDao(dataBase,pluginDatabaseSystem,pluginId);
+                this.chatMetaDataDao = new ChatMetaDataDao(dataBase, pluginDatabaseSystem, pluginId);
 
             } catch (CantCreateDatabaseException cantOpenDatabaseException) {
 
@@ -760,7 +769,7 @@ public class ChatPluginRoot extends AbstractPlugin implements
                 throw new CantInitializeChatNetworkServiceDatabaseException(cantOpenDatabaseException.getLocalizedMessage());
 
             }
-        } catch (Exception exception){
+        } catch (Exception exception) {
             throw new CantInitializeChatNetworkServiceDatabaseException(CantInitializeChatNetworkServiceDatabaseException.DEFAULT_MESSAGE, FermatException.wrapException(exception), null, null);
         }
 
@@ -770,6 +779,7 @@ public class ChatPluginRoot extends AbstractPlugin implements
     public String getNetWorkServicePublicKey() {
         return getIdentityPublicKey();
     }
+
     @Override
     public void sendChatMetadata(String localActorPubKey, String remoteActorPubKey, ChatMetadata chatMetadata) throws CantSendChatMessageMetadataException, IllegalArgumentException {
 
@@ -777,13 +787,13 @@ public class ChatPluginRoot extends AbstractPlugin implements
         ChatMetadataTransactionRecord chatMetadataTransactionRecord = new ChatMetadataTransactionRecord();
         try {
 
-            if(chatMetadata == null){
+            if (chatMetadata == null) {
                 throw new IllegalArgumentException("Argument chatMetadata can not be null");
             }
-            if(localActorPubKey == null || localActorPubKey.length() ==0 || localActorPubKey.equals("null")){
+            if (localActorPubKey == null || localActorPubKey.length() == 0 || localActorPubKey.equals("null")) {
                 throw new IllegalArgumentException("Argument localActorPubKey can not be null");
             }
-            if(remoteActorPubKey == null || remoteActorPubKey.length() ==0 || remoteActorPubKey.equals("null")){
+            if (remoteActorPubKey == null || remoteActorPubKey.length() == 0 || remoteActorPubKey.equals("null")) {
                 throw new IllegalArgumentException("Argument remoteActorPubKey can not be null");
             }
             System.out.println("ChatPLuginRoot - Starting method sendChatMetadata");
@@ -799,7 +809,7 @@ public class ChatPluginRoot extends AbstractPlugin implements
             String msjContent = EncodeMsjContent.encodeMSjContentChatMetadataTransmit(chatMetadata, chatMetadata.getLocalActorType(), chatMetadata.getRemoteActorType());
             System.out.println("ChatPluginRoot - Message encoded:\n" + msjContent);
 
-            String msgHash = CryptoHasher.performSha256(chatMetadata.getChatId().toString()+chatMetadata.getMessageId().toString());
+            String msgHash = CryptoHasher.performSha256(chatMetadata.getChatId().toString() + chatMetadata.getMessageId().toString());
             chatMetadataTransactionRecord.setTransactionId(getChatMetaDataDao().getNewUUID(UUID.randomUUID().toString()));
             chatMetadataTransactionRecord.setTransactionHash(msgHash);
             chatMetadataTransactionRecord.setChatId(chatMetadata.getChatId());
@@ -872,7 +882,7 @@ public class ChatPluginRoot extends AbstractPlugin implements
                 communicationNetworkServiceConnectionManager.connectTo(sender, platformComponentProfile, receiver);
             }
             System.out.println("ChatPluginRoot - Message sent.");
-        } catch(IllegalArgumentException e){
+        } catch (IllegalArgumentException e) {
 
             throw e;
 
@@ -907,23 +917,23 @@ public class ChatPluginRoot extends AbstractPlugin implements
 
         try {
 
-            if(localActorPubKey == null || localActorPubKey.length() == 0){
+            if (localActorPubKey == null || localActorPubKey.length() == 0) {
                 throw new IllegalArgumentException("Argument localActorPubKey can not be null");
             }
-            if(senderType == null){
+            if (senderType == null) {
                 throw new IllegalArgumentException("Argument senderType can not be null");
             }
-            if(remoteActorPubKey == null || remoteActorPubKey.length() == 0){
+            if (remoteActorPubKey == null || remoteActorPubKey.length() == 0) {
                 throw new IllegalArgumentException("Argument remoteActorPubKey can not be null");
             }
-            if(receiverType == null){
+            if (receiverType == null) {
                 throw new IllegalArgumentException("Argument receiverType can not be null");
             }
-            if(newDistributionStatus == null){
+            if (newDistributionStatus == null) {
                 throw new IllegalArgumentException("Argument newDistributionStatus can not be null");
             }
-            if(chatId == null){
-                throw  new IllegalArgumentException("Argument chatId can not be null");
+            if (chatId == null) {
+                throw new IllegalArgumentException("Argument chatId can not be null");
             }
 
 
@@ -938,7 +948,7 @@ public class ChatPluginRoot extends AbstractPlugin implements
             /*
              * Construct the message content in json format
              */
-            String msjContent = EncodeMsjContent.encodeMSjContentTransactionNewStatusNotification(chatId,messageID, newDistributionStatus, senderType, receiverType);
+            String msjContent = EncodeMsjContent.encodeMSjContentTransactionNewStatusNotification(chatId, messageID, newDistributionStatus, senderType, receiverType);
 
             /*
              * If not null
@@ -1095,7 +1105,7 @@ public class ChatPluginRoot extends AbstractPlugin implements
     @Override
     public void handleClientConnectionLooseNotificationEvent(FermatEvent fermatEvent) {
 
-        if(communicationNetworkServiceConnectionManager != null)
+        if (communicationNetworkServiceConnectionManager != null)
             communicationNetworkServiceConnectionManager.stop();
     }
 
@@ -1103,13 +1113,13 @@ public class ChatPluginRoot extends AbstractPlugin implements
     public void handleClientSuccessfullReconnectNotificationEvent(FermatEvent fermatEvent) {
 
 
-        if(communicationNetworkServiceConnectionManager != null) {
+        if (communicationNetworkServiceConnectionManager != null) {
             communicationNetworkServiceConnectionManager.restart();
         }
-        if(!this.register){
+        if (!this.register) {
 
 
-            if(communicationRegistrationProcessNetworkServiceAgent.isAlive()) {
+            if (communicationRegistrationProcessNetworkServiceAgent.isAlive()) {
 
                 communicationRegistrationProcessNetworkServiceAgent.interrupt();
                 communicationRegistrationProcessNetworkServiceAgent = null;
@@ -1118,37 +1128,35 @@ public class ChatPluginRoot extends AbstractPlugin implements
                    /*
                  * Construct my profile and register me
                  */
-                PlatformComponentProfile platformComponentProfileToReconnect = wsCommunicationsCloudClientManager.getCommunicationsCloudClientConnection().constructPlatformComponentProfileFactory(this.getIdentityPublicKey(),
-                        this.getAlias().toLowerCase(),
-                        this.getName(),
-                        this.getNetworkServiceType(),
-                        this.getPlatformComponentType(),
-                        this.getExtraData());
+            PlatformComponentProfile platformComponentProfileToReconnect = wsCommunicationsCloudClientManager.getCommunicationsCloudClientConnection().constructPlatformComponentProfileFactory(this.getIdentityPublicKey(),
+                    this.getAlias().toLowerCase(),
+                    this.getName(),
+                    this.getNetworkServiceType(),
+                    this.getPlatformComponentType(),
+                    this.getExtraData());
 
-                try {
+            try {
                     /*
                      * Register me
                      */
-                    wsCommunicationsCloudClientManager.getCommunicationsCloudClientConnection().registerComponentForCommunication(this.getNetworkServiceType(), platformComponentProfileToReconnect);
+                wsCommunicationsCloudClientManager.getCommunicationsCloudClientConnection().registerComponentForCommunication(this.getNetworkServiceType(), platformComponentProfileToReconnect);
 
-                } catch (CantRegisterComponentException e) {
-                    e.printStackTrace();
-                }
+            } catch (CantRegisterComponentException e) {
+                e.printStackTrace();
+            }
 
                 /*
                  * Configure my new profile
                  */
-                this.setPlatformComponentProfilePluginRoot(platformComponentProfileToReconnect);
+            this.setPlatformComponentProfilePluginRoot(platformComponentProfileToReconnect);
 
                 /*
                  * Initialize the connection manager
                  */
-                this.initializeCommunicationNetworkServiceConnectionManager();
-            }
+            this.initializeCommunicationNetworkServiceConnectionManager();
         }
-
-
     }
+
 
     @Override
     public void confirmReception(UUID transactionID) throws CantConfirmTransactionException {
@@ -1165,7 +1173,7 @@ public class ChatPluginRoot extends AbstractPlugin implements
             StringBuilder contextBuffer = new StringBuilder();
             contextBuffer.append("Plugin ID: " + pluginId);
             contextBuffer.append(CantStartPluginException.CONTEXT_CONTENT_SEPARATOR);
-            contextBuffer.append("wsCommunicationsCloudClientManager: "+  wsCommunicationsCloudClientManager);
+            contextBuffer.append("wsCommunicationsCloudClientManager: " + wsCommunicationsCloudClientManager);
             contextBuffer.append(CantStartPluginException.CONTEXT_CONTENT_SEPARATOR);
             contextBuffer.append("pluginDatabaseSystem: " + pluginDatabaseSystem);
             contextBuffer.append(CantStartPluginException.CONTEXT_CONTENT_SEPARATOR);
@@ -1181,17 +1189,17 @@ public class ChatPluginRoot extends AbstractPlugin implements
         List<Transaction<ChatMetadata>> pendingTransactions = new ArrayList<>();
         try {
             List<ChatMetadataTransactionRecord> pendingChatMetadataTransactions = getChatMetaDataDao().findAll(NetworkServiceChatNetworkServiceDatabaseConstants.CHAT_PROCCES_STATUS_COLUMN_NAME, ChatMetadataTransactionRecord.NO_PROCESSED);
-                if (!pendingChatMetadataTransactions.isEmpty()) {
-                    for (ChatMetadataTransactionRecord chatMetadataTransactionRecord : pendingChatMetadataTransactions) {
-                        Transaction<ChatMetadata> transaction = new Transaction<>(chatMetadataTransactionRecord.getTransactionId(),
-                                (ChatMetadata) chatMetadataTransactionRecord,
-                                Action.APPLY,
-                                chatMetadataTransactionRecord.getDate().getTime());
-                                pendingTransactions.add(transaction);
-
-                    }
+            if (!pendingChatMetadataTransactions.isEmpty()) {
+                for (ChatMetadataTransactionRecord chatMetadataTransactionRecord : pendingChatMetadataTransactions) {
+                    Transaction<ChatMetadata> transaction = new Transaction<>(chatMetadataTransactionRecord.getTransactionId(),
+                            (ChatMetadata) chatMetadataTransactionRecord,
+                            Action.APPLY,
+                            chatMetadataTransactionRecord.getDate().getTime());
+                    pendingTransactions.add(transaction);
 
                 }
+
+            }
 
         } catch (CantReadRecordDataBaseException e) {
             StringBuilder contextBuffer = new StringBuilder();
@@ -1208,4 +1216,5 @@ public class ChatPluginRoot extends AbstractPlugin implements
         }
         return pendingTransactions;
     }
+}
 
