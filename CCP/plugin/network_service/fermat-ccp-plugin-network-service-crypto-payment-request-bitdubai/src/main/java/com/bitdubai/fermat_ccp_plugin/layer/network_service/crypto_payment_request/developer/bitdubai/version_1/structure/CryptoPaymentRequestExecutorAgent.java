@@ -34,6 +34,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
 
 /**
  * The class <code>com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_payment_request.developer.bitdubai.version_1.structure.CryptoPaymentRequestExecutorAgent</code>
@@ -47,7 +50,20 @@ public class CryptoPaymentRequestExecutorAgent extends FermatAgent {
     private static final long SLEEP_TIME = 7500;
 
     // Represent the receive and send cycles for this agent.
-    private Thread agentThread;
+    private final Runnable agentTask= new Runnable() {
+        @Override
+        public void run() {
+            while (isRunning()) {
+                sendCycle();
+                receiveCycle();
+            }
+
+        }
+    };
+
+    ;
+    private ExecutorService executorService;
+    private Future<?> future;
 
     // network services registered
     private Map<String, String> poolConnectionsWaitingForResponse;
@@ -77,24 +93,14 @@ public class CryptoPaymentRequestExecutorAgent extends FermatAgent {
 
         poolConnectionsWaitingForResponse = new HashMap<>();
 
-        //Create a thread to send the messages
-        this.agentThread = new Thread(new Runnable() {
-            @Override
-            public void run() {
-                while (isRunning()) {
-                    sendCycle();
-                    receiveCycle();
-                }
+        executorService = Executors.newSingleThreadExecutor();
 
-            }
-        });
     }
 
     public void start() throws CantStartAgentException {
 
         try {
-            agentThread.start();
-
+            future = executorService.submit(agentTask);
             this.status = AgentStatus.STARTED;
 
         } catch (Exception exception) {
@@ -105,24 +111,25 @@ public class CryptoPaymentRequestExecutorAgent extends FermatAgent {
 
     @Override
     public void pause() {
-        agentThread.interrupt();
-        super.pause();
+        future.cancel(true);
+        status = AgentStatus.PAUSED;
     }
 
     @Override
     public void resume() {
-        agentThread.start();
-        super.resume();
+        future = executorService.submit(agentTask);
+        status = AgentStatus.STARTED;
     }
 
     @Override
     public void stop() {
-        agentThread.interrupt();
-        try {
-            super.stop();
-        } catch (CantStopAgentException e) {
-            e.printStackTrace();
-        }
+        future.cancel(true);
+        this.status = AgentStatus.STOPPED;
+
+    }
+
+    public void stopExecutor(){
+        executorService.shutdownNow();
     }
 
     public void sendCycle() {
@@ -162,10 +169,10 @@ public class CryptoPaymentRequestExecutorAgent extends FermatAgent {
                         System.out.println("********** Crypto Payment Request NS -> Executor Agent -> Sending Approval. PROCESSING_SEND -> CONFIRM REQUEST.");
                         if (sendMessageToActor(
                                 buildJsonInformationMessage(cpr),
-                                cpr.getIdentityPublicKey(),
-                                cpr.getIdentityType(),
                                 cpr.getActorPublicKey(),
-                                cpr.getActorType()
+                                cpr.getActorType(),
+                                cpr.getIdentityPublicKey(),
+                                cpr.getIdentityType()
                         )) {
                             confirmRequest(cpr.getRequestId());
                             System.out.println("********** Crypto Payment Request NS -> Executor Agent -> Sending Approval. PROCESSING_SEND -> CONFIRM REQUEST -> OK.");
@@ -177,10 +184,10 @@ public class CryptoPaymentRequestExecutorAgent extends FermatAgent {
                         System.out.println("********** Crypto Payment Request NS -> Executor Agent -> Sending Denial. PROCESSING_SEND -> CONFIRM REQUEST.");
                         if (sendMessageToActor(
                                 buildJsonInformationMessage(cpr),
-                                cpr.getIdentityPublicKey(),
-                                cpr.getIdentityType(),
                                 cpr.getActorPublicKey(),
-                                cpr.getActorType()
+                                cpr.getActorType(),
+                                cpr.getIdentityPublicKey(),
+                                cpr.getIdentityType()
                         )) {
                             confirmRequest(cpr.getRequestId());
                             System.out.println("********** Crypto Payment Request NS -> Executor Agent -> Sending Denial. PROCESSING_SEND -> CONFIRM REQUEST -> OK.");
@@ -192,10 +199,10 @@ public class CryptoPaymentRequestExecutorAgent extends FermatAgent {
                         System.out.println("********** Crypto Payment Request NS -> Executor Agent -> Sending Reception Inform. PROCESSING_SEND -> CONFIRM REQUEST.");
                         if (sendMessageToActor(
                                 buildJsonInformationMessage(cpr),
-                                cpr.getIdentityPublicKey(),
-                                cpr.getIdentityType(),
                                 cpr.getActorPublicKey(),
-                                cpr.getActorType()
+                                cpr.getActorType(),
+                                cpr.getIdentityPublicKey(),
+                                cpr.getIdentityType()
                         )) {
                             confirmRequest(cpr.getRequestId());
                             System.out.println("********** Crypto Payment Request NS -> Executor Agent -> Sending Reception Inform. PROCESSING_SEND -> CONFIRM REQUEST -> OK.");
@@ -207,8 +214,8 @@ public class CryptoPaymentRequestExecutorAgent extends FermatAgent {
                         System.out.println("********** Crypto Payment Request NS -> Executor Agent -> Sending Refusal. PROCESSING_SEND -> CONFIRM REQUEST.");
                         if (sendMessageToActor(
                                 buildJsonInformationMessage(cpr),
-                                cpr.getIdentityPublicKey(),
-                                cpr.getIdentityType(),
+                                cpr.getActorPublicKey(),
+                                cpr.getActorType(),
                                 cpr.getActorPublicKey(),
                                 cpr.getActorType()
                         )) {
@@ -438,8 +445,11 @@ public class CryptoPaymentRequestExecutorAgent extends FermatAgent {
         errorManager.reportUnexpectedPluginException(pluginVersionReference, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
     }
 
-    public void connectionFailure(String identityPublicKey){
-        this.poolConnectionsWaitingForResponse.remove(identityPublicKey);
+    public void connectionFailure(String remotePublicKey){
+        this.poolConnectionsWaitingForResponse.remove(remotePublicKey);
     }
 
+    public boolean isConnectionOpen(String remotePublicKey) {
+        return poolConnectionsWaitingForResponse.containsKey(remotePublicKey);
+    }
 }

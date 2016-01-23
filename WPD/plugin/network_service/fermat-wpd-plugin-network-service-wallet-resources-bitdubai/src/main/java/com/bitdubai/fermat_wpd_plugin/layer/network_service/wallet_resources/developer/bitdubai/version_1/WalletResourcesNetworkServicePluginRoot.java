@@ -447,6 +447,11 @@ public class WalletResourcesNetworkServicePluginRoot extends AbstractPlugin impl
         //TODO: implementar el handle new messages
     }
 
+    @Override
+    public void handleNewSentMessageNotificationEvent(FermatMessage message) {
+
+    }
+
     /**
      * WalletResourcesInstalationManager Implementation
      */

@@ -3,27 +3,81 @@ package com.bitdubai.fermat_dap_api.layer.all_definition.digital_asset;
 import com.bitdubai.fermat_api.layer.all_definition.crypto.util.CryptoHasher;
 import com.bitdubai.fermat_api.layer.all_definition.util.XMLParser;
 import com.bitdubai.fermat_dap_api.layer.all_definition.enums.State;
+import com.bitdubai.fermat_dap_api.layer.dap_actor.DAPActor;
 import com.thoughtworks.xstream.XStream;
 
+import java.util.LinkedHashMap;
+import java.util.Map;
+import java.util.UUID;
+
 /**
+ * This class represents the metadata associated with a single instance of
+ * a {@link DigitalAsset}, every asset can be distributed and redeemed
+ * several amount of times, and this object keeps all the needing information
+ * to keep track of it.
+ * <p/>
  * Created by rodrigo on 9/4/15.
  */
 public class DigitalAssetMetadata {
-    DigitalAsset digitalAsset;
-    String genesisTransaction;
-    String genesisBlock;
-    String hash;
+
+    //VARIABLE DECLARATION
+    /**
+     * This ID is used for identified the metadata,
+     * since this metadata have lots of transactions and there can be
+     * the same asset in the same devices at different steps of the process
+     * we need to identify every single of them so it can get represented on
+     * the asset statistics.
+     */
+
+    private UUID metadataId;
+
+    {
+        //If its a previous metadata then we will need to override this.
+        metadataId = UUID.randomUUID();
+    }
+
+    /**
+     * The {@link DigitalAsset} to which this object
+     * corresponds too.
+     */
+    private DigitalAsset digitalAsset;
+
+    /**
+     * This map was created as {@link LinkedHashMap} on purpose.
+     * It will store all the transactions and their blocks associated with this
+     * DigitalAsset so we can do further validations.
+     */
+    private LinkedHashMap<String, String> transactionChain;
+
+    {
+        transactionChain = new LinkedHashMap<>();
+    }
+
+    private DAPActor lastOwner;
+
+    //CONSTRUCTORS
 
     public DigitalAssetMetadata(DigitalAsset digitalAsset) {
         this.digitalAsset = digitalAsset;
     }
 
-    //I'm gonna add this constructor for now, TODO: I need to make a test to get this object with this constructor and without it
-    public DigitalAssetMetadata(){
+    public DigitalAssetMetadata() {
         this.digitalAsset = null;
     }
 
-    private String  generateHash(){
+    public DigitalAssetMetadata(UUID metadataId,
+                                DigitalAsset digitalAsset,
+                                LinkedHashMap<String, String> transactionChain,
+                                DAPActor lastOwner) {
+        this.metadataId = metadataId;
+        this.digitalAsset = digitalAsset;
+        this.transactionChain = transactionChain;
+        this.lastOwner = lastOwner;
+    }
+
+    //PRIVATE METHODS
+
+    private String generateHash() {
         digitalAsset.setState(State.FINAL);
         XStream xStream = new XStream();
         xStream.autodetectAnnotations(true);
@@ -31,37 +85,102 @@ public class DigitalAssetMetadata {
         return CryptoHasher.performSha256(xml);
     }
 
-    public String getDigitalAssetHash() {
-        hash = generateHash();
-        return hash;
+    private Map.Entry<String, String> getTransactionByDepth(int transactionDepth) {
+        int actualDepth = 0;
+        for (Map.Entry<String, String> entry : transactionChain.entrySet()) {
+            actualDepth++;
+            if (actualDepth == transactionDepth) {
+                return entry;
+            }
+
+            if (actualDepth > transactionDepth) break; //Did what I could :(
+        }
+        throw new IllegalStateException("This depth is not found on this transaction chain.");
     }
 
-    public String getGenesisTransaction() {
-        return genesisTransaction;
+
+    //PUBLIC METHODS
+
+    public void addNewTransaction(String transactionHash, String blockHash) {
+        transactionChain.put(transactionHash, blockHash);
     }
 
-    public void setGenesisTransaction(String genesisTransaction) {
-        this.genesisTransaction = genesisTransaction;
-    }
-
-    public String getGenesisBlock() {
-        return genesisBlock;
-    }
-
-    public void setGenesisBlock(String genesisBlock) {
-        this.genesisBlock = genesisBlock;
+    public void removeTransaction(String transactionHash) {
+        transactionChain.remove(transactionHash);
     }
 
     @Override
-    public String toString(){
+    public String toString() {
         return XMLParser.parseObject(this);
     }
 
-    public DigitalAsset getDigitalAsset(){
-        return this.digitalAsset;
-    }
-    public void setDigitalAsset(DigitalAsset digitalAsset){
-        this.digitalAsset=digitalAsset;
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || !(o instanceof DigitalAssetMetadata)) return false;
+
+        DigitalAssetMetadata that = (DigitalAssetMetadata) o;
+
+        if (!getMetadataId().equals(that.getMetadataId())) return false;
+        if (!getDigitalAsset().equals(that.getDigitalAsset())) return false;
+        return getTransactionChain().equals(that.getTransactionChain());
+
     }
 
+    @Override
+    public int hashCode() {
+        int result = getMetadataId().hashCode();
+        result = 31 * result + getDigitalAsset().hashCode();
+        result = 31 * result + getTransactionChain().hashCode();
+        return result;
+    }
+
+    //GETTERS AND SETTERS
+    public String getDigitalAssetHash() {
+        return generateHash();
+    }
+
+    public String getGenesisTransaction() {
+        return getTransactionByDepth(1).getKey();
+    }
+
+    public String getGenesisBlock() {
+        return getTransactionByDepth(1).getValue();
+    }
+
+    public DigitalAsset getDigitalAsset() {
+        return this.digitalAsset;
+    }
+
+    public void setDigitalAsset(DigitalAsset digitalAsset) {
+        this.digitalAsset = digitalAsset;
+    }
+
+    public UUID getMetadataId() {
+        return metadataId;
+    }
+
+    public void setMetadataId(UUID metadataId) {
+        this.metadataId = metadataId;
+    }
+
+    public String getLastTransactionHash() {
+        return getTransactionByDepth(transactionChain.size()).getKey();
+    }
+
+    public String getLastTransactionBlock() {
+        return getTransactionByDepth(transactionChain.size()).getValue();
+    }
+
+    public LinkedHashMap<String, String> getTransactionChain() {
+        return transactionChain;
+    }
+
+    public DAPActor getLastOwner() {
+        return lastOwner;
+    }
+
+    public void setLastOwner(DAPActor lastOwner) {
+        this.lastOwner = lastOwner;
+    }
 }

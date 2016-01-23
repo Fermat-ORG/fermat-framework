@@ -6,6 +6,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -195,14 +196,19 @@ public class SendTransactionFragment2 extends FermatWalletExpandableListFragment
         getExecutor().execute(new Runnable() {
             @Override
             public void run() {
-                //TODO error geting drawable
-            //    final Drawable drawable = getResources().getDrawable(R.drawable.background_gradient, null);
-                getActivity().runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-   //                     getPaintActivtyFeactures().setActivityBackgroundColor(drawable);
-                    }
-                });
+                if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP) {
+                    final Drawable drawable = getResources().getDrawable(R.drawable.background_gradient, null);
+                    getActivity().runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            try {
+                                getPaintActivtyFeactures().setActivityBackgroundColor(drawable);
+                            }catch (OutOfMemoryError o){
+                                o.printStackTrace();
+                            }
+                        }
+                    });
+                }
             }
         });
 
@@ -768,9 +774,9 @@ public class SendTransactionFragment2 extends FermatWalletExpandableListFragment
 
                 available_offset = lstCryptoWalletTransactionsAvailable.size();
 
-                lstCryptoWalletTransactionsBook.addAll(moduleManager.listLastActorTransactionsByTransactionType(BalanceType.BOOK, TransactionType.DEBIT, referenceWalletSession.getAppPublicKey(), intraUserPk, MAX_TRANSACTIONS, book_offset));
+                //lstCryptoWalletTransactionsBook.addAll(moduleManager.listLastActorTransactionsByTransactionType(BalanceType.BOOK, TransactionType.DEBIT, referenceWalletSession.getAppPublicKey(), intraUserPk, MAX_TRANSACTIONS, book_offset));
 
-                book_offset = lstCryptoWalletTransactionsBook.size();
+                //book_offset = lstCryptoWalletTransactionsBook.size();
 
 
                 for (CryptoWalletTransaction cryptoWalletTransaction : lstCryptoWalletTransactionsAvailable) {

@@ -19,7 +19,6 @@ import java.util.UUID;
  */
 public class RequestMessage extends NetworkServiceMessage {
 
-    private final UUID                  requestId                  ;
     private final CryptoCurrency        cryptoCurrency             ;
     private final Actors                identityTypeRequesting     ;
     private final Actors                identityTypeResponding     ;
@@ -37,9 +36,8 @@ public class RequestMessage extends NetworkServiceMessage {
                           final CryptoAddressDealers  cryptoAddressDealer        ,
                           final BlockchainNetworkType blockchainNetworkType      ) {
 
-        super(MessageTypes.REQUEST);
+        super(requestId,MessageTypes.REQUEST,identityPublicKeyResponding,identityPublicKeyRequesting);
 
-        this.requestId                   = requestId                  ;
         this.cryptoCurrency              = cryptoCurrency             ;
         this.identityTypeRequesting      = identityTypeRequesting     ;
         this.identityTypeResponding      = identityTypeResponding     ;
@@ -47,10 +45,6 @@ public class RequestMessage extends NetworkServiceMessage {
         this.identityPublicKeyResponding = identityPublicKeyResponding;
         this.cryptoAddressDealer         = cryptoAddressDealer        ;
         this.blockchainNetworkType       = blockchainNetworkType      ;
-    }
-
-    public UUID getRequestId() {
-        return requestId;
     }
 
     public CryptoCurrency getCryptoCurrency() {
@@ -84,7 +78,7 @@ public class RequestMessage extends NetworkServiceMessage {
     @Override
     public String toString() {
         return "RequestMessage{" +
-                "requestId=" + requestId +
+                "requestId=" + getRequestId() +
                 ", cryptoCurrency=" + cryptoCurrency +
                 ", identityTypeRequesting=" + identityTypeRequesting +
                 ", identityTypeResponding=" + identityTypeResponding +

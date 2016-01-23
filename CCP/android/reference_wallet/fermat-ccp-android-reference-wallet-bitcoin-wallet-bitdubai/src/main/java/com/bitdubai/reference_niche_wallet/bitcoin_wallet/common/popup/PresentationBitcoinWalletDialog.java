@@ -3,9 +3,7 @@ package com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.popup;
 import android.app.Activity;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.graphics.drawable.Drawable;
 import android.os.Bundle;
-import android.os.Handler;
 import android.view.View;
 import android.view.Window;
 import android.widget.Button;
@@ -13,7 +11,6 @@ import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
-import android.widget.Toast;
 
 import com.bitdubai.android_fermat_ccp_wallet_bitcoin.R;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatButton;
@@ -32,7 +29,6 @@ import com.bitdubai.reference_niche_wallet.bitcoin_wallet.session.ReferenceWalle
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.session.SessionConstant;
 
 import java.io.ByteArrayOutputStream;
-import java.nio.ByteBuffer;
 
 /**
  * Created by mati on 2015.11.27..
@@ -131,7 +127,7 @@ public class PresentationBitcoinWalletDialog extends FermatDialog<ReferenceWalle
             case TYPE_PRESENTATION:
                 return R.layout.presentation_wallet;
             case TYPE_PRESENTATION_WITHOUT_IDENTITIES:
-                return R.layout.presentation_wallet_without_identities;
+                return R.layout.presentation_bitcoin_wallet_without_identities;
         }
         return 0;
     }
