@@ -1,12 +1,10 @@
-package com.bitdubai.fermat_ccp_plugin.layer.network_service.intra_user.developer.bitdubai.version_1.communications;
+package com.bitdubai.fermat_p2p_api.layer.all_definition.common.network_services.template.structure;
 
 import com.bitdubai.fermat_api.layer.all_definition.components.interfaces.PlatformComponentProfile;
 import com.bitdubai.fermat_api.layer.all_definition.crypto.asymmetric.ECCKeyPair;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.network_service.interfaces.NetworkServiceConnectionManager;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
-import com.bitdubai.fermat_ccp_plugin.layer.network_service.intra_user.developer.bitdubai.version_1.database.communications.IncomingMessageDao;
-import com.bitdubai.fermat_ccp_plugin.layer.network_service.intra_user.developer.bitdubai.version_1.database.communications.OutgoingMessageDao;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.common.network_services.interfaces.NetworkService;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.client.CommunicationsClientConnection;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.client.CommunicationsVPNConnection;
@@ -28,7 +26,7 @@ import java.util.Map;
  * @version 1.0
  * @since Java JDK 1.7
  */
-public class CommunicationNetworkServiceConnectionManager implements NetworkServiceConnectionManager {
+public class CommunicationNetworkServiceConnectionManager_V2 implements NetworkServiceConnectionManager {
 
     /**
      *  Represent the network service plugin root
@@ -86,7 +84,7 @@ public class CommunicationNetworkServiceConnectionManager implements NetworkServ
      * @param communicationsClientConnection a communicationLayerManager instance
      * @param errorManager              a errorManager instance
      */
-    public CommunicationNetworkServiceConnectionManager(NetworkService networkServicePluginRoot,PlatformComponentProfile platformComponentProfile, ECCKeyPair identity, CommunicationsClientConnection communicationsClientConnection, Database dataBase, ErrorManager errorManager, EventManager eventManager) {
+    public CommunicationNetworkServiceConnectionManager_V2(NetworkService networkServicePluginRoot, PlatformComponentProfile platformComponentProfile, ECCKeyPair identity, CommunicationsClientConnection communicationsClientConnection, Database dataBase, ErrorManager errorManager, EventManager eventManager) {
         super();
         this.networkServicePluginRoot = networkServicePluginRoot;
         this.platformComponentProfile = platformComponentProfile;
@@ -299,7 +297,7 @@ public class CommunicationNetworkServiceConnectionManager implements NetworkServ
      * Get the OutgoingMessageDao
      * @return OutgoingMessageDao
      */
-    public com.bitdubai.fermat_ccp_plugin.layer.network_service.intra_user.developer.bitdubai.version_1.database.communications.OutgoingMessageDao getOutgoingMessageDao() {
+    public OutgoingMessageDao getOutgoingMessageDao() {
         return outgoingMessageDao;
     }
 
@@ -307,7 +305,7 @@ public class CommunicationNetworkServiceConnectionManager implements NetworkServ
      * Get the IncomingMessageDao
      * @return IncomingMessageDao
      */
-    public com.bitdubai.fermat_ccp_plugin.layer.network_service.intra_user.developer.bitdubai.version_1.database.communications.IncomingMessageDao getIncomingMessageDao() {
+    public IncomingMessageDao getIncomingMessageDao() {
         return incomingMessageDao;
     }
 }

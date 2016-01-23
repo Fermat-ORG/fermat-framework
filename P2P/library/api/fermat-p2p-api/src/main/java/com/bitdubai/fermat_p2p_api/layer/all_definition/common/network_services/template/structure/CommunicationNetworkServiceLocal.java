@@ -4,19 +4,15 @@
  * You may not modify, use, reproduce or distribute this software.
  * BITDUBAI/CONFIDENTIAL
  */
-package com.bitdubai.fermat_p2p_api.layer.all_definition.common.network_services.template.communications;
+package com.bitdubai.fermat_p2p_api.layer.all_definition.common.network_services.template.structure;
 
 import com.bitdubai.fermat_api.layer.all_definition.components.interfaces.PlatformComponentProfile;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
-import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEvent;
 import com.bitdubai.fermat_api.layer.all_definition.network_service.enums.NetworkServiceType;
 import com.bitdubai.fermat_api.layer.all_definition.network_service.interfaces.NetworkServiceLocal;
-import com.bitdubai.fermat_p2p_api.layer.all_definition.common.network_services.abstract_classes.AbstractNetworkService;
-import com.bitdubai.fermat_p2p_api.layer.all_definition.common.network_services.abstract_classes.AbstractNetworkServiceV2;
+import com.bitdubai.fermat_p2p_api.layer.all_definition.common.network_services.interfaces.NetworkService;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.contents.FermatMessageCommunication;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.contents.FermatMessageCommunicationFactory;
-import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.enums.P2pEventType;
-import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.events.NewNetworkServiceMessageReceivedNotificationEvent;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.contents.FermatMessage;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.enums.FermatMessageContentType;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.enums.FermatMessagesStatus;
@@ -40,9 +36,9 @@ import java.util.Observer;
  * @version 1.0
  * @since Java JDK 1.7
  */
-@Deprecated
 public class CommunicationNetworkServiceLocal implements Observer, NetworkServiceLocal {
 
+    private final NetworkService networkServicePluginRoot;
     /**
      * Represent the profile of the remote network service
      */
@@ -53,11 +49,6 @@ public class CommunicationNetworkServiceLocal implements Observer, NetworkServic
      */
     private NetworkServiceType networkServiceTypePluginRoot;
 
-    /**
-     * Network service root
-     */
-    private AbstractNetworkService networkServicePluginRoot;
-    private AbstractNetworkServiceV2 abstractNetworkServiceV2;
     /**
      * DealsWithErrors Interface member variables.
      */
@@ -89,33 +80,13 @@ public class CommunicationNetworkServiceLocal implements Observer, NetworkServic
                                             ErrorManager errorManager, EventManager eventManager,
                                             OutgoingMessageDao outgoingMessageDao,
                                             NetworkServiceType networkServiceTypePluginRoot,
-                                            AbstractNetworkService networkServicePluginRoot) {
+                                            NetworkService networkService) {
         this.remoteNetworkServiceProfile = remoteNetworkServiceProfile;
         this.errorManager = errorManager;
         this.eventManager = eventManager;
         this.outgoingMessageDao = outgoingMessageDao;
         this.networkServiceTypePluginRoot = networkServiceTypePluginRoot;
-        this.networkServicePluginRoot = networkServicePluginRoot;
-    }
-
-    /**
-     * Constructor with parameters
-     *
-     * @param remoteNetworkServiceProfile
-     * @param errorManager                  instance
-     * @param outgoingMessageDao            instance
-     */
-    public CommunicationNetworkServiceLocal(PlatformComponentProfile remoteNetworkServiceProfile,
-                                            ErrorManager errorManager, EventManager eventManager,
-                                            OutgoingMessageDao outgoingMessageDao,
-                                            NetworkServiceType networkServiceTypePluginRoot,
-                                            AbstractNetworkServiceV2 networkServicePluginRoot) {
-        this.remoteNetworkServiceProfile = remoteNetworkServiceProfile;
-        this.errorManager = errorManager;
-        this.eventManager = eventManager;
-        this.outgoingMessageDao = outgoingMessageDao;
-        this.networkServiceTypePluginRoot = networkServiceTypePluginRoot;
-        this.abstractNetworkServiceV2 = networkServicePluginRoot;
+        this.networkServicePluginRoot = networkService;
     }
 
 
@@ -163,17 +134,16 @@ public class CommunicationNetworkServiceLocal implements Observer, NetworkServic
          * set the last message received
          */
         this.lastMessageReceived = incomingMessage;
-
         /**
          * Put the message on a event and fire new event
          */
-        networkServicePluginRoot.handleNewMessages(incomingMessage);
-//        FermatEvent fermatEvent = eventManager.getNewEvent(P2pEventType.NEW_NETWORK_SERVICE_MESSAGE_RECEIVE_NOTIFICATION);
-//        fermatEvent.setSource((networkServicePluginRoot!=null)?networkServicePluginRoot.getEventSource():abstractNetworkServiceV2.getEventSource());
+        //FermatEvent fermatEvent = eventManager.getNewEvent(P2pEventType.NEW_NETWORK_SERVICE_MESSAGE_RECEIVE_NOTIFICATION);
+        //TODO: no source
+//        fermatEvent.setSource();
 //        ((NewNetworkServiceMessageReceivedNotificationEvent) fermatEvent).setData(incomingMessage);
 //        ((NewNetworkServiceMessageReceivedNotificationEvent) fermatEvent).setNetworkServiceTypeApplicant(networkServiceTypePluginRoot);
 //        eventManager.raiseEvent(fermatEvent);
-
+        networkServicePluginRoot.handleNewMessages(incomingMessage);
     }
 
     /**
