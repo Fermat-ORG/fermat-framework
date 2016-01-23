@@ -34,6 +34,7 @@ import com.bitdubai.fermat_api.layer.osa_android.file_system.FilePrivacy;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginTextFile;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantCreateFileException;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.FileNotFoundException;
+import com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_addresses.developer.bitdubai.version_1.communication.event_handlers.NewMessagesEventHandler;
 import com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_addresses.developer.bitdubai.version_1.communication.event_handlers.NewSentMessageNotificationEventHandler;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.common.network_services.interfaces.NetworkService;
 import com.bitdubai.fermat_api.layer.all_definition.network_service.interfaces.NetworkServiceConnectionManager;
@@ -431,7 +432,7 @@ public class CryptoAddressesNetworkServicePluginRoot extends AbstractNetworkServ
          * new message
          */
         fermatEventListener = eventManager.getNewListener(P2pEventType.NEW_NETWORK_SERVICE_MESSAGE_RECEIVE_NOTIFICATION);
-        fermatEventListener.setEventHandler(new NewReceiveMessagesNotificationEventHandler(this));
+        fermatEventListener.setEventHandler(new NewMessagesEventHandler(this));
         eventManager.addListener(fermatEventListener);
         listenersAdded.add(fermatEventListener);
 
@@ -982,7 +983,8 @@ public class CryptoAddressesNetworkServicePluginRoot extends AbstractNetworkServ
             this.register = Boolean.TRUE;
 
         //    if(!beforeRegistered)
-              initializeAgent();
+            initializeAgent();
+            initializeCommunicationNetworkServiceConnectionManager();
         }
 
     }
@@ -1122,8 +1124,9 @@ public class CryptoAddressesNetworkServicePluginRoot extends AbstractNetworkServ
                 /*
                  * Initialize the connection manager
                  */
-                    this.initializeCommunicationNetworkServiceConnectionManager();
-
+                    if(communicationNetworkServiceConnectionManager==null) {
+                        this.initializeCommunicationNetworkServiceConnectionManager();
+                    }
                 }
             }
 
