@@ -152,6 +152,7 @@ public class NetworkServiceChatNetworkServiceDeveloperDatabaseFactory implements
         List<String> outgoingChatColumns = new ArrayList<String>();
 
         outgoingChatColumns.add(NetworkServiceChatNetworkServiceDatabaseConstants.CHAT_TRANSACTION_ID_COLUMN_NAME);
+        outgoingChatColumns.add(NetworkServiceChatNetworkServiceDatabaseConstants.CHAT_TRANSACTION_HASH_COLUMN_NAME);
         outgoingChatColumns.add(NetworkServiceChatNetworkServiceDatabaseConstants.CHAT_IDCHAT_COLUMN_NAME);
         outgoingChatColumns.add(NetworkServiceChatNetworkServiceDatabaseConstants.CHAT_IDOBJECTO_COLUMN_NAME);
         outgoingChatColumns.add(NetworkServiceChatNetworkServiceDatabaseConstants.CHAT_LOCALACTORTYPE_COLUMN_NAME);
@@ -165,6 +166,7 @@ public class NetworkServiceChatNetworkServiceDeveloperDatabaseFactory implements
         outgoingChatColumns.add(NetworkServiceChatNetworkServiceDatabaseConstants.CHAT_IDMENSAJE_COLUMN_NAME);
         outgoingChatColumns.add(NetworkServiceChatNetworkServiceDatabaseConstants.CHAT_MESSAGE_COLUMN_NAME);
         outgoingChatColumns.add(NetworkServiceChatNetworkServiceDatabaseConstants.CHAT_DISTRIBUTIONSTATUS_COLUMN_NAME);
+        outgoingChatColumns.add(NetworkServiceChatNetworkServiceDatabaseConstants.CHAT_PROCCES_STATUS_COLUMN_NAME);
         /**
          * Table Outgoing Chat addition.
          */

@@ -560,13 +560,22 @@ public class ChatMiddlewareMonitorAgent implements
                         chat,
                         createdMessage
                 );
-                System.out.println("ChatMetadata to send:\n"+chatMetadata);
-                chatNetworkServiceManager.sendChatMetadata(
-                        localActorPublicKey,
-                        remoteActorPublicKey,
-                        chatMetadata
-                );
-                createdMessage.setStatus(MessageStatus.SEND);
+                System.out.println("ChatMetadata to send:\n" + chatMetadata);
+                try{
+                    chatNetworkServiceManager.sendChatMetadata(
+                            localActorPublicKey,
+                            remoteActorPublicKey,
+                            chatMetadata
+                    );
+                    createdMessage.setStatus(MessageStatus.SEND);
+                } catch (IllegalArgumentException e) {
+                    /**
+                     * In this case, any argument in chat or message was null or not properly set.
+                     * I'm gonna change the status to CANNOT_SEND to avoid send this message.
+                     */
+                    createdMessage.setStatus(MessageStatus.CANNOT_SEND);
+                }
+
                 chatMiddlewareDatabaseDao.saveMessage(createdMessage);
             } catch (DatabaseOperationException e) {
                 throw new CantSendChatMessageException(

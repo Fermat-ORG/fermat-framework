@@ -17,6 +17,8 @@ public class ChatMetadataTransactionRecord implements ChatMetadata{
 
     private UUID transactionId;
 
+    private String transactionHash;
+
     private UUID chatId;
 
     private UUID objectId;
@@ -43,6 +45,43 @@ public class ChatMetadataTransactionRecord implements ChatMetadata{
 
     private DistributionStatus distributionStatus;
 
+    /**
+     * Represent the value of processed
+     */
+    private String processed;
+
+    /**
+     * Represent the value of PROCESSED
+     */
+    public final static String PROCESSED = "Y";
+
+    /**
+     * Represent the value of NO_PROCESSED
+     */
+    public final static String NO_PROCESSED = "N";
+
+    /**
+     * Get the Processed
+     * @return String
+     */
+    public String getProcessed() {
+        return processed;
+    }
+
+    /**
+     * Set the Processed
+     * @param processed
+     */
+    public void setProcessed(String processed) {
+        this.processed = processed;
+    }
+    public String getTransactionHash() {
+        return transactionHash;
+    }
+
+    public void setTransactionHash(String transactionHash) {
+        this.transactionHash = transactionHash;
+    }
     public UUID getTransactionId() {
         return transactionId;
     }

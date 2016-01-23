@@ -52,6 +52,7 @@ public final class NetworkServiceChatNetworkServiceDatabaseConstants {
     public static final String CHAT_TABLE_NAME = "chatmetadata";
 
     public static final String CHAT_TRANSACTION_ID_COLUMN_NAME = "transaction_id";
+    public static final String CHAT_TRANSACTION_HASH_COLUMN_NAME = "transaction_hash";
     public static final String CHAT_IDCHAT_COLUMN_NAME = "idchat";
     public static final String CHAT_IDOBJECTO_COLUMN_NAME = "idobjecto";
     public static final String CHAT_LOCALACTORTYPE_COLUMN_NAME = "localactortype";
@@ -65,6 +66,7 @@ public final class NetworkServiceChatNetworkServiceDatabaseConstants {
     public static final String CHAT_IDMENSAJE_COLUMN_NAME = "idmensaje";
     public static final String CHAT_MESSAGE_COLUMN_NAME = "message";
     public static final String CHAT_DISTRIBUTIONSTATUS_COLUMN_NAME = "distributionstatus";
+    public static final String CHAT_PROCCES_STATUS_COLUMN_NAME = "process";
 
     public static final String CHAT_FIRST_KEY_COLUMN = CHAT_TRANSACTION_ID_COLUMN_NAME;
 
