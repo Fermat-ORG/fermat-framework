@@ -11,24 +11,38 @@ import android.os.Build;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.Toast;
 
 import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractFermatFragment;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView;
+import com.bitdubai.fermat_android_api.ui.Views.PresentationDialog;
 import com.bitdubai.fermat_android_api.ui.util.BitmapWorkerTask;
+import com.bitdubai.fermat_api.FermatException;
+import com.bitdubai.fermat_api.layer.all_definition.enums.UISource;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
+import com.bitdubai.fermat_api.layer.all_definition.settings.structure.SettingsManager;
 import com.bitdubai.fermat_dap_android_wallet_asset_issuer_bitdubai.R;
 import com.bitdubai.fermat_dap_android_wallet_asset_issuer_bitdubai.models.Data;
 import com.bitdubai.fermat_dap_android_wallet_asset_issuer_bitdubai.models.DigitalAsset;
 import com.bitdubai.fermat_dap_android_wallet_asset_issuer_bitdubai.sessions.AssetIssuerSession;
+import com.bitdubai.fermat_dap_android_wallet_asset_issuer_bitdubai.sessions.SessionConstantsAssetIssuer;
+import com.bitdubai.fermat_dap_api.layer.dap_module.wallet_asset_issuer.AssetIssuerSettings;
 import com.bitdubai.fermat_dap_api.layer.dap_module.wallet_asset_issuer.exceptions.CantGetAssetStatisticException;
 import com.bitdubai.fermat_dap_api.layer.dap_module.wallet_asset_issuer.interfaces.AssetIssuerWalletSupAppModuleManager;
 import com.bitdubai.fermat_dap_api.layer.dap_wallet.common.exceptions.CantLoadWalletException;
+import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedUIExceptionSeverity;
+import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 
 import java.io.ByteArrayInputStream;
 import java.lang.ref.WeakReference;
+
+import static android.widget.Toast.makeText;
 
 /**
  * Created by frank on 12/15/15.
@@ -37,6 +51,7 @@ public class AssetDetailActivityFragment extends AbstractFermatFragment {
 
     private AssetIssuerSession assetIssuerSession;
     private AssetIssuerWalletSupAppModuleManager moduleManager;
+    private ErrorManager errorManager;
 
     private View rootView;
     private Toolbar toolbar;
@@ -62,6 +77,8 @@ public class AssetDetailActivityFragment extends AbstractFermatFragment {
 
     private DigitalAsset digitalAsset;
 
+    SettingsManager<AssetIssuerSettings> settingsManager;
+
     public AssetDetailActivityFragment() {
 
     }
@@ -73,9 +90,13 @@ public class AssetDetailActivityFragment extends AbstractFermatFragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setHasOptionsMenu(true);
 
         assetIssuerSession = (AssetIssuerSession) appSession;
         moduleManager = assetIssuerSession.getModuleManager();
+        errorManager = appSession.getErrorManager();
+
+        settingsManager = appSession.getModuleManager().getSettingsManager();
 
         configureToolbar();
     }
@@ -141,8 +162,6 @@ public class AssetDetailActivityFragment extends AbstractFermatFragment {
                 changeActivity(Activities.DAP_WALLET_ASSET_ISSUER_USER_REDEEMED_LIST, appSession.getAppPublicKey());
             }
         });
-
-
     }
 
     private void setupBackgroundBitmap() {
@@ -209,12 +228,12 @@ public class AssetDetailActivityFragment extends AbstractFermatFragment {
         assetDetailNameText.setText(digitalAsset.getName());
         assetDetailExpDateText.setText(digitalAsset.getFormattedExpDate());
         assetDetailAvailableText.setText(digitalAsset.getAvailableBalanceQuantity()+"");
-        assetDetailBookText.setText(digitalAsset.getBookBalanceQuantity()+"");
+        assetDetailBookText.setText(digitalAsset.getBookBalanceQuantity() + "");
         assetDetailBtcText.setText(digitalAsset.getFormattedAvailableBalanceBitcoin() + " BTC");
         //assetDetailRemainingText.setText(digitalAsset.getAvailableBalanceQuantity() + " Assets Remaining");
         assetDetailDelivered.setText(digitalAsset.getUnused() + "");
         assetDetailRedeemText.setText(digitalAsset.getRedeemed()+"");
-        assetDetailAppropriatedText.setText(digitalAsset.getAppropriated()+"");
+        assetDetailAppropriatedText.setText(digitalAsset.getAppropriated() + "");
     }
 
     private void configureToolbar() {
@@ -237,5 +256,49 @@ public class AssetDetailActivityFragment extends AbstractFermatFragment {
 
             toolbar.setBackground(drawable);
         }
+    }
+
+    private void setUpHelpAssetDetail(boolean checkButton) {
+        try {
+            PresentationDialog presentationDialog = new PresentationDialog.Builder(getActivity(), appSession)
+                    .setBannerRes(R.drawable.banner_asset_issuer_wallet)
+                    .setIconRes(R.drawable.asset_issuer)
+                    .setVIewColor(R.color.dap_issuer_view_color)
+                    .setTitleTextColor(R.color.dap_issuer_view_color)
+                    .setSubTitle("Asset Issuer Detail.")
+                    .setBody("*GIVE ME A TEXT")
+                    .setTemplateType(PresentationDialog.TemplateType.TYPE_PRESENTATION_WITHOUT_IDENTITIES)
+                    .setIsCheckEnabled(checkButton)
+                    .build();
+
+            presentationDialog.show();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        super.onCreateOptionsMenu(menu, inflater);
+        menu.add(0, SessionConstantsAssetIssuer.IC_ACTION_ISSUER_HELP_DETAIL, 0, "help").setIcon(R.drawable.dap_asset_issuer_help_icon)
+                .setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        try {
+            int id = item.getItemId();
+
+            if (id == SessionConstantsAssetIssuer.IC_ACTION_ISSUER_HELP_DETAIL) {
+                setUpHelpAssetDetail(settingsManager.loadAndGetSettings(appSession.getAppPublicKey()).isPresentationHelpEnabled());
+                return true;
+            }
+
+        } catch (Exception e) {
+            errorManager.reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.UNSTABLE, FermatException.wrapException(e));
+            makeText(getActivity(), "Asset Issuer system error",
+                    Toast.LENGTH_SHORT).show();
+        }
+        return super.onOptionsItemSelected(item);
     }
 }

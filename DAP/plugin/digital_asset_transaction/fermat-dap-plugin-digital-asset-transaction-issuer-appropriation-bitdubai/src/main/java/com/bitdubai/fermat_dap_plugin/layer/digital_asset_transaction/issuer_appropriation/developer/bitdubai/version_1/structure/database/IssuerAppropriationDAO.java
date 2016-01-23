@@ -100,16 +100,16 @@ public class IssuerAppropriationDAO {
         String context = "Asset : " + assetMetadata.getDigitalAsset().getPublicKey() + " - Btc Wallet: " + bitcoinWalletPublicKey
                 + " - User Wallet: " + userWalletPublicKey;
         try {
-            if (transactionExists(assetMetadata.getDigitalAsset().getPublicKey(), userWalletPublicKey, bitcoinWalletPublicKey)) {
+            if (transactionExists(assetMetadata.getGenesisTransaction(), userWalletPublicKey, bitcoinWalletPublicKey)) {
                 throw new TransactionAlreadyStartedException(null, context, "You already started the transaction for this asset.");
             }
 
-            vault.persistDigitalAssetMetadataInLocalStorage(assetMetadata);
 
             DatabaseTable databaseTable = this.database.getTable(IssuerAppropriationDatabaseConstants.ISSUER_APPROPRIATION_TRANSACTION_METADATA_TABLE_NAME);
             DatabaseTableRecord transactionRecord = databaseTable.getEmptyRecord();
 
             String transactionId = UUID.randomUUID().toString(); //The id of the record to be created.
+            vault.persistDigitalAssetMetadataInLocalStorage(assetMetadata, transactionId);
 
             transactionRecord.setStringValue(IssuerAppropriationDatabaseConstants.ISSUER_APPROPRIATION_TRANSACTION_METADATA_ID_COLUMN_NAME, transactionId);
             transactionRecord.setStringValue(IssuerAppropriationDatabaseConstants.ISSUER_APPROPRIATION_TRANSACTION_METADATA_STATUS_COLUMN_NAME, AppropriationStatus.APPROPRIATION_STARTED.getCode());
@@ -120,7 +120,7 @@ public class IssuerAppropriationDAO {
             transactionRecord.setStringValue(IssuerAppropriationDatabaseConstants.ISSUER_APPROPRIATION_TRANSACTION_METADATA_CRYPTO_CURRENCY_TO_COLUMN_NAME, "-");
             transactionRecord.setLongValue(IssuerAppropriationDatabaseConstants.ISSUER_APPROPRIATION_TRANSACTION_METADATA_START_TIME_COLUMN_NAME, System.currentTimeMillis());
             transactionRecord.setLongValue(IssuerAppropriationDatabaseConstants.ISSUER_APPROPRIATION_TRANSACTION_METADATA_END_TIME_COLUMN_NAME, Validate.MAX_DATE); //Since I can't store null on a primitive I'll set it as the max possible then update it.
-            transactionRecord.setStringValue(IssuerAppropriationDatabaseConstants.ISSUER_APPROPRIATION_TRANSACTION_METADATA_GENESIS_COLUMN_NAME, "-"); //I will update this when I send the bitcoins...
+            transactionRecord.setStringValue(IssuerAppropriationDatabaseConstants.ISSUER_APPROPRIATION_TRANSACTION_METADATA_GENESIS_COLUMN_NAME, assetMetadata.getGenesisTransaction());
 
             databaseTable.insertRecord(transactionRecord);
             return transactionId;
@@ -245,9 +245,9 @@ public class IssuerAppropriationDAO {
         }
     }
 
-    private boolean transactionExists(String assetPublicKey, String userWalletPublicKey, String bitcoinWalletPublicKey) throws CantLoadAssetAppropriationTransactionListException {
+    private boolean transactionExists(String txHash, String userWalletPublicKey, String bitcoinWalletPublicKey) throws CantLoadAssetAppropriationTransactionListException {
         try {
-            getTransactionId(assetPublicKey, userWalletPublicKey, bitcoinWalletPublicKey);
+            getTransactionId(txHash, userWalletPublicKey, bitcoinWalletPublicKey);
             return true;
         } catch (RecordsNotFoundException e) {
             return false;
@@ -255,8 +255,8 @@ public class IssuerAppropriationDAO {
 
     }
 
-    private String getTransactionId(String assetPublicKey, String userWalletPublicKey, String bitcoinWalletPublicKey) throws CantLoadAssetAppropriationTransactionListException, RecordsNotFoundException {
-        String context = "Asset Public Key: " + assetPublicKey + " - User Wallet: " + userWalletPublicKey
+    private String getTransactionId(String txHash, String userWalletPublicKey, String bitcoinWalletPublicKey) throws CantLoadAssetAppropriationTransactionListException, RecordsNotFoundException {
+        String context = "Asset Public Key: " + txHash + " - User Wallet: " + userWalletPublicKey
                 + " - BTC Wallet: " + bitcoinWalletPublicKey;
         try {
             DatabaseTable transactionMetadataTable;
@@ -268,8 +268,8 @@ public class IssuerAppropriationDAO {
             addressFilter.setType(DatabaseFilterType.EQUAL);
 
             DatabaseTableFilter assetPublicKeyFilter = transactionMetadataTable.getEmptyTableFilter();
-            assetPublicKeyFilter.setColumn(IssuerAppropriationDatabaseConstants.ISSUER_APPROPRIATION_TRANSACTION_METADATA_DA_PUBLIC_KEY_COLUMN_NAME);
-            assetPublicKeyFilter.setValue(assetPublicKey);
+            assetPublicKeyFilter.setColumn(IssuerAppropriationDatabaseConstants.ISSUER_APPROPRIATION_TRANSACTION_METADATA_GENESIS_COLUMN_NAME);
+            assetPublicKeyFilter.setValue(txHash);
             assetPublicKeyFilter.setType(DatabaseFilterType.EQUAL);
 
             DatabaseTableFilter userWallerFilter = transactionMetadataTable.getEmptyTableFilter();
@@ -496,7 +496,7 @@ public class IssuerAppropriationDAO {
                 cryptoAddress = new CryptoAddress(address, currency);
             }
             AppropriationStatus status = AppropriationStatus.getByCode(getStringFieldByTransactionId(IssuerAppropriationDatabaseConstants.ISSUER_APPROPRIATION_TRANSACTION_METADATA_STATUS_COLUMN_NAME, transactionId));
-            DigitalAssetMetadata assetMetadata = vault.getDigitalAssetMetadataFromLocalStorage(getStringFieldByTransactionId(IssuerAppropriationDatabaseConstants.ISSUER_APPROPRIATION_TRANSACTION_METADATA_DA_PUBLIC_KEY_COLUMN_NAME, transactionId));
+            DigitalAssetMetadata assetMetadata = vault.getDigitalAssetMetadataFromLocalStorage(transactionId);
             long startTime = getLongFieldByTransactionId(IssuerAppropriationDatabaseConstants.ISSUER_APPROPRIATION_TRANSACTION_METADATA_START_TIME_COLUMN_NAME, transactionId);
             long endTime = getLongFieldByTransactionId(IssuerAppropriationDatabaseConstants.ISSUER_APPROPRIATION_TRANSACTION_METADATA_END_TIME_COLUMN_NAME, transactionId);
             String genesisTransaction = getStringFieldByTransactionId(IssuerAppropriationDatabaseConstants.ISSUER_APPROPRIATION_TRANSACTION_METADATA_GENESIS_COLUMN_NAME, transactionId);
@@ -589,6 +589,8 @@ public class IssuerAppropriationDAO {
         uncompleted.addAll(getTransactionsForStatus(AppropriationStatus.CRYPTOADDRESS_OBTAINED));
         uncompleted.addAll(getTransactionsForStatus(AppropriationStatus.CRYPTOADDRESS_REGISTERED));
         uncompleted.addAll(getTransactionsForStatus(AppropriationStatus.SENDING_MESSAGE));
+        uncompleted.addAll(getTransactionsForStatus(AppropriationStatus.BITCOINS_SENT));
+        uncompleted.addAll(getTransactionsForStatus(AppropriationStatus.ASSET_DEBITED));
         return uncompleted;
     }
 

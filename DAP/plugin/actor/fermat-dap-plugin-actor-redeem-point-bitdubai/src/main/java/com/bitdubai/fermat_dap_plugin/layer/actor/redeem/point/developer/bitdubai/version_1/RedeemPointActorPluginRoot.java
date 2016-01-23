@@ -17,7 +17,6 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.Layers;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
-import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEventHandler;
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEventListener;
 import com.bitdubai.fermat_api.layer.all_definition.util.Version;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
@@ -57,7 +56,7 @@ import com.bitdubai.fermat_dap_plugin.layer.actor.redeem.point.developer.bitduba
 import com.bitdubai.fermat_dap_plugin.layer.actor.redeem.point.developer.bitdubai.version_1.developerUtils.RedeemPointActorDeveloperDatabaseFactory;
 import com.bitdubai.fermat_dap_plugin.layer.actor.redeem.point.developer.bitdubai.version_1.event_handlers.ActorAssetRedeemPointCompleteRegistrationNotificationEventHandler;
 import com.bitdubai.fermat_dap_plugin.layer.actor.redeem.point.developer.bitdubai.version_1.event_handlers.CryptoAddressRequestedEventHandler;
-import com.bitdubai.fermat_dap_plugin.layer.actor.redeem.point.developer.bitdubai.version_1.event_handlers.NewReceiveMessageActorRedeemPointNotificationEventHandler;
+import com.bitdubai.fermat_dap_plugin.layer.actor.redeem.point.developer.bitdubai.version_1.event_handlers.NewReceiveMessageEventHandler;
 import com.bitdubai.fermat_dap_plugin.layer.actor.redeem.point.developer.bitdubai.version_1.exceptions.CantAddPendingRedeemPointException;
 import com.bitdubai.fermat_dap_plugin.layer.actor.redeem.point.developer.bitdubai.version_1.exceptions.CantGetRedeemPointsListException;
 import com.bitdubai.fermat_dap_plugin.layer.actor.redeem.point.developer.bitdubai.version_1.exceptions.CantHandleCryptoAddressReceivedActionException;
@@ -180,15 +179,23 @@ public class RedeemPointActorPluginRoot extends AbstractPlugin implements
                         System.currentTimeMillis(),
                         assetRedeemPointActorprofileImage);
 
+//                RedeemPointActorAddress address = new RedeemPointActorAddress();
+//                address.setCountryName("Venezuela");
+//                address.setProvinceName("Zulia");
+//                address.setPostalCode("4019");
+//                address.setCityName("Ciudad Ojeda");
+//                address.setStreetName("Avenida 8");
+//                address.setHouseNumber("#712");
+//                record.setAddress(address);
+//                record.setCryptoAddress(cryptoAddress);
+//                record.setHoursOfOperation("08:00 am a 05:30pm");
+//                record.setContactInformation("marsvicam@gmail.com");
                 redeemPointActorDao.createNewRedeemPoint(record);
 
                 actorAssetRedeemPoint = this.redeemPointActorDao.getActorAssetRedeemPoint();
 
                 assetRedeemPointActorNetworkServiceManager.registerActorAssetRedeemPoint(actorAssetRedeemPoint);
             } else {
-
-                actorAssetRedeemPoint = this.redeemPointActorDao.getActorAssetRedeemPoint();
-
                 Double locationLatitude = new Random().nextDouble();
                 Double locationLongitude = new Random().nextDouble();
 
@@ -201,8 +208,20 @@ public class RedeemPointActorPluginRoot extends AbstractPlugin implements
                         actorAssetRedeemPoint.getCryptoAddress(),
                         actorAssetRedeemPoint.getRegistrationDate(),
                         System.currentTimeMillis(),
-                        assetRedeemPointActorprofileImage);
+                        assetRedeemPointActorprofileImage,
+                        actorAssetRedeemPoint.getRegisteredIssuers());
 
+//                RedeemPointActorAddress address = new RedeemPointActorAddress();
+//                address.setCountryName("Venezuela");
+//                address.setProvinceName("Zulia");
+//                address.setPostalCode("4019");
+//                address.setCityName("Ciudad Ojeda");
+//                address.setStreetName("Avenida 8");
+//                address.setHouseNumber("#712");
+//                record.setAddress(address);
+//                record.setCryptoAddress(cryptoAddress);
+//                record.setHoursOfOperation("08:00 am a 05:30pm");
+//                record.setContactInformation("marsvicam@gmail.com");
                 redeemPointActorDao.updateRedeemPoint(record);
 
                 actorAssetRedeemPoint = this.redeemPointActorDao.getActorAssetRedeemPoint();
@@ -448,8 +467,9 @@ public class RedeemPointActorPluginRoot extends AbstractPlugin implements
             try {
                 watchOnlyVaultManager.initialize(extendedPublicKey);
                 redeemPointActorDao.newExtendedPublicKeyRegistered(getActorAssetRedeemPoint().getActorPublicKey(), dapActorSender.getActorPublicKey());
+                assetRedeemPointActorNetworkServiceManager.updateActorAssetRedeemPoint(redeemPointActorDao.getActorAssetRedeemPoint());
                 actorAssetIssuerManager.updateExtendedPublicKey(dapActorSender.getActorPublicKey(), extendedPublicKey.toString());
-            } catch (CantInitializeWatchOnlyVaultException | CantInsertRecordException | CantGetAssetRedeemPointActorsException | CantUpdateActorAssetIssuerException e) {
+            } catch (CantInitializeWatchOnlyVaultException | CantInsertRecordException | CantGetAssetRedeemPointActorsException | CantUpdateActorAssetIssuerException | CantRegisterActorAssetRedeemPointException e) {
                 //handle this.
                 e.printStackTrace();
             }
@@ -513,15 +533,13 @@ public class RedeemPointActorPluginRoot extends AbstractPlugin implements
          * I will initialize the handling of com.bitdubai.platform events.
          */
         FermatEventListener fermatEventListener;
-        FermatEventHandler fermatEventHandler;
-
         fermatEventListener = eventManager.getNewListener(EventType.COMPLETE_ASSET_REDEEM_POINT_REGISTRATION_NOTIFICATION);
         fermatEventListener.setEventHandler(new ActorAssetRedeemPointCompleteRegistrationNotificationEventHandler(this));
         eventManager.addListener(fermatEventListener);
         listenersAdded.add(fermatEventListener);
 
         fermatEventListener = eventManager.getNewListener(EventType.NEW_RECEIVE_MESSAGE_ACTOR);
-        fermatEventListener.setEventHandler(new NewReceiveMessageActorRedeemPointNotificationEventHandler(this));
+        fermatEventListener.setEventHandler(new NewReceiveMessageEventHandler(this));
         eventManager.addListener(fermatEventListener);
         listenersAdded.add(fermatEventListener);
 
