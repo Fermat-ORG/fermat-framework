@@ -18,14 +18,14 @@ public class IncomingConfirmBusinessTransactionResponseEventHandler extends Abst
             try {
                 this.customerOnlinePaymentRecorderService.incomingConfirmBusinessTransactionResponse((IncomingConfirmBusinessTransactionResponse) fermatEvent);
             } catch(CantSaveEventException exception){
-                throw new CantSaveEventException(exception,"Handling the IncomingConfirmBusinessTransactionResponse", "Check the cause");
+                throw new CantSaveEventException(FermatException.wrapException(exception),"Handling the IncomingConfirmBusinessTransactionResponse", "Check the cause");
             } catch(ClassCastException exception){
                 //Logger LOG = Logger.getGlobal();
                 //LOG.info("EXCEPTION DETECTOR----------------------------------");
                 //exception.printStackTrace();
                 throw new CantSaveEventException(FermatException.wrapException(exception), "Handling the IncomingConfirmBusinessTransactionResponse", "Cannot cast this event");
             } catch(Exception exception){
-                throw new CantSaveEventException(exception,"Handling the IncomingConfirmBusinessTransactionResponse", "Unexpected exception");
+                throw new CantSaveEventException(FermatException.wrapException(exception),"Handling the IncomingConfirmBusinessTransactionResponse", "Unexpected exception");
             }
 
         }else {

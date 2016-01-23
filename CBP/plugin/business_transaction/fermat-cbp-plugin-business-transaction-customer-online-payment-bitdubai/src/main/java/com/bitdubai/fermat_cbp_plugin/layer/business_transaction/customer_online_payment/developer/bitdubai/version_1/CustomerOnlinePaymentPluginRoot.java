@@ -194,7 +194,7 @@ public class CustomerOnlinePaymentPluginRoot extends AbstractPlugin implements
             this.errorManager.reportUnexpectedPluginException(
                     Plugins.CUSTOMER_ONLINE_PAYMENT,
                     UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,
-                    exception);
+                    FermatException.wrapException(exception));
         }
     }
 
@@ -341,6 +341,7 @@ public class CustomerOnlinePaymentPluginRoot extends AbstractPlugin implements
 
     @Override
     public List<DeveloperDatabaseTableRecord> getDatabaseTableContent(DeveloperObjectFactory developerObjectFactory, DeveloperDatabase developerDatabase, DeveloperDatabaseTable developerDatabaseTable) {
+
         return customerOnlinePaymentBusinessTransactionDeveloperDatabaseFactory.getDatabaseTableContent(developerObjectFactory, developerDatabaseTable);
     }
 

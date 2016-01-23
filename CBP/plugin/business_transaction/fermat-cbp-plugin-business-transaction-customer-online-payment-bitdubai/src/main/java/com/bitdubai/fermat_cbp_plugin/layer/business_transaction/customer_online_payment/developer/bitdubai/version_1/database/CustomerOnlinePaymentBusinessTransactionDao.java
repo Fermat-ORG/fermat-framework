@@ -145,6 +145,8 @@ public class CustomerOnlinePaymentBusinessTransactionDao {
                     e,
                     "Getting the contract transaction status",
                     "Invalid code in ContractTransactionStatus enum");
+        } catch (Exception exception){
+            throw new UnexpectedResultReturnedFromDatabaseException( exception,"Unexpected error","check the cause" );
         }
     }
 
@@ -173,6 +175,9 @@ public class CustomerOnlinePaymentBusinessTransactionDao {
             throw new CantGetContractListException(e,
                     "Getting events in EventStatus.PENDING",
                     "Cannot load the table into memory");
+        } catch (Exception e){
+            throw new UnexpectedResultReturnedFromDatabaseException(e,"Unexpected error","check the cause");
+
         }
     }
 
@@ -197,6 +202,8 @@ public class CustomerOnlinePaymentBusinessTransactionDao {
             throw new UnexpectedResultReturnedFromDatabaseException(e,
                     "Getting value from database",
                     "Cannot load the database table");
+            }catch (Exception exception){
+                throw new UnexpectedResultReturnedFromDatabaseException( exception,"Unexpected error","check the cause" );
         }
 
     }
@@ -238,21 +245,21 @@ public class CustomerOnlinePaymentBusinessTransactionDao {
     }
 
     public List<BusinessTransactionRecord> getOnCryptoNetworkCryptoStatusList() throws
-            UnexpectedResultReturnedFromDatabaseException,
-            CantGetContractListException {
-        return getCustomerOnlinePaymentRecordList(
-                CryptoStatus.ON_CRYPTO_NETWORK.getCode(),
-                CustomerOnlinePaymentBusinessTransactionDatabaseConstants.ONLINE_PAYMENT_CRYPTO_STATUS_COLUMN_NAME,
-                CustomerOnlinePaymentBusinessTransactionDatabaseConstants.ONLINE_PAYMENT_CONTRACT_HASH_COLUMN_NAME);
+        UnexpectedResultReturnedFromDatabaseException,
+                CantGetContractListException {
+            return getCustomerOnlinePaymentRecordList(
+                    CryptoStatus.ON_CRYPTO_NETWORK.getCode(),
+                    CustomerOnlinePaymentBusinessTransactionDatabaseConstants.ONLINE_PAYMENT_CRYPTO_STATUS_COLUMN_NAME,
+                    CustomerOnlinePaymentBusinessTransactionDatabaseConstants.ONLINE_PAYMENT_CONTRACT_HASH_COLUMN_NAME);
     }
 
     public List<BusinessTransactionRecord> getOnBlockchainkCryptoStatusList() throws
-            UnexpectedResultReturnedFromDatabaseException,
-            CantGetContractListException {
-        return getCustomerOnlinePaymentRecordList(
-                CryptoStatus.ON_BLOCKCHAIN.getCode(),
-                CustomerOnlinePaymentBusinessTransactionDatabaseConstants.ONLINE_PAYMENT_CRYPTO_STATUS_COLUMN_NAME,
-                CustomerOnlinePaymentBusinessTransactionDatabaseConstants.ONLINE_PAYMENT_CONTRACT_HASH_COLUMN_NAME);
+        UnexpectedResultReturnedFromDatabaseException,
+                CantGetContractListException {
+            return getCustomerOnlinePaymentRecordList(
+                    CryptoStatus.ON_BLOCKCHAIN.getCode(),
+                    CustomerOnlinePaymentBusinessTransactionDatabaseConstants.ONLINE_PAYMENT_CRYPTO_STATUS_COLUMN_NAME,
+                    CustomerOnlinePaymentBusinessTransactionDatabaseConstants.ONLINE_PAYMENT_CONTRACT_HASH_COLUMN_NAME);
     }
 
     /**
