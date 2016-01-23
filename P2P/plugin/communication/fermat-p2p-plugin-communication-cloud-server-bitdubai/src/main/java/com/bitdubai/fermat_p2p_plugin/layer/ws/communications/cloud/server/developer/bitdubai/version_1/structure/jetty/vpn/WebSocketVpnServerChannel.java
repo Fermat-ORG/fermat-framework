@@ -191,10 +191,13 @@ public class WebSocketVpnServerChannel {
                                                                                                                         fermatMessage.toJson(),                     //Message Content
                                                                                                                         FermatPacketType.MESSAGE_TRANSMIT,          //Packet type
                                                                                                                         vpnServerIdentity.getPrivateKey());         //Sender private key
+
+            String key = fermatMessage.getReceiver() + fermatMessage.getSender();
+
             /*
              * Get the connection of the destination
              */
-            VpnClientConnection clientConnectionDestination = ShareMemoryCacheForVpnClientsConnections.getMyRemote(vpnClientConnection);
+            VpnClientConnection clientConnectionDestination = ShareMemoryCacheForVpnClientsConnections.getMyRemote(vpnClientConnection.getNetworkServiceType(), key);
 
             /*
              * If the connection to client destination available

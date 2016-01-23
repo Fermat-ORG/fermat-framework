@@ -2,13 +2,9 @@ package com.bitdubai.fermat_dap_android_wallet_asset_user_bitdubai.models;
 
 import com.bitdubai.fermat_api.layer.all_definition.resources_structure.Resource;
 import com.bitdubai.fermat_dap_api.layer.all_definition.digital_asset.DigitalAssetContractPropertiesConstants;
-import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.exceptions.CantGetAssetUserActorsException;
-import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.interfaces.ActorAssetUser;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.redeem_point.exceptions.CantGetAssetRedeemPointActorsException;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.redeem_point.interfaces.ActorAssetRedeemPoint;
-import com.bitdubai.fermat_dap_api.layer.dap_module.wallet_asset_issuer.interfaces.AssetIssuerWalletSupAppModuleManager;
 import com.bitdubai.fermat_dap_api.layer.dap_module.wallet_asset_user.interfaces.AssetUserWalletSubAppModuleManager;
-import com.bitdubai.fermat_dap_api.layer.dap_wallet.asset_issuer_wallet.interfaces.AssetIssuerWalletList;
 import com.bitdubai.fermat_dap_api.layer.dap_wallet.asset_user_wallet.interfaces.AssetUserWalletList;
 import com.bitdubai.fermat_dap_api.layer.dap_wallet.common.exceptions.CantLoadWalletException;
 
@@ -70,14 +66,14 @@ public class Data {
         return null;
     }
 
-    public static List<RedeemPoint> getConnectedRedeemPoints(AssetUserWalletSubAppModuleManager moduleManager, List<RedeemPoint> usersSelected) throws CantGetAssetRedeemPointActorsException {
+    public static List<RedeemPoint> getConnectedRedeemPoints(AssetUserWalletSubAppModuleManager moduleManager, List<RedeemPoint> usersSelected, DigitalAsset digitalAsset) throws CantGetAssetRedeemPointActorsException {
 //        List<RedeemPoint> redeemPoints = new ArrayList<>();
 //        redeemPoints.add(new RedeemPoint("Frank Contreras RP", null));
 //        redeemPoints.add(new RedeemPoint("Victor Mars RP", null));
 //        redeemPoints.add(new RedeemPoint("Nerio Indriago RP", null));
 //        redeemPoints.add(new RedeemPoint("Rodrigo Acosta RP", null));
         List<RedeemPoint> redeemPoints = new ArrayList<>();
-        List<ActorAssetRedeemPoint> actorAssetRedeemPoints = moduleManager.getAllActorAssetRedeemPointConnected();
+        List<ActorAssetRedeemPoint> actorAssetRedeemPoints = moduleManager.getRedeemPointsConnectedForAsset(digitalAsset.getAssetPublicKey());
         for (ActorAssetRedeemPoint actorAssetRedeemPoint : actorAssetRedeemPoints) {
             RedeemPoint newUser = new RedeemPoint(actorAssetRedeemPoint.getName(), actorAssetRedeemPoint);
 //            int index = usersSelected.indexOf(newUser);

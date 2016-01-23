@@ -6,9 +6,7 @@
  */
 package com.bitdubai.fermat_cht_plugin.layer.network_service.chat.developer.bitdubai.version_1.structure.processors;
 
-import com.bitdubai.fermat_api.layer.all_definition.components.enums.PlatformComponentType;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
-import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEvent;
 import com.bitdubai.fermat_api.layer.all_definition.util.XMLParser;
 import com.bitdubai.fermat_cht_api.all_definition.enums.MessageStatus;
 import com.bitdubai.fermat_cht_api.layer.network_service.chat.enums.ChatMessageStatus;
@@ -71,12 +69,16 @@ public class ChatMetadataTransmitMessageReceiverProcessor extends FermatMessageP
              * Construct a new digitalAssetMetadataTransaction
             */
 
-
-            chatMetadaTransactionRecord.setDistributionStatus(DistributionStatus.DELIVERED);
             /*
              * Save into data base for audit control
              */
-           // getChatPluginRoot().getChatMetaDataDao().create(chatMetadaTransactionRecord);
+            //get the transactions an UUID
+            chatMetadaTransactionRecord.setTransactionId(getChatPluginRoot().getChatMetaDataDao().getNewUUID(UUID.randomUUID().toString()));
+            chatMetadaTransactionRecord.setChatMessageStatus(ChatMessageStatus.CREATED_CHAT);
+            chatMetadaTransactionRecord.setMessageStatus(MessageStatus.CREATED);
+            chatMetadaTransactionRecord.setDistributionStatus(DistributionStatus.DELIVERING);
+            chatMetadaTransactionRecord.setProcessed(ChatMetadataTransactionRecord.NO_PROCESSED);
+            getChatPluginRoot().getChatMetaDataDao().create(chatMetadaTransactionRecord);
 
             /*
              * Mark the message as read
@@ -101,7 +103,7 @@ public class ChatMetadataTransmitMessageReceiverProcessor extends FermatMessageP
 
     @Override
     public ChatMessageTransactionType getChatMessageTransactionType() {
-        return ChatMessageTransactionType.TRANSACTION_STATUS_UPDATE;
+        return ChatMessageTransactionType.CHAT_METADATA_TRASMIT;
     }
 
 

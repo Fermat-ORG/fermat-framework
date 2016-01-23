@@ -13,8 +13,8 @@ import java.util.UUID;
  */
 public class ChatMock implements Chat {
 
-    private String localActorPubKey = "TestLocalActorPublicKey";
-    private String remoteActorPubKey = "RemoteActorPublicKey";
+    private String localActorPubKey;
+    private String remoteActorPubKey;
     @Override
     public UUID getChatId() {
         return UUID.fromString("52d7fab8-a423-458f-bcc9-49cdb3e9ba8f");
@@ -52,7 +52,7 @@ public class ChatMock implements Chat {
 
     @Override
     public void setLocalActorPublicKey(String localActorPublicKey) {
-
+        this.localActorPubKey = localActorPublicKey;
     }
 
     @Override
@@ -72,7 +72,7 @@ public class ChatMock implements Chat {
 
     @Override
     public void setRemoteActorPublicKey(String remoteActorPublicKey) {
-
+        this.remoteActorPubKey = remoteActorPublicKey;
     }
 
     @Override

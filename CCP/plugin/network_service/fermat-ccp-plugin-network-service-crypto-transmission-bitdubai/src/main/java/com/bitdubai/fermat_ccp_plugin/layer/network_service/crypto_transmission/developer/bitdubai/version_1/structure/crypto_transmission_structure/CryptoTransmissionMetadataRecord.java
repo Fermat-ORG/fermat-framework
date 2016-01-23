@@ -1,7 +1,8 @@
 package com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_transmission.developer.bitdubai.version_1.structure.crypto_transmission_structure;
 
 import com.bitdubai.fermat_api.layer.all_definition.enums.CryptoCurrency;
-import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_transmission.enums.CryptoTransmissionStates;
+import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_transmission.enums.CryptoTransmissionMetadataState;
+import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_transmission.enums.CryptoTransmissionProtocolState;
 import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_transmission.interfaces.structure.CryptoTransmissionMetadata;
 import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_transmission.interfaces.structure.CryptoTransmissionMetadataType;
 
@@ -20,11 +21,12 @@ public class CryptoTransmissionMetadataRecord implements CryptoTransmissionMetad
     private String destinationPublicKey;
     private String associatedCryptoTransactionHash;
     private String paymentDescription;
-    private CryptoTransmissionStates cryptoTransmissionState;
+    private CryptoTransmissionProtocolState cryptoTransmissionProtocolState;
     private CryptoTransmissionMetadataType cryptoTransmissionMetadataType;
     private long timestamp;
-    private boolean pendigFlag;
+    private boolean pendingFlag;
     private int sentCount;
+    private CryptoTransmissionMetadataState cryptoTransmissionMetadataState;
 
     public CryptoTransmissionMetadataRecord(String associatedCryptoTransactionHash,
                                             long cryptoAmount,
@@ -34,11 +36,12 @@ public class CryptoTransmissionMetadataRecord implements CryptoTransmissionMetad
                                             UUID requestId,
                                             String senderPublicKey,
                                             UUID transactionId,
-                                            CryptoTransmissionStates cryptoTransmissionState,
+                                            CryptoTransmissionProtocolState cryptoTransmissionState,
                                             CryptoTransmissionMetadataType cryptoTransmissionMetadataType,
                                             long timestamp,
                                             boolean pendigFlag,
-                                            int sentCount) {
+                                            int sentCount,
+                                            CryptoTransmissionMetadataState notificationState) {
 
         this.associatedCryptoTransactionHash    = associatedCryptoTransactionHash;
         this.cryptoAmount                       = cryptoAmount;
@@ -48,11 +51,12 @@ public class CryptoTransmissionMetadataRecord implements CryptoTransmissionMetad
         this.requestId                          = requestId;
         this.senderPublicKey                    = senderPublicKey;
         this.transactionId = transactionId;
-        this.cryptoTransmissionState = cryptoTransmissionState;
+        this.cryptoTransmissionProtocolState = cryptoTransmissionState;
         this.cryptoTransmissionMetadataType = cryptoTransmissionMetadataType;
-        this.pendigFlag = pendigFlag;
+        this.pendingFlag = pendigFlag;
         this.timestamp =timestamp;
         this.sentCount = sentCount;
+        this.cryptoTransmissionMetadataState = notificationState;
     }
 
     public CryptoTransmissionMetadataRecord(String associatedCryptoTransactionHash,
@@ -63,9 +67,10 @@ public class CryptoTransmissionMetadataRecord implements CryptoTransmissionMetad
                                             UUID requestId,
                                             String senderPublicKey,
                                             UUID transactionId,
-                                            CryptoTransmissionStates cryptoTransmissionState,
+                                            CryptoTransmissionProtocolState cryptoTransmissionState,
                                             CryptoTransmissionMetadataType cryptoTransmissionMetadataType,
-                                            int sentCount) {
+                                            int sentCount,
+                                            CryptoTransmissionMetadataState notificationState) {
 
         this.associatedCryptoTransactionHash    = associatedCryptoTransactionHash;
         this.cryptoAmount                       = cryptoAmount;
@@ -75,10 +80,11 @@ public class CryptoTransmissionMetadataRecord implements CryptoTransmissionMetad
         this.requestId                          = requestId;
         this.senderPublicKey                    = senderPublicKey;
         this.transactionId = transactionId;
-        this.cryptoTransmissionState = cryptoTransmissionState;
+        this.cryptoTransmissionProtocolState = cryptoTransmissionState;
         this.cryptoTransmissionMetadataType = cryptoTransmissionMetadataType;
-        pendigFlag = false;
+        pendingFlag = false;
         this.sentCount = sentCount;
+        this.cryptoTransmissionMetadataState = notificationState;
     }
 
     @Override
@@ -134,13 +140,24 @@ public class CryptoTransmissionMetadataRecord implements CryptoTransmissionMetad
 
 
     @Override
-    public CryptoTransmissionStates getCryptoTransmissionStates() {
-        return cryptoTransmissionState;
+    public CryptoTransmissionProtocolState getCryptoTransmissionProtocolState() {
+        return cryptoTransmissionProtocolState;
     }
 
+
     @Override
-    public void changeState(CryptoTransmissionStates cryptoTransmissionStates) {
-        cryptoTransmissionState = cryptoTransmissionStates;
+    public CryptoTransmissionMetadataState getCryptoTransmissionMetadataStates() {
+        return this.cryptoTransmissionMetadataState;
+    }
+
+
+    @Override
+    public void changeCryptoTransmissionProtocolState(CryptoTransmissionProtocolState cryptoTransmissionProtocolState) {
+        this.cryptoTransmissionProtocolState = cryptoTransmissionProtocolState;
+    }
+    @Override
+    public void changeMetadataState(CryptoTransmissionMetadataState cryptoTransmissionNotificationStates) {
+        this.cryptoTransmissionMetadataState = cryptoTransmissionNotificationStates;
     }
 
     @Override
@@ -150,12 +167,12 @@ public class CryptoTransmissionMetadataRecord implements CryptoTransmissionMetad
 
     @Override
     public boolean isPendigToRead() {
-        return pendigFlag;
+        return pendingFlag;
     }
 
     @Override
     public void confirmRead() {
-        this.pendigFlag = true;
+        this.pendingFlag = true;
     }
 
     @Override
@@ -165,6 +182,15 @@ public class CryptoTransmissionMetadataRecord implements CryptoTransmissionMetad
 
     @Override
     public void setPendingToRead(boolean pending) {
-        this.pendigFlag = pending;
+        this.pendingFlag = pending;
+    }
+
+    @Override
+    public void setDestinationPublickKey(String destinationPublicKey) {
+        this.destinationPublicKey = destinationPublicKey;
+    }
+    @Override
+    public void setSenderPublicKey(String senderPublicKey) {
+        this.senderPublicKey = senderPublicKey;
     }
 }

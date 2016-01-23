@@ -2,6 +2,7 @@ package com.bitdubai.fermat_ccp_api.layer.crypto_transaction.outgoing_intra_acto
 
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.FermatManager;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
+import com.bitdubai.fermat_api.layer.all_definition.enums.BlockchainNetworkType;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ReferenceWallet;
 import com.bitdubai.fermat_api.layer.all_definition.money.CryptoAddress;
 import com.bitdubai.fermat_ccp_api.layer.crypto_transaction.outgoing_intra_actor.exceptions.OutgoingIntraActorCantSendFundsExceptions;
@@ -41,7 +42,8 @@ public interface IntraActorCryptoTransactionManager extends FermatManager {
                                  String receptorPublicKey,
                                  Actors senderActorType,
                                  Actors receptorActorType,
-                                 ReferenceWallet referenceWallet) throws com.bitdubai.fermat_ccp_api.layer.crypto_transaction.outgoing_intra_actor.exceptions.OutgoingIntraActorCantSendFundsExceptions,
+                                 ReferenceWallet referenceWallet,
+                                 BlockchainNetworkType blockchainNetworkType) throws com.bitdubai.fermat_ccp_api.layer.crypto_transaction.outgoing_intra_actor.exceptions.OutgoingIntraActorCantSendFundsExceptions,
             com.bitdubai.fermat_ccp_api.layer.crypto_transaction.outgoing_intra_actor.exceptions.OutgoingIntraActorInsufficientFundsException;
 
     /**
@@ -67,7 +69,8 @@ public interface IntraActorCryptoTransactionManager extends FermatManager {
                            String receptorPublicKey,
                            Actors senderActorType,
                            Actors receptorActorType,
-                           ReferenceWallet referenceWallet) throws com.bitdubai.fermat_ccp_api.layer.crypto_transaction.outgoing_intra_actor.exceptions.OutgoingIntraActorCantSendFundsExceptions,
+                           ReferenceWallet referenceWallet,
+                           BlockchainNetworkType blockchainNetworkType) throws com.bitdubai.fermat_ccp_api.layer.crypto_transaction.outgoing_intra_actor.exceptions.OutgoingIntraActorCantSendFundsExceptions,
             com.bitdubai.fermat_ccp_api.layer.crypto_transaction.outgoing_intra_actor.exceptions.OutgoingIntraActorInsufficientFundsException;
 
     /**
@@ -85,7 +88,8 @@ public interface IntraActorCryptoTransactionManager extends FermatManager {
                     Actors senderActorType,
                     Actors receptorActorType,
                     ReferenceWallet referenceWallet,
-                    boolean sendFromSameDevice) throws OutgoingIntraActorCantSendFundsExceptions, OutgoingIntraActorInsufficientFundsException;
+                    boolean sendFromSameDevice,
+                    BlockchainNetworkType blockchainNetworkType) throws OutgoingIntraActorCantSendFundsExceptions, OutgoingIntraActorInsufficientFundsException;
 
 
     /**

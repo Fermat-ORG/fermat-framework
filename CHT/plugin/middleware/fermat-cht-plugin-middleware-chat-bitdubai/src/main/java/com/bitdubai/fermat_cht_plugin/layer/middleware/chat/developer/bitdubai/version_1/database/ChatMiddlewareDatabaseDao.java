@@ -119,6 +119,10 @@ public class ChatMiddlewareDatabaseDao {
 
             database.closeDatabase();
 
+            if(contacts.isEmpty()){
+                return null;
+            }
+
             return contacts.get(0);
         }
         catch (Exception e) {
@@ -249,14 +253,19 @@ public class ChatMiddlewareDatabaseDao {
 
             database.closeDatabase();
 
+            if(chats.isEmpty()){
+                return null;
+            }
+
             return chats.get(0);
         }
         catch (Exception e) {
             if (database != null)
                 database.closeDatabase();
-            throw new DatabaseOperationException(DatabaseOperationException.DEFAULT_MESSAGE, e, "error trying to get Contact from the database with filter: " + chatId.toString(), null);
+            throw new DatabaseOperationException(DatabaseOperationException.DEFAULT_MESSAGE, e, "error trying to get Chat from the database with filter: " + chatId.toString(), null);
         }
     }
+
     public Chat newEmptyInstanceChat() throws CantNewEmptyChatException
     {
         ChatImpl chat = new ChatImpl();
@@ -327,7 +336,7 @@ public class ChatMiddlewareDatabaseDao {
      * @throws DatabaseOperationException
      * @throws CantGetMessageException
      */
-    public List<Message> getCreatedMesages() throws
+    public List<Message> getCreatedMessages() throws
             DatabaseOperationException,
             CantGetMessageException {
         DatabaseTable databaseTable=getDatabaseTable(
@@ -398,6 +407,10 @@ public class ChatMiddlewareDatabaseDao {
             }
 
             database.closeDatabase();
+
+            if(messages.isEmpty()){
+                return null;
+            }
 
             return messages.get(0);
         }

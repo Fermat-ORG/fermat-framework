@@ -36,6 +36,7 @@ public class RedeemPointSession extends AbstractFermatSession<InstalledWallet,As
      */
     private ErrorManager errorManager;
 
+    private WalletSettings settings;
 
     public RedeemPointSession(WalletResourcesProviderManager resourceManager, InstalledWallet installedWallet, ErrorManager errorManager, AssetRedeemPointWalletSubAppModule manager) {
         super(installedWallet.getWalletPublicKey(), installedWallet, errorManager, manager, null);
@@ -46,21 +47,18 @@ public class RedeemPointSession extends AbstractFermatSession<InstalledWallet,As
     }
 
     public RedeemPointSession() {
-
-        installedWallet = null;
         data = new HashMap<String, Object>();
+        installedWallet = null;
     }
 
-
     public InstalledWallet getWalletSessionType() {
-        return null;
+        return installedWallet;
     }
 
     @Override
     public void setData(String key, Object object) {
         data.put(key, object);
     }
-
 
     @Override
     public Object getData(String key) {
@@ -76,9 +74,6 @@ public class RedeemPointSession extends AbstractFermatSession<InstalledWallet,As
         return null;
     }
 
-
-
-
     /**
      * Get Asset Issuer Wallet Manager instance
      *
@@ -87,4 +82,9 @@ public class RedeemPointSession extends AbstractFermatSession<InstalledWallet,As
     public AssetRedeemPointWalletSubAppModule getManager() {
         return manager;
     }
+
+    public void setSettings(WalletSettings settings) {
+        this.settings = settings;
+    }
+
 }
