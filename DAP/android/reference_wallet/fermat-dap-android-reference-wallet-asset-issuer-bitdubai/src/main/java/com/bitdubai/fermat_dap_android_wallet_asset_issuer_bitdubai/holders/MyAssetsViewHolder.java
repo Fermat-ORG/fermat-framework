@@ -23,9 +23,7 @@ public class MyAssetsViewHolder extends FermatViewHolder {
     public ImageView image;
     public FermatTextView nameText;
     public FermatTextView availableText;
-    public FermatTextView availableText2;
     public FermatTextView pendingText;
-    public FermatTextView pendingText2;
     public FermatTextView btcText;
     public FermatTextView expDateText;
 
@@ -43,9 +41,7 @@ public class MyAssetsViewHolder extends FermatViewHolder {
         image = (ImageView) itemView.findViewById(R.id.asset_image);
         nameText = (FermatTextView) itemView.findViewById(R.id.assetNameText);
         availableText = (FermatTextView) itemView.findViewById(R.id.assetAvailable1);
-        availableText2 = (FermatTextView) itemView.findViewById(R.id.assetAvailable2);
-        pendingText = (FermatTextView) itemView.findViewById(R.id.assetAvailable3);
-        pendingText2 = (FermatTextView) itemView.findViewById(R.id.assetAvailable4);
+        pendingText = (FermatTextView) itemView.findViewById(R.id.assetAvailable2);
         btcText = (FermatTextView) itemView.findViewById(R.id.assetBtcText);
         expDateText = (FermatTextView) itemView.findViewById(R.id.assetExpDateText);
     }
@@ -65,30 +61,23 @@ public class MyAssetsViewHolder extends FermatViewHolder {
         long available = digitalAsset.getAvailableBalanceQuantity();
         long book = digitalAsset.getBookBalanceQuantity();
         availableText.setText(availableText(available));
-        availableText2.setText(availableText2(available));
         if (available == book) {
             pendingText.setVisibility(View.INVISIBLE);
-            pendingText2.setVisibility(View.INVISIBLE);
         } else {
             long pendingValue = Math.abs(available - book);
             pendingText.setText(pendingText(pendingValue));
             pendingText.setVisibility(View.VISIBLE);
-            pendingText2.setVisibility(View.VISIBLE);
         }
 
         btcText.setText(digitalAsset.getFormattedAvailableBalanceBitcoin()+" BTC");
         expDateText.setText(digitalAsset.getFormattedExpDate());
     }
 
-    private String availableText2(long available) {
-        return (available == 1) ? "                     Asset" : "                     Assets";
-    }
-
     private String pendingText(long pendingValue) {
-        return "                         \n " + pendingValue;
+        return "(" + pendingValue + " pending confirmation)";
     }
 
     private String availableText(long available) {
-        return "                 " + available;
+        return available + ((available == 1) ? " Asset" : " Assets");
     }
 }
