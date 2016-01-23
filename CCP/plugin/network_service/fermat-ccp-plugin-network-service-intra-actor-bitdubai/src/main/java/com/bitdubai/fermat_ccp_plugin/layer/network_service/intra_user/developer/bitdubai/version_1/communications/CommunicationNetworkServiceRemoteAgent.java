@@ -342,7 +342,7 @@ public class CommunicationNetworkServiceRemoteAgent extends Observable {
 
 
                         }else{
-                            System.out.println("IntraCommunicationNetworkServiceRemoteAgent - VPN connection is no connected = "+communicationsVPNConnection.isConnected());
+                            System.out.println("IntraCommunicationNetworkServiceRemoteAgent - VPN connection is connected = "+communicationsVPNConnection.isConnected());
                         }
 
                     }
