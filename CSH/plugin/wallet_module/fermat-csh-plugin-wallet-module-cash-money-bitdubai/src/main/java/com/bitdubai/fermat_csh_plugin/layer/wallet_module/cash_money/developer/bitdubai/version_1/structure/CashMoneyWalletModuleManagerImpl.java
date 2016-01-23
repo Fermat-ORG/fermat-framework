@@ -3,6 +3,7 @@ package com.bitdubai.fermat_csh_plugin.layer.wallet_module.cash_money.developer.
 import com.bitdubai.fermat_api.AsyncTransactionAgent;
 import com.bitdubai.fermat_api.layer.all_definition.enums.FiatCurrency;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
+import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterException;
 import com.bitdubai.fermat_api.layer.all_definition.settings.structure.SettingsManager;
 import com.bitdubai.fermat_api.layer.modules.common_classes.ActiveActorIdentityInformation;
 import com.bitdubai.fermat_api.layer.modules.exceptions.CantGetSelectedActorIdentityException;
@@ -147,13 +148,14 @@ public class CashMoneyWalletModuleManagerImpl extends AsyncTransactionAgent<Cash
     }
 
     @Override
-    public void createAsyncCashDepositTransaction(CashTransactionParameters depositParameters) {
+    public void createAsyncCashTransaction(CashTransactionParameters depositParameters) {
         this.queueNewTransaction(depositParameters);
     }
 
     @Override
-    public void createAsyncCashWithdrawalTransaction(CashTransactionParameters withdrawalParameters) {
-        this.queueNewTransaction(withdrawalParameters);
+    public void cancelAsyncCashTransaction(CashMoneyWalletTransaction t)  throws InvalidParameterException {
+        CashTransactionParameters tp = new CashTransactionParametersImpl(t.getTransactionId(), t.getPublicKeyWallet(), t.getPublicKeyActor(), t.getPublicKeyPlugin(), t.getAmount(), t.getCurrency(), t.getMemo(), t.getTransactionType());
+        this.cancelTransaction(tp);
     }
 
     @Override
@@ -172,7 +174,7 @@ public class CashMoneyWalletModuleManagerImpl extends AsyncTransactionAgent<Cash
         List<CashMoneyWalletTransaction> transactionList = new ArrayList<>();
         for(CashTransactionParameters tp : getQueuedTransactions()) {
             transactionList.add(new CashMoneyWalletTransactionImpl(tp.getTransactionId(), tp.getPublicKeyWallet(), tp.getPublicKeyActor(), tp.getPublicKeyPlugin(),
-                    tp.getTransactionType(), null, tp.getAmount(), tp.getMemo(), System.currentTimeMillis()/1000L));
+                    tp.getTransactionType(), null, tp.getAmount(), tp.getMemo(), System.currentTimeMillis()/1000L, true));
         }
         return transactionList;
     }

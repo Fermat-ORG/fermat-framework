@@ -1,6 +1,7 @@
 package com.bitdubai.fermat_api;
 
 import com.bitdubai.fermat_api.layer.all_definition.enums.AgentStatus;
+import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterException;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -35,6 +36,20 @@ public abstract class AsyncTransactionAgent<T> extends FermatAgent {
         if (!isRunning())
             this.start();
     }
+
+
+    public final void cancelTransaction(T transaction) throws InvalidParameterException {
+        throw new InvalidParameterException();
+
+        //TODO:
+
+        //Si el hilo no esta running no hay transacciones, throw CantFind
+
+
+        // De lo contrario stop el hilo, buscar la transaccion, si existe borrarla, reiniciar el hilo si quedan transacciones y luego return
+        // De lo contrario reiniciar el hilo y lanzar una excepcion
+    }
+
 
     public final List<T> getQueuedTransactions()
     {

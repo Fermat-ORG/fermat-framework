@@ -1,6 +1,7 @@
 package com.bitdubai.fermat_csh_api.layer.csh_wallet_module.interfaces;
 
 import com.bitdubai.fermat_api.layer.all_definition.enums.FiatCurrency;
+import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterException;
 import com.bitdubai.fermat_api.layer.modules.common_classes.ActiveActorIdentityInformation;
 import com.bitdubai.fermat_api.layer.modules.interfaces.ModuleManager;
 import com.bitdubai.fermat_csh_api.all_definition.enums.BalanceType;
@@ -30,8 +31,9 @@ public interface CashMoneyWalletModuleManager extends ModuleManager<CashMoneyWal
     FiatCurrency getWalletCurrency(String walletPublicKey) throws CantGetCashMoneyWalletCurrencyException;
 
 
-    void createAsyncCashDepositTransaction(CashTransactionParameters depositParameters);
-    void createAsyncCashWithdrawalTransaction(CashTransactionParameters withdrawalParameters);
+    void createAsyncCashTransaction(CashTransactionParameters depositParameters);
+    void cancelAsyncCashTransaction(CashMoneyWalletTransaction transaction)  throws InvalidParameterException;
+
 
     CashDepositTransaction doCreateCashDepositTransaction(CashTransactionParameters depositParameters) throws CantCreateDepositTransactionException;
     CashWithdrawalTransaction doCreateCashWithdrawalTransaction(CashTransactionParameters withdrawalParameters) throws CantCreateWithdrawalTransactionException, CashMoneyWalletInsufficientFundsException;

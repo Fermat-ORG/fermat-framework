@@ -13,6 +13,7 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.Layers;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
+import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterException;
 import com.bitdubai.fermat_api.layer.all_definition.settings.structure.SettingsManager;
 import com.bitdubai.fermat_api.layer.all_definition.util.Version;
 import com.bitdubai.fermat_api.layer.modules.common_classes.ActiveActorIdentityInformation;
@@ -142,13 +143,13 @@ public class CashMoneyWalletModulePluginRoot extends AbstractPlugin implements L
     }
 
     @Override
-    public void createAsyncCashDepositTransaction(CashTransactionParameters depositParameters) {
-        cashMoneyWalletModuleManager.createAsyncCashDepositTransaction(depositParameters);
+    public void createAsyncCashTransaction(CashTransactionParameters depositParameters) {
+        cashMoneyWalletModuleManager.createAsyncCashTransaction(depositParameters);
     }
 
     @Override
-    public void createAsyncCashWithdrawalTransaction(CashTransactionParameters withdrawalParameters) {
-        cashMoneyWalletModuleManager.createAsyncCashWithdrawalTransaction(withdrawalParameters);
+    public void cancelAsyncCashTransaction(CashMoneyWalletTransaction transaction) throws InvalidParameterException {
+        cashMoneyWalletModuleManager.cancelAsyncCashTransaction(transaction);
     }
 
     @Override
