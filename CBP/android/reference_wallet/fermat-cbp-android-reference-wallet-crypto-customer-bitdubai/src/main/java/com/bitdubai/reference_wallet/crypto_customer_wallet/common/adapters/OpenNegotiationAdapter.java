@@ -27,7 +27,7 @@ import java.util.NoSuchElementException;
 
 /**
  *Created by Yordin Alayn on 22.01.16.
- * Based in AmountToBuyViewHolder of Star_negotiation by nelson
+ * Based in StartNegotiationAdapter of Star_negotiation by nelson
  */
 public class OpenNegotiationAdapter extends FermatAdapter<ClauseInformation, FermatViewHolder> {
 
@@ -119,12 +119,28 @@ public class OpenNegotiationAdapter extends FermatAdapter<ClauseInformation, Fer
 
     @Override
     public int getItemViewType(int position) {
-        return 0;
+
+        if (isFooterPosition(position))
+            return TYPE_FOOTER;
+
+        ClauseType type = dataSet.get(position).getType();
+        switch (type) {
+            case CUSTOMER_CURRENCY_QUANTITY:
+                return TYPE_ITEM_AMOUNT_TO_BUY;
+            case EXCHANGE_RATE:
+                return TYPE_ITEM_EXCHANGE_RATE;
+            default:
+                return TYPE_ITEM_SINGLE_CHOICE;
+        }
+
     }
 
     @Override
     public void onBindViewHolder(FermatViewHolder holder, int position) {
 
+        if (!isFooterPosition(position))
+            super.onBindViewHolder(holder, position);
+        
     }
 
     @Override
@@ -179,4 +195,7 @@ public class OpenNegotiationAdapter extends FermatAdapter<ClauseInformation, Fer
         return Arrays.asList(data);
     }
 
+    private boolean isFooterPosition(int position) {
+        return position == getItemCount() - 1;
+    }
 }

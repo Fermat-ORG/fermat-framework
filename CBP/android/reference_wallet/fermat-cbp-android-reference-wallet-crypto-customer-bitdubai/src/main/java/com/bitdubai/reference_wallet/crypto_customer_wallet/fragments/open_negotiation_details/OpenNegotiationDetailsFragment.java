@@ -25,6 +25,7 @@ import com.bitdubai.fermat_cbp_api.all_definition.identity.ActorIdentity;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.common.interfaces.ClauseInformation;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.common.interfaces.CustomerBrokerNegotiationInformation;
 import com.bitdubai.reference_wallet.crypto_customer_wallet.R;
+import com.bitdubai.reference_wallet.crypto_customer_wallet.common.adapters.OpenNegotiationAdapter;
 import com.bitdubai.reference_wallet.crypto_customer_wallet.common.holders.open_negotiation.ClauseViewHolder;
 import com.bitdubai.reference_wallet.crypto_customer_wallet.common.holders.open_negotiation.FooterViewHolder;
 import com.bitdubai.reference_wallet.crypto_customer_wallet.session.CryptoCustomerWalletSession;
@@ -47,6 +48,9 @@ public class OpenNegotiationDetailsFragment extends AbstractFermatFragment<Crypt
     private FermatTextView exchangeRateSummary;
     private FermatTextView brokerName;
     private RecyclerView recyclerView;
+
+    private OpenNegotiationAdapter adapter;
+    private CustomerBrokerNegotiationInformation negotiationInfo;
 
     public OpenNegotiationDetailsFragment() {
         // Required empty public constructor
@@ -114,9 +118,9 @@ public class OpenNegotiationDetailsFragment extends AbstractFermatFragment<Crypt
     //VIEW DATE
     private void bindData() {
 
-        CustomerBrokerNegotiationInformation negotiationInformation = (CustomerBrokerNegotiationInformation) appSession.getData(CryptoCustomerWalletSession.NEGOTIATION_DATA);
-        ActorIdentity broker = negotiationInformation.getBroker();
-        Map<ClauseType, ClauseInformation> clauses = negotiationInformation.getClauses();
+        negotiationInfo = (CustomerBrokerNegotiationInformation) appSession.getData(CryptoCustomerWalletSession.NEGOTIATION_DATA);
+        ActorIdentity broker = negotiationInfo.getBroker();
+        Map<ClauseType, ClauseInformation> clauses = negotiationInfo.getClauses();
 
         String merchandise = clauses.get(ClauseType.CUSTOMER_CURRENCY).getValue();
         String exchangeAmount = clauses.get(ClauseType.EXCHANGE_RATE).getValue();
@@ -128,6 +132,10 @@ public class OpenNegotiationDetailsFragment extends AbstractFermatFragment<Crypt
         brokerName.setText(broker.getAlias());
         sellingDetails.setText(getResources().getString(R.string.ccw_selling_details, amount, merchandise));
         exchangeRateSummary.setText(getResources().getString(R.string.ccw_exchange_rate_summary, merchandise, exchangeAmount, paymentCurrency));
+        
+        adapter = new OpenNegotiationAdapter(getActivity(), negotiationInfo);
+        adapter.setClauseListener(this);
+        adapter.setFooterListener(this);
 
     }
 
