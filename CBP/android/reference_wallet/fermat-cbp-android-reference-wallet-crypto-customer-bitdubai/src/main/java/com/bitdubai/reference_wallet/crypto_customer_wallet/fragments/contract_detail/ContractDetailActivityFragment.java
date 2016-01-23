@@ -167,7 +167,12 @@ public class ContractDetailActivityFragment extends AbstractFermatFragment<Crypt
         detailRate.setText("1 BTC @ 254 USD");
 
 
-        adapter = new ContractDetailAdapter(getActivity(), contractInformation);
+        //Create adapter
+        adapter = new ContractDetailAdapter(
+                getActivity(),
+                contractInformation,
+                appSession,
+                walletManager);
         //adapter.setFooterListener(this);
         //adapter.setClauseListener(this);
 
@@ -187,7 +192,7 @@ public class ContractDetailActivityFragment extends AbstractFermatFragment<Crypt
                 FiatCurrency.CHINESE_YUAN.getFriendlyName(),
                 12,
                 ContractStatus.PAYMENT_SUBMIT,
-                "BTC Broker",
+                "BTC Customer",
                 getByteArrayFromImageView(brokerImage),
                 1961,
                 2016);

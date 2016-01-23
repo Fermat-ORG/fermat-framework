@@ -6,8 +6,10 @@ import android.support.annotation.NonNull;
 import android.text.format.DateFormat;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.bitdubai.fermat_android_api.layer.definition.wallet.utils.ImagesUtils;
+import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatButton;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView;
 import com.bitdubai.fermat_android_api.ui.holders.FermatViewHolder;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.ContractStatus;
@@ -28,10 +30,16 @@ public class ContractDetailViewHolder extends FermatViewHolder {
     private View itemView;
 
     public ImageView customerImage;
+    public ImageView stepNumber;
     public FermatTextView customerName;
     public FermatTextView soldQuantityAndCurrency;
     public FermatTextView exchangeRateAmountAndCurrency;
     public FermatTextView lastUpdateDate;
+    public FermatTextView stepTitle;
+    public FermatTextView textDescription;
+    public FermatButton textButton;
+    public FermatButton confirmButton;
+    protected int itemPosition;
     /**
      * Constructor
      *
@@ -43,11 +51,16 @@ public class ContractDetailViewHolder extends FermatViewHolder {
         this.itemView = itemView;
         res = itemView.getResources();
 
-        customerImage = (ImageView) itemView.findViewById(R.id.ccw_customer_image);
+        stepNumber = (ImageView) itemView.findViewById(R.id.ccw_contract_detail_step);
+        stepTitle = (FermatTextView) itemView.findViewById(R.id.ccw_contract_detail_card_view_title);
+        textDescription = (FermatTextView) itemView.findViewById(R.id.ccw_contract_detail_description_text);
+        textButton = (FermatButton) itemView.findViewById(R.id.ccw_contract_detail_text_button);
+        confirmButton = (FermatButton) itemView.findViewById(R.id.ccw_contract_detail_confirm_button);
+        /*customerImage = (ImageView) itemView.findViewById(R.id.ccw_customer_image);
         customerName = (FermatTextView) itemView.findViewById(R.id.ccw_customer_name);
         soldQuantityAndCurrency = (FermatTextView) itemView.findViewById(R.id.ccw_sold_quantity_and_currency);
         exchangeRateAmountAndCurrency = (FermatTextView) itemView.findViewById(R.id.ccw_exchange_rate_amount_and_currency);
-        lastUpdateDate = (FermatTextView) itemView.findViewById(R.id.ccw_last_update_date);
+        lastUpdateDate = (FermatTextView) itemView.findViewById(R.id.ccw_last_update_date);*/
 
     }
 
@@ -55,7 +68,19 @@ public class ContractDetailViewHolder extends FermatViewHolder {
         ContractStatus contractStatus = itemInfo.getContractStatus();
 
         itemView.setBackgroundColor(getStatusBackgroundColor(contractStatus));
-        customerName.setText(itemInfo.getCryptoCustomerAlias());
+        switch (itemInfo.getContractDetailType()){
+            case CUSTOMER_DETAIL:
+                stepNumber.setImageResource(R.drawable.bg_detail_number_01);
+                textDescription.setText("Customer");
+                break;
+            case BROKER_DETAIL:
+                stepNumber.setImageResource(R.drawable.bg_detail_number_02);
+                textDescription.setText("Broker");
+                break;
+
+        }
+        textButton.setText(itemInfo.getCurrencyType().getCode());
+        /*customerName.setText(itemInfo.getCryptoCustomerAlias());
         customerImage.setImageDrawable(getImgDrawable(itemInfo.getCryptoCustomerImage()));
 
         String soldQuantityAndCurrencyText = getSoldQuantityAndCurrencyText(itemInfo, contractStatus);
@@ -65,7 +90,7 @@ public class ContractDetailViewHolder extends FermatViewHolder {
         exchangeRateAmountAndCurrency.setText(exchangeRateAmountAndCurrencyText);
 
         CharSequence date = DateFormat.format("dd MMM yyyy", itemInfo.getLastUpdate());
-        lastUpdateDate.setText(date);
+        lastUpdateDate.setText(date);*/
     }
     @NonNull
     private String getSoldQuantityAndCurrencyText(ContractDetail itemInfo, ContractStatus contractStatus) {
@@ -109,6 +134,29 @@ public class ContractDetailViewHolder extends FermatViewHolder {
             return ImagesUtils.getRoundedBitmap(res, customerImg);
 
         return ImagesUtils.getRoundedBitmap(res, R.drawable.person);
+    }
+
+    protected int getClauseNumberImageRes(int clauseNumber) {
+        switch (clauseNumber) {
+            case 1:
+                return R.drawable.bg_detail_number_01;
+            case 2:
+                return R.drawable.bg_detail_number_02;
+            case 3:
+                return R.drawable.bg_detail_number_03;
+            case 4:
+                return R.drawable.bg_detail_number_04;
+            case 5:
+                return R.drawable.bg_detail_number_05;
+            case 6:
+                return R.drawable.bg_detail_number_06;
+            case 7:
+                return R.drawable.bg_detail_number_07;
+            case 8:
+                return R.drawable.bg_detail_number_08;
+            default:
+                return R.drawable.bg_detail_number_09;
+        }
     }
 
 }
