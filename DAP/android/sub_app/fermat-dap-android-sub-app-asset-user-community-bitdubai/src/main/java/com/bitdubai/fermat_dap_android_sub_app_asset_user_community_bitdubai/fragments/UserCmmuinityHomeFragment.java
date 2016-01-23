@@ -34,6 +34,7 @@ import com.bitdubai.fermat_dap_android_sub_app_asset_user_community_bitdubai.ada
 import com.bitdubai.fermat_dap_android_sub_app_asset_user_community_bitdubai.interfaces.AdapterChangeListener;
 import com.bitdubai.fermat_dap_android_sub_app_asset_user_community_bitdubai.models.Actor;
 import com.bitdubai.fermat_dap_android_sub_app_asset_user_community_bitdubai.sessions.AssetUserCommunitySubAppSession;
+import com.bitdubai.fermat_dap_android_sub_app_asset_user_community_bitdubai.sessions.SessionConstantsAssetUserCommunity;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.AssetUserActorRecord;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.interfaces.ActorAssetUser;
 import com.bitdubai.fermat_dap_api.layer.all_definition.exceptions.CantGetIdentityAssetUserException;
@@ -140,17 +141,17 @@ public class UserCmmuinityHomeFragment extends AbstractFermatFragment implements
             }
         }
 
-        final AssetUserSettings assetUserSettingsTemp = settings;
-
-
-        Handler handlerTimer = new Handler();
-        handlerTimer.postDelayed(new Runnable() {
-            public void run() {
-                if (assetUserSettingsTemp.isPresentationHelpEnabled()) {
-                    setUpPresentation(false);
-                }
-            }
-        }, 500);
+//        final AssetUserSettings assetUserSettingsTemp = settings;
+//
+//
+//        Handler handlerTimer = new Handler();
+//        handlerTimer.postDelayed(new Runnable() {
+//            public void run() {
+//                if (assetUserSettingsTemp.isPresentationHelpEnabled()) {
+//                    setUpPresentation(false);
+//                }
+//            }
+//        }, 500);
 
         return rootView;
     }
@@ -164,9 +165,7 @@ public class UserCmmuinityHomeFragment extends AbstractFermatFragment implements
                 .setTitleTextColor(R.color.dap_community_user_view_color)
                 .setSubTitle("Welcome to the Asset User Community.")
                 .setBody("From this wallet you will be able to distribute your assets to the world and collect statistics of their usage.")
-                .setTextFooter("We will be creating an avatar for you in order to identify you in the system as an Asset Issuer, name and more details later in the Asset Issuer Identity sub app.")
                 .setTemplateType(PresentationDialog.TemplateType.TYPE_PRESENTATION_WITHOUT_IDENTITIES)
-//                    .setTemplateType((moduleManager.getActiveAssetIssuerIdentity() == null) ? PresentationDialog.TemplateType.TYPE_PRESENTATION : PresentationDialog.TemplateType.TYPE_PRESENTATION_WITHOUT_IDENTITIES)
                 .setIsCheckEnabled(checkButton)
                 .build();
 
@@ -197,12 +196,6 @@ public class UserCmmuinityHomeFragment extends AbstractFermatFragment implements
 //        } catch (CantGetIdentityAssetIssuerException e) {
 //            e.printStackTrace();
 //        }
-    }
-
-    @Override
-    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        super.onCreateOptionsMenu(menu, inflater);
-        inflater.inflate(R.menu.dap_community_user_home_menu, menu);
     }
 
     protected void initViews(View layout) {
@@ -286,8 +279,22 @@ public class UserCmmuinityHomeFragment extends AbstractFermatFragment implements
 //    }
 
     @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        super.onCreateOptionsMenu(menu, inflater);
+//        inflater.inflate(R.menu.dap_community_user_home_menu, menu);
+        menu.add(0, SessionConstantsAssetUserCommunity.IC_ACTION_USER_COMMUNITY_CONNECT, 0, "Connect")//.setIcon(R.drawable.dap_community_issuer_help_icon)
+                .setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM);
+
+        menu.add(1, SessionConstantsAssetUserCommunity.IC_ACTION_USER_COMMUNITY_HELP_PRESENTATION, 1, "help").setIcon(R.drawable.dap_community_user_help_icon)
+                .setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
+    }
+
+    @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        if (item.getItemId() == R.id.action_connect) {
+        int id = item.getItemId();
+
+//        if (item.getItemId() == R.id.action_connect) {
+        if (id == SessionConstantsAssetUserCommunity.IC_ACTION_USER_COMMUNITY_CONNECT) {
             final ProgressDialog dialog = new ProgressDialog(getActivity());
             dialog.setMessage("Connecting please wait...");
             dialog.setCancelable(false);
@@ -331,7 +338,7 @@ public class UserCmmuinityHomeFragment extends AbstractFermatFragment implements
         }
 
         try {
-            if (item.getItemId() == R.id.action_community_user_help) {
+            if (id == SessionConstantsAssetUserCommunity.IC_ACTION_USER_COMMUNITY_HELP_PRESENTATION) {
                 setUpPresentation(settingsManager.loadAndGetSettings(appSession.getAppPublicKey()).isPresentationHelpEnabled());
                 return true;
             }
