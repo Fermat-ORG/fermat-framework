@@ -50,49 +50,39 @@ public class BrokerCommunityWalletNavigationViewAdapter extends FermatAdapter<Me
             } else {
                 bindMenuItem(holder, position);
             }
+            data.setSelected(false);
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
     private void bindMenuItem(NavigationItemMenuViewHolder holder, int position) {
-        holder.getIcon().setImageResource(R.drawable.cbc_btn_drawer_home);
-        return;
-
-//        switch (position) {
-//            case 0:
-//                holder.getIcon().setImageResource(R.drawable.cbc_btn_drawer_home);
-//                break;
-//            case 1:
-//                holder.getIcon().setImageResource(R.drawable.ccw_btn_drawer_contract_history);
-//                break;
-//            case 2:
-//                holder.getIcon().setImageResource(R.drawable.ccw_btn_drawer_broker_list);
-//                break;
-//            case 3:
-//                holder.getIcon().setImageResource(R.drawable.ccw_btn_drawer_settings);
-//                break;
-//        }
+        switch (position) {
+            case 0:
+                holder.getIcon().setImageResource(R.drawable.cbc_ic_nav_friends);
+                break;
+            case 1:
+                holder.getIcon().setImageResource(R.drawable.cbc_ic_nav_connections);
+                break;
+            case 2:
+                holder.getIcon().setImageResource(R.drawable.cbc_ic_nav_notifications);
+                break;
+        }
     }
 
     private void bindSelectedMenuItem(NavigationItemMenuViewHolder holder, int position) {
-        holder.getIcon().setImageResource(R.drawable.cbc_btn_drawer_home_selected);
-        return;
+        //holder.getRowContainer().setBackgroundResource(R.color.cbc_selected_menu_item_background);
 
-//        holder.getRowContainer().setBackgroundResource(R.color.ccw_navigation_view_menu_item_overlay);
-//        switch (position) {
-//            case 0:
-//                holder.getIcon().setImageResource(R.drawable.ccw_btn_drawer_home_selected);
-//                break;
-//            case 1:
-//                holder.getIcon().setImageResource(R.drawable.ccw_btn_drawer_contract_history_selected);
-//                break;
-//            case 2:
-//                holder.getIcon().setImageResource(R.drawable.ccw_btn_drawer_broker_list_selected);
-//                break;
-//            case 3:
-//                holder.getIcon().setImageResource(R.drawable.ccw_btn_drawer_settings_selected);
-//                break;
-//        }
+        switch (position) {
+            case 0:
+                holder.getIcon().setImageResource(R.drawable.cbc_ic_nav_friends_selected);
+                break;
+            case 1:
+                holder.getIcon().setImageResource(R.drawable.cbc_ic_nav_connections_selected);
+                break;
+            case 2:
+                holder.getIcon().setImageResource(R.drawable.cbc_ic_nav_notifications_selected);
+                break;
+        }
     }
 }

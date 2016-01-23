@@ -11,6 +11,7 @@ import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantPers
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.FileNotFoundException;
 import com.bitdubai.fermat_dap_api.layer.all_definition.enums.State;
 import com.bitdubai.fermat_dap_api.layer.dap_identity.asset_issuer.interfaces.IdentityAssetIssuer;
+import com.bitdubai.fermat_dap_api.layer.dap_identity.asset_issuer.interfaces.IdentityAssetIssuerManager;
 import com.bitdubai.fermat_dap_api.layer.dap_middleware.dap_asset_factory.exceptions.CantCreateAssetFactoryException;
 import com.bitdubai.fermat_dap_api.layer.dap_middleware.dap_asset_factory.exceptions.CantCreateEmptyAssetFactoryException;
 import com.bitdubai.fermat_dap_api.layer.dap_middleware.dap_asset_factory.exceptions.CantDeleteAsserFactoryException;
@@ -29,13 +30,15 @@ import java.util.List;
 public class AssetFactorySupAppModuleManager  {
 
     private final AssetFactoryManager assetFactoryManager;
+    private final IdentityAssetIssuerManager identityAssetIssuerManager;
+
     /**
      * constructor
      * @param assetFactoryManager
      */
-    public AssetFactorySupAppModuleManager(final AssetFactoryManager assetFactoryManager) {
-
+    public AssetFactorySupAppModuleManager(final AssetFactoryManager assetFactoryManager, final IdentityAssetIssuerManager identityAssetIssuerManager) {
         this.assetFactoryManager = assetFactoryManager;
+        this.identityAssetIssuerManager = identityAssetIssuerManager;
     }
 
     public AssetFactory getAssetFactory(String assetPublicKey)  throws CantGetAssetFactoryException, CantCreateFileException {
@@ -93,4 +96,12 @@ public class AssetFactorySupAppModuleManager  {
         }
     }
 
+    public List<IdentityAssetIssuer> getActiveIdentities() {
+        try {
+            return identityAssetIssuerManager.getIdentityAssetIssuersFromCurrentDeviceUser();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
 }

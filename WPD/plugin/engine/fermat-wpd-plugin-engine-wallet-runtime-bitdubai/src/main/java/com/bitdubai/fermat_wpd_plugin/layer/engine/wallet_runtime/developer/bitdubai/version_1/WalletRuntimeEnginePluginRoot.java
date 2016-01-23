@@ -73,28 +73,22 @@ public class WalletRuntimeEnginePluginRoot extends AbstractPlugin implements
         XML {
 
 
-    @NeededAddonReference(platform = Platforms.OPERATIVE_SYSTEM_API, layer = Layers.SYSTEM, addon = Addons.PLUGIN_FILE_SYSTEM)
-    private PluginFileSystem pluginFileSystem;
-
-    @NeededAddonReference(platform = Platforms.PLUG_INS_PLATFORM, layer = Layers.PLATFORM_SERVICE, addon = Addons.ERROR_MANAGER)
-    private ErrorManager errorManager;
-
-    @NeededAddonReference(platform = Platforms.PLUG_INS_PLATFORM, layer = Layers.PLATFORM_SERVICE, addon = Addons.EVENT_MANAGER)
-    private EventManager eventManager;
-
-
     /**
      * Path of xml files
      */
     final String NAVIGATION_STRUCTURE_FILE_PATH = "navigation_structure";
-
     List<FermatEventListener> listenersAdded = new ArrayList<>();
-
     /**
      * WalletRuntimeManager Interface member variables.
      */
 
     WalletNavigationStructure walletNavigationStructureOpen;
+    @NeededAddonReference(platform = Platforms.OPERATIVE_SYSTEM_API, layer = Layers.SYSTEM, addon = Addons.PLUGIN_FILE_SYSTEM)
+    private PluginFileSystem pluginFileSystem;
+    @NeededAddonReference(platform = Platforms.PLUG_INS_PLATFORM, layer = Layers.PLATFORM_SERVICE, addon = Addons.ERROR_MANAGER)
+    private ErrorManager errorManager;
+    @NeededAddonReference(platform = Platforms.PLUG_INS_PLATFORM, layer = Layers.PLATFORM_SERVICE, addon = Addons.EVENT_MANAGER)
+    private EventManager eventManager;
 
     public WalletRuntimeEnginePluginRoot() {
         super(new PluginVersionReference(new Version()));
@@ -3111,24 +3105,21 @@ public class WalletRuntimeEnginePluginRoot extends AbstractPlugin implements
         WalletNavigationStructure runtimeWalletNavigationStructure;
         Activity runtimeActivity;
         Fragment runtimeFragment;
-        SideMenu runtimeSideMenu;
-        MenuItem runtimeMenuItem;
-        TitleBar runtimeTitleBar;
         StatusBar runtimeStatusBar;
-        Header runtimeHeader;
-        TabStrip runtimeTabStrip;
-        Tab runtimeTab;
+        TitleBar runtimeTitleBar;
+
 
         final String publicKey = "cash_wallet";
-        //final String statusBarColor = "#21519E";
         final String statusBarColor = "#00b9ff";
-        //final String titleBarLabelColor = "#FFFFFF";
-        //final int titleBarLabelSize = 16;
+        final String titleBarLabelColor = "#FFFFFF";
+        final String titleBarColor = "#00b9ff";
+        final int titleBarLabelSize = 20;
 
         runtimeWalletNavigationStructure = new WalletNavigationStructure();
         runtimeWalletNavigationStructure.setWalletCategory(WalletCategory.REFERENCE_WALLET.getCode());
         runtimeWalletNavigationStructure.setWalletType(WalletType.REFERENCE.getCode());
         runtimeWalletNavigationStructure.setPublicKey(publicKey);
+
 
 
         //Setup Activity
@@ -3137,13 +3128,6 @@ public class WalletRuntimeEnginePluginRoot extends AbstractPlugin implements
         runtimeActivity.setActivityType(Activities.CSH_CASH_MONEY_WALLET_SETUP.getCode());
         runtimeWalletNavigationStructure.addActivity(runtimeActivity);
         runtimeWalletNavigationStructure.addPosibleStartActivity(Activities.CSH_CASH_MONEY_WALLET_SETUP);
-
-        /*runtimeTitleBar = new TitleBar();
-        runtimeTitleBar.setLabel("Cash Wallet Setup");
-        runtimeTitleBar.setLabelSize(titleBarLabelSize);
-        runtimeTitleBar.setTitleColor(titleBarLabelColor);
-        runtimeTitleBar.setIsTitleTextStatic(true);
-        runtimeActivity.setTitleBar(runtimeTitleBar);*/
 
         runtimeStatusBar = new StatusBar();
         runtimeStatusBar.setColor(statusBarColor);
@@ -3155,18 +3139,12 @@ public class WalletRuntimeEnginePluginRoot extends AbstractPlugin implements
         runtimeActivity.setStartFragment(Fragments.CSH_CASH_MONEY_WALLET_SETUP.getKey());
 
 
+
         //Home Activity
         runtimeActivity = new Activity();
         runtimeActivity.setType(Activities.CSH_CASH_MONEY_WALLET_HOME);
         runtimeActivity.setActivityType(Activities.CSH_CASH_MONEY_WALLET_HOME.getCode());
         runtimeWalletNavigationStructure.addActivity(runtimeActivity);
-
-        /*runtimeTitleBar = new TitleBar();
-        runtimeTitleBar.setLabel("Cash Wallet");
-        runtimeTitleBar.setLabelSize(titleBarLabelSize);
-        runtimeTitleBar.setTitleColor(titleBarLabelColor);
-        runtimeTitleBar.setIsTitleTextStatic(true);
-        runtimeActivity.setTitleBar(runtimeTitleBar);*/
 
         runtimeStatusBar = new StatusBar();
         runtimeStatusBar.setColor(statusBarColor);
@@ -3176,6 +3154,34 @@ public class WalletRuntimeEnginePluginRoot extends AbstractPlugin implements
         runtimeFragment.setType(Fragments.CSH_CASH_MONEY_WALLET_BALANCE_SUMMARY.getKey());
         runtimeActivity.addFragment(Fragments.CSH_CASH_MONEY_WALLET_BALANCE_SUMMARY.getKey(), runtimeFragment);
         runtimeActivity.setStartFragment(Fragments.CSH_CASH_MONEY_WALLET_BALANCE_SUMMARY.getKey());
+
+
+
+        //Transaction detail Activity
+        runtimeActivity = new Activity();
+        runtimeActivity.setType(Activities.CSH_CASH_MONEY_WALLET_TRANSACTION_DETAIL);
+        runtimeActivity.setActivityType(Activities.CSH_CASH_MONEY_WALLET_TRANSACTION_DETAIL.getCode());
+        runtimeActivity.setBackActivity(Activities.CSH_CASH_MONEY_WALLET_HOME);
+        runtimeActivity.setBackPublicKey(publicKey);
+        runtimeWalletNavigationStructure.addActivity(runtimeActivity);
+
+        runtimeTitleBar = new TitleBar();
+        runtimeTitleBar.setIconName("back");
+        runtimeTitleBar.setLabel("Transaction detail");
+        runtimeTitleBar.setLabelSize(titleBarLabelSize);
+        runtimeTitleBar.setTitleColor(titleBarLabelColor);
+        runtimeTitleBar.setColor(titleBarColor);
+        runtimeTitleBar.setIsTitleTextStatic(true);
+        runtimeActivity.setTitleBar(runtimeTitleBar);
+
+        runtimeStatusBar = new StatusBar();
+        runtimeStatusBar.setColor(statusBarColor);
+        runtimeActivity.setStatusBar(runtimeStatusBar);
+
+        runtimeFragment = new Fragment();
+        runtimeFragment.setType(Fragments.CSH_CASH_MONEY_WALLET_TRANSACTION_DETAIL.getKey());
+        runtimeActivity.addFragment(Fragments.CSH_CASH_MONEY_WALLET_TRANSACTION_DETAIL.getKey(), runtimeFragment);
+        runtimeActivity.setStartFragment(Fragments.CSH_CASH_MONEY_WALLET_TRANSACTION_DETAIL.getKey());
 
 
         return runtimeWalletNavigationStructure;
@@ -3813,6 +3819,85 @@ public class WalletRuntimeEnginePluginRoot extends AbstractPlugin implements
 
         //Side Menu
         runtimeActivity.setSideMenu(loadSideMenuBitcoinWallet(publicKey));
+
+        runtimeActivity = new Activity();
+        runtimeActivity.setType(Activities.CCP_BITCOIN_WALLET_SETTINGS_ACTIVITY_MAIN_NETWORK);
+        runtimeActivity.setActivityType(Activities.CCP_BITCOIN_WALLET_SETTINGS_ACTIVITY_MAIN_NETWORK.getCode());
+        runtimeActivity.setColor("#12aca1");
+        runtimeActivity.setBackActivity(Activities.CCP_BITCOIN_WALLET_SETTINGS_ACTIVITY);
+        runtimeActivity.setBackPublicKey(publicKey);
+
+        runtimeWalletNavigationStructure.addActivity(runtimeActivity);
+
+        runtimeTitleBar = new TitleBar();
+        runtimeTitleBar.setLabel("Network");
+        runtimeTitleBar.setLabelSize(16);
+        runtimeTitleBar.setIsTitleTextStatic(true);
+        runtimeTitleBar.setTitleColor("#ffffff");
+        runtimeTitleBar.setColor("#12aca1");
+        runtimeTitleBar.setIconName("back");
+        runtimeActivity.setTitleBar(runtimeTitleBar);
+        runtimeActivity.setColor("#12aca1");
+
+
+        runtimeStatusBar = new com.bitdubai.fermat_api.layer.all_definition.navigation_structure.StatusBar();
+        runtimeStatusBar.setColor("#12aca1");
+
+        runtimeTabStrip = new TabStrip();
+
+        runtimeTabStrip.setTabsColor("#1173aa");
+
+        runtimeTabStrip.setTabsTextColor("#FFFFFF");
+
+        runtimeTabStrip.setTabsIndicateColor("#FFFFFF");
+
+        runtimeActivity.setStatusBar(runtimeStatusBar);
+
+        runtimeActivity.setStartFragment(Fragments.CCP_BITCOIN_WALLET_SETTINGS_FRAGMENT_MAIN_NETWORK.getKey());
+
+        runtimeFragment = new Fragment();
+        runtimeFragment.setType(Fragments.CCP_BITCOIN_WALLET_SETTINGS_FRAGMENT_MAIN_NETWORK.getKey());
+        runtimeActivity.addFragment(Fragments.CCP_BITCOIN_WALLET_SETTINGS_FRAGMENT_MAIN_NETWORK.getKey(), runtimeFragment);
+
+
+        runtimeActivity = new Activity();
+        runtimeActivity.setType(Activities.CCP_BITCOIN_WALLET_SETTINGS_ACTIVITY_NOTIFICATIONS);
+        runtimeActivity.setActivityType(Activities.CCP_BITCOIN_WALLET_SETTINGS_ACTIVITY_NOTIFICATIONS.getCode());
+        runtimeActivity.setColor("#12aca1");
+        runtimeActivity.setBackActivity(Activities.CCP_BITCOIN_WALLET_SETTINGS_ACTIVITY);
+        runtimeActivity.setBackPublicKey(publicKey);
+
+        runtimeWalletNavigationStructure.addActivity(runtimeActivity);
+
+        runtimeTitleBar = new TitleBar();
+        runtimeTitleBar.setLabel("Notifications");
+        runtimeTitleBar.setLabelSize(16);
+        runtimeTitleBar.setIsTitleTextStatic(true);
+        runtimeTitleBar.setTitleColor("#ffffff");
+        runtimeTitleBar.setColor("#12aca1");
+        runtimeTitleBar.setIconName("back");
+        runtimeActivity.setTitleBar(runtimeTitleBar);
+        runtimeActivity.setColor("#12aca1");
+
+        runtimeStatusBar = new com.bitdubai.fermat_api.layer.all_definition.navigation_structure.StatusBar();
+        runtimeStatusBar.setColor("#12aca1");
+
+        runtimeTabStrip = new TabStrip();
+
+
+        runtimeTabStrip.setTabsColor("#1173aa");
+
+        runtimeTabStrip.setTabsTextColor("#FFFFFF");
+
+        runtimeTabStrip.setTabsIndicateColor("#FFFFFF");
+
+        runtimeActivity.setStatusBar(runtimeStatusBar);
+
+        runtimeActivity.setStartFragment(Fragments.CCP_BITCOIN_WALLET_SETTINGS_FRAGMENT_NOTIFICATIONS.getKey());
+
+        runtimeFragment = new Fragment();
+        runtimeFragment.setType(Fragments.CCP_BITCOIN_WALLET_SETTINGS_FRAGMENT_NOTIFICATIONS.getKey());
+        runtimeActivity.addFragment(Fragments.CCP_BITCOIN_WALLET_SETTINGS_FRAGMENT_NOTIFICATIONS.getKey(), runtimeFragment);
 
         //fin navigation
 

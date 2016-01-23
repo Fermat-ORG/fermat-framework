@@ -1,36 +1,51 @@
 package com.bitdubai.fermat_dap_android_wallet_asset_user_bitdubai.fragments;
 
+import android.content.DialogInterface;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.graphics.drawable.BitmapDrawable;
-import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.widget.Toast;
 
+import com.bitdubai.fermat_android_api.ui.Views.PresentationDialog;
 import com.bitdubai.fermat_android_api.ui.adapters.FermatAdapter;
 import com.bitdubai.fermat_android_api.ui.enums.FermatRefreshTypes;
 import com.bitdubai.fermat_android_api.ui.fragments.FermatWalletListFragment;
 import com.bitdubai.fermat_android_api.ui.interfaces.FermatListItemListeners;
+import com.bitdubai.fermat_api.FermatException;
+import com.bitdubai.fermat_api.layer.all_definition.enums.UISource;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Wallets;
-import com.bitdubai.fermat_api.layer.modules.common_classes.ActiveActorIdentityInformation;
+import com.bitdubai.fermat_api.layer.all_definition.settings.exceptions.CantGetSettingsException;
+import com.bitdubai.fermat_api.layer.all_definition.settings.exceptions.CantPersistSettingsException;
+import com.bitdubai.fermat_api.layer.all_definition.settings.exceptions.SettingsNotFoundException;
+import com.bitdubai.fermat_api.layer.all_definition.settings.structure.SettingsManager;
 import com.bitdubai.fermat_dap_android_wallet_asset_user_bitdubai.R;
 import com.bitdubai.fermat_dap_android_wallet_asset_user_bitdubai.adapters.MyAssetsAdapter;
 import com.bitdubai.fermat_dap_android_wallet_asset_user_bitdubai.models.Data;
 import com.bitdubai.fermat_dap_android_wallet_asset_user_bitdubai.models.DigitalAsset;
 import com.bitdubai.fermat_dap_android_wallet_asset_user_bitdubai.sessions.AssetUserSession;
+import com.bitdubai.fermat_dap_android_wallet_asset_user_bitdubai.sessions.SessionConstantsAssetUser;
 import com.bitdubai.fermat_dap_android_wallet_asset_user_bitdubai.util.CommonLogger;
+import com.bitdubai.fermat_dap_api.layer.all_definition.exceptions.CantGetIdentityAssetUserException;
+import com.bitdubai.fermat_dap_api.layer.dap_identity.asset_user.interfaces.IdentityAssetUser;
+import com.bitdubai.fermat_dap_api.layer.dap_module.wallet_asset_user.AssetUserSettings;
 import com.bitdubai.fermat_dap_api.layer.dap_module.wallet_asset_user.interfaces.AssetUserWalletSubAppModuleManager;
+import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedUIExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedWalletExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 
@@ -38,7 +53,6 @@ import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.List;
 
-import static android.widget.Toast.LENGTH_SHORT;
 import static android.widget.Toast.makeText;
 
 /**
@@ -48,11 +62,12 @@ public class UserMainActivityFragment extends FermatWalletListFragment<DigitalAs
         implements FermatListItemListeners<DigitalAsset> {
 
     // Constants
-    private static final String TAG = "MyAssetsActivityFragment";
+    private static final String TAG = "UserMainActivityFragment";
 
     // Fermat Managers
     private AssetUserWalletSubAppModuleManager moduleManager;
     private ErrorManager errorManager;
+    SettingsManager<AssetUserSettings> settingsManager;
 
     // Data
     private List<DigitalAsset> digitalAssets;
@@ -67,10 +82,12 @@ public class UserMainActivityFragment extends FermatWalletListFragment<DigitalAs
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setHasOptionsMenu(true);
 
         try {
             moduleManager = ((AssetUserSession) appSession).getModuleManager();
             errorManager = appSession.getErrorManager();
+            settingsManager = appSession.getModuleManager().getSettingsManager();
 
             digitalAssets = (List) getMoreDataAsync(FermatRefreshTypes.NEW, 0);
         } catch (Exception ex) {
@@ -89,28 +106,135 @@ public class UserMainActivityFragment extends FermatWalletListFragment<DigitalAs
         configureToolbar();
         noAssetsView = layout.findViewById(R.id.dap_wallet_no_assets);
         showOrHideNoAssetsView(digitalAssets.isEmpty());
+
+        //Initialize settings
+        settingsManager = appSession.getModuleManager().getSettingsManager();
+        AssetUserSettings settings = null;
+        try {
+            settings = settingsManager.loadAndGetSettings(appSession.getAppPublicKey());
+        } catch (Exception e) {
+            settings = null;
+        }
+        if (settings == null) {
+            settings = new AssetUserSettings();
+            settings.setIsContactsHelpEnabled(true);
+            settings.setIsPresentationHelpEnabled(true);
+            try {
+                settingsManager.persistSettings(appSession.getAppPublicKey(), settings);
+            } catch (CantPersistSettingsException e) {
+                e.printStackTrace();
+            }
+        }
+
+        final AssetUserSettings assetUserSettingsTemp = settings;
+
+
+        Handler handlerTimer = new Handler();
+        handlerTimer.postDelayed(new Runnable() {
+            public void run() {
+                if (assetUserSettingsTemp.isPresentationHelpEnabled()) {
+                    setUpPresentation(false);
+                }
+            }
+        }, 500);
+
+    }
+
+    private void setUpPresentation(boolean checkButton) {
+
+        try {
+            boolean isPresentationHelpEnabled = settingsManager.loadAndGetSettings(appSession.getAppPublicKey()).isPresentationHelpEnabled();
+
+            if (isPresentationHelpEnabled) {
+                PresentationDialog presentationDialog = new PresentationDialog.Builder(getActivity(), appSession)
+                        .setBannerRes(R.drawable.banner_asset_user_wallet)
+                        .setIconRes(R.drawable.asset_user_wallet)
+                        .setVIewColor(R.color.dap_user_view_color)
+                        .setTitleTextColor(R.color.dap_user_view_color)
+                        .setSubTitle("Welcome to the Asset User Wallet.")
+                        .setBody("From this wallet you will be able to redeem your assets or even get the monetary value associated with them.")
+                        .setTextFooter("We will be creating an avatar for you in order to identify you in the system as an Asset User, name and more details later in the Asset Issuer Identity sub app.")
+                        .setTemplateType((moduleManager.getActiveAssetUserIdentity() == null) ? PresentationDialog.TemplateType.TYPE_PRESENTATION : PresentationDialog.TemplateType.TYPE_PRESENTATION_WITHOUT_IDENTITIES)
+                        .setIsCheckEnabled(checkButton)
+                        .build();
+
+                presentationDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
+                    @Override
+                    public void onDismiss(DialogInterface dialog) {
+                        Object o = appSession.getData(SessionConstantsAssetUser.PRESENTATION_IDENTITY_CREATED);
+                        if (o != null) {
+                            if ((Boolean) (o)) {
+                                //invalidate();
+                                appSession.removeData(SessionConstantsAssetUser.PRESENTATION_IDENTITY_CREATED);
+                            }
+                        }
+                        try {
+                            IdentityAssetUser identityAssetUser = moduleManager.getActiveAssetUserIdentity();
+                            if (identityAssetUser == null) {
+                                getActivity().onBackPressed();
+                            } else {
+                                invalidate();
+                            }
+                        } catch (CantGetIdentityAssetUserException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                });
+
+                presentationDialog.show();
+            }
+        } catch (CantGetIdentityAssetUserException e) {
+            e.printStackTrace();
+        } catch (CantGetSettingsException e) {
+            e.printStackTrace();
+        } catch (SettingsNotFoundException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        super.onCreateOptionsMenu(menu, inflater);
+        inflater.inflate(R.menu.dap_wallet_asset_user_home_menu, menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        try {
+
+            if (item.getItemId() == R.id.action_wallet_user_help) {
+                setUpPresentation(settingsManager.loadAndGetSettings(appSession.getAppPublicKey()).isPresentationHelpEnabled());
+                return true;
+            }
+
+        } catch (Exception e) {
+            errorManager.reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.UNSTABLE, FermatException.wrapException(e));
+            makeText(getActivity(), "Asset User system error",
+                    Toast.LENGTH_SHORT).show();
+        }
+        return super.onOptionsItemSelected(item);
     }
 
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
-        checkIdentity();
+//        checkIdentity();
     }
 
-    private void checkIdentity() {
-        ActiveActorIdentityInformation identity = null;
-        try {
-            identity = moduleManager.getSelectedActorIdentity();
-        } catch(Exception e) {
-            e.printStackTrace();
-        }
-        if (identity == null) {
-            makeText(getActivity(), "Identity must be created",
-                    LENGTH_SHORT).show();
-            getActivity().onBackPressed();
-        }
-    }
+//    private void checkIdentity() {
+//        ActiveActorIdentityInformation identity = null;
+//        try {
+//            identity = moduleManager.getSelectedActorIdentity();
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//        }
+//        if (identity == null) {
+//            makeText(getActivity(), "Identity must be created",
+//                    LENGTH_SHORT).show();
+//            getActivity().onBackPressed();
+//        }
+//    }
 
     private void configureToolbar() {
         Toolbar toolbar = getToolbar();
@@ -132,7 +256,7 @@ public class UserMainActivityFragment extends FermatWalletListFragment<DigitalAs
 
             @Override
             protected void onPreExecute() {
-                view = new WeakReference(rootView) ;
+                view = new WeakReference(rootView);
             }
 
             @Override
@@ -143,8 +267,8 @@ public class UserMainActivityFragment extends FermatWalletListFragment<DigitalAs
                     options.inScaled = true;
                     options.inSampleSize = 5;
                     drawable = BitmapFactory.decodeResource(
-                            getResources(), R.drawable.bg_app_image_user,options);
-                }catch (OutOfMemoryError error){
+                            getResources(), R.drawable.bg_app_image_user, options);
+                } catch (OutOfMemoryError error) {
                     error.printStackTrace();
                 }
                 return drawable;
@@ -152,11 +276,11 @@ public class UserMainActivityFragment extends FermatWalletListFragment<DigitalAs
 
             @Override
             protected void onPostExecute(Bitmap drawable) {
-                if (drawable!= null) {
-                    view.get().setBackground(new BitmapDrawable(getResources(),drawable));
+                if (drawable != null) {
+                    view.get().setBackground(new BitmapDrawable(getResources(), drawable));
                 }
             }
-        } ;
+        };
         asyncTask.execute();
     }
 

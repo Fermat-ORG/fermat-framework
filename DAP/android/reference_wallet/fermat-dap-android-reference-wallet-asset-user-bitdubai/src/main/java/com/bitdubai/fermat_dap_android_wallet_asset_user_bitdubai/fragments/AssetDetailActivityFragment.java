@@ -7,7 +7,6 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.graphics.drawable.BitmapDrawable;
-import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
@@ -32,9 +31,7 @@ import com.bitdubai.fermat_dap_android_wallet_asset_user_bitdubai.sessions.Asset
 import com.bitdubai.fermat_dap_api.layer.dap_module.wallet_asset_user.interfaces.AssetUserWalletSubAppModuleManager;
 import com.bitdubai.fermat_dap_api.layer.dap_wallet.common.exceptions.CantLoadWalletException;
 
-import java.io.ByteArrayInputStream;
 import java.lang.ref.WeakReference;
-import java.util.HashMap;
 
 /**
  * Created by frank on 12/15/15.

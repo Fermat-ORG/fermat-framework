@@ -2,6 +2,7 @@ package com.bitdubai.fermat_ccp_plugin.layer.crypto_transaction.outgoing_extra_u
 
 import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
+import com.bitdubai.fermat_api.layer.all_definition.enums.BlockchainNetworkType;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.money.CryptoAddress;
 import com.bitdubai.fermat_ccp_api.layer.basic_wallet.bitcoin_wallet.interfaces.BitcoinWalletWallet;
@@ -53,7 +54,8 @@ public class OutgoingExtraUserTransactionManager implements TransactionManager {
                      final String        deliveredByActorPublicKey,
                      final Actors        deliveredByActorType     ,
                      final String        deliveredToActorPublicKey,
-                     final Actors        deliveredToActorType     ) throws InsufficientFundsException,
+                     final Actors        deliveredToActorType     ,
+                     BlockchainNetworkType blockchainNetworkType) throws InsufficientFundsException,
                                                                            CantSendFundsException    {
         /*
          * TODO: Create a class fir tge selection of the correct wallet
@@ -80,7 +82,7 @@ public class OutgoingExtraUserTransactionManager implements TransactionManager {
 
             } else {
 
-                dao.registerNewTransaction(walletPublicKey, destinationAddress, cryptoAmount, notes, deliveredByActorPublicKey, deliveredByActorType, deliveredToActorPublicKey, deliveredToActorType);
+                dao.registerNewTransaction(walletPublicKey, destinationAddress, cryptoAmount, notes, deliveredByActorPublicKey, deliveredByActorType, deliveredToActorPublicKey, deliveredToActorType, blockchainNetworkType );
             }
         } catch (InsufficientFundsException exception) {
 

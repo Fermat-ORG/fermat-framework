@@ -17,7 +17,7 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.util.Version;
 /**
- * ChatFragmentFactory
+ * ChatFermatAppConnection
  *
  * @author Jose Cardozo josejcb (josejcb89@gmail.com)  on 08/01/16.
  * @version 1.0
