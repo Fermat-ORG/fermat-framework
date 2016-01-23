@@ -162,6 +162,11 @@ public class CashMoneyWalletModulePluginRoot extends AbstractPlugin implements L
     }
 
     @Override
+    public List<CashMoneyWalletTransaction> getPendingTransactions() {
+        return cashMoneyWalletModuleManager.getPendingTransactions();
+    }
+
+    @Override
     public List<CashMoneyWalletTransaction> getTransactions(String walletPublicKey, List<TransactionType> transactionTypes, List<BalanceType> balanceTypes, int max, int offset) throws CantGetCashMoneyWalletTransactionsException {
         return cashMoneyWalletModuleManager.getTransactions(walletPublicKey, transactionTypes, balanceTypes, max, offset);
     }

@@ -92,7 +92,6 @@ implements FermatListItemListeners<CashMoneyWalletTransaction>, DialogInterface.
         }
 
         //Get wallet transactions, balances and currency
-        //TODO: Cargar el wallet.. loadCashMonetWallet() usando walletSession.getAppPublicKey() ????
         transactionList = (ArrayList) getMoreDataAsync(FermatRefreshTypes.NEW, 0);
         getWalletBalances();
         getWalletCurrency();
@@ -298,6 +297,8 @@ implements FermatListItemListeners<CashMoneyWalletTransaction>, DialogInterface.
 
         if (moduleManager != null) {
             try {
+                //Add un field de PENDING? para mostrarlas como pending...
+                data.addAll(moduleManager.getPendingTransactions());
                 data.addAll(moduleManager.getTransactions(walletSession.getAppPublicKey(), transactionTypes, balanceTypes, 100, 0));
 
             } catch (Exception ex) {
