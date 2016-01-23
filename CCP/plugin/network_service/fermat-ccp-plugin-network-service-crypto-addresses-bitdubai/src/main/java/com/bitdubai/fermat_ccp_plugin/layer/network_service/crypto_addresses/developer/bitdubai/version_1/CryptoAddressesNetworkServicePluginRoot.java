@@ -630,7 +630,8 @@ public class CryptoAddressesNetworkServicePluginRoot extends AbstractNetworkServ
                     blockchainNetworkType,
                     1,
                     System.currentTimeMillis(),
-                    "OUT"
+                    "OUT",
+                    false
             );
 
             System.out.println("********* Crypto Addresses: Successful Address Exchange Request creation. ");
@@ -807,6 +808,15 @@ public class CryptoAddressesNetworkServicePluginRoot extends AbstractNetworkServ
 
             errorManager.reportUnexpectedPluginException(this.getPluginVersionReference(), UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
             throw new CantDenyAddressExchangeRequestException(FermatException.wrapException(e), null, "Unhandled Exception.");
+        }
+    }
+
+    @Override
+    public void markReceivedRequest(UUID requestId) throws CantConfirmAddressExchangeRequestException {
+        try {
+            cryptoAddressesNetworkServiceDao.markRead(requestId);
+        }catch (Exception e){
+            throw new CantConfirmAddressExchangeRequestException(e,"","No se pudo marcar como leido el request exchange de address");
         }
     }
 
@@ -1235,19 +1245,23 @@ public class CryptoAddressesNetworkServicePluginRoot extends AbstractNetworkServ
             NetworkServiceMessage networkServiceMessage = gson.fromJson(jsonMessage, NetworkServiceMessage.class);
 
             switch (networkServiceMessage.getMessageType()) {
-//                case ACCEPT:
+                case ACCEPT:
 //                    AcceptMessage acceptMessage = gson.fromJson(jsonMessage, AcceptMessage.class);
 //                    cryptoAddressesNetworkServiceDao.changeProtocolState(acceptMessage.getRequestId(), ProtocolState.DONE);
-//
-//                    break;
-//                case DENY:
+
+                    break;
+                case DENY:
 //                    DenyMessage denyMessage = gson.fromJson(jsonMessage, DenyMessage.class);
 //                    cryptoAddressesNetworkServiceDao.changeProtocolState(denyMessage.getRequestId(), ProtocolState.DONE);
-//                    break;
+                    break;
                 case REQUEST:
                     // update the request to processing receive state with the given action.
                     //RequestMessage requestMessage = gson.fromJson(jsonMessage, RequestMessage.class);
                     cryptoAddressesNetworkServiceDao.changeProtocolState(networkServiceMessage.getRequestId(), ProtocolState.PENDING_ACTION);
+                    break;
+                case RECEIVED:
+                    ReceivedMessage receivedMessage  =  gson.fromJson(jsonMessage, ReceivedMessage.class);
+                    receivedMessage(receivedMessage);
                     break;
                 default:
                     throw new CantHandleNewMessagesException(
@@ -1289,7 +1303,8 @@ public class CryptoAddressesNetworkServicePluginRoot extends AbstractNetworkServ
                     requestMessage.getBlockchainNetworkType(),
                     1,
                     System.currentTimeMillis(),
-                    "INT"
+                    "INT",
+                    false
             );
 
         } catch(CantCreateRequestException e) {

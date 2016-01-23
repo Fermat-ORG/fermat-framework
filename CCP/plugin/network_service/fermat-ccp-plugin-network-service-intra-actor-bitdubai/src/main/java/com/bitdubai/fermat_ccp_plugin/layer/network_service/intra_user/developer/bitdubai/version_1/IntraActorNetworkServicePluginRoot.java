@@ -1034,7 +1034,6 @@ public class IntraActorNetworkServicePluginRoot extends AbstractPlugin implement
                     //TODO: ver porqué esta en delivery
                     getOutgoingNotificationDao().changeProtocolState(actorNetworkServiceRecord.getId(), ActorProtocolState.DONE);
                     actorNetworkServiceRecord.changeState(ActorProtocolState.DONE);
-                    if (actorNetworkServiceRecord.getActorProtocolState() == ActorProtocolState.DONE){
                         // close connection, sender is the destination
                         System.out.println("----------------------------\n" +
                                 "INTRA ACTOR NETWORK SERVICE" +
@@ -1049,7 +1048,6 @@ public class IntraActorNetworkServicePluginRoot extends AbstractPlugin implement
                                 "THE CONNECTION WAS CLOSED AND THE AWAITING POOL CLEARED." + actorNetworkServiceRecord.getActorSenderAlias()
                                 + "\n-------------------------------------------------");
 
-                    }
 
                     break;
 
