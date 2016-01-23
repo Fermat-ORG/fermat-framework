@@ -186,14 +186,15 @@ public class UserMainActivityFragment extends FermatWalletListFragment<DigitalAs
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         super.onCreateOptionsMenu(menu, inflater);
-        inflater.inflate(R.menu.dap_wallet_asset_user_home_menu, menu);
-    }
+        menu.add(0, SessionConstantsAssetUser.IC_ACTION_USER_HELP_PRESENTATION, 0, "help").setIcon(R.drawable.dap_asset_user_help_icon)
+                .setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);    }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         try {
+            int id = item.getItemId();
 
-            if (item.getItemId() == R.id.action_wallet_user_help) {
+            if (id == SessionConstantsAssetUser.IC_ACTION_USER_HELP_PRESENTATION) {
                 setUpPresentation(settingsManager.loadAndGetSettings(appSession.getAppPublicKey()).isPresentationHelpEnabled());
                 return true;
             }

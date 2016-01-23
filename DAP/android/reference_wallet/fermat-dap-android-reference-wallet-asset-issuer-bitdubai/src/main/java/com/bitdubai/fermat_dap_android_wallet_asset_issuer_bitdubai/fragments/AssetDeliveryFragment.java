@@ -13,6 +13,9 @@ import android.os.Build;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -21,21 +24,31 @@ import android.widget.Toast;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractFermatFragment;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatEditText;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView;
+import com.bitdubai.fermat_android_api.ui.Views.PresentationDialog;
 import com.bitdubai.fermat_android_api.ui.interfaces.FermatWorkerCallBack;
 import com.bitdubai.fermat_android_api.ui.util.BitmapWorkerTask;
 import com.bitdubai.fermat_android_api.ui.util.FermatWorker;
+import com.bitdubai.fermat_api.FermatException;
+import com.bitdubai.fermat_api.layer.all_definition.enums.UISource;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
+import com.bitdubai.fermat_api.layer.all_definition.settings.structure.SettingsManager;
 import com.bitdubai.fermat_dap_android_wallet_asset_issuer_bitdubai.R;
 import com.bitdubai.fermat_dap_android_wallet_asset_issuer_bitdubai.dialogs.DistributeAcceptDialog;
 import com.bitdubai.fermat_dap_android_wallet_asset_issuer_bitdubai.models.Data;
 import com.bitdubai.fermat_dap_android_wallet_asset_issuer_bitdubai.models.DigitalAsset;
 import com.bitdubai.fermat_dap_android_wallet_asset_issuer_bitdubai.models.User;
 import com.bitdubai.fermat_dap_android_wallet_asset_issuer_bitdubai.sessions.AssetIssuerSession;
+import com.bitdubai.fermat_dap_android_wallet_asset_issuer_bitdubai.sessions.SessionConstantsAssetIssuer;
+import com.bitdubai.fermat_dap_api.layer.dap_module.wallet_asset_issuer.AssetIssuerSettings;
 import com.bitdubai.fermat_dap_api.layer.dap_module.wallet_asset_issuer.interfaces.AssetIssuerWalletSupAppModuleManager;
 import com.bitdubai.fermat_dap_api.layer.dap_wallet.common.exceptions.CantLoadWalletException;
+import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedUIExceptionSeverity;
+import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 
 import java.lang.ref.WeakReference;
 import java.util.List;
+
+import static android.widget.Toast.makeText;
 
 /**
  * Created by frank on 12/15/15.
@@ -46,6 +59,7 @@ public class AssetDeliveryFragment extends AbstractFermatFragment {
 
     private AssetIssuerSession assetIssuerSession;
     private AssetIssuerWalletSupAppModuleManager moduleManager;
+    private ErrorManager errorManager;
 
     private View rootView;
     private Toolbar toolbar;
@@ -62,6 +76,7 @@ public class AssetDeliveryFragment extends AbstractFermatFragment {
 
     int selectedUsersCount;
 
+    SettingsManager<AssetIssuerSettings> settingsManager;
 
     public AssetDeliveryFragment() {
 
@@ -74,9 +89,14 @@ public class AssetDeliveryFragment extends AbstractFermatFragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setHasOptionsMenu(true);
 
         assetIssuerSession = (AssetIssuerSession) appSession;
         moduleManager = assetIssuerSession.getModuleManager();
+        errorManager = appSession.getErrorManager();
+
+        settingsManager = appSession.getModuleManager().getSettingsManager();
+
         activity = getActivity();
 
         configureToolbar();
@@ -92,6 +112,52 @@ public class AssetDeliveryFragment extends AbstractFermatFragment {
         setupUIData();
 
         return rootView;
+    }
+
+    private void setUpHelpAssetStatistics(boolean checkButton) {
+        try {
+            PresentationDialog presentationDialog = new PresentationDialog.Builder(getActivity(), appSession)
+                    .setBannerRes(R.drawable.banner_asset_issuer_wallet)
+                    .setIconRes(R.drawable.asset_issuer)
+                    .setVIewColor(R.color.dap_issuer_view_color)
+                    .setTitleTextColor(R.color.dap_issuer_view_color)
+                    .setSubTitle("Asset delivery section.")
+                    .setBody("On this section you will be able to identify the users you are going to deliver this asset to.\n\n" +
+                            "You can deliver as many assets as you have to any connected user. \n\n" +
+                            "If no users are available, you will have to connect to them using the User Community sub application.")
+                    .setTemplateType(PresentationDialog.TemplateType.TYPE_PRESENTATION_WITHOUT_IDENTITIES)
+                    .setIsCheckEnabled(checkButton)
+                    .build();
+
+            presentationDialog.show();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        super.onCreateOptionsMenu(menu, inflater);
+        menu.add(0, SessionConstantsAssetIssuer.IC_ACTION_ISSUER_HELP_DELIVERY, 0, "help").setIcon(R.drawable.dap_asset_issuer_help_icon)
+                .setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        try {
+            int id = item.getItemId();
+
+            if (id == SessionConstantsAssetIssuer.IC_ACTION_ISSUER_HELP_DELIVERY) {
+                setUpHelpAssetStatistics(settingsManager.loadAndGetSettings(appSession.getAppPublicKey()).isPresentationHelpEnabled());
+                return true;
+            }
+
+        } catch (Exception e) {
+            errorManager.reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.UNSTABLE, FermatException.wrapException(e));
+            makeText(getActivity(), "Asset Issuer system error",
+                    Toast.LENGTH_SHORT).show();
+        }
+        return super.onOptionsItemSelected(item);
     }
 
     private void setupUI() {
@@ -280,7 +346,7 @@ public class AssetDeliveryFragment extends AbstractFermatFragment {
 
         byte[] img = (digitalAsset.getImage() == null) ? new byte[0] : digitalAsset.getImage();
         BitmapWorkerTask bitmapWorkerTask = new BitmapWorkerTask(assetDeliveryImage, res, R.drawable.img_asset_without_image, false);
-        bitmapWorkerTask.execute(img);
+        //bitmapWorkerTask.execute(img); //todo commenting to compile, please review
 
         assetDeliveryNameText.setText(digitalAsset.getName());
         //assetsToDeliverEditText.setText(digitalAsset.getAvailableBalanceQuantity()+"");

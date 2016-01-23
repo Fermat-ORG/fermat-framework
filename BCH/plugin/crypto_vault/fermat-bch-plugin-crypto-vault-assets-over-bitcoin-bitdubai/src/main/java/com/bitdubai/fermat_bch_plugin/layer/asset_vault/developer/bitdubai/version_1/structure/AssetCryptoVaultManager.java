@@ -839,7 +839,7 @@ public class AssetCryptoVaultManager  {
              */
             bitcoinNetworkManager.storeBitcoinTransaction(networkType, sendRequest.tx, UUID.randomUUID());
         } catch (CantStoreBitcoinTransactionException e) {
-            e.printStackTrace();
+            throw new CantCreateBitcoinTransactionException(CantCreateBitcoinTransactionException.DEFAULT_MESSAGE, e, "There was an error storing the created transaction in the CryptoNetwork", "Crypto Network issue");
         }
 
         return sendRequest.tx.getHashAsString();

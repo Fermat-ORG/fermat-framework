@@ -389,7 +389,7 @@ public class AssetUserActorNetworkServicePluginRoot extends AbstractNetworkServi
     public void registerActorAssetUser(ActorAssetUser actorAssetUserToRegister) throws CantRegisterActorAssetUserException {
 
         try {
-            CommunicationsClientConnection communicationsClientConnection = wsCommunicationsCloudClientManager.getCommunicationsCloudClientConnection();
+            final CommunicationsClientConnection communicationsClientConnection = wsCommunicationsCloudClientManager.getCommunicationsCloudClientConnection();
             /*
              * If register
              */
@@ -402,7 +402,7 @@ public class AssetUserActorNetworkServicePluginRoot extends AbstractNetworkServi
                 jsonObject.addProperty(DAP_IMG_USER, Base64.encodeToString(actorAssetUserToRegister.getProfileImage(), Base64.DEFAULT));
                 String extraData = gson.toJson(jsonObject);
 
-                PlatformComponentProfile platformComponentProfileAssetUser = communicationsClientConnection.constructPlatformComponentProfileFactory(
+                final PlatformComponentProfile platformComponentProfileAssetUser = communicationsClientConnection.constructPlatformComponentProfileFactory(
                         actorAssetUserToRegister.getActorPublicKey(),
                         actorAssetUserToRegister.getName().toLowerCase().trim(),
                         actorAssetUserToRegister.getName(),
@@ -412,7 +412,20 @@ public class AssetUserActorNetworkServicePluginRoot extends AbstractNetworkServi
                 /*
                  * ask to the communication cloud client to register
                  */
-                communicationsClientConnection.registerComponentForCommunication(getNetworkServiceType(), platformComponentProfileAssetUser);
+                /**
+                 * I need to add this in a new thread other than the main android thread
+                 */
+                new Thread(new Runnable() {
+                    @Override
+                    public void run() {
+                        try {
+                            communicationsClientConnection.registerComponentForCommunication(getNetworkServiceType(), platformComponentProfileAssetUser);
+                        } catch (CantRegisterComponentException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                }).start();
+
             } else {
                 /*
                  * Construct the profile

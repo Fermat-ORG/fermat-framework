@@ -118,8 +118,9 @@ public class PublishedAssetsFragment extends AbstractFermatFragment implements
                     .setIconRes(R.drawable.asset_factory)
                     .setVIewColor(R.color.dap_asset_factory_view_color)
                     .setTitleTextColor(R.color.dap_asset_factory_view_color)
-                    .setSubTitle("Asset Factory Published.")
-                    .setBody("*GIVE ME A TEXT")
+                    .setSubTitle("Published Tab of Asset Factory.")
+                    .setBody("This tab shows all the Assets that you have already created and were  successfully published.\n \n" +
+                            "Published assets are read-only and cannot be changed.")
 //                    .setTextFooter("Again, give me a Text")
                     .setTemplateType(PresentationDialog.TemplateType.TYPE_PRESENTATION_WITHOUT_IDENTITIES)
                     .setIsCheckEnabled(checkButton)

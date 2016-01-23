@@ -141,10 +141,11 @@ public class MyAssetsActivityFragment extends FermatWalletListFragment<DigitalAs
                     .setImageLeft(R.drawable.asset_issuer_identity)
                     .setVIewColor(R.color.dap_issuer_view_color)
                     .setTitleTextColor(R.color.dap_issuer_view_color)
-                    .setTextNameLeft("Example.com")
+                    //.setTextNameLeft("Example.com")
                     .setSubTitle("Welcome to the Asset Issuer Wallet.")
-                    .setBody("From this wallet you will be able to distribute your assets to the world and collect statistics of their usage.")
-                    .setTextFooter("We will be creating an avatar for you in order to identify you in the system as an Asset Issuer, name and more details later in the Asset Issuer Identity sub app.")
+                    .setBody("From this wallet you will be able to distribute your assets to the world and collect statistics of their usage.\n \n" +
+                            "If you don't have assets, open the Asset Factory application in order to get started.")
+                    //.setTextFooter("We will be creating an avatar for you in order to identify you in the system as an Asset Issuer, name and more details later in the Asset Issuer Identity sub app.")
                     .setTemplateType((moduleManager.getActiveAssetIssuerIdentity() == null) ? PresentationDialog.TemplateType.DAP_TYPE_PRESENTATION : PresentationDialog.TemplateType.TYPE_PRESENTATION_WITHOUT_IDENTITIES)
                     .setIsCheckEnabled(checkButton)
                     .build();
@@ -181,13 +182,15 @@ public class MyAssetsActivityFragment extends FermatWalletListFragment<DigitalAs
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         super.onCreateOptionsMenu(menu, inflater);
-        inflater.inflate(R.menu.dap_asset_issuer_home_menu, menu);
-    }
+        menu.add(0, SessionConstantsAssetIssuer.IC_ACTION_ISSUER_HELP_PRESENTATION, 0, "help").setIcon(R.drawable.dap_asset_issuer_help_icon)
+                .setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);    }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         try {
-            if (item.getItemId() == R.id.action_wallet_issuer_help) {
+            int id = item.getItemId();
+
+            if (id == SessionConstantsAssetIssuer.IC_ACTION_ISSUER_HELP_PRESENTATION) {
                 setUpPresentation(settingsManager.loadAndGetSettings(appSession.getAppPublicKey()).isPresentationHelpEnabled());
                 return true;
             }
