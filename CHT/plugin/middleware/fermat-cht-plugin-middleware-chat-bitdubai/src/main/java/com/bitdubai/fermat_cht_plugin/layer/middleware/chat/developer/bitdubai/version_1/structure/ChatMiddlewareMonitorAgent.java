@@ -252,7 +252,7 @@ public class ChatMiddlewareMonitorAgent implements
                 /**
                  * Check if pending messages to submit
                  */
-                List<Message> createdMessagesList=chatMiddlewareDatabaseDao.getCreatedMesages();
+                List<Message> createdMessagesList=chatMiddlewareDatabaseDao.getCreatedMessages();
                 for(Message createdMessage : createdMessagesList){
                     sendMessage(createdMessage);
                 }
@@ -530,6 +530,14 @@ public class ChatMiddlewareMonitorAgent implements
                 CantGetMessageException {
             UUID messageId=chatMetadata.getMessageId();
             Message messageRecorded=chatMiddlewareDatabaseDao.getMessageByMessageId(messageId);
+            if(messageRecorded==null){
+                /**
+                 * In this case, the message is not created in database, so, is an incoming message,
+                 * I need to create a new message
+                 */
+                messageRecorded=getMessageFromChatMetadata(
+                        chatMetadata);
+            }
             messageRecorded.setStatus(chatMetadata.getMessageStatus());
             chatMiddlewareDatabaseDao.saveMessage(messageRecorded);
         }
@@ -543,6 +551,9 @@ public class ChatMiddlewareMonitorAgent implements
             try{
                 UUID chatId=createdMessage.getChatId();
                 Chat chat=chatMiddlewareDatabaseDao.getChatByChatId(chatId);
+                if(chat==null){
+                    return;
+                }
                 String localActorPublicKey=chat.getLocalActorPublicKey();
                 String remoteActorPublicKey=chat.getRemoteActorPublicKey();
                 ChatMetadata chatMetadata=constructChatMetadata(
