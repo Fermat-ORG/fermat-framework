@@ -14,6 +14,7 @@ import com.bitdubai.fermat_api.layer.all_definition.network_service.enums.Networ
 import com.bitdubai.fermat_api.layer.all_definition.network_service.interfaces.NetworkServiceLocal;
 import com.bitdubai.fermat_ccp_api.all_definition.enums.EventType;
 import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_addresses.enums.ProtocolState;
+import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_addresses.enums.RequestAction;
 import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_addresses.exceptions.CantConfirmAddressExchangeRequestException;
 import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_addresses.exceptions.CantListPendingCryptoAddressRequestsException;
 import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_addresses.exceptions.PendingRequestNotFoundException;
@@ -23,6 +24,7 @@ import com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_addresses.dev
 import com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_addresses.developer.bitdubai.version_1.exceptions.CantChangeProtocolStateException;
 import com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_addresses.developer.bitdubai.version_1.messages.AcceptMessage;
 import com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_addresses.developer.bitdubai.version_1.messages.DenyMessage;
+import com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_addresses.developer.bitdubai.version_1.messages.ReceivedMessage;
 import com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_addresses.developer.bitdubai.version_1.messages.RequestMessage;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.WsCommunicationsCloudClientManager;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
@@ -172,7 +174,7 @@ public final class CryptoAddressesExecutorAgent extends FermatAgent {
                                 aer.getIdentityPublicKeyRequesting(),
                                 aer.getIdentityTypeRequesting()
                         )) {
-                            confirmRequest(aer.getRequestId());
+                            confirmRequestAcceptance(aer.getRequestId());
                         }
 
                         break;
@@ -188,7 +190,7 @@ public final class CryptoAddressesExecutorAgent extends FermatAgent {
                                 aer.getIdentityPublicKeyRequesting(),
                                 aer.getIdentityTypeRequesting()
                         )) {
-                            confirmRequest(aer.getRequestId());
+                            confirmRequestDeny(aer.getRequestId());
                         }
 
                         break;
@@ -199,6 +201,22 @@ public final class CryptoAddressesExecutorAgent extends FermatAgent {
 
                         if (sendMessageToActor(
                                 buildJsonRequestMessage(aer),
+                                aer.getIdentityPublicKeyRequesting(),
+                                aer.getIdentityTypeRequesting(),
+                                aer.getIdentityPublicKeyResponding(),
+                                aer.getIdentityTypeResponding()
+                        )) {
+                            toWaitingResponse(aer.getRequestId());
+                        }
+
+                        break;
+
+                    case RECEIVED:
+
+                        System.out.println("********* Crypto Addresses: Executor Agent -> Sending RECEIVED. "+aer);
+
+                        if (sendMessageToActor(
+                                buildJsonReceivedMessage(aer),
                                 aer.getIdentityPublicKeyRequesting(),
                                 aer.getIdentityTypeRequesting(),
                                 aer.getIdentityPublicKeyResponding(),
@@ -377,6 +395,15 @@ public final class CryptoAddressesExecutorAgent extends FermatAgent {
         ).toJson();
     }
 
+    private String buildJsonReceivedMessage(final CryptoAddressRequest aer) {
+
+        return new ReceivedMessage(
+                aer.getRequestId(),
+                aer.getIdentityPublicKeyResponding(),
+                aer.getIdentityPublicKeyRequesting()
+        ).toJson();
+    }
+
     private String buildJsonRequestMessage(final CryptoAddressRequest aer) {
 
         return new RequestMessage(
@@ -403,10 +430,18 @@ public final class CryptoAddressesExecutorAgent extends FermatAgent {
         dao.changeProtocolState(requestId, ProtocolState.WAITING_RESPONSE);
     }
 
-    private void confirmRequest(final UUID requestId) throws CantConfirmAddressExchangeRequestException,
-            PendingRequestNotFoundException           {
+    private void confirmRequestAcceptance(final UUID requestId) throws CantConfirmAddressExchangeRequestException,
+            PendingRequestNotFoundException, CantChangeProtocolStateException {
 
-        dao.confirmAddressExchangeRequest(requestId);
+        dao.changeProtocolState(requestId, ProtocolState.PENDING_ACTION);
+        dao.changeActionState(requestId, RequestAction.ACCEPT);
+    }
+
+    private void confirmRequestDeny(final UUID requestId) throws CantConfirmAddressExchangeRequestException,
+            PendingRequestNotFoundException, CantChangeProtocolStateException {
+
+        dao.changeProtocolState(requestId, ProtocolState.PENDING_ACTION);
+        dao.changeActionState(requestId, RequestAction.DENY);
     }
 
     private void reportUnexpectedError(final Exception e) {
