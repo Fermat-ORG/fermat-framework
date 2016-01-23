@@ -58,8 +58,8 @@ public class ChatTransmissionJsonAttNames {
     public final static String MESSAGE_STATUS = "msgst";
 
     /**
-     *  Represents the value of TRANSACTION_ID
+     *  Represents the value of MESSAGE_ID
      */
 
-    public final static String TRANSACTION_ID = "transid";
+    public final static String MESSAGE_ID = "msgid";
 }
