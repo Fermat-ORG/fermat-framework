@@ -99,11 +99,6 @@ public class CreateUserIdentityFragment extends AbstractFermatFragment {
                 if (appSession.getAppPublicKey() != null) {
                     userIdentitySettings = settingsManager.loadAndGetSettings(appSession.getAppPublicKey());
                 }
-//                else{
-//                    //TODO: Joaquin: Lo estoy poniendo con un public key hardcoded porque en este punto no posee public key.
-//                    intraUserIdentitySettings = settingsManager.loadAndGetSettings("123456789");
-//                }
-
             } catch (Exception e) {
                 userIdentitySettings = null;
             }
@@ -114,21 +109,20 @@ public class CreateUserIdentityFragment extends AbstractFermatFragment {
                 if (appSession.getAppPublicKey() != null) {
                     settingsManager.persistSettings(appSession.getAppPublicKey(), userIdentitySettings);
                 }
-//                else{
-//                    settingsManager.persistSettings("123456789", issuerIdentitySettings);
-//                }
             }
 
-            final UserIdentitySettings userIdentitySettingsTemp = userIdentitySettings;
+            if(moduleManager.getIdentityAssetUser() == null) {
+                final UserIdentitySettings userIdentitySettingsTemp = userIdentitySettings;
 
-            Handler handlerTimer = new Handler();
-            handlerTimer.postDelayed(new Runnable() {
-                public void run() {
-                    if (userIdentitySettingsTemp.isPresentationHelpEnabled()) {
-                        setUpPresentation(false);
+                Handler handlerTimer = new Handler();
+                handlerTimer.postDelayed(new Runnable() {
+                    public void run() {
+                        if (userIdentitySettingsTemp.isPresentationHelpEnabled()) {
+                            setUpPresentation(false);
+                        }
                     }
-                }
-            }, 500);
+                }, 500);
+            }
 //            if(moduleManager.getIdentityAssetUsersFromCurrentDeviceUser().isEmpty()){
 //                moduleManager.createNewIdentityAssetUser("Asset User John Doe", null);
 //            }
@@ -140,7 +134,7 @@ public class CreateUserIdentityFragment extends AbstractFermatFragment {
     private void setUpPresentation(boolean checkButton) {
         try {
             PresentationDialog presentationDialog = new PresentationDialog.Builder(getActivity(), appSession)
-//                    .setBannerRes(R.drawable.banner_asset_factory)
+                    .setBannerRes(R.drawable.banner_asset_user)
                     .setIconRes(R.drawable.asset_user_wallet)
                     .setVIewColor(R.color.dap_identity_user_view_color)
                     .setTitleTextColor(R.color.dap_identity_user_view_color)
@@ -148,7 +142,6 @@ public class CreateUserIdentityFragment extends AbstractFermatFragment {
                     .setBody("From here you will be able to create an Asset User type identity.\n\n" +
                             "This Identity, will identify you in the system as an asset user, and give you access to all tasks and applications you need.\n\n" +
                             "Other Asset Issuers will be able to request connection to you by finding you with the information you provide here.")
-                    .setTextFooter("We will be creating an avatar for you in order to identify you in the system as an Asset User.")
                     .setTemplateType(PresentationDialog.TemplateType.TYPE_PRESENTATION_WITHOUT_IDENTITIES)
                     .setIsCheckEnabled(checkButton)
                     .build();

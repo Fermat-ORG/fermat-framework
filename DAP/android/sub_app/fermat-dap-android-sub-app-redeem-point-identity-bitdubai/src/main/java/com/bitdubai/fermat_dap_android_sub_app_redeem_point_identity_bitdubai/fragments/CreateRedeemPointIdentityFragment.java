@@ -98,11 +98,6 @@ public class CreateRedeemPointIdentityFragment extends AbstractFermatFragment {
                 if (appSession.getAppPublicKey() != null) {
                     redeemPointSettings = settingsManager.loadAndGetSettings(appSession.getAppPublicKey());
                 }
-//                else{
-//                    //TODO: Joaquin: Lo estoy poniendo con un public key hardcoded porque en este punto no posee public key.
-//                    intraUserIdentitySettings = settingsManager.loadAndGetSettings("123456789");
-//                }
-
             } catch (Exception e) {
                 redeemPointSettings = null;
             }
@@ -113,24 +108,21 @@ public class CreateRedeemPointIdentityFragment extends AbstractFermatFragment {
                 if (appSession.getAppPublicKey() != null) {
                     settingsManager.persistSettings(appSession.getAppPublicKey(), redeemPointSettings);
                 }
-//                else{
-//                    settingsManager.persistSettings("123456789", issuerIdentitySettings);
-//                }
             }
 
-            final RedeemPointSettings redeemPointSettingsTemp = redeemPointSettings;
+            if(moduleManager.getIdentityAssetRedeemPoint() == null) {
 
-            Handler handlerTimer = new Handler();
-            handlerTimer.postDelayed(new Runnable() {
-                public void run() {
-                    if (redeemPointSettingsTemp.isPresentationHelpEnabled()) {
-                        setUpPresentation(false);
+                final RedeemPointSettings redeemPointSettingsTemp = redeemPointSettings;
+
+                Handler handlerTimer = new Handler();
+                handlerTimer.postDelayed(new Runnable() {
+                    public void run() {
+                        if (redeemPointSettingsTemp.isPresentationHelpEnabled()) {
+                            setUpPresentation(false);
+                        }
                     }
-                }
-            }, 500);
-//            if(moduleManager.getRedeemPointsFromCurrentDeviceUser().isEmpty()){
-//                moduleManager.createNewRedeemPoint("Asset Redeem Point John Doe", null);
-//            }
+                }, 500);
+            }
         } catch (Exception ex) {
             CommonLogger.exception(TAG, ex.getMessage(), ex);
         }
@@ -139,7 +131,7 @@ public class CreateRedeemPointIdentityFragment extends AbstractFermatFragment {
     private void setUpPresentation(boolean checkButton) {
         try {
             PresentationDialog presentationDialog = new PresentationDialog.Builder(getActivity(), appSession)
-//                    .setBannerRes(R.drawable.banner_asset_factory)
+                    .setBannerRes(R.drawable.banner_redeem_point)
                     .setIconRes(R.drawable.redeem_point)
                     .setVIewColor(R.color.dap_identity_redeem_view_color)
                     .setTitleTextColor(R.color.dap_identity_redeem_view_color)
@@ -147,7 +139,6 @@ public class CreateRedeemPointIdentityFragment extends AbstractFermatFragment {
                     .setBody("From here you will be able to create a Redeem Point type identity.\n\n" +
                             "This Identity will identify you in the system as a redeem point, and give you access to all tasks and applications you need.\n\n" +
                             "Other Asset Users will be able to request connection to you by finding you with the information you provide here.")
-                    .setTextFooter("We will be creating an avatar for you in order to identify you in the system as an Redeem Point.")
                     .setTemplateType(PresentationDialog.TemplateType.TYPE_PRESENTATION_WITHOUT_IDENTITIES)
                     .setIsCheckEnabled(checkButton)
                     .build();

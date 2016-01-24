@@ -228,7 +228,7 @@ public class UserCommuinityGroupUsersFragment extends AbstractFermatFragment imp
     private void setUpPresentation(boolean checkButton) {
 
         PresentationDialog presentationDialog = new PresentationDialog.Builder(getActivity(), appSession)
-//                    .setBannerRes(R.drawable.banner_asset_issuer_wallet)
+                .setBannerRes(R.drawable.banner_asset_user)
                 .setIconRes(R.drawable.asset_user_comunity)
                 .setVIewColor(R.color.dap_community_user_view_color)
                 .setTitleTextColor(R.color.dap_community_user_view_color)

@@ -153,7 +153,7 @@ public class IssuerCommunityHomeFragment extends AbstractFermatFragment implemen
     private void setUpPresentation(boolean checkButton) {
 //        try {
         PresentationDialog presentationDialog = new PresentationDialog.Builder(getActivity(), appSession)
-//                    .setBannerRes(R.drawable.banner_asset_issuer_wallet)
+                .setBannerRes(R.drawable.banner_asset_issuer)
                 .setIconRes(R.drawable.asset_issuer_comunity)
                 .setVIewColor(R.color.dap_community_issuer_view_color)
                 .setTitleTextColor(R.color.dap_community_issuer_view_color)
@@ -161,9 +161,7 @@ public class IssuerCommunityHomeFragment extends AbstractFermatFragment implemen
                 .setBody("This application will help you discover and connect to Asset Issuers registered in our network.!\n\n" +
                         "If you are identified as a Redeem Point, you will need to connect to Assets Issuers in order to get approval to redeem assets created by that " +
                         "Asset Issuer.\n\nSelect any available Asset Issuer and click connect to start the process. If your network speed is low, you may have to retry several times.")
-                .setTextFooter("We will be creating an avatar for you in order to identify you in the system as an Asset Issuer, name and more details later in the Asset Issuer Identity sub app.")
                 .setTemplateType(PresentationDialog.TemplateType.TYPE_PRESENTATION_WITHOUT_IDENTITIES)
-//                    .setTemplateType((moduleManager.getActiveAssetIssuerIdentity() == null) ? PresentationDialog.TemplateType.TYPE_PRESENTATION : PresentationDialog.TemplateType.TYPE_PRESENTATION_WITHOUT_IDENTITIES)
                 .setIsCheckEnabled(checkButton)
                 .build();
 
@@ -336,7 +334,7 @@ public class IssuerCommunityHomeFragment extends AbstractFermatFragment implemen
         }
         try {
 
-        if (id == SessionConstantsAssetIssuerCommunity.IC_ACTION_ISSUER_COMMUNITY_HELP_PRESENTATION) {
+            if (id == SessionConstantsAssetIssuerCommunity.IC_ACTION_ISSUER_COMMUNITY_HELP_PRESENTATION) {
                 setUpPresentation(settingsManager.loadAndGetSettings(appSession.getAppPublicKey()).isPresentationHelpEnabled());
                 return true;
             }

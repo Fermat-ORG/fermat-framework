@@ -3,7 +3,6 @@ package com.bitdubai.fermat_dap_android_sub_app_asset_issuer_identity_bitdubai.f
 import android.app.Activity;
 import android.app.Fragment;
 import android.content.ContentResolver;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -35,7 +34,6 @@ import com.bitdubai.fermat_dap_android_sub_app_asset_issuer_identity_bitdubai.se
 import com.bitdubai.fermat_dap_android_sub_app_asset_issuer_identity_bitdubai.session.SessionConstants;
 import com.bitdubai.fermat_dap_android_sub_app_asset_issuer_identity_bitdubai.util.CommonLogger;
 import com.bitdubai.fermat_dap_api.layer.dap_identity.asset_issuer.exceptions.CantCreateNewIdentityAssetIssuerException;
-import com.bitdubai.fermat_dap_api.layer.dap_identity.asset_issuer.exceptions.CantGetAssetIssuerIdentitiesException;
 import com.bitdubai.fermat_dap_api.layer.dap_identity.asset_issuer.exceptions.CantUpdateIdentityAssetIssuerException;
 import com.bitdubai.fermat_dap_api.layer.dap_identity.asset_issuer.interfaces.IdentityAssetIssuer;
 import com.bitdubai.fermat_dap_api.layer.dap_identity.asset_issuer.interfaces.IdentityAssetIssuerManager;
@@ -101,11 +99,6 @@ public class CreateIssuerIdentityFragment extends AbstractFermatFragment {
                 if (appSession.getAppPublicKey() != null) {
                     issuerIdentitySettings = settingsManager.loadAndGetSettings(appSession.getAppPublicKey());
                 }
-//                else{
-//                    //TODO: Joaquin: Lo estoy poniendo con un public key hardcoded porque en este punto no posee public key.
-//                    intraUserIdentitySettings = settingsManager.loadAndGetSettings("123456789");
-//                }
-
             } catch (Exception e) {
                 issuerIdentitySettings = null;
             }
@@ -116,24 +109,20 @@ public class CreateIssuerIdentityFragment extends AbstractFermatFragment {
                 if (appSession.getAppPublicKey() != null) {
                     settingsManager.persistSettings(appSession.getAppPublicKey(), issuerIdentitySettings);
                 }
-//                else{
-//                    settingsManager.persistSettings("123456789", issuerIdentitySettings);
-//                }
             }
 
-            final IssuerIdentitySettings issuerIdentitySettingsTemp = issuerIdentitySettings;
+            if(moduleManager.getIdentityAssetIssuer() == null) {
+                final IssuerIdentitySettings issuerIdentitySettingsTemp = issuerIdentitySettings;
 
-            Handler handlerTimer = new Handler();
-            handlerTimer.postDelayed(new Runnable() {
-                public void run() {
-                    if (issuerIdentitySettingsTemp.isPresentationHelpEnabled()) {
-                        setUpPresentation(false);
+                Handler handlerTimer = new Handler();
+                handlerTimer.postDelayed(new Runnable() {
+                    public void run() {
+                        if (issuerIdentitySettingsTemp.isPresentationHelpEnabled()) {
+                            setUpPresentation(false);
+                        }
                     }
-                }
-            }, 500);
-//            if(moduleManager.getIdentityAssetIssuersFromCurrentDeviceUser().isEmpty()){
-//                moduleManager.createNewIdentityAssetIssuer("Asset Issuer John Doe", null);
-//            }
+                }, 500);
+            }
         } catch (Exception ex) {
             CommonLogger.exception(TAG, ex.getMessage(), ex);
         }
@@ -142,7 +131,7 @@ public class CreateIssuerIdentityFragment extends AbstractFermatFragment {
     private void setUpPresentation(boolean checkButton) {
         try {
             PresentationDialog presentationDialog = new PresentationDialog.Builder(getActivity(), appSession)
-//                    .setBannerRes(R.drawable.banner_asset_factory)
+                    .setBannerRes(R.drawable.banner_asset_issuer)
                     .setIconRes(R.drawable.asset_issuer)
                     .setVIewColor(R.color.dap_identity_issuer_view_color)
                     .setTitleTextColor(R.color.dap_identity_issuer_view_color)
@@ -150,7 +139,6 @@ public class CreateIssuerIdentityFragment extends AbstractFermatFragment {
                     .setBody("From here you will be able to create an Asset Issuer type identity.\n\n" +
                             "This Identity, will identify you in the system as an asset issuer, and give you access to all tasks and applications you need.\n\n" +
                             "Other Redeem Points will be able to request connection to you by finding you with the information you provide here.")
-                    .setTextFooter("We will be creating an avatar for you in order to identify you in the system as an Asset Issuer.")
                     .setTemplateType(PresentationDialog.TemplateType.TYPE_PRESENTATION_WITHOUT_IDENTITIES)
                     .setIsCheckEnabled(checkButton)
                     .build();

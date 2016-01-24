@@ -2,14 +2,11 @@ package com.bitdubai.fermat_dap_android_sub_app_asset_user_community_bitdubai.fr
 
 import android.app.ProgressDialog;
 import android.graphics.Color;
-import android.os.Build;
 import android.os.Bundle;
-import android.os.Handler;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -35,9 +32,9 @@ import com.bitdubai.fermat_dap_android_sub_app_asset_user_community_bitdubai.int
 import com.bitdubai.fermat_dap_android_sub_app_asset_user_community_bitdubai.models.Actor;
 import com.bitdubai.fermat_dap_android_sub_app_asset_user_community_bitdubai.sessions.AssetUserCommunitySubAppSession;
 import com.bitdubai.fermat_dap_android_sub_app_asset_user_community_bitdubai.sessions.SessionConstantsAssetUserCommunity;
+import com.bitdubai.fermat_dap_api.layer.all_definition.exceptions.CantGetIdentityAssetUserException;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.AssetUserActorRecord;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.interfaces.ActorAssetUser;
-import com.bitdubai.fermat_dap_api.layer.all_definition.exceptions.CantGetIdentityAssetUserException;
 import com.bitdubai.fermat_dap_api.layer.dap_module.wallet_asset_user.AssetUserSettings;
 import com.bitdubai.fermat_dap_api.layer.dap_sub_app_module.asset_user_community.interfaces.AssetUserCommunitySubAppModuleManager;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedUIExceptionSeverity;
@@ -159,7 +156,7 @@ public class UserCmmuinityHomeFragment extends AbstractFermatFragment implements
     private void setUpPresentation(boolean checkButton) {
 //        try {
         PresentationDialog presentationDialog = new PresentationDialog.Builder(getActivity(), appSession)
-//                    .setBannerRes(R.drawable.banner_asset_issuer_wallet)
+                .setBannerRes(R.drawable.banner_asset_user)
                 .setIconRes(R.drawable.asset_user_comunity)
                 .setVIewColor(R.color.dap_community_user_view_color)
                 .setTitleTextColor(R.color.dap_community_user_view_color)
@@ -203,10 +200,10 @@ public class UserCmmuinityHomeFragment extends AbstractFermatFragment implements
     protected void initViews(View layout) {
 
         // fab action button create
-    ActionButton create = (ActionButton) layout.findViewById(R.id.create);
-    create.setOnClickListener(new View.OnClickListener() {
-        @Override
-        public void onClick(View view) {
+        ActionButton create = (ActionButton) layout.findViewById(R.id.create);
+        create.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
 //            if (item.getItemId() == R.id.action_connect) {
                 final ProgressDialog dialog = new ProgressDialog(getActivity());
                 dialog.setMessage("Connecting please wait...");
@@ -251,10 +248,10 @@ public class UserCmmuinityHomeFragment extends AbstractFermatFragment implements
                 /* create new asset factory project */
 //                selectedAsset = null;
 //                changeActivity(Activities.DAP_ASSET_EDITOR_ACTIVITY.getCode(), appSession.getAppPublicKey(), getAssetForEdit());
-        }
-    });
-    create.setAnimation(AnimationUtils.loadAnimation(getActivity(), R.anim.fab_jump_from_down));
-    create.setVisibility(View.VISIBLE);
+            }
+        });
+        create.setAnimation(AnimationUtils.loadAnimation(getActivity(), R.anim.fab_jump_from_down));
+        create.setVisibility(View.VISIBLE);
     }
 
     @Override
