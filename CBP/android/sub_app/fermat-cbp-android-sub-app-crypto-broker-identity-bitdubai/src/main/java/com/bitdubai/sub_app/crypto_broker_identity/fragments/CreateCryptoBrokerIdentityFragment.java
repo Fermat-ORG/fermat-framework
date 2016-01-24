@@ -138,8 +138,7 @@ public class CreateCryptoBrokerIdentityFragment extends AbstractFermatFragment {
             }
 
             if (pictureView != null && cryptoBrokerBitmap != null) {
-                RoundedBitmapDrawable roundedBitmap = ImagesUtils.getRoundedBitmap(getResources(), cryptoBrokerBitmap);
-                pictureView.setImageDrawable(roundedBitmap);
+                pictureView.setImageBitmap(cryptoBrokerBitmap);
             }
         }
     }
