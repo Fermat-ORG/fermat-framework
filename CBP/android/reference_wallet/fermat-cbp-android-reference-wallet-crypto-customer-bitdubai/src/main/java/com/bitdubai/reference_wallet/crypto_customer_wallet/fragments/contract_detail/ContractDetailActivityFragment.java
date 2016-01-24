@@ -31,8 +31,10 @@ import com.bitdubai.fermat_cbp_api.all_definition.enums.ContractStatus;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.CurrencyType;
 import com.bitdubai.fermat_cbp_api.all_definition.identity.ActorIdentity;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.common.interfaces.ClauseInformation;
+import com.bitdubai.fermat_cbp_api.layer.wallet_module.common.interfaces.ContractBasicInformation;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_customer.interfaces.CryptoCustomerWalletManager;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_customer.interfaces.CryptoCustomerWalletModuleManager;
+import com.bitdubai.fermat_cbp_plugin.layer.wallet_module.crypto_customer.developer.bitdubai.version_1.structure.CryptoBrokerWalletModuleContractBasicInformation;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedWalletExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 import com.bitdubai.reference_wallet.crypto_customer_wallet.common.adapters.ContractDetailAdapter;
@@ -47,8 +49,11 @@ import com.bitdubai.reference_wallet.crypto_customer_wallet.session.CryptoCustom
 import com.bitdubai.reference_wallet.crypto_customer_wallet.R;
 
 import java.io.ByteArrayOutputStream;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by Manuel Perez (darkpriestrelative@gmail.com) on 18/01/16.
@@ -159,12 +164,19 @@ public class ContractDetailActivityFragment extends AbstractFermatFragment<Crypt
         //Drawable brokerImg = getImgDrawable(broker.getProfileImage());
         //brokerImage.setImageDrawable(brokerImg);
         //brokerName.setText(broker.getAlias());
-        brokerName.setText("Broker Name");
-        sellingSummary.setText(getResources().getString(
-                R.string.ccw_start_selling_details,
-                currencyToBuy.getFriendlyName()));
-        detailDate.setText("Date");
-        detailRate.setText("1 BTC @ 254 USD");
+        //brokerName.setText("Broker Name");
+
+        ContractBasicInformation data=
+                (ContractBasicInformation) appSession.getData("contract_data");
+        String paymentCurrency=data.getPaymentCurrency();
+        brokerName.setText(data.getCryptoCustomerAlias());
+        sellingSummary.setText("SELLING "+paymentCurrency);
+        Date date=new Date(data.getLastUpdate());
+        //TODO: we can introduce locale for date format
+        SimpleDateFormat formatter = new SimpleDateFormat("EEE, d MMM yy");
+        detailDate.setText(formatter.format(date));
+        //detailRate.setText("1 BTC @ 254 USD");
+        detailRate.setText(data.getExchangeRateAmount()+" "+paymentCurrency+" @ "+data.getAmount()+" "+data.getMerchandise());
 
 
         //Create adapter

@@ -79,7 +79,8 @@ public class ContractDetailViewHolder extends FermatViewHolder {
                 break;
 
         }
-        textButton.setText(itemInfo.getCurrencyType().getCode());
+        //TODO: here we can see the contract status
+        textButton.setText(contractStatus.toString());
         /*customerName.setText(itemInfo.getCryptoCustomerAlias());
         customerImage.setImageDrawable(getImgDrawable(itemInfo.getCryptoCustomerImage()));
 
