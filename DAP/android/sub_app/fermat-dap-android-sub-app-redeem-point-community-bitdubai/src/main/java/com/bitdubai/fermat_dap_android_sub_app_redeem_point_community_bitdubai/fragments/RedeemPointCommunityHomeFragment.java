@@ -2,14 +2,11 @@ package com.bitdubai.fermat_dap_android_sub_app_redeem_point_community_bitdubai.
 
 import android.app.ProgressDialog;
 import android.graphics.Color;
-import android.os.Build;
 import android.os.Bundle;
-import android.os.Handler;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -34,6 +31,7 @@ import com.bitdubai.fermat_dap_android_sub_app_redeem_point_community_bitdubai.a
 import com.bitdubai.fermat_dap_android_sub_app_redeem_point_community_bitdubai.interfaces.AdapterChangeListener;
 import com.bitdubai.fermat_dap_android_sub_app_redeem_point_community_bitdubai.models.Actor;
 import com.bitdubai.fermat_dap_android_sub_app_redeem_point_community_bitdubai.sessions.AssetRedeemPointCommunitySubAppSession;
+import com.bitdubai.fermat_dap_android_sub_app_redeem_point_community_bitdubai.sessions.SessionConstantRedeemPointCommunity;
 import com.bitdubai.fermat_dap_api.layer.all_definition.exceptions.CantGetIdentityRedeemPointException;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.redeem_point.RedeemPointActorRecord;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.redeem_point.interfaces.ActorAssetRedeemPoint;
@@ -137,17 +135,17 @@ public class RedeemPointCommunityHomeFragment extends AbstractFermatFragment imp
             }
         }
 
-        final RedeemPointSettings redeemPointSettingsTemp = settings;
-
-
-        Handler handlerTimer = new Handler();
-        handlerTimer.postDelayed(new Runnable() {
-            public void run() {
-                if (redeemPointSettingsTemp.isPresentationHelpEnabled()) {
-                    setUpPresentation(false);
-                }
-            }
-        }, 500);
+//        final RedeemPointSettings redeemPointSettingsTemp = settings;
+//
+//
+//        Handler handlerTimer = new Handler();
+//        handlerTimer.postDelayed(new Runnable() {
+//            public void run() {
+//                if (redeemPointSettingsTemp.isPresentationHelpEnabled()) {
+//                    setUpPresentation(false);
+//                }
+//            }
+//        }, 500);
 
         return rootView;
     }
@@ -155,15 +153,15 @@ public class RedeemPointCommunityHomeFragment extends AbstractFermatFragment imp
     private void setUpPresentation(boolean checkButton) {
 //        try {
         PresentationDialog presentationDialog = new PresentationDialog.Builder(getActivity(), appSession)
-//                    .setBannerRes(R.drawable.banner_asset_issuer_wallet)
+                .setBannerRes(R.drawable.banner_redeem_point)
                 .setIconRes(R.drawable.reddem_point_community)
                 .setVIewColor(R.color.dap_community_redeem_view_color)
                 .setTitleTextColor(R.color.dap_community_redeem_view_color)
                 .setSubTitle("Welcome to the Redeem Point Community.")
-                .setBody("From this wallet you will be able to distribute your assets to the world and collect statistics of their usage.")
-                .setTextFooter("We will be creating an avatar for you in order to identify you in the system as an Asset Issuer, name and more details later in the Asset Issuer Identity sub app.")
+                .setBody("This application will help you discover and connect to Redeem Points registered in our network.!\n\n" +
+                        "If you are identified as an Asset User, you will need to connect to Redeem Points in order to be able to redeem your assets with them." +
+                        "\n\nSelect any available Redeem Point and click connect to start the process. If your network speed is low, you may have to retry several times.")
                 .setTemplateType(PresentationDialog.TemplateType.TYPE_PRESENTATION_WITHOUT_IDENTITIES)
-//                    .setTemplateType((moduleManager.getActiveAssetIssuerIdentity() == null) ? PresentationDialog.TemplateType.TYPE_PRESENTATION : PresentationDialog.TemplateType.TYPE_PRESENTATION_WITHOUT_IDENTITIES)
                 .setIsCheckEnabled(checkButton)
                 .build();
 
@@ -195,13 +193,6 @@ public class RedeemPointCommunityHomeFragment extends AbstractFermatFragment imp
 //            e.printStackTrace();
 //        }
     }
-
-    @Override
-    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        super.onCreateOptionsMenu(menu, inflater);
-        inflater.inflate(R.menu.dap_community_redeem_point_home_menu, menu);
-    }
-
 
     protected void initViews(View layout) {
 
@@ -245,7 +236,7 @@ public class RedeemPointCommunityHomeFragment extends AbstractFermatFragment imp
                     @Override
                     public void onErrorOccurred(Exception ex) {
                         dialog.dismiss();
-                        Toast.makeText(getActivity(), String.format("An exception has been thrown: %s", ex.getMessage()), Toast.LENGTH_LONG).show();
+                        Toast.makeText(getActivity(), String.format("We have detected an error. Make sure you have created an Asset User or Redeem Point identities using the corresponding Identity sub app."), Toast.LENGTH_LONG).show();
                         ex.printStackTrace();
                     }
                 });
@@ -285,10 +276,23 @@ public class RedeemPointCommunityHomeFragment extends AbstractFermatFragment imp
 //        toolbar.setTitleTextColor(Color.WHITE);
 //    }
 
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        super.onCreateOptionsMenu(menu, inflater);
+        menu.add(0, SessionConstantRedeemPointCommunity.IC_ACTION_REDEEM_COMMUNITY_CONNECT, 0, "Connect")//.setIcon(R.drawable.dap_community_issuer_help_icon)
+                .setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM);
+
+        menu.add(1, SessionConstantRedeemPointCommunity.IC_ACTION_REDEEM_COMMUNITY_HELP_PRESENTATION, 1, "help").setIcon(R.drawable.dap_community_redeem_help_icon)
+                .setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
+//        inflater.inflate(R.menu.dap_community_redeem_point_home_menu, menu);
+    }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        if (item.getItemId() == R.id.action_connect) {
+        int id = item.getItemId();
+
+//        if (item.getItemId() == R.id.action_connect) {
+        if (id == SessionConstantRedeemPointCommunity.IC_ACTION_REDEEM_COMMUNITY_CONNECT) {
             final ProgressDialog dialog = new ProgressDialog(getActivity());
             dialog.setMessage("Connecting please wait...");
             dialog.setCancelable(false);
@@ -332,7 +336,8 @@ public class RedeemPointCommunityHomeFragment extends AbstractFermatFragment imp
         }
 
         try {
-            if (item.getItemId() == R.id.action_community_redeem_help) {
+            if (id == SessionConstantRedeemPointCommunity.IC_ACTION_REDEEM_COMMUNITY_HELP_PRESENTATION) {
+//            if (item.getItemId() == R.id.action_community_redeem_help) {
                 setUpPresentation(settingsManager.loadAndGetSettings(appSession.getAppPublicKey()).isPresentationHelpEnabled());
                 return true;
             }

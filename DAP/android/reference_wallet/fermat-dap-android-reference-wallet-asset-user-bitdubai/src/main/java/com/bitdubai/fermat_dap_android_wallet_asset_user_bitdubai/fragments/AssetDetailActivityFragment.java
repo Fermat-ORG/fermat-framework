@@ -63,8 +63,8 @@ public class AssetDetailActivityFragment extends AbstractFermatFragment {
     private ImageView assetImageDetail;
     private FermatTextView assetDetailNameText;
     private FermatTextView assetDetailExpDateText;
-    private FermatTextView assetDetailAvailableText;
-    private FermatTextView assetDetailBookText;
+    private FermatTextView availableText;
+    private FermatTextView pendingText;
     private FermatTextView assetDetailBtcText;
     private FermatTextView assetDetailRedeemText;
 
@@ -114,8 +114,11 @@ public class AssetDetailActivityFragment extends AbstractFermatFragment {
                     .setIconRes(R.drawable.asset_user_wallet)
                     .setVIewColor(R.color.dap_user_view_color)
                     .setTitleTextColor(R.color.dap_user_view_color)
-                    .setSubTitle("Asset User Detail.")
-                    .setBody("*GIVE ME A TEXT")
+                    .setSubTitle("Asset Detail.")
+                    .setBody("You can review detailed information about the selected asset.\n\n" +
+                            "You can also decide to redeem your asset in a connected Redeem Point. If you are not connected to any Redeem Point, " +
+                            "use the Redeem Point Community sub app to search for Redeem Points.\n\n" +
+                            "You can also appropriate the asset in order to get the Bitcoins associated with it. They will be sent to your Bitcoin wallet.")
                     .setTemplateType(PresentationDialog.TemplateType.TYPE_PRESENTATION_WITHOUT_IDENTITIES)
                     .setIsCheckEnabled(checkButton)
                     .build();
@@ -157,8 +160,8 @@ public class AssetDetailActivityFragment extends AbstractFermatFragment {
         assetImageDetail = (ImageView) rootView.findViewById(R.id.asset_image_detail);
         assetDetailNameText = (FermatTextView) rootView.findViewById(R.id.assetDetailNameText);
         assetDetailExpDateText = (FermatTextView) rootView.findViewById(R.id.assetDetailExpDateText);
-        assetDetailAvailableText = (FermatTextView) rootView.findViewById(R.id.assetDetailAvailableText);
-        assetDetailBookText = (FermatTextView) rootView.findViewById(R.id.assetDetailBookText);
+        availableText = (FermatTextView) rootView.findViewById(R.id.assetAvailable1);
+        pendingText = (FermatTextView) rootView.findViewById(R.id.assetAvailable2);
         assetDetailBtcText = (FermatTextView) rootView.findViewById(R.id.assetDetailBtcText);
         assetDetailRedeemText = (FermatTextView) rootView.findViewById(R.id.assetDetailRedeemText);
 
@@ -231,15 +234,33 @@ public class AssetDetailActivityFragment extends AbstractFermatFragment {
 //        }
         byte[] img = (digitalAsset.getImage() == null) ? new byte[0] : digitalAsset.getImage();
         BitmapWorkerTask bitmapWorkerTask = new BitmapWorkerTask(assetImageDetail, res, R.drawable.img_asset_without_image, false);
-        bitmapWorkerTask.execute(img);
+        //bitmapWorkerTask.execute(img); //todo comment to compile, please review.
 
         assetDetailRedeemLayout.setVisibility((digitalAsset.getAvailableBalanceQuantity() > 0) ? View.VISIBLE : View.GONE);
 
         assetDetailNameText.setText(digitalAsset.getName());
         assetDetailExpDateText.setText(digitalAsset.getFormattedExpDate());
-        assetDetailAvailableText.setText(digitalAsset.getAvailableBalanceQuantity()+"");
-        assetDetailBookText.setText(digitalAsset.getBookBalanceQuantity() + "");
+
+        long available = digitalAsset.getAvailableBalanceQuantity();
+        long book = digitalAsset.getBookBalanceQuantity();
+        availableText.setText(availableText(available));
+        if (available == book) {
+            pendingText.setVisibility(View.INVISIBLE);
+        } else {
+            long pendingValue = Math.abs(available - book);
+            pendingText.setText(pendingText(pendingValue));
+            pendingText.setVisibility(View.VISIBLE);
+        }
+
         assetDetailBtcText.setText(digitalAsset.getFormattedAvailableBalanceBitcoin() + " BTC");
+    }
+
+    private String pendingText(long pendingValue) {
+        return "(" + pendingValue + " pending confirmation)";
+    }
+
+    private String availableText(long available) {
+        return available + ((available == 1) ? " Asset" : " Assets");
     }
 
     private void configureToolbar() {
@@ -280,7 +301,7 @@ public class AssetDetailActivityFragment extends AbstractFermatFragment {
             public void onPostExecute(Object... result) {
                 dialog.dismiss();
                 if (activity != null) {
-                    Toast.makeText(activity, "Everything ok (appropriate)...", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(activity, "Appropriation of the asset has started successfully. The process will be completed in a couple of minutes.", Toast.LENGTH_LONG).show();
                 }
             }
 
@@ -288,7 +309,7 @@ public class AssetDetailActivityFragment extends AbstractFermatFragment {
             public void onErrorOccurred(Exception ex) {
                 dialog.dismiss();
                 if (activity != null)
-                    Toast.makeText(activity, "Fermat Has detected an exception",
+                    Toast.makeText(activity, "Fermat Has detected an exception. Please retry again.",
                             Toast.LENGTH_SHORT).show();
             }
         });

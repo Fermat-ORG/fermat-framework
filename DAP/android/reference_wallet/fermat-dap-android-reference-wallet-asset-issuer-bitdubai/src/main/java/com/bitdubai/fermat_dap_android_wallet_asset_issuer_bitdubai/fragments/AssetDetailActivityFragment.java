@@ -67,8 +67,8 @@ public class AssetDetailActivityFragment extends AbstractFermatFragment {
     private ImageView assetImageDetail;
     private FermatTextView assetDetailNameText;
     private FermatTextView assetDetailExpDateText;
-    private FermatTextView assetDetailAvailableText;
-    private FermatTextView assetDetailBookText;
+    private FermatTextView availableText;
+    private FermatTextView pendingText;
     private FermatTextView assetDetailBtcText;
     private FermatTextView assetDetailRemainingText;
     private FermatTextView assetDetailDelivered;
@@ -119,8 +119,8 @@ public class AssetDetailActivityFragment extends AbstractFermatFragment {
         assetImageDetail = (ImageView) rootView.findViewById(R.id.asset_image_detail);
         assetDetailNameText = (FermatTextView) rootView.findViewById(R.id.assetDetailNameText);
         assetDetailExpDateText = (FermatTextView) rootView.findViewById(R.id.assetDetailExpDateText);
-        assetDetailAvailableText = (FermatTextView) rootView.findViewById(R.id.assetDetailAvailableText);
-        assetDetailBookText = (FermatTextView) rootView.findViewById(R.id.assetDetailBookText);
+        availableText = (FermatTextView) rootView.findViewById(R.id.assetAvailable1);
+        pendingText = (FermatTextView) rootView.findViewById(R.id.assetAvailable2);
         assetDetailBtcText = (FermatTextView) rootView.findViewById(R.id.assetDetailBtcText);
         //Text = (FermatTextView) rootView.findViewById(R.id.assetDetailRemainingText);
         assetDetailDelivered = (FermatTextView) rootView.findViewById(R.id.assetDetailAvailableText2);
@@ -227,13 +227,31 @@ public class AssetDetailActivityFragment extends AbstractFermatFragment {
 
         assetDetailNameText.setText(digitalAsset.getName());
         assetDetailExpDateText.setText(digitalAsset.getFormattedExpDate());
-        assetDetailAvailableText.setText(digitalAsset.getAvailableBalanceQuantity()+"");
-        assetDetailBookText.setText(digitalAsset.getBookBalanceQuantity() + "");
+
+        long available = digitalAsset.getAvailableBalanceQuantity();
+        long book = digitalAsset.getBookBalanceQuantity();
+        availableText.setText(availableText(available));
+        if (available == book) {
+            pendingText.setVisibility(View.INVISIBLE);
+        } else {
+            long pendingValue = Math.abs(available - book);
+            pendingText.setText(pendingText(pendingValue));
+            pendingText.setVisibility(View.VISIBLE);
+        }
+
         assetDetailBtcText.setText(digitalAsset.getFormattedAvailableBalanceBitcoin() + " BTC");
         //assetDetailRemainingText.setText(digitalAsset.getAvailableBalanceQuantity() + " Assets Remaining");
         assetDetailDelivered.setText(digitalAsset.getUnused() + "");
         assetDetailRedeemText.setText(digitalAsset.getRedeemed()+"");
         assetDetailAppropriatedText.setText(digitalAsset.getAppropriated() + "");
+    }
+
+    private String pendingText(long pendingValue) {
+        return "(" + pendingValue + " pending confirmation)";
+    }
+
+    private String availableText(long available) {
+        return available + ((available == 1) ? " Asset" : " Assets");
     }
 
     private void configureToolbar() {
@@ -267,9 +285,9 @@ public class AssetDetailActivityFragment extends AbstractFermatFragment {
                     .setTitleTextColor(R.color.dap_issuer_view_color)
                     .setSubTitle("Asset detail section.")
                     .setBody("This section will show you detailed information of your selected asset.\n\n" +
-                            "You will be able to see statistics of its usage, like to which users it has been distributed." +
-                            "And at which Redeem Points it has been redeemed.\n\n" +
-                            "You will also be able to deliver the asset to any user you are connected to and appropriate and get your bitcoins back.")
+                            "You will be able to see statistics of its usage, like to which users it has been distributed and" +
+                            "much more.\n\n" +
+                            "You will also be able to deliver the asset to any user you are connected to. If needed, you can appropriate this asset in order to get your bitcoins back.")
                     .setTemplateType(PresentationDialog.TemplateType.TYPE_PRESENTATION_WITHOUT_IDENTITIES)
                     .setIsCheckEnabled(checkButton)
                     .build();

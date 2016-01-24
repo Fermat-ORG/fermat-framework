@@ -84,7 +84,7 @@ public class EditableAssetsFragment extends AbstractFermatFragment implements
     private LinearLayoutManager layoutManager;
     private AssetFactoryAdapter adapter;
     private ErrorManager errorManager;
-//    private MenuItem menuHelp;
+    //    private MenuItem menuHelp;
 //    private Menu menu;
     // custom inflater
     private ViewInflater viewInflater;
@@ -256,14 +256,17 @@ public class EditableAssetsFragment extends AbstractFermatFragment implements
 
         final AssetFactorySettings assetFactorySettingsTemp = settings;
 
-        Handler handlerTimer = new Handler();
-        handlerTimer.postDelayed(new Runnable() {
-            public void run() {
-                if (assetFactorySettingsTemp.isPresentationHelpEnabled()) {
-                    setUpPresentation(false);
+        if (manager.getLoggedIdentityAssetIssuer() == null) {
+            Handler handlerTimer = new Handler();
+            handlerTimer.postDelayed(new Runnable() {
+                public void run() {
+                    if (assetFactorySettingsTemp.isPresentationHelpEnabled()) {
+                        setUpPresentation(false);
+                    }
                 }
-            }
-        }, 500);
+            }, 500);
+        }
+
     }
 
     private void setUpPresentation(boolean checkButton) {
@@ -271,14 +274,16 @@ public class EditableAssetsFragment extends AbstractFermatFragment implements
             PresentationDialog presentationDialog = new PresentationDialog.Builder(getActivity(), appSession)
                     .setBannerRes(R.drawable.banner_asset_factory)
                     .setIconRes(R.drawable.asset_factory)
+                    .setImageLeft(R.drawable.asset_issuer_identity)
                     .setVIewColor(R.color.dap_asset_factory_view_color)
                     .setTitleTextColor(R.color.dap_asset_factory_view_color)
+                    .setTextNameLeft("Asset Issuer")
                     .setSubTitle("Welcome to the Asset Factory application.")
                     .setBody("From here you will be able to create, define and publish all your assets. \n\n" +
                             "In order to start, tap over the + button below where you will be able to \n" +
                             "define all the properties of your asset.")
-                    //.setTextFooter("We will be creating an avatar for you in order to identify you in the system as an Asset Issuer, name and more details later in the Asset Issuer Identity sub app.")
-                    .setTemplateType((manager.getLoggedIdentityAssetIssuer() == null) ? PresentationDialog.TemplateType.TYPE_PRESENTATION : PresentationDialog.TemplateType.TYPE_PRESENTATION_WITHOUT_IDENTITIES)
+//                    .setTextFooter("We will be creating an avatar for you in order to identify you in the system as an Asset Issuer, name and more details later in the Asset Issuer Identity sub app.")
+                    .setTemplateType((manager.getLoggedIdentityAssetIssuer() == null) ? PresentationDialog.TemplateType.DAP_TYPE_PRESENTATION : PresentationDialog.TemplateType.TYPE_PRESENTATION_WITHOUT_IDENTITIES)
                     .setIsCheckEnabled(checkButton)
                     .build();
 
@@ -319,8 +324,8 @@ public class EditableAssetsFragment extends AbstractFermatFragment implements
         try {
             int id = item.getItemId();
 
-                if (id == SessionConstantsAssetFactory.IC_ACTION_HELP_FACTORY) {
-                    setUpPresentation(settingsManager.loadAndGetSettings(appSession.getAppPublicKey()).isPresentationHelpEnabled());
+            if (id == SessionConstantsAssetFactory.IC_ACTION_HELP_FACTORY) {
+                setUpPresentation(settingsManager.loadAndGetSettings(appSession.getAppPublicKey()).isPresentationHelpEnabled());
                 return true;
             }
 

@@ -121,8 +121,10 @@ public class AssetRedeemFragment extends AbstractFermatFragment {
                     .setIconRes(R.drawable.asset_user_wallet)
                     .setVIewColor(R.color.dap_user_view_color)
                     .setTitleTextColor(R.color.dap_user_view_color)
-                    .setSubTitle("Asset User Redemm.")
-                    .setBody("*GIVE ME A TEXT")
+                    .setSubTitle("Asset  Redemption.")
+                    .setBody("You can decide how many assets to redeem at your connected Redeem Points. In order to connect to Redeem Points, search them at" +
+                            "the Redeem Point Community sub app.\n\n" +
+                            "The selected Redeem Point will receive and confirm your asset so you can exchange it for what the asset represents.")
                     .setTemplateType(PresentationDialog.TemplateType.TYPE_PRESENTATION_WITHOUT_IDENTITIES)
                     .setIsCheckEnabled(checkButton)
                     .build();
@@ -276,7 +278,8 @@ public class AssetRedeemFragment extends AbstractFermatFragment {
             public void onPostExecute(Object... result) {
                 dialog.dismiss();
                 if (activity != null) {
-                    Toast.makeText(activity, "Everything ok...", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(activity, "Redemption of the asset has successfully started.\n\n" +
+                            "The process will take some minutes and if not accepted at the destination, it will be rollback.", Toast.LENGTH_LONG).show();
                 }
             }
 
@@ -284,7 +287,7 @@ public class AssetRedeemFragment extends AbstractFermatFragment {
             public void onErrorOccurred(Exception ex) {
                 dialog.dismiss();
                 if (activity != null)
-                    Toast.makeText(activity, "Fermat Has detected an exception",
+                    Toast.makeText(activity, "Fermat Has detected an exception. Please retry again.",
                             Toast.LENGTH_SHORT).show();
             }
         });
@@ -309,7 +312,7 @@ public class AssetRedeemFragment extends AbstractFermatFragment {
 //        }
         byte[] img = (digitalAsset.getImage() == null) ? new byte[0] : digitalAsset.getImage();
         BitmapWorkerTask bitmapWorkerTask = new BitmapWorkerTask(assetRedeemImage, res, R.drawable.img_asset_without_image, false);
-        bitmapWorkerTask.execute(img);
+        //bitmapWorkerTask.execute(img); //todo comment to be able to compile
 
         assetRedeemNameText.setText(digitalAsset.getName());
         assetsToRedeemEditText.setText(digitalAsset.getAvailableBalanceQuantity() + "");

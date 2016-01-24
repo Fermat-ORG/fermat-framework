@@ -3,7 +3,6 @@ package com.bitdubai.fermat_dap_android_sub_app_asset_issuer_community_bitdubai.
 import android.app.ProgressDialog;
 import android.graphics.Color;
 import android.os.Bundle;
-import android.os.Handler;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
@@ -32,6 +31,7 @@ import com.bitdubai.fermat_dap_android_sub_app_asset_issuer_community_bitdubai.a
 import com.bitdubai.fermat_dap_android_sub_app_asset_issuer_community_bitdubai.interfaces.AdapterChangeListener;
 import com.bitdubai.fermat_dap_android_sub_app_asset_issuer_community_bitdubai.models.ActorIssuer;
 import com.bitdubai.fermat_dap_android_sub_app_asset_issuer_community_bitdubai.sessions.AssetIssuerCommunitySubAppSession;
+import com.bitdubai.fermat_dap_android_sub_app_asset_issuer_community_bitdubai.sessions.SessionConstantsAssetIssuerCommunity;
 import com.bitdubai.fermat_dap_api.layer.all_definition.exceptions.CantGetIdentityAssetIssuerException;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_issuer.AssetIssuerActorRecord;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_issuer.interfaces.ActorAssetIssuer;
@@ -135,17 +135,17 @@ public class IssuerCommunityHomeFragment extends AbstractFermatFragment implemen
             }
         }
 
-        final AssetIssuerSettings assetIssuerSettingsTemp = settings;
-
-
-        Handler handlerTimer = new Handler();
-        handlerTimer.postDelayed(new Runnable() {
-            public void run() {
-                if (assetIssuerSettingsTemp.isPresentationHelpEnabled()) {
-                    setUpPresentation(false);
-                }
-            }
-        }, 500);
+//        final AssetIssuerSettings assetIssuerSettingsTemp = settings;
+//
+//
+//        Handler handlerTimer = new Handler();
+//        handlerTimer.postDelayed(new Runnable() {
+//            public void run() {
+//                if (assetIssuerSettingsTemp.isPresentationHelpEnabled()) {
+//                    setUpPresentation(false);
+//                }
+//            }
+//        }, 500);
 
         return rootView;
     }
@@ -153,15 +153,15 @@ public class IssuerCommunityHomeFragment extends AbstractFermatFragment implemen
     private void setUpPresentation(boolean checkButton) {
 //        try {
         PresentationDialog presentationDialog = new PresentationDialog.Builder(getActivity(), appSession)
-//                    .setBannerRes(R.drawable.banner_asset_issuer_wallet)
+                .setBannerRes(R.drawable.banner_asset_issuer)
                 .setIconRes(R.drawable.asset_issuer_comunity)
                 .setVIewColor(R.color.dap_community_issuer_view_color)
                 .setTitleTextColor(R.color.dap_community_issuer_view_color)
                 .setSubTitle("Welcome to the Asset Issuer Community.")
-                .setBody("From this wallet you will be able to distribute your assets to the world and collect statistics of their usage.")
-                .setTextFooter("We will be creating an avatar for you in order to identify you in the system as an Asset Issuer, name and more details later in the Asset Issuer Identity sub app.")
+                .setBody("This application will help you discover and connect to Asset Issuers registered in our network.!\n\n" +
+                        "If you are identified as a Redeem Point, you will need to connect to Assets Issuers in order to get approval to redeem assets created by that " +
+                        "Asset Issuer.\n\nSelect any available Asset Issuer and click connect to start the process. If your network speed is low, you may have to retry several times.")
                 .setTemplateType(PresentationDialog.TemplateType.TYPE_PRESENTATION_WITHOUT_IDENTITIES)
-//                    .setTemplateType((moduleManager.getActiveAssetIssuerIdentity() == null) ? PresentationDialog.TemplateType.TYPE_PRESENTATION : PresentationDialog.TemplateType.TYPE_PRESENTATION_WITHOUT_IDENTITIES)
                 .setIsCheckEnabled(checkButton)
                 .build();
 
@@ -192,12 +192,6 @@ public class IssuerCommunityHomeFragment extends AbstractFermatFragment implemen
 //        } catch (CantGetIdentityAssetIssuerException e) {
 //            e.printStackTrace();
 //        }
-    }
-
-    @Override
-    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        super.onCreateOptionsMenu(menu, inflater);
-        inflater.inflate(R.menu.dap_community_issuer_home_menu, menu);
     }
 
     protected void initViews(View layout) {
@@ -242,7 +236,7 @@ public class IssuerCommunityHomeFragment extends AbstractFermatFragment implemen
                     @Override
                     public void onErrorOccurred(Exception ex) {
                         dialog.dismiss();
-                        Toast.makeText(getActivity(), String.format("An exception has been thrown: %s", ex.getMessage()), Toast.LENGTH_LONG).show();
+                        Toast.makeText(getActivity(), String.format("We have detected an error. Make sure you have created an Asset Issuer or Redeem Point identities using the corresponding Identity sub app."), Toast.LENGTH_LONG).show();
                         ex.printStackTrace();
                     }
                 });
@@ -282,8 +276,21 @@ public class IssuerCommunityHomeFragment extends AbstractFermatFragment implemen
 //    }
 
     @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        super.onCreateOptionsMenu(menu, inflater);
+        menu.add(0, SessionConstantsAssetIssuerCommunity.IC_ACTION_ISSUER_COMMUNITY_CONNECT, 0, "Connect")//.setIcon(R.drawable.dap_community_issuer_help_icon)
+                .setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM);
+
+        menu.add(1, SessionConstantsAssetIssuerCommunity.IC_ACTION_ISSUER_COMMUNITY_HELP_PRESENTATION, 1, "help").setIcon(R.drawable.dap_community_issuer_help_icon)
+                .setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
+    }
+
+    @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        if (item.getItemId() == R.id.action_connect) {
+        int id = item.getItemId();
+
+//        if (item.getItemId() == R.id.action_connect) {
+        if (id == SessionConstantsAssetIssuerCommunity.IC_ACTION_ISSUER_COMMUNITY_CONNECT) {
             final ProgressDialog dialog = new ProgressDialog(getActivity());
             dialog.setMessage("Connecting please wait...");
             dialog.setCancelable(false);
@@ -325,15 +332,15 @@ public class IssuerCommunityHomeFragment extends AbstractFermatFragment implemen
             worker.execute();
             return true;
         }
-
         try {
-            if (item.getItemId() == R.id.action_community_issuer_help) {
+
+            if (id == SessionConstantsAssetIssuerCommunity.IC_ACTION_ISSUER_COMMUNITY_HELP_PRESENTATION) {
                 setUpPresentation(settingsManager.loadAndGetSettings(appSession.getAppPublicKey()).isPresentationHelpEnabled());
                 return true;
             }
         } catch (Exception e) {
             errorManager.reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.UNSTABLE, FermatException.wrapException(e));
-            makeText(getActivity(), "Asset Issuer system error",
+            makeText(getActivity(), "Community Issuer system error",
                     Toast.LENGTH_SHORT).show();
         }
         return super.onOptionsItemSelected(item);

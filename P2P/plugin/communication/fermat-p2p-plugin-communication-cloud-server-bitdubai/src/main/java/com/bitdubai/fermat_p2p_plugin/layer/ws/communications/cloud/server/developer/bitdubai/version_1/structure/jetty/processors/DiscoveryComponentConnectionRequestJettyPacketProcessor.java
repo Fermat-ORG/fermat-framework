@@ -79,6 +79,7 @@ public class DiscoveryComponentConnectionRequestJettyPacketProcessor extends Fer
         String packetContentJsonStringRepresentation     = null;
         PlatformComponentProfile applicantParticipant    = null;
         PlatformComponentProfile applicantNetworkService = null;
+        PlatformComponentProfile remoteParticipantRequested = null;
         PlatformComponentProfile remoteParticipant       = null;
         PlatformComponentProfile remoteNsParticipant     = null;
 
@@ -118,8 +119,8 @@ public class DiscoveryComponentConnectionRequestJettyPacketProcessor extends Fer
             /*
              * Get the component profile to connect as remote participant
              */
-            remoteParticipant = new PlatformComponentProfileCommunication().fromJson(packetContent.get(JsonAttNamesConstants.REMOTE_PARTICIPANT_VPN).getAsString());
-            List<PlatformComponentProfile> remoteParticipantList = searchProfile(remoteParticipant.getPlatformComponentType(), remoteParticipant.getNetworkServiceType(), remoteParticipant.getIdentityPublicKey());
+            remoteParticipantRequested = new PlatformComponentProfileCommunication().fromJson(packetContent.get(JsonAttNamesConstants.REMOTE_PARTICIPANT_VPN).getAsString());
+            List<PlatformComponentProfile> remoteParticipantList = searchProfile(remoteParticipantRequested.getPlatformComponentType(), remoteParticipantRequested.getNetworkServiceType(), remoteParticipantRequested.getIdentityPublicKey());
             remoteParticipant = remoteParticipantList.get(0);
             LOG.info("remoteParticipant = " + remoteParticipant.getAlias() + "("+remoteParticipant.getIdentityPublicKey()+")");
 
@@ -143,10 +144,10 @@ public class DiscoveryComponentConnectionRequestJettyPacketProcessor extends Fer
 
             LOG.error("Requested connection is no possible, some of the participant are no available.");
             LOG.error("Details: ");
-            LOG.error("ApplicantParticipant is available    = " + (applicantParticipant    != null ? "SI ("+applicantParticipant.getAlias()+")" : "NO" ));
+            LOG.error("ApplicantParticipant is available    = " + (applicantParticipant    != null ? "SI (" + applicantParticipant.getAlias()    + ")" : "NO" ));
             LOG.error("NetworkServiceApplicant is available = " + (applicantNetworkService != null ? "SI (" + applicantNetworkService.getAlias() + ")" : "NO"));
-            LOG.error("RemoteParticipant is available       = " + (remoteParticipant != null ? "SI (" + remoteParticipant.getAlias() + ")" : "NO"));
-            LOG.error("RemoteNsParticipant is available     = " + (remoteNsParticipant != null ? "SI (" + remoteNsParticipant.getAlias() + ")" : "NO"));
+            LOG.error("RemoteParticipant is available       = " + (remoteParticipant       != null ? "SI (" + remoteParticipant.getAlias()       + ")" : "NO"));
+            LOG.error("RemoteNsParticipant is available     = " + (remoteNsParticipant     != null ? "SI (" + remoteNsParticipant.getAlias()     + ")" : "NO"));
             LOG.error("Cause: " + e.getMessage());
 
             String details = "";
@@ -172,7 +173,7 @@ public class DiscoveryComponentConnectionRequestJettyPacketProcessor extends Fer
              */
             JsonObject packetContent = jsonParser.parse(packetContentJsonStringRepresentation).getAsJsonObject();
             packetContent.addProperty(JsonAttNamesConstants.APPLICANT_PARTICIPANT_NS_VPN, applicantNetworkService.toJson());
-            packetContent.addProperty(JsonAttNamesConstants.REMOTE_PARTICIPANT_VPN, remoteParticipant.toJson());
+            packetContent.addProperty(JsonAttNamesConstants.REMOTE_PARTICIPANT_VPN, remoteParticipantRequested.toJson());
             packetContent.addProperty(JsonAttNamesConstants.FAILURE_VPN_MSJ, "Failure in component connection, some of the component needed to establish the vpn are no available: "+details+" "+e.getMessage());
 
             /*

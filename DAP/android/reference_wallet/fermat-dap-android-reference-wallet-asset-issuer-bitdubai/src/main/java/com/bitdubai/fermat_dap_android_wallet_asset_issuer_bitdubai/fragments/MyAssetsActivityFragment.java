@@ -141,11 +141,12 @@ public class MyAssetsActivityFragment extends FermatWalletListFragment<DigitalAs
                     .setImageLeft(R.drawable.asset_issuer_identity)
                     .setVIewColor(R.color.dap_issuer_view_color)
                     .setTitleTextColor(R.color.dap_issuer_view_color)
-                    //.setTextNameLeft("Example.com")
+                    .setTextNameLeft("Asset Issuer")
                     .setSubTitle("Welcome to the Asset Issuer Wallet.")
-                    .setBody("From this wallet you will be able to distribute your assets to the world and collect statistics of their usage.\n \n" +
-                            "If you don't have assets, open the Asset Factory application in order to get started.")
-                    //.setTextFooter("We will be creating an avatar for you in order to identify you in the system as an Asset Issuer, name and more details later in the Asset Issuer Identity sub app.")
+                    .setBody("* From this wallet you will be able to distribute your assets to the world and collect statistics of their usage.\n" +
+                            "* Help is available on any screen!")
+                    .setTextFooter("* We will be creating an avatar for you in order to identify you in the system as an Asset Issuer.\n" +
+                            "* You will be able to edit your profile in the Asset Issuer Identity sub app.")
                     .setTemplateType((moduleManager.getActiveAssetIssuerIdentity() == null) ? PresentationDialog.TemplateType.DAP_TYPE_PRESENTATION : PresentationDialog.TemplateType.TYPE_PRESENTATION_WITHOUT_IDENTITIES)
                     .setIsCheckEnabled(checkButton)
                     .build();

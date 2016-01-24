@@ -104,7 +104,7 @@ public class WalletActivity extends FermatActivity implements FermatScreenSwappe
             loadUI(createOrCallWalletSession());
 
         } catch (Exception e) {
-            getErrorManager().reportUnexpectedWalletException(Wallets.CWP_WALLET_RUNTIME_WALLET_BITCOIN_WALLET_ALL_BITDUBAI, UnexpectedWalletExceptionSeverity.DISABLES_THIS_FRAGMENT, FermatException.wrapException(e));
+            e.printStackTrace();
             Toast.makeText(getApplicationContext(), "Oooops! recovering from system error", Toast.LENGTH_LONG).show();
         }
     }

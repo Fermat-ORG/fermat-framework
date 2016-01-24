@@ -143,10 +143,10 @@ public class RedeemPointMainActivityFragment extends FermatWalletListFragment<Di
                     .setImageLeft(R.drawable.redeem_point_identity)
                     .setVIewColor(R.color.dap_redeem_point_view_color)
                     .setTitleTextColor(R.color.dap_redeem_point_view_color)
-                    .setTextNameLeft("Example.com")
+                    .setTextNameLeft("Redeem Point")
                     .setSubTitle("Welcome to the RedeemPoint Wallet.")
                     .setBody("From this wallet you will be able to verify the assets that users redeem with you and get statistic from them.")
-                    .setTextFooter("We will be creating an avatar for you in order to identify you in the system as a Redeem Point, name and more details later in the Redeem Point Identity sub app.")
+                    .setTextFooter("We will be creating an avatar for you in order to identify you in the system as a Redeem Point. You will be able to edit this information at the Redeem Point Identity sub app.")
                     .setTemplateType((moduleManager.getActiveAssetRedeemPointIdentity() == null) ? PresentationDialog.TemplateType.DAP_TYPE_PRESENTATION : PresentationDialog.TemplateType.TYPE_PRESENTATION_WITHOUT_IDENTITIES)
                     .setIsCheckEnabled(checkButton)
                     .build();

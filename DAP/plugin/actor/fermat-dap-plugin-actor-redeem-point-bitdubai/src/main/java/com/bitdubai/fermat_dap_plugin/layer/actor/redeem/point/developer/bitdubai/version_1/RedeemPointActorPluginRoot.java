@@ -383,7 +383,7 @@ public class RedeemPointActorPluginRoot extends AbstractPlugin implements
 
                 if (request.getCryptoAddressDealer() == CryptoAddressDealers.DAP_WATCH_ONLY || request.getCryptoAddressDealer() == CryptoAddressDealers.DAP_ASSET) {
 
-                    if (request.getAction().equals(RequestAction.ACCEPT))
+                    if (request.getAction().equals(RequestAction.ACCEPT) || request.getAction().equals(RequestAction.NONE))
                         this.handleCryptoAddressReceivedEvent(request);
 
 //                if (request.getAction().equals(RequestAction.DENY))

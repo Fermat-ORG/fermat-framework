@@ -17,6 +17,7 @@ import com.bitdubai.fermat_p2p_api.layer.p2p_communication.WsCommunicationsCloud
  * @version 1.0
  * @since Java JDK 1.7
  */
+@Deprecated
 public abstract class AbstractCommunicationRegistrationProcessNetworkServiceAgent extends FermatAgent {
 
     /*
