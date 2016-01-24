@@ -611,6 +611,13 @@ public class AssetEditorFragment extends AbstractFermatFragment implements View.
                 return false;
 
             }
+            int quantityInt = Integer.parseInt(quantityStr.isEmpty() ? "0" : quantityStr);
+            if (quantityStr.length() == 0 || quantityInt == 0)
+            {
+                Toast.makeText(getActivity(), "Invalid Quantity of Assets", Toast.LENGTH_SHORT).show();
+                return false;
+
+            }
             return true;
         } catch (NumberFormatException ex) {
             CommonLogger.exception(TAG, ex.getMessage(), ex);
