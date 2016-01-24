@@ -1,6 +1,7 @@
 package com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.fragments;
 
 import android.os.Bundle;
+import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -35,7 +36,9 @@ import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.Un
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 
 import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.UUID;
@@ -67,7 +70,7 @@ public class ChatFragment extends AbstractFermatFragment {//ActionBarActivity
     List<String> chatmessages =  new ArrayList<>();
 
     private EditText messageET;
-    private ListView messagesContainer;
+    private RecyclerView messagesContainer;
     public Button sendBtn;
     private ChatAdapter adapter;
     public ArrayList<ChatMessage> chatHistory;
@@ -116,7 +119,6 @@ public class ChatFragment extends AbstractFermatFragment {//ActionBarActivity
 
 
 
-        messagesContainer = (ListView) layout.findViewById(R.id.messagesContainer);
         messageET = (EditText) layout.findViewById(R.id.messageEdit);
         sendBtn = (Button) layout.findViewById(R.id.chatSendButton);
 
@@ -127,6 +129,30 @@ public class ChatFragment extends AbstractFermatFragment {//ActionBarActivity
       //  loadDummyHistory();// Hard Coded
 
 
+        chatHistory = new ArrayList<ChatMessage>();
+
+        ChatMessage msg1 = new ChatMessage();
+        msg1.setId("Jose");
+        msg1.setMe(true);
+        msg1.setMessage("hola");
+        msg1.setDate(DateFormat.getDateTimeInstance().format(new Date()));
+        chatHistory.add(msg1);
+        ChatMessage msg2 = new ChatMessage();
+        msg2.setId("Miguel");
+        msg2.setMe(false);
+        msg2.setMessage("hola");
+        msg2.setDate(DateFormat.getDateTimeInstance().format(new Date()));
+        chatHistory.add(msg2);
+        final ChatAdapter adapter = new ChatAdapter(getActivity(), chatHistory);
+        //messagesContainer = (ListView)layout.findViewById(R.id.messagesContainer);
+        //adapter.setFermatListEventListener(this);
+        messagesContainer = (RecyclerView) layout.findViewById(R.id.messagesContainer);
+        messagesContainer.setAdapter(adapter);
+        //adapter = new ChatAdapter(getActivity());//,
+        //messagesContainer.setAdapter(adapter);
+
+
+        /*
         ListView lstOpciones;
         final Parameters[] datos =
                 new Parameters[]{
@@ -143,7 +169,7 @@ public class ChatFragment extends AbstractFermatFragment {//ActionBarActivity
 
         lstOpciones.setAdapter(adaptador);
 
-
+*/
 
 
         sendBtn.setOnClickListener(new View.OnClickListener() {
@@ -161,9 +187,15 @@ public class ChatFragment extends AbstractFermatFragment {//ActionBarActivity
                     chatManager.saveChat(testChat);
                     chatManager.saveMessage(testMessage);
                     mensaje=chatManager.getMessageByChatId((UUID.fromString("52d7fab8-a423-458f-bcc9-49cdb3e9ba8f"))).getMessage();
-                    datos[0]=new Parameters("Jose",mensaje);
-
-                    adaptador.refreshEvents(datos);
+                    String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(Calendar.getInstance().getTime());
+                    ChatMessage msg = new ChatMessage();
+                    msg.setMe(true);
+                    msg.setMessage(mensaje);
+                    msg.setDate(timeStamp);
+                    msg.setId(UUID.fromString("52d7fab8-a423-458f-bcc9-49cdb3e9ba8f").toString());
+                    msg.setUserId("Jose");
+                    chatHistory.add(msg);
+                    adapter.refreshEvents(chatHistory);
          //           meLabel.setText(chatManager.getMessageByChatId((UUID.fromString("52d7fab8-a423-458f-bcc9-49cdb3e9ba8f"))).getMessage());
          //           linear_layout_send_form.setText(chatManager.getMessageByChatId((UUID.fromString("52d7fab8-a423-458f-bcc9-49cdb3e9ba8f"))).getMessage());
                 } catch (CantSaveChatException e) {
@@ -189,19 +221,29 @@ public class ChatFragment extends AbstractFermatFragment {//ActionBarActivity
         return layout;
     }
 
-    /*public void displayMessage(ChatMessage message) {
-        adapter.add(message);
-        //adapter.notifyDataSetChanged();
-        scroll();
+   /* @SuppressWarnings("unchecked")
+    public void onPostExecute(Object... result) {
+
+        if (result != null && result.length > 0) {
+            chatHistory = (ArrayList<ChatMessage>) result[0];
+            adapter.changeDataSet(chatHistory);
+            if (chatHistory == null || chatHistory.isEmpty()) {
+                //changeActivity(Activities.DAP_ASSET_EDITOR_ACTIVITY.getCode(), getAssetForEdit());
+            }
+        } else if (result != null) {
+            chatHistory = new ArrayList<>();
+            adapter.changeDataSet(chatHistory);
+        }
     }*/
 
 
 
-    private void scroll() {
-        messagesContainer.setSelection(messagesContainer.getCount() - 1);
-    }
 
-    private void loadDummyHistory(){// Hard Coded
+    /*private void scroll() {
+        messagesContainer.setSelection(messagesContainer. - 1);
+    }*/
+
+    /*private void loadDummyHistory(){// Hard Coded
 
         chatHistory = new ArrayList<ChatMessage>();
 
@@ -225,7 +267,7 @@ public class ChatFragment extends AbstractFermatFragment {//ActionBarActivity
 
         for(int i=0; i<chatHistory.size(); i++) {
             ChatMessage message = chatHistory.get(i);
-            //displayMessage(message);
+            displayMessage(message);
         }
-    }
+    }*/
 }

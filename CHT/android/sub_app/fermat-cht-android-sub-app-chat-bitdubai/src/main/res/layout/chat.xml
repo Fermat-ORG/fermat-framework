@@ -1,7 +1,8 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    android:background="@color/background_activity">
 
     <RelativeLayout
         android:id="@+id/container"
@@ -17,6 +18,7 @@
             android:layout_alignParentBottom="true"
             android:layout_toLeftOf="@+id/chatSendButton"
             android:autoText="true"
+            android:textColor="@color/black"/>
             android:hint="type message" />
 
         <Button
@@ -29,7 +31,7 @@
             android:text="Send"
             android:textColor="@color/background_material_light"/>
 
-        <ListView
+        <android.support.v7.widget.RecyclerView
             android:id="@+id/messagesContainer"
             android:layout_width="match_parent"
             android:layout_height="match_parent"

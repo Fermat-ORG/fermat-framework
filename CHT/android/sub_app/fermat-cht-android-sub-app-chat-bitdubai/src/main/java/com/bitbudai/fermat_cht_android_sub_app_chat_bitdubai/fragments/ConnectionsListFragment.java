@@ -19,7 +19,7 @@ import android.text.TextUtils;
 import android.widget.CursorAdapter;
 
 import com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.models.ChatMessage;
-import com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.models.ContactList;
+import com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.models.ConnectionList;
 import com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.util.ImageLoader;
 import com.bitdubai.android_api.BuildConfig;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractFermatFragment;
@@ -68,32 +68,32 @@ import java.util.Locale;
 
 
 /**
- * Contact List fragment
+ * Connections List fragment
  *
- * @author Jose Cardozo josejcb (josejcb89@gmail.com) on 05/01/16
+ * @author Jose Cardozo josejcb (josejcb89@gmail.com) on 20/01/16
  * @version 1.0
  *
  */
-public class ContactsListFragment extends AbstractFermatFragment {
+public class ConnectionsListFragment extends AbstractFermatFragment {
 
     // Defines a tag for identifying log entries
-    private static final String TAG = "ContactsListFragment";
+    private static final String TAG = "ConnectionListFragment";
 
     // Bundle key for saving previously selected search result item
     private static final String STATE_PREVIOUSLY_SELECTED_KEY =
             "SELECTED_ITEM";
-    private ContactsAdapter mAdapter; // The main query adapter
+    private ConnectionsAdapter mAdapter; // The main query adapter
     private ImageLoader mImageLoader; // Handles loading the contact image in a background thread
     private String mSearchTerm; // Stores the current search query term
 
-    private OnContactsInteractionListener mOnContactSelectedListener;
+    private OnConnectionsInteractionListener mOnConnectionSelectedListener;
 
     // Stores the previously selected search item so that on a configuration change the same item
     // can be reselected again
     private int mPreviouslySelectedSearchItem = 0;
-    public ArrayList<ContactList> contactList;
-    private ListView contactsContainer;
-    private ContactsAdapter adapter;
+    public ArrayList<ConnectionList> connectiontList;
+    private ListView connectionsContainer;
+    private ConnectionsAdapter adapter;
 
     // Whether or not the search query has changed since the last time the loader was refreshed
     private boolean mSearchQueryChanged;
@@ -105,10 +105,10 @@ public class ContactsListFragment extends AbstractFermatFragment {
     // OS versions as search results are shown in-line via Action Bar search from honeycomb onward
     private boolean mIsSearchResultView = false;
 
-    public ContactsListFragment() {}
+    public ConnectionsListFragment() {}
 
-    public static ContactsListFragment newInstance() {
-        return new ContactsListFragment();}
+    public static ConnectionsListFragment newInstance() {
+        return new ConnectionsListFragment();}
 
     public void setSearchQuery(String query) {
         if (TextUtils.isEmpty(query)) {
@@ -132,8 +132,8 @@ public class ContactsListFragment extends AbstractFermatFragment {
         // Let this fragment contribute menu items
         setHasOptionsMenu(true);
 
-        // Create the main contacts adapter
-        mAdapter = new ContactsAdapter(getActivity());
+        // Create the main Connection adapter
+        mAdapter = new ConnectionsAdapter(getActivity());
 
         if (savedInstanceState != null) {
             // If we're restoring state after this fragment was recreated then
@@ -160,7 +160,7 @@ public class ContactsListFragment extends AbstractFermatFragment {
             protected Bitmap processBitmap(Object data) {
                 // This gets called in a background thread and passed the data from
                 // ImageLoader.loadImage().
-                return loadContactPhotoThumbnail((String) data, getImageSize());
+                return loadConnectionPhotoThumbnail((String) data, getImageSize());
             }
         };
 
@@ -178,19 +178,19 @@ public class ContactsListFragment extends AbstractFermatFragment {
 
         //loadDummyHistory();
         // Inflate the list fragment layout
-        return inflater.inflate(R.layout.contact_list_fragment, container, false);
+        return inflater.inflate(R.layout.connection_list_fragment, container, false);
     }
 
     private void loadDummyHistory(){// Hard Coded
 
-        contactList = new ArrayList<ContactList>();
+        connectiontList = new ArrayList<ConnectionList>();
 
-        ContactList cl = new ContactList();
+        ConnectionList cl = new ConnectionList();
         cl.setId(1);
         cl.setName("John Doe");
         cl.setDate(DateFormat.getDateTimeInstance().format(new Date()));
         //contactList.add(cl);
-        ContactList cl1 = new ContactList();
+        ConnectionList cl1 = new ConnectionList();
         cl1.setId(2);
         cl1.setName("Jane Doe");
         cl1.setDate(DateFormat.getDateTimeInstance().format(new Date()));
@@ -198,8 +198,8 @@ public class ContactsListFragment extends AbstractFermatFragment {
         //adapter = new ChatAdapter(getActivity());//,
         //contactsContainer.setAdapter((ListAdapter) cl);
 
-        for(int i=0; i<contactList.size(); i++) {
-            ContactList contact_list = contactList.get(i);
+        for(int i=0; i<connectiontList.size(); i++) {
+            ConnectionList contact_list = connectiontList.get(i);
             //displayMessage(contact_list);
         }
     }
@@ -289,14 +289,14 @@ public class ContactsListFragment extends AbstractFermatFragment {
 
         // Creates a contact lookup Uri from contact ID and lookup_key
         final Uri uri = ContactsContract.Contacts.getLookupUri(
-                cursor.getLong(ContactsQuery.ID),
-                cursor.getString(ContactsQuery.LOOKUP_KEY));
+                cursor.getLong(ConnectionsQuery.ID),
+                cursor.getString(ConnectionsQuery.LOOKUP_KEY));
 
         // Notifies the parent activity that the user selected a contact. In a two-pane layout, the
         // parent activity loads a ContactDetailFragment that displays the details for the selected
         // contact. In a single-pane layout, the parent activity starts a new activity that
         // displays contact details in its own Fragment.
-        mOnContactSelectedListener.onContactSelected(uri);
+        mOnConnectionSelectedListener.onConnectionSelected(uri);
 
         // If two-pane layout sets the selected item to checked so it remains highlighted. In a
         // single-pane layout a new activity is started so this is not needed.
@@ -312,7 +312,7 @@ public class ContactsListFragment extends AbstractFermatFragment {
      */
     private void onSelectionCleared() {
         // Uses callback to notify activity this contains this fragment
-        mOnContactSelectedListener.onSelectionCleared();
+        mOnConnectionSelectedListener.onSelectionCleared();
 
         // Clears currently checked item
         //getListView().clearChoices();
@@ -322,7 +322,7 @@ public class ContactsListFragment extends AbstractFermatFragment {
     // annotation tells Android lint that they are properly guarded so they won't run on older OS
     // versions and can be ignored by lint.
 
-    @Override
+    /*@Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
 
         // Inflate the menu items
@@ -422,8 +422,8 @@ public class ContactsListFragment extends AbstractFermatFragment {
             // Sets the SearchView to the previous search string
             searchView.setQuery(savedSearchTerm, false);
         }
-*/
-    }
+
+    }*/
 
     @Override
     public void onSaveInstanceState(Bundle outState) {
@@ -569,7 +569,7 @@ public class ContactsListFragment extends AbstractFermatFragment {
      * @return A Bitmap containing the contact's image, resized to fit the provided image size. If
      * no thumbnail exists, returns null.
      */
-    private Bitmap loadContactPhotoThumbnail(String photoData, int imageSize) {
+    private Bitmap loadConnectionPhotoThumbnail(String photoData, int imageSize) {
 
         // Ensures the Fragment is still added to an activity. As this method is called in a
         // background thread, there's the possibility the Fragment is no longer attached and
@@ -609,7 +609,7 @@ public class ContactsListFragment extends AbstractFermatFragment {
             // opened in "read" mode, ContentResolver.openAssetFileDescriptor throws a
             // FileNotFoundException.
             if (BuildConfig.DEBUG) {
-                Log.d(TAG, "Contact photo thumbnail not found for contact " + photoData
+                Log.d(TAG, "Connection photo thumbnail not found for connection " + photoData
                         + ": " + e.toString());
             }
         } finally {
@@ -634,16 +634,16 @@ public class ContactsListFragment extends AbstractFermatFragment {
      * query text. An {@link AlphabetIndexer} is used to allow quicker navigation up and down the
      * ListView.
      */
-    private class ContactsAdapter extends CursorAdapter implements SectionIndexer {
+    private class ConnectionsAdapter extends CursorAdapter implements SectionIndexer {
         private LayoutInflater mInflater; // Stores the layout inflater
         private AlphabetIndexer mAlphabetIndexer; // Stores the AlphabetIndexer instance
         private TextAppearanceSpan highlightTextSpan; // Stores the highlight text appearance style
-        List<ContactList> contactList = new ArrayList<>();
+        List<ConnectionList> connectionList = new ArrayList<>();
         /**
          * Instantiates a new Contacts Adapter.
          * @param context A context that has access to the app's layout.
          */
-        public ContactsAdapter(Context context) {
+        public ConnectionsAdapter(Context context) {
             super(context, null, 0);
 
             // Stores inflater for use later
@@ -658,7 +658,7 @@ public class ContactsListFragment extends AbstractFermatFragment {
 
             // Instantiates a new AlphabetIndexer bound to the column used to sort contact names.
             // The cursor is left null, because it has not yet been retrieved.
-            mAlphabetIndexer = new AlphabetIndexer(null, ContactsQuery.SORT_KEY, alphabet);
+            mAlphabetIndexer = new AlphabetIndexer(null, ConnectionsQuery.SORT_KEY, alphabet);
 
             // Defines a span for highlighting the part of a display name that matches the search
             // string
@@ -690,7 +690,7 @@ public class ContactsListFragment extends AbstractFermatFragment {
         public View newView(Context context, Cursor cursor, ViewGroup viewGroup) {
             // Inflates the list item layout.
             final View itemLayout =
-                    mInflater.inflate(R.layout.contact_list_item, viewGroup, false);
+                    mInflater.inflate(R.layout.connection_list_item, viewGroup, false);
 
             // Creates a new ViewHolder in which to store handles to each view resource. This
             // allows bindView() to retrieve stored references instead of calling findViewById for
@@ -719,9 +719,9 @@ public class ContactsListFragment extends AbstractFermatFragment {
             // For Android 3.0 and later, gets the thumbnail image Uri from the current Cursor row.
             // For platforms earlier than 3.0, this isn't necessary, because the thumbnail is
             // generated from the other fields in the row.
-            final String photoUri = cursor.getString(ContactsQuery.PHOTO_THUMBNAIL_DATA);
+            final String photoUri = cursor.getString(ConnectionsQuery.PHOTO_THUMBNAIL_DATA);
 
-            final String displayName = cursor.getString(ContactsQuery.DISPLAY_NAME);
+            final String displayName = cursor.getString(ConnectionsQuery.DISPLAY_NAME);
 
             final int startIndex = indexOfSearchQuery(displayName);
 
@@ -764,12 +764,12 @@ public class ContactsListFragment extends AbstractFermatFragment {
             // each detail type.
 
             // Generates the contact lookup Uri
-            final Uri contactUri = ContactsContract.Contacts.getLookupUri(
-                    cursor.getLong(ContactsQuery.ID),
-                    cursor.getString(ContactsQuery.LOOKUP_KEY));
+            final Uri connectionUri = ContactsContract.Contacts.getLookupUri(
+                    cursor.getLong(ConnectionsQuery.ID),
+                    cursor.getString(ConnectionsQuery.LOOKUP_KEY));
 
             // Binds the contact's lookup Uri to the QuickContactBadge
-            holder.icon.assignContactUri(contactUri);
+            holder.icon.assignContactUri(connectionUri);
 
             // Loads the thumbnail image pointed to by photoUri into the QuickContactBadge in a
             // background worker thread
@@ -840,7 +840,7 @@ public class ContactsListFragment extends AbstractFermatFragment {
             QuickContactBadge icon;
         }
 
-        public void add(ContactList contactlist) {contactList.add(contactlist);
+        public void add(ConnectionList connectionslist) {connectionList.add(connectionslist);
         }
     }
 
@@ -849,12 +849,12 @@ public class ContactsListFragment extends AbstractFermatFragment {
      * interaction occurs, such as touching an item from the ListView, these callbacks will
      * be invoked to communicate the event back to the activity.
      */
-    public interface OnContactsInteractionListener {
+    public interface OnConnectionsInteractionListener {
         /**
          * Called when a contact is selected from the ListView.
          * @param contactUri The contact Uri.
          */
-        public void onContactSelected(Uri contactUri);
+        public void onConnectionSelected(Uri contactUri);
 
         /**
          * Called when the ListView selection is cleared like when
@@ -867,7 +867,7 @@ public class ContactsListFragment extends AbstractFermatFragment {
      * This interface defines constants for the Cursor and CursorLoader, based on constants defined
      * in the {@link android.provider.ContactsContract.Contacts} class.
      */
-    public interface ContactsQuery {
+    public interface ConnectionsQuery {
 
         // An identifier for the loader
         final static int QUERY_ID = 1;
