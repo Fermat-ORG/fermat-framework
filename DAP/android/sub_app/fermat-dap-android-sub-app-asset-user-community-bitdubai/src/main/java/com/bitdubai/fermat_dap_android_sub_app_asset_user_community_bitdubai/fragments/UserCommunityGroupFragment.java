@@ -20,9 +20,16 @@ import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractFermatFragment;
+import com.bitdubai.fermat_android_api.ui.Views.PresentationDialog;
 import com.bitdubai.fermat_android_api.ui.interfaces.FermatWorkerCallBack;
 import com.bitdubai.fermat_android_api.ui.util.FermatWorker;
+import com.bitdubai.fermat_api.FermatException;
+import com.bitdubai.fermat_api.layer.all_definition.enums.UISource;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
+import com.bitdubai.fermat_api.layer.all_definition.settings.exceptions.CantGetSettingsException;
+import com.bitdubai.fermat_api.layer.all_definition.settings.exceptions.CantPersistSettingsException;
+import com.bitdubai.fermat_api.layer.all_definition.settings.exceptions.SettingsNotFoundException;
+import com.bitdubai.fermat_api.layer.all_definition.settings.structure.SettingsManager;
 import com.bitdubai.fermat_dap_android_sub_app_asset_user_community_bitdubai.R;
 import com.bitdubai.fermat_dap_android_sub_app_asset_user_community_bitdubai.adapters.GroupCommunityAdapter;
 import com.bitdubai.fermat_dap_android_sub_app_asset_user_community_bitdubai.adapters.UserCommunityAdapter;
@@ -33,6 +40,7 @@ import com.bitdubai.fermat_dap_android_sub_app_asset_user_community_bitdubai.mod
 import com.bitdubai.fermat_dap_android_sub_app_asset_user_community_bitdubai.models.Group;
 import com.bitdubai.fermat_dap_android_sub_app_asset_user_community_bitdubai.popup.CreateGroupFragmentDialog;
 import com.bitdubai.fermat_dap_android_sub_app_asset_user_community_bitdubai.sessions.AssetUserCommunitySubAppSession;
+import com.bitdubai.fermat_dap_android_sub_app_asset_user_community_bitdubai.sessions.SessionConstantsAssetUserCommunity;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.AssetUserGroupMemberRecord;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.exceptions.CantDeleteAssetUserGroupException;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.exceptions.CantGetAssetUserActorsException;
@@ -41,13 +49,17 @@ import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.interfaces.ActorAs
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.interfaces.ActorAssetUserGroupMember;
 import com.bitdubai.fermat_dap_api.layer.dap_middleware.dap_asset_factory.exceptions.CantPublishAssetFactoy;
 import com.bitdubai.fermat_dap_api.layer.dap_middleware.dap_asset_factory.interfaces.AssetFactory;
+import com.bitdubai.fermat_dap_api.layer.dap_module.wallet_asset_user.AssetUserSettings;
 import com.bitdubai.fermat_dap_api.layer.dap_sub_app_module.asset_user_community.interfaces.AssetUserCommunitySubAppModuleManager;
 import com.bitdubai.fermat_dap_api.layer.dap_transaction.common.exceptions.RecordsNotFoundException;
+import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedUIExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 import com.software.shell.fab.ActionButton;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import static android.widget.Toast.makeText;
 
 /**
  * Created by Nerio on 06/01/16.
@@ -73,6 +85,7 @@ public class UserCommunityGroupFragment extends AbstractFermatFragment implement
     private CreateGroupFragmentDialog dialog;
     private Group selectedGroup;
 
+    SettingsManager<AssetUserSettings> settingsManager;
     /**
      * Flags
      */
@@ -89,6 +102,7 @@ public class UserCommunityGroupFragment extends AbstractFermatFragment implement
         try {
             manager = ((AssetUserCommunitySubAppSession) appSession).getModuleManager();
             errorManager = appSession.getErrorManager();
+            settingsManager = appSession.getModuleManager().getSettingsManager();
         } catch (Exception ex) {
             ex.printStackTrace();
         }
@@ -110,17 +124,17 @@ public class UserCommunityGroupFragment extends AbstractFermatFragment implement
             }
         });
         adapter.setMenuItemClick(new PopupMenu() {
-                @Override
-                public void onMenuItemClickListener(View menuView, Group group, int position) {
-                    selectedGroup = group;
-                    android.widget.PopupMenu popupMenu = new android.widget.PopupMenu(getActivity(), menuView);
-                    MenuInflater inflater = popupMenu.getMenuInflater();
-                    inflater.inflate(R.menu.dap_community_user_group_menu, popupMenu.getMenu());
+            @Override
+            public void onMenuItemClickListener(View menuView, Group group, int position) {
+                selectedGroup = group;
+                android.widget.PopupMenu popupMenu = new android.widget.PopupMenu(getActivity(), menuView);
+                MenuInflater inflater = popupMenu.getMenuInflater();
+                inflater.inflate(R.menu.dap_community_user_group_menu, popupMenu.getMenu());
 
-                    popupMenu.setOnMenuItemClickListener(UserCommunityGroupFragment.this);
-                    popupMenu.show();
-                }
-            });
+                popupMenu.setOnMenuItemClickListener(UserCommunityGroupFragment.this);
+                popupMenu.show();
+            }
+        });
 
         recyclerView.setAdapter(adapter);
         swipeRefreshLayout = (SwipeRefreshLayout) rootView.findViewById(R.id.swipe_group);
@@ -131,6 +145,7 @@ public class UserCommunityGroupFragment extends AbstractFermatFragment implement
         emptyView = (LinearLayout) rootView.findViewById(R.id.empty_view_group);
         swipeRefreshLayout.setRefreshing(true);
         onRefresh();
+
 
         ActionButton create = (ActionButton) rootView.findViewById(R.id.create_group);
         create.setOnClickListener(new View.OnClickListener() {
@@ -145,6 +160,25 @@ public class UserCommunityGroupFragment extends AbstractFermatFragment implement
         create.setAnimation(AnimationUtils.loadAnimation(getActivity(), R.anim.fab_jump_from_down));
         create.setVisibility(View.VISIBLE);
 
+        //initialize settings
+        settingsManager = appSession.getModuleManager().getSettingsManager();
+        AssetUserSettings settings = null;
+        try {
+            settings = settingsManager.loadAndGetSettings(appSession.getAppPublicKey());
+        } catch (Exception e) {
+            settings = null;
+        }
+        if (settings == null) {
+            settings = new AssetUserSettings();
+            settings.setIsContactsHelpEnabled(true);
+            settings.setIsPresentationHelpEnabled(true);
+
+            try {
+                settingsManager.persistSettings(appSession.getAppPublicKey(), settings);
+            } catch (CantPersistSettingsException e) {
+                e.printStackTrace();
+            }
+        }
 
         return rootView;
     }
@@ -152,7 +186,9 @@ public class UserCommunityGroupFragment extends AbstractFermatFragment implement
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         super.onCreateOptionsMenu(menu, inflater);
-        //inflater.inflate(R.menu.dap_community_user_home_menu, menu);
+        menu.add(0, SessionConstantsAssetUserCommunity.IC_ACTION_USER_COMMUNITY_HELP_GROUP, 0, "help").setIcon(R.drawable.dap_community_user_help_icon)
+                .setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
+
     }
 
     @Override
@@ -250,6 +286,48 @@ public class UserCommunityGroupFragment extends AbstractFermatFragment implement
         create.setVisibility(View.VISIBLE);
     }
 
+    private void setUpPresentation(boolean checkButton) {
+        //        try {
+        PresentationDialog presentationDialog = new PresentationDialog.Builder(getActivity(), appSession)
+//                    .setBannerRes(R.drawable.banner_asset_issuer_wallet)
+                .setIconRes(R.drawable.asset_user_comunity)
+                .setVIewColor(R.color.dap_community_user_view_color)
+                .setTitleTextColor(R.color.dap_community_user_view_color)
+                .setSubTitle("Welcome to the Asset User Community Groups.")
+                .setBody("From here you can administrate and organize your users groups")
+                .setTemplateType(PresentationDialog.TemplateType.TYPE_PRESENTATION_WITHOUT_IDENTITIES)
+                .setIsCheckEnabled(checkButton)
+                .build();
+
+//            presentationDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
+//                @Override
+//                public void onDismiss(DialogInterface dialog) {
+//                    Object o = appSession.getData(SessionConstantsAssetIssuer.PRESENTATION_IDENTITY_CREATED);
+//                    if (o != null) {
+//                        if ((Boolean) (o)) {
+//                            //invalidate();
+//                            appSession.removeData(SessionConstantsAssetIssuer.PRESENTATION_IDENTITY_CREATED);
+//                        }
+//                    }
+//                    try {
+//                        IdentityAssetIssuer identityAssetIssuer = moduleManager.getActiveAssetIssuerIdentity();
+//                        if (identityAssetIssuer == null) {
+//                            getActivity().onBackPressed();
+//                        } else {
+//                            invalidate();
+//                        }
+//                    } catch (CantGetIdentityAssetIssuerException e) {
+//                        e.printStackTrace();
+//                    }
+//                }
+//            });
+
+        presentationDialog.show();
+//        } catch (CantGetIdentityAssetIssuerException e) {
+//            e.printStackTrace();
+//        }
+    }
+
     public void showEmpty(boolean show, View emptyView) {
         Animation anim = AnimationUtils.loadAnimation(getActivity(),
                 show ? android.R.anim.fade_in : android.R.anim.fade_out);
@@ -263,6 +341,23 @@ public class UserCommunityGroupFragment extends AbstractFermatFragment implement
             emptyView.setAnimation(anim);
             emptyView.setVisibility(View.GONE);
         }
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int id = item.getItemId();
+
+        try {
+            if (id == SessionConstantsAssetUserCommunity.IC_ACTION_USER_COMMUNITY_HELP_GROUP) {
+                setUpPresentation(settingsManager.loadAndGetSettings(appSession.getAppPublicKey()).isPresentationHelpEnabled());
+                return true;
+            }
+        } catch (Exception e) {
+            errorManager.reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.UNSTABLE, FermatException.wrapException(e));
+            makeText(getActivity(), "Asset User system error",
+                    Toast.LENGTH_SHORT).show();
+        }
+        return super.onOptionsItemSelected(item);
     }
 
     private void lauchCreateGroupDialog(){
