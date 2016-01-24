@@ -259,7 +259,10 @@ public class OpenNegotiationAdapter extends FermatAdapter<ClauseInformation, Fer
         else if(currencyEquals.getValue().equals(BANK_TRANSFER))
             clause = clauses.get(ClauseType.BROKER_BANK_ACCOUNT);
 
-        else if(currencyEquals.getValue().equals(CASH_DELIVERY) || currencyEquals.getValue().equals(CASH_IN_HAND))
+        else if(currencyEquals.getValue().equals(CASH_DELIVERY))
+            clause = clauses.get(ClauseType.BROKER_PLACE_TO_DELIVER);
+
+        else if(currencyEquals.getValue().equals(CASH_IN_HAND))
             clause = clauses.get(ClauseType.BROKER_PLACE_TO_DELIVER);
 
         return clause;
@@ -276,7 +279,10 @@ public class OpenNegotiationAdapter extends FermatAdapter<ClauseInformation, Fer
         else if(currencyEquals.getValue().equals(BANK_TRANSFER))
             clause = clauses.get(ClauseType.CUSTOMER_BANK_ACCOUNT);
 
-        else if(currencyEquals.getValue().equals(CASH_DELIVERY) || currencyEquals.getValue().equals(CASH_IN_HAND))
+        else if(currencyEquals.getValue().equals(CASH_DELIVERY))
+            clause = clauses.get(ClauseType.CUSTOMER_PLACE_TO_DELIVER);
+
+        else if(currencyEquals.getValue().equals(CASH_IN_HAND))
             clause = clauses.get(ClauseType.CUSTOMER_PLACE_TO_DELIVER);
 
         return clause;
