@@ -30,6 +30,12 @@ public interface CryptoBrokerIdentityModuleManager extends ModuleManager<FermatS
     CryptoBrokerIdentityInformation createCryptoBrokerIdentity(String alias, byte[] image) throws CantCreateCryptoBrokerException;
 
     /**
+     *
+     * @param cryptoBrokerIdentity
+     */
+    void updateCryptoBrokerIdentity(CryptoBrokerIdentityInformation cryptoBrokerIdentity);
+
+    /**
      * The method <code>publishIdentity</code> is used to publish a Broker identity
      *
      * @param publicKey the public key of the crypto Broker to publish
@@ -52,5 +58,7 @@ public interface CryptoBrokerIdentityModuleManager extends ModuleManager<FermatS
      * @throws CantListCryptoBrokersException if something goes wrong.
      */
     List<CryptoBrokerIdentityInformation> listIdentities(int max, int offset) throws CantListCryptoBrokersException;
+
+
 
 }
