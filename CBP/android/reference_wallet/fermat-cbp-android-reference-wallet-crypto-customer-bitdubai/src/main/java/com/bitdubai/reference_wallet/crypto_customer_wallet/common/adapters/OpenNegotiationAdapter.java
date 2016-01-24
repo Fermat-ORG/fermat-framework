@@ -48,6 +48,8 @@ public class OpenNegotiationAdapter extends FermatAdapter<ClauseInformation, Fer
     private OpenNegotiationDetailsFragment footerListener;
     private ClauseViewHolder.Listener clauseListener;
 
+    private boolean haveNote;
+
     public OpenNegotiationAdapter (Context context, CustomerBrokerNegotiationInformation negotiationInformation) {
 
         super(context);
@@ -56,6 +58,9 @@ public class OpenNegotiationAdapter extends FermatAdapter<ClauseInformation, Fer
 
         dataSet = new ArrayList<>();
         dataSet.addAll(buildListOfItems());
+
+        haveNote = false;
+        haveNote = (negotiationInformation.getMemo() != null);
     }
 
     public void changeDataSet(CustomerBrokerNegotiationInformation negotiationInfo) {
@@ -134,6 +139,9 @@ public class OpenNegotiationAdapter extends FermatAdapter<ClauseInformation, Fer
 
     @Override
     public int getItemViewType(int position) {
+
+        if(position == 0 && haveNote)
+            return TYPE_HEADER;
 
         if (isFooterPosition(position))
             return TYPE_FOOTER;
