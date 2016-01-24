@@ -377,8 +377,10 @@ public class WalletContactsMiddlewareRegistry implements WalletContactsRegistry 
                             }
                             break;
                     }
-
-                    cryptoAddressesManager.markReceivedRequest(request.getRequestId());
+                    if(request.getCryptoAddress()!=null) {
+                        if (request.getCryptoAddress().getAddress() != null)
+                            cryptoAddressesManager.markReceivedRequest(request.getRequestId());
+                    }
 
                 }
 

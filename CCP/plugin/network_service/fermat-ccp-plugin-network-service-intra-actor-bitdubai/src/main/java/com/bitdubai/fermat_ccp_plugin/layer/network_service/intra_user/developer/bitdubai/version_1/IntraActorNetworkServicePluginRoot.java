@@ -136,6 +136,7 @@ import java.util.TimerTask;
 import java.util.UUID;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.function.Predicate;
 import java.util.regex.Pattern;
 
 
@@ -1033,7 +1034,7 @@ public class IntraActorNetworkServicePluginRoot extends AbstractPlugin implement
                             + "\n-------------------------------------------------");
                     //TODO: ver porqué esta en delivery
                     getOutgoingNotificationDao().changeProtocolState(actorNetworkServiceRecord.getId(), ActorProtocolState.DONE);
-                    actorNetworkServiceRecord.changeState(ActorProtocolState.DONE);
+
                         // close connection, sender is the destination
                         System.out.println("----------------------------\n" +
                                 "INTRA ACTOR NETWORK SERVICE" +
@@ -1110,13 +1111,19 @@ public class IntraActorNetworkServicePluginRoot extends AbstractPlugin implement
         actorNetworkServiceRecord.changeDescriptor(NotificationDescriptor.RECEIVED);
 
         actorNetworkServiceRecord = changeActor(actorNetworkServiceRecord);
+        try {
+
+            outgoingNotificationDao.createNotification(actorNetworkServiceRecord);
+        } catch (CantCreateNotificationException e) {
+            e.printStackTrace();
+        }
 
 
-        communicationNetworkServiceConnectionManager.getNetworkServiceLocalInstance(actorNetworkServiceRecord.getActorDestinationPublicKey())
-                .sendMessage(
-                        actorNetworkServiceRecord.getActorSenderPublicKey(),
-                        actorNetworkServiceRecord.getActorDestinationPublicKey(),
-                        actorNetworkServiceRecord.toJson());
+//        communicationNetworkServiceConnectionManager.getNetworkServiceLocalInstance(actorNetworkServiceRecord.getActorDestinationPublicKey())
+//                .sendMessage(
+//                        actorNetworkServiceRecord.getActorSenderPublicKey(),
+//                        actorNetworkServiceRecord.getActorDestinationPublicKey(),
+//                        actorNetworkServiceRecord.toJson());
 
     }
 
@@ -1345,8 +1352,9 @@ public class IntraActorNetworkServicePluginRoot extends AbstractPlugin implement
 
                 }
                 // close connection, sender is the destination
-                actorNetworkServiceRecordedAgent.getPoolConnectionsWaitingForResponse().remove(remotePublicKey);
-                reprocessMessage(remotePublicKey);
+                if(actorNetworkServiceRecordedAgent!=null) actorNetworkServiceRecordedAgent.getPoolConnectionsWaitingForResponse().remove(remotePublicKey);
+
+                //reprocessMessage(remotePublicKey);
 
             }
 
@@ -1676,7 +1684,7 @@ public class IntraActorNetworkServicePluginRoot extends AbstractPlugin implement
         try {
 
 
-            ActorNetworkServiceRecord actorNetworkServiceRecord = incomingNotificationsDao.changeIntraUserNotificationDescriptor(intraUserToAddPublicKey, NotificationDescriptor.ACCEPTED, ActorProtocolState.DONE);
+            ActorNetworkServiceRecord actorNetworkServiceRecord = incomingNotificationsDao.changeIntraUserNotificationDescriptor(intraUserToAddPublicKey, NotificationDescriptor.ACCEPTED, ActorProtocolState.PENDING_ACTION);
 
             actorNetworkServiceRecord.setActorDestinationPublicKey(intraUserToAddPublicKey);
             actorNetworkServiceRecord.setActorSenderPublicKey(intraUserLoggedInPublicKey);

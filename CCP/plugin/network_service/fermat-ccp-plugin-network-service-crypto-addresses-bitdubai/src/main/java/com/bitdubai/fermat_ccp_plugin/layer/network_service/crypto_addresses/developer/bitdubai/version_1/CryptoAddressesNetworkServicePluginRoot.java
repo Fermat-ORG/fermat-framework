@@ -1048,7 +1048,7 @@ public class CryptoAddressesNetworkServicePluginRoot extends AbstractNetworkServ
                 if (cryptoAddressesExecutorAgent.isConnectionOpen(remotePublicKey)){
                     cryptoAddressesExecutorAgent.connectionFailure(remotePublicKey);
                 }
-                reprocessMessage(remotePublicKey);
+                //reprocessMessage(remotePublicKey);
             }
 
         }

@@ -267,7 +267,7 @@ public final class CryptoAddressesExecutorAgent extends FermatAgent {
         try {
 
             // if there is pending actions i raise a crypto address news event.
-            if(dao.isPendingRequestNotReaded(RequestType.SENT)) {
+            if(dao.isPendingRequestByProtocolStateAndNotRead(ProtocolState.PENDING_ACTION)){
                 FermatEvent eventToRaise = eventManager.getNewEvent(EventType.CRYPTO_ADDRESSES_NEWS);
                 eventToRaise.setSource(cryptoAddressesNetworkServicePluginRoot.getEventSource());
                 eventManager.raiseEvent(eventToRaise);
@@ -350,11 +350,9 @@ public final class CryptoAddressesExecutorAgent extends FermatAgent {
                     jsonMessage
             );
             System.out.println("mensaje enviado");
-            poolConnectionsWaitingForResponse.remove(actorPublicKey);
 
             return true;
         }
-        poolConnectionsWaitingForResponse.remove(actorPublicKey);
         return false;
     }
 
