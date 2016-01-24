@@ -34,9 +34,9 @@
     <string name="ccw_cancellation_reason_title">Cancellation Reason:</string>
     <string name="ccw_cash">Cash</string>
     <string name="ccw_cash_place_to_delivery_broker">Place To Delivery Broker</string>
-    <string name="ccw_cash_date_to_delivery_broker">Date To Delivery Broker</string>
     <string name="ccw_cash_place_to_delivery_customer">Place To Delivery Customer</string>
-    <string name="ccw_cash_date_to_delivery_customer">Date To Delivery Customer</string>
+    <string name="ccw_date_to_delivery_broker">Date To Delivery Broker</string>
+    <string name="ccw_date_to_delivery_customer">Date To Delivery Customer</string>
     <string name="ccw_check_negotiation_details">Check Negotiation Details</string>
     <string name="ccw_city">City</string>
     <string name="ccw_contract_details_contract_title">SELLING BTC</string>

@@ -36,6 +36,11 @@ public class OpenNegotiationAdapter extends FermatAdapter<ClauseInformation, Fer
     private static final int TYPE_ITEM_AMOUNT_TO_BUY = 4;
     private static final int TYPE_FOOTER = 5;
 
+    public static final String CASH_IN_HAND = "Cash on Hand";
+    public static final String CASH_DELIVERY = "Cash Delivery";
+    public static final String BANK_TRANSFER = "Bank Transfer";
+    public static final String CRYPTO_TRANSFER = "Crypto Transfer";
+
     private CustomerBrokerNegotiationInformation negotiationInformation;
     private OpenNegotiationDetailsFragment footerListener;
     private ClauseViewHolder.Listener clauseListener;
@@ -197,14 +202,15 @@ public class OpenNegotiationAdapter extends FermatAdapter<ClauseInformation, Fer
             case CUSTOMER_PLACE_TO_DELIVER:
                 clauseViewHolder.setViewResources(R.string.ccw_cash_place_to_delivery_customer, clauseNumberImageRes);
                 break;
-            case CUSTOMER_DATE_TIME_TO_DELIVER:
-                clauseViewHolder.setViewResources(R.string.ccw_cash_date_to_delivery_customer, clauseNumberImageRes);
-                break;
             case BROKER_PLACE_TO_DELIVER:
                 clauseViewHolder.setViewResources(R.string.ccw_cash_place_to_delivery_broker, clauseNumberImageRes);
                 break;
+            //DATE CLAUSES
+            case CUSTOMER_DATE_TIME_TO_DELIVER:
+                clauseViewHolder.setViewResources(R.string.ccw_date_to_delivery_customer, clauseNumberImageRes);
+                break;
             case BROKER_DATE_TIME_TO_DELIVER:
-                clauseViewHolder.setViewResources(R.string.ccw_cash_date_to_delivery_broker, clauseNumberImageRes);
+                clauseViewHolder.setViewResources(R.string.ccw_date_to_delivery_broker, clauseNumberImageRes);
                 break;
         }
 
@@ -234,26 +240,56 @@ public class OpenNegotiationAdapter extends FermatAdapter<ClauseInformation, Fer
         data[2] = clauses.get(ClauseType.BROKER_CURRENCY);
         data[3] = clauses.get(ClauseType.CUSTOMER_PAYMENT_METHOD);
         data[4] = clauses.get(ClauseType.BROKER_PAYMENT_METHOD);
-
-        //OTHER CLAUSES
-        for (Map.Entry<ClauseType, ClauseInformation> clauseInformation : clauses.entrySet()) {
-            if (clauseInformation != null){
-                data[cont] = clauses.get(clauseInformation.getValue().getType());
-                cont++;
-            }
-        }
+        data[5] = getCustomerPaymentInfo(clauses);
+        data[6] = getBrokerPaymentInfo(clauses);
+        data[7] = clauses.get(ClauseType.CUSTOMER_DATE_TIME_TO_DELIVER);
+        data[8] = clauses.get(ClauseType.CUSTOMER_DATE_TIME_TO_DELIVER);
 
         return Arrays.asList(data);
     }
 
+    private ClauseInformation getCustomerPaymentInfo(Map<ClauseType, ClauseInformation> clauses){
+
+        ClauseInformation currencyEquals = clauses.get(ClauseType.CUSTOMER_PAYMENT_METHOD);
+        ClauseInformation clause = null;
+
+        if(currencyEquals.getValue().equals(CRYPTO_TRANSFER))
+            clause = clauses.get(ClauseType.BROKER_CRYPTO_ADDRESS);
+
+        else if(currencyEquals.getValue().equals(BANK_TRANSFER))
+            clause = clauses.get(ClauseType.BROKER_BANK_ACCOUNT);
+
+        else if(currencyEquals.getValue().equals(CASH_DELIVERY) || currencyEquals.getValue().equals(CASH_IN_HAND))
+            clause = clauses.get(ClauseType.BROKER_PLACE_TO_DELIVER);
+
+        return clause;
+    }
+
+    private ClauseInformation getBrokerPaymentInfo(Map<ClauseType, ClauseInformation> clauses){
+
+        ClauseInformation currencyEquals = clauses.get(ClauseType.BROKER_PAYMENT_METHOD);
+        ClauseInformation clause = null;
+
+        if(currencyEquals.getValue().equals(CRYPTO_TRANSFER))
+            clause = clauses.get(ClauseType.CUSTOMER_CRYPTO_ADDRESS);
+
+        else if(currencyEquals.getValue().equals(BANK_TRANSFER))
+            clause = clauses.get(ClauseType.CUSTOMER_BANK_ACCOUNT);
+
+        else if(currencyEquals.getValue().equals(CASH_DELIVERY) || currencyEquals.getValue().equals(CASH_IN_HAND))
+            clause = clauses.get(ClauseType.CUSTOMER_PLACE_TO_DELIVER);
+
+        return clause;
+    }
+
     private int getTotalSteps(Map<ClauseType, ClauseInformation> clauses){
 
-        int cont = 0;
-        if(clauses != null)
-            for (Map.Entry<ClauseType, ClauseInformation> clauseInformation : clauses.entrySet()) if(clauseInformation != null) cont++;
-
-        return cont;
-//        return 5;
+//        int cont = 0;
+//        if(clauses != null)
+//            for (Map.Entry<ClauseType, ClauseInformation> clauseInformation : clauses.entrySet()) if(clauseInformation != null) cont++;
+//
+//        return cont;
+        return 9;
 
     }
 
