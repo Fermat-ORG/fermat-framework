@@ -994,7 +994,8 @@ public class AssetIssuerActorNetworkServicePluginRoot extends AbstractNetworkSer
     @Override
     public void handleCompleteComponentRegistrationNotificationEvent(PlatformComponentProfile platformComponentProfileRegistered) {
 
-        if (platformComponentProfileRegistered.getPlatformComponentType() == PlatformComponentType.COMMUNICATION_CLOUD_CLIENT && this.register) {
+
+        if (platformComponentProfileRegistered.getPlatformComponentType() == PlatformComponentType.COMMUNICATION_CLOUD_CLIENT && this.register){
 
             if (communicationRegistrationProcessNetworkServiceAgent.isAlive()) {
                 communicationRegistrationProcessNetworkServiceAgent.interrupt();
@@ -1005,6 +1006,7 @@ public class AssetIssuerActorNetworkServicePluginRoot extends AbstractNetworkSer
                  * Construct my profile and register me
                  */
             PlatformComponentProfile platformComponentProfileToReconnect = wsCommunicationsCloudClientManager.getCommunicationsCloudClientConnection().constructPlatformComponentProfileFactory(this.getIdentityPublicKey(),
+
                     this.getAlias().toLowerCase(),
                     this.getName(),
                     this.getNetworkServiceType(),
@@ -1229,12 +1231,13 @@ public class AssetIssuerActorNetworkServicePluginRoot extends AbstractNetworkSer
             communicationNetworkServiceConnectionManager.restart();
         }
 
-        if (!this.register) {
 
-            if (communicationRegistrationProcessNetworkServiceAgent.isAlive()) {
+        if(communicationRegistrationProcessNetworkServiceAgent != null && !this.register){
 
+            if(communicationRegistrationProcessNetworkServiceAgent.isAlive()){
                 communicationRegistrationProcessNetworkServiceAgent.interrupt();
                 communicationRegistrationProcessNetworkServiceAgent = null;
+            }
 
                 /*
                  * Construct my profile and register me
@@ -1266,7 +1269,7 @@ public class AssetIssuerActorNetworkServicePluginRoot extends AbstractNetworkSer
                  */
                 this.initializeCommunicationNetworkServiceConnectionManager();
 
-            }
+
 
         }
 

@@ -5,14 +5,14 @@ import com.bitdubai.fermat_dap_api.layer.all_definition.digital_asset.DigitalAss
 import com.bitdubai.fermat_dap_api.layer.all_definition.digital_asset.DigitalAssetMetadata;
 import com.bitdubai.fermat_dap_api.layer.all_definition.enums.AppropriationStatus;
 import com.bitdubai.fermat_dap_api.layer.all_definition.util.Validate;
-import com.bitdubai.fermat_dap_api.layer.dap_transaction.asset_appropriation.interfaces.AssetAppropriationTransactionRecord;
+import com.bitdubai.fermat_dap_api.layer.dap_transaction.common.interfaces.AppropriationTransactionRecord;
 
 import java.util.Date;
 
 /**
  * Created by Víctor A. Mars M. (marsvicam@gmail.com) on 12/11/15.
  */
-public class AssetAppropriationTransactionRecordImpl implements AssetAppropriationTransactionRecord {
+public class AssetAppropriationTransactionRecordImpl implements AppropriationTransactionRecord {
 
     //VARIABLE DECLARATION
 
@@ -142,7 +142,7 @@ public class AssetAppropriationTransactionRecordImpl implements AssetAppropriati
     }
 
     @Override
-    public String userWalletPublicKey() {
+    public String walletPublicKey() {
         return userWalletPublicKey;
     }
 

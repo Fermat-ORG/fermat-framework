@@ -79,6 +79,8 @@ public interface ActorAssetRedeemPointManager extends FermatManager {
      */
     List<ActorAssetRedeemPoint> getAllRedeemPointActorConnected() throws CantGetAssetRedeemPointActorsException;
 
+    List<ActorAssetRedeemPoint> getAllRedeemPointActorConnectedForIssuer(String issuerPublicKey) throws CantGetAssetRedeemPointActorsException;
+
     /**
      * The method <code>sendMessage</code> Stablish Connection
      * with Requester and Lists Issuers Delivered
