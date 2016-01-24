@@ -72,4 +72,5 @@ public interface ActorAssetIssuer extends DAPActor {
      * @return CryptoAddress instance.
      */
 //    CryptoAddress getCryptoAddress();
+    String getExtendedPublicKey();
 }
