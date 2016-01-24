@@ -140,7 +140,7 @@ public class OpenNegotiationAdapter extends FermatAdapter<ClauseInformation, Fer
     @Override
     public int getItemViewType(int position) {
 
-        if(position == 0 && haveNote)
+        if(idHeaderPosition(position))
             return TYPE_HEADER;
 
         if (isFooterPosition(position))
@@ -301,6 +301,11 @@ public class OpenNegotiationAdapter extends FermatAdapter<ClauseInformation, Fer
             clause = clauses.get(ClauseType.CUSTOMER_PLACE_TO_DELIVER);
 
         return clause;
+    }
+
+
+    private boolean idHeaderPosition(int position){
+        return (position == 0) && (haveNote);
     }
 
     private boolean isFooterPosition(int position) {
