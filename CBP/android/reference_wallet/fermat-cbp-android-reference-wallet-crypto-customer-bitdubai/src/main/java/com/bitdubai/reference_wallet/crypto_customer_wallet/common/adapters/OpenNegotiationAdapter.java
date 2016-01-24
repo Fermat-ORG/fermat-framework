@@ -15,6 +15,7 @@ import com.bitdubai.reference_wallet.crypto_customer_wallet.common.holders.open_
 import com.bitdubai.reference_wallet.crypto_customer_wallet.common.holders.open_negotiation.ClauseViewHolder;
 import com.bitdubai.reference_wallet.crypto_customer_wallet.common.holders.open_negotiation.ExchangeRateViewHolder;
 import com.bitdubai.reference_wallet.crypto_customer_wallet.common.holders.open_negotiation.FooterViewHolder;
+import com.bitdubai.reference_wallet.crypto_customer_wallet.common.holders.open_negotiation.NoteViewHolder;
 import com.bitdubai.reference_wallet.crypto_customer_wallet.common.holders.open_negotiation.SingleChoiceViewHolder;
 import com.bitdubai.reference_wallet.crypto_customer_wallet.fragments.open_negotiation_details.OpenNegotiationDetailsFragment;
 import com.bitdubai.reference_wallet.crypto_customer_wallet.util.FragmentsCommons;
@@ -31,10 +32,12 @@ import java.util.NoSuchElementException;
  */
 public class OpenNegotiationAdapter extends FermatAdapter<ClauseInformation, FermatViewHolder> {
 
+    private static final int TYPE_HEADER = 0;
     private static final int TYPE_ITEM_SINGLE_CHOICE = 1;
     private static final int TYPE_ITEM_EXCHANGE_RATE = 3;
     private static final int TYPE_ITEM_AMOUNT_TO_BUY = 4;
     private static final int TYPE_FOOTER = 5;
+
 
     public static final String CASH_IN_HAND = "Cash on Hand";
     public static final String CASH_DELIVERY = "Cash Delivery";
@@ -75,6 +78,11 @@ public class OpenNegotiationAdapter extends FermatAdapter<ClauseInformation, Fer
     protected FermatViewHolder createHolder(View itemView, int type) {
 
         switch (type) {
+            case TYPE_HEADER:
+                final NoteViewHolder noteViewHolder = new NoteViewHolder(itemView);
+                noteViewHolder.bind(negotiationInformation.getMemo());
+                return noteViewHolder;
+
             case TYPE_ITEM_SINGLE_CHOICE:
                 return new SingleChoiceViewHolder(itemView);
 
@@ -98,6 +106,8 @@ public class OpenNegotiationAdapter extends FermatAdapter<ClauseInformation, Fer
     private int getCardViewResource(int type) {
 
         switch (type) {
+            case TYPE_HEADER:
+                return R.layout.ccw_notes_item;
             case TYPE_ITEM_SINGLE_CHOICE:
                 return R.layout.ccw_single_choice_item;
             case TYPE_ITEM_EXCHANGE_RATE:
@@ -226,15 +236,12 @@ public class OpenNegotiationAdapter extends FermatAdapter<ClauseInformation, Fer
 
     private List<ClauseInformation> buildListOfItems() {
 
-        int cont = 5;
-
         Map<ClauseType, ClauseInformation> clauses = negotiationInformation.getClauses();
 
-        final int TOTAL_STEPS = getTotalSteps(clauses);
+        final int TOTAL_STEPS = 9;
 
         final ClauseInformation[] data = new ClauseInformation[TOTAL_STEPS];
 
-        //BASIC CLAUSES
         data[0] = clauses.get(ClauseType.CUSTOMER_CURRENCY_QUANTITY);
         data[1] = clauses.get(ClauseType.EXCHANGE_RATE);
         data[2] = clauses.get(ClauseType.BROKER_CURRENCY);
@@ -286,17 +293,6 @@ public class OpenNegotiationAdapter extends FermatAdapter<ClauseInformation, Fer
             clause = clauses.get(ClauseType.CUSTOMER_PLACE_TO_DELIVER);
 
         return clause;
-    }
-
-    private int getTotalSteps(Map<ClauseType, ClauseInformation> clauses){
-
-//        int cont = 0;
-//        if(clauses != null)
-//            for (Map.Entry<ClauseType, ClauseInformation> clauseInformation : clauses.entrySet()) if(clauseInformation != null) cont++;
-//
-//        return cont;
-        return 9;
-
     }
 
     private boolean isFooterPosition(int position) {
