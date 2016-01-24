@@ -194,7 +194,7 @@ public class ActorNetworkServiceRecordedAgent extends FermatAgent{
     private void processSend() {
         try {
 
-            List<ActorNetworkServiceRecord> lstActorRecord = actorNetworkServicePluginRoot.getOutgoingNotificationDao().listRequestsByProtocolState(
+            List<ActorNetworkServiceRecord> lstActorRecord = actorNetworkServicePluginRoot.getOutgoingNotificationDao().listRequestsByProtocolStateAndNotDone(
                     ActorProtocolState.PROCESSING_SEND
             );
 
@@ -433,9 +433,6 @@ public class ActorNetworkServiceRecordedAgent extends FermatAgent{
 
                         reportUnexpectedError(FermatException.wrapException(e));
                     }
-                }else{
-                  connectionFailure(actorNetworkServiceRecord.getActorDestinationPublicKey());
-                   System.out.println("ENTRO EN ESTE ELSE");
                 }
             }
         } catch (Exception z) {
