@@ -221,7 +221,7 @@ public class AssetDetailActivityFragment extends AbstractFermatFragment {
 
         byte[] img = (digitalAsset.getImage() == null) ? new byte[0] : digitalAsset.getImage();
         BitmapWorkerTask bitmapWorkerTask = new BitmapWorkerTask(assetImageDetail, res, R.drawable.img_asset_without_image, false);
-        //bitmapWorkerTask.execute(img); //todo commenting to compile, please review
+        bitmapWorkerTask.execute(img); //todo commenting to compile, please review
 
         assetDetailDeliverLayout.setVisibility((digitalAsset.getAvailableBalanceQuantity() > 0) ? View.VISIBLE : View.GONE);
 
