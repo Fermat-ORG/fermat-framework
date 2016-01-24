@@ -127,8 +127,8 @@ public class WizardPageSetIdentityFragment extends FermatWalletListFragment<Cryp
                             .setBannerRes(R.drawable.banner_crypto_broker)
                             .setIconRes(R.drawable.crypto_broker)
                             .setBody("Custom text support for dialog in the wizard identities help")
-                            .setSubTitle("Subtitle text of identities dialog help")
-                            .setTextFooter("Text footer identities dialog help")
+                            .setSubTitle("This is a simple wallet for exchange Merchandise. It's main features are:")
+                            .setTextFooter("To begin, choose an avatar below. You might change it later with any picture and your alias")
                             .build();
                     presentationDialog.show();
 
@@ -177,8 +177,8 @@ public class WizardPageSetIdentityFragment extends FermatWalletListFragment<Cryp
                         .setBannerRes(R.drawable.banner_crypto_broker)
                         .setIconRes(R.drawable.crypto_broker)
                         .setBody("Custom text support for dialog in the wizard identities help 2")
-                        .setSubTitle("Subtitle text of identities dialog help -> " + identities)
-                        .setTextFooter("Text footer identities dialog help")
+                        .setSubTitle("This is a simple wallet for exchange Merchandise. " + identities)
+                        .setTextFooter("To begin, choose an avatar below. You might change it later with any picture and your alias")
                         .build();
                 presentationDialog.setOnDismissListener(this);
                 presentationDialog.show();
