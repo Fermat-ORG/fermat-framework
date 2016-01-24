@@ -250,7 +250,7 @@ public final class CryptoAddressesExecutorAgent extends FermatAgent {
             Thread.sleep(SLEEP_TIME);
 
         } catch (InterruptedException e) {
-
+            Thread.currentThread().interrupt();
             reportUnexpectedError(FermatException.wrapException(e));
         } catch(Exception e) {
 
@@ -270,6 +270,34 @@ public final class CryptoAddressesExecutorAgent extends FermatAgent {
                 eventManager.raiseEvent(eventToRaise);
                 System.out.println("CRYPTO ADDRESS NEWS");
             }
+
+            List<CryptoAddressRequest> list = dao.listPendingRequestsByProtocolState(ProtocolState.PENDING_ACTION);
+            for(CryptoAddressRequest cryptoAddressRequest : list){
+                if(!cryptoAddressRequest.isReadMark() ) {
+                    if (cryptoAddressRequest.getMessageType().equals(AddressesConstants.INCOMING_MESSAGE)) {
+                        System.out.println("CRYPTO ADDRESS NEWS LA CONCHA DE TU MADRE");
+                        FermatEvent eventToRaise = eventManager.getNewEvent(EventType.CRYPTO_ADDRESSES_NEWS);
+                        eventToRaise.setSource(cryptoAddressesNetworkServicePluginRoot.getEventSource());
+                        eventManager.raiseEvent(eventToRaise);
+                    }
+
+                }
+            }
+
+            List<CryptoAddressRequest> list1 = dao.listPendingRequestsByProtocolState(ProtocolState.WAITING_RESPONSE);
+            for(CryptoAddressRequest cryptoAddressRequest : list1){
+                if(!cryptoAddressRequest.isReadMark()){
+                    if(cryptoAddressRequest.getMessageType().equals(AddressesConstants.OUTGOING_MESSAGE)){
+                         FermatEvent eventToRaise = eventManager.getNewEvent(EventType.CRYPTO_ADDRESSES_NEWS);
+                        eventToRaise.setSource(cryptoAddressesNetworkServicePluginRoot.getEventSource());
+                        eventManager.raiseEvent(eventToRaise);
+                        System.out.println("CRYPTO ADDRESS NEWS PROTOCOL DONE");
+
+                    }
+                }
+
+            }
+
 
         } catch(CantListPendingCryptoAddressRequestsException e) {
 

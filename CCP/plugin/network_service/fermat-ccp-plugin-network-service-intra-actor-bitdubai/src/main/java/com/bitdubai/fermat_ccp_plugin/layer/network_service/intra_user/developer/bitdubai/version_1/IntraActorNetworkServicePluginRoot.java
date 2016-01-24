@@ -1032,6 +1032,7 @@ public class IntraActorNetworkServicePluginRoot extends AbstractPlugin implement
                             "THE RECORD WAS CHANGE TO THE STATE OF DELIVERY" + actorNetworkServiceRecord.getActorSenderAlias()
                             + "\n-------------------------------------------------");
                     //TODO: ver porqué no encuentra el id para cambiarlo
+                    if(actorNetworkServiceRecord.getResponseToNotificationId()!=null)
                     getOutgoingNotificationDao().changeProtocolState(actorNetworkServiceRecord.getResponseToNotificationId(), ActorProtocolState.DONE);
 
                         // close connection, sender is the destination

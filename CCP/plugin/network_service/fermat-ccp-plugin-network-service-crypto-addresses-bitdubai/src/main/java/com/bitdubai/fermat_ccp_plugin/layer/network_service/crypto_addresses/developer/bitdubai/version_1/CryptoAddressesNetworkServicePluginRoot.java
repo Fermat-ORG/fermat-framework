@@ -1261,7 +1261,7 @@ public class CryptoAddressesNetworkServicePluginRoot extends AbstractNetworkServ
                     break;
                 case RECEIVED:
                     ReceivedMessage receivedMessage  =  gson.fromJson(jsonMessage, ReceivedMessage.class);
-                    receivedMessage(receivedMessage);
+                    //receivedMessage(receivedMessage);
                     break;
                 default:
                     throw new CantHandleNewMessagesException(
