@@ -217,7 +217,7 @@ public class RedeemPointActorRecord implements ActorAssetRedeemPoint {
     }
 
     @Override
-    public List<String> registeredIssuers() {
+    public List<String> getRegisteredIssuers() {
         return registeredIssuers;
     }
 

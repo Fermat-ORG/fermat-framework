@@ -32,6 +32,7 @@ import com.bitdubai.fermat_dap_api.layer.dap_identity.redeem_point.exceptions.Ca
 import com.bitdubai.fermat_dap_api.layer.dap_identity.redeem_point.exceptions.CantUpdateIdentityRedeemPointException;
 import com.bitdubai.fermat_dap_api.layer.dap_identity.redeem_point.interfaces.RedeemPointIdentity;
 import com.bitdubai.fermat_dap_api.layer.dap_identity.redeem_point.interfaces.RedeemPointIdentityManager;
+import com.bitdubai.fermat_dap_api.layer.dap_module.wallet_asset_redeem_point.RedeemPointSettings;
 import com.bitdubai.fermat_dap_plugin.layer.identity.redeem.point.developer.bitdubai.version_1.database.AssetRedeemPointIdentityDeveloperDatabaseFactory;
 import com.bitdubai.fermat_dap_plugin.layer.identity.redeem.point.developer.bitdubai.version_1.exceptions.CantInitializeAssetRedeemPointIdentityDatabaseException;
 import com.bitdubai.fermat_dap_plugin.layer.identity.redeem.point.developer.bitdubai.version_1.structure.IdentityAssetRedeemPointManagerImpl;
@@ -70,6 +71,8 @@ public class ReedemPointIdentityPluginRoot extends AbstractPlugin implements
 
     @NeededPluginReference(platform = Platforms.DIGITAL_ASSET_PLATFORM, layer = Layers.ACTOR, plugin = Plugins.REDEEM_POINT)
     private ActorAssetRedeemPointManager actorAssetRedeemPointManager;
+
+    private SettingsManager<RedeemPointSettings> settingsManager;
 
     public ReedemPointIdentityPluginRoot() {
         super(new PluginVersionReference(new Version()));
@@ -202,17 +205,32 @@ public class ReedemPointIdentityPluginRoot extends AbstractPlugin implements
 
     @Override
     public SettingsManager getSettingsManager() {
-        return null;
+        if (this.settingsManager != null)
+            return this.settingsManager;
+
+        this.settingsManager = new SettingsManager<>(
+                pluginFileSystem,
+                pluginId
+        );
+
+        return this.settingsManager;
     }
 
     @Override
     public ActiveActorIdentityInformation getSelectedActorIdentity() throws CantGetSelectedActorIdentityException {
-        return null;
+        try {
+            List<RedeemPointIdentity> identities = identityAssetRedeemPointManager.getIdentityAssetRedeemPointsFromCurrentDeviceUser();
+            return (identities == null || identities.isEmpty()) ? null : identityAssetRedeemPointManager.getIdentityAssetRedeemPointsFromCurrentDeviceUser().get(0);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
     }
+
 
     @Override
     public void createIdentity(String name, String phrase, byte[] profile_img) throws Exception {
-
+        identityAssetRedeemPointManager.createNewIdentityAssetRedeemPoint(name, profile_img);
     }
 
     @Override

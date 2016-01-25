@@ -133,13 +133,6 @@ More than a Team we are a group of highly motivated friends pursuing the goal of
     Email:   acosta_rodrigo@hotmail.com
     Skype:   acosta_rodrigo
     Github:  https://github.com/acostarodrigo
-    
-    
-* **Nerio Enrique Indriago Ortega [Veteran Developer]**<br/>
----
-      Email:   nerioindriago@gmail.com
-      Skype:   nerioindriago
-      Github:  https://github.com/nindriago
 
 * **Victor Mars [Veteran Developer]** <br/>
 ---
@@ -296,6 +289,33 @@ In the Crypto Broker Platform we are responsible for a large part of user level 
       Github:  https://github.com/Lozadaa 
 
 We are also amateur philosophers, passionate about esoteric topics and video games.
+
+<br>
+### Skynet Team:
+-----------------------------------
+From the most hidden and beautiful corner, in an unknown place of the universe, a network that gathers a group of polymaths is born. Such network combines their knowledge and artificial intelligence in order to overcome any obstacle that might try to avoid giving life to a limitless project.. that network is Team Skynet, a group of workaholics that enjoys turning challenges into fun, having a great will to help the needed and learn continuously.
+We are a team with diverse tastes and full of color making it an explosive integration. We love video games, anime, movie theaters, music and many other things. If you want to be part of our team, you will be always welcome at Skynet
+
+#### Skynet Team Members:
+
+* **Nerio Enrique Indriago Ortega [Team Leader]** <br/>
+---
+      Email:   nerioindriago@gmail.com
+      Skype:   nerioindriago
+      Github:  https://github.com/nindriago
+
+* **Penelope Quintero [New Developer]** <br/>
+---
+      Email:   pennyxz@gmail.com
+      Skype:   pennyxz
+      Github:  https://github.com/pennyxz
+
+* **Jinmy Bohorquez [New Developer]** <br/>
+---
+      Email:   jinmybohorquez@gmail.com
+      Skype:   jinmyb22
+      Github:  https://github.com/jinmyjbv
+
 
 <br/>
 ### Code Butchers Team:
