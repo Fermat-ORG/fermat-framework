@@ -7,6 +7,7 @@
 package com.bitdubai.fermat_cht_plugin.layer.network_service.chat.developer.bitdubai.version_1.structure.processors;
 
 import com.bitdubai.fermat_api.layer.all_definition.components.enums.PlatformComponentType;
+import com.bitdubai.fermat_api.layer.all_definition.crypto.util.CryptoHasher;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEvent;
 import com.bitdubai.fermat_cht_api.all_definition.events.enums.EventType;
@@ -66,7 +67,8 @@ public class NewTransactionStatusNotificationMessageReceiverProcessor extends Fe
 
 
             DistributionStatus distributionStatus = gson.fromJson(jsonMsjContent.get(ChatTransmissionJsonAttNames.DISTRIBUTION_STATUS).getAsString(), DistributionStatus.class);
-            UUID idChat                             = gson.fromJson(jsonMsjContent.get(ChatTransmissionJsonAttNames.ID_CHAT).getAsString(), UUID.class);
+            UUID chatID                             = gson.fromJson(jsonMsjContent.get(ChatTransmissionJsonAttNames.ID_CHAT).getAsString(), UUID.class);
+            UUID messageID                          = gson.fromJson(jsonMsjContent.get(ChatTransmissionJsonAttNames.MESSAGE_ID).getAsString(), UUID.class);
             PlatformComponentType senderType      = gson.fromJson(jsonMsjContent.get(ChatTransmissionJsonAttNames.SENDER_TYPE).getAsString(), PlatformComponentType.class);
             PlatformComponentType receiverType    = gson.fromJson(jsonMsjContent.get(ChatTransmissionJsonAttNames.RECEIVER_TYPE).getAsString(), PlatformComponentType.class);
 
@@ -75,18 +77,13 @@ public class NewTransactionStatusNotificationMessageReceiverProcessor extends Fe
              * Get the digitalAssetMetadataTransaction
              */
 
-            //TODO: FROM MANUEL, I commented this line for compilation
-            List<ChatMetadataTransactionRecord> list =  null;//getChatPluginRoot().getChatMetaDataDao().findAll(NetworkServiceChatNetworkServiceDatabaseConstants.CHAT_IDCHAT_COLUMN_NAME, idChat.toString());
+            String transactionHash = CryptoHasher.performSha256(chatID.toString() + messageID.toString());
+            ChatMetadataTransactionRecord chatMetadataTransactionRecord =  getChatPluginRoot().getChatMetaDataDao().findByTransactionHash(transactionHash);
 
-            ChatMetadataTransactionRecord chatMetadataTransactionRecord = null;
-            if(list.size()>0){
-                for (int i = 0; i < list.size(); i++) {
-                    chatMetadataTransactionRecord = list.get(i);
-                    chatMetadataTransactionRecord.setDistributionStatus(DistributionStatus.DELIVERED);
-                    chatMetadataTransactionRecord.setChatMessageStatus(ChatMessageStatus.CREATED_CHAT);
+            if(chatMetadataTransactionRecord != null){
 
-                    //TODO: FROM MANUEL, I commented this line for compilation
-                //getChatPluginRoot().getChatMetaDataDao().update(chatMetadataTransactionRecord);
+                chatMetadataTransactionRecord.setDistributionStatus(distributionStatus);
+                getChatPluginRoot().getChatMetaDataDao().update(chatMetadataTransactionRecord);
 
 
                 /*
@@ -99,52 +96,14 @@ public class NewTransactionStatusNotificationMessageReceiverProcessor extends Fe
                 /*
                 * Notify to the interested
                 */
-                    IncomingNewChatStatusUpdate event = (IncomingNewChatStatusUpdate) getChatPluginRoot().getEventManager().getNewEvent(EventType.INCOMING_STATUS);
-                    event.setChatId(chatMetadataTransactionRecord.getChatId());
+                IncomingNewChatStatusUpdate event = (IncomingNewChatStatusUpdate) getChatPluginRoot().getEventManager().getNewEvent(EventType.INCOMING_STATUS);
+                event.setChatId(chatMetadataTransactionRecord.getChatId());
                 event.setSource(ChatPluginRoot.EVENT_SOURCE);
                 getChatPluginRoot().getEventManager().raiseEvent(event);
-                    System.out.println("ChatPluginRoot - Incoming Status fired!");
+                System.out.println("ChatPluginRoot - Incoming Status fired!");
 
-
-                }
             }
 
-
-//            if (list != null && !list.isEmpty()){
-//                chatMetadataTransactionRecord = list.get(0);
-//
-//                chatMetadataTransactionRecord.setIdChat(idChat);
-//                chatMetadataTransactionRecord.setObjectId(idObject);
-//                chatMetadataTransactionRecord.setReceiverId(fermatMessage.getReceiver());
-//                chatMetadataTransactionRecord.setReceiverType(receiverType);
-//                chatMetadataTransactionRecord.setDistributionStatus(distributionStatus);
-//                chatMetadataTransactionRecord.setProcessed(DigitalAssetMetadataTransactionImpl.NO_PROCESSED);
-//                chatMetadataTransactionRecord.setType(DigitalAssetMetadataTransactionType.TRANSACTION_STATUS_UPDATE);
-//
-//
-//                /*
-//                * Save into data base like a new transaction
-//                */
-//
-//                getChatPluginRoot().getDigitalAssetMetaDataTransactionDao().create(chatMetadataTransactionRecord);
-//
-//
-//                /*
-//                * Mark the message as read
-//                */
-//
-//                ((FermatMessageCommunication)fermatMessage).setFermatMessagesStatus(FermatMessagesStatus.READ);
-//                ((CommunicationNetworkServiceConnectionManager) getChatPluginRoot().getNetworkServiceConnectionManager()).getIncomingMessageDao().update(fermatMessage);
-//
-//
-//                /*
-//                * Notify to the interested
-//                */
-//
-//                FermatEvent event =  getChatPluginRoot().getEventManager().getNewEvent(EventType.RECEIVED_NEW_TRANSACTION_STATUS_NOTIFICATION);
-//                event.setSource(AssetTransmissionNetworkServicePluginRoot.EVENT_SOURCE);
-//                getChatPluginRoot().getEventManager().raiseEvent(event);
-//            }
         } catch (Exception e) {
             getChatPluginRoot().getErrorManager().reportUnexpectedPluginException(Plugins.CHAT_NETWORK_SERVICE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
         }
