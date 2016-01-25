@@ -1,17 +1,13 @@
-/*
+package com.bitdubai.fermat_ccp_plugin.layer.network_service.intra_user.developer.bitdubai.version_1.communications;/*
  * @#RegistrationProcessNetworkServiceAgent.java - 2015
  * Copyright bitDubai.com., All rights reserved.
  * You may not modify, use, reproduce or distribute this software.
  * BITDUBAI/CONFIDENTIAL
  */
-package com.bitdubai.fermat_ccp_plugin.layer.network_service.intra_user.developer.bitdubai.version_1.communications;
 
 import com.bitdubai.fermat_api.layer.all_definition.components.interfaces.PlatformComponentProfile;
-import com.bitdubai.fermat_ccp_plugin.layer.network_service.intra_user.developer.bitdubai.version_1.IntraActorNetworkServicePluginRoot;
+import com.bitdubai.fermat_p2p_api.layer.all_definition.common.network_services.interfaces.NetworkService;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.WsCommunicationsCloudClientManager;
-
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 
 
 /**
@@ -22,7 +18,7 @@ import java.util.concurrent.Executors;
  * @version 1.0
  * @since Java JDK 1.7
  */
-public class CommunicationRegistrationProcessNetworkServiceAgent {
+public class CommunicationRegistrationProcessNetworkServiceAgent extends Thread {
 
     /*
      * Represent the sleep time for the read or send (5000 milliseconds)
@@ -33,7 +29,7 @@ public class CommunicationRegistrationProcessNetworkServiceAgent {
     /**
      * Represent the networkService
      */
-    private IntraActorNetworkServicePluginRoot networkService;
+    private NetworkService networkService;
 
     /**
      * Represent the communicationsClientConnection
@@ -45,36 +41,27 @@ public class CommunicationRegistrationProcessNetworkServiceAgent {
      */
     private boolean active;
 
-    private Runnable toRegistration = new Runnable() {
-        @Override
-        public void run() {
-            while (active)
-                processRegistration();
-        }
-    };
-
-    /*
-     *
-     */
-    private ExecutorService executorService;
-
     /**
      * Constructor with parameters
      * @param networkService
      * @param communicationsClientConnection
      */
-    public CommunicationRegistrationProcessNetworkServiceAgent(IntraActorNetworkServicePluginRoot networkService, WsCommunicationsCloudClientManager communicationsClientConnection) {
+    public CommunicationRegistrationProcessNetworkServiceAgent(NetworkService networkService, WsCommunicationsCloudClientManager communicationsClientConnection) {
         this.networkService = networkService;
         this.communicationsClientConnection = communicationsClientConnection;
         this.active = Boolean.FALSE;
-        executorService = Executors.newSingleThreadExecutor();
     }
 
-    private void processRegistration() {
+    /**
+     * (non-javadoc)
+     * @see Thread#run()
+     */
+    @Override
+    public void run() {
 
+        while (active){
             try{
-
-               System.out.println("IntraActorNetworkServicePluginRoot "+networkService.isRegister()+" communicationsClientConnection.isRegister() "+communicationsClientConnection.getCommunicationsCloudClientConnection().isRegister());
+                System.out.println("IntraActorNetworkServicePluginRoot "+networkService.isRegister()+" communicationsClientConnection.isRegister() "+communicationsClientConnection.getCommunicationsCloudClientConnection().isRegister());
 
                 if (communicationsClientConnection.getCommunicationsCloudClientConnection().isRegister() && !networkService.isRegister()){
 
@@ -104,50 +91,43 @@ public class CommunicationRegistrationProcessNetworkServiceAgent {
                     networkService.initializeCommunicationNetworkServiceConnectionManager();
 
                     /*
-                     * Stop the internal threads
+                     * Stop the agent
                      */
-                    stop();
+                    active = Boolean.FALSE;
 
                 }else if (!networkService.isRegister()){
-                    active = Boolean.FALSE;
+
                     try {
-
-                        if(Thread.currentThread().isInterrupted() == Boolean.FALSE)
-                            Thread.sleep(CommunicationRegistrationProcessNetworkServiceAgent.SLEEP_TIME);
-
+                        sleep(CommunicationRegistrationProcessNetworkServiceAgent.SLEEP_TIME);
                     } catch (InterruptedException e) {
+                        System.out.println(e.getMessage());
                         active = Boolean.FALSE;
                     }
 
-                }else if(networkService.isRegister()){
-                    /*
-                     * Stop the internal threads
-                     */
-                    stop();
+                }else if (!networkService.isRegister()){
+                    active = Boolean.FALSE;
                 }
 
             }catch (Exception e){
-                try {
-                    if(Thread.currentThread().isInterrupted() == Boolean.FALSE)
-                        Thread.sleep(CommunicationRegistrationProcessNetworkServiceAgent.MAX_SLEEP_TIME);
+                try { //TODO null pointer exc
+//                    System.out.println(e.getMessage());
+                    sleep(CommunicationRegistrationProcessNetworkServiceAgent.MAX_SLEEP_TIME);
                 } catch (InterruptedException e1) {
+//                    System.out.println(e1.getMessage());
                     active = Boolean.FALSE;
                 }
             }
-
+        }
     }
 
-    public  void start() {
-        this.active = Boolean.TRUE;
-        executorService.execute(toRegistration);
-    }
-
-    /*
-     * Stop the internal threads
+    /**
+     * (non-javadoc)
+     * @see Thread#start()
      */
-    public void stop(){
-        this.active = Boolean.FALSE;
-        executorService.shutdown();
+    @Override
+    public synchronized void start() {
+        this.active = Boolean.TRUE;
+        super.start();
     }
 
     /**
@@ -157,5 +137,4 @@ public class CommunicationRegistrationProcessNetworkServiceAgent {
     public boolean getActive() {
         return active;
     }
-
 }
