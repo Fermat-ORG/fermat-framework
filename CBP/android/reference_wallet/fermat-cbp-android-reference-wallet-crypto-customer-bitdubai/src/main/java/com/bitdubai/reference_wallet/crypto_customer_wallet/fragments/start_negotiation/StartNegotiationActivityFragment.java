@@ -42,6 +42,7 @@ import com.bitdubai.reference_wallet.crypto_customer_wallet.common.adapters.Star
 import com.bitdubai.reference_wallet.crypto_customer_wallet.common.dialogs.ClauseTextDialog;
 import com.bitdubai.reference_wallet.crypto_customer_wallet.common.holders.start_negotiation.ClauseViewHolder;
 import com.bitdubai.reference_wallet.crypto_customer_wallet.common.holders.start_negotiation.FooterViewHolder;
+import com.bitdubai.reference_wallet.crypto_customer_wallet.common.models.BrokerCurrencyQuotationTest;
 import com.bitdubai.reference_wallet.crypto_customer_wallet.common.models.EmptyCustomerBrokerNegotiationInformation;
 import com.bitdubai.reference_wallet.crypto_customer_wallet.common.models.TestData;
 import com.bitdubai.reference_wallet.crypto_customer_wallet.fragments.common.SimpleListDialogFragment;
@@ -51,6 +52,7 @@ import java.math.BigDecimal;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 import java.util.Map;
 
 
@@ -141,23 +143,10 @@ public class StartNegotiationActivityFragment extends AbstractFermatFragment<Cry
                 break;
             case BROKER_CURRENCY_QUANTITY:
                 clauseTextDialog = new ClauseTextDialog(getActivity(), appSession, appResourcesProviderManager);
+
                 clauseTextDialog.setAcceptBtnListener(new ClauseTextDialog.OnClickAcceptListener() {
                     @Override
-                    public void onClick(String newValue) {
-                        negotiationInfo.putClause(clause, newValue);
-
-                        final Map<ClauseType, ClauseInformation> clauses = negotiationInfo.getClauses();
-
-                        final BigDecimal exchangeRate = new BigDecimal(clauses.get(ClauseType.EXCHANGE_RATE).getValue());
-                        final BigDecimal amountToBuy = new BigDecimal(clauses.get(ClauseType.BROKER_CURRENCY_QUANTITY).getValue());
-                        final BigDecimal amountToSell = amountToBuy.divide(exchangeRate);
-
-                        final String amountToSellStr = DecimalFormat.getInstance().format(amountToSell.doubleValue());
-                        final ClauseInformation brokerCurrencyQuantity = clauses.get(ClauseType.CUSTOMER_CURRENCY_QUANTITY);
-                        negotiationInfo.putClause(brokerCurrencyQuantity, amountToSellStr);
-
-                        adapter.changeDataSet(negotiationInfo);
-                    }
+                    public void onClick(String newValue) { acceptBtnListenerBrokerCurrencyQuantity(clause, newValue); }
                 });
 
                 clauseTextDialog.setEditTextValue(clause.getValue());
@@ -201,21 +190,7 @@ public class StartNegotiationActivityFragment extends AbstractFermatFragment<Cry
                 clauseTextDialog = new ClauseTextDialog(getActivity(), appSession, appResourcesProviderManager);
                 clauseTextDialog.setAcceptBtnListener(new ClauseTextDialog.OnClickAcceptListener() {
                     @Override
-                    public void onClick(String newValue) {
-                        negotiationInfo.putClause(clause, newValue);
-
-                        final Map<ClauseType, ClauseInformation> clauses = negotiationInfo.getClauses();
-
-                        final BigDecimal exchangeRate = new BigDecimal(clauses.get(ClauseType.EXCHANGE_RATE).getValue());
-                        final BigDecimal amountToBuy = new BigDecimal(clauses.get(ClauseType.CUSTOMER_CURRENCY_QUANTITY).getValue());
-                        final BigDecimal amountToSell = amountToBuy.multiply(exchangeRate);
-
-                        final String amountToSellStr = DecimalFormat.getInstance().format(amountToSell.doubleValue());
-                        final ClauseInformation brokerCurrencyQuantity = clauses.get(ClauseType.BROKER_CURRENCY_QUANTITY);
-                        negotiationInfo.putClause(brokerCurrencyQuantity, amountToSellStr);
-
-                        adapter.changeDataSet(negotiationInfo);
-                    }
+                    public void onClick(String newValue) { acceptBtnListener(clause, newValue); }
                 });
 
                 clauseTextDialog.setEditTextValue(clause.getValue());
@@ -356,9 +331,28 @@ public class StartNegotiationActivityFragment extends AbstractFermatFragment<Cry
 
         if(clauses != null) {
 
-            ClauseInformation information = null;
+//            ClauseInformation information = null;
 
-            for (Map.Entry<ClauseType, ClauseInformation> clauseInformation : clauses.entrySet()) {
+            final BigDecimal exchangeRate   = new BigDecimal(clauses.get(ClauseType.EXCHANGE_RATE).getValue());
+            final BigDecimal amountToBuy    = new BigDecimal(clauses.get(ClauseType.CUSTOMER_CURRENCY_QUANTITY).getValue());
+            final BigDecimal amountToPay    = new BigDecimal(clauses.get(ClauseType.BROKER_CURRENCY_QUANTITY).getValue());
+
+            if(exchangeRate.compareTo(BigDecimal.ZERO) <= 0){
+                Toast.makeText(getActivity(), "The exchange must be greater than zero.", Toast.LENGTH_LONG).show();
+                return false;
+            }
+
+            if(amountToBuy.compareTo(BigDecimal.ZERO) <= 0){
+                Toast.makeText(getActivity(), "The  buying must be greater than zero.", Toast.LENGTH_LONG).show();
+                return false;
+            }
+
+            if(amountToPay.compareTo(BigDecimal.ZERO) <= 0){
+                Toast.makeText(getActivity(), "The  paying must be greater than zero.", Toast.LENGTH_LONG).show();
+                return false;
+            }
+
+            /*for (Map.Entry<ClauseType, ClauseInformation> clauseInformation : clauses.entrySet()) {
 
                 information = clauseInformation.getValue();
 
@@ -370,7 +364,7 @@ public class StartNegotiationActivityFragment extends AbstractFermatFragment<Cry
                 if (information.getType().getCode().equals(ClauseType.CUSTOMER_CURRENCY_QUANTITY.getCode())) {
 
                     if (Double.parseDouble(information.getValue()) <= 0) {
-                        Toast.makeText(getActivity(), "The currency quantity not have menor of 0.", Toast.LENGTH_LONG).show();
+                        Toast.makeText(getActivity(), "The currency quantity not is hight of 0.", Toast.LENGTH_LONG).show();
 //                        mBrokerName.requestFocus();
                         return false;
                     }
@@ -378,21 +372,24 @@ public class StartNegotiationActivityFragment extends AbstractFermatFragment<Cry
                 } else if (information.getType().getCode().equals(ClauseType.BROKER_CURRENCY_QUANTITY.getCode())) {
 
                     if (Double.parseDouble(information.getValue()) <= 0) {
-                        Toast.makeText(getActivity(), "The  payment quantity not have menor of 0.", Toast.LENGTH_LONG).show();
+                        Toast.makeText(getActivity(), "The  payment quantity not is hight of 0.", Toast.LENGTH_LONG).show();
                         return false;
                     }
 
                 } else if (information.getType().getCode().equals(ClauseType.EXCHANGE_RATE.getCode())) {
 
                     if (Double.parseDouble(information.getValue()) <= 0) {
-                        Toast.makeText(getActivity(), "The exchange rate quantity not have menor of 0.", Toast.LENGTH_LONG).show();
+                        Toast.makeText(getActivity(), "The exchange rate quantity not is hight of 0.", Toast.LENGTH_LONG).show();
                         return false;
                     }
 
                 }
-            }
+            }*/
 
-        } else { return false; }
+        } else {
+            Toast.makeText(getActivity(), "Error. Information is null.", Toast.LENGTH_LONG).show();
+            return false;
+        }
 
         return true;
     }
@@ -402,15 +399,9 @@ public class StartNegotiationActivityFragment extends AbstractFermatFragment<Cry
 
         Collection<ClauseInformation> clauses = new ArrayList<>();
 
-        if(mapClauses != null) {
-
-            for (Map.Entry<ClauseType, ClauseInformation> clauseInformation : mapClauses.entrySet()) {
-
+        if(mapClauses != null)
+            for (Map.Entry<ClauseType, ClauseInformation> clauseInformation : mapClauses.entrySet())
                 clauses.add(clauseInformation.getValue());
-
-            }
-
-        }
 
         return clauses;
     }
@@ -433,6 +424,73 @@ public class StartNegotiationActivityFragment extends AbstractFermatFragment<Cry
         }
 
         return clauses;
+    }
+
+    private void acceptBtnListenerBrokerCurrencyQuantity(ClauseInformation clause, String newValue){
+
+        if(validateExchangeRate()) {
+
+            negotiationInfo.putClause(clause, newValue);
+
+            final Map<ClauseType, ClauseInformation> clauses = negotiationInfo.getClauses();
+
+            final BigDecimal exchangeRate = new BigDecimal(clauses.get(ClauseType.EXCHANGE_RATE).getValue());
+            final BigDecimal amountToBuy = new BigDecimal(clauses.get(ClauseType.BROKER_CURRENCY_QUANTITY).getValue());
+            final BigDecimal amountToSell = amountToBuy.divide(exchangeRate);
+
+            final String amountToSellStr = DecimalFormat.getInstance().format(amountToSell.doubleValue());
+            final ClauseInformation brokerCurrencyQuantity = clauses.get(ClauseType.CUSTOMER_CURRENCY_QUANTITY);
+            negotiationInfo.putClause(brokerCurrencyQuantity, amountToSellStr);
+
+            adapter.changeDataSet(negotiationInfo);
+
+        }
+
+    }
+
+    private void acceptBtnListener(ClauseInformation clause, String newValue){
+
+        negotiationInfo.putClause(clause, newValue);
+
+        final Map<ClauseType, ClauseInformation> clauses = negotiationInfo.getClauses();
+
+        final BigDecimal exchangeRate = new BigDecimal(clauses.get(ClauseType.EXCHANGE_RATE).getValue());
+        final BigDecimal amountToBuy = new BigDecimal(clauses.get(ClauseType.CUSTOMER_CURRENCY_QUANTITY).getValue());
+        final BigDecimal amountToSell = amountToBuy.multiply(exchangeRate);
+
+        final String amountToSellStr = DecimalFormat.getInstance().format(amountToSell.doubleValue());
+        final ClauseInformation brokerCurrencyQuantity = clauses.get(ClauseType.BROKER_CURRENCY_QUANTITY);
+        negotiationInfo.putClause(brokerCurrencyQuantity, amountToSellStr);
+
+        adapter.changeDataSet(negotiationInfo);
+    }
+
+    private boolean validateExchangeRate(){
+
+        final Map<ClauseType, ClauseInformation> clauses = negotiationInfo.getClauses();
+
+        final BigDecimal exchangeRate = new BigDecimal(clauses.get(ClauseType.EXCHANGE_RATE).getValue());
+
+        if(exchangeRate.compareTo(BigDecimal.ZERO) <= 0){
+            Toast.makeText(getActivity(), "The exchange must be greater than zero.", Toast.LENGTH_LONG).show();
+            return false;
+        }
+
+        return true;
+
+    }
+
+    public List <BrokerCurrencyQuotationTest> getExchangeRateForCurrencyTest(){
+
+        List <BrokerCurrencyQuotationTest> brokerCurrencyQuotationTest = new ArrayList<>();
+
+        brokerCurrencyQuotationTest.add(new BrokerCurrencyQuotationTest(CryptoCurrency.BITCOIN.getCode(), FiatCurrency.ARGENTINE_PESO.getCode(), "100000"));
+        brokerCurrencyQuotationTest.add(new BrokerCurrencyQuotationTest(CryptoCurrency.BITCOIN.getCode(), FiatCurrency.VENEZUELAN_BOLIVAR.getCode(), "350000"));
+        brokerCurrencyQuotationTest.add(new BrokerCurrencyQuotationTest(CryptoCurrency.BITCOIN.getCode(), FiatCurrency.US_DOLLAR.getCode(), "410"));
+        brokerCurrencyQuotationTest.add(new BrokerCurrencyQuotationTest(CryptoCurrency.BITCOIN.getCode(), CryptoCurrency.LITECOIN.getCode(), "130"));
+
+        return brokerCurrencyQuotationTest;
+
     }
 
 }
