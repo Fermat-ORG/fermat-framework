@@ -1,7 +1,9 @@
 package com.bitdubai.reference_wallet.crypto_customer_wallet.fragments.contract_detail;
 
 import android.content.res.Resources;
+import android.graphics.Bitmap;
 import android.graphics.Color;
+import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.os.Bundle;
@@ -19,9 +21,14 @@ import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractFermatFra
 import com.bitdubai.fermat_android_api.layer.definition.wallet.utils.ImagesUtils;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatButton;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView;
+import com.bitdubai.fermat_api.layer.all_definition.enums.CryptoCurrency;
+import com.bitdubai.fermat_api.layer.all_definition.enums.FiatCurrency;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Wallets;
 import com.bitdubai.fermat_api.layer.pip_engine.interfaces.ResourceProviderManager;
 import com.bitdubai.fermat_api.layer.world.interfaces.Currency;
+import com.bitdubai.fermat_cbp_api.all_definition.enums.ContractDetailType;
+import com.bitdubai.fermat_cbp_api.all_definition.enums.ContractStatus;
+import com.bitdubai.fermat_cbp_api.all_definition.enums.CurrencyType;
 import com.bitdubai.fermat_cbp_api.all_definition.identity.ActorIdentity;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.common.interfaces.ClauseInformation;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_customer.interfaces.CryptoCustomerWalletManager;
@@ -31,25 +38,28 @@ import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfac
 import com.bitdubai.reference_wallet.crypto_customer_wallet.common.adapters.ContractDetailAdapter;
 import com.bitdubai.reference_wallet.crypto_customer_wallet.common.holders.start_negotiation.ClauseViewHolder;
 import com.bitdubai.reference_wallet.crypto_customer_wallet.common.holders.start_negotiation.FooterViewHolder;
+import com.bitdubai.reference_wallet.crypto_customer_wallet.common.models.ContractDetail;
+import com.bitdubai.reference_wallet.crypto_customer_wallet.common.models.EmptyContractInformation;
 import com.bitdubai.reference_wallet.crypto_customer_wallet.common.models.EmptyCustomerBrokerNegotiationInformation;
 import com.bitdubai.reference_wallet.crypto_customer_wallet.session.CryptoCustomerWalletSession;
 
 
 import com.bitdubai.reference_wallet.crypto_customer_wallet.R;
 
+import java.io.ByteArrayOutputStream;
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by Manuel Perez (darkpriestrelative@gmail.com) on 18/01/16.
  */
-public class ContractDetailActivityFragment extends AbstractFermatFragment<CryptoCustomerWalletSession, ResourceProviderManager>
-        implements FooterViewHolder.OnFooterButtonsClickListener, ClauseViewHolder.Listener {
+public class ContractDetailActivityFragment extends AbstractFermatFragment<CryptoCustomerWalletSession, ResourceProviderManager> {
 
     private static final String TAG = "ContractDetailFrag";
 
     private CryptoCustomerWalletManager walletManager;
     private ErrorManager errorManager;
-    private EmptyCustomerBrokerNegotiationInformation negotiationInfo;
+    private List<ContractDetail> contractInformation;
     private ArrayList<String> paymentMethods; // test data
     private ArrayList<Currency> currencies; // test data
 
@@ -93,24 +103,10 @@ public class ContractDetailActivityFragment extends AbstractFermatFragment<Crypt
 
         configureToolbar();
         initViews(layout);
+        contractInformation=createContractDetails();
         bindData();
 
         return layout;
-    }
-
-    @Override
-    public void onClauseCLicked(Button triggerView, ClauseInformation clause, int clausePosition) {
-        //TODO: show the contract clause detail
-    }
-
-    @Override
-    public void onAddNoteButtonClicked() {
-        //TODO: look if this is necessary
-    }
-
-    @Override
-    public void onSendButtonClicked() {
-        //TODO: Send notifications through the module
     }
 
     //TODO: analize the following methods
@@ -118,7 +114,7 @@ public class ContractDetailActivityFragment extends AbstractFermatFragment<Crypt
 
         brokerImage = (ImageView) rootView.findViewById(R.id.ccw_contract_details_broker_image);
         brokerName = (FermatTextView) rootView.findViewById(R.id.ccw_contract_details_broker_name);
-        sellingSummary = (FermatTextView) rootView.findViewById(R.id.ccw_selling_summary);
+        sellingSummary = (FermatTextView) rootView.findViewById(R.id.ccw_contract_details_selling_summary);
         detailDate = (FermatTextView) rootView.findViewById(R.id.ccw_contract_details_date);
         detailRate = (FermatTextView) rootView.findViewById(R.id.ccw_contract_details_rate);
         negotiationButton = (FermatButton) rootView.findViewById(R.id.ccw_contract_details_negotiation_details);
@@ -139,45 +135,106 @@ public class ContractDetailActivityFragment extends AbstractFermatFragment<Crypt
     }
 
     private void bindData() {
-        /*ActorIdentity broker = appSession.getSelectedBrokerIdentity();
+        ActorIdentity broker = appSession.getSelectedBrokerIdentity();
         Currency currencyToBuy = appSession.getCurrencyToBuy();
 
+        //Test implementation
+        currencyToBuy=new Currency() {
+            @Override
+            public String getFriendlyName() {
+                return "BTC";
+            }
+
+            @Override
+            public String getCode() {
+                return CurrencyType.CRYPTO_MONEY.getCode();
+            }
+        };
         //Negotiation Summary
-        Drawable brokerImg = getImgDrawable(broker.getProfileImage());
+        /*Drawable brokerImg = getImgDrawable(broker.getProfileImage());
         brokerImage.setImageDrawable(brokerImg);
         brokerName.setText(broker.getAlias());
-        sellingSummary.setText(getResources().getString(R.string.ccw_start_selling_details, currencyToBuy.getFriendlyName()));
+        sellingSummary.setText(getResources().getString(R.string.ccw_start_selling_details, currencyToBuy.getFriendlyName()));*/
+        //Contract summary
+        //Drawable brokerImg = getImgDrawable(broker.getProfileImage());
+        //brokerImage.setImageDrawable(brokerImg);
+        //brokerName.setText(broker.getAlias());
+        brokerName.setText("Broker Name");
+        sellingSummary.setText(getResources().getString(
+                R.string.ccw_start_selling_details,
+                currencyToBuy.getFriendlyName()));
+        detailDate.setText("Date");
+        detailRate.setText("1 BTC @ 254 USD");
 
-        adapter = new ContractDetailAdapter(getActivity(), negotiationInfo);
-        adapter.setFooterListener(this);
-        adapter.setClauseListener(this);
 
-        recyclerView.setAdapter(adapter);*/
+        //Create adapter
+        adapter = new ContractDetailAdapter(
+                getActivity(),
+                contractInformation,
+                appSession,
+                walletManager);
+        //adapter.setFooterListener(this);
+        //adapter.setClauseListener(this);
+
+        recyclerView.setAdapter(adapter);
+    }
+
+    private List<ContractDetail> createContractDetails(){
+        List<ContractDetail> contractDetails=new ArrayList<>();
+        ContractDetail contractDetail;
+        /**
+         * TODO: this contract details is only for testing, please, implement this date from database.
+         */
+        //Customer Broker
+        contractDetail=new ContractDetail(
+                ContractDetailType.CUSTOMER_DETAIL,
+                CurrencyType.BANK_MONEY,
+                FiatCurrency.CHINESE_YUAN.getFriendlyName(),
+                12,
+                ContractStatus.PAYMENT_SUBMIT,
+                "BTC Customer",
+                getByteArrayFromImageView(brokerImage),
+                1961,
+                2016);
+        contractDetails.add(contractDetail);
+        //Testing Broker
+        contractDetail=new ContractDetail(
+                ContractDetailType.BROKER_DETAIL,
+                CurrencyType.CRYPTO_MONEY,
+                CryptoCurrency.BITCOIN.getFriendlyName(),
+                12,
+                ContractStatus.PENDING_MERCHANDISE,
+                "BTC Broker",
+                getByteArrayFromImageView(brokerImage),
+                1961,
+                2016);
+        contractDetails.add(contractDetail);
+        return contractDetails;
     }
 
     private EmptyCustomerBrokerNegotiationInformation createNewEmptyNegotiationInfo() {
         try {
-            /*EmptyCustomerBrokerNegotiationInformation negotiationInfo = TestData.newEmptyNegotiationInformation();
-            negotiationInfo.setStatus(NegotiationStatus.WAITING_FOR_BROKER);
+            /*EmptyCustomerBrokerNegotiationInformation contractInformation = TestData.newEmptyNegotiationInformation();
+            contractInformation.setStatus(NegotiationStatus.WAITING_FOR_BROKER);
 
             final Currency currency = appSession.getCurrencyToBuy();
-            negotiationInfo.putClause(ClauseType.CUSTOMER_CURRENCY, currency.getCode());
-            negotiationInfo.putClause(ClauseType.BROKER_CURRENCY, currencies.get(0).getCode());
-            negotiationInfo.putClause(ClauseType.CUSTOMER_CURRENCY_QUANTITY, "0.0");
-            negotiationInfo.putClause(ClauseType.BROKER_CURRENCY_QUANTITY, "0.0");
-            negotiationInfo.putClause(ClauseType.EXCHANGE_RATE, "0.0");
-            negotiationInfo.putClause(ClauseType.CUSTOMER_PAYMENT_METHOD, paymentMethods.get(0));
-            negotiationInfo.putClause(ClauseType.BROKER_PAYMENT_METHOD, paymentMethods.get(0));
+            contractInformation.putClause(ClauseType.CUSTOMER_CURRENCY, currency.getCode());
+            contractInformation.putClause(ClauseType.BROKER_CURRENCY, currencies.get(0).getCode());
+            contractInformation.putClause(ClauseType.CUSTOMER_CURRENCY_QUANTITY, "0.0");
+            contractInformation.putClause(ClauseType.BROKER_CURRENCY_QUANTITY, "0.0");
+            contractInformation.putClause(ClauseType.EXCHANGE_RATE, "0.0");
+            contractInformation.putClause(ClauseType.CUSTOMER_PAYMENT_METHOD, paymentMethods.get(0));
+            contractInformation.putClause(ClauseType.BROKER_PAYMENT_METHOD, paymentMethods.get(0));
 
             final ActorIdentity brokerIdentity = appSession.getSelectedBrokerIdentity();
             if (brokerIdentity != null)
-                negotiationInfo.setBroker(brokerIdentity);
+                contractInformation.setBroker(brokerIdentity);
 
             final CryptoCustomerIdentity customerIdentity = walletManager.getAssociatedIdentity();
             if (customerIdentity != null)
-                negotiationInfo.setCustomer(customerIdentity);
+                contractInformation.setCustomer(customerIdentity);
 
-            return negotiationInfo;*/
+            return contractInformation;*/
 
         } catch (Exception e) {
             if (errorManager != null)
@@ -195,6 +252,18 @@ public class ContractDetailActivityFragment extends AbstractFermatFragment<Crypt
             return ImagesUtils.getRoundedBitmap(res, customerImg);
 
         return ImagesUtils.getRoundedBitmap(res, R.drawable.person);
+    }
+
+    /**
+     * This method is for testing
+     * @param image
+     * @return
+     */
+    private byte[] getByteArrayFromImageView(ImageView image){
+        Bitmap bitmap = ((BitmapDrawable)image.getDrawable()).getBitmap();
+        ByteArrayOutputStream stream=new ByteArrayOutputStream();
+        bitmap.compress(Bitmap.CompressFormat.PNG, 90, stream);
+        return stream.toByteArray();
     }
 
 }

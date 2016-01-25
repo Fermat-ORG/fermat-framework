@@ -47,6 +47,7 @@ import com.bitdubai.fermat_cht_plugin.layer.middleware.chat.developer.bitdubai.v
 import com.bitdubai.fermat_cht_plugin.layer.middleware.chat.developer.bitdubai.version_1.exceptions.CantInitializeChatMiddlewareDatabaseException;
 import com.bitdubai.fermat_cht_plugin.layer.middleware.chat.developer.bitdubai.version_1.structure.ChatMiddlewareManager;
 import com.bitdubai.fermat_cht_plugin.layer.middleware.chat.developer.bitdubai.version_1.structure.ChatMiddlewareMonitorAgent;
+import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.exceptions.CantRequestListException;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedPluginExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfaces.EventManager;
@@ -248,6 +249,7 @@ public class ChatMiddlewarePluginRoot extends AbstractPlugin implements
             //Test method
             //sendMessageTest();
             //receiveMessageTest();
+            //testPublicKeys();
         } catch (CantInitializeDatabaseException exception) {
             throw new CantStartPluginException(
                     CantStartPluginException.DEFAULT_MESSAGE,
@@ -338,9 +340,26 @@ public class ChatMiddlewarePluginRoot extends AbstractPlugin implements
         }
     }
 
+    private void testPublicKeys(){
+        List<String> publicKey = null;
+        try {
+            publicKey = chatManager.getRegisteredPubliKey();
+        } catch (CantRequestListException e) {
+            System.out.println("Exception in chat middleware test: "+e.getMessage());
+            e.printStackTrace();
+        }
+        System.out.println("-------------------REGISTED CHAT NETWORK SERVICE PUBLIC KEYS------------------");
+        for (String key : publicKey){
+            System.out.println(key);
+        }
+        System.out.println("-------------------REGISTED CHAT NETWORK SERVICE PUBLIC KEYS END------------------");
+    }
     private void sendMessageTest(){
         try{
             Chat testChat=new ChatMock();
+            testChat.setLocalActorPublicKey(chatManager.getNetWorkServicePublicKey());
+            List<String> remotePublicKey = chatManager.getRegisteredPubliKey();
+            testChat.setRemoteActorPublicKey(remotePublicKey.get(0));
             Message testMessage=new MessageMock(UUID.fromString("52d7fab8-a423-458f-bcc9-49cdb3e9ba8f"));
             this.chatMiddlewareManager.saveChat(testChat);
             this.chatMiddlewareManager.saveMessage(testMessage);
