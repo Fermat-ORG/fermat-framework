@@ -59,9 +59,10 @@ public class SetupFragment extends AbstractFermatFragment implements View.OnClic
         okBtn.setOnClickListener(this);
 
         /*if(moduleManager.getBankingWallet().getBankName()!=null){
+            getRuntimeManager().changeStartActivity(0);
             changeActivity(Activities.BNK_BANK_MONEY_WALLET_HOME,appSession.getAppPublicKey());
         }*/
-        /*new Handler().postDelayed(new Runnable() {
+        new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
                 //If wallet already exists, go directly to wallet
@@ -74,8 +75,8 @@ public class SetupFragment extends AbstractFermatFragment implements View.OnClic
                     setupContainer.startAnimation(fadeInAnimation);
                 }
             }
-        }, 500);*/
-        setupContainer.setVisibility(View.VISIBLE);
+        }, 800);
+        //setupContainer.setVisibility(View.VISIBLE);
         return layout;
     }
 

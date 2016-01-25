@@ -84,14 +84,8 @@ public class AccountsListFragment extends FermatWalletListFragment<BankAccountNu
                 .setBody("prueba Body")
                 .setTitle("prueba Title")
                 .setSubTitle("prueba subtitle")
-                .setTextFooter("prueba footer").build();
+                .setTextFooter("prueba footer").setTemplateType(PresentationDialog.TemplateType.TYPE_PRESENTATION_WITHOUT_IDENTITIES).build();
         showOrHideNoAccountListView(accountsList.isEmpty());
-        /*presentationDialog.findViewById(R.id.btn_dismiss).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                System.out.println("presentation dialog button close");
-            }
-        });*/
         presentationDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
             @Override
             public void onDismiss(DialogInterface dialogInterface) {
