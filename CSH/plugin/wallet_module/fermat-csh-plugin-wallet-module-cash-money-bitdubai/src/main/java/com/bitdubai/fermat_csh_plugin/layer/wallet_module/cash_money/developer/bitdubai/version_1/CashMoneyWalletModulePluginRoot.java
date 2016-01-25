@@ -148,7 +148,7 @@ public class CashMoneyWalletModulePluginRoot extends AbstractPlugin implements L
     }
 
     @Override
-    public void cancelAsyncCashTransaction(CashMoneyWalletTransaction transaction) throws InvalidParameterException {
+    public void cancelAsyncCashTransaction(CashMoneyWalletTransaction transaction) throws Exception {
         cashMoneyWalletModuleManager.cancelAsyncCashTransaction(transaction);
     }
 
@@ -170,6 +170,11 @@ public class CashMoneyWalletModulePluginRoot extends AbstractPlugin implements L
     @Override
     public List<CashMoneyWalletTransaction> getTransactions(String walletPublicKey, List<TransactionType> transactionTypes, List<BalanceType> balanceTypes, int max, int offset) throws CantGetCashMoneyWalletTransactionsException {
         return cashMoneyWalletModuleManager.getTransactions(walletPublicKey, transactionTypes, balanceTypes, max, offset);
+    }
+
+    @Override
+    public CashMoneyWalletTransaction getTransaction(String walletPublicKey, UUID transactionId) throws CantGetCashMoneyWalletTransactionsException {
+        return cashMoneyWalletModuleManager.getTransaction(walletPublicKey, transactionId);
     }
 
     @Override

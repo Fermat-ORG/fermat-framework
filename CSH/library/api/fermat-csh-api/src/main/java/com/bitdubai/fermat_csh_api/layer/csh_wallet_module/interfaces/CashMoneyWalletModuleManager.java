@@ -21,6 +21,7 @@ import com.bitdubai.fermat_csh_api.layer.csh_wallet_module.CashMoneyWalletPrefer
 import com.bitdubai.fermat_csh_api.layer.csh_wallet_module.exceptions.CantGetCashMoneyWalletBalancesException;
 
 import java.util.List;
+import java.util.UUID;
 
 /**
  * Created by Alejandro Bicelis on 12/8/2015.
@@ -32,7 +33,7 @@ public interface CashMoneyWalletModuleManager extends ModuleManager<CashMoneyWal
 
 
     void createAsyncCashTransaction(CashTransactionParameters depositParameters);
-    void cancelAsyncCashTransaction(CashMoneyWalletTransaction transaction)  throws InvalidParameterException;
+    void cancelAsyncCashTransaction(CashMoneyWalletTransaction transaction)  throws Exception;
 
 
     CashDepositTransaction doCreateCashDepositTransaction(CashTransactionParameters depositParameters) throws CantCreateDepositTransactionException;
@@ -40,6 +41,7 @@ public interface CashMoneyWalletModuleManager extends ModuleManager<CashMoneyWal
 
     List<CashMoneyWalletTransaction> getPendingTransactions();
     List<CashMoneyWalletTransaction> getTransactions(String walletPublicKey, List<TransactionType> transactionTypes, List<BalanceType> balanceTypes, int max, int offset) throws CantGetCashMoneyWalletTransactionsException;
+    CashMoneyWalletTransaction getTransaction(String walletPublicKey, UUID transactionId) throws CantGetCashMoneyWalletTransactionsException;
 
     void createCashMoneyWallet(String walletPublicKey, FiatCurrency fiatCurrency) throws CantCreateCashMoneyWalletException;
     boolean cashMoneyWalletExists(String walletPublicKey);
