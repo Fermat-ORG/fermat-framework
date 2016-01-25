@@ -136,7 +136,6 @@ import java.util.TimerTask;
 import java.util.UUID;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.atomic.AtomicBoolean;
-import java.util.function.Predicate;
 import java.util.regex.Pattern;
 
 
@@ -1004,10 +1003,6 @@ public class IntraActorNetworkServicePluginRoot extends AbstractPlugin implement
                     respondReceiveAndDoneCommunication(actorNetworkServiceRecord);
                     break;
                 case ACCEPTED:
-                    //TODO: ver si me conviene guardarlo en el outogoing DAO o usar el incoming para las que llegan directamente
-                    actorNetworkServiceRecord.changeDescriptor(NotificationDescriptor.ACCEPTED);
-                    actorNetworkServiceRecord.changeState(ActorProtocolState.DONE);
-                    getOutgoingNotificationDao().update(actorNetworkServiceRecord);
 
                     //create incoming notification
 
@@ -1027,10 +1022,6 @@ public class IntraActorNetworkServicePluginRoot extends AbstractPlugin implement
                 case RECEIVED:
 
                     //launchIncomingRequestConnectionNotificationEvent(actorNetworkServiceRecord);
-                    System.out.println("----------------------------\n" +
-                            "INTRA ACTOR NETWORK SERVICE" +
-                            "THE RECORD WAS CHANGE TO THE STATE OF DELIVERY" + actorNetworkServiceRecord.getActorSenderAlias()
-                            + "\n-------------------------------------------------");
                     //TODO: ver porqué no encuentra el id para cambiarlo
                     if(actorNetworkServiceRecord.getResponseToNotificationId()!=null)
                     getOutgoingNotificationDao().changeProtocolState(actorNetworkServiceRecord.getResponseToNotificationId(), ActorProtocolState.DONE);
@@ -1038,8 +1029,7 @@ public class IntraActorNetworkServicePluginRoot extends AbstractPlugin implement
                         // close connection, sender is the destination
                         System.out.println("----------------------------\n" +
                                 "INTRA ACTOR NETWORK SERVICE" +
-                                "THE CONNECTION BECAUSE THE ACTOR PROTOCOL STATE" +
-                                "WAS CHANGE TO DONE" + actorNetworkServiceRecord.getActorSenderAlias()
+                                "THE RECORD WAS CHANGE TO DONE" + actorNetworkServiceRecord.getActorSenderAlias()
                                 + "\n-------------------------------------------------");
 
                         communicationNetworkServiceConnectionManager.closeConnection(actorNetworkServiceRecord.getActorSenderPublicKey());
@@ -1053,10 +1043,6 @@ public class IntraActorNetworkServicePluginRoot extends AbstractPlugin implement
                     break;
 
                 case DENIED:
-
-                    actorNetworkServiceRecord.changeDescriptor(NotificationDescriptor.DENIED);
-                    actorNetworkServiceRecord.changeState(ActorProtocolState.DONE);
-                    getOutgoingNotificationDao().update(actorNetworkServiceRecord);
 
                     actorNetworkServiceRecord.changeState(ActorProtocolState.PROCESSING_RECEIVE);
                     actorNetworkServiceRecord.setFlagReadead(false);
@@ -1072,10 +1058,6 @@ public class IntraActorNetworkServicePluginRoot extends AbstractPlugin implement
 
                 case DISCONNECTED:
 
-                    actorNetworkServiceRecord.changeDescriptor(NotificationDescriptor.DISCONNECTED);
-                    actorNetworkServiceRecord.changeState(ActorProtocolState.DONE);
-                    getOutgoingNotificationDao().update(actorNetworkServiceRecord);
-
                     actorNetworkServiceRecord.changeState(ActorProtocolState.PROCESSING_RECEIVE);
                     actorNetworkServiceRecord.setFlagReadead(false);
                     getIncomingNotificationsDao().createNotification(actorNetworkServiceRecord);
@@ -1085,6 +1067,21 @@ public class IntraActorNetworkServicePluginRoot extends AbstractPlugin implement
 
 
                     respondReceiveAndDoneCommunication(actorNetworkServiceRecord);
+
+                    break;
+
+                case CANCEL:
+
+                    actorNetworkServiceRecord.changeState(ActorProtocolState.PROCESSING_RECEIVE);
+                    actorNetworkServiceRecord.setFlagReadead(false);
+                    getIncomingNotificationsDao().createNotification(actorNetworkServiceRecord);
+                    System.out.println("----------------------------\n" +
+                            "MENSAJE CANCEL LLEGÓ BIEN: CASE DISCONNECTED" + actorNetworkServiceRecord.getActorSenderAlias()
+                            + "\n-------------------------------------------------");
+
+
+                    respondReceiveAndDoneCommunication(actorNetworkServiceRecord);
+
 
                     break;
 
@@ -1727,7 +1724,7 @@ public class IntraActorNetworkServicePluginRoot extends AbstractPlugin implement
                     actorNetworkServiceRecord.getActorProtocolState(),
                     false,
                     1,
-                    actorNetworkServiceRecord.getResponseToNotificationId()
+                    null
             );
 
 
@@ -1751,7 +1748,22 @@ public class IntraActorNetworkServicePluginRoot extends AbstractPlugin implement
 
             actorNetworkServiceRecord.changeState(ActorProtocolState.PROCESSING_SEND);
 
-            outgoingNotificationDao.createNotification(actorNetworkServiceRecord);
+            outgoingNotificationDao.createNotification(
+                    UUID.randomUUID(),
+                    actorNetworkServiceRecord.getActorSenderPublicKey(),
+                    actorNetworkServiceRecord.getActorSenderType(),
+                    actorNetworkServiceRecord.getActorDestinationPublicKey(),
+                    actorNetworkServiceRecord.getActorSenderAlias(),
+                    actorNetworkServiceRecord.getActorSenderPhrase(),
+                    actorNetworkServiceRecord.getActorSenderProfileImage(),
+                    actorNetworkServiceRecord.getActorDestinationType(),
+                    actorNetworkServiceRecord.getNotificationDescriptor(),
+                    System.currentTimeMillis(),
+                    actorNetworkServiceRecord.getActorProtocolState(),
+                    false,
+                    1,
+                    null
+            );
 
         } catch (Exception e) {
             throw new ErrorDenyConnectingIntraUserException("ERROR DENY CONNECTION TO INTRAUSER", e, "", "Generic Exception");
@@ -1813,7 +1825,22 @@ public class IntraActorNetworkServicePluginRoot extends AbstractPlugin implement
 
             actorNetworkServiceRecord.changeState(ActorProtocolState.PROCESSING_SEND);
 
-            outgoingNotificationDao.createNotification(actorNetworkServiceRecord);
+            outgoingNotificationDao.createNotification(
+                    UUID.randomUUID(),
+                    actorNetworkServiceRecord.getActorSenderPublicKey(),
+                    actorNetworkServiceRecord.getActorSenderType(),
+                    actorNetworkServiceRecord.getActorDestinationPublicKey(),
+                    actorNetworkServiceRecord.getActorSenderAlias(),
+                    actorNetworkServiceRecord.getActorSenderPhrase(),
+                    actorNetworkServiceRecord.getActorSenderProfileImage(),
+                    actorNetworkServiceRecord.getActorDestinationType(),
+                    actorNetworkServiceRecord.getNotificationDescriptor(),
+                    System.currentTimeMillis(),
+                    actorNetworkServiceRecord.getActorProtocolState(),
+                    false,
+                    1,
+                    null
+            );
 
         } catch (Exception e) {
             throw new ErrorCancellingIntraUserException("ERROR CANCEL CONNECTION TO INTRAUSER ", e, "", "Generic Exception");
