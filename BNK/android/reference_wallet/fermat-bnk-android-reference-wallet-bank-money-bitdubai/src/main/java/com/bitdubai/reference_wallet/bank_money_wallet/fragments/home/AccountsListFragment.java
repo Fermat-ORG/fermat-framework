@@ -16,6 +16,7 @@ import com.bitdubai.fermat_android_api.ui.adapters.FermatAdapter;
 import com.bitdubai.fermat_android_api.ui.enums.FermatRefreshTypes;
 import com.bitdubai.fermat_android_api.ui.fragments.FermatWalletListFragment;
 import com.bitdubai.fermat_android_api.ui.interfaces.FermatListItemListeners;
+import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.enums.UISource;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Wallets;
@@ -91,7 +92,14 @@ public class AccountsListFragment extends FermatWalletListFragment<BankAccountNu
                 System.out.println("presentation dialog dismiss");
             }
         });
-        presentationDialog.show();
+        try{
+            if(moduleManager.getSettingsManager().loadAndGetSettings(appSession.getAppPublicKey()).isHomeTutorialDialogEnabled())
+                presentationDialog.show();
+        }catch (FermatException e){
+            makeText(getActivity(), "Oops! recovering from system error", Toast.LENGTH_SHORT).show();
+        }
+
+
 
     }
 
