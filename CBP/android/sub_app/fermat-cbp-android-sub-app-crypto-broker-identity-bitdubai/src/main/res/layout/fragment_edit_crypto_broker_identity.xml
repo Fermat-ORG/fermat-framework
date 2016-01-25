@@ -38,10 +38,10 @@
         android:layout_height="wrap_content"
         android:text="@string/publish_identity"
         android:id="@+id/publish_identity"
-        android:layout_marginTop="32dp"
+        android:textColor="#000000"
         android:layout_below="@+id/crypto_broker_name"
         android:layout_centerHorizontal="true"
-        android:textColor="#000000" />
+        android:layout_marginTop="11dp" />
 
     <Button
         style="?android:attr/buttonStyleSmall"

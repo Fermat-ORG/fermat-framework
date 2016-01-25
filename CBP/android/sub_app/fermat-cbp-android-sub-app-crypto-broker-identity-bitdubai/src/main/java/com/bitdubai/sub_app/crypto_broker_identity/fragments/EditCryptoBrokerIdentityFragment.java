@@ -253,8 +253,6 @@ public class EditCryptoBrokerIdentityFragment extends AbstractFermatFragment imp
 
 
     private void dispatchTakePictureIntent() {
-        Log.i(TAG, "Opening Camera app to take the picture...");
-
         Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
         if (takePictureIntent.resolveActivity(getActivity().getPackageManager()) != null) {
             startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE);
@@ -262,8 +260,6 @@ public class EditCryptoBrokerIdentityFragment extends AbstractFermatFragment imp
     }
 
     private void loadImageFromGallery() {
-        Log.i(TAG, "Loading Image from Gallery...");
-
         Intent loadImageIntent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
         startActivityForResult(loadImageIntent, REQUEST_LOAD_IMAGE);
     }
