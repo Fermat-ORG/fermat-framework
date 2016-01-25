@@ -102,6 +102,11 @@ public class CashMoneyWalletImpl implements CashMoneyWallet {
         return dao.getTransactions(walletPublicKey, transactionTypes, balanceTypes, max, offset);
     }
 
+    @Override
+    public CashMoneyWalletTransaction getTransaction(UUID transactionId) throws CantGetCashMoneyWalletTransactionsException {
+        return dao.getTransaction(transactionId);
+    }
+
 
     @Override
     public BigDecimal getHeldFunds(String actorPublicKey) throws CantGetHeldFundsException {
