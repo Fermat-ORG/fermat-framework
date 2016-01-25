@@ -717,6 +717,28 @@ public class CryptoCustomerWalletModuleCryptoCustomerWalletManager implements Cr
         return null;
     }
 
+    /**
+     * This method returns the CustomerBrokerContractPurchase associated to a negotiationId
+     * @param negotiationId
+     * @return
+     * @throws CantGetListCustomerBrokerContractPurchaseException
+     */
+    @Override
+    public CustomerBrokerContractPurchase getCustomerBrokerContractPurchaseByNegotiationId(
+            String negotiationId) throws CantGetListCustomerBrokerContractPurchaseException {
+        Collection<CustomerBrokerContractPurchase> customerBrokerContractPurchases=
+                customerBrokerContractPurchaseManager.getAllCustomerBrokerContractPurchase();
+        String negotiationIdFromCollection;
+        for(CustomerBrokerContractPurchase customerBrokerContractPurchase : customerBrokerContractPurchases){
+            negotiationIdFromCollection=customerBrokerContractPurchase.getNegotiatiotId();
+            if(negotiationIdFromCollection.equals(negotiationId)){
+                return customerBrokerContractPurchase;
+            }
+        }
+        throw new CantGetListCustomerBrokerContractPurchaseException(
+                "Cannot find the contract associated to negotiation "+negotiationId);
+    }
+
 
     private List<ContractBasicInformation> getOpenContractsTestData() {
         if (openContracts == null) {
