@@ -41,8 +41,12 @@ public class CryptoAddressRequestedEventHandler implements FermatEventHandler {
                 list = cryptoAddressesNetworkServiceManager.listAllPendingRequests();
 
                 for (final CryptoAddressRequest request : list) {
-                    if (request.getIdentityTypeResponding().equals(Actors.DAP_ASSET_REDEEM_POINT)) {
-                        redeemPointActorPluginRoot.handleCryptoAddressesNewsEvent();
+                    if(request.getCryptoAddress()!=null) {
+                        if (request.getCryptoAddress().getAddress() != null)
+                            if (request.getIdentityTypeResponding().equals(Actors.DAP_ASSET_REDEEM_POINT)) {
+                                redeemPointActorPluginRoot.handleCryptoAddressesNewsEvent();
+                                cryptoAddressesNetworkServiceManager.markReceivedRequest(request.getRequestId());
+                            }
                     }
                 }
 

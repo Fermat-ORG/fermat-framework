@@ -356,7 +356,7 @@ public class BrokerSubmitOnlineMerchandiseMonitorAgent implements
                         brokerSubmitOnlineMerchandiseBusinessTransactionDao.getPendingToSubmitNotificationList();
                 for(BusinessTransactionRecord pendingToSubmitNotificationRecord : pendingToSubmitNotificationList){
                     contractHash=pendingToSubmitNotificationRecord.getTransactionHash();
-                    transactionTransmissionManager.sendContractStatusNotificationToCryptoBroker(
+                    transactionTransmissionManager.sendContractStatusNotification(
                             pendingToSubmitNotificationRecord.getCustomerPublicKey(),
                             pendingToSubmitNotificationRecord.getBrokerPublicKey(),
                             contractHash,
@@ -377,7 +377,7 @@ public class BrokerSubmitOnlineMerchandiseMonitorAgent implements
                         brokerSubmitOnlineMerchandiseBusinessTransactionDao.getPendingToSubmitNotificationList();
                 for(BusinessTransactionRecord pendingToSubmitConfirmationRecord : pendingToSubmitConfirmationList){
                     contractHash=pendingToSubmitConfirmationRecord.getTransactionHash();
-                    transactionTransmissionManager.sendContractStatusNotificationToCryptoBroker(
+                    transactionTransmissionManager.sendContractStatusNotification(
                             pendingToSubmitConfirmationRecord.getCustomerPublicKey(),
                             pendingToSubmitConfirmationRecord.getBrokerPublicKey(),
                             contractHash,

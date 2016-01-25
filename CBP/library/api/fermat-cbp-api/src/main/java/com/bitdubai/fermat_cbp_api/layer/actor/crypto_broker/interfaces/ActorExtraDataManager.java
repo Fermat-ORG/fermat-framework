@@ -1,8 +1,11 @@
 package com.bitdubai.fermat_cbp_api.layer.actor.crypto_broker.interfaces;
 
+import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
+import com.bitdubai.fermat_api.layer.world.interfaces.Currency;
 import com.bitdubai.fermat_cbp_api.all_definition.identity.ActorIdentity;
 import com.bitdubai.fermat_cbp_api.layer.actor.crypto_broker.exceptions.CantCreateNewActorExtraDataException;
 import com.bitdubai.fermat_cbp_api.layer.actor.crypto_broker.exceptions.CantGetListActorExtraDataException;
+import com.bitdubai.fermat_cbp_api.layer.actor.crypto_broker.exceptions.CantGetListPlatformsException;
 import com.bitdubai.fermat_cbp_api.layer.actor.crypto_broker.exceptions.CantUpdateActorExtraDataException;
 
 import java.util.Collection;
@@ -10,21 +13,21 @@ import java.util.Collection;
 /**
  * Created by angel on 13/1/16.
  */
-public interface ActorExtraDataManager {
+public interface ActorExtraDataManager extends CryptoBrokerActorManager {
 
     /**
      *
-     * @param ActorExtraData
+     * @param actorExtraData
      * @throws CantCreateNewActorExtraDataException
      */
-    void createBrokerSetting(ActorExtraData ActorExtraData) throws CantCreateNewActorExtraDataException;
+    void createBrokerExtraData(ActorExtraData actorExtraData) throws CantCreateNewActorExtraDataException;
 
     /**
      *
-     * @param ActorExtraData
+     * @param actorExtraData
      * @throws CantUpdateActorExtraDataException
      */
-    void updateBrokerSetting(ActorExtraData ActorExtraData) throws CantUpdateActorExtraDataException;
+    void updateBrokerExtraData(ActorExtraData actorExtraData) throws CantUpdateActorExtraDataException;
 
     /**
      *
@@ -46,7 +49,7 @@ public interface ActorExtraDataManager {
      * @return
      * @throws CantGetListActorExtraDataException
      */
-    Collection<ActorExtraData> getActorExtraDataConnectedByIdentity(ActorIdentity identity) throws CantGetListActorExtraDataException;
+    ActorExtraData getActorExtraDataByIdentity(ActorIdentity identity) throws CantGetListActorExtraDataException;
 
     /**
      *
@@ -54,5 +57,11 @@ public interface ActorExtraDataManager {
      * @throws CantGetListActorExtraDataException
      */
     ActorExtraData getActorExtraDataLocalActor() throws CantGetListActorExtraDataException;
+
+    /**
+     *
+     * @return all currencies handled with platforms that support them
+     */
+    Collection<Platforms> getPlatformsSupport(String brokerPublicKey, Currency currency) throws CantGetListPlatformsException;
 
 }

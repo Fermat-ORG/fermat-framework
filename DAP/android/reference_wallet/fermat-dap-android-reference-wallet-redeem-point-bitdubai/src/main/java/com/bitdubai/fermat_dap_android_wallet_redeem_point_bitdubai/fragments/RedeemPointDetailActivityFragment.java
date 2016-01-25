@@ -14,6 +14,9 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
@@ -22,24 +25,31 @@ import android.widget.Toast;
 
 import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractFermatFragment;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView;
+import com.bitdubai.fermat_android_api.ui.Views.PresentationDialog;
 import com.bitdubai.fermat_android_api.ui.adapters.FermatAdapter;
 import com.bitdubai.fermat_android_api.ui.enums.FermatRefreshTypes;
 import com.bitdubai.fermat_android_api.ui.fragments.FermatWalletListFragment;
 import com.bitdubai.fermat_android_api.ui.interfaces.FermatWorkerCallBack;
 import com.bitdubai.fermat_android_api.ui.util.BitmapWorkerTask;
 import com.bitdubai.fermat_android_api.ui.util.FermatWorker;
+import com.bitdubai.fermat_api.FermatException;
+import com.bitdubai.fermat_api.layer.all_definition.enums.UISource;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Wallets;
+import com.bitdubai.fermat_api.layer.all_definition.settings.structure.SettingsManager;
 import com.bitdubai.fermat_dap_android_wallet_redeem_point_bitdubai.R;
 import com.bitdubai.fermat_dap_android_wallet_redeem_point_bitdubai.models.Data;
 import com.bitdubai.fermat_dap_android_wallet_redeem_point_bitdubai.models.DigitalAsset;
 import com.bitdubai.fermat_dap_android_wallet_redeem_point_bitdubai.models.UserRedeemed;
 import com.bitdubai.fermat_dap_android_wallet_redeem_point_bitdubai.sessions.RedeemPointSession;
+import com.bitdubai.fermat_dap_android_wallet_redeem_point_bitdubai.sessions.SessionConstantsRedeemPoint;
+import com.bitdubai.fermat_dap_api.layer.dap_module.wallet_asset_redeem_point.RedeemPointSettings;
 import com.bitdubai.fermat_dap_api.layer.dap_module.wallet_asset_redeem_point.interfaces.AssetRedeemPointWalletSubAppModule;
 import com.bitdubai.fermat_dap_android_wallet_redeem_point_bitdubai.adapters.UserRedeemedPointListAdapter;
 import com.bitdubai.fermat_dap_android_wallet_redeem_point_bitdubai.util.CommonLogger;
 import com.bitdubai.fermat_dap_api.layer.dap_wallet.asset_redeem_point.interfaces.AssetRedeemPointWallet;
 import com.bitdubai.fermat_dap_api.layer.dap_wallet.asset_redeem_point.interfaces.RedeemPointStatistic;
 import com.bitdubai.fermat_dap_plugin.layer.wallet.wallet.redeem.point.developer.bitdubai.version_1.structure.functional.RedeemPointStatisticImpl;
+import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedUIExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedWalletExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 
@@ -50,6 +60,8 @@ import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+
+import static android.widget.Toast.makeText;
 
 /**
  * Created by jinmy on 01/12/16.
@@ -69,12 +81,13 @@ public class RedeemPointDetailActivityFragment extends FermatWalletListFragment<
     private ImageView assetImageDetail;
     private FermatTextView assetDetailNameText;
     private FermatTextView assetDetailExpDateText;
-    private FermatTextView assetDetailAvailableText;
-    private FermatTextView assetDetailBookText;
+    private FermatTextView availableText;
+    private FermatTextView pendingText;
     private FermatTextView assetDetailBtcText;
 
-
     private DigitalAsset digitalAsset;
+
+    SettingsManager<RedeemPointSettings> settingsManager;
 
     public RedeemPointDetailActivityFragment() {
 
@@ -87,11 +100,14 @@ public class RedeemPointDetailActivityFragment extends FermatWalletListFragment<
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setHasOptionsMenu(true);
 
         try {
             assetUserSession = (RedeemPointSession) appSession;
             moduleManager = assetUserSession.getModuleManager();
             errorManager = appSession.getErrorManager();
+
+            settingsManager = appSession.getModuleManager().getSettingsManager();
 
             users = getMoreDataAsync(FermatRefreshTypes.NEW, 0);
         } catch (Exception ex) {
@@ -117,6 +133,53 @@ public class RedeemPointDetailActivityFragment extends FermatWalletListFragment<
 
         showOrHideNoUsersView(users.isEmpty());
     }
+
+    private void setUpHelpAssetRedeemDetail(boolean checkButton) {
+        try {
+            PresentationDialog presentationDialog = new PresentationDialog.Builder(getActivity(), appSession)
+                    .setBannerRes(R.drawable.banner_redeem_point)
+                    .setIconRes(R.drawable.redeem_point)
+                    .setVIewColor(R.color.dap_redeem_point_view_color)
+                    .setTitleTextColor(R.color.dap_redeem_point_view_color)
+                    .setSubTitle("Assets Detail.")
+                    .setBody("You can review in more detail the asset that has been redeemed by an user.\n\n" +
+                            "An asset might be redeemed by many users so statistics and tracking of the users is shown here.\n\n " +
+                            "Every asset redeem at you, is also notified to the original creator of the Asset.")
+                    .setTemplateType(PresentationDialog.TemplateType.TYPE_PRESENTATION_WITHOUT_IDENTITIES)
+                    .setIsCheckEnabled(checkButton)
+                    .build();
+
+            presentationDialog.show();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        super.onCreateOptionsMenu(menu, inflater);
+        menu.add(0, SessionConstantsRedeemPoint.IC_ACTION_REDEEM_HELP_DETAIL, 0, "help").setIcon(R.drawable.dap_asset_redeem_help_icon)
+                .setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        try {
+            int id = item.getItemId();
+
+            if (id == SessionConstantsRedeemPoint.IC_ACTION_REDEEM_HELP_DETAIL) {
+                setUpHelpAssetRedeemDetail(settingsManager.loadAndGetSettings(appSession.getAppPublicKey()).isPresentationHelpEnabled());
+                return true;
+            }
+
+        } catch (Exception e) {
+            errorManager.reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.UNSTABLE, FermatException.wrapException(e));
+            makeText(getActivity(), "Asset Redeem Point system error",
+                    Toast.LENGTH_SHORT).show();
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
  /*   @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -161,8 +224,8 @@ public class RedeemPointDetailActivityFragment extends FermatWalletListFragment<
         assetImageDetail = (ImageView) rootView.findViewById(R.id.asset_image_detail);
         assetDetailNameText = (FermatTextView) rootView.findViewById(R.id.assetDetailNameText);
         assetDetailExpDateText = (FermatTextView) rootView.findViewById(R.id.assetDetailExpDateText);
-        assetDetailAvailableText = (FermatTextView) rootView.findViewById(R.id.assetDetailAvailableText);
-        assetDetailBookText = (FermatTextView) rootView.findViewById(R.id.assetDetailBookText);
+        availableText = (FermatTextView) rootView.findViewById(R.id.assetAvailable1);
+        pendingText = (FermatTextView) rootView.findViewById(R.id.assetAvailable2);
         assetDetailBtcText = (FermatTextView) rootView.findViewById(R.id.assetDetailBtcText);
 
     }
@@ -220,9 +283,27 @@ public class RedeemPointDetailActivityFragment extends FermatWalletListFragment<
 
         assetDetailNameText.setText(digitalAsset.getName());
         assetDetailExpDateText.setText(digitalAsset.getFormattedExpDate());
-        assetDetailAvailableText.setText(digitalAsset.getAvailableBalanceQuantity()+"");
-        assetDetailBookText.setText(digitalAsset.getBookBalanceQuantity() + "");
+
+        long available = digitalAsset.getAvailableBalanceQuantity();
+        long book = digitalAsset.getBookBalanceQuantity();
+        availableText.setText(availableText(available));
+        if (available == book) {
+            pendingText.setVisibility(View.INVISIBLE);
+        } else {
+            long pendingValue = Math.abs(available - book);
+            pendingText.setText(pendingText(pendingValue));
+            pendingText.setVisibility(View.VISIBLE);
+        }
+
         assetDetailBtcText.setText(digitalAsset.getFormattedAvailableBalanceBitcoin() + " BTC");
+    }
+
+    private String pendingText(long pendingValue) {
+        return "(" + pendingValue + " pending confirmation)";
+    }
+
+    private String availableText(long available) {
+        return available + ((available == 1) ? " Asset" : " Assets");
     }
 
     private void configureToolbar() {

@@ -19,15 +19,7 @@ import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.DealsWithLogger;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogLevel;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogManager;
-import com.bitdubai.fermat_p2p_plugin.layer.ws.communications.cloud.server.developer.bitdubai.version_1.structure.WsCommunicationCloudServer;
-import com.bitdubai.fermat_p2p_plugin.layer.ws.communications.cloud.server.developer.bitdubai.version_1.structure.WsCommunicationsCloudServerPingAgent;
 import com.bitdubai.fermat_p2p_plugin.layer.ws.communications.cloud.server.developer.bitdubai.version_1.structure.jetty.JettyEmbeddedAppServer;
-import com.bitdubai.fermat_p2p_plugin.layer.ws.communications.cloud.server.developer.bitdubai.version_1.structure.processors.ActorUpdateRequestPacketProcessor;
-import com.bitdubai.fermat_p2p_plugin.layer.ws.communications.cloud.server.developer.bitdubai.version_1.structure.processors.ComponentConnectionRequestPacketProcessor;
-import com.bitdubai.fermat_p2p_plugin.layer.ws.communications.cloud.server.developer.bitdubai.version_1.structure.processors.ComponentRegistrationRequestPacketProcessor;
-import com.bitdubai.fermat_p2p_plugin.layer.ws.communications.cloud.server.developer.bitdubai.version_1.structure.processors.DiscoveryComponentConnectionRequestPacketProcessor;
-import com.bitdubai.fermat_p2p_plugin.layer.ws.communications.cloud.server.developer.bitdubai.version_1.structure.processors.RequestListComponentRegisterPacketProcessor;
-import com.bitdubai.fermat_p2p_plugin.layer.ws.communications.cloud.server.developer.bitdubai.version_1.structure.webservices.RestletCommunicationCloudServer;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.DealsWithErrors;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedPluginExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
@@ -36,15 +28,8 @@ import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfac
 
 import org.apache.commons.lang.ClassUtils;
 import org.apache.log4j.Logger;
-import org.java_websocket.WebSocketImpl;
 
-import java.net.Inet6Address;
-import java.net.InetAddress;
-import java.net.InetSocketAddress;
-import java.net.NetworkInterface;
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -109,11 +94,6 @@ public class WsCommunicationsServerCloudPluginRoot implements Service, DealsWith
     private List<FermatEventListener> listenersAdded = new ArrayList<>();
 
     /**
-     * Represent the wsCommunicationCloudServer
-     */
-    private WsCommunicationCloudServer wsCommunicationCloudServer;
-
-    /**
      * DealsWithPluginIdentity Interface member variables.
      */
     private UUID pluginId;
@@ -122,11 +102,6 @@ public class WsCommunicationsServerCloudPluginRoot implements Service, DealsWith
      * Represent the disableServerFlag
      */
     private Boolean disableServerFlag;
-
-    /**
-     * Represent the  wsCommunicationsCloudServerPingAgent
-     */
-    private WsCommunicationsCloudServerPingAgent wsCommunicationsCloudServerPingAgent;
 
     /**
      * Constructor
@@ -256,7 +231,7 @@ public class WsCommunicationsServerCloudPluginRoot implements Service, DealsWith
         listenersAdded.clear();
 
         /*
-         * Change the estatus
+         * Change the status
          */
         this.serviceStatus = ServiceStatus.STOPPED;
 
