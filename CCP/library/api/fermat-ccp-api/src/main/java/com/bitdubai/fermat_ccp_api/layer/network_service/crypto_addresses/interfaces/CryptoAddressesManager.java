@@ -115,4 +115,6 @@ public interface CryptoAddressesManager extends FermatManager {
      */
     void denyAddressExchangeRequest(UUID requestId) throws CantDenyAddressExchangeRequestException,
                                                            PendingRequestNotFoundException        ;;
+
+    void markReceivedRequest(UUID requestId) throws CantConfirmAddressExchangeRequestException;
 }

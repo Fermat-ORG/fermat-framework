@@ -5,5 +5,5 @@
         android:id="@+id/action_asset_factory_help"
         android:title="@string/help"
         android:icon="@drawable/dap_asset_factory_help_icon"
-        app:showAsAction="always" />
+        app:showAsAction="ifRoom" />
 </menu>
