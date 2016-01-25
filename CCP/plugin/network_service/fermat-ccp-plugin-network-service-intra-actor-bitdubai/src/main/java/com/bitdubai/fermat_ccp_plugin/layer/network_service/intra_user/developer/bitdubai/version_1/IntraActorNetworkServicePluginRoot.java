@@ -776,7 +776,7 @@ public class IntraActorNetworkServicePluginRoot extends AbstractPlugin implement
         if (platformComponentProfileRegistered.getPlatformComponentType() == PlatformComponentType.COMMUNICATION_CLOUD_CLIENT && this.register){
 
             if(communicationRegistrationProcessNetworkServiceAgent.getActive()){
-                communicationRegistrationProcessNetworkServiceAgent.stop();
+                communicationRegistrationProcessNetworkServiceAgent.interrupt();
                 communicationRegistrationProcessNetworkServiceAgent = null;
             }
 
@@ -1430,7 +1430,7 @@ public class IntraActorNetworkServicePluginRoot extends AbstractPlugin implement
 
             if(communicationRegistrationProcessNetworkServiceAgent.getActive()){
 
-                communicationRegistrationProcessNetworkServiceAgent.stop();
+                communicationRegistrationProcessNetworkServiceAgent.interrupt();
                 communicationRegistrationProcessNetworkServiceAgent = null;
             }
 
