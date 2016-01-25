@@ -33,9 +33,11 @@ public class ActorNetworkServiceRecord implements IntraUserNotification {
     private boolean flagReadead;
     private int sentCount;
 
+    private UUID responseToNotificationId;
 
 
-    public ActorNetworkServiceRecord(UUID id, String actorSenderAlias,String actorSenderPhrase, byte[] actorSenderProfileImage, NotificationDescriptor notificationDescriptor, Actors actorDestinationType, Actors actorSenderType, String actorSenderPublicKey, String actorDestinationPublicKey,long sentDate,ActorProtocolState actorProtocolState,boolean flagReadead, int sendCount) {
+
+    public ActorNetworkServiceRecord(UUID id, String actorSenderAlias,String actorSenderPhrase, byte[] actorSenderProfileImage, NotificationDescriptor notificationDescriptor, Actors actorDestinationType, Actors actorSenderType, String actorSenderPublicKey, String actorDestinationPublicKey,long sentDate,ActorProtocolState actorProtocolState,boolean flagReadead, int sendCount,UUID responseToNotificationId) {
         this.id = id;
         this.actorSenderAlias = actorSenderAlias;
         this.actorSenderProfileImage = actorSenderProfileImage;
@@ -49,6 +51,7 @@ public class ActorNetworkServiceRecord implements IntraUserNotification {
         this.flagReadead = flagReadead;
         this.sentCount = sendCount;
         this.actorSenderPhrase = actorSenderPhrase;
+        this.responseToNotificationId = responseToNotificationId;
     }
 
 
@@ -69,6 +72,8 @@ public class ActorNetworkServiceRecord implements IntraUserNotification {
         this.actorSenderPhrase         = jsonObject.get("actorSenderPhrase").getAsString();
 
     }
+
+
 
     @Override
     public String getActorSenderAlias() {
@@ -162,6 +167,14 @@ public class ActorNetworkServiceRecord implements IntraUserNotification {
 
     public void setActorProtocolState(ActorProtocolState actorProtocolState) {
         this.actorProtocolState = actorProtocolState;
+    }
+
+    public UUID getResponseToNotificationId() {
+        return responseToNotificationId;
+    }
+
+    public void setResponseToNotificationId(UUID responseToNotificationId) {
+        this.responseToNotificationId = responseToNotificationId;
     }
 
     public String toJson() {

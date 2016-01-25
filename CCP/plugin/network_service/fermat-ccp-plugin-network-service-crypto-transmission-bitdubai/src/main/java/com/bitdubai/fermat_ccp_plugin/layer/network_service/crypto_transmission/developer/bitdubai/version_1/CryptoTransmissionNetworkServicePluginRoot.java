@@ -95,6 +95,7 @@ import com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_transmission.
 import com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_transmission.developer.bitdubai.version_1.structure.crypto_transmission_structure.CryptoTransmissionResponseMessage;
 import com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_transmission.developer.bitdubai.version_1.structure.crypto_transmission_structure.CryptoTransmissionTransactionProtocolManager;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.common.network_services.abstract_classes.AbstractNetworkService;
+import com.bitdubai.fermat_p2p_api.layer.all_definition.common.network_services.template.structure.CommunicationNetworkServiceConnectionManager_V2;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.contents.FermatMessageCommunication;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.enums.P2pEventType;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.events.ClientConnectionCloseNotificationEvent;
@@ -168,7 +169,7 @@ public class CryptoTransmissionNetworkServicePluginRoot extends AbstractNetworkS
     /**
      * Represent the communicationNetworkServiceConnectionManager
      */
-    private CommunicationNetworkServiceConnectionManager communicationNetworkServiceConnectionManager;
+    private CommunicationNetworkServiceConnectionManager_V2 communicationNetworkServiceConnectionManager;
 
     /**
      * Represent the dataBase
@@ -280,8 +281,15 @@ public class CryptoTransmissionNetworkServicePluginRoot extends AbstractNetworkS
      * because at this moment, is create the platformComponentProfile for this component
      */
     public void initializeCommunicationNetworkServiceConnectionManager(){
-        this.communicationNetworkServiceConnectionManager = new CommunicationNetworkServiceConnectionManager(
-                getPlatformComponentProfilePluginRoot(), identity, wsCommunicationsCloudClientManager.getCommunicationsCloudClientConnection(), dataBase, errorManager, eventManager,getEventSource(),getPluginVersionReference(),this);
+        this.communicationNetworkServiceConnectionManager = new CommunicationNetworkServiceConnectionManager_V2(
+                this,
+                getPlatformComponentProfilePluginRoot(),
+                identity,
+                wsCommunicationsCloudClientManager.getCommunicationsCloudClientConnection(),
+                dataBase,
+                errorManager,
+                eventManager
+        );
     }
 
     /**
@@ -887,7 +895,7 @@ public class CryptoTransmissionNetworkServicePluginRoot extends AbstractNetworkS
     @Override
     public void handleVpnConnectionCloseNotificationEvent(FermatEvent fermatEvent) {
 
-        System.out.println("CRYPTO TRANSMISSION - handleVpnConnectionCloseNotificationEvent");
+
         VPNConnectionCloseNotificationEvent vpnConnectionCloseNotificationEvent = (VPNConnectionCloseNotificationEvent) fermatEvent;
         //cryptoTransmissionAgent.connectionFailure(vpnConnectionCloseNotificationEvent.getRemoteParticipant().getIdentityPublicKey());
 
@@ -895,12 +903,20 @@ public class CryptoTransmissionNetworkServicePluginRoot extends AbstractNetworkS
 
             if(vpnConnectionCloseNotificationEvent.getNetworkServiceApplicant() == getNetworkServiceType()){
 
-              reprocessWaitingMessage(vpnConnectionCloseNotificationEvent.getRemoteParticipant().getIdentityPublicKey());
+                System.out.println("CRYPTO TRANSMISSION - handleVpnConnectionCloseNotificationEvent");
+
+                String remotePublicKey = vpnConnectionCloseNotificationEvent.getRemoteParticipant().getIdentityPublicKey();
+              reprocessWaitingMessage(remotePublicKey);
 
                 if(communicationNetworkServiceConnectionManager != null)
                      communicationNetworkServiceConnectionManager.closeConnection(vpnConnectionCloseNotificationEvent.getRemoteParticipant().getIdentityPublicKey());
 
+                if(cryptoTransmissionAgent!=null) cryptoTransmissionAgent.connectionFailure(remotePublicKey);
+
+
             }
+
+
 
         }
 

@@ -12,7 +12,6 @@ import java.util.UUID;
  */
 public class DenyMessage extends NetworkServiceMessage {
 
-    private final UUID   requestId;
     private final String reason   ;
 
     public DenyMessage(final UUID   requestId,
@@ -22,13 +21,9 @@ public class DenyMessage extends NetworkServiceMessage {
 
         super(requestId,MessageTypes.DENY,identitySender,actorDestination);
 
-        this.requestId = requestId;
         this.reason = reason;
     }
 
-    public UUID getRequestId() {
-        return requestId;
-    }
 
     public String getReason() {
         return reason;
@@ -37,7 +32,7 @@ public class DenyMessage extends NetworkServiceMessage {
     @Override
     public String toString() {
         return "DenyMessage{" +
-                "requestId=" + requestId +
+                "requestId=" + getRequestId() +
                 ", reason='" + reason + '\'' +
                 '}';
     }

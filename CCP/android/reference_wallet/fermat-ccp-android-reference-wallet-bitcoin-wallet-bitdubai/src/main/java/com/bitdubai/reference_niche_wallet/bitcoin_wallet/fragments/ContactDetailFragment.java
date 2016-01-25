@@ -22,6 +22,8 @@ import android.widget.Toast;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractFermatFragment;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatButton;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
+import com.bitdubai.fermat_api.layer.all_definition.enums.BlockchainNetworkType;
+import com.bitdubai.fermat_api.layer.all_definition.enums.CryptoCurrency;
 import com.bitdubai.fermat_api.layer.all_definition.enums.CryptoCurrencyVault;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ReferenceWallet;
@@ -218,28 +220,25 @@ public class ContactDetailFragment extends AbstractFermatFragment implements Vie
                 @Override
                 public void onClick(View v) {
                     try {
-                        referenceWalletSession.getModuleManager().getCryptoWallet().requestAddressToKnownUser(
-                                referenceWalletSession.getIntraUserModuleManager().getPublicKey(),
+                        referenceWalletSession.getModuleManager().getCryptoWallet().sendAddressExchangeRequest(
+                                cryptoWalletWalletContact.getActorName(),
                                 Actors.INTRA_USER,
                                 cryptoWalletWalletContact.getActorPublicKey(),
-                                cryptoWalletWalletContact.getActorType(),
-                                Platforms.CRYPTO_CURRENCY_PLATFORM,
-                                VaultType.CRYPTO_CURRENCY_VAULT,
-                                CryptoCurrencyVault.BITCOIN_VAULT.getCode(),
-                                referenceWalletSession.getAppPublicKey(),
-                                ReferenceWallet.BASIC_WALLET_BITCOIN_WALLET
+                                cryptoWalletWalletContact.getProfilePicture(),
+                                Actors.INTRA_USER,
+                                referenceWalletSession.getIntraUserModuleManager().getPublicKey()
+                                ,appSession.getAppPublicKey(),
+                                CryptoCurrency.BITCOIN,
+                                BlockchainNetworkType.DEFAULT
                         );
-                    } catch (CantRequestCryptoAddressException e) {
-                        e.printStackTrace();
-                    } catch (CantGetCryptoWalletException e) {
-                        e.printStackTrace();
-                    } catch (CantListCryptoWalletIntraUserIdentityException e) {
+                    } catch (CantGetCryptoWalletException | CantListCryptoWalletIntraUserIdentityException e) {
                         e.printStackTrace();
                     }
 
                 }
             });
         }
+
     }
 
 
@@ -271,6 +270,8 @@ public class ContactDetailFragment extends AbstractFermatFragment implements Vie
                     //TODO: si la address es nula hay que ver porqué es
                     text_view_address.setText((address!=null)?address:"mnK7DuBQT3REr9bmfYcufTwjiAWfjwRwMf");
                     img_update.setVisibility(View.GONE);
+                }else{
+                    img_update.setVisibility(View.VISIBLE);
                 }
             }else{
                 text_view_address.setText("Waiting...");
