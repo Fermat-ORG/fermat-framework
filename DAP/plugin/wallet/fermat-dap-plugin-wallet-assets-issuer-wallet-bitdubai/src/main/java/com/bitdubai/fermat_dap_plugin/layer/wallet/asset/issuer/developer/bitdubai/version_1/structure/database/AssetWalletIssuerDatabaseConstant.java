@@ -44,6 +44,8 @@ public class AssetWalletIssuerDatabaseConstant {
     // ASSET STATISTIC TABLE.
 
     public static final String ASSET_STATISTIC_TABLE_NAME = "asset_statistics";
+    public static final String ASSET_STATISTIC_TRANSACTION_ID_COLUMN_NAME = "transaction_id";
+    public static final String ASSET_STATISTIC_TRANSACTION_HASH_COLUMN_NAME = "transactionHash";
     public static final String ASSET_STATISTIC_ASSET_PUBLIC_KEY_COLUMN_NAME = "asset_public_key";
     public static final String ASSET_STATISTIC_ACTOR_USER_PUBLIC_KEY_COLUMN_NAME = "user_public_key";
     public static final String ASSET_STATISTIC_REDEEM_POINT_PUBLIC_KEY_COLUMN_NAME = "redeem_point_public_key";
