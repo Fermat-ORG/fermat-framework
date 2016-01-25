@@ -220,7 +220,7 @@ public final class CryptoAddressesExecutorAgent extends FermatAgent {
                                 aer.getIdentityPublicKeyResponding(),
                                 aer.getIdentityTypeResponding()
                         )) {
-                            toWaitingResponse(aer.getRequestId());
+                                         toWaitingResponse(aer.getRequestId());
                         }
 
                         break;
