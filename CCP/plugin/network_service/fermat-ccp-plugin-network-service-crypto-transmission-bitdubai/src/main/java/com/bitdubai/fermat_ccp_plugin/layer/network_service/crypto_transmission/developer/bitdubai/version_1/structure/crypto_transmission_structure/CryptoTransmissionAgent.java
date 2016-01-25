@@ -20,7 +20,8 @@ import com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_transmission.
 import com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_transmission.developer.bitdubai.version_1.crypto_transmission_database.exceptions.CantInitializeCryptoTransmissionNetworkServiceDatabaseException;
 import com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_transmission.developer.bitdubai.version_1.exceptions.CantReadRecordDataBaseException;
 import com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_transmission.developer.bitdubai.version_1.exceptions.CantUpdateRecordDataBaseException;
-import com.bitdubai.fermat_p2p_api.layer.all_definition.common.network_services.template.communications.CommunicationNetworkServiceLocal;
+import com.bitdubai.fermat_p2p_api.layer.all_definition.common.network_services.template.structure.CommunicationNetworkServiceLocal;
+import com.bitdubai.fermat_p2p_api.layer.all_definition.common.network_services.template.structure.CommunicationNetworkServiceConnectionManager_V2;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.WsCommunicationsCloudClientManager;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.contents.FermatMessage;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.exceptions.CantEstablishConnectionException;
@@ -81,7 +82,7 @@ public class CryptoTransmissionAgent {
     /**
      * Communication manager, Class to obtain the connections
      */
-    CommunicationNetworkServiceConnectionManager communicationNetworkServiceConnectionManager;
+    CommunicationNetworkServiceConnectionManager_V2 communicationNetworkServiceConnectionManager;
 
     /**
      *
@@ -165,7 +166,7 @@ public class CryptoTransmissionAgent {
             CryptoTransmissionConnectionsDAO cryptoTransmissionConnectionsDAO,
             CryptoTransmissionMetadataDAO_V2 incomingCryptoTransmissionMetadataDAO,
             CryptoTransmissionMetadataDAO_V2 outgoingCryptoTransmissionMetadataDAO,
-            CommunicationNetworkServiceConnectionManager communicationNetworkServiceConnectionManager,
+            CommunicationNetworkServiceConnectionManager_V2 communicationNetworkServiceConnectionManager,
             WsCommunicationsCloudClientManager wsCommunicationsCloudClientManager,
             ErrorManager errorManager,
             List<PlatformComponentProfile> remoteNetworkServicesRegisteredList,
@@ -410,8 +411,6 @@ public class CryptoTransmissionAgent {
                         } catch (Exception e) {
                             e.printStackTrace();
                         }
-                    }else{
-                        poolConnectionsWaitingForResponse.remove(cryptoTransmissionMetadata.getDestinationPublicKey());
                     }
                 }
             }
