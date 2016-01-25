@@ -86,6 +86,7 @@ public class NewTransactionStatusNotificationMessageReceiverProcessor extends Fe
                     chatMetadataTransactionRecord.setDistributionStatus(distributionStatus);
                 if(messageStatus != null)
                     chatMetadataTransactionRecord.setMessageStatus(messageStatus);
+                chatMetadataTransactionRecord.setProcessed(ChatMetadataTransactionRecord.NO_PROCESSED);
                 getChatPluginRoot().getChatMetaDataDao().update(chatMetadataTransactionRecord);
 
 
@@ -99,6 +100,7 @@ public class NewTransactionStatusNotificationMessageReceiverProcessor extends Fe
                 /*
                 * Notify to the interested
                 */
+
                 IncomingNewChatStatusUpdate event = (IncomingNewChatStatusUpdate) getChatPluginRoot().getEventManager().getNewEvent(EventType.INCOMING_STATUS);
                 event.setChatId(chatMetadataTransactionRecord.getChatId());
                 event.setSource(ChatPluginRoot.EVENT_SOURCE);
