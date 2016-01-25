@@ -70,7 +70,7 @@ public class ActorNetworkServiceRecord implements IntraUserNotification {
         this.flagReadead               = jsonObject.get("flagReadead").getAsBoolean();
         this.sentCount                 = jsonObject.get("sentCount").getAsInt();
         this.actorSenderPhrase         = jsonObject.get("actorSenderPhrase").getAsString();
-        this.responseToNotificationId  = UUID.fromString(jsonObject.get("responseToNotificationId").getAsString());
+        if(jsonObject.get("responseToNotificationId")!=null)this.responseToNotificationId  = UUID.fromString(jsonObject.get("responseToNotificationId").getAsString());
 
     }
 
@@ -196,7 +196,7 @@ public class ActorNetworkServiceRecord implements IntraUserNotification {
         jsonObject.addProperty("actorProtocolState",        actorProtocolState.toString());
         jsonObject.addProperty("flagReadead",               flagReadead);
         jsonObject.addProperty("sentCount",                 sentCount);
-        jsonObject.addProperty("responseToNotificationId",  responseToNotificationId.toString());
+        if(responseToNotificationId!=null)jsonObject.addProperty("responseToNotificationId", responseToNotificationId.toString());
         return gson.toJson(jsonObject);
 
     }
