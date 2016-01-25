@@ -113,7 +113,7 @@ public class ChatFragment extends AbstractFermatFragment {//ActionBarActivity
 
         // Inflate the layout for this fragment
         View layout = inflater.inflate(R.layout.chat, container, false);
-
+        
 
 
         messagesContainer = (ListView) layout.findViewById(R.id.messagesContainer);
@@ -158,6 +158,7 @@ public class ChatFragment extends AbstractFermatFragment {//ActionBarActivity
                 Message testMessage = new MessageMock(UUID.fromString("52d7fab8-a423-458f-bcc9-49cdb3e9ba8f"));
                 testMessage.setMessage(messageET.getText().toString());
                 try {
+
                     chatManager.saveChat(testChat);
                     chatManager.saveMessage(testMessage);
                     mensaje=chatManager.getMessageByChatId((UUID.fromString("52d7fab8-a423-458f-bcc9-49cdb3e9ba8f"))).getMessage();

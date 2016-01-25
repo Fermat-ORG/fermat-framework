@@ -1,42 +1,30 @@
 package com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.fragments;
 
-import android.app.Activity;
-import android.app.ProgressDialog;
-import android.content.Intent;
-import android.content.pm.ActivityInfo;
-import android.os.AsyncTask;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentTransaction;
-import android.support.v4.app.ListFragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.LinearLayout;
+import android.widget.AdapterView;
 import android.widget.ListView;
-import android.widget.ProgressBar;
-import android.widget.TextView;
+import android.widget.Toast;
 
 import com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.adapters.ChatListAdapter;
-import com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.holders.ChatsListHolder;
-import com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.models.ChatsList;
+import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractFermatFragment;
 import com.bitdubai.fermat_cht_android_sub_app_chat_bitdubai.R;
 
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Chat List Fragment
  *
  * @author Jose Cardozo josejcb (josejcb89@gmail.com) on 19/01/16
  * @version 1.0
+ * Upd
  *
  */
 
-public class ChatListFragment extends ListFragment {
+public class ChatListFragment extends AbstractFermatFragment {
 
-    boolean dualPane;
+    /*boolean dualPane;
     private static int currentCheckPosition = 0;
     private ChatListAdapter adapter;
     private ProgressBar progressBar;
@@ -47,18 +35,79 @@ public class ChatListFragment extends ListFragment {
 
     private TextView noChatsMessage;
 
-    private long clickedId;
+    private long clickedId;*/
+
+
+    ListView list;
+ //   static HashMap<Integer,List<String>> chatinfo=new HashMap<Integer,List<String>>();
+   // static Integer[] imgid=new Integer[6];
+    String[] chatinfo={"MIGUEL@@hola como estas##24/10/2015",
+         "MAP@@chao nos vemos##25/10/2015",
+         "JOS@@Vamos a alla##24/12/2015",
+         "MIG@@hola como estas##24/10/2015",
+         "FRAN@@hola como estas##24/10/2015",
+         "GAB@@hola como estas##24/10/2015"};   //work
+    Integer[] imgid={R.drawable.ken,
+    R.drawable.sas,
+    R.drawable.koj,
+    R.drawable.veg,
+    R.drawable.ren,
+    R.drawable.pat
+    };
+
+    static void initchatinfo(){
+     //   chatinfo.put(0, Arrays.asList("Miguel", "Que paso?", "12/09/2007"));
+        //imgid[0]=R.drawable.ken;
+    }
+    public static ChatListFragment newInstance() {
+        initchatinfo();
+        return new ChatListFragment();}
 
     @Override
+
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+//System.out.println("**********LISTA:"+chatinfo.get(0).get(0)+" - "+chatinfo.get(0).get(1)+" - "+chatinfo.get(0).get(2));
+     //   setContentView(getActivity());
+        View layout = inflater.inflate(R.layout.chats_list_fragment, container, false);
+
+        ChatListAdapter adapter=new ChatListAdapter(getActivity(), chatinfo, imgid);
+        list=(ListView)layout.findViewById(R.id.list);
+        list.setAdapter(adapter);
+
+        list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view,int position, long id) {
+                // TODO Auto-generated method stub
+                String Slecteditem= chatinfo[position];
+                Toast.makeText(getActivity(), Slecteditem, Toast.LENGTH_SHORT).show();
+
+            }
+        });
+
+        return layout;
+    }
+
+
+
+
+
+
+
+//mig chance
+    /*   @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         adapter = new ChatListAdapter(getActivity());
         layout = (LinearLayout) getActivity().findViewById(R.id.fragment_layout);
         noChatsMessage = (TextView) getActivity().findViewById(R.id.no_chats);
         return inflater.inflate(R.layout.chats_list_fragment, null);
-    }
+    }*/
+ //
 
-    @Override
+//mig chance
+/*    @Override
     public void onActivityCreated(Bundle savedState) {
         super.onActivityCreated(savedState);
 
@@ -76,7 +125,8 @@ public class ChatListFragment extends ListFragment {
 
         //getChatsList(Const.CHATS_LIST_OFFSET, Const.CHATS_LIST_LIMIT);
 
-        FloatingActionButton fab = (FloatingActionButton) getActivity().findViewById(R.id.fab);
+        FloatingActionButton fab = (FloatingActionButton) getActivity().findViewById(R.id.fab);*/
+    //
         //fab.attachToListView(getListView());
         //fab.setColorPressedResId(R.color.background_floating_button_pressed);
         //fab.setColorNormalResId(R.color.background_floating_button);
@@ -92,8 +142,8 @@ public class ChatListFragment extends ListFragment {
             }
         });
         setListAdapter(adapter);*/
-
-        View detailsFrame = getActivity().findViewById(R.id.messages);
+//mig chance
+  /*      View detailsFrame = getActivity().findViewById(R.id.messages);
         dualPane = detailsFrame != null
                 && detailsFrame.getVisibility() == View.VISIBLE;
         if (savedState != null) {
@@ -101,25 +151,25 @@ public class ChatListFragment extends ListFragment {
         }
         if (dualPane) {
             getListView().setChoiceMode(ListView.CHOICE_MODE_SINGLE);
-        }
-
+        }*/
+//
          /*long id = ((ChatActivity) getActivity()).getIntentChatId();
        if (id != 0) {
             clickedId = id;
             int position = getChatPosition(id);
             showMessages(position);
         }*/
-    }
-
-    public void setChatsList(final ChatsList chats1) {
+ //   }
+//mig
+/*    public void setChatsList(final ChatsList chats1) {
         if (progressBar != null) {
             progressBar.setVisibility(View.GONE);
         }
         chats = chats1;
         //adapter.clear();
         //adapter.addAll(chats.chats);
-    }
-
+    }*/
+//
     /*public void getChatsList(int offset, int limit) {
         new ApiClient<>(new TdApi.GetChats(offset, limit), new ChatsHandler(), new ApiClient.OnApiResultHandler() {
             @Override
@@ -143,10 +193,10 @@ public class ChatListFragment extends ListFragment {
             }
         }).executeOnExecutor(AsyncTask.SERIAL_EXECUTOR);
     }*/
-
-    public ChatsList getChat(long id) {
-       // if (chats == null /*|| chats.chats.length == 0*/) {
-        /*    chats = ChatsListHolder.getChats();
+//mig chance
+/*    public ChatsList getChat(long id) {
+       // if (chats == null *//*|| chats.chats.length == 0*//*) {
+        *//*    chats = ChatsListHolder.getChats();
         }
         if (id != 0) {
             clickedId = id;
@@ -161,10 +211,10 @@ public class ChatListFragment extends ListFragment {
             return chats.chats[0];
         } else {
             return chats.chats[currentCheckPosition];
-        }*/
+        }*//*
         return null;
-    }
-
+    }*/
+//
     /*public int getChatPosition(long id) {
         if (chats == null) {
             chats = MessagesFragmentHolder.getChats();
@@ -210,13 +260,13 @@ public class ChatListFragment extends ListFragment {
         }
         adapter.notifyDataSetChanged();
     }*/
-
-    @Override
+//mig chanve
+/*    @Override
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
         outState.putInt("curChoice", currentCheckPosition);
-    }
-
+    }*/
+//
     /*@Override
     public void onListItemClick(ListView l, View v, int pos, long id) {
         TdApi.Chat selectedItem = adapter.getItem(pos);
@@ -238,17 +288,17 @@ public class ChatListFragment extends ListFragment {
             layout.setVisibility(View.INVISIBLE);
         }
     }*/
-
-    public void openChat(long resultId) {
+//mig chance
+/*    public void openChat(long resultId) {
         clickedId = resultId;
-        /*int position = getChatPosition(resultId);
+        *//*int position = getChatPosition(resultId);
         if (position == Const.CHAT_NOT_FOUND) {
             newPrivateChat(resultId);
         } else {
             showMessages(position);
-        }*/
-    }
-
+        }*//*
+    }*/
+//
    /* private void newPrivateChat(final long userId) {
         getActivity().setRequestedOrientation(getResources().getConfiguration().orientation);
         mProgressDialog = ProgressDialog.show(getActivity(), getActivity().getString(R.string.loading),
@@ -309,12 +359,13 @@ public class ChatListFragment extends ListFragment {
         }
     }*/
 
-    @Override
+    //mig change
+ /*   @Override
     public void onStop() {
         super.onStop();
         fragmentStopped = true;
-    }
-
+    }*/
+    //
     /*@Override
     public void onResume() {
         fragmentStopped = false;
