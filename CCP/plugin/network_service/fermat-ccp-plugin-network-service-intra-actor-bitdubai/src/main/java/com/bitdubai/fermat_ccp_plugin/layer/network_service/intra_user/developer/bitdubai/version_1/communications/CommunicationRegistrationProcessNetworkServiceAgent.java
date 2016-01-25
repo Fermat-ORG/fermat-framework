@@ -74,7 +74,7 @@ public class CommunicationRegistrationProcessNetworkServiceAgent {
 
             try{
 
-               System.out.println("IntraActorNetworkServicePluginRoot "+networkService.isRegister()+" communicationsClientConnection.isRegister() "+communicationsClientConnection.getCommunicationsCloudClientConnection().isRegister());
+                System.out.println(networkService.getName()+" isRegister "+networkService.isRegister()+" communicationsClientConnection.isRegister() "+communicationsClientConnection.getCommunicationsCloudClientConnection().isRegister());
 
                 if (communicationsClientConnection.getCommunicationsCloudClientConnection().isRegister() && !networkService.isRegister()){
 
@@ -109,8 +109,7 @@ public class CommunicationRegistrationProcessNetworkServiceAgent {
                     stop();
 
                 }else if (!networkService.isRegister()){
-                    active = Boolean.FALSE;
-                    try {
+                   try {
 
                         if(Thread.currentThread().isInterrupted() == Boolean.FALSE)
                             Thread.sleep(CommunicationRegistrationProcessNetworkServiceAgent.SLEEP_TIME);
@@ -137,7 +136,7 @@ public class CommunicationRegistrationProcessNetworkServiceAgent {
 
     }
 
-    public  void start() {
+    public void start() {
         this.active = Boolean.TRUE;
         executorService.execute(toRegistration);
     }

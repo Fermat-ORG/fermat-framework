@@ -110,8 +110,6 @@ public class CommunicationRegistrationProcessNetworkServiceAgent {
 
                 }else if (!networkService.isRegister()){
 
-                    active = Boolean.FALSE;
-
                     try {
 
                         if(Thread.currentThread().isInterrupted() == Boolean.FALSE)
@@ -138,7 +136,6 @@ public class CommunicationRegistrationProcessNetworkServiceAgent {
             }
 
     }
-
 
     public  void start() {
         this.active = Boolean.TRUE;
