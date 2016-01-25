@@ -1260,13 +1260,13 @@ public class CryptoAddressesNetworkServicePluginRoot extends AbstractNetworkServ
 
             switch (networkServiceMessage.getMessageType()) {
                 case ACCEPT:
-//                    AcceptMessage acceptMessage = gson.fromJson(jsonMessage, AcceptMessage.class);
-//                    cryptoAddressesNetworkServiceDao.changeProtocolState(acceptMessage.getRequestId(), ProtocolState.DONE);
+                    AcceptMessage acceptMessage = gson.fromJson(jsonMessage, AcceptMessage.class);
+                   cryptoAddressesNetworkServiceDao.changeProtocolState(acceptMessage.getRequestId(), ProtocolState.DONE);
 
                     break;
                 case DENY:
-//                    DenyMessage denyMessage = gson.fromJson(jsonMessage, DenyMessage.class);
-//                    cryptoAddressesNetworkServiceDao.changeProtocolState(denyMessage.getRequestId(), ProtocolState.DONE);
+                    DenyMessage denyMessage = gson.fromJson(jsonMessage, DenyMessage.class);
+                    cryptoAddressesNetworkServiceDao.changeProtocolState(denyMessage.getRequestId(), ProtocolState.DONE);
                     break;
                 case REQUEST:
                     // update the request to processing receive state with the given action.
