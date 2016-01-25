@@ -713,7 +713,7 @@ public class CryptoTransmissionMetadataDAO_V2 {
         String metadataNotificationState = record.getStringValue(CryptoTransmissionNetworkServiceDatabaseConstants.CRYPTO_TRANSMISSION_METADATA_NOTIFICATION_DESCRIPTOR_COLUMN_NAME);
 
         String type = record.getStringValue(CryptoTransmissionNetworkServiceDatabaseConstants.CRYPTO_TRANSMISSION_METADATA_TYPE_COLUMN_NAME);
-        String pendig = record.getStringValue(CryptoTransmissionNetworkServiceDatabaseConstants.CRYPTO_TRANSMISSION_METADATA_PENDING_FLAG_COLUMN_NAME);
+        String pending = record.getStringValue(CryptoTransmissionNetworkServiceDatabaseConstants.CRYPTO_TRANSMISSION_METADATA_PENDING_FLAG_COLUMN_NAME);
         long timestamp = record.getLongValue(CryptoTransmissionNetworkServiceDatabaseConstants.CRYPTO_TRANSMISSION_METADATA_TIMESTAMP_COLUMN_NAME);
         int sentCount = record.getIntegerValue(CryptoTransmissionNetworkServiceDatabaseConstants.CRYPTO_TRANSMISSION_METADATA_SENT_COUNT_COLUMN_NAME);
 
@@ -738,7 +738,7 @@ public class CryptoTransmissionMetadataDAO_V2 {
                 cryptoTransmissionProtocolState,
                 cryptoTransmissionType,
                 timestamp,
-                Boolean.getBoolean(pendig),
+                Boolean.getBoolean(pending),
                 sentCount,
                 notificationState
 
