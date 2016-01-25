@@ -12,18 +12,18 @@ import java.util.Arrays;
  */
 public class AssetIssuerActorRecord implements ActorAssetIssuer {
 
-    private String              publicLinkedIdentity    ;
-    private String              actorPublicKey          ;
-    private String              name                    ;
-    private String              description             ;
-    private long                registrationDate        ;
-    private long                lastConnectionDate      ;
-    private DAPConnectionState  dapConnectionState      ;
-    private Location            location                ;
-    private Double              locationLatitude        ;
-    private Double              locationLongitude       ;
-    private CryptoAddress       cryptoAddress           ;
-    private byte[]              profileImage            ;
+    private String publicLinkedIdentity;
+    private String actorPublicKey;
+    private String name;
+    private String description;
+    private long registrationDate;
+    private long lastConnectionDate;
+    private DAPConnectionState dapConnectionState;
+    private Location location;
+    private Double locationLatitude;
+    private Double locationLongitude;
+    private CryptoAddress cryptoAddress;
+    private byte[] profileImage;
     private String extendedPublicKey;
 
     /**
@@ -36,29 +36,29 @@ public class AssetIssuerActorRecord implements ActorAssetIssuer {
 
     public AssetIssuerActorRecord(String name,
                                   String actorPublicKey) {
-        this.name           = name              ;
-        this.actorPublicKey = actorPublicKey    ;
+        this.name = name;
+        this.actorPublicKey = actorPublicKey;
     }
 
     /**
-     *  Method for Set Actor in Actor Network Service Issuer
+     * Method for Set Actor in Actor Network Service Issuer
      */
     public AssetIssuerActorRecord(String actorPublicKey,
                                   String name,
                                   byte[] profileImage,
                                   Location location) {
 
-        this.actorPublicKey         = actorPublicKey                    ;
-        this.name                   = name                              ;
-        this.profileImage           = profileImage.clone()              ;
+        this.actorPublicKey = actorPublicKey;
+        this.name = name;
+        this.profileImage = profileImage.clone();
         if (location != null) {
-            this.locationLatitude   = location.getLatitude()            ;
-            this.locationLongitude  = location.getLongitude()           ;
+            this.locationLatitude = location.getLatitude();
+            this.locationLongitude = location.getLongitude();
         } else {
-            this.locationLatitude   = (double) 0                        ;
-            this.locationLongitude  = (double) 0                        ;
+            this.locationLatitude = (double) 0;
+            this.locationLongitude = (double) 0;
         }
-        this.dapConnectionState = DAPConnectionState.REGISTERED_ONLINE  ;
+        this.dapConnectionState = DAPConnectionState.REGISTERED_ONLINE;
 
     }
 
@@ -73,15 +73,15 @@ public class AssetIssuerActorRecord implements ActorAssetIssuer {
                                   final String description,
                                   final String extendedPublicKey) {
 
-        this.actorPublicKey         =       actorPublicKey          ;
-        this.name                   =       name                    ;
-        this.dapConnectionState     =       dapConnectionState      ;
-        this.locationLatitude       =       locationLatitude        ;
-        this.locationLongitude      =       locationLongitude       ;
-        this.registrationDate       =       registrationDate        ;
-        this.lastConnectionDate     =       lastConnectionDate      ;
-        this.profileImage           =       profileImage.clone()    ;
-        this.description            =       description             ;
+        this.actorPublicKey = actorPublicKey;
+        this.name = name;
+        this.dapConnectionState = dapConnectionState;
+        this.locationLatitude = locationLatitude;
+        this.locationLongitude = locationLongitude;
+        this.registrationDate = registrationDate;
+        this.lastConnectionDate = lastConnectionDate;
+        this.profileImage = profileImage.clone();
+        this.description = description;
         this.extendedPublicKey = extendedPublicKey;
     }
 
@@ -173,7 +173,6 @@ public class AssetIssuerActorRecord implements ActorAssetIssuer {
 
     /**
      * {@inheritDoc}
-     *
      */
     @Override
     public String getDescription() {
@@ -190,7 +189,7 @@ public class AssetIssuerActorRecord implements ActorAssetIssuer {
     }
 
     public void setLocation(Location location) {
-        if(location != null)
+        if (location != null)
             this.location = location;
     }
 
@@ -210,8 +209,13 @@ public class AssetIssuerActorRecord implements ActorAssetIssuer {
 //    }
 
     public void setCryptoAddress(CryptoAddress cryptoAddress) {
-        if(cryptoAddress != null)
+        if (cryptoAddress != null)
             this.cryptoAddress = cryptoAddress;
+    }
+
+    @Override
+    public String getExtendedPublicKey() {
+        return extendedPublicKey;
     }
 
     @Override

@@ -87,7 +87,7 @@ public enum ContractTransactionStatus implements FermatEnum {
 
     @Override
     public String toString() {
-        return "OpenContractStatus{" +
+        return "ContractTransactionStatus{" +
                 "code='" + code + '\'' +
                 '}';
     }

@@ -367,6 +367,8 @@ public class CryptoTransmissionMetadataDAO_V2 {
     }
 
 
+
+
     /**
      * Method that update an CryptoTransmissionMetadata in the data base.
      *

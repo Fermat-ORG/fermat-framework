@@ -1,4 +1,4 @@
-package com.bitdubai.fermat_pip_plugin.layer.andrid_core_module.developer.bitdubai;
+package com.bitdubai.fermat_pip_plugin.layer.android_core_module.developer.bitdubai;
 
 import com.bitdubai.fermat_api.layer.all_definition.common.system.abstract_classes.AbstractPluginDeveloper;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.exceptions.CantRegisterVersionException;
@@ -8,7 +8,7 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.CryptoCurrency;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Developers;
 import com.bitdubai.fermat_api.layer.all_definition.enums.TimeFrequency;
 import com.bitdubai.fermat_api.layer.all_definition.license.PluginLicensor;
-import com.bitdubai.fermat_pip_plugin.layer.andrid_core_module.developer.bitdubai.version_1.AndroidCoreModulePluginRoot;
+import com.bitdubai.fermat_pip_plugin.layer.android_core_module.developer.bitdubai.version_1.AndroidCoreModulePluginRoot;
 
 /**
  * I will choose from the different versions of my implementations which one to start. Now there is only one, so

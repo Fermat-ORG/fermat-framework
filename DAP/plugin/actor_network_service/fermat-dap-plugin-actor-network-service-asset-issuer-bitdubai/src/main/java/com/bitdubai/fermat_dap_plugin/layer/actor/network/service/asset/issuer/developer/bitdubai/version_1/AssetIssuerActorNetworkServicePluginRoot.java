@@ -561,7 +561,7 @@ public class AssetIssuerActorNetworkServicePluginRoot extends AbstractNetworkSer
     public void registerActorAssetIssuer(ActorAssetIssuer actorAssetIssuerToRegister) throws CantRegisterActorAssetIssuerException {
 
         try {
-            CommunicationsClientConnection communicationsClientConnection = wsCommunicationsCloudClientManager.getCommunicationsCloudClientConnection();
+            final CommunicationsClientConnection communicationsClientConnection = wsCommunicationsCloudClientManager.getCommunicationsCloudClientConnection();
             /*
              * If register
              */
@@ -574,7 +574,7 @@ public class AssetIssuerActorNetworkServicePluginRoot extends AbstractNetworkSer
                 jsonObject.addProperty(DAP_IMG_ISSUER, Base64.encodeToString(actorAssetIssuerToRegister.getProfileImage(), Base64.DEFAULT));
                 String extraData = gson.toJson(jsonObject);
 
-                PlatformComponentProfile platformComponentProfileAssetIssuer = communicationsClientConnection.constructPlatformComponentProfileFactory(
+                final PlatformComponentProfile platformComponentProfileAssetIssuer = communicationsClientConnection.constructPlatformComponentProfileFactory(
                         actorAssetIssuerToRegister.getActorPublicKey(),
                         actorAssetIssuerToRegister.getName().toLowerCase().trim(),
                         actorAssetIssuerToRegister.getName(),
@@ -584,7 +584,20 @@ public class AssetIssuerActorNetworkServicePluginRoot extends AbstractNetworkSer
                 /*
                  * ask to the communication cloud client to register
                  */
-                communicationsClientConnection.registerComponentForCommunication(this.getNetworkServiceType(), platformComponentProfileAssetIssuer);
+                /**
+                 * I need to add this in a new thread other than the main android thread
+                 */
+            new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    try {
+                        communicationsClientConnection.registerComponentForCommunication(getNetworkServiceType(), platformComponentProfileAssetIssuer);
+                    } catch (CantRegisterComponentException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }).start();
+
             } else {
                 /*
                  * Construct the profile
