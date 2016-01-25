@@ -22,6 +22,7 @@ import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfac
 
 
 import org.glassfish.tyrus.client.ClientManager;
+import org.glassfish.tyrus.client.ClientProperties;
 
 import java.io.IOException;
 import java.net.URI;
@@ -30,6 +31,7 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 import javax.websocket.ClientEndpointConfig;
+import javax.websocket.CloseReason;
 import javax.websocket.ContainerProvider;
 import javax.websocket.DeploymentException;
 import javax.websocket.Endpoint;
@@ -123,8 +125,32 @@ public class WsCommunicationTyrusVPNClientManagerAgent{
                                                                         .configurator(cloudClientVpnConfigurator)
                                                                         .build();
 
-        WebSocketContainer container = ContainerProvider.getWebSocketContainer();
-        container.connectToServer(newPpnClient, clientConfig, serverURI);
+        ClientManager clientManager = ClientManager.createClient();
+
+        /*
+        ClientManager.ReconnectHandler reconnectHandler = new ClientManager.ReconnectHandler() {
+
+            @Override
+            public boolean onDisconnect(CloseReason closeReason) {
+                System.out.println("### Reconnecting... ");
+                return true;
+            }
+
+            @Override
+            public boolean onConnectFailure(Exception exception) {
+                // Thread.sleep(...) to avoid potential DDoS when you don't limit number of reconnects.
+                return true;
+            }
+
+        };
+
+        /*
+         *  Add Property RECONNECT_HANDLER to reconect automatically
+         */
+       /* clientManager.getProperties().put(ClientProperties.RECONNECT_HANDLER, reconnectHandler);
+        */
+
+        clientManager.connectToServer(newPpnClient, clientConfig, serverURI);
 
     }
 

@@ -51,39 +51,22 @@ public class WsCommunicationsCloudClientSupervisorConnectionAgent extends Thread
     @Override
     public void run() {
 
-        try {
+        if(wsCommunicationsCloudClientPluginRoot.getStatus() == ServiceStatus.STARTED && getConnection() != null){
 
-            if(wsCommunicationsCloudClientPluginRoot.getStatus() == ServiceStatus.STARTED){
+            System.out.println(" WsCommunicationsCloudClientSupervisorConnectionAgent - Connection is Open = "+getConnection().isOpen());
 
-                System.out.println(" WsCommunicationsCloudClientSupervisorConnectionAgent - Connection is Open = "+getConnection().isOpen());
+            try {
 
-                if (!getConnection().isOpen()) {
-                    System.out.println(" WsCommunicationsCloudClientSupervisorConnectionAgent - Trying to reconnect whit cloud server ");
-                    wsCommunicationsCloudClientPluginRoot.connectClient();
-                }else {
-
-                    try {
-
-                        if (getConnection().isOpen()){
-                            getWsCommunicationsTyrusCloudClientChannel().sendPing();
-                        }
-
-                    } catch (Exception ex) {
-                        System.out.println(" WsCommunicationsCloudClientSupervisorConnectionAgent - Error occurred sending ping to the node, closing the connection to remote node");
-                        getWsCommunicationsTyrusCloudClientChannel().closeConnection();
-                        ((WsCommunicationsCloudClientConnection)wsCommunicationsCloudClientPluginRoot.getCommunicationsCloudClientConnection()).getWsCommunicationsCloudClientChannel().setIsRegister(Boolean.FALSE);
-                        ((WsCommunicationsCloudClientConnection)wsCommunicationsCloudClientPluginRoot.getCommunicationsCloudClientConnection()).getWsCommunicationsCloudClientChannel().raiseClientConnectionLooseNotificationEvent();
-                    }
+                if (getConnection().isOpen()){
+                    getWsCommunicationsTyrusCloudClientChannel().sendPing();
                 }
 
+            } catch (Exception ex) {
+                System.out.println(" WsCommunicationsCloudClientSupervisorConnectionAgent - Error occurred sending ping to the node, closing the connection to remote node");
+                getWsCommunicationsTyrusCloudClientChannel().closeConnection();
+                ((WsCommunicationsCloudClientConnection)wsCommunicationsCloudClientPluginRoot.getCommunicationsCloudClientConnection()).getWsCommunicationsCloudClientChannel().setIsRegister(Boolean.FALSE);
+                ((WsCommunicationsCloudClientConnection)wsCommunicationsCloudClientPluginRoot.getCommunicationsCloudClientConnection()).getWsCommunicationsCloudClientChannel().raiseClientConnectionLooseNotificationEvent();
             }
-
-        } catch (URISyntaxException e) {
-            e.printStackTrace();
-        } catch (DeploymentException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
         }
     }
 

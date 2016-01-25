@@ -44,7 +44,9 @@ import org.bitcoinj.core.ECKey;
 import org.bitcoinj.core.Transaction;
 import org.bitcoinj.core.UTXOProvider;
 
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
 import javax.annotation.Nullable;
@@ -65,6 +67,9 @@ public class BitcoinCryptoNetworkPluginRoot extends AbstractPlugin implements
     @NeededAddonReference(platform = Platforms.OPERATIVE_SYSTEM_API, layer = Layers.SYSTEM, addon = Addons.PLUGIN_DATABASE_SYSTEM)
     private PluginDatabaseSystem pluginDatabaseSystem;
 
+    /**
+     * Default Constructor
+     */
     public BitcoinCryptoNetworkPluginRoot() {
         super(new PluginVersionReference(new Version()));
     }
@@ -162,28 +167,6 @@ public class BitcoinCryptoNetworkPluginRoot extends AbstractPlugin implements
     }
 
     /**
-     * Broadcast a well formed, commited and signed transaction into the specified network
-     * @param blockchainNetworkType
-     * @param tx
-     * @param transactionId the internal Fermat Transaction
-     * @throws CantBroadcastTransactionException
-     */
-    @Override
-    public synchronized void broadcastTransaction(BlockchainNetworkType blockchainNetworkType, Transaction tx, UUID transactionId) throws CantBroadcastTransactionException {
-        bitcoinCryptoNetworkManager.broadcastTransaction(blockchainNetworkType, tx, transactionId);
-    }
-
-    /**
-     * Gets the UTXO provider from the CryptoNetwork on the specified Network
-     * @param blockchainNetworkType
-     * @return
-     */
-    @Override
-    public UTXOProvider getUTXOProvider(BlockchainNetworkType blockchainNetworkType) {
-        return bitcoinCryptoNetworkManager.getUTXOProvider(blockchainNetworkType);
-    }
-
-    /**
      * Gets the specified bitcoin transaction
      * @param transactionHash
      * @return
@@ -191,16 +174,6 @@ public class BitcoinCryptoNetworkPluginRoot extends AbstractPlugin implements
     @Override
     public Transaction getBitcoinTransaction(BlockchainNetworkType blockchainNetworkType, String transactionHash) {
         return bitcoinCryptoNetworkManager.getBitcoinTransaction(blockchainNetworkType, transactionHash);
-    }
-
-    @Override
-    public List<Transaction> getBitcoinTransaction(BlockchainNetworkType blockchainNetworkType, ECKey ecKey) {
-        return null;
-    }
-
-    @Override
-    public List<Transaction> getBitcoinTransaction(BlockchainNetworkType blockchainNetworkType, List<ECKey> ecKeys) {
-        return null;
     }
 
     @Override
@@ -219,30 +192,6 @@ public class BitcoinCryptoNetworkPluginRoot extends AbstractPlugin implements
     @Override
     public CryptoTransaction getCryptoTransactionFromBlockChain(String txHash, String blockHash) throws CantGetCryptoTransactionException {
         return  bitcoinCryptoNetworkManager.getCryptoTransactionFromBlockChain(txHash, blockHash);
-    }
-
-
-    /**
-     * Will get all the CryptoTransactions stored in the CryptoNetwork which are a child of a parent Transaction
-     * @param parentHash
-     * @return
-     * @throws CantGetCryptoTransactionException
-     */
-    @Override
-    public List<CryptoTransaction> getChildCryptoTransaction(String parentHash) throws CantGetCryptoTransactionException {
-        return bitcoinCryptoNetworkManager.getChildCryptoTransaction(parentHash);
-    }
-
-    /**
-     * Will get all the CryptoTransactions stored in the CryptoNetwork which are a child of a parent Transaction
-     * @param parentHash the parent transaction
-     * @param depth the depth of how many transactions we will navigate until we reach the parent transaction. Max is 10
-     * @return
-     * @throws CantGetCryptoTransactionException
-     */
-    @Override
-    public List<CryptoTransaction> getChildCryptoTransaction(String parentHash, int depth) throws CantGetCryptoTransactionException {
-        return bitcoinCryptoNetworkManager.getChildCryptoTransaction(parentHash, depth);
     }
 
     /**
@@ -323,32 +272,6 @@ public class BitcoinCryptoNetworkPluginRoot extends AbstractPlugin implements
     }
 
     /**
-     * Starting from the parentTransaction, I will navigate up until the last transaction, and return it.
-     * @blockchainNetworkType the network in which we will be executing this. If none provided, DEFAULT will be used.
-     * @param parentTransactionHash The starting point transaction hash.
-     * @param transactionBlockHash the block where this transaction is.
-     * @return the Last child transaction.
-     */
-    @Override
-    public Transaction getLastChildTransaction(@Nullable BlockchainNetworkType blockchainNetworkType, String parentTransactionHash, String transactionBlockHash) throws CantGetTransactionException {
-        return bitcoinCryptoNetworkManager.getLastChildTransaction(blockchainNetworkType, parentTransactionHash, transactionBlockHash);
-    }
-
-    /**
-     * Starting from the parentTransaction, I will navigate up until the last transaction, and return the CryptoTransaction
-     * @blockchainNetworkType the network in which we will be executing this. If none provided, DEFAULT will be used.
-     * @param parentTransactionHash The starting point transaction hash.
-     * @param transactionBlockHash the block where this transaction is.
-     * @return the Last child transaction.
-     */
-    @Override
-    public CryptoTransaction getLastChildCryptoTransaction(@Nullable BlockchainNetworkType blockchainNetworkType, String parentTransactionHash, String transactionBlockHash) throws CantGetCryptoTransactionException {
-        CryptoTransaction cryptoTransaction = bitcoinCryptoNetworkManager.getLastChildCryptoTransaction(blockchainNetworkType, parentTransactionHash, transactionBlockHash);
-        cryptoTransaction.setTransactionHash(parentTransactionHash);
-        return cryptoTransaction;
-    }
-
-    /**
      * Gets a stored CryptoTransaction in wathever network.
      * @param txHash the transaction hash we want to get the CryptoTransaction
      * @return the last recorded CryptoTransaction.
@@ -357,5 +280,30 @@ public class BitcoinCryptoNetworkPluginRoot extends AbstractPlugin implements
     @Override
     public CryptoTransaction getCryptoTransaction(String txHash) throws CantGetCryptoTransactionException {
         return bitcoinCryptoNetworkManager.getCryptoTransaction(txHash);
+    }
+
+    /**
+     * Based on the passed transaction chain of Transactions hashes and Blocks hashes, determines the entire path
+     * of the chain until the Genesis Transaction is reached.
+     * The genesis Transaction will be the first transaction in the map.
+     * @param transactionChain a Map with the form TransactionHash / BlockHash
+     * @return all the CryptoTransactions originated at the genesis transaction
+     * @throws CantGetCryptoTransactionException
+     */
+    @Override
+    public CryptoTransaction getGenesisCryptoTransaction(@Nullable BlockchainNetworkType blockchainNetworkType, LinkedHashMap<String, String> transactionChain) throws CantGetCryptoTransactionException {
+        return bitcoinCryptoNetworkManager.getGenesisCryptoTransaction(blockchainNetworkType, transactionChain);
+    }
+
+    /**
+     * Based on the Parent trasaction passed, will return all the CryptoTransactions that are a direct descendant of this parent.
+     * Only if it is a locally stored transaction
+     * @param parentTransactionHash the hash of the parent trasaction
+     * @return the list of CryptoTransactions that are a direct child of the parent.
+     * @throws CantGetCryptoTransactionException
+     */
+    @Override
+    public List<CryptoTransaction> getChildTransactionsFromParent(String parentTransactionHash) throws CantGetCryptoTransactionException {
+        return bitcoinCryptoNetworkManager.getChildTransactionsFromParent(parentTransactionHash);
     }
 }

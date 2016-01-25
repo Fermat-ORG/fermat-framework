@@ -1,6 +1,7 @@
 package com.bitdubai.fermat_ccp_plugin.layer.wallet_module.crypto_wallet.developer.bitdubai.version_1.structure;
 
 import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
+import com.bitdubai.fermat_api.layer.all_definition.enums.BlockchainNetworkType;
 import com.bitdubai.fermat_api.layer.all_definition.money.CryptoAddress;
 import com.bitdubai.fermat_ccp_api.layer.actor.Actor;
 import com.bitdubai.fermat_ccp_api.layer.basic_wallet.common.enums.BalanceType;
@@ -38,6 +39,7 @@ public class CryptoWalletWalletModuleTransaction implements CryptoWalletTransact
     private final long runningAvailableBalance;
     private final long timeStamp;
     private final String memo;
+    private final BlockchainNetworkType blockchainNetworkType;
 
     public CryptoWalletWalletModuleTransaction(final BitcoinWalletTransaction bitcoinWalletTransaction,
                                                final UUID                     contactId,
@@ -62,6 +64,7 @@ public class CryptoWalletWalletModuleTransaction implements CryptoWalletTransact
         this.runningAvailableBalance = bitcoinWalletTransaction.getRunningAvailableBalance();
         this.timeStamp = bitcoinWalletTransaction.getTimestamp();
         this.memo = bitcoinWalletTransaction.getMemo();
+        this.blockchainNetworkType = bitcoinWalletTransaction.getBlockchainNetworkType();
     }
 
     @Override
@@ -147,4 +150,5 @@ public class CryptoWalletWalletModuleTransaction implements CryptoWalletTransact
         return memo;
     }
 
+    public BlockchainNetworkType getBlockchainNetworkType() {return blockchainNetworkType;}
 }

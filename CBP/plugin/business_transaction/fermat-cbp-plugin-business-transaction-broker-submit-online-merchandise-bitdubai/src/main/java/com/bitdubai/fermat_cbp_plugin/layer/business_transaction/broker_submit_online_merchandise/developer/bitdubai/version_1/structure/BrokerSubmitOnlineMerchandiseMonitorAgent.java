@@ -3,6 +3,7 @@ package com.bitdubai.fermat_cbp_plugin.layer.business_transaction.broker_submit_
 import com.bitdubai.fermat_api.CantStartAgentException;
 import com.bitdubai.fermat_api.DealsWithPluginIdentity;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
+import com.bitdubai.fermat_api.layer.all_definition.enums.BlockchainNetworkType;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ReferenceWallet;
 import com.bitdubai.fermat_api.layer.all_definition.events.EventSource;
@@ -334,7 +335,8 @@ public class BrokerSubmitOnlineMerchandiseMonitorAgent implements
                             businessTransactionRecord.getCustomerPublicKey(),
                             Actors.CBP_CRYPTO_BROKER,
                             Actors.CBP_CRYPTO_CUSTOMER,
-                            ReferenceWallet.BASIC_WALLET_BITCOIN_WALLET
+                            ReferenceWallet.BASIC_WALLET_BITCOIN_WALLET,
+                            BlockchainNetworkType.REG_TEST
                     );
                     //Updating the business transaction record
                     businessTransactionRecord.setTransactionId(

@@ -154,7 +154,7 @@ public class AddConnectionFragment extends FermatWalletListFragment<CryptoWallet
     @Override
     public void onPostExecute(Object... result) {
         isRefreshing = false;
-        menu.clear();
+        if(menu!=null) menu.clear();
         connectionPickCounter = 0;
         if (isAttached) {
             swipeRefreshLayout.setRefreshing(false);

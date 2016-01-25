@@ -252,7 +252,7 @@ public class ChatMiddlewareMonitorAgent implements
                 /**
                  * Check if pending messages to submit
                  */
-                List<Message> createdMessagesList=chatMiddlewareDatabaseDao.getCreatedMesages();
+                List<Message> createdMessagesList=chatMiddlewareDatabaseDao.getCreatedMessages();
                 for(Message createdMessage : createdMessagesList){
                     sendMessage(createdMessage);
                 }
@@ -530,6 +530,14 @@ public class ChatMiddlewareMonitorAgent implements
                 CantGetMessageException {
             UUID messageId=chatMetadata.getMessageId();
             Message messageRecorded=chatMiddlewareDatabaseDao.getMessageByMessageId(messageId);
+            if(messageRecorded==null){
+                /**
+                 * In this case, the message is not created in database, so, is an incoming message,
+                 * I need to create a new message
+                 */
+                messageRecorded=getMessageFromChatMetadata(
+                        chatMetadata);
+            }
             messageRecorded.setStatus(chatMetadata.getMessageStatus());
             chatMiddlewareDatabaseDao.saveMessage(messageRecorded);
         }
@@ -543,19 +551,31 @@ public class ChatMiddlewareMonitorAgent implements
             try{
                 UUID chatId=createdMessage.getChatId();
                 Chat chat=chatMiddlewareDatabaseDao.getChatByChatId(chatId);
+                if(chat==null){
+                    return;
+                }
                 String localActorPublicKey=chat.getLocalActorPublicKey();
                 String remoteActorPublicKey=chat.getRemoteActorPublicKey();
                 ChatMetadata chatMetadata=constructChatMetadata(
                         chat,
                         createdMessage
                 );
-                System.out.println("ChatMetadata to send:\n"+chatMetadata);
-                chatNetworkServiceManager.sendChatMetadata(
-                        localActorPublicKey,
-                        remoteActorPublicKey,
-                        chatMetadata
-                );
-                createdMessage.setStatus(MessageStatus.SEND);
+                System.out.println("ChatMetadata to send:\n" + chatMetadata);
+                try{
+                    chatNetworkServiceManager.sendChatMetadata(
+                            localActorPublicKey,
+                            remoteActorPublicKey,
+                            chatMetadata
+                    );
+                    createdMessage.setStatus(MessageStatus.SEND);
+                } catch (IllegalArgumentException e) {
+                    /**
+                     * In this case, any argument in chat or message was null or not properly set.
+                     * I'm gonna change the status to CANNOT_SEND to avoid send this message.
+                     */
+                    createdMessage.setStatus(MessageStatus.CANNOT_SEND);
+                }
+
                 chatMiddlewareDatabaseDao.saveMessage(createdMessage);
             } catch (DatabaseOperationException e) {
                 throw new CantSendChatMessageException(

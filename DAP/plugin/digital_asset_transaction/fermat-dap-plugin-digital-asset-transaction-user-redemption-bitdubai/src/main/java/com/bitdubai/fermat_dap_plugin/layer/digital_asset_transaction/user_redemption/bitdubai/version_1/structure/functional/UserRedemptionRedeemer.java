@@ -6,8 +6,10 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.Cant
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantLoadTableToMemoryException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantUpdateRecordException;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
+import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.exceptions.CantCancellBroadcastTransactionException;
 import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.exceptions.CantGetCryptoTransactionException;
 import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.interfaces.BitcoinNetworkManager;
+import com.bitdubai.fermat_bch_api.layer.crypto_vault.asset_vault.exceptions.CantCreateBitcoinTransactionException;
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.asset_vault.interfaces.AssetVaultManager;
 import com.bitdubai.fermat_dap_api.layer.all_definition.digital_asset.DigitalAsset;
 import com.bitdubai.fermat_dap_api.layer.all_definition.digital_asset.DigitalAssetContract;
@@ -16,7 +18,6 @@ import com.bitdubai.fermat_dap_api.layer.all_definition.enums.DAPTransactionType
 import com.bitdubai.fermat_dap_api.layer.all_definition.enums.DistributionStatus;
 import com.bitdubai.fermat_dap_api.layer.all_definition.exceptions.CantSetObjectException;
 import com.bitdubai.fermat_dap_api.layer.all_definition.exceptions.DAPException;
-import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.exceptions.CantAssetUserActorNotFoundException;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.exceptions.CantGetAssetUserActorsException;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.interfaces.ActorAssetUser;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.interfaces.ActorAssetUserManager;
@@ -26,7 +27,6 @@ import com.bitdubai.fermat_dap_api.layer.dap_network_services.asset_transmission
 import com.bitdubai.fermat_dap_api.layer.dap_transaction.common.exceptions.CantCreateDigitalAssetFileException;
 import com.bitdubai.fermat_dap_api.layer.dap_transaction.common.exceptions.CantExecuteDatabaseOperationException;
 import com.bitdubai.fermat_dap_api.layer.dap_transaction.common.exceptions.CantPersistDigitalAssetException;
-import com.bitdubai.fermat_dap_api.layer.dap_transaction.common.exceptions.CantPersistsTransactionUUIDException;
 import com.bitdubai.fermat_dap_api.layer.dap_transaction.common.exceptions.CantStartDeliveringException;
 import com.bitdubai.fermat_dap_api.layer.dap_transaction.common.exceptions.TransactionAlreadyDeliveringException;
 import com.bitdubai.fermat_dap_api.layer.dap_transaction.common.exceptions.UnexpectedResultReturnedFromDatabaseException;
@@ -146,6 +146,11 @@ public class UserRedemptionRedeemer extends AbstractDigitalAssetSwap {
                     persistDigitalAsset(digitalAssetMetadata, actorAssetRedeemPoint);
                 } else {
                     System.out.println("ASSET REDEMPTION IS NOT FIRST TRANSACTION");
+                    try {
+                        bitcoinNetworkManager.cancelBroadcast(digitalAssetMetadata.getLastTransactionHash());
+                    } catch (CantCancellBroadcastTransactionException e) {
+                        //Ok, maybe I don't have it.
+                    }
                     userRedemptionDao.updateActorAssetRedeemPoint(actorAssetRedeemPoint, digitalAssetMetadata.getGenesisTransaction());
                 }
 
@@ -180,6 +185,8 @@ public class UserRedemptionRedeemer extends AbstractDigitalAssetSwap {
                 System.out.println("ASSET USER REDEMPTION set debit in asset user wallet:" + genesisTransaction);
                 cryptoTransaction = foundCryptoTransaction(digitalAssetMetadata);
                 actorAssetUser = actorAssetUserManager.getActorAssetUser();
+                String newTx = assetVaultManager.createBitcoinTransaction(digitalAssetMetadata.getLastTransactionHash(), actorAssetRedeemPoint.getCryptoAddress());
+                digitalAssetMetadata = digitalAssetUserRedemptionVault.updateMetadataTransactionChain(genesisTransaction, newTx, null);
                 digitalAssetUserRedemptionVault.updateWalletBalance(digitalAssetMetadata, this.cryptoTransaction, BalanceType.AVAILABLE, TransactionType.DEBIT, DAPTransactionType.RECEPTION, actorAssetRedeemPoint.getActorPublicKey());
                 System.out.println("ASSET USER REDEMPTION Begins the deliver to an remote actor");
                 deliverToRemoteActor(digitalAssetMetadata, actorAssetRedeemPoint);
@@ -198,7 +205,7 @@ public class UserRedemptionRedeemer extends AbstractDigitalAssetSwap {
             throw new CantRedeemDigitalAssetException(exception, "Delivering digital assets", "There is an error delivering the digital asset through the network layer");
         } catch (DAPException | CantUpdateRecordException | CantLoadTableToMemoryException exception) {
             throw new CantRedeemDigitalAssetException(exception, "Delivering digital assets", "Generic DAP Exception");
-        } catch (CantGetTransactionsException exception) {
+        } catch (CantGetTransactionsException | CantCreateBitcoinTransactionException exception) {
             throw new CantRedeemDigitalAssetException(exception, "Delivering digital assets", "Cannot get the genesis transaction from crypto network");
         } catch (CantLoadWalletException exception) {
             throw new CantRedeemDigitalAssetException(exception, "Delivering digital assets", "Cannot load Asset issuer wallet");

@@ -148,7 +148,6 @@ public class DiscoveryComponentConnectionRequestJettyPacketProcessor extends Fer
             LOG.error("RemoteParticipant is available       = " + (remoteParticipant != null ? "SI (" + remoteParticipant.getAlias() + ")" : "NO"));
             LOG.error("RemoteNsParticipant is available     = " + (remoteNsParticipant != null ? "SI (" + remoteNsParticipant.getAlias() + ")" : "NO"));
             LOG.error("Cause: " + e.getMessage());
-            LOG.error("Cause: " + e.getCause().getMessage());
 
             String details = "";
 
@@ -204,8 +203,9 @@ public class DiscoveryComponentConnectionRequestJettyPacketProcessor extends Fer
     private void constructRequestConnectToVpnRespondPacketAndSend(String path, PlatformComponentProfile platformComponentProfileDestination, PlatformComponentProfile remoteParticipant, PlatformComponentProfile remoteParticipantNetworkService){
 
 
-        LOG.info("Sending vpn connection to = " + platformComponentProfileDestination.getAlias());
-        LOG.info("Sending whit remote = " + remoteParticipant.getAlias());
+        LOG.info("Sending vpn connection to = " + platformComponentProfileDestination.toJson());
+        LOG.info("------------------------------------------------------ -----------------------------------------------------");
+        LOG.info("Sending whit remote = " + remoteParticipant.toJson());
 
         /*
          * Get json representation for the filters
