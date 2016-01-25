@@ -104,8 +104,6 @@ public class CommunicationRegistrationProcessNetworkServiceAgent extends Thread 
                         active = Boolean.FALSE;
                     }
 
-                }else if (!networkService.isRegister()){
-                    active = Boolean.FALSE;
                 }
 
             }catch (Exception e){
