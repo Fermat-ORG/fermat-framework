@@ -8,6 +8,7 @@ import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEven
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEventMonitor;
 import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterException;
 import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_addresses.events.CryptoAddressesNewsEvent;
+import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_addresses.events.CryptoAddressesUpdateEvent;
 import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_payment_request.events.CryptoPaymentRequestNewsEvent;
 import com.bitdubai.fermat_ccp_api.layer.network_service.intra_actor.events.ActorNetworkServiceCompleteRegistration;
 
@@ -31,6 +32,10 @@ public enum EventType implements FermatEventEnum {
     },
     CRYPTO_ADDRESSES_NEWS("CRYADDN") {
         public FermatEvent getNewEvent() { return new CryptoAddressesNewsEvent(this); }
+    },
+
+    CRYPTO_ADDRESSES_UPDATE("CRYADDU") {
+        public FermatEvent getNewEvent() { return new CryptoAddressesUpdateEvent(this); }
     },
     CRYPTO_PAYMENT_REQUEST_NEWS("CRYPRNW") {
         public FermatEvent getNewEvent() { return new CryptoPaymentRequestNewsEvent(this); }

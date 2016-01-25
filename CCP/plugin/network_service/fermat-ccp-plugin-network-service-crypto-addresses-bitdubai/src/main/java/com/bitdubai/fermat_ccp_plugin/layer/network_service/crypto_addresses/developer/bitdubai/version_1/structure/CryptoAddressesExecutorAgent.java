@@ -275,7 +275,7 @@ public final class CryptoAddressesExecutorAgent extends FermatAgent {
             for(CryptoAddressRequest cryptoAddressRequest : list){
                 if(!cryptoAddressRequest.isReadMark() ) {
                     if (cryptoAddressRequest.getMessageType().equals(AddressesConstants.INCOMING_MESSAGE)) {
-                        System.out.println("CRYPTO ADDRESS NEWS LA CONCHA DE TU MADRE");
+                        System.out.println("CRYPTO ADDRESS NEWS - INCOMING MESSAGE");
                         FermatEvent eventToRaise = eventManager.getNewEvent(EventType.CRYPTO_ADDRESSES_NEWS);
                         eventToRaise.setSource(cryptoAddressesNetworkServicePluginRoot.getEventSource());
                         eventManager.raiseEvent(eventToRaise);
@@ -479,5 +479,9 @@ public final class CryptoAddressesExecutorAgent extends FermatAgent {
 
     public boolean isConnectionOpen(String destinationPublicKey) {
         return poolConnectionsWaitingForResponse.containsKey(destinationPublicKey);
+    }
+
+    public Map<String, String> getPoolConnectionsWaitingForResponse() {
+        return poolConnectionsWaitingForResponse;
     }
 }
