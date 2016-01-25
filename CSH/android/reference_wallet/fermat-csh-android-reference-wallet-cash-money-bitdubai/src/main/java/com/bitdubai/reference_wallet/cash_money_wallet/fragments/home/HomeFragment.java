@@ -265,7 +265,7 @@ implements FermatListItemListeners<CashMoneyWalletTransaction>, DialogInterface.
 
     /* MISC FUNCTIONS */
     private void lauchCreateTransactionDialog(TransactionType transactionType){
-        transactionFragmentDialog = new CreateTransactionFragmentDialog(getActivity(), (CashMoneyWalletSession) appSession, getResources(), transactionType);
+        transactionFragmentDialog = new CreateTransactionFragmentDialog(getActivity(), (CashMoneyWalletSession) appSession, getResources(), transactionType, null, null);
         transactionFragmentDialog.setOnDismissListener(this);
         transactionFragmentDialog.show();
     }
@@ -370,19 +370,36 @@ implements FermatListItemListeners<CashMoneyWalletTransaction>, DialogInterface.
 
     @Override
     public void onItemClickListener(CashMoneyWalletTransaction data, int position) {
-        //Try to cancel transaction if it is pending
-        try{
-            moduleManager.cancelAsyncCashTransaction(transactionList.get(position));
-        } catch (InvalidParameterException e) {
-            //TODO: do something with this.
-        }
-        appSession.setData("transaction", transactionList.get(position));
-        changeActivity(Activities.CSH_CASH_MONEY_WALLET_TRANSACTION_DETAIL, appSession.getAppPublicKey());
+        handleTransactionClick(data, position);
     }
 
     @Override
     public void onLongItemClickListener(CashMoneyWalletTransaction data, int position) {
-        appSession.setData("transaction", transactionList.get(position));
-        changeActivity(Activities.CSH_CASH_MONEY_WALLET_TRANSACTION_DETAIL, appSession.getAppPublicKey());
+        handleTransactionClick(data, position);
+    }
+
+
+    private void handleTransactionClick(CashMoneyWalletTransaction data, int position){
+
+        if(data.isPending()) {
+            //Try to cancel transaction if it is pending
+            try{
+                moduleManager.cancelAsyncCashTransaction(data);
+                Thread.sleep(100);
+            } catch (Exception e) {
+                //Ignore this error
+            }
+
+            appSession.setData("transaction", data);
+            appSession.setData("checkIfTransactionHasBeenCommitted", true);
+            changeActivity(Activities.CSH_CASH_MONEY_WALLET_TRANSACTION_DETAIL, appSession.getAppPublicKey());
+        }
+        else {
+            appSession.setData("transaction", data);
+            appSession.setData("checkIfTransactionHasBeenCommitted", false);
+            changeActivity(Activities.CSH_CASH_MONEY_WALLET_TRANSACTION_DETAIL, appSession.getAppPublicKey());
+        }
+
     }
 }
+
