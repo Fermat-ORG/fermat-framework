@@ -1,33 +1,36 @@
 package com.bitdubai.reference_wallet.crypto_customer_wallet.common.models;
 
-import com.bitdubai.fermat_api.layer.all_definition.enums.CryptoCurrency;
-import com.bitdubai.fermat_api.layer.all_definition.enums.FiatCurrency;
-import com.bitdubai.fermat_api.layer.all_definition.enums.interfaces.FermatEnum;
-
 /**
  * Created by Yordin Alayn on 25.01.16.
  */
 public class BrokerCurrencyQuotationTest {
 
-    private String currencyBuy;
+    private String currencyOver;
 
-    private String currencyPay;
+    private String currencyUnder;
 
     private String exchangeRate;
 
+    private boolean exchangeRateInv;
+
     public BrokerCurrencyQuotationTest(
-        String currencyBuy,
-        String currencyPay,
+        String currencyOver,
+        String currencyUnder,
         String exchangeRate
     ){
-        this.currencyBuy = currencyBuy;
-        this.currencyPay = currencyPay;
+        this.currencyOver = currencyOver;
+        this.currencyUnder = currencyUnder;
         this.exchangeRate = exchangeRate;
+        this.exchangeRateInv = Boolean.FALSE;
     }
 
-    String getCurrencyBuy(){ return this.currencyBuy; }
+    public String getCurrencyOver(){ return this.currencyOver; }
 
-    String getCurrencyPay(){ return this.currencyPay; }
+    public String getCurrencyUnder(){ return this.currencyUnder; }
 
-    String getExchangeRate(){ return  this.exchangeRate; }
+    public String getExchangeRate(){ return  this.exchangeRate; }
+
+    public boolean getExchangeRateInv(){ return this.exchangeRateInv; }
+
+    public void setExchangeRateInv(boolean exchangeRateInv){ this.exchangeRateInv = Boolean.TRUE; }
 }
