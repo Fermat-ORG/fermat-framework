@@ -13,6 +13,7 @@ import com.bitdubai.fermat_cbp_api.layer.wallet_module.common.interfaces.Custome
 import com.bitdubai.reference_wallet.crypto_customer_wallet.R;
 import com.bitdubai.reference_wallet.crypto_customer_wallet.common.holders.open_negotiation.AmountToBuyViewHolder;
 import com.bitdubai.reference_wallet.crypto_customer_wallet.common.holders.open_negotiation.ClauseViewHolder;
+import com.bitdubai.reference_wallet.crypto_customer_wallet.common.holders.open_negotiation.DateTimeViewHolder;
 import com.bitdubai.reference_wallet.crypto_customer_wallet.common.holders.open_negotiation.ExchangeRateViewHolder;
 import com.bitdubai.reference_wallet.crypto_customer_wallet.common.holders.open_negotiation.FooterViewHolder;
 import com.bitdubai.reference_wallet.crypto_customer_wallet.common.holders.open_negotiation.NoteViewHolder;
@@ -34,6 +35,7 @@ public class OpenNegotiationAdapter extends FermatAdapter<ClauseInformation, Fer
 
     private static final int TYPE_HEADER = 0;
     private static final int TYPE_ITEM_SINGLE_CHOICE = 1;
+    private static final int TYPE_ITEM_DATE_TIME = 2;
     private static final int TYPE_ITEM_EXCHANGE_RATE = 3;
     private static final int TYPE_ITEM_AMOUNT_TO_BUY = 4;
     private static final int TYPE_FOOTER = 5;
@@ -88,6 +90,9 @@ public class OpenNegotiationAdapter extends FermatAdapter<ClauseInformation, Fer
                 noteViewHolder.bind(negotiationInformation.getMemo());
                 return noteViewHolder;
 
+            case TYPE_ITEM_DATE_TIME:
+                return new DateTimeViewHolder(itemView);
+
             case TYPE_ITEM_SINGLE_CHOICE:
                 return new SingleChoiceViewHolder(itemView);
 
@@ -113,6 +118,8 @@ public class OpenNegotiationAdapter extends FermatAdapter<ClauseInformation, Fer
         switch (type) {
             case TYPE_HEADER:
                 return R.layout.ccw_notes_item;
+            case TYPE_ITEM_DATE_TIME:
+                return R.layout.ccw_date_time_item;
             case TYPE_ITEM_SINGLE_CHOICE:
                 return R.layout.ccw_single_choice_item;
             case TYPE_ITEM_EXCHANGE_RATE:
@@ -152,6 +159,10 @@ public class OpenNegotiationAdapter extends FermatAdapter<ClauseInformation, Fer
                 return TYPE_ITEM_AMOUNT_TO_BUY;
             case EXCHANGE_RATE:
                 return TYPE_ITEM_EXCHANGE_RATE;
+            case CUSTOMER_DATE_TIME_TO_DELIVER:
+                return TYPE_ITEM_DATE_TIME;
+            case BROKER_DATE_TIME_TO_DELIVER:
+                return TYPE_ITEM_DATE_TIME;
             default:
                 return TYPE_ITEM_SINGLE_CHOICE;
         }
