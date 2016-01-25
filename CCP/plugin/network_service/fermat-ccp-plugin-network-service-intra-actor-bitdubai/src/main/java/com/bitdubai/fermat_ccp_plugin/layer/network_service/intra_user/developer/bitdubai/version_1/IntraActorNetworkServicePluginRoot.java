@@ -371,6 +371,7 @@ public class IntraActorNetworkServicePluginRoot extends AbstractPlugin implement
      * because at this moment, is create the platformComponentProfilePluginRoot for this component
      */
     public void initializeCommunicationNetworkServiceConnectionManager() {
+        System.out.println("IntraActorNetworkServicePluginRoot - initializeCommunicationNetworkServiceConnectionManager() ");
         this.communicationNetworkServiceConnectionManager = new CommunicationNetworkServiceConnectionManager(this,platformComponentProfilePluginRoot, identity, wsCommunicationsCloudClientManager.getCommunicationsCloudClientConnection(), dataBaseCommunication, errorManager, eventManager);
     }
 
@@ -1462,14 +1463,14 @@ public class IntraActorNetworkServicePluginRoot extends AbstractPlugin implement
                  */
                 this.setPlatformComponentProfilePluginRoot(platformComponentProfileToReconnect);
 
-                /*
-                 * Initialize the connection manager
-                 */
-                this.initializeCommunicationNetworkServiceConnectionManager();
+        }
 
+        if (communicationNetworkServiceConnectionManager == null){
 
-
-
+            /*
+             * Initialize the connection manager
+             */
+            this.initializeCommunicationNetworkServiceConnectionManager();
         }
 
          /*
