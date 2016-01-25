@@ -28,7 +28,6 @@ import org.apache.commons.lang.ClassUtils;
 import org.apache.log4j.Logger;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -149,6 +148,8 @@ public class DiscoveryComponentConnectionRequestJettyPacketProcessor extends Fer
             LOG.error("RemoteParticipant is available       = " + (remoteParticipant       != null ? "SI (" + remoteParticipant.getAlias()       + ")" : "NO"));
             LOG.error("RemoteNsParticipant is available     = " + (remoteNsParticipant     != null ? "SI (" + remoteNsParticipant.getAlias()     + ")" : "NO"));
             LOG.error("Cause: " + e.getMessage());
+
+            e.printStackTrace();
 
             String details = "";
 
