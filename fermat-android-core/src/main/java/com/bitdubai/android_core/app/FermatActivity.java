@@ -922,6 +922,7 @@ public abstract class FermatActivity extends AppCompatActivity
                 }
             } else {
                 navigationView.setVisibility(View.GONE);
+                mDrawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
             }
 
         } catch (Exception e) {
@@ -1188,7 +1189,7 @@ public abstract class FermatActivity extends AppCompatActivity
     protected void initialisePaging() {
 
         try {
-            List<android.app.Fragment> fragments = new Vector<android.app.Fragment>();
+            List<android.app.Fragment> fragments = new Vector<>();
 
             DesktopRuntimeManager desktopRuntimeManager = getDesktopRuntimeManager();
 

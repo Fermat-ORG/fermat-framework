@@ -816,6 +816,40 @@ public final class CryptoAddressesNetworkServiceDao {
         }
     }
 
+    public void markReadAndDone(UUID requestId) throws CantChangeProtocolStateException, PendingRequestNotFoundException {
+        if (requestId == null)
+            throw new CantChangeProtocolStateException(null, "", "The requestId is required, can not be null");
+        try {
+
+            DatabaseTable addressExchangeRequestTable = database.getTable(CryptoAddressesNetworkServiceDatabaseConstants.ADDRESS_EXCHANGE_REQUEST_TABLE_NAME);
+
+            addressExchangeRequestTable.addUUIDFilter(CryptoAddressesNetworkServiceDatabaseConstants.ADDRESS_EXCHANGE_REQUEST_ID_COLUMN_NAME, requestId, DatabaseFilterType.EQUAL);
+
+            addressExchangeRequestTable.loadToMemory();
+
+            List<DatabaseTableRecord> records = addressExchangeRequestTable.getRecords();
+
+            if (!records.isEmpty()) {
+                DatabaseTableRecord record = records.get(0);
+
+                record.setStringValue(CryptoAddressesNetworkServiceDatabaseConstants.ADDRESS_EXCHANGE_REQUEST_READ_MARK_COLUMN_NAME, Boolean.TRUE.toString());
+                record.setStringValue(CryptoAddressesNetworkServiceDatabaseConstants.ADDRESS_EXCHANGE_REQUEST_STATE_COLUMN_NAME, ProtocolState.DONE.getCode());
+
+                addressExchangeRequestTable.updateRecord(record);
+
+            } else
+                throw new PendingRequestNotFoundException(null, "requestId: "+requestId, "Cannot find an address exchange request with that requestId.");
+
+        } catch (CantUpdateRecordException e) {
+
+            throw new CantChangeProtocolStateException(e, "", "Exception not handled by the plugin, there is a problem in database and i cannot update the record.");
+        } catch (CantLoadTableToMemoryException e) {
+
+            throw new CantChangeProtocolStateException(e, "", "Exception not handled by the plugin, there is a problem in database and i cannot load the table.");
+
+        }
+    }
+
     /**
      * change the protocol state
      *

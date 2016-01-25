@@ -483,7 +483,7 @@ public class CryptoTransmissionAgent {
                 if (cryptoTransmissionMetadata.getCryptoTransmissionProtocolState() != CryptoTransmissionProtocolState.DONE) {
 
                     System.out.print("-----------------------\n" +
-                            "RECIVIENDO CRYPTO METADATA!!!!! -----------------------\n" +
+                            "RECIBIENDO CRYPTO METADATA!!!!! -----------------------\n" +
                             "-----------------------\n STATE: " + cryptoTransmissionMetadata.getCryptoTransmissionMetadataStates());
 
                     // si no contiene la metadata, la tengo que guardar en la bd y notificar que llegó, tambien debería cargar ese caché cuando se lanza el evento de que llega la metadata de respuesta
@@ -528,19 +528,14 @@ public class CryptoTransmissionAgent {
                             case CREDITED_IN_DESTINATION_WALLET:
                                 // Guardo estado
                                 System.out.print("-----------------------\n" +
-                                        "ACA DEBERIA LANZAR EVENTO NO CREO -----------------------\n" +
+                                        "RECIBIENDO CRYPTO METADATA!!!!! -----------------------\n" +
                                         "-----------------------\n STATE: " + cryptoTransmissionMetadata.getCryptoTransmissionMetadataStates());
-                                // deberia ver si tengo que lanzar un evento acá
-                                //para el outgoing intra user
 
+                                //update message in DONE and Close connection with another device - End message
                                 outgoingCryptoTransmissionMetadataDAO.doneTransaction(cryptoTransmissionMetadata.getTransactionId());
 
-                                System.out.print("-----------------------\n" +
-                                        "RECIVIENDO CRYPTO METADATA!!!!! -----------------------\n" +
-                                        "-----------------------\n STATE: " + cryptoTransmissionMetadata.getCryptoTransmissionMetadataStates());
 
-
-                                System.out.print("CryptoTransmission CREDITED_IN_DESTINATION_WALLET event");
+                                System.out.print("CryptoTransmission Close Connection - End Message");
                                 this.poolConnectionsWaitingForResponse.remove(cryptoTransmissionMetadata.getDestinationPublicKey());
                                 break;
                             // si el mensaje viene con un estado de SENT es porque es la primera vez que llega, por lo que tengo que guardarlo en la bd y responder
@@ -552,7 +547,7 @@ public class CryptoTransmissionAgent {
                                         CryptoTransmissionProtocolState.RECEIVED);
 
                                 System.out.print("-----------------------\n" +
-                                        "RECIVIENDO CRYPTO METADATA!!!!! -----------------------\n" +
+                                        "RECIBIENDO CRYPTO METADATA!!!!! -----------------------\n" +
                                         "-----------------------\n STATE: " + cryptoTransmissionMetadata.getCryptoTransmissionProtocolState());
 
                                 lauchNotification();
@@ -585,7 +580,7 @@ public class CryptoTransmissionAgent {
                                 break;
                             default:
                                 System.out.print("-----------------------\n" +
-                                        "TE ESTAS YENDO POR EL DEFAULT MATI T!!!!! -----------------------\n" +
+                                        "TE ESTAS YENDO POR EL DEFAULT !!!!! -----------------------\n" +
                                         "-----------------------\n STATE: " + cryptoTransmissionMetadata.getCryptoTransmissionProtocolState());
                                 break;
                         }
