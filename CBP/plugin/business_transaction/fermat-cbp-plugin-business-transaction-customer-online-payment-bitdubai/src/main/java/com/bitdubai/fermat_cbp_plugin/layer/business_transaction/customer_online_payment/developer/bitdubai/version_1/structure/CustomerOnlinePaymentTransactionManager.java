@@ -239,10 +239,6 @@ public class CustomerOnlinePaymentTransactionManager implements CustomerOnlinePa
                     e);
             throw new UnexpectedResultReturnedFromDatabaseException(
                     "Cannot check a null contractHash/Id");
-        } catch (UnexpectedResultReturnedFromDatabaseException exception){
-
-            throw new UnexpectedResultReturnedFromDatabaseException(exception,"Unexpected Error","Check the cause");
-
         }
     }
 

@@ -145,8 +145,6 @@ public class CustomerOnlinePaymentBusinessTransactionDao {
                     e,
                     "Getting the contract transaction status",
                     "Invalid code in ContractTransactionStatus enum");
-        } catch (Exception exception){
-            throw new UnexpectedResultReturnedFromDatabaseException( FermatException.wrapException(exception),"Unexpected error","check the cause" );
         }
     }
 
@@ -175,9 +173,6 @@ public class CustomerOnlinePaymentBusinessTransactionDao {
             throw new CantGetContractListException(e,
                     "Getting events in EventStatus.PENDING",
                     "Cannot load the table into memory");
-        } catch (Exception e){
-            throw new UnexpectedResultReturnedFromDatabaseException(FermatException.wrapException(e),"Unexpected error","check the cause");
-
         }
     }
 
@@ -202,9 +197,7 @@ public class CustomerOnlinePaymentBusinessTransactionDao {
             throw new UnexpectedResultReturnedFromDatabaseException(e,
                     "Getting value from database",
                     "Cannot load the database table");
-            }catch (Exception exception){
-                throw new UnexpectedResultReturnedFromDatabaseException( FermatException.wrapException(exception),"Unexpected error","check the cause" );
-        }
+            }
 
     }
 
