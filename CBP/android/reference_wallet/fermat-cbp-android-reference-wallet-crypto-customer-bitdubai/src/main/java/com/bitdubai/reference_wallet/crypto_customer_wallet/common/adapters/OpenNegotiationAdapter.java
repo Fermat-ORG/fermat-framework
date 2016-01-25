@@ -204,31 +204,31 @@ public class OpenNegotiationAdapter extends FermatAdapter<ClauseInformation, Fer
                 break;
             //CRYPTO CLAUSES
             case CUSTOMER_CRYPTO_ADDRESS:
-                clauseViewHolder.setViewResources(R.string.ccw_crypto_address_customer, clauseNumberImageRes);
+                clauseViewHolder.setViewResources(R.string.ccw_crypto_address_customer, clauseNumberImageRes, R.string.ccw_crypto_address_title);
                 break;
             case BROKER_CRYPTO_ADDRESS:
-                clauseViewHolder.setViewResources(R.string.ccw_crypto_address_broker, clauseNumberImageRes);
+                clauseViewHolder.setViewResources(R.string.ccw_crypto_address_broker, clauseNumberImageRes, R.string.ccw_crypto_address_title);
                 break;
             //BANK CLAUSES
             case CUSTOMER_BANK_ACCOUNT:
-                clauseViewHolder.setViewResources(R.string.ccw_bank_account_customer, clauseNumberImageRes);
+                clauseViewHolder.setViewResources(R.string.ccw_bank_account_customer, clauseNumberImageRes, R.string.ccw_bank_account_title);
                 break;
             case BROKER_BANK_ACCOUNT:
-                clauseViewHolder.setViewResources(R.string.ccw_bank_account_broker, clauseNumberImageRes);
+                clauseViewHolder.setViewResources(R.string.ccw_bank_account_broker, clauseNumberImageRes, R.string.ccw_bank_account_title);
                 break;
             //CASH CLAUSES
             case CUSTOMER_PLACE_TO_DELIVER:
-                clauseViewHolder.setViewResources(R.string.ccw_cash_place_to_delivery_customer, clauseNumberImageRes);
+                clauseViewHolder.setViewResources(R.string.ccw_cash_place_to_delivery_customer, clauseNumberImageRes, R.string.ccw_cash_place_to_delivery_title);
                 break;
             case BROKER_PLACE_TO_DELIVER:
-                clauseViewHolder.setViewResources(R.string.ccw_cash_place_to_delivery_broker, clauseNumberImageRes);
+                clauseViewHolder.setViewResources(R.string.ccw_cash_place_to_delivery_broker, clauseNumberImageRes, R.string.ccw_cash_place_to_delivery_title);
                 break;
             //DATE CLAUSES
             case CUSTOMER_DATE_TIME_TO_DELIVER:
-                clauseViewHolder.setViewResources(R.string.ccw_date_to_delivery_customer, clauseNumberImageRes);
+                clauseViewHolder.setViewResources(R.string.ccw_date_to_delivery_customer, clauseNumberImageRes, R.string.delivery_date_title);
                 break;
             case BROKER_DATE_TIME_TO_DELIVER:
-                clauseViewHolder.setViewResources(R.string.ccw_date_to_delivery_broker, clauseNumberImageRes);
+                clauseViewHolder.setViewResources(R.string.ccw_date_to_delivery_broker, clauseNumberImageRes, R.string.delivery_date_title);
                 break;
         }
 

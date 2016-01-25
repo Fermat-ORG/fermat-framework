@@ -9,6 +9,7 @@ import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,12 +20,18 @@ import android.widget.Toast;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractFermatFragment;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.utils.ImagesUtils;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView;
+import com.bitdubai.fermat_api.layer.all_definition.enums.CryptoCurrency;
+import com.bitdubai.fermat_api.layer.all_definition.enums.FiatCurrency;
 import com.bitdubai.fermat_api.layer.pip_engine.interfaces.ResourceProviderManager;
 import com.bitdubai.fermat_api.layer.world.interfaces.Currency;
+import com.bitdubai.fermat_cbp_api.all_definition.enums.ClauseStatus;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.ClauseType;
 import com.bitdubai.fermat_cbp_api.all_definition.identity.ActorIdentity;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.common.interfaces.ClauseInformation;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.common.interfaces.CustomerBrokerNegotiationInformation;
+import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_customer.interfaces.CryptoCustomerWalletManager;
+import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_customer.interfaces.CryptoCustomerWalletModuleManager;
+import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 import com.bitdubai.reference_wallet.crypto_customer_wallet.R;
 import com.bitdubai.reference_wallet.crypto_customer_wallet.common.adapters.OpenNegotiationAdapter;
 import com.bitdubai.reference_wallet.crypto_customer_wallet.common.dialogs.ClauseTextDialog;
@@ -55,6 +62,8 @@ public class OpenNegotiationDetailsFragment extends AbstractFermatFragment<Crypt
     private FermatTextView brokerName;
     private RecyclerView recyclerView;
 
+    private CryptoCustomerWalletManager walletManager;
+    private ErrorManager errorManager;
     private OpenNegotiationAdapter adapter;
     private CustomerBrokerNegotiationInformation negotiationInfo;
 
@@ -67,6 +76,32 @@ public class OpenNegotiationDetailsFragment extends AbstractFermatFragment<Crypt
 
     public static OpenNegotiationDetailsFragment newInstance() {
         return new OpenNegotiationDetailsFragment();
+    }
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+
+        paymentMethods = new ArrayList<>();
+        paymentMethods.add("Cash");
+        paymentMethods.add("Bank");
+        paymentMethods.add("Crypto");
+
+        currencies = new ArrayList<>();
+        currencies.add(FiatCurrency.VENEZUELAN_BOLIVAR);
+        currencies.add(FiatCurrency.US_DOLLAR);
+        currencies.add(CryptoCurrency.BITCOIN);
+
+        try {
+
+            CryptoCustomerWalletModuleManager moduleManager = appSession.getModuleManager();
+            walletManager = moduleManager.getCryptoCustomerWallet(appSession.getAppPublicKey());
+            errorManager = appSession.getErrorManager();
+
+        } catch (Exception e) {
+            Log.e(TAG, e.getMessage(), e);
+        }
+
     }
 
     @Override
@@ -83,7 +118,82 @@ public class OpenNegotiationDetailsFragment extends AbstractFermatFragment<Crypt
 
     @Override
     public void onClauseCLicked(final Button triggerView, final ClauseInformation clause, final int position) {
-        Toast.makeText(getActivity(), "PROCESS CLAUSE.", Toast.LENGTH_LONG).show();
+//        Toast.makeText(getActivity(), "PROCESS CLAUSE.", Toast.LENGTH_LONG).show();
+        SimpleListDialogFragment dialogFragment;
+        final ClauseType type = clause.getType();
+        switch (type) {
+            case BROKER_CURRENCY:
+                dialogFragment = new SimpleListDialogFragment<>();
+                dialogFragment.configure("Currencies", currencies);
+                dialogFragment.setListener(new SimpleListDialogFragment.ItemSelectedListener<Currency>() {
+                    @Override
+                    public void onItemSelected(Currency selectedItem) {
+                        putClause(clause, selectedItem.getCode());
+                        adapter.changeDataSet(negotiationInfo);
+                    }
+                });
+
+                dialogFragment.show(getFragmentManager(), "brokerCurrenciesDialog");
+                break;
+
+            case CUSTOMER_PAYMENT_METHOD:
+                dialogFragment = new SimpleListDialogFragment<>();
+                dialogFragment.configure("Payment Methods", paymentMethods);
+                dialogFragment.setListener(new SimpleListDialogFragment.ItemSelectedListener<String>() {
+                    @Override
+                    public void onItemSelected(String selectedItem) {
+                        putClause(clause, selectedItem);
+                        adapter.changeDataSet(negotiationInfo);
+                    }
+                });
+
+                dialogFragment.show(getFragmentManager(), "paymentMethodsDialog");
+                break;
+
+            case BROKER_PAYMENT_METHOD:
+                dialogFragment = new SimpleListDialogFragment<>();
+
+                dialogFragment.configure("Reception Methods", paymentMethods);
+                dialogFragment.setListener(new SimpleListDialogFragment.ItemSelectedListener<String>() {
+                    @Override
+                    public void onItemSelected(String selectedItem) {
+                        putClause(clause, selectedItem);
+                        adapter.changeDataSet(negotiationInfo);
+                    }
+                });
+
+                dialogFragment.show(getFragmentManager(), "paymentMethodsDialog");
+                break;
+
+            default:
+                ClauseTextDialog clauseTextDialog = new ClauseTextDialog(getActivity(), appSession, appResourcesProviderManager);
+                clauseTextDialog.setAcceptBtnListener(new ClauseTextDialog.OnClickAcceptListener() {
+                    @Override
+                    public void onClick(String newValue) {
+                        putClause(clause, newValue);
+
+                        final Map<ClauseType, ClauseInformation> clauses = negotiationInfo.getClauses();
+
+                        final BigDecimal exchangeRate = new BigDecimal(clauses.get(ClauseType.EXCHANGE_RATE).getValue());
+                        final BigDecimal amountToBuy = new BigDecimal(clauses.get(ClauseType.CUSTOMER_CURRENCY_QUANTITY).getValue());
+                        final BigDecimal amountToSell = amountToBuy.multiply(exchangeRate);
+
+                        final String amountToSellStr = DecimalFormat.getInstance().format(amountToSell.doubleValue());
+                        final ClauseInformation brokerCurrencyQuantity = clauses.get(ClauseType.BROKER_CURRENCY_QUANTITY);
+                        putClause(brokerCurrencyQuantity, amountToSellStr);
+
+                        adapter.changeDataSet(negotiationInfo);
+                    }
+                });
+
+                clauseTextDialog.setEditTextValue(clause.getValue());
+                clauseTextDialog.configure(
+                        type.equals(ClauseType.EXCHANGE_RATE) ? R.string.ccw_your_exchange_rate : R.string.ccw_amount_to_buy,
+                        type.equals(ClauseType.EXCHANGE_RATE) ? R.string.amount : R.string.ccw_value);
+
+                clauseTextDialog.show();
+                break;
+        }
     }
 
     @Override
@@ -170,6 +280,34 @@ public class OpenNegotiationDetailsFragment extends AbstractFermatFragment<Crypt
 
         return cont;
 
+    }
+
+    public void putClause(final ClauseInformation clause, final String value) {
+        final ClauseType type = clause.getType();
+
+        ClauseInformation clauseInformation = new ClauseInformation() {
+            @Override
+            public UUID getClauseID() {
+                return clause.getClauseID();
+            }
+
+            @Override
+            public ClauseType getType() {
+                return type;
+            }
+
+            @Override
+            public String getValue() {
+                return value;
+            }
+
+            @Override
+            public ClauseStatus getStatus() {
+                return clause.getStatus();
+            }
+        };
+
+        negotiationInfo.getClauses().put(type, clauseInformation);
     }
     /*END PRIVATE METHOD*/
 
