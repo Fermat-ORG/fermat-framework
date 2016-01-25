@@ -7,6 +7,8 @@ import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantPers
 import com.bitdubai.fermat_api.layer.world.interfaces.Currency;
 import com.bitdubai.fermat_cbp_api.all_definition.negotiation.NegotiationBankAccount;
 import com.bitdubai.fermat_cbp_api.layer.actor.crypto_broker.exceptions.CantGetListActorExtraDataException;
+import com.bitdubai.fermat_cbp_api.layer.contract.customer_broker_purchase.exceptions.CantGetListCustomerBrokerContractPurchaseException;
+import com.bitdubai.fermat_cbp_api.layer.contract.customer_broker_purchase.interfaces.CustomerBrokerContractPurchase;
 import com.bitdubai.fermat_cbp_api.layer.identity.crypto_customer.exceptions.CantGetCryptoCustomerIdentityException;
 import com.bitdubai.fermat_cbp_api.layer.identity.crypto_customer.interfaces.CryptoCustomerIdentity;
 import com.bitdubai.fermat_cbp_api.layer.negotiation.customer_broker_purchase.exceptions.CantCreateBankAccountPurchaseException;
@@ -44,6 +46,7 @@ import java.util.UUID;
 
 /**
  * Created by nelson on 22/09/15.
+ * Updated by Manuel Perez on 24/01/2016
  */
 public interface CryptoCustomerWalletManager extends WalletManager {
 
@@ -166,4 +169,14 @@ public interface CryptoCustomerWalletManager extends WalletManager {
     void saveCryptoCustomerWalletProviderSetting(CryptoCustomerWalletProviderSetting setting, String customerWalletpublicKey) throws CantSaveCryptoCustomerWalletSettingException, CantPersistFileException, CantCreateFileException;
 
     List<CryptoCustomerWalletProviderSetting> getAssociatedProviders(String walletPublicKey);
+
+    /**
+     * This method returns the CustomerBrokerContractPurchase associated to a negotiationId
+     * @param negotiationId
+     * @return
+     * @throws CantGetListCustomerBrokerContractPurchaseException
+     */
+    CustomerBrokerContractPurchase getCustomerBrokerContractPurchaseByNegotiationId(
+            String negotiationId
+    ) throws CantGetListCustomerBrokerContractPurchaseException;
 }
