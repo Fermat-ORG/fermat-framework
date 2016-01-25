@@ -1,8 +1,9 @@
 package com.bitdubai.fermat_api.layer.modules.interfaces;
 
 /**
- * Created by Matias Furszyfer on 2015.11.21..
+ * Created by mati on 2015.11.21..
  */
 public interface FermatSettings {
     void setIsPresentationHelpEnabled(boolean b);
+
 }

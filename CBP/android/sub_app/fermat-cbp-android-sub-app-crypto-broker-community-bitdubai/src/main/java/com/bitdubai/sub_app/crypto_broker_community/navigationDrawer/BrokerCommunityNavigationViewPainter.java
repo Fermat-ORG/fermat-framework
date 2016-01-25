@@ -64,7 +64,7 @@ public class BrokerCommunityNavigationViewPainter implements NavigationViewPaint
 
     @Override
     public Bitmap addBodyBackground() {
-        Bitmap drawable = null;
+       /* Bitmap drawable = null;
         try {
             BitmapFactory.Options options = new BitmapFactory.Options();
             options.inScaled = true;
@@ -74,7 +74,8 @@ public class BrokerCommunityNavigationViewPainter implements NavigationViewPaint
         } catch (OutOfMemoryError error) {
             error.printStackTrace();
         }
-        return drawable;
+        return drawable;*/
+        return null;
     }
 
     @Override

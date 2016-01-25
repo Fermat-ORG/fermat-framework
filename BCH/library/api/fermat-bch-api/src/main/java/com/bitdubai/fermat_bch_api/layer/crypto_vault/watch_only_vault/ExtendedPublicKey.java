@@ -36,4 +36,9 @@ public class ExtendedPublicKey {
     public byte[] getChainCode() {
         return chainCode;
     }
+
+    @Override
+    public String toString() {
+        return pubKeyBytes.toString() + chainCode.toString();
+    }
 }
