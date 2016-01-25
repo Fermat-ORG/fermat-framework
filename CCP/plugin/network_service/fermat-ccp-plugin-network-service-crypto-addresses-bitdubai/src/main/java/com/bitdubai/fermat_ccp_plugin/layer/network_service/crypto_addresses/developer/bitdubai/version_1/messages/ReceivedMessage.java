@@ -10,6 +10,7 @@ import java.util.UUID;
 public class ReceivedMessage extends NetworkServiceMessage {
 
 
+    private final UUID requestId;
 
     public ReceivedMessage(final UUID   requestId,
                        String identitySender,
@@ -17,14 +18,18 @@ public class ReceivedMessage extends NetworkServiceMessage {
 
         super(requestId, MessageTypes.RECEIVED,identitySender,actorDestination);
 
+        this.requestId = requestId;
 
     }
 
+    public UUID getRequestId() {
+        return requestId;
+    }
 
     @Override
     public String toString() {
         return "ReceivedMessage{" +
-                "requestId=" + getRequestId() +
+                "requestId=" + requestId +
                 '}';
     }
 }
