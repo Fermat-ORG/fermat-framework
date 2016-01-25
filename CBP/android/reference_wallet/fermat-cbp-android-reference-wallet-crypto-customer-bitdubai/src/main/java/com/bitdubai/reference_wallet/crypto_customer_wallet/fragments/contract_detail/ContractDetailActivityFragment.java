@@ -16,6 +16,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.Toast;
 
 import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractFermatFragment;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.utils.ImagesUtils;
@@ -26,6 +27,7 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.FiatCurrency;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Wallets;
 import com.bitdubai.fermat_api.layer.pip_engine.interfaces.ResourceProviderManager;
 import com.bitdubai.fermat_api.layer.world.interfaces.Currency;
+import com.bitdubai.fermat_cbp_api.all_definition.contract.Contract;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.ContractDetailType;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.ContractStatus;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.CurrencyType;
@@ -47,6 +49,7 @@ import com.bitdubai.reference_wallet.crypto_customer_wallet.session.CryptoCustom
 
 
 import com.bitdubai.reference_wallet.crypto_customer_wallet.R;
+import com.bitdubai.reference_wallet.crypto_customer_wallet.util.CommonLogger;
 
 import java.io.ByteArrayOutputStream;
 import java.text.SimpleDateFormat;
@@ -174,9 +177,11 @@ public class ContractDetailActivityFragment extends AbstractFermatFragment<Crypt
         Date date=new Date(data.getLastUpdate());
         //TODO: we can introduce locale for date format
         SimpleDateFormat formatter = new SimpleDateFormat("EEE, d MMM yy");
-        detailDate.setText(formatter.format(date));
+        detailDate.setText("Date:\n"+formatter.format(date));
         //detailRate.setText("1 BTC @ 254 USD");
-        detailRate.setText(data.getExchangeRateAmount()+" "+paymentCurrency+" @ "+data.getAmount()+" "+data.getMerchandise());
+        detailRate.setText(
+                data.getExchangeRateAmount()+" "+paymentCurrency+" @ "+data.getAmount()+" "+data.getMerchandise()
+        );
 
 
         //Create adapter
@@ -193,10 +198,10 @@ public class ContractDetailActivityFragment extends AbstractFermatFragment<Crypt
 
     private List<ContractDetail> createContractDetails(){
         List<ContractDetail> contractDetails=new ArrayList<>();
-        ContractDetail contractDetail;
         /**
          * TODO: this contract details is only for testing, please, implement this date from database.
          */
+        ContractDetail contractDetail;
         //Customer Broker
         contractDetail=new ContractDetail(
                 ContractDetailType.CUSTOMER_DETAIL,
@@ -221,6 +226,39 @@ public class ContractDetailActivityFragment extends AbstractFermatFragment<Crypt
                 1961,
                 2016);
         contractDetails.add(contractDetail);
+        /**
+         * Get the wallet module manager
+         */
+        //TODO: when the module is finished, use the followings lines to create contract details.
+        /*CryptoCustomerWalletModuleManager cryptoCustomerWalletModuleManager=
+                appSession.getModuleManager();
+        if(cryptoCustomerWalletModuleManager!=null){
+
+            try{
+                CryptoCustomerWalletManager cryptoCustomerWalletManager=
+                        cryptoCustomerWalletModuleManager.getCryptoCustomerWallet(
+                                appSession.getAppPublicKey()
+                        );
+                ContractDetail contractDetail;
+
+            } catch (Exception ex) {
+                CommonLogger.exception(TAG, ex.getMessage(), ex);
+                if (errorManager != null) {
+                    errorManager.reportUnexpectedWalletException(Wallets.CBP_CRYPTO_CUSTOMER_WALLET,
+                            UnexpectedWalletExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT,
+                            ex);
+                }
+            }
+
+        } else{
+            //If module is null, I cannot handle with this.
+            Toast.makeText(
+                    getActivity(),
+                    "Sorry, an error happened in ContractDetailActivityFragment (CryptoCustomerWalletModuleManager == null)",
+                    Toast.LENGTH_SHORT)
+                    .show();
+        }*/
+
         return contractDetails;
     }
 
