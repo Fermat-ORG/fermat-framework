@@ -382,14 +382,6 @@ public class IntraActorNetworkServicePluginRoot extends AbstractPlugin implement
         eventManager.addListener(fermatEventListener);
         listenersAdded.add(fermatEventListener);
 
-         /*
-         * Listen and handle Complete Request List Component Registered Notification Event
-         */
-        fermatEventListener = eventManager.getNewListener(P2pEventType.COMPLETE_REQUEST_LIST_COMPONENT_REGISTERED_NOTIFICATION);
-//        fermatEventListener.setEventHandler(new CompleteRequestListComponentRegisteredNotificationEventHandler(this));
-//        eventManager.addListener(fermatEventListener);
-//        listenersAdded.add(fermatEventListener);
-
         /*
          * Listen and handle Complete Request List Component Registered Notification Event
          */
@@ -398,16 +390,15 @@ public class IntraActorNetworkServicePluginRoot extends AbstractPlugin implement
         eventManager.addListener(fermatEventListener);
         listenersAdded.add(fermatEventListener);
 
-        /**
+        /*
          *  failure connection
          */
-
         fermatEventListener = eventManager.getNewListener(P2pEventType.FAILURE_COMPONENT_CONNECTION_REQUEST_NOTIFICATION);
         fermatEventListener.setEventHandler(new FailureComponentConnectionRequestNotificationEventHandler(this));
         eventManager.addListener(fermatEventListener);
         listenersAdded.add(fermatEventListener);
 
-                /*
+        /*
          * Listen and handle VPN Connection Close Notification Event
          */
         fermatEventListener = eventManager.getNewListener(P2pEventType.VPN_CONNECTION_CLOSE);
@@ -431,7 +422,6 @@ public class IntraActorNetworkServicePluginRoot extends AbstractPlugin implement
         eventManager.addListener(fermatEventListener);
         listenersAdded.add(fermatEventListener);
 
-
         /*
          * Listen and handle Client Connection Success Reconnect Notification Event
          */
@@ -439,8 +429,6 @@ public class IntraActorNetworkServicePluginRoot extends AbstractPlugin implement
         fermatEventListener.setEventHandler(new ClientSuccessfullReconnectNotificationEventHandler(this));
         eventManager.addListener(fermatEventListener);
         listenersAdded.add(fermatEventListener);
-
-
 
          /*
          * Listen and handle Complete Update Actor Profile Notification Event
@@ -495,55 +483,53 @@ public class IntraActorNetworkServicePluginRoot extends AbstractPlugin implement
                 serviceStatus = ServiceStatus.STARTING;
 
 
-                logManager.log(IntraActorNetworkServicePluginRoot.getLogLevelByClass(this.getClass().getName()), "TemplateNetworkServicePluginRoot - Starting", "TemplateNetworkServicePluginRoot - Starting", "TemplateNetworkServicePluginRoot - Starting");
+                logManager.log(IntraActorNetworkServicePluginRoot.getLogLevelByClass(this.getClass().getName()), "IntraActorNetworkServicePluginRoot - Starting", "TemplateNetworkServicePluginRoot - Starting", "TemplateNetworkServicePluginRoot - Starting");
 
-        /*
-         * Validate required resources
-         */
+                /*
+                 * Validate required resources
+                 */
                 validateInjectedResources();
 
                 try {
 
-            /*
-             * Create a new key pair for this execution
-             */
-                    // identity = new ECCKeyPair();
+                    /*
+                     * Create a new key pair for this execution
+                     */
                     initializeClientIdentity();
 
-            /*
-             * Initialize the data base
-             */
+                /*
+                 * Initialize the data base
+                 */
                     initializeDb();
 
 
-                    /**
+                    /*
                      * Initialize cache data base
                      */
-
                     initializeCacheDb();
 
-            /*
-             * Initialize Developer Database Factory
-             */
+                    /*
+                     * Initialize Developer Database Factory
+                     */
                     communicationNetworkServiceDeveloperDatabaseFactory = new CommunicationNetworkServiceDeveloperDatabaseFactory(pluginDatabaseSystem, pluginId);
                     communicationNetworkServiceDeveloperDatabaseFactory.initializeDatabase();
 
 
 
-            /*
-             * Initialize listeners
-             */
+                    /*
+                     * Initialize listeners
+                     */
                     initializeListener();
 
 
-            /*
-             * Verify if the communication cloud client is active
-             */
+                    /*
+                     * Verify if the communication cloud client is active
+                     */
                     if (!wsCommunicationsCloudClientManager.isDisable()) {
 
-                /*
-                 * Initialize the agent and start
-                 */
+                        /*
+                         * Initialize the agent and start
+                         */
                         communicationRegistrationProcessNetworkServiceAgent = new CommunicationRegistrationProcessNetworkServiceAgent(this, wsCommunicationsCloudClientManager);
                         communicationRegistrationProcessNetworkServiceAgent.start();
                     }
@@ -577,9 +563,9 @@ public class IntraActorNetworkServicePluginRoot extends AbstractPlugin implement
                     }, 2*3600*1000);
 
 
-            /*
-             * Its all ok, set the new status
-            */
+                    /*
+                     * Its all ok, set the new status
+                    */
                     this.serviceStatus = ServiceStatus.STARTED;
 
 
@@ -620,7 +606,7 @@ public class IntraActorNetworkServicePluginRoot extends AbstractPlugin implement
 
     private void initializeClientIdentity() throws CantStartPluginException {
 
-        System.out.println("Calling the method - initializeClientIdentity() ");
+        System.out.println("IntraActorNetworkServicePluginRoot - Calling the method - initializeClientIdentity() ");
 
         try {
 
@@ -644,7 +630,7 @@ public class IntraActorNetworkServicePluginRoot extends AbstractPlugin implement
              */
             try {
 
-                System.out.println("No previous clientIdentity finder - Proceed to create new one");
+                System.out.println("IntraActorNetworkServicePluginRoot - No previous clientIdentity finder - Proceed to create new one");
 
                 /*
                  * Create the new clientIdentity
@@ -774,7 +760,7 @@ public class IntraActorNetworkServicePluginRoot extends AbstractPlugin implement
 
             if (platformComponentProfileRegistered.getPlatformComponentType() == PlatformComponentType.COMMUNICATION_CLOUD_CLIENT && !this.register){
 
-                if(communicationRegistrationProcessNetworkServiceAgent.getActive()){
+                if(communicationRegistrationProcessNetworkServiceAgent != null && communicationRegistrationProcessNetworkServiceAgent.getActive()){
                     communicationRegistrationProcessNetworkServiceAgent.stop();
                     communicationRegistrationProcessNetworkServiceAgent = null;
                 }
@@ -899,7 +885,6 @@ public class IntraActorNetworkServicePluginRoot extends AbstractPlugin implement
         /*
          * Tell the manager to handler the new connection stablished
          */
-
         communicationNetworkServiceConnectionManager.handleEstablishedRequestedNetworkServiceConnection(remoteComponentProfile);
 
 
@@ -1376,22 +1361,20 @@ public class IntraActorNetworkServicePluginRoot extends AbstractPlugin implement
     @Override
     public void handleClientSuccessfullReconnectNotificationEvent(FermatEvent fermatEvent) {
 
-        System.out.println("IntraActorNetworkServicePluginRoot - SuccessfullReconnectNotificationEvent");
+        System.out.println("IntraActorNetworkServicePluginRoot - handleClientSuccessfullReconnectNotificationEvent");
 
         try {
 
-            if(communicationNetworkServiceConnectionManager != null) {
+            if (communicationNetworkServiceConnectionManager == null){
+                this.initializeCommunicationNetworkServiceConnectionManager();
+            }else{
                 communicationNetworkServiceConnectionManager.restart();
             }
 
-            if (communicationNetworkServiceConnectionManager == null){
-                this.initializeCommunicationNetworkServiceConnectionManager();
-            }
-
-            if(actorNetworkServiceRecordedAgent!=null) {
-                actorNetworkServiceRecordedAgent.start();
-            }else {
+            if(actorNetworkServiceRecordedAgent == null) {
                 initializeIntraActorAgent();
+            }else {
+                actorNetworkServiceRecordedAgent.start();
             }
 
             /*
