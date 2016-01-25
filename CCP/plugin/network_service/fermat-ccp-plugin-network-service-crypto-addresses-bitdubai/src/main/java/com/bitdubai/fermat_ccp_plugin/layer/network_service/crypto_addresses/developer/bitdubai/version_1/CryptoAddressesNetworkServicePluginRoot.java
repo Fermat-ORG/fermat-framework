@@ -1186,18 +1186,20 @@ public class CryptoAddressesNetworkServicePluginRoot extends AbstractNetworkServ
                     AcceptMessage acceptMessage = gson.fromJson(jsonMessage, AcceptMessage.class);
                     receiveAcceptance(acceptMessage);
 
-                     eventToRaise = eventManager.getNewEvent(P2pEventType.VPN_CONNECTION_CLOSE);
-                    eventToRaise.setSource(this.getEventSource());
-                    eventManager.raiseEvent(eventToRaise);
+
+                    //close connection - end message
+                    communicationNetworkServiceConnectionManager.closeConnection(acceptMessage.getActorDestination());
+                    cryptoAddressesExecutorAgent.getPoolConnectionsWaitingForResponse().remove(acceptMessage.getActorDestination());
+
                     break;
 
                 case DENY:
                     DenyMessage denyMessage = gson.fromJson(jsonMessage, DenyMessage.class);
                     receiveDenial(denyMessage);
 
-                     eventToRaise = eventManager.getNewEvent(P2pEventType.VPN_CONNECTION_CLOSE);
-                    eventToRaise.setSource(this.getEventSource());
-                    eventManager.raiseEvent(eventToRaise);
+                    //close connection - end message
+                    communicationNetworkServiceConnectionManager.closeConnection(denyMessage.getActorDestination());
+                    cryptoAddressesExecutorAgent.getPoolConnectionsWaitingForResponse().remove(denyMessage.getActorDestination());
                     break;
 
                 case REQUEST:

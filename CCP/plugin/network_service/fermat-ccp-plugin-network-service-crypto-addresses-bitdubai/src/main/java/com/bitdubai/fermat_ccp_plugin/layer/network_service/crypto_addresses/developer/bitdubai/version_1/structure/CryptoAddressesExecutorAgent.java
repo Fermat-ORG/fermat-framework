@@ -480,4 +480,8 @@ public final class CryptoAddressesExecutorAgent extends FermatAgent {
     public boolean isConnectionOpen(String destinationPublicKey) {
         return poolConnectionsWaitingForResponse.containsKey(destinationPublicKey);
     }
+
+    public Map<String, String> getPoolConnectionsWaitingForResponse() {
+        return poolConnectionsWaitingForResponse;
+    }
 }
