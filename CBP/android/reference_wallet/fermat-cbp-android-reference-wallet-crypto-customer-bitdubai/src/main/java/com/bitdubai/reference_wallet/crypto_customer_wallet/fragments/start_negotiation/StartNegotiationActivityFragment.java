@@ -14,14 +14,15 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.Toast;
 
 import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractFermatFragment;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.utils.ImagesUtils;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView;
 import com.bitdubai.fermat_api.layer.all_definition.enums.CryptoCurrency;
 import com.bitdubai.fermat_api.layer.all_definition.enums.FiatCurrency;
+import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Wallets;
 import com.bitdubai.fermat_api.layer.pip_engine.interfaces.ResourceProviderManager;
 import com.bitdubai.fermat_api.layer.world.interfaces.Currency;
@@ -29,7 +30,9 @@ import com.bitdubai.fermat_cbp_api.all_definition.enums.ClauseType;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.NegotiationStatus;
 import com.bitdubai.fermat_cbp_api.all_definition.identity.ActorIdentity;
 import com.bitdubai.fermat_cbp_api.layer.identity.crypto_customer.interfaces.CryptoCustomerIdentity;
+import com.bitdubai.fermat_cbp_api.layer.negotiation_transaction.customer_broker_new.exceptions.CantCreateCustomerBrokerNewPurchaseNegotiationTransactionException;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.common.interfaces.ClauseInformation;
+import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_customer.exceptions.CouldNotStartNegotiationException;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_customer.interfaces.CryptoCustomerWalletManager;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_customer.interfaces.CryptoCustomerWalletModuleManager;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedWalletExceptionSeverity;
@@ -47,7 +50,9 @@ import com.bitdubai.reference_wallet.crypto_customer_wallet.session.CryptoCustom
 import java.math.BigDecimal;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Map;
+import java.util.UUID;
 
 
 /**
@@ -196,7 +201,43 @@ public class StartNegotiationActivityFragment extends AbstractFermatFragment<Cry
 
     @Override
     public void onSendButtonClicked() {
-        // TODO
+
+        //TEST DATE
+        String infoCont = "";
+
+        try {
+
+            Map<ClauseType, ClauseInformation> mapClauses = negotiationInfo.getClauses();
+            Collection<ClauseInformation> clauses = new ArrayList<>();
+            String customerPublicKey = "customerPublicKey";
+            String brokerPublicKey = negotiationInfo.getBroker().getPublicKey();
+
+            if (mapClauses != null) {
+
+                if (validateClauses(mapClauses)) {
+
+                    clauses = getClause(mapClauses);
+                    infoCont = getClauseTest(mapClauses);
+
+                    if(walletManager.startNegotiation(customerPublicKey, brokerPublicKey, clauses)) {
+                        Toast.makeText(getActivity(), "Send negotiation. " + infoCont + " CUSTOMER_PUBLICKEY: "+ customerPublicKey +" BROKER_PUBLICKEY: "+ brokerPublicKey, Toast.LENGTH_LONG).show();
+                        changeActivity(Activities.CBP_CRYPTO_CUSTOMER_WALLET_HOME, this.appSession.getAppPublicKey());
+                    } else {
+                        Toast.makeText(getActivity(), "Error send negotiation. " + infoCont + " CUSTOMER_PUBLICKEY: "+ customerPublicKey +" BROKER_PUBLICKEY: "+ brokerPublicKey, Toast.LENGTH_LONG).show();
+                    }
+
+                }
+
+            } else {
+                Toast.makeText(getActivity(), "Error in the information. Is null.", Toast.LENGTH_LONG).show();
+            }
+
+        } catch (CouldNotStartNegotiationException | CantCreateCustomerBrokerNewPurchaseNegotiationTransactionException e){
+            if (errorManager != null)
+                errorManager.reportUnexpectedWalletException(Wallets.CBP_CRYPTO_CUSTOMER_WALLET,
+                        UnexpectedWalletExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
+        }
+
     }
 
     @Override
@@ -283,4 +324,96 @@ public class StartNegotiationActivityFragment extends AbstractFermatFragment<Cry
 
         return ImagesUtils.getRoundedBitmap(res, R.drawable.person);
     }
+
+    //VALIDATE CLAUSE
+    private Boolean validateClauses(Map<ClauseType, ClauseInformation> clauses){
+
+
+        if(clauses != null) {
+
+            ClauseInformation information = null;
+
+            for (Map.Entry<ClauseType, ClauseInformation> clauseInformation : clauses.entrySet()) {
+
+                information = clauseInformation.getValue();
+
+                if (information == null) {
+                    Toast.makeText(getActivity(), "Please completed all information.", Toast.LENGTH_LONG).show();
+                    return false;
+                }
+
+                if (information.getType().getCode().equals(ClauseType.CUSTOMER_CURRENCY_QUANTITY.getCode())) {
+
+                    if (Double.parseDouble(information.getValue()) <= 0) {
+                        Toast.makeText(getActivity(), "The currency quantity not have menor of 0.", Toast.LENGTH_LONG).show();
+//                        mBrokerName.requestFocus();
+                        return false;
+                    }
+
+                } else if (information.getType().getCode().equals(ClauseType.BROKER_CURRENCY_QUANTITY.getCode())) {
+
+                    if (Double.parseDouble(information.getValue()) <= 0) {
+                        Toast.makeText(getActivity(), "The  payment quantity not have menor of 0.", Toast.LENGTH_LONG).show();
+                        return false;
+                    }
+
+                } else if (information.getType().getCode().equals(ClauseType.EXCHANGE_RATE.getCode())) {
+
+                    if (Double.parseDouble(information.getValue()) <= 0) {
+                        Toast.makeText(getActivity(), "The exchange rate quantity not have menor of 0.", Toast.LENGTH_LONG).show();
+                        return false;
+                    }
+
+                }
+            }
+
+        } else { return false; }
+
+        return true;
+    }
+
+    //GET CLAUSE INFORMATION
+    private Collection<ClauseInformation> getClause(Map<ClauseType, ClauseInformation> mapClauses){
+
+        Collection<ClauseInformation> clauses = new ArrayList<>();
+
+        if(mapClauses != null) {
+
+            for (Map.Entry<ClauseType, ClauseInformation> clauseInformation : mapClauses.entrySet()) {
+
+                clauses.add(clauseInformation.getValue());
+
+            }
+
+        }
+
+        return clauses;
+    }
+
+    //GET CLAUSE INFORMATION TEST
+    private String getClauseTest(Map<ClauseType, ClauseInformation> mapClauses){
+
+        String clauses = "";
+        ClauseInformation information;
+
+        if(mapClauses != null) {
+
+            /*for (Map.Entry<ClauseType, ClauseInformation> clauseInformation : mapClauses.entrySet()) {
+                information = clauseInformation.getValue();
+                clauses.add(information);
+                infoCont = information.getType().getCode() + ": " + information.getValue() + ", " + infoCont;
+            }*/
+
+            for (Map.Entry<ClauseType, ClauseInformation> clauseInformation : mapClauses.entrySet()) {
+
+                information = clauseInformation.getValue();
+                clauses = information.getType().getCode() + ": " + information.getValue() + ", " + clauses;
+
+            }
+
+        }
+
+        return clauses;
+    }
+
 }

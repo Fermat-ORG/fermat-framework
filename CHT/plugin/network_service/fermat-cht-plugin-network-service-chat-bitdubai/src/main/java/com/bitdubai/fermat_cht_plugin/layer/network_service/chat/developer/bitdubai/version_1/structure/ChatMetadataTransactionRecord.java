@@ -1,5 +1,7 @@
 package com.bitdubai.fermat_cht_plugin.layer.network_service.chat.developer.bitdubai.version_1.structure;
 
+import com.bitdubai.fermat_api.layer.all_definition.components.enums.PlatformComponentType;
+import com.bitdubai.fermat_cht_api.all_definition.enums.MessageStatus;
 import com.bitdubai.fermat_cht_api.layer.network_service.chat.enums.ChatMessageStatus;
 import com.bitdubai.fermat_cht_api.layer.network_service.chat.enums.DistributionStatus;
 import com.bitdubai.fermat_cht_api.layer.network_service.chat.interfaces.ChatMetadata;
@@ -9,33 +11,102 @@ import java.sql.Timestamp;
 import java.util.UUID;
 
 /**
- * Created by root on 06/01/16.
+ * Created by Gabriel Araujo on 06/01/16.
  */
-public class ChatMetadataTransactionRecord implements ChatMetadata,Serializable {
+public class ChatMetadataTransactionRecord implements ChatMetadata{
 
-    private UUID idChat;
+    private UUID transactionId;
 
-    private UUID idObject;
+    private String transactionHash;
 
-    private String localActorType;
+    private UUID chatId;
 
-    private String localActorPubKey;
+    private UUID objectId;
 
-    private String remoteActorType;
+    private PlatformComponentType localActorType;
 
-    private String remoteActorPubKey;
+    private String localActorPublicKey;
+
+    private PlatformComponentType remoteActorType;
+
+    private String remoteActorPublicKey;
 
     private String chatName;
 
     private ChatMessageStatus chatMessageStatus;
 
+    private MessageStatus messageStatus;
+
     private Timestamp date;
 
-    private UUID idMessage;
+    private UUID messageId;
 
     private String message;
 
     private DistributionStatus distributionStatus;
+
+    /**
+     * Represent the value of processed
+     */
+    private String processed;
+
+    /**
+     * Represent the value of PROCESSED
+     */
+    public final static String PROCESSED = "Y";
+
+    /**
+     * Represent the value of NO_PROCESSED
+     */
+    public final static String NO_PROCESSED = "N";
+
+    /**
+     * Get the Processed
+     * @return String
+     */
+    public String getProcessed() {
+        return processed;
+    }
+
+    /**
+     * Set the Processed
+     * @param processed
+     */
+    public void setProcessed(String processed) {
+        this.processed = processed;
+    }
+    public String getTransactionHash() {
+        return transactionHash;
+    }
+
+    public void setTransactionHash(String transactionHash) {
+        this.transactionHash = transactionHash;
+    }
+    public UUID getTransactionId() {
+        return transactionId;
+    }
+
+    public void setTransactionId(UUID transactionId) {
+        this.transactionId = transactionId;
+    }
+
+    @Override
+    public UUID getChatId() {
+        return chatId;
+    }
+
+    public void setChatId(UUID chatId) {
+        this.chatId = chatId;
+    }
+
+    @Override
+    public MessageStatus getMessageStatus() {
+        return messageStatus;
+    }
+
+    public void setMessageStatus(MessageStatus messageStatus) {
+        this.messageStatus = messageStatus;
+    }
 
     @Override
     public DistributionStatus getDistributionStatus() {
@@ -49,16 +120,16 @@ public class ChatMetadataTransactionRecord implements ChatMetadata,Serializable 
     @Override
     public String toString() {
         return "ChatMetadataTransactionRecord{" +
-                "idChat=" + idChat +
-                ", idObject=" + idObject +
+                "chatId=" + chatId +
+                ", objectId=" + objectId +
                 ", localActorType='" + localActorType + '\'' +
-                ", localActorPubKey='" + localActorPubKey + '\'' +
+                ", localActorPublicKey='" + localActorPublicKey + '\'' +
                 ", remoteActorType='" + remoteActorType + '\'' +
-                ", remoteActorPubKey='" + remoteActorPubKey + '\'' +
+                ", remoteActorPublicKey='" + remoteActorPublicKey + '\'' +
                 ", chatName='" + chatName + '\'' +
                 ", chatMessageStatus=" + chatMessageStatus +
                 ", date=" + date +
-                ", idMessage=" + idMessage +
+                ", messageId=" + messageId +
                 ", message='" + message + '\'' +
                 '}';
     }
@@ -66,39 +137,39 @@ public class ChatMetadataTransactionRecord implements ChatMetadata,Serializable 
 
 
     @Override
-    public String getLocalActorType() {
+    public PlatformComponentType getLocalActorType() {
         return localActorType;
     }
 
-    public void setLocalActorType(String localActorType) {
+    public void setLocalActorType(PlatformComponentType localActorType) {
         this.localActorType = localActorType;
     }
 
     @Override
-    public String getLocalActorPubKey() {
-        return localActorPubKey;
+    public String getLocalActorPublicKey() {
+        return localActorPublicKey;
     }
 
-    public void setLocalActorPubKey(String localActorPubKey) {
-        this.localActorPubKey = localActorPubKey;
+    public void setLocalActorPublicKey(String localActorPublicKey) {
+        this.localActorPublicKey = localActorPublicKey;
     }
 
     @Override
-    public String getRemoteActorType() {
+    public PlatformComponentType getRemoteActorType() {
         return remoteActorType;
     }
 
-    public void setRemoteActorType(String remoteActorType) {
+    public void setRemoteActorType(PlatformComponentType remoteActorType) {
         this.remoteActorType = remoteActorType;
     }
 
     @Override
-    public String getRemoteActorPubKey() {
-        return remoteActorPubKey;
+    public String getRemoteActorPublicKey() {
+        return remoteActorPublicKey;
     }
 
-    public void setRemoteActorPubKey(String remoteActorPubKey) {
-        this.remoteActorPubKey = remoteActorPubKey;
+    public void setRemoteActorPublicKey(String remoteActorPublicKey) {
+        this.remoteActorPublicKey = remoteActorPublicKey;
     }
 
     @Override
@@ -137,30 +208,22 @@ public class ChatMetadataTransactionRecord implements ChatMetadata,Serializable 
         this.message = message;
     }
 
-    @Override
-    public UUID getIdChat() {
-        return idChat;
-    }
-
-    public void setIdChat(UUID idChat) {
-        this.idChat = idChat;
-    }
 
     @Override
-    public UUID getIdObject() {
-        return idObject;
+    public UUID getObjectId() {
+        return objectId;
     }
 
-    public void setIdObject(UUID idObject) {
-        this.idObject = idObject;
+    public void setObjectId(UUID objectId) {
+        this.objectId = objectId;
     }
 
     @Override
-    public UUID getIdMessage() {
-        return idMessage;
+    public UUID getMessageId() {
+        return messageId;
     }
 
-    public void setIdMessage(UUID idMessage) {
-        this.idMessage = idMessage;
+    public void setMessageId(UUID messageId) {
+        this.messageId = messageId;
     }
 }

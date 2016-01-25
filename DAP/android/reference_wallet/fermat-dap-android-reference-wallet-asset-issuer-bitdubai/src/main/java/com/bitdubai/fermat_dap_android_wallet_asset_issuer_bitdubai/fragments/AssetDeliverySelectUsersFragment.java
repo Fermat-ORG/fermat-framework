@@ -15,24 +15,33 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Toast;
 
+import com.bitdubai.fermat_android_api.ui.Views.PresentationDialog;
 import com.bitdubai.fermat_android_api.ui.adapters.FermatAdapter;
 import com.bitdubai.fermat_android_api.ui.enums.FermatRefreshTypes;
 import com.bitdubai.fermat_android_api.ui.fragments.FermatWalletListFragment;
 import com.bitdubai.fermat_android_api.ui.interfaces.FermatListItemListeners;
+import com.bitdubai.fermat_api.FermatException;
+import com.bitdubai.fermat_api.layer.all_definition.enums.UISource;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Wallets;
+import com.bitdubai.fermat_api.layer.all_definition.settings.structure.SettingsManager;
 import com.bitdubai.fermat_dap_android_wallet_asset_issuer_bitdubai.R;
 import com.bitdubai.fermat_dap_android_wallet_asset_issuer_bitdubai.common.adapters.AssetDeliverySelectUsersAdapter;
 import com.bitdubai.fermat_dap_android_wallet_asset_issuer_bitdubai.models.Data;
 import com.bitdubai.fermat_dap_android_wallet_asset_issuer_bitdubai.models.User;
 import com.bitdubai.fermat_dap_android_wallet_asset_issuer_bitdubai.sessions.AssetIssuerSession;
+import com.bitdubai.fermat_dap_android_wallet_asset_issuer_bitdubai.sessions.SessionConstantsAssetIssuer;
 import com.bitdubai.fermat_dap_android_wallet_asset_issuer_bitdubai.util.CommonLogger;
+import com.bitdubai.fermat_dap_api.layer.dap_module.wallet_asset_issuer.AssetIssuerSettings;
 import com.bitdubai.fermat_dap_api.layer.dap_module.wallet_asset_issuer.interfaces.AssetIssuerWalletSupAppModuleManager;
+import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedUIExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedWalletExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import static android.widget.Toast.makeText;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -50,6 +59,8 @@ public class AssetDeliverySelectUsersFragment extends FermatWalletListFragment<U
     // Data
     private List<User> users;
 
+    SettingsManager<AssetIssuerSettings> settingsManager;
+
     //UI
     private View noUsersView;
 
@@ -60,10 +71,13 @@ public class AssetDeliverySelectUsersFragment extends FermatWalletListFragment<U
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setHasOptionsMenu(true);
 
         try {
             moduleManager = ((AssetIssuerSession) appSession).getModuleManager();
             errorManager = appSession.getErrorManager();
+
+            settingsManager = appSession.getModuleManager().getSettingsManager();
 
             users = (List) getMoreDataAsync(FermatRefreshTypes.NEW, 0);
         } catch (Exception ex) {
@@ -83,6 +97,52 @@ public class AssetDeliverySelectUsersFragment extends FermatWalletListFragment<U
         noUsersView = layout.findViewById(R.id.dap_wallet_asset_issuer_delivery_no_users);
 
         showOrHideNoUsersView(users.isEmpty());
+    }
+
+    private void setUpHelpAssetDeliverUsers(boolean checkButton) {
+        try {
+            PresentationDialog presentationDialog = new PresentationDialog.Builder(getActivity(), appSession)
+                    .setBannerRes(R.drawable.banner_asset_issuer_wallet)
+                    .setIconRes(R.drawable.asset_issuer)
+                    .setVIewColor(R.color.dap_issuer_view_color)
+                    .setTitleTextColor(R.color.dap_issuer_view_color)
+                    .setSubTitle("Asset Users selection.")
+                    .setBody("Use this screen to select users that you are connected to.\n\n" +
+                            "If no users are available, you need to connect to them from the Asset User Community sub application.\n\n" +
+                            "Use this application to identify and connect to users and they will be permanently available to receive your assets.")
+                    .setTemplateType(PresentationDialog.TemplateType.TYPE_PRESENTATION_WITHOUT_IDENTITIES)
+                    .setIsCheckEnabled(checkButton)
+                    .build();
+
+            presentationDialog.show();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        super.onCreateOptionsMenu(menu, inflater);
+        menu.add(0, SessionConstantsAssetIssuer.IC_ACTION_ISSUER_HELP_USER, 0, "help").setIcon(R.drawable.dap_asset_issuer_help_icon)
+                .setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        try {
+            int id = item.getItemId();
+
+            if (id == SessionConstantsAssetIssuer.IC_ACTION_ISSUER_HELP_USER) {
+                setUpHelpAssetDeliverUsers(settingsManager.loadAndGetSettings(appSession.getAppPublicKey()).isPresentationHelpEnabled());
+                return true;
+            }
+
+        } catch (Exception e) {
+            errorManager.reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.UNSTABLE, FermatException.wrapException(e));
+            makeText(getActivity(), "Asset Issuer system error",
+                    Toast.LENGTH_SHORT).show();
+        }
+        return super.onOptionsItemSelected(item);
     }
 
     @Override
