@@ -32,6 +32,7 @@ import com.bitdubai.fermat_cbp_api.all_definition.enums.ContractDetailType;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.ContractStatus;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.CurrencyType;
 import com.bitdubai.fermat_cbp_api.all_definition.identity.ActorIdentity;
+import com.bitdubai.fermat_cbp_api.layer.contract.customer_broker_purchase.interfaces.CustomerBrokerContractPurchase;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.common.interfaces.ClauseInformation;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.common.interfaces.ContractBasicInformation;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_customer.interfaces.CryptoCustomerWalletManager;
@@ -68,6 +69,7 @@ public class ContractDetailActivityFragment extends AbstractFermatFragment<Crypt
     private CryptoCustomerWalletManager walletManager;
     private ErrorManager errorManager;
     private List<ContractDetail> contractInformation;
+    private ContractBasicInformation data;
     private ArrayList<String> paymentMethods; // test data
     private ArrayList<Currency> currencies; // test data
 
@@ -97,6 +99,7 @@ public class ContractDetailActivityFragment extends AbstractFermatFragment<Crypt
             walletManager = moduleManager.getCryptoCustomerWallet(appSession.getAppPublicKey());
             errorManager = appSession.getErrorManager();
             //TODO: load contract here
+            data=(ContractBasicInformation) appSession.getData("contract_data");
 
         } catch (Exception e) {
             Log.e(TAG, e.getMessage(), e);
@@ -169,8 +172,7 @@ public class ContractDetailActivityFragment extends AbstractFermatFragment<Crypt
         //brokerName.setText(broker.getAlias());
         //brokerName.setText("Broker Name");
 
-        ContractBasicInformation data=
-                (ContractBasicInformation) appSession.getData("contract_data");
+
         String paymentCurrency=data.getPaymentCurrency();
         brokerName.setText(data.getCryptoCustomerAlias());
         sellingSummary.setText("SELLING "+paymentCurrency);
@@ -239,8 +241,11 @@ public class ContractDetailActivityFragment extends AbstractFermatFragment<Crypt
                         cryptoCustomerWalletModuleManager.getCryptoCustomerWallet(
                                 appSession.getAppPublicKey()
                         );
-                ContractDetail contractDetail;
-
+                //ContractDetail contractDetail;
+                CustomerBrokerContractPurchase customerBrokerContractPurchase=
+                        cryptoCustomerWalletManager.
+                                getCustomerBrokerContractPurchaseByNegotiationId(
+                                        data.getNegotiationId().toString());
             } catch (Exception ex) {
                 CommonLogger.exception(TAG, ex.getMessage(), ex);
                 if (errorManager != null) {
