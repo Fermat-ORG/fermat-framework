@@ -66,27 +66,21 @@ public class NetworkServiceChatNetworkServiceDeveloperDatabaseFactory implements
      */
     public void initializeDatabase() throws CantInitializeChatNetworkServiceDatabaseException {
         try {
-
              /*
               * Open new database connection
               */
-            database = this.pluginDatabaseSystem.openDatabase(pluginId, pluginId.toString());
-
+            database = this.pluginDatabaseSystem.openDatabase(pluginId, NetworkServiceChatNetworkServiceDatabaseConstants.DATA_BASE_NAME);
         } catch (CantOpenDatabaseException cantOpenDatabaseException) {
-
              /*
               * The database exists but cannot be open. I can not handle this situation.
               */
             throw new CantInitializeChatNetworkServiceDatabaseException(cantOpenDatabaseException.getMessage());
-
         } catch (DatabaseNotFoundException e) {
-
              /*
               * The database no exist may be the first time the plugin is running on this device,
               * We need to create the new database
               */
             NetworkServiceChatNetworkServiceDatabaseFactory networkServiceChatNetworkServiceDatabaseFactory = new NetworkServiceChatNetworkServiceDatabaseFactory(pluginDatabaseSystem);
-
             try {
                   /*
                    * We create the new database
@@ -114,114 +108,6 @@ public class NetworkServiceChatNetworkServiceDeveloperDatabaseFactory implements
 
     public List<DeveloperDatabaseTable> getDatabaseTableList(DeveloperObjectFactory developerObjectFactory) {
         List<DeveloperDatabaseTable> tables = new ArrayList<DeveloperDatabaseTable>();
-
-        /**
-         * Table Outgoing Chat columns.
-         */
-        List<String> outgoingChatColumns = new ArrayList<String>();
-
-        outgoingChatColumns.add(NetworkServiceChatNetworkServiceDatabaseConstants.CHAT_IDCHAT_COLUMN_NAME);
-        outgoingChatColumns.add(NetworkServiceChatNetworkServiceDatabaseConstants.CHAT_IDOBJECTO_COLUMN_NAME);
-        outgoingChatColumns.add(NetworkServiceChatNetworkServiceDatabaseConstants.CHAT_LOCALACTORTYPE_COLUMN_NAME);
-        outgoingChatColumns.add(NetworkServiceChatNetworkServiceDatabaseConstants.CHAT_LOCALACTORPUBKEY_COLUMN_NAME);
-        outgoingChatColumns.add(NetworkServiceChatNetworkServiceDatabaseConstants.CHAT_REMOTEACTORTYPE_COLUMN_NAME);
-        outgoingChatColumns.add(NetworkServiceChatNetworkServiceDatabaseConstants.CHAT_REMOTEACTORPUBKEY_COLUMN_NAME);
-        outgoingChatColumns.add(NetworkServiceChatNetworkServiceDatabaseConstants.CHAT_CHATNAME_COLUMN_NAME);
-        outgoingChatColumns.add(NetworkServiceChatNetworkServiceDatabaseConstants.CHAT_CHATSTATUS_COLUMN_NAME);
-        outgoingChatColumns.add(NetworkServiceChatNetworkServiceDatabaseConstants.CHAT_DATE_COLUMN_NAME);
-        outgoingChatColumns.add(NetworkServiceChatNetworkServiceDatabaseConstants.CHAT_IDMENSAJE_COLUMN_NAME);
-        outgoingChatColumns.add(NetworkServiceChatNetworkServiceDatabaseConstants.CHAT_MESSAGE_COLUMN_NAME);
-        outgoingChatColumns.add(NetworkServiceChatNetworkServiceDatabaseConstants.CHAT_DISTRIBUTIONSTATUS_COLUMN_NAME);
-        /**
-         * Table Outgoing Chat addition.
-         */
-        DeveloperDatabaseTable outgoingChatTable = developerObjectFactory.getNewDeveloperDatabaseTable(NetworkServiceChatNetworkServiceDatabaseConstants.CHAT_TABLE_NAME, outgoingChatColumns);
-        tables.add(outgoingChatTable);
-
-        /**
-         * Table Incoming Chat columns.
-         */
-        List<String> incomingChatColumns = new ArrayList<String>();
-
-        incomingChatColumns.add(NetworkServiceChatNetworkServiceDatabaseConstants.INCOMING_CHAT_IDCHAT_COLUMN_NAME);
-        incomingChatColumns.add(NetworkServiceChatNetworkServiceDatabaseConstants.INCOMING_CHAT_IDOBJECTO_COLUMN_NAME);
-        incomingChatColumns.add(NetworkServiceChatNetworkServiceDatabaseConstants.INCOMING_CHAT_LOCALACTORTYPE_COLUMN_NAME);
-        incomingChatColumns.add(NetworkServiceChatNetworkServiceDatabaseConstants.INCOMING_CHAT_LOCALACTORPUBKEY_COLUMN_NAME);
-        incomingChatColumns.add(NetworkServiceChatNetworkServiceDatabaseConstants.INCOMING_CHAT_REMOTEACTORTYPE_COLUMN_NAME);
-        incomingChatColumns.add(NetworkServiceChatNetworkServiceDatabaseConstants.INCOMING_CHAT_REMOTEACTORPUBKEY_COLUMN_NAME);
-        incomingChatColumns.add(NetworkServiceChatNetworkServiceDatabaseConstants.INCOMING_CHAT_CHATNAME_COLUMN_NAME);
-        incomingChatColumns.add(NetworkServiceChatNetworkServiceDatabaseConstants.INCOMING_CHAT_CHATSTATUS_COLUMN_NAME);
-        incomingChatColumns.add(NetworkServiceChatNetworkServiceDatabaseConstants.INCOMING_CHAT_DATE_COLUMN_NAME);
-        incomingChatColumns.add(NetworkServiceChatNetworkServiceDatabaseConstants.INCOMING_CHAT_IDMENSAJE_COLUMN_NAME);
-        incomingChatColumns.add(NetworkServiceChatNetworkServiceDatabaseConstants.INCOMING_CHAT_MESSAGE_COLUMN_NAME);
-        incomingChatColumns.add(NetworkServiceChatNetworkServiceDatabaseConstants.INCOMING_CHAT_DISTRIBUTIONSTATUS_COLUMN_NAME);
-        /**
-         * Table Incoming Chat addition.
-         */
-        DeveloperDatabaseTable incomingChatTable = developerObjectFactory.getNewDeveloperDatabaseTable(NetworkServiceChatNetworkServiceDatabaseConstants.INCOMING_CHAT_TABLE_NAME, incomingChatColumns);
-        tables.add(incomingChatTable);
-
-        /**
-         * Table Incoming Chat Message columns.
-         */
-        List<String> incomingChatMessageColumns = new ArrayList<String>();
-
-        incomingChatMessageColumns.add(NetworkServiceChatNetworkServiceDatabaseConstants.INCOMING_CHAT_MESSAGE_IDMENSAJE_COLUMN_NAME);
-        incomingChatMessageColumns.add(NetworkServiceChatNetworkServiceDatabaseConstants.INCOMING_CHAT_MESSAGE_IDCHAT_COLUMN_NAME);
-        incomingChatMessageColumns.add(NetworkServiceChatNetworkServiceDatabaseConstants.INCOMING_CHAT_MESSAGE_MESSAGE_COLUMN_NAME);
-        incomingChatMessageColumns.add(NetworkServiceChatNetworkServiceDatabaseConstants.INCOMING_CHAT_MESSAGE_DATE_COLUMN_NAME);
-        incomingChatMessageColumns.add(NetworkServiceChatNetworkServiceDatabaseConstants.INCOMING_CHAT_MESSAGE_DISTRIBUTIONSTATUS_COLUMN_NAME);
-        /**
-         * Table Incoming Chat Message addition.
-         */
-        DeveloperDatabaseTable incomingChatMessageTable = developerObjectFactory.getNewDeveloperDatabaseTable(NetworkServiceChatNetworkServiceDatabaseConstants.INCOMING_CHAT_MESSAGE_TABLE_NAME, incomingChatMessageColumns);
-        tables.add(incomingChatMessageTable);
-
-        /**
-         * Table Outgoing Chat Message columns.
-         */
-        List<String> outgoingChatMessageColumns = new ArrayList<String>();
-
-        outgoingChatMessageColumns.add(NetworkServiceChatNetworkServiceDatabaseConstants.OUTGOING_CHAT_MESSAGE_IDMENSAJE_COLUMN_NAME);
-        outgoingChatMessageColumns.add(NetworkServiceChatNetworkServiceDatabaseConstants.OUTGOING_CHAT_MESSAGE_IDCHAT_COLUMN_NAME);
-        outgoingChatMessageColumns.add(NetworkServiceChatNetworkServiceDatabaseConstants.OUTGOING_CHAT_MESSAGE_MESSAGE_COLUMN_NAME);
-        outgoingChatMessageColumns.add(NetworkServiceChatNetworkServiceDatabaseConstants.OUTGOING_CHAT_MESSAGE_DATE_COLUMN_NAME);
-        outgoingChatMessageColumns.add(NetworkServiceChatNetworkServiceDatabaseConstants.OUTGOING_CHAT_MESSAGE_DISTRIBUTIONSTATUS_COLUMN_NAME);
-        /**
-         * Table Outgoing Chat Message addition.
-         */
-        DeveloperDatabaseTable outgoingChatMessageTable = developerObjectFactory.getNewDeveloperDatabaseTable(NetworkServiceChatNetworkServiceDatabaseConstants.OUTGOING_CHAT_MESSAGE_TABLE_NAME, outgoingChatMessageColumns);
-        tables.add(outgoingChatMessageTable);
-
-        /**
-         * Table Incoming Chat Message Notification Status columns.
-         */
-        List<String> incomingChatMessageNotificationStatusColumns = new ArrayList<String>();
-
-        incomingChatMessageNotificationStatusColumns.add(NetworkServiceChatNetworkServiceDatabaseConstants.INCOMING_CHAT_MESSAGE_NOTIFICATION_STATUS_IDMENSAJE_COLUMN_NAME);
-        incomingChatMessageNotificationStatusColumns.add(NetworkServiceChatNetworkServiceDatabaseConstants.INCOMING_CHAT_MESSAGE_NOTIFICATION_STATUS_IDCHAT_COLUMN_NAME);
-        incomingChatMessageNotificationStatusColumns.add(NetworkServiceChatNetworkServiceDatabaseConstants.INCOMING_CHAT_MESSAGE_NOTIFICATION_STATUS_DATE_COLUMN_NAME);
-        incomingChatMessageNotificationStatusColumns.add(NetworkServiceChatNetworkServiceDatabaseConstants.INCOMING_CHAT_MESSAGE_NOTIFICATION_STATUS_DISTRIBUTIONSTATUS_COLUMN_NAME);
-        /**
-         * Table Incoming Chat Message Notification Status addition.
-         */
-        DeveloperDatabaseTable incomingChatMessageNotificationStatusTable = developerObjectFactory.getNewDeveloperDatabaseTable(NetworkServiceChatNetworkServiceDatabaseConstants.INCOMING_CHAT_MESSAGE_NOTIFICATION_STATUS_TABLE_NAME, incomingChatMessageNotificationStatusColumns);
-        tables.add(incomingChatMessageNotificationStatusTable);
-
-        /**
-         * Table Outgoing Chat Message Notification Status columns.
-         */
-        List<String> outgoingChatMessageNotificationStatusColumns = new ArrayList<String>();
-
-        outgoingChatMessageNotificationStatusColumns.add(NetworkServiceChatNetworkServiceDatabaseConstants.OUTGOING_CHAT_MESSAGE_NOTIFICATION_STATUS_IDMENSAJE_COLUMN_NAME);
-        outgoingChatMessageNotificationStatusColumns.add(NetworkServiceChatNetworkServiceDatabaseConstants.OUTGOING_CHAT_MESSAGE_NOTIFICATION_STATUS_IDCHAT_COLUMN_NAME);
-        outgoingChatMessageNotificationStatusColumns.add(NetworkServiceChatNetworkServiceDatabaseConstants.OUTGOING_CHAT_MESSAGE_NOTIFICATION_STATUS_DATE_COLUMN_NAME);
-        outgoingChatMessageNotificationStatusColumns.add(NetworkServiceChatNetworkServiceDatabaseConstants.OUTGOING_CHAT_MESSAGE_NOTIFICATION_STATUS_DISTRIBUTIONSTATUS_COLUMN_NAME);
-        /**
-         * Table Outgoing Chat Message Notification Status addition.
-         */
-        DeveloperDatabaseTable outgoingChatMessageNotificationStatusTable = developerObjectFactory.getNewDeveloperDatabaseTable(NetworkServiceChatNetworkServiceDatabaseConstants.OUTGOING_CHAT_MESSAGE_NOTIFICATION_STATUS_TABLE_NAME, outgoingChatMessageNotificationStatusColumns);
-        tables.add(outgoingChatMessageNotificationStatusTable);
         /**
          * Table incoming messages columns.
          */
@@ -260,6 +146,32 @@ public class NetworkServiceChatNetworkServiceDeveloperDatabaseFactory implements
         DeveloperDatabaseTable outgoingmessagesTable = developerObjectFactory.getNewDeveloperDatabaseTable(NetworkServiceChatNetworkServiceDatabaseConstants.OUTGOING_MESSAGES_TABLE_NAME, outgoingmessagesColumns);
         tables.add(outgoingmessagesTable);
 
+        /**
+         * Table Chat columns.
+         */
+        List<String> outgoingChatColumns = new ArrayList<String>();
+
+        outgoingChatColumns.add(NetworkServiceChatNetworkServiceDatabaseConstants.CHAT_TRANSACTION_ID_COLUMN_NAME);
+        outgoingChatColumns.add(NetworkServiceChatNetworkServiceDatabaseConstants.CHAT_TRANSACTION_HASH_COLUMN_NAME);
+        outgoingChatColumns.add(NetworkServiceChatNetworkServiceDatabaseConstants.CHAT_IDCHAT_COLUMN_NAME);
+        outgoingChatColumns.add(NetworkServiceChatNetworkServiceDatabaseConstants.CHAT_IDOBJECTO_COLUMN_NAME);
+        outgoingChatColumns.add(NetworkServiceChatNetworkServiceDatabaseConstants.CHAT_LOCALACTORTYPE_COLUMN_NAME);
+        outgoingChatColumns.add(NetworkServiceChatNetworkServiceDatabaseConstants.CHAT_LOCALACTORPUBKEY_COLUMN_NAME);
+        outgoingChatColumns.add(NetworkServiceChatNetworkServiceDatabaseConstants.CHAT_REMOTEACTORTYPE_COLUMN_NAME);
+        outgoingChatColumns.add(NetworkServiceChatNetworkServiceDatabaseConstants.CHAT_REMOTEACTORPUBKEY_COLUMN_NAME);
+        outgoingChatColumns.add(NetworkServiceChatNetworkServiceDatabaseConstants.CHAT_CHATNAME_COLUMN_NAME);
+        outgoingChatColumns.add(NetworkServiceChatNetworkServiceDatabaseConstants.CHAT_CHATSTATUS_COLUMN_NAME);
+        outgoingChatColumns.add(NetworkServiceChatNetworkServiceDatabaseConstants.CHAT_MESSAGE_STATUS_COLUMN_NAME);
+        outgoingChatColumns.add(NetworkServiceChatNetworkServiceDatabaseConstants.CHAT_DATE_COLUMN_NAME);
+        outgoingChatColumns.add(NetworkServiceChatNetworkServiceDatabaseConstants.CHAT_IDMENSAJE_COLUMN_NAME);
+        outgoingChatColumns.add(NetworkServiceChatNetworkServiceDatabaseConstants.CHAT_MESSAGE_COLUMN_NAME);
+        outgoingChatColumns.add(NetworkServiceChatNetworkServiceDatabaseConstants.CHAT_DISTRIBUTIONSTATUS_COLUMN_NAME);
+        outgoingChatColumns.add(NetworkServiceChatNetworkServiceDatabaseConstants.CHAT_PROCCES_STATUS_COLUMN_NAME);
+        /**
+         * Table Outgoing Chat addition.
+         */
+        DeveloperDatabaseTable outgoingChatTable = developerObjectFactory.getNewDeveloperDatabaseTable(NetworkServiceChatNetworkServiceDatabaseConstants.CHAT_TABLE_NAME, outgoingChatColumns);
+        tables.add(outgoingChatTable);
 
         return tables;
     }

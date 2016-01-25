@@ -277,7 +277,7 @@ public class BrokerAckOnlinePaymentMonitorAgent implements
                         brokerAckOnlinePaymentBusinessTransactionDao.getPendingToSubmitNotificationList();
                 for(BusinessTransactionRecord pendingToSubmitNotificationRecord : pendingToSubmitNotificationList){
                     contractHash=pendingToSubmitNotificationRecord.getContractHash();
-                    transactionTransmissionManager.sendContractStatusNotificationToCryptoCustomer(
+                    transactionTransmissionManager.sendContractStatusNotification(
                             pendingToSubmitNotificationRecord.getBrokerPublicKey(),
                             pendingToSubmitNotificationRecord.getCustomerPublicKey(),
                             contractHash,
@@ -297,7 +297,7 @@ public class BrokerAckOnlinePaymentMonitorAgent implements
                         brokerAckOnlinePaymentBusinessTransactionDao.getPendingToSubmitNotificationList();
                 for(BusinessTransactionRecord pendingToSubmitConfirmationRecord : pendingToSubmitConfirmationList){
                     contractHash=pendingToSubmitConfirmationRecord.getTransactionHash();
-                    transactionTransmissionManager.sendContractStatusNotificationToCryptoBroker(
+                    transactionTransmissionManager.sendContractStatusNotification(
                             pendingToSubmitConfirmationRecord.getCustomerPublicKey(),
                             pendingToSubmitConfirmationRecord.getBrokerPublicKey(),
                             contractHash,
@@ -365,16 +365,37 @@ public class BrokerAckOnlinePaymentMonitorAgent implements
             try{
                 incomingMoneyEventWrapper=brokerAckOnlinePaymentBusinessTransactionDao.getIncomingMoneyEventWrapper(
                         eventId);
-                //senderPublicKey=incomingMoneyEventWrapper.getSenderPublicKey();
+                senderPublicKey=incomingMoneyEventWrapper.getSenderPublicKey();
                 //TODO: look a way to get the sender public key
-                /*businessTransactionRecord =
+                businessTransactionRecord =
                         brokerAckOnlinePaymentBusinessTransactionDao.
                                 getBusinessTransactionRecordByCustomerPublicKey(senderPublicKey);
                 if(businessTransactionRecord ==null){
                     //Case: the contract event is not processed or the incoming money is not link to a contract.
                     return;
                 }
-                walletPublicKey=incomingMoneyEventWrapper.getWalletPublicKey();
+                contractHash= businessTransactionRecord.getContractHash();
+                incomingCryptoAmount=incomingMoneyEventWrapper.getCryptoAmount();
+                contractCryptoAmount= businessTransactionRecord.getCryptoAmount();
+                if(incomingCryptoAmount!=contractCryptoAmount){
+                    throw new IncomingOnlinePaymentException("The incoming crypto amount received is "+incomingCryptoAmount+"\n" +
+                            "The amount excepted in contract "+contractHash+"\n" +
+                            "is "+contractCryptoAmount
+                    );
+                }
+                receiverActorPublicKey=incomingMoneyEventWrapper.getReceiverPublicKey();
+                expectedActorPublicKey= businessTransactionRecord.getCustomerPublicKey();
+                if(!receiverActorPublicKey.equals(expectedActorPublicKey)){
+                    throw new IncomingOnlinePaymentException("The actor public key that receive the money is "+receiverActorPublicKey+"\n" +
+                            "The broker public key in contract "+contractHash+"\n" +
+                            "is "+expectedActorPublicKey
+                    );
+                }
+                businessTransactionRecord.setContractTransactionStatus(
+                        ContractTransactionStatus.PENDING_ACK_ONLINE_MERCHANDISE_NOTIFICATION);
+                brokerAckOnlinePaymentBusinessTransactionDao.updateBusinessTransactionRecord(
+                        businessTransactionRecord);
+                /*walletPublicKey=incomingMoneyEventWrapper.getWalletPublicKey();
                 businessTransactionRecord =brokerAckOnlinePaymentBusinessTransactionDao.
                         getBusinessTransactionRecordByWalletPublicKey(walletPublicKey);
                 if(businessTransactionRecord ==null){
@@ -389,7 +410,7 @@ public class BrokerAckOnlinePaymentMonitorAgent implements
                             "The amount excepted in contract "+contractHash+"\n" +
                             "is "+contractCryptoAmount
                     );
-                }*/
+                }
                 receiverActorPublicKey=incomingMoneyEventWrapper.getReceiverPublicKey();
                 businessTransactionRecord=
                         brokerAckOnlinePaymentBusinessTransactionDao.getBusinessTransactionRecordByBrokerPublicKey(
@@ -406,7 +427,7 @@ public class BrokerAckOnlinePaymentMonitorAgent implements
                             "is "+expectedActorPublicKey
                     );
                 }
-                /*incomingWalletPublicKey=incomingMoneyEventWrapper.getWalletPublicKey();
+                incomingWalletPublicKey=incomingMoneyEventWrapper.getWalletPublicKey();
                 contractWalletPublicKey= businessTransactionRecord.getExternalWalletPublicKey();
                 if(!incomingWalletPublicKey.equals(contractWalletPublicKey)){
                     throw new IncomingOnlinePaymentException("The wallet public key that receive the money is "+incomingWalletPublicKey+"\n" +
@@ -498,7 +519,7 @@ public class BrokerAckOnlinePaymentMonitorAgent implements
                                     eventId);
                     brokerAckOnlinePaymentBusinessTransactionDao.persistContractInDatabase(
                             customerBrokerContractSale);
-                    brokerAckOnlinePaymentBusinessTransactionDao.updateEventStatus(
+                    brokerAckOnlinePaymentBusinessTransactionDao.updateIncomingEventStatus(
                             eventId,
                             EventStatus.NOTIFIED);
                 }

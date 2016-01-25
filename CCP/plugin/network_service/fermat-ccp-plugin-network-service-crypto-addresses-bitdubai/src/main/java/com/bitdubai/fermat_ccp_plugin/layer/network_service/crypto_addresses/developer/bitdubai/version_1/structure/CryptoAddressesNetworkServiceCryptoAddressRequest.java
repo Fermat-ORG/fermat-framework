@@ -123,6 +123,11 @@ public class CryptoAddressesNetworkServiceCryptoAddressRequest implements Crypto
         return action;
     }
 
+    @Override
+    public RequestType getRequestType() {
+        return type;
+    }
+
     public BlockchainNetworkType getBlockchainNetworkType() {
         return blockchainNetworkType;
     }
