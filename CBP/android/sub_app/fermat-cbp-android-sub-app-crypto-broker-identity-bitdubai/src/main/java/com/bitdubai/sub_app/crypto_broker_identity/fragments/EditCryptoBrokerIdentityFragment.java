@@ -68,6 +68,7 @@ public class EditCryptoBrokerIdentityFragment extends AbstractFermatFragment imp
     private ErrorManager errorManager;
 
     private ImageView mBrokerImage;
+    private ImageView sw;
     private EditText mBrokerName;
 
     private ExecutorService executor;
@@ -76,6 +77,8 @@ public class EditCryptoBrokerIdentityFragment extends AbstractFermatFragment imp
 
     private Button camara;
     private Button galeria;
+
+    private Switch publishIdentityCheckBox;
 
     public static EditCryptoBrokerIdentityFragment newInstance() {
         return new EditCryptoBrokerIdentityFragment();
@@ -104,7 +107,8 @@ public class EditCryptoBrokerIdentityFragment extends AbstractFermatFragment imp
         Button mUpdateButton = (Button) layout.findViewById(R.id.update_crypto_broker_button);
         mBrokerName = (EditText) layout.findViewById(R.id.crypto_broker_name);
         mBrokerImage = (ImageView) layout.findViewById(R.id.crypto_broker_image);
-        Switch publishIdentityCheckBox = (Switch) layout.findViewById(R.id.publish_identity);
+        sw = (ImageView) layout.findViewById(R.id.sw);
+        publishIdentityCheckBox = (Switch) layout.findViewById(R.id.publish_identity);
 
         camara = (Button) layout.findViewById(R.id.camara);
         galeria = (Button) layout.findViewById(R.id.galeria);
@@ -126,6 +130,16 @@ public class EditCryptoBrokerIdentityFragment extends AbstractFermatFragment imp
             publishIdentityCheckBox.setChecked(wantPublishIdentity);
         }
 
+        if(publishIdentityCheckBox.isChecked()){
+            sw.setImageResource(R.drawable.swicth_on);
+            publishIdentityCheckBox.setChecked(false);
+            wantPublishIdentity = false;
+        }else{
+            sw.setImageResource(R.drawable.swicth_off);
+            publishIdentityCheckBox.setChecked(true);
+            wantPublishIdentity = true;
+        }
+
         publishIdentityCheckBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean value) {
@@ -136,7 +150,7 @@ public class EditCryptoBrokerIdentityFragment extends AbstractFermatFragment imp
         mBrokerImage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                loadImageFromGallery();
+                //loadImageFromGallery();
             }
         });
 
@@ -160,11 +174,26 @@ public class EditCryptoBrokerIdentityFragment extends AbstractFermatFragment imp
                 editIdentityInfo();
             }
         });
+
+        sw.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+               if(publishIdentityCheckBox.isChecked()){
+                   sw.setImageResource(R.drawable.swicth_on);
+                   publishIdentityCheckBox.setChecked(false);
+                   wantPublishIdentity = false;
+               }else{
+                   sw.setImageResource(R.drawable.swicth_off);
+                   publishIdentityCheckBox.setChecked(true);
+                   wantPublishIdentity = true;
+               }
+            }
+        });
     }
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(  requestCode, resultCode, data);
+        super.onActivityResult(requestCode, resultCode, data);
         if (resultCode == Activity.RESULT_OK) {
             ImageView pictureView = mBrokerImage;
 
