@@ -38,16 +38,33 @@ public abstract class AsyncTransactionAgent<T> extends FermatAgent {
     }
 
 
-    public final void cancelTransaction(T transaction) throws InvalidParameterException {
-        throw new InvalidParameterException();
+    public final void cancelTransaction(T transaction) throws Exception {
 
-        //TODO:
+        //If agent isn's running, there are no transactions, throw exception.
+        if(!isRunning())
+            throw new Exception("Could not find transaction");
 
-        //Si el hilo no esta running no hay transacciones, throw CantFind
+        //Agent is running, stop it.
+        this.stop();
 
+        //Try to find transaction
+        boolean foundTransaction = false;
+        for(Iterator<Map.Entry<Long, T>> it = transactionList.entrySet().iterator(); it.hasNext(); ) {
+            Map.Entry<Long, T> t = it.next();
 
-        // De lo contrario stop el hilo, buscar la transaccion, si existe borrarla, reiniciar el hilo si quedan transacciones y luego return
-        // De lo contrario reiniciar el hilo y lanzar una excepcion
+            //If it exists, remove it
+            if(transaction.equals(t)){
+                it.remove();
+                foundTransaction = true;
+            }
+        }
+
+        //Restart agent
+        this.start();
+
+        //If no transaction was found, throw exception
+        if(!foundTransaction)
+            throw new Exception("Could not find transaction");
     }
 
 
@@ -111,12 +128,12 @@ public abstract class AsyncTransactionAgent<T> extends FermatAgent {
                 return;
             }
 
-            doProcess();
-
             if (transactionThread.isInterrupted()) {
                 cleanResources();
                 return;
             }
+
+            doProcess();
         }
     }
 
@@ -125,13 +142,12 @@ public abstract class AsyncTransactionAgent<T> extends FermatAgent {
 
         for(Iterator<Map.Entry<Long, T>> it = transactionList.entrySet().iterator(); it.hasNext(); ) {
             Map.Entry<Long, T> transaction = it.next();
-            System.out.println("AsyncTransactionAgent - Transaction Agent new entry");
 
             long timestamp = transaction.getKey().longValue();
 
             //Si ya han pasado n segundos
             if(transactionDelayExpired(transaction.getKey())){
-                System.out.println("AsyncTransactionAgent - Transaction Agent time expired");
+                System.out.println("AsyncTransactionAgent - Transaction Agent time expired for transaction: " + transaction.toString());
 
                 this.processTransaction(transaction.getValue());
 
@@ -143,7 +159,7 @@ public abstract class AsyncTransactionAgent<T> extends FermatAgent {
 
         //Si no hay transacciones, frenar el agente.
         if(transactionList.size() == 0) {
-            System.out.println("AsyncTransactionAgent - Transaction Agent size =0 stopping");
+            System.out.println("AsyncTransactionAgent - Transaction Agent list size=0, stopping");
 
             this.stop();
         }
@@ -159,13 +175,7 @@ public abstract class AsyncTransactionAgent<T> extends FermatAgent {
     /* INTERNAL HELPER METHODS */
     private boolean transactionDelayExpired(long timestamp)
     {
-        System.out.println("AsyncTransactionAgent - TimeExpiredFunc - timestamp = " + (timestamp * 1000L));
-        System.out.println("AsyncTransactionAgent - TimeExpiredFunc - currenttime = " + System.currentTimeMillis());
-
         long timeDifference = System.currentTimeMillis() - (timestamp * 1000L);
-        System.out.println("AsyncTransactionAgent - TimeExpiredFunc - timeDifference = " + timeDifference);
-        System.out.println("AsyncTransactionAgent - TimeExpiredFunc - transactDelay = " + this.TRANSACTION_DELAY);
-
         return (timeDifference > this.TRANSACTION_DELAY);
 
     }
