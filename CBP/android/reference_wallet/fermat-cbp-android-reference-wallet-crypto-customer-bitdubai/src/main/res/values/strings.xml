@@ -11,6 +11,7 @@
     <string name="broker_bank_account_title">Broker Bank Accounts</string>
     <string name="broker_locations_title">Broker Locations</string>
     <string name="buying_text">Buying: </string>
+    <string name="paying_text">Paying: </string>
     <string name="buy_text_and_price">Buy: %1$s</string>
 
     <string name="ccw_account_alias">Account Alias</string>

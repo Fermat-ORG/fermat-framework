@@ -20,8 +20,8 @@ import java.util.Map;
  */
 public class AmountToBuyViewHolder extends ClauseViewHolder implements View.OnClickListener {
 
-    private TextView youWillPayTextValue;
     private TextView currencyToBuyTextValue;
+    private TextView buyingText;
     private FermatButton buyingValue;
     private boolean paymentBuy;
 
@@ -29,9 +29,10 @@ public class AmountToBuyViewHolder extends ClauseViewHolder implements View.OnCl
         super(itemView);
 
         this.paymentBuy = Boolean.TRUE;
-        currencyToBuyTextValue = (TextView) itemView.findViewById(R.id.ccw_currency_to_buy);
-//        youWillPayTextValue = (TextView) itemView.findViewById(R.id.ccw_you_will_pay_text_value);
-        buyingValue = (FermatButton) itemView.findViewById(R.id.ccw_buying_value);
+
+        currencyToBuyTextValue  = (TextView) itemView.findViewById(R.id.ccw_currency_to_buy);
+        buyingText              = (TextView) itemView.findViewById(R.id.ccw_buying_text);
+        buyingValue             = (FermatButton) itemView.findViewById(R.id.ccw_buying_value);
         buyingValue.setOnClickListener(this);
     }
 
@@ -42,16 +43,18 @@ public class AmountToBuyViewHolder extends ClauseViewHolder implements View.OnCl
         final Map<ClauseType, ClauseInformation> clauses = data.getClauses();
 
         ClauseType currencyType = ClauseType.CUSTOMER_CURRENCY;
+        int buyingTextValue = R.string.buying_text;
 
-        if (!paymentBuy) currencyType = ClauseType.BROKER_CURRENCY;
+        if (!paymentBuy) {
+            currencyType = ClauseType.BROKER_CURRENCY;
+            buyingTextValue = R.string.paying_text;
+        }
 
         final ClauseInformation currencyToBuy = clauses.get(currencyType);
-//        final ClauseInformation amountToPay = clauses.get(ClauseType.BROKER_CURRENCY_QUANTITY);
-//        final ClauseInformation currencyToPay = clauses.get(ClauseType.BROKER_CURRENCY);
 
-        buyingValue.setText(clause.getValue());
         currencyToBuyTextValue.setText(currencyToBuy.getValue());
-//        youWillPayTextValue.setText(String.format("%1$s %2$s", amountToPay.getValue(), currencyToPay.getValue()));
+        buyingText.setText(buyingTextValue);
+        buyingValue.setText(clause.getValue());
     }
 
     @Override
