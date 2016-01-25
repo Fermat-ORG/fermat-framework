@@ -66,8 +66,13 @@ import java.util.Date;
 import java.text.DateFormat;
 import java.util.Locale;
 
+
 /**
- * Created by j on 05/01/16.
+ * Contact List fragment
+ *
+ * @author Jose Cardozo josejcb (josejcb89@gmail.com) on 05/01/16
+ * @version 1.0
+ *
  */
 public class ContactsListFragment extends AbstractFermatFragment {
 
