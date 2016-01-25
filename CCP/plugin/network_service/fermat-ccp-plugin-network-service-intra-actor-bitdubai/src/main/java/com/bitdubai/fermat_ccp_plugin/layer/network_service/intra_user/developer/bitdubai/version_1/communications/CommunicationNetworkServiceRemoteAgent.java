@@ -205,7 +205,7 @@ public class CommunicationNetworkServiceRemoteAgent extends Observable {
 
         try {
 
-           System.out.println("IntraCommunicationNetworkServiceRemoteAgent - processMessageReceived "+communicationsVPNConnection.isActive());
+           System.out.println("IntraCommunicationNetworkServiceRemoteAgent - processMessageReceived "+communicationsVPNConnection.isConnected());
 
             /**
              * Verified the status of the connection
@@ -259,6 +259,7 @@ public class CommunicationNetworkServiceRemoteAgent extends Observable {
 
             }else{
                 communicationNetworkServiceConnectionManager.closeConnection(communicationsVPNConnection.getRemoteParticipant().getIdentityPublicKey());
+                //Thread.currentThread().interrupt();
             }
 
             if(Thread.currentThread().isInterrupted() == Boolean.FALSE) {
