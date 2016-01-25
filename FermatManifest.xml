@@ -34,6 +34,7 @@
         <layer name="Actor Network Service" language="java"></layer>
         <layer name="Network Service" language="java"></layer>
         <!-- separator or empty layer -->
+        <layer name="Search" language="java" super_layer="CER"></layer>
         <layer name="Provider" language="java" super_layer="CER"></layer>
         <!-- separator or empty layer -->
         <layer name="Communication" language="java" super_layer="P2P"></layer>
