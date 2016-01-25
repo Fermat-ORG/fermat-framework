@@ -476,11 +476,11 @@ public class CryptoTransmissionAgent {
             List<CryptoTransmissionMetadata> lstCryptoTransmissionMetadata = incomingCryptoTransmissionMetadataDAO.findAll(filters);
 
 
-            for(CryptoTransmissionMetadata cryptoTransmissionMetadata : lstCryptoTransmissionMetadata){
+            for(CryptoTransmissionMetadata cryptoTransmissionMetadata : lstCryptoTransmissionMetadata) {
 
-             //   CommunicationNetworkServiceLocal communicationNetworkServiceLocal = communicationNetworkServiceConnectionManager.getNetworkServiceLocalInstance(cryptoTransmissionMetadata.getSenderPublicKey());
+                //   CommunicationNetworkServiceLocal communicationNetworkServiceLocal = communicationNetworkServiceConnectionManager.getNetworkServiceLocalInstance(cryptoTransmissionMetadata.getSenderPublicKey());
 
-              //  if(communicationNetworkServiceLocal!=null){
+                if (cryptoTransmissionMetadata.getCryptoTransmissionProtocolState() != CryptoTransmissionProtocolState.DONE) {
 
                     System.out.print("-----------------------\n" +
                             "RECIVIENDO CRYPTO METADATA!!!!! -----------------------\n" +
@@ -560,7 +560,7 @@ public class CryptoTransmissionAgent {
                                 // El destination soy yo porque me lo estan enviando
                                 // El sender es el otro y es a quien le voy a responder
                                 CommunicationNetworkServiceLocal communicationNetworkServiceLocal = communicationNetworkServiceConnectionManager.getNetworkServiceLocalInstance(cryptoTransmissionMetadata.getSenderPublicKey());
-                                if(communicationNetworkServiceLocal!=null) {
+                                if (communicationNetworkServiceLocal != null) {
                                     // Notifico recepcion de metadata
                                     CryptoTransmissionResponseMessage cryptoTransmissionResponseMessage = new CryptoTransmissionResponseMessage(
                                             cryptoTransmissionMetadata.getTransactionId(),
@@ -574,11 +574,14 @@ public class CryptoTransmissionAgent {
                                     System.out.print("-----------------------\n" +
                                             "ENVIANDO RESPUESTA CRYPTO METADATA!!!!! -----------------------\n" +
                                             "-----------------------\n STATE: " + cryptoTransmissionMetadata.getCryptoTransmissionProtocolState());
-                                }else{
+                                } else {
                                     System.out.print("-----------------------\n" +
                                             "INTENTO DE RESPUESTA DENEGADO, NO HAY CONEXION CON EL OTRO TRANSMISSION -----------------------\n" +
                                             "-----------------------\n STATE: " + cryptoTransmissionMetadata.getCryptoTransmissionProtocolState());
                                 }
+                                break;
+                            case CREDITED_IN_OWN_WALLET:
+
                                 break;
                             default:
                                 System.out.print("-----------------------\n" +
@@ -587,12 +590,13 @@ public class CryptoTransmissionAgent {
                                 break;
                         }
 
-                    } catch (Exception e){
+                    } catch (Exception e) {
                         e.printStackTrace();
                     }
                 }
 
 
+            }
 
 
 
