@@ -88,6 +88,7 @@ public class UserMainActivityFragment extends FermatWalletListFragment<DigitalAs
             settingsManager = appSession.getModuleManager().getSettingsManager();
 
             digitalAssets = (List) getMoreDataAsync(FermatRefreshTypes.NEW, 0);
+            appSession.setData("redeem_points", null);
         } catch (Exception ex) {
             CommonLogger.exception(TAG, ex.getMessage(), ex);
             if (errorManager != null)
