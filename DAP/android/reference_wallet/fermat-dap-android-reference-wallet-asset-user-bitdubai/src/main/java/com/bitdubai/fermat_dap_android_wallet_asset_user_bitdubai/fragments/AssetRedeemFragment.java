@@ -278,6 +278,7 @@ public class AssetRedeemFragment extends AbstractFermatFragment {
             public void onPostExecute(Object... result) {
                 dialog.dismiss();
                 if (activity != null) {
+                    refreshUIData();
                     Toast.makeText(activity, "Redemption of the asset has successfully started.\n\n" +
                             "The process will take some minutes and if not accepted at the destination, it will be rollback.", Toast.LENGTH_LONG).show();
                 }
@@ -292,6 +293,24 @@ public class AssetRedeemFragment extends AbstractFermatFragment {
             }
         });
         task.execute();
+    }
+
+    private void refreshUIData() {
+        String digitalAssetPublicKey = ((DigitalAsset) appSession.getData("asset_data")).getAssetPublicKey();
+        try {
+            digitalAsset = Data.getDigitalAsset(moduleManager, digitalAssetPublicKey);
+        } catch (CantLoadWalletException e) {
+            e.printStackTrace();
+        }
+
+        assetRedeemNameText.setText(digitalAsset.getName());
+        //assetsToDeliverEditText.setText(digitalAsset.getAvailableBalanceQuantity()+"");
+        assetsToRedeemEditText.setText(selectedRPCount + "");
+        assetRedeemRemainingText.setText(digitalAsset.getAvailableBalanceQuantity() + " Assets Remaining");
+
+        if (digitalAsset.getAvailableBalanceQuantity() == 0) {
+            selectRPButton.setOnClickListener(null);
+        }
     }
 
     private void setupUIData() {
