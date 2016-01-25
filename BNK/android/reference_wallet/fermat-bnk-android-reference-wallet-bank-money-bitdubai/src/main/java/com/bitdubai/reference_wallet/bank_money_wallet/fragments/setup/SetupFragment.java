@@ -66,10 +66,9 @@ public class SetupFragment extends AbstractFermatFragment implements View.OnClic
             @Override
             public void run() {
                 //If wallet already exists, go directly to wallet
-                if(moduleManager.getBankingWallet().getBankName()!=null){
-                    changeActivity(Activities.BNK_BANK_MONEY_WALLET_HOME,appSession.getAppPublicKey());
-                }
-                else {  //otherwise, fade in setup page
+                if (moduleManager.getBankingWallet().getBankName() != null) {
+                    changeActivity(Activities.BNK_BANK_MONEY_WALLET_HOME, appSession.getAppPublicKey());
+                } else {  //otherwise, fade in setup page
                     Animation fadeInAnimation = AnimationUtils.loadAnimation(getActivity(), R.anim.fade_in);
                     setupContainer.setVisibility(View.VISIBLE);
                     setupContainer.startAnimation(fadeInAnimation);
