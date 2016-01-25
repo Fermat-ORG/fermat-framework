@@ -80,7 +80,7 @@ public class CustomerOnlinePaymentBusinessTransactionDao {
 
                 throw new CantInitializeCustomerOnlinePaymentBusinessTransactionDatabaseException(
                         CantInitializeCustomerOnlinePaymentBusinessTransactionDatabaseException.DEFAULT_MESSAGE,
-                        z,
+                        FermatException.wrapException(z),
                         "",
                         "Generic Exception.");
             }
@@ -96,7 +96,7 @@ public class CustomerOnlinePaymentBusinessTransactionDao {
 
             throw new CantInitializeCustomerOnlinePaymentBusinessTransactionDatabaseException(
                     CantInitializeCustomerOnlinePaymentBusinessTransactionDatabaseException.DEFAULT_MESSAGE,
-                    e,
+                    FermatException.wrapException(e),
                     "",
                     "Generic Exception.");
         }
@@ -146,7 +146,7 @@ public class CustomerOnlinePaymentBusinessTransactionDao {
                     "Getting the contract transaction status",
                     "Invalid code in ContractTransactionStatus enum");
         } catch (Exception exception){
-            throw new UnexpectedResultReturnedFromDatabaseException( exception,"Unexpected error","check the cause" );
+            throw new UnexpectedResultReturnedFromDatabaseException( FermatException.wrapException(exception),"Unexpected error","check the cause" );
         }
     }
 
@@ -176,7 +176,7 @@ public class CustomerOnlinePaymentBusinessTransactionDao {
                     "Getting events in EventStatus.PENDING",
                     "Cannot load the table into memory");
         } catch (Exception e){
-            throw new UnexpectedResultReturnedFromDatabaseException(e,"Unexpected error","check the cause");
+            throw new UnexpectedResultReturnedFromDatabaseException(FermatException.wrapException(e),"Unexpected error","check the cause");
 
         }
     }
@@ -203,7 +203,7 @@ public class CustomerOnlinePaymentBusinessTransactionDao {
                     "Getting value from database",
                     "Cannot load the database table");
             }catch (Exception exception){
-                throw new UnexpectedResultReturnedFromDatabaseException( exception,"Unexpected error","check the cause" );
+                throw new UnexpectedResultReturnedFromDatabaseException( FermatException.wrapException(exception),"Unexpected error","check the cause" );
         }
 
     }
@@ -245,12 +245,12 @@ public class CustomerOnlinePaymentBusinessTransactionDao {
     }
 
     public List<BusinessTransactionRecord> getOnCryptoNetworkCryptoStatusList() throws
-        UnexpectedResultReturnedFromDatabaseException,
-                CantGetContractListException {
-            return getCustomerOnlinePaymentRecordList(
-                    CryptoStatus.ON_CRYPTO_NETWORK.getCode(),
-                    CustomerOnlinePaymentBusinessTransactionDatabaseConstants.ONLINE_PAYMENT_CRYPTO_STATUS_COLUMN_NAME,
-                    CustomerOnlinePaymentBusinessTransactionDatabaseConstants.ONLINE_PAYMENT_CONTRACT_HASH_COLUMN_NAME);
+            UnexpectedResultReturnedFromDatabaseException,
+            CantGetContractListException {
+        return getCustomerOnlinePaymentRecordList(
+                CryptoStatus.ON_CRYPTO_NETWORK.getCode(),
+                CustomerOnlinePaymentBusinessTransactionDatabaseConstants.ONLINE_PAYMENT_CRYPTO_STATUS_COLUMN_NAME,
+                CustomerOnlinePaymentBusinessTransactionDatabaseConstants.ONLINE_PAYMENT_CONTRACT_HASH_COLUMN_NAME);
     }
 
     public List<BusinessTransactionRecord> getOnBlockchainkCryptoStatusList() throws
