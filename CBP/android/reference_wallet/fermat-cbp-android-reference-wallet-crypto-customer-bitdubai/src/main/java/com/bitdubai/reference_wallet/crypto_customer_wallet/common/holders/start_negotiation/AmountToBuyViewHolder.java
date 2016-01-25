@@ -23,12 +23,14 @@ public class AmountToBuyViewHolder extends ClauseViewHolder implements View.OnCl
     private TextView youWillPayTextValue;
     private TextView currencyToBuyTextValue;
     private FermatButton buyingValue;
+    private boolean paymentBuy;
 
     public AmountToBuyViewHolder(View itemView) {
         super(itemView);
 
+        this.paymentBuy = Boolean.TRUE;
         currencyToBuyTextValue = (TextView) itemView.findViewById(R.id.ccw_currency_to_buy);
-        youWillPayTextValue = (TextView) itemView.findViewById(R.id.ccw_you_will_pay_text_value);
+//        youWillPayTextValue = (TextView) itemView.findViewById(R.id.ccw_you_will_pay_text_value);
         buyingValue = (FermatButton) itemView.findViewById(R.id.ccw_buying_value);
         buyingValue.setOnClickListener(this);
     }
@@ -38,13 +40,18 @@ public class AmountToBuyViewHolder extends ClauseViewHolder implements View.OnCl
         super.bindData(data, clause, position);
 
         final Map<ClauseType, ClauseInformation> clauses = data.getClauses();
-        final ClauseInformation currencyToBuy = clauses.get(ClauseType.CUSTOMER_CURRENCY);
-        final ClauseInformation amountToPay = clauses.get(ClauseType.BROKER_CURRENCY_QUANTITY);
-        final ClauseInformation currencyToPay = clauses.get(ClauseType.BROKER_CURRENCY);
+
+        ClauseType currencyType = ClauseType.CUSTOMER_CURRENCY;
+
+        if (!paymentBuy) currencyType = ClauseType.BROKER_CURRENCY;
+
+        final ClauseInformation currencyToBuy = clauses.get(currencyType);
+//        final ClauseInformation amountToPay = clauses.get(ClauseType.BROKER_CURRENCY_QUANTITY);
+//        final ClauseInformation currencyToPay = clauses.get(ClauseType.BROKER_CURRENCY);
 
         buyingValue.setText(clause.getValue());
         currencyToBuyTextValue.setText(currencyToBuy.getValue());
-        youWillPayTextValue.setText(String.format("%1$s %2$s", amountToPay.getValue(), currencyToPay.getValue()));
+//        youWillPayTextValue.setText(String.format("%1$s %2$s", amountToPay.getValue(), currencyToPay.getValue()));
     }
 
     @Override
@@ -72,5 +79,9 @@ public class AmountToBuyViewHolder extends ClauseViewHolder implements View.OnCl
     @Override
     protected int getTitleTextViewRes() {
         return R.id.ccw_card_view_title;
+    }
+
+    public boolean setPaymentBuy(boolean paymentBuy){
+        return this.paymentBuy = paymentBuy;
     }
 }

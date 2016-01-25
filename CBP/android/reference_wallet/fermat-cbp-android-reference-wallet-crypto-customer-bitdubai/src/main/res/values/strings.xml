@@ -24,6 +24,7 @@
     <string name="ccw_add_location">Add a Location</string>
     <string name="ccw_add_your_bank_accounts">Add Your Bank Accounts</string>
     <string name="ccw_amount_to_buy">Amount to Buy</string>
+    <string name="ccw_amount_title">Amount: </string>
     <string name="ccw_bank">Bank</string>
     <string name="ccw_bank_name">Bank Name</string>
     <string name="ccw_bank_account_customer">Bank Account Customer</string>
