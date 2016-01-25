@@ -483,6 +483,7 @@ public class OutgoingMessageDao {
             DatabaseTransaction transaction = getDataBase().newTransaction();
 
             //falta configurar la llamada para borrar la entidad
+            //Y setaer el filtro por ID
 
             getDataBase().executeTransaction(transaction);
 

@@ -34,6 +34,7 @@ import com.bitdubai.fermat_api.layer.osa_android.file_system.FilePrivacy;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginTextFile;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantCreateFileException;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.FileNotFoundException;
+import com.bitdubai.fermat_ccp_api.all_definition.enums.EventType;
 import com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_addresses.developer.bitdubai.version_1.communication.event_handlers.NewMessagesEventHandler;
 import com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_addresses.developer.bitdubai.version_1.communication.event_handlers.NewSentMessageNotificationEventHandler;
 import com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_addresses.developer.bitdubai.version_1.messages.ReceivedMessage;
@@ -814,7 +815,9 @@ public class CryptoAddressesNetworkServicePluginRoot extends AbstractNetworkServ
     @Override
     public void markReceivedRequest(UUID requestId) throws CantConfirmAddressExchangeRequestException {
         try {
-            cryptoAddressesNetworkServiceDao.markRead(requestId);
+
+            //update message to read with destination, and update state in DONE, End Message
+            cryptoAddressesNetworkServiceDao.markReadAndDone(requestId);
         }catch (Exception e){
             throw new CantConfirmAddressExchangeRequestException(e,"","No se pudo marcar como leido el request exchange de address");
         }
@@ -1176,16 +1179,27 @@ public class CryptoAddressesNetworkServicePluginRoot extends AbstractNetworkServ
 
             NetworkServiceMessage networkServiceMessage = gson.fromJson(jsonMessage, NetworkServiceMessage.class);
 
+            FermatEvent eventToRaise;
             switch (networkServiceMessage.getMessageType()) {
 
                 case ACCEPT:
                     AcceptMessage acceptMessage = gson.fromJson(jsonMessage, AcceptMessage.class);
                     receiveAcceptance(acceptMessage);
+
+
+                    //close connection - end message
+                    communicationNetworkServiceConnectionManager.closeConnection(acceptMessage.getActorDestination());
+                    cryptoAddressesExecutorAgent.getPoolConnectionsWaitingForResponse().remove(acceptMessage.getActorDestination());
+
                     break;
 
                 case DENY:
                     DenyMessage denyMessage = gson.fromJson(jsonMessage, DenyMessage.class);
                     receiveDenial(denyMessage);
+
+                    //close connection - end message
+                    communicationNetworkServiceConnectionManager.closeConnection(denyMessage.getActorDestination());
+                    cryptoAddressesExecutorAgent.getPoolConnectionsWaitingForResponse().remove(denyMessage.getActorDestination());
                     break;
 
                 case REQUEST:
