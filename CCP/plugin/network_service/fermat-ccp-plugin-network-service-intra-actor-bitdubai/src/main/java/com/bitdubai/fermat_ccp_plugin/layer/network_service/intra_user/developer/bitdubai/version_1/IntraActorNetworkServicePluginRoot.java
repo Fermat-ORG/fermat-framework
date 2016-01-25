@@ -1429,8 +1429,11 @@ public class IntraActorNetworkServicePluginRoot extends AbstractPlugin implement
         if(communicationRegistrationProcessNetworkServiceAgent != null && !this.register){
 
             if(communicationRegistrationProcessNetworkServiceAgent.getActive()){
+                try {
+                    communicationRegistrationProcessNetworkServiceAgent.interrupt();
+                }catch (Exception e){
 
-                communicationRegistrationProcessNetworkServiceAgent.interrupt();
+                }
                 communicationRegistrationProcessNetworkServiceAgent = null;
             }
 
@@ -1473,6 +1476,31 @@ public class IntraActorNetworkServicePluginRoot extends AbstractPlugin implement
              * Mark as register
              */
         this.register = Boolean.TRUE;
+
+
+        try {
+
+            /**
+             * Register identities
+             */
+
+            CommunicationsClientConnection communicationsClientConnection = wsCommunicationsCloudClientManager.getCommunicationsCloudClientConnection();
+
+
+            for (PlatformComponentProfile platformComponentProfile : actorsToRegisterCache) {
+
+                communicationsClientConnection.registerComponentForCommunication(networkServiceType, platformComponentProfile);
+
+                System.out.print("-----------------------\n" +
+                        "INTENTANDO REGISTRAR ACTOR  -----------------------\n" +
+                        "-----------------------\n A: " + platformComponentProfile.getAlias());
+
+
+            }
+
+        } catch (CantRegisterComponentException e) {
+            e.printStackTrace();
+        }
 
         if(actorNetworkServiceRecordedAgent!=null) {
             try {
