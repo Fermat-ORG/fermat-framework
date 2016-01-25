@@ -4424,77 +4424,78 @@
     </super_layers>
     <processes>
         <process platform="DAP" name="Asset Issuing" description="Describes the process of issuing Assets by the actor Asset Issuer" previous="">
-            <step id="1" type="start" title="Asset Factory" description="Starts by opening the Asset Factory Sub App" platform="DAP" superlayer="" layer="Sub App" name="Asset Factory">
-                <next>
-                    <step id="2" type="direct call"></step>
-                    <step id="3" type="direct call"></step>
-                </next>
-            </step>
-            <step id="2" type="activity" title="Asset Issuer Identity" description="Asset Issuer Identity is created and Issuer Actor is registered in P2P" platform="DAP" superlayer="" layer="Identity" name="Asset Issuer">
-                <next>
-                    <step id="4" type="direct call"></step>
-                </next>
-            </step>
-            <step id="3" type="activity" title="Asset parameters definition" description="The Asset information is entered, including the value on bitcoins for each asset" platform="DAP" superlayer="" layer="Sub App" name="Asset Factory">
-                <next>
-                    <step id="4" type="direct call"></step>
-                </next>
-            </step>
-            <step id="4" type="activity" title="Transaction Asset Issuing" description="We revalidate we have enough founds in the wallet." platform="DAP" superlayer="" layer="Sub App" name="Asset Factory">
-                <next>
-                    <step id="5" type="direct call"></step>
-                    <step id="20" type="direct call"></step>
-                </next>
-            </step>
-            <step id="5" type="activity" title="Transaction Asset Issuing" description="We validate the contract and properties defined are all valid for each asset." platform="DAP" superlayer="" layer="Sub App" name="Asset Factory">
-                <next>
-                    <step id="6" type="direct call"></step>
-                    <step id="20" type="direct call"></step>
-                </next>
-            </step>
-            <step id="6" type="activity" title="Transaction Asset Issuing" description="We request the Genesis Address to the Asset Vault and register it in the Address Book." platform="DAP" superlayer="" layer="Sub App" name="Asset Factory">
-                <next>
-                    <step id="7" type="direct call"></step>
-                    <step id="20" type="direct call"></step>
-                </next>
-            </step>
-            <step id="7" type="activity" title="Transaction Asset Issuing" description="We lock the asset and generate the Digital Asset Metadata with its asses hash." platform="DAP" superlayer="" layer="Sub App" name="Asset Factory">
-                <next>
-                    <step id="8" type="direct call"></step>
-                    <step id="20" type="direct call"></step>
-                </next>
-            </step>
-            <step id="8" type="activity" title="Transaction Asset Issuing" description="We generate a Bitcoin transaction using the Outgoing Intra Actor plugin, which includes the op_return, the Genesis Amount and the Genesis Address." platform="DAP" superlayer="" layer="Sub App" name="Asset Factory">
-                <next>
-                    <step id="9" type="direct call"></step>
-                    <step id="20" type="direct call"></step>
-                </next>
-            </step>
-            <step id="9" type="activity" title="Transaction Asset Issuing" description="We store the Genesis Transaction in the metadata, and wait for broadcasting of the transaction." platform="DAP" superlayer="" layer="Sub App" name="Asset Factory">
-                <next>
-                    <step id="10" type="direct call"></step>
-                    <step id="20" type="direct call"></step>
-                </next>
-            </step>
-            <step id="10" type="activity" title="Transaction Asset Issuing" description="When transaction is registered to be On Block Chain, we finish the asset Issuing process." platform="DAP" superlayer="" layer="Sub App" name="Asset Factory">
-                <next>
-                    <step id="11" type="direct call"></step>
-                    <step id="20" type="direct call"></step>
-                </next>
-            </step>
+            <steps>
+                <step id="1" type="start" title="Asset Factory" description="Starts by opening the Asset Factory Sub App" platform="DAP" superlayer="" layer="Sub App" name="Asset Factory">
+                    <next>
+                        <step id="2" type="direct call"></step>
+                        <step id="3" type="direct call"></step>
+                    </next>
+                </step>
+                <step id="2" type="activity" title="Asset Issuer Identity" description="Asset Issuer Identity is created and Issuer Actor is registered in P2P" platform="DAP" superlayer="" layer="Identity" name="Asset Issuer">
+                    <next>
+                        <step id="4" type="direct call"></step>
+                    </next>
+                </step>
+                <step id="3" type="activity" title="Asset parameters definition" description="The Asset information is entered, including the value on bitcoins for each asset" platform="DAP" superlayer="" layer="Sub App" name="Asset Factory">
+                    <next>
+                        <step id="4" type="direct call"></step>
+                    </next>
+                </step>
+                <step id="4" type="activity" title="Transaction Asset Issuing" description="We revalidate we have enough founds in the wallet." platform="DAP" superlayer="" layer="Sub App" name="Asset Factory">
+                    <next>
+                        <step id="5" type="direct call"></step>
+                        <step id="20" type="direct call"></step>
+                    </next>
+                </step>
+                <step id="5" type="activity" title="Transaction Asset Issuing" description="We validate the contract and properties defined are all valid for each asset." platform="DAP" superlayer="" layer="Sub App" name="Asset Factory">
+                    <next>
+                        <step id="6" type="direct call"></step>
+                        <step id="20" type="direct call"></step>
+                    </next>
+                </step>
+                <step id="6" type="activity" title="Transaction Asset Issuing" description="We request the Genesis Address to the Asset Vault and register it in the Address Book." platform="DAP" superlayer="" layer="Sub App" name="Asset Factory">
+                    <next>
+                        <step id="7" type="direct call"></step>
+                        <step id="20" type="direct call"></step>
+                    </next>
+                </step>
+                <step id="7" type="activity" title="Transaction Asset Issuing" description="We lock the asset and generate the Digital Asset Metadata with its asses hash." platform="DAP" superlayer="" layer="Sub App" name="Asset Factory">
+                    <next>
+                        <step id="8" type="direct call"></step>
+                        <step id="20" type="direct call"></step>
+                    </next>
+                </step>
+                <step id="8" type="activity" title="Transaction Asset Issuing" description="We generate a Bitcoin transaction using the Outgoing Intra Actor plugin, which includes the op_return, the Genesis Amount and the Genesis Address." platform="DAP" superlayer="" layer="Sub App" name="Asset Factory">
+                    <next>
+                        <step id="9" type="direct call"></step>
+                        <step id="20" type="direct call"></step>
+                    </next>
+                </step>
+                <step id="9" type="activity" title="Transaction Asset Issuing" description="We store the Genesis Transaction in the metadata, and wait for broadcasting of the transaction." platform="DAP" superlayer="" layer="Sub App" name="Asset Factory">
+                    <next>
+                        <step id="10" type="direct call"></step>
+                        <step id="20" type="direct call"></step>
+                    </next>
+                </step>
+                <step id="10" type="activity" title="Transaction Asset Issuing" description="When transaction is registered to be On Block Chain, we finish the asset Issuing process." platform="DAP" superlayer="" layer="Sub App" name="Asset Factory">
+                    <next>
+                        <step id="11" type="direct call"></step>
+                        <step id="20" type="direct call"></step>
+                    </next>
+                </step>
 
-            <step id="11" type="activity" title="End" description="The asset is received at the Asset Issuer Wallet." platform="DAP" superlayer="" layer="Sub App" name="Asset Factory">
-                <next>
-                </next>
-            </step>
+                <step id="11" type="activity" title="End" description="The asset is received at the Asset Issuer Wallet." platform="DAP" superlayer="" layer="Sub App" name="Asset Factory">
+                    <next>
+                    </next>
+                </step>
 
-            <step id="20" type="activity" title="Process Interrupted" description="A validation did not pass, or error was thrown. We rollback the process and Asset is again editable." platform="DAP" superlayer="" layer="Sub App" name="Asset Factory">
-                <next>
-                    <step id="5" type="direct call"></step>
-                    <step id="20" type="direct call"></step>
-                </next>
-            </step>
-
+                <step id="20" type="activity" title="Process Interrupted" description="A validation did not pass, or error was thrown. We rollback the process and Asset is again editable." platform="DAP" superlayer="" layer="Sub App" name="Asset Factory">
+                    <next>
+                        <step id="5" type="direct call"></step>
+                        <step id="20" type="direct call"></step>
+                    </next>
+                </step>
+            </steps>
         </process>
         <process platform="CBP" name="Crypto Broker Reference Wallet Installation" description="Wallet Store installation procedure for the Crypto Broker Reference Wallet" previous="">
             <steps>

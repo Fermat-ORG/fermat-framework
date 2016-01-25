@@ -297,7 +297,7 @@ public class AssetDeliveryFragment extends AbstractFermatFragment {
                 if (activity != null) {
                     refreshUIData();
                     //Toast.makeText(activity, "Everything ok...", Toast.LENGTH_SHORT).show();
-                    Toast.makeText(activity, "Delivering assets...", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(activity, "Assets are being delivered. It may take a couple of minutes to confirm or rollback depending on your network connection.", Toast.LENGTH_LONG).show();
                 }
             }
 
