@@ -26,6 +26,7 @@ public class RequestMessage extends NetworkServiceMessage {
     private final String                identityPublicKeyResponding;
     private final CryptoAddressDealers  cryptoAddressDealer        ;
     private final BlockchainNetworkType blockchainNetworkType      ;
+    private final String walletPublicKey;
 
     public RequestMessage(final UUID                  requestId                  ,
                           final CryptoCurrency        cryptoCurrency             ,
@@ -34,7 +35,8 @@ public class RequestMessage extends NetworkServiceMessage {
                           final String                identityPublicKeyRequesting,
                           final String                identityPublicKeyResponding,
                           final CryptoAddressDealers  cryptoAddressDealer        ,
-                          final BlockchainNetworkType blockchainNetworkType      ) {
+                          final BlockchainNetworkType blockchainNetworkType      ,
+                          final String walletPublicKey) {
 
         super(requestId,MessageTypes.REQUEST,identityPublicKeyResponding,identityPublicKeyRequesting);
 
@@ -45,6 +47,7 @@ public class RequestMessage extends NetworkServiceMessage {
         this.identityPublicKeyResponding = identityPublicKeyResponding;
         this.cryptoAddressDealer         = cryptoAddressDealer        ;
         this.blockchainNetworkType       = blockchainNetworkType      ;
+        this.walletPublicKey = walletPublicKey;
     }
 
     public CryptoCurrency getCryptoCurrency() {
@@ -73,6 +76,10 @@ public class RequestMessage extends NetworkServiceMessage {
 
     public BlockchainNetworkType getBlockchainNetworkType() {
         return blockchainNetworkType;
+    }
+
+    public String getWalletPublicKey() {
+        return walletPublicKey;
     }
 
     @Override

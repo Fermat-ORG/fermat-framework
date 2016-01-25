@@ -190,7 +190,8 @@ public class CommunicationNetworkServiceRemoteAgent extends Observable {
         futures[RECEIVE_TASK].cancel(true);
 
         //Disconnect from the service
-        communicationsVPNConnection.close();
+        if(communicationsVPNConnection.isConnected())
+            communicationsVPNConnection.close();
 
         System.out.println("IntraCommunicationNetworkServiceRemoteAgent - stopped ");
     }
@@ -204,7 +205,7 @@ public class CommunicationNetworkServiceRemoteAgent extends Observable {
 
         try {
 
-           System.out.println("IntraCommunicationNetworkServiceRemoteAgent - processMessageReceived "+communicationsVPNConnection.isActive());
+           System.out.println("IntraCommunicationNetworkServiceRemoteAgent - processMessageReceived "+communicationsVPNConnection.isConnected());
 
             /**
              * Verified the status of the connection
@@ -258,6 +259,7 @@ public class CommunicationNetworkServiceRemoteAgent extends Observable {
 
             }else{
                 communicationNetworkServiceConnectionManager.closeConnection(communicationsVPNConnection.getRemoteParticipant().getIdentityPublicKey());
+                //Thread.currentThread().interrupt();
             }
 
             if(Thread.currentThread().isInterrupted() == Boolean.FALSE) {
@@ -342,7 +344,7 @@ public class CommunicationNetworkServiceRemoteAgent extends Observable {
 
 
                         }else{
-                            System.out.println("IntraCommunicationNetworkServiceRemoteAgent - VPN connection is no connected = "+communicationsVPNConnection.isConnected());
+                            System.out.println("IntraCommunicationNetworkServiceRemoteAgent - VPN connection is connected = "+communicationsVPNConnection.isConnected());
                         }
 
                     }

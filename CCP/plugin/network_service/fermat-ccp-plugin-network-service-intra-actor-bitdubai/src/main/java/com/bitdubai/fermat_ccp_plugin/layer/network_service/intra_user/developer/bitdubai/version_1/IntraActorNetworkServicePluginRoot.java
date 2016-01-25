@@ -102,6 +102,7 @@ import com.bitdubai.fermat_ccp_plugin.layer.network_service.intra_user.developer
 import com.bitdubai.fermat_ccp_plugin.layer.network_service.intra_user.developer.bitdubai.version_1.structure.Identity;
 import com.bitdubai.fermat_ccp_plugin.layer.network_service.intra_user.developer.bitdubai.version_1.structure.IntraActorNetworkServiceDao;
 import com.bitdubai.fermat_ccp_plugin.layer.network_service.intra_user.developer.bitdubai.version_1.structure.IntraUserNetworkService;
+import com.bitdubai.fermat_p2p_api.layer.all_definition.common.network_services.template.structure.CommunicationNetworkServiceConnectionManager_V2;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.contents.FermatMessageCommunication;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.enums.P2pEventType;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.events.ClientConnectionCloseNotificationEvent;
@@ -135,6 +136,7 @@ import java.util.TimerTask;
 import java.util.UUID;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.function.Predicate;
 import java.util.regex.Pattern;
 
 
@@ -856,6 +858,18 @@ public class IntraActorNetworkServicePluginRoot extends AbstractPlugin implement
                 e.printStackTrace();
             }
 
+            if(communicationNetworkServiceConnectionManager==null) {
+
+                this.communicationNetworkServiceConnectionManager = new CommunicationNetworkServiceConnectionManager(
+                        this,
+                        getPlatformComponentProfilePluginRoot(),
+                        identity,
+                        wsCommunicationsCloudClientManager.getCommunicationsCloudClientConnection(),
+                        dataBase,
+                        errorManager,
+                        eventManager
+                );
+            }
 
         }
 
@@ -922,9 +936,8 @@ public class IntraActorNetworkServicePluginRoot extends AbstractPlugin implement
                 // close connection, sender is the destination
                 System.out.println("ENTRANDO EN EL METODO PARA CERRAR LA CONEXION DEL HANDLE NEW SENT MESSAGE NOTIFICATION");
                 System.out.println("ENTRO AL METODO PARA CERRAR LA CONEXION");
-                communicationNetworkServiceConnectionManager.closeConnection(actorNetworkServiceRecord.getActorDestinationPublicKey());
+             //   communicationNetworkServiceConnectionManager.closeConnection(actorNetworkServiceRecord.getActorDestinationPublicKey());
                 actorNetworkServiceRecordedAgent.getPoolConnectionsWaitingForResponse().remove(actorNetworkServiceRecord.getActorDestinationPublicKey());
-
             }
 
             System.out.println("SALIENDO DEL HANDLE NEW SENT MESSAGE NOTIFICATION");
@@ -1018,10 +1031,10 @@ public class IntraActorNetworkServicePluginRoot extends AbstractPlugin implement
                             "INTRA ACTOR NETWORK SERVICE" +
                             "THE RECORD WAS CHANGE TO THE STATE OF DELIVERY" + actorNetworkServiceRecord.getActorSenderAlias()
                             + "\n-------------------------------------------------");
-                    //TODO: ver porqué esta en delivery
-                    getOutgoingNotificationDao().changeProtocolState(actorNetworkServiceRecord.getId(), ActorProtocolState.DONE);
-                    actorNetworkServiceRecord.changeState(ActorProtocolState.DONE);
-                    if (actorNetworkServiceRecord.getActorProtocolState() == ActorProtocolState.DONE){
+                    //TODO: ver porqué no encuentra el id para cambiarlo
+                    if(actorNetworkServiceRecord.getResponseToNotificationId()!=null)
+                    getOutgoingNotificationDao().changeProtocolState(actorNetworkServiceRecord.getResponseToNotificationId(), ActorProtocolState.DONE);
+
                         // close connection, sender is the destination
                         System.out.println("----------------------------\n" +
                                 "INTRA ACTOR NETWORK SERVICE" +
@@ -1036,7 +1049,6 @@ public class IntraActorNetworkServicePluginRoot extends AbstractPlugin implement
                                 "THE CONNECTION WAS CLOSED AND THE AWAITING POOL CLEARED." + actorNetworkServiceRecord.getActorSenderAlias()
                                 + "\n-------------------------------------------------");
 
-                    }
 
                     break;
 
@@ -1095,17 +1107,40 @@ public class IntraActorNetworkServicePluginRoot extends AbstractPlugin implement
 
     // respond receive and done notification
     private void respondReceiveAndDoneCommunication(ActorNetworkServiceRecord actorNetworkServiceRecord) {
-        actorNetworkServiceRecord.changeState(ActorProtocolState.DONE);
-        actorNetworkServiceRecord.changeDescriptor(NotificationDescriptor.RECEIVED);
+
 
         actorNetworkServiceRecord = changeActor(actorNetworkServiceRecord);
+        try {
+            UUID newNotificationID = UUID.randomUUID();
+            long currentTime = System.currentTimeMillis();
+            ActorProtocolState protocolState = ActorProtocolState.PROCESSING_SEND;
+            actorNetworkServiceRecord.changeDescriptor(NotificationDescriptor.RECEIVED);
+            outgoingNotificationDao.createNotification(
+                    newNotificationID,
+                    actorNetworkServiceRecord.getActorSenderPublicKey(),
+                    actorNetworkServiceRecord.getActorSenderType(),
+                    actorNetworkServiceRecord.getActorDestinationPublicKey(),
+                    actorNetworkServiceRecord.getActorSenderAlias(),
+                    actorNetworkServiceRecord.getActorSenderPhrase(),
+                    actorNetworkServiceRecord.getActorSenderProfileImage(),
+                    actorNetworkServiceRecord.getActorDestinationType(),
+                    actorNetworkServiceRecord.getNotificationDescriptor(),
+                    currentTime,
+                    protocolState,
+                    false,
+                    1,
+                    actorNetworkServiceRecord.getId()
+            );
+        } catch (CantCreateNotificationException e) {
+            e.printStackTrace();
+        }
 
 
-        communicationNetworkServiceConnectionManager.getNetworkServiceLocalInstance(actorNetworkServiceRecord.getActorDestinationPublicKey())
-                .sendMessage(
-                        actorNetworkServiceRecord.getActorSenderPublicKey(),
-                        actorNetworkServiceRecord.getActorDestinationPublicKey(),
-                        actorNetworkServiceRecord.toJson());
+//        communicationNetworkServiceConnectionManager.getNetworkServiceLocalInstance(actorNetworkServiceRecord.getActorDestinationPublicKey())
+//                .sendMessage(
+//                        actorNetworkServiceRecord.getActorSenderPublicKey(),
+//                        actorNetworkServiceRecord.getActorDestinationPublicKey(),
+//                        actorNetworkServiceRecord.toJson());
 
     }
 
@@ -1334,8 +1369,9 @@ public class IntraActorNetworkServicePluginRoot extends AbstractPlugin implement
 
                 }
                 // close connection, sender is the destination
-                actorNetworkServiceRecordedAgent.getPoolConnectionsWaitingForResponse().remove(remotePublicKey);
-                reprocessMessage(remotePublicKey);
+                if(actorNetworkServiceRecordedAgent!=null) actorNetworkServiceRecordedAgent.getPoolConnectionsWaitingForResponse().remove(remotePublicKey);
+
+                //reprocessMessage(remotePublicKey);
 
             }
 
@@ -1644,7 +1680,8 @@ public class IntraActorNetworkServicePluginRoot extends AbstractPlugin implement
                     notificationDescriptor,
                     currentTime,
                     protocolState,
-                    false,1
+                    false,1,
+                    null
             );
 
         } catch (final CantCreateNotificationException e) {
@@ -1665,7 +1702,7 @@ public class IntraActorNetworkServicePluginRoot extends AbstractPlugin implement
         try {
 
 
-            ActorNetworkServiceRecord actorNetworkServiceRecord = incomingNotificationsDao.changeIntraUserNotificationDescriptor(intraUserToAddPublicKey, NotificationDescriptor.ACCEPTED, ActorProtocolState.DONE);
+            ActorNetworkServiceRecord actorNetworkServiceRecord = incomingNotificationsDao.changeIntraUserNotificationDescriptor(intraUserToAddPublicKey, NotificationDescriptor.ACCEPTED, ActorProtocolState.PENDING_ACTION);
 
             actorNetworkServiceRecord.setActorDestinationPublicKey(intraUserToAddPublicKey);
             actorNetworkServiceRecord.setActorSenderPublicKey(intraUserLoggedInPublicKey);
@@ -1676,7 +1713,22 @@ public class IntraActorNetworkServicePluginRoot extends AbstractPlugin implement
 
             actorNetworkServiceRecord.changeState(ActorProtocolState.PROCESSING_SEND);
 
-            outgoingNotificationDao.createNotification(actorNetworkServiceRecord);
+            outgoingNotificationDao.createNotification(
+                    UUID.randomUUID(),
+                    actorNetworkServiceRecord.getActorSenderPublicKey(),
+                    actorNetworkServiceRecord.getActorSenderType(),
+                    actorNetworkServiceRecord.getActorDestinationPublicKey(),
+                    actorNetworkServiceRecord.getActorSenderAlias(),
+                    actorNetworkServiceRecord.getActorSenderPhrase(),
+                    actorNetworkServiceRecord.getActorSenderProfileImage(),
+                    actorNetworkServiceRecord.getActorDestinationType(),
+                    actorNetworkServiceRecord.getNotificationDescriptor(),
+                    System.currentTimeMillis(),
+                    actorNetworkServiceRecord.getActorProtocolState(),
+                    false,
+                    1,
+                    actorNetworkServiceRecord.getResponseToNotificationId()
+            );
 
 
         } catch (Exception e) {
@@ -1731,7 +1783,9 @@ public class IntraActorNetworkServicePluginRoot extends AbstractPlugin implement
                     notificationDescriptor,
                     currentTime,
                     protocolState,
-                    false, 1
+                    false,
+                    1,
+                    null
             );
 
 
