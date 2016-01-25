@@ -125,7 +125,7 @@
                     android:layout_height="wrap_content"
                     android:textSize="12sp"
                     android:paddingBottom="5dp"
-                    android:text="* See your balances.\n* Deposit cash funds into wallet.\n* Withdraw funds out of the wallet.\n* Browse your transaction history."
+                    android:text="* See your balances.\n* Deposit funds into wallet.\n* Withdraw funds out of the wallet.\n* Browse your transaction history."
                     android:gravity="left"
                     android:layout_gravity="center_horizontal"
                     android:paddingLeft="16dp"

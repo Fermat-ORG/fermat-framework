@@ -179,22 +179,26 @@ public class WsCommunicationTyrusVPNClient extends Endpoint implements Communica
 
         switch (reason.getCloseCode().getCode()) {
 
+            case 1000:
+                try {
+                    wsCommunicationTyrusVPNClientManagerAgent.riseVpnConnectionCloseNotificationEvent(remoteParticipantNetworkService.getNetworkServiceType(), remoteParticipant,true);
+                }catch (Exception e){
+                    e.printStackTrace();
+                }
+                break;
             case 1002:
             case 1006:
-
                     try {
-                        wsCommunicationTyrusVPNClientManagerAgent.riseVpnConnectionCloseNotificationEvent(remoteParticipantNetworkService.getNetworkServiceType(), remoteParticipant);
+                        wsCommunicationTyrusVPNClientManagerAgent.riseVpnConnectionCloseNotificationEvent(remoteParticipantNetworkService.getNetworkServiceType(), remoteParticipant,false);
                         System.out.println(" WsCommunicationVPNClient - Connection loose,  trying to reconnect");
                     }catch (Exception e){
                         e.printStackTrace();
                     }
-
                 break;
-
             default:
-
                     try {
-                        wsCommunicationTyrusVPNClientManagerAgent.riseVpnConnectionCloseNotificationEvent(remoteParticipantNetworkService.getNetworkServiceType(), remoteParticipant);
+                        //TODO: ver codigo por codigo haber si esto cumple con el true
+                        wsCommunicationTyrusVPNClientManagerAgent.riseVpnConnectionCloseNotificationEvent(remoteParticipantNetworkService.getNetworkServiceType(), remoteParticipant,true);
                     }catch (Exception e){
                         e.printStackTrace();
                     }
@@ -229,7 +233,7 @@ public class WsCommunicationTyrusVPNClient extends Endpoint implements Communica
 
             System.out.println(" WsCommunicationVPNClient - close connection");
             vpnClientConnection.close(new CloseReason(CloseReason.CloseCodes.NORMAL_CLOSURE, "The cloud client close the connection, intentionally."));
-            wsCommunicationTyrusVPNClientManagerAgent.riseVpnConnectionCloseNotificationEvent(remoteParticipantNetworkService.getNetworkServiceType(), remoteParticipant);
+            wsCommunicationTyrusVPNClientManagerAgent.riseVpnConnectionCloseNotificationEvent(remoteParticipantNetworkService.getNetworkServiceType(), remoteParticipant,true);
 
         } catch (IOException e) {
             e.printStackTrace();

@@ -1,5 +1,3 @@
-
-
 package com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.util;
 
 import android.content.Context;
@@ -20,7 +18,13 @@ import com.bitdubai.android_api.BuildConfig;
 
 import java.io.FileDescriptor;
 import java.lang.ref.WeakReference;
-
+/**
+ * ImageLoader
+ *
+ * @author Jose Cardozo josejcb (josejcb89@gmail.com) on 05/01/16
+ * @version 1.0
+ *
+ */
 /**
  * This class wraps up completing some arbitrary long running work when loading a bitmap to an
  * ImageView. It handles things like using a memory and disk cache, running the work in a background

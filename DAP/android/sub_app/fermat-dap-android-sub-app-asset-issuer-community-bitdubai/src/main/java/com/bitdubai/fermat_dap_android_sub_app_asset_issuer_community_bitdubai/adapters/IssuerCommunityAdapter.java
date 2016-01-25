@@ -40,6 +40,14 @@ public class IssuerCommunityAdapter extends FermatAdapter<ActorIssuer, IssuerVie
     @Override
     protected void bindHolder(final IssuerViewHolder holder, final ActorIssuer data, final int position) {
         try {
+            if (data.getRecord().getExtendedPublicKey() != null) {
+                holder.name.setText(String.format("%s", data.getRecord().getName()));
+                holder.extendedPublicKey.setText("ExtendedKey: YES");
+            } else {
+                holder.name.setText(String.format("%s", data.getRecord().getName()));
+                holder.extendedPublicKey.setText("ExtendedKey: NO");
+            }
+
             if (data.getRecord().getDapConnectionState() == DAPConnectionState.REGISTERED_ONLINE || data.getRecord().getDapConnectionState() == DAPConnectionState.CONNECTED_ONLINE) {
                 holder.status.setText(R.string.status_online);
                 holder.status.setBackgroundColor(holder.status.getResources().getColor(R.color.background_status_online));
