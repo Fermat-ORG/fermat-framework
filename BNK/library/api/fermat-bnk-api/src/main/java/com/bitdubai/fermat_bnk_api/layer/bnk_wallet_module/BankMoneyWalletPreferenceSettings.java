@@ -68,6 +68,6 @@ public class BankMoneyWalletPreferenceSettings implements WalletSettings {
 
     @Override
     public void setIsPresentationHelpEnabled(boolean b) {
-
+        isHomeTutorialDialogEnabled=b;
     }
 }

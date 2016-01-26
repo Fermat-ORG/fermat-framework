@@ -86,21 +86,21 @@ public class AccountsListFragment extends FermatWalletListFragment<BankAccountNu
                 .setSubTitle("prueba subtitle")
                 .setTextFooter("prueba footer").setTemplateType(PresentationDialog.TemplateType.TYPE_PRESENTATION_WITHOUT_IDENTITIES).build();
         showOrHideNoAccountListView(accountsList.isEmpty());
-        presentationDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
+        /*presentationDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
             @Override
             public void onDismiss(DialogInterface dialogInterface) {
                 System.out.println("presentation dialog dismiss");
             }
-        });
+        });*/
+        boolean showDialog;
         try{
-            if(moduleManager.getSettingsManager().loadAndGetSettings(appSession.getAppPublicKey()).isHomeTutorialDialogEnabled())
+            showDialog = moduleManager.getSettingsManager().loadAndGetSettings(appSession.getAppPublicKey()).isHomeTutorialDialogEnabled();
+            if(showDialog){
                 presentationDialog.show();
+            }
         }catch (FermatException e){
             makeText(getActivity(), "Oops! recovering from system error", Toast.LENGTH_SHORT).show();
         }
-
-
-
     }
 
     private void configureToolbar() {
