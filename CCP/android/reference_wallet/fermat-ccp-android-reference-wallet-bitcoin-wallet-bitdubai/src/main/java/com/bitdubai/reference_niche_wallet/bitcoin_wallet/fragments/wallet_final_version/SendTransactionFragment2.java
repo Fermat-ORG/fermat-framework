@@ -404,7 +404,7 @@ public class SendTransactionFragment2 extends FermatWalletExpandableListFragment
 
         circularProgressBar = (CircularProgressBar) balance_header.findViewById(R.id.progress);
 
-        String runningBalance = WalletUtils.formatBalanceStringNotDecimal(moduleManager.getBalance(BalanceType.AVAILABLE, referenceWalletSession.getAppPublicKey()),ShowMoneyType.BITCOIN.getCode());
+       final String runningBalance = WalletUtils.formatBalanceStringNotDecimal(moduleManager.getBalance(BalanceType.AVAILABLE, referenceWalletSession.getAppPublicKey()),ShowMoneyType.BITCOIN.getCode());
 
         circularProgressBar.setProgressValue(Integer.valueOf(runningBalance));
         circularProgressBar.setProgressValue2(getBalanceAverage());
@@ -476,8 +476,9 @@ public class SendTransactionFragment2 extends FermatWalletExpandableListFragment
                     if (after - before < 2000) {
                         changeBalanceType(txt_type_balance, txt_balance_amount);
                         //System.out.println(System.currentTimeMillis());
-                        progress1 = 1;
-                        circularProgressBar.setProgressValue(progress1);
+
+                        circularProgressBar.setProgressValue(Integer.valueOf(runningBalance));
+                        circularProgressBar.setProgressValue2(getBalanceAverage());
                         return true;
                     }else {
                         //String receivedAddress = GET("http://52.27.68.19:15400/mati/address/");
