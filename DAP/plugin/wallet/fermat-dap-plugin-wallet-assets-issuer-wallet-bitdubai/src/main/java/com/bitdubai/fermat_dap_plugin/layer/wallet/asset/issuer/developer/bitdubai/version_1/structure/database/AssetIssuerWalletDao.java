@@ -305,7 +305,7 @@ public class AssetIssuerWalletDao {
     }
 
     // Read record data and create transactions list
-    private List<AssetIssuerWalletTransaction> createTransactionList(final Collection<DatabaseTableRecord> records) {
+    private List<AssetIssuerWalletTransaction> createTransactionList(final Collection<DatabaseTableRecord> records) throws InvalidParameterException {
 
         List<AssetIssuerWalletTransaction> transactions = new ArrayList<>();
 
@@ -316,12 +316,12 @@ public class AssetIssuerWalletDao {
     }
 
 
-    private AssetIssuerWalletTransaction constructAssetIssuerWalletTransactionFromRecord(DatabaseTableRecord record) {
+    private AssetIssuerWalletTransaction constructAssetIssuerWalletTransactionFromRecord(DatabaseTableRecord record) throws InvalidParameterException {
 
         String transactionId = record.getStringValue(AssetWalletIssuerDatabaseConstant.ASSET_WALLET_ISSUER_VERIFICATION_ID_COLUMN_NAME);
         String assetPublicKey = record.getStringValue(AssetWalletIssuerDatabaseConstant.ASSET_WALLET_ISSUER_BALANCE_TABLE_ASSET_PUBLIC_KEY_COLUMN_NAME);
         String transactionHash = record.getStringValue(AssetWalletIssuerDatabaseConstant.ASSET_WALLET_ISSUER_TRANSACTION_HASH_COLUMN_NAME);
-        TransactionType transactionType = TransactionType.getByCode(record.getStringValue(AssetWalletIssuerDatabaseConstant.ASSET_WALLET_ISSUER_BALANCE_TYPE_COLUMN_NAME));
+        TransactionType transactionType = TransactionType.getByCode(record.getStringValue(AssetWalletIssuerDatabaseConstant.ASSET_WALLET_ISSUER_TYPE_COLUMN_NAME));
         CryptoAddress addressFrom = new CryptoAddress();
         addressFrom.setAddress(record.getStringValue(AssetWalletIssuerDatabaseConstant.ASSET_WALLET_ISSUER_ADDRESS_FROM_COLUMN_NAME));
         CryptoAddress addressTo = new CryptoAddress();
@@ -364,10 +364,8 @@ public class AssetIssuerWalletDao {
             /**
              * I'm also saving to file the DigitalAssetMetadata of this digital Asset.
              */
-            String digitalAssetMetadataFilename = assetIssuerWalletTransactionRecord.getDigitalAsset().getPublicKey() + "_metadata";
-            String digitalAssetMetadataXML = assetIssuerWalletTransactionRecord.getDigitalAssetMetadata().toString();
-            pluginTextFile = pluginFileSystem.createTextFile(plugin, PATH_DIRECTORY, digitalAssetMetadataFilename, FilePrivacy.PRIVATE, FileLifeSpan.PERMANENT);
-            pluginTextFile.setContent(digitalAssetMetadataXML);
+            pluginTextFile = pluginFileSystem.createTextFile(plugin, PATH_DIRECTORY, assetIssuerWalletTransactionRecord.getDigitalAssetMetadataHash(), FilePrivacy.PRIVATE, FileLifeSpan.PERMANENT);
+            pluginTextFile.setContent(assetIssuerWalletTransactionRecord.getDigitalAssetMetadata().toString());
             pluginTextFile.persistToMedia();
 
             database.executeTransaction(transaction);
@@ -836,10 +834,10 @@ public class AssetIssuerWalletDao {
                 throw new RecordsNotFoundException(null, context, "");
             }
 
-            for (DatabaseTableRecord record : assetStatisticTable.getRecords()) {
-                record.setStringValue(columnName, value);
-                assetStatisticTable.updateRecord(record);
-            }
+            DatabaseTableRecord record = assetStatisticTable.getRecords().get(0);
+
+            record.setStringValue(columnName, value);
+            assetStatisticTable.updateRecord(record);
         } catch (CantLoadTableToMemoryException exception) {
             throw new CantGetAssetStatisticException(exception, context, "Cannot load table to memory.");
         } catch (CantUpdateRecordException exception) {

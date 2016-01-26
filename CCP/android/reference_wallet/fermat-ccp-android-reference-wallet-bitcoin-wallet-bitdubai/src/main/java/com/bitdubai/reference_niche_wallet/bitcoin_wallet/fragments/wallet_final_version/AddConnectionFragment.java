@@ -154,7 +154,7 @@ public class AddConnectionFragment extends FermatWalletListFragment<CryptoWallet
     @Override
     public void onPostExecute(Object... result) {
         isRefreshing = false;
-        menu.clear();
+        if(menu!=null) menu.clear();
         connectionPickCounter = 0;
         if (isAttached) {
             swipeRefreshLayout.setRefreshing(false);
@@ -315,12 +315,12 @@ public class AddConnectionFragment extends FermatWalletListFragment<CryptoWallet
 
     @Override
     public void addMenuEnabled() {
+        connectionPickCounter++;
         if(!isMenuVisible){
             isMenuVisible = true;
             menu.add(0, BitcoinWalletConstants.IC_ACTION_ADD_CONNECTION, 0, "ADD")
                     .setIcon(R.drawable.button_add_connection)
                     .setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
-            connectionPickCounter++;
         }
     }
 

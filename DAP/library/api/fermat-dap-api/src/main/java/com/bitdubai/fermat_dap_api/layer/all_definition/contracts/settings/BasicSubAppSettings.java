@@ -9,4 +9,9 @@ import com.bitdubai.fermat_api.layer.modules.interfaces.FermatSettings;
  * Created by Leon Acosta - (laion.cj91@gmail.com) on 21/12/2015.
  */
 public class BasicSubAppSettings implements FermatSettings {
+
+    @Override
+    public void setIsPresentationHelpEnabled(boolean b) {
+
+    }
 }

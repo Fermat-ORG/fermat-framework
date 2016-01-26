@@ -139,6 +139,7 @@ public class CryptoWalletWalletModuleManager implements CryptoWallet {
     private final OutgoingIntraActorManager      outgoingIntraActorManager     ;
     private final WalletContactsManager          walletContactsManager         ;
 
+
     public CryptoWalletWalletModuleManager(final BitcoinWalletManager           bitcoinWalletManager          ,
                                            final CryptoAddressBookManager       cryptoAddressBookManager      ,
                                            final CryptoAddressesManager         cryptoAddressesNSManager      ,
@@ -150,7 +151,7 @@ public class CryptoWalletWalletModuleManager implements CryptoWallet {
                                            final IntraWalletUserIdentityManager intraWalletUserIdentityManager,
                                            final OutgoingExtraUserManager       outgoingExtraUserManager      ,
                                            final OutgoingIntraActorManager      outgoingIntraActorManager     ,
-                                           final WalletContactsManager          walletContactsManager         ) {
+                                           final WalletContactsManager          walletContactsManager        ) {
 
         this.bitcoinWalletManager           = bitcoinWalletManager          ;
         this.cryptoAddressBookManager       = cryptoAddressBookManager      ;
@@ -164,6 +165,7 @@ public class CryptoWalletWalletModuleManager implements CryptoWallet {
         this.outgoingExtraUserManager       = outgoingExtraUserManager      ;
         this.outgoingIntraActorManager      = outgoingIntraActorManager     ;
         this.walletContactsManager          = walletContactsManager         ;
+
     }
 
     private CryptoPaymentRegistry  cryptoPaymentRegistry ;
@@ -382,7 +384,7 @@ public class CryptoWalletWalletModuleManager implements CryptoWallet {
         try{
 
             try {
-                WalletContactRecord walletContactRecord = walletContactsRegistry.getWalletContactByAliasAndWalletPublicKey(actorAlias, walletPublicKey);
+                WalletContactRecord walletContactRecord = walletContactsRegistry.getWalletContactByActorAndWalletPublicKey(actorConnectedPublicKey, walletPublicKey);
 
                 //get to Crypto Address NS the intra user actor address
                 cryptoAddressesNSManager.sendAddressExchangeRequest(walletPublicKey,
@@ -854,12 +856,12 @@ public class CryptoWalletWalletModuleManager implements CryptoWallet {
             switch (deliveredToActorType) {
                 case EXTRA_USER:
                     System.out.println("Sending throw outgoing Extra User ...");
-                    outgoingExtraUserManager.getTransactionManager().send(walletPublicKey, destinationAddress, cryptoAmount, notes, deliveredByActorPublicKey, deliveredByActorType, deliveredToActorPublicKey, deliveredToActorType);
+                    outgoingExtraUserManager.getTransactionManager().send(walletPublicKey, destinationAddress, cryptoAmount, notes, deliveredByActorPublicKey, deliveredByActorType, deliveredToActorPublicKey, deliveredToActorType, BlockchainNetworkType.REG_TEST);
 
                     break;
                 case INTRA_USER:
                     System.out.println("Sending throw outgoing Intra Actor ...");
-                    outgoingIntraActorManager.getTransactionManager().sendCrypto(walletPublicKey, destinationAddress, cryptoAmount, notes, deliveredByActorPublicKey,  deliveredToActorPublicKey,deliveredByActorType, deliveredToActorType,referenceWallet);
+                    outgoingIntraActorManager.getTransactionManager().sendCrypto(walletPublicKey, destinationAddress, cryptoAmount, notes, deliveredByActorPublicKey,  deliveredToActorPublicKey,deliveredByActorType, deliveredToActorType,referenceWallet,BlockchainNetworkType.REG_TEST);
 
                     break;
             }
@@ -885,14 +887,19 @@ public class CryptoWalletWalletModuleManager implements CryptoWallet {
     public List<PaymentRequest> listSentPaymentRequest(String walletPublicKey,int max,int offset) throws CantListSentPaymentRequestException {
         try {
             List<PaymentRequest> lst =  new ArrayList<>();
-            CryptoWalletWalletContact cryptoWalletWalletContact = null;
+            CryptoWalletWalletModuleWalletContact cryptoWalletWalletContact = null;
+            byte[] profilePicture = null;
 
             //find received payment request
             for (CryptoPayment paymentRecord :  cryptoPaymentRegistry.listCryptoPaymentRequestsByType(walletPublicKey, CryptoPaymentType.SENT, max, offset)) {
 
                 WalletContactRecord walletContactRecord = walletContactsRegistry.getWalletContactByActorAndWalletPublicKey(paymentRecord.getActorPublicKey(),walletPublicKey);
                 if (walletContactRecord != null)
-                    cryptoWalletWalletContact = new CryptoWalletWalletModuleWalletContact(walletContactRecord);
+                    cryptoWalletWalletContact = new CryptoWalletWalletModuleWalletContact(walletContactRecord, profilePicture);
+
+                if (getImageByActorType(paymentRecord.getActorType(),paymentRecord.getActorPublicKey(),paymentRecord.getIdentityPublicKey()) != null)
+                    profilePicture = getImageByActorType(paymentRecord.getActorType(),paymentRecord.getActorPublicKey(),paymentRecord.getIdentityPublicKey());
+
 
                 CryptoWalletWalletModulePaymentRequest cryptoWalletPaymentRequest = new CryptoWalletWalletModulePaymentRequest(
                         paymentRecord.getRequestId(),
@@ -929,7 +936,8 @@ public class CryptoWalletWalletModuleManager implements CryptoWallet {
         try {
             List<PaymentRequest> lst =  new ArrayList<>();
 
-            CryptoWalletWalletContact cryptoWalletWalletContact = null;
+            CryptoWalletWalletModuleWalletContact cryptoWalletWalletContact = null;
+             byte[] profilePicture = null;
 
             //find received payment request
             for (CryptoPayment paymentRecord :  cryptoPaymentRegistry.listCryptoPaymentRequestsByType(
@@ -946,8 +954,11 @@ public class CryptoWalletWalletModuleManager implements CryptoWallet {
                             walletPublicKey
                     );
 
+                    if (getImageByActorType(paymentRecord.getActorType(),paymentRecord.getActorPublicKey(),paymentRecord.getIdentityPublicKey()) != null)
+                        profilePicture = getImageByActorType(paymentRecord.getActorType(),paymentRecord.getActorPublicKey(),paymentRecord.getIdentityPublicKey());
+
                     if (walletContactRecord != null)
-                        cryptoWalletWalletContact = new CryptoWalletWalletModuleWalletContact(walletContactRecord);
+                        cryptoWalletWalletContact = new CryptoWalletWalletModuleWalletContact(walletContactRecord,profilePicture);
 
                 }
                 catch(com.bitdubai.fermat_ccp_api.layer.middleware.wallet_contacts.exceptions.WalletContactNotFoundException e)
@@ -1031,7 +1042,9 @@ public class CryptoWalletWalletModuleManager implements CryptoWallet {
             CryptoPayment paymentRequest =  cryptoPaymentRegistry.getRequestById(requestId);
 
             try {
-                WalletContactRecord walletContactRecord = walletContactsRegistry.getWalletContactByActorAndWalletPublicKey(paymentRequest.getActorPublicKey(), paymentRequest.getWalletPublicKey());
+                intraUserManager.acceptIntraWalletUser(paymentRequest.getIdentityPublicKey(),paymentRequest.getActorPublicKey());
+
+                walletContactsRegistry.getWalletContactByActorAndWalletPublicKey(paymentRequest.getActorPublicKey(), paymentRequest.getWalletPublicKey());
 
             } catch (com.bitdubai.fermat_ccp_api.layer.middleware.wallet_contacts.exceptions.WalletContactNotFoundException e) {
                 try {

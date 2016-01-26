@@ -16,15 +16,15 @@ public abstract class FermatAgent {
         this.status = AgentStatus.STARTED;
     }
 
-    public void pause(){
+    public void pause() throws CantStopAgentException {
         this.status = AgentStatus.PAUSED;
     }
 
-    public void resume(){
+    public void resume() throws CantStartAgentException {
         this.status = AgentStatus.STARTED;
     }
 
-    public void stop(){
+    public void stop() throws CantStopAgentException {
         this.status = AgentStatus.STOPPED;
     }
 

@@ -215,7 +215,7 @@ public class ConnectionOtherProfileFragment extends AbstractFermatFragment imple
         if (i == R.id.btn_connection_accept){
             try {
 
-                AcceptDialog notificationAcceptDialog = new AcceptDialog(getActivity(), intraUserSubAppSession, (SubAppResourcesProviderManager) appResourcesProviderManager, intraUserInformation, moduleManager.getActiveIntraUserIdentity());
+                AcceptDialog notificationAcceptDialog = new AcceptDialog(getActivity(),(IntraUserSubAppSession) appSession, (SubAppResourcesProviderManager) appResourcesProviderManager, intraUserInformation, moduleManager.getActiveIntraUserIdentity());
                 notificationAcceptDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
                     @Override
                     public void onDismiss(DialogInterface dialog) {
@@ -281,11 +281,11 @@ public class ConnectionOtherProfileFragment extends AbstractFermatFragment imple
     }
 
     private void conectionAccept(){
-        connectionRequestSend.setVisibility(View.GONE);
+        connectionRequestSend.setVisibility(View.VISIBLE);
         connect.setVisibility(View.GONE);
         disconnect.setVisibility(View.GONE);
         connectionRequestRejected.setVisibility(View.GONE);
-        accept.setVisibility(View.VISIBLE);
+        accept.setVisibility(View.GONE);
 
     }
 

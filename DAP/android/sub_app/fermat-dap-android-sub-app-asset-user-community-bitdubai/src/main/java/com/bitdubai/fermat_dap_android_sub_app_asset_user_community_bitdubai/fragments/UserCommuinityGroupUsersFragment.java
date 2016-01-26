@@ -21,16 +21,21 @@ import android.widget.Toast;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractFermatFragment;
 import com.bitdubai.fermat_android_api.ui.interfaces.FermatWorkerCallBack;
 import com.bitdubai.fermat_android_api.ui.util.FermatWorker;
+import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
 import com.bitdubai.fermat_dap_android_sub_app_asset_user_community_bitdubai.R;
 import com.bitdubai.fermat_dap_android_sub_app_asset_user_community_bitdubai.adapters.UserCommunityAdapter;
+import com.bitdubai.fermat_dap_android_sub_app_asset_user_community_bitdubai.dialogs.ConfirmDeleteDialog;
 import com.bitdubai.fermat_dap_android_sub_app_asset_user_community_bitdubai.interfaces.AdapterChangeListener;
 import com.bitdubai.fermat_dap_android_sub_app_asset_user_community_bitdubai.models.Actor;
 import com.bitdubai.fermat_dap_android_sub_app_asset_user_community_bitdubai.models.Group;
 import com.bitdubai.fermat_dap_android_sub_app_asset_user_community_bitdubai.sessions.AssetUserCommunitySubAppSession;
 import com.bitdubai.fermat_dap_api.layer.all_definition.exceptions.CantGetIdentityAssetUserException;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.AssetUserActorRecord;
+import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.AssetUserGroupMemberRecord;
+import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.exceptions.CantDeleteAssetUserGroupException;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.interfaces.ActorAssetUser;
 import com.bitdubai.fermat_dap_api.layer.dap_sub_app_module.asset_user_community.interfaces.AssetUserCommunitySubAppModuleManager;
+import com.bitdubai.fermat_dap_api.layer.dap_transaction.common.exceptions.RecordsNotFoundException;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 import com.software.shell.fab.ActionButton;
 
@@ -57,6 +62,8 @@ public class UserCommuinityGroupUsersFragment extends AbstractFermatFragment imp
     private View rootView;
     private LinearLayout emptyView;
     private int offset = 0;
+    private MenuItem menuItemDelete;
+    private Menu menu;
 
     /**
      * Flags
@@ -75,6 +82,7 @@ public class UserCommuinityGroupUsersFragment extends AbstractFermatFragment imp
             group = (Group) appSession.getData("group_selected");
             manager = ((AssetUserCommunitySubAppSession) appSession).getModuleManager();
             errorManager = appSession.getErrorManager();
+
         } catch (Exception ex) {
             ex.printStackTrace();
         }
@@ -95,17 +103,21 @@ public class UserCommuinityGroupUsersFragment extends AbstractFermatFragment imp
             public void onDataSetChanged(List<Actor> dataSet) {
                 actors = dataSet;
                 boolean someSelected = false;
-                for (Actor actor : actors){
-                    if (actor.selected){
+                for (Actor actor : actors) {
+                    if (actor.selected) {
                         someSelected = true;
                         break;
                     }
                 }
 
-                if (someSelected)
-                {
-
+                if (someSelected) {
+                    menuItemDelete.setVisible(true);
                 }
+                else
+                {
+                    menuItemDelete.setVisible(false);
+                }
+
             }
         });
         recyclerView.setAdapter(adapter);
@@ -123,7 +135,8 @@ public class UserCommuinityGroupUsersFragment extends AbstractFermatFragment imp
             @Override
             public void onClick(View view) {
 
-               //changeActivity(Activities.DAP_ASSET_EDITOR_ACTIVITY.getCode(), appSession.getAppPublicKey(), getAssetForEdit());
+                appSession.setData("group_selected", group);
+                changeActivity(Activities.DAP_ASSET_USER_COMMUNITY_ACTIVITY_ADMINISTRATIVE_USERS.getCode(), appSession.getAppPublicKey());
 
             }
         });
@@ -131,7 +144,7 @@ public class UserCommuinityGroupUsersFragment extends AbstractFermatFragment imp
         create.setVisibility(View.VISIBLE);
 
         //Toast.makeText(getActivity(), group.getGroupName(), Toast.LENGTH_LONG).show();
-        getToolbar().setTitle(group.getGroupName());
+        getToolbar().setTitle(group.getGroupName()+" Users");
         //getToolbar().getMenu().getItem(1).setVisible(true);
         return rootView;
     }
@@ -140,6 +153,42 @@ public class UserCommuinityGroupUsersFragment extends AbstractFermatFragment imp
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         super.onCreateOptionsMenu(menu, inflater);
         inflater.inflate(R.menu.dap_community_user_group_users_menu, menu);
+        this.menu = menu;
+        menuItemDelete = menu.findItem(R.id.group_users_delete);
+        menuItemDelete.setVisible(false);
+        menuItemDelete.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
+            @Override
+            public boolean onMenuItemClick(MenuItem item) {
+
+                ConfirmDeleteDialog dialog = new ConfirmDeleteDialog(getActivity(), (AssetUserCommunitySubAppSession) appSession, appResourcesProviderManager);
+                dialog.setYesBtnListener(new ConfirmDeleteDialog.OnClickAcceptListener() {
+                    @Override
+                    public void onClick() {
+                        try {
+                            for (Actor actor : actors) {
+                                if (actor.selected)
+                                {   AssetUserGroupMemberRecord actorGroup = new AssetUserGroupMemberRecord();
+                                    actorGroup.setGroupId(group.getGroupId());
+                                    actorGroup.setActorPublicKey(actor.getActorPublicKey());
+                                    manager.removeActorAssetUserFromGroup(actorGroup);
+                                }
+                            }
+                            Toast.makeText(getActivity(), "Selected users deleted from the group", Toast.LENGTH_SHORT).show();
+                            onRefresh();
+                            menuItemDelete.setVisible(false);
+                        } catch (CantDeleteAssetUserGroupException e) {
+                            e.printStackTrace();
+                            Toast.makeText(getActivity(), "This users couldn't be deleted.", Toast.LENGTH_SHORT).show();
+                        } catch (RecordsNotFoundException e) {
+                            Toast.makeText(getActivity(), "Records not found.", Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                });
+                dialog.show();
+                return true;
+            }
+        });
+
     }
 
     @Override
@@ -152,55 +201,9 @@ public class UserCommuinityGroupUsersFragment extends AbstractFermatFragment imp
                     onRefresh();
                 }
             });
+
     }
 
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-       /* if (item.getItemId() == R.id.action_connect) {
-            final ProgressDialog dialog = new ProgressDialog(getActivity());
-            dialog.setMessage("Connecting please wait...");
-            dialog.setCancelable(false);
-            dialog.show();
-            FermatWorker worker = new FermatWorker() {
-                @Override
-                protected Object doInBackground() throws Exception {
-                    List<ActorAssetUser> toConnect = new ArrayList<>();
-                    for (Actor actor : actors) {
-                        if (actor.selected)
-                            toConnect.add(actor);
-                    }
-                    //// TODO: 28/10/15 get Actor asset User
-                    manager.connectToActorAssetUser(null, toConnect);
-                    return true;
-                }
-            };
-            worker.setContext(getActivity());
-            worker.setCallBack(new FermatWorkerCallBack() {
-                @Override
-                public void onPostExecute(Object... result) {
-                    dialog.dismiss();
-                    if (swipeRefreshLayout != null)
-                        swipeRefreshLayout.post(new Runnable() {
-                            @Override
-                            public void run() {
-                                onRefresh();
-                            }
-                        });
-                }
-
-                @Override
-                public void onErrorOccurred(Exception ex) {
-                    dialog.dismiss();
-                    Toast.makeText(getActivity(), String.format("An exception has been thrown: %s", ex.getMessage()), Toast.LENGTH_LONG).show();
-                    ex.printStackTrace();
-                }
-            });
-            worker.execute();
-            return true;
-        }*/
-        return super.onOptionsItemSelected(item);
-    }
 
     public void showEmpty(boolean show, View emptyView) {
         Animation anim = AnimationUtils.loadAnimation(getActivity(),
@@ -252,8 +255,9 @@ public class UserCommuinityGroupUsersFragment extends AbstractFermatFragment imp
                                 showEmpty(false, emptyView);
                             }
                         }
-                    } else
+                    } else {
                         showEmpty(true, emptyView);
+                    }
                 }
 
                 @Override

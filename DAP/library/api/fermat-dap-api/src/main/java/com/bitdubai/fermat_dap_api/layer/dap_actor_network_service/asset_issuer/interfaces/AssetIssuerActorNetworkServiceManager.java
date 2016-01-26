@@ -24,6 +24,14 @@ public interface AssetIssuerActorNetworkServiceManager extends FermatManager {
     void registerActorAssetIssuer(ActorAssetIssuer actorAssetIssuerToRegister) throws CantRegisterActorAssetIssuerException;
 
     /**
+     * Update the ActorAssetUser in the cloud server like online
+     *
+     * @param actorAssetIssuerToRegister
+     * @throws CantRegisterActorAssetIssuerException
+     */
+    void updateActorAssetIssuer(ActorAssetIssuer actorAssetIssuerToRegister) throws CantRegisterActorAssetIssuerException;
+
+    /**
      * @param dapMessage the message to be sent, this message has to contain both the actor
      *                   that sent the message and the actor that will receive the message.
      * @throws CantSendMessageException

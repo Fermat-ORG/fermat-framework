@@ -6,7 +6,7 @@
  */
 package com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_transmission.developer.bitdubai.version_1.communication;
 
-import com.bitdubai.fermat_api.layer.all_definition.network_service.interfaces.NetworkService;
+import com.bitdubai.fermat_p2p_api.layer.all_definition.common.network_services.abstract_classes.AbstractNetworkService;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.common.network_services.template.event_handlers.AbstractCommunicationBaseEventHandler;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.events.CompleteRequestListComponentRegisteredNotificationEvent;
 
@@ -26,7 +26,7 @@ public class CompleteRequestListComponentRegisteredNotificationEventHandler exte
      *
      * @param networkService
      */
-    public CompleteRequestListComponentRegisteredNotificationEventHandler(NetworkService networkService) {
+    public CompleteRequestListComponentRegisteredNotificationEventHandler(AbstractNetworkService networkService) {
         super(networkService);
     }
 

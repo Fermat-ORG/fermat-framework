@@ -8,7 +8,7 @@ package com.bitdubai.fermat_ccp_plugin.layer.network_service.intra_user.develope
 
 import com.bitdubai.fermat_api.layer.all_definition.components.interfaces.PlatformComponentProfile;
 import com.bitdubai.fermat_ccp_plugin.layer.network_service.intra_user.developer.bitdubai.version_1.IntraActorNetworkServicePluginRoot;
-import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.client.CommunicationsClientConnection;
+import com.bitdubai.fermat_p2p_api.layer.p2p_communication.WsCommunicationsCloudClientManager;
 
 
 /**
@@ -35,7 +35,7 @@ public class CommunicationRegistrationProcessNetworkServiceAgent extends Thread 
     /**
      * Represent the communicationsClientConnection
      */
-    private CommunicationsClientConnection communicationsClientConnection;
+    private WsCommunicationsCloudClientManager communicationsClientConnection;
 
     /**
      * Represent the active
@@ -47,7 +47,7 @@ public class CommunicationRegistrationProcessNetworkServiceAgent extends Thread 
      * @param networkService
      * @param communicationsClientConnection
      */
-    public CommunicationRegistrationProcessNetworkServiceAgent(IntraActorNetworkServicePluginRoot networkService, CommunicationsClientConnection communicationsClientConnection) {
+    public CommunicationRegistrationProcessNetworkServiceAgent(IntraActorNetworkServicePluginRoot networkService, WsCommunicationsCloudClientManager communicationsClientConnection) {
         this.networkService = networkService;
         this.communicationsClientConnection = communicationsClientConnection;
         this.active = Boolean.FALSE;
@@ -62,23 +62,24 @@ public class CommunicationRegistrationProcessNetworkServiceAgent extends Thread 
 
         while (active){
             try{
+               System.out.println("IntraActorNetworkServicePluginRoot "+networkService.isRegister()+" communicationsClientConnection.isRegister() "+communicationsClientConnection.getCommunicationsCloudClientConnection().isRegister());
 
-                if (communicationsClientConnection.isRegister() && !networkService.isRegister()){
+                if (communicationsClientConnection.getCommunicationsCloudClientConnection().isRegister() && !networkService.isRegister()){
 
                     /*
                      * Construct my profile and register me
                      */
-                    PlatformComponentProfile platformComponentProfile =  communicationsClientConnection.constructPlatformComponentProfileFactory(networkService.getIdentityPublicKey(),
-                                                                                                                                                 networkService.getAlias().toLowerCase(),
-                                                                                                                                                 networkService.getName(),
-                                                                                                                                                 networkService.getNetworkServiceType(),
-                                                                                                                                                 networkService.getPlatformComponentType(),
-                                                                                                                                                 networkService.getExtraData());
+                    PlatformComponentProfile platformComponentProfile =  communicationsClientConnection.getCommunicationsCloudClientConnection().constructPlatformComponentProfileFactory(networkService.getIdentityPublicKey(),
+                            networkService.getAlias().toLowerCase(),
+                            networkService.getName(),
+                            networkService.getNetworkServiceType(),
+                            networkService.getPlatformComponentType(),
+                            networkService.getExtraData());
 
                     /*
                      * Register me
                      */
-                    communicationsClientConnection.registerComponentForCommunication(networkService.getNetworkServiceType(), platformComponentProfile);
+                    communicationsClientConnection.getCommunicationsCloudClientConnection().registerComponentForCommunication(networkService.getNetworkServiceType(), platformComponentProfile);
 
                     /*
                      * Configure my new profile
@@ -100,7 +101,7 @@ public class CommunicationRegistrationProcessNetworkServiceAgent extends Thread 
                     try {
                         sleep(CommunicationRegistrationProcessNetworkServiceAgent.SLEEP_TIME);
                     } catch (InterruptedException e) {
-                        e.printStackTrace();
+                        System.out.println(e.getMessage());
                         active = Boolean.FALSE;
                     }
 
@@ -109,11 +110,11 @@ public class CommunicationRegistrationProcessNetworkServiceAgent extends Thread 
                 }
 
             }catch (Exception e){
-                try {
-                    e.printStackTrace();
+                try { //TODO null pointer exc
+//                    System.out.println(e.getMessage());
                     sleep(CommunicationRegistrationProcessNetworkServiceAgent.MAX_SLEEP_TIME);
                 } catch (InterruptedException e1) {
-                    e1.printStackTrace();
+//                    System.out.println(e1.getMessage());
                     active = Boolean.FALSE;
                 }
             }

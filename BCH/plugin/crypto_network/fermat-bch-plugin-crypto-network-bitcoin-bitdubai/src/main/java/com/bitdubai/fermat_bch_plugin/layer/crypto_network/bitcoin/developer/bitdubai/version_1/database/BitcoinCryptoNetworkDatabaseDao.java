@@ -231,6 +231,16 @@ public class BitcoinCryptoNetworkDatabaseDao {
         DatabaseTableRecord record = databaseTable.getEmptyRecord();
 
         /**
+         * if the transaction hash already exists with the same crypto Status, then I won't insert it.
+         * Issue #4501
+         * This is because the wallet is not detecting as own our outgoing transactions and the commit launches the incoming bitcoins
+         * event. A transaction that we are sending may be actually recorded as incoming. The important thing at this point is not to
+         * duplicate transactions
+         */
+        if (!this.isNewTransaction(hash, cryptoStatus))
+            return;
+
+        /**
          * generates the trx_id if this is an incoming transaction or used the passed one.
          */
         UUID trxId = null;
@@ -973,6 +983,7 @@ public class BitcoinCryptoNetworkDatabaseDao {
             return;
 
         DatabaseTable databaseTable = database.getTable(BitcoinCryptoNetworkDatabaseConstants.CRYPTOVAULTS_DETAILED_STATS_TABLE_NAME);
+        databaseTable.addStringFilter(BitcoinCryptoNetworkDatabaseConstants.CRYPTOVAULTS_DETAILED_STATS_CRYPTO_VAULT_COLUMN_NAME, cryptoVault.getCode(), DatabaseFilterType.EQUAL);
         try {
             databaseTable.loadToMemory();
         } catch (CantLoadTableToMemoryException e) {
@@ -1014,7 +1025,7 @@ public class BitcoinCryptoNetworkDatabaseDao {
         DatabaseTable databaseTable = database.getTable(BitcoinCryptoNetworkDatabaseConstants.BROADCAST_TABLE_NAME);
 
         /**
-         * I will verify that I don't have this transaction already stored, if so I will thrown an error
+         * I will verify that I don't have this transaction already stored, if so I will delete it
          */
         databaseTable.addStringFilter(BitcoinCryptoNetworkDatabaseConstants.TRANSACTIONS_HASH_COLUMN_NAME, txHash, DatabaseFilterType.EQUAL);
         try {
@@ -1023,11 +1034,11 @@ public class BitcoinCryptoNetworkDatabaseDao {
             throwLoadToMemoryException(e, databaseTable.getTableName());
         }
 
+        /**
+         * delete if already exists.
+         */
         if (!databaseTable.getRecords().isEmpty()){
-            StringBuilder output = new StringBuilder("Transaction already stored in Broadcast Table.");
-            output.append(System.lineSeparator());
-            output.append("The transaction " + txHash + " is already stored.");
-            throw new CantExecuteDatabaseOperationException("Inconsistent data detected.",null, output.toString(), null);
+            this.deleteStoredBitcoinTransaction(txHash);
         }
 
         /**
@@ -1288,5 +1299,63 @@ public class BitcoinCryptoNetworkDatabaseDao {
         DatabaseTableRecord record = databaseTable.getRecords().get(0);
 
         return record.getUUIDValue(BitcoinCryptoNetworkDatabaseConstants.TRANSACTIONS_TRX_ID_COLUMN_NAME);
+    }
+
+    /**
+     * Gets the last CryptoTransaction that we have locally.
+     * @param txHash
+     * @return
+     */
+    public CryptoTransaction getCryptoTransaction(String txHash) throws CantExecuteDatabaseOperationException{
+        /**
+         * I get the list of stored cryptoTransactions with all their crypto Status
+         */
+        List<CryptoTransaction> cryptoTransactions = this.getIncomingCryptoTransaction(txHash);
+
+        /**
+         * I get the last available crypto Status
+         */
+        CryptoStatus lastCryptoStatus = null;
+        for (CryptoTransaction cryptoTransaction: cryptoTransactions){
+            CryptoStatus cryptoStatus = cryptoTransaction.getCryptoStatus();
+
+            if (lastCryptoStatus == null)
+                lastCryptoStatus = cryptoStatus;
+            else if (lastCryptoStatus.getOrder() < cryptoStatus.getOrder())
+                lastCryptoStatus = cryptoStatus;
+        }
+
+        /**
+         * I return the CryptoTranasction with the last cryptoStatus
+         */
+        for (CryptoTransaction cryptoTransaction: cryptoTransactions){
+            if (cryptoTransaction.getCryptoStatus() == lastCryptoStatus)
+                return cryptoTransaction;
+        }
+
+        //this should never happen
+        return null;
+    }
+
+    /**
+     * Will get the BlockchainNetworkType the passed trasaction was registered from
+     * @param txHash
+     * @return
+     */
+    public BlockchainNetworkType getBlockchainNetworkTypeFromBroadcast(String txHash) throws CantExecuteDatabaseOperationException{
+        DatabaseTable databaseTable = database.getTable(BitcoinCryptoNetworkDatabaseConstants.BROADCAST_TABLE_NAME);
+        databaseTable.addStringFilter(BitcoinCryptoNetworkDatabaseConstants.BROADCAST_TX_HASH, txHash, DatabaseFilterType.EQUAL);
+
+        try {
+            databaseTable.loadToMemory();
+        } catch (CantLoadTableToMemoryException e) {
+            throwLoadToMemoryException(e, databaseTable.getTableName());
+        }
+
+        if (databaseTable.getRecords().size() != 1)
+            throw new CantExecuteDatabaseOperationException(CantExecuteDatabaseOperationException.DEFAULT_MESSAGE, null, "unexpected result obtained. The passed tx is not broadcasting.", null);
+
+        BlockchainNetworkType blockchainNetworkType = BlockchainNetworkType.getByCode(databaseTable.getRecords().get(0).getStringValue(BitcoinCryptoNetworkDatabaseConstants.BROADCAST_NETWORK));
+        return blockchainNetworkType;
     }
 }

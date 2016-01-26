@@ -9,6 +9,7 @@ import com.bitdubai.fermat_wpd_api.layer.wpd_middleware.wallet_settings.exceptio
 import com.bitdubai.fermat_wpd_api.layer.wpd_middleware.wallet_settings.interfaces.WalletSettings;
 
 
+import java.util.Map;
 import java.util.UUID;
 
 public class BitcoinWalletSettings implements WalletSettings {
@@ -16,6 +17,7 @@ public class BitcoinWalletSettings implements WalletSettings {
     private IntraUserLoginIdentity lastSelectedIdentity;
     private boolean isPresentationHelpEnabled;
     private boolean isContactsHelpEnabled;
+    private Map<Long, Long>  runningDailyBalance ;
 
     public BitcoinWalletSettings() {
         this.lastSelectedIdentity = null;
@@ -37,6 +39,10 @@ public class BitcoinWalletSettings implements WalletSettings {
     @Override
     public UUID getDefaultSkin() throws CantGetDefaultSkinException {
         return null;
+    }
+
+    public Map<Long, Long> getRunningDailyBalance()  {
+        return this.runningDailyBalance ;
     }
 
     @Override
@@ -63,5 +69,9 @@ public class BitcoinWalletSettings implements WalletSettings {
 
     public void setIsContactsHelpEnabled(boolean isContactsHelpEnabled) {
         this.isContactsHelpEnabled = isContactsHelpEnabled;
+    }
+
+    public void setRunningDailyBalance(Map<Long, Long>  runningDailyBalance) {
+        this.runningDailyBalance = runningDailyBalance;
     }
 }

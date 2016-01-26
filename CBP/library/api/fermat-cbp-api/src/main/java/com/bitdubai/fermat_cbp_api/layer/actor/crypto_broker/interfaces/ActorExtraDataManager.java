@@ -5,6 +5,7 @@ import com.bitdubai.fermat_api.layer.world.interfaces.Currency;
 import com.bitdubai.fermat_cbp_api.all_definition.identity.ActorIdentity;
 import com.bitdubai.fermat_cbp_api.layer.actor.crypto_broker.exceptions.CantCreateNewActorExtraDataException;
 import com.bitdubai.fermat_cbp_api.layer.actor.crypto_broker.exceptions.CantGetListActorExtraDataException;
+import com.bitdubai.fermat_cbp_api.layer.actor.crypto_broker.exceptions.CantGetListPlatformsException;
 import com.bitdubai.fermat_cbp_api.layer.actor.crypto_broker.exceptions.CantUpdateActorExtraDataException;
 
 import java.util.Collection;
@@ -48,7 +49,7 @@ public interface ActorExtraDataManager extends CryptoBrokerActorManager {
      * @return
      * @throws CantGetListActorExtraDataException
      */
-    Collection<ActorExtraData> getActorExtraDataConnectedByIdentity(ActorIdentity identity) throws CantGetListActorExtraDataException;
+    ActorExtraData getActorExtraDataByIdentity(ActorIdentity identity) throws CantGetListActorExtraDataException;
 
     /**
      *
@@ -61,6 +62,6 @@ public interface ActorExtraDataManager extends CryptoBrokerActorManager {
      *
      * @return all currencies handled with platforms that support them
      */
-    Collection<Platforms> getPlatformsSupport(String brokerPublicKey, Currency currency);
+    Collection<Platforms> getPlatformsSupport(String brokerPublicKey, Currency currency) throws CantGetListPlatformsException;
 
 }
