@@ -36,6 +36,7 @@ import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_broker_community.
 import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_broker_community.exceptions.CantListCryptoBrokersException;
 import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_broker_community.exceptions.CantListIdentitiesToSelectException;
 import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_broker_community.exceptions.CantRequestConnectionException;
+import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_broker_community.exceptions.CantSelectIdentityException;
 import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_broker_community.exceptions.CantValidateConnectionStateException;
 import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_broker_community.exceptions.ConnectionRequestNotFoundException;
 import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_broker_community.exceptions.CryptoBrokerCancellingFailedException;
@@ -409,44 +410,56 @@ public class CryptoBrokerCommunityManager implements CryptoBrokerCommunitySubApp
     @Override
     public CryptoBrokerCommunitySelectableIdentity getSelectedActorIdentity() throws CantGetSelectedActorIdentityException, ActorIdentityNotSelectedException {
 
-        try {
-
-            CryptoBrokerCommunitySelectableIdentity lastSelectedIdentity = getSettingsManager().loadAndGetSettings(this.subAppPublicKey).getLastSelectedIdentity();
-
-            if (lastSelectedIdentity != null)
-                return lastSelectedIdentity;
-            else
-                throw new ActorIdentityNotSelectedException("", "There's no an identity selected");
-
-        } catch (final SettingsNotFoundException settingsNotFoundException) {
-
-            try {
-
-                getSettingsManager().persistSettings(this.subAppPublicKey, new CryptoBrokerCommunitySettings());
-
-                CryptoBrokerCommunitySelectableIdentity lastSelectedIdentity = getSettingsManager().loadAndGetSettings(this.subAppPublicKey).getLastSelectedIdentity();
-
-                if (lastSelectedIdentity != null)
-                    return lastSelectedIdentity;
-                else
-                    throw new ActorIdentityNotSelectedException("", "There's no an identity selected");
-
-            }catch (final CantPersistSettingsException exception) {
-
-                throw new CantGetSelectedActorIdentityException(exception, "", "Error trying to persist the settings.");
-            } catch (final Exception exception) {
-
-                this.errorManager.reportUnexpectedPluginException(pluginVersionReference, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, exception);
-                throw new CantGetSelectedActorIdentityException(exception, "", "Unhandled Error.");
-            }
-        } catch (final ActorIdentityNotSelectedException exception) {
-
-            throw exception;
-        } catch (final Exception exception) {
-
-            this.errorManager.reportUnexpectedPluginException(pluginVersionReference, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, exception);
-            throw new CantGetSelectedActorIdentityException(exception, "", "Unhandled Error.");
+        List<CryptoBrokerIdentity> deviceBrokerIdentities = null;
+        try{
+            deviceBrokerIdentities = this.cryptoBrokerIdentityManager.listIdentitiesFromCurrentDeviceUser();
+        } catch( CantListCryptoBrokerIdentitiesException e) {
+            e.printStackTrace();
         }
+        final CryptoBrokerIdentity foo = deviceBrokerIdentities.get(2);
+
+        return new CryptoBrokerCommunitySelectableIdentityImpl(foo.getPublicKey(), Actors.CBP_CRYPTO_BROKER, foo.getAlias(), foo.getProfileImage());
+
+
+
+//        try {
+//
+//            CryptoBrokerCommunitySelectableIdentity lastSelectedIdentity = getSettingsManager().loadAndGetSettings(this.subAppPublicKey).getLastSelectedIdentity();
+//
+//            if (lastSelectedIdentity != null)
+//                return lastSelectedIdentity;
+//            else
+//                throw new ActorIdentityNotSelectedException("", "There's no an identity selected");
+//
+//        } catch (final SettingsNotFoundException settingsNotFoundException) {
+//
+//            try {
+//
+//                getSettingsManager().persistSettings(this.subAppPublicKey, new CryptoBrokerCommunitySettings());
+//
+//                CryptoBrokerCommunitySelectableIdentity lastSelectedIdentity = getSettingsManager().loadAndGetSettings(this.subAppPublicKey).getLastSelectedIdentity();
+//
+//                if (lastSelectedIdentity != null)
+//                    return lastSelectedIdentity;
+//                else
+//                    throw new ActorIdentityNotSelectedException("", "There's no an identity selected");
+//
+//            }catch (final CantPersistSettingsException exception) {
+//
+//                throw new CantGetSelectedActorIdentityException(exception, "", "Error trying to persist the settings.");
+//            } catch (final Exception exception) {
+//
+//                this.errorManager.reportUnexpectedPluginException(pluginVersionReference, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, exception);
+//                throw new CantGetSelectedActorIdentityException(exception, "", "Unhandled Error.");
+//            }
+//        } catch (final ActorIdentityNotSelectedException exception) {
+//
+//            throw exception;
+//        } catch (final Exception exception) {
+//
+//            this.errorManager.reportUnexpectedPluginException(pluginVersionReference, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, exception);
+//            throw new CantGetSelectedActorIdentityException(exception, "", "Unhandled Error.");
+//        }
     }
 
     @Override
