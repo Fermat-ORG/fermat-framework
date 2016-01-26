@@ -143,7 +143,7 @@ public class AssetEditorFragment extends AbstractFermatFragment implements View.
             errorManager = appSession.getErrorManager();
             if (!isEdit) {
                 final ProgressDialog dialog = new ProgressDialog(getActivity());
-                dialog.setTitle("Asset Editor");
+                dialog.setTitle("Draft Asset");
                 dialog.setMessage("Creating new empty asset project, please wait...");
                 dialog.setCancelable(false);
                 dialog.show();
@@ -187,7 +187,7 @@ public class AssetEditorFragment extends AbstractFermatFragment implements View.
         configureToolbar();
         rootView.findViewById(R.id.action_create).setOnClickListener(this);
 
-        ((FermatButton) rootView.findViewById(R.id.action_create)).setText(isEdit ? "Edit" : "Create");
+        ((FermatButton) rootView.findViewById(R.id.action_create)).setText(isEdit ? "Done" : "Create");
 
         nameView = (FermatEditText) rootView.findViewById(R.id.name);
         descriptionView = (FermatEditText) rootView.findViewById(R.id.description);
