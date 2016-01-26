@@ -383,8 +383,13 @@ public class RedeemPointActorPluginRoot extends AbstractPlugin implements
 
                 if (request.getCryptoAddressDealer() == CryptoAddressDealers.DAP_WATCH_ONLY || request.getCryptoAddressDealer() == CryptoAddressDealers.DAP_ASSET) {
 
-                    if (request.getAction().equals(RequestAction.ACCEPT) || request.getAction().equals(RequestAction.NONE))
+                    if (request.getAction().equals(RequestAction.ACCEPT) || request.getAction().equals(RequestAction.NONE) || request.getAction().equals(RequestAction.RECEIVED))
                         this.handleCryptoAddressReceivedEvent(request);
+                    try {
+                        cryptoAddressesNetworkServiceManager.markReceivedRequest(request.getRequestId());
+                    } catch (CantConfirmAddressExchangeRequestException e) {
+                        throw new CantHandleCryptoAddressesNewsEventException(e, "Error marking request as received.", null);
+                    }
 
 //                if (request.getAction().equals(RequestAction.DENY))
 //                    this.handleCryptoAddressDeniedEvent(request);
