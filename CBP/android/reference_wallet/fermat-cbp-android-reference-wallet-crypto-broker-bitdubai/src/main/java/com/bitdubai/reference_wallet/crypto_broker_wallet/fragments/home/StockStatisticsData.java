@@ -5,7 +5,6 @@ import android.util.Log;
 import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Wallets;
 import com.bitdubai.fermat_api.layer.world.interfaces.Currency;
-import com.bitdubai.fermat_cbp_api.layer.wallet.crypto_broker.exceptions.CantGetCryptoBrokerStockTransactionException;
 import com.bitdubai.fermat_cbp_api.layer.wallet.crypto_broker.interfaces.CryptoBrokerStockTransaction;
 import com.bitdubai.fermat_cbp_api.layer.wallet.crypto_broker.interfaces.setting.CryptoBrokerWalletAssociatedSetting;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_broker.interfaces.CryptoBrokerWalletManager;
@@ -69,11 +68,19 @@ public class StockStatisticsData {
         }
     }
 
+    public float getBalance() {
+        return balance;
+    }
+
     public Currency getCurrency() {
         return currency;
     }
 
     public List<CryptoBrokerStockTransaction> getStockTransactions() {
         return stockTransactions;
+    }
+
+    public void setBalance(float balance) {
+        this.balance = balance;
     }
 }

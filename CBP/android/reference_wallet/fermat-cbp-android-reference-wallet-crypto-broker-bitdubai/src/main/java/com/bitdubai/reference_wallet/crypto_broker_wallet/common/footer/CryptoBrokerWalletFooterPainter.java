@@ -26,6 +26,7 @@ import com.bitdubai.reference_wallet.crypto_broker_wallet.fragments.home.StockSt
 import com.bitdubai.reference_wallet.crypto_broker_wallet.session.CryptoBrokerWalletSession;
 import com.viewpagerindicator.CirclePageIndicator;
 
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -36,21 +37,22 @@ import java.util.List;
  */
 public class CryptoBrokerWalletFooterPainter implements FooterViewPainter {
 
-    private Activity activity;
-    private CryptoBrokerWalletSession session;
+    private final List<StockStatisticsData> data;
+    private final Activity activity;
+    private final CryptoBrokerWalletSession session;
     private View footerBar;
-    private FrameLayout layout;
+    private ViewGroup layout;
 
     public CryptoBrokerWalletFooterPainter(Activity activity, CryptoBrokerWalletSession fullyLoadedSession) {
         this.activity = activity;
         session = fullyLoadedSession;
+
+        data = getData();
     }
 
     @Override
     public ViewGroup addFooterViewContainer(LayoutInflater layoutInflater, ViewGroup footer_container) {
-        layout = (FrameLayout) layoutInflater.inflate(R.layout.cbw_footer_stock_bar_chart, footer_container, true);
-
-        List<StockStatisticsData> data = getData();
+        layout = (ViewGroup) layoutInflater.inflate(R.layout.cbw_footer_stock_bar_chart, footer_container, true);
 
         StockBarChartPageAdapter pageAdapter = new StockBarChartPageAdapter(activity.getFragmentManager(), data);
         ViewPager stockViewPager = (ViewPager) layout.findViewById(R.id.cbw_stock_view_pager);
@@ -68,8 +70,14 @@ public class CryptoBrokerWalletFooterPainter implements FooterViewPainter {
     public View addNavigationViewFooterElementVisible(LayoutInflater layoutInflater, FrameLayout slide_container) {
         footerBar = layoutInflater.inflate(R.layout.cbw_footer_view_bar, slide_container, true);
 
+        StockStatisticsData stockStatisticsData = data.get(0);
+
         FermatTextView stockCurrency = (FermatTextView) footerBar.findViewById(R.id.cbw_footer_bar_stock_currency);
+        stockCurrency.setText(stockStatisticsData.getCurrency().getFriendlyName());
+
         FermatTextView stockQuantity = (FermatTextView) footerBar.findViewById(R.id.cbw_footer_bar_stock_quantity);
+        stockQuantity.setText(DecimalFormat.getInstance().format(stockStatisticsData.getBalance()));
+
         return footerBar;
     }
 
