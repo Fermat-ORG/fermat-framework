@@ -49,6 +49,7 @@ import com.bitdubai.reference_wallet.crypto_customer_wallet.fragments.common.Sim
 import com.bitdubai.reference_wallet.crypto_customer_wallet.session.CryptoCustomerWalletSession;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -439,7 +440,7 @@ public class StartNegotiationActivityFragment extends AbstractFermatFragment<Cry
 
             final BigDecimal exchangeRate   = new BigDecimal(clauses.get(ClauseType.EXCHANGE_RATE).getValue());
             final BigDecimal amountToPay    = new BigDecimal(clauses.get(ClauseType.BROKER_CURRENCY_QUANTITY).getValue());
-            final BigDecimal amountToBuy    = amountToPay.divide(exchangeRate);
+            final BigDecimal amountToBuy    = amountToPay.divide(exchangeRate,4, RoundingMode.HALF_UP);
 
             final String amountToBuyStr = DecimalFormat.getInstance().format(amountToBuy.doubleValue());
             final ClauseInformation brokerCurrencyQuantity = clauses.get(ClauseType.CUSTOMER_CURRENCY_QUANTITY);
@@ -460,7 +461,7 @@ public class StartNegotiationActivityFragment extends AbstractFermatFragment<Cry
 
         final BigDecimal exchangeRate   = new BigDecimal(clauses.get(ClauseType.EXCHANGE_RATE).getValue());
         final BigDecimal amountToBuy    = new BigDecimal(clauses.get(ClauseType.CUSTOMER_CURRENCY_QUANTITY).getValue());
-        final BigDecimal amountToPay   = amountToBuy.multiply(exchangeRate);
+        final BigDecimal amountToPay    = amountToBuy.multiply(exchangeRate);
 
         final String amountToPayStr = DecimalFormat.getInstance().format(amountToPay.doubleValue());
         final ClauseInformation brokerCurrencyQuantityClause = clauses.get(ClauseType.BROKER_CURRENCY_QUANTITY);
@@ -477,24 +478,23 @@ public class StartNegotiationActivityFragment extends AbstractFermatFragment<Cry
         final Map<ClauseType, ClauseInformation> clauses = negotiationInfo.getClauses();
 
         BrokerCurrencyQuotationTest brokerCurrencyQuotation = getBrokerCurrencyQuotation(
-                clauses.get(ClauseType.BROKER_CURRENCY).getValue(),
-                clauses.get(ClauseType.CUSTOMER_CURRENCY).getValue()
+                clauses.get(ClauseType.CUSTOMER_CURRENCY).getValue(),
+                clauses.get(ClauseType.BROKER_CURRENCY).getValue()
         );
+
+        Toast.makeText(getActivity(), "The exchange rate:" +
+                "BROKER CURRENCY: " +clauses.get(ClauseType.BROKER_CURRENCY).getValue()+
+                ", CUSTOMER CURRENCY: "+clauses.get(ClauseType.CUSTOMER_CURRENCY).getValue()+
+                ", EXCHANGE RATE: "+brokerCurrencyQuotation.getExchangeRate()
+                , Toast.LENGTH_LONG).show();
 
         if(brokerCurrencyQuotation != null) {
 
-
-            Toast.makeText(getActivity(), "The exchange rate:" +
-                    "BROKER CURRENCY: " +clauses.get(ClauseType.BROKER_CURRENCY).getValue()+
-                    ", CUSTOMER CURRENCY: "+clauses.get(ClauseType.CUSTOMER_CURRENCY).getValue()+
-                    ", EXCHANGE RATE: "+brokerCurrencyQuotation.getExchangeRate()
-                    , Toast.LENGTH_LONG).show();
-/*
-            final BigDecimal one = new BigDecimal(1);
+            final BigDecimal one = new BigDecimal("1");
 
             //GET EXCHANGE RATE
             BigDecimal exchangeRate = new BigDecimal(brokerCurrencyQuotation.getExchangeRate());
-            if(brokerCurrencyQuotation.getExchangeRateInv()) exchangeRate = one.divide(exchangeRate);
+            if(brokerCurrencyQuotation.getExchangeRateInv()) exchangeRate = one.divide(exchangeRate,4, RoundingMode.HALF_UP);
 
             //CALCULATE NEW PAY
             final BigDecimal amountToBuy = new BigDecimal(clauses.get(ClauseType.CUSTOMER_CURRENCY_QUANTITY).getValue());
@@ -509,7 +509,7 @@ public class StartNegotiationActivityFragment extends AbstractFermatFragment<Cry
             final String amountToPayStr = DecimalFormat.getInstance().format(amountToPay.doubleValue());
             final ClauseInformation brokerCurrencyQuantityClause = clauses.get(ClauseType.BROKER_CURRENCY_QUANTITY);
             negotiationInfo.putClause(brokerCurrencyQuantityClause, amountToPayStr);
-*/
+
         } else {
             Toast.makeText(getActivity(), "The exchange rate not fount for the currency to pay selected.", Toast.LENGTH_LONG).show();
         }
@@ -539,13 +539,13 @@ public class StartNegotiationActivityFragment extends AbstractFermatFragment<Cry
 
         List <BrokerCurrencyQuotationTest> list = new ArrayList<>();
 
-        list.add(new BrokerCurrencyQuotationTest(CryptoCurrency.BITCOIN.getCode(), FiatCurrency.ARGENTINE_PESO.getCode(),       "100000"));
-        list.add(new BrokerCurrencyQuotationTest(CryptoCurrency.BITCOIN.getCode(), FiatCurrency.VENEZUELAN_BOLIVAR.getCode(),   "350000"));
-        list.add(new BrokerCurrencyQuotationTest(CryptoCurrency.BITCOIN.getCode(), FiatCurrency.US_DOLLAR.getCode(),            "410"));
-        list.add(new BrokerCurrencyQuotationTest(CryptoCurrency.BITCOIN.getCode(), CryptoCurrency.LITECOIN.getCode(),           "130"));
+        list.add(new BrokerCurrencyQuotationTest(CryptoCurrency.BITCOIN.getCode(), FiatCurrency.ARGENTINE_PESO.getCode(),       "100000.0"));
+        list.add(new BrokerCurrencyQuotationTest(CryptoCurrency.BITCOIN.getCode(), FiatCurrency.VENEZUELAN_BOLIVAR.getCode(),   "350000.0"));
+        list.add(new BrokerCurrencyQuotationTest(CryptoCurrency.BITCOIN.getCode(), FiatCurrency.US_DOLLAR.getCode(),            "410.0"));
+        list.add(new BrokerCurrencyQuotationTest(CryptoCurrency.BITCOIN.getCode(), CryptoCurrency.LITECOIN.getCode(),           "130.0"));
 
-        list.add(new BrokerCurrencyQuotationTest(FiatCurrency.US_DOLLAR.getCode(), FiatCurrency.VENEZUELAN_BOLIVAR.getCode(),   "950"));
-        list.add(new BrokerCurrencyQuotationTest(FiatCurrency.US_DOLLAR.getCode(), FiatCurrency.ARGENTINE_PESO.getCode(),       "390"));
+        list.add(new BrokerCurrencyQuotationTest(FiatCurrency.US_DOLLAR.getCode(), FiatCurrency.VENEZUELAN_BOLIVAR.getCode(),   "950.0"));
+        list.add(new BrokerCurrencyQuotationTest(FiatCurrency.US_DOLLAR.getCode(), FiatCurrency.ARGENTINE_PESO.getCode(),       "390.0"));
 
         return list;
     }
@@ -554,9 +554,10 @@ public class StartNegotiationActivityFragment extends AbstractFermatFragment<Cry
 
         BrokerCurrencyQuotationTest currencyQuotation = getQuotation(currencyOver,currencyUnder);
 
-        if(currencyQuotation == null)
-            currencyQuotation = getQuotation(currencyUnder,currencyOver);
-            if(currencyQuotation != null) currencyQuotation.setExchangeRateInv(Boolean.TRUE);
+        if(currencyQuotation == null) {
+            currencyQuotation = getQuotation(currencyUnder, currencyOver);
+            if (currencyQuotation != null) currencyQuotation.setExchangeRateInv(Boolean.TRUE);
+        }
 
         return currencyQuotation;
     }
