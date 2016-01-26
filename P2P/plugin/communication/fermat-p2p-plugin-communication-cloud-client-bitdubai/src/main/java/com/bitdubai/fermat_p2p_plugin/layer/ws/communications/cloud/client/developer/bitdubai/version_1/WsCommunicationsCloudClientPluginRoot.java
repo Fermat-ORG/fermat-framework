@@ -211,9 +211,9 @@ public class WsCommunicationsCloudClientPluginRoot extends AbstractPlugin implem
                         /*
                          * Try to connect whit the cloud server
                          */
-                        System.out.println(" WsCommunicationsCloudClientPluginRoot - ===================================");
-                        System.out.println(" WsCommunicationsCloudClientPluginRoot - Connecting with the cloud server...");
-                        System.out.println(" WsCommunicationsCloudClientPluginRoot - ===================================");
+                        System.out.println(" WsCommunicationsCloudClientPluginRoot - ================================================================");
+                        System.out.println(" WsCommunicationsCloudClientPluginRoot - Connecting with the cloud server. Server IP ("+SERVER_IP+")");
+                        System.out.println(" WsCommunicationsCloudClientPluginRoot - ================================================================");
 
 
                         new Thread(new Runnable() {
@@ -260,9 +260,9 @@ public class WsCommunicationsCloudClientPluginRoot extends AbstractPlugin implem
      */
     public void connectClient() throws URISyntaxException, IOException, DeploymentException {
 
-        System.out.println(" WsCommunicationsCloudClientPluginRoot - ***********************************");
-        System.out.println(" WsCommunicationsCloudClientPluginRoot - ReConnecting with the cloud server...");
-        System.out.println(" WsCommunicationsCloudClientPluginRoot - ***********************************");
+        System.out.println(" WsCommunicationsCloudClientPluginRoot - ****************************************************************");
+        System.out.println(" WsCommunicationsCloudClientPluginRoot - ReConnecting with the cloud server. Server IP ("+SERVER_IP+")");
+        System.out.println(" WsCommunicationsCloudClientPluginRoot - ****************************************************************");
 
         if (wsCommunicationsTyrusCloudClientConnection != null){
             wsCommunicationsTyrusCloudClientConnection.closeMainConnection();

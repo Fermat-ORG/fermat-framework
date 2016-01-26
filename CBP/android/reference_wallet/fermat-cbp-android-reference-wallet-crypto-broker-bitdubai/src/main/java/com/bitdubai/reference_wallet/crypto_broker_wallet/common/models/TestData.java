@@ -11,6 +11,7 @@ import com.bitdubai.fermat_cbp_api.layer.wallet_module.common.interfaces.Custome
 import com.bitdubai.fermat_cbp_plugin.layer.wallet_module.crypto_broker.developer.bitdubai.version_1.structure.CryptoBrokerWalletModuleClauseInformation;
 import com.bitdubai.fermat_cbp_plugin.layer.wallet_module.crypto_broker.developer.bitdubai.version_1.structure.CryptoBrokerWalletModuleContractBasicInformation;
 import com.bitdubai.fermat_cbp_plugin.layer.wallet_module.crypto_broker.developer.bitdubai.version_1.structure.CryptoBrokerWalletModuleCustomerBrokerNegotiationInformation;
+import com.bitdubai.reference_wallet.crypto_broker_wallet.fragments.home.StockStatisticsData;
 
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
@@ -109,6 +110,15 @@ public class TestData {
         }
 
         return data;
+    }
+
+    public static List<StockStatisticsData> getStockStadisticsData(){
+        ArrayList<StockStatisticsData> stockStatisticsData = new ArrayList<>();
+        stockStatisticsData.add(new StockStatisticsData(FiatCurrency.VENEZUELAN_BOLIVAR, 14));
+        stockStatisticsData.add(new StockStatisticsData(CryptoCurrency.BITCOIN, 3));
+        stockStatisticsData.add(new StockStatisticsData(FiatCurrency.US_DOLLAR, 1));
+
+        return stockStatisticsData;
     }
 
     private static List<CustomerBrokerNegotiationInformation> getOpenNegotiationsTestData() {

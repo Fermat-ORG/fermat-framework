@@ -170,7 +170,7 @@ public class MainFragment extends AbstractFermatFragment
                 public void onPostExecute(Object... result) {
                     dialog.dismiss();
                     if (getActivity() != null) {
-                        Toast.makeText(getActivity(), "Everything ok (appropriate)...", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getActivity(), "Appropriation of the asset has started successfully. The process will be completed in a couple of minutes.", Toast.LENGTH_LONG).show();
                     }
                 }
 
@@ -178,7 +178,7 @@ public class MainFragment extends AbstractFermatFragment
                 public void onErrorOccurred(Exception ex) {
                     dialog.dismiss();
                     if (getActivity() != null)
-                        Toast.makeText(getActivity(), "Fermat Has detected an exception",
+                        Toast.makeText(getActivity(), "Fermat Has detected an exception. Please retry again.",
                                 Toast.LENGTH_SHORT).show();
                 }
             });
@@ -202,7 +202,8 @@ public class MainFragment extends AbstractFermatFragment
                 public void onPostExecute(Object... result) {
                     dialog.dismiss();
                     if (getActivity() != null) {
-                        Toast.makeText(getActivity(), "Everything ok (redeem)...", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getActivity(), "Redemption of the asset has successfully started.\n\n " +
+                                "The process will take some minutes and if not accepted at the destination, it will be rollback.", Toast.LENGTH_LONG).show();
                     }
                 }
 
@@ -210,7 +211,7 @@ public class MainFragment extends AbstractFermatFragment
                 public void onErrorOccurred(Exception ex) {
                     dialog.dismiss();
                     if (getActivity() != null)
-                        Toast.makeText(getActivity(), "Fermat Has detected an exception",
+                        Toast.makeText(getActivity(), "Fermat Has detected an exception. Please retry again.",
                                 Toast.LENGTH_SHORT).show();
                 }
             });

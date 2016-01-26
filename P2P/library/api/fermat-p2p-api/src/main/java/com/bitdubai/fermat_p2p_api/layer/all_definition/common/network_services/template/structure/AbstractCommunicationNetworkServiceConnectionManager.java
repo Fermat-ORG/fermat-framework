@@ -34,6 +34,7 @@ import java.util.concurrent.ConcurrentHashMap;
  * @version 1.0
  * @since Java JDK 1.7
  */
+@Deprecated
 public abstract class AbstractCommunicationNetworkServiceConnectionManager<NS extends AbstractNetworkService> implements NetworkServiceConnectionManager {
 
     private final CommunicationsClientConnection communicationsClientConnection;

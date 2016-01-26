@@ -2,6 +2,7 @@ package com.bitdubai.sub_app.crypto_broker_identity.common.holders;
 
 import android.app.Activity;
 import android.content.Context;
+import android.graphics.drawable.BitmapDrawable;
 import android.support.v4.graphics.drawable.RoundedBitmapDrawable;
 import android.text.SpannableString;
 import android.view.View;
@@ -21,6 +22,7 @@ import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfac
 import com.bitdubai.sub_app.crypto_broker_identity.R;
 import com.bitdubai.sub_app.crypto_broker_identity.util.PublishIdentityWorker;
 
+import java.io.ByteArrayInputStream;
 import java.util.concurrent.ExecutorService;
 
 import static com.bitdubai.sub_app.crypto_broker_identity.util.PublishIdentityWorker.INVALID_ENTRY_DATA;
@@ -42,7 +44,7 @@ public class CryptoBrokerIdentityInfoViewHolder extends FermatViewHolder impleme
     private String identityPublicKey;
     private ImageView identityImage;
     private FermatTextView identityName;
-    private FermatCheckBox publishIdentityCheckBox;
+    private FermatTextView identityStatus;
 
     public CryptoBrokerIdentityInfoViewHolder(final View                              itemView     ,
                                               final ErrorManager                      errorManager ,
@@ -56,21 +58,21 @@ public class CryptoBrokerIdentityInfoViewHolder extends FermatViewHolder impleme
 
         identityImage = (ImageView) itemView.findViewById(R.id.crypto_broker_identity_image);
         identityName = (FermatTextView) itemView.findViewById(R.id.crypto_broker_identity_alias);
-        publishIdentityCheckBox = (FermatCheckBox) itemView.findViewById(R.id.crypto_broker_identity_publish_identity);
+        identityStatus = (FermatTextView) itemView.findViewById(R.id.crypto_broker_identity_status);
     }
 
     public void setImage(byte[] imageInBytes) {
-        RoundedBitmapDrawable roundedBitmap;
-        if (imageInBytes != null)
-            roundedBitmap = ImagesUtils.getRoundedBitmap(identityImage.getResources(), imageInBytes);
-        else
-            roundedBitmap = ImagesUtils.getRoundedBitmap(identityImage.getResources(), R.drawable.person);
+        ByteArrayInputStream bytes = new ByteArrayInputStream(imageInBytes);
+        BitmapDrawable bmd = new BitmapDrawable(bytes);
+        identityImage.setImageBitmap(bmd.getBitmap());
+    }
 
-        identityImage.setImageDrawable(roundedBitmap);
+    public void setStatus(String status) {
+        identityStatus.setText(status);
     }
 
     public void setPublished(boolean isPublished) {
-
+        /*
         publishIdentityCheckBox.setChecked(isPublished);
 
         publishIdentityCheckBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
@@ -80,6 +82,7 @@ public class CryptoBrokerIdentityInfoViewHolder extends FermatViewHolder impleme
                 changeExposureLevel(value);
             }
         });
+        */
     }
 
     public void changeExposureLevel(boolean value) {
@@ -110,11 +113,12 @@ public class CryptoBrokerIdentityInfoViewHolder extends FermatViewHolder impleme
             int resultCode = (int) result[0];
 
             if (resultCode == SUCCESS) {
+                /*
                 if (publishIdentityCheckBox.isChecked())
                     Toast.makeText(activity, "Published successfully", Toast.LENGTH_LONG).show();
                 else
                     Toast.makeText(activity, "Unpublished successfully", Toast.LENGTH_LONG).show();
-
+                */
             } else if (resultCode == INVALID_ENTRY_DATA) {
                 Toast.makeText(activity, "There was a problem trying to get identity information.", Toast.LENGTH_LONG).show();
             }

@@ -6,6 +6,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -195,14 +196,19 @@ public class SendTransactionFragment2 extends FermatWalletExpandableListFragment
         getExecutor().execute(new Runnable() {
             @Override
             public void run() {
-                //TODO error geting drawable
-            //    final Drawable drawable = getResources().getDrawable(R.drawable.background_gradient, null);
-                getActivity().runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-   //                     getPaintActivtyFeactures().setActivityBackgroundColor(drawable);
-                    }
-                });
+                if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP) {
+                    final Drawable drawable = getResources().getDrawable(R.drawable.background_gradient, null);
+                    getActivity().runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            try {
+                                getPaintActivtyFeactures().setActivityBackgroundColor(drawable);
+                            }catch (OutOfMemoryError o){
+                                o.printStackTrace();
+                            }
+                        }
+                    });
+                }
             }
         });
 
@@ -398,7 +404,7 @@ public class SendTransactionFragment2 extends FermatWalletExpandableListFragment
 
         circularProgressBar = (CircularProgressBar) balance_header.findViewById(R.id.progress);
 
-        String runningBalance = WalletUtils.formatBalanceStringNotDecimal(moduleManager.getBalance(BalanceType.AVAILABLE, referenceWalletSession.getAppPublicKey()),ShowMoneyType.BITCOIN.getCode());
+       final String runningBalance = WalletUtils.formatBalanceStringNotDecimal(moduleManager.getBalance(BalanceType.AVAILABLE, referenceWalletSession.getAppPublicKey()),ShowMoneyType.BITCOIN.getCode());
 
         circularProgressBar.setProgressValue(Integer.valueOf(runningBalance));
         circularProgressBar.setProgressValue2(getBalanceAverage());
@@ -470,8 +476,9 @@ public class SendTransactionFragment2 extends FermatWalletExpandableListFragment
                     if (after - before < 2000) {
                         changeBalanceType(txt_type_balance, txt_balance_amount);
                         //System.out.println(System.currentTimeMillis());
-                        progress1 = 1;
-                        circularProgressBar.setProgressValue(progress1);
+
+                        circularProgressBar.setProgressValue(Integer.valueOf(runningBalance));
+                        circularProgressBar.setProgressValue2(getBalanceAverage());
                         return true;
                     }else {
                         //String receivedAddress = GET("http://52.27.68.19:15400/mati/address/");

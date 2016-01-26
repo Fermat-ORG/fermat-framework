@@ -70,6 +70,11 @@ public class CryptoBrokerIdentitySubAppModulePluginRoot extends AbstractPlugin i
     }
 
     @Override
+    public void updateCryptoBrokerIdentity(CryptoBrokerIdentityInformation cryptoBrokerIdentity) {
+        this.identityManager.updateCryptoBrokerIdentity(cryptoBrokerIdentity.getAlias(), cryptoBrokerIdentity.getPublicKey(), cryptoBrokerIdentity.getProfileImage());
+    }
+
+    @Override
     public void publishIdentity(String publicKey) throws CantPublishCryptoBrokerException, CryptoBrokerNotFoundException {
 
         try {
