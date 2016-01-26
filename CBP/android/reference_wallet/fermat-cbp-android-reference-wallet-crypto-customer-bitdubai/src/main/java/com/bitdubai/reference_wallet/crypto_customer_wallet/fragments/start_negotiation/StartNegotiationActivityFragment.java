@@ -482,11 +482,11 @@ public class StartNegotiationActivityFragment extends AbstractFermatFragment<Cry
 
 //            adapter.setBrokerMarketRate(brokerMarketRate);
 
-            Toast.makeText(getActivity(), "The exchange rate:" +
-                    "BROKER CURRENCY: " +clauses.get(ClauseType.BROKER_CURRENCY).getValue()+
-                    ", CUSTOMER CURRENCY: "+clauses.get(ClauseType.CUSTOMER_CURRENCY).getValue()+
-                    ", EXCHANGE RATE: "+brokerMarketRate
-                    , Toast.LENGTH_LONG).show();
+//            Toast.makeText(getActivity(), "The exchange rate:" +
+//                    "BROKER CURRENCY: " +clauses.get(ClauseType.BROKER_CURRENCY).getValue()+
+//                    ", CUSTOMER CURRENCY: "+clauses.get(ClauseType.CUSTOMER_CURRENCY).getValue()+
+//                    ", EXCHANGE RATE: "+brokerMarketRate
+//                    , Toast.LENGTH_LONG).show();
 
         } else {
             Toast.makeText(getActivity(), "The exchange rate not fount for the currency to pay selected.", Toast.LENGTH_LONG).show();
