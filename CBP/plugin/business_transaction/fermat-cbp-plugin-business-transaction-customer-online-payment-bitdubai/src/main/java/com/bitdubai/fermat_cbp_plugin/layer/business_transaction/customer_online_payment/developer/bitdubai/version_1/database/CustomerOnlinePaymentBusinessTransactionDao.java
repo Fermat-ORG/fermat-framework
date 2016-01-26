@@ -25,7 +25,6 @@ import com.bitdubai.fermat_cbp_api.layer.business_transaction.common.interfaces.
 import com.bitdubai.fermat_cbp_api.layer.contract.customer_broker_purchase.interfaces.CustomerBrokerContractPurchase;
 import com.bitdubai.fermat_cbp_api.layer.contract.customer_broker_sale.interfaces.CustomerBrokerContractSale;
 import com.bitdubai.fermat_cbp_plugin.layer.business_transaction.customer_online_payment.developer.bitdubai.version_1.exceptions.CantInitializeCustomerOnlinePaymentBusinessTransactionDatabaseException;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -80,7 +79,7 @@ public class CustomerOnlinePaymentBusinessTransactionDao {
 
                 throw new CantInitializeCustomerOnlinePaymentBusinessTransactionDatabaseException(
                         CantInitializeCustomerOnlinePaymentBusinessTransactionDatabaseException.DEFAULT_MESSAGE,
-                        FermatException.wrapException(z),
+                        z,
                         "",
                         "Generic Exception.");
             }
@@ -96,7 +95,7 @@ public class CustomerOnlinePaymentBusinessTransactionDao {
 
             throw new CantInitializeCustomerOnlinePaymentBusinessTransactionDatabaseException(
                     CantInitializeCustomerOnlinePaymentBusinessTransactionDatabaseException.DEFAULT_MESSAGE,
-                    FermatException.wrapException(e),
+                    e,
                     "",
                     "Generic Exception.");
         }
