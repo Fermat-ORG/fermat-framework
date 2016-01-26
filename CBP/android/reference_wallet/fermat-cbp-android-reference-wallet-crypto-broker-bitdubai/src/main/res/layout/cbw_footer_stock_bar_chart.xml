@@ -19,7 +19,7 @@
         android:layout_width="match_parent"
         android:layout_height="20dp"
         android:layout_gravity="center_horizontal|bottom"
-        android:layout_marginBottom="55dp"
+        android:layout_marginBottom="8dp"
         app:fillColor="#142f41"
         app:pageColor="#b1ffffff"
         app:radius="5dp"

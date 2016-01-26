@@ -4,7 +4,6 @@ package com.bitdubai.reference_wallet.crypto_broker_wallet.fragments.home;
 import android.app.Fragment;
 import android.graphics.Color;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,7 +13,6 @@ import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractFermatFra
 import com.bitdubai.fermat_api.layer.world.interfaces.Currency;
 import com.bitdubai.fermat_cbp_api.layer.wallet.crypto_broker.interfaces.CryptoBrokerStockTransaction;
 import com.bitdubai.reference_wallet.crypto_broker_wallet.R;
-import com.bitdubai.reference_wallet.crypto_broker_wallet.common.models.TestData;
 import com.github.mikephil.charting.charts.BarChart;
 import com.github.mikephil.charting.components.LimitLine;
 import com.github.mikephil.charting.components.XAxis;
@@ -38,7 +36,7 @@ import java.util.Map;
  */
 public class StockStatisticsFragment extends AbstractFermatFragment {
 
-
+    private NumberFormat numberFormat = DecimalFormat.getInstance();
     private Currency currency;
     private List<CryptoBrokerStockTransaction> stockTransactions;
     private float limitVal = 0.4f * 100;
@@ -46,6 +44,7 @@ public class StockStatisticsFragment extends AbstractFermatFragment {
     private Map<Integer, CryptoBrokerStockTransaction> map = new HashMap<>();
     private TextView startIndicator;
     private TextView endIndicator;
+    private float balance;
 
 
     public static StockStatisticsFragment newInstance() {
@@ -62,9 +61,8 @@ public class StockStatisticsFragment extends AbstractFermatFragment {
         final TextView currencyBottomTextView = (TextView) layout.findViewById(R.id.currency_bottom);
         currencyBottomTextView.setText(currency.getFriendlyName());
 
-        final TextView currencyBottomValTextView = (TextView) layout.findViewById(R.id.currency_bottom_value);
-        CryptoBrokerStockTransaction transaction = stockTransactions.get(stockTransactions.size() - 1);
-        currencyBottomValTextView.setText(String.format("%s %s", DecimalFormat.getInstance().format(transaction.getAmount()), currency.getCode()));
+        final TextView currencyBottomValTextView = (TextView) layout.findViewById(R.id.cbw_currency_bottom_value);
+        currencyBottomValTextView.setText(String.format("%s %s", numberFormat.format(balance), currency.getCode()));
 
         startIndicator = (TextView) layout.findViewById(R.id.start_indicator_text);
         endIndicator = (TextView) layout.findViewById(R.id.end_indicator_text);
@@ -103,33 +101,10 @@ public class StockStatisticsFragment extends AbstractFermatFragment {
         return layout;
     }
 
-    private void putDataInIndicators(int xIndex) {
-        CryptoBrokerStockTransaction transaction = map.get(xIndex);
-
-        if (transaction != null) {
-            NumberFormat numberFormat = DecimalFormat.getInstance();
-            startIndicator.setText(numberFormat.format(transaction.getPreviousAvailableBalance()));
-            endIndicator.setText(numberFormat.format(transaction.getRunningAvailableBalance()));
-        }
-    }
-
-    @NonNull
-    private LimitLine getLimitLine() {
-        int limitLineColor = Color.parseColor("#36b7c8");
-
-        LimitLine limitLine = new LimitLine(limitVal, String.format("Target: %s %s", limitVal, currency.getCode()));
-        limitLine.setLabelPosition(LimitLine.LimitLabelPosition.LEFT_BOTTOM);
-        limitLine.setLineWidth(1f);
-        limitLine.setLineColor(limitLineColor);
-        limitLine.setTextSize(10f);
-        limitLine.setTextColor(limitLineColor);
-
-        return limitLine;
-    }
-
     public void bind(StockStatisticsData data) {
         currency = data.getCurrency();
         stockTransactions = data.getStockTransactions();
+        balance = data.getBalance();
     }
 
     private BarData getChartData() {
@@ -149,19 +124,21 @@ public class StockStatisticsFragment extends AbstractFermatFragment {
         }
 
         // poniendo los valores en los dias adecuados
-        for (CryptoBrokerStockTransaction transaction : stockTransactions) {
-            calendar.setTimeInMillis(transaction.getTimestamp());
+        if (stockTransactions != null) {
+            for (CryptoBrokerStockTransaction transaction : stockTransactions) {
+                calendar.setTimeInMillis(transaction.getTimestamp());
 
-            lastItemPosition = calendar.get(Calendar.DAY_OF_MONTH);
-            float runningAvailableBalance = transaction.getRunningAvailableBalance().floatValue();
-            int index = lastItemPosition - 1;
+                lastItemPosition = calendar.get(Calendar.DAY_OF_MONTH);
+                float runningAvailableBalance = transaction.getRunningAvailableBalance().floatValue();
+                int index = lastItemPosition - 1;
 
-            entries.get(index).setVal(runningAvailableBalance);
+                entries.get(index).setVal(runningAvailableBalance);
 
-            map.put(lastItemPosition, transaction);
+                map.put(lastItemPosition, transaction);
 
-            if (runningAvailableBalance > limitVal)
-                colors.set(index, Color.parseColor("#FF3E4664"));
+                if (runningAvailableBalance > limitVal)
+                    colors.set(index, Color.parseColor("#FF3E4664"));
+            }
         }
 
         putDataInIndicators(lastItemPosition);
@@ -179,5 +156,26 @@ public class StockStatisticsFragment extends AbstractFermatFragment {
         return barData;
     }
 
+    private LimitLine getLimitLine() {
+        int limitLineColor = Color.parseColor("#36b7c8");
 
+        LimitLine limitLine = new LimitLine(limitVal, String.format("Target: %s %s", limitVal, currency.getCode()));
+        limitLine.setLabelPosition(LimitLine.LimitLabelPosition.LEFT_BOTTOM);
+        limitLine.setLineWidth(1f);
+        limitLine.setLineColor(limitLineColor);
+        limitLine.setTextSize(10f);
+        limitLine.setTextColor(limitLineColor);
+
+        return limitLine;
+    }
+
+
+    private void putDataInIndicators(int xIndex) {
+        CryptoBrokerStockTransaction transaction = map.get(xIndex);
+
+        if (transaction != null) {
+            startIndicator.setText(numberFormat.format(transaction.getPreviousAvailableBalance()));
+            endIndicator.setText(numberFormat.format(transaction.getRunningAvailableBalance()));
+        }
+    }
 }

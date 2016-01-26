@@ -35,13 +35,13 @@ import java.util.List;
  *
  * @since 17/12/15.
  */
-public class CryptoBrokerWalletFooterPainter implements FooterViewPainter {
+public class CryptoBrokerWalletFooterPainter implements FooterViewPainter, ViewPager.OnPageChangeListener {
 
     private final List<StockStatisticsData> data;
     private final Activity activity;
     private final CryptoBrokerWalletSession session;
-    private View footerBar;
-    private ViewGroup layout;
+    private FermatTextView stockCurrency;
+    private FermatTextView stockQuantity;
 
     public CryptoBrokerWalletFooterPainter(Activity activity, CryptoBrokerWalletSession fullyLoadedSession) {
         this.activity = activity;
@@ -52,12 +52,13 @@ public class CryptoBrokerWalletFooterPainter implements FooterViewPainter {
 
     @Override
     public ViewGroup addFooterViewContainer(LayoutInflater layoutInflater, ViewGroup footer_container) {
-        layout = (ViewGroup) layoutInflater.inflate(R.layout.cbw_footer_stock_bar_chart, footer_container, true);
+        ViewGroup layout = (ViewGroup) layoutInflater.inflate(R.layout.cbw_footer_stock_bar_chart, footer_container, true);
 
         StockBarChartPageAdapter pageAdapter = new StockBarChartPageAdapter(activity.getFragmentManager(), data);
         ViewPager stockViewPager = (ViewPager) layout.findViewById(R.id.cbw_stock_view_pager);
         stockViewPager.setAdapter(pageAdapter);
         stockViewPager.setOffscreenPageLimit(3);
+        stockViewPager.addOnPageChangeListener(this);
 
         CirclePageIndicator indicator = (CirclePageIndicator) layout.findViewById(R.id.cbw_stock_chart_indicator);
         indicator.setViewPager(stockViewPager);
@@ -68,14 +69,14 @@ public class CryptoBrokerWalletFooterPainter implements FooterViewPainter {
 
     @Override
     public View addNavigationViewFooterElementVisible(LayoutInflater layoutInflater, FrameLayout slide_container) {
-        footerBar = layoutInflater.inflate(R.layout.cbw_footer_view_bar, slide_container, true);
+        View footerBar = layoutInflater.inflate(R.layout.cbw_footer_view_bar, slide_container, true);
 
         StockStatisticsData stockStatisticsData = data.get(0);
 
-        FermatTextView stockCurrency = (FermatTextView) footerBar.findViewById(R.id.cbw_footer_bar_stock_currency);
+        stockCurrency = (FermatTextView) footerBar.findViewById(R.id.cbw_footer_bar_stock_currency);
         stockCurrency.setText(stockStatisticsData.getCurrency().getFriendlyName());
 
-        FermatTextView stockQuantity = (FermatTextView) footerBar.findViewById(R.id.cbw_footer_bar_stock_quantity);
+        stockQuantity = (FermatTextView) footerBar.findViewById(R.id.cbw_footer_bar_stock_quantity);
         stockQuantity.setText(DecimalFormat.getInstance().format(stockStatisticsData.getBalance()));
 
         return footerBar;
@@ -91,20 +92,40 @@ public class CryptoBrokerWalletFooterPainter implements FooterViewPainter {
         return Color.parseColor("#AAAAAA");
     }
 
+    @Override
+    public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+
+    }
+
+    @Override
+    public void onPageSelected(int position) {
+        StockStatisticsData stockStatisticsData = data.get(position);
+
+        stockQuantity.setText(DecimalFormat.getInstance().format(stockStatisticsData.getBalance()));
+        stockCurrency.setText(stockStatisticsData.getCurrency().getFriendlyName());
+    }
+
+    @Override
+    public void onPageScrollStateChanged(int state) {
+
+    }
+
     private List<StockStatisticsData> getData() {
         List<StockStatisticsData> data = new ArrayList<>();
 
         ErrorManager errorManager = session.getErrorManager();
 
         try {
-            CryptoBrokerWalletManager walletManager = session.getModuleManager().getCryptoBrokerWallet(session.getAppPublicKey());
-            List<CryptoBrokerWalletAssociatedSetting> associatedWallets = walletManager.getCryptoBrokerWalletAssociatedSettings(session.getAppPublicKey());
+            data.addAll(TestData.getStockStadisticsData());
 
-            for (CryptoBrokerWalletAssociatedSetting associatedWallet : associatedWallets) {
-                data.add(new StockStatisticsData(associatedWallet, session));
-            }
+//            CryptoBrokerWalletManager walletManager = session.getModuleManager().getCryptoBrokerWallet(session.getAppPublicKey());
+//            List<CryptoBrokerWalletAssociatedSetting> associatedWallets = walletManager.getCryptoBrokerWalletAssociatedSettings(session.getAppPublicKey());
+//
+//            for (CryptoBrokerWalletAssociatedSetting associatedWallet : associatedWallets) {
+//                data.add(new StockStatisticsData(associatedWallet, session));
+//            }
 
-        } catch (FermatException e) {
+        } catch (Exception e) {
 
             data.addAll(TestData.getStockStadisticsData());
 

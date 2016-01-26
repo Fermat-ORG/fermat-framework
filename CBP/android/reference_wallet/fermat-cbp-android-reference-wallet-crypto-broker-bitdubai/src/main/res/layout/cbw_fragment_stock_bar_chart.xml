@@ -160,7 +160,8 @@
     <View
         android:layout_width="match_parent"
         android:layout_height="0.5dp"
-        android:background="#6cd8ff"/>
+        android:background="#6cd8ff"
+        android:visibility="gone"/>
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -169,7 +170,8 @@
         android:paddingEnd="16dp"
         android:paddingLeft="16dp"
         android:paddingRight="16dp"
-        android:paddingStart="16dp">
+        android:paddingStart="16dp"
+        android:visibility="gone">
 
         <TextView
             android:id="@+id/currency_bottom"
@@ -182,7 +184,7 @@
             tools:text="Bitcoins"/>
 
         <TextView
-            android:id="@+id/currency_bottom_value"
+            android:id="@+id/cbw_currency_bottom_value"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:layout_gravity="end"
