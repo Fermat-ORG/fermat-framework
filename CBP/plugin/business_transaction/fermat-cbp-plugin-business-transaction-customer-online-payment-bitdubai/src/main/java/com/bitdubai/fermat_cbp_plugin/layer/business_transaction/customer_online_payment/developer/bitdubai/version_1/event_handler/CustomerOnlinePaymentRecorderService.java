@@ -1,5 +1,6 @@
 package com.bitdubai.fermat_cbp_plugin.layer.business_transaction.customer_online_payment.developer.bitdubai.version_1.event_handler;
 
+import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEventHandler;
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEventListener;
@@ -41,6 +42,10 @@ public class CustomerOnlinePaymentRecorderService implements CBPService {
             throw new CantStartServiceException(exception,
                     "Cannot set the customer online payment database handler",
                     "The database handler is null");
+        }catch (Exception exception){
+            throw new CantStartServiceException(CantStartServiceException.DEFAULT_MESSAGE, FermatException.wrapException(exception),
+                    "Cannot set the customer online payment database handler",
+                    "Unexpected error");
         }
     }
 
@@ -57,17 +62,34 @@ public class CustomerOnlinePaymentRecorderService implements CBPService {
     }
 
     public void incomingNewContractStatusUpdateEventHandler(IncomingNewContractStatusUpdate event) throws CantSaveEventException {
-        //Logger LOG = Logger.getGlobal();
-        //LOG.info("EVENT TEST, I GOT AN EVENT:\n"+event);
-        this.customerOnlinePaymentBusinessTransactionDao.saveNewEvent(event.getEventType().getCode(), event.getSource().getCode());
-        //LOG.info("CHECK THE DATABASE");
+        try{
+            //Logger LOG = Logger.getGlobal();
+            //LOG.info("EVENT TEST, I GOT AN EVENT:\n"+event);
+            this.customerOnlinePaymentBusinessTransactionDao.saveNewEvent(event.getEventType().getCode(), event.getSource().getCode());
+            //LOG.info("CHECK THE DATABASE");
+        }catch (CantSaveEventException exception){
+            throw exception;
+        }catch(Exception exception){
+            throw new CantSaveEventException(CantSaveEventException.DEFAULT_MESSAGE,FermatException.wrapException(exception),
+                    "Unexpected error",
+                    "Check the cause");
+        }
     }
 
     public void incomingConfirmBusinessTransactionResponse(IncomingConfirmBusinessTransactionResponse event) throws CantSaveEventException {
-        //Logger LOG = Logger.getGlobal();
-        //LOG.info("EVENT TEST, I GOT AN EVENT:\n"+event);
-        this.customerOnlinePaymentBusinessTransactionDao.saveNewEvent(event.getEventType().getCode(), event.getSource().getCode());
-        //LOG.info("CHECK THE DATABASE");
+        try{
+            //Logger LOG = Logger.getGlobal();
+            //LOG.info("EVENT TEST, I GOT AN EVENT:\n"+event);
+            this.customerOnlinePaymentBusinessTransactionDao.saveNewEvent(event.getEventType().getCode(), event.getSource().getCode());
+            //LOG.info("CHECK THE DATABASE");
+        }catch(CantSaveEventException exception){
+            throw exception;
+        }catch (Exception exception){
+            throw new CantSaveEventException(CantSaveEventException.DEFAULT_MESSAGE,FermatException.wrapException(exception),
+                    "Unexpected error",
+                    "Check the cause");
+        }
+
     }
 
     @Override
@@ -99,14 +121,23 @@ public class CustomerOnlinePaymentRecorderService implements CBPService {
                     exception,
                     "Starting the CustomerOnlinePaymentRecorderService",
                     "The CustomerOnlinePaymentRecorderService is probably null");
+        }catch(Exception exception){
+            throw new CantStartServiceException(CantStartServiceException.DEFAULT_MESSAGE,FermatException.wrapException(exception),
+                    "Starting the CustomerOnlinePaymentRecorderService",
+                    "Unexpected error");
         }
 
     }
 
     @Override
     public void stop() {
-        removeRegisteredListeners();
-        this.serviceStatus = ServiceStatus.STOPPED;
+        try{
+            removeRegisteredListeners();
+            this.serviceStatus = ServiceStatus.STOPPED;
+        }catch (Exception exception){
+            throw exception;
+        }
+
     }
 
     private void removeRegisteredListeners(){
