@@ -96,7 +96,7 @@ public class AssetDeliveryFragment extends AbstractFermatFragment {
         errorManager = appSession.getErrorManager();
 
         settingsManager = appSession.getModuleManager().getSettingsManager();
-
+        moduleManager.clearDeliverList();
         activity = getActivity();
 
         configureToolbar();
