@@ -47,7 +47,7 @@ import com.bitdubai.fermat_cbp_plugin.layer.actor_network_service.crypto_custome
 import com.bitdubai.fermat_cbp_plugin.layer.actor_network_service.crypto_customer.developer.bitdubai.version_1.communication.event_handlers.NewReceiveMessagesNotificationEventHandler;
 import com.bitdubai.fermat_cbp_plugin.layer.actor_network_service.crypto_customer.developer.bitdubai.version_1.communication.event_handlers.VPNConnectionCloseNotificationEventHandler;
 import com.bitdubai.fermat_cbp_plugin.layer.actor_network_service.crypto_customer.developer.bitdubai.version_1.communication.structure.CommunicationNetworkServiceConnectionManager;
-import com.bitdubai.fermat_cbp_plugin.layer.actor_network_service.crypto_customer.developer.bitdubai.version_1.communication.structure.CommunicationRegistrationProcessNetworkServiceAgent;
+import com.bitdubai.fermat_p2p_api.layer.all_definition.common.network_services.template.structure.CommunicationRegistrationProcessNetworkServiceAgent;
 import com.bitdubai.fermat_cbp_plugin.layer.actor_network_service.crypto_customer.developer.bitdubai.version_1.database.CryptoCustomerActorNetworkServiceDeveloperDatabaseFactory;
 import com.bitdubai.fermat_cbp_plugin.layer.actor_network_service.crypto_customer.developer.bitdubai.version_1.structure.CryptoCustomerActorNetworkServiceManager;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.common.network_services.abstract_classes.AbstractNetworkService;
@@ -556,9 +556,9 @@ public class CryptoCustomerActorNetworkServicePluginRoot extends AbstractNetwork
 
     public void handleCompleteComponentRegistrationNotificationEvent(PlatformComponentProfile platformComponentProfileRegistered){
 
-        if (platformComponentProfileRegistered.getPlatformComponentType() == PlatformComponentType.COMMUNICATION_CLOUD_CLIENT && this.register){
+        if (platformComponentProfileRegistered.getPlatformComponentType() == PlatformComponentType.COMMUNICATION_CLOUD_CLIENT && !this.register){
 
-            if(communicationRegistrationProcessNetworkServiceAgent.isRunning()){
+            if(communicationRegistrationProcessNetworkServiceAgent != null && communicationRegistrationProcessNetworkServiceAgent.getActive()){
                 communicationRegistrationProcessNetworkServiceAgent.stop();
                 communicationRegistrationProcessNetworkServiceAgent = null;
             }
@@ -611,9 +611,14 @@ public class CryptoCustomerActorNetworkServicePluginRoot extends AbstractNetwork
     public void handleClientConnectionCloseNotificationEvent(FermatEvent fermatEvent) {
 
         if(fermatEvent instanceof ClientConnectionCloseNotificationEvent){
-            this.register = false;
-            if(communicationNetworkServiceConnectionManager!=null)
+
+            this.register = Boolean.FALSE;
+
+            if(communicationNetworkServiceConnectionManager != null) {
                 communicationNetworkServiceConnectionManager.closeAllConnection();
+                communicationNetworkServiceConnectionManager.stop();
+            }
+
         }
 
     }
@@ -627,6 +632,8 @@ public class CryptoCustomerActorNetworkServicePluginRoot extends AbstractNetwork
         if(communicationNetworkServiceConnectionManager != null)
             communicationNetworkServiceConnectionManager.stop();
 
+        this.register = Boolean.FALSE;
+
     }
 
     /*
@@ -635,50 +642,16 @@ public class CryptoCustomerActorNetworkServicePluginRoot extends AbstractNetwork
     @Override
     public void handleClientSuccessfullReconnectNotificationEvent(FermatEvent fermatEvent) {
 
-        if(communicationNetworkServiceConnectionManager != null) {
+        if (communicationNetworkServiceConnectionManager == null){
+            this.initializeCommunicationNetworkServiceConnectionManager();
+        }else{
             communicationNetworkServiceConnectionManager.restart();
         }
 
-        if(communicationRegistrationProcessNetworkServiceAgent != null && !this.register){
-
-            if(communicationRegistrationProcessNetworkServiceAgent.isRunning()) {
-               communicationRegistrationProcessNetworkServiceAgent.stop();
-               communicationRegistrationProcessNetworkServiceAgent = null;
-            }
-
-                   /*
-                 * Construct my profile and register me
-                 */
-                PlatformComponentProfile platformComponentProfileToReconnect =  wsCommunicationsCloudClientManager.getCommunicationsCloudClientConnection().constructPlatformComponentProfileFactory(this.getIdentityPublicKey(),
-                        this.getAlias().toLowerCase(),
-                        this.getName(),
-                        this.getNetworkServiceType(),
-                        this.getPlatformComponentType(),
-                        this.getExtraData());
-
-                try {
-                    /*
-                     * Register me
-                     */
-                    wsCommunicationsCloudClientManager.getCommunicationsCloudClientConnection().registerComponentForCommunication(this.getNetworkServiceType(), platformComponentProfileToReconnect);
-
-                } catch (CantRegisterComponentException e) {
-                    e.printStackTrace();
-                }
-
-                /*
-                 * Configure my new profile
-                 */
-                this.setPlatformComponentProfilePluginRoot(platformComponentProfileToReconnect);
-
-                /*
-                 * Initialize the connection manager
-                 */
-                this.initializeCommunicationNetworkServiceConnectionManager();
-
-
-
-        }
+       /*
+        * Mark as register
+        */
+        this.register = Boolean.TRUE;
 
     }
 
