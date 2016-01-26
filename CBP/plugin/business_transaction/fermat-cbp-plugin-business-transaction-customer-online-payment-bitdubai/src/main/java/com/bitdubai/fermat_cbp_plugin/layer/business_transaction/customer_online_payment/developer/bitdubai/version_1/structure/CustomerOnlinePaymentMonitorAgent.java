@@ -167,7 +167,6 @@ public class CustomerOnlinePaymentMonitorAgent implements
         }catch(Exception exception){
             this.errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_BITCOIN_WALLET_BASIC_WALLET,UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,FermatException.wrapException(exception));
         }
-
     }
 
     @Override
@@ -177,7 +176,6 @@ public class CustomerOnlinePaymentMonitorAgent implements
         }catch(Exception exception){
             this.errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_BITCOIN_WALLET_BASIC_WALLET,UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,FermatException.wrapException(exception));
         }
-
     }
 
     @Override

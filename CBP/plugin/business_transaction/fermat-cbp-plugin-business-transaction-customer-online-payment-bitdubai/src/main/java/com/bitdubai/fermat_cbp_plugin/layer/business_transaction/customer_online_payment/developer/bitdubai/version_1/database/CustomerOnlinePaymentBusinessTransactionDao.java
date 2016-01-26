@@ -145,7 +145,7 @@ public class CustomerOnlinePaymentBusinessTransactionDao {
                     "Getting the contract transaction status",
                     "Invalid code in ContractTransactionStatus enum");
         }catch (Exception exception){
-            throw new UnexpectedResultReturnedFromDatabaseException( FermatException.wrapException(exception),
+            throw new UnexpectedResultReturnedFromDatabaseException( exception,
                     "Getting the contract transaction status",
                     "Unexpected error" );
         }
@@ -177,7 +177,7 @@ public class CustomerOnlinePaymentBusinessTransactionDao {
                     "Getting events in EventStatus.PENDING",
                     "Cannot load the table into memory");
         }catch(Exception exception){
-            throw new UnexpectedResultReturnedFromDatabaseException(FermatException.wrapException(exception),
+            throw new UnexpectedResultReturnedFromDatabaseException(exception,
                     "Getting events in EventStatus.PENDING\"",
                     "Unexpected error");
         }
@@ -205,7 +205,7 @@ public class CustomerOnlinePaymentBusinessTransactionDao {
                     "Getting value from database",
                     "Cannot load the database table");
             }catch(Exception exception){
-            throw new UnexpectedResultReturnedFromDatabaseException(FermatException.wrapException(exception),
+            throw new UnexpectedResultReturnedFromDatabaseException(exception,
                     "Getting value from database",
                     "Unexpected error");
         }
@@ -224,7 +224,7 @@ public class CustomerOnlinePaymentBusinessTransactionDao {
         }catch(CantGetContractListException exception){
             throw exception;
         }catch(Exception exception){
-            throw new UnexpectedResultReturnedFromDatabaseException(FermatException.wrapException(exception),
+            throw new UnexpectedResultReturnedFromDatabaseException(exception,
                     "Unexpected error",
                     "Check the cause");
         }
@@ -242,7 +242,7 @@ public class CustomerOnlinePaymentBusinessTransactionDao {
         }catch(CantGetContractListException exception){
             throw exception;
         }catch(Exception exception){
-            throw new UnexpectedResultReturnedFromDatabaseException(FermatException.wrapException(exception),
+            throw new UnexpectedResultReturnedFromDatabaseException(exception,
                     "Unexpected error",
                     "Check the cause");
         }
@@ -260,7 +260,7 @@ public class CustomerOnlinePaymentBusinessTransactionDao {
         }catch(CantGetContractListException exception){
             throw exception;
         }catch (Exception exception){
-         throw new UnexpectedResultReturnedFromDatabaseException(FermatException.wrapException(exception),
+         throw new UnexpectedResultReturnedFromDatabaseException(exception,
                  "Unexpected error",
                  "Check the cause");
         }
@@ -278,7 +278,7 @@ public class CustomerOnlinePaymentBusinessTransactionDao {
         }catch(CantGetContractListException exception){
             throw exception;
         }catch(Exception exception){
-            throw new UnexpectedResultReturnedFromDatabaseException(FermatException.wrapException(exception),
+            throw new UnexpectedResultReturnedFromDatabaseException(exception,
                     "Unexpected error",
                     "Check the cause");
         }
@@ -296,7 +296,7 @@ public class CustomerOnlinePaymentBusinessTransactionDao {
         }catch(CantGetContractListException exception){
             throw exception;
         }catch (Exception exception){
-            throw new UnexpectedResultReturnedFromDatabaseException(FermatException.wrapException(exception),
+            throw new UnexpectedResultReturnedFromDatabaseException(exception,
                     "Unexpected error",
                     "Check the cause");
         }
@@ -314,7 +314,7 @@ public class CustomerOnlinePaymentBusinessTransactionDao {
         }catch(CantGetContractListException exception){
             throw exception;
         }catch (Exception exception){
-            throw new UnexpectedResultReturnedFromDatabaseException(FermatException.wrapException(exception),
+            throw new UnexpectedResultReturnedFromDatabaseException(exception,
                     "Unexpected error",
                     "Check the cause");
         }
@@ -366,7 +366,7 @@ public class CustomerOnlinePaymentBusinessTransactionDao {
         }catch (CantGetContractListException exception){
             throw exception;
         }catch(Exception exception){
-            throw new UnexpectedResultReturnedFromDatabaseException(FermatException.wrapException(exception),
+            throw new UnexpectedResultReturnedFromDatabaseException(exception,
                     "Unexpected error",
                     "Check the cause");
         }
@@ -418,7 +418,7 @@ public class CustomerOnlinePaymentBusinessTransactionDao {
                     CustomerOnlinePaymentBusinessTransactionDatabaseConstants.ONLINE_PAYMENT_CONTRACT_HASH_COLUMN_NAME);
             return contractHashFromDatabase!=null;
         }catch (Exception exception){
-            throw new UnexpectedResultReturnedFromDatabaseException(FermatException.wrapException(exception),
+            throw new UnexpectedResultReturnedFromDatabaseException(exception,
                     "Unexpected error",
                     "Check the cause");
         }
@@ -509,7 +509,7 @@ public class CustomerOnlinePaymentBusinessTransactionDao {
         }catch(CantInsertRecordException exception){
             throw exception;
         }catch(Exception exception){
-            throw new CantInsertRecordException(CantInsertRecordException.DEFAULT_MESSAGE,FermatException.wrapException(exception),
+            throw new CantInsertRecordException(CantInsertRecordException.DEFAULT_MESSAGE,exception,
                     "Unexpected error",
                     "Check the cause");
         }
@@ -575,7 +575,7 @@ public class CustomerOnlinePaymentBusinessTransactionDao {
                     "Getting value from database",
                     "Invalid parameter in ContractTransactionStatus");
         }catch (Exception exception){
-            throw new UnexpectedResultReturnedFromDatabaseException(FermatException.wrapException(exception),
+            throw new UnexpectedResultReturnedFromDatabaseException(exception,
                     "Getting value from database",
                     "Unexpected error");
         }
@@ -603,7 +603,7 @@ public class CustomerOnlinePaymentBusinessTransactionDao {
                     "Updating databaseTableRecord from a BusinessTransactionRecord",
                     "Unexpected results in database");
         }catch(Exception exception){
-            throw new UnexpectedResultReturnedFromDatabaseException(FermatException.wrapException(exception),
+            throw new UnexpectedResultReturnedFromDatabaseException(exception,
                     "Updating databaseTableRecord from a BusinessTransactionRecord",
                     "Unexpected error");
         }
@@ -628,7 +628,7 @@ public class CustomerOnlinePaymentBusinessTransactionDao {
         }catch(CantInsertRecordException exception){
             throw exception;
         }catch(Exception exception){
-            throw new CantInsertRecordException(CantInsertRecordException.DEFAULT_MESSAGE,FermatException.wrapException(exception),
+            throw new CantInsertRecordException(CantInsertRecordException.DEFAULT_MESSAGE,exception,
                     "Unexpected error",
                     "Check the cause");
         }
@@ -791,7 +791,7 @@ public class CustomerOnlinePaymentBusinessTransactionDao {
                     "Persisting crypto transaction in database",
                     "There was an unexpected result in database");
         }catch (Exception exception){
-            throw new UnexpectedResultReturnedFromDatabaseException(FermatException.wrapException(exception),
+            throw new UnexpectedResultReturnedFromDatabaseException(exception,
                     "Persisting crypto transaction in database",
                     "Unexpected error");
         }
@@ -809,7 +809,7 @@ public class CustomerOnlinePaymentBusinessTransactionDao {
         }catch(CantUpdateRecordException exception){
             throw exception;
         }catch (Exception exception){
-            throw new UnexpectedResultReturnedFromDatabaseException(FermatException.wrapException(exception),"Unexpected error","Check the cause");
+            throw new UnexpectedResultReturnedFromDatabaseException(exception,"Unexpected error","Check the cause");
         }
     }
 
@@ -868,7 +868,7 @@ public class CustomerOnlinePaymentBusinessTransactionDao {
                     exception,
                     "Updating parameter "+CustomerOnlinePaymentBusinessTransactionDatabaseConstants.ONLINE_PAYMENT_EVENTS_RECORDED_STATUS_COLUMN_NAME,"");
         }catch(Exception exception){
-            throw new UnexpectedResultReturnedFromDatabaseException(FermatException.wrapException(exception),"Unexpected error","Check the cause");
+            throw new UnexpectedResultReturnedFromDatabaseException(exception,"Unexpected error","Check the cause");
         }
     }
 
@@ -899,7 +899,7 @@ public class CustomerOnlinePaymentBusinessTransactionDao {
                     "Cannot insert a record in Online Payment database");
         } catch(Exception exception){
             throw new CantSaveEventException(
-                    FermatException.wrapException(exception),
+                    exception,
                     "Saving new event.",
                     "Unexpected exception");
         }

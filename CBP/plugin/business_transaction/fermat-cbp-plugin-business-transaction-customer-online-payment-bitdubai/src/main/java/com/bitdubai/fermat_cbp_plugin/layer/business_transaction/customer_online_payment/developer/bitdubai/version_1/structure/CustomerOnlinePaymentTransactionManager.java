@@ -221,6 +221,8 @@ public class CustomerOnlinePaymentTransactionManager implements CustomerOnlinePa
                     e,
                     "Sending online payment",
                     "An argument is null");
+        }catch (Exception exception){
+            throw new CantSendPaymentException(exception,"Sending online payment","Unexpected error");
         }
 
     }
@@ -239,6 +241,8 @@ public class CustomerOnlinePaymentTransactionManager implements CustomerOnlinePa
                     e);
             throw new UnexpectedResultReturnedFromDatabaseException(
                     "Cannot check a null contractHash/Id");
+        }catch (Exception exception){
+            throw new UnexpectedResultReturnedFromDatabaseException(exception,"","Unexpected result");
         }
     }
 

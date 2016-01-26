@@ -1,6 +1,7 @@
 package com.bitdubai.fermat_cbp_plugin.layer.business_transaction.customer_online_payment.developer.bitdubai.version_1.event_handler;
 
 import com.bitdubai.fermat_api.FermatException;
+import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEventHandler;
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEventListener;
@@ -12,6 +13,7 @@ import com.bitdubai.fermat_cbp_api.all_definition.exceptions.CantStartServiceExc
 import com.bitdubai.fermat_cbp_api.layer.network_service.transaction_transmission.events.IncomingConfirmBusinessTransactionResponse;
 import com.bitdubai.fermat_cbp_api.layer.network_service.transaction_transmission.events.IncomingNewContractStatusUpdate;
 import com.bitdubai.fermat_cbp_plugin.layer.business_transaction.customer_online_payment.developer.bitdubai.version_1.database.CustomerOnlinePaymentBusinessTransactionDao;
+import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedPluginExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfaces.EventManager;
 import java.util.ArrayList;
@@ -60,7 +62,11 @@ public class CustomerOnlinePaymentRecorderService implements CBPService {
     }
 
     public void setEventManager(EventManager eventManager) {
-        this.eventManager = eventManager;
+        try{
+            this.eventManager = eventManager;
+        }catch (Exception exception){
+            this.errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_BITCOIN_WALLET_BASIC_WALLET, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,FermatException.wrapException(exception));
+        }
     }
 
     public void incomingNewContractStatusUpdateEventHandler(IncomingNewContractStatusUpdate event) throws CantSaveEventException {
@@ -72,7 +78,7 @@ public class CustomerOnlinePaymentRecorderService implements CBPService {
         }catch (CantSaveEventException exception){
             throw exception;
         }catch(Exception exception){
-            throw new CantSaveEventException(CantSaveEventException.DEFAULT_MESSAGE,FermatException.wrapException(exception),
+            throw new CantSaveEventException(CantSaveEventException.DEFAULT_MESSAGE,exception,
                     "Unexpected error",
                     "Check the cause");
         }
@@ -87,7 +93,7 @@ public class CustomerOnlinePaymentRecorderService implements CBPService {
         }catch(CantSaveEventException exception){
             throw exception;
         }catch (Exception exception){
-            throw new CantSaveEventException(CantSaveEventException.DEFAULT_MESSAGE,FermatException.wrapException(exception),
+            throw new CantSaveEventException(CantSaveEventException.DEFAULT_MESSAGE,exception,
                     "Unexpected error",
                     "Check the cause");
         }
@@ -124,7 +130,7 @@ public class CustomerOnlinePaymentRecorderService implements CBPService {
                     "Starting the CustomerOnlinePaymentRecorderService",
                     "The CustomerOnlinePaymentRecorderService is probably null");
         }catch(Exception exception){
-            throw new CantStartServiceException(CantStartServiceException.DEFAULT_MESSAGE,FermatException.wrapException(exception),
+            throw new CantStartServiceException(CantStartServiceException.DEFAULT_MESSAGE,exception,
                     "Starting the CustomerOnlinePaymentRecorderService",
                     "Unexpected error");
         }
@@ -137,7 +143,7 @@ public class CustomerOnlinePaymentRecorderService implements CBPService {
             removeRegisteredListeners();
             this.serviceStatus = ServiceStatus.STOPPED;
         }catch (Exception exception){
-            throw exception;
+            this.errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_BITCOIN_WALLET_BASIC_WALLET, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,FermatException.wrapException(exception));
         }
 
     }

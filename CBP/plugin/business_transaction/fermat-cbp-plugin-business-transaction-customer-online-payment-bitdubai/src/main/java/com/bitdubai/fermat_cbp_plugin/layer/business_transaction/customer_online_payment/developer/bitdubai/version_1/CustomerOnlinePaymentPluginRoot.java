@@ -290,6 +290,10 @@ public class CustomerOnlinePaymentPluginRoot extends AbstractPlugin implements
                     FermatException.wrapException(exception),
                     "Starting Customer Online Payment Plugin",
                     "Cannot set an argument in monitor agent constructor");
+        }catch (Exception exception){
+            throw new CantStartPluginException(FermatException.wrapException(exception),
+                    "Starting Customer Online Payment Plugin",
+                    "Unexpected error");
         }
     }
 
