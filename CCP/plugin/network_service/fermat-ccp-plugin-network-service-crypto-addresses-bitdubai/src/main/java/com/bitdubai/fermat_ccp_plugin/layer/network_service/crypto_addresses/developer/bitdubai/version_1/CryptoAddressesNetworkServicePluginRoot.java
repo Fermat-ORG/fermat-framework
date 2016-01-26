@@ -990,7 +990,7 @@ public class CryptoAddressesNetworkServicePluginRoot extends AbstractNetworkServ
                     platformComponentProfileRegistered.getNetworkServiceType() == this.getNetworkServiceType() &&
                     platformComponentProfileRegistered.getIdentityPublicKey().equals(identity.getPublicKey())) {
 
-                System.out.print("CryptoPaymentRequestNetworkServicePluginRoot - NetWork Service is Registered: " + platformComponentProfileRegistered.getAlias());
+                System.out.println("CryptoPaymentRequestNetworkServicePluginRoot - NetWork Service is Registered: " + platformComponentProfileRegistered.getAlias());
 
                 this.register = Boolean.TRUE;
                 initializeAgent();
@@ -1412,7 +1412,7 @@ public class CryptoAddressesNetworkServicePluginRoot extends AbstractNetworkServ
         }
         catch(Exception e)
         {
-            System.out.print("EXCEPCION VERIFICANDO WAIT MESSAGE");
+            System.out.println("EXCEPCION VERIFICANDO WAIT MESSAGE");
             e.printStackTrace();
         }
 
@@ -1432,7 +1432,7 @@ public class CryptoAddressesNetworkServicePluginRoot extends AbstractNetworkServ
         }
         catch(CantListPendingCryptoAddressRequestsException | CantChangeProtocolStateException |PendingRequestNotFoundException e)
         {
-            System.out.print("ADDRESS NS EXCEPCION REPROCESANDO WAIT MESSAGE");
+            System.out.println("ADDRESS NS EXCEPCION REPROCESANDO WAIT MESSAGE");
             e.printStackTrace();
         }
     }
@@ -1451,7 +1451,7 @@ public class CryptoAddressesNetworkServicePluginRoot extends AbstractNetworkServ
         }
         catch(CantListPendingCryptoAddressRequestsException | CantChangeProtocolStateException |PendingRequestNotFoundException e)
         {
-            System.out.print("ADDRESS NS EXCEPCION REPROCESANDO WAIT MESSAGE");
+            System.out.println("ADDRESS NS EXCEPCION REPROCESANDO WAIT MESSAGE");
             e.printStackTrace();
         }
     }
