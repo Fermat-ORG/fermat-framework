@@ -88,6 +88,9 @@ public class SettingsActivityFragment extends AbstractFermatFragment {
             }
         });
 
+
+
+
         /*View earningsButton = layout.findViewById(R.id.settings_public_information);
         earningsButton.setOnClickListener(new View.OnClickListener() {
             @Override

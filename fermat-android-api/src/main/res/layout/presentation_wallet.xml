@@ -13,6 +13,7 @@
         android:layout_height="4.5dp"
         android:background="@drawable/round_corner_line_dialog"
         android:fitsSystemWindows="true"
+        android:id="@+id/top_line"
         />
 
     <LinearLayout

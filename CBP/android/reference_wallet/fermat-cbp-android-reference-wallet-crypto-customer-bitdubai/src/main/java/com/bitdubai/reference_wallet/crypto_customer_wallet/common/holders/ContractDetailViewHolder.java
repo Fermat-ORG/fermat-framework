@@ -79,7 +79,8 @@ public class ContractDetailViewHolder extends FermatViewHolder {
                 break;
 
         }
-        textButton.setText(itemInfo.getCurrencyType().getCode());
+        //TODO: here we can see the contract status
+        textButton.setText(contractStatus.getFriendlyName());
         /*customerName.setText(itemInfo.getCryptoCustomerAlias());
         customerImage.setImageDrawable(getImgDrawable(itemInfo.getCryptoCustomerImage()));
 
@@ -111,7 +112,29 @@ public class ContractDetailViewHolder extends FermatViewHolder {
     }
 
     private int getStatusBackgroundColor(ContractStatus status) {
-        if (status == ContractStatus.PENDING_PAYMENT)
+
+        switch (status){
+            case COMPLETED:
+                return res.getColor(R.color.contract_completed_list_item_background);
+            case CANCELLED:
+                return res.getColor(R.color.contract_cancelled_list_item_background);
+            case READY_TO_CLOSE:
+                return res.getColor(R.color.contract_completed_list_item_background);
+            case PAUSED:
+                return res.getColor(R.color.contract_paused_list_item_background);
+            case PENDING_PAYMENT:
+                return res.getColor(R.color.waiting_for_customer_list_item_background);
+            case PAYMENT_SUBMIT:
+                return res.getColor(R.color.contract_completed_list_item_background);
+            case PENDING_MERCHANDISE:
+                return res.getColor(R.color.waiting_for_broker_list_item_background);
+            case MERCHANDISE_SUBMIT:
+                return res.getColor(R.color.contract_completed_list_item_background);
+            default:
+                return res.getColor(R.color.waiting_for_broker_list_item_background);
+
+        }
+        /*if (status == ContractStatus.PENDING_PAYMENT)
             return res.getColor(R.color.waiting_for_customer_list_item_background);
 
         if (status == ContractStatus.CANCELLED)
@@ -120,7 +143,7 @@ public class ContractDetailViewHolder extends FermatViewHolder {
         if (status == ContractStatus.COMPLETED)
             return res.getColor(R.color.contract_completed_list_item_background);
 
-        return res.getColor(R.color.waiting_for_broker_list_item_background);
+        return res.getColor(R.color.waiting_for_broker_list_item_background);*/
     }
 
     private String getSellingOrSoldText(ContractStatus status) {

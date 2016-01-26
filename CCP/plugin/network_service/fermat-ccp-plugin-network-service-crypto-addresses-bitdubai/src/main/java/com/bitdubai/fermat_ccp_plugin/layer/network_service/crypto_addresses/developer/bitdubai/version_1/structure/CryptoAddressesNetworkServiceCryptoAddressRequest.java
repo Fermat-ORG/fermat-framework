@@ -40,6 +40,7 @@ public class CryptoAddressesNetworkServiceCryptoAddressRequest implements Crypto
     private final int                          sentNumber;
     private final long                          sentDate;
     private final String                      messageType;
+    private boolean                     readMark;
 
     public CryptoAddressesNetworkServiceCryptoAddressRequest(final UUID                  requestId                  ,
                                                              final String                walletPublicKey            ,
@@ -56,7 +57,8 @@ public class CryptoAddressesNetworkServiceCryptoAddressRequest implements Crypto
                                                              final BlockchainNetworkType blockchainNetworkType     ,
                                                              final int sentNumber,
                                                              final long sentDate,
-                                                             final String messageType) {
+                                                             final String messageType,
+                                                             final boolean readMark) {
 
         this.requestId                   = requestId                  ;
         this.walletPublicKey             = walletPublicKey            ;
@@ -74,6 +76,7 @@ public class CryptoAddressesNetworkServiceCryptoAddressRequest implements Crypto
         this.sentNumber = sentNumber;
         this.sentDate                   = sentDate;
         this.messageType                = messageType;
+        this.readMark = readMark;
     }
 
     public UUID getRequestId() {
@@ -120,6 +123,11 @@ public class CryptoAddressesNetworkServiceCryptoAddressRequest implements Crypto
         return action;
     }
 
+    @Override
+    public RequestType getRequestType() {
+        return type;
+    }
+
     public BlockchainNetworkType getBlockchainNetworkType() {
         return blockchainNetworkType;
     }
@@ -141,6 +149,15 @@ public class CryptoAddressesNetworkServiceCryptoAddressRequest implements Crypto
     public CryptoAddressDealers getCryptoAddressDealer() {
         return cryptoAddressDealer;
     }
+
+    public boolean isReadMark() {
+        return readMark;
+    }
+
+    public void setReaded(boolean readMark){
+        this.readMark = readMark;
+    }
+
 
     @Override
     public String toString() {

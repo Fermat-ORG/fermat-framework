@@ -335,31 +335,32 @@ public class AssetFactoryMiddlewareDao {
             DatabaseTable tableContracts = getDatabaseTable(AssertFactoryMiddlewareDatabaseConstant.ASSET_FACTORY_CONTRACT_TABLE_NAME);
             DatabaseTable tableResources = getDatabaseTable(AssertFactoryMiddlewareDatabaseConstant.ASSET_FACTORY_RESOURCE_TABLE_NAME);
             DatabaseTable tableIdentityUser = getDatabaseTable(AssertFactoryMiddlewareDatabaseConstant.ASSET_FACTORY_IDENTITY_ISSUER_TABLE_NAME);
-            DatabaseTableRecord databaseTablerecord = getAssetFactoryProjectRecord(assetFactory);
-            table.addStringFilter(AssertFactoryMiddlewareDatabaseConstant.ASSET_FACTORY_ID_COLUMN, assetFactory.getFactoryId(), DatabaseFilterType.EQUAL);
-            table.loadToMemory();
 
             if (removeResources) {
-                if (assetFactory.getResources() != null) {
-                    for (Resource resources : assetFactory.getResources()) {
-                        DatabaseTableRecord record = getResourceDataRecord(assetFactory.getAssetPublicKey(), resources);
-                        tableResources.deleteRecord(record);
-                    }
+                tableResources.addStringFilter(AssertFactoryMiddlewareDatabaseConstant.ASSET_FACTORY_RESOURCE_ASSET_PUBLIC_KEY_COLUMN, assetFactory.getAssetPublicKey(), DatabaseFilterType.EQUAL);
+                tableResources.loadToMemory();
+                for (DatabaseTableRecord record : tableResources.getRecords()) {
+                    tableResources.deleteRecord(record);
                 }
-            }
 
-            if (assetFactory.getContractProperties() != null) {
-                for (ContractProperty contractProperties : assetFactory.getContractProperties()) {
-                    DatabaseTableRecord record = getContractDataRecord(assetFactory.getAssetPublicKey(), contractProperties.getName(), contractProperties.getValue().toString());
+                tableContracts.addStringFilter(AssertFactoryMiddlewareDatabaseConstant.ASSET_FACTORY_CONTRACT_ASSET_PUBLIC_KEY_COLUMN, assetFactory.getAssetPublicKey(), DatabaseFilterType.EQUAL);
+                tableContracts.loadToMemory();
+                for (DatabaseTableRecord record : tableContracts.getRecords()) {
                     tableContracts.deleteRecord(record);
                 }
+
+                tableIdentityUser.addStringFilter(AssertFactoryMiddlewareDatabaseConstant.ASSET_FACTORY_IDENTITY_ISSUER_PUBLIC_KEY_COLUMN, assetFactory.getIdentyAssetIssuer().getPublicKey(), DatabaseFilterType.EQUAL);
+                tableIdentityUser.loadToMemory();
+                for (DatabaseTableRecord record : tableIdentityUser.getRecords()) {
+                    tableIdentityUser.deleteRecord(record);
+                }
             }
 
-            DatabaseTableRecord record = getIdentityIssuerDataRecord(assetFactory.getAssetPublicKey(), assetFactory.getIdentyAssetIssuer().getPublicKey(), assetFactory.getIdentyAssetIssuer().getAlias(), "signature");
-            tableIdentityUser.deleteRecord(record);
-
-            table.deleteRecord(databaseTablerecord);
-
+            table.addStringFilter(AssertFactoryMiddlewareDatabaseConstant.ASSET_FACTORY_ID_COLUMN, assetFactory.getFactoryId(), DatabaseFilterType.EQUAL);
+            table.loadToMemory();
+            for (DatabaseTableRecord record : table.getRecords()) {
+                table.deleteRecord(record);
+            }
 
         } catch (Exception exception) {
             throw new CantDeleteAsserFactoryException(exception, "Error delete Asset Factory", "Asset Factory - Delete");
@@ -474,7 +475,6 @@ public class AssetFactoryMiddlewareDao {
                     resources.add(resource);
                 }
 
-                //assetFactory.setContractProperties(contractProperties);
                 assetFactory.setResources(resources);
                 assetFactory.setIdentityAssetIssuer(assetIssuerIdentity);
 

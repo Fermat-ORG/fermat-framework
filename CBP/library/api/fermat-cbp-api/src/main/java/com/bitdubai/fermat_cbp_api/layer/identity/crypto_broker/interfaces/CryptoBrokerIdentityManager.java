@@ -40,6 +40,13 @@ public interface CryptoBrokerIdentityManager extends FermatManager {
     CryptoBrokerIdentity createCryptoBrokerIdentity(final String alias,
                                                     final byte[] image) throws CantCreateCryptoBrokerIdentityException   ,
                                                                                CryptoBrokerIdentityAlreadyExistsException;
+    /**
+     *
+     * @param alias
+     * @param publicKey
+     * @param imageProfile
+     */
+    void updateCryptoBrokerIdentity(String alias, String publicKey, byte[] imageProfile);
 
     /**
      * Through the method <code>createCryptoBrokerIdentity</code> you can create a new crypto broker identity.

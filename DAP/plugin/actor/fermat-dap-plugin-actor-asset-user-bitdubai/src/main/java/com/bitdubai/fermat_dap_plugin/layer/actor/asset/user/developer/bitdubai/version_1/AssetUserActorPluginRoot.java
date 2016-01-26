@@ -472,8 +472,12 @@ public class AssetUserActorPluginRoot extends AbstractPlugin implements
 
                 if (request.getCryptoAddressDealer().equals(CryptoAddressDealers.DAP_ASSET)) {
 
-                    if (request.getAction().equals(RequestAction.ACCEPT))
-                        this.handleCryptoAddressReceivedEvent(request);
+                    if (request.getCryptoAddress().getAddress() != null)
+                        if (request.getAction().equals(RequestAction.ACCEPT) || request.getAction().equals(RequestAction.NONE)){
+                            this.handleCryptoAddressReceivedEvent(request);
+                            cryptoAddressesNetworkServiceManager.markReceivedRequest(request.getRequestId());
+                        }
+
 
 //                if (request.getAction().equals(RequestAction.DENY))
 //                    this.handleCryptoAddressDeniedEvent(request);
@@ -484,6 +488,8 @@ public class AssetUserActorPluginRoot extends AbstractPlugin implements
                 CantHandleCryptoAddressReceivedActionException e) {
 
             throw new CantHandleCryptoAddressesNewsEventException(e, "", "Error handling Crypto Addresses News Event.");
+        } catch (CantConfirmAddressExchangeRequestException e) {
+            e.printStackTrace();
         }
     }
 
