@@ -96,7 +96,9 @@ public class StartNegotiationActivityFragment extends AbstractFermatFragment<Cry
         currencies = new ArrayList<>();
         currencies.add(FiatCurrency.VENEZUELAN_BOLIVAR);
         currencies.add(FiatCurrency.US_DOLLAR);
+        currencies.add(FiatCurrency.ARGENTINE_PESO);
         currencies.add(CryptoCurrency.BITCOIN);
+        currencies.add(CryptoCurrency.LITECOIN);
 
         try {
             CryptoCustomerWalletModuleManager moduleManager = appSession.getModuleManager();
@@ -435,13 +437,13 @@ public class StartNegotiationActivityFragment extends AbstractFermatFragment<Cry
 
             final Map<ClauseType, ClauseInformation> clauses = negotiationInfo.getClauses();
 
-            final BigDecimal exchangeRate = new BigDecimal(clauses.get(ClauseType.EXCHANGE_RATE).getValue());
-            final BigDecimal amountToBuy = new BigDecimal(clauses.get(ClauseType.BROKER_CURRENCY_QUANTITY).getValue());
-            final BigDecimal amountToSell = amountToBuy.divide(exchangeRate);
+            final BigDecimal exchangeRate   = new BigDecimal(clauses.get(ClauseType.EXCHANGE_RATE).getValue());
+            final BigDecimal amountToPay    = new BigDecimal(clauses.get(ClauseType.BROKER_CURRENCY_QUANTITY).getValue());
+            final BigDecimal amountToBuy    = amountToPay.divide(exchangeRate);
 
-            final String amountToSellStr = DecimalFormat.getInstance().format(amountToSell.doubleValue());
+            final String amountToBuyStr = DecimalFormat.getInstance().format(amountToBuy.doubleValue());
             final ClauseInformation brokerCurrencyQuantity = clauses.get(ClauseType.CUSTOMER_CURRENCY_QUANTITY);
-            negotiationInfo.putClause(brokerCurrencyQuantity, amountToSellStr);
+            negotiationInfo.putClause(brokerCurrencyQuantity, amountToBuyStr);
 
             adapter.changeDataSet(negotiationInfo);
 
@@ -456,13 +458,13 @@ public class StartNegotiationActivityFragment extends AbstractFermatFragment<Cry
 
         final Map<ClauseType, ClauseInformation> clauses = negotiationInfo.getClauses();
 
-        final BigDecimal exchangeRate = new BigDecimal(clauses.get(ClauseType.EXCHANGE_RATE).getValue());
-        final BigDecimal amountToBuy = new BigDecimal(clauses.get(ClauseType.CUSTOMER_CURRENCY_QUANTITY).getValue());
-        final BigDecimal amountToSell = amountToBuy.multiply(exchangeRate);
+        final BigDecimal exchangeRate   = new BigDecimal(clauses.get(ClauseType.EXCHANGE_RATE).getValue());
+        final BigDecimal amountToBuy    = new BigDecimal(clauses.get(ClauseType.CUSTOMER_CURRENCY_QUANTITY).getValue());
+        final BigDecimal amountToPay   = amountToBuy.multiply(exchangeRate);
 
-        final String amountToSellStr = DecimalFormat.getInstance().format(amountToSell.doubleValue());
-        final ClauseInformation brokerCurrencyQuantity = clauses.get(ClauseType.BROKER_CURRENCY_QUANTITY);
-        negotiationInfo.putClause(brokerCurrencyQuantity, amountToSellStr);
+        final String amountToPayStr = DecimalFormat.getInstance().format(amountToPay.doubleValue());
+        final ClauseInformation brokerCurrencyQuantityClause = clauses.get(ClauseType.BROKER_CURRENCY_QUANTITY);
+        negotiationInfo.putClause(brokerCurrencyQuantityClause, amountToPayStr);
 
         adapter.changeDataSet(negotiationInfo);
     }
@@ -481,6 +483,13 @@ public class StartNegotiationActivityFragment extends AbstractFermatFragment<Cry
 
         if(brokerCurrencyQuotation != null) {
 
+
+            Toast.makeText(getActivity(), "The exchange rate:" +
+                    "BROKER CURRENCY: " +clauses.get(ClauseType.BROKER_CURRENCY).getValue()+
+                    ", CUSTOMER CURRENCY: "+clauses.get(ClauseType.CUSTOMER_CURRENCY).getValue()+
+                    ", EXCHANGE RATE: "+brokerCurrencyQuotation.getExchangeRate()
+                    , Toast.LENGTH_LONG).show();
+/*
             final BigDecimal one = new BigDecimal(1);
 
             //GET EXCHANGE RATE
@@ -500,7 +509,7 @@ public class StartNegotiationActivityFragment extends AbstractFermatFragment<Cry
             final String amountToPayStr = DecimalFormat.getInstance().format(amountToPay.doubleValue());
             final ClauseInformation brokerCurrencyQuantityClause = clauses.get(ClauseType.BROKER_CURRENCY_QUANTITY);
             negotiationInfo.putClause(brokerCurrencyQuantityClause, amountToPayStr);
-
+*/
         } else {
             Toast.makeText(getActivity(), "The exchange rate not fount for the currency to pay selected.", Toast.LENGTH_LONG).show();
         }
@@ -547,7 +556,7 @@ public class StartNegotiationActivityFragment extends AbstractFermatFragment<Cry
 
         if(currencyQuotation == null)
             currencyQuotation = getQuotation(currencyUnder,currencyOver);
-            currencyQuotation.setExchangeRateInv(Boolean.TRUE);
+            if(currencyQuotation != null) currencyQuotation.setExchangeRateInv(Boolean.TRUE);
 
         return currencyQuotation;
     }
