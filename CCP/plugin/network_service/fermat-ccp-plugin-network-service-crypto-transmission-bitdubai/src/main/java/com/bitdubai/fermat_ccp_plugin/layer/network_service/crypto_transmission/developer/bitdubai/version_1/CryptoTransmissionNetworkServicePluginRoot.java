@@ -1106,6 +1106,10 @@ public class CryptoTransmissionNetworkServicePluginRoot extends AbstractNetworkS
                     CryptoTransmissionProtocolState.DONE,
                     CryptoTransmissionMetadataState.CREDITED_IN_OWN_WALLET);
 
+            System.out.print("-----------------------\n" +
+                    "TRANSACTION CREDITED IN WALLET CRYPTO TRANSMISSION ROOT  !!!!! -----------------------\n" +
+                    "-----------------------\n STATE: " + cryptoTransmissionMetadata.getCryptoTransmissionMetadataStates());
+
 
             // send inform to other ns
             cryptoTransmissionMetadata.changeCryptoTransmissionProtocolState(CryptoTransmissionProtocolState.PRE_PROCESSING_SEND);
@@ -1133,6 +1137,10 @@ public class CryptoTransmissionNetworkServicePluginRoot extends AbstractNetworkS
                     transaction_id,
                     CryptoTransmissionProtocolState.WAITING_FOR_RESPONSE,
                     CryptoTransmissionMetadataState.SEEN_BY_OWN_VAULT);
+
+            System.out.print("-----------------------\n" +
+                    "TRANSACTION SEEN BY VAULT CRYPTO TRANSMISSION ROOT  !!!!! -----------------------\n" +
+                    "-----------------------\n STATE: " + cryptoTransmissionMetadata.getCryptoTransmissionMetadataStates());
 
             // send inform to other ns
             cryptoTransmissionMetadata.changeCryptoTransmissionProtocolState(CryptoTransmissionProtocolState.PRE_PROCESSING_SEND);
