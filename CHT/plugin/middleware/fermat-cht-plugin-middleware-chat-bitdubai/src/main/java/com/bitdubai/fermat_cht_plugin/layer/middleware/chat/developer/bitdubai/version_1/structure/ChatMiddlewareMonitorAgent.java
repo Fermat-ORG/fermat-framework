@@ -343,10 +343,11 @@ public class ChatMiddlewareMonitorAgent implements
                     incomingChatMetadata=pendingTransaction.getInformation();
                     incomingTransactionChatId=incomingChatMetadata.getChatId();
                     if(eventChatId.toString().equals(incomingTransactionChatId.toString())){
-                        //If message exists in database, this message will be updated
+                        //If message exists in database, this message will be update
                         saveMessage(incomingChatMetadata);
                         chatNetworkServiceManager.confirmReception(pendingTransaction.getTransactionID());
-                        chatNetworkServiceManager.sendChatMessageNewStatusNotification(chatNetworkServiceManager.getNetWorkServicePublicKey(),
+                        chatNetworkServiceManager.sendChatMessageNewStatusNotification(
+                                chatNetworkServiceManager.getNetWorkServicePublicKey(),
                                 PlatformComponentType.NETWORK_SERVICE,
                                 incomingChatMetadata.getLocalActorPublicKey(),
                                 PlatformComponentType.NETWORK_SERVICE,
@@ -354,6 +355,7 @@ public class ChatMiddlewareMonitorAgent implements
                                 incomingChatMetadata.getChatId(),
                                 incomingChatMetadata.getMessageId()
                         );
+                        break;
                     }
                 }
                 eventRecord.setEventStatus(EventStatus.NOTIFIED);
@@ -424,6 +426,7 @@ public class ChatMiddlewareMonitorAgent implements
                         //Check if metadata exists in database
                         checkChatMetadata(incomingChatMetadata);
                         updateMessageStatus(incomingChatMetadata);
+                        chatNetworkServiceManager.confirmReception(pendingTransaction.getTransactionID());
                         break;
                     }
                 }
@@ -458,6 +461,12 @@ public class ChatMiddlewareMonitorAgent implements
                         e,
                         "Checking the incoming status pending transactions",
                         "Cannot update message from database"
+                );
+            } catch (CantConfirmTransactionException e) {
+                throw new CantGetPendingTransactionException(
+                        e,
+                        "Checking the incoming status pending transactions",
+                        "Cannot get confirm the reception to local NS"
                 );
             }
         }
@@ -515,6 +524,7 @@ public class ChatMiddlewareMonitorAgent implements
                 messageRecorded=getMessageFromChatMetadata(
                         chatMetadata);
             }
+            messageRecorded.setStatus(MessageStatus.RECEIVE);
             chatMiddlewareDatabaseDao.saveMessage(messageRecorded);
         }
 
