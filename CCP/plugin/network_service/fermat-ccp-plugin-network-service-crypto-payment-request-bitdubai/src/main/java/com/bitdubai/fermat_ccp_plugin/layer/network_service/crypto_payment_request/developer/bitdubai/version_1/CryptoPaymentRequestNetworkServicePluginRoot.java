@@ -32,6 +32,7 @@ import com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_payment_reque
 import com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_payment_request.developer.bitdubai.version_1.database.CryptoPaymentRequestNetworkServiceDeveloperDatabaseFactory;
 import com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_payment_request.developer.bitdubai.version_1.exceptions.CantChangeRequestProtocolStateException;
 import com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_payment_request.developer.bitdubai.version_1.exceptions.CantHandleNewMessagesException;
+import com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_payment_request.developer.bitdubai.version_1.structure.PaymentConstants;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.common.network_services.abstract_classes.AbstractNetworkService;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.PluginVersionReference;
 import com.bitdubai.fermat_api.layer.all_definition.components.enums.PlatformComponentType;
@@ -539,10 +540,10 @@ public final class CryptoPaymentRequestNetworkServicePluginRoot extends Abstract
         communicationNetworkServiceConnectionManager.closeAllConnection();
 
         // interrupt the registration agent execution
-        communicationRegistrationProcessNetworkServiceAgent.stop();
+       // communicationRegistrationProcessNetworkServiceAgent.stop();
 
         // interrupt the executor agent execution
-        cryptoPaymentRequestExecutorAgent.stop();
+        //cryptoPaymentRequestExecutorAgent.stop();
 
         // set to not registered.
         register = Boolean.FALSE;
@@ -594,7 +595,7 @@ public final class CryptoPaymentRequestNetworkServicePluginRoot extends Abstract
                     protocolState,
                     networkType,
                     referenceWallet,
-                    0, "OUT"
+                    0, PaymentConstants.OUTGOING_MESSAGE
             );
 
             System.out.println("********** Crypto Payment Request NS -> sending request. PROCESSING_SEND - REQUEST - SENT - OK.");
@@ -897,7 +898,7 @@ public final class CryptoPaymentRequestNetworkServicePluginRoot extends Abstract
     public void initializeCommunicationNetworkServiceConnectionManager() {
         this.communicationNetworkServiceConnectionManager = new CommunicationNetworkServiceConnectionManager_V2(
                 this,
-                this.getPlatformComponentProfilePluginRoot(),
+                getPlatformComponentProfilePluginRoot(),
                 identity,
                 wsCommunicationsCloudClientManager.getCommunicationsCloudClientConnection(),
                 dataBase,
@@ -912,9 +913,6 @@ public final class CryptoPaymentRequestNetworkServicePluginRoot extends Abstract
 
         if (platformComponentProfileRegistered.getPlatformComponentType() == PlatformComponentType.COMMUNICATION_CLOUD_CLIENT && !this.register){
 
-            /*
-             * Construct my profile and register me
-             */
             PlatformComponentProfile platformComponentProfileToReconnect =  wsCommunicationsCloudClientManager.getCommunicationsCloudClientConnection().constructPlatformComponentProfileFactory(this.getIdentityPublicKey(),
                     this.getAlias().toLowerCase(),
                     this.getName(),
@@ -937,18 +935,20 @@ public final class CryptoPaymentRequestNetworkServicePluginRoot extends Abstract
         /*
          * If the component registered have my profile and my identity public key
          */
-        if (platformComponentProfileRegistered.getPlatformComponentType() == getPlatformComponentType() &&
-            platformComponentProfileRegistered.getNetworkServiceType()    == getNetworkServiceType()   &&
-            platformComponentProfileRegistered.getIdentityPublicKey().equals(identity.getPublicKey())                        ) {
+        if (platformComponentProfileRegistered.getPlatformComponentType()  == getPlatformComponentType() &&
+                platformComponentProfileRegistered.getNetworkServiceType()  == getNetworkServiceType() &&
+                platformComponentProfileRegistered.getIdentityPublicKey().equals(identity.getPublicKey())){
 
             /*
              * Mark as register
              */
             this.register = Boolean.TRUE;
 
+            //    if(!beforeRegistered)
             initializeAgent();
+            initializeCommunicationNetworkServiceConnectionManager();
+        }
 
-            }
     }
 
 
@@ -1199,7 +1199,7 @@ public final class CryptoPaymentRequestNetworkServicePluginRoot extends Abstract
                     protocolState,
                     requestMessage.getNetworkType(),
                     requestMessage.getReferenceWallet(),
-                    0, "INC"
+                    0, PaymentConstants.INCOMING_MESSAGE
             );
 
         } catch(CantCreateCryptoPaymentRequestException e) {

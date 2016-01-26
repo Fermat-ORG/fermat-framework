@@ -22,7 +22,7 @@ public class InformationMessage extends NetworkServiceMessage {
                               String actorDestination) {
 
 
-        super(requestId,MessageTypes.INFORMATION,identitySender,actorDestination);
+        super(MessageTypes.INFORMATION,identitySender,actorDestination);
         this.requestId = requestId;
         this.action    = action   ;
     }

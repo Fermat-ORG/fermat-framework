@@ -16,11 +16,9 @@ public class NetworkServiceMessage {
     private MessageTypes messageType;
     private String identitySender;
     private String actorDestination;
-    private UUID requestId;
 
-    public NetworkServiceMessage(UUID requestId,final MessageTypes messageType,String identitySender,String actorDestination) {
+    public NetworkServiceMessage(final MessageTypes messageType,String identitySender,String actorDestination) {
         this.messageType = messageType;
-        this.requestId = requestId;
         this.identitySender = identitySender;
         this.actorDestination = actorDestination;
     }
@@ -37,9 +35,6 @@ public class NetworkServiceMessage {
         return gson.toJson(this);
     }
 
-    public UUID getRequestId() {
-        return requestId;
-    }
 
     public MessageTypes getMessageType() {
         return messageType;

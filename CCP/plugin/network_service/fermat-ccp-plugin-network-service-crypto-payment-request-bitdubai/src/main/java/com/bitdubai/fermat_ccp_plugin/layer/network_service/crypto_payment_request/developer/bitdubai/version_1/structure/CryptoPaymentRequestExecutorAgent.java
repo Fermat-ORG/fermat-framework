@@ -354,7 +354,6 @@ public class CryptoPaymentRequestExecutorAgent extends FermatAgent {
             return false;
         }
     }
-
     private boolean sendMessage(final String identityPublicKey,
                                 final String actorPublicKey   ,
                                 final String jsonMessage      ) {
