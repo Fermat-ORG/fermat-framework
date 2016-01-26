@@ -26,11 +26,19 @@
     <string name="ccw_amount_to_buy">Amount to Buy</string>
     <string name="ccw_bank">Bank</string>
     <string name="ccw_bank_name">Bank Name</string>
+    <string name="ccw_bank_account_customer">Bank Account Customer</string>
+    <string name="ccw_bank_account_broker">Bank Account Broker</string>
+    <string name="ccw_bank_account_title">Bank Account:</string>
     <string name="ccw_broker_exchange_rate_for_selling_item">%1$s/%2$s: %3$s</string>
     <string name="ccw_broker_information">Broker Information</string>
     <string name="ccw_cancel_caps">CANCEL</string>
     <string name="ccw_cancellation_reason_title">Cancellation Reason:</string>
     <string name="ccw_cash">Cash</string>
+    <string name="ccw_cash_place_to_delivery_broker">Place To Delivery Broker</string>
+    <string name="ccw_cash_place_to_delivery_customer">Place To Delivery Customer</string>
+    <string name="ccw_cash_place_to_delivery_title">Place To Delivery:</string>
+    <string name="ccw_date_to_delivery_broker">Date To Delivery Broker</string>
+    <string name="ccw_date_to_delivery_customer">Date To Delivery Customer</string>
     <string name="ccw_check_negotiation_details">Check Negotiation Details</string>
     <string name="ccw_city">City</string>
     <string name="ccw_contract_details_contract_title">SELLING BTC</string>
@@ -44,6 +52,9 @@
     <string name="ccw_contract_history_sold_quantity_and_currency">%1$s %2$s %3$s</string>
     <string name="ccw_create">Create</string>
     <string name="ccw_crypto">Crypto</string>
+    <string name="ccw_crypto_address_broker">Crypto Address Broker</string>
+    <string name="ccw_crypto_address_customer">Crypto Address Customer</string>
+    <string name="ccw_crypto_address_title">Crypto Address:</string>
     <string name="ccw_delete_caps">DELETE</string>
     <string name="ccw_delete_wallet_dialog_title">Delete Wallet</string>
     <string name="ccw_delete_wallet_dialog_msg">"Do you want to delete this wallet?"</string>
@@ -100,8 +111,8 @@
     <string name="customer_locations_title">Customer Locations</string>
     <string name="customer_bank_account_title">Customer Bank Accounts</string>
 
-    <string name="delivery_date_title">Delivery Date</string>
-    <string name="delivery_date_text">Delivery Date: </string>
+    <string name="delivery_date_title">Date To Delivery:</string>
+    <string name="delivery_date_text">Delivery Date </string>
 
     <string name="exchange_rate_reference">Exchange Rate Reference</string>
     <string name="expiration_date_text">Expiration Date:</string>
