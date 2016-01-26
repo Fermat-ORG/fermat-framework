@@ -306,12 +306,13 @@ public class StartActivity extends FermatActivity implements FermatWorkerCallBac
             } catch (CantStartAllRegisteredPlatformsException e) {
                 e.printStackTrace();
             }
-            catch (FermatException e) {
-                System.err.println(e.toString());
-                System.out.println(e.getPossibleReason());
-                System.out.println(e.getFormattedContext());
-                System.out.println(e.getFormattedTrace());
-            }
+            //TODO delete: unreachable section
+//            catch (FermatException e) {
+//                System.err.println(e.toString());
+//                System.out.println(e.getPossibleReason());
+//                System.out.println(e.getFormattedContext());
+//                System.out.println(e.getFormattedTrace());
+//            }
 
             return true;
         }

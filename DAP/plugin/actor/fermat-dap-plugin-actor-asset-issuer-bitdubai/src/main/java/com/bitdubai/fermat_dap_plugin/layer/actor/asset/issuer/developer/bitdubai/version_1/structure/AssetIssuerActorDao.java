@@ -93,7 +93,7 @@ public class AssetIssuerActorDao implements Serializable {
               * Open new database connection
               */
             database = this.pluginDatabaseSystem.openDatabase(this.pluginId, AssetIssuerActorDatabaseConstants.ASSET_ISSUER_DATABASE_NAME);
-            database.closeDatabase();
+
         } catch (CantOpenDatabaseException cantOpenDatabaseException) {
             throw new CantInitializeAssetIssuerActorDatabaseException(CantInitializeAssetIssuerActorDatabaseException.DEFAULT_MESSAGE, cantOpenDatabaseException, "", "Exception not handled by the plugin, there is a problem and i cannot open the database.");
         } catch (DatabaseNotFoundException e) {
@@ -107,7 +107,7 @@ public class AssetIssuerActorDao implements Serializable {
                    * We create the new database
                    */
                 database = databaseFactory.createDatabase(this.pluginId, AssetIssuerActorDatabaseConstants.ASSET_ISSUER_DATABASE_NAME);
-                database.closeDatabase();
+
             } catch (CantCreateDatabaseException cantCreateDatabaseException) {
                   /*
                    * The database cannot be created. I can not handle this situation.
@@ -162,13 +162,13 @@ public class AssetIssuerActorDao implements Serializable {
                     persistNewAssetIssuerProfileImage(assetIssuerActorRecord.getActorPublicKey(), assetIssuerActorRecord.getProfileImage());
                 }
             }
-            database.closeDatabase();
+
         } catch (CantInsertRecordException e) {
             throw new CantAddPendingAssetIssuerException("CAN'T INSERT ASSET ISSUER", e, "", "Cant create new ASSET ISSUER, insert database problems.");
         } catch (Exception e) {
             throw new CantAddPendingAssetIssuerException("CAN'T INSERT ASSET ISSUER", FermatException.wrapException(e), "", "Cant create new ASSET ISSUER, unknown failure.");
         } finally {
-            database.closeDatabase();
+
         }
     }
 
@@ -211,7 +211,7 @@ public class AssetIssuerActorDao implements Serializable {
         } catch (Exception e) {
             throw new CantAddPendingAssetIssuerException("CAN'T INSERT ASSET ISSUER", FermatException.wrapException(e), "", "Cant create new ASSET ISSUER, unknown failure.");
         } finally {
-            database.closeDatabase();
+
         }
     }
 
@@ -254,7 +254,7 @@ public class AssetIssuerActorDao implements Serializable {
         } catch (Exception e) {
             throw new CantAddPendingAssetIssuerException("CAN'T INSERT ASSET ISSUER", FermatException.wrapException(e), "", "Cant create new ASSET ISSUER, unknown failure.");
         } finally {
-            database.closeDatabase();
+
         }
     }
 
@@ -300,7 +300,7 @@ public class AssetIssuerActorDao implements Serializable {
         } catch (Exception e) {
             throw new CantUpdateAssetIssuerException(e.getMessage(), FermatException.wrapException(e), "asset issuer Actor", "Cant get developer identity list, unknown failure.");
         } finally {
-            database.closeDatabase();
+
         }
     }
 
@@ -340,7 +340,7 @@ public class AssetIssuerActorDao implements Serializable {
         } catch (Exception e) {
             throw new CantUpdateAssetIssuerException(e.getMessage(), FermatException.wrapException(e), "asset issuer Actor", "Cant get developer identity list, unknown failure.");
         } finally {
-            database.closeDatabase();
+
         }
     }
 
@@ -389,7 +389,33 @@ public class AssetIssuerActorDao implements Serializable {
         } catch (Exception e) {
             throw new CantUpdateAssetIssuerException(e.getMessage(), FermatException.wrapException(e), "asset issuer Actor", "Cant get developer identity list, unknown failure.");
         } finally {
-            database.closeDatabase();
+
+        }
+    }
+
+    public void updateExtendedPublicKey(String actorPublicKey, String extendedPublicKey) throws CantGetUserDeveloperIdentitiesException, CantLoadTableToMemoryException, CantUpdateRecordException {
+        DatabaseTable table;
+        /**
+         * 1) Get the table.
+         */
+        table = this.database.getTable(AssetIssuerActorDatabaseConstants.ASSET_ISSUER_REGISTERED_TABLE_NAME);
+
+        if (table == null) {
+            /**
+             * Table not found.
+             */
+            throw new CantGetUserDeveloperIdentitiesException("Cant get asset issuer actor list, table not found.", "Asset Issuer Actor", "");
+        }
+
+        // 2) Find the Asset Issuer , filter by keys.
+        table.addStringFilter(AssetIssuerActorDatabaseConstants.ASSET_ISSUER_REGISTERED_PUBLIC_KEY_COLUMN_NAME, actorPublicKey, DatabaseFilterType.EQUAL);
+
+        table.loadToMemory();
+
+        // 3) Get Asset Issuer record and update state.
+        for (DatabaseTableRecord record : table.getRecords()) {
+            record.setStringValue(AssetIssuerActorDatabaseConstants.ASSET_ISSUER_REGISTERED_PUBLIC_KEY_EXTENDED_COLUMN_NAME, extendedPublicKey);
+            table.updateRecord(record);
         }
     }
 
@@ -453,7 +479,7 @@ public class AssetIssuerActorDao implements Serializable {
                 this.updateAssetIssuerDAPConnectionStateActorNetworkService(DAPConnectionState.REGISTERED_OFFLINE);
             }
 
-            database.closeDatabase();
+
         } catch (CantInsertRecordException e) {
             throw new CantAddPendingAssetIssuerException("CAN'T INSERT ASSET ISSUER REGISTERED IN ACTOR NETWORK SERVICE", e, "", "Cant create new ASSET ISSUER REGISTERED IN ACTOR NETWORK SERVICE, insert database problems.");
         } catch (CantUpdateAssetIssuerException e) {
@@ -461,7 +487,7 @@ public class AssetIssuerActorDao implements Serializable {
         } catch (Exception e) {
             throw new CantAddPendingAssetIssuerException("CAN'T INSERT ASSET ISSUER", FermatException.wrapException(e), "", "Cant create new ASSET USER, unknown failure.");
         } finally {
-            database.closeDatabase();
+
         }
         return recordInsert;
     }
@@ -489,7 +515,7 @@ public class AssetIssuerActorDao implements Serializable {
                     table.updateRecord(record);
                 }
             }
-            database.closeDatabase();
+
         } catch (CantLoadTableToMemoryException e) {
             throw new CantUpdateAssetIssuerException(e.getMessage(), e, "asset Issuer REGISTERED Actor", "Cant load " + AssetIssuerActorDatabaseConstants.ASSET_ISSUER_REGISTERED_TABLE_NAME + " table in memory.");
         } catch (CantUpdateRecordException e) {
@@ -497,7 +523,7 @@ public class AssetIssuerActorDao implements Serializable {
         } catch (Exception e) {
             throw new CantUpdateAssetIssuerException(e.getMessage(), FermatException.wrapException(e), "Asset User REGISTERED Actor", "Cant get developer identity list, unknown failure.");
         } finally {
-            database.closeDatabase();
+
         }
     }
 
@@ -545,7 +571,7 @@ public class AssetIssuerActorDao implements Serializable {
         } catch (Exception e) {
             throw new CantUpdateAssetIssuerException(e.getMessage(), FermatException.wrapException(e), "asset issuer Actor", "Cant get developer identity list, unknown failure.");
         } finally {
-            database.closeDatabase();
+
         }
     }
 
@@ -589,7 +615,7 @@ public class AssetIssuerActorDao implements Serializable {
         } catch (Exception e) {
             throw new CantGetAssetIssuersListException(e.getMessage(), FermatException.wrapException(e), "Asset Issuer Actor", "Cant get Asset Issuer Actor list, unknown failure.");
         } finally {
-            database.closeDatabase();
+
         }
         // Return the list values.
         return list;
@@ -632,7 +658,7 @@ public class AssetIssuerActorDao implements Serializable {
         } catch (Exception e) {
             throw new CantGetAssetIssuersListException(e.getMessage(), FermatException.wrapException(e), "Asset Issuer Actor", "Cant get Asset Issuer Actor list, unknown failure.");
         } finally {
-            database.closeDatabase();
+
         }
         // Return the list values.
         return list;
@@ -659,7 +685,7 @@ public class AssetIssuerActorDao implements Serializable {
             table.loadToMemory();
             // 3) Get Asset Users Record.
             assetIssuerActorRecord = this.addRecords(table.getRecords());
-            database.closeDatabase();
+
         } catch (CantLoadTableToMemoryException e) {
             throw new CantGetAssetIssuerActorsException(e.getMessage(), e, "Asset User Actor", "Cant load " + AssetIssuerActorDatabaseConstants.ASSET_ISSUER_TABLE_NAME + " table in memory.");
         } catch (CantGetAssetIssuerActorProfileImageException e) {
@@ -667,7 +693,7 @@ public class AssetIssuerActorDao implements Serializable {
         } catch (Exception e) {
             throw new CantGetAssetIssuerActorsException(e.getMessage(), FermatException.wrapException(e), "Asset User Actor", "Cant get Asset User Actor list, unknown failure.");
         } finally {
-            database.closeDatabase();
+
         }
         // Return the values.
         return assetIssuerActorRecord;
@@ -696,7 +722,7 @@ public class AssetIssuerActorDao implements Serializable {
             // 3) Get Asset Users Record.
             actorAssetIssuerrRecord = this.addRecords(table.getRecords());
 
-            database.closeDatabase();
+
         } catch (CantLoadTableToMemoryException e) {
             throw new CantGetAssetIssuerActorsException(e.getMessage(), e, "Asset Issuer Actor", "Cant load " + AssetIssuerActorDatabaseConstants.ASSET_ISSUER_TABLE_NAME + " table in memory.");
         } catch (CantGetAssetIssuerActorProfileImageException e) {
@@ -704,7 +730,7 @@ public class AssetIssuerActorDao implements Serializable {
         } catch (Exception e) {
             throw new CantGetAssetIssuerActorsException(e.getMessage(), FermatException.wrapException(e), "Asset Issuer Actor", "Cant get Asset User Actor, unknown failure.");
         } finally {
-            database.closeDatabase();
+
         }
         // Return the values.
         return actorAssetIssuerrRecord;
@@ -740,7 +766,46 @@ public class AssetIssuerActorDao implements Serializable {
         } catch (Exception e) {
             throw new CantGetAssetIssuersListException(e.getMessage(), FermatException.wrapException(e), "Asset Issuer Actor Registered", "Cant get Asset Issuer Actor Registered list, unknown failure.");
         } finally {
-            database.closeDatabase();
+
+        }
+        // Return the list values.
+        return list;
+    }
+
+    public List<ActorAssetIssuer> getAllAssetIssuerActorConnectedWithExtendedpk() throws CantGetAssetIssuersListException {
+        List<ActorAssetIssuer> list = new ArrayList<>(); // Asset User Actor list.
+        DatabaseTable table;
+        // Get Asset Users identities list.
+        try {
+            /**
+             * 1) Get the table.
+             */
+            table = this.database.getTable(AssetIssuerActorDatabaseConstants.ASSET_ISSUER_REGISTERED_TABLE_NAME);
+
+            if (table == null) {
+                /**
+                 * Table not found.
+                 */
+                throw new CantGetUserDeveloperIdentitiesException("Cant get asset Issuer identity list, table not found.", "Plugin Identity", "Cant get asset user identity list, table not found.");
+            }
+            // 2) Find  Asset Users by Connection State.
+
+            table.addStringFilter(AssetIssuerActorDatabaseConstants.ASSET_ISSUER_REGISTERED_CONNECTION_STATE_COLUMN_NAME, DAPConnectionState.CONNECTED_ONLINE.getCode(), DatabaseFilterType.EQUAL);
+            table.addStringFilter(AssetIssuerActorDatabaseConstants.ASSET_ISSUER_REGISTERED_PUBLIC_KEY_EXTENDED_COLUMN_NAME, "-", DatabaseFilterType.NOT_EQUALS);
+            table.addStringFilter(AssetIssuerActorDatabaseConstants.ASSET_ISSUER_REGISTERED_PUBLIC_KEY_EXTENDED_COLUMN_NAME, "", DatabaseFilterType.NOT_EQUALS);
+            table.addStringFilter(AssetIssuerActorDatabaseConstants.ASSET_ISSUER_REGISTERED_PUBLIC_KEY_EXTENDED_COLUMN_NAME, null, DatabaseFilterType.NOT_EQUALS);
+
+            table.loadToMemory();
+
+            this.addRecordsTableRegisteredToList(list, table.getRecords());
+        } catch (CantLoadTableToMemoryException e) {
+            throw new CantGetAssetIssuersListException(e.getMessage(), e, "Asset Issuer Actor", "Cant load " + AssetIssuerActorDatabaseConstants.ASSET_ISSUER_REGISTERED_TABLE_NAME + " table in memory.");
+        } catch (CantGetAssetIssuerActorProfileImageException e) {
+            throw new CantGetAssetIssuersListException(e.getMessage(), e, "Asset Issuer Actor", "Can't get profile ImageMiddleware.");
+        } catch (Exception e) {
+            throw new CantGetAssetIssuersListException(e.getMessage(), FermatException.wrapException(e), "Asset User Actor", "Cant get Asset Issuer Actor list, unknown failure.");
+        } finally {
+
         }
         // Return the list values.
         return list;
@@ -769,8 +834,6 @@ public class AssetIssuerActorDao implements Serializable {
             table.loadToMemory();
 
             this.addRecordsTableRegisteredToList(list, table.getRecords());
-
-            database.closeDatabase();
         } catch (CantLoadTableToMemoryException e) {
             throw new CantGetAssetIssuersListException(e.getMessage(), e, "Asset Issuer Actor", "Cant load " + AssetIssuerActorDatabaseConstants.ASSET_ISSUER_REGISTERED_TABLE_NAME + " table in memory.");
         } catch (CantGetAssetIssuerActorProfileImageException e) {
@@ -778,7 +841,7 @@ public class AssetIssuerActorDao implements Serializable {
         } catch (Exception e) {
             throw new CantGetAssetIssuersListException(e.getMessage(), FermatException.wrapException(e), "Asset User Actor", "Cant get Asset Issuer Actor list, unknown failure.");
         } finally {
-            database.closeDatabase();
+
         }
         // Return the list values.
         return list;
@@ -950,7 +1013,8 @@ public class AssetIssuerActorDao implements Serializable {
                     record.getLongValue(AssetIssuerActorDatabaseConstants.ASSET_ISSUER_REGISTRATION_DATE_COLUMN_NAME),
                     record.getLongValue(AssetIssuerActorDatabaseConstants.ASSET_ISSUER_LAST_CONNECTION_DATE_COLUMN_NAME),
                     getAssetIssuerProfileImagePrivateKey(record.getStringValue(AssetIssuerActorDatabaseConstants.ASSET_ISSUER_PUBLIC_KEY_COLUMN_NAME)),
-                    record.getStringValue(AssetIssuerActorDatabaseConstants.ASSET_ISSUER_DESCRIPTION_COLUMN_NAME));
+                    record.getStringValue(AssetIssuerActorDatabaseConstants.ASSET_ISSUER_DESCRIPTION_COLUMN_NAME),
+                    record.getStringValue(AssetIssuerActorDatabaseConstants.ASSET_ISSUER_REGISTERED_PUBLIC_KEY_EXTENDED_COLUMN_NAME));
         }
         return actorAssetIssuer;
     }
@@ -967,7 +1031,8 @@ public class AssetIssuerActorDao implements Serializable {
                     record.getLongValue(AssetIssuerActorDatabaseConstants.ASSET_ISSUER_REGISTERED_REGISTRATION_DATE_COLUMN_NAME),
                     record.getLongValue(AssetIssuerActorDatabaseConstants.ASSET_ISSUER_REGISTERED_LAST_CONNECTION_DATE_COLUMN_NAME),
                     getAssetIssuerProfileImagePrivateKey(record.getStringValue(AssetIssuerActorDatabaseConstants.ASSET_ISSUER_REGISTERED_PUBLIC_KEY_COLUMN_NAME)),
-                    record.getStringValue(AssetIssuerActorDatabaseConstants.ASSET_ISSUER_REGISTERED_DESCRIPTION_COLUMN_NAME)));
+                    record.getStringValue(AssetIssuerActorDatabaseConstants.ASSET_ISSUER_REGISTERED_DESCRIPTION_COLUMN_NAME),
+                    record.getStringValue(AssetIssuerActorDatabaseConstants.ASSET_ISSUER_REGISTERED_PUBLIC_KEY_EXTENDED_COLUMN_NAME)));
         }
     }
 }

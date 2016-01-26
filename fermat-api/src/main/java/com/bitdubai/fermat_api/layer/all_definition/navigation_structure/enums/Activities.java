@@ -26,6 +26,8 @@ public enum Activities implements FermatEnum {
     CCP_BITCOIN_WALLET_REQUEST_FORM_ACTIVITY("CCPBWRFA"),
     CCP_BITCOIN_WALLET_CONTACT_DETAIL_ACTIVITY("CCPBWCDA"),
     CCP_BITCOIN_WALLET_SETTINGS_ACTIVITY("CCPBWSA"),
+    CCP_BITCOIN_WALLET_SETTINGS_ACTIVITY_NOTIFICATIONS("CCPBWSAN"),
+    CCP_BITCOIN_WALLET_SETTINGS_ACTIVITY_MAIN_NETWORK("CCPBWSAMN"),
     CCP_BITCOIN_WALLET_ADD_CONNECTION_ACTIVITY("CCPBWACA"),
     CCP_BITCOIN_WALLET_NO_IDENTITY_ACTIVITY("CCPBWNIA"),
 
@@ -173,9 +175,11 @@ public enum Activities implements FermatEnum {
     BNK_BANK_MONEY_WALLET_SETUP("BNKBMWS"),
     BNK_BANK_MONEY_WALLET_ACCOUNT_DETAILS("BNKBMWAD"),
     BNK_BANK_MONEY_WALLET_ADD_ACCOUNT("BNKBMWAA"),
+    BNK_BANK_MONEY_WALLET_UPDATE_RECORD("BNKBMWU"),
 
     // Cash Money Wallet
     CSH_CASH_MONEY_WALLET_HOME("CSHCMWH"),
+    CSH_CASH_MONEY_WALLET_TRANSACTION_DETAIL("CSHCMWTD"),
     CSH_CASH_MONEY_WALLET_SETUP("CSHCMWS"),
 
     // Crypto Broker Identity
@@ -514,6 +518,10 @@ public enum Activities implements FermatEnum {
                 return CCP_BITCOIN_WALLET_REQUEST_FORM_ACTIVITY;
             case "CCPBWSA":
                 return CCP_BITCOIN_WALLET_SETTINGS_ACTIVITY;
+            case "CCPBWSAMN":
+                return CCP_BITCOIN_WALLET_SETTINGS_ACTIVITY_MAIN_NETWORK;
+            case "CCPBWSAN":
+                return CCP_BITCOIN_WALLET_SETTINGS_ACTIVITY_NOTIFICATIONS;
             case "CCPBWACA":
                 return CCP_BITCOIN_WALLET_ADD_CONNECTION_ACTIVITY;
             case "BWCIUC":
@@ -538,6 +546,8 @@ public enum Activities implements FermatEnum {
                 return BNK_BANK_MONEY_WALLET_SETUP;
             case "CSHCMWH":
                 return CSH_CASH_MONEY_WALLET_HOME;
+            case "CSHCMWTD":
+                return CSH_CASH_MONEY_WALLET_TRANSACTION_DETAIL;
             case "CSHCMWS":
                 return CSH_CASH_MONEY_WALLET_SETUP;
             case "BNKBMWAD":
@@ -588,7 +598,8 @@ public enum Activities implements FermatEnum {
 
             case "BNKBMWAA":
                 return BNK_BANK_MONEY_WALLET_ADD_ACCOUNT;
-
+            case "BNKBMWU":
+                return BNK_BANK_MONEY_WALLET_UPDATE_RECORD;
             case "DWAIUAL":
                 return DAP_WALLET_ASSET_ISSUER_USER_APPROPIATE_LIST;
 

@@ -53,10 +53,10 @@ public class ErrorConnectingFermatNetworkDialog extends FermatDialog<ReferenceWa
         positiveButtonView.setOnClickListener(rightClick);
         negativeButtonView.setOnClickListener(leftClick);
         mDescription.setText(description != null ? description : "");
-        positiveButtonView.setText(leftButton != null ? leftButton : "");
-        negativeButtonView.setText(rightButton != null ? rightButton : "");
-        positiveButtonView.setOnClickListener(leftClick);
-        negativeButtonView.setOnClickListener(rightClick);
+        negativeButtonView.setText(leftButton != null ? leftButton : "");
+        positiveButtonView.setText(rightButton != null ? rightButton : "");
+        negativeButtonView.setOnClickListener(leftClick);
+        positiveButtonView.setOnClickListener(rightClick);
     }
 
     @Override

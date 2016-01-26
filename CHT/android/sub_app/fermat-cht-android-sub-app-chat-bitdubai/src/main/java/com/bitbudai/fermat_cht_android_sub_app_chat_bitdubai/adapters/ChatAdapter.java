@@ -1,10 +1,4 @@
 package com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.adapters;
-/**
- * ChatAdapter
- *
- * @author Jose Cardozo josejcb (josejcb89@gmail.com) on 05/01/15.
- * @version 1.0
- */
 
 import android.content.Context;
 import android.graphics.BitmapFactory;
@@ -30,6 +24,13 @@ import com.bitdubai.fermat_cht_android_sub_app_chat_bitdubai.R;
 import java.util.ArrayList;
 import java.util.List;
 import java.lang.String;
+
+/**
+ * ChatAdapter
+ *
+ * @author Jose Cardozo josejcb (josejcb89@gmail.com) on 05/01/15.
+ * @version 1.0
+ */
 
 public class ChatAdapter extends FermatAdapter<ChatMessage, ChatHolder> {//ChatFactory
 
@@ -115,6 +116,7 @@ public class ChatAdapter extends FermatAdapter<ChatMessage, ChatHolder> {//ChatF
 
     private void setAlignment(ChatHolder holder, boolean isMe) {
         if (!isMe) {
+
             //holder.contentWithBG.setBackgroundResource(R.drawable.in_message_bg);
 
             LinearLayout.LayoutParams layoutParams =

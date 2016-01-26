@@ -1,5 +1,6 @@
 package com.bitdubai.reference_wallet.crypto_broker_wallet.fragments.wizard_pages;
 
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v7.widget.LinearLayoutManager;
@@ -20,9 +21,11 @@ import com.bitdubai.fermat_android_api.ui.interfaces.FermatListItemListeners;
 import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Wallets;
+import com.bitdubai.fermat_cbp_api.layer.identity.crypto_broker.exceptions.CantListCryptoBrokerIdentitiesException;
 import com.bitdubai.fermat_cbp_api.layer.identity.crypto_broker.interfaces.CryptoBrokerIdentity;
 import com.bitdubai.fermat_cbp_api.layer.wallet.crypto_broker.exceptions.CantGetCryptoBrokerWalletSettingException;
 import com.bitdubai.fermat_cbp_api.layer.wallet.crypto_broker.exceptions.CryptoBrokerWalletNotFoundException;
+import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_broker.exceptions.CantGetCryptoBrokerIdentityListException;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_broker.interfaces.CryptoBrokerWalletManager;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_broker.interfaces.CryptoBrokerWalletModuleManager;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedWalletExceptionSeverity;
@@ -38,7 +41,7 @@ import java.util.List;
  * Created by nelson on 22/12/15.
  */
 public class WizardPageSetIdentityFragment extends FermatWalletListFragment<CryptoBrokerIdentity>
-        implements FermatListItemListeners<CryptoBrokerIdentity> {
+        implements FermatListItemListeners<CryptoBrokerIdentity>, DialogInterface.OnDismissListener {
 
     private List<CryptoBrokerIdentity> identities;
     private CryptoBrokerIdentity selectedIdentity;
@@ -124,8 +127,8 @@ public class WizardPageSetIdentityFragment extends FermatWalletListFragment<Cryp
                             .setBannerRes(R.drawable.banner_crypto_broker)
                             .setIconRes(R.drawable.crypto_broker)
                             .setBody("Custom text support for dialog in the wizard identities help")
-                            .setSubTitle("Subtitle text of identities dialog help")
-                            .setTextFooter("Text footer indetities dialog help")
+                            .setSubTitle("This is a simple wallet for exchange Merchandise. It's main features are:")
+                            .setTextFooter("To begin, choose an avatar below. You might change it later with any picture and your alias")
                             .build();
                     presentationDialog.show();
 
@@ -135,10 +138,6 @@ public class WizardPageSetIdentityFragment extends FermatWalletListFragment<Cryp
             }
         }, 500);
     }
-
-
-
-
 
     @Override
     public FermatAdapter getAdapter() {
@@ -178,9 +177,10 @@ public class WizardPageSetIdentityFragment extends FermatWalletListFragment<Cryp
                         .setBannerRes(R.drawable.banner_crypto_broker)
                         .setIconRes(R.drawable.crypto_broker)
                         .setBody("Custom text support for dialog in the wizard identities help 2")
-                        .setSubTitle("Subtitle text of identities dialog help -> " + identities)
-                        .setTextFooter("Text footer indetities dialog help")
+                        .setSubTitle("This is a simple wallet for exchange Merchandise. " + identities)
+                        .setTextFooter("To begin, choose an avatar below. You might change it later with any picture and your alias")
                         .build();
+                presentationDialog.setOnDismissListener(this);
                 presentationDialog.show();
             }
 
@@ -254,5 +254,28 @@ public class WizardPageSetIdentityFragment extends FermatWalletListFragment<Cryp
     public void onDetach() {
         layoutManager = null;
         super.onDetach();
+    }
+
+    /**
+     * This method will be invoked when the dialog is dismissed.
+     *
+     * @param dialog The dialog that was dismissed will be passed into the
+     *               method.
+     */
+    @Override
+    public void onDismiss(DialogInterface dialog) {
+        try {
+            adapter.changeDataSet(walletManager.getListOfIdentities());
+        } catch (CantGetCryptoBrokerIdentityListException e) {
+            errorManager.reportUnexpectedWalletException(
+                    Wallets.CBP_CRYPTO_BROKER_WALLET,
+                    UnexpectedWalletExceptionSeverity.DISABLES_THIS_FRAGMENT,
+                    e);
+        } catch (CantListCryptoBrokerIdentitiesException e) {
+            errorManager.reportUnexpectedWalletException(
+                    Wallets.CBP_CRYPTO_BROKER_WALLET,
+                    UnexpectedWalletExceptionSeverity.DISABLES_THIS_FRAGMENT,
+                    e);
+        }
     }
 }

@@ -59,6 +59,11 @@ public class RedeemPointActorDatabaseConstants {
 
     public static final String REDEEM_POINT_REGISTERED_FIRST_KEY_COLUMN = REDEEM_POINT_REGISTERED_PUBLIC_KEY_COLUMN_NAME;
 
+    public static final String REGISTERED_ASSET_ISSUERS_TABLE_NAME = "registered_asset_issuers";
+    public static final String REGISTERED_ASSET_ISSUERS_REDEEM_POINT_PUBLICKEY_COLUMN = "redeemPointPublicKey";
+    public static final String REGISTERED_ASSET_ISSUERS_ISSUER_PUBLICKEY_COLUMN = "issuerExtendedPublicKey";
+    public static final String REGISTERED_ASSET_ISSUERS_FIRST_KEY_COLUMN = REGISTERED_ASSET_ISSUERS_REDEEM_POINT_PUBLICKEY_COLUMN;
+
     /**
      * Redeem Point Relation Issuer database table definition.
      */

@@ -41,7 +41,8 @@ public class AssetDetailActivityFragment extends AbstractFermatFragment {
     private View rootView;
     private Toolbar toolbar;
     private Resources res;
-    private View assetDetailRemainingLayout;
+    private View assetDetailDeliverLayout;
+    private View assetDetailAppropiateBtnLayout;
     private View assetDetailAvailableLayout;
 
     private View assetDetailAppropiateLayout;
@@ -100,12 +101,24 @@ public class AssetDetailActivityFragment extends AbstractFermatFragment {
         assetDetailAvailableText = (FermatTextView) rootView.findViewById(R.id.assetDetailAvailableText);
         assetDetailBookText = (FermatTextView) rootView.findViewById(R.id.assetDetailBookText);
         assetDetailBtcText = (FermatTextView) rootView.findViewById(R.id.assetDetailBtcText);
-        assetDetailRemainingText = (FermatTextView) rootView.findViewById(R.id.assetDetailRemainingText);
+        //Text = (FermatTextView) rootView.findViewById(R.id.assetDetailRemainingText);
         assetDetailDelivered = (FermatTextView) rootView.findViewById(R.id.assetDetailAvailableText2);
         assetDetailRedeemText = (FermatTextView) rootView.findViewById(R.id.assetDetailRedeemText);
         assetDetailAppropriatedText = (FermatTextView) rootView.findViewById(R.id.assetDetailAppropriatedText);
 
-        assetDetailRemainingLayout = rootView.findViewById(R.id.assetDetailRemainingLayout);
+        assetDetailDeliverLayout = rootView.findViewById(R.id.assetDetailDeliverLayout);
+        assetDetailDeliverLayout.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                changeActivity(Activities.DAP_WALLET_ASSET_ISSUER_ASSET_DELIVERY, appSession.getAppPublicKey());
+            }
+        });
+
+        assetDetailAppropiateBtnLayout = rootView.findViewById(R.id.assetDetailAppropiateBtnLayout);
+        assetDetailAppropiateBtnLayout.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+               //TODO: INSERTAR ACCION APPROPIATE aqui
+            }
+        });
 
         assetDetailAvailableLayout = rootView.findViewById(R.id.assetDetailAvailableLayout);
         assetDetailAvailableLayout.setOnClickListener(new View.OnClickListener() {
@@ -129,11 +142,7 @@ public class AssetDetailActivityFragment extends AbstractFermatFragment {
             }
         });
 
-        assetDetailRemainingLayout.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {
-                changeActivity(Activities.DAP_WALLET_ASSET_ISSUER_ASSET_DELIVERY, appSession.getAppPublicKey());
-            }
-        });
+
     }
 
     private void setupBackgroundBitmap() {
@@ -195,14 +204,14 @@ public class AssetDetailActivityFragment extends AbstractFermatFragment {
         BitmapWorkerTask bitmapWorkerTask = new BitmapWorkerTask(assetImageDetail, res, R.drawable.img_asset_without_image, false);
         bitmapWorkerTask.execute(img);
 
-        assetDetailRemainingLayout.setVisibility((digitalAsset.getAvailableBalanceQuantity() > 0) ? View.VISIBLE : View.GONE);
+        assetDetailDeliverLayout.setVisibility((digitalAsset.getAvailableBalanceQuantity() > 0) ? View.VISIBLE : View.GONE);
 
         assetDetailNameText.setText(digitalAsset.getName());
         assetDetailExpDateText.setText(digitalAsset.getFormattedExpDate());
         assetDetailAvailableText.setText(digitalAsset.getAvailableBalanceQuantity()+"");
         assetDetailBookText.setText(digitalAsset.getBookBalanceQuantity()+"");
         assetDetailBtcText.setText(digitalAsset.getFormattedAvailableBalanceBitcoin() + " BTC");
-        assetDetailRemainingText.setText(digitalAsset.getAvailableBalanceQuantity() + " Assets Remaining");
+        //assetDetailRemainingText.setText(digitalAsset.getAvailableBalanceQuantity() + " Assets Remaining");
         assetDetailDelivered.setText(digitalAsset.getUnused() + "");
         assetDetailRedeemText.setText(digitalAsset.getRedeemed()+"");
         assetDetailAppropriatedText.setText(digitalAsset.getAppropriated()+"");
