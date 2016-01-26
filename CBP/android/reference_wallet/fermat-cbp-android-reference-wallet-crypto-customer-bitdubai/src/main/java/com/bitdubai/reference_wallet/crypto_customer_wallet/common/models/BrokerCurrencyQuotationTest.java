@@ -11,7 +11,7 @@ public class BrokerCurrencyQuotationTest {
 
     private String exchangeRate;
 
-    private Boolean exchangeRateInv;
+//    private Boolean exchangeRateInv;
 
     public BrokerCurrencyQuotationTest(
         String currencyOver,
@@ -21,7 +21,7 @@ public class BrokerCurrencyQuotationTest {
         this.currencyOver = currencyOver;
         this.currencyUnder = currencyUnder;
         this.exchangeRate = exchangeRate;
-        this.exchangeRateInv = Boolean.FALSE;
+//        this.exchangeRateInv = Boolean.FALSE;
     }
 
     public String getCurrencyOver(){ return this.currencyOver; }
@@ -30,8 +30,10 @@ public class BrokerCurrencyQuotationTest {
 
     public String getExchangeRate(){ return  this.exchangeRate; }
 
-    public boolean getExchangeRateInv(){ return this.exchangeRateInv; }
+    public void setExchangeRate(String exchangeRate){ this.exchangeRate = exchangeRate; }
 
-    public void setExchangeRateInv(boolean exchangeRateInv){ this.exchangeRateInv = exchangeRateInv; }
+//    public boolean getExchangeRateInv(){ return this.exchangeRateInv; }
+
+//    public void setExchangeRateInv(boolean exchangeRateInv){ this.exchangeRateInv = exchangeRateInv; }
 
 }

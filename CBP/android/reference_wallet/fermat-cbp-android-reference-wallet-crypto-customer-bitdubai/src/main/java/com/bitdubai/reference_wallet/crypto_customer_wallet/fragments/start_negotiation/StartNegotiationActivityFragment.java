@@ -482,11 +482,6 @@ public class StartNegotiationActivityFragment extends AbstractFermatFragment<Cry
                 clauses.get(ClauseType.BROKER_CURRENCY).getValue()
         );
 
-        Toast.makeText(getActivity(), "The exchange rate:" +
-                "BROKER CURRENCY: " +clauses.get(ClauseType.BROKER_CURRENCY).getValue()+
-                ", CUSTOMER CURRENCY: "+clauses.get(ClauseType.CUSTOMER_CURRENCY).getValue()+
-                ", EXCHANGE RATE: "+brokerCurrencyQuotation.getExchangeRate()
-                , Toast.LENGTH_LONG).show();
 
         if(brokerCurrencyQuotation != null) {
 
@@ -494,7 +489,7 @@ public class StartNegotiationActivityFragment extends AbstractFermatFragment<Cry
 
             //GET EXCHANGE RATE
             BigDecimal exchangeRate = new BigDecimal(brokerCurrencyQuotation.getExchangeRate());
-            if(brokerCurrencyQuotation.getExchangeRateInv()) exchangeRate = one.divide(exchangeRate,4, RoundingMode.HALF_UP);
+//            if(brokerCurrencyQuotation.getExchangeRateInv()) exchangeRate = one.divide(exchangeRate,4, RoundingMode.HALF_UP);
 
             //CALCULATE NEW PAY
             final BigDecimal amountToBuy = new BigDecimal(clauses.get(ClauseType.CUSTOMER_CURRENCY_QUANTITY).getValue());
@@ -509,6 +504,13 @@ public class StartNegotiationActivityFragment extends AbstractFermatFragment<Cry
             final String amountToPayStr = DecimalFormat.getInstance().format(amountToPay.doubleValue());
             final ClauseInformation brokerCurrencyQuantityClause = clauses.get(ClauseType.BROKER_CURRENCY_QUANTITY);
             negotiationInfo.putClause(brokerCurrencyQuantityClause, amountToPayStr);
+
+
+            Toast.makeText(getActivity(), "The exchange rate:" +
+                    "BROKER CURRENCY: " +clauses.get(ClauseType.BROKER_CURRENCY).getValue()+
+                    ", CUSTOMER CURRENCY: "+clauses.get(ClauseType.CUSTOMER_CURRENCY).getValue()+
+                    ", EXCHANGE RATE: "+brokerCurrencyQuotation.getExchangeRate()
+                    , Toast.LENGTH_LONG).show();
 
         } else {
             Toast.makeText(getActivity(), "The exchange rate not fount for the currency to pay selected.", Toast.LENGTH_LONG).show();
@@ -556,7 +558,14 @@ public class StartNegotiationActivityFragment extends AbstractFermatFragment<Cry
 
         if(currencyQuotation == null) {
             currencyQuotation = getQuotation(currencyUnder, currencyOver);
-            if (currencyQuotation != null) currencyQuotation.setExchangeRateInv(Boolean.TRUE);
+            if (currencyQuotation != null) {
+                final BigDecimal one = new BigDecimal("1");
+                BigDecimal exchangeRate = new BigDecimal(currencyQuotation.getExchangeRate());
+                exchangeRate = one.divide(exchangeRate, 4, RoundingMode.HALF_UP);
+                final String exchangeRateStr = DecimalFormat.getInstance().format(exchangeRate.doubleValue());
+                currencyQuotation.setExchangeRate(exchangeRateStr);
+            }
+//            if (currencyQuotation != null) currencyQuotation.setExchangeRateInv(Boolean.TRUE);
         }
 
         return currencyQuotation;
