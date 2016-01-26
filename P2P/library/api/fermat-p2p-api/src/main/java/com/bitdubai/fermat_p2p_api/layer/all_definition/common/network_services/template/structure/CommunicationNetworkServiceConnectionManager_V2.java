@@ -190,7 +190,7 @@ public class CommunicationNetworkServiceConnectionManager_V2 implements NetworkS
             /*
              * Get the active connection
              */
-                CommunicationsVPNConnection communicationsVPNConnection = communicationsClientConnection.getCommunicationsVPNConnectionStablished(platformComponentProfile.getNetworkServiceType(), remoteComponentProfile);
+                CommunicationsVPNConnection communicationsVPNConnection = communicationsClientConnection.getCommunicationsVPNConnectionStablished(networkServicePluginRoot.getPlatformComponentProfilePluginRoot().getNetworkServiceType(), remoteComponentProfile);
 
                 //Validate the connection
                 if (communicationsVPNConnection != null &&
@@ -199,7 +199,7 @@ public class CommunicationNetworkServiceConnectionManager_V2 implements NetworkS
                  /*
                  * Instantiate the local reference
                  */
-                    CommunicationNetworkServiceLocal communicationNetworkServiceLocal = new CommunicationNetworkServiceLocal(remoteComponentProfile, errorManager, eventManager, outgoingMessageDao, platformComponentProfile.getNetworkServiceType(), networkServicePluginRoot);
+                    CommunicationNetworkServiceLocal communicationNetworkServiceLocal = new CommunicationNetworkServiceLocal(remoteComponentProfile, errorManager, eventManager, outgoingMessageDao, networkServicePluginRoot.getPlatformComponentProfilePluginRoot().getNetworkServiceType(), networkServicePluginRoot);
 
                 /*
                  * Instantiate the remote reference

@@ -483,9 +483,10 @@ public class CryptoTransmissionNetworkServicePluginRoot extends AbstractNetworkS
              */
                 if (!wsCommunicationsCloudClientManager.isDisable()) {
 
-                /*
-                 * Initialize the agent and start
-                 */
+
+                    /*
+                     * Initialize the agent and start
+                     */
                     communicationRegistrationProcessNetworkServiceAgent = new CommunicationRegistrationProcessNetworkServiceAgent(this, wsCommunicationsCloudClientManager);
                     communicationRegistrationProcessNetworkServiceAgent.start();
                 }
