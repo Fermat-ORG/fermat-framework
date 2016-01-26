@@ -11,7 +11,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.holders.ChatHolder;
-import com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.holders.ChatsListHolder;
+//import com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.holders.ChatsListHolder;
 import com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.models.ChatsList;
 import com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.util.Utils;
 import com.bitdubai.fermat_android_api.ui.adapters.FermatAdapter;
@@ -30,7 +30,7 @@ import java.util.Date;
  *
  */
 
-public class ChatListAdapter extends FermatAdapter<ChatsList, ChatsListHolder> {//ChatFactory
+public class ChatListAdapter extends FermatAdapter<ChatsList, ChatHolder> {//ChatFactory
 
     //private final LayoutInflater inflater;
     List<ChatsList> chatsList = new ArrayList<>();
@@ -45,14 +45,14 @@ public class ChatListAdapter extends FermatAdapter<ChatsList, ChatsListHolder> {
     }
 
     @Override
-    protected ChatsListHolder createHolder(View itemView, int type) {
-        return new ChatsListHolder(itemView);
+    protected ChatHolder createHolder(View itemView, int type) {
+        return new ChatHolder(itemView);
     }
 
     protected int getCardViewResource() {return R.layout.chats_item;  }
 
     @Override
-    protected void bindHolder(ChatsListHolder holder, ChatsList data, int position) {
+    protected void bindHolder(ChatHolder holder, ChatsList data, int position) {
         View convertView = getView();
         /*if (convertView == null) {
             convertView = inflater.inflate(R.layout.chat_list_item, parent, false);
@@ -64,13 +64,13 @@ public class ChatListAdapter extends FermatAdapter<ChatsList, ChatsListHolder> {
             holder = createHolder(convertView, position);
             convertView.setTag(holder);
         } else {
-            holder = (ChatsListHolder) convertView.getTag();
+            holder = (ChatHolder) convertView.getTag();
         }
 
         //holder.message_icon_text.setText(data.getId());
-        holder.firstLastName.setText(data.getName());
+       /* holder.firstLastName.setText(data.getName());
         holder.lastMessage.setText(data.getLastMessage());
-        holder.contactItemTime.setText(data.getDate());
+        holder.contactItemTime.setText(data.getDate());*/
 
     }
 
@@ -96,17 +96,12 @@ public class ChatListAdapter extends FermatAdapter<ChatsList, ChatsListHolder> {
 /*
         TdApi.Chat item = getItem(position);
         TdApi.ChatInfo info = item.type;
-
         TdApi.MessageText text = null;
         TdApi.Message message = item.topMessage;
-
         long timeMls = (long) message.date;
         Date date = new Date(timeMls * 1000);
-
         if (message.message instanceof TdApi.MessageText) {
             text = (TdApi.MessageText) message.message;
-
-
             lastMessage.setTextColor(Color.BLACK);
             lastMessage.setText(text.textWithSmilesAndUserRefs);
         } else {
@@ -136,12 +131,10 @@ public class ChatListAdapter extends FermatAdapter<ChatsList, ChatsListHolder> {
                 lastMessage.setText(R.string.message_unknown);
             }
         }
-
         TdApi.File file = null;
         long chatId = item.id;
         String userFirstName = "";
         String userLastName = "";
-
         if (info.getConstructor() == TdApi.PrivateChatInfo.CONSTRUCTOR) {
             TdApi.PrivateChatInfo privateChatInfo = (TdApi.PrivateChatInfo) info;
             TdApi.User chatUser = privateChatInfo.user;
@@ -155,7 +148,6 @@ public class ChatListAdapter extends FermatAdapter<ChatsList, ChatsListHolder> {
             userFirstName = groupChatInfo.groupChat.title;
             userLastName = "";
         }
-
         if (item.unreadCount != 0) {
             notify.setText(String.valueOf(item.unreadCount));
             Utils.verifySetBackground(notify, Utils.getShapeDrawable(R.dimen.chat_list_item_notification_size, getContext().getResources().getColor(R.color.message_notify)));
@@ -163,9 +155,7 @@ public class ChatListAdapter extends FermatAdapter<ChatsList, ChatsListHolder> {
             Utils.verifySetBackground(notify, null);
             notify.setText("");
         }
-
         Utils.setIcon(file, (int) chatId, userFirstName, userLastName, imageIcon, icon, (Activity) getContext());
-
         firstLastName.setText(userFirstName + " " + userLastName);
         time.setText(Utils.getDateFormat(Const.TIME_PATTERN).format(date));
 */

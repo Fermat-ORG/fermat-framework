@@ -4,17 +4,18 @@
     android:layout_height="match_parent"
     android:background="@color/background_activity">
 
-    <FrameLayout
+  <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <ProgressBar
-            android:id="@+id/chat_list_progress_bar"
-            style="@style/Widget.AppCompat.ProgressBar"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center" />
+      <!--       <ProgressBar
+               android:id="@+id/chat_list_progress_bar"
+               style="@style/Widget.AppCompat.ProgressBar"
+               android:layout_width="wrap_content"
+               android:layout_height="wrap_content"
+               android:layout_gravity="center" />
 
+<<<<<<< HEAD
         <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
             android:id="@+id/no_chats"
             android:layout_width="wrap_content"
@@ -23,9 +24,19 @@
             android:text="@string/no_chats_message"
             android:textSize="@dimen/no_messages_text_size"
             android:visibility="gone" />
+=======
+           <FermatTextView
+               android:id="@+id/no_chats"
+               android:layout_width="wrap_content"
+               android:layout_height="wrap_content"
+               android:layout_gravity="center"
+               android:text="@string/no_chats_message"
+               android:textSize="@dimen/no_messages_text_size"
+               android:visibility="gone" />-->
+>>>>>>> ccbe65283943b1248fa17bd0ad93e7e4785b4e1c
 
         <ListView
-            android:id="@id/android:list"
+            android:id="@+id/list"
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
@@ -33,12 +44,12 @@
     </FrameLayout>
 
 
-    <com.melnykov.fab.FloatingActionButton
+ <!--   <com.melnykov.fab.FloatingActionButton
         android:id="@+id/fab"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom|right"
         android:layout_margin="@dimen/margin_16dp"
         android:background="@drawable/message_icon_bg"
-        android:src="@drawable/cht_floating_pencil" />
+        android:src="@drawable/cht_floating_pencil" />-->
 </FrameLayout>

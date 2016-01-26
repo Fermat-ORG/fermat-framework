@@ -1,6 +1,7 @@
 package com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.fragments;
 
 import android.os.Bundle;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
@@ -13,6 +14,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 //import com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.adapters.ChatAdapter;
+import com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.adapters.ChatAdapter;
 import com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.adapters.ChatAdapterView;
 import com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.models.ChatMessage;
 import com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.sessions.ChatSession;
@@ -20,6 +22,7 @@ import com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.settings.ChatSettin
 import com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.util.Parameters;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractFermatFragment;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView;
+import com.bitdubai.fermat_android_api.ui.interfaces.FermatListItemListeners;
 import com.bitdubai.fermat_api.layer.all_definition.settings.structure.SettingsManager;
 import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.enums.SubApps;
 import com.bitdubai.fermat_cht_android_sub_app_chat_bitdubai.R;
@@ -57,7 +60,7 @@ import java.util.UUID;
  * Update by Miguel Payarez on 15/01/2016 (android-module connection with send button)
  */
 
-public class ChatFragment extends AbstractFermatFragment {//ActionBarActivity
+public class ChatFragment extends AbstractFermatFragment {//implements FermatListItemListeners<ChatModuleManager> {//ActionBarActivity
 
     // Fermat Managers
     private ChatManager chatManager;
@@ -70,21 +73,13 @@ public class ChatFragment extends AbstractFermatFragment {//ActionBarActivity
     List<String> chatmessages =  new ArrayList<>();
 
     private EditText messageET;
-    //private RecyclerView messagesContainer;
-    private ListView messagesContainer;
+    //private ListView messagesContainer;
     public Button sendBtn;
-    //private ChatAdapter adapter;
+    private ChatAdapter adapter;
     public ArrayList<ChatMessage> chatHistory;
+    private RecyclerView messagesContainer;
     TextView linear_layout_send_form;
 
-    //CHAT
-    String[] itemname ={
-            "Safari",
-            "Chrone",
-            "Opera",
-            "FireFox",
-
-    };
     public static ChatFragment newInstance() {return new ChatFragment();}
 
     @Override
@@ -105,9 +100,10 @@ public class ChatFragment extends AbstractFermatFragment {//ActionBarActivity
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {//private void initControls() {}
-/*
+
         // Inflate the layout for this fragment
         View layout = inflater.inflate(R.layout.chat, container, false);
+
         messageET = (EditText) layout.findViewById(R.id.messageEdit);
         sendBtn = (Button) layout.findViewById(R.id.chatSendButton);
         final FermatTextView meLabel = (FermatTextView) layout.findViewById(R.id.meLbl);
@@ -128,15 +124,21 @@ public class ChatFragment extends AbstractFermatFragment {//ActionBarActivity
         msg2.setMessage("hola");
         msg2.setDate(DateFormat.getDateTimeInstance().format(new Date()));
         chatHistory.add(msg2);
-        final ChatAdapter adapter = new ChatAdapter(getActivity(), chatHistory);
+        //final ChatAdapter adapter = new ChatAdapter(getActivity(), chatHistory);
         //messagesContainer = (ListView)layout.findViewById(R.id.messagesContainer);
-        //adapter.setFermatListEventListener(this);
+        //adapter.setFermatListEventListener();
         messagesContainer = (RecyclerView) layout.findViewById(R.id.messagesContainer);
+        messagesContainer.setLayoutManager(new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false));
+        adapter = new ChatAdapter(getActivity(), chatHistory);
+        //adapter.setFermatListEventListener();
         messagesContainer.setAdapter(adapter);
+
+        //messagesContainer.setFermatListEventListener(adapter);
         //adapter = new ChatAdapter(getActivity());//,
         //messagesContainer.setAdapter(adapter);*/
 
-        View layout = inflater.inflate(R.layout.chat, container, false);
+
+/*
         messagesContainer = (ListView) layout.findViewById(R.id.messagesContainer);
         messageET = (EditText) layout.findViewById(R.id.messageEdit);
         sendBtn = (Button) layout.findViewById(R.id.chatSendButton);
@@ -147,7 +149,7 @@ public class ChatFragment extends AbstractFermatFragment {//ActionBarActivity
         companionLabel.setText("My Contact");// Hard Coded
         //  loadDummyHistory();// Hard Coded
 
-
+/*
         ListView lstOpciones;
         final Parameters[] datos =
                 new Parameters[]{
@@ -164,9 +166,7 @@ public class ChatFragment extends AbstractFermatFragment {//ActionBarActivity
 
         lstOpciones.setAdapter(adaptador);
 
-
-
-
+*/
         sendBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -179,7 +179,8 @@ public class ChatFragment extends AbstractFermatFragment {//ActionBarActivity
                 Message testMessage = new MessageMock(UUID.fromString("52d7fab8-a423-458f-bcc9-49cdb3e9ba8f"));
                 testMessage.setMessage(messageET.getText().toString());
                 try {
-                    /*chatManager.saveChat(testChat);
+
+                    chatManager.saveChat(testChat);
                     chatManager.saveMessage(testMessage);
                     mensaje=chatManager.getMessageByChatId((UUID.fromString("52d7fab8-a423-458f-bcc9-49cdb3e9ba8f"))).getMessage();
                     String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(Calendar.getInstance().getTime());
@@ -190,14 +191,14 @@ public class ChatFragment extends AbstractFermatFragment {//ActionBarActivity
                     msg.setId(UUID.fromString("52d7fab8-a423-458f-bcc9-49cdb3e9ba8f").toString());
                     msg.setUserId("Jose");
                     chatHistory.add(msg);
-                    adapter.refreshEvents(chatHistory);*/
-                    chatManager.saveChat(testChat);
+                    adapter.refreshEvents(chatHistory);
+                    /*chatManager.saveChat(testChat);
                     chatManager.saveMessage(testMessage);
                     mensaje = chatManager.getMessageByChatId((UUID.fromString("52d7fab8-a423-458f-bcc9-49cdb3e9ba8f"))).getMessage();
                     datos[0] = new Parameters("Jose", mensaje);
 
                     adaptador.refreshEvents(datos);
-
+*/
                     //           meLabel.setText(chatManager.getMessageByChatId((UUID.fromString("52d7fab8-a423-458f-bcc9-49cdb3e9ba8f"))).getMessage());
                     //           linear_layout_send_form.setText(chatManager.getMessageByChatId((UUID.fromString("52d7fab8-a423-458f-bcc9-49cdb3e9ba8f"))).getMessage());
                 } catch (CantSaveChatException e) {
@@ -238,10 +239,10 @@ public class ChatFragment extends AbstractFermatFragment {//ActionBarActivity
         }
     }*/
 
-    private void scroll() {
+   /* private void scroll() {
         messagesContainer.setSelection(messagesContainer.getCount() - 1);
     }
-
+*/
 
 
     /*private void scroll() {

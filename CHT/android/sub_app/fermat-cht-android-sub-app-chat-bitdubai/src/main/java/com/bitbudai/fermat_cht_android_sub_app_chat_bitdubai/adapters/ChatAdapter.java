@@ -5,6 +5,7 @@ import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
 //import android.support.v4.content.ContextCompat;
 //import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.LinearLayoutManager;
 import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
@@ -40,9 +41,9 @@ public class ChatAdapter extends FermatAdapter<ChatMessage, ChatHolder> {//ChatF
 
     //private Activity context;
 
-    /*public ChatAdapter(Context context) {
+    public ChatAdapter(Context context) {
         super(context);
-    }*/
+    }
 
     public ChatAdapter(Context context, List<ChatMessage> chatMessages) {//ChatFactory
         super(context, chatMessages);
@@ -69,7 +70,6 @@ public class ChatAdapter extends FermatAdapter<ChatMessage, ChatHolder> {//ChatF
         View convertView = getView();
         //LayoutInflater vi = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         LayoutInflater vi = LayoutInflater.from(context) ;
-
         FermatTextView lblTitulo = (FermatTextView)convertView.findViewById(R.id.txtInfo);
         lblTitulo.setText(data.getMessage());
 
@@ -124,6 +124,7 @@ public class ChatAdapter extends FermatAdapter<ChatMessage, ChatHolder> {//ChatF
         //LayoutInflater vi = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
        // LayoutInflater vi = LayoutInflater.from(context);
         LayoutInflater vi = LayoutInflater.from(context) ;
+
         View convertView = vi.inflate(R.layout.chat_list_item, null);
 
        // LayoutInflater vi = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);

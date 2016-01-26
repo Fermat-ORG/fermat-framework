@@ -1,5 +1,6 @@
 package com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.fragments;
 
+
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.app.SearchManager;
@@ -16,6 +17,7 @@ import android.support.v4.app.FragmentTransaction;
 import android.support.v4.app.ListFragment;
 import android.text.TextUtils;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView;
+import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -26,24 +28,23 @@ import android.widget.AdapterView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.ProgressBar;
-import android.widget.TextView;
+import android.widget.Toast;
 
 import com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.adapters.ChatListAdapter;
-import com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.holders.ChatsListHolder;
+//import com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.holders.ChatsListHolder;
 import com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.models.ChatsList;
 import com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.models.ContactList;
 import com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.util.ImageLoader;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractFermatFragment;
 import com.bitdubai.fermat_cht_android_sub_app_chat_bitdubai.R;
 
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Chat List Fragment
  *
  * @author Jose Cardozo josejcb (josejcb89@gmail.com) on 19/01/16
  * @version 1.0
+ * Upd
  *
  */
 
@@ -78,7 +79,7 @@ public class ChatListFragment extends AbstractFermatFragment {
     // OS versions as search results are shown in-line via Action Bar search from honeycomb onward
     private boolean mIsSearchResultView = false;
 
-    boolean dualPane;
+    /*boolean dualPane;
     private static int currentCheckPosition = 0;
     private ProgressBar progressBar;
     private static ChatsList chats;
@@ -88,12 +89,38 @@ public class ChatListFragment extends AbstractFermatFragment {
 
     private FermatTextView noChatsMessage;
 
-    private long clickedId;
+    private long clickedId;*/
+
+
+    ListView list;
+ //   static HashMap<Integer,List<String>> chatinfo=new HashMap<Integer,List<String>>();
+   // static Integer[] imgid=new Integer[6];
+    String[] chatinfo={"MIGUEL@@hola como estas##24/10/2015",
+         "MAP@@chao nos vemos##25/10/2015",
+         "JOS@@Vamos a alla##24/12/2015",
+         "MIG@@hola como estas##24/10/2015",
+         "FRAN@@hola como estas##24/10/2015",
+         "GAB@@hola como estas##24/10/2015"};   //work
+    Integer[] imgid={R.drawable.ken,
+    R.drawable.sas,
+    R.drawable.koj,
+    R.drawable.veg,
+    R.drawable.ren,
+    R.drawable.pat
+    };
+
+    static void initchatinfo(){
+     //   chatinfo.put(0, Arrays.asList("Miguel", "Que paso?", "12/09/2007"));
+        //imgid[0]=R.drawable.ken;
+    }
+    public static ChatListFragment newInstance() {
+        initchatinfo();
+        return new ChatListFragment();}
 
     public ChatListFragment() {}
 
-    public static ChatListFragment newInstance() {
-        return new ChatListFragment();}
+    /*public static ChatListFragment newInstance() {
+        return new ChatListFragment();}*/
 
     public void setSearchQuery(String query) {
         if (TextUtils.isEmpty(query)) {
@@ -118,7 +145,7 @@ public class ChatListFragment extends AbstractFermatFragment {
         setHasOptionsMenu(true);
 
         // Create the main contacts adapter
-        adapter = new ChatListAdapter(getActivity());
+        //adapter = new ChatListAdapter(getActivity());
 
         if (savedInstanceState != null) {
             // If we're restoring state after this fragment was recreated then
@@ -148,18 +175,58 @@ public class ChatListFragment extends AbstractFermatFragment {
     }
 
     @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+//System.out.println("**********LISTA:"+chatinfo.get(0).get(0)+" - "+chatinfo.get(0).get(1)+" - "+chatinfo.get(0).get(2));
+     //   setContentView(getActivity());
+        View layout = inflater.inflate(R.layout.chats_list_fragment, container, false);
+
+        //ChatListAdapter adapter=new ChatListAdapter(getActivity(), chatinfo, imgid);
+        list=(ListView)layout.findViewById(R.id.list);
+        //list.setAdapter(adapter);
+
+        list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view,int position, long id) {
+                // TODO Auto-generated method stub
+                String Slecteditem= chatinfo[position];
+                Toast.makeText(getActivity(), Slecteditem, Toast.LENGTH_SHORT).show();
+
+            }
+        });
+
+        return layout;
+    }
+
+
+
+
+
+
+
+//mig chance
+    /*   @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View layout = inflater.inflate(R.layout.chats_list_fragment, container, false);
         adapter = new ChatListAdapter(getActivity());
+<<<<<<< HEAD
         //layout = (LinearLayout) getActivity().findViewById(R.id.fragment_layout);
         noChatsMessage = (FermatTextView) layout.findViewById(R.id.no_chats);//getActivity()
         return layout;
        // return inflater.inflate(R.layout.chats_list_fragment, null);
     }
+=======
+        layout = (LinearLayout) getActivity().findViewById(R.id.fragment_layout);
+        noChatsMessage = (TextView) getActivity().findViewById(R.id.no_chats);
+        return inflater.inflate(R.layout.chats_list_fragment, null);
+    }*/
+ //
 
-    @Override
+//mig chance
+/*    @Override
     public void onActivityCreated(Bundle savedState) {
         super.onActivityCreated(savedState);
 
@@ -173,11 +240,12 @@ public class ChatListFragment extends AbstractFermatFragment {
             layout.setVisibility(View.VISIBLE);
         }
 */
-        progressBar = (ProgressBar) getActivity().findViewById(R.id.chat_list_progress_bar);
+   /*     progressBar = (ProgressBar) getActivity().findViewById(R.id.chat_list_progress_bar);
 
         //getChatsList(Const.CHATS_LIST_OFFSET, Const.CHATS_LIST_LIMIT);
 
-        FloatingActionButton fab = (FloatingActionButton) getActivity().findViewById(R.id.fab);
+        FloatingActionButton fab = (FloatingActionButton) getActivity().findViewById(R.id.fab);*/
+    //
         //fab.attachToListView(getListView());
         //fab.setColorPressedResId(R.color.background_floating_button_pressed);
         //fab.setColorNormalResId(R.color.background_floating_button);
@@ -193,8 +261,8 @@ public class ChatListFragment extends AbstractFermatFragment {
             }
         });
         setListAdapter(adapter);*/
-
-        View detailsFrame = getActivity().findViewById(R.id.messages);
+//mig chance
+  /*      View detailsFrame = getActivity().findViewById(R.id.messages);
         dualPane = detailsFrame != null
                 && detailsFrame.getVisibility() == View.VISIBLE;
         if (savedState != null) {
@@ -203,14 +271,14 @@ public class ChatListFragment extends AbstractFermatFragment {
        /* if (dualPane) {
             getListView().setChoiceMode(ListView.CHOICE_MODE_SINGLE);
         }*/
-
          /*long id = ((ChatActivity) getActivity()).getIntentChatId();
        if (id != 0) {
             clickedId = id;
             int position = getChatPosition(id);
             showMessages(position);
-        }*/
-    }
+        }
+
+    }*/
 
     @Override
     public void onPause() {
@@ -220,14 +288,19 @@ public class ChatListFragment extends AbstractFermatFragment {
         // un-paused to let any remaining background work complete.
         mImageLoader.setPauseWork(false);
     }
-
+/*
     public void setChatsList(final ChatsList chats1) {
+
+ //   }
+//mig
+/*    public void setChatsList(final ChatsList chats1) {
         if (progressBar != null) {
             progressBar.setVisibility(View.GONE);
         }
         chats = chats1;
         //adapter.clear();
         //adapter.addAll(chats.chats);
+
     }
 
     public void onItemClick(AdapterView<?> parent, View v, int position, long id) {
@@ -237,7 +310,9 @@ public class ChatListFragment extends AbstractFermatFragment {
         // Moves to the Cursor row corresponding to the ListView item that was clicked
         //cursor.moveToPosition(position);
 
-       /*// Creates a contact lookup Uri from contact ID and lookup_key
+       /*
+       // Creates a contact lookup Uri from contact ID and lookup_key
+
         final Uri uri = ChatsContract.Contacts.getLookupUri(
                 cursor.getLong(ContactsQuery.ID),
                 cursor.getString(ChatsQuery.LOOKUP_KEY));
@@ -252,8 +327,9 @@ public class ChatListFragment extends AbstractFermatFragment {
         // single-pane layout a new activity is started so this is not needed.
         /*if (mIsTwoPaneLayout) {
             getListView().setItemChecked(position, true);
-        }*/
+        }
     }
+*/
 
     /*public void getChatsList(int offset, int limit) {
         new ApiClient<>(new TdApi.GetChats(offset, limit), new ChatsHandler(), new ApiClient.OnApiResultHandler() {
@@ -279,6 +355,7 @@ public class ChatListFragment extends AbstractFermatFragment {
         }).executeOnExecutor(AsyncTask.SERIAL_EXECUTOR);
     }*/
 
+
     private void onSelectionCleared() {
         // Uses callback to notify activity this contains this fragment
         mOnChatSelectedListener.onSelectionCleared();
@@ -303,6 +380,7 @@ public class ChatListFragment extends AbstractFermatFragment {
         if (mIsSearchResultView) {
             searchItem.setVisible(false);
         }
+    }
 
         // Retrieves the system search manager service
 /*        final SearchManager searchManager =
@@ -388,13 +466,14 @@ public class ChatListFragment extends AbstractFermatFragment {
             // Sets the SearchView to the previous search string
             searchView.setQuery(savedSearchTerm, false);
         }
-*/
-    }
+
+    }*/
 
 
-    public ChatsList getChat(long id) {
-       // if (chats == null /*|| chats.chats.length == 0*/) {
-        /*    chats = ChatsListHolder.getChats();
+//mig chance
+/*    public ChatsList getChat(long id) {
+       // if (chats == null *//*|| chats.chats.length == 0*//*) {
+        *//*    chats = ChatsListHolder.getChats();
         }
         if (id != 0) {
             clickedId = id;
@@ -409,10 +488,10 @@ public class ChatListFragment extends AbstractFermatFragment {
             return chats.chats[0];
         } else {
             return chats.chats[currentCheckPosition];
-        }*/
+        }*//*
         return null;
-    }
-
+    }*/
+//
     /*public int getChatPosition(long id) {
         if (chats == null) {
             chats = MessagesFragmentHolder.getChats();
@@ -458,10 +537,11 @@ public class ChatListFragment extends AbstractFermatFragment {
         }
         adapter.notifyDataSetChanged();
     }*/
-
-    @Override
+//mig chanve
+/*    @Override
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
+
         if (!TextUtils.isEmpty(mSearchTerm)) {
             // Saves the current search string
             outState.putString(SearchManager.QUERY, mSearchTerm);
@@ -470,6 +550,10 @@ public class ChatListFragment extends AbstractFermatFragment {
             //outState.putInt(STATE_PREVIOUSLY_SELECTED_KEY, getListView().getCheckedItemPosition());
         }
     }
+
+        outState.putInt("curChoice", currentCheckPosition);
+    }*/
+//
 
     /*@Override
     public void onListItemClick(ListView l, View v, int pos, long id) {
@@ -492,17 +576,17 @@ public class ChatListFragment extends AbstractFermatFragment {
             layout.setVisibility(View.INVISIBLE);
         }
     }*/
-
-    public void openChat(long resultId) {
+//mig chance
+/*    public void openChat(long resultId) {
         clickedId = resultId;
-        /*int position = getChatPosition(resultId);
+        *//*int position = getChatPosition(resultId);
         if (position == Const.CHAT_NOT_FOUND) {
             newPrivateChat(resultId);
         } else {
             showMessages(position);
-        }*/
-    }
-
+        }*//*
+    }*/
+//
    /* private void newPrivateChat(final long userId) {
         getActivity().setRequestedOrientation(getResources().getConfiguration().orientation);
         mProgressDialog = ProgressDialog.show(getActivity(), getActivity().getString(R.string.loading),
@@ -563,12 +647,13 @@ public class ChatListFragment extends AbstractFermatFragment {
         }
     }*/
 
-    @Override
+    //mig change
+ /*   @Override
     public void onStop() {
         super.onStop();
         fragmentStopped = true;
-    }
-
+    }*/
+    //
     /*@Override
     public void onResume() {
         fragmentStopped = false;
