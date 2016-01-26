@@ -8,6 +8,7 @@ import android.support.v4.content.LocalBroadcastManager;
 import android.widget.Toast;
 
 import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.FermatSession;
+import com.bitdubai.fermat_android_api.ui.Views.PresentationDialog;
 import com.bitdubai.fermat_android_api.ui.inflater.ViewInflater;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Engine;
 import com.bitdubai.fermat_api.layer.all_definition.enums.UISource;
@@ -126,4 +127,6 @@ public abstract class FermatDialog <S extends FermatSession,R extends ResourcePr
     protected void toastDefaultError() {
         Toast.makeText(getContext(), "Oooops! recovering from system error - ", Toast.LENGTH_SHORT).show();
     }
+
+
 }

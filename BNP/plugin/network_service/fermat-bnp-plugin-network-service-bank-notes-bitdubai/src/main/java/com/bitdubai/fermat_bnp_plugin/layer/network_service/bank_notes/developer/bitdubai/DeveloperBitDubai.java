@@ -20,7 +20,7 @@ public class DeveloperBitDubai implements PluginDeveloper, PluginLicensor {
     }
 
     public DeveloperBitDubai () {
-        plugin = new BankNotesNetworkServicePluginRoot();
+        //plugin = new BankNotesNetworkServicePluginRoot();
     }
 
     @Override
