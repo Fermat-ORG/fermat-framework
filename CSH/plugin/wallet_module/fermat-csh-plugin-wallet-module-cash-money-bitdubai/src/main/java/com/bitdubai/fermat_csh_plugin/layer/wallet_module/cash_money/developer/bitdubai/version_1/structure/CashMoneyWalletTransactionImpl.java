@@ -1,4 +1,4 @@
-package com.bitdubai.fermat_csh_plugin.layer.wallet.cash_money.developer.bitdubai.version_1.structure;
+package com.bitdubai.fermat_csh_plugin.layer.wallet_module.cash_money.developer.bitdubai.version_1.structure;
 
 import com.bitdubai.fermat_api.layer.all_definition.enums.FiatCurrency;
 import com.bitdubai.fermat_csh_api.all_definition.enums.BalanceType;
@@ -93,3 +93,4 @@ public class CashMoneyWalletTransactionImpl implements CashMoneyWalletTransactio
         return isPending;
     }
 }
+
