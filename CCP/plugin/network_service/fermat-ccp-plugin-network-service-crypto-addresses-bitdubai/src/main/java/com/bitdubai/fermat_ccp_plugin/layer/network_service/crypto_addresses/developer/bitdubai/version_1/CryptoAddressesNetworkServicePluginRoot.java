@@ -37,6 +37,7 @@ import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.FileNotF
 import com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_addresses.developer.bitdubai.version_1.communication.event_handlers.NewMessagesEventHandler;
 import com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_addresses.developer.bitdubai.version_1.communication.event_handlers.NewSentMessageNotificationEventHandler;
 import com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_addresses.developer.bitdubai.version_1.messages.ReceivedMessage;
+import com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_addresses.developer.bitdubai.version_1.structure.AddressesConstants;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.common.network_services.interfaces.NetworkService;
 import com.bitdubai.fermat_api.layer.all_definition.network_service.interfaces.NetworkServiceConnectionManager;
 import com.bitdubai.fermat_api.layer.all_definition.util.Version;
@@ -68,7 +69,6 @@ import com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_addresses.dev
 import com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_addresses.developer.bitdubai.version_1.communication.event_handlers.FailureComponentConnectionRequestNotificationEventHandler;
 import com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_addresses.developer.bitdubai.version_1.communication.event_handlers.NewReceiveMessagesNotificationEventHandler;
 import com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_addresses.developer.bitdubai.version_1.communication.event_handlers.VPNConnectionCloseNotificationEventHandler;
-import com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_addresses.developer.bitdubai.version_1.communication.structure.CommunicationNetworkServiceConnectionManager;
 import com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_addresses.developer.bitdubai.version_1.communication.structure.CommunicationRegistrationProcessNetworkServiceAgent;
 import com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_addresses.developer.bitdubai.version_1.database.CryptoAddressesNetworkServiceDao;
 import com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_addresses.developer.bitdubai.version_1.database.CryptoAddressesNetworkServiceDeveloperDatabaseFactory;
@@ -630,7 +630,7 @@ public class CryptoAddressesNetworkServicePluginRoot extends AbstractNetworkServ
                     blockchainNetworkType,
                     1,
                     System.currentTimeMillis(),
-                    "OUT",
+                    AddressesConstants.OUTGOING_MESSAGE,
                     false
             );
 
@@ -1261,7 +1261,7 @@ public class CryptoAddressesNetworkServicePluginRoot extends AbstractNetworkServ
                     break;
                 case RECEIVED:
                     ReceivedMessage receivedMessage  =  gson.fromJson(jsonMessage, ReceivedMessage.class);
-                    receivedMessage(receivedMessage);
+                    //receivedMessage(receivedMessage);
                     break;
                 default:
                     throw new CantHandleNewMessagesException(
@@ -1303,7 +1303,7 @@ public class CryptoAddressesNetworkServicePluginRoot extends AbstractNetworkServ
                     requestMessage.getBlockchainNetworkType(),
                     1,
                     System.currentTimeMillis(),
-                    "INT",
+                    AddressesConstants.INCOMING_MESSAGE,
                     false
             );
 

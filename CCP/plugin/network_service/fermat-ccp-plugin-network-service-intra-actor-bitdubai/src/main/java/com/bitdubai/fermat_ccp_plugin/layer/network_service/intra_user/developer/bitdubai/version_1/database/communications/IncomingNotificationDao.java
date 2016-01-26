@@ -81,7 +81,8 @@ public class IncomingNotificationDao implements DAO {
                                                         final long                            timestamp           ,
                                                         final ActorProtocolState              protocolState       ,
                                                         final boolean                         flagReaded ,
-                                                        int sentCount) throws CantCreateNotificationException {
+                                                        int sentCount,
+                                                        UUID responseToNotificationId) throws CantCreateNotificationException {
 
         try {
 
@@ -106,7 +107,8 @@ public class IncomingNotificationDao implements DAO {
                         timestamp           ,
                         protocolState       ,
                         flagReaded,
-                        0
+                        0,
+                        responseToNotificationId
 
                 );
 
@@ -514,6 +516,8 @@ public class IncomingNotificationDao implements DAO {
             dbRecord.setStringValue(CommunicationNetworkServiceDatabaseConstants.INCOMING_NOTIFICATION_PROTOCOL_STATE_COLUMN_NAME, record.getActorProtocolState().getCode());
             dbRecord.setStringValue(CommunicationNetworkServiceDatabaseConstants.INCOMING_NOTIFICATION_READ_MARK_COLUMN_NAME, String.valueOf(record.isFlagReadead()));
             dbRecord.setStringValue(CommunicationNetworkServiceDatabaseConstants.INCOMING_NOTIFICATION_SENDER_PHRASE_COLUMN_NAME          , record.getActorSenderPhrase());
+            if(record.getResponseToNotificationId()!=null)
+            dbRecord.setUUIDValue(CommunicationNetworkServiceDatabaseConstants.INCOMING_NOTIFICATION_RESPONSE_TO_NOTIFICATION_ID_COLUMN_NAME, record.getResponseToNotificationId());
 
 
             /**
@@ -547,7 +551,7 @@ public class IncomingNotificationDao implements DAO {
         String protocolState         = record.getStringValue(CommunicationNetworkServiceDatabaseConstants.INCOMING_NOTIFICATION_PROTOCOL_STATE_COLUMN_NAME);
         String flagReaded  = record.getStringValue(CommunicationNetworkServiceDatabaseConstants.INCOMING_NOTIFICATION_READ_MARK_COLUMN_NAME);
         String senderPhrase = record.getStringValue(CommunicationNetworkServiceDatabaseConstants.INCOMING_NOTIFICATION_SENDER_PHRASE_COLUMN_NAME);
-
+        UUID   responseToNotificationId            = record.getUUIDValue(CommunicationNetworkServiceDatabaseConstants.OUTGOING_NOTIFICATION_RESPONSE_TO_NOTIFICATION_ID_COLUMN_NAME);
 
         ActorProtocolState  actorProtocolState = ActorProtocolState .getByCode(protocolState);
         Boolean readed =Boolean.valueOf(flagReaded);
@@ -577,7 +581,8 @@ public class IncomingNotificationDao implements DAO {
                 timestamp   ,
                 actorProtocolState             ,
                 readed,
-                0
+                0,
+                responseToNotificationId
 
         );
         }
