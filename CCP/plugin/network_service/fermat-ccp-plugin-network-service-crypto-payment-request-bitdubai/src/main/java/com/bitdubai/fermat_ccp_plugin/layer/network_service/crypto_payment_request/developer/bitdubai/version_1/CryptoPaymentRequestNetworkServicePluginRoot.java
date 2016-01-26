@@ -907,9 +907,7 @@ public final class CryptoPaymentRequestNetworkServicePluginRoot extends Abstract
      */
     public void handleCompleteComponentRegistrationNotificationEvent(final PlatformComponentProfile platformComponentProfileRegistered) {
 
-        if (platformComponentProfileRegistered.getPlatformComponentType() == PlatformComponentType.COMMUNICATION_CLOUD_CLIENT && this.register){
-
-            beforeRegistered = Boolean.TRUE;
+        if (platformComponentProfileRegistered.getPlatformComponentType() == PlatformComponentType.COMMUNICATION_CLOUD_CLIENT && !this.register){
 
             /*
              * Construct my profile and register me
@@ -1035,9 +1033,16 @@ public final class CryptoPaymentRequestNetworkServicePluginRoot extends Abstract
 
           reprocessMessage();
 
-            this.register = false;
-            if(communicationNetworkServiceConnectionManager != null)
+            this.register = Boolean.FALSE;
+
+            if(communicationNetworkServiceConnectionManager != null) {
                 communicationNetworkServiceConnectionManager.closeAllConnection();
+                communicationNetworkServiceConnectionManager.stop();
+            }
+
+            if(cryptoPaymentRequestExecutorAgent!=null) {
+                cryptoPaymentRequestExecutorAgent.stop();
+            }
         }
 
     }
@@ -1051,6 +1056,12 @@ public final class CryptoPaymentRequestNetworkServicePluginRoot extends Abstract
         if(communicationNetworkServiceConnectionManager != null)
             communicationNetworkServiceConnectionManager.stop();
 
+        if(cryptoPaymentRequestExecutorAgent!=null) {
+            cryptoPaymentRequestExecutorAgent.stop();
+        }
+
+        this.register = Boolean.FALSE;
+
     }
 
     /*
@@ -1060,52 +1071,15 @@ public final class CryptoPaymentRequestNetworkServicePluginRoot extends Abstract
     public void handleClientSuccessfullReconnectNotificationEvent(FermatEvent fermatEvent) {
 
 
-            if(communicationNetworkServiceConnectionManager != null) {
-                communicationNetworkServiceConnectionManager.restart();
-            }
+        if (communicationNetworkServiceConnectionManager == null){
+            this.initializeCommunicationNetworkServiceConnectionManager();
+        }else{
+            communicationNetworkServiceConnectionManager.restart();
+        }
 
-            if(!this.register){
-                if(communicationRegistrationProcessNetworkServiceAgent != null) {
-
-                    communicationRegistrationProcessNetworkServiceAgent.stop();
-                    communicationRegistrationProcessNetworkServiceAgent = null;
-
-                       /*
-                 * Construct my profile and register me
-                 */
-                    PlatformComponentProfile platformComponentProfileToReconnect =  wsCommunicationsCloudClientManager.getCommunicationsCloudClientConnection().constructPlatformComponentProfileFactory(this.getIdentityPublicKey(),
-                            this.getAlias().toLowerCase(),
-                            this.getName(),
-                            this.getNetworkServiceType(),
-                            this.getPlatformComponentType(),
-                            this.getExtraData());
-
-                    try {
-                    /*
-                     * Register me
-                     */
-                        wsCommunicationsCloudClientManager.getCommunicationsCloudClientConnection().registerComponentForCommunication(this.getNetworkServiceType(), platformComponentProfileToReconnect);
-
-                    } catch (CantRegisterComponentException e) {
-                        e.printStackTrace();
-                    }
-
-                /*
-                 * Configure my new profile
-                 */
-                    this.setPlatformComponentProfilePluginRoot(platformComponentProfileToReconnect);
-
-                /*
-                 * Initialize the connection manager
-                 */
-                    this.initializeCommunicationNetworkServiceConnectionManager();
-
-                }
-            }
-
-         /*
-             * Mark as register
-             */
+        /*
+         * Mark as register
+         */
         this.register = Boolean.TRUE;
 
         if(cryptoPaymentRequestExecutorAgent!=null) {

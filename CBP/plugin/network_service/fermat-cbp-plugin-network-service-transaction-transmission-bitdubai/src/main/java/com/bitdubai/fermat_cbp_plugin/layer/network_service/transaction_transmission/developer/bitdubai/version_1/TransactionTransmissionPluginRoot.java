@@ -735,10 +735,12 @@ public class TransactionTransmissionPluginRoot extends AbstractNetworkService im
 
         try{
             if (fermatEvent instanceof ClientConnectionCloseNotificationEvent) {
-                this.register = false;
+                this.register = Boolean.FALSE;
 
-                if (communicationNetworkServiceConnectionManager != null)
+                if(communicationNetworkServiceConnectionManager != null) {
                     communicationNetworkServiceConnectionManager.closeAllConnection();
+                    communicationNetworkServiceConnectionManager.stop();
+                }
             }
         }catch(Exception e){
             StringBuffer contextBuffer = new StringBuffer();
@@ -759,18 +761,7 @@ public class TransactionTransmissionPluginRoot extends AbstractNetworkService im
             errorManager.reportUnexpectedPluginException(Plugins.TRANSACTION_TRANSMISSION, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, registrationNotificationException);
 
         }
-    /*public void handleVpnConnectionCloseNotificationEvent(FermatEvent fermatEvent) {
-        if(fermatEvent instanceof VPNConnectionCloseNotificationEvent){
 
-            VPNConnectionCloseNotificationEvent vpnConnectionCloseNotificationEvent = (VPNConnectionCloseNotificationEvent) fermatEvent;
-
-            if(vpnConnectionCloseNotificationEvent.getNetworkServiceApplicant() == getNetworkServiceType()){
-
-                communicationNetworkServiceConnectionManager.closeConnection(vpnConnectionCloseNotificationEvent.getRemoteParticipant().getIdentityPublicKey());
-
-            }
-
-        }*/
     }
 
     /*
@@ -782,6 +773,8 @@ public class TransactionTransmissionPluginRoot extends AbstractNetworkService im
         if(communicationNetworkServiceConnectionManager != null)
             communicationNetworkServiceConnectionManager.stop();
 
+        this.register = Boolean.FALSE;
+
     }
 
     /*
@@ -790,50 +783,16 @@ public class TransactionTransmissionPluginRoot extends AbstractNetworkService im
     @Override
     public void handleClientSuccessfullReconnectNotificationEvent(FermatEvent fermatEvent) {
 
-            if(communicationNetworkServiceConnectionManager != null) {
-                communicationNetworkServiceConnectionManager.restart();
-            }
+        if (communicationNetworkServiceConnectionManager == null){
+            this.initializeCommunicationNetworkServiceConnectionManager();
+        }else{
+            communicationNetworkServiceConnectionManager.restart();
+        }
 
-            if(communicationRegistrationProcessNetworkServiceAgent != null && !this.register){
-
-                if(communicationRegistrationProcessNetworkServiceAgent.isRunning()) {
-                    communicationRegistrationProcessNetworkServiceAgent.stop();
-                    communicationRegistrationProcessNetworkServiceAgent = null;
-                }
-
-                       /*
-                 * Construct my profile and register me
-                 */
-                    PlatformComponentProfile platformComponentProfileToReconnect =  wsCommunicationsCloudClientManager.getCommunicationsCloudClientConnection().constructPlatformComponentProfileFactory(this.getIdentityPublicKey(),
-                            this.getAlias().toLowerCase(),
-                            this.getName(),
-                            this.getNetworkServiceType(),
-                            this.getPlatformComponentType(),
-                            this.getExtraData());
-
-                    try {
-                    /*
-                     * Register me
-                     */
-                        wsCommunicationsCloudClientManager.getCommunicationsCloudClientConnection().registerComponentForCommunication(this.getNetworkServiceType(), platformComponentProfileToReconnect);
-
-                    } catch (CantRegisterComponentException e) {
-                        e.printStackTrace();
-                    }
-
-                /*
-                 * Configure my new profile
-                 */
-                    this.setPlatformComponentProfilePluginRoot(platformComponentProfileToReconnect);
-
-                /*
-                 * Initialize the connection manager
-                 */
-                    this.initializeCommunicationNetworkServiceConnectionManager();
-
-
-            }
-
+         /*
+          * Mark as register
+          */
+        this.register = Boolean.TRUE;
     }
 
     @Override
