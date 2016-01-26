@@ -124,7 +124,7 @@ public class AssetDeliveryFragment extends AbstractFermatFragment {
                     .setSubTitle("Asset delivery section.")
                     .setBody("On this section you will be able to identify the users you are going to deliver this asset to.\n\n" +
                             "You can deliver as many assets as you have to any connected user. \n\n" +
-                            "If no users are available, you will have to connect to them using the User Community sub application.")
+                            "If no users are available, you will have to connect to them using the User Community application.")
                     .setTemplateType(PresentationDialog.TemplateType.TYPE_PRESENTATION_WITHOUT_IDENTITIES)
                     .setIsCheckEnabled(checkButton)
                     .build();

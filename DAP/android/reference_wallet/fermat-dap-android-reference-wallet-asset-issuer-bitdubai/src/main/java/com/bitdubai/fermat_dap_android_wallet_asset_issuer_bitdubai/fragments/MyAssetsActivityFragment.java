@@ -146,7 +146,7 @@ public class MyAssetsActivityFragment extends FermatWalletListFragment<DigitalAs
                     .setBody("* From this wallet you will be able to distribute your assets to the world and collect statistics of their usage.\n" +
                             "* Help is available on any screen!")
                     .setTextFooter("* We will be creating an avatar for you in order to identify you in the system as an Asset Issuer.\n" +
-                            "* You will be able to edit your profile in the Asset Issuer Identity sub app.")
+                            "* You will be able to edit your profile in the Asset Issuer Identity application.")
                     .setTemplateType((moduleManager.getActiveAssetIssuerIdentity() == null) ? PresentationDialog.TemplateType.DAP_TYPE_PRESENTATION : PresentationDialog.TemplateType.TYPE_PRESENTATION_WITHOUT_IDENTITIES)
                     .setIsCheckEnabled(checkButton)
                     .build();
