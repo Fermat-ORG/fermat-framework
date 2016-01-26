@@ -2,18 +2,22 @@ package com.bitdubai.fermat_pip_plugin.layer.android_core_module.developer.bitdu
 
 
 import com.bitdubai.fermat_api.layer.all_definition.common.system.abstract_classes.AbstractPlugin;
-;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.annotations.NeededPluginReference;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.PluginVersionReference;
-
+import com.bitdubai.fermat_api.layer.all_definition.enums.Layers;
+import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
+import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.settings.structure.SettingsManager;
 import com.bitdubai.fermat_api.layer.all_definition.util.Version;
 import com.bitdubai.fermat_api.layer.modules.common_classes.ActiveActorIdentityInformation;
 import com.bitdubai.fermat_api.layer.modules.exceptions.ActorIdentityNotSelectedException;
 import com.bitdubai.fermat_api.layer.modules.exceptions.CantGetSelectedActorIdentityException;
-import com.bitdubai.fermat_pip_api.all_definition.enums.NetworkStatus;
+import com.bitdubai.fermat_p2p_api.layer.p2p_communication.WsCommunicationsCloudClientManager;
 import com.bitdubai.fermat_pip_api.layer.module.android_core.interfaces.AndroidCoreManager;
 import com.bitdubai.fermat_pip_api.layer.module.android_core.interfaces.AndroidCoreModule;
 import com.bitdubai.fermat_pip_plugin.layer.android_core_module.developer.bitdubai.version_1.structure.AndroidCoreModuleManager;
+
+;
 
 
 /**
@@ -29,7 +33,8 @@ import com.bitdubai.fermat_pip_plugin.layer.android_core_module.developer.bitdub
  */
 public class AndroidCoreModulePluginRoot extends AbstractPlugin implements AndroidCoreModule {
 
-
+    @NeededPluginReference(platform = Platforms.COMMUNICATION_PLATFORM, layer = Layers.COMMUNICATION, plugin = Plugins.WS_CLOUD_CLIENT)
+    private WsCommunicationsCloudClientManager wsCommunicationsCloudClientManager;
 
     public AndroidCoreModulePluginRoot(){
         super(new PluginVersionReference(new Version()));
@@ -42,7 +47,7 @@ public class AndroidCoreModulePluginRoot extends AbstractPlugin implements Andro
 
     @Override
     public AndroidCoreManager getAndroidCoreManager() {
-        return new AndroidCoreModuleManager();
+        return new AndroidCoreModuleManager(wsCommunicationsCloudClientManager);
     }
 
     @Override
