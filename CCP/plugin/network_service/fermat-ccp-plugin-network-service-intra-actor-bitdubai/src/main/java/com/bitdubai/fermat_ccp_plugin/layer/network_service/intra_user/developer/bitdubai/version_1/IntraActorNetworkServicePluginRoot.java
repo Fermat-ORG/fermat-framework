@@ -1359,7 +1359,7 @@ public class IntraActorNetworkServicePluginRoot extends AbstractPlugin implement
      * Handles the events ClientSuccessfullReconnectNotificationEvent
      */
     @Override
-    public void handleClientSuccessfullReconnectNotificationEvent(FermatEvent fermatEvent) {
+    public void c(FermatEvent fermatEvent) {
 
         System.out.println("IntraActorNetworkServicePluginRoot - handleClientSuccessfullReconnectNotificationEvent");
 

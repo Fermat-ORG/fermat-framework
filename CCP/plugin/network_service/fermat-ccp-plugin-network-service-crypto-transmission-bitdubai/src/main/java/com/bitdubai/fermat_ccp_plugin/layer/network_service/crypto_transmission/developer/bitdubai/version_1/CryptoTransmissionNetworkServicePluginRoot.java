@@ -879,9 +879,7 @@ public class CryptoTransmissionNetworkServicePluginRoot extends AbstractNetworkS
     @Override
     public void handleVpnConnectionCloseNotificationEvent(FermatEvent fermatEvent) {
 
-
         VPNConnectionCloseNotificationEvent vpnConnectionCloseNotificationEvent = (VPNConnectionCloseNotificationEvent) fermatEvent;
-        //cryptoTransmissionAgent.connectionFailure(vpnConnectionCloseNotificationEvent.getRemoteParticipant().getIdentityPublicKey());
 
         if(fermatEvent instanceof VPNConnectionCloseNotificationEvent){
 
@@ -899,8 +897,6 @@ public class CryptoTransmissionNetworkServicePluginRoot extends AbstractNetworkS
 
 
             }
-
-
 
         }
 
