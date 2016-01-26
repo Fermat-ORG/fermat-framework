@@ -84,11 +84,6 @@ public class CommunicationRegistrationProcessNetworkServiceAgent {
                     communicationsClientConnection.getCommunicationsCloudClientConnection().registerComponentForCommunication(networkService.getNetworkServiceType(), networkService.getPlatformComponentProfilePluginRoot());
 
                     /*
-                     * Initialize the connection manager
-                     */
-                    networkService.initializeCommunicationNetworkServiceConnectionManager();
-
-                    /*
                      * Stop the agent
                      */
                     stop();
