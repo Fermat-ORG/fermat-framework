@@ -34,6 +34,7 @@ import java.util.concurrent.ConcurrentHashMap;
  * @version 1.0
  * @since Java JDK 1.7
  */
+@Deprecated
 public abstract class AbstractCommunicationNetworkServiceConnectionManager<NS extends AbstractNetworkService> implements NetworkServiceConnectionManager {
 
     private final CommunicationsClientConnection communicationsClientConnection;
@@ -155,6 +156,33 @@ public abstract class AbstractCommunicationNetworkServiceConnectionManager<NS ex
 
         communicationNetworkServiceRemoteAgentsCache.clear();
         communicationNetworkServiceLocalsCache.clear();
+    }
+
+    /*
+  * Stop the internal threads of the CommunicationNetworkServiceRemoteAgent
+  */
+    @Override
+    public void stop() {
+        for (String key : communicationNetworkServiceRemoteAgentsCache.keySet()) {
+
+            //stop his threads
+            communicationNetworkServiceRemoteAgentsCache.get(key).stop();
+
+        }
+    }
+
+    /*
+     * restart the internal threads of the CommunicationNetworkServiceRemoteAgent
+     */
+    @Override
+    public void restart() {
+
+        for (String key : communicationNetworkServiceRemoteAgentsCache.keySet()) {
+
+            //Restart threads
+            communicationNetworkServiceRemoteAgentsCache.get(key).start();
+
+        }
     }
 
     /**

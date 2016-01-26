@@ -12,26 +12,25 @@ import com.bitdubai.fermat_cbp_api.layer.actor.crypto_customer.exceptions.CantGe
  * Created by jorge on 26-10-2015.
  * Updated by Yordin Alayn 21.11.2015.
  */
-public interface CryptoCustomerActorManager {
+public interface CryptoCustomerActorManager extends FermatManager{
 
     /**
      * Throw the method <code>createNewCryptoCustomerActor</code> we can create a new actor crypto customer.
      *
-     * @param actorPublicKey assigned to the new actor
+     * @param identityPublicKey assigned to the new actor
      * @param actorName assigned to the new actor
      * @param actorPhoto assigned to the new actor
      * @return an instance of the new actor created.
      * @throws CantCreateCryptoCustomerActorException if something goes wrong
      */
-    CryptoCustomerActor createNewCryptoCustomerActor(String actorPublicKey, String actorName, byte[] actorPhoto) throws CantCreateCryptoCustomerActorException;
+    CryptoCustomerActor createNewCryptoCustomerActor(String identityPublicKey, String actorName, byte[] actorPhoto) throws CantCreateCryptoCustomerActorException;
 
     /**
      * Throw the method <code>createActor</code> we can create a new user (this, without picture).
      *
-     * @param actorLoggedInPublicKey assigned to the new actor
      * @param actorPublicKey assigned to the new actor
      * @return an instance of the actor we're looking for
      * @throws CantGetCryptoCustomerActorException if something goes wrong
      */
-    CryptoCustomerActor getCryptoCustomerActor(String actorLoggedInPublicKey, String actorPublicKey) throws CantGetCryptoCustomerActorException;
+    CryptoCustomerActor getCryptoCustomerActor(String actorPublicKey) throws CantGetCryptoCustomerActorException;
 }

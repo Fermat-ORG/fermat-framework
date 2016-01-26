@@ -13,6 +13,7 @@ import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.exceptions.CantGet
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.exceptions.CantUpdateAssetUserGroupException;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.redeem_point.exceptions.CantConnectToActorAssetRedeemPointException;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.redeem_point.interfaces.ActorAssetRedeemPoint;
+import com.bitdubai.fermat_dap_api.layer.dap_actor_network_service.asset_user.exceptions.CantRegisterActorAssetUserException;
 import com.bitdubai.fermat_dap_api.layer.dap_transaction.common.exceptions.RecordsNotFoundException;
 
 import java.util.List;
@@ -33,6 +34,16 @@ public interface ActorAssetUserManager extends FermatManager {
     ActorAssetUser getActorByPublicKey(String actorPublicKey) throws CantGetAssetUserActorsException, CantAssetUserActorNotFoundException;
 
     /**
+     * The method <code>getActorRegisteredByPublicKey</code> shows the information associated with the registered actorPublicKey
+     *
+     * @param actorPublicKey                    The public key of the Asset Actor User registered
+     * @return                                  THe information associated with the actorPublicKey.
+     * @throws CantGetAssetUserActorsException
+     * @throws CantAssetUserActorNotFoundException
+     */
+    ActorAssetUser getActorRegisteredByPublicKey(String actorPublicKey) throws CantGetAssetUserActorsException, CantAssetUserActorNotFoundException;
+
+    /**
      * The method <code>createActorAssetUserFactory</code> create Actor by a Identity
      *
      * @param assetUserActorPublicKey                       Referred to the Identity publicKey
@@ -41,6 +52,12 @@ public interface ActorAssetUserManager extends FermatManager {
      * @throws CantCreateAssetUserActorException
      */
     void createActorAssetUserFactory(String assetUserActorPublicKey, String assetUserActorName, byte[] assetUserActorprofileImage) throws CantCreateAssetUserActorException;
+
+
+    /**
+     * The method <code>registerActorInActorNetworkService</code> Register Actor in Actor Network Service
+     */
+    void registerActorInActorNetworkService() throws CantRegisterActorAssetUserException;
 
     /**
      * The method <code>createActorAssetUserRegisterInNetworkService</code> create Actor Registered

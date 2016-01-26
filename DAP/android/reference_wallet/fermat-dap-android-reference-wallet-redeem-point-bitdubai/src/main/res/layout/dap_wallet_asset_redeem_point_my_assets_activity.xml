@@ -2,7 +2,6 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#828A95"
     tools:context="com.bitdubai.fermat_dap_android_wallet_asset_issuer_bitdubai.fragments.MyAssetsActivityFragment">
 
     <android.support.v4.widget.SwipeRefreshLayout
@@ -24,7 +23,7 @@
     </android.support.v4.widget.SwipeRefreshLayout>
 
     <LinearLayout
-        android:id="@+id/dap_wallet_asset_issuer_no_assets"
+        android:id="@+id/dap_wallet_no_assets"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:gravity="center"
@@ -42,9 +41,20 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:gravity="center"
-            android:text="@string/no_assets"
+            android:text="@string/no_assets_redeem_point"
             android:textColor="@color/fab_material_white"
             android:textSize="20sp"/>
+
+        <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:text="@string/no_assets_redeem_point_message"
+            android:textColor="@color/fab_material_white"
+            android:textSize="15sp"
+            android:layout_marginTop="10dp"
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="20dp"/>
 
     </LinearLayout>
 

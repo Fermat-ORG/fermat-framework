@@ -10,6 +10,8 @@
     <string name="identity_img">identity_image</string>
     <string name="description_search">Search</string>
     <string name="publish_identity">Publish identity</string>
+    <string name="published">Published</string>
+    <string name="not_published">Not Published</string>
     <string name="empty_identity_list_msg">No Identities\nCreate a new one</string>
     <string name="no_matches">No Matches</string>
     <string name="camera_option_context_menu">Camera</string>

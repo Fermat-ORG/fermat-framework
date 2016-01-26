@@ -10,7 +10,7 @@ import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_pro
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantExecuteQueryException;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogManager;
-import com.bitdubai.fermat_bch_api.layer.crypto_network.BroadcastStatus;
+import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.BroadcastStatus;
 import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.exceptions.CantGetBroadcastStatusException;
 import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.exceptions.CantGetCryptoTransactionException;
 import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.exceptions.CantGetTransactionCryptoStatusException;
@@ -199,7 +199,7 @@ public class AssetIssuingTransactionMonitorAgent implements Agent {
                 CantCheckAssetIssuingProgressException,
                 UnexpectedResultReturnedFromDatabaseException,
                 CantGetCryptoTransactionException,
-                InvalidParameterException {
+                InvalidParameterException, CantGetDigitalAssetFromLocalStorageException {
 
             for (String eventId : getPendingEvents()) {
                 List<String> genesisTransactionList;
@@ -248,16 +248,6 @@ public class AssetIssuingTransactionMonitorAgent implements Agent {
                             String transactionInternalId = this.assetIssuingTransactionDao.getTransactionIdByGenesisTransaction(genesisTransaction);
                             System.out.println("ASSET ISSUING internal id " + transactionInternalId);
                             try {
-                                /**
-                                 * Added By Rodrigo Acosta - at this point, the asset is delivered and confirmed. So we will save the
-                                 * Genesis block in the database
-                                 */
-                                try {
-                                    assetIssuingTransactionDao.persistGenesisBlock(transactionInternalId, cryptoGenesisTransaction.getBlockHash());
-                                } catch (CantPersistsGenesisTransactionException e) {
-                                    e.printStackTrace();
-                                }
-
                                 digitalAssetIssuingVault.deliverDigitalAssetMetadataToAssetWallet(cryptoGenesisTransaction, transactionInternalId, AssetBalanceType.AVAILABLE);
                             } catch (CantDeliverDigitalAssetToAssetWalletException e) {
                                 e.printStackTrace();
@@ -340,7 +330,7 @@ public class AssetIssuingTransactionMonitorAgent implements Agent {
 
         //I left working this method for testing porpoises
         private CryptoTransaction getGenesisTransactionFromAssetVault(String transactionHash) throws CantGetCryptoTransactionException {
-            List<CryptoTransaction> cryptoTransactions = bitcoinNetworkManager.getCryptoTransaction(transactionHash);
+            List<CryptoTransaction> cryptoTransactions = bitcoinNetworkManager.getCryptoTransactions(transactionHash);
 
             /**
              * I will return the more mature crypto transaction

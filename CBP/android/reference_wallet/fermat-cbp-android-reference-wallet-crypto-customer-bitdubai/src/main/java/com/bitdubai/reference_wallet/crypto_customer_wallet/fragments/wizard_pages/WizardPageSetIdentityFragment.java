@@ -79,7 +79,6 @@ public class WizardPageSetIdentityFragment extends FermatWalletListFragment<Cryp
             public void onClick(View view) {
                 if (selectedIdentity != null) {
                     walletManager.associateIdentity(selectedIdentity.getPublicKey());
-                    appSession.setData(CryptoCustomerWalletSession.CONFIGURED_DATA, true);
 
                     changeActivity(Activities.CBP_CRYPTO_CUSTOMER_WALLET_SET_BITCOIN_WALLET_AND_PROVIDERS, appSession.getAppPublicKey());
                 } else {
@@ -95,26 +94,28 @@ public class WizardPageSetIdentityFragment extends FermatWalletListFragment<Cryp
 
     private void verifyIfWalletConfigured() {
         new Handler().postDelayed(new Runnable() {
+            boolean walletConfigured;
+
             @Override
             public void run() {
                 try {
-
-                    Object data = appSession.getData(CryptoCustomerWalletSession.CONFIGURED_DATA);
-                    boolean walletConfigured = (data != null); // walletManager.isWalletConfigured(appSession.getAppPublicKey()); TODO
-
-                    if (walletConfigured) {
-                        changeActivity(Activities.CBP_CRYPTO_CUSTOMER_WALLET_HOME, appSession.getAppPublicKey());
-                    } else {
-                        Animation fadeInAnimation = AnimationUtils.loadAnimation(getActivity(), R.anim.fade_in);
-                        container.setVisibility(View.VISIBLE);
-                        container.startAnimation(fadeInAnimation);
-                    }
+                    walletConfigured = walletManager.isWalletConfigured(appSession.getAppPublicKey());
 
                 } catch (Exception ex) {
-                    Log.e(TAG, ex.getMessage(), ex);
+                    Object data = appSession.getData(CryptoCustomerWalletSession.CONFIGURED_DATA);
+                    walletConfigured = (data != null);
+
                     if (errorManager != null)
-                        errorManager.reportUnexpectedWalletException(Wallets.CBP_CRYPTO_CUSTOMER_WALLET,
+                        errorManager.reportUnexpectedWalletException(Wallets.CBP_CRYPTO_BROKER_WALLET,
                                 UnexpectedWalletExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, ex);
+                }
+
+                if (walletConfigured) {
+                    changeActivity(Activities.CBP_CRYPTO_BROKER_WALLET_HOME, appSession.getAppPublicKey());
+                } else {
+                    Animation fadeInAnimation = AnimationUtils.loadAnimation(getActivity(), R.anim.fade_in);
+                    container.setVisibility(View.VISIBLE);
+                    container.startAnimation(fadeInAnimation);
                 }
 
             }

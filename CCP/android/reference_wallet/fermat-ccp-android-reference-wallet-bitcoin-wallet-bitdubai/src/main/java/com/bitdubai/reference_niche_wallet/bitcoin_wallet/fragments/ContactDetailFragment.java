@@ -3,6 +3,7 @@ package com.bitdubai.reference_niche_wallet.bitcoin_wallet.fragments;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Typeface;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
@@ -21,10 +22,18 @@ import android.widget.Toast;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractFermatFragment;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatButton;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
+import com.bitdubai.fermat_api.layer.all_definition.enums.BlockchainNetworkType;
+import com.bitdubai.fermat_api.layer.all_definition.enums.CryptoCurrency;
+import com.bitdubai.fermat_api.layer.all_definition.enums.CryptoCurrencyVault;
+import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
+import com.bitdubai.fermat_api.layer.all_definition.enums.ReferenceWallet;
 import com.bitdubai.fermat_api.layer.all_definition.enums.UISource;
+import com.bitdubai.fermat_api.layer.all_definition.enums.VaultType;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Wallets;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.exceptions.CantGetCryptoWalletException;
+import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.exceptions.CantListCryptoWalletIntraUserIdentityException;
+import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.exceptions.CantRequestCryptoAddressException;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.interfaces.CryptoWallet;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.interfaces.CryptoWalletManager;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.interfaces.CryptoWalletWalletContact;
@@ -35,6 +44,7 @@ import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfac
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedWalletExceptionSeverity;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.BitcoinWalletConstants;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.popup.ReceiveFragmentDialog;
+import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.utils.BitmapWorkerTask;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.session.ReferenceWalletSession;
 
 import java.io.ByteArrayOutputStream;
@@ -89,6 +99,7 @@ public class ContactDetailFragment extends AbstractFermatFragment implements Vie
     private ReferenceWalletSession referenceWalletSession;
     private FermatButton send_button;
     private FermatButton receive_button;
+    private ImageView img_update;
 
 
     public static ContactDetailFragment newInstance() {
@@ -191,6 +202,7 @@ public class ContactDetailFragment extends AbstractFermatFragment implements Vie
             receive_button = (FermatButton) mFragmentView.findViewById(R.id.receive_button);
             send_button = (FermatButton) mFragmentView.findViewById(R.id.send_button);
             linear_layout_extra_user_receive = (LinearLayout) mFragmentView.findViewById(R.id.linear_layout_extra_user_receive);
+            img_update = (ImageView) mFragmentView.findViewById(R.id.img_update);
             send_button.setOnClickListener(this);
             receive_button.setOnClickListener(this);
             linear_layout_extra_user_receive.setOnClickListener(this);
@@ -204,7 +216,29 @@ public class ContactDetailFragment extends AbstractFermatFragment implements Vie
             if(cryptoWalletWalletContact.getActorType().equals(Actors.INTRA_USER)){
                 linear_layout_extra_user_receive.setVisibility(View.GONE);
             }
+            img_update.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    try {
+                        referenceWalletSession.getModuleManager().getCryptoWallet().sendAddressExchangeRequest(
+                                cryptoWalletWalletContact.getActorName(),
+                                Actors.INTRA_USER,
+                                cryptoWalletWalletContact.getActorPublicKey(),
+                                cryptoWalletWalletContact.getProfilePicture(),
+                                Actors.INTRA_USER,
+                                referenceWalletSession.getIntraUserModuleManager().getPublicKey()
+                                ,appSession.getAppPublicKey(),
+                                CryptoCurrency.BITCOIN,
+                                BlockchainNetworkType.DEFAULT
+                        );
+                    } catch (CantGetCryptoWalletException | CantListCryptoWalletIntraUserIdentityException e) {
+                        e.printStackTrace();
+                    }
+
+                }
+            });
         }
+
     }
 
 
@@ -216,21 +250,33 @@ public class ContactDetailFragment extends AbstractFermatFragment implements Vie
         if (cryptoWalletWalletContact != null) {
             if(image_view_profile!=null){
                 try {
-                    if (cryptoWalletWalletContact.getProfilePicture().length > 0) {
-                            Bitmap bitmapDrawable = BitmapFactory.decodeByteArray(cryptoWalletWalletContact.getProfilePicture(), 0, cryptoWalletWalletContact.getProfilePicture().length);// MemoryUtils.decodeSampledBitmapFromByteArray(cryptoWalletWalletContact.getProfilePicture(),image_view_profile.getMaxWidth(),image_view_profile.getMaxHeight());
-                            bitmapDrawable = Bitmap.createScaledBitmap(bitmapDrawable, image_view_profile.getWidth(), image_view_profile.getHeight(), true);
-                            image_view_profile.setImageBitmap(bitmapDrawable);
-                    } else
-                        Picasso.with(getActivity()).load(R.drawable.ic_profile_male).into(image_view_profile);
+                          //  Bitmap bitmapDrawable = BitmapFactory.decodeByteArray(cryptoWalletWalletContact.getProfilePicture(), 0, cryptoWalletWalletContact.getProfilePicture().length);// MemoryUtils.decodeSampledBitmapFromByteArray(cryptoWalletWalletContact.getProfilePicture(),image_view_profile.getMaxWidth(),image_view_profile.getMaxHeight());
+                          //  bitmapDrawable = Bitmap.createScaledBitmap(bitmapDrawable, image_view_profile.getWidth(), 200, true);
+                           // image_view_profile.setImageBitmap(bitmapDrawable);
+                        BitmapWorkerTask bitmapWorkerTask = new BitmapWorkerTask(image_view_profile,getResources(),false);
+                        bitmapWorkerTask.execute(cryptoWalletWalletContact.getProfilePicture());
                 }catch (Exception e){
-                    Picasso.with(getActivity()).load(R.drawable.ic_profile_male).into(image_view_profile);
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                        Toast.makeText(getContext(),"Loading image error",Toast.LENGTH_SHORT).show();
+                    }
+                    e.printStackTrace();
                 }
             }
             if (edit_text_name != null)
                 edit_text_name.setText(cryptoWalletWalletContact.getActorName());
-            if (text_view_address != null)
-                if(cryptoWalletWalletContact.getReceivedCryptoAddress().size() > 0)
-                text_view_address.setText(cryptoWalletWalletContact.getReceivedCryptoAddress().get(0).getAddress());
+            if (text_view_address != null) {
+                if (cryptoWalletWalletContact.getReceivedCryptoAddress().size() > 0) {
+                    String address = cryptoWalletWalletContact.getReceivedCryptoAddress().get(0).getAddress();
+                    //TODO: si la address es nula hay que ver porqué es
+                    text_view_address.setText((address!=null)?address:"mnK7DuBQT3REr9bmfYcufTwjiAWfjwRwMf");
+                    img_update.setVisibility(View.GONE);
+                }else{
+                    img_update.setVisibility(View.VISIBLE);
+                }
+            }else{
+                text_view_address.setText("Waiting...");
+                img_update.setVisibility(View.VISIBLE);
+            }
         }
     }
 

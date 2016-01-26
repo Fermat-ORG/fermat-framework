@@ -45,7 +45,7 @@ public class IssuerWalletNavigationViewAdapter extends FermatAdapter<MenuItem, I
 
             if (data.isSelected()) {
 
-                holder.getRow_container().setBackgroundResource(R.color.black_overlay_2);
+//                holder.getRow_container().setBackgroundResource(R.color.black_overlay_2);
 
                 switch (position) {
                     case 0:
@@ -62,11 +62,6 @@ public class IssuerWalletNavigationViewAdapter extends FermatAdapter<MenuItem, I
 //                        holder.getIcon().setImageResource(R.drawable.ic_nav_stadistics_active);
 
                         Picasso.with(context).load(R.drawable.ic_nav_stadistics_active).into(holder.getIcon());
-                        break;
-                    case 3:
-//                        holder.getIcon().setImageResource(R.drawable.ic_nav_users_active);
-
-                        Picasso.with(context).load(R.drawable.ic_nav_users_active).into(holder.getIcon());
                         break;
                 }
             } else {
@@ -86,17 +81,12 @@ public class IssuerWalletNavigationViewAdapter extends FermatAdapter<MenuItem, I
 
                         Picasso.with(context).load(R.drawable.ic_nav_stadistics_normal).into(holder.getIcon());
                         break;
-                    case 3:
-//                        holder.getIcon().setImageResource(R.drawable.ic_nav_users_normal);
-
-                        Picasso.with(context).load(R.drawable.ic_nav_users_normal).into(holder.getIcon());
-                        break;
                 }
             }
 
-            if (position == 4) {
-                holder.getNavigation_row_divider().setVisibility(View.GONE);
-            }
+//            if (position == 3) {
+//                holder.getNavigation_row_divider().setVisibility(View.GONE);
+//            }
 
         } catch (Exception e) {
             e.printStackTrace();

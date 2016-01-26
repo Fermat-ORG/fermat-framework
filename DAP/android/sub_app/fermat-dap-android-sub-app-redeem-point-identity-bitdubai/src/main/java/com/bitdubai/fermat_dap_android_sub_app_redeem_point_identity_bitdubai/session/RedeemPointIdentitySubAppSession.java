@@ -14,7 +14,7 @@ import java.util.Map;
 /**
  * Created by Francisco Vasquez
  */
-public class RedeemPointIdentitySubAppSession extends AbstractFermatSession<InstalledSubApp,RedeemPointIdentityManager,SubAppResourcesProviderManager> implements SubAppsSession {
+public class RedeemPointIdentitySubAppSession extends AbstractFermatSession<InstalledSubApp,RedeemPointIdentityManager,SubAppResourcesProviderManager> {
 
     public RedeemPointIdentitySubAppSession() {}
 

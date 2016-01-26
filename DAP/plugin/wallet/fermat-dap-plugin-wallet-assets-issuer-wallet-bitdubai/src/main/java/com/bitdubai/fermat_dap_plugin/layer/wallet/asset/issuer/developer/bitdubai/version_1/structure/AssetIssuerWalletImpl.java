@@ -16,16 +16,13 @@ import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantCrea
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantLoadFileException;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantPersistFileException;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.FileNotFoundException;
-import com.bitdubai.fermat_dap_api.layer.all_definition.contracts.exceptions.CantDefineContractPropertyException;
 import com.bitdubai.fermat_dap_api.layer.all_definition.digital_asset.DigitalAsset;
 import com.bitdubai.fermat_dap_api.layer.all_definition.digital_asset.DigitalAssetMetadata;
 import com.bitdubai.fermat_dap_api.layer.all_definition.enums.AssetCurrentStatus;
-import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.interfaces.ActorAssetUser;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.interfaces.ActorAssetUserManager;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.redeem_point.interfaces.ActorAssetRedeemPoint;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.redeem_point.interfaces.ActorAssetRedeemPointManager;
 import com.bitdubai.fermat_dap_api.layer.dap_module.wallet_asset_issuer.exceptions.CantGetAssetStatisticException;
-import com.bitdubai.fermat_dap_api.layer.dap_module.wallet_asset_issuer.interfaces.AssetStatistic;
 import com.bitdubai.fermat_dap_api.layer.dap_transaction.common.exceptions.CantGetDigitalAssetFromLocalStorageException;
 import com.bitdubai.fermat_dap_api.layer.dap_transaction.common.exceptions.RecordsNotFoundException;
 import com.bitdubai.fermat_dap_api.layer.dap_wallet.asset_issuer_wallet.exceptions.CantInitializeAssetIssuerWalletException;
@@ -34,6 +31,7 @@ import com.bitdubai.fermat_dap_api.layer.dap_wallet.asset_issuer_wallet.interfac
 import com.bitdubai.fermat_dap_api.layer.dap_wallet.asset_issuer_wallet.interfaces.AssetIssuerWalletBalance;
 import com.bitdubai.fermat_dap_api.layer.dap_wallet.asset_issuer_wallet.interfaces.AssetIssuerWalletTransaction;
 import com.bitdubai.fermat_dap_api.layer.dap_wallet.asset_issuer_wallet.interfaces.AssetIssuerWalletTransactionSummary;
+import com.bitdubai.fermat_dap_api.layer.dap_wallet.asset_issuer_wallet.interfaces.AssetStatistic;
 import com.bitdubai.fermat_dap_api.layer.dap_wallet.common.enums.BalanceType;
 import com.bitdubai.fermat_dap_api.layer.dap_wallet.common.enums.TransactionType;
 import com.bitdubai.fermat_dap_api.layer.dap_wallet.common.exceptions.CantCreateWalletException;
@@ -43,8 +41,6 @@ import com.bitdubai.fermat_dap_api.layer.dap_wallet.common.exceptions.CantGetTra
 import com.bitdubai.fermat_dap_api.layer.dap_wallet.common.exceptions.CantStoreMemoException;
 import com.bitdubai.fermat_dap_plugin.layer.wallet.asset.issuer.developer.bitdubai.version_1.structure.database.AssetIssuerWalletDao;
 import com.bitdubai.fermat_dap_plugin.layer.wallet.asset.issuer.developer.bitdubai.version_1.structure.database.AssetIssuerWalletDatabaseFactory;
-import com.bitdubai.fermat_dap_plugin.layer.wallet.asset.issuer.developer.bitdubai.version_1.structure.developer_utils.mocks.MockActorAssetUserForTesting;
-import com.bitdubai.fermat_dap_plugin.layer.wallet.asset.issuer.developer.bitdubai.version_1.structure.developer_utils.mocks.MockDigitalAssetForTesting;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedPluginExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 
@@ -136,33 +132,6 @@ public class AssetIssuerWalletImpl implements AssetIssuerWallet {
 
     }
 
-
-    private void test() throws CantGetAssetStatisticException, RecordsNotFoundException, CantSaveStatisticException, CantDefineContractPropertyException {
-
-        DigitalAsset asset = new MockDigitalAssetForTesting();
-        ActorAssetUser user = new MockActorAssetUserForTesting();
-
-        debug("creating new asset");
-        createdNewAsset(asset);
-        debug("distributing new asset");
-        assetDistributed(asset.getPublicKey(), user.getActorPublicKey());
-        debug("appropriating new asset");
-        assetAppropriated(asset.getPublicKey(), user.getActorPublicKey());
-        debug("redeemed new asset");
-        assetRedeemed(asset.getPublicKey(), user.getActorPublicKey(), "RePoPk");
-
-        debug("testing queries");
-        debug(getAllStatisticForAllAssets().toString());
-        debug(getAllStatisticForGivenAsset(asset.getName()).toString());
-        debug(getStatisticForAllAssetsByStatus(AssetCurrentStatus.ASSET_REDEEMED).toString());
-        debug(getStatisticForGivenAssetByStatus(asset.getName(), AssetCurrentStatus.ASSET_REDEEMED).toString());
-
-    }
-
-    private void debug(String message) {
-        System.out.println("ASSET STATISTIC - " + message);
-    }
-
     private PluginTextFile createAssetIssuerWalletFile() throws CantCreateWalletException {
         try {
             return pluginFileSystem.getTextFile(pluginId, "", ASSET_ISSUER_WALLET_FILE_NAME, FilePrivacy.PRIVATE, FileLifeSpan.PERMANENT);
@@ -226,7 +195,7 @@ public class AssetIssuerWalletImpl implements AssetIssuerWallet {
     }
 
     @Override
-    public AssetIssuerWalletBalance getBookBalance(BalanceType balanceType) throws CantGetTransactionsException {
+    public AssetIssuerWalletBalance getBalance() throws CantGetTransactionsException {
         try {
             return new AssetIssuerWallletBalanceImpl(database, pluginId, pluginFileSystem);
         } catch (Exception exception) {
@@ -261,6 +230,14 @@ public class AssetIssuerWalletImpl implements AssetIssuerWallet {
             errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_ASSET_WALLET_ISSUER, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, FermatException.wrapException(exception));
             throw new CantGetTransactionsException(CantGetTransactionsException.DEFAULT_MESSAGE, FermatException.wrapException(exception), null, null);
         }
+    }
+
+    @Override
+    public List<AssetIssuerWalletTransaction> getAvailableTransactions(String assetPublicKey) throws CantGetTransactionsException {
+        List<AssetIssuerWalletTransaction> allCreditAvailable = getTransactionsAll(BalanceType.AVAILABLE, TransactionType.CREDIT, assetPublicKey);
+        List<AssetIssuerWalletTransaction> alldebitAvailable = getTransactionsAll(BalanceType.AVAILABLE, TransactionType.DEBIT, assetPublicKey);
+        allCreditAvailable.removeAll(alldebitAvailable);
+        return allCreditAvailable;
     }
 
     @Override
@@ -319,13 +296,11 @@ public class AssetIssuerWalletImpl implements AssetIssuerWallet {
     }
 
     @Override
-    public DigitalAssetMetadata getDigitalAssetMetadata(String digitalAssetPublicKey) throws CantGetDigitalAssetFromLocalStorageException {
+    public DigitalAssetMetadata getDigitalAssetMetadata(String transactionHash) throws CantGetDigitalAssetFromLocalStorageException {
         DigitalAssetMetadata digitalAssetMetadata = new DigitalAssetMetadata();
         try {
             PluginTextFile pluginTextFile = null;
-
-            String digitalAssetMetadataFileName = digitalAssetPublicKey + "_metadata";
-            pluginTextFile = pluginFileSystem.getTextFile(pluginId, PATH_DIRECTORY, digitalAssetMetadataFileName, FilePrivacy.PRIVATE, FileLifeSpan.PERMANENT);
+            pluginTextFile = pluginFileSystem.getTextFile(pluginId, PATH_DIRECTORY, transactionHash, FilePrivacy.PRIVATE, FileLifeSpan.PERMANENT);
             String digitalAssetMetaData = pluginTextFile.getContent();
             digitalAssetMetadata = (DigitalAssetMetadata) XMLParser.parseXML(digitalAssetMetaData, digitalAssetMetadata);
 
@@ -346,6 +321,28 @@ public class AssetIssuerWalletImpl implements AssetIssuerWallet {
     @Override
     public DigitalAsset getAssetByPublicKey(String assetPublicKey) {
         return assetIssuerWalletDao.getAssetByPublicKey(assetPublicKey);
+    }
+
+    @Override
+    public String getUserDeliveredToPublicKey(String assetPublicKey) throws RecordsNotFoundException, CantGetAssetStatisticException {
+        return assetIssuerWalletDao.getUserPublicKey(assetPublicKey);
+    }
+
+    @Override
+    public List<DigitalAssetMetadata> getAllUsedAssets() throws CantGetDigitalAssetFromLocalStorageException {
+        List<AssetStatistic> allUsedAssets = new ArrayList<>();
+        List<DigitalAssetMetadata> toReturn = new ArrayList<>();
+        try {
+            allUsedAssets.addAll(constructListFromAssetPublicKey(assetIssuerWalletDao.getAllAssetPublicKeyForStatus(AssetCurrentStatus.ASSET_REDEEMED)));
+            allUsedAssets.addAll(constructListFromAssetPublicKey(assetIssuerWalletDao.getAllAssetPublicKeyForStatus(AssetCurrentStatus.ASSET_APPROPRIATED)));
+
+            for (AssetStatistic statistic : allUsedAssets) {
+                toReturn.add(getDigitalAssetMetadata(statistic.assetPublicKey()));
+            }
+        } catch (CantGetAssetStatisticException e) {
+            throw new CantGetDigitalAssetFromLocalStorageException();
+        }
+        return toReturn;
     }
 
     @Override
@@ -412,7 +409,7 @@ public class AssetIssuerWalletImpl implements AssetIssuerWallet {
         assetStatistic.setAssetName(assetIssuerWalletDao.getAssetName(assetPublicKey));
 
         try {
-            assetStatistic.setAssetOwner(assetIssuerWalletDao.getUserPublicKey(assetPublicKey));
+            assetStatistic.setOwner(actorAssetUserManager.getActorRegisteredByPublicKey(assetIssuerWalletDao.getUserPublicKey(assetPublicKey)));
         } catch (Exception e) {
             e.printStackTrace();
             //If this happen it means we couldn't get the user or there were none. So we'll keep it as null.
@@ -436,46 +433,4 @@ public class AssetIssuerWalletImpl implements AssetIssuerWallet {
         }
         return assetStatistic;
     }
-
-//    @Override
-//    public void distributionAssets(String assetPublicKey, String walletPublicKey, List<ActorAssetUser> actorAssetUsers)  throws CantDistributeDigitalAssetsException, CantGetTransactionsException, CantCreateFileException, FileNotFoundException {
-//        try{
-//            //TODO: Esta comentado solo para la prueba del Distribution
-//            //Buscar el Asset Balance con la data para traerse las propiedades del Digital Asset que me entrego el Issuing en su momento.
-////            List<AssetIssuerWalletTransaction> assetIssuerWalletTransactions;
-////
-////            HashMap<DigitalAssetMetadata, ActorAssetUser> hashMap = new HashMap<>();
-////            assetIssuerWalletTransactions = assetIssuerWalletDao.distributeAssets(assetPublicKey);
-////            int i = 0;
-////            for (AssetIssuerWalletTransaction assetIssuerWalletTransactionList : assetIssuerWalletTransactions){
-////                //TODO: Optimizar para que vea el registro de la tabla Balance Wallet
-////                DigitalAsset digitalAsset = new  DigitalAsset();
-////                PluginTextFile pluginTextFile = pluginFileSystem.getTextFile(pluginId, PATH_DIRECTORY, assetIssuerWalletTransactionList.getAssetPublicKey(), FilePrivacy.PRIVATE, FileLifeSpan.PERMANENT);
-////                String digitalAssetData = pluginTextFile.getContent();
-////                digitalAsset = (DigitalAsset) XMLParser.parseXML(digitalAssetData, digitalAsset);
-////                DigitalAssetMetadata digitalAssetMetadata = new DigitalAssetMetadata();
-////                digitalAssetMetadata.setDigitalAsset(digitalAsset);
-////                digitalAssetMetadata.setGenesisTransaction(assetIssuerWalletTransactionList.getTransactionHash());
-////                hashMap.put(digitalAssetMetadata, actorAssetUsers.get(i));
-////
-////                if (i > actorAssetUsers.size()){
-////                    break;
-////                }
-////
-////                i++;
-////            }
-//            //assetDistributionManager.distributeAssets(hashMap, walletPublicKey);
-//            HashMap<DigitalAssetMetadata, ActorAssetUser> hashMap = new HashMap<>();
-//            for (ActorAssetUser actorAssetUser : actorAssetUsers){
-//                hashMap.put(null, actorAssetUser);
-//            }
-//            assetDistributionManager.distributeAssets(hashMap, null);
-//
-//        }//catch(CantDistributeDigitalAssetsException | CantGetTransactionsException | CantCreateFileException | FileNotFoundException  cantDistributeDigitalAssetsException){
-//        catch(CantDistributeDigitalAssetsException cantDistributeDigitalAssetsException){
-//            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_ASSET_WALLET_ISSUER, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, FermatException.wrapException(cantDistributeDigitalAssetsException));
-//            throw new CantDistributeDigitalAssetsException(cantDistributeDigitalAssetsException, "Error Distribution Asset", "Method: distributionAssets()");
-//        }
-//    }
-
 }

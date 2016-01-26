@@ -39,6 +39,7 @@ class VaultKeyHierarchy extends DeterministicHierarchy {
     /**
      * Holds the list of Accounts and master keys of the hierarchy
      */
+    DeterministicKey accountMasterKey;
     private Map<Integer, DeterministicKey> accountsMasterKeys;
 
     /**
@@ -58,6 +59,7 @@ class VaultKeyHierarchy extends DeterministicHierarchy {
      */
     public VaultKeyHierarchy(DeterministicKey rootKey, PluginDatabaseSystem pluginDatabaseSystem, UUID pluginId) {
         super(rootKey);
+        this.accountMasterKey = rootKey;
         accountsMasterKeys = new HashMap<>();
         this.pluginDatabaseSystem = pluginDatabaseSystem;
         this.pluginId = pluginId;
@@ -69,7 +71,7 @@ class VaultKeyHierarchy extends DeterministicHierarchy {
      * @param account
      */
     public void addVaultAccount(com.bitdubai.fermat_bch_api.layer.crypto_vault.classes.HierarchyAccount.HierarchyAccount account){
-        DeterministicKey accountMasterKey = this.deriveChild(account.getAccountPath(), true, true, ChildNumber.ZERO);
+        //DeterministicKey accountMasterKey = this.deriveChild(account.getAccountPath(), true, true, ChildNumber.ZERO);
         accountsMasterKeys.put(account.getId(), accountMasterKey);
     }
 
@@ -79,18 +81,19 @@ class VaultKeyHierarchy extends DeterministicHierarchy {
      * @return the fist key of the path m/HierarchyAccount/0. Example: m/0/0
      */
     public DeterministicKey getAddressKeyFromAccount(com.bitdubai.fermat_bch_api.layer.crypto_vault.classes.HierarchyAccount.HierarchyAccount hierarchyAccount){
-        /**
-         * gets the masterKey for this account
-         */
-        DeterministicKey masterKey = accountsMasterKeys.get(hierarchyAccount.getId());
-
-        /**
-         * Serialize the pubkey of the master key
-         */
-        byte[] privateKeyBytes = masterKey.getPrivKeyBytes();
-        byte[] chainCode = masterKey.getChainCode();
-
-        return HDKeyDerivation.createMasterPrivKeyFromBytes(privateKeyBytes, chainCode);
+//        /**
+//         * gets the masterKey for this account
+//         */
+//        DeterministicKey masterKey = accountsMasterKeys.get(hierarchyAccount.getId());
+//
+//        /**
+//         * Serialize the pubkey of the master key
+//         */
+//        byte[] publicKeyBytes = masterKey.getPubKey();
+//        byte[] chainCode = masterKey.getChainCode();
+//
+//        return HDKeyDerivation.createMasterPubKeyFromBytes(publicKeyBytes, chainCode);
+        return accountMasterKey;
     }
 
     /**
@@ -186,7 +189,7 @@ class VaultKeyHierarchy extends DeterministicHierarchy {
         /**
          * I convert from a HD key to a ECKey
          */
-        ECKey ecKey = ECKey.fromPrivate(deterministicKey.getPrivKey());
+        ECKey ecKey = ECKey.fromPublicOnly(deterministicKey.getPubKey());
         return ecKey;
     }
 

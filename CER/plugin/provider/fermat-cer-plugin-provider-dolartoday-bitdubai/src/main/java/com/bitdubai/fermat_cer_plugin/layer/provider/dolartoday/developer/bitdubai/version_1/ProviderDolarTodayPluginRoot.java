@@ -19,7 +19,6 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
 import com.bitdubai.fermat_api.layer.all_definition.util.Version;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
-import com.bitdubai.fermat_cer_api.all_definition.enums.TimeUnit;
 import com.bitdubai.fermat_cer_api.all_definition.interfaces.CurrencyPair;
 import com.bitdubai.fermat_cer_api.all_definition.interfaces.ExchangeRate;
 import com.bitdubai.fermat_cer_api.layer.provider.exceptions.CantGetExchangeRateException;
@@ -32,7 +31,7 @@ import com.bitdubai.fermat_cer_plugin.layer.provider.dolartoday.developer.bitdub
 import com.bitdubai.fermat_cer_plugin.layer.provider.dolartoday.developer.bitdubai.version_1.exceptions.CantInitializeDolarTodayProviderDatabaseException;
 import com.bitdubai.fermat_cer_api.all_definition.utils.CurrencyPairImpl;
 import com.bitdubai.fermat_cer_api.all_definition.utils.ExchangeRateImpl;
-import com.bitdubai.fermat_cer_api.all_definition.utils.HttpReader;
+import com.bitdubai.fermat_cer_api.layer.provider.utils.HttpReader;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedPluginExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfaces.EventManager;
@@ -121,7 +120,7 @@ public class ProviderDolarTodayPluginRoot extends AbstractPlugin implements Data
     @Override
     public boolean isCurrencyPairSupported(CurrencyPair currencyPair) throws IllegalArgumentException {
         for (CurrencyPair cp : supportedCurrencyPairs) {
-            if (currencyPair.equals(cp))
+            if (cp.equals(currencyPair))
                 return true;
         }
         return false;
@@ -137,7 +136,6 @@ public class ProviderDolarTodayPluginRoot extends AbstractPlugin implements Data
         double salePrice = 0;
         try{
             JSONObject json = new JSONObject(HttpReader.getHTTPContent("http://api.bitcoinvenezuela.com/DolarToday.php?json=yes"));
-            //System.out.println("String JSON:" + json.toString());
 
             purchasePrice = (double) json.getJSONObject("USD").get("transferencia");
             salePrice = (double) json.getJSONObject("USD").get("transferencia");
@@ -168,7 +166,7 @@ public class ProviderDolarTodayPluginRoot extends AbstractPlugin implements Data
     }
 
     @Override
-    public Collection<ExchangeRate> getExchangeRatesFromPeriod(CurrencyPair currencyPair, TimeUnit timeUnit, int max, int offset) throws UnsupportedCurrencyPairException, CantGetExchangeRateException {
+    public Collection<ExchangeRate> getDailyExchangeRatesForPeriod(CurrencyPair currencyPair, long startTimestamp, long endTimestamp) throws UnsupportedCurrencyPairException, CantGetExchangeRateException {
         throw new CantGetExchangeRateException("This provider does not support fetching non-current exchange rates");
     }
 

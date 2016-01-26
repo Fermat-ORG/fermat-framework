@@ -10,7 +10,7 @@ import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfac
 /**
  * Created by Matias Furszyfer on 2015.07.20..
  */
-public class IntraUserSubAppSession extends AbstractFermatSession<InstalledSubApp,IntraUserModuleManager,SubAppResourcesProviderManager> implements SubAppsSession{
+public class IntraUserSubAppSession extends AbstractFermatSession<InstalledSubApp,IntraUserModuleManager,SubAppResourcesProviderManager>{
 
     public static final String BASIC_DATA = "catalog item";
     public static final String PREVIEW_IMGS = "preview images";

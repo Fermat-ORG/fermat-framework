@@ -91,17 +91,11 @@ public abstract class AbstractDigitalAssetVault implements DigitalAssetVault {
         this.pluginFileSystem = pluginFileSystem;
     }
 
-    public void setActorAssetUserManager(ActorAssetUserManager actorAssetUserManager) throws CantSetObjectException {
-        if (actorAssetUserManager == null) {
-            throw new CantSetObjectException("actorAssetUserManager is null");
-        }
+    public void setActorAssetUserManager(ActorAssetUserManager actorAssetUserManager) {
         this.actorAssetUserManager = actorAssetUserManager;
     }
 
-    public void setActorAssetIssuerManager(ActorAssetIssuerManager actorAssetIssuerManager) throws CantSetObjectException {
-        if (actorAssetIssuerManager == null) {
-            throw new CantSetObjectException("actorAssetIssuerManager is null");
-        }
+    public void setActorAssetIssuerManager(ActorAssetIssuerManager actorAssetIssuerManager) {
         this.actorAssetIssuerManager = actorAssetIssuerManager;
     }
 
@@ -296,13 +290,20 @@ public abstract class AbstractDigitalAssetVault implements DigitalAssetVault {
         }
     }
 
+    public DigitalAssetMetadata updateMetadataTransactionChain(String genesisTx, String txHash, String blockHash) throws CantCreateDigitalAssetFileException, CantGetDigitalAssetFromLocalStorageException {
+        DigitalAssetMetadata digitalAssetMetadata = getDigitalAssetMetadataFromLocalStorage(genesisTx);
+        digitalAssetMetadata.addNewTransaction(txHash, blockHash);
+        persistDigitalAssetMetadataInLocalStorage(digitalAssetMetadata, genesisTx);
+        return digitalAssetMetadata;
+    }
+
     public void updateWalletBalance(DigitalAssetMetadata digitalAssetMetadata, CryptoTransaction genesisTransaction, BalanceType balanceType, TransactionType transactionType, DAPTransactionType dapTransactionType, String externalActorPublicKey) throws CantLoadWalletException, CantGetTransactionsException, CantRegisterCreditException, CantRegisterDebitException, CantGetAssetIssuerActorsException, CantAssetUserActorNotFoundException, CantGetAssetUserActorsException {
         String actorFromPublicKey = "ActorFromPublicKey";
         String actorToPublicKey = externalActorPublicKey;
         switch (dapTransactionType) {
             case DISTRIBUTION:
-                AssetIssuerWallet issuerWalet = this.assetIssuerWalletManager.loadAssetIssuerWallet(this.walletPublicKey);
-                AssetIssuerWalletBalance assetIssuerWalletBalance = issuerWalet.getBookBalance(balanceType);
+                AssetIssuerWallet issuerWallet = this.assetIssuerWalletManager.loadAssetIssuerWallet(this.walletPublicKey);
+                AssetIssuerWalletBalance assetIssuerWalletBalance = issuerWallet.getBalance();
                 actorFromPublicKey = this.actorAssetIssuerManager.getActorAssetIssuer().getActorPublicKey();
                 AssetIssuerWalletTransactionRecordWrapper assetIssuerWalletTransactionRecordWrapper = new AssetIssuerWalletTransactionRecordWrapper(
                         digitalAssetMetadata,

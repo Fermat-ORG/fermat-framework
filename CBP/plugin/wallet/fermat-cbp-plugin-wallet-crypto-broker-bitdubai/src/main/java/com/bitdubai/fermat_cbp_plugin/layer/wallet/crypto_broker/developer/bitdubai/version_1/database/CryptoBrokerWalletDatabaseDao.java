@@ -2,6 +2,7 @@ package com.bitdubai.fermat_cbp_plugin.layer.wallet.crypto_broker.developer.bitd
 
 import com.bitdubai.fermat_api.layer.all_definition.enums.CryptoCurrency;
 import com.bitdubai.fermat_api.layer.all_definition.enums.FiatCurrency;
+import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
 import com.bitdubai.fermat_api.layer.all_definition.enums.interfaces.FermatEnum;
 import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
@@ -14,6 +15,7 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.Cant
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.DatabaseTransactionFailedException;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.DealsWithPluginFileSystem;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
+import com.bitdubai.fermat_api.layer.world.interfaces.Currency;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.BalanceType;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.CurrencyType;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.OriginTransaction;
@@ -46,6 +48,14 @@ import com.bitdubai.fermat_cbp_plugin.layer.wallet.crypto_broker.developer.bitdu
 import com.bitdubai.fermat_cbp_plugin.layer.wallet.crypto_broker.developer.bitdubai.version_1.structure.util.CryptoBrokerStockTransactionImpl;
 import com.bitdubai.fermat_cbp_plugin.layer.wallet.crypto_broker.developer.bitdubai.version_1.structure.util.FiatIndexImpl;
 import com.bitdubai.fermat_cbp_plugin.layer.wallet.crypto_broker.developer.bitdubai.version_1.structure.util.QuoteImpl;
+import com.bitdubai.fermat_cer_api.all_definition.interfaces.CurrencyPair;
+import com.bitdubai.fermat_cer_api.all_definition.interfaces.ExchangeRate;
+import com.bitdubai.fermat_cer_api.all_definition.utils.CurrencyPairImpl;
+import com.bitdubai.fermat_cer_api.layer.provider.exceptions.CantGetExchangeRateException;
+import com.bitdubai.fermat_cer_api.layer.provider.exceptions.UnsupportedCurrencyPairException;
+import com.bitdubai.fermat_cer_api.layer.provider.interfaces.CurrencyExchangeRateProviderManager;
+import com.bitdubai.fermat_cer_api.layer.search.exceptions.CantGetProviderException;
+import com.bitdubai.fermat_cer_api.layer.search.interfaces.CurrencyExchangeProviderFilterManager;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
@@ -62,6 +72,7 @@ public class CryptoBrokerWalletDatabaseDao implements DealsWithPluginFileSystem 
     public static final String PATH_DIRECTORY = "cryptobrokerwallet-swap/";
     PluginFileSystem pluginFileSystem;
     UUID plugin;
+    private CurrencyExchangeProviderFilterManager providerFilter;
 
     @Override
     public void setPluginFileSystem(PluginFileSystem pluginFileSystem) {
@@ -71,6 +82,8 @@ public class CryptoBrokerWalletDatabaseDao implements DealsWithPluginFileSystem 
     public void setPlugin(UUID plugin) {
         this.plugin = plugin;
     }
+
+    public void setProviderFilter(CurrencyExchangeProviderFilterManager providerFilter){ this.providerFilter = providerFilter; }
 
     private Database database;
 
@@ -149,7 +162,7 @@ public class CryptoBrokerWalletDatabaseDao implements DealsWithPluginFileSystem 
                 } else {
                     cryptoBrokerWalletBalanceRecord.setMerchandise(CryptoCurrency.getByCode(records.getStringValue(CryptoBrokerWalletDatabaseConstants.CRYPTO_BROKER_STOCK_BALANCE_MERCHANDISE_COLUMN_NAME)));
                 }
-                cryptoBrokerWalletBalanceRecord.setAvilableBalance( new BigDecimal(0));
+                cryptoBrokerWalletBalanceRecord.setAvilableBalance(new BigDecimal(0));
                 cryptoBrokerWalletBalanceRecord.setBrokerPublicKey(records.getStringValue(CryptoBrokerWalletDatabaseConstants.CRYPTO_BROKER_STOCK_BALANCE_BROKER_PUBLIC_KEY_COLUMN_NAME));
 
                 cryptoBrokerWalletBalanceRecords.add(cryptoBrokerWalletBalanceRecord);
@@ -164,19 +177,34 @@ public class CryptoBrokerWalletDatabaseDao implements DealsWithPluginFileSystem 
         return cryptoBrokerWalletBalanceRecords;
     }
 
-    //TODO Implementar:
     public Quote getQuote(final FermatEnum merchandise, final float quantity, final FiatCurrency payment) throws CantGetCryptoBrokerQuoteException {
         //Debemos de conocer el valor AvailableBalance menos los congelado, de esa forma tengo lo que puedo vender
         //Tambien podemos determinar devolver segun la volatilidad del mercado
         //Determinar mediante el precio del mercado a como esta esa mercancia
         float priceReference = 0;
         float availableBalanceFroze = 0;
+        ExchangeRate rate = null;
         try {
             availableBalanceFroze = getCurrentBalanceByMerchandise(BalanceType.AVAILABLE, merchandise.getCode()) - getBalanceFrozenByMerchandise(merchandise, null, BalanceType.AVAILABLE, priceReference);
         } catch (CantLoadTableToMemoryException e) {
             throw new CantGetCryptoBrokerQuoteException("Cant Load Table", e, "", "");
         }
 
+        Currency currency = (Currency) merchandise;
+        CurrencyPair usdVefCurrencyPair = new CurrencyPairImpl(currency, payment);
+        try {
+            Collection<CurrencyExchangeRateProviderManager> usdVefProviders = providerFilter.getProviderReferencesFromCurrencyPair(usdVefCurrencyPair);
+            for( CurrencyExchangeRateProviderManager provider : usdVefProviders) {
+                rate = provider.getCurrentExchangeRate(usdVefCurrencyPair);
+            }
+        } catch (CantGetProviderException e) {
+            e.printStackTrace();
+        } catch (CantGetExchangeRateException e) {
+            e.printStackTrace();
+        } catch (UnsupportedCurrencyPairException e) {
+            e.printStackTrace();
+        }
+        priceReference = (float)rate.getSalePrice();
         QuoteImpl quote = new QuoteImpl(
                 merchandise,
                 payment,
@@ -187,25 +215,42 @@ public class CryptoBrokerWalletDatabaseDao implements DealsWithPluginFileSystem 
         return quote;
     }
 
-    //TODO Implementar:
     public FiatIndex getMarketRate(final FermatEnum merchandise, FiatCurrency fiatCurrency, CurrencyType currencyType) throws CantGetCryptoBrokerMarketRateException {
         //Buscar el Spread en el setting de la wallet
         FiatIndexImpl fiatIndex = null;
         float spread = 0;
+        ExchangeRate rate = null;
         try {
             spread = getSpread();
             //Determinar luego si ya se vendio o compro esa mercaderia para calcular el rate sobre el precio inicial y final
             //Tambien podemos determinar devolver segun la volatilidad del mercado
             float volatility = getVolatilityCalculation(merchandise, currencyType);
             //Determinar mediante el precio del mercado a como esta esa mercancia
-            final float priceReference = 0; //Precio en dolar devuelto al pedir el precio del mercado
-            final float priceRateSale = 0;
-            final float priceRatePurchase = 0;
-            final float priceSaleUp = (priceRateSale * ((spread / 2) / 100)) + priceRateSale;
-            final float priceSaleDown = (priceRateSale * ((spread / 2) / 100)) - priceRateSale;
-            final float pricePurchaseUp = (priceRatePurchase * ((spread / 2) / 100)) + priceRatePurchase;
+            float priceReference    = 0; //Precio en dolar devuelto al pedir el precio del mercado
+            float priceRateSale     = 0;
+            float priceRatePurchase = 0;
+            if (!getCryptoBrokerStockTransactionsByMerchandise(merchandise, currencyType, TransactionType.CREDIT, BalanceType.AVAILABLE).isEmpty())
+                priceRateSale = getCryptoBrokerStockTransactionsByMerchandise(merchandise, currencyType, TransactionType.CREDIT, BalanceType.AVAILABLE).get(0).getPriceReference().floatValue();
+            if (!getCryptoBrokerStockTransactionsByMerchandise(merchandise, currencyType, TransactionType.DEBIT, BalanceType.AVAILABLE).isEmpty())
+                priceRatePurchase = getCryptoBrokerStockTransactionsByMerchandise(merchandise, currencyType, TransactionType.DEBIT, BalanceType.AVAILABLE).get(0).getPriceReference().floatValue();
+
+            Currency currency = (Currency) merchandise;
+            CurrencyPair usdVefCurrencyPair = new CurrencyPairImpl(currency, fiatCurrency);
+
+            Collection<CurrencyExchangeRateProviderManager> usdVefProviders = providerFilter.getProviderReferencesFromCurrencyPair(usdVefCurrencyPair);
+            for( CurrencyExchangeRateProviderManager provider : usdVefProviders) {
+                rate = provider.getCurrentExchangeRate(usdVefCurrencyPair);
+            }
+
+            if (priceRateSale     == 0) priceRateSale     = (float) rate.getSalePrice();
+            if (priceRatePurchase == 0) priceRatePurchase = (float) rate.getPurchasePrice();
+
+            final float priceSaleUp       = (priceRateSale * ((spread / 2) / 100)) + priceRateSale;
+            final float priceSaleDown     = (priceRateSale * ((spread / 2) / 100)) - priceRateSale;
+            final float pricePurchaseUp   = (priceRatePurchase * ((spread / 2) / 100)) + priceRatePurchase;
             final float pricePurchaseDown = (priceRatePurchase * ((spread / 2) / 100)) + priceRatePurchase;
 
+            priceReference = (float)rate.getSalePrice();
             fiatIndex = new FiatIndexImpl(
                     merchandise,
                     priceRateSale,
@@ -213,12 +258,20 @@ public class CryptoBrokerWalletDatabaseDao implements DealsWithPluginFileSystem 
                     priceSaleUp,
                     priceSaleDown,
                     pricePurchaseUp,
-                    pricePurchaseDown
+                    pricePurchaseDown,
+                    priceReference,
+                    fiatCurrency
             );
         } catch (CantLoadTableToMemoryException e) {
             throw new CantGetCryptoBrokerMarketRateException("Cant Load Table Memory", e, "", "");
         } catch (CantGetCryptoBrokerStockTransactionException e) {
             throw new CantGetCryptoBrokerMarketRateException("Cant Get Broker Stock Transaction", e, "", "");
+        }catch (CantGetProviderException e) {
+            throw new CantGetCryptoBrokerMarketRateException("Cant Get Provider Exception", e, "", "");
+        }catch (CantGetExchangeRateException e) {
+            throw new CantGetCryptoBrokerMarketRateException("Cant Get Exchange Rate Exception", e, "", "");
+        }catch (UnsupportedCurrencyPairException e) {
+            throw new CantGetCryptoBrokerMarketRateException("Cant Get Crypto Broker Market Rate Exception", e, "", "");
         }
         return fiatIndex;
     }
@@ -600,7 +653,9 @@ public class CryptoBrokerWalletDatabaseDao implements DealsWithPluginFileSystem 
             cryptoBrokerWalletAssociatedSetting.setMerchandise(FiatCurrency.getByCode(record.getStringValue(CryptoBrokerWalletDatabaseConstants.CRYPTO_BROKER_WALLET_ASSOCIATED_MERCHANDISE_COLUMN_NAME)));
         else
             cryptoBrokerWalletAssociatedSetting.setMerchandise(CryptoCurrency.getByCode(record.getStringValue(CryptoBrokerWalletDatabaseConstants.CRYPTO_BROKER_WALLET_ASSOCIATED_MERCHANDISE_COLUMN_NAME)));
-
+        cryptoBrokerWalletAssociatedSetting.setPlatform(Platforms.getByCode(record.getStringValue(CryptoBrokerWalletDatabaseConstants.CRYPTO_BROKER_WALLET_ASSOCIATED_PLATFORM_COLUMN_NAME)));
+        if(cryptoBrokerWalletAssociatedSetting.getPlatform() == Platforms.BANKING_PLATFORM)
+            cryptoBrokerWalletAssociatedSetting.setBankAccount(record.getStringValue(CryptoBrokerWalletDatabaseConstants.CRYPTO_BROKER_WALLET_ASSOCIATED_BANK_ACCOUNT_COLUMN_NAME));
         return cryptoBrokerWalletAssociatedSetting;
     }
 

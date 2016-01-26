@@ -1,18 +1,22 @@
 package com.bitdubai.android_core.app;
 
+import android.app.Notification;
+import android.app.NotificationManager;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.RemoteViews;
 import android.widget.Toast;
 
 import com.bitdubai.android_core.app.common.version_1.connections.ConnectionConstants;
 import com.bitdubai.fermat.R;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.ActivityType;
+import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.FermatSession;
 import com.bitdubai.fermat_api.FermatException;
-import com.bitdubai.fermat_api.layer.all_definition.common.system.exceptions.CantStartAllRegisteredPlatformsException;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Engine;
 import com.bitdubai.fermat_api.layer.all_definition.enums.UISource;
 import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterException;
@@ -21,6 +25,7 @@ import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.WalletN
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.interfaces.FermatCallback;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.interfaces.FermatScreenSwapper;
+import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.interfaces.FermatStructure;
 import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.SubApp;
 import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.SubAppRuntimeManager;
 import com.bitdubai.fermat_api.layer.dmp_module.sub_app_manager.InstalledSubApp;
@@ -47,25 +52,42 @@ public class DesktopActivity extends FermatActivity implements FermatScreenSwapp
 
         setActivityType(ActivityType.ACTIVITY_TYPE_DESKTOP);
 
-        if(getIntent().getExtras()!=null) {
-            if (getIntent().getExtras().containsKey(StartActivity.START_ACTIVITY_INIT)) {
-                System.out.println("EJECUTANDO START ALL");
+//        if(getIntent().getExtras()!=null) {
+//            if (getIntent().getExtras().containsKey(StartActivity.START_ACTIVITY_INIT)) {
+//                System.out.println("EJECUTANDO START ALL");
+//
+//                Thread thread = new Thread(new Runnable() {
+//                    @Override
+//                    public void run() {
+//                        try {
+//                            getApplicationSession().getFermatSystem().startAllRegisteredPlatforms();
+//                        } catch (CantStartAllRegisteredPlatformsException e) {
+//                            e.printStackTrace();
+//                        }
+//                    }
+//                });
+//                thread.start();
+//
+//
+//            }
+//        }
 
-                Thread thread = new Thread(new Runnable() {
-                    @Override
-                    public void run() {
-                        try {
-                            getApplicationSession().getFermatSystem().startAllRegisteredPlatforms();
-                        } catch (CantStartAllRegisteredPlatformsException e) {
-                            e.printStackTrace();
-                        }
-                    }
-                });
-                thread.start();
+//        Intent i= new Intent(this, NotificationService.class);
+//// potentially add data to the intent
+//        startService(i);
 
 
-            }
-        }
+//        RemoteViews mContentView = new RemoteViews(getPackageName(), R.layout.test_tt);
+//        Notification notification = new Notification.Builder(this).setSmallIcon(R.drawable.fermat_bitcoin2).setTicker("ticker")
+//                .setPriority(Notification.PRIORITY_HIGH)
+//                .setAutoCancel(false)
+//                .setOngoing(true)
+//                .setContent(mContentView)
+//                .setWhen(System.currentTimeMillis()).build();
+//
+//        NotificationManager mNotificationManager =
+//                (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+//        mNotificationManager.notify(3,notification);
         try {
 
             loadUI();
@@ -82,10 +104,24 @@ public class DesktopActivity extends FermatActivity implements FermatScreenSwapp
     }
     @Override
     protected void onDestroy() {
+        NotificationManager nMgr = (NotificationManager) getApplicationContext().getSystemService( Context.NOTIFICATION_SERVICE);
+        nMgr.cancel(3);
         super.onDestroy();
 
         unbindDrawables(findViewById(R.id.drawer_layout));
         System.gc();
+    }
+
+    @Override
+    protected FermatStructure getAppInUse() {
+        //TODO por ahora en null va esto
+        return null;
+    }
+
+    @Override
+    protected FermatSession getFermatSessionInUse(String appPublicKey) {
+        //TODO : por ahora va null esto
+        return null;
     }
 
     private void unbindDrawables(View view) {

@@ -1,5 +1,6 @@
 package com.bitdubai.fermat_cbp_api.layer.wallet.crypto_broker.interfaces;
 
+import com.bitdubai.fermat_api.layer.all_definition.enums.FiatCurrency;
 import com.bitdubai.fermat_api.layer.all_definition.enums.interfaces.FermatEnum;
 
 /**
@@ -14,5 +15,6 @@ public interface FiatIndex {
     float getPurchasePriceDownSpread();
     float getSalePurchaseUpSpread();
     float getPurchasePurchaseDownSpread();
-
+    float getPriceReference();
+    FiatCurrency getFiatCurrency();
 }

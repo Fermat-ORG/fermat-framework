@@ -22,11 +22,12 @@ import java.util.UUID;
 public interface DAO {
 
 
-    public ActorNetworkServiceRecord createNotification(        UUID                        notificationId        ,
+    public ActorNetworkServiceRecord createNotification(UUID                        notificationId        ,
                                            String                      senderPublicKey,
-                                           Actors senderType     ,
+                                           Actors                      senderType     ,
                                            String                      destinationPublicKey   ,
                                            String                      senderAlias,
+                                           String                      senderPhrase,
                                            byte[]                      senderProfileImage,
                                            Actors                      destinationType        ,
                                            NotificationDescriptor descriptor      ,
@@ -43,9 +44,8 @@ public interface DAO {
                                                       final NotificationDescriptor notificationDescriptor) throws CantUpdateRecordDataBaseException, CantUpdateRecordException, RequestNotFoundException;
 
     public void changeProtocolState(final UUID                 requestId    ,
-                                    final ActorProtocolState protocolState) throws CantUpdateRecordDataBaseException, CantUpdateRecordException, RequestNotFoundException;
+                                    final ActorProtocolState protocolState) throws CantUpdateRecordDataBaseException, CantUpdateRecordException, Exception;
 
-    public List<ActorNetworkServiceRecord> listRequestsByProtocolStateAndType(final ActorProtocolState protocolState) throws CantListIntraWalletUsersException;
 
     public List<ActorNetworkServiceRecord> listRequestsByProtocolStateAndType(final ActorProtocolState protocolState,
                                                                               final NotificationDescriptor notificationDescriptor) throws CantListIntraWalletUsersException;

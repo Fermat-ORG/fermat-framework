@@ -44,7 +44,8 @@
             android:layout_alignParentLeft="true"
             android:layout_alignParentTop="true"
             android:src="@drawable/ic_home_friend"
-            android:visibility="gone" />
+            android:visibility="gone"
+            tools:ignore="ContentDescription,RtlHardcoded" />
 
     </RelativeLayout>
     <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView

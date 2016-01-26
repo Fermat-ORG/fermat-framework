@@ -42,9 +42,9 @@ public TransactionAdapter(Activity activity, List<CashMoneyWalletTransaction> tr
     private int getCardViewResource(int type) {
         switch (type) {
             case HOLDER_TYPE_DEPOSIT:
-                return R.layout.deposit_list_item;
+                return R.layout.csh_deposit_list_item;
             case HOLDER_TYPE_WITHDRAWAL:
-                return R.layout.withdrawal_list_item;
+                return R.layout.csh_withdrawal_list_item;
             default:
                 throw new NoSuchElementException("Incorrect type value");
         }

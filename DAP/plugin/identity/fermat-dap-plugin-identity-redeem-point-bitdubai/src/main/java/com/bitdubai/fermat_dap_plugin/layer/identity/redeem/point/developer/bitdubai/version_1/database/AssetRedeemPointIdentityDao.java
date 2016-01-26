@@ -252,7 +252,7 @@ public class AssetRedeemPointIdentityDao implements DealsWithPluginDatabaseSyste
                 list.add(new IdentityAssetRedeemPointImpl(record.getStringValue(AssetRedeemPointIdentityDatabaseConstants.ASSET_REDEEM_POINT_IDENTITY_ALIAS_COLUMN_NAME),
                         record.getStringValue(AssetRedeemPointIdentityDatabaseConstants.ASSET_REDEEM_POINT_IDENTITY_PUBLIC_KEY_COLUMN_NAME),
                         getAssetRedeemPointIdentityPrivateKey(record.getStringValue(AssetRedeemPointIdentityDatabaseConstants.ASSET_REDEEM_POINT_IDENTITY_PUBLIC_KEY_COLUMN_NAME)),
-                        getAssetRedeemPointProfileImagePrivateKey(record.getStringValue(AssetRedeemPointIdentityDatabaseConstants.ASSET_REDEEM_POINT_IDENTITY_DEVICE_USER_PUBLIC_KEY_COLUMN_NAME)),
+                        getAssetRedeemPointProfileImagePrivateKey(record.getStringValue(AssetRedeemPointIdentityDatabaseConstants.ASSET_REDEEM_POINT_IDENTITY_PUBLIC_KEY_COLUMN_NAME)),
                         pluginFileSystem,
                         pluginId));
             }
@@ -305,7 +305,7 @@ public class AssetRedeemPointIdentityDao implements DealsWithPluginDatabaseSyste
                 redeemPointIdentityRecord = new IdentityAssetRedeemPointImpl(
                         record.getStringValue(AssetRedeemPointIdentityDatabaseConstants.ASSET_REDEEM_POINT_IDENTITY_ALIAS_COLUMN_NAME),
                         record.getStringValue(AssetRedeemPointIdentityDatabaseConstants.ASSET_REDEEM_POINT_IDENTITY_PUBLIC_KEY_COLUMN_NAME),
-                        getAssetRedeemPointProfileImagePrivateKey(record.getStringValue(AssetRedeemPointIdentityDatabaseConstants.ASSET_REDEEM_POINT_IDENTITY_DEVICE_USER_PUBLIC_KEY_COLUMN_NAME)));
+                        getAssetRedeemPointProfileImagePrivateKey(record.getStringValue(AssetRedeemPointIdentityDatabaseConstants.ASSET_REDEEM_POINT_IDENTITY_PUBLIC_KEY_COLUMN_NAME)));
             }
         } catch (CantLoadTableToMemoryException e) {
             throw new CantGetRedeemPointIdentitiesException(e.getMessage(), e, "Asset Redeem Point Identity", "Cant load " + AssetRedeemPointIdentityDatabaseConstants.ASSET_REDEEM_POINT_IDENTITY_TABLE_NAME + " table in memory.");
@@ -327,16 +327,13 @@ public class AssetRedeemPointIdentityDao implements DealsWithPluginDatabaseSyste
                     FileLifeSpan.PERMANENT
             );
 
-
             file.loadFromMedia();
 
             profileImage = file.getContent();
 
         } catch (CantLoadFileException e) {
             throw new CantGetAssetRedeemPointIdentityProfileImageException("CAN'T GET IMAGE PROFILE ", e, "Error loaded file.", null);
-
         } catch (FileNotFoundException | CantCreateFileException e) {
-            //Not image found return byte null
             profileImage = new byte[0];
             // throw new CantGetIntraWalletUserIdentityProfileImageException("CAN'T GET IMAGE PROFILE ", e, "Error getting developer identity private keys file.", null);
         } catch (Exception e) {
@@ -364,7 +361,6 @@ public class AssetRedeemPointIdentityDao implements DealsWithPluginDatabaseSyste
             file.persistToMedia();
         } catch (CantPersistFileException e) {
             throw new CantPersistPrivateKeyException("CAN'T PERSIST PRIVATE KEY ", e, "Error persist file.", null);
-
         } catch (CantCreateFileException e) {
             throw new CantPersistPrivateKeyException("CAN'T PERSIST PRIVATE KEY ", e, "Error creating file.", null);
         } catch (Exception e) {
@@ -386,7 +382,6 @@ public class AssetRedeemPointIdentityDao implements DealsWithPluginDatabaseSyste
             file.persistToMedia();
         } catch (CantPersistFileException e) {
             throw new CantPersistProfileImageException("CAN'T PERSIST PROFILE IMAGE ", e, "Error persist file.", null);
-
         } catch (CantCreateFileException e) {
             throw new CantPersistProfileImageException("CAN'T PERSIST PROFILE IMAGE ", e, "Error creating file.", null);
         } catch (Exception e) {
@@ -441,14 +436,12 @@ public class AssetRedeemPointIdentityDao implements DealsWithPluginDatabaseSyste
                     FileLifeSpan.PERMANENT
             );
 
-
             file.loadFromMedia();
 
             privateKey = file.getContent();
 
         } catch (CantLoadFileException e) {
             throw new CantGetAssetRedeemPointIdentityPrivateKeyException("CAN'T GET PRIVATE KEY ", e, "Error loaded file.", null);
-
         } catch (FileNotFoundException | CantCreateFileException e) {
             throw new CantGetAssetRedeemPointIdentityPrivateKeyException("CAN'T GET PRIVATE KEY ", e, "Error getting developer identity private keys file.", null);
         } catch (Exception e) {

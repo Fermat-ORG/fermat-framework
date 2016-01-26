@@ -19,7 +19,7 @@ apply from: 'PIP/settings.gradle'
 apply from: 'WPD/settings.gradle'
 
 
-include ':fermat-android-api'
+include ':fermat-android-api', ':fermat-pip-plugin-android-core-module-developer-bitdubai'
 include ':fermat-android-core'
 include ':fermat-api'
 include ':fermat-core'
@@ -28,19 +28,10 @@ include ':fermat-core-api'
 //include ':fermat_linux_core'
 //include ':manifest_generator'
 
-include ':fermat-cry-api'
-project(':fermat-cry-api').projectDir = new File('CRY/library/api/fermat-cry-api')
-
 //BNP Projects
 
 include ':fermat-bnp-plugin-network-service-bank-notes-bitdubai'
 project(':fermat-bnp-plugin-network-service-bank-notes-bitdubai').projectDir = new File('BNP/plugin/network_service/fermat-bnp-plugin-network-service-bank-notes-bitdubai')
-
-// CRY Projects
-
-// Milestone 1 project:
-include ':fermat-cry-plugin-crypto-network-bitcoin-bitdubai'
-project(':fermat-cry-plugin-crypto-network-bitcoin-bitdubai').projectDir = new File('CRY/plugin/crypto_network/fermat-cry-plugin-crypto-network-bitcoin-bitdubai')
 
 //CCM Projects
 
@@ -83,3 +74,4 @@ project(':fermat-shp-plugin-identity-brand-bitdubai').projectDir = new File('SHP
 
 
 //project(':fermat-ccp-plugin-module-intra-user-identity-bitdubai').projectDir = new File('CCP/plugin/module/fermat-ccp-plugin-module-intra-user-identity-bitdubai')
+project(':fermat-pip-plugin-android-core-module-developer-bitdubai').projectDir = new File('PIP/plugin/module/fermat-pip-plugin-android-core-module-developer-bitdubai')

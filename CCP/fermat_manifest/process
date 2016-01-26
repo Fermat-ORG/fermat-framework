@@ -1020,4 +1020,109 @@ previous="Open Intra Wallet Community"
 
         </steps>
     </process>
+    <process platform="CCP"
+            name="Connect with other intra user"
+            description="An Intra User from the community sends a connection request to another"
+            previous="Open Intra Wallet Community"
+            >
+            <steps>
+                <step id="0"
+                    type="start"
+                    title="Sends a connection request."
+                    description="The logged intra user selects another one and sends a connection request."
+                    platform="CCP"
+                    superlayer=""
+                    layer="SubApp"
+                    name="Intra User Community"
+                    >
+                    <next>
+                        <step id="1" type="direct call"></step>
+                    </next>
+                </step>
+                <step id="1"
+                    type="activity"
+                    title="Process the connection request."
+                    description="The module process the connection request to the network service."
+                    platform="CCP"
+                    superlayer=""
+                    component="Plugin"
+                    layer="Sub App Module"
+                    name="Intra Wallet USer"
+                    >
+                    <next>
+                        <step id="2" type="direct call"></step>
+                    </next>
+                </step>
+
+                <step id="2"
+                    type="activity"
+                    title="Route the connection request."
+                    description="The module process the connection request to the database."
+                    platform="CCP"
+                    superlayer=""
+                    component="Plugin"
+                    layer="Module
+                    name="Intra Wallet User Actor"
+                    >
+                    <next>
+                        <step id="3" type="direct call"></step>
+                    </next>
+                </step>
+                <step id="3"
+                    type="activity"
+                    title="Processing the request in the database."
+                    description="The database creates or updates de record."
+                    platform=""
+                    superlayer=""
+                    layer="Database"
+                    name="Intra Wallet User Dao"
+                    >
+                    <next>
+                        <step id="4" type="fermat message"></step>
+                    </next>
+                </step>
+                <step id="4"
+                    type="activity"
+                    title="Route the request to the network service"
+                    description="Route the connection request to the network service and creates and notification in order to be sent to the other device."
+                    platform="CCP"
+                    superlayer=""
+                    component="Plugin"
+                    layer="Module"
+                    name="Intra Wallet user"
+                    >
+                    <next>
+                        <step id="5" type="event"></step>
+                    </next>
+                </step>
+                <step id="5"
+                    type="activity"
+                    title="Build a notification in order to be sent to the database."
+                    description="The Network Service build a notification so that it can be send to the database."
+                    platform="CCP"
+                    superlayer=""
+                    component=""
+                    layer="Plugin"
+                    name="Intra Actor Network Service"
+                    >
+                    <next>
+                        <step id="6" type="direct call"></step>
+                    </next>
+                </step>
+                <step id="6"
+                    type="activity"
+                    title="The notification is created."
+                    description="The notification was created in the outgoing notification database."
+                    platform="CCP"
+                    superlayer=""
+                    component="Database"
+                    layer="Network Service"
+                    name="Outgoing Notification Dao"
+                    >
+                    <next>
+                        <step id="7" type="direct call"></step>
+                    </next>
+                </step>
+            </steps>
+        </process>
 </processes>

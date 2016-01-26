@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/relativeLayout_withdrawal"
+    android:layout_width="wrap_content"
+    android:layout_height="80dp"
+    android:background="@color/csh_transaction_item_background"
+    android:paddingBottom="8dp"
+    android:paddingEnd="@dimen/csh_activity_horizontal_margin"
+    android:paddingLeft="@dimen/csh_activity_horizontal_margin"
+    android:paddingRight="@dimen/csh_activity_horizontal_margin"
+    android:paddingStart="@dimen/csh_activity_horizontal_margin"
+    android:paddingTop="8dp"
+    android:visibility="visible">
+
+    <ImageView
+        android:id="@+id/imageView_withdrawal"
+        android:layout_width="@dimen/csh_transaction_image_width_and_height"
+        android:layout_height="match_parent"
+        android:layout_alignParentRight="true"
+        android:layout_marginStart="10dp"
+        android:layout_marginLeft="8dp"
+        android:contentDescription="@string/csh_transaction_img_desc"
+        tools:src="@drawable/csh_withdrawal"/>
+
+    <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
+        android:id="@+id/textView_withdrawal_amount"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_marginTop="8dp"
+        android:layout_gravity="center_vertical"
+        android:layout_toStartOf="@+id/imageView_withdrawal"
+        android:layout_toLeftOf="@+id/imageView_withdrawal"
+        android:singleLine="true"
+        android:textColor="#000"
+        android:textSize="@dimen/csh_large_text_size"
+        tools:text="1.293,82 USD"/>
+
+    <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
+        android:id="@+id/textView_withdrawal"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/textView_withdrawal_amount"
+        android:layout_marginEnd="@dimen/csh_transaction_margin_text"
+        android:layout_marginRight="@dimen/csh_transaction_margin_text"
+        android:layout_toStartOf="@+id/imageView_withdrawal"
+        android:layout_toLeftOf="@+id/imageView_withdrawal"
+        android:singleLine="true"
+        android:textColor="@color/csh_transaction_withdrawal_color"
+        android:textSize="@dimen/csh_regular_text_size"
+        android:text="WITHDRAWAL"/>
+
+    <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
+        android:id="@+id/textView_withdrawal_date"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:layout_alignBottom="@id/textView_withdrawal"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentLeft="true"
+        android:singleLine="true"
+        android:textColor="@color/csh_transaction_date_text_color"
+        android:textSize="@dimen/csh_regular_text_size"
+        android:text="3 Feb 2015"/>
+
+    <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
+        android:id="@+id/textView_withdrawal_memo"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentLeft="true"
+        android:textColor="@color/csh_transaction_date_text_color"
+        android:textSize="@dimen/csh_regular_text_size"
+        tools:text="Memo for withdrawal"/>
+
+</RelativeLayout>
+

@@ -35,8 +35,8 @@ public class CryptoWalletUserFermatAppConnection extends AppConnections{
     public PluginVersionReference getPluginVersionReference() {
         return  new PluginVersionReference(
                 Platforms.CRYPTO_CURRENCY_PLATFORM,
-                Layers.IDENTITY,
-                Plugins.INTRA_WALLET_USER,
+                Layers.SUB_APP_MODULE,
+                Plugins.INTRA_IDENTITY_USER,
                 Developers.BITDUBAI,
                 new Version()
         );

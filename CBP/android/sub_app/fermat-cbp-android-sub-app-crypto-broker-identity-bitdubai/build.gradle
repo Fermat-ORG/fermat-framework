@@ -32,6 +32,11 @@ android {
     lintOptions {
         abortOnError false
     }
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_7
+        targetCompatibility JavaVersion.VERSION_1_7
+    }
 }
 
 dependencies {
@@ -94,5 +99,3 @@ task testCoverage(dependsOn: jacocoTestReport) << {
 
 tasks.assemble.dependsOn clean
 tasks.assemble.mustRunAfter clean
-
-

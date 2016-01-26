@@ -7,26 +7,29 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
-import android.os.Environment;
-import android.support.v4.app.FragmentActivity;
 import android.util.DisplayMetrics;
 import android.view.View;
 import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
 import android.widget.ImageView;
 import android.widget.Toast;
-
+import com.bitdubai.android_core.app.common.version_1.ApplicationConstants;
 import com.bitdubai.fermat.R;
+import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.FermatSession;
 import com.bitdubai.fermat_android_api.ui.interfaces.FermatWorkerCallBack;
 import com.bitdubai.fermat_android_api.ui.util.FermatWorker;
 import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.exceptions.CantGetAddonException;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.exceptions.CantStartAllRegisteredPlatformsException;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.exceptions.VersionNotFoundException;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.AddonVersionReference;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Addons;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Developers;
+import com.bitdubai.fermat_api.layer.all_definition.enums.Engine;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Layers;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
+import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.MenuItem;
+import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.interfaces.FermatStructure;
 import com.bitdubai.fermat_api.layer.all_definition.resources_structure.enums.ScreenSize;
 import com.bitdubai.fermat_api.layer.all_definition.util.DeviceInfoUtils;
 import com.bitdubai.fermat_api.layer.all_definition.util.Version;
@@ -40,6 +43,7 @@ import com.bitdubai.fermat_pip_api.layer.platform_service.platform_info.exceptio
 import org.apache.log4j.Level;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import de.mindpipe.android.logging.log4j.LogConfigurator;
 
@@ -54,11 +58,9 @@ import de.mindpipe.android.logging.log4j.LogConfigurator;
  * -- Luis.
  */
 
-public class StartActivity extends FragmentActivity implements FermatWorkerCallBack{
+public class StartActivity extends FermatActivity implements FermatWorkerCallBack{
 
 
-    public static final String START_ACTIVITY_INIT = "Init";
-    public static final String ACTIVE_PLATFORMS = "active";
 
     // Indicate if the app was loaded, for not load again the start activity.
     private static boolean WAS_START_ACTIVITY_LOADED = false;
@@ -74,9 +76,22 @@ public class StartActivity extends FragmentActivity implements FermatWorkerCallB
     Animation animation2;
 
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        final FermatSystem fermatSystem =((ApplicationSession) getApplication()).getFermatSystem();
+
+        try {
+            fermatSystem.start(this.getApplicationContext(), new OSAPlatform());
+        } catch (FermatException e) {
+
+            System.out.println(e.toString());
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 
             // Indicate if the app was loaded, for not load again the start activity.
             if (WAS_START_ACTIVITY_LOADED) {
@@ -162,6 +177,7 @@ public class StartActivity extends FragmentActivity implements FermatWorkerCallB
 
 
 
+
                 GetTask getTask = new GetTask(this,this);
                 getTask.setCallBack(this);
                 getTask.execute();
@@ -172,6 +188,31 @@ public class StartActivity extends FragmentActivity implements FermatWorkerCallB
 
     }
 
+    @Override
+    protected FermatStructure getAppInUse() {
+        return null;
+    }
+
+    @Override
+    protected FermatSession getFermatSessionInUse(String appPublicKey) {
+        return null;
+    }
+
+    @Override
+    protected List<MenuItem> getNavigationMenu() {
+        return null;
+    }
+
+    @Override
+    protected void onNavigationMenuItemTouchListener(MenuItem data, int position) {
+
+    }
+
+    @Override
+    public void connectWithOtherApp(Engine engine, String fermatAppPublicKey, Object[] objectses) {
+
+    }
+
     public void handleTouch(View view) {
         fermatInit();
     }
@@ -179,8 +220,8 @@ public class StartActivity extends FragmentActivity implements FermatWorkerCallB
     private boolean fermatInit() {
         //Intent intent = new Intent(this, SubAppActivity.class);
         Intent intent = new Intent(this, DesktopActivity.class);
-        intent.putExtra(ACTIVE_PLATFORMS,activePlatforms);
-        intent.putExtra(START_ACTIVITY_INIT, "init");
+        intent.putExtra(ApplicationConstants.ACTIVE_PLATFORMS,activePlatforms);
+        intent.putExtra(ApplicationConstants.START_ACTIVITY_INIT, "init");
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
         startActivity(intent);
         overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
@@ -236,6 +277,11 @@ public class StartActivity extends FragmentActivity implements FermatWorkerCallB
                 Toast.LENGTH_LONG).show();
     }
 
+    @Override
+    public void changeActivityBack(String appBackPublicKey, String activityCode) {
+
+    }
+
     class GetTask extends FermatWorker{
 
 
@@ -255,15 +301,18 @@ public class StartActivity extends FragmentActivity implements FermatWorkerCallB
             final FermatSystem fermatSystem =((ApplicationSession) getApplication()).getFermatSystem();
 
             try {
-                Context context = getApplicationContext();
-                fermatSystem.start(context, new OSAPlatform());
+                fermatSystem.startAllRegisteredPlatforms();
 
-            } catch (FermatException e) {
-                System.err.println(e.toString());
-                System.out.println(e.getPossibleReason());
-                System.out.println(e.getFormattedContext());
-                System.out.println(e.getFormattedTrace());
+            } catch (CantStartAllRegisteredPlatformsException e) {
+                e.printStackTrace();
             }
+            //TODO delete: unreachable section
+//            catch (FermatException e) {
+//                System.err.println(e.toString());
+//                System.out.println(e.getPossibleReason());
+//                System.out.println(e.getFormattedContext());
+//                System.out.println(e.getFormattedTrace());
+//            }
 
             return true;
         }
@@ -300,4 +349,6 @@ public class StartActivity extends FragmentActivity implements FermatWorkerCallB
         //}
         return list;
     }
+
+
 }

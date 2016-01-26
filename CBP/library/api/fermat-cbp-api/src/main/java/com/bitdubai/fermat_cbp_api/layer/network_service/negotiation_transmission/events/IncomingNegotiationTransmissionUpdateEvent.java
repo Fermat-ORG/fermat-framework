@@ -1,8 +1,8 @@
 package com.bitdubai.fermat_cbp_api.layer.network_service.negotiation_transmission.events;
 
-import com.bitdubai.fermat_api.layer.all_definition.network_service.interfaces.NetworkService;
 import com.bitdubai.fermat_cbp_api.all_definition.events.AbstractCBPFermatEvent;
 import com.bitdubai.fermat_cbp_api.all_definition.events.enums.EventType;
+import com.bitdubai.fermat_p2p_api.layer.all_definition.common.network_services.interfaces.NetworkService;
 
 /**
  * Created by Yordin Alayn 25.11.15.

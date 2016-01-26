@@ -77,10 +77,10 @@ public class MainFragment extends AbstractFermatFragment
                 if (assetRedeemPointWalletList != null && !assetRedeemPointWalletList.isEmpty()) {
                     bookAssets = new ArrayList<>();
                     for (AssetRedeemPointWalletList assetRedeemPointWallet : assetRedeemPointWalletList) {
-                        DigitalAsset asset = new DigitalAsset(assetRedeemPointWallet.getName(),
+                        DigitalAsset asset = new DigitalAsset(assetRedeemPointWallet.getDigitalAsset().getName(),
                                 String.valueOf(String.format("BookBalance: %d - AvailableBalance: %d",
                                         assetRedeemPointWallet.getQuantityBookBalance(), assetRedeemPointWallet.getQuantityAvailableBalance())));
-                        asset.setAssetPublicKey(assetRedeemPointWallet.getAssetPublicKey());
+                        asset.setAssetPublicKey(assetRedeemPointWallet.getDigitalAsset().getPublicKey());
                         asset.setWalletPublicKey("public_key");
                         bookAssets.add(asset);
                     }
@@ -163,7 +163,7 @@ public class MainFragment extends AbstractFermatFragment
                 public void onErrorOccurred(Exception ex) {
                     dialog.dismiss();
                     if (getActivity() != null)
-                        Toast.makeText(getActivity(), "Fermat Has detected an exception",
+                        Toast.makeText(getActivity(), "Fermat Has detected an exception. Please retry later.",
                                 Toast.LENGTH_SHORT).show();
                 }
             });

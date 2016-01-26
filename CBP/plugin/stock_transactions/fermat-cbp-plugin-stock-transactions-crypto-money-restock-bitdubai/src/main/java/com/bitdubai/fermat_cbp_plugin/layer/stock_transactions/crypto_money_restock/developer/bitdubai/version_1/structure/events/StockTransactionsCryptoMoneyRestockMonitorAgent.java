@@ -1,6 +1,7 @@
 package com.bitdubai.fermat_cbp_plugin.layer.stock_transactions.crypto_money_restock.developer.bitdubai.version_1.structure.events;
 
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
+import com.bitdubai.fermat_api.layer.all_definition.enums.interfaces.FermatEnum;
 import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterException;
 import com.bitdubai.fermat_api.Agent;
 import com.bitdubai.fermat_api.CantStartAgentException;
@@ -129,6 +130,7 @@ public class StockTransactionsCryptoMoneyRestockMonitorAgent implements Agent{
             for(CryptoMoneyTransaction cryptoMoneyTransaction : stockTransactionCryptoMoneyRestockFactory.getCryptoMoneyTransactionList(filter))
             {
                 switch(cryptoMoneyTransaction.getTransactionStatus()) {
+                    //TODO: Hacer un case que vea el status REJECTED para reversar la operacion en la wallet, si es credito se hace un debito, si debito se hace un credito
                     case INIT_TRANSACTION:
                         //Llamar al metodo de la interfaz public del manager de Bank Hold
                         //Luego cambiar el status al registro de la transaccion leido
@@ -157,10 +159,10 @@ public class StockTransactionsCryptoMoneyRestockMonitorAgent implements Agent{
                                 WalletTransactionWrapper walletTransactionRecord = new WalletTransactionWrapper(
 
                                         cryptoMoneyTransaction.getTransactionId(),
-                                        null,
+                                        cryptoMoneyTransaction.getCryptoCurrency(),
                                         BalanceType.AVAILABLE,
                                         TransactionType.CREDIT,
-                                        CurrencyType.BANK_MONEY,
+                                        CurrencyType.CRYPTO_MONEY,
                                         cryptoMoneyTransaction.getCbpWalletPublicKey(),
                                         cryptoMoneyTransaction.getActorPublicKey(),
                                         cryptoMoneyTransaction.getAmount(),
@@ -169,6 +171,8 @@ public class StockTransactionsCryptoMoneyRestockMonitorAgent implements Agent{
                                         cryptoMoneyTransaction.getPriceReference(),
                                         cryptoMoneyTransaction.getOriginTransaction());
 
+                                //TODO:Solo para testear
+                                cryptoMoneyTransaction.setCbpWalletPublicKey("walletPublicKeyTest");
                                 cryptoBrokerWalletManager.loadCryptoBrokerWallet(cryptoMoneyTransaction.getCbpWalletPublicKey()).getStockBalance().debit(walletTransactionRecord, BalanceType.BOOK);
                                 cryptoBrokerWalletManager.loadCryptoBrokerWallet(cryptoMoneyTransaction.getCbpWalletPublicKey()).getStockBalance().debit(walletTransactionRecord, BalanceType.AVAILABLE);
                             } catch (CryptoBrokerWalletNotFoundException e) {
