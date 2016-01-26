@@ -433,16 +433,15 @@ public class ChatPluginRoot extends AbstractPlugin implements
 
     @Override
     public void handleCompleteComponentRegistrationNotificationEvent(PlatformComponentProfile platformComponentProfileRegistered) {
-        System.out.println("ChatPLuginRoot - CommunicationNetworkServiceConnectionManager - Starting method handleCompleteComponentRegistrationNotificationEvent");
 
+        System.out.println("ChatPLuginRoot - CommunicationNetworkServiceConnectionManager - Starting method handleCompleteComponentRegistrationNotificationEvent");
 
         if (platformComponentProfileRegistered.getPlatformComponentType() == PlatformComponentType.COMMUNICATION_CLOUD_CLIENT && !this.register) {
 
-            if (communicationRegistrationProcessNetworkServiceAgent.isAlive()) {
-                communicationRegistrationProcessNetworkServiceAgent.interrupt();
+            if(communicationRegistrationProcessNetworkServiceAgent != null && communicationRegistrationProcessNetworkServiceAgent.getActive()){
+                communicationRegistrationProcessNetworkServiceAgent.stop();
                 communicationRegistrationProcessNetworkServiceAgent = null;
             }
-
 
             /*
              * Construct my profile and register me
@@ -481,7 +480,7 @@ public class ChatPluginRoot extends AbstractPlugin implements
             System.out.print("-----------------------\n" +
                     "NETWORK SERVICE CHATPLUGINROOT REGISTERED  -----------------------\n" +
                     "-----------------------\n TO: " + getName());
-            communicationRegistrationProcessNetworkServiceAgent.interrupt();
+            communicationRegistrationProcessNetworkServiceAgent.stop();
             communicationRegistrationProcessNetworkServiceAgent = null;
 
 
