@@ -1158,7 +1158,7 @@ public class WalletRuntimeEnginePluginRoot extends AbstractPlugin implements
 
         // Side Menu
         runtimeSideMenu = new SideMenu();
-        runtimeSideMenu.setBackgroundColor("#e2e4e6");
+        runtimeSideMenu.setBackgroundColor("#5C6E81");
 //TODO en Deshuso por ahora
 //        runtimeMenuItem = new MenuItem();
 //        runtimeMenuItem.setLabel("My Assets");
@@ -1513,7 +1513,7 @@ public class WalletRuntimeEnginePluginRoot extends AbstractPlugin implements
 
         // Side Menu
         runtimeSideMenu = new SideMenu();
-        runtimeSideMenu.setBackgroundColor("#e2e4e6");
+        runtimeSideMenu.setBackgroundColor("#381a5e");
 //TODO en Deshuso por ahora
 //        runtimeMenuItem = new MenuItem();
 //        runtimeMenuItem.setLabel("My Assets");
@@ -1699,7 +1699,7 @@ public class WalletRuntimeEnginePluginRoot extends AbstractPlugin implements
 
         // Side Menu
         runtimeSideMenu = new SideMenu();
-        runtimeSideMenu.setBackgroundColor("#e2e4e6");
+        runtimeSideMenu.setBackgroundColor("#005580");
 //TODO en Deshuso por ahora
 //        runtimeMenuItem = new MenuItem();
 //        runtimeMenuItem.setLabel("My Assets");
