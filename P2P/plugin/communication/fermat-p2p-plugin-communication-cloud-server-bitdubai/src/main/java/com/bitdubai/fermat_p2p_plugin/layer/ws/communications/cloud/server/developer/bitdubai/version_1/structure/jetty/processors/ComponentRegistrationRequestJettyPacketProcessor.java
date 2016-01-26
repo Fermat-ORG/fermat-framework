@@ -216,22 +216,22 @@ public class ComponentRegistrationRequestJettyPacketProcessor extends FermatJett
 
                 LOG.info("New registration");
 
-            /*
-             * Construct the respond
-             */
-            Gson gson = new Gson();
-            JsonObject jsonObject = new JsonObject();
-            jsonObject.addProperty(JsonAttNamesConstants.NETWORK_SERVICE_TYPE, networkServiceTypeApplicant.toString());
-            jsonObject.addProperty(JsonAttNamesConstants.PROFILE_TO_REGISTER, platformComponentProfileToRegister.toJson());
+                /*
+                 * Construct the respond
+                 */
+                Gson gson = new Gson();
+                JsonObject jsonObject = new JsonObject();
+                jsonObject.addProperty(JsonAttNamesConstants.NETWORK_SERVICE_TYPE, networkServiceTypeApplicant.toString());
+                jsonObject.addProperty(JsonAttNamesConstants.PROFILE_TO_REGISTER, platformComponentProfileToRegister.toJson());
 
-            /*
-             * Construct a fermat packet whit the same platform component profile and different FermatPacketType
-             */
-            fermatPacketRespond = FermatPacketCommunicationFactory.constructFermatPacketEncryptedAndSinged(receiveFermatPacket.getSender(),                  //Destination
-                                                                                                            clientConnection.getServerIdentity().getPublicKey(),                    //Sender
-                                                                                                            gson.toJson(jsonObject),                          //Message Content
-                                                                                                            FermatPacketType.COMPLETE_COMPONENT_REGISTRATION, //Packet type
-                                                                                                            clientConnection.getServerIdentity().getPrivateKey());  //Sender private key
+                /*
+                 * Construct a fermat packet whit the same platform component profile and different FermatPacketType
+                 */
+                fermatPacketRespond = FermatPacketCommunicationFactory.constructFermatPacketEncryptedAndSinged(receiveFermatPacket.getSender(),                        //Destination
+                                                                                                                clientConnection.getServerIdentity().getPublicKey(),   //Sender
+                                                                                                                gson.toJson(jsonObject),                               //Message Content
+                                                                                                                FermatPacketType.COMPLETE_COMPONENT_REGISTRATION,      //Packet type
+                                                                                                                clientConnection.getServerIdentity().getPrivateKey()); //Sender private key
 
             }else{
 
