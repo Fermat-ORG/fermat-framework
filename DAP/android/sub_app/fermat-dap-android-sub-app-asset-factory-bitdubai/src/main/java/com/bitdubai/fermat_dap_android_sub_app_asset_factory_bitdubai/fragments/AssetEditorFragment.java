@@ -327,10 +327,10 @@ public class AssetEditorFragment extends AbstractFermatFragment implements View.
                     .setVIewColor(R.color.dap_asset_factory_view_color)
                     .setTitleTextColor(R.color.dap_asset_factory_view_color)
                     .setSubTitle("Asset Editor section.")
-                    .setBody("On this section you are able to define all your assets properties.\n \n" +
+                    .setBody("On this section you are able to define all your assets properties.\n\n" +
                             "A digital asset is formed by an image which represents it," +
                             "a set of properties like description, expiration date and quantity.\n" +
-                            "And a value expressed in Bitcoins.\n \n" +
+                            "And a value expressed in bitcoin.\n \n" +
                             "You will be able to modify any of this properties as needed before publishing your asset.")
 //                    .setTextFooter("Again, give me a Text")
                     .setTemplateType(PresentationDialog.TemplateType.TYPE_PRESENTATION_WITHOUT_IDENTITIES)
@@ -342,20 +342,19 @@ public class AssetEditorFragment extends AbstractFermatFragment implements View.
 //                public void onDismiss(DialogInterface dialog) {
 //                    Object o = appSession.getData(SessionConstantsAssetFactory.PRESENTATION_IDENTITY_CREATED);
 //                    if (o != null) {
-//                        if ((Boolean) (o)) {
+//                        if ((Boolean) )) {
 //                            //invalidate();
 //                            appSession.removeData(SessionConstantsAssetFactory.PRESENTATION_IDENTITY_CREATED);
 //                        }
-//                    }
+//
 //                    IdentityAssetIssuer identityAssetIssuer = manager.getLoggedIdentityAssetIssuer();
 //                    if (identityAssetIssuer == null) {
-//                        getActivity().onBackPressed();
+//                       getActivity().onBackPressed();
 //                    } else {
 //                        invalidate();
 //                    }
-//                }
-//            });
-
+//
+//
             presentationDialog.show();
         } catch (Exception e) {
             e.printStackTrace();
@@ -588,7 +587,8 @@ public class AssetEditorFragment extends AbstractFermatFragment implements View.
             String satoshisStr = bitcoinsView.getText().toString().trim();
             long satoshis = Long.parseLong(satoshisStr.isEmpty() ? "0" : satoshisStr);
             if (satoshis < MINIMUM_ASSET_VALUE) {
-                Toast.makeText(getActivity(), "The minimun monetary amount for any Asset is "+MINIMUM_ASSET_VALUE+" satoshis.", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getActivity(), "The minimum monetary amount for any Asset is "+MINIMUM_ASSET_VALUE+" satoshis.\n" +
+                        " \n This is needed to pay the fee of bitcoin transactions during delivery of the assets.", Toast.LENGTH_LONG).show();
                 return false;
             }
             String quantityStr = quantityView.getText().toString().trim();
