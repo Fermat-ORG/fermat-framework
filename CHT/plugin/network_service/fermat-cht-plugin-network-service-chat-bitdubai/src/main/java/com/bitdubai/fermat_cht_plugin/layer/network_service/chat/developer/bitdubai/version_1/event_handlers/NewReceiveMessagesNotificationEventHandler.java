@@ -37,11 +37,36 @@ public class NewReceiveMessagesNotificationEventHandler implements FermatEventHa
      */
     private JsonParser parser;
 
+    public Map<ChatMessageTransactionType, FermatMessageProcessor> getMessagesProcessorsRegistered() {
+        return messagesProcessorsRegistered;
+    }
+
+    public void setMessagesProcessorsRegistered(Map<ChatMessageTransactionType, FermatMessageProcessor> messagesProcessorsRegistered) {
+        this.messagesProcessorsRegistered = messagesProcessorsRegistered;
+    }
+
+    public Gson getGson() {
+        return gson;
+    }
+
+    public void setGson(Gson gson) {
+        this.gson = gson;
+    }
+
+    public JsonParser getParser() {
+        return parser;
+    }
+
+    public void setParser(JsonParser parser) {
+        this.parser = parser;
+    }
+
     /**
      * Constructor with parameter
      *
      * @param
      */
+
     public NewReceiveMessagesNotificationEventHandler(ChatPluginRoot chatPluginRoot) {
         this.messagesProcessorsRegistered = new HashMap<>();
         this.messagesProcessorsRegistered.put(ChatMessageTransactionType.CHAT_METADATA_TRASMIT, new ChatMetadataTransmitMessageReceiverProcessor(chatPluginRoot));

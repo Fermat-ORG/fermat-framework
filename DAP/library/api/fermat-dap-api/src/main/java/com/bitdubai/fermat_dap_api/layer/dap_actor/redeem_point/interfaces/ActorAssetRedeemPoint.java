@@ -105,5 +105,5 @@ public interface ActorAssetRedeemPoint extends DAPActor {
      */
     CryptoAddress getCryptoAddress();
 
-    List<String> registeredIssuers();
+    List<String> getRegisteredIssuers();
 }

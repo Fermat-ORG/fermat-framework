@@ -51,6 +51,22 @@ public class NewSentMessagesNotificationEventHandler implements FermatEventHandl
 
     private ChatPluginRoot chatPluginRoot;
 
+    public Gson getGson() {
+        return gson;
+    }
+
+    public void setGson(Gson gson) {
+        this.gson = gson;
+    }
+
+    public JsonParser getParser() {
+        return parser;
+    }
+
+    public void setParser(JsonParser parser) {
+        this.parser = parser;
+    }
+
     /**
      * Constructor with parameter
      *
