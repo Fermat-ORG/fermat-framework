@@ -227,6 +227,9 @@ public class DiscoveryComponentConnectionRequestJettyPacketProcessor extends Fer
         ClientConnection clientConnectionDestination = MemoryCache.getInstance().getRegisteredClientConnectionsCache().get(platformComponentProfileDestination.getCommunicationCloudClientIdentity());
 
 
+        LOG.info("platformComponentProfileDestination.getCommunicationCloudClientIdentity() = " +platformComponentProfileDestination.getCommunicationCloudClientIdentity());
+        LOG.info("clientConnectionDestination.getServerIdentity().getPublicKey() = " +clientConnectionDestination.getServerIdentity().getPublicKey());
+        LOG.info("clientConnectionDestination.getServerIdentity().getPrivateKey() = " +clientConnectionDestination.getServerIdentity().getPrivateKey());
 
         /*
          * Create the respond packet

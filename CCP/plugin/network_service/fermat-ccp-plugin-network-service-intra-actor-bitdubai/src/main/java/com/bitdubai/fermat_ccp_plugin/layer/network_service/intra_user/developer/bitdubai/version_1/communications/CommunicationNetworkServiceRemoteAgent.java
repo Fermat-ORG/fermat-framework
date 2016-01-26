@@ -54,7 +54,7 @@ public class CommunicationNetworkServiceRemoteAgent extends Observable {
     /*
      * Represent the sleep time for the read or send (2000 milliseconds)
      */
-    private static final long SLEEP_TIME = 2000;
+    private static final long SLEEP_TIME = 100;
 
     private static final int SEND_TASK = 0;
     private static final int RECEIVE_TASK = 1;
