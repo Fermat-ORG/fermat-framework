@@ -398,7 +398,7 @@ public class ActorNetworkServiceRecordedAgent extends FermatAgent{
                     NetworkServiceLocal communicationNetworkServiceLocal = actorNetworkServicePluginRoot.getNetworkServiceConnectionManager().getNetworkServiceLocalInstance(actorNetworkServiceRecord.getActorDestinationPublicKey());
 
                     System.out.println("----------------------------\n" +
-                            "ENVIANDO MENSAJE:" + actorNetworkServiceRecord.getActorDestinationPublicKey()
+                            "ENVIANDO MENSAJE: " + actorNetworkServiceRecord.getActorDestinationPublicKey()
                             + "\n-------------------------------------------------");
 
 
@@ -421,7 +421,7 @@ public class ActorNetworkServiceRecordedAgent extends FermatAgent{
                     try {
 
                         System.out.println("----------------------------\n" +
-                                "ENVIANDO MENSAJE:" + actorNetworkServiceRecord.getActorDestinationPublicKey()
+                                "ENVIANDO MENSAJE: " + actorNetworkServiceRecord.getActorDestinationPublicKey()
                                 + "\n-------------------------------------------------");
 
 

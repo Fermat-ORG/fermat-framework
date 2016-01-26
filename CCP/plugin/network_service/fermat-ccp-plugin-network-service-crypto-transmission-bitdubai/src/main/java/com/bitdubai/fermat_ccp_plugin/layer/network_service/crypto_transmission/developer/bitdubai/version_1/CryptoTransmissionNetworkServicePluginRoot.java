@@ -455,41 +455,58 @@ public class CryptoTransmissionNetworkServicePluginRoot extends AbstractNetworkS
 
             if(!flag.getAndSet(true)) {
 
-            /*
-             * Create a new key pair for this execution
-             */
-               // identity = new ECCKeyPair();
+                /*
+                 * Create a new key pair for this execution
+                 */
                 initializeClientIdentity();
 
-            /*
-             * Initialize the data base
-             */
+                /*
+                 * Initialize the data base
+                 */
                 initializeDb();
 
-            /*
-             * Initialize Developer Database Factory
-             */
+                /*
+                 * Initialize Developer Database Factory
+                 */
                 communicationNetworkServiceDeveloperDatabaseFactory = new CommunicationNetworkServiceDeveloperDatabaseFactory(pluginDatabaseSystem, pluginId);
                 communicationNetworkServiceDeveloperDatabaseFactory.initializeDatabase();
 
-            /*
-             * Initialize listeners
-             */
+                /*
+                 * Initialize listeners
+                 */
                 initializeListener();
 
 
-            /*
-             * Verify if the communication cloud client is active
-             */
-                if (!wsCommunicationsCloudClientManager.isDisable()) {
+                /*
+                 * Initialize connection manager
+                 */
+                initializeCommunicationNetworkServiceConnectionManager();
 
                 /*
-                 * Initialize the agent and start
+                 * Verify if the communication cloud client is active
                  */
+                if (!wsCommunicationsCloudClientManager.isDisable()){
+
+
+                    /*
+                     * Construct my profile and register me
+                     */
+                    PlatformComponentProfile platformComponentProfilePluginRoot =  wsCommunicationsCloudClientManager.getCommunicationsCloudClientConnection().constructPlatformComponentProfileFactory(getIdentityPublicKey(),
+                            getAlias().toLowerCase(),
+                            getName(),
+                            getNetworkServiceType(),
+                            getPlatformComponentType(),
+                            getExtraData());
+
+                    setPlatformComponentProfilePluginRoot(platformComponentProfilePluginRoot);
+
+
+                    /*
+                     * Initialize the agent and start
+                     */
                     communicationRegistrationProcessNetworkServiceAgent = new CommunicationRegistrationProcessNetworkServiceAgent(this, wsCommunicationsCloudClientManager);
                     communicationRegistrationProcessNetworkServiceAgent.start();
                 }
-
 
                 /**
                  * Initialice DAO
@@ -773,14 +790,7 @@ public class CryptoTransmissionNetworkServicePluginRoot extends AbstractNetworkS
                     communicationRegistrationProcessNetworkServiceAgent = null;
                 }
 
-                PlatformComponentProfile platformComponentProfileToReconnect =  wsCommunicationsCloudClientManager.getCommunicationsCloudClientConnection().constructPlatformComponentProfileFactory(this.getIdentityPublicKey(),
-                        this.getAlias().toLowerCase(),
-                        this.getName(),
-                        this.getNetworkServiceType(),
-                        this.getPlatformComponentType(),
-                        this.getExtraData());
-
-                wsCommunicationsCloudClientManager.getCommunicationsCloudClientConnection().registerComponentForCommunication(this.getNetworkServiceType(), platformComponentProfileToReconnect);
+                wsCommunicationsCloudClientManager.getCommunicationsCloudClientConnection().registerComponentForCommunication(this.getNetworkServiceType(), getPlatformComponentProfilePluginRoot());
 
             }
 
@@ -879,9 +889,7 @@ public class CryptoTransmissionNetworkServicePluginRoot extends AbstractNetworkS
     @Override
     public void handleVpnConnectionCloseNotificationEvent(FermatEvent fermatEvent) {
 
-
         VPNConnectionCloseNotificationEvent vpnConnectionCloseNotificationEvent = (VPNConnectionCloseNotificationEvent) fermatEvent;
-        //cryptoTransmissionAgent.connectionFailure(vpnConnectionCloseNotificationEvent.getRemoteParticipant().getIdentityPublicKey());
 
         if(fermatEvent instanceof VPNConnectionCloseNotificationEvent){
 
@@ -899,8 +907,6 @@ public class CryptoTransmissionNetworkServicePluginRoot extends AbstractNetworkS
 
 
             }
-
-
 
         }
 

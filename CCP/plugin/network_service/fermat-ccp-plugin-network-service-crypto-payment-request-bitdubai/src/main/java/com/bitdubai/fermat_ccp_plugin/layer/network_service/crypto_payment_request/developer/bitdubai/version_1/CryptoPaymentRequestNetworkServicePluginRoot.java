@@ -2,6 +2,7 @@ package com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_payment_requ
 
 import com.bitdubai.fermat_api.CantStartAgentException;
 import com.bitdubai.fermat_api.CantStartPluginException;
+import com.bitdubai.fermat_api.CantStopAgentException;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.annotations.NeededAddonReference;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.annotations.NeededPluginReference;
 import com.bitdubai.fermat_api.layer.all_definition.crypto.asymmetric.ECCKeyPair;
@@ -89,6 +90,7 @@ import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.enums.P2pE
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.events.ClientConnectionCloseNotificationEvent;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.events.VPNConnectionCloseNotificationEvent;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.WsCommunicationsCloudClientManager;
+import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.client.CommunicationsClientConnection;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.contents.FermatMessage;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.exceptions.CantRegisterComponentException;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.exceptions.CantRequestListException;
@@ -458,22 +460,15 @@ public final class CryptoPaymentRequestNetworkServicePluginRoot extends Abstract
 
                 System.out.println("********* Crypto Payment Request: Starting. ");
 
-//                try {
-//                    loadKeyPair(pluginFileSystem);
-//                } catch (CantLoadKeyPairException e) {
-//
-//                    errorManager.reportUnexpectedPluginException(this.getPluginVersionReference(), UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
-//                    throw new CantStartPluginException(e, "", "Problem trying to load the key pair of the plugin.");
-//                }
 
                 /*
                  * Create a new key pair for this execution
                  */
                 initializeClientIdentity();
 
-        /*
-         * Validate required resources
-         */
+                /*
+                 * Validate required resources
+                 */
                 validateInjectedResources();
 
 
@@ -494,25 +489,41 @@ public final class CryptoPaymentRequestNetworkServicePluginRoot extends Abstract
 
                 try {
 
-            /*
-             * Initialize the data base
-             */
+                    /*
+                     * Initialize the data base
+                     */
                     initializeCommunicationDb();
 
-            /*
-             * Initialize listeners
-             */
+                    /*
+                     * Initialize listeners
+                     */
                     initializeListener();
 
+                    /*
+                     * Initialize connection manager
+                     */
+                    initializeCommunicationNetworkServiceConnectionManager();
 
-            /*
-             * Verify if the communication cloud client is active
-             */
+                    /*
+                     * Verify if the communication cloud client is active
+                     */
                     if (!wsCommunicationsCloudClientManager.isDisable()){
 
-                /*
-                 * Initialize the agent and start
-                 */
+                        /*
+                         * Construct my profile and register me
+                         */
+                        PlatformComponentProfile platformComponentProfilePluginRoot =  wsCommunicationsCloudClientManager.getCommunicationsCloudClientConnection().constructPlatformComponentProfileFactory(getIdentityPublicKey(),
+                                                                                                                                                                                    getAlias().toLowerCase(),
+                                                                                                                                                                                    getName(),
+                                                                                                                                                                                    getNetworkServiceType(),
+                                                                                                                                                                                    getPlatformComponentType(),
+                                                                                                                                                                                    getExtraData());
+
+                        setPlatformComponentProfilePluginRoot(platformComponentProfilePluginRoot);
+
+                        /*
+                         * Initialize the agent and start
+                         */
                         communicationRegistrationProcessNetworkServiceAgent = new CommunicationRegistrationProcessNetworkServiceAgent(this, wsCommunicationsCloudClientManager);
                         communicationRegistrationProcessNetworkServiceAgent.start();
                     }
@@ -905,50 +916,35 @@ public final class CryptoPaymentRequestNetworkServicePluginRoot extends Abstract
      */
     public void handleCompleteComponentRegistrationNotificationEvent(final PlatformComponentProfile platformComponentProfileRegistered) {
 
-        if (platformComponentProfileRegistered.getPlatformComponentType() == PlatformComponentType.COMMUNICATION_CLOUD_CLIENT && !this.register){
+        System.out.println("CryptoPaymentRequestNetworkServicePluginRoot - Starting method handleCompleteComponentRegistrationNotificationEvent");
 
-            if(communicationRegistrationProcessNetworkServiceAgent != null && communicationRegistrationProcessNetworkServiceAgent.getActive()){
-                communicationRegistrationProcessNetworkServiceAgent.stop();
-                communicationRegistrationProcessNetworkServiceAgent = null;
+        try {
+
+            if (platformComponentProfileRegistered.getPlatformComponentType() == PlatformComponentType.COMMUNICATION_CLOUD_CLIENT && !this.register){
+
+                if(communicationRegistrationProcessNetworkServiceAgent != null && communicationRegistrationProcessNetworkServiceAgent.getActive()){
+                    communicationRegistrationProcessNetworkServiceAgent.stop();
+                    communicationRegistrationProcessNetworkServiceAgent = null;
+                }
+
+                wsCommunicationsCloudClientManager.getCommunicationsCloudClientConnection().registerComponentForCommunication(this.getNetworkServiceType(), getPlatformComponentProfilePluginRoot());
+
             }
 
-            /*
-             * Construct my profile and register me
-             */
-            PlatformComponentProfile platformComponentProfileToReconnect =  wsCommunicationsCloudClientManager.getCommunicationsCloudClientConnection().constructPlatformComponentProfileFactory(this.getIdentityPublicKey(),
-                    this.getAlias().toLowerCase(),
-                    this.getName(),
-                    this.getNetworkServiceType(),
-                    this.getPlatformComponentType(),
-                    this.getExtraData());
+            if (platformComponentProfileRegistered.getPlatformComponentType() == PlatformComponentType.NETWORK_SERVICE &&
+                    platformComponentProfileRegistered.getNetworkServiceType() == this.getNetworkServiceType() &&
+                    platformComponentProfileRegistered.getIdentityPublicKey().equals(identity.getPublicKey())) {
 
-            try {
-                    /*
-                     * Register me
-                     */
-                wsCommunicationsCloudClientManager.getCommunicationsCloudClientConnection().registerComponentForCommunication(this.getNetworkServiceType(), platformComponentProfileToReconnect);
+                System.out.print("CryptoPaymentRequestNetworkServicePluginRoot - NetWork Service is Registered: " + platformComponentProfileRegistered.getAlias());
 
-            } catch (CantRegisterComponentException e) {
-                e.printStackTrace();
+                this.register = Boolean.TRUE;
+                initializeAgent();
             }
 
+        } catch (Exception e) {
+            e.printStackTrace();
         }
 
-        /*
-         * If the component registered have my profile and my identity public key
-         */
-        if (platformComponentProfileRegistered.getPlatformComponentType() == getPlatformComponentType() &&
-            platformComponentProfileRegistered.getNetworkServiceType()    == getNetworkServiceType()   &&
-            platformComponentProfileRegistered.getIdentityPublicKey().equals(identity.getPublicKey())                        ) {
-
-            /*
-             * Mark as register
-             */
-            this.register = Boolean.TRUE;
-
-            initializeAgent();
-
-            }
     }
 
 
@@ -970,8 +966,6 @@ public final class CryptoPaymentRequestNetworkServicePluginRoot extends Abstract
             errorManager.reportUnexpectedPluginException(this.getPluginVersionReference(), UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, pluginStartException);
         }
     }
-
-// posta
 
     @Override
     public void handleFailureComponentRegistrationNotificationEvent(PlatformComponentProfile networkServiceApplicant, PlatformComponentProfile remoteParticipant) {
@@ -1034,7 +1028,7 @@ public final class CryptoPaymentRequestNetworkServicePluginRoot extends Abstract
 
         if(fermatEvent instanceof ClientConnectionCloseNotificationEvent){
 
-          reprocessMessage();
+            try {
 
             this.register = Boolean.FALSE;
 
@@ -1046,6 +1040,22 @@ public final class CryptoPaymentRequestNetworkServicePluginRoot extends Abstract
             if(cryptoPaymentRequestExecutorAgent!=null) {
                 cryptoPaymentRequestExecutorAgent.stop();
             }
+                reprocessMessage();
+
+                this.register = Boolean.FALSE;
+
+                if(communicationNetworkServiceConnectionManager != null) {
+                    communicationNetworkServiceConnectionManager.closeAllConnection();
+                    communicationNetworkServiceConnectionManager.stop();
+                }
+
+                if(cryptoPaymentRequestExecutorAgent != null) {
+                    cryptoPaymentRequestExecutorAgent.stop();
+                }
+
+            }catch (Exception e) {
+                e.printStackTrace();
+            }
         }
 
     }
@@ -1056,14 +1066,21 @@ public final class CryptoPaymentRequestNetworkServicePluginRoot extends Abstract
     @Override
     public void handleClientConnectionLooseNotificationEvent(FermatEvent fermatEvent) {
 
-        if(communicationNetworkServiceConnectionManager != null)
-            communicationNetworkServiceConnectionManager.stop();
+        try {
 
-        if(cryptoPaymentRequestExecutorAgent!=null) {
-            cryptoPaymentRequestExecutorAgent.stop();
+            if(communicationNetworkServiceConnectionManager != null) {
+                communicationNetworkServiceConnectionManager.stop();
+            }
+
+            if(cryptoPaymentRequestExecutorAgent != null) {
+                cryptoPaymentRequestExecutorAgent.stop();
+            }
+
+            this.register = Boolean.FALSE;
+
+        } catch (Exception e) {
+            e.printStackTrace();
         }
-
-        this.register = Boolean.FALSE;
 
     }
 
@@ -1073,26 +1090,27 @@ public final class CryptoPaymentRequestNetworkServicePluginRoot extends Abstract
     @Override
     public void handleClientSuccessfullReconnectNotificationEvent(FermatEvent fermatEvent) {
 
+        try {
 
-        if (communicationNetworkServiceConnectionManager == null){
-            this.initializeCommunicationNetworkServiceConnectionManager();
-        }else{
-            communicationNetworkServiceConnectionManager.restart();
-        }
-
-        /*
-         * Mark as register
-         */
-        this.register = Boolean.TRUE;
-
-        if(cryptoPaymentRequestExecutorAgent!=null) {
-            try {
-                cryptoPaymentRequestExecutorAgent.start();
-            } catch (CantStartAgentException e) {
-                e.printStackTrace();
+            if (communicationNetworkServiceConnectionManager == null){
+                this.initializeCommunicationNetworkServiceConnectionManager();
+            }else{
+                communicationNetworkServiceConnectionManager.restart();
             }
-        }else {
-            initializeAgent();
+
+            if(cryptoPaymentRequestExecutorAgent == null) {
+                initializeAgent();
+            }else {
+                cryptoPaymentRequestExecutorAgent.start();
+            }
+
+            /*
+             * Mark as register
+             */
+            this.register = Boolean.TRUE;
+
+        } catch (CantStartAgentException e) {
+            e.printStackTrace();
         }
 
     }

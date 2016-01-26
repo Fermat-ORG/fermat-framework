@@ -227,14 +227,6 @@ public class CryptoAddressesNetworkServicePluginRoot extends AbstractNetworkServ
             if (this.serviceStatus != ServiceStatus.STARTING) {
                 serviceStatus = ServiceStatus.STARTING;
 
-//                try {
-//                    loadKeyPair(pluginFileSystem);
-//                } catch (CantLoadKeyPairException e) {
-//
-//                    errorManager.reportUnexpectedPluginException(this.getPluginVersionReference(), UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
-//                    throw new CantStartPluginException(e, "", "Problem trying to load the key pair of the plugin.");
-//                }
-
                 /*
                  * Create a new key pair for this execution
                  */
@@ -242,9 +234,9 @@ public class CryptoAddressesNetworkServicePluginRoot extends AbstractNetworkServ
 
                 System.out.println("********* Crypto Addresses: Starting. ");
 
-        /*
-         * Validate required resources
-         */
+                /*
+                 * Validate required resources
+                 */
                 validateInjectedResources();
 
 
@@ -265,25 +257,43 @@ public class CryptoAddressesNetworkServicePluginRoot extends AbstractNetworkServ
 
                 try {
 
-            /*
-             * Initialize the data base
-             */
+                    /*
+                     * Initialize the data base
+                     */
                     initializeCommunicationDb();
 
-            /*
-             * Initialize listeners
-             */
+                    /*
+                     * Initialize listeners
+                     */
                     initializeListener();
 
+                    /*
+                     * Initialize connection manager
+                     */
+                    initializeCommunicationNetworkServiceConnectionManager();
 
-            /*
-             * Verify if the communication cloud client is active
-             */
+                    /*
+                     * Verify if the communication cloud client is active
+                     */
                     if (!wsCommunicationsCloudClientManager.isDisable()){
 
-                /*
-                 * Initialize the agent and start
-                 */
+
+                        /*
+                         * Construct my profile and register me
+                         */
+                        PlatformComponentProfile platformComponentProfilePluginRoot =  wsCommunicationsCloudClientManager.getCommunicationsCloudClientConnection().constructPlatformComponentProfileFactory(getIdentityPublicKey(),
+                                                                                                                                                                                                            getAlias().toLowerCase(),
+                                                                                                                                                                                                            getName(),
+                                                                                                                                                                                                            getNetworkServiceType(),
+                                                                                                                                                                                                            getPlatformComponentType(),
+                                                                                                                                                                                                            getExtraData());
+
+                        setPlatformComponentProfilePluginRoot(platformComponentProfilePluginRoot);
+
+
+                        /*
+                         * Initialize the agent and start
+                         */
                         communicationRegistrationProcessNetworkServiceAgent = new CommunicationRegistrationProcessNetworkServiceAgent(this, wsCommunicationsCloudClientManager);
                         communicationRegistrationProcessNetworkServiceAgent.start();
                     }
@@ -961,49 +971,35 @@ public class CryptoAddressesNetworkServicePluginRoot extends AbstractNetworkServ
 
     public void handleCompleteComponentRegistrationNotificationEvent(PlatformComponentProfile platformComponentProfileRegistered){
 
-        if (platformComponentProfileRegistered.getPlatformComponentType() == PlatformComponentType.COMMUNICATION_CLOUD_CLIENT && !this.register){
+        System.out.println("CryptoPaymentRequestNetworkServicePluginRoot - Starting method handleCompleteComponentRegistrationNotificationEvent");
 
-            if(communicationRegistrationProcessNetworkServiceAgent != null && communicationRegistrationProcessNetworkServiceAgent.getActive()){
-                communicationRegistrationProcessNetworkServiceAgent.stop();
-                communicationRegistrationProcessNetworkServiceAgent = null;
+        try {
+
+            if (platformComponentProfileRegistered.getPlatformComponentType() == PlatformComponentType.COMMUNICATION_CLOUD_CLIENT && !this.register){
+
+                if(communicationRegistrationProcessNetworkServiceAgent != null && communicationRegistrationProcessNetworkServiceAgent.getActive()){
+                    communicationRegistrationProcessNetworkServiceAgent.stop();
+                    communicationRegistrationProcessNetworkServiceAgent = null;
+                }
+
+                wsCommunicationsCloudClientManager.getCommunicationsCloudClientConnection().registerComponentForCommunication(this.getNetworkServiceType(), getPlatformComponentProfilePluginRoot());
+
             }
 
-            PlatformComponentProfile platformComponentProfileToReconnect =  wsCommunicationsCloudClientManager.getCommunicationsCloudClientConnection().constructPlatformComponentProfileFactory(this.getIdentityPublicKey(),
-                    this.getAlias().toLowerCase(),
-                    this.getName(),
-                    this.getNetworkServiceType(),
-                    this.getPlatformComponentType(),
-                    this.getExtraData());
+            if (platformComponentProfileRegistered.getPlatformComponentType() == PlatformComponentType.NETWORK_SERVICE &&
+                    platformComponentProfileRegistered.getNetworkServiceType() == this.getNetworkServiceType() &&
+                    platformComponentProfileRegistered.getIdentityPublicKey().equals(identity.getPublicKey())) {
 
-            try {
-                    /*
-                     * Register me
-                     */
-                wsCommunicationsCloudClientManager.getCommunicationsCloudClientConnection().registerComponentForCommunication(this.getNetworkServiceType(), platformComponentProfileToReconnect);
+                System.out.print("CryptoPaymentRequestNetworkServicePluginRoot - NetWork Service is Registered: " + platformComponentProfileRegistered.getAlias());
 
-            } catch (CantRegisterComponentException e) {
-                e.printStackTrace();
+                this.register = Boolean.TRUE;
+                initializeAgent();
+
             }
 
+        } catch (Exception e) {
+            e.printStackTrace();
         }
-
-        /*
-         * If the component registered have my profile and my identity public key
-         */
-        if (platformComponentProfileRegistered.getPlatformComponentType()  == getPlatformComponentType() &&
-                platformComponentProfileRegistered.getNetworkServiceType()  == getNetworkServiceType() &&
-                platformComponentProfileRegistered.getIdentityPublicKey().equals(identity.getPublicKey())){
-
-            /*
-             * Mark as register
-             */
-            this.register = Boolean.TRUE;
-
-        //    if(!beforeRegistered)
-            initializeAgent();
-            initializeCommunicationNetworkServiceConnectionManager();
-        }
-
     }
 
 
