@@ -11,6 +11,7 @@ import com.bitdubai.fermat_cbp_api.all_definition.exceptions.CantStartServiceExc
 import com.bitdubai.fermat_cbp_api.layer.network_service.transaction_transmission.events.IncomingConfirmBusinessTransactionResponse;
 import com.bitdubai.fermat_cbp_api.layer.network_service.transaction_transmission.events.IncomingNewContractStatusUpdate;
 import com.bitdubai.fermat_cbp_plugin.layer.business_transaction.customer_online_payment.developer.bitdubai.version_1.database.CustomerOnlinePaymentBusinessTransactionDao;
+import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfaces.EventManager;
 
 import java.util.ArrayList;
@@ -25,7 +26,8 @@ public class CustomerOnlinePaymentRecorderService implements CBPService {
      */
     private EventManager eventManager;
     private List<FermatEventListener> listenersAdded = new ArrayList<>();
-    CustomerOnlinePaymentBusinessTransactionDao customerOnlinePaymentBusinessTransactionDao;
+    private CustomerOnlinePaymentBusinessTransactionDao customerOnlinePaymentBusinessTransactionDao;
+    private ErrorManager errorManager;
     /**
      * TransactionService Interface member variables.
      */
@@ -33,7 +35,8 @@ public class CustomerOnlinePaymentRecorderService implements CBPService {
 
     public CustomerOnlinePaymentRecorderService(
             CustomerOnlinePaymentBusinessTransactionDao customerOnlinePaymentBusinessTransactionDao,
-            EventManager eventManager) throws CantStartServiceException {
+            EventManager eventManager,
+            ErrorManager errorManager) throws CantStartServiceException {
         try {
             setDatabaseDao(customerOnlinePaymentBusinessTransactionDao);
             setEventManager(eventManager);

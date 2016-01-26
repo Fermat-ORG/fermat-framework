@@ -10,6 +10,7 @@ import com.bitdubai.fermat_api.layer.all_definition.components.enums.PlatformCom
 import com.bitdubai.fermat_api.layer.all_definition.crypto.util.CryptoHasher;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEvent;
+import com.bitdubai.fermat_cht_api.all_definition.enums.MessageStatus;
 import com.bitdubai.fermat_cht_api.all_definition.events.enums.EventType;
 import com.bitdubai.fermat_cht_api.layer.network_service.chat.enums.ChatMessageStatus;
 import com.bitdubai.fermat_cht_api.layer.network_service.chat.enums.ChatMessageTransactionType;
@@ -25,6 +26,7 @@ import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.contents.Ferm
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.enums.FermatMessagesStatus;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedPluginExceptionSeverity;
 
+import com.google.gson.JsonNull;
 import com.google.gson.JsonObject;
 
 import java.util.List;
@@ -66,15 +68,13 @@ public class NewTransactionStatusNotificationMessageReceiverProcessor extends Fe
              */
 
 
-            DistributionStatus distributionStatus = gson.fromJson(jsonMsjContent.get(ChatTransmissionJsonAttNames.DISTRIBUTION_STATUS).getAsString(), DistributionStatus.class);
+            DistributionStatus distributionStatus   = (jsonMsjContent.has(ChatTransmissionJsonAttNames.DISTRIBUTION_STATUS)) ? gson.fromJson(jsonMsjContent.get(ChatTransmissionJsonAttNames.DISTRIBUTION_STATUS).getAsString(), DistributionStatus.class) : null;
+            MessageStatus messageStatus             = (jsonMsjContent.has(ChatTransmissionJsonAttNames.MESSAGE_STATUS)) ? gson.fromJson(jsonMsjContent.get(ChatTransmissionJsonAttNames.MESSAGE_STATUS).getAsString(), MessageStatus.class) : null;
             UUID chatID                             = gson.fromJson(jsonMsjContent.get(ChatTransmissionJsonAttNames.ID_CHAT).getAsString(), UUID.class);
             UUID messageID                          = gson.fromJson(jsonMsjContent.get(ChatTransmissionJsonAttNames.MESSAGE_ID).getAsString(), UUID.class);
-            PlatformComponentType senderType      = gson.fromJson(jsonMsjContent.get(ChatTransmissionJsonAttNames.SENDER_TYPE).getAsString(), PlatformComponentType.class);
-            PlatformComponentType receiverType    = gson.fromJson(jsonMsjContent.get(ChatTransmissionJsonAttNames.RECEIVER_TYPE).getAsString(), PlatformComponentType.class);
-
 
             /*
-             * Get the digitalAssetMetadataTransaction
+             * Get the ChatMetadataTransactionRecord
              */
 
             String transactionHash = CryptoHasher.performSha256(chatID.toString() + messageID.toString());
@@ -82,7 +82,11 @@ public class NewTransactionStatusNotificationMessageReceiverProcessor extends Fe
 
             if(chatMetadataTransactionRecord != null){
 
-                chatMetadataTransactionRecord.setDistributionStatus(distributionStatus);
+                if(distributionStatus != null)
+                    chatMetadataTransactionRecord.setDistributionStatus(distributionStatus);
+                if(messageStatus != null)
+                    chatMetadataTransactionRecord.setMessageStatus(messageStatus);
+                chatMetadataTransactionRecord.setProcessed(ChatMetadataTransactionRecord.NO_PROCESSED);
                 getChatPluginRoot().getChatMetaDataDao().update(chatMetadataTransactionRecord);
 
 
@@ -96,6 +100,7 @@ public class NewTransactionStatusNotificationMessageReceiverProcessor extends Fe
                 /*
                 * Notify to the interested
                 */
+
                 IncomingNewChatStatusUpdate event = (IncomingNewChatStatusUpdate) getChatPluginRoot().getEventManager().getNewEvent(EventType.INCOMING_STATUS);
                 event.setChatId(chatMetadataTransactionRecord.getChatId());
                 event.setSource(ChatPluginRoot.EVENT_SOURCE);
