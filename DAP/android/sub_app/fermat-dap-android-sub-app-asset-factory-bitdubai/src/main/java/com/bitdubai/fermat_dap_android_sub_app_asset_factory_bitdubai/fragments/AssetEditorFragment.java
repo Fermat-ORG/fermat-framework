@@ -4,7 +4,6 @@ import android.app.Activity;
 import android.app.DatePickerDialog;
 import android.app.ProgressDialog;
 import android.app.TimePickerDialog;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -13,12 +12,12 @@ import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
-import android.os.Handler;
 import android.provider.MediaStore;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.ContextMenu;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -26,9 +25,12 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.DatePicker;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.Spinner;
 import android.widget.TimePicker;
 import android.widget.Toast;
 
@@ -47,16 +49,16 @@ import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.A
 import com.bitdubai.fermat_api.layer.all_definition.resources_structure.Resource;
 import com.bitdubai.fermat_api.layer.all_definition.resources_structure.enums.ResourceDensity;
 import com.bitdubai.fermat_api.layer.all_definition.resources_structure.enums.ResourceType;
-import com.bitdubai.fermat_api.layer.all_definition.settings.exceptions.CantPersistSettingsException;
 import com.bitdubai.fermat_api.layer.all_definition.settings.structure.SettingsManager;
 import com.bitdubai.fermat_api.layer.all_definition.util.BitcoinConverter;
+import com.bitdubai.fermat_api.layer.all_definition.util.BitcoinConverter.Currency;
 import com.bitdubai.fermat_dap_android_sub_app_asset_factory_bitdubai.R;
+import com.bitdubai.fermat_dap_android_sub_app_asset_factory_bitdubai.adapters.BitcoinsSpinnerAdapter;
 import com.bitdubai.fermat_dap_android_sub_app_asset_factory_bitdubai.sessions.AssetFactorySession;
 import com.bitdubai.fermat_dap_android_sub_app_asset_factory_bitdubai.sessions.SessionConstantsAssetFactory;
 import com.bitdubai.fermat_dap_android_sub_app_asset_factory_bitdubai.util.CommonLogger;
 import com.bitdubai.fermat_dap_api.layer.all_definition.enums.State;
 import com.bitdubai.fermat_dap_api.layer.all_definition.util.DAPStandardFormats;
-import com.bitdubai.fermat_dap_api.layer.dap_identity.asset_issuer.interfaces.IdentityAssetIssuer;
 import com.bitdubai.fermat_dap_api.layer.dap_middleware.dap_asset_factory.enums.AssetBehavior;
 import com.bitdubai.fermat_dap_api.layer.dap_middleware.dap_asset_factory.interfaces.AssetFactory;
 import com.bitdubai.fermat_dap_api.layer.dap_module.asset_factory.AssetFactorySettings;
@@ -66,9 +68,6 @@ import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfac
 import com.bitdubai.fermat_wpd_api.layer.wpd_middleware.wallet_manager.exceptions.CantListWalletsException;
 import com.bitdubai.fermat_wpd_api.layer.wpd_middleware.wallet_manager.interfaces.InstalledWallet;
 
-import static android.widget.Toast.makeText;
-import static com.bitdubai.fermat_api.layer.all_definition.util.BitcoinConverter.Currency.*;
-
 import java.io.ByteArrayOutputStream;
 import java.text.DateFormat;
 import java.util.ArrayList;
@@ -77,6 +76,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 
+import static android.widget.Toast.makeText;
 import static com.bitdubai.fermat_api.layer.all_definition.util.BitcoinConverter.Currency.BITCOIN;
 import static com.bitdubai.fermat_api.layer.all_definition.util.BitcoinConverter.Currency.SATOSHI;
 
@@ -92,6 +92,7 @@ public class AssetEditorFragment extends AbstractFermatFragment implements View.
     private static final int CONTEXT_MENU_CAMERA = 1;
     private static final int CONTEXT_MENU_GALLERY = 2;
     private static final long MINIMUM_ASSET_VALUE = 50000;
+    private static final String NO_AVAILABLE = "No Available";
     private final String TAG = "AssetEditor";
     private AssetFactoryModuleManager manager;
     private ErrorManager errorManager;
@@ -103,6 +104,8 @@ public class AssetEditorFragment extends AbstractFermatFragment implements View.
     private FermatEditText descriptionView;
     private FermatEditText quantityView;
     private FermatEditText bitcoinsView;
+    private Spinner bitcoinsSpinner;
+    private FermatTextView bitcoinsTextView;
     private FermatTextView bitcoinBalanceText;
     private FermatButton expirationDate;
     private FermatButton expirationTime;
@@ -199,6 +202,34 @@ public class AssetEditorFragment extends AbstractFermatFragment implements View.
         hasExpirationDate = (LinearLayout) rootView.findViewById(R.id.hasExpiration);
         takePicture = (ImageView) rootView.findViewById(R.id.picture);
         bitcoinBalanceText = (FermatTextView) rootView.findViewById(R.id.bitcoinBalanceText);
+        bitcoinsSpinner = (Spinner) rootView.findViewById(R.id.bitcoinsSpinner);
+        bitcoinsTextView = (FermatTextView) rootView.findViewById(R.id.bitcoinsText);
+
+        final Currency[] data = Currency.values();
+        final ArrayAdapter<Currency> spinnerAdapter = new BitcoinsSpinnerAdapter(
+                getActivity(), android.R.layout.simple_spinner_item,
+                data);
+        bitcoinsSpinner.setAdapter(spinnerAdapter);
+        bitcoinsSpinner.setSelection(3);
+        bitcoinsSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+                updateBitcoins();
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> adapterView) {
+
+            }
+        });
+        bitcoinsView.setOnKeyListener(new View.OnKeyListener() {
+            @Override
+            public boolean onKey(View view, int i, KeyEvent keyEvent) {
+                updateBitcoins();
+                return false;
+            }
+        });
+        bitcoinsTextView.setText(String.format("%.6f BTC", 0.0));
 
         takePicture.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -280,11 +311,22 @@ public class AssetEditorFragment extends AbstractFermatFragment implements View.
             double bitcoinWalletBalance = BitcoinConverter.convert(satoshis, SATOSHI, BITCOIN);
             bitcoinBalanceText.setText(String.format("%.6f BTC", bitcoinWalletBalance));
         } catch (Exception e) {
-            bitcoinBalanceText.setText("No Available");
+            bitcoinBalanceText.setText(NO_AVAILABLE);
         }
 //        setUpHelpEditor(false);
 //        showPresentationDialog();
         return rootView;
+    }
+
+    private void updateBitcoins() {
+        Object selectedItem = bitcoinsSpinner.getSelectedItem();
+        String bitcoinViewStr = bitcoinsView.getText().toString();
+        if (selectedItem != null && bitcoinViewStr != null && bitcoinViewStr.length() > 0) {
+            Currency from = (Currency) bitcoinsSpinner.getSelectedItem();
+            double amount = Double.parseDouble(bitcoinsView.getText().toString());
+            double amountBTC = BitcoinConverter.convert(amount, from, BITCOIN);
+            bitcoinsTextView.setText(String.format("%.6f BTC", amountBTC));
+        }
     }
 
 //    private void showPresentationDialog() {
@@ -514,7 +556,7 @@ public class AssetEditorFragment extends AbstractFermatFragment implements View.
         asset.setDescription(descriptionView.getText().toString().trim());
         asset.setQuantity(Integer.parseInt(quantityView.getText().toString().trim().isEmpty() ? "0" : quantityView.getText().toString().trim()));
         asset.setTotalQuantity(Integer.parseInt(quantityView.getText().toString().trim().isEmpty() ? "0" : quantityView.getText().toString().trim()));
-        asset.setAmount(Long.parseLong(bitcoinsView.getText().toString().trim().isEmpty() ? "0" : bitcoinsView.getText().toString().trim()));
+        asset.setAmount(getSatoshis());
         asset.setIsRedeemable(isRedeemableView.isChecked());
         asset.setState(State.DRAFT);
         //// TODO: 02/10/15 Asset behaviour is given from the final user through dropdown control list
@@ -583,10 +625,20 @@ public class AssetEditorFragment extends AbstractFermatFragment implements View.
         worker.execute();
     }
 
+    private long getSatoshis() {
+        String amountStr = bitcoinsView.getText().toString().trim();
+        if (amountStr != null && amountStr.length() > 0) {
+            Currency currency = (Currency) bitcoinsSpinner.getSelectedItem();
+            double amount = Double.parseDouble(amountStr);
+            return Double.valueOf(BitcoinConverter.convert(amount, currency, SATOSHI)).longValue();
+        } else {
+            return 0;
+        }
+    }
+
     private boolean validate() {
         try {
-            String satoshisStr = bitcoinsView.getText().toString().trim();
-            long satoshis = Long.parseLong(satoshisStr.isEmpty() ? "0" : satoshisStr);
+            long satoshis = getSatoshis();
             if (satoshis < MINIMUM_ASSET_VALUE) {
                 Toast.makeText(getActivity(), "The minimun monetary amount for any Asset is "+MINIMUM_ASSET_VALUE+" satoshis.", Toast.LENGTH_SHORT).show();
                 return false;

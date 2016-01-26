@@ -13,7 +13,7 @@
     <string name="dap_asset_factory_editor_name_hint">Name</string>
     <string name="dap_asset_factory_editor_description_hint">Description</string>
     <string name="dap_asset_factory_editor_quantity_hint"> Amount of Assets</string>
-    <string name="dap_asset_factory_editor_bitcoin_price_hint">Asset Value in Satoshis</string>
+    <string name="dap_asset_factory_editor_bitcoin_price_hint">Asset Value</string>
     <string name="dap_asset_factory_editor_expiration_date_hint">Expiration Date</string>
 
     <string name="help">Help</string>
