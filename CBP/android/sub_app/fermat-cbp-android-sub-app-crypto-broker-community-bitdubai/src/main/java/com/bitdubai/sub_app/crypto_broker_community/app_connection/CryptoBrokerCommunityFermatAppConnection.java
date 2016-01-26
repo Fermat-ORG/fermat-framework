@@ -29,7 +29,7 @@ public class CryptoBrokerCommunityFermatAppConnection extends AppConnections{
 
     ActorIdentity identity;
 
-    public CryptoBrokerCommunityFermatAppConnection(Activity activity, ActorIdentity identity) {
+    public CryptoBrokerCommunityFermatAppConnection(Activity activity) {
         super(activity);
         this.identity = identity;
     }
@@ -59,7 +59,7 @@ public class CryptoBrokerCommunityFermatAppConnection extends AppConnections{
     @Override
     public NavigationViewPainter getNavigationViewPainter() {
 
-        return new BrokerCommunityNavigationViewPainter(getActivity(), identity);
+        return new BrokerCommunityNavigationViewPainter(getActivity(), getActiveIdentity());
 
     }
 

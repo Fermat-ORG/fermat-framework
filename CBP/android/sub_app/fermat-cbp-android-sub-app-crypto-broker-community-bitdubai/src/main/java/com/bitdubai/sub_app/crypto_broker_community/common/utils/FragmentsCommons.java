@@ -26,7 +26,7 @@ import com.squareup.picasso.Picasso;
 public class FragmentsCommons {
 
 
-    public static View setUpHeaderScreen(LayoutInflater inflater, Activity activity, ActorIdentity identity) throws CantGetActiveLoginIdentityException {
+    public static View setUpHeaderScreen(LayoutInflater inflater, Activity activity, ActiveActorIdentityInformation identity) throws CantGetActiveLoginIdentityException {
         /**
          * Navigation view header
          */
@@ -36,9 +36,9 @@ public class FragmentsCommons {
         View view = inflater.inflate(R.layout.row_navigation_drawer_community_header, relativeLayout, true);
         ImageView imageView = (ImageView) view.findViewById(R.id.image_view_profile);
         if (identity != null) {
-            if (identity.getProfileImage() != null) {
-                if (identity.getProfileImage().length > 0) {
-                    imageView.setImageBitmap((BitmapFactory.decodeByteArray(identity.getProfileImage(), 0, identity.getProfileImage().length)));
+            if (identity.getImage() != null) {
+                if (identity.getImage().length > 0) {
+                    imageView.setImageBitmap((BitmapFactory.decodeByteArray(identity.getImage(), 0, identity.getImage().length)));
                 } else
                     Picasso.with(activity).load(R.drawable.profile_image).into(imageView);
             } else
