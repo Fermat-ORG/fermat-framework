@@ -227,14 +227,6 @@ public class CryptoAddressesNetworkServicePluginRoot extends AbstractNetworkServ
             if (this.serviceStatus != ServiceStatus.STARTING) {
                 serviceStatus = ServiceStatus.STARTING;
 
-//                try {
-//                    loadKeyPair(pluginFileSystem);
-//                } catch (CantLoadKeyPairException e) {
-//
-//                    errorManager.reportUnexpectedPluginException(this.getPluginVersionReference(), UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
-//                    throw new CantStartPluginException(e, "", "Problem trying to load the key pair of the plugin.");
-//                }
-
                 /*
                  * Create a new key pair for this execution
                  */

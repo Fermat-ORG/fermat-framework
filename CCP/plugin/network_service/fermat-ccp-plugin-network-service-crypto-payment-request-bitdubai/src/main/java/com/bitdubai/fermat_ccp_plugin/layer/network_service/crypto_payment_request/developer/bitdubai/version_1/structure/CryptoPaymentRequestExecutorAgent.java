@@ -398,7 +398,9 @@ public class CryptoPaymentRequestExecutorAgent extends FermatAgent {
 
         return new InformationMessage(
                 cpr.getRequestId(),
-                cpr.getAction()
+                cpr.getAction(),
+                cpr.getIdentityPublicKey(),
+                cpr.getActorPublicKey()
         ).toJson();
     }
 
@@ -416,7 +418,10 @@ public class CryptoPaymentRequestExecutorAgent extends FermatAgent {
                 cpr.getStartTimeStamp()   ,
                 cpr.getAction()           ,
                 cpr.getNetworkType(),
-                cpr.getReferenceWallet()
+                cpr.getReferenceWallet(),
+                cpr.getIdentityPublicKey(),
+                cpr.getActorPublicKey()
+
         ).toJson();
     }
 
@@ -450,6 +455,11 @@ public class CryptoPaymentRequestExecutorAgent extends FermatAgent {
     }
 
     public boolean isConnectionOpen(String remotePublicKey) {
-        return poolConnectionsWaitingForResponse.containsKey(remotePublicKey);
+        return poolConnectionsWaitingForResponse.containsKey(remotePublicKey);   }
+
+
+
+    public Map<String, String> getPoolConnectionsWaitingForResponse() {
+        return poolConnectionsWaitingForResponse;
     }
 }

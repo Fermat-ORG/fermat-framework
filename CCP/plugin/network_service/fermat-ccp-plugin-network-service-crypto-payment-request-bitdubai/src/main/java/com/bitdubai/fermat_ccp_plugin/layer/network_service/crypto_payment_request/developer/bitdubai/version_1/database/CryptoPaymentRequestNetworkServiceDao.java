@@ -353,7 +353,7 @@ public final class CryptoPaymentRequestNetworkServiceDao {
             DatabaseTable cryptoPaymentRequestTable = database.getTable(CryptoPaymentRequestNetworkServiceDatabaseConstants.CRYPTO_PAYMENT_REQUEST_TABLE_NAME);
 
             cryptoPaymentRequestTable.addStringFilter(CryptoPaymentRequestNetworkServiceDatabaseConstants.CRYPTO_PAYMENT_REQUEST_PROTOCOL_STATE_COLUMN_NAME, RequestProtocolState.DONE.getCode(), DatabaseFilterType.NOT_EQUALS);
-            cryptoPaymentRequestTable.addStringFilter(CryptoPaymentRequestNetworkServiceDatabaseConstants.CRYPTO_PAYMENT_REQUEST_MESSAGE_TYPE_COLUMN_NAME, "OUT", DatabaseFilterType.NOT_EQUALS);
+            cryptoPaymentRequestTable.addStringFilter(CryptoPaymentRequestNetworkServiceDatabaseConstants.CRYPTO_PAYMENT_REQUEST_MESSAGE_TYPE_COLUMN_NAME, "OUT", DatabaseFilterType.EQUAL);
 
             cryptoPaymentRequestTable.loadToMemory();
 
