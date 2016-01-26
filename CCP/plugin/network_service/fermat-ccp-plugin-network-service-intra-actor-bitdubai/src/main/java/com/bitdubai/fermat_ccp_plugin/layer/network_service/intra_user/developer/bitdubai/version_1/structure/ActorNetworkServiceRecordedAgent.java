@@ -206,6 +206,7 @@ public class ActorNetworkServiceRecordedAgent extends FermatAgent{
                     case ACCEPTED:
                     case DISCONNECTED:
                     case DENIED:
+                    case RECEIVED:
                         sendMessageToActor(
                                 cpr
                         );
@@ -219,23 +220,7 @@ public class ActorNetworkServiceRecordedAgent extends FermatAgent{
                         break;
 
 
-                    case RECEIVED:
-                        cpr.setSentCount(cpr.getSentCount()+1);
-                        actorNetworkServicePluginRoot.getOutgoingNotificationDao().update(cpr);
-                        if (cpr.getSentCount()>=3) {
-                            actorNetworkServicePluginRoot.getOutgoingNotificationDao().changeProtocolState(cpr.getId(), ActorProtocolState.DONE);
-                        }else{
 
-                            sendMessageToActor(
-                                    cpr
-                            );
-
-                            System.out.print("-----------------------\n" +
-                                    "ENVIANDO MENSAJE DE RECEIVED OTRO INTRA USER!!!!! -----------------------\n" +
-                                    "-----------------------\n DESDE: " + cpr.getActorSenderAlias());
-                        }
-
-                        break;
                 }
 
             }
@@ -243,10 +228,6 @@ public class ActorNetworkServiceRecordedAgent extends FermatAgent{
 //            e.printStackTrace();
 //        }
         } catch (CantListIntraWalletUsersException e) {
-            e.printStackTrace();
-        } catch (CantUpdateRecordDataBaseException e) {
-            e.printStackTrace();
-        } catch (CantUpdateRecordException e) {
             e.printStackTrace();
         } catch (Exception e) {
             e.printStackTrace();

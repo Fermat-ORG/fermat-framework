@@ -853,7 +853,6 @@ public class IntraActorNetworkServicePluginRoot extends AbstractPlugin implement
         try {
             ActorNetworkServiceRecord actorNetworkServiceRecord = ActorNetworkServiceRecord.fronJson(fermatMessage.getContent());
 
-
             if (actorNetworkServiceRecord.getActorProtocolState()==ActorProtocolState.DONE) {
                 // close connection, sender is the destination
                 System.out.println("ENTRANDO EN EL METODO PARA CERRAR LA CONEXION DEL HANDLE NEW SENT MESSAGE NOTIFICATION");
@@ -861,6 +860,10 @@ public class IntraActorNetworkServicePluginRoot extends AbstractPlugin implement
                 //   communicationNetworkServiceConnectionManager.closeConnection(actorNetworkServiceRecord.getActorDestinationPublicKey());
                 actorNetworkServiceRecordedAgent.getPoolConnectionsWaitingForResponse().remove(actorNetworkServiceRecord.getActorDestinationPublicKey());
             }
+
+            actorNetworkServiceRecord.setActorProtocolState(ActorProtocolState.DONE);
+            getOutgoingNotificationDao().update(actorNetworkServiceRecord);
+
 
             System.out.println("SALIENDO DEL HANDLE NEW SENT MESSAGE NOTIFICATION");
 
