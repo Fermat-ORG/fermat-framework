@@ -236,7 +236,7 @@ public class IssuerCommunityHomeFragment extends AbstractFermatFragment implemen
                     @Override
                     public void onErrorOccurred(Exception ex) {
                         dialog.dismiss();
-                        Toast.makeText(getActivity(), String.format("We have detected an error. Make sure you have created an Asset Issuer or Redeem Point identities using the corresponding Identity sub app."), Toast.LENGTH_LONG).show();
+                        Toast.makeText(getActivity(), String.format("We have detected an error. Make sure you have created an Asset Issuer or Redeem Point identities using the corresponding Identity application."), Toast.LENGTH_LONG).show();
                         ex.printStackTrace();
                     }
                 });

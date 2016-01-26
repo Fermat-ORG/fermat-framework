@@ -150,7 +150,7 @@ public class UserMainActivityFragment extends FermatWalletListFragment<DigitalAs
                     .setTextNameLeft("Asset User")
                     .setSubTitle("Welcome to the Asset User Wallet.")
                     .setBody("From this wallet you will be able to redeem your assets or even get the monetary value associated with them.")
-                    .setTextFooter("We will be creating an avatar for you in order to identify you in the system as an Asset User. You will be able to edit this information at the Asset User Identity sub app.")
+                    .setTextFooter("We will be creating an avatar for you in order to identify you in the system as an Asset User. You will be able to edit this information at the Asset User Identity application.")
                     .setTemplateType((moduleManager.getActiveAssetUserIdentity() == null) ? PresentationDialog.TemplateType.DAP_TYPE_PRESENTATION : PresentationDialog.TemplateType.TYPE_PRESENTATION_WITHOUT_IDENTITIES)
                     .setIsCheckEnabled(checkButton)
                     .build();

@@ -123,7 +123,7 @@ public class AssetRedeemFragment extends AbstractFermatFragment {
                     .setTitleTextColor(R.color.dap_user_view_color)
                     .setSubTitle("Asset  Redemption.")
                     .setBody("You can decide how many assets to redeem at your connected Redeem Points. In order to connect to Redeem Points, search them at" +
-                            "the Redeem Point Community sub app.\n\n" +
+                            "the Redeem Point Community application.\n\n" +
                             "The selected Redeem Point will receive and confirm your asset so you can exchange it for what the asset represents.")
                     .setTemplateType(PresentationDialog.TemplateType.TYPE_PRESENTATION_WITHOUT_IDENTITIES)
                     .setIsCheckEnabled(checkButton)
