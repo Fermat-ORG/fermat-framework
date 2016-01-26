@@ -45,6 +45,14 @@ public class CommunicationRegistrationProcessNetworkServiceAgent {
      */
     private boolean active;
 
+    /**
+     * Represent the executorService
+     */
+    private ExecutorService executorService;
+
+    /**
+     * Represent the main task
+     */
     private Runnable toRegistration = new Runnable() {
         @Override
         public void run() {
@@ -52,11 +60,6 @@ public class CommunicationRegistrationProcessNetworkServiceAgent {
                 processRegistration();
         }
     };
-
-    /*
-     *
-     */
-    private ExecutorService executorService;
 
     /**
      * Constructor with parameters
@@ -67,7 +70,6 @@ public class CommunicationRegistrationProcessNetworkServiceAgent {
         this.networkService = networkService;
         this.communicationsClientConnection = communicationsClientConnection;
         this.active = Boolean.FALSE;
-        executorService = Executors.newSingleThreadExecutor();
     }
 
     private void processRegistration() {
@@ -138,6 +140,7 @@ public class CommunicationRegistrationProcessNetworkServiceAgent {
 
     public void start() {
         this.active = Boolean.TRUE;
+        executorService = Executors.newSingleThreadExecutor();
         executorService.execute(toRegistration);
     }
 

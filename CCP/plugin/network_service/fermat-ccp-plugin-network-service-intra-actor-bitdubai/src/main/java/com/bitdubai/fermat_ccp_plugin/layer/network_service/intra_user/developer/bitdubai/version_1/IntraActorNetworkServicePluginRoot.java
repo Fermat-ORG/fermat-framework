@@ -445,10 +445,6 @@ public class IntraActorNetworkServicePluginRoot extends AbstractPlugin implement
      * Messages listeners
      */
     private void initializeMessagesListeners() {
-        /*
-         * Listen and handle Complete Request List Component Registered Notification Event
-         */
-
 
         /**
          *Listen and handle the received messages
@@ -461,8 +457,6 @@ public class IntraActorNetworkServicePluginRoot extends AbstractPlugin implement
         /**
          * Listen and handle the sent messages
          */
-
-
         fermatEventListener = eventManager.getNewListener(P2pEventType.NEW_NETWORK_SERVICE_MESSAGE_SENT_NOTIFICATION);
         fermatEventListener.setEventHandler(new NewSentMessageNotificationEventHandler(this));
         eventManager.addListener(fermatEventListener);
@@ -1359,7 +1353,7 @@ public class IntraActorNetworkServicePluginRoot extends AbstractPlugin implement
      * Handles the events ClientSuccessfullReconnectNotificationEvent
      */
     @Override
-    public void c(FermatEvent fermatEvent) {
+    public void handleClientSuccessfullReconnectNotificationEvent(FermatEvent fermatEvent) {
 
         System.out.println("IntraActorNetworkServicePluginRoot - handleClientSuccessfullReconnectNotificationEvent");
 

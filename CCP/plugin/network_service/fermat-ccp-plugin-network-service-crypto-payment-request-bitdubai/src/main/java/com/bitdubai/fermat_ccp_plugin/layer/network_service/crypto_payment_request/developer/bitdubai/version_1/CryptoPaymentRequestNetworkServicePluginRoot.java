@@ -909,28 +909,18 @@ public final class CryptoPaymentRequestNetworkServicePluginRoot extends Abstract
      */
     public void handleCompleteComponentRegistrationNotificationEvent(final PlatformComponentProfile platformComponentProfileRegistered) {
 
-        if (platformComponentProfileRegistered.getPlatformComponentType() == PlatformComponentType.COMMUNICATION_CLOUD_CLIENT && !this.register){
-        System.out.println("CryptoPaymentRequestNetworkServicePluginRoot - Starting method handleCompleteComponentRegistrationNotificationEvent");
+        System.out.println("IntraActorNetworkServicePluginRoot - Starting method handleCompleteComponentRegistrationNotificationEvent");
 
-            /*
-             * Construct my profile and register me
-             */
-            PlatformComponentProfile platformComponentProfileToReconnect =  wsCommunicationsCloudClientManager.getCommunicationsCloudClientConnection().constructPlatformComponentProfileFactory(this.getIdentityPublicKey(),
-                    this.getAlias().toLowerCase(),
-                    this.getName(),
-                    this.getNetworkServiceType(),
-                    this.getPlatformComponentType(),
-                    this.getExtraData());
         try {
 
-            if (platformComponentProfileRegistered.getPlatformComponentType() == PlatformComponentType.COMMUNICATION_CLOUD_CLIENT && !this.register) {
+            if (platformComponentProfileRegistered.getPlatformComponentType() == PlatformComponentType.COMMUNICATION_CLOUD_CLIENT && !this.register){
 
-                if (communicationRegistrationProcessNetworkServiceAgent != null && communicationRegistrationProcessNetworkServiceAgent.isRunning()) {
+                if(communicationRegistrationProcessNetworkServiceAgent != null && communicationRegistrationProcessNetworkServiceAgent.isRunning()){
                     communicationRegistrationProcessNetworkServiceAgent.stop();
                     communicationRegistrationProcessNetworkServiceAgent = null;
                 }
 
-                PlatformComponentProfile platformComponentProfileToReconnect = wsCommunicationsCloudClientManager.getCommunicationsCloudClientConnection().constructPlatformComponentProfileFactory(this.getIdentityPublicKey(),
+                PlatformComponentProfile platformComponentProfileToReconnect =  wsCommunicationsCloudClientManager.getCommunicationsCloudClientConnection().constructPlatformComponentProfileFactory(this.getIdentityPublicKey(),
                         this.getAlias().toLowerCase(),
                         this.getName(),
                         this.getNetworkServiceType(),
@@ -945,12 +935,12 @@ public final class CryptoPaymentRequestNetworkServicePluginRoot extends Abstract
                     platformComponentProfileRegistered.getNetworkServiceType() == NetworkServiceType.INTRA_USER &&
                     platformComponentProfileRegistered.getIdentityPublicKey().equals(identity.getPublicKey())) {
 
-                System.out.print("CryptoPaymentRequestNetworkServicePluginRoot - NetWork Service is Registered: " + platformComponentProfileRegistered.getAlias());
+                System.out.print("IntraActorNetworkServicePluginRoot - NetWork Service is Registered: " + platformComponentProfileRegistered.getAlias());
 
                 this.register = Boolean.TRUE;
                 initializeAgent();
 
-                if (communicationNetworkServiceConnectionManager == null) {
+                if(communicationNetworkServiceConnectionManager==null) {
                     initializeCommunicationNetworkServiceConnectionManager();
                 }
 
@@ -981,8 +971,6 @@ public final class CryptoPaymentRequestNetworkServicePluginRoot extends Abstract
             errorManager.reportUnexpectedPluginException(this.getPluginVersionReference(), UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, pluginStartException);
         }
     }
-
-// posta
 
     @Override
     public void handleFailureComponentRegistrationNotificationEvent(PlatformComponentProfile networkServiceApplicant, PlatformComponentProfile remoteParticipant) {
