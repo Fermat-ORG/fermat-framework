@@ -24,7 +24,6 @@ public class ExchangeRateViewHolder extends ClauseViewHolder implements View.OnC
     private TextView yourExchangeRateValueRightSide;
     private FermatButton yourExchangeRateValue;
 
-
     public ExchangeRateViewHolder(View itemView) {
         super(itemView);
 
@@ -42,8 +41,10 @@ public class ExchangeRateViewHolder extends ClauseViewHolder implements View.OnC
         final Map<ClauseType, ClauseInformation> clauses = negotiationInformation.getClauses();
         final ClauseInformation currencyToBuy = clauses.get(ClauseType.CUSTOMER_CURRENCY);
         final ClauseInformation currencyToPay = clauses.get(ClauseType.BROKER_CURRENCY);
+        final ClauseInformation exchangeRate = clauses.get(ClauseType.BROKER_CURRENCY);
 
-        double marketRate = 212.48; // TODO cambiar por valor que devuelve el proveedor asociado a la wallet para este par de monedas
+//        double marketRate = 212.48; // TODO cambiar por valor que devuelve el proveedor asociado a la wallet para este par de monedas
+        double marketRate = Double.parseDouble(exchangeRate.getValue());
 
         String formattedMarketRate = NumberFormat.getInstance().format(marketRate);
 
@@ -79,4 +80,5 @@ public class ExchangeRateViewHolder extends ClauseViewHolder implements View.OnC
     protected int getTitleTextViewRes() {
         return R.id.ccw_card_view_title;
     }
+
 }

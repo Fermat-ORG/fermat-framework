@@ -40,7 +40,7 @@ public class StartNegotiationAdapter extends FermatAdapter<ClauseInformation, Fe
     ClauseViewHolder.Listener clauseListener;
 
 
-    public StartNegotiationAdapter(Context context, CustomerBrokerNegotiationInformation negotiationInformation) {
+    public StartNegotiationAdapter(Context context, CustomerBrokerNegotiationInformation negotiationInformation ) {
         super(context);
 
         this.negotiationInformation = negotiationInformation;

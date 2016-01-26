@@ -282,6 +282,16 @@ public class StartNegotiationActivityFragment extends AbstractFermatFragment<Cry
         brokerName.setText(broker.getAlias());
         sellingDetails.setText(getResources().getString(R.string.ccw_start_selling_details, currencyToBuy.getFriendlyName()));
 
+        final Map<ClauseType, ClauseInformation> clauses = negotiationInfo.getClauses();
+
+        String brokerMarketRate = brokerCurrencyQuotation.getExchangeRate(
+                clauses.get(ClauseType.CUSTOMER_CURRENCY).getValue(),
+                clauses.get(ClauseType.BROKER_CURRENCY).getValue()
+        );
+
+        final ClauseInformation exchangeRate = clauses.get(ClauseType.EXCHANGE_RATE);
+        negotiationInfo.putClause(exchangeRate, brokerMarketRate);
+
         adapter = new StartNegotiationAdapter(getActivity(), negotiationInfo);
         adapter.setFooterListener(this);
         adapter.setClauseListener(this);
@@ -444,16 +454,16 @@ public class StartNegotiationActivityFragment extends AbstractFermatFragment<Cry
 
         final Map<ClauseType, ClauseInformation> clauses = negotiationInfo.getClauses();
 
-        String currencyQuotationExchangeRate = brokerCurrencyQuotation.getExchangeRate(
+        String brokerMarketRate = brokerCurrencyQuotation.getExchangeRate(
                 clauses.get(ClauseType.CUSTOMER_CURRENCY).getValue(),
                 clauses.get(ClauseType.BROKER_CURRENCY).getValue()
         );
 
 
-        if(currencyQuotationExchangeRate != null) {
+        if(brokerMarketRate != null) {
 
             //GET EXCHANGE RATE
-            BigDecimal exchangeRate = new BigDecimal(currencyQuotationExchangeRate.replace(",", ""));
+            BigDecimal exchangeRate = new BigDecimal(brokerMarketRate.replace(",", ""));
 
             //CALCULATE NEW PAY
             final BigDecimal amountToBuy = new BigDecimal(clauses.get(ClauseType.CUSTOMER_CURRENCY_QUANTITY).getValue().replace("," ,""));
@@ -469,10 +479,12 @@ public class StartNegotiationActivityFragment extends AbstractFermatFragment<Cry
             final ClauseInformation brokerCurrencyQuantityClause = clauses.get(ClauseType.BROKER_CURRENCY_QUANTITY);
             negotiationInfo.putClause(brokerCurrencyQuantityClause, amountToPayStr);
 
+//            adapter.setBrokerMarketRate(brokerMarketRate);
+
             Toast.makeText(getActivity(), "The exchange rate:" +
                     "BROKER CURRENCY: " +clauses.get(ClauseType.BROKER_CURRENCY).getValue()+
                     ", CUSTOMER CURRENCY: "+clauses.get(ClauseType.CUSTOMER_CURRENCY).getValue()+
-                    ", EXCHANGE RATE: "+currencyQuotationExchangeRate
+                    ", EXCHANGE RATE: "+brokerMarketRate
                     , Toast.LENGTH_LONG).show();
 
         } else {
