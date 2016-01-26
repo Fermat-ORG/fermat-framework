@@ -13,7 +13,6 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.Layers;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
-import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterException;
 import com.bitdubai.fermat_api.layer.all_definition.settings.structure.SettingsManager;
 import com.bitdubai.fermat_api.layer.all_definition.util.Version;
 import com.bitdubai.fermat_api.layer.modules.common_classes.ActiveActorIdentityInformation;
@@ -30,11 +29,11 @@ import com.bitdubai.fermat_cer_api.layer.search.interfaces.CurrencyExchangeProvi
 import com.bitdubai.fermat_csh_api.all_definition.enums.BalanceType;
 import com.bitdubai.fermat_csh_api.all_definition.enums.TransactionType;
 import com.bitdubai.fermat_csh_api.all_definition.exceptions.CashMoneyWalletInsufficientFundsException;
+import com.bitdubai.fermat_csh_api.all_definition.interfaces.CashTransactionParameters;
 import com.bitdubai.fermat_csh_api.all_definition.interfaces.CashWalletBalances;
 import com.bitdubai.fermat_csh_api.layer.csh_cash_money_transaction.deposit.exceptions.CantCreateDepositTransactionException;
 import com.bitdubai.fermat_csh_api.layer.csh_cash_money_transaction.deposit.interfaces.CashDepositTransaction;
 import com.bitdubai.fermat_csh_api.layer.csh_cash_money_transaction.deposit.interfaces.CashDepositTransactionManager;
-import com.bitdubai.fermat_csh_api.all_definition.interfaces.CashTransactionParameters;
 import com.bitdubai.fermat_csh_api.layer.csh_cash_money_transaction.withdrawal.exceptions.CantCreateWithdrawalTransactionException;
 import com.bitdubai.fermat_csh_api.layer.csh_cash_money_transaction.withdrawal.interfaces.CashWithdrawalTransaction;
 import com.bitdubai.fermat_csh_api.layer.csh_cash_money_transaction.withdrawal.interfaces.CashWithdrawalTransactionManager;
@@ -47,12 +46,10 @@ import com.bitdubai.fermat_csh_api.layer.csh_wallet_module.CashMoneyWalletPrefer
 import com.bitdubai.fermat_csh_api.layer.csh_wallet_module.exceptions.CantGetCashMoneyWalletBalancesException;
 import com.bitdubai.fermat_csh_api.layer.csh_wallet_module.interfaces.CashMoneyWalletModuleManager;
 import com.bitdubai.fermat_csh_plugin.layer.wallet_module.cash_money.developer.bitdubai.version_1.structure.CashMoneyWalletModuleManagerImpl;
-import com.bitdubai.fermat_csh_plugin.layer.wallet_module.cash_money.developer.bitdubai.version_1.structure.CashTransactionParametersImpl;
 import com.bitdubai.fermat_csh_plugin.layer.wallet_module.cash_money.developer.bitdubai.version_1.structure.CurrencyPairImpl;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedPluginExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 
-import java.math.BigDecimal;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -91,6 +88,10 @@ public class CashMoneyWalletModulePluginRoot extends AbstractPlugin implements L
     /* CER PLUGINS */
     @NeededPluginReference(platform = Platforms.CURRENCY_EXCHANGE_RATE_PLATFORM, layer = Layers.SEARCH, plugin = Plugins.BITDUBAI_CER_PROVIDER_FILTER)
     private CurrencyExchangeProviderFilterManager providerFilter;
+
+    //TODO:
+    //@NeededLayerReference(platform = Platforms.CURRENCY_EXCHANGE_RATE_PLATFORM, layer = Layers.PROVIDER)
+    //private CurrencyExchangeRateProviderLayerManager currencyExchangeRateProviderLayer;
 
 
 
