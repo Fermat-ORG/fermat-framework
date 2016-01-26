@@ -215,13 +215,20 @@ public class UserRedemptionMonitorAgent implements Agent, DealsWithLogger, Deals
         private void checkDeliveringTime() throws CantExecuteDatabaseOperationException, CantExecuteQueryException, UnexpectedResultReturnedFromDatabaseException, CantGetCryptoTransactionException, CantGetTransactionsException, CantLoadWalletException, CantRegisterCreditException, CantRegisterDebitException, CantGetAssetIssuerActorsException, CantSendTransactionNewStatusNotificationException, CantGetAssetUserActorsException, CantAssetUserActorNotFoundException, RecordsNotFoundException, CantCheckAssetUserRedemptionProgressException {
             for (DeliverRecord record : userRedemptionDao.getDeliveringRecords()) {
                 if (new Date().after(record.getTimeOut())) {
+                    record.getDigitalAssetMetadata().removeLastTransaction();
+                    try {
+                        bitcoinNetworkManager.cancelBroadcast(record.getDigitalAssetMetadata().getLastTransactionHash());
+                    } catch (CantCancellBroadcastTransactionException e) {
+                        e.printStackTrace();
+                    }
                     digitalAssetUserRedemptionVault.updateWalletBalance(record.getDigitalAssetMetadata(), AssetVerification.foundCryptoTransaction(bitcoinNetworkManager, record.getDigitalAssetMetadata()), BalanceType.AVAILABLE, TransactionType.CREDIT, DAPTransactionType.RECEPTION, record.getRedeemPointPublicKey());
                     userRedemptionDao.cancelDelivering(record.getTransactionId());
+
                 }
             }
         }
 
-        private void checkNetworkLayerEvents() throws CantConfirmTransactionException, CantExecuteQueryException, UnexpectedResultReturnedFromDatabaseException, CantCheckAssetUserRedemptionProgressException, CantGetDigitalAssetFromLocalStorageException, CantSendAssetBitcoinsToUserException, CantGetCryptoTransactionException, CantDeliverDigitalAssetToAssetWalletException, CantDistributeDigitalAssetsException, CantDeliverPendingTransactionsException, RecordsNotFoundException, CantBroadcastTransactionException, CantCreateDigitalAssetFileException {
+        private void checkNetworkLayerEvents() throws CantConfirmTransactionException, CantExecuteQueryException, UnexpectedResultReturnedFromDatabaseException, CantCheckAssetUserRedemptionProgressException, CantGetDigitalAssetFromLocalStorageException, CantSendAssetBitcoinsToUserException, CantGetCryptoTransactionException, CantDeliverDigitalAssetToAssetWalletException, CantDistributeDigitalAssetsException, CantDeliverPendingTransactionsException, RecordsNotFoundException, CantBroadcastTransactionException, CantCreateDigitalAssetFileException, CantLoadWalletException {
             List<Transaction<DigitalAssetMetadataTransaction>> pendingEventsList = assetTransmissionManager.getPendingTransactions(Specialist.ASSET_ISSUER_SPECIALIST);
             if (!userRedemptionDao.getPendingNetworkLayerEvents().isEmpty()) {
                 for (Transaction<DigitalAssetMetadataTransaction> transaction : pendingEventsList) {
@@ -256,28 +263,32 @@ public class UserRedemptionMonitorAgent implements Agent, DealsWithLogger, Deals
                 updateDistributionStatus(DistributionStatus.SENDING_CRYPTO, assetAcceptedGenesisTransaction);
 
                 DigitalAssetMetadata metadata = digitalAssetUserRedemptionVault.getDigitalAssetMetadataFromLocalStorage(assetAcceptedGenesisTransaction);
-                sendCryptoAmountToRemoteActor(metadata);
                 userRedemptionDao.sendingBitcoins(assetAcceptedGenesisTransaction, metadata.getLastTransactionHash());
                 userRedemptionDao.updateDigitalAssetCryptoStatusByGenesisTransaction(assetAcceptedGenesisTransaction, CryptoStatus.PENDING_SUBMIT);
+                sendCryptoAmountToRemoteActor(metadata);
             }
             List<String> assetRejectedByContractGenesisTransactionList = userRedemptionDao.getGenesisTransactionByAssetRejectedByContractStatus();
             for (String assetRejectedGenesisTransaction : assetRejectedByContractGenesisTransactionList) {
+                DigitalAssetMetadata digitalAssetMetadata = digitalAssetUserRedemptionVault.getUserWallet().getDigitalAssetMetadata(assetRejectedGenesisTransaction);
                 String internalId = userRedemptionDao.getTransactionIdByGenesisTransaction(assetRejectedGenesisTransaction);
-                List<CryptoTransaction> genesisTransactionList = bitcoinNetworkManager.getCryptoTransactions(assetRejectedGenesisTransaction);
+                List<CryptoTransaction> genesisTransactionList = bitcoinNetworkManager.getCryptoTransactions(digitalAssetMetadata.getLastTransactionHash());
                 if (genesisTransactionList == null || genesisTransactionList.isEmpty()) {
                     throw new CantCheckAssetUserRedemptionProgressException("Cannot get the CryptoTransaction from Crypto Network for " + assetRejectedGenesisTransaction);
                 }
+                System.out.println("ASSET REJECTED BY CONTRACT!! : " + digitalAssetMetadata);
                 String userPublicKey = userRedemptionDao.getActorUserPublicKeyByGenesisTransaction(assetRejectedGenesisTransaction);
                 digitalAssetUserRedemptionVault.setDigitalAssetMetadataAssetIssuerWalletTransaction(genesisTransactionList.get(0), internalId, AssetBalanceType.AVAILABLE, TransactionType.CREDIT, DAPTransactionType.DISTRIBUTION, userPublicKey);
             }
 
             List<String> assetRejectedByHashGenesisTransactionList = userRedemptionDao.getGenesisTransactionByAssetRejectedByHashStatus();
             for (String assetRejectedGenesisTransaction : assetRejectedByHashGenesisTransactionList) {
+                DigitalAssetMetadata digitalAssetMetadata = digitalAssetUserRedemptionVault.getUserWallet().getDigitalAssetMetadata(assetRejectedGenesisTransaction);
                 String internalId = userRedemptionDao.getTransactionIdByGenesisTransaction(assetRejectedGenesisTransaction);
-                List<CryptoTransaction> genesisTransactionList = bitcoinNetworkManager.getCryptoTransactions(assetRejectedGenesisTransaction);
+                List<CryptoTransaction> genesisTransactionList = bitcoinNetworkManager.getCryptoTransactions(digitalAssetMetadata.getLastTransactionHash());
                 if (genesisTransactionList == null || genesisTransactionList.isEmpty()) {
                     throw new CantCheckAssetUserRedemptionProgressException("Cannot get the CryptoTransaction from Crypto Network for " + assetRejectedGenesisTransaction);
                 }
+                System.out.println("ASSET REJECTED BY HASH!! : " + digitalAssetMetadata);
                 String userPublicKey = userRedemptionDao.getActorUserPublicKeyByGenesisTransaction(assetRejectedGenesisTransaction);
                 digitalAssetUserRedemptionVault.setDigitalAssetMetadataAssetIssuerWalletTransaction(genesisTransactionList.get(0), internalId, AssetBalanceType.AVAILABLE, TransactionType.CREDIT, DAPTransactionType.DISTRIBUTION, userPublicKey);
             }
