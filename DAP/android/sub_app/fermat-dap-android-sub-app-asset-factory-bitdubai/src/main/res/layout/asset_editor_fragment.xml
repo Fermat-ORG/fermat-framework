@@ -176,7 +176,7 @@
                     android:layout_marginTop="10dp"
                     android:textSize="12sp"
                     android:textColor="@color/text_color_hint"
-                    android:text="Bitcoin Wallet Balance:"/>
+                    android:text="bitcoin Wallet Balance:"/>
 
                 <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
                     android:id="@+id/bitcoinBalanceText"

@@ -334,7 +334,8 @@ public class AssetRedeemFragment extends AbstractFermatFragment {
         //bitmapWorkerTask.execute(img); //todo comment to be able to compile
 
         assetRedeemNameText.setText(digitalAsset.getName());
-        assetsToRedeemEditText.setText(digitalAsset.getAvailableBalanceQuantity() + "");
+//        assetsToRedeemEditText.setText(digitalAsset.getAvailableBalanceQuantity() + "");
+        assetsToRedeemEditText.setText(selectedRPCount+"");
         assetRedeemRemainingText.setText(digitalAsset.getAvailableBalanceQuantity() + " Assets Remaining");
     }
 

@@ -24,6 +24,7 @@ import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_issuer.exceptions.CantG
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_issuer.interfaces.ActorAssetIssuer;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_issuer.interfaces.ActorAssetIssuerManager;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.exceptions.CantGetAssetUserActorsException;
+import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.interfaces.ActorAssetUser;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.interfaces.ActorAssetUserManager;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.redeem_point.interfaces.ActorAssetRedeemPointManager;
 import com.bitdubai.fermat_dap_api.layer.dap_network_services.asset_transmission.interfaces.AssetTransmissionNetworkServiceManager;
@@ -43,6 +44,7 @@ import com.bitdubai.fermat_dap_plugin.digital_asset_transaction.redeem_point_red
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedPluginExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 import java.util.concurrent.CountDownLatch;
@@ -174,7 +176,8 @@ public class RedeemPointRedemptionMonitorAgent implements Agent {
         }
 
         private void doTheMainTask() {
-            try (AssetRedeemPointRedemptionDAO dao = new AssetRedeemPointRedemptionDAO(pluginDatabaseSystem, pluginId)) {
+            try {
+                AssetRedeemPointRedemptionDAO dao = new AssetRedeemPointRedemptionDAO(pluginDatabaseSystem, pluginId);
                 for (String eventId : dao.getPendingAssetTransmissionEvents()) {
                     switch (dao.getEventTypeById(eventId)) {
                         case RECEIVED_NEW_DIGITAL_ASSET_METADATA_NOTIFICATION:
@@ -184,60 +187,62 @@ public class RedeemPointRedemptionMonitorAgent implements Agent {
                                 debug("verifying if there is any transaction for me");
                                 if (transaction.getInformation().getReceiverType() == PlatformComponentType.ACTOR_ASSET_REDEEM_POINT) {
                                     //GET THE BASIC INFORMATION.
-                                    DigitalAssetMetadataTransaction assetMetadataTransaction = transaction.getInformation();
-                                    DigitalAssetMetadata metadata = assetMetadataTransaction.getDigitalAssetMetadata();
-                                    DigitalAsset digitalAsset = metadata.getDigitalAsset();
-                                    String transactionId = assetMetadataTransaction.getGenesisTransaction();
+                                    try {
+                                        DigitalAssetMetadataTransaction assetMetadataTransaction = transaction.getInformation();
+                                        DigitalAssetMetadata metadata = assetMetadataTransaction.getDigitalAssetMetadata();
+                                        DigitalAsset digitalAsset = metadata.getDigitalAsset();
+                                        String transactionId = assetMetadataTransaction.getGenesisTransaction();
 
-                                    //Now I should answer the metadata, so I'll send a message to the actor that sends me this metadata.
-                                    String actorSender = assetMetadataTransaction.getReceiverId(); //now I am the sender.
-                                    PlatformComponentType senderType = assetMetadataTransaction.getReceiverType();
-                                    String actorReceiver = assetMetadataTransaction.getSenderId(); //And the one that sends me this message is the receiver.
-                                    PlatformComponentType receiverType = assetMetadataTransaction.getSenderType();
+                                        //Now I should answer the metadata, so I'll send a message to the actor that sends me this metadata.
+                                        String actorSender = assetMetadataTransaction.getReceiverId(); //now I am the sender.
+                                        PlatformComponentType senderType = assetMetadataTransaction.getReceiverType();
+                                        String actorReceiver = assetMetadataTransaction.getSenderId(); //And the one that sends me this message is the receiver.
+                                        PlatformComponentType receiverType = assetMetadataTransaction.getSenderType();
 
-                                    if (isValidIssuer(digitalAsset)) {
-                                        dao.updateTransactionStatusById(DistributionStatus.INCORRECT_REDEEM_POINT, transactionId);
-                                        assetTransmissionManager.sendTransactionNewStatusNotification(actorSender, senderType, actorReceiver, receiverType, transactionId, DistributionStatus.INCORRECT_REDEEM_POINT);
-                                        debug("This redeem point can't redeem that kind of assets.");
-                                        continue;
+                                        if (isValidIssuer(digitalAsset)) {
+                                            dao.updateTransactionStatusById(DistributionStatus.INCORRECT_REDEEM_POINT, transactionId);
+                                            assetTransmissionManager.sendTransactionNewStatusNotification(actorSender, senderType, actorReceiver, receiverType, transactionId, DistributionStatus.INCORRECT_REDEEM_POINT);
+                                            debug("This redeem point can't redeem that kind of assets.");
+                                            continue;
+                                        }
+                                        //PERSIST METADATA
+                                        debug("persisting metadata");
+                                        dao.persistTransaction(transactionId, assetMetadataTransaction.getSenderId(), assetMetadataTransaction.getReceiverId(), DistributionStatus.SENDING_CRYPTO, CryptoStatus.PENDING_SUBMIT);
+                                        persistDigitalAssetMetadataInLocalStorage(metadata, transactionId);
+
+                                        dao.updateTransactionStatusById(DistributionStatus.CHECKING_HASH, transactionId);
+                                        debug("verifying hash");
+                                        boolean hashValid = AssetVerification.isDigitalAssetHashValid(bitcoinNetworkManager, metadata);
+                                        if (!hashValid) {
+                                            dao.updateTransactionStatusById(DistributionStatus.ASSET_REJECTED_BY_HASH, transactionId);
+                                            assetTransmissionManager.sendTransactionNewStatusNotification(actorSender, senderType, actorReceiver, receiverType, transactionId, DistributionStatus.ASSET_REJECTED_BY_HASH);
+                                            debug("hash rejected");
+                                            continue;
+                                        }
+                                        debug("hash checked.");
+                                        dao.updateTransactionStatusById(DistributionStatus.HASH_CHECKED, transactionId);
+
+                                        debug("verifying contract");
+                                        dao.updateTransactionStatusById(DistributionStatus.CHECKING_CONTRACT, transactionId);
+                                        boolean contractValid = AssetVerification.isValidContract(digitalAsset.getContract());
+                                        if (!contractValid) {
+                                            dao.updateTransactionStatusById(DistributionStatus.ASSET_REJECTED_BY_CONTRACT, transactionId);
+                                            assetTransmissionManager.sendTransactionNewStatusNotification(actorSender, senderType, actorReceiver, receiverType, transactionId, DistributionStatus.ASSET_REJECTED_BY_CONTRACT);
+                                            debug("contract rejected");
+                                            continue;
+                                        }
+                                        debug("contract checked");
+                                        dao.updateTransactionStatusById(DistributionStatus.CONTRACT_CHECKED, transactionId);
+
+
+                                        //EVERYTHING WENT OK.
+                                        assetTransmissionManager.sendTransactionNewStatusNotification(actorSender, senderType, actorReceiver, receiverType, transactionId, DistributionStatus.ASSET_ACCEPTED);
+                                        dao.updateTransactionStatusById(DistributionStatus.ASSET_ACCEPTED, transactionId);
+                                        dao.updateTransactionCryptoStatusById(CryptoStatus.PENDING_SUBMIT, transactionId);
+                                        //UPDATE EVENT STATUS
+                                    } finally{
+                                        assetTransmissionManager.confirmReception(transaction.getTransactionID());
                                     }
-
-                                    metadata.setLastOwner(actorAssetRedeemPointManager.getActorAssetRedeemPoint());
-                                    //PERSIST METADATA
-                                    debug("persisting metadata");
-                                    dao.persistTransaction(transactionId, assetMetadataTransaction.getSenderId(), assetMetadataTransaction.getReceiverId(), DistributionStatus.SENDING_CRYPTO, CryptoStatus.PENDING_SUBMIT);
-                                    persistDigitalAssetMetadataInLocalStorage(metadata, transactionId);
-
-                                    dao.updateTransactionStatusById(DistributionStatus.CHECKING_HASH, transactionId);
-                                    debug("verifying hash");
-                                    boolean hashValid = AssetVerification.isDigitalAssetHashValid(bitcoinNetworkManager, metadata);
-                                    if (!hashValid) {
-                                        dao.updateTransactionStatusById(DistributionStatus.ASSET_REJECTED_BY_HASH, transactionId);
-                                        assetTransmissionManager.sendTransactionNewStatusNotification(actorSender, senderType, actorReceiver, receiverType, transactionId, DistributionStatus.ASSET_REJECTED_BY_HASH);
-                                        debug("hash rejected");
-                                        continue;
-                                    }
-                                    debug("hash checked.");
-                                    dao.updateTransactionStatusById(DistributionStatus.HASH_CHECKED, transactionId);
-
-                                    debug("verifying contract");
-                                    dao.updateTransactionStatusById(DistributionStatus.CHECKING_CONTRACT, transactionId);
-                                    boolean contractValid = AssetVerification.isValidContract(digitalAsset.getContract());
-                                    if (!contractValid) {
-                                        dao.updateTransactionStatusById(DistributionStatus.ASSET_REJECTED_BY_CONTRACT, transactionId);
-                                        assetTransmissionManager.sendTransactionNewStatusNotification(actorSender, senderType, actorReceiver, receiverType, transactionId, DistributionStatus.ASSET_REJECTED_BY_CONTRACT);
-                                        debug("contract rejected");
-                                        continue;
-                                    }
-                                    debug("contract checked");
-                                    dao.updateTransactionStatusById(DistributionStatus.CONTRACT_CHECKED, transactionId);
-
-
-                                    //EVERYTHING WENT OK.
-                                    assetTransmissionManager.sendTransactionNewStatusNotification(actorSender, senderType, actorReceiver, receiverType, transactionId, DistributionStatus.ASSET_ACCEPTED);
-                                    dao.updateTransactionStatusById(DistributionStatus.ASSET_ACCEPTED, transactionId);
-                                    dao.updateTransactionCryptoStatusById(CryptoStatus.PENDING_SUBMIT, transactionId);
-                                    //UPDATE EVENT STATUS
                                 }
                             }
                             dao.updateEventStatus(EventStatus.NOTIFIED, eventId);
@@ -313,7 +318,9 @@ public class RedeemPointRedemptionMonitorAgent implements Agent {
                                         actorAssetRedeemPointManager.getActorAssetRedeemPoint().getActorPublicKey());
 
                                 updateMetadataTransactionChain(transactionId, cryptoTransaction.getTransactionHash(), cryptoTransaction.getBlockHash());
-
+                                List<ActorAssetUser> userToAdd = new ArrayList<>();
+                                userToAdd.add((ActorAssetUser) metadata.getLastOwner());
+                                actorAssetUserManager.createActorAssetUserRegisterInNetworkService(userToAdd);
                                 //CREDIT ON AVAILABLE BALANCE.
                                 debug("adding credit on available balance");
                                 AssetRedeemPointWalletBalance walletBalance = wallet.getBalance();
