@@ -1095,6 +1095,8 @@ public class CryptoAddressesNetworkServicePluginRoot extends AbstractNetworkServ
             cryptoAddressesExecutorAgent.pause();
         }
 
+        this.register = Boolean.FALSE;
+
     }
 
     /*

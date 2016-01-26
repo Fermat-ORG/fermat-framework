@@ -1033,7 +1033,7 @@ public final class CryptoPaymentRequestNetworkServicePluginRoot extends Abstract
 
           reprocessMessage();
 
-            this.register = false;
+            this.register = Boolean.FALSE;
 
             if(communicationNetworkServiceConnectionManager != null) {
                 communicationNetworkServiceConnectionManager.closeAllConnection();
@@ -1059,6 +1059,8 @@ public final class CryptoPaymentRequestNetworkServicePluginRoot extends Abstract
         if(cryptoPaymentRequestExecutorAgent!=null) {
             cryptoPaymentRequestExecutorAgent.stop();
         }
+
+        this.register = Boolean.FALSE;
 
     }
 
