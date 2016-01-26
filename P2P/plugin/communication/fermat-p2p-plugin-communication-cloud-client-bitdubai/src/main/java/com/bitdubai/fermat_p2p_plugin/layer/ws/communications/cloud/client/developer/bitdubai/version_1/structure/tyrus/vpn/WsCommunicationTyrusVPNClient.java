@@ -176,7 +176,6 @@ public class WsCommunicationTyrusVPNClient extends Endpoint implements Communica
         System.out.println(" WsCommunicationVPNClient - Starting method onClose");
         System.out.println("Socket " + session.getId() + " is disconnect! code = " + reason.getCloseCode() + "[" + reason.getCloseCode().getCode() + "] reason = " + reason.getReasonPhrase());
 
-
         switch (reason.getCloseCode().getCode()) {
 
             case 1000:

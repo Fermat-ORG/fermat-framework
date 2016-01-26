@@ -8,6 +8,7 @@ package com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_transmission
 
 import com.bitdubai.fermat_api.CantStartAgentException;
 import com.bitdubai.fermat_api.CantStartPluginException;
+import com.bitdubai.fermat_api.CantStopAgentException;
 import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.Service;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.annotations.NeededAddonReference;
@@ -102,6 +103,7 @@ import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.events.Cli
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.events.VPNConnectionCloseNotificationEvent;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.MessagesStatus;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.WsCommunicationsCloudClientManager;
+import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.client.CommunicationsClientConnection;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.contents.FermatMessage;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.enums.FermatMessagesStatus;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.exceptions.CantRegisterComponentException;
@@ -760,64 +762,46 @@ public class CryptoTransmissionNetworkServicePluginRoot extends AbstractNetworkS
      */
     public void handleCompleteComponentRegistrationNotificationEvent(PlatformComponentProfile platformComponentProfileRegistered){
 
-        System.out.println(" Crypto Transmission CommunicationNetworkServiceConnectionManager - Starting method handleCompleteComponentRegistrationNotificationEvent");
+        System.out.println("CryptoTransmissionNetworkServicePluginRoot - Starting method handleCompleteComponentRegistrationNotificationEvent");
 
-        if (platformComponentProfileRegistered.getPlatformComponentType() == PlatformComponentType.COMMUNICATION_CLOUD_CLIENT && this.register){
+        try {
 
-            if(communicationRegistrationProcessNetworkServiceAgent.isRunning()){
-                communicationRegistrationProcessNetworkServiceAgent.stop();
-                communicationRegistrationProcessNetworkServiceAgent = null;
-            }
+            if (platformComponentProfileRegistered.getPlatformComponentType() == PlatformComponentType.COMMUNICATION_CLOUD_CLIENT && !this.register){
 
-            beforeRegistered = Boolean.TRUE;
-                              /*
-                 * Construct my profile and register me
-                 */
-            PlatformComponentProfile platformComponentProfileToReconnect =  wsCommunicationsCloudClientManager.getCommunicationsCloudClientConnection().constructPlatformComponentProfileFactory(this.getIdentityPublicKey(),
-                    this.getAlias().toLowerCase(),
-                    this.getName(),
-                    this.getNetworkServiceType(),
-                    this.getPlatformComponentType(),
-                    this.getExtraData());
+                if(communicationRegistrationProcessNetworkServiceAgent != null && communicationRegistrationProcessNetworkServiceAgent.isRunning()){
+                    communicationRegistrationProcessNetworkServiceAgent.stop();
+                    communicationRegistrationProcessNetworkServiceAgent = null;
+                }
 
-            try {
-                    /*
-                     * Register me
-                     */
+                PlatformComponentProfile platformComponentProfileToReconnect =  wsCommunicationsCloudClientManager.getCommunicationsCloudClientConnection().constructPlatformComponentProfileFactory(this.getIdentityPublicKey(),
+                        this.getAlias().toLowerCase(),
+                        this.getName(),
+                        this.getNetworkServiceType(),
+                        this.getPlatformComponentType(),
+                        this.getExtraData());
+
                 wsCommunicationsCloudClientManager.getCommunicationsCloudClientConnection().registerComponentForCommunication(this.getNetworkServiceType(), platformComponentProfileToReconnect);
 
-            } catch (CantRegisterComponentException e) {
-                e.printStackTrace();
             }
 
-        }
+            if (platformComponentProfileRegistered.getPlatformComponentType() == PlatformComponentType.NETWORK_SERVICE &&
+                    platformComponentProfileRegistered.getNetworkServiceType() == NetworkServiceType.INTRA_USER &&
+                    platformComponentProfileRegistered.getIdentityPublicKey().equals(identity.getPublicKey())) {
 
-
-
-        /*
-         * If the component registered have my profile and my identity public key
-         */
-        if (platformComponentProfileRegistered.getPlatformComponentType()  == PlatformComponentType.NETWORK_SERVICE &&
-                platformComponentProfileRegistered.getNetworkServiceType()  == NetworkServiceType.CRYPTO_TRANSMISSION &&
-                   platformComponentProfileRegistered.getIdentityPublicKey().equals(identity.getPublicKey())){
-
-            /*
-             * Mark as register
-             */
-            this.register = Boolean.TRUE;
-
-            System.out.print("-----------------------\n" +
-                    "CRYPTO TRANSMISSION REGISTRADO  -----------------------\n" +
-                    "-----------------------\n A: " + getName());
-
-            setPlatformComponentProfilePluginRoot(platformComponentProfileRegistered);
-
-                /**
-                 * Inicialice de main agent
-                 */
+                System.out.print("CryptoTransmissionNetworkServicePluginRoot - NetWork Service is Registered: " + platformComponentProfileRegistered.getAlias());
+                this.register = Boolean.TRUE;
                 initializeCryptoTransmissionAgent();
 
+                if(communicationNetworkServiceConnectionManager==null) {
+                    initializeCommunicationNetworkServiceConnectionManager();
+                }
+
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
         }
+
     }
 
     @Override
@@ -930,14 +914,22 @@ public class CryptoTransmissionNetworkServicePluginRoot extends AbstractNetworkS
     @Override
     public void handleClientConnectionCloseNotificationEvent(FermatEvent fermatEvent) {
 
+        System.out.println("CryptoTransmissionNetworkServicePluginRoot - handleClientConnectionCloseNotificationEvent");
+
         if(fermatEvent instanceof ClientConnectionCloseNotificationEvent){
 
            reprocessWaitingMessage();
 
-            this.register = false;
+            this.register = Boolean.FALSE;
 
-            if(communicationNetworkServiceConnectionManager != null)
+            if(communicationNetworkServiceConnectionManager != null) {
                 communicationNetworkServiceConnectionManager.closeAllConnection();
+                communicationNetworkServiceConnectionManager.stop();
+            }
+
+            if(cryptoTransmissionAgent != null) {
+                cryptoTransmissionAgent.stop();
+            }
         }
 
     }
@@ -948,8 +940,23 @@ public class CryptoTransmissionNetworkServicePluginRoot extends AbstractNetworkS
     @Override
     public void handleClientConnectionLooseNotificationEvent(FermatEvent fermatEvent) {
 
-        if(communicationNetworkServiceConnectionManager != null)
-            communicationNetworkServiceConnectionManager.stop();
+        System.out.println("CryptoTransmissionNetworkServicePluginRoot - handleClientConnectionLooseNotificationEvent");
+
+        try {
+
+            if(communicationNetworkServiceConnectionManager != null) {
+                communicationNetworkServiceConnectionManager.stop();
+            }
+
+            if(cryptoTransmissionAgent != null) {
+                cryptoTransmissionAgent.stop();
+            }
+
+            this.register = Boolean.FALSE;
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 
     }
 
@@ -959,64 +966,30 @@ public class CryptoTransmissionNetworkServicePluginRoot extends AbstractNetworkS
     @Override
     public void handleClientSuccessfullReconnectNotificationEvent(FermatEvent fermatEvent) {
 
-            if(communicationNetworkServiceConnectionManager != null) {
+        System.out.println("CryptoTransmissionNetworkServicePluginRoot - handleClientSuccessfullReconnectNotificationEvent");
+
+        try {
+
+            if (communicationNetworkServiceConnectionManager == null){
+                this.initializeCommunicationNetworkServiceConnectionManager();
+            }else{
                 communicationNetworkServiceConnectionManager.restart();
             }
 
-           if(communicationRegistrationProcessNetworkServiceAgent != null && !this.register){
+            if(cryptoTransmissionAgent == null) {
+                initializeCryptoTransmissionAgent();
+            }else {
+                cryptoTransmissionAgent.start();
+            }
 
-                if(communicationRegistrationProcessNetworkServiceAgent.isRunning()) {
-                    communicationRegistrationProcessNetworkServiceAgent.stop();
-                    communicationRegistrationProcessNetworkServiceAgent = null;
-                }
-
-                       /*
-                 * Construct my profile and register me
-                 */
-                    PlatformComponentProfile platformComponentProfileToReconnect =  wsCommunicationsCloudClientManager.getCommunicationsCloudClientConnection().constructPlatformComponentProfileFactory(this.getIdentityPublicKey(),
-                            this.getAlias().toLowerCase(),
-                            this.getName(),
-                            this.getNetworkServiceType(),
-                            this.getPlatformComponentType(),
-                            this.getExtraData());
-
-                    try {
-                    /*
-                     * Register me
-                     */
-                        wsCommunicationsCloudClientManager.getCommunicationsCloudClientConnection().registerComponentForCommunication(this.getNetworkServiceType(), platformComponentProfileToReconnect);
-
-                    } catch (CantRegisterComponentException e) {
-                        e.printStackTrace();
-                    }
-
-                /*
-                 * Configure my new profile
-                 */
-                    this.setPlatformComponentProfilePluginRoot(platformComponentProfileToReconnect);
-
-                /*
-                 * Initialize the connection manager
-                 */
-                    this.initializeCommunicationNetworkServiceConnectionManager();
-
-
-         }
-
-         /*
+            /*
              * Mark as register
              */
-        this.register = Boolean.TRUE;
-        if(cryptoTransmissionAgent!=null) {
-            try {
-                cryptoTransmissionAgent.start();
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        }else {
-            initializeCryptoTransmissionAgent();
-        }
+            this.register = Boolean.TRUE;
 
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 
     }
 
