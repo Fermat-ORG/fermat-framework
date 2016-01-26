@@ -34,6 +34,12 @@ public class BrokerCurrencyQuotation {
         return currencyQuotation;
     }
 
+    public String getExchangeRate(String currencyOver, String currencyUnder){
+        BrokerCurrencyQuotationImpl currencyQuotation = getBrokerCurrencyQuotation(currencyOver, currencyUnder);
+        if(currencyQuotation != null) return currencyQuotation.getExchangeRate();
+        return null;
+    }
+
     private BrokerCurrencyQuotationImpl getQuotation(String currencyAlfa, String currencyBeta) {
 
         for (BrokerCurrencyQuotationImpl item : brokerCurrencyQuotationlist)

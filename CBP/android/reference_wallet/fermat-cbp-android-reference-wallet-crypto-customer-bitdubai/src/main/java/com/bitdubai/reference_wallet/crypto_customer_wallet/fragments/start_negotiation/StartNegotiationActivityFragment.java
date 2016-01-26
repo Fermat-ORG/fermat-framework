@@ -42,6 +42,7 @@ import com.bitdubai.reference_wallet.crypto_customer_wallet.common.adapters.Star
 import com.bitdubai.reference_wallet.crypto_customer_wallet.common.dialogs.ClauseTextDialog;
 import com.bitdubai.reference_wallet.crypto_customer_wallet.common.holders.start_negotiation.ClauseViewHolder;
 import com.bitdubai.reference_wallet.crypto_customer_wallet.common.holders.start_negotiation.FooterViewHolder;
+import com.bitdubai.reference_wallet.crypto_customer_wallet.common.models.BrokerCurrencyQuotation;
 import com.bitdubai.reference_wallet.crypto_customer_wallet.common.models.BrokerCurrencyQuotationImpl;
 import com.bitdubai.reference_wallet.crypto_customer_wallet.common.models.EmptyCustomerBrokerNegotiationInformation;
 import com.bitdubai.reference_wallet.crypto_customer_wallet.common.models.TestData;
@@ -72,6 +73,7 @@ public class StartNegotiationActivityFragment extends AbstractFermatFragment<Cry
     private FermatTextView brokerName;
     private RecyclerView recyclerView;
     private StartNegotiationAdapter adapter;
+    private BrokerCurrencyQuotation brokerCurrencyQuotation;
 
     private CryptoCustomerWalletManager walletManager;
     private ErrorManager errorManager;
@@ -106,7 +108,8 @@ public class StartNegotiationActivityFragment extends AbstractFermatFragment<Cry
             walletManager = moduleManager.getCryptoCustomerWallet(appSession.getAppPublicKey());
             errorManager = appSession.getErrorManager();
 
-            brokerCurrencyQuotationlist = getExchangeRateForCurrencyTest();
+            brokerCurrencyQuotationlist = TestData.getExchangeRateForCurrencyTest();
+            brokerCurrencyQuotation = new BrokerCurrencyQuotation(brokerCurrencyQuotationlist);
 
             negotiationInfo = createNewEmptyNegotiationInfo();
 
@@ -441,16 +444,16 @@ public class StartNegotiationActivityFragment extends AbstractFermatFragment<Cry
 
         final Map<ClauseType, ClauseInformation> clauses = negotiationInfo.getClauses();
 
-        BrokerCurrencyQuotationImpl brokerCurrencyQuotation = getBrokerCurrencyQuotation(
+        String currencyQuotationExchangeRate = brokerCurrencyQuotation.getExchangeRate(
                 clauses.get(ClauseType.CUSTOMER_CURRENCY).getValue(),
                 clauses.get(ClauseType.BROKER_CURRENCY).getValue()
         );
 
 
-        if(brokerCurrencyQuotation != null) {
+        if(currencyQuotationExchangeRate != null) {
 
             //GET EXCHANGE RATE
-            BigDecimal exchangeRate = new BigDecimal(brokerCurrencyQuotation.getExchangeRate().replace("," ,""));
+            BigDecimal exchangeRate = new BigDecimal(currencyQuotationExchangeRate.replace(",", ""));
 
             //CALCULATE NEW PAY
             final BigDecimal amountToBuy = new BigDecimal(clauses.get(ClauseType.CUSTOMER_CURRENCY_QUANTITY).getValue().replace("," ,""));
@@ -469,7 +472,7 @@ public class StartNegotiationActivityFragment extends AbstractFermatFragment<Cry
             Toast.makeText(getActivity(), "The exchange rate:" +
                     "BROKER CURRENCY: " +clauses.get(ClauseType.BROKER_CURRENCY).getValue()+
                     ", CUSTOMER CURRENCY: "+clauses.get(ClauseType.CUSTOMER_CURRENCY).getValue()+
-                    ", EXCHANGE RATE: "+brokerCurrencyQuotation.getExchangeRate()
+                    ", EXCHANGE RATE: "+currencyQuotationExchangeRate
                     , Toast.LENGTH_LONG).show();
 
         } else {
@@ -496,6 +499,7 @@ public class StartNegotiationActivityFragment extends AbstractFermatFragment<Cry
 
     }
 
+    /*
     //LIST OF BROKER CURRENCY QUOTATUION  TEST
     public List <BrokerCurrencyQuotationImpl> getExchangeRateForCurrencyTest(){
 
@@ -511,7 +515,8 @@ public class StartNegotiationActivityFragment extends AbstractFermatFragment<Cry
 
         return list;
     }
-
+    */
+/*
     public BrokerCurrencyQuotationImpl getBrokerCurrencyQuotation(String currencyOver, String currencyUnder){
 
         BrokerCurrencyQuotationImpl currencyQuotation = getQuotation(currencyOver,currencyUnder);
@@ -537,5 +542,6 @@ public class StartNegotiationActivityFragment extends AbstractFermatFragment<Cry
 
         return null;
     }
+    */
 
 }
