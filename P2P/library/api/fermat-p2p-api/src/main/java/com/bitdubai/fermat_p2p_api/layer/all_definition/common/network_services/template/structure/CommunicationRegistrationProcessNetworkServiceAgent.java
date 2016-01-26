@@ -79,24 +79,9 @@ public class CommunicationRegistrationProcessNetworkServiceAgent {
                 if (communicationsClientConnection.getCommunicationsCloudClientConnection().isRegister() && !networkService.isRegister()){
 
                     /*
-                     * Construct my profile and register me
-                     */
-                    PlatformComponentProfile platformComponentProfile =  communicationsClientConnection.getCommunicationsCloudClientConnection().constructPlatformComponentProfileFactory(networkService.getIdentityPublicKey(),
-                            networkService.getAlias().toLowerCase(),
-                            networkService.getName(),
-                            networkService.getNetworkServiceType(),
-                            networkService.getPlatformComponentType(),
-                            networkService.getExtraData());
-
-                    /*
                      * Register me
                      */
-                    communicationsClientConnection.getCommunicationsCloudClientConnection().registerComponentForCommunication(networkService.getNetworkServiceType(), platformComponentProfile);
-
-                    /*
-                     * Configure my new profile
-                     */
-                    networkService.setPlatformComponentProfilePluginRoot(platformComponentProfile);
+                    communicationsClientConnection.getCommunicationsCloudClientConnection().registerComponentForCommunication(networkService.getNetworkServiceType(), networkService.getPlatformComponentProfilePluginRoot());
 
                     /*
                      * Initialize the connection manager

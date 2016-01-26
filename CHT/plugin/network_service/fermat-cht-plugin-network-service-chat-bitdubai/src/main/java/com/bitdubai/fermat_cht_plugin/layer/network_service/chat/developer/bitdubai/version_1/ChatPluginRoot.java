@@ -76,7 +76,7 @@ import com.bitdubai.fermat_cht_plugin.layer.network_service.chat.developer.bitdu
 import com.bitdubai.fermat_cht_plugin.layer.network_service.chat.developer.bitdubai.version_1.exceptions.CantReadRecordDataBaseException;
 import com.bitdubai.fermat_cht_plugin.layer.network_service.chat.developer.bitdubai.version_1.structure.ChatMetadataTransactionRecord;
 import com.bitdubai.fermat_cht_plugin.layer.network_service.chat.developer.bitdubai.version_1.structure.EncodeMsjContent;
-import com.bitdubai.fermat_cht_plugin.layer.network_service.chat.developer.bitdubai.version_1.communications.CommunicationRegistrationProcessNetworkServiceAgent;
+import com.bitdubai.fermat_p2p_api.layer.all_definition.common.network_services.template.structure.CommunicationRegistrationProcessNetworkServiceAgent;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.contents.FermatMessageCommunication;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.contents.FermatMessageCommunicationFactory;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.enums.P2pEventType;
@@ -433,16 +433,15 @@ public class ChatPluginRoot extends AbstractPlugin implements
 
     @Override
     public void handleCompleteComponentRegistrationNotificationEvent(PlatformComponentProfile platformComponentProfileRegistered) {
+
         System.out.println("ChatPLuginRoot - CommunicationNetworkServiceConnectionManager - Starting method handleCompleteComponentRegistrationNotificationEvent");
 
+        if (platformComponentProfileRegistered.getPlatformComponentType() == PlatformComponentType.COMMUNICATION_CLOUD_CLIENT && !this.register) {
 
-        if (platformComponentProfileRegistered.getPlatformComponentType() == PlatformComponentType.COMMUNICATION_CLOUD_CLIENT && this.register) {
-
-            if (communicationRegistrationProcessNetworkServiceAgent.isAlive()) {
-                communicationRegistrationProcessNetworkServiceAgent.interrupt();
+            if(communicationRegistrationProcessNetworkServiceAgent != null && communicationRegistrationProcessNetworkServiceAgent.getActive()){
+                communicationRegistrationProcessNetworkServiceAgent.stop();
                 communicationRegistrationProcessNetworkServiceAgent = null;
             }
-
 
             /*
              * Construct my profile and register me
@@ -481,7 +480,7 @@ public class ChatPluginRoot extends AbstractPlugin implements
             System.out.print("-----------------------\n" +
                     "NETWORK SERVICE CHATPLUGINROOT REGISTERED  -----------------------\n" +
                     "-----------------------\n TO: " + getName());
-            communicationRegistrationProcessNetworkServiceAgent.interrupt();
+            communicationRegistrationProcessNetworkServiceAgent.stop();
             communicationRegistrationProcessNetworkServiceAgent = null;
 
 
@@ -545,10 +544,12 @@ public class ChatPluginRoot extends AbstractPlugin implements
     @Override
     public void handleClientConnectionCloseNotificationEvent(FermatEvent fermatEvent) {
         if (fermatEvent instanceof ClientConnectionCloseNotificationEvent) {
-            this.register = false;
+            this.register = Boolean.FALSE;
 
-            if (communicationNetworkServiceConnectionManager != null)
+            if(communicationNetworkServiceConnectionManager != null) {
                 communicationNetworkServiceConnectionManager.closeAllConnection();
+                communicationNetworkServiceConnectionManager.stop();
+            }
         }
     }
 
@@ -1179,54 +1180,24 @@ public class ChatPluginRoot extends AbstractPlugin implements
 
         if (communicationNetworkServiceConnectionManager != null)
             communicationNetworkServiceConnectionManager.stop();
+
+        this.register = Boolean.FALSE;
     }
 
     @Override
     public void handleClientSuccessfullReconnectNotificationEvent(FermatEvent fermatEvent) {
 
-
-        if (communicationNetworkServiceConnectionManager != null) {
+        if (communicationNetworkServiceConnectionManager == null){
+            this.initializeCommunicationNetworkServiceConnectionManager();
+        }else{
             communicationNetworkServiceConnectionManager.restart();
         }
-        if (!this.register) {
 
+        /*
+         * Mark as register
+         */
+        this.register = Boolean.TRUE;
 
-            if (communicationRegistrationProcessNetworkServiceAgent.isAlive()) {
-
-                communicationRegistrationProcessNetworkServiceAgent.interrupt();
-                communicationRegistrationProcessNetworkServiceAgent = null;
-            }
-
-                   /*
-                 * Construct my profile and register me
-                 */
-            PlatformComponentProfile platformComponentProfileToReconnect = wsCommunicationsCloudClientManager.getCommunicationsCloudClientConnection().constructPlatformComponentProfileFactory(this.getIdentityPublicKey(),
-                    this.getAlias().toLowerCase(),
-                    this.getName(),
-                    this.getNetworkServiceType(),
-                    this.getPlatformComponentType(),
-                    this.getExtraData());
-
-            try {
-                    /*
-                     * Register me
-                     */
-                wsCommunicationsCloudClientManager.getCommunicationsCloudClientConnection().registerComponentForCommunication(this.getNetworkServiceType(), platformComponentProfileToReconnect);
-
-            } catch (CantRegisterComponentException e) {
-                e.printStackTrace();
-            }
-
-                /*
-                 * Configure my new profile
-                 */
-            this.setPlatformComponentProfilePluginRoot(platformComponentProfileToReconnect);
-
-                /*
-                 * Initialize the connection manager
-                 */
-            this.initializeCommunicationNetworkServiceConnectionManager();
-        }
     }
 
 

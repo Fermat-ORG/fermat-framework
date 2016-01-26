@@ -67,7 +67,7 @@ import com.bitdubai.fermat_dap_api.layer.dap_actor_network_service.redeem_point.
 import com.bitdubai.fermat_dap_plugin.layer.actor.network.service.asset.redeem_point.developer.bitdubai.version_1.agents.AssetRedeemPointActorNetworkServiceAgent;
 import com.bitdubai.fermat_dap_plugin.layer.actor.network.service.asset.redeem_point.developer.bitdubai.version_1.communications.CommunicationNetworkServiceConnectionManager;
 import com.bitdubai.fermat_dap_plugin.layer.actor.network.service.asset.redeem_point.developer.bitdubai.version_1.communications.CommunicationNetworkServiceLocal;
-import com.bitdubai.fermat_dap_plugin.layer.actor.network.service.asset.redeem_point.developer.bitdubai.version_1.communications.CommunicationRegistrationProcessNetworkServiceAgent;
+import com.bitdubai.fermat_p2p_api.layer.all_definition.common.network_services.template.structure.CommunicationRegistrationProcessNetworkServiceAgent;
 import com.bitdubai.fermat_dap_plugin.layer.actor.network.service.asset.redeem_point.developer.bitdubai.version_1.database.communications.CommunicationNetworkServiceDatabaseConstants;
 import com.bitdubai.fermat_dap_plugin.layer.actor.network.service.asset.redeem_point.developer.bitdubai.version_1.database.communications.CommunicationNetworkServiceDatabaseFactory;
 import com.bitdubai.fermat_dap_plugin.layer.actor.network.service.asset.redeem_point.developer.bitdubai.version_1.database.communications.CommunicationNetworkServiceDeveloperDatabaseFactory;
@@ -802,10 +802,10 @@ public class AssetRedeemPointActorNetworkServicePluginRoot extends AbstractNetwo
     @Override
     public void handleCompleteComponentRegistrationNotificationEvent(PlatformComponentProfile platformComponentProfileRegistered) {
 
-        if (platformComponentProfileRegistered.getPlatformComponentType() == PlatformComponentType.COMMUNICATION_CLOUD_CLIENT && this.register){
+        if (platformComponentProfileRegistered.getPlatformComponentType() == PlatformComponentType.COMMUNICATION_CLOUD_CLIENT && !this.register){
 
-            if (communicationRegistrationProcessNetworkServiceAgent.isAlive()) {
-                communicationRegistrationProcessNetworkServiceAgent.interrupt();
+            if(communicationRegistrationProcessNetworkServiceAgent != null && communicationRegistrationProcessNetworkServiceAgent.getActive()){
+                communicationRegistrationProcessNetworkServiceAgent.stop();
                 communicationRegistrationProcessNetworkServiceAgent = null;
             }
 
@@ -997,10 +997,12 @@ public class AssetRedeemPointActorNetworkServicePluginRoot extends AbstractNetwo
     public void handleClientConnectionCloseNotificationEvent(FermatEvent fermatEvent) {
 
         if (fermatEvent instanceof ClientConnectionCloseNotificationEvent) {
-            this.register = false;
+            this.register = Boolean.FALSE;
 
-            if (communicationNetworkServiceConnectionManager != null)
+            if(communicationNetworkServiceConnectionManager != null) {
                 communicationNetworkServiceConnectionManager.closeAllConnection();
+                communicationNetworkServiceConnectionManager.stop();
+            }
         }
 
     }
@@ -1014,6 +1016,8 @@ public class AssetRedeemPointActorNetworkServicePluginRoot extends AbstractNetwo
         if (communicationNetworkServiceConnectionManager != null)
             communicationNetworkServiceConnectionManager.stop();
 
+        this.register = Boolean.FALSE;
+
     }
 
     /*
@@ -1022,48 +1026,13 @@ public class AssetRedeemPointActorNetworkServicePluginRoot extends AbstractNetwo
     @Override
     public void handleClientSuccessfullReconnectNotificationEvent(FermatEvent fermatEvent) {
 
-        if (communicationNetworkServiceConnectionManager != null) {
+        if (communicationNetworkServiceConnectionManager == null){
+            this.initializeCommunicationNetworkServiceConnectionManager();
+        }else{
             communicationNetworkServiceConnectionManager.restart();
         }
 
-
-        if(communicationRegistrationProcessNetworkServiceAgent != null && !this.register){
-
-            if(communicationRegistrationProcessNetworkServiceAgent.isAlive()){
-                communicationRegistrationProcessNetworkServiceAgent.interrupt();
-                communicationRegistrationProcessNetworkServiceAgent = null;
-            }
-
-                   /*
-                 * Construct my profile and register me
-                 */
-                PlatformComponentProfile platformComponentProfileToReconnect = wsCommunicationsCloudClientManager.getCommunicationsCloudClientConnection().constructPlatformComponentProfileFactory(this.getIdentityPublicKey(),
-                        this.getAlias().toLowerCase(),
-                        this.getName(),
-                        this.getNetworkServiceType(),
-                        this.getPlatformComponentType(),
-                        this.getExtraData());
-
-                try {
-                    /*
-                     * Register me
-                     */
-                    wsCommunicationsCloudClientManager.getCommunicationsCloudClientConnection().registerComponentForCommunication(this.getNetworkServiceType(), platformComponentProfileToReconnect);
-
-                } catch (CantRegisterComponentException e) {
-                    e.printStackTrace();
-                }
-
-                /*
-                 * Configure my new profile
-                 */
-                this.setPlatformComponentProfilePluginRoot(platformComponentProfileToReconnect);
-
-                /*
-                 * Initialize the connection manager
-                 */
-                this.initializeCommunicationNetworkServiceConnectionManager();
-        }
+        this.register = Boolean.TRUE;
     }
 
     /**
