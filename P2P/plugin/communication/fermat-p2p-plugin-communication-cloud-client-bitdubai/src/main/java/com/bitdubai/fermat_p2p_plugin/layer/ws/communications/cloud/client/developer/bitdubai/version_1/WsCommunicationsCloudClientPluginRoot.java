@@ -80,8 +80,7 @@ public class WsCommunicationsCloudClientPluginRoot extends AbstractPlugin implem
      * Represent the SERVER_IP
      */
     public static final String SERVER_IP = ServerConf.SERVER_IP_PRODUCTION;
-//    public static final String SERVER_IP = ServerConf.SERVER_IP_DEVELOPER_LOCAL;
-
+ //   public static final String SERVER_IP = ServerConf.SERVER_IP_DEVELOPER_LOCAL;
 
     /**
      * Represent the executor
@@ -212,9 +211,9 @@ public class WsCommunicationsCloudClientPluginRoot extends AbstractPlugin implem
                         /*
                          * Try to connect whit the cloud server
                          */
-                        System.out.println(" WsCommunicationsCloudClientPluginRoot - ===================================");
-                        System.out.println(" WsCommunicationsCloudClientPluginRoot - Connecting with the cloud server...");
-                        System.out.println(" WsCommunicationsCloudClientPluginRoot - ===================================");
+                        System.out.println(" WsCommunicationsCloudClientPluginRoot - ================================================================");
+                        System.out.println(" WsCommunicationsCloudClientPluginRoot - Connecting with the cloud server. Server IP ("+SERVER_IP+")");
+                        System.out.println(" WsCommunicationsCloudClientPluginRoot - ================================================================");
 
 
                         new Thread(new Runnable() {
@@ -261,9 +260,9 @@ public class WsCommunicationsCloudClientPluginRoot extends AbstractPlugin implem
      */
     public void connectClient() throws URISyntaxException, IOException, DeploymentException {
 
-        System.out.println(" WsCommunicationsCloudClientPluginRoot - ***********************************");
-        System.out.println(" WsCommunicationsCloudClientPluginRoot - ReConnecting with the cloud server...");
-        System.out.println(" WsCommunicationsCloudClientPluginRoot - ***********************************");
+        System.out.println(" WsCommunicationsCloudClientPluginRoot - ****************************************************************");
+        System.out.println(" WsCommunicationsCloudClientPluginRoot - ReConnecting with the cloud server. Server IP ("+SERVER_IP+")");
+        System.out.println(" WsCommunicationsCloudClientPluginRoot - ****************************************************************");
 
         if (wsCommunicationsTyrusCloudClientConnection != null){
             wsCommunicationsTyrusCloudClientConnection.closeMainConnection();
