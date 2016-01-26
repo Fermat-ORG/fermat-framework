@@ -5,6 +5,8 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.interfaces.FermatEnum;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantCreateFileException;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantPersistFileException;
 import com.bitdubai.fermat_api.layer.world.interfaces.Currency;
+import com.bitdubai.fermat_cbp_api.all_definition.enums.ContractDetailType;
+import com.bitdubai.fermat_cbp_api.all_definition.enums.CurrencyType;
 import com.bitdubai.fermat_cbp_api.all_definition.negotiation.NegotiationBankAccount;
 import com.bitdubai.fermat_cbp_api.layer.actor.crypto_broker.exceptions.CantGetListActorExtraDataException;
 import com.bitdubai.fermat_cbp_api.layer.contract.customer_broker_purchase.exceptions.CantGetListCustomerBrokerContractPurchaseException;
@@ -15,6 +17,7 @@ import com.bitdubai.fermat_cbp_api.layer.negotiation.customer_broker_purchase.ex
 import com.bitdubai.fermat_cbp_api.layer.negotiation.customer_broker_purchase.exceptions.CantCreateCustomerBrokerPurchaseNegotiationException;
 import com.bitdubai.fermat_cbp_api.layer.negotiation.customer_broker_purchase.exceptions.CantCreateLocationPurchaseException;
 import com.bitdubai.fermat_cbp_api.layer.negotiation.customer_broker_purchase.exceptions.CantDeleteBankAccountPurchaseException;
+import com.bitdubai.fermat_cbp_api.layer.negotiation.customer_broker_purchase.exceptions.CantGetListPurchaseNegotiationsException;
 import com.bitdubai.fermat_cbp_api.layer.negotiation.customer_broker_purchase.exceptions.CantUpdateBankAccountPurchaseException;
 import com.bitdubai.fermat_cbp_api.layer.negotiation_transaction.customer_broker_new.exceptions.CantCreateCustomerBrokerNewPurchaseNegotiationTransactionException;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.common.interfaces.ClauseInformation;
@@ -179,4 +182,40 @@ public interface CryptoCustomerWalletManager extends WalletManager {
     CustomerBrokerContractPurchase getCustomerBrokerContractPurchaseByNegotiationId(
             String negotiationId
     ) throws CantGetListCustomerBrokerContractPurchaseException;
+
+    /**
+     * This method returns the currency type from a contract
+     * @param customerBrokerContractPurchase
+     * @param contractDetailType
+     * @return
+     * @throws CantGetListPurchaseNegotiationsException
+     */
+    CurrencyType getCurrencyTypeFromContract(
+            CustomerBrokerContractPurchase customerBrokerContractPurchase,
+            ContractDetailType contractDetailType) throws
+            CantGetListPurchaseNegotiationsException;
+
+    /**
+     * This method returns a string with the currency code.
+     * @param customerBrokerContractPurchase
+     * @param contractDetailType
+     * @return
+     * @throws CantGetListPurchaseNegotiationsException
+     */
+    /*String getCurrencyCodeFromContract(
+            CustomerBrokerContractPurchase customerBrokerContractPurchase,
+            ContractDetailType contractDetailType) throws
+            CantGetListPurchaseNegotiationsException;*/
+
+    /**
+     * This method returns the currency amount
+     * @param customerBrokerContractPurchase
+     * @param contractDetailType
+     * @return
+     * @throws CantGetListPurchaseNegotiationsException
+     */
+    /*float getCurrencyAmountFromContract(
+            CustomerBrokerContractPurchase customerBrokerContractPurchase,
+            ContractDetailType contractDetailType) throws
+            CantGetListPurchaseNegotiationsException;*/
 }
