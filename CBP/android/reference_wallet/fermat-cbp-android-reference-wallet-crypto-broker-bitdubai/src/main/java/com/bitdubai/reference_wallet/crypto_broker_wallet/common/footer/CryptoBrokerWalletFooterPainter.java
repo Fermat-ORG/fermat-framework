@@ -116,14 +116,12 @@ public class CryptoBrokerWalletFooterPainter implements FooterViewPainter, ViewP
         ErrorManager errorManager = session.getErrorManager();
 
         try {
-            data.addAll(TestData.getStockStadisticsData());
+            CryptoBrokerWalletManager walletManager = session.getModuleManager().getCryptoBrokerWallet(session.getAppPublicKey());
+            List<CryptoBrokerWalletAssociatedSetting> associatedWallets = walletManager.getCryptoBrokerWalletAssociatedSettings(session.getAppPublicKey());
 
-//            CryptoBrokerWalletManager walletManager = session.getModuleManager().getCryptoBrokerWallet(session.getAppPublicKey());
-//            List<CryptoBrokerWalletAssociatedSetting> associatedWallets = walletManager.getCryptoBrokerWalletAssociatedSettings(session.getAppPublicKey());
-//
-//            for (CryptoBrokerWalletAssociatedSetting associatedWallet : associatedWallets) {
-//                data.add(new StockStatisticsData(associatedWallet, session));
-//            }
+            for (CryptoBrokerWalletAssociatedSetting associatedWallet : associatedWallets) {
+                data.add(new StockStatisticsData(associatedWallet, session));
+            }
 
         } catch (Exception e) {
 

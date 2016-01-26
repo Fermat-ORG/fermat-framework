@@ -87,7 +87,7 @@
                     android:layout_marginLeft="8dp"
                     android:layout_marginStart="8dp"
                     android:gravity="center"
-                    android:text="start"
+                    android:text="open"
                     android:textColor="#222"
                     android:textSize="12sp"/>
 
@@ -103,7 +103,7 @@
                     android:layout_toEndOf="@+id/start_textView"
                     android:layout_toRightOf="@+id/start_textView"
                     android:gravity="center"
-                    android:text="16.00"
+                    android:text="0.00"
                     android:textColor="#222"
                     android:textSize="22sp"/>
 
@@ -123,7 +123,7 @@
                     android:layout_marginLeft="8dp"
                     android:layout_marginStart="8dp"
                     android:gravity="center"
-                    android:text="end"
+                    android:text="close"
                     android:textColor="#FFF"
                     android:textSize="12sp"/>
 
@@ -139,7 +139,7 @@
                     android:layout_toEndOf="@+id/end_textView"
                     android:layout_toRightOf="@+id/end_textView"
                     android:gravity="center"
-                    android:text="13.00"
+                    android:text="0.00"
                     android:textColor="#FFF"
                     android:textSize="18sp"/>
 
