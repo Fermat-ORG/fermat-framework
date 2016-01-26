@@ -16,6 +16,7 @@ import com.bitdubai.reference_wallet.crypto_customer_wallet.common.holders.start
 import com.bitdubai.reference_wallet.crypto_customer_wallet.common.holders.start_negotiation.ExchangeRateViewHolder;
 import com.bitdubai.reference_wallet.crypto_customer_wallet.common.holders.start_negotiation.FooterViewHolder;
 import com.bitdubai.reference_wallet.crypto_customer_wallet.common.holders.start_negotiation.SingleChoiceViewHolder;
+import com.bitdubai.reference_wallet.crypto_customer_wallet.common.models.BrokerCurrencyQuotationImpl;
 import com.bitdubai.reference_wallet.crypto_customer_wallet.common.models.EmptyCustomerBrokerNegotiationInformation;
 import com.bitdubai.reference_wallet.crypto_customer_wallet.fragments.start_negotiation.StartNegotiationActivityFragment;
 import com.bitdubai.reference_wallet.crypto_customer_wallet.util.FragmentsCommons;
@@ -38,6 +39,7 @@ public class StartNegotiationAdapter extends FermatAdapter<ClauseInformation, Fe
     private CustomerBrokerNegotiationInformation negotiationInformation;
     private StartNegotiationActivityFragment footerListener;
     ClauseViewHolder.Listener clauseListener;
+    private List <BrokerCurrencyQuotationImpl> marketRateList;
 
 
     public StartNegotiationAdapter(Context context, CustomerBrokerNegotiationInformation negotiationInformation ) {
@@ -68,8 +70,10 @@ public class StartNegotiationAdapter extends FermatAdapter<ClauseInformation, Fe
                 return new SingleChoiceViewHolder(itemView);
 
             case TYPE_ITEM_EXCHANGE_RATE:
-                return new ExchangeRateViewHolder(itemView);
-
+//                return new ExchangeRateViewHolder(itemView);
+                final ExchangeRateViewHolder exchangeRateViewHolder = new ExchangeRateViewHolder(itemView);
+                exchangeRateViewHolder.setMarketRateList(marketRateList);
+                return exchangeRateViewHolder;
             case TYPE_ITEM_AMOUNT_TO_BUY:
                 return new AmountToBuyViewHolder(itemView);
 
@@ -182,6 +186,10 @@ public class StartNegotiationAdapter extends FermatAdapter<ClauseInformation, Fe
 
     public void setClauseListener(ClauseViewHolder.Listener clauseListener) {
         this.clauseListener = clauseListener;
+    }
+
+    public void setMarketRateList(List <BrokerCurrencyQuotationImpl> marketRateList){
+        this.marketRateList = marketRateList;
     }
 
     private List<ClauseInformation> buildListOfItems() {

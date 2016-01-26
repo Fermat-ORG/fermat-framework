@@ -397,7 +397,7 @@ public class TestData {
     }
 
     //LIST OF BROKER CURRENCY QUOTATUION  TEST
-    public static List <BrokerCurrencyQuotationImpl> getExchangeRateForCurrencyTest(){
+    public static List <BrokerCurrencyQuotationImpl> getMarketRateForCurrencyTest(){
 
         List <BrokerCurrencyQuotationImpl> list = new ArrayList<>();
 

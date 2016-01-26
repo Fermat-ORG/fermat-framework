@@ -108,7 +108,7 @@ public class StartNegotiationActivityFragment extends AbstractFermatFragment<Cry
             walletManager = moduleManager.getCryptoCustomerWallet(appSession.getAppPublicKey());
             errorManager = appSession.getErrorManager();
 
-            brokerCurrencyQuotationlist = TestData.getExchangeRateForCurrencyTest();
+            brokerCurrencyQuotationlist = TestData.getMarketRateForCurrencyTest();
             brokerCurrencyQuotation = new BrokerCurrencyQuotation(brokerCurrencyQuotationlist);
 
             negotiationInfo = createNewEmptyNegotiationInfo();
@@ -295,6 +295,7 @@ public class StartNegotiationActivityFragment extends AbstractFermatFragment<Cry
         adapter = new StartNegotiationAdapter(getActivity(), negotiationInfo);
         adapter.setFooterListener(this);
         adapter.setClauseListener(this);
+        adapter.setMarketRateList(brokerCurrencyQuotationlist);
 
         recyclerView.setAdapter(adapter);
     }
@@ -417,7 +418,7 @@ public class StartNegotiationActivityFragment extends AbstractFermatFragment<Cry
 
             final BigDecimal exchangeRate   = new BigDecimal(clauses.get(ClauseType.EXCHANGE_RATE).getValue().replace(",", ""));
             final BigDecimal amountToPay    = new BigDecimal(clauses.get(ClauseType.BROKER_CURRENCY_QUANTITY).getValue().replace(",", ""));
-            final BigDecimal amountToBuy    = amountToPay.divide(exchangeRate,4, RoundingMode.HALF_UP);
+            final BigDecimal amountToBuy    = amountToPay.divide(exchangeRate,6, RoundingMode.HALF_UP);
 
             final String amountToBuyStr = DecimalFormat.getInstance().format(amountToBuy.doubleValue());
             final ClauseInformation brokerCurrencyQuantity = clauses.get(ClauseType.CUSTOMER_CURRENCY_QUANTITY);
@@ -511,49 +512,5 @@ public class StartNegotiationActivityFragment extends AbstractFermatFragment<Cry
 
     }
 
-    /*
-    //LIST OF BROKER CURRENCY QUOTATUION  TEST
-    public List <BrokerCurrencyQuotationImpl> getExchangeRateForCurrencyTest(){
-
-        List <BrokerCurrencyQuotationImpl> list = new ArrayList<>();
-
-        list.add(new BrokerCurrencyQuotationImpl(CryptoCurrency.BITCOIN.getCode(), FiatCurrency.ARGENTINE_PESO.getCode(),       "100000"));
-        list.add(new BrokerCurrencyQuotationImpl(CryptoCurrency.BITCOIN.getCode(), FiatCurrency.VENEZUELAN_BOLIVAR.getCode(),   "350000"));
-        list.add(new BrokerCurrencyQuotationImpl(CryptoCurrency.BITCOIN.getCode(), FiatCurrency.US_DOLLAR.getCode(),            "410"));
-        list.add(new BrokerCurrencyQuotationImpl(CryptoCurrency.BITCOIN.getCode(), CryptoCurrency.LITECOIN.getCode(),           "130"));
-
-        list.add(new BrokerCurrencyQuotationImpl(FiatCurrency.US_DOLLAR.getCode(), FiatCurrency.VENEZUELAN_BOLIVAR.getCode(),   "950"));
-        list.add(new BrokerCurrencyQuotationImpl(FiatCurrency.US_DOLLAR.getCode(), FiatCurrency.ARGENTINE_PESO.getCode(),       "390"));
-
-        return list;
-    }
-    */
-/*
-    public BrokerCurrencyQuotationImpl getBrokerCurrencyQuotation(String currencyOver, String currencyUnder){
-
-        BrokerCurrencyQuotationImpl currencyQuotation = getQuotation(currencyOver,currencyUnder);
-
-        if(currencyQuotation == null) {
-            currencyQuotation = getQuotation(currencyUnder, currencyOver);
-            if (currencyQuotation != null) {
-                final BigDecimal one = new BigDecimal("1");
-                BigDecimal exchangeRate = new BigDecimal(currencyQuotation.getExchangeRate());
-                exchangeRate = one.divide(exchangeRate, 4, RoundingMode.HALF_UP);
-                final String exchangeRateStr = DecimalFormat.getInstance().format(exchangeRate.doubleValue());
-                currencyQuotation.setExchangeRate(exchangeRateStr);
-            }
-        }
-
-        return currencyQuotation;
-    }
-
-    private BrokerCurrencyQuotationImpl getQuotation(String currencyAlfa, String currencyBeta) {
-
-        for (BrokerCurrencyQuotationImpl item : brokerCurrencyQuotationlist)
-            if ((item.getCurrencyOver().equals(currencyAlfa)) && (item.getCurrencyUnder().equals(currencyBeta))) return item;
-
-        return null;
-    }
-    */
 
 }

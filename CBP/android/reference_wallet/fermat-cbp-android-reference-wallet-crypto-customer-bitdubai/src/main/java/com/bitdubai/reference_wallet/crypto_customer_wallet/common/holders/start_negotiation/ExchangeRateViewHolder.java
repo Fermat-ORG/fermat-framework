@@ -8,8 +8,11 @@ import com.bitdubai.fermat_cbp_api.all_definition.enums.ClauseType;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.common.interfaces.ClauseInformation;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.common.interfaces.CustomerBrokerNegotiationInformation;
 import com.bitdubai.reference_wallet.crypto_customer_wallet.R;
+import com.bitdubai.reference_wallet.crypto_customer_wallet.common.models.BrokerCurrencyQuotation;
+import com.bitdubai.reference_wallet.crypto_customer_wallet.common.models.BrokerCurrencyQuotationImpl;
 
 import java.text.NumberFormat;
+import java.util.List;
 import java.util.Map;
 
 
@@ -23,6 +26,7 @@ public class ExchangeRateViewHolder extends ClauseViewHolder implements View.OnC
     private TextView yourExchangeRateValueLeftSide;
     private TextView yourExchangeRateValueRightSide;
     private FermatButton yourExchangeRateValue;
+    private List<BrokerCurrencyQuotationImpl> marketRateList;
 
     public ExchangeRateViewHolder(View itemView) {
         super(itemView);
@@ -32,6 +36,7 @@ public class ExchangeRateViewHolder extends ClauseViewHolder implements View.OnC
         yourExchangeRateValue = (FermatButton) itemView.findViewById(R.id.ccw_exchange_rate_value);
         markerRateReference = (TextView) itemView.findViewById(R.id.ccw_market_rate_value);
         yourExchangeRateValue.setOnClickListener(this);
+
     }
 
     @Override
@@ -39,12 +44,13 @@ public class ExchangeRateViewHolder extends ClauseViewHolder implements View.OnC
         super.bindData(negotiationInformation, clause, clausePosition);
 
         final Map<ClauseType, ClauseInformation> clauses = negotiationInformation.getClauses();
+
         final ClauseInformation currencyToBuy = clauses.get(ClauseType.CUSTOMER_CURRENCY);
         final ClauseInformation currencyToPay = clauses.get(ClauseType.BROKER_CURRENCY);
-        final ClauseInformation exchangeRate = clauses.get(ClauseType.BROKER_CURRENCY);
+        final ClauseInformation exchangeRate = clauses.get(ClauseType.EXCHANGE_RATE);
 
 //        double marketRate = 212.48; // TODO cambiar por valor que devuelve el proveedor asociado a la wallet para este par de monedas
-        double marketRate = Double.parseDouble(exchangeRate.getValue());
+        double marketRate = Double.parseDouble(getMarketRate(clauses).replace(",",""));
 
         String formattedMarketRate = NumberFormat.getInstance().format(marketRate);
 
@@ -79,6 +85,21 @@ public class ExchangeRateViewHolder extends ClauseViewHolder implements View.OnC
     @Override
     protected int getTitleTextViewRes() {
         return R.id.ccw_card_view_title;
+    }
+
+    public void setMarketRateList(List <BrokerCurrencyQuotationImpl> marketRateList){
+        this.marketRateList = marketRateList;
+    }
+
+    private String getMarketRate(Map<ClauseType, ClauseInformation> clauses){
+
+        BrokerCurrencyQuotation brokerCurrencyQuotation = new BrokerCurrencyQuotation(marketRateList);
+        String brokerMarketRate = brokerCurrencyQuotation.getExchangeRate(
+                clauses.get(ClauseType.CUSTOMER_CURRENCY).getValue(),
+                clauses.get(ClauseType.BROKER_CURRENCY).getValue()
+        );
+
+        return brokerMarketRate;
     }
 
 }
