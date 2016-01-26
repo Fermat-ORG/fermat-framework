@@ -233,18 +233,17 @@ public class AddConnectionFragment extends FermatWalletListFragment<CryptoWallet
                                     cryptoWalletIntraUserActor.getProfileImage(),
                                     Actors.INTRA_USER,
                                     referenceWalletSession.getIntraUserModuleManager().getPublicKey()
-                                    ,appSession.getAppPublicKey(),
+                                    , appSession.getAppPublicKey(),
                                     CryptoCurrency.BITCOIN,
                                     BlockchainNetworkType.DEFAULT);
                             Toast.makeText(getActivity(),"Contact Created",Toast.LENGTH_SHORT).show();
-                            onRefresh();
                         }
-
                     }catch (Exception e){
                         Toast.makeText(getActivity(),"Please try again later",Toast.LENGTH_SHORT).show();
                         errorManager.reportUnexpectedUIException(UISource.VIEW, UnexpectedUIExceptionSeverity.UNSTABLE, FermatException.wrapException(e));
                     }
                 }
+                onRefresh();
                 return true;
             }
 

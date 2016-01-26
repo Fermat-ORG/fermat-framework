@@ -853,7 +853,6 @@ public class IntraActorNetworkServicePluginRoot extends AbstractPlugin implement
         try {
             ActorNetworkServiceRecord actorNetworkServiceRecord = ActorNetworkServiceRecord.fronJson(fermatMessage.getContent());
 
-
             if (actorNetworkServiceRecord.getActorProtocolState()==ActorProtocolState.DONE) {
                 // close connection, sender is the destination
                 System.out.println("ENTRANDO EN EL METODO PARA CERRAR LA CONEXION DEL HANDLE NEW SENT MESSAGE NOTIFICATION");
@@ -861,6 +860,10 @@ public class IntraActorNetworkServicePluginRoot extends AbstractPlugin implement
                 //   communicationNetworkServiceConnectionManager.closeConnection(actorNetworkServiceRecord.getActorDestinationPublicKey());
                 actorNetworkServiceRecordedAgent.getPoolConnectionsWaitingForResponse().remove(actorNetworkServiceRecord.getActorDestinationPublicKey());
             }
+
+            actorNetworkServiceRecord.setActorProtocolState(ActorProtocolState.DONE);
+            getOutgoingNotificationDao().update(actorNetworkServiceRecord);
+
 
             System.out.println("SALIENDO DEL HANDLE NEW SENT MESSAGE NOTIFICATION");
 
@@ -1361,30 +1364,90 @@ public class IntraActorNetworkServicePluginRoot extends AbstractPlugin implement
     @Override
     public void handleClientSuccessfullReconnectNotificationEvent(FermatEvent fermatEvent) {
 
-        System.out.println("IntraActorNetworkServicePluginRoot - handleClientSuccessfullReconnectNotificationEvent");
+        System.out.println("SuccessfullReconnectNotificationEvent");
 
-        try {
 
-            if (communicationNetworkServiceConnectionManager == null){
-                this.initializeCommunicationNetworkServiceConnectionManager();
-            }else{
-                communicationNetworkServiceConnectionManager.restart();
+        if (communicationNetworkServiceConnectionManager == null) {
+            this.initializeCommunicationNetworkServiceConnectionManager();
+        } else {
+            communicationNetworkServiceConnectionManager.restart();
+        }
+
+        if (communicationRegistrationProcessNetworkServiceAgent != null && !this.register) {
+
+            if (communicationRegistrationProcessNetworkServiceAgent.getActive()) {
+                try {
+                    communicationRegistrationProcessNetworkServiceAgent.stop();
+                } catch (Exception e) {
+
+                }
+                communicationRegistrationProcessNetworkServiceAgent = null;
             }
 
-            if(actorNetworkServiceRecordedAgent == null) {
-                initializeIntraActorAgent();
-            }else {
-                actorNetworkServiceRecordedAgent.start();
+                /*
+                 * Construct my profile and register me
+                 */
+            PlatformComponentProfile platformComponentProfileToReconnect = wsCommunicationsCloudClientManager.getCommunicationsCloudClientConnection().constructPlatformComponentProfileFactory(this.getIdentityPublicKey(),
+                    this.getAlias().toLowerCase(),
+                    this.getName(),
+                    this.getNetworkServiceType(),
+                    this.getPlatformComponentType(),
+                    this.getExtraData());
+
+            try {
+                    /*
+                     * Register me
+                     */
+                wsCommunicationsCloudClientManager.getCommunicationsCloudClientConnection().registerComponentForCommunication(this.getNetworkServiceType(), platformComponentProfileToReconnect);
+
+            } catch (CantRegisterComponentException e) {
+                e.printStackTrace();
             }
+
+        }
+
+            try {
+
+
+                if (actorNetworkServiceRecordedAgent == null) {
+                    initializeIntraActorAgent();
+                } else {
+                    actorNetworkServiceRecordedAgent.start();
+                }
 
             /*
              * Mark as register
              */
-            this.register = Boolean.TRUE;
+                this.register = Boolean.TRUE;
 
-        } catch (CantStartAgentException e) {
-            e.printStackTrace();
-        }
+
+                try {
+
+                    /**
+                     * Register identities
+                     */
+
+                    CommunicationsClientConnection communicationsClientConnection = wsCommunicationsCloudClientManager.getCommunicationsCloudClientConnection();
+
+
+                    for (PlatformComponentProfile platformComponentProfile : actorsToRegisterCache) {
+
+                        communicationsClientConnection.registerComponentForCommunication(networkServiceType, platformComponentProfile);
+
+                        System.out.print("-----------------------\n" +
+                                "INTENTANDO REGISTRAR ACTOR  -----------------------\n" +
+                                "-----------------------\n A: " + platformComponentProfile.getAlias());
+
+
+                    }
+
+                } catch (CantRegisterComponentException e) {
+                    e.printStackTrace();
+                }
+
+            } catch (CantStartAgentException e) {
+                e.printStackTrace();
+            }
 
     }
 

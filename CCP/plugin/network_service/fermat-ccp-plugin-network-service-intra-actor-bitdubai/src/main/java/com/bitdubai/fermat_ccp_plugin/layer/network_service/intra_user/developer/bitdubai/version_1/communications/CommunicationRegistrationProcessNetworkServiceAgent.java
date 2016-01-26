@@ -118,7 +118,7 @@ public class CommunicationRegistrationProcessNetworkServiceAgent {
                         active = Boolean.FALSE;
                     }
 
-                }else if(networkService.isRegister()){
+                }else {
                     /*
                      * Stop the internal threads
                      */
