@@ -110,5 +110,4 @@ public interface AssetVaultManager extends FermatManager, PlatformCryptoVault {
      * @throws CantCreateBitcoinTransactionException
      */
     String createBitcoinTransaction (String inputTransaction, CryptoAddress addressTo) throws CantCreateBitcoinTransactionException;
-
 }

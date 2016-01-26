@@ -1,7 +1,6 @@
 package com.bitdubai.reference_wallet.bank_money_wallet.fragments.add_account;
 
 import android.os.Bundle;
-import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -21,7 +20,6 @@ import com.bitdubai.reference_wallet.bank_money_wallet.session.BankMoneyWalletSe
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Random;
 
 /**
  * Created by memo on 03/01/16.
@@ -84,7 +82,12 @@ public class AddAccountFragment extends AbstractFermatFragment implements View.O
         currencySpinner = (Spinner) layout.findViewById(R.id.bnk_add_account_currency_spinner);
         currencySpinner.setAdapter(currencySpinnerAdapter);
         currencySpinner.setOnItemSelectedListener(this);
+        configureToolbar();
         return layout;
+    }
+
+    private void configureToolbar() {
+        getToolbar().setBackgroundColor(getResources().getColor(R.color.background_header_navy));
     }
 
     @Override

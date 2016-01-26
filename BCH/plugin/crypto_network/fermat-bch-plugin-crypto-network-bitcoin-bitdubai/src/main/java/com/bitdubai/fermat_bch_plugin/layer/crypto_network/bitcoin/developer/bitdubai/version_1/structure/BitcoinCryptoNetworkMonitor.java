@@ -28,6 +28,7 @@ import com.google.common.util.concurrent.MoreExecutors;
 
 import org.bitcoinj.core.Block;
 import org.bitcoinj.core.BlockChain;
+import org.bitcoinj.core.Coin;
 import org.bitcoinj.core.NetworkParameters;
 import org.bitcoinj.core.PeerAddress;
 import org.bitcoinj.core.PeerGroup;
@@ -35,6 +36,9 @@ import org.bitcoinj.core.Sha256Hash;
 import org.bitcoinj.core.StoredBlock;
 import org.bitcoinj.core.Transaction;
 import org.bitcoinj.core.TransactionBroadcast;
+import org.bitcoinj.core.TransactionConfidence;
+import org.bitcoinj.core.TransactionInput;
+import org.bitcoinj.core.TransactionOutput;
 import org.bitcoinj.core.Wallet;
 import org.bitcoinj.net.discovery.DnsDiscovery;
 import org.bitcoinj.params.RegTestParams;
@@ -469,29 +473,41 @@ public class BitcoinCryptoNetworkMonitor implements Agent {
      * @param txHash
      */
     public void cancelBroadcast(String txHash) throws CantCancellBroadcastTransactionException{
-        Sha256Hash sha256Hash = Sha256Hash.wrap(txHash);
-        Transaction transaction = wallet.getTransaction(sha256Hash);
-
-        if (transaction == null)
-            throw new CantCancellBroadcastTransactionException(CantCancellBroadcastTransactionException.DEFAULT_MESSAGE, null, "the specified transaction does not exists.", null);
-
-        /**
-         * clear the transaction
-         */
-        transaction.clearInputs();
-        transaction.clearOutputs();
-
-
-        /**
-         * mark the transaction as dead.
-         */
-        WalletTransaction walletTransaction = new WalletTransaction(WalletTransaction.Pool.DEAD, transaction);
-        wallet.addWalletTransaction(walletTransaction);
-
-
         try {
+            /**
+             * I will get the transaction
+             */
+            Sha256Hash sha256Hash = Sha256Hash.wrap(txHash);
+            Transaction transaction = wallet.getTransaction(sha256Hash);
+
+            if (transaction == null)
+                throw new CantCancellBroadcastTransactionException(CantCancellBroadcastTransactionException.DEFAULT_MESSAGE, null, "the specified transaction does not exists.", null);
+
+            if (transaction.getConfidence().getConfidenceType() != TransactionConfidence.ConfidenceType.PENDING)
+                throw new CantCancellBroadcastTransactionException(CantCancellBroadcastTransactionException.DEFAULT_MESSAGE, null, "The transaction was already broadcasted and Can't be cancelled.", null);
+
+            /**
+             * I will disconnect all inputs from the outpoint
+             */
+            for (TransactionInput input : transaction.getInputs()){
+                input.disconnect();
+            }
+
+            /**
+             * I will change all outputs values to zero
+             */
+            for (TransactionOutput output : transaction.getOutputs()){
+                output.setValue(Coin.ZERO);
+            }
+
+            /**
+             * do wallet maintenance
+             */
+            wallet.maybeCommitTx(transaction);
+            wallet.cleanup();
+
             wallet.saveToFile(walletFileName);
-        } catch (IOException e) {
+        } catch (Exception e) {
             throw new CantCancellBroadcastTransactionException(CantCancellBroadcastTransactionException.DEFAULT_MESSAGE, e, "Change in transaction could not be saved in wallet.", null);
         }
     }

@@ -25,11 +25,14 @@ import com.google.gson.JsonParser;
 import org.apache.commons.lang.ClassUtils;
 import org.apache.log4j.Logger;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Timer;
+
+import javax.websocket.CloseReason;
 
 /**
  * The Class <code>com.bitdubai.fermat_p2p_plugin.layer.ws.communications.cloud.server.developer.bitdubai.version_1.structure.processors.ComponentRegistrationRequestJettyPacketProcessor</code> this
@@ -156,7 +159,7 @@ public class ComponentRegistrationRequestJettyPacketProcessor extends FermatJett
      * Method that process the registration of the Communications
      * Cloud Client Component
      */
-    private void registerCommunicationsCloudClientComponent(final PlatformComponentProfile platformComponentProfileToRegister, final FermatPacket receiveFermatPacket, final ClientConnection clientConnection, final NetworkServiceType networkServiceTypeApplicant){
+    private void registerCommunicationsCloudClientComponent(final PlatformComponentProfile platformComponentProfileToRegister, final FermatPacket receiveFermatPacket, final ClientConnection clientConnection, final NetworkServiceType networkServiceTypeApplicant) throws IOException {
 
         LOG.info("registerCommunicationsCloudClientComponent");
 
@@ -172,108 +175,94 @@ public class ComponentRegistrationRequestJettyPacketProcessor extends FermatJett
          */
         if (MemoryCache.getInstance().getPendingRegisterClientConnectionsCache().containsKey(receiveFermatPacket.getSender())){
 
-
-
             FermatPacket fermatPacketRespond = null;
 
             /*
              * If exist is a reconnection, because the server don't notify when the
-             * socket are closed and the profile don't pass ot the stand by cache
+             * socket are closed and the profile don't pass ot the stand by cache or
+             * remove
              */
             if (MemoryCache.getInstance().getRegisteredCommunicationsCloudClientCache().containsKey(platformComponentProfileToRegister.getIdentityPublicKey())) {
 
-                 /*
-                 * Construct a fermat packet whit reconnect notification
-                 */
-                fermatPacketRespond = FermatPacketCommunicationFactory.constructFermatPacketEncryptedAndSinged(receiveFermatPacket.getSender(),   //Destination
-                                                                                                                clientConnection.getServerIdentity().getPublicKey(),                    //Sender
-                                                                                                                "Reconnect successfully",                          //Message Content
-                                                                                                                FermatPacketType.CLIENT_CONNECTION_SUCCESSFULLY_RECONNECT, //Packet type
-                                                                                                                clientConnection.getServerIdentity().getPrivateKey());
-
-
-            }else{
-
-                 /*
-                 * Add to the cache
-                 */
-                MemoryCache.getInstance().getRegisteredCommunicationsCloudClientCache().put(platformComponentProfileToRegister.getIdentityPublicKey(), platformComponentProfileToRegister);
-
-                /*
-                 * Remove from the PendingRegisterClientConnectionsCache
-                 */
-                MemoryCache.getInstance().getPendingRegisterClientConnectionsCache().remove(receiveFermatPacket.getSender()); //Remove using temporal client identity
-
-                /*
-                 * Add to the RegisteredClientConnectionsCache
-                 */
-                MemoryCache.getInstance().getRegisteredClientConnectionsCache().put(platformComponentProfileToRegister.getIdentityPublicKey(), clientConnection); //Add using the real client identity from profile
-
-                /*
-                 * Update the ClientIdentityByClientConnectionCache to the real identity
-                 */
-                clientConnection.setClientIdentity(platformComponentProfileToRegister.getIdentityPublicKey());
-
-
-                /*
-                 * Validate if no has a profile references in stand by, is have is a reconnection
-                 */
-                if(!MemoryCache.getInstance().getStandByProfileByClientIdentity().containsKey(platformComponentProfileToRegister.getIdentityPublicKey())){
-
-                    LOG.info("New registration");
-
-                /*
-                 * Construct the respond
-                 */
-                    Gson gson = new Gson();
-                    JsonObject jsonObject = new JsonObject();
-                    jsonObject.addProperty(JsonAttNamesConstants.NETWORK_SERVICE_TYPE, networkServiceTypeApplicant.toString());
-                    jsonObject.addProperty(JsonAttNamesConstants.PROFILE_TO_REGISTER, platformComponentProfileToRegister.toJson());
-
-                /*
-                 * Construct a fermat packet whit the same platform component profile and different FermatPacketType
-                 */
-                    fermatPacketRespond = FermatPacketCommunicationFactory.constructFermatPacketEncryptedAndSinged(receiveFermatPacket.getSender(),                  //Destination
-                            clientConnection.getServerIdentity().getPublicKey(),                    //Sender
-                            gson.toJson(jsonObject),                          //Message Content
-                            FermatPacketType.COMPLETE_COMPONENT_REGISTRATION, //Packet type
-                            clientConnection.getServerIdentity().getPrivateKey());  //Sender private key
-
-                }else{
-
-                    LOG.info("Registration for reconnection");
-
-                    if (MemoryCache.getInstance().getTimersByClientIdentity().containsKey(platformComponentProfileToRegister.getIdentityPublicKey())){
-                        LOG.info("Cancel timer task to clean references");
-                        Timer timer = MemoryCache.getInstance().getTimersByClientIdentity().get(platformComponentProfileToRegister.getIdentityPublicKey());
-                        timer.cancel();
-                    }
-
-                    /*
-                     * Get the profiles in stand by
-                     */
-                    List<PlatformComponentProfile> profilesInStandBy = MemoryCache.getInstance().getStandByProfileByClientIdentity().remove(platformComponentProfileToRegister.getIdentityPublicKey());
-
-                    /*
-                     * Move again to the registers profile cache
-                     */
-                    moveFromStandByToRegistersCache(profilesInStandBy);
-
-                    /*
-                     * Construct a fermat packet whit reconnect notification
-                     */
-                    fermatPacketRespond = FermatPacketCommunicationFactory.constructFermatPacketEncryptedAndSinged(receiveFermatPacket.getSender(),                  //Destination
-                            clientConnection.getServerIdentity().getPublicKey(),                    //Sender
-                            "Reconnect successfully",                          //Message Content
-                            FermatPacketType.CLIENT_CONNECTION_SUCCESSFULLY_RECONNECT, //Packet type
-                            clientConnection.getServerIdentity().getPrivateKey());
-
-                }
+                ClientConnection clientConnectionOld = MemoryCache.getInstance().getRegisteredClientConnectionsCache().remove(platformComponentProfileToRegister.getIdentityPublicKey());
+                clientConnectionOld.getSession().close(new CloseReason(CloseReason.CloseCodes.NORMAL_CLOSURE, "Connection is no more active"));
 
             }
 
+             /*
+             * Add to the cache
+             */
+            MemoryCache.getInstance().getRegisteredCommunicationsCloudClientCache().put(platformComponentProfileToRegister.getIdentityPublicKey(), platformComponentProfileToRegister);
 
+            /*
+             * Remove from the PendingRegisterClientConnectionsCache
+             */
+            MemoryCache.getInstance().getPendingRegisterClientConnectionsCache().remove(receiveFermatPacket.getSender()); //Remove using temporal client identity
 
+            /*
+             * Add to the RegisteredClientConnectionsCache
+             */
+            MemoryCache.getInstance().getRegisteredClientConnectionsCache().put(platformComponentProfileToRegister.getIdentityPublicKey(), clientConnection); //Add using the real client identity from profile
+
+            /*
+             * Update the ClientIdentityByClientConnectionCache to the real identity
+             */
+            clientConnection.setClientIdentity(platformComponentProfileToRegister.getIdentityPublicKey());
+
+            /*
+             * Validate if no has a profile references in stand by, is have is a reconnection
+             */
+            if(!MemoryCache.getInstance().getStandByProfileByClientIdentity().containsKey(platformComponentProfileToRegister.getIdentityPublicKey())){
+
+                LOG.info("New registration");
+
+            /*
+             * Construct the respond
+             */
+            Gson gson = new Gson();
+            JsonObject jsonObject = new JsonObject();
+            jsonObject.addProperty(JsonAttNamesConstants.NETWORK_SERVICE_TYPE, networkServiceTypeApplicant.toString());
+            jsonObject.addProperty(JsonAttNamesConstants.PROFILE_TO_REGISTER, platformComponentProfileToRegister.toJson());
+
+            /*
+             * Construct a fermat packet whit the same platform component profile and different FermatPacketType
+             */
+            fermatPacketRespond = FermatPacketCommunicationFactory.constructFermatPacketEncryptedAndSinged(receiveFermatPacket.getSender(),                  //Destination
+                                                                                                            clientConnection.getServerIdentity().getPublicKey(),                    //Sender
+                                                                                                            gson.toJson(jsonObject),                          //Message Content
+                                                                                                            FermatPacketType.COMPLETE_COMPONENT_REGISTRATION, //Packet type
+                                                                                                            clientConnection.getServerIdentity().getPrivateKey());  //Sender private key
+
+            }else{
+
+                LOG.info("Registration for reconnection");
+
+                if (MemoryCache.getInstance().getTimersByClientIdentity().containsKey(platformComponentProfileToRegister.getIdentityPublicKey())){
+                    LOG.info("Cancel timer task to clean references");
+                    Timer timer = MemoryCache.getInstance().getTimersByClientIdentity().get(platformComponentProfileToRegister.getIdentityPublicKey());
+                    timer.cancel();
+                }
+
+                /*
+                 * Get the profiles in stand by
+                 */
+                List<PlatformComponentProfile> profilesInStandBy = MemoryCache.getInstance().getStandByProfileByClientIdentity().remove(platformComponentProfileToRegister.getIdentityPublicKey());
+
+                /*
+                 * Move again to the registers profile cache
+                 */
+                moveFromStandByToRegistersCache(profilesInStandBy);
+
+                /*
+                 * Construct a fermat packet whit reconnect notification
+                 */
+                fermatPacketRespond = FermatPacketCommunicationFactory.constructFermatPacketEncryptedAndSinged(receiveFermatPacket.getSender(),                  //Destination
+                        clientConnection.getServerIdentity().getPublicKey(),                    //Sender
+                        "Reconnect successfully",                          //Message Content
+                        FermatPacketType.CLIENT_CONNECTION_SUCCESSFULLY_RECONNECT, //Packet type
+                        clientConnection.getServerIdentity().getPrivateKey());
+
+            }
 
             LOG.info("FermatPacketRespond to send = "+fermatPacketRespond.getFermatPacketType());
 

@@ -111,7 +111,7 @@ public class RedeemPointRedemptionMonitorAgent implements Agent {
         try {
             logManager.log(RedeemPointRedemptionDigitalAssetTransactionPluginRoot.getLogLevelByClass(this.getClass().getName()), "RedeemPoint Redemption Protocol Notification Agent: starting...", null, null);
             latch = new CountDownLatch(1);
-            agent = new RedemptionAgent(pluginId, pluginFileSystem, actorAssetUserManager);
+            agent = new RedemptionAgent(pluginId, pluginFileSystem, actorAssetUserManager, actorAssetIssuerManager);
             Thread agentThread = new Thread(agent);
             agentThread.start();
         } catch (Exception e) {
@@ -149,10 +149,11 @@ public class RedeemPointRedemptionMonitorAgent implements Agent {
         private volatile boolean agentRunning;
         private static final int WAIT_TIME = 20; //SECONDS
 
-        public RedemptionAgent(UUID pluginId, PluginFileSystem pluginFileSystem, ActorAssetUserManager actorAssetUserManager) throws CantSetObjectException {
+        public RedemptionAgent(UUID pluginId, PluginFileSystem pluginFileSystem, ActorAssetUserManager actorAssetUserManager, ActorAssetIssuerManager actorAssetIssuerManager) throws CantSetObjectException {
             super.setPluginId(pluginId);
             super.setPluginFileSystem(pluginFileSystem);
             super.setActorAssetUserManager(actorAssetUserManager);
+            super.setActorAssetIssuerManager(actorAssetIssuerManager);
             startAgent();
         }
 

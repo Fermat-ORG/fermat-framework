@@ -89,7 +89,7 @@ public class ChatMetaDataDao {
     /**
      * Method that find an ChatMetadataTransactionRecord by id in the data base.
      *
-     * @param id Long id.
+     * @param hash Long id.
      * @return ChatMetadataTransactionRecord found.
      * @throws CantReadRecordDataBaseException
      */

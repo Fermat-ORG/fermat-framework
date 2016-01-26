@@ -35,7 +35,6 @@ import com.bitdubai.fermat_api.layer.all_definition.events.EventSource;
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEvent;
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEventListener;
 import com.bitdubai.fermat_api.layer.all_definition.network_service.enums.NetworkServiceType;
-import com.bitdubai.fermat_p2p_api.layer.all_definition.common.network_services.interfaces.NetworkService;
 import com.bitdubai.fermat_api.layer.all_definition.network_service.interfaces.NetworkServiceConnectionManager;
 import com.bitdubai.fermat_api.layer.all_definition.util.Version;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
@@ -44,7 +43,12 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.Cant
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantOpenDatabaseException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantUpdateRecordException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.DatabaseNotFoundException;
+import com.bitdubai.fermat_api.layer.osa_android.file_system.FileLifeSpan;
+import com.bitdubai.fermat_api.layer.osa_android.file_system.FilePrivacy;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
+import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginTextFile;
+import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantCreateFileException;
+import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.FileNotFoundException;
 import com.bitdubai.fermat_api.layer.osa_android.location_system.Location;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogLevel;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogManager;
@@ -97,6 +101,7 @@ import com.bitdubai.fermat_ccp_plugin.layer.network_service.intra_user.developer
 import com.bitdubai.fermat_ccp_plugin.layer.network_service.intra_user.developer.bitdubai.version_1.structure.Identity;
 import com.bitdubai.fermat_ccp_plugin.layer.network_service.intra_user.developer.bitdubai.version_1.structure.IntraActorNetworkServiceDao;
 import com.bitdubai.fermat_ccp_plugin.layer.network_service.intra_user.developer.bitdubai.version_1.structure.IntraUserNetworkService;
+import com.bitdubai.fermat_p2p_api.layer.all_definition.common.network_services.interfaces.NetworkService;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.contents.FermatMessageCommunication;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.enums.P2pEventType;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.events.ClientConnectionCloseNotificationEvent;
@@ -506,7 +511,8 @@ public class IntraActorNetworkServicePluginRoot extends AbstractPlugin implement
             /*
              * Create a new key pair for this execution
              */
-                    identity = new ECCKeyPair();
+                   // identity = new ECCKeyPair();
+                    initializeClientIdentity();
 
             /*
              * Initialize the data base
@@ -613,6 +619,67 @@ public class IntraActorNetworkServicePluginRoot extends AbstractPlugin implement
             }
         }
 
+
+    }
+
+    private void initializeClientIdentity() throws CantStartPluginException {
+
+        System.out.println("Calling the method - initializeClientIdentity() ");
+
+        try {
+
+            System.out.println("Loading clientIdentity");
+
+             /*
+              * Load the file with the clientIdentity
+              */
+            PluginTextFile pluginTextFile = pluginFileSystem.getTextFile(pluginId, "private", "clientIdentity", FilePrivacy.PRIVATE, FileLifeSpan.PERMANENT);
+            String content = pluginTextFile.getContent();
+
+            //System.out.println("content = "+content);
+
+            identity = new ECCKeyPair(content);
+
+        } catch (FileNotFoundException e) {
+
+            /*
+             * The file no exist may be the first time the plugin is running on this device,
+             * We need to create the new clientIdentity
+             */
+            try {
+
+                System.out.println("No previous clientIdentity finder - Proceed to create new one");
+
+                /*
+                 * Create the new clientIdentity
+                 */
+                identity = new ECCKeyPair();
+
+                /*
+                 * save into the file
+                 */
+                PluginTextFile pluginTextFile = pluginFileSystem.createTextFile(pluginId, "private", "clientIdentity", FilePrivacy.PRIVATE, FileLifeSpan.PERMANENT);
+                pluginTextFile.setContent(identity.getPrivateKey());
+                pluginTextFile.persistToMedia();
+
+            } catch (Exception exception) {
+                /*
+                 * The file cannot be created. I can not handle this situation.
+                 */
+                errorManager.reportUnexpectedPluginException(this.getPluginVersionReference(), UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, exception);
+                throw new CantStartPluginException(exception.getLocalizedMessage());
+            }
+
+
+        } catch (CantCreateFileException cantCreateFileException) {
+
+            /*
+             * The file cannot be load. I can not handle this situation.
+             */
+            errorManager.reportUnexpectedPluginException(this.getPluginVersionReference(), UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, cantCreateFileException);
+            throw new CantStartPluginException(cantCreateFileException.getLocalizedMessage());
+
+        }
 
     }
 
@@ -789,6 +856,18 @@ public class IntraActorNetworkServicePluginRoot extends AbstractPlugin implement
                 e.printStackTrace();
             }
 
+            if(communicationNetworkServiceConnectionManager==null) {
+
+                this.communicationNetworkServiceConnectionManager = new CommunicationNetworkServiceConnectionManager(
+                        this,
+                        getPlatformComponentProfilePluginRoot(),
+                        identity,
+                        wsCommunicationsCloudClientManager.getCommunicationsCloudClientConnection(),
+                        dataBase,
+                        errorManager,
+                        eventManager
+                );
+            }
 
         }
 
@@ -847,21 +926,16 @@ public class IntraActorNetworkServicePluginRoot extends AbstractPlugin implement
     }
 
     public void handleNewSentMessageNotificationEvent(FermatMessage fermatMessage){
-        Gson gson = new Gson();
-
         try {
-            fermatMessage.toJson();
-
             ActorNetworkServiceRecord actorNetworkServiceRecord = ActorNetworkServiceRecord.fronJson(fermatMessage.getContent());
 
 
-            if (actorNetworkServiceRecord.getActorProtocolState().getCode().equals(ActorProtocolState.DONE)) {
+            if (actorNetworkServiceRecord.getActorProtocolState()==ActorProtocolState.DONE) {
                 // close connection, sender is the destination
                 System.out.println("ENTRANDO EN EL METODO PARA CERRAR LA CONEXION DEL HANDLE NEW SENT MESSAGE NOTIFICATION");
                 System.out.println("ENTRO AL METODO PARA CERRAR LA CONEXION");
-                communicationNetworkServiceConnectionManager.closeConnection(actorNetworkServiceRecord.getActorDestinationPublicKey());
+             //   communicationNetworkServiceConnectionManager.closeConnection(actorNetworkServiceRecord.getActorDestinationPublicKey());
                 actorNetworkServiceRecordedAgent.getPoolConnectionsWaitingForResponse().remove(actorNetworkServiceRecord.getActorDestinationPublicKey());
-
             }
 
             System.out.println("SALIENDO DEL HANDLE NEW SENT MESSAGE NOTIFICATION");
@@ -894,8 +968,6 @@ public class IntraActorNetworkServicePluginRoot extends AbstractPlugin implement
     }
 
     public void handleNewMessages(FermatMessage fermatMessage) {
-        Gson gson = new Gson();
-
         try {
             System.out.println("----------------------------\n" +
                     "CONVIERTIENDO MENSAJE ENTRANTE A GSON:" + fermatMessage.toJson()
@@ -957,10 +1029,10 @@ public class IntraActorNetworkServicePluginRoot extends AbstractPlugin implement
                             "INTRA ACTOR NETWORK SERVICE" +
                             "THE RECORD WAS CHANGE TO THE STATE OF DELIVERY" + actorNetworkServiceRecord.getActorSenderAlias()
                             + "\n-------------------------------------------------");
-                    //TODO: ver porqué esta en delivery
-                    getOutgoingNotificationDao().changeProtocolState(actorNetworkServiceRecord.getId(), ActorProtocolState.DONE);
-                    actorNetworkServiceRecord.changeState(ActorProtocolState.DONE);
-                    if (actorNetworkServiceRecord.getActorProtocolState().getCode().equals(ActorProtocolState.DONE)){
+                    //TODO: ver porqué no encuentra el id para cambiarlo
+                    if(actorNetworkServiceRecord.getResponseToNotificationId()!=null)
+                    getOutgoingNotificationDao().changeProtocolState(actorNetworkServiceRecord.getResponseToNotificationId(), ActorProtocolState.DONE);
+
                         // close connection, sender is the destination
                         System.out.println("----------------------------\n" +
                                 "INTRA ACTOR NETWORK SERVICE" +
@@ -975,7 +1047,6 @@ public class IntraActorNetworkServicePluginRoot extends AbstractPlugin implement
                                 "THE CONNECTION WAS CLOSED AND THE AWAITING POOL CLEARED." + actorNetworkServiceRecord.getActorSenderAlias()
                                 + "\n-------------------------------------------------");
 
-                    }
 
                     break;
 
@@ -1034,18 +1105,40 @@ public class IntraActorNetworkServicePluginRoot extends AbstractPlugin implement
 
     // respond receive and done notification
     private void respondReceiveAndDoneCommunication(ActorNetworkServiceRecord actorNetworkServiceRecord) {
-        actorNetworkServiceRecord.changeState(ActorProtocolState.DONE);
-        actorNetworkServiceRecord.changeDescriptor(NotificationDescriptor.RECEIVED);
+
 
         actorNetworkServiceRecord = changeActor(actorNetworkServiceRecord);
+        try {
+            UUID newNotificationID = UUID.randomUUID();
+            long currentTime = System.currentTimeMillis();
+            ActorProtocolState protocolState = ActorProtocolState.PROCESSING_SEND;
+            actorNetworkServiceRecord.changeDescriptor(NotificationDescriptor.RECEIVED);
+            outgoingNotificationDao.createNotification(
+                    newNotificationID,
+                    actorNetworkServiceRecord.getActorSenderPublicKey(),
+                    actorNetworkServiceRecord.getActorSenderType(),
+                    actorNetworkServiceRecord.getActorDestinationPublicKey(),
+                    actorNetworkServiceRecord.getActorSenderAlias(),
+                    actorNetworkServiceRecord.getActorSenderPhrase(),
+                    actorNetworkServiceRecord.getActorSenderProfileImage(),
+                    actorNetworkServiceRecord.getActorDestinationType(),
+                    actorNetworkServiceRecord.getNotificationDescriptor(),
+                    currentTime,
+                    protocolState,
+                    false,
+                    1,
+                    actorNetworkServiceRecord.getId()
+            );
+        } catch (CantCreateNotificationException e) {
+            e.printStackTrace();
+        }
 
 
-        communicationNetworkServiceConnectionManager.getNetworkServiceLocalInstance(actorNetworkServiceRecord.getActorDestinationPublicKey())
-                .sendMessage(
-                        actorNetworkServiceRecord.getActorSenderPublicKey(),
-                        actorNetworkServiceRecord.getActorDestinationPublicKey(),
-                        actorNetworkServiceRecord.toJson());
-
+//        communicationNetworkServiceConnectionManager.getNetworkServiceLocalInstance(actorNetworkServiceRecord.getActorDestinationPublicKey())
+//                .sendMessage(
+//                        actorNetworkServiceRecord.getActorSenderPublicKey(),
+//                        actorNetworkServiceRecord.getActorDestinationPublicKey(),
+//                        actorNetworkServiceRecord.toJson());
 
     }
 
@@ -1266,13 +1359,17 @@ public class IntraActorNetworkServicePluginRoot extends AbstractPlugin implement
 
             if(vpnConnectionCloseNotificationEvent.getNetworkServiceApplicant() == getNetworkServiceType()){
 
-
-                if(communicationNetworkServiceConnectionManager != null)
-                {
-                    reprocessMessage(vpnConnectionCloseNotificationEvent.getRemoteParticipant().getIdentityPublicKey());
-                    communicationNetworkServiceConnectionManager.closeConnection(vpnConnectionCloseNotificationEvent.getRemoteParticipant().getIdentityPublicKey());
+                String remotePublicKey = vpnConnectionCloseNotificationEvent.getRemoteParticipant().getIdentityPublicKey();
+                if(communicationNetworkServiceConnectionManager != null) {
+                    System.out.println("ENTRANDO EN EL METODO PARA CERRAR LA CONEXION DEL handleVpnConnectionCloseNotificationEvent");
+                    System.out.println("ENTRO AL METODO PARA CERRAR LA CONEXION");
+                    communicationNetworkServiceConnectionManager.closeConnection(remotePublicKey);
 
                 }
+                // close connection, sender is the destination
+                if(actorNetworkServiceRecordedAgent!=null) actorNetworkServiceRecordedAgent.getPoolConnectionsWaitingForResponse().remove(remotePublicKey);
+
+                //reprocessMessage(remotePublicKey);
 
             }
 
@@ -1581,7 +1678,8 @@ public class IntraActorNetworkServicePluginRoot extends AbstractPlugin implement
                     notificationDescriptor,
                     currentTime,
                     protocolState,
-                    false,1
+                    false,1,
+                    null
             );
 
         } catch (final CantCreateNotificationException e) {
@@ -1602,7 +1700,7 @@ public class IntraActorNetworkServicePluginRoot extends AbstractPlugin implement
         try {
 
 
-            ActorNetworkServiceRecord actorNetworkServiceRecord = incomingNotificationsDao.changeIntraUserNotificationDescriptor(intraUserToAddPublicKey, NotificationDescriptor.ACCEPTED, ActorProtocolState.DONE);
+            ActorNetworkServiceRecord actorNetworkServiceRecord = incomingNotificationsDao.changeIntraUserNotificationDescriptor(intraUserToAddPublicKey, NotificationDescriptor.ACCEPTED, ActorProtocolState.PENDING_ACTION);
 
             actorNetworkServiceRecord.setActorDestinationPublicKey(intraUserToAddPublicKey);
             actorNetworkServiceRecord.setActorSenderPublicKey(intraUserLoggedInPublicKey);
@@ -1613,7 +1711,22 @@ public class IntraActorNetworkServicePluginRoot extends AbstractPlugin implement
 
             actorNetworkServiceRecord.changeState(ActorProtocolState.PROCESSING_SEND);
 
-            outgoingNotificationDao.createNotification(actorNetworkServiceRecord);
+            outgoingNotificationDao.createNotification(
+                    UUID.randomUUID(),
+                    actorNetworkServiceRecord.getActorSenderPublicKey(),
+                    actorNetworkServiceRecord.getActorSenderType(),
+                    actorNetworkServiceRecord.getActorDestinationPublicKey(),
+                    actorNetworkServiceRecord.getActorSenderAlias(),
+                    actorNetworkServiceRecord.getActorSenderPhrase(),
+                    actorNetworkServiceRecord.getActorSenderProfileImage(),
+                    actorNetworkServiceRecord.getActorDestinationType(),
+                    actorNetworkServiceRecord.getNotificationDescriptor(),
+                    System.currentTimeMillis(),
+                    actorNetworkServiceRecord.getActorProtocolState(),
+                    false,
+                    1,
+                    actorNetworkServiceRecord.getResponseToNotificationId()
+            );
 
 
         } catch (Exception e) {
@@ -1668,7 +1781,9 @@ public class IntraActorNetworkServicePluginRoot extends AbstractPlugin implement
                     notificationDescriptor,
                     currentTime,
                     protocolState,
-                    false, 1
+                    false,
+                    1,
+                    null
             );
 
 

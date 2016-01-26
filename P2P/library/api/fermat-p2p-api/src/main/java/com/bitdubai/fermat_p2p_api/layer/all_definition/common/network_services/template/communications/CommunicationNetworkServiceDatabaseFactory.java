@@ -27,6 +27,7 @@ import java.util.UUID;
  *
  * @version 1.0
  */
+@Deprecated
 public class CommunicationNetworkServiceDatabaseFactory implements DealsWithPluginDatabaseSystem {
 
     /**

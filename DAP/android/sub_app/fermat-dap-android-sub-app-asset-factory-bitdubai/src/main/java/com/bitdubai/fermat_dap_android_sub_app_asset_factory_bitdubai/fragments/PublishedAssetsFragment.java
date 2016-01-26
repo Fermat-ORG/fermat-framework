@@ -11,31 +11,43 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.view.animation.AnimationUtils;
+import android.widget.Toast;
 
 import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractFermatFragment;
+import com.bitdubai.fermat_android_api.ui.Views.PresentationDialog;
 import com.bitdubai.fermat_android_api.ui.inflater.ViewInflater;
 import com.bitdubai.fermat_android_api.ui.interfaces.FermatWorkerCallBack;
 import com.bitdubai.fermat_android_api.ui.util.FermatWorker;
+import com.bitdubai.fermat_api.FermatException;
+import com.bitdubai.fermat_api.layer.all_definition.enums.UISource;
 import com.bitdubai.fermat_api.layer.all_definition.resources_structure.Resource;
+import com.bitdubai.fermat_api.layer.all_definition.settings.structure.SettingsManager;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantCreateFileException;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.FileNotFoundException;
 import com.bitdubai.fermat_dap_android_sub_app_asset_factory_bitdubai.R;
 import com.bitdubai.fermat_dap_android_sub_app_asset_factory_bitdubai.adapters.AssetFactoryAdapter;
 import com.bitdubai.fermat_dap_android_sub_app_asset_factory_bitdubai.sessions.AssetFactorySession;
+import com.bitdubai.fermat_dap_android_sub_app_asset_factory_bitdubai.sessions.SessionConstantsAssetFactory;
 import com.bitdubai.fermat_dap_android_sub_app_asset_factory_bitdubai.util.CommonLogger;
 import com.bitdubai.fermat_dap_api.layer.dap_middleware.dap_asset_factory.exceptions.CantGetAssetFactoryException;
 import com.bitdubai.fermat_dap_api.layer.dap_middleware.dap_asset_factory.interfaces.AssetFactory;
+import com.bitdubai.fermat_dap_api.layer.dap_module.asset_factory.AssetFactorySettings;
 import com.bitdubai.fermat_dap_api.layer.dap_module.asset_factory.interfaces.AssetFactoryModuleManager;
+import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedUIExceptionSeverity;
+import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 import com.software.shell.fab.ActionButton;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import static android.widget.Toast.makeText;
 import static com.bitdubai.fermat_dap_api.layer.all_definition.enums.State.FINAL;
 
 /**
@@ -50,19 +62,21 @@ public class PublishedAssetsFragment extends AbstractFermatFragment implements
     /**
      * asset to edit
      */
-    private final String TAG = "DapMain";
+    private final String TAG = "DapPublish";
     private ArrayList<AssetFactory> dataSet;
     private AssetFactoryModuleManager manager;
     private SwipeRefreshLayout swipeRefreshLayout;
     private RecyclerView recyclerView;
     private LinearLayoutManager layoutManager;
     private AssetFactoryAdapter adapter;
+    private ErrorManager errorManager;
+
     // custom inflater
     private ViewInflater viewInflater;
 
-
     private boolean isRefreshing = false;
 
+    SettingsManager<AssetFactorySettings> settingsManager;
 
     public static PublishedAssetsFragment newInstance() {
         return new PublishedAssetsFragment();
@@ -71,8 +85,15 @@ public class PublishedAssetsFragment extends AbstractFermatFragment implements
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setHasOptionsMenu(true);
+
         try {
             manager = ((AssetFactorySession) appSession).getModuleManager();
+
+            settingsManager = appSession.getModuleManager().getSettingsManager();
+
+            errorManager = appSession.getErrorManager();
+
             //viewInflater = new ViewInflater(getActivity(), appResourcesProviderManager);
         } catch (Exception ex) {
             CommonLogger.exception(TAG, ex.getMessage(), ex);
@@ -86,7 +107,74 @@ public class PublishedAssetsFragment extends AbstractFermatFragment implements
         View rootView = inflater.inflate(R.layout.main_assets_draf_fragment, container, false);
         configureToolbar();
         initViews(rootView);
+//        setUpHelpPublished(false);
         return rootView;
+    }
+
+    private void setUpHelpPublished(boolean checkButton) {
+        try {
+            PresentationDialog presentationDialog = new PresentationDialog.Builder(getActivity(), appSession)
+//                    .setBannerRes(R.drawable.banner_asset_factory)
+                    .setIconRes(R.drawable.asset_factory)
+                    .setVIewColor(R.color.dap_asset_factory_view_color)
+                    .setTitleTextColor(R.color.dap_asset_factory_view_color)
+                    .setSubTitle("Published Tab of Asset Factory.")
+                    .setBody("This tab shows all the Assets that you have already created and were  successfully published.\n \n" +
+                            "Published assets are read-only and cannot be changed.")
+//                    .setTextFooter("Again, give me a Text")
+                    .setTemplateType(PresentationDialog.TemplateType.TYPE_PRESENTATION_WITHOUT_IDENTITIES)
+                    .setIsCheckEnabled(checkButton)
+                    .build();
+
+//            presentationDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
+//                @Override
+//                public void onDismiss(DialogInterface dialog) {
+//                    Object o = appSession.getData(SessionConstantsAssetFactory.PRESENTATION_IDENTITY_CREATED);
+//                    if (o != null) {
+//                        if ((Boolean) (o)) {
+//                            //invalidate();
+//                            appSession.removeData(SessionConstantsAssetFactory.PRESENTATION_IDENTITY_CREATED);
+//                        }
+//                    }
+//                    IdentityAssetIssuer identityAssetIssuer = manager.getLoggedIdentityAssetIssuer();
+//                    if (identityAssetIssuer == null) {
+//                        getActivity().onBackPressed();
+//                    } else {
+//                        invalidate();
+//                    }
+//                }
+//            });
+
+            presentationDialog.show();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        super.onCreateOptionsMenu(menu, inflater);
+        menu.add(0, SessionConstantsAssetFactory.IC_ACTION_EDITOR_PUBLISHED, 0, "help").setIcon(R.drawable.dap_asset_factory_help_icon)
+                .setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        try {
+            int id = item.getItemId();
+
+            if (id == SessionConstantsAssetFactory.IC_ACTION_EDITOR_PUBLISHED) {
+                setUpHelpPublished(settingsManager.loadAndGetSettings(appSession.getAppPublicKey()).isPresentationHelpEnabled());
+                return true;
+            }
+
+        } catch (Exception e) {
+            errorManager.reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.UNSTABLE, FermatException.wrapException(e));
+            makeText(getActivity(), "Asset Factory system error",
+                    Toast.LENGTH_SHORT).show();
+        }
+        return super.onOptionsItemSelected(item);
     }
 
     @Override
