@@ -81,7 +81,7 @@ public class NewTransactionStatusNotificationMessageReceiverProcessor extends Fe
                 /*
                 * Save into data base like a new transaction
                 */
-                getAssetTransmissionNetworkServicePluginRoot().getDigitalAssetMetaDataTransactionDao().create(digitalAssetMetadataTransactionImpl);
+                getAssetTransmissionNetworkServicePluginRoot().getDigitalAssetMetaDataTransactionDao().update(digitalAssetMetadataTransactionImpl);
 
                 /*
                 * Mark the message as read
