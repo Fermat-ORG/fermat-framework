@@ -1,5 +1,7 @@
 package com.bitdubai.fermat_dap_android_wallet_asset_issuer_bitdubai.fragments;
 
+import android.app.Activity;
+import android.app.ProgressDialog;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -22,7 +24,9 @@ import android.widget.Toast;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractFermatFragment;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView;
 import com.bitdubai.fermat_android_api.ui.Views.PresentationDialog;
+import com.bitdubai.fermat_android_api.ui.interfaces.FermatWorkerCallBack;
 import com.bitdubai.fermat_android_api.ui.util.BitmapWorkerTask;
+import com.bitdubai.fermat_android_api.ui.util.FermatWorker;
 import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.enums.UISource;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
@@ -138,6 +142,7 @@ public class AssetDetailActivityFragment extends AbstractFermatFragment {
         assetDetailAppropiateBtnLayout.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                //TODO: INSERTAR ACCION APPROPIATE aqui
+                doAppropriate(digitalAsset.getAssetPublicKey(), digitalAsset.getWalletPublicKey());
             }
         });
 
@@ -162,6 +167,46 @@ public class AssetDetailActivityFragment extends AbstractFermatFragment {
                 changeActivity(Activities.DAP_WALLET_ASSET_ISSUER_USER_REDEEMED_LIST, appSession.getAppPublicKey());
             }
         });
+    }
+
+    private void doAppropriate(final String assetPublicKey, final String walletPublicKey) {
+        final Activity activity = getActivity();
+        final ProgressDialog dialog = new ProgressDialog(activity);
+        dialog.setMessage("Please wait...");
+        dialog.setCancelable(false);
+        dialog.show();
+        FermatWorker task = new FermatWorker() {
+            @Override
+            protected Object doInBackground() throws Exception {
+//                    manager.distributionAssets(
+//                            asset.getAssetPublicKey(),
+//                            asset.getWalletPublicKey(),
+//                            asset.getActorAssetRedeemPoint()
+//                    );
+                //TODO: only for Appropriate test
+                moduleManager.appropriateAsset(assetPublicKey, walletPublicKey);
+                return true;
+            }
+        };
+        task.setContext(activity);
+        task.setCallBack(new FermatWorkerCallBack() {
+            @Override
+            public void onPostExecute(Object... result) {
+                dialog.dismiss();
+                if (activity != null) {
+                    Toast.makeText(activity, "Appropriation of the asset has started successfully. The process will be completed in a couple of minutes.", Toast.LENGTH_LONG).show();
+                }
+            }
+
+            @Override
+            public void onErrorOccurred(Exception ex) {
+                dialog.dismiss();
+                if (activity != null)
+                    Toast.makeText(activity, "Fermat Has detected an exception. Please retry again.",
+                            Toast.LENGTH_SHORT).show();
+            }
+        });
+        task.execute();
     }
 
     private void setupBackgroundBitmap() {

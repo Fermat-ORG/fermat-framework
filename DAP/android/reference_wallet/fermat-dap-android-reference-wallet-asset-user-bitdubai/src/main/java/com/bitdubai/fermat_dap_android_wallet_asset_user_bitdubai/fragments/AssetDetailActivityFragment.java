@@ -117,7 +117,7 @@ public class AssetDetailActivityFragment extends AbstractFermatFragment {
                     .setSubTitle("Asset Detail.")
                     .setBody("You can review detailed information about the selected asset.\n\n" +
                             "You can also decide to redeem your asset in a connected Redeem Point. If you are not connected to any Redeem Point, " +
-                            "use the Redeem Point Community sub app to search for Redeem Points.\n\n" +
+                            "use the Redeem Point Community application to search for Redeem Points.\n\n" +
                             "You can also appropriate the asset in order to get the Bitcoins associated with it. They will be sent to your Bitcoin wallet.")
                     .setTemplateType(PresentationDialog.TemplateType.TYPE_PRESENTATION_WITHOUT_IDENTITIES)
                     .setIsCheckEnabled(checkButton)

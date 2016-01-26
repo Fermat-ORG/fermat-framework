@@ -301,8 +301,8 @@ public class AssetIssuerWalletImpl implements AssetIssuerWallet {
         try {
             PluginTextFile pluginTextFile = null;
             pluginTextFile = pluginFileSystem.getTextFile(pluginId, PATH_DIRECTORY, transactionHash, FilePrivacy.PRIVATE, FileLifeSpan.PERMANENT);
-            String digitalAssetMetaData = pluginTextFile.getContent();
-            digitalAssetMetadata = (DigitalAssetMetadata) XMLParser.parseXML(digitalAssetMetaData, digitalAssetMetadata);
+            String content = pluginTextFile.getContent();
+            digitalAssetMetadata = (DigitalAssetMetadata) XMLParser.parseXML(content, digitalAssetMetadata);
 
 
         } catch (FileNotFoundException e) {
@@ -324,20 +324,19 @@ public class AssetIssuerWalletImpl implements AssetIssuerWallet {
     }
 
     @Override
-    public String getUserDeliveredToPublicKey(String assetPublicKey) throws RecordsNotFoundException, CantGetAssetStatisticException {
-        return assetIssuerWalletDao.getUserPublicKey(assetPublicKey);
+    public String getUserDeliveredToPublicKey(UUID transactionId) throws RecordsNotFoundException, CantGetAssetStatisticException {
+        return assetIssuerWalletDao.getUserPublicKey(transactionId);
     }
 
     @Override
-    public List<DigitalAssetMetadata> getAllUsedAssets() throws CantGetDigitalAssetFromLocalStorageException {
+    public List<DigitalAssetMetadata> getAllUnusedAssets() throws CantGetDigitalAssetFromLocalStorageException {
         List<AssetStatistic> allUsedAssets = new ArrayList<>();
         List<DigitalAssetMetadata> toReturn = new ArrayList<>();
         try {
-            allUsedAssets.addAll(constructListFromAssetPublicKey(assetIssuerWalletDao.getAllAssetPublicKeyForStatus(AssetCurrentStatus.ASSET_REDEEMED)));
-            allUsedAssets.addAll(constructListFromAssetPublicKey(assetIssuerWalletDao.getAllAssetPublicKeyForStatus(AssetCurrentStatus.ASSET_APPROPRIATED)));
+            allUsedAssets.addAll(constructListFromAssetPublicKey(assetIssuerWalletDao.getAllAssetPublicKeyForStatus(AssetCurrentStatus.ASSET_UNUSED)));
 
             for (AssetStatistic statistic : allUsedAssets) {
-                toReturn.add(getDigitalAssetMetadata(statistic.assetPublicKey()));
+                toReturn.add(getDigitalAssetMetadata(statistic.genesisTransaction()));
             }
         } catch (CantGetAssetStatisticException e) {
             throw new CantGetDigitalAssetFromLocalStorageException();
@@ -346,28 +345,28 @@ public class AssetIssuerWalletImpl implements AssetIssuerWallet {
     }
 
     @Override
-    public void createdNewAsset(DigitalAsset asset) throws CantSaveStatisticException {
-        assetIssuerWalletDao.createdNewAsset(asset);
+    public void createdNewAsset(DigitalAssetMetadata metadata) throws CantSaveStatisticException {
+        assetIssuerWalletDao.createdNewAsset(metadata);
     }
 
     @Override
-    public void assetDistributed(String assetPublicKey, String actorAssetUserPublicKey) throws RecordsNotFoundException, CantGetAssetStatisticException {
-        assetIssuerWalletDao.assetDistributed(assetPublicKey, actorAssetUserPublicKey);
+    public void assetDistributed(UUID transactionId, String actorAssetUserPublicKey) throws RecordsNotFoundException, CantGetAssetStatisticException {
+        assetIssuerWalletDao.assetDistributed(transactionId, actorAssetUserPublicKey);
     }
 
     @Override
-    public void assetRedeemed(String assetPublicKey, String userPublicKey, String redeemPointPublicKey) throws RecordsNotFoundException, CantGetAssetStatisticException {
-        assetIssuerWalletDao.assetRedeemed(assetPublicKey, userPublicKey, redeemPointPublicKey);
+    public void assetRedeemed(UUID transactionId, String userPublicKey, String redeemPointPublicKey) throws RecordsNotFoundException, CantGetAssetStatisticException {
+        assetIssuerWalletDao.assetRedeemed(transactionId, userPublicKey, redeemPointPublicKey);
     }
 
     @Override
-    public void assetAppropriated(String assetPublicKey, String userPublicKey) throws RecordsNotFoundException, CantGetAssetStatisticException {
-        assetIssuerWalletDao.assetAppropriated(assetPublicKey, userPublicKey);
+    public void assetAppropriated(UUID transactionId, String userPublicKey) throws RecordsNotFoundException, CantGetAssetStatisticException {
+        assetIssuerWalletDao.assetAppropriated(transactionId, userPublicKey);
     }
 
     @Override
     public List<AssetStatistic> getAllStatisticForAllAssets() throws CantGetAssetStatisticException {
-        return constructListFromAssetPublicKey(assetIssuerWalletDao.getAllAssetPublicKey());
+        return constructListFromAssetPublicKey(assetIssuerWalletDao.getAllTransactionIds());
     }
 
     @Override
@@ -393,37 +392,39 @@ public class AssetIssuerWalletImpl implements AssetIssuerWallet {
         return getStatisticForGivenAssetByStatus(assetName, status).size();
     }
 
-    private List<AssetStatistic> constructListFromAssetPublicKey(List<String> assetPublicKeys) {
-        if (assetPublicKeys.isEmpty()) return Collections.EMPTY_LIST;
+    private List<AssetStatistic> constructListFromAssetPublicKey(List<UUID> transactionIds) {
+        if (transactionIds.isEmpty()) return Collections.EMPTY_LIST;
 
         List<AssetStatistic> returnList = new ArrayList<>();
-        for (String publicKey : assetPublicKeys) {
-            returnList.add(constructAssetStatisticByAssetPublicKey(publicKey));
+        for (UUID txId : transactionIds) {
+            returnList.add(constructAssetStatisticByTransactionId(txId));
         }
         return returnList;
     }
 
-    private AssetStatistic constructAssetStatisticByAssetPublicKey(String assetPublicKey) {
+    private AssetStatistic constructAssetStatisticByTransactionId(UUID transactionId) {
         AssetStatisticImpl assetStatistic = new AssetStatisticImpl();
-        assetStatistic.setAssetPublicKey(assetPublicKey);
-        assetStatistic.setAssetName(assetIssuerWalletDao.getAssetName(assetPublicKey));
+        assetStatistic.setTransactionId(transactionId);
+        assetStatistic.setGenesisTransaction(assetIssuerWalletDao.getGenesisTransaction(transactionId));
+        assetStatistic.setAssetPublicKey(assetIssuerWalletDao.getAssetPublicKey(transactionId));
+        assetStatistic.setAssetName(assetIssuerWalletDao.getAssetName(transactionId));
 
         try {
-            assetStatistic.setOwner(actorAssetUserManager.getActorRegisteredByPublicKey(assetIssuerWalletDao.getUserPublicKey(assetPublicKey)));
+            assetStatistic.setOwner(actorAssetUserManager.getActorRegisteredByPublicKey(assetIssuerWalletDao.getUserPublicKey(transactionId)));
         } catch (Exception e) {
             e.printStackTrace();
             //If this happen it means we couldn't get the user or there were none. So we'll keep it as null.
         }
-        AssetCurrentStatus status = assetIssuerWalletDao.getStatus(assetPublicKey);
+        AssetCurrentStatus status = assetIssuerWalletDao.getStatus(transactionId);
         assetStatistic.setStatus(status);
-        assetStatistic.setDistributionDate(assetIssuerWalletDao.getDistributionDate(assetPublicKey));
+        assetStatistic.setDistributionDate(assetIssuerWalletDao.getDistributionDate(transactionId));
 
         if (status == AssetCurrentStatus.ASSET_REDEEMED || status == AssetCurrentStatus.ASSET_APPROPRIATED) {
-            Date assetUsageDate = assetIssuerWalletDao.getUsageDate(assetPublicKey);
+            Date assetUsageDate = assetIssuerWalletDao.getUsageDate(transactionId);
             assetStatistic.setUsageDate(assetUsageDate);
             if (status == AssetCurrentStatus.ASSET_REDEEMED) {
                 try {
-                    ActorAssetRedeemPoint redeemPoint = actorAssetRedeemPointManager.getActorByPublicKey(assetIssuerWalletDao.getRedeemPointPublicKey(assetPublicKey));
+                    ActorAssetRedeemPoint redeemPoint = actorAssetRedeemPointManager.getActorByPublicKey(assetIssuerWalletDao.getRedeemPointPublicKey(transactionId));
                     assetStatistic.setRedeemPoint(redeemPoint);
                 } catch (Exception e) {
                     e.printStackTrace();
