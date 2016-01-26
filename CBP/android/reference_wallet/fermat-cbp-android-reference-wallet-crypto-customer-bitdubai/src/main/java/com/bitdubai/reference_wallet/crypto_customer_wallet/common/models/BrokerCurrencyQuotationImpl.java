@@ -3,7 +3,7 @@ package com.bitdubai.reference_wallet.crypto_customer_wallet.common.models;
 /**
  * Created by Yordin Alayn on 25.01.16.
  */
-public class BrokerCurrencyQuotationTest {
+public class BrokerCurrencyQuotationImpl {
 
     private String currencyOver;
 
@@ -11,10 +11,10 @@ public class BrokerCurrencyQuotationTest {
 
     private String exchangeRate;
 
-    public BrokerCurrencyQuotationTest(
-        String currencyOver,
-        String currencyUnder,
-        String exchangeRate
+    public BrokerCurrencyQuotationImpl(
+            String currencyOver,
+            String currencyUnder,
+            String exchangeRate
     ){
         this.currencyOver = currencyOver;
         this.currencyUnder = currencyUnder;

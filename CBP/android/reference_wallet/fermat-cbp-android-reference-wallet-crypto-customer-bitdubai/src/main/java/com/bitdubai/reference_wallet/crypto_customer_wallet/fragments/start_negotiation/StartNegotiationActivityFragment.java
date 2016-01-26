@@ -42,7 +42,7 @@ import com.bitdubai.reference_wallet.crypto_customer_wallet.common.adapters.Star
 import com.bitdubai.reference_wallet.crypto_customer_wallet.common.dialogs.ClauseTextDialog;
 import com.bitdubai.reference_wallet.crypto_customer_wallet.common.holders.start_negotiation.ClauseViewHolder;
 import com.bitdubai.reference_wallet.crypto_customer_wallet.common.holders.start_negotiation.FooterViewHolder;
-import com.bitdubai.reference_wallet.crypto_customer_wallet.common.models.BrokerCurrencyQuotationTest;
+import com.bitdubai.reference_wallet.crypto_customer_wallet.common.models.BrokerCurrencyQuotationImpl;
 import com.bitdubai.reference_wallet.crypto_customer_wallet.common.models.EmptyCustomerBrokerNegotiationInformation;
 import com.bitdubai.reference_wallet.crypto_customer_wallet.common.models.TestData;
 import com.bitdubai.reference_wallet.crypto_customer_wallet.fragments.common.SimpleListDialogFragment;
@@ -51,11 +51,9 @@ import com.bitdubai.reference_wallet.crypto_customer_wallet.session.CryptoCustom
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.text.DecimalFormat;
-import java.text.DecimalFormatSymbols;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
-import java.util.Locale;
 import java.util.Map;
 
 
@@ -80,7 +78,7 @@ public class StartNegotiationActivityFragment extends AbstractFermatFragment<Cry
     private EmptyCustomerBrokerNegotiationInformation negotiationInfo;
     private ArrayList<String> paymentMethods; // test data
     private ArrayList<Currency> currencies; // test data
-    private List <BrokerCurrencyQuotationTest> brokerCurrencyQuotationlist;
+    private List <BrokerCurrencyQuotationImpl> brokerCurrencyQuotationlist;
 
 
     public static StartNegotiationActivityFragment newInstance() {
@@ -443,7 +441,7 @@ public class StartNegotiationActivityFragment extends AbstractFermatFragment<Cry
 
         final Map<ClauseType, ClauseInformation> clauses = negotiationInfo.getClauses();
 
-        BrokerCurrencyQuotationTest brokerCurrencyQuotation = getBrokerCurrencyQuotation(
+        BrokerCurrencyQuotationImpl brokerCurrencyQuotation = getBrokerCurrencyQuotation(
                 clauses.get(ClauseType.CUSTOMER_CURRENCY).getValue(),
                 clauses.get(ClauseType.BROKER_CURRENCY).getValue()
         );
@@ -487,7 +485,7 @@ public class StartNegotiationActivityFragment extends AbstractFermatFragment<Cry
 
         final Map<ClauseType, ClauseInformation> clauses = negotiationInfo.getClauses();
 
-        final BigDecimal exchangeRate = new BigDecimal(clauses.get(ClauseType.EXCHANGE_RATE).getValue().replace("," ,""));
+        final BigDecimal exchangeRate = new BigDecimal(clauses.get(ClauseType.EXCHANGE_RATE).getValue().replace(",", ""));
 
         if(exchangeRate.compareTo(BigDecimal.ZERO) <= 0){
             Toast.makeText(getActivity(), "The exchange rate must be greater than zero.", Toast.LENGTH_LONG).show();
@@ -499,24 +497,24 @@ public class StartNegotiationActivityFragment extends AbstractFermatFragment<Cry
     }
 
     //LIST OF BROKER CURRENCY QUOTATUION  TEST
-    public List <BrokerCurrencyQuotationTest> getExchangeRateForCurrencyTest(){
+    public List <BrokerCurrencyQuotationImpl> getExchangeRateForCurrencyTest(){
 
-        List <BrokerCurrencyQuotationTest> list = new ArrayList<>();
+        List <BrokerCurrencyQuotationImpl> list = new ArrayList<>();
 
-        list.add(new BrokerCurrencyQuotationTest(CryptoCurrency.BITCOIN.getCode(), FiatCurrency.ARGENTINE_PESO.getCode(),       "100000"));
-        list.add(new BrokerCurrencyQuotationTest(CryptoCurrency.BITCOIN.getCode(), FiatCurrency.VENEZUELAN_BOLIVAR.getCode(),   "350000"));
-        list.add(new BrokerCurrencyQuotationTest(CryptoCurrency.BITCOIN.getCode(), FiatCurrency.US_DOLLAR.getCode(),            "410"));
-        list.add(new BrokerCurrencyQuotationTest(CryptoCurrency.BITCOIN.getCode(), CryptoCurrency.LITECOIN.getCode(),           "130"));
+        list.add(new BrokerCurrencyQuotationImpl(CryptoCurrency.BITCOIN.getCode(), FiatCurrency.ARGENTINE_PESO.getCode(),       "100000"));
+        list.add(new BrokerCurrencyQuotationImpl(CryptoCurrency.BITCOIN.getCode(), FiatCurrency.VENEZUELAN_BOLIVAR.getCode(),   "350000"));
+        list.add(new BrokerCurrencyQuotationImpl(CryptoCurrency.BITCOIN.getCode(), FiatCurrency.US_DOLLAR.getCode(),            "410"));
+        list.add(new BrokerCurrencyQuotationImpl(CryptoCurrency.BITCOIN.getCode(), CryptoCurrency.LITECOIN.getCode(),           "130"));
 
-        list.add(new BrokerCurrencyQuotationTest(FiatCurrency.US_DOLLAR.getCode(), FiatCurrency.VENEZUELAN_BOLIVAR.getCode(),   "950"));
-        list.add(new BrokerCurrencyQuotationTest(FiatCurrency.US_DOLLAR.getCode(), FiatCurrency.ARGENTINE_PESO.getCode(),       "390"));
+        list.add(new BrokerCurrencyQuotationImpl(FiatCurrency.US_DOLLAR.getCode(), FiatCurrency.VENEZUELAN_BOLIVAR.getCode(),   "950"));
+        list.add(new BrokerCurrencyQuotationImpl(FiatCurrency.US_DOLLAR.getCode(), FiatCurrency.ARGENTINE_PESO.getCode(),       "390"));
 
         return list;
     }
 
-    public BrokerCurrencyQuotationTest getBrokerCurrencyQuotation(String currencyOver, String currencyUnder){
+    public BrokerCurrencyQuotationImpl getBrokerCurrencyQuotation(String currencyOver, String currencyUnder){
 
-        BrokerCurrencyQuotationTest currencyQuotation = getQuotation(currencyOver,currencyUnder);
+        BrokerCurrencyQuotationImpl currencyQuotation = getQuotation(currencyOver,currencyUnder);
 
         if(currencyQuotation == null) {
             currencyQuotation = getQuotation(currencyUnder, currencyOver);
@@ -532,9 +530,9 @@ public class StartNegotiationActivityFragment extends AbstractFermatFragment<Cry
         return currencyQuotation;
     }
 
-    private BrokerCurrencyQuotationTest getQuotation(String currencyAlfa, String currencyBeta) {
+    private BrokerCurrencyQuotationImpl getQuotation(String currencyAlfa, String currencyBeta) {
 
-        for (BrokerCurrencyQuotationTest item : brokerCurrencyQuotationlist)
+        for (BrokerCurrencyQuotationImpl item : brokerCurrencyQuotationlist)
             if ((item.getCurrencyOver().equals(currencyAlfa)) && (item.getCurrencyUnder().equals(currencyBeta))) return item;
 
         return null;
