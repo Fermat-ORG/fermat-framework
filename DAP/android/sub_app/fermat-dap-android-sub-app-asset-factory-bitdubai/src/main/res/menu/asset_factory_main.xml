@@ -8,12 +8,13 @@
         app:showAsAction="never" />
 
     <item
+        android:id="@+id/action_delete"
+        android:title="@string/asset_factory_main_delete_menu"
+        app:showAsAction="never" />
+
+    <item
         android:id="@+id/action_publish"
         android:title="@string/asset_factory_main_publish_menu"
         app:showAsAction="never" />
 
-    <item
-        android:id="@+id/action_delete"
-        android:title="@string/asset_factory_main_delete_menu"
-        app:showAsAction="never" />
 </menu>

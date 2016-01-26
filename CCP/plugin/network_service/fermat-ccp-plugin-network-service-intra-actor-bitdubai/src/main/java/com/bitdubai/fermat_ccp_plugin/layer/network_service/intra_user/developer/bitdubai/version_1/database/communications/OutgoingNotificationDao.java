@@ -294,6 +294,35 @@ public class OutgoingNotificationDao implements com.bitdubai.fermat_ccp_plugin.l
     }
 
 
+    public List<ActorNetworkServiceRecord> listRequestsByProtocolStateAndNotDone(ActorProtocolState protocolState) throws CantListIntraWalletUsersException {
+        if (protocolState == null)
+            throw new CantListIntraWalletUsersException("protocolState null",null, "The protocolState is required, can not be null","");
+
+
+        try {
+            DatabaseTable cryptoPaymentRequestTable = getDatabaseTable();
+
+            cryptoPaymentRequestTable.addStringFilter(CommunicationNetworkServiceDatabaseConstants.OUTGOING_NOTIFICATION_PROTOCOL_STATE_COLUMN_NAME, protocolState.getCode(), DatabaseFilterType.EQUAL);
+
+            cryptoPaymentRequestTable.loadToMemory();
+
+            List<DatabaseTableRecord> records = cryptoPaymentRequestTable.getRecords();
+
+            List<com.bitdubai.fermat_ccp_plugin.layer.network_service.intra_user.developer.bitdubai.version_1.structure.ActorNetworkServiceRecord> cryptoPaymentList = new ArrayList<>();
+
+            for (DatabaseTableRecord record : records) {
+                cryptoPaymentList.add(buildActorNetworkServiceRecord(record));
+            }
+            return cryptoPaymentList;
+
+        } catch (CantLoadTableToMemoryException e) {
+
+            throw new CantListIntraWalletUsersException("",e, "Exception not handled by the plugin, there is a problem in database and i cannot load the table.","");
+        } catch(InvalidParameterException exception){
+
+            throw new CantListIntraWalletUsersException("",exception, "Exception invalidParameterException.","");
+        }
+    }
 
     public List<ActorNetworkServiceRecord> listRequestsByProtocolState(final ActorProtocolState protocolState) throws CantListIntraWalletUsersException {
 
@@ -360,7 +389,7 @@ public class OutgoingNotificationDao implements com.bitdubai.fermat_ccp_plugin.l
     public List<ActorNetworkServiceRecord> listNotSentNotifications(String receiveIdentityKey) throws CantListIntraWalletUsersException {
 
 
-
+        //TODO: ver si en vez de receiver es destination
         try {
             DatabaseTable cryptoPaymentRequestTable = getDatabaseTable();
 
@@ -491,7 +520,7 @@ public class OutgoingNotificationDao implements com.bitdubai.fermat_ccp_plugin.l
         NotificationDescriptor notificationDescriptor = NotificationDescriptor.getByCode(descriptor);
 
         Actors actorDestinationType = Actors.getByCode(destinationType);
-        Actors actorSenderType    = Actors.getByCode(senderType   );
+        Actors actorSenderType    = Actors.getByCode(senderType);
 
         byte[] profileImage;
 
@@ -545,7 +574,7 @@ public class OutgoingNotificationDao implements com.bitdubai.fermat_ccp_plugin.l
             /*
              * 1- Create the record to the entity
              */
-            DatabaseTableRecord entityRecord = buildDatabaseRecord(emptyRecord,entity);
+            DatabaseTableRecord entityRecord = buildDatabaseRecord(emptyRecord, entity);
 
             /**
              * 2.- Create a new transaction and execute
@@ -685,5 +714,6 @@ public class OutgoingNotificationDao implements com.bitdubai.fermat_ccp_plugin.l
     private String buildProfileImageFileName(final String publicKey) {
         return PROFILE_IMAGE_FILE_NAME_PREFIX + "_" + publicKey;
     }
+
 
 }

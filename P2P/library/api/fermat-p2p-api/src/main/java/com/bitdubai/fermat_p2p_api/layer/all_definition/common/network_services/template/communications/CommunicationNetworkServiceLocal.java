@@ -40,6 +40,7 @@ import java.util.Observer;
  * @version 1.0
  * @since Java JDK 1.7
  */
+@Deprecated
 public class CommunicationNetworkServiceLocal implements Observer, NetworkServiceLocal {
 
     /**

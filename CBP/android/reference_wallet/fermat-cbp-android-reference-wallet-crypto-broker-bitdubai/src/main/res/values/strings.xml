@@ -133,5 +133,7 @@
     <string name="wizard_locations_title">Add Your Locations</string>
     <string name="cbw_contract_details_contract_title">SELLING BTC</string>
     <string name="cbw_contract_details_negotiation_details">NEGOTIATION DETAILS</string>
+    <string name="cbw_wizard_other_settings_title">Other settings</string>
+    <string name="cbw_wizard_other_settings_description">Other settings description step other settings description</string>
 
 </resources>

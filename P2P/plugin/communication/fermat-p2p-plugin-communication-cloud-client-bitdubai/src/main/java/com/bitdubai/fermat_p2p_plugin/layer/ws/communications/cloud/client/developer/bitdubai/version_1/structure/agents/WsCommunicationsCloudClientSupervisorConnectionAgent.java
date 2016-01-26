@@ -8,17 +8,9 @@ package com.bitdubai.fermat_p2p_plugin.layer.ws.communications.cloud.client.deve
 
 import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
 import com.bitdubai.fermat_p2p_plugin.layer.ws.communications.cloud.client.developer.bitdubai.version_1.WsCommunicationsCloudClientPluginRoot;
-import com.bitdubai.fermat_p2p_plugin.layer.ws.communications.cloud.client.developer.bitdubai.version_1.structure.WsCommunicationsCloudClientConnection;
-import com.bitdubai.fermat_p2p_plugin.layer.ws.communications.cloud.client.developer.bitdubai.version_1.structure.tyrus.WsCommunicationsTyrusCloudClientChannel;
 import com.bitdubai.fermat_p2p_plugin.layer.ws.communications.cloud.client.developer.bitdubai.version_1.structure.tyrus.WsCommunicationsTyrusCloudClientConnection;
+import com.bitdubai.fermat_p2p_plugin.layer.ws.communications.cloud.client.developer.bitdubai.version_1.structure.tyrus.WsCommunicationsTyrusCloudClientChannel;
 
-import org.java_websocket.WebSocket;
-
-import java.io.IOException;
-import java.net.URISyntaxException;
-import java.nio.ByteBuffer;
-
-import javax.websocket.DeploymentException;
 import javax.websocket.Session;
 
 /**
@@ -64,8 +56,8 @@ public class WsCommunicationsCloudClientSupervisorConnectionAgent extends Thread
             } catch (Exception ex) {
                 System.out.println(" WsCommunicationsCloudClientSupervisorConnectionAgent - Error occurred sending ping to the node, closing the connection to remote node");
                 getWsCommunicationsTyrusCloudClientChannel().closeConnection();
-                ((WsCommunicationsCloudClientConnection)wsCommunicationsCloudClientPluginRoot.getCommunicationsCloudClientConnection()).getWsCommunicationsCloudClientChannel().setIsRegister(Boolean.FALSE);
-                ((WsCommunicationsCloudClientConnection)wsCommunicationsCloudClientPluginRoot.getCommunicationsCloudClientConnection()).getWsCommunicationsCloudClientChannel().raiseClientConnectionLooseNotificationEvent();
+                ((WsCommunicationsTyrusCloudClientConnection)wsCommunicationsCloudClientPluginRoot.getCommunicationsCloudClientConnection()).getWsCommunicationsTyrusCloudClientChannel().setIsRegister(Boolean.FALSE);
+                ((WsCommunicationsTyrusCloudClientConnection)wsCommunicationsCloudClientPluginRoot.getCommunicationsCloudClientConnection()).getWsCommunicationsTyrusCloudClientChannel().raiseClientConnectionLooseNotificationEvent();
             }
         }
     }

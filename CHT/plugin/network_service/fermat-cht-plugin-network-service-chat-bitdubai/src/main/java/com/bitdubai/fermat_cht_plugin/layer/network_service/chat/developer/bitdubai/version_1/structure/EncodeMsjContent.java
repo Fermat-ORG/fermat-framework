@@ -76,4 +76,19 @@ public class EncodeMsjContent {
 
         return gson.toJson(jsonObjectContent);
     }
+
+    public static String encodeMSjContentTransactionNewStatusNotification(UUID chatId,UUID messageID, MessageStatus messageStatus, PlatformComponentType senderType, PlatformComponentType receiverType) {
+
+
+        Gson gson = new Gson();
+        JsonObject jsonObjectContent = new JsonObject();
+        jsonObjectContent.addProperty(ChatTransmissionJsonAttNames.MSJ_CONTENT_TYPE, ChatMessageTransactionType.TRANSACTION_STATUS_UPDATE.toString());
+        jsonObjectContent.addProperty(ChatTransmissionJsonAttNames.ID_CHAT, chatId.toString());
+        jsonObjectContent.addProperty(ChatTransmissionJsonAttNames.MESSAGE_ID, messageID.toString());
+        jsonObjectContent.addProperty(ChatTransmissionJsonAttNames.MESSAGE_STATUS, gson.toJson(messageStatus));
+        jsonObjectContent.addProperty(ChatTransmissionJsonAttNames.SENDER_TYPE, senderType.toString());
+        jsonObjectContent.addProperty(ChatTransmissionJsonAttNames.RECEIVER_TYPE, receiverType.toString());
+
+        return gson.toJson(jsonObjectContent);
+    }
 }

@@ -243,7 +243,8 @@ public class CustomerOnlinePaymentPluginRoot extends AbstractPlugin implements
              */
             CustomerOnlinePaymentRecorderService customerOnlinePaymentRecorderService=new CustomerOnlinePaymentRecorderService(
                     customerOnlinePaymentBusinessTransactionDao,
-                    eventManager);
+                    eventManager,
+                    errorManager);
             customerOnlinePaymentRecorderService.start();
 
             /**
