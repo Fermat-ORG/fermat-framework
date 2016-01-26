@@ -74,7 +74,7 @@ public class CommunicationRegistrationProcessNetworkServiceAgent {
 
             try{
 
-               System.out.println(networkService.getName()+" isRegister "+networkService.isRegister()+" communicationsClientConnection.isRegister() "+communicationsClientConnection.getCommunicationsCloudClientConnection().isRegister());
+               System.out.println(networkService.getAlias()+" isRegister "+networkService.isRegister()+" communicationsClientConnection.isRegister() "+communicationsClientConnection.getCommunicationsCloudClientConnection().isRegister());
 
                 if (communicationsClientConnection.getCommunicationsCloudClientConnection().isRegister() && !networkService.isRegister()){
 
