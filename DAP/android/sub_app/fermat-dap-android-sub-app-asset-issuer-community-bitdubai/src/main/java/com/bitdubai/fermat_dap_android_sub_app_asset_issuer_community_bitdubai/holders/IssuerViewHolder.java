@@ -17,6 +17,7 @@ public class IssuerViewHolder extends FermatViewHolder {
     public SquareImageView thumbnail;
     public FermatTextView name;
     public FermatTextView status;
+    public FermatTextView extendedPublicKey;
 
     /**
      * Constructor
@@ -30,5 +31,7 @@ public class IssuerViewHolder extends FermatViewHolder {
         connect = (CheckBox) itemView.findViewById(R.id.connect);
 
         status = (FermatTextView) itemView.findViewById(R.id.status);
+        extendedPublicKey = (FermatTextView) itemView.findViewById(R.id.extendedPublicKey);
+
     }
 }

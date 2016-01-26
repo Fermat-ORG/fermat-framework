@@ -59,4 +59,6 @@
     <color name="cbw_wizard_color">#2c648f</color>
     <color name="cbw_wizard_border_color">#455077</color>
     <color name="light_grey">#EEE</color>
+
+    <color name="cbw_contract_details_background">#222</color>
 </resources>

@@ -13,13 +13,14 @@ import com.bitdubai.fermat_dap_api.layer.all_definition.exceptions.CantSetObject
 import com.bitdubai.fermat_dap_api.layer.all_definition.util.Validate;
 import com.bitdubai.fermat_dap_api.layer.dap_transaction.common.exceptions.CantCreateDigitalAssetFileException;
 import com.bitdubai.fermat_dap_api.layer.dap_transaction.common.exceptions.CantGetDigitalAssetFromLocalStorageException;
+import com.bitdubai.fermat_dap_api.layer.dap_transaction.common.interfaces.AbstractDigitalAssetVault;
 
 import java.util.UUID;
 
 /**
  * Created by Víctor A. Mars M. (marsvicam@gmail.com) on 12/11/15.
  */
-public class AssetAppropriationVault {
+public class AssetAppropriationVault extends AbstractDigitalAssetVault{
 
     //VARIABLE DECLARATION
 
@@ -39,9 +40,10 @@ public class AssetAppropriationVault {
 
     //PUBLIC METHODS
 
-    public void persistDigitalAssetMetadataInLocalStorage(DigitalAssetMetadata assetMetadata) throws CantCreateDigitalAssetFileException {
+    @Override
+    public void persistDigitalAssetMetadataInLocalStorage(DigitalAssetMetadata assetMetadata, String internalId) throws CantCreateDigitalAssetFileException {
         try {
-            PluginTextFile digitalAssetFile = pluginFileSystem.createTextFile(pluginId, STORAGE_PATH, createFilename(assetMetadata.getDigitalAsset().getPublicKey()), FILE_PRIVACY, FILE_LIFE_SPAN);
+            PluginTextFile digitalAssetFile = pluginFileSystem.createTextFile(pluginId, STORAGE_PATH, internalId, FILE_PRIVACY, FILE_LIFE_SPAN);
             digitalAssetFile.setContent(assetMetadata.toString());
             digitalAssetFile.persistToMedia();
 
@@ -57,14 +59,15 @@ public class AssetAppropriationVault {
 
     //GETTER AND SETTERS
 
-    public DigitalAssetMetadata getDigitalAssetMetadataFromLocalStorage(String assetPublicKey) throws CantGetDigitalAssetFromLocalStorageException {
+    @Override
+    public DigitalAssetMetadata getDigitalAssetMetadataFromLocalStorage(String internalId) throws CantGetDigitalAssetFromLocalStorageException {
         try {
-            PluginTextFile metadataFile = pluginFileSystem.getTextFile(pluginId, STORAGE_PATH, createFilename(assetPublicKey), FILE_PRIVACY, FILE_LIFE_SPAN);
+            PluginTextFile metadataFile = pluginFileSystem.getTextFile(pluginId, STORAGE_PATH, internalId, FILE_PRIVACY, FILE_LIFE_SPAN);
             return (DigitalAssetMetadata) XMLParser.parseXML(metadataFile.getContent(), new DigitalAssetMetadata());
         } catch (FileNotFoundException e) {
-            throw new CantGetDigitalAssetFromLocalStorageException(e, "Getting Digital Asset file from local storage", "Unexpected exception getting '" + STORAGE_PATH + createFilename(assetPublicKey) + "' file");
+            throw new CantGetDigitalAssetFromLocalStorageException(e, "Getting Digital Asset file from local storage", "Unexpected exception getting '" + STORAGE_PATH + createFilename(internalId) + "' file");
         } catch (CantCreateFileException e) {
-            throw new CantGetDigitalAssetFromLocalStorageException(e, "Getting Digital Asset file from local storage", "Unexpected exception creating '" + STORAGE_PATH + createFilename(assetPublicKey) + "' file");
+            throw new CantGetDigitalAssetFromLocalStorageException(e, "Getting Digital Asset file from local storage", "Unexpected exception creating '" + STORAGE_PATH + createFilename(internalId) + "' file");
         }
     }
     //INNER CLASSES

@@ -15,6 +15,7 @@ public enum RequestAction implements FermatEnum {
     DENY   ("DEN"),
     NONE   ("NON"),
     REQUEST("REQ"),
+    RECEIVED("REC"),
 
     ;
 
@@ -32,6 +33,7 @@ public enum RequestAction implements FermatEnum {
             case "DEN": return DENY   ;
             case "NON": return NONE   ;
             case "REQ": return REQUEST;
+            case "REC": return RECEIVED;
 
             default:
                 throw new InvalidParameterException(

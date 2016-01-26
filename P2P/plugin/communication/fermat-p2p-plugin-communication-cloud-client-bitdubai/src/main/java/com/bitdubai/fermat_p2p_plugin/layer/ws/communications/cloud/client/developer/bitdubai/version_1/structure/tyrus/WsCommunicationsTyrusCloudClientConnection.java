@@ -40,7 +40,6 @@ import com.bitdubai.fermat_p2p_plugin.layer.ws.communications.cloud.client.devel
 import com.bitdubai.fermat_p2p_plugin.layer.ws.communications.cloud.client.developer.bitdubai.version_1.structure.tyrus.processors.ServerHandshakeRespondTyrusPacketProcessor;
 import com.bitdubai.fermat_p2p_plugin.layer.ws.communications.cloud.client.developer.bitdubai.version_1.structure.tyrus.vpn.WsCommunicationTyrusVPNClientManagerAgent;
 import com.bitdubai.fermat_p2p_plugin.layer.ws.communications.cloud.client.developer.bitdubai.version_1.structure.util.ServerConf;
-import com.bitdubai.fermat_p2p_plugin.layer.ws.communications.cloud.client.developer.bitdubai.version_1.structure.vpn.WsCommunicationVPNClientManagerAgent;
 import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfaces.EventManager;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
@@ -70,9 +69,7 @@ import java.util.Collections;
 import java.util.List;
 
 import javax.websocket.CloseReason;
-import javax.websocket.ContainerProvider;
 import javax.websocket.DeploymentException;
-import javax.websocket.WebSocketContainer;
 
 /**
  * The Class <code>com.bitdubai.fermat_p2p_plugin.layer.ws.communications.cloud.client.developer.bitdubai.version_1.structure.WsCommunicationsCloudClientConnection</code>
@@ -191,7 +188,7 @@ public class WsCommunicationsTyrusCloudClientConnection implements Communication
 
                     System.out.println("#  WsCommunicationsCloudClientConnection - Reconnect Failure :"+exception.getMessage());
                     // To avoid potential DDoS when you don't limit number of reconnects, wait to the next try.
-                    Thread.sleep(10000);
+                    Thread.sleep(5000);
 
                 } catch (InterruptedException e) {
                     e.printStackTrace();

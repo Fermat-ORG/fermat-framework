@@ -200,7 +200,6 @@ public class AssetAppropriationMonitorAgent implements Agent {
             try (AssetAppropriationDAO dao = new AssetAppropriationDAO(pluginDatabaseSystem, pluginId, assetVault)) {
 
                 eventMonitoring(dao);
-
                 statusMonitoring(dao);
 
             } catch (InvalidParameterException | CantRegisterDebitException | CantLoadWalletException | CantGetCryptoTransactionException e) {
@@ -215,55 +214,6 @@ public class AssetAppropriationMonitorAgent implements Agent {
         }
 
         private void eventMonitoring(AssetAppropriationDAO dao) throws Exception {
-            for (String eventId : dao.getPendingCryptoRouterEvents()) {
-                switch (dao.getEventTypeById(eventId)) {
-                    //TODO CHANGE THESE EVENTS TO THE NEW ONES.
-                    case INCOMING_ASSET_ON_CRYPTO_NETWORK_WAITING_TRANSFERENCE_ASSET_USER:
-                        for (AppropriationTransactionRecord record : dao.getTransactionsForStatus(AppropriationStatus.BITCOINS_SENT)) {
-                            if ("-".equals(record.genesisTransaction())) {
-                                //If for some reason it wasn't updated then the bitcoins wasn't sent.
-                                dao.updateTransactionStatusCryptoAddressObtained(record.transactionRecordId());
-                                continue;
-                            }
-                            CryptoTransaction cryptoTransaction = AssetVerification.getCryptoTransactionFromCryptoNetworkByCryptoStatus(bitcoinNetworkManager, record.assetMetadata(), CryptoStatus.ON_CRYPTO_NETWORK);
-                            if(cryptoTransaction == null) continue;
-                            AssetUserWallet userWallet = assetUserWalletManager.loadAssetUserWallet(record.walletPublicKey());
-                            AssetUserWalletBalance balance = userWallet.getBalance();
-                            AssetUserWalletTransactionRecordWrapper walletRecord = new AssetUserWalletTransactionRecordWrapper(record.assetMetadata(),
-                                    cryptoTransaction,
-                                    record.digitalAsset().getPublicKey(),
-                                    Actors.DAP_ASSET_USER,
-                                    record.addressTo().getAddress(),
-                                    Actors.INTRA_USER);
-                            balance.debit(walletRecord, BalanceType.AVAILABLE);
-                            dao.updateTransactionStatusAssetDebited(record.transactionRecordId());
-                        }
-                        break;
-
-                    case INCOMING_ASSET_ON_BLOCKCHAIN_WAITING_TRANSFERENCE_ASSET_USER:
-                        for (AppropriationTransactionRecord record : dao.getTransactionsForStatus(AppropriationStatus.ASSET_DEBITED)) {
-                            CryptoTransaction cryptoTransaction = AssetVerification.getCryptoTransactionFromCryptoNetworkByCryptoStatus(bitcoinNetworkManager, record.assetMetadata(), CryptoStatus.ON_BLOCKCHAIN);
-                            if(cryptoTransaction == null) continue;
-                            AssetUserWallet userWallet = assetUserWalletManager.loadAssetUserWallet(record.walletPublicKey());
-                            AssetUserWalletBalance balance = userWallet.getBalance();
-                            AssetUserWalletTransactionRecordWrapper walletRecord = new AssetUserWalletTransactionRecordWrapper(record.assetMetadata(),
-                                    cryptoTransaction,
-                                    record.digitalAsset().getPublicKey(),
-                                    Actors.DAP_ASSET_USER,
-                                    record.addressTo().getAddress(),
-                                    Actors.INTRA_USER);
-                            balance.debit(walletRecord, BalanceType.BOOK);
-                            dao.updateStatusSendingMessage(record.transactionRecordId());
-                        }
-                        break;
-
-                    default:
-                        //THIS CAN'T HAPPEN. But if it happen, this event is not for me and I don't care...
-                        break;
-                }
-                dao.updateEventStatus(EventStatus.NOTIFIED, eventId);
-            }
-
             for (String eventId : dao.getPendingIssuerNetworkServiceEvents()) {
                 switch (dao.getDAPEventTypeById(eventId)) {
                     case NEW_RECEIVE_MESSAGE_ACTOR:
@@ -320,11 +270,46 @@ public class AssetAppropriationMonitorAgent implements Agent {
                             dao.updateTransactionStatusAppropriationStarted(record.transactionRecordId());
                         } else {
                             String genesisTransaction = assetVaultManager.sendAssetBitcoins(record.assetMetadata().getGenesisTransaction(), record.assetMetadata().getGenesisBlock(), record.addressTo());
-                            dao.updateGenesisTransaction(genesisTransaction, record.transactionRecordId());
+                            assetVault.updateMetadataTransactionChain(record.transactionRecordId(), genesisTransaction, null);
                             dao.updateTransactionStatusBitcoinsSent(record.transactionRecordId());
                             AssetAppropriationDigitalAssetTransactionPluginRoot.debugAssetAppropriation("Bitcoins sent!");
                         }
                         break;
+                    case BITCOINS_SENT: {
+                        CryptoTransaction cryptoTransaction = AssetVerification.foundCryptoTransaction(bitcoinNetworkManager, record.assetMetadata());
+                        if (cryptoTransaction == null) continue;
+                        AssetUserWallet userWallet = assetUserWalletManager.loadAssetUserWallet(record.walletPublicKey());
+                        AssetUserWalletBalance balance = userWallet.getBalance();
+                        AssetUserWalletTransactionRecordWrapper walletRecord = new AssetUserWalletTransactionRecordWrapper(record.assetMetadata(),
+                                cryptoTransaction,
+                                record.digitalAsset().getPublicKey(),
+                                Actors.DAP_ASSET_USER,
+                                record.addressTo().getAddress(),
+                                Actors.INTRA_USER);
+                        balance.debit(walletRecord, BalanceType.AVAILABLE);
+                        dao.updateTransactionStatusAssetDebited(record.transactionRecordId());
+                        break;
+                    }
+                    case ASSET_DEBITED: {
+                        switch (bitcoinNetworkManager.getCryptoStatus(record.assetMetadata().getLastTransactionHash())) {
+                            case ON_BLOCKCHAIN:
+                            case IRREVERSIBLE:
+                                CryptoTransaction cryptoTransaction = AssetVerification.getCryptoTransactionFromCryptoNetworkByCryptoStatus(bitcoinNetworkManager, record.assetMetadata(), CryptoStatus.ON_BLOCKCHAIN);
+                                if (cryptoTransaction == null) continue;
+                                AssetUserWallet userWallet = assetUserWalletManager.loadAssetUserWallet(record.walletPublicKey());
+                                AssetUserWalletBalance balance = userWallet.getBalance();
+                                AssetUserWalletTransactionRecordWrapper walletRecord = new AssetUserWalletTransactionRecordWrapper(record.assetMetadata(),
+                                        cryptoTransaction,
+                                        record.digitalAsset().getPublicKey(),
+                                        Actors.DAP_ASSET_USER,
+                                        record.addressTo().getAddress(),
+                                        Actors.INTRA_USER);
+                                balance.debit(walletRecord, BalanceType.BOOK);
+                                dao.updateStatusSendingMessage(record.transactionRecordId());
+                                break;
+                        }
+                        break;
+                    }
                     case SENDING_MESSAGE:
                         sendMessageAssetAppropriated(record.digitalAsset());
                         dao.completeAppropriationSuccessful(record.transactionRecordId());

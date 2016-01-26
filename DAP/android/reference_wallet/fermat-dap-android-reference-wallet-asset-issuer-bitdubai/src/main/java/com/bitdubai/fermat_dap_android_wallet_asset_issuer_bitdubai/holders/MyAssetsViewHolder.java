@@ -23,7 +23,7 @@ public class MyAssetsViewHolder extends FermatViewHolder {
     public ImageView image;
     public FermatTextView nameText;
     public FermatTextView availableText;
-    public FermatTextView bookText;
+    public FermatTextView pendingText;
     public FermatTextView btcText;
     public FermatTextView expDateText;
 
@@ -40,8 +40,8 @@ public class MyAssetsViewHolder extends FermatViewHolder {
 
         image = (ImageView) itemView.findViewById(R.id.asset_image);
         nameText = (FermatTextView) itemView.findViewById(R.id.assetNameText);
-        availableText = (FermatTextView) itemView.findViewById(R.id.assetAvailableText);
-        bookText = (FermatTextView) itemView.findViewById(R.id.assetBookText);
+        availableText = (FermatTextView) itemView.findViewById(R.id.assetAvailable1);
+        pendingText = (FermatTextView) itemView.findViewById(R.id.assetAvailable2);
         btcText = (FermatTextView) itemView.findViewById(R.id.assetBtcText);
         expDateText = (FermatTextView) itemView.findViewById(R.id.assetExpDateText);
     }
@@ -57,9 +57,27 @@ public class MyAssetsViewHolder extends FermatViewHolder {
         bitmapWorkerTask.execute(img);
 
         nameText.setText(digitalAsset.getName());
-        availableText.setText(digitalAsset.getAvailableBalanceQuantity()+"");
-        bookText.setText(digitalAsset.getBookBalanceQuantity()+"");
+
+        long available = digitalAsset.getAvailableBalanceQuantity();
+        long book = digitalAsset.getBookBalanceQuantity();
+        availableText.setText(availableText(available));
+        if (available == book) {
+            pendingText.setVisibility(View.INVISIBLE);
+        } else {
+            long pendingValue = Math.abs(available - book);
+            pendingText.setText(pendingText(pendingValue));
+            pendingText.setVisibility(View.VISIBLE);
+        }
+
         btcText.setText(digitalAsset.getFormattedAvailableBalanceBitcoin()+" BTC");
         expDateText.setText(digitalAsset.getFormattedExpDate());
+    }
+
+    private String pendingText(long pendingValue) {
+        return "(" + pendingValue + " pending confirmation)";
+    }
+
+    private String availableText(long available) {
+        return available + ((available == 1) ? " Asset" : " Assets");
     }
 }
