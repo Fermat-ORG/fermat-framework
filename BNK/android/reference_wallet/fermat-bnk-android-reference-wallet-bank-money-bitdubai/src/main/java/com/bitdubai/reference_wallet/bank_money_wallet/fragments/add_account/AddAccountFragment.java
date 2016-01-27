@@ -2,6 +2,8 @@ package com.bitdubai.reference_wallet.bank_money_wallet.fragments.add_account;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.*;
@@ -83,6 +85,8 @@ public class AddAccountFragment extends AbstractFermatFragment implements View.O
         currencySpinner.setAdapter(currencySpinnerAdapter);
         currencySpinner.setOnItemSelectedListener(this);
         configureToolbar();
+        /*setHasOptionsMenu(false);
+        setMenuVisibility(false);*/
         return layout;
     }
 
@@ -122,4 +126,5 @@ public class AddAccountFragment extends AbstractFermatFragment implements View.O
     public void onNothingSelected(AdapterView<?> parent) {
 
     }
+
 }

@@ -133,6 +133,7 @@ public class AccountsListFragment extends FermatWalletListFragment<BankAccountNu
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == R.id.add_account) {
+            item.setEnabled(false);
             changeActivity(Activities.BNK_BANK_MONEY_WALLET_ADD_ACCOUNT,appSession.getAppPublicKey());
         }
         return true;
