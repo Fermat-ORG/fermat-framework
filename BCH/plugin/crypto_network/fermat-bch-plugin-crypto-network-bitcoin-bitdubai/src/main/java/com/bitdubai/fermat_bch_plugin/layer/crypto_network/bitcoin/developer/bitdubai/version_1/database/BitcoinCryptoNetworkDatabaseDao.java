@@ -1180,7 +1180,7 @@ public class BitcoinCryptoNetworkDatabaseDao {
      * @param txHash
      * @throws CantExecuteDatabaseOperationException
      */
-    public void setBroadcastStatus(Status status, int connectedPeers, Exception lastException, String txHash) throws CantExecuteDatabaseOperationException {
+    public void setBroadcastStatus(Status status, @Nullable int connectedPeers, @Nullable Exception lastException, String txHash) throws CantExecuteDatabaseOperationException {
         DatabaseTable databaseTable = database.getTable(BitcoinCryptoNetworkDatabaseConstants.BROADCAST_TABLE_NAME);
         databaseTable.addStringFilter(BitcoinCryptoNetworkDatabaseConstants.BROADCAST_TX_HASH, txHash, DatabaseFilterType.EQUAL);
 
@@ -1217,8 +1217,8 @@ public class BitcoinCryptoNetworkDatabaseDao {
         else
             broadcastStatus.setRetriesCount(retriesAmount);
 
-        broadcastStatus.setConnectedPeers(connectedPeers);
-        broadcastStatus.setLastException(lastException);
+            broadcastStatus.setConnectedPeers(connectedPeers);
+            broadcastStatus.setLastException(lastException);
 
         /**
          * I will set the new values and execute

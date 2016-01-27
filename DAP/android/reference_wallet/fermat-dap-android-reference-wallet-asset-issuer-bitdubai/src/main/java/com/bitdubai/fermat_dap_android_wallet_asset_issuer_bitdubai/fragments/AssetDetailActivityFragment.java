@@ -141,7 +141,6 @@ public class AssetDetailActivityFragment extends AbstractFermatFragment {
         assetDetailAppropiateBtnLayout = rootView.findViewById(R.id.assetDetailAppropiateBtnLayout);
         assetDetailAppropiateBtnLayout.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-               //TODO: INSERTAR ACCION APPROPIATE aqui
                 doAppropriate(digitalAsset.getAssetPublicKey(), digitalAsset.getWalletPublicKey());
             }
         });
@@ -289,6 +288,8 @@ public class AssetDetailActivityFragment extends AbstractFermatFragment {
         assetDetailDelivered.setText(digitalAsset.getUnused() + "");
         assetDetailRedeemText.setText(digitalAsset.getRedeemed()+"");
         assetDetailAppropriatedText.setText(digitalAsset.getAppropriated() + "");
+
+        assetDetailAppropiateBtnLayout.setVisibility((digitalAsset.getAvailableBalanceQuantity() > 0) ? View.VISIBLE : View.GONE);
     }
 
     private String pendingText(long pendingValue) {

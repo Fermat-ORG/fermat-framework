@@ -91,7 +91,7 @@ public class AssetEditorFragment extends AbstractFermatFragment implements View.
     private static final int REQUEST_LOAD_IMAGE = 2;
     private static final int CONTEXT_MENU_CAMERA = 1;
     private static final int CONTEXT_MENU_GALLERY = 2;
-    private static final long MINIMUM_ASSET_VALUE = 50000;
+    private static final long MINIMUM_ASSET_VALUE = DAPStandardFormats.MINIMUN_SATOSHI_AMOUNT;
     private static final String NO_AVAILABLE = "No Available";
     private final String TAG = "AssetEditor";
     private AssetFactoryModuleManager manager;
