@@ -112,6 +112,7 @@ public class OpenNegotiationDetailsFragment extends AbstractFermatFragment<Crypt
             brokerCurrencyQuotation = new BrokerCurrencyQuotation(brokerCurrencyQuotationlist);
 
             //REMOVE CURRENCY TO PAY OF CURRENCY LIST
+            //no lo esta quitando
             removeCurrency();
 
         } catch (Exception e) {
