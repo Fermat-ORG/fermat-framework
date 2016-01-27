@@ -502,7 +502,7 @@ public class BitcoinCryptoNetworkMonitor implements Agent {
             /**
              * do wallet maintenance
              */
-            wallet.maybeCommitTx(transaction);
+            //wallet.maybeCommitTx(transaction);
             wallet.cleanup();
 
             wallet.saveToFile(walletFileName);
