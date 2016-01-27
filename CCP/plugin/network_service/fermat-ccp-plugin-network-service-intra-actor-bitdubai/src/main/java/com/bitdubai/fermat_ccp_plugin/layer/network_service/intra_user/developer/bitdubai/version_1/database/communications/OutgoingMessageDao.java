@@ -319,7 +319,7 @@ public class OutgoingMessageDao {
             /*
              * 2 - load the data base to memory with filters
              */
-            templateTable.setFilterGroup(filtersTable, null, DatabaseFilterOperator.OR);
+            templateTable.setFilterGroup(filtersTable, null, DatabaseFilterOperator.AND);
             templateTable.loadToMemory();
 
             /*

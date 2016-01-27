@@ -263,6 +263,38 @@ public class CashMoneyWalletDao {
     }
 
 
+    public CashMoneyWalletTransaction getTransaction(UUID transactionId) throws CantGetCashMoneyWalletTransactionsException {
+        CashMoneyWalletTransaction transaction;
+
+        List<DatabaseTableRecord> records;
+        DatabaseTable table = this.database.getTable(CashMoneyWalletDatabaseConstants.TRANSACTIONS_TABLE_NAME);
+        table.addUUIDFilter(CashMoneyWalletDatabaseConstants.TRANSACTIONS_TRANSACTION_ID_COLUMN_NAME, transactionId, DatabaseFilterType.EQUAL);
+        table.addStringFilter(CashMoneyWalletDatabaseConstants.TRANSACTIONS_BALANCE_TYPE_COLUMN_NAME, BalanceType.BOOK.getCode(), DatabaseFilterType.EQUAL);
+
+        try {
+            table.loadToMemory();
+        } catch (CantLoadTableToMemoryException e) {
+            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_CSH_WALLET_CASH_MONEY, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+            throw new CantGetCashMoneyWalletTransactionsException(CantGetCashMoneyWalletTransactionsException.DEFAULT_MESSAGE, e, "getTransaction", "Cant load table into memory");
+        }
+
+        records = table.getRecords();
+
+        if (records.size() == 0)
+            throw new CantGetCashMoneyWalletTransactionsException(CantGetCashMoneyWalletTransactionsException.DEFAULT_MESSAGE, null, "getTransaction", "No record found");
+        if (records.size() != 1)
+            throw new CantGetCashMoneyWalletTransactionsException("Inconsistent (" + records.size() + ") number of fetched records, should be between 0 and 1.", null, "The id is: " + transactionId, "");
+
+        try{
+            transaction = constructCashMoneyWalletTransactionFromRecord(records.get(0));
+        }catch(CantCreateCashMoneyWalletTransactionException e){
+            throw new CantGetCashMoneyWalletTransactionsException(CantCreateCashMoneyWalletTransactionException.DEFAULT_MESSAGE, null, "getTransaction", "Error creating transaction from record");
+
+        }
+
+        return transaction;
+    }
+
     public List<CashMoneyWalletTransaction> getTransactions(String walletPublicKey, List<TransactionType> transactionTypes, List<BalanceType> balanceTypes, int max, int offset) throws CantGetCashMoneyWalletTransactionsException {
         List<CashMoneyWalletTransaction> transactions = new ArrayList<>();
 
@@ -442,7 +474,7 @@ public class CashMoneyWalletDao {
                     + CashMoneyWalletDatabaseConstants.TRANSACTIONS_TABLE_NAME + " for id " + transactionId);
         }
 
-        return new CashMoneyWalletTransactionImpl(transactionId, publicKeyWallet, publicKeyActor, publicKeyPlugin, transactionType, balanceType, amount, memo, timestamp);
+        return new CashMoneyWalletTransactionImpl(transactionId, publicKeyWallet, publicKeyActor, publicKeyPlugin, transactionType, balanceType, amount, memo, timestamp, false);
     }
 
 }

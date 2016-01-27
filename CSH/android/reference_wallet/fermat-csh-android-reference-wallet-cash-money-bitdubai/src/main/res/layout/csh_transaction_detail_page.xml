@@ -147,11 +147,12 @@
         android:background="@color/csh_transaction_detail_hr_color" />
 
     <LinearLayout
-        android:id="@+id/linear_create_contact"
+        android:id="@+id/csh_transaction_detail_btn_container"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="40dp"
-        android:orientation="horizontal">
+        android:orientation="horizontal"
+        android:visibility="invisible">
 
         <Button
             android:id="@+id/csh_transaction_detail_delete_btn"

@@ -40,6 +40,7 @@ import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.Un
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 import com.bitdubai.sub_app.crypto_broker_community.R;
 import com.bitdubai.sub_app.crypto_broker_community.adapters.AppListAdapter;
+import com.bitdubai.sub_app.crypto_broker_community.common.CryptoBrokerCommunityInformationImpl;
 import com.bitdubai.sub_app.crypto_broker_community.common.popups.ListIdentitiesDialog;
 import com.bitdubai.sub_app.crypto_broker_community.constants.Constants;
 import com.bitdubai.sub_app.crypto_broker_community.session.CryptoBrokerCommunitySubAppSession;
@@ -110,38 +111,39 @@ public class ConnectionsWorldFragment extends AbstractFermatFragment<CryptoBroke
             moduleManager = appSession.getModuleManager();
             errorManager = appSession.getErrorManager();
 
+
             mNotificationsCount = moduleManager.listCryptoBrokersPendingLocalAction(moduleManager.getSelectedActorIdentity(), MAX, offset).size();
+            mNotificationsCount = 2;
             //List<CryptoBrokerCommunityInformation> asd = moduleManager.listAllConnectedCryptoBrokers(moduleManager.getSelectedActorIdentity(),MAX, offset);
             //List<CryptoBrokerCommunitySelectableIdentity> asss = moduleManager.listSelectableIdentities();
-            CryptoBrokerCommunitySelectableIdentity cbsi = new CryptoBrokerCommunitySelectableIdentity() {
-                @Override
-                public void select() throws CantSelectIdentityException {
-
-                }
-
-                @Override
-                public String getPublicKey() {
-                    return null;
-                }
-
-                @Override
-                public Actors getActorType() {
-                    return Actors.CBP_CRYPTO_BROKER;
-                }
-
-                @Override
-                public String getAlias() {
-                    return "";
-                }
-
-                @Override
-                public byte[] getImage() {
-                    return new byte[0];
-                }
-            };
-
-            CryptoBrokerCommunitySearch asdss = moduleManager.searchNewCryptoBroker(cbsi);
-            List<CryptoBrokerCommunityInformation> blah = asdss.getResult();
+//            CryptoBrokerCommunitySelectableIdentity cbsi = new CryptoBrokerCommunitySelectableIdentity() {
+//                @Override
+//                public void select() throws CantSelectIdentityException {
+//
+//                }
+//
+//                @Override
+//                public String getPublicKey() {
+//                    return null;
+//                }
+//
+//                @Override
+//                public Actors getActorType() {
+//                    return Actors.CBP_CRYPTO_BROKER;
+//                }
+//
+//                @Override
+//                public String getAlias() {
+//                    return "";
+//                }
+//
+//                @Override
+//                public byte[] getImage() {
+//                    return new byte[0];
+//                }
+//            };
+//
+//            CryptoBrokerCommunitySearch asdss = moduleManager.searchNewCryptoBroker(cbsi);
 
 
 
@@ -275,10 +277,10 @@ public class ConnectionsWorldFragment extends AbstractFermatFragment<CryptoBroke
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
 
-        /*super.onCreateOptionsMenu(menu, inflater);
+        super.onCreateOptionsMenu(menu, inflater);
 
         menu.add(0, Constants.SELECT_IDENTITY, 0, "send").setIcon(R.drawable.ic_actionbar_send)
-                .setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);*/
+                .setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
     }
 
     @Override
@@ -309,7 +311,16 @@ public class ConnectionsWorldFragment extends AbstractFermatFragment<CryptoBroke
         try {
             CryptoBrokerCommunitySearch cryptoBrokerCommunitySearch = moduleManager.searchNewCryptoBroker(moduleManager.getSelectedActorIdentity());
 
-            dataSet.addAll(cryptoBrokerCommunitySearch.getResult());
+            List<CryptoBrokerCommunityInformation> result = cryptoBrokerCommunitySearch.getResult();
+
+            //TODO: "FIXING" los images en null pues en el ConnectionOtherProfileFragment explota.
+            //Eventualmente este result traera las imagenes correctas. Quitar este for cuando eso ocurra.
+            List<CryptoBrokerCommunityInformation> fixedResult = new ArrayList<>();
+            for(CryptoBrokerCommunityInformation i : result){
+                fixedResult.add(new CryptoBrokerCommunityInformationImpl(i.getPublicKey(), i.getAlias(), new byte[0]));
+            }
+
+            dataSet.addAll(fixedResult);
             offset = dataSet.size();
 
         } catch (Exception e) {

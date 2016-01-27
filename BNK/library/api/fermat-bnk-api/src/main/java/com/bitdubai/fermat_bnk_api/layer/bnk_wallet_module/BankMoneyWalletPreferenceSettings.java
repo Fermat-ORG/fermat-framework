@@ -1,4 +1,4 @@
-package com.bitdubai.reference_wallet.bank_money_wallet.preference_settings;
+package com.bitdubai.fermat_bnk_api.layer.bnk_wallet_module;
 
 import com.bitdubai.fermat_wpd_api.layer.wpd_middleware.wallet_settings.exceptions.CantGetDefaultLanguageException;
 import com.bitdubai.fermat_wpd_api.layer.wpd_middleware.wallet_settings.exceptions.CantGetDefaultSkinException;
@@ -12,6 +12,16 @@ import java.util.UUID;
  * Created by memo on 04/12/15.
  */
 public class BankMoneyWalletPreferenceSettings implements WalletSettings {
+
+    private boolean isHomeTutorialDialogEnabled;
+
+    public boolean isHomeTutorialDialogEnabled() {
+        return isHomeTutorialDialogEnabled;
+    }
+
+    public void setIsHomeTutorialDialogEnabled(boolean isHomeTutorialDialogEnabled) {
+        this.isHomeTutorialDialogEnabled = isHomeTutorialDialogEnabled;
+    }
     /**
      * This method let us know the default language of a wallet
      *
@@ -58,6 +68,6 @@ public class BankMoneyWalletPreferenceSettings implements WalletSettings {
 
     @Override
     public void setIsPresentationHelpEnabled(boolean b) {
-
+        isHomeTutorialDialogEnabled=b;
     }
 }

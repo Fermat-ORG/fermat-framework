@@ -37,7 +37,7 @@ public class CustomerBrokerContractPurchaseMock implements CustomerBrokerContrac
 
     @Override
     public ContractStatus getStatus() {
-        return ContractStatus.PENDING_PAYMENT;
+        return ContractStatus.PENDING_MERCHANDISE;
     }
 
     @Override
