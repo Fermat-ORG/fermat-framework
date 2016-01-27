@@ -954,6 +954,7 @@ public final class CryptoPaymentRequestNetworkServicePluginRoot extends Abstract
                 if(communicationNetworkServiceConnectionManager==null) {
                     initializeCommunicationNetworkServiceConnectionManager();
                 }
+
                 this.register = Boolean.TRUE;
                 initializeAgent();
                 System.out.print("CryptoPaymentRequestNetworkServicePluginRoot - NetWork Service is Registered: " + platformComponentProfileRegistered.getAlias());
@@ -1357,7 +1358,7 @@ public final class CryptoPaymentRequestNetworkServicePluginRoot extends Abstract
         }
         catch(Exception e)
         {
-            System.out.print("REQUEST PAYMENT NS EXCEPCION VERIFICANDO WAIT MESSAGE");
+            System.out.println("REQUEST PAYMENT NS EXCEPCION VERIFICANDO WAIT MESSAGE");
             e.printStackTrace();
         }
 
@@ -1377,7 +1378,7 @@ public final class CryptoPaymentRequestNetworkServicePluginRoot extends Abstract
         }
         catch(CantListRequestsException | CantChangeRequestProtocolStateException |RequestNotFoundException e)
         {
-            System.out.print("Payment Request NS EXCEPCION REPROCESANDO WAIT MESSAGE");
+            System.out.println("Payment Request NS EXCEPCION REPROCESANDO WAIT MESSAGE");
             e.printStackTrace();
         }
     }
@@ -1395,7 +1396,7 @@ public final class CryptoPaymentRequestNetworkServicePluginRoot extends Abstract
         }
         catch(CantListRequestsException | CantChangeRequestProtocolStateException |RequestNotFoundException e)
         {
-            System.out.print("Payment Request NS EXCEPCION REPROCESANDO WAIT MESSAGE");
+            System.out.println("Payment Request NS EXCEPCION REPROCESANDO WAIT MESSAGE");
             e.printStackTrace();
         }
     }

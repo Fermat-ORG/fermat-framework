@@ -798,7 +798,7 @@ public class CryptoTransmissionNetworkServicePluginRoot extends AbstractNetworkS
                     platformComponentProfileRegistered.getNetworkServiceType() == NetworkServiceType.INTRA_USER &&
                     platformComponentProfileRegistered.getIdentityPublicKey().equals(identity.getPublicKey())) {
 
-                System.out.print("CryptoTransmissionNetworkServicePluginRoot - NetWork Service is Registered: " + platformComponentProfileRegistered.getAlias());
+                System.out.println("CryptoTransmissionNetworkServicePluginRoot - NetWork Service is Registered: " + platformComponentProfileRegistered.getAlias());
                 this.register = Boolean.TRUE;
                 initializeCryptoTransmissionAgent();
 
@@ -832,7 +832,7 @@ public class CryptoTransmissionNetworkServicePluginRoot extends AbstractNetworkS
 
         System.out.println(" CryptoTransmissionNetworkServiceConnectionManager - Starting method handleCompleteRequestListComponentRegisteredNotificationEvent");
 
-        System.out.print("-----------------------\n" +
+        System.out.println("-----------------------\n" +
                 "CRYPTO TRANSMISSION CONEXION EXITOSA!!!!  -----------------------\n" +
                 "-----------------------\n A: " + getName());
 
@@ -865,7 +865,7 @@ public class CryptoTransmissionNetworkServicePluginRoot extends AbstractNetworkS
         //TODO: SE lo paso en duro para probar
         communicationNetworkServiceConnectionManager.handleEstablishedRequestedNetworkServiceConnection(remoteComponentProfile);
 
-        System.out.print("-----------------------\n" +
+        System.out.println("-----------------------\n" +
                 "CRYPTO TRANSMISSION CONEXION ENTRANTE  -----------------------\n" +
                 "-----------------------\n A: " + remoteComponentProfile.getAlias());
 
@@ -874,7 +874,7 @@ public class CryptoTransmissionNetworkServicePluginRoot extends AbstractNetworkS
             remoteNetworkServicesRegisteredList.add(remoteComponentProfile);
 
 
-            System.out.print("-----------------------\n" +
+            System.out.println("-----------------------\n" +
                     "CRYPTO TRANSMISSION CONEXION ENTRANTE  -----------------------\n" +
                     "-----------------------\n A: " + remoteComponentProfile.getAlias());
         }
@@ -1329,7 +1329,7 @@ public class CryptoTransmissionNetworkServicePluginRoot extends AbstractNetworkS
                 cryptoTransmissionMetadata.changeCryptoTransmissionProtocolState(CryptoTransmissionProtocolState.PROCESSING_RECEIVE);
                 incomingCryptoTransmissionMetadataDAO.saveCryptoTransmissionMetadata(cryptoTransmissionMetadata);
 
-                System.out.print("-----------------------\n" +
+                System.out.println("-----------------------\n" +
                         "RECIVIENDO CRYPTO METADATA!!!!! -----------------------\n" +
                         "-----------------------\n STATE: " + cryptoTransmissionMetadata.getCryptoTransmissionProtocolState());
 
@@ -1352,10 +1352,10 @@ public class CryptoTransmissionNetworkServicePluginRoot extends AbstractNetworkS
                                     cryptoTransmissionResponseMessage.getCryptoTransmissionMetadataState()
                                     );
 
-                            System.out.print("-----------------------\n" +
+                            System.out.println("-----------------------\n" +
                                     "RECIVIENDO RESPUESTA CRYPTO METADATA!!!!! -----------------------\n" +
                                     "-----------------------\n STATE: SEEN_BY_DESTINATION_NETWORK_SERVICE ") ;
-                            System.out.print("CryptoTransmission SEEN_BY_DESTINATION_NETWORK_SERVICE event");
+                            System.out.println("CryptoTransmission SEEN_BY_DESTINATION_NETWORK_SERVICE event");
 
                             break;
                         case  SEEN_BY_DESTINATION_VAULT:
@@ -1365,10 +1365,10 @@ public class CryptoTransmissionNetworkServicePluginRoot extends AbstractNetworkS
                                     cryptoTransmissionResponseMessage.getCryptoTransmissionProtocolState(),
                                     cryptoTransmissionResponseMessage.getCryptoTransmissionMetadataState()
                             );
-                            System.out.print("-----------------------\n" +
+                            System.out.println("-----------------------\n" +
                                     "RECIVIENDO RESPUESTA CRYPTO METADATA!!!!! -----------------------\n" +
                                     "-----------------------\n STATE: SEEN_BY_DESTINATION_VAULT " );
-                            System.out.print("CryptoTransmission SEEN_BY_DESTINATION_VAULT event");
+                            System.out.println("CryptoTransmission SEEN_BY_DESTINATION_VAULT event");
                             break;
 
                         case CREDITED_IN_DESTINATION_WALLET:
@@ -1378,11 +1378,11 @@ public class CryptoTransmissionNetworkServicePluginRoot extends AbstractNetworkS
                                     CryptoTransmissionProtocolState.DONE,
                                     cryptoTransmissionResponseMessage.getCryptoTransmissionMetadataState()
                             );
-                            System.out.print("-----------------------\n" +
+                            System.out.println("-----------------------\n" +
                                     "RECIVIENDO RESPUESTA CRYPTO METADATA!!!!! -----------------------\n" +
                                     "-----------------------\n STATE: CREDITED_IN_DESTINATION_WALLET ");
                             // deberia ver si tengo que lanzar un evento acá
-                            System.out.print("CryptoTransmission CREDITED_IN_DESTINATION_WALLET event");
+                            System.out.println("CryptoTransmission CREDITED_IN_DESTINATION_WALLET event");
 
                             break;
                     }
@@ -1458,7 +1458,7 @@ public class CryptoTransmissionNetworkServicePluginRoot extends AbstractNetworkS
         }
         catch(Exception e)
         {
-            System.out.print("CRYPTO TRANSMISSION EXCEPCION VERIFICANDO WAIT MESSAGE");
+            System.out.println("CRYPTO TRANSMISSION EXCEPCION VERIFICANDO WAIT MESSAGE");
             e.printStackTrace();
         }
 
@@ -1483,10 +1483,10 @@ public class CryptoTransmissionNetworkServicePluginRoot extends AbstractNetworkS
 
 
         } catch (CantUpdateRecordDataBaseException  e) {
-            System.out.print("CRYPTO TRANSMISSION EXCEPCION REPROCESANDO WAIT MESSAGE");
+            System.out.println("CRYPTO TRANSMISSION EXCEPCION REPROCESANDO WAIT MESSAGE");
             e.printStackTrace();
         } catch (Exception  e) {
-            System.out.print("CRYPTO TRANSMISSION EXCEPCION REPROCESANDO WAIT MESSAGE");
+            System.out.println("CRYPTO TRANSMISSION EXCEPCION REPROCESANDO WAIT MESSAGE");
             e.printStackTrace();
         }
     }
@@ -1508,10 +1508,10 @@ public class CryptoTransmissionNetworkServicePluginRoot extends AbstractNetworkS
 
 
         } catch (CantUpdateRecordDataBaseException  e) {
-            System.out.print("CRYPTO TRANSMISSION EXCEPCION REPROCESANDO WAIT MESSAGE");
+            System.out.println("CRYPTO TRANSMISSION EXCEPCION REPROCESANDO WAIT MESSAGE");
             e.printStackTrace();
         } catch (Exception  e) {
-            System.out.print("CRYPTO TRANSMISSION EXCEPCION REPROCESANDO WAIT MESSAGE");
+            System.out.println("CRYPTO TRANSMISSION EXCEPCION REPROCESANDO WAIT MESSAGE");
             e.printStackTrace();
         }
     }

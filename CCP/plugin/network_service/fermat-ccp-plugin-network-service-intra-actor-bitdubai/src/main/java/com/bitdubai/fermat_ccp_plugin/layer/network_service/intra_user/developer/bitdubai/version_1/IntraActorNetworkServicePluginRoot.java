@@ -286,7 +286,6 @@ public class IntraActorNetworkServicePluginRoot extends AbstractPlugin implement
 
     private IntraActorNetworkServiceDao intraActorNetworkServiceDao;
 
-    private  boolean beforeRegistered;
     /**
      * Constructor
      */
@@ -298,7 +297,7 @@ public class IntraActorNetworkServicePluginRoot extends AbstractPlugin implement
         this.name = "Intra actor Network Service";
         this.alias = "IntraActorNetworkService";
         this.extraData = null;
-        beforeRegistered = false;
+        this.actorsToRegisterCache = new ArrayList<>();
     }
 
     /**
@@ -546,7 +545,7 @@ public class IntraActorNetworkServicePluginRoot extends AbstractPlugin implement
 
                     intraActorNetworkServiceDao = new IntraActorNetworkServiceDao(this.dataBase, this.pluginFileSystem,this.pluginId);
 
-                    actorsToRegisterCache = new ArrayList<>();
+
 
                     remoteNetworkServicesRegisteredList = new CopyOnWriteArrayList<PlatformComponentProfile>();
 
@@ -777,7 +776,7 @@ public class IntraActorNetworkServicePluginRoot extends AbstractPlugin implement
                     platformComponentProfileRegistered.getNetworkServiceType() == this.getNetworkServiceType() &&
                     platformComponentProfileRegistered.getIdentityPublicKey().equals(identity.getPublicKey())) {
 
-
+                System.out.println("IntraActorNetworkServicePluginRoot - NetWork Service is Registered: " + platformComponentProfileRegistered.getAlias());
                 this.register = Boolean.TRUE;
                 initializeIntraActorAgent();
 
@@ -785,15 +784,14 @@ public class IntraActorNetworkServicePluginRoot extends AbstractPlugin implement
 
                 for (PlatformComponentProfile platformComponentProfile : actorsToRegisterCache) {
                     communicationsClientConnection.registerComponentForCommunication(networkServiceType, platformComponentProfile);
-                    System.out.print("IntraActorNetworkServicePluginRoot - Trying to register to: " + platformComponentProfile.getAlias());
+                    System.out.println("IntraActorNetworkServicePluginRoot - Trying to register to: " + platformComponentProfile.getAlias());
                 }
+
 
             }
 
             if (platformComponentProfileRegistered.getPlatformComponentType() == PlatformComponentType.ACTOR_INTRA_USER) {
-                System.out.print("IntraActorNetworkServicePluginRoot - New Actor registered: " + platformComponentProfileRegistered.getAlias());
-            }else {
-                System.out.print("IntraActorNetworkServicePluginRoot - NetWork Service is Registered: " + platformComponentProfileRegistered.getAlias());
+                System.out.println("IntraActorNetworkServicePluginRoot - New Actor registered: " + platformComponentProfileRegistered.getAlias());
             }
 
         } catch (Exception e) {
@@ -862,7 +860,7 @@ public class IntraActorNetworkServicePluginRoot extends AbstractPlugin implement
 
         } catch (Exception e) {
             //quiere decir que no estoy reciviendo metadata si no una respuesta
-            System.out.print("EXCEPCION DENTRO DEL PROCCESS EVENT");
+            System.out.println("EXCEPCION DENTRO DEL PROCCESS EVENT");
             e.printStackTrace();
 
         }
@@ -1119,7 +1117,7 @@ public class IntraActorNetworkServicePluginRoot extends AbstractPlugin implement
         }
         catch(Exception e)
         {
-            System.out.print("INTRA USER NS EXCEPCION VERIFICANDO WAIT MESSAGE");
+            System.out.println("INTRA USER NS EXCEPCION VERIFICANDO WAIT MESSAGE");
             e.printStackTrace();
         }
 
@@ -1572,7 +1570,7 @@ public class IntraActorNetworkServicePluginRoot extends AbstractPlugin implement
                     notificationDescriptor,
                     currentTime,
                     protocolState,
-                    false,1,
+                    false, 1,
                     null
             );
 
@@ -1786,12 +1784,13 @@ public class IntraActorNetworkServicePluginRoot extends AbstractPlugin implement
 
 
                 if (!actorsToRegisterCache.contains(platformComponentProfile)) {
+
                     actorsToRegisterCache.add(platformComponentProfile);
 
                     if (register) {
                         System.out.println("---------- TESTENADO --------------------");
-                        System.out.println("----------\n"+platformComponentProfile+"\n --------------------");
-                        System.out.println("----------\n "+networkServiceType+"\n --------------------");
+                        System.out.println("----------\n" + platformComponentProfile + "\n --------------------");
+                        System.out.println("----------\n " + networkServiceType + "\n --------------------");
                         System.out.println("---------- TESTENADO --------------------");
                         communicationsClientConnection.registerComponentForCommunication(networkServiceType, platformComponentProfile);
                         System.out.println("----------\n Pasamos por el registro robert\n --------------------");
@@ -1826,6 +1825,10 @@ public class IntraActorNetworkServicePluginRoot extends AbstractPlugin implement
                         NetworkServiceType.UNDEFINED,
                         PlatformComponentType.ACTOR_INTRA_USER,
                         extraData);
+
+                if (!actorsToRegisterCache.contains(platformComponentProfile)) {
+                    actorsToRegisterCache.add(platformComponentProfile);
+                }
 
                 Thread thread = new Thread(new Runnable() {
                     @Override
@@ -2115,10 +2118,10 @@ public class IntraActorNetworkServicePluginRoot extends AbstractPlugin implement
         catch(CantListIntraWalletUsersException | CantUpdateRecordDataBaseException| CantUpdateRecordException| RequestNotFoundException
                 e)
         {
-            System.out.print("INTRA USER NS EXCEPCION REPROCESANDO MESSAGEs");
+            System.out.println("INTRA USER NS EXCEPCION REPROCESANDO MESSAGEs");
             e.printStackTrace();
         } catch (Exception e) {
-            System.out.print("INTRA USER NS EXCEPCION REPROCESANDO MESSAGEs");
+            System.out.println("INTRA USER NS EXCEPCION REPROCESANDO MESSAGEs");
             e.printStackTrace();
         }
     }
@@ -2136,10 +2139,10 @@ public class IntraActorNetworkServicePluginRoot extends AbstractPlugin implement
         catch(CantListIntraWalletUsersException | CantUpdateRecordDataBaseException| CantUpdateRecordException| RequestNotFoundException
                 e)
         {
-            System.out.print("INTRA USER NS EXCEPCION REPROCESANDO MESSAGEs");
+            System.out.println("INTRA USER NS EXCEPCION REPROCESANDO MESSAGEs");
             e.printStackTrace();
         } catch (Exception e) {
-            System.out.print("INTRA USER NS EXCEPCION REPROCESANDO MESSAGEs");
+            System.out.println("INTRA USER NS EXCEPCION REPROCESANDO MESSAGEs");
             e.printStackTrace();
         }
     }
