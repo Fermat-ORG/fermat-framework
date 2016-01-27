@@ -199,14 +199,14 @@ public class CommunicationNetworkServiceRemoteAgent extends Observable {
 
         try {
 
-           System.out.println("IntraCommunicationNetworkServiceRemoteAgent - processMessageReceived "+communicationsVPNConnection.isActive());
+           System.out.println("CommunicationNetworkServiceRemoteAgent - processMessageReceived "+communicationsVPNConnection.isActive());
 
             /**
              * Verified the status of the connection
              */
             if (communicationsVPNConnection.isConnected()){
 
-                System.out.println("IntraCommunicationNetworkServiceRemoteAgent - communicationsVPNConnection.getUnreadMessagesCount() = "+communicationsVPNConnection.getUnreadMessagesCount());
+                System.out.println("CommunicationNetworkServiceRemoteAgent - communicationsVPNConnection.getUnreadMessagesCount() = "+communicationsVPNConnection.getUnreadMessagesCount());
 
                 /**
                  * process all pending messages
@@ -262,7 +262,7 @@ public class CommunicationNetworkServiceRemoteAgent extends Observable {
         } catch (InterruptedException e) {
             running = false;
             Thread.currentThread().interrupt();
-            System.out.println("IntraCommunicationNetworkServiceRemoteAgent - Thread Interrupted stopped ...  ");
+            System.out.println("CommunicationNetworkServiceRemoteAgent - Thread Interrupted stopped ...  ");
         } catch (CantInsertRecordDataBaseException e) {
             errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_TEMPLATE_NETWORK_SERVICE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, new Exception("Can not process message received. Error reason: "+e.getMessage()));
         }
@@ -281,7 +281,7 @@ public class CommunicationNetworkServiceRemoteAgent extends Observable {
             if (communicationsVPNConnection.isConnected()){
                 try {
 
-                    System.out.println("IntraCommunicationNetworkServiceRemoteAgent - processMessageToSend ");
+                    System.out.println("CommunicationNetworkServiceRemoteAgent - processMessageToSend ");
 
 
                     Map<String, Object> filters = new HashMap<>();
@@ -293,7 +293,7 @@ public class CommunicationNetworkServiceRemoteAgent extends Observable {
                      */
                     List<FermatMessage> messages = outgoingMessageDao.findAll(filters);
 
-                    System.out.println("IntraCommunicationNetworkServiceRemoteAgent - messages.size() "+messages.size());
+                    System.out.println("CommunicationNetworkServiceRemoteAgent - messages.size() "+messages.size());
 
                     /*
                      * For each message
@@ -337,7 +337,7 @@ public class CommunicationNetworkServiceRemoteAgent extends Observable {
 
 
                         }else{
-                            System.out.println("IntraCommunicationNetworkServiceRemoteAgent - VPN connection is connected = "+communicationsVPNConnection.isConnected());
+                            System.out.println("CommunicationNetworkServiceRemoteAgent - VPN connection is connected = "+communicationsVPNConnection.isConnected());
                         }
 
                     }
@@ -361,7 +361,7 @@ public class CommunicationNetworkServiceRemoteAgent extends Observable {
         } catch (InterruptedException e) {
             running = false;
             Thread.currentThread().interrupt();
-            System.out.println("IntraCommunicationNetworkServiceRemoteAgent - Thread Interrupted stopped ...  ");
+            System.out.println("CommunicationNetworkServiceRemoteAgent - Thread Interrupted stopped ...  ");
         }
     }
 }

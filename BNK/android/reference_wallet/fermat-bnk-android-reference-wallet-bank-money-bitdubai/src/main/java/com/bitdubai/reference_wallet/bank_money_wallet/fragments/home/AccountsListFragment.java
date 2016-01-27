@@ -10,12 +10,13 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Toast;
 
-import com.bitdubai.fermat_android_api.ui.Views.PresentationCallback;
+import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView;
 import com.bitdubai.fermat_android_api.ui.Views.PresentationDialog;
 import com.bitdubai.fermat_android_api.ui.adapters.FermatAdapter;
 import com.bitdubai.fermat_android_api.ui.enums.FermatRefreshTypes;
 import com.bitdubai.fermat_android_api.ui.fragments.FermatWalletListFragment;
 import com.bitdubai.fermat_android_api.ui.interfaces.FermatListItemListeners;
+import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.enums.UISource;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Wallets;
@@ -53,6 +54,7 @@ public class AccountsListFragment extends FermatWalletListFragment<BankAccountNu
     }
 
     private View emtyView;
+    private FermatTextView header;
 
     private PresentationDialog presentationDialog;
     @Override
@@ -75,27 +77,30 @@ public class AccountsListFragment extends FermatWalletListFragment<BankAccountNu
         super.initViews(layout);
         configureToolbar();
         this.emtyView =  layout.findViewById(R.id.bw_empty_accounts_view);
+        header = (FermatTextView)layout.findViewById(R.id.textView_header_text);
+        header.setText("Accounts:   "+moduleManager.getBankingWallet().getBankName());
         presentationDialog = new PresentationDialog.Builder(getActivity(),appSession)
                 .setBannerRes(R.drawable.bw_banner)
                 .setBody("prueba Body")
                 .setTitle("prueba Title")
                 .setSubTitle("prueba subtitle")
-                .setTextFooter("prueba footer").build();
+                .setTextFooter("prueba footer").setTemplateType(PresentationDialog.TemplateType.TYPE_PRESENTATION_WITHOUT_IDENTITIES).build();
         showOrHideNoAccountListView(accountsList.isEmpty());
-        /*presentationDialog.findViewById(R.id.btn_dismiss).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                System.out.println("presentation dialog button close");
-            }
-        });*/
-        presentationDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
+        /*presentationDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
             @Override
             public void onDismiss(DialogInterface dialogInterface) {
                 System.out.println("presentation dialog dismiss");
             }
-        });
-        presentationDialog.show();
-
+        });*/
+        boolean showDialog;
+        try{
+            showDialog = moduleManager.getSettingsManager().loadAndGetSettings(appSession.getAppPublicKey()).isHomeTutorialDialogEnabled();
+            if(showDialog){
+                presentationDialog.show();
+            }
+        }catch (FermatException e){
+            makeText(getActivity(), "Oops! recovering from system error", Toast.LENGTH_SHORT).show();
+        }
     }
 
     private void configureToolbar() {
