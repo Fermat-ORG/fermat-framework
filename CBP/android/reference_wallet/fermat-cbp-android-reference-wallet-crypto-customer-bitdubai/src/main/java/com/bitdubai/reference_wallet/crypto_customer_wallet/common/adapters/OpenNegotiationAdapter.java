@@ -132,7 +132,7 @@ public class OpenNegotiationAdapter extends FermatAdapter<ClauseInformation, Fer
                 return R.layout.ccw_exchange_rate_item;
             case TYPE_ITEM_AMOUNT_TO_BUY:
                 return R.layout.ccw_amount_to_buy_item_single;
-            case TYPE_ITEM_AMOUNT_TO_PAY
+            case TYPE_ITEM_AMOUNT_TO_PAY:
                 return R.layout.ccw_amount_to_buy_item_single;
             case TYPE_FOOTER:
                 return R.layout.ccw_footer_item;
@@ -207,10 +207,10 @@ public class OpenNegotiationAdapter extends FermatAdapter<ClauseInformation, Fer
                 clauseViewHolder.setViewResources(R.string.exchange_rate_reference, clauseNumberImageRes);
                 break;
             case CUSTOMER_CURRENCY_QUANTITY:
-                clauseViewHolder.setViewResources(R.string.ccw_amount_to_buy, clauseNumberImageRes);
+                clauseViewHolder.setViewResources(R.string.ccw_amount_to_buy, clauseNumberImageRes, R.string.ccw_amount_title);
                 break;
             case BROKER_CURRENCY_QUANTITY:
-                clauseViewHolder.setViewResources(R.string.ccw_amount_to_pay, clauseNumberImageRes, R.string.payment_method);
+                clauseViewHolder.setViewResources(R.string.ccw_amount_to_pay, clauseNumberImageRes, R.string.ccw_amount_title);
                 break;
             //PAYMENT METHOD CLAUSES
             case CUSTOMER_PAYMENT_METHOD:
