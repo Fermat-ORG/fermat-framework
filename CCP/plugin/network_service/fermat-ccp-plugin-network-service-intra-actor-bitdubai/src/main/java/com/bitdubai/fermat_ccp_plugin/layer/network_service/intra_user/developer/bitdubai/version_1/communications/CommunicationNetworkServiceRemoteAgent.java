@@ -146,7 +146,7 @@ public class CommunicationNetworkServiceRemoteAgent extends Observable {
         this.communicationsVPNConnection         = communicationsVPNConnection;
         this.networkServicePluginRoot            = networkServicePluginRoot;
         this.communicationNetworkServiceConnectionManager = communicationNetworkServiceConnectionManager;
-        executorService = Executors.newFixedThreadPool(2);
+
 
     }
 
@@ -157,6 +157,7 @@ public class CommunicationNetworkServiceRemoteAgent extends Observable {
 
         //Set to running
         this.running  = Boolean.TRUE;
+        this.executorService = Executors.newFixedThreadPool(2);
 
         //Start the Threads
         futures[SEND_TASK] = executorService.submit(toSend);
