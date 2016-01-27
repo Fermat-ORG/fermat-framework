@@ -762,7 +762,6 @@ public class CryptoTransmissionNetworkServicePluginRoot extends AbstractNetworkS
                     wsCommunicationsCloudClientManager,
                     errorManager,
                     new ArrayList<PlatformComponentProfile>(),
-                    identity,
                     eventManager
             );
             cryptoTransmissionAgent.start();

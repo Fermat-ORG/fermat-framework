@@ -22,6 +22,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.DeadObjectException;
 import android.os.Handler;
+import android.os.RemoteException;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.design.widget.CoordinatorLayout;
@@ -217,7 +218,7 @@ public abstract class FermatActivity extends AppCompatActivity
     /**
      * Receivers
      */
-    private NetworkStateReceiver networkStateReceiver;
+    //private NetworkStateReceiver networkStateReceiver;
 
     /**
      * UI
@@ -319,7 +320,10 @@ public abstract class FermatActivity extends AppCompatActivity
     protected void onStop() {
         try {
             super.onStop();
-            unregisterReceiver(networkStateReceiver);
+//            if(networkStateReceiver!=null) {
+//                unregisterReceiver(networkStateReceiver);
+//                networkStateReceiver.removeListener(this);
+//            }
        //     networkStateReceiver.removeListener(this);
         } catch (Exception e) {
             e.printStackTrace();
@@ -969,13 +973,13 @@ public abstract class FermatActivity extends AppCompatActivity
 //            }
 //
 //        }
-        try {
-            networkStateReceiver = new NetworkStateReceiver();
-            networkStateReceiver.addListener(this);
-            this.registerReceiver(networkStateReceiver, new IntentFilter(android.net.ConnectivityManager.CONNECTIVITY_ACTION));
-        }catch (Exception e){
-            e.printStackTrace();
-        }
+//        try {
+//            networkStateReceiver = NetworkStateReceiver.getInstance();
+//            networkStateReceiver.addListener(this);
+//            this.registerReceiver(networkStateReceiver, new IntentFilter(android.net.ConnectivityManager.CONNECTIVITY_ACTION));
+//        }catch (Exception e){
+//            e.printStackTrace();
+//        }
     }
 
     @Override
@@ -995,6 +999,8 @@ public abstract class FermatActivity extends AppCompatActivity
         NotificationManager mNotificationManager =
                 (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
         mNotificationManager.cancelAll();
+
+//        networkStateReceiver.removeListener(this);
         //mNotificationManager.notify(NOTIFICATION_ID, notification.build());
     }
     /**
