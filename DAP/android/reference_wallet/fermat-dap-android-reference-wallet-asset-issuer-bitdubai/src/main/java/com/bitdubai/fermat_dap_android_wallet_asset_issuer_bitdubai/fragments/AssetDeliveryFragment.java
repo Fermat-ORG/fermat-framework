@@ -36,6 +36,7 @@ import com.bitdubai.fermat_dap_android_wallet_asset_issuer_bitdubai.R;
 import com.bitdubai.fermat_dap_android_wallet_asset_issuer_bitdubai.dialogs.DistributeAcceptDialog;
 import com.bitdubai.fermat_dap_android_wallet_asset_issuer_bitdubai.models.Data;
 import com.bitdubai.fermat_dap_android_wallet_asset_issuer_bitdubai.models.DigitalAsset;
+import com.bitdubai.fermat_dap_android_wallet_asset_issuer_bitdubai.models.Group;
 import com.bitdubai.fermat_dap_android_wallet_asset_issuer_bitdubai.models.User;
 import com.bitdubai.fermat_dap_android_wallet_asset_issuer_bitdubai.sessions.AssetIssuerSession;
 import com.bitdubai.fermat_dap_android_wallet_asset_issuer_bitdubai.sessions.SessionConstantsAssetIssuer;
@@ -75,6 +76,7 @@ public class AssetDeliveryFragment extends AbstractFermatFragment {
     private DigitalAsset digitalAsset;
 
     int selectedUsersCount;
+    int selectedGroupsCount;
 
     SettingsManager<AssetIssuerSettings> settingsManager;
 
@@ -180,24 +182,42 @@ public class AssetDeliveryFragment extends AbstractFermatFragment {
                     Toast.makeText(activity, "Value can't be greater than "+MAX_ASSET_QUANTITY, Toast.LENGTH_SHORT).show();
                 } else if (digitalAsset.getAvailableBalanceQuantity() == 0) {
                     Toast.makeText(activity, "There is not assets to distribute", Toast.LENGTH_SHORT).show();
-                } else if (selectedUsersCount == 0) {
-                    Toast.makeText(activity, "No users selected", Toast.LENGTH_SHORT).show();
-                } else if (selectedUsersCount > digitalAsset.getAvailableBalanceQuantity()) {
+                } else if (selectedUsersCount == 0 && selectedGroupsCount == 0) {
+                    Toast.makeText(activity, "No users/groups selected", Toast.LENGTH_SHORT).show();
+                } else if (selectedUsersCount > digitalAsset.getAvailableBalanceQuantity() || selectedGroupsCount > digitalAsset.getAvailableBalanceQuantity()) {
                     Toast.makeText(activity, "There is not enought assets to distribute", Toast.LENGTH_SHORT).show();
                 } else {
-                    Object x = appSession.getData("users");
-                    if (x != null) {
-                        final List<User> users = (List<User>) x;
-                        if (users.size() > 0) {
-                            DistributeAcceptDialog dialog = new DistributeAcceptDialog(getActivity(), (AssetIssuerSession) appSession, appResourcesProviderManager);
-                            dialog.setYesBtnListener(new DistributeAcceptDialog.OnClickAcceptListener() {
-                                @Override
-                                public void onClick() {
-                                    int assetsAmount = Integer.parseInt(assetsToDeliverEditText.getText().toString());
-                                    doDistribute(digitalAsset.getAssetPublicKey(), users, assetsAmount);
-                                }
-                            });
-                            dialog.show();
+                    if (selectedUsersCount > 0) {
+                        Object x = appSession.getData("users");
+                        if (x != null) {
+                            final List<User> users = (List<User>) x;
+                            if (users.size() > 0) {
+                                DistributeAcceptDialog dialog = new DistributeAcceptDialog(getActivity(), (AssetIssuerSession) appSession, appResourcesProviderManager);
+                                dialog.setYesBtnListener(new DistributeAcceptDialog.OnClickAcceptListener() {
+                                    @Override
+                                    public void onClick() {
+                                        int assetsAmount = Integer.parseInt(assetsToDeliverEditText.getText().toString());
+                                        doDistributeToUsers(digitalAsset.getAssetPublicKey(), users, assetsAmount);
+                                    }
+                                });
+                                dialog.show();
+                            }
+                        }
+                    } else if (selectedGroupsCount > 0) {
+                        Object x = appSession.getData("groups");
+                        if (x != null) {
+                            final List<Group> groups = (List<Group>) x;
+                            if (groups.size() > 0) {
+                                DistributeAcceptDialog dialog = new DistributeAcceptDialog(getActivity(), (AssetIssuerSession) appSession, appResourcesProviderManager);
+                                dialog.setYesBtnListener(new DistributeAcceptDialog.OnClickAcceptListener() {
+                                    @Override
+                                    public void onClick() {
+                                        int assetsAmount = Integer.parseInt(assetsToDeliverEditText.getText().toString());
+                                        doDistributeToGroups(digitalAsset.getAssetPublicKey(), groups, assetsAmount);
+                                    }
+                                });
+                                dialog.show();
+                            }
                         }
                     }
                 }
@@ -212,7 +232,16 @@ public class AssetDeliveryFragment extends AbstractFermatFragment {
         });
 
         selectedUsersCount = getUsersSelectedCount();
-        String message = (selectedUsersCount == 0) ? "Select users" : selectedUsersCount + " users selected";
+        selectedGroupsCount = getGroupsSelectedCount();
+
+        String message = "";
+        if (selectedUsersCount == 0 && selectedGroupsCount == 0) {
+            message = "Select users or groups";
+        } else if (selectedUsersCount > 0) {
+            message = selectedUsersCount + " users selected";
+        } else if (selectedGroupsCount > 0){
+            message = selectedGroupsCount + " groups selected";
+        }
         selectedUsersText.setText(message);
     }
 
@@ -268,7 +297,24 @@ public class AssetDeliveryFragment extends AbstractFermatFragment {
         return count;
     }
 
-    private void doDistribute(final String assetPublicKey, final List<User> users, final int assetsAmount) {
+    private int getGroupsSelectedCount() {
+        Object x = appSession.getData("groups");
+        int count = 0;
+        if (x != null) {
+            List<Group> groups = (List<Group>) x;
+            if (groups.size() > 0) {
+                for (Group group :
+                        groups) {
+                    if (group.isSelected()) {
+                        count++;
+                    }
+                }
+            }
+        }
+        return count;
+    }
+
+    private void doDistributeToUsers(final String assetPublicKey, final List<User> users, final int assetsAmount) {
         final ProgressDialog dialog = new ProgressDialog(activity);
         dialog.setMessage("Please wait...");
         dialog.setCancelable(false);
@@ -282,7 +328,6 @@ public class AssetDeliveryFragment extends AbstractFermatFragment {
                     }
                 }
                 if (users.size() > 0) {
-                    //TODO: Solo para la prueba del Distribution
                     moduleManager.distributionAssets(assetPublicKey, null, assetsAmount);
                 }
                 return true;
@@ -312,6 +357,51 @@ public class AssetDeliveryFragment extends AbstractFermatFragment {
         task.execute();
     }
 
+    private void doDistributeToGroups(final String assetPublicKey, final List<Group> groups, final int assetsAmount) {
+        final ProgressDialog dialog = new ProgressDialog(activity);
+        dialog.setMessage("Please wait...");
+        dialog.setCancelable(false);
+        dialog.show();
+        FermatWorker task = new FermatWorker() {
+            @Override
+            protected Object doInBackground() throws Exception {
+                for (Group group : groups) {
+                    if (group.isSelected()) {
+                        moduleManager.addGroupToDeliver(group.getActorAssetUserGroup());
+                    }
+                }
+                if (groups.size() > 0) {
+                    moduleManager.distributionAssets(assetPublicKey, null, assetsAmount);
+                }
+                return true;
+            }
+        };
+
+        task.setContext(activity);
+        task.setCallBack(new FermatWorkerCallBack() {
+            @Override
+            public void onPostExecute(Object... result) {
+                dialog.dismiss();
+                if (activity != null) {
+                    refreshUIData();
+                    //Toast.makeText(activity, "Everything ok...", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(activity, "Assets are being delivered. It may take a couple of minutes to confirm or rollback depending on your network connection.", Toast.LENGTH_LONG).show();
+                }
+            }
+
+            @Override
+            public void onErrorOccurred(Exception ex) {
+                dialog.dismiss();
+                if (activity != null) {
+                    refreshUIData();
+                    Toast.makeText(activity, "Fermat Has detected an exception",
+                            Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
+        task.execute();
+    }
+
     private void refreshUIData() {
         String digitalAssetPublicKey = ((DigitalAsset) appSession.getData("asset_data")).getAssetPublicKey();
         try {
@@ -322,7 +412,7 @@ public class AssetDeliveryFragment extends AbstractFermatFragment {
 
         assetDeliveryNameText.setText(digitalAsset.getName());
         //assetsToDeliverEditText.setText(digitalAsset.getAvailableBalanceQuantity()+"");
-        assetsToDeliverEditText.setText(selectedUsersCount+"");
+        assetsToDeliverEditText.setText(((selectedUsersCount > 0) ? selectedUsersCount : selectedGroupsCount) + "");
         assetDeliveryRemainingText.setText(digitalAsset.getAvailableBalanceQuantity() + " Assets Remaining");
 
         if (digitalAsset.getAvailableBalanceQuantity() == 0) {
@@ -353,7 +443,7 @@ public class AssetDeliveryFragment extends AbstractFermatFragment {
 
         assetDeliveryNameText.setText(digitalAsset.getName());
         //assetsToDeliverEditText.setText(digitalAsset.getAvailableBalanceQuantity()+"");
-        assetsToDeliverEditText.setText(selectedUsersCount+"");
+        assetsToDeliverEditText.setText(((selectedUsersCount > 0) ? selectedUsersCount : selectedGroupsCount) + "");
         assetDeliveryRemainingText.setText(digitalAsset.getAvailableBalanceQuantity() + " Assets Remaining");
     }
 
