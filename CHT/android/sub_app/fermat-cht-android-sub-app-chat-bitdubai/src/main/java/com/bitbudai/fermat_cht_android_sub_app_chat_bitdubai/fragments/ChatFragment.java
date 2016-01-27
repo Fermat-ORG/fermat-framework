@@ -21,10 +21,10 @@ import com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.sessions.ChatSessio
 import com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.settings.ChatSettings;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractFermatFragment;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView;
-import com.bitdubai.fermat_api.layer.all_definition.common.system.annotations.NeededAddonReference;
-import com.bitdubai.fermat_api.layer.all_definition.enums.Addons;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.annotations.NeededPluginReference;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Layers;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
+import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.settings.structure.SettingsManager;
 import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.enums.SubApps;
 import com.bitdubai.fermat_cht_android_sub_app_chat_bitdubai.R;
@@ -37,9 +37,9 @@ import com.bitdubai.fermat_cht_api.layer.middleware.mocks.ChatMock;
 import com.bitdubai.fermat_cht_api.layer.middleware.mocks.MessageMock;
 import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.ChatManager;
 import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.ChatModuleManager;
+import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.exceptions.CantRequestListException;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedSubAppExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
-import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfaces.EventManager;
 
 import java.text.DateFormat;
 import java.util.ArrayList;
@@ -72,10 +72,12 @@ public class ChatFragment extends AbstractFermatFragment {//ActionBarActivity
     private ChatSession chatSession;
 
     //New
-    @NeededAddonReference(platform = Platforms.PLUG_INS_PLATFORM, layer = Layers.PLATFORM_SERVICE, addon = Addons.EVENT_MANAGER)
+/*    @NeededAddonReference(platform = Platforms.PLUG_INS_PLATFORM, layer = Layers.PLATFORM_SERVICE, addon = Addons.EVENT_MANAGER)
     private EventManager eventManager;
     @NeededAddonReference(platform = Platforms.PLUG_INS_PLATFORM, layer = Layers.PLATFORM_SERVICE, addon = Addons.EVENT_MANAGER)
-    private EventManager eventManager2;
+    private EventManager eventManager2;*/
+    @NeededPluginReference(platform = Platforms.CHAT_PLATFORM, layer = Layers.NETWORK_SERVICE, plugin = Plugins.CHAT_NETWORK_SERVICE)
+    private com.bitdubai.fermat_cht_api.layer.network_service.chat.interfaces.ChatManager networkservicechatmanager;
     int i = 4;
     boolean me;
     Integer newmessage = 0;
@@ -169,14 +171,19 @@ public class ChatFragment extends AbstractFermatFragment {//ActionBarActivity
                     return;
                 }
 
-                Chat testChat = new ChatMock();
-                Message testMessage = new MessageMock(UUID.fromString("52d7fab8-a423-458f-bcc9-49cdb3e9ba8f"));
-                testMessage.setMessage(messageET.getText().toString());
                 try {
+                    Chat testChat = new ChatMock();
+                    testChat.setLocalActorPublicKey(networkservicechatmanager.getNetWorkServicePublicKey());
+                    List<String> remotePublicKey = networkservicechatmanager.getRegisteredPubliKey();
+                    testChat.setRemoteActorPublicKey(remotePublicKey.get(0));
 
+                    Message testMessage = new MessageMock(UUID.fromString("52d7fab8-a423-458f-bcc9-49cdb3e9ba8f"));
+                    testMessage.setMessage(messageET.getText().toString());
 
                     chatManager.saveChat(testChat);
+
                     chatManager.saveMessage(testMessage);
+
                     mensaje = chatManager.getMessageByChatId((UUID.fromString("52d7fab8-a423-458f-bcc9-49cdb3e9ba8f"))).getMessage();
 
                     historialmensaje.add(mensaje);
@@ -188,6 +195,8 @@ public class ChatFragment extends AbstractFermatFragment {//ActionBarActivity
                 } catch (CantSaveMessageException e) {
                     e.printStackTrace();
                 } catch (CantGetMessageException e) {
+                    e.printStackTrace();
+                } catch (CantRequestListException e) {
                     e.printStackTrace();
                 }
 
@@ -226,6 +235,7 @@ public class ChatFragment extends AbstractFermatFragment {//ActionBarActivity
                                 //              i = i + 1;
                                 newmessage = newmessage + 1;
                                 mensaje = chatManager.getMessageByChatId((UUID.fromString("52d7fab8-a423-458f-bcc9-49cdb3e9ba8f"))).getMessage();
+              //                  mensaje = chatManager.getMessageByChatId(chatManager.networkservicechatmanage)
                                 //        historialmensaje.add("tu##"+mensaje);
                                 //        datos.set(0, historialmensaje);
                                 //        adaptador.refreshEvents(datos);
