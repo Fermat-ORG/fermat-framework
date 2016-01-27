@@ -551,6 +551,8 @@ public class IntraActorNetworkServicePluginRoot extends AbstractPlugin implement
 
                     connectionArrived = new AtomicBoolean(false);
 
+                    initializeIntraActorAgent();
+
                     // change message state to process again first time
                     reprocessMessage();
 
@@ -735,18 +737,14 @@ public class IntraActorNetworkServicePluginRoot extends AbstractPlugin implement
     }
 
     private void initializeIntraActorAgent() {
-        try {
+
             actorNetworkServiceRecordedAgent = new ActorNetworkServiceRecordedAgent(
                     communicationNetworkServiceConnectionManager,
                     this,
                     errorManager,
                     eventManager,
                     wsCommunicationsCloudClientManager);
-            actorNetworkServiceRecordedAgent.start();
 
-        } catch (CantStartAgentException e) {
-            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_INTRAUSER_NETWORK_SERVICE, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
-        }
     }
 
     /**
@@ -778,7 +776,10 @@ public class IntraActorNetworkServicePluginRoot extends AbstractPlugin implement
 
                 System.out.println("IntraActorNetworkServicePluginRoot - NetWork Service is Registered: " + platformComponentProfileRegistered.getAlias());
                 this.register = Boolean.TRUE;
-                initializeIntraActorAgent();
+
+                if (actorNetworkServiceRecordedAgent != null) {
+                    actorNetworkServiceRecordedAgent.start();
+                }
 
                 CommunicationsClientConnection communicationsClientConnection = wsCommunicationsCloudClientManager.getCommunicationsCloudClientConnection();
 
@@ -1365,9 +1366,7 @@ public class IntraActorNetworkServicePluginRoot extends AbstractPlugin implement
                 this.initializeCommunicationNetworkServiceConnectionManager();
             }
 
-            if(actorNetworkServiceRecordedAgent == null) {
-                initializeIntraActorAgent();
-            }else {
+            if(actorNetworkServiceRecordedAgent != null) {
                 actorNetworkServiceRecordedAgent.start();
             }
 
