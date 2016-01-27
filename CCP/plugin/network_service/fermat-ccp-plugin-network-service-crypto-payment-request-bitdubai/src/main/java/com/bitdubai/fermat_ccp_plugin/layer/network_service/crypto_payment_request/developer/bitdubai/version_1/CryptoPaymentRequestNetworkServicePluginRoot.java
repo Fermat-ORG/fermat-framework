@@ -972,7 +972,9 @@ public final class CryptoPaymentRequestNetworkServicePluginRoot extends Abstract
 
     private void initializeAgent(){
 
-            cryptoPaymentRequestExecutorAgent = new CryptoPaymentRequestExecutorAgent(
+        System.out.print("CryptoPaymentRequestNetworkServicePluginRoot - Starting method initializeAgent ");
+
+        cryptoPaymentRequestExecutorAgent = new CryptoPaymentRequestExecutorAgent(
                     this,
                     errorManager,
                     eventManager,
@@ -1045,28 +1047,19 @@ public final class CryptoPaymentRequestNetworkServicePluginRoot extends Abstract
 
             try {
 
-            this.register = Boolean.FALSE;
-
-            if(communicationNetworkServiceConnectionManager != null) {
-                communicationNetworkServiceConnectionManager.closeAllConnection();
-                communicationNetworkServiceConnectionManager.stop();
-            }
-
-            if(cryptoPaymentRequestExecutorAgent!=null) {
-                cryptoPaymentRequestExecutorAgent.stop();
-            }
-                reprocessMessage();
-
-                this.register = Boolean.FALSE;
 
                 if(communicationNetworkServiceConnectionManager != null) {
                     communicationNetworkServiceConnectionManager.closeAllConnection();
                     communicationNetworkServiceConnectionManager.stop();
                 }
 
-                if(cryptoPaymentRequestExecutorAgent != null) {
+                if(cryptoPaymentRequestExecutorAgent!=null) {
                     cryptoPaymentRequestExecutorAgent.stop();
                 }
+
+                reprocessMessage();
+
+                this.register = Boolean.FALSE;
 
             }catch (Exception e) {
                 e.printStackTrace();

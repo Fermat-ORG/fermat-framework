@@ -751,6 +751,9 @@ public class CryptoTransmissionNetworkServicePluginRoot extends AbstractNetworkS
     }
 
     private void initializeCryptoTransmissionAgent(){
+
+        System.out.println("CryptoTransmissionNetworkServicePluginRoot - Starting method initializeCryptoTransmissionAgent");
+
         cryptoTransmissionAgent = new CryptoTransmissionAgent(
                 this,
                 errorManager,

@@ -950,6 +950,8 @@ public class CryptoAddressesNetworkServicePluginRoot extends AbstractNetworkServ
      */
     public void initializeAgent() {
 
+        System.out.println("CryptoPaymentRequestNetworkServicePluginRoot - Starting method initializeAgent");
+
         cryptoAddressesExecutorAgent = new CryptoAddressesExecutorAgent(
                 this,
                 errorManager,

@@ -298,6 +298,7 @@ public class IntraActorNetworkServicePluginRoot extends AbstractPlugin implement
         this.alias = "IntraActorNetworkService";
         this.extraData = null;
         this.actorsToRegisterCache = new ArrayList<>();
+        this.remoteNetworkServicesRegisteredList = new CopyOnWriteArrayList<PlatformComponentProfile>();
     }
 
     /**
@@ -547,8 +548,6 @@ public class IntraActorNetworkServicePluginRoot extends AbstractPlugin implement
 
 
 
-                    remoteNetworkServicesRegisteredList = new CopyOnWriteArrayList<PlatformComponentProfile>();
-
                     connectionArrived = new AtomicBoolean(false);
 
                     initializeIntraActorAgent();
@@ -738,7 +737,9 @@ public class IntraActorNetworkServicePluginRoot extends AbstractPlugin implement
 
     private void initializeIntraActorAgent() {
 
-            actorNetworkServiceRecordedAgent = new ActorNetworkServiceRecordedAgent(
+        System.out.println("IntraActorNetworkServicePluginRoot - Starting method initializeIntraActorAgent");
+
+        actorNetworkServiceRecordedAgent = new ActorNetworkServiceRecordedAgent(
                     communicationNetworkServiceConnectionManager,
                     this,
                     errorManager,
@@ -763,7 +764,6 @@ public class IntraActorNetworkServicePluginRoot extends AbstractPlugin implement
 
                 if(communicationRegistrationProcessNetworkServiceAgent != null && communicationRegistrationProcessNetworkServiceAgent.getActive()){
                     communicationRegistrationProcessNetworkServiceAgent.stop();
-                    communicationRegistrationProcessNetworkServiceAgent = null;
                 }
 
                 wsCommunicationsCloudClientManager.getCommunicationsCloudClientConnection().registerComponentForCommunication(this.getNetworkServiceType(), platformComponentProfilePluginRoot);
