@@ -75,8 +75,8 @@ public class EditCryptoBrokerIdentityFragment extends AbstractFermatFragment imp
 
     private byte[] profileImage;
 
-    private Button camara;
-    private Button galeria;
+    private ImageView camara;
+    private ImageView galeria;
 
     private Switch publishIdentityCheckBox;
 
@@ -110,8 +110,8 @@ public class EditCryptoBrokerIdentityFragment extends AbstractFermatFragment imp
         sw = (ImageView) layout.findViewById(R.id.sw);
         publishIdentityCheckBox = (Switch) layout.findViewById(R.id.publish_identity);
 
-        camara = (Button) layout.findViewById(R.id.camara);
-        galeria = (Button) layout.findViewById(R.id.galeria);
+        camara = (ImageView) layout.findViewById(R.id.camara);
+        galeria = (ImageView) layout.findViewById(R.id.galeria);
 
         final CryptoBrokerIdentityInformation identityInfo = (CryptoBrokerIdentityInformation) appSession.getData(IDENTITY_INFO);
 
@@ -132,12 +132,12 @@ public class EditCryptoBrokerIdentityFragment extends AbstractFermatFragment imp
 
         if(publishIdentityCheckBox.isChecked()){
             sw.setImageResource(R.drawable.swicth_on);
-            publishIdentityCheckBox.setChecked(false);
-            wantPublishIdentity = false;
-        }else{
-            sw.setImageResource(R.drawable.swicth_off);
             publishIdentityCheckBox.setChecked(true);
             wantPublishIdentity = true;
+        }else{
+            sw.setImageResource(R.drawable.swicth_off);
+            publishIdentityCheckBox.setChecked(false);
+            wantPublishIdentity = false;
         }
 
         publishIdentityCheckBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
@@ -179,11 +179,11 @@ public class EditCryptoBrokerIdentityFragment extends AbstractFermatFragment imp
             @Override
             public void onClick(View view) {
                if(publishIdentityCheckBox.isChecked()){
-                   sw.setImageResource(R.drawable.swicth_on);
+                   sw.setImageResource(R.drawable.swicth_off);
                    publishIdentityCheckBox.setChecked(false);
                    wantPublishIdentity = false;
                }else{
-                   sw.setImageResource(R.drawable.swicth_off);
+                   sw.setImageResource(R.drawable.swicth_on);
                    publishIdentityCheckBox.setChecked(true);
                    wantPublishIdentity = true;
                }
