@@ -74,6 +74,7 @@ public class StartNegotiationAdapter extends FermatAdapter<ClauseInformation, Fe
                 final ExchangeRateViewHolder exchangeRateViewHolder = new ExchangeRateViewHolder(itemView);
                 exchangeRateViewHolder.setMarketRateList(marketRateList);
                 return exchangeRateViewHolder;
+
             case TYPE_ITEM_AMOUNT_TO_BUY:
                 return new AmountToBuyViewHolder(itemView);
 
