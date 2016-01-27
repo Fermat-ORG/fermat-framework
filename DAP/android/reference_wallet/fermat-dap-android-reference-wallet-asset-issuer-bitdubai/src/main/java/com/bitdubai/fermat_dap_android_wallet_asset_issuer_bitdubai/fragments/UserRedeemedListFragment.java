@@ -124,9 +124,8 @@ public class UserRedeemedListFragment extends FermatWalletListFragment<UserRedee
                     .setIconRes(R.drawable.asset_issuer)
                     .setVIewColor(R.color.dap_issuer_view_color)
                     .setTitleTextColor(R.color.dap_issuer_view_color)
-                    .setSubTitle("Asset Issuer Redeemed List.")
-                    .setBody("Assets that have been redeemed at redeem points connected to you are a very important data.\n\n" +
-                            "We are collecting those statistics in this section for you to analize it.")
+                    .setSubTitle(R.string.dap_issuer_wallet_redeemed_list_subTitle)
+                    .setBody(R.string.dap_issuer_wallet_redeemed_list_body)
                     .setTemplateType(PresentationDialog.TemplateType.TYPE_PRESENTATION_WITHOUT_IDENTITIES)
                     .setIsCheckEnabled(checkButton)
                     .build();
