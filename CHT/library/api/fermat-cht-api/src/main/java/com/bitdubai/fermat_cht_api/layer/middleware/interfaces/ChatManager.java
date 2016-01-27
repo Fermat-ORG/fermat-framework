@@ -56,4 +56,6 @@ public interface ChatManager extends FermatManager{
 
     void deleteContact(Contact contact) throws CantDeleteContactException;
 
+    List<Contact> discoverActorsRegistered() throws CantGetContactException;
+
 }
