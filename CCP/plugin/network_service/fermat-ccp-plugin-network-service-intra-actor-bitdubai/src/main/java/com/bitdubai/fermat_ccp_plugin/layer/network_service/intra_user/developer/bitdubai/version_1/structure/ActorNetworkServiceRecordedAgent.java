@@ -55,9 +55,6 @@ public class ActorNetworkServiceRecordedAgent extends FermatAgent{
     // network services registered
     private Map<String, ActorNetworkServiceRecord> poolConnectionsWaitingForResponse;
 
-    // counter and wait time
-    private Map<String, ActorNetworkServiceConnectionIncubation> waitingPlatformComponentProfile;
-
     private List<Future<?>> futures= new ArrayList<>();
 
 
@@ -80,7 +77,6 @@ public class ActorNetworkServiceRecordedAgent extends FermatAgent{
         this.wsCommunicationsCloudClientManager           = wsCommunicationsCloudClientManager          ;
         this.status                                       = AgentStatus.CREATED                         ;
 
-        waitingPlatformComponentProfile   = new HashMap<>();
         poolConnectionsWaitingForResponse = new HashMap<>();
 
         threadPoolExecutor = Executors.newFixedThreadPool(2);
