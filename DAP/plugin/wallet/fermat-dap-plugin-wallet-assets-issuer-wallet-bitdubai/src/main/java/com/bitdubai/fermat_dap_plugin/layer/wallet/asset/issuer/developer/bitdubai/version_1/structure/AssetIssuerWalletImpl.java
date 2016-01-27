@@ -236,7 +236,9 @@ public class AssetIssuerWalletImpl implements AssetIssuerWallet {
     public List<AssetIssuerWalletTransaction> getAvailableTransactions(String assetPublicKey) throws CantGetTransactionsException {
         List<AssetIssuerWalletTransaction> allCreditAvailable = getTransactionsAll(BalanceType.AVAILABLE, TransactionType.CREDIT, assetPublicKey);
         List<AssetIssuerWalletTransaction> alldebitAvailable = getTransactionsAll(BalanceType.AVAILABLE, TransactionType.DEBIT, assetPublicKey);
-        allCreditAvailable.removeAll(alldebitAvailable);
+        for (AssetIssuerWalletTransaction transaction : alldebitAvailable) {
+            allCreditAvailable.remove(transaction);
+        }
         return allCreditAvailable;
     }
 
