@@ -222,9 +222,9 @@ public class WsCommunicationsTyrusCloudClientConnection implements Communication
         try {
 
             //Validate parameters
-            if ((identityPublicKey == null || identityPublicKey == "") ||
-                    (alias == null || alias == "")                     ||
-                        (name == null || name == "")                   ||
+            if ((identityPublicKey == null || identityPublicKey.equals("")) ||
+                    (alias == null || alias.equals(""))                     ||
+                        (name == null || name.equals(""))                   ||
                                     networkServiceType == null         ||
                                         platformComponentType == null  ){
 
