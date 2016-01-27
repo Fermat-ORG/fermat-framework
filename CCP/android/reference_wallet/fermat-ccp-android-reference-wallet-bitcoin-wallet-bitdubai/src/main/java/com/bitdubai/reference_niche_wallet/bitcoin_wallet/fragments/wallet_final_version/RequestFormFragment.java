@@ -277,26 +277,31 @@ public class RequestFormFragment extends AbstractFermatFragment<ReferenceWalletS
                                 appSession.getAppPublicKey(),
                                 CryptoCurrency.BITCOIN,
                                 BlockchainNetworkType.TEST);
-                    walletContact.name = cryptoWalletWalletContact.getActorName();
-                    walletContact.actorPublicKey = cryptoWalletWalletContact.getActorPublicKey();
-                    if(cryptoWalletWalletContact.getReceivedCryptoAddress().isEmpty()){
-                        appSession.getModuleManager().getCryptoWallet().requestAddressToKnownUser(
-                                appSession.getIntraUserModuleManager().getPublicKey(),
-                                Actors.INTRA_USER,
-                                cryptoWalletWalletContact.getActorPublicKey(),
-                                cryptoWalletWalletContact.getActorType(),
-                                Platforms.CRYPTO_CURRENCY_PLATFORM,
-                                VaultType.CRYPTO_CURRENCY_VAULT,
-                                CryptoCurrencyVault.BITCOIN_VAULT.getCode(),
-                                appSession.getAppPublicKey(),
-                                ReferenceWallet.BASIC_WALLET_BITCOIN_WALLET
-                        );
-                    }else {
-                        walletContact.address = cryptoWalletWalletContact.getReceivedCryptoAddress().get(0).getAddress();
+
+                    try {
+                        walletContact.name = cryptoWalletWalletContact.getActorName();
+                        walletContact.actorPublicKey = cryptoWalletWalletContact.getActorPublicKey();
+                        if (cryptoWalletWalletContact.getReceivedCryptoAddress().isEmpty()) {
+                            appSession.getModuleManager().getCryptoWallet().requestAddressToKnownUser(
+                                    appSession.getIntraUserModuleManager().getPublicKey(),
+                                    Actors.INTRA_USER,
+                                    cryptoWalletWalletContact.getActorPublicKey(),
+                                    cryptoWalletWalletContact.getActorType(),
+                                    Platforms.CRYPTO_CURRENCY_PLATFORM,
+                                    VaultType.CRYPTO_CURRENCY_VAULT,
+                                    CryptoCurrencyVault.BITCOIN_VAULT.getCode(),
+                                    appSession.getAppPublicKey(),
+                                    ReferenceWallet.BASIC_WALLET_BITCOIN_WALLET
+                            );
+                        } else {
+                            walletContact.address = cryptoWalletWalletContact.getReceivedCryptoAddress().get(0).getAddress();
+                        }
+                        walletContact.contactId = cryptoWalletWalletContact.getContactId();
+                        walletContact.profileImage = cryptoWalletWalletContact.getProfilePicture();
+                        walletContact.isConnection = cryptoWalletWalletContact.isConnection();
+                    }catch (Exception e){
+                        e.printStackTrace();
                     }
-                    walletContact.contactId = cryptoWalletWalletContact.getContactId();
-                    walletContact.profileImage = cryptoWalletWalletContact.getProfilePicture();
-                    walletContact.isConnection = cryptoWalletWalletContact.isConnection();
 
                     setUpUIData();
 
@@ -308,11 +313,9 @@ public class RequestFormFragment extends AbstractFermatFragment<ReferenceWalletS
                     appSession.getErrorManager().reportUnexpectedWalletException(Wallets.CWP_WALLET_RUNTIME_WALLET_BITCOIN_WALLET_ALL_BITDUBAI, UnexpectedWalletExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
                     showMessage(getActivity(), "ContactNameAlreadyExistsException- " + e.getMessage());
 
-                } catch (CantGetCryptoWalletException e) {
+                } catch (CantGetCryptoWalletException | CantListCryptoWalletIntraUserIdentityException e) {
                     e.printStackTrace();
-                } catch (CantListCryptoWalletIntraUserIdentityException e) {
-                    e.printStackTrace();
-                } catch (CantRequestCryptoAddressException e) {
+                } catch (Exception e){
                     e.printStackTrace();
                 }
             }
@@ -431,7 +434,6 @@ public class RequestFormFragment extends AbstractFermatFragment<ReferenceWalletS
             try {
                 if (cryptoWalletWalletContact.getProfilePicture() != null) {
                     imageView_contact.setImageDrawable(ImagesUtils.getRoundedBitmap(getResources(), cryptoWalletWalletContact.getProfilePicture()));
-
                 } else
                     Picasso.with(getActivity()).load(R.drawable.ic_profile_male).transform(new CircleTransform()).into(imageView_contact);
             } catch (Exception e) {
