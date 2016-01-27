@@ -22,7 +22,7 @@ import com.bitdubai.fermat_cht_android_sub_app_chat_bitdubai.R;
  *
  */
 
-public class ChatListFragment extends AbstractFermatFragment {
+public class ChatListFragment extends AbstractFermatFragment{
 
     /*boolean dualPane;
     private static int currentCheckPosition = 0;
