@@ -36,9 +36,17 @@ public class ChatMiddlewareManager implements ChatManager {
      */
     private ChatMiddlewareDatabaseDao chatMiddlewareDatabaseDao;
 
+    /**
+     * Represents the contact factory
+     */
+    private ChatMiddlewareContactFactory chatMiddlewareContactFactory;
+
     public ChatMiddlewareManager(
-            ChatMiddlewareDatabaseDao chatMiddlewareDatabaseDao) {
+            ChatMiddlewareDatabaseDao chatMiddlewareDatabaseDao,
+            ChatMiddlewareContactFactory chatMiddlewareContactFactory
+    ) {
         this.chatMiddlewareDatabaseDao = chatMiddlewareDatabaseDao;
+        this.chatMiddlewareContactFactory = chatMiddlewareContactFactory;
     }
 
     /**
@@ -329,5 +337,15 @@ public class ChatMiddlewareManager implements ChatManager {
                     "Deleting a message from database",
                     "An unexpected error happened in a database operation");
         }
+    }
+
+    /**
+     * This method returns the active registered actors to contact list.
+     * @return
+     * @throws CantGetContactException
+     */
+    @Override
+    public List<Contact> discoverActorsRegistered() throws CantGetContactException {
+        return this.chatMiddlewareContactFactory.discoverDeviceActors();
     }
 }

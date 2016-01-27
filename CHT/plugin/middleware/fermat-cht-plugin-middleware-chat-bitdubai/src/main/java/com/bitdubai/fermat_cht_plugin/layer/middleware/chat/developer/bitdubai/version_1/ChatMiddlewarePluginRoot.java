@@ -29,11 +29,16 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.Cant
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.DatabaseNotFoundException;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogLevel;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogManager;
+import com.bitdubai.fermat_ccp_api.layer.actor.intra_user.interfaces.IntraWalletUserActorManager;
+import com.bitdubai.fermat_ccp_api.layer.module.intra_user.interfaces.IntraUserModuleManager;
+import com.bitdubai.fermat_ccp_api.layer.network_service.intra_actor.interfaces.IntraUserManager;
 import com.bitdubai.fermat_cht_api.all_definition.events.enums.EventType;
+import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantGetCompatiblesActorNetworkServiceListException;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantInitializeDatabaseException;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantSetObjectException;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantStartServiceException;
 import com.bitdubai.fermat_cht_api.layer.middleware.interfaces.Chat;
+import com.bitdubai.fermat_cht_api.layer.middleware.interfaces.Contact;
 import com.bitdubai.fermat_cht_api.layer.middleware.interfaces.Message;
 import com.bitdubai.fermat_cht_api.layer.middleware.mocks.ChatMock;
 import com.bitdubai.fermat_cht_api.layer.middleware.mocks.MessageMock;
@@ -45,8 +50,11 @@ import com.bitdubai.fermat_cht_plugin.layer.middleware.chat.developer.bitdubai.v
 import com.bitdubai.fermat_cht_plugin.layer.middleware.chat.developer.bitdubai.version_1.database.ChatMiddlewareDeveloperDatabaseFactory;
 import com.bitdubai.fermat_cht_plugin.layer.middleware.chat.developer.bitdubai.version_1.event_handler.ChatMiddlewareRecorderService;
 import com.bitdubai.fermat_cht_plugin.layer.middleware.chat.developer.bitdubai.version_1.exceptions.CantInitializeChatMiddlewareDatabaseException;
+import com.bitdubai.fermat_cht_plugin.layer.middleware.chat.developer.bitdubai.version_1.structure.ChatMiddlewareContactFactory;
 import com.bitdubai.fermat_cht_plugin.layer.middleware.chat.developer.bitdubai.version_1.structure.ChatMiddlewareManager;
 import com.bitdubai.fermat_cht_plugin.layer.middleware.chat.developer.bitdubai.version_1.structure.ChatMiddlewareMonitorAgent;
+import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.interfaces.ActorAssetUser;
+import com.bitdubai.fermat_dap_api.layer.dap_actor_network_service.asset_user.interfaces.AssetUserActorNetworkServiceManager;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.exceptions.CantRequestListException;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedPluginExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
@@ -81,6 +89,12 @@ public class ChatMiddlewarePluginRoot extends AbstractPlugin implements
     @NeededPluginReference(platform = Platforms.CHAT_PLATFORM, layer = Layers.NETWORK_SERVICE, plugin = Plugins.CHAT_NETWORK_SERVICE)
     private ChatManager chatManager;
 
+    @NeededPluginReference(platform = Platforms.DIGITAL_ASSET_PLATFORM, layer = Layers.ACTOR_NETWORK_SERVICE, plugin = Plugins.ASSET_USER)
+    AssetUserActorNetworkServiceManager assetUserActorNetworkServiceManager;
+
+    @NeededPluginReference(platform = Platforms.CRYPTO_CURRENCY_PLATFORM, layer = Layers.SUB_APP_MODULE, plugin = Plugins.INTRA_WALLET_USER)
+    private IntraUserModuleManager intraUserModuleManager;
+
     /**
      * Represent the database
      */
@@ -89,6 +103,8 @@ public class ChatMiddlewarePluginRoot extends AbstractPlugin implements
     private ChatMiddlewareDeveloperDatabaseFactory chatMiddlewareDeveloperDatabaseFactory;
 
     private ChatMiddlewareManager chatMiddlewareManager;
+
+    ChatMiddlewareContactFactory chatMiddlewareContactFactory;
 
     static Map<String, LogLevel> newLoggingLevel = new HashMap<String, LogLevel>();
 
@@ -184,6 +200,24 @@ public class ChatMiddlewarePluginRoot extends AbstractPlugin implements
 
     ServiceStatus serviceStatus = ServiceStatus.CREATED;
 
+    /**
+     * This method initializes the contact factory.
+     */
+    private void initializeContactFactory() throws CantGetCompatiblesActorNetworkServiceListException {
+        //Configure platforms
+        HashMap<String, Object> actorNetworkServiceMap=new HashMap<>();
+        //Include DAP users
+        actorNetworkServiceMap.put(
+                Platforms.DIGITAL_ASSET_PLATFORM.getCode(),
+                assetUserActorNetworkServiceManager);
+        //Include CCP actors
+        actorNetworkServiceMap.put(
+                Platforms.DIGITAL_ASSET_PLATFORM.getCode(),
+                assetUserActorNetworkServiceManager);
+        this.chatMiddlewareContactFactory =
+                new ChatMiddlewareContactFactory(actorNetworkServiceMap);
+    }
+
     @Override
     public void start() throws CantStartPluginException {
         try {
@@ -212,10 +246,19 @@ public class ChatMiddlewarePluginRoot extends AbstractPlugin implements
                             database);
             //chatMiddlewareDatabaseDao.initialize();
             /**
+             * Init developer database factory
+             */
+            chatMiddlewareDeveloperDatabaseFactory =
+                    new ChatMiddlewareDeveloperDatabaseFactory(
+                            pluginDatabaseSystem,
+                            pluginId);
+            chatMiddlewareDeveloperDatabaseFactory.initializeDatabase();
+            /**
              * Initialize manager
              */
             chatMiddlewareManager =new ChatMiddlewareManager(
-                    chatMiddlewareDatabaseDao);
+                    chatMiddlewareDatabaseDao,
+                    this.chatMiddlewareContactFactory);
 
             /**
              * Init event recorder service.
@@ -225,14 +268,6 @@ public class ChatMiddlewarePluginRoot extends AbstractPlugin implements
                     eventManager);
             chatMiddlewareRecorderService.start();
 
-            /**
-             * Init developer database factory
-             */
-            chatMiddlewareDeveloperDatabaseFactory =
-                    new ChatMiddlewareDeveloperDatabaseFactory(
-                            pluginDatabaseSystem,
-                            pluginId);
-            chatMiddlewareDeveloperDatabaseFactory.initializeDatabase();
             /**
              * Init monitor Agent
              */
@@ -245,11 +280,16 @@ public class ChatMiddlewarePluginRoot extends AbstractPlugin implements
                     chatManager);
             openContractMonitorAgent.start();
 
+            //Initialize Contact Factory
+            initializeContactFactory();
+
             this.serviceStatus = ServiceStatus.STARTED;
             //Test method
             //testPublicKeys();
             //sendMessageTest();
             //receiveMessageTest();
+            //identitiesTest();
+            discoveryTest();
 
         } catch (CantInitializeDatabaseException exception) {
             throw new CantStartPluginException(
@@ -384,6 +424,40 @@ public class ChatMiddlewarePluginRoot extends AbstractPlugin implements
             eventManager.raiseEvent(incomingChat);
         } catch(Exception exception){
             System.out.println("Exception in raise event chat middleware test: "+exception.getMessage());
+            exception.printStackTrace();
+        }
+    }
+
+    private void identitiesTest(){
+        try{
+            List<ActorAssetUser> identitiesList=this.assetUserActorNetworkServiceManager.getListActorAssetUserRegistered();
+            int counter=0;
+            for(ActorAssetUser actor : identitiesList){
+                System.out.println("Identities Test: Init*****");
+                System.out.println("Identities Test: Actor "+counter);
+                System.out.println("Identities Test: Name -- "+actor.getName());
+                System.out.println("Identities Test: PK -- "+actor.getActorPublicKey());
+                System.out.println("Identities Test: PublicLinkedIdentity -- "+actor.getPublicLinkedIdentity());
+                counter++;
+            }
+        } catch (Exception exception){
+            System.out.println("Exception in raise event chat middleware identities test: "+exception.getMessage());
+            exception.printStackTrace();
+        }
+
+    }
+
+    private void discoveryTest(){
+        try{
+            List<Contact> contactList=this.chatMiddlewareContactFactory.discoverDeviceActors();
+            System.out.println("Discovery Test: Init*****");
+            int counter=0;
+            for(Contact contact : contactList){
+                System.out.println("Discovery Test:"+contact);
+                counter++;
+            }
+        } catch (Exception exception){
+            System.out.println("Exception in raise event chat middleware discovery test: "+exception.getMessage());
             exception.printStackTrace();
         }
     }
