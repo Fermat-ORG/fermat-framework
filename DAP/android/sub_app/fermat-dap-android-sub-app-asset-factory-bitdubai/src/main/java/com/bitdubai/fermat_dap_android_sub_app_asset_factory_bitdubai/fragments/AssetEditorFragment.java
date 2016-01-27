@@ -57,6 +57,7 @@ import com.bitdubai.fermat_dap_android_sub_app_asset_factory_bitdubai.adapters.B
 import com.bitdubai.fermat_dap_android_sub_app_asset_factory_bitdubai.sessions.AssetFactorySession;
 import com.bitdubai.fermat_dap_android_sub_app_asset_factory_bitdubai.sessions.SessionConstantsAssetFactory;
 import com.bitdubai.fermat_dap_android_sub_app_asset_factory_bitdubai.util.CommonLogger;
+import com.bitdubai.fermat_dap_android_sub_app_asset_factory_bitdubai.util.Utils;
 import com.bitdubai.fermat_dap_api.layer.all_definition.enums.State;
 import com.bitdubai.fermat_dap_api.layer.all_definition.util.DAPStandardFormats;
 import com.bitdubai.fermat_dap_api.layer.dap_middleware.dap_asset_factory.enums.AssetBehavior;
@@ -91,7 +92,6 @@ public class AssetEditorFragment extends AbstractFermatFragment implements View.
     private static final int REQUEST_LOAD_IMAGE = 2;
     private static final int CONTEXT_MENU_CAMERA = 1;
     private static final int CONTEXT_MENU_GALLERY = 2;
-    private static final long MINIMUM_ASSET_VALUE = DAPStandardFormats.MINIMUN_SATOSHI_AMOUNT;
     private static final String NO_AVAILABLE = "No Available";
     private final String TAG = "AssetEditor";
     private AssetFactoryModuleManager manager;
@@ -306,7 +306,7 @@ public class AssetEditorFragment extends AbstractFermatFragment implements View.
         }
 
         try {
-            long satoshis = manager.getBitcoinWalletBalance(getBitcoinWalletPublicKey());
+            long satoshis = manager.getBitcoinWalletBalance(Utils.getBitcoinWalletPublicKey(manager));
             satoshisWalletBalance = satoshis;
             double bitcoinWalletBalance = BitcoinConverter.convert(satoshis, SATOSHI, BITCOIN);
             bitcoinBalanceText.setText(String.format("%.6f BTC", bitcoinWalletBalance));
@@ -428,17 +428,6 @@ public class AssetEditorFragment extends AbstractFermatFragment implements View.
         return super.onOptionsItemSelected(item);
     }
 
-    private String getBitcoinWalletPublicKey() throws CantListWalletsException {
-        List<InstalledWallet> installedWallets = manager.getInstallWallets();
-        for (InstalledWallet installedWallet :
-                installedWallets) {
-            if (installedWallet.getPlatform().equals(Platforms.CRYPTO_CURRENCY_PLATFORM)) {
-                return installedWallet.getWalletPublicKey();
-            }
-        }
-        return null;
-    }
-
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -545,7 +534,9 @@ public class AssetEditorFragment extends AbstractFermatFragment implements View.
             asset.setFactoryId(UUID.randomUUID().toString());
         }
 
-        if (validate()) {
+        if (nameView.getText().toString().trim().length() == 0) {
+            Toast.makeText(getActivity(), "Invalid Asset Name.", Toast.LENGTH_SHORT).show();
+        } else {
             doSaveAsset();
         }
     }
@@ -633,49 +624,6 @@ public class AssetEditorFragment extends AbstractFermatFragment implements View.
         } else {
             return 0;
         }
-    }
-
-    private boolean validate() {
-        try {
-            long satoshis = getSatoshis();
-            if (satoshis < MINIMUM_ASSET_VALUE) {
-                Toast.makeText(getActivity(), "The minimum monetary amount for any Asset is "+MINIMUM_ASSET_VALUE+" satoshis.\n" +
-                        " \n This is needed to pay the fee of bitcoin transactions during delivery of the assets.", Toast.LENGTH_LONG).show();
-                return false;
-            }
-            String quantityStr = quantityView.getText().toString().trim();
-            long quantity = Long.parseLong(quantityStr.isEmpty() ? "0" : quantityStr);
-            if (satoshis * quantity > satoshisWalletBalance) {
-                Toast.makeText(getActivity(), "There are insufficient available funds to perform the transaction.", Toast.LENGTH_SHORT).show();
-                return false;
-            }
-            String name = nameView.getText().toString().trim();
-            if (name.length() == 0)
-            {
-                Toast.makeText(getActivity(), "Invalid Asset Name.", Toast.LENGTH_SHORT).show();
-                return false;
-
-            }
-            String description = descriptionView.getText().toString().trim();
-            if (description.length() == 0)
-            {
-                Toast.makeText(getActivity(), "Invalid Asset Description.", Toast.LENGTH_SHORT).show();
-                return false;
-
-            }
-            int quantityInt = Integer.parseInt(quantityStr.isEmpty() ? "0" : quantityStr);
-            if (quantityStr.length() == 0 || quantityInt == 0)
-            {
-                Toast.makeText(getActivity(), "Invalid Quantity of Assets", Toast.LENGTH_SHORT).show();
-                return false;
-
-            }
-            return true;
-        } catch (NumberFormatException ex) {
-            CommonLogger.exception(TAG, ex.getMessage(), ex);
-            Toast.makeText(getActivity(), "Invalid monetary amount.", Toast.LENGTH_SHORT).show();
-        }
-        return false;
     }
 
     public void setIsEdit(boolean isEdit) {
