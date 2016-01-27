@@ -3,6 +3,7 @@ package com.bitdubai.reference_wallet.crypto_broker_wallet.fragments.wizard_page
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.os.Bundle;
+import android.renderscript.ScriptGroup;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -36,6 +37,7 @@ import com.bitdubai.reference_wallet.crypto_broker_wallet.common.adapters.Single
 import com.bitdubai.reference_wallet.crypto_broker_wallet.common.adapters.WalletsAdapter;
 import com.bitdubai.reference_wallet.crypto_broker_wallet.fragments.common.SimpleListDialogFragment;
 import com.bitdubai.reference_wallet.crypto_broker_wallet.session.CryptoBrokerWalletSession;
+import com.bitdubai.reference_wallet.crypto_broker_wallet.util.InputDialogCBP;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -201,28 +203,34 @@ public class WizardPageSetMerchandisesFragment extends AbstractFermatFragment
     private void showBankAccountsDialog(final InstalledWallet selectedWallet) {
         try {
             List<BankAccountNumber> accounts = walletManager.getAccounts(selectedWallet.getWalletPublicKey());
+            if (!accounts.isEmpty()) {
 
-            SimpleListDialogFragment<BankAccountNumber> accountsDialog = new SimpleListDialogFragment<>();
-            accountsDialog.configure("Select an Account", accounts);
-            accountsDialog.setListener(new SimpleListDialogFragment.ItemSelectedListener<BankAccountNumber>() {
-                @Override
-                public void onItemSelected(BankAccountNumber selectedAccount) {
+                SimpleListDialogFragment<BankAccountNumber> accountsDialog = new SimpleListDialogFragment<>();
+                accountsDialog.configure("Select an Account", accounts);
+                accountsDialog.setListener(new SimpleListDialogFragment.ItemSelectedListener<BankAccountNumber>() {
 
-                    FiatCurrency currency = selectedAccount.getCurrencyType();
-                    String account = selectedAccount.getAccount();
+                    @Override
+                    public void onItemSelected(BankAccountNumber selectedAccount) {
+                        FiatCurrency currency = selectedAccount.getCurrencyType();
+                        String account = selectedAccount.getAccount();
+                        bankCurrencies.put(selectedWallet.getWalletPublicKey(), currency);
+                        bankAccounts.put(selectedWallet.getWalletPublicKey(), account);
+                        if (!containWallet(selectedWallet)) {
+                            stockWallets.add(selectedWallet);
+                            adapter.changeDataSet(stockWallets);
+                            showOrHideNoSelectedWalletsView();
 
-                    bankCurrencies.put(selectedWallet.getWalletPublicKey(), currency);
-                    bankAccounts.put(selectedWallet.getWalletPublicKey(), account);
-
-                    if (!containWallet(selectedWallet)) {
-                        stockWallets.add(selectedWallet);
-                        adapter.changeDataSet(stockWallets);
-                        showOrHideNoSelectedWalletsView();
+                        }
                     }
-                }
-            });
 
-            accountsDialog.show(getFragmentManager(), "accountsDialog");
+                });
+                accountsDialog.show(getFragmentManager(), "accountsDialog");
+            } else {
+                InputDialogCBP inputDialogCBP = new InputDialogCBP(getActivity(),appSession,null);
+                inputDialogCBP.DialogType(1);
+                inputDialogCBP.show();
+
+            }
 
         } catch (FermatException ex) {
             Toast.makeText(WizardPageSetMerchandisesFragment.this.getActivity(), "Oops a error occurred...", Toast.LENGTH_SHORT).show();
