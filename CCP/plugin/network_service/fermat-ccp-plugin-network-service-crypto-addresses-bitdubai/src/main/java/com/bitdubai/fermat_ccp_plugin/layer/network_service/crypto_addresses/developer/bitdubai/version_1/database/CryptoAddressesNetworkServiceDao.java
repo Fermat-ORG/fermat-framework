@@ -623,6 +623,7 @@ public final class CryptoAddressesNetworkServiceDao {
             DatabaseTable addressExchangeRequestTable = database.getTable(CryptoAddressesNetworkServiceDatabaseConstants.ADDRESS_EXCHANGE_REQUEST_TABLE_NAME);
 
             addressExchangeRequestTable.addUUIDFilter(CryptoAddressesNetworkServiceDatabaseConstants.ADDRESS_EXCHANGE_REQUEST_ID_COLUMN_NAME, requestId, DatabaseFilterType.EQUAL);
+            addressExchangeRequestTable.addStringFilter(CryptoAddressesNetworkServiceDatabaseConstants.ADDRESS_EXCHANGE_REQUEST_TYPE_COLUMN_NAME, AddressesConstants.OUTGOING_MESSAGE, DatabaseFilterType.EQUAL);
 
             addressExchangeRequestTable.loadToMemory();
 
