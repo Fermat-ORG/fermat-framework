@@ -34,9 +34,10 @@
 
     <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
         android:id="@+id/intra_user_alias"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_gravity="center_vertical"
+        android:layout_weight="1"
         android:paddingEnd="8dp"
         android:paddingLeft="8dp"
         android:paddingRight="8dp"
@@ -45,6 +46,13 @@
         android:textColor="@color/green"
         tools:text="Mati was here" />
 
+
+        <CheckBox
+            android:id="@+id/checkbox_connection"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:textColorHint="@color/black_overlay" />
 
     </LinearLayout>
 
