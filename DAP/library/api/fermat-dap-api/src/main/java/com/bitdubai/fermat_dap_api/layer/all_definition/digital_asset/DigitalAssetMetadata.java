@@ -105,8 +105,8 @@ public class DigitalAssetMetadata {
         transactionChain.put(transactionHash, blockHash);
     }
 
-    public void removeTransaction(String transactionHash) {
-        transactionChain.remove(transactionHash);
+    public void removeLastTransaction() {
+        transactionChain.remove(getLastTransactionHash());
     }
 
     @Override
