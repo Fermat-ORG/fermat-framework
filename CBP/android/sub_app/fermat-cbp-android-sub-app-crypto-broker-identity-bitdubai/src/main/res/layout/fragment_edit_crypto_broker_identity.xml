@@ -43,28 +43,6 @@
         android:visibility="invisible" />
 
     <Button
-        style="?android:attr/buttonStyleSmall"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Galeria"
-        android:id="@+id/galeria"
-        android:textSize="10dp"
-        android:layout_above="@+id/sw"
-        android:layout_toLeftOf="@+id/camara"
-        android:layout_toStartOf="@+id/camara" />
-
-    <Button
-        style="?android:attr/buttonStyleSmall"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Camara"
-        android:id="@+id/camara"
-        android:textSize="10dp"
-        android:layout_above="@+id/sw"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentEnd="true" />
-
-    <Button
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="@string/update"
@@ -81,5 +59,30 @@
         android:layout_centerHorizontal="true"
         android:src="@drawable/swicth_off"
         android:scaleType="fitXY" />
+
+    <ImageView
+        android:layout_width="45dp"
+        android:layout_height="40dp"
+        android:id="@+id/camara"
+        android:src="@drawable/camara"
+        android:scaleType="fitXY"
+        android:background="#64ffffff"
+        android:adjustViewBounds="false"
+        android:layout_marginBottom="5dp"
+        android:layout_above="@+id/galeria"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true" />
+
+    <ImageView
+        android:layout_width="45dp"
+        android:layout_height="40dp"
+        android:id="@+id/galeria"
+        android:src="@drawable/galeria"
+        android:scaleType="fitXY"
+        android:background="#64ffffff"
+        android:layout_alignBottom="@+id/crypto_broker_image"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"
+        android:layout_marginBottom="13dp" />
 
 </RelativeLayout>
