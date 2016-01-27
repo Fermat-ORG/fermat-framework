@@ -4425,7 +4425,12 @@
     <processes>
         <process platform="DAP" name="Asset Issuing" description="Describes the process of issuing Assets by the actor Asset Issuer" previous="">
             <steps>
-                <step id="1" type="start" title="Asset Factory" description="Starts by opening the Asset Factory Sub App" platform="DAP" superlayer="" layer="Sub App" name="Asset Factory">
+                <step id="0" type="start" title="Process Start" description="Platform starts" platform="DAP" superlayer="" layer="" name="">
+                    <next>
+                        <step id="1" type="direct call"></step>
+                    </next>
+                </step>
+                <step id="1" type="activity" title="Asset Factory" description="Starts by opening the Asset Factory Sub App" platform="DAP" superlayer="" layer="Sub App" name="Asset Factory">
                     <next>
                         <step id="2" type="direct call"></step>
                         <step id="3" type="direct call"></step>

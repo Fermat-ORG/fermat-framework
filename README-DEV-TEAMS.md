@@ -288,6 +288,12 @@ In the Crypto Broker Platform we are responsible for a large part of user level 
       Skype:   richardalozada
       Github:  https://github.com/Lozadaa 
 
+* **Rodrigo Guzman [New Part-Time Developer]**<br/>
+---
+      Email:   roygufo@gmail.com
+      Skype:   roy-epps
+      Github:  https://github.com/RoyGF
+
 We are also amateur philosophers, passionate about esoteric topics and video games.
 
 <br>

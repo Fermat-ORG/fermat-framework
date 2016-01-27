@@ -1,6 +1,7 @@
 package com.bitdubai.fermat_csh_api.layer.csh_wallet_module.interfaces;
 
 import com.bitdubai.fermat_api.layer.all_definition.enums.FiatCurrency;
+import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterException;
 import com.bitdubai.fermat_api.layer.modules.common_classes.ActiveActorIdentityInformation;
 import com.bitdubai.fermat_api.layer.modules.interfaces.ModuleManager;
 import com.bitdubai.fermat_csh_api.all_definition.enums.BalanceType;
@@ -20,6 +21,7 @@ import com.bitdubai.fermat_csh_api.layer.csh_wallet_module.CashMoneyWalletPrefer
 import com.bitdubai.fermat_csh_api.layer.csh_wallet_module.exceptions.CantGetCashMoneyWalletBalancesException;
 
 import java.util.List;
+import java.util.UUID;
 
 /**
  * Created by Alejandro Bicelis on 12/8/2015.
@@ -30,13 +32,16 @@ public interface CashMoneyWalletModuleManager extends ModuleManager<CashMoneyWal
     FiatCurrency getWalletCurrency(String walletPublicKey) throws CantGetCashMoneyWalletCurrencyException;
 
 
-    void createAsyncCashDepositTransaction(CashTransactionParameters depositParameters);
-    void createAsyncCashWithdrawalTransaction(CashTransactionParameters withdrawalParameters);
+    void createAsyncCashTransaction(CashTransactionParameters depositParameters);
+    void cancelAsyncCashTransaction(CashMoneyWalletTransaction transaction)  throws Exception;
+
 
     CashDepositTransaction doCreateCashDepositTransaction(CashTransactionParameters depositParameters) throws CantCreateDepositTransactionException;
     CashWithdrawalTransaction doCreateCashWithdrawalTransaction(CashTransactionParameters withdrawalParameters) throws CantCreateWithdrawalTransactionException, CashMoneyWalletInsufficientFundsException;
 
+    List<CashMoneyWalletTransaction> getPendingTransactions();
     List<CashMoneyWalletTransaction> getTransactions(String walletPublicKey, List<TransactionType> transactionTypes, List<BalanceType> balanceTypes, int max, int offset) throws CantGetCashMoneyWalletTransactionsException;
+    CashMoneyWalletTransaction getTransaction(String walletPublicKey, UUID transactionId) throws CantGetCashMoneyWalletTransactionsException;
 
     void createCashMoneyWallet(String walletPublicKey, FiatCurrency fiatCurrency) throws CantCreateCashMoneyWalletException;
     boolean cashMoneyWalletExists(String walletPublicKey);
