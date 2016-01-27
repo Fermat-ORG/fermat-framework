@@ -136,4 +136,28 @@
     <string name="cbw_wizard_other_settings_title">Other settings</string>
     <string name="cbw_wizard_other_settings_description">Other settings description step other settings description</string>
 
+
+    <!--Dialog Help - Init-->
+    <string name="cbw_crypto_broker_wallet_earning_subTitle">Subtitle text of Earnings dialog help.</string>
+    <string name="cbw_crypto_broker_wallet_earning_body">Custom text support for dialog in the wizard Earnings help</string>
+    <string name="cbw_crypto_broker_wallet_earning_footer">Text footer Earnings dialog help.</string>
+    <!--Dialog Help - End-->
+
+    <!--Dialog Help - Init-->
+    <string name="cbw_crypto_broker_wallet_identity_subTitle">This is a simple wallet for exchange Merchandise. It\'s main features are:</string>
+    <string name="cbw_crypto_broker_wallet_identity_body">Custom text support for dialog in the wizard identities help</string>
+    <string name="cbw_crypto_broker_wallet_identity_footer">To begin, choose an avatar below. You might change it later with any picture and your alias.</string>
+    <!--Dialog Help - End-->
+
+    <!--Dialog Help - Init-->
+    <string name="cbw_crypto_broker_wallet_identity_2_subTitle">This is a simple wallet for exchange Merchandise. </string>
+    <string name="cbw_crypto_broker_wallet_identity_2_body">Custom text support for dialog in the wizard identities help 2</string>
+    <string name="cbw_crypto_broker_wallet_identity_2_footer">To begin, choose an avatar below. You might change it later with any picture and your alias.</string>
+    <!--Dialog Help - End-->
+
+    <!--Dialog Help - Init-->
+    <string name="cbw_crypto_broker_wallet_merchandises_subTitle">Subtitle text of Merchandises dialog help</string>
+    <string name="cbw_crypto_broker_wallet_merchandises_body">Custom text support for dialog in the wizard Merchandises help.</string>
+    <string name="cbw_crypto_broker_wallet_merchandises_footer">Text footer Merchandises dialog help.</string>
+    <!--Dialog Help - End-->
 </resources>

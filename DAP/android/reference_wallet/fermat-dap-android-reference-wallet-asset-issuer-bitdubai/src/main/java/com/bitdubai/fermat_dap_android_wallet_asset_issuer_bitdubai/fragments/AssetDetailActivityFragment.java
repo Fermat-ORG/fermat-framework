@@ -329,11 +329,8 @@ public class AssetDetailActivityFragment extends AbstractFermatFragment {
                     .setIconRes(R.drawable.asset_issuer)
                     .setVIewColor(R.color.dap_issuer_view_color)
                     .setTitleTextColor(R.color.dap_issuer_view_color)
-                    .setSubTitle("Asset detail section.")
-                    .setBody("This section will show you detailed information of your selected asset.\n\n" +
-                            "You will be able to see statistics of its usage, like to which users it has been distributed and" +
-                            "much more.\n\n" +
-                            "You will also be able to deliver the asset to any user you are connected to. If needed, you can appropriate this asset in order to get your bitcoins back.")
+                    .setSubTitle(R.string.dap_issuer_wallet_detail_subTitle)
+                    .setBody(R.string.dap_issuer_wallet_detail_body)
                     .setTemplateType(PresentationDialog.TemplateType.TYPE_PRESENTATION_WITHOUT_IDENTITIES)
                     .setIsCheckEnabled(checkButton)
                     .build();

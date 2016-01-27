@@ -157,10 +157,8 @@ public class IssuerCommunityHomeFragment extends AbstractFermatFragment implemen
                 .setIconRes(R.drawable.asset_issuer_comunity)
                 .setVIewColor(R.color.dap_community_issuer_view_color)
                 .setTitleTextColor(R.color.dap_community_issuer_view_color)
-                .setSubTitle("Welcome to the Asset Issuer Community.")
-                .setBody("This application will help you discover and connect to Asset Issuers registered in our network.!\n\n" +
-                        "If you are identified as a Redeem Point, you will need to connect to Assets Issuers in order to get approval to redeem assets created by that " +
-                        "Asset Issuer.\n\nSelect any available Asset Issuer and click connect to start the process. If your network speed is low, you may have to retry several times.")
+                .setSubTitle(R.string.dap_issuer_community_welcome_subTitle)
+                .setBody(R.string.dap_issuer_community_welcome_body)
                 .setTemplateType(PresentationDialog.TemplateType.TYPE_PRESENTATION_WITHOUT_IDENTITIES)
                 .setIsCheckEnabled(checkButton)
                 .build();

@@ -277,12 +277,10 @@ public class EditableAssetsFragment extends AbstractFermatFragment implements
                     .setImageLeft(R.drawable.asset_issuer_identity)
                     .setVIewColor(R.color.dap_asset_factory_view_color)
                     .setTitleTextColor(R.color.dap_asset_factory_view_color)
-                    .setTextNameLeft("Asset Issuer")
-                    .setSubTitle("Welcome to the Asset Factory application.")
-                    .setBody("From here you will be able to create, define and publish all your assets. \n\n" +
-                            "In order to start, tap over the + button below where you will be able to \n" +
-                            "define all the properties of your asset.")
-//                    .setTextFooter("We will be creating an avatar for you in order to identify you in the system as an Asset Issuer, name and more details later in the Asset Issuer Identity sub app.")
+                    .setTextNameLeft(R.string.dap_asset_factory_welcome_name_left)
+                    .setSubTitle(R.string.dap_asset_factory_welcome_subTitle)
+                    .setBody(R.string.dap_asset_factory_welcome_body)
+                    .setTextFooter(R.string.dap_asset_factory_welcome_Footer)
                     .setTemplateType((manager.getLoggedIdentityAssetIssuer() == null) ? PresentationDialog.TemplateType.DAP_TYPE_PRESENTATION : PresentationDialog.TemplateType.TYPE_PRESENTATION_WITHOUT_IDENTITIES)
                     .setIsCheckEnabled(checkButton)
                     .build();
