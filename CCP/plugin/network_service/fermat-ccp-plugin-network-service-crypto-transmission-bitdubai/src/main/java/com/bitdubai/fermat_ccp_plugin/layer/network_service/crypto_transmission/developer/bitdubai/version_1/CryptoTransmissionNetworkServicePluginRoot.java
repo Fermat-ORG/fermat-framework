@@ -512,6 +512,13 @@ public class CryptoTransmissionNetworkServicePluginRoot extends AbstractNetworkS
                 cryptoTransmissionConnectionsDAO = new CryptoTransmissionConnectionsDAO(pluginDatabaseSystem, pluginId);
 
 
+                cryptoTransmissionAgent = new CryptoTransmissionAgent(
+                        this,
+                        errorManager,
+                        eventManager
+                );
+
+
 
                 initializeCryptoTransmissionAgent();
 
@@ -841,9 +848,7 @@ public class CryptoTransmissionNetworkServicePluginRoot extends AbstractNetworkS
          * save into the cache
          */
         remoteNetworkServicesRegisteredList.addAll(platformComponentProfileRegisteredList);
-        cryptoTransmissionAgent.addRemoteNetworkServicesRegisteredList(platformComponentProfileRegisteredList);
-        // por ahora guardo solo el primero para saber cuales estan conectados
-        //cacheConnections.put(discoveryQueryParameters.getIdentityPublicKey(), platformComponentProfileRegisteredList.get(0));
+
 
     }
 
@@ -1496,5 +1501,21 @@ public class CryptoTransmissionNetworkServicePluginRoot extends AbstractNetworkS
             System.out.println("CRYPTO TRANSMISSION EXCEPCION REPROCESANDO WAIT MESSAGE");
             e.printStackTrace();
         }
+    }
+
+    public CryptoTransmissionMetadataDAO_V2 getOutgoingCryptoTransmissionMetadataDAO() {
+        return outgoingCryptoTransmissionMetadataDAO;
+    }
+
+    public CryptoTransmissionMetadataDAO_V2 getIncomingCryptoTransmissionMetadataDAO() {
+        return incomingCryptoTransmissionMetadataDAO;
+    }
+
+    public WsCommunicationsCloudClientManager getWsCommunicationsCloudClientManager() {
+        return wsCommunicationsCloudClientManager;
+    }
+
+    public CommunicationNetworkServiceConnectionManager_V2 getCommunicationNetworkServiceConnectionManager() {
+        return communicationNetworkServiceConnectionManager;
     }
 }
