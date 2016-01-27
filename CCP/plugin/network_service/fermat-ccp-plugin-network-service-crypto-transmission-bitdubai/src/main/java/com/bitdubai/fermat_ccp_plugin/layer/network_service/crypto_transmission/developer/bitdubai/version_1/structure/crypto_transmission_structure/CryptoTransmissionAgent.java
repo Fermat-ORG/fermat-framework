@@ -68,10 +68,6 @@ public class CryptoTransmissionAgent {
      */
     private AtomicBoolean running;
 
-    /**
-     * Represent the identity
-     */
-    private ECCKeyPair identity;
 
     /**
      * Communication Service, Class to send the message
@@ -180,7 +176,6 @@ public class CryptoTransmissionAgent {
         this.wsCommunicationsCloudClientManager =wsCommunicationsCloudClientManager;
         this.errorManager = errorManager;
         this.remoteNetworkServicesRegisteredList = remoteNetworkServicesRegisteredList;
-        this.identity = identity;
         this.eventManager = eventManager;
 
         cacheResponseMetadataFromRemotes = new HashMap<String, CryptoTransmissionProtocolState>();
@@ -540,10 +535,10 @@ public class CryptoTransmissionAgent {
                             // si el mensaje viene con un estado de SENT es porque es la primera vez que llega, por lo que tengo que guardarlo en la bd y responder
                             case SEEN_BY_OWN_NETWORK_SERVICE_WAITING_FOR_RESPONSE:
 
-                                incomingCryptoTransmissionMetadataDAO.changeTransactionStateAndProtocolState(
-                                        cryptoTransmissionMetadata.getTransactionId(),
-                                        CryptoTransmissionMetadataState.SEEN_BY_DESTINATION_NETWORK_SERVICE,
-                                        CryptoTransmissionProtocolState.RECEIVED);
+//                                incomingCryptoTransmissionMetadataDAO.changeTransactionStateAndProtocolState(
+//                                        cryptoTransmissionMetadata.getTransactionId(),
+//                                        CryptoTransmissionMetadataState.SEEN_BY_DESTINATION_NETWORK_SERVICE,
+//                                        CryptoTransmissionProtocolState.RECEIVED);
 
                                 System.out.print("-----------------------\n" +
                                         "RECIBIENDO CRYPTO METADATA!!!!! -----------------------\n" +
