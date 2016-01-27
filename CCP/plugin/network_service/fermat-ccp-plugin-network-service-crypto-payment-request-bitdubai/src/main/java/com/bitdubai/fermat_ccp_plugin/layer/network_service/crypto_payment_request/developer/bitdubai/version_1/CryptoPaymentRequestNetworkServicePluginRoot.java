@@ -951,10 +951,15 @@ public final class CryptoPaymentRequestNetworkServicePluginRoot extends Abstract
                     platformComponentProfileRegistered.getNetworkServiceType() == this.getNetworkServiceType() &&
                     platformComponentProfileRegistered.getIdentityPublicKey().equals(identity.getPublicKey())) {
 
-                System.out.println("CryptoPaymentRequestNetworkServicePluginRoot - NetWork Service is Registered: " + platformComponentProfileRegistered.getAlias());
+                if(communicationNetworkServiceConnectionManager==null) {
+                    initializeCommunicationNetworkServiceConnectionManager();
+                }
 
                 this.register = Boolean.TRUE;
                 initializeAgent();
+                System.out.print("CryptoPaymentRequestNetworkServicePluginRoot - NetWork Service is Registered: " + platformComponentProfileRegistered.getAlias());
+
+
             }
 
         } catch (Exception e) {

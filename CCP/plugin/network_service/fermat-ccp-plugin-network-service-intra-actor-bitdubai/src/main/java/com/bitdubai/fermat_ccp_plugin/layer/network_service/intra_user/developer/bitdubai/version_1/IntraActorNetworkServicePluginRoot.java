@@ -1361,6 +1361,8 @@ public class IntraActorNetworkServicePluginRoot extends AbstractPlugin implement
 
             if (communicationNetworkServiceConnectionManager != null){
                communicationNetworkServiceConnectionManager.restart();
+            }else{
+                this.initializeCommunicationNetworkServiceConnectionManager();
             }
 
             if(actorNetworkServiceRecordedAgent == null) {
@@ -1776,12 +1778,6 @@ public class IntraActorNetworkServicePluginRoot extends AbstractPlugin implement
                         NetworkServiceType.UNDEFINED,
                         PlatformComponentType.ACTOR_INTRA_USER,
                         extraData);
-
-
-               /* for (int i = 0; i < 35; i++) {
-                    communicationsClientConnection.registerComponentForCommunication(this.networkServiceType, platformComponentProfile);
-                }*/
-
 
                 if (!actorsToRegisterCache.contains(platformComponentProfile)) {
 

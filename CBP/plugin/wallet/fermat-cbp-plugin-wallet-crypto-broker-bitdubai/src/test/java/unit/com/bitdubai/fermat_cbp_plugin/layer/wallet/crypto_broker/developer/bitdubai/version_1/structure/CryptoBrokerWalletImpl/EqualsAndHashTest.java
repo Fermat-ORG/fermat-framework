@@ -1,6 +1,5 @@
 package unit.com.bitdubai.fermat_cbp_plugin.layer.wallet.crypto_broker.developer.bitdubai.version_1.structure.CryptoBrokerWalletImpl;
 
-import com.bitdubai.fermat_api.layer.all_definition.crypto.asymmetric.AsymmetricCryptography;
 import com.bitdubai.fermat_api.layer.all_definition.crypto.asymmetric.interfaces.KeyPair;
 import com.bitdubai.fermat_api.layer.all_definition.enums.CryptoCurrency;
 import com.bitdubai.fermat_api.layer.all_definition.enums.interfaces.FermatEnum;
@@ -9,17 +8,12 @@ import com.bitdubai.fermat_cbp_api.all_definition.enums.BalanceType;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.CurrencyType;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.TransactionType;
 import com.bitdubai.fermat_cbp_api.layer.wallet.crypto_broker.interfaces.CryptoBrokerStockTransactionRecord;
-import com.bitdubai.fermat_cbp_plugin.layer.wallet.crypto_broker.developer.bitdubai.version_1.structure.util.CryptoBrokerStockTransactionRecordImpl;
 
-import org.junit.Before;
-import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 
 import java.util.UUID;
-
-import static org.fest.assertions.api.Assertions.assertThat;
 
 /**
  * Created by Yordin Alayn on 23.10.2015.
@@ -31,27 +25,27 @@ public class EqualsAndHashTest {
     private static final String TEST_PUBLIC_KEY = "0450863AD64A87AE8A2FE83C1AF1A8403CB53F53E486D8511DAD8A04887E5B23522CD470243453A299FA9E77237716103ABC11A1DF38855ED6F2EE187E9C582BA6";
     private static final String TEST_PUBLIC_KEY2 = "0450863AD64A87AE8A2FE83C1AF1A8403CB53F53E486D8511DAD8A04887E5B23522CD470243453A299FA9E77237716103ABC11A1DF38855ED6F2EE187E9C582BA8";
 
-    private UUID            transactionId           = UUID.randomUUID();
-    private KeyPair         testkeyPairWallet;
-    private String          ownerPublicKey          = TEST_PUBLIC_KEY;
-    private BalanceType     balanceType             = BalanceType.BOOK;
-    private TransactionType transactionType         = TransactionType.DEBIT;
-    private float           amount                  = 300;
-    private CurrencyType    currencyType            = CurrencyType.CRYPTO_MONEY;
-    private FermatEnum      merchandise             = CryptoCurrency.BITCOIN;
-    private float           runningBookBalance      = 3000;
-    private float           runningAvailableBalance = 3000;
-    private long            timeStamp               = 0;
-    private String          memo                    = "TEST";
+    private UUID transactionId = UUID.randomUUID();
+    private KeyPair testkeyPairWallet;
+    private String ownerPublicKey = TEST_PUBLIC_KEY;
+    private BalanceType balanceType = BalanceType.BOOK;
+    private TransactionType transactionType = TransactionType.DEBIT;
+    private float amount = 300;
+    private CurrencyType currencyType = CurrencyType.CRYPTO_MONEY;
+    private FermatEnum merchandise = CryptoCurrency.BITCOIN;
+    private float runningBookBalance = 3000;
+    private float runningAvailableBalance = 3000;
+    private long timeStamp = 0;
+    private String memo = "TEST";
 
     @Mock
     private PluginFileSystem mockPluginFileSystem;
 
     private CryptoBrokerStockTransactionRecord testIdentity1, testIdentity2;
 
-//    @Before
-//    public void setUpWallet(){
-//        testkeyPairWallet = AsymmetricCryptography.createKeyPair(TEST_PRIVATE_KEY);
+// @Before
+//  public void setUpWallet(){
+//   testkeyPairWallet = AsymmetricCryptography.createKeyPair(TEST_PRIVATE_KEY);
 //        testIdentity1 = new CryptoBrokerStockTransactionRecordImpl(
 //                transactionId,
 //                testkeyPairWallet,

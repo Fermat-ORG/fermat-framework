@@ -50,20 +50,20 @@ import java.util.UUID;
 public abstract class AbstractDigitalAssetVault implements DigitalAssetVault {
 
     //public String LOCAL_STORAGE_PATH="digital-asset-metadata/";
-    public AssetUserWalletManager assetUserWalletManager;
-    public final String digitalAssetFileName = "digital-asset";
-    public final String digitalAssetMetadataFileName = "digital-asset-metadata";
-    public String LOCAL_STORAGE_PATH = "digital-asset-swap";
-    public FileLifeSpan FILE_LIFE_SPAN = FileLifeSpan.PERMANENT;
-    public FilePrivacy FILE_PRIVACY = FilePrivacy.PRIVATE;
-    public UUID pluginId;
-    public PluginFileSystem pluginFileSystem;
-    public String digitalAssetFileStoragePath;
-    public AssetIssuerWalletManager assetIssuerWalletManager;
-    public String walletPublicKey = "walletPublicKeyTest";
-    public ActorAssetIssuerManager actorAssetIssuerManager;
-    public ActorAssetUserManager actorAssetUserManager;
-    BitcoinNetworkManager bitcoinNetworkManager;
+    protected AssetUserWalletManager assetUserWalletManager;
+    protected final String digitalAssetFileName = "digital-asset";
+    protected final String digitalAssetMetadataFileName = "digital-asset-metadata";
+    protected String LOCAL_STORAGE_PATH = "digital-asset-swap";
+    protected FileLifeSpan FILE_LIFE_SPAN = FileLifeSpan.PERMANENT;
+    protected FilePrivacy FILE_PRIVACY = FilePrivacy.PRIVATE;
+    protected UUID pluginId;
+    protected PluginFileSystem pluginFileSystem;
+    protected String digitalAssetFileStoragePath;
+    protected AssetIssuerWalletManager assetIssuerWalletManager;
+    protected String walletPublicKey = "walletPublicKeyTest";
+    protected ActorAssetIssuerManager actorAssetIssuerManager;
+    protected ActorAssetUserManager actorAssetUserManager;
+    protected BitcoinNetworkManager bitcoinNetworkManager;
 
     /**
      * Set the UUID from this plugin

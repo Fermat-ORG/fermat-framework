@@ -56,14 +56,11 @@ public class CompleteComponentConnectionRequestNotificationEventHandler implemen
 
         if (((Service) this.networkService).getStatus() == ServiceStatus.STARTED) {
 
-
             CompleteComponentConnectionRequestNotificationEvent completeComponentConnectionRequestNotificationEvent = (CompleteComponentConnectionRequestNotificationEvent) platformEvent;
 
-            NetworkServiceType networkServiceTypeApplicant = completeComponentConnectionRequestNotificationEvent.getNetworkServiceTypeApplicant();
-            NetworkServiceType networkServiceTypeRoot = networkService.getNetworkServiceType();
 
 
-            if(networkServiceTypeApplicant == networkServiceTypeRoot){
+            if(completeComponentConnectionRequestNotificationEvent.getNetworkServiceTypeApplicant() == networkService.getPlatformComponentProfilePluginRoot().getNetworkServiceType()){
 
                 /*
                  *  networkService make the job
