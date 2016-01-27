@@ -827,7 +827,11 @@ public class CryptoAddressesNetworkServicePluginRoot extends AbstractNetworkServ
         try {
 
             //update message to read with destination, and update state in DONE, End Message
-            cryptoAddressesNetworkServiceDao.markReadAndDone(requestId);
+            if(cryptoAddressesNetworkServiceDao.getPendingRequest(requestId).getMessageType().equals(AddressesConstants.INCOMING_MESSAGE)){
+                cryptoAddressesNetworkServiceDao.markRead(requestId);
+            }else {
+                cryptoAddressesNetworkServiceDao.markReadAndDone(requestId);
+            }
         }catch (Exception e){
             throw new CantConfirmAddressExchangeRequestException(e,"","No se pudo marcar como leido el request exchange de address");
         }
