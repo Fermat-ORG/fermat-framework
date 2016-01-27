@@ -61,4 +61,5 @@
     <color name="light_grey">#EEE</color>
 
     <color name="cbw_contract_details_background">#222</color>
+    <color name="cbw_background_stock_chart_container">#3c70a9</color>
 </resources>

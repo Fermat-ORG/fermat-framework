@@ -146,7 +146,7 @@ public class WsCommunicationTyrusVPNClientManagerAgent{
     /**
      * Notify when a vpn connection close
      */
-    public void riseVpnConnectionCloseNotificationEvent(NetworkServiceType networkServiceApplicant, PlatformComponentProfile remoteParticipant) {
+    public void riseVpnConnectionCloseNotificationEvent(NetworkServiceType networkServiceApplicant, PlatformComponentProfile remoteParticipant,boolean isCloseNormal) {
 
         System.out.println("WsCommunicationVPNClientManagerAgent - riseVpnConnectionCloseNotificationEvent");
         FermatEvent platformEvent = eventManager.getNewEvent(P2pEventType.VPN_CONNECTION_CLOSE);
@@ -154,6 +154,7 @@ public class WsCommunicationTyrusVPNClientManagerAgent{
         event.setSource(EventSource.WS_COMMUNICATION_CLOUD_CLIENT_PLUGIN);
         event.setNetworkServiceApplicant(networkServiceApplicant);
         event.setRemoteParticipant(remoteParticipant);
+        event.setIsCloseNormal(isCloseNormal);
         eventManager.raiseEvent(platformEvent);
         System.out.println("WsCommunicationVPNClientManagerAgent - Raised Event = P2pEventType.VPN_CONNECTION_CLOSE");
     }

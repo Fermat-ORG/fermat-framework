@@ -2,6 +2,7 @@ package com.bitdubai.fermat_cht_plugin.layer.middleware.chat.developer.bitdubai.
 
 import com.bitdubai.fermat_api.CantStartAgentException;
 import com.bitdubai.fermat_api.DealsWithPluginIdentity;
+import com.bitdubai.fermat_api.layer.all_definition.components.enums.PlatformComponentType;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.Specialist;
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.Transaction;
@@ -34,6 +35,7 @@ import com.bitdubai.fermat_cht_api.layer.middleware.utils.MessageImpl;
 import com.bitdubai.fermat_cht_api.layer.network_service.chat.enums.ChatMessageStatus;
 import com.bitdubai.fermat_cht_api.layer.network_service.chat.enums.DistributionStatus;
 import com.bitdubai.fermat_cht_api.layer.network_service.chat.exceptions.CantSendChatMessageMetadataException;
+import com.bitdubai.fermat_cht_api.layer.network_service.chat.exceptions.CantSendChatMessageNewStatusNotificationException;
 import com.bitdubai.fermat_cht_api.layer.network_service.chat.interfaces.ChatManager;
 import com.bitdubai.fermat_cht_api.layer.network_service.chat.interfaces.ChatMetadata;
 import com.bitdubai.fermat_cht_plugin.layer.middleware.chat.developer.bitdubai.version_1.ChatMiddlewarePluginRoot;
@@ -341,8 +343,19 @@ public class ChatMiddlewareMonitorAgent implements
                     incomingChatMetadata=pendingTransaction.getInformation();
                     incomingTransactionChatId=incomingChatMetadata.getChatId();
                     if(eventChatId.toString().equals(incomingTransactionChatId.toString())){
-                        //If message exists in database, this message will be updated
+                        //If message exists in database, this message will be update
                         saveMessage(incomingChatMetadata);
+                        chatNetworkServiceManager.confirmReception(pendingTransaction.getTransactionID());
+                        chatNetworkServiceManager.sendChatMessageNewStatusNotification(
+                                chatNetworkServiceManager.getNetWorkServicePublicKey(),
+                                PlatformComponentType.NETWORK_SERVICE,
+                                incomingChatMetadata.getLocalActorPublicKey(),
+                                PlatformComponentType.NETWORK_SERVICE,
+                                DistributionStatus.DELIVERED,
+                                incomingChatMetadata.getChatId(),
+                                incomingChatMetadata.getMessageId()
+                        );
+                        break;
                     }
                 }
                 eventRecord.setEventStatus(EventStatus.NOTIFIED);
@@ -370,6 +383,18 @@ public class ChatMiddlewareMonitorAgent implements
                         e,
                         "Checking the incoming chat pending transactions",
                         "Cannot get the message from database"
+                );
+            } catch (CantSendChatMessageNewStatusNotificationException e) {
+                throw new CantGetPendingTransactionException(
+                        e,
+                        "Checking the incoming chat pending transactions",
+                        "Cannot send the message to TX"
+                );
+            } catch (CantConfirmTransactionException e) {
+                throw new CantGetPendingTransactionException(
+                        e,
+                        "Checking the incoming chat pending transactions",
+                        "Cannot get confirm the reception to local NS"
                 );
             }
 
@@ -441,10 +466,9 @@ public class ChatMiddlewareMonitorAgent implements
                 throw new CantGetPendingTransactionException(
                         e,
                         "Checking the incoming status pending transactions",
-                        "Cannot confirm the pending transaction in Network Service plugin"
+                        "Cannot get confirm the reception to local NS"
                 );
             }
-
         }
 
         /**
@@ -500,6 +524,7 @@ public class ChatMiddlewareMonitorAgent implements
                 messageRecorded=getMessageFromChatMetadata(
                         chatMetadata);
             }
+            messageRecorded.setStatus(MessageStatus.RECEIVE);
             chatMiddlewareDatabaseDao.saveMessage(messageRecorded);
         }
 

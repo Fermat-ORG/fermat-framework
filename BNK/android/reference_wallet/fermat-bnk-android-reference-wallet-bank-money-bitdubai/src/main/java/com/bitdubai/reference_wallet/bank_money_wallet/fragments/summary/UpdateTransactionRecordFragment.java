@@ -46,9 +46,13 @@ public class UpdateTransactionRecordFragment extends AbstractFermatFragment {
         transactionType.setText(transactionRecord.getTransactionType().getCode());
         transactionDate.setText(Utils.dateTimeFormat(transactionRecord.getTimestamp()));
         transactionConcept.setText(transactionRecord.getMemo());
+        configureToolbar();
         return layout;
     }
 
+    private void configureToolbar() {
+        getToolbar().setBackgroundColor(getResources().getColor(R.color.background_header_navy));
+    }
 
 
 }
