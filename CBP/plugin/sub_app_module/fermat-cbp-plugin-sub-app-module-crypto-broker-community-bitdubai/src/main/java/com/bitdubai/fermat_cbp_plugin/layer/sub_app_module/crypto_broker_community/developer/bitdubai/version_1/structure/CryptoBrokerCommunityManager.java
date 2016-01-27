@@ -385,6 +385,23 @@ public class CryptoBrokerCommunityManager implements CryptoBrokerCommunitySubApp
 
     @Override
     public boolean isActorConnected(String publicKey) throws CantValidateConnectionStateException {
+
+        try {
+            final CryptoBrokerLinkedActorIdentity linkedActorIdentity = new CryptoBrokerLinkedActorIdentity(publicKey, Actors.CBP_CRYPTO_BROKER);
+            final CryptoBrokerActorConnectionSearch search = cryptoBrokerActorConnectionManager.getSearch(linkedActorIdentity);
+            search.addConnectionState(ConnectionState.CONNECTED);
+
+            final List<CryptoBrokerActorConnection> actorConnections = search.getResult(Integer.MAX_VALUE, 0);
+
+            for(CryptoBrokerActorConnection connection : actorConnections){
+                if(publicKey.equals(connection.getPublicKey()))
+                    return true;
+            }
+
+        } catch (final CantListActorConnectionsException e) {
+            this.errorManager.reportUnexpectedPluginException(pluginVersionReference, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+            throw new CantValidateConnectionStateException(e, "", "Error trying to list actor connections.");
+        }
         return false;
     }
 
