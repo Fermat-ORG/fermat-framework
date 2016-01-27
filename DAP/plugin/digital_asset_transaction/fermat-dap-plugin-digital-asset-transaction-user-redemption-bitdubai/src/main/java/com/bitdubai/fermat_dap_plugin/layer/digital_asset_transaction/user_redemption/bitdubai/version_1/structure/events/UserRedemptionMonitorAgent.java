@@ -215,15 +215,14 @@ public class UserRedemptionMonitorAgent implements Agent, DealsWithLogger, Deals
         private void checkDeliveringTime() throws CantExecuteDatabaseOperationException, CantExecuteQueryException, UnexpectedResultReturnedFromDatabaseException, CantGetCryptoTransactionException, CantGetTransactionsException, CantLoadWalletException, CantRegisterCreditException, CantRegisterDebitException, CantGetAssetIssuerActorsException, CantSendTransactionNewStatusNotificationException, CantGetAssetUserActorsException, CantAssetUserActorNotFoundException, RecordsNotFoundException, CantCheckAssetUserRedemptionProgressException {
             for (DeliverRecord record : userRedemptionDao.getDeliveringRecords()) {
                 if (new Date().after(record.getTimeOut())) {
-                    record.getDigitalAssetMetadata().removeLastTransaction();
                     try {
                         bitcoinNetworkManager.cancelBroadcast(record.getDigitalAssetMetadata().getLastTransactionHash());
                     } catch (CantCancellBroadcastTransactionException e) {
                         e.printStackTrace();
                     }
+                    record.getDigitalAssetMetadata().removeLastTransaction();
                     digitalAssetUserRedemptionVault.updateWalletBalance(record.getDigitalAssetMetadata(), AssetVerification.foundCryptoTransaction(bitcoinNetworkManager, record.getDigitalAssetMetadata()), BalanceType.AVAILABLE, TransactionType.CREDIT, DAPTransactionType.RECEPTION, record.getRedeemPointPublicKey());
                     userRedemptionDao.cancelDelivering(record.getTransactionId());
-
                 }
             }
         }
