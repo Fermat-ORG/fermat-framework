@@ -2,14 +2,20 @@ package com.bitdubai.reference_wallet.bank_money_wallet.fragments.summary;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.view.ContextMenu;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
 
 import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractFermatFragment;
+import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
 import com.bitdubai.fermat_bnk_api.layer.bnk_wallet.bank_money.interfaces.BankMoneyTransactionRecord;
 import com.bitdubai.reference_wallet.bank_money_wallet.R;
+import com.bitdubai.reference_wallet.bank_money_wallet.util.ReferenceWalletConstants;
 
 import org.bitcoinj.core.Utils;
 
@@ -31,6 +37,7 @@ public class UpdateTransactionRecordFragment extends AbstractFermatFragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setHasOptionsMenu(true);
         transactionRecord = ( BankMoneyTransactionRecord )appSession.getData("transaction_data");
     }
 
@@ -54,5 +61,22 @@ public class UpdateTransactionRecordFragment extends AbstractFermatFragment {
         getToolbar().setBackgroundColor(getResources().getColor(R.color.background_header_navy));
     }
 
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if(item.getItemId()== ReferenceWalletConstants.SAVE){
+            System.out.println("item selected");
+            //TODO:update transaction
+            changeActivity(Activities.BNK_BANK_MONEY_WALLET_ACCOUNT_DETAILS, appSession.getAppPublicKey());
+            return true;
+        }
 
+        return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        super.onCreateOptionsMenu(menu, inflater);
+        menu.add(0, ReferenceWalletConstants.SAVE, 0, "Save")
+                .setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
+    }
 }

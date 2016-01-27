@@ -152,7 +152,7 @@ public class AddAccountFragment extends AbstractFermatFragment implements View.O
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         super.onCreateOptionsMenu(menu, inflater);
-        menu.add(1, ReferenceWalletConstants.SAVE, 1, "Save").setIcon(0)
+        menu.add(0, ReferenceWalletConstants.SAVE, 0, "Save")
                 .setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
     }
 }
