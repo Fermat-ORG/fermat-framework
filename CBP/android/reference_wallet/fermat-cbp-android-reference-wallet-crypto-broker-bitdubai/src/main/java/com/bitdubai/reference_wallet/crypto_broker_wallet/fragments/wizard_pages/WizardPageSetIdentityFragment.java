@@ -28,6 +28,7 @@ import com.bitdubai.fermat_cbp_api.layer.wallet.crypto_broker.exceptions.CryptoB
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_broker.exceptions.CantGetCryptoBrokerIdentityListException;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_broker.interfaces.CryptoBrokerWalletManager;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_broker.interfaces.CryptoBrokerWalletModuleManager;
+import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_broker.interfaces.CryptoBrokerWalletPreferenceSettings;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedWalletExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 import com.bitdubai.reference_wallet.crypto_broker_wallet.R;
@@ -37,6 +38,8 @@ import com.bitdubai.reference_wallet.crypto_broker_wallet.session.CryptoBrokerWa
 import java.util.ArrayList;
 import java.util.List;
 
+import static android.widget.Toast.makeText;
+
 /**
  * Created by nelson on 22/12/15.
  */
@@ -45,6 +48,7 @@ public class WizardPageSetIdentityFragment extends FermatWalletListFragment<Cryp
 
     private List<CryptoBrokerIdentity> identities;
     private CryptoBrokerIdentity selectedIdentity;
+    private CryptoBrokerWalletPreferenceSettings walletSettings;
 
     private LinearLayout container;
 
@@ -60,6 +64,22 @@ public class WizardPageSetIdentityFragment extends FermatWalletListFragment<Cryp
             CryptoBrokerWalletModuleManager moduleManager = ((CryptoBrokerWalletSession) appSession).getModuleManager();
             walletManager = moduleManager.getCryptoBrokerWallet(appSession.getAppPublicKey());
             errorManager = appSession.getErrorManager();
+
+            //Obtain walletSettings or create new wallet settings if first time opening wallet
+            walletSettings = null;
+            try {
+                walletSettings = moduleManager.getSettingsManager().loadAndGetSettings(appSession.getAppPublicKey());
+            }catch (Exception e){ walletSettings = null; }
+
+            if(walletSettings == null){
+                walletSettings = new CryptoBrokerWalletPreferenceSettings();
+                walletSettings.setIsPresentationHelpEnabled(true);
+                try {
+                    moduleManager.getSettingsManager().persistSettings(appSession.getAppPublicKey(), walletSettings);
+                }catch (Exception e){
+                    Log.e(TAG, e.getMessage(), e);
+                }
+            }
 
             identities = getMoreDataAsync(FermatRefreshTypes.NEW, 0);
 
@@ -130,9 +150,18 @@ public class WizardPageSetIdentityFragment extends FermatWalletListFragment<Cryp
                             .setSubTitle("This is a simple wallet for exchange Merchandise. It's main features are:")
                             .setTextFooter("To begin, choose an avatar below. You might change it later with any picture and your alias")
                             .build();
-                    presentationDialog.show();
 
-
+                    boolean showDialog;
+                    try{
+                        CryptoBrokerWalletModuleManager moduleManager = ((CryptoBrokerWalletSession) appSession).getModuleManager();
+                        showDialog = moduleManager.getSettingsManager().loadAndGetSettings(appSession.getAppPublicKey()).isHomeTutorialDialogEnabled();
+                        if(showDialog){
+                            presentationDialog.show();
+                        }
+                    }catch (FermatException e){
+                        makeText(getActivity(), "Oops! recovering from system error", Toast.LENGTH_SHORT).show();
+                    }
+                    //presentationDialog.show();
                 }
 
             }
@@ -181,7 +210,18 @@ public class WizardPageSetIdentityFragment extends FermatWalletListFragment<Cryp
                         .setTextFooter("To begin, choose an avatar below. You might change it later with any picture and your alias")
                         .build();
                 presentationDialog.setOnDismissListener(this);
-                presentationDialog.show();
+
+                boolean showDialog;
+                try{
+                    CryptoBrokerWalletModuleManager moduleManager = ((CryptoBrokerWalletSession) appSession).getModuleManager();
+                    showDialog = moduleManager.getSettingsManager().loadAndGetSettings(appSession.getAppPublicKey()).isHomeTutorialDialogEnabled();
+                    if(showDialog){
+                        presentationDialog.show();
+                    }
+                }catch (FermatException e){
+                    makeText(getActivity(), "Oops! recovering from system error", Toast.LENGTH_SHORT).show();
+                }
+                //presentationDialog.show();
             }
 
 
