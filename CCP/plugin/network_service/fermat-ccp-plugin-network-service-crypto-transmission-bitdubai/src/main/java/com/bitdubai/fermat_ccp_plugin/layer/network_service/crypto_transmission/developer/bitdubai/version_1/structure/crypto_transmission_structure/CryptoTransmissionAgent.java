@@ -13,7 +13,6 @@ import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_transmission.enu
 import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_transmission.interfaces.structure.CryptoTransmissionMetadata;
 import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_transmission.interfaces.structure.CryptoTransmissionMetadataType;
 import com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_transmission.developer.bitdubai.version_1.CryptoTransmissionNetworkServicePluginRoot;
-import com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_transmission.developer.bitdubai.version_1.communication.structure.CommunicationNetworkServiceConnectionManager;
 import com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_transmission.developer.bitdubai.version_1.crypto_transmission_database.CryptoTransmissionNetworkServiceDatabaseConstants;
 import com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_transmission.developer.bitdubai.version_1.crypto_transmission_database.dao.CryptoTransmissionConnectionsDAO;
 import com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_transmission.developer.bitdubai.version_1.crypto_transmission_database.dao.CryptoTransmissionMetadataDAO_V2;
@@ -196,7 +195,7 @@ public class CryptoTransmissionAgent {
         this.toSend = new Runnable() {
             @Override
             public void run() {
-                while (running.get())
+                while (true)
                     sendCycle();
             }
         };
@@ -205,7 +204,7 @@ public class CryptoTransmissionAgent {
         this.toReceive = new Runnable() {
             @Override
             public void run() {
-                while (running.get())
+                while (true)
                     receiveCycle();
             }
         };

@@ -67,6 +67,7 @@ import com.bitdubai.android_core.app.common.version_1.provisory.SubAppManagerPro
 import com.bitdubai.android_core.app.common.version_1.sessions.SubAppSessionManager;
 import com.bitdubai.android_core.app.common.version_1.sessions.WalletSessionManager;
 import com.bitdubai.android_core.app.common.version_1.builders.SideMenuBuilder;
+import com.bitdubai.android_core.app.common.version_1.top_settings.TopSettings;
 import com.bitdubai.android_core.app.common.version_1.util.DepthPageTransformer;
 import com.bitdubai.android_core.app.common.version_1.util.FermatSystemUtils;
 import com.bitdubai.fermat.R;
@@ -498,6 +499,8 @@ public abstract class FermatActivity extends AppCompatActivity
                                                                  };
         view.findViewById(R.id.img_fermat_setting_1).setOnClickListener(onClickListener);
         view.findViewById(R.id.img_fermat_setting).setOnClickListener(onClickListener);
+
+        TopSettings.buildSettingsTop(mRevealView);
 
     }
 

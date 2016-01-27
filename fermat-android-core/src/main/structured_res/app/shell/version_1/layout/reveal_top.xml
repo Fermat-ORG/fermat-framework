@@ -70,7 +70,8 @@
                         <ImageButton
                             android:layout_width="48dp"
                             android:layout_height="48dp"
-                            android:background="@drawable/ic_drawable_p2p_network" />
+                            android:background="@drawable/ic_drawable_p2p_network"
+                            android:id="@+id/btn_fermat_network"/>
                         <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
