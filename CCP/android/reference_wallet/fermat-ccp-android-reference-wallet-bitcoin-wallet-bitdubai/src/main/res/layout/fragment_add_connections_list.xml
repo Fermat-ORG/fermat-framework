@@ -37,8 +37,7 @@
         <ImageView
             android:layout_width="125dp"
             android:layout_height="125dp"
-            android:src="@drawable/contacts_empty_icon"
-            />
+            android:src="@drawable/contacts_empty_icon" />
 
 
         <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
@@ -50,14 +49,8 @@
             android:text="Click me to\nsearch contacts!"
             android:textAppearance="?android:attr/textAppearanceLarge"
             android:textColor="#fff"
-            fab:typeface="ROBOTO_REGULAR"
-            />
+            fab:typeface="ROBOTO_REGULAR" />
 
     </LinearLayout>
-
-
-
-
-
 </FrameLayout>
 
