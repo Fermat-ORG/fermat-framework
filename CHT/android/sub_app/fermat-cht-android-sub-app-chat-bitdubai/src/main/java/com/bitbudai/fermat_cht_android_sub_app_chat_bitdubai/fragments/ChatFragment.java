@@ -1,6 +1,8 @@
 package com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.fragments;
 
 import android.os.Bundle;
+import android.os.Handler;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -10,15 +12,19 @@ import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.adapters.ChatAdapter;
 import com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.adapters.ChatAdapterView;
 import com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.models.ChatMessage;
 import com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.sessions.ChatSession;
 import com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.settings.ChatSettings;
-import com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.util.Parameters;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractFermatFragment;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.annotations.NeededAddonReference;
+import com.bitdubai.fermat_api.layer.all_definition.enums.Addons;
+import com.bitdubai.fermat_api.layer.all_definition.enums.Layers;
+import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
 import com.bitdubai.fermat_api.layer.all_definition.settings.structure.SettingsManager;
 import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.enums.SubApps;
 import com.bitdubai.fermat_cht_android_sub_app_chat_bitdubai.R;
@@ -33,12 +39,14 @@ import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.ChatManager;
 import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.ChatModuleManager;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedSubAppExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
+import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfaces.EventManager;
 
 import java.text.DateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.UUID;
+
 
 //import android.widget.LinearLayout;
 //import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
@@ -63,8 +71,21 @@ public class ChatFragment extends AbstractFermatFragment {//ActionBarActivity
     private SettingsManager<ChatSettings> settingsManager;
     private ChatSession chatSession;
 
+    //New
+    @NeededAddonReference(platform = Platforms.PLUG_INS_PLATFORM, layer = Layers.PLATFORM_SERVICE, addon = Addons.EVENT_MANAGER)
+    private EventManager eventManager;
+    @NeededAddonReference(platform = Platforms.PLUG_INS_PLATFORM, layer = Layers.PLATFORM_SERVICE, addon = Addons.EVENT_MANAGER)
+    private EventManager eventManager2;
+    int i = 4;
+    boolean me;
+    Integer newmessage = 0;
+    String mensaje = "";
+    ArrayList<String> historialmensaje = new ArrayList<>();
+    SwipeRefreshLayout mSwipeRefreshLayout;
+
+
     //Data
-    List<String> chatmessages =  new ArrayList<>();
+    List<String> chatmessages = new ArrayList<>();
 
     private EditText messageET;
     private ListView messagesContainer;
@@ -75,18 +96,10 @@ public class ChatFragment extends AbstractFermatFragment {//ActionBarActivity
 
     TextView linear_layout_send_form;
 
-    //CHAT
-    String[] itemname ={
-            "Safari",
-            "Chrone",
-            "Opera",
-            "FireFox",
 
-    };
-    //
-
-
-    public static ChatFragment newInstance() {return new ChatFragment();}
+    public static ChatFragment newInstance() {
+        return new ChatFragment();
+    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -94,31 +107,33 @@ public class ChatFragment extends AbstractFermatFragment {//ActionBarActivity
         try {
             chatSession = ((ChatSession) appSession);
             moduleManager = chatSession.getModuleManager();
-            chatManager=moduleManager.getChatManager();
+            chatManager = moduleManager.getChatManager();
             //settingsManager = moduleManager.getSettingsManager();
             errorManager = appSession.getErrorManager();
+
+
         } catch (Exception e) {
             if (errorManager != null)
                 errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
         }
 
 
-
-
     }
+
 
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {//private void initControls() {}
 
         // Inflate the layout for this fragment
-        View layout = inflater.inflate(R.layout.chat, container, false);
+        final View layout = inflater.inflate(R.layout.chat, container, false);
         
 
 
         messagesContainer = (ListView) layout.findViewById(R.id.messagesContainer);
         messageET = (EditText) layout.findViewById(R.id.messageEdit);
         sendBtn = (Button) layout.findViewById(R.id.chatSendButton);
+        mSwipeRefreshLayout = (SwipeRefreshLayout) layout.findViewById(R.id.swipe_container);
 
         final FermatTextView meLabel = (FermatTextView) layout.findViewById(R.id.meLbl);
         FermatTextView companionLabel = (FermatTextView) layout.findViewById(R.id.friendLabel);
@@ -126,24 +141,24 @@ public class ChatFragment extends AbstractFermatFragment {//ActionBarActivity
         companionLabel.setText("My Contact");// Hard Coded
       //  loadDummyHistory();// Hard Coded
 
-
+        historialmensaje.add("yo##Hola estoy haciendo pruebas con la vista");
+        historialmensaje.add("tu##Que bueno");
+        historialmensaje.add("tu##Como lo pruebo");
+        historialmensaje.add("yo##escribes yo seguido de 2 numerales y el mensaje");
+        historialmensaje.add("yo##mensaje del otro lado igual pero colocando tu");
+        historialmensaje.add("yo##por ultimo swipe down para lanzar un toast");
         ListView lstOpciones;
-        final Parameters[] datos =
-                new Parameters[]{
-                        new Parameters("Jose", ""),
-                        new Parameters("Miguel", ""),
-
-                };
-
+//new se coloco la variable me para identificar cuando sea yo quien envie el mensaje y actualice el textview correcto
 
         final ChatAdapterView adaptador =
-                new ChatAdapterView(getActivity(), datos);
+                new ChatAdapterView(getActivity(), historialmensaje);
 
         lstOpciones = (ListView)layout.findViewById(R.id.messagesContainer);
 
         lstOpciones.setAdapter(adaptador);
 
 
+        adaptador.refreshEvents(historialmensaje);
 
 
         sendBtn.setOnClickListener(new View.OnClickListener() {
@@ -153,20 +168,21 @@ public class ChatFragment extends AbstractFermatFragment {//ActionBarActivity
                 if (TextUtils.isEmpty(messageText)) {
                     return;
                 }
-                String mensaje="";
+
                 Chat testChat = new ChatMock();
                 Message testMessage = new MessageMock(UUID.fromString("52d7fab8-a423-458f-bcc9-49cdb3e9ba8f"));
                 testMessage.setMessage(messageET.getText().toString());
                 try {
 
+
                     chatManager.saveChat(testChat);
                     chatManager.saveMessage(testMessage);
-                    mensaje=chatManager.getMessageByChatId((UUID.fromString("52d7fab8-a423-458f-bcc9-49cdb3e9ba8f"))).getMessage();
-                    datos[0]=new Parameters("Jose",mensaje);
+                    mensaje = chatManager.getMessageByChatId((UUID.fromString("52d7fab8-a423-458f-bcc9-49cdb3e9ba8f"))).getMessage();
 
-                    adaptador.refreshEvents(datos);
-         //           meLabel.setText(chatManager.getMessageByChatId((UUID.fromString("52d7fab8-a423-458f-bcc9-49cdb3e9ba8f"))).getMessage());
-         //           linear_layout_send_form.setText(chatManager.getMessageByChatId((UUID.fromString("52d7fab8-a423-458f-bcc9-49cdb3e9ba8f"))).getMessage());
+                    historialmensaje.add(mensaje);
+
+                    adaptador.refreshEvents(historialmensaje);
+                    System.out.println("chatmanager.gettext:" + chatManager.getMessages().size());
                 } catch (CantSaveChatException e) {
                     e.printStackTrace();
                 } catch (CantSaveMessageException e) {
@@ -187,7 +203,50 @@ public class ChatFragment extends AbstractFermatFragment {//ActionBarActivity
                 displayMessage(chatMessage);*/
             }
         });
+
+
+        mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                new Handler().postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        System.out.println("Despierta Kakaroto");
+                        Toast.makeText(getActivity(), "Despierta Kakaroto", Toast.LENGTH_SHORT).show();
+                        //new Estaba en el plugin root del middleware creo que no es necesario
+/*                FermatEvent fermatEvent = eventManager.getNewEvent(EventType.INCOMING_CHAT);
+                IncomingChat incomingChat = (IncomingChat) fermatEvent;
+                incomingChat.setSource(EventSource.NETWORK_SERVICE_CHAT);
+                incomingChat.setChatId(UUID.fromString("52d7fab8-a423-458f-bcc9-49cdb3e9ba8f"));
+                eventManager.raiseEvent(incomingChat);*/
+                        try {
+                            System.out.println("Threar UI corriendo");
+                            if (chatManager.getMessages().size() > newmessage) {
+                                me = false;
+                                //              i = i + 1;
+                                newmessage = newmessage + 1;
+                                mensaje = chatManager.getMessageByChatId((UUID.fromString("52d7fab8-a423-458f-bcc9-49cdb3e9ba8f"))).getMessage();
+                                //        historialmensaje.add("tu##"+mensaje);
+                                //        datos.set(0, historialmensaje);
+                                //        adaptador.refreshEvents(datos);
+
+                            }
+                        } catch (CantGetMessageException e) {
+                            e.printStackTrace();
+                        }
+
+
+                        mSwipeRefreshLayout.setRefreshing(false);
+                    }
+                }, 2500);
+            }
+        });
+
+
+
         return layout;
+
+
     }
 
     /*public void displayMessage(ChatMessage message) {
@@ -195,6 +254,8 @@ public class ChatFragment extends AbstractFermatFragment {//ActionBarActivity
         //adapter.notifyDataSetChanged();
         scroll();
     }*/
+
+
 
 
 

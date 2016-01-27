@@ -41,12 +41,12 @@ public class ChatListFragment extends AbstractFermatFragment {
     ListView list;
  //   static HashMap<Integer,List<String>> chatinfo=new HashMap<Integer,List<String>>();
    // static Integer[] imgid=new Integer[6];
-    String[] chatinfo={"MIGUEL@@hola como estas##24/10/2015",
-         "MAP@@chao nos vemos##25/10/2015",
-         "JOS@@Vamos a alla##24/12/2015",
-         "MIG@@hola como estas##24/10/2015",
-         "FRAN@@hola como estas##24/10/2015",
-         "GAB@@hola como estas##24/10/2015"};   //work
+    String[] chatinfo={"GABRIEL@@hola como estas##24/10/2015",
+         "MIGUEL@@chao nos vemos##25/10/2015",
+         "FRANKLIN@@A la victoria siempre##24/12/2015",
+         "MANUEL@@Tigres Campeon##24/10/2015",
+         "JOSE@@gracias totales##24/10/2015",
+         "LUIS@@Fermat Rules##20/10/2015"};   //work
     Integer[] imgid={R.drawable.ken,
     R.drawable.sas,
     R.drawable.koj,
