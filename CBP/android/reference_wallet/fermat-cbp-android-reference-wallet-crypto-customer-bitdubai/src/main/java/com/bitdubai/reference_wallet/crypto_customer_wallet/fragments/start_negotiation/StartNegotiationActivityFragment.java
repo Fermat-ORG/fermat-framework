@@ -256,6 +256,7 @@ public class StartNegotiationActivityFragment extends AbstractFermatFragment<Cry
         // DO NOTHING..
     }
 
+    /*PRIVATE METHOD*/
     private void initViews(View rootView) {
 
         brokerImage = (ImageView) rootView.findViewById(R.id.ccw_broker_image);
@@ -453,42 +454,42 @@ public class StartNegotiationActivityFragment extends AbstractFermatFragment<Cry
 
     }
 
-    //VALIDATE CLAUSE
-    private Boolean validateClauses(Map<ClauseType, ClauseInformation> clauses){
+        //VALIDATE CLAUSE
+        private Boolean validateClauses(Map<ClauseType, ClauseInformation> clauses){
 
-        if(clauses != null) {
+            if(clauses != null) {
 
-            final BigDecimal exchangeRate   = getBigDecimal(clauses.get(ClauseType.EXCHANGE_RATE).getValue());
-            final BigDecimal amountToBuy    = getBigDecimal(clauses.get(ClauseType.CUSTOMER_CURRENCY_QUANTITY).getValue());
-            final BigDecimal amountToPay    = getBigDecimal(clauses.get(ClauseType.BROKER_CURRENCY_QUANTITY).getValue());
+                final BigDecimal exchangeRate   = getBigDecimal(clauses.get(ClauseType.EXCHANGE_RATE).getValue());
+                final BigDecimal amountToBuy    = getBigDecimal(clauses.get(ClauseType.CUSTOMER_CURRENCY_QUANTITY).getValue());
+                final BigDecimal amountToPay    = getBigDecimal(clauses.get(ClauseType.BROKER_CURRENCY_QUANTITY).getValue());
 
-            if(exchangeRate.compareTo(BigDecimal.ZERO) <= 0){
-                Toast.makeText(getActivity(), "The exchange must be greater than zero.", Toast.LENGTH_LONG).show();
+                if(exchangeRate.compareTo(BigDecimal.ZERO) <= 0){
+                    Toast.makeText(getActivity(), "The exchange must be greater than zero.", Toast.LENGTH_LONG).show();
+                    return false;
+                }
+
+                if(amountToBuy.compareTo(BigDecimal.ZERO) <= 0){
+                    Toast.makeText(getActivity(), "The  buying must be greater than zero.", Toast.LENGTH_LONG).show();
+                    return false;
+                }
+
+                if(amountToPay.compareTo(BigDecimal.ZERO) <= 0){
+                    Toast.makeText(getActivity(), "The  paying must be greater than zero.", Toast.LENGTH_LONG).show();
+                    return false;
+                }
+
+                if ((clauses.get(ClauseType.CUSTOMER_CURRENCY).getValue()) == (clauses.get(ClauseType.BROKER_CURRENCY).getValue())) {
+                    Toast.makeText(getActivity(), "The currency to pay is equal to currency buy.", Toast.LENGTH_LONG).show();
+                    return false;
+                }
+
+            } else {
+                Toast.makeText(getActivity(), "Error. Information is null.", Toast.LENGTH_LONG).show();
                 return false;
             }
 
-            if(amountToBuy.compareTo(BigDecimal.ZERO) <= 0){
-                Toast.makeText(getActivity(), "The  buying must be greater than zero.", Toast.LENGTH_LONG).show();
-                return false;
-            }
-
-            if(amountToPay.compareTo(BigDecimal.ZERO) <= 0){
-                Toast.makeText(getActivity(), "The  paying must be greater than zero.", Toast.LENGTH_LONG).show();
-                return false;
-            }
-
-            if ((clauses.get(ClauseType.CUSTOMER_CURRENCY).getValue()) == (clauses.get(ClauseType.BROKER_CURRENCY).getValue())) {
-                Toast.makeText(getActivity(), "The currency to pay is equal to currency buy.", Toast.LENGTH_LONG).show();
-                return false;
-            }
-
-        } else {
-            Toast.makeText(getActivity(), "Error. Information is null.", Toast.LENGTH_LONG).show();
-            return false;
+            return true;
         }
-
-        return true;
-    }
 
     //GET CLAUSE INFORMATION
     private Collection<ClauseInformation> getClause(Map<ClauseType, ClauseInformation> mapClauses){
@@ -538,17 +539,17 @@ public class StartNegotiationActivityFragment extends AbstractFermatFragment<Cry
 
     }
 
-    //REMOVE CURRENCY TO PAY
-    private void removeCurrency(){
+        //REMOVE CURRENCY TO PAY
+        private void removeCurrency(){
 
-        final Map<ClauseType, ClauseInformation> clauses = negotiationInfo.getClauses();
+            final Map<ClauseType, ClauseInformation> clauses = negotiationInfo.getClauses();
 
-        String currencyPay = clauses.get(ClauseType.CUSTOMER_CURRENCY).getValue();
+            String currencyPay = clauses.get(ClauseType.CUSTOMER_CURRENCY).getValue();
 
-        for (Currency item: currencies)
-            if(currencyPay.equals(item.getCode())) currencies.remove(item);
+            for (Currency item: currencies)
+                if(currencyPay.equals(item.getCode())) currencies.remove(item);
 
-    }
+        }
 
     private BigDecimal getBigDecimal(String value){
         return new BigDecimal(value.replace(",", ""));
@@ -557,5 +558,6 @@ public class StartNegotiationActivityFragment extends AbstractFermatFragment<Cry
     private String getDecimalFormat(BigDecimal value){
         return DecimalFormat.getInstance().format(value.doubleValue());
     }
+    /*END PRIVATE METHOD*/
 
 }
