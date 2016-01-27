@@ -511,15 +511,6 @@ public class CryptoTransmissionNetworkServicePluginRoot extends AbstractNetworkS
                 outgoingCryptoTransmissionMetadataDAO = new CryptoTransmissionMetadataDAO_V2(pluginDatabaseSystem, pluginId, dataBase, CryptoTransmissionNetworkServiceDatabaseConstants.OUTGOING_CRYPTO_TRANSMISSION_METADATA_TABLE_NAME);
                 cryptoTransmissionConnectionsDAO = new CryptoTransmissionConnectionsDAO(pluginDatabaseSystem, pluginId);
 
-
-                cryptoTransmissionAgent = new CryptoTransmissionAgent(
-                        this,
-                        errorManager,
-                        eventManager
-                );
-
-
-
                 initializeCryptoTransmissionAgent();
 
                 // change message state to process again first time
@@ -760,22 +751,11 @@ public class CryptoTransmissionNetworkServicePluginRoot extends AbstractNetworkS
     }
 
     private void initializeCryptoTransmissionAgent(){
-        try {
-            cryptoTransmissionAgent = new CryptoTransmissionAgent(
-                    this,
-                    cryptoTransmissionConnectionsDAO,
-                    incomingCryptoTransmissionMetadataDAO,
-                    outgoingCryptoTransmissionMetadataDAO,
-                    communicationNetworkServiceConnectionManager,
-                    wsCommunicationsCloudClientManager,
-                    errorManager,
-                    new ArrayList<PlatformComponentProfile>(),
-                    eventManager
-            );
-
-        }catch (Exception e){
-            e.printStackTrace();
-        }
+        cryptoTransmissionAgent = new CryptoTransmissionAgent(
+                this,
+                errorManager,
+                eventManager
+        );
     }
 
     /**
