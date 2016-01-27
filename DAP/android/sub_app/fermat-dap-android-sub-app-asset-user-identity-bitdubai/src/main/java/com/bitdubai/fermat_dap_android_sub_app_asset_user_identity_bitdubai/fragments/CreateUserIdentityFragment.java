@@ -138,10 +138,8 @@ public class CreateUserIdentityFragment extends AbstractFermatFragment {
                     .setIconRes(R.drawable.asset_user_wallet)
                     .setVIewColor(R.color.dap_identity_user_view_color)
                     .setTitleTextColor(R.color.dap_identity_user_view_color)
-                    .setSubTitle("Welcome to the Asset User Identity.")
-                    .setBody("From here you will be able to create an Asset User type identity.\n\n" +
-                            "This Identity, will identify you in the system as an asset user, and give you access to all tasks and applications you need.\n\n" +
-                            "Other Asset Issuers will be able to request connection to you by finding you with the information you provide here.")
+                    .setSubTitle(R.string.dap_user_identity_welcome_subTitle)
+                    .setBody(R.string.dap_user_identity_welcome_body)
                     .setTemplateType(PresentationDialog.TemplateType.TYPE_PRESENTATION_WITHOUT_IDENTITIES)
                     .setIsCheckEnabled(checkButton)
                     .build();
