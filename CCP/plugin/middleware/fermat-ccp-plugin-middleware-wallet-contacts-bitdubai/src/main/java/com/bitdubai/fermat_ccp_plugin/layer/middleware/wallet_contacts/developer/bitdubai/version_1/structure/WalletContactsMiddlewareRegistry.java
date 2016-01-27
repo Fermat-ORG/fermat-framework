@@ -379,7 +379,8 @@ public class WalletContactsMiddlewareRegistry implements WalletContactsRegistry 
                     }
                     if(request.getCryptoAddress()!=null) {
                         if (request.getCryptoAddress().getAddress() != null)
-                            cryptoAddressesManager.markReceivedRequest(request.getRequestId());
+                            if (request.getIdentityTypeResponding() == Actors.CCP_INTRA_WALLET_USER)
+                                cryptoAddressesManager.markReceivedRequest(request.getRequestId());
                     }
 
                 }

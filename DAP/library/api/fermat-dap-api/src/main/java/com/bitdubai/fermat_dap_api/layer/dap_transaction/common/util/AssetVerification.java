@@ -129,6 +129,10 @@ public final class AssetVerification {
     public static boolean isValidContract(DigitalAssetContract digitalAssetContract) {
         //For now, we going to check, only, the expiration date
         ContractProperty contractProperty = digitalAssetContract.getContractProperty(DigitalAssetContractPropertiesConstants.EXPIRATION_DATE);
+        return isValidExpirationDate(contractProperty);
+    }
+
+    public static boolean isValidExpirationDate(ContractProperty contractProperty) {
         Timestamp expirationDate = (Timestamp) contractProperty.getValue();
         return (expirationDate == null || new Timestamp(System.currentTimeMillis()).before(expirationDate));
     }

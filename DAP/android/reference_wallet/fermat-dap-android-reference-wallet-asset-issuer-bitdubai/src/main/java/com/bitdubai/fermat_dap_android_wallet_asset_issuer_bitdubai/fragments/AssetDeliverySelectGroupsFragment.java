@@ -110,7 +110,7 @@ public class AssetDeliverySelectGroupsFragment extends FermatWalletListFragment<
                     .setSubTitle("Asset Issuer Deliver Groups.")
                     .setBody("You can also deliver your assets to entire groups of users.\n\n" +
                             "If you have many users you are already connected to, it may be better to organize them in groups.\n\n" +
-                            "You can accomplish this from the Asset User Community sub application.")
+                            "You can accomplish this from the Asset User Community application.")
                     .setTemplateType(PresentationDialog.TemplateType.TYPE_PRESENTATION_WITHOUT_IDENTITIES)
                     .setIsCheckEnabled(checkButton)
                     .build();

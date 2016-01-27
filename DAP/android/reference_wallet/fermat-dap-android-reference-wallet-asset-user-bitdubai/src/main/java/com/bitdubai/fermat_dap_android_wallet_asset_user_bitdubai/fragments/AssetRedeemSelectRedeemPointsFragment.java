@@ -108,7 +108,7 @@ public class AssetRedeemSelectRedeemPointsFragment extends FermatWalletListFragm
                     .setTitleTextColor(R.color.dap_user_view_color)
                     .setSubTitle("Redeem Point Selection.")
                     .setBody("In order to redeem an asset, you must be connected to at least a redeem point. You can connect to Redeem Points at the " +
-                            "Redeem Point Community sub app.\n\n" +
+                            "Redeem Point Community application.\n\n" +
                             "Your assets may not be redeemable at any redeem point.")
                     .setTemplateType(PresentationDialog.TemplateType.TYPE_PRESENTATION_WITHOUT_IDENTITIES)
                     .setIsCheckEnabled(checkButton)
