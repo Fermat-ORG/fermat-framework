@@ -1239,7 +1239,7 @@ public final class CryptoPaymentRequestNetworkServicePluginRoot extends Abstract
                     protocolState,
                     requestMessage.getNetworkType(),
                     requestMessage.getReferenceWallet(),
-                    0, PaymentConstants.INCOMING_MESSAGE
+                    0, PaymentConstants.OUTGOING_MESSAGE
             );
 
         } catch(CantCreateCryptoPaymentRequestException e) {
