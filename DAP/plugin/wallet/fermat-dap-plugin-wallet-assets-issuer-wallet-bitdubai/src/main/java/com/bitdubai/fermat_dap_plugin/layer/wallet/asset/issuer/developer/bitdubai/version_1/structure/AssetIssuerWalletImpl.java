@@ -424,7 +424,7 @@ public class AssetIssuerWalletImpl implements AssetIssuerWallet {
             assetStatistic.setUsageDate(assetUsageDate);
             if (status == AssetCurrentStatus.ASSET_REDEEMED) {
                 try {
-                    ActorAssetRedeemPoint redeemPoint = actorAssetRedeemPointManager.getActorByPublicKey(assetIssuerWalletDao.getRedeemPointPublicKey(transactionId));
+                    ActorAssetRedeemPoint redeemPoint = actorAssetRedeemPointManager.getActorRegisteredByPublicKey(assetIssuerWalletDao.getRedeemPointPublicKey(transactionId));
                     assetStatistic.setRedeemPoint(redeemPoint);
                 } catch (Exception e) {
                     e.printStackTrace();
