@@ -369,12 +369,15 @@ public class WalletContactsMiddlewareRegistry implements WalletContactsRegistry 
                         case DENY:
                             this.handleCryptoAddressDeniedEvent(request);
                             break;
+                        case RECEIVED:
+                            this.handleCryptoAddressReceivedEvent(request);
+                            break;
                         default:
                             //TODO: mejorar esto que es una mierda por favor
-                            if(request.getCryptoAddress()!=null) {
-                                if(request.getCryptoAddress().getAddress()!=null)
-                                    this.handleCryptoAddressReceivedEvent(request);
-                            }
+//                            if(request.getCryptoAddress()!=null) {
+//                                if(request.getCryptoAddress().getAddress()!=null)
+//                                    this.handleCryptoAddressReceivedEvent(request);
+//                            }
                             break;
                     }
                     if(request.getCryptoAddress()!=null) {
