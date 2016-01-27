@@ -762,7 +762,6 @@ public class CryptoTransmissionNetworkServicePluginRoot extends AbstractNetworkS
                     wsCommunicationsCloudClientManager,
                     errorManager,
                     new ArrayList<PlatformComponentProfile>(),
-                    identity,
                     eventManager
             );
             cryptoTransmissionAgent.start();
@@ -798,8 +797,6 @@ public class CryptoTransmissionNetworkServicePluginRoot extends AbstractNetworkS
 
                 System.out.println("CryptoTransmissionNetworkServicePluginRoot - NetWork Service is Registered: " + platformComponentProfileRegistered.getAlias());
                 this.register = Boolean.TRUE;
-
-
 
                 if(communicationNetworkServiceConnectionManager==null) {
                     initializeCommunicationNetworkServiceConnectionManager();
@@ -865,23 +862,8 @@ public class CryptoTransmissionNetworkServicePluginRoot extends AbstractNetworkS
         /*
          * Tell the manager to handler the new connection stablished
          */
-
-        //TODO: SE lo paso en duro para probar
         communicationNetworkServiceConnectionManager.handleEstablishedRequestedNetworkServiceConnection(remoteComponentProfile);
 
-        System.out.println("-----------------------\n" +
-                "CRYPTO TRANSMISSION CONEXION ENTRANTE  -----------------------\n" +
-                "-----------------------\n A: " + remoteComponentProfile.getAlias());
-
-        if (remoteNetworkServicesRegisteredList != null && !remoteNetworkServicesRegisteredList.isEmpty()){
-
-            remoteNetworkServicesRegisteredList.add(remoteComponentProfile);
-
-
-            System.out.println("-----------------------\n" +
-                    "CRYPTO TRANSMISSION CONEXION ENTRANTE  -----------------------\n" +
-                    "-----------------------\n A: " + remoteComponentProfile.getAlias());
-        }
 
     }
 

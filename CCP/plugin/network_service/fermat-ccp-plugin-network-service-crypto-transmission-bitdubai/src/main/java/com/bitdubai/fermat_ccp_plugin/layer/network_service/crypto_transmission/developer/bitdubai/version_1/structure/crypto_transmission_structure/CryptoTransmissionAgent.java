@@ -58,6 +58,9 @@ public class CryptoTransmissionAgent {
     private static final long RECEIVE_SLEEP_TIME = 15000;
 
 
+    private static final int SEND_TASK = 0;
+    private static final int RECEIVE_TASK = 1;
+
     /**
      * DealsWithErrors Interface member variables.
      */
@@ -68,10 +71,6 @@ public class CryptoTransmissionAgent {
      */
     private AtomicBoolean running;
 
-    /**
-     * Represent the identity
-     */
-    private ECCKeyPair identity;
 
     /**
      * Communication Service, Class to send the message
@@ -118,7 +117,7 @@ public class CryptoTransmissionAgent {
      */
     private Runnable toReceive;
 
-    private List<Future<?>> futures= new ArrayList<>();
+    private Future<?>[] futures= new Future[2];
     private final ExecutorService threadPoolExecutor;
 
     /**
@@ -126,12 +125,6 @@ public class CryptoTransmissionAgent {
      * ActorPublicKey, metadata de respuesta
      */
     Map<String, CryptoTransmissionProtocolState> cacheResponseMetadataFromRemotes;
-
-    /**
-     * Mapa con el publicKey del componentProfile al cual me quiero conectar
-     *  y las veces que intenté conectarme para saltearlo si no está conectado
-     */
-    Map<String,Timer> connectionsTimer;
 
     /**
      * Cola de espera, a la cual van pasando las conecciones que no se pudieron conectar para que se hagan con más tiempo y no saturen el server
@@ -144,11 +137,6 @@ public class CryptoTransmissionAgent {
      * publicKey  and transaccion metadata waiting to be a response
      */
     Map<String,CryptoTransmissionMetadata> poolConnectionsWaitingForResponse;
-
-
-    Map<String, FermatMessage> receiveMessage;
-    private boolean flag=true;
-
 
     private  EventManager eventManager;
     /**
@@ -169,7 +157,6 @@ public class CryptoTransmissionAgent {
             WsCommunicationsCloudClientManager wsCommunicationsCloudClientManager,
             ErrorManager errorManager,
             List<PlatformComponentProfile> remoteNetworkServicesRegisteredList,
-            ECCKeyPair identity,
             EventManager eventManager) {
 
         this.cryptoTransmissionNetworkServicePluginRoot = cryptoTransmissionNetworkServicePluginRoot;
@@ -180,7 +167,6 @@ public class CryptoTransmissionAgent {
         this.wsCommunicationsCloudClientManager =wsCommunicationsCloudClientManager;
         this.errorManager = errorManager;
         this.remoteNetworkServicesRegisteredList = remoteNetworkServicesRegisteredList;
-        this.identity = identity;
         this.eventManager = eventManager;
 
         cacheResponseMetadataFromRemotes = new HashMap<String, CryptoTransmissionProtocolState>();
@@ -226,9 +212,13 @@ public class CryptoTransmissionAgent {
             e.printStackTrace();
         }
 
+        if(futures!=null){
+            if(futures[SEND_TASK]!=null)futures[SEND_TASK].cancel(true);
+            if(futures[RECEIVE_TASK]!=null)futures[RECEIVE_TASK].cancel(true);
+        }
         //Start the Thread
-        futures.add(threadPoolExecutor.submit(toSend));
-        futures.add(threadPoolExecutor.submit(toReceive));
+        futures[SEND_TASK] = threadPoolExecutor.submit(toSend);
+        futures[RECEIVE_TASK] = threadPoolExecutor.submit(toReceive);
 
         System.out.println("CryptoTransmissionAgent - started ");
 
@@ -240,20 +230,23 @@ public class CryptoTransmissionAgent {
      */
     public void pause(){
         running.set(false);
-        Iterator<Future<?>> it = futures.iterator();
 
-        while (it.hasNext()){
-            it.next().cancel(true);
-        }
+        futures[SEND_TASK].cancel(true);
+        futures[RECEIVE_TASK].cancel(true);
     }
 
     /**
      * Resume the internal threads
      */
     public void resume(){
-        if(running.get()==false){
-            futures.add(threadPoolExecutor.submit(toSend));
-            futures.add(threadPoolExecutor.submit(toReceive));
+        if(!running.get()){
+
+            if(futures!=null){
+                if(futures[SEND_TASK]!=null)futures[SEND_TASK].cancel(true);
+                if(futures[RECEIVE_TASK]!=null)futures[RECEIVE_TASK].cancel(true);
+            }
+            futures[SEND_TASK] = threadPoolExecutor.submit(toSend);
+            futures[RECEIVE_TASK] = threadPoolExecutor.submit(toReceive);
             this.running.set(true);
         }
     }
@@ -264,11 +257,8 @@ public class CryptoTransmissionAgent {
     public void stop(){
         running.set(false);
         //Stop the Thread
-        Iterator<Future<?>> it = futures.iterator();
-
-        while (it.hasNext()){
-            it.next().cancel(true);
-        }
+        futures[SEND_TASK].cancel(true);
+        futures[RECEIVE_TASK].cancel(true);
 
     }
 
@@ -402,7 +392,7 @@ public class CryptoTransmissionAgent {
                                     CryptoTransmissionProtocolState.SENT_TO_COMMUNICATION_TEMPLATE);
 
                             System.out.print("-----------------------\n" +
-                                    "CRYPTO METADATA!!!!! -----------------------\n" +
+                                    "CRYPTO METADATA SENT_TO_COMMUNICATION_TEMPLATE !!!!! -----------------------\n" +
                                     "-----------------------\n STATE: " + cryptoTransmissionMetadata.getCryptoTransmissionProtocolState());
 
                         //} catch (CantUpdateRecordDataBaseException e) {
@@ -540,10 +530,10 @@ public class CryptoTransmissionAgent {
                             // si el mensaje viene con un estado de SENT es porque es la primera vez que llega, por lo que tengo que guardarlo en la bd y responder
                             case SEEN_BY_OWN_NETWORK_SERVICE_WAITING_FOR_RESPONSE:
 
-                                incomingCryptoTransmissionMetadataDAO.changeTransactionStateAndProtocolState(
-                                        cryptoTransmissionMetadata.getTransactionId(),
-                                        CryptoTransmissionMetadataState.SEEN_BY_DESTINATION_NETWORK_SERVICE,
-                                        CryptoTransmissionProtocolState.RECEIVED);
+//                                incomingCryptoTransmissionMetadataDAO.changeTransactionStateAndProtocolState(
+//                                        cryptoTransmissionMetadata.getTransactionId(),
+//                                        CryptoTransmissionMetadataState.SEEN_BY_DESTINATION_NETWORK_SERVICE,
+//                                        CryptoTransmissionProtocolState.RECEIVED);
 
                                 System.out.print("-----------------------\n" +
                                         "RECIBIENDO CRYPTO METADATA!!!!! -----------------------\n" +
@@ -575,7 +565,9 @@ public class CryptoTransmissionAgent {
                                 }
                                 break;
                             case CREDITED_IN_OWN_WALLET:
-
+                                System.out.print("-----------------------\n" +
+                                        "CREDITED IN WALLET, TENES QUE VER QUE SE HACE ACÁ !!!!! -----------------------\n" +
+                                        "-----------------------\n STATE: " + cryptoTransmissionMetadata.getCryptoTransmissionProtocolState());
                                 break;
                             default:
                                 System.out.print("-----------------------\n" +
