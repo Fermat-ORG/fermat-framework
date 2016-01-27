@@ -121,9 +121,8 @@ public class UserDeliveryListFragment extends FermatWalletListFragment<UserDeliv
                     .setIconRes(R.drawable.asset_issuer)
                     .setVIewColor(R.color.dap_issuer_view_color)
                     .setTitleTextColor(R.color.dap_issuer_view_color)
-                    .setSubTitle("Asset Issuer Delivery List.")
-                    .setBody("On this section you are able to see delivery statistics of your selected asset.\n\n" +
-                            "All the users that have receive this asset will be collected here so you can better define the success of your marketing campaign.")
+                    .setSubTitle(R.string.dap_issuer_wallet_delivery_list_subTitle)
+                    .setBody(R.string.dap_issuer_wallet_delivery_list_body)
                     .setTemplateType(PresentationDialog.TemplateType.TYPE_PRESENTATION_WITHOUT_IDENTITIES)
                     .setIsCheckEnabled(checkButton)
                     .build();

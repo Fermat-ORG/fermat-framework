@@ -126,9 +126,9 @@ public class WizardPageSetIdentityFragment extends FermatWalletListFragment<Cryp
                             .setTemplateType(PresentationDialog.TemplateType.TYPE_PRESENTATION_WITHOUT_IDENTITIES)
                             .setBannerRes(R.drawable.banner_crypto_broker)
                             .setIconRes(R.drawable.crypto_broker)
-                            .setBody("Custom text support for dialog in the wizard identities help")
-                            .setSubTitle("This is a simple wallet for exchange Merchandise. It's main features are:")
-                            .setTextFooter("To begin, choose an avatar below. You might change it later with any picture and your alias")
+                            .setSubTitle(R.string.cbw_crypto_broker_wallet_merchandises_subTitle)
+                            .setBody(R.string.cbw_crypto_broker_wallet_identity_body)
+                            .setTextFooter(R.string.cbw_crypto_broker_wallet_identity_footer)
                             .build();
                     presentationDialog.show();
 
@@ -176,9 +176,9 @@ public class WizardPageSetIdentityFragment extends FermatWalletListFragment<Cryp
                         .setTemplateType(PresentationDialog.TemplateType.TYPE_PRESENTATION)
                         .setBannerRes(R.drawable.banner_crypto_broker)
                         .setIconRes(R.drawable.crypto_broker)
-                        .setBody("Custom text support for dialog in the wizard identities help 2")
-                        .setSubTitle("This is a simple wallet for exchange Merchandise. " + identities)
-                        .setTextFooter("To begin, choose an avatar below. You might change it later with any picture and your alias")
+                        .setSubTitle(R.string.cbw_crypto_broker_wallet_identity_2_subTitle)// + identities)
+                        .setBody(R.string.cbw_crypto_broker_wallet_identity_2_body)
+                        .setTextFooter(R.string.cbw_crypto_broker_wallet_identity_2_footer)
                         .build();
                 presentationDialog.setOnDismissListener(this);
                 presentationDialog.show();

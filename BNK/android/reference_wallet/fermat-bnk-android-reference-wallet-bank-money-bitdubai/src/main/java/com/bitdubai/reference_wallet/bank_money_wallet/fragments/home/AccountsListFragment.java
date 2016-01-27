@@ -77,10 +77,10 @@ public class AccountsListFragment extends FermatWalletListFragment<BankAccountNu
         this.emtyView =  layout.findViewById(R.id.bw_empty_accounts_view);
         presentationDialog = new PresentationDialog.Builder(getActivity(),appSession)
                 .setBannerRes(R.drawable.bw_banner)
-                .setBody("prueba Body")
-                .setTitle("prueba Title")
-                .setSubTitle("prueba subtitle")
-                .setTextFooter("prueba footer").build();
+//                .setTitle("prueba Title")
+                .setSubTitle(R.string.bnk_bank_money_wallet_account_subTitle)
+                .setBody(R.string.bnk_bank_money_wallet_account_body)
+                .setTextFooter(R.string.bnk_bank_money_wallet_account_footer).build();
         showOrHideNoAccountListView(accountsList.isEmpty());
         /*presentationDialog.findViewById(R.id.btn_dismiss).setOnClickListener(new View.OnClickListener() {
             @Override
