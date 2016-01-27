@@ -4,24 +4,30 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.*;
 
 import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractFermatFragment;
 import com.bitdubai.fermat_api.layer.all_definition.enums.FiatCurrency;
+import com.bitdubai.fermat_api.layer.all_definition.enums.UISource;
 import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterException;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Wallets;
 import com.bitdubai.fermat_bnk_api.all_definition.enums.BankAccountType;
 import com.bitdubai.fermat_bnk_api.layer.bnk_wallet_module.interfaces.BankMoneyWalletModuleManager;
+import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedUIExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedWalletExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 import com.bitdubai.reference_wallet.bank_money_wallet.R;
 import com.bitdubai.reference_wallet.bank_money_wallet.session.BankMoneyWalletSession;
+import com.bitdubai.reference_wallet.bank_money_wallet.util.ReferenceWalletConstants;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import static android.widget.Toast.makeText;
 
 /**
  * Created by memo on 03/01/16.
@@ -42,9 +48,6 @@ public class AddAccountFragment extends AbstractFermatFragment implements View.O
     EditText accountNumberText;
     EditText accountAliasText;
 
-    public AddAccountFragment() {
-    }
-
     public static AddAccountFragment newInstance() {
         return new AddAccountFragment();
     }
@@ -52,7 +55,7 @@ public class AddAccountFragment extends AbstractFermatFragment implements View.O
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
+        setHasOptionsMenu(true);
         try {
             moduleManager = ((BankMoneyWalletSession) appSession).getModuleManager();
             errorManager = appSession.getErrorManager();
@@ -66,6 +69,7 @@ public class AddAccountFragment extends AbstractFermatFragment implements View.O
             fiatCurrencies.add(f.getCode());
             fiatCurrenciesFriendly.add(f.getFriendlyName() + " (" + f.getCode() + ")");
         }
+
     }
 
 
@@ -85,8 +89,6 @@ public class AddAccountFragment extends AbstractFermatFragment implements View.O
         currencySpinner.setAdapter(currencySpinnerAdapter);
         currencySpinner.setOnItemSelectedListener(this);
         configureToolbar();
-        /*setHasOptionsMenu(false);
-        setMenuVisibility(false);*/
         return layout;
     }
 
@@ -106,7 +108,7 @@ public class AddAccountFragment extends AbstractFermatFragment implements View.O
         }
     }
 
-    public void createAccount(){
+    private void createAccount(){
         String account = accountNumberText.getText().toString();
         String alias = accountAliasText.getText().toString();
         moduleManager.getBankingWallet().addNewAccount(BankAccountType.SAVING,alias,account,selectedCurrency);
@@ -126,5 +128,31 @@ public class AddAccountFragment extends AbstractFermatFragment implements View.O
     public void onNothingSelected(AdapterView<?> parent) {
 
     }
+    @Override
+    public void onActivityCreated(Bundle savedInstanceState) {
+        try {
+            super.onActivityCreated(new Bundle());
+        } catch (Exception e){
+            makeText(getActivity(), "Oooops! recovering from system error", Toast.LENGTH_SHORT).show();
+        }
+    }
 
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if(item.getItemId()==ReferenceWalletConstants.SAVE){
+            System.out.println("item selected");
+            createAccount();
+            changeActivity(Activities.BNK_BANK_MONEY_WALLET_HOME, appSession.getAppPublicKey());
+            return true;
+        }
+
+        return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        super.onCreateOptionsMenu(menu, inflater);
+        menu.add(1, ReferenceWalletConstants.SAVE, 1, "Save").setIcon(0)
+                .setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
+    }
 }

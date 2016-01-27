@@ -31,6 +31,7 @@ import com.bitdubai.reference_wallet.bank_money_wallet.common.holders.AccountLis
 import com.bitdubai.reference_wallet.bank_money_wallet.common.navigationDrawer.BankMoneyWalletNavigationViewPainter;
 import com.bitdubai.reference_wallet.bank_money_wallet.session.BankMoneyWalletSession;
 import com.bitdubai.reference_wallet.bank_money_wallet.util.CommonLogger;
+import com.bitdubai.reference_wallet.bank_money_wallet.util.ReferenceWalletConstants;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -47,6 +48,7 @@ public class AccountsListFragment extends FermatWalletListFragment<BankAccountNu
     private ErrorManager errorManager;
     private ArrayList<BankAccountNumber> accountsList;
 
+
     private static final String TAG = "AccountListActivityFragment";
 
     public static AccountsListFragment newInstance() {
@@ -60,6 +62,7 @@ public class AccountsListFragment extends FermatWalletListFragment<BankAccountNu
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setHasOptionsMenu(true);
         accountsList = new ArrayList<>();
         try {
             moduleManager = ((BankMoneyWalletSession) appSession).getModuleManager();
@@ -126,17 +129,18 @@ public class AccountsListFragment extends FermatWalletListFragment<BankAccountNu
 
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        menu.clear();
-        inflater.inflate(R.menu.bw_menu_home, menu);
+        super.onCreateOptionsMenu(menu,inflater);
+        menu.add(0, ReferenceWalletConstants.ADD_ACCOUNT, 0, "Add Account")
+                .setShowAsAction(MenuItem.SHOW_AS_ACTION_NEVER);
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        if (item.getItemId() == R.id.add_account) {
-            item.setEnabled(false);
-            changeActivity(Activities.BNK_BANK_MONEY_WALLET_ADD_ACCOUNT,appSession.getAppPublicKey());
+        if (item.getItemId() == ReferenceWalletConstants.ADD_ACCOUNT) {
+            changeActivity(Activities.BNK_BANK_MONEY_WALLET_ADD_ACCOUNT, appSession.getAppPublicKey());
+            return true;
         }
-        return true;
+        return super.onOptionsItemSelected(item);
     }
 
 
