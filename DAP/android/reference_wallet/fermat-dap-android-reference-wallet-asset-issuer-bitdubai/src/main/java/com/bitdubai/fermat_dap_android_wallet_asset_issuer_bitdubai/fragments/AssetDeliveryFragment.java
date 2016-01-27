@@ -123,10 +123,8 @@ public class AssetDeliveryFragment extends AbstractFermatFragment {
                     .setIconRes(R.drawable.asset_issuer)
                     .setVIewColor(R.color.dap_issuer_view_color)
                     .setTitleTextColor(R.color.dap_issuer_view_color)
-                    .setSubTitle("Asset delivery section.")
-                    .setBody("On this section you will be able to identify the users you are going to deliver this asset to.\n\n" +
-                            "You can deliver as many assets as you have to any connected user. \n\n" +
-                            "If no users are available, you will have to connect to them using the User Community application.")
+                    .setSubTitle(R.string.dap_issuer_wallet_delivery_subTitle)
+                    .setBody(R.string.dap_issuer_wallet_delivery_body)
                     .setTemplateType(PresentationDialog.TemplateType.TYPE_PRESENTATION_WITHOUT_IDENTITIES)
                     .setIsCheckEnabled(checkButton)
                     .build();

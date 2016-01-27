@@ -95,9 +95,9 @@ public class WizardPageSetMerchandisesFragment extends AbstractFermatFragment
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         super.onCreateView(inflater, container, savedInstanceState);
         PresentationDialog presentationDialog = new PresentationDialog.Builder(getActivity(), appSession)
-                .setBody("Custom text support for dialog in the wizard Merchandises help")
-                .setSubTitle("Subtitle text of Merchandises dialog help")
-                .setTextFooter("Text footer Merchandises dialog help")
+                .setSubTitle(R.string.cbw_crypto_broker_wallet_merchandises_subTitle)
+                .setBody(R.string.cbw_crypto_broker_wallet_merchandises_body)
+                .setTextFooter(R.string.cbw_crypto_broker_wallet_merchandises_footer)
                 .setTemplateType(PresentationDialog.TemplateType.TYPE_PRESENTATION_WITHOUT_IDENTITIES)
                 .setBannerRes(R.drawable.banner_crypto_broker)
                 .setIconRes(R.drawable.crypto_broker)

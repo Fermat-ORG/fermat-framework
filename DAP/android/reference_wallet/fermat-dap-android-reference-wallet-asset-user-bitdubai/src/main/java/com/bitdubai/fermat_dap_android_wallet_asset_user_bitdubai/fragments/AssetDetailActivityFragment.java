@@ -114,11 +114,8 @@ public class AssetDetailActivityFragment extends AbstractFermatFragment {
                     .setIconRes(R.drawable.asset_user_wallet)
                     .setVIewColor(R.color.dap_user_view_color)
                     .setTitleTextColor(R.color.dap_user_view_color)
-                    .setSubTitle("Asset Detail.")
-                    .setBody("You can review detailed information about the selected asset.\n\n" +
-                            "You can also decide to redeem your asset in a connected Redeem Point. If you are not connected to any Redeem Point, " +
-                            "use the Redeem Point Community application to search for Redeem Points.\n\n" +
-                            "You can also appropriate the asset in order to get the Bitcoins associated with it. They will be sent to your Bitcoin wallet.")
+                    .setSubTitle(R.string.dap_user_wallet_detail_subTitle)
+                    .setBody(R.string.dap_user_wallet_detail_body)
                     .setTemplateType(PresentationDialog.TemplateType.TYPE_PRESENTATION_WITHOUT_IDENTITIES)
                     .setIsCheckEnabled(checkButton)
                     .build();

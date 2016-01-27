@@ -364,17 +364,12 @@ public class AssetEditorFragment extends AbstractFermatFragment implements View.
     private void setUpHelpEditor(boolean checkButton) {
         try {
             PresentationDialog presentationDialog = new PresentationDialog.Builder(getActivity(), appSession)
-//                    .setBannerRes(R.drawable.banner_asset_factory)
+                    .setBannerRes(R.drawable.banner_asset_factory)
                     .setIconRes(R.drawable.asset_factory)
                     .setVIewColor(R.color.dap_asset_factory_view_color)
                     .setTitleTextColor(R.color.dap_asset_factory_view_color)
-                    .setSubTitle("Asset Editor section.")
-                    .setBody("On this section you are able to define all your assets properties.\n\n" +
-                            "A digital asset is formed by an image which represents it," +
-                            "a set of properties like description, expiration date and quantity.\n" +
-                            "And a value expressed in bitcoin.\n \n" +
-                            "You will be able to modify any of this properties as needed before publishing your asset.")
-//                    .setTextFooter("Again, give me a Text")
+                    .setSubTitle(R.string.dap_asset_factory_editor_subTitle)
+                    .setBody(R.string.dap_asset_factory_editor_body)
                     .setTemplateType(PresentationDialog.TemplateType.TYPE_PRESENTATION_WITHOUT_IDENTITIES)
                     .setIsCheckEnabled(checkButton)
                     .build();

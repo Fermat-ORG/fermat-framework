@@ -125,8 +125,8 @@ public class RedeemPointHistoryActivityFragment extends FermatWalletListFragment
                     .setIconRes(R.drawable.redeem_point)
                     .setVIewColor(R.color.dap_redeem_point_view_color)
                     .setTitleTextColor(R.color.dap_redeem_point_view_color)
-                    .setSubTitle("Asset User Redeem Point History.")
-                    .setBody("*GIVE ME A TEXT")
+//                    .setSubTitle("Asset User Redeem Point History.")
+//                    .setBody("*GIVE ME A TEXT")
                     .setTemplateType(PresentationDialog.TemplateType.TYPE_PRESENTATION_WITHOUT_IDENTITIES)
                     .setIsCheckEnabled(checkButton)
                     .build();
