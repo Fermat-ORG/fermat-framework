@@ -62,7 +62,8 @@ public class RedeemPointRedemptionRecorderService implements DealsWithEvents, As
     void receiveNewEvent(FermatEvent event) throws CantSaveEventException {
         String context = "pluginDatabaseSystem: " + pluginDatabaseSystem + " - pluginId: " + pluginId + " - event: " + event;
 
-        try (AssetRedeemPointRedemptionDAO rprDao = new AssetRedeemPointRedemptionDAO(pluginDatabaseSystem, pluginId)) {
+        try {
+            AssetRedeemPointRedemptionDAO rprDao = new AssetRedeemPointRedemptionDAO(pluginDatabaseSystem, pluginId);
             rprDao.saveNewEvent(event);
         } catch (DatabaseNotFoundException | CantOpenDatabaseException e) {
             throw new CantSaveEventException(e, context, CantSaveEventException.DEFAULT_MESSAGE);

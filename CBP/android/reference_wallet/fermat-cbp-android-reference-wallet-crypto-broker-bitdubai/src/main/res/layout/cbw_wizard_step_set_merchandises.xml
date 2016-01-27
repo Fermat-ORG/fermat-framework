@@ -153,34 +153,11 @@
             android:layout_marginTop="8dp"
             android:orientation="horizontal">
 
-            <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_vertical"
-                android:text="@string/cbw_automatic_restock"
-                android:textColor="@color/black"
-                android:textSize="14sp"/>
 
-            <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatCheckBox
-                android:id="@+id/cbw_automatic_restock_check_box"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:buttonTint="@color/cbw_wizard_border_color"/>
 
 
         </LinearLayout>
 
-        <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Select the Spread"
-            android:textColor="@color/cbw_wizard_color"/>
-
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:layout_marginTop="8dp"
-            android:background="@color/cbw_wizard_border_color"/>
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -189,22 +166,6 @@
             android:orientation="horizontal"
             android:paddingBottom="8dp">
 
-            <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
-                android:id="@+id/cbw_spread_value_text"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_vertical"
-                android:layout_marginLeft="16dp"
-                android:layout_marginStart="16dp"
-                android:textColor="@color/black"
-                android:textSize="16sp"
-                tools:text="15%"/>
-
-            <SeekBar
-                android:id="@+id/cbw_spread_value_seek_bar"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_vertical"/>
 
 
         </LinearLayout>

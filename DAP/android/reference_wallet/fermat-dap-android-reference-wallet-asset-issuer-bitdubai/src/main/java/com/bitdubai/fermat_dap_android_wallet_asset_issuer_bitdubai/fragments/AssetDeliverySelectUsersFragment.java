@@ -108,7 +108,7 @@ public class AssetDeliverySelectUsersFragment extends FermatWalletListFragment<U
                     .setTitleTextColor(R.color.dap_issuer_view_color)
                     .setSubTitle("Asset Users selection.")
                     .setBody("Use this screen to select users that you are connected to.\n\n" +
-                            "If no users are available, you need to connect to them from the Asset User Community sub application.\n\n" +
+                            "If no users are available, you need to connect to them from the Asset User Community application.\n\n" +
                             "Use this application to identify and connect to users and they will be permanently available to receive your assets.")
                     .setTemplateType(PresentationDialog.TemplateType.TYPE_PRESENTATION_WITHOUT_IDENTITIES)
                     .setIsCheckEnabled(checkButton)

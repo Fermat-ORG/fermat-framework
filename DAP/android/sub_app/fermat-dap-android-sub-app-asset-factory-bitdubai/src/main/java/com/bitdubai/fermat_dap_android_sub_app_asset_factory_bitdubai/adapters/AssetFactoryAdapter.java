@@ -123,7 +123,7 @@ public class AssetFactoryAdapter extends FermatAdapter<AssetFactory, AssetHolder
         holder.amount.setTextColor(ContextCompat.getColor(context, R.color.blue_amount));
         holder.bitcoins.setTextColor(ContextCompat.getColor(context, R.color.blue_bitcoins));
         holder.name.setText(data.getName() != null ? data.getName() : context.getString(R.string.app_unnamed));
-        holder.state.setText(R.string.home_asset_state_editable);
+        holder.state.setText(R.string.home_asset_state_draft);
         holder.amount.setText(String.format(context.getString(R.string.home_row_asset_amount), data.getQuantity()));
         holder.bitcoins.setText(String.format(context.getString(R.string.home_row_asset_bitcoins), amount));
     }

@@ -286,7 +286,6 @@ public class IntraActorNetworkServicePluginRoot extends AbstractPlugin implement
 
     private IntraActorNetworkServiceDao intraActorNetworkServiceDao;
 
-    private  boolean beforeRegistered;
     /**
      * Constructor
      */
@@ -298,7 +297,7 @@ public class IntraActorNetworkServicePluginRoot extends AbstractPlugin implement
         this.name = "Intra actor Network Service";
         this.alias = "IntraActorNetworkService";
         this.extraData = null;
-        beforeRegistered = false;
+        this.actorsToRegisterCache = new ArrayList<>();
     }
 
     /**
@@ -546,7 +545,7 @@ public class IntraActorNetworkServicePluginRoot extends AbstractPlugin implement
 
                     intraActorNetworkServiceDao = new IntraActorNetworkServiceDao(this.dataBase, this.pluginFileSystem,this.pluginId);
 
-                    actorsToRegisterCache = new ArrayList<>();
+
 
                     remoteNetworkServicesRegisteredList = new CopyOnWriteArrayList<PlatformComponentProfile>();
 
@@ -1362,6 +1361,8 @@ public class IntraActorNetworkServicePluginRoot extends AbstractPlugin implement
 
             if (communicationNetworkServiceConnectionManager != null){
                communicationNetworkServiceConnectionManager.restart();
+            }else{
+                this.initializeCommunicationNetworkServiceConnectionManager();
             }
 
             if(actorNetworkServiceRecordedAgent == null) {
@@ -1571,7 +1572,7 @@ public class IntraActorNetworkServicePluginRoot extends AbstractPlugin implement
                     notificationDescriptor,
                     currentTime,
                     protocolState,
-                    false,1,
+                    false, 1,
                     null
             );
 
@@ -1778,13 +1779,8 @@ public class IntraActorNetworkServicePluginRoot extends AbstractPlugin implement
                         PlatformComponentType.ACTOR_INTRA_USER,
                         extraData);
 
-
-               /* for (int i = 0; i < 35; i++) {
-                    communicationsClientConnection.registerComponentForCommunication(this.networkServiceType, platformComponentProfile);
-                }*/
-
-
                 if (!actorsToRegisterCache.contains(platformComponentProfile)) {
+
                     actorsToRegisterCache.add(platformComponentProfile);
 
                     if (register) {
@@ -1825,6 +1821,10 @@ public class IntraActorNetworkServicePluginRoot extends AbstractPlugin implement
                         NetworkServiceType.UNDEFINED,
                         PlatformComponentType.ACTOR_INTRA_USER,
                         extraData);
+
+                if (!actorsToRegisterCache.contains(platformComponentProfile)) {
+                    actorsToRegisterCache.add(platformComponentProfile);
+                }
 
                 Thread thread = new Thread(new Runnable() {
                     @Override

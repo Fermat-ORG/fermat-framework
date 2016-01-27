@@ -199,22 +199,21 @@ public class BitcoinCryptoNetworkMonitor implements Agent {
      * Will get all transactions hashes in Broadcasting status to resume them.
      */
     private void resumeBroadcastOfPendingTransactions(BlockchainNetworkType blockchainNetworkType) {
-        /**
-         * will get all the trasactions from the wallet in pending status and broadcast them
-         */
-        for (Transaction transaction : wallet.getPendingTransactions()){
-            try {
-                this.broadcastTransaction(transaction.getHashAsString());
-            } catch (CantBroadcastTransactionException e) {
-                /**
-                 * if there was an error, I will mark the transaction as WITH_ERROR
-                 */
+        try {
+            for (String txId :  getDao().getBroadcastTransactionsByStatus(blockchainNetworkType, Status.BROADCASTING)){
                 try {
-                    getDao().setBroadcastStatus(Status.WITH_ERROR, peerGroup.getConnectedPeers().size(), e, transaction.getHashAsString());
-                } catch (CantExecuteDatabaseOperationException e1) {
-                    e1.printStackTrace();
+                    this.broadcastTransaction(txId);
+                } catch (CantBroadcastTransactionException e) {
+                    getDao().setBroadcastStatus(Status.WITH_ERROR, peerGroup.getConnectedPeers().size(), e, txId);
                 }
             }
+        } catch (CantExecuteDatabaseOperationException e) {
+            /**
+             * If I couldn't get the list due to a database error, then nothing left to do
+             */
+            e.printStackTrace();
+        } {
+
         }
     }
 
@@ -503,10 +502,15 @@ public class BitcoinCryptoNetworkMonitor implements Agent {
             /**
              * do wallet maintenance
              */
-            wallet.maybeCommitTx(transaction);
+            //wallet.maybeCommitTx(transaction);
             wallet.cleanup();
 
             wallet.saveToFile(walletFileName);
+
+            /**
+             * update Broadcasting table to set it to cancelled.
+             */
+            this.getDao().setBroadcastStatus(Status.CANCELLED, peerGroup.getConnectedPeers().size(), null, txHash);
         } catch (Exception e) {
             throw new CantCancellBroadcastTransactionException(CantCancellBroadcastTransactionException.DEFAULT_MESSAGE, e, "Change in transaction could not be saved in wallet.", null);
         }
