@@ -236,9 +236,9 @@ public class AssetDeliveryFragment extends AbstractFermatFragment {
         if (selectedUsersCount == 0 && selectedGroupsCount == 0) {
             message = "Select users or groups";
         } else if (selectedUsersCount > 0) {
-            message = selectedUsersCount + " users selected";
-        } else if (selectedGroupsCount > 0){
-            message = selectedGroupsCount + " groups selected";
+            message = selectedUsersCount + ((selectedUsersCount == 1) ? " user" : " users") + " selected";
+        } else if (selectedGroupsCount > 0) {
+            message = selectedGroupsCount  + ((selectedUsersCount == 1) ? " group" : " groups") + " selected";
         }
         selectedUsersText.setText(message);
     }
