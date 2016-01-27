@@ -8,8 +8,13 @@ import com.bitdubai.fermat_cbp_api.all_definition.enums.ClauseType;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.common.interfaces.ClauseInformation;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.common.interfaces.CustomerBrokerNegotiationInformation;
 import com.bitdubai.reference_wallet.crypto_customer_wallet.R;
+import com.bitdubai.reference_wallet.crypto_customer_wallet.common.models.BrokerCurrencyQuotation;
+import com.bitdubai.reference_wallet.crypto_customer_wallet.common.models.BrokerCurrencyQuotationImpl;
 
+import java.math.BigDecimal;
+import java.text.DecimalFormat;
 import java.text.NumberFormat;
+import java.util.List;
 import java.util.Map;
 
 
@@ -23,6 +28,7 @@ public class ExchangeRateViewHolder extends ClauseViewHolder implements View.OnC
     private TextView yourExchangeRateValueLeftSide;
     private TextView yourExchangeRateValueRightSide;
     private FermatButton yourExchangeRateValue;
+    private List<BrokerCurrencyQuotationImpl> marketRateList;
 
 
     public ExchangeRateViewHolder(View itemView) {
@@ -43,9 +49,11 @@ public class ExchangeRateViewHolder extends ClauseViewHolder implements View.OnC
         final ClauseInformation currencyToBuy = clauses.get(ClauseType.CUSTOMER_CURRENCY);
         final ClauseInformation currencyToPay = clauses.get(ClauseType.BROKER_CURRENCY);
 
-        double marketRate = 212.48; // TODO cambiar por valor que devuelve el proveedor asociado a la wallet para este par de monedas
+//        double marketRate = 212.48; // TODO cambiar por valor que devuelve el proveedor asociado a la wallet para este par de monedas
+//        String formattedMarketRate = NumberFormat.getInstance().format(marketRate);
 
-        String formattedMarketRate = NumberFormat.getInstance().format(marketRate);
+        final BigDecimal marketRate = new BigDecimal(getMarketRate(clauses).replace("," ,""));
+        String formattedMarketRate  = DecimalFormat.getInstance().format(marketRate.doubleValue());
 
         markerRateReference.setText(String.format("1 %1$s / %2$s %3$s", currencyToBuy.getValue(), formattedMarketRate, currencyToPay.getValue()));
         yourExchangeRateValueLeftSide.setText(String.format("1 %1$s /", currencyToBuy.getValue()));
@@ -78,5 +86,20 @@ public class ExchangeRateViewHolder extends ClauseViewHolder implements View.OnC
     @Override
     protected int getTitleTextViewRes() {
         return R.id.ccw_card_view_title;
+    }
+
+    public void setMarketRateList(List<BrokerCurrencyQuotationImpl> marketRateList){
+        this.marketRateList = marketRateList;
+    }
+
+    private String getMarketRate(Map<ClauseType, ClauseInformation> clauses){
+
+        BrokerCurrencyQuotation brokerCurrencyQuotation = new BrokerCurrencyQuotation(marketRateList);
+        String brokerMarketRate = brokerCurrencyQuotation.getExchangeRate(
+                clauses.get(ClauseType.CUSTOMER_CURRENCY).getValue(),
+                clauses.get(ClauseType.BROKER_CURRENCY).getValue()
+        );
+
+        return brokerMarketRate;
     }
 }

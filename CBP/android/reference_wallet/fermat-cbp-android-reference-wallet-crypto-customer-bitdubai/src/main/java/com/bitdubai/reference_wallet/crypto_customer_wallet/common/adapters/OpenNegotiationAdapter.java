@@ -100,7 +100,7 @@ public class OpenNegotiationAdapter extends FermatAdapter<ClauseInformation, Fer
                 return new SingleChoiceViewHolder(itemView);
 
             case TYPE_ITEM_EXCHANGE_RATE:
-                final ExchangeRateViewHolder exchangeRateViewHolder = new ExchangeRateViewHolder(itemView);
+                    final ExchangeRateViewHolder exchangeRateViewHolder = new ExchangeRateViewHolder(itemView);
                 exchangeRateViewHolder.setMarketRateList(marketRateList);
                 return exchangeRateViewHolder;
 
