@@ -162,7 +162,7 @@ public class WizardPageSetProvidersFragment extends AbstractFermatFragment
 
             Map<String, CurrencyPair> map = walletManager.getWalletProviderAssociatedCurrencyPairs(null, appSession.getAppPublicKey());
 
-            Collection<CurrencyExchangeRateProviderManager> providerManagers = null;
+            Collection<CurrencyExchangeRateProviderManager> providerManagers;
 
             for (Map.Entry<String, CurrencyPair> e: map.entrySet()) {
 
