@@ -1061,7 +1061,8 @@ public class CryptoBrokerWalletModuleCryptoBrokerWalletManager implements Crypto
      */
     @Override
     public Map<String, CurrencyPair> getWalletProviderAssociatedCurrencyPairs(CurrencyPair currencyPair, String walletPublicKey) throws CryptoBrokerWalletNotFoundException, CantGetCryptoBrokerWalletSettingException {
-
+        //TODO: Quitar este hardcore luego que se implemente la instalacion de la wallet
+        walletPublicKey = "walletPublicKeyTest";
         CurrencyPairImpl currencyPair1 = null;
         CurrencyPairImpl currencyPair2 = null;
         CurrencyPairImpl currencyPair3 = null;
