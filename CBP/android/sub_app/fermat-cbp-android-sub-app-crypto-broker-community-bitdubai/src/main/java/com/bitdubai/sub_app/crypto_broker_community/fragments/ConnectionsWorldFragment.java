@@ -25,11 +25,11 @@ import com.bitdubai.fermat_android_api.ui.interfaces.FermatListItemListeners;
 import com.bitdubai.fermat_android_api.ui.interfaces.FermatWorkerCallBack;
 import com.bitdubai.fermat_android_api.ui.util.FermatWorker;
 import com.bitdubai.fermat_api.FermatException;
-import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
 import com.bitdubai.fermat_api.layer.all_definition.enums.UISource;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
+import com.bitdubai.fermat_api.layer.modules.exceptions.ActorIdentityNotSelectedException;
 import com.bitdubai.fermat_api.layer.modules.exceptions.CantGetSelectedActorIdentityException;
-import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_broker_community.exceptions.CantSelectIdentityException;
+import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_broker_community.exceptions.CantListCryptoBrokersException;
 import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_broker_community.interfaces.CryptoBrokerCommunityInformation;
 import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_broker_community.interfaces.CryptoBrokerCommunitySearch;
 import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_broker_community.interfaces.CryptoBrokerCommunitySelectableIdentity;
@@ -60,95 +60,61 @@ import static android.widget.Toast.makeText;
 public class ConnectionsWorldFragment extends AbstractFermatFragment<CryptoBrokerCommunitySubAppSession, SubAppResourcesProviderManager> implements
         SwipeRefreshLayout.OnRefreshListener, FermatListItemListeners<CryptoBrokerCommunityInformation> {
 
-
+    //Constants
     public static final String ACTOR_SELECTED = "actor_selected";
-
     private static final int MAX = 20;
-    /**
-     * MANAGERS
-     */
+    protected final String TAG = "Recycler Base";
+
+    //Managers
     private static CryptoBrokerCommunitySubAppModuleManager moduleManager;
     private static ErrorManager errorManager;
 
-    protected final String TAG = "Recycler Base";
+    //Data
     private int offset = 0;
-
     private int mNotificationsCount = 0;
-    private SearchView mSearchView;
-
-    private AppListAdapter adapter;
-    private boolean isStartList = false;
-
-    // recycler
-    private RecyclerView recyclerView;
-    private GridLayoutManager layoutManager;
-
-    private SwipeRefreshLayout swipeRefresh;
-
-    // flags
-    private boolean isRefreshing = false;
-    private View rootView;
-
-    private LinearLayout emptyView;
     private ArrayList<CryptoBrokerCommunityInformation> cryptoBrokerCommunityInformationList;
 
-    /**
-     * Create a new instance of this fragment
-     *
-     * @return InstalledFragment instance object
-     */
+    //Flags
+    private boolean isRefreshing = false;
+
+    //UI
+    private View rootView;
+    private LinearLayout emptyView;
+    private RecyclerView recyclerView;
+    private GridLayoutManager layoutManager;
+    private AppListAdapter adapter;
+    private SwipeRefreshLayout swipeRefresh;
+
+
+
+
     public static ConnectionsWorldFragment newInstance() {
         return new ConnectionsWorldFragment();
     }
 
+
+
+
+    /**
+     * Fragment interface implementation.
+     */
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         try {
 
             setHasOptionsMenu(true);
-            // setting up  module
+
+            //Get managers
             moduleManager = appSession.getModuleManager();
             errorManager = appSession.getErrorManager();
 
 
-            mNotificationsCount = moduleManager.listCryptoBrokersPendingLocalAction(moduleManager.getSelectedActorIdentity(), MAX, offset).size();
-            mNotificationsCount = 2;
-            //List<CryptoBrokerCommunityInformation> asd = moduleManager.listAllConnectedCryptoBrokers(moduleManager.getSelectedActorIdentity(),MAX, offset);
-            //List<CryptoBrokerCommunitySelectableIdentity> asss = moduleManager.listSelectableIdentities();
-//            CryptoBrokerCommunitySelectableIdentity cbsi = new CryptoBrokerCommunitySelectableIdentity() {
-//                @Override
-//                public void select() throws CantSelectIdentityException {
-//
-//                }
-//
-//                @Override
-//                public String getPublicKey() {
-//                    return null;
-//                }
-//
-//                @Override
-//                public Actors getActorType() {
-//                    return Actors.CBP_CRYPTO_BROKER;
-//                }
-//
-//                @Override
-//                public String getAlias() {
-//                    return "";
-//                }
-//
-//                @Override
-//                public byte[] getImage() {
-//                    return new byte[0];
-//                }
-//            };
-//
-//            CryptoBrokerCommunitySearch asdss = moduleManager.searchNewCryptoBroker(cbsi);
+            //Get notification requests count
+            //mNotificationsCount = moduleManager.listCryptoBrokersPendingLocalAction(moduleManager.getSelectedActorIdentity(), MAX, offset).size();
+            //mNotificationsCount = 4;
+            //new FetchCountTask().execute();
 
-
-
-            // TODO: display unread notifications.
-            new FetchCountTask().execute();
 
         } catch (Exception ex) {
             CommonLogger.exception(TAG, ex.getMessage(), ex);
@@ -156,24 +122,23 @@ public class ConnectionsWorldFragment extends AbstractFermatFragment<CryptoBroke
         }
     }
 
-    /**
-     * Fragment Class implementation.
-     */
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
         try {
             rootView = inflater.inflate(R.layout.fragment_connections_world, container, false);
-            setUpScreen(inflater);
+
+            //Set up RecyclerView
+            layoutManager = new GridLayoutManager(getActivity(), 3, LinearLayoutManager.VERTICAL, false);
+            adapter = new AppListAdapter(getActivity(), cryptoBrokerCommunityInformationList);
+            adapter.setFermatListEventListener(this);
             recyclerView = (RecyclerView) rootView.findViewById(R.id.gridView);
             recyclerView.setHasFixedSize(true);
-            layoutManager = new GridLayoutManager(getActivity(), 3, LinearLayoutManager.VERTICAL, false);
-            recyclerView.setLayoutManager(layoutManager);
-            adapter = new AppListAdapter(getActivity(), cryptoBrokerCommunityInformationList);
             recyclerView.setAdapter(adapter);
-            adapter.setFermatListEventListener(this);
+            recyclerView.setLayoutManager(layoutManager);
 
+            //Set up swipeRefresher
             swipeRefresh = (SwipeRefreshLayout) rootView.findViewById(R.id.swipe);
             swipeRefresh.setOnRefreshListener(this);
             swipeRefresh.setColorSchemeColors(Color.BLUE, Color.BLUE);
@@ -188,27 +153,9 @@ public class ConnectionsWorldFragment extends AbstractFermatFragment<CryptoBroke
             Toast.makeText(getActivity().getApplicationContext(), "Oooops! recovering from system error", Toast.LENGTH_SHORT).show();
         }
 
-
         return rootView;
     }
 
-    public void showEmpty(boolean show, View emptyView) {
-        Animation anim = AnimationUtils.loadAnimation(getActivity(),
-                show ? android.R.anim.fade_in : android.R.anim.fade_out);
-        if (show &&
-                (emptyView.getVisibility() == View.GONE || emptyView.getVisibility() == View.INVISIBLE)) {
-            emptyView.setAnimation(anim);
-            emptyView.setVisibility(View.VISIBLE);
-            if (adapter != null)
-                adapter.changeDataSet(null);
-        } else if (!show && emptyView.getVisibility() == View.VISIBLE) {
-            emptyView.setAnimation(anim);
-            emptyView.setVisibility(View.GONE);
-        }
-    }
-
-    private void setUpScreen(LayoutInflater layoutInflater) throws CantGetActiveLoginIdentityException, CantGetSelectedActorIdentityException {
-    }
 
     @Override
     public void onRefresh() {
@@ -263,46 +210,20 @@ public class ConnectionsWorldFragment extends AbstractFermatFragment<CryptoBroke
         }
     }
 
-    /*
-     * Updates the count of notifications in the ActionBar.
-     */
-    private void updateNotificationsBadge(int count) {
-        mNotificationsCount = count;
 
-        // force the ActionBar to relayout its MenuItems.
-        // onCreateOptionsMenu(Menu) will be called again.
-        getActivity().invalidateOptionsMenu();
-    }
-
-    @Override
-    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-
-        super.onCreateOptionsMenu(menu, inflater);
-
-        menu.add(0, Constants.SELECT_IDENTITY, 0, "send").setIcon(R.drawable.ic_actionbar_send)
-                .setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        try {
-
-            int id = item.getItemId();
-
-            if(id == Constants.SELECT_IDENTITY){
-                final ListIdentitiesDialog progressDialog = new ListIdentitiesDialog(getActivity(), appSession, appResourcesProviderManager);
-                progressDialog.setTitle("Select an Identity");
-                progressDialog.setCancelable(false);
-                progressDialog.show();
-                return true;
-            }
-
-        } catch (Exception e) {
-            errorManager.reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.UNSTABLE, FermatException.wrapException(e));
-            makeText(getActivity(), "Oooops! recovering from system error",
-                    Toast.LENGTH_SHORT).show();
+    public void showEmpty(boolean show, View emptyView) {
+        Animation anim = AnimationUtils.loadAnimation(getActivity(),
+                show ? android.R.anim.fade_in : android.R.anim.fade_out);
+        if (show &&
+                (emptyView.getVisibility() == View.GONE || emptyView.getVisibility() == View.INVISIBLE)) {
+            emptyView.setAnimation(anim);
+            emptyView.setVisibility(View.VISIBLE);
+            if (adapter != null)
+                adapter.changeDataSet(null);
+        } else if (!show && emptyView.getVisibility() == View.VISIBLE) {
+            emptyView.setAnimation(anim);
+            emptyView.setVisibility(View.GONE);
         }
-        return super.onOptionsItemSelected(item);
     }
 
     private synchronized List<CryptoBrokerCommunityInformation> getMoreData() {
@@ -331,6 +252,59 @@ public class ConnectionsWorldFragment extends AbstractFermatFragment<CryptoBroke
     }
 
 
+
+
+
+    /**
+     * OptionMenu implementation.
+     */
+//    private void updateOptionMenuNotificationsBadge(int count) {
+//        mNotificationsCount = count;
+//
+//        // force the ActionBar to relayout its MenuItems.
+//        // onCreateOptionsMenu(Menu) will be called again.
+//        getActivity().invalidateOptionsMenu();
+//    }
+//
+//
+//
+//    @Override
+//    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+//
+//        super.onCreateOptionsMenu(menu, inflater);
+//
+//        menu.add(0, Constants.SELECT_IDENTITY, 0, "send").setIcon(R.drawable.ic_actionbar_send)
+//                .setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
+//    }
+//
+//    @Override
+//    public boolean onOptionsItemSelected(MenuItem item) {
+//        try {
+//
+//            int id = item.getItemId();
+//
+//            if(id == Constants.SELECT_IDENTITY){
+//                final ListIdentitiesDialog progressDialog = new ListIdentitiesDialog(getActivity(), appSession, appResourcesProviderManager);
+//                progressDialog.setTitle("Select an Identity");
+//                progressDialog.setCancelable(false);
+//                progressDialog.show();
+//                return true;
+//            }
+//
+//        } catch (Exception e) {
+//            errorManager.reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.UNSTABLE, FermatException.wrapException(e));
+//            makeText(getActivity(), "Oooops! recovering from system error",
+//                    Toast.LENGTH_SHORT).show();
+//        }
+//        return super.onOptionsItemSelected(item);
+//    }
+
+
+
+
+
+
+
     @Override
     public void onItemClickListener(CryptoBrokerCommunityInformation data, int position) {
 
@@ -340,28 +314,36 @@ public class ConnectionsWorldFragment extends AbstractFermatFragment<CryptoBroke
     }
 
     @Override
-    public void onLongItemClickListener(CryptoBrokerCommunityInformation data, int position) {
-
-    }
+    public void onLongItemClickListener(CryptoBrokerCommunityInformation data, int position) {}
 
 
-    /*
-    Sample AsyncTask to fetch the notifications count
-    */
-    class FetchCountTask extends AsyncTask<Void, Void, Integer> {
 
-        @Override
-        protected Integer doInBackground(Void... params) {
-            // example count. This is where you'd
-            // query your data store for the actual count.
-            return mNotificationsCount;
-        }
 
-        @Override
-        public void onPostExecute(Integer count) {
-            updateNotificationsBadge(count);
-        }
-    }
+
+    /**
+     * Simple AsyncTask to fetch the notifications count.
+     */
+//    class FetchCountTask extends AsyncTask<Void, Void, Integer> {
+//
+//        @Override
+//        protected Integer doInBackground(Void... params) {
+//            int notificationCount = 0;
+//
+//            try {
+//                CryptoBrokerCommunitySelectableIdentity selectedIdentity = moduleManager.getSelectedActorIdentity();
+//                notificationCount = moduleManager.listCryptoBrokersPendingLocalAction(selectedIdentity, MAX, offset).size();
+//            } catch(CantListCryptoBrokersException | ActorIdentityNotSelectedException | CantGetSelectedActorIdentityException e){
+//                errorManager.reportUnexpectedUIException(UISource.TASK, UnexpectedUIExceptionSeverity.NOT_IMPORTANT, e);
+//            }
+//            notificationCount = 80;
+//            return notificationCount;
+//        }
+//
+//        @Override
+//        public void onPostExecute(Integer count) {
+//            updateOptionMenuNotificationsBadge(count);
+//        }
+//    }
 
 }
 
