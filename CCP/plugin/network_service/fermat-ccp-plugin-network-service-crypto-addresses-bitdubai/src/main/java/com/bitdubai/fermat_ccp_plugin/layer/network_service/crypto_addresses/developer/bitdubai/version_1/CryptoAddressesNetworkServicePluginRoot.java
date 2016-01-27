@@ -776,19 +776,16 @@ public class CryptoAddressesNetworkServicePluginRoot extends AbstractNetworkServ
                                                                      PendingRequestNotFoundException           {
 
         System.out.println("****** crypto addresses -> confirming address");
-//        try {
-//
-//            cryptoAddressesNetworkServiceDao.confirmAddressExchangeRequest(requestId);
-//
-//        } catch (CantConfirmAddressExchangeRequestException | PendingRequestNotFoundException e){
-//            // PendingRequestNotFoundException - THIS SHOULD' HAPPEN.
-//            errorManager.reportUnexpectedPluginException(this.getPluginVersionReference(), UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
-//            throw e;
-//        } catch (Exception e){
-//
-//            errorManager.reportUnexpectedPluginException(this.getPluginVersionReference(), UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
-//            throw new CantConfirmAddressExchangeRequestException(FermatException.wrapException(e), null, "Unhandled Exception.");
-//        }
+       try {
+           cryptoAddressesNetworkServiceDao.confirmAddressExchangeRequest(requestId);
+       } catch (CantConfirmAddressExchangeRequestException | PendingRequestNotFoundException e){
+           // PendingRequestNotFoundException - THIS SHOULD' HAPPEN.
+           errorManager.reportUnexpectedPluginException(this.getPluginVersionReference(), UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+           throw e;
+       } catch (Exception e){
+           errorManager.reportUnexpectedPluginException(this.getPluginVersionReference(), UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+           throw new CantConfirmAddressExchangeRequestException(FermatException.wrapException(e), null, "Unhandled Exception.");
+        }
     }
 
     /**
