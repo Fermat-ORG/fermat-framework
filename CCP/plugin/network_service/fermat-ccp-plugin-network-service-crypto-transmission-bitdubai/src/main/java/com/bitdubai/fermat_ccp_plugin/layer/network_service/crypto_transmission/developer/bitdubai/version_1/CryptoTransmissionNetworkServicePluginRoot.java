@@ -763,13 +763,7 @@ public class CryptoTransmissionNetworkServicePluginRoot extends AbstractNetworkS
         try {
             cryptoTransmissionAgent = new CryptoTransmissionAgent(
                     this,
-                    cryptoTransmissionConnectionsDAO,
-                    incomingCryptoTransmissionMetadataDAO,
-                    outgoingCryptoTransmissionMetadataDAO,
-                    communicationNetworkServiceConnectionManager,
-                    wsCommunicationsCloudClientManager,
                     errorManager,
-                    new ArrayList<PlatformComponentProfile>(),
                     eventManager
             );
 
