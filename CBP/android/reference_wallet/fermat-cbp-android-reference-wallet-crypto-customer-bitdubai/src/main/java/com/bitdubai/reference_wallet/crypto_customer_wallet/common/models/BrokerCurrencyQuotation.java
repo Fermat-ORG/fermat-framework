@@ -21,13 +21,15 @@ public class BrokerCurrencyQuotation {
         BrokerCurrencyQuotationImpl currencyQuotation = getQuotation(currencyOver,currencyUnder);
 
         if(currencyQuotation == null) {
+
             currencyQuotation = getQuotation(currencyUnder, currencyOver);
             if (currencyQuotation != null) {
-                final BigDecimal one = new BigDecimal("1");
-                BigDecimal exchangeRate = new BigDecimal(currencyQuotation.getExchangeRate());
-                exchangeRate = one.divide(exchangeRate, 4, RoundingMode.HALF_UP);
+
+                BigDecimal exchangeRate = new BigDecimal(currencyQuotation.getExchangeRate().replace(",",""));
+                exchangeRate = (new BigDecimal(1)).divide(exchangeRate, 8, RoundingMode.HALF_UP);
                 final String exchangeRateStr = DecimalFormat.getInstance().format(exchangeRate.doubleValue());
                 currencyQuotation.setExchangeRate(exchangeRateStr);
+
             }
         }
 
