@@ -18,6 +18,7 @@ import com.bitdubai.reference_wallet.crypto_customer_wallet.common.holders.open_
 import com.bitdubai.reference_wallet.crypto_customer_wallet.common.holders.open_negotiation.FooterViewHolder;
 import com.bitdubai.reference_wallet.crypto_customer_wallet.common.holders.open_negotiation.NoteViewHolder;
 import com.bitdubai.reference_wallet.crypto_customer_wallet.common.holders.open_negotiation.SingleChoiceViewHolder;
+import com.bitdubai.reference_wallet.crypto_customer_wallet.common.models.BrokerCurrencyQuotationImpl;
 import com.bitdubai.reference_wallet.crypto_customer_wallet.fragments.open_negotiation_details.OpenNegotiationDetailsFragment;
 import com.bitdubai.reference_wallet.crypto_customer_wallet.util.FragmentsCommons;
 
@@ -50,6 +51,7 @@ public class OpenNegotiationAdapter extends FermatAdapter<ClauseInformation, Fer
     private CustomerBrokerNegotiationInformation negotiationInformation;
     private OpenNegotiationDetailsFragment footerListener;
     private ClauseViewHolder.Listener clauseListener;
+    private List <BrokerCurrencyQuotationImpl> marketRateList;
 
     private boolean haveNote;
 
@@ -98,7 +100,9 @@ public class OpenNegotiationAdapter extends FermatAdapter<ClauseInformation, Fer
                 return new SingleChoiceViewHolder(itemView);
 
             case TYPE_ITEM_EXCHANGE_RATE:
-                return new ExchangeRateViewHolder(itemView);
+                final ExchangeRateViewHolder exchangeRateViewHolder = new ExchangeRateViewHolder(itemView);
+                exchangeRateViewHolder.setMarketRateList(marketRateList);
+                return exchangeRateViewHolder;
 
             case TYPE_ITEM_AMOUNT_TO_BUY:
                 return new AmountToBuyViewHolder(itemView);
@@ -262,6 +266,10 @@ public class OpenNegotiationAdapter extends FermatAdapter<ClauseInformation, Fer
 
     public void setClauseListener(ClauseViewHolder.Listener clauseListener) {
         this.clauseListener = clauseListener;
+    }
+
+    public void setMarketRateList(List <BrokerCurrencyQuotationImpl> marketRateList){
+        this.marketRateList = marketRateList;
     }
 
     private List<ClauseInformation> buildListOfItems() {

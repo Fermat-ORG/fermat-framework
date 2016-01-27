@@ -274,6 +274,7 @@ public class OpenNegotiationDetailsFragment extends AbstractFermatFragment<Crypt
         adapter = new OpenNegotiationAdapter(getActivity(), negotiationInfo);
         adapter.setClauseListener(this);
         adapter.setFooterListener(this);
+        adapter.setMarketRateList(brokerCurrencyQuotationlist);
 
         recyclerView.setAdapter(adapter);
     }
