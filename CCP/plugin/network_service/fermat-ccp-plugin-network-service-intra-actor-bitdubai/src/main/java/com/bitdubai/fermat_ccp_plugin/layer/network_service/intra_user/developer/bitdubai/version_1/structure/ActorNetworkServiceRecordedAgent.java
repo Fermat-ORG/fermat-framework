@@ -38,6 +38,7 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 import java.util.concurrent.ThreadPoolExecutor;
+import java.util.concurrent.TimeUnit;
 
 /**
  * Created by mati on 2015.10.15..
@@ -167,7 +168,7 @@ public class ActorNetworkServiceRecordedAgent extends FermatAgent{
 
         try {
 
-            if(actorNetworkServicePluginRoot.isRegister()) {
+            if(actorNetworkServicePluginRoot.isRegister() && actorNetworkServicePluginRoot.isStarted()) {
 
                 // function to process and send the rigth message to the counterparts.
                 processSend();
@@ -175,15 +176,14 @@ public class ActorNetworkServiceRecordedAgent extends FermatAgent{
             }
 
             //Sleep for a time
-            Thread.sleep(SEND_SLEEP_TIME);
+            TimeUnit.SECONDS.sleep(2);
 
         } catch (InterruptedException e) {
             status = AgentStatus.STOPPED;
             reportUnexpectedError(FermatException.wrapException(e));
-        } /*catch(Exception e) {
-
+        } catch(Exception e) {
             reportUnexpectedError(FermatException.wrapException(e));
-        }*/
+        }
 
     }
 
@@ -235,7 +235,7 @@ public class ActorNetworkServiceRecordedAgent extends FermatAgent{
 
         try {
 
-            if(actorNetworkServicePluginRoot.isRegister()) {
+            if(actorNetworkServicePluginRoot.isRegister() && actorNetworkServicePluginRoot.isStarted()) {
 
                 // function to process and send the right message to the counterparts.
                 processReceive();
@@ -247,10 +247,10 @@ public class ActorNetworkServiceRecordedAgent extends FermatAgent{
         } catch (InterruptedException e) {
             status = AgentStatus.STOPPED;
             reportUnexpectedError(FermatException.wrapException(e));
-        } /*catch(Exception e) {
+        } catch(Exception e) {
 
             reportUnexpectedError(FermatException.wrapException(e));
-        }*/
+        }
 
     }
 
