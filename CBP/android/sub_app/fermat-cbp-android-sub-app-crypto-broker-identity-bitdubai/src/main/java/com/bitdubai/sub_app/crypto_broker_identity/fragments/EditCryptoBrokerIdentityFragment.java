@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.v4.graphics.drawable.RoundedBitmapDrawable;
@@ -95,6 +96,8 @@ public class EditCryptoBrokerIdentityFragment extends AbstractFermatFragment imp
         View rootLayout = inflater.inflate(R.layout.fragment_edit_crypto_broker_identity, container, false);
         initViews(rootLayout);
 
+        //mBrokerName.setSelection(mBrokerName.getText().length());
+
         return rootLayout;
     }
 
@@ -110,6 +113,9 @@ public class EditCryptoBrokerIdentityFragment extends AbstractFermatFragment imp
         sw = (ImageView) layout.findViewById(R.id.sw);
         publishIdentityCheckBox = (Switch) layout.findViewById(R.id.publish_identity);
 
+        //mBrokerName.setSelectAllOnFocus(true);
+
+
         camara = (ImageView) layout.findViewById(R.id.camara);
         galeria = (ImageView) layout.findViewById(R.id.galeria);
 
@@ -119,6 +125,10 @@ public class EditCryptoBrokerIdentityFragment extends AbstractFermatFragment imp
 
         if (identityInfo != null) {
             mBrokerName.setText(identityInfo.getAlias());
+
+            mBrokerName.clearFocus();
+            mBrokerName.requestFocus();
+            mBrokerName.selectAll();
 
             profileImage = identityInfo.getProfileImage();
 
@@ -178,17 +188,26 @@ public class EditCryptoBrokerIdentityFragment extends AbstractFermatFragment imp
         sw.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-               if(publishIdentityCheckBox.isChecked()){
-                   sw.setImageResource(R.drawable.swicth_off);
-                   publishIdentityCheckBox.setChecked(false);
-                   wantPublishIdentity = false;
-               }else{
-                   sw.setImageResource(R.drawable.swicth_on);
-                   publishIdentityCheckBox.setChecked(true);
-                   wantPublishIdentity = true;
+                if (publishIdentityCheckBox.isChecked()) {
+                    sw.setImageResource(R.drawable.swicth_off);
+                    publishIdentityCheckBox.setChecked(false);
+                    wantPublishIdentity = false;
+                } else {
+                    sw.setImageResource(R.drawable.swicth_on);
+                    publishIdentityCheckBox.setChecked(true);
+                    wantPublishIdentity = true;
                }
             }
         });
+
+
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+
+        System.out.println("VLZ: onStop");
     }
 
     @Override
@@ -208,7 +227,7 @@ public class EditCryptoBrokerIdentityFragment extends AbstractFermatFragment imp
                         if (isAttached) {
                             ContentResolver contentResolver = getActivity().getContentResolver();
                             cryptoBrokerBitmap = MediaStore.Images.Media.getBitmap(contentResolver, selectedImage);
-                            cryptoBrokerBitmap = Bitmap.createScaledBitmap(cryptoBrokerBitmap, pictureView.getWidth(), pictureView.getHeight(), true);
+                            //cryptoBrokerBitmap = Bitmap.createScaledBitmap(cryptoBrokerBitmap, pictureView.getWidth(), pictureView.getHeight(), true);
                         }
                     } catch (Exception e) {
                         e.printStackTrace();
