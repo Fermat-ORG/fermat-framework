@@ -132,11 +132,12 @@ public class DigitalAssetIssuingVault extends AbstractDigitalAssetVault {
         assetIssuerWalletBalance.credit(assetIssuerWalletTransactionRecordWrapper, balanceType);
     }
 
-    public void setGenesisTransaction(String internalId, String genesisTransaction) throws CantPersistsGenesisTransactionException {
+    public DigitalAssetMetadata setGenesisTransaction(String internalId, String genesisTransaction) throws CantPersistsGenesisTransactionException {
         try{
             DigitalAssetMetadata digitalAssetMetadata=getDigitalAssetMetadataFromLocalStorage(internalId);
             digitalAssetMetadata.addNewTransaction(genesisTransaction, null);
             persistDigitalAssetMetadataInLocalStorage(digitalAssetMetadata, internalId);
+            return digitalAssetMetadata;
         } catch (CantGetDigitalAssetFromLocalStorageException exception) {
             throw new CantPersistsGenesisTransactionException(exception, "Set genesis transaction in Digital Asset Metadata","Cannot get the Digital Asset metadata from local storage");
         } catch (CantCreateDigitalAssetFileException exception) {

@@ -79,12 +79,9 @@ import com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_transmission.
 import com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_transmission.developer.bitdubai.version_1.communication.NewReceiveMessagesNotificationEventHandler;
 import com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_transmission.developer.bitdubai.version_1.communication.NewSentMessageNotificationEventHandler;
 import com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_transmission.developer.bitdubai.version_1.communication.VPNConnectionCloseNotificationEventHandler;
-import com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_transmission.developer.bitdubai.version_1.communication.structure.CommunicationNetworkServiceConnectionManager;
-import com.bitdubai.fermat_p2p_api.layer.all_definition.common.network_services.template.structure.CommunicationRegistrationProcessNetworkServiceAgent;
 import com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_transmission.developer.bitdubai.version_1.crypto_transmission_database.CryptoTransmissionNetworkServiceDatabaseConstants;
 import com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_transmission.developer.bitdubai.version_1.crypto_transmission_database.dao.CryptoTransmissionConnectionsDAO;
 import com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_transmission.developer.bitdubai.version_1.crypto_transmission_database.exceptions.CantGetCryptoTransmissionMetadataException;
-import com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_transmission.developer.bitdubai.version_1.crypto_transmission_database.exceptions.CantInitializeCryptoTransmissionNetworkServiceDatabaseException;
 import com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_transmission.developer.bitdubai.version_1.crypto_transmission_database.exceptions.CantSaveCryptoTransmissionMetadatatException;
 import com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_transmission.developer.bitdubai.version_1.database.communications.CommunicationNetworkServiceDatabaseConstants;
 import com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_transmission.developer.bitdubai.version_1.database.communications.CommunicationNetworkServiceDatabaseFactory;
@@ -97,6 +94,7 @@ import com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_transmission.
 import com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_transmission.developer.bitdubai.version_1.structure.crypto_transmission_structure.CryptoTransmissionTransactionProtocolManager;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.common.network_services.abstract_classes.AbstractNetworkService;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.common.network_services.template.structure.CommunicationNetworkServiceConnectionManager_V2;
+import com.bitdubai.fermat_p2p_api.layer.all_definition.common.network_services.template.structure.CommunicationRegistrationProcessNetworkServiceAgent;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.contents.FermatMessageCommunication;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.enums.P2pEventType;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.events.ClientConnectionCloseNotificationEvent;
@@ -764,7 +762,6 @@ public class CryptoTransmissionNetworkServicePluginRoot extends AbstractNetworkS
                     wsCommunicationsCloudClientManager,
                     errorManager,
                     new ArrayList<PlatformComponentProfile>(),
-                    identity,
                     eventManager
             );
             cryptoTransmissionAgent.start();
@@ -794,17 +791,21 @@ public class CryptoTransmissionNetworkServicePluginRoot extends AbstractNetworkS
 
             }
 
-            if (platformComponentProfileRegistered.getPlatformComponentType() == PlatformComponentType.NETWORK_SERVICE &&
-                    platformComponentProfileRegistered.getNetworkServiceType() == NetworkServiceType.INTRA_USER &&
+            if (platformComponentProfileRegistered.getPlatformComponentType() == getPlatformComponentType() &&
+                    platformComponentProfileRegistered.getNetworkServiceType() == getNetworkServiceType() &&
                     platformComponentProfileRegistered.getIdentityPublicKey().equals(identity.getPublicKey())) {
 
                 System.out.println("CryptoTransmissionNetworkServicePluginRoot - NetWork Service is Registered: " + platformComponentProfileRegistered.getAlias());
                 this.register = Boolean.TRUE;
-                initializeCryptoTransmissionAgent();
 
                 if(communicationNetworkServiceConnectionManager==null) {
                     initializeCommunicationNetworkServiceConnectionManager();
+                }else{
+                    communicationNetworkServiceConnectionManager.restart();
                 }
+
+                if(cryptoTransmissionAgent==null) initializeCryptoTransmissionAgent();
+                else cryptoTransmissionAgent.start();
 
             }
 
@@ -861,23 +862,8 @@ public class CryptoTransmissionNetworkServicePluginRoot extends AbstractNetworkS
         /*
          * Tell the manager to handler the new connection stablished
          */
-
-        //TODO: SE lo paso en duro para probar
         communicationNetworkServiceConnectionManager.handleEstablishedRequestedNetworkServiceConnection(remoteComponentProfile);
 
-        System.out.println("-----------------------\n" +
-                "CRYPTO TRANSMISSION CONEXION ENTRANTE  -----------------------\n" +
-                "-----------------------\n A: " + remoteComponentProfile.getAlias());
-
-        if (remoteNetworkServicesRegisteredList != null && !remoteNetworkServicesRegisteredList.isEmpty()){
-
-            remoteNetworkServicesRegisteredList.add(remoteComponentProfile);
-
-
-            System.out.println("-----------------------\n" +
-                    "CRYPTO TRANSMISSION CONEXION ENTRANTE  -----------------------\n" +
-                    "-----------------------\n A: " + remoteComponentProfile.getAlias());
-        }
 
     }
 

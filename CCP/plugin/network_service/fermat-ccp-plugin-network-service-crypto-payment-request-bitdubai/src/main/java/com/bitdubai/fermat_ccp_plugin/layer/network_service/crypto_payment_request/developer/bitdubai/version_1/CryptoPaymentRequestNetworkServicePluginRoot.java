@@ -12,7 +12,6 @@ import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperDatabaseT
 import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperDatabaseTableRecord;
 import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperObjectFactory;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Addons;
-import com.bitdubai.fermat_api.layer.all_definition.enums.AgentStatus;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Layers;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ReferenceWallet;
@@ -27,10 +26,14 @@ import com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_payment_reque
 import com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_payment_request.developer.bitdubai.version_1.communication.event_handlers.ClientConnectionLooseNotificationEventHandler;
 import com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_payment_request.developer.bitdubai.version_1.communication.event_handlers.ClientSuccessfullReconnectNotificationEventHandler;
 import com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_payment_request.developer.bitdubai.version_1.communication.event_handlers.FailureComponentConnectionRequestNotificationEventHandler;
+import com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_payment_request.developer.bitdubai.version_1.communication.event_handlers.NewMessagesEventHandler;
+import com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_payment_request.developer.bitdubai.version_1.communication.event_handlers.NewSentMessageNotificationEventHandler;
 import com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_payment_request.developer.bitdubai.version_1.communication.event_handlers.VPNConnectionCloseNotificationEventHandler;
 import com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_payment_request.developer.bitdubai.version_1.database.CryptoPaymentRequestNetworkServiceDatabaseConstants;
 import com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_payment_request.developer.bitdubai.version_1.database.CryptoPaymentRequestNetworkServiceDeveloperDatabaseFactory;
 import com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_payment_request.developer.bitdubai.version_1.exceptions.CantChangeRequestProtocolStateException;
+import com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_payment_request.developer.bitdubai.version_1.exceptions.CantHandleNewMessagesException;
+import com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_payment_request.developer.bitdubai.version_1.structure.PaymentConstants;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.common.network_services.abstract_classes.AbstractNetworkService;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.PluginVersionReference;
 import com.bitdubai.fermat_api.layer.all_definition.components.enums.PlatformComponentType;
@@ -153,7 +156,7 @@ public final class CryptoPaymentRequestNetworkServicePluginRoot extends Abstract
     /**
      * Represent the registrationProcessNetworkServiceAgent
      */
-    private CommunicationRegistrationProcessNetworkServiceAgent communicationRegistrationProcessNetworkServiceAgent;
+    private CommunicationRegistrationProcessNetworkServiceAgent  communicationRegistrationProcessNetworkServiceAgent;
 
     private CryptoPaymentRequestExecutorAgent cryptoPaymentRequestExecutorAgent;
 
@@ -190,6 +193,383 @@ public final class CryptoPaymentRequestNetworkServicePluginRoot extends Abstract
         beforeRegistered = Boolean.FALSE;
     }
 
+
+    /**
+     * Service Interface implementation
+     */
+    @Override
+    public synchronized void start() throws CantStartPluginException {
+
+        if(!flag.getAndSet(true)) {
+            if (this.serviceStatus != ServiceStatus.STARTING) {
+                serviceStatus = ServiceStatus.STARTING;
+
+                System.out.println("********* Crypto Payment Request: Starting. ");
+
+
+                /*
+                 * Create a new key pair for this execution
+                 */
+                initializeClientIdentity();
+
+                /*
+                 * Validate required resources
+                 */
+                validateInjectedResources();
+
+
+                // initialize crypto payment request dao
+
+                try {
+
+                    cryptoPaymentRequestNetworkServiceDao = new CryptoPaymentRequestNetworkServiceDao(pluginDatabaseSystem, pluginId);
+
+                    cryptoPaymentRequestNetworkServiceDao.initialize();
+
+                } catch(CantInitializeCryptoPaymentRequestNetworkServiceDatabaseException e) {
+
+                    CantStartPluginException pluginStartException = new CantStartPluginException(e, "", "Problem initializing crypto payment request network service dao.");
+                    errorManager.reportUnexpectedPluginException(this.getPluginVersionReference(), UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, pluginStartException);
+                    throw pluginStartException;
+                }
+
+                try {
+
+                    /*
+                     * Initialize the data base
+                     */
+                    initializeCommunicationDb();
+
+                    /*
+                     * Initialize listeners
+                     */
+                    initializeListener();
+
+                    /*
+                     * Initialize connection manager
+                     */
+                    initializeCommunicationNetworkServiceConnectionManager();
+
+                    /*
+                     * Verify if the communication cloud client is active
+                     */
+                    if (!wsCommunicationsCloudClientManager.isDisable()){
+
+                        /*
+                         * Construct my profile and register me
+                         */
+                        PlatformComponentProfile platformComponentProfilePluginRoot =  wsCommunicationsCloudClientManager.getCommunicationsCloudClientConnection().constructPlatformComponentProfileFactory(getIdentityPublicKey(),
+                                getAlias().toLowerCase(),
+                                getName(),
+                                getNetworkServiceType(),
+                                getPlatformComponentType(),
+                                getExtraData());
+
+                        setPlatformComponentProfilePluginRoot(platformComponentProfilePluginRoot);
+
+                        /*
+                         * Initialize the agent and start
+                         */
+                        communicationRegistrationProcessNetworkServiceAgent = new CommunicationRegistrationProcessNetworkServiceAgent(this, wsCommunicationsCloudClientManager);
+                        communicationRegistrationProcessNetworkServiceAgent.start();
+                    }
+
+                    remoteNetworkServicesRegisteredList = new CopyOnWriteArrayList<>();
+
+                    // change message state to process again first time
+                    reprocessMessage();
+
+                    //declare a schedule to process waiting request message
+
+
+                    this.startTimer();
+
+
+            /*
+             * Its all ok, set the new status
+            */
+                    this.serviceStatus = ServiceStatus.STARTED;
+
+                } catch (CantInitializeNetworkServiceDatabaseException exception) {
+
+                    StringBuffer contextBuffer = new StringBuffer();
+                    contextBuffer.append("Plugin ID: " + pluginId);
+                    contextBuffer.append(CantStartPluginException.CONTEXT_CONTENT_SEPARATOR);
+                    contextBuffer.append("Database Name: " + CommunicationNetworkServiceDatabaseConstants.DATA_BASE_NAME);
+
+                    String context = contextBuffer.toString();
+                    String possibleCause = "The Template Database triggered an unexpected problem that wasn't able to solve by itself";
+                    CantStartPluginException pluginStartException = new CantStartPluginException(CantStartPluginException.DEFAULT_MESSAGE, exception, context, possibleCause);
+
+                    errorManager.reportUnexpectedPluginException(this.getPluginVersionReference(), UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, pluginStartException);
+                    throw pluginStartException;
+                }
+
+                System.out.println("********* Crypto Payment Request: Successful start. ");
+            }
+        }
+
+    }
+
+    private void initializeClientIdentity() throws CantStartPluginException {
+
+        System.out.println("Calling the method - initializeClientIdentity() ");
+
+        try {
+
+            System.out.println("Loading clientIdentity");
+
+             /*
+              * Load the file with the clientIdentity
+              */
+            PluginTextFile pluginTextFile = pluginFileSystem.getTextFile(pluginId, "private", "clientIdentity", FilePrivacy.PRIVATE, FileLifeSpan.PERMANENT);
+            String content = pluginTextFile.getContent();
+
+            //System.out.println("content = "+content);
+
+            identity = new ECCKeyPair(content);
+
+        } catch (FileNotFoundException e) {
+
+            /*
+             * The file no exist may be the first time the plugin is running on this device,
+             * We need to create the new clientIdentity
+             */
+            try {
+
+                System.out.println("No previous clientIdentity finder - Proceed to create new one");
+
+                /*
+                 * Create the new clientIdentity
+                 */
+                identity = new ECCKeyPair();
+
+                /*
+                 * save into the file
+                 */
+                PluginTextFile pluginTextFile = pluginFileSystem.createTextFile(pluginId, "private", "clientIdentity", FilePrivacy.PRIVATE, FileLifeSpan.PERMANENT);
+                pluginTextFile.setContent(identity.getPrivateKey());
+                pluginTextFile.persistToMedia();
+
+            } catch (Exception exception) {
+                /*
+                 * The file cannot be created. I can not handle this situation.
+                 */
+                errorManager.reportUnexpectedPluginException(this.getPluginVersionReference(), UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, exception);
+                throw new CantStartPluginException(exception.getLocalizedMessage());
+            }
+
+
+        } catch (CantCreateFileException cantCreateFileException) {
+
+            /*
+             * The file cannot be load. I can not handle this situation.
+             */
+            errorManager.reportUnexpectedPluginException(this.getPluginVersionReference(), UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, cantCreateFileException);
+            throw new CantStartPluginException(cantCreateFileException.getLocalizedMessage());
+
+        }
+
+    }
+
+    /**
+     * This method initialize the database
+     *
+     * @throws CantInitializeNetworkServiceDatabaseException
+     */
+    private void initializeCommunicationDb() throws CantInitializeNetworkServiceDatabaseException {
+
+        try {
+
+            this.dataBase = this.pluginDatabaseSystem.openDatabase(pluginId, CommunicationNetworkServiceDatabaseConstants.DATA_BASE_NAME);
+
+        } catch (CantOpenDatabaseException cantOpenDatabaseException) {
+
+            errorManager.reportUnexpectedPluginException(this.getPluginVersionReference(), UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, cantOpenDatabaseException);
+            throw new CantInitializeNetworkServiceDatabaseException(cantOpenDatabaseException);
+
+        } catch (DatabaseNotFoundException e) {
+
+            CommunicationNetworkServiceDatabaseFactory communicationLayerNetworkServiceDatabaseFactory = new CommunicationNetworkServiceDatabaseFactory(pluginDatabaseSystem);
+
+            try {
+
+                this.dataBase = communicationLayerNetworkServiceDatabaseFactory.createDatabase(pluginId, CommunicationNetworkServiceDatabaseConstants.DATA_BASE_NAME);
+
+            } catch (CantCreateDatabaseException cantCreateDatabaseException) {
+
+                errorManager.reportUnexpectedPluginException(this.getPluginVersionReference(), UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, cantCreateDatabaseException);
+                throw new CantInitializeNetworkServiceDatabaseException(cantCreateDatabaseException);
+
+            }
+        }
+    }
+
+    /**
+     * This method validate is all required resource are injected into
+     * the plugin root by the platform
+     *
+     * @throws CantStartPluginException
+     */
+    private void validateInjectedResources() throws CantStartPluginException {
+
+         /*
+         * If all resources are inject
+         */
+        if (wsCommunicationsCloudClientManager == null ||
+                pluginDatabaseSystem               == null ||
+                errorManager                       == null ||
+                eventManager                       == null ) {
+
+
+            String context =
+                    "Plugin ID:                          " + pluginId                           + CantStartPluginException.CONTEXT_CONTENT_SEPARATOR +
+                            "wsCommunicationsCloudClientManager: " + wsCommunicationsCloudClientManager + CantStartPluginException.CONTEXT_CONTENT_SEPARATOR +
+                            "pluginDatabaseSystem:               " + pluginDatabaseSystem               + CantStartPluginException.CONTEXT_CONTENT_SEPARATOR +
+                            "errorManager:                       " + errorManager                       + CantStartPluginException.CONTEXT_CONTENT_SEPARATOR +
+                            "eventManager:                       " + eventManager;
+
+            String possibleCause = "No all required resource are injected";
+            CantStartPluginException pluginStartException = new CantStartPluginException(CantStartPluginException.DEFAULT_MESSAGE, null, context, possibleCause);
+
+            errorManager.reportUnexpectedPluginException(this.getPluginVersionReference(),UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, pluginStartException);
+            throw pluginStartException;
+
+        }
+
+    }
+
+    private void initializeListener(){
+
+         /*
+         * Listen and handle Complete Component Registration Notification Event
+         */
+        FermatEventListener fermatEventListener = eventManager.getNewListener(P2pEventType.COMPLETE_COMPONENT_REGISTRATION_NOTIFICATION);
+        fermatEventListener.setEventHandler(new CompleteComponentRegistrationNotificationEventHandler(this));
+        eventManager.addListener(fermatEventListener);
+        listenersAdded.add(fermatEventListener);
+
+         /*
+         * Listen and handle Complete Request List Component Registered Notification Event
+         */
+        fermatEventListener = eventManager.getNewListener(P2pEventType.COMPLETE_REQUEST_LIST_COMPONENT_REGISTERED_NOTIFICATION);
+//        fermatEventListener.setEventHandler(new CompleteRequestListComponentRegisteredNotificationEventHandler(this));
+//        eventManager.addListener(fermatEventListener);
+//        listenersAdded.add(fermatEventListener);
+
+        /*
+         * Listen and handle Complete Request List Component Registered Notification Event
+         */
+        fermatEventListener = eventManager.getNewListener(P2pEventType.COMPLETE_COMPONENT_CONNECTION_REQUEST_NOTIFICATION);
+        fermatEventListener.setEventHandler(new CompleteComponentConnectionRequestNotificationEventHandler(this));
+        eventManager.addListener(fermatEventListener);
+        listenersAdded.add(fermatEventListener);
+
+        /*
+         *  failure connection
+         */
+
+        fermatEventListener = eventManager.getNewListener(P2pEventType.FAILURE_COMPONENT_CONNECTION_REQUEST_NOTIFICATION);
+        fermatEventListener.setEventHandler(new FailureComponentConnectionRequestNotificationEventHandler(this));
+        eventManager.addListener(fermatEventListener);
+        listenersAdded.add(fermatEventListener);
+
+        /*
+         * new message
+         */
+        fermatEventListener = eventManager.getNewListener(P2pEventType.NEW_NETWORK_SERVICE_MESSAGE_RECEIVE_NOTIFICATION);
+        fermatEventListener.setEventHandler(new NewMessagesEventHandler(this));
+        eventManager.addListener(fermatEventListener);
+        listenersAdded.add(fermatEventListener);
+
+        /*
+         * Listen and handle VPN Connection Close Notification Event
+         */
+        fermatEventListener = eventManager.getNewListener(P2pEventType.VPN_CONNECTION_CLOSE);
+        fermatEventListener.setEventHandler(new VPNConnectionCloseNotificationEventHandler(this));
+        eventManager.addListener(fermatEventListener);
+        listenersAdded.add(fermatEventListener);
+
+        /*
+         * Listen and handle Client Connection Close Notification Event
+         */
+        fermatEventListener = eventManager.getNewListener(P2pEventType.CLIENT_CONNECTION_CLOSE);
+        fermatEventListener.setEventHandler(new ClientConnectionCloseNotificationEventHandler(this));
+        eventManager.addListener(fermatEventListener);
+        listenersAdded.add(fermatEventListener);
+
+        /*
+         * Listen and handle Client Connection Loose Notification Event
+         */
+        fermatEventListener = eventManager.getNewListener(P2pEventType.CLIENT_CONNECTION_LOOSE);
+        fermatEventListener.setEventHandler(new ClientConnectionLooseNotificationEventHandler(this));
+        eventManager.addListener(fermatEventListener);
+        listenersAdded.add(fermatEventListener);
+
+
+        /*
+         * Listen and handle Client Connection Success Reconnect Notification Event
+         */
+        fermatEventListener = eventManager.getNewListener(P2pEventType.CLIENT_SUCCESS_RECONNECT);
+        fermatEventListener.setEventHandler(new ClientSuccessfullReconnectNotificationEventHandler(this));
+        eventManager.addListener(fermatEventListener);
+        listenersAdded.add(fermatEventListener);
+
+        /**
+         * Listen and handle the sent messages
+         */
+
+
+        fermatEventListener = eventManager.getNewListener(P2pEventType.NEW_NETWORK_SERVICE_MESSAGE_SENT_NOTIFICATION);
+        fermatEventListener.setEventHandler(new NewSentMessageNotificationEventHandler(this));
+        eventManager.addListener(fermatEventListener);
+        listenersAdded.add(fermatEventListener);
+    }
+
+    @Override
+    public void pause() {
+
+        // pause connections manager.
+        communicationNetworkServiceConnectionManager.pause();
+
+        this.serviceStatus = ServiceStatus.PAUSED;
+    }
+
+    @Override
+    public void resume() {
+
+        // resume connections manager.
+        communicationNetworkServiceConnectionManager.resume();
+
+        this.serviceStatus = ServiceStatus.STARTED;
+    }
+
+    @Override
+    public void stop() {
+
+        // remove all listeners from the event manager and from the plugin.
+        for (FermatEventListener listener: listenersAdded)
+            eventManager.removeListener(listener);
+
+        listenersAdded.clear();
+
+        // close all connections.
+        communicationNetworkServiceConnectionManager.closeAllConnection();
+
+        // interrupt the registration agent execution
+       // communicationRegistrationProcessNetworkServiceAgent.stop();
+
+        // interrupt the executor agent execution
+        //cryptoPaymentRequestExecutorAgent.stop();
+
+        // set to not registered.
+        register = Boolean.FALSE;
+
+        cryptoPaymentRequestExecutorAgent.stopExecutor();
+
+        this.serviceStatus = ServiceStatus.STOPPED;
+    }
+
     /**
      * I indicate to the Agent the action that it must take:
      * - Protocol State: PROCESSING_SEND.
@@ -200,8 +580,8 @@ public final class CryptoPaymentRequestNetworkServicePluginRoot extends Abstract
     public final void sendCryptoPaymentRequest(final UUID                  requestId        ,
                                                final String                identityPublicKey,
                                                final Actors                identityType     ,
-                                               final String                actorPublicKey   ,
-                                               final Actors                actorType        ,
+                                               final String                actorPublicKey,
+                                               final Actors actorType,
                                                final CryptoAddress         cryptoAddress    ,
                                                final String                description      ,
                                                final long                  amount           ,
@@ -232,7 +612,7 @@ public final class CryptoPaymentRequestNetworkServicePluginRoot extends Abstract
                     protocolState,
                     networkType,
                     referenceWallet,
-                    0, "OUT"
+                    0, PaymentConstants.OUTGOING_MESSAGE
             );
 
             System.out.println("********** Crypto Payment Request NS -> sending request. PROCESSING_SEND - REQUEST - SENT - OK.");
@@ -288,7 +668,6 @@ public final class CryptoPaymentRequestNetworkServicePluginRoot extends Abstract
     @Override
     public void informDenial(UUID requestId) throws RequestNotFoundException  ,
                                                     CantInformDenialException {
-
         try {
 
             cryptoPaymentRequestNetworkServiceDao.takeAction(
@@ -311,6 +690,11 @@ public final class CryptoPaymentRequestNetworkServicePluginRoot extends Abstract
             throw new CantInformDenialException(e, "", "Unhandled Exception.");
         }
     }
+
+
+
+
+
 
     /**
      * I indicate to the Agent the action that it must take:
@@ -448,375 +832,7 @@ public final class CryptoPaymentRequestNetworkServicePluginRoot extends Abstract
 
     }
 
-    /**
-     * Service Interface implementation
-     */
-    @Override
-    public synchronized void start() throws CantStartPluginException {
 
-        if(!flag.getAndSet(true)) {
-            if (this.serviceStatus != ServiceStatus.STARTING) {
-                serviceStatus = ServiceStatus.STARTING;
-
-                System.out.println("********* Crypto Payment Request: Starting. ");
-
-
-                /*
-                 * Create a new key pair for this execution
-                 */
-                initializeClientIdentity();
-
-                /*
-                 * Validate required resources
-                 */
-                validateInjectedResources();
-
-
-                // initialize crypto payment request dao
-
-                try {
-
-                    cryptoPaymentRequestNetworkServiceDao = new CryptoPaymentRequestNetworkServiceDao(pluginDatabaseSystem, pluginId);
-
-                    cryptoPaymentRequestNetworkServiceDao.initialize();
-
-                } catch(CantInitializeCryptoPaymentRequestNetworkServiceDatabaseException e) {
-
-                    CantStartPluginException pluginStartException = new CantStartPluginException(e, "", "Problem initializing crypto payment request network service dao.");
-                    errorManager.reportUnexpectedPluginException(this.getPluginVersionReference(), UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, pluginStartException);
-                    throw pluginStartException;
-                }
-
-                try {
-
-                    /*
-                     * Initialize the data base
-                     */
-                    initializeCommunicationDb();
-
-                    /*
-                     * Initialize listeners
-                     */
-                    initializeListener();
-
-                    /*
-                     * Initialize connection manager
-                     */
-                    initializeCommunicationNetworkServiceConnectionManager();
-
-                    /*
-                     * Verify if the communication cloud client is active
-                     */
-                    if (!wsCommunicationsCloudClientManager.isDisable()){
-
-                        /*
-                         * Construct my profile and register me
-                         */
-                        PlatformComponentProfile platformComponentProfilePluginRoot =  wsCommunicationsCloudClientManager.getCommunicationsCloudClientConnection().constructPlatformComponentProfileFactory(getIdentityPublicKey(),
-                                                                                                                                                                                    getAlias().toLowerCase(),
-                                                                                                                                                                                    getName(),
-                                                                                                                                                                                    getNetworkServiceType(),
-                                                                                                                                                                                    getPlatformComponentType(),
-                                                                                                                                                                                    getExtraData());
-
-                        setPlatformComponentProfilePluginRoot(platformComponentProfilePluginRoot);
-
-                        /*
-                         * Initialize the agent and start
-                         */
-                        communicationRegistrationProcessNetworkServiceAgent = new CommunicationRegistrationProcessNetworkServiceAgent(this, wsCommunicationsCloudClientManager);
-                        communicationRegistrationProcessNetworkServiceAgent.start();
-                    }
-
-                    remoteNetworkServicesRegisteredList = new CopyOnWriteArrayList<>();
-
-                    // change message state to process again first time
-                    reprocessMessage();
-
-                    //declare a schedule to process waiting request message
-
-
-                    this.startTimer();
-
-
-            /*
-             * Its all ok, set the new status
-            */
-                    this.serviceStatus = ServiceStatus.STARTED;
-
-                } catch (CantInitializeNetworkServiceDatabaseException exception) {
-
-                    StringBuffer contextBuffer = new StringBuffer();
-                    contextBuffer.append("Plugin ID: " + pluginId);
-                    contextBuffer.append(CantStartPluginException.CONTEXT_CONTENT_SEPARATOR);
-                    contextBuffer.append("Database Name: " + CommunicationNetworkServiceDatabaseConstants.DATA_BASE_NAME);
-
-                    String context = contextBuffer.toString();
-                    String possibleCause = "The Template Database triggered an unexpected problem that wasn't able to solve by itself";
-                    CantStartPluginException pluginStartException = new CantStartPluginException(CantStartPluginException.DEFAULT_MESSAGE, exception, context, possibleCause);
-
-                    errorManager.reportUnexpectedPluginException(this.getPluginVersionReference(), UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, pluginStartException);
-                    throw pluginStartException;
-                }
-
-                System.out.println("********* Crypto Payment Request: Successful start. ");
-            }
-        }
-
-
-    }
-
-    private void initializeClientIdentity() throws CantStartPluginException {
-
-        System.out.println("Calling the method - initializeClientIdentity() ");
-
-        try {
-
-            System.out.println("Loading clientIdentity");
-
-             /*
-              * Load the file with the clientIdentity
-              */
-            PluginTextFile pluginTextFile = pluginFileSystem.getTextFile(pluginId, "private", "clientIdentity", FilePrivacy.PRIVATE, FileLifeSpan.PERMANENT);
-            String content = pluginTextFile.getContent();
-
-            //System.out.println("content = "+content);
-
-            identity = new ECCKeyPair(content);
-
-        } catch (FileNotFoundException e) {
-
-            /*
-             * The file no exist may be the first time the plugin is running on this device,
-             * We need to create the new clientIdentity
-             */
-            try {
-
-                System.out.println("No previous clientIdentity finder - Proceed to create new one");
-
-                /*
-                 * Create the new clientIdentity
-                 */
-                identity = new ECCKeyPair();
-
-                /*
-                 * save into the file
-                 */
-                PluginTextFile pluginTextFile = pluginFileSystem.createTextFile(pluginId, "private", "clientIdentity", FilePrivacy.PRIVATE, FileLifeSpan.PERMANENT);
-                pluginTextFile.setContent(identity.getPrivateKey());
-                pluginTextFile.persistToMedia();
-
-            } catch (Exception exception) {
-                /*
-                 * The file cannot be created. I can not handle this situation.
-                 */
-                errorManager.reportUnexpectedPluginException(this.getPluginVersionReference(), UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, exception);
-                throw new CantStartPluginException(exception.getLocalizedMessage());
-            }
-
-
-        } catch (CantCreateFileException cantCreateFileException) {
-
-            /*
-             * The file cannot be load. I can not handle this situation.
-             */
-            errorManager.reportUnexpectedPluginException(this.getPluginVersionReference(), UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, cantCreateFileException);
-            throw new CantStartPluginException(cantCreateFileException.getLocalizedMessage());
-
-        }
-
-    }
-
-    /**
-     * This method initialize the database
-     *
-     * @throws CantInitializeNetworkServiceDatabaseException
-     */
-    private void initializeCommunicationDb() throws CantInitializeNetworkServiceDatabaseException {
-
-        try {
-
-            this.dataBase = this.pluginDatabaseSystem.openDatabase(pluginId, CommunicationNetworkServiceDatabaseConstants.DATA_BASE_NAME);
-
-        } catch (CantOpenDatabaseException cantOpenDatabaseException) {
-
-            errorManager.reportUnexpectedPluginException(this.getPluginVersionReference(), UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, cantOpenDatabaseException);
-            throw new CantInitializeNetworkServiceDatabaseException(cantOpenDatabaseException);
-
-        } catch (DatabaseNotFoundException e) {
-
-            CommunicationNetworkServiceDatabaseFactory communicationLayerNetworkServiceDatabaseFactory = new CommunicationNetworkServiceDatabaseFactory(pluginDatabaseSystem);
-
-            try {
-
-                this.dataBase = communicationLayerNetworkServiceDatabaseFactory.createDatabase(pluginId, CommunicationNetworkServiceDatabaseConstants.DATA_BASE_NAME);
-
-            } catch (CantCreateDatabaseException cantCreateDatabaseException) {
-
-                errorManager.reportUnexpectedPluginException(this.getPluginVersionReference(), UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, cantCreateDatabaseException);
-                throw new CantInitializeNetworkServiceDatabaseException(cantCreateDatabaseException);
-
-            }
-        }
-
-    }
-
-    /**
-     * This method validate is all required resource are injected into
-     * the plugin root by the platform
-     *
-     * @throws CantStartPluginException
-     */
-    private void validateInjectedResources() throws CantStartPluginException {
-
-         /*
-         * If all resources are inject
-         */
-        if (wsCommunicationsCloudClientManager == null ||
-            pluginDatabaseSystem               == null ||
-            errorManager                       == null ||
-            eventManager                       == null ) {
-
-
-            String context =
-                    "Plugin ID:                          " + pluginId                           + CantStartPluginException.CONTEXT_CONTENT_SEPARATOR +
-                    "wsCommunicationsCloudClientManager: " + wsCommunicationsCloudClientManager + CantStartPluginException.CONTEXT_CONTENT_SEPARATOR +
-                    "pluginDatabaseSystem:               " + pluginDatabaseSystem               + CantStartPluginException.CONTEXT_CONTENT_SEPARATOR +
-                    "errorManager:                       " + errorManager                       + CantStartPluginException.CONTEXT_CONTENT_SEPARATOR +
-                    "eventManager:                       " + eventManager;
-
-            String possibleCause = "No all required resource are injected";
-            CantStartPluginException pluginStartException = new CantStartPluginException(CantStartPluginException.DEFAULT_MESSAGE, null, context, possibleCause);
-
-            errorManager.reportUnexpectedPluginException(this.getPluginVersionReference(),UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, pluginStartException);
-            throw pluginStartException;
-
-        }
-
-    }
-
-    private void initializeListener(){
-
-         /*
-         * Listen and handle Complete Component Registration Notification Event
-         */
-        FermatEventListener fermatEventListener = eventManager.getNewListener(P2pEventType.COMPLETE_COMPONENT_REGISTRATION_NOTIFICATION);
-        fermatEventListener.setEventHandler(new CompleteComponentRegistrationNotificationEventHandler(this));
-        eventManager.addListener(fermatEventListener);
-        listenersAdded.add(fermatEventListener);
-
-         /*
-         * Listen and handle Complete Request List Component Registered Notification Event
-         */
-        fermatEventListener = eventManager.getNewListener(P2pEventType.COMPLETE_REQUEST_LIST_COMPONENT_REGISTERED_NOTIFICATION);
-//        fermatEventListener.setEventHandler(new CompleteRequestListComponentRegisteredNotificationEventHandler(this));
-//        eventManager.addListener(fermatEventListener);
-//        listenersAdded.add(fermatEventListener);
-
-        /*
-         * Listen and handle Complete Request List Component Registered Notification Event
-         */
-        fermatEventListener = eventManager.getNewListener(P2pEventType.COMPLETE_COMPONENT_CONNECTION_REQUEST_NOTIFICATION);
-        fermatEventListener.setEventHandler(new CompleteComponentConnectionRequestNotificationEventHandler(this));
-        eventManager.addListener(fermatEventListener);
-        listenersAdded.add(fermatEventListener);
-
-        /**
-         *  failure connection
-         */
-
-        fermatEventListener = eventManager.getNewListener(P2pEventType.FAILURE_COMPONENT_CONNECTION_REQUEST_NOTIFICATION);
-        fermatEventListener.setEventHandler(new FailureComponentConnectionRequestNotificationEventHandler(this));
-        eventManager.addListener(fermatEventListener);
-        listenersAdded.add(fermatEventListener);
-
-        /**
-         *  close connection
-         */
-
-        fermatEventListener = eventManager.getNewListener(P2pEventType.CLIENT_CONNECTION_CLOSE);
-        fermatEventListener.setEventHandler(new ClientConnectionCloseNotificationEventHandler(this));
-        eventManager.addListener(fermatEventListener);
-        listenersAdded.add(fermatEventListener);
-
-
-        /*
-         * Listen and handle VPN Connection Close Notification Event
-         */
-        fermatEventListener = eventManager.getNewListener(P2pEventType.VPN_CONNECTION_CLOSE);
-        fermatEventListener.setEventHandler(new VPNConnectionCloseNotificationEventHandler(this));
-        eventManager.addListener(fermatEventListener);
-        listenersAdded.add(fermatEventListener);
-
-        /**
-         * new message
-         */
-        fermatEventListener = eventManager.getNewListener(P2pEventType.NEW_NETWORK_SERVICE_MESSAGE_RECEIVE_NOTIFICATION);
-        fermatEventListener.setEventHandler(new NewReceiveMessagesNotificationEventHandler(this));
-        eventManager.addListener(fermatEventListener);
-        listenersAdded.add(fermatEventListener);
-
-                /*
-         * Listen and handle Client Connection Loose Notification Event
-         */
-        fermatEventListener = eventManager.getNewListener(P2pEventType.CLIENT_CONNECTION_LOOSE);
-        fermatEventListener.setEventHandler(new ClientConnectionLooseNotificationEventHandler(this));
-        eventManager.addListener(fermatEventListener);
-        listenersAdded.add(fermatEventListener);
-
-
-        /*
-         * Listen and handle Client Connection Success Reconnect Notification Event
-         */
-        fermatEventListener = eventManager.getNewListener(P2pEventType.CLIENT_SUCCESS_RECONNECT);
-        fermatEventListener.setEventHandler(new ClientSuccessfullReconnectNotificationEventHandler(this));
-        eventManager.addListener(fermatEventListener);
-        listenersAdded.add(fermatEventListener);
-    }
-
-    @Override
-    public void pause() {
-
-        // pause connections manager.
-        communicationNetworkServiceConnectionManager.pause();
-
-        this.serviceStatus = ServiceStatus.PAUSED;
-    }
-
-    @Override
-    public void resume() {
-
-        // resume connections manager.
-        communicationNetworkServiceConnectionManager.resume();
-
-        this.serviceStatus = ServiceStatus.STARTED;
-    }
-
-    @Override
-    public void stop() {
-
-        // remove all listeners from the event manager and from the plugin.
-        for (FermatEventListener listener: listenersAdded)
-            eventManager.removeListener(listener);
-
-        listenersAdded.clear();
-
-        // close all connections.
-        communicationNetworkServiceConnectionManager.closeAllConnection();
-
-        // interrupt the registration agent execution
-        communicationRegistrationProcessNetworkServiceAgent.stop();
-
-        // interrupt the executor agent execution
-        cryptoPaymentRequestExecutorAgent.stop();
-
-        // set to not registered.
-        register = Boolean.FALSE;
-
-        cryptoPaymentRequestExecutorAgent.stopExecutor();
-
-        this.serviceStatus = ServiceStatus.STOPPED;
-    }
 
     @Override
     public String getIdentityPublicKey() {
@@ -903,7 +919,7 @@ public final class CryptoPaymentRequestNetworkServicePluginRoot extends Abstract
     public void initializeCommunicationNetworkServiceConnectionManager() {
         this.communicationNetworkServiceConnectionManager = new CommunicationNetworkServiceConnectionManager_V2(
                 this,
-                this.getPlatformComponentProfilePluginRoot(),
+                getPlatformComponentProfilePluginRoot(),
                 identity,
                 wsCommunicationsCloudClientManager.getCommunicationsCloudClientConnection(),
                 dataBase,
@@ -935,16 +951,20 @@ public final class CryptoPaymentRequestNetworkServicePluginRoot extends Abstract
                     platformComponentProfileRegistered.getNetworkServiceType() == this.getNetworkServiceType() &&
                     platformComponentProfileRegistered.getIdentityPublicKey().equals(identity.getPublicKey())) {
 
-                System.out.println("CryptoPaymentRequestNetworkServicePluginRoot - NetWork Service is Registered: " + platformComponentProfileRegistered.getAlias());
+                if(communicationNetworkServiceConnectionManager==null) {
+                    initializeCommunicationNetworkServiceConnectionManager();
+                }
 
                 this.register = Boolean.TRUE;
                 initializeAgent();
+                System.out.print("CryptoPaymentRequestNetworkServicePluginRoot - NetWork Service is Registered: " + platformComponentProfileRegistered.getAlias());
+
+
             }
 
         } catch (Exception e) {
             e.printStackTrace();
         }
-
     }
 
 
@@ -1136,6 +1156,11 @@ public final class CryptoPaymentRequestNetworkServicePluginRoot extends Abstract
                     // update the request to processing receive state with the given action.
                     final InformationMessage informationMessage = gson.fromJson(jsonMessage, InformationMessage.class);
                     receiveInformationMessage(informationMessage);
+
+                    //close connection - end message
+                    communicationNetworkServiceConnectionManager.closeConnection(informationMessage.getActorDestination());
+                    cryptoPaymentRequestExecutorAgent.getPoolConnectionsWaitingForResponse().remove(informationMessage.getActorDestination());
+
                     System.out.println(" CPR NS - Information Message Received: "+informationMessage.toString());
                     break;
                 case REQUEST:
@@ -1154,7 +1179,36 @@ public final class CryptoPaymentRequestNetworkServicePluginRoot extends Abstract
     }
 
     @Override
-    public void handleNewSentMessageNotificationEvent(FermatMessage data) {
+    public void handleNewSentMessageNotificationEvent(FermatMessage fermatMessage) {
+
+        try {
+
+            Gson gson = new Gson();
+
+            String jsonMessage = fermatMessage.getContent();
+
+            NetworkServiceMessage networkServiceMessage = gson.fromJson(jsonMessage, NetworkServiceMessage.class);
+
+            switch (networkServiceMessage.getMessageType()) {
+                case INFORMATION:
+                    InformationMessage informationMessage = gson.fromJson(jsonMessage, InformationMessage.class);
+                    cryptoPaymentRequestNetworkServiceDao.changeProtocolState(informationMessage.getRequestId(), RequestProtocolState.DONE);
+
+                    break;
+                case REQUEST:
+                    RequestMessage requestMessage = gson.fromJson(jsonMessage, RequestMessage.class);
+                    cryptoPaymentRequestNetworkServiceDao.changeProtocolState(requestMessage.getRequestId(), RequestProtocolState.DONE);
+                    break;
+
+                default:
+                    throw new CantHandleNewMessagesException(
+                            "message type: " +networkServiceMessage.getMessageType().name(),
+                            "Message type not handled."
+                    );
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 
     }
 
@@ -1185,7 +1239,7 @@ public final class CryptoPaymentRequestNetworkServicePluginRoot extends Abstract
                     protocolState,
                     requestMessage.getNetworkType(),
                     requestMessage.getReferenceWallet(),
-                    0, "INC"
+                    0, PaymentConstants.INCOMING_MESSAGE
             );
 
         } catch(CantCreateCryptoPaymentRequestException e) {

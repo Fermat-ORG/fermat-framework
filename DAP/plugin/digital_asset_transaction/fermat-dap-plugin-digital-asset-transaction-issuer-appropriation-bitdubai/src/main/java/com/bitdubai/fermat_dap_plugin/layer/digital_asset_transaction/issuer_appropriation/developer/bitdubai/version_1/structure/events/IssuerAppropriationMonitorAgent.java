@@ -20,6 +20,8 @@ import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.exceptions.CantG
 import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.interfaces.BitcoinNetworkManager;
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.asset_vault.interfaces.AssetVaultManager;
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.bitcoin_vault.CryptoVaultManager;
+import com.bitdubai.fermat_ccp_api.layer.identity.intra_user.exceptions.CantCreateNewIntraWalletUserException;
+import com.bitdubai.fermat_ccp_api.layer.identity.intra_user.exceptions.CantListIntraWalletUsersException;
 import com.bitdubai.fermat_ccp_api.layer.identity.intra_user.interfaces.IntraWalletUserIdentity;
 import com.bitdubai.fermat_ccp_api.layer.identity.intra_user.interfaces.IntraWalletUserIdentityManager;
 import com.bitdubai.fermat_dap_api.layer.all_definition.exceptions.CantSetObjectException;
@@ -43,6 +45,7 @@ import com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.issuer_app
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedPluginExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 
+import java.util.List;
 import java.util.UUID;
 import java.util.concurrent.CountDownLatch;
 
@@ -201,7 +204,7 @@ public class IssuerAppropriationMonitorAgent implements Agent {
                         break;
                     case CRYPTOADDRESS_OBTAINED:
                         IssuerAppropriationDigitalAssetTransactionPluginRoot.debugAssetAppropriation("registering crypto address in crypto book. : " + record.transactionRecordId());
-                        IntraWalletUserIdentity assetIdentity = intraWalletUserIdentityManager.createNewIntraWalletUser("Issuer Appropriation: " + record.digitalAsset().getName(), null);
+                        IntraWalletUserIdentity assetIdentity = getIntraUserIdentity(record);
                         cryptoAddressBookManager.registerCryptoAddress(record.addressTo(),
                                 assetIdentity.getPublicKey(),
                                 Actors.INTRA_USER,
@@ -278,5 +281,16 @@ public class IssuerAppropriationMonitorAgent implements Agent {
         }
 
 
+        private IntraWalletUserIdentity getIntraUserIdentity(AppropriationTransactionRecord record) throws CantListIntraWalletUsersException, CantCreateNewIntraWalletUserException {
+            List<IntraWalletUserIdentity> allIdentities = intraWalletUserIdentityManager.getAllIntraWalletUsersFromCurrentDeviceUser();
+            String alias = "Issuer Appropriation: " + record.digitalAsset().getName();
+            IntraWalletUserIdentity assetIdentity = null;
+            for (IntraWalletUserIdentity identity : allIdentities) {
+                if (identity.getAlias().equals(alias)) assetIdentity = identity;
+            }
+            if (assetIdentity == null)
+                assetIdentity = intraWalletUserIdentityManager.createNewIntraWalletUser(alias, null);
+            return assetIdentity;
+        }
     }
 }

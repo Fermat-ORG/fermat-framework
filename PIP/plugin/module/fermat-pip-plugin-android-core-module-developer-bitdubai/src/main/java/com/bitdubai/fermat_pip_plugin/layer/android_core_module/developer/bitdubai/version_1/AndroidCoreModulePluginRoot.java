@@ -12,6 +12,7 @@ import com.bitdubai.fermat_api.layer.all_definition.util.Version;
 import com.bitdubai.fermat_api.layer.modules.common_classes.ActiveActorIdentityInformation;
 import com.bitdubai.fermat_api.layer.modules.exceptions.ActorIdentityNotSelectedException;
 import com.bitdubai.fermat_api.layer.modules.exceptions.CantGetSelectedActorIdentityException;
+import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.interfaces.BitcoinNetworkManager;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.WsCommunicationsCloudClientManager;
 import com.bitdubai.fermat_pip_api.layer.module.android_core.interfaces.AndroidCoreManager;
 import com.bitdubai.fermat_pip_api.layer.module.android_core.interfaces.AndroidCoreModule;
@@ -36,6 +37,9 @@ public class AndroidCoreModulePluginRoot extends AbstractPlugin implements Andro
     @NeededPluginReference(platform = Platforms.COMMUNICATION_PLATFORM, layer = Layers.COMMUNICATION, plugin = Plugins.WS_CLOUD_CLIENT)
     private WsCommunicationsCloudClientManager wsCommunicationsCloudClientManager;
 
+    @NeededPluginReference(platform = Platforms.BLOCKCHAINS         , layer = Layers.CRYPTO_NETWORK  , plugin = Plugins.BITCOIN_NETWORK       )
+    private BitcoinNetworkManager bitcoinNetworkManager;
+
     public AndroidCoreModulePluginRoot(){
         super(new PluginVersionReference(new Version()));
     }
@@ -47,7 +51,8 @@ public class AndroidCoreModulePluginRoot extends AbstractPlugin implements Andro
 
     @Override
     public AndroidCoreManager getAndroidCoreManager() {
-        return new AndroidCoreModuleManager(wsCommunicationsCloudClientManager);
+        //TODO pasar la referencia al Cloud Manager, Bitcoin Network y la red privada
+        return new AndroidCoreModuleManager(wsCommunicationsCloudClientManager,bitcoinNetworkManager);
     }
 
     @Override

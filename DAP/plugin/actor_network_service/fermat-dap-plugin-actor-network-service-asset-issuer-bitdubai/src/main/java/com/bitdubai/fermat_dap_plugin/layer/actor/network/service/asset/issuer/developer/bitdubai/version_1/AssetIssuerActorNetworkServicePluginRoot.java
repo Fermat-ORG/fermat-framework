@@ -70,7 +70,7 @@ import com.bitdubai.fermat_dap_api.layer.dap_actor_network_service.asset_issuer.
 import com.bitdubai.fermat_dap_plugin.layer.actor.network.service.asset.issuer.developer.bitdubai.version_1.agents.AssetIssuerActorNetworkServiceAgent;
 import com.bitdubai.fermat_dap_plugin.layer.actor.network.service.asset.issuer.developer.bitdubai.version_1.communications.CommunicationNetworkServiceConnectionManager;
 import com.bitdubai.fermat_dap_plugin.layer.actor.network.service.asset.issuer.developer.bitdubai.version_1.communications.CommunicationNetworkServiceLocal;
-import com.bitdubai.fermat_p2p_api.layer.all_definition.common.network_services.template.structure.CommunicationRegistrationProcessNetworkServiceAgent;
+import com.bitdubai.fermat_dap_plugin.layer.actor.network.service.asset.issuer.developer.bitdubai.version_1.communications.CommunicationRegistrationProcessNetworkServiceAgent;
 import com.bitdubai.fermat_dap_plugin.layer.actor.network.service.asset.issuer.developer.bitdubai.version_1.database.communications.CommunicationNetworkServiceDatabaseConstants;
 import com.bitdubai.fermat_dap_plugin.layer.actor.network.service.asset.issuer.developer.bitdubai.version_1.database.communications.CommunicationNetworkServiceDatabaseFactory;
 import com.bitdubai.fermat_dap_plugin.layer.actor.network.service.asset.issuer.developer.bitdubai.version_1.database.communications.CommunicationNetworkServiceDeveloperDatabaseFactory;
@@ -88,7 +88,6 @@ import com.bitdubai.fermat_dap_plugin.layer.actor.network.service.asset.issuer.d
 import com.bitdubai.fermat_dap_plugin.layer.actor.network.service.asset.issuer.developer.bitdubai.version_1.exceptions.CantReadRecordDataBaseException;
 import com.bitdubai.fermat_dap_plugin.layer.actor.network.service.asset.issuer.developer.bitdubai.version_1.exceptions.CantUpdateRecordDataBaseException;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.common.network_services.abstract_classes.AbstractNetworkService;
-import com.bitdubai.fermat_p2p_api.layer.all_definition.common.network_services.exceptions.CantLoadKeyPairException;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.contents.FermatMessageCommunication;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.contents.FermatMessageCommunicationFactory;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.enums.P2pEventType;
@@ -587,16 +586,16 @@ public class AssetIssuerActorNetworkServicePluginRoot extends AbstractNetworkSer
                 /**
                  * I need to add this in a new thread other than the main android thread
                  */
-            new Thread(new Runnable() {
-                @Override
-                public void run() {
-                    try {
-                        communicationsClientConnection.registerComponentForCommunication(getNetworkServiceType(), platformComponentProfileAssetIssuer);
-                    } catch (CantRegisterComponentException e) {
-                        e.printStackTrace();
+                new Thread(new Runnable() {
+                    @Override
+                    public void run() {
+                        try {
+                            communicationsClientConnection.registerComponentForCommunication(getNetworkServiceType(), platformComponentProfileAssetIssuer);
+                        } catch (CantRegisterComponentException e) {
+                            e.printStackTrace();
+                        }
                     }
-                }
-            }).start();
+                }).start();
 
             } else {
                 /*
@@ -645,7 +644,7 @@ public class AssetIssuerActorNetworkServicePluginRoot extends AbstractNetworkSer
     public void updateActorAssetIssuer(ActorAssetIssuer actorAssetIssuerToRegister) throws CantRegisterActorAssetIssuerException {
 
         try {
-            CommunicationsClientConnection communicationsClientConnection = wsCommunicationsCloudClientManager.getCommunicationsCloudClientConnection();
+            final CommunicationsClientConnection communicationsClientConnection = wsCommunicationsCloudClientManager.getCommunicationsCloudClientConnection();
             /*
              * If register
              */
@@ -658,38 +657,48 @@ public class AssetIssuerActorNetworkServicePluginRoot extends AbstractNetworkSer
                 jsonObject.addProperty(DAP_IMG_ISSUER, Base64.encodeToString(actorAssetIssuerToRegister.getProfileImage(), Base64.DEFAULT));
                 String extraData = gson.toJson(jsonObject);
 
-                PlatformComponentProfile platformComponentProfileAssetIssuer = communicationsClientConnection.constructPlatformComponentProfileFactory(
+                final PlatformComponentProfile platformComponentProfileAssetIssuer = communicationsClientConnection.constructPlatformComponentProfileFactory(
                         actorAssetIssuerToRegister.getActorPublicKey(),
                         actorAssetIssuerToRegister.getName().toLowerCase().trim(),
                         actorAssetIssuerToRegister.getName(),
                         NetworkServiceType.UNDEFINED,
                         PlatformComponentType.ACTOR_ASSET_ISSUER,
                         extraData);
-                /*
-                 * ask to the communication cloud client to register
-                 */
-                communicationsClientConnection.updateRegisterActorProfile(this.getNetworkServiceType(), platformComponentProfileAssetIssuer);
-            } else {
-                /*
-                 * Construct the profile
-                 */
-                Gson gson = new Gson();
-                JsonObject jsonObject = new JsonObject();
-                jsonObject.addProperty(DAP_IMG_ISSUER, Base64.encodeToString(actorAssetIssuerToRegister.getProfileImage(), Base64.DEFAULT));
-                String extraData = gson.toJson(jsonObject);
 
-                PlatformComponentProfile platformComponentProfileAssetIssuer = communicationsClientConnection.constructPlatformComponentProfileFactory(
-                        actorAssetIssuerToRegister.getActorPublicKey(),
-                        actorAssetIssuerToRegister.getName().toLowerCase().trim(),
-                        actorAssetIssuerToRegister.getName(),
-                        NetworkServiceType.UNDEFINED,
-                        PlatformComponentType.ACTOR_ASSET_ISSUER,
-                        extraData);
-                /*
-                 * Add to the list of pending to register
-                 */
-                actorAssetIssuerPendingToRegistration.add(platformComponentProfileAssetIssuer);
+                Thread thread = new Thread(new Runnable() {
+                    @Override
+                    public void run() {
+                        try {
+                            communicationsClientConnection.updateRegisterActorProfile(getNetworkServiceType(), platformComponentProfileAssetIssuer);
+                        } catch (CantRegisterComponentException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                });
+                thread.start();
             }
+
+//            else {
+//                /*
+//                 * Construct the profile
+//                 */
+//                Gson gson = new Gson();
+//                JsonObject jsonObject = new JsonObject();
+//                jsonObject.addProperty(DAP_IMG_ISSUER, Base64.encodeToString(actorAssetIssuerToRegister.getProfileImage(), Base64.DEFAULT));
+//                String extraData = gson.toJson(jsonObject);
+//
+//                PlatformComponentProfile platformComponentProfileAssetIssuer = communicationsClientConnection.constructPlatformComponentProfileFactory(
+//                        actorAssetIssuerToRegister.getActorPublicKey(),
+//                        actorAssetIssuerToRegister.getName().toLowerCase().trim(),
+//                        actorAssetIssuerToRegister.getName(),
+//                        NetworkServiceType.UNDEFINED,
+//                        PlatformComponentType.ACTOR_ASSET_ISSUER,
+//                        extraData);
+//                /*
+//                 * Add to the list of pending to register
+//                 */
+//                actorAssetIssuerPendingToRegistration.add(platformComponentProfileAssetIssuer);
+//            }
         } catch (Exception e) {
             StringBuffer contextBuffer = new StringBuffer();
             contextBuffer.append("Plugin ID: " + pluginId);
@@ -1069,16 +1078,17 @@ public class AssetIssuerActorNetworkServicePluginRoot extends AbstractNetworkSer
     @Override
     public void handleCompleteComponentRegistrationNotificationEvent(PlatformComponentProfile platformComponentProfileRegistered) {
 
-        if (platformComponentProfileRegistered.getPlatformComponentType() == PlatformComponentType.COMMUNICATION_CLOUD_CLIENT && !this.register){
 
-            if(communicationRegistrationProcessNetworkServiceAgent != null && communicationRegistrationProcessNetworkServiceAgent.getActive()){
-                communicationRegistrationProcessNetworkServiceAgent.stop();
+        if (platformComponentProfileRegistered.getPlatformComponentType() == PlatformComponentType.COMMUNICATION_CLOUD_CLIENT && this.register) {
+
+            if (communicationRegistrationProcessNetworkServiceAgent.isAlive()) {
+                communicationRegistrationProcessNetworkServiceAgent.interrupt();
                 communicationRegistrationProcessNetworkServiceAgent = null;
             }
 
-            /*
-             * Construct my profile and register me
-             */
+                              /*
+                 * Construct my profile and register me
+                 */
             PlatformComponentProfile platformComponentProfileToReconnect = wsCommunicationsCloudClientManager.getCommunicationsCloudClientConnection().constructPlatformComponentProfileFactory(this.getIdentityPublicKey(),
 
                     this.getAlias().toLowerCase(),
@@ -1275,12 +1285,10 @@ public class AssetIssuerActorNetworkServicePluginRoot extends AbstractNetworkSer
     public void handleClientConnectionCloseNotificationEvent(FermatEvent fermatEvent) {
 
         if (fermatEvent instanceof ClientConnectionCloseNotificationEvent) {
-            this.register = Boolean.FALSE;
+            this.register = false;
 
-            if(communicationNetworkServiceConnectionManager != null) {
+            if (communicationNetworkServiceConnectionManager != null)
                 communicationNetworkServiceConnectionManager.closeAllConnection();
-                communicationNetworkServiceConnectionManager.stop();
-            }
         }
 
     }
@@ -1294,8 +1302,6 @@ public class AssetIssuerActorNetworkServicePluginRoot extends AbstractNetworkSer
         if (communicationNetworkServiceConnectionManager != null)
             communicationNetworkServiceConnectionManager.stop();
 
-        this.register = Boolean.FALSE;
-
     }
 
     /*
@@ -1305,13 +1311,50 @@ public class AssetIssuerActorNetworkServicePluginRoot extends AbstractNetworkSer
     public void handleClientSuccessfullReconnectNotificationEvent(FermatEvent fermatEvent) {
 
 
-        if (communicationNetworkServiceConnectionManager == null){
-            this.initializeCommunicationNetworkServiceConnectionManager();
-        }else{
+        if (communicationNetworkServiceConnectionManager != null) {
             communicationNetworkServiceConnectionManager.restart();
         }
 
-        this.register = Boolean.TRUE;
+
+        if (communicationRegistrationProcessNetworkServiceAgent != null && !this.register) {
+
+            if (communicationRegistrationProcessNetworkServiceAgent.isAlive()) {
+                communicationRegistrationProcessNetworkServiceAgent.interrupt();
+                communicationRegistrationProcessNetworkServiceAgent = null;
+            }
+
+                /*
+                 * Construct my profile and register me
+                 */
+            PlatformComponentProfile platformComponentProfileToReconnect = wsCommunicationsCloudClientManager.getCommunicationsCloudClientConnection().constructPlatformComponentProfileFactory(this.getIdentityPublicKey(),
+                    this.getAlias().toLowerCase(),
+                    this.getName(),
+                    this.getNetworkServiceType(),
+                    this.getPlatformComponentType(),
+                    this.getExtraData());
+
+            try {
+                    /*
+                     * Register me
+                     */
+                wsCommunicationsCloudClientManager.getCommunicationsCloudClientConnection().registerComponentForCommunication(this.getNetworkServiceType(), platformComponentProfileToReconnect);
+
+            } catch (CantRegisterComponentException e) {
+                e.printStackTrace();
+            }
+
+                /*
+                 * Configure my new profile
+                 */
+            this.setPlatformComponentProfilePluginRoot(platformComponentProfileToReconnect);
+
+                /*
+                 * Initialize the connection manager
+                 */
+            this.initializeCommunicationNetworkServiceConnectionManager();
+
+
+        }
 
     }
 
