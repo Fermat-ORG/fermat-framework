@@ -190,8 +190,6 @@ public class CryptoAddressesNetworkServicePluginRoot extends AbstractNetworkServ
 
     private CryptoAddressesNetworkServiceDao cryptoAddressesNetworkServiceDao;
 
-    private  boolean beforeRegistered;
-
     /**
      * Represent the flag to start only once
      */
@@ -211,7 +209,7 @@ public class CryptoAddressesNetworkServicePluginRoot extends AbstractNetworkServ
         );
 
         this.listenersAdded = new ArrayList<>();
-        beforeRegistered = Boolean.FALSE;
+        this.remoteNetworkServicesRegisteredList = new CopyOnWriteArrayList<>();
 
     }
 
@@ -298,7 +296,8 @@ public class CryptoAddressesNetworkServicePluginRoot extends AbstractNetworkServ
                         communicationRegistrationProcessNetworkServiceAgent.start();
                     }
 
-                    remoteNetworkServicesRegisteredList = new CopyOnWriteArrayList<>();
+
+                    initializeAgent();
 
                     // change message state to process again first time
                     reprocessMessage();
@@ -776,19 +775,19 @@ public class CryptoAddressesNetworkServicePluginRoot extends AbstractNetworkServ
                                                                      PendingRequestNotFoundException           {
 
         System.out.println("****** crypto addresses -> confirming address");
-        try {
-
-            cryptoAddressesNetworkServiceDao.confirmAddressExchangeRequest(requestId);
-
-        } catch (CantConfirmAddressExchangeRequestException | PendingRequestNotFoundException e){
-            // PendingRequestNotFoundException - THIS SHOULD' HAPPEN.
-            errorManager.reportUnexpectedPluginException(this.getPluginVersionReference(), UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
-            throw e;
-        } catch (Exception e){
-
-            errorManager.reportUnexpectedPluginException(this.getPluginVersionReference(), UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
-            throw new CantConfirmAddressExchangeRequestException(FermatException.wrapException(e), null, "Unhandled Exception.");
-        }
+//        try {
+//
+//            cryptoAddressesNetworkServiceDao.confirmAddressExchangeRequest(requestId);
+//
+//        } catch (CantConfirmAddressExchangeRequestException | PendingRequestNotFoundException e){
+//            // PendingRequestNotFoundException - THIS SHOULD' HAPPEN.
+//            errorManager.reportUnexpectedPluginException(this.getPluginVersionReference(), UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+//            throw e;
+//        } catch (Exception e){
+//
+//            errorManager.reportUnexpectedPluginException(this.getPluginVersionReference(), UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+//            throw new CantConfirmAddressExchangeRequestException(FermatException.wrapException(e), null, "Unhandled Exception.");
+//        }
     }
 
     /**
@@ -827,7 +826,11 @@ public class CryptoAddressesNetworkServicePluginRoot extends AbstractNetworkServ
         try {
 
             //update message to read with destination, and update state in DONE, End Message
-            cryptoAddressesNetworkServiceDao.markReadAndDone(requestId);
+            if(cryptoAddressesNetworkServiceDao.getPendingRequest(requestId).getMessageType().equals(AddressesConstants.INCOMING_MESSAGE)){
+                cryptoAddressesNetworkServiceDao.markRead(requestId);
+            }else {
+                cryptoAddressesNetworkServiceDao.markReadAndDone(requestId);
+            }
         }catch (Exception e){
             throw new CantConfirmAddressExchangeRequestException(e,"","No se pudo marcar como leido el request exchange de address");
         }
@@ -950,23 +953,13 @@ public class CryptoAddressesNetworkServicePluginRoot extends AbstractNetworkServ
      */
     public void initializeAgent() {
 
-        try {
-
-            cryptoAddressesExecutorAgent = new CryptoAddressesExecutorAgent(
-                    this,
-                    errorManager,
-                    eventManager,
-                    cryptoAddressesNetworkServiceDao,
-                    wsCommunicationsCloudClientManager
-            );
-
-            cryptoAddressesExecutorAgent.start();
-
-        } catch(CantStartAgentException e) {
-
-            CantStartPluginException pluginStartException = new CantStartPluginException(e, "", "Problem initializing crypto addresses dao.");
-            errorManager.reportUnexpectedPluginException(this.getPluginVersionReference(), UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, pluginStartException);
-        }
+        cryptoAddressesExecutorAgent = new CryptoAddressesExecutorAgent(
+                this,
+                errorManager,
+                eventManager,
+                cryptoAddressesNetworkServiceDao,
+                wsCommunicationsCloudClientManager
+        );
     }
 
     public void handleCompleteComponentRegistrationNotificationEvent(PlatformComponentProfile platformComponentProfileRegistered){
@@ -993,7 +986,7 @@ public class CryptoAddressesNetworkServicePluginRoot extends AbstractNetworkServ
                 System.out.println("CryptoPaymentRequestNetworkServicePluginRoot - NetWork Service is Registered: " + platformComponentProfileRegistered.getAlias());
 
                 this.register = Boolean.TRUE;
-                initializeAgent();
+                cryptoAddressesExecutorAgent.start();
 
             }
 
@@ -1038,19 +1031,14 @@ public class CryptoAddressesNetworkServicePluginRoot extends AbstractNetworkServ
 
                 String remotePublicKey =  vpnConnectionCloseNotificationEvent.getRemoteParticipant().getIdentityPublicKey();
 
-
                 if(communicationNetworkServiceConnectionManager != null) {
                     communicationNetworkServiceConnectionManager.closeConnection(remotePublicKey);
                 }
 
-                /**
-                 * remove messages
-                 */
-
                 if (cryptoAddressesExecutorAgent.isConnectionOpen(remotePublicKey)){
                     cryptoAddressesExecutorAgent.connectionFailure(remotePublicKey);
                 }
-                //reprocessMessage(remotePublicKey);
+
             }
 
         }
@@ -1107,28 +1095,24 @@ public class CryptoAddressesNetworkServicePluginRoot extends AbstractNetworkServ
     public void handleClientSuccessfullReconnectNotificationEvent(FermatEvent fermatEvent) {
 
 
-        if (communicationNetworkServiceConnectionManager == null){
-            this.initializeCommunicationNetworkServiceConnectionManager();
-        }else{
-            communicationNetworkServiceConnectionManager.restart();
-        }
+        try {
 
-        /*
-         * Mark as register
-         */
-        this.register = Boolean.TRUE;
-
-        if(cryptoAddressesExecutorAgent!=null) {
-            try {
-                cryptoAddressesExecutorAgent.start();
-            } catch (CantStartAgentException e) {
-                e.printStackTrace();
+            if (communicationNetworkServiceConnectionManager != null){
+                communicationNetworkServiceConnectionManager.restart();
             }
-        }else {
-            initializeAgent();
+
+            /*
+             * Mark as register
+             */
+            this.register = Boolean.TRUE;
+
+            if(cryptoAddressesExecutorAgent!=null) {
+                cryptoAddressesExecutorAgent.start();
+            }
+
+        }catch (Exception e){
+            e.printStackTrace();
         }
-
-
 
     }
 

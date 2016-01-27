@@ -162,8 +162,6 @@ public final class CryptoPaymentRequestNetworkServicePluginRoot extends Abstract
 
     private CryptoPaymentRequestNetworkServiceDao cryptoPaymentRequestNetworkServiceDao;
 
-    private  boolean beforeRegistered;
-
     private long reprocessTimer =   1* 3600 * 1000; //one hours
 
     private Timer timer = new Timer();
@@ -190,7 +188,7 @@ public final class CryptoPaymentRequestNetworkServicePluginRoot extends Abstract
 
         this.remoteNetworkServicesRegisteredList = new CopyOnWriteArrayList<>();
         this.listenersAdded = new ArrayList<>();
-        beforeRegistered = Boolean.FALSE;
+        this.remoteNetworkServicesRegisteredList = new CopyOnWriteArrayList<>();
     }
 
 
@@ -274,7 +272,8 @@ public final class CryptoPaymentRequestNetworkServicePluginRoot extends Abstract
                         communicationRegistrationProcessNetworkServiceAgent.start();
                     }
 
-                    remoteNetworkServicesRegisteredList = new CopyOnWriteArrayList<>();
+                    initializeAgent();
+
 
                     // change message state to process again first time
                     reprocessMessage();
@@ -955,8 +954,11 @@ public final class CryptoPaymentRequestNetworkServicePluginRoot extends Abstract
                     initializeCommunicationNetworkServiceConnectionManager();
                 }
 
+                if (cryptoPaymentRequestExecutorAgent != null){
+                    cryptoPaymentRequestExecutorAgent.start();
+                }
+
                 this.register = Boolean.TRUE;
-                initializeAgent();
                 System.out.print("CryptoPaymentRequestNetworkServicePluginRoot - NetWork Service is Registered: " + platformComponentProfileRegistered.getAlias());
 
 
@@ -969,7 +971,7 @@ public final class CryptoPaymentRequestNetworkServicePluginRoot extends Abstract
 
 
     private void initializeAgent(){
-        try {
+
             cryptoPaymentRequestExecutorAgent = new CryptoPaymentRequestExecutorAgent(
                     this,
                     errorManager,
@@ -978,13 +980,6 @@ public final class CryptoPaymentRequestNetworkServicePluginRoot extends Abstract
                     wsCommunicationsCloudClientManager,
                     getPluginVersionReference()
             );
-            cryptoPaymentRequestExecutorAgent.start();
-
-        } catch (CantStartAgentException e) {
-
-            CantStartPluginException pluginStartException = new CantStartPluginException(e, "", "Problem initializing crypto payment request dao.");
-            errorManager.reportUnexpectedPluginException(this.getPluginVersionReference(), UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, pluginStartException);
-        }
     }
 
     @Override
@@ -1112,15 +1107,11 @@ public final class CryptoPaymentRequestNetworkServicePluginRoot extends Abstract
 
         try {
 
-            if (communicationNetworkServiceConnectionManager == null){
-                this.initializeCommunicationNetworkServiceConnectionManager();
-            }else{
-                communicationNetworkServiceConnectionManager.restart();
+            if (communicationNetworkServiceConnectionManager != null){
+               communicationNetworkServiceConnectionManager.restart();
             }
 
-            if(cryptoPaymentRequestExecutorAgent == null) {
-                initializeAgent();
-            }else {
+            if(cryptoPaymentRequestExecutorAgent != null) {
                 cryptoPaymentRequestExecutorAgent.start();
             }
 
