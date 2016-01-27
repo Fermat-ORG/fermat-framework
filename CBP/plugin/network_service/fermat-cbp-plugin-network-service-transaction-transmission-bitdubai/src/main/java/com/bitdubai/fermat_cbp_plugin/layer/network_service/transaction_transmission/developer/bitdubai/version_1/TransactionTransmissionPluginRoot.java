@@ -870,6 +870,18 @@ public class TransactionTransmissionPluginRoot extends AbstractNetworkService im
              */
             if (!wsCommunicationsCloudClientManager.isDisable()){
 
+                 /*
+                  * Construct my profile and register me
+                  */
+                PlatformComponentProfile platformComponentProfilePluginRoot =  wsCommunicationsCloudClientManager.getCommunicationsCloudClientConnection().constructPlatformComponentProfileFactory(getIdentityPublicKey(),
+                        getAlias().toLowerCase(),
+                        getName(),
+                        getNetworkServiceType(),
+                        getPlatformComponentType(),
+                        getExtraData());
+
+                setPlatformComponentProfilePluginRoot(platformComponentProfilePluginRoot);
+
                 /*
                  * Initialize the agent and start
                  */
