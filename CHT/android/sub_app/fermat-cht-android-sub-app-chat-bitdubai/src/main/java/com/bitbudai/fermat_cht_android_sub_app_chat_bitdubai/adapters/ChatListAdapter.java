@@ -1,8 +1,6 @@
 package com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.adapters;
 
-import android.app.Activity;
 import android.content.Context;
-import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,17 +8,8 @@ import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.holders.ChatHolder;
-import com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.holders.ChatsListHolder;
-import com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.models.ChatsList;
-import com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.util.Utils;
-import com.bitdubai.fermat_android_api.ui.adapters.FermatAdapter;
 import com.bitdubai.fermat_cht_android_sub_app_chat_bitdubai.R;
 
-
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Date;
 
 /**
  * Chat List Adapter
@@ -30,7 +19,60 @@ import java.util.Date;
  *
  */
 
-public class ChatListAdapter extends FermatAdapter<ChatsList, ChatsListHolder> {//ChatFactory
+
+public class ChatListAdapter extends ArrayAdapter<String> {
+  //  HashMap<Integer,List<String>> chatinfo=new HashMap<Integer,List<String>>();
+    private final String[] chatinfo;   //work
+    private final Integer[] imgid;
+
+    public ChatListAdapter(Context context, String[] chatinfo,Integer[] imgid) {
+        super(context, R.layout.chat_list_listview,chatinfo);
+
+     this.chatinfo=chatinfo;   //wotk
+     //   this.chatinfo.putAll(chatinfo);
+
+        this.imgid=imgid;
+     //   System.out.println("**********LISTA2:"+chatinfo.get(0).get(0)+" - "+chatinfo.get(0).get(1)+" - "+chatinfo.get(0).get(2));
+
+    }
+
+    public View getView(int position, View convertView, ViewGroup parent) {
+        LayoutInflater inflater = LayoutInflater.from(getContext());
+        View item = inflater.inflate(R.layout.chat_list_listview, null,true);
+
+        ImageView imagen=(ImageView)item.findViewById(R.id.image);
+        imagen.setImageResource(imgid[position]);
+
+        TextView contactname = (TextView)item.findViewById(R.id.tvtitle);
+    //    contactname.setText(chatinfo.get(0).get(0));
+        contactname.setText(chatinfo[position].split("@@")[0]);
+
+        TextView lastmessage = (TextView)item.findViewById(R.id.tvdesc);
+     //   lastmessage.setText(chatinfo.get(0).get(1));
+        lastmessage.setText(chatinfo[position].split("@@")[1].split("##")[0]);
+
+        TextView dateofmessage = (TextView)item.findViewById(R.id.tvdate);
+     //   dateofmessage.setText(chatinfo.get(0).get(2));
+          dateofmessage.setText(chatinfo[position].split("@@")[1].split("##")[1]);
+        return(item);
+    }
+
+    /*public void refreshEvents(Parameters[] datos) {
+
+        for(int i=0; i<datos.length; i++) {
+            this.datos[i]=datos[i];
+        }
+
+        notifyDataSetChanged();
+
+    }*/
+
+
+}
+
+
+
+/*public class ChatListAdapter extends FermatAdapter<ChatsList, ChatsListHolder> {//ChatFactory
 
     //private final LayoutInflater inflater;
     List<ChatsList> chatsList = new ArrayList<>();
@@ -54,9 +96,9 @@ public class ChatListAdapter extends FermatAdapter<ChatsList, ChatsListHolder> {
     @Override
     protected void bindHolder(ChatsListHolder holder, ChatsList data, int position) {
         View convertView = getView();
-        /*if (convertView == null) {
+        *//*if (convertView == null) {
             convertView = inflater.inflate(R.layout.chat_list_item, parent, false);
-        }*/
+        }*//*
         LayoutInflater vi = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 
         if (data == null) {
@@ -93,7 +135,7 @@ public class ChatListAdapter extends FermatAdapter<ChatsList, ChatsListHolder> {
         icon.setText("");
 
         Utils.verifySetBackground(icon, null);
-/*
+*//*
         TdApi.Chat item = getItem(position);
         TdApi.ChatInfo info = item.type;
 
@@ -168,11 +210,11 @@ public class ChatListAdapter extends FermatAdapter<ChatsList, ChatsListHolder> {
 
         firstLastName.setText(userFirstName + " " + userLastName);
         time.setText(Utils.getDateFormat(Const.TIME_PATTERN).format(date));
-*/
+*//*
         return convertView;
     }
 
     public void add(ChatsList chats) {
         chatsList.add(chats);
     }
-}
+}*/
