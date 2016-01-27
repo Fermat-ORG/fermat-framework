@@ -1,8 +1,6 @@
 package com.bitdubai.reference_wallet.bank_money_wallet.fragments.summary;
 
 import android.os.Bundle;
-import android.support.annotation.Nullable;
-import android.view.ContextMenu;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -63,8 +61,8 @@ public class UpdateTransactionRecordFragment extends AbstractFermatFragment {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        if(item.getItemId()== ReferenceWalletConstants.SAVE){
-            System.out.println("item selected");
+        if(item.getItemId()== ReferenceWalletConstants.UPDATE_RECORD_ACTION){
+            System.out.println("item selected UPDATE ACTION");
             //TODO:update transaction
             changeActivity(Activities.BNK_BANK_MONEY_WALLET_ACCOUNT_DETAILS, appSession.getAppPublicKey());
             return true;
@@ -76,7 +74,7 @@ public class UpdateTransactionRecordFragment extends AbstractFermatFragment {
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         super.onCreateOptionsMenu(menu, inflater);
-        menu.add(0, ReferenceWalletConstants.SAVE, 0, "Save")
+        menu.add(0, ReferenceWalletConstants.UPDATE_RECORD_ACTION, 0, "Save")
                 .setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
     }
 }

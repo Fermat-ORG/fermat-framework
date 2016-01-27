@@ -11,13 +11,11 @@ import android.widget.*;
 
 import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractFermatFragment;
 import com.bitdubai.fermat_api.layer.all_definition.enums.FiatCurrency;
-import com.bitdubai.fermat_api.layer.all_definition.enums.UISource;
 import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterException;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Wallets;
 import com.bitdubai.fermat_bnk_api.all_definition.enums.BankAccountType;
 import com.bitdubai.fermat_bnk_api.layer.bnk_wallet_module.interfaces.BankMoneyWalletModuleManager;
-import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedUIExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedWalletExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 import com.bitdubai.reference_wallet.bank_money_wallet.R;
@@ -76,10 +74,10 @@ public class AddAccountFragment extends AbstractFermatFragment implements View.O
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View layout = inflater.inflate(R.layout.bw_add_account, container, false);
-        okButton = (Button) layout.findViewById(R.id.bnk_add_account_ok_btn);
+        /*okButton = (Button) layout.findViewById(R.id.bnk_add_account_ok_btn);
         okButton.setOnClickListener(this);
         cancelButton = (Button) layout.findViewById(R.id.bnk_add_account_cancel_btn);
-        cancelButton.setOnClickListener(this);
+        cancelButton.setOnClickListener(this);*/
         accountNumberText = (EditText) layout.findViewById(R.id.account_number);
         accountAliasText = (EditText) layout.findViewById(R.id.account_alias);
         currencySpinnerAdapter = new ArrayAdapter<>(getActivity(), android.R.layout.simple_spinner_item, fiatCurrenciesFriendly);
@@ -98,14 +96,14 @@ public class AddAccountFragment extends AbstractFermatFragment implements View.O
 
     @Override
     public void onClick(View v) {
-        if (v.getId() == R.id.bnk_add_account_ok_btn) {
+        /*if (v.getId() == R.id.bnk_add_account_ok_btn) {
             //todo: llamar del module el metodo que crea cuentas.
             createAccount();
             changeActivity(Activities.BNK_BANK_MONEY_WALLET_HOME, appSession.getAppPublicKey());
         }
         if (v.getId() == R.id.bnk_add_account_cancel_btn) {
             changeActivity(Activities.BNK_BANK_MONEY_WALLET_HOME, appSession.getAppPublicKey());
-        }
+        }*/
     }
 
     private void createAccount(){
@@ -139,7 +137,7 @@ public class AddAccountFragment extends AbstractFermatFragment implements View.O
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        if(item.getItemId()==ReferenceWalletConstants.SAVE){
+        if(item.getItemId()==ReferenceWalletConstants.SAVE_ACTION){
             System.out.println("item selected");
             createAccount();
             changeActivity(Activities.BNK_BANK_MONEY_WALLET_HOME, appSession.getAppPublicKey());
@@ -152,7 +150,7 @@ public class AddAccountFragment extends AbstractFermatFragment implements View.O
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         super.onCreateOptionsMenu(menu, inflater);
-        menu.add(0, ReferenceWalletConstants.SAVE, 0, "Save")
+        menu.add(0, ReferenceWalletConstants.SAVE_ACTION, 0, "Save")
                 .setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
     }
 }

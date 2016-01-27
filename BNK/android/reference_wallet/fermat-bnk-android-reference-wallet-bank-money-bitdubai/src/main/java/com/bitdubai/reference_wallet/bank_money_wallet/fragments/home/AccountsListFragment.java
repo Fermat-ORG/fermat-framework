@@ -1,6 +1,5 @@
 package com.bitdubai.reference_wallet.bank_money_wallet.fragments.home;
 
-import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -130,13 +129,13 @@ public class AccountsListFragment extends FermatWalletListFragment<BankAccountNu
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         super.onCreateOptionsMenu(menu,inflater);
-        menu.add(0, ReferenceWalletConstants.ADD_ACCOUNT, 0, "Add Account")
+        menu.add(0, ReferenceWalletConstants.ADD_ACCOUNT_ACTION, 0, "Add Account")
                 .setShowAsAction(MenuItem.SHOW_AS_ACTION_NEVER);
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        if (item.getItemId() == ReferenceWalletConstants.ADD_ACCOUNT) {
+        if (item.getItemId() == ReferenceWalletConstants.ADD_ACCOUNT_ACTION) {
             changeActivity(Activities.BNK_BANK_MONEY_WALLET_ADD_ACCOUNT, appSession.getAppPublicKey());
             return true;
         }
