@@ -264,12 +264,12 @@ public final class CryptoAddressesExecutorAgent extends FermatAgent {
         try {
 
             // if there is pending actions i raise a crypto address news event.
-            if(dao.isPendingRequestByProtocolStateAndNotReadAndReceived(ProtocolState.PENDING_ACTION)){
-                FermatEvent eventToRaise = eventManager.getNewEvent(EventType.CRYPTO_ADDRESSES_NEWS);
-                eventToRaise.setSource(cryptoAddressesNetworkServicePluginRoot.getEventSource());
-                eventManager.raiseEvent(eventToRaise);
-                System.out.println("CRYPTO ADDRESS NEWS");
-            }
+//            if(dao.isPendingRequestByProtocolStateAndNotReadAndReceived(ProtocolState.PENDING_ACTION)){
+//                FermatEvent eventToRaise = eventManager.getNewEvent(EventType.CRYPTO_ADDRESSES_NEWS);
+//                eventToRaise.setSource(cryptoAddressesNetworkServicePluginRoot.getEventSource());
+//                eventManager.raiseEvent(eventToRaise);
+//                System.out.println("CRYPTO ADDRESS NEWS");
+//            }
 
             List<CryptoAddressRequest> list = dao.listPendingRequestsByProtocolState(ProtocolState.PENDING_ACTION);
             for(CryptoAddressRequest cryptoAddressRequest : list){
