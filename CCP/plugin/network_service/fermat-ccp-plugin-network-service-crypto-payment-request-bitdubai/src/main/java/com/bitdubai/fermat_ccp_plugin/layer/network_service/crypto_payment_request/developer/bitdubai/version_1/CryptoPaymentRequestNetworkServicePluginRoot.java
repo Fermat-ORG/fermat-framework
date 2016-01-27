@@ -946,6 +946,9 @@ public final class CryptoPaymentRequestNetworkServicePluginRoot extends Abstract
              */
             this.register = Boolean.TRUE;
 
+            if(communicationNetworkServiceConnectionManager==null) {
+                initializeCommunicationNetworkServiceConnectionManager();
+            }
             initializeAgent();
 
             }
