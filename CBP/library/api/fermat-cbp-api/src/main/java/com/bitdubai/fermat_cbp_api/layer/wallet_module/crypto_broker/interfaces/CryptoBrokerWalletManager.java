@@ -94,7 +94,7 @@ public interface CryptoBrokerWalletManager extends WalletManager {
      */
     List<CryptoBrokerIdentity> getListOfIdentities() throws CantGetCryptoBrokerIdentityListException, CantListCryptoBrokerIdentitiesException;
 
-    List<String> getPaymentMethods(String currencyToSell);
+    List<String> getPaymentMethods(String currencyToSell, String brokerWalletPublicKey) throws CryptoBrokerWalletNotFoundException, CantGetCryptoBrokerWalletSettingException;
 
     List<NegotiationStep> getSteps(CustomerBrokerNegotiationInformation negotiationInfo);
 
