@@ -1092,15 +1092,16 @@ public class CryptoTransmissionNetworkServicePluginRoot extends AbstractNetworkS
                     CryptoTransmissionProtocolState.DONE,
                     CryptoTransmissionMetadataState.CREDITED_IN_OWN_WALLET);
 
+            CryptoTransmissionMetadataRecord cryptoTransmissionMetadataRecord = (CryptoTransmissionMetadataRecord)cryptoTransmissionMetadata;
 
             // send inform to other ns
-            cryptoTransmissionMetadata.changeCryptoTransmissionProtocolState(CryptoTransmissionProtocolState.PRE_PROCESSING_SEND);
-            cryptoTransmissionMetadata.changeMetadataState(CryptoTransmissionMetadataState.CREDITED_IN_DESTINATION_WALLET);
-            cryptoTransmissionMetadata.setPendingToRead(false);
-            String pkAux = cryptoTransmissionMetadata.getDestinationPublicKey();
-            cryptoTransmissionMetadata.setDestinationPublickKey(cryptoTransmissionMetadata.getSenderPublicKey());
-            cryptoTransmissionMetadata.setSenderPublicKey(pkAux);
-            outgoingCryptoTransmissionMetadataDAO.saveCryptoTransmissionMetadata(cryptoTransmissionMetadata);
+            cryptoTransmissionMetadataRecord.changeCryptoTransmissionProtocolState(CryptoTransmissionProtocolState.PRE_PROCESSING_SEND);
+            cryptoTransmissionMetadataRecord.changeMetadataState(CryptoTransmissionMetadataState.CREDITED_IN_DESTINATION_WALLET);
+            cryptoTransmissionMetadataRecord.setPendingToRead(false);
+            String pkAux = cryptoTransmissionMetadataRecord.getDestinationPublicKey();
+            cryptoTransmissionMetadataRecord.setDestinationPublickKey(cryptoTransmissionMetadataRecord.getSenderPublicKey());
+            cryptoTransmissionMetadataRecord.setSenderPublicKey(pkAux);
+            outgoingCryptoTransmissionMetadataDAO.saveCryptoTransmissionMetadata(cryptoTransmissionMetadataRecord);
         }
         catch(CantUpdateRecordDataBaseException e) {
             throw  new CantSetToCreditedInWalletException("Can't Set Metadata To Credited In Wallet Exception",e,"","Can't update record");
@@ -1120,14 +1121,15 @@ public class CryptoTransmissionNetworkServicePluginRoot extends AbstractNetworkS
                     CryptoTransmissionProtocolState.WAITING_FOR_RESPONSE,
                     CryptoTransmissionMetadataState.SEEN_BY_OWN_VAULT);
 
+            CryptoTransmissionMetadataRecord cryptoTransmissionMetadataRecord = (CryptoTransmissionMetadataRecord)cryptoTransmissionMetadata;
             // send inform to other ns
-            cryptoTransmissionMetadata.changeCryptoTransmissionProtocolState(CryptoTransmissionProtocolState.PRE_PROCESSING_SEND);
-            cryptoTransmissionMetadata.changeMetadataState(CryptoTransmissionMetadataState.SEEN_BY_DESTINATION_VAULT);
-            cryptoTransmissionMetadata.setPendingToRead(false);
-            String pkAux = cryptoTransmissionMetadata.getDestinationPublicKey();
-            cryptoTransmissionMetadata.setDestinationPublickKey(cryptoTransmissionMetadata.getSenderPublicKey());
-            cryptoTransmissionMetadata.setSenderPublicKey(pkAux);
-            outgoingCryptoTransmissionMetadataDAO.saveCryptoTransmissionMetadata(cryptoTransmissionMetadata);
+            cryptoTransmissionMetadataRecord.changeCryptoTransmissionProtocolState(CryptoTransmissionProtocolState.PRE_PROCESSING_SEND);
+            cryptoTransmissionMetadataRecord.changeMetadataState(CryptoTransmissionMetadataState.SEEN_BY_DESTINATION_VAULT);
+            cryptoTransmissionMetadataRecord.setPendingToRead(false);
+            String pkAux = cryptoTransmissionMetadataRecord.getDestinationPublicKey();
+            cryptoTransmissionMetadataRecord.setDestinationPublickKey(cryptoTransmissionMetadataRecord.getSenderPublicKey());
+            cryptoTransmissionMetadataRecord.setSenderPublicKey(pkAux);
+            outgoingCryptoTransmissionMetadataDAO.saveCryptoTransmissionMetadata(cryptoTransmissionMetadataRecord);
 
 
         }
