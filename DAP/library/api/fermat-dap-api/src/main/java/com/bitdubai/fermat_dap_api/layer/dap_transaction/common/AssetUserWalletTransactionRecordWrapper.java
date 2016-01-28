@@ -72,7 +72,7 @@ public class AssetUserWalletTransactionRecordWrapper implements AssetUserWalletT
         this.actorToPublicKey = actorToPublicKey;
         this.actorFromType = actorFromType;
         this.actorToType = actorToType;
-        this.amount = cryptoGenesisTransaction.getCryptoAmount();
+        this.amount = digitalAssetMetadata.getDigitalAsset().getGenesisAmount();
         this.transactionId = cryptoGenesisTransaction.getTransactionHash();
         this.digitalAssetMetadata = digitalAssetMetadata;
     }
