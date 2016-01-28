@@ -120,8 +120,9 @@ public class CryptoTransmissionAgent {
         this.toReceive = new Runnable() {
             @Override
             public void run() {
-                while (true)
+                while (true) {
                     receiveCycle();
+                }
             }
         };
 
@@ -132,19 +133,25 @@ public class CryptoTransmissionAgent {
      */
     public void start(){
 
-        //Set to running
-        this.running  = new AtomicBoolean(true);
+        try {
+            //Set to running
+            this.running = new AtomicBoolean(true);
 
-        if(futures!=null){
-            if(futures[SEND_TASK]!=null)futures[SEND_TASK].cancel(true);
-            if(futures[RECEIVE_TASK]!=null)futures[RECEIVE_TASK].cancel(true);
+            if (futures != null) {
+                if (futures[SEND_TASK] != null) futures[SEND_TASK].cancel(true);
+                if (futures[RECEIVE_TASK] != null) futures[RECEIVE_TASK].cancel(true);
+            }
+            //Start the Thread
+            assert futures != null;
+            futures[SEND_TASK] = threadPoolExecutor.submit(toSend);
+            futures[RECEIVE_TASK] = threadPoolExecutor.submit(toReceive);
+
+            System.out.println("CryptoTransmissionAgent - started ");
+
+
+        }catch (Exception e){
+            e.printStackTrace();
         }
-        //Start the Thread
-        futures[SEND_TASK] = threadPoolExecutor.submit(toSend);
-        futures[RECEIVE_TASK] = threadPoolExecutor.submit(toReceive);
-
-        System.out.println("CryptoTransmissionAgent - started ");
-
 
     }
 
@@ -162,15 +169,20 @@ public class CryptoTransmissionAgent {
      * Resume the internal threads
      */
     public void resume(){
-        if(!running.get()){
+        try {
+            if (!running.get()) {
 
-            if(futures!=null){
-                if(futures[SEND_TASK]!=null)futures[SEND_TASK].cancel(true);
-                if(futures[RECEIVE_TASK]!=null)futures[RECEIVE_TASK].cancel(true);
+                if (futures != null) {
+                    if (futures[SEND_TASK] != null) futures[SEND_TASK].cancel(true);
+                    if (futures[RECEIVE_TASK] != null) futures[RECEIVE_TASK].cancel(true);
+                }
+                assert futures != null;
+                futures[SEND_TASK] = threadPoolExecutor.submit(toSend);
+                futures[RECEIVE_TASK] = threadPoolExecutor.submit(toReceive);
+                this.running.set(true);
             }
-            futures[SEND_TASK] = threadPoolExecutor.submit(toSend);
-            futures[RECEIVE_TASK] = threadPoolExecutor.submit(toReceive);
-            this.running.set(true);
+        }catch (Exception e){
+            e.printStackTrace();
         }
     }
 
@@ -178,10 +190,15 @@ public class CryptoTransmissionAgent {
      * Stop the internal threads
      */
     public void stop(){
-        running.set(false);
-        //Stop the Thread
-        futures[SEND_TASK].cancel(true);
-        futures[RECEIVE_TASK].cancel(true);
+        try {
+            running.set(false);
+            //Stop the Thread
+            futures[SEND_TASK].cancel(true);
+            futures[RECEIVE_TASK].cancel(true);
+
+        }catch (Exception e){
+            e.printStackTrace();
+        }
 
     }
 
@@ -220,6 +237,8 @@ public class CryptoTransmissionAgent {
 //            toSend.interrupt();
             System.out.println("CryptoTransmissionAgent - Thread Interrupted stopped ...  ");
             System.out.println("CryptoTransmissionAgent - Thread Interrupted stopped, restarting threads ...  ");
+        } catch (Exception e){
+            e.printStackTrace();
         }
 
     }
@@ -241,11 +260,11 @@ public class CryptoTransmissionAgent {
 
                 if(!poolConnectionsWaitingForResponse.containsKey(cryptoTransmissionMetadata.getDestinationPublicKey())) {
 
-                    if (cryptoTransmissionNetworkServicePluginRoot.getNetworkServiceConnectionManager().getNetworkServiceLocalInstance(cryptoTransmissionMetadata.getDestinationPublicKey()) == null) {
+                    if (cryptoTransmissionNetworkServicePluginRoot.getCommunicationNetworkServiceConnectionManager().getNetworkServiceLocalInstance(cryptoTransmissionMetadata.getDestinationPublicKey()) == null) {
                         if (cryptoTransmissionNetworkServicePluginRoot.getWsCommunicationsCloudClientManager() != null && cryptoTransmissionNetworkServicePluginRoot.getPlatformComponentProfilePluginRoot() != null) {
                             PlatformComponentProfile applicantParticipant = cryptoTransmissionNetworkServicePluginRoot.getWsCommunicationsCloudClientManager().getCommunicationsCloudClientConnection().constructPlatformComponentProfileFactory(cryptoTransmissionMetadata.getSenderPublicKey(), "sender", "sender", NetworkServiceType.UNDEFINED, PlatformComponentType.ACTOR_INTRA_USER, "");
                             PlatformComponentProfile remoteParticipant = cryptoTransmissionNetworkServicePluginRoot.getWsCommunicationsCloudClientManager().getCommunicationsCloudClientConnection().constructPlatformComponentProfileFactory(cryptoTransmissionMetadata.getDestinationPublicKey(),"destination","destination", NetworkServiceType.UNDEFINED, PlatformComponentType.ACTOR_INTRA_USER,"");
-                            cryptoTransmissionNetworkServicePluginRoot.getNetworkServiceConnectionManager().connectTo(applicantParticipant, cryptoTransmissionNetworkServicePluginRoot.getPlatformComponentProfilePluginRoot(), remoteParticipant);
+                            cryptoTransmissionNetworkServicePluginRoot.getCommunicationNetworkServiceConnectionManager().connectTo(applicantParticipant, cryptoTransmissionNetworkServicePluginRoot.getPlatformComponentProfilePluginRoot(), remoteParticipant);
                             // pass the metada to a pool wainting for the response of the other peer or server failure
                             poolConnectionsWaitingForResponse.put(cryptoTransmissionMetadata.getDestinationPublicKey(), cryptoTransmissionMetadata);
 
@@ -253,7 +272,7 @@ public class CryptoTransmissionAgent {
                     }
                 }else{
 
-                    NetworkServiceLocal communicationNetworkServiceLocal = cryptoTransmissionNetworkServicePluginRoot.getNetworkServiceConnectionManager().getNetworkServiceLocalInstance(cryptoTransmissionMetadata.getDestinationPublicKey());
+                    NetworkServiceLocal communicationNetworkServiceLocal = cryptoTransmissionNetworkServicePluginRoot.getCommunicationNetworkServiceConnectionManager().getNetworkServiceLocalInstance(cryptoTransmissionMetadata.getDestinationPublicKey());
 
                     if (communicationNetworkServiceLocal != null) {
 
@@ -324,12 +343,6 @@ public class CryptoTransmissionAgent {
             }
 
 
-        } catch (CantReadRecordDataBaseException e) {
-            e.printStackTrace();
-        } catch (CantEstablishConnectionException e) {
-            e.printStackTrace();
-        } catch (FermatException e) {
-            e.printStackTrace();
         } catch (Exception e){
             e.printStackTrace();
         }
@@ -447,7 +460,7 @@ public class CryptoTransmissionAgent {
 
                                 // El destination soy yo porque me lo estan enviando
                                 // El sender es el otro y es a quien le voy a responder
-                                NetworkServiceLocal communicationNetworkServiceLocal = cryptoTransmissionNetworkServicePluginRoot.getNetworkServiceConnectionManager().getNetworkServiceLocalInstance(cryptoTransmissionMetadata.getSenderPublicKey());
+                                NetworkServiceLocal communicationNetworkServiceLocal = cryptoTransmissionNetworkServicePluginRoot.getCommunicationNetworkServiceConnectionManager().getNetworkServiceLocalInstance(cryptoTransmissionMetadata.getSenderPublicKey());
                                 if (communicationNetworkServiceLocal != null) {
                                     // Notifico recepcion de metadata
                                     CryptoTransmissionResponseMessage cryptoTransmissionResponseMessage = new CryptoTransmissionResponseMessage(
