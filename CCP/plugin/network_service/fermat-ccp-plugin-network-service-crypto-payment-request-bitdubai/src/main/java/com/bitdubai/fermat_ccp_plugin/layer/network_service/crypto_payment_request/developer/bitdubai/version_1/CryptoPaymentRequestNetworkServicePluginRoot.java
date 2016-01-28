@@ -1142,7 +1142,7 @@ public final class CryptoPaymentRequestNetworkServicePluginRoot extends Abstract
 
             switch (networkServiceMessage.getMessageType()) {
                 case INFORMATION:
-                    // update the request to processing receive state with the given action.
+                    // update the request to processing receive state with the given action. Set Message DONE
                     final InformationMessage informationMessage = gson.fromJson(jsonMessage, InformationMessage.class);
                     receiveInformationMessage(informationMessage);
 
@@ -1177,7 +1177,6 @@ public final class CryptoPaymentRequestNetworkServicePluginRoot extends Abstract
             switch (networkServiceMessage.getMessageType()) {
                 case INFORMATION:
                     InformationMessage informationMessage = gson.fromJson(jsonMessage, InformationMessage.class);
-                    cryptoPaymentRequestNetworkServiceDao.changeProtocolState(informationMessage.getRequestId(), RequestProtocolState.DONE);
 
                     //close connection - end message
                     communicationNetworkServiceConnectionManager.closeConnection(informationMessage.getActorDestination());
@@ -1186,7 +1185,6 @@ public final class CryptoPaymentRequestNetworkServicePluginRoot extends Abstract
                     break;
                 case REQUEST:
                     RequestMessage requestMessage = gson.fromJson(jsonMessage, RequestMessage.class);
-                    cryptoPaymentRequestNetworkServiceDao.changeProtocolState(requestMessage.getRequestId(), RequestProtocolState.DONE);
 
                     //close connection - end message
                     communicationNetworkServiceConnectionManager.closeConnection(requestMessage.getActorDestination());
@@ -1256,6 +1254,9 @@ public final class CryptoPaymentRequestNetworkServicePluginRoot extends Abstract
                     informationMessage.getAction(),
                     RequestProtocolState.PENDING_ACTION
             );
+
+            cryptoPaymentRequestNetworkServiceDao.changeProtocolState(informationMessage.getRequestId(), RequestProtocolState.DONE);
+
 
         } catch(CantTakeActionException  |
                 RequestNotFoundException e) {
