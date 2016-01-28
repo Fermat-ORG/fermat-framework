@@ -13,11 +13,11 @@
         android:isScrollContainer="true"
         android:hapticFeedbackEnabled="false"
         android:src="@drawable/img_new_user_camera"
-        android:layout_above="@+id/sw"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="false"
         android:scaleType="centerCrop"
-        android:adjustViewBounds="true" />
+        android:adjustViewBounds="true"
+        android:layout_alignParentBottom="true" />
 
     <EditText
         android:layout_width="match_parent"
@@ -26,11 +26,13 @@
         android:text="Name"
         android:ems="10"
         android:id="@+id/crypto_broker_name"
-        android:textIsSelectable="true"
-        android:textColor="#000000"
-        android:layout_centerVertical="true"
+        android:textColor="#ffffff"
+        android:layout_above="@+id/sw"
         android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true" />
+        android:layout_alignParentStart="true"
+        android:selectAllOnFocus="true"
+        android:background="#7d000000"
+        android:padding="8dp" />
 
     <Switch
         android:layout_width="wrap_content"
@@ -38,9 +40,10 @@
         android:text="@string/publish_identity"
         android:id="@+id/publish_identity"
         android:textColor="#000000"
+        android:visibility="invisible"
+        android:layout_marginBottom="10dp"
         android:layout_above="@+id/update_crypto_broker_button"
-        android:layout_centerHorizontal="true"
-        android:visibility="invisible" />
+        android:layout_centerHorizontal="true" />
 
     <Button
         android:layout_width="match_parent"
@@ -49,40 +52,42 @@
         android:id="@+id/update_crypto_broker_button"
         android:layout_alignParentBottom="true"
         android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true" />
+        android:layout_alignParentStart="true"
+        android:visibility="invisible" />
 
     <ImageView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:id="@+id/sw"
-        android:layout_above="@+id/crypto_broker_name"
-        android:layout_centerHorizontal="true"
         android:src="@drawable/swicth_off"
-        android:scaleType="fitXY" />
+        android:scaleType="fitXY"
+        android:alpha="0.8"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true" />
 
     <ImageView
-        android:layout_width="45dp"
-        android:layout_height="40dp"
+        android:layout_width="60dp"
+        android:layout_height="60dp"
         android:id="@+id/camara"
         android:src="@drawable/camara"
         android:scaleType="fitXY"
-        android:background="#64ffffff"
+        android:background="#64000000"
         android:adjustViewBounds="false"
-        android:layout_marginBottom="5dp"
+        android:layout_marginBottom="8dp"
         android:layout_above="@+id/galeria"
-        android:layout_alignParentRight="true"
         android:layout_alignParentEnd="true" />
 
     <ImageView
-        android:layout_width="45dp"
-        android:layout_height="40dp"
+        android:layout_width="60dp"
+        android:layout_height="60dp"
         android:id="@+id/galeria"
         android:src="@drawable/galeria"
         android:scaleType="fitXY"
-        android:background="#64ffffff"
-        android:layout_alignBottom="@+id/crypto_broker_image"
-        android:layout_alignParentRight="true"
+        android:background="#64000000"
+        android:layout_marginRight="0dp"
+        android:layout_above="@+id/crypto_broker_name"
         android:layout_alignParentEnd="true"
-        android:layout_marginBottom="13dp" />
+        android:layout_marginBottom="9dp" />
 
 </RelativeLayout>
