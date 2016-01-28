@@ -2003,6 +2003,7 @@ public class SubAppRuntimeEnginePluginRoot extends AbstractPlugin implements Sub
         String chatPublicKey = "public_key_cht_chat";
         chtChat.setPublicKey(chatPublicKey);
         listSubApp.put(chtChat.getPublicKey(), chtChat);
+
         //chtChat.setStartActivity(Activities.CHT_CHAT_OPEN_CHATLIST_TAB_FRAGMENT);
 
 
@@ -2207,9 +2208,8 @@ public class SubAppRuntimeEnginePluginRoot extends AbstractPlugin implements Sub
 
         runtimeFragment = new Fragment();
         runtimeFragment.setType(Fragments.CHT_CHAT_OPEM_MESSAGE_LIST_FRAGMENT.getKey());
-        runtimeFragment.setBack(Fragments.CHT_CHAT_OPEN_CHATLIST_TAB_FRAGMENT.getKey());
         runtimeActivity.addFragment(Fragments.CHT_CHAT_OPEM_MESSAGE_LIST_FRAGMENT.getKey(), runtimeFragment);
-
+        runtimeActivity.setStartFragment(Fragments.CHT_CHAT_OPEM_MESSAGE_LIST_FRAGMENT.getKey());
 
         //
 
