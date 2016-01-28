@@ -229,7 +229,7 @@ In the Crypto Broker Platform we are responsible for a large part of business tr
     Github:  https://github.com/darkestpriest
     
     
-* **Gabriel Araujo [New Developer]**<br/>
+* **Gabriel Araujo [Veteran Developer]**<br/>
 ---
       Email:   gabe_512@hotmail.com
       Skype:   gabee512
