@@ -60,40 +60,6 @@ public class CryptoTransmissionMetadataDAO_V2 {
         this.tableType = tableType;
     }
 
-    public void initialize() throws CantInitializeCryptoTransmissionNetworkServiceDatabaseException {
-        try {
-
-            database = this.pluginDatabaseSystem.openDatabase(
-                    this.pluginId,
-                    CryptoTransmissionNetworkServiceDatabaseConstants.DATABASE_NAME
-            );
-
-        } catch (DatabaseNotFoundException e) {
-
-            try {
-
-                CommunicationNetworkServiceDatabaseFactory databaseFactory = new CommunicationNetworkServiceDatabaseFactory(pluginDatabaseSystem);
-                database = databaseFactory.createDatabase(
-                        pluginId,
-                        CryptoTransmissionNetworkServiceDatabaseConstants.DATABASE_NAME
-                );
-
-            } catch (CantCreateDatabaseException f) {
-
-                throw new CantInitializeCryptoTransmissionNetworkServiceDatabaseException(CantCreateDatabaseException.DEFAULT_MESSAGE, f, "", "There is a problem and i cannot create the database.");
-            } catch (Exception z) {
-
-                throw new CantInitializeCryptoTransmissionNetworkServiceDatabaseException(CantInitializeCryptoTransmissionNetworkServiceDatabaseException.DEFAULT_MESSAGE, z, "", "Generic Exception.");
-            }
-
-        } catch (CantOpenDatabaseException e) {
-
-            throw new CantInitializeCryptoTransmissionNetworkServiceDatabaseException(CantOpenDatabaseException.DEFAULT_MESSAGE, e, "", "Exception not handled by the plugin, there is a problem and i cannot open the database.");
-        } catch (Exception e) {
-
-            throw new CantInitializeCryptoTransmissionNetworkServiceDatabaseException(CantInitializeCryptoTransmissionNetworkServiceDatabaseException.DEFAULT_MESSAGE, e, "", "Generic Exception.");
-        }
-    }
 
     /**
      * Return the Database

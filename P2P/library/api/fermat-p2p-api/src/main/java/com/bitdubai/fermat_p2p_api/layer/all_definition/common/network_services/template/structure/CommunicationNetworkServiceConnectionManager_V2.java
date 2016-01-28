@@ -199,7 +199,7 @@ public class CommunicationNetworkServiceConnectionManager_V2 implements NetworkS
                  /*
                  * Instantiate the local reference
                  */
-                    CommunicationNetworkServiceLocal communicationNetworkServiceLocal = new CommunicationNetworkServiceLocal(remoteComponentProfile, errorManager, eventManager, outgoingMessageDao, networkServicePluginRoot.getPlatformComponentProfilePluginRoot().getNetworkServiceType(), networkServicePluginRoot);
+                    CommunicationNetworkServiceLocal communicationNetworkServiceLocal = new CommunicationNetworkServiceLocal(remoteComponentProfile, errorManager, eventManager, outgoingMessageDao, networkServicePluginRoot);
 
                 /*
                  * Instantiate the remote reference

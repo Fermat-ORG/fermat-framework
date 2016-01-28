@@ -169,10 +169,10 @@ public class CryptoPaymentRequestExecutorAgent extends FermatAgent {
                         System.out.println("********** Crypto Payment Request NS -> Executor Agent -> Sending Approval. PROCESSING_SEND -> CONFIRM REQUEST.");
                         if (sendMessageToActor(
                                 buildJsonInformationMessage(cpr),
-                                cpr.getActorPublicKey(),
-                                cpr.getActorType(),
                                 cpr.getIdentityPublicKey(),
-                                cpr.getIdentityType()
+                                cpr.getIdentityType(),
+                                cpr.getActorPublicKey(),
+                                cpr.getActorType()
                         )) {
                             confirmRequest(cpr.getRequestId());
                             System.out.println("********** Crypto Payment Request NS -> Executor Agent -> Sending Approval. PROCESSING_SEND -> CONFIRM REQUEST -> OK.");
@@ -184,10 +184,10 @@ public class CryptoPaymentRequestExecutorAgent extends FermatAgent {
                         System.out.println("********** Crypto Payment Request NS -> Executor Agent -> Sending Denial. PROCESSING_SEND -> CONFIRM REQUEST.");
                         if (sendMessageToActor(
                                 buildJsonInformationMessage(cpr),
-                                cpr.getActorPublicKey(),
-                                cpr.getActorType(),
                                 cpr.getIdentityPublicKey(),
-                                cpr.getIdentityType()
+                                cpr.getIdentityType(),
+                                cpr.getActorPublicKey(),
+                                cpr.getActorType()
                         )) {
                             confirmRequest(cpr.getRequestId());
                             System.out.println("********** Crypto Payment Request NS -> Executor Agent -> Sending Denial. PROCESSING_SEND -> CONFIRM REQUEST -> OK.");
@@ -199,10 +199,10 @@ public class CryptoPaymentRequestExecutorAgent extends FermatAgent {
                         System.out.println("********** Crypto Payment Request NS -> Executor Agent -> Sending Reception Inform. PROCESSING_SEND -> CONFIRM REQUEST.");
                         if (sendMessageToActor(
                                 buildJsonInformationMessage(cpr),
-                                cpr.getActorPublicKey(),
-                                cpr.getActorType(),
                                 cpr.getIdentityPublicKey(),
-                                cpr.getIdentityType()
+                                cpr.getIdentityType(),
+                                cpr.getActorPublicKey(),
+                                cpr.getActorType()
                         )) {
                             confirmRequest(cpr.getRequestId());
                             System.out.println("********** Crypto Payment Request NS -> Executor Agent -> Sending Reception Inform. PROCESSING_SEND -> CONFIRM REQUEST -> OK.");
@@ -214,10 +214,10 @@ public class CryptoPaymentRequestExecutorAgent extends FermatAgent {
                         System.out.println("********** Crypto Payment Request NS -> Executor Agent -> Sending Refusal. PROCESSING_SEND -> CONFIRM REQUEST.");
                         if (sendMessageToActor(
                                 buildJsonInformationMessage(cpr),
-                                cpr.getActorPublicKey(),
-                                cpr.getActorType(),
                                 cpr.getIdentityPublicKey(),
-                                cpr.getIdentityType()
+                                cpr.getIdentityType(),
+                                cpr.getActorPublicKey(),
+                                cpr.getActorType()
                         )) {
                             confirmRequest(cpr.getRequestId());
                             System.out.println("********** Crypto Payment Request NS -> Executor Agent -> Sending Refusal. PROCESSING_SEND -> CONFIRM REQUEST -> OK.");

@@ -525,12 +525,12 @@ public class IntraActorNetworkServicePluginRoot extends AbstractPlugin implement
                         /*
                          * Construct my profile and register me
                          */
-                         platformComponentProfilePluginRoot =  wsCommunicationsCloudClientManager.getCommunicationsCloudClientConnection().constructPlatformComponentProfileFactory(getIdentityPublicKey(),
-                                                                                                                                                                                                 getAlias().toLowerCase(),
-                                                                                                                                                                                                 getName(),
-                                                                                                                                                                                                 getNetworkServiceType(),
-                                                                                                                                                                                                 getPlatformComponentType(),
-                                                                                                                                                                                                 getExtraData());
+                        platformComponentProfilePluginRoot =  wsCommunicationsCloudClientManager.getCommunicationsCloudClientConnection().constructPlatformComponentProfileFactory(getIdentityPublicKey(),
+                                getAlias().toLowerCase(),
+                                getName(),
+                                getNetworkServiceType(),
+                                getPlatformComponentType(),
+                                getExtraData());
                         /*
                          * Initialize the agent and start
                          */
@@ -1360,7 +1360,7 @@ public class IntraActorNetworkServicePluginRoot extends AbstractPlugin implement
         try {
 
             if (communicationNetworkServiceConnectionManager != null){
-               communicationNetworkServiceConnectionManager.restart();
+                communicationNetworkServiceConnectionManager.restart();
             }else{
                 this.initializeCommunicationNetworkServiceConnectionManager();
             }

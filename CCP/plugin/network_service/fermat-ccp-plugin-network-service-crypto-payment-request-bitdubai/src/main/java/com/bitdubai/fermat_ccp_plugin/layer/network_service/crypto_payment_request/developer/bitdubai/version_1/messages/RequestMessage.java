@@ -45,7 +45,7 @@ public class RequestMessage extends NetworkServiceMessage {
                           String identitySender,
                           String actorDestination) {
 
-        super(MessageTypes.INFORMATION,identitySender,actorDestination);
+        super(MessageTypes.REQUEST,identitySender,actorDestination);
 
         this.requestId         = requestId        ;
         this.identityPublicKey = identityPublicKey;

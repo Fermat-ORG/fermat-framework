@@ -1544,6 +1544,8 @@ public abstract class FermatActivity extends AppCompatActivity
                 .setContentText(notificationTextBody)
                 .setContentIntent(pi)
                 .setAutoCancel(true)
+                .setVibrate(new long[]{1000, 1000, 1000, 1000, 1000})
+                .setLights(Color.YELLOW, 3000, 3000)
                 .build();
         NotificationManager notificationManager = (NotificationManager)
                 getSystemService(NOTIFICATION_SERVICE);

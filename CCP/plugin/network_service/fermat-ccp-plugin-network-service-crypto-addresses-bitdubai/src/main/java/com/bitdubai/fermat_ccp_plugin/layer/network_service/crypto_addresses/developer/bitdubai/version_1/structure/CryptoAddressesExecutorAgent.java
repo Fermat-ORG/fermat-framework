@@ -264,13 +264,15 @@ public final class CryptoAddressesExecutorAgent extends FermatAgent {
         try {
 
             // if there is pending actions i raise a crypto address news event.
-            if(dao.isPendingRequestByProtocolStateAndNotReadAndReceived(ProtocolState.PENDING_ACTION)){
-                FermatEvent eventToRaise = eventManager.getNewEvent(EventType.CRYPTO_ADDRESSES_NEWS);
-                eventToRaise.setSource(cryptoAddressesNetworkServicePluginRoot.getEventSource());
-                eventManager.raiseEvent(eventToRaise);
-                System.out.println("CRYPTO ADDRESS NEWS");
-            }
+//            if(dao.isPendingRequestByProtocolStateAndNotReadAndReceived(ProtocolState.PENDING_ACTION)){
+//                FermatEvent eventToRaise = eventManager.getNewEvent(EventType.CRYPTO_ADDRESSES_NEWS);
+//                eventToRaise.setSource(cryptoAddressesNetworkServicePluginRoot.getEventSource());
+//                eventManager.raiseEvent(eventToRaise);
+//                System.out.println("CRYPTO ADDRESS NEWS");
+//            }
 
+            //TODO:aca dispara este evento que va a tratar de actualizar el address del contacto cuando en realidad solo tiene que generarla
+            //hay que separar los evento para que el wallet contact escuche otro evento de actualizar el address
             List<CryptoAddressRequest> list = dao.listPendingRequestsByProtocolState(ProtocolState.PENDING_ACTION);
             for(CryptoAddressRequest cryptoAddressRequest : list){
                 if(!cryptoAddressRequest.isReadMark() ) {

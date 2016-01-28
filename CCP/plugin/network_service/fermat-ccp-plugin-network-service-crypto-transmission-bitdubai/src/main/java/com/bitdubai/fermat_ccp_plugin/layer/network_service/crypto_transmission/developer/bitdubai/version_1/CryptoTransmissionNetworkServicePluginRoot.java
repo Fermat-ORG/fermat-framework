@@ -514,6 +514,13 @@ public class CryptoTransmissionNetworkServicePluginRoot extends AbstractNetworkS
                 cryptoTransmissionConnectionsDAO = new CryptoTransmissionConnectionsDAO(pluginDatabaseSystem, pluginId);
                 remoteNetworkServicesRegisteredList = new CopyOnWriteArrayList<PlatformComponentProfile>();
 
+
+                cryptoTransmissionAgent = new CryptoTransmissionAgent(
+                        this,
+                        errorManager,
+                        eventManager
+                );
+
                 // change message state to process again first time
                 reprocessWaitingMessage();
 
@@ -753,17 +760,6 @@ public class CryptoTransmissionNetworkServicePluginRoot extends AbstractNetworkS
 
     private void initializeCryptoTransmissionAgent(){
         try {
-            cryptoTransmissionAgent = new CryptoTransmissionAgent(
-                    this,
-                    cryptoTransmissionConnectionsDAO,
-                    incomingCryptoTransmissionMetadataDAO,
-                    outgoingCryptoTransmissionMetadataDAO,
-                    communicationNetworkServiceConnectionManager,
-                    wsCommunicationsCloudClientManager,
-                    errorManager,
-                    new ArrayList<PlatformComponentProfile>(),
-                    eventManager
-            );
             cryptoTransmissionAgent.start();
         }catch (Exception e){
             e.printStackTrace();
@@ -841,9 +837,7 @@ public class CryptoTransmissionNetworkServicePluginRoot extends AbstractNetworkS
          * save into the cache
          */
         remoteNetworkServicesRegisteredList.addAll(platformComponentProfileRegisteredList);
-        cryptoTransmissionAgent.addRemoteNetworkServicesRegisteredList(platformComponentProfileRegisteredList);
-        // por ahora guardo solo el primero para saber cuales estan conectados
-        //cacheConnections.put(discoveryQueryParameters.getIdentityPublicKey(), platformComponentProfileRegisteredList.get(0));
+
 
     }
 
@@ -1498,6 +1492,48 @@ public class CryptoTransmissionNetworkServicePluginRoot extends AbstractNetworkS
             e.printStackTrace();
         } catch (Exception  e) {
             System.out.println("CRYPTO TRANSMISSION EXCEPCION REPROCESANDO WAIT MESSAGE");
+            e.printStackTrace();
+        }
+    }
+
+    public CryptoTransmissionMetadataDAO_V2 getOutgoingCryptoTransmissionMetadataDAO() {
+        if(outgoingCryptoTransmissionMetadataDAO==null){
+            initializeOutgoingDAO();
+        }
+        return outgoingCryptoTransmissionMetadataDAO;
+    }
+
+    public CryptoTransmissionMetadataDAO_V2 getIncomingCryptoTransmissionMetadataDAO() {
+        if(incomingCryptoTransmissionMetadataDAO==null){
+            initializeIncomingDAO();
+        }
+        return incomingCryptoTransmissionMetadataDAO;
+    }
+
+    public WsCommunicationsCloudClientManager getWsCommunicationsCloudClientManager() {
+        return wsCommunicationsCloudClientManager;
+    }
+
+    public CommunicationNetworkServiceConnectionManager_V2 getCommunicationNetworkServiceConnectionManager() {
+        return communicationNetworkServiceConnectionManager;
+    }
+
+    private void initializeOutgoingDAO(){
+        try {
+            if (outgoingCryptoTransmissionMetadataDAO == null) {
+                outgoingCryptoTransmissionMetadataDAO = new CryptoTransmissionMetadataDAO_V2(pluginDatabaseSystem, pluginId, dataBase, CryptoTransmissionNetworkServiceDatabaseConstants.OUTGOING_CRYPTO_TRANSMISSION_METADATA_TABLE_NAME);
+            }
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+    }
+
+    private void initializeIncomingDAO(){
+        try {
+            if (incomingCryptoTransmissionMetadataDAO == null) {
+                incomingCryptoTransmissionMetadataDAO = new CryptoTransmissionMetadataDAO_V2(pluginDatabaseSystem, pluginId, dataBase, CryptoTransmissionNetworkServiceDatabaseConstants.INCOMING_CRYPTO_TRANSMISSION_METADATA_TABLE_NAME);
+            }
+        }catch (Exception e){
             e.printStackTrace();
         }
     }
