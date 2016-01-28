@@ -9,6 +9,7 @@ import com.bitdubai.fermat_api.layer.all_definition.components.interfaces.Platfo
 import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
 import com.bitdubai.fermat_api.layer.all_definition.enums.AgentStatus;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
+import com.bitdubai.fermat_api.layer.all_definition.events.EventSource;
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEvent;
 import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterException;
 import com.bitdubai.fermat_api.layer.all_definition.network_service.enums.NetworkServiceType;
@@ -26,6 +27,7 @@ import com.bitdubai.fermat_p2p_api.layer.all_definition.common.network_services.
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedPluginExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.enums.EventType;
+import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.events.IncomingCryptoMetadataEvent;
 import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfaces.EventManager;
 import com.google.gson.Gson;
 
@@ -42,6 +44,7 @@ import java.util.concurrent.TimeUnit;
 
 import bitdubai.version_1.CryptoTransmissionNetworkServicePluginRoot;
 import bitdubai.version_1.database.communications.CryptoTransmissionNetworkServiceDatabaseConstants;
+import bitdubai.version_1.exceptions.CantSaveCryptoTransmissionMetadatatException;
 import bitdubai.version_1.exceptions.CantUpdateRecordDataBaseException;
 import bitdubai.version_1.structure.structure.CryptoTransmissionMessage;
 import bitdubai.version_1.structure.structure.CryptoTransmissionMessageType;
@@ -211,8 +214,24 @@ public class ActorNetworkServiceRecordedAgent extends FermatAgent{
                         );
                         break;
                     case RESPONSE:
+                        CryptoTransmissionResponseMessage cryptoTransmissionResponseMessage = null;
+                        switch (cpr.getCryptoTransmissionMetadataState()){
+                            case SEEN_BY_DESTINATION_NETWORK_SERVICE:
+                                cryptoTransmissionResponseMessage = new CryptoTransmissionResponseMessage(
+                                        cpr.getTransactionId(),
+                                        CryptoTransmissionMessageType.RESPONSE,
+                                        CryptoTransmissionProtocolState.SENT,
+                                        CryptoTransmissionMetadataType.METADATA_SEND,
+                                        CryptoTransmissionMetadataState.SEEN_BY_DESTINATION_NETWORK_SERVICE,
+                                        cpr.getSenderPublicKey(),
+                                        cpr.getDestinationPublicKey(),
+                                        false,
+                                        0);
+                                break;
+
+                        }
                         sendMessageToActor(
-                                cpr
+                                cryptoTransmissionResponseMessage
                         );
                         break;
 
@@ -325,29 +344,31 @@ public class ActorNetworkServiceRecordedAgent extends FermatAgent{
 
                        // El destination soy yo porque me lo estan enviando
                        // El sender es el otro y es a quien le voy a responder
-                       NetworkServiceLocal communicationNetworkServiceLocal = cryptoTransmissionNetworkServicePluginRoot.getNetworkServiceConnectionManager().getNetworkServiceLocalInstance(cryptoTransmissionMetadata.getSenderPublicKey());
-                       if (communicationNetworkServiceLocal != null) {
                            // Notifico recepcion de metadata
-                           CryptoTransmissionResponseMessage cryptoTransmissionResponseMessage = new CryptoTransmissionResponseMessage(
+                       CryptoTransmissionMetadataRecord cryptoTransmissionMetadataRecord = new CryptoTransmissionMetadataRecord(
                                    cryptoTransmissionMetadata.getTransactionId(),
                                    CryptoTransmissionMessageType.RESPONSE,
+                                   cryptoTransmissionMetadata.getRequestId(),
+                                   cryptoTransmissionMetadata.getCryptoCurrency(),
+                                   cryptoTransmissionMetadata.getCryptoAmount(),
+                                   cryptoTransmissionMetadata.getDestinationPublicKey(),
+                                   cryptoTransmissionMetadata.getSenderPublicKey(),
+                                   cryptoTransmissionMetadata.getAssociatedCryptoTransactionHash(),
+                                   cryptoTransmissionMetadata.getPaymentDescription(),
                                    CryptoTransmissionProtocolState.SENT,
                                    CryptoTransmissionMetadataType.METADATA_SEND,
-                                   CryptoTransmissionMetadataState.SEEN_BY_DESTINATION_NETWORK_SERVICE,
-                                   cryptoTransmissionMetadata.getDestinationPublicKey(),
-                                   cryptoTransmissionMetadata.getSenderPublicKey());
+                                   cryptoTransmissionMetadata.getTimestamp(),
+                                   false,
+                                   0,
+                                   CryptoTransmissionMetadataState.SEEN_BY_DESTINATION_NETWORK_SERVICE
+                           );
+                       cryptoTransmissionNetworkServicePluginRoot.getOutgoingMetadataDao().saveCryptoTransmissionMetadata(cryptoTransmissionMetadataRecord);
 
-                           Gson gson = new Gson();
-                           String message = gson.toJson(cryptoTransmissionResponseMessage);
-                           communicationNetworkServiceLocal.sendMessage(cryptoTransmissionMetadata.getDestinationPublicKey(), cryptoTransmissionMetadata.getSenderPublicKey(), message);
+
                            System.out.print("-----------------------\n" +
-                                   "ENVIANDO RESPUESTA CRYPTO METADATA!!!!! -----------------------\n" +
+                                   "GUARDANDO RESPUESTA CRYPTO METADATA PARA ENVIAR, LO VI Y AHORA LE DIGO QUE YA TENGO LA METADATA!!!!! -----------------------\n" +
                                    "-----------------------\n STATE: " + cryptoTransmissionMetadata.getCryptoTransmissionProtocolState());
-                       } else {
-                           System.out.print("-----------------------\n" +
-                                   "INTENTO DE RESPUESTA DENEGADO, NO HAY CONEXION CON EL OTRO TRANSMISSION -----------------------\n" +
-                                   "-----------------------\n STATE: " + cryptoTransmissionMetadata.getCryptoTransmissionProtocolState());
-                       }
+
                        break;
                    case CREDITED_IN_OWN_WALLET:
                        System.out.print("-----------------------\n" +
@@ -369,6 +390,8 @@ public class ActorNetworkServiceRecordedAgent extends FermatAgent{
        } catch (CantUpdateRecordDataBaseException e) {
            e.printStackTrace();
        } catch (PendingRequestNotFoundException e) {
+           e.printStackTrace();
+       } catch (CantSaveCryptoTransmissionMetadatatException e) {
            e.printStackTrace();
        }
     }
@@ -503,9 +526,10 @@ public class ActorNetworkServiceRecordedAgent extends FermatAgent{
     }
 
     private void lauchNotification(){
-        FermatEvent fermatEvent = eventManager.getNewEvent(EventType.ACTOR_NETWORK_SERVICE_NEW_NOTIFICATIONS);
-        ActorNetworkServicePendingsNotificationEvent intraUserActorRequestConnectionEvent = (ActorNetworkServicePendingsNotificationEvent) fermatEvent;
-        eventManager.raiseEvent(intraUserActorRequestConnectionEvent);
+        FermatEvent fermatEvent = eventManager.getNewEvent(EventType.INCOMING_CRYPTO_METADATA);
+        IncomingCryptoMetadataEvent incomingCryptoMetadataReceive = (IncomingCryptoMetadataEvent) fermatEvent;
+        incomingCryptoMetadataReceive.setSource(EventSource.NETWORK_SERVICE_CRYPTO_TRANSMISSION);
+        eventManager.raiseEvent(incomingCryptoMetadataReceive);
     }
 
 }
