@@ -216,6 +216,7 @@ public class ActorNetworkServiceRecordedAgent extends FermatAgent{
                     case RESPONSE:
                         CryptoTransmissionResponseMessage cryptoTransmissionResponseMessage = null;
                         switch (cpr.getCryptoTransmissionMetadataState()){
+                            //TODO: falta hacer lo mismo con los demás mensajes
                             case SEEN_BY_DESTINATION_NETWORK_SERVICE:
                                 cryptoTransmissionResponseMessage = new CryptoTransmissionResponseMessage(
                                         cpr.getTransactionId(),
@@ -274,6 +275,7 @@ public class ActorNetworkServiceRecordedAgent extends FermatAgent{
        try {
            Map<String, Object> filters = new HashMap<>();
            filters.put(CryptoTransmissionNetworkServiceDatabaseConstants.CRYPTO_TRANSMISSION_METADATA_PENDING_FLAG_COLUMN_NAME, "false");
+
              /*
              * Read all pending CryptoTransmissionMetadata from database
              */
@@ -475,6 +477,8 @@ public class ActorNetworkServiceRecordedAgent extends FermatAgent{
                                 actorNetworkServiceRecord.getTransactionId(),
                                 CryptoTransmissionProtocolState.SENT_TO_COMMUNICATION_TEMPLATE);
 
+                        poolConnectionsWaitingForResponse.put(actorNetworkServiceRecord.getDestinationPublicKey(), actorNetworkServiceRecord);
+
                     } catch (Exception e) {
 
                         reportUnexpectedError(FermatException.wrapException(e));
@@ -486,31 +490,7 @@ public class ActorNetworkServiceRecordedAgent extends FermatAgent{
         }
     }
 
-    private PlatformComponentType platformComponentTypeSelectorByActorType(Actors type) throws InvalidParameterException {
 
-        switch (type) {
-
-            case INTRA_USER  : return PlatformComponentType.ACTOR_INTRA_USER  ;
-            case DAP_ASSET_ISSUER: return PlatformComponentType.ACTOR_ASSET_ISSUER;
-            case DAP_ASSET_USER  : return PlatformComponentType.ACTOR_ASSET_USER  ;
-
-            default: throw new InvalidParameterException(
-                    " actor type: "+type.name()+"  type-code: "+type.getCode(),
-                    " type of actor not expected."
-            );
-        }
-    }
-
-
-
-    private void raiseEvent(final EventType eventType,
-                            final UUID      requestId) {
-
-        FermatEvent eventToRaise = eventManager.getNewEvent(eventType);
-        //((CryptoPaymentRequestEvent) eventToRaise).setRequestId(requestId);
-        //eventToRaise.setSource(CryptoPaymentRequestNetworkServicePluginRoot.EVENT_SOURCE);
-        eventManager.raiseEvent(eventToRaise);
-    }
 
     private void reportUnexpectedError(FermatException e) {
         errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_INTRAUSER_NETWORK_SERVICE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);

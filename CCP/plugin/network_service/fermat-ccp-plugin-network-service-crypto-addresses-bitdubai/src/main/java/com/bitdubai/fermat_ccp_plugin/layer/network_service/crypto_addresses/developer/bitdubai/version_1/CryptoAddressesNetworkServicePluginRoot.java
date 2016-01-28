@@ -954,8 +954,8 @@ public class CryptoAddressesNetworkServicePluginRoot extends AbstractNetworkServ
      */
     public void initializeAgent() {
 
-        System.out.println("CryptoPaymentRequestNetworkServicePluginRoot - Starting method initializeAgent");
-
+        System.out.println("CryptoAddressesNetworkServicePluginRoot - Starting method initializeAgent");
+        
         cryptoAddressesExecutorAgent = new CryptoAddressesExecutorAgent(
                 this,
                 errorManager,
@@ -967,7 +967,7 @@ public class CryptoAddressesNetworkServicePluginRoot extends AbstractNetworkServ
 
     public void handleCompleteComponentRegistrationNotificationEvent(PlatformComponentProfile platformComponentProfileRegistered){
 
-        System.out.println("CryptoPaymentRequestNetworkServicePluginRoot - Starting method handleCompleteComponentRegistrationNotificationEvent");
+        System.out.println("CryptoAddressesNetworkServicePluginRoot - Starting method handleCompleteComponentRegistrationNotificationEvent");
 
         try {
 
@@ -986,7 +986,7 @@ public class CryptoAddressesNetworkServicePluginRoot extends AbstractNetworkServ
                     platformComponentProfileRegistered.getNetworkServiceType() == this.getNetworkServiceType() &&
                     platformComponentProfileRegistered.getIdentityPublicKey().equals(identity.getPublicKey())) {
 
-                System.out.println("CryptoPaymentRequestNetworkServicePluginRoot - NetWork Service is Registered: " + platformComponentProfileRegistered.getAlias());
+                System.out.println("CryptoAddressesNetworkServicePluginRoot - NetWork Service is Registered: " + platformComponentProfileRegistered.getAlias());
 
                 this.register = Boolean.TRUE;
                 cryptoAddressesExecutorAgent.start();
