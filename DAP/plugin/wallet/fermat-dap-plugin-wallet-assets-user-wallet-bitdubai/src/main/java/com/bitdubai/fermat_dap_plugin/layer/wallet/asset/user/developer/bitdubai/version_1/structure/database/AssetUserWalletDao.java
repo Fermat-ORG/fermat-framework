@@ -423,7 +423,7 @@ public class AssetUserWalletDao implements DealsWithPluginFileSystem {
             }
 
             String assetMetadataInnerXML = XMLParser.parseObject(assetUserWalletTransactionRecord.getDigitalAssetMetadata());
-            PluginTextFile metadataTextFile = pluginFileSystem.createTextFile(plugin, AssetUserWalletPluginRoot.PATH_DIRECTORY, assetUserWalletTransactionRecord.getDigitalAssetMetadataHash(), FilePrivacy.PRIVATE, FileLifeSpan.PERMANENT);
+            PluginTextFile metadataTextFile = pluginFileSystem.createTextFile(plugin, AssetUserWalletPluginRoot.PATH_DIRECTORY, assetUserWalletTransactionRecord.getGenesisTransaction(), FilePrivacy.PRIVATE, FileLifeSpan.PERMANENT);
             metadataTextFile.setContent(assetMetadataInnerXML);
             metadataTextFile.persistToMedia();
 
@@ -472,7 +472,7 @@ public class AssetUserWalletDao implements DealsWithPluginFileSystem {
         record.setLongValue(AssetUserWalletDatabaseConstant.ASSET_WALLET_USER_AMOUNT_COLUMN_NAME, assetUserWalletTransactionRecord.getAmount());
         record.setStringValue(AssetUserWalletDatabaseConstant.ASSET_WALLET_USER_MEMO_COLUMN_NAME, assetUserWalletTransactionRecord.getMemo());
         record.setLongValue(AssetUserWalletDatabaseConstant.ASSET_WALLET_USER_TIME_STAMP_COLUMN_NAME, assetUserWalletTransactionRecord.getTimestamp());
-        record.setStringValue(AssetUserWalletDatabaseConstant.ASSET_WALLET_USER_TRANSACTION_HASH_COLUMN_NAME, assetUserWalletTransactionRecord.getDigitalAssetMetadataHash());
+        record.setStringValue(AssetUserWalletDatabaseConstant.ASSET_WALLET_USER_TRANSACTION_HASH_COLUMN_NAME, assetUserWalletTransactionRecord.getGenesisTransaction());
         record.setStringValue(AssetUserWalletDatabaseConstant.ASSET_WALLET_USER_ADDRESS_FROM_COLUMN_NAME, assetUserWalletTransactionRecord.getAddressFrom().getAddress());
         record.setStringValue(AssetUserWalletDatabaseConstant.ASSET_WALLET_USER_ADDRESS_TO_COLUMN_NAME, assetUserWalletTransactionRecord.getAddressTo().getAddress());
         record.setStringValue(AssetUserWalletDatabaseConstant.ASSET_WALLET_USER_BALANCE_TYPE_COLUMN_NAME, balanceType.getCode());
