@@ -1,5 +1,7 @@
 package com.bitdubai.fermat_cht_plugin.layer.middleware.chat.developer.bitdubai.version_1.structure;
 
+import com.bitdubai.fermat_api.layer.all_definition.events.EventSource;
+import com.bitdubai.fermat_api.layer.dmp_module.notification.NotificationType;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTableFilter;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantDeleteChatException;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantDeleteContactException;
@@ -13,12 +15,15 @@ import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantNewEmptyMessage
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantSaveChatException;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantSaveContactException;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantSaveMessageException;
+import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantSendNotificationNewIncomingMessageException;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.ObjectNotSetException;
 import com.bitdubai.fermat_cht_api.all_definition.util.ObjectChecker;
+import com.bitdubai.fermat_cht_api.layer.middleware.event.IncomingChatMessageNotificationEvent;
 import com.bitdubai.fermat_cht_api.layer.middleware.interfaces.Chat;
 import com.bitdubai.fermat_cht_api.layer.middleware.interfaces.ChatManager;
 import com.bitdubai.fermat_cht_api.layer.middleware.interfaces.Contact;
 import com.bitdubai.fermat_cht_api.layer.middleware.interfaces.Message;
+import com.bitdubai.fermat_cht_plugin.layer.middleware.chat.developer.bitdubai.version_1.ChatMiddlewarePluginRoot;
 import com.bitdubai.fermat_cht_plugin.layer.middleware.chat.developer.bitdubai.version_1.database.ChatMiddlewareDatabaseDao;
 import com.bitdubai.fermat_cht_plugin.layer.middleware.chat.developer.bitdubai.version_1.exceptions.DatabaseOperationException;
 
@@ -31,6 +36,9 @@ import java.util.UUID;
  */
 public class ChatMiddlewareManager implements ChatManager {
 
+    public static String INCOMING_CHAT_MESSAGE_NOTIFICATION = "New Message";
+
+    private ChatMiddlewarePluginRoot chatMiddlewarePluginRoot;
     /**
      * Represents the plugin Database Dao.
      */
@@ -43,10 +51,12 @@ public class ChatMiddlewareManager implements ChatManager {
 
     public ChatMiddlewareManager(
             ChatMiddlewareDatabaseDao chatMiddlewareDatabaseDao,
-            ChatMiddlewareContactFactory chatMiddlewareContactFactory
+            ChatMiddlewareContactFactory chatMiddlewareContactFactory,
+            ChatMiddlewarePluginRoot chatMiddlewarePluginRoot
     ) {
         this.chatMiddlewareDatabaseDao = chatMiddlewareDatabaseDao;
         this.chatMiddlewareContactFactory = chatMiddlewareContactFactory;
+        this.chatMiddlewarePluginRoot = chatMiddlewarePluginRoot;
     }
 
     /**
@@ -348,4 +358,38 @@ public class ChatMiddlewareManager implements ChatManager {
     public List<Contact> discoverActorsRegistered() throws CantGetContactException {
         return this.chatMiddlewareContactFactory.discoverDeviceActors();
     }
+
+    /**
+     * This method will notify PIP to launch a new notification to user
+     * @param publicKey
+     * @param tittle
+     * @param body
+     * @throws CantSendNotificationNewIncomingMessageException
+     */
+    @Override
+    public void notificationNewIncomingMessage(String publicKey, String tittle, String body) throws CantSendNotificationNewIncomingMessageException {
+        //TODO MATIAS PLEASE CHECK THIS
+        IncomingChatMessageNotificationEvent event = (IncomingChatMessageNotificationEvent) this.chatMiddlewarePluginRoot.getEventManager().getNewEvent(com.bitdubai.fermat_cht_api.all_definition.events.enums.EventType.INCOMING_CHAT_MESSAGE_NOTIFICATION);
+        event.setLocalPublicKey(publicKey);
+        event.setAlertTitle(getSourceString(ChatMiddlewarePluginRoot.EVENT_SOURCE));
+        event.setTextTitle(tittle);
+        event.setTextBody(body);
+        event.setNotificationType(NotificationType.INCOMING_CHAT_MESSAGE.getCode());
+        event.setSource(ChatMiddlewarePluginRoot.EVENT_SOURCE);
+        this.chatMiddlewarePluginRoot.getEventManager().raiseEvent(event);
+        System.out.println("MiddleWareChatPluginRoot - IncomingChatMessageNotificationEvent fired!: "+event.toString());
+
+    }
+    private String getSourceString(EventSource eventSource){
+        switch (eventSource){
+
+            case MIDDLEWARE_CHAT_MANAGER:
+                return INCOMING_CHAT_MESSAGE_NOTIFICATION;
+            default:
+                return "Method: getSourceString - NO TIENE valor ASIGNADO para RETURN";
+
+        }
+
+    }
+
 }
