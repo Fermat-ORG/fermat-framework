@@ -284,6 +284,8 @@ public class IntraActorNetworkServicePluginRoot extends AbstractPlugin implement
     private IncomingNotificationDao incomingNotificationsDao;
     private OutgoingNotificationDao outgoingNotificationDao;
 
+    private IntraActorNetworkServiceDao intraActorNetworkServiceDao;
+
     /**
      * Constructor
      */
