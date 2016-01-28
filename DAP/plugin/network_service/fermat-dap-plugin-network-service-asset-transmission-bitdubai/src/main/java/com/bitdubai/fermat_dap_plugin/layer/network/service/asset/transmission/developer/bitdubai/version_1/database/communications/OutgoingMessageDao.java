@@ -423,6 +423,9 @@ public class OutgoingMessageDao {
 
         try {
 
+            if (findById(entity.getId().toString()) != null) {
+                return;
+            }
             /*
              * 1- Create the record to the entity
              */
@@ -432,10 +435,12 @@ public class OutgoingMessageDao {
              * 2.- Create a new transaction and execute
              */
             DatabaseTransaction transaction = getDataBase().newTransaction();
-            transaction.addRecordToUpdate(getDatabaseTable(), entityRecord);
+            DatabaseTable outgoingMessageTable = getDatabaseTable();
+            outgoingMessageTable.addStringFilter(CommunicationNetworkServiceDatabaseConstants.OUTGOING_MESSAGES_ID_COLUMN_NAME, entity.getId().toString(), DatabaseFilterType.EQUAL);
+            transaction.addRecordToUpdate(outgoingMessageTable, entityRecord);
             getDataBase().executeTransaction(transaction);
 
-        } catch (DatabaseTransactionFailedException databaseTransactionFailedException) {
+        } catch (DatabaseTransactionFailedException | CantReadRecordDataBaseException databaseTransactionFailedException) {
 
             StringBuffer contextBuffer = new StringBuffer();
             contextBuffer.append("Database Name: " + CommunicationNetworkServiceDatabaseConstants.DATA_BASE_NAME);
@@ -446,7 +451,6 @@ public class OutgoingMessageDao {
             throw cantUpdateRecordDataBaseException;
 
         }
-
     }
 
     /**
