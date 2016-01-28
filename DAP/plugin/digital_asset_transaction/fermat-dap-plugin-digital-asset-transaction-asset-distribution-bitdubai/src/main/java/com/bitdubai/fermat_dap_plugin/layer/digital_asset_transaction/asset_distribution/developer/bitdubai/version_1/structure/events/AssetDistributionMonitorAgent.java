@@ -367,7 +367,6 @@ public class AssetDistributionMonitorAgent implements Agent, DealsWithLogger, De
                 System.out.println("ASSET DISTRIBUTION cryptoAddressTo: " + cryptoAddressTo);
                 DigitalAssetMetadata digitalAsset = digitalAssetDistributionVault.getDigitalAssetMetadataFromLocalStorage(assetAcceptedGenesisTransaction);
                 if (assetDistributionDao.getLastDelivering(assetAcceptedGenesisTransaction).getState() != DistributionStatus.DELIVERING_CANCELLED) {
-                    updateDistributionStatus(DistributionStatus.SENDING_CRYPTO, assetAcceptedGenesisTransaction);
                     assetDistributionDao.sendingBitcoins(assetAcceptedGenesisTransaction, digitalAsset.getLastTransactionHash());
                     sendCryptoAmountToRemoteActor(digitalAsset);
                 } else {
