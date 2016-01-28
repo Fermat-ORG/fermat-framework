@@ -1487,10 +1487,16 @@ public class CryptoTransmissionNetworkServicePluginRoot extends AbstractNetworkS
     }
 
     public CryptoTransmissionMetadataDAO_V2 getOutgoingCryptoTransmissionMetadataDAO() {
+        if(outgoingCryptoTransmissionMetadataDAO==null){
+            initializeOutgoingDAO();
+        }
         return outgoingCryptoTransmissionMetadataDAO;
     }
 
     public CryptoTransmissionMetadataDAO_V2 getIncomingCryptoTransmissionMetadataDAO() {
+        if(incomingCryptoTransmissionMetadataDAO==null){
+            initializeIncomingDAO();
+        }
         return incomingCryptoTransmissionMetadataDAO;
     }
 
@@ -1500,5 +1506,25 @@ public class CryptoTransmissionNetworkServicePluginRoot extends AbstractNetworkS
 
     public CommunicationNetworkServiceConnectionManager_V2 getCommunicationNetworkServiceConnectionManager() {
         return communicationNetworkServiceConnectionManager;
+    }
+
+    private void initializeOutgoingDAO(){
+        try {
+            if (outgoingCryptoTransmissionMetadataDAO == null) {
+                outgoingCryptoTransmissionMetadataDAO = new CryptoTransmissionMetadataDAO_V2(pluginDatabaseSystem, pluginId, dataBase, CryptoTransmissionNetworkServiceDatabaseConstants.OUTGOING_CRYPTO_TRANSMISSION_METADATA_TABLE_NAME);
+            }
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+    }
+
+    private void initializeIncomingDAO(){
+        try {
+            if (incomingCryptoTransmissionMetadataDAO == null) {
+                incomingCryptoTransmissionMetadataDAO = new CryptoTransmissionMetadataDAO_V2(pluginDatabaseSystem, pluginId, dataBase, CryptoTransmissionNetworkServiceDatabaseConstants.INCOMING_CRYPTO_TRANSMISSION_METADATA_TABLE_NAME);
+            }
+        }catch (Exception e){
+            e.printStackTrace();
+        }
     }
 }

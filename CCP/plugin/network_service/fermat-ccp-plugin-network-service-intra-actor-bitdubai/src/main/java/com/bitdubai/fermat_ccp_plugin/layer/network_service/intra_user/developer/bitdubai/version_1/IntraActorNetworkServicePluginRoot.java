@@ -230,6 +230,8 @@ public class IntraActorNetworkServicePluginRoot extends AbstractPlugin implement
      */
     private Database dataBaseCommunication;
 
+    private Database dataBase;
+
 
     /**
      * Represent the identity
@@ -492,6 +494,12 @@ public class IntraActorNetworkServicePluginRoot extends AbstractPlugin implement
                      */
                     initializeDb();
 
+
+                    /*
+                     * Initialize cache data base
+                     */
+                    initializeCacheDb();
+
                     /*
                      * Initialize Developer Database Factory
                      */
@@ -516,12 +524,12 @@ public class IntraActorNetworkServicePluginRoot extends AbstractPlugin implement
                         /*
                          * Construct my profile and register me
                          */
-                         platformComponentProfilePluginRoot =  wsCommunicationsCloudClientManager.getCommunicationsCloudClientConnection().constructPlatformComponentProfileFactory(getIdentityPublicKey(),
-                                                                                                                                                                                                 getAlias().toLowerCase(),
-                                                                                                                                                                                                 getName(),
-                                                                                                                                                                                                 getNetworkServiceType(),
-                                                                                                                                                                                                 getPlatformComponentType(),
-                                                                                                                                                                                                 getExtraData());
+                        platformComponentProfilePluginRoot =  wsCommunicationsCloudClientManager.getCommunicationsCloudClientConnection().constructPlatformComponentProfileFactory(getIdentityPublicKey(),
+                                getAlias().toLowerCase(),
+                                getName(),
+                                getNetworkServiceType(),
+                                getPlatformComponentType(),
+                                getExtraData());
                         /*
                          * Initialize the agent and start
                          */
@@ -533,6 +541,12 @@ public class IntraActorNetworkServicePluginRoot extends AbstractPlugin implement
                     incomingNotificationsDao = new IncomingNotificationDao(dataBaseCommunication, this.pluginFileSystem, this.pluginId);
 
                     outgoingNotificationDao = new OutgoingNotificationDao(dataBaseCommunication,this.pluginFileSystem, this.pluginId);
+
+                    intraActorNetworkServiceDao = new IntraActorNetworkServiceDao(this.dataBase, this.pluginFileSystem,this.pluginId);
+
+
+
+                    remoteNetworkServicesRegisteredList = new CopyOnWriteArrayList<PlatformComponentProfile>();
 
                     connectionArrived = new AtomicBoolean(false);
 
@@ -573,11 +587,12 @@ public class IntraActorNetworkServicePluginRoot extends AbstractPlugin implement
                     errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_INTRAUSER_NETWORK_SERVICE, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, pluginStartException);
                     throw pluginStartException;
 
-                } catch (Exception exception) {
+                } catch (CantInitializeNetworkIntraUserDataBaseException exception) {
 
                     StringBuffer contextBuffer = new StringBuffer();
                     contextBuffer.append("Plugin ID: " + pluginId);
                     contextBuffer.append(CantStartPluginException.CONTEXT_CONTENT_SEPARATOR);
+                    contextBuffer.append("Database Name: " + IntraActorNetworkServiceDataBaseConstants.DATA_BASE_NAME);
 
                     String context = contextBuffer.toString();
 
@@ -1346,7 +1361,7 @@ public class IntraActorNetworkServicePluginRoot extends AbstractPlugin implement
         try {
 
             if (communicationNetworkServiceConnectionManager != null){
-               communicationNetworkServiceConnectionManager.restart();
+                communicationNetworkServiceConnectionManager.restart();
             }else{
                 this.initializeCommunicationNetworkServiceConnectionManager();
             }
@@ -1889,19 +1904,12 @@ public class IntraActorNetworkServicePluginRoot extends AbstractPlugin implement
 
 
     public IncomingNotificationDao getIncomingNotificationsDao() {
-        if(incomingNotificationsDao==null){
-            incomingNotificationsDao = new IncomingNotificationDao(dataBaseCommunication, this.pluginFileSystem, this.pluginId);
-        }
         return incomingNotificationsDao;
     }
 
     public OutgoingNotificationDao getOutgoingNotificationDao() {
-        if(outgoingNotificationDao==null){
-            outgoingNotificationDao = new OutgoingNotificationDao(dataBaseCommunication,this.pluginFileSystem, this.pluginId);
-        }
         return outgoingNotificationDao;
     }
-
 
     /**
      * (non-Javadoc)
@@ -2026,6 +2034,50 @@ public class IntraActorNetworkServicePluginRoot extends AbstractPlugin implement
                  */
                 errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_INTRAUSER_NETWORK_SERVICE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, cantOpenDatabaseException);
                 throw new CantInitializeTemplateNetworkServiceDatabaseException(cantOpenDatabaseException.getLocalizedMessage());
+
+            }
+        }
+
+    }
+
+    private void initializeCacheDb() throws CantInitializeNetworkIntraUserDataBaseException {
+
+        try {
+            /*
+             * Open new database connection
+             */
+            this.dataBase = this.pluginDatabaseSystem.openDatabase(pluginId, pluginId.toString());
+
+        } catch (CantOpenDatabaseException cantOpenDatabaseException) {
+
+            /*
+             * The database exists but cannot be open. I can not handle this situation.
+             */
+            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_INTRAUSER_NETWORK_SERVICE, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, cantOpenDatabaseException);
+            throw new CantInitializeNetworkIntraUserDataBaseException(cantOpenDatabaseException.getLocalizedMessage());
+
+        } catch (DatabaseNotFoundException e) {
+
+            /*
+             * The database no exist may be the first time the plugin is running on this device,
+             * We need to create the new database
+             */
+            IntraActorNetworkServiceDatabaseFactory intraActorNetworkServiceDatabaseFactory = new IntraActorNetworkServiceDatabaseFactory(pluginDatabaseSystem);
+
+            try {
+
+                /*
+                 * We create the new database
+                 */
+                this.dataBase = intraActorNetworkServiceDatabaseFactory.createDatabase(pluginId, pluginId.toString());
+
+            } catch (CantCreateDatabaseException cantOpenDatabaseException) {
+
+                /*
+                 * The database cannot be created. I can not handle this situation.
+                 */
+                errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_INTRAUSER_NETWORK_SERVICE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, cantOpenDatabaseException);
+                throw new CantInitializeNetworkIntraUserDataBaseException(cantOpenDatabaseException.getLocalizedMessage());
 
             }
         }
