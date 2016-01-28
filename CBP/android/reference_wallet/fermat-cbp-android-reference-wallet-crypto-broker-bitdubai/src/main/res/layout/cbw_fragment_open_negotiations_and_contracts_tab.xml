@@ -1,10 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:background="@color/app_background">
+    android:background="@color/app_background"
+    android:layout_marginBottom="@dimen/cbw_footer_bar_height">
 
     <android.support.v4.widget.SwipeRefreshLayout
         android:id="@+id/swipe_refresh"
@@ -13,7 +14,7 @@
         android:visibility="visible">
 
         <android.support.v7.widget.RecyclerView
-            android:id="@+id/open_negotiations_recycler_view"
+            android:id="@+id/cbw_open_negotiations_and_contracts_recycler_view"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_marginEnd="16dp"
@@ -21,7 +22,7 @@
             android:layout_marginRight="16dp"
             android:layout_marginStart="16dp"
             android:layout_marginTop="8dp"
-            tools:listitem="@layout/cbw_negotiation_list_item"/>
+            tools:listitem="@layout/cbw_open_negotiation_and_contract_list_item"/>
 
     </android.support.v4.widget.SwipeRefreshLayout>
 
@@ -44,7 +45,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:gravity="center"
-            android:text="@string/no_new_open_negotiations"
+            android:text="@string/no_new_open_contracts"
             android:textColor="#000"
             android:textSize="20sp"/>
 

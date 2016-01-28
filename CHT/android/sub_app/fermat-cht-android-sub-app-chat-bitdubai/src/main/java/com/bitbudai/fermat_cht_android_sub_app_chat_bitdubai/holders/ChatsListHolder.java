@@ -1,15 +1,5 @@
 package com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.holders;
 
-import android.view.View;
-import android.widget.LinearLayout;
-import android.widget.ProgressBar;
-import android.widget.QuickContactBadge;
-
-import com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.models.ChatsList;
-import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView;
-import com.bitdubai.fermat_android_api.ui.holders.FermatViewHolder;
-import com.bitdubai.fermat_cht_android_sub_app_chat_bitdubai.R;
-
 //import android.widget.ImageView;
 
 /**
@@ -18,6 +8,7 @@ import com.bitdubai.fermat_cht_android_sub_app_chat_bitdubai.R;
  * @author Jose Cardozo josejcb (josejcb89@gmail.com) on 05/01/15.
  * @version 1.0
  */
+/*
 public class ChatsListHolder extends FermatViewHolder {
 
     public FermatTextView message_icon_text;//TextView
@@ -31,11 +22,13 @@ public class ChatsListHolder extends FermatViewHolder {
 
     private static ChatsList chats;
 
-    /**
+    */
+/**
      * Constructor
      *
      * @param itemView
-     */
+     *//*
+
     public ChatsListHolder(View itemView) {
         super(itemView);
         message_icon_text = (FermatTextView) itemView.findViewById(R.id.message_icon_text);
@@ -55,4 +48,4 @@ public class ChatsListHolder extends FermatViewHolder {
     public static void setChats(ChatsList chats1) {
         chats = chats1;
     }
-}
+}*/
