@@ -289,13 +289,21 @@ public class WsCommunicationTyrusVPNClient extends Endpoint implements Communica
                                                                                                                     fermatMessage.toJson(),             //Message Content
                                                                                                                     FermatPacketType.MESSAGE_TRANSMIT,  //Packet type
                                                                                                                     vpnClientIdentity.getPrivateKey()); //Sender private key
-        /*
-         * Send the encode packet to the server
-         */
-        if(vpnClientConnection!=null) {
-            if (vpnClientConnection.isOpen()) {
-                vpnClientConnection.getAsyncRemote().sendText(FermatPacketEncoder.encode(fermatPacketRequest));
-            }
+
+
+        System.out.println("WsCommunicationVPNClient - vpnClientConnection = "+vpnClientConnection);
+        System.out.println("WsCommunicationVPNClient - vpnClientConnection.isOpen() = "+vpnClientConnection.isOpen());
+        System.out.println("WsCommunicationVPNClient - vpnClientConnection.getAsyncRemote() = "+vpnClientConnection.getAsyncRemote());
+
+        if (vpnClientConnection.isOpen()){
+
+             /*
+             * Send the encode packet to the server
+             */
+            vpnClientConnection.getAsyncRemote().sendText(FermatPacketEncoder.encode(fermatPacketRequest));
+
+        }else{
+            throw new RuntimeException("Client Connection is Close");
         }
 
     }

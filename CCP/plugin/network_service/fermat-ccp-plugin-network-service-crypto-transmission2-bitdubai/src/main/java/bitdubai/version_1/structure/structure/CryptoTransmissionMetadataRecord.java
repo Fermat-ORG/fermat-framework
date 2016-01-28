@@ -19,26 +19,18 @@ public class CryptoTransmissionMetadataRecord extends CryptoTransmissionMessage 
     private long cryptoAmount;
     private String associatedCryptoTransactionHash;
     private String paymentDescription;
-    private CryptoTransmissionProtocolState cryptoTransmissionProtocolState;
     private CryptoTransmissionMetadataType cryptoTransmissionMetadataType;
     private long timestamp;
-    private boolean pendingFlag;
-    private int sentCount;
-    private CryptoTransmissionMetadataState cryptoTransmissionMetadataState;
 
     public CryptoTransmissionMetadataRecord(UUID transactionId, CryptoTransmissionMessageType cryptoTransmissionMessage, UUID requestId, CryptoCurrency cryptoCurrency, long cryptoAmount, String senderPublicKey, String destinationPublicKey, String associatedCryptoTransactionHash, String paymentDescription, CryptoTransmissionProtocolState cryptoTransmissionProtocolState, CryptoTransmissionMetadataType cryptoTransmissionMetadataType, long timestamp, boolean pendingFlag, int sentCount, CryptoTransmissionMetadataState cryptoTransmissionMetadataState) {
-        super(transactionId, cryptoTransmissionMessage,senderPublicKey,destinationPublicKey);
+        super(transactionId, cryptoTransmissionMessage,senderPublicKey,destinationPublicKey,cryptoTransmissionProtocolState,cryptoTransmissionMetadataState,pendingFlag,sentCount);
         this.requestId = requestId;
         this.cryptoCurrency = cryptoCurrency;
         this.cryptoAmount = cryptoAmount;
         this.associatedCryptoTransactionHash = associatedCryptoTransactionHash;
         this.paymentDescription = paymentDescription;
-        this.cryptoTransmissionProtocolState = cryptoTransmissionProtocolState;
         this.cryptoTransmissionMetadataType = cryptoTransmissionMetadataType;
         this.timestamp = timestamp;
-        this.pendingFlag = pendingFlag;
-        this.sentCount = sentCount;
-        this.cryptoTransmissionMetadataState = cryptoTransmissionMetadataState;
     }
 
     @Override
@@ -77,12 +69,6 @@ public class CryptoTransmissionMetadataRecord extends CryptoTransmissionMessage 
     }
 
 
-    @Override
-    public int getSentCount() {
-        return sentCount;
-    }
-
-
     public CryptoTransmissionMetadataType getCryptoTransmissionMetadataType() {
         return cryptoTransmissionMetadataType;
     }
@@ -90,23 +76,23 @@ public class CryptoTransmissionMetadataRecord extends CryptoTransmissionMessage 
 
     @Override
     public CryptoTransmissionProtocolState getCryptoTransmissionProtocolState() {
-        return cryptoTransmissionProtocolState;
+        return super.getCryptoTransmissionProtocolState();
     }
 
 
     @Override
     public CryptoTransmissionMetadataState getCryptoTransmissionMetadataStates() {
-        return this.cryptoTransmissionMetadataState;
+        return super.getCryptoTransmissionMetadataState();
     }
 
 
     @Override
     public void changeCryptoTransmissionProtocolState(CryptoTransmissionProtocolState cryptoTransmissionProtocolState) {
-        this.cryptoTransmissionProtocolState = cryptoTransmissionProtocolState;
+        super.setProtocolState(cryptoTransmissionProtocolState);
     }
     @Override
     public void changeMetadataState(CryptoTransmissionMetadataState cryptoTransmissionNotificationStates) {
-        this.cryptoTransmissionMetadataState = cryptoTransmissionNotificationStates;
+        super.setCryptoTransmissionMetadataState(cryptoTransmissionNotificationStates);
     }
 
     @Override
@@ -116,12 +102,12 @@ public class CryptoTransmissionMetadataRecord extends CryptoTransmissionMessage 
 
     @Override
     public boolean isPendigToRead() {
-        return pendingFlag;
+        return super.isPendigToRead();
     }
 
     @Override
     public void confirmRead() {
-        this.pendingFlag = true;
+        setPendingToRead(true);
     }
 
     @Override
@@ -131,8 +117,10 @@ public class CryptoTransmissionMetadataRecord extends CryptoTransmissionMessage 
 
     @Override
     public void setPendingToRead(boolean pending) {
-        this.pendingFlag = pending;
+        super.setPendigToRead(pending);
     }
+
+
 
 
 

@@ -972,7 +972,9 @@ public final class CryptoPaymentRequestNetworkServicePluginRoot extends Abstract
 
     private void initializeAgent(){
 
-            cryptoPaymentRequestExecutorAgent = new CryptoPaymentRequestExecutorAgent(
+        System.out.println("CryptoPaymentRequestNetworkServicePluginRoot - Starting method initializeAgent ");
+
+        cryptoPaymentRequestExecutorAgent = new CryptoPaymentRequestExecutorAgent(
                     this,
                     errorManager,
                     eventManager,
@@ -1045,28 +1047,19 @@ public final class CryptoPaymentRequestNetworkServicePluginRoot extends Abstract
 
             try {
 
-            this.register = Boolean.FALSE;
-
-            if(communicationNetworkServiceConnectionManager != null) {
-                communicationNetworkServiceConnectionManager.closeAllConnection();
-                communicationNetworkServiceConnectionManager.stop();
-            }
-
-            if(cryptoPaymentRequestExecutorAgent!=null) {
-                cryptoPaymentRequestExecutorAgent.stop();
-            }
-                reprocessMessage();
-
-                this.register = Boolean.FALSE;
 
                 if(communicationNetworkServiceConnectionManager != null) {
                     communicationNetworkServiceConnectionManager.closeAllConnection();
                     communicationNetworkServiceConnectionManager.stop();
                 }
 
-                if(cryptoPaymentRequestExecutorAgent != null) {
+                if(cryptoPaymentRequestExecutorAgent!=null) {
                     cryptoPaymentRequestExecutorAgent.stop();
                 }
+
+                reprocessMessage();
+
+                this.register = Boolean.FALSE;
 
             }catch (Exception e) {
                 e.printStackTrace();
@@ -1104,6 +1097,8 @@ public final class CryptoPaymentRequestNetworkServicePluginRoot extends Abstract
      */
     @Override
     public void handleClientSuccessfullReconnectNotificationEvent(FermatEvent fermatEvent) {
+
+        System.out.println("CryptoPaymentRequestNetworkServicePluginRoot - Starting method handleClientSuccessfullReconnectNotificationEvent ");
 
         try {
 
