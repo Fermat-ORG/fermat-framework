@@ -292,7 +292,11 @@ public class WsCommunicationTyrusVPNClient extends Endpoint implements Communica
         /*
          * Send the encode packet to the server
          */
-        vpnClientConnection.getAsyncRemote().sendText(FermatPacketEncoder.encode(fermatPacketRequest));
+        if(vpnClientConnection!=null) {
+            if (vpnClientConnection.isOpen()) {
+                vpnClientConnection.getAsyncRemote().sendText(FermatPacketEncoder.encode(fermatPacketRequest));
+            }
+        }
 
     }
 
