@@ -941,7 +941,19 @@ public enum EventType implements FermatEventEnum {
             return new OutgoingIntraUserTransactionRollbackNotificationEvent(this);
         }
 
-    };
+    },
+    REVIEW_NEGOTIATION("RN"){
+        @Override
+        public FermatEventListener getNewListener(FermatEventMonitor fermatEventMonitor) {
+            return new com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.listeners.ReviewNegotiationEventListener(this, fermatEventMonitor);
+        }
+
+        @Override
+        public FermatEvent getNewEvent() {
+            return new com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.events.ReviewNegotiationEvent(this);
+        }
+    }
+    ;
 
 
     /**
