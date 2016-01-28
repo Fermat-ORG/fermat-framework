@@ -180,7 +180,7 @@ public class ActorNetworkServiceRecordedAgent extends FermatAgent{
 
         } catch (InterruptedException e) {
             status = AgentStatus.STOPPED;
-            reportUnexpectedError(FermatException.wrapException(e));
+            System.out.println("ActorNetworkServiceRecordedAgent - sendCycle() Thread Interrupted stopped ... ");
         } catch(Exception e) {
             reportUnexpectedError(FermatException.wrapException(e));
         }
@@ -246,7 +246,7 @@ public class ActorNetworkServiceRecordedAgent extends FermatAgent{
 
         } catch (InterruptedException e) {
             status = AgentStatus.STOPPED;
-            reportUnexpectedError(FermatException.wrapException(e));
+            System.out.println("ActorNetworkServiceRecordedAgent - receiveCycle() Thread Interrupted stopped ... ");
         } catch(Exception e) {
 
             reportUnexpectedError(FermatException.wrapException(e));

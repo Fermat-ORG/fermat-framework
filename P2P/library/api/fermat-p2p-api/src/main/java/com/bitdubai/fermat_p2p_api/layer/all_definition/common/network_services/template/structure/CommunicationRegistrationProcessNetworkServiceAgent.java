@@ -74,7 +74,7 @@ public class CommunicationRegistrationProcessNetworkServiceAgent {
 
             try{
 
-               System.out.println(networkService.getName()+" isRegister "+networkService.isRegister()+" communicationsClientConnection.isRegister() "+communicationsClientConnection.getCommunicationsCloudClientConnection().isRegister());
+               System.out.println(networkService.getAlias()+" isRegister "+networkService.isRegister()+" communicationsClientConnection.isRegister() "+communicationsClientConnection.getCommunicationsCloudClientConnection().isRegister());
 
                 if (communicationsClientConnection.getCommunicationsCloudClientConnection().isRegister() && !networkService.isRegister()){
 
@@ -82,11 +82,6 @@ public class CommunicationRegistrationProcessNetworkServiceAgent {
                      * Register me
                      */
                     communicationsClientConnection.getCommunicationsCloudClientConnection().registerComponentForCommunication(networkService.getNetworkServiceType(), networkService.getPlatformComponentProfilePluginRoot());
-
-                    /*
-                     * Initialize the connection manager
-                     */
-                    networkService.initializeCommunicationNetworkServiceConnectionManager();
 
                     /*
                      * Stop the agent

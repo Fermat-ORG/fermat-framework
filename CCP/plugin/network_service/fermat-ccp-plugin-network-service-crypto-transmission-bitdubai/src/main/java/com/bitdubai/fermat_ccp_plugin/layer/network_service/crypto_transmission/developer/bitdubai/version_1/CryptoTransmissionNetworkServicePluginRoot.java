@@ -205,8 +205,6 @@ public class CryptoTransmissionNetworkServicePluginRoot extends AbstractNetworkS
      */
     CryptoTransmissionAgent cryptoTransmissionAgent;
 
-    private  boolean beforeRegistered;
-
 
     private AtomicBoolean flag=new AtomicBoolean(false);
 
@@ -226,7 +224,7 @@ public class CryptoTransmissionNetworkServicePluginRoot extends AbstractNetworkS
                 );
         this.remoteNetworkServicesRegisteredList = new CopyOnWriteArrayList<>();
         this.listenersAdded = new ArrayList<>();
-        beforeRegistered = Boolean.FALSE;
+        remoteNetworkServicesRegisteredList = new CopyOnWriteArrayList<>();
     }
 
 
@@ -512,14 +510,8 @@ public class CryptoTransmissionNetworkServicePluginRoot extends AbstractNetworkS
                 incomingCryptoTransmissionMetadataDAO = new CryptoTransmissionMetadataDAO_V2(pluginDatabaseSystem, pluginId, dataBase, CryptoTransmissionNetworkServiceDatabaseConstants.INCOMING_CRYPTO_TRANSMISSION_METADATA_TABLE_NAME);
                 outgoingCryptoTransmissionMetadataDAO = new CryptoTransmissionMetadataDAO_V2(pluginDatabaseSystem, pluginId, dataBase, CryptoTransmissionNetworkServiceDatabaseConstants.OUTGOING_CRYPTO_TRANSMISSION_METADATA_TABLE_NAME);
                 cryptoTransmissionConnectionsDAO = new CryptoTransmissionConnectionsDAO(pluginDatabaseSystem, pluginId);
-                remoteNetworkServicesRegisteredList = new CopyOnWriteArrayList<PlatformComponentProfile>();
 
-
-                cryptoTransmissionAgent = new CryptoTransmissionAgent(
-                        this,
-                        errorManager,
-                        eventManager
-                );
+                initializeCryptoTransmissionAgent();
 
                 // change message state to process again first time
                 reprocessWaitingMessage();
@@ -759,11 +751,14 @@ public class CryptoTransmissionNetworkServicePluginRoot extends AbstractNetworkS
     }
 
     private void initializeCryptoTransmissionAgent(){
-        try {
-            cryptoTransmissionAgent.start();
-        }catch (Exception e){
-            e.printStackTrace();
-        }
+
+        System.out.println("CryptoTransmissionNetworkServicePluginRoot - Starting method initializeCryptoTransmissionAgent");
+
+        cryptoTransmissionAgent = new CryptoTransmissionAgent(
+                this,
+                errorManager,
+                eventManager
+        );
     }
 
     /**
@@ -794,14 +789,13 @@ public class CryptoTransmissionNetworkServicePluginRoot extends AbstractNetworkS
                 System.out.println("CryptoTransmissionNetworkServicePluginRoot - NetWork Service is Registered: " + platformComponentProfileRegistered.getAlias());
                 this.register = Boolean.TRUE;
 
-                if(communicationNetworkServiceConnectionManager==null) {
-                    initializeCommunicationNetworkServiceConnectionManager();
-                }else{
+                if(communicationNetworkServiceConnectionManager != null) {
                     communicationNetworkServiceConnectionManager.restart();
                 }
 
-                if(cryptoTransmissionAgent==null) initializeCryptoTransmissionAgent();
-                else cryptoTransmissionAgent.start();
+                if(cryptoTransmissionAgent != null){
+                    cryptoTransmissionAgent.start();
+                }
 
             }
 
@@ -956,15 +950,11 @@ public class CryptoTransmissionNetworkServicePluginRoot extends AbstractNetworkS
 
         try {
 
-            if (communicationNetworkServiceConnectionManager == null){
-                this.initializeCommunicationNetworkServiceConnectionManager();
-            }else{
+            if (communicationNetworkServiceConnectionManager != null){
                 communicationNetworkServiceConnectionManager.restart();
             }
 
-            if(cryptoTransmissionAgent == null) {
-                initializeCryptoTransmissionAgent();
-            }else {
+            if(cryptoTransmissionAgent != null){
                 cryptoTransmissionAgent.start();
             }
 
