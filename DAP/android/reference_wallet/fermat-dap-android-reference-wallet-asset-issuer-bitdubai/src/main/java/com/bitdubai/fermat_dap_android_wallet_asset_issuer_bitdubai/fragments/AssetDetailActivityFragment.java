@@ -146,26 +146,8 @@ public class AssetDetailActivityFragment extends AbstractFermatFragment {
         });
 
         assetDetailAvailableLayout = rootView.findViewById(R.id.assetDetailAvailableLayout);
-        assetDetailAvailableLayout.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {
-                changeActivity(Activities.DAP_WALLET_ASSET_ISSUER_USER_DELIVERY_LIST, appSession.getAppPublicKey());
-            }
-        });
-
-
         assetDetailAppropiateLayout = rootView.findViewById(R.id.assetDetailAppropiateLayout);
-        assetDetailAppropiateLayout.setOnClickListener(new View.OnClickListener() {
-           public void onClick(View v) {
-               changeActivity(Activities.DAP_WALLET_ASSET_ISSUER_USER_APPROPIATE_LIST, appSession.getAppPublicKey());
-            }
-        });
-
         assetDetailRedeemedLayout = rootView.findViewById(R.id.assetDetailRedeemedLayout);
-        assetDetailRedeemedLayout.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {
-                changeActivity(Activities.DAP_WALLET_ASSET_ISSUER_USER_REDEEMED_LIST, appSession.getAppPublicKey());
-            }
-        });
     }
 
     private void doAppropriate(final String assetPublicKey, final String walletPublicKey) {
@@ -288,6 +270,35 @@ public class AssetDetailActivityFragment extends AbstractFermatFragment {
         assetDetailDelivered.setText(digitalAsset.getUnused() + "");
         assetDetailRedeemText.setText(digitalAsset.getRedeemed()+"");
         assetDetailAppropriatedText.setText(digitalAsset.getAppropriated() + "");
+
+
+        assetDetailAvailableLayout.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                if (digitalAsset.getUnused() > 0) {
+                    changeActivity(Activities.DAP_WALLET_ASSET_ISSUER_USER_DELIVERY_LIST, appSession.getAppPublicKey());
+                } else {
+                    makeText(getActivity(), "No assets delivered", Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
+        assetDetailAppropiateLayout.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                if (digitalAsset.getAppropriated() > 0) {
+                    changeActivity(Activities.DAP_WALLET_ASSET_ISSUER_USER_APPROPIATE_LIST, appSession.getAppPublicKey());
+                } else {
+                    makeText(getActivity(), "No assets appropriated", Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
+        assetDetailRedeemedLayout.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                if (digitalAsset.getRedeemed() > 0) {
+                    changeActivity(Activities.DAP_WALLET_ASSET_ISSUER_USER_REDEEMED_LIST, appSession.getAppPublicKey());
+                } else {
+                    makeText(getActivity(), "No assets redeemed", Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
 
         assetDetailAppropiateBtnLayout.setVisibility((digitalAsset.getAvailableBalanceQuantity() > 0) ? View.VISIBLE : View.GONE);
     }

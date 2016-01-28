@@ -826,6 +826,10 @@ public class AssetCryptoVaultManager  {
         sendRequest.fee = fee;
         sendRequest.feePerKb = Coin.ZERO;
 
+
+        /**
+         * I'm ready so will complete the transaction.
+         */
         try {
             wallet.completeTx(sendRequest);
         } catch (InsufficientMoneyException e) {
@@ -847,6 +851,14 @@ public class AssetCryptoVaultManager  {
         }
 
         return sendRequest.tx.getHashAsString();
+    }
+
+    /**
+     * gets the current timestamp
+     * @return
+     */
+    private long getCurrentTimeStamp() {
+        return System.currentTimeMillis();
     }
 
     /**
