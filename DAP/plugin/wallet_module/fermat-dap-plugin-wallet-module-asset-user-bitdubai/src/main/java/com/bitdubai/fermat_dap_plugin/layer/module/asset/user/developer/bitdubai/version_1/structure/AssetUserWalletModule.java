@@ -78,7 +78,7 @@ public class AssetUserWalletModule {
         if (redeemPoints.size() > availableTransactions.size())
             throw new NotEnoughAcceptsException(null, context, "WE DON'T HAVE ENOUGH ASSETS!!");
         for (int i = 0; i < redeemPoints.size(); i++) {
-            DigitalAssetMetadata digitalAssetMetadata = wallet.getDigitalAssetMetadata(availableTransactions.get(i).getTransactionHash());
+            DigitalAssetMetadata digitalAssetMetadata = wallet.getDigitalAssetMetadata(availableTransactions.get(i).getGenesisTransaction());
             hashMap.put(digitalAssetMetadata, redeemPoints.get(i));
         }
         return hashMap;
@@ -93,7 +93,7 @@ public class AssetUserWalletModule {
             if (transactions.isEmpty())
                 throw new NotEnoughAcceptsException(null, context, "There are no assets available to appropriate!!");
             for (AssetUserWalletTransaction transaction : transactions) {
-                DigitalAssetMetadata assetMetadata = wallet.getDigitalAssetMetadata(transaction.getTransactionHash());
+                DigitalAssetMetadata assetMetadata = wallet.getDigitalAssetMetadata(transaction.getGenesisTransaction());
                 assetAppropriationManager.appropriateAsset(assetMetadata, "walletPublicKeyTest", bitcoinWalletPublicKey);
             }
         } catch (CantGetDigitalAssetFromLocalStorageException | CantGetTransactionsException | CantLoadWalletException e) {

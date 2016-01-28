@@ -5,8 +5,6 @@ import com.bitdubai.fermat_api.layer.all_definition.money.CryptoAddress;
 import com.bitdubai.fermat_dap_api.layer.all_definition.digital_asset.DigitalAsset;
 import com.bitdubai.fermat_dap_api.layer.all_definition.digital_asset.DigitalAssetMetadata;
 
-import java.util.UUID;
-
 /**
  * Created by franklin on 05/10/15.
  */
@@ -33,7 +31,7 @@ public interface AssetUserWalletTransactionRecord {
 
     String getMemo();
 
-    String getDigitalAssetMetadataHash();
+    String getGenesisTransaction();
 
     DigitalAssetMetadata getDigitalAssetMetadata();
 }
