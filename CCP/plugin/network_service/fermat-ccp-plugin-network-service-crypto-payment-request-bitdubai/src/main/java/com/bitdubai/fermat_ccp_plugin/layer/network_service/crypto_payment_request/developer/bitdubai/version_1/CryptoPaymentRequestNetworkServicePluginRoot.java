@@ -972,7 +972,7 @@ public final class CryptoPaymentRequestNetworkServicePluginRoot extends Abstract
 
     private void initializeAgent(){
 
-        System.out.print("CryptoPaymentRequestNetworkServicePluginRoot - Starting method initializeAgent ");
+        System.out.println("CryptoPaymentRequestNetworkServicePluginRoot - Starting method initializeAgent ");
 
         cryptoPaymentRequestExecutorAgent = new CryptoPaymentRequestExecutorAgent(
                     this,
@@ -1097,6 +1097,8 @@ public final class CryptoPaymentRequestNetworkServicePluginRoot extends Abstract
      */
     @Override
     public void handleClientSuccessfullReconnectNotificationEvent(FermatEvent fermatEvent) {
+
+        System.out.println("CryptoPaymentRequestNetworkServicePluginRoot - Starting method handleClientSuccessfullReconnectNotificationEvent ");
 
         try {
 
