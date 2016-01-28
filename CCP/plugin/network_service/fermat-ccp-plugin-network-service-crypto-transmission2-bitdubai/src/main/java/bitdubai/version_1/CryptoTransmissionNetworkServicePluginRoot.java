@@ -26,7 +26,6 @@ import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperDatabaseT
 import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperDatabaseTableRecord;
 import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperObjectFactory;
 import com.bitdubai.fermat_api.layer.all_definition.developer.LogManagerForDevelopers;
-import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Addons;
 import com.bitdubai.fermat_api.layer.all_definition.enums.CryptoCurrency;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Layers;
@@ -56,7 +55,6 @@ import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.FileNotF
 import com.bitdubai.fermat_api.layer.osa_android.location_system.Location;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogLevel;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogManager;
-import com.bitdubai.fermat_ccp_api.layer.actor.intra_user.exceptions.CantCreateNotificationException;
 import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_addresses.exceptions.PendingRequestNotFoundException;
 import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_transmission.enums.CryptoTransmissionMetadataState;
 import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_transmission.enums.CryptoTransmissionProtocolState;
@@ -70,8 +68,6 @@ import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_transmission.exc
 import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_transmission.interfaces.CryptoTransmissionNetworkServiceManager;
 import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_transmission.interfaces.structure.CryptoTransmissionMetadata;
 import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_transmission.interfaces.structure.CryptoTransmissionMetadataType;
-import com.bitdubai.fermat_ccp_api.layer.network_service.intra_actor.enums.ActorProtocolState;
-import com.bitdubai.fermat_ccp_api.layer.network_service.intra_actor.enums.NotificationDescriptor;
 
 import com.bitdubai.fermat_p2p_api.layer.all_definition.common.network_services.interfaces.NetworkService;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.common.network_services.template.communications.CantInitializeTemplateNetworkServiceDatabaseException;
@@ -80,15 +76,11 @@ import com.bitdubai.fermat_p2p_api.layer.all_definition.common.network_services.
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.enums.P2pEventType;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.events.ClientConnectionCloseNotificationEvent;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.events.VPNConnectionCloseNotificationEvent;
-import com.bitdubai.fermat_p2p_api.layer.p2p_communication.MessagesStatus;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.WsCommunicationsCloudClientManager;
-import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.client.CommunicationsClientConnection;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.contents.FermatMessage;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.exceptions.CantRequestListException;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedPluginExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
-import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.enums.EventType;
-import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.events.IncomingActorRequestConnectionNotificationEvent;
 import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfaces.EventManager;
 import com.google.gson.Gson;
 
@@ -120,7 +112,6 @@ import bitdubai.version_1.event_handlers.communication.NewMessagesEventHandler;
 import bitdubai.version_1.event_handlers.communication.NewSentMessageNotificationEventHandler;
 import bitdubai.version_1.event_handlers.communication.VPNConnectionCloseNotificationEventHandler;
 import bitdubai.version_1.exceptions.CantGetCryptoTransmissionMetadataException;
-import bitdubai.version_1.exceptions.CantReadRecordDataBaseException;
 import bitdubai.version_1.exceptions.CantSaveCryptoTransmissionMetadatatException;
 import bitdubai.version_1.exceptions.CantUpdateRecordDataBaseException;
 import bitdubai.version_1.structure.ActorNetworkServiceRecordedAgent;
@@ -221,9 +212,6 @@ public class CryptoTransmissionNetworkServicePluginRoot extends AbstractPlugin i
      */
     private Database dataBaseCommunication;
 
-    private Database dataBase;
-
-
     /**
      * Represent the identity
      */
@@ -255,16 +243,6 @@ public class CryptoTransmissionNetworkServicePluginRoot extends AbstractPlugin i
     private ActorNetworkServiceRecordedAgent actorNetworkServiceRecordedAgent;
 
     /**
-     * cacha identities to register
-     */
-    private List<PlatformComponentProfile> actorsToRegisterCache;
-
-    /**
-     * Connections arrived
-     */
-    private AtomicBoolean connectionArrived;
-
-    /**
      * Represent the flag to start only once
      */
     private AtomicBoolean flag = new AtomicBoolean(false);
@@ -287,7 +265,6 @@ public class CryptoTransmissionNetworkServicePluginRoot extends AbstractPlugin i
         this.name = "Crypto Transmission Network Service";
         this.alias = "CryptoTransmissionNetworkService";
         this.extraData = null;
-        this.actorsToRegisterCache = new ArrayList<>();
     }
 
     /**
@@ -341,7 +318,7 @@ public class CryptoTransmissionNetworkServicePluginRoot extends AbstractPlugin i
             String possibleCause = "No all required resource are injected";
             CantStartPluginException pluginStartException = new CantStartPluginException(CantStartPluginException.DEFAULT_MESSAGE, null, context, possibleCause);
 
-            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_INTRAUSER_NETWORK_SERVICE, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, pluginStartException);
+            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_CRYPTO_TRANSMISSION_NETWORK_SERVICE, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, pluginStartException);
             throw pluginStartException;
 
 
@@ -524,8 +501,6 @@ public class CryptoTransmissionNetworkServicePluginRoot extends AbstractPlugin i
 
                     remoteNetworkServicesRegisteredList = new CopyOnWriteArrayList<PlatformComponentProfile>();
 
-                    connectionArrived = new AtomicBoolean(false);
-
                     actorNetworkServiceRecordedAgent = new ActorNetworkServiceRecordedAgent(
                             this,
                             errorManager,
@@ -563,7 +538,7 @@ public class CryptoTransmissionNetworkServicePluginRoot extends AbstractPlugin i
                     String possibleCause = "The Template Database triggered an unexpected problem that wasn't able to solve by itself";
                     CantStartPluginException pluginStartException = new CantStartPluginException(CantStartPluginException.DEFAULT_MESSAGE, exception, context, possibleCause);
 
-                    errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_INTRAUSER_NETWORK_SERVICE, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, pluginStartException);
+                    errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_CRYPTO_TRANSMISSION_NETWORK_SERVICE, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, pluginStartException);
                     throw pluginStartException;
 
                 } catch (Exception exception) {
@@ -577,7 +552,7 @@ public class CryptoTransmissionNetworkServicePluginRoot extends AbstractPlugin i
 
                     CantStartPluginException pluginStartException = new CantStartPluginException(CantStartPluginException.DEFAULT_MESSAGE, exception, context, "");
 
-                    errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_INTRAUSER_NETWORK_SERVICE, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, pluginStartException);
+                    errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_CRYPTO_TRANSMISSION_NETWORK_SERVICE, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, pluginStartException);
                     throw pluginStartException;
                 }
 
@@ -716,11 +691,16 @@ public class CryptoTransmissionNetworkServicePluginRoot extends AbstractPlugin i
 
     private void initializeIntraActorAgent() {
         try {
-
+            if(actorNetworkServiceRecordedAgent==null){
+                actorNetworkServiceRecordedAgent = new ActorNetworkServiceRecordedAgent(
+                        this,
+                        errorManager,
+                        eventManager);
+            }
             actorNetworkServiceRecordedAgent.start();
 
         } catch (CantStartAgentException e) {
-            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_INTRAUSER_NETWORK_SERVICE, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
+            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_CRYPTO_TRANSMISSION_NETWORK_SERVICE, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
         }
     }
 
@@ -814,13 +794,19 @@ public class CryptoTransmissionNetworkServicePluginRoot extends AbstractPlugin i
     }
 
     public void handleNewSentMessageNotificationEvent(FermatMessage fermatMessage){
+        //TODO: ver bien esto, no creo que sea así, hay que ponerle DONE al credited in wallet seguramente
+        //TODO: esto vamos a tener que cambiarlo porque está horrible
+        CryptoTransmissionMessage cryptoTransmissionMetadata = new Gson().fromJson(fermatMessage.getContent(), CryptoTransmissionMessage.class);
         try {
-            //TODO: ver bien esto, no creo que sea así, hay que ponerle DONE al credited in wallet seguramente
-            Gson gson = new Gson();
-            CryptoTransmissionMessage cryptoTransmissionMetadata = gson.fromJson(fermatMessage.getContent(), CryptoTransmissionMessage.class);
             outgoingNotificationDao.changeCryptoTransmissionProtocolState(cryptoTransmissionMetadata.getTransactionId(), CryptoTransmissionProtocolState.SENT);
         } catch (CantUpdateRecordDataBaseException e) {
-            e.printStackTrace();
+            try{
+                incomingNotificationsDao.changeCryptoTransmissionProtocolState(cryptoTransmissionMetadata.getTransactionId(), CryptoTransmissionProtocolState.SENT);
+            } catch (CantUpdateRecordDataBaseException e1) {
+                e1.printStackTrace();
+            } catch (Exception e1){
+                e1.printStackTrace();
+            }
         }catch (Exception e){
             e.printStackTrace();
         }
@@ -873,7 +859,9 @@ public class CryptoTransmissionNetworkServicePluginRoot extends AbstractPlugin i
                             cryptoTransmissionMetadata.getCryptoTransmissionMetadataType(),
                             cryptoTransmissionMetadata.getCryptoTransmissionMetadataStates(),
                             cryptoTransmissionMetadata.getSenderPublicKey(),
-                            cryptoTransmissionMetadata.getDestinationPublicKey());
+                            cryptoTransmissionMetadata.getDestinationPublicKey(),
+                            false,
+                            0);
 
                     switch (cryptoTransmissionResponseMessage.getCryptoTransmissionMetadataState()) {
                         case SEEN_BY_DESTINATION_NETWORK_SERVICE:
@@ -1118,7 +1106,7 @@ public class CryptoTransmissionNetworkServicePluginRoot extends AbstractPlugin i
             String context = contextBuffer.toString();
             String possibleCause = "Plugin was not registered";
 
-            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_INTRAUSER_NETWORK_SERVICE, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
+            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_CRYPTO_TRANSMISSION_NETWORK_SERVICE, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
 
         }
 
@@ -1367,7 +1355,7 @@ public class CryptoTransmissionNetworkServicePluginRoot extends AbstractPlugin i
     }
 
     private void reportUnexpectedError(final Exception e) {
-        errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_INTRAUSER_NETWORK_SERVICE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+        errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_CRYPTO_TRANSMISSION_NETWORK_SERVICE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
     }
 
 
@@ -1389,7 +1377,7 @@ public class CryptoTransmissionNetworkServicePluginRoot extends AbstractPlugin i
             /*
              * The database exists but cannot be open. I can not handle this situation.
              */
-            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_INTRAUSER_NETWORK_SERVICE, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, cantOpenDatabaseException);
+            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_CRYPTO_TRANSMISSION_NETWORK_SERVICE, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, cantOpenDatabaseException);
             throw new CantInitializeTemplateNetworkServiceDatabaseException(cantOpenDatabaseException.getLocalizedMessage());
 
         } catch (DatabaseNotFoundException e) {
@@ -1412,7 +1400,7 @@ public class CryptoTransmissionNetworkServicePluginRoot extends AbstractPlugin i
                 /*
                  * The database cannot be created. I can not handle this situation.
                  */
-                errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_INTRAUSER_NETWORK_SERVICE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, cantOpenDatabaseException);
+                errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_CRYPTO_TRANSMISSION_NETWORK_SERVICE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, cantOpenDatabaseException);
                 throw new CantInitializeTemplateNetworkServiceDatabaseException(cantOpenDatabaseException.getLocalizedMessage());
 
             }

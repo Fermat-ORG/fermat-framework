@@ -180,11 +180,28 @@ public class CryptoBrokerActorNetworkServicePluginRoot extends AbstractNetworkSe
              */
             initializeListener();
 
+           /*
+            * Initialize connection manager
+            */
+            initializeCommunicationNetworkServiceConnectionManager();
+
 
             /*
              * Verify if the communication cloud client is active
              */
             if (!wsCommunicationsCloudClientManager.isDisable()){
+
+                 /*
+                  * Construct my profile and register me
+                  */
+                PlatformComponentProfile platformComponentProfilePluginRoot =  wsCommunicationsCloudClientManager.getCommunicationsCloudClientConnection().constructPlatformComponentProfileFactory(getIdentityPublicKey(),
+                        getAlias().toLowerCase(),
+                        getName(),
+                        getNetworkServiceType(),
+                        getPlatformComponentType(),
+                        getExtraData());
+
+                setPlatformComponentProfilePluginRoot(platformComponentProfilePluginRoot);
 
                 /*
                  * Initialize the agent and start

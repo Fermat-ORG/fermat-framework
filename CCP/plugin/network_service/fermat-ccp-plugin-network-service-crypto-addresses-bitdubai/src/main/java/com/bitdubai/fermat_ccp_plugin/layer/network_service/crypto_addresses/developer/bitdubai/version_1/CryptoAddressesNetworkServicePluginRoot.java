@@ -190,8 +190,6 @@ public class CryptoAddressesNetworkServicePluginRoot extends AbstractNetworkServ
 
     private CryptoAddressesNetworkServiceDao cryptoAddressesNetworkServiceDao;
 
-    private  boolean beforeRegistered;
-
     /**
      * Represent the flag to start only once
      */
@@ -211,7 +209,7 @@ public class CryptoAddressesNetworkServicePluginRoot extends AbstractNetworkServ
         );
 
         this.listenersAdded = new ArrayList<>();
-        beforeRegistered = Boolean.FALSE;
+        this.remoteNetworkServicesRegisteredList = new CopyOnWriteArrayList<>();
 
     }
 
@@ -298,7 +296,8 @@ public class CryptoAddressesNetworkServicePluginRoot extends AbstractNetworkServ
                         communicationRegistrationProcessNetworkServiceAgent.start();
                     }
 
-                    remoteNetworkServicesRegisteredList = new CopyOnWriteArrayList<>();
+
+                    initializeAgent();
 
                     // change message state to process again first time
                     reprocessMessage();
@@ -955,23 +954,15 @@ public class CryptoAddressesNetworkServicePluginRoot extends AbstractNetworkServ
      */
     public void initializeAgent() {
 
-        try {
+        System.out.println("CryptoPaymentRequestNetworkServicePluginRoot - Starting method initializeAgent");
 
-            cryptoAddressesExecutorAgent = new CryptoAddressesExecutorAgent(
-                    this,
-                    errorManager,
-                    eventManager,
-                    cryptoAddressesNetworkServiceDao,
-                    wsCommunicationsCloudClientManager
-            );
-
-            cryptoAddressesExecutorAgent.start();
-
-        } catch(CantStartAgentException e) {
-
-            CantStartPluginException pluginStartException = new CantStartPluginException(e, "", "Problem initializing crypto addresses dao.");
-            errorManager.reportUnexpectedPluginException(this.getPluginVersionReference(), UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, pluginStartException);
-        }
+        cryptoAddressesExecutorAgent = new CryptoAddressesExecutorAgent(
+                this,
+                errorManager,
+                eventManager,
+                cryptoAddressesNetworkServiceDao,
+                wsCommunicationsCloudClientManager
+        );
     }
 
     public void handleCompleteComponentRegistrationNotificationEvent(PlatformComponentProfile platformComponentProfileRegistered){
@@ -998,7 +989,7 @@ public class CryptoAddressesNetworkServicePluginRoot extends AbstractNetworkServ
                 System.out.println("CryptoPaymentRequestNetworkServicePluginRoot - NetWork Service is Registered: " + platformComponentProfileRegistered.getAlias());
 
                 this.register = Boolean.TRUE;
-                initializeAgent();
+                cryptoAddressesExecutorAgent.start();
 
             }
 
@@ -1043,19 +1034,14 @@ public class CryptoAddressesNetworkServicePluginRoot extends AbstractNetworkServ
 
                 String remotePublicKey =  vpnConnectionCloseNotificationEvent.getRemoteParticipant().getIdentityPublicKey();
 
-
                 if(communicationNetworkServiceConnectionManager != null) {
                     communicationNetworkServiceConnectionManager.closeConnection(remotePublicKey);
                 }
 
-                /**
-                 * remove messages
-                 */
-
                 if (cryptoAddressesExecutorAgent.isConnectionOpen(remotePublicKey)){
                     cryptoAddressesExecutorAgent.connectionFailure(remotePublicKey);
                 }
-                //reprocessMessage(remotePublicKey);
+
             }
 
         }
@@ -1112,28 +1098,24 @@ public class CryptoAddressesNetworkServicePluginRoot extends AbstractNetworkServ
     public void handleClientSuccessfullReconnectNotificationEvent(FermatEvent fermatEvent) {
 
 
-        if (communicationNetworkServiceConnectionManager == null){
-            this.initializeCommunicationNetworkServiceConnectionManager();
-        }else{
-            communicationNetworkServiceConnectionManager.restart();
-        }
+        try {
 
-        /*
-         * Mark as register
-         */
-        this.register = Boolean.TRUE;
-
-        if(cryptoAddressesExecutorAgent!=null) {
-            try {
-                cryptoAddressesExecutorAgent.start();
-            } catch (CantStartAgentException e) {
-                e.printStackTrace();
+            if (communicationNetworkServiceConnectionManager != null){
+                communicationNetworkServiceConnectionManager.restart();
             }
-        }else {
-            initializeAgent();
+
+            /*
+             * Mark as register
+             */
+            this.register = Boolean.TRUE;
+
+            if(cryptoAddressesExecutorAgent!=null) {
+                cryptoAddressesExecutorAgent.start();
+            }
+
+        }catch (Exception e){
+            e.printStackTrace();
         }
-
-
 
     }
 
