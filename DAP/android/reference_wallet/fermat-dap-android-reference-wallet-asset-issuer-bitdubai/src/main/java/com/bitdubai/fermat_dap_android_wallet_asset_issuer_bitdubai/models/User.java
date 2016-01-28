@@ -42,4 +42,10 @@ public class User {
     public void setActorAssetUser(ActorAssetUser actorAssetUser) {
         this.actorAssetUser = actorAssetUser;
     }
+
+    @Override
+    public boolean equals(Object o) {
+        User user = (User) o;
+        return this.getName().equals(user.getName());
+    }
 }

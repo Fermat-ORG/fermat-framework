@@ -3,43 +3,65 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:background="#e2e4e6"
     android:orientation="vertical"
-    tools:background="@drawable/cbw_navigation_drawer_background">
+    android:paddingLeft="24dp"
+    android:paddingRight="24dp">
+
+    <!--<LinearLayout-->
+        <!--android:id="@+id/row_container"-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:orientation="horizontal"-->
+        <!--android:paddingLeft="16dp"-->
+        <!--android:paddingRight="16dp"-->
+        <!--tools:background="@color/navigation_view_menu_item_overlay">-->
+
+        <!--<ImageView-->
+            <!--android:id="@+id/imageView_icon"-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:layout_gravity="center"-->
+            <!--android:paddingLeft="14dp"-->
+            <!--android:paddingRight="14dp"-->
+            <!--android:scaleType="centerCrop"-->
+            <!--android:src="@drawable/sad_face"-->
+            <!--android:visibility="gone"-->
+            <!--tools:ignore="contentDescription" />-->
 
     <LinearLayout
-        android:id="@+id/row_container"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:paddingLeft="16dp"
-        android:paddingRight="16dp"
-        tools:background="@color/navigation_view_menu_item_overlay">
+        android:orientation="horizontal">
 
         <ImageView
             android:id="@+id/imageView_icon"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
             android:layout_gravity="center"
-            android:paddingLeft="14dp"
-            android:paddingRight="14dp"
-            android:scaleType="centerCrop"
-            android:src="@drawable/sad_face"
-            android:visibility="gone"
-            tools:ignore="contentDescription" />
+            android:background="#e2e4e6"
+            android:src="@drawable/ic_nav_home_normal"
+            android:visibility="visible"
+            tools:ignore="ContentDescription" />
 
         <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
             android:id="@+id/textView_label"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:gravity="center_horizontal"
-            android:paddingBottom="14dip"
-            android:paddingLeft="8dip"
-            android:paddingRight="8dip"
-            android:paddingTop="14dip"
-            android:textColor="#ffffff"
+            android:background="#e2e4e6"
+            android:paddingBottom="14dp"
+            android:paddingLeft="16dp"
+            android:paddingTop="14dp"
+            android:text="Home"
+            android:textColor="#000000"
             android:textSize="16sp"
-            android:text="Home" />
+            tools:ignore="HardcodedText" />
 
     </LinearLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="#ffffff" />
 
 </LinearLayout>

@@ -10,7 +10,6 @@ import com.bitdubai.sub_app.crypto_broker_community.fragments.ConnectionOtherPro
 import com.bitdubai.sub_app.crypto_broker_community.fragments.ConnectionsFragment;
 import com.bitdubai.sub_app.crypto_broker_community.fragments.ConnectionsListFragment;
 import com.bitdubai.sub_app.crypto_broker_community.fragments.ConnectionsWorldFragment;
-import com.bitdubai.sub_app.crypto_broker_community.preference_settings.CryptoBrokerCommunityPreferenceSettings;
 import com.bitdubai.sub_app.crypto_broker_community.session.CryptoBrokerCommunitySubAppSession;
 
 /**
@@ -54,22 +53,22 @@ public class CryptoBrokerCommunityFragmentFactory extends FermatFragmentFactory<
             case CWP_WALLET_STORE_ALL_FRAGMENT:
                 currentFragment = ConnectionsWorldFragment.newInstance();
                 break;
-            case CCP_SUB_APP_INTRA_USER_COMMUNITY_CONNECTIONS_FRAGMENT:
+            case CBP_SUB_APP_CRYPTO_BROKER_COMMUNITY_CONNECTIONS:
                 currentFragment = ConnectionsFragment.newInstance();
                 break;
-            case CCP_SUB_APP_INTRA_USER_COMMUNITY_CONNECTION_DETAIL_FRAGMENT:
+            case CBP_SUB_APP_CRYPTO_BROKER_COMMUNITY_CONNECTION_DETAIL:
                 currentFragment = null;
                 break;
-            case CCP_SUB_APP_INTRA_USER_COMMUNITY_CONNECTION_NOTIFICATIONS_FRAGMENT:
+            case CBP_SUB_APP_CRYPTO_BROKER_COMMUNITY_CONNECTION_NOTIFICATIONS:
                 currentFragment = ConnectionNotificationsFragment.newInstance();
                 break;
-            case CCP_SUB_APP_INTRA_USER_COMMUNITY_CONNECTION_OTHER_PROFILE_FRAGMENT:
+            case CBP_SUB_APP_CRYPTO_BROKER_COMMUNITY_CONNECTION_OTHER_PROFILE:
                 currentFragment = ConnectionOtherProfileFragment.newInstance();
                 break;
-            case CCP_SUB_APP_INTRA_USER_COMMUNITY_CONNECTION_WORLD_FRAGMENT:
+            case CBP_SUB_APP_CRYPTO_BROKER_COMMUNITY_CONNECTION_WORLD:
                 currentFragment = ConnectionsWorldFragment.newInstance();
                 break;
-            case CCP_SUB_APP_INTRA_USER_COMMUNITY_CONNECTION_FRIEND_LIST_FRAGMENT:
+            case CBP_SUB_APP_CRYPTO_BROKER_COMMUNITY_CONNECTION_FRIEND_LIST:
                 currentFragment = ConnectionsListFragment.newInstance();
                 break;
             default:

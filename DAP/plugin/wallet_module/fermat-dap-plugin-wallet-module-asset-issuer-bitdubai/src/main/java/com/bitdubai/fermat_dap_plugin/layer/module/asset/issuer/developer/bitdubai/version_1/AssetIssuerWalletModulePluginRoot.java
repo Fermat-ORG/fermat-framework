@@ -15,12 +15,14 @@ import com.bitdubai.fermat_api.layer.all_definition.resources_structure.Resource
 import com.bitdubai.fermat_api.layer.all_definition.settings.structure.SettingsManager;
 import com.bitdubai.fermat_api.layer.all_definition.util.Version;
 import com.bitdubai.fermat_api.layer.modules.common_classes.ActiveActorIdentityInformation;
+import com.bitdubai.fermat_api.layer.modules.exceptions.ActorIdentityNotSelectedException;
 import com.bitdubai.fermat_api.layer.modules.exceptions.CantGetSelectedActorIdentityException;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginBinaryFile;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantCreateFileException;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.FileNotFoundException;
 import com.bitdubai.fermat_dap_api.layer.all_definition.enums.AssetCurrentStatus;
+import com.bitdubai.fermat_dap_api.layer.all_definition.exceptions.CantGetIdentityAssetIssuerException;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.exceptions.CantGetAssetUserActorsException;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.exceptions.CantGetAssetUserGroupException;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.interfaces.ActorAssetUser;
@@ -32,21 +34,28 @@ import com.bitdubai.fermat_dap_api.layer.dap_identity.asset_issuer.interfaces.Id
 import com.bitdubai.fermat_dap_api.layer.dap_middleware.dap_asset_factory.exceptions.CantGetAssetFactoryException;
 import com.bitdubai.fermat_dap_api.layer.dap_middleware.dap_asset_factory.interfaces.AssetFactory;
 import com.bitdubai.fermat_dap_api.layer.dap_middleware.dap_asset_factory.interfaces.AssetFactoryManager;
-import com.bitdubai.fermat_dap_api.layer.all_definition.exceptions.CantGetIdentityAssetIssuerException;
+import com.bitdubai.fermat_dap_api.layer.dap_module.wallet_asset_issuer.AssetIssuerSettings;
 import com.bitdubai.fermat_dap_api.layer.dap_module.wallet_asset_issuer.exceptions.CantGetAssetStatisticException;
 import com.bitdubai.fermat_dap_api.layer.dap_module.wallet_asset_issuer.interfaces.AssetIssuerWalletSupAppModuleManager;
-import com.bitdubai.fermat_dap_api.layer.dap_module.wallet_asset_issuer.interfaces.AssetStatistic;
 import com.bitdubai.fermat_dap_api.layer.dap_transaction.asset_distribution.exceptions.CantDistributeDigitalAssetsException;
 import com.bitdubai.fermat_dap_api.layer.dap_transaction.asset_distribution.interfaces.AssetDistributionManager;
+import com.bitdubai.fermat_dap_api.layer.dap_transaction.common.exceptions.CantExecuteAppropriationTransactionException;
+import com.bitdubai.fermat_dap_api.layer.dap_transaction.common.exceptions.NotEnoughAcceptsException;
+import com.bitdubai.fermat_dap_api.layer.dap_transaction.common.exceptions.TransactionAlreadyStartedException;
+import com.bitdubai.fermat_dap_api.layer.dap_transaction.issuer_appropriation.interfaces.IssuerAppropriationManager;
 import com.bitdubai.fermat_dap_api.layer.dap_wallet.asset_issuer_wallet.interfaces.AssetIssuerWallet;
 import com.bitdubai.fermat_dap_api.layer.dap_wallet.asset_issuer_wallet.interfaces.AssetIssuerWalletList;
 import com.bitdubai.fermat_dap_api.layer.dap_wallet.asset_issuer_wallet.interfaces.AssetIssuerWalletManager;
+import com.bitdubai.fermat_dap_api.layer.dap_wallet.asset_issuer_wallet.interfaces.AssetStatistic;
 import com.bitdubai.fermat_dap_api.layer.dap_wallet.common.exceptions.CantCreateWalletException;
 import com.bitdubai.fermat_dap_api.layer.dap_wallet.common.exceptions.CantGetTransactionsException;
 import com.bitdubai.fermat_dap_api.layer.dap_wallet.common.exceptions.CantLoadWalletException;
 import com.bitdubai.fermat_dap_plugin.layer.module.asset.issuer.developer.bitdubai.version_1.structure.AssetIssuerWalletModuleManager;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedPluginExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
+import com.bitdubai.fermat_wpd_api.layer.wpd_middleware.wallet_manager.exceptions.CantListWalletsException;
+import com.bitdubai.fermat_wpd_api.layer.wpd_middleware.wallet_manager.interfaces.InstalledWallet;
+import com.bitdubai.fermat_wpd_api.layer.wpd_middleware.wallet_manager.interfaces.WalletManagerManager;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -80,9 +89,17 @@ public class AssetIssuerWalletModulePluginRoot extends AbstractPlugin implements
     @NeededPluginReference(platform = Platforms.DIGITAL_ASSET_PLATFORM, layer = Layers.IDENTITY       , plugin = Plugins.ASSET_ISSUER  )
     IdentityAssetIssuerManager identityAssetIssuerManager;
 
+    @NeededPluginReference(platform = Platforms.CRYPTO_CURRENCY_PLATFORM, layer = Layers.MIDDLEWARE, plugin = Plugins.WALLET_MANAGER)
+    private WalletManagerManager walletMiddlewareManager;
+
+    @NeededPluginReference(platform = Platforms.DIGITAL_ASSET_PLATFORM, layer = Layers.DIGITAL_ASSET_TRANSACTION, plugin = Plugins.ISSUER_APPROPRIATION)
+    private IssuerAppropriationManager issuerAppropriationManager;
+
     private AssetIssuerWallet wallet;
 
     private List<ActorAssetUser> selectedUsersToDeliver;
+
+    private SettingsManager<AssetIssuerSettings> settingsManager;
 
     {
         selectedUsersToDeliver = new ArrayList<>();
@@ -110,6 +127,7 @@ public class AssetIssuerWalletModulePluginRoot extends AbstractPlugin implements
                     assetIssuerWalletManager,
                     actorAssetUserManager,
                     assetDistributionManager,
+                    issuerAppropriationManager,
                     identityAssetIssuerManager,
                     pluginId,
                     pluginFileSystem
@@ -244,9 +262,25 @@ public class AssetIssuerWalletModulePluginRoot extends AbstractPlugin implements
     }
 
     @Override
-    public void distributionAssets(String assetPublicKey, String walletPublicKey) throws
+    public void distributionAssets(String assetPublicKey, String walletPublicKey, int assetsAmount) throws
             CantDistributeDigitalAssetsException, CantGetTransactionsException, CantCreateFileException, FileNotFoundException, CantLoadWalletException {
-        assetIssuerWalletModuleManager.distributionAssets(assetPublicKey, walletPublicKey, selectedUsersToDeliver);
+        assetIssuerWalletModuleManager.distributionAssets(assetPublicKey, walletPublicKey, selectedUsersToDeliver, assetsAmount);
+    }
+
+    @Override
+    public void appropriateAsset(String digitalAssetPublicKey, String bitcoinWalletPublicKey) throws CantExecuteAppropriationTransactionException, TransactionAlreadyStartedException, NotEnoughAcceptsException {
+        try {
+            List<InstalledWallet> installedWallets = walletMiddlewareManager.getInstalledWallets();
+            if (installedWallets.isEmpty()) {
+                System.out.println("NO INSTALLED WALLETS, CANNOT PROCEED.");
+                return;
+            }
+            //TODO REMOVE HARDCODE
+            InstalledWallet installedWallet = installedWallets.get(0);
+            assetIssuerWalletModuleManager.appropriateAsset(digitalAssetPublicKey, installedWallet.getWalletPublicKey());
+        } catch (CantListWalletsException e) {
+            e.printStackTrace();
+        }
     }
 
     @Override
@@ -277,18 +311,37 @@ public class AssetIssuerWalletModulePluginRoot extends AbstractPlugin implements
     }
 
     @Override
-    public SettingsManager getSettingsManager() {
-        return null;
+    public List<AssetStatistic> getWalletStatisticsByAsset(String walletPublicKey, String assetName) throws CantLoadWalletException, CantGetAssetStatisticException {
+        return loadAssetIssuerWallet(walletPublicKey).getAllStatisticForGivenAsset(assetName);
     }
 
     @Override
-    public ActiveActorIdentityInformation getSelectedActorIdentity() throws CantGetSelectedActorIdentityException {
-//        try {
-            return assetIssuerWalletModuleManager.getActiveIdentities().get(0);
-//        } catch (CantGetIssuerWalletModuleException e) {
-//            e.printStackTrace();
-//            return null;
-//        }
+    public SettingsManager getSettingsManager() {
+        if (this.settingsManager != null)
+            return this.settingsManager;
+
+        this.settingsManager = new SettingsManager<>(
+                pluginFileSystem,
+                pluginId
+        );
+
+        return this.settingsManager;
+    }
+
+    @Override
+    public ActiveActorIdentityInformation getSelectedActorIdentity() throws CantGetSelectedActorIdentityException, ActorIdentityNotSelectedException {
+        try {
+            List<IdentityAssetIssuer> identities = assetIssuerWalletModuleManager.getActiveIdentities();
+            return (identities == null || identities.isEmpty()) ? null : assetIssuerWalletModuleManager.getActiveIdentities().get(0);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    @Override
+    public void createIdentity(String name, String phrase, byte[] profile_img) throws Exception {
+        identityAssetIssuerManager.createNewIdentityAssetIssuer(name, profile_img);
     }
 
     @Override

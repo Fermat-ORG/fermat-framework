@@ -14,11 +14,15 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
 import com.bitdubai.fermat_api.layer.all_definition.settings.structure.SettingsManager;
 import com.bitdubai.fermat_api.layer.all_definition.util.Version;
 import com.bitdubai.fermat_api.layer.modules.common_classes.ActiveActorIdentityInformation;
+import com.bitdubai.fermat_api.layer.modules.exceptions.ActorIdentityNotSelectedException;
 import com.bitdubai.fermat_api.layer.modules.exceptions.CantGetSelectedActorIdentityException;
+import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
+import com.bitdubai.fermat_dap_api.layer.dap_identity.asset_user.interfaces.IdentityAssetUser;
 import com.bitdubai.fermat_dap_api.layer.dap_identity.redeem_point.exceptions.CantGetRedeemPointIdentitiesException;
 import com.bitdubai.fermat_dap_api.layer.dap_identity.redeem_point.interfaces.RedeemPointIdentity;
 import com.bitdubai.fermat_dap_api.layer.dap_identity.redeem_point.interfaces.RedeemPointIdentityManager;
 import com.bitdubai.fermat_dap_api.layer.all_definition.exceptions.CantGetIdentityRedeemPointException;
+import com.bitdubai.fermat_dap_api.layer.dap_module.wallet_asset_redeem_point.RedeemPointSettings;
 import com.bitdubai.fermat_dap_api.layer.dap_module.wallet_asset_redeem_point.interfaces.AssetRedeemPointWalletSubAppModule;
 import com.bitdubai.fermat_dap_api.layer.dap_wallet.asset_redeem_point.interfaces.AssetRedeemPointWallet;
 import com.bitdubai.fermat_dap_api.layer.dap_wallet.asset_redeem_point.interfaces.AssetRedeemPointWalletList;
@@ -45,12 +49,17 @@ public class AssetRedeemPointWalletModulePluginRoot extends AbstractPlugin imple
     @NeededAddonReference(platform = Platforms.PLUG_INS_PLATFORM, layer = Layers.PLATFORM_SERVICE, addon = Addons.ERROR_MANAGER)
     private ErrorManager errorManager;
 
+    @NeededAddonReference(platform = Platforms.OPERATIVE_SYSTEM_API, layer = Layers.SYSTEM, addon = Addons.PLUGIN_FILE_SYSTEM)
+    protected PluginFileSystem pluginFileSystem;
+
     @NeededPluginReference(platform = Platforms.DIGITAL_ASSET_PLATFORM, layer = Layers.IDENTITY       , plugin = Plugins.REDEEM_POINT  )
     RedeemPointIdentityManager redeemPointIdentityManager;
 
     // TODO MAKE USE OF THE ERROR MANAGER
 
     private AssetRedeemPointWalletModuleManager assetRedeemPointWalletModuleManager;
+
+    private SettingsManager<RedeemPointSettings> settingsManager;
 
     public AssetRedeemPointWalletModulePluginRoot() {
         super(new PluginVersionReference(new Version()));
@@ -66,7 +75,10 @@ public class AssetRedeemPointWalletModulePluginRoot extends AbstractPlugin imple
         try {
             assetRedeemPointWalletModuleManager = new AssetRedeemPointWalletModuleManager(
                     assetRedeemPointWalletManager,
-                    redeemPointIdentityManager);
+                    redeemPointIdentityManager,
+                    pluginId,
+                    pluginFileSystem
+            );
 
             System.out.println("******* Asset Redeem Point Wallet Module Init ******");
             this.serviceStatus = ServiceStatus.STARTED;
@@ -104,18 +116,33 @@ public class AssetRedeemPointWalletModulePluginRoot extends AbstractPlugin imple
 
     @Override
     public SettingsManager getSettingsManager() {
-        return null;
+        if (this.settingsManager != null)
+            return this.settingsManager;
+
+        this.settingsManager = new SettingsManager<>(
+                pluginFileSystem,
+                pluginId
+        );
+
+        return this.settingsManager;
     }
 
     @Override
-    public ActiveActorIdentityInformation getSelectedActorIdentity() throws CantGetSelectedActorIdentityException {
-//        try {
-        return assetRedeemPointWalletModuleManager.getActiveIdentities().get(0);
-//        } catch (CantGetIssuerWalletModuleException e) {
-//            e.printStackTrace();
-//            return null;
-//        }
+    public ActiveActorIdentityInformation getSelectedActorIdentity() throws CantGetSelectedActorIdentityException, ActorIdentityNotSelectedException {
+        try {
+            List<RedeemPointIdentity> identities = assetRedeemPointWalletModuleManager.getActiveIdentities();
+            return (identities == null || identities.isEmpty()) ? null : identities.get(0);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
     }
+
+    @Override
+    public void createIdentity(String name, String phrase, byte[] profile_img) throws Exception {
+        redeemPointIdentityManager.createNewRedeemPoint(name,profile_img);
+    }
+
 
     @Override
     public void setAppPublicKey(String publicKey) {

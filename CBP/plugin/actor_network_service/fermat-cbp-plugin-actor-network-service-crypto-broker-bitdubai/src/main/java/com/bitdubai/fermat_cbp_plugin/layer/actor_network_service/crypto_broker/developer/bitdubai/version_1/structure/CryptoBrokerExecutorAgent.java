@@ -1,6 +1,7 @@
 package com.bitdubai.fermat_cbp_plugin.layer.actor_network_service.crypto_broker.developer.bitdubai.version_1.structure;
 
 import com.bitdubai.fermat_api.CantStartAgentException;
+import com.bitdubai.fermat_api.CantStopAgentException;
 import com.bitdubai.fermat_api.FermatAgent;
 import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.components.enums.PlatformComponentType;
@@ -101,19 +102,21 @@ public final class CryptoBrokerExecutorAgent extends FermatAgent {
     @Override
     public void pause() {
         agentThread.interrupt();
-        super.pause();
+        status = AgentStatus.PAUSED;
     }
 
     @Override
     public void resume() {
         agentThread.start();
-        super.resume();
+        status = AgentStatus.STARTED;
     }
 
     @Override
     public void stop() {
         agentThread.interrupt();
-        super.stop();
+        //TODO: fijense esto
+        status = AgentStatus.STOPPED;
+
     }
 
     private void sendCycle() {

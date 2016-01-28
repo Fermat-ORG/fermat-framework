@@ -14,9 +14,8 @@ import com.bitdubai.fermat_api.layer.actor_connection.common.exceptions.Unsuppor
 import com.bitdubai.fermat_api.layer.actor_connection.common.structure_common_classes.ActorIdentityInformation;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.PluginVersionReference;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
-import com.bitdubai.fermat_api.layer.all_definition.settings.exceptions.CantPersistSettingsException;
-import com.bitdubai.fermat_api.layer.all_definition.settings.exceptions.SettingsNotFoundException;
 import com.bitdubai.fermat_api.layer.all_definition.settings.structure.SettingsManager;
+import com.bitdubai.fermat_api.layer.modules.exceptions.ActorIdentityNotSelectedException;
 import com.bitdubai.fermat_api.layer.modules.exceptions.CantGetSelectedActorIdentityException;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
 import com.bitdubai.fermat_cbp_api.layer.actor_connection.crypto_broker.interfaces.CryptoBrokerActorConnectionManager;
@@ -41,9 +40,9 @@ import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_broker_community.
 import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_broker_community.exceptions.CryptoBrokerConnectionDenialFailedException;
 import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_broker_community.exceptions.CryptoBrokerDisconnectingFailedException;
 import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_broker_community.interfaces.CryptoBrokerCommunityInformation;
+import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_broker_community.interfaces.CryptoBrokerCommunitySearch;
 import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_broker_community.interfaces.CryptoBrokerCommunitySelectableIdentity;
 import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_broker_community.interfaces.CryptoBrokerCommunitySubAppModuleManager;
-import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_broker_community.interfaces.CryptoBrokerCommunitySearch;
 import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_broker_community.settings.CryptoBrokerCommunitySettings;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedPluginExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
@@ -68,6 +67,8 @@ public class CryptoBrokerCommunityManager implements CryptoBrokerCommunitySubApp
     private final PluginFileSystem                   pluginFileSystem                      ;
     private final UUID                               pluginId                              ;
     private final PluginVersionReference             pluginVersionReference                ;
+
+    private       String                             subAppPublicKey                       ;
 
     public CryptoBrokerCommunityManager(final CryptoBrokerIdentityManager        cryptoBrokerIdentityManager           ,
                                         final CryptoBrokerActorConnectionManager cryptoBrokerActorConnectionManager    ,
@@ -404,36 +405,69 @@ public class CryptoBrokerCommunityManager implements CryptoBrokerCommunitySubApp
     }
 
     @Override
-    public CryptoBrokerCommunitySelectableIdentity getSelectedActorIdentity() throws CantGetSelectedActorIdentityException {
+    public CryptoBrokerCommunitySelectableIdentity getSelectedActorIdentity() throws CantGetSelectedActorIdentityException, ActorIdentityNotSelectedException {
 
-        try {
-
-            return getSettingsManager().loadAndGetSettings(null).getLastSelectedIdentity();
-
-        } catch (final SettingsNotFoundException settingsNotFoundException) {
-
-            try {
-
-                getSettingsManager().persistSettings(null, new CryptoBrokerCommunitySettings());
-
-                return this.settingsManager.loadAndGetSettings(null).getLastSelectedIdentity();
-
-            }catch (final CantPersistSettingsException exception) {
-
-                throw new CantGetSelectedActorIdentityException(exception, "", "Error trying to persist the settings.");
-            } catch (final Exception exception) {
-
-                throw new CantGetSelectedActorIdentityException(exception, "", "Unhandled Error.");
-            }
-        } catch (final Exception exception) {
-
-            throw new CantGetSelectedActorIdentityException(exception, "", "Unhandled Error.");
+        List<CryptoBrokerIdentity> deviceBrokerIdentities = null;
+        try{
+            deviceBrokerIdentities = this.cryptoBrokerIdentityManager.listIdentitiesFromCurrentDeviceUser();
+        } catch( CantListCryptoBrokerIdentitiesException e) {
+            e.printStackTrace();
         }
+        final CryptoBrokerIdentity foo = deviceBrokerIdentities.get(0);
+
+        return new CryptoBrokerCommunitySelectableIdentityImpl(foo.getPublicKey(), Actors.CBP_CRYPTO_BROKER, foo.getAlias(), foo.getProfileImage());
+
+
+
+//        try {
+//
+//            CryptoBrokerCommunitySelectableIdentity lastSelectedIdentity = getSettingsManager().loadAndGetSettings(this.subAppPublicKey).getLastSelectedIdentity();
+//
+//            if (lastSelectedIdentity != null)
+//                return lastSelectedIdentity;
+//            else
+//                throw new ActorIdentityNotSelectedException("", "There's no an identity selected");
+//
+//        } catch (final SettingsNotFoundException settingsNotFoundException) {
+//
+//            try {
+//
+//                getSettingsManager().persistSettings(this.subAppPublicKey, new CryptoBrokerCommunitySettings());
+//
+//                CryptoBrokerCommunitySelectableIdentity lastSelectedIdentity = getSettingsManager().loadAndGetSettings(this.subAppPublicKey).getLastSelectedIdentity();
+//
+//                if (lastSelectedIdentity != null)
+//                    return lastSelectedIdentity;
+//                else
+//                    throw new ActorIdentityNotSelectedException("", "There's no an identity selected");
+//
+//            }catch (final CantPersistSettingsException exception) {
+//
+//                throw new CantGetSelectedActorIdentityException(exception, "", "Error trying to persist the settings.");
+//            } catch (final Exception exception) {
+//
+//                this.errorManager.reportUnexpectedPluginException(pluginVersionReference, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, exception);
+//                throw new CantGetSelectedActorIdentityException(exception, "", "Unhandled Error.");
+//            }
+//        } catch (final ActorIdentityNotSelectedException exception) {
+//
+//            throw exception;
+//        } catch (final Exception exception) {
+//
+//            this.errorManager.reportUnexpectedPluginException(pluginVersionReference, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, exception);
+//            throw new CantGetSelectedActorIdentityException(exception, "", "Unhandled Error.");
+//        }
     }
 
     @Override
-    public void setAppPublicKey(String publicKey) {
+    public void createIdentity(String name, String phrase, byte[] profile_img) throws Exception {
+        
+    }
 
+    @Override
+    public void setAppPublicKey(final String publicKey) {
+
+        this.subAppPublicKey = publicKey;
     }
 
     @Override

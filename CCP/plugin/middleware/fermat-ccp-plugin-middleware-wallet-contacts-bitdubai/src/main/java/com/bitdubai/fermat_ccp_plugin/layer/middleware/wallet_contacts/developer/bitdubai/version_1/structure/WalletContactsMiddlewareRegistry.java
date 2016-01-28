@@ -210,17 +210,9 @@ public class WalletContactsMiddlewareRegistry implements WalletContactsRegistry 
                     walletPublicKey
             );
 
-        } catch (WalletContactNotFoundException e){
-
-            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_CCP_WALLET_CONTACTS_MIDDLEWARE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
-            throw e;
-        } catch (CantGetWalletContactException  e){
-
-            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_CCP_WALLET_CONTACTS_MIDDLEWARE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+        } catch (WalletContactNotFoundException | CantGetWalletContactException e){
             throw e;
         } catch (Exception e){
-
-            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_CCP_WALLET_CONTACTS_MIDDLEWARE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
             throw new CantGetWalletContactException(CantGetWalletContactException.DEFAULT_MESSAGE, FermatException.wrapException(e));
         }
     }
@@ -370,20 +362,38 @@ public class WalletContactsMiddlewareRegistry implements WalletContactsRegistry 
 
                 if (request.getCryptoAddressDealer().equals(CryptoAddressDealers.CRYPTO_WALLET)) {
 
-                    if (request.getAction().equals(RequestAction.ACCEPT))
-                        this.handleCryptoAddressReceivedEvent(request);
-                    if (request.getAction().equals(RequestAction.DENY))
-                        this.handleCryptoAddressDeniedEvent(request);
+                    switch (request.getAction()){
+                        case ACCEPT:
+                            this.handleCryptoAddressReceivedEvent(request);
+                            break;
+                        case DENY:
+                            this.handleCryptoAddressDeniedEvent(request);
+                            break;
+                        default:
+                            //TODO: mejorar esto que es una mierda por favor
+                            if(request.getCryptoAddress()!=null) {
+                                if(request.getCryptoAddress().getAddress()!=null)
+                                    this.handleCryptoAddressReceivedEvent(request);
+                            }
+                            break;
+                    }
+                    if(request.getCryptoAddress()!=null) {
+                        if (request.getCryptoAddress().getAddress() != null)
+                            cryptoAddressesManager.markReceivedRequest(request.getRequestId());
+                    }
 
                 }
 
             }
+
 
         } catch(CantListPendingCryptoAddressRequestsException |
                 CantHandleCryptoAddressDeniedActionException |
                 CantHandleCryptoAddressReceivedActionException e) {
 
             throw new CantHandleCryptoAddressesNewsEventException(e, "", "Error handling Crypto Addresses News Event.");
+        } catch (CantConfirmAddressExchangeRequestException e) {
+            e.printStackTrace();
         }
     }
 

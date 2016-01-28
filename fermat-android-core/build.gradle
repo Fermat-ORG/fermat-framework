@@ -38,6 +38,7 @@ android {
     dexOptions {
         javaMaxHeapSize "2g"
         incremental true
+        jumboMode=true
         preDexLibraries = false
     }
 
@@ -45,6 +46,11 @@ android {
         main {
             res.srcDirs = ['src/main/structured_res/app/shell/version_1',
                            'src/main/res']
+            java {
+                include 'com/ourcompany/somepackage/activityadapter/**'
+                include 'com/ourcompany/someotherpackage/**'
+                exclude 'javax/websocket/**'
+            }
         }
     }
     buildTypes {
@@ -77,6 +83,8 @@ dependencies {
     compile project(':fermat-api')
     compile project(':fermat-core')
     compile project(':fermat-osa-android-core')
+    compile 'com.github.ozodrukh:CircularReveal:1.1.0'
+
     // DMP Projects (Wallets)
     compile project(':fermat-ccp-android-reference-wallet-bitcoin-wallet-bitdubai')
     compile project(':fermat-ccp-android-clone-reference-nich-wallet')
@@ -89,8 +97,8 @@ dependencies {
     compile project(':fermat-dmp-android-sub-app-wallet-store-bitdubai')
     compile project(':fermat-dap-android-reference-wallet-asset-issuer-bitdubai')
     /*
-                    Sub APPs on the pipeline
-                    */
+                        Sub APPs on the pipeline
+                        */
     compile project(':fermat-pip-android-sub-app-sub-app-manager-bitdubai')
     // PIP Projects (Sub APPs)
     compile project(':fermat-pip-android-sub-app-developer-bitdubai')
@@ -120,7 +128,9 @@ dependencies {
     compile project(':fermat-bnk-android-reference-wallet-bank-money-bitdubai')
     //CSH wallet
     compile project(':fermat-csh-android-reference-wallet-cash-money-bitdubai')
-//    compile project(':fermat-dap-plugin-wallet-module-asset-issuer-bitdubai')
+    //CHT
+    compile project(':fermat-cht-android-sub-app-chat-bitdubai')
+    //    compile project(':fermat-dap-plugin-wallet-module-asset-issuer-bitdubai')
     compile fileTree(dir: 'libs', include: ['*.jar'])
     //compile 'com.android.support:appcompat-v7:21.0.3'
     compile 'com.android.support:support-v4:23.0.1'
@@ -133,5 +143,11 @@ dependencies {
     compile 'com.android.support:design:23.1.0'
     compile 'com.github.PhilJay:MPAndroidChart:v2.1.6'
     // compile files('src/main/libs/beans.jar')
+
+    configurations {
+        all {
+            exclude module: ':fermat-p2p-plugin-communication-cloud-server-bitdubai'
+        }
+    }
 
 }

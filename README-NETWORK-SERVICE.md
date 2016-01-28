@@ -278,25 +278,29 @@ For the execution server in a local development environment, follow these steps:
            
 * You must enter to where the project is saved on the hard disk parent folder.
 ```Shell
+
 cd $PATH_TO_FERMAT_REPO/fermat
 ```
 * After the command to run the compilation run:
  ```Shell
+ 
 cd $PATH_TO_gradle/gradle fatjar
 ```
 * Now you enter the folder in which the executable file as a result of the above compilation is:
 
 ```Shell
-P2P/plugin/communication/fermat-p2p-plugin-ws-communications-cloud-server-bitdubai/build/libs/
+
+P2P/plugin/communication/fermat-p2p-plugin-communication-cloud-server-bitdubai/build/libs/
 ```
 * You should verify the contents of the previous folder, for this use the command:
 ```Shell
 ls
 ```
-* Once the list of files in P2P _ **/plugin/communication/fermat-p2p-plugin-ws-communications-cloud-server-bitdubai/build/libs/_** must copy the JAR file name contains in its name dependencies ** ** With
+* Once the list of files in P2P _ **/plugin/communication/fermat-p2p-plugin-communication-cloud-server-bitdubai/build/libs/_** must copy the JAR file name contains in its name dependencies ** ** With
 * To implement the server, you must run the following command:
 ```Shell
-java -jar $NOMBRE_DEL_ARCHIVO_OBTENIDO_EN_EL_PASO_ANTERIOR -jar
+
+java -jar $FILE_NAME_OBTAINED_IN_THE_PREVIOUS_STEP -jar
 ```
 * When the server is running must observe the messages printed on the console, including the IP address you are using the local print server, this address should be copied and used to configure the local client communications. The local communications client is in **_com.bitdubai.fermat_p2p_plugin.layer.ws.communications.cloud.client.developer.bitdubai.version_1.structure.util.ServerConf_**.
 * The IP address obtained in the previous step should be used in the following configuration variable:

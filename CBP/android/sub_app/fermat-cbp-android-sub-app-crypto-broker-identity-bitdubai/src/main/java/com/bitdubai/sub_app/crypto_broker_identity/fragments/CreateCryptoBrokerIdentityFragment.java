@@ -33,6 +33,7 @@ import com.bitdubai.sub_app.crypto_broker_identity.util.CreateBrokerIdentityExec
 
 import static com.bitdubai.sub_app.crypto_broker_identity.util.CreateBrokerIdentityExecutor.EXCEPTION_THROWN;
 import static com.bitdubai.sub_app.crypto_broker_identity.util.CreateBrokerIdentityExecutor.INVALID_ENTRY_DATA;
+import static com.bitdubai.sub_app.crypto_broker_identity.util.CreateBrokerIdentityExecutor.MISSING_IMAGE;
 import static com.bitdubai.sub_app.crypto_broker_identity.util.CreateBrokerIdentityExecutor.SUCCESS;
 
 /**
@@ -54,6 +55,9 @@ public class CreateCryptoBrokerIdentityFragment extends AbstractFermatFragment {
 
     private EditText mBrokerName;
     private ImageView mBrokerImage;
+
+    private Button camara;
+    private Button galeria;
 
 
     public static CreateCryptoBrokerIdentityFragment newInstance() {
@@ -90,6 +94,9 @@ public class CreateCryptoBrokerIdentityFragment extends AbstractFermatFragment {
         mBrokerName = (EditText) layout.findViewById(R.id.crypto_broker_name);
         mBrokerName.requestFocus();
 
+        camara = (Button) layout.findViewById(R.id.camara);
+        galeria = (Button) layout.findViewById(R.id.galeria);
+
         mBrokerImage = (ImageView) layout.findViewById(R.id.crypto_broker_image);
         RoundedBitmapDrawable roundedBitmap = ImagesUtils.getRoundedBitmap(getResources(), R.drawable.img_new_user_camera);
         mBrokerImage.setImageDrawable(roundedBitmap);
@@ -98,6 +105,20 @@ public class CreateCryptoBrokerIdentityFragment extends AbstractFermatFragment {
             public void onClick(View view) {
                 registerForContextMenu(mBrokerImage);
                 getActivity().openContextMenu(mBrokerImage);
+            }
+        });
+
+        camara.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                dispatchTakePictureIntent();
+            }
+        });
+
+        galeria.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                loadImageFromGallery();
             }
         });
 
@@ -112,6 +133,7 @@ public class CreateCryptoBrokerIdentityFragment extends AbstractFermatFragment {
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(  requestCode, resultCode, data);
         if (resultCode == Activity.RESULT_OK) {
             ImageView pictureView = mBrokerImage;
 
@@ -136,8 +158,7 @@ public class CreateCryptoBrokerIdentityFragment extends AbstractFermatFragment {
             }
 
             if (pictureView != null && cryptoBrokerBitmap != null) {
-                RoundedBitmapDrawable roundedBitmap = ImagesUtils.getRoundedBitmap(getResources(), cryptoBrokerBitmap);
-                pictureView.setImageDrawable(roundedBitmap);
+                pictureView.setImageBitmap(cryptoBrokerBitmap);
             }
         }
     }
@@ -189,6 +210,9 @@ public class CreateCryptoBrokerIdentityFragment extends AbstractFermatFragment {
                 break;
             case INVALID_ENTRY_DATA:
                 Toast.makeText(getActivity(), "Cannot create identity due to wrong data.", Toast.LENGTH_LONG).show();
+                break;
+            case MISSING_IMAGE:
+                Toast.makeText(getActivity(), "Please select a valid profile image for the identity.", Toast.LENGTH_LONG).show();
                 break;
         }
     }

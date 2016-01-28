@@ -7,9 +7,11 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
+import android.widget.Toast;
 
 import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView;
 import com.bitdubai.fermat_api.layer.modules.common_classes.ActiveActorIdentityInformation;
+import com.bitdubai.fermat_cbp_api.all_definition.identity.ActorIdentity;
 import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_broker_community.interfaces.CryptoBrokerCommunitySelectableIdentity;
 import com.bitdubai.fermat_ccp_api.layer.module.intra_user.exceptions.CantGetActiveLoginIdentityException;
 import com.bitdubai.sub_app.crypto_broker_community.R;
@@ -24,7 +26,7 @@ import com.squareup.picasso.Picasso;
 public class FragmentsCommons {
 
 
-    public static View setUpHeaderScreen(LayoutInflater inflater, Activity activity, CryptoBrokerCommunitySelectableIdentity selectableIdentity) throws CantGetActiveLoginIdentityException {
+    public static View setUpHeaderScreen(LayoutInflater inflater, Activity activity, ActiveActorIdentityInformation identity) throws CantGetActiveLoginIdentityException {
         /**
          * Navigation view header
          */
@@ -33,16 +35,16 @@ public class FragmentsCommons {
         relativeLayout.setLayoutParams(layoutParams);
         View view = inflater.inflate(R.layout.row_navigation_drawer_community_header, relativeLayout, true);
         ImageView imageView = (ImageView) view.findViewById(R.id.image_view_profile);
-        if (selectableIdentity != null) {
-            if (selectableIdentity.getImage() != null) {
-                if (selectableIdentity.getImage().length > 0) {
-                    imageView.setImageBitmap((BitmapFactory.decodeByteArray(selectableIdentity.getImage(), 0, selectableIdentity.getImage().length)));
+        if (identity != null) {
+            if (identity.getImage() != null) {
+                if (identity.getImage().length > 0) {
+                    imageView.setImageBitmap((BitmapFactory.decodeByteArray(identity.getImage(), 0, identity.getImage().length)));
                 } else
                     Picasso.with(activity).load(R.drawable.profile_image).into(imageView);
             } else
                 Picasso.with(activity).load(R.drawable.profile_image).into(imageView);
             FermatTextView fermatTextView = (FermatTextView) view.findViewById(R.id.txt_name);
-            fermatTextView.setText(selectableIdentity.getAlias());
+            fermatTextView.setText(identity.getAlias());
         }
 
         return view;

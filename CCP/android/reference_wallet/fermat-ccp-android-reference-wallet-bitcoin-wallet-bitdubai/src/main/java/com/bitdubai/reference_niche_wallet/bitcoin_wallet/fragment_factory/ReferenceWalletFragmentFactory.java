@@ -2,10 +2,7 @@ package com.bitdubai.reference_niche_wallet.bitcoin_wallet.fragment_factory;
 
 import com.bitdubai.fermat_android_api.engine.FermatFragmentFactory;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractFermatFragment;
-import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractFermatFragment;
-import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractFermatFragment;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.exceptions.FragmentNotFoundException;
-import com.bitdubai.fermat_wpd_api.layer.wpd_middleware.wallet_settings.interfaces.WalletSettings;
 import com.bitdubai.fermat_wpd_api.layer.wpd_network_service.wallet_resources.interfaces.WalletResourcesProviderManager;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.fragments.ContactDetailFragment;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.fragments.ContactsFragment;
@@ -18,6 +15,8 @@ import com.bitdubai.reference_niche_wallet.bitcoin_wallet.fragments.wallet_final
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.fragments.wallet_final_version.SendFormFragment;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.fragments.wallet_final_version.SendTransactionFragment2;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.fragments.wallet_final_version.SettingsFragment2;
+import com.bitdubai.reference_niche_wallet.bitcoin_wallet.fragments.wallet_final_version.SettingsMainNetworkFragment;
+import com.bitdubai.reference_niche_wallet.bitcoin_wallet.fragments.wallet_final_version.SettingsNotificationsFragment;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.session.ReferenceWalletSession;
 
 /**
@@ -85,6 +84,12 @@ public class ReferenceWalletFragmentFactory extends FermatFragmentFactory<Refere
                     break;
                 case CCP_BITCOIN_WALLET_SETTINGS_FRAGMENT:
                     currentFragment = SettingsFragment2.newInstance();
+                    break;
+                case CCP_BITCOIN_WALLET_SETTINGS_FRAGMENT_NOTIFICATIONS:
+                    currentFragment = SettingsNotificationsFragment.newInstance();
+                    break;
+                case CCP_BITCOIN_WALLET_SETTINGS_FRAGMENT_MAIN_NETWORK:
+                    currentFragment = SettingsMainNetworkFragment.newInstance();
                     break;
                 case CCP_BITCOIN_WALLET_ADD_CONNECTION_FRAGMENT:
                     currentFragment = AddConnectionFragment.newInstance();

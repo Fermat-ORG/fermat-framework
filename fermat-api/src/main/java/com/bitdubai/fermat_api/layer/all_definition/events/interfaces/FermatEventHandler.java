@@ -12,7 +12,7 @@ import com.bitdubai.fermat_api.FermatException;
  * @version 1.0
  * @since Java JDK 1.7
  */
-public interface FermatEventHandler {
+public interface FermatEventHandler{
 
     /**
      * Throw the method <code>handleEvent</code> you can handle the fermat event.

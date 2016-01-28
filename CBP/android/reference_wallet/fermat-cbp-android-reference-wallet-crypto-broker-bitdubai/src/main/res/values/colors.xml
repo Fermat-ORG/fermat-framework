@@ -56,6 +56,10 @@
 
     <color name="cbw_setting_item_color">#dbdbdb</color>
 
-    <color name="cbw_wizard_color">#254478</color>
+    <color name="cbw_wizard_color">#2c648f</color>
+    <color name="cbw_wizard_border_color">#455077</color>
     <color name="light_grey">#EEE</color>
+
+    <color name="cbw_contract_details_background">#222</color>
+    <color name="cbw_background_stock_chart_container">#3c70a9</color>
 </resources>

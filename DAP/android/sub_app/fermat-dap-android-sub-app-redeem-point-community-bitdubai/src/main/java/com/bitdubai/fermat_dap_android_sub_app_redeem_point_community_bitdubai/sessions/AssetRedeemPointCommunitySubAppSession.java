@@ -14,7 +14,7 @@ import java.util.Map;
 /**
  * Created by Nerio on 21/10/15.
  */
-public class AssetRedeemPointCommunitySubAppSession extends AbstractFermatSession<InstalledSubApp,RedeemPointCommunitySubAppModuleManager,SubAppResourcesProviderManager> implements SubAppsSession {
+public class AssetRedeemPointCommunitySubAppSession extends AbstractFermatSession<InstalledSubApp,RedeemPointCommunitySubAppModuleManager,SubAppResourcesProviderManager>  {
 
     public AssetRedeemPointCommunitySubAppSession() {}
 

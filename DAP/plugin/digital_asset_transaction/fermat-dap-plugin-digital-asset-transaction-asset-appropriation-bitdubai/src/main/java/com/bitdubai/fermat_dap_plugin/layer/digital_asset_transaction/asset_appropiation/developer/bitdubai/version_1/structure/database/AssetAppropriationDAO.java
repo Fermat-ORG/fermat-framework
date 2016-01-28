@@ -25,14 +25,14 @@ import com.bitdubai.fermat_dap_api.layer.all_definition.digital_asset.DigitalAss
 import com.bitdubai.fermat_dap_api.layer.all_definition.enums.AppropriationStatus;
 import com.bitdubai.fermat_dap_api.layer.all_definition.enums.EventStatus;
 import com.bitdubai.fermat_dap_api.layer.all_definition.util.Validate;
-import com.bitdubai.fermat_dap_api.layer.dap_transaction.asset_appropriation.exceptions.CantExecuteAppropriationTransactionException;
 import com.bitdubai.fermat_dap_api.layer.dap_transaction.asset_appropriation.exceptions.CantLoadAssetAppropriationTransactionListException;
-import com.bitdubai.fermat_dap_api.layer.dap_transaction.asset_appropriation.exceptions.TransactionAlreadyStartedException;
-import com.bitdubai.fermat_dap_api.layer.dap_transaction.asset_appropriation.interfaces.AssetAppropriationTransactionRecord;
 import com.bitdubai.fermat_dap_api.layer.dap_transaction.common.exceptions.CantCreateDigitalAssetFileException;
+import com.bitdubai.fermat_dap_api.layer.dap_transaction.common.exceptions.CantExecuteAppropriationTransactionException;
 import com.bitdubai.fermat_dap_api.layer.dap_transaction.common.exceptions.CantGetDigitalAssetFromLocalStorageException;
 import com.bitdubai.fermat_dap_api.layer.dap_transaction.common.exceptions.CantSaveEventException;
 import com.bitdubai.fermat_dap_api.layer.dap_transaction.common.exceptions.RecordsNotFoundException;
+import com.bitdubai.fermat_dap_api.layer.dap_transaction.common.exceptions.TransactionAlreadyStartedException;
+import com.bitdubai.fermat_dap_api.layer.dap_transaction.common.interfaces.AppropriationTransactionRecord;
 import com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.asset_appropiation.developer.bitdubai.version_1.exceptions.CantLoadAssetAppropriationEventListException;
 import com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.asset_appropiation.developer.bitdubai.version_1.structure.functional.AssetAppropriationTransactionRecordImpl;
 import com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.asset_appropiation.developer.bitdubai.version_1.structure.functional.AssetAppropriationVault;
@@ -101,16 +101,16 @@ public class AssetAppropriationDAO implements AutoCloseable {
         String context = "Asset : " + assetMetadata.getDigitalAsset().getPublicKey() + " - Btc Wallet: " + bitcoinWalletPublicKey
                 + " - User Wallet: " + userWalletPublicKey;
         try {
-            if (transactionExists(assetMetadata.getDigitalAsset().getPublicKey(), userWalletPublicKey, bitcoinWalletPublicKey)) {
+            if (transactionExists(assetMetadata.getGenesisTransaction(), userWalletPublicKey, bitcoinWalletPublicKey)) {
                 throw new TransactionAlreadyStartedException(null, context, "You already started the transaction for this asset.");
             }
 
-            vault.persistDigitalAssetMetadataInLocalStorage(assetMetadata);
 
             DatabaseTable databaseTable = this.database.getTable(AssetAppropriationDatabaseConstants.ASSET_APPROPRIATION_TRANSACTION_METADATA_TABLE_NAME);
             DatabaseTableRecord transactionRecord = databaseTable.getEmptyRecord();
 
             String transactionId = UUID.randomUUID().toString(); //The id of the record to be created.
+            vault.persistDigitalAssetMetadataInLocalStorage(assetMetadata, transactionId);
 
             transactionRecord.setStringValue(AssetAppropriationDatabaseConstants.ASSET_APPROPRIATION_TRANSACTION_METADATA_ID_COLUMN_NAME, transactionId);
             transactionRecord.setStringValue(AssetAppropriationDatabaseConstants.ASSET_APPROPRIATION_TRANSACTION_METADATA_STATUS_COLUMN_NAME, AppropriationStatus.APPROPRIATION_STARTED.getCode());
@@ -121,7 +121,7 @@ public class AssetAppropriationDAO implements AutoCloseable {
             transactionRecord.setStringValue(AssetAppropriationDatabaseConstants.ASSET_APPROPRIATION_TRANSACTION_METADATA_CRYPTO_CURRENCY_TO_COLUMN_NAME, "-");
             transactionRecord.setLongValue(AssetAppropriationDatabaseConstants.ASSET_APPROPRIATION_TRANSACTION_METADATA_START_TIME_COLUMN_NAME, System.currentTimeMillis());
             transactionRecord.setLongValue(AssetAppropriationDatabaseConstants.ASSET_APPROPRIATION_TRANSACTION_METADATA_END_TIME_COLUMN_NAME, Validate.MAX_DATE); //Since I can't store null on a primitive I'll set it as the max possible then update it.
-            transactionRecord.setStringValue(AssetAppropriationDatabaseConstants.ASSET_APPROPRIATION_TRANSACTION_METADATA_GENESIS_COLUMN_NAME, "-"); //I will update this when I send the bitcoins...
+            transactionRecord.setStringValue(AssetAppropriationDatabaseConstants.ASSET_APPROPRIATION_TRANSACTION_METADATA_GENESIS_COLUMN_NAME, assetMetadata.getGenesisTransaction());
 
             databaseTable.insertRecord(transactionRecord);
             return transactionId;
@@ -287,9 +287,9 @@ public class AssetAppropriationDAO implements AutoCloseable {
         }
     }
 
-    private boolean transactionExists(String assetPublicKey, String userWalletPublicKey, String bitcoinWalletPublicKey) throws CantLoadAssetAppropriationTransactionListException {
+    private boolean transactionExists(String txHash, String userWalletPublicKey, String bitcoinWalletPublicKey) throws CantLoadAssetAppropriationTransactionListException {
         try {
-            getTransactionId(assetPublicKey, userWalletPublicKey, bitcoinWalletPublicKey);
+            getTransactionId(txHash, userWalletPublicKey, bitcoinWalletPublicKey);
             return true;
         } catch (RecordsNotFoundException e) {
             return false;
@@ -297,8 +297,8 @@ public class AssetAppropriationDAO implements AutoCloseable {
 
     }
 
-    private String getTransactionId(String assetPublicKey, String userWalletPublicKey, String bitcoinWalletPublicKey) throws CantLoadAssetAppropriationTransactionListException, RecordsNotFoundException {
-        String context = "Asset Public Key: " + assetPublicKey + " - User Wallet: " + userWalletPublicKey
+    private String getTransactionId(String txHash, String userWalletPublicKey, String bitcoinWalletPublicKey) throws CantLoadAssetAppropriationTransactionListException, RecordsNotFoundException {
+        String context = "Asset Public Key: " + txHash + " - User Wallet: " + userWalletPublicKey
                 + " - BTC Wallet: " + bitcoinWalletPublicKey;
         try {
             DatabaseTable transactionMetadataTable;
@@ -310,8 +310,8 @@ public class AssetAppropriationDAO implements AutoCloseable {
             addressFilter.setType(DatabaseFilterType.EQUAL);
 
             DatabaseTableFilter assetPublicKeyFilter = transactionMetadataTable.getEmptyTableFilter();
-            assetPublicKeyFilter.setColumn(AssetAppropriationDatabaseConstants.ASSET_APPROPRIATION_TRANSACTION_METADATA_DA_PUBLIC_KEY_COLUMN_NAME);
-            assetPublicKeyFilter.setValue(assetPublicKey);
+            assetPublicKeyFilter.setColumn(AssetAppropriationDatabaseConstants.ASSET_APPROPRIATION_TRANSACTION_METADATA_GENESIS_COLUMN_NAME);
+            assetPublicKeyFilter.setValue(txHash);
             assetPublicKeyFilter.setType(DatabaseFilterType.EQUAL);
 
             DatabaseTableFilter userWallerFilter = transactionMetadataTable.getEmptyTableFilter();
@@ -538,7 +538,7 @@ public class AssetAppropriationDAO implements AutoCloseable {
                 cryptoAddress = new CryptoAddress(address, currency);
             }
             AppropriationStatus status = AppropriationStatus.getByCode(getStringFieldByTransactionId(AssetAppropriationDatabaseConstants.ASSET_APPROPRIATION_TRANSACTION_METADATA_STATUS_COLUMN_NAME, transactionId));
-            DigitalAssetMetadata assetMetadata = vault.getDigitalAssetMetadataFromLocalStorage(getStringFieldByTransactionId(AssetAppropriationDatabaseConstants.ASSET_APPROPRIATION_TRANSACTION_METADATA_DA_PUBLIC_KEY_COLUMN_NAME, transactionId));
+            DigitalAssetMetadata assetMetadata = vault.getDigitalAssetMetadataFromLocalStorage(transactionId);
             long startTime = getLongFieldByTransactionId(AssetAppropriationDatabaseConstants.ASSET_APPROPRIATION_TRANSACTION_METADATA_START_TIME_COLUMN_NAME, transactionId);
             long endTime = getLongFieldByTransactionId(AssetAppropriationDatabaseConstants.ASSET_APPROPRIATION_TRANSACTION_METADATA_END_TIME_COLUMN_NAME, transactionId);
             String genesisTransaction = getStringFieldByTransactionId(AssetAppropriationDatabaseConstants.ASSET_APPROPRIATION_TRANSACTION_METADATA_GENESIS_COLUMN_NAME, transactionId);
@@ -591,57 +591,59 @@ public class AssetAppropriationDAO implements AutoCloseable {
     /*
      * Transaction metadata table.
      */
-    public AssetAppropriationTransactionRecord getTransaction(DigitalAsset digitalAsset, String assetUserWalletPublicKey, String bitcoinWalletPublicKey) throws RecordsNotFoundException, CantLoadAssetAppropriationTransactionListException {
-        return constructRecordFromId(getTransactionId(digitalAsset.getPublicKey(), assetUserWalletPublicKey, bitcoinWalletPublicKey));
+    public AppropriationTransactionRecord getTransaction(DigitalAssetMetadata digitalAsset, String assetUserWalletPublicKey, String bitcoinWalletPublicKey) throws RecordsNotFoundException, CantLoadAssetAppropriationTransactionListException {
+        return constructRecordFromId(getTransactionId(digitalAsset.getGenesisTransaction(), assetUserWalletPublicKey, bitcoinWalletPublicKey));
     }
 
-    public AssetAppropriationTransactionRecord getTransaction(String genesisTransaction) throws RecordsNotFoundException, CantLoadAssetAppropriationTransactionListException {
+    public AppropriationTransactionRecord getTransaction(String genesisTransaction) throws RecordsNotFoundException, CantLoadAssetAppropriationTransactionListException {
         return constructRecordFromId(getTransactionIdByGenesisTransaction(genesisTransaction));
     }
 
-    public List<AssetAppropriationTransactionRecord> getTransactionsForUserWallet(String assetUserWalletPublicKey) throws CantLoadAssetAppropriationTransactionListException {
+    public List<AppropriationTransactionRecord> getTransactionsForUserWallet(String assetUserWalletPublicKey) throws CantLoadAssetAppropriationTransactionListException {
         try {
             List<String> transactionIds = getTransactionIdsForUserWallet(assetUserWalletPublicKey);
-            List<AssetAppropriationTransactionRecord> assetAppropriationTransactionRecords = new ArrayList<>(transactionIds.size());
+            List<AppropriationTransactionRecord> appropriationTransactionRecords = new ArrayList<>(transactionIds.size());
             for (String id : transactionIds) {
-                assetAppropriationTransactionRecords.add(constructRecordFromId(id));
+                appropriationTransactionRecords.add(constructRecordFromId(id));
             }
-            return assetAppropriationTransactionRecords;
+            return appropriationTransactionRecords;
         } catch (RecordsNotFoundException e) {
             return new ArrayList<>();
         }
     }
 
-    public List<AssetAppropriationTransactionRecord> getTransactionsForBitcoinWallet(String bitcoinWalletPublicKey) throws CantLoadAssetAppropriationTransactionListException {
+    public List<AppropriationTransactionRecord> getTransactionsForBitcoinWallet(String bitcoinWalletPublicKey) throws CantLoadAssetAppropriationTransactionListException {
         try {
             List<String> transactionIds = getTransactionIdsForBitcoinWallet(bitcoinWalletPublicKey);
-            List<AssetAppropriationTransactionRecord> assetAppropriationTransactionRecords = new ArrayList<>(transactionIds.size());
+            List<AppropriationTransactionRecord> appropriationTransactionRecords = new ArrayList<>(transactionIds.size());
             for (String id : transactionIds) {
-                assetAppropriationTransactionRecords.add(constructRecordFromId(id));
+                appropriationTransactionRecords.add(constructRecordFromId(id));
             }
-            return assetAppropriationTransactionRecords;
+            return appropriationTransactionRecords;
         } catch (RecordsNotFoundException e) {
             return new ArrayList<>();
         }
     }
 
-    public List<AssetAppropriationTransactionRecord> getUnsendedTransactions() throws CantLoadAssetAppropriationTransactionListException {
-        List<AssetAppropriationTransactionRecord> uncompleted = new ArrayList<>();
+    public List<AppropriationTransactionRecord> getUnsendedTransactions() throws CantLoadAssetAppropriationTransactionListException {
+        List<AppropriationTransactionRecord> uncompleted = new ArrayList<>();
         uncompleted.addAll(getTransactionsForStatus(AppropriationStatus.APPROPRIATION_STARTED));
         uncompleted.addAll(getTransactionsForStatus(AppropriationStatus.CRYPTOADDRESS_OBTAINED));
         uncompleted.addAll(getTransactionsForStatus(AppropriationStatus.CRYPTOADDRESS_REGISTERED));
         uncompleted.addAll(getTransactionsForStatus(AppropriationStatus.SENDING_MESSAGE));
+        uncompleted.addAll(getTransactionsForStatus(AppropriationStatus.BITCOINS_SENT));
+        uncompleted.addAll(getTransactionsForStatus(AppropriationStatus.ASSET_DEBITED));
         return uncompleted;
     }
 
-    public List<AssetAppropriationTransactionRecord> getTransactionsForStatus(AppropriationStatus status) throws CantLoadAssetAppropriationTransactionListException {
+    public List<AppropriationTransactionRecord> getTransactionsForStatus(AppropriationStatus status) throws CantLoadAssetAppropriationTransactionListException {
         try {
             List<String> transactionIds = getTransactionIdsForStatus(status);
-            List<AssetAppropriationTransactionRecord> assetAppropriationTransactionRecords = new ArrayList<>(transactionIds.size());
+            List<AppropriationTransactionRecord> appropriationTransactionRecords = new ArrayList<>(transactionIds.size());
             for (String id : transactionIds) {
-                assetAppropriationTransactionRecords.add(constructRecordFromId(id));
+                appropriationTransactionRecords.add(constructRecordFromId(id));
             }
-            return assetAppropriationTransactionRecords;
+            return appropriationTransactionRecords;
         } catch (RecordsNotFoundException e) {
             return new ArrayList<>();
         }

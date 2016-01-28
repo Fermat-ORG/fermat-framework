@@ -32,6 +32,7 @@ import com.bitdubai.fermat_cbp_api.layer.negotiation.customer_broker_purchase.in
 import com.bitdubai.fermat_cbp_api.layer.negotiation.customer_broker_sale.exceptions.CantCreateCustomerBrokerSaleNegotiationException;
 import com.bitdubai.fermat_cbp_api.layer.negotiation.customer_broker_sale.interfaces.CustomerBrokerSaleNegotiation;
 import com.bitdubai.fermat_cbp_api.layer.negotiation.customer_broker_sale.interfaces.CustomerBrokerSaleNegotiationManager;
+import com.bitdubai.fermat_cbp_api.layer.negotiation_transaction.customer_broker_new.interfaces.CustomerBrokerNew;
 import com.bitdubai.fermat_cbp_plugin.layer.negotiation_transaction.customer_broker_new.developer.bitdubai.version_1.exceptions.CantNewSaleNegotiationTransactionException;
 import com.bitdubai.fermat_cbp_plugin.layer.negotiation_transaction.customer_broker_new.developer.bitdubai.version_1.exceptions.CantSendCustomerBrokerNewConfirmationNegotiationTransactionException;
 import com.bitdubai.fermat_cbp_plugin.layer.negotiation_transaction.customer_broker_new.developer.bitdubai.version_1.exceptions.CantSendCustomerBrokerNewNegotiationTransactionException;
@@ -143,7 +144,7 @@ public class CustomerBrokerNewAgent implements
 
         this.agentThread = new Thread(monitorAgentTransaction);
         this.agentThread.start();
-        System.out.print("-----------------------\n CUSTOMER BROKER NEW AGENT: SUCCESSFUL START \n-----------------------\n");
+//        System.out.print("-----------------------\n CUSTOMER BROKER NEW AGENT: SUCCESSFUL START \n-----------------------\n");
 
     }
 
@@ -280,61 +281,62 @@ public class CustomerBrokerNewAgent implements
         {
             try{
 
+//                System.out.print("\n\n**** MOCK CUSTOMER BROKER NEW. AGENT ****\n");
                 customerBrokerNewNegotiationTransactionDatabaseDao = new CustomerBrokerNewNegotiationTransactionDatabaseDao(pluginDatabaseSystem, pluginId, database);
 
                 String                  negotiationXML;
                 NegotiationType         negotiationType;
                 UUID                    transactionId;
-                NegotiationTransaction  negotiationTransaction;
-                List<String>            negotiationPendingToSubmitList;
+                List<CustomerBrokerNew> negotiationPendingToSubmitList;
                 CustomerBrokerPurchaseNegotiation  purchaseNegotiation = new NegotiationPurchaseRecord();
+                CustomerBrokerSaleNegotiation  saleNegotiation = new NegotiationSaleRecord();
 
+//                System.out.print("\n\n**** X) MOCK NEGOTIATION TRANSACTION - CUSTOMER BROKER NEW - AGENT - PENDING LIST SENDING ****\n");
                 //SEND NEGOTIATION PENDING (CUSTOMER_BROKER_NEW_STATUS_NEGOTIATION_COLUMN_NAME = NegotiationTransactionStatus.PENDING_SUBMIT)
                 negotiationPendingToSubmitList  = customerBrokerNewNegotiationTransactionDatabaseDao.getPendingToSubmitNegotiation();
                 if(!negotiationPendingToSubmitList.isEmpty()){
-                    for(String negotiationToSubmit: negotiationPendingToSubmitList){
+                    for (CustomerBrokerNew negotiationTransaction : negotiationPendingToSubmitList) {
 
-                        System.out.println("Customer Broker New - Negotiation to submit:\n"+negotiationToSubmit);
-
-                        negotiationXML          = customerBrokerNewNegotiationTransactionDatabaseDao.getNegotiationXML(negotiationToSubmit);
-                        negotiationType         = customerBrokerNewNegotiationTransactionDatabaseDao.getNegotiationType(negotiationToSubmit);
-                        transactionId           = customerBrokerNewNegotiationTransactionDatabaseDao.getTransactionId(negotiationToSubmit);
-                        negotiationTransaction  = customerBrokerNewNegotiationTransactionDatabaseDao.getRegisterCustomerBrokerNewNegotiationTranasction(transactionId);
+                        System.out.print("\n\n**** 5) MOCK NEGOTIATION TRANSACTION - CUSTOMER BROKER NEW - AGENT - PURCHASE NEGOTIATION SEND ****\n");
+                        negotiationXML = negotiationTransaction.getNegotiationXML();
+                        negotiationType = negotiationTransaction.getNegotiationType();
+                        transactionId = negotiationTransaction.getTransactionId();
 
                         switch (negotiationType){
                             case PURCHASE:
                                 purchaseNegotiation = (CustomerBrokerPurchaseNegotiation)XMLParser.parseXML(negotiationXML, purchaseNegotiation);
+                                System.out.print("\n\n**** 6) MOCK NEGOTIATION TRANSACTION - CUSTOMER BROKER NEW - AGENT - PURCHASE NEGOTIATION SEND negotiationId(XML): " + purchaseNegotiation.getNegotiationId() + " ****\n");
                                 //SEND NEGOTIATION TO BROKER
                                 negotiationTransmissionManager.sendNegotiatioToCryptoBroker(negotiationTransaction, NegotiationTransactionType.CUSTOMER_BROKER_NEW);
                                 //CHANGE STATUS PURCHASE NEGOTIATION. SEND_TO_BROKER: send negotiation to broker, waiting confirm
                                 customerBrokerPurchaseNegotiationManager.sendToBroker(purchaseNegotiation);
                                 break;
                         }
-                        
+
                         //Update the Negotiation Transaction
                         customerBrokerNewNegotiationTransactionDatabaseDao.updateStatusRegisterCustomerBrokerNewNegotiationTranasction(transactionId, NegotiationTransactionStatus.SENDING_NEGOTIATION);
-                    }
 
+                    }
                 }
 
                 //SEND CONFIRM PENDING (CUSTOMER_BROKER_NEW_STATUS_NEGOTIATION_COLUMN_NAME = NegotiationTransactionStatus.PENDING_CONFIRMATION)
                 negotiationPendingToSubmitList = customerBrokerNewNegotiationTransactionDatabaseDao.getPendingToConfirmtNegotiation();
                 if(!negotiationPendingToSubmitList.isEmpty()){
-                    for(String negotiationToSubmit: negotiationPendingToSubmitList){
-                        
-                        System.out.println("Customer Broker New - Negotiation to confirm:\n"+negotiationToSubmit);
-                        
-                        negotiationXML          = customerBrokerNewNegotiationTransactionDatabaseDao.getNegotiationXML(negotiationToSubmit);
-                        negotiationType         = customerBrokerNewNegotiationTransactionDatabaseDao.getNegotiationType(negotiationToSubmit);
-                        transactionId           = customerBrokerNewNegotiationTransactionDatabaseDao.getTransactionId(negotiationToSubmit);
-                        negotiationTransaction  = customerBrokerNewNegotiationTransactionDatabaseDao.getRegisterCustomerBrokerNewNegotiationTranasction(transactionId);
+                    for (CustomerBrokerNew negotiationTransaction : negotiationPendingToSubmitList) {
+
+//                        System.out.print("\n\n**** 22) MOCK NEGOTIATION TRANSACTION - CUSTOMER BROKER NEW - AGENT - CONFIRMATION FOR SEND transactionId: " + negotiationToSubmit.getTransactionId() + " ****\n");
+
+                        negotiationXML = negotiationTransaction.getNegotiationXML();
+                        negotiationType = negotiationTransaction.getNegotiationType();
+                        transactionId = negotiationTransaction.getTransactionId();
 
                         switch (negotiationType){
                             case SALE:
-                                purchaseNegotiation=(CustomerBrokerPurchaseNegotiation)XMLParser.parseXML(negotiationXML,purchaseNegotiation);
+                                saleNegotiation = (CustomerBrokerSaleNegotiation)XMLParser.parseXML(negotiationXML,saleNegotiation);
+//                                System.out.print("\n\n**** 23) MOCK NEGOTIATION TRANSACTION - CUSTOMER BROKER NEW - AGENT - CONFIRMATION SEND negotiationId(XML): " + negotiationToSubmit.getTransactionId() + " ****\n");
                                 negotiationTransmissionManager.sendConfirmNegotiatioToCryptoCustomer(negotiationTransaction, NegotiationTransactionType.CUSTOMER_BROKER_NEW);
                                 //CHANGE STATUS PURCHASE NEGOTIATION. WAITING_TO_BROKER: send confirm of creation of the negotiation in the broker, Waiting response of part of the broker
-                                customerBrokerPurchaseNegotiationManager.waitForBroker(purchaseNegotiation);
+                                customerBrokerSaleNegotiationManager.waitForBroker(saleNegotiation);
                                 break;
                         }
 
@@ -345,8 +347,8 @@ public class CustomerBrokerNewAgent implements
                 }
 
                 //PROCES PENDING EVENT
-                List<String> pendingEventsIdList=customerBrokerNewNegotiationTransactionDatabaseDao.getPendingEvents();
-                for(String eventId : pendingEventsIdList){
+                List<UUID> pendingEventsIdList=customerBrokerNewNegotiationTransactionDatabaseDao.getPendingEvents();
+                for(UUID eventId : pendingEventsIdList){
                     checkPendingEvent(eventId);
                 }
                 
@@ -366,7 +368,7 @@ public class CustomerBrokerNewAgent implements
         }
 
         //CHECK PENDING EVEN
-        private void checkPendingEvent(String eventId) throws UnexpectedResultReturnedFromDatabaseException {
+        private void checkPendingEvent(UUID eventId) throws UnexpectedResultReturnedFromDatabaseException {
 
             try {
 
@@ -374,7 +376,6 @@ public class CustomerBrokerNewAgent implements
                 UUID                            transmissionId;
                 NegotiationTransmission         negotiationTransmission;
                 NegotiationTransaction          negotiationTransaction;
-                NegotiationTransactionStatus    negotiationTransactionStatus;
                 NegotiationType                 negotiationType;
                 String                          negotiationXML;
                 CustomerBrokerSaleNegotiation   saleNegotiation     = new NegotiationSaleRecord();
@@ -387,26 +388,42 @@ public class CustomerBrokerNewAgent implements
                     for (Transaction<NegotiationTransmission> record : pendingTransactionList) {
 
                         negotiationTransmission = record.getInformation();
-                        negotiationXML  = negotiationTransmission.getNegotiationXML();
-                        transmissionId  = negotiationTransmission.getTransmissionId();
-                        transactionId   = negotiationTransmission.getTransactionId();
-                        negotiationType = negotiationTransmission.getNegotiationType();
 
-                        if (negotiationXML != null) {
-                            switch (negotiationType) {
-                                case SALE:
-                                    //CREATE SALE NEGOTIATION
-                                    saleNegotiation = (CustomerBrokerSaleNegotiation) XMLParser.parseXML(negotiationXML, saleNegotiation);
-                                    customerBrokerNewSaleNegotiationTransaction = new CustomerBrokerNewSaleNegotiationTransaction(
-                                            customerBrokerSaleNegotiationManager,
-                                            customerBrokerNewNegotiationTransactionDatabaseDao
-                                    );
-                                    customerBrokerNewSaleNegotiationTransaction.receiveSaleNegotiationTranasction(transactionId, saleNegotiation);
-                                    break;
+                        if(negotiationTransmission.getNegotiationTransactionType().getCode().equals(NegotiationTransactionType.CUSTOMER_BROKER_NEW.getCode())){
+
+                            negotiationXML = negotiationTransmission.getNegotiationXML();
+                            transmissionId = negotiationTransmission.getTransmissionId();
+                            transactionId = negotiationTransmission.getTransactionId();
+                            negotiationType = negotiationTransmission.getNegotiationType();
+
+//                            System.out.print("\n**** 18) MOCK NEGOTIATION TRANSACTION - CUSTOMER BROKER NEW - AGENT - LIST EVENT PENDING ****\n" +
+//                                            "\n - NEGOTIATION TRANSACTION TYPE = "+negotiationTransmission.getNegotiationTransactionType().getCode()+
+////                                            "\n - TRANSACTION ID = " +transactionId+
+////                                            "\n - TRANSMISSION ID = " +transmissionId+
+//                                            "\n - TRANSMISSION STATE = "+negotiationTransmission.getTransmissionState().getCode()+
+//                                            "\n - NEGOTIATION TYPE = "+negotiationType+
+//                                            "\n - NEGOTIATION XML = "+negotiationXML
+//                            );
+
+                            if (negotiationXML != null) {
+//                                System.out.print("\n**** 18.2) MOCK NEGOTIATION TRANSACTION - CUSTOMER BROKER NEW - AGENT - LIST EVENT ID "+ eventId +" PENDING ****\n");
+                                switch (negotiationType) {
+                                    case SALE:
+//                                        System.out.print("\n**** 19) MOCK NEGOTIATION TRANSACTION - CUSTOMER BROKER NEW - AGENT - CREATE SALE NEGOTIATION TRANSACTION  ****\n");
+                                        //CREATE SALE NEGOTIATION
+                                        saleNegotiation = (CustomerBrokerSaleNegotiation) XMLParser.parseXML(negotiationXML, saleNegotiation);
+                                        customerBrokerNewSaleNegotiationTransaction = new CustomerBrokerNewSaleNegotiationTransaction(
+                                                customerBrokerSaleNegotiationManager,
+                                                customerBrokerNewNegotiationTransactionDatabaseDao
+                                        );
+                                        customerBrokerNewSaleNegotiationTransaction.receiveSaleNegotiationTranasction(transactionId, saleNegotiation);
+                                        break;
+                                }
+                                //NOTIFIED EVENT
+                                customerBrokerNewNegotiationTransactionDatabaseDao.updateEventTansactionStatus(eventId, EventStatus.NOTIFIED);
+                                //CONFIRM TRANSMISSION
+                                negotiationTransmissionManager.confirmReception(transmissionId);
                             }
-
-                            //NOTIFIED EVENT
-                            customerBrokerNewNegotiationTransactionDatabaseDao.updateEventTansactionStatus(transactionId, EventStatus.NOTIFIED);
                         }
                     }
                 }
@@ -415,17 +432,20 @@ public class CustomerBrokerNewAgent implements
                 if (eventTypeCode.equals(EventType.INCOMING_NEGOTIATION_TRANSMISSION_CONFIRM_NEW.getCode())) {
                     List<Transaction<NegotiationTransmission>> pendingTransactionList = negotiationTransmissionManager.getPendingTransactions(Specialist.UNKNOWN_SPECIALIST);
                     for (Transaction<NegotiationTransmission> record : pendingTransactionList) {
+
                         negotiationTransmission = record.getInformation();
+                        transmissionId  = negotiationTransmission.getTransmissionId();
                         transactionId = negotiationTransmission.getTransactionId();
+
                         negotiationTransaction = customerBrokerNewNegotiationTransactionDatabaseDao.getRegisterCustomerBrokerNewNegotiationTranasction(transactionId);
                         if (negotiationTransaction.getStatusTransaction().equals(NegotiationTransactionStatus.PENDING_CONFIRMATION.getCode())) {
 
                             //CONFIRM TRANSACTION
                             customerBrokerNewNegotiationTransactionDatabaseDao.updateStatusRegisterCustomerBrokerNewNegotiationTranasction(transactionId, NegotiationTransactionStatus.CONFIRM_NEGOTIATION);
                             //NOTIFIED EVENT
-                            customerBrokerNewNegotiationTransactionDatabaseDao.updateEventTansactionStatus(transactionId, EventStatus.NOTIFIED);
+                            customerBrokerNewNegotiationTransactionDatabaseDao.updateEventTansactionStatus(eventId, EventStatus.NOTIFIED);
                             //CONFIRM TRANSMISSION
-                            negotiationTransmissionManager.confirmReception(transactionId);
+                            negotiationTransmissionManager.confirmReception(transmissionId);
 
                         }
                     }

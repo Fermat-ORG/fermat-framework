@@ -2,12 +2,11 @@ package com.bitdubai.fermat_dap_api.layer.dap_actor.redeem_point.interfaces;
 
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.FermatManager;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_issuer.interfaces.ActorAssetIssuer;
-import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.exceptions.CantCreateAssetUserActorException;
-import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.interfaces.ActorAssetUser;
-import com.bitdubai.fermat_dap_api.layer.dap_actor.redeem_point.exceptions.CantAssetRedeemPointActorNotFoundException;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.exceptions.CantConnectToActorAssetUserException;
+import com.bitdubai.fermat_dap_api.layer.dap_actor.redeem_point.exceptions.CantAssetRedeemPointActorNotFoundException;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.redeem_point.exceptions.CantCreateActorRedeemPointException;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.redeem_point.exceptions.CantGetAssetRedeemPointActorsException;
+import com.bitdubai.fermat_dap_api.layer.dap_actor_network_service.redeem_point.exceptions.CantRegisterActorAssetRedeemPointException;
 
 import java.util.List;
 
@@ -35,6 +34,20 @@ public interface ActorAssetRedeemPointManager extends FermatManager {
      * @throws CantCreateActorRedeemPointException
      */
     void createActorAssetRedeemPointFactory(String assetRedeemPointActorPublicKey, String assetRedeemPointActorName, byte[] assetRedeemPointActorprofileImage) throws CantCreateActorRedeemPointException;
+
+    /**
+     * The method <code>registerActorInActorNetworkService</code> Register Actor in Actor Network Service
+     */
+    void registerActorInActorNetworkService() throws CantRegisterActorAssetRedeemPointException;
+
+    /**
+     * This method saves an already existing redeem point in the registered redeem point database,
+     * usually uses when the redeem point request the issuer an extended public key, we save in
+     * the issuer side this redeem point so we can retrieve its information on future uses.
+     * @param redeemPoint The already existing redeem point with all its information
+     * @throws CantCreateActorRedeemPointException
+     */
+    void saveRegisteredActorRedeemPoint(ActorAssetRedeemPoint redeemPoint) throws CantCreateActorRedeemPointException;
 
     /**
      * The method <code>createActorAssetRedeemPointRegisterInNetworkService</code> create Actor Registered
@@ -65,6 +78,8 @@ public interface ActorAssetRedeemPointManager extends FermatManager {
      * @throws CantGetAssetRedeemPointActorsException
      */
     List<ActorAssetRedeemPoint> getAllRedeemPointActorConnected() throws CantGetAssetRedeemPointActorsException;
+
+    List<ActorAssetRedeemPoint> getAllRedeemPointActorConnectedForIssuer(String issuerPublicKey) throws CantGetAssetRedeemPointActorsException;
 
     /**
      * The method <code>sendMessage</code> Stablish Connection

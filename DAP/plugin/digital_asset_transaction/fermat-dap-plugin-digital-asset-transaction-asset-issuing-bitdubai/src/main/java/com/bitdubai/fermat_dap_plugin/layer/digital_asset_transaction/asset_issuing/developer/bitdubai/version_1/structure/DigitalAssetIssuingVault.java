@@ -70,7 +70,7 @@ public class DigitalAssetIssuingVault extends AbstractDigitalAssetVault {
             /**
              * Added by Rodrigo. This might not be the right place to do this.
              */
-            digitalAssetMetadataToDeliver.setGenesisBlock(genesisTransaction.getBlockHash());
+            digitalAssetMetadataToDeliver.addNewTransaction(genesisTransaction.getTransactionHash(), genesisTransaction.getBlockHash());
 
             /**
              * Saving the Digital Asset metadata on disk because we might have a not null genesis block
@@ -117,7 +117,7 @@ public class DigitalAssetIssuingVault extends AbstractDigitalAssetVault {
         /////////////////////////////////////////////
         System.out.println("ASSET ISSUING Before delivering - Wallet public key is:"+this.walletPublicKey);
         AssetIssuerWallet assetIssuerWallet=this.assetIssuerWalletManager.loadAssetIssuerWallet(this.walletPublicKey);
-        AssetIssuerWalletBalance assetIssuerWalletBalance= assetIssuerWallet.getBookBalance(balanceType);
+        AssetIssuerWalletBalance assetIssuerWalletBalance = assetIssuerWallet.getBalance();
         String actorToPublicKey=this.actorAssetIssuerManager.getActorAssetIssuer().getActorPublicKey();
         System.out.println("ASSET ISSUING Actor Issuer public key:"+actorToPublicKey);
         System.out.println("ASSET ISSUING Transaction to deliver: "+genesisTransaction.getTransactionHash());
@@ -135,7 +135,7 @@ public class DigitalAssetIssuingVault extends AbstractDigitalAssetVault {
     public void setGenesisTransaction(String internalId, String genesisTransaction) throws CantPersistsGenesisTransactionException {
         try{
             DigitalAssetMetadata digitalAssetMetadata=getDigitalAssetMetadataFromLocalStorage(internalId);
-            digitalAssetMetadata.setGenesisTransaction(genesisTransaction);
+            digitalAssetMetadata.addNewTransaction(genesisTransaction, null);
             persistDigitalAssetMetadataInLocalStorage(digitalAssetMetadata, internalId);
         } catch (CantGetDigitalAssetFromLocalStorageException exception) {
             throw new CantPersistsGenesisTransactionException(exception, "Set genesis transaction in Digital Asset Metadata","Cannot get the Digital Asset metadata from local storage");

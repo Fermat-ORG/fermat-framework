@@ -60,7 +60,7 @@
 
         <FrameLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
                     <android.support.v4.view.ViewPager
@@ -72,31 +72,28 @@
                          />
 
             <SlidingDrawer
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:id="@+id/SlidingDrawer"
                 android:handle="@+id/slide_container"
                 android:content="@+id/contentLayout"
                 android:layout_gravity="bottom"
-                android:padding="10dip"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
-                android:visibility="gone">
+                android:visibility="gone"
+                >
                 <FrameLayout
-                    android:layout_width="wrap_content"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:id="@+id/slide_container"
-                    android:background="@drawable/ic_arrow_down_expanded">
+                    android:id="@+id/slide_container">
 
 
                 </FrameLayout>
 
                 <LinearLayout
-                    android:layout_width="wrap_content"
+                    android:layout_width="match_parent"
                     android:id="@+id/contentLayout"
                     android:orientation="vertical"
                     android:gravity="center"
-                    android:padding="17dip"
-                    android:background="#21ab23"
                     android:layout_height="wrap_content">
 
                     <RelativeLayout

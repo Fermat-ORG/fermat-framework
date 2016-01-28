@@ -263,7 +263,7 @@ public class OpenContractMonitorAgent implements
                                 purchaseContract=(ContractPurchaseRecord)XMLParser.parseXML(
                                         contractXML,
                                         purchaseContract);
-                                transactionTransmissionManager.sendContractHashToCryptoBroker(
+                                transactionTransmissionManager.sendContractHash(
                                         transactionId,
                                         purchaseContract.getPublicKeyCustomer(),
                                         purchaseContract.getPublicKeyBroker(),
@@ -274,7 +274,7 @@ public class OpenContractMonitorAgent implements
                                 saleContract=(ContractSaleRecord)XMLParser.parseXML(
                                         contractXML,
                                         saleContract);
-                                transactionTransmissionManager.sendContractHashToCryptoCustomer(
+                                transactionTransmissionManager.sendContractHash(
                                         transactionId,
                                         saleContract.getPublicKeyBroker(),
                                         saleContract.getPublicKeyCustomer(),
@@ -305,7 +305,7 @@ public class OpenContractMonitorAgent implements
                                 purchaseContract=(ContractPurchaseRecord)XMLParser.parseXML(
                                         contractXML,
                                         purchaseContract);
-                                transactionTransmissionManager.sendContractStatusNotificationToCryptoBroker(
+                                transactionTransmissionManager.sendContractStatusNotification(
                                         purchaseContract.getPublicKeyCustomer(),
                                         purchaseContract.getPublicKeyBroker(),
                                         hashToSubmit,
@@ -316,7 +316,7 @@ public class OpenContractMonitorAgent implements
                                 saleContract=(ContractSaleRecord)XMLParser.parseXML(
                                         contractXML,
                                         saleContract);
-                                transactionTransmissionManager.sendContractStatusNotificationToCryptoCustomer(
+                                transactionTransmissionManager.sendContractStatusNotification(
                                         purchaseContract.getPublicKeyBroker(),
                                         purchaseContract.getPublicKeyCustomer(),
                                         hashToSubmit,

@@ -17,9 +17,9 @@ public class BankMoneyDeStockRecord extends AbstractDeStockRecord{
 
     private String bankAccount;
 
-    private BigDecimal priceReference;
+    //private BigDecimal priceReference;
 
-    private OriginTransaction originTransaction;
+    //private OriginTransaction originTransaction;
 
     public BankMoneyDeStockRecord(
             BusinessTransactionRecord businessTransactionRecord){

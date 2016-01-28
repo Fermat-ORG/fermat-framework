@@ -17,7 +17,7 @@ import java.util.Map;
  * @author Francisco Vasquez
  * @version 1.0
  */
-public class AssetIssuerSession extends AbstractFermatSession<InstalledWallet,AssetIssuerWalletSupAppModuleManager,WalletResourcesProviderManager> implements WalletSession {
+public class AssetIssuerSession extends AbstractFermatSession<InstalledWallet,AssetIssuerWalletSupAppModuleManager,WalletResourcesProviderManager> {
 
     private final InstalledWallet installedWallet;
     /**
@@ -38,7 +38,7 @@ public class AssetIssuerSession extends AbstractFermatSession<InstalledWallet,As
     /**
      *  Wallet Settings
      */
-    private WalletSettings walletSettings;
+    private WalletSettings settings;
 
     /**
      * Constructor
@@ -60,19 +60,13 @@ public class AssetIssuerSession extends AbstractFermatSession<InstalledWallet,As
         installedWallet = null;
     }
 
-
-//    public InstalledWallet getWalletSessionType() {
-//        return null;
-//    }
+    public InstalledWallet getWalletSessionType() {
+        return installedWallet;
+    }
 
     @Override
     public void setData(String key, Object object) {
         data.put(key, object);
-    }
-
-    @Override
-    public String getIdentityConnection() {
-        return "public_key_dap_asset_issuer_identity";
     }
 
     @Override
@@ -89,12 +83,6 @@ public class AssetIssuerSession extends AbstractFermatSession<InstalledWallet,As
 //        return null;
 //    }
 
-    @Override
-    public WalletSettings getWalletSettings() {
-        return this.walletSettings;
-    }
-
-
     /**
      * Get Asset Issuer Wallet Manager instance
      *
@@ -103,4 +91,9 @@ public class AssetIssuerSession extends AbstractFermatSession<InstalledWallet,As
     public AssetIssuerWalletSupAppModuleManager getManager() {
         return manager;
     }
+
+    public void setSettings(WalletSettings settings) {
+        this.settings = settings;
+    }
+
 }

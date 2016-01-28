@@ -16,15 +16,19 @@ import android.widget.Toast;
 
 import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractFermatFragment;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView;
+import com.bitdubai.fermat_android_api.ui.Views.PresentationDialog;
 import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.enums.CryptoCurrency;
 import com.bitdubai.fermat_api.layer.all_definition.enums.FiatCurrency;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Wallets;
 import com.bitdubai.fermat_api.layer.world.interfaces.Currency;
+import com.bitdubai.fermat_cbp_api.layer.wallet.crypto_broker.exceptions.CantGetCryptoBrokerWalletSettingException;
+import com.bitdubai.fermat_cbp_api.layer.wallet.crypto_broker.exceptions.CryptoBrokerWalletNotFoundException;
 import com.bitdubai.fermat_cbp_api.layer.wallet.crypto_broker.interfaces.setting.CryptoBrokerWalletProviderSetting;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_broker.interfaces.CryptoBrokerWalletManager;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_broker.interfaces.CryptoBrokerWalletModuleManager;
+import com.bitdubai.fermat_cer_api.all_definition.interfaces.CurrencyPair;
 import com.bitdubai.fermat_cer_api.layer.provider.exceptions.CantGetProviderInfoException;
 import com.bitdubai.fermat_cer_api.layer.provider.interfaces.CurrencyExchangeRateProviderManager;
 import com.bitdubai.fermat_cer_api.layer.search.exceptions.CantGetProviderException;
@@ -133,6 +137,16 @@ public class WizardPageSetProvidersFragment extends AbstractFermatFragment
                 saveSettingAndGoNextStep();
             }
         });
+        PresentationDialog presentationDialog = new PresentationDialog.Builder(getActivity(), appSession)
+                .setBody("Custom text support for dialog in the wizard Providers help")
+                .setSubTitle("Subtitle text of Merchandises dialog help")
+                .setTextFooter("Text footer Merchandises dialog help")
+                .setTemplateType(PresentationDialog.TemplateType.TYPE_PRESENTATION_WITHOUT_IDENTITIES)
+                .setBannerRes(R.drawable.banner_crypto_broker)
+                .setIconRes(R.drawable.crypto_broker)
+                .build();
+
+        presentationDialog.show();
 
         return layout;
     }
@@ -157,10 +171,19 @@ public class WizardPageSetProvidersFragment extends AbstractFermatFragment
         try {
             List<CurrencyExchangeRateProviderManager> providers = new ArrayList<>();
 
-            Collection<CurrencyExchangeRateProviderManager> providerManagers = walletManager.getProviderReferencesFromCurrencyPair(currencyFrom, currencyTo);
-            if (providerManagers != null)
-                providers.addAll(providerManagers);
+            Map<String, CurrencyPair> map = walletManager.getWalletProviderAssociatedCurrencyPairs(null, appSession.getAppPublicKey());
 
+            Collection<CurrencyExchangeRateProviderManager> providerManagers;
+
+            for (Map.Entry<String, CurrencyPair> e: map.entrySet()) {
+
+                currencyFrom = e.getValue().getFrom();
+                currencyTo   = e.getValue().getTo();
+
+                providerManagers = walletManager.getProviderReferencesFromCurrencyPair(currencyFrom, currencyTo);
+                if (providerManagers != null)
+                    providers.addAll(providerManagers);
+            }
 
             final SimpleListDialogFragment<CurrencyExchangeRateProviderManager> dialogFragment = new SimpleListDialogFragment<>();
             dialogFragment.configure("Select a Provider", providers);
@@ -182,6 +205,16 @@ public class WizardPageSetProvidersFragment extends AbstractFermatFragment
             if (errorManager != null)
                 errorManager.reportUnexpectedWalletException(Wallets.CBP_CRYPTO_BROKER_WALLET,
                         UnexpectedWalletExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, ex);
+        } catch (CantGetCryptoBrokerWalletSettingException ex) {
+            Log.e(TAG, ex.getMessage(), ex);
+            if (errorManager != null)
+                errorManager.reportUnexpectedWalletException(Wallets.CBP_CRYPTO_BROKER_WALLET,
+                        UnexpectedWalletExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, ex);
+        } catch (CryptoBrokerWalletNotFoundException ex) {
+            Log.e(TAG, ex.getMessage(), ex);
+            if (errorManager != null)
+                errorManager.reportUnexpectedWalletException(Wallets.CBP_CRYPTO_BROKER_WALLET,
+                        UnexpectedWalletExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, ex);
         }
 
 
@@ -190,9 +223,8 @@ public class WizardPageSetProvidersFragment extends AbstractFermatFragment
     private void saveSettingAndGoNextStep() {
 
         if (selectedProviders.isEmpty()) {
-            Toast.makeText(getActivity(), R.string.cbw_select_stock_wallets_warning_msg, Toast.LENGTH_SHORT).show();
-            //TODO
-            //return;
+            Toast.makeText(getActivity(), R.string.cbw_select_providers_warning_msg, Toast.LENGTH_SHORT).show();
+            return;
         }
 
         try {
@@ -221,7 +253,7 @@ public class WizardPageSetProvidersFragment extends AbstractFermatFragment
     public void deleteButtonClicked(CurrencyExchangeRateProviderManager data, final int position) {
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
 
-        builder.setTitle(R.string.cbw_delete_wallet_dialog_title).setMessage(R.string.cbw_delete_wallet_dialog_msg);
+        builder.setTitle(R.string.cbw_delete_provider_dialog_title).setMessage(R.string.cbw_delete_provider_dialog_msg);
         builder.setPositiveButton(R.string.cbw_delete_caps, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {

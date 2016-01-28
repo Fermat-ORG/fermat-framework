@@ -19,6 +19,7 @@ import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfac
  * @version 1.0
  * @since Java JDK 1.7
  */
+@Deprecated
 public final class CommunicationNetworkServiceConnectionManager extends AbstractCommunicationNetworkServiceConnectionManager {
 
     public CommunicationNetworkServiceConnectionManager(final PlatformComponentProfile platformComponentProfile,

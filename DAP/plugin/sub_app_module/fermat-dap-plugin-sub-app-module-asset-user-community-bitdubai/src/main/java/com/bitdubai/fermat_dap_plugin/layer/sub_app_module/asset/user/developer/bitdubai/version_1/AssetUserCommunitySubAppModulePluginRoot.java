@@ -12,7 +12,9 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.settings.structure.SettingsManager;
 import com.bitdubai.fermat_api.layer.all_definition.util.Version;
 import com.bitdubai.fermat_api.layer.modules.common_classes.ActiveActorIdentityInformation;
+import com.bitdubai.fermat_api.layer.modules.exceptions.ActorIdentityNotSelectedException;
 import com.bitdubai.fermat_api.layer.modules.exceptions.CantGetSelectedActorIdentityException;
+import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
 import com.bitdubai.fermat_dap_api.layer.all_definition.exceptions.CantGetIdentityAssetUserException;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_issuer.exceptions.CantGetAssetIssuerActorsException;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_issuer.interfaces.ActorAssetIssuer;
@@ -35,6 +37,7 @@ import com.bitdubai.fermat_dap_api.layer.dap_actor_network_service.asset_user.in
 import com.bitdubai.fermat_dap_api.layer.dap_identity.asset_user.exceptions.CantGetAssetUserIdentitiesException;
 import com.bitdubai.fermat_dap_api.layer.dap_identity.asset_user.interfaces.IdentityAssetUser;
 import com.bitdubai.fermat_dap_api.layer.dap_identity.asset_user.interfaces.IdentityAssetUserManager;
+import com.bitdubai.fermat_dap_api.layer.dap_module.wallet_asset_user.AssetUserSettings;
 import com.bitdubai.fermat_dap_api.layer.dap_sub_app_module.asset_user_community.interfaces.AssetUserCommunitySubAppModuleManager;
 import com.bitdubai.fermat_dap_api.layer.dap_transaction.common.exceptions.RecordsNotFoundException;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedPluginExceptionSeverity;
@@ -66,11 +69,16 @@ public class AssetUserCommunitySubAppModulePluginRoot extends AbstractPlugin imp
     @NeededPluginReference(platform = Platforms.DIGITAL_ASSET_PLATFORM, layer = Layers.ACTOR_NETWORK_SERVICE, plugin = Plugins.ASSET_USER)
     AssetUserActorNetworkServiceManager assetUserActorNetworkServiceManager;
 
+    @NeededAddonReference(platform = Platforms.OPERATIVE_SYSTEM_API, layer = Layers.SYSTEM, addon = Addons.PLUGIN_FILE_SYSTEM)
+    private PluginFileSystem pluginFileSystem;
+
     @NeededAddonReference(platform = Platforms.PLUG_INS_PLATFORM, layer = Layers.PLATFORM_SERVICE, addon = Addons.ERROR_MANAGER)
     ErrorManager errorManager;
 
     @NeededPluginReference(platform = Platforms.DIGITAL_ASSET_PLATFORM, layer = Layers.IDENTITY       , plugin = Plugins.ASSET_USER  )
     IdentityAssetUserManager identityAssetUserManager;
+
+    private SettingsManager<AssetUserSettings> settingsManager;
 
     public AssetUserCommunitySubAppModulePluginRoot() {
         super(new PluginVersionReference(new Version()));
@@ -224,12 +232,25 @@ public class AssetUserCommunitySubAppModulePluginRoot extends AbstractPlugin imp
 
     @Override
     public SettingsManager getSettingsManager() {
-        return null;
+        if (this.settingsManager != null)
+            return this.settingsManager;
+
+        this.settingsManager = new SettingsManager<>(
+                pluginFileSystem,
+                pluginId
+        );
+
+        return this.settingsManager;
     }
 
     @Override
-    public ActiveActorIdentityInformation getSelectedActorIdentity() throws CantGetSelectedActorIdentityException {
+    public ActiveActorIdentityInformation getSelectedActorIdentity() throws CantGetSelectedActorIdentityException, ActorIdentityNotSelectedException {
         return identityAssetUserManager.getSelectedActorIdentity();
+    }
+
+    @Override
+    public void createIdentity(String name, String phrase, byte[] profile_img) throws Exception {
+        identityAssetUserManager.createNewIdentityAssetUser(name, profile_img);
     }
 
     @Override

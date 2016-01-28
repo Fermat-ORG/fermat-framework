@@ -6,6 +6,8 @@ import com.bitdubai.fermat_api.FermatException;
  * Created by natalia on 05/01/16.
  */
 public class CantCreateNewIntraUserIdentityException extends FermatException {
+
+    public static final String DEFAULT_MESSAGE = "CAN'T CREATE NEW INTRA USER IDENTITY MODULE EXCEPTION";
     /**
      * This is the constructor that every inherited FermatException must implement
      *

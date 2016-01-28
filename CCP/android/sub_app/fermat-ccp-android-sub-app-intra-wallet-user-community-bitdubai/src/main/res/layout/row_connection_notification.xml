@@ -30,7 +30,7 @@
         </RelativeLayout>
 
         <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
-            android:id="@+id/userName"
+            android:id="@+id/username"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"

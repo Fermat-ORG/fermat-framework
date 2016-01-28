@@ -648,7 +648,8 @@ public class BitcoinWatchOnlyCryptoVaultDao {
             throwLoadToMemoryException(e, databaseTable.getTableName());
         }
 
-        return !databaseTable.getRecords().isEmpty();
+        Boolean isEmpty = databaseTable.getRecords().isEmpty();
+        return !isEmpty;
     }
 
     /**

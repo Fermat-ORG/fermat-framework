@@ -7,12 +7,12 @@
 package com.bitdubai.fermat_ccp_plugin.layer.network_service.intra_user.developer.bitdubai.version_1.database.communications;
 
 import com.bitdubai.fermat_api.DealsWithPluginIdentity;
+import com.bitdubai.fermat_api.layer.DeveloperDatabasePIP;
 import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperDatabase;
 import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperDatabaseTable;
 import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperDatabaseTableRecord;
 import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperObjectFactory;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
-import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseDataType;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseRecord;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTable;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTableRecord;
@@ -22,7 +22,6 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.Cant
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantLoadTableToMemoryException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantOpenDatabaseException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.DatabaseNotFoundException;
-import com.bitdubai.fermat_ccp_plugin.layer.network_service.intra_user.developer.bitdubai.version_1.database.IntraActorNetworkServiceDataBaseConstants;
 import com.bitdubai.fermat_ccp_plugin.layer.network_service.intra_user.developer.bitdubai.version_1.exceptions.CantInitializeTemplateNetworkServiceDatabaseException;
 
 import java.util.ArrayList;
@@ -40,7 +39,7 @@ import java.util.UUID;
  * @since Java JDK 1.7
  */
 
-public class CommunicationNetworkServiceDeveloperDatabaseFactory implements DealsWithPluginDatabaseSystem, DealsWithPluginIdentity {
+public class CommunicationNetworkServiceDeveloperDatabaseFactory implements DealsWithPluginDatabaseSystem, DealsWithPluginIdentity,DeveloperDatabasePIP {
 
     /**
      * DealsWithPluginDatabaseSystem Interface member variables.
@@ -130,11 +129,12 @@ public class CommunicationNetworkServiceDeveloperDatabaseFactory implements Deal
         incomingmessagesColumns.add(CommunicationNetworkServiceDatabaseConstants.INCOMING_MESSAGES_ID_COLUMN_NAME);
         incomingmessagesColumns.add(CommunicationNetworkServiceDatabaseConstants.INCOMING_MESSAGES_SENDER_ID_COLUMN_NAME);
         incomingmessagesColumns.add(CommunicationNetworkServiceDatabaseConstants.INCOMING_MESSAGES_RECEIVER_ID_COLUMN_NAME);
-        incomingmessagesColumns.add(CommunicationNetworkServiceDatabaseConstants.INCOMING_MESSAGES_TEXT_CONTENT_COLUMN_NAME);
+
         incomingmessagesColumns.add(CommunicationNetworkServiceDatabaseConstants.INCOMING_MESSAGES_TYPE_COLUMN_NAME);
         incomingmessagesColumns.add(CommunicationNetworkServiceDatabaseConstants.INCOMING_MESSAGES_SHIPPING_TIMESTAMP_COLUMN_NAME);
         incomingmessagesColumns.add(CommunicationNetworkServiceDatabaseConstants.INCOMING_MESSAGES_DELIVERY_TIMESTAMP_COLUMN_NAME);
         incomingmessagesColumns.add(CommunicationNetworkServiceDatabaseConstants.INCOMING_MESSAGES_STATUS_COLUMN_NAME);
+        incomingmessagesColumns.add(CommunicationNetworkServiceDatabaseConstants.INCOMING_MESSAGES_TEXT_CONTENT_COLUMN_NAME);
         /**
          * Table incoming messages addition.
          */
@@ -149,11 +149,12 @@ public class CommunicationNetworkServiceDeveloperDatabaseFactory implements Deal
         outgoingmessagesColumns.add(CommunicationNetworkServiceDatabaseConstants.OUTGOING_MESSAGES_ID_COLUMN_NAME);
         outgoingmessagesColumns.add(CommunicationNetworkServiceDatabaseConstants.OUTGOING_MESSAGES_SENDER_ID_COLUMN_NAME);
         outgoingmessagesColumns.add(CommunicationNetworkServiceDatabaseConstants.OUTGOING_MESSAGES_RECEIVER_ID_COLUMN_NAME);
-        outgoingmessagesColumns.add(CommunicationNetworkServiceDatabaseConstants.OUTGOING_MESSAGES_TEXT_CONTENT_COLUMN_NAME);
+
         outgoingmessagesColumns.add(CommunicationNetworkServiceDatabaseConstants.OUTGOING_MESSAGES_TYPE_COLUMN_NAME);
         outgoingmessagesColumns.add(CommunicationNetworkServiceDatabaseConstants.OUTGOING_MESSAGES_SHIPPING_TIMESTAMP_COLUMN_NAME);
         outgoingmessagesColumns.add(CommunicationNetworkServiceDatabaseConstants.OUTGOING_MESSAGES_DELIVERY_TIMESTAMP_COLUMN_NAME);
         outgoingmessagesColumns.add(CommunicationNetworkServiceDatabaseConstants.OUTGOING_MESSAGES_STATUS_COLUMN_NAME);
+        outgoingmessagesColumns.add(CommunicationNetworkServiceDatabaseConstants.OUTGOING_MESSAGES_TEXT_CONTENT_COLUMN_NAME);
         /**
          * Table outgoing messages addition.
          */
@@ -175,7 +176,8 @@ public class CommunicationNetworkServiceDeveloperDatabaseFactory implements Deal
         outgoingNotificationsColumns.add(CommunicationNetworkServiceDatabaseConstants.OUTGOING_NOTIFICATION_DESCRIPTOR_COLUMN_NAME);
         outgoingNotificationsColumns.add(CommunicationNetworkServiceDatabaseConstants.OUTGOING_NOTIFICATION_PROTOCOL_STATE_COLUMN_NAME);
         outgoingNotificationsColumns.add(CommunicationNetworkServiceDatabaseConstants.OUTGOING_NOTIFICATION_SENT_COUNT_COLUMN_NAME);
-
+        outgoingNotificationsColumns.add(CommunicationNetworkServiceDatabaseConstants.OUTGOING_NOTIFICATION_SENDER_PHRASE_COLUMN_NAME);
+        outgoingNotificationsColumns.add(CommunicationNetworkServiceDatabaseConstants.OUTGOING_NOTIFICATION_RESPONSE_TO_NOTIFICATION_ID_COLUMN_NAME);
         /**
          * Table outgoing messages addition.
          */
@@ -196,6 +198,11 @@ public class CommunicationNetworkServiceDeveloperDatabaseFactory implements Deal
         incomingNotificationsColumns.add(CommunicationNetworkServiceDatabaseConstants.INCOMING_NOTIFICATION_SENDER_ALIAS_COLUMN_NAME);
         incomingNotificationsColumns.add(CommunicationNetworkServiceDatabaseConstants.INCOMING_NOTIFICATION_DESCRIPTOR_COLUMN_NAME);
         incomingNotificationsColumns.add(CommunicationNetworkServiceDatabaseConstants.INCOMING_NOTIFICATION_PROTOCOL_STATE_COLUMN_NAME);
+        incomingNotificationsColumns.add(CommunicationNetworkServiceDatabaseConstants.INCOMING_NOTIFICATION_SENDER_PHRASE_COLUMN_NAME);
+        incomingNotificationsColumns.add(CommunicationNetworkServiceDatabaseConstants.INCOMING_NOTIFICATION_READ_MARK_COLUMN_NAME);
+        outgoingNotificationsColumns.add(CommunicationNetworkServiceDatabaseConstants.INCOMING_NOTIFICATION_RESPONSE_TO_NOTIFICATION_ID_COLUMN_NAME);
+
+
         /**
          * Table outgoing messages addition.
          */

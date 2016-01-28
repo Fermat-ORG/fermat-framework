@@ -25,7 +25,7 @@ import java.util.List;
  * Created by Matias Furszyfer on 2015.07.20..
  */
 
-public class ReferenceWalletSession extends AbstractFermatSession<InstalledWallet,CryptoWalletManager,WalletResourcesProviderManager> implements WalletSession {
+public class ReferenceWalletSession extends AbstractFermatSession<InstalledWallet,CryptoWalletManager,WalletResourcesProviderManager>  {
 
 
 
@@ -119,21 +119,6 @@ public class ReferenceWalletSession extends AbstractFermatSession<InstalledWalle
     public void setBalanceTypeSelected(BalanceType balaceType) {
         typeBalanceSelected=balaceType.getCode();
     }
-
-    /**
-     *
-     */
-    @Override
-    public WalletSettings getWalletSettings() {
-        return this.walletSettings;
-    }
-
-    @Override
-    public String getIdentityConnection() {
-        //return searchConnectionPublicKey(SubApps.CWP_INTRA_USER_IDENTITY.getCode());
-        return "public_key_ccp_intra_user_identity";
-    }
-
 
     public CryptoWalletWalletContact getLastContactSelected() {
         return lastContactSelected;

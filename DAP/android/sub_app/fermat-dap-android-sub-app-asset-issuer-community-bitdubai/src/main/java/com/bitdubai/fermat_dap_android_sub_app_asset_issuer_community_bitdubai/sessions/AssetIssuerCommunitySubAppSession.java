@@ -4,9 +4,11 @@ import com.bitdubai.fermat_android_api.layer.definition.wallet.abstracts.Abstrac
 import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.SubAppsSession;
 import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.enums.SubApps;
 import com.bitdubai.fermat_api.layer.dmp_module.sub_app_manager.InstalledSubApp;
+import com.bitdubai.fermat_api.layer.dmp_module.wallet_manager.InstalledWallet;
 import com.bitdubai.fermat_dap_api.layer.dap_sub_app_module.asset_issuer_community.interfaces.AssetIssuerCommunitySubAppModuleManager;
 import com.bitdubai.fermat_pip_api.layer.network_service.subapp_resources.SubAppResourcesProviderManager;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
+import com.bitdubai.fermat_wpd_api.layer.wpd_middleware.wallet_settings.interfaces.WalletSettings;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -14,9 +16,54 @@ import java.util.Map;
 /**
  * Created by francisco on 21/10/15.
  */
-public class AssetIssuerCommunitySubAppSession extends AbstractFermatSession<InstalledSubApp,AssetIssuerCommunitySubAppModuleManager,SubAppResourcesProviderManager> implements SubAppsSession {
+public class AssetIssuerCommunitySubAppSession extends AbstractFermatSession<InstalledSubApp,AssetIssuerCommunitySubAppModuleManager,SubAppResourcesProviderManager> {
 
-    public AssetIssuerCommunitySubAppSession() {}
+    private AssetIssuerCommunitySubAppModuleManager manager;
+
+    private final InstalledWallet installedWallet;
+
+    /**
+     * Active objects in wallet session
+     */
+    private Map<String, Object> data;
+
+    /**
+     * Error manager
+     */
+    private ErrorManager errorManager;
+
+    /**
+     *  Wallet Settings
+     */
+    private WalletSettings settings;
+
+    public AssetIssuerCommunitySubAppSession() {
+        data = new HashMap<String, Object>();
+        installedWallet = null;
+    }
+
+    @Override
+    public void setData(String key, Object object) {
+        data.put(key, object);
+    }
+
+    @Override
+    public Object getData(String key) {
+        return data.get(key);
+    }
+
+    @Override
+    public ErrorManager getErrorManager() {
+        return errorManager;
+    }
+
+    public void setSettings(WalletSettings settings) {
+        this.settings = settings;
+    }
+
+    public AssetIssuerCommunitySubAppModuleManager getManager() {
+        return manager;
+    }
 
     //    private AssetIssuerCommunitySubAppModuleManager manager;
 //
@@ -47,7 +94,5 @@ public class AssetIssuerCommunitySubAppSession extends AbstractFermatSession<Ins
 //        return errorManager;
 //    }
 //
-//    public AssetIssuerCommunitySubAppModuleManager getManager() {
-//        return manager;
-//    }
+
 }

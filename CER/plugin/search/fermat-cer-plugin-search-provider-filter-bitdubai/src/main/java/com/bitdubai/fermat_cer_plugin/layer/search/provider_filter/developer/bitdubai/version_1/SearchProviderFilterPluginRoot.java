@@ -55,6 +55,9 @@ public class SearchProviderFilterPluginRoot extends AbstractPlugin implements Da
     @NeededAddonReference(platform = Platforms.PLUG_INS_PLATFORM, layer = Layers.PLATFORM_SERVICE, addon = Addons.EVENT_MANAGER)
     private EventManager eventManager;
 
+    @NeededPluginReference(platform = Platforms.CURRENCY_EXCHANGE_RATE_PLATFORM, layer = Layers.PROVIDER, plugin = Plugins.BITDUBAI_CER_PROVIDER_BITCOINVENEZUELA)
+    private CurrencyExchangeRateProviderManager bitcoinVenezuelaProvider;
+
     @NeededPluginReference(platform = Platforms.CURRENCY_EXCHANGE_RATE_PLATFORM, layer = Layers.PROVIDER, plugin = Plugins.BITDUBAI_CER_PROVIDER_DOLARTODAY)
     private CurrencyExchangeRateProviderManager dolarTodayProvider;
 
@@ -91,6 +94,7 @@ public class SearchProviderFilterPluginRoot extends AbstractPlugin implements Da
         //Build Provider map
         providerMap = new HashMap<>();
         try {
+            providerMap.put(bitcoinVenezuelaProvider.getProviderId(), bitcoinVenezuelaProvider);
             providerMap.put(dolarTodayProvider.getProviderId(), dolarTodayProvider);
             providerMap.put(elCronistaProvider.getProviderId(), elCronistaProvider);
             providerMap.put(europeanCentralBankProvider.getProviderId(), europeanCentralBankProvider);

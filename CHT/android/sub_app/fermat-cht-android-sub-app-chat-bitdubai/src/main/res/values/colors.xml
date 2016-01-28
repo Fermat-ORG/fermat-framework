@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  Copyright (C) 2013 The Android Open Source Project
+
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+
+       http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+<resources>
+
+    <!-- Define a standard holo blue color. Useful as we can refer to it from various other
+         resource files or even code and it only needs to be updated in one place if we wanted
+         to change it. -->
+    <color name="holo_blue">#FF33B5E5</color>
+    <color name="splash_background">#000</color>
+    <color name="text_color">#000</color>
+    <color name="text_info">#BEBEBE</color>
+    <color name="background_action_bar">#5b95c2</color>
+    <color name="background_activity">#fff</color>
+    <color name="blue">#FF33B5E5</color>
+    <color name="text_country_list">#000</color>
+    <color name="selected_contact">#ffd8d8d8</color>
+    <color name="pressed_contact">#ff74c8ff</color>
+    <color name="pressed_choose_country">#33b5e5</color>
+    <color name="unpressed_choose_country">#ff7a7a7a</color>
+    <color name="button_on_map">#ff72bff3</color>
+    <color name="button_on_map_pressed">#ff698bc1</color>
+    <color name="button_send_location">#ff72bff3</color>
+    <color name="button_send_location_pressed">#ff698bc1</color>
+    <color name="button_foursquare">#ff72bff3</color>
+    <color name="button_foursquare_pressed">#ff698bc1</color>
+    <color name="text_color_gallery_fragment">#fff</color>
+    <color name="background_search_gif">#ff286879</color>
+    <color name="background_gallery_buttons">#ff0d2028</color>
+    <color name="wrong_code">#ffff0000</color>
+
+    <color name="background_floating_button">#5b95c2</color>
+    <color name="background_floating_button_pressed">#ff46698c</color>
+
+    <color name="content_text_color">#5b95c2</color>
+
+    <color name="message_notify">#ff3ac34b</color>
+
+    <color name="transparent_activity_background">#9f363948</color>
+    <color name="transparent_background">#df090909</color>
+
+    <color name="bg_keyboard">#ffffffff</color>
+    <color name="tab_divider">#ff0fff0e</color>
+    <color name="bg_tab_selected">#ff74c8ff</color>
+
+    <color name="dark_slate_gray">#2F4F4F</color>
+    <color name="gray_2">#AFAFAF</color>
+    <color name="gray_1">#C0C0C0</color>
+    <color name="black">#000000</color>
+
+    <color name="chat_layout_background">#EEE</color>
+    <color name="item_icon_text">#fff</color>
+    <color name="chat_item_notification_text">#fff</color>
+
+    <color name="country_list_header_text">#708090</color>
+    <color name="document_filesize_text">#ff0087ff</color>
+    <color name="drawer_text">#ff282828</color>
+    <color name="drawer_header_text">#fff</color>
+    <color name="drawer_icon_text">#fff</color>
+    <color name="gif_document_view_background">#aa090909</color>
+
+    <color name="message_content_time_background">#877c7c7c</color>
+    <color name="message_content_time_text">#FFD0D0D0</color>
+    <color name="message_time">#aaa</color>
+
+    <!-- <color name="titanic_background">#212121</color>
+    <color name="titanic_foreground">#ffa5a5a5</color>
+
+   -->
+    <color name="hint">#aaa</color>
+
+    <color name="toolbar_text">#fff</color>
+    <color name="video_message_background">#aa090909</color>
+
+    <color name="button_keyboard_tab">#ffcbcbcb</color>
+    <color name="circle_color_transparent">#00000000</color>
+    <color name="circle_color">#BEBEBE</color>
+    <color name="cursor">#fff</color>
+    <color name="rect_stroke">#fff</color>
+    <color name="rect_transparent">#00FFFFFF</color>
+    <color name="toolbar_selected_border">#ff808080</color>
+    <color name="toolbar_selected_background">#fff</color>
+    <color name="rect_bottom">#80000000</color>
+
+</resources>

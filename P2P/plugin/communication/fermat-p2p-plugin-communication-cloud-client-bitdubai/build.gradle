@@ -10,15 +10,6 @@ group = "com.bitdubai.fermat.p2p"
 sourceCompatibility = 1.7
 version = '1.6.1'
 
-compileJava {
-	//enable compilation in a separate daemon process
-	options.fork = true
-
-	//enable incremental compilation
-	options.incremental = true
-}
-
-
 configurations {
     deployerJars
 }
@@ -50,9 +41,10 @@ dependencies {
 	compile project(':fermat-p2p-api')
 	compile project(':fermat-pip-api')
 
-    compile "org.java-websocket:Java-WebSocket:1.3.0"
     compile 'org.springframework.android:spring-android-rest-template:1.0.1.RELEASE'
     compile 'org.springframework.android:spring-android-core:1.0.1.RELEASE'
+
+	compile ('org.glassfish.tyrus.bundles:tyrus-standalone-client:1.12')
 
 	testCompile group: 'junit', name: 'junit', version: '4.11'
 	testCompile group: 'org.easytesting', name: 'fest-assert-core', version: '2.0M10'
@@ -110,3 +102,7 @@ task jenkins(dependsOn: ['clean', 'check', 'jacocoTestReport']) << {
 
 check.mustRunAfter clean
 jacocoTestReport.mustRunAfter check
+
+configurations {
+
+}

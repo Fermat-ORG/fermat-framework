@@ -24,12 +24,13 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.WalletCategory;
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEvent;
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEventListener;
 import com.bitdubai.fermat_api.layer.all_definition.network_service.enums.NetworkServiceType;
-import com.bitdubai.fermat_api.layer.all_definition.network_service.interfaces.NetworkService;
+import com.bitdubai.fermat_p2p_api.layer.all_definition.common.network_services.interfaces.NetworkService;
 import com.bitdubai.fermat_api.layer.all_definition.network_service.interfaces.NetworkServiceConnectionManager;
 import com.bitdubai.fermat_api.layer.all_definition.resources_structure.enums.ScreenSize;
 import com.bitdubai.fermat_api.layer.all_definition.util.Version;
 import com.bitdubai.fermat_api.layer.dmp_identity.designer.interfaces.DesignerIdentity;
 import com.bitdubai.fermat_api.layer.dmp_identity.translator.interfaces.TranslatorIdentity;
+import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.contents.FermatMessage;
 import com.bitdubai.fermat_wpd_api.all_definition.exceptions.CantGetWalletLanguageException;
 import com.bitdubai.fermat_api.CantStartAgentException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
@@ -470,6 +471,32 @@ public class WalletStoreNetworkServicePluginRoot extends AbstractPlugin implemen
 
     }
 
+    /*
+    * Handles the events ClientConnectionLooseNotificationEvent
+    */
+    @Override
+    public void handleClientConnectionLooseNotificationEvent(FermatEvent fermatEvent) {
+
+//        if(communicationNetworkServiceConnectionManager != null)
+//            communicationNetworkServiceConnectionManager.stop();
+
+    }
+
+    /*
+     * Handles the events ClientSuccessfullReconnectNotificationEvent
+     */
+    @Override
+    public void handleClientSuccessfullReconnectNotificationEvent(FermatEvent fermatEvent) {
+
+//        if(communicationNetworkServiceConnectionManager != null)
+//            communicationNetworkServiceConnectionManager.restart();
+
+//        if(!this.register){
+//            communicationRegistrationProcessNetworkServiceAgent.start();
+//        }
+
+    }
+
     @Override
     public boolean isRegister() {
         return false;
@@ -503,6 +530,16 @@ public class WalletStoreNetworkServicePluginRoot extends AbstractPlugin implemen
     @Override
     public String getExtraData() {
         return null;
+    }
+
+    @Override
+    public void handleNewMessages(FermatMessage incomingMessage) {
+        //TODO implement handle new message
+    }
+
+    @Override
+    public void handleNewSentMessageNotificationEvent(FermatMessage message) {
+
     }
 
     /**

@@ -1,62 +1,57 @@
 package com.bitdubai.fermat_dap_plugin.layer.wallet.asset.issuer.developer.bitdubai.version_1.structure;
 
+import com.bitdubai.fermat_dap_api.layer.all_definition.digital_asset.DigitalAsset;
 import com.bitdubai.fermat_dap_api.layer.dap_wallet.asset_issuer_wallet.interfaces.AssetIssuerWalletList;
 
 /**
  * Created by franklin on 29/09/15.
  */
 public class AssetIssuerWalletBalance implements AssetIssuerWalletList {
-    String assetPublicKey;
-    String name;
-    String description;
-    long bookBalance;
-    long availableBalance;
-    long quantityBookBalance;
-    long quantityAvailableBalance;
 
-    public AssetIssuerWalletBalance(String assetPublicKey, String name, String description, long bookBalance, long availableBalance, long quantityBookBalance, long quantityAvailableBalance){
-        this.assetPublicKey = assetPublicKey;
-        this.name = name;
-        this.description = description;
+    private DigitalAsset digitalAsset;
+    private long bookBalance;
+    private long availableBalance;
+    private long quantityBookBalance;
+    private long quantityAvailableBalance;
+
+
+    public AssetIssuerWalletBalance() {
+    }
+
+    public AssetIssuerWalletBalance(DigitalAsset digitalAsset, long bookBalance, long availableBalance, long quantityBookBalance, long quantityAvailableBalance) {
+        this.digitalAsset = digitalAsset;
         this.bookBalance = bookBalance;
         this.availableBalance = availableBalance;
-        this.quantityAvailableBalance = quantityAvailableBalance;
         this.quantityBookBalance = quantityBookBalance;
-    };
-
-    public AssetIssuerWalletBalance(){};
-
-    public String getAssetPublicKey() {
-        return assetPublicKey;
-    }
-    public void setAssetPublicKey(String assetPublicKey) {
-        this.assetPublicKey = assetPublicKey;
+        this.quantityAvailableBalance = quantityAvailableBalance;
     }
 
-    public String getDescription() {
-        return description;
-    }
-    public void setDescription(String description) {
-        this.description = description;
+    @Override
+    public DigitalAsset getDigitalAsset() {
+        return digitalAsset;
     }
 
-    public String getName() {
-        return name;
-    }
-    public void setName(String name) {
-        this.name = name;
+    @Override
+    public void setDigitalAsset(DigitalAsset digitalAsset) {
+        this.digitalAsset = digitalAsset;
     }
 
+    @Override
     public long getBookBalance() {
         return bookBalance;
     }
+
+    @Override
     public void setBookBalance(long bookBalance) {
         this.bookBalance = bookBalance;
     }
 
+    @Override
     public long getAvailableBalance() {
         return availableBalance;
     }
+
+    @Override
     public void setAvailableBalance(long availableBalance) {
         this.availableBalance = availableBalance;
     }

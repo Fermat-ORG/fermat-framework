@@ -35,6 +35,7 @@ import com.bitdubai.fermat_cbp_api.layer.wallet.crypto_broker.interfaces.setting
 import com.bitdubai.fermat_cbp_plugin.layer.wallet.crypto_broker.developer.bitdubai.version_1.database.CryptoBrokerWalletDatabaseDao;
 import com.bitdubai.fermat_cbp_plugin.layer.wallet.crypto_broker.developer.bitdubai.version_1.database.CryptoBrokerWalletDatabaseFactory;
 import com.bitdubai.fermat_cbp_plugin.layer.wallet.crypto_broker.developer.bitdubai.version_1.exceptions.CantCreateNewCryptoBrokerWalletException;
+import com.bitdubai.fermat_cer_api.layer.search.interfaces.CurrencyExchangeProviderFilterManager;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 
 import java.util.HashMap;
@@ -60,15 +61,17 @@ public class CryptoBrokerWalletImpl implements CryptoBrokerWallet{
     private PluginDatabaseSystem pluginDatabaseSystem;
     private PluginFileSystem pluginFileSystem;
     private CryptoBrokerWalletDatabaseDao cryptoBrokerWalletDatabaseDao;
+    private CurrencyExchangeProviderFilterManager providerFilter;
 
     /**
      * Constructor
      */
-    public CryptoBrokerWalletImpl(ErrorManager errorManager, PluginDatabaseSystem pluginDatabaseSystem, PluginFileSystem pluginFileSystem, UUID pluginId) {
-        this.errorManager = errorManager;
+    public CryptoBrokerWalletImpl(ErrorManager errorManager, PluginDatabaseSystem pluginDatabaseSystem, PluginFileSystem pluginFileSystem, UUID pluginId, CurrencyExchangeProviderFilterManager providerFilter) {
+        this.errorManager         = errorManager;
         this.pluginDatabaseSystem = pluginDatabaseSystem;
-        this.pluginFileSystem = pluginFileSystem;
-        this.pluginId = pluginId;
+        this.pluginFileSystem     = pluginFileSystem;
+        this.pluginId             = pluginId;
+        this.providerFilter       = providerFilter;
     }
 
     /**
@@ -140,6 +143,7 @@ public class CryptoBrokerWalletImpl implements CryptoBrokerWallet{
         cryptoBrokerWalletDatabaseDao = new CryptoBrokerWalletDatabaseDao(this.database);
         cryptoBrokerWalletDatabaseDao.setPlugin(this.pluginId);
         cryptoBrokerWalletDatabaseDao.setPluginFileSystem(this.pluginFileSystem);
+        cryptoBrokerWalletDatabaseDao.setProviderFilter(this.providerFilter);
         return cryptoBrokerWalletDatabaseDao.getQuote(merchandise, quantity,payment);
     }
 

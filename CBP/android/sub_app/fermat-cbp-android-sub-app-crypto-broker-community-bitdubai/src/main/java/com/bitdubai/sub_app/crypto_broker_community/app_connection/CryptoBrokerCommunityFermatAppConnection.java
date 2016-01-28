@@ -14,7 +14,9 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.Layers;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.util.Version;
+import com.bitdubai.fermat_cbp_api.all_definition.identity.ActorIdentity;
 import com.bitdubai.sub_app.crypto_broker_community.fragmentFactory.CryptoBrokerCommunityFragmentFactory;
+import com.bitdubai.sub_app.crypto_broker_community.navigationDrawer.BrokerCommunityNavigationViewPainter;
 import com.bitdubai.sub_app.crypto_broker_community.session.CryptoBrokerCommunitySubAppSession;
 
 /**
@@ -25,8 +27,11 @@ import com.bitdubai.sub_app.crypto_broker_community.session.CryptoBrokerCommunit
  */
 public class CryptoBrokerCommunityFermatAppConnection extends AppConnections{
 
+    ActorIdentity identity;
+
     public CryptoBrokerCommunityFermatAppConnection(Activity activity) {
         super(activity);
+        this.identity = identity;
     }
 
     @Override
@@ -53,7 +58,9 @@ public class CryptoBrokerCommunityFermatAppConnection extends AppConnections{
 
     @Override
     public NavigationViewPainter getNavigationViewPainter() {
-        return null;
+
+        return new BrokerCommunityNavigationViewPainter(getActivity(), getActiveIdentity());
+
     }
 
     @Override

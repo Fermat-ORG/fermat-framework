@@ -3,8 +3,6 @@ package com.bitdubai.reference_wallet.cash_money_wallet.common.dialogs;
 import android.app.Activity;
 import android.app.Dialog;
 import android.content.res.Resources;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.text.InputFilter;
 import android.view.View;
@@ -18,18 +16,16 @@ import android.widget.Toast;
 import com.bitdubai.fermat_csh_api.all_definition.enums.TransactionType;
 import com.bitdubai.fermat_csh_api.all_definition.exceptions.CashMoneyWalletInsufficientFundsException;
 import com.bitdubai.fermat_csh_api.layer.csh_cash_money_transaction.deposit.exceptions.CantCreateDepositTransactionException;
-import com.bitdubai.fermat_csh_api.layer.csh_cash_money_transaction.deposit.interfaces.CashDepositTransactionParameters;
+import com.bitdubai.fermat_csh_api.all_definition.interfaces.CashTransactionParameters;
 import com.bitdubai.reference_wallet.cash_money_wallet.R;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView;
 import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.enums.FiatCurrency;
 import com.bitdubai.fermat_api.layer.all_definition.enums.UISource;
 import com.bitdubai.fermat_csh_api.layer.csh_cash_money_transaction.withdrawal.exceptions.CantCreateWithdrawalTransactionException;
-import com.bitdubai.fermat_csh_api.layer.csh_cash_money_transaction.withdrawal.interfaces.CashWithdrawalTransactionParameters;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedUIExceptionSeverity;
 import com.bitdubai.fermat_wpd_api.layer.wpd_network_service.wallet_resources.interfaces.WalletResourcesProviderManager;
-import com.bitdubai.reference_wallet.cash_money_wallet.common.CashDepositTransactionParametersImpl;
-import com.bitdubai.reference_wallet.cash_money_wallet.common.CashWithdrawalTransactionParametersImpl;
+import com.bitdubai.reference_wallet.cash_money_wallet.common.CashTransactionParametersImpl;
 import com.bitdubai.reference_wallet.cash_money_wallet.common.NumberInputFilter;
 import com.bitdubai.reference_wallet.cash_money_wallet.session.CashMoneyWalletSession;
 
@@ -46,9 +42,6 @@ public class CreateTransactionFragmentDialog extends Dialog implements
     public Activity activity;
     public Dialog d;
 
-    //private CreateContactDialogCallback createContactDialogCallback;
-
-
     /**
      * Resources
      */
@@ -56,12 +49,8 @@ public class CreateTransactionFragmentDialog extends Dialog implements
     private CashMoneyWalletSession cashMoneyWalletSession;
     private Resources resources;
     private TransactionType transactionType;
-
-    /**
-     *  Contact member
-     */
-    //private WalletContact walletContact;
-    //private String user_address_wallet = "";
+    BigDecimal optionalAmount;
+    String optionalMemo;
 
     /**
      *  UI components
@@ -74,27 +63,16 @@ public class CreateTransactionFragmentDialog extends Dialog implements
     Button cancelBtn;
 
 
-    /**
-     * Allow the zxing engine use the default argument for the margin variable
-     */
-    //private Bitmap contactPicture;
-    //private EditText txt_address;
-
-   //private Typeface tf;
-    /**
-     *
-     * @param a
-     * @param
-     */
-
-
-    public CreateTransactionFragmentDialog(Activity a, CashMoneyWalletSession cashMoneyWalletSession, Resources resources, TransactionType transactionType) {
+    public CreateTransactionFragmentDialog(Activity a, CashMoneyWalletSession cashMoneyWalletSession, Resources resources, TransactionType transactionType, BigDecimal optionalAmount, String optionalMemo) {
         super(a);
         // TODO Auto-generated constructor stub
         this.activity = a;
         this.cashMoneyWalletSession = cashMoneyWalletSession;
         this.transactionType = transactionType;
         this.resources = resources;
+
+        this.optionalAmount = (optionalAmount == null || optionalAmount == new BigDecimal(0) ? null : optionalAmount);
+        this.optionalMemo = (optionalMemo == null || optionalMemo == "" ? null : optionalMemo);
     }
 
 
@@ -109,7 +87,7 @@ public class CreateTransactionFragmentDialog extends Dialog implements
 
         try {
             requestWindowFeature(Window.FEATURE_NO_TITLE);
-            setContentView(R.layout.create_transaction_dialog);
+            setContentView(R.layout.csh_create_transaction_dialog);
 
 
             dialogTitleLayout = (LinearLayout) findViewById(R.id.csh_ctd_title_layout);
@@ -127,32 +105,12 @@ public class CreateTransactionFragmentDialog extends Dialog implements
             cancelBtn.setOnClickListener(this);
             applyBtn.setOnClickListener(this);
 
-            /*if(contactImageBitmap!=null){
-                contactImageBitmap = Bitmap.createScaledBitmap(contactImageBitmap,65,65,true);
-                take_picture_btn.setBackground(new BitmapDrawable(contactImageBitmap));
-                take_picture_btn.setImageDrawable(null);
-            }*/
+            if(optionalAmount != null)
+                amountText.append(optionalAmount.toPlainString());  //append places cursor at the end!
+            if(optionalMemo != null)
+                memoText.setText(optionalMemo);
 
-            //take_picture_btn.setOnClickListener(this);
 
-            //ImageView scanImage = (ImageView) findViewById(R.id.scan_qr);
-
-            /*scanImage.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    IntentIntegrator integrator = new IntentIntegrator(activity, (EditText) findViewById(R.id.contact_address));
-                    integrator.initiateScan();
-                }
-            });*/
-
-            // paste_button button definition
-            /*ImageView pasteFromClipboardButton = (ImageView) findViewById(R.id.paste_from_clipboard_btn);
-            pasteFromClipboardButton.setOnClickListener(new View.OnClickListener() {
-                public void onClick(View v) {
-                    pasteFromClipboard();
-                }
-            });*/
-            //getWindow().setBackgroundDrawable(new ColorDrawable(0));
         }catch (Exception e){
             e.printStackTrace();
         }
@@ -163,9 +121,9 @@ public class CreateTransactionFragmentDialog extends Dialog implements
     private String getTransactionTitleText()
     {
         if (transactionType == TransactionType.DEBIT)
-            return resources.getString(R.string.withdrawal_transaction_text);
+            return resources.getString(R.string.csh_withdrawal_transaction_text);
         else
-            return resources.getString(R.string.deposit_transaction_text);
+            return resources.getString(R.string.csh_deposit_transaction_text);
     }
 
     private int getTransactionTitleColor()
@@ -185,6 +143,7 @@ public class CreateTransactionFragmentDialog extends Dialog implements
             dismiss();
         }else if( i == R.id.csh_ctd_apply_transaction_btn){
             applyTransaction();
+            dismiss();
         }
     }
 
@@ -207,37 +166,36 @@ public class CreateTransactionFragmentDialog extends Dialog implements
 
 
             if (transactionType == TransactionType.DEBIT) {
-                CashWithdrawalTransactionParameters t = new CashWithdrawalTransactionParametersImpl(UUID.randomUUID(), "cash_wallet", "pkeyActorRefWallet", "pkeyPluginRefWallet", new BigDecimal(amount), FiatCurrency.US_DOLLAR, memo);
-                try {
-                    cashMoneyWalletSession.getModuleManager().createCashWithdrawalTransaction(t);
+                CashTransactionParameters t = new CashTransactionParametersImpl(UUID.randomUUID(), "cash_wallet", "pkeyActorRefWallet", "pkeyPluginRefWallet", new BigDecimal(amount), FiatCurrency.US_DOLLAR, memo, TransactionType.DEBIT);
+                //try {
+                    cashMoneyWalletSession.getModuleManager().createAsyncCashTransaction(t);
                     //updateWalletBalances(view.getRootView());
 
-                } catch (CantCreateWithdrawalTransactionException e) {
-                    Toast.makeText(activity.getApplicationContext(), "There's been an error, please try again", Toast.LENGTH_SHORT).show();
-                    return;
-                } catch (CashMoneyWalletInsufficientFundsException e) {
-                    Toast.makeText(activity.getApplicationContext(), "Insufficient funds, please try a lower value", Toast.LENGTH_SHORT).show();
-                    return;
-                }
+//                } catch (CantCreateWithdrawalTransactionException e) {
+//                    Toast.makeText(activity.getApplicationContext(), "There's been an error, please try again", Toast.LENGTH_SHORT).show();
+//                    return;
+//                } catch (CashMoneyWalletInsufficientFundsException e) {
+//                    Toast.makeText(activity.getApplicationContext(), "Insufficient funds, please try a lower value", Toast.LENGTH_SHORT).show();
+//                    return;
+//                }
             }
             else if(transactionType == TransactionType.CREDIT) {
-                CashDepositTransactionParameters t = new CashDepositTransactionParametersImpl(UUID.randomUUID(), "cash_wallet", "pkeyActorRefWallet", "pkeyPluginRefWallet", new BigDecimal(amount), FiatCurrency.US_DOLLAR, memo);
-                try {
-                    cashMoneyWalletSession.getModuleManager().createCashDepositTransaction(t);
+                CashTransactionParameters t = new CashTransactionParametersImpl(UUID.randomUUID(), "cash_wallet", "pkeyActorRefWallet", "pkeyPluginRefWallet", new BigDecimal(amount), FiatCurrency.US_DOLLAR, memo, TransactionType.CREDIT);
+                //try {
+                    cashMoneyWalletSession.getModuleManager().createAsyncCashTransaction(t);
                     //updateWalletBalances(view.getRootView());
 
-                } catch (CantCreateDepositTransactionException e) {
-                    Toast.makeText(activity.getApplicationContext(), "There's been an error, please try again", Toast.LENGTH_SHORT).show();
-                    return;
-                }
+//                } catch (CantCreateDepositTransactionException e) {
+//                    Toast.makeText(activity.getApplicationContext(), "There's been an error, please try again", Toast.LENGTH_SHORT).show();
+//                    return;
+//                }
             }
 
         } catch (Exception e) {
             cashMoneyWalletSession.getErrorManager().reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.CRASH, FermatException.wrapException(e));
-            Toast.makeText(activity.getApplicationContext(), "There's been an error, please try again" +  e.getMessage(), Toast.LENGTH_SHORT).show();
+            Toast.makeText(activity.getApplicationContext(), "There's been an error, please try again. " +  e.getMessage(), Toast.LENGTH_SHORT).show();
             return;
         }
-        dismiss();
     }
 
 }

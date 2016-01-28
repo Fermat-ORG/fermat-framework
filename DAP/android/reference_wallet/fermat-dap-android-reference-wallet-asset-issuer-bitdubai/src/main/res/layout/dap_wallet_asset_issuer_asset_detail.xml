@@ -28,7 +28,7 @@
                 android:textAppearance="?android:attr/textAppearanceLarge"
                 android:text="Asset Name"
                 android:fontFamily="regular"
-                android:textSize="17sp"
+                android:textSize="19sp"
                 android:textColor="#ffffff"
                 android:layout_alignParentTop="true"
                 android:layout_alignParentLeft="true"
@@ -36,57 +36,41 @@
                 android:paddingLeft="15dp"/>
 
             <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
-                android:id="@+id/assetDetailAvailableText"
+                android:id="@+id/assetBalanceText"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textAppearance="?android:attr/textAppearanceMedium"
-                android:text="500"
-                android:fontFamily="normal"
                 android:textSize="16sp"
+                android:text="Balance:"
                 android:textColor="#ffffff"
+                android:fontFamily="regular"
                 android:layout_below="@+id/assetDetailNameText"
                 android:paddingLeft="15dp"
-                android:layout_alignParentLeft="true"
                 android:paddingTop="10dp"/>
 
             <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
-                android:id="@+id/textView1"
+                android:id="@+id/assetAvailable1"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textAppearance="?android:attr/textAppearanceSmall"
-                android:text="Available"
-                android:fontFamily="light"
-                android:textSize="15sp"
-                android:textColor="#b3ffffff"
-                android:layout_alignBottom="@+id/assetDetailAvailableText"
-                android:layout_toRightOf="@+id/assetDetailAvailableText"
-                android:paddingLeft="15dp"/>
-
-            <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
-                android:id="@+id/assetDetailBookText"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textAppearance="?android:attr/textAppearanceMedium"
-                android:text="300"
-                android:fontFamily="normal"
                 android:textSize="16sp"
-                android:textColor="#ffffff"
-                android:layout_below="@+id/assetDetailAvailableText"
-                android:paddingLeft="15dp"
+                android:fontFamily="light"
+                android:textColor="#b3ffffff"
+                android:text="3 Assets"
+                android:layout_toRightOf="@+id/assetBalanceText"
+                android:layout_alignTop="@+id/assetBalanceText"
+                android:paddingLeft="5dp"
                 android:paddingTop="10dp"/>
 
             <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
+                android:id="@+id/assetAvailable2"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textAppearance="?android:attr/textAppearanceSmall"
-                android:text="Book"
-                android:id="@+id/textView2"
+                android:textSize="16sp"
                 android:fontFamily="light"
-                android:textSize="15sp"
                 android:textColor="#b3ffffff"
-                android:layout_alignBottom="@+id/assetDetailBookText"
-                android:layout_toRightOf="@+id/assetDetailBookText"
-                android:paddingLeft="15dp"/>
+                android:text="(2 pending confirmation)"
+                android:layout_below="@+id/assetAvailable1"
+                android:paddingLeft="15dp"
+                android:paddingTop="0dp"/>
 
             <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
                 android:id="@+id/textView7"
@@ -138,36 +122,71 @@
 
         </RelativeLayout>
 
-        <RelativeLayout
-            android:id="@+id/assetDetailRemainingLayout"
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="75dp"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
             android:background="#24202E">
 
-            <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
-                android:id="@+id/assetDetailRemainingText"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="94 Assets Remaining"
-                android:layout_centerInParent="true"
-                android:fontFamily="regular"
-                android:textSize="17sp"
-                android:textColor="#00aeef"/>
+            <RelativeLayout
+                android:id="@+id/assetDetailDeliverLayout"
+                android:layout_width="match_parent"
+                android:layout_height="30dp"
+                android:layout_marginTop="15dp">
 
-            <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:src="@drawable/bg_delivery_button"
-                android:paddingLeft="20dp"
-                android:paddingRight="20dp"/>
+                <ImageView
+                    android:layout_width="325dp"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/bg_delivery_button"
+                    android:layout_centerInParent="true" />
+
+                <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
+                    android:id="@+id/assetDetailDeliverAssetText"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:text="Deliver Assets"
+                    android:layout_centerVertical="true"
+                    android:gravity="center"
+                    android:fontFamily="regular"
+                    android:textSize="17sp"
+                    android:textColor="#00aeef"/>
+
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:id="@+id/assetDetailAppropiateBtnLayout"
+                android:layout_width="match_parent"
+                android:layout_height="30dp"
+                android:layout_marginTop="15dp"
+                android:layout_marginBottom="15dp">
+
+                <ImageView
+                    android:layout_width="325dp"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/bg_delivery_button"
+                    android:layout_centerInParent="true" />
+
+                <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
+                    android:id="@+id/assetDetailAppropiateAssetText"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:text="Appropriate Assets"
+                    android:layout_centerVertical="true"
+                    android:gravity="center"
+                    android:fontFamily="regular"
+                    android:textSize="17sp"
+                    android:textColor="#00aeef"/>
+
+            </RelativeLayout>
 
             <ImageView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:src="@drawable/img_detail_divider"
-                android:layout_alignParentBottom="true"/>
+                android:layout_alignParentBottom="true"
+                android:id="@+id/imageView5" />
 
-        </RelativeLayout>
+        </LinearLayout>
 
         <RelativeLayout
             android:layout_width="match_parent"
@@ -215,14 +234,16 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:src="@drawable/img_detail_divider"
-                android:layout_alignParentBottom="true"/>
+                android:layout_alignParentBottom="true"
+                android:id="@+id/imageView" />
 
         </RelativeLayout>
 
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="75dp"
-            android:background="#24202E">
+            android:background="#24202E"
+            android:id="@+id/assetDetailRedeemedLayout">
 
             <LinearLayout
                 android:orientation="vertical"
@@ -270,7 +291,8 @@
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="75dp"
-            android:background="#24202E">
+            android:background="#24202E"
+            android:id="@+id/assetDetailAppropiateLayout">
 
             <LinearLayout
                 android:orientation="vertical"

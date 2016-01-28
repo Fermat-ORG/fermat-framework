@@ -1,78 +1,27 @@
 ![alt text](https://github.com/bitDubai/media-kit/blob/master/MediaKit/Fermat%20Branding/Fermat%20Logotype/Fermat_Logo_3D.png "Fermat Logo")
 
-#Contributing Guide
+#Contributing Guide (for developers)
 
 <br>
-## Introduction
+
+Fermat is a community driven open source project, so you are welcome to contribute! +
+
+## Developers
 =======
 
-Anybody can contribute to Fermat and you are welcome to do so. There is a stable community of mantainers called bitDubai. You might want to join this community and specifically one of their teams which are working on different areas of the system. Visit their [site](https://bitDubai.com) to learn how to join in.
+Just choose one of the possibilites we have thought in our [Contribution Program](https://github.com/bitDubai/contribution-program/blob/master/README.md) or contact us to propose your own [here](https://bitdubai.com/wp/#GETINVOLVED)
 
-Also, you might want to add your own functionality to Fermat, perhaps your own platform, plugins, reference wallet or build your own niche wallet. To help you get all the necessary tools to set up the development enviroment, please refer to [Installation Guide](https://github.com/bitDubai/fermat/blob/master/README-INSTALLATION.md)
-<br>
-## Part I: Casual Contribution
+If you have a Developer Team (or can easily gather one) you will probably like to get an assigned task in our development program to get the corresponding bounty. Please visit our [Bounty Program](https://github.com/bitDubai/bounty-program/blob/master/README.md). 
 
-We consider a _casual contribution_ a bug fix or any other change big or small done in casual way, without assuming any responsability for the maintenance of the code submited.  _Casual contributions_ don't get to the size of adding new components to the system.
+If you are interested in a rewarded part-time collaboration with the possibility of participanting for an extra prize, see our [2016 Competition](https://github.com/bitDubai/competition)
 
+ 
+## Non-developers
+=======
 
-<br>
-### Contributing to a Component
-
-Whatever you may find that could make Fermat better is welcome and it will be considered. Follow these steps to find the best way for your case: 
-
-In fermat, every component (plug-in, add-on, library, etc) has an author and a maintainer.
-
-1. Open http://dev.fermat.org , go to the Architecture view and zoom in until you find the component you will suggest to change.
-2. Click on that component to select it.
-3. You will find there a picture of the author. If he/she is not the current maintainer, you will also find the maintainers picture. 
-4. Click again their the picture to get more detailed info including their github username.
-5. Go to https://github.com/*username*/fermat.
-
-If your change doesn't need to be compiled and tested or you prefer not to do that yourself, then you can go through the _Casual or Minor Change_ section. Otherwise, if you prefer to get deeper and finish the job yourself, then go throught the _Major Change_ section.
-
-#### Casual or Minor Change
-
-Find the file in *username*/fermat repo, open it on edit mode and hit the "Propose file change" button when you are done.
-
-#### Major Change
-
-Fork the *username*/fermat repo, and submit a pull request there when done.
+If you are not a developer or graphic designer, please refer to our [How to Participate Guide](https://github.com/bitDubai/participate-now).
 
 
-<br>
-### Contributing to the Fermat Book
-
-It is very easy to contribute to the book, just edit the desired file and at the end you will find the "Propose file change" button. Please do it at the editors' fork. You can find it [here](https://github.com/gustl-arg/fermat/tree/master/fermat-book).
 
 
-<br>
-## Part II: Expanding Fermat Functionality ( currently in redaction process..)
-
-<br>
-### Expanding the Master Plan
-
-
-<br>
-### Adding a New Platform
-
-
-<br>
-### Adding a New Add-on
-
-
-<br>
-### Adding a New Plug-in
-
-For the details on this process, you can check the [Adding a New Plug-in to Fermat](https://github.com/bitDubai/fermat/blob/master/README-PLUG-INS.md) document.
-
-<br>
-### Adding a New Reference Wallet
-
-
-<br>
-### Adding a New Niche Wallet
-
-
-<br>
-### Creating a Branded Wallet
 

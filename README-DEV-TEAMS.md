@@ -4,27 +4,33 @@
 
 ## Introduction
 
-All the work done on the Fermat project is done by a Team. We have several teams working in parallel. Most of them are teams of developers, but these are not the only types of teams. We also have teams of graphic designers, 3d artists, video producers, copy writers, publishing, etc.
+All the work done for the Fermat open source project is done by several teams of people collaborating between each other. Fermat has several teams working in parallel. Most of them are dev teams, but these are not the only ones. Fermat also has teams of graphic designers, 3d artists, video producers, copy writers, publishing, etc.
 
-At this file you will find a list of Fermat developers teams. Feel free to contact their team leaders if you want to join them.
+bitDubai is a network of teams working on the Fermat project. In this document you will learn about how bitDubai teams are organized. At the moment bitDubai is the only team-network working on Fermat, but there is room for other networks to join and they might want to get organized in a different way.
 
-## Organization
+Below you will find a list of bitDubai/Fermat developers teams. Feel free to contact their team leaders if you want to join them.
 
-The maximun size of a team is 5 people. Among all of them, they should have all the skill sets needed for these kind of projects.
+You can also contribute to the Fermat project through other means. Please refer to the [CONTRIBUTING GUIDE](https://github.com/bitDubai/fermat/blob/master/CONTRIBUTING.md) for more details.
 
-Fermat teams are organized in a hierarchical way. This helps the task of reviewing changes in source code, since it is expected that a child team changes are pushed to its parent team in order to be reviewed, merged with their own changes and pushed again to the next parent in the hierarchy. At the top the core developers are the only ones merging the combined batch of changes into the bitDubai codebase.
+## bitDubai Teams Organization
 
-## Team List
+The maximun size for a team is 5 people. All of them together should have all the skill sets needed for these kind of projects.
+
+Teams are organized in a hierarchical way. This helps the task of reviewing changes in source code, since it is expected that a child team changes they are pushed to its parent team in order to be reviewed, merged with their own changes and pushed again to the next parent in the hierarchy. At the top the core developers are the only ones merging the combined batch of changes into the bitDubai codebase.
+
+
+## Teams List
 
 * Thunder
 * Code Butchers
 * Coin Diggers
 * Disruptors
-* Fermat ORG Charlie
-* Fermat ORG Sierra
 * DBZ Team
 * Mordor
 * Kabuto
+* Skynet
+* Fermat ORG Charlie
+* Fermat ORG Sierra
 
 ## Current Hierarchy
 
@@ -35,6 +41,7 @@ Fermat teams are organized in a hierarchical way. This helps the task of reviewi
 | Thunder | | | |
 | | Kabuto | | |
 | | Mordor | | |
+| | Skynet | | |
 | Code Butchers | | | |
 | | DBZ Team | | |
 | Coin Diggers | | | |
@@ -93,18 +100,19 @@ Developers and team leaders in particular are classified by the deepness of the 
 
 ### The following rules apply:
 
-1. Standard team size is of 5 full-time members.
-2. One full-time member can be replaced by 2 part-time members.
-3. Developers can go up the category list and they can also go down in certain circumstances.
-4. Going up or down a category is decided by the developers's team leader or parent team leader according to these rules.
-5. To move up one category or to keep the current one, all the conditions of previous categories need to have been met.
-6. To be _awarded_ means to win the full bounty at the month targeted by the bounty program.
-7. When a criteria is met to go up a category, the developer will be moved up the following calendar month.
-8. When a full team has a child sub-team leaded by one of the current members:<br>
+1. **Team Size** : Standard team size is of 5 full-time members.
+2. **Part-Time & Full-Time** : One full-time member can be replaced by 2 part-time members.
+3. **Up & Down** : Developers can go up the category list and they can also go down in certain circumstances.
+4. **Approval** : Going up or down a category is decided by the developers's team leader or parent team leader in case a the one moving is already a team leader. In all cases these rules and the project director must approve the move.
+5. **Cumulative Conditions** : To move up one category or to keep the current one, all the conditions of previous categories need to have been met.
+6. **Awards Needed** : To be _awarded_ means to win the full bounty at the month targeted by the bounty program.
+7. **When** : When a criteria is met to go up a category, the developer will be moved up the following calendar month.
+8. **Replacement** : When a full team has a child sub-team leaded by one of the current members:<br>
     a. Their current team leader must add a full-time developer within the same month in order to keep his category.<br>
     b. Failing to do so, will move him down the next month to _Team Leader_.<br>
     c. Succeeding to get a full-time member will probably move him to _New Parent Team Leader_ if this was his first child.<br>
-9. Team leaders can remove members from their teams with a reasonable cause (lack of engagement, performance, etc.).
+9. **Removing Members** : Team leaders can remove members from their teams with a reasonable cause (lack of engagement, performance, etc.).
+10. **Changing Parents** : Team leaders might move their team and decendence to other parent if they don't fell supported by their biological or current parent. They need an authoritation by the project director for this to happen.
 
 <br>
 ## Teams presentations and members
@@ -115,7 +123,7 @@ Developers and team leaders in particular are classified by the deepness of the 
 <br>
 ### ![alt text](https://github.com/bitDubai/media-kit/blob/master/MediaKit/Logotype/Fermat%20Teams/Thunder%20Team/HQ_1920x1080.jpg "Thunder Team Logo"")
 
-More than a Team we are a group of highly motivated friends pursuing the goal of taking Fermat to success! We are in charge of core development and top priority platforms like DAP, BCH and WPD among others. A highly communicated group of developers solving issues and deailing with high difficulty designs and implementations, with a lot of room for other priorities like music, Star Wars, series and movies.
+More than a Team we are a group of highly motivated friends pursuing the goal of taking Fermat to success! We are in charge of core development and top priority platforms like DAP, BCH and WPD among others. A highly communicated group of developers solving issues and dealing with high difficulty designs and implementations, with a lot of room for other priorities like music, Star Wars, series and movies.
 
 #### Thunder Team Members:
 
@@ -125,13 +133,6 @@ More than a Team we are a group of highly motivated friends pursuing the goal of
     Email:   acosta_rodrigo@hotmail.com
     Skype:   acosta_rodrigo
     Github:  https://github.com/acostarodrigo
-    
-    
-* **Nerio Enrique Indriago Ortega [Veteran Developer]**<br/>
----
-      Email:   nerioindriago@gmail.com
-      Skype:   nerioindriago
-      Github:  https://github.com/nindriago
 
 * **Victor Mars [Veteran Developer]** <br/>
 ---
@@ -153,9 +154,9 @@ More than a Team we are a group of highly motivated friends pursuing the goal of
 <br>
 ### ![alt text](https://github.com/bitDubai/media-kit/blob/master/MediaKit/Logotype/Fermat%20Teams/CoinDiggers%20Team/HQ_1920x1080.jpg "Logo Coin Diggers Team")
 
-We are passionate geeks , always on the edge of technology and a little more. 
+We are passionate geeks, always on the edge of technology and a little more. 
 With the only phrase "Keep moving forward" we just walk through Fermat.
-We are in charge of Android-core,Fermat-Core, Android framework development and platforms like CCP, CCM among others.
+We are in charge of Android-core, Fermat-Core, Android framework development and platforms like CCP, CCM among others.
 
 #### CoinDiggers Team Members:
 
@@ -191,9 +192,9 @@ We are in charge of Android-core,Fermat-Core, Android framework development and 
 ### Disruptor Team:
 -----------------------------------
 
-We want to assemble a team that wants to combines its technical capacity with its creative talent, where you feel passion for development and for the work done and not just do it for pay, who is willing to work together and share nights without sleep.
+We are team that wants to combine technical capacity with creative talent, where passion for development and satisfaction for the work done are important ingredients of the daily motivation, and also so engaged that we do not hesitate in sharing nights without sleep to fullfill the goals! The spirit of gentle collaboration is also very important to us. We are willing to share our work with new members.
 
-Currently we are a small team dedicated to the development of a communications layer based on a peer-to-peer network with all its complications, and the development of some network services.
+Currently we are a small team dedicated to the development of a communication layer based on a peer-to-peer network with all its complexity, and the development of some network services.
 
 #### Team Members:
 
@@ -214,9 +215,9 @@ We would be grateful for any help received, and anyone interested in joining the
 <br/>
 ### Mordor Team:
 -----------------------------------
-We are putting together a team of talented developers, especially passionate about the implementation of major challenges, in order to carry out our goals and collaborate with other teams with theirs.
+We are putting together a team of talented developers, especially passionate about the implementation of major challenges, in order to carry out our goals and collaborate with other teams on their goals.
 
-In the Crypto Broker Platform we are responsible for a large part of business transactions, while in the Chat Platform we are developing the back end. In each platform mentioned, we are involved in the development of Network Services.
+In the Crypto Broker Platform we are responsible for a large part of business transactions, while in the Chat Platform we are developing the back end. In each platform mentioned, we are involved in the development of Network Services and transactional plugins.
 
 #### Team Members:
 
@@ -245,6 +246,12 @@ In the Crypto Broker Platform we are responsible for a large part of business tr
     Email:   sulbaranja@gmail.com
     Skype:   juanaso15
     Github:  https://github.com/Juanaso
+
+* **Alexander Jimenez [New Developer]**<br/>
+---
+    Email:   alex_jimenez76@hotmail.com
+    Skype:   alex_jimenez76
+    Github:  https://github.com/alexanderejm
     
 This is a team full of manga, anime, comics, sci-fi and Tolkien fans, also we represent the dark side of the force. We would be grateful for any help received, and anyone interested in joining the team will be welcome.
 
@@ -273,16 +280,55 @@ In the Crypto Broker Platform we are responsible for a large part of user level 
 ---
       Email:   josvilchezalmera@gmail.com
       Skype:   josvilchezalmera
-      Github:  https://github.com/  
+      Github:  https://github.com/JDVilchez  
 
-We are also ameteur philosophers, passionate about esoteric topics as video games.
+* **Richard Lozada [New Developer]**<br/>
+---
+      Email:   richardalozada@hotmail.com
+      Skype:   richardalozada
+      Github:  https://github.com/Lozadaa 
+
+* **Rodrigo Guzman [New Part-Time Developer]**<br/>
+---
+      Email:   roygufo@gmail.com
+      Skype:   roy-epps
+      Github:  https://github.com/RoyGF
+
+We are also amateur philosophers, passionate about esoteric topics and video games.
+
+<br>
+### Skynet Team:
+-----------------------------------
+From the most hidden and beautiful corner, in an unknown place of the universe, a network that gathers a group of polymaths is born. Such network combines their knowledge and artificial intelligence in order to overcome any obstacle that might try to avoid giving life to a limitless project.. that network is Team Skynet, a group of workaholics that enjoys turning challenges into fun, having a great will to help the needed and learn continuously.
+We are a team with diverse tastes and full of color making it an explosive integration. We love video games, anime, movie theaters, music and many other things. If you want to be part of our team, you will be always welcome at Skynet
+
+#### Skynet Team Members:
+
+* **Nerio Enrique Indriago Ortega [Team Leader]** <br/>
+---
+      Email:   nerioindriago@gmail.com
+      Skype:   nerioindriago
+      Github:  https://github.com/nindriago
+
+* **Penelope Quintero [New Developer]** <br/>
+---
+      Email:   pennyxz@gmail.com
+      Skype:   pennyxz
+      Github:  https://github.com/pennyxz
+
+* **Jinmy Bohorquez [New Developer]** <br/>
+---
+      Email:   jinmybohorquez@gmail.com
+      Skype:   jinmyb22
+      Github:  https://github.com/jinmyjbv
+
 
 <br/>
 ### Code Butchers Team:
 -----------------------------------
-We are a team of diverse nature developers, interested on the bases and structure of the Fermat Framework, and even nonconforming, we work along the entire platform, trying to keep the things ordered and collaborating with other teams.
+We are a team of developers of diverse nature, interested on the basis and structure of the Fermat Framework, and always looking for a better way of perfecting the system, with an innovative spirit and full of perspicacy. We work across the entire platform, trying to keep the things ordered and paying attention to collaborate with other teams.
 
-* In the Fermat Core we are responsible for the enhancements and maintance.
+* In the Fermat Core we are responsible for the enhancements and maintenance.
 * In the OSA Platform we do our best.
 * In the Crypto Broker Platform we are responsible for the communication between its respectives actors.
 * In the Crypto Currency Platform we developed a serie of plug-ins and we have knowdlege of the whole platform.
@@ -305,12 +351,12 @@ In each platform mentioned, we are involved in the development of Network Servic
       Skype:   pmgesualdi
       Github:  https://github.com/pmgesualdi
 
-We love music and we do music, we love movies (fanatics), we are also ameteur philosophers. We're always available to talk about whatever. We would be grateful for any help received, and anyone interested in joining the team will be welcome.
+We love music and we do music, we love movies (fanatics), we are also amateur philosophers. We're always available to talk about whatever. We would be grateful for any help received, and anyone interested in joining the team will be welcome.
 
 <br/>
 ### DBZ Team:
 -----------------------------------
-We are a developer team with different experience level; we give our best to deliver products of the highest quality. Our team is responsible for the design and development of both the CSH and BNK Platform as well as several Plugins, Reference Wallets and Sub Apps for the CBP Platform
+We are a developer team with different experience levels; we give our best to deliver products of the highest quality. Our team is responsible for the design and development of both the CSH and BNK Platform as well as several plug-ins, Reference Wallets and Sub Apps for the CBP Platform
 
 #### Team Members:
 
@@ -343,13 +389,13 @@ We are a developer team with different experience level; we give our best to del
       Skype:   y_alayn
       Github:  https://github.com/yalayn
 
-We can talk about any topic outside work, as movies, video games (!), politics, etc, always respecting everyone's opinion. The DBZ initials refers to Dragon Ball Z, so as you can notice we also like anime and the like! If you want to join our team you're more that welcome!
+We can talk about any topic outside of work, as movies, video games (!), politics, etc, always respecting everyone's opinion. The DBZ initials refers to Dragon Ball Z, so as you can notice we also like anime and boy do we! If you want to join our team you're more than welcome!
 
 <br/>
 
 ### Fermat ORG Charlie:
 -----------------------------------
-Developers of dev.fermat.org in the client-side. We are responsible to show to the public and to the developers the current state and structure of this big project the best we can in a 3D graphic environment. We are a team of passionate developers with different levels of skills, from JavaScript developers through web testers to 3D graphics experts, we enjoy a lot what we do and work side-by-side with other teams like the Server-side, graphic designers and Fermat internal developers.
+Developers of dev.fermat.org on the client-side. We are responsible to show to the public and to the developers the current state and structure of this big project the best we can in a 3D graphic environment. We are a team of passionate developers with different levels of skills, from JavaScript developers through web testers to 3D graphics experts, we enjoy a lot what we do and work side-by-side with other teams like the Server-side, graphic designers and Fermat internal developers.
 
 #### Team Members:
 
@@ -372,20 +418,20 @@ Developers of dev.fermat.org in the client-side. We are responsible to show to t
     Skype:   ecolina4
     Github:  https://github.com/emmanuelcolina
 
-We welcome everyone who would like to join us. JavaScript is a hard languages when it comes to write big projects, but we learn and teach techniques to keep it simple to everyone.
+We welcome everyone who would like to join us. JavaScript is a hard language when it comes to write big projects, but we learn and teach techniques to keep it simple to everyone.
 
 <br/>
 
 ### Fermat ORG Sierra:
 -----------------------------------
-In the Fermat ORG Sierra Team we look for the excellence in coding, following the best practices for our tools and using the optimum way to solve a problem. We are responsible to provide all the repository data and network data to the client-side so they can show to the public and the developers, the current state and structure of this big project. We are a small team of developers with a different levels of expertise in JavaScript (Node.js), NoSQL database (MongoDB), RESTful API design, in train to give solutions to our developers and general public.
+In the Fermat ORG Sierra Team we look for the excellence in coding, following the best practices for our tools and using the optimum way to solve a problem. We are responsible to provide all the repository data and network data to the client-side so they can show to the public and the developers, the current state and structure of this big project. We are a small team of developers with different levels of expertise in JavaScript (Node.js), NoSQL database (MongoDB), RESTful API design, in train to give solutions to our developers and general public.
 
 #### Team Members:
 
 * **Luis Fuenmayor [ORG Team Leader]**<br/>
 ---
     Email:   fuelusumar@gmail.com
-    Skype:   fuelusumar
+    Skype:   live:fuelusumar.
     Github:  https://github.com/fuelusumar
     
 * **German Mendoza [ORG Veteran Developer]**<br/>
@@ -399,6 +445,12 @@ In the Fermat ORG Sierra Team we look for the excellence in coding, following th
     Email:   campusprize@gmail.com
     Skype:   campol
     Github:  https://github.com/campol
+
+* **Erick Narvaez [ORG Developer]**<br/>
+---
+    Email:   ericknarvaez@hotmail.com 
+    Skype:   live:ericknarvaez
+    Github:  https://github.com/korik1
 
 <br/>
 

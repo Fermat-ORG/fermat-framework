@@ -12,6 +12,6 @@
         android:id="@+id/assets"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:listitem="@layout/row_digital_asset" />
+        tools:listitem="@layout/dap_wallet_asset_redeempoint_row_digital_asset" />
 
 </LinearLayout>

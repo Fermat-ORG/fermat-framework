@@ -11,8 +11,7 @@ public enum DAPMessageType implements FermatEnum {
     //ENUM DECLARATION
 
     ASSET_APPROPRIATION("ASAP"),
-    EXTENDED_PUBLIC_KEY("EXPK"),
-
+    EXTENDED_PUBLIC_KEY("EXPK")
     ;
     //VARIABLE DECLARATION
 

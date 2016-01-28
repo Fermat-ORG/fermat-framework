@@ -50,22 +50,28 @@ public class UserWalletNavigationViewPainter implements NavigationViewPainter {
 
     @Override
     public ViewGroup addNavigationViewBodyContainer(LayoutInflater layoutInflater, ViewGroup base) {
-        return (RelativeLayout) layoutInflater.inflate(R.layout.dap_navigation_drawer_user_wallet_bottom, base, true);
+//        return (RelativeLayout) layoutInflater.inflate(R.layout.dap_navigation_drawer_user_wallet_bottom, base, true);
+        return null;
     }
+
+//    @Override
+//    public Bitmap addBodyBackground() {
+//        Bitmap drawable = null;
+//        try {
+//            BitmapFactory.Options options = new BitmapFactory.Options();
+//            options.inScaled = true;
+//            options.inSampleSize = 5;
+//            drawable = BitmapFactory.decodeResource(
+//                    activity.getResources(), R.drawable.cbw_navigation_drawer_background, options);
+//        } catch (OutOfMemoryError error) {
+//            error.printStackTrace();
+//        }
+//        return drawable;
+//    }
 
     @Override
     public Bitmap addBodyBackground() {
-        Bitmap drawable = null;
-        try {
-            BitmapFactory.Options options = new BitmapFactory.Options();
-            options.inScaled = true;
-            options.inSampleSize = 5;
-            drawable = BitmapFactory.decodeResource(
-                    activity.getResources(), R.drawable.cbw_navigation_drawer_background, options);
-        } catch (OutOfMemoryError error) {
-            error.printStackTrace();
-        }
-        return drawable;
+        return null;
     }
 
     @Override
@@ -80,7 +86,7 @@ public class UserWalletNavigationViewPainter implements NavigationViewPainter {
 
     @Override
     public boolean hasBodyBackground() {
-        return true;
+        return false;
     }
 
     @Override

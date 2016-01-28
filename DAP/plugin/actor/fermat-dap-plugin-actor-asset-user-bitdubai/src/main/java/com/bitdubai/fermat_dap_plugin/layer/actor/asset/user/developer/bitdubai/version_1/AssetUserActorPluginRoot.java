@@ -157,14 +157,24 @@ public class AssetUserActorPluginRoot extends AbstractPlugin implements
     }
 
     @Override
+    public ActorAssetUser getActorRegisteredByPublicKey(String actorPublicKey) throws CantGetAssetUserActorsException, CantAssetUserActorNotFoundException {
+        try {
+            return this.assetUserActorDao.getActorAssetUserRegisteredByPublicKey(actorPublicKey);
+        } catch (CantGetAssetUserActorsException e) {
+            throw new CantGetAssetUserActorsException("", FermatException.wrapException(e), "Cant Get Actor Asset User from Data Base", null);
+        }
+    }
+
+    @Override
     public void createActorAssetUserFactory(String assetUserActorPublicKey, String assetUserActorName, byte[] assetUserActorprofileImage) throws CantCreateAssetUserActorException {
         try {
             ActorAssetUser actorAssetUser = this.assetUserActorDao.getActorAssetUser();
 
+            if (actorAssetUser == null) {
+
             Double locationLatitude = new Random().nextDouble();
             Double locationLongitude = new Random().nextDouble();
 
-            if (actorAssetUser == null) {
                 Genders genders = Genders.INDEFINITE;
                 String age = "-";
                 AssetUserActorRecord record = new AssetUserActorRecord(
@@ -181,11 +191,38 @@ public class AssetUserActorPluginRoot extends AbstractPlugin implements
                         assetUserActorprofileImage);
 
                 this.assetUserActorDao.createNewAssetUser(record);
+
+                actorAssetUser = this.assetUserActorDao.getActorAssetUser();
+
+                assetUserActorNetworkServiceManager.registerActorAssetUser(actorAssetUser);
+            } else {
+
+                actorAssetUser = this.assetUserActorDao.getActorAssetUser();
+
+                Double locationLatitude = new Random().nextDouble();
+                Double locationLongitude = new Random().nextDouble();
+
+                Genders genders = Genders.INDEFINITE;
+                String age = "-";
+                AssetUserActorRecord record = new AssetUserActorRecord(
+                        actorAssetUser.getActorPublicKey(),
+                        assetUserActorName,
+                        age,
+                        genders,
+                        actorAssetUser.getDapConnectionState(),
+                        locationLatitude,
+                        locationLongitude,
+                        actorAssetUser.getCryptoAddress(),
+                        actorAssetUser.getRegistrationDate(),
+                        System.currentTimeMillis(),
+                        assetUserActorprofileImage);
+
+                this.assetUserActorDao.updateAssetUser(record);
+
+                actorAssetUser = this.assetUserActorDao.getActorAssetUser();
+
+                assetUserActorNetworkServiceManager.updateActorAssetUser(actorAssetUser);
             }
-
-            registerActorInActorNetowrkSerice();
-
-            actorAssetUser = this.assetUserActorDao.getActorAssetUser();
 
             if (actorAssetUser != null) {
                 System.out.println("*****************Actor Asset User************************");
@@ -271,7 +308,7 @@ public class AssetUserActorPluginRoot extends AbstractPlugin implements
                             CryptoAddressDealers.DAP_ASSET,
                             BlockchainNetworkType.DEFAULT);
 
-                    this.assetUserActorDao.updateAssetUserDAPConnectionStateActorNetworService(actorAssetUser.getActorPublicKey(), DAPConnectionState.CONNECTING, actorAssetUser.getCryptoAddress());
+                    this.assetUserActorDao.updateAssetUserDAPConnectionStateActorNetworkService(actorAssetUser, DAPConnectionState.CONNECTING, actorAssetUser.getCryptoAddress());
                 } catch (CantUpdateAssetUserConnectionException e) {
                     e.printStackTrace();
                 }
@@ -293,7 +330,7 @@ public class AssetUserActorPluginRoot extends AbstractPlugin implements
                         Actors.DAP_ASSET_REDEEM_POINT,
                         requester.getActorPublicKey(),
                         actorAssetRedeemPoint.getActorPublicKey(),
-                        CryptoAddressDealers.DAP_ASSET,
+                        CryptoAddressDealers.DAP_WATCH_ONLY,
                         BlockchainNetworkType.DEFAULT);
 
 //                    this.assetUserActorDao.updateAssetUserDAPConnectionStateActorNetworService(actorAssetUser.getActorPublicKey(), DAPConnectionState.CONNECTING, actorAssetUser.getCryptoAddress());
@@ -390,7 +427,7 @@ public class AssetUserActorPluginRoot extends AbstractPlugin implements
         }
     }
 
-    public void registerActorInActorNetowrkSerice() throws CantRegisterActorAssetUserException {
+    public void registerActorInActorNetworkService() throws CantRegisterActorAssetUserException {
         try {
             /*
              * Send the Actor Asset User Local for Register in Actor Network Service
@@ -435,8 +472,12 @@ public class AssetUserActorPluginRoot extends AbstractPlugin implements
 
                 if (request.getCryptoAddressDealer().equals(CryptoAddressDealers.DAP_ASSET)) {
 
-                    if (request.getAction().equals(RequestAction.ACCEPT))
-                        this.handleCryptoAddressReceivedEvent(request);
+                    if (request.getCryptoAddress().getAddress() != null)
+                        if (request.getAction().equals(RequestAction.ACCEPT) || request.getAction().equals(RequestAction.NONE)){
+                            this.handleCryptoAddressReceivedEvent(request);
+                            cryptoAddressesNetworkServiceManager.markReceivedRequest(request.getRequestId());
+                        }
+
 
 //                if (request.getAction().equals(RequestAction.DENY))
 //                    this.handleCryptoAddressDeniedEvent(request);
@@ -447,6 +488,8 @@ public class AssetUserActorPluginRoot extends AbstractPlugin implements
                 CantHandleCryptoAddressReceivedActionException e) {
 
             throw new CantHandleCryptoAddressesNewsEventException(e, "", "Error handling Crypto Addresses News Event.");
+        } catch (CantConfirmAddressExchangeRequestException e) {
+            e.printStackTrace();
         }
     }
 
@@ -456,7 +499,7 @@ public class AssetUserActorPluginRoot extends AbstractPlugin implements
             if (request.getCryptoAddress() != null) {
                 System.out.println("*****Actor Asset User Recibiendo Crypto Localmente*****");
 
-                this.assetUserActorDao.updateAssetUserDAPConnectionStateActorNetworService(request.getIdentityPublicKeyResponding(), DAPConnectionState.CONNECTED_ONLINE, request.getCryptoAddress());
+                this.assetUserActorDao.updateAssetUserConnectionStateCryptoAddress(request.getIdentityPublicKeyResponding(), DAPConnectionState.CONNECTED_ONLINE, request.getCryptoAddress());
 
                 List<ActorAssetUser> actorAssetUser = this.assetUserActorDao.getAssetUserRegistered(request.getIdentityPublicKeyResponding());
 

@@ -3,6 +3,7 @@ package com.bitdubai.reference_wallet.crypto_broker_wallet.fragments.wizard_page
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.os.Bundle;
+import android.renderscript.ScriptGroup;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -15,6 +16,7 @@ import android.widget.Toast;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractFermatFragment;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatCheckBox;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView;
+import com.bitdubai.fermat_android_api.ui.Views.PresentationDialog;
 import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.enums.FiatCurrency;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
@@ -35,6 +37,7 @@ import com.bitdubai.reference_wallet.crypto_broker_wallet.common.adapters.Single
 import com.bitdubai.reference_wallet.crypto_broker_wallet.common.adapters.WalletsAdapter;
 import com.bitdubai.reference_wallet.crypto_broker_wallet.fragments.common.SimpleListDialogFragment;
 import com.bitdubai.reference_wallet.crypto_broker_wallet.session.CryptoBrokerWalletSession;
+import com.bitdubai.reference_wallet.crypto_broker_wallet.util.InputDialogCBP;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -51,8 +54,6 @@ public class WizardPageSetMerchandisesFragment extends AbstractFermatFragment
     // Constants
     private static final String TAG = "WizardPageSetMerchand";
 
-    private int spreadValue;
-    private boolean automaticRestock;
     private List<InstalledWallet> stockWallets;
     private Map<String, FiatCurrency> bankCurrencies;
     private Map<String, String> bankAccounts;
@@ -73,8 +74,7 @@ public class WizardPageSetMerchandisesFragment extends AbstractFermatFragment
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        spreadValue = 0;
-        automaticRestock = false;
+
         stockWallets = new ArrayList<>();
         bankCurrencies = new HashMap<>();
         bankAccounts = new HashMap<>();
@@ -96,7 +96,16 @@ public class WizardPageSetMerchandisesFragment extends AbstractFermatFragment
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         super.onCreateView(inflater, container, savedInstanceState);
+        PresentationDialog presentationDialog = new PresentationDialog.Builder(getActivity(), appSession)
+                .setBody("Custom text support for dialog in the wizard Merchandises help")
+                .setSubTitle("Subtitle text of Merchandises dialog help")
+                .setTextFooter("Text footer Merchandises dialog help")
+                .setTemplateType(PresentationDialog.TemplateType.TYPE_PRESENTATION_WITHOUT_IDENTITIES)
+                .setBannerRes(R.drawable.banner_crypto_broker)
+                .setIconRes(R.drawable.crypto_broker)
+                .build();
 
+        presentationDialog.show();
         final View layout = inflater.inflate(R.layout.cbw_wizard_step_set_merchandises, container, false);
 
         recyclerView = (RecyclerView) layout.findViewById(R.id.cbw_selected_stock_wallets_recycler_view);
@@ -108,8 +117,6 @@ public class WizardPageSetMerchandisesFragment extends AbstractFermatFragment
 
         emptyView = (FermatTextView) layout.findViewById(R.id.cbw_selected_stock_wallets_empty_view);
 
-        final FermatTextView spreadTextView = (FermatTextView) layout.findViewById(R.id.cbw_spread_value_text);
-        spreadTextView.setText(String.format("%1$s %%", spreadValue));
 
         final View cryptoButton = layout.findViewById(R.id.cbw_select_crypto_wallets);
         cryptoButton.setOnClickListener(new View.OnClickListener() {
@@ -135,30 +142,7 @@ public class WizardPageSetMerchandisesFragment extends AbstractFermatFragment
             }
         });
 
-        final FermatCheckBox automaticRestockCheckBox = (FermatCheckBox) layout.findViewById(R.id.cbw_automatic_restock_check_box);
-        automaticRestockCheckBox.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                automaticRestock = automaticRestockCheckBox.isChecked();
-            }
-        });
 
-        final SeekBar spreadSeekBar = (SeekBar) layout.findViewById(R.id.cbw_spread_value_seek_bar);
-        spreadSeekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
-            @Override
-            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-                spreadValue = progress;
-                spreadTextView.setText(String.format("%1$s %%", spreadValue));
-            }
-
-            @Override
-            public void onStartTrackingTouch(SeekBar seekBar) {
-            }
-
-            @Override
-            public void onStopTrackingTouch(SeekBar seekBar) {
-            }
-        });
 
 
         final View nextStepButton = layout.findViewById(R.id.cbw_next_step_button);
@@ -219,28 +203,34 @@ public class WizardPageSetMerchandisesFragment extends AbstractFermatFragment
     private void showBankAccountsDialog(final InstalledWallet selectedWallet) {
         try {
             List<BankAccountNumber> accounts = walletManager.getAccounts(selectedWallet.getWalletPublicKey());
+            if (!accounts.isEmpty()) {
 
-            SimpleListDialogFragment<BankAccountNumber> accountsDialog = new SimpleListDialogFragment<>();
-            accountsDialog.configure("Select an Account", accounts);
-            accountsDialog.setListener(new SimpleListDialogFragment.ItemSelectedListener<BankAccountNumber>() {
-                @Override
-                public void onItemSelected(BankAccountNumber selectedAccount) {
+                SimpleListDialogFragment<BankAccountNumber> accountsDialog = new SimpleListDialogFragment<>();
+                accountsDialog.configure("Select an Account", accounts);
+                accountsDialog.setListener(new SimpleListDialogFragment.ItemSelectedListener<BankAccountNumber>() {
 
-                    FiatCurrency currency = selectedAccount.getCurrencyType();
-                    String account = selectedAccount.getAccount();
+                    @Override
+                    public void onItemSelected(BankAccountNumber selectedAccount) {
+                        FiatCurrency currency = selectedAccount.getCurrencyType();
+                        String account = selectedAccount.getAccount();
+                        bankCurrencies.put(selectedWallet.getWalletPublicKey(), currency);
+                        bankAccounts.put(selectedWallet.getWalletPublicKey(), account);
+                        if (!containWallet(selectedWallet)) {
+                            stockWallets.add(selectedWallet);
+                            adapter.changeDataSet(stockWallets);
+                            showOrHideNoSelectedWalletsView();
 
-                    bankCurrencies.put(selectedWallet.getWalletPublicKey(), currency);
-                    bankAccounts.put(selectedWallet.getWalletPublicKey(), account);
-
-                    if (!containWallet(selectedWallet)) {
-                        stockWallets.add(selectedWallet);
-                        adapter.changeDataSet(stockWallets);
-                        showOrHideNoSelectedWalletsView();
+                        }
                     }
-                }
-            });
 
-            accountsDialog.show(getFragmentManager(), "accountsDialog");
+                });
+                accountsDialog.show(getFragmentManager(), "accountsDialog");
+            } else {
+                InputDialogCBP inputDialogCBP = new InputDialogCBP(getActivity(),appSession,null);
+                inputDialogCBP.DialogType(1);
+                inputDialogCBP.show();
+
+            }
 
         } catch (FermatException ex) {
             Toast.makeText(WizardPageSetMerchandisesFragment.this.getActivity(), "Oops a error occurred...", Toast.LENGTH_SHORT).show();
@@ -263,12 +253,6 @@ public class WizardPageSetMerchandisesFragment extends AbstractFermatFragment
         }
 
         try {
-            CryptoBrokerWalletSettingSpread walletSetting = walletManager.newEmptyCryptoBrokerWalletSetting();
-            walletSetting.setId(null);
-            walletSetting.setBrokerPublicKey(appSession.getAppPublicKey());
-            walletSetting.setSpread(spreadValue);
-            walletSetting.setRestockAutomatic(automaticRestock);
-            walletManager.saveWalletSetting(walletSetting, appSession.getAppPublicKey());
 
 
             for (InstalledWallet wallet : stockWallets) {

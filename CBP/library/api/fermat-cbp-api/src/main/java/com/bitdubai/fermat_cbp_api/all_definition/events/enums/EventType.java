@@ -20,6 +20,7 @@ import com.bitdubai.fermat_cbp_api.layer.business_transaction.customer_online_pa
 import com.bitdubai.fermat_cbp_api.layer.network_service.negotiation_transmission.events.IncomingNegotiationTransmissionConfirmNegotiationEvent;
 import com.bitdubai.fermat_cbp_api.layer.network_service.negotiation_transmission.events.IncomingNegotiationTransmissionConfirmResponseEvent;
 import com.bitdubai.fermat_cbp_api.layer.business_transaction.open_contract.events.NewContractOpened;
+import com.bitdubai.fermat_cbp_api.layer.network_service.negotiation_transmission.events.IncomingNegotiationTransmissionEventTEA;
 import com.bitdubai.fermat_cbp_api.layer.network_service.negotiation_transmission.events.IncomingNegotiationTransmissionUpdateEvent;
 import com.bitdubai.fermat_cbp_api.layer.network_service.transaction_transmission.events.IncomingBusinessTransactionContractHash;
 import com.bitdubai.fermat_cbp_api.layer.network_service.transaction_transmission.events.IncomingConfirmBusinessTransactionContract;
@@ -84,6 +85,9 @@ public enum EventType implements FermatEventEnum {
     },
     INCOMING_NEGOTIATION_TRANSMISSION_CONFIRM_CLOSE("INTCC") {
         public final FermatEvent getNewEvent() { return new IncomingNegotiationTransmissionConfirmNegotiationEvent(this);}
+    },
+    INCOMING_NEGOTIATION_TRANSMISSION_TRANSACTION_NEW2("INTTN2") {
+        public final FermatEvent getNewEvent() { return new IncomingNegotiationTransmissionEventTEA(this);}
     },
     INCOMING_NEGOTIATION_TRANSMISSION_TRANSACTION_NEW("INTTN") {
         public final FermatEvent getNewEvent() { return new IncomingNegotiationTransactionEvent(this);}

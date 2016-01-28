@@ -4,7 +4,6 @@ import com.bitdubai.fermat_dap_api.layer.all_definition.digital_asset.DigitalAss
 import com.bitdubai.fermat_dap_api.layer.all_definition.digital_asset.DigitalAssetMetadata;
 import com.bitdubai.fermat_dap_api.layer.all_definition.enums.AssetCurrentStatus;
 import com.bitdubai.fermat_dap_api.layer.dap_module.wallet_asset_issuer.exceptions.CantGetAssetStatisticException;
-import com.bitdubai.fermat_dap_api.layer.dap_module.wallet_asset_issuer.interfaces.AssetStatistic;
 import com.bitdubai.fermat_dap_api.layer.dap_transaction.common.exceptions.CantGetDigitalAssetFromLocalStorageException;
 import com.bitdubai.fermat_dap_api.layer.dap_transaction.common.exceptions.RecordsNotFoundException;
 import com.bitdubai.fermat_dap_api.layer.dap_wallet.asset_issuer_wallet.exceptions.CantSaveStatisticException;
@@ -25,7 +24,7 @@ public interface AssetIssuerWallet {
 
     //TODO:Documentar y manejo de excepciones
 
-    AssetIssuerWalletBalance getBookBalance(BalanceType balanceType) throws CantGetTransactionsException;
+    AssetIssuerWalletBalance getBalance() throws CantGetTransactionsException;
 
     List<AssetIssuerWalletTransaction> getTransactionsAll(BalanceType balanceType,
                                                           TransactionType transactionType,
@@ -35,6 +34,8 @@ public interface AssetIssuerWallet {
                                                        TransactionType transactionType,
                                                        int max,
                                                        int offset, String assetPublicKey) throws CantGetTransactionsException;
+
+    List<AssetIssuerWalletTransaction> getAvailableTransactions(String assetPublicKey) throws CantGetTransactionsException;
 
     List<AssetIssuerWalletTransaction> getTransactionsByActor(String actorPublicKey,
                                                               BalanceType balanceType,
@@ -54,9 +55,13 @@ public interface AssetIssuerWallet {
 
     List<AssetIssuerWalletTransaction> getTransactionsAssetAll(String assetPublicKey) throws CantGetTransactionsException;
 
-    DigitalAssetMetadata getDigitalAssetMetadata(String digitalAssetPublicKey) throws CantGetDigitalAssetFromLocalStorageException;
+    DigitalAssetMetadata getDigitalAssetMetadata(String transactionHash) throws CantGetDigitalAssetFromLocalStorageException;
 
     DigitalAsset getAssetByPublicKey(String assetPublicKey);
+
+    String getUserDeliveredToPublicKey(String assetPublicKey) throws RecordsNotFoundException, CantGetAssetStatisticException;
+
+    List<DigitalAssetMetadata> getAllUsedAssets() throws CantGetDigitalAssetFromLocalStorageException;
 
     //ASSET STATISTIC METHODS
 

@@ -3,7 +3,9 @@ apply plugin: 'jacoco'
 apply plugin: 'findbugs'
 apply plugin: 'checkstyle'
 apply plugin: 'pmd'
+
 sourceCompatibility = 1.7
+targetCompatibility = 1.7
 version = '1.0'
 
 repositories {

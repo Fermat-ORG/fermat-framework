@@ -4,7 +4,7 @@ import com.bitdubai.fermat_api.FermatAgent;
 import com.bitdubai.fermat_api.layer.all_definition.components.interfaces.PlatformComponentProfile;
 import com.bitdubai.fermat_api.layer.all_definition.enums.AgentStatus;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.common.network_services.abstract_classes.AbstractNetworkService;
-import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.client.CommunicationsClientConnection;
+import com.bitdubai.fermat_p2p_api.layer.p2p_communication.WsCommunicationsCloudClientManager;
 
 /**
  * The Class <code>com.bitdubai.fermat_p2p_api.layer.all_definition.common.network_services.template.structure.AbstractCommunicationRegistrationProcessNetworkServiceAgent</code>
@@ -17,6 +17,7 @@ import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.client.Commun
  * @version 1.0
  * @since Java JDK 1.7
  */
+@Deprecated
 public abstract class AbstractCommunicationRegistrationProcessNetworkServiceAgent extends FermatAgent {
 
     /*
@@ -28,7 +29,7 @@ public abstract class AbstractCommunicationRegistrationProcessNetworkServiceAgen
     private final Thread agentThread;
 
     private final AbstractNetworkService networkServicePluginRoot      ;
-    private final CommunicationsClientConnection communicationsClientConnection;
+    private final WsCommunicationsCloudClientManager communicationsClientConnection;
 
     /**
      * Constructor with parameters.
@@ -37,7 +38,7 @@ public abstract class AbstractCommunicationRegistrationProcessNetworkServiceAgen
      * @param communicationsClientConnection   communication client connection instance.
      */
     public AbstractCommunicationRegistrationProcessNetworkServiceAgent(final AbstractNetworkService         networkServicePluginRoot      ,
-                                                                       final CommunicationsClientConnection communicationsClientConnection) {
+                                                                       final WsCommunicationsCloudClientManager communicationsClientConnection) {
 
         this.networkServicePluginRoot       = networkServicePluginRoot      ;
         this.communicationsClientConnection = communicationsClientConnection;
@@ -75,10 +76,10 @@ public abstract class AbstractCommunicationRegistrationProcessNetworkServiceAgen
 
         try {
 
-            if (communicationsClientConnection.isRegister() && !networkServicePluginRoot.isRegister()){
+            if (communicationsClientConnection.getCommunicationsCloudClientConnection().isRegister() && !networkServicePluginRoot.isRegister()){
 
                 //Construct my profile and register me
-                PlatformComponentProfile platformComponentProfile =  communicationsClientConnection.constructPlatformComponentProfileFactory(
+                PlatformComponentProfile platformComponentProfile =  communicationsClientConnection.getCommunicationsCloudClientConnection().constructPlatformComponentProfileFactory(
                         networkServicePluginRoot.getIdentityPublicKey(),
                          networkServicePluginRoot.getAlias().toLowerCase(),
                          networkServicePluginRoot.getName(),
@@ -88,7 +89,7 @@ public abstract class AbstractCommunicationRegistrationProcessNetworkServiceAgen
                 );
 
                 // Register me
-                communicationsClientConnection.registerComponentForCommunication(networkServicePluginRoot.getNetworkServiceType(), platformComponentProfile);
+                communicationsClientConnection.getCommunicationsCloudClientConnection().registerComponentForCommunication(networkServicePluginRoot.getNetworkServiceType(), platformComponentProfile);
 
                 // Configure my new profile
                 networkServicePluginRoot.setPlatformComponentProfilePluginRoot(platformComponentProfile);
@@ -104,7 +105,7 @@ public abstract class AbstractCommunicationRegistrationProcessNetworkServiceAgen
                 try {
                     Thread.sleep(AbstractCommunicationRegistrationProcessNetworkServiceAgent.SLEEP_TIME);
                 } catch (InterruptedException e) {
-                    e.printStackTrace();
+                    System.out.println(e.getMessage());
                     this.status = AgentStatus.STOPPED;
                 }
 
@@ -114,10 +115,11 @@ public abstract class AbstractCommunicationRegistrationProcessNetworkServiceAgen
 
         } catch (Exception e) {
             try {
-                e.printStackTrace();
+                //TODO lo comente por que me genera un null pointer
+//                System.out.println(e.getMessage());
                 Thread.sleep(AbstractCommunicationRegistrationProcessNetworkServiceAgent.MAX_SLEEP_TIME);
             } catch (InterruptedException e1) {
-                e1.printStackTrace();
+                System.out.println(e1.getMessage());
                 this.status = AgentStatus.STOPPED;
             }
         }

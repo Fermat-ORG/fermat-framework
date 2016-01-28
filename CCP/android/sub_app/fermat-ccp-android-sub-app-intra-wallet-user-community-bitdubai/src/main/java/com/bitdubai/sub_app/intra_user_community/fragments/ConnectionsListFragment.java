@@ -7,6 +7,8 @@ import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
@@ -26,8 +28,6 @@ import com.bitdubai.fermat_ccp_api.layer.module.intra_user.interfaces.IntraUserM
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 import com.bitdubai.sub_app.intra_user_community.R;
 import com.bitdubai.sub_app.intra_user_community.adapters.AppFriendsListAdapter;
-import com.bitdubai.sub_app.intra_user_community.adapters.AppNavigationAdapter;
-import com.bitdubai.sub_app.intra_user_community.common.utils.FragmentsCommons;
 import com.bitdubai.sub_app.intra_user_community.session.IntraUserSubAppSession;
 import com.bitdubai.sub_app.intra_user_community.util.CommonLogger;
 
@@ -55,7 +55,7 @@ public class ConnectionsListFragment extends AbstractFermatFragment implements S
     private LinearLayout emptyView;
     private IntraUserModuleManager moduleManager;
     private ErrorManager errorManager;
-    private ArrayList<IntraUserInformation> lstIntraUserInformations;
+    private List<IntraUserInformation> lstIntraUserInformations;
 
     public static ConnectionsListFragment newInstance() {
         return new ConnectionsListFragment();
@@ -64,6 +64,7 @@ public class ConnectionsListFragment extends AbstractFermatFragment implements S
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setHasOptionsMenu(true);
         intraUserSubAppSession = ((IntraUserSubAppSession) appSession);
         moduleManager = intraUserSubAppSession.getModuleManager();
         errorManager = appSession.getErrorManager();
@@ -92,6 +93,12 @@ public class ConnectionsListFragment extends AbstractFermatFragment implements S
             Toast.makeText(getActivity().getApplicationContext(), "Oooops! recovering from system error", Toast.LENGTH_SHORT).show();
         }
         return rootView;
+    }
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        super.onCreateOptionsMenu(menu, inflater);
+        menu.clear();
     }
 
     private void setUpScreen(LayoutInflater layoutInflater) throws CantGetActiveLoginIdentityException {

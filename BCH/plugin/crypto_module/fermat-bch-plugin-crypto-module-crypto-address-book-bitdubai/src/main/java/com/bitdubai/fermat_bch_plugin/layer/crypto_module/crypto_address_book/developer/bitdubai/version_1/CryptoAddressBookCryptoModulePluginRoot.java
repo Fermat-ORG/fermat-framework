@@ -314,4 +314,19 @@ public class CryptoAddressBookCryptoModulePluginRoot extends AbstractPlugin impl
             return DEFAULT_LOG_LEVEL;
         }
     }
+
+    /**
+     * Gets the list of CryptoAddresses registered to an specific actor type
+     * @param actorType
+     * @return
+     * @throws CantRegisterCryptoAddressBookRecordException
+     */
+    @Override
+    public List<CryptoAddressBookRecord> listCryptoAddressBookRecordsByDeliveredToActorType(Actors actorType) throws CantRegisterCryptoAddressBookRecordException {
+        try {
+            return cryptoAddressBookCryptoModuleDao.listCryptoAddressBookRecordsByDeliveredToActorType(actorType);
+        } catch (CantListCryptoAddressBookRecordsException e) {
+            throw new CantRegisterCryptoAddressBookRecordException(CantRegisterCryptoAddressBookRecordException.DEFAULT_MESSAGE, e, "Can't get list of cryptpo addresses from database", "database issue");
+        }
+    }
 }

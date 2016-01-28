@@ -1,6 +1,8 @@
 package com.bitdubai.fermat_bnk_plugin.layer.wallet_module.bank_money.developer.bitdubai.version_1.structure;
 
+import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.enums.FiatCurrency;
+import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
 import com.bitdubai.fermat_bnk_api.all_definition.bank_money_transaction.BankTransactionParameters;
 import com.bitdubai.fermat_bnk_api.all_definition.enums.BankAccountType;
 import com.bitdubai.fermat_bnk_api.all_definition.enums.TransactionType;
@@ -30,15 +32,19 @@ public class BankingWalletModuleImpl implements BankingWallet {
     private final WithdrawManager withdrawManager;
     private final HoldManager holdManager;
     private final UnholdManager unholdManager;
+    private PluginFileSystem pluginFileSystem;
+    private UUID pluginId;
 
     private String publicKey = "banking_wallet";
 
-    public BankingWalletModuleImpl(BankMoneyWalletManager bankMoneyWalletManager, DepositManager depositManager, WithdrawManager withdrawManager, HoldManager holdManager, UnholdManager unholdManager) {
+    public BankingWalletModuleImpl(BankMoneyWalletManager bankMoneyWalletManager, DepositManager depositManager, WithdrawManager withdrawManager, HoldManager holdManager, UnholdManager unholdManager, PluginFileSystem pluginFileSystem, UUID pluginId) {
         this.bankMoneyWalletManager = bankMoneyWalletManager;
         this.depositManager = depositManager;
         this.withdrawManager = withdrawManager;
         this.holdManager = holdManager;
         this.unholdManager = unholdManager;
+        this.pluginFileSystem = pluginFileSystem;
+        this.pluginId = pluginId;
     }
 
     @Override
@@ -103,4 +109,24 @@ public class BankingWalletModuleImpl implements BankingWallet {
         }
         return balance;
     }
+
+    @Override
+    public void createBankName(String bankName) {
+        try {
+            bankMoneyWalletManager.loadBankMoneyWallet(publicKey).createBankName(bankName);
+        }catch (FermatException e){
+            System.out.println("exception "+e.getMessage());
+        }
+    }
+
+    @Override
+    public String getBankName() {
+        try {
+            return  bankMoneyWalletManager.loadBankMoneyWallet(publicKey).getBankName();
+        }catch (FermatException e){
+            System.out.println("exception "+e.getMessage());
+        }
+        return null;
+    }
+
 }

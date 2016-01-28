@@ -19,7 +19,11 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.FiatCurrency;
 import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterException;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Wallets;
+import com.bitdubai.fermat_api.layer.all_definition.settings.exceptions.CantGetSettingsException;
+import com.bitdubai.fermat_api.layer.all_definition.settings.exceptions.SettingsNotFoundException;
+import com.bitdubai.fermat_api.layer.all_definition.settings.structure.SettingsManager;
 import com.bitdubai.fermat_csh_api.layer.csh_wallet.exceptions.CantCreateCashMoneyWalletException;
+import com.bitdubai.fermat_csh_api.layer.csh_wallet_module.CashMoneyWalletPreferenceSettings;
 import com.bitdubai.fermat_csh_api.layer.csh_wallet_module.interfaces.CashMoneyWalletModuleManager;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedWalletExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
@@ -28,6 +32,7 @@ import com.bitdubai.reference_wallet.cash_money_wallet.session.CashMoneyWalletSe
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 /**
  * Created by Alejandro Bicelis on 12/18/2015.
@@ -35,13 +40,17 @@ import java.util.List;
 public class SetupFragment extends AbstractFermatFragment implements View.OnClickListener, Spinner.OnItemSelectedListener {
 
     // Fermat Managers
+    private CashMoneyWalletSession walletSession;
     private CashMoneyWalletModuleManager moduleManager;
+    private SettingsManager<CashMoneyWalletPreferenceSettings> settingsManager;
     private ErrorManager errorManager;
 
     //Data
     List<String> fiatCurrenciesFriendly =  new ArrayList<>();
     List<String> fiatCurrencies =  new ArrayList<>();
     FiatCurrency selectedCurrency;
+    private CashMoneyWalletPreferenceSettings walletSettings;
+
 
     //UI
     LinearLayout setupContainer;
@@ -58,12 +67,32 @@ public class SetupFragment extends AbstractFermatFragment implements View.OnClic
         super.onCreate(savedInstanceState);
 
         try {
-            moduleManager = ((CashMoneyWalletSession) appSession).getModuleManager();
+            walletSession = ((CashMoneyWalletSession) appSession);
+            moduleManager = walletSession.getModuleManager();
+            settingsManager = moduleManager.getSettingsManager();
             errorManager = appSession.getErrorManager();
+
         } catch (Exception e) {
             if (errorManager != null)
                 errorManager.reportUnexpectedWalletException(Wallets.CSH_CASH_WALLET, UnexpectedWalletExceptionSeverity.DISABLES_THIS_FRAGMENT, e);
         }
+
+        //Obtain walletSettings or create new wallet settings if first time opening wallet
+        walletSettings = null;
+        try {
+            walletSettings = this.settingsManager.loadAndGetSettings(walletSession.getAppPublicKey());
+        }catch (Exception e){ walletSettings = null; }
+
+        if(walletSettings == null){
+            walletSettings = new CashMoneyWalletPreferenceSettings();
+            walletSettings.setIsHomeTutorialDialogEnabled(true);
+            try {
+                settingsManager.persistSettings(walletSession.getAppPublicKey(),walletSettings);
+            }catch (Exception e){
+                e.printStackTrace();
+            }
+        }
+
 
         //Get fermat FiatCurrencies
         for (FiatCurrency f : FiatCurrency.values()) {
@@ -76,7 +105,7 @@ public class SetupFragment extends AbstractFermatFragment implements View.OnClic
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
         // Inflate the layout for this fragment
-        View layout = inflater.inflate(R.layout.setup_page, container, false);
+        View layout = inflater.inflate(R.layout.csh_setup_page, container, false);
 
 
         //getToolbar().setBackgroundColor(getResources().getColor(R.color.csh_setup_background_color));
@@ -105,6 +134,7 @@ public class SetupFragment extends AbstractFermatFragment implements View.OnClic
                     Animation fadeInAnimation = AnimationUtils.loadAnimation(getActivity(), R.anim.fade_in);
                     setupContainer.setVisibility(View.VISIBLE);
                     setupContainer.startAnimation(fadeInAnimation);
+
                 }
             }
         }, 500);

@@ -1,0 +1,135 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/dap_asset_factory_rounded_corners">
+
+    <!--<View-->
+        <!--android:layout_width="fill_parent"-->
+        <!--android:layout_height="4.5dp"-->
+        <!--android:background="#ffffff" />-->
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:layout_margin="20dp">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="50dp">
+
+            <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
+                android:id="@+id/welcomeTitleText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/dap_asset_factory_welcome_title"
+                android:layout_centerVertical="true"
+                android:textSize="20sp"
+                android:textColor="@color/black"/>
+
+            <ImageView
+                android:id="@+id/welcomeAppImage"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:src="@drawable/img_asset_image"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"/>
+        </RelativeLayout>
+
+        <View
+            android:layout_width="fill_parent"
+            android:layout_height="0.7dp"
+            android:background="#000000"/>
+
+        <ImageView
+            android:id="@+id/welcomeBannerImage"
+            android:layout_width="match_parent"
+            android:layout_height="110dp"
+            android:cropToPadding="false"
+            android:layout_marginTop="12dp"
+            android:layout_marginBottom="7dp"/>
+
+        <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
+            android:id="@+id/welcomeDescriptionText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="5dp"
+            android:text="@string/dap_asset_factory_welcome_desc"
+            android:textAlignment="center"
+            android:textSize="14sp"
+            android:textColor="#1d1d26"/>
+
+        <View
+            android:layout_width="fill_parent"
+            android:layout_height="0.7dp"
+            android:background="#000000"/>
+
+        <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
+            android:id="@+id/welcomeContentText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="12dp"
+            android:layout_marginBottom="7dp"
+            android:text="@string/dap_asset_factory_welcome_content"
+            android:textSize="12sp"
+            android:textColor="#1d1d26"
+            android:layout_marginLeft="16dp"
+            android:gravity="center"/>
+
+        <View
+            android:layout_width="fill_parent"
+            android:layout_height="0.7dp"
+            android:background="#000000"/>
+
+        <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
+            android:id="@+id/welcomeIdentityText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="12dp"
+            android:layout_marginBottom="7dp"
+            android:text="@string/dap_asset_factory_welcome_identity"
+            android:textSize="12sp"
+            android:textColor="#1d1d26"
+            android:layout_marginLeft="16dp"
+            android:gravity="center"/>
+
+        <View
+            android:layout_width="fill_parent"
+            android:layout_height="0.7dp"
+            android:background="#000000"/>
+
+        <RelativeLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center">
+
+            <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
+                android:id="@+id/text1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/dap_asset_factory_welcome_checkbox"
+                android:layout_centerVertical="true"
+                android:textColor="#7c7c7c"
+                android:textSize="12sp"/>
+
+            <CheckBox
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_toRightOf="@+id/text1"
+                android:buttonTint="@color/black_overlay"/>
+
+        </RelativeLayout>
+
+        <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatButton
+            android:id="@+id/welcomeNewIdentityButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/dap_asset_factory_welcome_identity_button"
+            android:layout_gravity="center"/>
+
+    </LinearLayout>
+
+</LinearLayout>

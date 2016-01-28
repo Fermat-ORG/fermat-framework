@@ -15,6 +15,7 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseS
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantCreateDatabaseException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantCreateTableException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.InvalidOwnerIdException;
+import com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_transmission.developer.bitdubai.version_1.crypto_transmission_database.CryptoTransmissionNetworkServiceDatabaseConstants;
 
 import java.util.UUID;
 
@@ -117,6 +118,88 @@ public class CommunicationNetworkServiceDatabaseFactory implements DealsWithPlug
             } catch (CantCreateTableException cantCreateTableException) {
                 throw new CantCreateDatabaseException(CantCreateDatabaseException.DEFAULT_MESSAGE, cantCreateTableException, "", "Exception not handled by the plugin, There is a problem and i cannot create the table.");
             }
+
+            /**
+             * Create INCOMING CRYPTO TRANSMISSION METADATA table.
+             */
+            table = databaseFactory.newTableFactory(ownerId, CryptoTransmissionNetworkServiceDatabaseConstants.INCOMING_CRYPTO_TRANSMISSION_METADATA_TABLE_NAME);
+
+            table.addColumn(CryptoTransmissionNetworkServiceDatabaseConstants.CRYPTO_TRANSMISSION_METADATA_TRANSMISSION_ID_COLUMN_NAME, DatabaseDataType.STRING, 36, Boolean.TRUE);
+            table.addColumn(CryptoTransmissionNetworkServiceDatabaseConstants.CRYPTO_TRANSMISSION_METADATA_REQUEST_ID_COLUMN_NAME, DatabaseDataType.STRING, 36, Boolean.FALSE);
+            table.addColumn(CryptoTransmissionNetworkServiceDatabaseConstants.CRYPTO_TRANSMISSION_METADATA_CRYPTO_CURRENCY_COLUMN_NAME, DatabaseDataType.STRING, 30, Boolean.FALSE);
+            table.addColumn(CryptoTransmissionNetworkServiceDatabaseConstants.CRYPTO_TRANSMISSION_METADATA_CRYPTO_AMOUNT_COLUMN_NAME, DatabaseDataType.LONG_INTEGER, 100, Boolean.FALSE);
+            table.addColumn(CryptoTransmissionNetworkServiceDatabaseConstants.CRYPTO_TRANSMISSION_METADATA_SENDER_PUBLIC_KEY_COLUMN_NAME, DatabaseDataType.STRING, 50, Boolean.FALSE);
+            table.addColumn(CryptoTransmissionNetworkServiceDatabaseConstants.CRYPTO_TRANSMISSION_METADATA_DESTINATION_PUBLIC_KEY_COLUMN_NAME, DatabaseDataType.STRING, 50, Boolean.FALSE);
+            table.addColumn(CryptoTransmissionNetworkServiceDatabaseConstants.CRYPTO_TRANSMISSION_METADATA_ASSOCIATED_CRYPTO_TRANSACTION_HASH_COLUMN_NAME, DatabaseDataType.STRING, 255, Boolean.FALSE);
+            table.addColumn(CryptoTransmissionNetworkServiceDatabaseConstants.CRYPTO_TRANSMISSION_METADATA_PAYMENT_DESCRIPTION_COLUMN_NAME, DatabaseDataType.STRING, 255, Boolean.FALSE);
+            table.addColumn(CryptoTransmissionNetworkServiceDatabaseConstants.CRYPTO_TRANSMISSION_METADATA_STATUS_COLUMN_NAME, DatabaseDataType.STRING, 50, Boolean.TRUE);
+            table.addColumn(CryptoTransmissionNetworkServiceDatabaseConstants.CRYPTO_TRANSMISSION_METADATA_NOTIFICATION_DESCRIPTOR_COLUMN_NAME, DatabaseDataType.STRING, 50, Boolean.TRUE);
+            table.addColumn(CryptoTransmissionNetworkServiceDatabaseConstants.CRYPTO_TRANSMISSION_METADATA_TYPE_COLUMN_NAME,DatabaseDataType.STRING, 50, Boolean.TRUE);
+            table.addColumn(CryptoTransmissionNetworkServiceDatabaseConstants.CRYPTO_TRANSMISSION_METADATA_PENDING_FLAG_COLUMN_NAME,DatabaseDataType.STRING,5,Boolean.FALSE);
+            table.addColumn(CryptoTransmissionNetworkServiceDatabaseConstants.CRYPTO_TRANSMISSION_METADATA_TIMESTAMP_COLUMN_NAME,DatabaseDataType.LONG_INTEGER,255,Boolean.FALSE);
+            table.addColumn(CryptoTransmissionNetworkServiceDatabaseConstants.CRYPTO_TRANSMISSION_METADATA_SENT_COUNT_COLUMN_NAME,DatabaseDataType.INTEGER,0,Boolean.FALSE);
+
+            table.addIndex(CryptoTransmissionNetworkServiceDatabaseConstants.CRYPTO_TRANSMISSION_METADATA_FIRST_KEY_COLUMN);
+
+            try {
+                //Create the table
+                databaseFactory.createTable(ownerId, table);
+            } catch (CantCreateTableException cantCreateTableException) {
+                throw new CantCreateDatabaseException(CantCreateDatabaseException.DEFAULT_MESSAGE, cantCreateTableException, "", "Exception not handled by the plugin, There is a problem and i cannot create the table.");
+            }
+
+            /**
+             * Create OUTGOING CRYPTO TRANSMISSION METADATA table.
+             */
+            table = databaseFactory.newTableFactory(ownerId, CryptoTransmissionNetworkServiceDatabaseConstants.OUTGOING_CRYPTO_TRANSMISSION_METADATA_TABLE_NAME);
+
+            table.addColumn(CryptoTransmissionNetworkServiceDatabaseConstants.CRYPTO_TRANSMISSION_METADATA_TRANSMISSION_ID_COLUMN_NAME, DatabaseDataType.STRING, 36, Boolean.TRUE);
+            table.addColumn(CryptoTransmissionNetworkServiceDatabaseConstants.CRYPTO_TRANSMISSION_METADATA_REQUEST_ID_COLUMN_NAME, DatabaseDataType.STRING, 36, Boolean.FALSE);
+            table.addColumn(CryptoTransmissionNetworkServiceDatabaseConstants.CRYPTO_TRANSMISSION_METADATA_CRYPTO_CURRENCY_COLUMN_NAME, DatabaseDataType.STRING, 30, Boolean.FALSE);
+            table.addColumn(CryptoTransmissionNetworkServiceDatabaseConstants.CRYPTO_TRANSMISSION_METADATA_CRYPTO_AMOUNT_COLUMN_NAME, DatabaseDataType.LONG_INTEGER, 100, Boolean.FALSE);
+            table.addColumn(CryptoTransmissionNetworkServiceDatabaseConstants.CRYPTO_TRANSMISSION_METADATA_SENDER_PUBLIC_KEY_COLUMN_NAME, DatabaseDataType.STRING, 50, Boolean.FALSE);
+            table.addColumn(CryptoTransmissionNetworkServiceDatabaseConstants.CRYPTO_TRANSMISSION_METADATA_DESTINATION_PUBLIC_KEY_COLUMN_NAME, DatabaseDataType.STRING, 50, Boolean.FALSE);
+            table.addColumn(CryptoTransmissionNetworkServiceDatabaseConstants.CRYPTO_TRANSMISSION_METADATA_ASSOCIATED_CRYPTO_TRANSACTION_HASH_COLUMN_NAME, DatabaseDataType.STRING, 255, Boolean.FALSE);
+            table.addColumn(CryptoTransmissionNetworkServiceDatabaseConstants.CRYPTO_TRANSMISSION_METADATA_PAYMENT_DESCRIPTION_COLUMN_NAME, DatabaseDataType.STRING, 255, Boolean.FALSE);
+            table.addColumn(CryptoTransmissionNetworkServiceDatabaseConstants.CRYPTO_TRANSMISSION_METADATA_STATUS_COLUMN_NAME, DatabaseDataType.STRING, 50, Boolean.TRUE);
+            table.addColumn(CryptoTransmissionNetworkServiceDatabaseConstants.CRYPTO_TRANSMISSION_METADATA_NOTIFICATION_DESCRIPTOR_COLUMN_NAME, DatabaseDataType.STRING, 50, Boolean.TRUE);
+            table.addColumn(CryptoTransmissionNetworkServiceDatabaseConstants.CRYPTO_TRANSMISSION_METADATA_TYPE_COLUMN_NAME,DatabaseDataType.STRING, 50, Boolean.TRUE);
+            table.addColumn(CryptoTransmissionNetworkServiceDatabaseConstants.CRYPTO_TRANSMISSION_METADATA_PENDING_FLAG_COLUMN_NAME,DatabaseDataType.STRING,5,Boolean.FALSE);
+            table.addColumn(CryptoTransmissionNetworkServiceDatabaseConstants.CRYPTO_TRANSMISSION_METADATA_TIMESTAMP_COLUMN_NAME,DatabaseDataType.LONG_INTEGER,255,Boolean.FALSE);
+            table.addColumn(CryptoTransmissionNetworkServiceDatabaseConstants.CRYPTO_TRANSMISSION_METADATA_SENT_COUNT_COLUMN_NAME,DatabaseDataType.INTEGER,0,Boolean.FALSE);
+
+            table.addIndex(CryptoTransmissionNetworkServiceDatabaseConstants.CRYPTO_TRANSMISSION_METADATA_FIRST_KEY_COLUMN);
+
+            try {
+                //Create the table
+                databaseFactory.createTable(ownerId, table);
+            } catch (CantCreateTableException cantCreateTableException) {
+                throw new CantCreateDatabaseException(CantCreateDatabaseException.DEFAULT_MESSAGE, cantCreateTableException, "", "Exception not handled by the plugin, There is a problem and i cannot create the table.");
+            }
+
+            /**
+             * Create COMPONENT VERSIONS DETAILS table.
+             */
+            table = databaseFactory.newTableFactory(ownerId, CryptoTransmissionNetworkServiceDatabaseConstants.COMPONENT_VERSIONS_DETAILS_TABLE_NAME);
+
+            table.addColumn(CryptoTransmissionNetworkServiceDatabaseConstants.COMPONENT_VERSIONS_DETAILS_ID_COLUMN_NAME, DatabaseDataType.STRING, 36, Boolean.TRUE);
+            table.addColumn(CryptoTransmissionNetworkServiceDatabaseConstants.COMPONENT_VERSIONS_DETAILS_ACTOR_PUBLIC_KEY_COLUMN_NAME, DatabaseDataType.STRING, 100, Boolean.TRUE);
+            table.addColumn(CryptoTransmissionNetworkServiceDatabaseConstants.COMPONENT_VERSIONS_DETAILS_IPK_COLUMN_NAME, DatabaseDataType.STRING, 100, Boolean.TRUE);
+            table.addColumn(CryptoTransmissionNetworkServiceDatabaseConstants.COMPONENT_VERSIONS_DETAILS_LAST_CONNECTION_COLUMN_NAME, DatabaseDataType.STRING, 30, Boolean.TRUE);
+
+            table.addIndex(CryptoTransmissionNetworkServiceDatabaseConstants.COMPONENT_VERSIONS_DETAILS_FIRST_KEY_COLUMN);
+
+            try {
+                //Create the table
+                databaseFactory.createTable(ownerId, table);
+            } catch (CantCreateTableException cantCreateTableException) {
+                throw new CantCreateDatabaseException(CantCreateDatabaseException.DEFAULT_MESSAGE, cantCreateTableException, "", "Exception not handled by the plugin, There is a problem and i cannot create the table.");
+            }
+
+
+
+
+
         } catch (InvalidOwnerIdException invalidOwnerId) {
             /**
              * This shouldn't happen here because I was the one who gave the owner id to the database file system,

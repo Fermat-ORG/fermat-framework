@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+
+<resources>
+
+    <style name="AppTheme" parent="@android:style/Theme"/>
+
+    <style name="customAppTheme" parent="Theme.AppCompat.Light.NoActionBar">
+        <item name="android:windowNoTitle">true</item>
+        <item name="colorAccent">@color/background_action_bar</item>
+        <item name="drawerArrowStyle">@style/MyDrawerArrowToggle</item>
+        <item name="color">#fff</item>
+        <item name="android:actionMenuTextColor">#fff</item>
+        <item name="searchViewStyle">@style/AppTheme.SearchView</item>
+        <item name="android:autoCompleteTextViewStyle">@style/cursorColor</item>
+    </style>
+
+    <style name="MyDrawerArrowToggle" parent="Widget.AppCompat.DrawerArrowToggle">
+        <item name="color">#fff</item>
+    </style>
+
+    <style name="AppTheme.SearchView" parent="Widget.AppCompat.SearchView">
+        <item name="closeIcon">@drawable/cht_ic_close_white</item>
+        <item name="navigationIcon">@drawable/cht_ic_back</item>
+    </style>
+
+    <style name="Theme.AppCompat.Translucent" parent="Theme.AppCompat.Light.NoActionBar">
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
+        <item name="android:windowBackground">@android:color/transparent</item>
+        <item name="android:colorBackgroundCacheHint">@null</item>
+        <item name="android:windowIsTranslucent">true</item>
+        <item name="android:windowAnimationStyle">@android:style/Animation</item>
+        <item name="android:textColorPrimary">#fff</item>
+        <item name="searchViewStyle">@style/AppTheme.SearchView</item>
+        <item name="color">#fff</item>
+    </style>
+
+    <style name="ToolbarStyle" parent="customAppTheme">
+        <item name="drawerArrowStyle">@style/MyDrawerArrowToggle</item>
+        <item name="android:textColorPrimary">#fff</item>
+        <item name="colorAccent">#fff</item>
+        <item name="colorControlNormal">?android:attr/textColorPrimary</item>
+    </style>
+
+    <style name="cursorColor" parent="Widget.AppCompat.AutoCompleteTextView">
+        <item name="android:textCursorDrawable">@drawable/cht_cursor</item>
+        <item name="android:textColor">#fff</item>
+    </style>
+
+
+    <style name="ContactListView">
+        <item name="android:verticalScrollbarPosition">right</item>
+        <item name="android:fastScrollAlwaysVisible">true</item>
+        <item name="android:scrollbarStyle">outsideInset</item>
+    </style>
+
+    <style name="listViewActivatedStyle"/>
+
+    <style name="quickContactBadgeStyle">
+        <item name="android:background">@drawable/quickcontact_badge_small</item>
+    </style>
+
+    <style name="searchTextHiglight">
+        <item name="android:textColor">@color/holo_blue</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+
+    <style name="addressHeader" parent="@android:style/TextAppearance.Small">
+        <item name="android:textAllCaps">true</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+
+    <style name="addressDetail" parent="@android:style/TextAppearance.Medium">
+        <item name="android:fontFamily">sans-serif-light</item>
+        <item name="android:textIsSelectable">true</item>
+    </style>
+
+    <style name="contactNameTitle" parent="@android:style/TextAppearance.Large">
+        <item name="android:textSize">38sp</item>
+        <item name="android:fontFamily">sans-serif</item>
+        <item name="android:textIsSelectable">true</item>
+    </style>
+
+    <style name="addressButton"/>
+
+</resources>

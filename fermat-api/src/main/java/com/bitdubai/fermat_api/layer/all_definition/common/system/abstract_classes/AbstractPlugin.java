@@ -46,9 +46,10 @@ public abstract class AbstractPlugin implements Plugin, Service {
     private boolean referencesCollected;
 
     private final PluginVersionReference pluginVersionReference;
-    protected     ServiceStatus          serviceStatus         ;
 
-    protected     UUID                   pluginId              ;
+    protected volatile ServiceStatus serviceStatus;
+
+    protected          UUID          pluginId     ;
 
     public AbstractPlugin(final PluginVersionReference pluginVersionReference) {
 
@@ -68,7 +69,7 @@ public abstract class AbstractPlugin implements Plugin, Service {
     }
 
     @Override
-    public final ServiceStatus getStatus() {
+    public ServiceStatus getStatus() {
         return serviceStatus;
     }
 
@@ -94,6 +95,51 @@ public abstract class AbstractPlugin implements Plugin, Service {
 
     public FeatureForDevelopers getFeatureForDevelopers(final DevelopersUtilReference developersUtilReference) throws CantGetFeatureForDevelopersException {
         return null;
+    }
+
+    public synchronized final void startPlugin() throws CantStartPluginException {
+
+        switch (serviceStatus) {
+
+            case STARTED:
+                break;
+
+            case STARTING:
+
+                while (serviceStatus == ServiceStatus.STARTING) {
+
+                    try {
+
+                        wait(1);
+
+                    } catch (final InterruptedException e) {
+
+
+                    }
+
+                }
+
+                if(serviceStatus == ServiceStatus.ERROR) {
+
+                    throw new CantStartPluginException(
+                        "There was an error in the Start of the plug-in."
+                    );
+                }
+
+                break;
+            case ERROR:
+
+                throw new CantStartPluginException(
+                        "There was an error in the Start of the plug-in."
+                );
+
+            default:
+
+                this.start();
+                this.serviceStatus = ServiceStatus.STARTED;
+
+                break;
+        }
     }
 
     @Override
@@ -459,4 +505,6 @@ public abstract class AbstractPlugin implements Plugin, Service {
             );
         }
     }
+
+
 }

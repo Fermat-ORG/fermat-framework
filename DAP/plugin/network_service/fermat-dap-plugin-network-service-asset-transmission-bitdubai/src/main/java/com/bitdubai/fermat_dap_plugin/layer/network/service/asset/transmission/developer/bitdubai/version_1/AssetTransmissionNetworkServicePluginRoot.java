@@ -31,7 +31,12 @@ import com.bitdubai.fermat_api.layer.all_definition.events.EventSource;
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEvent;
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEventListener;
 import com.bitdubai.fermat_api.layer.all_definition.network_service.enums.NetworkServiceType;
-import com.bitdubai.fermat_api.layer.all_definition.network_service.interfaces.NetworkService;
+import com.bitdubai.fermat_api.layer.osa_android.file_system.FileLifeSpan;
+import com.bitdubai.fermat_api.layer.osa_android.file_system.FilePrivacy;
+import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginTextFile;
+import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantCreateFileException;
+import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.FileNotFoundException;
+import com.bitdubai.fermat_p2p_api.layer.all_definition.common.network_services.interfaces.NetworkService;
 import com.bitdubai.fermat_api.layer.all_definition.network_service.interfaces.NetworkServiceConnectionManager;
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.Action;
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.Specialist;
@@ -69,6 +74,8 @@ import com.bitdubai.fermat_dap_plugin.layer.network.service.asset.transmission.d
 import com.bitdubai.fermat_dap_plugin.layer.network.service.asset.transmission.developer.bitdubai.version_1.database.communications.DigitalAssetMetaDataTransactionDao;
 import com.bitdubai.fermat_dap_plugin.layer.network.service.asset.transmission.developer.bitdubai.version_1.database.communications.OutgoingMessageDao;
 import com.bitdubai.fermat_dap_plugin.layer.network.service.asset.transmission.developer.bitdubai.version_1.event_handlers.ClientConnectionCloseNotificationEventHandler;
+import com.bitdubai.fermat_dap_plugin.layer.network.service.asset.transmission.developer.bitdubai.version_1.event_handlers.ClientConnectionLooseNotificationEventHandler;
+import com.bitdubai.fermat_dap_plugin.layer.network.service.asset.transmission.developer.bitdubai.version_1.event_handlers.ClientSuccessfullReconnectNotificationEventHandler;
 import com.bitdubai.fermat_dap_plugin.layer.network.service.asset.transmission.developer.bitdubai.version_1.event_handlers.CompleteComponentConnectionRequestNotificationEventHandler;
 import com.bitdubai.fermat_dap_plugin.layer.network.service.asset.transmission.developer.bitdubai.version_1.event_handlers.CompleteComponentRegistrationNotificationEventHandler;
 import com.bitdubai.fermat_dap_plugin.layer.network.service.asset.transmission.developer.bitdubai.version_1.event_handlers.CompleteRequestListComponentRegisteredNotificationEventHandler;
@@ -90,6 +97,7 @@ import com.bitdubai.fermat_p2p_api.layer.p2p_communication.WsCommunicationsCloud
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.contents.FermatMessage;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.enums.FermatMessageContentType;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.enums.FermatMessagesStatus;
+import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.exceptions.CantRegisterComponentException;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.exceptions.CantRequestListException;
 import com.bitdubai.fermat_pip_api.layer.actor.exception.CantGetLogTool;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedPluginExceptionSeverity;
@@ -272,6 +280,16 @@ public class AssetTransmissionNetworkServicePluginRoot extends AbstractPlugin im
         return extraData;
     }
 
+    @Override
+    public void handleNewMessages(FermatMessage incomingMessage) {
+        //TODO: implementar el handler de los mensajes acá por favor ;)
+    }
+
+    @Override
+    public void handleNewSentMessageNotificationEvent(FermatMessage message) {
+
+    }
+
     /**
      * Set the PlatformComponentProfile
      *
@@ -435,6 +453,23 @@ public class AssetTransmissionNetworkServicePluginRoot extends AbstractPlugin im
         eventManager.addListener(fermatEventListener);
         listenersAdded.add(fermatEventListener);
 
+          /*
+         * Listen and handle Client Connection Loose Notification Event
+         */
+        fermatEventListener = eventManager.getNewListener(P2pEventType.CLIENT_CONNECTION_LOOSE);
+        fermatEventListener.setEventHandler(new ClientConnectionLooseNotificationEventHandler(this));
+        eventManager.addListener(fermatEventListener);
+        listenersAdded.add(fermatEventListener);
+
+
+        /*
+         * Listen and handle Client Connection Success Reconnect Notification Event
+         */
+        fermatEventListener = eventManager.getNewListener(P2pEventType.CLIENT_SUCCESS_RECONNECT);
+        fermatEventListener.setEventHandler(new ClientSuccessfullReconnectNotificationEventHandler(this));
+        eventManager.addListener(fermatEventListener);
+        listenersAdded.add(fermatEventListener);
+
     }
 
 
@@ -454,7 +489,8 @@ public class AssetTransmissionNetworkServicePluginRoot extends AbstractPlugin im
              /*
              * Create a new key pair for this execution
              */
-            identity = new ECCKeyPair();
+            //identity = new ECCKeyPair();
+            initializeClientIdentity();
 
             /*
             * Initialize the data base
@@ -480,7 +516,7 @@ public class AssetTransmissionNetworkServicePluginRoot extends AbstractPlugin im
                 /*
                  * Initialize the agent and start
                  */
-                communicationRegistrationProcessNetworkServiceAgent = new CommunicationRegistrationProcessNetworkServiceAgent(this, wsCommunicationsCloudClientManager.getCommunicationsCloudClientConnection());
+                communicationRegistrationProcessNetworkServiceAgent = new CommunicationRegistrationProcessNetworkServiceAgent(this, wsCommunicationsCloudClientManager);
                 communicationRegistrationProcessNetworkServiceAgent.start();
             }
 
@@ -504,6 +540,67 @@ public class AssetTransmissionNetworkServicePluginRoot extends AbstractPlugin im
 
             throw pluginStartException;
         }
+    }
+
+    private void initializeClientIdentity() throws CantStartPluginException {
+
+        System.out.println("Calling the method - initializeClientIdentity() ");
+
+        try {
+
+            System.out.println("Loading clientIdentity");
+
+             /*
+              * Load the file with the clientIdentity
+              */
+            PluginTextFile pluginTextFile = pluginFileSystem.getTextFile(pluginId, "private", "clientIdentity", FilePrivacy.PRIVATE, FileLifeSpan.PERMANENT);
+            String content = pluginTextFile.getContent();
+
+            //System.out.println("content = "+content);
+
+            identity = new ECCKeyPair(content);
+
+        } catch (FileNotFoundException e) {
+
+            /*
+             * The file no exist may be the first time the plugin is running on this device,
+             * We need to create the new clientIdentity
+             */
+            try {
+
+                System.out.println("No previous clientIdentity finder - Proceed to create new one");
+
+                /*
+                 * Create the new clientIdentity
+                 */
+                identity = new ECCKeyPair();
+
+                /*
+                 * save into the file
+                 */
+                PluginTextFile pluginTextFile = pluginFileSystem.createTextFile(pluginId, "private", "clientIdentity", FilePrivacy.PRIVATE, FileLifeSpan.PERMANENT);
+                pluginTextFile.setContent(identity.getPrivateKey());
+                pluginTextFile.persistToMedia();
+
+            } catch (Exception exception) {
+                /*
+                 * The file cannot be created. I can not handle this situation.
+                 */
+                errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_INTRAUSER_NETWORK_SERVICE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, exception);
+                throw new CantStartPluginException(exception.getLocalizedMessage());
+            }
+
+
+        } catch (CantCreateFileException cantCreateFileException) {
+
+            /*
+             * The file cannot be load. I can not handle this situation.
+             */
+            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_INTRAUSER_NETWORK_SERVICE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, cantCreateFileException);
+            throw new CantStartPluginException(cantCreateFileException.getLocalizedMessage());
+
+        }
+
     }
 
     @Override
@@ -618,6 +715,36 @@ public class AssetTransmissionNetworkServicePluginRoot extends AbstractPlugin im
 
         System.out.println(" CommunicationNetworkServiceConnectionManager - Starting method handleCompleteComponentRegistrationNotificationEvent");
 
+
+        if (platformComponentProfileRegistered.getPlatformComponentType() == PlatformComponentType.COMMUNICATION_CLOUD_CLIENT && this.register){
+
+            if(communicationRegistrationProcessNetworkServiceAgent.isAlive()){
+                communicationRegistrationProcessNetworkServiceAgent.interrupt();
+                communicationRegistrationProcessNetworkServiceAgent = null;
+            }
+
+                              /*
+                 * Construct my profile and register me
+                 */
+            PlatformComponentProfile platformComponentProfileToReconnect =  wsCommunicationsCloudClientManager.getCommunicationsCloudClientConnection().constructPlatformComponentProfileFactory(this.getIdentityPublicKey(),
+                    this.getAlias().toLowerCase(),
+                    this.getName(),
+                    this.getNetworkServiceType(),
+                    this.getPlatformComponentType(),
+                    this.getExtraData());
+
+            try {
+                    /*
+                     * Register me
+                     */
+                wsCommunicationsCloudClientManager.getCommunicationsCloudClientConnection().registerComponentForCommunication(this.getNetworkServiceType(), platformComponentProfileToReconnect);
+
+            } catch (CantRegisterComponentException e) {
+                e.printStackTrace();
+            }
+
+        }
+
         /*
          * If the component registered have my profile and my identity public key
          */
@@ -685,6 +812,7 @@ public class AssetTransmissionNetworkServicePluginRoot extends AbstractPlugin im
         /*
          * Tell the manager to handler the new connection stablished
          */
+        initializeCommunicationNetworkServiceConnectionManager();
         communicationNetworkServiceConnectionManager.handleEstablishedRequestedNetworkServiceConnection(remoteComponentProfile);
     }
 
@@ -725,6 +853,71 @@ public class AssetTransmissionNetworkServicePluginRoot extends AbstractPlugin im
 
             if (communicationNetworkServiceConnectionManager != null)
                 communicationNetworkServiceConnectionManager.closeAllConnection();
+        }
+
+    }
+
+    /*
+    * Handles the events ClientConnectionLooseNotificationEvent
+    */
+    @Override
+    public void handleClientConnectionLooseNotificationEvent(FermatEvent fermatEvent) {
+
+        if(communicationNetworkServiceConnectionManager != null)
+            communicationNetworkServiceConnectionManager.stop();
+
+    }
+
+    /*
+     * Handles the events ClientSuccessfullReconnectNotificationEvent
+     */
+    @Override
+    public void handleClientSuccessfullReconnectNotificationEvent(FermatEvent fermatEvent) {
+
+
+        if(communicationNetworkServiceConnectionManager != null) {
+            communicationNetworkServiceConnectionManager.restart();
+        }
+
+        if(communicationRegistrationProcessNetworkServiceAgent != null && !this.register){
+
+            if(communicationRegistrationProcessNetworkServiceAgent.isAlive()){
+                communicationRegistrationProcessNetworkServiceAgent.interrupt();
+                communicationRegistrationProcessNetworkServiceAgent = null;
+            }
+
+                   /*
+                 * Construct my profile and register me
+                 */
+                PlatformComponentProfile platformComponentProfileToReconnect =  wsCommunicationsCloudClientManager.getCommunicationsCloudClientConnection().constructPlatformComponentProfileFactory(this.getIdentityPublicKey(),
+                        this.getAlias().toLowerCase(),
+                        this.getName(),
+                        this.getNetworkServiceType(),
+                        this.getPlatformComponentType(),
+                        this.getExtraData());
+
+                try {
+                    /*
+                     * Register me
+                     */
+                    wsCommunicationsCloudClientManager.getCommunicationsCloudClientConnection().registerComponentForCommunication(this.getNetworkServiceType(), platformComponentProfileToReconnect);
+
+                } catch (CantRegisterComponentException e) {
+                    e.printStackTrace();
+                }
+
+                /*
+                 * Configure my new profile
+                 */
+                this.setPlatformComponentProfilePluginRoot(platformComponentProfileToReconnect);
+
+                /*
+                 * Initialize the connection manager
+                 */
+                this.initializeCommunicationNetworkServiceConnectionManager();
+
+
+
         }
 
     }
@@ -994,7 +1187,7 @@ public class AssetTransmissionNetworkServicePluginRoot extends AbstractPlugin im
             String context = contextBuffer.toString();
             String possibleCause = "Plugin was not registered";
 
-            CantSendDigitalAssetMetadataException pluginStartException = new CantSendDigitalAssetMetadataException(CantSendDigitalAssetMetadataException.DEFAULT_MESSAGE, e, context, possibleCause);
+            CantSendDigitalAssetMetadataException pluginStartException = new CantSendDigitalAssetMetadataException(CantSendDigitalAssetMetadataException.DEFAULT_MESSAGE, FermatException.wrapException(e), context, possibleCause);
 
             errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_DAP_ASSET_TRANSMISSION_NETWORK_SERVICE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, pluginStartException);
 

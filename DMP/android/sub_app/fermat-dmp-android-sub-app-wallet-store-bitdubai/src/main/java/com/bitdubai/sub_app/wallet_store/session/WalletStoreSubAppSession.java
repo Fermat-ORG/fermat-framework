@@ -14,7 +14,7 @@ import java.util.Map;
 /**
  * Created by Matias Furszyfer on 2015.07.20..
  */
-public class WalletStoreSubAppSession extends AbstractFermatSession<InstalledSubApp, WalletStoreModuleManager, SubAppResourcesProviderManager> implements SubAppsSession {
+public class WalletStoreSubAppSession extends AbstractFermatSession<InstalledSubApp, WalletStoreModuleManager, SubAppResourcesProviderManager> {
     public static final String BASIC_DATA = "catalog item";
     public static final String PREVIEW_IMGS = "preview images";
     public static final String DEVELOPER_NAME = "developer name";

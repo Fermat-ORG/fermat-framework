@@ -5,6 +5,7 @@ import android.app.Fragment;
 import android.content.ContentResolver;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
@@ -18,7 +19,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.CompoundButton;
+import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.Switch;
 import android.widget.Toast;
 
 import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractFermatFragment;
@@ -28,19 +31,19 @@ import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextV
 import com.bitdubai.fermat_android_api.ui.interfaces.FermatWorkerCallBack;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
 import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.enums.SubApps;
+import com.bitdubai.fermat_cbp_api.layer.identity.crypto_broker.ExposureLevel;
 import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_broker_identity.interfaces.CryptoBrokerIdentityInformation;
-import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
+import com.bitdubai.fermat_cbp_plugin.layer.sub_app_module.crypto_broker_identity.developer.bitdubai.version_1.structure.CryptoBrokerIdentityInformationImpl;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedSubAppExceptionSeverity;
+import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 import com.bitdubai.sub_app.crypto_broker_identity.R;
 import com.bitdubai.sub_app.crypto_broker_identity.util.CommonLogger;
-import com.bitdubai.sub_app.crypto_broker_identity.util.PublishIdentityWorker;
+import com.bitdubai.sub_app.crypto_broker_identity.util.EditIdentityWorker;
 
+import java.io.ByteArrayInputStream;
 import java.util.concurrent.ExecutorService;
 
 import static com.bitdubai.sub_app.crypto_broker_identity.session.CryptoBrokerIdentitySubAppSession.IDENTITY_INFO;
-import static com.bitdubai.sub_app.crypto_broker_identity.util.PublishIdentityWorker.DATA_NOT_CHANGED;
-import static com.bitdubai.sub_app.crypto_broker_identity.util.PublishIdentityWorker.INVALID_ENTRY_DATA;
-import static com.bitdubai.sub_app.crypto_broker_identity.util.PublishIdentityWorker.SUCCESS;
 
 
 /**
@@ -57,14 +60,25 @@ public class EditCryptoBrokerIdentityFragment extends AbstractFermatFragment imp
     // data
     private Bitmap cryptoBrokerBitmap;
     private boolean wantPublishIdentity;
+    private String cryptoBrokerPublicKey;
+
+    private boolean actualizable;
 
     // Managers
     private ErrorManager errorManager;
 
     private ImageView mBrokerImage;
+    private ImageView sw;
+    private EditText mBrokerName;
 
     private ExecutorService executor;
 
+    private byte[] profileImage;
+
+    private ImageView camara;
+    private ImageView galeria;
+
+    private Switch publishIdentityCheckBox;
 
     public static EditCryptoBrokerIdentityFragment newInstance() {
         return new EditCryptoBrokerIdentityFragment();
@@ -73,21 +87,13 @@ public class EditCryptoBrokerIdentityFragment extends AbstractFermatFragment imp
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-        try {
-            errorManager = appSession.getErrorManager();
-        } catch (Exception ex) {
-            CommonLogger.exception(TAG, ex.getMessage(), ex);
-        }
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View rootLayout = inflater.inflate(R.layout.fragment_edit_crypto_broker_identity, container, false);
         initViews(rootLayout);
-
 
         return rootLayout;
     }
@@ -99,30 +105,44 @@ public class EditCryptoBrokerIdentityFragment extends AbstractFermatFragment imp
      */
     private void initViews(View layout) {
         Button mUpdateButton = (Button) layout.findViewById(R.id.update_crypto_broker_button);
-        FermatTextView mBrokerName = (FermatTextView) layout.findViewById(R.id.crypto_broker_name);
+        mBrokerName = (EditText) layout.findViewById(R.id.crypto_broker_name);
         mBrokerImage = (ImageView) layout.findViewById(R.id.crypto_broker_image);
-        FermatCheckBox publishIdentityCheckBox = (FermatCheckBox) layout.findViewById(R.id.publish_identity);
+        sw = (ImageView) layout.findViewById(R.id.sw);
+        publishIdentityCheckBox = (Switch) layout.findViewById(R.id.publish_identity);
+
+        camara = (ImageView) layout.findViewById(R.id.camara);
+        galeria = (ImageView) layout.findViewById(R.id.galeria);
 
         final CryptoBrokerIdentityInformation identityInfo = (CryptoBrokerIdentityInformation) appSession.getData(IDENTITY_INFO);
+
+        cryptoBrokerPublicKey = identityInfo.getPublicKey();
 
         if (identityInfo != null) {
             mBrokerName.setText(identityInfo.getAlias());
 
-            byte[] profileImage = identityInfo.getProfileImage();
-            RoundedBitmapDrawable roundedBitmap = (profileImage != null) ?
-                    ImagesUtils.getRoundedBitmap(getResources(), profileImage) :
-                    ImagesUtils.getRoundedBitmap(getResources(), R.drawable.img_new_user_camera);
+            profileImage = identityInfo.getProfileImage();
 
-            mBrokerImage.setImageDrawable(roundedBitmap);
+            ByteArrayInputStream bytes = new ByteArrayInputStream(profileImage);
+            BitmapDrawable bmd = new BitmapDrawable(bytes);
+            mBrokerImage.setImageBitmap(bmd.getBitmap());
 
             wantPublishIdentity = identityInfo.isPublished();
             publishIdentityCheckBox.setChecked(wantPublishIdentity);
         }
 
+        if(publishIdentityCheckBox.isChecked()){
+            sw.setImageResource(R.drawable.swicth_on);
+            publishIdentityCheckBox.setChecked(true);
+            wantPublishIdentity = true;
+        }else{
+            sw.setImageResource(R.drawable.swicth_off);
+            publishIdentityCheckBox.setChecked(false);
+            wantPublishIdentity = false;
+        }
+
         publishIdentityCheckBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean value) {
-                CommonLogger.debug(TAG, "IN publishIdentityCheckBox.setOnCheckedChangeListener");
                 wantPublishIdentity = value;
             }
         });
@@ -130,23 +150,50 @@ public class EditCryptoBrokerIdentityFragment extends AbstractFermatFragment imp
         mBrokerImage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                CommonLogger.debug(TAG, "IN mBrokerImage.setOnClickListener");
-                registerForContextMenu(mBrokerImage);
-                getActivity().openContextMenu(mBrokerImage);
+                //loadImageFromGallery();
+            }
+        });
+
+        camara.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                dispatchTakePictureIntent();
+            }
+        });
+
+        galeria.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                loadImageFromGallery();
             }
         });
 
         mUpdateButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                CommonLogger.debug(TAG, "IN mUpdateButton.setOnClickListener");
                 editIdentityInfo();
+            }
+        });
+
+        sw.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+               if(publishIdentityCheckBox.isChecked()){
+                   sw.setImageResource(R.drawable.swicth_off);
+                   publishIdentityCheckBox.setChecked(false);
+                   wantPublishIdentity = false;
+               }else{
+                   sw.setImageResource(R.drawable.swicth_on);
+                   publishIdentityCheckBox.setChecked(true);
+                   wantPublishIdentity = true;
+               }
             }
         });
     }
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
         if (resultCode == Activity.RESULT_OK) {
             ImageView pictureView = mBrokerImage;
 
@@ -171,8 +218,7 @@ public class EditCryptoBrokerIdentityFragment extends AbstractFermatFragment imp
             }
 
             if (pictureView != null && cryptoBrokerBitmap != null) {
-                RoundedBitmapDrawable roundedBitmap = ImagesUtils.getRoundedBitmap(getResources(), cryptoBrokerBitmap);
-                pictureView.setImageDrawable(roundedBitmap);
+                pictureView.setImageBitmap(cryptoBrokerBitmap);
             }
         }
     }
@@ -204,18 +250,38 @@ public class EditCryptoBrokerIdentityFragment extends AbstractFermatFragment imp
      * Edita la informacion de la identidad que se muestra actualmente
      */
     private void editIdentityInfo() {
+        String brokerNameText = mBrokerName.getText().toString();
+        ExposureLevel ex;
+        byte[] imgInBytes;
 
-        // TODO falta implementar funcionalidad para editar info del identity en el backend
+        if (wantPublishIdentity) {
+            ex = ExposureLevel.PUBLISH;
+        }else{
+            ex = ExposureLevel.HIDE;
+        }
 
-        PublishIdentityWorker publishIdentityWorker = new PublishIdentityWorker(getActivity(), appSession, wantPublishIdentity, this);
+        if (cryptoBrokerBitmap != null) {
+            imgInBytes = ImagesUtils.toByteArray(cryptoBrokerBitmap);
+        }else{
+            imgInBytes = profileImage;
+        }
 
-        executor = publishIdentityWorker.execute();
+        if(mBrokerName != null && imgInBytes != null && cryptoBrokerPublicKey != null) {
+
+            CryptoBrokerIdentityInformation identity = new CryptoBrokerIdentityInformationImpl(
+                    brokerNameText,
+                    cryptoBrokerPublicKey,
+                    imgInBytes,
+                    ex
+            );
+
+            EditIdentityWorker EditIdentityWorker = new EditIdentityWorker(getActivity(), appSession, identity, this);
+            executor = EditIdentityWorker.execute();
+        }
     }
 
 
     private void dispatchTakePictureIntent() {
-        Log.i(TAG, "Opening Camera app to take the picture...");
-
         Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
         if (takePictureIntent.resolveActivity(getActivity().getPackageManager()) != null) {
             startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE);
@@ -223,8 +289,6 @@ public class EditCryptoBrokerIdentityFragment extends AbstractFermatFragment imp
     }
 
     private void loadImageFromGallery() {
-        Log.i(TAG, "Loading Image from Gallery...");
-
         Intent loadImageIntent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
         startActivityForResult(loadImageIntent, REQUEST_LOAD_IMAGE);
     }
@@ -235,14 +299,13 @@ public class EditCryptoBrokerIdentityFragment extends AbstractFermatFragment imp
             executor.shutdown();
             executor = null;
         }
-
         if (result.length > 0) {
             int resultCode = (int) result[0];
 
-            if (resultCode == SUCCESS || resultCode == DATA_NOT_CHANGED) {
+            if (resultCode == 1) {
                 changeActivity(Activities.CBP_SUB_APP_CRYPTO_BROKER_IDENTITY.getCode(), appSession.getAppPublicKey());
 
-            } else if (resultCode == INVALID_ENTRY_DATA) {
+            } else if (resultCode == 4) {
                 Toast.makeText(getActivity(), "Please check the submitted data", Toast.LENGTH_LONG).show();
             }
         }
