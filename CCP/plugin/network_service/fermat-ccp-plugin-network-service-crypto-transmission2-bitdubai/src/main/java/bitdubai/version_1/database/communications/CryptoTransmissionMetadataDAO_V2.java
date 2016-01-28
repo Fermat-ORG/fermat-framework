@@ -33,6 +33,7 @@ import bitdubai.version_1.exceptions.CantSaveCryptoTransmissionMetadatatExceptio
 import bitdubai.version_1.exceptions.CantUpdateRecordDataBaseException;
 import bitdubai.version_1.structure.structure.CryptoTransmissionMessageType;
 import bitdubai.version_1.structure.structure.CryptoTransmissionMetadataRecord;
+import bitdubai.version_1.structure.structure.CryptoTransmissionResponseMessage;
 
 /**
  * Created by Matias Furszyfer on 2015.10.04..
@@ -93,6 +94,30 @@ public class CryptoTransmissionMetadataDAO_V2 {
 
         }
     }
+
+    public void saveCryptoTransmissionResponse(CryptoTransmissionResponseMessage cryptoTransmissionResponseMessage ) throws CantSaveCryptoTransmissionMetadatatException {
+        try {
+
+            if(!existMetadata(cryptoTransmissionResponseMessage.getTransactionId())) {
+                DatabaseTable addressExchangeRequestTable = getDatabaseTable();
+                DatabaseTableRecord entityRecord = addressExchangeRequestTable.getEmptyRecord();
+
+                entityRecord = buildDatabaseRecordResponseMessage(entityRecord, cryptoTransmissionResponseMessage);
+
+                addressExchangeRequestTable.insertRecord(entityRecord);
+            }
+
+
+        } catch (CantInsertRecordException e) {
+
+            throw new CantSaveCryptoTransmissionMetadatatException("",e, "Exception not handled by the plugin, there is a problem in database and i cannot insert the record.","");
+        }  catch (CantGetCryptoTransmissionMetadataException e) {
+            throw new CantSaveCryptoTransmissionMetadatatException("",e, "Cant Get Crypto Transmission Metadata Exception","");
+
+        }
+    }
+
+
 
 
     public CryptoTransmissionMetadataRecord getMetadata(UUID transmissionId) throws CantGetCryptoTransmissionMetadataException,
@@ -892,6 +917,25 @@ public class CryptoTransmissionMetadataDAO_V2 {
 
         );
 
+    }
+
+    private DatabaseTableRecord buildDatabaseRecordResponseMessage(DatabaseTableRecord record, CryptoTransmissionResponseMessage cryptoTransmissionResponseMessage) {
+
+
+        record.setUUIDValue(CryptoTransmissionNetworkServiceDatabaseConstants.CRYPTO_TRANSMISSION_METADATA_TRANSMISSION_ID_COLUMN_NAME, cryptoTransmissionResponseMessage.getTransactionId());
+        record.setStringValue(CryptoTransmissionNetworkServiceDatabaseConstants.CRYPTO_TRANSMISSION_METADATA_SENDER_PUBLIC_KEY_COLUMN_NAME, cryptoTransmissionResponseMessage.getSenderPublicKey());
+        record.setStringValue(CryptoTransmissionNetworkServiceDatabaseConstants.CRYPTO_TRANSMISSION_METADATA_DESTINATION_PUBLIC_KEY_COLUMN_NAME , cryptoTransmissionResponseMessage.getDestinationPublicKey());
+        record.setStringValue(CryptoTransmissionNetworkServiceDatabaseConstants.CRYPTO_TRANSMISSION_METADATA_STATUS_COLUMN_NAME, cryptoTransmissionResponseMessage.getCryptoTransmissionProtocolState().getCode());
+        //record.setStringValue(CryptoTransmissionNetworkServiceDatabaseConstants.CRYPTO_TRANSMISSION_METADATA_NOTIFICATION_DESCRIPTOR_COLUMN_NAME, cryptoTransmissionResponseMessage.getCryptoTransmissionMetadataStates().getCode());
+
+        record.setStringValue(CryptoTransmissionNetworkServiceDatabaseConstants.CRYPTO_TRANSMISSION_METADATA_TYPE_COLUMN_NAME, cryptoTransmissionResponseMessage.getCryptoTransmissionMetadataType().getCode());
+        record.setStringValue(CryptoTransmissionNetworkServiceDatabaseConstants.CRYPTO_TRANSMISSION_METADATA_PENDING_FLAG_COLUMN_NAME, String.valueOf(cryptoTransmissionResponseMessage.isPendigToRead()));
+        record.setIntegerValue(CryptoTransmissionNetworkServiceDatabaseConstants.CRYPTO_TRANSMISSION_METADATA_SENT_COUNT_COLUMN_NAME, cryptoTransmissionResponseMessage.getSentCount());
+        record.setStringValue(CryptoTransmissionNetworkServiceDatabaseConstants.CRYPTO_TRANSMISSION_METADATA_MESSAGE_TYPE_COLUMN_NAME,cryptoTransmissionResponseMessage.getCryptoTransmissionMessageType().getCode());
+
+
+
+        return record;
     }
 
 
