@@ -88,11 +88,11 @@ public class CryptoTransmissionMetadataRecord extends CryptoTransmissionMessage 
 
     @Override
     public void changeCryptoTransmissionProtocolState(CryptoTransmissionProtocolState cryptoTransmissionProtocolState) {
-        super.setProtocolState(cryptoTransmissionProtocolState);
+        setProtocolState(cryptoTransmissionProtocolState);
     }
     @Override
     public void changeMetadataState(CryptoTransmissionMetadataState cryptoTransmissionNotificationStates) {
-        super.setCryptoTransmissionMetadataState(cryptoTransmissionNotificationStates);
+        setCryptoTransmissionMetadataState(cryptoTransmissionNotificationStates);
     }
 
     @Override

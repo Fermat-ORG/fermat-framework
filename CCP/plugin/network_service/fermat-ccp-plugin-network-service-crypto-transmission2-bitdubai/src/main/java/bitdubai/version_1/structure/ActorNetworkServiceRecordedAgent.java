@@ -445,9 +445,10 @@ public class ActorNetworkServiceRecordedAgent extends FermatAgent{
                     communicationNetworkServiceLocal.sendMessage(
                             actorNetworkServiceRecord.getSenderPublicKey(),
                             actorNetworkServiceRecord.getDestinationPublicKey(),
-                           actorNetworkServiceRecord.toJson()
+                            actorNetworkServiceRecord.toJson()
                     );
 
+                    actorNetworkServiceRecord.setProtocolState(CryptoTransmissionProtocolState.SENT_TO_COMMUNICATION_TEMPLATE);
                     cryptoTransmissionNetworkServicePluginRoot.getOutgoingMetadataDao().changeCryptoTransmissionProtocolState(
                             actorNetworkServiceRecord.getTransactionId(),
                             CryptoTransmissionProtocolState.SENT_TO_COMMUNICATION_TEMPLATE);
