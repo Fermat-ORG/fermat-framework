@@ -7,9 +7,8 @@
 package com.bitdubai.fermat_cht_plugin.layer.network_service.chat.developer.bitdubai.version_1.communications;
 
 import com.bitdubai.fermat_api.layer.all_definition.components.interfaces.PlatformComponentProfile;
-import com.bitdubai.fermat_cht_plugin.layer.network_service.chat.developer.bitdubai.version_1.ChatPluginRoot;
+import com.bitdubai.fermat_cht_plugin.layer.network_service.chat.developer.bitdubai.version_1.ChatNetworkServicePluginRoot;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.WsCommunicationsCloudClientManager;
-import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.client.CommunicationsClientConnection;
 
 
 /**
@@ -31,7 +30,7 @@ public class CommunicationRegistrationProcessNetworkServiceAgent extends Thread 
     /**
      * Represent the networkService
      */
-    private ChatPluginRoot networkService;
+    private ChatNetworkServicePluginRoot networkService;
 
     /**
      * Represent the communicationsClientConnection
@@ -48,7 +47,7 @@ public class CommunicationRegistrationProcessNetworkServiceAgent extends Thread 
      * @param networkService
      * @param communicationsClientConnection
      */
-    public CommunicationRegistrationProcessNetworkServiceAgent(ChatPluginRoot networkService, WsCommunicationsCloudClientManager communicationsClientConnection) {
+    public CommunicationRegistrationProcessNetworkServiceAgent(ChatNetworkServicePluginRoot networkService, WsCommunicationsCloudClientManager communicationsClientConnection) {
             this.networkService = networkService;
             this.communicationsClientConnection = communicationsClientConnection;
             this.active = Boolean.FALSE;
