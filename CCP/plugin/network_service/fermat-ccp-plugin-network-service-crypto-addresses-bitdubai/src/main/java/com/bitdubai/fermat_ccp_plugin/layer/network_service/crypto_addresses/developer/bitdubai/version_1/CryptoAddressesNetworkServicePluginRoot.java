@@ -777,7 +777,11 @@ public class CryptoAddressesNetworkServicePluginRoot extends AbstractNetworkServ
 
         System.out.println("****** crypto addresses -> confirming address");
        try {
-           cryptoAddressesNetworkServiceDao.confirmAddressExchangeRequest(requestId);
+
+           //only the record you request the addromperess
+           if(cryptoAddressesNetworkServiceDao.getPendingRequest(requestId).getMessageType().equals(AddressesConstants.OUTGOING_MESSAGE))
+               cryptoAddressesNetworkServiceDao.confirmAddressExchangeRequest(requestId);
+
        } catch (CantConfirmAddressExchangeRequestException | PendingRequestNotFoundException e){
            // PendingRequestNotFoundException - THIS SHOULD' HAPPEN.
            errorManager.reportUnexpectedPluginException(this.getPluginVersionReference(), UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
