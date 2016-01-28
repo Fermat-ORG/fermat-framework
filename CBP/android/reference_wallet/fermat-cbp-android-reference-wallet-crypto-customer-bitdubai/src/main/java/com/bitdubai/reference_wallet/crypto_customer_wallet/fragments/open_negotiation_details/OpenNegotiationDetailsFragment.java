@@ -11,6 +11,8 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
@@ -20,6 +22,9 @@ import android.widget.Toast;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractFermatFragment;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.utils.ImagesUtils;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView;
+import com.bitdubai.fermat_android_api.ui.enums.FermatRefreshTypes;
+import com.bitdubai.fermat_android_api.ui.expandableRecicler.ExpandableRecyclerAdapter;
+import com.bitdubai.fermat_android_api.ui.fragments.FermatWalletExpandableListFragment;
 import com.bitdubai.fermat_api.layer.all_definition.enums.CryptoCurrency;
 import com.bitdubai.fermat_api.layer.all_definition.enums.FiatCurrency;
 import com.bitdubai.fermat_api.layer.pip_engine.interfaces.ResourceProviderManager;
@@ -34,14 +39,17 @@ import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_customer.interface
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 import com.bitdubai.reference_wallet.crypto_customer_wallet.R;
 import com.bitdubai.reference_wallet.crypto_customer_wallet.common.adapters.OpenNegotiationAdapter;
+import com.bitdubai.reference_wallet.crypto_customer_wallet.common.adapters.OpenNegotiationsExpandableAdapter;
 import com.bitdubai.reference_wallet.crypto_customer_wallet.common.dialogs.ClauseTextDialog;
 import com.bitdubai.reference_wallet.crypto_customer_wallet.common.holders.open_negotiation.ClauseViewHolder;
 import com.bitdubai.reference_wallet.crypto_customer_wallet.common.holders.open_negotiation.FooterViewHolder;
 import com.bitdubai.reference_wallet.crypto_customer_wallet.common.models.BrokerCurrencyQuotation;
 import com.bitdubai.reference_wallet.crypto_customer_wallet.common.models.BrokerCurrencyQuotationImpl;
+import com.bitdubai.reference_wallet.crypto_customer_wallet.common.models.GrouperItem;
 import com.bitdubai.reference_wallet.crypto_customer_wallet.common.models.TestData;
 import com.bitdubai.reference_wallet.crypto_customer_wallet.fragments.common.SimpleListDialogFragment;
 import com.bitdubai.reference_wallet.crypto_customer_wallet.session.CryptoCustomerWalletSession;
+import com.bitdubai.reference_wallet.crypto_customer_wallet.util.CommonLogger;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
@@ -56,6 +64,7 @@ import java.util.UUID;
  * A simple {@link Fragment} subclass.
  * Modified by Yordin Alayn 22.01.16
  */
+//FermatWalletExpandableListFragment<GrouperItem>
 public class OpenNegotiationDetailsFragment extends AbstractFermatFragment<CryptoCustomerWalletSession, ResourceProviderManager>
         implements FooterViewHolder.OnFooterButtonsClickListener, ClauseViewHolder.Listener{
 
@@ -224,6 +233,91 @@ public class OpenNegotiationDetailsFragment extends AbstractFermatFragment<Crypt
     public void onAddNoteButtonClicked() {
         // DO NOTHING..
     }
+
+    /*MENU*/
+/*
+    @Override
+    protected boolean hasMenu() {
+        return true;
+    }
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        menu.clear();
+        inflater.inflate(R.menu.ccw_menu_home, menu);
+    }
+
+    @Override
+    protected boolean recyclerHasFixedSize() {
+        return true;
+    }
+
+    @Override
+    protected int getLayoutResource() {
+        return R.layout.ccw_fragment_open_negotiations_tab;
+    }
+
+    @Override
+    protected int getRecyclerLayoutId() {
+        return R.id.ccw_open_negotiations_recycler_view;
+    }
+
+    @Override
+    protected int getSwipeRefreshLayoutId() {
+        return R.id.swipe_refresh;
+    }
+
+    @Override
+    public List<GrouperItem> getMoreDataAsync(FermatRefreshTypes refreshType, int pos) {
+        return null;
+    }
+
+    //IMPLEMENT RecycleExpandibleListFrament
+    @Override
+    public ExpandableRecyclerAdapter getAdapter() {
+        if (adapter == null) {
+            adapter = new OpenNegotiationsExpandableAdapter(getActivity(), openNegotiationList);
+            // setting up event listeners
+            adapter.setChildItemFermatEventListeners(this);
+        }
+        return adapter;
+        return null;
+    }
+
+    @Override
+    public RecyclerView.LayoutManager getLayoutManager() {
+        if (layoutManager == null)
+            layoutManager = new LinearLayoutManager(getActivity());
+
+        return layoutManager;
+    }
+    //END IMPLEMENT RecycleExpandibleListFrament
+
+    //IMPLEMENT FermatWorkerCallBack
+    @Override
+    public void onPostExecute(Object... result) {
+        isRefreshing = false;
+        if (isAttached) {
+            swipeRefreshLayout.setRefreshing(false);
+            if (result != null && result.length > 0) {
+                openNegotiationList = (ArrayList) result[0];
+                if (adapter != null)
+                    adapter.changeDataSet(openNegotiationList);
+            }
+        }
+    }
+
+    @Override
+    public void onErrorOccurred(Exception ex) {
+        isRefreshing = false;
+        if (isAttached) {
+            swipeRefreshLayout.setRefreshing(false);
+            CommonLogger.exception(TAG, ex.getMessage(), ex);
+        }
+    }
+    //END IMPLEMENT FermatWorkerCallBack
+*/
+    /*END MENU*/
     
     /*PRIVATE METHOD*/
     //VIEW TOOLBAR
@@ -265,6 +359,13 @@ public class OpenNegotiationDetailsFragment extends AbstractFermatFragment<Crypt
         String paymentCurrency = clauses.get(ClauseType.BROKER_CURRENCY).getValue();
         String amount = clauses.get(ClauseType.CUSTOMER_CURRENCY_QUANTITY).getValue();
         Drawable brokerImg = getImgDrawable(broker.getProfileImage());
+
+        /*ClauseInformation customerPaymentMethod = clauses.get(ClauseType.CUSTOMER_PAYMENT_METHOD);
+        if(customerPaymentMethod == null) putClause(customerPaymentMethod,paymentMethods.get(0));
+
+        ClauseInformation brokerPaymentMethod = clauses.get(ClauseType.BROKER_PAYMENT_METHOD);
+        if(brokerPaymentMethod == null) putClause(brokerPaymentMethod,paymentMethods.get(0));*/
+
 
         brokerImage.setImageDrawable(brokerImg);
         brokerName.setText(broker.getAlias());

@@ -39,6 +39,7 @@ public class SingleChoiceViewHolder extends ClauseViewHolder implements View.OnC
     @Override
     public void setViewResources(int titleRes, int positionImgRes, int... stringResources) {
         titleTextView.setText(titleRes);
+        //TODO ACA DA EXCEPTION: Process: com.bitdubai.fermat, PID: 3128 java.lang.OutOfMemoryError: Failed to allocate a 1849612 byte allocation with 1595744 free bytes and 1558KB until OOM
         clauseNumberImageView.setImageResource(positionImgRes);
         descriptionTextView.setText(stringResources[0]);
     }
