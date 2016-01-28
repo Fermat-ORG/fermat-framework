@@ -894,6 +894,16 @@ public enum EventType implements FermatEventEnum {
         public FermatEvent getNewEvent() {
             return new com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.events.IncomingActorRequestConnectionNotificationEvent(this);
         }
+    }, INCOMING_CHAT_MESSAGE("INCCM"){
+        @Override
+        public FermatEventListener getNewListener(FermatEventMonitor fermatEventMonitor) {
+            return new com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.listeners.IncomingChatMessageEventListener(this, fermatEventMonitor);
+        }
+
+        @Override
+        public FermatEvent getNewEvent() {
+            return new com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.events.IncomingChatMessageEvent(this);
+        }
     },
 //    NEW_CRYPTO_ADDRESS_REQUEST_ASSET_USER("NCA_REQUEST_AU") {
 //        @Override
