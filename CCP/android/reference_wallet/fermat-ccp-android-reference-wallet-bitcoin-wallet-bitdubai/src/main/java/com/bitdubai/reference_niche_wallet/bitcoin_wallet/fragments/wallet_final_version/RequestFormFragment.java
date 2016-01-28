@@ -482,7 +482,7 @@ public class RequestFormFragment extends AbstractFermatFragment<ReferenceWalletS
             } else {
 
                 String amount = editTextAmount.getText().toString();
-                if (!amount.equals("") && amount != null && Long.parseLong(amount) != 0) {
+                if (!amount.equals("") && amount != null && Double.parseDouble(amount) != 0) {
 
                     String txtType = txt_type.getText().toString();
                     String newAmount = "";
