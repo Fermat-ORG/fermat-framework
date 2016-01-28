@@ -148,8 +148,8 @@ public class AssetUserWalletTransactionRecordWrapper implements AssetUserWalletT
     }
 
     @Override
-    public String getDigitalAssetMetadataHash() {
-        return digitalAssetMetadata.getDigitalAssetHash();
+    public String getGenesisTransaction() {
+        return digitalAssetMetadata.getGenesisTransaction();
     }
 
     @Override

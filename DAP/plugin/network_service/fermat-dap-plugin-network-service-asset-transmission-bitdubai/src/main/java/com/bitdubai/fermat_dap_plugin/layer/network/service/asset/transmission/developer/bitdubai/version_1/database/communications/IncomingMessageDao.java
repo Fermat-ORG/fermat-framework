@@ -376,6 +376,10 @@ public class IncomingMessageDao {
 
         try {
 
+            if (findById(entity.getId().toString()) != null) {
+                return;
+            }
+
             /*
              * 1- Create the record to the entity
              */
@@ -388,7 +392,7 @@ public class IncomingMessageDao {
             transaction.addRecordToInsert(getDatabaseTable(), entityRecord);
             getDataBase().executeTransaction(transaction);
 
-        } catch (DatabaseTransactionFailedException databaseTransactionFailedException) {
+        } catch (DatabaseTransactionFailedException | CantReadRecordDataBaseException databaseTransactionFailedException) {
 
             // Register the failure.
             StringBuffer contextBuffer = new StringBuffer();
@@ -399,7 +403,6 @@ public class IncomingMessageDao {
             CantInsertRecordDataBaseException cantInsertRecordDataBaseException = new CantInsertRecordDataBaseException(CantInsertRecordDataBaseException.DEFAULT_MESSAGE, databaseTransactionFailedException, context, possibleCause);
             throw cantInsertRecordDataBaseException;
         }
-
     }
 
     /**
@@ -425,7 +428,9 @@ public class IncomingMessageDao {
              * 2.- Create a new transaction and execute
              */
             DatabaseTransaction transaction = getDataBase().newTransaction();
-            transaction.addRecordToUpdate(getDatabaseTable(), entityRecord);
+            DatabaseTable incomingMessageTable = getDatabaseTable();
+            incomingMessageTable.addStringFilter(CommunicationNetworkServiceDatabaseConstants.INCOMING_MESSAGES_ID_COLUMN_NAME, entity.getId().toString(), DatabaseFilterType.EQUAL);
+            transaction.addRecordToUpdate(incomingMessageTable, entityRecord);
             getDataBase().executeTransaction(transaction);
 
         } catch (DatabaseTransactionFailedException databaseTransactionFailedException) {

@@ -23,6 +23,7 @@ import android.widget.Toast;
 
 import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractFermatFragment;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView;
+import com.bitdubai.fermat_android_api.ui.Views.ConfirmDialog;
 import com.bitdubai.fermat_android_api.ui.Views.PresentationDialog;
 import com.bitdubai.fermat_android_api.ui.interfaces.FermatWorkerCallBack;
 import com.bitdubai.fermat_android_api.ui.util.BitmapWorkerTask;
@@ -167,7 +168,16 @@ public class AssetDetailActivityFragment extends AbstractFermatFragment {
         assetDetailAppropriateLayout = rootView.findViewById(R.id.assetDetailAppropriateLayout);
         assetDetailAppropriateLayout.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                doAppropriate(digitalAsset.getAssetPublicKey());
+                new ConfirmDialog.Builder(getActivity(), appSession)
+                        .setTitle("Confirm")
+                        .setMessage("Are you sure you want to do this? This action is irreversible")
+                        .setColorStyle(Color.parseColor("#381a5e"))
+                        .setYesBtnListener(new ConfirmDialog.OnClickAcceptListener() {
+                            @Override
+                            public void onClick() {
+                                doAppropriate(digitalAsset.getAssetPublicKey());
+                            }
+                        }).build().show();
             }
         });
 

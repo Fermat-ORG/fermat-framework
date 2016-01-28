@@ -23,6 +23,7 @@ import android.widget.Toast;
 
 import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractFermatFragment;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView;
+import com.bitdubai.fermat_android_api.ui.Views.ConfirmDialog;
 import com.bitdubai.fermat_android_api.ui.Views.PresentationDialog;
 import com.bitdubai.fermat_android_api.ui.interfaces.FermatWorkerCallBack;
 import com.bitdubai.fermat_android_api.ui.util.BitmapWorkerTask;
@@ -43,7 +44,6 @@ import com.bitdubai.fermat_dap_api.layer.dap_wallet.common.exceptions.CantLoadWa
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedUIExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 
-import java.io.ByteArrayInputStream;
 import java.lang.ref.WeakReference;
 
 import static android.widget.Toast.makeText;
@@ -141,7 +141,16 @@ public class AssetDetailActivityFragment extends AbstractFermatFragment {
         assetDetailAppropiateBtnLayout = rootView.findViewById(R.id.assetDetailAppropiateBtnLayout);
         assetDetailAppropiateBtnLayout.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                doAppropriate(digitalAsset.getAssetPublicKey(), digitalAsset.getWalletPublicKey());
+                new ConfirmDialog.Builder(getActivity(), appSession)
+                        .setTitle(getResources().getString(R.string.dap_issuer_wallet_confirm_title))
+                        .setMessage(getResources().getString(R.string.dap_issuer_wallet_confirm_sure))
+                        .setColorStyle(getResources().getColor(R.color.dap_issuer_wallet_principal))
+                        .setYesBtnListener(new ConfirmDialog.OnClickAcceptListener() {
+                            @Override
+                            public void onClick() {
+                                doAppropriate(digitalAsset.getAssetPublicKey(), digitalAsset.getWalletPublicKey());
+                            }
+                        }).build().show();
             }
         });
 
@@ -153,18 +162,12 @@ public class AssetDetailActivityFragment extends AbstractFermatFragment {
     private void doAppropriate(final String assetPublicKey, final String walletPublicKey) {
         final Activity activity = getActivity();
         final ProgressDialog dialog = new ProgressDialog(activity);
-        dialog.setMessage("Please wait...");
+        dialog.setMessage(getResources().getString(R.string.dap_issuer_wallet_wait));
         dialog.setCancelable(false);
         dialog.show();
         FermatWorker task = new FermatWorker() {
             @Override
             protected Object doInBackground() throws Exception {
-//                    manager.distributionAssets(
-//                            asset.getAssetPublicKey(),
-//                            asset.getWalletPublicKey(),
-//                            asset.getActorAssetRedeemPoint()
-//                    );
-                //TODO: only for Appropriate test
                 moduleManager.appropriateAsset(assetPublicKey, walletPublicKey);
                 return true;
             }
@@ -175,7 +178,7 @@ public class AssetDetailActivityFragment extends AbstractFermatFragment {
             public void onPostExecute(Object... result) {
                 dialog.dismiss();
                 if (activity != null) {
-                    Toast.makeText(activity, "Appropriation of the asset has started successfully. The process will be completed in a couple of minutes.", Toast.LENGTH_LONG).show();
+                    Toast.makeText(activity, R.string.dap_issuer_wallet_appropriation_ok, Toast.LENGTH_LONG).show();
                 }
             }
 
@@ -183,7 +186,7 @@ public class AssetDetailActivityFragment extends AbstractFermatFragment {
             public void onErrorOccurred(Exception ex) {
                 dialog.dismiss();
                 if (activity != null)
-                    Toast.makeText(activity, "Fermat Has detected an exception. Please retry again.",
+                    Toast.makeText(activity, R.string.dap_issuer_wallet_exception_retry,
                             Toast.LENGTH_SHORT).show();
             }
         });
@@ -226,7 +229,6 @@ public class AssetDetailActivityFragment extends AbstractFermatFragment {
     }
 
     private void setupUIData() {
-//        digitalAsset = (DigitalAsset) appSession.getData("asset_data");
         String digitalAssetPublicKey = ((DigitalAsset) appSession.getData("asset_data")).getAssetPublicKey();
         try {
             digitalAsset = Data.getDigitalAsset(moduleManager, digitalAssetPublicKey);
@@ -238,12 +240,6 @@ public class AssetDetailActivityFragment extends AbstractFermatFragment {
         }
 
         toolbar.setTitle(digitalAsset.getName());
-
-//        if (digitalAsset.getImage() != null) {
-//            assetImageDetail.setImageBitmap(BitmapFactory.decodeStream(new ByteArrayInputStream(digitalAsset.getImage())));
-//        } else {
-//            assetImageDetail.setImageDrawable(rootView.getResources().getDrawable(R.drawable.img_asset_without_image));
-//        }
 
         byte[] img = (digitalAsset.getImage() == null) ? new byte[0] : digitalAsset.getImage();
         BitmapWorkerTask bitmapWorkerTask = new BitmapWorkerTask(assetImageDetail, res, R.drawable.img_asset_without_image, false);
@@ -266,18 +262,16 @@ public class AssetDetailActivityFragment extends AbstractFermatFragment {
         }
 
         assetDetailBtcText.setText(digitalAsset.getFormattedAvailableBalanceBitcoin() + " BTC");
-        //assetDetailRemainingText.setText(digitalAsset.getAvailableBalanceQuantity() + " Assets Remaining");
         assetDetailDelivered.setText(digitalAsset.getUnused() + "");
         assetDetailRedeemText.setText(digitalAsset.getRedeemed()+"");
         assetDetailAppropriatedText.setText(digitalAsset.getAppropriated() + "");
-
 
         assetDetailAvailableLayout.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 if (digitalAsset.getUnused() > 0) {
                     changeActivity(Activities.DAP_WALLET_ASSET_ISSUER_USER_DELIVERY_LIST, appSession.getAppPublicKey());
                 } else {
-                    makeText(getActivity(), "No assets delivered", Toast.LENGTH_SHORT).show();
+                    makeText(getActivity(), R.string.dap_issuer_wallet_no_assets_delivered, Toast.LENGTH_SHORT).show();
                 }
             }
         });
@@ -286,7 +280,7 @@ public class AssetDetailActivityFragment extends AbstractFermatFragment {
                 if (digitalAsset.getAppropriated() > 0) {
                     changeActivity(Activities.DAP_WALLET_ASSET_ISSUER_USER_APPROPIATE_LIST, appSession.getAppPublicKey());
                 } else {
-                    makeText(getActivity(), "No assets appropriated", Toast.LENGTH_SHORT).show();
+                    makeText(getActivity(), R.string.dap_issuer_wallet_no_assets_appropriated, Toast.LENGTH_SHORT).show();
                 }
             }
         });
@@ -295,7 +289,7 @@ public class AssetDetailActivityFragment extends AbstractFermatFragment {
                 if (digitalAsset.getRedeemed() > 0) {
                     changeActivity(Activities.DAP_WALLET_ASSET_ISSUER_USER_REDEEMED_LIST, appSession.getAppPublicKey());
                 } else {
-                    makeText(getActivity(), "No assets redeemed", Toast.LENGTH_SHORT).show();
+                    makeText(getActivity(), R.string.dap_issuer_wallet_no_assets_redeemed, Toast.LENGTH_SHORT).show();
                 }
             }
         });
@@ -314,21 +308,14 @@ public class AssetDetailActivityFragment extends AbstractFermatFragment {
     private void configureToolbar() {
         toolbar = getToolbar();
         if (toolbar != null) {
-//            toolbar.setBackgroundColor(Color.parseColor("#1d1d25"));
             toolbar.setTitleTextColor(Color.WHITE);
             toolbar.setBackgroundColor(Color.TRANSPARENT);
             toolbar.setBottom(Color.WHITE);
-//            if (Build.VERSION.SDK_INT > Build.VERSION_CODES.LOLLIPOP) {
-//                Window window = getActivity().getWindow();
-//                window.setStatusBarColor(Color.parseColor("#1d1d25"));
-//            }
             Drawable drawable = null;
-            //TODO uncomment
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP)
                 drawable = getResources().getDrawable(R.drawable.dap_wallet_asset_issuer_action_bar_gradient_colors, null);
             else
                 drawable = getResources().getDrawable(R.drawable.dap_wallet_asset_issuer_action_bar_gradient_colors);
-
             toolbar.setBackground(drawable);
         }
     }
@@ -371,7 +358,7 @@ public class AssetDetailActivityFragment extends AbstractFermatFragment {
 
         } catch (Exception e) {
             errorManager.reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.UNSTABLE, FermatException.wrapException(e));
-            makeText(getActivity(), "Asset Issuer system error",
+            makeText(getActivity(), R.string.dap_issuer_wallet_system_error,
                     Toast.LENGTH_SHORT).show();
         }
         return super.onOptionsItemSelected(item);
