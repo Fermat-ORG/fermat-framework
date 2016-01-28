@@ -118,7 +118,7 @@ public class RedeemPointRedemptionMonitorAgent implements Agent {
         try {
             logManager.log(RedeemPointRedemptionDigitalAssetTransactionPluginRoot.getLogLevelByClass(this.getClass().getName()), "RedeemPoint Redemption Protocol Notification Agent: starting...", null, null);
             latch = new CountDownLatch(1);
-            agent = new RedemptionAgent(pluginId, pluginFileSystem, actorAssetUserManager, actorAssetIssuerManager);
+            agent = new RedemptionAgent(pluginId, pluginFileSystem, actorAssetUserManager, actorAssetIssuerManager, bitcoinNetworkManager);
             Thread agentThread = new Thread(agent);
             agentThread.start();
         } catch (Exception e) {
@@ -157,11 +157,12 @@ public class RedeemPointRedemptionMonitorAgent implements Agent {
         private static final int WAIT_TIME = 20; //SECONDS
         private AssetRedeemPointRedemptionDAO dao;
 
-        public RedemptionAgent(UUID pluginId, PluginFileSystem pluginFileSystem, ActorAssetUserManager actorAssetUserManager, ActorAssetIssuerManager actorAssetIssuerManager) throws CantSetObjectException, CantOpenDatabaseException, DatabaseNotFoundException {
+        public RedemptionAgent(UUID pluginId, PluginFileSystem pluginFileSystem, ActorAssetUserManager actorAssetUserManager, ActorAssetIssuerManager actorAssetIssuerManager, BitcoinNetworkManager bitcoinNetworkManager) throws CantSetObjectException, CantOpenDatabaseException, DatabaseNotFoundException {
             super.setPluginId(pluginId);
             super.setPluginFileSystem(pluginFileSystem);
             super.setActorAssetUserManager(actorAssetUserManager);
             super.setActorAssetIssuerManager(actorAssetIssuerManager);
+            super.setBitcoinCryptoNetworkManager(bitcoinNetworkManager);
             dao = new AssetRedeemPointRedemptionDAO(pluginDatabaseSystem, pluginId);
             startAgent();
         }
@@ -198,16 +199,16 @@ public class RedeemPointRedemptionMonitorAgent implements Agent {
                                     DigitalAsset digitalAsset = metadata.getDigitalAsset();
                                     String transactionId = assetMetadataTransaction.getGenesisTransaction();
 
+                                    //PERSIST METADATA
+                                    debug("persisting metadata");
+                                    dao.persistTransaction(transactionId, assetMetadataTransaction.getSenderId(), assetMetadataTransaction.getReceiverId(), DistributionStatus.SENDING_CRYPTO, CryptoStatus.PENDING_SUBMIT);
+                                    persistDigitalAssetMetadataInLocalStorage(metadata, transactionId);
                                     //Now I should answer the metadata, so I'll send a message to the actor that sends me this metadata.
 
                                     if (!isValidIssuer(digitalAsset)) {
                                         updateStatusAndSendMessage(DistributionStatus.INCORRECT_REDEEM_POINT, transaction);
                                         continue;
                                     }
-                                    //PERSIST METADATA
-                                    debug("persisting metadata");
-                                    dao.persistTransaction(transactionId, assetMetadataTransaction.getSenderId(), assetMetadataTransaction.getReceiverId(), DistributionStatus.SENDING_CRYPTO, CryptoStatus.PENDING_SUBMIT);
-                                    persistDigitalAssetMetadataInLocalStorage(metadata, transactionId);
 
                                     dao.updateTransactionStatusById(DistributionStatus.CHECKING_HASH, transactionId);
                                     debug("verifying hash");
