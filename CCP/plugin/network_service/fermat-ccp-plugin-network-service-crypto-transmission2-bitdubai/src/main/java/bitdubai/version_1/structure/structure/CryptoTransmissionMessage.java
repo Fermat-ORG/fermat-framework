@@ -17,10 +17,8 @@ public class CryptoTransmissionMessage {
     private CryptoTransmissionMetadataState cryptoTransmissionMetadataState;
     private String destinationPublicKey;
     private String senderPublicKey;
-    private String destinationPublickKey;
     private boolean pendigToRead;
     private int sentCount;
-    private CryptoTransmissionProtocolState protocolState;
 
     public CryptoTransmissionMessage(
             UUID transactionId,
@@ -63,7 +61,7 @@ public class CryptoTransmissionMessage {
     }
 
     public void setDestinationPublickKey(String destinationPublickKey) {
-        this.destinationPublickKey = destinationPublickKey;
+        this.destinationPublicKey = destinationPublickKey;
     }
 
     public void setSenderPublicKey(String senderPublicKey) {
@@ -91,7 +89,7 @@ public class CryptoTransmissionMessage {
     }
 
     public void setProtocolState(CryptoTransmissionProtocolState protocolState) {
-        this.protocolState = protocolState;
+        this.cryptoTransmissionProtocolState = protocolState;
     }
 
     public CryptoTransmissionMetadataState getCryptoTransmissionMetadataState() {
