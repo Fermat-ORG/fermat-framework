@@ -24,6 +24,8 @@ public interface BankingWallet {
     List<BankMoneyTransactionRecord> getTransactions(String account)throws CantLoadBankMoneyWalletException;
     void makeDeposit(BankTransactionParameters bankTransactionParameters) throws CantMakeDepositTransactionException;
     void makeWithdraw(BankTransactionParameters bankTransactionParameters)throws CantMakeWithdrawTransactionException;
+    void makeAsyncDeposit(BankTransactionParameters bankTransactionParameters);
+    void makeAsyncWithdraw(BankTransactionParameters bankTransactionParameters);
     float getBookBalance(String account);
     float getAvailableBalance(String account);
     void createBankName(String bankName);
