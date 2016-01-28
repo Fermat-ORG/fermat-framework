@@ -232,6 +232,7 @@ public enum Activities implements FermatEnum {
      */
     CHT_CHAT_OPEN_CHATLIST("CHTOCHL"),
     CHT_CHAT_OPEN_CONTACTLIST("CHTOCONTL"),
+    CHT_CHAT_OPEM_MESSAGE_LIST("CHTOML"),
     /**
      * CHT_CHAT_OPEN_CHAT_DETAIL_FRAGMENT("CHTOCHDF"),
      CHT_CHAT_OPEN_CONTACT_DETAIL_FRAGMENT("CHTOCODF"),
@@ -587,6 +588,8 @@ public enum Activities implements FermatEnum {
                 return Activities.CHT_CHAT_OPEN_CHATLIST;
             case "CHTOCONTLTF":
                 return Activities.CHT_CHAT_OPEN_CONTACTLIST;
+            case "CHTOML":
+                return Activities.CHT_CHAT_OPEM_MESSAGE_LIST;
            /* case "CHTOCHDF":
                 return CHT_CHAT_OPEN_CHAT_DETAIL_FRAGMENT;
             case "CHTOCODF":

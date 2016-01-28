@@ -234,11 +234,12 @@ public class ChatFragment extends AbstractFermatFragment {//ActionBarActivity
                                 me = false;
                                 //              i = i + 1;
                                 newmessage = newmessage + 1;
+
                                 mensaje = chatManager.getMessageByChatId((UUID.fromString("52d7fab8-a423-458f-bcc9-49cdb3e9ba8f"))).getMessage();
               //                  mensaje = chatManager.getMessageByChatId(chatManager.networkservicechatmanage)
-                                //        historialmensaje.add("tu##"+mensaje);
+                                historialmensaje.add("tu##"+mensaje);
                                 //        datos.set(0, historialmensaje);
-                                //        adaptador.refreshEvents(datos);
+                                adaptador.refreshEvents(historialmensaje);
 
                             }
                         } catch (CantGetMessageException e) {
