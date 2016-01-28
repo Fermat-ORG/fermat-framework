@@ -335,6 +335,8 @@ public class CommunicationNetworkServiceRemoteAgent extends Observable {
                             String signature = AsymmetricCryptography.createMessageSignature(message.getContent(), eccKeyPair.getPrivateKey());
                             ((FermatMessageCommunication) message).setSignature(signature);
 
+                            System.out.println("CommunicationNetworkServiceRemoteAgent - communicationsVPNConnection = "+communicationsVPNConnection);
+
                             /*
                              * Send the message
                              */

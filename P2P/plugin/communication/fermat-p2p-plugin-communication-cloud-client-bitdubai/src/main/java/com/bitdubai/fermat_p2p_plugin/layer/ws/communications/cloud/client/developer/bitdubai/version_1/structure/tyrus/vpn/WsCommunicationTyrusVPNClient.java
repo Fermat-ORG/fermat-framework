@@ -291,6 +291,10 @@ public class WsCommunicationTyrusVPNClient extends Endpoint implements Communica
                                                                                                                     vpnClientIdentity.getPrivateKey()); //Sender private key
 
 
+        System.out.println("WsCommunicationVPNClient - vpnClientConnection = "+vpnClientConnection);
+        System.out.println("WsCommunicationVPNClient - vpnClientConnection.isOpen() = "+vpnClientConnection.isOpen());
+        System.out.println("WsCommunicationVPNClient - vpnClientConnection.getAsyncRemote() = "+vpnClientConnection.getAsyncRemote());
+
         if (vpnClientConnection.isOpen()){
 
              /*

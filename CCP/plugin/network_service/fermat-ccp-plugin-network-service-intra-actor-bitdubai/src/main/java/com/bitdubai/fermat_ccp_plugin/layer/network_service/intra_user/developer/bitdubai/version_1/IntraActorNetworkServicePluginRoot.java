@@ -298,7 +298,6 @@ public class IntraActorNetworkServicePluginRoot extends AbstractPlugin implement
         this.alias = "IntraActorNetworkService";
         this.extraData = null;
         this.actorsToRegisterCache = new ArrayList<>();
-        this.remoteNetworkServicesRegisteredList = new CopyOnWriteArrayList<PlatformComponentProfile>();
     }
 
     /**
@@ -552,8 +551,6 @@ public class IntraActorNetworkServicePluginRoot extends AbstractPlugin implement
 
                     connectionArrived = new AtomicBoolean(false);
 
-                    initializeIntraActorAgent();
-
                     // change message state to process again first time
                     reprocessMessage();
 
@@ -738,16 +735,18 @@ public class IntraActorNetworkServicePluginRoot extends AbstractPlugin implement
     }
 
     private void initializeIntraActorAgent() {
-
-        System.out.println("IntraActorNetworkServicePluginRoot - Starting method initializeIntraActorAgent");
-
-        actorNetworkServiceRecordedAgent = new ActorNetworkServiceRecordedAgent(
+        try {
+            actorNetworkServiceRecordedAgent = new ActorNetworkServiceRecordedAgent(
                     communicationNetworkServiceConnectionManager,
                     this,
                     errorManager,
                     eventManager,
                     wsCommunicationsCloudClientManager);
+            actorNetworkServiceRecordedAgent.start();
 
+        } catch (CantStartAgentException e) {
+            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_INTRAUSER_NETWORK_SERVICE, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
+        }
     }
 
     /**
@@ -766,6 +765,7 @@ public class IntraActorNetworkServicePluginRoot extends AbstractPlugin implement
 
                 if(communicationRegistrationProcessNetworkServiceAgent != null && communicationRegistrationProcessNetworkServiceAgent.getActive()){
                     communicationRegistrationProcessNetworkServiceAgent.stop();
+                    communicationRegistrationProcessNetworkServiceAgent = null;
                 }
 
                 wsCommunicationsCloudClientManager.getCommunicationsCloudClientConnection().registerComponentForCommunication(this.getNetworkServiceType(), platformComponentProfilePluginRoot);
@@ -778,10 +778,7 @@ public class IntraActorNetworkServicePluginRoot extends AbstractPlugin implement
 
                 System.out.println("IntraActorNetworkServicePluginRoot - NetWork Service is Registered: " + platformComponentProfileRegistered.getAlias());
                 this.register = Boolean.TRUE;
-
-                if (actorNetworkServiceRecordedAgent != null) {
-                    actorNetworkServiceRecordedAgent.start();
-                }
+                initializeIntraActorAgent();
 
                 CommunicationsClientConnection communicationsClientConnection = wsCommunicationsCloudClientManager.getCommunicationsCloudClientConnection();
 
@@ -1368,7 +1365,9 @@ public class IntraActorNetworkServicePluginRoot extends AbstractPlugin implement
                 this.initializeCommunicationNetworkServiceConnectionManager();
             }
 
-            if(actorNetworkServiceRecordedAgent != null) {
+            if(actorNetworkServiceRecordedAgent == null) {
+                initializeIntraActorAgent();
+            }else {
                 actorNetworkServiceRecordedAgent.start();
             }
 
@@ -1508,6 +1507,23 @@ public class IntraActorNetworkServicePluginRoot extends AbstractPlugin implement
                 lstIntraUser.add(new IntraUserNetworkService(platformComponentProfile.getIdentityPublicKey(), imageByte, platformComponentProfile.getAlias(),actorPhrase));
             }
 
+            //Create a thread to save intra user cache list
+
+            Thread thread = new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    try
+                    {
+                        intraActorNetworkServiceDao.saveIntraUserCache(lstIntraUser);
+                    } catch (CantAddIntraWalletCacheUserException e) {
+                        errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_INTRAUSER_NETWORK_SERVICE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+
+                    }
+                }
+            },"Thread Cache");
+
+            thread.start();
+
         } catch (Exception e) {
             errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_INTRAUSER_NETWORK_SERVICE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
 
@@ -1518,15 +1534,13 @@ public class IntraActorNetworkServicePluginRoot extends AbstractPlugin implement
 
     @Override
     public List<IntraUserInformation> getCacheIntraUsersSuggestions(int max, int offset) throws ErrorSearchingCacheSuggestionsException {
-       /* try
+        try
         {
             return intraActorNetworkServiceDao.listIntraUserCache(max,offset);
 
         } catch (CantListIntraWalletCacheUserException e) {
             throw new ErrorSearchingCacheSuggestionsException("CAN'T GET INTRA USER CACHE LIST",e,"","error get table records");
-        } */
-
-        return null;
+        }
     }
 
     @Override
