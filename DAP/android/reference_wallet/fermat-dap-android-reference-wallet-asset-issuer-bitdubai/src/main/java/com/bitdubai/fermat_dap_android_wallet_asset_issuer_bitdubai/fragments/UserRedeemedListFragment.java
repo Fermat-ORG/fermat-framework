@@ -155,7 +155,7 @@ public class UserRedeemedListFragment extends FermatWalletListFragment<UserRedee
 
         } catch (Exception e) {
             errorManager.reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.UNSTABLE, FermatException.wrapException(e));
-            makeText(getActivity(), "Asset Issuer system error",
+            makeText(getActivity(), R.string.dap_issuer_wallet_system_error,
                     Toast.LENGTH_SHORT).show();
         }
         return super.onOptionsItemSelected(item);
@@ -177,20 +177,14 @@ public class UserRedeemedListFragment extends FermatWalletListFragment<UserRedee
     private void configureToolbar() {
         Toolbar toolbar = getToolbar();
         if (toolbar != null) {
-//            toolbar.setBackgroundColor(Color.parseColor("#1d1d25"));
             toolbar.setTitleTextColor(Color.WHITE);
             toolbar.setBackgroundColor(Color.TRANSPARENT);
             toolbar.setBottom(Color.WHITE);
-//            if (Build.VERSION.SDK_INT > Build.VERSION_CODES.LOLLIPOP) {
-//                Window window = getActivity().getWindow();
-//                window.setStatusBarColor(Color.parseColor("#1d1d25"));
-//            }
             Drawable drawable = null;
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP)
                 drawable = getResources().getDrawable(R.drawable.dap_wallet_asset_issuer_action_bar_gradient_colors, null);
             else
                 drawable = getResources().getDrawable(R.drawable.dap_wallet_asset_issuer_action_bar_gradient_colors);
-
             toolbar.setBackground(drawable);
         }
     }
@@ -341,7 +335,7 @@ public class UserRedeemedListFragment extends FermatWalletListFragment<UserRedee
             }
         } else {
             Toast.makeText(getActivity(),
-                    "Sorry, an error happened in BrokerListActivityFragment (Module == null)",
+                    R.string.dap_issuer_wallet_system_error,
                     Toast.LENGTH_SHORT).
                     show();
         }
