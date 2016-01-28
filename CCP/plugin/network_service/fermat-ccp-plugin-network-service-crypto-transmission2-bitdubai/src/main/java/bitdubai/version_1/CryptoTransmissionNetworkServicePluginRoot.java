@@ -868,12 +868,12 @@ public class CryptoTransmissionNetworkServicePluginRoot extends AbstractPlugin i
                     //CryptoTransmissionResponseMessage cryptoTransmissionResponseMessage = (CryptoTransmissionMessage) cryptoTransmissionMetadata;
 
                     CryptoTransmissionResponseMessage cryptoTransmissionResponseMessage = new CryptoTransmissionResponseMessage(cryptoTransmissionMetadata.getTransactionId(),
-                                                                                                                                cryptoTransmissionMetadata.getCryptoTransmissionMessageType(),
-                                                                                                                                cryptoTransmissionMetadata.getCryptoTransmissionProtocolState(),
-                                                                                                                                cryptoTransmissionMetadata.getCryptoTransmissionMetadataType(),
-                                                                                                                                cryptoTransmissionMetadata.getCryptoTransmissionMetadataStates(),
-                                                                                                                                cryptoTransmissionMetadata.getSenderPublicKey(),
-                                                                                                                                cryptoTransmissionMetadata.getDestinationPublicKey());
+                            cryptoTransmissionMetadata.getCryptoTransmissionMessageType(),
+                            cryptoTransmissionMetadata.getCryptoTransmissionProtocolState(),
+                            cryptoTransmissionMetadata.getCryptoTransmissionMetadataType(),
+                            cryptoTransmissionMetadata.getCryptoTransmissionMetadataStates(),
+                            cryptoTransmissionMetadata.getSenderPublicKey(),
+                            cryptoTransmissionMetadata.getDestinationPublicKey());
 
                     switch (cryptoTransmissionResponseMessage.getCryptoTransmissionMetadataState()) {
                         case SEEN_BY_DESTINATION_NETWORK_SERVICE:
