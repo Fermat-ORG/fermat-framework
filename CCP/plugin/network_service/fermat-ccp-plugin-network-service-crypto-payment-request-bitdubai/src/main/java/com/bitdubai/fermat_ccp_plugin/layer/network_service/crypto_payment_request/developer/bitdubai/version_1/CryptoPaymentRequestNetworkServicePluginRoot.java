@@ -162,7 +162,10 @@ public final class CryptoPaymentRequestNetworkServicePluginRoot extends Abstract
 
     private CryptoPaymentRequestNetworkServiceDao cryptoPaymentRequestNetworkServiceDao;
 
-    private long reprocessTimer =   1* 3600 * 1000; //one hours
+
+
+    private long reprocessTimer =   3600 * 1000; //one hours
+
 
     private Timer timer = new Timer();
 
@@ -987,7 +990,7 @@ public final class CryptoPaymentRequestNetworkServicePluginRoot extends Abstract
     @Override
     public void handleFailureComponentRegistrationNotificationEvent(PlatformComponentProfile networkServiceApplicant, PlatformComponentProfile remoteParticipant) {
         System.out.println("----------------------------------\n" +
-                "FAILED CONNECTION WITH "+remoteParticipant.getAlias()+"\n" +
+                "PAYMENT NS FAILED CONNECTION WITH "+remoteParticipant.getAlias()+"\n" +
                 "--------------------------------------------------------");
         cryptoPaymentRequestExecutorAgent.connectionFailure(remoteParticipant.getIdentityPublicKey());
 
@@ -1143,10 +1146,6 @@ public final class CryptoPaymentRequestNetworkServicePluginRoot extends Abstract
                     final InformationMessage informationMessage = gson.fromJson(jsonMessage, InformationMessage.class);
                     receiveInformationMessage(informationMessage);
 
-                    //close connection - end message
-                    communicationNetworkServiceConnectionManager.closeConnection(informationMessage.getActorDestination());
-                    cryptoPaymentRequestExecutorAgent.getPoolConnectionsWaitingForResponse().remove(informationMessage.getActorDestination());
-
                     System.out.println(" CPR NS - Information Message Received: "+informationMessage.toString());
                     break;
                 case REQUEST:
@@ -1180,10 +1179,20 @@ public final class CryptoPaymentRequestNetworkServicePluginRoot extends Abstract
                     InformationMessage informationMessage = gson.fromJson(jsonMessage, InformationMessage.class);
                     cryptoPaymentRequestNetworkServiceDao.changeProtocolState(informationMessage.getRequestId(), RequestProtocolState.DONE);
 
+                    //close connection - end message
+                    communicationNetworkServiceConnectionManager.closeConnection(informationMessage.getActorDestination());
+                    cryptoPaymentRequestExecutorAgent.getPoolConnectionsWaitingForResponse().remove(informationMessage.getActorDestination());
+
                     break;
                 case REQUEST:
                     RequestMessage requestMessage = gson.fromJson(jsonMessage, RequestMessage.class);
                     cryptoPaymentRequestNetworkServiceDao.changeProtocolState(requestMessage.getRequestId(), RequestProtocolState.DONE);
+
+                    //close connection - end message
+                    communicationNetworkServiceConnectionManager.closeConnection(requestMessage.getActorDestination());
+                    cryptoPaymentRequestExecutorAgent.getPoolConnectionsWaitingForResponse().remove(requestMessage.getActorDestination());
+
+
                     break;
 
                 default:
