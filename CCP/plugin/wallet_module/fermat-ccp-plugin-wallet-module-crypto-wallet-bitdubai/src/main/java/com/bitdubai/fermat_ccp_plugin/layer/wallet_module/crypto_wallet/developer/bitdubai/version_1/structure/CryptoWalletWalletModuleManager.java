@@ -1249,7 +1249,7 @@ public class CryptoWalletWalletModuleManager implements CryptoWallet {
             switch (bitcoinWalletTransaction.getTransactionType()) {
                 case CREDIT:
                     try {
-                        involvedActor = getActorByActorPublicKeyAndType(bitcoinWalletTransaction.getActorToPublicKey(), bitcoinWalletTransaction.getActorToType(), intraUserLoggedInPublicKey);
+                        involvedActor = getActorByActorPublicKeyAndType(bitcoinWalletTransaction.getActorFromPublicKey(), bitcoinWalletTransaction.getActorToType(), intraUserLoggedInPublicKey);
                         WalletContactRecord walletContactRecord = walletContactsRegistry.getWalletContactByActorAndWalletPublicKey(bitcoinWalletTransaction.getActorToPublicKey(),walletPublicKey);
                         if (walletContactRecord != null)
                             contactId = walletContactRecord.getContactId();
