@@ -787,7 +787,13 @@ public class AssetCryptoVaultManager  {
          */
         final Wallet wallet;
         try {
-            wallet = getWalletForAllAccounts(networkParameters);
+            wallet = Wallet.fromSeed(networkParameters, getAssetVaultSeed());
+        } catch (InvalidSeedException e) {
+            throw new CantCreateBitcoinTransactionException(CantCreateBitcoinTransactionException.DEFAULT_MESSAGE, e, "Unable to create wallet from seed.", "seed issue");
+        }
+
+        try {
+            wallet.importKeys(getKeysForAllAccounts(networkParameters));
         } catch (CantExecuteDatabaseOperationException e) {
             throw new CantCreateBitcoinTransactionException(CantCreateBitcoinTransactionException.DEFAULT_MESSAGE, e, "Error getting the stored accounts to get the keys", "database issue");
         }
@@ -826,6 +832,10 @@ public class AssetCryptoVaultManager  {
         sendRequest.fee = fee;
         sendRequest.feePerKb = Coin.ZERO;
 
+
+        /**
+         * I'm ready so will complete the transaction.
+         */
         try {
             wallet.completeTx(sendRequest);
         } catch (InsufficientMoneyException e) {
@@ -850,11 +860,19 @@ public class AssetCryptoVaultManager  {
     }
 
     /**
+     * gets the current timestamp
+     * @return
+     */
+    private long getCurrentTimeStamp() {
+        return System.currentTimeMillis();
+    }
+
+    /**
      * Creates a BitcoinWallet from all derived keys for all accounts stored in this vault.
      * @param networkParameters
      * @return
      */
-    private Wallet getWalletForAllAccounts(NetworkParameters networkParameters) throws CantExecuteDatabaseOperationException {
+    private List<ECKey> getKeysForAllAccounts(NetworkParameters networkParameters) throws CantExecuteDatabaseOperationException {
         List<ECKey> allAccountsKeys = new ArrayList<>();
         List<HierarchyAccount> hierarchyAccounts = getDao().getHierarchyAccounts();
 
@@ -865,12 +883,7 @@ public class AssetCryptoVaultManager  {
             List<ECKey> derivedKeys = vaultKeyHierarchyGenerator.getVaultKeyHierarchy().getDerivedKeys(hierarchyAccount);
             allAccountsKeys.addAll(derivedKeys);
         }
-
-        /**
-         * Will create the wallet from all accounts.
-         */
-        Wallet wallet = Wallet.fromKeys(networkParameters, allAccountsKeys);
-        return wallet;
+        return allAccountsKeys;
     }
 
 }
