@@ -86,7 +86,8 @@ public class CryptoBrokerWalletModuleCustomerBrokerNegotiationInformation implem
         summary.put(ClauseType.CUSTOMER_CURRENCY, clauses.get(ClauseType.CUSTOMER_CURRENCY).getValue());
         summary.put(ClauseType.EXCHANGE_RATE, clauses.get(ClauseType.EXCHANGE_RATE).getValue());
         summary.put(ClauseType.BROKER_CURRENCY, clauses.get(ClauseType.BROKER_CURRENCY).getValue());
-        summary.put(ClauseType.BROKER_PAYMENT_METHOD, clauses.get(ClauseType.BROKER_PAYMENT_METHOD).getValue());
+        //Yordin: Debido al cambio en la estructura del StartNegotiation propuesta por luis esta clausula puede ser null y en ese caso genera un error
+//        summary.put(ClauseType.BROKER_PAYMENT_METHOD, clauses.get(ClauseType.BROKER_PAYMENT_METHOD).getValue());
 
         return summary;
     }

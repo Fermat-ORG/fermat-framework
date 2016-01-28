@@ -122,7 +122,7 @@ public class OpenNegotiationDetailsFragment extends AbstractFermatFragment<Crypt
 
             //REMOVE CURRENCY TO PAY OF CURRENCY LIST
             //no lo esta quitando
-            removeCurrency();
+//            removeCurrency();
 
         } catch (Exception e) {
             Log.e(TAG, e.getMessage(), e);
@@ -350,6 +350,9 @@ public class OpenNegotiationDetailsFragment extends AbstractFermatFragment<Crypt
     //VIEW DATE
     private void bindData() {
 
+        long timeInMillisVal = System.currentTimeMillis();
+        String timeInMillisStr = String.valueOf(timeInMillisVal);
+
         negotiationInfo = (CustomerBrokerNegotiationInformation) appSession.getData(CryptoCustomerWalletSession.NEGOTIATION_DATA);
         ActorIdentity broker = negotiationInfo.getBroker();
         Map<ClauseType, ClauseInformation> clauses = negotiationInfo.getClauses();
@@ -360,12 +363,17 @@ public class OpenNegotiationDetailsFragment extends AbstractFermatFragment<Crypt
         String amount = clauses.get(ClauseType.CUSTOMER_CURRENCY_QUANTITY).getValue();
         Drawable brokerImg = getImgDrawable(broker.getProfileImage());
 
-        /*ClauseInformation customerPaymentMethod = clauses.get(ClauseType.CUSTOMER_PAYMENT_METHOD);
-        if(customerPaymentMethod == null) putClause(customerPaymentMethod,paymentMethods.get(0));
+        if(clauses.get(ClauseType.CUSTOMER_PAYMENT_METHOD) == null)
+            putClause(ClauseType.CUSTOMER_PAYMENT_METHOD,paymentMethods.get(0));
 
-        ClauseInformation brokerPaymentMethod = clauses.get(ClauseType.BROKER_PAYMENT_METHOD);
-        if(brokerPaymentMethod == null) putClause(brokerPaymentMethod,paymentMethods.get(0));*/
+        if(clauses.get(ClauseType.BROKER_PAYMENT_METHOD) == null)
+            putClause(ClauseType.BROKER_PAYMENT_METHOD,paymentMethods.get(0));
 
+        if(clauses.get(ClauseType.BROKER_DATE_TIME_TO_DELIVER) == null)
+            putClause(ClauseType.BROKER_DATE_TIME_TO_DELIVER,timeInMillisStr);
+
+        if(clauses.get(ClauseType.CUSTOMER_DATE_TIME_TO_DELIVER) == null)
+            putClause(ClauseType.CUSTOMER_DATE_TIME_TO_DELIVER,timeInMillisStr);
 
         brokerImage.setImageDrawable(brokerImg);
         brokerName.setText(broker.getAlias());
@@ -504,6 +512,7 @@ public class OpenNegotiationDetailsFragment extends AbstractFermatFragment<Crypt
 
     //PUT CLAUSE
     public void putClause(final ClauseInformation clause, final String value) {
+
         final ClauseType type = clause.getType();
 
         ClauseInformation clauseInformation = new ClauseInformation() {
@@ -529,6 +538,25 @@ public class OpenNegotiationDetailsFragment extends AbstractFermatFragment<Crypt
         };
 
         negotiationInfo.getClauses().put(type, clauseInformation);
+    }
+
+    public void putClause(final ClauseType clauseType, final String value) {
+
+        ClauseInformation clauseInformation = new ClauseInformation() {
+            @Override
+            public UUID getClauseID() { return UUID.randomUUID(); }
+
+            @Override
+            public ClauseType getType() { return clauseType; }
+
+            @Override
+            public String getValue() { return (value != null) ? value : ""; }
+
+            @Override
+            public ClauseStatus getStatus() { return ClauseStatus.DRAFT; }
+        };
+
+        negotiationInfo.getClauses().put(clauseType, clauseInformation);
     }
 
     //VALIDATE CLAUSE
