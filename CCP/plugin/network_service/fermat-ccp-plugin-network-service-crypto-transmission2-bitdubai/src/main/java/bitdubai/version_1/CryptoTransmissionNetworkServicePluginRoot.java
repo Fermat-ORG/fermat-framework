@@ -283,9 +283,9 @@ public class CryptoTransmissionNetworkServicePluginRoot extends AbstractPlugin i
         super(new PluginVersionReference(new Version()));
         this.listenersAdded = new ArrayList<>();
         this.platformComponentType = PlatformComponentType.NETWORK_SERVICE;
-        this.networkServiceType = NetworkServiceType.INTRA_USER;
-        this.name = "Intra actor Network Service";
-        this.alias = "IntraActorNetworkService";
+        this.networkServiceType = NetworkServiceType.CRYPTO_TRANSMISSION;
+        this.name = "Crypto Transmission Network Service";
+        this.alias = "CryptoTransmissionNetworkService";
         this.extraData = null;
         this.actorsToRegisterCache = new ArrayList<>();
     }
@@ -850,12 +850,12 @@ public class CryptoTransmissionNetworkServicePluginRoot extends AbstractPlugin i
         System.out.println("Crypto transmission metadata arrived, handle new message");
 
         try {
-            CryptoTransmissionMessage cryptoTransmissionMetadata = gson.fromJson(fermatMessage.getContent(), CryptoTransmissionMessage.class);
 
+            CryptoTransmissionMetadataRecord cryptoTransmissionMetadata = gson.fromJson(fermatMessage.getContent(), CryptoTransmissionMetadataRecord.class);
 
             switch (cryptoTransmissionMetadata.getCryptoTransmissionMessageType()) {
                 case METADATA:
-                    CryptoTransmissionMetadataRecord cryptoTransmissionMetadataRecord = (CryptoTransmissionMetadataRecord) cryptoTransmissionMetadata;
+                    CryptoTransmissionMetadataRecord cryptoTransmissionMetadataRecord = cryptoTransmissionMetadata;
                     cryptoTransmissionMetadataRecord.changeCryptoTransmissionProtocolState(CryptoTransmissionProtocolState.PROCESSING_RECEIVE);
                     incomingNotificationsDao.saveCryptoTransmissionMetadata(cryptoTransmissionMetadataRecord);
 
@@ -865,7 +865,16 @@ public class CryptoTransmissionNetworkServicePluginRoot extends AbstractPlugin i
 
                     break;
                 case RESPONSE:
-                    CryptoTransmissionResponseMessage cryptoTransmissionResponseMessage = (CryptoTransmissionResponseMessage) cryptoTransmissionMetadata;
+                    //CryptoTransmissionResponseMessage cryptoTransmissionResponseMessage = (CryptoTransmissionMessage) cryptoTransmissionMetadata;
+
+                    CryptoTransmissionResponseMessage cryptoTransmissionResponseMessage = new CryptoTransmissionResponseMessage(cryptoTransmissionMetadata.getTransactionId(),
+                                                                                                                                cryptoTransmissionMetadata.getCryptoTransmissionMessageType(),
+                                                                                                                                cryptoTransmissionMetadata.getCryptoTransmissionProtocolState(),
+                                                                                                                                cryptoTransmissionMetadata.getCryptoTransmissionMetadataType(),
+                                                                                                                                cryptoTransmissionMetadata.getCryptoTransmissionMetadataStates(),
+                                                                                                                                cryptoTransmissionMetadata.getSenderPublicKey(),
+                                                                                                                                cryptoTransmissionMetadata.getDestinationPublicKey());
+
                     switch (cryptoTransmissionResponseMessage.getCryptoTransmissionMetadataState()) {
                         case SEEN_BY_DESTINATION_NETWORK_SERVICE:
 
