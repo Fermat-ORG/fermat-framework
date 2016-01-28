@@ -5,41 +5,39 @@ import com.bitdubai.fermat_api.layer.all_definition.money.CryptoAddress;
 import com.bitdubai.fermat_dap_api.layer.dap_wallet.common.enums.BalanceType;
 import com.bitdubai.fermat_dap_api.layer.dap_wallet.common.enums.TransactionType;
 
-import java.util.UUID;
-
 /**
  * Created by franklin on 05/10/15.
  */
 public interface AssetUserWalletTransaction {
-    public String getAssetPublicKey();
+    String getAssetPublicKey();
 
-    public String getTransactionId();
+    String getActualTransactionHash();
 
-    public String getTransactionHash();
+    String getGenesisTransaction();
 
-    public CryptoAddress getAddressFrom();
+    CryptoAddress getAddressFrom();
 
-    public Actors getActorFromType();
+    Actors getActorFromType();
 
-    public CryptoAddress getAddressTo();
+    CryptoAddress getAddressTo();
 
-    public Actors getActorToType();
+    Actors getActorToType();
 
-    public String getActorToPublicKey();
+    String getActorToPublicKey();
 
-    public String getActorFromPublicKey();
+    String getActorFromPublicKey();
 
-    public BalanceType getBalanceType();
+    BalanceType getBalanceType();
 
-    public TransactionType getTransactionType();
+    TransactionType getTransactionType();
 
-    public long getTimestamp();
+    long getTimestamp();
 
-    public long getAmount();
+    long getAmount();
 
-    public long getRunningBookBalance();
+    long getRunningBookBalance();
 
-    public long getRunningAvailableBalance();
+    long getRunningAvailableBalance();
 
-    public String getMemo();
+    String getMemo();
 }
