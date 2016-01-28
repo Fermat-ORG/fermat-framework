@@ -212,9 +212,6 @@ public class CryptoTransmissionNetworkServicePluginRoot extends AbstractPlugin i
      */
     private Database dataBaseCommunication;
 
-    private Database dataBase;
-
-
     /**
      * Represent the identity
      */
@@ -246,16 +243,6 @@ public class CryptoTransmissionNetworkServicePluginRoot extends AbstractPlugin i
     private ActorNetworkServiceRecordedAgent actorNetworkServiceRecordedAgent;
 
     /**
-     * cacha identities to register
-     */
-    private List<PlatformComponentProfile> actorsToRegisterCache;
-
-    /**
-     * Connections arrived
-     */
-    private AtomicBoolean connectionArrived;
-
-    /**
      * Represent the flag to start only once
      */
     private AtomicBoolean flag = new AtomicBoolean(false);
@@ -278,7 +265,6 @@ public class CryptoTransmissionNetworkServicePluginRoot extends AbstractPlugin i
         this.name = "Crypto Transmission Network Service";
         this.alias = "CryptoTransmissionNetworkService";
         this.extraData = null;
-        this.actorsToRegisterCache = new ArrayList<>();
     }
 
     /**
@@ -514,8 +500,6 @@ public class CryptoTransmissionNetworkServicePluginRoot extends AbstractPlugin i
 
 
                     remoteNetworkServicesRegisteredList = new CopyOnWriteArrayList<PlatformComponentProfile>();
-
-                    connectionArrived = new AtomicBoolean(false);
 
                     actorNetworkServiceRecordedAgent = new ActorNetworkServiceRecordedAgent(
                             this,
