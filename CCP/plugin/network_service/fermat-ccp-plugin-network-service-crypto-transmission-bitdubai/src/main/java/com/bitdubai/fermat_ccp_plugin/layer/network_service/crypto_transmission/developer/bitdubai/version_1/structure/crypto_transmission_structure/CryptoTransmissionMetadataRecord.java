@@ -27,6 +27,7 @@ public class CryptoTransmissionMetadataRecord implements CryptoTransmissionMetad
     private boolean pendingFlag;
     private int sentCount;
     private CryptoTransmissionMetadataState cryptoTransmissionMetadataState;
+    private String destinationPublickKey;
 
     public CryptoTransmissionMetadataRecord(String associatedCryptoTransactionHash,
                                             long cryptoAmount,
@@ -185,11 +186,10 @@ public class CryptoTransmissionMetadataRecord implements CryptoTransmissionMetad
         this.pendingFlag = pending;
     }
 
-    @Override
-    public void setDestinationPublickKey(String destinationPublicKey) {
-        this.destinationPublicKey = destinationPublicKey;
+    public void setDestinationPublickKey(String destinationPublickKey) {
+        this.destinationPublickKey = destinationPublickKey;
     }
-    @Override
+
     public void setSenderPublicKey(String senderPublicKey) {
         this.senderPublicKey = senderPublicKey;
     }

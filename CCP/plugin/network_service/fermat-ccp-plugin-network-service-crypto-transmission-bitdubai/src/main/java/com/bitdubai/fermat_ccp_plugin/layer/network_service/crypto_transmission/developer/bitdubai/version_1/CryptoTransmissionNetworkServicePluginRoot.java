@@ -1092,19 +1092,16 @@ public class CryptoTransmissionNetworkServicePluginRoot extends AbstractNetworkS
                     CryptoTransmissionProtocolState.DONE,
                     CryptoTransmissionMetadataState.CREDITED_IN_OWN_WALLET);
 
-            System.out.print("-----------------------\n" +
-                    "TRANSACTION CREDITED IN WALLET CRYPTO TRANSMISSION ROOT  !!!!! -----------------------\n" +
-                    "-----------------------\n STATE: " + cryptoTransmissionMetadata.getCryptoTransmissionMetadataStates());
-
+            CryptoTransmissionMetadataRecord cryptoTransmissionMetadataRecord = (CryptoTransmissionMetadataRecord)cryptoTransmissionMetadata;
 
             // send inform to other ns
-            cryptoTransmissionMetadata.changeCryptoTransmissionProtocolState(CryptoTransmissionProtocolState.PRE_PROCESSING_SEND);
-            cryptoTransmissionMetadata.changeMetadataState(CryptoTransmissionMetadataState.CREDITED_IN_DESTINATION_WALLET);
-            cryptoTransmissionMetadata.setPendingToRead(false);
-            String pkAux = cryptoTransmissionMetadata.getDestinationPublicKey();
-            cryptoTransmissionMetadata.setDestinationPublickKey(cryptoTransmissionMetadata.getSenderPublicKey());
-            cryptoTransmissionMetadata.setSenderPublicKey(pkAux);
-            outgoingCryptoTransmissionMetadataDAO.saveCryptoTransmissionMetadata(cryptoTransmissionMetadata);
+            cryptoTransmissionMetadataRecord.changeCryptoTransmissionProtocolState(CryptoTransmissionProtocolState.PRE_PROCESSING_SEND);
+            cryptoTransmissionMetadataRecord.changeMetadataState(CryptoTransmissionMetadataState.CREDITED_IN_DESTINATION_WALLET);
+            cryptoTransmissionMetadataRecord.setPendingToRead(false);
+            String pkAux = cryptoTransmissionMetadataRecord.getDestinationPublicKey();
+            cryptoTransmissionMetadataRecord.setDestinationPublickKey(cryptoTransmissionMetadataRecord.getSenderPublicKey());
+            cryptoTransmissionMetadataRecord.setSenderPublicKey(pkAux);
+            outgoingCryptoTransmissionMetadataDAO.saveCryptoTransmissionMetadata(cryptoTransmissionMetadataRecord);
         }
         catch(CantUpdateRecordDataBaseException e) {
             throw  new CantSetToCreditedInWalletException("Can't Set Metadata To Credited In Wallet Exception",e,"","Can't update record");
@@ -1124,18 +1121,15 @@ public class CryptoTransmissionNetworkServicePluginRoot extends AbstractNetworkS
                     CryptoTransmissionProtocolState.WAITING_FOR_RESPONSE,
                     CryptoTransmissionMetadataState.SEEN_BY_OWN_VAULT);
 
-            System.out.print("-----------------------\n" +
-                    "TRANSACTION SEEN BY VAULT CRYPTO TRANSMISSION ROOT  !!!!! -----------------------\n" +
-                    "-----------------------\n STATE: " + cryptoTransmissionMetadata.getCryptoTransmissionMetadataStates());
-
+            CryptoTransmissionMetadataRecord cryptoTransmissionMetadataRecord = (CryptoTransmissionMetadataRecord)cryptoTransmissionMetadata;
             // send inform to other ns
-            cryptoTransmissionMetadata.changeCryptoTransmissionProtocolState(CryptoTransmissionProtocolState.PRE_PROCESSING_SEND);
-            cryptoTransmissionMetadata.changeMetadataState(CryptoTransmissionMetadataState.SEEN_BY_DESTINATION_VAULT);
-            cryptoTransmissionMetadata.setPendingToRead(false);
-            String pkAux = cryptoTransmissionMetadata.getDestinationPublicKey();
-            cryptoTransmissionMetadata.setDestinationPublickKey(cryptoTransmissionMetadata.getSenderPublicKey());
-            cryptoTransmissionMetadata.setSenderPublicKey(pkAux);
-            outgoingCryptoTransmissionMetadataDAO.saveCryptoTransmissionMetadata(cryptoTransmissionMetadata);
+            cryptoTransmissionMetadataRecord.changeCryptoTransmissionProtocolState(CryptoTransmissionProtocolState.PRE_PROCESSING_SEND);
+            cryptoTransmissionMetadataRecord.changeMetadataState(CryptoTransmissionMetadataState.SEEN_BY_DESTINATION_VAULT);
+            cryptoTransmissionMetadataRecord.setPendingToRead(false);
+            String pkAux = cryptoTransmissionMetadataRecord.getDestinationPublicKey();
+            cryptoTransmissionMetadataRecord.setDestinationPublickKey(cryptoTransmissionMetadataRecord.getSenderPublicKey());
+            cryptoTransmissionMetadataRecord.setSenderPublicKey(pkAux);
+            outgoingCryptoTransmissionMetadataDAO.saveCryptoTransmissionMetadata(cryptoTransmissionMetadataRecord);
 
 
         }
@@ -1505,10 +1499,16 @@ public class CryptoTransmissionNetworkServicePluginRoot extends AbstractNetworkS
     }
 
     public CryptoTransmissionMetadataDAO_V2 getOutgoingCryptoTransmissionMetadataDAO() {
+        if(outgoingCryptoTransmissionMetadataDAO==null){
+            initializeOutgoingDAO();
+        }
         return outgoingCryptoTransmissionMetadataDAO;
     }
 
     public CryptoTransmissionMetadataDAO_V2 getIncomingCryptoTransmissionMetadataDAO() {
+        if(incomingCryptoTransmissionMetadataDAO==null){
+            initializeIncomingDAO();
+        }
         return incomingCryptoTransmissionMetadataDAO;
     }
 
@@ -1518,5 +1518,25 @@ public class CryptoTransmissionNetworkServicePluginRoot extends AbstractNetworkS
 
     public CommunicationNetworkServiceConnectionManager_V2 getCommunicationNetworkServiceConnectionManager() {
         return communicationNetworkServiceConnectionManager;
+    }
+
+    private void initializeOutgoingDAO(){
+        try {
+            if (outgoingCryptoTransmissionMetadataDAO == null) {
+                outgoingCryptoTransmissionMetadataDAO = new CryptoTransmissionMetadataDAO_V2(pluginDatabaseSystem, pluginId, dataBase, CryptoTransmissionNetworkServiceDatabaseConstants.OUTGOING_CRYPTO_TRANSMISSION_METADATA_TABLE_NAME);
+            }
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+    }
+
+    private void initializeIncomingDAO(){
+        try {
+            if (incomingCryptoTransmissionMetadataDAO == null) {
+                incomingCryptoTransmissionMetadataDAO = new CryptoTransmissionMetadataDAO_V2(pluginDatabaseSystem, pluginId, dataBase, CryptoTransmissionNetworkServiceDatabaseConstants.INCOMING_CRYPTO_TRANSMISSION_METADATA_TABLE_NAME);
+            }
+        }catch (Exception e){
+            e.printStackTrace();
+        }
     }
 }

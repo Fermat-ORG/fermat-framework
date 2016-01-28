@@ -1,4 +1,4 @@
-package com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_transmission.developer.bitdubai.version_1.crypto_transmission_database.dao;
+package bitdubai.version_1.database.communications;
 
 import com.bitdubai.fermat_api.layer.all_definition.enums.CryptoCurrency;
 import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterException;
@@ -10,52 +10,42 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTableFi
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTableRecord;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTransaction;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
-import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantCreateDatabaseException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantDeleteRecordException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantInsertRecordException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantLoadTableToMemoryException;
-import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantOpenDatabaseException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantUpdateRecordException;
-import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.DatabaseNotFoundException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.DatabaseTransactionFailedException;
 import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_addresses.exceptions.PendingRequestNotFoundException;
 import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_transmission.enums.CryptoTransmissionMetadataState;
 import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_transmission.enums.CryptoTransmissionProtocolState;
 import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_transmission.interfaces.structure.CryptoTransmissionMetadata;
 import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_transmission.interfaces.structure.CryptoTransmissionMetadataType;
-import com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_transmission.developer.bitdubai.version_1.crypto_transmission_database.CryptoTransmissionNetworkServiceDatabaseConstants;
-import com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_transmission.developer.bitdubai.version_1.crypto_transmission_database.exceptions.CantGetCryptoTransmissionMetadataException;
-import com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_transmission.developer.bitdubai.version_1.crypto_transmission_database.exceptions.CantInitializeCryptoTransmissionNetworkServiceDatabaseException;
-import com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_transmission.developer.bitdubai.version_1.crypto_transmission_database.exceptions.CantSaveCryptoTransmissionMetadatatException;
-import com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_transmission.developer.bitdubai.version_1.database.communications.CommunicationNetworkServiceDatabaseConstants;
-import com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_transmission.developer.bitdubai.version_1.database.communications.CommunicationNetworkServiceDatabaseFactory;
-import com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_transmission.developer.bitdubai.version_1.exceptions.CantDeleteRecordDataBaseException;
-import com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_transmission.developer.bitdubai.version_1.exceptions.CantReadRecordDataBaseException;
-import com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_transmission.developer.bitdubai.version_1.exceptions.CantUpdateRecordDataBaseException;
-import com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_transmission.developer.bitdubai.version_1.structure.crypto_transmission_structure.CryptoTransmissionMetadataRecord;
+import com.bitdubai.fermat_p2p_api.layer.all_definition.common.network_services.template.exceptions.CantReadRecordDataBaseException;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
+import bitdubai.version_1.exceptions.CantDeleteRecordDataBaseException;
+import bitdubai.version_1.exceptions.CantGetCryptoTransmissionMetadataException;
+import bitdubai.version_1.exceptions.CantSaveCryptoTransmissionMetadatatException;
+import bitdubai.version_1.exceptions.CantUpdateRecordDataBaseException;
+import bitdubai.version_1.structure.structure.CryptoTransmissionMessageType;
+import bitdubai.version_1.structure.structure.CryptoTransmissionMetadataRecord;
+
 /**
  * Created by Matias Furszyfer on 2015.10.04..
  */
 public class CryptoTransmissionMetadataDAO_V2 {
-
-
-    private final PluginDatabaseSystem pluginDatabaseSystem;
-    private final UUID pluginId            ;
+ ;
     private final String tableType;
     private Database database;
 
-    public CryptoTransmissionMetadataDAO_V2(final PluginDatabaseSystem pluginDatabaseSystem,
-                                            final UUID pluginId,
+    public CryptoTransmissionMetadataDAO_V2(
                                             final Database database,
                                             String tableType) {
 
-        this.pluginDatabaseSystem = pluginDatabaseSystem;
-        this.pluginId             = pluginId            ;
         this.database = database;
         this.tableType = tableType;
     }
@@ -80,7 +70,7 @@ public class CryptoTransmissionMetadataDAO_V2 {
     }
 
 
-    public void saveCryptoTransmissionMetadata(CryptoTransmissionMetadata cryptoTransmissionMetadata) throws CantSaveCryptoTransmissionMetadatatException {
+    public void saveCryptoTransmissionMetadata(CryptoTransmissionMetadataRecord cryptoTransmissionMetadata) throws CantSaveCryptoTransmissionMetadatatException {
 
         try {
 
@@ -105,7 +95,7 @@ public class CryptoTransmissionMetadataDAO_V2 {
     }
 
 
-    public CryptoTransmissionMetadata getMetadata(UUID transmissionId) throws CantGetCryptoTransmissionMetadataException,
+    public CryptoTransmissionMetadataRecord getMetadata(UUID transmissionId) throws CantGetCryptoTransmissionMetadataException,
             PendingRequestNotFoundException {
 
         if (transmissionId == null)
@@ -170,7 +160,7 @@ public class CryptoTransmissionMetadataDAO_V2 {
      * @throws CantReadRecordDataBaseException
      * @see CryptoTransmissionNetworkServiceDatabaseConstants
      */
-    public List<CryptoTransmissionMetadata> findAll(String columnName, String columnValue) throws CantReadRecordDataBaseException {
+    public List<CryptoTransmissionMetadataRecord> findAll(String columnName, String columnValue) throws CantReadRecordDataBaseException {
 
         if (columnName == null ||
                 columnName.isEmpty() ||
@@ -181,7 +171,7 @@ public class CryptoTransmissionMetadataDAO_V2 {
         }
 
 
-        List<CryptoTransmissionMetadata> list = null;
+        List<CryptoTransmissionMetadataRecord> list = null;
 
         try {
 
@@ -211,7 +201,7 @@ public class CryptoTransmissionMetadataDAO_V2 {
                 /*
                  * 4.1 - Create and configure a  FermatMessage
                  */
-                CryptoTransmissionMetadata outGoingTemplateNetworkServiceMessage = buildCryptoTransmissionRecord(record);
+                CryptoTransmissionMetadataRecord outGoingTemplateNetworkServiceMessage = buildCryptoTransmissionRecord(record);
 
                 /*
                  * 4.2 - Add to the list
@@ -248,7 +238,98 @@ public class CryptoTransmissionMetadataDAO_V2 {
      * @return List<FermatMessage>
      * @throws CantReadRecordDataBaseException
      */
-    public List<CryptoTransmissionMetadata> findAll(Map<String, Object> filters) throws CantReadRecordDataBaseException {
+    public List<CryptoTransmissionMetadataRecord> findAll(Map<String, Object> filters) throws CantReadRecordDataBaseException {
+
+        if (filters == null ||
+                filters.isEmpty()) {
+
+            throw new IllegalArgumentException("The filters are required, can not be null or empty");
+        }
+
+        List<CryptoTransmissionMetadataRecord> list = null;
+        List<DatabaseTableFilter> filtersTable = new ArrayList<>();
+
+        try {
+
+
+            /*
+             * 1- Prepare the filters
+             */
+            DatabaseTable templateTable = getDatabaseTable();
+
+            for (String key : filters.keySet()) {
+
+                DatabaseTableFilter newFilter = templateTable.getEmptyTableFilter();
+                newFilter.setType(DatabaseFilterType.EQUAL);
+                newFilter.setColumn(key);
+                newFilter.setValue((String) filters.get(key));
+
+                filtersTable.add(newFilter);
+            }
+
+            /*
+             * 2 - load the data base to memory with filters
+             */
+            templateTable.setFilterGroup(filtersTable, null, DatabaseFilterOperator.OR);
+            templateTable.loadToMemory();
+
+            /*
+             * 3 - read all records
+             */
+            List<DatabaseTableRecord> records = templateTable.getRecords();
+
+            /*
+             * 4 - Create a list of FermatMessage objects
+             */
+            list = new ArrayList<>();
+            list.clear();
+
+            /*
+             * 5 - Convert into FermatMessage objects
+             */
+            for (DatabaseTableRecord record : records) {
+
+                /*
+                 * 5.1 - Create and configure a  FermatMessage
+                 */
+                CryptoTransmissionMetadataRecord outgoingTemplateNetworkServiceMessage = buildCryptoTransmissionRecord(record);
+
+                /*
+                 * 5.2 - Add to the list
+                 */
+                list.add(outgoingTemplateNetworkServiceMessage);
+
+            }
+
+        } catch (CantLoadTableToMemoryException cantLoadTableToMemory) {
+
+            StringBuffer contextBuffer = new StringBuffer();
+            contextBuffer.append("Table Name: " + tableType);
+
+            String context = contextBuffer.toString();
+            String possibleCause = "The data no exist";
+            CantReadRecordDataBaseException cantReadRecordDataBaseException = new CantReadRecordDataBaseException(CantReadRecordDataBaseException.DEFAULT_MESSAGE, cantLoadTableToMemory, context, possibleCause);
+            throw cantReadRecordDataBaseException;
+        } catch (InvalidParameterException e) {
+            CantReadRecordDataBaseException cantReadRecordDataBaseException = new CantReadRecordDataBaseException(CantReadRecordDataBaseException.DEFAULT_MESSAGE, e, "", "invalid parameter");
+            throw cantReadRecordDataBaseException;
+        }
+
+        /*
+         * return the list
+         */
+        return list;
+    }
+
+    /**
+     * Method that list the all entities on the data base. The valid value of
+     * the key are the att of the <code>TemplateNetworkServiceDatabaseConstants</code>
+     *
+     * @param filters
+     * @return List<FermatMessage>
+     * @throws CantReadRecordDataBaseException
+     */
+    public List<CryptoTransmissionMetadata> findAllMetadata(Map<String, Object> filters) throws CantReadRecordDataBaseException {
 
         if (filters == null ||
                 filters.isEmpty()) {
@@ -276,7 +357,6 @@ public class CryptoTransmissionMetadataDAO_V2 {
 
                 filtersTable.add(newFilter);
             }
-
 
             /*
              * 2 - load the data base to memory with filters
@@ -332,11 +412,106 @@ public class CryptoTransmissionMetadataDAO_V2 {
         return list;
     }
 
+    /**
+     * Method that list the all entities on the data base. The valid value of
+     * the key are the att of the <code>TemplateNetworkServiceDatabaseConstants</code>
+     *
+     * @param filters
+     * @return List<FermatMessage>
+     * @throws CantReadRecordDataBaseException
+     */
+    public List<CryptoTransmissionMetadataRecord> findAllNotDone(Map<String, Object> filters) throws CantReadRecordDataBaseException {
+
+        if (filters == null ||
+                filters.isEmpty()) {
+
+            throw new IllegalArgumentException("The filters are required, can not be null or empty");
+        }
+
+        List<CryptoTransmissionMetadataRecord> list = null;
+        List<DatabaseTableFilter> filtersTable = new ArrayList<>();
+
+        try {
+
+
+            /*
+             * 1- Prepare the filters
+             */
+            DatabaseTable templateTable = getDatabaseTable();
+
+            for (String key : filters.keySet()) {
+
+                DatabaseTableFilter newFilter = templateTable.getEmptyTableFilter();
+                newFilter.setType(DatabaseFilterType.EQUAL);
+                newFilter.setColumn(key);
+                newFilter.setValue((String) filters.get(key));
+
+                filtersTable.add(newFilter);
+            }
+
+            //NOT EQUALS TO DONE
+            templateTable.addStringFilter(CryptoTransmissionNetworkServiceDatabaseConstants.CRYPTO_TRANSMISSION_METADATA_STATUS_COLUMN_NAME,CryptoTransmissionProtocolState.DONE.getCode(), DatabaseFilterType.NOT_EQUALS);
+
+
+            /*
+             * 2 - load the data base to memory with filters
+             */
+            templateTable.setFilterGroup(filtersTable, null, DatabaseFilterOperator.OR);
+            templateTable.loadToMemory();
+
+            /*
+             * 3 - read all records
+             */
+            List<DatabaseTableRecord> records = templateTable.getRecords();
+
+            /*
+             * 4 - Create a list of FermatMessage objects
+             */
+            list = new ArrayList<>();
+            list.clear();
+
+            /*
+             * 5 - Convert into FermatMessage objects
+             */
+            for (DatabaseTableRecord record : records) {
+
+                /*
+                 * 5.1 - Create and configure a  FermatMessage
+                 */
+                CryptoTransmissionMetadataRecord outgoingTemplateNetworkServiceMessage = buildCryptoTransmissionRecord(record);
+
+                /*
+                 * 5.2 - Add to the list
+                 */
+                list.add(outgoingTemplateNetworkServiceMessage);
+
+            }
+
+        } catch (CantLoadTableToMemoryException cantLoadTableToMemory) {
+
+            StringBuffer contextBuffer = new StringBuffer();
+            contextBuffer.append("Table Name: " + tableType);
+
+            String context = contextBuffer.toString();
+            String possibleCause = "The data no exist";
+            CantReadRecordDataBaseException cantReadRecordDataBaseException = new CantReadRecordDataBaseException(CantReadRecordDataBaseException.DEFAULT_MESSAGE, cantLoadTableToMemory, context, possibleCause);
+            throw cantReadRecordDataBaseException;
+        } catch (InvalidParameterException e) {
+            CantReadRecordDataBaseException cantReadRecordDataBaseException = new CantReadRecordDataBaseException(CantReadRecordDataBaseException.DEFAULT_MESSAGE, e, "", "invalid parameter");
+            throw cantReadRecordDataBaseException;
+        }
+
+        /*
+         * return the list
+         */
+        return list;
+    }
+
 
 
 
     /**
-     * Method that update an CryptoTransmissionMetadata in the data base.
+     * Method that update an CryptoTransmissionMetadataRecord in the data base.
      *
      * @throws CantUpdateRecordDataBaseException
      */
@@ -348,7 +523,7 @@ public class CryptoTransmissionMetadataDAO_V2 {
 
         try {
 
-            CryptoTransmissionMetadata cryptoTransmissionMetadata = getMetadata(transmission_id);
+            CryptoTransmissionMetadataRecord cryptoTransmissionMetadata = getMetadata(transmission_id);
             cryptoTransmissionMetadata.changeCryptoTransmissionProtocolState(cryptoTransmissionProtocolState);
 
 
@@ -388,14 +563,14 @@ public class CryptoTransmissionMetadataDAO_V2 {
 
     }
 
-    public CryptoTransmissionMetadata changeCryptoTransmissionProtocolStateAndNotificationState(UUID transaction_id, CryptoTransmissionProtocolState cryptoTransmissionProtocolState, CryptoTransmissionMetadataState cryptoTransmissionMetadataState) throws CantUpdateRecordDataBaseException, PendingRequestNotFoundException {
+    public CryptoTransmissionMetadataRecord changeCryptoTransmissionProtocolStateAndNotificationState(UUID transaction_id, CryptoTransmissionProtocolState cryptoTransmissionProtocolState, CryptoTransmissionMetadataState cryptoTransmissionMetadataState) throws CantUpdateRecordDataBaseException, PendingRequestNotFoundException {
         if (transaction_id == null) {
             throw new IllegalArgumentException("The entity is required, can not be null");
         }
 
         try {
 
-            CryptoTransmissionMetadata cryptoTransmissionMetadata = getMetadata(transaction_id);
+            CryptoTransmissionMetadataRecord cryptoTransmissionMetadata = getMetadata(transaction_id);
             cryptoTransmissionMetadata.changeCryptoTransmissionProtocolState(cryptoTransmissionProtocolState);
             cryptoTransmissionMetadata.changeMetadataState(cryptoTransmissionMetadataState);
 
@@ -442,7 +617,7 @@ public class CryptoTransmissionMetadataDAO_V2 {
 
     public void changeTransactionStateAndProtocolState(UUID transactionId,CryptoTransmissionMetadataState cryptoTransmissionMetadataState, CryptoTransmissionProtocolState cryptoTransmissionProtocolState) {
         try {
-            CryptoTransmissionMetadata cryptoTransmissionMetadataRecord = getMetadata(transactionId);
+            CryptoTransmissionMetadataRecord cryptoTransmissionMetadataRecord = getMetadata(transactionId);
             cryptoTransmissionMetadataRecord.changeCryptoTransmissionProtocolState(cryptoTransmissionProtocolState);
             cryptoTransmissionMetadataRecord.changeMetadataState(cryptoTransmissionMetadataState);
             update(cryptoTransmissionMetadataRecord);
@@ -521,7 +696,7 @@ public class CryptoTransmissionMetadataDAO_V2 {
      *.
      * @throws CantUpdateRecordDataBaseException
      */
-    public void update(CryptoTransmissionMetadata cryptoTransmissionMetadataRecord) throws CantUpdateRecordDataBaseException {
+    public void update(CryptoTransmissionMetadataRecord cryptoTransmissionMetadataRecord) throws CantUpdateRecordDataBaseException {
 
         if (cryptoTransmissionMetadataRecord == null) {
             throw new IllegalArgumentException("The entity is required, can not be null");
@@ -565,7 +740,7 @@ public class CryptoTransmissionMetadataDAO_V2 {
     public void confirmReception(UUID transactionID) throws CantUpdateRecordDataBaseException, PendingRequestNotFoundException, CantGetCryptoTransmissionMetadataException {
         try {
 
-            CryptoTransmissionMetadata cryptoTransmissionMetadataRecord = getMetadata(transactionID);
+            CryptoTransmissionMetadataRecord cryptoTransmissionMetadataRecord = getMetadata(transactionID);
 
             cryptoTransmissionMetadataRecord.confirmRead();
 
@@ -590,17 +765,17 @@ public class CryptoTransmissionMetadataDAO_V2 {
     }
 
 
-    public List<CryptoTransmissionMetadata> getPendings() throws CantReadRecordDataBaseException {
+    public List<CryptoTransmissionMetadataRecord> getPendings() throws CantReadRecordDataBaseException {
         return findAll(CryptoTransmissionNetworkServiceDatabaseConstants.CRYPTO_TRANSMISSION_METADATA_PENDING_FLAG_COLUMN_NAME,"false");
     }
 
 
 
-    public  List<CryptoTransmissionMetadata> getNotSentRecord() throws CantReadRecordDataBaseException {
+    public  List<CryptoTransmissionMetadataRecord> getNotSentRecord() throws CantReadRecordDataBaseException {
 
         try {
 
-            List<CryptoTransmissionMetadata> list = new ArrayList<>();
+            List<CryptoTransmissionMetadataRecord> list = new ArrayList<>();
 
             DatabaseTable cryptoTransmissiontTable = getDatabaseTable();
 
@@ -611,7 +786,7 @@ public class CryptoTransmissionMetadataDAO_V2 {
 
 
             for (DatabaseTableRecord record : cryptoTransmissiontTable.getRecords()) {
-                CryptoTransmissionMetadata outgoingTemplateNetworkServiceMessage = buildCryptoTransmissionRecord(record);
+                CryptoTransmissionMetadataRecord outgoingTemplateNetworkServiceMessage = buildCryptoTransmissionRecord(record);
                 list.add(outgoingTemplateNetworkServiceMessage);
             }
 
@@ -628,10 +803,10 @@ public class CryptoTransmissionMetadataDAO_V2 {
 
     }
 
-    public List<CryptoTransmissionMetadata> getNotSentRecord(String remoteIdentityPublicKey) throws CantReadRecordDataBaseException {
+    public List<CryptoTransmissionMetadataRecord> getNotSentRecord(String remoteIdentityPublicKey) throws CantReadRecordDataBaseException {
         try {
 
-            List<CryptoTransmissionMetadata> list = new ArrayList<>();
+            List<CryptoTransmissionMetadataRecord> list = new ArrayList<>();
 
             DatabaseTable cryptoTransmissiontTable =getDatabaseTable();
 
@@ -643,7 +818,7 @@ public class CryptoTransmissionMetadataDAO_V2 {
 
 
             for (DatabaseTableRecord record : cryptoTransmissiontTable.getRecords()) {
-                CryptoTransmissionMetadata outgoingTemplateNetworkServiceMessage = buildCryptoTransmissionRecord(record);
+                CryptoTransmissionMetadataRecord outgoingTemplateNetworkServiceMessage = buildCryptoTransmissionRecord(record);
                 list.add(outgoingTemplateNetworkServiceMessage);
             }
 
@@ -667,7 +842,7 @@ public class CryptoTransmissionMetadataDAO_V2 {
     }
 
 
-    private CryptoTransmissionMetadata buildCryptoTransmissionRecord(DatabaseTableRecord record) throws InvalidParameterException {
+    private CryptoTransmissionMetadataRecord buildCryptoTransmissionRecord(DatabaseTableRecord record) throws InvalidParameterException {
 
         UUID   transactionId                       = record.getUUIDValue(CryptoTransmissionNetworkServiceDatabaseConstants.CRYPTO_TRANSMISSION_METADATA_TRANSMISSION_ID_COLUMN_NAME);
         UUID   requestId                  = record.getUUIDValue(CryptoTransmissionNetworkServiceDatabaseConstants.CRYPTO_TRANSMISSION_METADATA_REQUEST_ID_COLUMN_NAME);
@@ -685,6 +860,8 @@ public class CryptoTransmissionMetadataDAO_V2 {
         long timestamp = record.getLongValue(CryptoTransmissionNetworkServiceDatabaseConstants.CRYPTO_TRANSMISSION_METADATA_TIMESTAMP_COLUMN_NAME);
         int sentCount = record.getIntegerValue(CryptoTransmissionNetworkServiceDatabaseConstants.CRYPTO_TRANSMISSION_METADATA_SENT_COUNT_COLUMN_NAME);
 
+        CryptoTransmissionMessageType cryptoTransmissionMessageType =  CryptoTransmissionMessageType.getByCode(record.getStringValue(CryptoTransmissionNetworkServiceDatabaseConstants.CRYPTO_TRANSMISSION_METADATA_MESSAGE_TYPE_COLUMN_NAME));
+
 
         CryptoCurrency cryptoCurrency = CryptoCurrency                     .getByCode(cryptoCurrencyString);
 
@@ -694,15 +871,17 @@ public class CryptoTransmissionMetadataDAO_V2 {
 
         CryptoTransmissionMetadataState notificationState = CryptoTransmissionMetadataState.getByCode(metadataNotificationState);
 
+
         return new CryptoTransmissionMetadataRecord(
-                associatedHash,
-                amount,
-                cryptoCurrency,
-                destination,
-                description,
-                requestId,
-                sender,
                 transactionId,
+                cryptoTransmissionMessageType,
+                requestId,
+                cryptoCurrency,
+                amount,
+                sender,
+                destination,
+                associatedHash,
+                description,
                 cryptoTransmissionProtocolState,
                 cryptoTransmissionType,
                 timestamp,
@@ -710,12 +889,14 @@ public class CryptoTransmissionMetadataDAO_V2 {
                 sentCount,
                 notificationState
 
+
         );
+
     }
 
 
     private DatabaseTableRecord buildDatabaseRecord(DatabaseTableRecord                                 record,
-                                                    CryptoTransmissionMetadata cryptoTransmissionMetadata) {
+                                                    CryptoTransmissionMetadataRecord cryptoTransmissionMetadata) {
 
         record.setUUIDValue(CryptoTransmissionNetworkServiceDatabaseConstants.CRYPTO_TRANSMISSION_METADATA_TRANSMISSION_ID_COLUMN_NAME, cryptoTransmissionMetadata.getTransactionId());
         if(cryptoTransmissionMetadata.getRequestId()!=null) record.setUUIDValue(CryptoTransmissionNetworkServiceDatabaseConstants.CRYPTO_TRANSMISSION_METADATA_REQUEST_ID_COLUMN_NAME,  cryptoTransmissionMetadata.getRequestId());
@@ -732,6 +913,7 @@ public class CryptoTransmissionMetadataDAO_V2 {
         record.setStringValue(CryptoTransmissionNetworkServiceDatabaseConstants.CRYPTO_TRANSMISSION_METADATA_PENDING_FLAG_COLUMN_NAME, String.valueOf(cryptoTransmissionMetadata.isPendigToRead()));
         record.setLongValue(CryptoTransmissionNetworkServiceDatabaseConstants.CRYPTO_TRANSMISSION_METADATA_TIMESTAMP_COLUMN_NAME, cryptoTransmissionMetadata.getTimestamp());
         record.setIntegerValue(CryptoTransmissionNetworkServiceDatabaseConstants.CRYPTO_TRANSMISSION_METADATA_SENT_COUNT_COLUMN_NAME, cryptoTransmissionMetadata.getSentCount());
+        record.setStringValue(CryptoTransmissionNetworkServiceDatabaseConstants.CRYPTO_TRANSMISSION_METADATA_MESSAGE_TYPE_COLUMN_NAME,cryptoTransmissionMetadata.getCryptoTransmissionMessageType().getCode());
 
 
         return record;

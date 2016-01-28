@@ -2,20 +2,20 @@ package com.bitdubai.android_core.app;
 
 import android.app.Activity;
 import android.app.ProgressDialog;
-import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.util.DisplayMetrics;
 import android.view.View;
 import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
 import android.widget.ImageView;
 import android.widget.Toast;
+
 import com.bitdubai.android_core.app.common.version_1.ApplicationConstants;
 import com.bitdubai.fermat.R;
-import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.FermatSession;
 import com.bitdubai.fermat_android_api.ui.interfaces.FermatWorkerCallBack;
 import com.bitdubai.fermat_android_api.ui.util.FermatWorker;
 import com.bitdubai.fermat_api.FermatException;
@@ -25,27 +25,19 @@ import com.bitdubai.fermat_api.layer.all_definition.common.system.exceptions.Ver
 import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.AddonVersionReference;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Addons;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Developers;
-import com.bitdubai.fermat_api.layer.all_definition.enums.Engine;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Layers;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
-import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.MenuItem;
-import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.interfaces.FermatStructure;
 import com.bitdubai.fermat_api.layer.all_definition.resources_structure.enums.ScreenSize;
 import com.bitdubai.fermat_api.layer.all_definition.util.DeviceInfoUtils;
 import com.bitdubai.fermat_api.layer.all_definition.util.Version;
 import com.bitdubai.fermat_core.FermatSystem;
 import com.bitdubai.fermat_osa_android_core.OSAPlatform;
-import com.bitdubai.fermat_pip_api.layer.platform_service.platform_info.interfaces.PlatformInfo;
-import com.bitdubai.fermat_pip_api.layer.platform_service.platform_info.interfaces.PlatformInfoManager;
 import com.bitdubai.fermat_pip_api.layer.platform_service.platform_info.exceptions.CantLoadPlatformInformationException;
 import com.bitdubai.fermat_pip_api.layer.platform_service.platform_info.exceptions.CantSetPlatformInformationException;
-
-import org.apache.log4j.Level;
+import com.bitdubai.fermat_pip_api.layer.platform_service.platform_info.interfaces.PlatformInfo;
+import com.bitdubai.fermat_pip_api.layer.platform_service.platform_info.interfaces.PlatformInfoManager;
 
 import java.util.ArrayList;
-import java.util.List;
-
-import de.mindpipe.android.logging.log4j.LogConfigurator;
 
 
 /**
@@ -58,7 +50,7 @@ import de.mindpipe.android.logging.log4j.LogConfigurator;
  * -- Luis.
  */
 
-public class StartActivity extends FermatActivity implements FermatWorkerCallBack{
+public class StartActivity extends AppCompatActivity implements FermatWorkerCallBack{
 
 
 
@@ -188,30 +180,6 @@ public class StartActivity extends FermatActivity implements FermatWorkerCallBac
 
     }
 
-    @Override
-    protected FermatStructure getAppInUse() {
-        return null;
-    }
-
-    @Override
-    protected FermatSession getFermatSessionInUse(String appPublicKey) {
-        return null;
-    }
-
-    @Override
-    protected List<MenuItem> getNavigationMenu() {
-        return null;
-    }
-
-    @Override
-    protected void onNavigationMenuItemTouchListener(MenuItem data, int position) {
-
-    }
-
-    @Override
-    public void connectWithOtherApp(Engine engine, String fermatAppPublicKey, Object[] objectses) {
-
-    }
 
     public void handleTouch(View view) {
         fermatInit();
@@ -277,10 +245,6 @@ public class StartActivity extends FermatActivity implements FermatWorkerCallBac
                 Toast.LENGTH_LONG).show();
     }
 
-    @Override
-    public void changeActivityBack(String appBackPublicKey, String activityCode) {
-
-    }
 
     class GetTask extends FermatWorker{
 
