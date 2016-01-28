@@ -56,4 +56,6 @@ public interface ChatManager {
     void saveContact(Contact contact) throws CantSaveContactException;
 
     void deleteContact(Contact contact) throws CantDeleteContactException;
+
+    List<Contact> discoverActorsRegistered() throws CantGetContactException;
 }

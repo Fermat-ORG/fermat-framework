@@ -23,7 +23,7 @@ public class IncomingConfirmBusinessTransactionResponseEventHandler extends Abst
                 //Logger LOG = Logger.getGlobal();
                 //LOG.info("EXCEPTION DETECTOR----------------------------------");
                 //exception.printStackTrace();
-                throw new CantSaveEventException(FermatException.wrapException(exception), "Handling the IncomingConfirmBusinessTransactionResponse", "Cannot cast this event");
+                throw new CantSaveEventException(exception, "Handling the IncomingConfirmBusinessTransactionResponse", "Cannot cast this event");
             } catch(Exception exception){
                 throw new CantSaveEventException(exception,"Handling the IncomingConfirmBusinessTransactionResponse", "Unexpected exception");
             }

@@ -20,7 +20,8 @@ public enum NotificationType {
     OUTGOING_INTRA_ACTOR_ROLLBACK_TRANSACTION_NOTIFICATION("OIARTN"),
     CLOUD_CLIENT_CONNECTED ("CCCONEC"),
     CLOUD_CLIENT_CLOSED                           ("CCCLOSE"),
-    CLOUD_CLIENT_CONNECTION_LOOSE                                  ("CCCL");
+    CLOUD_CLIENT_CONNECTION_LOOSE                                  ("CCCL"),
+    INCOMING_CHAT_MESSAGE   ("ICCM");
 
     /**
      * Represent the key
@@ -72,6 +73,7 @@ public enum NotificationType {
             case "CCCONEC":     return CLOUD_CLIENT_CONNECTED                                 ;
             case "CCCLOSE": return CLOUD_CLIENT_CLOSED;
             case "CCCL":    return CLOUD_CLIENT_CONNECTION_LOOSE;
+            case "ICCM": return  INCOMING_CHAT_MESSAGE;
             default:
                 throw new InvalidParameterException(InvalidParameterException.DEFAULT_MESSAGE, null, "Code Received: " + code, "This Code Is Not Valid for the FactoryProjectType enum");
 

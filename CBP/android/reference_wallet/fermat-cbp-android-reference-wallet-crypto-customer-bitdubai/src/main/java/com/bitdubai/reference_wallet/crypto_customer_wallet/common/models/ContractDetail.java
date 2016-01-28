@@ -12,7 +12,7 @@ import java.util.Arrays;
 public class ContractDetail {
 
     ContractDetailType contractDetailType;
-    CurrencyType currencyType;
+    String currencyTypeCode;
     String currencyCode;
     float currencyAmount;
     ContractStatus contractStatus;
@@ -23,7 +23,7 @@ public class ContractDetail {
 
     public ContractDetail(
             ContractDetailType contractDetailType,
-            CurrencyType currencyType,
+            String currencyType,
             String currencyCode,
             float currencyAmount,
             ContractStatus contractStatus,
@@ -32,7 +32,7 @@ public class ContractDetail {
             long lastUpdate,
             float exchangeRateAmount) {
         this.contractDetailType = contractDetailType;
-        this.currencyType = currencyType;
+        this.currencyTypeCode = currencyType;
         this.currencyCode = currencyCode;
         this.currencyAmount = currencyAmount;
         this.contractStatus = contractStatus;
@@ -58,12 +58,12 @@ public class ContractDetail {
         this.contractDetailType = contractDetailType;
     }
 
-    public CurrencyType getCurrencyType() {
-        return currencyType;
+    public String getCurrencyType() {
+        return currencyTypeCode;
     }
 
-    public void setCurrencyType(CurrencyType currencyType) {
-        this.currencyType = currencyType;
+    public void setCurrencyType(String currencyType) {
+        this.currencyTypeCode = currencyType;
     }
 
     public String getCurrencyCode() {
@@ -118,7 +118,7 @@ public class ContractDetail {
     public String toString() {
         return "ContractDetail{" +
                 "contractDetailType=" + contractDetailType +
-                ", currencyType=" + currencyType +
+                ", currencyType=" + currencyTypeCode +
                 ", currencyCode='" + currencyCode + '\'' +
                 ", currencyAmount=" + currencyAmount +
                 ", contractStatus=" + contractStatus +
