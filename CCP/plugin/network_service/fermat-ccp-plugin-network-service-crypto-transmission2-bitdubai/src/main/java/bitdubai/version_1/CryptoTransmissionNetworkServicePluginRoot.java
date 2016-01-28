@@ -691,7 +691,12 @@ public class CryptoTransmissionNetworkServicePluginRoot extends AbstractPlugin i
 
     private void initializeIntraActorAgent() {
         try {
-
+            if(actorNetworkServiceRecordedAgent==null){
+                actorNetworkServiceRecordedAgent = new ActorNetworkServiceRecordedAgent(
+                        this,
+                        errorManager,
+                        eventManager);
+            }
             actorNetworkServiceRecordedAgent.start();
 
         } catch (CantStartAgentException e) {
@@ -789,13 +794,19 @@ public class CryptoTransmissionNetworkServicePluginRoot extends AbstractPlugin i
     }
 
     public void handleNewSentMessageNotificationEvent(FermatMessage fermatMessage){
+        //TODO: ver bien esto, no creo que sea así, hay que ponerle DONE al credited in wallet seguramente
+        //TODO: esto vamos a tener que cambiarlo porque está horrible
+        CryptoTransmissionMessage cryptoTransmissionMetadata = new Gson().fromJson(fermatMessage.getContent(), CryptoTransmissionMessage.class);
         try {
-            //TODO: ver bien esto, no creo que sea así, hay que ponerle DONE al credited in wallet seguramente
-            Gson gson = new Gson();
-            CryptoTransmissionMessage cryptoTransmissionMetadata = gson.fromJson(fermatMessage.getContent(), CryptoTransmissionMessage.class);
             outgoingNotificationDao.changeCryptoTransmissionProtocolState(cryptoTransmissionMetadata.getTransactionId(), CryptoTransmissionProtocolState.SENT);
         } catch (CantUpdateRecordDataBaseException e) {
-            e.printStackTrace();
+            try{
+                incomingNotificationsDao.changeCryptoTransmissionProtocolState(cryptoTransmissionMetadata.getTransactionId(), CryptoTransmissionProtocolState.SENT);
+            } catch (CantUpdateRecordDataBaseException e1) {
+                e1.printStackTrace();
+            } catch (Exception e1){
+                e1.printStackTrace();
+            }
         }catch (Exception e){
             e.printStackTrace();
         }
@@ -848,7 +859,9 @@ public class CryptoTransmissionNetworkServicePluginRoot extends AbstractPlugin i
                             cryptoTransmissionMetadata.getCryptoTransmissionMetadataType(),
                             cryptoTransmissionMetadata.getCryptoTransmissionMetadataStates(),
                             cryptoTransmissionMetadata.getSenderPublicKey(),
-                            cryptoTransmissionMetadata.getDestinationPublicKey());
+                            cryptoTransmissionMetadata.getDestinationPublicKey(),
+                            false,
+                            0);
 
                     switch (cryptoTransmissionResponseMessage.getCryptoTransmissionMetadataState()) {
                         case SEEN_BY_DESTINATION_NETWORK_SERVICE:

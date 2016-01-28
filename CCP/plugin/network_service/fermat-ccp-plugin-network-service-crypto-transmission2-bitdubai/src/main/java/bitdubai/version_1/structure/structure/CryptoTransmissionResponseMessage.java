@@ -11,9 +11,7 @@ import java.util.UUID;
  */
 public class CryptoTransmissionResponseMessage  extends CryptoTransmissionMessage{
 
-    private CryptoTransmissionProtocolState cryptoTransmissionStates;
     private CryptoTransmissionMetadataType cryptoTransmissionMetadataType;
-    private CryptoTransmissionMetadataState cryptoTransmissionMetadataState;
 
     public CryptoTransmissionResponseMessage(
             UUID transactionId,
@@ -22,35 +20,30 @@ public class CryptoTransmissionResponseMessage  extends CryptoTransmissionMessag
             CryptoTransmissionMetadataType cryptoTransmissionMetadataType,
             CryptoTransmissionMetadataState cryptoTransmissionMetadataState,
             String senderPublicKey,
-            String destinationPublicKey) {
-        super(transactionId,cryptoTransmissionMessageType,senderPublicKey,destinationPublicKey);
-        this.cryptoTransmissionStates = cryptoTransmissionStates;
+            String destinationPublicKey,
+            boolean isPendingToRead,
+            int sentCount) {
+        super(transactionId,cryptoTransmissionMessageType,senderPublicKey,destinationPublicKey,cryptoTransmissionStates,cryptoTransmissionMetadataState,isPendingToRead,sentCount);
         this.cryptoTransmissionMetadataType = cryptoTransmissionMetadataType;
-        this.cryptoTransmissionMetadataState = cryptoTransmissionMetadataState;
     }
 
 
-    public CryptoTransmissionProtocolState getCryptoTransmissionProtocolState() {
-        return cryptoTransmissionStates;
-    }
-
-    public void setCryptoTransmissionProtocolState(CryptoTransmissionProtocolState cryptoTransmissionStates) {
-        this.cryptoTransmissionStates = cryptoTransmissionStates;
-    }
 
     public CryptoTransmissionMetadataType getCryptoTransmissionMetadataType() {
         return cryptoTransmissionMetadataType;
     }
 
     public CryptoTransmissionMetadataState getCryptoTransmissionMetadataState() {
-        return cryptoTransmissionMetadataState;
+        return super.getCryptoTransmissionMetadataState();
     }
 
     @Override
     public String toString() {
         return "CryptoTransmissionResponseMessage{" +
                 "transactionId=" + getTransactionId() +
-                ", cryptoTransmissionStates=" + cryptoTransmissionStates +
+                ", cryptoTransmissionStates=" + getCryptoTransmissionProtocolState() +
                 '}';
     }
+
+
 }

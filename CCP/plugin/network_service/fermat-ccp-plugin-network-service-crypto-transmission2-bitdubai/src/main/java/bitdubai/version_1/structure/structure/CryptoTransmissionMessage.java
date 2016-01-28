@@ -1,5 +1,7 @@
 package bitdubai.version_1.structure.structure;
 
+import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_transmission.enums.CryptoTransmissionMetadataState;
+import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_transmission.enums.CryptoTransmissionProtocolState;
 import com.google.gson.Gson;
 
 import java.util.UUID;
@@ -11,19 +13,32 @@ public class CryptoTransmissionMessage {
 
     private UUID transactionId;
     private CryptoTransmissionMessageType cryptoTransmissionMessageType;
+    private CryptoTransmissionProtocolState cryptoTransmissionProtocolState;
+    private CryptoTransmissionMetadataState cryptoTransmissionMetadataState;
     private String destinationPublicKey;
     private String senderPublicKey;
     private String destinationPublickKey;
+    private boolean pendigToRead;
+    private int sentCount;
+    private CryptoTransmissionProtocolState protocolState;
 
     public CryptoTransmissionMessage(
             UUID transactionId,
             CryptoTransmissionMessageType cryptoTransmissionMessage,
             String senderPublicKey,
-            String destinationPublicKey) {
+            String destinationPublicKey,
+            CryptoTransmissionProtocolState cryptoTransmissionProtocolState,
+            CryptoTransmissionMetadataState cryptoTransmissionMetadataState,
+            boolean pendigToRead,
+            int sentCount) {
         this.transactionId = transactionId;
         this.cryptoTransmissionMessageType = cryptoTransmissionMessage;
         this.senderPublicKey = senderPublicKey;
         this.destinationPublicKey = destinationPublicKey;
+        this.cryptoTransmissionProtocolState = cryptoTransmissionProtocolState;
+        this.cryptoTransmissionMetadataState = cryptoTransmissionMetadataState;
+        this.pendigToRead = pendigToRead;
+        this.sentCount = sentCount;
     }
 
 
@@ -53,5 +68,37 @@ public class CryptoTransmissionMessage {
 
     public void setSenderPublicKey(String senderPublicKey) {
         this.senderPublicKey = senderPublicKey;
+    }
+
+    public boolean isPendigToRead() {
+        return pendigToRead;
+    }
+
+    public int getSentCount() {
+        return sentCount;
+    }
+
+    public void setPendigToRead(boolean pendigToRead) {
+        this.pendigToRead = pendigToRead;
+    }
+
+    public void setSentCount(int sentCount) {
+        this.sentCount = sentCount;
+    }
+
+    public CryptoTransmissionProtocolState getCryptoTransmissionProtocolState() {
+        return cryptoTransmissionProtocolState;
+    }
+
+    public void setProtocolState(CryptoTransmissionProtocolState protocolState) {
+        this.protocolState = protocolState;
+    }
+
+    public CryptoTransmissionMetadataState getCryptoTransmissionMetadataState() {
+        return cryptoTransmissionMetadataState;
+    }
+
+    public void setCryptoTransmissionMetadataState(CryptoTransmissionMetadataState cryptoTransmissionMetadataState) {
+        this.cryptoTransmissionMetadataState = cryptoTransmissionMetadataState;
     }
 }
