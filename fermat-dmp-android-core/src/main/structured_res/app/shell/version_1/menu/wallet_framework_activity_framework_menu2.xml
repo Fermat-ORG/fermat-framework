@@ -1,0 +1,24 @@
+<!DOCTYPE menu [
+    <!ELEMENT menu (item)*>
+    <!ATTLIST menu
+        xmlns:android CDATA #IMPLIED>
+    <!ELEMENT item (menu)*>
+    <!ATTLIST item
+        android:actionLayout CDATA #IMPLIED
+        android:icon CDATA #IMPLIED
+        android:id CDATA #REQUIRED
+        android:showAsAction CDATA #IMPLIED
+        android:title CDATA #REQUIRED>
+    ]>
+<menu xmlns:android="http://schemas.android.com/apk/res/android" >
+    <!-- Search, should appear as action button -->
+
+
+    <!-- Settings, should always be in the overflow -->
+
+    <item
+        android:id="@+id/action_settings"
+        android:title="@string/action_settings"
+        android:showAsAction="never" />
+
+</menu>

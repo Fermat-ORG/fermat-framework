@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content" >
+
+    <ImageView
+        android:id="@+id/image"
+        android:layout_width="match_parent"
+        android:layout_height="144dip"
+        android:scaleType="centerCrop"
+        android:src="@drawable/banner" />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@+id/image"
+        android:background="#77000000"
+        android:paddingBottom="14dip"
+        android:paddingLeft="8dip"
+        android:paddingTop="14dip"
+        android:text="Choose a wallet"
+        android:textColor="#FFFFFFFF"
+        android:textSize="18sp"
+        android:typeface="monospace"/>
+
+    <com.bitdubai.android_core.app.common.version_1.classes.PagerSlidingTabStrip
+        android:id="@+id/tabs"
+        android:layout_width="match_parent"
+        android:layout_height="62dip"
+        android:layout_below="@+id/image"
+        android:background="@drawable/background_tiled_diagonal_light"
+
+        />
+
+    <android.support.v4.view.ViewPager
+        android:id="@+id/pager"
+        android:layout_width="match_parent"
+        android:layout_height="96dip"
+        android:layout_below="@+id/tabs" />
+
+</RelativeLayout>

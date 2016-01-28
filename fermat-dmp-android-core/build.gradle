@@ -1,0 +1,70 @@
+apply plugin: 'com.android.application'
+
+android {
+    compileSdkVersion 21
+    buildToolsVersion "21.1.1"
+
+    packagingOptions {
+        exclude 'LICENSE.txt'
+    }
+
+    defaultConfig {
+        applicationId "com.bitdubai.fermat"
+        minSdkVersion 15
+        targetSdkVersion 21
+        versionCode 1
+        versionName "1.0"
+        multiDexEnabled true
+    }
+
+    dexOptions{ javaMaxHeapSize "4g"}
+    
+    sourceSets {
+        main {
+            res.srcDirs = ['src/main/structured_res/app/shell/version_1',
+                           'src/main/structured_res/app/subapp/shop/version_1',
+                           'src/main/structured_res/app/subapp/shop_manager/version_1',
+                           'src/main/structured_res/app/subapp/wallet_factory/version_1',
+                           'src/main/structured_res/app/subapp/wallet_factory/version_2',
+                           'src/main/structured_res/app/subapp/wallet_store/version_1',
+                           'src/main/structured_res/app/subapp/publisher/version_1',
+                           'src/main/structured_res/app/subapp/wallet_manager/version_1',
+                           'src/main/structured_res/app/subapp/wallet_runtime/wallet_framework/version_1',
+                           'src/main/structured_res/app/subapp/wallet_runtime/version_1',
+                           'src/main/structured_res/app/subapp/wallet_runtime/wallet_segment/age/sub_segment/teens/sub_segment/all/developer/bitdubai/version_1',
+                           'src/main/structured_res/app/subapp/wallet_runtime/wallet_segment/age/sub_segment/kids/sub_segment/all/developer/bitdubai/version_1',
+                           'src/main/res']
+        }
+    }
+    buildTypes {
+        release {
+            apply plugin: 'idea'
+            minifyEnabled false
+        }
+    }
+}
+
+
+dependencies {
+    compile project(':fermat-pip-api')
+    compile project(':fermat-pip-core')
+    
+    compile project(':fermat-dmp-android-wallet-runtime-age-kids-boys-bitdubai')
+    compile project(':fermat-dmp-android-wallet-manager-bitdubai')
+    compile project(':fermat-dmp-android-wallet-factory-bitdubai')
+    compile project(':fermat-dmp-android-wallet-store-bitdubai')
+    compile project(':fermat-dmp-android-wallet-publisher-bitdubai')
+    compile project(':fermat-pip-android-addon-os-file-system-bitdubai')
+    compile project(':fermat-pip-android-addon-os-device-location-bitdubai')
+    compile project(':fermat-dmp-android-shop-manager-bitdubai')
+    compile project(':fermat-dmp-android-wallet-runtime-bitcoin-wallet-bitdubai')
+
+    compile project(':fermat-osa-addon-android-database-system-bitdubai')
+
+    compile fileTree(dir: 'libs', include: ['*.jar'])
+    compile 'com.android.support:appcompat-v7:21.0.3'
+    compile 'com.android.support:support-v4:21.0.3'
+    compile 'com.android.support:support-v13:21.0.3'
+
+    compile 'com.google.android.gms:play-services:6.5.87'
+}

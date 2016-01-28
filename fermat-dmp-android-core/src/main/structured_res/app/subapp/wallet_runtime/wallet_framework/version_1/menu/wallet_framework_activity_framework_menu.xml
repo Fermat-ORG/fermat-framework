@@ -1,0 +1,48 @@
+<!DOCTYPE menu [
+        <!ELEMENT menu (item)*>
+        <!ATTLIST menu
+                xmlns:android CDATA #IMPLIED>
+        <!ELEMENT item (menu)*>
+        <!ATTLIST item
+                android:actionLayout CDATA #IMPLIED
+                android:icon CDATA #IMPLIED
+                android:id CDATA #REQUIRED
+                android:showAsAction CDATA #IMPLIED
+                android:title CDATA #REQUIRED>
+        ]>
+<menu xmlns:android="http://schemas.android.com/apk/res/android" >
+    <!-- Search, should appear as action button -->
+
+
+
+
+
+    <item android:id="@+id/menu_wallets"
+        android:icon="@drawable/ic_action_request_icon"
+        android:title="All requests"
+        android:showAsAction="ifRoom">
+        <menu>
+            <item android:id="@+id/action_requests_sent"
+                android:icon="@drawable/ic_action_request_send"
+                android:title="Requests sent"
+                />
+            <item android:id="@+id/action_requests_received"
+                android:icon="@drawable/ic_action_request_receive"
+                android:title="Requests received"
+
+                />
+        </menu>
+    </item>
+
+    <!-- Settings, should always be in the overflow -->
+    <item  android:title="About" android:id="@+id/AboutUs" />
+    <item android:title="Preferences" android:id="@+id/preferences" />
+    <item
+        android:id="@+id/action_settings"
+        android:title="@string/action_settings"
+        android:showAsAction="never" />
+    <item
+        android:id="@+id/action_help"
+        android:title="@string/action_help"
+        android:showAsAction="never" />
+</menu>
