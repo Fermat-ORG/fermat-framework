@@ -48,36 +48,35 @@ import com.bitdubai.fermat_cht_android_sub_app_chat_bitdubai.R;
  *
  */
 
-public class ChatListFragment extends AbstractFermatFragment {
+public class ChatListFragment extends AbstractFermatFragment{
 
     // Defines a tag for identifying log entries
-    private static final String TAG = "ChatListFragment";
+    //private static final String TAG = "ChatListFragment";
 
     // Bundle key for saving previously selected search result item
-    private static final String STATE_PREVIOUSLY_SELECTED_KEY =
-            "SELECTED_ITEM";
-    private ChatListAdapter adapter; // The main query adapter
-    private ImageLoader mImageLoader; // Handles loading the chat image in a background thread
-    private String mSearchTerm; // Stores the current search query term
-
-    private OnChatInteractionListener mOnChatSelectedListener;
-
-    // Stores the previously selected search item so that on a configuration change the same item
-    // can be reselected again
-    private int mPreviouslySelectedSearchItem = 0;
-    //public ArrayList<ContactList> contactList;
-   // private ListView contactsContainer;
-    //private ContactsAdapter adapter;
-
-    // Whether or not the search query has changed since the last time the loader was refreshed
-    private boolean mSearchQueryChanged;
-
-    // Whether or not this fragment is showing in a two-pane layout
-    private boolean mIsTwoPaneLayout;
-
-    // Whether or not this is a search result view of this fragment, only used on pre-honeycomb
-    // OS versions as search results are shown in-line via Action Bar search from honeycomb onward
-    private boolean mIsSearchResultView = false;
+    //private static final String STATE_PREVIOUSLY_SELECTED_KEY =    "SELECTED_ITEM";
+//    private ChatListAdapter adapter; // The main query adapter
+//    private ImageLoader mImageLoader; // Handles loading the chat image in a background thread
+//    private String mSearchTerm; // Stores the current search query term
+//
+//    private OnChatInteractionListener mOnChatSelectedListener;
+//
+//    // Stores the previously selected search item so that on a configuration change the same item
+//    // can be reselected again
+//    private int mPreviouslySelectedSearchItem = 0;
+//    //public ArrayList<ContactList> contactList;
+//   // private ListView contactsContainer;
+//    //private ContactsAdapter adapter;
+//
+//    // Whether or not the search query has changed since the last time the loader was refreshed
+//    private boolean mSearchQueryChanged;
+//
+//    // Whether or not this fragment is showing in a two-pane layout
+      private boolean mIsTwoPaneLayout;
+//
+//    // Whether or not this is a search result view of this fragment, only used on pre-honeycomb
+//    // OS versions as search results are shown in-line via Action Bar search from honeycomb onward
+//    private boolean mIsSearchResultView = false;
 
     /*boolean dualPane;
     private static int currentCheckPosition = 0;
@@ -95,12 +94,12 @@ public class ChatListFragment extends AbstractFermatFragment {
     ListView list;
  //   static HashMap<Integer,List<String>> chatinfo=new HashMap<Integer,List<String>>();
    // static Integer[] imgid=new Integer[6];
-    String[] chatinfo={"MIGUEL@@hola como estas##24/10/2015",
-         "MAP@@chao nos vemos##25/10/2015",
-         "JOS@@Vamos a alla##24/12/2015",
-         "MIG@@hola como estas##24/10/2015",
-         "FRAN@@hola como estas##24/10/2015",
-         "GAB@@hola como estas##24/10/2015"};   //work
+    String[] chatinfo={"GABRIEL@@hola como estas##24/10/2015",
+         "MIGUEL@@chao nos vemos##25/10/2015",
+         "FRANKLIN@@A la victoria siempre##24/12/2015",
+         "MANUEL@@Tigres Campeon##24/10/2015",
+         "JOSE@@gracias totales##24/10/2015",
+         "LUIS@@Fermat Rules##20/10/2015"};   //work
     Integer[] imgid={R.drawable.ken,
     R.drawable.sas,
     R.drawable.koj,
@@ -113,26 +112,27 @@ public class ChatListFragment extends AbstractFermatFragment {
      //   chatinfo.put(0, Arrays.asList("Miguel", "Que paso?", "12/09/2007"));
         //imgid[0]=R.drawable.ken;
     }
+
     public static ChatListFragment newInstance() {
         initchatinfo();
         return new ChatListFragment();}
 
-    public ChatListFragment() {}
-
-    /*public static ChatListFragment newInstance() {
-        return new ChatListFragment();}*/
-
-    public void setSearchQuery(String query) {
-        if (TextUtils.isEmpty(query)) {
-            mIsSearchResultView = false;
-        } else {
-            mSearchTerm = query;
-            mIsSearchResultView = true;
-        }
-    }
+//    public ChatListFragment() {}
+//
+//    /*public static ChatListFragment newInstance() {
+//        return new ChatListFragment();}*/
+//
+//    public void setSearchQuery(String query) {
+//        if (TextUtils.isEmpty(query)) {
+//            mIsSearchResultView = false;
+//        } else {
+//            mSearchTerm = query;
+//            mIsSearchResultView = true;
+//        }
+//    }
 
     @Override
-    public void onCreate(Bundle savedInstanceState) {
+     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         // Check if this fragment is part of a two-pane set up or a single pane by reading a
@@ -144,17 +144,17 @@ public class ChatListFragment extends AbstractFermatFragment {
         // Let this fragment contribute menu items
         setHasOptionsMenu(true);
 
-        // Create the main contacts adapter
-        //adapter = new ChatListAdapter(getActivity());
-
-        if (savedInstanceState != null) {
-            // If we're restoring state after this fragment was recreated then
-            // retrieve previous search term and previously selected search
-            // result.
-            mSearchTerm = savedInstanceState.getString(SearchManager.QUERY);
-            mPreviouslySelectedSearchItem =
-                    savedInstanceState.getInt(STATE_PREVIOUSLY_SELECTED_KEY, 0);
-        }
+//        // Create the main contacts adapter
+//        //adapter = new ChatListAdapter(getActivity());
+//
+//        if (savedInstanceState != null) {
+//            // If we're restoring state after this fragment was recreated then
+//            // retrieve previous search term and previously selected search
+//            // result.
+//            mSearchTerm = savedInstanceState.getString(SearchManager.QUERY);
+//            mPreviouslySelectedSearchItem =
+//                    savedInstanceState.getInt(STATE_PREVIOUSLY_SELECTED_KEY, 0);
+//        }
 
 
         /*mImageLoader = new ImageLoader(getActivity(), getListPreferredItemHeight()) {
@@ -172,7 +172,7 @@ public class ChatListFragment extends AbstractFermatFragment {
         // Add a cache to the image loader
         //mImageLoader.addImageCache(getActivity().getSupportFragmentManager(), 0.1f);
 
-    }
+   }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -181,9 +181,9 @@ public class ChatListFragment extends AbstractFermatFragment {
      //   setContentView(getActivity());
         View layout = inflater.inflate(R.layout.chats_list_fragment, container, false);
 
-        //ChatListAdapter adapter=new ChatListAdapter(getActivity(), chatinfo, imgid);
+        ChatListAdapter adapter=new ChatListAdapter(getActivity(), chatinfo, imgid);
         list=(ListView)layout.findViewById(R.id.list);
-        //list.setAdapter(adapter);
+        list.setAdapter(adapter);
 
         list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 
@@ -279,15 +279,15 @@ public class ChatListFragment extends AbstractFermatFragment {
         }
 
     }*/
-
-    @Override
-    public void onPause() {
-        super.onPause();
-
-        // In the case onPause() is called during a fling the image loader is
-        // un-paused to let any remaining background work complete.
-        mImageLoader.setPauseWork(false);
-    }
+//
+//    @Override
+//    public void onPause() {
+//        super.onPause();
+//
+//        // In the case onPause() is called during a fling the image loader is
+//        // un-paused to let any remaining background work complete.
+//        mImageLoader.setPauseWork(false);
+//    }
 /*
     public void setChatsList(final ChatsList chats1) {
 
@@ -356,15 +356,15 @@ public class ChatListFragment extends AbstractFermatFragment {
     }*/
 
 
-    private void onSelectionCleared() {
-        // Uses callback to notify activity this contains this fragment
-        mOnChatSelectedListener.onSelectionCleared();
-
-        // Clears currently checked item
-        //getListView().clearChoices();
-    }
-
-
+//    private void onSelectionCleared() {
+//        // Uses callback to notify activity this contains this fragment
+//        mOnChatSelectedListener.onSelectionCleared();
+//
+//        // Clears currently checked item
+//        //getListView().clearChoices();
+//    }
+//
+//
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
 
@@ -377,9 +377,9 @@ public class ChatListFragment extends AbstractFermatFragment {
         // searches. In Android 3.0 and later, searching is done via a SearchView in the ActionBar.
         // Since the search doesn't create a new Activity to do the searching, the menu item
         // doesn't need to be turned off.
-        if (mIsSearchResultView) {
-            searchItem.setVisible(false);
-        }
+//        if (mIsSearchResultView) {
+//            searchItem.setVisible(false);
+//        }
     }
 
         // Retrieves the system search manager service
@@ -663,17 +663,17 @@ public class ChatListFragment extends AbstractFermatFragment {
         super.onResume();
     }*/
 
-    public interface OnChatInteractionListener {
-        /**
-         * Called when a chat is selected from the ListView.
-         * @param chatUri The contact Uri.
-         */
-        public void onChatSelected(Uri chatUri);
-
-        /**
-         * Called when the ListView selection is cleared like when
-         * a chat search is taking place or is finishing.
-         */
-        public void onSelectionCleared();
-    }
+//    public interface OnChatInteractionListener {
+//        /**
+//         * Called when a chat is selected from the ListView.
+//         * @param chatUri The contact Uri.
+//         */
+//        public void onChatSelected(Uri chatUri);
+//
+//        /**
+//         * Called when the ListView selection is cleared like when
+//         * a chat search is taking place or is finishing.
+//         */
+//        public void onSelectionCleared();
+//    }
 }
