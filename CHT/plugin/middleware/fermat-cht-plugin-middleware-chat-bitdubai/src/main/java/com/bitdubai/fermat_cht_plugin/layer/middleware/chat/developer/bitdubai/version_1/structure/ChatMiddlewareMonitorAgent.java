@@ -26,6 +26,7 @@ import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantGetMessageExcep
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantInitializeCHTAgent;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantSaveMessageException;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantSendChatMessageException;
+import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantSendNotificationNewIncomingMessageException;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantSetObjectException;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.UnexpectedResultReturnedFromDatabaseException;
 import com.bitdubai.fermat_cht_api.layer.middleware.interfaces.Chat;
@@ -75,19 +76,22 @@ public class ChatMiddlewareMonitorAgent implements
     PluginDatabaseSystem pluginDatabaseSystem;
     UUID pluginId;
     ChatManager chatNetworkServiceManager;
+    com.bitdubai.fermat_cht_api.layer.middleware.interfaces.ChatManager chatMiddlewareManager;
 
     public ChatMiddlewareMonitorAgent(PluginDatabaseSystem pluginDatabaseSystem,
                                     LogManager logManager,
                                     ErrorManager errorManager,
                                     EventManager eventManager,
                                     UUID pluginId,
-                                    ChatManager chatNetworkServiceManager) throws CantSetObjectException {
+                                    ChatManager chatNetworkServiceManager,
+                                      com.bitdubai.fermat_cht_api.layer.middleware.interfaces.ChatManager chatMiddlewareManager) throws CantSetObjectException {
         this.eventManager = eventManager;
         this.pluginDatabaseSystem = pluginDatabaseSystem;
         this.errorManager = errorManager;
         this.pluginId = pluginId;
         this.logManager=logManager;
         this.chatNetworkServiceManager=chatNetworkServiceManager;
+        this.chatMiddlewareManager = chatMiddlewareManager;
     }
 
     @Override
@@ -346,6 +350,8 @@ public class ChatMiddlewareMonitorAgent implements
                         //If message exists in database, this message will be update
                         saveMessage(incomingChatMetadata);
                         chatNetworkServiceManager.confirmReception(pendingTransaction.getTransactionID());
+                        //TODO TEST NOTIFICATION TO PIP
+                      //  chatMiddlewareManager.notificationNewIncomingMessage(chatNetworkServiceManager.getNetWorkServicePublicKey(),"New Message",incomingChatMetadata.getMessage());
                         chatNetworkServiceManager.sendChatMessageNewStatusNotification(
                                 chatNetworkServiceManager.getNetWorkServicePublicKey(),
                                 PlatformComponentType.NETWORK_SERVICE,
@@ -396,6 +402,12 @@ public class ChatMiddlewareMonitorAgent implements
                         "Checking the incoming chat pending transactions",
                         "Cannot get confirm the reception to local NS"
                 );
+//            } catch (CantSendNotificationNewIncomingMessageException e) {
+//                throw new CantGetPendingTransactionException(
+//                        e,
+//                        "Checking the incoming chat pending transactions",
+//                        "Cannot send Notification to PIP"
+//                );
             }
 
         }

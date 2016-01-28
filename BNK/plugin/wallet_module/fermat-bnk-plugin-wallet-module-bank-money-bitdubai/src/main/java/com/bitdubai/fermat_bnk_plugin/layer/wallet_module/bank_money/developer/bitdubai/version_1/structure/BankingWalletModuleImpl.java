@@ -1,5 +1,6 @@
 package com.bitdubai.fermat_bnk_plugin.layer.wallet_module.bank_money.developer.bitdubai.version_1.structure;
 
+import com.bitdubai.fermat_api.AsyncTransactionAgent;
 import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.enums.FiatCurrency;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
@@ -25,7 +26,7 @@ import java.util.UUID;
 /**
  * Created by memo on 08/12/15.
  */
-public class BankingWalletModuleImpl implements BankingWallet {
+public class BankingWalletModuleImpl extends AsyncTransactionAgent<BankTransactionParametersImpl> implements BankingWallet {
 
     private final BankMoneyWalletManager bankMoneyWalletManager;
     private final DepositManager depositManager;
@@ -129,4 +130,31 @@ public class BankingWalletModuleImpl implements BankingWallet {
         return null;
     }
 
+
+    @Override
+    public void processTransaction(BankTransactionParametersImpl transaction) {
+        try{
+            if(transaction.getTransactionType() == TransactionType.CREDIT)
+                this.makeDeposit(transaction);
+            else
+                this.makeWithdraw(transaction);
+
+            //TODO: Evento al GUI de actualizar la transaccion indicando que se realizo satisfactoriamente
+
+        }catch(FermatException e){
+            //TODO: Evento al GUI de actualizar el deposito indicando que hubo una falla y no se pudo realizar
+        }
+    }
+
+    @Override
+    public void makeAsyncDeposit(BankTransactionParameters bankTransactionParameters)  {
+        BankTransactionParametersImpl parameters= new BankTransactionParametersImpl(bankTransactionParameters.getTransactionId(),bankTransactionParameters.getPublicKeyPlugin(),bankTransactionParameters.getPublicKeyWallet(),bankTransactionParameters.getPublicKeyActor(),bankTransactionParameters.getAmount(),bankTransactionParameters.getAccount(),bankTransactionParameters.getCurrency(),bankTransactionParameters.getMemo(),TransactionType.CREDIT);
+        this.queueNewTransaction(parameters);
+    }
+
+    @Override
+    public void makeAsyncWithdraw(BankTransactionParameters bankTransactionParameters) {
+        BankTransactionParametersImpl parameters= new BankTransactionParametersImpl(bankTransactionParameters.getTransactionId(),bankTransactionParameters.getPublicKeyPlugin(),bankTransactionParameters.getPublicKeyWallet(),bankTransactionParameters.getPublicKeyActor(),bankTransactionParameters.getAmount(),bankTransactionParameters.getAccount(),bankTransactionParameters.getCurrency(),bankTransactionParameters.getMemo(),TransactionType.DEBIT);
+        this.queueNewTransaction(parameters);
+    }
 }

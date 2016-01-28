@@ -95,6 +95,12 @@ public class ChatMiddlewarePluginRoot extends AbstractPlugin implements
     @NeededPluginReference(platform = Platforms.CRYPTO_CURRENCY_PLATFORM, layer = Layers.SUB_APP_MODULE, plugin = Plugins.INTRA_WALLET_USER)
     private IntraUserModuleManager intraUserModuleManager;
 
+    public static EventSource EVENT_SOURCE = EventSource.MIDDLEWARE_CHAT_MANAGER;
+
+    public EventManager getEventManager() {
+        return eventManager;
+    }
+
     /**
      * Represent the database
      */
@@ -212,8 +218,8 @@ public class ChatMiddlewarePluginRoot extends AbstractPlugin implements
                 assetUserActorNetworkServiceManager);
         //Include CCP actors
         actorNetworkServiceMap.put(
-                Platforms.DIGITAL_ASSET_PLATFORM.getCode(),
-                assetUserActorNetworkServiceManager);
+                Platforms.CRYPTO_CURRENCY_PLATFORM.getCode(),
+                intraUserModuleManager);
         this.chatMiddlewareContactFactory =
                 new ChatMiddlewareContactFactory(actorNetworkServiceMap);
     }
@@ -253,12 +259,16 @@ public class ChatMiddlewarePluginRoot extends AbstractPlugin implements
                             pluginDatabaseSystem,
                             pluginId);
             chatMiddlewareDeveloperDatabaseFactory.initializeDatabase();
+            //Initialize Contact Factory
+            initializeContactFactory();
             /**
              * Initialize manager
              */
             chatMiddlewareManager =new ChatMiddlewareManager(
                     chatMiddlewareDatabaseDao,
-                    this.chatMiddlewareContactFactory);
+                    this.chatMiddlewareContactFactory,
+                    this
+            );
 
             /**
              * Init event recorder service.
@@ -277,11 +287,11 @@ public class ChatMiddlewarePluginRoot extends AbstractPlugin implements
                     errorManager,
                     eventManager,
                     pluginId,
-                    chatManager);
+                    chatManager,
+                    chatMiddlewareManager);
             openContractMonitorAgent.start();
 
-            //Initialize Contact Factory
-            initializeContactFactory();
+
 
             this.serviceStatus = ServiceStatus.STARTED;
             //Test method
@@ -289,7 +299,7 @@ public class ChatMiddlewarePluginRoot extends AbstractPlugin implements
             //sendMessageTest();
             //receiveMessageTest();
             //identitiesTest();
-            discoveryTest();
+            //discoveryTest();
 
         } catch (CantInitializeDatabaseException exception) {
             throw new CantStartPluginException(
@@ -389,6 +399,7 @@ public class ChatMiddlewarePluginRoot extends AbstractPlugin implements
             System.out.println("Exception in chat middleware test: "+e.getMessage());
             e.printStackTrace();
         }
+        System.out.println("ChatPLuginRoot MY PUBLIC KEY- "+chatManager.getNetWorkServicePublicKey());
         System.out.println("-------------------REGISTED CHAT NETWORK SERVICE PUBLIC KEYS------------------");
         for (String key : publicKey){
             System.out.println(key);
@@ -453,7 +464,7 @@ public class ChatMiddlewarePluginRoot extends AbstractPlugin implements
             System.out.println("Discovery Test: Init*****");
             int counter=0;
             for(Contact contact : contactList){
-                System.out.println("Discovery Test:"+contact);
+                System.out.println("Discovery Test: Contact "+counter+"\n"+contact);
                 counter++;
             }
         } catch (Exception exception){
