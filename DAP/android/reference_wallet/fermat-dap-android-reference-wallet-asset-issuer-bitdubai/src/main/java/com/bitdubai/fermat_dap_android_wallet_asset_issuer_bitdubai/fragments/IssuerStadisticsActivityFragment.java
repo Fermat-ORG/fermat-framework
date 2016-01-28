@@ -169,8 +169,8 @@ public class IssuerStadisticsActivityFragment extends FermatWalletListFragment<D
                     .setIconRes(R.drawable.asset_issuer)
                     .setVIewColor(R.color.dap_issuer_view_color)
                     .setTitleTextColor(R.color.dap_issuer_view_color)
-                    .setSubTitle("Asset Issuer Statistics.")
-                    .setBody("*GIVE ME A TEXT")
+//                    .setSubTitle("Asset Issuer Statistics.")
+//                    .setBody("*GIVE ME A TEXT")
                     .setTemplateType(PresentationDialog.TemplateType.TYPE_PRESENTATION_WITHOUT_IDENTITIES)
                     .setIsCheckEnabled(checkButton)
                     .build();

@@ -128,10 +128,8 @@ public class RedeemPointDetailActivityFragment extends FermatWalletListFragment<
                     .setIconRes(R.drawable.redeem_point)
                     .setVIewColor(R.color.dap_redeem_point_view_color)
                     .setTitleTextColor(R.color.dap_redeem_point_view_color)
-                    .setSubTitle("Assets Detail.")
-                    .setBody("You can review in more detail the asset that has been redeemed by an user.\n\n" +
-                            "An asset might be redeemed by many users so statistics and tracking of the users is shown here.\n\n " +
-                            "Every asset redeem at you, is also notified to the original creator of the Asset.")
+                    .setSubTitle(R.string.dap_redeem_wallet_detail_subTitle)
+                    .setBody(R.string.dap_redeem_wallet_detail_body)
                     .setTemplateType(PresentationDialog.TemplateType.TYPE_PRESENTATION_WITHOUT_IDENTITIES)
                     .setIsCheckEnabled(checkButton)
                     .build();

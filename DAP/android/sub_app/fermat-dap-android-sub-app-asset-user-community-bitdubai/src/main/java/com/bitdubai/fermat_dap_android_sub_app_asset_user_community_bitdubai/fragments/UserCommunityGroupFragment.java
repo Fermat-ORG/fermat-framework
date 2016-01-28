@@ -293,8 +293,8 @@ public class UserCommunityGroupFragment extends AbstractFermatFragment implement
                 .setIconRes(R.drawable.asset_user_comunity)
                 .setVIewColor(R.color.dap_community_user_view_color)
                 .setTitleTextColor(R.color.dap_community_user_view_color)
-                .setSubTitle("Welcome to the Asset User Community Groups.")
-                .setBody("From here you can administrate and organize your users groups")
+                .setSubTitle(R.string.dap_user_community_group_subTitle)
+                .setBody(R.string.dap_user_community_group_body)
                 .setTemplateType(PresentationDialog.TemplateType.TYPE_PRESENTATION_WITHOUT_IDENTITIES)
                 .setIsCheckEnabled(checkButton)
                 .build();

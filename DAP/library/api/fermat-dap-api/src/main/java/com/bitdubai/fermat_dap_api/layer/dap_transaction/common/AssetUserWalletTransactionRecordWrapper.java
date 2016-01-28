@@ -51,7 +51,7 @@ public class AssetUserWalletTransactionRecordWrapper implements AssetUserWalletT
         this.actorToPublicKey = actorToPublicKey;
         this.actorFromType = Actors.INTRA_USER;
         this.actorToType = Actors.DAP_ASSET_ISSUER;
-        this.amount = cryptoGenesisTransaction.getCryptoAmount();
+        this.amount = digitalAssetMetadata.getDigitalAsset().getGenesisAmount();
         this.transactionId = cryptoGenesisTransaction.getTransactionHash();
         this.digitalAssetMetadata = digitalAssetMetadata;
     }
@@ -148,8 +148,8 @@ public class AssetUserWalletTransactionRecordWrapper implements AssetUserWalletT
     }
 
     @Override
-    public String getDigitalAssetMetadataHash() {
-        return digitalAssetMetadata.getDigitalAssetHash();
+    public String getGenesisTransaction() {
+        return digitalAssetMetadata.getGenesisTransaction();
     }
 
     @Override

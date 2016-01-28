@@ -229,7 +229,6 @@ public class DigitalAssetDistributor extends AbstractDigitalAssetSwap {
                 actorAssetUser.getActorPublicKey(),
                 actorAddress);
         System.out.println("ASSET DISTRIBUTION registered in database");
-        persistInLocalStorage(digitalAssetMetadata);
     }
 
     @Override
