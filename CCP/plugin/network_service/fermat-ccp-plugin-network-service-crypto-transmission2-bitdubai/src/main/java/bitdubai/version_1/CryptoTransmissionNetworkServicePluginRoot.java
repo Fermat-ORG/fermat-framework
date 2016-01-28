@@ -1436,13 +1436,11 @@ public class CryptoTransmissionNetworkServicePluginRoot extends AbstractPlugin i
             String pkAux = cryptoTransmissionMetadataRecord.getDestinationPublicKey();
             cryptoTransmissionMetadataRecord.setDestinationPublickKey(cryptoTransmissionMetadataRecord.getSenderPublicKey());
             cryptoTransmissionMetadataRecord.setSenderPublicKey(pkAux);
-            outgoingNotificationDao.saveCryptoTransmissionMetadata(cryptoTransmissionMetadataRecord);
+            outgoingNotificationDao.update(cryptoTransmissionMetadataRecord);
         }
         catch(CantUpdateRecordDataBaseException e) {
             throw  new CantSetToCreditedInWalletException("Can't Set Metadata To Credited In Wallet Exception",e,"","Can't update record");
         } catch (PendingRequestNotFoundException e) {
-            e.printStackTrace();
-        } catch (CantSaveCryptoTransmissionMetadatatException e) {
             e.printStackTrace();
         }
     }
@@ -1464,15 +1462,13 @@ public class CryptoTransmissionNetworkServicePluginRoot extends AbstractPlugin i
             String pkAux = cryptoTransmissionMetadataRecord.getDestinationPublicKey();
             cryptoTransmissionMetadataRecord.setDestinationPublickKey(cryptoTransmissionMetadataRecord.getSenderPublicKey());
             cryptoTransmissionMetadataRecord.setSenderPublicKey(pkAux);
-            outgoingNotificationDao.saveCryptoTransmissionMetadata(cryptoTransmissionMetadataRecord);
+            outgoingNotificationDao.update(cryptoTransmissionMetadataRecord);
 
 
         }
         catch(CantUpdateRecordDataBaseException e) {
             throw  new CantSetToSeenByCryptoVaultException("Can't Set Metadata To Seen By Crypto Vault Exception",e,"","Can't update record");
         } catch (PendingRequestNotFoundException e) {
-            e.printStackTrace();
-        } catch (CantSaveCryptoTransmissionMetadatatException e) {
             e.printStackTrace();
         }
     }
@@ -1486,6 +1482,9 @@ public class CryptoTransmissionNetworkServicePluginRoot extends AbstractPlugin i
             throw new CantGetTransactionStateException("Cant get metadata",e,"","");
         } catch (PendingRequestNotFoundException e) {
             throw new CantGetTransactionStateException("Metadata not found",e,"","");
+        } catch (Exception e){
+            throw new CantGetTransactionStateException("Uknown exception",e,"","");
+
         }
     }
 
