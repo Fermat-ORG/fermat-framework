@@ -851,7 +851,6 @@ public class CryptoTransmissionNetworkServicePluginRoot extends AbstractPlugin i
 
                     break;
                 case RESPONSE:
-                    //CryptoTransmissionResponseMessage cryptoTransmissionResponseMessage = (CryptoTransmissionMessage) cryptoTransmissionMetadata;
 
                     CryptoTransmissionResponseMessage cryptoTransmissionResponseMessage = new CryptoTransmissionResponseMessage(cryptoTransmissionMetadata.getTransactionId(),
                             cryptoTransmissionMetadata.getCryptoTransmissionMessageType(),
