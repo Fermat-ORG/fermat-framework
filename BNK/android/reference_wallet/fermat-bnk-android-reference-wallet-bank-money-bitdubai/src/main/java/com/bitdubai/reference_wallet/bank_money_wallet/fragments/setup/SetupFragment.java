@@ -14,7 +14,9 @@ import android.widget.LinearLayout;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractFermatFragment;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Wallets;
+import com.bitdubai.fermat_bnk_api.layer.bnk_wallet_module.BankMoneyWalletPreferenceSettings;
 import com.bitdubai.fermat_bnk_api.layer.bnk_wallet_module.interfaces.BankMoneyWalletModuleManager;
+import com.bitdubai.fermat_csh_api.layer.csh_wallet_module.CashMoneyWalletPreferenceSettings;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedWalletExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 import com.bitdubai.reference_wallet.bank_money_wallet.R;
@@ -27,6 +29,7 @@ public class SetupFragment extends AbstractFermatFragment implements View.OnClic
 
     private BankMoneyWalletModuleManager moduleManager;
     private ErrorManager errorManager;
+    private BankMoneyWalletPreferenceSettings walletSettings;
 
     EditText bankName;
 
@@ -47,7 +50,21 @@ public class SetupFragment extends AbstractFermatFragment implements View.OnClic
             if (errorManager != null)
                 errorManager.reportUnexpectedWalletException(Wallets.BNK_BANKING_WALLET, UnexpectedWalletExceptionSeverity.DISABLES_THIS_FRAGMENT, e);
         }
+        //Obtain walletSettings or create new wallet settings if first time opening wallet
+        walletSettings = null;
+        try {
+            walletSettings = this.moduleManager.getSettingsManager().loadAndGetSettings(appSession.getAppPublicKey());
+        }catch (Exception e){ walletSettings = null; }
 
+        if(walletSettings == null){
+            walletSettings = new BankMoneyWalletPreferenceSettings();
+            walletSettings.setIsPresentationHelpEnabled(true);
+            try {
+                moduleManager.getSettingsManager().persistSettings(appSession.getAppPublicKey(),walletSettings);
+            }catch (Exception e){
+                e.printStackTrace();
+            }
+        }
     }
 
     @Override
@@ -59,23 +76,23 @@ public class SetupFragment extends AbstractFermatFragment implements View.OnClic
         okBtn.setOnClickListener(this);
 
         /*if(moduleManager.getBankingWallet().getBankName()!=null){
+            getRuntimeManager().changeStartActivity(0);
             changeActivity(Activities.BNK_BANK_MONEY_WALLET_HOME,appSession.getAppPublicKey());
         }*/
-        /*new Handler().postDelayed(new Runnable() {
+        new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
                 //If wallet already exists, go directly to wallet
-                if(moduleManager.getBankingWallet().getBankName()!=null){
-                    changeActivity(Activities.BNK_BANK_MONEY_WALLET_HOME,appSession.getAppPublicKey());
-                }
-                else {  //otherwise, fade in setup page
+                if (moduleManager.getBankingWallet().getBankName() != null) {
+                    changeActivity(Activities.BNK_BANK_MONEY_WALLET_HOME, appSession.getAppPublicKey());
+                } else {  //otherwise, fade in setup page
                     Animation fadeInAnimation = AnimationUtils.loadAnimation(getActivity(), R.anim.fade_in);
                     setupContainer.setVisibility(View.VISIBLE);
                     setupContainer.startAnimation(fadeInAnimation);
                 }
             }
-        }, 500);*/
-        setupContainer.setVisibility(View.VISIBLE);
+        }, 800);
+        //setupContainer.setVisibility(View.VISIBLE);
         return layout;
     }
 

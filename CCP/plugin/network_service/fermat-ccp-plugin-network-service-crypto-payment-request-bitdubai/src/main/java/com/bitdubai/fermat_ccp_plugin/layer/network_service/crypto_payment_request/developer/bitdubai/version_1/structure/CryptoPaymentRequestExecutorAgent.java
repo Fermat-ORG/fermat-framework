@@ -216,8 +216,8 @@ public class CryptoPaymentRequestExecutorAgent extends FermatAgent {
                                 buildJsonInformationMessage(cpr),
                                 cpr.getActorPublicKey(),
                                 cpr.getActorType(),
-                                cpr.getActorPublicKey(),
-                                cpr.getActorType()
+                                cpr.getIdentityPublicKey(),
+                                cpr.getIdentityType()
                         )) {
                             confirmRequest(cpr.getRequestId());
                             System.out.println("********** Crypto Payment Request NS -> Executor Agent -> Sending Refusal. PROCESSING_SEND -> CONFIRM REQUEST -> OK.");

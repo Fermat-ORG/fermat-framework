@@ -70,6 +70,8 @@ public class CryptoBrokerIdentityInfoAdapter
             holder.setStatus("Not visible");
         }
 
+        holder.itemView.setMinimumHeight(800);
+
     }
 
     @Override

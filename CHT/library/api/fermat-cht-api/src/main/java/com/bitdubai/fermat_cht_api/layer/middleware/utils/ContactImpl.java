@@ -3,7 +3,7 @@ package com.bitdubai.fermat_cht_api.layer.middleware.utils;
 import com.bitdubai.fermat_api.layer.all_definition.components.enums.PlatformComponentType;
 import com.bitdubai.fermat_cht_api.layer.middleware.interfaces.Contact;
 
-import java.sql.Date;
+import java.util.Date;
 import java.util.UUID;
 
 /**
@@ -91,5 +91,17 @@ public class ContactImpl implements Contact {
     @Override
     public void setCreationDate(Date creationDate) {
         this.creationDate = creationDate;
+    }
+
+    @Override
+    public String toString() {
+        return "ContactImpl{" +
+                "contactId=" + contactId +
+                ", remoteName='" + remoteName + '\'' +
+                ", alias='" + alias + '\'' +
+                ", remoteActorType=" + remoteActorType +
+                ", remoteActorPublicKey='" + remoteActorPublicKey + '\'' +
+                ", creationDate=" + creationDate +
+                '}';
     }
 }

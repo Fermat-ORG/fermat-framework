@@ -562,11 +562,16 @@ public class ChatMetaDataDao {
              * 1- Create the record to the entity
              */
             DatabaseTableRecord entityRecord = constructFrom(entity);
+            DatabaseTableFilter filter = getDatabaseTable().getEmptyTableFilter();
+            filter.setType(DatabaseFilterType.EQUAL);
+            filter.setValue(entity.getTransactionId().toString());
+            filter.setColumn(NetworkServiceChatNetworkServiceDatabaseConstants.CHAT_FIRST_KEY_COLUMN);
 
             /*
              * 2.- Create a new transaction and execute
              */
             DatabaseTransaction transaction = getDataBase().newTransaction();
+            getDatabaseTable().addStringFilter(filter.getColumn(), filter.getValue(), filter.getType());
             transaction.addRecordToUpdate(getDatabaseTable(), entityRecord);
             getDataBase().executeTransaction(transaction);
 

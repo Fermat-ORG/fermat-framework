@@ -12,6 +12,7 @@ import com.bitdubai.fermat_android_api.layer.definition.wallet.utils.ImagesUtils
 import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatButton;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView;
 import com.bitdubai.fermat_android_api.ui.holders.FermatViewHolder;
+import com.bitdubai.fermat_cbp_api.all_definition.enums.ContractDetailType;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.ContractStatus;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.common.interfaces.ContractBasicInformation;
 import com.bitdubai.reference_wallet.crypto_customer_wallet.R;
@@ -66,9 +67,13 @@ public class ContractDetailViewHolder extends FermatViewHolder {
 
     public void bind(ContractDetail itemInfo) {
         ContractStatus contractStatus = itemInfo.getContractStatus();
-
-        itemView.setBackgroundColor(getStatusBackgroundColor(contractStatus));
-        switch (itemInfo.getContractDetailType()){
+        ContractDetailType contractDetailType=itemInfo.getContractDetailType();
+        ContractStatus visualContractStatus=getContractStatusByContractDetailType(
+                contractStatus,
+                contractDetailType
+        );
+        itemView.setBackgroundColor(getStatusBackgroundColor(visualContractStatus));
+        switch (contractDetailType){
             case CUSTOMER_DETAIL:
                 stepNumber.setImageResource(R.drawable.bg_detail_number_01);
                 textDescription.setText("Customer");
@@ -80,7 +85,7 @@ public class ContractDetailViewHolder extends FermatViewHolder {
 
         }
         //TODO: here we can see the contract status
-        textButton.setText(contractStatus.getFriendlyName());
+        textButton.setText(visualContractStatus.getFriendlyName());
         /*customerName.setText(itemInfo.getCryptoCustomerAlias());
         customerImage.setImageDrawable(getImgDrawable(itemInfo.getCryptoCustomerImage()));
 
@@ -93,6 +98,58 @@ public class ContractDetailViewHolder extends FermatViewHolder {
         CharSequence date = DateFormat.format("dd MMM yyyy", itemInfo.getLastUpdate());
         lastUpdateDate.setText(date);*/
     }
+
+    /**
+     * This method returns the friendly name from a contract status by contract detail type.
+     * @param contractStatus
+     * @param contractDetailType
+     * @return
+     */
+    private ContractStatus getContractStatusByContractDetailType(
+            ContractStatus contractStatus,
+            ContractDetailType contractDetailType){
+        switch (contractStatus){
+            case CANCELLED:
+                return ContractStatus.CANCELLED;
+            case COMPLETED:
+                return ContractStatus.COMPLETED;
+            case MERCHANDISE_SUBMIT:
+                switch (contractDetailType){
+                    case BROKER_DETAIL:
+                        return ContractStatus.MERCHANDISE_SUBMIT;
+                    case CUSTOMER_DETAIL:
+                        return ContractStatus.PAYMENT_SUBMIT;
+                }
+            case PAUSED:
+                return ContractStatus.PAUSED;
+            case PENDING_MERCHANDISE:
+                switch (contractDetailType){
+                    case BROKER_DETAIL:
+                        return ContractStatus.PENDING_MERCHANDISE;
+                    case CUSTOMER_DETAIL:
+                        return ContractStatus.PAYMENT_SUBMIT;
+                }
+            case PENDING_PAYMENT:
+                switch (contractDetailType){
+                    case BROKER_DETAIL:
+                        return ContractStatus.PENDING_MERCHANDISE;
+                    case CUSTOMER_DETAIL:
+                        return ContractStatus.PENDING_PAYMENT;
+                }
+            case PAYMENT_SUBMIT:
+                switch (contractDetailType){
+                    case BROKER_DETAIL:
+                        return ContractStatus.PENDING_MERCHANDISE;
+                    case CUSTOMER_DETAIL:
+                        return ContractStatus.PAYMENT_SUBMIT;
+                }
+            case READY_TO_CLOSE:
+                return ContractStatus.READY_TO_CLOSE;
+            default:
+                return ContractStatus.PAUSED;
+        }
+    }
+
     @NonNull
     private String getSoldQuantityAndCurrencyText(ContractDetail itemInfo, ContractStatus contractStatus) {
         String sellingOrSoldText = getSellingOrSoldText(contractStatus);

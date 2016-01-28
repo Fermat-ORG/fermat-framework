@@ -21,8 +21,6 @@ import com.google.gson.reflect.TypeToken;
 
 import org.apache.commons.lang.ClassUtils;
 import org.apache.log4j.Logger;
-import org.json.JSONObject;
-import org.restlet.ext.json.JsonRepresentation;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -30,7 +28,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
 
-import javax.ws.rs.Consumes;
 import javax.ws.rs.FormParam;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
