@@ -95,6 +95,12 @@ public class ChatMiddlewarePluginRoot extends AbstractPlugin implements
     @NeededPluginReference(platform = Platforms.CRYPTO_CURRENCY_PLATFORM, layer = Layers.SUB_APP_MODULE, plugin = Plugins.INTRA_WALLET_USER)
     private IntraUserModuleManager intraUserModuleManager;
 
+    public static EventSource EVENT_SOURCE = EventSource.MIDDLEWARE_CHAT_MANAGER;
+
+    public EventManager getEventManager() {
+        return eventManager;
+    }
+
     /**
      * Represent the database
      */
@@ -260,7 +266,9 @@ public class ChatMiddlewarePluginRoot extends AbstractPlugin implements
              */
             chatMiddlewareManager =new ChatMiddlewareManager(
                     chatMiddlewareDatabaseDao,
-                    this.chatMiddlewareContactFactory);
+                    this.chatMiddlewareContactFactory,
+                    this
+            );
 
             /**
              * Init event recorder service.
@@ -279,7 +287,8 @@ public class ChatMiddlewarePluginRoot extends AbstractPlugin implements
                     errorManager,
                     eventManager,
                     pluginId,
-                    chatManager);
+                    chatManager,
+                    chatMiddlewareManager);
             openContractMonitorAgent.start();
 
 
@@ -290,7 +299,7 @@ public class ChatMiddlewarePluginRoot extends AbstractPlugin implements
             //sendMessageTest();
             //receiveMessageTest();
             //identitiesTest();
-            discoveryTest();
+            //discoveryTest();
 
         } catch (CantInitializeDatabaseException exception) {
             throw new CantStartPluginException(
@@ -390,6 +399,7 @@ public class ChatMiddlewarePluginRoot extends AbstractPlugin implements
             System.out.println("Exception in chat middleware test: "+e.getMessage());
             e.printStackTrace();
         }
+        System.out.println("ChatPLuginRoot MY PUBLIC KEY- "+chatManager.getNetWorkServicePublicKey());
         System.out.println("-------------------REGISTED CHAT NETWORK SERVICE PUBLIC KEYS------------------");
         for (String key : publicKey){
             System.out.println(key);
