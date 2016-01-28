@@ -111,4 +111,9 @@ public class ChatSupAppModuleManager implements ChatManager {
     public void deleteContact(Contact contact) throws CantDeleteContactException {
         chatManager.deleteContact(contact);
     }
+
+    @Override
+    public List<Contact> discoverActorsRegistered() throws CantGetContactException {
+        return chatManager.discoverActorsRegistered();
+    }
 }

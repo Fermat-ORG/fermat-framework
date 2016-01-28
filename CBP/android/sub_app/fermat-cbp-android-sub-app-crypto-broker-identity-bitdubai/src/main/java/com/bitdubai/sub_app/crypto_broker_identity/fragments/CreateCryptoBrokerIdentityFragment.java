@@ -11,6 +11,7 @@ import android.provider.MediaStore;
 import android.support.v4.graphics.drawable.RoundedBitmapDrawable;
 import android.util.Log;
 import android.view.ContextMenu;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -56,9 +57,10 @@ public class CreateCryptoBrokerIdentityFragment extends AbstractFermatFragment {
     private EditText mBrokerName;
     private ImageView mBrokerImage;
 
-    private Button camara;
-    private Button galeria;
+    private ImageView camara;
+    private ImageView galeria;
 
+    private boolean actualizable;
 
     public static CreateCryptoBrokerIdentityFragment newInstance() {
         return new CreateCryptoBrokerIdentityFragment();
@@ -91,23 +93,27 @@ public class CreateCryptoBrokerIdentityFragment extends AbstractFermatFragment {
      */
     private void initViews(View layout) {
 
+        actualizable = true;
+
         mBrokerName = (EditText) layout.findViewById(R.id.crypto_broker_name);
+        mBrokerName.clearFocus();
         mBrokerName.requestFocus();
-
-        camara = (Button) layout.findViewById(R.id.camara);
-        galeria = (Button) layout.findViewById(R.id.galeria);
-
-        mBrokerImage = (ImageView) layout.findViewById(R.id.crypto_broker_image);
-        RoundedBitmapDrawable roundedBitmap = ImagesUtils.getRoundedBitmap(getResources(), R.drawable.img_new_user_camera);
-        mBrokerImage.setImageDrawable(roundedBitmap);
-        mBrokerImage.setOnClickListener(new View.OnClickListener() {
+        mBrokerName.selectAll();
+        mBrokerName.setOnKeyListener(new View.OnKeyListener() {
             @Override
-            public void onClick(View view) {
-                registerForContextMenu(mBrokerImage);
-                getActivity().openContextMenu(mBrokerImage);
+            public boolean onKey(View v, int keyCode, KeyEvent event) {
+                if (keyCode == 4) {
+                    if (actualizable) {
+                        createNewIdentityInBackDevice();
+                        actualizable = false;
+                    }
+                }
+
+                return false;
             }
         });
 
+        camara = (ImageView) layout.findViewById(R.id.camara);
         camara.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -115,6 +121,7 @@ public class CreateCryptoBrokerIdentityFragment extends AbstractFermatFragment {
             }
         });
 
+        galeria = (ImageView) layout.findViewById(R.id.galeria);
         galeria.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -122,18 +129,32 @@ public class CreateCryptoBrokerIdentityFragment extends AbstractFermatFragment {
             }
         });
 
-        Button createButton = (Button) layout.findViewById(R.id.create_crypto_broker_button);
-        createButton.setOnClickListener(new View.OnClickListener() {
+        mBrokerImage = (ImageView) layout.findViewById(R.id.crypto_broker_image);
+        mBrokerImage.setImageResource(R.drawable.img_new_user_camera);
+        /*
+        //RoundedBitmapDrawable roundedBitmap = ImagesUtils.getRoundedBitmap(getResources(), R.drawable.img_new_user_camera);
+        mBrokerImage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                createNewIdentity();
+                //registerForContextMenu(mBrokerImage);
+                //getActivity().openContextMenu(mBrokerImage);
             }
         });
+        */
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        if(actualizable) {
+            createNewIdentityInBackDevice();
+            actualizable = false;
+        }
     }
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(  requestCode, resultCode, data);
+        super.onActivityResult(requestCode, resultCode, data);
         if (resultCode == Activity.RESULT_OK) {
             ImageView pictureView = mBrokerImage;
 
@@ -148,7 +169,7 @@ public class CreateCryptoBrokerIdentityFragment extends AbstractFermatFragment {
                         if (isAttached) {
                             ContentResolver contentResolver = getActivity().getContentResolver();
                             cryptoBrokerBitmap = MediaStore.Images.Media.getBitmap(contentResolver, selectedImage);
-                            cryptoBrokerBitmap = Bitmap.createScaledBitmap(cryptoBrokerBitmap, pictureView.getWidth(), pictureView.getHeight(), true);
+                            //cryptoBrokerBitmap = Bitmap.createScaledBitmap(cryptoBrokerBitmap, pictureView.getWidth(), pictureView.getHeight(), true);
                         }
                     } catch (Exception ex) {
                         errorManager.reportUnexpectedUIException(UISource.VIEW, UnexpectedUIExceptionSeverity.UNSTABLE, ex);
@@ -186,40 +207,68 @@ public class CreateCryptoBrokerIdentityFragment extends AbstractFermatFragment {
         return super.onContextItemSelected(item);
     }
 
+    private void createNewIdentityInBackDevice(){
+        String brokerNameText = mBrokerName.getText().toString();
+        if(brokerNameText.trim().equals("")) {
+           // Toast.makeText(getActivity(), "Please enter a profile name for the identity.", Toast.LENGTH_LONG).show();
+        }else{
+            if (cryptoBrokerBitmap != null){
+                byte[] imgInBytes = ImagesUtils.toByteArray(cryptoBrokerBitmap);
+                CreateBrokerIdentityExecutor executor = new CreateBrokerIdentityExecutor(appSession, brokerNameText, imgInBytes);
+                int resultKey = executor.execute();
+                switch (resultKey) {
+                    case SUCCESS:
+                        Toast.makeText(getActivity(), "Crypto Broker Identity Created.", Toast.LENGTH_LONG).show();
+                    break;
+                    case EXCEPTION_THROWN:
+                        //Toast.makeText(getActivity(), "Error creating identity.", Toast.LENGTH_LONG).show();
+                    break;
+                    case INVALID_ENTRY_DATA:
+                       // Toast.makeText(getActivity(), "Cannot create identity due to wrong data.", Toast.LENGTH_LONG).show();
+                    break;
+                    case MISSING_IMAGE:
+                        //Toast.makeText(getActivity(), "Please select a valid profile image for the identity.", Toast.LENGTH_LONG).show();
+                    break;
+                }
+            }else{
+               // Toast.makeText(getActivity(), "Please select a profile image for the identity.", Toast.LENGTH_LONG).show();
+            }
+        }
+    }
+
     /**
      * Crea una nueva identidad para un crypto broker
      */
     private void createNewIdentity() {
-
         String brokerNameText = mBrokerName.getText().toString();
-
-        byte[] imgInBytes = new byte[0];
-
-        if (cryptoBrokerBitmap != null)
-            imgInBytes = ImagesUtils.toByteArray(cryptoBrokerBitmap);
-
-        CreateBrokerIdentityExecutor executor = new CreateBrokerIdentityExecutor(appSession, brokerNameText, imgInBytes);
-        int resultKey = executor.execute();
-
-        switch (resultKey) {
-            case SUCCESS:
-                changeActivity(Activities.CBP_SUB_APP_CRYPTO_BROKER_IDENTITY.getCode(), appSession.getAppPublicKey());
-                break;
-            case EXCEPTION_THROWN:
-                Toast.makeText(getActivity(), "Error creating identity.", Toast.LENGTH_LONG).show();
-                break;
-            case INVALID_ENTRY_DATA:
-                Toast.makeText(getActivity(), "Cannot create identity due to wrong data.", Toast.LENGTH_LONG).show();
-                break;
-            case MISSING_IMAGE:
-                Toast.makeText(getActivity(), "Please select a valid profile image for the identity.", Toast.LENGTH_LONG).show();
-                break;
+        if(brokerNameText.trim().equals("")) {
+            Toast.makeText(getActivity(), "Please enter a profile name for the identity.", Toast.LENGTH_LONG).show();
+        }else{
+            if (cryptoBrokerBitmap != null){
+                byte[] imgInBytes = ImagesUtils.toByteArray(cryptoBrokerBitmap);
+                CreateBrokerIdentityExecutor executor = new CreateBrokerIdentityExecutor(appSession, brokerNameText, imgInBytes);
+                int resultKey = executor.execute();
+                switch (resultKey) {
+                    case SUCCESS:
+                        changeActivity(Activities.CBP_SUB_APP_CRYPTO_BROKER_IDENTITY.getCode(), appSession.getAppPublicKey());
+                        break;
+                    case EXCEPTION_THROWN:
+                        Toast.makeText(getActivity(), "Error creating identity.", Toast.LENGTH_LONG).show();
+                        break;
+                    case INVALID_ENTRY_DATA:
+                        Toast.makeText(getActivity(), "Cannot create identity due to wrong data.", Toast.LENGTH_LONG).show();
+                        break;
+                    case MISSING_IMAGE:
+                        Toast.makeText(getActivity(), "Please select a valid profile image for the identity.", Toast.LENGTH_LONG).show();
+                        break;
+                }
+            }else{
+                Toast.makeText(getActivity(), "Please select a profile image for the identity.", Toast.LENGTH_LONG).show();
+            }
         }
     }
 
     private void dispatchTakePictureIntent() {
-        Log.i(TAG, "Opening Camera app to take the picture...");
-
         Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
         if (takePictureIntent.resolveActivity(getActivity().getPackageManager()) != null) {
             startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE);
@@ -227,8 +276,6 @@ public class CreateCryptoBrokerIdentityFragment extends AbstractFermatFragment {
     }
 
     private void loadImageFromGallery() {
-        Log.i(TAG, "Loading Image from Gallery...");
-
         Intent loadImageIntent = new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
         startActivityForResult(loadImageIntent, REQUEST_LOAD_IMAGE);
     }

@@ -37,12 +37,17 @@ import com.bitdubai.reference_wallet.crypto_customer_wallet.common.adapters.Open
 import com.bitdubai.reference_wallet.crypto_customer_wallet.common.dialogs.ClauseTextDialog;
 import com.bitdubai.reference_wallet.crypto_customer_wallet.common.holders.open_negotiation.ClauseViewHolder;
 import com.bitdubai.reference_wallet.crypto_customer_wallet.common.holders.open_negotiation.FooterViewHolder;
+import com.bitdubai.reference_wallet.crypto_customer_wallet.common.models.BrokerCurrencyQuotation;
+import com.bitdubai.reference_wallet.crypto_customer_wallet.common.models.BrokerCurrencyQuotationImpl;
+import com.bitdubai.reference_wallet.crypto_customer_wallet.common.models.TestData;
 import com.bitdubai.reference_wallet.crypto_customer_wallet.fragments.common.SimpleListDialogFragment;
 import com.bitdubai.reference_wallet.crypto_customer_wallet.session.CryptoCustomerWalletSession;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
@@ -66,9 +71,11 @@ public class OpenNegotiationDetailsFragment extends AbstractFermatFragment<Crypt
     private ErrorManager errorManager;
     private OpenNegotiationAdapter adapter;
     private CustomerBrokerNegotiationInformation negotiationInfo;
+    private BrokerCurrencyQuotation brokerCurrencyQuotation;
 
     private ArrayList<String> paymentMethods; // test data
     private ArrayList<Currency> currencies; // test data
+    private List<BrokerCurrencyQuotationImpl> brokerCurrencyQuotationlist;
 
     public OpenNegotiationDetailsFragment() {
         // Required empty public constructor
@@ -90,13 +97,23 @@ public class OpenNegotiationDetailsFragment extends AbstractFermatFragment<Crypt
         currencies = new ArrayList<>();
         currencies.add(FiatCurrency.VENEZUELAN_BOLIVAR);
         currencies.add(FiatCurrency.US_DOLLAR);
+        currencies.add(FiatCurrency.ARGENTINE_PESO);
         currencies.add(CryptoCurrency.BITCOIN);
+        currencies.add(CryptoCurrency.LITECOIN);
 
         try {
 
             CryptoCustomerWalletModuleManager moduleManager = appSession.getModuleManager();
             walletManager = moduleManager.getCryptoCustomerWallet(appSession.getAppPublicKey());
             errorManager = appSession.getErrorManager();
+
+            //LIST OF MAKET RATE OF BROKER
+            brokerCurrencyQuotationlist = TestData.getMarketRateForCurrencyTest();
+            brokerCurrencyQuotation = new BrokerCurrencyQuotation(brokerCurrencyQuotationlist);
+
+            //REMOVE CURRENCY TO PAY OF CURRENCY LIST
+            //no lo esta quitando
+            removeCurrency();
 
         } catch (Exception e) {
             Log.e(TAG, e.getMessage(), e);
@@ -121,19 +138,33 @@ public class OpenNegotiationDetailsFragment extends AbstractFermatFragment<Crypt
 //        Toast.makeText(getActivity(), "PROCESS CLAUSE.", Toast.LENGTH_LONG).show();
         SimpleListDialogFragment dialogFragment;
         final ClauseType type = clause.getType();
+        ClauseTextDialog clauseTextDialog = null;
         switch (type) {
             case BROKER_CURRENCY:
                 dialogFragment = new SimpleListDialogFragment<>();
                 dialogFragment.configure("Currencies", currencies);
                 dialogFragment.setListener(new SimpleListDialogFragment.ItemSelectedListener<Currency>() {
                     @Override
-                    public void onItemSelected(Currency selectedItem) {
-                        putClause(clause, selectedItem.getCode());
-                        adapter.changeDataSet(negotiationInfo);
-                    }
+                    public void onItemSelected(Currency selectedItem) { actionListenerBrokerCurrency(clause, selectedItem); }
                 });
 
                 dialogFragment.show(getFragmentManager(), "brokerCurrenciesDialog");
+                break;
+
+            case BROKER_CURRENCY_QUANTITY:
+                clauseTextDialog = new ClauseTextDialog(getActivity(), appSession, appResourcesProviderManager);
+
+                clauseTextDialog.setAcceptBtnListener(new ClauseTextDialog.OnClickAcceptListener() {
+                    @Override
+                    public void onClick(String newValue) { actionListenerBrokerCurrencyQuantity(clause, newValue); }
+                });
+
+                clauseTextDialog.setEditTextValue(clause.getValue());
+                clauseTextDialog.configure(
+                        type.equals(ClauseType.EXCHANGE_RATE) ? R.string.ccw_your_exchange_rate : R.string.ccw_amount_to_buy,
+                        type.equals(ClauseType.EXCHANGE_RATE) ? R.string.amount : R.string.ccw_value);
+
+                clauseTextDialog.show();
                 break;
 
             case CUSTOMER_PAYMENT_METHOD:
@@ -166,24 +197,10 @@ public class OpenNegotiationDetailsFragment extends AbstractFermatFragment<Crypt
                 break;
 
             default:
-                ClauseTextDialog clauseTextDialog = new ClauseTextDialog(getActivity(), appSession, appResourcesProviderManager);
+                clauseTextDialog = new ClauseTextDialog(getActivity(), appSession, appResourcesProviderManager);
                 clauseTextDialog.setAcceptBtnListener(new ClauseTextDialog.OnClickAcceptListener() {
                     @Override
-                    public void onClick(String newValue) {
-                        putClause(clause, newValue);
-
-                        final Map<ClauseType, ClauseInformation> clauses = negotiationInfo.getClauses();
-
-                        final BigDecimal exchangeRate = new BigDecimal(clauses.get(ClauseType.EXCHANGE_RATE).getValue());
-                        final BigDecimal amountToBuy = new BigDecimal(clauses.get(ClauseType.CUSTOMER_CURRENCY_QUANTITY).getValue());
-                        final BigDecimal amountToSell = amountToBuy.multiply(exchangeRate);
-
-                        final String amountToSellStr = DecimalFormat.getInstance().format(amountToSell.doubleValue());
-                        final ClauseInformation brokerCurrencyQuantity = clauses.get(ClauseType.BROKER_CURRENCY_QUANTITY);
-                        putClause(brokerCurrencyQuantity, amountToSellStr);
-
-                        adapter.changeDataSet(negotiationInfo);
-                    }
+                    public void onClick(String newValue) { actionListener(clause, newValue); }
                 });
 
                 clauseTextDialog.setEditTextValue(clause.getValue());
@@ -257,6 +274,7 @@ public class OpenNegotiationDetailsFragment extends AbstractFermatFragment<Crypt
         adapter = new OpenNegotiationAdapter(getActivity(), negotiationInfo);
         adapter.setClauseListener(this);
         adapter.setFooterListener(this);
+        adapter.setMarketRateList(brokerCurrencyQuotationlist);
 
         recyclerView.setAdapter(adapter);
     }
@@ -282,6 +300,108 @@ public class OpenNegotiationDetailsFragment extends AbstractFermatFragment<Crypt
 
     }
 
+    //ACTION LISTENER FOR CLAUSE BROKER CURRNCY QUANTTY
+    private void actionListenerBrokerCurrencyQuantity(ClauseInformation clause, String newValue){
+
+        if(validateExchangeRate()) {
+
+            final Map<ClauseType, ClauseInformation> clauses = negotiationInfo.getClauses();
+
+            //ASIGNAMENT NEW VALUE
+            newValue = getDecimalFormat(getBigDecimal(newValue));
+            putClause(clause, newValue);
+
+            //CALCULATE CUSTOMER CURRENCY QUANTITY
+            final BigDecimal exchangeRate   = getBigDecimal(clauses.get(ClauseType.EXCHANGE_RATE).getValue());
+            final BigDecimal amountToPay    = getBigDecimal(clauses.get(ClauseType.BROKER_CURRENCY_QUANTITY).getValue());
+            final BigDecimal amountToBuy    = amountToPay.divide(exchangeRate,8, RoundingMode.HALF_UP);
+
+            //ASIGNAMENT CUSTOMER CURRENCY QUANTITY
+            final String amountToBuyStr = getDecimalFormat(amountToBuy);
+            final ClauseInformation brokerCurrencyQuantity = clauses.get(ClauseType.CUSTOMER_CURRENCY_QUANTITY);
+            putClause(brokerCurrencyQuantity, amountToBuyStr);
+
+            adapter.changeDataSet(negotiationInfo);
+
+        }
+
+    }
+
+    //ACTION LISTENER FOR CLAUSE DEFAULT
+    private void actionListener(ClauseInformation clause, String newValue){
+
+        final Map<ClauseType, ClauseInformation> clauses = negotiationInfo.getClauses();
+
+        //ASIGNAMENT NEW VALUE
+        newValue = getDecimalFormat(getBigDecimal(newValue));
+        putClause(clause, newValue);
+
+        //CALCULATE BROKER CURRENCY
+        final BigDecimal exchangeRate   = new BigDecimal(clauses.get(ClauseType.EXCHANGE_RATE).getValue().replace(",", ""));
+        final BigDecimal amountToBuy    = new BigDecimal(clauses.get(ClauseType.CUSTOMER_CURRENCY_QUANTITY).getValue().replace("," ,""));
+        final BigDecimal amountToPay    = amountToBuy.multiply(exchangeRate);
+
+        //ASIGNAMENT BROKER CURRENCY
+        final String amountToPayStr = DecimalFormat.getInstance().format(amountToPay.doubleValue());
+        final ClauseInformation brokerCurrencyQuantityClause = clauses.get(ClauseType.BROKER_CURRENCY_QUANTITY);
+        putClause(brokerCurrencyQuantityClause, amountToPayStr);
+
+        adapter.changeDataSet(negotiationInfo);
+    }
+
+    //ACTION LISTENER FOR CLAUSE BROKER CURRNCY
+    private void actionListenerBrokerCurrency(ClauseInformation clause, Currency selectedItem){
+
+        final Map<ClauseType, ClauseInformation> clauses = negotiationInfo.getClauses();
+
+        if ((clauses.get(ClauseType.CUSTOMER_CURRENCY).getValue()) != (clauses.get(ClauseType.BROKER_CURRENCY).getValue())) {
+
+            //ASIGNAMENT NEW VALUE
+            putClause(clause, selectedItem.getCode());
+
+            //GET MARKET RATE
+            String brokerMarketRate = brokerCurrencyQuotation.getExchangeRate(
+                    clauses.get(ClauseType.CUSTOMER_CURRENCY).getValue(),
+                    clauses.get(ClauseType.BROKER_CURRENCY).getValue()
+            );
+
+            if (brokerMarketRate != null) {
+
+                BigDecimal exchangeRate = getBigDecimal(brokerMarketRate);
+
+                //CALCULATE NEW PAY
+                final BigDecimal amountToBuy = getBigDecimal(clauses.get(ClauseType.CUSTOMER_CURRENCY_QUANTITY).getValue());
+                final BigDecimal amountToPay = amountToBuy.multiply(exchangeRate);
+
+                //ASINAMENT NEW EXCHANGE RATE
+                final String amountToexchangeRateStr = getDecimalFormat(exchangeRate);
+                final ClauseInformation exchangeRateClause = clauses.get(ClauseType.EXCHANGE_RATE);
+                putClause(exchangeRateClause, amountToexchangeRateStr);
+
+                //ASIGNAMENT NEW PAY
+                final String amountToPayStr = getDecimalFormat(amountToPay);
+                final ClauseInformation brokerCurrencyQuantityClause = clauses.get(ClauseType.BROKER_CURRENCY_QUANTITY);
+                putClause(brokerCurrencyQuantityClause, amountToPayStr);
+
+                //            Toast.makeText(getActivity(), "The exchange rate:" +
+                //                    "BROKER CURRENCY: " +clauses.get(ClauseType.BROKER_CURRENCY).getValue()+
+                //                    ", CUSTOMER CURRENCY: "+clauses.get(ClauseType.CUSTOMER_CURRENCY).getValue()+
+                //                    ", EXCHANGE RATE: "+brokerMarketRate
+                //                    , Toast.LENGTH_LONG).show();
+
+            } else {
+                Toast.makeText(getActivity(), "The exchange rate not fount for the currency to pay selected.", Toast.LENGTH_LONG).show();
+            }
+
+            adapter.changeDataSet(negotiationInfo);
+
+        }else{
+            Toast.makeText(getActivity(), "The currency to pay is equal to currency buy.", Toast.LENGTH_LONG).show();
+        }
+
+    }
+
+    //PUT CLAUSE
     public void putClause(final ClauseInformation clause, final String value) {
         final ClauseType type = clause.getType();
 
@@ -308,6 +428,79 @@ public class OpenNegotiationDetailsFragment extends AbstractFermatFragment<Crypt
         };
 
         negotiationInfo.getClauses().put(type, clauseInformation);
+    }
+
+    //VALIDATE CLAUSE
+    private Boolean validateClauses(Map<ClauseType, ClauseInformation> clauses){
+
+        if(clauses != null) {
+
+            final BigDecimal exchangeRate   = getBigDecimal(clauses.get(ClauseType.EXCHANGE_RATE).getValue());
+            final BigDecimal amountToBuy    = getBigDecimal(clauses.get(ClauseType.CUSTOMER_CURRENCY_QUANTITY).getValue());
+            final BigDecimal amountToPay    = getBigDecimal(clauses.get(ClauseType.BROKER_CURRENCY_QUANTITY).getValue());
+
+            if(exchangeRate.compareTo(BigDecimal.ZERO) <= 0){
+                Toast.makeText(getActivity(), "The exchange must be greater than zero.", Toast.LENGTH_LONG).show();
+                return false;
+            }
+
+            if(amountToBuy.compareTo(BigDecimal.ZERO) <= 0){
+                Toast.makeText(getActivity(), "The  buying must be greater than zero.", Toast.LENGTH_LONG).show();
+                return false;
+            }
+
+            if(amountToPay.compareTo(BigDecimal.ZERO) <= 0){
+                Toast.makeText(getActivity(), "The  paying must be greater than zero.", Toast.LENGTH_LONG).show();
+                return false;
+            }
+
+            if ((clauses.get(ClauseType.CUSTOMER_CURRENCY).getValue()) == (clauses.get(ClauseType.BROKER_CURRENCY).getValue())) {
+                Toast.makeText(getActivity(), "The currency to pay is equal to currency buy.", Toast.LENGTH_LONG).show();
+                return false;
+            }
+
+        } else {
+            Toast.makeText(getActivity(), "Error. Information is null.", Toast.LENGTH_LONG).show();
+            return false;
+        }
+
+        return true;
+    }
+
+    //VALIDATE EXCHANGE RATE NOT IS ZERO
+    private boolean validateExchangeRate(){
+
+        final Map<ClauseType, ClauseInformation> clauses = negotiationInfo.getClauses();
+
+        final BigDecimal exchangeRate = getBigDecimal(clauses.get(ClauseType.EXCHANGE_RATE).getValue());
+
+        if(exchangeRate.compareTo(BigDecimal.ZERO) <= 0){
+            Toast.makeText(getActivity(), "The exchange rate must be greater than zero.", Toast.LENGTH_LONG).show();
+            return false;
+        }
+
+        return true;
+
+    }
+
+    //REMOVE CURRENCY TO PAY
+    private void removeCurrency(){
+
+        final Map<ClauseType, ClauseInformation> clauses = negotiationInfo.getClauses();
+
+        String currencyPay = clauses.get(ClauseType.CUSTOMER_CURRENCY).getValue();
+
+        for (Currency item: currencies)
+            if(currencyPay.equals(item.getCode())) currencies.remove(item);
+
+    }
+
+    private BigDecimal getBigDecimal(String value){
+        return new BigDecimal(value.replace(",", ""));
+    }
+
+    private String getDecimalFormat(BigDecimal value){
+        return DecimalFormat.getInstance().format(value.doubleValue());
     }
     /*END PRIVATE METHOD*/
 

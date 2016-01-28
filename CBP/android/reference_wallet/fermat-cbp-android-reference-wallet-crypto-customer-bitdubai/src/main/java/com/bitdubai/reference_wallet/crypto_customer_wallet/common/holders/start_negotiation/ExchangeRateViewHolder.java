@@ -11,6 +11,8 @@ import com.bitdubai.reference_wallet.crypto_customer_wallet.R;
 import com.bitdubai.reference_wallet.crypto_customer_wallet.common.models.BrokerCurrencyQuotation;
 import com.bitdubai.reference_wallet.crypto_customer_wallet.common.models.BrokerCurrencyQuotationImpl;
 
+import java.math.BigDecimal;
+import java.text.DecimalFormat;
 import java.text.NumberFormat;
 import java.util.List;
 import java.util.Map;
@@ -47,12 +49,13 @@ public class ExchangeRateViewHolder extends ClauseViewHolder implements View.OnC
 
         final ClauseInformation currencyToBuy = clauses.get(ClauseType.CUSTOMER_CURRENCY);
         final ClauseInformation currencyToPay = clauses.get(ClauseType.BROKER_CURRENCY);
-        final ClauseInformation exchangeRate = clauses.get(ClauseType.EXCHANGE_RATE);
 
 //        double marketRate = 212.48; // TODO cambiar por valor que devuelve el proveedor asociado a la wallet para este par de monedas
-        double marketRate = Double.parseDouble(getMarketRate(clauses).replace(",",""));
+//        double marketRate = Double.parseDouble(getMarketRate(clauses));
+//        String formattedMarketRate = NumberFormat.getInstance().format(marketRate);
 
-        String formattedMarketRate = NumberFormat.getInstance().format(marketRate);
+        final BigDecimal marketRate = new BigDecimal(getMarketRate(clauses).replace("," ,""));
+        String formattedMarketRate  = DecimalFormat.getInstance().format(marketRate.doubleValue());
 
         markerRateReference.setText(String.format("1 %1$s / %2$s %3$s", currencyToBuy.getValue(), formattedMarketRate, currencyToPay.getValue()));
         yourExchangeRateValueLeftSide.setText(String.format("1 %1$s /", currencyToBuy.getValue()));

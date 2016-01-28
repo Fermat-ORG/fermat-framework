@@ -13,6 +13,7 @@ import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantNewEmptyMessage
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantSaveChatException;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantSaveContactException;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantSaveMessageException;
+import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantSendNotificationNewIncomingMessageException;
 
 import java.util.List;
 import java.util.UUID;
@@ -56,4 +57,7 @@ public interface ChatManager extends FermatManager{
 
     void deleteContact(Contact contact) throws CantDeleteContactException;
 
+    List<Contact> discoverActorsRegistered() throws CantGetContactException;
+
+    void notificationNewIncomingMessage(String publicKey, String tittle, String body) throws CantSendNotificationNewIncomingMessageException;
 }
