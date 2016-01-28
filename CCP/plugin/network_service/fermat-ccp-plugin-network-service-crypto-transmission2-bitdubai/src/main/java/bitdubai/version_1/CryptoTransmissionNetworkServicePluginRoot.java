@@ -798,7 +798,12 @@ public class CryptoTransmissionNetworkServicePluginRoot extends AbstractPlugin i
         //TODO: esto vamos a tener que cambiarlo porque está horrible
         CryptoTransmissionMessage cryptoTransmissionMetadata = new Gson().fromJson(fermatMessage.getContent(), CryptoTransmissionMessage.class);
         try {
-            outgoingNotificationDao.changeCryptoTransmissionProtocolState(cryptoTransmissionMetadata.getTransactionId(), CryptoTransmissionProtocolState.SENT);
+            if(cryptoTransmissionMetadata.getCryptoTransmissionMetadataState()==CryptoTransmissionMetadataState.CREDITED_IN_DESTINATION_WALLET){
+                outgoingNotificationDao.changeCryptoTransmissionProtocolState(cryptoTransmissionMetadata.getTransactionId(), CryptoTransmissionProtocolState.DONE);
+
+            }else {
+                outgoingNotificationDao.changeCryptoTransmissionProtocolState(cryptoTransmissionMetadata.getTransactionId(), CryptoTransmissionProtocolState.SENT);
+            }
         } catch (CantUpdateRecordDataBaseException e) {
             try{
                 incomingNotificationsDao.changeCryptoTransmissionProtocolState(cryptoTransmissionMetadata.getTransactionId(), CryptoTransmissionProtocolState.SENT);
