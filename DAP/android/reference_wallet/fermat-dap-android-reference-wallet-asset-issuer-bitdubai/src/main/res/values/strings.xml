@@ -12,6 +12,36 @@
     <string name="no_users">No Users</string>
     <string name="no_groups">No Groups</string>
 
+    <!-- error messages -->
+    <string name="dap_issuer_wallet_system_error">Asset Issuer system error</string>
+    <string name="dap_issuer_wallet_exception">Fermat Has detected an exception</string>
+    <string name="dap_issuer_wallet_exception_retry">Fermat Has detected an exception. Please retry again.</string>
+    <!-- -->
+
+    <!-- validation messages -->
+    <string name="dap_issuer_wallet_validate_assets_to_deliver">Must be enter the number of assets to deliver</string>
+    <string name="dap_issuer_wallet_validate_assets_to_deliver_greater">Value can\'t be greater than </string>
+    <string name="dap_issuer_wallet_validate_no_available_assets">There is not assets to distribute</string>
+    <string name="dap_issuer_wallet_validate_no_users_groups">No users/groups selected</string>
+    <string name="dap_issuer_wallet_validate_not_enought_assets">There is not enought assets to distribute</string>
+    <!-- -->
+
+    <!-- confirm messages -->
+    <string name="dap_issuer_wallet_confirm_title">Confirm</string>
+    <string name="dap_issuer_wallet_confirm_entered_info">Are you sure that the entered information is correct? This action is irreversible</string>
+    <string name="dap_issuer_wallet_confirm_sure">Are you sure you want to do this? This action is irreversible</string>
+    <!-- -->
+
+    <!-- app messages -->
+    <string name="dap_issuer_wallet_deliver_ok">Assets are being delivered. It may take a couple of minutes to confirm or rollback depending on your network connection.</string>
+    <string name="dap_issuer_wallet_wait">Please wait...</string>
+    <string name="dap_issuer_wallet_remaining_assets">Assets Remaining</string>
+    <string name="dap_issuer_wallet_appropriation_ok">Appropriation of the asset has started successfully. The process will be completed in a couple of minutes.</string>
+    <string name="dap_issuer_wallet_no_assets_delivered">No assets delivered</string>
+    <string name="dap_issuer_wallet_no_assets_appropriated">No assets appropriated</string>
+    <string name="dap_issuer_wallet_no_assets_redeemed">No assets redeemed</string>
+    <!-- -->
+
     <!--Dialog Help - Init-->
     <string name="dap_issuer_wallet_welcome_subTitle">Welcome to the Asset Issuer Wallet.</string>
     <string name="dap_issuer_wallet_welcome_body">You will be using this wallet to store all the assets created with the Asset Factory Application. From here you will be able to distribute them to whom ever uses the Asset User Wallet and get statistics of its usage.\n\nHelp is available on every screen!</string>
