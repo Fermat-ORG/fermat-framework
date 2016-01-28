@@ -98,8 +98,10 @@ public class CryptoBrokerIdentityListFragment extends FermatListFragment<CryptoB
 
         noMatchView = layout.findViewById(R.id.no_matches_crypto_broker_identity);
 
+        /*
         RecyclerView.ItemDecoration itemDecoration = new FermatDividerItemDecoration(getActivity(), R.drawable.divider_shape);
         recyclerView.addItemDecoration(itemDecoration);
+        */
 
         if (identityInformationList == null || identityInformationList.isEmpty()) {
             recyclerView.setVisibility(View.GONE);
