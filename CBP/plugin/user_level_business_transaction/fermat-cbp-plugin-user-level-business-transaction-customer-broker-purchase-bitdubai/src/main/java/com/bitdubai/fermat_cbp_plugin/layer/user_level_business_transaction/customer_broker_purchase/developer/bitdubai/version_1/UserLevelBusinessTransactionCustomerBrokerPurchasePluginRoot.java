@@ -19,6 +19,7 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.Layers;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
+import com.bitdubai.fermat_api.layer.all_definition.events.EventSource;
 import com.bitdubai.fermat_api.layer.all_definition.util.Version;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogLevel;
@@ -28,6 +29,7 @@ import com.bitdubai.fermat_cbp_api.layer.business_transaction.open_contract.inte
 import com.bitdubai.fermat_cbp_api.layer.contract.customer_broker_purchase.interfaces.CustomerBrokerContractPurchaseManager;
 import com.bitdubai.fermat_cbp_api.layer.negotiation.customer_broker_purchase.interfaces.CustomerBrokerPurchaseNegotiationManager;
 import com.bitdubai.fermat_cbp_api.layer.world.interfaces.FiatIndexManager;
+import com.bitdubai.fermat_cbp_plugin.layer.network_service.negotiation_transmission.developer.bitdubai.version_1.NetworkServiceNegotiationTransmissionPluginRoot;
 import com.bitdubai.fermat_cbp_plugin.layer.user_level_business_transaction.customer_broker_purchase.developer.bitdubai.version_1.database.UserLevelBusinessTransactionCustomerBrokerPurchaseDatabaseDao;
 import com.bitdubai.fermat_cbp_plugin.layer.user_level_business_transaction.customer_broker_purchase.developer.bitdubai.version_1.database.UserLevelBusinessTransactionCustomerBrokerPurchaseDeveloperFactory;
 import com.bitdubai.fermat_cbp_plugin.layer.user_level_business_transaction.customer_broker_purchase.developer.bitdubai.version_1.exceptions.CantInitializeCustomerBrokerPurchaseDatabaseException;
@@ -88,6 +90,12 @@ public class UserLevelBusinessTransactionCustomerBrokerPurchasePluginRoot extend
 
     @NeededPluginReference(platform = Platforms.PLUG_INS_PLATFORM, layer = Layers.SUB_APP_MODULE, plugin = Plugins.NOTIFICATION)
     NotificationManagerMiddleware notificationManagerMiddleware;
+
+    UserLevelBusinessTransactionCustomerBrokerPurchaseManager userLevelBusinessTransactionCustomerBrokerPurchaseManager = new UserLevelBusinessTransactionCustomerBrokerPurchaseManager();
+
+    NetworkServiceNegotiationTransmissionPluginRoot networkServiceNegotiationTransmissionPluginRoot = new NetworkServiceNegotiationTransmissionPluginRoot();
+
+    public static EventSource EVENT_SOURCE = EventSource.USER_LEVEL_CUSTOMER_BROKER_PURCHASE_MANAGER;
 
     UserLevelBusinessTransactionCustomerBrokerPurchaseDatabaseDao userLevelBusinessTransactionCustomerBrokerPurchaseDatabaseDao;
 
@@ -216,8 +224,15 @@ public class UserLevelBusinessTransactionCustomerBrokerPurchasePluginRoot extend
                     closeContractManager,
                     customerBrokerContractPurchaseManager,
                     fiatIndexManager,
-                    notificationManagerMiddleware);
+                    notificationManagerMiddleware,
+                    userLevelBusinessTransactionCustomerBrokerPurchaseManager,
+                    networkServiceNegotiationTransmissionPluginRoot
+                    );
             userLevelBusinessTransactionCustomerBrokerPurchaseMonitorAgent.start();
         } else userLevelBusinessTransactionCustomerBrokerPurchaseMonitorAgent.start();
+    }
+
+    public EventManager getEventManager() {
+        return eventManager;
     }
 }
