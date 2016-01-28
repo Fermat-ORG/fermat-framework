@@ -98,7 +98,7 @@ public class WsCommunicationTyrusVPNClient extends Endpoint implements Communica
     public void onOpen(Session session, EndpointConfig config) {
         System.out.println(" --------------------------------------------------------------------- ");
         System.out.println(" WsCommunicationVPNClient - Starting method onOpen");
-        System.out.println(" WsCommunicationVPNClient - VPN Server id = " + session.getId());
+        System.out.println(" WsCommunicationVPNClient - Session id = " + session.getId());
         this.vpnClientConnection = session;
 
         /*

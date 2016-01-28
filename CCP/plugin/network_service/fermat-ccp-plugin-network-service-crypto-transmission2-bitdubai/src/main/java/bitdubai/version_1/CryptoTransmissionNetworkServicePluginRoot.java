@@ -114,7 +114,7 @@ import bitdubai.version_1.event_handlers.communication.VPNConnectionCloseNotific
 import bitdubai.version_1.exceptions.CantGetCryptoTransmissionMetadataException;
 import bitdubai.version_1.exceptions.CantSaveCryptoTransmissionMetadatatException;
 import bitdubai.version_1.exceptions.CantUpdateRecordDataBaseException;
-import bitdubai.version_1.structure.ActorNetworkServiceRecordedAgent;
+import bitdubai.version_1.structure.CryptoTransmissionTransactionRecordedAgent;
 import bitdubai.version_1.structure.CryptoTransmissionTransactionProtocolManager;
 import bitdubai.version_1.structure.structure.CryptoTransmissionMessage;
 import bitdubai.version_1.structure.structure.CryptoTransmissionMessageType;
@@ -240,7 +240,7 @@ public class CryptoTransmissionNetworkServicePluginRoot extends AbstractPlugin i
     /**
      * Agent
      */
-    private ActorNetworkServiceRecordedAgent actorNetworkServiceRecordedAgent;
+    private CryptoTransmissionTransactionRecordedAgent cryptoTransmissionTransactionRecordedAgent;
 
     /**
      * Represent the flag to start only once
@@ -501,7 +501,7 @@ public class CryptoTransmissionNetworkServicePluginRoot extends AbstractPlugin i
 
                     remoteNetworkServicesRegisteredList = new CopyOnWriteArrayList<PlatformComponentProfile>();
 
-                    actorNetworkServiceRecordedAgent = new ActorNetworkServiceRecordedAgent(
+                    cryptoTransmissionTransactionRecordedAgent = new CryptoTransmissionTransactionRecordedAgent(
                             this,
                             errorManager,
                             eventManager);
@@ -691,13 +691,13 @@ public class CryptoTransmissionNetworkServicePluginRoot extends AbstractPlugin i
 
     private void initializeIntraActorAgent() {
         try {
-            if(actorNetworkServiceRecordedAgent==null){
-                actorNetworkServiceRecordedAgent = new ActorNetworkServiceRecordedAgent(
+            if(cryptoTransmissionTransactionRecordedAgent ==null){
+                cryptoTransmissionTransactionRecordedAgent = new CryptoTransmissionTransactionRecordedAgent(
                         this,
                         errorManager,
                         eventManager);
             }
-            actorNetworkServiceRecordedAgent.start();
+            cryptoTransmissionTransactionRecordedAgent.start();
 
         } catch (CantStartAgentException e) {
             errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_CRYPTO_TRANSMISSION_NETWORK_SERVICE, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
@@ -758,7 +758,7 @@ public class CryptoTransmissionNetworkServicePluginRoot extends AbstractPlugin i
         System.out.println("----------------------------------\n" +
                 "FAILED CONNECTION WITH " + remoteParticipant.getCommunicationCloudClientIdentity() + "\n" +
                 "--------------------------------------------------------");
-        actorNetworkServiceRecordedAgent.connectionFailure(remoteParticipant.getIdentityPublicKey());
+        cryptoTransmissionTransactionRecordedAgent.connectionFailure(remoteParticipant.getIdentityPublicKey());
 
         //I check my time trying to send the message
         checkFailedDeliveryTime(remoteParticipant.getIdentityPublicKey());
@@ -1135,7 +1135,7 @@ public class CryptoTransmissionNetworkServicePluginRoot extends AbstractPlugin i
                 }
 
                 // close connection, sender is the destination
-                if(actorNetworkServiceRecordedAgent!=null) actorNetworkServiceRecordedAgent.getPoolConnectionsWaitingForResponse().remove(remotePublicKey);
+                if(cryptoTransmissionTransactionRecordedAgent !=null) cryptoTransmissionTransactionRecordedAgent.getPoolConnectionsWaitingForResponse().remove(remotePublicKey);
 
             }
 
@@ -1170,8 +1170,8 @@ public class CryptoTransmissionNetworkServicePluginRoot extends AbstractPlugin i
                     communicationNetworkServiceConnectionManager.stop();
                 }
 
-                if(actorNetworkServiceRecordedAgent!=null) {
-                    actorNetworkServiceRecordedAgent.stop();
+                if(cryptoTransmissionTransactionRecordedAgent !=null) {
+                    cryptoTransmissionTransactionRecordedAgent.stop();
                 }
 
             }catch (CantStopAgentException e) {
@@ -1196,8 +1196,8 @@ public class CryptoTransmissionNetworkServicePluginRoot extends AbstractPlugin i
                 communicationNetworkServiceConnectionManager.stop();
             }
 
-            if(actorNetworkServiceRecordedAgent!=null) {
-                actorNetworkServiceRecordedAgent.stop();
+            if(cryptoTransmissionTransactionRecordedAgent !=null) {
+                cryptoTransmissionTransactionRecordedAgent.stop();
             }
 
             this.register = Boolean.FALSE;
@@ -1224,10 +1224,10 @@ public class CryptoTransmissionNetworkServicePluginRoot extends AbstractPlugin i
                 this.initializeCommunicationNetworkServiceConnectionManager();
             }
 
-            if(actorNetworkServiceRecordedAgent == null) {
+            if(cryptoTransmissionTransactionRecordedAgent == null) {
                 initializeIntraActorAgent();
             }else {
-                actorNetworkServiceRecordedAgent.start();
+                cryptoTransmissionTransactionRecordedAgent.start();
             }
 
             /*

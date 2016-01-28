@@ -54,7 +54,7 @@ import bitdubai.version_1.structure.structure.CryptoTransmissionResponseMessage;
 /**
  * Created by mati on 2015.10.15..
  */
-public class ActorNetworkServiceRecordedAgent extends FermatAgent{
+public class CryptoTransmissionTransactionRecordedAgent extends FermatAgent{
 
 
     private static final long SEND_SLEEP_TIME    = 15000;
@@ -73,10 +73,10 @@ public class ActorNetworkServiceRecordedAgent extends FermatAgent{
     private final ErrorManager errorManager                                ;
     private final EventManager eventManager                                ;
 
-    public ActorNetworkServiceRecordedAgent( final CryptoTransmissionNetworkServicePluginRoot cryptoTransmissionNetworkServicePluginRoot,
-                                             final ErrorManager                                 errorManager                                ,
-                                             final EventManager                                 eventManager
-                                             ) {
+    public CryptoTransmissionTransactionRecordedAgent(final CryptoTransmissionNetworkServicePluginRoot cryptoTransmissionNetworkServicePluginRoot,
+                                                      final ErrorManager errorManager,
+                                                      final EventManager eventManager
+    ) {
 
         this.errorManager                                 = errorManager                                ;
         this.eventManager                                 = eventManager                                ;
@@ -185,7 +185,7 @@ public class ActorNetworkServiceRecordedAgent extends FermatAgent{
 
         } catch (InterruptedException e) {
             status = AgentStatus.STOPPED;
-            reportUnexpectedError(FermatException.wrapException(e));
+            System.out.println("CryptoTransmissionTransactionRecordedAgent - sendCycle() Thread Interrupted stopped ... ");
         } catch(Exception e) {
             reportUnexpectedError(FermatException.wrapException(e));
         }
@@ -263,7 +263,7 @@ public class ActorNetworkServiceRecordedAgent extends FermatAgent{
 
         } catch (InterruptedException e) {
             status = AgentStatus.STOPPED;
-            reportUnexpectedError(FermatException.wrapException(e));
+            System.out.println("CryptoTransmissionTransactionRecordedAgent - receiveCycle() Thread Interrupted stopped ... ");
         } catch(Exception e) {
 
             reportUnexpectedError(FermatException.wrapException(e));
