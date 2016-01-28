@@ -164,7 +164,7 @@ public final class CryptoPaymentRequestNetworkServicePluginRoot extends Abstract
 
     private  boolean beforeRegistered;
 
-    private long reprocessTimer =   1* 3600 * 1000; //one hours
+    private long reprocessTimer =   3600 * 1000; //one hours
 
     private Timer timer = new Timer();
 
@@ -990,7 +990,7 @@ public final class CryptoPaymentRequestNetworkServicePluginRoot extends Abstract
     @Override
     public void handleFailureComponentRegistrationNotificationEvent(PlatformComponentProfile networkServiceApplicant, PlatformComponentProfile remoteParticipant) {
         System.out.println("----------------------------------\n" +
-                "FAILED CONNECTION WITH "+remoteParticipant.getAlias()+"\n" +
+                "PAYMENT NS FAILED CONNECTION WITH "+remoteParticipant.getAlias()+"\n" +
                 "--------------------------------------------------------");
         cryptoPaymentRequestExecutorAgent.connectionFailure(remoteParticipant.getIdentityPublicKey());
 
