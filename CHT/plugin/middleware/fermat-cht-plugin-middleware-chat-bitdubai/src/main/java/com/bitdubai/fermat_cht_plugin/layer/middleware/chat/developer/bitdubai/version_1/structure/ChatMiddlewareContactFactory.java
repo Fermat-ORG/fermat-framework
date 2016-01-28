@@ -7,6 +7,7 @@ import com.bitdubai.fermat_ccp_api.layer.actor.intra_user.interfaces.IntraWallet
 import com.bitdubai.fermat_ccp_api.layer.module.intra_user.exceptions.CantGetActiveLoginIdentityException;
 import com.bitdubai.fermat_ccp_api.layer.module.intra_user.exceptions.CantGetIntraUsersListException;
 import com.bitdubai.fermat_ccp_api.layer.module.intra_user.interfaces.IntraUserInformation;
+import com.bitdubai.fermat_ccp_api.layer.module.intra_user.interfaces.IntraUserLoginIdentity;
 import com.bitdubai.fermat_ccp_api.layer.module.intra_user.interfaces.IntraUserModuleManager;
 import com.bitdubai.fermat_ccp_api.layer.network_service.intra_actor.interfaces.IntraUserManager;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantGetCompatiblesActorNetworkServiceListException;
@@ -73,7 +74,7 @@ public class ChatMiddlewareContactFactory {
                     objectFromHashMap=this.actorNetworkServiceMap.get(platformEnumCode);
                     if(objectFromHashMap!=null){
 
-                        if(objectFromHashMap instanceof IntraWalletUserActorManager){
+                        if(objectFromHashMap instanceof IntraUserModuleManager){
                             compatiblesActorNetworkServiceList.put(
                                     Platforms.CRYPTO_CURRENCY_PLATFORM.getCode(),
                                     objectFromHashMap);
@@ -81,7 +82,7 @@ public class ChatMiddlewareContactFactory {
                             //Please, not throw an exception, in this version, make a logcat report.
                             System.out.println(
                                     "CHAT Middleware: For "+platform+" we need " +
-                                            ""+IntraUserManager.class+" and we get from PluginRoot " +
+                                            ""+IntraUserModuleManager.class+" and we get from PluginRoot " +
                                             ""+objectFromHashMap.getClass());
                         }
 
@@ -155,8 +156,16 @@ public class ChatMiddlewareContactFactory {
                 //CCP
                 if(key.equals(Platforms.CRYPTO_CURRENCY_PLATFORM.getCode())){
                     IntraUserModuleManager intraActorManager = (IntraUserModuleManager) value;
-                    List<IntraUserInformation> ccpActorList=intraActorManager.getAllIntraUsers(
-                            intraActorManager.getActiveIntraUserIdentity().getPublicKey(), 20, 0);
+                    IntraUserLoginIdentity identity=intraActorManager.getActiveIntraUserIdentity();
+                    if(identity==null){
+                        continue;
+                    }
+                    String appPublicKey=identity.getPublicKey();
+                    if(appPublicKey==null){
+                        continue;
+                    }
+                    List<IntraUserInformation> ccpActorList=intraActorManager.getAllIntraUsers(appPublicKey
+                            , 20, 0);
                     for(IntraUserInformation intraUserInformation : ccpActorList){
                         remoteName=intraUserInformation.getName();
                         alias=intraUserInformation.getName();

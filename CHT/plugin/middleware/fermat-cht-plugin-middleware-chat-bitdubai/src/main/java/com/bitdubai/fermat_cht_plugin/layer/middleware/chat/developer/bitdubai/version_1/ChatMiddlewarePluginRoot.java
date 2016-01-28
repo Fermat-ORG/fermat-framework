@@ -212,8 +212,8 @@ public class ChatMiddlewarePluginRoot extends AbstractPlugin implements
                 assetUserActorNetworkServiceManager);
         //Include CCP actors
         actorNetworkServiceMap.put(
-                Platforms.DIGITAL_ASSET_PLATFORM.getCode(),
-                assetUserActorNetworkServiceManager);
+                Platforms.CRYPTO_CURRENCY_PLATFORM.getCode(),
+                intraUserModuleManager);
         this.chatMiddlewareContactFactory =
                 new ChatMiddlewareContactFactory(actorNetworkServiceMap);
     }
@@ -253,6 +253,8 @@ public class ChatMiddlewarePluginRoot extends AbstractPlugin implements
                             pluginDatabaseSystem,
                             pluginId);
             chatMiddlewareDeveloperDatabaseFactory.initializeDatabase();
+            //Initialize Contact Factory
+            initializeContactFactory();
             /**
              * Initialize manager
              */
@@ -280,8 +282,7 @@ public class ChatMiddlewarePluginRoot extends AbstractPlugin implements
                     chatManager);
             openContractMonitorAgent.start();
 
-            //Initialize Contact Factory
-            initializeContactFactory();
+
 
             this.serviceStatus = ServiceStatus.STARTED;
             //Test method
@@ -453,7 +454,7 @@ public class ChatMiddlewarePluginRoot extends AbstractPlugin implements
             System.out.println("Discovery Test: Init*****");
             int counter=0;
             for(Contact contact : contactList){
-                System.out.println("Discovery Test:"+contact);
+                System.out.println("Discovery Test: Contact "+counter+"\n"+contact);
                 counter++;
             }
         } catch (Exception exception){
