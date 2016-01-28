@@ -329,6 +329,8 @@ public class ActorNetworkServiceRecordedAgent extends FermatAgent{
 
                        System.out.print("CryptoTransmission Close Connection - End Message");
                        this.poolConnectionsWaitingForResponse.remove(cryptoTransmissionMetadata.getDestinationPublicKey());
+                       cryptoTransmissionNetworkServicePluginRoot.getNetworkServiceConnectionManager().closeConnection(cryptoTransmissionMetadata.getDestinationPublicKey());
+
                        break;
                    // si el mensaje viene con un estado de SENT es porque es la primera vez que llega, por lo que tengo que guardarlo en la bd y responder
                    case SEEN_BY_OWN_NETWORK_SERVICE_WAITING_FOR_RESPONSE:
