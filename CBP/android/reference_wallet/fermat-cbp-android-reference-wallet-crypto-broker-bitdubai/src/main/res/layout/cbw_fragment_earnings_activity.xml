@@ -7,63 +7,86 @@
               android:orientation="vertical"
               android:paddingTop="16dp">
 
-    <TextView
+    <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Currency"
-        android:textColor="@color/activity_background"
-        android:textSize="12sp"
         android:layout_marginLeft="16dp"
-        android:layout_marginRight="16dp"/>
+        android:layout_marginRight="16dp"
+        android:text="Currency"
+        android:textAllCaps="true"
+        android:textStyle="bold"
+        android:textColor="#555"
+        android:textSize="12sp"/>
 
     <View
-        android:layout_marginTop="4dp"
-        android:layout_marginBottom="8dp"
         android:layout_width="match_parent"
         android:layout_height="0.5dp"
-        android:background="@color/cbw_wizard_color"
+        android:layout_marginBottom="8dp"
         android:layout_marginLeft="16dp"
-        android:layout_marginRight="16dp"/>
+        android:layout_marginRight="16dp"
+        android:layout_marginTop="4dp"
+        android:background="@color/cbw_wizard_color"/>
 
     <Spinner
-        android:id="@+id/cbw_country_spinner"
+        android:id="@+id/cbw_earning_currency_spinner"
         android:layout_width="match_parent"
         android:layout_height="40dp"
+        android:layout_marginLeft="16dp"
+        android:layout_marginRight="16dp"
         android:backgroundTint="@color/black"
         android:drawSelectorOnTop="true"
-        tools:listitem="@layout/cbw_spinner_item"
-        android:layout_marginLeft="16dp"
-        android:layout_marginRight="16dp"/>
+        tools:listitem="@layout/cbw_spinner_item"/>
 
-    <com.github.mikephil.charting.charts.LineChart
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_marginBottom="8dp"
-        android:layout_weight="0.8"/>
 
-    <TextView
+    <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Your Earnings"
-        android:textColor="@color/activity_background"
-        android:textSize="12sp"
+        android:layout_marginBottom="4dp"
         android:layout_marginLeft="16dp"
-        android:layout_marginRight="16dp"/>
+        android:layout_marginRight="16dp"
+        android:layout_marginTop="16dp"
+        android:text="Current:"
+        android:textColor="@color/activity_background"
+        android:textSize="20sp"/>
+
+    <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
+        android:id="@+id/cbw_current_earning_value"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="16dp"
+        android:layout_marginLeft="16dp"
+        android:layout_marginRight="16dp"
+        android:text="132,02 BTC"
+        android:textColor="@color/activity_background"
+        android:textSize="26sp"
+        android:textStyle="italic"/>
+
+    <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="16dp"
+        android:layout_marginRight="16dp"
+        android:text="Overview"
+        android:textAllCaps="true"
+        android:textStyle="bold"
+        android:textColor="#555"
+        android:textSize="12sp"/>
 
     <View
-        android:layout_marginTop="4dp"
-        android:layout_marginBottom="8dp"
         android:layout_width="match_parent"
         android:layout_height="0.5dp"
-        android:background="@color/cbw_wizard_color"
+        android:layout_marginBottom="8dp"
         android:layout_marginLeft="16dp"
-        android:layout_marginRight="16dp"/>
+        android:layout_marginRight="16dp"
+        android:layout_marginTop="4dp"
+        android:background="@color/cbw_wizard_color"/>
 
     <android.support.v7.widget.RecyclerView
+        android:id="@+id/earning_overview_recycler_view"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="1"
-        tools:listitem="@layout/cbw_earnings_list_item"
         android:layout_marginLeft="16dp"
-        android:layout_marginRight="16dp"/>
+        android:layout_marginRight="16dp"
+        android:layout_weight="1"
+        tools:listitem="@layout/cbw_earnings_list_item"/>
 </LinearLayout>

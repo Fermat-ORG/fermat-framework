@@ -4,33 +4,47 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:orientation="vertical"
-    android:layout_marginTop="8dp">
+    android:orientation="vertical">
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="35dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
         android:orientation="horizontal">
 
         <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
-            android:layout_width="0dp"
+            android:id="@+id/cbw_earning_value_item"
+            android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:layout_weight="1"
+            android:layout_marginEnd="8dp"
+            android:layout_marginRight="8dp"
+            android:gravity="bottom"
             android:textColor="@color/card_title_color_status_confirm"
-            android:textSize="14sp"
-            android:gravity="top"
-            tools:text="20 Enero 2015"
+            android:textSize="20sp"
+            tools:text="1.501,30 BTC"
             />
 
         <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
+            android:id="@+id/cbw_earning_value_difference_item"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            android:gravity="end|top"
-            android:textColor="@color/cbw_second_line_item"
-            android:textSize="18sp"
-            tools:text="200 VEF"/>
+            android:gravity="start|bottom"
+            android:textColor="#39ab89"
+            android:textSize="14sp"
+            tools:text="- 10.0 VEF (0 %)"/>
     </LinearLayout>
+
+    <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
+        android:id="@+id/cbw_earning_value_date_item"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textSize="12sp"
+        android:textColor="#999"
+        android:layout_marginTop="4dp"
+        android:textStyle="bold"
+        android:layout_marginBottom="8dp"
+        tools:text="January 15, 2015"/>
 
     <View
         android:layout_width="match_parent"

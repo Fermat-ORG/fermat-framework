@@ -2,6 +2,7 @@ package com.bitdubai.reference_wallet.crypto_broker_wallet.common.models;
 
 import com.bitdubai.fermat_api.layer.all_definition.enums.CryptoCurrency;
 import com.bitdubai.fermat_api.layer.all_definition.enums.FiatCurrency;
+import com.bitdubai.fermat_api.layer.world.interfaces.Currency;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.ClauseStatus;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.ClauseType;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.ContractStatus;
@@ -112,7 +113,7 @@ public class TestData {
         return data;
     }
 
-    public static List<StockStatisticsData> getStockStadisticsData(){
+    public static List<StockStatisticsData> getStockStadisticsData() {
         ArrayList<StockStatisticsData> stockStatisticsData = new ArrayList<>();
         stockStatisticsData.add(new StockStatisticsData(FiatCurrency.VENEZUELAN_BOLIVAR, 14));
         stockStatisticsData.add(new StockStatisticsData(CryptoCurrency.BITCOIN, 3));
@@ -358,5 +359,86 @@ public class TestData {
         }
 
         return contractsHistory;
+    }
+
+    public static List<EarningTestData> getEarnings(Currency currency) {
+        ArrayList<EarningTestData> dataArrayList = new ArrayList<>();
+        double previousValue;
+        EarningTestData earningTestData;
+
+        if (currency.equals(CryptoCurrency.BITCOIN)) {
+            earningTestData = new EarningTestData(currency, 0.1, 0.1, System.currentTimeMillis());
+            previousValue = earningTestData.getEarningValue();
+            dataArrayList.add(earningTestData);
+
+            earningTestData = new EarningTestData(currency, 0.2, previousValue, System.currentTimeMillis());
+            previousValue = earningTestData.getEarningValue();
+            dataArrayList.add(earningTestData);
+
+            earningTestData = new EarningTestData(currency, 1.2, previousValue, System.currentTimeMillis());
+            previousValue = earningTestData.getEarningValue();
+            dataArrayList.add(earningTestData);
+
+            earningTestData = new EarningTestData(currency, 5.2, previousValue, System.currentTimeMillis());
+            previousValue = earningTestData.getEarningValue();
+            dataArrayList.add(earningTestData);
+
+            earningTestData = new EarningTestData(currency, 1.2, previousValue, System.currentTimeMillis());
+            previousValue = earningTestData.getEarningValue();
+            dataArrayList.add(earningTestData);
+
+            earningTestData = new EarningTestData(currency, 0.02, previousValue, System.currentTimeMillis());
+            previousValue = earningTestData.getEarningValue();
+            dataArrayList.add(earningTestData);
+
+            earningTestData = new EarningTestData(currency, 0.122, previousValue, System.currentTimeMillis());
+            previousValue = earningTestData.getEarningValue();
+            dataArrayList.add(earningTestData);
+
+            earningTestData = new EarningTestData(currency, 0.5465482, previousValue, System.currentTimeMillis());
+            dataArrayList.add(earningTestData);
+
+
+        } else if (currency.equals(FiatCurrency.US_DOLLAR)) {
+            earningTestData = new EarningTestData(currency, 12330.11, 12330.11, System.currentTimeMillis());
+            previousValue = earningTestData.getEarningValue();
+            dataArrayList.add(earningTestData);
+
+            earningTestData = new EarningTestData(currency, 2340.9552, previousValue, System.currentTimeMillis());
+            previousValue = earningTestData.getEarningValue();
+            dataArrayList.add(earningTestData);
+
+            earningTestData = new EarningTestData(currency, 1231.88002, previousValue, System.currentTimeMillis());
+            previousValue = earningTestData.getEarningValue();
+            dataArrayList.add(earningTestData);
+
+            earningTestData = new EarningTestData(currency, 51.12342, previousValue, System.currentTimeMillis());
+            dataArrayList.add(earningTestData);
+
+
+        } else if (currency.equals(FiatCurrency.VENEZUELAN_BOLIVAR)) {
+            earningTestData = new EarningTestData(currency, 60230.112123, 60230.112123, System.currentTimeMillis());
+            previousValue = earningTestData.getEarningValue();
+            dataArrayList.add(earningTestData);
+
+            earningTestData = new EarningTestData(currency, 160230.456456, previousValue, System.currentTimeMillis());
+            dataArrayList.add(earningTestData);
+        }
+
+        return dataArrayList;
+    }
+
+    public static double getCurrentEarning(Currency currency) {
+        if (currency.equals(CryptoCurrency.BITCOIN)) {
+            return 2.25;
+
+        } else if (currency.equals(FiatCurrency.US_DOLLAR)) {
+            return 6598.25;
+
+        } else if (currency.equals(FiatCurrency.VENEZUELAN_BOLIVAR)) {
+            return 6598.25;
+        }
+
+        return 0.0;
     }
 }
