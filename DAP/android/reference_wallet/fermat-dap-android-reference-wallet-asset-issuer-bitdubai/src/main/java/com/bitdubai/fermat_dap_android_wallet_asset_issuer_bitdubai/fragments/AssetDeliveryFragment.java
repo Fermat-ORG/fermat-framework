@@ -24,6 +24,7 @@ import android.widget.Toast;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractFermatFragment;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatEditText;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView;
+import com.bitdubai.fermat_android_api.ui.Views.ConfirmDialog;
 import com.bitdubai.fermat_android_api.ui.Views.PresentationDialog;
 import com.bitdubai.fermat_android_api.ui.interfaces.FermatWorkerCallBack;
 import com.bitdubai.fermat_android_api.ui.util.BitmapWorkerTask;
@@ -33,7 +34,6 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.UISource;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
 import com.bitdubai.fermat_api.layer.all_definition.settings.structure.SettingsManager;
 import com.bitdubai.fermat_dap_android_wallet_asset_issuer_bitdubai.R;
-import com.bitdubai.fermat_dap_android_wallet_asset_issuer_bitdubai.dialogs.DistributeAcceptDialog;
 import com.bitdubai.fermat_dap_android_wallet_asset_issuer_bitdubai.models.Data;
 import com.bitdubai.fermat_dap_android_wallet_asset_issuer_bitdubai.models.DigitalAsset;
 import com.bitdubai.fermat_dap_android_wallet_asset_issuer_bitdubai.models.Group;
@@ -154,7 +154,7 @@ public class AssetDeliveryFragment extends AbstractFermatFragment {
 
         } catch (Exception e) {
             errorManager.reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.UNSTABLE, FermatException.wrapException(e));
-            makeText(getActivity(), "Asset Issuer system error",
+            makeText(getActivity(), R.string.dap_issuer_wallet_system_error,
                     Toast.LENGTH_SHORT).show();
         }
         return super.onOptionsItemSelected(item);
@@ -175,30 +175,32 @@ public class AssetDeliveryFragment extends AbstractFermatFragment {
         deliverAssetsButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 if (assetsToDeliverEditText.getText().length() == 0) {
-                    Toast.makeText(activity, "Must be enter the number of assets to deliver", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(activity, R.string.dap_issuer_wallet_validate_assets_to_deliver, Toast.LENGTH_SHORT).show();
                 } else if (Integer.parseInt(assetsToDeliverEditText.getText().toString()) > MAX_ASSET_QUANTITY){
-                    Toast.makeText(activity, "Value can't be greater than "+MAX_ASSET_QUANTITY, Toast.LENGTH_SHORT).show();
+                    Toast.makeText(activity, R.string.dap_issuer_wallet_validate_assets_to_deliver_greater + MAX_ASSET_QUANTITY, Toast.LENGTH_SHORT).show();
                 } else if (digitalAsset.getAvailableBalanceQuantity() == 0) {
-                    Toast.makeText(activity, "There is not assets to distribute", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(activity, R.string.dap_issuer_wallet_validate_no_available_assets, Toast.LENGTH_SHORT).show();
                 } else if (selectedUsersCount == 0 && selectedGroupsCount == 0) {
-                    Toast.makeText(activity, "No users/groups selected", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(activity, R.string.dap_issuer_wallet_validate_no_users_groups, Toast.LENGTH_SHORT).show();
                 } else if (selectedUsersCount > digitalAsset.getAvailableBalanceQuantity() || selectedGroupsCount > digitalAsset.getAvailableBalanceQuantity()) {
-                    Toast.makeText(activity, "There is not enought assets to distribute", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(activity, R.string.dap_issuer_wallet_validate_not_enought_assets, Toast.LENGTH_SHORT).show();
                 } else {
                     if (selectedUsersCount > 0) {
                         Object x = appSession.getData("users");
                         if (x != null) {
                             final List<User> users = (List<User>) x;
                             if (users.size() > 0) {
-                                DistributeAcceptDialog dialog = new DistributeAcceptDialog(getActivity(), (AssetIssuerSession) appSession, appResourcesProviderManager);
-                                dialog.setYesBtnListener(new DistributeAcceptDialog.OnClickAcceptListener() {
-                                    @Override
-                                    public void onClick() {
-                                        int assetsAmount = Integer.parseInt(assetsToDeliverEditText.getText().toString());
-                                        doDistributeToUsers(digitalAsset.getAssetPublicKey(), users, assetsAmount);
-                                    }
-                                });
-                                dialog.show();
+                                new ConfirmDialog.Builder(getActivity(), appSession)
+                                        .setTitle(getResources().getString(R.string.dap_issuer_wallet_confirm_title))
+                                        .setMessage(getResources().getString(R.string.dap_issuer_wallet_confirm_entered_info))
+                                        .setColorStyle(getResources().getColor(R.color.dap_issuer_wallet_principal))
+                                        .setYesBtnListener(new ConfirmDialog.OnClickAcceptListener() {
+                                            @Override
+                                            public void onClick() {
+                                                int assetsAmount = Integer.parseInt(assetsToDeliverEditText.getText().toString());
+                                                doDistributeToUsers(digitalAsset.getAssetPublicKey(), users, assetsAmount);
+                                            }
+                                        }).build().show();
                             }
                         }
                     } else if (selectedGroupsCount > 0) {
@@ -206,15 +208,17 @@ public class AssetDeliveryFragment extends AbstractFermatFragment {
                         if (x != null) {
                             final List<Group> groups = (List<Group>) x;
                             if (groups.size() > 0) {
-                                DistributeAcceptDialog dialog = new DistributeAcceptDialog(getActivity(), (AssetIssuerSession) appSession, appResourcesProviderManager);
-                                dialog.setYesBtnListener(new DistributeAcceptDialog.OnClickAcceptListener() {
-                                    @Override
-                                    public void onClick() {
-                                        int assetsAmount = Integer.parseInt(assetsToDeliverEditText.getText().toString());
-                                        doDistributeToGroups(digitalAsset.getAssetPublicKey(), groups, assetsAmount);
-                                    }
-                                });
-                                dialog.show();
+                                new ConfirmDialog.Builder(getActivity(), appSession)
+                                        .setTitle(getResources().getString(R.string.dap_issuer_wallet_confirm_title))
+                                        .setMessage(getResources().getString(R.string.dap_issuer_wallet_confirm_entered_info))
+                                        .setColorStyle(getResources().getColor(R.color.dap_issuer_wallet_principal))
+                                        .setYesBtnListener(new ConfirmDialog.OnClickAcceptListener() {
+                                            @Override
+                                            public void onClick() {
+                                                int assetsAmount = Integer.parseInt(assetsToDeliverEditText.getText().toString());
+                                                doDistributeToGroups(digitalAsset.getAssetPublicKey(), groups, assetsAmount);
+                                            }
+                                        }).build().show();
                             }
                         }
                     }
@@ -339,8 +343,7 @@ public class AssetDeliveryFragment extends AbstractFermatFragment {
                 dialog.dismiss();
                 if (activity != null) {
                     refreshUIData();
-                    //Toast.makeText(activity, "Everything ok...", Toast.LENGTH_SHORT).show();
-                    Toast.makeText(activity, "Assets are being delivered. It may take a couple of minutes to confirm or rollback depending on your network connection.", Toast.LENGTH_LONG).show();
+                    Toast.makeText(activity, R.string.dap_issuer_wallet_deliver_ok, Toast.LENGTH_LONG).show();
                 }
             }
 
@@ -348,7 +351,7 @@ public class AssetDeliveryFragment extends AbstractFermatFragment {
             public void onErrorOccurred(Exception ex) {
                 dialog.dismiss();
                 if (activity != null)
-                    Toast.makeText(activity, "Fermat Has detected an exception",
+                    Toast.makeText(activity, R.string.dap_issuer_wallet_exception,
                             Toast.LENGTH_SHORT).show();
             }
         });
@@ -357,7 +360,7 @@ public class AssetDeliveryFragment extends AbstractFermatFragment {
 
     private void doDistributeToGroups(final String assetPublicKey, final List<Group> groups, final int assetsAmount) {
         final ProgressDialog dialog = new ProgressDialog(activity);
-        dialog.setMessage("Please wait...");
+        dialog.setMessage(getResources().getString(R.string.dap_issuer_wallet_wait));
         dialog.setCancelable(false);
         dialog.show();
         FermatWorker task = new FermatWorker() {
@@ -382,8 +385,7 @@ public class AssetDeliveryFragment extends AbstractFermatFragment {
                 dialog.dismiss();
                 if (activity != null) {
                     refreshUIData();
-                    //Toast.makeText(activity, "Everything ok...", Toast.LENGTH_SHORT).show();
-                    Toast.makeText(activity, "Assets are being delivered. It may take a couple of minutes to confirm or rollback depending on your network connection.", Toast.LENGTH_LONG).show();
+                    Toast.makeText(activity, R.string.dap_issuer_wallet_deliver_ok, Toast.LENGTH_LONG).show();
                 }
             }
 
@@ -392,7 +394,7 @@ public class AssetDeliveryFragment extends AbstractFermatFragment {
                 dialog.dismiss();
                 if (activity != null) {
                     refreshUIData();
-                    Toast.makeText(activity, "Fermat Has detected an exception",
+                    Toast.makeText(activity, R.string.dap_issuer_wallet_exception,
                             Toast.LENGTH_SHORT).show();
                 }
             }
@@ -411,7 +413,7 @@ public class AssetDeliveryFragment extends AbstractFermatFragment {
         assetDeliveryNameText.setText(digitalAsset.getName());
         //assetsToDeliverEditText.setText(digitalAsset.getAvailableBalanceQuantity()+"");
         assetsToDeliverEditText.setText(((selectedUsersCount > 0) ? selectedUsersCount : selectedGroupsCount) + "");
-        assetDeliveryRemainingText.setText(digitalAsset.getAvailableBalanceQuantity() + " Assets Remaining");
+        assetDeliveryRemainingText.setText(digitalAsset.getAvailableBalanceQuantity() + " " + getResources().getString(R.string.dap_issuer_wallet_remaining_assets));
 
         if (digitalAsset.getAvailableBalanceQuantity() == 0) {
             selectUsersButton.setOnClickListener(null);
@@ -442,26 +444,20 @@ public class AssetDeliveryFragment extends AbstractFermatFragment {
         assetDeliveryNameText.setText(digitalAsset.getName());
         //assetsToDeliverEditText.setText(digitalAsset.getAvailableBalanceQuantity()+"");
         assetsToDeliverEditText.setText(((selectedUsersCount > 0) ? selectedUsersCount : selectedGroupsCount) + "");
-        assetDeliveryRemainingText.setText(digitalAsset.getAvailableBalanceQuantity() + " Assets Remaining");
+        assetDeliveryRemainingText.setText(digitalAsset.getAvailableBalanceQuantity() + " " + getResources().getString(R.string.dap_issuer_wallet_remaining_assets));
     }
 
     private void configureToolbar() {
         toolbar = getToolbar();
         if (toolbar != null) {
-//            toolbar.setBackgroundColor(Color.parseColor("#1d1d25"));
             toolbar.setTitleTextColor(Color.WHITE);
             toolbar.setBackgroundColor(Color.TRANSPARENT);
             toolbar.setBottom(Color.WHITE);
-//            if (Build.VERSION.SDK_INT > Build.VERSION_CODES.LOLLIPOP) {
-//                Window window = getActivity().getWindow();
-//                window.setStatusBarColor(Color.parseColor("#1d1d25"));
-//            }
             Drawable drawable = null;
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP)
                 drawable = getResources().getDrawable(R.drawable.dap_wallet_asset_issuer_action_bar_gradient_colors, null);
             else
                 drawable = getResources().getDrawable(R.drawable.dap_wallet_asset_issuer_action_bar_gradient_colors);
-
             toolbar.setBackground(drawable);
         }
     }
