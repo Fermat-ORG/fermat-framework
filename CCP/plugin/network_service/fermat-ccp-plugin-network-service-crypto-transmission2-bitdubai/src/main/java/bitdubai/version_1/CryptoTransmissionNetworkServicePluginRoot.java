@@ -1190,21 +1190,11 @@ public class CryptoTransmissionNetworkServicePluginRoot extends AbstractPlugin i
 
         System.out.println("CryptoTransmissionNetworkServicePluginRoot - handleClientConnectionLooseNotificationEvent");
 
-        try {
-
-            if(communicationNetworkServiceConnectionManager != null) {
-                communicationNetworkServiceConnectionManager.stop();
-            }
-
-            if(actorNetworkServiceRecordedAgent!=null) {
-                actorNetworkServiceRecordedAgent.stop();
-            }
-
-            this.register = Boolean.FALSE;
-
-        } catch (CantStopAgentException e) {
-            e.printStackTrace();
+        if(communicationNetworkServiceConnectionManager != null) {
+            communicationNetworkServiceConnectionManager.stop();
         }
+
+        this.register = Boolean.FALSE;
 
     }
 
@@ -1216,28 +1206,16 @@ public class CryptoTransmissionNetworkServicePluginRoot extends AbstractPlugin i
 
         System.out.println("CryptoTransmissionNetworkServicePluginRoot - handleClientSuccessfullReconnectNotificationEvent");
 
-        try {
-
-            if (communicationNetworkServiceConnectionManager != null){
-                communicationNetworkServiceConnectionManager.restart();
-            }else{
-                this.initializeCommunicationNetworkServiceConnectionManager();
-            }
-
-            if(actorNetworkServiceRecordedAgent == null) {
-                initializeIntraActorAgent();
-            }else {
-                actorNetworkServiceRecordedAgent.start();
-            }
+        if (communicationNetworkServiceConnectionManager != null){
+            communicationNetworkServiceConnectionManager.restart();
+        }else{
+            this.initializeCommunicationNetworkServiceConnectionManager();
+        }
 
             /*
              * Mark as register
              */
-            this.register = Boolean.TRUE;
-
-        } catch (CantStartAgentException e) {
-            e.printStackTrace();
-        }
+        this.register = Boolean.TRUE;
 
     }
 

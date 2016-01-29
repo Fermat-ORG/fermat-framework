@@ -1077,21 +1077,13 @@ public final class CryptoPaymentRequestNetworkServicePluginRoot extends Abstract
     @Override
     public void handleClientConnectionLooseNotificationEvent(FermatEvent fermatEvent) {
 
-        try {
+        System.out.println("CryptoPaymentRequestNetworkServicePluginRoot - handleClientConnectionLooseNotificationEvent");
 
-            if(communicationNetworkServiceConnectionManager != null) {
-                communicationNetworkServiceConnectionManager.stop();
-            }
-
-            if(cryptoPaymentRequestExecutorAgent != null) {
-                cryptoPaymentRequestExecutorAgent.stop();
-            }
-
-            this.register = Boolean.FALSE;
-
-        } catch (Exception e) {
-            e.printStackTrace();
+        if(communicationNetworkServiceConnectionManager != null) {
+            communicationNetworkServiceConnectionManager.stop();
         }
+
+        this.register = Boolean.FALSE;
 
     }
 
@@ -1103,24 +1095,16 @@ public final class CryptoPaymentRequestNetworkServicePluginRoot extends Abstract
 
         System.out.println("CryptoPaymentRequestNetworkServicePluginRoot - Starting method handleClientSuccessfullReconnectNotificationEvent ");
 
-        try {
-
-            if (communicationNetworkServiceConnectionManager != null){
-               communicationNetworkServiceConnectionManager.restart();
-            }
-
-            if(cryptoPaymentRequestExecutorAgent != null) {
-                cryptoPaymentRequestExecutorAgent.start();
-            }
+        if (communicationNetworkServiceConnectionManager != null){
+            communicationNetworkServiceConnectionManager.restart();
+        }else{
+            this.initializeCommunicationNetworkServiceConnectionManager();
+        }
 
             /*
              * Mark as register
              */
-            this.register = Boolean.TRUE;
-
-        } catch (CantStartAgentException e) {
-            e.printStackTrace();
-        }
+        this.register = Boolean.TRUE;
 
     }
 

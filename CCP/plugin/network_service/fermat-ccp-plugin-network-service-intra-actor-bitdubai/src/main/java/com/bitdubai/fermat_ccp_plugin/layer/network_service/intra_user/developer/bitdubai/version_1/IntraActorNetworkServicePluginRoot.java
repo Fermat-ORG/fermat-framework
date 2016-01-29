@@ -1331,21 +1331,11 @@ public class IntraActorNetworkServicePluginRoot extends AbstractPlugin implement
 
         System.out.println("IntraActorNetworkServicePluginRoot - handleClientConnectionLooseNotificationEvent");
 
-        try {
-
             if(communicationNetworkServiceConnectionManager != null) {
                 communicationNetworkServiceConnectionManager.stop();
             }
 
-            if(actorNetworkServiceRecordedAgent!=null) {
-                actorNetworkServiceRecordedAgent.stop();
-            }
-
             this.register = Boolean.FALSE;
-
-        } catch (CantStopAgentException e) {
-            e.printStackTrace();
-        }
 
     }
 
@@ -1357,28 +1347,16 @@ public class IntraActorNetworkServicePluginRoot extends AbstractPlugin implement
 
         System.out.println("IntraActorNetworkServicePluginRoot - handleClientSuccessfullReconnectNotificationEvent");
 
-        try {
-
             if (communicationNetworkServiceConnectionManager != null){
                 communicationNetworkServiceConnectionManager.restart();
             }else{
                 this.initializeCommunicationNetworkServiceConnectionManager();
             }
 
-            if(actorNetworkServiceRecordedAgent == null) {
-                initializeIntraActorAgent();
-            }else {
-                actorNetworkServiceRecordedAgent.start();
-            }
-
             /*
              * Mark as register
              */
             this.register = Boolean.TRUE;
-
-        } catch (CantStartAgentException e) {
-            e.printStackTrace();
-        }
 
     }
 
