@@ -182,7 +182,9 @@ public class AssetUserWalletImpl implements AssetUserWallet {
     public List<AssetUserWalletTransaction> getAllAvailableTransactions(String assetPublicKey) throws CantGetTransactionsException {
         List<AssetUserWalletTransaction> allCreditAvailable = getTransactions(BalanceType.AVAILABLE, TransactionType.CREDIT, assetPublicKey);
         List<AssetUserWalletTransaction> alldebitAvailable = getTransactions(BalanceType.AVAILABLE, TransactionType.DEBIT, assetPublicKey);
-        allCreditAvailable.removeAll(alldebitAvailable);
+        for (AssetUserWalletTransaction transaction : alldebitAvailable) {
+            allCreditAvailable.remove(transaction);
+        }
         return allCreditAvailable;
     }
 

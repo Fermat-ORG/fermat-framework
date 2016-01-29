@@ -148,11 +148,11 @@ public class RedeemPointActorPluginRoot extends AbstractPlugin implements
     }
 
     @Override
-    public ActorAssetRedeemPoint getActorByPublicKey(String actorPublicKey) throws CantGetAssetRedeemPointActorsException,
+    public ActorAssetRedeemPoint getActorRegisteredByPublicKey(String actorPublicKey) throws CantGetAssetRedeemPointActorsException,
             CantAssetRedeemPointActorNotFoundException {
 
         try {
-            return this.redeemPointActorDao.getActorByPublicKey(actorPublicKey);
+            return this.redeemPointActorDao.getActorRegisteredByPublicKey(actorPublicKey);
         } catch (CantGetAssetRedeemPointActorsException e) {
             throw new CantGetAssetRedeemPointActorsException("", FermatException.wrapException(e), "Cant Get Actor Asset User from Data Base", null);
         }
@@ -383,8 +383,13 @@ public class RedeemPointActorPluginRoot extends AbstractPlugin implements
 
                 if (request.getCryptoAddressDealer() == CryptoAddressDealers.DAP_WATCH_ONLY || request.getCryptoAddressDealer() == CryptoAddressDealers.DAP_ASSET) {
 
-                    if (request.getAction().equals(RequestAction.ACCEPT) || request.getAction().equals(RequestAction.NONE))
+                    if (request.getAction().equals(RequestAction.ACCEPT) || request.getAction().equals(RequestAction.NONE) || request.getAction().equals(RequestAction.RECEIVED))
                         this.handleCryptoAddressReceivedEvent(request);
+                    try {
+                        cryptoAddressesNetworkServiceManager.markReceivedRequest(request.getRequestId());
+                    } catch (CantConfirmAddressExchangeRequestException e) {
+                        throw new CantHandleCryptoAddressesNewsEventException(e, "Error marking request as received.", null);
+                    }
 
 //                if (request.getAction().equals(RequestAction.DENY))
 //                    this.handleCryptoAddressDeniedEvent(request);

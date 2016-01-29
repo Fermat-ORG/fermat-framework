@@ -748,12 +748,12 @@ public class SubAppRuntimeEnginePluginRoot extends AbstractPlugin implements Sub
             runtimeTabStrip.setTabsTextColor("#ffffff");
 
             runtimeTab = new Tab();
-            runtimeTab.setLabel("Editable");
+            runtimeTab.setLabel("Draft");
             runtimeTab.setFragment(Fragments.DAP_SUB_APP_ASSET_FACTORY_EDITABLE_TAB_FRAGMENT);
             runtimeTabStrip.addTab(runtimeTab);
 
             runtimeTab = new Tab();
-            runtimeTab.setLabel("Published");
+            runtimeTab.setLabel("Issued");
             runtimeTab.setFragment(Fragments.DAP_SUB_APP_ASSET_FACTORY_PUBLISHED_TAB_FRAGMENT);
             runtimeTabStrip.addTab(runtimeTab);
 
@@ -779,7 +779,7 @@ public class SubAppRuntimeEnginePluginRoot extends AbstractPlugin implements Sub
             statusBar.setColor("#1d1d25");
 
             runtimeTitleBar = new TitleBar();
-            runtimeTitleBar.setLabel("Asset Editor");
+            runtimeTitleBar.setLabel("Draft Asset");
             runtimeTitleBar.setColor("#1d1d25");
 
             runtimeActivity.setTitleBar(runtimeTitleBar);

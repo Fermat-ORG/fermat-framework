@@ -23,7 +23,8 @@
             android:layout_gravity="right"
             android:paddingLeft="10dp"
             android:paddingBottom="10dp"
-            android:orientation="vertical">
+            android:orientation="vertical"
+            android:textColor="@android:color/black">
             <!--
             android:background="@drawable/message_bg"
              -->

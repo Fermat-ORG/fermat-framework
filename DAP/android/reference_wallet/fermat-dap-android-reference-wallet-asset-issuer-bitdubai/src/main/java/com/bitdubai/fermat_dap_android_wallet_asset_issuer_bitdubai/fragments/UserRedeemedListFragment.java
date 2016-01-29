@@ -124,9 +124,8 @@ public class UserRedeemedListFragment extends FermatWalletListFragment<UserRedee
                     .setIconRes(R.drawable.asset_issuer)
                     .setVIewColor(R.color.dap_issuer_view_color)
                     .setTitleTextColor(R.color.dap_issuer_view_color)
-                    .setSubTitle("Asset Issuer Redeemed List.")
-                    .setBody("Assets that have been redeemed at redeem points connected to you are a very important data.\n\n" +
-                            "We are collecting those statistics in this section for you to analize it.")
+                    .setSubTitle(R.string.dap_issuer_wallet_redeemed_list_subTitle)
+                    .setBody(R.string.dap_issuer_wallet_redeemed_list_body)
                     .setTemplateType(PresentationDialog.TemplateType.TYPE_PRESENTATION_WITHOUT_IDENTITIES)
                     .setIsCheckEnabled(checkButton)
                     .build();
@@ -156,7 +155,7 @@ public class UserRedeemedListFragment extends FermatWalletListFragment<UserRedee
 
         } catch (Exception e) {
             errorManager.reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.UNSTABLE, FermatException.wrapException(e));
-            makeText(getActivity(), "Asset Issuer system error",
+            makeText(getActivity(), R.string.dap_issuer_wallet_system_error,
                     Toast.LENGTH_SHORT).show();
         }
         return super.onOptionsItemSelected(item);
@@ -178,20 +177,14 @@ public class UserRedeemedListFragment extends FermatWalletListFragment<UserRedee
     private void configureToolbar() {
         Toolbar toolbar = getToolbar();
         if (toolbar != null) {
-//            toolbar.setBackgroundColor(Color.parseColor("#1d1d25"));
             toolbar.setTitleTextColor(Color.WHITE);
             toolbar.setBackgroundColor(Color.TRANSPARENT);
             toolbar.setBottom(Color.WHITE);
-//            if (Build.VERSION.SDK_INT > Build.VERSION_CODES.LOLLIPOP) {
-//                Window window = getActivity().getWindow();
-//                window.setStatusBarColor(Color.parseColor("#1d1d25"));
-//            }
             Drawable drawable = null;
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP)
                 drawable = getResources().getDrawable(R.drawable.dap_wallet_asset_issuer_action_bar_gradient_colors, null);
             else
                 drawable = getResources().getDrawable(R.drawable.dap_wallet_asset_issuer_action_bar_gradient_colors);
-
             toolbar.setBackground(drawable);
         }
     }
@@ -330,6 +323,7 @@ public class UserRedeemedListFragment extends FermatWalletListFragment<UserRedee
         List<UserRedeemed> users = new ArrayList<>();
         if (moduleManager != null) {
             try {
+                if (digitalAsset == null) digitalAsset = (DigitalAsset) appSession.getData("asset_data");
                 users = Data.getUserRedeemedList("walletPublicKeyTest", digitalAsset, moduleManager);
 
             } catch (Exception ex) {
@@ -342,7 +336,7 @@ public class UserRedeemedListFragment extends FermatWalletListFragment<UserRedee
             }
         } else {
             Toast.makeText(getActivity(),
-                    "Sorry, an error happened in BrokerListActivityFragment (Module == null)",
+                    R.string.dap_issuer_wallet_system_error,
                     Toast.LENGTH_SHORT).
                     show();
         }

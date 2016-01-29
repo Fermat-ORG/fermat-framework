@@ -153,7 +153,6 @@ public class UserRedemptionRedeemer extends AbstractDigitalAssetSwap {
                     }
                     userRedemptionDao.updateActorAssetRedeemPoint(actorAssetRedeemPoint, digitalAssetMetadata.getGenesisTransaction());
                 }
-
                 //First, I going to persist in database the basic information about digitalAssetMetadata
                 System.out.println("ASSET USER REDEMPTION begins for persisted");
                 //Now, I'll check is Hash wasn't modified
@@ -251,7 +250,6 @@ public class UserRedemptionRedeemer extends AbstractDigitalAssetSwap {
                 actorAssetRedeemPoint.getActorPublicKey(),
                 actorAddress);
         System.out.println("ASSET USER REDEMPTION registered in database");
-        persistInLocalStorage(digitalAssetMetadata);
     }
 
     @Override

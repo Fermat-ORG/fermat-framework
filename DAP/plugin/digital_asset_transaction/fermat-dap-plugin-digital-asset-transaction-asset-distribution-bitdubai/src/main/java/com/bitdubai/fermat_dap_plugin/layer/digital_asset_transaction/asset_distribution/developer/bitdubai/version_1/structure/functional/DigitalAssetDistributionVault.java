@@ -2,8 +2,10 @@ package com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.asset_dis
 
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
 import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.interfaces.BitcoinNetworkManager;
+import com.bitdubai.fermat_dap_api.layer.all_definition.digital_asset.DigitalAssetMetadata;
 import com.bitdubai.fermat_dap_api.layer.all_definition.exceptions.CantSetObjectException;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_issuer.interfaces.ActorAssetIssuerManager;
+import com.bitdubai.fermat_dap_api.layer.dap_transaction.common.exceptions.CantGetDigitalAssetFromLocalStorageException;
 import com.bitdubai.fermat_dap_api.layer.dap_transaction.common.interfaces.AbstractDigitalAssetVault;
 import com.bitdubai.fermat_dap_api.layer.dap_wallet.asset_issuer_wallet.interfaces.AssetIssuerWallet;
 import com.bitdubai.fermat_dap_api.layer.dap_wallet.asset_issuer_wallet.interfaces.AssetIssuerWalletManager;
@@ -44,4 +46,19 @@ public class DigitalAssetDistributionVault extends AbstractDigitalAssetVault {
         return this.assetIssuerWalletManager.loadAssetIssuerWallet(this.walletPublicKey);
     }
 
+    /**
+     * This method get the XML file and cast the DigitalAssetMetadata object
+     *
+     * @param internalId AssetIssuing: Asset Issuing: This id is an UUID provided by DigitalAssetTransactionFactory, this will be used to identify the file in Local Storage
+     * @return
+     * @throws CantGetDigitalAssetFromLocalStorageException
+     */
+    @Override
+    public DigitalAssetMetadata getDigitalAssetMetadataFromLocalStorage(String internalId) throws CantGetDigitalAssetFromLocalStorageException {
+        try {
+            return getIssuerWallet().getDigitalAssetMetadata(internalId);
+        } catch (CantLoadWalletException e) {
+            throw new CantGetDigitalAssetFromLocalStorageException();
+        }
+    }
 }

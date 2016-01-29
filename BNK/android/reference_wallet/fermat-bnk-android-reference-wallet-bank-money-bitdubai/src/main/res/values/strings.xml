@@ -26,4 +26,11 @@
     <string name="transaction_amount" translatable="false">Amount: </string>
     <string name="transaction_date" translatable="false">Date: </string>
     <string name="transaction_description" translatable="false">Concept: </string>
+
+    <!--Dialog Help - Init-->
+    <string name="bnk_bank_money_wallet_account_subTitle">prueba subtitle.</string>
+    <string name="bnk_bank_money_wallet_account_body">prueba Body.</string>
+    <string name="bnk_bank_money_wallet_account_footer">prueba footer.</string>
+    <!--Dialog Help - End-->
+
 </resources>
