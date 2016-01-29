@@ -330,8 +330,8 @@ public class UserRedemptionMonitorAgent implements Agent, DealsWithLogger, Deals
                         System.out.println("VAMM: USER REDEMPTION BROADCAST WITH ERROR");
                         if (record.getAttemptNumber() < UserRedemptionDigitalAssetTransactionPluginRoot.BROADCASTING_MAX_ATTEMPT_NUMBER) {
                             System.out.println("VAMM: ATTEMPT NUMBER: " + record.getAttemptNumber());
-                            bitcoinNetworkManager.broadcastTransaction(record.getGenesisTransactionSent());
                             userRedemptionDao.newAttempt(record.getTransactionId());
+                            bitcoinNetworkManager.broadcastTransaction(record.getGenesisTransactionSent());
                         } else {
                             System.out.println("VAMM: MAX NUMBER OF ATTEMPT REACHED, CANCELLING.");
                             bitcoinNetworkManager.cancelBroadcast(record.getGenesisTransactionSent());
