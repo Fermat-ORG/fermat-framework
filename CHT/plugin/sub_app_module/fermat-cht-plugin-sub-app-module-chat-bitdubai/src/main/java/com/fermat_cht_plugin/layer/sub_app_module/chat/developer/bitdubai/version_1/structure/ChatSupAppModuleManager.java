@@ -6,6 +6,7 @@ import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantDeleteMessageEx
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantGetChatException;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantGetContactException;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantGetMessageException;
+import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantGetNetworkServicePublicKeyException;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantNewEmptyChatException;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantNewEmptyContactException;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantNewEmptyMessageException;
@@ -116,5 +117,15 @@ public class ChatSupAppModuleManager implements ChatManager {
     @Override
     public List<Contact> discoverActorsRegistered() throws CantGetContactException {
         return middlewareChatManager.discoverActorsRegistered();
+    }
+
+    /**
+     * This method returns the Network Service public key
+     * @return
+     * @throws CantGetNetworkServicePublicKeyException
+     */
+    @Override
+    public String getNetworkServicePublicKey() throws CantGetNetworkServicePublicKeyException {
+        return middlewareChatManager.getNetworkServicePublicKey();
     }
 }
