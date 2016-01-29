@@ -168,15 +168,18 @@ public class ActorNetworkServiceRecordedAgent extends FermatAgent{
 
         try {
 
-            if (!actorNetworkServicePluginRoot.getWsCommunicationsCloudClientManager().getCommunicationsCloudClientConnection().isConnected()){
-                //System.out.println("ActorNetworkServiceRecordedAgent - sendCycle() no connection available ... ");
-                return;
-            }else {
-                // function to process and send the rigth message to the counterparts.
-                processSend();
+            if (actorNetworkServicePluginRoot.getWsCommunicationsCloudClientManager().getCommunicationsCloudClientConnection() != null){
 
-                //Sleep for a time
-                TimeUnit.SECONDS.sleep(2);
+                if (!actorNetworkServicePluginRoot.getWsCommunicationsCloudClientManager().getCommunicationsCloudClientConnection().isConnected()){
+                    //System.out.println("ActorNetworkServiceRecordedAgent - sendCycle() no connection available ... ");
+                    return;
+                }else {
+                    // function to process and send the rigth message to the counterparts.
+                    processSend();
+
+                    //Sleep for a time
+                    TimeUnit.SECONDS.sleep(2);
+                }
             }
 
         } catch (InterruptedException e) {
@@ -236,19 +239,20 @@ public class ActorNetworkServiceRecordedAgent extends FermatAgent{
 
         try {
 
-            if (!actorNetworkServicePluginRoot.getWsCommunicationsCloudClientManager().getCommunicationsCloudClientConnection().isConnected()){
-                //System.out.println("ActorNetworkServiceRecordedAgent - receiveCycle() no connection available ... ");
-                return;
+            if (actorNetworkServicePluginRoot.getWsCommunicationsCloudClientManager().getCommunicationsCloudClientConnection() != null) {
+
+                if (!actorNetworkServicePluginRoot.getWsCommunicationsCloudClientManager().getCommunicationsCloudClientConnection().isConnected()) {
+                    //System.out.println("ActorNetworkServiceRecordedAgent - receiveCycle() no connection available ... ");
+                    return;
+                } else {
+
+                    // function to process and send the right message to the counterparts.
+                    processReceive();
+
+                    //Sleep for a time
+                    Thread.sleep(RECEIVE_SLEEP_TIME);
+                }
             }
-
-            if(actorNetworkServicePluginRoot.isRegister() && actorNetworkServicePluginRoot.isStarted()) {
-
-                // function to process and send the right message to the counterparts.
-                processReceive();
-            }
-
-            //Sleep for a time
-            Thread.sleep(RECEIVE_SLEEP_TIME);
 
         } catch (InterruptedException e) {
             status = AgentStatus.STOPPED;

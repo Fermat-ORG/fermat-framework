@@ -131,19 +131,21 @@ public final class CryptoAddressesExecutorAgent extends FermatAgent {
 
         try {
 
-            if (!cryptoAddressesNetworkServicePluginRoot.getWsCommunicationsCloudClientManager().getCommunicationsCloudClientConnection().isConnected()){
-                //System.out.println("CryptoAddressesExecutorAgent - sendCycle() no connection available ... ");
-                return;
+            if (cryptoAddressesNetworkServicePluginRoot.getWsCommunicationsCloudClientManager().getCommunicationsCloudClientConnection() != null){
+
+                if (!cryptoAddressesNetworkServicePluginRoot.getWsCommunicationsCloudClientManager().getCommunicationsCloudClientConnection().isConnected()){
+                    //System.out.println("CryptoAddressesExecutorAgent - sendCycle() no connection available ... ");
+                    return;
+                }else {
+
+                    // function to process and send the right message to the counterparts.
+                    processSend();
+
+                    //Sleep for a while
+                    Thread.sleep(SLEEP_TIME);
+
+                }
             }
-
-            if(cryptoAddressesNetworkServicePluginRoot.isStarted()) {
-
-                // function to process and send the right message to the counterparts.
-                processSend();
-            }
-
-            //Sleep for a time
-            Thread.sleep(SLEEP_TIME);
 
         } catch (InterruptedException e) {
 
@@ -245,17 +247,20 @@ public final class CryptoAddressesExecutorAgent extends FermatAgent {
 
         try {
 
-            if (!cryptoAddressesNetworkServicePluginRoot.getWsCommunicationsCloudClientManager().getCommunicationsCloudClientConnection().isConnected()){
-                //System.out.println("CryptoAddressesExecutorAgent - receiveCycle() no connection available ... ");
-                return;
-            }else {
+            if (cryptoAddressesNetworkServicePluginRoot.getWsCommunicationsCloudClientManager().getCommunicationsCloudClientConnection() != null){
 
-                // function to process and send the right message to the counterparts.
-                processReceive();
+                if (!cryptoAddressesNetworkServicePluginRoot.getWsCommunicationsCloudClientManager().getCommunicationsCloudClientConnection().isConnected()){
+                    //System.out.println("CryptoAddressesExecutorAgent - receiveCycle() no connection available ... ");
+                    return;
+                }else {
 
-                //Sleep for a while
-                Thread.sleep(SLEEP_TIME);
+                    // function to process and send the right message to the counterparts.
+                    processReceive();
 
+                    //Sleep for a while
+                    Thread.sleep(SLEEP_TIME);
+
+                }
             }
 
         } catch (InterruptedException e) {

@@ -136,16 +136,19 @@ public class CryptoPaymentRequestExecutorAgent extends FermatAgent {
 
         try {
 
-            if (!cryptoPaymentRequestNetworkServicePluginRoot.getWsCommunicationsCloudClientManager().getCommunicationsCloudClientConnection().isConnected()){
-                //System.out.println("CryptoPaymentRequestExecutorAgent - sendCycle() no connection available ... ");
-                return;
-            }else {
+            if (cryptoPaymentRequestNetworkServicePluginRoot.getWsCommunicationsCloudClientManager().getCommunicationsCloudClientConnection() != null) {
 
-                // function to process and send the rigth message to the counterparts.
-                processSend();
+                if (!cryptoPaymentRequestNetworkServicePluginRoot.getWsCommunicationsCloudClientManager().getCommunicationsCloudClientConnection().isConnected()) {
+                    //System.out.println("CryptoPaymentRequestExecutorAgent - sendCycle() no connection available ... ");
+                    return;
+                } else {
 
-                //Sleep for a time
-                Thread.sleep(SLEEP_TIME);
+                    // function to process and send the rigth message to the counterparts.
+                    processSend();
+
+                    //Sleep for a time
+                    Thread.sleep(SLEEP_TIME);
+                }
             }
 
         } catch (InterruptedException e) {
@@ -261,14 +264,20 @@ public class CryptoPaymentRequestExecutorAgent extends FermatAgent {
 
         try {
 
-            if(cryptoPaymentRequestNetworkServicePluginRoot.isRegister()) {
+            if (cryptoPaymentRequestNetworkServicePluginRoot.getWsCommunicationsCloudClientManager().getCommunicationsCloudClientConnection() != null) {
 
-                // function to process and send the rigth message to the counterparts.
-                processReceive();
+                if (!cryptoPaymentRequestNetworkServicePluginRoot.getWsCommunicationsCloudClientManager().getCommunicationsCloudClientConnection().isConnected()) {
+                    //System.out.println("CryptoPaymentRequestExecutorAgent - sendCycle() no connection available ... ");
+                    return;
+                } else {
+
+                    // function to process and send the rigth message to the counterparts.
+                    processReceive();
+
+                    //Sleep for a time
+                    Thread.sleep(SLEEP_TIME);
+                }
             }
-
-            //Sleep for a time
-            Thread.sleep(SLEEP_TIME);
 
         } catch (InterruptedException e) {
             status = AgentStatus.STOPPED;
