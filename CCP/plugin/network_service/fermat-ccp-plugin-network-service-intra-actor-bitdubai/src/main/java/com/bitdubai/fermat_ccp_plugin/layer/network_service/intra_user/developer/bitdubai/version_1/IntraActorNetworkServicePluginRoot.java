@@ -1070,13 +1070,14 @@ public class IntraActorNetworkServicePluginRoot extends AbstractPlugin implement
                 {
                     if(record.getSentCount() > 10 )
                     {
-                        if(record.getSentCount() > 20)
-                        {
+                      //  if(record.getSentCount() > 20)
+                      //  {
                             //reprocess at two hours
-                            reprocessTimer =  2 * 3600 * 1000;
-                        }
+                          //  reprocessTimer =  2 * 3600 * 1000;
+                       // }
 
                         record.setActorProtocolState(ActorProtocolState.WAITING_RESPONSE);
+                        record.setSentCount(1);
                         //update state and process again later
 
                         outgoingNotificationDao.update(record);
@@ -2151,7 +2152,7 @@ public class IntraActorNetworkServicePluginRoot extends AbstractPlugin implement
                 // change message state to process retry later
                 reprocessMessage();
             }
-        }, reprocessTimer);
+        },0, reprocessTimer);
     }
 
 

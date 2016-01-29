@@ -1362,13 +1362,14 @@ public class CryptoAddressesNetworkServicePluginRoot extends AbstractNetworkServ
                 {
                     if(record.getSentNumber() > 10)
                     {
-                        if(record.getSentNumber() > 20)
-                        {
+                      //  if(record.getSentNumber() > 20)
+                       // {
                             //reprocess at two hours
-                            reprocessTimer =  2 * 3600 * 1000;
-                        }
+                       //     reprocessTimer =  2 * 3600 * 1000;
+                        //}
                          //update state and process again later
                         cryptoAddressesNetworkServiceDao.changeProtocolState(record.getRequestId(),ProtocolState.WAITING_RESPONSE);
+                        cryptoAddressesNetworkServiceDao.changeSentNumber(record.getRequestId(),1);
                     }
                     else
                     {
@@ -1460,7 +1461,9 @@ public class CryptoAddressesNetworkServicePluginRoot extends AbstractNetworkServ
                 // change message state to process retry later
                 reprocessMessage();
             }
-        }, reprocessTimer);
+        }, 0,reprocessTimer);
+
+
     }
 
     public EventManager getEventManager() {

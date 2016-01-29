@@ -930,12 +930,11 @@ public class CryptoTransmissionNetworkServicePluginRoot extends AbstractPlugin i
     }
 
 
-
     private void checkFailedDeliveryTime(String destinationPublicKey)
     {
         try{
 
-            Map<String, Object> filters = new HashMap<>();
+            Map<String, Object> filters =new HashMap<>();
             filters.put(CryptoTransmissionNetworkServiceDatabaseConstants.CRYPTO_TRANSMISSION_METADATA_DESTINATION_PUBLIC_KEY_COLUMN_NAME, destinationPublicKey);
                     /*
          * Read all pending CryptoTransmissionMetadata from database
@@ -950,11 +949,13 @@ public class CryptoTransmissionNetworkServicePluginRoot extends AbstractPlugin i
                 {
                     if(record.getSentCount() > 10)
                     {
-                        if(record.getSentCount() > 20)
-                            reprocessTimer =  2 * 3600 * 1000; //reprocess at two hours
+                       // if(record.getSentCount() > 20)
+                         //   reprocessTimer =  2 * 3600 * 1000; //reprocess at two hours
 
                         //update state and process again later
                         outgoingNotificationDao.changeCryptoTransmissionProtocolState(record.getTransactionId(), CryptoTransmissionProtocolState.WAITING_FOR_RESPONSE);
+                        outgoingNotificationDao.changeSentNumber(record.getTransactionId(), 1);
+
                     }
                     else
                     {
@@ -1714,6 +1715,6 @@ public class CryptoTransmissionNetworkServicePluginRoot extends AbstractPlugin i
                 // change message state to process retry later
                 reprocessMessage();
             }
-        }, reprocessTimer);
+        }, 0,reprocessTimer);
     }
 }
