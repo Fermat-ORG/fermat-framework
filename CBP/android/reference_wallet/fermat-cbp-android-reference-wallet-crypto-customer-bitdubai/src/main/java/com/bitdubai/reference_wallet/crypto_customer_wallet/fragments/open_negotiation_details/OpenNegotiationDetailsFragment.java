@@ -181,10 +181,7 @@ public class OpenNegotiationDetailsFragment extends AbstractFermatFragment<Crypt
                 dialogFragment.configure("Payment Methods", paymentMethods);
                 dialogFragment.setListener(new SimpleListDialogFragment.ItemSelectedListener<String>() {
                     @Override
-                    public void onItemSelected(String selectedItem) {
-                        putClause(clause, selectedItem);
-                        adapter.changeDataSet(negotiationInfo);
-                    }
+                    public void onItemSelected(String selectedItem) { actionListenerCustomerPaymentMethod(clause, selectedItem);     }
                 });
 
                 dialogFragment.show(getFragmentManager(), "paymentMethodsDialog");
@@ -369,11 +366,12 @@ public class OpenNegotiationDetailsFragment extends AbstractFermatFragment<Crypt
         if(clauses.get(ClauseType.BROKER_PAYMENT_METHOD) == null)
             putClause(ClauseType.BROKER_PAYMENT_METHOD,paymentMethods.get(0));
 
+        if(clauses.get(ClauseType.CUSTOMER_DATE_TIME_TO_DELIVER) == null)
+            putClause(ClauseType.CUSTOMER_DATE_TIME_TO_DELIVER,timeInMillisStr);
+
         if(clauses.get(ClauseType.BROKER_DATE_TIME_TO_DELIVER) == null)
             putClause(ClauseType.BROKER_DATE_TIME_TO_DELIVER,timeInMillisStr);
 
-        if(clauses.get(ClauseType.CUSTOMER_DATE_TIME_TO_DELIVER) == null)
-            putClause(ClauseType.CUSTOMER_DATE_TIME_TO_DELIVER,timeInMillisStr);
 
         brokerImage.setImageDrawable(brokerImg);
         brokerName.setText(broker.getAlias());
@@ -407,6 +405,23 @@ public class OpenNegotiationDetailsFragment extends AbstractFermatFragment<Crypt
 
         return cont;
 
+    }
+
+    //ACTION LISTENER FOR CUSTOMER PAYMENT METHOD
+    private void actionListenerCustomerPaymentMethod(ClauseInformation clause, String selectedItem){
+
+        final Map<ClauseType, ClauseInformation> clauses = negotiationInfo.getClauses();
+
+        //ADD SELECTED ITEN
+        putClause(clause, selectedItem);
+
+        //ADD CLAUSE OF THE INFO THE PAYMENT
+        putCustomerPaymentInfo(clauses);
+
+        //ADD CLAUSE OF THE INFO THE PAYMENT
+        putBrokerPaymentInfo(clauses);
+
+        adapter.changeDataSet(negotiationInfo);
     }
 
     //ACTION LISTENER FOR CLAUSE BROKER CURRNCY QUANTTY
@@ -510,55 +525,6 @@ public class OpenNegotiationDetailsFragment extends AbstractFermatFragment<Crypt
 
     }
 
-    //PUT CLAUSE
-    public void putClause(final ClauseInformation clause, final String value) {
-
-        final ClauseType type = clause.getType();
-
-        ClauseInformation clauseInformation = new ClauseInformation() {
-            @Override
-            public UUID getClauseID() {
-                return clause.getClauseID();
-            }
-
-            @Override
-            public ClauseType getType() {
-                return type;
-            }
-
-            @Override
-            public String getValue() {
-                return value;
-            }
-
-            @Override
-            public ClauseStatus getStatus() {
-                return clause.getStatus();
-            }
-        };
-
-        negotiationInfo.getClauses().put(type, clauseInformation);
-    }
-
-    public void putClause(final ClauseType clauseType, final String value) {
-
-        ClauseInformation clauseInformation = new ClauseInformation() {
-            @Override
-            public UUID getClauseID() { return UUID.randomUUID(); }
-
-            @Override
-            public ClauseType getType() { return clauseType; }
-
-            @Override
-            public String getValue() { return (value != null) ? value : ""; }
-
-            @Override
-            public ClauseStatus getStatus() { return ClauseStatus.DRAFT; }
-        };
-
-        negotiationInfo.getClauses().put(clauseType, clauseInformation);
-    }
-
     //VALIDATE CLAUSE
     private Boolean validateClauses(Map<ClauseType, ClauseInformation> clauses){
 
@@ -622,6 +588,101 @@ public class OpenNegotiationDetailsFragment extends AbstractFermatFragment<Crypt
         for (Currency item: currencies)
             if(currencyPay.equals(item.getCode())) currencies.remove(item);
 
+    }
+
+    //GET CLAUSE OF INFO OF RECEIVED
+    private void putCustomerPaymentInfo(Map<ClauseType, ClauseInformation> clauses){
+
+        String currencyEquals = clauses.get(ClauseType.CUSTOMER_PAYMENT_METHOD).getValue();
+
+        if(currencyEquals != null) {
+            if (currencyEquals.equals(TestData.CRYPTO_TRANSFER))
+                Toast.makeText(getActivity(), "CRYPTO CUS PAY.", Toast.LENGTH_LONG).show(); if(clauses.get(ClauseType.BROKER_CRYPTO_ADDRESS) == null) putClause(ClauseType.BROKER_CRYPTO_ADDRESS, "Crypto Address is Generate Automatic");
+
+            else if (currencyEquals.equals(TestData.BANK_TRANSFER))
+                Toast.makeText(getActivity(), "BANK CUS PAY.", Toast.LENGTH_LONG).show();if(clauses.get(ClauseType.BROKER_BANK_ACCOUNT) == null) putClause(ClauseType.BROKER_BANK_ACCOUNT, "Info Bank");
+
+            else if (currencyEquals.equals(TestData.CASH_DELIVERY) || (currencyEquals.equals(TestData.CASH_IN_HAND)))
+                Toast.makeText(getActivity(), "CASH CUS PAY.", Toast.LENGTH_LONG).show();if(clauses.get(ClauseType.BROKER_PLACE_TO_DELIVER) == null) putClause(ClauseType.BROKER_PLACE_TO_DELIVER, "Insert Place To Delivery");
+        }
+
+    }
+
+    //GET CLAUSE OF INFO OF PAYMENT
+    private void putBrokerPaymentInfo(Map<ClauseType, ClauseInformation> clauses){
+
+        String currencyEquals = clauses.get(ClauseType.BROKER_PAYMENT_METHOD).getValue();
+
+        if(currencyEquals != null) {
+
+            if (currencyEquals.equals(TestData.CRYPTO_TRANSFER))
+                Toast.makeText(getActivity(), "CRYPTO BRO PAY.", Toast.LENGTH_LONG).show();if (clauses.get(ClauseType.CUSTOMER_CRYPTO_ADDRESS) == null) putClause(ClauseType.CUSTOMER_CRYPTO_ADDRESS, "Crypto Address is Generate Automatic");
+
+            else if (currencyEquals.equals(TestData.BANK_TRANSFER))
+                Toast.makeText(getActivity(), "BANK BRO PAY.", Toast.LENGTH_LONG).show();if (clauses.get(ClauseType.CUSTOMER_BANK_ACCOUNT) == null) putClause(ClauseType.CUSTOMER_BANK_ACCOUNT,"Info Bank");
+
+            else if (currencyEquals.equals(TestData.CASH_DELIVERY) || (currencyEquals.equals(TestData.CASH_IN_HAND)))
+                Toast.makeText(getActivity(), "CASH BRO PAY.", Toast.LENGTH_LONG).show();if (clauses.get(ClauseType.CUSTOMER_PLACE_TO_DELIVER) == null) putClause(ClauseType.CUSTOMER_PLACE_TO_DELIVER,"Insert Place To Delivery");
+        }
+
+    }
+
+    private void addClause(Map<ClauseType, ClauseInformation> clauses, ClauseType clauseType, String value) {
+
+        ClauseInformation clauseInformation = clauses.get(clauseType);
+
+        if (clauseInformation == null) putClause(clauseType, value);
+        else putClause(clauseInformation,value);
+
+    }
+
+    //PUT CLAUSE
+    public void putClause(final ClauseInformation clause, final String value) {
+
+        final ClauseType type = clause.getType();
+
+        ClauseInformation clauseInformation = new ClauseInformation() {
+            @Override
+            public UUID getClauseID() {
+                return clause.getClauseID();
+            }
+
+            @Override
+            public ClauseType getType() {
+                return type;
+            }
+
+            @Override
+            public String getValue() {
+                return value;
+            }
+
+            @Override
+            public ClauseStatus getStatus() {
+                return clause.getStatus();
+            }
+        };
+
+        negotiationInfo.getClauses().put(type, clauseInformation);
+    }
+
+    public void putClause(final ClauseType clauseType, final String value) {
+
+        ClauseInformation clauseInformation = new ClauseInformation() {
+            @Override
+            public UUID getClauseID() { return UUID.randomUUID(); }
+
+            @Override
+            public ClauseType getType() { return clauseType; }
+
+            @Override
+            public String getValue() { return (value != null) ? value : ""; }
+
+            @Override
+            public ClauseStatus getStatus() { return ClauseStatus.DRAFT; }
+        };
+
+        negotiationInfo.getClauses().put(clauseType, clauseInformation);
     }
 
     private BigDecimal getBigDecimal(String value){
