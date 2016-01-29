@@ -29,7 +29,6 @@ import com.bitdubai.fermat_cbp_api.layer.business_transaction.open_contract.inte
 import com.bitdubai.fermat_cbp_api.layer.contract.customer_broker_purchase.interfaces.CustomerBrokerContractPurchaseManager;
 import com.bitdubai.fermat_cbp_api.layer.negotiation.customer_broker_purchase.interfaces.CustomerBrokerPurchaseNegotiationManager;
 import com.bitdubai.fermat_cbp_api.layer.world.interfaces.FiatIndexManager;
-import com.bitdubai.fermat_cbp_plugin.layer.network_service.negotiation_transmission.developer.bitdubai.version_1.NetworkServiceNegotiationTransmissionPluginRoot;
 import com.bitdubai.fermat_cbp_plugin.layer.user_level_business_transaction.customer_broker_purchase.developer.bitdubai.version_1.database.UserLevelBusinessTransactionCustomerBrokerPurchaseDatabaseDao;
 import com.bitdubai.fermat_cbp_plugin.layer.user_level_business_transaction.customer_broker_purchase.developer.bitdubai.version_1.database.UserLevelBusinessTransactionCustomerBrokerPurchaseDeveloperFactory;
 import com.bitdubai.fermat_cbp_plugin.layer.user_level_business_transaction.customer_broker_purchase.developer.bitdubai.version_1.exceptions.CantInitializeCustomerBrokerPurchaseDatabaseException;
@@ -94,8 +93,6 @@ public class UserLevelBusinessTransactionCustomerBrokerPurchasePluginRoot extend
 
 
     UserLevelBusinessTransactionCustomerBrokerPurchaseManager userLevelBusinessTransactionCustomerBrokerPurchaseManager = new UserLevelBusinessTransactionCustomerBrokerPurchaseManager();
-
-    NetworkServiceNegotiationTransmissionPluginRoot networkServiceNegotiationTransmissionPluginRoot = new NetworkServiceNegotiationTransmissionPluginRoot();
 
     public static EventSource EVENT_SOURCE = EventSource.USER_LEVEL_CUSTOMER_BROKER_PURCHASE_MANAGER;
 
@@ -229,7 +226,7 @@ public class UserLevelBusinessTransactionCustomerBrokerPurchasePluginRoot extend
                     fiatIndexManager,
                     notificationManagerMiddleware,
                     userLevelBusinessTransactionCustomerBrokerPurchaseManager
-            );
+                    );
             userLevelBusinessTransactionCustomerBrokerPurchaseMonitorAgent.start();
         } else userLevelBusinessTransactionCustomerBrokerPurchaseMonitorAgent.start();
     }

@@ -18,10 +18,9 @@ public enum NotificationType {
     RECEIVE_REQUEST_PAYMENT_NOTIFICATION("RRPN"),
     DENIED_REQUEST_PAYMENT_NOTIFICATION("DRPN"),
     OUTGOING_INTRA_ACTOR_ROLLBACK_TRANSACTION_NOTIFICATION("OIARTN"),
-    CLOUD_CLIENT_CONNECTED ("CCCONEC"),
-    CLOUD_CLIENT_CLOSED                           ("CCCLOSE"),
-    CLOUD_CLIENT_CONNECTION_LOOSE                                  ("CCCL"),
-    INCOMING_CHAT_MESSAGE   ("ICCM"),
+    CLOUD_CLIENT_CONNECTED("CCCONEC"),
+    CLOUD_CLIENT_CLOSED("CCCLOSE"),
+    CLOUD_CLIENT_CONNECTION_LOOSE("CCCL"),
     REVIEW_NOTIFICATION("RN");
 
     /**
@@ -73,10 +72,12 @@ public enum NotificationType {
                 return RECEIVE_REQUEST_PAYMENT_NOTIFICATION;
             case "DRPN":
                 return DENIED_REQUEST_PAYMENT_NOTIFICATION;
-            case "CCCONEC":     return CLOUD_CLIENT_CONNECTED                                 ;
-            case "CCCLOSE": return CLOUD_CLIENT_CLOSED;
-            case "CCCL":    return CLOUD_CLIENT_CONNECTION_LOOSE;
-            case "ICCM": return  INCOMING_CHAT_MESSAGE;
+            case "CCCONEC":
+                return CLOUD_CLIENT_CONNECTED;
+            case "CCCLOSE":
+                return CLOUD_CLIENT_CLOSED;
+            case "CCCL":
+                return CLOUD_CLIENT_CONNECTION_LOOSE;
             case "RN":
                 return REVIEW_NOTIFICATION;
             default:

@@ -58,7 +58,6 @@ public class UserLevelBusinessTransactionCustomerBrokerPurchaseMonitorAgent impl
     private final NotificationManagerMiddleware notificationManagerMiddleware;
     private final UserLevelBusinessTransactionCustomerBrokerPurchaseManager userLevelBusinessTransactionCustomerBrokerPurchaseManager;
 
-
     public UserLevelBusinessTransactionCustomerBrokerPurchaseMonitorAgent(ErrorManager errorManager,
                                                                           CustomerBrokerPurchaseNegotiationManager customerBrokerPurchaseNegotiationManager,
                                                                           PluginDatabaseSystem pluginDatabaseSystem,
