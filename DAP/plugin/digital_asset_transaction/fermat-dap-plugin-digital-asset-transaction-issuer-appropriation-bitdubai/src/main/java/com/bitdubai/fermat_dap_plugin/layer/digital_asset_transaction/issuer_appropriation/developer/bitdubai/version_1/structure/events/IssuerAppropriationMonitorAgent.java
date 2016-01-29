@@ -215,10 +215,11 @@ public class IssuerAppropriationMonitorAgent implements Agent {
                     case CRYPTOADDRESS_OBTAINED:
                         IssuerAppropriationDigitalAssetTransactionPluginRoot.debugAssetAppropriation("registering crypto address in crypto book. : " + record.transactionRecordId());
                         IntraWalletUserIdentity assetIdentity = getIntraUserIdentity(record);
+                        Actor extraUser = getExtraUser(record.assetMetadata());
                         cryptoAddressBookManager.registerCryptoAddress(record.addressTo(),
                                 assetIdentity.getPublicKey(),
                                 Actors.INTRA_USER,
-                                intraWalletUserIdentityManager.getAllIntraWalletUsersFromCurrentDeviceUser().get(0).getPublicKey(),
+                                extraUser.getActorPublicKey(),
                                 Actors.EXTRA_USER,
                                 Platforms.CRYPTO_CURRENCY_PLATFORM,
                                 VaultType.CRYPTO_CURRENCY_VAULT,
