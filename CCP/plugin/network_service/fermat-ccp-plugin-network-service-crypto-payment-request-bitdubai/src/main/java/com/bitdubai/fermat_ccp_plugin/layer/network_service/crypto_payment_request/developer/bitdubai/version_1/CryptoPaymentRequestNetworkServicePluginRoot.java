@@ -164,7 +164,7 @@ public final class CryptoPaymentRequestNetworkServicePluginRoot extends Abstract
 
 
 
-    private long reprocessTimer =   3600 * 1000; //one hours
+    private long reprocessTimer =  300000; //five minutes
 
 
     private Timer timer = new Timer();
@@ -1316,9 +1316,16 @@ public final class CryptoPaymentRequestNetworkServicePluginRoot extends Abstract
                 {
                     if(record.getSentNumber() > 10)
                     {
+                        if(record.getSentNumber() > 20)
+                        {
+                            //reprocess at two hours
+                            reprocessTimer =  2 * 3600 * 1000;
+
+                        }
+
+                        //reprocess at five minutes
                         //update state and process again later
                         cryptoPaymentRequestNetworkServiceDao.changeProtocolState(record.getRequestId(),RequestProtocolState.WAITING_RESPONSE);
-
 
                     }
                     else

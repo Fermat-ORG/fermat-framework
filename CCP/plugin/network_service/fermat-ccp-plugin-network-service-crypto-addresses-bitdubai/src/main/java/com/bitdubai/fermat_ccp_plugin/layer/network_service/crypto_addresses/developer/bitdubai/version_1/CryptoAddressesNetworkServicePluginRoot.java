@@ -195,6 +195,9 @@ public class CryptoAddressesNetworkServicePluginRoot extends AbstractNetworkServ
      */
     private AtomicBoolean flag = new AtomicBoolean(false);
 
+    private long reprocessTimer =  300000; //five minutes
+
+    private Timer timer = new Timer();
 
     public CryptoAddressesNetworkServicePluginRoot() {
 
@@ -303,15 +306,7 @@ public class CryptoAddressesNetworkServicePluginRoot extends AbstractNetworkServ
                     reprocessMessage();
 
                     //declare a schedule to process waiting request message
-                    Timer timer = new Timer();
-
-                    timer.schedule(new TimerTask() {
-                        @Override
-                        public void run() {
-                            // change message state to process again
-                            reprocessMessage();
-                        }
-                    }, 3600*1000);
+                    startTimer();
 
 
             /*
@@ -1309,7 +1304,7 @@ public class CryptoAddressesNetworkServicePluginRoot extends AbstractNetworkServ
                     protocolState
             );
 
-            cryptoAddressesNetworkServiceDao.changeActionState(acceptMessage.getRequestId(),RequestAction.RECEIVED);
+            cryptoAddressesNetworkServiceDao.changeActionState(acceptMessage.getRequestId(), RequestAction.RECEIVED);
 
 
 
@@ -1370,6 +1365,11 @@ public class CryptoAddressesNetworkServicePluginRoot extends AbstractNetworkServ
                 {
                     if(record.getSentNumber() > 10)
                     {
+                        if(record.getSentNumber() > 20)
+                        {
+                            //reprocess at two hours
+                            reprocessTimer =  2 * 3600 * 1000;
+                        }
                          //update state and process again later
                         cryptoAddressesNetworkServiceDao.changeProtocolState(record.getRequestId(),ProtocolState.WAITING_RESPONSE);
                     }
@@ -1448,5 +1448,13 @@ public class CryptoAddressesNetworkServicePluginRoot extends AbstractNetworkServ
     }
 
 
-
+    private void startTimer(){
+        timer.schedule(new TimerTask() {
+            @Override
+            public void run() {
+                // change message state to process retry later
+                reprocessMessage();
+            }
+        }, reprocessTimer);
+    }
 }

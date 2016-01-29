@@ -286,6 +286,10 @@ public class IntraActorNetworkServicePluginRoot extends AbstractPlugin implement
 
     private IntraActorNetworkServiceDao intraActorNetworkServiceDao;
 
+    private long reprocessTimer =  300000; //five minutes
+
+    private  Timer timer = new Timer();
+
     /**
      * Constructor
      */
@@ -555,16 +559,8 @@ public class IntraActorNetworkServicePluginRoot extends AbstractPlugin implement
                     reprocessMessage();
 
                     //declare a schedule to process waiting request message
-                    Timer timer = new Timer();
 
-                    timer.schedule(new TimerTask() {
-                        @Override
-                        public void run() {
-                            // change message state to process again
-                            reprocessMessage();
-                        }
-                    }, 3600*1000);
-
+                        this.startTimer();
 
                     /*
                      * Its all ok, set the new status
@@ -1079,6 +1075,12 @@ public class IntraActorNetworkServicePluginRoot extends AbstractPlugin implement
                 {
                     if(record.getSentCount() > 10 )
                     {
+                        if(record.getSentCount() > 20)
+                        {
+                            //reprocess at two hours
+                            reprocessTimer =  2 * 3600 * 1000;
+                        }
+
                         record.setActorProtocolState(ActorProtocolState.WAITING_RESPONSE);
                         //update state and process again later
 
@@ -2144,6 +2146,16 @@ public class IntraActorNetworkServicePluginRoot extends AbstractPlugin implement
             System.out.println("INTRA USER NS EXCEPCION REPROCESANDO MESSAGEs");
             e.printStackTrace();
         }
+    }
+
+    private void startTimer(){
+        timer.schedule(new TimerTask() {
+            @Override
+            public void run() {
+                // change message state to process retry later
+                reprocessMessage();
+            }
+        }, reprocessTimer);
     }
 
 
