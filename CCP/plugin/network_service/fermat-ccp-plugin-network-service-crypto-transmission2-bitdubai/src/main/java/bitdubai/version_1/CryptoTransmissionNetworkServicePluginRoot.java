@@ -859,6 +859,7 @@ public class CryptoTransmissionNetworkServicePluginRoot extends AbstractPlugin i
                 case RESPONSE:
                     //CryptoTransmissionResponseMessage cryptoTransmissionResponseMessage = (CryptoTransmissionMessage) cryptoTransmissionMetadata;
 
+                    //TODO: ver esto: porque seguramente esté mal el sender y el destination, ya que lo estoy recibiendo, por lo cual yo soy el destination.
                     CryptoTransmissionResponseMessage cryptoTransmissionResponseMessage = new CryptoTransmissionResponseMessage(cryptoTransmissionMetadata.getTransactionId(),
                             cryptoTransmissionMetadata.getCryptoTransmissionMessageType(),
                             cryptoTransmissionMetadata.getCryptoTransmissionProtocolState(),
@@ -907,12 +908,15 @@ public class CryptoTransmissionNetworkServicePluginRoot extends AbstractPlugin i
 
                             System.out.print("CryptoTransmission Close Connection - End Message");
 
-                            this.actorNetworkServiceRecordedAgent.getPoolConnectionsWaitingForResponse().remove(cryptoTransmissionMetadata.getDestinationPublicKey());
-                            this.getNetworkServiceConnectionManager().closeConnection(cryptoTransmissionMetadata.getDestinationPublicKey());
+                            //Si me llega es destinatario que yo tengo la conexion abierta es el sender
+                            //TODO: VER BIEN ESTO PORQUE ESTOY DORMIDO
+                            this.actorNetworkServiceRecordedAgent.getPoolConnectionsWaitingForResponse().remove(cryptoTransmissionMetadata.getSenderPublicKey());
+                            this.getNetworkServiceConnectionManager().closeConnection(cryptoTransmissionMetadata.getSenderPublicKey());
 
                             System.out.println("-----------------------\n" +
                                     "RECIVIENDO RESPUESTA CRYPTO METADATA!!!!! -----------------------\n" +
-                                    "-----------------------\n STATE: CREDITED_IN_DESTINATION_WALLET ");
+                                    "-----------------------\n STATE: CREDITED_IN_DESTINATION_WALLET \n"+
+                            "----CERRANDO CONEXION");
                             // deberia ver si tengo que lanzar un evento acá
 
                             break;
@@ -1477,7 +1481,7 @@ public class CryptoTransmissionNetworkServicePluginRoot extends AbstractPlugin i
             String pkAux = cryptoTransmissionMetadataRecord.getDestinationPublicKey();
             cryptoTransmissionMetadataRecord.setDestinationPublickKey(cryptoTransmissionMetadataRecord.getSenderPublicKey());
             cryptoTransmissionMetadataRecord.setSenderPublicKey(pkAux);
-            outgoingNotificationDao.update(cryptoTransmissionMetadataRecord);
+           // outgoingNotificationDao.update(cryptoTransmissionMetadataRecord);
 
 
         }
@@ -1652,4 +1656,7 @@ public class CryptoTransmissionNetworkServicePluginRoot extends AbstractPlugin i
         }
     }
 
+    public EventManager getEventManager() {
+        return eventManager;
+    }
 }
