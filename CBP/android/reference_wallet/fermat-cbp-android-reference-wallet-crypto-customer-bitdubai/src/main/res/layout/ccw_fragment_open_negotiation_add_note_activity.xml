@@ -35,7 +35,7 @@
             android:text="Negotiation Note"
             android:id="@+id/textView"
             android:textColor="#FFFFFF"
-            android:textSize="24dp"
+            android:textSize="20dp"
             android:layout_centerVertical="true"
             android:layout_centerHorizontal="true"
             android:typeface="sans" />
@@ -61,7 +61,9 @@
                 android:layout_height="137dp"
                 android:inputType="textMultiLine"
                 android:ems="10"
-                android:id="@+id/editText" />
+                android:id="@+id/editText"
+                android:textSize="18dp"
+                android:textColor="#5F5F5F" />
         </LinearLayout>
 
         <LinearLayout
@@ -75,7 +77,7 @@
                 android:layout_width="192dp"
                 android:layout_height="match_parent"
                 android:text="Cancel"
-                android:id="@+id/button"
+                android:id="@+id/ccw_open_negotiation_cancel_note"
                 android:background="#E7E7E7"
                 android:textColor="#5F5F5F"
                 android:textSize="20dp"
@@ -86,7 +88,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:text="Ok"
-                android:id="@+id/button2"
+                android:id="@+id/ccw_open_negotiation_save_note"
                 android:background="#E7E7E7"
                 android:textColor="#5F5F5F"
                 android:textSize="20dp"
