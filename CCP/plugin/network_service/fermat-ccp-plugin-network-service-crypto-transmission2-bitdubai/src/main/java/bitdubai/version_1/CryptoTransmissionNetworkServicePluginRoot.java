@@ -510,15 +510,15 @@ public class CryptoTransmissionNetworkServicePluginRoot extends AbstractPlugin i
                    // reprocessMessage();
 
                     //declare a schedule to process waiting request message
-                  //  Timer timer = new Timer();
+                    Timer timer = new Timer();
 
-                   /* timer.schedule(new TimerTask() {
+                    timer.schedule(new TimerTask() {
                         @Override
                         public void run() {
                             // change message state to process again
-                            reprocessMessage();
+                            reprocessWaitingMessage();
                         }
-                    }, 3600*1000);*/
+                    }, 3600*1000);
 
 
                     /*
@@ -1628,6 +1628,35 @@ public class CryptoTransmissionNetworkServicePluginRoot extends AbstractPlugin i
             List<CryptoTransmissionMetadataRecord> lstCryptoTransmissionMetadata = outgoingNotificationDao.getNotSentRecord();
 
 
+            for(CryptoTransmissionMetadataRecord record : lstCryptoTransmissionMetadata) {
+
+                outgoingNotificationDao.changeCryptoTransmissionProtocolState(record.getTransactionId(), CryptoTransmissionProtocolState.PRE_PROCESSING_SEND);
+
+            }
+
+
+        } catch (CantUpdateRecordDataBaseException  e) {
+            System.out.println("CRYPTO TRANSMISSION EXCEPCION REPROCESANDO MESSAGES");
+            e.printStackTrace();
+        } catch (Exception  e) {
+            System.out.println("CRYPTO TRANSMISSION EXCEPCION REPROCESANDO MESSAGES");
+            e.printStackTrace();
+        }
+    }
+
+
+    private void reprocessWaitingMessage() {
+        try {
+
+         /*
+         * Read waiting CryptoTransmissionMetadata message from database
+         */
+               Map<String, Object> filters = new HashMap<>();
+            filters.put(CryptoTransmissionNetworkServiceDatabaseConstants.CRYPTO_TRANSMISSION_METADATA_STATUS_COLUMN_NAME, CryptoTransmissionProtocolState.WAITING_FOR_RESPONSE.getCode());
+
+            List<CryptoTransmissionMetadataRecord> lstCryptoTransmissionMetadata = outgoingNotificationDao.findAll(filters);
+
+            //change status to send againg
             for(CryptoTransmissionMetadataRecord record : lstCryptoTransmissionMetadata) {
 
                 outgoingNotificationDao.changeCryptoTransmissionProtocolState(record.getTransactionId(), CryptoTransmissionProtocolState.PRE_PROCESSING_SEND);
