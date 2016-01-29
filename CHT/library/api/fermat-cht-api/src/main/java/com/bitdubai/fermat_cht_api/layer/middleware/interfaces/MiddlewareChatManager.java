@@ -7,6 +7,7 @@ import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantDeleteMessageEx
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantGetChatException;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantGetContactException;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantGetMessageException;
+import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantGetNetworkServicePublicKeyException;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantNewEmptyChatException;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantNewEmptyContactException;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantNewEmptyMessageException;
@@ -22,7 +23,7 @@ import java.util.UUID;
  * Created by miguel payarez (miguel_payarez@hotmail.com) on 29/12/15.
  * Update by Manuel Perez on 08/01/2016 (fix naming conventions)
  */
-public interface ChatManager extends FermatManager{
+public interface MiddlewareChatManager extends FermatManager{
 
     //Documentar
     List<Chat> getChats() throws CantGetChatException;
@@ -59,5 +60,10 @@ public interface ChatManager extends FermatManager{
 
     List<Contact> discoverActorsRegistered() throws CantGetContactException;
 
-    void notificationNewIncomingMessage(String publicKey, String tittle, String body) throws CantSendNotificationNewIncomingMessageException;
+    void notificationNewIncomingMessage(
+            String publicKey,
+            String tittle,
+            String body) throws CantSendNotificationNewIncomingMessageException;
+
+    String getNetworkServicePublicKey() throws CantGetNetworkServicePublicKeyException;
 }

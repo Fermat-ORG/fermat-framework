@@ -1,8 +1,6 @@
 package com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.adapters;
 
-import android.app.Activity;
 import android.content.Context;
-import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,20 +8,17 @@ import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.holders.ChatHolder;
-//import com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.holders.ChatsListHolder;
 import com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.models.ChatsList;
-import com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.util.Utils;
-import com.bitdubai.fermat_android_api.ui.adapters.FermatAdapter;
+import com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.models.ContactList;
 import com.bitdubai.fermat_cht_android_sub_app_chat_bitdubai.R;
-
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Date;
+
+//import com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.holders.ChatsListHolder;
 
 /**
- * Chat List Adapter
+ * Contact List Adapter
  *
  * @author Jose Cardozo josejcb (josejcb89@gmail.com) on 19/01/16.
  * @version 1.0
@@ -31,46 +26,29 @@ import java.util.Date;
  */
 
 //public class ChatListAdapter extends FermatAdapter<ChatsList, ChatHolder> {//ChatFactory
-public class ChatListAdapter extends ArrayAdapter<String> {
-    //private final LayoutInflater inflater;
-    List<ChatsList> chatsList = new ArrayList<>();
-    //  HashMap<Integer,List<String>> chatinfo=new HashMap<Integer,List<String>>();
-    private final String[] chatinfo;   //work
-    private final Integer[] imgid;
+public class ContactListAdapter extends ArrayAdapter<String> {
 
-//    public ChatListAdapter(Context context) {
-//        super(context);
-//    }
-//
-//    public ChatListAdapter(Context context, List<ChatsList> chatsList) {
-//        super(context, chatsList);
-//        //inflater = LayoutInflater.from(context);
-//    }
-    public ChatListAdapter(Context context, String[] chatinfo,Integer[] imgid) {
-        super(context, R.layout.chat_list_listview, chatinfo);
-        this.chatinfo = chatinfo;   //wotk //   this.chatinfo.putAll(chatinfo);
-        this.imgid = imgid;
-        //   System.out.println("**********LISTA2:"+chatinfo.get(0).get(0)+" - "+chatinfo.get(0).get(1)+" - "+chatinfo.get(0).get(2));
+    List<ContactList> contactsList = new ArrayList<>();
+    private final String[] contactinfo;
+    private final Integer[] contacticon;
+
+
+    public ContactListAdapter(Context context, String[] contactinfo, Integer[] contacticon) {
+        super(context, R.layout.contact_list_item, contactinfo);
+        this.contactinfo = contactinfo;
+        this.contacticon = contacticon;
     }
 
     public View getView(int position, View convertView, ViewGroup parent) {
         LayoutInflater inflater = LayoutInflater.from(getContext());
-        View item = inflater.inflate(R.layout.chat_list_listview, null, true);
+        View item = inflater.inflate(R.layout.contact_list_item, null, true);
 
-        ImageView imagen = (ImageView) item.findViewById(R.id.image);
-        imagen.setImageResource(imgid[position]);
+        ImageView imagen = (ImageView) item.findViewById(R.id.icon);
+        imagen.setImageResource(contacticon[position]);
 
-        TextView contactname = (TextView) item.findViewById(R.id.tvtitle);
-
-        contactname.setText(chatinfo[position].split("@@")[0]);//    contactname.setText(chatinfo.get(0).get(0));
-
-        TextView lastmessage = (TextView) item.findViewById(R.id.tvdesc);
-
-        lastmessage.setText(chatinfo[position].split("@@")[1].split("##")[0]);        //   lastmessage.setText(chatinfo.get(0).get(1));
-        TextView dateofmessage = (TextView) item.findViewById(R.id.tvdate);
-
-        dateofmessage.setText(chatinfo[position].split("@@")[1].split("##")[1]);//   dateofmessage.setText(chatinfo.get(0).get(2));
-        return (item);
+        TextView contactname = (TextView) item.findViewById(R.id.text1);
+        contactname.setText(contactinfo[position]);
+        return item;
     }
      /*public void refreshEvents(Parameters[] datos) {
 
