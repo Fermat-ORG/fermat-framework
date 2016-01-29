@@ -562,6 +562,8 @@ public class IntraActorNetworkServicePluginRoot extends AbstractPlugin implement
                     }, 3600*1000);
 
 
+                    initializeAgent();
+
                     /*
                      * Its all ok, set the new status
                     */

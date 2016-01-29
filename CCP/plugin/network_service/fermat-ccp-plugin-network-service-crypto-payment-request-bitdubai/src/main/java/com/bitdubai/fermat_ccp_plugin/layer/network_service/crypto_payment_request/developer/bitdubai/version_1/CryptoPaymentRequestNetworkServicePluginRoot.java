@@ -283,10 +283,12 @@ public final class CryptoPaymentRequestNetworkServicePluginRoot extends Abstract
 
                     this.startTimer();
 
+                    initializeAgent();
 
-            /*
-             * Its all ok, set the new status
-            */
+
+                    /*
+                     * Its all ok, set the new status
+                    */
                     this.serviceStatus = ServiceStatus.STARTED;
 
                 } catch (CantInitializeNetworkServiceDatabaseException exception) {
@@ -299,6 +301,19 @@ public final class CryptoPaymentRequestNetworkServicePluginRoot extends Abstract
                     String context = contextBuffer.toString();
                     String possibleCause = "The Template Database triggered an unexpected problem that wasn't able to solve by itself";
                     CantStartPluginException pluginStartException = new CantStartPluginException(CantStartPluginException.DEFAULT_MESSAGE, exception, context, possibleCause);
+
+                    errorManager.reportUnexpectedPluginException(this.getPluginVersionReference(), UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, pluginStartException);
+                    throw pluginStartException;
+                } catch (CantStartAgentException e) {
+
+                    StringBuffer contextBuffer = new StringBuffer();
+                    contextBuffer.append("Plugin ID: " + pluginId);
+                    contextBuffer.append(CantStartPluginException.CONTEXT_CONTENT_SEPARATOR);
+                    contextBuffer.append("Database Name: " + CommunicationNetworkServiceDatabaseConstants.DATA_BASE_NAME);
+
+                    String context = contextBuffer.toString();
+                    String possibleCause = "Problem initializing the agent";
+                    CantStartPluginException pluginStartException = new CantStartPluginException(CantStartPluginException.DEFAULT_MESSAGE, e, context, possibleCause);
 
                     errorManager.reportUnexpectedPluginException(this.getPluginVersionReference(), UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, pluginStartException);
                     throw pluginStartException;

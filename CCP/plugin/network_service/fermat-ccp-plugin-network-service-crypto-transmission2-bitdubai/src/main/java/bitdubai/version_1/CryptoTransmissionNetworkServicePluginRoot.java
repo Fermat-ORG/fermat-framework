@@ -521,6 +521,7 @@ public class CryptoTransmissionNetworkServicePluginRoot extends AbstractPlugin i
                         }
                     }, 3600*1000);
 
+                    initializeAgent();
 
                     /*
                      * Its all ok, set the new status
