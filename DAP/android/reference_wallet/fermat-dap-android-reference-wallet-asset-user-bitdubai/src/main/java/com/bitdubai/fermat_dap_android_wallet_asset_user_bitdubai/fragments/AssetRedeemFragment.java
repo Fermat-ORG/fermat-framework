@@ -331,12 +331,13 @@ public class AssetRedeemFragment extends AbstractFermatFragment {
 //        }
         byte[] img = (digitalAsset.getImage() == null) ? new byte[0] : digitalAsset.getImage();
         BitmapWorkerTask bitmapWorkerTask = new BitmapWorkerTask(assetRedeemImage, res, R.drawable.img_asset_without_image, false);
-        //bitmapWorkerTask.execute(img); //todo comment to be able to compile
+        bitmapWorkerTask.execute(img); //todo comment to be able to compile
 
         assetRedeemNameText.setText(digitalAsset.getName());
 //        assetsToRedeemEditText.setText(digitalAsset.getAvailableBalanceQuantity() + "");
         assetsToRedeemEditText.setText(selectedRPCount+"");
-        assetRedeemRemainingText.setText(digitalAsset.getAvailableBalanceQuantity() + " Assets Remaining");
+        long quantity = digitalAsset.getAvailableBalanceQuantity();
+        assetRedeemRemainingText.setText(quantity + ((quantity == 1) ? " Asset" : " Assets") + " Remaining");
     }
 
     private void configureToolbar() {
