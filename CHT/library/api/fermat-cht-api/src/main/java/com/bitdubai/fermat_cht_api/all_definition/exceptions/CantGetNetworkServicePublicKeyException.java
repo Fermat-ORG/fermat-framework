@@ -1,9 +1,9 @@
 package com.bitdubai.fermat_cht_api.all_definition.exceptions;
 
 /**
- * Created by Franklin Marcano on 09/01/16.
+ * Created by Manuel Perez (darkpriestrelative@gmail.com) on 29/01/16.
  */
-public class CantGetMessageException extends CHTException {
+public class CantGetNetworkServicePublicKeyException extends CHTException {
 
     /**
      * Represent the default message
@@ -18,7 +18,7 @@ public class CantGetMessageException extends CHTException {
      * @param context
      * @param possibleReason
      */
-    public CantGetMessageException(final String message, final Exception cause, final String context, final String possibleReason) {
+    public CantGetNetworkServicePublicKeyException(final String message, final Exception cause, final String context, final String possibleReason) {
         super(message, cause, context, possibleReason);
     }
 
@@ -29,7 +29,7 @@ public class CantGetMessageException extends CHTException {
      * @param context
      * @param possibleReason
      */
-    public CantGetMessageException(Exception cause, String context, String possibleReason) {
+    public CantGetNetworkServicePublicKeyException(Exception cause, String context, String possibleReason) {
         super(DEFAULT_MESSAGE , cause, context, possibleReason);
     }
 
@@ -39,7 +39,7 @@ public class CantGetMessageException extends CHTException {
      * @param message
      * @param cause
      */
-    public CantGetMessageException(final String message, final Exception cause) {
+    public CantGetNetworkServicePublicKeyException(final String message, final Exception cause) {
         this(message, cause, "", "");
     }
 
@@ -48,7 +48,7 @@ public class CantGetMessageException extends CHTException {
      *
      * @param message
      */
-    public CantGetMessageException(final String message) {
+    public CantGetNetworkServicePublicKeyException(final String message) {
         this(message, null);
     }
 
@@ -57,7 +57,7 @@ public class CantGetMessageException extends CHTException {
      *
      * @param exception
      */
-    public CantGetMessageException(final Exception exception) {
+    public CantGetNetworkServicePublicKeyException(final Exception exception) {
         this(exception.getMessage());
         setStackTrace(exception.getStackTrace());
     }
@@ -65,7 +65,7 @@ public class CantGetMessageException extends CHTException {
     /**
      * Constructor
      */
-    public CantGetMessageException() {
+    public CantGetNetworkServicePublicKeyException() {
         this(DEFAULT_MESSAGE);
     }
 }
