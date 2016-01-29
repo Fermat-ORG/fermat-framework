@@ -180,7 +180,7 @@ public class ConnectionsWorldFragment extends AbstractFermatFragment<CryptoBroke
                         .setIconRes(R.drawable.crypto_broker)
                         .setSubTitle("This app allows you yo find and connect to other Crypto Broker users within the Fermat Network. This app's main features are:")
                         .setBody("* Browse users around you.\n* Search and connect to to users anywhere.\n* See other user's profiles.\n* Send connection requests to other users.\n* Review connection requests from other users.")
-                        .setTextFooter("To begin, choose a starter avatar below./nPlease note, you may change your avatar later.")
+                        .setTextFooter("To begin, choose a starter avatar below.\nYou may change your avatar later.")
                         .build();
                 presentationDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
                             @Override
@@ -193,8 +193,8 @@ public class ConnectionsWorldFragment extends AbstractFermatFragment<CryptoBroke
             }
             else
             {
+                invalidate();
                 onRefresh();
-
             }
 
 
