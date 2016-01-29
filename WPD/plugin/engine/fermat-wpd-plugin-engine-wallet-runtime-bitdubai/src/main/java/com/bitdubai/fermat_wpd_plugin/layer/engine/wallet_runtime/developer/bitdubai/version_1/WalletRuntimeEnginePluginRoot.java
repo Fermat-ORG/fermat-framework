@@ -1920,30 +1920,31 @@ public class WalletRuntimeEnginePluginRoot extends AbstractPlugin implements
 
         // WIZARD
         // step 1 - Set Identity
-        runtimeActivity = new Activity();
-        runtimeActivity.setType(Activities.CBP_CRYPTO_BROKER_WALLET_SET_IDENTITY);
-        runtimeActivity.setActivityType(Activities.CBP_CRYPTO_BROKER_WALLET_SET_IDENTITY.getCode());
-        runtimeWalletNavigationStructure.addActivity(runtimeActivity);
-        runtimeWalletNavigationStructure.addPosibleStartActivity(Activities.CBP_CRYPTO_BROKER_WALLET_SET_IDENTITY);
+//        runtimeActivity = new Activity();
+//        runtimeActivity.setType(Activities.CBP_CRYPTO_BROKER_WALLET_SET_IDENTITY);
+//        runtimeActivity.setActivityType(Activities.CBP_CRYPTO_BROKER_WALLET_SET_IDENTITY.getCode());
+//        runtimeWalletNavigationStructure.addActivity(runtimeActivity);
+//        runtimeWalletNavigationStructure.addPosibleStartActivity(Activities.CBP_CRYPTO_BROKER_WALLET_SET_IDENTITY);
 
         String walletSetupLabel = "Wallet Setup";
 
-        runtimeStatusBar = new StatusBar();
-        runtimeStatusBar.setColor(statusBarColor);
-        runtimeActivity.setStatusBar(runtimeStatusBar);
+//        runtimeStatusBar = new StatusBar();
+//        runtimeStatusBar.setColor(statusBarColor);
+//        runtimeActivity.setStatusBar(runtimeStatusBar);
 
-        runtimeFragment = new Fragment();
-        runtimeFragment.setType(Fragments.CBP_CRYPTO_BROKER_WALLET_SET_IDENTITY.getKey());
-        runtimeActivity.addFragment(Fragments.CBP_CRYPTO_BROKER_WALLET_SET_IDENTITY.getKey(), runtimeFragment);
-        runtimeActivity.setStartFragment(Fragments.CBP_CRYPTO_BROKER_WALLET_SET_IDENTITY.getKey());
+//        runtimeFragment = new Fragment();
+//        runtimeFragment.setType(Fragments.CBP_CRYPTO_BROKER_WALLET_SET_IDENTITY.getKey());
+//        runtimeActivity.addFragment(Fragments.CBP_CRYPTO_BROKER_WALLET_SET_IDENTITY.getKey(), runtimeFragment);
+//        runtimeActivity.setStartFragment(Fragments.CBP_CRYPTO_BROKER_WALLET_SET_IDENTITY.getKey());
 
         // step 2 - Set Merchandises
         runtimeActivity = new Activity();
         runtimeActivity.setType(Activities.CBP_CRYPTO_BROKER_WALLET_SET_MERCHANDISES);
         runtimeActivity.setActivityType(Activities.CBP_CRYPTO_BROKER_WALLET_SET_MERCHANDISES.getCode());
-        runtimeActivity.setBackActivity(Activities.CBP_CRYPTO_BROKER_WALLET_SET_IDENTITY);
+        //runtimeActivity.setBackActivity(Activities.CBP_CRYPTO_BROKER_WALLET_SET_IDENTITY);
         runtimeActivity.setBackPublicKey(publicKey);
         runtimeWalletNavigationStructure.addActivity(runtimeActivity);
+        runtimeWalletNavigationStructure.addPosibleStartActivity(Activities.CBP_CRYPTO_BROKER_WALLET_SET_MERCHANDISES);
 
         runtimeStatusBar = new StatusBar();
         runtimeStatusBar.setColor(statusBarColor);
