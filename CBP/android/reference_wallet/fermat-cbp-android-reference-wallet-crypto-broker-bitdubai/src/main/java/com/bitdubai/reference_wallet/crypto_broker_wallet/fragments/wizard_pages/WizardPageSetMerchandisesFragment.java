@@ -127,7 +127,7 @@ public class WizardPageSetMerchandisesFragment extends AbstractFermatFragment
                         .setBannerRes(R.drawable.banner_crypto_broker)
                         .setIconRes(R.drawable.crypto_broker)
                         .setBody(R.string.cbw_wizard_merchandise_dialog_body)
-                        .setSubTitle(R.string.cbw_wizard_merchandise_dialog_sub_title) // TODO para franklin (revisar esto, esta es la linea que venia en tu commit): .setSubTitle("This is a simple wallet for exchange Merchandise. " + identities)
+.setSubTitle(R.string.cbw_wizard_merchandise_dialog_sub_title) // TODO para franklin (revisar esto, esta es la linea que venia en tu commit): .setSubTitle("This is a simple wallet for exchange Merchandise. " + identities)
                         .setTextFooter(R.string.cbw_wizard_merchandise_dialog_footer)
                         .build();
                 presentationDialog.setOnDismissListener(this);
