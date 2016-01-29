@@ -102,9 +102,6 @@ public class EditCryptoBrokerIdentityFragment extends AbstractFermatFragment imp
         // Inflate the layout for this fragment
         View rootLayout = inflater.inflate(R.layout.fragment_edit_crypto_broker_identity, container, false);
         initViews(rootLayout);
-
-        //mBrokerName.setSelection(mBrokerName.getText().length());
-
         return rootLayout;
     }
 
@@ -240,10 +237,8 @@ public class EditCryptoBrokerIdentityFragment extends AbstractFermatFragment imp
                         if (isAttached) {
                             ContentResolver contentResolver = getActivity().getContentResolver();
                             cryptoBrokerBitmap = MediaStore.Images.Media.getBitmap(contentResolver, selectedImage);
-                            //cryptoBrokerBitmap = Bitmap.createScaledBitmap(cryptoBrokerBitmap, pictureView.getWidth(), pictureView.getHeight(), true);
                         }
                     } catch (Exception e) {
-                        //e.printStackTrace();
                         Toast.makeText(getActivity().getApplicationContext(), "Error loading image.", Toast.LENGTH_SHORT).show();
                     }
                     break;
@@ -353,7 +348,6 @@ public class EditCryptoBrokerIdentityFragment extends AbstractFermatFragment imp
             int resultCode = (int) result[0];
 
             if (resultCode == 1) {
-                //changeActivity(Activities.CBP_SUB_APP_CRYPTO_BROKER_IDENTITY.getCode(), appSession.getAppPublicKey());
                 Toast.makeText(getActivity(), "Crypto Broker Identity Updated.", Toast.LENGTH_LONG).show();
 
             } else if (resultCode == 4) {

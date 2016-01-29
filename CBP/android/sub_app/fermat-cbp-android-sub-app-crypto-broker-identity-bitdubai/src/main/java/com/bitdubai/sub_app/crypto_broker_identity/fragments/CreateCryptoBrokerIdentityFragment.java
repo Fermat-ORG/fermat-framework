@@ -115,23 +115,6 @@ public class CreateCryptoBrokerIdentityFragment extends AbstractFermatFragment {
             }
         });
 
-        mBrokerName.addTextChangedListener(
-            new TextWatcher() {
-                @Override
-                public void onTextChanged(CharSequence s, int start, int before, int count) {}
-
-                @Override
-                public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
-
-                @Override
-                public void afterTextChanged(Editable s) {
-
-                    System.out.println("hashCode: "+s.hashCode());
-                    //createNewIdentityInBackDevice();
-                }
-            }
-        );
-
         camara = (ImageView) layout.findViewById(R.id.camara);
         camara.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -192,7 +175,6 @@ public class CreateCryptoBrokerIdentityFragment extends AbstractFermatFragment {
                         if (isAttached) {
                             ContentResolver contentResolver = getActivity().getContentResolver();
                             cryptoBrokerBitmap = MediaStore.Images.Media.getBitmap(contentResolver, selectedImage);
-                            //cryptoBrokerBitmap = Bitmap.createScaledBitmap(cryptoBrokerBitmap, pictureView.getWidth(), pictureView.getHeight(), true);
                         }
                     } catch (Exception ex) {
                         errorManager.reportUnexpectedUIException(UISource.VIEW, UnexpectedUIExceptionSeverity.UNSTABLE, ex);
@@ -233,7 +215,6 @@ public class CreateCryptoBrokerIdentityFragment extends AbstractFermatFragment {
     private void createNewIdentityInBackDevice(){
         String brokerNameText = mBrokerName.getText().toString();
         if(brokerNameText.trim().equals("")) {
-           // Toast.makeText(getActivity(), "Please enter a profile name for the identity.", Toast.LENGTH_LONG).show();
         }else{
             if (cryptoBrokerBitmap != null){
                 byte[] imgInBytes = ImagesUtils.toByteArray(cryptoBrokerBitmap);
@@ -243,18 +224,7 @@ public class CreateCryptoBrokerIdentityFragment extends AbstractFermatFragment {
                     case SUCCESS:
                         Toast.makeText(getActivity(), "Crypto Broker Identity Created.", Toast.LENGTH_LONG).show();
                     break;
-                    case EXCEPTION_THROWN:
-                        //Toast.makeText(getActivity(), "Error creating identity.", Toast.LENGTH_LONG).show();
-                    break;
-                    case INVALID_ENTRY_DATA:
-                       // Toast.makeText(getActivity(), "Cannot create identity due to wrong data.", Toast.LENGTH_LONG).show();
-                    break;
-                    case MISSING_IMAGE:
-                        //Toast.makeText(getActivity(), "Please select a valid profile image for the identity.", Toast.LENGTH_LONG).show();
-                    break;
                 }
-            }else{
-               // Toast.makeText(getActivity(), "Please select a profile image for the identity.", Toast.LENGTH_LONG).show();
             }
         }
     }
