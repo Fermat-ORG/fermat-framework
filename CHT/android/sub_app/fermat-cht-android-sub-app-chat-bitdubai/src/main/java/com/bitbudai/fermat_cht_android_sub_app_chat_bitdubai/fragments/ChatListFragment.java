@@ -36,6 +36,7 @@ import com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.models.ChatsList;
 import com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.models.ContactList;
 import com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.util.ImageLoader;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractFermatFragment;
+import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
 import com.bitdubai.fermat_cht_android_sub_app_chat_bitdubai.R;
 
 
@@ -192,6 +193,7 @@ public class ChatListFragment extends AbstractFermatFragment{
                 // TODO Auto-generated method stub
                 String Slecteditem= chatinfo[position];
                 Toast.makeText(getActivity(), Slecteditem, Toast.LENGTH_SHORT).show();
+                changeActivity(Activities.CHT_CHAT_OPEM_MESSAGE_LIST, appSession.getAppPublicKey());
 
             }
         });

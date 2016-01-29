@@ -26,13 +26,6 @@ import com.bitdubai.fermat_api.layer.all_definition.events.EventSource;
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEvent;
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEventListener;
 import com.bitdubai.fermat_api.layer.all_definition.network_service.enums.NetworkServiceType;
-import com.bitdubai.fermat_api.layer.osa_android.file_system.FileLifeSpan;
-import com.bitdubai.fermat_api.layer.osa_android.file_system.FilePrivacy;
-import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
-import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginTextFile;
-import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantCreateFileException;
-import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.FileNotFoundException;
-import com.bitdubai.fermat_p2p_api.layer.all_definition.common.network_services.interfaces.NetworkService;
 import com.bitdubai.fermat_api.layer.all_definition.network_service.interfaces.NetworkServiceConnectionManager;
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.Action;
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.Specialist;
@@ -45,6 +38,12 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseS
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantCreateDatabaseException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantOpenDatabaseException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.DatabaseNotFoundException;
+import com.bitdubai.fermat_api.layer.osa_android.file_system.FileLifeSpan;
+import com.bitdubai.fermat_api.layer.osa_android.file_system.FilePrivacy;
+import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
+import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginTextFile;
+import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantCreateFileException;
+import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.FileNotFoundException;
 import com.bitdubai.fermat_api.layer.osa_android.location_system.Location;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogLevel;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogManager;
@@ -58,6 +57,7 @@ import com.bitdubai.fermat_cht_api.layer.network_service.chat.interfaces.Network
 import com.bitdubai.fermat_cht_api.layer.network_service.chat.interfaces.ChatMetadata;
 import com.bitdubai.fermat_cht_plugin.layer.network_service.chat.developer.bitdubai.version_1.communications.CommunicationNetworkServiceConnectionManager;
 import com.bitdubai.fermat_cht_plugin.layer.network_service.chat.developer.bitdubai.version_1.communications.CommunicationNetworkServiceLocal;
+import com.bitdubai.fermat_cht_plugin.layer.network_service.chat.developer.bitdubai.version_1.communications.CommunicationRegistrationProcessNetworkServiceAgent;
 import com.bitdubai.fermat_cht_plugin.layer.network_service.chat.developer.bitdubai.version_1.database.ChatMetaDataDao;
 import com.bitdubai.fermat_cht_plugin.layer.network_service.chat.developer.bitdubai.version_1.database.NetworkServiceChatNetworkServiceDatabaseConstants;
 import com.bitdubai.fermat_cht_plugin.layer.network_service.chat.developer.bitdubai.version_1.database.NetworkServiceChatNetworkServiceDatabaseFactory;
@@ -76,7 +76,7 @@ import com.bitdubai.fermat_cht_plugin.layer.network_service.chat.developer.bitdu
 import com.bitdubai.fermat_cht_plugin.layer.network_service.chat.developer.bitdubai.version_1.exceptions.CantReadRecordDataBaseException;
 import com.bitdubai.fermat_cht_plugin.layer.network_service.chat.developer.bitdubai.version_1.structure.ChatMetadataTransactionRecord;
 import com.bitdubai.fermat_cht_plugin.layer.network_service.chat.developer.bitdubai.version_1.structure.EncodeMsjContent;
-import com.bitdubai.fermat_cht_plugin.layer.network_service.chat.developer.bitdubai.version_1.communications.CommunicationRegistrationProcessNetworkServiceAgent;
+import com.bitdubai.fermat_p2p_api.layer.all_definition.common.network_services.interfaces.NetworkService;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.contents.FermatMessageCommunication;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.contents.FermatMessageCommunicationFactory;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.enums.P2pEventType;
@@ -147,6 +147,7 @@ public class NetworkServiceChatNetworkServicePluginRoot extends AbstractPlugin i
         this.alias = "NetworkServiceChat";
 
         this.extraData = null;
+
     }
 
     @Override
@@ -692,7 +693,7 @@ public class NetworkServiceChatNetworkServicePluginRoot extends AbstractPlugin i
              */
             //identity = new ECCKeyPair();
             initializeClientIdentity();
-
+            System.out.println("########AQUI ESTOY###########"+getIdentityPublicKey());
             /*
              * Initialize the data base
              */
