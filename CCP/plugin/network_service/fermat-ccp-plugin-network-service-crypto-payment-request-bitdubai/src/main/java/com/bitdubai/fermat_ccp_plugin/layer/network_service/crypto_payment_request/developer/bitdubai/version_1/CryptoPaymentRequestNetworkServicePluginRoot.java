@@ -1146,6 +1146,11 @@ public final class CryptoPaymentRequestNetworkServicePluginRoot extends Abstract
                     final InformationMessage informationMessage = gson.fromJson(jsonMessage, InformationMessage.class);
                     receiveInformationMessage(informationMessage);
 
+                    //close connection - end message
+                    communicationNetworkServiceConnectionManager.closeConnection(informationMessage.getActorDestination());
+                    cryptoPaymentRequestExecutorAgent.getPoolConnectionsWaitingForResponse().remove(informationMessage.getActorDestination());
+
+
                     System.out.println(" CPR NS - Information Message Received: "+informationMessage.toString());
                     break;
                 case REQUEST:
@@ -1177,20 +1182,9 @@ public final class CryptoPaymentRequestNetworkServicePluginRoot extends Abstract
             switch (networkServiceMessage.getMessageType()) {
                 case INFORMATION:
                     InformationMessage informationMessage = gson.fromJson(jsonMessage, InformationMessage.class);
-
-                    //close connection - end message
-                    communicationNetworkServiceConnectionManager.closeConnection(informationMessage.getActorDestination());
-                    cryptoPaymentRequestExecutorAgent.getPoolConnectionsWaitingForResponse().remove(informationMessage.getActorDestination());
-
                     break;
                 case REQUEST:
                     RequestMessage requestMessage = gson.fromJson(jsonMessage, RequestMessage.class);
-
-                    //close connection - end message
-                    communicationNetworkServiceConnectionManager.closeConnection(requestMessage.getActorDestination());
-                    cryptoPaymentRequestExecutorAgent.getPoolConnectionsWaitingForResponse().remove(requestMessage.getActorDestination());
-
-
                     break;
 
                 default:

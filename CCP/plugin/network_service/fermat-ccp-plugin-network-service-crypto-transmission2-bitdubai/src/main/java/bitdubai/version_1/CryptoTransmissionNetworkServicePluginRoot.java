@@ -507,7 +507,7 @@ public class CryptoTransmissionNetworkServicePluginRoot extends AbstractPlugin i
                             eventManager);
 
                     // change message state to process again first time
-                    //reprocessMessage();
+                    reprocessMessage();
 
                     //declare a schedule to process waiting request message
                     Timer timer = new Timer();
@@ -516,9 +516,9 @@ public class CryptoTransmissionNetworkServicePluginRoot extends AbstractPlugin i
                         @Override
                         public void run() {
                             // change message state to process again
-                            //reprocessMessage();
+                            reprocessMessage();
                         }
-                    }, 2*3600*1000);
+                    }, 3600*1000);
 
 
                     /*
@@ -903,11 +903,16 @@ public class CryptoTransmissionNetworkServicePluginRoot extends AbstractPlugin i
                                     CryptoTransmissionProtocolState.DONE,
                                     cryptoTransmissionResponseMessage.getCryptoTransmissionMetadataState()
                             );
+
+                            System.out.print("CryptoTransmission Close Connection - End Message");
+
+                            this.actorNetworkServiceRecordedAgent.getPoolConnectionsWaitingForResponse().remove(cryptoTransmissionMetadata.getDestinationPublicKey());
+                            this.getNetworkServiceConnectionManager().closeConnection(cryptoTransmissionMetadata.getDestinationPublicKey());
+
                             System.out.println("-----------------------\n" +
                                     "RECIVIENDO RESPUESTA CRYPTO METADATA!!!!! -----------------------\n" +
                                     "-----------------------\n STATE: CREDITED_IN_DESTINATION_WALLET ");
                             // deberia ver si tengo que lanzar un evento acá
-                            System.out.println("CryptoTransmission CREDITED_IN_DESTINATION_WALLET event");
 
                             break;
                     }
@@ -1169,7 +1174,7 @@ public class CryptoTransmissionNetworkServicePluginRoot extends AbstractPlugin i
 
                 this.register = Boolean.FALSE;
 
-                //reprocessMessage();
+                reprocessMessage();
 
                 if(communicationNetworkServiceConnectionManager != null) {
                     communicationNetworkServiceConnectionManager.closeAllConnection();
@@ -1611,6 +1616,32 @@ public class CryptoTransmissionNetworkServicePluginRoot extends AbstractPlugin i
     public TransactionProtocolManager<FermatCryptoTransaction> getTransactionManager() {
         CryptoTransmissionTransactionProtocolManager cryptoTransmissionTransactionProtocolManager = new CryptoTransmissionTransactionProtocolManager(incomingNotificationsDao);
         return cryptoTransmissionTransactionProtocolManager;
+    }
+
+    private void reprocessMessage()
+    {
+        try {
+
+         /*
+         * Read all pending CryptoTransmissionMetadata message from database
+         */
+            List<CryptoTransmissionMetadataRecord> lstCryptoTransmissionMetadata = outgoingNotificationDao.getNotSentRecord();
+
+
+            for(CryptoTransmissionMetadataRecord record : lstCryptoTransmissionMetadata) {
+
+                outgoingNotificationDao.changeCryptoTransmissionProtocolState(record.getTransactionId(), CryptoTransmissionProtocolState.PRE_PROCESSING_SEND);
+
+            }
+
+
+        } catch (CantUpdateRecordDataBaseException  e) {
+            System.out.println("CRYPTO TRANSMISSION EXCEPCION REPROCESANDO WAIT MESSAGE");
+            e.printStackTrace();
+        } catch (Exception  e) {
+            System.out.println("CRYPTO TRANSMISSION EXCEPCION REPROCESANDO WAIT MESSAGE");
+            e.printStackTrace();
+        }
     }
 
 }
