@@ -182,11 +182,15 @@ public class ComponentRegistrationRequestJettyPacketProcessor extends FermatJett
              * socket are closed and the profile don't pass ot the stand by cache or
              * remove
              */
-            if (MemoryCache.getInstance().getRegisteredCommunicationsCloudClientCache().containsKey(platformComponentProfileToRegister.getIdentityPublicKey())) {
+            if (MemoryCache.getInstance().getRegisteredCommunicationsCloudClientCache().containsKey(platformComponentProfileToRegister.getIdentityPublicKey()) &&
+                    !MemoryCache.getInstance().getStandByProfileByClientIdentity().containsKey(platformComponentProfileToRegister.getIdentityPublicKey())) {
 
+                LOG.info("Cloud client already register! clean old references and close old connection");
                 ClientConnection clientConnectionOld = MemoryCache.getInstance().getRegisteredClientConnectionsCache().remove(platformComponentProfileToRegister.getIdentityPublicKey());
-                clientConnectionOld.getSession().close(new CloseReason(CloseReason.CloseCodes.NORMAL_CLOSURE, "Connection is no more active"));
-
+                LOG.info("clientConnectionOld id = " + clientConnectionOld.getSession().getId());
+                MemoryCache.getInstance().cleanReferences(clientConnectionOld);
+                clientConnectionOld.setClientIdentity(null);
+                clientConnectionOld.getSession().close();
             }
 
              /*
@@ -239,7 +243,7 @@ public class ComponentRegistrationRequestJettyPacketProcessor extends FermatJett
 
                 if (MemoryCache.getInstance().getTimersByClientIdentity().containsKey(platformComponentProfileToRegister.getIdentityPublicKey())){
                     LOG.info("Cancel timer task to clean references");
-                    Timer timer = MemoryCache.getInstance().getTimersByClientIdentity().get(platformComponentProfileToRegister.getIdentityPublicKey());
+                    Timer timer = MemoryCache.getInstance().getTimersByClientIdentity().remove(platformComponentProfileToRegister.getIdentityPublicKey());
                     timer.cancel();
                 }
 

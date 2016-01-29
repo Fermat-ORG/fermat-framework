@@ -563,7 +563,7 @@ public class IntraActorNetworkServicePluginRoot extends AbstractPlugin implement
                             // change message state to process again
                             reprocessMessage();
                         }
-                    }, 2*3600*1000);
+                    }, 3600*1000);
 
 
                     /*
@@ -1278,6 +1278,9 @@ public class IntraActorNetworkServicePluginRoot extends AbstractPlugin implement
                 // close connection, sender is the destination
                 if(actorNetworkServiceRecordedAgent!=null) actorNetworkServiceRecordedAgent.getPoolConnectionsWaitingForResponse().remove(remotePublicKey);
 
+                //reprocess messages
+                if(!((VPNConnectionCloseNotificationEvent) fermatEvent).isCloseNormal())
+                    reprocessMessage(remotePublicKey);
             }
 
         }

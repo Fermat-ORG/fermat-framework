@@ -98,7 +98,7 @@ public class WsCommunicationTyrusVPNClient extends Endpoint implements Communica
     public void onOpen(Session session, EndpointConfig config) {
         System.out.println(" --------------------------------------------------------------------- ");
         System.out.println(" WsCommunicationVPNClient - Starting method onOpen");
-        System.out.println(" WsCommunicationVPNClient - VPN Server id = " + session.getId());
+        System.out.println(" WsCommunicationVPNClient - Session id = " + session.getId());
         this.vpnClientConnection = session;
 
         /*
@@ -189,7 +189,6 @@ public class WsCommunicationTyrusVPNClient extends Endpoint implements Communica
             case 1006:
                     try {
                         wsCommunicationTyrusVPNClientManagerAgent.riseVpnConnectionCloseNotificationEvent(remoteParticipantNetworkService.getNetworkServiceType(), remoteParticipant,false);
-                        System.out.println(" WsCommunicationVPNClient - Connection loose,  trying to reconnect");
                     }catch (Exception e){
                         e.printStackTrace();
                     }
