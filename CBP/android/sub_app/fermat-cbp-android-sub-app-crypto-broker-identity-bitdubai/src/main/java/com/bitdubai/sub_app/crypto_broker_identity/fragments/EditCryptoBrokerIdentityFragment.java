@@ -251,9 +251,6 @@ public class EditCryptoBrokerIdentityFragment extends AbstractFermatFragment imp
 
             if (pictureView != null && cryptoBrokerBitmap != null) {
                 pictureView.setImageBitmap(cryptoBrokerBitmap);
-                mBrokerName.clearFocus();
-                mBrokerName.requestFocus();
-                mBrokerName.selectAll();
             }
         }
     }

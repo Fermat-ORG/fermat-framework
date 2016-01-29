@@ -203,10 +203,6 @@ public class CreateCryptoBrokerIdentityFragment extends AbstractFermatFragment {
 
             if (pictureView != null && cryptoBrokerBitmap != null) {
                 pictureView.setImageBitmap(cryptoBrokerBitmap);
-                mBrokerName.requestFocus();
-                getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE);
-
-                createNewIdentityInBackDevice();
             }
         }
     }
