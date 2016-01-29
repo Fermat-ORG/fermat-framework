@@ -1081,11 +1081,10 @@ public class CryptoAddressesNetworkServicePluginRoot extends AbstractNetworkServ
     @Override
     public void handleClientConnectionLooseNotificationEvent(FermatEvent fermatEvent) {
 
+        System.out.println("CryptoAddressesNetworkServicePluginRoot - handleClientConnectionLooseNotificationEvent");
+
         if(communicationNetworkServiceConnectionManager != null) {
             communicationNetworkServiceConnectionManager.stop();
-        }
-        if(cryptoAddressesExecutorAgent!=null) {
-            cryptoAddressesExecutorAgent.pause();
         }
 
         this.register = Boolean.FALSE;
@@ -1098,25 +1097,18 @@ public class CryptoAddressesNetworkServicePluginRoot extends AbstractNetworkServ
     @Override
     public void handleClientSuccessfullReconnectNotificationEvent(FermatEvent fermatEvent) {
 
-
-        try {
+        System.out.println("CryptoAddressesNetworkServicePluginRoot - handleClientSuccessfullReconnectNotificationEvent");
 
             if (communicationNetworkServiceConnectionManager != null){
                 communicationNetworkServiceConnectionManager.restart();
+            }else{
+                this.initializeCommunicationNetworkServiceConnectionManager();
             }
 
             /*
              * Mark as register
              */
             this.register = Boolean.TRUE;
-
-            if(cryptoAddressesExecutorAgent!=null) {
-                cryptoAddressesExecutorAgent.start();
-            }
-
-        }catch (Exception e){
-            e.printStackTrace();
-        }
 
     }
 

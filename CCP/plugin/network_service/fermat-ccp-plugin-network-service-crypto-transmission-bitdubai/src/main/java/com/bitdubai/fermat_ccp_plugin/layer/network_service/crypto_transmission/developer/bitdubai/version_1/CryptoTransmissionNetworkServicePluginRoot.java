@@ -922,21 +922,11 @@ public class CryptoTransmissionNetworkServicePluginRoot extends AbstractNetworkS
 
         System.out.println("CryptoTransmissionNetworkServicePluginRoot - handleClientConnectionLooseNotificationEvent");
 
-        try {
-
             if(communicationNetworkServiceConnectionManager != null) {
                 communicationNetworkServiceConnectionManager.stop();
             }
 
-            if(cryptoTransmissionAgent != null) {
-                cryptoTransmissionAgent.stop();
-            }
-
             this.register = Boolean.FALSE;
-
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
 
     }
 
@@ -948,24 +938,16 @@ public class CryptoTransmissionNetworkServicePluginRoot extends AbstractNetworkS
 
         System.out.println("CryptoTransmissionNetworkServicePluginRoot - handleClientSuccessfullReconnectNotificationEvent");
 
-        try {
-
             if (communicationNetworkServiceConnectionManager != null){
                 communicationNetworkServiceConnectionManager.restart();
-            }
-
-            if(cryptoTransmissionAgent != null){
-                cryptoTransmissionAgent.start();
+            }else{
+                this.initializeCommunicationNetworkServiceConnectionManager();
             }
 
             /*
              * Mark as register
              */
             this.register = Boolean.TRUE;
-
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
 
     }
 
