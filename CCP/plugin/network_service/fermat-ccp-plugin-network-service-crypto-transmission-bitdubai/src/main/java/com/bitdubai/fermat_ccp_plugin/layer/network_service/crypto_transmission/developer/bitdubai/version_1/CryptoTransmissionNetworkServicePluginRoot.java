@@ -279,6 +279,7 @@ public class CryptoTransmissionNetworkServicePluginRoot extends AbstractNetworkS
      * because at this moment, is create the platformComponentProfile for this component
      */
     public void initializeCommunicationNetworkServiceConnectionManager(){
+
         this.communicationNetworkServiceConnectionManager = new CommunicationNetworkServiceConnectionManager_V2(
                 this,
                 getPlatformComponentProfilePluginRoot(),
@@ -510,8 +511,6 @@ public class CryptoTransmissionNetworkServicePluginRoot extends AbstractNetworkS
                 incomingCryptoTransmissionMetadataDAO = new CryptoTransmissionMetadataDAO_V2(pluginDatabaseSystem, pluginId, dataBase, CryptoTransmissionNetworkServiceDatabaseConstants.INCOMING_CRYPTO_TRANSMISSION_METADATA_TABLE_NAME);
                 outgoingCryptoTransmissionMetadataDAO = new CryptoTransmissionMetadataDAO_V2(pluginDatabaseSystem, pluginId, dataBase, CryptoTransmissionNetworkServiceDatabaseConstants.OUTGOING_CRYPTO_TRANSMISSION_METADATA_TABLE_NAME);
                 cryptoTransmissionConnectionsDAO = new CryptoTransmissionConnectionsDAO(pluginDatabaseSystem, pluginId);
-
-                initializeCryptoTransmissionAgent();
 
                 // change message state to process again first time
                 reprocessWaitingMessage();
@@ -754,11 +753,13 @@ public class CryptoTransmissionNetworkServicePluginRoot extends AbstractNetworkS
 
         System.out.println("CryptoTransmissionNetworkServicePluginRoot - Starting method initializeCryptoTransmissionAgent");
 
-        cryptoTransmissionAgent = new CryptoTransmissionAgent(
+        this.cryptoTransmissionAgent = new CryptoTransmissionAgent(
                 this,
                 errorManager,
                 eventManager
         );
+
+        this.cryptoTransmissionAgent.start();
     }
 
     /**
@@ -789,13 +790,7 @@ public class CryptoTransmissionNetworkServicePluginRoot extends AbstractNetworkS
                 System.out.println("CryptoTransmissionNetworkServicePluginRoot - NetWork Service is Registered: " + platformComponentProfileRegistered.getAlias());
                 this.register = Boolean.TRUE;
 
-                if(communicationNetworkServiceConnectionManager != null) {
-                    communicationNetworkServiceConnectionManager.restart();
-                }
-
-                if(cryptoTransmissionAgent != null){
-                    cryptoTransmissionAgent.start();
-                }
+                initializeCryptoTransmissionAgent();
 
             }
 
@@ -907,9 +902,6 @@ public class CryptoTransmissionNetworkServicePluginRoot extends AbstractNetworkS
                 communicationNetworkServiceConnectionManager.stop();
             }
 
-            if(cryptoTransmissionAgent != null) {
-                cryptoTransmissionAgent.stop();
-            }
         }
 
     }
@@ -926,10 +918,6 @@ public class CryptoTransmissionNetworkServicePluginRoot extends AbstractNetworkS
 
             if(communicationNetworkServiceConnectionManager != null) {
                 communicationNetworkServiceConnectionManager.stop();
-            }
-
-            if(cryptoTransmissionAgent != null) {
-                cryptoTransmissionAgent.stop();
             }
 
             this.register = Boolean.FALSE;
@@ -952,10 +940,6 @@ public class CryptoTransmissionNetworkServicePluginRoot extends AbstractNetworkS
 
             if (communicationNetworkServiceConnectionManager != null){
                 communicationNetworkServiceConnectionManager.restart();
-            }
-
-            if(cryptoTransmissionAgent != null){
-                cryptoTransmissionAgent.start();
             }
 
             /*
@@ -1525,4 +1509,5 @@ public class CryptoTransmissionNetworkServicePluginRoot extends AbstractNetworkS
             e.printStackTrace();
         }
     }
+
 }

@@ -215,26 +215,19 @@ public class CryptoTransmissionAgent {
 
         try {
 
-            if(running.get()) {
-                if (cryptoTransmissionNetworkServicePluginRoot.isRegister()) {
-                    // deberia dividirlo en funciones mas pequeñas despues
+            if (!cryptoTransmissionNetworkServicePluginRoot.getWsCommunicationsCloudClientManager().getCommunicationsCloudClientConnection().isConnected()){
+                //System.out.println("ActorNetworkServiceRecordedAgent - sendCycle() no connection available ... ");
+                return;
+            } else  {
 
-                    // function to process and send metadata to remote
-                    processMetadata();
+                // function to process and send metadata to remote
+                processMetadata();
 
-                    // this function read the active conections waiting for response that the events not catch
-                    //readResponseFromRemote();
-
-                }
-            }
-//            if (toSend.isInterrupted() == Boolean.FALSE) {
-                //Sleep for a time
                 Thread.sleep(CryptoTransmissionAgent.SLEEP_TIME);
-//            }
+            }
 
         } catch (InterruptedException e) {
             running.set(false);
-//            toSend.interrupt();
             System.out.println("CryptoTransmissionAgent - Thread Interrupted stopped ...  ");
             System.out.println("CryptoTransmissionAgent - Thread Interrupted stopped, restarting threads ...  ");
         } catch (Exception e){

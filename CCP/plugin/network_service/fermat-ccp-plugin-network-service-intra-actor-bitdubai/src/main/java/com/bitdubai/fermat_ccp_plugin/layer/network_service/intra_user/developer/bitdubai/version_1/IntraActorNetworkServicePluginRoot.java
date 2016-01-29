@@ -10,7 +10,6 @@ import android.util.Base64;
 
 import com.bitdubai.fermat_api.CantStartAgentException;
 import com.bitdubai.fermat_api.CantStartPluginException;
-import com.bitdubai.fermat_api.CantStopAgentException;
 import com.bitdubai.fermat_api.Service;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.abstract_classes.AbstractPlugin;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.annotations.NeededAddonReference;
@@ -298,6 +297,7 @@ public class IntraActorNetworkServicePluginRoot extends AbstractPlugin implement
         this.alias = "IntraActorNetworkService";
         this.extraData = null;
         this.actorsToRegisterCache = new ArrayList<>();
+        this.remoteNetworkServicesRegisteredList = new CopyOnWriteArrayList<>();
     }
 
     /**
@@ -545,10 +545,6 @@ public class IntraActorNetworkServicePluginRoot extends AbstractPlugin implement
 
                     intraActorNetworkServiceDao = new IntraActorNetworkServiceDao(this.dataBase, this.pluginFileSystem,this.pluginId);
 
-
-
-                    remoteNetworkServicesRegisteredList = new CopyOnWriteArrayList<PlatformComponentProfile>();
-
                     connectionArrived = new AtomicBoolean(false);
 
                     // change message state to process again first time
@@ -734,7 +730,10 @@ public class IntraActorNetworkServicePluginRoot extends AbstractPlugin implement
 
     }
 
-    private void initializeIntraActorAgent() {
+    private void initializeAgent() {
+
+        System.out.println("IntraActorNetworkServicePluginRoot - initializeAgent() ");
+
         try {
             actorNetworkServiceRecordedAgent = new ActorNetworkServiceRecordedAgent(
                     communicationNetworkServiceConnectionManager,
@@ -778,7 +777,7 @@ public class IntraActorNetworkServicePluginRoot extends AbstractPlugin implement
 
                 System.out.println("IntraActorNetworkServicePluginRoot - NetWork Service is Registered: " + platformComponentProfileRegistered.getAlias());
                 this.register = Boolean.TRUE;
-                initializeIntraActorAgent();
+                initializeAgent();
 
                 CommunicationsClientConnection communicationsClientConnection = wsCommunicationsCloudClientManager.getCommunicationsCloudClientConnection();
 
@@ -1311,11 +1310,7 @@ public class IntraActorNetworkServicePluginRoot extends AbstractPlugin implement
                     communicationNetworkServiceConnectionManager.stop();
                 }
 
-                if(actorNetworkServiceRecordedAgent!=null) {
-                    actorNetworkServiceRecordedAgent.stop();
-                }
-
-            }catch (CantStopAgentException e) {
+            }catch (Exception e) {
                 e.printStackTrace();
             }
 
@@ -1337,13 +1332,9 @@ public class IntraActorNetworkServicePluginRoot extends AbstractPlugin implement
                 communicationNetworkServiceConnectionManager.stop();
             }
 
-            if(actorNetworkServiceRecordedAgent!=null) {
-                actorNetworkServiceRecordedAgent.stop();
-            }
-
             this.register = Boolean.FALSE;
 
-        } catch (CantStopAgentException e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
 
@@ -1361,14 +1352,10 @@ public class IntraActorNetworkServicePluginRoot extends AbstractPlugin implement
 
             if (communicationNetworkServiceConnectionManager != null){
                 communicationNetworkServiceConnectionManager.restart();
-            }else{
-                this.initializeCommunicationNetworkServiceConnectionManager();
             }
 
             if(actorNetworkServiceRecordedAgent == null) {
-                initializeIntraActorAgent();
-            }else {
-                actorNetworkServiceRecordedAgent.start();
+                initializeAgent();
             }
 
             /*
@@ -1376,7 +1363,7 @@ public class IntraActorNetworkServicePluginRoot extends AbstractPlugin implement
              */
             this.register = Boolean.TRUE;
 
-        } catch (CantStartAgentException e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
 
@@ -2144,4 +2131,7 @@ public class IntraActorNetworkServicePluginRoot extends AbstractPlugin implement
     }
 
 
+    public WsCommunicationsCloudClientManager getWsCommunicationsCloudClientManager() {
+        return wsCommunicationsCloudClientManager;
+    }
 }

@@ -131,7 +131,12 @@ public final class CryptoAddressesExecutorAgent extends FermatAgent {
 
         try {
 
-            if(cryptoAddressesNetworkServicePluginRoot.isRegister()) {
+            if (!cryptoAddressesNetworkServicePluginRoot.getWsCommunicationsCloudClientManager().getCommunicationsCloudClientConnection().isConnected()){
+                //System.out.println("CryptoAddressesExecutorAgent - sendCycle() no connection available ... ");
+                return;
+            }
+
+            if(cryptoAddressesNetworkServicePluginRoot.isStarted()) {
 
                 // function to process and send the right message to the counterparts.
                 processSend();
@@ -240,14 +245,18 @@ public final class CryptoAddressesExecutorAgent extends FermatAgent {
 
         try {
 
-            if(cryptoAddressesNetworkServicePluginRoot.isRegister()) {
+            if (!cryptoAddressesNetworkServicePluginRoot.getWsCommunicationsCloudClientManager().getCommunicationsCloudClientConnection().isConnected()){
+                //System.out.println("CryptoAddressesExecutorAgent - receiveCycle() no connection available ... ");
+                return;
+            }else {
 
                 // function to process and send the right message to the counterparts.
                 processReceive();
-            }
 
-            //Sleep for a while
-            Thread.sleep(SLEEP_TIME);
+                //Sleep for a while
+                Thread.sleep(SLEEP_TIME);
+
+            }
 
         } catch (InterruptedException e) {
             Thread.currentThread().interrupt();

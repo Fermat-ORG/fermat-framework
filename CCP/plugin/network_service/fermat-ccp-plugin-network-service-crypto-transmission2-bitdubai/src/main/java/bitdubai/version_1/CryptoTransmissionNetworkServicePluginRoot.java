@@ -690,7 +690,10 @@ public class CryptoTransmissionNetworkServicePluginRoot extends AbstractPlugin i
 
     }
 
-    private void initializeIntraActorAgent() {
+    private void initializeAgent() {
+
+        System.out.println("CryptoTransmissionNetworkServicePluginRoot - initializeAgent() ");
+
         try {
             if(cryptoTransmissionTransactionRecordedAgent ==null){
                 cryptoTransmissionTransactionRecordedAgent = new CryptoTransmissionTransactionRecordedAgent(
@@ -740,7 +743,7 @@ public class CryptoTransmissionNetworkServicePluginRoot extends AbstractPlugin i
                     communicationNetworkServiceConnectionManager.restart();
                 }
 
-                initializeIntraActorAgent();
+                initializeAgent();
 
 
             }
@@ -1242,9 +1245,7 @@ public class CryptoTransmissionNetworkServicePluginRoot extends AbstractPlugin i
             }
 
             if(cryptoTransmissionTransactionRecordedAgent == null) {
-                initializeIntraActorAgent();
-            }else {
-                cryptoTransmissionTransactionRecordedAgent.start();
+                initializeAgent();
             }
 
             /*
@@ -1252,7 +1253,7 @@ public class CryptoTransmissionNetworkServicePluginRoot extends AbstractPlugin i
              */
             this.register = Boolean.TRUE;
 
-        } catch (CantStartAgentException e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
 
@@ -1656,4 +1657,6 @@ public class CryptoTransmissionNetworkServicePluginRoot extends AbstractPlugin i
     public EventManager getEventManager() {
         return eventManager;
     }
+
+
 }

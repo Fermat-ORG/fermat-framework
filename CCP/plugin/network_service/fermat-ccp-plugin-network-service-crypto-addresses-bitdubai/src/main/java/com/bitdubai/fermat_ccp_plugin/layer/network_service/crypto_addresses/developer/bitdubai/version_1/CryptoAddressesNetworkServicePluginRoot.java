@@ -296,9 +296,6 @@ public class CryptoAddressesNetworkServicePluginRoot extends AbstractNetworkServ
                         communicationRegistrationProcessNetworkServiceAgent.start();
                     }
 
-
-                    initializeAgent();
-
                     // change message state to process again first time
                     reprocessMessage();
 
@@ -952,17 +949,19 @@ public class CryptoAddressesNetworkServicePluginRoot extends AbstractNetworkServ
     /**
      * Handles the events CompleteComponentRegistrationNotification
      */
-    public void initializeAgent() {
+    public void initializeAgent() throws CantStartPluginException {
 
         System.out.println("CryptoAddressesNetworkServicePluginRoot - Starting method initializeAgent");
         
-        cryptoAddressesExecutorAgent = new CryptoAddressesExecutorAgent(
+        this.cryptoAddressesExecutorAgent = new CryptoAddressesExecutorAgent(
                 this,
                 errorManager,
                 eventManager,
                 cryptoAddressesNetworkServiceDao,
                 wsCommunicationsCloudClientManager
         );
+
+        this.start();
     }
 
     public void handleCompleteComponentRegistrationNotificationEvent(PlatformComponentProfile platformComponentProfileRegistered){
@@ -987,9 +986,8 @@ public class CryptoAddressesNetworkServicePluginRoot extends AbstractNetworkServ
                     platformComponentProfileRegistered.getIdentityPublicKey().equals(identity.getPublicKey())) {
 
                 System.out.println("CryptoAddressesNetworkServicePluginRoot - NetWork Service is Registered: " + platformComponentProfileRegistered.getAlias());
-
+                initializeAgent();
                 this.register = Boolean.TRUE;
-                cryptoAddressesExecutorAgent.start();
 
             }
 
@@ -1066,10 +1064,6 @@ public class CryptoAddressesNetworkServicePluginRoot extends AbstractNetworkServ
                 communicationNetworkServiceConnectionManager.stop();
             }
 
-            if(cryptoAddressesExecutorAgent!=null) {
-                cryptoAddressesExecutorAgent.stop();
-            }
-
         }
 
     }
@@ -1082,9 +1076,6 @@ public class CryptoAddressesNetworkServicePluginRoot extends AbstractNetworkServ
 
         if(communicationNetworkServiceConnectionManager != null) {
             communicationNetworkServiceConnectionManager.stop();
-        }
-        if(cryptoAddressesExecutorAgent!=null) {
-            cryptoAddressesExecutorAgent.pause();
         }
 
         this.register = Boolean.FALSE;
@@ -1104,14 +1095,15 @@ public class CryptoAddressesNetworkServicePluginRoot extends AbstractNetworkServ
                 communicationNetworkServiceConnectionManager.restart();
             }
 
+            if (cryptoAddressesExecutorAgent == null){
+                initializeAgent();
+            }
+
             /*
              * Mark as register
              */
             this.register = Boolean.TRUE;
 
-            if(cryptoAddressesExecutorAgent!=null) {
-                cryptoAddressesExecutorAgent.start();
-            }
 
         }catch (Exception e){
             e.printStackTrace();
@@ -1305,7 +1297,7 @@ public class CryptoAddressesNetworkServicePluginRoot extends AbstractNetworkServ
                     protocolState
             );
 
-            cryptoAddressesNetworkServiceDao.changeActionState(acceptMessage.getRequestId(),RequestAction.RECEIVED);
+            cryptoAddressesNetworkServiceDao.changeActionState(acceptMessage.getRequestId(), RequestAction.RECEIVED);
 
 
 
@@ -1443,6 +1435,8 @@ public class CryptoAddressesNetworkServicePluginRoot extends AbstractNetworkServ
         }
     }
 
-
+    public WsCommunicationsCloudClientManager getWsCommunicationsCloudClientManager() {
+        return wsCommunicationsCloudClientManager;
+    }
 
 }

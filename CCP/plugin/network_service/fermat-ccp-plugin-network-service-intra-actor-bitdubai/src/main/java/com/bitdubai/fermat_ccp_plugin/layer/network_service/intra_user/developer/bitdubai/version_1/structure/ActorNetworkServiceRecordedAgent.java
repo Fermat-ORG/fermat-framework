@@ -168,15 +168,16 @@ public class ActorNetworkServiceRecordedAgent extends FermatAgent{
 
         try {
 
-            if(actorNetworkServicePluginRoot.isRegister() && actorNetworkServicePluginRoot.isStarted()) {
-
+            if (!actorNetworkServicePluginRoot.getWsCommunicationsCloudClientManager().getCommunicationsCloudClientConnection().isConnected()){
+                //System.out.println("ActorNetworkServiceRecordedAgent - sendCycle() no connection available ... ");
+                return;
+            }else {
                 // function to process and send the rigth message to the counterparts.
                 processSend();
 
+                //Sleep for a time
+                TimeUnit.SECONDS.sleep(2);
             }
-
-            //Sleep for a time
-            TimeUnit.SECONDS.sleep(2);
 
         } catch (InterruptedException e) {
             status = AgentStatus.STOPPED;
@@ -234,6 +235,11 @@ public class ActorNetworkServiceRecordedAgent extends FermatAgent{
     public void receiveCycle() {
 
         try {
+
+            if (!actorNetworkServicePluginRoot.getWsCommunicationsCloudClientManager().getCommunicationsCloudClientConnection().isConnected()){
+                //System.out.println("ActorNetworkServiceRecordedAgent - receiveCycle() no connection available ... ");
+                return;
+            }
 
             if(actorNetworkServicePluginRoot.isRegister() && actorNetworkServicePluginRoot.isStarted()) {
 

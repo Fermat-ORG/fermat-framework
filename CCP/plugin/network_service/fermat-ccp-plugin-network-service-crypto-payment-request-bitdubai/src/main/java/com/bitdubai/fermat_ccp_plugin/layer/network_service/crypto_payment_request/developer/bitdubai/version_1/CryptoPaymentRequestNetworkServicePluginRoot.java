@@ -275,9 +275,6 @@ public final class CryptoPaymentRequestNetworkServicePluginRoot extends Abstract
                         communicationRegistrationProcessNetworkServiceAgent.start();
                     }
 
-                    initializeAgent();
-
-
                     // change message state to process again first time
                     reprocessMessage();
 
@@ -953,13 +950,7 @@ public final class CryptoPaymentRequestNetworkServicePluginRoot extends Abstract
                     platformComponentProfileRegistered.getNetworkServiceType() == this.getNetworkServiceType() &&
                     platformComponentProfileRegistered.getIdentityPublicKey().equals(identity.getPublicKey())) {
 
-                if(communicationNetworkServiceConnectionManager==null) {
-                    initializeCommunicationNetworkServiceConnectionManager();
-                }
-
-                if (cryptoPaymentRequestExecutorAgent != null){
-                    cryptoPaymentRequestExecutorAgent.start();
-                }
+                initializeAgent();
 
                 this.register = Boolean.TRUE;
                 System.out.print("CryptoPaymentRequestNetworkServicePluginRoot - NetWork Service is Registered: " + platformComponentProfileRegistered.getAlias());
@@ -973,11 +964,11 @@ public final class CryptoPaymentRequestNetworkServicePluginRoot extends Abstract
     }
 
 
-    private void initializeAgent(){
+    private void initializeAgent() throws CantStartAgentException {
 
         System.out.println("CryptoPaymentRequestNetworkServicePluginRoot - Starting method initializeAgent ");
 
-        cryptoPaymentRequestExecutorAgent = new CryptoPaymentRequestExecutorAgent(
+        this.cryptoPaymentRequestExecutorAgent = new CryptoPaymentRequestExecutorAgent(
                     this,
                     errorManager,
                     eventManager,
@@ -985,6 +976,8 @@ public final class CryptoPaymentRequestNetworkServicePluginRoot extends Abstract
                     wsCommunicationsCloudClientManager,
                     getPluginVersionReference()
             );
+
+        this.cryptoPaymentRequestExecutorAgent.start();
     }
 
     @Override
@@ -1056,10 +1049,6 @@ public final class CryptoPaymentRequestNetworkServicePluginRoot extends Abstract
                     communicationNetworkServiceConnectionManager.stop();
                 }
 
-                if(cryptoPaymentRequestExecutorAgent!=null) {
-                    cryptoPaymentRequestExecutorAgent.stop();
-                }
-
                 reprocessMessage();
 
                 this.register = Boolean.FALSE;
@@ -1081,10 +1070,6 @@ public final class CryptoPaymentRequestNetworkServicePluginRoot extends Abstract
 
             if(communicationNetworkServiceConnectionManager != null) {
                 communicationNetworkServiceConnectionManager.stop();
-            }
-
-            if(cryptoPaymentRequestExecutorAgent != null) {
-                cryptoPaymentRequestExecutorAgent.stop();
             }
 
             this.register = Boolean.FALSE;
@@ -1109,8 +1094,8 @@ public final class CryptoPaymentRequestNetworkServicePluginRoot extends Abstract
                communicationNetworkServiceConnectionManager.restart();
             }
 
-            if(cryptoPaymentRequestExecutorAgent != null) {
-                cryptoPaymentRequestExecutorAgent.start();
+            if (cryptoPaymentRequestExecutorAgent == null){
+                initializeAgent();
             }
 
             /*
@@ -1118,7 +1103,7 @@ public final class CryptoPaymentRequestNetworkServicePluginRoot extends Abstract
              */
             this.register = Boolean.TRUE;
 
-        } catch (CantStartAgentException e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
 
@@ -1401,6 +1386,8 @@ public final class CryptoPaymentRequestNetworkServicePluginRoot extends Abstract
         }, reprocessTimer);
     }
 
-
+    public WsCommunicationsCloudClientManager getWsCommunicationsCloudClientManager() {
+        return wsCommunicationsCloudClientManager;
+    }
 
 }
