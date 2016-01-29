@@ -1032,7 +1032,10 @@ public final class CryptoPaymentRequestNetworkServicePluginRoot extends Abstract
                     cryptoPaymentRequestExecutorAgent.connectionFailure(remotePublicKey);
                 }
 
-                reprocessMessage(remotePublicKey);
+                //reprocess not DONE messages
+
+                if(!((VPNConnectionCloseNotificationEvent) fermatEvent).isCloseNormal())
+                    reprocessMessage(remotePublicKey);
             }
 
         }

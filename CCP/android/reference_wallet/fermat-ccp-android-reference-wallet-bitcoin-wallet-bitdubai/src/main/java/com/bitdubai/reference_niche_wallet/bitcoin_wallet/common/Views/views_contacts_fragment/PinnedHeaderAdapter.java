@@ -253,7 +253,7 @@ public class PinnedHeaderAdapter extends BaseAdapter implements OnScrollListener
 
     @Override
     public void onScrollStateChanged(AbsListView view, int scrollState) {
-        // TODO Auto-generated method stub
+
     }
 
     @Override

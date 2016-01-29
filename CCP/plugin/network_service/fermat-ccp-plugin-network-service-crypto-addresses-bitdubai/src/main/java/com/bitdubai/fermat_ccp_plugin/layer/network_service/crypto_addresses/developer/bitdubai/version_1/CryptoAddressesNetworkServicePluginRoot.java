@@ -1042,6 +1042,10 @@ public class CryptoAddressesNetworkServicePluginRoot extends AbstractNetworkServ
                     cryptoAddressesExecutorAgent.connectionFailure(remotePublicKey);
                 }
 
+                //reprocess not DONE messages
+                if(!((VPNConnectionCloseNotificationEvent) fermatEvent).isCloseNormal())
+                    reprocessMessage(remotePublicKey);
+
             }
 
         }

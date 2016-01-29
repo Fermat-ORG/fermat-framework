@@ -30,20 +30,4 @@ public class IntraUserInfoViewHolder extends FermatViewHolder {
         container_data = (LinearLayout) itemView.findViewById(R.id.container_data);
         checkbox_connection = (CheckBox) itemView.findViewById(R.id.checkbox_connection);
     }
-
-    public ImageView getThumbnail() {
-        return thumbnail;
-    }
-
-    public FermatTextView getName() {
-        return name;
-    }
-
-    public LinearLayout getContainer_data() {
-        return container_data;
-    }
-
-    public CheckBox getCheckbox_connection() {
-        return checkbox_connection;
-    }
 }
