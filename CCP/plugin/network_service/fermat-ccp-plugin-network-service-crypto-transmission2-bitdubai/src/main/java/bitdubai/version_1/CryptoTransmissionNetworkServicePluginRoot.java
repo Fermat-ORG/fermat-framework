@@ -1185,11 +1185,9 @@ public class CryptoTransmissionNetworkServicePluginRoot extends AbstractPlugin i
                     communicationNetworkServiceConnectionManager.stop();
                 }
 
-                if(cryptoTransmissionTransactionRecordedAgent !=null) {
-                    cryptoTransmissionTransactionRecordedAgent.stop();
-                }
 
-            }catch (CantStopAgentException e) {
+
+            }catch (Exception e) {
                 e.printStackTrace();
             }
 

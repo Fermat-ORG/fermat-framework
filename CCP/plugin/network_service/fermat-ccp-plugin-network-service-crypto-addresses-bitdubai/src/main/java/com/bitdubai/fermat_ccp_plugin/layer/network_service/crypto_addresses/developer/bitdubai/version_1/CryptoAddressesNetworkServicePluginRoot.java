@@ -953,10 +953,7 @@ public class CryptoAddressesNetworkServicePluginRoot extends AbstractNetworkServ
         
         cryptoAddressesExecutorAgent = new CryptoAddressesExecutorAgent(
                 this,
-                errorManager,
-                eventManager,
-                cryptoAddressesNetworkServiceDao,
-                wsCommunicationsCloudClientManager
+                cryptoAddressesNetworkServiceDao
         );
     }
 
@@ -1447,8 +1444,16 @@ public class CryptoAddressesNetworkServicePluginRoot extends AbstractNetworkServ
         }
     }
 
+    public WsCommunicationsCloudClientManager getWsCommunicationsCloudClientManager() {
+        return wsCommunicationsCloudClientManager;
+    }
 
-    private void startTimer(){
+    public ErrorManager getErrorManager() {
+        return errorManager;
+    }
+
+
+    private void startTimer() {
         timer.schedule(new TimerTask() {
             @Override
             public void run() {
@@ -1456,5 +1461,14 @@ public class CryptoAddressesNetworkServicePluginRoot extends AbstractNetworkServ
                 reprocessMessage();
             }
         }, reprocessTimer);
+    }
+
+    public EventManager getEventManager() {
+        return eventManager;
+    }
+
+    public CommunicationNetworkServiceConnectionManager_V2 getCommunicationNetworkServiceConnectionManager() {
+        return communicationNetworkServiceConnectionManager;
+
     }
 }

@@ -164,11 +164,13 @@ public class CryptoTransmissionTransactionRecordedAgent extends FermatAgent{
 
         try {
 
-            if(cryptoTransmissionNetworkServicePluginRoot.isRegister() && cryptoTransmissionNetworkServicePluginRoot.isStarted()) {
+            if(cryptoTransmissionNetworkServicePluginRoot.getWsCommunicationsCloudClientManager().getCommunicationsCloudClientConnection().isConnected()) {
+                if (cryptoTransmissionNetworkServicePluginRoot.isRegister() && cryptoTransmissionNetworkServicePluginRoot.isStarted()) {
 
-                // function to process and send the rigth message to the counterparts.
-                processSend();
+                    // function to process and send the rigth message to the counterparts.
+                    processSend();
 
+                }
             }
 
             //Sleep for a time
@@ -244,10 +246,13 @@ public class CryptoTransmissionTransactionRecordedAgent extends FermatAgent{
 
         try {
 
-            if(cryptoTransmissionNetworkServicePluginRoot.isRegister() && cryptoTransmissionNetworkServicePluginRoot.isStarted()) {
+            if(cryptoTransmissionNetworkServicePluginRoot.getWsCommunicationsCloudClientManager().getCommunicationsCloudClientConnection().isConnected()) {
 
-                // function to process and send the right message to the counterparts.
-                processReceive();
+                if (cryptoTransmissionNetworkServicePluginRoot.isRegister() && cryptoTransmissionNetworkServicePluginRoot.isStarted()) {
+
+                    // function to process and send the right message to the counterparts.
+                    processReceive();
+                }
             }
 
             //Sleep for a time
