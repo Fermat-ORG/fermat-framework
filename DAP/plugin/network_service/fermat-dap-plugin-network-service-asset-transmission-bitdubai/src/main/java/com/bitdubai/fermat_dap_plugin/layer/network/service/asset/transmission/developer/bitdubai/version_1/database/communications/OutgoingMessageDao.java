@@ -379,8 +379,11 @@ public class OutgoingMessageDao {
         if (entity == null) {
             throw new IllegalArgumentException("The entity is required, can not be null");
         }
-
         try {
+
+            if (findById(entity.getId().toString()) != null) {
+                return;
+            }
 
             /*
              * 1- Create the record to the entity
@@ -394,7 +397,7 @@ public class OutgoingMessageDao {
             transaction.addRecordToInsert(getDatabaseTable(), entityRecord);
             getDataBase().executeTransaction(transaction);
 
-        } catch (DatabaseTransactionFailedException databaseTransactionFailedException) {
+        } catch (DatabaseTransactionFailedException | CantReadRecordDataBaseException databaseTransactionFailedException) {
 
 
             StringBuffer contextBuffer = new StringBuffer();
@@ -432,7 +435,9 @@ public class OutgoingMessageDao {
              * 2.- Create a new transaction and execute
              */
             DatabaseTransaction transaction = getDataBase().newTransaction();
-            transaction.addRecordToUpdate(getDatabaseTable(), entityRecord);
+            DatabaseTable outgoingMessageTable = getDatabaseTable();
+            outgoingMessageTable.addStringFilter(CommunicationNetworkServiceDatabaseConstants.OUTGOING_MESSAGES_ID_COLUMN_NAME, entity.getId().toString(), DatabaseFilterType.EQUAL);
+            transaction.addRecordToUpdate(outgoingMessageTable, entityRecord);
             getDataBase().executeTransaction(transaction);
 
         } catch (DatabaseTransactionFailedException databaseTransactionFailedException) {
@@ -446,7 +451,6 @@ public class OutgoingMessageDao {
             throw cantUpdateRecordDataBaseException;
 
         }
-
     }
 
     /**
@@ -539,15 +543,15 @@ public class OutgoingMessageDao {
         entityRecord.setStringValue(CommunicationNetworkServiceDatabaseConstants.OUTGOING_MESSAGES_TEXT_CONTENT_COLUMN_NAME, outGoingTemplateNetworkServiceMessage.getContent());
         entityRecord.setStringValue(CommunicationNetworkServiceDatabaseConstants.OUTGOING_MESSAGES_TYPE_COLUMN_NAME, outGoingTemplateNetworkServiceMessage.getFermatMessageContentType().getCode());
 
-        if (outGoingTemplateNetworkServiceMessage.getShippingTimestamp() != null){
+        if (outGoingTemplateNetworkServiceMessage.getShippingTimestamp() != null) {
             entityRecord.setLongValue(CommunicationNetworkServiceDatabaseConstants.OUTGOING_MESSAGES_SHIPPING_TIMESTAMP_COLUMN_NAME, outGoingTemplateNetworkServiceMessage.getShippingTimestamp().getTime());
-        }else {
+        } else {
             entityRecord.setLongValue(CommunicationNetworkServiceDatabaseConstants.OUTGOING_MESSAGES_SHIPPING_TIMESTAMP_COLUMN_NAME, (long) 0);
         }
 
-        if (outGoingTemplateNetworkServiceMessage.getDeliveryTimestamp() != null){
+        if (outGoingTemplateNetworkServiceMessage.getDeliveryTimestamp() != null) {
             entityRecord.setLongValue(CommunicationNetworkServiceDatabaseConstants.OUTGOING_MESSAGES_DELIVERY_TIMESTAMP_COLUMN_NAME, outGoingTemplateNetworkServiceMessage.getDeliveryTimestamp().getTime());
-        }else {
+        } else {
             entityRecord.setLongValue(CommunicationNetworkServiceDatabaseConstants.OUTGOING_MESSAGES_DELIVERY_TIMESTAMP_COLUMN_NAME, (long) 0);
         }
 

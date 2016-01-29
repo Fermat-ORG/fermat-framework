@@ -100,18 +100,19 @@ Developers and team leaders in particular are classified by the deepness of the 
 
 ### The following rules apply:
 
-1. Standard team size is of 5 full-time members.
-2. One full-time member can be replaced by 2 part-time members.
-3. Developers can go up the category list and they can also go down in certain circumstances.
-4. Going up or down a category is decided by the developers's team leader or parent team leader according to these rules.
-5. To move up one category or to keep the current one, all the conditions of previous categories need to have been met.
-6. To be _awarded_ means to win the full bounty at the month targeted by the bounty program.
-7. When a criteria is met to go up a category, the developer will be moved up the following calendar month.
-8. When a full team has a child sub-team leaded by one of the current members:<br>
+1. **Team Size** : Standard team size is of 5 full-time members.
+2. **Part-Time & Full-Time** : One full-time member can be replaced by 2 part-time members.
+3. **Up & Down** : Developers can go up the category list and they can also go down in certain circumstances.
+4. **Approval** : Going up or down a category is decided by the developers's team leader or parent team leader in case a the one moving is already a team leader. In all cases these rules and the project director must approve the move.
+5. **Cumulative Conditions** : To move up one category or to keep the current one, all the conditions of previous categories need to have been met.
+6. **Awards Needed** : To be _awarded_ means to win the full bounty at the month targeted by the bounty program.
+7. **When** : When a criteria is met to go up a category, the developer will be moved up the following calendar month.
+8. **Replacement** : When a full team has a child sub-team leaded by one of the current members:<br>
     a. Their current team leader must add a full-time developer within the same month in order to keep his category.<br>
     b. Failing to do so, will move him down the next month to _Team Leader_.<br>
     c. Succeeding to get a full-time member will probably move him to _New Parent Team Leader_ if this was his first child.<br>
-9. Team leaders can remove members from their teams with a reasonable cause (lack of engagement, performance, etc.).
+9. **Removing Members** : Team leaders can remove members from their teams with a reasonable cause (lack of engagement, performance, etc.).
+10. **Changing Parents** : Team leaders might move their team and decendence to other parent if they don't fell supported by their biological or current parent. They need an authoritation by the project director for this to happen.
 
 <br>
 ## Teams presentations and members
@@ -132,13 +133,6 @@ More than a Team we are a group of highly motivated friends pursuing the goal of
     Email:   acosta_rodrigo@hotmail.com
     Skype:   acosta_rodrigo
     Github:  https://github.com/acostarodrigo
-    
-    
-* **Nerio Enrique Indriago Ortega [Veteran Developer]**<br/>
----
-      Email:   nerioindriago@gmail.com
-      Skype:   nerioindriago
-      Github:  https://github.com/nindriago
 
 * **Victor Mars [Veteran Developer]** <br/>
 ---
@@ -294,7 +288,40 @@ In the Crypto Broker Platform we are responsible for a large part of user level 
       Skype:   richardalozada
       Github:  https://github.com/Lozadaa 
 
+* **Rodrigo Guzman [New Part-Time Developer]**<br/>
+---
+      Email:   roygufo@gmail.com
+      Skype:   roy-epps
+      Github:  https://github.com/RoyGF
+
 We are also amateur philosophers, passionate about esoteric topics and video games.
+
+<br>
+### Skynet Team:
+-----------------------------------
+From the most hidden and beautiful corner, in an unknown place of the universe, a network that gathers a group of polymaths is born. Such network combines their knowledge and artificial intelligence in order to overcome any obstacle that might try to avoid giving life to a limitless project.. that network is Team Skynet, a group of workaholics that enjoys turning challenges into fun, having a great will to help the needed and learn continuously.
+We are a team with diverse tastes and full of color making it an explosive integration. We love video games, anime, movie theaters, music and many other things. If you want to be part of our team, you will be always welcome at Skynet
+
+#### Skynet Team Members:
+
+* **Nerio Enrique Indriago Ortega [Team Leader]** <br/>
+---
+      Email:   nerioindriago@gmail.com
+      Skype:   nerioindriago
+      Github:  https://github.com/nindriago
+
+* **Penelope Quintero [New Developer]** <br/>
+---
+      Email:   pennyxz@gmail.com
+      Skype:   pennyxz
+      Github:  https://github.com/pennyxz
+
+* **Jinmy Bohorquez [New Developer]** <br/>
+---
+      Email:   jinmybohorquez@gmail.com
+      Skype:   jinmyb22
+      Github:  https://github.com/jinmyjbv
+
 
 <br/>
 ### Code Butchers Team:
@@ -404,7 +431,7 @@ In the Fermat ORG Sierra Team we look for the excellence in coding, following th
 * **Luis Fuenmayor [ORG Team Leader]**<br/>
 ---
     Email:   fuelusumar@gmail.com
-    Skype:   fuelusumar
+    Skype:   live:fuelusumar.
     Github:  https://github.com/fuelusumar
     
 * **German Mendoza [ORG Veteran Developer]**<br/>
@@ -418,6 +445,12 @@ In the Fermat ORG Sierra Team we look for the excellence in coding, following th
     Email:   campusprize@gmail.com
     Skype:   campol
     Github:  https://github.com/campol
+
+* **Erick Narvaez [ORG Developer]**<br/>
+---
+    Email:   ericknarvaez@hotmail.com 
+    Skype:   live:ericknarvaez
+    Github:  https://github.com/korik1
 
 <br/>
 

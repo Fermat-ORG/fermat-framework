@@ -27,6 +27,7 @@
     <color name="ccw_wizard_color">#492781</color>
     <color name="contract_cancelled_list_item_background">#ff8b8b</color>
     <color name="contract_completed_list_item_background">#f3f3f3</color>
+    <color name="contract_paused_list_item_background">#a4a4a4</color>
     <color name="dark_grey">#7b7b7b</color>
     <color name="market_rate_text">#31beff</color>
     <color name="negotiation_date_text">#6b7378</color>

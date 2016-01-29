@@ -1,5 +1,7 @@
 package com.bitdubai.fermat_cht_plugin.layer.middleware.chat.developer.bitdubai.version_1.structure;
 
+import com.bitdubai.fermat_api.layer.all_definition.events.EventSource;
+import com.bitdubai.fermat_api.layer.dmp_module.notification.NotificationType;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTableFilter;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantDeleteChatException;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantDeleteContactException;
@@ -7,18 +9,23 @@ import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantDeleteMessageEx
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantGetChatException;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantGetContactException;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantGetMessageException;
+import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantGetNetworkServicePublicKeyException;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantNewEmptyChatException;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantNewEmptyContactException;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantNewEmptyMessageException;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantSaveChatException;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantSaveContactException;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantSaveMessageException;
+import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantSendNotificationNewIncomingMessageException;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.ObjectNotSetException;
 import com.bitdubai.fermat_cht_api.all_definition.util.ObjectChecker;
+import com.bitdubai.fermat_cht_api.layer.middleware.event.IncomingChatMessageNotificationEvent;
 import com.bitdubai.fermat_cht_api.layer.middleware.interfaces.Chat;
-import com.bitdubai.fermat_cht_api.layer.middleware.interfaces.ChatManager;
+import com.bitdubai.fermat_cht_api.layer.middleware.interfaces.MiddlewareChatManager;
 import com.bitdubai.fermat_cht_api.layer.middleware.interfaces.Contact;
 import com.bitdubai.fermat_cht_api.layer.middleware.interfaces.Message;
+import com.bitdubai.fermat_cht_api.layer.network_service.chat.interfaces.NetworkServiceChatManager;
+import com.bitdubai.fermat_cht_plugin.layer.middleware.chat.developer.bitdubai.version_1.ChatMiddlewarePluginRoot;
 import com.bitdubai.fermat_cht_plugin.layer.middleware.chat.developer.bitdubai.version_1.database.ChatMiddlewareDatabaseDao;
 import com.bitdubai.fermat_cht_plugin.layer.middleware.chat.developer.bitdubai.version_1.exceptions.DatabaseOperationException;
 
@@ -26,19 +33,39 @@ import java.util.List;
 import java.util.UUID;
 
 /**
- * This class is the implementation of ChatManager.
+ * This class is the implementation of MiddlewareChatManager.
  * Created by Manuel Perez (darkpriestrelative@gmail.com) on 10/01/16.
  */
-public class ChatMiddlewareManager implements ChatManager {
+public class ChatMiddlewareManager implements MiddlewareChatManager {
 
+    public static String INCOMING_CHAT_MESSAGE_NOTIFICATION = "New Message";
+
+    private ChatMiddlewarePluginRoot chatMiddlewarePluginRoot;
     /**
      * Represents the plugin Database Dao.
      */
     private ChatMiddlewareDatabaseDao chatMiddlewareDatabaseDao;
 
+    /**
+     * Represents the contact factory
+     */
+    private ChatMiddlewareContactFactory chatMiddlewareContactFactory;
+
+    /**
+     * Represents the NetworkServiceChatManager
+     */
+    NetworkServiceChatManager networkServiceChatManager;
+
     public ChatMiddlewareManager(
-            ChatMiddlewareDatabaseDao chatMiddlewareDatabaseDao) {
+            ChatMiddlewareDatabaseDao chatMiddlewareDatabaseDao,
+            ChatMiddlewareContactFactory chatMiddlewareContactFactory,
+            ChatMiddlewarePluginRoot chatMiddlewarePluginRoot,
+            NetworkServiceChatManager networkServiceChatManager
+    ) {
         this.chatMiddlewareDatabaseDao = chatMiddlewareDatabaseDao;
+        this.chatMiddlewareContactFactory = chatMiddlewareContactFactory;
+        this.chatMiddlewarePluginRoot = chatMiddlewarePluginRoot;
+        this.networkServiceChatManager = networkServiceChatManager;
     }
 
     /**
@@ -330,4 +357,66 @@ public class ChatMiddlewareManager implements ChatManager {
                     "An unexpected error happened in a database operation");
         }
     }
+
+    /**
+     * This method returns the active registered actors to contact list.
+     * @return
+     * @throws CantGetContactException
+     */
+    @Override
+    public List<Contact> discoverActorsRegistered() throws CantGetContactException {
+        return this.chatMiddlewareContactFactory.discoverDeviceActors();
+    }
+
+    /**
+     * This method will notify PIP to launch a new notification to user
+     * @param publicKey
+     * @param tittle
+     * @param body
+     * @throws CantSendNotificationNewIncomingMessageException
+     */
+    @Override
+    public void notificationNewIncomingMessage(String publicKey, String tittle, String body) throws CantSendNotificationNewIncomingMessageException {
+        //TODO MATIAS PLEASE CHECK THIS
+        IncomingChatMessageNotificationEvent event = (IncomingChatMessageNotificationEvent) this.chatMiddlewarePluginRoot.getEventManager().getNewEvent(com.bitdubai.fermat_cht_api.all_definition.events.enums.EventType.INCOMING_CHAT_MESSAGE_NOTIFICATION);
+        event.setLocalPublicKey(publicKey);
+        event.setAlertTitle(getSourceString(ChatMiddlewarePluginRoot.EVENT_SOURCE));
+        event.setTextTitle(tittle);
+        event.setTextBody(body);
+        event.setNotificationType(NotificationType.INCOMING_CHAT_MESSAGE.getCode());
+        event.setSource(ChatMiddlewarePluginRoot.EVENT_SOURCE);
+        this.chatMiddlewarePluginRoot.getEventManager().raiseEvent(event);
+        System.out.println("MiddleWareChatPluginRoot - IncomingChatMessageNotificationEvent fired!: "+event.toString());
+
+    }
+
+    /**
+     * This method returns the Network Service public key
+     * @return
+     * @throws CantGetNetworkServicePublicKeyException
+     */
+    @Override
+    public String getNetworkServicePublicKey() throws CantGetNetworkServicePublicKeyException {
+        if(this.networkServiceChatManager==null){
+            throw new CantGetNetworkServicePublicKeyException("The Network Service is not starting");
+        }
+        String networkServicePublicKey=this.networkServiceChatManager.getNetWorkServicePublicKey();
+        if(networkServicePublicKey==null){
+            throw new CantGetNetworkServicePublicKeyException("The Network Service public key is null");
+        }
+        return networkServicePublicKey;
+    }
+
+    private String getSourceString(EventSource eventSource){
+        switch (eventSource){
+
+            case MIDDLEWARE_CHAT_MANAGER:
+                return INCOMING_CHAT_MESSAGE_NOTIFICATION;
+            default:
+                return "Method: getSourceString - NO TIENE valor ASIGNADO para RETURN";
+
+        }
+
+    }
+
 }

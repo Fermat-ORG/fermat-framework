@@ -5,4 +5,10 @@
         android:id="@+id/action_connect"
         android:title="@string/connect"
         app:showAsAction="ifRoom" />
+
+    <item
+        android:id="@+id/action_community_issuer_help"
+        android:title="@string/help"
+        android:icon="@drawable/dap_community_issuer_help_icon"
+        app:showAsAction="always" />
 </menu>

@@ -16,14 +16,14 @@ import java.util.List;
 public interface ActorAssetRedeemPointManager extends FermatManager {
 
     /**
-     * The method <code>getActorByPublicKey</code> shows the information associated with the actorPublicKey
+     * The method <code>getActorRegisteredByPublicKey</code> shows the information associated with the actorPublicKey
      *
      * @param actorPublicKey                    The public key of the Asset Actor Redeem Point
      * @return                                  The information associated with the actorPublicKey.
      * @throws CantGetAssetRedeemPointActorsException
      * @throws CantAssetRedeemPointActorNotFoundException
      */
-    ActorAssetRedeemPoint getActorByPublicKey(String actorPublicKey) throws CantGetAssetRedeemPointActorsException, CantAssetRedeemPointActorNotFoundException;
+    ActorAssetRedeemPoint getActorRegisteredByPublicKey(String actorPublicKey) throws CantGetAssetRedeemPointActorsException, CantAssetRedeemPointActorNotFoundException;
 
     /**
      * The method <code>createActorAssetRedeemPointFactory</code> create Actor by a Identity
@@ -78,6 +78,8 @@ public interface ActorAssetRedeemPointManager extends FermatManager {
      * @throws CantGetAssetRedeemPointActorsException
      */
     List<ActorAssetRedeemPoint> getAllRedeemPointActorConnected() throws CantGetAssetRedeemPointActorsException;
+
+    List<ActorAssetRedeemPoint> getAllRedeemPointActorConnectedForIssuer(String issuerPublicKey) throws CantGetAssetRedeemPointActorsException;
 
     /**
      * The method <code>sendMessage</code> Stablish Connection

@@ -50,20 +50,20 @@ import java.util.UUID;
 public abstract class AbstractDigitalAssetVault implements DigitalAssetVault {
 
     //public String LOCAL_STORAGE_PATH="digital-asset-metadata/";
-    public AssetUserWalletManager assetUserWalletManager;
-    public final String digitalAssetFileName = "digital-asset";
-    public final String digitalAssetMetadataFileName = "digital-asset-metadata";
-    public String LOCAL_STORAGE_PATH = "digital-asset-swap";
-    public FileLifeSpan FILE_LIFE_SPAN = FileLifeSpan.PERMANENT;
-    public FilePrivacy FILE_PRIVACY = FilePrivacy.PRIVATE;
-    public UUID pluginId;
-    public PluginFileSystem pluginFileSystem;
-    public String digitalAssetFileStoragePath;
-    public AssetIssuerWalletManager assetIssuerWalletManager;
-    public String walletPublicKey = "walletPublicKeyTest";
-    public ActorAssetIssuerManager actorAssetIssuerManager;
-    public ActorAssetUserManager actorAssetUserManager;
-    BitcoinNetworkManager bitcoinNetworkManager;
+    protected AssetUserWalletManager assetUserWalletManager;
+    protected final String digitalAssetFileName = "digital-asset";
+    protected final String digitalAssetMetadataFileName = "digital-asset-metadata";
+    protected String LOCAL_STORAGE_PATH = "digital-asset-swap";
+    protected FileLifeSpan FILE_LIFE_SPAN = FileLifeSpan.PERMANENT;
+    protected FilePrivacy FILE_PRIVACY = FilePrivacy.PRIVATE;
+    protected UUID pluginId;
+    protected PluginFileSystem pluginFileSystem;
+    protected String digitalAssetFileStoragePath;
+    protected AssetIssuerWalletManager assetIssuerWalletManager;
+    protected String walletPublicKey = "walletPublicKeyTest";
+    protected ActorAssetIssuerManager actorAssetIssuerManager;
+    protected ActorAssetUserManager actorAssetUserManager;
+    protected BitcoinNetworkManager bitcoinNetworkManager;
 
     /**
      * Set the UUID from this plugin
@@ -91,17 +91,11 @@ public abstract class AbstractDigitalAssetVault implements DigitalAssetVault {
         this.pluginFileSystem = pluginFileSystem;
     }
 
-    public void setActorAssetUserManager(ActorAssetUserManager actorAssetUserManager) throws CantSetObjectException {
-        if (actorAssetUserManager == null) {
-            throw new CantSetObjectException("actorAssetUserManager is null");
-        }
+    public void setActorAssetUserManager(ActorAssetUserManager actorAssetUserManager) {
         this.actorAssetUserManager = actorAssetUserManager;
     }
 
-    public void setActorAssetIssuerManager(ActorAssetIssuerManager actorAssetIssuerManager) throws CantSetObjectException {
-        if (actorAssetIssuerManager == null) {
-            throw new CantSetObjectException("actorAssetIssuerManager is null");
-        }
+    public void setActorAssetIssuerManager(ActorAssetIssuerManager actorAssetIssuerManager) {
         this.actorAssetIssuerManager = actorAssetIssuerManager;
     }
 
@@ -294,6 +288,13 @@ public abstract class AbstractDigitalAssetVault implements DigitalAssetVault {
         } catch (CantGetAssetUserActorsException exception) {
             throw new CantDeliverDigitalAssetToAssetWalletException(exception, "Delivering DigitalAssetMetadata to Asset Wallet", "Cannot get the Actor Asset User");
         }
+    }
+
+    public DigitalAssetMetadata updateMetadataTransactionChain(String genesisTx, String txHash, String blockHash) throws CantCreateDigitalAssetFileException, CantGetDigitalAssetFromLocalStorageException {
+        DigitalAssetMetadata digitalAssetMetadata = getDigitalAssetMetadataFromLocalStorage(genesisTx);
+        digitalAssetMetadata.addNewTransaction(txHash, blockHash);
+        persistDigitalAssetMetadataInLocalStorage(digitalAssetMetadata, genesisTx);
+        return digitalAssetMetadata;
     }
 
     public void updateWalletBalance(DigitalAssetMetadata digitalAssetMetadata, CryptoTransaction genesisTransaction, BalanceType balanceType, TransactionType transactionType, DAPTransactionType dapTransactionType, String externalActorPublicKey) throws CantLoadWalletException, CantGetTransactionsException, CantRegisterCreditException, CantRegisterDebitException, CantGetAssetIssuerActorsException, CantAssetUserActorNotFoundException, CantGetAssetUserActorsException {

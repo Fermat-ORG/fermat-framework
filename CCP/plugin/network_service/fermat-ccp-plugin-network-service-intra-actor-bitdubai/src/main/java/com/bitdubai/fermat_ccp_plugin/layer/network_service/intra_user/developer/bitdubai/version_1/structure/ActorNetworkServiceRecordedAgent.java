@@ -28,10 +28,16 @@ import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.enums.Ev
 import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfaces.EventManager;
 import com.google.gson.Gson;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
+import java.util.concurrent.ThreadPoolExecutor;
 
 /**
  * Created by mati on 2015.10.15..
@@ -41,15 +47,18 @@ public class ActorNetworkServiceRecordedAgent extends FermatAgent{
 
     private static final long SEND_SLEEP_TIME    = 15000;
     private static final long RECEIVE_SLEEP_TIME = 15000;
+    private final ExecutorService threadPoolExecutor;
 
-    private Thread toSend   ;
-    private Thread toReceive;
+    private Runnable toSend   ;
+    private Runnable toReceive;
 
     // network services registered
     private Map<String, ActorNetworkServiceRecord> poolConnectionsWaitingForResponse;
 
     // counter and wait time
     private Map<String, ActorNetworkServiceConnectionIncubation> waitingPlatformComponentProfile;
+
+    private List<Future<?>> futures= new ArrayList<>();
 
 
     private final CommunicationNetworkServiceConnectionManager communicationNetworkServiceConnectionManager;
@@ -74,33 +83,32 @@ public class ActorNetworkServiceRecordedAgent extends FermatAgent{
         waitingPlatformComponentProfile   = new HashMap<>();
         poolConnectionsWaitingForResponse = new HashMap<>();
 
+        threadPoolExecutor = Executors.newFixedThreadPool(2);
         //Create a thread to send the messages
-        this.toSend = new Thread(new Runnable() {
+        this.toSend = new Runnable() {
             @Override
             public void run() {
                 while (isRunning())
                     sendCycle();
             }
-        });
+        };
 
         //Create a thread to receive the messages
-        this.toReceive = new Thread(new Runnable() {
+        this.toReceive = new Runnable() {
             @Override
             public void run() {
                 while (isRunning())
                     receiveCycle();
             }
-        });
+        };
     }
 
 
     public void start() throws CantStartAgentException {
 
         try {
-
-            toSend.start();
-
-            toReceive.start();
+            futures.add(threadPoolExecutor.submit(toSend));
+            futures.add(threadPoolExecutor.submit(toReceive));
 
             this.status = AgentStatus.STARTED;
 
@@ -109,12 +117,45 @@ public class ActorNetworkServiceRecordedAgent extends FermatAgent{
             throw new CantStartAgentException(FermatException.wrapException(exception), null, "You should inspect the cause.");
         }
     }
+
+    public void resume() throws CantStartAgentException {
+        try {
+            futures.add(threadPoolExecutor.submit(toSend));
+            futures.add(threadPoolExecutor.submit(toReceive));
+
+            this.status = AgentStatus.STARTED;
+
+        } catch (Exception exception) {
+
+            throw new CantStartAgentException(FermatException.wrapException(exception), null, "You should inspect the cause.");
+        }
+    }
+
+    public void pause() throws CantStopAgentException {
+        try {
+
+            Iterator<Future<?>> it = futures.iterator();
+
+            while (it.hasNext()){
+                it.next().cancel(true);
+            }
+
+            this.status = AgentStatus.PAUSED;
+
+        } catch (Exception exception) {
+
+            throw new CantStopAgentException(FermatException.wrapException(exception), null, "You should inspect the cause.");
+        }
+    }
+
     public void stop() throws CantStopAgentException {
         try {
 
-            toSend.interrupt();
+            Iterator<Future<?>> it = futures.iterator();
 
-            toReceive.interrupt();
+            while (it.hasNext()){
+                it.next().cancel(true);
+            }
 
             this.status = AgentStatus.PAUSED;
 
@@ -153,7 +194,7 @@ public class ActorNetworkServiceRecordedAgent extends FermatAgent{
     private void processSend() {
         try {
 
-            List<ActorNetworkServiceRecord> lstActorRecord = actorNetworkServicePluginRoot.getOutgoingNotificationDao().listRequestsByProtocolState(
+            List<ActorNetworkServiceRecord> lstActorRecord = actorNetworkServicePluginRoot.getOutgoingNotificationDao().listRequestsByProtocolStateAndNotDone(
                     ActorProtocolState.PROCESSING_SEND
             );
 
@@ -392,9 +433,6 @@ public class ActorNetworkServiceRecordedAgent extends FermatAgent{
 
                         reportUnexpectedError(FermatException.wrapException(e));
                     }
-                }else{
-                  connectionFailure(actorNetworkServiceRecord.getActorDestinationPublicKey());
-                   System.out.println("ENTRO EN ESTE ELSE");
                 }
             }
         } catch (Exception z) {

@@ -17,10 +17,10 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.Layers;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
-import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEventHandler;
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEventListener;
 import com.bitdubai.fermat_api.layer.all_definition.util.Version;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
+import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantInsertRecordException;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.watch_only_vault.ExtendedPublicKey;
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.watch_only_vault.exceptions.CantInitializeWatchOnlyVaultException;
@@ -38,8 +38,9 @@ import com.bitdubai.fermat_dap_api.layer.all_definition.enums.EventType;
 import com.bitdubai.fermat_dap_api.layer.all_definition.exceptions.CantSetObjectException;
 import com.bitdubai.fermat_dap_api.layer.all_definition.network_service_message.DAPMessage;
 import com.bitdubai.fermat_dap_api.layer.all_definition.network_service_message.content_message.AssetExtendedPublickKeyContentMessage;
-import com.bitdubai.fermat_dap_api.layer.dap_actor.DAPActor;
+import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_issuer.exceptions.CantUpdateActorAssetIssuerException;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_issuer.interfaces.ActorAssetIssuer;
+import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_issuer.interfaces.ActorAssetIssuerManager;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.exceptions.CantConnectToActorAssetUserException;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.redeem_point.RedeemPointActorRecord;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.redeem_point.exceptions.CantAssetRedeemPointActorNotFoundException;
@@ -55,7 +56,7 @@ import com.bitdubai.fermat_dap_plugin.layer.actor.redeem.point.developer.bitduba
 import com.bitdubai.fermat_dap_plugin.layer.actor.redeem.point.developer.bitdubai.version_1.developerUtils.RedeemPointActorDeveloperDatabaseFactory;
 import com.bitdubai.fermat_dap_plugin.layer.actor.redeem.point.developer.bitdubai.version_1.event_handlers.ActorAssetRedeemPointCompleteRegistrationNotificationEventHandler;
 import com.bitdubai.fermat_dap_plugin.layer.actor.redeem.point.developer.bitdubai.version_1.event_handlers.CryptoAddressRequestedEventHandler;
-import com.bitdubai.fermat_dap_plugin.layer.actor.redeem.point.developer.bitdubai.version_1.event_handlers.NewReceiveMessageActorRedeemPointNotificationEventHandler;
+import com.bitdubai.fermat_dap_plugin.layer.actor.redeem.point.developer.bitdubai.version_1.event_handlers.NewReceiveMessageEventHandler;
 import com.bitdubai.fermat_dap_plugin.layer.actor.redeem.point.developer.bitdubai.version_1.exceptions.CantAddPendingRedeemPointException;
 import com.bitdubai.fermat_dap_plugin.layer.actor.redeem.point.developer.bitdubai.version_1.exceptions.CantGetRedeemPointsListException;
 import com.bitdubai.fermat_dap_plugin.layer.actor.redeem.point.developer.bitdubai.version_1.exceptions.CantHandleCryptoAddressReceivedActionException;
@@ -108,6 +109,9 @@ public class RedeemPointActorPluginRoot extends AbstractPlugin implements
     @NeededPluginReference(platform = Platforms.BLOCKCHAINS, layer = Layers.CRYPTO_VAULT, plugin = Plugins.BITCOIN_WATCH_ONLY_VAULT)
     private WatchOnlyVaultManager watchOnlyVaultManager;
 
+    @NeededPluginReference(platform = Platforms.DIGITAL_ASSET_PLATFORM, layer = Layers.ACTOR, plugin = Plugins.ASSET_ISSUER)
+    private ActorAssetIssuerManager actorAssetIssuerManager;
+
     private RedeemPointActorDao redeemPointActorDao;
 
     private ActorAssetRedeemPointMonitorAgent actorAssetRedeemPointMonitorAgent;
@@ -144,11 +148,11 @@ public class RedeemPointActorPluginRoot extends AbstractPlugin implements
     }
 
     @Override
-    public ActorAssetRedeemPoint getActorByPublicKey(String actorPublicKey) throws CantGetAssetRedeemPointActorsException,
+    public ActorAssetRedeemPoint getActorRegisteredByPublicKey(String actorPublicKey) throws CantGetAssetRedeemPointActorsException,
             CantAssetRedeemPointActorNotFoundException {
 
         try {
-            return this.redeemPointActorDao.getActorByPublicKey(actorPublicKey);
+            return this.redeemPointActorDao.getActorRegisteredByPublicKey(actorPublicKey);
         } catch (CantGetAssetRedeemPointActorsException e) {
             throw new CantGetAssetRedeemPointActorsException("", FermatException.wrapException(e), "Cant Get Actor Asset User from Data Base", null);
         }
@@ -161,8 +165,8 @@ public class RedeemPointActorPluginRoot extends AbstractPlugin implements
 
             if (actorAssetRedeemPoint == null) {
 
-            Double locationLatitude = new Random().nextDouble();
-            Double locationLongitude = new Random().nextDouble();
+                Double locationLatitude = new Random().nextDouble();
+                Double locationLongitude = new Random().nextDouble();
 
                 RedeemPointActorRecord record = new RedeemPointActorRecord(
                         assetRedeemPointActorPublicKey,
@@ -192,9 +196,6 @@ public class RedeemPointActorPluginRoot extends AbstractPlugin implements
 
                 assetRedeemPointActorNetworkServiceManager.registerActorAssetRedeemPoint(actorAssetRedeemPoint);
             } else {
-
-                actorAssetRedeemPoint = this.redeemPointActorDao.getActorAssetRedeemPoint();
-
                 Double locationLatitude = new Random().nextDouble();
                 Double locationLongitude = new Random().nextDouble();
 
@@ -207,7 +208,8 @@ public class RedeemPointActorPluginRoot extends AbstractPlugin implements
                         actorAssetRedeemPoint.getCryptoAddress(),
                         actorAssetRedeemPoint.getRegistrationDate(),
                         System.currentTimeMillis(),
-                        assetRedeemPointActorprofileImage);
+                        assetRedeemPointActorprofileImage,
+                        actorAssetRedeemPoint.getRegisteredIssuers());
 
 //                RedeemPointActorAddress address = new RedeemPointActorAddress();
 //                address.setCountryName("Venezuela");
@@ -305,6 +307,19 @@ public class RedeemPointActorPluginRoot extends AbstractPlugin implements
         return list;
     }
 
+    @Override
+    public List<ActorAssetRedeemPoint> getAllRedeemPointActorConnectedForIssuer(String issuerPublicKey) throws CantGetAssetRedeemPointActorsException {
+        List<ActorAssetRedeemPoint> list; // Asset User Actor list.
+        try {
+            list = this.redeemPointActorDao.getRedeemPointsConnectedForIssuer(issuerPublicKey);
+        } catch (CantGetRedeemPointsListException e) {
+            throw new CantGetAssetRedeemPointActorsException("CAN'T GET REDEEM POINT ACTOR CONNECTED ", e, "", "");
+        }
+
+        return list;
+    }
+
+
     public void registerActorInActorNetworkService() throws CantRegisterActorAssetRedeemPointException {
         try {
             /*
@@ -368,8 +383,13 @@ public class RedeemPointActorPluginRoot extends AbstractPlugin implements
 
                 if (request.getCryptoAddressDealer() == CryptoAddressDealers.DAP_WATCH_ONLY || request.getCryptoAddressDealer() == CryptoAddressDealers.DAP_ASSET) {
 
-                    if (request.getAction().equals(RequestAction.ACCEPT))
+                    if (request.getAction().equals(RequestAction.ACCEPT) || request.getAction().equals(RequestAction.NONE) || request.getAction().equals(RequestAction.RECEIVED))
                         this.handleCryptoAddressReceivedEvent(request);
+                    try {
+                        cryptoAddressesNetworkServiceManager.markReceivedRequest(request.getRequestId());
+                    } catch (CantConfirmAddressExchangeRequestException e) {
+                        throw new CantHandleCryptoAddressesNewsEventException(e, "Error marking request as received.", null);
+                    }
 
 //                if (request.getAction().equals(RequestAction.DENY))
 //                    this.handleCryptoAddressDeniedEvent(request);
@@ -424,9 +444,9 @@ public class RedeemPointActorPluginRoot extends AbstractPlugin implements
     }
 
     public void handleNewReceiveMessageActorNotificationEvent(DAPMessage dapMessage) {
-        DAPActor dapActorSender = dapMessage.getActorSender();
+        ActorAssetIssuer dapActorSender = (ActorAssetIssuer) dapMessage.getActorSender();
         System.out.println("*****Actor Asset Redeem Point Recibe*****");
-        System.out.println("Actor Asset Redeem Point name: " + dapActorSender.getName());
+        System.out.println("Actor Asset Redeem Point Sender name: " + dapActorSender.getName());
         System.out.println("Actor Asset Redeem Point message: " + dapMessage.getMessageType());
         System.out.println("***************************************************************");
 
@@ -448,10 +468,15 @@ public class RedeemPointActorPluginRoot extends AbstractPlugin implements
             /**
              * I will start the Bitcoin Watch only Vault on the redeem Point.
              */
+
             try {
                 watchOnlyVaultManager.initialize(extendedPublicKey);
-            } catch (CantInitializeWatchOnlyVaultException e) {
+                redeemPointActorDao.newExtendedPublicKeyRegistered(getActorAssetRedeemPoint().getActorPublicKey(), dapActorSender.getActorPublicKey());
+                assetRedeemPointActorNetworkServiceManager.updateActorAssetRedeemPoint(redeemPointActorDao.getActorAssetRedeemPoint());
+                actorAssetIssuerManager.updateExtendedPublicKey(dapActorSender.getActorPublicKey(), extendedPublicKey.toString());
+            } catch (CantInitializeWatchOnlyVaultException | CantInsertRecordException | CantGetAssetRedeemPointActorsException | CantUpdateActorAssetIssuerException | CantRegisterActorAssetRedeemPointException e) {
                 //handle this.
+                e.printStackTrace();
             }
         }
 
@@ -513,15 +538,13 @@ public class RedeemPointActorPluginRoot extends AbstractPlugin implements
          * I will initialize the handling of com.bitdubai.platform events.
          */
         FermatEventListener fermatEventListener;
-        FermatEventHandler fermatEventHandler;
-
         fermatEventListener = eventManager.getNewListener(EventType.COMPLETE_ASSET_REDEEM_POINT_REGISTRATION_NOTIFICATION);
         fermatEventListener.setEventHandler(new ActorAssetRedeemPointCompleteRegistrationNotificationEventHandler(this));
         eventManager.addListener(fermatEventListener);
         listenersAdded.add(fermatEventListener);
 
         fermatEventListener = eventManager.getNewListener(EventType.NEW_RECEIVE_MESSAGE_ACTOR);
-        fermatEventListener.setEventHandler(new NewReceiveMessageActorRedeemPointNotificationEventHandler(this));
+        fermatEventListener.setEventHandler(new NewReceiveMessageEventHandler(this));
         eventManager.addListener(fermatEventListener);
         listenersAdded.add(fermatEventListener);
 

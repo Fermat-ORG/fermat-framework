@@ -13,6 +13,7 @@ import android.widget.Toast;
 
 import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractFermatFragment;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView;
+import com.bitdubai.fermat_android_api.ui.Views.PresentationDialog;
 import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.enums.FiatCurrency;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
@@ -129,6 +130,15 @@ public class WizardPageSetEarningsFragment extends AbstractFermatFragment
                 saveSettingAndGoNextStep();
             }
         });
+        PresentationDialog presentationDialog = new PresentationDialog.Builder(getActivity(), appSession)
+                .setTemplateType(PresentationDialog.TemplateType.TYPE_PRESENTATION_WITHOUT_IDENTITIES)
+                .setBannerRes(R.drawable.banner_crypto_broker)
+                .setIconRes(R.drawable.crypto_broker)
+                .setSubTitle(R.string.cbw_crypto_broker_wallet_earning_subTitle)
+                .setBody(R.string.cbw_crypto_broker_wallet_earning_body)
+                .setTextFooter(R.string.cbw_crypto_broker_wallet_earning_footer)
+                .build();
+        presentationDialog.show();
 
         return layout;
     }

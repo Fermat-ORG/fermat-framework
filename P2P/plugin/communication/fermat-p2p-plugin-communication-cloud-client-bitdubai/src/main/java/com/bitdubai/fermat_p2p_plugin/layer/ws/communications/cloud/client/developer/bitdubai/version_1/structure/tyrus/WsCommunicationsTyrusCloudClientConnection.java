@@ -40,7 +40,6 @@ import com.bitdubai.fermat_p2p_plugin.layer.ws.communications.cloud.client.devel
 import com.bitdubai.fermat_p2p_plugin.layer.ws.communications.cloud.client.developer.bitdubai.version_1.structure.tyrus.processors.ServerHandshakeRespondTyrusPacketProcessor;
 import com.bitdubai.fermat_p2p_plugin.layer.ws.communications.cloud.client.developer.bitdubai.version_1.structure.tyrus.vpn.WsCommunicationTyrusVPNClientManagerAgent;
 import com.bitdubai.fermat_p2p_plugin.layer.ws.communications.cloud.client.developer.bitdubai.version_1.structure.util.ServerConf;
-import com.bitdubai.fermat_p2p_plugin.layer.ws.communications.cloud.client.developer.bitdubai.version_1.structure.vpn.WsCommunicationVPNClientManagerAgent;
 import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfaces.EventManager;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
@@ -48,6 +47,7 @@ import com.google.gson.JsonParser;
 import com.google.gson.reflect.TypeToken;
 
 import org.glassfish.tyrus.client.ClientManager;
+import org.glassfish.tyrus.client.ClientProperties;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
@@ -68,9 +68,8 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import javax.websocket.ContainerProvider;
+import javax.websocket.CloseReason;
 import javax.websocket.DeploymentException;
-import javax.websocket.WebSocketContainer;
 
 /**
  * The Class <code>com.bitdubai.fermat_p2p_plugin.layer.ws.communications.cloud.client.developer.bitdubai.version_1.structure.WsCommunicationsCloudClientConnection</code>
@@ -100,7 +99,7 @@ public class WsCommunicationsTyrusCloudClientConnection implements Communication
     /**
      * Represent the webSocketContainer
      */
-    private WebSocketContainer webSocketContainer;
+    private ClientManager webSocketContainer;
 
     /**
      * Represent the locationManager
@@ -124,7 +123,7 @@ public class WsCommunicationsTyrusCloudClientConnection implements Communication
         this.wsCommunicationsTyrusCloudClientChannel = new WsCommunicationsTyrusCloudClientChannel(this, eventManager, clientIdentity);
         this.wsCommunicationTyrusVPNClientManagerAgent    = WsCommunicationTyrusVPNClientManagerAgent.getInstance();
         this.locationManager                         = locationManager;
-        this.webSocketContainer = ContainerProvider.getWebSocketContainer();
+        this.webSocketContainer = ClientManager.createClient();
     }
 
     /**
@@ -161,7 +160,9 @@ public class WsCommunicationsTyrusCloudClientConnection implements Communication
      */
     public void initializeAndConnect() throws IOException, DeploymentException {
 
-        System.out.println("WsCommunicationsCloudClientConnection - initializeAndConnect ");
+        System.out.println("***********************************************************************");
+        System.out.println("* WsCommunicationsCloudClientConnection - Initializing And Connecting *");
+        System.out.println("***********************************************************************");
 
         /*
          * Register the processors
@@ -169,10 +170,43 @@ public class WsCommunicationsTyrusCloudClientConnection implements Communication
         registerFermatPacketProcessors();
 
         /*
+         * Create a ReconnectHandler
+         */
+        ClientManager.ReconnectHandler reconnectHandler = new ClientManager.ReconnectHandler() {
+
+            @Override
+            public boolean onDisconnect(CloseReason closeReason) {
+                    System.out.println("############################################################");
+                    System.out.println("#  WsCommunicationsCloudClientConnection - Reconnecting... #");
+                    System.out.println("############################################################");
+                    return true;
+            }
+
+            @Override
+            public boolean onConnectFailure(Exception exception) {
+                try {
+
+                    System.out.println("#  WsCommunicationsCloudClientConnection - Reconnect Failure :"+exception.getMessage());
+                    // To avoid potential DDoS when you don't limit number of reconnects, wait to the next try.
+                    Thread.sleep(5000);
+
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+                return true;
+            }
+
+        };
+
+        /*
+         * Register the ReconnectHandler
+         */
+        webSocketContainer.getProperties().put(ClientProperties.RECONNECT_HANDLER, reconnectHandler);
+
+        /*
          * Connect
          */
         webSocketContainer.connectToServer(wsCommunicationsTyrusCloudClientChannel, uri);
-
         System.out.println("WsCommunicationsCloudClientConnection - final initializeAndConnect ");
 
     }

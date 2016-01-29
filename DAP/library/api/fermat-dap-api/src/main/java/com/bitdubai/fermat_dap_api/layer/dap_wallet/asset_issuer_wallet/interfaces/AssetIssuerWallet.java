@@ -35,6 +35,8 @@ public interface AssetIssuerWallet {
                                                        int max,
                                                        int offset, String assetPublicKey) throws CantGetTransactionsException;
 
+    List<AssetIssuerWalletTransaction> getAvailableTransactions(String assetPublicKey) throws CantGetTransactionsException;
+
     List<AssetIssuerWalletTransaction> getTransactionsByActor(String actorPublicKey,
                                                               BalanceType balanceType,
                                                               int max,
@@ -53,23 +55,23 @@ public interface AssetIssuerWallet {
 
     List<AssetIssuerWalletTransaction> getTransactionsAssetAll(String assetPublicKey) throws CantGetTransactionsException;
 
-    DigitalAssetMetadata getDigitalAssetMetadata(String digitalAssetPublicKey) throws CantGetDigitalAssetFromLocalStorageException;
+    DigitalAssetMetadata getDigitalAssetMetadata(String transactionHash) throws CantGetDigitalAssetFromLocalStorageException;
 
     DigitalAsset getAssetByPublicKey(String assetPublicKey);
 
-    String getUserDeliveredToPublicKey(String assetPublicKey) throws RecordsNotFoundException, CantGetAssetStatisticException;
+    String getUserDeliveredToPublicKey(UUID transactionId) throws RecordsNotFoundException, CantGetAssetStatisticException;
 
-    List<DigitalAssetMetadata> getAllUsedAssets() throws CantGetDigitalAssetFromLocalStorageException;
+    List<DigitalAssetMetadata> getAllUnusedAssets() throws CantGetDigitalAssetFromLocalStorageException;
 
     //ASSET STATISTIC METHODS
 
-    void createdNewAsset(DigitalAsset asset) throws CantSaveStatisticException;
+    void createdNewAsset(DigitalAssetMetadata assetMetadata) throws CantSaveStatisticException;
 
-    void assetDistributed(String assetPublicKey, String actorAssetUserPublicKey) throws RecordsNotFoundException, CantGetAssetStatisticException;
+    void assetDistributed(UUID transactionId, String actorAssetUserPublicKey) throws RecordsNotFoundException, CantGetAssetStatisticException;
 
-    void assetRedeemed(String assetPublicKey, String userPublicKey, String redeemPointPublicKey) throws RecordsNotFoundException, CantGetAssetStatisticException;
+    void assetRedeemed(UUID transactionId, String userPublicKey, String redeemPointPublicKey) throws RecordsNotFoundException, CantGetAssetStatisticException;
 
-    void assetAppropriated(String assetPublicKey, String userPublicKey) throws RecordsNotFoundException, CantGetAssetStatisticException;
+    void assetAppropriated(UUID transactionId, String userPublicKey) throws RecordsNotFoundException, CantGetAssetStatisticException;
 
     List<AssetStatistic> getAllStatisticForAllAssets() throws CantGetAssetStatisticException;
 

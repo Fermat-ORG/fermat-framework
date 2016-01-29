@@ -46,9 +46,10 @@ public abstract class AbstractPlugin implements Plugin, Service {
     private boolean referencesCollected;
 
     private final PluginVersionReference pluginVersionReference;
-    protected     ServiceStatus          serviceStatus         ;
 
-    protected     UUID                   pluginId              ;
+    protected volatile ServiceStatus serviceStatus;
+
+    protected          UUID          pluginId     ;
 
     public AbstractPlugin(final PluginVersionReference pluginVersionReference) {
 

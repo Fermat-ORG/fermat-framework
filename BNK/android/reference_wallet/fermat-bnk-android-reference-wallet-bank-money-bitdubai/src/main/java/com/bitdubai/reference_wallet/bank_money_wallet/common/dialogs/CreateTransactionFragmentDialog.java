@@ -218,7 +218,7 @@ public class CreateTransactionFragmentDialog extends Dialog implements
                         return  memoText.getText().toString();
                     }
                 };
-                bankMoneyWalletSession.getModuleManager().getBankingWallet().makeWithdraw(t);
+                bankMoneyWalletSession.getModuleManager().getBankingWallet().makeAsyncWithdraw(t);
             }
             if (transactionType == TransactionType.CREDIT) {
                 System.out.println("DIALOG = "+TransactionType.CREDIT.getCode());
@@ -265,7 +265,7 @@ public class CreateTransactionFragmentDialog extends Dialog implements
                         return  memoText.getText().toString();
                     }
                 };
-                bankMoneyWalletSession.getModuleManager().getBankingWallet().makeDeposit(t);
+                bankMoneyWalletSession.getModuleManager().getBankingWallet().makeAsyncDeposit(t);
             }
         } catch (Exception e) {
             bankMoneyWalletSession.getErrorManager().reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.CRASH, FermatException.wrapException(e));

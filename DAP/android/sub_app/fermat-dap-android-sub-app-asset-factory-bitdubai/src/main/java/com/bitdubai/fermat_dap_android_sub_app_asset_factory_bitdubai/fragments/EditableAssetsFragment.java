@@ -1,9 +1,11 @@
 package com.bitdubai.fermat_dap_android_sub_app_asset_factory_bitdubai.fragments;
 
 import android.app.ProgressDialog;
+import android.content.DialogInterface;
 import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.GridLayoutManager;
@@ -12,6 +14,7 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -21,12 +24,19 @@ import android.view.animation.AnimationUtils;
 import android.widget.Toast;
 
 import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractFermatFragment;
+import com.bitdubai.fermat_android_api.ui.Views.ConfirmDialog;
+import com.bitdubai.fermat_android_api.ui.Views.PresentationDialog;
 import com.bitdubai.fermat_android_api.ui.inflater.ViewInflater;
 import com.bitdubai.fermat_android_api.ui.interfaces.FermatWorkerCallBack;
 import com.bitdubai.fermat_android_api.ui.util.FermatWorker;
+import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.enums.BlockchainNetworkType;
+import com.bitdubai.fermat_api.layer.all_definition.enums.UISource;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
 import com.bitdubai.fermat_api.layer.all_definition.resources_structure.Resource;
+import com.bitdubai.fermat_api.layer.all_definition.settings.exceptions.CantPersistSettingsException;
+import com.bitdubai.fermat_api.layer.all_definition.settings.structure.SettingsManager;
+import com.bitdubai.fermat_api.layer.all_definition.util.BitcoinConverter;
 import com.bitdubai.fermat_api.layer.modules.common_classes.ActiveActorIdentityInformation;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantCreateFileException;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.FileNotFoundException;
@@ -34,14 +44,24 @@ import com.bitdubai.fermat_dap_android_sub_app_asset_factory_bitdubai.R;
 import com.bitdubai.fermat_dap_android_sub_app_asset_factory_bitdubai.adapters.AssetFactoryAdapter;
 import com.bitdubai.fermat_dap_android_sub_app_asset_factory_bitdubai.interfaces.PopupMenu;
 import com.bitdubai.fermat_dap_android_sub_app_asset_factory_bitdubai.sessions.AssetFactorySession;
+import com.bitdubai.fermat_dap_android_sub_app_asset_factory_bitdubai.sessions.SessionConstantsAssetFactory;
 import com.bitdubai.fermat_dap_android_sub_app_asset_factory_bitdubai.util.CommonLogger;
+import com.bitdubai.fermat_dap_android_sub_app_asset_factory_bitdubai.util.Utils;
 import com.bitdubai.fermat_dap_api.layer.all_definition.enums.State;
+import com.bitdubai.fermat_dap_api.layer.dap_identity.asset_issuer.interfaces.IdentityAssetIssuer;
 import com.bitdubai.fermat_dap_api.layer.dap_middleware.dap_asset_factory.exceptions.CantGetAssetFactoryException;
 import com.bitdubai.fermat_dap_api.layer.dap_middleware.dap_asset_factory.exceptions.CantPublishAssetFactoy;
 import com.bitdubai.fermat_dap_api.layer.dap_middleware.dap_asset_factory.interfaces.AssetFactory;
+import com.bitdubai.fermat_dap_api.layer.dap_module.asset_factory.AssetFactorySettings;
 import com.bitdubai.fermat_dap_api.layer.dap_module.asset_factory.interfaces.AssetFactoryModuleManager;
+import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedUIExceptionSeverity;
+import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 import com.bitdubai.fermat_wpd_api.layer.wpd_middleware.wallet_manager.interfaces.InstalledWallet;
 import com.software.shell.fab.ActionButton;
+
+import static com.bitdubai.fermat_api.layer.all_definition.util.BitcoinConverter.Currency.BITCOIN;
+import static com.bitdubai.fermat_api.layer.all_definition.util.BitcoinConverter.Currency.SATOSHI;
+import static com.bitdubai.fermat_dap_api.layer.all_definition.util.DAPStandardFormats.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -69,12 +89,16 @@ public class EditableAssetsFragment extends AbstractFermatFragment implements
     private RecyclerView recyclerView;
     private LinearLayoutManager layoutManager;
     private AssetFactoryAdapter adapter;
+    private ErrorManager errorManager;
+    //    private MenuItem menuHelp;
+//    private Menu menu;
     // custom inflater
     private ViewInflater viewInflater;
 
+    SettingsManager<AssetFactorySettings> settingsManager;
 
     private boolean isRefreshing = false;
-
+    private long satoshisWalletBalance;
 
     public static EditableAssetsFragment newInstance() {
         return new EditableAssetsFragment();
@@ -87,10 +111,17 @@ public class EditableAssetsFragment extends AbstractFermatFragment implements
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setHasOptionsMenu(true);
+
         try {
             selectedAsset = null;
             manager = ((AssetFactorySession) appSession).getModuleManager();
+            errorManager = appSession.getErrorManager();
+
+            settingsManager = appSession.getModuleManager().getSettingsManager();
             //viewInflater = new ViewInflater(getActivity(), appResourcesProviderManager);
+
+            satoshisWalletBalance = manager.getBitcoinWalletBalance(Utils.getBitcoinWalletPublicKey(manager));
         } catch (Exception ex) {
             CommonLogger.exception(TAG, ex.getMessage(), ex);
         }
@@ -199,11 +230,116 @@ public class EditableAssetsFragment extends AbstractFermatFragment implements
             public void onClick(View view) {
                 /* create new asset factory project */
                 selectedAsset = null;
+//                menuHelp = menu.findItem(R.id.action_asset_factory_help);
+//                menuHelp.setVisible(false);
                 changeActivity(Activities.DAP_ASSET_EDITOR_ACTIVITY.getCode(), appSession.getAppPublicKey(), getAssetForEdit());
             }
         });
         create.setAnimation(AnimationUtils.loadAnimation(getActivity(), R.anim.fab_jump_from_down));
         create.setVisibility(View.VISIBLE);
+
+        showPresentationDialog();
+    }
+
+    private void showPresentationDialog() {
+        //Initialize settings
+        settingsManager = appSession.getModuleManager().getSettingsManager();
+        AssetFactorySettings settings = null;
+        try {
+            settings = settingsManager.loadAndGetSettings(appSession.getAppPublicKey());
+        } catch (Exception e) {
+            settings = null;
+        }
+        if (settings == null) {
+            settings = new AssetFactorySettings();
+            settings.setIsContactsHelpEnabled(true);
+            settings.setIsPresentationHelpEnabled(true);
+            try {
+                settingsManager.persistSettings(appSession.getAppPublicKey(), settings);
+            } catch (CantPersistSettingsException e) {
+                e.printStackTrace();
+            }
+        }
+
+        final AssetFactorySettings assetFactorySettingsTemp = settings;
+
+        if (manager.getLoggedIdentityAssetIssuer() == null) {
+            Handler handlerTimer = new Handler();
+            handlerTimer.postDelayed(new Runnable() {
+                public void run() {
+                    if (assetFactorySettingsTemp.isPresentationHelpEnabled()) {
+                        setUpPresentation(false);
+                    }
+                }
+            }, 500);
+        }
+
+    }
+
+    private void setUpPresentation(boolean checkButton) {
+        try {
+            PresentationDialog presentationDialog = new PresentationDialog.Builder(getActivity(), appSession)
+                    .setBannerRes(R.drawable.banner_asset_factory)
+                    .setIconRes(R.drawable.asset_factory)
+                    .setImageLeft(R.drawable.asset_issuer_identity)
+                    .setVIewColor(R.color.dap_asset_factory_view_color)
+                    .setTitleTextColor(R.color.dap_asset_factory_view_color)
+                    .setTextNameLeft(R.string.dap_asset_factory_welcome_name_left)
+                    .setSubTitle(R.string.dap_asset_factory_welcome_subTitle)
+                    .setBody(R.string.dap_asset_factory_welcome_body)
+                    .setTextFooter(R.string.dap_asset_factory_welcome_Footer)
+                    .setTemplateType((manager.getLoggedIdentityAssetIssuer() == null) ? PresentationDialog.TemplateType.DAP_TYPE_PRESENTATION : PresentationDialog.TemplateType.TYPE_PRESENTATION_WITHOUT_IDENTITIES)
+                    .setIsCheckEnabled(checkButton)
+                    .build();
+
+            presentationDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
+                @Override
+                public void onDismiss(DialogInterface dialog) {
+                    Object o = appSession.getData(SessionConstantsAssetFactory.PRESENTATION_IDENTITY_CREATED);
+                    if (o != null) {
+                        if ((Boolean) (o)) {
+                            //invalidate();
+                            appSession.removeData(SessionConstantsAssetFactory.PRESENTATION_IDENTITY_CREATED);
+                        }
+                    }
+                    IdentityAssetIssuer identityAssetIssuer = manager.getLoggedIdentityAssetIssuer();
+                    if (identityAssetIssuer == null) {
+                        getActivity().onBackPressed();
+                    } else {
+                        invalidate();
+                    }
+                }
+            });
+
+            presentationDialog.show();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        super.onCreateOptionsMenu(menu, inflater);
+        menu.add(0, SessionConstantsAssetFactory.IC_ACTION_HELP_FACTORY, 0, "help").setIcon(R.drawable.dap_asset_factory_help_icon)
+                .setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        try {
+            int id = item.getItemId();
+
+            if (id == SessionConstantsAssetFactory.IC_ACTION_HELP_FACTORY) {
+                setUpPresentation(settingsManager.loadAndGetSettings(appSession.getAppPublicKey()).isPresentationHelpEnabled());
+                return true;
+            }
+
+        } catch (Exception e) {
+            errorManager.reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.UNSTABLE, FermatException.wrapException(e));
+            makeText(getActivity(), "Asset Issuer system error",
+                    Toast.LENGTH_SHORT).show();
+        }
+        return super.onOptionsItemSelected(item);
     }
 
     @SuppressWarnings("unchecked")
@@ -245,9 +381,9 @@ public class EditableAssetsFragment extends AbstractFermatFragment implements
         if (pendingFinalItems != null && !pendingFinalItems.isEmpty())
             items.addAll(pendingFinalItems);
         List<Resource> resources;
-        for(AssetFactory item : items) {
+        for (AssetFactory item : items) {
             resources = item.getResources();
-            for(Resource resource : resources) {
+            for (Resource resource : resources) {
                 resource.setResourceBinayData(manager.getAssetFactoryResource(resource).getContent());
             }
         }
@@ -273,75 +409,177 @@ public class EditableAssetsFragment extends AbstractFermatFragment implements
     @Override
     public boolean onMenuItemClick(MenuItem menuItem) {
         if (menuItem.getItemId() == R.id.action_edit) {
-            if (getAssetForEdit() != null && getAssetForEdit().getState() == State.DRAFT)
-                changeActivity(Activities.DAP_ASSET_EDITOR_ACTIVITY.getCode(), appSession.getAppPublicKey(), getAssetForEdit());
-            else
-                selectedAsset = null;
+            editAsset();
         } else if (menuItem.getItemId() == R.id.action_publish) {
-            try {
-                if (manager.isReadyToPublish(selectedAsset.getAssetPublicKey())) {
-                    final ProgressDialog dialog = new ProgressDialog(getActivity());
-                    dialog.setTitle("Asset Factory");
-                    dialog.setMessage("Publishing asset, please wait...");
-                    dialog.setCancelable(false);
-                    dialog.show();
-                    FermatWorker worker = new FermatWorker() {
-                        @Override
-                        protected Object doInBackground() throws Exception {
-                            // for test
-                            for (InstalledWallet wallet : manager.getInstallWallets()) {
-                                selectedAsset.setWalletPublicKey(wallet.getWalletPublicKey());
-                                break;
+            if (validate()) {
+                new ConfirmDialog.Builder(getActivity(), appSession)
+                        .setTitle("Confirm")
+                        .setMessage("Are you sure you are ready to publish your Asset? Once published you won't be able to perform any changes to it.")
+                        .setColorStyle(getResources().getColor(R.color.bg_asset_factory))
+                        .setYesBtnListener(new ConfirmDialog.OnClickAcceptListener() {
+                            @Override
+                            public void onClick() {
+                                publishAsset();
                             }
-                            manager.publishAsset(getAssetForEdit(), BlockchainNetworkType.TEST);
-                            selectedAsset = null;
-                            return true;
-                        }
-                    };
-                    worker.setContext(getActivity());
-                    worker.setCallBack(new FermatWorkerCallBack() {
-                        @Override
-                        public void onPostExecute(Object... result) {
-                            dialog.dismiss();
-                            selectedAsset = null;
-                            if (getActivity() != null) {
-                                onRefresh();
-                            }
-                            Toast.makeText(getActivity(), "The asset was successfully published.", Toast.LENGTH_SHORT).show();
-                        }
-
-                        @Override
-                        public void onErrorOccurred(Exception ex) {
-                            dialog.dismiss();
-                            selectedAsset = null;
-                            if (getActivity() != null) {
-                                Toast.makeText(getActivity(), "Ups, some error occurred publishing this asset", Toast.LENGTH_SHORT).show();
-                                onRefresh();
-                            }
-                            ex.printStackTrace();
-                        }
-                    });
-                    worker.execute();
-                }
-            } catch (CantPublishAssetFactoy cantPublishAssetFactoy) {
-                cantPublishAssetFactoy.printStackTrace();
-                Toast.makeText(getActivity(), "You cannot publish this asset", Toast.LENGTH_SHORT).show();
+                        }).build().show();
             }
+        } else if (menuItem.getItemId() == R.id.action_delete) {
+//            new ConfirmDialog.Builder(getActivity(), appSession)
+//                    .setTitle("Confirm")
+//                    .setMessage("Are you sure you want to delete this Asset? This action can't be undo.")
+//                    .setColorStyle(getResources().getColor(R.color.bg_asset_factory))
+//                    .setYesBtnListener(new ConfirmDialog.OnClickAcceptListener() {
+//                        @Override
+//                        public void onClick() {
+//                            deleteAsset();
+//                        }
+//                    }).build().show();
+            deleteAsset();
         }
         return false;
+    }
+
+    private void editAsset() {
+        if (getAssetForEdit() != null && getAssetForEdit().getState() == State.DRAFT)
+            changeActivity(Activities.DAP_ASSET_EDITOR_ACTIVITY.getCode(), appSession.getAppPublicKey(), getAssetForEdit());
+        else
+            selectedAsset = null;
+    }
+
+    private boolean validate() {
+        try {
+            AssetFactory assetFactory = getAssetForEdit();
+            long satoshis = assetFactory.getAmount();
+            if (satoshis < MINIMUN_SATOSHI_AMOUNT) {
+                Toast.makeText(getActivity(), "The minimum monetary amount for any Asset is " + MINIMUN_SATOSHI_AMOUNT + " satoshis.\n" +
+                        " \n This is needed to pay the fee of bitcoin transactions during delivery of the assets.", Toast.LENGTH_LONG).show();
+                return false;
+            }
+            long quantity = assetFactory.getQuantity();
+            if (satoshis * quantity > satoshisWalletBalance) {
+                double bitcoinWalletBalance = BitcoinConverter.convert(satoshisWalletBalance, SATOSHI, BITCOIN);
+                Toast.makeText(getActivity(), String.format("There are insufficient available funds to perform the transaction. The bitcoin wallet balance is %.2f BTC", bitcoinWalletBalance), Toast.LENGTH_SHORT).show();
+                return false;
+            }
+            String description = assetFactory.getDescription();
+            if (description.length() == 0)
+            {
+                Toast.makeText(getActivity(), "Invalid Asset Description.", Toast.LENGTH_SHORT).show();
+                return false;
+            }
+            if (quantity == 0)
+            {
+                Toast.makeText(getActivity(), "Invalid Quantity of Assets", Toast.LENGTH_SHORT).show();
+                return false;
+            }
+            return true;
+        } catch (NumberFormatException ex) {
+            CommonLogger.exception(TAG, ex.getMessage(), ex);
+            Toast.makeText(getActivity(), "Invalid monetary amount.", Toast.LENGTH_SHORT).show();
+        }
+        return false;
+    }
+
+    private void publishAsset() {
+        try {
+            if (manager.isReadyToPublish(selectedAsset.getAssetPublicKey())) {
+                final ProgressDialog dialog = new ProgressDialog(getActivity());
+                dialog.setTitle("Asset Factory");
+                dialog.setMessage("Publishing asset, please wait...");
+                dialog.setCancelable(false);
+                dialog.show();
+                FermatWorker worker = new FermatWorker() {
+                    @Override
+                    protected Object doInBackground() throws Exception {
+                        // for test
+                        for (InstalledWallet wallet : manager.getInstallWallets()) {
+                            selectedAsset.setWalletPublicKey(wallet.getWalletPublicKey());
+                            break;
+                        }
+                        manager.publishAsset(getAssetForEdit(), BlockchainNetworkType.TEST);
+                        selectedAsset = null;
+                        return true;
+                    }
+                };
+                worker.setContext(getActivity());
+                worker.setCallBack(new FermatWorkerCallBack() {
+                    @Override
+                    public void onPostExecute(Object... result) {
+                        dialog.dismiss();
+                        selectedAsset = null;
+                        if (getActivity() != null) {
+                            onRefresh();
+                        }
+                        Toast.makeText(getActivity(), "The publishing process has been started successfully.\n\n " +
+                                "You will be able to distribute this asset in a few minutes from your Asset Issuer Wallet.", Toast.LENGTH_LONG).show();
+                    }
+
+                    @Override
+                    public void onErrorOccurred(Exception ex) {
+                        dialog.dismiss();
+                        selectedAsset = null;
+                        if (getActivity() != null) {
+                            Toast.makeText(getActivity(), "You need to define all mandatory properties in your asset before publishing it.", Toast.LENGTH_LONG).show();
+                            onRefresh();
+                        }
+                        ex.printStackTrace();
+                    }
+                });
+                worker.execute();
+            }
+        } catch (CantPublishAssetFactoy cantPublishAssetFactoy) {
+            cantPublishAssetFactoy.printStackTrace();
+            Toast.makeText(getActivity(), "You cannot publish this asset", Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    private void deleteAsset() {
+        final ProgressDialog dialog = new ProgressDialog(getActivity());
+        dialog.setTitle("Deleting asset");
+        dialog.setMessage("Please wait...");
+        dialog.setCancelable(false);
+        dialog.show();
+        FermatWorker worker = new FermatWorker() {
+            @Override
+            protected Object doInBackground() throws Exception {
+                manager.removeAssetFactory(selectedAsset.getAssetPublicKey());
+                return true;
+            }
+        };
+        worker.setContext(getActivity());
+        worker.setCallBack(new FermatWorkerCallBack() {
+            @Override
+            public void onPostExecute(Object... result) {
+                dialog.dismiss();
+                if (getActivity() != null) {
+                    Toast.makeText(getActivity(), "Asset deleted successfully", Toast.LENGTH_SHORT).show();
+                    changeActivity(Activities.DAP_MAIN.getCode(), appSession.getAppPublicKey());
+                }
+            }
+
+            @Override
+            public void onErrorOccurred(Exception ex) {
+                dialog.dismiss();
+                if (getActivity() != null) {
+                    CommonLogger.exception(TAG, ex.getMessage(), ex);
+                    Toast.makeText(getActivity(), "There was an error deleting this asset", Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
+        worker.execute();
     }
 
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        checkIdentity();
+//        checkIdentity();
     }
 
     private void checkIdentity() {
         ActiveActorIdentityInformation identity = null;
         try {
             identity = manager.getSelectedActorIdentity();
-        } catch(Exception e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
         if (identity == null) {

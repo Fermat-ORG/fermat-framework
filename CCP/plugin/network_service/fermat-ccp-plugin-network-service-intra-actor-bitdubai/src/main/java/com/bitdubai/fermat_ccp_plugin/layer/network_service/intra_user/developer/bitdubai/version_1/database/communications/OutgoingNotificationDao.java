@@ -79,7 +79,8 @@ public class OutgoingNotificationDao implements com.bitdubai.fermat_ccp_plugin.l
                                            long                        timestamp   ,
                                            ActorProtocolState          protocolState    ,
                                            boolean                     flagReaded,
-                                           int sentCount) throws CantCreateNotificationException {
+                                           int sentCount,
+                                           UUID responseToNotificationId                     ) throws CantCreateNotificationException {
 
         try {
 
@@ -104,9 +105,11 @@ public class OutgoingNotificationDao implements com.bitdubai.fermat_ccp_plugin.l
                         timestamp   ,
                         protocolState             ,
                         flagReaded,
-                        sentCount
+                        sentCount,
+                         responseToNotificationId
 
                 );
+
 
                 outgoingNotificationTable.insertRecord(buildDatabaseRecord(entityRecord, connectionRequestRecord));
 
@@ -129,8 +132,7 @@ public class OutgoingNotificationDao implements com.bitdubai.fermat_ccp_plugin.l
 
         try {
 
-            if(!existNotification(actorNetworkServiceRecord.getId()))
-            {
+            if(!existNotification(actorNetworkServiceRecord.getId())) {
                 DatabaseTable cryptoPaymentRequestTable = getDatabaseTable();
 
                 DatabaseTableRecord entityRecord = cryptoPaymentRequestTable.getEmptyRecord();
@@ -294,6 +296,35 @@ public class OutgoingNotificationDao implements com.bitdubai.fermat_ccp_plugin.l
     }
 
 
+    public List<ActorNetworkServiceRecord> listRequestsByProtocolStateAndNotDone(ActorProtocolState protocolState) throws CantListIntraWalletUsersException {
+        if (protocolState == null)
+            throw new CantListIntraWalletUsersException("protocolState null",null, "The protocolState is required, can not be null","");
+
+
+        try {
+            DatabaseTable cryptoPaymentRequestTable = getDatabaseTable();
+
+            cryptoPaymentRequestTable.addStringFilter(CommunicationNetworkServiceDatabaseConstants.OUTGOING_NOTIFICATION_PROTOCOL_STATE_COLUMN_NAME, protocolState.getCode(), DatabaseFilterType.EQUAL);
+
+            cryptoPaymentRequestTable.loadToMemory();
+
+            List<DatabaseTableRecord> records = cryptoPaymentRequestTable.getRecords();
+
+            List<com.bitdubai.fermat_ccp_plugin.layer.network_service.intra_user.developer.bitdubai.version_1.structure.ActorNetworkServiceRecord> cryptoPaymentList = new ArrayList<>();
+
+            for (DatabaseTableRecord record : records) {
+                cryptoPaymentList.add(buildActorNetworkServiceRecord(record));
+            }
+            return cryptoPaymentList;
+
+        } catch (CantLoadTableToMemoryException e) {
+
+            throw new CantListIntraWalletUsersException("",e, "Exception not handled by the plugin, there is a problem in database and i cannot load the table.","");
+        } catch(InvalidParameterException exception){
+
+            throw new CantListIntraWalletUsersException("",exception, "Exception invalidParameterException.","");
+        }
+    }
 
     public List<ActorNetworkServiceRecord> listRequestsByProtocolState(final ActorProtocolState protocolState) throws CantListIntraWalletUsersException {
 
@@ -335,6 +366,37 @@ public class OutgoingNotificationDao implements com.bitdubai.fermat_ccp_plugin.l
             DatabaseTable cryptoPaymentRequestTable = getDatabaseTable();
 
             cryptoPaymentRequestTable.addStringFilter(CommunicationNetworkServiceDatabaseConstants.OUTGOING_NOTIFICATION_PROTOCOL_STATE_COLUMN_NAME, ActorProtocolState.DONE.getCode(), DatabaseFilterType.NOT_EQUALS);
+
+            cryptoPaymentRequestTable.loadToMemory();
+
+            List<DatabaseTableRecord> records = cryptoPaymentRequestTable.getRecords();
+
+            List<com.bitdubai.fermat_ccp_plugin.layer.network_service.intra_user.developer.bitdubai.version_1.structure.ActorNetworkServiceRecord> cryptoPaymentList = new ArrayList<>();
+
+            for (DatabaseTableRecord record : records) {
+                cryptoPaymentList.add(buildActorNetworkServiceRecord(record));
+            }
+            return cryptoPaymentList;
+
+        } catch (CantLoadTableToMemoryException e) {
+
+            throw new CantListIntraWalletUsersException("",e, "Exception not handled by the plugin, there is a problem in database and i cannot load the table.","");
+        } catch(InvalidParameterException exception){
+
+            throw new CantListIntraWalletUsersException("",exception, "Exception invalidParameterException.","");
+        }
+    }
+
+
+    public List<ActorNetworkServiceRecord> listNotSentNotifications(String receiveIdentityKey) throws CantListIntraWalletUsersException {
+
+
+        //TODO: ver si en vez de receiver es destination
+        try {
+            DatabaseTable cryptoPaymentRequestTable = getDatabaseTable();
+
+            cryptoPaymentRequestTable.addStringFilter(CommunicationNetworkServiceDatabaseConstants.OUTGOING_NOTIFICATION_PROTOCOL_STATE_COLUMN_NAME, ActorProtocolState.DONE.getCode(), DatabaseFilterType.NOT_EQUALS);
+            cryptoPaymentRequestTable.addStringFilter(CommunicationNetworkServiceDatabaseConstants.OUTGOING_NOTIFICATION_RECEIVER_PUBLIC_KEY_COLUMN_NAME, receiveIdentityKey, DatabaseFilterType.EQUAL);
 
             cryptoPaymentRequestTable.loadToMemory();
 
@@ -419,6 +481,8 @@ public class OutgoingNotificationDao implements com.bitdubai.fermat_ccp_plugin.l
             record.setStringValue(CommunicationNetworkServiceDatabaseConstants.OUTGOING_NOTIFICATION_PROTOCOL_STATE_COLUMN_NAME, connectionRequestRecord.getActorProtocolState().getCode());
             record.setStringValue(CommunicationNetworkServiceDatabaseConstants.OUTGOING_NOTIFICATION_READ_MARK_COLUMN_NAME           , String.valueOf(connectionRequestRecord.isFlagReadead())                  );
             record.setIntegerValue(CommunicationNetworkServiceDatabaseConstants.OUTGOING_NOTIFICATION_SENT_COUNT_COLUMN_NAME, connectionRequestRecord.getSentCount());
+            if(connectionRequestRecord.getResponseToNotificationId()!=null)
+            record.setUUIDValue(CommunicationNetworkServiceDatabaseConstants.OUTGOING_NOTIFICATION_RESPONSE_TO_NOTIFICATION_ID_COLUMN_NAME, connectionRequestRecord.getResponseToNotificationId());
 
             /**
              * Persist profile image on a file
@@ -452,15 +516,17 @@ public class OutgoingNotificationDao implements com.bitdubai.fermat_ccp_plugin.l
         String flagReaded  = record.getStringValue(CommunicationNetworkServiceDatabaseConstants.OUTGOING_NOTIFICATION_READ_MARK_COLUMN_NAME);
 
         int sentCount =  record.getIntegerValue(CommunicationNetworkServiceDatabaseConstants.OUTGOING_NOTIFICATION_SENT_COUNT_COLUMN_NAME);
+            UUID   responseToNotificationId            = record.getUUIDValue(CommunicationNetworkServiceDatabaseConstants.OUTGOING_NOTIFICATION_RESPONSE_TO_NOTIFICATION_ID_COLUMN_NAME);
 
 
 
-        ActorProtocolState  actorProtocolState = ActorProtocolState .getByCode(protocolState);
+
+            ActorProtocolState  actorProtocolState = ActorProtocolState .getByCode(protocolState);
         Boolean readed =Boolean.valueOf(flagReaded);
         NotificationDescriptor notificationDescriptor = NotificationDescriptor.getByCode(descriptor);
 
         Actors actorDestinationType = Actors.getByCode(destinationType);
-        Actors actorSenderType    = Actors.getByCode(senderType   );
+        Actors actorSenderType    = Actors.getByCode(senderType);
 
         byte[] profileImage;
 
@@ -483,8 +549,8 @@ public class OutgoingNotificationDao implements com.bitdubai.fermat_ccp_plugin.l
                 timestamp   ,
                 actorProtocolState             ,
                 readed,
-                sentCount
-
+                sentCount,
+                responseToNotificationId
         );
 
         }
@@ -514,7 +580,7 @@ public class OutgoingNotificationDao implements com.bitdubai.fermat_ccp_plugin.l
             /*
              * 1- Create the record to the entity
              */
-            DatabaseTableRecord entityRecord = buildDatabaseRecord(emptyRecord,entity);
+            DatabaseTableRecord entityRecord = buildDatabaseRecord(emptyRecord, entity);
 
             /**
              * 2.- Create a new transaction and execute
@@ -654,5 +720,6 @@ public class OutgoingNotificationDao implements com.bitdubai.fermat_ccp_plugin.l
     private String buildProfileImageFileName(final String publicKey) {
         return PROFILE_IMAGE_FILE_NAME_PREFIX + "_" + publicKey;
     }
+
 
 }

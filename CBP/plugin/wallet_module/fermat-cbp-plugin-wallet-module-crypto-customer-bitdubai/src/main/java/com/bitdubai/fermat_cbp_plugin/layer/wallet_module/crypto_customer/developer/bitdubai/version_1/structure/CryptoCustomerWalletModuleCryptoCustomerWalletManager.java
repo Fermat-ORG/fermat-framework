@@ -3,6 +3,7 @@ package com.bitdubai.fermat_cbp_plugin.layer.wallet_module.crypto_customer.devel
 import com.bitdubai.fermat_api.layer.all_definition.enums.CryptoCurrency;
 import com.bitdubai.fermat_api.layer.all_definition.enums.FiatCurrency;
 import com.bitdubai.fermat_api.layer.all_definition.enums.interfaces.FermatEnum;
+import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterException;
 import com.bitdubai.fermat_api.layer.all_definition.settings.structure.SettingsManager;
 import com.bitdubai.fermat_api.layer.all_definition.util.XMLParser;
 import com.bitdubai.fermat_api.layer.modules.common_classes.ActiveActorIdentityInformation;
@@ -16,9 +17,12 @@ import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginTextFile;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantCreateFileException;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantPersistFileException;
 import com.bitdubai.fermat_api.layer.world.interfaces.Currency;
+import com.bitdubai.fermat_cbp_api.all_definition.contract.ContractClause;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.ClauseType;
+import com.bitdubai.fermat_cbp_api.all_definition.enums.ContractDetailType;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.ContractStatus;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.ContractTransactionStatus;
+import com.bitdubai.fermat_cbp_api.all_definition.enums.CurrencyType;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.NegotiationStatus;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.NegotiationType;
 import com.bitdubai.fermat_cbp_api.all_definition.negotiation.Clause;
@@ -28,6 +32,7 @@ import com.bitdubai.fermat_cbp_api.layer.actor.crypto_broker.exceptions.CantGetL
 import com.bitdubai.fermat_cbp_api.layer.actor.crypto_broker.interfaces.ActorExtraData;
 import com.bitdubai.fermat_cbp_api.layer.actor.crypto_broker.interfaces.ActorExtraDataManager;
 import com.bitdubai.fermat_cbp_api.layer.actor.crypto_broker.interfaces.QuotesExtraData;
+import com.bitdubai.fermat_cbp_api.layer.business_transaction.common.mocks.CustomerBrokerContractPurchaseMock;
 import com.bitdubai.fermat_cbp_api.layer.contract.customer_broker_purchase.exceptions.CantGetListCustomerBrokerContractPurchaseException;
 import com.bitdubai.fermat_cbp_api.layer.contract.customer_broker_purchase.interfaces.CustomerBrokerContractPurchase;
 import com.bitdubai.fermat_cbp_api.layer.contract.customer_broker_purchase.interfaces.CustomerBrokerContractPurchaseManager;
@@ -43,6 +48,7 @@ import com.bitdubai.fermat_cbp_api.layer.negotiation.customer_broker_purchase.ex
 import com.bitdubai.fermat_cbp_api.layer.negotiation.customer_broker_purchase.exceptions.CantUpdateBankAccountPurchaseException;
 import com.bitdubai.fermat_cbp_api.layer.negotiation.customer_broker_purchase.interfaces.CustomerBrokerPurchaseNegotiation;
 import com.bitdubai.fermat_cbp_api.layer.negotiation.customer_broker_purchase.interfaces.CustomerBrokerPurchaseNegotiationManager;
+import com.bitdubai.fermat_cbp_api.layer.negotiation.exceptions.CantGetListClauseException;
 import com.bitdubai.fermat_cbp_api.layer.negotiation_transaction.customer_broker_new.exceptions.CantCreateCustomerBrokerNewPurchaseNegotiationTransactionException;
 import com.bitdubai.fermat_cbp_api.layer.negotiation_transaction.customer_broker_new.interfaces.CustomerBrokerNewManager;
 import com.bitdubai.fermat_cbp_api.layer.user_level_business_transaction.customer_broker_purchase.interfaces.CustomerBrokerPurchaseManager;
@@ -717,6 +723,155 @@ public class CryptoCustomerWalletModuleCryptoCustomerWalletManager implements Cr
         return null;
     }
 
+    /**
+     * This method returns the CustomerBrokerContractPurchase associated to a negotiationId
+     * @param negotiationId
+     * @return
+     * @throws CantGetListCustomerBrokerContractPurchaseException
+     */
+    @Override
+    public CustomerBrokerContractPurchase getCustomerBrokerContractPurchaseByNegotiationId(
+            String negotiationId) throws CantGetListCustomerBrokerContractPurchaseException {
+        Collection<CustomerBrokerContractPurchase> customerBrokerContractPurchases=
+                customerBrokerContractPurchaseManager.getAllCustomerBrokerContractPurchase();
+        String negotiationIdFromCollection;
+        //This line is only for testing
+        return new CustomerBrokerContractPurchaseMock();
+        /*for(CustomerBrokerContractPurchase customerBrokerContractPurchase : customerBrokerContractPurchases){
+            negotiationIdFromCollection=customerBrokerContractPurchase.getNegotiatiotId();
+            if(negotiationIdFromCollection.equals(negotiationId)){
+                return customerBrokerContractPurchase;
+            }
+        }
+        throw new CantGetListCustomerBrokerContractPurchaseException(
+                "Cannot find the contract associated to negotiation "+negotiationId);*/
+    }
+
+    /**
+     * This method returns the currency type from a contract
+     * @param customerBrokerContractPurchase
+     * @param contractDetailType
+     * @return
+     * @throws CantGetListPurchaseNegotiationsException
+     */
+    @Override
+    public CurrencyType getCurrencyTypeFromContract(
+            CustomerBrokerContractPurchase customerBrokerContractPurchase,
+            ContractDetailType contractDetailType) throws
+            CantGetListPurchaseNegotiationsException{
+        try {
+            String negotiationId=customerBrokerContractPurchase.getNegotiatiotId();
+            CustomerBrokerPurchaseNegotiation customerBrokerPurchaseNegotiation=
+                    customerBrokerPurchaseNegotiationManager.getNegotiationsByNegotiationId(
+                            UUID.fromString(negotiationId));
+            Collection<Clause> clauses = customerBrokerPurchaseNegotiation.getClauses();
+            ClauseType clauseType;
+            for(Clause clause : clauses){
+                clauseType=clause.getType();
+
+                switch (contractDetailType){
+                    case BROKER_DETAIL:
+                        if(clauseType.equals(ClauseType.BROKER_PAYMENT_METHOD)){
+                            return CurrencyType.getByCode(clause.getValue());
+                        }
+                    case CUSTOMER_DETAIL:
+                        if(clauseType.equals(ClauseType.CUSTOMER_PAYMENT_METHOD)){
+                            return CurrencyType.getByCode(clause.getValue());
+                        }
+                }
+            }
+            throw new CantGetListPurchaseNegotiationsException("Cannot find the proper clause");
+        } catch (InvalidParameterException e) {
+            throw new CantGetListPurchaseNegotiationsException("Cannot get the negotiation list",e );
+        } catch (CantGetListClauseException e) {
+            throw new CantGetListPurchaseNegotiationsException("Cannot find clauses list");
+        }
+
+    }
+
+    /**
+     * This method returns a string with the currency code.
+     * @param customerBrokerContractPurchase
+     * @param contractDetailType
+     * @return
+     * @throws CantGetListPurchaseNegotiationsException
+     */
+    /*public String getCurrencyCodeFromContract(
+            CustomerBrokerContractPurchase customerBrokerContractPurchase,
+            ContractDetailType contractDetailType) throws
+            CantGetListPurchaseNegotiationsException{
+        try {
+            String negotiationId=customerBrokerContractPurchase.getNegotiatiotId();
+            CustomerBrokerPurchaseNegotiation customerBrokerPurchaseNegotiation=
+                    customerBrokerPurchaseNegotiationManager.getNegotiationsByNegotiationId(
+                            UUID.fromString(negotiationId));
+            Collection<Clause> clauses = customerBrokerPurchaseNegotiation.getClauses();
+            ClauseType clauseType;
+            String currencyCode;
+            for(Clause clause : clauses){
+                clauseType=clause.getType();
+
+                switch (contractDetailType){
+                    case BROKER_DETAIL:
+                        if(clauseType.equals(ClauseType.BROKER_CURRENCY)){
+                            currencyCode=clause.getValue();
+                            return FiatCurrency.getByCode(currencyCode).getFriendlyName();
+                        }
+                    case CUSTOMER_DETAIL:
+                        if(clauseType.equals(ClauseType.CUSTOMER_CURRENCY)){
+                            currencyCode=clause.getValue();
+                            return FiatCurrency.getByCode(currencyCode).getFriendlyName();
+                        }
+                }
+            }
+            throw new CantGetListPurchaseNegotiationsException("Cannot find the proper clause");
+        } catch (CantGetListClauseException e) {
+            throw new CantGetListPurchaseNegotiationsException("Cannot find clauses list");
+        } catch (InvalidParameterException e) {
+            throw new CantGetListPurchaseNegotiationsException("Cannot get the negotiation list",e );
+        }
+
+    }*/
+
+    /**
+     * This method returns the currency amount
+     * @return
+     * @throws CantGetListPurchaseNegotiationsException
+     */
+    /*public float getCurrencyAmountFromContract(
+            CustomerBrokerContractPurchase customerBrokerContractPurchase,
+            ContractDetailType contractDetailType) throws
+            CantGetListPurchaseNegotiationsException{
+        try {
+            String negotiationId=customerBrokerContractPurchase.getNegotiatiotId();
+            CustomerBrokerPurchaseNegotiation customerBrokerPurchaseNegotiation=
+                    customerBrokerPurchaseNegotiationManager.getNegotiationsByNegotiationId(
+                            UUID.fromString(negotiationId));
+            Collection<Clause> clauses = customerBrokerPurchaseNegotiation.getClauses();
+            ClauseType clauseType;
+            String currencyAmount;
+            for(Clause clause : clauses){
+                clauseType=clause.getType();
+
+                switch (contractDetailType){
+                    case BROKER_DETAIL:
+                        if(clauseType.equals(ClauseType.BROKER_CURRENCY_QUANTITY)){
+                            currencyAmount=clause.getValue();
+                            return Float.valueOf(currencyAmount);
+                        }
+                    case CUSTOMER_DETAIL:
+                        if(clauseType.equals(ClauseType.CUSTOMER_CURRENCY_QUANTITY)){
+                            currencyAmount=clause.getValue();
+                            return Float.valueOf(currencyAmount);
+                        }
+                }
+            }
+            throw new CantGetListPurchaseNegotiationsException("Cannot find the proper clause");
+        } catch (CantGetListClauseException e) {
+            throw new CantGetListPurchaseNegotiationsException("Cannot find clauses list");
+        }
+
+    }*/
 
     private List<ContractBasicInformation> getOpenContractsTestData() {
         if (openContracts == null) {

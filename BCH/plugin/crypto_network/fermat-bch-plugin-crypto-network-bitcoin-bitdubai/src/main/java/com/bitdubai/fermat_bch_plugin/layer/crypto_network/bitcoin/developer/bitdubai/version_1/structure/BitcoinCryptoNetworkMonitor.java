@@ -28,6 +28,7 @@ import com.google.common.util.concurrent.MoreExecutors;
 
 import org.bitcoinj.core.Block;
 import org.bitcoinj.core.BlockChain;
+import org.bitcoinj.core.Coin;
 import org.bitcoinj.core.NetworkParameters;
 import org.bitcoinj.core.PeerAddress;
 import org.bitcoinj.core.PeerGroup;
@@ -35,6 +36,9 @@ import org.bitcoinj.core.Sha256Hash;
 import org.bitcoinj.core.StoredBlock;
 import org.bitcoinj.core.Transaction;
 import org.bitcoinj.core.TransactionBroadcast;
+import org.bitcoinj.core.TransactionConfidence;
+import org.bitcoinj.core.TransactionInput;
+import org.bitcoinj.core.TransactionOutput;
 import org.bitcoinj.core.Wallet;
 import org.bitcoinj.net.discovery.DnsDiscovery;
 import org.bitcoinj.params.RegTestParams;
@@ -196,75 +200,28 @@ public class BitcoinCryptoNetworkMonitor implements Agent {
      */
     private void resumeBroadcastOfPendingTransactions(BlockchainNetworkType blockchainNetworkType) {
         try {
-            for (String txHash : getDao().getBroadcastTransactionsByStatus(blockchainNetworkType, Status.BROADCASTING)){
+            for (String txId :  getDao().getBroadcastTransactionsByStatus(blockchainNetworkType, Status.BROADCASTING)){
                 try {
-                    this.broadcastTransaction(txHash);
+                    this.broadcastTransaction(txId);
                 } catch (CantBroadcastTransactionException e) {
-                    /**
-                     * if there was an error, I will mark the transaction as WITH_ERROR
-                     */
-                    getDao().setBroadcastStatus(Status.WITH_ERROR, peerGroup.getConnectedPeers().size(), e, txHash);
+                    getDao().setBroadcastStatus(Status.WITH_ERROR, peerGroup.getConnectedPeers().size(), e, txId);
                 }
             }
         } catch (CantExecuteDatabaseOperationException e) {
+            /**
+             * If I couldn't get the list due to a database error, then nothing left to do
+             */
             e.printStackTrace();
+        } {
+
         }
-
-    }
-
-    /**
-     * Broadcast a well formed, commited and signed transaction into the network
-     * @param tx
-     * @param transactionId the internal fermat transaction Ifd
-     * @throws CantBroadcastTransactionException
-     */
-    public synchronized void  broadcastTransaction(final Transaction tx, final UUID transactionId) throws CantBroadcastTransactionException {
-        try{
-            /**
-             * I will add this transaction to the wallet.
-             */
-            wallet.commitTx(tx);
-
-            /**
-             * save the added transaction in the wallet
-             */
-            wallet.saveToFile(walletFileName);
-
-
-
-            /**
-             * Broadcast it.
-             */
-            final TransactionBroadcast broadcast = peerGroup.broadcastTransaction(tx);
-            broadcast.setProgressCallback(new TransactionBroadcast.ProgressCallback() {
-                @Override
-                public void onBroadcastProgress(double progress) {
-                    System.out.println("****CryptoNetwork: progress broadcast " + progress);
-                }
-            });
-
-            broadcast.broadcast().get(BitcoinNetworkConfiguration.TRANSACTION_BROADCAST_TIMEOUT, TimeUnit.MINUTES);
-            broadcast.future().get(BitcoinNetworkConfiguration.TRANSACTION_BROADCAST_TIMEOUT, TimeUnit.MINUTES);
-
-            /**
-             * Store this outgoing transaction in the table
-             */
-            storeOutgoingTransaction(wallet, tx, transactionId);
-
-            /**
-             * saves the wallet again.
-             */
-            wallet.saveToFile(walletFileName);
-        } catch (Exception exception){
-            exception.printStackTrace();
-            throw new CantBroadcastTransactionException(CantBroadcastTransactionException.DEFAULT_MESSAGE, exception, "There was an unexpected issue while broadcasting a transaction.", null);
-        }
-
     }
 
     /**
      * Broadcast a well formed, commited and signed transaction into the specified network
-     * @param txHash
+     *
+     * @param txHash the transaction hash to be broadcasted
+     * @return the broadcasted transaction.
      * @throws CantBroadcastTransactionException
      */
     public synchronized void broadcastTransaction(final String txHash) throws CantBroadcastTransactionException{
@@ -288,7 +245,7 @@ public class BitcoinCryptoNetworkMonitor implements Agent {
 
          final Transaction transaction = wallet.getTransaction(sha256Hash);
          TransactionBroadcast transactionBroadcast = peerGroup.broadcastTransaction(transaction);
-
+         transactionBroadcast.setMinConnections(BitcoinNetworkConfiguration.MIN_BROADCAST_CONNECTIONS);
 
          ListenableFuture<Transaction> future = transactionBroadcast.future();
         /**
@@ -306,10 +263,13 @@ public class BitcoinCryptoNetworkMonitor implements Agent {
                     UUID transactionId = getDao().getBroadcastedTransactionId(BLOCKCHAIN_NETWORKTYPE, txHash);
                     storeOutgoingTransaction(wallet, transaction, transactionId);
 
+
                     /**
                      * saves the wallet again.
                      */
                     wallet.saveToFile(walletFileName);
+
+                    System.out.println("Transaction succesfully broadcasted: " + transaction.getHashAsString());
                 } catch (CantExecuteDatabaseOperationException e) {
                     e.printStackTrace();
                 } catch (IOException e) {
@@ -327,30 +287,37 @@ public class BitcoinCryptoNetworkMonitor implements Agent {
             }
         });
 
-        /**
-         * Will set the time out for this broadcast attempt.
-         */
-        try {
-            future.get(1, TimeUnit.MINUTES);
-        } catch (InterruptedException e) {
-            try {
-                getDao().setBroadcastStatus(Status.WITH_ERROR, connectedPeers, e, txHash);
-            } catch (CantExecuteDatabaseOperationException e1) {
-                e1.printStackTrace();
-            }
-        } catch (ExecutionException e) {
-            try {
-                getDao().setBroadcastStatus(Status.WITH_ERROR, connectedPeers, e, txHash);
-            } catch (CantExecuteDatabaseOperationException e1) {
-                e1.printStackTrace();
-            }
-        } catch (TimeoutException e) {
-            try {
-                getDao().setBroadcastStatus(Status.WITH_ERROR, connectedPeers, e, txHash);
-            } catch (CantExecuteDatabaseOperationException e1) {
-                e1.printStackTrace();
-            }
-        }
+
+//        /**
+//         * Will set the time out for this broadcast attempt.
+//         */
+//        try {
+//            future.get(BitcoinNetworkConfiguration.TRANSACTION_BROADCAST_TIMEOUT, TimeUnit.MINUTES);
+//        } catch (InterruptedException e) {
+//            try {
+//                getDao().setBroadcastStatus(Status.WITH_ERROR, connectedPeers, e, txHash);
+//            } catch (CantExecuteDatabaseOperationException e1) {
+//                e1.printStackTrace();
+//            }
+//        } catch (ExecutionException e) { a
+//            try {
+//                getDao().setBroadcastStatus(Status.WITH_ERROR, connectedPeers, e, txHash);
+//            } catch (CantExecuteDatabaseOperationException e1) {
+//                e1.printStackTrace();
+//            }
+//        } catch (TimeoutException e) {
+//            try {
+//                getDao().setBroadcastStatus(Status.WITH_ERROR, connectedPeers, e, txHash);
+//            } catch (CantExecuteDatabaseOperationException e1) {
+//                e1.printStackTrace();
+//            }
+//        } catch (Exception e){
+//            try {
+//                getDao().setBroadcastStatus(Status.WITH_ERROR, connectedPeers, e, txHash);
+//            } catch (CantExecuteDatabaseOperationException e1) {
+//                e1.printStackTrace();
+//            }
+//        }
     }
 
 
@@ -465,13 +432,14 @@ public class BitcoinCryptoNetworkMonitor implements Agent {
              * I store it in the database
              */
             getDao().storeBitcoinTransaction(BLOCKCHAIN_NETWORKTYPE, tx.getHashAsString(), transactionId, peerGroup.getConnectedPeers().size(), peerGroup.getDownloadPeer().getAddress().toString());
+
             /**
              * I store it in the wallet.
              */
-            wallet.commitTx(tx);
+            wallet.maybeCommitTx(tx);
             wallet.saveToFile(walletFileName);
 
-
+            System.out.println("Transaction succesfully stored for broadcasting: " + tx.getHashAsString());
         } catch (CantExecuteDatabaseOperationException e) {
             throw new CantStoreBitcoinTransactionException(CantStoreBitcoinTransactionException.DEFAULT_MESSAGE, e, "There was an error storing the transaction in the database", null);
         } catch (Exception e) {
@@ -504,19 +472,69 @@ public class BitcoinCryptoNetworkMonitor implements Agent {
      * @param txHash
      */
     public void cancelBroadcast(String txHash) throws CantCancellBroadcastTransactionException{
-        Sha256Hash sha256Hash = Sha256Hash.wrap(txHash);
-        Transaction transaction = wallet.getTransaction(sha256Hash);
-
-        if (transaction == null)
-            throw new CantCancellBroadcastTransactionException(CantCancellBroadcastTransactionException.DEFAULT_MESSAGE, null, "the specified transaction does not exists.", null);
-
-        transaction.clearInputs();
-        transaction.clearOutputs();
-
         try {
+            /**
+             * I will get the transaction
+             */
+            Sha256Hash sha256Hash = Sha256Hash.wrap(txHash);
+            Transaction transaction = wallet.getTransaction(sha256Hash);
+
+            if (transaction == null)
+                throw new CantCancellBroadcastTransactionException(CantCancellBroadcastTransactionException.DEFAULT_MESSAGE, null, "the specified transaction does not exists.", null);
+
+            if (transaction.getConfidence().getConfidenceType() != TransactionConfidence.ConfidenceType.PENDING)
+                throw new CantCancellBroadcastTransactionException(CantCancellBroadcastTransactionException.DEFAULT_MESSAGE, null, "The transaction was already broadcasted and Can't be cancelled.", null);
+
+            /**
+             * I will disconnect all inputs from the outpoint
+             */
+            for (TransactionInput input : transaction.getInputs()){
+                input.disconnect();
+
+                /**
+                 * Will mark the outpoints as unspent to be able to set the parent transaction reusable.
+                 */
+                Transaction parentTransaction = null;
+                try{
+                    // Will get the parent transaction, only if it is local.
+                    parentTransaction = this.getTransactionFromBlockChain(input.getOutpoint().getHash().toString(), null);
+                } catch (CantGetTransactionException e){
+                    //if I couldn't get it locally, then I don't need it.
+                }
+
+                if (parentTransaction != null){
+                    for (TransactionOutput output : parentTransaction.getOutputs()){
+                        // If the output is mine, then I will make it as unspent.
+                        if (output.isMine(wallet))
+                            output.markAsUnspent();
+                    }
+                }
+
+            }
+
+            /**
+             * I will invalidate the outputs of the current cancelled transaction.
+             */
+            for (TransactionOutput output : transaction.getOutputs()){
+                output.setValue(Coin.ZERO);
+            }
+
+            /**
+             * do wallet maintenance
+             */
+            wallet.cleanup();
+
+            /**
+             * save all changes.
+             */
             wallet.saveToFile(walletFileName);
-        } catch (IOException e) {
-            throw new CantCancellBroadcastTransactionException(CantCancellBroadcastTransactionException.DEFAULT_MESSAGE, e, "Change in transaction could not be saved in wallet.", null);
+
+            /**
+             * update Broadcasting table to set it to cancelled.
+             */
+            this.getDao().setBroadcastStatus(Status.CANCELLED, peerGroup.getConnectedPeers().size(), null, txHash);
+        } catch (Exception e) {
+            throw new CantCancellBroadcastTransactionException(CantCancellBroadcastTransactionException.DEFAULT_MESSAGE, e, "Transaction couldn't rollback properly.", "Crypto Network error");
         }
     }
 
@@ -562,7 +580,6 @@ public class BitcoinCryptoNetworkMonitor implements Agent {
         if (storedTransaction != null)
             return storedTransaction;
 
-
         /**
          * I don't have it locally, so I will try to get it from the stored blockstore
          */
@@ -577,7 +594,6 @@ public class BitcoinCryptoNetworkMonitor implements Agent {
              */
 
             Block genesisBlock = getBlockFromPeer(blockHash);
-
 
             /**
              * Will search all transactions from the block until I find my own.

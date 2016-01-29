@@ -34,7 +34,8 @@ public interface DAO {
                                            long                        timestamp   ,
                                            ActorProtocolState protocolState    ,
                                            boolean                     flagReaded,
-                                            int sentCount) throws CantCreateNotificationException;
+                                            int sentCount,
+                                           UUID responseToNotificationId             ) throws CantCreateNotificationException;
 
     public ActorNetworkServiceRecord getNotificationById(final UUID notificationId) throws CantGetNotificationException, NotificationNotFoundException;
 
