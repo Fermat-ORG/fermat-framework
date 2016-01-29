@@ -103,17 +103,17 @@ public class AmountToBuyViewHolder extends ClauseViewHolder implements View.OnCl
         switch (clauseStatus) {
             case ACCEPTED:
                 buyingText.setTextColor(getColor(R.color.description_text_status_accepted));
-                buyingValue.setTextColor(getColor(R.color.text_value_status_accepted));
+//                buyingValue.setTextColor(getColor(R.color.text_value_status_accepted));
                 currencyToBuyTextValue.setTextColor(getColor(R.color.text_value_status_accepted));
                 break;
             case CHANGED:
                 buyingText.setTextColor(getColor(R.color.description_text_status_changed));
-                buyingValue.setTextColor(getColor(R.color.text_value_status_changed));
+//                buyingValue.setTextColor(getColor(R.color.text_value_status_changed));
                 currencyToBuyTextValue.setTextColor(getColor(R.color.text_value_status_changed));
                 break;
             case CONFIRM:
                 buyingText.setTextColor(getColor(R.color.description_text_status_confirm));
-                buyingValue.setTextColor(getColor(R.color.text_value_status_confirm));
+//                buyingValue.setTextColor(getColor(R.color.text_value_status_confirm));
                 currencyToBuyTextValue.setTextColor(getColor(R.color.text_value_status_confirm));
                 break;
         }
