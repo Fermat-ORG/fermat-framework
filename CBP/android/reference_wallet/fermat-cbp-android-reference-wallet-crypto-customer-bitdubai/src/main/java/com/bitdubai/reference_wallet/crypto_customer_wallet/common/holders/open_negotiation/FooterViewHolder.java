@@ -19,6 +19,7 @@ public class FooterViewHolder extends FermatViewHolder implements View.OnClickLi
 
         CardView addNoteButton = (CardView) itemView.findViewById(R.id.add_a_note_card_view);
         addNoteButton.setVisibility(View.VISIBLE);
+        addNoteButton.setOnClickListener(this);
 
         TextView sendButton = (TextView) itemView.findViewById(R.id.send_button);
         sendButton.setOnClickListener(this);
