@@ -8,18 +8,21 @@ import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
-import android.support.v4.graphics.drawable.RoundedBitmapDrawable;
-import android.util.Log;
+import android.support.v7.widget.Toolbar;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.ContextMenu;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
+import android.view.WindowManager;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.Toast;
 
 import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractFermatFragment;
@@ -96,22 +99,38 @@ public class CreateCryptoBrokerIdentityFragment extends AbstractFermatFragment {
         actualizable = true;
 
         mBrokerName = (EditText) layout.findViewById(R.id.crypto_broker_name);
-        mBrokerName.clearFocus();
-        mBrokerName.requestFocus();
-        mBrokerName.selectAll();
-        mBrokerName.setOnKeyListener(new View.OnKeyListener() {
-            @Override
-            public boolean onKey(View v, int keyCode, KeyEvent event) {
-                if (keyCode == 4) {
-                    if (actualizable) {
-                        createNewIdentityInBackDevice();
-                        actualizable = false;
-                    }
-                }
 
-                return false;
+        mBrokerName.requestFocus();
+        getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE);
+
+        mBrokerName.performClick();
+
+        mBrokerName.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View v, boolean hasFocus) {
+                if (actualizable) {
+                    createNewIdentityInBackDevice();
+                    actualizable = false;
+                }
             }
         });
+
+        mBrokerName.addTextChangedListener(
+            new TextWatcher() {
+                @Override
+                public void onTextChanged(CharSequence s, int start, int before, int count) {}
+
+                @Override
+                public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+
+                @Override
+                public void afterTextChanged(Editable s) {
+
+                    System.out.println("hashCode: "+s.hashCode());
+                    //createNewIdentityInBackDevice();
+                }
+            }
+        );
 
         camara = (ImageView) layout.findViewById(R.id.camara);
         camara.setOnClickListener(new View.OnClickListener() {
@@ -131,16 +150,20 @@ public class CreateCryptoBrokerIdentityFragment extends AbstractFermatFragment {
 
         mBrokerImage = (ImageView) layout.findViewById(R.id.crypto_broker_image);
         mBrokerImage.setImageResource(R.drawable.img_new_user_camera);
-        /*
-        //RoundedBitmapDrawable roundedBitmap = ImagesUtils.getRoundedBitmap(getResources(), R.drawable.img_new_user_camera);
-        mBrokerImage.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                //registerForContextMenu(mBrokerImage);
-                //getActivity().openContextMenu(mBrokerImage);
-            }
-        });
-        */
+
+    }
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        menu.getItem(0).setVisible(false);
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+
+        mBrokerName.requestFocus();
+        getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE);
     }
 
     @Override
@@ -180,6 +203,10 @@ public class CreateCryptoBrokerIdentityFragment extends AbstractFermatFragment {
 
             if (pictureView != null && cryptoBrokerBitmap != null) {
                 pictureView.setImageBitmap(cryptoBrokerBitmap);
+                mBrokerName.requestFocus();
+                getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE);
+
+                createNewIdentityInBackDevice();
             }
         }
     }

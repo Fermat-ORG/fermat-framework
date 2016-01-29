@@ -5,12 +5,16 @@ import android.app.Fragment;
 import android.content.ContentResolver;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.Color;
 import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.v4.graphics.drawable.RoundedBitmapDrawable;
+import android.support.v7.widget.Toolbar;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.ContextMenu;
 import android.view.KeyEvent;
@@ -82,6 +86,8 @@ public class EditCryptoBrokerIdentityFragment extends AbstractFermatFragment imp
 
     private Switch publishIdentityCheckBox;
 
+    private long actualizableStatus;
+
     public static EditCryptoBrokerIdentityFragment newInstance() {
         return new EditCryptoBrokerIdentityFragment();
     }
@@ -124,6 +130,8 @@ public class EditCryptoBrokerIdentityFragment extends AbstractFermatFragment imp
 
         cryptoBrokerPublicKey = identityInfo.getPublicKey();
 
+        actualizableStatus = 0;
+
         if (identityInfo != null) {
             mBrokerName.setText(identityInfo.getAlias());
 
@@ -141,12 +149,22 @@ public class EditCryptoBrokerIdentityFragment extends AbstractFermatFragment imp
             publishIdentityCheckBox.setChecked(wantPublishIdentity);
         }
 
+        mBrokerName.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View v, boolean hasFocus) {
+                if (actualizable) {
+                    editIdentityInfoInBackDevice();
+                    actualizable = false;
+                }
+            }
+        });
+
         if(publishIdentityCheckBox.isChecked()){
-            sw.setImageResource(R.drawable.swicth_on);
+            sw.setImageResource(R.drawable.visible2);
             publishIdentityCheckBox.setChecked(true);
             wantPublishIdentity = true;
         }else{
-            sw.setImageResource(R.drawable.swicth_off);
+            sw.setImageResource(R.drawable.not_visible2);
             publishIdentityCheckBox.setChecked(false);
             wantPublishIdentity = false;
         }
@@ -182,28 +200,15 @@ public class EditCryptoBrokerIdentityFragment extends AbstractFermatFragment imp
         sw.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (publishIdentityCheckBox.isChecked()) {
-                    sw.setImageResource(R.drawable.swicth_off);
-                    publishIdentityCheckBox.setChecked(false);
-                    wantPublishIdentity = false;
-                } else {
-                    sw.setImageResource(R.drawable.swicth_on);
-                    publishIdentityCheckBox.setChecked(true);
-                    wantPublishIdentity = true;
-               }
-            }
-        });
-
-        mBrokerName.setOnKeyListener(new View.OnKeyListener() {
-            @Override
-            public boolean onKey(View v, int keyCode, KeyEvent event) {
-                if (keyCode == 4) {
-                    if(actualizable) {
-                        editIdentityInfoInBackDevice();
-                        actualizable = false;
+                    if (publishIdentityCheckBox.isChecked()) {
+                        sw.setImageResource(R.drawable.not_visible2);
+                        publishIdentityCheckBox.setChecked(false);
+                        wantPublishIdentity = false;
+                    } else {
+                        sw.setImageResource(R.drawable.visible2);
+                        publishIdentityCheckBox.setChecked(true);
+                        wantPublishIdentity = true;
                     }
-                }
-                return false;
             }
         });
 
@@ -246,6 +251,9 @@ public class EditCryptoBrokerIdentityFragment extends AbstractFermatFragment imp
 
             if (pictureView != null && cryptoBrokerBitmap != null) {
                 pictureView.setImageBitmap(cryptoBrokerBitmap);
+                mBrokerName.clearFocus();
+                mBrokerName.requestFocus();
+                mBrokerName.selectAll();
             }
         }
     }
