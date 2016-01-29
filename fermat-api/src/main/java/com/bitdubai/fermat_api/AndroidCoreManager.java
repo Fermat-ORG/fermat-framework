@@ -1,9 +1,10 @@
-package com.bitdubai.fermat_pip_api.layer.module.android_core.interfaces;
+package com.bitdubai.fermat_api;
 
+import com.bitdubai.fermat_api.layer.all_definition.common.system.enums.NetworkStatus;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.exceptions.CantGetBitcoinNetworkStatusException;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.exceptions.CantGetCommunicationNetworkStatusException;
 import com.bitdubai.fermat_api.layer.all_definition.enums.BlockchainNetworkType;
-import com.bitdubai.fermat_pip_api.all_definition.enums.NetworkStatus;
-import com.bitdubai.fermat_pip_api.layer.module.android_core.exception.CantGetBitcoinNetworkStatusException;
-import com.bitdubai.fermat_pip_api.layer.module.android_core.exception.CantGetCommunicationNetworkStatusException;
+
 
 /**
  * Created by natalia on 19/01/16.
