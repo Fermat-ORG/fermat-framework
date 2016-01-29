@@ -265,6 +265,9 @@ public class CryptoTransmissionNetworkServicePluginRoot extends AbstractPlugin i
         this.name = "Crypto Transmission Network Service";
         this.alias = "CryptoTransmissionNetworkService";
         this.extraData = null;
+
+        actorNetworkServiceRecordedAgent = new ActorNetworkServiceRecordedAgent(
+                this);
     }
 
     /**
@@ -501,10 +504,10 @@ public class CryptoTransmissionNetworkServicePluginRoot extends AbstractPlugin i
 
                     remoteNetworkServicesRegisteredList = new CopyOnWriteArrayList<PlatformComponentProfile>();
 
-                    actorNetworkServiceRecordedAgent = new ActorNetworkServiceRecordedAgent(
-                            this,
-                            errorManager,
-                            eventManager);
+                    if(actorNetworkServiceRecordedAgent==null) {
+                        actorNetworkServiceRecordedAgent = new ActorNetworkServiceRecordedAgent(
+                                this);
+                    }
 
                     // change message state to process again first time
                     //reprocessMessage();
@@ -693,9 +696,7 @@ public class CryptoTransmissionNetworkServicePluginRoot extends AbstractPlugin i
         try {
             if(actorNetworkServiceRecordedAgent==null){
                 actorNetworkServiceRecordedAgent = new ActorNetworkServiceRecordedAgent(
-                        this,
-                        errorManager,
-                        eventManager);
+                        this);
             }
             actorNetworkServiceRecordedAgent.start();
 
@@ -1135,13 +1136,17 @@ public class CryptoTransmissionNetworkServicePluginRoot extends AbstractPlugin i
                 String remotePublicKey = vpnConnectionCloseNotificationEvent.getRemoteParticipant().getIdentityPublicKey();
                 if(communicationNetworkServiceConnectionManager != null) {
                     System.out.println("ENTRANDO EN EL METODO PARA CERRAR LA CONEXION DEL handleVpnConnectionCloseNotificationEvent");
-                    System.out.println("ENTRO AL METODO PARA CERRAR LA CONEXION");
+
                     communicationNetworkServiceConnectionManager.closeConnection(remotePublicKey);
 
                 }
 
                 // close connection, sender is the destination
                 if(actorNetworkServiceRecordedAgent!=null) actorNetworkServiceRecordedAgent.getPoolConnectionsWaitingForResponse().remove(remotePublicKey);
+
+                if(vpnConnectionCloseNotificationEvent.isCloseNormal()){
+                    System.out.println("ENTRO AL METODO PARA CERRAR LA CONEXION-- Cerrado normal de conexion");
+                }
 
             }
 
@@ -1613,4 +1618,11 @@ public class CryptoTransmissionNetworkServicePluginRoot extends AbstractPlugin i
         return cryptoTransmissionTransactionProtocolManager;
     }
 
+    public ErrorManager getErrorManager() {
+        return errorManager;
+    }
+
+    public EventManager getEventManager() {
+        return eventManager;
+    }
 }

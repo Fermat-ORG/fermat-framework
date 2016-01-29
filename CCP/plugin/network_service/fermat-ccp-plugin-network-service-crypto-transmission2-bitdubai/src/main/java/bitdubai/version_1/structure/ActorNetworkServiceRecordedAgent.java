@@ -70,16 +70,10 @@ public class ActorNetworkServiceRecordedAgent extends FermatAgent{
     private List<Future<?>> futures= new ArrayList<>();
 
     private final CryptoTransmissionNetworkServicePluginRoot cryptoTransmissionNetworkServicePluginRoot;
-    private final ErrorManager errorManager                                ;
-    private final EventManager eventManager                                ;
 
-    public ActorNetworkServiceRecordedAgent( final CryptoTransmissionNetworkServicePluginRoot cryptoTransmissionNetworkServicePluginRoot,
-                                             final ErrorManager                                 errorManager                                ,
-                                             final EventManager                                 eventManager
+    public ActorNetworkServiceRecordedAgent( final CryptoTransmissionNetworkServicePluginRoot cryptoTransmissionNetworkServicePluginRoot
                                              ) {
-
-        this.errorManager                                 = errorManager                                ;
-        this.eventManager                                 = eventManager                                ;
+         ;
         this.status                                       = AgentStatus.CREATED                         ;
         this.cryptoTransmissionNetworkServicePluginRoot = cryptoTransmissionNetworkServicePluginRoot;
 
@@ -181,7 +175,8 @@ public class ActorNetworkServiceRecordedAgent extends FermatAgent{
             }
 
             //Sleep for a time
-            TimeUnit.SECONDS.sleep(2);
+
+            if(!Thread.currentThread().isInterrupted()) TimeUnit.SECONDS.sleep(2);
 
         } catch (InterruptedException e) {
             status = AgentStatus.STOPPED;
@@ -259,7 +254,7 @@ public class ActorNetworkServiceRecordedAgent extends FermatAgent{
             }
 
             //Sleep for a time
-            Thread.sleep(RECEIVE_SLEEP_TIME);
+            if(!Thread.currentThread().isInterrupted()) Thread.sleep(RECEIVE_SLEEP_TIME);
 
         } catch (InterruptedException e) {
             status = AgentStatus.STOPPED;
@@ -494,7 +489,7 @@ public class ActorNetworkServiceRecordedAgent extends FermatAgent{
 
 
     private void reportUnexpectedError(FermatException e) {
-        errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_INTRAUSER_NETWORK_SERVICE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+        cryptoTransmissionNetworkServicePluginRoot.getErrorManager().reportUnexpectedPluginException(Plugins.BITDUBAI_INTRAUSER_NETWORK_SERVICE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
     }
 
     public void connectionFailure(String identityPublicKey){
@@ -507,10 +502,10 @@ public class ActorNetworkServiceRecordedAgent extends FermatAgent{
     }
 
     private void lauchNotification(){
-        FermatEvent fermatEvent = eventManager.getNewEvent(EventType.INCOMING_CRYPTO_METADATA);
+        FermatEvent fermatEvent = cryptoTransmissionNetworkServicePluginRoot.getEventManager().getNewEvent(EventType.INCOMING_CRYPTO_METADATA);
         IncomingCryptoMetadataEvent incomingCryptoMetadataReceive = (IncomingCryptoMetadataEvent) fermatEvent;
         incomingCryptoMetadataReceive.setSource(EventSource.NETWORK_SERVICE_CRYPTO_TRANSMISSION);
-        eventManager.raiseEvent(incomingCryptoMetadataReceive);
+        cryptoTransmissionNetworkServicePluginRoot.getEventManager().raiseEvent(incomingCryptoMetadataReceive);
     }
 
 }
