@@ -334,6 +334,10 @@ public class AddConnectionFragment extends FermatWalletListFragment<CryptoWallet
 
     @Override
     public void setSelected(CryptoWalletIntraUserActor cryptoWalletIntraUserActor,boolean selected) {
-        intraUserInformationList.get(intraUserInformationList.indexOf(cryptoWalletIntraUserActor)).setSelected(selected);
+        intraUserInformationList.remove(cryptoWalletIntraUserActor);
+        cryptoWalletIntraUserActor.setSelected(selected);
+        intraUserInformationList.add(cryptoWalletIntraUserActor);
+
+
     }
 }
