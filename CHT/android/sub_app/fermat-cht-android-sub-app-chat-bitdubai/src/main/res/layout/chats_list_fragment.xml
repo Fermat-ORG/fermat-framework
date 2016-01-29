@@ -1,18 +1,31 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:background="@color/background_activity"
+    >
 
   <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-      <!--       <ProgressBar
+      <!--       android:background="@color/background_activity"
+      <ProgressBar
                android:id="@+id/chat_list_progress_bar"
                style="@style/Widget.AppCompat.ProgressBar"
                android:layout_width="wrap_content"
                android:layout_height="wrap_content"
                android:layout_gravity="center" />
+
+
+        <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
+            android:id="@+id/no_chats"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:text="@string/no_chats_message"
+            android:textSize="@dimen/no_messages_text_size"
+            android:visibility="gone" />
 
            <FermatTextView
                android:id="@+id/no_chats"
@@ -23,10 +36,11 @@
                android:textSize="@dimen/no_messages_text_size"
                android:visibility="gone" />-->
 
-        <ListView
+      <ListView
             android:id="@+id/list"
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="match_parent"
+            android:textColor="@color/black">
 
         </ListView>
     </FrameLayout>
