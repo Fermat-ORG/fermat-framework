@@ -38,6 +38,7 @@ import org.bitcoinj.core.Transaction;
 import org.bitcoinj.core.TransactionBroadcast;
 import org.bitcoinj.core.TransactionConfidence;
 import org.bitcoinj.core.TransactionInput;
+import org.bitcoinj.core.TransactionOutPoint;
 import org.bitcoinj.core.TransactionOutput;
 import org.bitcoinj.core.Wallet;
 import org.bitcoinj.net.discovery.DnsDiscovery;
@@ -437,9 +438,9 @@ public class BitcoinCryptoNetworkMonitor implements Agent {
             getDao().storeBitcoinTransaction(BLOCKCHAIN_NETWORKTYPE, tx.getHashAsString(), transactionId, peerGroup.getConnectedPeers().size(), peerGroup.getDownloadPeer().getAddress().toString());
 
             /**
-             * I store it in the wallet.
+             * Commit and save in the wallet
              */
-            wallet.maybeCommitTx(tx);
+            wallet.commitTx(tx);
             wallet.saveToFile(walletFileName);
 
             /**
@@ -447,11 +448,7 @@ public class BitcoinCryptoNetworkMonitor implements Agent {
              */
             Transaction storedTransaction = wallet.getTransaction(tx.getHash());
             if (storedTransaction == null){
-                /**
-                 * If it was not stored by try a different approach
-                 */
-                wallet.addWalletTransaction(new WalletTransaction(WalletTransaction.Pool.PENDING, tx));
-                wallet.saveToFile(walletFileName);
+                throw new CantStoreBitcoinTransactionException(CantStoreBitcoinTransactionException.DEFAULT_MESSAGE, null, "transaction was not correctly stored at the wallet.", null);
             }
 
             System.out.println("***CryptoNetwork*** Transaction succesfully stored for broadcasting: " + tx.getHashAsString());
@@ -518,14 +515,16 @@ public class BitcoinCryptoNetworkMonitor implements Agent {
                     //if I couldn't get it locally, then I don't need it.
                 }
 
+                // set it as unspent-
                 if (parentTransaction != null){
-                    for (TransactionOutput output : parentTransaction.getOutputs()){
-                        // If the output is mine, then I will make it as unspent.
-                        if (output.isMine(wallet))
-                            output.markAsUnspent();
-                    }
+                    parentTransaction.getOutput(input.getOutpoint().getIndex()).markAsUnspent();
                 }
 
+                /**
+                 * this parentTransaction will be a unspent Transaction
+                 */
+                WalletTransaction unspentWalletTransaction = new WalletTransaction(WalletTransaction.Pool.UNSPENT, parentTransaction);
+                wallet.addWalletTransaction(unspentWalletTransaction);
             }
 
             /**
@@ -534,6 +533,12 @@ public class BitcoinCryptoNetworkMonitor implements Agent {
             for (TransactionOutput output : transaction.getOutputs()){
                 output.setValue(Coin.ZERO);
             }
+
+            /**
+             * This cancelled transaction is a Dead transaction now.
+             */
+            WalletTransaction deadWalletTransaction = new WalletTransaction(WalletTransaction.Pool.DEAD, transaction);
+            wallet.addWalletTransaction(deadWalletTransaction);
 
             /**
              * do wallet maintenance
@@ -549,6 +554,8 @@ public class BitcoinCryptoNetworkMonitor implements Agent {
              * update Broadcasting table to set it to cancelled.
              */
             this.getDao().setBroadcastStatus(Status.CANCELLED, peerGroup.getConnectedPeers().size(), null, txHash);
+
+            System.out.println("***CryptoNetwork*** Transaction " + txHash + " cancelled.");
         } catch (Exception e) {
             throw new CantCancellBroadcastTransactionException(CantCancellBroadcastTransactionException.DEFAULT_MESSAGE, e, "Transaction couldn't rollback properly.", "Crypto Network error");
         }
