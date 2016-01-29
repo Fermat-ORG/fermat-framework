@@ -578,6 +578,7 @@ public class CryptoTransmissionMetadataDAO_V2 {
             CryptoTransmissionMetadataRecord cryptoTransmissionMetadata = getMetadata(transaction_id);
             cryptoTransmissionMetadata.changeCryptoTransmissionProtocolState(cryptoTransmissionProtocolState);
             cryptoTransmissionMetadata.changeMetadataState(cryptoTransmissionMetadataState);
+            cryptoTransmissionMetadata.confirmRead();
 
             update(cryptoTransmissionMetadata);
 

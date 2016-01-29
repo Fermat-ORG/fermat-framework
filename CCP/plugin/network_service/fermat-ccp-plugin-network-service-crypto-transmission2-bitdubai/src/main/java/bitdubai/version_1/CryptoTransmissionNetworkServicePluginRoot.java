@@ -517,7 +517,7 @@ public class CryptoTransmissionNetworkServicePluginRoot extends AbstractPlugin i
                         @Override
                         public void run() {
                             // change message state to process again
-                            reprocessWaitingMessage();
+                            reprocessMessage();
                         }
                     }, 3600*1000);
 
