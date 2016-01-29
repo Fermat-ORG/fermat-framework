@@ -26,18 +26,18 @@ import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantGetMessageExcep
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantInitializeCHTAgent;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantSaveMessageException;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantSendChatMessageException;
-import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantSendNotificationNewIncomingMessageException;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantSetObjectException;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.UnexpectedResultReturnedFromDatabaseException;
 import com.bitdubai.fermat_cht_api.layer.middleware.interfaces.Chat;
 import com.bitdubai.fermat_cht_api.layer.middleware.interfaces.Message;
+import com.bitdubai.fermat_cht_api.layer.middleware.interfaces.MiddlewareChatManager;
 import com.bitdubai.fermat_cht_api.layer.middleware.utils.EventRecord;
 import com.bitdubai.fermat_cht_api.layer.middleware.utils.MessageImpl;
 import com.bitdubai.fermat_cht_api.layer.network_service.chat.enums.ChatMessageStatus;
 import com.bitdubai.fermat_cht_api.layer.network_service.chat.enums.DistributionStatus;
 import com.bitdubai.fermat_cht_api.layer.network_service.chat.exceptions.CantSendChatMessageMetadataException;
 import com.bitdubai.fermat_cht_api.layer.network_service.chat.exceptions.CantSendChatMessageNewStatusNotificationException;
-import com.bitdubai.fermat_cht_api.layer.network_service.chat.interfaces.ChatManager;
+import com.bitdubai.fermat_cht_api.layer.network_service.chat.interfaces.NetworkServiceChatManager;
 import com.bitdubai.fermat_cht_api.layer.network_service.chat.interfaces.ChatMetadata;
 import com.bitdubai.fermat_cht_plugin.layer.middleware.chat.developer.bitdubai.version_1.ChatMiddlewarePluginRoot;
 import com.bitdubai.fermat_cht_plugin.layer.middleware.chat.developer.bitdubai.version_1.database.ChatMiddlewareDatabaseConstants;
@@ -75,16 +75,16 @@ public class ChatMiddlewareMonitorAgent implements
     ErrorManager errorManager;
     PluginDatabaseSystem pluginDatabaseSystem;
     UUID pluginId;
-    ChatManager chatNetworkServiceManager;
-    com.bitdubai.fermat_cht_api.layer.middleware.interfaces.ChatManager chatMiddlewareManager;
+    NetworkServiceChatManager chatNetworkServiceManager;
+    MiddlewareChatManager chatMiddlewareManager;
 
     public ChatMiddlewareMonitorAgent(PluginDatabaseSystem pluginDatabaseSystem,
                                     LogManager logManager,
                                     ErrorManager errorManager,
                                     EventManager eventManager,
                                     UUID pluginId,
-                                    ChatManager chatNetworkServiceManager,
-                                      com.bitdubai.fermat_cht_api.layer.middleware.interfaces.ChatManager chatMiddlewareManager) throws CantSetObjectException {
+                                    NetworkServiceChatManager chatNetworkServiceManager,
+                                      MiddlewareChatManager chatMiddlewareManager) throws CantSetObjectException {
         this.eventManager = eventManager;
         this.pluginDatabaseSystem = pluginDatabaseSystem;
         this.errorManager = errorManager;

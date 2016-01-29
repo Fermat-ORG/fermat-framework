@@ -7,7 +7,7 @@
 package com.bitdubai.fermat_cht_plugin.layer.network_service.chat.developer.bitdubai.version_1.structure.processors;
 
 import com.bitdubai.fermat_cht_api.layer.network_service.chat.enums.ChatMessageTransactionType;
-import com.bitdubai.fermat_cht_plugin.layer.network_service.chat.developer.bitdubai.version_1.ChatNetworkServicePluginRoot;
+import com.bitdubai.fermat_cht_plugin.layer.network_service.chat.developer.bitdubai.version_1.NetworkServiceChatNetworkServicePluginRoot;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.contents.FermatMessage;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
@@ -27,7 +27,7 @@ public abstract class FermatMessageProcessor {
     /**
      * Represent the assetTransmissionNetworkServicePluginRoot
      */
-    private ChatNetworkServicePluginRoot chatNetworkServicePluginRoot;
+    private NetworkServiceChatNetworkServicePluginRoot chatNetworkServicePluginRoot;
 
     /**
      * Represent the gson
@@ -38,7 +38,7 @@ public abstract class FermatMessageProcessor {
      * Constructor with parameters
      * @param chatNetworkServicePluginRoot
      */
-    public FermatMessageProcessor(ChatNetworkServicePluginRoot chatNetworkServicePluginRoot){
+    public FermatMessageProcessor(NetworkServiceChatNetworkServicePluginRoot chatNetworkServicePluginRoot){
         super();
         this.chatNetworkServicePluginRoot = chatNetworkServicePluginRoot;
         this.gson = new Gson();
@@ -57,10 +57,10 @@ public abstract class FermatMessageProcessor {
 
 
     /**
-     * Get the ChatNetworkServicePluginRoot
+     * Get the NetworkServiceChatNetworkServicePluginRoot
      * @return chatNetworkServicePluginRoot
      */
-    public ChatNetworkServicePluginRoot getChatNetworkServicePluginRoot() {
+    public NetworkServiceChatNetworkServicePluginRoot getChatNetworkServicePluginRoot() {
         return chatNetworkServicePluginRoot;
     }
 

@@ -54,7 +54,7 @@ import com.bitdubai.fermat_cht_api.layer.network_service.chat.enums.Distribution
 import com.bitdubai.fermat_cht_api.layer.network_service.chat.exceptions.CantInitializeCommunicationNetworkServiceConnectionManagerException;
 import com.bitdubai.fermat_cht_api.layer.network_service.chat.exceptions.CantSendChatMessageMetadataException;
 import com.bitdubai.fermat_cht_api.layer.network_service.chat.exceptions.CantSendChatMessageNewStatusNotificationException;
-import com.bitdubai.fermat_cht_api.layer.network_service.chat.interfaces.ChatManager;
+import com.bitdubai.fermat_cht_api.layer.network_service.chat.interfaces.NetworkServiceChatManager;
 import com.bitdubai.fermat_cht_api.layer.network_service.chat.interfaces.ChatMetadata;
 import com.bitdubai.fermat_cht_plugin.layer.network_service.chat.developer.bitdubai.version_1.communications.CommunicationNetworkServiceConnectionManager;
 import com.bitdubai.fermat_cht_plugin.layer.network_service.chat.developer.bitdubai.version_1.communications.CommunicationNetworkServiceLocal;
@@ -102,11 +102,11 @@ import java.util.regex.Pattern;
 /**
  * Created by Gabriel Araujo on 05/01/16.
  */
-public class ChatNetworkServicePluginRoot extends AbstractPlugin implements
+public class NetworkServiceChatNetworkServicePluginRoot extends AbstractPlugin implements
         NetworkService,
         LogManagerForDevelopers,
         DatabaseManagerForDevelopers,
-        ChatManager {
+        NetworkServiceChatManager {
 
     @NeededAddonReference(platform = Platforms.PLUG_INS_PLATFORM, layer = Layers.PLATFORM_SERVICE, addon = Addons.ERROR_MANAGER)
     private ErrorManager errorManager;
@@ -138,7 +138,7 @@ public class ChatNetworkServicePluginRoot extends AbstractPlugin implements
         this.eventManager = eventManager;
     }
 
-    public ChatNetworkServicePluginRoot() {
+    public NetworkServiceChatNetworkServicePluginRoot() {
         super(new PluginVersionReference(new Version()));
         this.listenersAdded = new ArrayList<>();
         this.platformComponentType = PlatformComponentType.NETWORK_SERVICE;
@@ -151,7 +151,7 @@ public class ChatNetworkServicePluginRoot extends AbstractPlugin implements
 
     @Override
     public String toString() {
-        return "ChatNetworkServicePluginRoot{" +
+        return "NetworkServiceChatNetworkServicePluginRoot{" +
                 "errorManager=" + errorManager +
                 ", eventManager=" + eventManager +
                 ", logManager=" + logManager +
@@ -353,21 +353,21 @@ public class ChatNetworkServicePluginRoot extends AbstractPlugin implements
 //        if (getNewReceiveMessagesNotificationEventHandler().getMessagesProcessorsRegistered().containsKey(chatMessageTransactionType)) {
 //            getNewReceiveMessagesNotificationEventHandler().getMessagesProcessorsRegistered().get(chatMessageTransactionType).processingMessage(incomingMessage, jsonMsjContent);
 //        }else{
-//            System.out.println("ChatNetworkServicePluginRoot - CompleteComponentConnectionRequestNotificationEventHandler - message type no supported = "+chatMessageTransactionType);
+//            System.out.println("NetworkServiceChatNetworkServicePluginRoot - CompleteComponentConnectionRequestNotificationEventHandler - message type no supported = "+chatMessageTransactionType);
 //        }
     }
 
     @Override
     public void handleNewSentMessageNotificationEvent(FermatMessage message) {
-//        System.out.println("ChatNetworkServicePluginRoot - NOTIFICACION EVENTO MENSAJE ENVIADO!!!!");
+//        System.out.println("NetworkServiceChatNetworkServicePluginRoot - NOTIFICACION EVENTO MENSAJE ENVIADO!!!!");
 //        JsonObject jsonMsjContent = getNewSentMessagesNotificationEventHandler().getParser().parse(message.getContent()).getAsJsonObject();
 //        UUID chatId = getNewSentMessagesNotificationEventHandler().getGson().fromJson(jsonMsjContent.get(ChatTransmissionJsonAttNames.ID_CHAT), UUID.class);
-//        System.out.println("ChatNetworkServicePluginRoot - ChatId"+chatId.toString());
+//        System.out.println("NetworkServiceChatNetworkServicePluginRoot - ChatId"+chatId.toString());
 //        OutgoingChat event = (OutgoingChat) this.getEventManager().getNewEvent(EventType.OUTGOING_CHAT);
 //        event.setChatId(chatId);
-//        event.setSource(ChatNetworkServicePluginRoot.EVENT_SOURCE);
+//        event.setSource(NetworkServiceChatNetworkServicePluginRoot.EVENT_SOURCE);
 //        this.getEventManager().raiseEvent(event);
-//        System.out.println("ChatNetworkServicePluginRoot - OUTGOING_CHAT EVENT FIRED!:"+event);
+//        System.out.println("NetworkServiceChatNetworkServicePluginRoot - OUTGOING_CHAT EVENT FIRED!:"+event);
     }
 
     @Override
@@ -393,7 +393,7 @@ public class ChatNetworkServicePluginRoot extends AbstractPlugin implements
 
     @Override
     public void requestRemoteNetworkServicesRegisteredList(DiscoveryQueryParameters discoveryQueryParameters) {
-        System.out.println("ChatNetworkServicePluginRoot - requestRemoteNetworkServicesRegisteredList");
+        System.out.println("NetworkServiceChatNetworkServicePluginRoot - requestRemoteNetworkServicesRegisteredList");
 
          /*
          * Request the list of component registers
@@ -449,7 +449,7 @@ public class ChatNetworkServicePluginRoot extends AbstractPlugin implements
                         null);                    // fromOtherNetworkServiceType,    when use this filter apply the identityPublicKey
 
         List<PlatformComponentProfile> registedPlatform = wsCommunicationsCloudClientManager.getCommunicationsCloudClientConnection().requestListComponentRegistered(discoveryQueryParameters);
-        System.out.println("-------------\nChatNetworkServicePluginRoot: registedPlatform" + registedPlatform.toString());
+        System.out.println("-------------\nNetworkServiceChatNetworkServicePluginRoot: registedPlatform" + registedPlatform.toString());
         for (PlatformComponentProfile platformComponentProfile : registedPlatform) {
             System.out.println("Registered componet:"+platformComponentProfile.getNetworkServiceType() +" - " +platformComponentProfile.getName()+"- "+platformComponentProfile.getIdentityPublicKey());
             publicKeys.add(platformComponentProfile.getIdentityPublicKey());
@@ -469,7 +469,7 @@ public class ChatNetworkServicePluginRoot extends AbstractPlugin implements
 
     @Override
     public DiscoveryQueryParameters constructDiscoveryQueryParamsFactory(PlatformComponentType platformComponentType, NetworkServiceType networkServiceType, String alias, String identityPublicKey, Location location, Double distance, String name, String extraData, Integer firstRecord, Integer numRegister, PlatformComponentType fromOtherPlatformComponentType, NetworkServiceType fromOtherNetworkServiceType) {
-        System.out.println("ChatNetworkServicePluginRoot - constructDiscoveryQueryParamsFactory");
+        System.out.println("NetworkServiceChatNetworkServicePluginRoot - constructDiscoveryQueryParamsFactory");
         return wsCommunicationsCloudClientManager.getCommunicationsCloudClientConnection().constructDiscoveryQueryParamsFactory(platformComponentType, networkServiceType, alias, identityPublicKey, location, distance, name, extraData, firstRecord, numRegister, fromOtherPlatformComponentType, fromOtherNetworkServiceType);
     }
 
@@ -561,20 +561,20 @@ public class ChatNetworkServicePluginRoot extends AbstractPlugin implements
 
     @Override
     public void handleCompleteRequestListComponentRegisteredNotificationEvent(List<PlatformComponentProfile> platformComponentProfileRegisteredList) {
-        System.out.println(" ChatNetworkServicePluginRoot - Starting method handleCompleteComponentRegistrationNotificationEvent");
+        System.out.println(" NetworkServiceChatNetworkServicePluginRoot - Starting method handleCompleteComponentRegistrationNotificationEvent");
 
          /*
          * save into the cache
          */
         remoteNetworkServicesRegisteredList = platformComponentProfileRegisteredList;
 
-        System.out.println(" ChatNetworkServicePluginRoot - remoteNetworkServicesRegisteredList.size() " + remoteNetworkServicesRegisteredList.size());
+        System.out.println(" NetworkServiceChatNetworkServicePluginRoot - remoteNetworkServicesRegisteredList.size() " + remoteNetworkServicesRegisteredList.size());
     }
 
     @Override
     public void handleCompleteComponentConnectionRequestNotificationEvent(PlatformComponentProfile applicantComponentProfile, PlatformComponentProfile remoteComponentProfile) {
 
-        System.out.println(" ChatNetworkServicePluginRoot - Starting method handleCompleteComponentConnectionRequestNotificationEvent");
+        System.out.println(" NetworkServiceChatNetworkServicePluginRoot - Starting method handleCompleteComponentConnectionRequestNotificationEvent");
 
         /*
          * Tell the manager to handler the new connection stablished
@@ -679,7 +679,7 @@ public class ChatNetworkServicePluginRoot extends AbstractPlugin implements
     }
 
     public void start() throws CantStartPluginException {
-        logManager.log(ChatNetworkServicePluginRoot.getLogLevelByClass(this.getClass().getName()), "ChatNetworkServicePluginRoot - Starting", "ChatNetworkServicePluginRoot - Starting", "ChatNetworkServicePluginRoot - Starting");
+        logManager.log(NetworkServiceChatNetworkServicePluginRoot.getLogLevelByClass(this.getClass().getName()), "NetworkServiceChatNetworkServicePluginRoot - Starting", "NetworkServiceChatNetworkServicePluginRoot - Starting", "NetworkServiceChatNetworkServicePluginRoot - Starting");
 
          /*
          * Validate required resources
@@ -727,7 +727,7 @@ public class ChatNetworkServicePluginRoot extends AbstractPlugin implements
             this.serviceStatus = ServiceStatus.STARTED;
 
 
-            System.out.print("-----------------------\n ChatNetworkServicePluginRoot NetworkService: Successful start.\n-----------------------\n");
+            System.out.print("-----------------------\n NetworkServiceChatNetworkServicePluginRoot NetworkService: Successful start.\n-----------------------\n");
 
         } catch (CantInitializeChatNetworkServiceDatabaseException exception) {
 
@@ -827,7 +827,7 @@ public class ChatNetworkServicePluginRoot extends AbstractPlugin implements
              * I need to ignore whats after this.
              */
             String[] correctedClass = className.split((Pattern.quote("$")));
-            return ChatNetworkServicePluginRoot.newLoggingLevel.get(correctedClass[0]);
+            return NetworkServiceChatNetworkServicePluginRoot.newLoggingLevel.get(correctedClass[0]);
         } catch (Exception e) {
             /**
              * If I couldn't get the correct loggin level, then I will set it to minimal.
@@ -916,13 +916,13 @@ public class ChatNetworkServicePluginRoot extends AbstractPlugin implements
 
             CommunicationNetworkServiceLocal communicationNetworkServiceLocal = communicationNetworkServiceConnectionManager.getNetworkServiceLocalInstance(remoteActorPubKey);
 
-            System.out.println("ChatNetworkServicePluginRoot - communicationNetworkServiceLocal: " + communicationNetworkServiceLocal);
+            System.out.println("NetworkServiceChatNetworkServicePluginRoot - communicationNetworkServiceLocal: " + communicationNetworkServiceLocal);
 
             /*
              * Construct the message content in json format
              */
             String msjContent = EncodeMsjContent.encodeMSjContentChatMetadataTransmit(chatMetadata, chatMetadata.getLocalActorType(), chatMetadata.getRemoteActorType());
-            System.out.println("ChatNetworkServicePluginRoot - Message encoded:\n" + msjContent);
+            System.out.println("NetworkServiceChatNetworkServicePluginRoot - Message encoded:\n" + msjContent);
 
             String msgHash = CryptoHasher.performSha256(chatMetadata.getChatId().toString() + chatMetadata.getMessageId().toString());
             chatMetadataTransactionRecord.setTransactionId(getChatMetaDataDao().getNewUUID(UUID.randomUUID().toString()));
@@ -996,7 +996,7 @@ public class ChatNetworkServicePluginRoot extends AbstractPlugin implements
                  */
                 communicationNetworkServiceConnectionManager.connectTo(sender, platformComponentProfile, receiver);
             }
-            System.out.println("ChatNetworkServicePluginRoot - Message sent.");
+            System.out.println("NetworkServiceChatNetworkServicePluginRoot - Message sent.");
         } catch (IllegalArgumentException e) {
 
             throw e;

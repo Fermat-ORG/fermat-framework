@@ -20,7 +20,7 @@ import com.bitdubai.fermat_cht_api.all_definition.exceptions.ObjectNotSetExcepti
 import com.bitdubai.fermat_cht_api.all_definition.util.ObjectChecker;
 import com.bitdubai.fermat_cht_api.layer.middleware.event.IncomingChatMessageNotificationEvent;
 import com.bitdubai.fermat_cht_api.layer.middleware.interfaces.Chat;
-import com.bitdubai.fermat_cht_api.layer.middleware.interfaces.ChatManager;
+import com.bitdubai.fermat_cht_api.layer.middleware.interfaces.MiddlewareChatManager;
 import com.bitdubai.fermat_cht_api.layer.middleware.interfaces.Contact;
 import com.bitdubai.fermat_cht_api.layer.middleware.interfaces.Message;
 import com.bitdubai.fermat_cht_plugin.layer.middleware.chat.developer.bitdubai.version_1.ChatMiddlewarePluginRoot;
@@ -31,10 +31,10 @@ import java.util.List;
 import java.util.UUID;
 
 /**
- * This class is the implementation of ChatManager.
+ * This class is the implementation of MiddlewareChatManager.
  * Created by Manuel Perez (darkpriestrelative@gmail.com) on 10/01/16.
  */
-public class ChatMiddlewareManager implements ChatManager {
+public class ChatMiddlewareManager implements MiddlewareChatManager {
 
     public static String INCOMING_CHAT_MESSAGE_NOTIFICATION = "New Message";
 

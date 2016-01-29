@@ -13,7 +13,7 @@ import com.bitdubai.fermat_cht_api.all_definition.enums.MessageStatus;
 import com.bitdubai.fermat_cht_api.layer.network_service.chat.enums.ChatMessageStatus;
 import com.bitdubai.fermat_cht_api.layer.network_service.chat.enums.ChatMessageTransactionType;
 import com.bitdubai.fermat_cht_api.layer.network_service.chat.events.IncomingChat;
-import com.bitdubai.fermat_cht_plugin.layer.network_service.chat.developer.bitdubai.version_1.ChatNetworkServicePluginRoot;
+import com.bitdubai.fermat_cht_plugin.layer.network_service.chat.developer.bitdubai.version_1.NetworkServiceChatNetworkServicePluginRoot;
 import com.bitdubai.fermat_cht_plugin.layer.network_service.chat.developer.bitdubai.version_1.communications.CommunicationNetworkServiceConnectionManager;
 import com.bitdubai.fermat_cht_plugin.layer.network_service.chat.developer.bitdubai.version_1.structure.ChatMetadataTransactionRecord;
 import com.bitdubai.fermat_cht_plugin.layer.network_service.chat.developer.bitdubai.version_1.structure.ChatTransmissionJsonAttNames;
@@ -42,7 +42,7 @@ public class ChatMetadataTransmitMessageReceiverProcessor extends FermatMessageP
      * Constructor with parameters
      * @param chatNetworkServicePluginRoot
      */
-    public ChatMetadataTransmitMessageReceiverProcessor(ChatNetworkServicePluginRoot chatNetworkServicePluginRoot) {
+    public ChatMetadataTransmitMessageReceiverProcessor(NetworkServiceChatNetworkServicePluginRoot chatNetworkServicePluginRoot) {
         super(chatNetworkServicePluginRoot);
     }
 
@@ -94,9 +94,9 @@ public class ChatMetadataTransmitMessageReceiverProcessor extends FermatMessageP
              */
             IncomingChat event = (IncomingChat) getChatNetworkServicePluginRoot().getEventManager().getNewEvent(EventType.INCOMING_CHAT);
             event.setChatId(chatMetadataTransactionRecord.getChatId());
-            event.setSource(ChatNetworkServicePluginRoot.EVENT_SOURCE);
+            event.setSource(NetworkServiceChatNetworkServicePluginRoot.EVENT_SOURCE);
             getChatNetworkServicePluginRoot().getEventManager().raiseEvent(event);
-            System.out.println("ChatNetworkServicePluginRoot - Incoming Chat fired!");
+            System.out.println("NetworkServiceChatNetworkServicePluginRoot - Incoming Chat fired!");
 
         } catch (Exception e) {
             getChatNetworkServicePluginRoot().getErrorManager().reportUnexpectedPluginException(Plugins.CHAT_NETWORK_SERVICE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
