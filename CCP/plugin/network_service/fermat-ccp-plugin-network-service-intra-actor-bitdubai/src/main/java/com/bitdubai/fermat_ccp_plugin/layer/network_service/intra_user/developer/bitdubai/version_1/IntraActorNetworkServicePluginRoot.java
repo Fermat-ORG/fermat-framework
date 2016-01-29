@@ -1077,7 +1077,7 @@ public class IntraActorNetworkServicePluginRoot extends AbstractPlugin implement
 
                 if(!record.getActorProtocolState().getCode().equals(ActorProtocolState.WAITING_RESPONSE.getCode()))
                 {
-                    if(record.getSentCount() > 10 )
+                    if(record.getSentCount() == 10 )
                     {
                         record.setActorProtocolState(ActorProtocolState.WAITING_RESPONSE);
                         //update state and process again later
