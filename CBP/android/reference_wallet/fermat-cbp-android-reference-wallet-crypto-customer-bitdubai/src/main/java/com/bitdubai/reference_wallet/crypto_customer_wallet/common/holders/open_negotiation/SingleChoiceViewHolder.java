@@ -8,6 +8,7 @@ import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.enums.CryptoCurrency;
 import com.bitdubai.fermat_api.layer.all_definition.enums.FiatCurrency;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.ClauseType;
+import com.bitdubai.fermat_cbp_api.all_definition.enums.NegotiationStepStatus;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.common.interfaces.ClauseInformation;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.common.interfaces.CustomerBrokerNegotiationInformation;
 import com.bitdubai.reference_wallet.crypto_customer_wallet.R;
@@ -27,6 +28,12 @@ public class SingleChoiceViewHolder extends ClauseViewHolder implements View.OnC
         descriptionTextView = (TextView) itemView.findViewById(R.id.ccw_description_text);
         buttonValue = (Button) itemView.findViewById(R.id.ccw_single_choice_value);
         buttonValue.setOnClickListener(this);
+        confirmButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                confirmButton.setText("ACEPT");
+            }
+        });
     }
 
     @Override
@@ -63,6 +70,23 @@ public class SingleChoiceViewHolder extends ClauseViewHolder implements View.OnC
     @Override
     protected int getTitleTextViewRes() {
         return R.id.ccw_card_view_title;
+    }
+
+    @Override
+    public void setStatus(NegotiationStepStatus clauseStatus) {
+        super.setStatus(clauseStatus);
+
+        switch (clauseStatus) {
+            case ACCEPTED:
+                descriptionTextView.setTextColor(getColor(R.color.card_title_color_status_accepted));
+                break;
+            case CHANGED:
+                descriptionTextView.setTextColor(getColor(R.color.card_title_color_status_changed));
+                break;
+            case CONFIRM:
+                descriptionTextView.setTextColor(getColor(R.color.card_title_color_status_confirm));
+                break;
+        }
     }
 
     /**
