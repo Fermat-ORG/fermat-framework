@@ -195,6 +195,9 @@ public class CryptoAddressesNetworkServicePluginRoot extends AbstractNetworkServ
      */
     private AtomicBoolean flag = new AtomicBoolean(false);
 
+    private long reprocessTimer =  300000; //five minutes
+
+    private Timer timer = new Timer();
 
     public CryptoAddressesNetworkServicePluginRoot() {
 
@@ -300,15 +303,8 @@ public class CryptoAddressesNetworkServicePluginRoot extends AbstractNetworkServ
                     reprocessMessage();
 
                     //declare a schedule to process waiting request message
-                    Timer timer = new Timer();
+                    startTimer();
 
-                    timer.schedule(new TimerTask() {
-                        @Override
-                        public void run() {
-                            // change message state to process again
-                            reprocessMessage();
-                        }
-                    }, 3600*1000);
 
 
                     initializeAgent();
@@ -970,18 +966,14 @@ public class CryptoAddressesNetworkServicePluginRoot extends AbstractNetworkServ
 
         if (cryptoAddressesExecutorAgent == null){
 
-            this.cryptoAddressesExecutorAgent = new CryptoAddressesExecutorAgent(
+            cryptoAddressesExecutorAgent = new CryptoAddressesExecutorAgent(
                     this,
-                    errorManager,
-                    eventManager,
-                    cryptoAddressesNetworkServiceDao,
-                    wsCommunicationsCloudClientManager
+                    cryptoAddressesNetworkServiceDao
             );
 
             this.cryptoAddressesExecutorAgent.start();
         }
-        
-
+               
     }
 
     public void handleCompleteComponentRegistrationNotificationEvent(PlatformComponentProfile platformComponentProfileRegistered){
@@ -1059,6 +1051,10 @@ public class CryptoAddressesNetworkServicePluginRoot extends AbstractNetworkServ
                 if (cryptoAddressesExecutorAgent.isConnectionOpen(remotePublicKey)){
                     cryptoAddressesExecutorAgent.connectionFailure(remotePublicKey);
                 }
+
+                //reprocess not DONE messages
+                if(!((VPNConnectionCloseNotificationEvent) fermatEvent).isCloseNormal())
+                    reprocessMessage(remotePublicKey);
 
             }
 
@@ -1377,8 +1373,14 @@ public class CryptoAddressesNetworkServicePluginRoot extends AbstractNetworkServ
                 {
                     if(record.getSentNumber() > 10)
                     {
+                      //  if(record.getSentNumber() > 20)
+                       // {
+                            //reprocess at two hours
+                       //     reprocessTimer =  2 * 3600 * 1000;
+                        //}
                          //update state and process again later
                         cryptoAddressesNetworkServiceDao.changeProtocolState(record.getRequestId(),ProtocolState.WAITING_RESPONSE);
+                        cryptoAddressesNetworkServiceDao.changeSentNumber(record.getRequestId(),1);
                     }
                     else
                     {
@@ -1454,8 +1456,33 @@ public class CryptoAddressesNetworkServicePluginRoot extends AbstractNetworkServ
         }
     }
 
+
     public WsCommunicationsCloudClientManager getWsCommunicationsCloudClientManager() {
         return wsCommunicationsCloudClientManager;
     }
 
+    public ErrorManager getErrorManager() {
+        return errorManager;
+    }
+
+    private void startTimer() {
+        timer.schedule(new TimerTask() {
+            @Override
+            public void run() {
+                // change message state to process retry later
+                reprocessMessage();
+            }
+        }, 0,reprocessTimer);
+
+
+    }
+
+    public EventManager getEventManager() {
+        return eventManager;
+    }
+
+    public CommunicationNetworkServiceConnectionManager_V2 getCommunicationNetworkServiceConnectionManager() {
+        return communicationNetworkServiceConnectionManager;
+
+    }
 }

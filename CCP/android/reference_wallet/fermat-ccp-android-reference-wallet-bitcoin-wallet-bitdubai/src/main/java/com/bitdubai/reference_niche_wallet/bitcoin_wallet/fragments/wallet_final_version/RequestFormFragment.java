@@ -28,6 +28,7 @@ import com.bitdubai.fermat_android_api.layer.definition.wallet.utils.ImagesUtils
 import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatButton;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView;
 import com.bitdubai.fermat_android_api.ui.transformation.CircleTransform;
+import com.bitdubai.fermat_api.AndroidCoreManager;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
 import com.bitdubai.fermat_api.layer.all_definition.enums.BlockchainNetworkType;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Compatibility;
@@ -50,7 +51,6 @@ import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.exceptions.
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.exceptions.ContactNameAlreadyExistsException;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.interfaces.CryptoWallet;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.interfaces.CryptoWalletWalletContact;
-import com.bitdubai.fermat_pip_api.layer.network_service.subapp_resources.SubAppResourcesProviderManager;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedUIExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedWalletExceptionSeverity;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.bar_code_scanner.IntentIntegrator;
@@ -73,6 +73,7 @@ import static com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.utils.Wa
 
 public class RequestFormFragment extends AbstractFermatFragment<ReferenceWalletSession,ResourceProviderManager> implements View.OnClickListener {
 
+    private AndroidCoreManager androidCoreManager;
     /**
      * Plaform reference
      */
@@ -131,8 +132,14 @@ public class RequestFormFragment extends AbstractFermatFragment<ReferenceWalletS
             bitcoinConverter = new BitcoinConverter();
             setUpUI();
             setUpActions();
-            setUpUIData();
-            //showErrorConnectionDialog();
+            setUpUIData();/*
+            switch (androidCoreManager.getFermatNetworkStatus()){
+                case CONNECTED:
+                    break;
+                case DISCONNECTED:
+                    showErrorConnectionDialog();
+                    break;
+            }*/
             return rootView;
         } catch (Exception e) {
             makeText(getActivity(), "Oooops! recovering from system error", Toast.LENGTH_SHORT).show();
