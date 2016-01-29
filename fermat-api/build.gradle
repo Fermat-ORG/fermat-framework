@@ -7,7 +7,10 @@ apply plugin: 'eclipse'
 
 
 group = "com.bitdubai.fermat.api"
+
 sourceCompatibility = 1.7
+targetCompatibility = 1.7
+
 version = '2.0.1'
 
 configurations {

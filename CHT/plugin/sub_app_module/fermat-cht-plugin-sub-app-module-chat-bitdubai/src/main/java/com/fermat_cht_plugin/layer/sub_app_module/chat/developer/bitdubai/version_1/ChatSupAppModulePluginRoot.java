@@ -20,6 +20,7 @@ import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogManager;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CHTException;
 import com.bitdubai.fermat_cht_api.layer.middleware.interfaces.Chat;
 import com.bitdubai.fermat_cht_api.layer.middleware.interfaces.Message;
+import com.bitdubai.fermat_cht_api.layer.middleware.interfaces.MiddlewareChatManager;
 import com.bitdubai.fermat_cht_api.layer.middleware.mocks.ChatMock;
 import com.bitdubai.fermat_cht_api.layer.middleware.mocks.MessageMock;
 import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.ChatManager;
@@ -51,7 +52,7 @@ public class ChatSupAppModulePluginRoot extends AbstractPlugin implements
     private LogManager logManager;
 
     @NeededPluginReference(platform = Platforms.CHAT_PLATFORM, layer = Layers.MIDDLEWARE, plugin = Plugins.CHAT_MIDDLEWARE)
-    private com.bitdubai.fermat_cht_api.layer.middleware.interfaces.ChatManager chatMiddlewareManager;
+    private MiddlewareChatManager chatMiddlewareManager;
 
     @Override
     public List<String> getClassesFullPath() {

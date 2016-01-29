@@ -7,7 +7,6 @@
 package com.bitdubai.fermat_p2p_plugin.layer.ws.communications.cloud.client.developer.bitdubai.version_1.structure.tyrus.vpn;
 
 import com.bitdubai.fermat_api.layer.all_definition.components.interfaces.PlatformComponentProfile;
-
 import com.bitdubai.fermat_api.layer.all_definition.crypto.asymmetric.ECCKeyPair;
 import com.bitdubai.fermat_api.layer.all_definition.events.EventSource;
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEvent;
@@ -16,26 +15,18 @@ import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.co
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.enums.P2pEventType;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.events.VPNConnectionCloseNotificationEvent;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.events.VPNConnectionLooseNotificationEvent;
-
 import com.bitdubai.fermat_p2p_plugin.layer.ws.communications.cloud.client.developer.bitdubai.version_1.structure.tyrus.conf.CloudClientVpnConfigurator;
 import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfaces.EventManager;
-
 
 import org.glassfish.tyrus.client.ClientManager;
 
 import java.io.IOException;
 import java.net.URI;
-
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 import javax.websocket.ClientEndpointConfig;
-import javax.websocket.ContainerProvider;
 import javax.websocket.DeploymentException;
-import javax.websocket.Endpoint;
-import javax.websocket.Session;
-import javax.websocket.WebSocketContainer;
-import javax.websocket.server.ServerEndpointConfig;
 
 /**
  * The Class <code>com.bitdubai.fermat_p2p_plugin.layer.ws.communications.cloud.client.developer.bitdubai.version_1.structure.vpn.WsCommunicationVPNClientManagerAgent</code>
@@ -123,15 +114,39 @@ public class WsCommunicationTyrusVPNClientManagerAgent{
                                                                         .configurator(cloudClientVpnConfigurator)
                                                                         .build();
 
-        WebSocketContainer container = ContainerProvider.getWebSocketContainer();
-        container.connectToServer(newPpnClient, clientConfig, serverURI);
+        ClientManager clientManager = ClientManager.createClient();
+
+        /*
+        ClientManager.ReconnectHandler reconnectHandler = new ClientManager.ReconnectHandler() {
+
+            @Override
+            public boolean onDisconnect(CloseReason closeReason) {
+                System.out.println("### Reconnecting... ");
+                return true;
+            }
+
+            @Override
+            public boolean onConnectFailure(Exception exception) {
+                // Thread.sleep(...) to avoid potential DDoS when you don't limit number of reconnects.
+                return true;
+            }
+
+        };
+
+        /*
+         *  Add Property RECONNECT_HANDLER to reconect automatically
+         */
+       /* clientManager.getProperties().put(ClientProperties.RECONNECT_HANDLER, reconnectHandler);
+        */
+
+        clientManager.connectToServer(newPpnClient, clientConfig, serverURI);
 
     }
 
     /**
      * Notify when a vpn connection close
      */
-    public void riseVpnConnectionCloseNotificationEvent(NetworkServiceType networkServiceApplicant, PlatformComponentProfile remoteParticipant) {
+    public void riseVpnConnectionCloseNotificationEvent(NetworkServiceType networkServiceApplicant, PlatformComponentProfile remoteParticipant,boolean isCloseNormal) {
 
         System.out.println("WsCommunicationVPNClientManagerAgent - riseVpnConnectionCloseNotificationEvent");
         FermatEvent platformEvent = eventManager.getNewEvent(P2pEventType.VPN_CONNECTION_CLOSE);
@@ -139,6 +154,7 @@ public class WsCommunicationTyrusVPNClientManagerAgent{
         event.setSource(EventSource.WS_COMMUNICATION_CLOUD_CLIENT_PLUGIN);
         event.setNetworkServiceApplicant(networkServiceApplicant);
         event.setRemoteParticipant(remoteParticipant);
+        event.setIsCloseNormal(isCloseNormal);
         eventManager.raiseEvent(platformEvent);
         System.out.println("WsCommunicationVPNClientManagerAgent - Raised Event = P2pEventType.VPN_CONNECTION_CLOSE");
     }

@@ -73,7 +73,7 @@ public class ConnectionOtherProfileFragment extends AbstractFermatFragment imple
 
         // setting up  module
         cryptoBrokerCommunitySubAppSession = ((CryptoBrokerCommunitySubAppSession) appSession);
-        cryptoBrokerCommunityInformation = (CryptoBrokerCommunityInformation) appSession.getData(ACTOR_SELECTED);
+        //cryptoBrokerCommunityInformation = (CryptoBrokerCommunityInformation) appSession.getData(ACTOR_SELECTED);
         moduleManager = cryptoBrokerCommunitySubAppSession.getModuleManager();
         errorManager = appSession.getErrorManager();
         cryptoBrokerCommunityInformation = (CryptoBrokerCommunityInformation) appSession.getData(ConnectionsWorldFragment.ACTOR_SELECTED);
@@ -131,7 +131,8 @@ public class ConnectionOtherProfileFragment extends AbstractFermatFragment imple
             public void onClick(View view) {
                 ConnectDialog connectDialog;
                 try {
-                    connectDialog = new ConnectDialog(getActivity(), (CryptoBrokerCommunitySubAppSession) appSession, (SubAppResourcesProviderManager) appResourcesProviderManager, cryptoBrokerCommunityInformation, moduleManager.getSelectedActorIdentity());
+                    connectDialog = new ConnectDialog(getActivity(), (CryptoBrokerCommunitySubAppSession) appSession, (SubAppResourcesProviderManager) appResourcesProviderManager,
+                                                      cryptoBrokerCommunityInformation, moduleManager.getSelectedActorIdentity());
                     connectDialog.setTitle("Connection Request");
                     connectDialog.setDescription("Do you want to send ");
                     connectDialog.setUsername(cryptoBrokerCommunityInformation.getAlias());

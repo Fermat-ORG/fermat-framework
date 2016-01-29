@@ -3,6 +3,9 @@ package com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.holders;
 import android.view.View;
 //import android.widget.ImageView;
 import android.widget.LinearLayout;
+
+import com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.models.ChatMessage;
+import com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.models.ChatsList;
 import com.bitdubai.fermat_cht_android_sub_app_chat_bitdubai.R;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView;
 import com.bitdubai.fermat_android_api.ui.holders.FermatViewHolder;
@@ -20,6 +23,8 @@ public class ChatHolder extends FermatViewHolder {
     public LinearLayout content;
     public LinearLayout contentWithBG;
 
+    //private static ChatsList chats;
+
     /**
      * Constructor
      *
@@ -34,4 +39,10 @@ public class ChatHolder extends FermatViewHolder {
         /*rowView = (LinearLayout) itemView.findViewById(R.id.row_view);
         bitcoins = (FermatTextView) itemView.findViewById(R.id.asset_bitcoins);*/
     }
+    /*public static ChatsList getChat() {
+        return chats;
+    }
+    public static void setChats(ChatsList chats1) {
+        chats = chats1;
+    }*/
 }

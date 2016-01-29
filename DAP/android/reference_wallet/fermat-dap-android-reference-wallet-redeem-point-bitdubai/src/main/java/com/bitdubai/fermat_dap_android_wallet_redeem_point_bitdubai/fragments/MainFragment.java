@@ -163,7 +163,7 @@ public class MainFragment extends AbstractFermatFragment
                 public void onErrorOccurred(Exception ex) {
                     dialog.dismiss();
                     if (getActivity() != null)
-                        Toast.makeText(getActivity(), "Fermat Has detected an exception",
+                        Toast.makeText(getActivity(), "Fermat Has detected an exception. Please retry later.",
                                 Toast.LENGTH_SHORT).show();
                 }
             });

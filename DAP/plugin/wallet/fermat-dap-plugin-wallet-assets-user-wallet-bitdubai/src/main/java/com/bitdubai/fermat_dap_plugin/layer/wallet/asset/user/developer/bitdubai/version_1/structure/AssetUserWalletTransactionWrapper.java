@@ -6,8 +6,6 @@ import com.bitdubai.fermat_dap_api.layer.dap_wallet.asset_user_wallet.interfaces
 import com.bitdubai.fermat_dap_api.layer.dap_wallet.common.enums.BalanceType;
 import com.bitdubai.fermat_dap_api.layer.dap_wallet.common.enums.TransactionType;
 
-import java.util.UUID;
-
 /**
  * Created by franklin on 08/10/15.
  */
@@ -62,18 +60,42 @@ public class AssetUserWalletTransactionWrapper implements AssetUserWalletTransac
         this.timeStamp = timeStamp;
         this.memo = memo;
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        AssetUserWalletTransactionWrapper that = (AssetUserWalletTransactionWrapper) o;
+
+        if (getActualTransactionHash() != null ? !getActualTransactionHash().equals(that.getActualTransactionHash()) : that.getActualTransactionHash() != null)
+            return false;
+        if (getGenesisTransaction() != null ? !getGenesisTransaction().equals(that.getGenesisTransaction()) : that.getGenesisTransaction() != null)
+            return false;
+        return !(getAssetPublicKey() != null ? !getAssetPublicKey().equals(that.getAssetPublicKey()) : that.getAssetPublicKey() != null);
+
+    }
+
+    @Override
+    public int hashCode() {
+        int result = getActualTransactionHash() != null ? getActualTransactionHash().hashCode() : 0;
+        result = 31 * result + (getGenesisTransaction() != null ? getGenesisTransaction().hashCode() : 0);
+        result = 31 * result + (getAssetPublicKey() != null ? getAssetPublicKey().hashCode() : 0);
+        return result;
+    }
+
     @Override
     public String getAssetPublicKey() {
         return assetPublicKey;
     }
 
     @Override
-    public String getTransactionId() {
+    public String getActualTransactionHash() {
         return transactionId;
     }
 
     @Override
-    public String getTransactionHash() {
+    public String getGenesisTransaction() {
         return transactionHash;
     }
 

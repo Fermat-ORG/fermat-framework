@@ -143,10 +143,11 @@
                 android:background="@null"/>
 
             <ImageView
-                android:layout_width="32dp"
+                android:layout_width="38dp"
+                android:padding="3dp"
                 android:layout_height="32dp"
-                android:layout_weight="1"
-                android:visibility="gone"
+                android:layout_weight="0.7"
+                android:visibility="visible"
                 android:id="@+id/img_update"
                 android:src="@drawable/ic_contact_update"/>
         </LinearLayout>

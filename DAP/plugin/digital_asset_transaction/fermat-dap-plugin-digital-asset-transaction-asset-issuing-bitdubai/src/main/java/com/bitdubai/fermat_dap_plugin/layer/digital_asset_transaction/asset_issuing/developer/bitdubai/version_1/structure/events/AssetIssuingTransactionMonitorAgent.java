@@ -18,6 +18,7 @@ import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.interfaces.Bitco
 import com.bitdubai.fermat_ccp_api.layer.crypto_transaction.outgoing_intra_actor.exceptions.CantGetOutgoingIntraActorTransactionManagerException;
 import com.bitdubai.fermat_ccp_api.layer.crypto_transaction.outgoing_intra_actor.exceptions.OutgoingIntraActorCantGetSendCryptoTransactionHashException;
 import com.bitdubai.fermat_ccp_api.layer.crypto_transaction.outgoing_intra_actor.interfaces.OutgoingIntraActorManager;
+import com.bitdubai.fermat_dap_api.layer.all_definition.digital_asset.DigitalAssetMetadata;
 import com.bitdubai.fermat_dap_api.layer.all_definition.enums.AssetBalanceType;
 import com.bitdubai.fermat_dap_api.layer.all_definition.enums.IssuingStatus;
 import com.bitdubai.fermat_dap_api.layer.all_definition.enums.TransactionStatus;
@@ -34,6 +35,8 @@ import com.bitdubai.fermat_dap_api.layer.dap_transaction.common.exceptions.Unexp
 import com.bitdubai.fermat_dap_api.layer.dap_transaction.common.util.AssetVerification;
 import com.bitdubai.fermat_dap_api.layer.dap_wallet.asset_issuer_wallet.exceptions.CantRegisterCreditException;
 import com.bitdubai.fermat_dap_api.layer.dap_wallet.asset_issuer_wallet.exceptions.CantRegisterDebitException;
+import com.bitdubai.fermat_dap_api.layer.dap_wallet.asset_issuer_wallet.exceptions.CantSaveStatisticException;
+import com.bitdubai.fermat_dap_api.layer.dap_wallet.asset_issuer_wallet.interfaces.AssetIssuerWalletManager;
 import com.bitdubai.fermat_dap_api.layer.dap_wallet.common.exceptions.CantGetTransactionsException;
 import com.bitdubai.fermat_dap_api.layer.dap_wallet.common.exceptions.CantLoadWalletException;
 import com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.asset_issuing.developer.bitdubai.version_1.AssetIssuingDigitalAssetTransactionPluginRoot;
@@ -61,6 +64,7 @@ public class AssetIssuingTransactionMonitorAgent implements Agent {
     private OutgoingIntraActorManager outgoingIntraActorManager;
     private DigitalAssetIssuingVault digitalAssetIssuingVault;
     private BitcoinNetworkManager bitcoinNetworkManager;
+    private AssetIssuerWalletManager assetIssuerWalletManager;
 
     public AssetIssuingTransactionMonitorAgent(PluginDatabaseSystem pluginDatabaseSystem,
                                                ErrorManager errorManager,
@@ -68,7 +72,8 @@ public class AssetIssuingTransactionMonitorAgent implements Agent {
                                                UUID pluginId,
                                                OutgoingIntraActorManager outgoingIntraActorManager,
                                                BitcoinNetworkManager bitcoinNetworkManager,
-                                               DigitalAssetIssuingVault digitalAssetIssuingVault) throws CantSetObjectException {
+                                               DigitalAssetIssuingVault digitalAssetIssuingVault,
+                                               AssetIssuerWalletManager assetIssuerWalletManager) throws CantSetObjectException {
         this.pluginDatabaseSystem = pluginDatabaseSystem;
         this.errorManager = errorManager;
         this.pluginId = pluginId;
@@ -76,6 +81,7 @@ public class AssetIssuingTransactionMonitorAgent implements Agent {
         this.bitcoinNetworkManager = bitcoinNetworkManager;
         this.logManager = logManager;
         this.outgoingIntraActorManager = outgoingIntraActorManager;
+        this.assetIssuerWalletManager = assetIssuerWalletManager;
     }
 
     @Override
@@ -199,7 +205,7 @@ public class AssetIssuingTransactionMonitorAgent implements Agent {
                 CantCheckAssetIssuingProgressException,
                 UnexpectedResultReturnedFromDatabaseException,
                 CantGetCryptoTransactionException,
-                InvalidParameterException {
+                InvalidParameterException, CantGetDigitalAssetFromLocalStorageException {
 
             for (String eventId : getPendingEvents()) {
                 List<String> genesisTransactionList;
@@ -248,16 +254,6 @@ public class AssetIssuingTransactionMonitorAgent implements Agent {
                             String transactionInternalId = this.assetIssuingTransactionDao.getTransactionIdByGenesisTransaction(genesisTransaction);
                             System.out.println("ASSET ISSUING internal id " + transactionInternalId);
                             try {
-                                /**
-                                 * Added By Rodrigo Acosta - at this point, the asset is delivered and confirmed. So we will save the
-                                 * Genesis block in the database
-                                 */
-                                try {
-                                    assetIssuingTransactionDao.persistGenesisBlock(transactionInternalId, cryptoGenesisTransaction.getBlockHash());
-                                } catch (CantPersistsGenesisTransactionException e) {
-                                    e.printStackTrace();
-                                }
-
                                 digitalAssetIssuingVault.deliverDigitalAssetMetadataToAssetWallet(cryptoGenesisTransaction, transactionInternalId, AssetBalanceType.AVAILABLE);
                             } catch (CantDeliverDigitalAssetToAssetWalletException e) {
                                 e.printStackTrace();
@@ -284,7 +280,7 @@ public class AssetIssuingTransactionMonitorAgent implements Agent {
                 CantGetOutgoingIntraActorTransactionManagerException,
                 OutgoingIntraActorCantGetSendCryptoTransactionHashException,
                 CantPersistsGenesisTransactionException,
-                UnexpectedResultReturnedFromDatabaseException, CantGetBroadcastStatusException, CantExecuteQueryException, CantGetTransactionCryptoStatusException, CantGetDigitalAssetFromLocalStorageException, CantGetCryptoTransactionException, CantGetTransactionsException, CantGetAssetUserActorsException, CantRegisterDebitException, CantAssetUserActorNotFoundException, CantLoadWalletException, CantGetAssetIssuerActorsException, CantRegisterCreditException {
+                UnexpectedResultReturnedFromDatabaseException, CantGetBroadcastStatusException, CantExecuteQueryException, CantGetTransactionCryptoStatusException, CantGetDigitalAssetFromLocalStorageException, CantGetCryptoTransactionException, CantGetTransactionsException, CantGetAssetUserActorsException, CantRegisterDebitException, CantAssetUserActorNotFoundException, CantLoadWalletException, CantGetAssetIssuerActorsException, CantRegisterCreditException, CantSaveStatisticException {
             List<String> outgoingIdList = assetIssuingTransactionDao.getOutgoingTransactionIdByIssuingStatus();
 
             for (String outgoingId : outgoingIdList) {
@@ -300,7 +296,8 @@ public class AssetIssuingTransactionMonitorAgent implements Agent {
                 System.out.println("ASSET ISSUING Persisting in database genesis transaction: " + genesisTransaction);
                 assetIssuingTransactionDao.persistGenesisTransaction(outgoingId, genesisTransaction);
                 String internalId = assetIssuingTransactionDao.getTransactionIdByGenesisTransaction(genesisTransaction);
-                digitalAssetIssuingVault.setGenesisTransaction(internalId, genesisTransaction);
+                DigitalAssetMetadata metadata = digitalAssetIssuingVault.setGenesisTransaction(internalId, genesisTransaction);
+                assetIssuerWalletManager.loadAssetIssuerWallet("walletPublicKeyTest").createdNewAsset(metadata);
             }
 
             for (String genesisTransaction : assetIssuingTransactionDao.getGenesisTransactionsByCryptoStatus(CryptoStatus.PENDING_SUBMIT)) {

@@ -3,7 +3,8 @@
     android:paddingTop="@dimen/padding"
     android:paddingLeft="@dimen/padding"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:background="@color/background_activity">
 
     <TextView
         android:id="@+id/contact_detail_header"
