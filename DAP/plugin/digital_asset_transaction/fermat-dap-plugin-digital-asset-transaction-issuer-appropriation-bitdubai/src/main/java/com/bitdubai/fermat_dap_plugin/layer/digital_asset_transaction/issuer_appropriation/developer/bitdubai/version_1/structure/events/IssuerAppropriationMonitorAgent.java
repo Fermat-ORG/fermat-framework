@@ -235,8 +235,8 @@ public class IssuerAppropriationMonitorAgent implements Agent {
                             IssuerAppropriationDigitalAssetTransactionPluginRoot.debugAssetAppropriation("This transaction failed to have a crypto address... Returning to previous state");
                             dao.updateTransactionStatusAppropriationStarted(record.transactionRecordId());
                         } else {
-                            String genesisTransaction = assetVaultManager.sendAssetBitcoins(record.assetMetadata().getGenesisTransaction(), record.assetMetadata().getGenesisBlock(), record.addressTo());
-                            assetVault.updateMetadataTransactionChain(record.transactionRecordId(), genesisTransaction, null);
+                            String newTx = assetVaultManager.sendAssetBitcoins(record.assetMetadata().getLastTransactionHash(), record.assetMetadata().getLastTransactionBlock(), record.addressTo());
+                            assetVault.updateMetadataTransactionChain(record.transactionRecordId(), newTx, null);
                             dao.updateTransactionStatusBitcoinsSent(record.transactionRecordId());
                             IssuerAppropriationDigitalAssetTransactionPluginRoot.debugAssetAppropriation("Bitcoins sent!");
                         }
