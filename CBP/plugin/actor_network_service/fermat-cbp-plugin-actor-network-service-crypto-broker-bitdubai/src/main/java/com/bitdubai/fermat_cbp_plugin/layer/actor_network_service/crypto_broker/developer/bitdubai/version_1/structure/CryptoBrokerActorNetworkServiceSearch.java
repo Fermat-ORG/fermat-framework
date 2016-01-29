@@ -65,7 +65,17 @@ public final class CryptoBrokerActorNetworkServiceSearch extends CryptoBrokerSea
 
             for (final PlatformComponentProfile platformComponentProfile : list) {
 
-                byte[] imageByte = Base64.decode(platformComponentProfile.getExtraData(), Base64.DEFAULT);
+                System.out.println("************** I'm a crypto broker searched: "+platformComponentProfile);
+                System.out.println("************** Do I have profile image?: "+(platformComponentProfile.getExtraData() != null));
+
+                byte[] imageByte;
+
+                if (platformComponentProfile.getExtraData() != null)
+                    imageByte = Base64.decode(platformComponentProfile.getExtraData(), Base64.DEFAULT);
+                else
+                    imageByte = null;
+
+
                 cryptoBrokerExposingDataList.add(new CryptoBrokerExposingData(platformComponentProfile.getIdentityPublicKey(), platformComponentProfile.getAlias(), imageByte));
             }
 
