@@ -1073,13 +1073,11 @@ public class CryptoTransmissionNetworkServicePluginRoot extends AbstractNetworkS
             String pkAux = cryptoTransmissionMetadataRecord.getDestinationPublicKey();
             cryptoTransmissionMetadataRecord.setDestinationPublickKey(cryptoTransmissionMetadataRecord.getSenderPublicKey());
             cryptoTransmissionMetadataRecord.setSenderPublicKey(pkAux);
-            outgoingCryptoTransmissionMetadataDAO.saveCryptoTransmissionMetadata(cryptoTransmissionMetadataRecord);
+            outgoingCryptoTransmissionMetadataDAO.update(cryptoTransmissionMetadataRecord);
         }
         catch(CantUpdateRecordDataBaseException e) {
             throw  new CantSetToCreditedInWalletException("Can't Set Metadata To Credited In Wallet Exception",e,"","Can't update record");
         } catch (PendingRequestNotFoundException e) {
-            e.printStackTrace();
-        } catch (CantSaveCryptoTransmissionMetadatatException e) {
             e.printStackTrace();
         }
     }
@@ -1101,15 +1099,13 @@ public class CryptoTransmissionNetworkServicePluginRoot extends AbstractNetworkS
             String pkAux = cryptoTransmissionMetadataRecord.getDestinationPublicKey();
             cryptoTransmissionMetadataRecord.setDestinationPublickKey(cryptoTransmissionMetadataRecord.getSenderPublicKey());
             cryptoTransmissionMetadataRecord.setSenderPublicKey(pkAux);
-            outgoingCryptoTransmissionMetadataDAO.saveCryptoTransmissionMetadata(cryptoTransmissionMetadataRecord);
+            outgoingCryptoTransmissionMetadataDAO.update(cryptoTransmissionMetadataRecord);
 
 
         }
         catch(CantUpdateRecordDataBaseException e) {
             throw  new CantSetToSeenByCryptoVaultException("Can't Set Metadata To Seen By Crypto Vault Exception",e,"","Can't update record");
         } catch (PendingRequestNotFoundException e) {
-            e.printStackTrace();
-        } catch (CantSaveCryptoTransmissionMetadatatException e) {
             e.printStackTrace();
         }
     }

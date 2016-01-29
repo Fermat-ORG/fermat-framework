@@ -71,8 +71,9 @@ public class CryptoTransmissionMetadataDAO_V2 {
     }
 
 
-    public void saveCryptoTransmissionMetadata(CryptoTransmissionMetadataRecord cryptoTransmissionMetadata) throws CantSaveCryptoTransmissionMetadatatException {
+    public boolean saveCryptoTransmissionMetadata(CryptoTransmissionMetadataRecord cryptoTransmissionMetadata) throws CantSaveCryptoTransmissionMetadatatException {
 
+        boolean success = false;
         try {
 
             if(!existMetadata(cryptoTransmissionMetadata.getTransactionId()))
@@ -83,6 +84,8 @@ public class CryptoTransmissionMetadataDAO_V2 {
                 entityRecord = buildDatabaseRecord(entityRecord, cryptoTransmissionMetadata);
 
                 addressExchangeRequestTable.insertRecord(entityRecord);
+
+                success = true;
             }
 
 
@@ -93,6 +96,7 @@ public class CryptoTransmissionMetadataDAO_V2 {
             throw new CantSaveCryptoTransmissionMetadatatException("",e, "Cant Get Crypto Transmission Metadata Exception","");
 
         }
+        return success;
     }
 
     public void saveCryptoTransmissionResponse(CryptoTransmissionResponseMessage cryptoTransmissionResponseMessage ) throws CantSaveCryptoTransmissionMetadatatException {

@@ -1,4 +1,4 @@
-package com.bitdubai.fermat_pip_api.all_definition.enums;
+package com.bitdubai.fermat_api.layer.all_definition.common.system.enums;
 
 import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterException;
 

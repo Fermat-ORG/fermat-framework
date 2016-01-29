@@ -152,7 +152,7 @@ public class RequestSendHistoryFragment extends FermatWalletListFragment<Payment
         frameLayout.setOnClickListener(onClickListener);
         view.setOnClickListener(onClickListener);
 
-        com.oguzdev.circularfloatingactionmenu.library.FloatingActionButton actionButton = new com.oguzdev.circularfloatingactionmenu.library.FloatingActionButton.Builder(getActivity())
+        final com.oguzdev.circularfloatingactionmenu.library.FloatingActionButton actionButton = new com.oguzdev.circularfloatingactionmenu.library.FloatingActionButton.Builder(getActivity())
                 .setContentView(frameLayout).setBackgroundDrawable(R.drawable.btn_request_selector)
                 .build();
 
@@ -160,7 +160,23 @@ public class RequestSendHistoryFragment extends FermatWalletListFragment<Payment
                 .attachTo(actionButton)
                 .build();
 
+        recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
 
+            @Override
+            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+                super.onScrolled(recyclerView, dx, dy);
+                int mScrollOffset = 4;
+                if (Math.abs(dy) > mScrollOffset) {
+                    if (actionButton != null) {
+                        if (dy > 0) {
+                            actionButton.setVisibility(View.GONE);
+                        } else {
+                            actionButton.setVisibility(View.VISIBLE);
+                        }
+                    }
+                }
+            }
+        });
     }
 
 

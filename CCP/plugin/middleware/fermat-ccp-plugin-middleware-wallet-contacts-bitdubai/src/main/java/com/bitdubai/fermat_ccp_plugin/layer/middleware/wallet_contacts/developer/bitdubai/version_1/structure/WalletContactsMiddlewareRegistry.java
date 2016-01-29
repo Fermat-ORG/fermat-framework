@@ -412,20 +412,27 @@ public class WalletContactsMiddlewareRegistry implements WalletContactsRegistry 
                         request.getIdentityPublicKeyResponding(),
                         request.getWalletPublicKey()
                 );
+                // SI ES WALLET CONTACT ES NULL PASA DIRECTO A CONFIRMAR EL ADDRESS YA QUE ES SOLO UN REQUEST DE ADDRESS
+                // SI POR EL CONTRARIO NO ES NULL ACTUALIZA EL CONTACTO CON EL ADDRESS
+                if (walletContactRecord != null){
 
-                this.addCryptoAddressToWalletContact(
-                    walletContactRecord.getContactId(),
-                    request.getCryptoAddress()
-                );
+                    this.addCryptoAddressToWalletContact(
+                            walletContactRecord.getContactId(),
+                            request.getCryptoAddress()
+                    );
 
-                System.out.println("----------------------------\n" +
-                        "ACTUALIZO ADDRESS PARA EL CONTACTO :" +  walletContactRecord.getContactId()
-                        + "\n-------------------------------------------------");
+                    System.out.println("----------------------------\n" +
+                            "ACTUALIZO ADDRESS PARA EL CONTACTO :" +  walletContactRecord.getContactId()
+                            + "\n-------------------------------------------------");
 
-                walletContactsMiddlewareDao.updateCompatibility(
-                        walletContactRecord.getContactId(),
-                        Compatibility.COMPATIBLE
-                );
+                    walletContactsMiddlewareDao.updateCompatibility(
+                            walletContactRecord.getContactId(),
+                            Compatibility.COMPATIBLE
+                    );
+
+                }
+
+
 
                 cryptoAddressesManager.confirmAddressExchangeRequest(request.getRequestId());
 

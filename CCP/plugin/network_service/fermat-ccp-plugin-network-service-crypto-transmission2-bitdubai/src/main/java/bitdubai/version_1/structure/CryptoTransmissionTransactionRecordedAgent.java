@@ -54,7 +54,7 @@ import bitdubai.version_1.structure.structure.CryptoTransmissionResponseMessage;
 /**
  * Created by mati on 2015.10.15..
  */
-public class ActorNetworkServiceRecordedAgent extends FermatAgent{
+public class CryptoTransmissionTransactionRecordedAgent extends FermatAgent{
 
 
     private static final long SEND_SLEEP_TIME    = 15000;
@@ -70,21 +70,12 @@ public class ActorNetworkServiceRecordedAgent extends FermatAgent{
     private List<Future<?>> futures= new ArrayList<>();
 
     private final CryptoTransmissionNetworkServicePluginRoot cryptoTransmissionNetworkServicePluginRoot;
-    private final ErrorManager errorManager                                ;
-    private final EventManager eventManager                                ;
 
-    public ActorNetworkServiceRecordedAgent( final CryptoTransmissionNetworkServicePluginRoot cryptoTransmissionNetworkServicePluginRoot,
-                                             final ErrorManager                                 errorManager                                ,
-                                             final EventManager                                 eventManager
-                                             ) {
+    public CryptoTransmissionTransactionRecordedAgent(final CryptoTransmissionNetworkServicePluginRoot cryptoTransmissionNetworkServicePluginRoot) {
 
-        this.errorManager                                 = errorManager                                ;
-        this.eventManager                                 = eventManager                                ;
-        this.status                                       = AgentStatus.CREATED                         ;
+        this.status = AgentStatus.CREATED;
         this.cryptoTransmissionNetworkServicePluginRoot = cryptoTransmissionNetworkServicePluginRoot;
-
         poolConnectionsWaitingForResponse = new HashMap<>();
-
         threadPoolExecutor = Executors.newFixedThreadPool(2);
         //Create a thread to send the messages
         this.toSend = new Runnable() {
@@ -181,11 +172,12 @@ public class ActorNetworkServiceRecordedAgent extends FermatAgent{
             }
 
             //Sleep for a time
-            TimeUnit.SECONDS.sleep(2);
+
+            if(!Thread.currentThread().isInterrupted()) TimeUnit.SECONDS.sleep(2);
 
         } catch (InterruptedException e) {
             status = AgentStatus.STOPPED;
-            reportUnexpectedError(FermatException.wrapException(e));
+            System.out.println("CryptoTransmissionTransactionRecordedAgent - sendCycle() Thread Interrupted stopped ... ");
         } catch(Exception e) {
             reportUnexpectedError(FermatException.wrapException(e));
         }
@@ -259,11 +251,11 @@ public class ActorNetworkServiceRecordedAgent extends FermatAgent{
             }
 
             //Sleep for a time
-            Thread.sleep(RECEIVE_SLEEP_TIME);
+            if(!Thread.currentThread().isInterrupted()) Thread.sleep(RECEIVE_SLEEP_TIME);
 
         } catch (InterruptedException e) {
             status = AgentStatus.STOPPED;
-            reportUnexpectedError(FermatException.wrapException(e));
+            System.out.println("CryptoTransmissionTransactionRecordedAgent - receiveCycle() Thread Interrupted stopped ... ");
         } catch(Exception e) {
 
             reportUnexpectedError(FermatException.wrapException(e));
@@ -327,8 +319,6 @@ public class ActorNetworkServiceRecordedAgent extends FermatAgent{
                        cryptoTransmissionNetworkServicePluginRoot.getOutgoingMetadataDao().doneTransaction(cryptoTransmissionMetadata.getTransactionId());
 
 
-                       System.out.print("CryptoTransmission Close Connection - End Message");
-                       this.poolConnectionsWaitingForResponse.remove(cryptoTransmissionMetadata.getDestinationPublicKey());
                        break;
                    // si el mensaje viene con un estado de SENT es porque es la primera vez que llega, por lo que tengo que guardarlo en la bd y responder
                    case SEEN_BY_OWN_NETWORK_SERVICE_WAITING_FOR_RESPONSE:
@@ -445,9 +435,10 @@ public class ActorNetworkServiceRecordedAgent extends FermatAgent{
                     communicationNetworkServiceLocal.sendMessage(
                             actorNetworkServiceRecord.getSenderPublicKey(),
                             actorNetworkServiceRecord.getDestinationPublicKey(),
-                           actorNetworkServiceRecord.toJson()
+                            actorNetworkServiceRecord.toJson()
                     );
 
+                    actorNetworkServiceRecord.setProtocolState(CryptoTransmissionProtocolState.SENT_TO_COMMUNICATION_TEMPLATE);
                     cryptoTransmissionNetworkServicePluginRoot.getOutgoingMetadataDao().changeCryptoTransmissionProtocolState(
                             actorNetworkServiceRecord.getTransactionId(),
                             CryptoTransmissionProtocolState.SENT_TO_COMMUNICATION_TEMPLATE);
@@ -493,7 +484,7 @@ public class ActorNetworkServiceRecordedAgent extends FermatAgent{
 
 
     private void reportUnexpectedError(FermatException e) {
-        errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_INTRAUSER_NETWORK_SERVICE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+        cryptoTransmissionNetworkServicePluginRoot.getErrorManager().reportUnexpectedPluginException(Plugins.BITDUBAI_INTRAUSER_NETWORK_SERVICE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
     }
 
     public void connectionFailure(String identityPublicKey){
@@ -506,10 +497,10 @@ public class ActorNetworkServiceRecordedAgent extends FermatAgent{
     }
 
     private void lauchNotification(){
-        FermatEvent fermatEvent = eventManager.getNewEvent(EventType.INCOMING_CRYPTO_METADATA);
+        FermatEvent fermatEvent = cryptoTransmissionNetworkServicePluginRoot.getEventManager().getNewEvent(EventType.INCOMING_CRYPTO_METADATA);
         IncomingCryptoMetadataEvent incomingCryptoMetadataReceive = (IncomingCryptoMetadataEvent) fermatEvent;
         incomingCryptoMetadataReceive.setSource(EventSource.NETWORK_SERVICE_CRYPTO_TRANSMISSION);
-        eventManager.raiseEvent(incomingCryptoMetadataReceive);
+        cryptoTransmissionNetworkServicePluginRoot.getEventManager().raiseEvent(incomingCryptoMetadataReceive);
     }
 
 }

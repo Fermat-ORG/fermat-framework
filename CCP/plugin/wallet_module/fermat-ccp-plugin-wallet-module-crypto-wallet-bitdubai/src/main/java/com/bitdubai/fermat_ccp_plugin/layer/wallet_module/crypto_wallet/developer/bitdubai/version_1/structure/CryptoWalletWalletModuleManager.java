@@ -922,11 +922,13 @@ public class CryptoWalletWalletModuleManager implements CryptoWallet {
             for (CryptoPayment paymentRecord :  cryptoPaymentRegistry.listCryptoPaymentRequestsByType(walletPublicKey, CryptoPaymentType.SENT, max, offset)) {
 
                 WalletContactRecord walletContactRecord = walletContactsRegistry.getWalletContactByActorAndWalletPublicKey(paymentRecord.getActorPublicKey(),walletPublicKey);
-                if (walletContactRecord != null)
-                    cryptoWalletWalletContact = new CryptoWalletWalletModuleWalletContact(walletContactRecord, profilePicture);
 
                 if (getImageByActorType(paymentRecord.getActorType(),paymentRecord.getActorPublicKey(),paymentRecord.getIdentityPublicKey()) != null)
                     profilePicture = getImageByActorType(paymentRecord.getActorType(),paymentRecord.getActorPublicKey(),paymentRecord.getIdentityPublicKey());
+
+                if (walletContactRecord != null)
+                    cryptoWalletWalletContact = new CryptoWalletWalletModuleWalletContact(walletContactRecord, profilePicture);
+
 
 
                 CryptoWalletWalletModulePaymentRequest cryptoWalletPaymentRequest = new CryptoWalletWalletModulePaymentRequest(
