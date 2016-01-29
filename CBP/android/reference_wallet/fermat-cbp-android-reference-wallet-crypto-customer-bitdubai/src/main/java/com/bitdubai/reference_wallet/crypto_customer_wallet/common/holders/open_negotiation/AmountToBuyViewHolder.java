@@ -5,6 +5,7 @@ import android.widget.TextView;
 
 import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatButton;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.ClauseType;
+import com.bitdubai.fermat_cbp_api.all_definition.enums.NegotiationStepStatus;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.common.interfaces.ClauseInformation;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.common.interfaces.CustomerBrokerNegotiationInformation;
 import com.bitdubai.reference_wallet.crypto_customer_wallet.R;
@@ -93,6 +94,29 @@ public class AmountToBuyViewHolder extends ClauseViewHolder implements View.OnCl
     @Override
     protected int getTitleTextViewRes() {
         return R.id.ccw_card_view_title;
+    }
+
+    @Override
+    public void setStatus(NegotiationStepStatus clauseStatus) {
+        super.setStatus(clauseStatus);
+
+        switch (clauseStatus) {
+            case ACCEPTED:
+                buyingText.setTextColor(getColor(R.color.description_text_status_accepted));
+                buyingValue.setTextColor(getColor(R.color.text_value_status_accepted));
+                currencyToBuyTextValue.setTextColor(getColor(R.color.text_value_status_accepted));
+                break;
+            case CHANGED:
+                buyingText.setTextColor(getColor(R.color.description_text_status_changed));
+                buyingValue.setTextColor(getColor(R.color.text_value_status_changed));
+                currencyToBuyTextValue.setTextColor(getColor(R.color.text_value_status_changed));
+                break;
+            case CONFIRM:
+                buyingText.setTextColor(getColor(R.color.description_text_status_confirm));
+                buyingValue.setTextColor(getColor(R.color.text_value_status_confirm));
+                currencyToBuyTextValue.setTextColor(getColor(R.color.text_value_status_confirm));
+                break;
+        }
     }
 
     public boolean setPaymentBuy(boolean paymentBuy){
