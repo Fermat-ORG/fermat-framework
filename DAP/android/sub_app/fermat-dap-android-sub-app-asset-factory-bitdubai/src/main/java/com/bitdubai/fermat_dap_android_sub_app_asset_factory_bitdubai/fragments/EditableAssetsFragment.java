@@ -66,7 +66,9 @@ import static com.bitdubai.fermat_api.layer.all_definition.util.BitcoinConverter
 import static com.bitdubai.fermat_api.layer.all_definition.util.BitcoinConverter.Currency.SATOSHI;
 import static com.bitdubai.fermat_dap_api.layer.all_definition.util.DAPStandardFormats.*;
 
+import java.sql.Timestamp;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import static android.widget.Toast.LENGTH_SHORT;
@@ -473,6 +475,10 @@ public class EditableAssetsFragment extends AbstractFermatFragment implements
             if (quantity == 0)
             {
                 Toast.makeText(getActivity(), "Invalid Quantity of Assets", Toast.LENGTH_SHORT).show();
+                return false;
+            }
+            if (assetFactory.getExpirationDate().before(new Date())) {
+                Toast.makeText(getActivity(), "Expiration date can't be in the past. Please modify the expiration date.", Toast.LENGTH_SHORT).show();
                 return false;
             }
             return true;
