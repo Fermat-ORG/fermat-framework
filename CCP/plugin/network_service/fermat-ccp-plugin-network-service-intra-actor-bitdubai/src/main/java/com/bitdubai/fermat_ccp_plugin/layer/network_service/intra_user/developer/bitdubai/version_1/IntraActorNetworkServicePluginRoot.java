@@ -852,9 +852,6 @@ public class IntraActorNetworkServicePluginRoot extends AbstractPlugin implement
                 actorNetworkServiceRecordedAgent.getPoolConnectionsWaitingForResponse().remove(actorNetworkServiceRecord.getActorDestinationPublicKey());
             }
 
-            actorNetworkServiceRecord.setActorProtocolState(ActorProtocolState.DONE);
-            getOutgoingNotificationDao().update(actorNetworkServiceRecord);
-
 
             System.out.println("SALIENDO DEL HANDLE NEW SENT MESSAGE NOTIFICATION");
 
