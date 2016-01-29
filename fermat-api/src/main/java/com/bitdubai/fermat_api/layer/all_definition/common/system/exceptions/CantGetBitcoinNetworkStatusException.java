@@ -1,4 +1,4 @@
-package com.bitdubai.fermat_pip_api.layer.module.android_core.exception;
+package com.bitdubai.fermat_api.layer.all_definition.common.system.exceptions;
 
 import com.bitdubai.fermat_api.FermatException;
 

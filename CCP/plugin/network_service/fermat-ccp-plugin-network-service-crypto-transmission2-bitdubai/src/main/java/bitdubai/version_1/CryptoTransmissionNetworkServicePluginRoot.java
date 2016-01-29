@@ -265,6 +265,9 @@ public class CryptoTransmissionNetworkServicePluginRoot extends AbstractPlugin i
         this.name = "Crypto Transmission Network Service";
         this.alias = "CryptoTransmissionNetworkService";
         this.extraData = null;
+
+        actorNetworkServiceRecordedAgent = new ActorNetworkServiceRecordedAgent(
+                this);
     }
 
     /**
@@ -501,10 +504,10 @@ public class CryptoTransmissionNetworkServicePluginRoot extends AbstractPlugin i
 
                     remoteNetworkServicesRegisteredList = new CopyOnWriteArrayList<PlatformComponentProfile>();
 
-                    actorNetworkServiceRecordedAgent = new ActorNetworkServiceRecordedAgent(
-                            this,
-                            errorManager,
-                            eventManager);
+                    if(actorNetworkServiceRecordedAgent==null) {
+                        actorNetworkServiceRecordedAgent = new ActorNetworkServiceRecordedAgent(
+                                this);
+                    }
 
                     // change message state to process again first time
                    // reprocessMessage();
@@ -693,9 +696,7 @@ public class CryptoTransmissionNetworkServicePluginRoot extends AbstractPlugin i
         try {
             if(actorNetworkServiceRecordedAgent==null){
                 actorNetworkServiceRecordedAgent = new ActorNetworkServiceRecordedAgent(
-                        this,
-                        errorManager,
-                        eventManager);
+                        this);
             }
             actorNetworkServiceRecordedAgent.start();
 
@@ -858,6 +859,7 @@ public class CryptoTransmissionNetworkServicePluginRoot extends AbstractPlugin i
                 case RESPONSE:
                     //CryptoTransmissionResponseMessage cryptoTransmissionResponseMessage = (CryptoTransmissionMessage) cryptoTransmissionMetadata;
 
+                    //TODO: ver esto: porque seguramente esté mal el sender y el destination, ya que lo estoy recibiendo, por lo cual yo soy el destination.
                     CryptoTransmissionResponseMessage cryptoTransmissionResponseMessage = new CryptoTransmissionResponseMessage(cryptoTransmissionMetadata.getTransactionId(),
                             cryptoTransmissionMetadata.getCryptoTransmissionMessageType(),
                             cryptoTransmissionMetadata.getCryptoTransmissionProtocolState(),
@@ -906,12 +908,15 @@ public class CryptoTransmissionNetworkServicePluginRoot extends AbstractPlugin i
 
                             System.out.print("CryptoTransmission Close Connection - End Message");
 
-                            this.actorNetworkServiceRecordedAgent.getPoolConnectionsWaitingForResponse().remove(cryptoTransmissionMetadata.getDestinationPublicKey());
-                            this.getNetworkServiceConnectionManager().closeConnection(cryptoTransmissionMetadata.getDestinationPublicKey());
+                            //Si me llega es destinatario que yo tengo la conexion abierta es el sender
+                            //TODO: VER BIEN ESTO PORQUE ESTOY DORMIDO
+                            this.actorNetworkServiceRecordedAgent.getPoolConnectionsWaitingForResponse().remove(cryptoTransmissionMetadata.getSenderPublicKey());
+                            this.getNetworkServiceConnectionManager().closeConnection(cryptoTransmissionMetadata.getSenderPublicKey());
 
                             System.out.println("-----------------------\n" +
                                     "RECIVIENDO RESPUESTA CRYPTO METADATA!!!!! -----------------------\n" +
-                                    "-----------------------\n STATE: CREDITED_IN_DESTINATION_WALLET ");
+                                    "-----------------------\n STATE: CREDITED_IN_DESTINATION_WALLET \n"+
+                            "----CERRANDO CONEXION");
                             // deberia ver si tengo que lanzar un evento acá
 
                             break;
@@ -1140,13 +1145,17 @@ public class CryptoTransmissionNetworkServicePluginRoot extends AbstractPlugin i
                 String remotePublicKey = vpnConnectionCloseNotificationEvent.getRemoteParticipant().getIdentityPublicKey();
                 if(communicationNetworkServiceConnectionManager != null) {
                     System.out.println("ENTRANDO EN EL METODO PARA CERRAR LA CONEXION DEL handleVpnConnectionCloseNotificationEvent");
-                    System.out.println("ENTRO AL METODO PARA CERRAR LA CONEXION");
+
                     communicationNetworkServiceConnectionManager.closeConnection(remotePublicKey);
 
                 }
 
                 // close connection, sender is the destination
                 if(actorNetworkServiceRecordedAgent!=null) actorNetworkServiceRecordedAgent.getPoolConnectionsWaitingForResponse().remove(remotePublicKey);
+
+                if(vpnConnectionCloseNotificationEvent.isCloseNormal()){
+                    System.out.println("ENTRO AL METODO PARA CERRAR LA CONEXION-- Cerrado normal de conexion");
+                }
 
             }
 
@@ -1472,7 +1481,7 @@ public class CryptoTransmissionNetworkServicePluginRoot extends AbstractPlugin i
             String pkAux = cryptoTransmissionMetadataRecord.getDestinationPublicKey();
             cryptoTransmissionMetadataRecord.setDestinationPublickKey(cryptoTransmissionMetadataRecord.getSenderPublicKey());
             cryptoTransmissionMetadataRecord.setSenderPublicKey(pkAux);
-            outgoingNotificationDao.update(cryptoTransmissionMetadataRecord);
+           // outgoingNotificationDao.update(cryptoTransmissionMetadataRecord);
 
 
         }
@@ -1614,8 +1623,11 @@ public class CryptoTransmissionNetworkServicePluginRoot extends AbstractPlugin i
 
     @Override
     public TransactionProtocolManager<FermatCryptoTransaction> getTransactionManager() {
-        CryptoTransmissionTransactionProtocolManager cryptoTransmissionTransactionProtocolManager = new CryptoTransmissionTransactionProtocolManager(incomingNotificationsDao);
-        return cryptoTransmissionTransactionProtocolManager;
+        return new CryptoTransmissionTransactionProtocolManager(incomingNotificationsDao);
+    }
+
+    public ErrorManager getErrorManager() {
+        return errorManager;
     }
 
     private void reprocessMessage()
@@ -1673,4 +1685,7 @@ public class CryptoTransmissionNetworkServicePluginRoot extends AbstractPlugin i
         }
     }
 
+    public EventManager getEventManager() {
+        return eventManager;
+    }
 }
