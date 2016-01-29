@@ -507,18 +507,18 @@ public class CryptoTransmissionNetworkServicePluginRoot extends AbstractPlugin i
                             eventManager);
 
                     // change message state to process again first time
-                    reprocessMessage();
+                   // reprocessMessage();
 
                     //declare a schedule to process waiting request message
-                    Timer timer = new Timer();
+                  //  Timer timer = new Timer();
 
-                    timer.schedule(new TimerTask() {
+                   /* timer.schedule(new TimerTask() {
                         @Override
                         public void run() {
                             // change message state to process again
                             reprocessMessage();
                         }
-                    }, 3600*1000);
+                    }, 3600*1000);*/
 
 
                     /*
