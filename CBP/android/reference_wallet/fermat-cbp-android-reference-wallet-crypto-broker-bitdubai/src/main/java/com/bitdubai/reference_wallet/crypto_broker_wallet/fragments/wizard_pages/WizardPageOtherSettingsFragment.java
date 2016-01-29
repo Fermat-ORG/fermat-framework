@@ -76,10 +76,12 @@ import com.bitdubai.reference_wallet.crypto_broker_wallet.session.CryptoBrokerWa
         final FermatTextView spreadTextView = (FermatTextView) layout.findViewById(R.id.cbw_spread_value_text);
         spreadTextView.setText(String.format("%1$s %%", spreadValue));
 
+         // todo SE COMENTA PORQ YA NO EXISTEN LOS MÉTODOS
+
          PresentationDialog presentationDialog = new PresentationDialog.Builder(getActivity(), appSession)
-                 .setBody("Custom text support for dialog in the wizard Merchandises help")
-                 .setSubTitle("Subtitle text of Merchandises dialog help")
-                 .setTextFooter("Text footer Merchandises dialog help")
+                // .setBody("Custom text support for dialog in the wizard Merchandises help")
+               //  .setSubTitle("Subtitle text of Merchandises dialog help")
+               //  .setTextFooter("Text footer Merchandises dialog help")
                  .setTemplateType(PresentationDialog.TemplateType.TYPE_PRESENTATION_WITHOUT_IDENTITIES)
                  .setBannerRes(R.drawable.banner_crypto_broker)
                  .setIconRes(R.drawable.crypto_broker)
