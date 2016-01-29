@@ -436,6 +436,8 @@ public class BitcoinCryptoNetworkMonitor implements Agent {
             /**
              * I store it in the wallet.
              */
+            WalletTransaction walletTransaction = new WalletTransaction(WalletTransaction.Pool.PENDING, tx);
+            wallet.addWalletTransaction(walletTransaction);
             wallet.maybeCommitTx(tx);
             wallet.saveToFile(walletFileName);
 
@@ -454,6 +456,7 @@ public class BitcoinCryptoNetworkMonitor implements Agent {
                  */
                 e1.printStackTrace();
             }
+            throw  new CantStoreBitcoinTransactionException(CantStoreBitcoinTransactionException.DEFAULT_MESSAGE, e, "Error storing the transaction in the wallet. TxId: " + tx.getHashAsString(), "Crypto Network");
         }
     }
 
