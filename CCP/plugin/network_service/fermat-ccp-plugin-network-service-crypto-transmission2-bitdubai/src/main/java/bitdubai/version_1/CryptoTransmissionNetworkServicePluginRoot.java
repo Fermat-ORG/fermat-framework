@@ -510,7 +510,7 @@ public class CryptoTransmissionNetworkServicePluginRoot extends AbstractPlugin i
                     }
 
                     // change message state to process again first time
-                   // reprocessMessage();
+                    reprocessMessage();
 
                     //declare a schedule to process waiting request message
                     Timer timer = new Timer();
@@ -1155,6 +1155,7 @@ public class CryptoTransmissionNetworkServicePluginRoot extends AbstractPlugin i
 
                 if(vpnConnectionCloseNotificationEvent.isCloseNormal()){
                     System.out.println("ENTRO AL METODO PARA CERRAR LA CONEXION-- Cerrado normal de conexion");
+                    reprocessMessage(remotePublicKey);
                 }
 
             }
@@ -1657,6 +1658,31 @@ public class CryptoTransmissionNetworkServicePluginRoot extends AbstractPlugin i
     }
 
 
+    private void reprocessMessage(String receiveIdentityKey)
+    {
+        try {
+
+         /*
+         * Read all pending CryptoTransmissionMetadata message from database
+         */
+            List<CryptoTransmissionMetadataRecord> lstCryptoTransmissionMetadata = outgoingNotificationDao.getNotSentRecord(receiveIdentityKey);
+
+
+            for(CryptoTransmissionMetadataRecord record : lstCryptoTransmissionMetadata) {
+
+                outgoingNotificationDao.changeCryptoTransmissionProtocolState(record.getTransactionId(), CryptoTransmissionProtocolState.PRE_PROCESSING_SEND);
+
+            }
+
+
+        } catch (CantUpdateRecordDataBaseException  e) {
+            System.out.println("CRYPTO TRANSMISSION EXCEPCION REPROCESANDO MESSAGES");
+            e.printStackTrace();
+        } catch (Exception  e) {
+            System.out.println("CRYPTO TRANSMISSION EXCEPCION REPROCESANDO MESSAGES");
+            e.printStackTrace();
+        }
+    }
     private void reprocessWaitingMessage() {
         try {
 
