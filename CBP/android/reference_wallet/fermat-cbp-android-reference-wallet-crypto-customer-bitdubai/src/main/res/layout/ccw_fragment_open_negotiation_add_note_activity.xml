@@ -18,16 +18,27 @@
         android:paddingTop="@dimen/activity_vertical_margin"
         tools:visibility="visible">
 
-        <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
-            android:id="@+id/ccw_buying_exchange_rate"
+
+        <!--<com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView-->
+            <!--android:id="@+id/ccw_buying_exchange_rate"-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:textColor="#fff"-->
+            <!--android:textSize="24sp"-->
+            <!--tools:text="Negotiation Note"-->
+            <!--android:layout_centerVertical="true"-->
+            <!--android:layout_centerHorizontal="true" />-->
+
+        <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textColor="#fff"
-            android:textSize="24sp"
-            tools:text="Negotiation Note"
+            android:text="Negotiation Note"
+            android:id="@+id/textView"
+            android:textColor="#FFFFFF"
+            android:textSize="24dp"
             android:layout_centerVertical="true"
-            android:layout_centerHorizontal="true" />
-
+            android:layout_centerHorizontal="true"
+            android:typeface="sans" />
     </RelativeLayout>
 
     <LinearLayout
@@ -45,15 +56,12 @@
             android:layout_weight="0.95"
             android:background="#E7E7E7">
 
-            <TextView
+            <EditText
                 android:layout_width="match_parent"
-                android:layout_height="141dp"
-                android:text="Large Text"
-                android:id="@+id/textView"
-                android:singleLine="false"
-                android:textSize="18dp"
-                android:typeface="sans"
-                android:textIsSelectable="false" />
+                android:layout_height="137dp"
+                android:inputType="textMultiLine"
+                android:ems="10"
+                android:id="@+id/editText" />
         </LinearLayout>
 
         <LinearLayout
