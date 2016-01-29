@@ -563,7 +563,7 @@ public class IntraActorNetworkServicePluginRoot extends AbstractPlugin implement
                             // change message state to process again
                             reprocessMessage();
                         }
-                    }, 2*3600*1000);
+                    }, 3600*1000);
 
 
                     /*

@@ -90,7 +90,9 @@ import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextV
 import com.bitdubai.fermat_android_api.ui.adapters.FermatAdapter;
 import com.bitdubai.fermat_android_api.ui.interfaces.FermatListItemListeners;
 import com.bitdubai.fermat_android_api.ui.util.FermatAnimationsUtils;
+import com.bitdubai.fermat_api.AndroidCoreManager;
 import com.bitdubai.fermat_api.FermatException;
+import com.bitdubai.fermat_api.FermatStates;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.exceptions.CantGetErrorManagerException;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.exceptions.CantGetModuleManagerException;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.exceptions.CantGetResourcesManagerException;
@@ -181,6 +183,7 @@ public abstract class FermatActivity extends AppCompatActivity
         NavigationView.OnNavigationItemSelectedListener,
         FermatRuntime,
         NetworkStateReceiver.NetworkStateReceiverListener,
+        FermatStates,
         FermatListItemListeners<com.bitdubai.fermat_api.layer.all_definition.navigation_structure.MenuItem> {
 
 
@@ -1833,7 +1836,7 @@ public abstract class FermatActivity extends AppCompatActivity
 
     @Override
     public void networkAvailable() {
-        Log.i(TAG,"NETWORK AVAILABLE MATIIIII");
+        Log.i(TAG, "NETWORK AVAILABLE MATIIIII");
         try {
             getCloudClient().setNetworkState(true);
         }catch (Exception e){
@@ -1849,6 +1852,11 @@ public abstract class FermatActivity extends AppCompatActivity
         }catch (Exception e){
           //  e.printStackTrace();
         }
+    }
+
+    @Override
+    public AndroidCoreManager getFermatStates(){
+        return FermatSystemUtils.getAndroidCoreModule(getApplication()).getAndroidCoreManager();
     }
 
 

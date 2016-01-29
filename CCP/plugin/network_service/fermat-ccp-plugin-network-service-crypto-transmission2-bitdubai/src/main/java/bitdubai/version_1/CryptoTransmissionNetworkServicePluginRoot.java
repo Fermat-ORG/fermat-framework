@@ -265,6 +265,9 @@ public class CryptoTransmissionNetworkServicePluginRoot extends AbstractPlugin i
         this.name = "Crypto Transmission Network Service";
         this.alias = "CryptoTransmissionNetworkService";
         this.extraData = null;
+
+        actorNetworkServiceRecordedAgent = new ActorNetworkServiceRecordedAgent(
+                this);
     }
 
     /**
@@ -505,9 +508,13 @@ public class CryptoTransmissionNetworkServicePluginRoot extends AbstractPlugin i
                             this,
                             errorManager,
                             eventManager);
+                    if(actorNetworkServiceRecordedAgent==null) {
+                        actorNetworkServiceRecordedAgent = new ActorNetworkServiceRecordedAgent(
+                                this);
+                    }
 
                     // change message state to process again first time
-                    //reprocessMessage();
+                    reprocessMessage();
 
                     //declare a schedule to process waiting request message
                     Timer timer = new Timer();
@@ -516,9 +523,9 @@ public class CryptoTransmissionNetworkServicePluginRoot extends AbstractPlugin i
                         @Override
                         public void run() {
                             // change message state to process again
-                            //reprocessMessage();
+                            reprocessMessage();
                         }
-                    }, 2*3600*1000);
+                    }, 3600*1000);
 
 
                     /*
@@ -696,6 +703,9 @@ public class CryptoTransmissionNetworkServicePluginRoot extends AbstractPlugin i
                         this,
                         errorManager,
                         eventManager);
+            if(actorNetworkServiceRecordedAgent==null){
+                actorNetworkServiceRecordedAgent = new ActorNetworkServiceRecordedAgent(
+                        this);
             }
             cryptoTransmissionTransactionRecordedAgent.start();
 
@@ -798,7 +808,12 @@ public class CryptoTransmissionNetworkServicePluginRoot extends AbstractPlugin i
         //TODO: esto vamos a tener que cambiarlo porque está horrible
         CryptoTransmissionMessage cryptoTransmissionMetadata = new Gson().fromJson(fermatMessage.getContent(), CryptoTransmissionMessage.class);
         try {
-            outgoingNotificationDao.changeCryptoTransmissionProtocolState(cryptoTransmissionMetadata.getTransactionId(), CryptoTransmissionProtocolState.SENT);
+            if(cryptoTransmissionMetadata.getCryptoTransmissionMetadataState()==CryptoTransmissionMetadataState.CREDITED_IN_DESTINATION_WALLET){
+                outgoingNotificationDao.changeCryptoTransmissionProtocolState(cryptoTransmissionMetadata.getTransactionId(), CryptoTransmissionProtocolState.DONE);
+
+            }else {
+                outgoingNotificationDao.changeCryptoTransmissionProtocolState(cryptoTransmissionMetadata.getTransactionId(), CryptoTransmissionProtocolState.SENT);
+            }
         } catch (CantUpdateRecordDataBaseException e) {
             try{
                 incomingNotificationsDao.changeCryptoTransmissionProtocolState(cryptoTransmissionMetadata.getTransactionId(), CryptoTransmissionProtocolState.SENT);
@@ -852,6 +867,7 @@ public class CryptoTransmissionNetworkServicePluginRoot extends AbstractPlugin i
                     break;
                 case RESPONSE:
 
+                    //TODO: ver esto: porque seguramente esté mal el sender y el destination, ya que lo estoy recibiendo, por lo cual yo soy el destination.
                     CryptoTransmissionResponseMessage cryptoTransmissionResponseMessage = new CryptoTransmissionResponseMessage(cryptoTransmissionMetadata.getTransactionId(),
                             cryptoTransmissionMetadata.getCryptoTransmissionMessageType(),
                             cryptoTransmissionMetadata.getCryptoTransmissionProtocolState(),
@@ -897,11 +913,19 @@ public class CryptoTransmissionNetworkServicePluginRoot extends AbstractPlugin i
                                     CryptoTransmissionProtocolState.DONE,
                                     cryptoTransmissionResponseMessage.getCryptoTransmissionMetadataState()
                             );
+
+                            System.out.print("CryptoTransmission Close Connection - End Message");
+
+                            //Si me llega es destinatario que yo tengo la conexion abierta es el sender
+                            //TODO: VER BIEN ESTO PORQUE ESTOY DORMIDO
+                            this.actorNetworkServiceRecordedAgent.getPoolConnectionsWaitingForResponse().remove(cryptoTransmissionMetadata.getSenderPublicKey());
+                            this.getNetworkServiceConnectionManager().closeConnection(cryptoTransmissionMetadata.getSenderPublicKey());
+
                             System.out.println("-----------------------\n" +
                                     "RECIVIENDO RESPUESTA CRYPTO METADATA!!!!! -----------------------\n" +
-                                    "-----------------------\n STATE: CREDITED_IN_DESTINATION_WALLET ");
+                                    "-----------------------\n STATE: CREDITED_IN_DESTINATION_WALLET \n"+
+                            "----CERRANDO CONEXION");
                             // deberia ver si tengo que lanzar un evento acá
-                            System.out.println("CryptoTransmission CREDITED_IN_DESTINATION_WALLET event");
 
                             break;
                     }
@@ -1129,13 +1153,17 @@ public class CryptoTransmissionNetworkServicePluginRoot extends AbstractPlugin i
                 String remotePublicKey = vpnConnectionCloseNotificationEvent.getRemoteParticipant().getIdentityPublicKey();
                 if(communicationNetworkServiceConnectionManager != null) {
                     System.out.println("ENTRANDO EN EL METODO PARA CERRAR LA CONEXION DEL handleVpnConnectionCloseNotificationEvent");
-                    System.out.println("ENTRO AL METODO PARA CERRAR LA CONEXION");
+
                     communicationNetworkServiceConnectionManager.closeConnection(remotePublicKey);
 
                 }
 
                 // close connection, sender is the destination
                 if(cryptoTransmissionTransactionRecordedAgent !=null) cryptoTransmissionTransactionRecordedAgent.getPoolConnectionsWaitingForResponse().remove(remotePublicKey);
+
+                if(vpnConnectionCloseNotificationEvent.isCloseNormal()){
+                    System.out.println("ENTRO AL METODO PARA CERRAR LA CONEXION-- Cerrado normal de conexion");
+                }
 
             }
 
@@ -1163,7 +1191,7 @@ public class CryptoTransmissionNetworkServicePluginRoot extends AbstractPlugin i
 
                 this.register = Boolean.FALSE;
 
-                //reprocessMessage();
+                reprocessMessage();
 
                 if(communicationNetworkServiceConnectionManager != null) {
                     communicationNetworkServiceConnectionManager.closeAllConnection();
@@ -1461,7 +1489,7 @@ public class CryptoTransmissionNetworkServicePluginRoot extends AbstractPlugin i
             String pkAux = cryptoTransmissionMetadataRecord.getDestinationPublicKey();
             cryptoTransmissionMetadataRecord.setDestinationPublickKey(cryptoTransmissionMetadataRecord.getSenderPublicKey());
             cryptoTransmissionMetadataRecord.setSenderPublicKey(pkAux);
-            outgoingNotificationDao.update(cryptoTransmissionMetadataRecord);
+           // outgoingNotificationDao.update(cryptoTransmissionMetadataRecord);
 
 
         }
@@ -1603,8 +1631,40 @@ public class CryptoTransmissionNetworkServicePluginRoot extends AbstractPlugin i
 
     @Override
     public TransactionProtocolManager<FermatCryptoTransaction> getTransactionManager() {
-        CryptoTransmissionTransactionProtocolManager cryptoTransmissionTransactionProtocolManager = new CryptoTransmissionTransactionProtocolManager(incomingNotificationsDao);
-        return cryptoTransmissionTransactionProtocolManager;
+        return new CryptoTransmissionTransactionProtocolManager(incomingNotificationsDao);
     }
 
+    public ErrorManager getErrorManager() {
+        return errorManager;
+    }
+
+    private void reprocessMessage()
+    {
+        try {
+
+         /*
+         * Read all pending CryptoTransmissionMetadata message from database
+         */
+            List<CryptoTransmissionMetadataRecord> lstCryptoTransmissionMetadata = outgoingNotificationDao.getNotSentRecord();
+
+
+            for(CryptoTransmissionMetadataRecord record : lstCryptoTransmissionMetadata) {
+
+                outgoingNotificationDao.changeCryptoTransmissionProtocolState(record.getTransactionId(), CryptoTransmissionProtocolState.PRE_PROCESSING_SEND);
+
+            }
+
+
+        } catch (CantUpdateRecordDataBaseException  e) {
+            System.out.println("CRYPTO TRANSMISSION EXCEPCION REPROCESANDO WAIT MESSAGE");
+            e.printStackTrace();
+        } catch (Exception  e) {
+            System.out.println("CRYPTO TRANSMISSION EXCEPCION REPROCESANDO WAIT MESSAGE");
+            e.printStackTrace();
+        }
+    }
+
+    public EventManager getEventManager() {
+        return eventManager;
+    }
 }

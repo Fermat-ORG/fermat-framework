@@ -145,9 +145,6 @@ public class PinnedHeaderAdapter extends BaseAdapter implements OnScrollListener
         try {
             if (convertView == null) {
                 holder = new ViewHolder();
-
-
-
                 switch (type) {
                     case TYPE_ITEM:
                         convertView = mLayoutInflater.inflate(R.layout.row_view, null);
@@ -249,9 +246,9 @@ public class PinnedHeaderAdapter extends BaseAdapter implements OnScrollListener
 
     @Override
     public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
-        if (view instanceof PinnedHeaderListView) {
+       /* if (view instanceof PinnedHeaderListView) {
             ((PinnedHeaderListView) view).configureHeaderView(firstVisibleItem);
-        }
+        }*/
     }
 
     @Override

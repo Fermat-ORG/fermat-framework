@@ -70,16 +70,10 @@ public class CryptoTransmissionTransactionRecordedAgent extends FermatAgent{
     private List<Future<?>> futures= new ArrayList<>();
 
     private final CryptoTransmissionNetworkServicePluginRoot cryptoTransmissionNetworkServicePluginRoot;
-    private final ErrorManager errorManager                                ;
-    private final EventManager eventManager                                ;
 
-    public CryptoTransmissionTransactionRecordedAgent(final CryptoTransmissionNetworkServicePluginRoot cryptoTransmissionNetworkServicePluginRoot,
-                                                      final ErrorManager errorManager,
-                                                      final EventManager eventManager
-    ) {
-
-        this.errorManager                                 = errorManager                                ;
-        this.eventManager                                 = eventManager                                ;
+    public ActorNetworkServiceRecordedAgent( final CryptoTransmissionNetworkServicePluginRoot cryptoTransmissionNetworkServicePluginRoot
+                                             ) {
+         ;
         this.status                                       = AgentStatus.CREATED                         ;
         this.cryptoTransmissionNetworkServicePluginRoot = cryptoTransmissionNetworkServicePluginRoot;
 
@@ -181,7 +175,8 @@ public class CryptoTransmissionTransactionRecordedAgent extends FermatAgent{
             }
 
             //Sleep for a time
-            TimeUnit.SECONDS.sleep(2);
+
+            if(!Thread.currentThread().isInterrupted()) TimeUnit.SECONDS.sleep(2);
 
         } catch (InterruptedException e) {
             status = AgentStatus.STOPPED;
@@ -259,7 +254,7 @@ public class CryptoTransmissionTransactionRecordedAgent extends FermatAgent{
             }
 
             //Sleep for a time
-            Thread.sleep(RECEIVE_SLEEP_TIME);
+            if(!Thread.currentThread().isInterrupted()) Thread.sleep(RECEIVE_SLEEP_TIME);
 
         } catch (InterruptedException e) {
             status = AgentStatus.STOPPED;
@@ -327,8 +322,6 @@ public class CryptoTransmissionTransactionRecordedAgent extends FermatAgent{
                        cryptoTransmissionNetworkServicePluginRoot.getOutgoingMetadataDao().doneTransaction(cryptoTransmissionMetadata.getTransactionId());
 
 
-                       System.out.print("CryptoTransmission Close Connection - End Message");
-                       this.poolConnectionsWaitingForResponse.remove(cryptoTransmissionMetadata.getDestinationPublicKey());
                        break;
                    // si el mensaje viene con un estado de SENT es porque es la primera vez que llega, por lo que tengo que guardarlo en la bd y responder
                    case SEEN_BY_OWN_NETWORK_SERVICE_WAITING_FOR_RESPONSE:
@@ -494,7 +487,7 @@ public class CryptoTransmissionTransactionRecordedAgent extends FermatAgent{
 
 
     private void reportUnexpectedError(FermatException e) {
-        errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_INTRAUSER_NETWORK_SERVICE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+        cryptoTransmissionNetworkServicePluginRoot.getErrorManager().reportUnexpectedPluginException(Plugins.BITDUBAI_INTRAUSER_NETWORK_SERVICE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
     }
 
     public void connectionFailure(String identityPublicKey){
@@ -507,10 +500,10 @@ public class CryptoTransmissionTransactionRecordedAgent extends FermatAgent{
     }
 
     private void lauchNotification(){
-        FermatEvent fermatEvent = eventManager.getNewEvent(EventType.INCOMING_CRYPTO_METADATA);
+        FermatEvent fermatEvent = cryptoTransmissionNetworkServicePluginRoot.getEventManager().getNewEvent(EventType.INCOMING_CRYPTO_METADATA);
         IncomingCryptoMetadataEvent incomingCryptoMetadataReceive = (IncomingCryptoMetadataEvent) fermatEvent;
         incomingCryptoMetadataReceive.setSource(EventSource.NETWORK_SERVICE_CRYPTO_TRANSMISSION);
-        eventManager.raiseEvent(incomingCryptoMetadataReceive);
+        cryptoTransmissionNetworkServicePluginRoot.getEventManager().raiseEvent(incomingCryptoMetadataReceive);
     }
 
 }
