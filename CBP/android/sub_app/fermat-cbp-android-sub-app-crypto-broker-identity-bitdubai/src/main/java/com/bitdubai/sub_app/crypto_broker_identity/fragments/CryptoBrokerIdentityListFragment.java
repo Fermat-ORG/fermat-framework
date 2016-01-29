@@ -12,6 +12,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.SearchView;
+import android.widget.Toast;
 import android.widget.Toolbar;
 
 import com.bitdubai.fermat_android_api.ui.Views.PresentationDialog;
@@ -20,8 +21,11 @@ import com.bitdubai.fermat_android_api.ui.enums.FermatRefreshTypes;
 import com.bitdubai.fermat_android_api.ui.fragments.FermatListFragment;
 import com.bitdubai.fermat_android_api.ui.interfaces.FermatListItemListeners;
 import com.bitdubai.fermat_android_api.ui.util.FermatDividerItemDecoration;
+import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
 import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.enums.SubApps;
+import com.bitdubai.fermat_bnk_api.layer.bnk_wallet_module.BankMoneyWalletPreferenceSettings;
+import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_broker_identity.IdentityBrokerPreferenceSettings;
 import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_broker_identity.exceptions.CantListCryptoBrokersException;
 import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_broker_identity.interfaces.CryptoBrokerIdentityInformation;
 import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_broker_identity.interfaces.CryptoBrokerIdentityModuleManager;
@@ -36,6 +40,7 @@ import com.melnykov.fab.FloatingActionButton;
 import java.util.ArrayList;
 import java.util.List;
 
+import static android.widget.Toast.makeText;
 import static com.bitdubai.sub_app.crypto_broker_identity.session.CryptoBrokerIdentitySubAppSession.IDENTITY_INFO;
 
 /**
@@ -59,6 +64,8 @@ public class CryptoBrokerIdentityListFragment extends FermatListFragment<CryptoB
     private CryptoBrokerIdentityListFilter filter;
 
     private PresentationDialog presentationDialog;
+
+    private IdentityBrokerPreferenceSettings walletSettings;
 
     public static CryptoBrokerIdentityListFragment newInstance() {
         return new CryptoBrokerIdentityListFragment();
@@ -99,20 +106,37 @@ public class CryptoBrokerIdentityListFragment extends FermatListFragment<CryptoB
 
         presentationDialog = new PresentationDialog.Builder(getActivity(),appSession)
                 .setBannerRes(R.drawable.bw_banner)
-                .setBody("prueba Body")
+                .setBody(R.string.dialog_identity_body)
                 .setTitle("prueba Title")
-                .setSubTitle("prueba subtitle")
-                .setTextFooter("prueba footer")
+                .setSubTitle(R.string.dialog_identity_subtitle)
+                .setTextFooter(R.string.dialog_identity_footer)
                 .setTemplateType(PresentationDialog.TemplateType.TYPE_PRESENTATION_WITHOUT_IDENTITIES)
                 .build();
 
-        presentationDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
-            @Override
-            public void onDismiss(DialogInterface dialogInterface) {
-                System.out.println("presentation dialog dismiss");
+        walletSettings = null;
+        try {
+            walletSettings = this.moduleManager.getSettingsManager().loadAndGetSettings(appSession.getAppPublicKey());
+        }catch (Exception e){ walletSettings = null; }
+
+        if(walletSettings == null){
+            walletSettings = new IdentityBrokerPreferenceSettings();
+            walletSettings.setIsPresentationHelpEnabled(true);
+            try {
+                moduleManager.getSettingsManager().persistSettings(appSession.getAppPublicKey(),walletSettings);
+            }catch (Exception e){
+                e.printStackTrace();
             }
-        });
-        presentationDialog.show();
+        }
+
+        boolean showDialog;
+        try{
+            showDialog = moduleManager.getSettingsManager().loadAndGetSettings(appSession.getAppPublicKey()).isHomeTutorialDialogEnabled();
+            if(showDialog){
+                presentationDialog.show();
+            }
+        }catch (FermatException e){
+            makeText(getActivity(), "Oops! recovering from system error", Toast.LENGTH_SHORT).show();
+        }
 
     }
 

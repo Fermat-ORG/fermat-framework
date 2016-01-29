@@ -71,7 +71,7 @@
 
     <ImageView
         android:layout_width="80dp"
-        android:layout_height="80dp"
+        android:layout_height="60dp"
         android:id="@+id/camara"
         android:src="@drawable/camera_icon_2"
         android:scaleType="fitXY"
@@ -83,7 +83,7 @@
 
     <ImageView
         android:layout_width="80dp"
-        android:layout_height="80dp"
+        android:layout_height="60dp"
         android:id="@+id/galeria"
         android:src="@drawable/galery_icon_2"
         android:scaleType="fitXY"
