@@ -28,12 +28,6 @@ public class SingleChoiceViewHolder extends ClauseViewHolder implements View.OnC
         descriptionTextView = (TextView) itemView.findViewById(R.id.ccw_description_text);
         buttonValue = (Button) itemView.findViewById(R.id.ccw_single_choice_value);
         buttonValue.setOnClickListener(this);
-        confirmButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                confirmButton.setText("ACEPT");
-            }
-        });
     }
 
     @Override

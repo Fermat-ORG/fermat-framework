@@ -5,6 +5,7 @@ import android.widget.TextView;
 
 import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatButton;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.ClauseType;
+import com.bitdubai.fermat_cbp_api.all_definition.enums.NegotiationStepStatus;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.common.interfaces.ClauseInformation;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.common.interfaces.CustomerBrokerNegotiationInformation;
 import com.bitdubai.reference_wallet.crypto_customer_wallet.R;
@@ -92,6 +93,31 @@ public class ExchangeRateViewHolder extends ClauseViewHolder implements View.OnC
         this.marketRateList = marketRateList;
     }
 
+    @Override
+    public void setStatus(NegotiationStepStatus clauseStatus) {
+        super.setStatus(clauseStatus);
+
+        switch (clauseStatus) {
+            case ACCEPTED:
+                markerRateReference.setTextColor(getColor(R.color.text_value_status_accepted));
+                yourExchangeRateValueLeftSide.setTextColor(getColor(R.color.text_value_status_accepted));
+                yourExchangeRateValueRightSide.setTextColor(getColor(R.color.text_value_status_accepted));
+                yourExchangeRateValue.setTextColor(getColor(R.color.text_value_status_accepted));
+                break;
+            case CHANGED:
+                markerRateReference.setTextColor(getColor(R.color.text_value_status_changed));
+                yourExchangeRateValueLeftSide.setTextColor(getColor(R.color.text_value_status_changed));
+                yourExchangeRateValueRightSide.setTextColor(getColor(R.color.text_value_status_changed));
+                yourExchangeRateValue.setTextColor(getColor(R.color.text_value_status_changed));
+                break;
+            case CONFIRM:
+                markerRateReference.setTextColor(getColor(R.color.text_value_status_confirm));
+                yourExchangeRateValueLeftSide.setTextColor(getColor(R.color.text_value_status_confirm));
+                yourExchangeRateValueRightSide.setTextColor(getColor(R.color.text_value_status_confirm));
+                yourExchangeRateValue.setTextColor(getColor(R.color.text_value_status_confirm));
+                break;
+        }
+    }
     private String getMarketRate(Map<ClauseType, ClauseInformation> clauses){
 
         BrokerCurrencyQuotation brokerCurrencyQuotation = new BrokerCurrencyQuotation(marketRateList);
