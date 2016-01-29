@@ -736,12 +736,7 @@ public class IntraActorNetworkServicePluginRoot extends AbstractPlugin implement
 
     private void initializeIntraActorAgent() {
         try {
-            actorNetworkServiceRecordedAgent = new ActorNetworkServiceRecordedAgent(
-                    communicationNetworkServiceConnectionManager,
-                    this,
-                    errorManager,
-                    eventManager,
-                    wsCommunicationsCloudClientManager);
+            actorNetworkServiceRecordedAgent = new ActorNetworkServiceRecordedAgent(this);
             actorNetworkServiceRecordedAgent.start();
 
         } catch (CantStartAgentException e) {
@@ -2146,5 +2141,19 @@ public class IntraActorNetworkServicePluginRoot extends AbstractPlugin implement
         }
     }
 
+    public WsCommunicationsCloudClientManager getWsCommunicationsCloudClientManager() {
+        return wsCommunicationsCloudClientManager;
+    }
 
+    public CommunicationNetworkServiceConnectionManager getCommunicationNetworkServiceConnectionManager() {
+        return communicationNetworkServiceConnectionManager;
+    }
+
+    public ErrorManager getErrorManager() {
+        return errorManager;
+    }
+
+    public EventManager getEventManager() {
+        return eventManager;
+    }
 }

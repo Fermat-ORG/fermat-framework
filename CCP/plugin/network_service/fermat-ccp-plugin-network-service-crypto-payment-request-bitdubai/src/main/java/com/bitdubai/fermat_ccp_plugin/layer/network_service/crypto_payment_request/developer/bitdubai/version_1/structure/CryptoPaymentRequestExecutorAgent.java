@@ -69,24 +69,15 @@ public class CryptoPaymentRequestExecutorAgent extends FermatAgent {
     private Map<String, String> poolConnectionsWaitingForResponse;
 
     private final CryptoPaymentRequestNetworkServicePluginRoot cryptoPaymentRequestNetworkServicePluginRoot;
-    private final ErrorManager                                 errorManager                                ;
-    private final EventManager                                 eventManager                                ;
-    private final WsCommunicationsCloudClientManager           wsCommunicationsCloudClientManager          ;
     private final CryptoPaymentRequestNetworkServiceDao        cryptoPaymentRequestNetworkServiceDao       ;
     private final PluginVersionReference                       pluginVersionReference                      ;
 
     public CryptoPaymentRequestExecutorAgent(final CryptoPaymentRequestNetworkServicePluginRoot cryptoPaymentRequestNetworkServicePluginRoot,
-                                             final ErrorManager                                 errorManager                                ,
-                                             final EventManager                                 eventManager                                ,
                                              final CryptoPaymentRequestNetworkServiceDao        cryptoPaymentRequestNetworkServiceDao       ,
-                                             final WsCommunicationsCloudClientManager           wsCommunicationsCloudClientManager          ,
                                              final PluginVersionReference                       pluginVersionReference                      ) {
 
         this.cryptoPaymentRequestNetworkServicePluginRoot = cryptoPaymentRequestNetworkServicePluginRoot;
-        this.errorManager                                 = errorManager                                ;
-        this.eventManager                                 = eventManager                                ;
         this.cryptoPaymentRequestNetworkServiceDao        = cryptoPaymentRequestNetworkServiceDao       ;
-        this.wsCommunicationsCloudClientManager           = wsCommunicationsCloudClientManager          ;
         this.pluginVersionReference                       = pluginVersionReference                      ;
 
         this.status                                       = AgentStatus.CREATED                         ;
@@ -136,10 +127,13 @@ public class CryptoPaymentRequestExecutorAgent extends FermatAgent {
 
         try {
 
-            if(cryptoPaymentRequestNetworkServicePluginRoot.isRegister()) {
+            if(cryptoPaymentRequestNetworkServicePluginRoot.getWsCommunicationsCloudClientManager().getCommunicationsCloudClientConnection().isConnected()) {
 
-                // function to process and send the rigth message to the counterparts.
-                processSend();
+                if (cryptoPaymentRequestNetworkServicePluginRoot.isRegister()) {
+
+                    // function to process and send the rigth message to the counterparts.
+                    processSend();
+                }
             }
 
             //Sleep for a time
@@ -258,10 +252,13 @@ public class CryptoPaymentRequestExecutorAgent extends FermatAgent {
 
         try {
 
-            if(cryptoPaymentRequestNetworkServicePluginRoot.isRegister()) {
+            if(cryptoPaymentRequestNetworkServicePluginRoot.getWsCommunicationsCloudClientManager().getCommunicationsCloudClientConnection().isConnected()) {
 
-                // function to process and send the rigth message to the counterparts.
-                processReceive();
+                if (cryptoPaymentRequestNetworkServicePluginRoot.isRegister()) {
+
+                    // function to process and send the rigth message to the counterparts.
+                    processReceive();
+                }
             }
 
             //Sleep for a time
@@ -284,9 +281,9 @@ public class CryptoPaymentRequestExecutorAgent extends FermatAgent {
             // if there is pending actions i raise a crypto address news event.
             if(cryptoPaymentRequestNetworkServiceDao.isPendingRequestByProtocolState(RequestProtocolState.PENDING_ACTION)) {
                 System.out.println("************* Crypto Payment Request -> Pending Action detected!");
-                FermatEvent eventToRaise = eventManager.getNewEvent(EventType.CRYPTO_PAYMENT_REQUEST_NEWS);
+                FermatEvent eventToRaise = cryptoPaymentRequestNetworkServicePluginRoot.getEventManager().getNewEvent(EventType.CRYPTO_PAYMENT_REQUEST_NEWS);
                 eventToRaise.setSource(cryptoPaymentRequestNetworkServicePluginRoot.getEventSource());
-                eventManager.raiseEvent(eventToRaise);
+                cryptoPaymentRequestNetworkServicePluginRoot.getEventManager().raiseEvent(eventToRaise);
             }
 
         } catch(CantListRequestsException e) {
@@ -308,16 +305,15 @@ public class CryptoPaymentRequestExecutorAgent extends FermatAgent {
 
                 if (cryptoPaymentRequestNetworkServicePluginRoot.getNetworkServiceConnectionManager().getNetworkServiceLocalInstance(actorPublicKey) == null) {
 
-                    if (wsCommunicationsCloudClientManager != null) {
 
                         if (cryptoPaymentRequestNetworkServicePluginRoot.getPlatformComponentProfilePluginRoot() != null) {
 
-                            PlatformComponentProfile applicantParticipant = wsCommunicationsCloudClientManager.getCommunicationsCloudClientConnection()
+                            PlatformComponentProfile applicantParticipant = cryptoPaymentRequestNetworkServicePluginRoot.getWsCommunicationsCloudClientManager().getCommunicationsCloudClientConnection()
                                     .constructBasicPlatformComponentProfileFactory(
                                             identityPublicKey,
                                             NetworkServiceType.UNDEFINED,
                                             platformComponentTypeSelectorByActorType(identityType));
-                            PlatformComponentProfile remoteParticipant = wsCommunicationsCloudClientManager.getCommunicationsCloudClientConnection()
+                            PlatformComponentProfile remoteParticipant = cryptoPaymentRequestNetworkServicePluginRoot.getWsCommunicationsCloudClientManager().getCommunicationsCloudClientConnection()
                                     .constructBasicPlatformComponentProfileFactory(
                                             actorPublicKey,
                                             NetworkServiceType.UNDEFINED,
@@ -333,7 +329,7 @@ public class CryptoPaymentRequestExecutorAgent extends FermatAgent {
                             poolConnectionsWaitingForResponse.put(actorPublicKey, actorPublicKey);
                         }
 
-                    }
+
 
                     return false;
 
@@ -446,7 +442,7 @@ public class CryptoPaymentRequestExecutorAgent extends FermatAgent {
 
 
     private void reportUnexpectedError(Exception e) {
-        errorManager.reportUnexpectedPluginException(pluginVersionReference, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+        cryptoPaymentRequestNetworkServicePluginRoot.getErrorManager().reportUnexpectedPluginException(pluginVersionReference, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
     }
 
     public void connectionFailure(String remotePublicKey){

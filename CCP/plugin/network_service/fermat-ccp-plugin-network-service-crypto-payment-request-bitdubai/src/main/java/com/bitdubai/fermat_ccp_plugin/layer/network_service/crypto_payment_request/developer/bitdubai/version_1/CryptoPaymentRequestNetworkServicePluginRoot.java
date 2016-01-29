@@ -979,10 +979,7 @@ public final class CryptoPaymentRequestNetworkServicePluginRoot extends Abstract
 
         cryptoPaymentRequestExecutorAgent = new CryptoPaymentRequestExecutorAgent(
                     this,
-                    errorManager,
-                    eventManager,
                     cryptoPaymentRequestNetworkServiceDao,
-                    wsCommunicationsCloudClientManager,
                     getPluginVersionReference()
             );
     }
@@ -1405,5 +1402,19 @@ public final class CryptoPaymentRequestNetworkServicePluginRoot extends Abstract
     }
 
 
+    public ErrorManager getErrorManager() {
+        return errorManager;
+    }
 
+    public EventManager getEventManager() {
+        return eventManager;
+    }
+
+    public WsCommunicationsCloudClientManager getWsCommunicationsCloudClientManager() {
+        return wsCommunicationsCloudClientManager;
+    }
+
+    public CommunicationNetworkServiceConnectionManager_V2 getCommunicationNetworkServiceConnectionManager() {
+        return communicationNetworkServiceConnectionManager;
+    }
 }
