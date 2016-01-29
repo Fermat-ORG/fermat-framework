@@ -949,19 +949,24 @@ public class CryptoAddressesNetworkServicePluginRoot extends AbstractNetworkServ
     /**
      * Handles the events CompleteComponentRegistrationNotification
      */
-    public void initializeAgent() throws CantStartPluginException {
+    public void initializeAgent() throws CantStartAgentException {
 
         System.out.println("CryptoAddressesNetworkServicePluginRoot - Starting method initializeAgent");
-        
-        this.cryptoAddressesExecutorAgent = new CryptoAddressesExecutorAgent(
-                this,
-                errorManager,
-                eventManager,
-                cryptoAddressesNetworkServiceDao,
-                wsCommunicationsCloudClientManager
-        );
 
-        this.start();
+        if (cryptoAddressesExecutorAgent == null){
+
+            this.cryptoAddressesExecutorAgent = new CryptoAddressesExecutorAgent(
+                    this,
+                    errorManager,
+                    eventManager,
+                    cryptoAddressesNetworkServiceDao,
+                    wsCommunicationsCloudClientManager
+            );
+
+            this.cryptoAddressesExecutorAgent.start();
+        }
+        
+
     }
 
     public void handleCompleteComponentRegistrationNotificationEvent(PlatformComponentProfile platformComponentProfileRegistered){
@@ -1095,9 +1100,8 @@ public class CryptoAddressesNetworkServicePluginRoot extends AbstractNetworkServ
                 communicationNetworkServiceConnectionManager.restart();
             }
 
-            if (cryptoAddressesExecutorAgent == null){
-                initializeAgent();
-            }
+
+            initializeAgent();
 
             /*
              * Mark as register

@@ -695,11 +695,11 @@ public class CryptoTransmissionNetworkServicePluginRoot extends AbstractPlugin i
         System.out.println("CryptoTransmissionNetworkServicePluginRoot - initializeAgent() ");
 
         try {
-            if(cryptoTransmissionTransactionRecordedAgent ==null){
-                cryptoTransmissionTransactionRecordedAgent = new CryptoTransmissionTransactionRecordedAgent(
-                        this);
+
+            if(cryptoTransmissionTransactionRecordedAgent == null){
+                cryptoTransmissionTransactionRecordedAgent = new CryptoTransmissionTransactionRecordedAgent(this);
+                cryptoTransmissionTransactionRecordedAgent.start();
             }
-            cryptoTransmissionTransactionRecordedAgent.start();
 
         } catch (CantStartAgentException e) {
             errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_CRYPTO_TRANSMISSION_NETWORK_SERVICE, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
@@ -1244,9 +1244,7 @@ public class CryptoTransmissionNetworkServicePluginRoot extends AbstractPlugin i
                 this.initializeCommunicationNetworkServiceConnectionManager();
             }
 
-            if(cryptoTransmissionTransactionRecordedAgent == null) {
-                initializeAgent();
-            }
+            initializeAgent();
 
             /*
              * Mark as register

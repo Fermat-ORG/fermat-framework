@@ -735,13 +735,18 @@ public class IntraActorNetworkServicePluginRoot extends AbstractPlugin implement
         System.out.println("IntraActorNetworkServicePluginRoot - initializeAgent() ");
 
         try {
-            actorNetworkServiceRecordedAgent = new ActorNetworkServiceRecordedAgent(
-                    communicationNetworkServiceConnectionManager,
-                    this,
-                    errorManager,
-                    eventManager,
-                    wsCommunicationsCloudClientManager);
-            actorNetworkServiceRecordedAgent.start();
+
+            if (actorNetworkServiceRecordedAgent == null){
+
+                actorNetworkServiceRecordedAgent = new ActorNetworkServiceRecordedAgent(
+                        communicationNetworkServiceConnectionManager,
+                        this,
+                        errorManager,
+                        eventManager,
+                        wsCommunicationsCloudClientManager);
+                actorNetworkServiceRecordedAgent.start();
+
+            }
 
         } catch (CantStartAgentException e) {
             errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_INTRAUSER_NETWORK_SERVICE, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
@@ -1354,9 +1359,7 @@ public class IntraActorNetworkServicePluginRoot extends AbstractPlugin implement
                 communicationNetworkServiceConnectionManager.restart();
             }
 
-            if(actorNetworkServiceRecordedAgent == null) {
-                initializeAgent();
-            }
+            initializeAgent();
 
             /*
              * Mark as register
