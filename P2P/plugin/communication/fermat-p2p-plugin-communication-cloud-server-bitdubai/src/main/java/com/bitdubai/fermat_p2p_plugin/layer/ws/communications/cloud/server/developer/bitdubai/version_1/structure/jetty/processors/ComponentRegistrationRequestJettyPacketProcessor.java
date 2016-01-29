@@ -185,16 +185,12 @@ public class ComponentRegistrationRequestJettyPacketProcessor extends FermatJett
             if (MemoryCache.getInstance().getRegisteredCommunicationsCloudClientCache().containsKey(platformComponentProfileToRegister.getIdentityPublicKey()) &&
                     !MemoryCache.getInstance().getStandByProfileByClientIdentity().containsKey(platformComponentProfileToRegister.getIdentityPublicKey())) {
 
+                LOG.info("Cloud client already register! clean old references and close old connection");
                 ClientConnection clientConnectionOld = MemoryCache.getInstance().getRegisteredClientConnectionsCache().remove(platformComponentProfileToRegister.getIdentityPublicKey());
-                clientConnectionOld.getSession().close(new CloseReason(CloseReason.CloseCodes.NORMAL_CLOSURE, "Connection is no more active"));
-                if (MemoryCache.getInstance().getTimersByClientIdentity().containsKey(platformComponentProfileToRegister.getIdentityPublicKey())){
-                    LOG.info("Cancel timer task to clean references for the old connection");
-                    Timer timer = MemoryCache.getInstance().getTimersByClientIdentity().remove(platformComponentProfileToRegister.getIdentityPublicKey());
-                    timer.cancel();
-                    LOG.info("Remove from stand by cache old references, they have to register again");
-                }
-                MemoryCache.getInstance().getStandByProfileByClientIdentity().remove(platformComponentProfileToRegister.getIdentityPublicKey());
-
+                LOG.info("clientConnectionOld id = " + clientConnectionOld.getSession().getId());
+                MemoryCache.getInstance().cleanReferences(clientConnectionOld);
+                clientConnectionOld.setClientIdentity(null);
+                clientConnectionOld.getSession().close();
             }
 
              /*
