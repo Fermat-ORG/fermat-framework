@@ -110,8 +110,9 @@
                     <EditText
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:id="@+id/editText"
+                        android:id="@+id/editTextBankName"
                         android:layout_weight="1"
+                        android:textColor="#000"
 
                         />
 
@@ -122,8 +123,13 @@
             <Spinner
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:id="@+id/spinner2"
-                android:textColor="#000"/>
+                android:id="@+id/spinner2Bank"
+                android:text="Bank"
+                android:theme="@style/Base.TextAppearance.AppCompat.Button"
+                android:textColor="#000000"
+                android:backgroundTint="#a5a5a5"
+                android:backgroundTintMode="add"
+                android:background="#c2c2c2" />
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -145,7 +151,7 @@
                 <EditText
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:id="@+id/editText2"
+                    android:id="@+id/AccountAlias"
                     android:layout_weight="1"
                     android:textColor="#000"/>
             </LinearLayout>
@@ -171,16 +177,26 @@
                 <EditText
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:id="@+id/editText3"
+                    android:id="@+id/Accountf"
                     android:layout_weight="1"
                     android:textColor="#000"/>
             </LinearLayout>
+            <Spinner
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/spinner2Currency"
+                android:text="Currency"
+                android:theme="@style/Base.TextAppearance.AppCompat.Button"
+
+                android:textColor="#000000"
+                android:backgroundTint="#a5a5a5"/>
 
             <View
                 android:layout_width="match_parent"
                 android:layout_height="0.7dp"
                 android:layout_marginLeft="5dp"
                 android:layout_marginRight="5dp"
+                android:textColor="#000"
                 android:background="@drawable/round_corner_line_dialog"
                 />
 
@@ -190,6 +206,7 @@
                 android:layout_height="0.7dp"
                 android:layout_marginLeft="5dp"
                 android:layout_marginRight="5dp"
+                android:textColor="#000"
                 android:background="@drawable/round_corner_line_dialog"
                 />
 
@@ -217,11 +234,11 @@
                 <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatButton
                     android:layout_width="120dp"
                     android:layout_height="wrap_content"
-                    android:id="@+id/btn_left"
+                    android:id="@+id/btn_action_bank"
                     android:text="Create"
                     android:textSize="12dp"
                     android:layout_gravity="center_horizontal"
-                    android:textColor="#000"
+
                   />
 
 

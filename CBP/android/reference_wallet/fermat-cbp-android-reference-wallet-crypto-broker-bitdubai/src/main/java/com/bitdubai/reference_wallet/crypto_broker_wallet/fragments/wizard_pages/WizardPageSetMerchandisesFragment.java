@@ -24,6 +24,9 @@ import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.A
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Wallets;
 import com.bitdubai.fermat_bnk_api.layer.bnk_wallet.bank_money.interfaces.BankAccountNumber;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.CurrencyType;
+import com.bitdubai.fermat_cbp_api.layer.wallet.crypto_broker.exceptions.CantCreateCryptoBrokerWalletException;
+import com.bitdubai.fermat_cbp_api.layer.wallet.crypto_broker.exceptions.CryptoBrokerWalletNotFoundException;
+import com.bitdubai.fermat_cbp_api.layer.wallet.crypto_broker.interfaces.CryptoBrokerWallet;
 import com.bitdubai.fermat_cbp_api.layer.wallet.crypto_broker.interfaces.setting.CryptoBrokerWalletAssociatedSetting;
 import com.bitdubai.fermat_cbp_api.layer.wallet.crypto_broker.interfaces.setting.CryptoBrokerWalletSettingSpread;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_broker.interfaces.CryptoBrokerWalletManager;
@@ -64,7 +67,7 @@ public class WizardPageSetMerchandisesFragment extends AbstractFermatFragment
     private WalletsAdapter adapter;
     private RecyclerView recyclerView;
     private FermatTextView emptyView;
-
+    private CryptoBrokerWalletManager cryptoBrokerWalletManager;
 
     public static WizardPageSetMerchandisesFragment newInstance() {
         return new WizardPageSetMerchandisesFragment();
@@ -212,25 +215,37 @@ public class WizardPageSetMerchandisesFragment extends AbstractFermatFragment
                     @Override
                     public void onItemSelected(BankAccountNumber selectedAccount) {
                         FiatCurrency currency = selectedAccount.getCurrencyType();
-                        String account = selectedAccount.getAccount();
-                        bankCurrencies.put(selectedWallet.getWalletPublicKey(), currency);
-                        bankAccounts.put(selectedWallet.getWalletPublicKey(), account);
-                        if (!containWallet(selectedWallet)) {
-                            stockWallets.add(selectedWallet);
-                            adapter.changeDataSet(stockWallets);
-                            showOrHideNoSelectedWalletsView();
+                        if (currency == null) {
+                            InputDialogCBP inputDialogCBP = new InputDialogCBP(getActivity(),appSession, null);
+                            inputDialogCBP.DialogType(2);
+                            inputDialogCBP.show();
 
                         }
-                    }
+                    String account = selectedAccount.getAccount();
+                    bankCurrencies.put(selectedWallet.getWalletPublicKey(),currency);
+                    bankAccounts.put(selectedWallet.getWalletPublicKey(),account);
+                    if(!
 
-                });
+                    containWallet(selectedWallet)
+
+                    )
+
+                    {
+                        stockWallets.add(selectedWallet);
+                        adapter.changeDataSet(stockWallets);
+                        showOrHideNoSelectedWalletsView();
+
+                    }
+                }
+
+            });
                 accountsDialog.show(getFragmentManager(), "accountsDialog");
             } else {
+
                 InputDialogCBP inputDialogCBP = new InputDialogCBP(getActivity(),appSession,null);
                 inputDialogCBP.DialogType(1);
                 inputDialogCBP.show();
-
-            }
+                }
 
         } catch (FermatException ex) {
             Toast.makeText(WizardPageSetMerchandisesFragment.this.getActivity(), "Oops a error occurred...", Toast.LENGTH_SHORT).show();
