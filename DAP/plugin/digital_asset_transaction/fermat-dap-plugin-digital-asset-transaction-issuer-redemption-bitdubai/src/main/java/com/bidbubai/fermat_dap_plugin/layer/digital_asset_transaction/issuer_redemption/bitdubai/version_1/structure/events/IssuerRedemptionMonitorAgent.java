@@ -179,6 +179,7 @@ public class IssuerRedemptionMonitorAgent implements Agent {
                             digitalAssetMetadata.getDigitalAsset().setGenesisAmount(cryptoTransactionOnBlockChain.getCryptoAmount());
                             digitalAssetMetadata.setMetadataId(UUID.randomUUID());
                             digitalAssetMetadata.addNewTransaction(cryptoTransactionOnBlockChain.getTransactionHash(), cryptoTransactionOnBlockChain.getBlockHash());
+                            wallet.createdNewAsset(digitalAssetMetadata);
                             /**
                              * Notifies the Asset Vault that the address of this Redeem Point, has been used.
                              */
