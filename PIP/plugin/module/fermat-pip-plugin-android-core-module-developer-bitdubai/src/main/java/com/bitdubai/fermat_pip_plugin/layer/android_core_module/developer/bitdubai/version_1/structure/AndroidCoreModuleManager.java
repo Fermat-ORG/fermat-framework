@@ -5,10 +5,10 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.BlockchainNetworkType;
 import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.exceptions.CantGetBlockchainConnectionStatusException;
 import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.interfaces.BitcoinNetworkManager;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.WsCommunicationsCloudClientManager;
-import com.bitdubai.fermat_pip_api.all_definition.enums.NetworkStatus;
-import com.bitdubai.fermat_pip_api.layer.module.android_core.exception.CantGetBitcoinNetworkStatusException;
-import com.bitdubai.fermat_pip_api.layer.module.android_core.exception.CantGetCommunicationNetworkStatusException;
-import com.bitdubai.fermat_pip_api.layer.module.android_core.interfaces.AndroidCoreManager;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.enums.NetworkStatus;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.exceptions.CantGetBitcoinNetworkStatusException;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.exceptions.CantGetCommunicationNetworkStatusException;
+import com.bitdubai.fermat_api.AndroidCoreManager;
 
 /**
  * Created by Natalia   19/01/2016
