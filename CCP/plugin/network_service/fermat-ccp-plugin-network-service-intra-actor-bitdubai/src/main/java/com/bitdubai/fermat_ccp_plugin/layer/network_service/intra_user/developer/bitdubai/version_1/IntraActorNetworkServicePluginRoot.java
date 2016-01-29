@@ -2167,7 +2167,5 @@ public class IntraActorNetworkServicePluginRoot extends AbstractPlugin implement
     public EventManager getEventManager() {
         return eventManager;
     }
-    public WsCommunicationsCloudClientManager getWsCommunicationsCloudClientManager() {
-        return wsCommunicationsCloudClientManager;
-    }
+
 }

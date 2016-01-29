@@ -306,19 +306,6 @@ public final class CryptoPaymentRequestNetworkServicePluginRoot extends Abstract
 
                     errorManager.reportUnexpectedPluginException(this.getPluginVersionReference(), UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, pluginStartException);
                     throw pluginStartException;
-                } catch (CantStartAgentException e) {
-
-                    StringBuffer contextBuffer = new StringBuffer();
-                    contextBuffer.append("Plugin ID: " + pluginId);
-                    contextBuffer.append(CantStartPluginException.CONTEXT_CONTENT_SEPARATOR);
-                    contextBuffer.append("Database Name: " + CommunicationNetworkServiceDatabaseConstants.DATA_BASE_NAME);
-
-                    String context = contextBuffer.toString();
-                    String possibleCause = "Problem initializing the agent";
-                    CantStartPluginException pluginStartException = new CantStartPluginException(CantStartPluginException.DEFAULT_MESSAGE, e, context, possibleCause);
-
-                    errorManager.reportUnexpectedPluginException(this.getPluginVersionReference(), UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, pluginStartException);
-                    throw pluginStartException;
                 }
 
                 System.out.println("********* Crypto Payment Request: Successful start. ");
@@ -981,21 +968,27 @@ public final class CryptoPaymentRequestNetworkServicePluginRoot extends Abstract
     }
 
 
-    private void initializeAgent() throws CantStartAgentException {
+    private void initializeAgent()  {
 
         System.out.println("CryptoPaymentRequestNetworkServicePluginRoot - Starting method initializeAgent ");
 
-        if (cryptoPaymentRequestExecutorAgent == null){
+        try {
 
-            this.cryptoPaymentRequestExecutorAgent = new CryptoPaymentRequestExecutorAgent(
-                    this,
-                    cryptoPaymentRequestNetworkServiceDao,
-                    getPluginVersionReference()
-            );
+            if (cryptoPaymentRequestExecutorAgent == null){
 
-            this.cryptoPaymentRequestExecutorAgent.start();
+                this.cryptoPaymentRequestExecutorAgent = new CryptoPaymentRequestExecutorAgent(
+                        this,
+                        cryptoPaymentRequestNetworkServiceDao,
+                        getPluginVersionReference()
+                );
 
+                this.cryptoPaymentRequestExecutorAgent.start();
+
+            }
+        } catch (CantStartAgentException e) {
+            e.printStackTrace();
         }
+
     }
 
     @Override
@@ -1433,9 +1426,6 @@ public final class CryptoPaymentRequestNetworkServicePluginRoot extends Abstract
         return eventManager;
     }
 
-    public WsCommunicationsCloudClientManager getWsCommunicationsCloudClientManager() {
-        return wsCommunicationsCloudClientManager;
-    }
 
     public CommunicationNetworkServiceConnectionManager_V2 getCommunicationNetworkServiceConnectionManager() {
         return communicationNetworkServiceConnectionManager;

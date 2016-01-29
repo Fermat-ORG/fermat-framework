@@ -327,19 +327,6 @@ public class CryptoAddressesNetworkServicePluginRoot extends AbstractNetworkServ
                     errorManager.reportUnexpectedPluginException(this.getPluginVersionReference(),UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, pluginStartException);
                     throw pluginStartException;
 
-                } catch (CantStartAgentException e) {
-
-                    StringBuffer contextBuffer = new StringBuffer();
-                    contextBuffer.append("Plugin ID: " + pluginId);
-                    contextBuffer.append(CantStartPluginException.CONTEXT_CONTENT_SEPARATOR);
-                    contextBuffer.append("Database Name: " + CommunicationNetworkServiceDatabaseConstants.DATA_BASE_NAME);
-
-                    String context = contextBuffer.toString();
-                    String possibleCause = "Problem initializing the agent";
-                    CantStartPluginException pluginStartException = new CantStartPluginException(CantStartPluginException.DEFAULT_MESSAGE, e, context, possibleCause);
-
-                    errorManager.reportUnexpectedPluginException(this.getPluginVersionReference(), UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, pluginStartException);
-                    throw pluginStartException;
                 }
 
                 System.out.println("********* Crypto Addresses: Successful start. ");
@@ -960,20 +947,24 @@ public class CryptoAddressesNetworkServicePluginRoot extends AbstractNetworkServ
     /**
      * Handles the events CompleteComponentRegistrationNotification
      */
-    public void initializeAgent() throws CantStartAgentException {
+    public void initializeAgent(){
 
         System.out.println("CryptoAddressesNetworkServicePluginRoot - Starting method initializeAgent");
 
-        if (cryptoAddressesExecutorAgent == null){
+        try {
+            if (cryptoAddressesExecutorAgent == null){
 
-            cryptoAddressesExecutorAgent = new CryptoAddressesExecutorAgent(
-                    this,
-                    cryptoAddressesNetworkServiceDao
-            );
+                cryptoAddressesExecutorAgent = new CryptoAddressesExecutorAgent(
+                        this,
+                        cryptoAddressesNetworkServiceDao
+                );
 
-            this.cryptoAddressesExecutorAgent.start();
+                this.cryptoAddressesExecutorAgent.start();
+            }
+        } catch (CantStartAgentException e) {
+            e.printStackTrace();
         }
-               
+
     }
 
     public void handleCompleteComponentRegistrationNotificationEvent(PlatformComponentProfile platformComponentProfileRegistered){
