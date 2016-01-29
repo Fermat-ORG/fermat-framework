@@ -265,9 +265,7 @@ public class CryptoTransmissionNetworkServicePluginRoot extends AbstractPlugin i
         this.name = "Crypto Transmission Network Service";
         this.alias = "CryptoTransmissionNetworkService";
         this.extraData = null;
-
-        actorNetworkServiceRecordedAgent = new ActorNetworkServiceRecordedAgent(
-                this);
+        this.cryptoTransmissionTransactionRecordedAgent = new CryptoTransmissionTransactionRecordedAgent(this);
     }
 
     /**
@@ -504,12 +502,8 @@ public class CryptoTransmissionNetworkServicePluginRoot extends AbstractPlugin i
 
                     remoteNetworkServicesRegisteredList = new CopyOnWriteArrayList<PlatformComponentProfile>();
 
-                    cryptoTransmissionTransactionRecordedAgent = new CryptoTransmissionTransactionRecordedAgent(
-                            this,
-                            errorManager,
-                            eventManager);
-                    if(actorNetworkServiceRecordedAgent==null) {
-                        actorNetworkServiceRecordedAgent = new ActorNetworkServiceRecordedAgent(
+                    if(cryptoTransmissionTransactionRecordedAgent==null) {
+                        cryptoTransmissionTransactionRecordedAgent = new CryptoTransmissionTransactionRecordedAgent(
                                 this);
                     }
 
@@ -700,11 +694,6 @@ public class CryptoTransmissionNetworkServicePluginRoot extends AbstractPlugin i
         try {
             if(cryptoTransmissionTransactionRecordedAgent ==null){
                 cryptoTransmissionTransactionRecordedAgent = new CryptoTransmissionTransactionRecordedAgent(
-                        this,
-                        errorManager,
-                        eventManager);
-            if(actorNetworkServiceRecordedAgent==null){
-                actorNetworkServiceRecordedAgent = new ActorNetworkServiceRecordedAgent(
                         this);
             }
             cryptoTransmissionTransactionRecordedAgent.start();
@@ -918,7 +907,7 @@ public class CryptoTransmissionNetworkServicePluginRoot extends AbstractPlugin i
 
                             //Si me llega es destinatario que yo tengo la conexion abierta es el sender
                             //TODO: VER BIEN ESTO PORQUE ESTOY DORMIDO
-                            this.actorNetworkServiceRecordedAgent.getPoolConnectionsWaitingForResponse().remove(cryptoTransmissionMetadata.getSenderPublicKey());
+                            this.cryptoTransmissionTransactionRecordedAgent.getPoolConnectionsWaitingForResponse().remove(cryptoTransmissionMetadata.getSenderPublicKey());
                             this.getNetworkServiceConnectionManager().closeConnection(cryptoTransmissionMetadata.getSenderPublicKey());
 
                             System.out.println("-----------------------\n" +

@@ -71,14 +71,11 @@ public class CryptoTransmissionTransactionRecordedAgent extends FermatAgent{
 
     private final CryptoTransmissionNetworkServicePluginRoot cryptoTransmissionNetworkServicePluginRoot;
 
-    public ActorNetworkServiceRecordedAgent( final CryptoTransmissionNetworkServicePluginRoot cryptoTransmissionNetworkServicePluginRoot
-                                             ) {
-         ;
-        this.status                                       = AgentStatus.CREATED                         ;
+    public CryptoTransmissionTransactionRecordedAgent(final CryptoTransmissionNetworkServicePluginRoot cryptoTransmissionNetworkServicePluginRoot) {
+
+        this.status = AgentStatus.CREATED;
         this.cryptoTransmissionNetworkServicePluginRoot = cryptoTransmissionNetworkServicePluginRoot;
-
         poolConnectionsWaitingForResponse = new HashMap<>();
-
         threadPoolExecutor = Executors.newFixedThreadPool(2);
         //Create a thread to send the messages
         this.toSend = new Runnable() {
