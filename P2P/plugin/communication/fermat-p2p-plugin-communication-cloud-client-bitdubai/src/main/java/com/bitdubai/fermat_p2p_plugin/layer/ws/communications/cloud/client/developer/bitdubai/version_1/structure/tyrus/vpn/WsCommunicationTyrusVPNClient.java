@@ -189,7 +189,6 @@ public class WsCommunicationTyrusVPNClient extends Endpoint implements Communica
             case 1006:
                     try {
                         wsCommunicationTyrusVPNClientManagerAgent.riseVpnConnectionCloseNotificationEvent(remoteParticipantNetworkService.getNetworkServiceType(), remoteParticipant,false);
-                        System.out.println(" WsCommunicationVPNClient - Connection loose,  trying to reconnect");
                     }catch (Exception e){
                         e.printStackTrace();
                     }
