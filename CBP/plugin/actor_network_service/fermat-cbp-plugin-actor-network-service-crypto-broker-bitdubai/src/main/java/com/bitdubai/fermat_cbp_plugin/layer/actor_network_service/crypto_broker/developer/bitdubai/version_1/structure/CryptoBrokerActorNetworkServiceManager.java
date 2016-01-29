@@ -87,7 +87,7 @@ public final class CryptoBrokerActorNetworkServiceManager implements CryptoBroke
                         (cryptoBroker.getAlias().toLowerCase() + "_" + platformComponentProfile.getName().replace(" ", "_")),
                         NetworkServiceType.UNDEFINED,
                         PlatformComponentType.ACTOR_CRYPTO_BROKER,
-                        null// imageString
+                        imageString
                 );
 
                 communicationsClientConnection.registerComponentForCommunication(platformComponentProfile.getNetworkServiceType(), actorPlatformComponentProfile);
