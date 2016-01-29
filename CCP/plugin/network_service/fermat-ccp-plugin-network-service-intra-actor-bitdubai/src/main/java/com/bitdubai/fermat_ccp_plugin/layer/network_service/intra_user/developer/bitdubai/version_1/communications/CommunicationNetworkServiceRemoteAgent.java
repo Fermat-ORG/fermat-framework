@@ -207,7 +207,7 @@ public class CommunicationNetworkServiceRemoteAgent extends Observable {
 
         try {
 
-           System.out.println("IntraCommunicationNetworkServiceRemoteAgent - processMessageReceived "+communicationsVPNConnection.isConnected());
+         //  System.out.println("IntraCommunicationNetworkServiceRemoteAgent - processMessageReceived "+communicationsVPNConnection.isConnected());
 
             /**
              * Verified the status of the connection

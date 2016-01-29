@@ -108,6 +108,8 @@ import java.util.Timer;
 import java.util.TimerTask;
 import java.util.UUID;
 import java.util.concurrent.CopyOnWriteArrayList;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 /**
@@ -164,7 +166,7 @@ public final class CryptoPaymentRequestNetworkServicePluginRoot extends Abstract
 
 
 
-    private long reprocessTimer =   3600 * 1000; //one hours
+    private long reprocessTimer =  300000; //five minutes
 
 
     private Timer timer = new Timer();
@@ -1313,9 +1315,17 @@ public final class CryptoPaymentRequestNetworkServicePluginRoot extends Abstract
                 {
                     if(record.getSentNumber() > 10)
                     {
+                        if(record.getSentNumber() > 20)
+                        {
+                            //reprocess at two hours
+                          //  reprocessTimer =  2 * 3600 * 1000;
+
+                        }
+
+                        //reprocess at five minutes
                         //update state and process again later
                         cryptoPaymentRequestNetworkServiceDao.changeProtocolState(record.getRequestId(),RequestProtocolState.WAITING_RESPONSE);
-
+                        cryptoPaymentRequestNetworkServiceDao.changeSentNumber(record.getRequestId(), 1);
 
                     }
                     else
@@ -1392,14 +1402,21 @@ public final class CryptoPaymentRequestNetworkServicePluginRoot extends Abstract
     }
 
     private void startTimer(){
+
+
         timer.schedule(new TimerTask() {
             @Override
             public void run() {
                 // change message state to process retry later
                 reprocessMessage();
             }
-        }, reprocessTimer);
+        },0, reprocessTimer);
+
+
+
     }
+
+
 
 
     public ErrorManager getErrorManager() {

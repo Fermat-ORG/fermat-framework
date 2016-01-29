@@ -253,6 +253,10 @@ public class CryptoTransmissionNetworkServicePluginRoot extends AbstractPlugin i
     private CryptoTransmissionMetadataDAO_V2 incomingNotificationsDao;
     private CryptoTransmissionMetadataDAO_V2 outgoingNotificationDao;
 
+    Timer timer = new Timer();
+
+    private long reprocessTimer =  300000; //five minutes
+
 
     /**
      * Constructor
@@ -511,15 +515,7 @@ public class CryptoTransmissionNetworkServicePluginRoot extends AbstractPlugin i
                     reprocessMessage();
 
                     //declare a schedule to process waiting request message
-                    Timer timer = new Timer();
-
-                    timer.schedule(new TimerTask() {
-                        @Override
-                        public void run() {
-                            // change message state to process again
-                            reprocessMessage();
-                        }
-                    }, 3600*1000);
+                    this.startTimer();
 
 
                     /*
@@ -934,12 +930,11 @@ public class CryptoTransmissionNetworkServicePluginRoot extends AbstractPlugin i
     }
 
 
-
     private void checkFailedDeliveryTime(String destinationPublicKey)
     {
         try{
 
-            Map<String, Object> filters = new HashMap<>();
+            Map<String, Object> filters =new HashMap<>();
             filters.put(CryptoTransmissionNetworkServiceDatabaseConstants.CRYPTO_TRANSMISSION_METADATA_DESTINATION_PUBLIC_KEY_COLUMN_NAME, destinationPublicKey);
                     /*
          * Read all pending CryptoTransmissionMetadata from database
@@ -950,17 +945,20 @@ public class CryptoTransmissionNetworkServicePluginRoot extends AbstractPlugin i
             //if I try to send more than 5 times I put it on hold
             for (CryptoTransmissionMetadata record : lstCryptoTransmissionMetadata) {
 
-
                 if(!record.getCryptoTransmissionProtocolState().getCode().equals(CryptoTransmissionProtocolState.WAITING_FOR_RESPONSE.getCode()))
                 {
                     if(record.getSentCount() > 10)
                     {
+                       // if(record.getSentCount() > 20)
+                         //   reprocessTimer =  2 * 3600 * 1000; //reprocess at two hours
+
                         //update state and process again later
                         outgoingNotificationDao.changeCryptoTransmissionProtocolState(record.getTransactionId(), CryptoTransmissionProtocolState.WAITING_FOR_RESPONSE);
+                        outgoingNotificationDao.changeSentNumber(record.getTransactionId(), 1);
+
                     }
                     else
                     {
-
                         outgoingNotificationDao.changeSentNumber(record.getTransactionId(), record.getSentCount() + 1);
                     }
                 }
@@ -1708,5 +1706,15 @@ public class CryptoTransmissionNetworkServicePluginRoot extends AbstractPlugin i
 
     public EventManager getEventManager() {
         return eventManager;
+    }
+
+    private void startTimer(){
+        timer.schedule(new TimerTask() {
+            @Override
+            public void run() {
+                // change message state to process retry later
+                reprocessMessage();
+            }
+        }, 0,reprocessTimer);
     }
 }
