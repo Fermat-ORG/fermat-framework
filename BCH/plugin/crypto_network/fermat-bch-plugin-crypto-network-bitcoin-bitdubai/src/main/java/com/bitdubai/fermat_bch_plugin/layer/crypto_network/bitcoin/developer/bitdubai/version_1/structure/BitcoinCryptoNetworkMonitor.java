@@ -137,7 +137,7 @@ public class BitcoinCryptoNetworkMonitor implements Agent {
      * Agent main method
      */
     private void doTheMainTask() throws BlockchainException {
-        System.out.println("Crypto Network starting and connecting...");
+        System.out.println("***CryptoNetwork***  starting and connecting...");
 
         try{
             /**
@@ -243,7 +243,7 @@ public class BitcoinCryptoNetworkMonitor implements Agent {
              e.printStackTrace();
          }
 
-        System.out.println("***CryptoNetwork*** Broadcasting transaction " + txHash + "...");
+        System.out.println("***CryptoNetwork***  Broadcasting transaction " + txHash + "...");
 
          final Transaction transaction = wallet.getTransaction(sha256Hash);
          TransactionBroadcast transactionBroadcast = peerGroup.broadcastTransaction(transaction);
@@ -271,7 +271,7 @@ public class BitcoinCryptoNetworkMonitor implements Agent {
                      */
                     wallet.saveToFile(walletFileName);
 
-                    System.out.println("Transaction succesfully broadcasted: " + transaction.getHashAsString());
+                    System.out.println("***CryptoNetwork***  Transaction succesfully broadcasted: " + transaction.getHashAsString());
                 } catch (CantExecuteDatabaseOperationException e) {
                     e.printStackTrace();
                 } catch (IOException e) {
@@ -454,7 +454,7 @@ public class BitcoinCryptoNetworkMonitor implements Agent {
                 wallet.saveToFile(walletFileName);
             }
 
-            System.out.println("Transaction succesfully stored for broadcasting: " + tx.getHashAsString());
+            System.out.println("***CryptoNetwork*** Transaction succesfully stored for broadcasting: " + tx.getHashAsString());
         } catch (CantExecuteDatabaseOperationException e) {
             throw new CantStoreBitcoinTransactionException(CantStoreBitcoinTransactionException.DEFAULT_MESSAGE, e, "There was an error storing the transaction in the database", null);
         } catch (Exception e) {
