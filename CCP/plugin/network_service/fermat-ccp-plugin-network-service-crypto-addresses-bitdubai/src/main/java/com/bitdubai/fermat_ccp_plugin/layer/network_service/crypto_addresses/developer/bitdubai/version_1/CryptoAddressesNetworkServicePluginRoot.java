@@ -958,10 +958,7 @@ public class CryptoAddressesNetworkServicePluginRoot extends AbstractNetworkServ
         
         cryptoAddressesExecutorAgent = new CryptoAddressesExecutorAgent(
                 this,
-                errorManager,
-                eventManager,
-                cryptoAddressesNetworkServiceDao,
-                wsCommunicationsCloudClientManager
+                cryptoAddressesNetworkServiceDao
         );
     }
 
