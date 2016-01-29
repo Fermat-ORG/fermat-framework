@@ -201,7 +201,7 @@ public class RedeemPointRedemptionMonitorAgent implements Agent {
 
                                     //PERSIST METADATA
                                     debug("persisting metadata");
-                                    dao.persistTransaction(transactionId, assetMetadataTransaction.getSenderId(), assetMetadataTransaction.getReceiverId(), DistributionStatus.SENDING_CRYPTO, CryptoStatus.PENDING_SUBMIT);
+                                    dao.newTransaction(transactionId, assetMetadataTransaction.getSenderId(), assetMetadataTransaction.getReceiverId(), DistributionStatus.SENDING_CRYPTO, CryptoStatus.PENDING_SUBMIT);
                                     persistDigitalAssetMetadataInLocalStorage(metadata, transactionId);
                                     //Now I should answer the metadata, so I'll send a message to the actor that sends me this metadata.
 
