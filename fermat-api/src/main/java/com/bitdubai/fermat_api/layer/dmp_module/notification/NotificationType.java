@@ -8,11 +8,11 @@ import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterE
 public enum NotificationType {
 
     /**
-     *  Definitions types
+     * Definitions types
      */
-    INCOMING_MONEY   ("IM"),
-    INCOMING_CONNECTION     ("IC"),
-    MONEY_REQUEST ("MR"),
+    INCOMING_MONEY("IM"),
+    INCOMING_CONNECTION("IC"),
+    MONEY_REQUEST("MR"),
     CLOUD_CONNECTED_NOTIFICATION("CCN"),
     INCOMING_INTRA_ACTOR_REQUEST_CONNECTION_NOTIFICATION("IIARCN"),
     RECEIVE_REQUEST_PAYMENT_NOTIFICATION("RRPN"),
@@ -21,7 +21,8 @@ public enum NotificationType {
     CLOUD_CLIENT_CONNECTED ("CCCONEC"),
     CLOUD_CLIENT_CLOSED                           ("CCCLOSE"),
     CLOUD_CLIENT_CONNECTION_LOOSE                                  ("CCCL"),
-    INCOMING_CHAT_MESSAGE   ("ICCM");
+    INCOMING_CHAT_MESSAGE   ("ICCM"),
+    REVIEW_NOTIFICATION("RN");
 
     /**
      * Represent the key
@@ -42,7 +43,9 @@ public enum NotificationType {
      *
      * @return String
      */
-    public String getCode()   { return this.code; }
+    public String getCode() {
+        return this.code;
+    }
 
     /**
      * Get the FactoryProjectType representation from code
@@ -53,12 +56,12 @@ public enum NotificationType {
      */
     public static NotificationType getByCode(String code) throws InvalidParameterException {
 
-        switch(code) {
-            case"IM":
+        switch (code) {
+            case "IM":
                 return INCOMING_MONEY;
-            case"IC":
+            case "IC":
                 return INCOMING_CONNECTION;
-            case"MR":
+            case "MR":
                 return MONEY_REQUEST;
             case "CCN":
                 return CLOUD_CONNECTED_NOTIFICATION;
@@ -74,6 +77,8 @@ public enum NotificationType {
             case "CCCLOSE": return CLOUD_CLIENT_CLOSED;
             case "CCCL":    return CLOUD_CLIENT_CONNECTION_LOOSE;
             case "ICCM": return  INCOMING_CHAT_MESSAGE;
+            case "RN":
+                return REVIEW_NOTIFICATION;
             default:
                 throw new InvalidParameterException(InvalidParameterException.DEFAULT_MESSAGE, null, "Code Received: " + code, "This Code Is Not Valid for the FactoryProjectType enum");
 
@@ -82,6 +87,7 @@ public enum NotificationType {
 
     /**
      * (non-Javadoc)
+     *
      * @see Object#toString()
      */
     @Override
