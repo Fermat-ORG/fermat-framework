@@ -5,6 +5,7 @@ import android.view.View;
 
 import com.bitdubai.fermat_android_api.ui.adapters.FermatAdapter;
 import com.bitdubai.fermat_api.layer.world.interfaces.CurrencyPair;
+import com.bitdubai.fermat_cbp_api.layer.middleware.matching_engine.interfaces.EarningsPair;
 import com.bitdubai.reference_wallet.crypto_broker_wallet.R;
 import com.bitdubai.reference_wallet.crypto_broker_wallet.common.holders.EarningsCurrencyPairsViewHolder;
 
@@ -13,10 +14,10 @@ import java.util.List;
 /**
  * Created by nelson on 29/01/16.
  */
-public class EarningsCurrencyPairsAdapter extends FermatAdapter<CurrencyPair, EarningsCurrencyPairsViewHolder> {
+public class EarningsCurrencyPairsAdapter extends FermatAdapter<EarningsPair, EarningsCurrencyPairsViewHolder> {
     private int selectedItem;
 
-    public EarningsCurrencyPairsAdapter(Context context, List<CurrencyPair> dataSet) {
+    public EarningsCurrencyPairsAdapter(Context context, List<EarningsPair> dataSet) {
         super(context, dataSet);
     }
 
@@ -31,7 +32,7 @@ public class EarningsCurrencyPairsAdapter extends FermatAdapter<CurrencyPair, Ea
     }
 
     @Override
-    protected void bindHolder(EarningsCurrencyPairsViewHolder holder, CurrencyPair data, int position) {
+    protected void bindHolder(EarningsCurrencyPairsViewHolder holder, EarningsPair data, int position) {
         holder.bind(data, selectedItem == position);
     }
 

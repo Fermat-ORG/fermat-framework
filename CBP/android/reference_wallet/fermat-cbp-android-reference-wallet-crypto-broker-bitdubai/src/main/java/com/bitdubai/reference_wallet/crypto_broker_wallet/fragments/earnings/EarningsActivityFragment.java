@@ -14,45 +14,55 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.Spinner;
 
 import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractFermatFragment;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView;
+import com.bitdubai.fermat_android_api.ui.interfaces.FermatListItemListeners;
 import com.bitdubai.fermat_api.layer.all_definition.enums.CryptoCurrency;
 import com.bitdubai.fermat_api.layer.all_definition.enums.FiatCurrency;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Wallets;
 import com.bitdubai.fermat_api.layer.world.interfaces.Currency;
+import com.bitdubai.fermat_cbp_api.layer.middleware.matching_engine.interfaces.EarningsPair;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_broker.interfaces.CryptoBrokerWalletManager;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_broker.interfaces.CryptoBrokerWalletModuleManager;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedWalletExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 import com.bitdubai.fermat_wpd_api.layer.wpd_network_service.wallet_resources.interfaces.WalletResourcesProviderManager;
 import com.bitdubai.reference_wallet.crypto_broker_wallet.R;
+import com.bitdubai.reference_wallet.crypto_broker_wallet.common.adapters.EarningsCurrencyPairsAdapter;
 import com.bitdubai.reference_wallet.crypto_broker_wallet.common.adapters.EarningsOverviewAdapter;
 import com.bitdubai.reference_wallet.crypto_broker_wallet.common.models.EarningTestData;
 import com.bitdubai.reference_wallet.crypto_broker_wallet.common.models.TestData;
 import com.bitdubai.reference_wallet.crypto_broker_wallet.session.CryptoBrokerWalletSession;
 
+import java.math.BigDecimal;
 import java.text.NumberFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 
 /**
  * A simple {@link Fragment} subclass.
  */
-public class EarningsActivityFragment extends AbstractFermatFragment<CryptoBrokerWalletSession, WalletResourcesProviderManager> {
+public class EarningsActivityFragment extends AbstractFermatFragment<CryptoBrokerWalletSession, WalletResourcesProviderManager> implements FermatListItemListeners<EarningsPair> {
 
     // Constants
     private static final String TAG = "EarningsActivity";
+
+    // Data
+    private List<EarningsPair> earningsPairs;
 
     // Fermat Managers
     private ErrorManager errorManager;
     private CryptoBrokerWalletManager walletManager;
 
-    private List<Currency> currencies;
-    private RecyclerView recyclerView;
-    private Spinner currencySpinner;
+    // UI
+    private RecyclerView earningsOverviewRecyclerView;
+    private RecyclerView currencyPairsRecyclerView;
+    private EarningsOverviewAdapter earningsOverviewAdapter;
+    private EarningsCurrencyPairsAdapter currencyPairsAdapter;
     private FermatTextView currentValue;
+    private FermatTextView previousValue;
 
 
     public static EarningsActivityFragment newInstance() {
@@ -68,7 +78,7 @@ public class EarningsActivityFragment extends AbstractFermatFragment<CryptoBroke
             walletManager = moduleManager.getCryptoBrokerWallet(appSession.getAppPublicKey());
             errorManager = appSession.getErrorManager();
 
-            currencies = getCurrencies();
+            earningsPairs = TestData.getEarningsPairs();
 
         } catch (Exception ex) {
             Log.e(TAG, ex.getMessage(), ex);
@@ -76,7 +86,6 @@ public class EarningsActivityFragment extends AbstractFermatFragment<CryptoBroke
                 errorManager.reportUnexpectedWalletException(Wallets.CBP_CRYPTO_BROKER_WALLET,
                         UnexpectedWalletExceptionSeverity.DISABLES_THIS_FRAGMENT, ex);
         }
-
     }
 
     @Override
@@ -84,8 +93,13 @@ public class EarningsActivityFragment extends AbstractFermatFragment<CryptoBroke
         View layout = inflater.inflate(R.layout.cbw_fragment_earnings_activity, container, false);
 
         currentValue = (FermatTextView) layout.findViewById(R.id.cbw_current_earning_value);
-        recyclerView = (RecyclerView) layout.findViewById(R.id.earning_overview_recycler_view);
-        currencySpinner = (Spinner) layout.findViewById(R.id.cbw_earning_currency_spinner);
+        previousValue = (FermatTextView) layout.findViewById(R.id.cbw_previous_earning_value);
+
+        earningsOverviewRecyclerView = (RecyclerView) layout.findViewById(R.id.earning_overview_recycler_view);
+        earningsOverviewRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false));
+
+        currencyPairsRecyclerView = (RecyclerView) layout.findViewById(R.id.cbw_earning_currency_pairs_recycler_view);
+        currencyPairsRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity(), LinearLayoutManager.HORIZONTAL, false));
 
         configureToolbar();
         setDataInViews();
@@ -93,39 +107,46 @@ public class EarningsActivityFragment extends AbstractFermatFragment<CryptoBroke
         return layout;
     }
 
-    private void setDataInViews() {
-        if (currencies != null && !currencies.isEmpty()) {
+    @Override
+    public void onItemClickListener(EarningsPair data, int position) {
+        Currency selectedCurrency = data.getSelectedEarningCurrency();
 
-            final List<EarningTestData> dataSet = TestData.getEarnings(currencies.get(0));
-            final EarningsOverviewAdapter adapter = new EarningsOverviewAdapter(getActivity(), dataSet);
-            recyclerView.setAdapter(adapter);
-            recyclerView.setLayoutManager(new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false));
+        List<EarningTestData> earnings = TestData.getEarnings(selectedCurrency, Calendar.MONTH);
+        earningsOverviewAdapter.changeDataSet(earnings);
 
+        double currentEarning = TestData.getCurrentEarning(selectedCurrency);
+        String currentEarningFormatted = NumberFormat.getInstance().format(currentEarning);
+        currentValue.setText(String.format("%s %s", currentEarningFormatted, selectedCurrency.getCode()));
 
-            List<String> arrayList = getFormattedCurrencies(currencies);
-            ArrayAdapter<String> spinnerAdapter = new ArrayAdapter<>(getActivity(), R.layout.cbw_spinner_item, arrayList);
-            spinnerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        if (!earnings.isEmpty()) {
+            double previousEarningValue = earnings.get(0).getEarningValue();
 
-            currencySpinner.setAdapter(spinnerAdapter);
-            currencySpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-                @Override
-                public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                    Currency selectedCurrency = currencies.get(position);
-
-                    List<EarningTestData> earnings = TestData.getEarnings(selectedCurrency);
-                    adapter.changeDataSet(earnings);
-
-                    double currentEarning = TestData.getCurrentEarning(selectedCurrency);
-                    String currentEarningFormatted = NumberFormat.getInstance().format(currentEarning);
-                    currentValue.setText(String.format("%s %s", currentEarningFormatted, selectedCurrency.getCode()));
-                }
-
-                @Override
-                public void onNothingSelected(AdapterView<?> parent) {
-
-                }
-            });
+            double previousEarning = getEarningDifference(currentEarning, previousEarningValue);
+            String previousEarningFormatted = NumberFormat.getInstance().format(previousEarning);
+            previousValue.setText(String.format("%s %s", previousEarningFormatted, selectedCurrency.getCode()));
         }
+
+        currencyPairsAdapter.setSelectedItem(position);
+    }
+
+    @Override
+    public void onLongItemClickListener(EarningsPair data, int position) {
+
+    }
+
+    private void setDataInViews() {
+        currencyPairsAdapter = new EarningsCurrencyPairsAdapter(getActivity(), earningsPairs);
+        currencyPairsAdapter.setFermatListEventListener(this);
+        currencyPairsRecyclerView.setAdapter(currencyPairsAdapter);
+
+        final EarningsPair earningsPair = earningsPairs.get(0);
+        final Currency earningCurrency = earningsPair.getSelectedEarningCurrency();
+        final List<EarningTestData> dataSet = TestData.getEarnings(earningCurrency, Calendar.MONTH);
+        earningsOverviewAdapter = new EarningsOverviewAdapter(getActivity(), dataSet);
+        earningsOverviewRecyclerView.setAdapter(earningsOverviewAdapter);
+
+        onItemClickListener(earningsPair, 0);
+
     }
 
     private void configureToolbar() {
@@ -139,21 +160,10 @@ public class EarningsActivityFragment extends AbstractFermatFragment<CryptoBroke
         if (toolbar.getMenu() != null) toolbar.getMenu().clear();
     }
 
-    private List<Currency> getCurrencies() {
-        ArrayList<Currency> currencies = new ArrayList<>();
-        currencies.add(CryptoCurrency.BITCOIN);
-        currencies.add(FiatCurrency.US_DOLLAR);
-        currencies.add(FiatCurrency.VENEZUELAN_BOLIVAR);
+    private double getEarningDifference(double currentEarningValue, double previousEarningValue) {
+        BigDecimal earningValueBigDec = BigDecimal.valueOf(currentEarningValue);
+        BigDecimal previousEarningValueBigDec = BigDecimal.valueOf(previousEarningValue);
 
-        return currencies;
-    }
-
-    private List<String> getFormattedCurrencies(List<Currency> currencies) {
-        ArrayList<String> data = new ArrayList<>();
-        for (Currency currency : currencies) {
-            data.add(currency.getFriendlyName() + " (" + currency.getCode() + ")");
-        }
-
-        return data;
+        return earningValueBigDec.subtract(previousEarningValueBigDec).doubleValue();
     }
 }
