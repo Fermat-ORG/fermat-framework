@@ -5,6 +5,7 @@ import com.bitdubai.fermat_csh_api.all_definition.enums.TransactionType;
 import com.bitdubai.fermat_csh_api.all_definition.interfaces.CashTransactionParameters;
 
 import java.math.BigDecimal;
+import java.util.Objects;
 import java.util.UUID;
 
 /**
@@ -58,4 +59,15 @@ public class CashTransactionParametersImpl implements CashTransactionParameters 
 
     @Override
     public TransactionType getTransactionType() {return transactionType;}
+
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof CashTransactionParameters)) return false;
+        CashTransactionParameters that = (CashTransactionParameters) o;
+        return Objects.equals(getTransactionId(), that.getTransactionId());
+    }
+
+
 }

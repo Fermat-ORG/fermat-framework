@@ -55,16 +55,13 @@ public class ConnectDialog extends FermatDialog<CryptoBrokerCommunitySubAppSessi
     CryptoBrokerCommunitySelectableIdentity identity;
 
 
-    public ConnectDialog(Activity                                a                                 ,
-                         CryptoBrokerCommunitySubAppSession      cryptoBrokerCommunitySubAppSession,
-                         SubAppResourcesProviderManager          subAppResources                   ,
-                         CryptoBrokerCommunityInformation information,
-                         CryptoBrokerCommunitySelectableIdentity identity                          ) {
+    public ConnectDialog(Activity a, CryptoBrokerCommunitySubAppSession cryptoBrokerCommunitySubAppSession, SubAppResourcesProviderManager subAppResources,
+                         CryptoBrokerCommunityInformation information, CryptoBrokerCommunitySelectableIdentity identity) {
 
         super(a, cryptoBrokerCommunitySubAppSession, subAppResources);
 
         this.information = information;
-        this.identity                         = identity                        ;
+        this.identity = identity;
     }
 
 

@@ -28,6 +28,7 @@ import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.W
 import com.bitdubai.fermat_api.layer.pip_engine.interfaces.ResourceProviderManager;
 import com.bitdubai.fermat_api.layer.world.interfaces.Currency;
 import com.bitdubai.fermat_cbp_api.all_definition.contract.Contract;
+import com.bitdubai.fermat_cbp_api.all_definition.contract.ContractClause;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.ContractDetailType;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.ContractStatus;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.CurrencyType;
@@ -207,7 +208,7 @@ public class ContractDetailActivityFragment extends AbstractFermatFragment<Crypt
         //Customer Broker
         contractDetail=new ContractDetail(
                 ContractDetailType.CUSTOMER_DETAIL,
-                CurrencyType.BANK_MONEY,
+                CurrencyType.BANK_MONEY.getCode(),
                 FiatCurrency.CHINESE_YUAN.getFriendlyName(),
                 12,
                 ContractStatus.PAYMENT_SUBMIT,
@@ -215,11 +216,11 @@ public class ContractDetailActivityFragment extends AbstractFermatFragment<Crypt
                 getByteArrayFromImageView(brokerImage),
                 1961,
                 2016);
-        contractDetails.add(contractDetail);
+        //contractDetails.add(contractDetail);
         //Testing Broker
         contractDetail=new ContractDetail(
                 ContractDetailType.BROKER_DETAIL,
-                CurrencyType.CRYPTO_MONEY,
+                CurrencyType.CRYPTO_MONEY.getCode(),
                 CryptoCurrency.BITCOIN.getFriendlyName(),
                 12,
                 ContractStatus.PENDING_MERCHANDISE,
@@ -227,12 +228,12 @@ public class ContractDetailActivityFragment extends AbstractFermatFragment<Crypt
                 getByteArrayFromImageView(brokerImage),
                 1961,
                 2016);
-        contractDetails.add(contractDetail);
+        //contractDetails.add(contractDetail);
         /**
          * Get the wallet module manager
          */
         //TODO: when the module is finished, use the followings lines to create contract details.
-        /*CryptoCustomerWalletModuleManager cryptoCustomerWalletModuleManager=
+        CryptoCustomerWalletModuleManager cryptoCustomerWalletModuleManager=
                 appSession.getModuleManager();
         if(cryptoCustomerWalletModuleManager!=null){
 
@@ -246,6 +247,30 @@ public class ContractDetailActivityFragment extends AbstractFermatFragment<Crypt
                         cryptoCustomerWalletManager.
                                 getCustomerBrokerContractPurchaseByNegotiationId(
                                         data.getNegotiationId().toString());
+                //Customer
+                contractDetail=new ContractDetail(
+                        ContractDetailType.CUSTOMER_DETAIL,
+                        data.getTypeOfPayment(),
+                        data.getPaymentCurrency(),
+                        data.getAmount(),
+                        customerBrokerContractPurchase.getStatus(),
+                        data.getCryptoCustomerAlias(),
+                        data.getCryptoCustomerImage(),
+                        data.getLastUpdate(),
+                        data.getExchangeRateAmount());
+                contractDetails.add(contractDetail);
+                //Broker
+                contractDetail=new ContractDetail(
+                        ContractDetailType.BROKER_DETAIL,
+                        data.getTypeOfPayment(),
+                        data.getMerchandise(),
+                        data.getAmount(),
+                        customerBrokerContractPurchase.getStatus(),
+                        data.getCryptoCustomerAlias(),
+                        data.getCryptoCustomerImage(),
+                        data.getLastUpdate(),
+                        data.getExchangeRateAmount());
+                contractDetails.add(contractDetail);
             } catch (Exception ex) {
                 CommonLogger.exception(TAG, ex.getMessage(), ex);
                 if (errorManager != null) {
@@ -262,10 +287,11 @@ public class ContractDetailActivityFragment extends AbstractFermatFragment<Crypt
                     "Sorry, an error happened in ContractDetailActivityFragment (CryptoCustomerWalletModuleManager == null)",
                     Toast.LENGTH_SHORT)
                     .show();
-        }*/
+        }
 
         return contractDetails;
     }
+
 
     private EmptyCustomerBrokerNegotiationInformation createNewEmptyNegotiationInfo() {
         try {
