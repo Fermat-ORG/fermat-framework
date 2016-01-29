@@ -265,7 +265,8 @@ public class ChatMiddlewarePluginRoot extends AbstractPlugin implements
             chatMiddlewareManager =new ChatMiddlewareManager(
                     chatMiddlewareDatabaseDao,
                     this.chatMiddlewareContactFactory,
-                    this
+                    this,
+                    this.networkServiceChatManager
             );
 
             /**
