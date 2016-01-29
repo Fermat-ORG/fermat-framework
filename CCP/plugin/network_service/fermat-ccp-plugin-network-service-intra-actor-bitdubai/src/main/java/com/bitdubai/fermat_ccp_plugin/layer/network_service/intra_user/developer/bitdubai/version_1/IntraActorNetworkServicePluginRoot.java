@@ -1278,6 +1278,9 @@ public class IntraActorNetworkServicePluginRoot extends AbstractPlugin implement
                 // close connection, sender is the destination
                 if(actorNetworkServiceRecordedAgent!=null) actorNetworkServiceRecordedAgent.getPoolConnectionsWaitingForResponse().remove(remotePublicKey);
 
+                //reprocess messages
+                if(!((VPNConnectionCloseNotificationEvent) fermatEvent).isCloseNormal())
+                    reprocessMessage(remotePublicKey);
             }
 
         }
