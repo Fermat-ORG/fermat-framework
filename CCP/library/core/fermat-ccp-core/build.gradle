@@ -35,7 +35,6 @@ dependencies {
 
     compile project(':fermat-ccp-plugin-network-service-crypto-addresses-bitdubai')
     compile project(':fermat-ccp-plugin-network-service-crypto-payment-request-bitdubai')
-    compile project(':fermat-ccp-plugin-network-service-crypto-transmission-bitdubai')
     compile project(':fermat-ccp-plugin-network-service-crypto-transmission2-bitdubai')
     compile project(':fermat-ccp-plugin-network-service-intra-actor-bitdubai')
 
