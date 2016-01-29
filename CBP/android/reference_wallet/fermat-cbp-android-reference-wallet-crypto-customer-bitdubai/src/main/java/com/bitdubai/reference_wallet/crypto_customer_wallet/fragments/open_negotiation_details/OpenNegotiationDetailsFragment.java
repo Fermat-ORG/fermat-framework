@@ -27,6 +27,7 @@ import com.bitdubai.fermat_android_api.ui.expandableRecicler.ExpandableRecyclerA
 import com.bitdubai.fermat_android_api.ui.fragments.FermatWalletExpandableListFragment;
 import com.bitdubai.fermat_api.layer.all_definition.enums.CryptoCurrency;
 import com.bitdubai.fermat_api.layer.all_definition.enums.FiatCurrency;
+import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
 import com.bitdubai.fermat_api.layer.pip_engine.interfaces.ResourceProviderManager;
 import com.bitdubai.fermat_api.layer.world.interfaces.Currency;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.ClauseStatus;
@@ -228,7 +229,8 @@ public class OpenNegotiationDetailsFragment extends AbstractFermatFragment<Crypt
 
     @Override
     public void onAddNoteButtonClicked() {
-        // DO NOTHING..
+        Toast.makeText(getActivity(), "ADD NOTE", Toast.LENGTH_LONG).show();
+//        changeActivity(Activities.CBP_CRYPTO_CUSTOMER_WALLET_HOME, this.appSession.getAppPublicKey());
     }
 
     /*MENU*/
