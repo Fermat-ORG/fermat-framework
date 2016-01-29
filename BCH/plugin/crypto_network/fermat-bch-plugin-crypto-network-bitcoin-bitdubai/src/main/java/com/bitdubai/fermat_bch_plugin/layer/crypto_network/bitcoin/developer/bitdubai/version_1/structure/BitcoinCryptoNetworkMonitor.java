@@ -137,7 +137,7 @@ public class BitcoinCryptoNetworkMonitor implements Agent {
      * Agent main method
      */
     private void doTheMainTask() throws BlockchainException {
-        System.out.println("Crypto Network starting and connecting...");
+        System.out.println("***CryptoNetwork***  starting and connecting...");
 
         try{
             /**
@@ -243,6 +243,8 @@ public class BitcoinCryptoNetworkMonitor implements Agent {
              e.printStackTrace();
          }
 
+        System.out.println("***CryptoNetwork***  Broadcasting transaction " + txHash + "...");
+
          final Transaction transaction = wallet.getTransaction(sha256Hash);
          TransactionBroadcast transactionBroadcast = peerGroup.broadcastTransaction(transaction);
          transactionBroadcast.setMinConnections(BitcoinNetworkConfiguration.MIN_BROADCAST_CONNECTIONS);
@@ -269,7 +271,7 @@ public class BitcoinCryptoNetworkMonitor implements Agent {
                      */
                     wallet.saveToFile(walletFileName);
 
-                    System.out.println("Transaction succesfully broadcasted: " + transaction.getHashAsString());
+                    System.out.println("***CryptoNetwork***  Transaction succesfully broadcasted: " + transaction.getHashAsString());
                 } catch (CantExecuteDatabaseOperationException e) {
                     e.printStackTrace();
                 } catch (IOException e) {
@@ -279,6 +281,7 @@ public class BitcoinCryptoNetworkMonitor implements Agent {
 
             @Override
             public void onFailure(Throwable t) {
+                System.out.println("***CryptoNetwork*** Error bradcasting transaction " + txHash + "...");
                 try {
                     getDao().setBroadcastStatus(Status.WITH_ERROR, connectedPeers, (Exception) t, txHash);
                 } catch (CantExecuteDatabaseOperationException e) {
@@ -436,12 +439,22 @@ public class BitcoinCryptoNetworkMonitor implements Agent {
             /**
              * I store it in the wallet.
              */
-            WalletTransaction walletTransaction = new WalletTransaction(WalletTransaction.Pool.PENDING, tx);
-            wallet.addWalletTransaction(walletTransaction);
             wallet.maybeCommitTx(tx);
             wallet.saveToFile(walletFileName);
 
-            System.out.println("Transaction succesfully stored for broadcasting: " + tx.getHashAsString());
+            /**
+             * I will verify the transaction was stored.
+             */
+            Transaction storedTransaction = wallet.getTransaction(tx.getHash());
+            if (storedTransaction == null){
+                /**
+                 * If it was not stored by try a different approach
+                 */
+                wallet.addWalletTransaction(new WalletTransaction(WalletTransaction.Pool.PENDING, tx));
+                wallet.saveToFile(walletFileName);
+            }
+
+            System.out.println("***CryptoNetwork*** Transaction succesfully stored for broadcasting: " + tx.getHashAsString());
         } catch (CantExecuteDatabaseOperationException e) {
             throw new CantStoreBitcoinTransactionException(CantStoreBitcoinTransactionException.DEFAULT_MESSAGE, e, "There was an error storing the transaction in the database", null);
         } catch (Exception e) {

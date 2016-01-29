@@ -485,7 +485,7 @@ public class BitcoinCryptoNetworkDatabaseDao {
      * @param pendingIncoming
      * @param pendingOutgoing
      */
-    public void updateEventAgentStats(int pendingIncoming, int pendingOutgoing) throws CantExecuteDatabaseOperationException{
+    public synchronized void updateEventAgentStats(int pendingIncoming, int pendingOutgoing) throws CantExecuteDatabaseOperationException{
         DatabaseTable databaseTable = database.getTable(BitcoinCryptoNetworkDatabaseConstants.EVENTAGENT_STATS_TABLE_NAME);
 
         /**

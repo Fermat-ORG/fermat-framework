@@ -303,7 +303,7 @@ public class BitcoinCryptoNetworkManager implements TransactionProtocolManager {
             /**
              * Will set the autosave information and save it.
              */
-            wallet.autosaveToFile(walletFile, 1, TimeUnit.SECONDS, null);
+            wallet.autosaveToFile(walletFile, 1, TimeUnit.NANOSECONDS, null);
             try {
                 wallet.saveToFile(walletFile);
             } catch (IOException e1) {
