@@ -517,7 +517,6 @@ public class CryptoTransmissionNetworkServicePluginRoot extends AbstractPlugin i
                     //declare a schedule to process waiting request message
                     this.startTimer();
 
-
                     initializeAgent();
 
                     /*
@@ -541,6 +540,8 @@ public class CryptoTransmissionNetworkServicePluginRoot extends AbstractPlugin i
                     throw pluginStartException;
 
                 } catch (Exception exception) {
+
+                    exception.printStackTrace();
 
                     StringBuffer contextBuffer = new StringBuffer();
                     contextBuffer.append("Plugin ID: " + pluginId);
@@ -732,17 +733,8 @@ public class CryptoTransmissionNetworkServicePluginRoot extends AbstractPlugin i
                     platformComponentProfileRegistered.getIdentityPublicKey().equals(identity.getPublicKey())) {
 
                 System.out.println("CryptoTransmissionNetworkServicePluginRoot - NetWork Service is Registered: " + platformComponentProfileRegistered.getAlias());
-
-                this.register = Boolean.TRUE;
-
-                if(communicationNetworkServiceConnectionManager==null) {
-                    initializeCommunicationNetworkServiceConnectionManager();
-                }else{
-                    communicationNetworkServiceConnectionManager.restart();
-                }
-
                 initializeAgent();
-
+                this.register = Boolean.TRUE;
 
             }
 
