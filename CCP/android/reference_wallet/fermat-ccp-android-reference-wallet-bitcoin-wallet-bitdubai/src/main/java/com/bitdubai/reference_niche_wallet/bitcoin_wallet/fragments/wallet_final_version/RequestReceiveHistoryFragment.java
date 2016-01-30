@@ -1,5 +1,6 @@
 package com.bitdubai.reference_niche_wallet.bitcoin_wallet.fragments.wallet_final_version;
 
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
@@ -94,6 +95,25 @@ public class RequestReceiveHistoryFragment extends FermatWalletListFragment<Paym
             cryptoWallet = referenceWalletSession.getModuleManager().getCryptoWallet();
 
             //lstPaymentRequest = getMoreDataAsync(FermatRefreshTypes.NEW, 0); // get init data
+
+            getExecutor().execute(new Runnable() {
+                @Override
+                public void run() {
+                    if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP) {
+                        final Drawable drawable = getResources().getDrawable(R.drawable.background_gradient, null);
+                        getActivity().runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                try {
+                                    getPaintActivtyFeactures().setActivityBackgroundColor(drawable);
+                                }catch (OutOfMemoryError o){
+                                    o.printStackTrace();
+                                }
+                            }
+                        });
+                    }
+                }
+            });
             onRefresh();
         } catch (Exception ex) {
             ex.printStackTrace();

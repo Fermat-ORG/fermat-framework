@@ -102,9 +102,7 @@ import static android.widget.Toast.makeText;
 /**
  * Fragment the show the list of open negotiations waiting for the broker and the customer un the Home activity
  *
- * @author Nelson Ramirez
- * @version 1.0refresh
- * @since 20/10/2015
+ * @author MAtias Furszyfer
  */
 public class SendTransactionFragment2 extends FermatWalletExpandableListFragment<GrouperItem>
         implements FermatListItemListeners<CryptoWalletTransaction>{
