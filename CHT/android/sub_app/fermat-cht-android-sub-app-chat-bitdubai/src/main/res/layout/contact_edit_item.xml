@@ -10,7 +10,6 @@
         android:id="@+id/contact_detail_header"
         android:layout_height="wrap_content"
         android:layout_width="wrap_content"
-        android:textColor="@color/black"
         style="@style/addressHeader"/>
 
     <LinearLayout android:orientation="horizontal"
@@ -21,27 +20,33 @@
         android:minHeight="48dp"
         android:divider="?android:attr/listDivider">
 
+        <EditText
+            android:id="@+id/aliasEdit"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:autoText="true"
+            android:textColor="@color/black"
+            android:hint="Edit Alias" />
+
         <TextView
-            android:id="@+id/alias"
+            android:id="@+id/uuid"
             android:layout_height="wrap_content"
             android:layout_width="0dp"
             android:layout_weight="1"
             android:paddingRight="@dimen/padding"
             android:layout_gravity="center"
-            android:textColor="@color/black"
-            style="@style/addressDetail"/>
+            android:textColor="@color/color_white"/>
 
-        <ImageButton
-            android:id="@+id/button_view_address"
-            android:src="@drawable/ic_action_map"
-            android:layout_height="match_parent"
+        <Button
+            android:id="@+id/saveContactButton"
             android:layout_width="wrap_content"
-            android:paddingTop="8dp"
-            android:paddingBottom="8dp"
-            android:layout_gravity="center"
-            android:textColor="@color/black"
-            android:contentDescription="@string/address_button_description"
-            style="@style/addressButton"/>
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentRight="true"
+            android:background="@color/background_floating_material_dark"
+            android:text="Send"
+            android:textColor="@color/background_material_light"/>
 
     </LinearLayout>
 

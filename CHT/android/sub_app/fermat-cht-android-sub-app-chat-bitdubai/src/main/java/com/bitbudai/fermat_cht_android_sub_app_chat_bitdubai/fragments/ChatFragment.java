@@ -164,8 +164,6 @@ return correct;
 
         // Inflate the layout for this fragment
         final View layout = inflater.inflate(R.layout.chat, container, false);
-        
-
 
         messagesContainer = (ListView) layout.findViewById(R.id.messagesContainer);
         messageET = (EditText) layout.findViewById(R.id.messageEdit);
@@ -190,15 +188,11 @@ return correct;
 
         lstOpciones.setAdapter(adaptador);
 
-
         adaptador.refreshEvents(historialmensaje);
-
-
 
         if(!whoImy("PAYAREZ")){
             Toast.makeText(getActivity(),"OOOPs...El usuario no existe",Toast.LENGTH_LONG).show();
         }
-
 
         //CODE FOR ALERT DIALOG
 

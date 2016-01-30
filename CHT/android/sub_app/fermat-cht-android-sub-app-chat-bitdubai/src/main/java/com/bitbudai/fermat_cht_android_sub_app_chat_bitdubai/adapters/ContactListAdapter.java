@@ -29,10 +29,10 @@ import java.util.List;
 public class ContactListAdapter extends ArrayAdapter<String> {
 
     List<ContactList> contactsList = new ArrayList<>();
-    private final String[] contactinfo;
-    private final Integer[] contacticon;
-    //discoverActorsRegistered()
-    public ContactListAdapter(Context context, String[] contactinfo, Integer[] contacticon) {
+    private final ArrayList<String> contactinfo;
+    private final ArrayList<Integer> contacticon;
+
+    public ContactListAdapter(Context context, ArrayList<String> contactinfo, ArrayList<Integer> contacticon) {
         super(context, R.layout.contact_list_item, contactinfo);
         this.contactinfo = contactinfo;
         this.contacticon = contacticon;
@@ -43,10 +43,11 @@ public class ContactListAdapter extends ArrayAdapter<String> {
         View item = inflater.inflate(R.layout.contact_list_item, null, true);
 
         ImageView imagen = (ImageView) item.findViewById(R.id.icon);
-        imagen.setImageResource(R.drawable.ic_contact_picture_holo_light);//contacticon[position]);
+        imagen.setImageResource(contacticon.get(position));//contacticon[position]);
 
         TextView contactname = (TextView) item.findViewById(R.id.text1);
-        contactname.setText(contactinfo[position]);
+        contactname.setText(contactinfo.get(position));
+
         return item;
     }
      /*public void refreshEvents(Parameters[] datos) {

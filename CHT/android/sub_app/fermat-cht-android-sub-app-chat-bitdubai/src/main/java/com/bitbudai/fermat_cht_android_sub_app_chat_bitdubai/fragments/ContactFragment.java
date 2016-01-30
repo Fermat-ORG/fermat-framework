@@ -1,7 +1,10 @@
 package com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.fragments;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.provider.ContactsContract;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -13,16 +16,25 @@ import android.widget.AlphabetIndexer;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.adapters.ContactAdapter;
 import com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.adapters.ContactListAdapter;
+import com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.sessions.ChatSession;
+import com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.settings.ChatSettings;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractFermatFragment;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
+import com.bitdubai.fermat_api.layer.all_definition.settings.structure.SettingsManager;
+import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.enums.SubApps;
 import com.bitdubai.fermat_cht_android_sub_app_chat_bitdubai.R;
 import com.bitdubai.fermat_cht_api.layer.middleware.interfaces.Contact;
 import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.ChatManager;
+import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.ChatModuleManager;
+import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedSubAppExceptionSeverity;
+import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 
 import java.util.List;
+import java.util.UUID;
 
 /*import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
@@ -78,12 +90,17 @@ public List<Contact> contacts;
     // OS versions as search results are shown in-line via Action Bar search from honeycomb onward
     private boolean mIsSearchResultView = false;
     private ChatManager chatManager;
-
+    private ChatModuleManager moduleManager;
+    private ErrorManager errorManager;
+    private SettingsManager<ChatSettings> settingsManager;
+    private ChatSession chatSession;
+    private static final String TAG = "ContactFragment";
 
 
     String[] contactname={"YO"};   //work
-    String[] contactaddress={"aqui"};
-
+    String[] contactalias={"aqui"};
+    UUID[] contactuuid;
+    Contact cont;
     //public ContactsListFragment() {}
     static void initchatinfo(){
         //   chatinfo.put(0, Arrays.asList("Miguel", "Que paso?", "12/09/2007"));
@@ -106,6 +123,22 @@ public List<Contact> contacts;
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        mIsTwoPaneLayout = getResources().getBoolean(R.bool.has_two_panes);
+
+        // Let this fragment contribute menu items
+        setHasOptionsMenu(true);
+
+        try {
+
+            chatSession=((ChatSession) appSession);
+            moduleManager= chatSession.getModuleManager();
+            chatManager=moduleManager.getChatManager();
+            errorManager=appSession.getErrorManager();
+
+        } catch (Exception e) {
+            Log.e(TAG, e.getMessage(), e);
+        }
 
         // Check if this fragment is part of a two-pane set up or a single pane by reading a
         // boolean from the application resource directories. This lets allows us to easily specify
@@ -160,10 +193,23 @@ public List<Contact> contacts;
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         View layout = inflater.inflate(R.layout.contact_list_fragment, container, false);
+        try {
+            Contact con= chatSession.getSelectedContact();
+            cont = chatManager.getContactByContactId(con.getContactId());
+            System.out.println("\n\nCONTACTuid:\n\n" + con.getContactId());
+            contactalias[0]=cont.getAlias();
+            contactname[0]=cont.getRemoteName();
+            contactuuid[0]=cont.getContactId();
+        }catch (Exception e){
+            if (errorManager != null)
+                errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
 
-        ContactAdapter adapter=new ContactAdapter(getActivity(), contactname,  contactaddress);
+        }
+        ContactAdapter adapter=new ContactAdapter(getActivity(), contactname,  contactalias, contactuuid, "detail");
         TextView name =(TextView)layout.findViewById(R.id.contact_name);
         name.setText(contactname[0]);
+        TextView id =(TextView)layout.findViewById(R.id.uuid);
+        id.setText(contactuuid[0].toString());
 
         LinearLayout detalles = (LinearLayout)layout.findViewById(R.id.contact_details_layout);
 
@@ -337,17 +383,9 @@ public List<Contact> contacts;
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
 
         // Inflate the menu items
-        inflater.inflate(R.menu.contact_list_menu, menu);
+        inflater.inflate(R.menu.contact_detail_menu, menu);
         // Locate the search item
-        MenuItem searchItem = menu.findItem(R.id.menu_search);
 
-        // In versions prior to Android 3.0, hides the search item to prevent additional
-        // searches. In Android 3.0 and later, searching is done via a SearchView in the ActionBar.
-        // Since the search doesn't create a new Activity to do the searching, the menu item
-        // doesn't need to be turned off.
-        if (mIsSearchResultView) {
-            searchItem.setVisible(false);
-        }
 
         // Retrieves the system search manager service
 /*        final SearchManager searchManager =
@@ -434,6 +472,49 @@ public List<Contact> contacts;
             searchView.setQuery(savedSearchTerm, false);
         }
 */
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if (item.getItemId() == R.id.menu_edit_contact) {
+            changeActivity(Activities.CHT_CHAT_EDIT_CONTACT, appSession.getAppPublicKey());
+        }
+        if (item.getItemId() == R.id.menu_del_contact) {
+            AlertDialog.Builder builder1 = new AlertDialog.Builder(getContext());
+            builder1.setMessage("Do you want to delete this contact?");
+            builder1.setCancelable(true);
+
+            builder1.setPositiveButton(
+                    "Yes",
+                    new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int id) {
+                            dialog.cancel();
+                            try {
+                                Contact con = chatSession.getSelectedContact();
+                                contactuuid[0] = con.getContactId();
+                                chatManager.deleteContact(con);
+                            }catch (Exception e)
+                            {
+
+                            }
+                        }
+                    });
+
+            builder1.setNegativeButton(
+                    "No",
+                    new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int id) {
+                            dialog.cancel();
+                        }
+                    });
+
+            AlertDialog alert11 = builder1.create();
+            alert11.show();
+        }
+
+        return true;
+
+
     }
 
 //    @Override

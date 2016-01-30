@@ -70,7 +70,6 @@ public class ChatListFragment extends AbstractFermatFragment{
 
     private long clickedId;*/
 
-
     ListView list;
  //   static HashMap<Integer,List<String>> chatinfo=new HashMap<Integer,List<String>>();
    // static Integer[] imgid=new Integer[6];
@@ -168,9 +167,9 @@ public class ChatListFragment extends AbstractFermatFragment{
         list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 
             @Override
-            public void onItemClick(AdapterView<?> parent, View view,int position, long id) {
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 // TODO Auto-generated method stub
-                String Slecteditem= chatinfo[position];
+                String Slecteditem = chatinfo[position];
                 Toast.makeText(getActivity(), Slecteditem, Toast.LENGTH_SHORT).show();
                 changeActivity(Activities.CHT_CHAT_OPEN_MESSAGE_LIST, appSession.getAppPublicKey());
 
