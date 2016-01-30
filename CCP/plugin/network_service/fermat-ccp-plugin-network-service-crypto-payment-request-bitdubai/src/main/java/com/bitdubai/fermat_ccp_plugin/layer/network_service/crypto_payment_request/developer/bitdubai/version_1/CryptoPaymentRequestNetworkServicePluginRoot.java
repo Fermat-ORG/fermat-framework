@@ -193,7 +193,6 @@ public final class CryptoPaymentRequestNetworkServicePluginRoot extends Abstract
 
         this.remoteNetworkServicesRegisteredList = new CopyOnWriteArrayList<>();
         this.listenersAdded = new ArrayList<>();
-        this.remoteNetworkServicesRegisteredList = new CopyOnWriteArrayList<>();
     }
 
 
@@ -1145,9 +1144,9 @@ public final class CryptoPaymentRequestNetworkServicePluginRoot extends Abstract
                     final InformationMessage informationMessage = gson.fromJson(jsonMessage, InformationMessage.class);
                     receiveInformationMessage(informationMessage);
 
-                    //close connection - end message
-                    communicationNetworkServiceConnectionManager.closeConnection(informationMessage.getActorDestination());
-                    cryptoPaymentRequestExecutorAgent.getPoolConnectionsWaitingForResponse().remove(informationMessage.getActorDestination());
+                    //close connection - end message - el destination sos vos por lo cual se debe cerrar el sender
+                    communicationNetworkServiceConnectionManager.closeConnection(informationMessage.getIdentitySender());
+                    cryptoPaymentRequestExecutorAgent.getPoolConnectionsWaitingForResponse().remove(informationMessage.getIdentitySender());
 
 
                     System.out.println(" CPR NS - Information Message Received: "+informationMessage.toString());
@@ -1158,6 +1157,7 @@ public final class CryptoPaymentRequestNetworkServicePluginRoot extends Abstract
                     receiveCryptoPaymentRequest(requestMessage);
                     System.out.println(" CPR NS - Request Message Received: " + requestMessage.toString());
                     break;
+
             }
 
 
@@ -1181,6 +1181,7 @@ public final class CryptoPaymentRequestNetworkServicePluginRoot extends Abstract
             switch (networkServiceMessage.getMessageType()) {
                 case INFORMATION:
                     InformationMessage informationMessage = gson.fromJson(jsonMessage, InformationMessage.class);
+                    confirmRequest(informationMessage.getRequestId());
                     break;
                 case REQUEST:
                     RequestMessage requestMessage = gson.fromJson(jsonMessage, RequestMessage.class);
@@ -1197,6 +1198,7 @@ public final class CryptoPaymentRequestNetworkServicePluginRoot extends Abstract
         }
 
     }
+
 
     /**
      * I indicate to the Agent the action that it must take:
