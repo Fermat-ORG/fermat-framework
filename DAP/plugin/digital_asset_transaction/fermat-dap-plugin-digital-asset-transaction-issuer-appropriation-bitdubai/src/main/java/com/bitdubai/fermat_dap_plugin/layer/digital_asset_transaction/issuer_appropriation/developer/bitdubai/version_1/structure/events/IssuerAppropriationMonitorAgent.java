@@ -215,10 +215,11 @@ public class IssuerAppropriationMonitorAgent implements Agent {
                     case CRYPTOADDRESS_OBTAINED:
                         IssuerAppropriationDigitalAssetTransactionPluginRoot.debugAssetAppropriation("registering crypto address in crypto book. : " + record.transactionRecordId());
                         IntraWalletUserIdentity assetIdentity = getIntraUserIdentity(record);
+                        Actor extraUser = getExtraUser(record.assetMetadata());
                         cryptoAddressBookManager.registerCryptoAddress(record.addressTo(),
                                 assetIdentity.getPublicKey(),
                                 Actors.INTRA_USER,
-                                intraWalletUserIdentityManager.getAllIntraWalletUsersFromCurrentDeviceUser().get(0).getPublicKey(),
+                                extraUser.getActorPublicKey(),
                                 Actors.EXTRA_USER,
                                 Platforms.CRYPTO_CURRENCY_PLATFORM,
                                 VaultType.CRYPTO_CURRENCY_VAULT,
@@ -234,8 +235,8 @@ public class IssuerAppropriationMonitorAgent implements Agent {
                             IssuerAppropriationDigitalAssetTransactionPluginRoot.debugAssetAppropriation("This transaction failed to have a crypto address... Returning to previous state");
                             dao.updateTransactionStatusAppropriationStarted(record.transactionRecordId());
                         } else {
-                            String genesisTransaction = assetVaultManager.sendAssetBitcoins(record.assetMetadata().getGenesisTransaction(), record.assetMetadata().getGenesisBlock(), record.addressTo());
-                            assetVault.updateMetadataTransactionChain(record.transactionRecordId(), genesisTransaction, null);
+                            String newTx = assetVaultManager.sendAssetBitcoins(record.assetMetadata().getLastTransactionHash(), record.assetMetadata().getLastTransactionBlock(), record.addressTo());
+                            assetVault.updateMetadataTransactionChain(record.transactionRecordId(), newTx, null);
                             dao.updateTransactionStatusBitcoinsSent(record.transactionRecordId());
                             IssuerAppropriationDigitalAssetTransactionPluginRoot.debugAssetAppropriation("Bitcoins sent!");
                         }

@@ -101,7 +101,7 @@ public class AssetRedeemPointWalletTransactionRecordWrapper implements AssetRede
         this.transactionId = cryptoTransaction.getTransactionHash();
         this.actorFromType = Actors.DAP_ASSET_USER;
         this.actorToType = Actors.DAP_ASSET_REDEEM_POINT;
-        this.amount = asset.getGenesisAmount();
+        this.amount = cryptoTransaction.getCryptoAmount();
         this.digitalAssetMetadata = assetMetadata;
     }
     //PUBLIC METHODS

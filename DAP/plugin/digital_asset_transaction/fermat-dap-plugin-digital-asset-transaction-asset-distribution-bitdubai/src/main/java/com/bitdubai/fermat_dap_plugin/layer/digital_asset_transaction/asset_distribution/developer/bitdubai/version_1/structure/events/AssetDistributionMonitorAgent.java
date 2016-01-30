@@ -6,6 +6,7 @@ import com.bitdubai.fermat_api.DealsWithPluginIdentity;
 import com.bitdubai.fermat_api.layer.all_definition.components.enums.PlatformComponentType;
 import com.bitdubai.fermat_api.layer.all_definition.enums.CryptoCurrency;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
+import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterException;
 import com.bitdubai.fermat_api.layer.all_definition.money.CryptoAddress;
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.Specialist;
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.Transaction;
@@ -258,7 +259,7 @@ public class AssetDistributionMonitorAgent implements Agent, DealsWithLogger, De
                 throw new CantCheckAssetDistributionProgressException(e, "Exception in asset distribution monitor agent", "There was a problem while reversing a transaction.");
             } catch (CantAssetUserActorNotFoundException | CantGetAssetUserActorsException e) {
                 throw new CantCheckAssetDistributionProgressException(e, "Exception in asset distribution monitor agent", "There was a problem while getting the user list.");
-            } catch (CantCancellBroadcastTransactionException | CantCreateDigitalAssetFileException | CantGetBroadcastStatusException | CantBroadcastTransactionException e) {
+            } catch (CantCancellBroadcastTransactionException | CantCreateDigitalAssetFileException | CantGetBroadcastStatusException | CantBroadcastTransactionException | InvalidParameterException e) {
                 e.printStackTrace();
             }
         }
@@ -305,8 +306,8 @@ public class AssetDistributionMonitorAgent implements Agent, DealsWithLogger, De
                         System.out.println("VAMM: DISTRIBUTION BROADCAST WITH ERROR");
                         if (record.getAttemptNumber() < AssetDistributionDigitalAssetTransactionPluginRoot.BROADCASTING_MAX_ATTEMPT_NUMBER) {
                             System.out.println("VAMM: ATTEMPT NUMBER: " + record.getAttemptNumber());
-                            bitcoinNetworkManager.broadcastTransaction(record.getGenesisTransactionSent());
                             assetDistributionDao.newAttempt(record.getTransactionId());
+                            bitcoinNetworkManager.broadcastTransaction(record.getGenesisTransactionSent());
                         } else {
                             System.out.println("VAMM: MAX NUMBER OF ATTEMPT REACHED, CANCELLING.");
                             bitcoinNetworkManager.cancelBroadcast(record.getGenesisTransactionSent());
@@ -412,9 +413,10 @@ public class AssetDistributionMonitorAgent implements Agent, DealsWithLogger, De
             }
         }
 
-        private void checkDeliveringTime() throws CantExecuteDatabaseOperationException, CantCheckAssetDistributionProgressException, CantExecuteQueryException, UnexpectedResultReturnedFromDatabaseException, CantGetCryptoTransactionException, CantGetTransactionsException, CantLoadWalletException, CantRegisterCreditException, CantRegisterDebitException, CantGetAssetIssuerActorsException, CantSendTransactionNewStatusNotificationException, CantGetAssetUserActorsException, CantAssetUserActorNotFoundException {
+        private void checkDeliveringTime() throws CantExecuteDatabaseOperationException, CantCheckAssetDistributionProgressException, CantExecuteQueryException, UnexpectedResultReturnedFromDatabaseException, CantGetCryptoTransactionException, CantGetTransactionsException, CantLoadWalletException, CantRegisterCreditException, CantRegisterDebitException, CantGetAssetIssuerActorsException, CantSendTransactionNewStatusNotificationException, CantGetAssetUserActorsException, CantAssetUserActorNotFoundException, InvalidParameterException {
             for (DeliverRecord record : assetDistributionDao.getDeliveringRecords()) {
-                if (new Date().after(record.getTimeOut())) {
+                DistributionStatus currentStatus = assetDistributionDao.getDistributionStatusForGenesisTx(record.getGenesisTransaction());
+                if (new Date().after(record.getTimeOut()) && currentStatus == DistributionStatus.DELIVERING) {
                     try {
                         bitcoinNetworkManager.cancelBroadcast(record.getDigitalAssetMetadata().getLastTransactionHash());
                     } catch (CantCancellBroadcastTransactionException e) {
