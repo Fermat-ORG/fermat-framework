@@ -596,7 +596,8 @@ public class SendFormFragment extends AbstractFermatFragment<ReferenceWalletSess
                         Toast.makeText(getActivity(), "Invalid Amount", Toast.LENGTH_LONG).show();
                     }
                 } else {
-                    Toast.makeText(getActivity(), "Invalid Contact Address", Toast.LENGTH_LONG).show();
+                    Toast.makeText(getActivity(), "Contact don't have an Address\n" +
+                            "please wait 2 minutes", Toast.LENGTH_LONG).show();
                 }
             } else {
                 Toast.makeText(getActivity(), "Contact don't have an Address\nplease wait 2 minutes", Toast.LENGTH_LONG).show();
