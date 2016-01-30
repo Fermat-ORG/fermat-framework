@@ -543,7 +543,12 @@ public class SendFormFragment extends AbstractFermatFragment<ReferenceWalletSess
                     EditText txtAmount = (EditText) rootView.findViewById(R.id.amount);
                     String amount = txtAmount.getText().toString();
 
-                    if (!amount.equals("") && amount != null && Double.parseDouble(amount) != 0) {
+                    BigDecimal money = new BigDecimal("0");
+
+                    if (!amount.equals(""))
+                        money = new BigDecimal("0");
+
+                    if(!amount.equals("") && !money.equals(new BigDecimal(0))) {
                         try {
                             String notes = null;
                             if (txt_notes.getText().toString().length() != 0) {
