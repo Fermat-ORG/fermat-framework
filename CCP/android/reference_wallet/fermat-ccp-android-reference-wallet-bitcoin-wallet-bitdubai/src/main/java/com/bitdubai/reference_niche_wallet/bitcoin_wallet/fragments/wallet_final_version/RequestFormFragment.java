@@ -63,6 +63,7 @@ import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.popup.ErrorConn
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.session.ReferenceWalletSession;
 import com.squareup.picasso.Picasso;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -540,7 +541,13 @@ public class RequestFormFragment extends AbstractFermatFragment<ReferenceWalletS
             } else {
 
                 String amount = editTextAmount.getText().toString();
-                if (!amount.equals("") && amount != null && Double.parseDouble(amount) != 0) {
+
+                BigDecimal money = new BigDecimal("0");
+
+                if (!amount.equals(""))
+                    money = new BigDecimal("0");
+
+                if (!amount.equals("") && amount != null && !money.equals(0)) {
 
                     String txtType = txt_type.getText().toString();
                     String newAmount = "";
