@@ -69,8 +69,7 @@ public class OpenNegotiationAddNoteFragment  extends AbstractFermatFragment<Cryp
     private void initViews(View layout){
 
         final EditText noteEditText = (EditText) layout.findViewById(R.id.ccw_open_negotiation_text_note);
-//        if(negotiationInfo.getMemo() != null)
-//            noteEditText.setText(negotiationInfo.getMemo());
+        if(negotiationInfo.getMemo() != null) noteEditText.setText(negotiationInfo.getMemo());
 
         Button cancelNoteButton = (Button) layout.findViewById(R.id.ccw_open_negotiation_cancel_note);
         cancelNoteButton.setOnClickListener(new View.OnClickListener() {
@@ -82,7 +81,7 @@ public class OpenNegotiationAddNoteFragment  extends AbstractFermatFragment<Cryp
         Button saveNoteButton = (Button) layout.findViewById(R.id.ccw_open_negotiation_save_note);
         saveNoteButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View view) {
-//                Toast.makeText(getActivity(), "SAVE NOTE", Toast.LENGTH_LONG).show();
+                Toast.makeText(getActivity(), "Note add the negotiation", Toast.LENGTH_LONG).show();
                 negotiationInfo.setMemo(noteEditText.getText().toString());
             }
         });
