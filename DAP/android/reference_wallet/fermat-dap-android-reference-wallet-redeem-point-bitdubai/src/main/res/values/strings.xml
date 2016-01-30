@@ -13,4 +13,17 @@
     <string name="no_assets_redeem_point_message">Don\'t worry, as a redeem point you need to connect your device to other Assets Issuers using the Asset Issuer Community application. Once you are connected, you will be eligible to redeem assets from any user!</string>
 
     <string name="no_users">No Users</string>
+
+    <!--Dialog Help - Init-->
+    <string name="dap_redeem_wallet_welcome_subTitle">Welcome to the RedeemPoint Wallet.</string>
+    <string name="dap_redeem_wallet_welcome_body">From this wallet you will be able to verify the assets that users redeem with you and get statistic from them.</string>
+    <string name="dap_redeem_wallet_welcome_Footer">We will be creating an avatar for you in order to identify you in the system as a Redeem Point. You will be able to edit this information at the Redeem Point Identity application.</string>
+    <string name="dap_redeem_wallet_welcome_name_left">Redeem Point</string>
+    <!--Dialog Help - End-->
+
+    <!--Dialog Help - Init-->
+    <string name="dap_redeem_wallet_detail_subTitle">Asset detail section.</string>
+    <string name="dap_redeem_wallet_detail_body">You can review in more detail the asset that has been redeemed by an user.\n\nAn asset might be redeemed by many users so statistics and tracking of the users is shown here.\n\nEvery asset redeem at you, is also notified to the original creator of the Asset.</string>
+    <!--Dialog Help - End-->
+
 </resources>

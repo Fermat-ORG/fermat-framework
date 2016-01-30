@@ -13,4 +13,7 @@
     <string name="wallet_status_open">UPGRADE</string>
     <string name="wallet_more_details_button">READ MORE</string>
     <string name="no_preview_images">No Preview Images</string>
+    <string name="launch_action_creation_dialog_sub_title">This app allows you yo find and connect to other Crypto Broker users within the Fermat Network. This app\'s main features are:</string>
+    <string name="launch_action_creation_dialog_body">* Browse users around you. * Search and connect to to users anywhere. * See other user\'s profiles. * Send connection requests to other users. * Review connection requests from other users.</string>
+    <string name="launch_action_creation_dialog_footer">To begin, choose a starter avatar below.\\nYou may change your avatar later.</string>
 </resources>

@@ -22,4 +22,13 @@
 
     <color name="dap_wallet_asset_issuer_gradient_start_color">#5C6E81</color>
     <color name="dap_wallet_asset_issuer_gradient_end_color">#5C6E81</color>
+
+    <!-- dap asset issuer wallet colors -->
+
+    <color name="dap_issuer_wallet_principal">#24202E</color>
+    <!--
+    <color name="dap_issuer_wallet_delivered_list_appropriated">#E7212C</color>
+    <color name="dap_issuer_wallet_delivered_list_redeemed"></color>
+    <color name="dap_issuer_wallet_delivered_list_unused"></color>
+    -->
 </resources>

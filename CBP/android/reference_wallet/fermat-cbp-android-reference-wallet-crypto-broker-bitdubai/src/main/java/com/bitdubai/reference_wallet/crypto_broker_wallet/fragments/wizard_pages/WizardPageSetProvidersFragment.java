@@ -137,10 +137,12 @@ public class WizardPageSetProvidersFragment extends AbstractFermatFragment
                 saveSettingAndGoNextStep();
             }
         });
+
+        // todo SE COMENTA PORQ YA NO EXISTEN LOS MÉTODOS
         PresentationDialog presentationDialog = new PresentationDialog.Builder(getActivity(), appSession)
-                .setBody("Custom text support for dialog in the wizard Providers help")
-                .setSubTitle("Subtitle text of Merchandises dialog help")
-                .setTextFooter("Text footer Merchandises dialog help")
+                //.setBody("Custom text support for dialog in the wizard Providers help")
+               // .setSubTitle("Subtitle text of Merchandises dialog help")
+               // .setTextFooter("Text footer Merchandises dialog help")
                 .setTemplateType(PresentationDialog.TemplateType.TYPE_PRESENTATION_WITHOUT_IDENTITIES)
                 .setBannerRes(R.drawable.banner_crypto_broker)
                 .setIconRes(R.drawable.crypto_broker)

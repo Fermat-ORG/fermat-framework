@@ -45,6 +45,9 @@ public class ChatMiddlewareContactFactory {
      */
     HashMap<String, Object> actorNetworkServiceMap;
 
+    /**
+     * This object contains all the compatibles checked actor network service in this version.
+     */
     HashMap<String, Object> compatiblesActorNetworkServiceMap;
 
     public ChatMiddlewareContactFactory(
@@ -58,7 +61,8 @@ public class ChatMiddlewareContactFactory {
      * This method returns a HashMap with the compatibles actor Network Services.
      * @return
      */
-    private HashMap<String, Object> getCompatiblesActorNetworkService() throws CantGetCompatiblesActorNetworkServiceListException {
+    private HashMap<String, Object> getCompatiblesActorNetworkService() throws
+            CantGetCompatiblesActorNetworkServiceListException {
         HashMap<String, Object> compatiblesActorNetworkServiceList=new HashMap<>();
         String platformEnumCode;
         Object objectFromHashMap;
@@ -137,7 +141,8 @@ public class ChatMiddlewareContactFactory {
      * @return
      * @throws CantGetContactException
      */
-    public List<Contact> discoverDeviceActors() throws CantGetContactException {
+    public List<Contact> discoverDeviceActors() throws
+            CantGetContactException {
         List<Contact> contactList=new ArrayList<>();
         Contact contact;
         Set<String> keySet= compatiblesActorNetworkServiceMap.keySet();

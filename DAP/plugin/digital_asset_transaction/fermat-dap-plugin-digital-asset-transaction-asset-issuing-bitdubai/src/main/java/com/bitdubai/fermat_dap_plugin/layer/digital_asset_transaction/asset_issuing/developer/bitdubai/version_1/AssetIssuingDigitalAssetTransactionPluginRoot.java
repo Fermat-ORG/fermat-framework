@@ -239,7 +239,8 @@ public class AssetIssuingDigitalAssetTransactionPluginRoot extends AbstractPlugi
                     pluginId,
                     outgoingIntraActorManager,
                     bitcoinNetworkManager,
-                    digitalAssetIssuingVault);
+                    digitalAssetIssuingVault,
+                    assetIssuerWalletManager);
         }
         assetIssuingTransactionMonitorAgent.start();
     }
