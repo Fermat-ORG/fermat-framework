@@ -171,7 +171,6 @@ public class CryptoPaymentRequestExecutorAgent extends FermatAgent {
                                 cpr.getActorPublicKey(),
                                 cpr.getActorType()
                         )) {
-                            confirmRequest(cpr.getRequestId());
                             System.out.println("********** Crypto Payment Request NS -> Executor Agent -> Sending Approval. PROCESSING_SEND -> CONFIRM REQUEST -> OK.");
                         }
                         System.out.println("********** Crypto Payment Request NS -> Executor Agent -> Sending Approval. PROCESSING_SEND -> CONFIRM REQUEST -> WAIT MORE.");
@@ -186,7 +185,6 @@ public class CryptoPaymentRequestExecutorAgent extends FermatAgent {
                                 cpr.getActorPublicKey(),
                                 cpr.getActorType()
                         )) {
-                            confirmRequest(cpr.getRequestId());
                             System.out.println("********** Crypto Payment Request NS -> Executor Agent -> Sending Denial. PROCESSING_SEND -> CONFIRM REQUEST -> OK.");
                         }
                         System.out.println("********** Crypto Payment Request NS -> Executor Agent -> Sending Denial. PROCESSING_SEND -> CONFIRM REQUEST -> WAIT MORE.");
@@ -201,7 +199,7 @@ public class CryptoPaymentRequestExecutorAgent extends FermatAgent {
                                 cpr.getActorPublicKey(),
                                 cpr.getActorType()
                         )) {
-                            confirmRequest(cpr.getRequestId());
+
                             System.out.println("********** Crypto Payment Request NS -> Executor Agent -> Sending Reception Inform. PROCESSING_SEND -> CONFIRM REQUEST -> OK.");
                         }
                         System.out.println("********** Crypto Payment Request NS -> Executor Agent -> Sending Reception Inform. PROCESSING_SEND -> CONFIRM REQUEST -> WAIT MORE.");
@@ -216,7 +214,6 @@ public class CryptoPaymentRequestExecutorAgent extends FermatAgent {
                                 cpr.getActorPublicKey(),
                                 cpr.getActorType()
                         )) {
-                            confirmRequest(cpr.getRequestId());
                             System.out.println("********** Crypto Payment Request NS -> Executor Agent -> Sending Refusal. PROCESSING_SEND -> CONFIRM REQUEST -> OK.");
                         }
                         System.out.println("********** Crypto Payment Request NS -> Executor Agent -> Sending Refusal. PROCESSING_SEND -> CONFIRM REQUEST -> WAIT MORE.");
@@ -244,7 +241,6 @@ public class CryptoPaymentRequestExecutorAgent extends FermatAgent {
 
         } catch(CantListRequestsException               |
                 CantChangeRequestProtocolStateException |
-                CantTakeActionException                 |
                 RequestNotFoundException                e) {
 
             reportUnexpectedError(e);
@@ -435,16 +431,7 @@ public class CryptoPaymentRequestExecutorAgent extends FermatAgent {
         );
     }
 
-    public void confirmRequest(final UUID requestId) throws CantTakeActionException,
-            RequestNotFoundException   {
 
-        cryptoPaymentRequestNetworkServiceDao.takeAction(
-                requestId,
-                RequestAction.NONE,
-                RequestProtocolState.DONE
-        );
-
-    }
 
 
     private void reportUnexpectedError(Exception e) {
