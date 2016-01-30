@@ -379,11 +379,11 @@ public class ChatMiddlewareDatabaseDao {
             database = openDatabase();
             List<Message> messages = new ArrayList<>();
             // I will add the message information from the database
-            List<DatabaseTableRecord> records=getContactData(filter);
+            List<DatabaseTableRecord> records=getMessageData(filter);
             if(records==null|| records.isEmpty()){
                 return messages;
             }
-            for (DatabaseTableRecord record : getMessageData(filter)) {
+            for (DatabaseTableRecord record : records) {
                 final Message message = getMessageTransaction(record);
 
                 messages.add(message);
@@ -412,11 +412,11 @@ public class ChatMiddlewareDatabaseDao {
             filter.setValue(chatId.toString());
             filter.setColumn(ChatMiddlewareDatabaseConstants.MESSAGE_ID_CHAT_COLUMN_NAME);
             // I will add the message information from the database
-            List<DatabaseTableRecord> records=getContactData(filter);
+            List<DatabaseTableRecord> records=getMessageData(filter);
             if(records==null|| records.isEmpty()){
                 return null;
             }
-            for (DatabaseTableRecord record : getMessageData(filter)) {
+            for (DatabaseTableRecord record : records) {
                 final Message message = getMessageTransaction(record);
 
                 messages.add(message);
