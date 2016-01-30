@@ -82,6 +82,10 @@ public class ChatMiddlewareDatabaseDao {
             database = openDatabase();
             List<Contact> contacts = new ArrayList<>();
             // I will add the contact information from the database
+            List<DatabaseTableRecord> records=getContactData(filter);
+            if(records==null|| records.isEmpty()){
+                return contacts;
+            }
             for (DatabaseTableRecord record : getContactData(filter)) {
                 final Contact contact = getContactTransaction(record);
 
@@ -216,6 +220,10 @@ public class ChatMiddlewareDatabaseDao {
             database = openDatabase();
             List<Chat> chats = new ArrayList<>();
             // I will add the contact information from the database
+            List<DatabaseTableRecord> records=getContactData(filter);
+            if(records==null|| records.isEmpty()){
+                return chats;
+            }
             for (DatabaseTableRecord record : getChatData(filter)) {
                 final Chat chat = getChatTransaction(record);
 
@@ -371,6 +379,10 @@ public class ChatMiddlewareDatabaseDao {
             database = openDatabase();
             List<Message> messages = new ArrayList<>();
             // I will add the message information from the database
+            List<DatabaseTableRecord> records=getContactData(filter);
+            if(records==null|| records.isEmpty()){
+                return messages;
+            }
             for (DatabaseTableRecord record : getMessageData(filter)) {
                 final Message message = getMessageTransaction(record);
 
@@ -400,6 +412,10 @@ public class ChatMiddlewareDatabaseDao {
             filter.setValue(chatId.toString());
             filter.setColumn(ChatMiddlewareDatabaseConstants.MESSAGE_ID_CHAT_COLUMN_NAME);
             // I will add the message information from the database
+            List<DatabaseTableRecord> records=getContactData(filter);
+            if(records==null|| records.isEmpty()){
+                return null;
+            }
             for (DatabaseTableRecord record : getMessageData(filter)) {
                 final Message message = getMessageTransaction(record);
 
