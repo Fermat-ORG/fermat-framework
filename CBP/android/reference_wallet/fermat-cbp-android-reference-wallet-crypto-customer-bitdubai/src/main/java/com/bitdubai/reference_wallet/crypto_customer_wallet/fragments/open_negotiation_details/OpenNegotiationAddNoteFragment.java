@@ -81,8 +81,9 @@ public class OpenNegotiationAddNoteFragment  extends AbstractFermatFragment<Cryp
         Button saveNoteButton = (Button) layout.findViewById(R.id.ccw_open_negotiation_save_note);
         saveNoteButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View view) {
-                Toast.makeText(getActivity(), "Note add the negotiation", Toast.LENGTH_LONG).show();
                 negotiationInfo.setMemo(noteEditText.getText().toString());
+                Toast.makeText(getActivity(), "Note add the negotiation", Toast.LENGTH_LONG).show();
+                changeActivity(Activities.CBP_CRYPTO_CUSTOMER_WALLET_OPEN_NEGOTIATION_DETAILS, appSession.getAppPublicKey());
             }
         });
     }
