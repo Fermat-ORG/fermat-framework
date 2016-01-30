@@ -269,7 +269,7 @@ public class CryptoTransmissionNetworkServicePluginRoot extends AbstractPlugin i
         this.name = "Crypto Transmission Network Service";
         this.alias = "CryptoTransmissionNetworkService";
         this.extraData = null;
-        this.cryptoTransmissionTransactionRecordedAgent = new CryptoTransmissionTransactionRecordedAgent(this);
+        this.remoteNetworkServicesRegisteredList = new CopyOnWriteArrayList<PlatformComponentProfile>();
     }
 
     /**
@@ -337,7 +337,7 @@ public class CryptoTransmissionNetworkServicePluginRoot extends AbstractPlugin i
      * because at this moment, is create the platformComponentProfilePluginRoot for this component
      */
     public void initializeCommunicationNetworkServiceConnectionManager() {
-        this.communicationNetworkServiceConnectionManager = new CommunicationNetworkServiceConnectionManager_V2(this,platformComponentProfilePluginRoot, identity, wsCommunicationsCloudClientManager.getCommunicationsCloudClientConnection(), dataBaseCommunication, errorManager, eventManager);
+        this.communicationNetworkServiceConnectionManager = new CommunicationNetworkServiceConnectionManager_V2(this, this.platformComponentProfilePluginRoot, identity, wsCommunicationsCloudClientManager.getCommunicationsCloudClientConnection(), dataBaseCommunication, errorManager, eventManager);
     }
 
     /**
@@ -484,7 +484,7 @@ public class CryptoTransmissionNetworkServicePluginRoot extends AbstractPlugin i
                         /*
                          * Construct my profile and register me
                          */
-                        platformComponentProfilePluginRoot =  wsCommunicationsCloudClientManager.getCommunicationsCloudClientConnection().constructPlatformComponentProfileFactory(getIdentityPublicKey(),
+                        this.platformComponentProfilePluginRoot =  wsCommunicationsCloudClientManager.getCommunicationsCloudClientConnection().constructPlatformComponentProfileFactory(getIdentityPublicKey(),
                                 getAlias().toLowerCase(),
                                 getName(),
                                 getNetworkServiceType(),
@@ -502,21 +502,13 @@ public class CryptoTransmissionNetworkServicePluginRoot extends AbstractPlugin i
 
                     outgoingNotificationDao = new CryptoTransmissionMetadataDAO_V2(dataBaseCommunication, CryptoTransmissionNetworkServiceDatabaseConstants.OUTGOING_CRYPTO_TRANSMISSION_METADATA_TABLE_NAME);
 
-
-
-                    remoteNetworkServicesRegisteredList = new CopyOnWriteArrayList<PlatformComponentProfile>();
-
-                    if(cryptoTransmissionTransactionRecordedAgent==null) {
-                        cryptoTransmissionTransactionRecordedAgent = new CryptoTransmissionTransactionRecordedAgent(
-                                this);
-                    }
-
                     // change message state to process again first time
                     reprocessMessage();
 
                     //declare a schedule to process waiting request message
                     this.startTimer();
 
+                    initializeAgent();
 
                     /*
                      * Its all ok, set the new status
@@ -539,6 +531,8 @@ public class CryptoTransmissionNetworkServicePluginRoot extends AbstractPlugin i
                     throw pluginStartException;
 
                 } catch (Exception exception) {
+
+                    exception.printStackTrace();
 
                     StringBuffer contextBuffer = new StringBuffer();
                     contextBuffer.append("Plugin ID: " + pluginId);
@@ -686,13 +680,16 @@ public class CryptoTransmissionNetworkServicePluginRoot extends AbstractPlugin i
 
     }
 
-    private void initializeIntraActorAgent() {
+    private void initializeAgent() {
+
+        System.out.println("CryptoTransmissionNetworkServicePluginRoot - initializeAgent() ");
+
         try {
-            if(cryptoTransmissionTransactionRecordedAgent ==null){
-                cryptoTransmissionTransactionRecordedAgent = new CryptoTransmissionTransactionRecordedAgent(
-                        this);
+
+            if(cryptoTransmissionTransactionRecordedAgent == null){
+                cryptoTransmissionTransactionRecordedAgent = new CryptoTransmissionTransactionRecordedAgent(this);
+                cryptoTransmissionTransactionRecordedAgent.start();
             }
-            cryptoTransmissionTransactionRecordedAgent.start();
 
         } catch (CantStartAgentException e) {
             errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_CRYPTO_TRANSMISSION_NETWORK_SERVICE, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
@@ -718,7 +715,7 @@ public class CryptoTransmissionNetworkServicePluginRoot extends AbstractPlugin i
                     communicationRegistrationProcessNetworkServiceAgent = null;
                 }
 
-                wsCommunicationsCloudClientManager.getCommunicationsCloudClientConnection().registerComponentForCommunication(this.getNetworkServiceType(), platformComponentProfilePluginRoot);
+                wsCommunicationsCloudClientManager.getCommunicationsCloudClientConnection().registerComponentForCommunication(this.getNetworkServiceType(), this.platformComponentProfilePluginRoot);
 
             }
 
@@ -727,17 +724,8 @@ public class CryptoTransmissionNetworkServicePluginRoot extends AbstractPlugin i
                     platformComponentProfileRegistered.getIdentityPublicKey().equals(identity.getPublicKey())) {
 
                 System.out.println("CryptoTransmissionNetworkServicePluginRoot - NetWork Service is Registered: " + platformComponentProfileRegistered.getAlias());
-
+                initializeAgent();
                 this.register = Boolean.TRUE;
-
-                if(communicationNetworkServiceConnectionManager==null) {
-                    initializeCommunicationNetworkServiceConnectionManager();
-                }else{
-                    communicationNetworkServiceConnectionManager.restart();
-                }
-
-                initializeIntraActorAgent();
-
 
             }
 
@@ -1238,18 +1226,14 @@ public class CryptoTransmissionNetworkServicePluginRoot extends AbstractPlugin i
                 this.initializeCommunicationNetworkServiceConnectionManager();
             }
 
-            if(cryptoTransmissionTransactionRecordedAgent == null) {
-                initializeIntraActorAgent();
-            }else {
-                cryptoTransmissionTransactionRecordedAgent.start();
-            }
+            initializeAgent();
 
             /*
              * Mark as register
              */
             this.register = Boolean.TRUE;
 
-        } catch (CantStartAgentException e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
 
@@ -1717,4 +1701,6 @@ public class CryptoTransmissionNetworkServicePluginRoot extends AbstractPlugin i
             }
         }, 0,reprocessTimer);
     }
+
+
 }

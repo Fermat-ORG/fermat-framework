@@ -193,7 +193,6 @@ public final class CryptoPaymentRequestNetworkServicePluginRoot extends Abstract
 
         this.remoteNetworkServicesRegisteredList = new CopyOnWriteArrayList<>();
         this.listenersAdded = new ArrayList<>();
-        this.remoteNetworkServicesRegisteredList = new CopyOnWriteArrayList<>();
     }
 
 
@@ -277,9 +276,6 @@ public final class CryptoPaymentRequestNetworkServicePluginRoot extends Abstract
                         communicationRegistrationProcessNetworkServiceAgent.start();
                     }
 
-                    initializeAgent();
-
-
                     // change message state to process again first time
                     reprocessMessage();
 
@@ -288,10 +284,12 @@ public final class CryptoPaymentRequestNetworkServicePluginRoot extends Abstract
 
                     this.startTimer();
 
+                    initializeAgent();
 
-            /*
-             * Its all ok, set the new status
-            */
+
+                    /*
+                     * Its all ok, set the new status
+                    */
                     this.serviceStatus = ServiceStatus.STARTED;
 
                 } catch (CantInitializeNetworkServiceDatabaseException exception) {
@@ -955,13 +953,7 @@ public final class CryptoPaymentRequestNetworkServicePluginRoot extends Abstract
                     platformComponentProfileRegistered.getNetworkServiceType() == this.getNetworkServiceType() &&
                     platformComponentProfileRegistered.getIdentityPublicKey().equals(identity.getPublicKey())) {
 
-                if(communicationNetworkServiceConnectionManager==null) {
-                    initializeCommunicationNetworkServiceConnectionManager();
-                }
-
-                if (cryptoPaymentRequestExecutorAgent != null){
-                    cryptoPaymentRequestExecutorAgent.start();
-                }
+                initializeAgent();
 
                 this.register = Boolean.TRUE;
                 System.out.print("CryptoPaymentRequestNetworkServicePluginRoot - NetWork Service is Registered: " + platformComponentProfileRegistered.getAlias());
@@ -975,15 +967,27 @@ public final class CryptoPaymentRequestNetworkServicePluginRoot extends Abstract
     }
 
 
-    private void initializeAgent(){
+    private void initializeAgent()  {
 
         System.out.println("CryptoPaymentRequestNetworkServicePluginRoot - Starting method initializeAgent ");
 
-        cryptoPaymentRequestExecutorAgent = new CryptoPaymentRequestExecutorAgent(
-                    this,
-                    cryptoPaymentRequestNetworkServiceDao,
-                    getPluginVersionReference()
-            );
+        try {
+
+            if (cryptoPaymentRequestExecutorAgent == null){
+
+                this.cryptoPaymentRequestExecutorAgent = new CryptoPaymentRequestExecutorAgent(
+                        this,
+                        cryptoPaymentRequestNetworkServiceDao,
+                        getPluginVersionReference()
+                );
+
+                this.cryptoPaymentRequestExecutorAgent.start();
+
+            }
+        } catch (CantStartAgentException e) {
+            e.printStackTrace();
+        }
+
     }
 
     @Override
@@ -1058,10 +1062,6 @@ public final class CryptoPaymentRequestNetworkServicePluginRoot extends Abstract
                     communicationNetworkServiceConnectionManager.stop();
                 }
 
-                if(cryptoPaymentRequestExecutorAgent!=null) {
-                    cryptoPaymentRequestExecutorAgent.stop();
-                }
-
                 reprocessMessage();
 
                 this.register = Boolean.FALSE;
@@ -1083,10 +1083,6 @@ public final class CryptoPaymentRequestNetworkServicePluginRoot extends Abstract
 
             if(communicationNetworkServiceConnectionManager != null) {
                 communicationNetworkServiceConnectionManager.stop();
-            }
-
-            if(cryptoPaymentRequestExecutorAgent != null) {
-                cryptoPaymentRequestExecutorAgent.stop();
             }
 
             this.register = Boolean.FALSE;
@@ -1111,16 +1107,16 @@ public final class CryptoPaymentRequestNetworkServicePluginRoot extends Abstract
                communicationNetworkServiceConnectionManager.restart();
             }
 
-            if(cryptoPaymentRequestExecutorAgent != null) {
-                cryptoPaymentRequestExecutorAgent.start();
-            }
+
+            initializeAgent();
+
 
             /*
              * Mark as register
              */
             this.register = Boolean.TRUE;
 
-        } catch (CantStartAgentException e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
 
@@ -1416,7 +1412,9 @@ public final class CryptoPaymentRequestNetworkServicePluginRoot extends Abstract
 
     }
 
-
+    public WsCommunicationsCloudClientManager getWsCommunicationsCloudClientManager() {
+        return wsCommunicationsCloudClientManager;
+    }
 
 
     public ErrorManager getErrorManager() {
@@ -1427,9 +1425,6 @@ public final class CryptoPaymentRequestNetworkServicePluginRoot extends Abstract
         return eventManager;
     }
 
-    public WsCommunicationsCloudClientManager getWsCommunicationsCloudClientManager() {
-        return wsCommunicationsCloudClientManager;
-    }
 
     public CommunicationNetworkServiceConnectionManager_V2 getCommunicationNetworkServiceConnectionManager() {
         return communicationNetworkServiceConnectionManager;

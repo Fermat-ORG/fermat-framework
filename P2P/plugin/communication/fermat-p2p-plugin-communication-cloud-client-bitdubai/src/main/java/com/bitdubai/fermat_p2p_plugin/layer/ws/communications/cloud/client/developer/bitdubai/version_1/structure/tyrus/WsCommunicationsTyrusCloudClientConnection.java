@@ -587,7 +587,7 @@ public class WsCommunicationsTyrusCloudClientConnection implements Communication
 
             // Create a new RestTemplate instance
             RestTemplate restTemplate = new RestTemplate(true);
-            String respond = restTemplate.postForObject("http://"+ WsCommunicationsCloudClientPluginRoot.SERVER_IP + ":" + ServerConf.DEFAULT_PORT+"/fermat/components/registered", parameters, String.class);
+            String respond = restTemplate.postForObject("http://" + WsCommunicationsCloudClientPluginRoot.SERVER_IP + ":" + ServerConf.DEFAULT_PORT + "/fermat/components/registered", parameters, String.class);
 
             /*
              * if respond have the result list
@@ -768,10 +768,10 @@ public class WsCommunicationsTyrusCloudClientConnection implements Communication
              * Construct a fermat packet whit the request
              */
             FermatPacket fermatPacketRespond = FermatPacketCommunicationFactory.constructFermatPacketEncryptedAndSinged(wsCommunicationsTyrusCloudClientChannel.getServerIdentity(),                  //Destination
-                                                                                                                        wsCommunicationsTyrusCloudClientChannel.getClientIdentity().getPublicKey(),   //Sender
-                                                                                                                        jsonListRepresentation,                                                  //Message Content
-                                                                                                                        FermatPacketType.COMPONENT_CONNECTION_REQUEST,                           //Packet type
-                                                                                                                        wsCommunicationsTyrusCloudClientChannel.getClientIdentity().getPrivateKey()); //Sender private key
+                    wsCommunicationsTyrusCloudClientChannel.getClientIdentity().getPublicKey(),   //Sender
+                    jsonListRepresentation,                                                  //Message Content
+                    FermatPacketType.COMPONENT_CONNECTION_REQUEST,                           //Packet type
+                    wsCommunicationsTyrusCloudClientChannel.getClientIdentity().getPrivateKey()); //Sender private key
 
 
             System.out.println("WsCommunicationsCloudClientConnection - wsCommunicationsTyrusCloudClientChannel.getClientConnection().isOpen() " + wsCommunicationsTyrusCloudClientChannel.getClientConnection().isOpen());
@@ -858,7 +858,7 @@ public class WsCommunicationsTyrusCloudClientConnection implements Communication
             }
 
         }catch (Exception e){
-            System.out.println("WsCommunicationsCloudClientConnection - "+e.getStackTrace());
+            System.out.println("WsCommunicationsCloudClientConnection - " + e.getStackTrace());
             CantEstablishConnectionException pluginStartException = new CantEstablishConnectionException(CantEstablishConnectionException.DEFAULT_MESSAGE, e, e.getLocalizedMessage(), e.getLocalizedMessage());
             throw pluginStartException;
         }
@@ -951,7 +951,12 @@ public class WsCommunicationsTyrusCloudClientConnection implements Communication
      */
     @Override
     public boolean isConnected(){
-        return wsCommunicationsTyrusCloudClientChannel.getClientConnection().isOpen();
+
+        if (wsCommunicationsTyrusCloudClientChannel.getClientConnection() != null){
+            return wsCommunicationsTyrusCloudClientChannel.getClientConnection().isOpen();
+        }
+
+        return Boolean.FALSE;
     }
 
     /**
