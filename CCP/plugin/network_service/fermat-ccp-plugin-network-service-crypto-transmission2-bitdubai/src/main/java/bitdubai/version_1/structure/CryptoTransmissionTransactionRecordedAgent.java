@@ -436,6 +436,11 @@ public class CryptoTransmissionTransactionRecordedAgent extends FermatAgent{
                                             NetworkServiceType.UNDEFINED,
                                             PlatformComponentType.ACTOR_INTRA_USER,"");
 
+                            //TODO: esto es una cochinada pero quiero que ande porque se lo setea en null
+                            if(cryptoTransmissionNetworkServicePluginRoot.getNetworkServiceConnectionManager_v2_fix().getCommunicationsClientConnection()==null){
+                                cryptoTransmissionNetworkServicePluginRoot.getNetworkServiceConnectionManager_v2_fix().setCommunicationsClientConnection(cryptoTransmissionNetworkServicePluginRoot.getWsCommunicationsCloudClientManager().getCommunicationsCloudClientConnection());
+                            }
+
                             cryptoTransmissionNetworkServicePluginRoot.getNetworkServiceConnectionManager().connectTo(
                                     applicantParticipant,
                                     cryptoTransmissionNetworkServicePluginRoot.getPlatformComponentProfilePluginRoot(),
