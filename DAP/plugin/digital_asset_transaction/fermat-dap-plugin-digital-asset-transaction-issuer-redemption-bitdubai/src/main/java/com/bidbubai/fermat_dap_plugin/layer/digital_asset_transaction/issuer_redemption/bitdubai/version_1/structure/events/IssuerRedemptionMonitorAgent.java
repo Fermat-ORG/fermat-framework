@@ -166,7 +166,7 @@ public class IssuerRedemptionMonitorAgent implements Agent {
                         AssetIssuerWallet wallet = assetIssuerWalletManager.loadAssetIssuerWallet(issuerPublicKeyWallet);
                         for (String genesisTx : issuerRedemptionDao.getToBeAppliedGenesisTransaction()) {
                             DigitalAssetMetadata digitalAssetMetadata = wallet.getDigitalAssetMetadata(genesisTx);
-                            CryptoTransaction cryptoTransactionOnBlockChain = AssetVerification.getCryptoTransactionFromCryptoNetworkByCryptoStatus(bitcoinNetworkManager, digitalAssetMetadata, CryptoStatus.ON_CRYPTO_NETWORK);
+                            CryptoTransaction cryptoTransactionOnBlockChain = AssetVerification.getCryptoTransactionFromCryptoNetworkByCryptoStatus(bitcoinNetworkManager, digitalAssetMetadata, CryptoStatus.ON_BLOCKCHAIN);
                             if (cryptoTransactionOnBlockChain == null) {
                                 notify = false;
                                 continue;
@@ -174,7 +174,6 @@ public class IssuerRedemptionMonitorAgent implements Agent {
                             CryptoAddressBookRecord bookRecord = cryptoAddressBookManager.getCryptoAddressBookRecordByCryptoAddress(cryptoTransactionOnBlockChain.getAddressTo());
                             String publicKeyFrom = wallet.getUserDeliveredToPublicKey(digitalAssetMetadata.getMetadataId());
                             String publicKeyTo = actorAssetIssuerManager.getActorAssetIssuer().getActorPublicKey();
-                            AssetIssuerWalletTransactionRecordWrapper recordWrapper = new AssetIssuerWalletTransactionRecordWrapper(digitalAssetMetadata, cryptoTransactionOnBlockChain, publicKeyFrom, publicKeyTo);
                             wallet.assetRedeemed(digitalAssetMetadata.getMetadataId(), null, bookRecord.getDeliveredToActorPublicKey());
                             digitalAssetMetadata.getDigitalAsset().setGenesisAmount(cryptoTransactionOnBlockChain.getCryptoAmount());
                             digitalAssetMetadata.setMetadataId(UUID.randomUUID());
@@ -184,6 +183,7 @@ public class IssuerRedemptionMonitorAgent implements Agent {
                              * Notifies the Asset Vault that the address of this Redeem Point, has been used.
                              */
                             assetVaultManager.notifyUsedRedeemPointAddress(bookRecord.getCryptoAddress(), bookRecord.getDeliveredToActorPublicKey());
+                            AssetIssuerWalletTransactionRecordWrapper recordWrapper = new AssetIssuerWalletTransactionRecordWrapper(digitalAssetMetadata, cryptoTransactionOnBlockChain, publicKeyFrom, publicKeyTo);
                             wallet.getBalance().credit(recordWrapper, BalanceType.AVAILABLE);
                             issuerRedemptionDao.redemptionFinished(digitalAssetMetadata);
                             if (cryptoTransactionOnBlockChain.getCryptoAmount() < DAPStandardFormats.MINIMUN_SATOSHI_AMOUNT) {
