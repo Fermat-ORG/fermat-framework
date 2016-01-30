@@ -56,27 +56,26 @@
         android:visibility="invisible" />
 
     <ImageView
-        android:layout_width="60dp"
+        android:layout_width="80dp"
         android:layout_height="60dp"
         android:id="@+id/camara"
-        android:src="@drawable/camara"
+        android:src="@drawable/camera_icon_2"
         android:scaleType="fitXY"
-        android:background="#64000000"
         android:adjustViewBounds="false"
-        android:layout_marginBottom="8dp"
-        android:layout_above="@+id/galeria"
-        android:layout_alignParentEnd="true" />
+        android:layout_alignParentTop="true"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"
+        android:background="#64000000" />
 
     <ImageView
-        android:layout_width="60dp"
+        android:layout_width="80dp"
         android:layout_height="60dp"
         android:id="@+id/galeria"
-        android:src="@drawable/galeria"
+        android:src="@drawable/galery_icon_2"
         android:scaleType="fitXY"
         android:background="#64000000"
-        android:layout_marginRight="0dp"
-        android:layout_above="@+id/crypto_broker_name"
-        android:layout_alignParentEnd="true"
-        android:layout_marginBottom="9dp" />
+        android:layout_alignParentTop="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true" />
 
 </RelativeLayout>
