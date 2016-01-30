@@ -21,7 +21,7 @@
         android:divider="?android:attr/listDivider">
 
         <TextView
-            android:id="@+id/contact_detail_item"
+            android:id="@+id/contact_detail"
             android:layout_height="wrap_content"
             android:layout_width="0dp"
             android:layout_weight="1"

@@ -2,6 +2,7 @@ package com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.factory;
 
 import com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.fragments.ChatFragment;
 import com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.fragments.ChatListFragment;
+import com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.fragments.ContactFragment;
 import com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.fragments.ContactsListFragment;
 import com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.sessions.ChatSession;
 import com.bitdubai.fermat_android_api.engine.FermatFragmentFactory;
@@ -30,9 +31,10 @@ public class ChatFragmentFactory extends FermatFragmentFactory<ChatSession, SubA
             return ContactsListFragment.newInstance();
            /* case CHT_CHAT_OPEN_CHAT_DETAIL:
                 return OpenChatDetailFragment.newInstance();
-            case CHT_CHAT_OPEN_CONTACT_DETAIL:
-                return OpenContactDetailFragment.newInstance();
-            case CHT_CHAT_EDIT_CONTACT:
+           */
+        if (fragments.equals(ChatFragmentsEnumType.CHT_CHAT_OPEN_CHAT_DETAIL_FRAGMENT))
+            return ContactFragment.newInstance();
+           /* case CHT_CHAT_EDIT_CONTACT:
                 return EditContactFragment.newInstance();
             case CHT_CHAT_OPEN_CONNECTIONLIST:
                 return OpenConnectionListFragment.newInstance();*/

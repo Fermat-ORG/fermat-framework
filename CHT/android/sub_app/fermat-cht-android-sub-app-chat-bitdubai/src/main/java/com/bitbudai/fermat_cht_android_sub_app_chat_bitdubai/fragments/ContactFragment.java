@@ -1,91 +1,53 @@
 package com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.fragments;
 
-import android.app.Activity;
-import android.app.SearchManager;
-import android.content.Context;
-import android.content.Intent;
-import android.content.res.AssetFileDescriptor;
-import android.database.Cursor;
-import android.graphics.Bitmap;
-import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
 import android.provider.ContactsContract;
-/*import android.support.v4.content.CursorLoader;
-import android.support.v4.content.Loader;
-import android.support.v4.widget.CursorAdapter;*/
-import android.text.SpannableString;
-import android.text.TextUtils;
-import android.widget.CursorAdapter;
-
-import com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.adapters.ChatListAdapter;
-import com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.adapters.ContactListAdapter;
-import com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.models.ChatMessage;
-import com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.models.ContactList;
-import com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.sessions.ChatSession;
-import com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.settings.ChatSettings;
-import com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.util.ImageLoader;
-import com.bitdubai.android_api.BuildConfig;
-import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractFermatFragment;
-import com.bitdubai.fermat_cht_api.layer.middleware.interfaces.Contact;
-import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.ChatManager;
-import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.ChatModuleManager;
-import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedSubAppExceptionSeverity;
-
-//import android.text.TextUtils;
-import android.text.style.TextAppearanceSpan;
-import android.util.DisplayMetrics;
-import android.util.Log;
-import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-//import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.AlphabetIndexer;
+import android.widget.LinearLayout;
+import android.widget.ListView;
+import android.widget.TextView;
+
+import com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.adapters.ContactAdapter;
+import com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.adapters.ContactListAdapter;
+import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractFermatFragment;
+import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
+import com.bitdubai.fermat_cht_android_sub_app_chat_bitdubai.R;
+import com.bitdubai.fermat_cht_api.layer.middleware.interfaces.Contact;
+import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.ChatManager;
+
+import java.util.List;
+
+/*import android.support.v4.content.CursorLoader;
+import android.support.v4.content.Loader;
+import android.support.v4.widget.CursorAdapter;*/
+//import android.text.TextUtils;
+//import android.widget.AbsListView;
 //import android.widget.Button;
 //import android.widget.EditText;
 //import android.widget.ListAdapter;
-import android.widget.ListAdapter;
-import android.widget.ListView;
-import android.widget.QuickContactBadge;
-import android.widget.SearchView;
-import android.widget.SectionIndexer;
-import android.widget.TextView;
-import android.widget.Toast;
 //import android.widget.LinearLayout;
 //import android.widget.ListView;
-import com.bitdubai.fermat_api.layer.all_definition.settings.structure.SettingsManager;
-import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.enums.SubApps;
-import com.bitdubai.fermat_cht_android_sub_app_chat_bitdubai.R;
-import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 //import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
 //import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedWalletExceptionSeverity;
 //import com.bitdubai.fermat_cht_api.layer.chat_module.interfaces.ChatModuleManager;
 //import com.bitdubai.fermat_cht_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 
-import java.io.FileDescriptor;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-import java.lang.String;
-import java.util.Date;
-import java.text.DateFormat;
-import java.util.Locale;
-
 
 /**
- * Contact List fragment
+ * Contact fragment
  *
  * @author Jose Cardozo josejcb (josejcb89@gmail.com) on 05/01/16
  * @version 1.0
  *
  */
-public class ContactsListFragment extends AbstractFermatFragment {
+public class ContactFragment extends AbstractFermatFragment {
 
 //    // Defines a tag for identifying log entries
 //    private static final String TAG = "ContactsListFragment";
@@ -102,7 +64,7 @@ public class ContactsListFragment extends AbstractFermatFragment {
 //    // can be reselected again
 //    private int mPreviouslySelectedSearchItem = 0;
 // public ArrayList<ContactList> contactList;
-    public List<Contact> contacts;
+public List<Contact> contacts;
 //    private ListView contactsContainer;
 //    //private ContactsAdapter adapter;
 //
@@ -116,27 +78,11 @@ public class ContactsListFragment extends AbstractFermatFragment {
     // OS versions as search results are shown in-line via Action Bar search from honeycomb onward
     private boolean mIsSearchResultView = false;
     private ChatManager chatManager;
-    private ChatModuleManager moduleManager;
-    private ErrorManager errorManager;
-    private SettingsManager<ChatSettings> settingsManager;
-    private ChatSession chatSession;
 
-;
-    ListView list;
 
-    String[] contactname={"GABRIEL",
-            "MIGUEL",
-            "FRANKLIN",
-            "MANUEL",
-            "JOSE",
-            "LUIS"};
-    Integer[] contacticon={R.drawable.ken,
-            R.drawable.sas,
-            R.drawable.koj,
-            R.drawable.veg,
-            R.drawable.ren,
-            R.drawable.pat
-    };
+
+    String[] contactname={"YO"};   //work
+    String[] contactaddress={"aqui"};
 
     //public ContactsListFragment() {}
     static void initchatinfo(){
@@ -144,9 +90,9 @@ public class ContactsListFragment extends AbstractFermatFragment {
         //imgid[0]=R.drawable.ken;
     }
 
-    public static ContactsListFragment newInstance() {
+    public static ContactFragment newInstance() {
         initchatinfo();
-        return new ContactsListFragment();}
+        return new ContactFragment();}
 
 //    public void setSearchQuery(String query) {
 //        if (TextUtils.isEmpty(query)) {
@@ -161,24 +107,14 @@ public class ContactsListFragment extends AbstractFermatFragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        try{
-            chatSession=((ChatSession) appSession);
-            moduleManager= chatSession.getModuleManager();
-            chatManager=moduleManager.getChatManager();
-            errorManager=appSession.getErrorManager();
-        }catch (Exception e)
-        {
-            //if(errorManager!=null)
-                //errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT,UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT);
-        }
         // Check if this fragment is part of a two-pane set up or a single pane by reading a
         // boolean from the application resource directories. This lets allows us to easily specify
         // which screen sizes should use a two-pane layout by setting this boolean in the
         // corresponding resource size-qualified directory.
-        mIsTwoPaneLayout = getResources().getBoolean(R.bool.has_two_panes);
+       // mIsTwoPaneLayout = getResources().getBoolean(R.bool.has_two_panes);
 
         // Let this fragment contribute menu items
-        setHasOptionsMenu(true);
+        //setHasOptionsMenu(true);
 
         // Create the main contacts adapter
 //        mAdapter = new ContactsAdapter(getActivity());
@@ -225,13 +161,20 @@ public class ContactsListFragment extends AbstractFermatFragment {
         super.onCreate(savedInstanceState);
         View layout = inflater.inflate(R.layout.contact_list_fragment, container, false);
 
-        //int size= chatManager.getContacts().size();
+        ContactAdapter adapter=new ContactAdapter(getActivity(), contactname,  contactaddress);
+        TextView name =(TextView)layout.findViewById(R.id.contact_name);
+        name.setText(contactname[0]);
 
-        ContactListAdapter adapter=new ContactListAdapter(getActivity(), contactname, contacticon);
-        list=(ListView)layout.findViewById(R.id.list);
-        list.setAdapter(adapter);
+        LinearLayout detalles = (LinearLayout)layout.findViewById(R.id.contact_details_layout);
 
-        list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+        final int adapterCount = adapter.getCount();
+
+        for (int i = 0; i < adapterCount; i++) {
+            View item = adapter.getView(i, null, null);
+            detalles.addView(item);
+        }
+
+        /*list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 
             @Override
             public void onItemClick(AdapterView<?> parent, View view,int position, long id) {
@@ -240,13 +183,14 @@ public class ContactsListFragment extends AbstractFermatFragment {
                 //Toast.makeText(getActivity(), Slecteditem, Toast.LENGTH_SHORT).show();
 
             }
-        });
+        });*/
 
         return layout;
         //loadDummyHistory();
         // Inflate the list fragment layout
         //return inflater.inflate(R.layout.contact_list_fragment, container, false);
     }
+
 
 //    private void loadDummyHistory(){// Hard Coded
 //
@@ -932,7 +876,7 @@ public class ContactsListFragment extends AbstractFermatFragment {
 
     /**
      * This interface defines constants for the Cursor and CursorLoader, based on constants defined
-     * in the {@link android.provider.ContactsContract.Contacts} class.
+     * in the {@link ContactsContract.Contacts} class.
      */
 //    public interface ContactsQuery {
 //

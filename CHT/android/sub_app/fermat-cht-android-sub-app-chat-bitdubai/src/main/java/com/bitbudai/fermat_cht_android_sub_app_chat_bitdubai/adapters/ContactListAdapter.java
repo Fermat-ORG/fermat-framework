@@ -31,8 +31,7 @@ public class ContactListAdapter extends ArrayAdapter<String> {
     List<ContactList> contactsList = new ArrayList<>();
     private final String[] contactinfo;
     private final Integer[] contacticon;
-
-
+    //discoverActorsRegistered()
     public ContactListAdapter(Context context, String[] contactinfo, Integer[] contacticon) {
         super(context, R.layout.contact_list_item, contactinfo);
         this.contactinfo = contactinfo;
