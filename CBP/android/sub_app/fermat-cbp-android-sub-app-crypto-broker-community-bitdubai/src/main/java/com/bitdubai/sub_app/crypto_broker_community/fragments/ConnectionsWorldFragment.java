@@ -285,14 +285,14 @@ public class ConnectionsWorldFragment extends AbstractFermatFragment<CryptoBroke
 
             List<CryptoBrokerCommunityInformation> result = cryptoBrokerCommunitySearch.getResult();
 
-            //TODO: "FIXING" los images en null pues en el ConnectionOtherProfileFragment explota.
+            /*//TODO: "FIXING" los images en null pues en el ConnectionOtherProfileFragment explota.
             //Eventualmente este result traera las imagenes correctas. Quitar este for cuando eso ocurra.
             List<CryptoBrokerCommunityInformation> fixedResult = new ArrayList<>();
             for(CryptoBrokerCommunityInformation i : result){
                 fixedResult.add(new CryptoBrokerCommunityInformationImpl(i.getPublicKey(), i.getAlias(), new byte[0]));
-            }
+            }*/
 
-            dataSet.addAll(fixedResult);
+            dataSet.addAll(result);
             offset = dataSet.size();
 
         } catch (Exception e) {
