@@ -29,6 +29,8 @@ import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractFermatFra
 import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatButton;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView;
 import com.bitdubai.fermat_android_api.ui.transformation.CircleTransform;
+import com.bitdubai.fermat_api.AndroidCoreManager;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.enums.NetworkStatus;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
 import com.bitdubai.fermat_api.layer.all_definition.enums.BlockchainNetworkType;
 import com.bitdubai.fermat_api.layer.all_definition.enums.CryptoCurrency;
@@ -75,8 +77,10 @@ import static com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.utils.Wa
 /**
  * Created by Matias Furszyfer on 2015.11.05..
  */
-public class SendFormFragment extends AbstractFermatFragment<ReferenceWalletSession, ResourceProviderManager> implements View.OnClickListener {
+public class SendFormFragment extends AbstractFermatFragment<ReferenceWalletSession,ResourceProviderManager> implements View.OnClickListener{
 
+    private AndroidCoreManager androidCoreManager;
+    private NetworkStatus networkStatus;
     /**
      * Plaform reference
      */
@@ -242,6 +246,9 @@ public class SendFormFragment extends AbstractFermatFragment<ReferenceWalletSess
                 AlphaAnimation alphaAnimation = new AlphaAnimation((float) 0.4, 1);
                 alphaAnimation.setDuration(300);
                 final String finalText = text;
+                if(newAmount.equals("0"))
+                    newAmount ="";
+
                 final String finalAmount = newAmount;
                 alphaAnimation.setAnimationListener(new Animation.AnimationListener() {
                     @Override
@@ -420,10 +427,28 @@ public class SendFormFragment extends AbstractFermatFragment<ReferenceWalletSess
                         );
                     } else {
                         walletContact.address = cryptoWalletWalletContact.getReceivedCryptoAddress().get(0).getAddress();
+                    if(cryptoWalletWalletContact!=null) {
+                        walletContact.name = cryptoWalletWalletContact.getActorName();
+                        walletContact.actorPublicKey = cryptoWalletWalletContact.getActorPublicKey();
+                        if (cryptoWalletWalletContact.getReceivedCryptoAddress().isEmpty()) {
+                            appSession.getModuleManager().getCryptoWallet().requestAddressToKnownUser(
+                                    appSession.getIntraUserModuleManager().getPublicKey(),
+                                    Actors.INTRA_USER,
+                                    cryptoWalletWalletContact.getActorPublicKey(),
+                                    cryptoWalletWalletContact.getActorType(),
+                                    Platforms.CRYPTO_CURRENCY_PLATFORM,
+                                    VaultType.CRYPTO_CURRENCY_VAULT,
+                                    CryptoCurrencyVault.BITCOIN_VAULT.getCode(),
+                                    appSession.getAppPublicKey(),
+                                    ReferenceWallet.BASIC_WALLET_BITCOIN_WALLET
+                            );
+                        } else {
+                            walletContact.address = cryptoWalletWalletContact.getReceivedCryptoAddress().get(0).getAddress();
+                        }
+                        walletContact.contactId = cryptoWalletWalletContact.getContactId();
+                        walletContact.profileImage = cryptoWalletWalletContact.getProfilePicture();
+                        walletContact.isConnection = cryptoWalletWalletContact.isConnection();
                     }
-                    walletContact.contactId = cryptoWalletWalletContact.getContactId();
-                    walletContact.profileImage = cryptoWalletWalletContact.getProfilePicture();
-                    walletContact.isConnection = cryptoWalletWalletContact.isConnection();
 
                     setUpUIData();
 

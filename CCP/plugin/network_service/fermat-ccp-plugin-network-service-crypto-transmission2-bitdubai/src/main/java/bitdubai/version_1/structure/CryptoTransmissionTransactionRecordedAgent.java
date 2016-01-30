@@ -73,7 +73,7 @@ public class CryptoTransmissionTransactionRecordedAgent extends FermatAgent{
 
     private Future<?>[] futures= new Future[2];
 
-    private final CryptoTransmissionNetworkServicePluginRoot cryptoTransmissionNetworkServicePluginRoot;
+    private CryptoTransmissionNetworkServicePluginRoot cryptoTransmissionNetworkServicePluginRoot;
 
     public CryptoTransmissionTransactionRecordedAgent(final CryptoTransmissionNetworkServicePluginRoot cryptoTransmissionNetworkServicePluginRoot) {
 
@@ -436,6 +436,11 @@ public class CryptoTransmissionTransactionRecordedAgent extends FermatAgent{
                                             NetworkServiceType.UNDEFINED,
                                             PlatformComponentType.ACTOR_INTRA_USER,"");
 
+                            //TODO: esto es una cochinada pero quiero que ande porque se lo setea en null
+                            if(cryptoTransmissionNetworkServicePluginRoot.getNetworkServiceConnectionManager_v2_fix().getCommunicationsClientConnection()==null){
+                                cryptoTransmissionNetworkServicePluginRoot.getNetworkServiceConnectionManager_v2_fix().setCommunicationsClientConnection(cryptoTransmissionNetworkServicePluginRoot.getWsCommunicationsCloudClientManager().getCommunicationsCloudClientConnection());
+                            }
+
                             cryptoTransmissionNetworkServicePluginRoot.getNetworkServiceConnectionManager().connectTo(
                                     applicantParticipant,
                                     cryptoTransmissionNetworkServicePluginRoot.getPlatformComponentProfilePluginRoot(),
@@ -526,4 +531,7 @@ public class CryptoTransmissionTransactionRecordedAgent extends FermatAgent{
         cryptoTransmissionNetworkServicePluginRoot.getEventManager().raiseEvent(incomingCryptoMetadataReceive);
     }
 
+    public void setCryptoTransmissionPluginRoot(CryptoTransmissionNetworkServicePluginRoot cryptoTransmissionPluginRoot) {
+        this.cryptoTransmissionNetworkServicePluginRoot = cryptoTransmissionPluginRoot;
+    }
 }
