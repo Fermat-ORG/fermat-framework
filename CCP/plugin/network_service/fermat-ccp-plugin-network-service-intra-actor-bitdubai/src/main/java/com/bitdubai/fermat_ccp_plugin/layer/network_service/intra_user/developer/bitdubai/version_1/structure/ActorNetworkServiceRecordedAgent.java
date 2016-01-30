@@ -48,6 +48,8 @@ public class ActorNetworkServiceRecordedAgent extends FermatAgent{
 
     private static final long SEND_SLEEP_TIME    = 15000;
     private static final long RECEIVE_SLEEP_TIME = 15000;
+    private static final int SEND_TASK = 0;
+    private static final int RECEIVE_TASK = 1;
     private final ExecutorService threadPoolExecutor;
 
     private Runnable toSend   ;
@@ -56,7 +58,7 @@ public class ActorNetworkServiceRecordedAgent extends FermatAgent{
     // network services registered
     private Map<String, ActorNetworkServiceRecord> poolConnectionsWaitingForResponse;
 
-    private List<Future<?>> futures= new ArrayList<>();
+    private Future<?>[] futures= new Future[2];
 
 
     private final IntraActorNetworkServicePluginRoot actorNetworkServicePluginRoot;
@@ -92,8 +94,14 @@ public class ActorNetworkServiceRecordedAgent extends FermatAgent{
     public void start() throws CantStartAgentException {
 
         try {
-            futures.add(threadPoolExecutor.submit(toSend));
-            futures.add(threadPoolExecutor.submit(toReceive));
+            if(futures!=null){
+                if(futures[SEND_TASK]!=null) futures[SEND_TASK].cancel(true);
+                if(futures[RECEIVE_TASK]!=null) futures[RECEIVE_TASK].cancel(true);
+
+                futures[SEND_TASK] = threadPoolExecutor.submit(toSend);
+                futures[RECEIVE_TASK] = threadPoolExecutor.submit(toReceive);
+
+            }
 
             this.status = AgentStatus.STARTED;
 
@@ -105,8 +113,14 @@ public class ActorNetworkServiceRecordedAgent extends FermatAgent{
 
     public void resume() throws CantStartAgentException {
         try {
-            futures.add(threadPoolExecutor.submit(toSend));
-            futures.add(threadPoolExecutor.submit(toReceive));
+            if(futures!=null){
+                if(futures[SEND_TASK]!=null) futures[SEND_TASK].cancel(true);
+                if(futures[RECEIVE_TASK]!=null) futures[RECEIVE_TASK].cancel(true);
+
+                futures[SEND_TASK] = threadPoolExecutor.submit(toSend);
+                futures[RECEIVE_TASK] = threadPoolExecutor.submit(toReceive);
+
+            }
 
             this.status = AgentStatus.STARTED;
 
@@ -119,10 +133,9 @@ public class ActorNetworkServiceRecordedAgent extends FermatAgent{
     public void pause() throws CantStopAgentException {
         try {
 
-            Iterator<Future<?>> it = futures.iterator();
-
-            while (it.hasNext()){
-                it.next().cancel(true);
+            if(futures!=null){
+                if(futures[SEND_TASK]!=null) futures[SEND_TASK].cancel(true);
+                if(futures[RECEIVE_TASK]!=null) futures[RECEIVE_TASK].cancel(true);
             }
 
             this.status = AgentStatus.PAUSED;
@@ -136,10 +149,9 @@ public class ActorNetworkServiceRecordedAgent extends FermatAgent{
     public void stop() throws CantStopAgentException {
         try {
 
-            Iterator<Future<?>> it = futures.iterator();
-
-            while (it.hasNext()){
-                it.next().cancel(true);
+            if(futures!=null){
+                if(futures[SEND_TASK]!=null) futures[SEND_TASK].cancel(true);
+                if(futures[RECEIVE_TASK]!=null) futures[RECEIVE_TASK].cancel(true);
             }
 
             this.status = AgentStatus.PAUSED;
@@ -156,18 +168,19 @@ public class ActorNetworkServiceRecordedAgent extends FermatAgent{
 
         try {
 
-            if(actorNetworkServicePluginRoot.getWsCommunicationsCloudClientManager().getCommunicationsCloudClientConnection().isConnected()) {
+            if (actorNetworkServicePluginRoot.getWsCommunicationsCloudClientManager().getCommunicationsCloudClientConnection() != null){
 
-                if (actorNetworkServicePluginRoot.isRegister() && actorNetworkServicePluginRoot.isStarted()) {
-
+                if (!actorNetworkServicePluginRoot.getWsCommunicationsCloudClientManager().getCommunicationsCloudClientConnection().isConnected()){
+                    //System.out.println("ActorNetworkServiceRecordedAgent - sendCycle() no connection available ... ");
+                    return;
+                }else {
                     // function to process and send the rigth message to the counterparts.
                     processSend();
 
+                    //Sleep for a time
+                    TimeUnit.SECONDS.sleep(2);
                 }
             }
-
-            //Sleep for a time
-            TimeUnit.SECONDS.sleep(2);
 
         } catch (InterruptedException e) {
             status = AgentStatus.STOPPED;
@@ -226,18 +239,20 @@ public class ActorNetworkServiceRecordedAgent extends FermatAgent{
 
         try {
 
-            if(actorNetworkServicePluginRoot.getWsCommunicationsCloudClientManager().getCommunicationsCloudClientConnection().isConnected()) {
+            if (actorNetworkServicePluginRoot.getWsCommunicationsCloudClientManager().getCommunicationsCloudClientConnection() != null) {
 
-
-                if (actorNetworkServicePluginRoot.isRegister() && actorNetworkServicePluginRoot.isStarted()) {
+                if (!actorNetworkServicePluginRoot.getWsCommunicationsCloudClientManager().getCommunicationsCloudClientConnection().isConnected()) {
+                    //System.out.println("ActorNetworkServiceRecordedAgent - receiveCycle() no connection available ... ");
+                    return;
+                } else {
 
                     // function to process and send the right message to the counterparts.
                     processReceive();
-                }
 
+                    //Sleep for a time
+                    Thread.sleep(RECEIVE_SLEEP_TIME);
+                }
             }
-            //Sleep for a time
-            Thread.sleep(RECEIVE_SLEEP_TIME);
 
         } catch (InterruptedException e) {
             status = AgentStatus.STOPPED;
@@ -361,15 +376,15 @@ public class ActorNetworkServiceRecordedAgent extends FermatAgent{
                             PlatformComponentProfile applicantParticipant = actorNetworkServicePluginRoot.getWsCommunicationsCloudClientManager().getCommunicationsCloudClientConnection()
                                     .constructPlatformComponentProfileFactory(
                                             actorNetworkServiceRecord.getActorSenderPublicKey(),
-                                            actorNetworkServiceRecord.getActorSenderAlias(),
-                                            actorNetworkServiceRecord.getActorSenderAlias(),
+                                            (!actorNetworkServiceRecord.getActorSenderAlias().equals(""))? actorNetworkServiceRecord.getActorSenderAlias():"sender_alias_null",
+                                            (!actorNetworkServiceRecord.getActorSenderAlias().equals(""))? actorNetworkServiceRecord.getActorSenderAlias():"sender_alias_null",
                                             NetworkServiceType.UNDEFINED,
                                             PlatformComponentType.ACTOR_INTRA_USER,"");
                             PlatformComponentProfile remoteParticipant = actorNetworkServicePluginRoot.getWsCommunicationsCloudClientManager().getCommunicationsCloudClientConnection()
                                     .constructPlatformComponentProfileFactory(
                                             actorNetworkServiceRecord.getActorDestinationPublicKey(),
-                                            actorNetworkServiceRecord.getActorSenderAlias(),
-                                            actorNetworkServiceRecord.getActorSenderAlias(),
+                                            (actorNetworkServiceRecord.getActorDestinationPublicKey()!=null)? actorNetworkServiceRecord.getActorDestinationPublicKey():"destination_alias_null",
+                                            (actorNetworkServiceRecord.getActorDestinationPublicKey()!=null)? actorNetworkServiceRecord.getActorDestinationPublicKey():"destination_alias_null",
                                             NetworkServiceType.UNDEFINED,
                                             PlatformComponentType.ACTOR_INTRA_USER,"");
 

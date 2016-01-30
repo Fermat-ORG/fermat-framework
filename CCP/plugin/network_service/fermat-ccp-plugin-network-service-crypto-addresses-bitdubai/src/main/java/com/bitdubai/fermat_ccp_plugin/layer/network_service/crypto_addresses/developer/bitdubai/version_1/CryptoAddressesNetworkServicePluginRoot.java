@@ -299,9 +299,6 @@ public class CryptoAddressesNetworkServicePluginRoot extends AbstractNetworkServ
                         communicationRegistrationProcessNetworkServiceAgent.start();
                     }
 
-
-                    initializeAgent();
-
                     // change message state to process again first time
                     reprocessMessage();
 
@@ -309,6 +306,8 @@ public class CryptoAddressesNetworkServicePluginRoot extends AbstractNetworkServ
                     startTimer();
 
 
+
+                    initializeAgent();
             /*
              * Its all ok, set the new status
             */
@@ -327,6 +326,7 @@ public class CryptoAddressesNetworkServicePluginRoot extends AbstractNetworkServ
 
                     errorManager.reportUnexpectedPluginException(this.getPluginVersionReference(),UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, pluginStartException);
                     throw pluginStartException;
+
                 }
 
                 System.out.println("********* Crypto Addresses: Successful start. ");
@@ -947,14 +947,24 @@ public class CryptoAddressesNetworkServicePluginRoot extends AbstractNetworkServ
     /**
      * Handles the events CompleteComponentRegistrationNotification
      */
-    public void initializeAgent() {
+    public void initializeAgent(){
 
         System.out.println("CryptoAddressesNetworkServicePluginRoot - Starting method initializeAgent");
-        
-        cryptoAddressesExecutorAgent = new CryptoAddressesExecutorAgent(
-                this,
-                cryptoAddressesNetworkServiceDao
-        );
+
+        try {
+            if (cryptoAddressesExecutorAgent == null){
+
+                cryptoAddressesExecutorAgent = new CryptoAddressesExecutorAgent(
+                        this,
+                        cryptoAddressesNetworkServiceDao
+                );
+
+                this.cryptoAddressesExecutorAgent.start();
+            }
+        } catch (CantStartAgentException e) {
+            e.printStackTrace();
+        }
+
     }
 
     public void handleCompleteComponentRegistrationNotificationEvent(PlatformComponentProfile platformComponentProfileRegistered){
@@ -979,9 +989,8 @@ public class CryptoAddressesNetworkServicePluginRoot extends AbstractNetworkServ
                     platformComponentProfileRegistered.getIdentityPublicKey().equals(identity.getPublicKey())) {
 
                 System.out.println("CryptoAddressesNetworkServicePluginRoot - NetWork Service is Registered: " + platformComponentProfileRegistered.getAlias());
-
+                initializeAgent();
                 this.register = Boolean.TRUE;
-                cryptoAddressesExecutorAgent.start();
 
             }
 
@@ -1062,10 +1071,6 @@ public class CryptoAddressesNetworkServicePluginRoot extends AbstractNetworkServ
                 communicationNetworkServiceConnectionManager.stop();
             }
 
-            if(cryptoAddressesExecutorAgent!=null) {
-                cryptoAddressesExecutorAgent.stop();
-            }
-
         }
 
     }
@@ -1078,9 +1083,6 @@ public class CryptoAddressesNetworkServicePluginRoot extends AbstractNetworkServ
 
         if(communicationNetworkServiceConnectionManager != null) {
             communicationNetworkServiceConnectionManager.stop();
-        }
-        if(cryptoAddressesExecutorAgent!=null) {
-            cryptoAddressesExecutorAgent.pause();
         }
 
         this.register = Boolean.FALSE;
@@ -1100,14 +1102,14 @@ public class CryptoAddressesNetworkServicePluginRoot extends AbstractNetworkServ
                 communicationNetworkServiceConnectionManager.restart();
             }
 
+
+            initializeAgent();
+
             /*
              * Mark as register
              */
             this.register = Boolean.TRUE;
 
-            if(cryptoAddressesExecutorAgent!=null) {
-                cryptoAddressesExecutorAgent.start();
-            }
 
         }catch (Exception e){
             e.printStackTrace();
@@ -1445,6 +1447,7 @@ public class CryptoAddressesNetworkServicePluginRoot extends AbstractNetworkServ
         }
     }
 
+
     public WsCommunicationsCloudClientManager getWsCommunicationsCloudClientManager() {
         return wsCommunicationsCloudClientManager;
     }
@@ -1452,7 +1455,6 @@ public class CryptoAddressesNetworkServicePluginRoot extends AbstractNetworkServ
     public ErrorManager getErrorManager() {
         return errorManager;
     }
-
 
     private void startTimer() {
         timer.schedule(new TimerTask() {

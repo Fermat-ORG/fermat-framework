@@ -81,7 +81,7 @@ public class ReceiveTransactionFragment2 extends FermatWalletExpandableListFragm
     private ErrorManager errorManager;
 
     // Data
-    private List<GrouperItem> openNegotiationList;
+    private ArrayList openNegotiationList;
     private TextView txt_type_balance;
     private TextView txt_balance_amount;
     private long balanceAvailable;

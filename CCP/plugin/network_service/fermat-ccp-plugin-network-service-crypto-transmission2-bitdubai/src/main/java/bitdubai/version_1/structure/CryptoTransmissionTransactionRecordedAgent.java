@@ -59,6 +59,10 @@ public class CryptoTransmissionTransactionRecordedAgent extends FermatAgent{
 
     private static final long SEND_SLEEP_TIME    = 15000;
     private static final long RECEIVE_SLEEP_TIME = 15000;
+    private static final int SEND_TASK = 0;
+    private static final int RECEIVE_TASK = 1;
+
+
     private final ExecutorService threadPoolExecutor;
 
     private Runnable toSend   ;
@@ -67,9 +71,9 @@ public class CryptoTransmissionTransactionRecordedAgent extends FermatAgent{
     // network services registered
     private Map<String, CryptoTransmissionMessage> poolConnectionsWaitingForResponse;
 
-    private List<Future<?>> futures= new ArrayList<>();
+    private Future<?>[] futures= new Future[2];
 
-    private final CryptoTransmissionNetworkServicePluginRoot cryptoTransmissionNetworkServicePluginRoot;
+    private CryptoTransmissionNetworkServicePluginRoot cryptoTransmissionNetworkServicePluginRoot;
 
     public CryptoTransmissionTransactionRecordedAgent(final CryptoTransmissionNetworkServicePluginRoot cryptoTransmissionNetworkServicePluginRoot) {
 
@@ -81,7 +85,7 @@ public class CryptoTransmissionTransactionRecordedAgent extends FermatAgent{
         this.toSend = new Runnable() {
             @Override
             public void run() {
-                while (isRunning())
+                while (true)
                     sendCycle();
             }
         };
@@ -90,7 +94,7 @@ public class CryptoTransmissionTransactionRecordedAgent extends FermatAgent{
         this.toReceive = new Runnable() {
             @Override
             public void run() {
-                while (isRunning())
+                while (true)
                     receiveCycle();
             }
         };
@@ -100,8 +104,15 @@ public class CryptoTransmissionTransactionRecordedAgent extends FermatAgent{
     public void start() throws CantStartAgentException {
 
         try {
-            futures.add(threadPoolExecutor.submit(toSend));
-            futures.add(threadPoolExecutor.submit(toReceive));
+
+            if(futures!=null){
+                if(futures[SEND_TASK]!=null) futures[SEND_TASK].cancel(true);
+                if(futures[RECEIVE_TASK]!=null) futures[RECEIVE_TASK].cancel(true);
+
+                futures[SEND_TASK] = threadPoolExecutor.submit(toSend);
+                futures[RECEIVE_TASK] = threadPoolExecutor.submit(toReceive);
+
+            }
 
             this.status = AgentStatus.STARTED;
 
@@ -113,8 +124,15 @@ public class CryptoTransmissionTransactionRecordedAgent extends FermatAgent{
 
     public void resume() throws CantStartAgentException {
         try {
-            futures.add(threadPoolExecutor.submit(toSend));
-            futures.add(threadPoolExecutor.submit(toReceive));
+            if(futures!=null){
+
+                if(futures[SEND_TASK]!=null) futures[SEND_TASK].cancel(true);
+                if(futures[RECEIVE_TASK]!=null) futures[RECEIVE_TASK].cancel(true);
+
+                futures[SEND_TASK] = threadPoolExecutor.submit(toSend);
+                futures[RECEIVE_TASK] = threadPoolExecutor.submit(toReceive);
+
+            }
 
             this.status = AgentStatus.STARTED;
 
@@ -127,10 +145,9 @@ public class CryptoTransmissionTransactionRecordedAgent extends FermatAgent{
     public void pause() throws CantStopAgentException {
         try {
 
-            Iterator<Future<?>> it = futures.iterator();
-
-            while (it.hasNext()){
-                it.next().cancel(true);
+            if(futures!=null){
+                if(futures[SEND_TASK]!=null) futures[SEND_TASK].cancel(true);
+                if(futures[RECEIVE_TASK]!=null) futures[RECEIVE_TASK].cancel(true);
             }
 
             this.status = AgentStatus.PAUSED;
@@ -144,12 +161,10 @@ public class CryptoTransmissionTransactionRecordedAgent extends FermatAgent{
     public void stop() throws CantStopAgentException {
         try {
 
-            Iterator<Future<?>> it = futures.iterator();
-
-            while (it.hasNext()){
-                it.next().cancel(true);
+            if(futures!=null){
+                if(futures[SEND_TASK]!=null) futures[SEND_TASK].cancel(true);
+                if(futures[RECEIVE_TASK]!=null) futures[RECEIVE_TASK].cancel(true);
             }
-
             this.status = AgentStatus.PAUSED;
 
         } catch (Exception exception) {
@@ -164,22 +179,21 @@ public class CryptoTransmissionTransactionRecordedAgent extends FermatAgent{
 
         try {
 
-            if(cryptoTransmissionNetworkServicePluginRoot.getWsCommunicationsCloudClientManager().getCommunicationsCloudClientConnection().isConnected()) {
-                if (cryptoTransmissionNetworkServicePluginRoot.isRegister() && cryptoTransmissionNetworkServicePluginRoot.isStarted()) {
+            if (cryptoTransmissionNetworkServicePluginRoot.getWsCommunicationsCloudClientManager().getCommunicationsCloudClientConnection() != null){
 
+                if (cryptoTransmissionNetworkServicePluginRoot.getWsCommunicationsCloudClientManager().getCommunicationsCloudClientConnection().isConnected()){
                     // function to process and send the rigth message to the counterparts.
                     processSend();
-
+                    //Sleep for a time
                 }
+
+                TimeUnit.SECONDS.sleep(2);
             }
-
-            //Sleep for a time
-
-            if(!Thread.currentThread().isInterrupted()) TimeUnit.SECONDS.sleep(2);
 
         } catch (InterruptedException e) {
             status = AgentStatus.STOPPED;
             System.out.println("CryptoTransmissionTransactionRecordedAgent - sendCycle() Thread Interrupted stopped ... ");
+            e.printStackTrace();
         } catch(Exception e) {
             reportUnexpectedError(FermatException.wrapException(e));
         }
@@ -246,17 +260,15 @@ public class CryptoTransmissionTransactionRecordedAgent extends FermatAgent{
 
         try {
 
-            if(cryptoTransmissionNetworkServicePluginRoot.getWsCommunicationsCloudClientManager().getCommunicationsCloudClientConnection().isConnected()) {
+            if (cryptoTransmissionNetworkServicePluginRoot.getWsCommunicationsCloudClientManager().getCommunicationsCloudClientConnection() != null) {
 
-                if (cryptoTransmissionNetworkServicePluginRoot.isRegister() && cryptoTransmissionNetworkServicePluginRoot.isStarted()) {
-
+                if (cryptoTransmissionNetworkServicePluginRoot.getWsCommunicationsCloudClientManager().getCommunicationsCloudClientConnection().isConnected()) {
                     // function to process and send the right message to the counterparts.
                     processReceive();
                 }
-            }
 
-            //Sleep for a time
-            if(!Thread.currentThread().isInterrupted()) Thread.sleep(RECEIVE_SLEEP_TIME);
+                Thread.sleep(RECEIVE_SLEEP_TIME);
+            }
 
         } catch (InterruptedException e) {
             status = AgentStatus.STOPPED;
@@ -322,6 +334,7 @@ public class CryptoTransmissionTransactionRecordedAgent extends FermatAgent{
 
                        //update message in DONE and Close connection with another device - End message
                        cryptoTransmissionNetworkServicePluginRoot.getOutgoingMetadataDao().doneTransaction(cryptoTransmissionMetadata.getTransactionId());
+                       cryptoTransmissionNetworkServicePluginRoot.getIncomingNotificationsDao().doneTransaction(cryptoTransmissionMetadata.getTransactionId());
 
 
                        break;
@@ -372,6 +385,11 @@ public class CryptoTransmissionTransactionRecordedAgent extends FermatAgent{
                                "CREDITED IN WALLET, TENES QUE VER QUE SE HACE ACÁ !!!!! -----------------------\n" +
                                "-----------------------\n STATE: " + cryptoTransmissionMetadata.getCryptoTransmissionProtocolState());
                        break;
+                   case SEEN_BY_OWN_VAULT:
+                       System.out.print("-----------------------\n" +
+                               "SEEN BY OWN VAULT, ESPERANDO A QUE SE CIERRE CUANDO LLEGUE A LA WALLET !!!!! -----------------------\n" +
+                               "-----------------------\n STATE: " + cryptoTransmissionMetadata.getCryptoTransmissionProtocolState());
+                       break;
                    default:
                        System.out.print("-----------------------\n" +
                                "TE ESTAS YENDO POR EL DEFAULT !!!!! -----------------------\n" +
@@ -417,6 +435,11 @@ public class CryptoTransmissionTransactionRecordedAgent extends FermatAgent{
                                             "destination_alias",
                                             NetworkServiceType.UNDEFINED,
                                             PlatformComponentType.ACTOR_INTRA_USER,"");
+
+                            //TODO: esto es una cochinada pero quiero que ande porque se lo setea en null
+                            if(cryptoTransmissionNetworkServicePluginRoot.getNetworkServiceConnectionManager_v2_fix().getCommunicationsClientConnection()==null){
+                                cryptoTransmissionNetworkServicePluginRoot.getNetworkServiceConnectionManager_v2_fix().setCommunicationsClientConnection(cryptoTransmissionNetworkServicePluginRoot.getWsCommunicationsCloudClientManager().getCommunicationsCloudClientConnection());
+                            }
 
                             cryptoTransmissionNetworkServicePluginRoot.getNetworkServiceConnectionManager().connectTo(
                                     applicantParticipant,
@@ -508,4 +531,7 @@ public class CryptoTransmissionTransactionRecordedAgent extends FermatAgent{
         cryptoTransmissionNetworkServicePluginRoot.getEventManager().raiseEvent(incomingCryptoMetadataReceive);
     }
 
+    public void setCryptoTransmissionPluginRoot(CryptoTransmissionNetworkServicePluginRoot cryptoTransmissionPluginRoot) {
+        this.cryptoTransmissionNetworkServicePluginRoot = cryptoTransmissionPluginRoot;
+    }
 }

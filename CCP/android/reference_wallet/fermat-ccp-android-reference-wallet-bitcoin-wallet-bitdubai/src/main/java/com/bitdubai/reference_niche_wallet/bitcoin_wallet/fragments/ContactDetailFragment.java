@@ -5,6 +5,7 @@ import android.graphics.BitmapFactory;
 import android.graphics.Typeface;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -48,6 +49,7 @@ import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.utils.BitmapWor
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.session.ReferenceWalletSession;
 
 import java.io.ByteArrayOutputStream;
+import java.util.concurrent.TimeUnit;
 
 import com.bitdubai.android_fermat_ccp_wallet_bitcoin.R;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.session.SessionConstant;
@@ -100,6 +102,15 @@ public class ContactDetailFragment extends AbstractFermatFragment implements Vie
     private FermatButton send_button;
     private FermatButton receive_button;
     private ImageView img_update;
+    private boolean addressIsTouch=false;
+    private static final long DELAY_TIME = 2;
+    private Handler delayHandler = new Handler();
+    private Runnable delay = new Runnable() {
+        @Override
+        public void run() {
+            addressIsTouch = false;
+        }
+    };
 
 
     public static ContactDetailFragment newInstance() {
@@ -220,17 +231,24 @@ public class ContactDetailFragment extends AbstractFermatFragment implements Vie
                 @Override
                 public void onClick(View v) {
                     try {
-                        referenceWalletSession.getModuleManager().getCryptoWallet().sendAddressExchangeRequest(
-                                cryptoWalletWalletContact.getActorName(),
-                                Actors.INTRA_USER,
-                                cryptoWalletWalletContact.getActorPublicKey(),
-                                cryptoWalletWalletContact.getProfilePicture(),
-                                Actors.INTRA_USER,
-                                referenceWalletSession.getIntraUserModuleManager().getPublicKey()
-                                ,appSession.getAppPublicKey(),
-                                CryptoCurrency.BITCOIN,
-                                BlockchainNetworkType.DEFAULT
-                        );
+                        if(!addressIsTouch) {
+                            addressIsTouch=true;
+                            referenceWalletSession.getModuleManager().getCryptoWallet().sendAddressExchangeRequest(
+                                    cryptoWalletWalletContact.getActorName(),
+                                    Actors.INTRA_USER,
+                                    cryptoWalletWalletContact.getActorPublicKey(),
+                                    cryptoWalletWalletContact.getProfilePicture(),
+                                    Actors.INTRA_USER,
+                                    referenceWalletSession.getIntraUserModuleManager().getPublicKey()
+                                    , appSession.getAppPublicKey(),
+                                    CryptoCurrency.BITCOIN,
+                                    BlockchainNetworkType.DEFAULT
+                            );
+
+                            delayHandler.postDelayed(delay, TimeUnit.MINUTES.toMillis(DELAY_TIME));
+                        }else{
+                            Toast.makeText(getActivity(),"Address exchange sent, wait 2 minutes please",Toast.LENGTH_SHORT).show();
+                        }
                     } catch (CantGetCryptoWalletException | CantListCryptoWalletIntraUserIdentityException e) {
                         e.printStackTrace();
                     }
