@@ -438,43 +438,9 @@ public class BitcoinCryptoNetworkMonitor implements Agent {
             getDao().storeBitcoinTransaction(BLOCKCHAIN_NETWORKTYPE, tx.getHashAsString(), transactionId, peerGroup.getConnectedPeers().size(), peerGroup.getDownloadPeer().getAddress().toString());
 
             /**
-             * I will mark the outputs of the Outpoint as spent and the input transaction as spent.
+             * Commit and save in the wallet
              */
-            for (TransactionInput input : tx.getInputs()){
-                TransactionOutPoint outPoint = input.getOutpoint();
-
-                TransactionOutput output = outPoint.getConnectedOutput();
-
-                // if I couldn't get the connect output, I'll do it manually
-                Transaction inputTransaction = getTransactionFromBlockChain(outPoint.getHash().toString(), null);
-
-                // mark it as spent.
-                if (output != null){
-                    output.markAsSpent(input);
-                } else{
-                    if (inputTransaction != null){
-                        TransactionOutput inputTranscactionOutput = inputTransaction.getOutput(outPoint.getIndex());
-                        inputTranscactionOutput.markAsSpent(input);
-                    }
-                }
-
-                /**
-                 * The parent Transaction is marked as Spent.
-                 */
-                WalletTransaction spentWalletTransaction = new WalletTransaction(WalletTransaction.Pool.SPENT, inputTransaction);
-                wallet.addWalletTransaction(spentWalletTransaction);
-            }
-
-            /**
-             * Will add this transaction to the pending Pool
-             */
-            WalletTransaction walletTransaction = new WalletTransaction(WalletTransaction.Pool.PENDING, tx);
-            wallet.addWalletTransaction(walletTransaction);
-
-
-            /**
-             * will save the wallet
-             */
+            wallet.commitTx(tx);
             wallet.saveToFile(walletFileName);
 
             /**
