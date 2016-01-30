@@ -2200,8 +2200,8 @@ public class SubAppRuntimeEnginePluginRoot extends AbstractPlugin implements Sub
 
         //NEWMIG
         runtimeActivity = new Activity();
-        runtimeActivity.setType(Activities.CHT_CHAT_OPEM_MESSAGE_LIST);
-        runtimeActivity.setActivityType(Activities.CHT_CHAT_OPEM_MESSAGE_LIST.getCode());
+        runtimeActivity.setType(Activities.CHT_CHAT_OPEN_MESSAGE_LIST);
+        runtimeActivity.setActivityType(Activities.CHT_CHAT_OPEN_MESSAGE_LIST.getCode());
         runtimeActivity.setBackActivity(Activities.CHT_CHAT_OPEN_CHATLIST);
         runtimeActivity.setBackPublicKey(Activities.CHT_CHAT_OPEN_CHATLIST.getCode());
         chtChat.addActivity(runtimeActivity);
