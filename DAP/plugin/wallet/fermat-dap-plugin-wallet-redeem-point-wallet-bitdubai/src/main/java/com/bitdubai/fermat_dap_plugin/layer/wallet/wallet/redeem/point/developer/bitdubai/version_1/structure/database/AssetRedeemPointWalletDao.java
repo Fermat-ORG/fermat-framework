@@ -148,8 +148,8 @@ public class AssetRedeemPointWalletDao implements DealsWithPluginFileSystem {
 
             try {
                 PluginTextFile pluginTextFile = pluginFileSystem.getTextFile(plugin, AssetRedeemPointWalletPluginRoot.PATH_DIRECTORY, assetPublicKey, FilePrivacy.PRIVATE, FileLifeSpan.PERMANENT);
-                DigitalAssetMetadata metadata = (DigitalAssetMetadata) XMLParser.parseXML(pluginTextFile.getContent(), new DigitalAssetMetadata());
-                redeemPointIssuerWalletBalance.setDigitalAsset(metadata.getDigitalAsset());
+                DigitalAsset asset = (DigitalAsset) XMLParser.parseXML(pluginTextFile.getContent(), new DigitalAsset());
+                redeemPointIssuerWalletBalance.setDigitalAsset(asset);
             } catch (FileNotFoundException | CantCreateFileException e) {
                 e.printStackTrace();
             }
@@ -231,10 +231,16 @@ public class AssetRedeemPointWalletDao implements DealsWithPluginFileSystem {
                 transaction.addRecordToUpdate(databaseTable, assetBalanceRecord);
             }
 
+
+            String digitalAssetInnerXML = assetRedeemPointWalletTransactionRecord.getDigitalAsset().toString();
+            PluginTextFile assetTextFile = pluginFileSystem.createTextFile(plugin, AssetRedeemPointWalletPluginRoot.PATH_DIRECTORY, assetRedeemPointWalletTransactionRecord.getDigitalAsset().getPublicKey(), FilePrivacy.PRIVATE, FileLifeSpan.PERMANENT);
+            assetTextFile.setContent(digitalAssetInnerXML);
+            assetTextFile.persistToMedia();
+
             String assetMetadataXML = XMLParser.parseObject(assetRedeemPointWalletTransactionRecord.getDigitalAssetMetadata());
-            PluginTextFile pluginTextFile = pluginFileSystem.createTextFile(plugin, AssetRedeemPointWalletPluginRoot.PATH_DIRECTORY, assetRedeemPointWalletTransactionRecord.getDigitalAssetMetadata().getGenesisTransaction(), FilePrivacy.PRIVATE, FileLifeSpan.PERMANENT);
-            pluginTextFile.setContent(assetMetadataXML);
-            pluginTextFile.persistToMedia();
+            PluginTextFile metadataTextFile = pluginFileSystem.createTextFile(plugin, AssetRedeemPointWalletPluginRoot.PATH_DIRECTORY, assetRedeemPointWalletTransactionRecord.getDigitalAssetMetadata().getGenesisTransaction(), FilePrivacy.PRIVATE, FileLifeSpan.PERMANENT);
+            metadataTextFile.setContent(assetMetadataXML);
+            metadataTextFile.persistToMedia();
 
             database.executeTransaction(transaction);
 
