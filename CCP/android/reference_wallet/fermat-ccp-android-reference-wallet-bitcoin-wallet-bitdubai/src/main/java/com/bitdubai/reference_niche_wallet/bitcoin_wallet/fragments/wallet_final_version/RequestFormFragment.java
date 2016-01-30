@@ -71,7 +71,7 @@ import static com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.utils.Wa
  * Created by Matias Furszyfer on 2015.11.05..
  */
 
-public class RequestFormFragment extends AbstractFermatFragment<ReferenceWalletSession,ResourceProviderManager> implements View.OnClickListener {
+public class RequestFormFragment extends AbstractFermatFragment<ReferenceWalletSession, ResourceProviderManager> implements View.OnClickListener {
 
     private AndroidCoreManager androidCoreManager;
     /**
@@ -128,18 +128,24 @@ public class RequestFormFragment extends AbstractFermatFragment<ReferenceWalletS
         super.onCreateView(inflater, container, savedInstanceState);
         try {
             rootView = inflater.inflate(R.layout.request_form_base, container, false);
-
+            /*if (getFermatState().getFermatNetworkStatus() != null) {
+                switch (getFermatState().getFermatNetworkStatus()) {
+                    case CONNECTED:
+                        bitcoinConverter = new BitcoinConverter();
+                        setUpUI();
+                        setUpActions();
+                        setUpUIData();
+                        break;
+                    case DISCONNECTED:
+                        showErrorConnectionDialog();
+                        break;
+                }
+            } else {*/
             bitcoinConverter = new BitcoinConverter();
             setUpUI();
             setUpActions();
-            setUpUIData();/*
-            switch (androidCoreManager.getFermatNetworkStatus()){
-                case CONNECTED:
-                    break;
-                case DISCONNECTED:
-                    showErrorConnectionDialog();
-                    break;
-            }*/
+            setUpUIData();
+
             return rootView;
         } catch (Exception e) {
             makeText(getActivity(), "Oooops! recovering from system error", Toast.LENGTH_SHORT).show();
@@ -301,10 +307,10 @@ public class RequestFormFragment extends AbstractFermatFragment<ReferenceWalletS
                             );
                         }
                     } else {
-                        if(cryptoWalletWalletContact!= null)
-                        walletContact.address = cryptoWalletWalletContact.getReceivedCryptoAddress().get(0).getAddress();
+                        if (cryptoWalletWalletContact != null)
+                            walletContact.address = cryptoWalletWalletContact.getReceivedCryptoAddress().get(0).getAddress();
                     }
-                    if(cryptoWalletWalletContact!=null) {
+                    if (cryptoWalletWalletContact != null) {
                         walletContact.contactId = cryptoWalletWalletContact.getContactId();
                         walletContact.profileImage = cryptoWalletWalletContact.getProfilePicture();
                         walletContact.isConnection = cryptoWalletWalletContact.isConnection();
