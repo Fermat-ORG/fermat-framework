@@ -73,7 +73,7 @@ public class CryptoTransmissionTransactionRecordedAgent extends FermatAgent{
 
     private Future<?>[] futures= new Future[2];
 
-    private final CryptoTransmissionNetworkServicePluginRoot cryptoTransmissionNetworkServicePluginRoot;
+    private CryptoTransmissionNetworkServicePluginRoot cryptoTransmissionNetworkServicePluginRoot;
 
     public CryptoTransmissionTransactionRecordedAgent(final CryptoTransmissionNetworkServicePluginRoot cryptoTransmissionNetworkServicePluginRoot) {
 
@@ -526,4 +526,7 @@ public class CryptoTransmissionTransactionRecordedAgent extends FermatAgent{
         cryptoTransmissionNetworkServicePluginRoot.getEventManager().raiseEvent(incomingCryptoMetadataReceive);
     }
 
+    public void setCryptoTransmissionPluginRoot(CryptoTransmissionNetworkServicePluginRoot cryptoTransmissionPluginRoot) {
+        this.cryptoTransmissionNetworkServicePluginRoot = cryptoTransmissionPluginRoot;
+    }
 }

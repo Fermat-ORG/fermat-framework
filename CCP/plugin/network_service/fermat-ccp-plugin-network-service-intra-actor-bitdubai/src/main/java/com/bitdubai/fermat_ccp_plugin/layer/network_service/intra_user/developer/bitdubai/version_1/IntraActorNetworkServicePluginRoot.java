@@ -854,6 +854,7 @@ public class IntraActorNetworkServicePluginRoot extends AbstractPlugin implement
             if(actorNetworkServiceRecord.getNotificationDescriptor() == NotificationDescriptor.RECEIVED) {
                 actorNetworkServiceRecord.setActorProtocolState(ActorProtocolState.DONE);
                 getOutgoingNotificationDao().update(actorNetworkServiceRecord);
+                actorNetworkServiceRecordedAgent.getPoolConnectionsWaitingForResponse().remove(actorNetworkServiceRecord.getActorDestinationPublicKey());
             }
 
             System.out.println("SALIENDO DEL HANDLE NEW SENT MESSAGE NOTIFICATION");

@@ -692,6 +692,8 @@ public class CryptoTransmissionNetworkServicePluginRoot extends AbstractPlugin i
             if(cryptoTransmissionTransactionRecordedAgent == null){
                 cryptoTransmissionTransactionRecordedAgent = new CryptoTransmissionTransactionRecordedAgent(this);
                 cryptoTransmissionTransactionRecordedAgent.start();
+            }else {
+                cryptoTransmissionTransactionRecordedAgent.setCryptoTransmissionPluginRoot(this);
             }
 
         } catch (CantStartAgentException e) {
@@ -834,9 +836,9 @@ public class CryptoTransmissionNetworkServicePluginRoot extends AbstractPlugin i
                 case METADATA:
                     CryptoTransmissionMetadataRecord cryptoTransmissionMetadataRecord = cryptoTransmissionMetadata;
                     cryptoTransmissionMetadataRecord.changeCryptoTransmissionProtocolState(CryptoTransmissionProtocolState.PROCESSING_RECEIVE);
-                    if(incomingNotificationsDao.saveCryptoTransmissionMetadata(cryptoTransmissionMetadataRecord)){
+                    if(!incomingNotificationsDao.saveCryptoTransmissionMetadata(cryptoTransmissionMetadataRecord)){
                         try {
-                            CryptoTransmissionMetadataRecord cryptoTransmissionMetadataRecord1 = incomingNotificationsDao.getMetadata(cryptoTransmissionMetadata.getRequestId());
+                            CryptoTransmissionMetadataRecord cryptoTransmissionMetadataRecord1 = incomingNotificationsDao.getMetadata(cryptoTransmissionMetadata.getTransactionId());
                             switch (cryptoTransmissionMetadataRecord1.getCryptoTransmissionMetadataState()){
                                 case CREDITED_IN_OWN_WALLET:
                                     // send inform to other ns
@@ -1220,13 +1222,13 @@ public class CryptoTransmissionNetworkServicePluginRoot extends AbstractPlugin i
                 communicationNetworkServiceConnectionManager.stop();
             }
 
-            if(cryptoTransmissionTransactionRecordedAgent !=null) {
-                cryptoTransmissionTransactionRecordedAgent.stop();
-            }
+//            if(cryptoTransmissionTransactionRecordedAgent !=null) {
+//                cryptoTransmissionTransactionRecordedAgent.stop();
+//            }
 
             this.register = Boolean.FALSE;
 
-        } catch (CantStopAgentException e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
 
