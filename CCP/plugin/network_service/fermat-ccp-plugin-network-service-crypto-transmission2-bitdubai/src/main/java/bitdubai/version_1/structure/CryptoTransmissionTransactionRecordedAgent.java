@@ -373,7 +373,7 @@ public class CryptoTransmissionTransactionRecordedAgent extends FermatAgent{
                                    CryptoTransmissionMetadataState.SEEN_BY_DESTINATION_NETWORK_SERVICE
                            );
                        if(!cryptoTransmissionNetworkServicePluginRoot.getOutgoingMetadataDao().saveCryptoTransmissionMetadata(cryptoTransmissionMetadataRecord)){
-                           cryptoTransmissionNetworkServicePluginRoot.getOutgoingMetadataDao().update(cryptoTransmissionMetadataRecord);
+                           //cryptoTransmissionNetworkServicePluginRoot.getOutgoingMetadataDao().update(cryptoTransmissionMetadataRecord);
                        }
 
 
