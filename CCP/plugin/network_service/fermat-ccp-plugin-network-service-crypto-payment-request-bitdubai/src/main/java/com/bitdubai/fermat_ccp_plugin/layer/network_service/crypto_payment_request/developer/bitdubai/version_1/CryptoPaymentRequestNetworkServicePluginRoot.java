@@ -193,7 +193,6 @@ public final class CryptoPaymentRequestNetworkServicePluginRoot extends Abstract
 
         this.remoteNetworkServicesRegisteredList = new CopyOnWriteArrayList<>();
         this.listenersAdded = new ArrayList<>();
-        this.remoteNetworkServicesRegisteredList = new CopyOnWriteArrayList<>();
     }
 
 
