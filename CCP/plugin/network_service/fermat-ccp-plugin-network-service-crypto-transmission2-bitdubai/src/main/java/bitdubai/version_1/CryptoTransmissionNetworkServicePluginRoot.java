@@ -269,6 +269,7 @@ public class CryptoTransmissionNetworkServicePluginRoot extends AbstractPlugin i
         this.name = "Crypto Transmission Network Service";
         this.alias = "CryptoTransmissionNetworkService";
         this.extraData = null;
+        this.remoteNetworkServicesRegisteredList = new CopyOnWriteArrayList<PlatformComponentProfile>();
     }
 
     /**
@@ -336,7 +337,7 @@ public class CryptoTransmissionNetworkServicePluginRoot extends AbstractPlugin i
      * because at this moment, is create the platformComponentProfilePluginRoot for this component
      */
     public void initializeCommunicationNetworkServiceConnectionManager() {
-        this.communicationNetworkServiceConnectionManager = new CommunicationNetworkServiceConnectionManager_V2(this,platformComponentProfilePluginRoot, identity, wsCommunicationsCloudClientManager.getCommunicationsCloudClientConnection(), dataBaseCommunication, errorManager, eventManager);
+        this.communicationNetworkServiceConnectionManager = new CommunicationNetworkServiceConnectionManager_V2(this, this.platformComponentProfilePluginRoot, identity, wsCommunicationsCloudClientManager.getCommunicationsCloudClientConnection(), dataBaseCommunication, errorManager, eventManager);
     }
 
     /**
@@ -483,7 +484,7 @@ public class CryptoTransmissionNetworkServicePluginRoot extends AbstractPlugin i
                         /*
                          * Construct my profile and register me
                          */
-                        platformComponentProfilePluginRoot =  wsCommunicationsCloudClientManager.getCommunicationsCloudClientConnection().constructPlatformComponentProfileFactory(getIdentityPublicKey(),
+                        this.platformComponentProfilePluginRoot =  wsCommunicationsCloudClientManager.getCommunicationsCloudClientConnection().constructPlatformComponentProfileFactory(getIdentityPublicKey(),
                                 getAlias().toLowerCase(),
                                 getName(),
                                 getNetworkServiceType(),
@@ -500,15 +501,6 @@ public class CryptoTransmissionNetworkServicePluginRoot extends AbstractPlugin i
                     incomingNotificationsDao = new CryptoTransmissionMetadataDAO_V2(dataBaseCommunication,CryptoTransmissionNetworkServiceDatabaseConstants.INCOMING_CRYPTO_TRANSMISSION_METADATA_TABLE_NAME);
 
                     outgoingNotificationDao = new CryptoTransmissionMetadataDAO_V2(dataBaseCommunication, CryptoTransmissionNetworkServiceDatabaseConstants.OUTGOING_CRYPTO_TRANSMISSION_METADATA_TABLE_NAME);
-
-
-
-                    remoteNetworkServicesRegisteredList = new CopyOnWriteArrayList<PlatformComponentProfile>();
-
-                    if(cryptoTransmissionTransactionRecordedAgent==null) {
-                        cryptoTransmissionTransactionRecordedAgent = new CryptoTransmissionTransactionRecordedAgent(
-                                this);
-                    }
 
                     // change message state to process again first time
                     reprocessMessage();
@@ -723,7 +715,7 @@ public class CryptoTransmissionNetworkServicePluginRoot extends AbstractPlugin i
                     communicationRegistrationProcessNetworkServiceAgent = null;
                 }
 
-                wsCommunicationsCloudClientManager.getCommunicationsCloudClientConnection().registerComponentForCommunication(this.getNetworkServiceType(), platformComponentProfilePluginRoot);
+                wsCommunicationsCloudClientManager.getCommunicationsCloudClientConnection().registerComponentForCommunication(this.getNetworkServiceType(), this.platformComponentProfilePluginRoot);
 
             }
 
