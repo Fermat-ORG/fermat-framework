@@ -10,7 +10,6 @@ import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_issuer.exceptions.CantG
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.exceptions.CantAssetUserActorNotFoundException;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.exceptions.CantGetAssetUserActorsException;
 import com.bitdubai.fermat_dap_api.layer.dap_transaction.asset_issuing.exceptions.CantDeliverDigitalAssetToAssetWalletException;
-import com.bitdubai.fermat_dap_api.layer.dap_transaction.common.exceptions.CantGetDigitalAssetFromLocalStorageException;
 import com.bitdubai.fermat_dap_api.layer.dap_transaction.common.interfaces.AbstractDigitalAssetVault;
 import com.bitdubai.fermat_dap_api.layer.dap_wallet.asset_issuer_wallet.exceptions.CantRegisterCreditException;
 import com.bitdubai.fermat_dap_api.layer.dap_wallet.asset_issuer_wallet.exceptions.CantRegisterDebitException;
@@ -49,9 +48,8 @@ public class DigitalAssetReceptionVault extends AbstractDigitalAssetVault {
     }
 
     @Override
-    public void setDigitalAssetMetadataAssetIssuerWalletTransaction(CryptoTransaction genesisTransaction, String internalId, AssetBalanceType assetBalanceType, TransactionType transactionType, DAPTransactionType dapTransactionType, String externalActorPublicKey) throws CantDeliverDigitalAssetToAssetWalletException {
+    public void setDigitalAssetMetadataAssetIssuerWalletTransaction(CryptoTransaction genesisTransaction, DigitalAssetMetadata digitalAssetMetadataToDeliver, AssetBalanceType assetBalanceType, TransactionType transactionType, DAPTransactionType dapTransactionType, String externalActorPublicKey) throws CantDeliverDigitalAssetToAssetWalletException {
         try {
-            DigitalAssetMetadata digitalAssetMetadataToDeliver = getDigitalAssetMetadataFromLocalStorage(internalId);
             digitalAssetMetadataToDeliver.getDigitalAsset().setGenesisAmount(genesisTransaction.getCryptoAmount());
             BalanceType balanceType = BalanceType.BOOK;
             if (assetBalanceType.getCode().equals(AssetBalanceType.BOOK.getCode())) {
@@ -62,8 +60,6 @@ public class DigitalAssetReceptionVault extends AbstractDigitalAssetVault {
             }
             System.out.println("ASSET Distribution OR RECEPTION - DELIVER TO WALLET TEST - " + balanceType + "\nHash: " + genesisTransaction.getTransactionHash());
             updateWalletBalance(digitalAssetMetadataToDeliver, genesisTransaction, balanceType, transactionType, dapTransactionType, externalActorPublicKey);
-        } catch (CantGetDigitalAssetFromLocalStorageException exception) {
-            throw new CantDeliverDigitalAssetToAssetWalletException(exception, "Delivering DigitalAssetMetadata to Asset Wallet", "Cannot get the DigitalAssetMetadata from storage");
         } catch (CantGetTransactionsException exception) {
             throw new CantDeliverDigitalAssetToAssetWalletException(exception, "Delivering DigitalAssetMetadata to Asset Wallet", "Cannot get the Asset Transaction");
         } catch (CantLoadWalletException exception) {
