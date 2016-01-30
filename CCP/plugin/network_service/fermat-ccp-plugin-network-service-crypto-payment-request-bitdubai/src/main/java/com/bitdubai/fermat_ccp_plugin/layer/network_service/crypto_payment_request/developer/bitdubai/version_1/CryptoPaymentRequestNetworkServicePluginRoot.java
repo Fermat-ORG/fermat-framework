@@ -1250,7 +1250,6 @@ public final class CryptoPaymentRequestNetworkServicePluginRoot extends Abstract
                     RequestProtocolState.PENDING_ACTION
             );
 
-            cryptoPaymentRequestNetworkServiceDao.changeProtocolState(informationMessage.getRequestId(), RequestProtocolState.DONE);
 
 
         } catch(CantTakeActionException  |
