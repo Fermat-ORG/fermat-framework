@@ -39,8 +39,8 @@ public class OpenNegotiationAddNoteFragment  extends AbstractFermatFragment<Cryp
         View layout = inflater.inflate(R.layout.ccw_fragment_open_negotiation_add_note_activity, container, false);
 
         configureToolbar();
-        initViews(layout);
         bindData();
+        initViews(layout);
 
         return layout;
     }
@@ -60,11 +60,17 @@ public class OpenNegotiationAddNoteFragment  extends AbstractFermatFragment<Cryp
 
     }
 
+    private void bindData() {
+
+        negotiationInfo = (CustomerBrokerNegotiationInformation) appSession.getData(CryptoCustomerWalletSession.NEGOTIATION_DATA);
+
+    }
+
     private void initViews(View layout){
 
         final EditText noteEditText = (EditText) layout.findViewById(R.id.ccw_open_negotiation_text_note);
-        if(negotiationInfo.getMemo() != null)
-            noteEditText.setText(negotiationInfo.getMemo());
+//        if(negotiationInfo.getMemo() != null)
+//            noteEditText.setText(negotiationInfo.getMemo());
 
         Button cancelNoteButton = (Button) layout.findViewById(R.id.ccw_open_negotiation_cancel_note);
         cancelNoteButton.setOnClickListener(new View.OnClickListener() {
@@ -80,12 +86,6 @@ public class OpenNegotiationAddNoteFragment  extends AbstractFermatFragment<Cryp
                 negotiationInfo.setMemo(noteEditText.getText().toString());
             }
         });
-    }
-
-    private void bindData() {
-
-        negotiationInfo = (CustomerBrokerNegotiationInformation) appSession.getData(CryptoCustomerWalletSession.NEGOTIATION_DATA);
-
     }
     /*END PRIVATE METHOD*/
 }
