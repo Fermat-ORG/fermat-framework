@@ -137,7 +137,7 @@ public class ConnectionsWorldFragment extends AbstractFermatFragment implements
                 intraUserWalletSettings = null;
             }
 
-            if(intraUserSubAppSession.getAppPublicKey() != null) //the identity not exist yet
+            if (intraUserSubAppSession.getAppPublicKey() != null) //the identity not exist yet
             {
                 if (intraUserWalletSettings == null) {
                     intraUserWalletSettings = new IntraUserWalletSettings();
@@ -164,48 +164,65 @@ public class ConnectionsWorldFragment extends AbstractFermatFragment implements
 
         try {
             rootView = inflater.inflate(R.layout.fragment_connections_world, container, false);
-            rootView.setOnKeyListener(new View.OnKeyListener() {
-                @Override
-                public boolean onKey(View v, int keyCode, KeyEvent event) {
-                    if (keyCode == KeyEvent.KEYCODE_BACK) {
-                        worker.shutdownNow();
-                        return true;
-                    }
-                    return false;
-                }
-            });
             toolbar = getToolbar();
             toolbar.setTitle("Cripto wallet users");
             setUpScreen(inflater);
             searchView = inflater.inflate(R.layout.search_edit_text, null);
-            searchEditText = (EditText) searchView.findViewById(R.id.search);
-            closeSearch = (ImageView) searchView.findViewById(R.id.close_search);
-            recyclerView = (RecyclerView) rootView.findViewById(R.id.gridView);
-            recyclerView.setHasFixedSize(true);
-            layoutManager = new GridLayoutManager(getActivity(), 3, LinearLayoutManager.VERTICAL, false);
-            recyclerView.setLayoutManager(layoutManager);
-            adapter = new AppListAdapter(getActivity(), lstIntraUserInformations);
-            recyclerView.setAdapter(adapter);
-            adapter.setFermatListEventListener(this);
-            swipeRefresh = (SwipeRefreshLayout) rootView.findViewById(R.id.swipe);
-            swipeRefresh.setOnRefreshListener(this);
-            swipeRefresh.setColorSchemeColors(Color.BLUE, Color.BLUE);
-            rootView.setBackgroundColor(Color.parseColor("#000b12"));
-            emptyView = (LinearLayout) rootView.findViewById(R.id.empty_view);
-            searchEmptyView = (LinearLayout) rootView.findViewById(R.id.search_empty_view);
-            noNetworkView = (LinearLayout) rootView.findViewById(R.id.no_connection_view);
-            noFermatNetworkView = (LinearLayout) rootView.findViewById(R.id.no_fermat_connection_view);
-            dataSet.addAll(moduleManager.getCacheSuggestionsToContact(MAX, offset));
-            if (intraUserWalletSettings.isPresentationHelpEnabled()) {
-                showDialogHelp();
-            } else {
-                showCriptoUsersCache();
-            }
+            setUpReferences();
+           /* switch (getFermatState().getFermatNetworkStatus()) {
+                case CONNECTED:
+                    setUpReferences();
+                    break;
+                case DISCONNECTED:
+                    showErrorFermatNetworkDialog();
+                    break;
+            }*/
+
         } catch (Exception ex) {
             errorManager.reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.CRASH, FermatException.wrapException(ex));
             Toast.makeText(getActivity().getApplicationContext(), "Oooops! recovering from system error", Toast.LENGTH_SHORT).show();
         }
         return rootView;
+    }
+
+    public void setUpReferences() {
+        rootView.setOnKeyListener(new View.OnKeyListener() {
+            @Override
+            public boolean onKey(View v, int keyCode, KeyEvent event) {
+                if (keyCode == KeyEvent.KEYCODE_BACK) {
+                    worker.shutdownNow();
+                    return true;
+                }
+                return false;
+            }
+        });
+        searchEditText = (EditText) searchView.findViewById(R.id.search);
+        closeSearch = (ImageView) searchView.findViewById(R.id.close_search);
+        recyclerView = (RecyclerView) rootView.findViewById(R.id.gridView);
+        recyclerView.setHasFixedSize(true);
+        layoutManager = new GridLayoutManager(getActivity(), 3, LinearLayoutManager.VERTICAL, false);
+        recyclerView.setLayoutManager(layoutManager);
+        adapter = new AppListAdapter(getActivity(), lstIntraUserInformations);
+        recyclerView.setAdapter(adapter);
+        adapter.setFermatListEventListener(this);
+        swipeRefresh = (SwipeRefreshLayout) rootView.findViewById(R.id.swipe);
+        swipeRefresh.setOnRefreshListener(this);
+        swipeRefresh.setColorSchemeColors(Color.BLUE, Color.BLUE);
+        rootView.setBackgroundColor(Color.parseColor("#000b12"));
+        emptyView = (LinearLayout) rootView.findViewById(R.id.empty_view);
+        searchEmptyView = (LinearLayout) rootView.findViewById(R.id.search_empty_view);
+        noNetworkView = (LinearLayout) rootView.findViewById(R.id.no_connection_view);
+        noFermatNetworkView = (LinearLayout) rootView.findViewById(R.id.no_fermat_connection_view);
+        try {
+            dataSet.addAll(moduleManager.getCacheSuggestionsToContact(MAX, offset));
+        } catch (CantGetIntraUsersListException e) {
+            e.printStackTrace();
+        }
+        if (intraUserWalletSettings.isPresentationHelpEnabled()) {
+            showDialogHelp();
+        } else {
+            showCriptoUsersCache();
+        }
     }
 
     public void showErrorNetworkDialog() {
