@@ -477,7 +477,7 @@ public class EditableAssetsFragment extends AbstractFermatFragment implements
                 Toast.makeText(getActivity(), "Invalid Quantity of Assets", Toast.LENGTH_SHORT).show();
                 return false;
             }
-            if (assetFactory.getExpirationDate().before(new Date())) {
+            if (assetFactory.getExpirationDate() != null && assetFactory.getExpirationDate().before(new Date())) {
                 Toast.makeText(getActivity(), "Expiration date can't be in the past. Please modify the expiration date.", Toast.LENGTH_SHORT).show();
                 return false;
             }
