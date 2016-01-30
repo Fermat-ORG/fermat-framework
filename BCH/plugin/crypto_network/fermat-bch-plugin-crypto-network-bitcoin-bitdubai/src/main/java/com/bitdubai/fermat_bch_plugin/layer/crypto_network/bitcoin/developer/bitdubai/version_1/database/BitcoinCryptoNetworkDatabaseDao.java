@@ -1324,10 +1324,15 @@ public class BitcoinCryptoNetworkDatabaseDao {
             throwLoadToMemoryException(e, databaseTable.getTableName());
         }
 
-        if (databaseTable.getRecords().size() != 1)
-            throw new CantExecuteDatabaseOperationException(CantExecuteDatabaseOperationException.DEFAULT_MESSAGE, null, "Unexpected result returned from query.", null);
+        /**
+         * I might have multiple txHash, so I will get the last one.
+         * This may need to be corrected at some point
+         */
+        DatabaseTableRecord record = null;
+        for (DatabaseTableRecord uuidRecord : databaseTable.getRecords()){
+            record = uuidRecord;
+        }
 
-        DatabaseTableRecord record = databaseTable.getRecords().get(0);
 
         return record.getUUIDValue(BitcoinCryptoNetworkDatabaseConstants.TRANSACTIONS_TRX_ID_COLUMN_NAME);
     }

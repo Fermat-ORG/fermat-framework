@@ -280,7 +280,7 @@ public class AssetCryptoVaultManager  {
             /**
              * Once I formed the transaction, I will store it and ask the CryptoNEtwork to broadcast it.
              */
-            bitcoinNetworkManager.storeBitcoinTransaction(networkType, sendRequest.tx, UUID.randomUUID());
+            bitcoinNetworkManager.storeBitcoinTransaction(networkType, sendRequest.tx, UUID.randomUUID(), true);
             bitcoinNetworkManager.broadcastTransaction(sendRequest.tx.getHashAsString());
         } catch (CantStoreBitcoinTransactionException e) {
             e.printStackTrace();
@@ -851,7 +851,7 @@ public class AssetCryptoVaultManager  {
             /**
              * Once I formed the transaction, I will store it in the CryptoNetwork so that is ready for broadcasting.
              */
-            bitcoinNetworkManager.storeBitcoinTransaction(networkType, sendRequest.tx, UUID.randomUUID());
+            bitcoinNetworkManager.storeBitcoinTransaction(networkType, sendRequest.tx, UUID.randomUUID(), false);
         } catch (CantStoreBitcoinTransactionException e) {
             throw new CantCreateBitcoinTransactionException(CantCreateBitcoinTransactionException.DEFAULT_MESSAGE, e, "There was an error storing the created transaction in the CryptoNetwork", "Crypto Network issue");
         }

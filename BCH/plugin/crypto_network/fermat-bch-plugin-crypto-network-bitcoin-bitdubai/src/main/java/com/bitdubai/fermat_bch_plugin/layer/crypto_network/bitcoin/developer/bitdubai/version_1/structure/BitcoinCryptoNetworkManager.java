@@ -10,6 +10,7 @@ import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_pro
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.exceptions.CantConfirmTransactionException;
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.exceptions.CantDeliverPendingTransactionsException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
+import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
 import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.BitcoinNetworkSelector;
 import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.BlockchainConnectionStatus;
 import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.BroadcastStatus;
@@ -102,6 +103,7 @@ public class BitcoinCryptoNetworkManager implements TransactionProtocolManager {
     PluginDatabaseSystem pluginDatabaseSystem;
     BitcoinCryptoNetworkDatabaseDao bitcoinCryptoNetworkDatabaseDao;
     UUID pluginId;
+    PluginFileSystem pluginFileSystem;
 
     /**
      * Constructor
@@ -109,9 +111,10 @@ public class BitcoinCryptoNetworkManager implements TransactionProtocolManager {
      * @param eventManager
      * @param pluginDatabaseSystem
      */
-    public BitcoinCryptoNetworkManager(EventManager eventManager, PluginDatabaseSystem pluginDatabaseSystem, UUID pluginId) {
+    public BitcoinCryptoNetworkManager(EventManager eventManager, PluginDatabaseSystem pluginDatabaseSystem, PluginFileSystem pluginFileSystem, UUID pluginId) {
         this.eventManager = eventManager;
         this.pluginDatabaseSystem = pluginDatabaseSystem;
+        this.pluginFileSystem = pluginFileSystem;
         this.pluginId = pluginId;
 
         runningAgents = new HashMap<>();
@@ -209,7 +212,7 @@ public class BitcoinCryptoNetworkManager implements TransactionProtocolManager {
                      * once the agent is stoped, I will restart it with the new wallet.
                      */
                     File walletFilename = new File(WALLET_FILENAME + blockchainNetworkType.getCode());
-                    bitcoinCryptoNetworkMonitor = new BitcoinCryptoNetworkMonitor(this.pluginDatabaseSystem, pluginId, wallet, walletFilename);
+                    bitcoinCryptoNetworkMonitor = new BitcoinCryptoNetworkMonitor(this.pluginDatabaseSystem, pluginId, wallet, walletFilename, pluginFileSystem);
                     runningAgents.put(blockchainNetworkType, bitcoinCryptoNetworkMonitor);
 
                     bitcoinCryptoNetworkMonitor.start();
@@ -219,7 +222,7 @@ public class BitcoinCryptoNetworkManager implements TransactionProtocolManager {
                  * If the agent for the network is not running, I will start a new one.
                  */
                 File walletFilename = new File(WALLET_FILENAME + blockchainNetworkType.getCode());
-                BitcoinCryptoNetworkMonitor bitcoinCryptoNetworkMonitor = new BitcoinCryptoNetworkMonitor(this.pluginDatabaseSystem, pluginId, wallet, walletFilename);
+                BitcoinCryptoNetworkMonitor bitcoinCryptoNetworkMonitor = new BitcoinCryptoNetworkMonitor(this.pluginDatabaseSystem, pluginId, wallet, walletFilename, pluginFileSystem);
                 runningAgents.put(blockchainNetworkType, bitcoinCryptoNetworkMonitor);
 
                 bitcoinCryptoNetworkMonitor.start();
@@ -724,8 +727,8 @@ public class BitcoinCryptoNetworkManager implements TransactionProtocolManager {
      * @param transactionId
      * @throws CantStoreBitcoinTransactionException
      */
-    public synchronized void storeBitcoinTransaction(BlockchainNetworkType blockchainNetworkType, Transaction tx, UUID transactionId) throws CantStoreBitcoinTransactionException {
-        runningAgents.get(blockchainNetworkType).storeBitcoinTransaction(tx, transactionId);
+    public synchronized void storeBitcoinTransaction(BlockchainNetworkType blockchainNetworkType, Transaction tx, UUID transactionId, boolean commit) throws CantStoreBitcoinTransactionException {
+        runningAgents.get(blockchainNetworkType).storeBitcoinTransaction(tx, transactionId, commit);
     }
 
     /**
