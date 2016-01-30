@@ -139,7 +139,8 @@ public class ChatFragment extends AbstractFermatFragment {//ActionBarActivity
     public boolean whoImy(String user){
         boolean correct=false;
         try {
-            for (int i=0;i<chatManager.discoverActorsRegistered().size();i++){
+            //TODO: fix this
+            /*for (int i=0;i<chatManager.discoverActorsRegistered().size();i++){
                 System.out.println("\n\nwhoImy("+i+"):\n\n"+chatManager.discoverActorsRegistered().get(i).getRemoteName()+" ?? "
                         +chatManager.discoverActorsRegistered().get(i).getAlias() +" ?? "+chatManager.discoverActorsRegistered().get(i).getRemoteActorPublicKey().toString()
                         +" ?? "+chatManager.discoverActorsRegistered().get(i).getContactId().toString()+" ?? "
@@ -149,8 +150,8 @@ public class ChatFragment extends AbstractFermatFragment {//ActionBarActivity
                     correct=true;
                     me.put("yo",chatManager.discoverActorsRegistered().get(i));
                 }
-            }
-        } catch (CantGetContactException e) {
+            }*/
+        } catch (Exception e) {
             e.printStackTrace();
         }
 
@@ -304,7 +305,8 @@ return correct;
 
                         try {
                             System.out.println("Threar UI corriendo");
-                            addContactDirection(chatManager.discoverActorsRegistered());
+                            //TODO: fix this
+                            //addContactDirection(chatManager.discoverActorsRegistered());
                             System.out.println("\n\nMENSAJES EN CON GETMESSAGES:"+chatManager.getMessages().size()+"\n\n");
                             for (int i=0;i<chatManager.getMessages().size();i++){
                                 System.out.println("MENSAJE("+i+"):"+chatManager.getMessages().size());
@@ -326,7 +328,8 @@ return correct;
                             }
                         } catch (CantGetMessageException e) {
                             e.printStackTrace();
-                        } catch (CantGetContactException e) {
+                        } catch (Exception e) {
+                            //TODO: fix this
                             e.printStackTrace();
                         }
 
@@ -363,13 +366,13 @@ return correct;
         chatHistory = new ArrayList<ChatMessage>();
 
         ChatMessage msg = new ChatMessage();
-        msg.setId(1);
+        msg.setId("1");
         msg.setMe(false);
         msg.setMessage("Hi");
         msg.setDate(DateFormat.getDateTimeInstance().format(new Date()));
         chatHistory.add(msg);
         ChatMessage msg1 = new ChatMessage();
-        msg1.setId(2);
+        msg1.setId("2");
         msg1.setMe(false);
         msg1.setMessage("How r u doing???");
         msg1.setDate(DateFormat.getDateTimeInstance().format(new Date()));
