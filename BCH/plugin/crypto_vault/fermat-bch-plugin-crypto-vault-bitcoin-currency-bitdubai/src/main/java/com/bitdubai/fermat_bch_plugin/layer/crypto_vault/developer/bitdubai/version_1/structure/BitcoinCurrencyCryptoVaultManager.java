@@ -418,7 +418,7 @@ public class BitcoinCurrencyCryptoVaultManager  {
          * I will store the transaction in the crypto network
          */
         try {
-            bitcoinNetworkManager.storeBitcoinTransaction(networkType, sendRequest.tx, FermatTrId);
+            bitcoinNetworkManager.storeBitcoinTransaction(networkType, sendRequest.tx, FermatTrId, true);
         } catch (CantStoreBitcoinTransactionException e) {
             throw new CouldNotSendMoneyException(CouldNotSendMoneyException.DEFAULT_MESSAGE, e, "There was an error storing the transaction in the Crypto Network-", "Crypto Network error or database error.");
         }
