@@ -476,6 +476,22 @@ public class CryptoTransmissionNetworkServicePluginRoot extends AbstractPlugin i
                      */
                     initializeCommunicationNetworkServiceConnectionManager();
 
+
+
+                    //DAO
+                    incomingNotificationsDao = new CryptoTransmissionMetadataDAO_V2(dataBaseCommunication,CryptoTransmissionNetworkServiceDatabaseConstants.INCOMING_CRYPTO_TRANSMISSION_METADATA_TABLE_NAME);
+
+                    outgoingNotificationDao = new CryptoTransmissionMetadataDAO_V2(dataBaseCommunication, CryptoTransmissionNetworkServiceDatabaseConstants.OUTGOING_CRYPTO_TRANSMISSION_METADATA_TABLE_NAME);
+
+                    // change message state to process again first time
+                    reprocessMessage();
+
+                    //declare a schedule to process waiting request message
+                    this.startTimer();
+
+                    initializeAgent();
+
+
                     /*
                      * Verify if the communication cloud client is active
                      */
@@ -496,19 +512,6 @@ public class CryptoTransmissionNetworkServicePluginRoot extends AbstractPlugin i
                         communicationRegistrationProcessNetworkServiceAgent = new CommunicationRegistrationProcessNetworkServiceAgent(this, wsCommunicationsCloudClientManager);
                         communicationRegistrationProcessNetworkServiceAgent.start();
                     }
-
-                    //DAO
-                    incomingNotificationsDao = new CryptoTransmissionMetadataDAO_V2(dataBaseCommunication,CryptoTransmissionNetworkServiceDatabaseConstants.INCOMING_CRYPTO_TRANSMISSION_METADATA_TABLE_NAME);
-
-                    outgoingNotificationDao = new CryptoTransmissionMetadataDAO_V2(dataBaseCommunication, CryptoTransmissionNetworkServiceDatabaseConstants.OUTGOING_CRYPTO_TRANSMISSION_METADATA_TABLE_NAME);
-
-                    // change message state to process again first time
-                    reprocessMessage();
-
-                    //declare a schedule to process waiting request message
-                    this.startTimer();
-
-                    initializeAgent();
 
                     /*
                      * Its all ok, set the new status
@@ -831,7 +834,26 @@ public class CryptoTransmissionNetworkServicePluginRoot extends AbstractPlugin i
                 case METADATA:
                     CryptoTransmissionMetadataRecord cryptoTransmissionMetadataRecord = cryptoTransmissionMetadata;
                     cryptoTransmissionMetadataRecord.changeCryptoTransmissionProtocolState(CryptoTransmissionProtocolState.PROCESSING_RECEIVE);
-                    incomingNotificationsDao.saveCryptoTransmissionMetadata(cryptoTransmissionMetadataRecord);
+                    if(incomingNotificationsDao.saveCryptoTransmissionMetadata(cryptoTransmissionMetadataRecord)){
+                        try {
+                            CryptoTransmissionMetadataRecord cryptoTransmissionMetadataRecord1 = incomingNotificationsDao.getMetadata(cryptoTransmissionMetadata.getRequestId());
+                            switch (cryptoTransmissionMetadataRecord1.getCryptoTransmissionMetadataState()){
+                                case CREDITED_IN_OWN_WALLET:
+                                    // send inform to other ns
+                                    cryptoTransmissionMetadataRecord.changeCryptoTransmissionProtocolState(CryptoTransmissionProtocolState.PRE_PROCESSING_SEND);
+                                    cryptoTransmissionMetadataRecord.changeMetadataState(CryptoTransmissionMetadataState.CREDITED_IN_DESTINATION_WALLET);
+                                    cryptoTransmissionMetadataRecord.setPendingToRead(false);
+                                    String pkAux = cryptoTransmissionMetadataRecord.getDestinationPublicKey();
+                                    cryptoTransmissionMetadataRecord.setDestinationPublickKey(cryptoTransmissionMetadataRecord.getSenderPublicKey());
+                                    cryptoTransmissionMetadataRecord.setSenderPublicKey(pkAux);
+                                    outgoingNotificationDao.update(cryptoTransmissionMetadataRecord);
+                                    break;
+                            }
+                        } catch (CantGetCryptoTransmissionMetadataException e) {
+                            e.printStackTrace();
+                        }
+
+                    }
 
                     System.out.println("-----------------------\n" +
                             "RECIVIENDO CRYPTO METADATA!!!!! -----------------------\n" +
@@ -1444,30 +1466,31 @@ public class CryptoTransmissionNetworkServicePluginRoot extends AbstractPlugin i
 
     @Override
     public void informTransactionSeenByVault(UUID transaction_id) throws CantSetToSeenByCryptoVaultException {
-        try {
+//        try {
             //change status to send , to inform Seen
-            CryptoTransmissionMetadata cryptoTransmissionMetadata = incomingNotificationsDao.changeCryptoTransmissionProtocolStateAndNotificationState(
-                    transaction_id,
-                    CryptoTransmissionProtocolState.WAITING_FOR_RESPONSE,
-                    CryptoTransmissionMetadataState.SEEN_BY_OWN_VAULT);
+//            CryptoTransmissionMetadataRecord cryptoTransmissionMetadata = incomingNotificationsDao.changeCryptoTransmissionProtocolStateAndNotificationState(
+//                    transaction_id,
+//                    CryptoTransmissionProtocolState.WAITING_FOR_RESPONSE,
+//                    CryptoTransmissionMetadataState.SEEN_BY_OWN_VAULT);
+//
+//
+//            cryptoTransmissionMetadata.changeCryptoTransmissionProtocolState(CryptoTransmissionProtocolState.PRE_PROCESSING_SEND);
+//            cryptoTransmissionMetadata.changeMetadataState(CryptoTransmissionMetadataState.SEEN_BY_DESTINATION_VAULT);
+//            cryptoTransmissionMetadata.setPendingToRead(false);
+//            String pkAux = cryptoTransmissionMetadata.getDestinationPublicKey();
+//            cryptoTransmissionMetadata.setDestinationPublickKey(cryptoTransmissionMetadata.getSenderPublicKey());
+//            cryptoTransmissionMetadata.setSenderPublicKey(pkAux);
+            //outgoingNotificationDao.update(cryptoTransmissionMetadataRecord);
 
-            CryptoTransmissionMetadataRecord cryptoTransmissionMetadataRecord = (CryptoTransmissionMetadataRecord)cryptoTransmissionMetadata;
-            // send inform to other ns
-            cryptoTransmissionMetadataRecord.changeCryptoTransmissionProtocolState(CryptoTransmissionProtocolState.PRE_PROCESSING_SEND);
-            cryptoTransmissionMetadataRecord.changeMetadataState(CryptoTransmissionMetadataState.SEEN_BY_DESTINATION_VAULT);
-            cryptoTransmissionMetadataRecord.setPendingToRead(false);
-            String pkAux = cryptoTransmissionMetadataRecord.getDestinationPublicKey();
-            cryptoTransmissionMetadataRecord.setDestinationPublickKey(cryptoTransmissionMetadataRecord.getSenderPublicKey());
-            cryptoTransmissionMetadataRecord.setSenderPublicKey(pkAux);
-           // outgoingNotificationDao.update(cryptoTransmissionMetadataRecord);
 
+//        }
+//        catch(CantUpdateRecordDataBaseException e) {
+//            throw  new CantSetToSeenByCryptoVaultException("Can't Set Metadata To Seen By Crypto Vault Exception",e,"","Can't update record");
+//        } catch (PendingRequestNotFoundException e) {
+//            e.printStackTrace();
+//        }
 
-        }
-        catch(CantUpdateRecordDataBaseException e) {
-            throw  new CantSetToSeenByCryptoVaultException("Can't Set Metadata To Seen By Crypto Vault Exception",e,"","Can't update record");
-        } catch (PendingRequestNotFoundException e) {
-            e.printStackTrace();
-        }
+        System.out.println("VISTO POR LA VAULT");
     }
 
     @Override
