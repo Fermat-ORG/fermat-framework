@@ -11,6 +11,7 @@ import com.bitdubai.reference_wallet.crypto_broker_wallet.common.models.EarningT
 
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
+import java.util.Calendar;
 
 /**
  * Created by nelson on 27/01/16.
@@ -29,28 +30,39 @@ public class EarningsOverviewViewHolder extends FermatViewHolder {
         dateTextView = (FermatTextView) itemView.findViewById(R.id.cbw_earning_value_date_item);
     }
 
-    public void bind(EarningTestData data) {
+    public void bind(EarningTestData data, int timeField) {
         final NumberFormat numberFormat = DecimalFormat.getInstance();
 
         final String diff = numberFormat.format(data.getDifference());
-        final String percent = numberFormat.format(data.getDifferencePercent());
         final String currencyCode = data.getCurrency().getCode();
         final double earningValue = data.getEarningValue();
 
         earningValueTextView.setText(String.format("%s %s", numberFormat.format(earningValue), currencyCode));
 
         if (data.getDifference() > 0) {
-            differenceTextView.setText(String.format("+ %s %s (%s%%)", diff, currencyCode, percent));
+            differenceTextView.setText(String.format("+ %s %s", diff, currencyCode));
             differenceTextView.setTextColor(Color.parseColor("#39ab89"));
         } else if (data.getDifference() < 0) {
-            differenceTextView.setText(String.format("%s %s (%s %%)", diff, currencyCode, percent));
+            differenceTextView.setText(String.format("%s %s", diff, currencyCode));
             differenceTextView.setTextColor(Color.parseColor("#d14846"));
         } else {
-            differenceTextView.setText(String.format("0.0 %s (0 %%)", currencyCode));
+            differenceTextView.setText(String.format("0.0 %s", currencyCode));
             differenceTextView.setTextColor(Color.parseColor("#7c7c7c"));
         }
 
-        CharSequence formattedDate = DateFormat.format("dd MMM yyyy", data.getTimestamp());
+        CharSequence formattedDate;
+        switch (timeField) {
+            case Calendar.MONTH:
+                formattedDate = DateFormat.format("MMM yyyy", data.getTimestamp());
+                break;
+            case Calendar.DATE:
+                formattedDate = DateFormat.format("dd MMM yyyy", data.getTimestamp());
+                break;
+            default:
+                formattedDate = DateFormat.format("MMM yyyy", data.getTimestamp());
+                break;
+        }
+
         dateTextView.setText(formattedDate);
     }
 }

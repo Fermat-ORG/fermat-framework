@@ -28,6 +28,9 @@ public class EarningsCurrencyPairsViewHolder extends FermatViewHolder {
         if (selected) {
             currencyPairButton.setBackgroundColor(Color.WHITE);
             currencyPairButton.setTextColor(Color.BLACK);
+        } else {
+            currencyPairButton.setBackgroundColor(Color.parseColor("#51ffffff"));
+            currencyPairButton.setTextColor(Color.WHITE);
         }
     }
 }

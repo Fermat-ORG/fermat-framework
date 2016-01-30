@@ -114,6 +114,7 @@
             android:textSize="14sp"/>
 
         <ImageView
+            android:id="@+id/cbw_earnings_sort_by_button"
             android:layout_width="20dp"
             android:layout_height="20dp"
             android:layout_centerVertical="true"
@@ -131,10 +132,12 @@
         android:paddingRight="16dp">
 
         <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
+            android:id="@+id/cbw_earning_time_field"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
             android:gravity="center_vertical"
+            android:textColor="@color/black"
             tools:text="Month"/>
 
         <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
@@ -142,6 +145,7 @@
             android:layout_height="match_parent"
             android:layout_weight="2"
             android:gravity="center"
+            android:textColor="@color/black"
             android:text="End"/>
 
         <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
@@ -149,6 +153,7 @@
             android:layout_height="match_parent"
             android:layout_weight="1"
             android:gravity="end|center_vertical"
+            android:textColor="@color/black"
             android:text="Earnings"/>
     </LinearLayout>
 

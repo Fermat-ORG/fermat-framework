@@ -38,5 +38,6 @@ public class EarningsCurrencyPairsAdapter extends FermatAdapter<EarningsPair, Ea
 
     public void setSelectedItem(int position) {
         selectedItem = position;
+        notifyDataSetChanged();
     }
 }
