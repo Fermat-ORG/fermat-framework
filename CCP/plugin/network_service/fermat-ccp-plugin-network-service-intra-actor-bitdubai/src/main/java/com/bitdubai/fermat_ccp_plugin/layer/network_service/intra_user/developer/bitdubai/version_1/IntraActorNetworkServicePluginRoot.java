@@ -10,7 +10,6 @@ import android.util.Base64;
 
 import com.bitdubai.fermat_api.CantStartAgentException;
 import com.bitdubai.fermat_api.CantStartPluginException;
-import com.bitdubai.fermat_api.CantStopAgentException;
 import com.bitdubai.fermat_api.Service;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.abstract_classes.AbstractPlugin;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.annotations.NeededAddonReference;
@@ -286,6 +285,10 @@ public class IntraActorNetworkServicePluginRoot extends AbstractPlugin implement
 
     private IntraActorNetworkServiceDao intraActorNetworkServiceDao;
 
+    private long reprocessTimer =  300000; //five minutes
+
+    private  Timer timer = new Timer();
+
     /**
      * Constructor
      */
@@ -298,6 +301,7 @@ public class IntraActorNetworkServicePluginRoot extends AbstractPlugin implement
         this.alias = "IntraActorNetworkService";
         this.extraData = null;
         this.actorsToRegisterCache = new ArrayList<>();
+        this.remoteNetworkServicesRegisteredList = new CopyOnWriteArrayList<>();
     }
 
     /**
@@ -545,26 +549,17 @@ public class IntraActorNetworkServicePluginRoot extends AbstractPlugin implement
 
                     intraActorNetworkServiceDao = new IntraActorNetworkServiceDao(this.dataBase, this.pluginFileSystem,this.pluginId);
 
-
-
-                    remoteNetworkServicesRegisteredList = new CopyOnWriteArrayList<PlatformComponentProfile>();
-
                     connectionArrived = new AtomicBoolean(false);
 
                     // change message state to process again first time
                     reprocessMessage();
 
                     //declare a schedule to process waiting request message
-                    Timer timer = new Timer();
 
-                    timer.schedule(new TimerTask() {
-                        @Override
-                        public void run() {
-                            // change message state to process again
-                            reprocessMessage();
-                        }
-                    }, 3600*1000);
+                        this.startTimer();
 
+
+                    initializeAgent();
 
                     /*
                      * Its all ok, set the new status
@@ -734,15 +729,18 @@ public class IntraActorNetworkServicePluginRoot extends AbstractPlugin implement
 
     }
 
-    private void initializeIntraActorAgent() {
+    private void initializeAgent() {
+
+        System.out.println("IntraActorNetworkServicePluginRoot - initializeAgent() ");
+
         try {
-            actorNetworkServiceRecordedAgent = new ActorNetworkServiceRecordedAgent(
-                    communicationNetworkServiceConnectionManager,
-                    this,
-                    errorManager,
-                    eventManager,
-                    wsCommunicationsCloudClientManager);
-            actorNetworkServiceRecordedAgent.start();
+           
+            if (actorNetworkServiceRecordedAgent == null){
+
+                actorNetworkServiceRecordedAgent = new ActorNetworkServiceRecordedAgent(this);
+                actorNetworkServiceRecordedAgent.start();
+
+            }
 
         } catch (CantStartAgentException e) {
             errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_INTRAUSER_NETWORK_SERVICE, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
@@ -778,7 +776,7 @@ public class IntraActorNetworkServicePluginRoot extends AbstractPlugin implement
 
                 System.out.println("IntraActorNetworkServicePluginRoot - NetWork Service is Registered: " + platformComponentProfileRegistered.getAlias());
                 this.register = Boolean.TRUE;
-                initializeIntraActorAgent();
+                initializeAgent();
 
                 CommunicationsClientConnection communicationsClientConnection = wsCommunicationsCloudClientManager.getCommunicationsCloudClientConnection();
 
@@ -852,9 +850,11 @@ public class IntraActorNetworkServicePluginRoot extends AbstractPlugin implement
                 actorNetworkServiceRecordedAgent.getPoolConnectionsWaitingForResponse().remove(actorNetworkServiceRecord.getActorDestinationPublicKey());
             }
 
-            actorNetworkServiceRecord.setActorProtocolState(ActorProtocolState.DONE);
-            getOutgoingNotificationDao().update(actorNetworkServiceRecord);
-
+            //done message type receive
+            if(actorNetworkServiceRecord.getNotificationDescriptor() == NotificationDescriptor.RECEIVED) {
+                actorNetworkServiceRecord.setActorProtocolState(ActorProtocolState.DONE);
+                getOutgoingNotificationDao().update(actorNetworkServiceRecord);
+            }
 
             System.out.println("SALIENDO DEL HANDLE NEW SENT MESSAGE NOTIFICATION");
 
@@ -1079,7 +1079,14 @@ public class IntraActorNetworkServicePluginRoot extends AbstractPlugin implement
                 {
                     if(record.getSentCount() > 10 )
                     {
+                      //  if(record.getSentCount() > 20)
+                      //  {
+                            //reprocess at two hours
+                          //  reprocessTimer =  2 * 3600 * 1000;
+                       // }
+
                         record.setActorProtocolState(ActorProtocolState.WAITING_RESPONSE);
+                        record.setSentCount(1);
                         //update state and process again later
 
                         outgoingNotificationDao.update(record);
@@ -1314,11 +1321,7 @@ public class IntraActorNetworkServicePluginRoot extends AbstractPlugin implement
                     communicationNetworkServiceConnectionManager.stop();
                 }
 
-                if(actorNetworkServiceRecordedAgent!=null) {
-                    actorNetworkServiceRecordedAgent.stop();
-                }
-
-            }catch (CantStopAgentException e) {
+            }catch (Exception e) {
                 e.printStackTrace();
             }
 
@@ -1334,11 +1337,17 @@ public class IntraActorNetworkServicePluginRoot extends AbstractPlugin implement
 
         System.out.println("IntraActorNetworkServicePluginRoot - handleClientConnectionLooseNotificationEvent");
 
+        try {
+
             if(communicationNetworkServiceConnectionManager != null) {
                 communicationNetworkServiceConnectionManager.stop();
             }
 
             this.register = Boolean.FALSE;
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 
     }
 
@@ -1350,16 +1359,22 @@ public class IntraActorNetworkServicePluginRoot extends AbstractPlugin implement
 
         System.out.println("IntraActorNetworkServicePluginRoot - handleClientSuccessfullReconnectNotificationEvent");
 
+        try {
+
             if (communicationNetworkServiceConnectionManager != null){
                 communicationNetworkServiceConnectionManager.restart();
-            }else{
-                this.initializeCommunicationNetworkServiceConnectionManager();
             }
+
+            initializeAgent();
 
             /*
              * Mark as register
              */
             this.register = Boolean.TRUE;
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 
     }
 
@@ -2124,5 +2139,33 @@ public class IntraActorNetworkServicePluginRoot extends AbstractPlugin implement
         }
     }
 
+
+    private void startTimer(){
+        timer.schedule(new TimerTask() {
+            @Override
+            public void run() {
+                // change message state to process retry later
+                reprocessMessage();
+            }
+        },0, reprocessTimer);
+    }
+
+
+    public WsCommunicationsCloudClientManager getWsCommunicationsCloudClientManager() {
+        return wsCommunicationsCloudClientManager;
+    }
+
+    public CommunicationNetworkServiceConnectionManager getCommunicationNetworkServiceConnectionManager() {
+        return communicationNetworkServiceConnectionManager;
+    }
+
+
+    public ErrorManager getErrorManager() {
+        return errorManager;
+    }
+
+    public EventManager getEventManager() {
+        return eventManager;
+    }
 
 }

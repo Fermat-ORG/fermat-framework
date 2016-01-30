@@ -108,6 +108,8 @@ import java.util.Timer;
 import java.util.TimerTask;
 import java.util.UUID;
 import java.util.concurrent.CopyOnWriteArrayList;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 /**
@@ -164,7 +166,7 @@ public final class CryptoPaymentRequestNetworkServicePluginRoot extends Abstract
 
 
 
-    private long reprocessTimer =   3600 * 1000; //one hours
+    private long reprocessTimer =  300000; //five minutes
 
 
     private Timer timer = new Timer();
@@ -275,9 +277,6 @@ public final class CryptoPaymentRequestNetworkServicePluginRoot extends Abstract
                         communicationRegistrationProcessNetworkServiceAgent.start();
                     }
 
-                    initializeAgent();
-
-
                     // change message state to process again first time
                     reprocessMessage();
 
@@ -286,10 +285,12 @@ public final class CryptoPaymentRequestNetworkServicePluginRoot extends Abstract
 
                     this.startTimer();
 
+                    initializeAgent();
 
-            /*
-             * Its all ok, set the new status
-            */
+
+                    /*
+                     * Its all ok, set the new status
+                    */
                     this.serviceStatus = ServiceStatus.STARTED;
 
                 } catch (CantInitializeNetworkServiceDatabaseException exception) {
@@ -953,13 +954,7 @@ public final class CryptoPaymentRequestNetworkServicePluginRoot extends Abstract
                     platformComponentProfileRegistered.getNetworkServiceType() == this.getNetworkServiceType() &&
                     platformComponentProfileRegistered.getIdentityPublicKey().equals(identity.getPublicKey())) {
 
-                if(communicationNetworkServiceConnectionManager==null) {
-                    initializeCommunicationNetworkServiceConnectionManager();
-                }
-
-                if (cryptoPaymentRequestExecutorAgent != null){
-                    cryptoPaymentRequestExecutorAgent.start();
-                }
+                initializeAgent();
 
                 this.register = Boolean.TRUE;
                 System.out.print("CryptoPaymentRequestNetworkServicePluginRoot - NetWork Service is Registered: " + platformComponentProfileRegistered.getAlias());
@@ -973,18 +968,27 @@ public final class CryptoPaymentRequestNetworkServicePluginRoot extends Abstract
     }
 
 
-    private void initializeAgent(){
+    private void initializeAgent()  {
 
         System.out.println("CryptoPaymentRequestNetworkServicePluginRoot - Starting method initializeAgent ");
 
-        cryptoPaymentRequestExecutorAgent = new CryptoPaymentRequestExecutorAgent(
-                    this,
-                    errorManager,
-                    eventManager,
-                    cryptoPaymentRequestNetworkServiceDao,
-                    wsCommunicationsCloudClientManager,
-                    getPluginVersionReference()
-            );
+        try {
+
+            if (cryptoPaymentRequestExecutorAgent == null){
+
+                this.cryptoPaymentRequestExecutorAgent = new CryptoPaymentRequestExecutorAgent(
+                        this,
+                        cryptoPaymentRequestNetworkServiceDao,
+                        getPluginVersionReference()
+                );
+
+                this.cryptoPaymentRequestExecutorAgent.start();
+
+            }
+        } catch (CantStartAgentException e) {
+            e.printStackTrace();
+        }
+
     }
 
     @Override
@@ -1059,10 +1063,6 @@ public final class CryptoPaymentRequestNetworkServicePluginRoot extends Abstract
                     communicationNetworkServiceConnectionManager.stop();
                 }
 
-                if(cryptoPaymentRequestExecutorAgent!=null) {
-                    cryptoPaymentRequestExecutorAgent.stop();
-                }
-
                 reprocessMessage();
 
                 this.register = Boolean.FALSE;
@@ -1080,13 +1080,17 @@ public final class CryptoPaymentRequestNetworkServicePluginRoot extends Abstract
     @Override
     public void handleClientConnectionLooseNotificationEvent(FermatEvent fermatEvent) {
 
-        System.out.println("CryptoPaymentRequestNetworkServicePluginRoot - handleClientConnectionLooseNotificationEvent");
+        try {
 
-        if(communicationNetworkServiceConnectionManager != null) {
-            communicationNetworkServiceConnectionManager.stop();
+            if(communicationNetworkServiceConnectionManager != null) {
+                communicationNetworkServiceConnectionManager.stop();
+            }
+
+            this.register = Boolean.FALSE;
+
+        } catch (Exception e) {
+            e.printStackTrace();
         }
-
-        this.register = Boolean.FALSE;
 
     }
 
@@ -1098,16 +1102,24 @@ public final class CryptoPaymentRequestNetworkServicePluginRoot extends Abstract
 
         System.out.println("CryptoPaymentRequestNetworkServicePluginRoot - Starting method handleClientSuccessfullReconnectNotificationEvent ");
 
-        if (communicationNetworkServiceConnectionManager != null){
-            communicationNetworkServiceConnectionManager.restart();
-        }else{
-            this.initializeCommunicationNetworkServiceConnectionManager();
-        }
+        try {
+
+            if (communicationNetworkServiceConnectionManager != null){
+               communicationNetworkServiceConnectionManager.restart();
+            }
+
+
+            initializeAgent();
+
 
             /*
              * Mark as register
              */
-        this.register = Boolean.TRUE;
+            this.register = Boolean.TRUE;
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 
     }
 
@@ -1300,9 +1312,17 @@ public final class CryptoPaymentRequestNetworkServicePluginRoot extends Abstract
                 {
                     if(record.getSentNumber() > 10)
                     {
+                        if(record.getSentNumber() > 20)
+                        {
+                            //reprocess at two hours
+                          //  reprocessTimer =  2 * 3600 * 1000;
+
+                        }
+
+                        //reprocess at five minutes
                         //update state and process again later
                         cryptoPaymentRequestNetworkServiceDao.changeProtocolState(record.getRequestId(),RequestProtocolState.WAITING_RESPONSE);
-
+                        cryptoPaymentRequestNetworkServiceDao.changeSentNumber(record.getRequestId(), 1);
 
                     }
                     else
@@ -1379,15 +1399,35 @@ public final class CryptoPaymentRequestNetworkServicePluginRoot extends Abstract
     }
 
     private void startTimer(){
+
+
         timer.schedule(new TimerTask() {
             @Override
             public void run() {
                 // change message state to process retry later
                 reprocessMessage();
             }
-        }, reprocessTimer);
+        },0, reprocessTimer);
+
+
+
+    }
+
+    public WsCommunicationsCloudClientManager getWsCommunicationsCloudClientManager() {
+        return wsCommunicationsCloudClientManager;
     }
 
 
+    public ErrorManager getErrorManager() {
+        return errorManager;
+    }
 
+    public EventManager getEventManager() {
+        return eventManager;
+    }
+
+
+    public CommunicationNetworkServiceConnectionManager_V2 getCommunicationNetworkServiceConnectionManager() {
+        return communicationNetworkServiceConnectionManager;
+    }
 }

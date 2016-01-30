@@ -253,6 +253,10 @@ public class CryptoTransmissionNetworkServicePluginRoot extends AbstractPlugin i
     private CryptoTransmissionMetadataDAO_V2 incomingNotificationsDao;
     private CryptoTransmissionMetadataDAO_V2 outgoingNotificationDao;
 
+    Timer timer = new Timer();
+
+    private long reprocessTimer =  300000; //five minutes
+
 
     /**
      * Constructor
@@ -511,16 +515,9 @@ public class CryptoTransmissionNetworkServicePluginRoot extends AbstractPlugin i
                     reprocessMessage();
 
                     //declare a schedule to process waiting request message
-                    Timer timer = new Timer();
+                    this.startTimer();
 
-                    timer.schedule(new TimerTask() {
-                        @Override
-                        public void run() {
-                            // change message state to process again
-                            reprocessWaitingMessage();
-                        }
-                    }, 3600*1000);
-
+                    initializeAgent();
 
                     /*
                      * Its all ok, set the new status
@@ -543,6 +540,8 @@ public class CryptoTransmissionNetworkServicePluginRoot extends AbstractPlugin i
                     throw pluginStartException;
 
                 } catch (Exception exception) {
+
+                    exception.printStackTrace();
 
                     StringBuffer contextBuffer = new StringBuffer();
                     contextBuffer.append("Plugin ID: " + pluginId);
@@ -690,13 +689,16 @@ public class CryptoTransmissionNetworkServicePluginRoot extends AbstractPlugin i
 
     }
 
-    private void initializeIntraActorAgent() {
+    private void initializeAgent() {
+
+        System.out.println("CryptoTransmissionNetworkServicePluginRoot - initializeAgent() ");
+
         try {
-            if(cryptoTransmissionTransactionRecordedAgent ==null){
-                cryptoTransmissionTransactionRecordedAgent = new CryptoTransmissionTransactionRecordedAgent(
-                        this);
+
+            if(cryptoTransmissionTransactionRecordedAgent == null){
+                cryptoTransmissionTransactionRecordedAgent = new CryptoTransmissionTransactionRecordedAgent(this);
+                cryptoTransmissionTransactionRecordedAgent.start();
             }
-            cryptoTransmissionTransactionRecordedAgent.start();
 
         } catch (CantStartAgentException e) {
             errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_CRYPTO_TRANSMISSION_NETWORK_SERVICE, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
@@ -731,17 +733,8 @@ public class CryptoTransmissionNetworkServicePluginRoot extends AbstractPlugin i
                     platformComponentProfileRegistered.getIdentityPublicKey().equals(identity.getPublicKey())) {
 
                 System.out.println("CryptoTransmissionNetworkServicePluginRoot - NetWork Service is Registered: " + platformComponentProfileRegistered.getAlias());
-
+                initializeAgent();
                 this.register = Boolean.TRUE;
-
-                if(communicationNetworkServiceConnectionManager==null) {
-                    initializeCommunicationNetworkServiceConnectionManager();
-                }else{
-                    communicationNetworkServiceConnectionManager.restart();
-                }
-
-                initializeIntraActorAgent();
-
 
             }
 
@@ -934,12 +927,11 @@ public class CryptoTransmissionNetworkServicePluginRoot extends AbstractPlugin i
     }
 
 
-
     private void checkFailedDeliveryTime(String destinationPublicKey)
     {
         try{
 
-            Map<String, Object> filters = new HashMap<>();
+            Map<String, Object> filters =new HashMap<>();
             filters.put(CryptoTransmissionNetworkServiceDatabaseConstants.CRYPTO_TRANSMISSION_METADATA_DESTINATION_PUBLIC_KEY_COLUMN_NAME, destinationPublicKey);
                     /*
          * Read all pending CryptoTransmissionMetadata from database
@@ -950,17 +942,20 @@ public class CryptoTransmissionNetworkServicePluginRoot extends AbstractPlugin i
             //if I try to send more than 5 times I put it on hold
             for (CryptoTransmissionMetadata record : lstCryptoTransmissionMetadata) {
 
-
                 if(!record.getCryptoTransmissionProtocolState().getCode().equals(CryptoTransmissionProtocolState.WAITING_FOR_RESPONSE.getCode()))
                 {
                     if(record.getSentCount() > 10)
                     {
+                       // if(record.getSentCount() > 20)
+                         //   reprocessTimer =  2 * 3600 * 1000; //reprocess at two hours
+
                         //update state and process again later
                         outgoingNotificationDao.changeCryptoTransmissionProtocolState(record.getTransactionId(), CryptoTransmissionProtocolState.WAITING_FOR_RESPONSE);
+                        outgoingNotificationDao.changeSentNumber(record.getTransactionId(), 1);
+
                     }
                     else
                     {
-
                         outgoingNotificationDao.changeSentNumber(record.getTransactionId(), record.getSentCount() + 1);
                     }
                 }
@@ -1188,11 +1183,9 @@ public class CryptoTransmissionNetworkServicePluginRoot extends AbstractPlugin i
                     communicationNetworkServiceConnectionManager.stop();
                 }
 
-                if(cryptoTransmissionTransactionRecordedAgent !=null) {
-                    cryptoTransmissionTransactionRecordedAgent.stop();
-                }
 
-            }catch (CantStopAgentException e) {
+
+            }catch (Exception e) {
                 e.printStackTrace();
             }
 
@@ -1208,11 +1201,21 @@ public class CryptoTransmissionNetworkServicePluginRoot extends AbstractPlugin i
 
         System.out.println("CryptoTransmissionNetworkServicePluginRoot - handleClientConnectionLooseNotificationEvent");
 
-        if(communicationNetworkServiceConnectionManager != null) {
-            communicationNetworkServiceConnectionManager.stop();
-        }
+        try {
 
-        this.register = Boolean.FALSE;
+            if(communicationNetworkServiceConnectionManager != null) {
+                communicationNetworkServiceConnectionManager.stop();
+            }
+
+            if(cryptoTransmissionTransactionRecordedAgent !=null) {
+                cryptoTransmissionTransactionRecordedAgent.stop();
+            }
+
+            this.register = Boolean.FALSE;
+
+        } catch (CantStopAgentException e) {
+            e.printStackTrace();
+        }
 
     }
 
@@ -1224,16 +1227,24 @@ public class CryptoTransmissionNetworkServicePluginRoot extends AbstractPlugin i
 
         System.out.println("CryptoTransmissionNetworkServicePluginRoot - handleClientSuccessfullReconnectNotificationEvent");
 
-        if (communicationNetworkServiceConnectionManager != null){
-            communicationNetworkServiceConnectionManager.restart();
-        }else{
-            this.initializeCommunicationNetworkServiceConnectionManager();
-        }
+        try {
+
+            if (communicationNetworkServiceConnectionManager != null){
+                communicationNetworkServiceConnectionManager.restart();
+            }else{
+                this.initializeCommunicationNetworkServiceConnectionManager();
+            }
+
+            initializeAgent();
 
             /*
              * Mark as register
              */
-        this.register = Boolean.TRUE;
+            this.register = Boolean.TRUE;
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 
     }
 
@@ -1689,4 +1700,16 @@ public class CryptoTransmissionNetworkServicePluginRoot extends AbstractPlugin i
     public EventManager getEventManager() {
         return eventManager;
     }
+
+    private void startTimer(){
+        timer.schedule(new TimerTask() {
+            @Override
+            public void run() {
+                // change message state to process retry later
+                reprocessMessage();
+            }
+        }, 0,reprocessTimer);
+    }
+
+
 }

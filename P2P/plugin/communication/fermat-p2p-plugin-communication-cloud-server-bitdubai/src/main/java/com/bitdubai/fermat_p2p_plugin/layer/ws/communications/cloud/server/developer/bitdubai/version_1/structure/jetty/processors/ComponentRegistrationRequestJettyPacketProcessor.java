@@ -187,9 +187,6 @@ public class ComponentRegistrationRequestJettyPacketProcessor extends FermatJett
 
                 LOG.info("Cloud client already register! clean old references and close old connection");
                 ClientConnection clientConnectionOld = MemoryCache.getInstance().getRegisteredClientConnectionsCache().remove(platformComponentProfileToRegister.getIdentityPublicKey());
-                LOG.info("clientConnectionOld id = " + clientConnectionOld.getSession().getId());
-                MemoryCache.getInstance().cleanReferences(clientConnectionOld);
-                clientConnectionOld.setClientIdentity(null);
                 clientConnectionOld.getSession().close();
             }
 
