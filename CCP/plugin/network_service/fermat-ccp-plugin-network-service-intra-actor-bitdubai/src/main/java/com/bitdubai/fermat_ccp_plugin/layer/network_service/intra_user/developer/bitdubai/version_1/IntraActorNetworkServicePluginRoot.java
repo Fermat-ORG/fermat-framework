@@ -563,7 +563,7 @@ public class IntraActorNetworkServicePluginRoot extends AbstractPlugin implement
                             // change message state to process again
                             reprocessMessage();
                         }
-                    }, 3600*1000);
+                    }, 3600 * 1000);
 
 
                     /*
@@ -848,6 +848,13 @@ public class IntraActorNetworkServicePluginRoot extends AbstractPlugin implement
                 // close connection, sender is the destination
                 System.out.println("ENTRANDO EN EL METODO PARA CERRAR LA CONEXION DEL HANDLE NEW SENT MESSAGE NOTIFICATION");
                 System.out.println("ENTRO AL METODO PARA CERRAR LA CONEXION");
+                //   communicationNetworkServiceConnectionManager.closeConnection(actorNetworkServiceRecord.getActorDestinationPublicKey());
+                actorNetworkServiceRecordedAgent.getPoolConnectionsWaitingForResponse().remove(actorNetworkServiceRecord.getActorDestinationPublicKey());
+            }
+
+            if (actorNetworkServiceRecord.getNotificationDescriptor() == NotificationDescriptor.RECEIVED) {
+                // close connection, sender is the destination
+                System.out.println("MENSAJE SALIENTE DE TIPO RECIBIDO, CERRANDO CONEXIONES");
                 //   communicationNetworkServiceConnectionManager.closeConnection(actorNetworkServiceRecord.getActorDestinationPublicKey());
                 actorNetworkServiceRecordedAgent.getPoolConnectionsWaitingForResponse().remove(actorNetworkServiceRecord.getActorDestinationPublicKey());
             }
