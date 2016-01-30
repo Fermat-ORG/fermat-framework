@@ -365,14 +365,16 @@ public class CryptoTransmissionTransactionRecordedAgent extends FermatAgent{
                                    cryptoTransmissionMetadata.getSenderPublicKey(),
                                    cryptoTransmissionMetadata.getAssociatedCryptoTransactionHash(),
                                    cryptoTransmissionMetadata.getPaymentDescription(),
-                                   CryptoTransmissionProtocolState.SENT,
+                                   CryptoTransmissionProtocolState.PRE_PROCESSING_SEND,
                                    CryptoTransmissionMetadataType.METADATA_SEND,
                                    cryptoTransmissionMetadata.getTimestamp(),
                                    false,
                                    0,
                                    CryptoTransmissionMetadataState.SEEN_BY_DESTINATION_NETWORK_SERVICE
                            );
-                       cryptoTransmissionNetworkServicePluginRoot.getOutgoingMetadataDao().saveCryptoTransmissionMetadata(cryptoTransmissionMetadataRecord);
+                       if(!cryptoTransmissionNetworkServicePluginRoot.getOutgoingMetadataDao().saveCryptoTransmissionMetadata(cryptoTransmissionMetadataRecord)){
+                           cryptoTransmissionNetworkServicePluginRoot.getOutgoingMetadataDao().update(cryptoTransmissionMetadataRecord);
+                       }
 
 
                            System.out.print("-----------------------\n" +
