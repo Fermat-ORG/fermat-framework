@@ -560,6 +560,9 @@ public class RequestFormFragment extends AbstractFermatFragment<ReferenceWalletS
                         newAmount = bitcoinConverter.getSathoshisFromBits(amount);
                     }
 
+
+                    BigDecimal operator = new BigDecimal(newAmount);
+
                     String identityPublicKey = appSession.getIntraUserModuleManager().getPublicKey();
 
                     CryptoAddress cryptoAddress = cryptoWallet.requestAddressToKnownUser(
@@ -581,7 +584,7 @@ public class RequestFormFragment extends AbstractFermatFragment<ReferenceWalletS
                             cryptoWalletWalletContact.getActorType(),
                             cryptoAddress,
                             txt_notes.getText().toString(),
-                            Long.valueOf(newAmount),
+                            operator.longValueExact(),
                             BlockchainNetworkType.DEFAULT,
                             ReferenceWallet.BASIC_WALLET_BITCOIN_WALLET
 
