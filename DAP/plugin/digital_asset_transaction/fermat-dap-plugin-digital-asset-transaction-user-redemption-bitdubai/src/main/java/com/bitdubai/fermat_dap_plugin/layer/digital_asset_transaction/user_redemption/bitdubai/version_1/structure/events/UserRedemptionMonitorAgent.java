@@ -280,7 +280,7 @@ public class UserRedemptionMonitorAgent implements Agent, DealsWithLogger, Deals
                 }
                 System.out.println("ASSET REJECTED BY CONTRACT!! : " + digitalAssetMetadata);
                 String userPublicKey = userRedemptionDao.getActorUserPublicKeyByGenesisTransaction(assetRejectedGenesisTransaction);
-                digitalAssetUserRedemptionVault.setDigitalAssetMetadataAssetIssuerWalletTransaction(genesisTransactionList.get(0), internalId, AssetBalanceType.AVAILABLE, TransactionType.CREDIT, DAPTransactionType.DISTRIBUTION, userPublicKey);
+                digitalAssetUserRedemptionVault.setDigitalAssetMetadataAssetIssuerWalletTransaction(genesisTransactionList.get(0), digitalAssetMetadata, AssetBalanceType.AVAILABLE, TransactionType.CREDIT, DAPTransactionType.DISTRIBUTION, userPublicKey);
             }
 
             List<String> assetRejectedByHashGenesisTransactionList = userRedemptionDao.getGenesisTransactionByAssetRejectedByHashStatus();
@@ -293,7 +293,7 @@ public class UserRedemptionMonitorAgent implements Agent, DealsWithLogger, Deals
                 }
                 System.out.println("ASSET REJECTED BY HASH!! : " + digitalAssetMetadata);
                 String userPublicKey = userRedemptionDao.getActorUserPublicKeyByGenesisTransaction(assetRejectedGenesisTransaction);
-                digitalAssetUserRedemptionVault.setDigitalAssetMetadataAssetIssuerWalletTransaction(genesisTransactionList.get(0), internalId, AssetBalanceType.AVAILABLE, TransactionType.CREDIT, DAPTransactionType.DISTRIBUTION, userPublicKey);
+                digitalAssetUserRedemptionVault.setDigitalAssetMetadataAssetIssuerWalletTransaction(genesisTransactionList.get(0), digitalAssetMetadata, AssetBalanceType.AVAILABLE, TransactionType.CREDIT, DAPTransactionType.DISTRIBUTION, userPublicKey);
             }
         }
 
@@ -314,8 +314,8 @@ public class UserRedemptionMonitorAgent implements Agent, DealsWithLogger, Deals
                     case IRREVERSIBLE:
                         CryptoTransaction transactionOnBlockChain = AssetVerification.getCryptoTransactionFromCryptoNetworkByCryptoStatus(bitcoinNetworkManager, record.getDigitalAssetMetadata(), CryptoStatus.ON_BLOCKCHAIN);
                         if (transactionOnBlockChain == null) break; //not yet...
-                        digitalAssetUserRedemptionVault.updateMetadataTransactionChain(record.getGenesisTransaction(), transactionOnBlockChain.getTransactionHash(), transactionOnBlockChain.getBlockHash());
-                        digitalAssetUserRedemptionVault.setDigitalAssetMetadataAssetIssuerWalletTransaction(transactionOnBlockChain, record.getGenesisTransaction(), AssetBalanceType.BOOK, TransactionType.DEBIT, DAPTransactionType.RECEPTION, record.getRedeemPointPublicKey());
+                        DigitalAssetMetadata digitalAssetMetadata = digitalAssetUserRedemptionVault.updateMetadataTransactionChain(record.getGenesisTransaction(), transactionOnBlockChain.getTransactionHash(), transactionOnBlockChain.getBlockHash());
+                        digitalAssetUserRedemptionVault.setDigitalAssetMetadataAssetIssuerWalletTransaction(transactionOnBlockChain, digitalAssetMetadata, AssetBalanceType.BOOK, TransactionType.DEBIT, DAPTransactionType.RECEPTION, record.getRedeemPointPublicKey());
                         userRedemptionDao.updateDeliveringStatusForTxId(record.getTransactionId(), DistributionStatus.DISTRIBUTION_FINISHED);
                         break;
                     case REVERSED_ON_BLOCKCHAIN:
