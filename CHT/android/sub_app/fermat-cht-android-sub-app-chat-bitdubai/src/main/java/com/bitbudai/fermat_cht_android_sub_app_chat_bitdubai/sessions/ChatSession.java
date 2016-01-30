@@ -13,6 +13,8 @@ import com.bitdubai.fermat_pip_api.layer.network_service.subapp_resources.SubApp
  */
 public class ChatSession extends AbstractFermatSession<InstalledSubApp, ChatModuleManager,SubAppResourcesProviderManager> {
 
+    public static final String CONTACT_DATA = "CONTACT_DATA";
+
     public ChatSession() {}
 
 }

@@ -149,8 +149,8 @@ public class ChatMiddlewareDatabaseDao {
             DatabaseTableRecord record = getContactRecord(contact);
             DatabaseTableFilter filter = table.getEmptyTableFilter();
             filter.setType(DatabaseFilterType.EQUAL);
-            filter.setValue(contact.getContactId().toString());
-            filter.setColumn(ChatMiddlewareDatabaseConstants.CONTACTS_FIRST_KEY_COLUMN);
+            filter.setValue(contact.getRemoteActorPublicKey().toString());
+            filter.setColumn(ChatMiddlewareDatabaseConstants.CONTACTS_REMOTE_ACTOR_PUB_KEY_COLUMN_NAME);
 
             if (isNewRecord(table, filter))
                 transaction.addRecordToInsert(table, record);

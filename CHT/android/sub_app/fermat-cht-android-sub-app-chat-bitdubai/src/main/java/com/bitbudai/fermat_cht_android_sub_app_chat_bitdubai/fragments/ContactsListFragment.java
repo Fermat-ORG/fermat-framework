@@ -27,6 +27,8 @@ import com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.settings.ChatSettin
 import com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.util.ImageLoader;
 import com.bitdubai.android_api.BuildConfig;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractFermatFragment;
+import com.bitdubai.fermat_api.layer.all_definition.components.enums.PlatformComponentType;
+import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
 import com.bitdubai.fermat_cht_api.layer.middleware.interfaces.Contact;
 import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.ChatManager;
 import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.ChatModuleManager;
@@ -76,6 +78,7 @@ import java.lang.String;
 import java.util.Date;
 import java.text.DateFormat;
 import java.util.Locale;
+import java.util.UUID;
 
 
 /**
@@ -123,8 +126,10 @@ public class ContactsListFragment extends AbstractFermatFragment {
 
 ;
     ListView list;
-
-    String[] contactname={"GABRIEL",
+    String[] contactname;
+    Integer[] contacticon;
+    UUID[] contactID;
+   /* String[] contactname={"GABRIEL",
             "MIGUEL",
             "FRANKLIN",
             "MANUEL",
@@ -137,7 +142,7 @@ public class ContactsListFragment extends AbstractFermatFragment {
             R.drawable.ren,
             R.drawable.pat
     };
-
+*/
     //public ContactsListFragment() {}
     static void initchatinfo(){
         //   chatinfo.put(0, Arrays.asList("Miguel", "Que paso?", "12/09/2007"));
@@ -224,9 +229,23 @@ public class ContactsListFragment extends AbstractFermatFragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         View layout = inflater.inflate(R.layout.contact_list_fragment, container, false);
+        try {
+            int size = chatManager.getContacts().size();
+            System.out.println("\n\nCONTACTsize:\n\n"+size);
 
-        //int size= chatManager.getContacts().size();
+            contactname= new String[size];
+            contacticon= new Integer[size];
+            contactID= new UUID[size];
+            List <Contact> con=  chatManager.getContacts();
+            for(int i=0;i<=size;i++)
+            {
+                contactname[i]=con.get(i).getAlias();
+                contactID[i]=con.get(i).getContactId();
+                contacticon[i]=R.drawable.ic_contact_picture_holo_light;
+            }
+        }catch (Exception e){
 
+        }
         ContactListAdapter adapter=new ContactListAdapter(getActivity(), contactname, contacticon);
         list=(ListView)layout.findViewById(R.id.list);
         list.setAdapter(adapter);
@@ -238,6 +257,8 @@ public class ContactsListFragment extends AbstractFermatFragment {
                 // TODO Auto-generated method stub
                 //String Slecteditem= contactname[position];
                 //Toast.makeText(getActivity(), Slecteditem, Toast.LENGTH_SHORT).show();
+                appSession.setData(ChatSession.CONTACT_DATA, contactID[position]);
+                changeActivity(Activities.CHT_CHAT_OPEN_MESSAGE_LIST, appSession.getAppPublicKey());
 
             }
         });
@@ -247,6 +268,12 @@ public class ContactsListFragment extends AbstractFermatFragment {
         // Inflate the list fragment layout
         //return inflater.inflate(R.layout.contact_list_fragment, container, false);
     }
+
+    /*@Override
+    public void onItemClickListener(ChatManager data, int position) {
+        appSession.setData(ChatSession.CONTACT_DATA, data);
+        changeActivity(Activities.CHT_CHAT_OPEN_MESSAGE_LIST, appSession.getAppPublicKey());
+    }*/
 
 //    private void loadDummyHistory(){// Hard Coded
 //

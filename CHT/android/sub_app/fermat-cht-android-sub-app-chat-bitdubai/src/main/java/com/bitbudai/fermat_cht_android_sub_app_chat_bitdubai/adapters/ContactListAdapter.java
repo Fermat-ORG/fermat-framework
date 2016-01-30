@@ -43,7 +43,7 @@ public class ContactListAdapter extends ArrayAdapter<String> {
         View item = inflater.inflate(R.layout.contact_list_item, null, true);
 
         ImageView imagen = (ImageView) item.findViewById(R.id.icon);
-        imagen.setImageResource(contacticon[position]);
+        imagen.setImageResource(R.drawable.ic_contact_picture_holo_light);//contacticon[position]);
 
         TextView contactname = (TextView) item.findViewById(R.id.text1);
         contactname.setText(contactinfo[position]);

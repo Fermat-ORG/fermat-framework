@@ -232,7 +232,8 @@ public enum Activities implements FermatEnum {
      */
     CHT_CHAT_OPEN_CHATLIST("CHTOCHL"),
     CHT_CHAT_OPEN_CONTACTLIST("CHTOCONTL"),
-     CHT_CHAT_OPEN_CHAT_DETAIL("CHTOCHDF"),
+    CHT_CHAT_OPEN_MESSAGE_LIST("CHTOML"),
+   //  CHT_CHAT_OPEN_CHAT_DETAIL("CHTOCHDF"),
      CHT_CHAT_OPEN_CONTACT_DETAIL("CHTOCODF"),
      CHT_CHAT_EDIT_CONTACT("CHTEDCOF"),
      CHT_CHAT_OPEN_CONNECTIONLIST("CHTOCONNLTF"),
@@ -582,15 +583,17 @@ public enum Activities implements FermatEnum {
             case "DWAIADSUG":
                 return DAP_WALLET_ASSET_ISSUER_ASSET_DELIVERY_SELECT_USERS_GROUPS;
             /* CHAT */
-            case "CHTOCHLTF":
+            case "CHTOCHL":
                 return Activities.CHT_CHAT_OPEN_CHATLIST;
-            case "CHTOCONTLTF":
+            case "CHTOCONTL":
                 return Activities.CHT_CHAT_OPEN_CONTACTLIST;
+            case "CHTOML":
+                return Activities.CHT_CHAT_OPEN_MESSAGE_LIST;
            /* case "CHTOCHDF":
                 return CHT_CHAT_OPEN_CHAT_DETAIL_FRAGMENT;
-            case "CHTOCODF":
-                return CHT_CHAT_OPEN_CONTACT_DETAIL_FRAGMENT;
-            case "CHTEDCOF":
+           */ case "CHTOCODF":
+                return Activities.CHT_CHAT_OPEN_CONTACT_DETAIL;
+           /* case "CHTEDCOF":
                 return CHT_CHAT_EDIT_CONTACT_FRAGMENT;
             case "CHTOCONNLTF":
                 return CHT_CHAT_OPEN_CONNECTIONLIST_FRAGMENT;*/
