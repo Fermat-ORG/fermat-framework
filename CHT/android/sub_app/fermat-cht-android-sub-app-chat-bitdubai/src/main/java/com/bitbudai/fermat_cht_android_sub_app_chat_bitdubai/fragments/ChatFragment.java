@@ -130,7 +130,7 @@ public class ChatFragment extends AbstractFermatFragment {//ActionBarActivity
             others.put(contactdirection.get(i).getRemoteName(), contactdirection.get(i));
             System.out.println("\n\nADDCONTACTDIRECTION("+i+"):\n\n"+contactdirection.get(i).getRemoteName()+" ?? "+contactdirection.get(i).getAlias()
                     +" ?? "+contactdirection.get(i).getRemoteActorPublicKey().toString()+" ?? "+contactdirection.get(i).getContactId().toString()+" ?? "
-                    +contactdirection.get(i).getRemoteActorType().toString()+" ?? "+contactdirection.get(i).getCreationDate().toString());
+                    +contactdirection.get(i).getRemoteActorType().toString()+" ?? "+contactdirection.get(i).getCreationDate());
         }
 
 
