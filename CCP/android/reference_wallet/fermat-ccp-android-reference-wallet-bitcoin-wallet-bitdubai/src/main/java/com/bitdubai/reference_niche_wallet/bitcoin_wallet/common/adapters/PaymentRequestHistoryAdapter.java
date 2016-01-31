@@ -152,12 +152,10 @@ public class PaymentRequestHistoryAdapter  extends FermatAdapter<PaymentRequest,
         }
         if(data.getType() == 0) //SEND
         {
-            if(data.getState() != null) {
-                holder.getLinear_layour_container_buttons().setVisibility(View.GONE);
-                holder.getLinear_layour_container_state().setVisibility(View.VISIBLE);
-                holder.getTxt_state().setText(state);
-                holder.getTxt_state().setTypeface(tf);
-            }
+            holder.getLinear_layour_container_buttons().setVisibility(View.GONE);
+            holder.getLinear_layour_container_state().setVisibility(View.VISIBLE);
+            holder.getTxt_state().setText(state);
+            holder.getTxt_state().setTypeface(tf);
         }
         else
         {

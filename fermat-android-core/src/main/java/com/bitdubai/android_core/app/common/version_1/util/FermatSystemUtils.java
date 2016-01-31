@@ -375,7 +375,7 @@ public class FermatSystemUtils {
     public static AndroidCoreModule getAndroidCoreModule(@NonNull Application application) {
 
         try {
-            return (AndroidCoreModule) ((ApplicationSession) application).getFermatSystem().getRuntimeManager(
+            return (AndroidCoreModule) ((ApplicationSession) application).getFermatSystem().getModuleManager(
                     new PluginVersionReference(
                             Platforms.PLUG_INS_PLATFORM,
                             Layers.SUB_APP_MODULE,
@@ -384,8 +384,7 @@ public class FermatSystemUtils {
                             new Version()
                     )
             );
-        } catch (RuntimeManagerNotFoundException |
-                CantGetRuntimeManagerException e) {
+        } catch (CantGetModuleManagerException e) {
 
             System.out.println(e.getMessage());
             System.out.println(e.toString());
