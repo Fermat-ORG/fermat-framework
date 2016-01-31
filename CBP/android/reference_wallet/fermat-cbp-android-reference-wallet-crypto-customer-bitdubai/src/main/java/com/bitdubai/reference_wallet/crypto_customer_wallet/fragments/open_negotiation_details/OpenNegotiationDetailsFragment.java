@@ -27,6 +27,7 @@ import com.bitdubai.fermat_api.layer.pip_engine.interfaces.ResourceProviderManag
 import com.bitdubai.fermat_api.layer.world.interfaces.Currency;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.ClauseStatus;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.ClauseType;
+import com.bitdubai.fermat_cbp_api.all_definition.enums.CurrencyType;
 import com.bitdubai.fermat_cbp_api.all_definition.identity.ActorIdentity;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.common.interfaces.ClauseInformation;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.common.interfaces.CustomerBrokerNegotiationInformation;
@@ -91,11 +92,6 @@ public class OpenNegotiationDetailsFragment extends AbstractFermatFragment<Crypt
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-        paymentMethods = new ArrayList<>();
-        paymentMethods.add("Cash");
-        paymentMethods.add("Bank");
-        paymentMethods.add("Crypto");
 
         currencies = new ArrayList<>();
         currencies.add(FiatCurrency.VENEZUELAN_BOLIVAR);
@@ -647,6 +643,30 @@ public class OpenNegotiationDetailsFragment extends AbstractFermatFragment<Crypt
 
     }
 
+    //ARRAY PAYMENT
+    private ArrayList<String> getPaymentMethod(String currency){
+
+        paymentMethods = new ArrayList<>();
+
+        Boolean isFiatCurrency = Boolean.FALSE;
+        Boolean isCryptoCurrency = Boolean.FALSE;
+
+        for (FiatCurrency fiatCurrency: FiatCurrency.values())
+            if(currency.equals(fiatCurrency)) isFiatCurrency = Boolean.TRUE;
+
+        for (CryptoCurrency cryptoCurrency: CryptoCurrency.values())
+            if(currency.equals(cryptoCurrency)) isCryptoCurrency = Boolean.TRUE;
+
+        if(isFiatCurrency){
+            paymentMethods.add(CurrencyType.BANK_MONEY.getFriendlyname());
+        }
+
+        paymentMethods.add("Cash");
+        paymentMethods.add("Bank");
+        paymentMethods.add("Crypto");
+
+        return paymentMethods;
+    }
     //REMOVE CURRENCY TO PAY
     private void removeCurrency(){
 
