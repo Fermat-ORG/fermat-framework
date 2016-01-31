@@ -1,94 +1,98 @@
 package com.bitdubai.reference_wallet.crypto_customer_wallet.common.dialogs;
 
 import android.app.Activity;
-import android.os.Bundle;
+import android.app.DialogFragment;
 import android.view.View;
-import android.view.Window;
 
-import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatButton;
-import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatEditText;
-import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView;
-import com.bitdubai.fermat_android_api.ui.dialogs.FermatDialog;
-import com.bitdubai.fermat_api.layer.pip_engine.interfaces.ResourceProviderManager;
-import com.bitdubai.reference_wallet.crypto_customer_wallet.R;
-import com.bitdubai.reference_wallet.crypto_customer_wallet.session.CryptoCustomerWalletSession;
+import com.bitdubai.reference_wallet.crypto_customer_wallet.fragments.common.DatePickerFragment;
+import com.bitdubai.reference_wallet.crypto_customer_wallet.fragments.common.TimePickerFragment;
 
+import java.util.Calendar;
 
 /**
- * Created by Yordin Alayn on 30.01.16.
- * Based in ClauseTextDialog of Open_negotiation by nelson
+ * Created by Yordin Alayn on 30/01/16.
  */
-public class ClauseDateTimeDialog extends FermatDialog<CryptoCustomerWalletSession, ResourceProviderManager>
-        implements View.OnClickListener {
+public class ClauseDateTimeDialog implements DatePickerFragment.SelectedDate, TimePickerFragment.SelectedTime, View.OnClickListener{
 
-    private FermatEditText editTextView;
-    private int titleStringResource;
-    private int hintStringResource;
-    private String editTextValue;
+    private Activity activity;
+    private Calendar calendar;
+    private long selectedValue;
+    private int year, monthOfYear, dayOfMonth, hourOfDay, minute;
 
     private OnClickAcceptListener acceptBtnListener;
 
     public interface OnClickAcceptListener {
-        void onClick(String editTextValue);
+        void onClick(long selectedValue);
     }
 
+    public ClauseDateTimeDialog(Activity activity){
 
-    public ClauseDateTimeDialog(Activity activity, CryptoCustomerWalletSession fermatSession, ResourceProviderManager resources) {
-        super(activity, fermatSession, resources);
+        this.activity = activity;
 
-        hintStringResource = R.string.hint;
-        titleStringResource = R.string.title;
-        editTextValue = null;
+        bind(System.currentTimeMillis());
     }
 
-    public void configure(int titleRes, int hintRes) {
-        titleStringResource = titleRes;
-        hintStringResource = hintRes;
+    @Override
+    public void onClick(View view) {
+        if (acceptBtnListener != null)
+            acceptBtnListener.onClick(selectedValue);
     }
+
+    @Override
+    public void getDate(int year, int monthOfYear, int dayOfMonth) {
+//        if (!valuesHasChanged) valuesHasChanged = this.year != year;
+//        if (!valuesHasChanged) valuesHasChanged = this.monthOfYear != monthOfYear;
+//        if (!valuesHasChanged) valuesHasChanged = this.dayOfMonth != dayOfMonth;
+
+        this.year = year;
+        this.monthOfYear = monthOfYear;
+        this.dayOfMonth = dayOfMonth;
+
+        calendar.set(year, monthOfYear, dayOfMonth, hourOfDay, minute);
+        selectedValue = calendar.getTimeInMillis();
+    }
+
+    @Override
+    public void getTime(int hourOfDay, int minute) {
+//        if (!valuesHasChanged) valuesHasChanged = this.hourOfDay != hourOfDay;
+//        if (!valuesHasChanged) valuesHasChanged = this.minute != minute;
+
+        this.hourOfDay = hourOfDay;
+        this.minute = minute;
+
+        calendar.set(year, monthOfYear, dayOfMonth, hourOfDay, minute);
+        selectedValue = calendar.getTimeInMillis();
+    }
+
+    public void bind(long timeInMillis) {
+
+        selectedValue = timeInMillis;
+
+        calendar = Calendar.getInstance();
+        calendar.setTimeInMillis(selectedValue);
+
+        year = calendar.get(Calendar.YEAR);
+        monthOfYear = calendar.get(Calendar.MONTH);
+        dayOfMonth = calendar.get(Calendar.DAY_OF_MONTH);
+        hourOfDay = calendar.get(Calendar.HOUR_OF_DAY);
+        minute = calendar.get(Calendar.MINUTE);
+
+    }
+
+    public void getDateDialog(){
+        DialogFragment datePicker = DatePickerFragment.getNewInstance(year, monthOfYear, dayOfMonth, this);
+        datePicker.show(activity.getFragmentManager(), "datePicker");
+    }
+
+    public void getTimeDialog(){
+        DialogFragment timePicker = TimePickerFragment.getNewInstance(hourOfDay, minute, this);
+        timePicker.show(activity.getFragmentManager(), "timePicker");
+    }
+
+    public long getSelectedValue(){ return this.selectedValue; }
 
     public void setAcceptBtnListener(OnClickAcceptListener acceptBtnListener) {
         this.acceptBtnListener = acceptBtnListener;
     }
 
-    public void setEditTextValue(String editTextValue) {
-        this.editTextValue = editTextValue;
-    }
-
-    @Override
-    public void onClick(View view) {
-        if (view.getId() == R.id.ccw_text_dialog_cancel_btn) {
-            dismiss();
-
-        } else if (view.getId() == R.id.ccw_text_dialog_accept_btn) {
-            if (acceptBtnListener != null)
-                acceptBtnListener.onClick(editTextView.getText().toString());
-            dismiss();
-        }
-    }
-
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-
-        FermatTextView titleTextView = (FermatTextView) findViewById(R.id.ccw_text_dialog_title);
-        titleTextView.setText(titleStringResource);
-        FermatButton acceptBtn = (FermatButton) findViewById(R.id.ccw_text_dialog_accept_btn);
-        acceptBtn.setOnClickListener(this);
-        FermatButton cancelBtn = (FermatButton) findViewById(R.id.ccw_text_dialog_cancel_btn);
-        cancelBtn.setOnClickListener(this);
-        editTextView = (FermatEditText) findViewById(R.id.ccw_text_dialog_edit_text);
-        editTextView.setHint(hintStringResource);
-        if (editTextValue != null)
-            editTextView.setText(editTextValue);
-    }
-
-    @Override
-    protected int setLayoutId() {
-        return R.layout.ccw_clause_text_dialog;
-    }
-
-    @Override
-    protected int setWindowFeature() {
-        return Window.FEATURE_NO_TITLE;
-    }
 }

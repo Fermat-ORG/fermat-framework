@@ -11,8 +11,6 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
@@ -22,9 +20,6 @@ import android.widget.Toast;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractFermatFragment;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.utils.ImagesUtils;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView;
-import com.bitdubai.fermat_android_api.ui.enums.FermatRefreshTypes;
-import com.bitdubai.fermat_android_api.ui.expandableRecicler.ExpandableRecyclerAdapter;
-import com.bitdubai.fermat_android_api.ui.fragments.FermatWalletExpandableListFragment;
 import com.bitdubai.fermat_api.layer.all_definition.enums.CryptoCurrency;
 import com.bitdubai.fermat_api.layer.all_definition.enums.FiatCurrency;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
@@ -40,18 +35,15 @@ import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_customer.interface
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 import com.bitdubai.reference_wallet.crypto_customer_wallet.R;
 import com.bitdubai.reference_wallet.crypto_customer_wallet.common.adapters.OpenNegotiationAdapter;
-import com.bitdubai.reference_wallet.crypto_customer_wallet.common.adapters.OpenNegotiationsExpandableAdapter;
 import com.bitdubai.reference_wallet.crypto_customer_wallet.common.dialogs.ClauseDateTimeDialog;
 import com.bitdubai.reference_wallet.crypto_customer_wallet.common.dialogs.ClauseTextDialog;
 import com.bitdubai.reference_wallet.crypto_customer_wallet.common.holders.open_negotiation.ClauseViewHolder;
 import com.bitdubai.reference_wallet.crypto_customer_wallet.common.holders.open_negotiation.FooterViewHolder;
 import com.bitdubai.reference_wallet.crypto_customer_wallet.common.models.BrokerCurrencyQuotation;
 import com.bitdubai.reference_wallet.crypto_customer_wallet.common.models.BrokerCurrencyQuotationImpl;
-import com.bitdubai.reference_wallet.crypto_customer_wallet.common.models.GrouperItem;
 import com.bitdubai.reference_wallet.crypto_customer_wallet.common.models.TestData;
 import com.bitdubai.reference_wallet.crypto_customer_wallet.fragments.common.SimpleListDialogFragment;
 import com.bitdubai.reference_wallet.crypto_customer_wallet.session.CryptoCustomerWalletSession;
-import com.bitdubai.reference_wallet.crypto_customer_wallet.util.CommonLogger;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
@@ -150,7 +142,6 @@ public class OpenNegotiationDetailsFragment extends AbstractFermatFragment<Crypt
         SimpleListDialogFragment dialogFragment;
         final ClauseType type = clause.getType();
         ClauseTextDialog clauseTextDialog = null;
-        ClauseDateTimeDialog ClauseDateTimeDialog = null;
         switch (type) {
             case BROKER_CURRENCY:
                 dialogFragment = new SimpleListDialogFragment<>();
@@ -172,6 +163,7 @@ public class OpenNegotiationDetailsFragment extends AbstractFermatFragment<Crypt
                 });
 
                 clauseTextDialog.setEditTextValue(clause.getValue());
+
                 clauseTextDialog.configure(
                         type.equals(ClauseType.EXCHANGE_RATE) ? R.string.ccw_your_exchange_rate : R.string.ccw_amount_to_buy,
                         type.equals(ClauseType.EXCHANGE_RATE) ? R.string.amount : R.string.ccw_value);
@@ -206,37 +198,67 @@ public class OpenNegotiationDetailsFragment extends AbstractFermatFragment<Crypt
                 break;
 
             case CUSTOMER_DATE_TIME_TO_DELIVER:
-                ClauseDateTimeDialog = new ClauseDateTimeDialog(getActivity(), appSession, appResourcesProviderManager);
 
-                ClauseDateTimeDialog.setAcceptBtnListener(new ClauseDateTimeDialog.OnClickAcceptListener() {
-                    @Override
-                    public void onClick(String newValue) {
-                        putClause(clause, newValue);
-                    }
-                });
 
-                ClauseDateTimeDialog.setEditTextValue(clause.getValue());
-                ClauseDateTimeDialog.configure(
-                        type.equals(ClauseType.EXCHANGE_RATE) ? R.string.ccw_your_exchange_rate : R.string.ccw_amount_to_buy,
-                        type.equals(ClauseType.EXCHANGE_RATE) ? R.string.amount : R.string.ccw_value);
+                ClauseDateTimeDialog clauseDateTimeDialog = new ClauseDateTimeDialog(getActivity());
+                String afterDateTime = clause.getValue();
 
-                ClauseDateTimeDialog.show();
+                Toast.makeText(getActivity(), afterDateTime, Toast.LENGTH_LONG).show();
+                if(triggerView.getId() == R.id.ccw_date_value){
+                    clauseDateTimeDialog.getDateDialog();
+
+                    clauseDateTimeDialog.setAcceptBtnListener(new ClauseDateTimeDialog.OnClickAcceptListener() {
+                        @Override
+                        public void onClick(long newValue) {
+
+                            Toast.makeText(getActivity(), " Date: " + String.valueOf(newValue), Toast.LENGTH_LONG).show();
+                            putClause(clause, String.valueOf(newValue));
+                            adapter.changeDataSet(negotiationInfo);
+
+                        }
+                    });
+                }else if(triggerView.getId() == R.id.ccw_time_value){
+                    clauseDateTimeDialog.getTimeDialog();
+
+                    clauseDateTimeDialog.setAcceptBtnListener(new ClauseDateTimeDialog.OnClickAcceptListener() {
+                        @Override
+                        public void onClick(long newValue) {
+
+                            Toast.makeText(getActivity(), " Time: " + String.valueOf(newValue), Toast.LENGTH_LONG).show();
+                            putClause(clause, String.valueOf(newValue));
+                            adapter.changeDataSet(negotiationInfo);
+
+                        }
+                    });
+                }else{
+                    Toast.makeText(getActivity(), "PROCESS NO FOUNT", Toast.LENGTH_LONG).show();
+                }
+
+                /*ClauseDateTimeDialog clauseDateTimeDialog = new ClauseDateTimeDialog(getActivity());
+                String afterDateTime = clause.getValue();
+                long newValue = 0;
+
+                if(triggerView.getId() == R.id.ccw_date_value){
+                    clauseDateTimeDialog.getDateDialog();
+                }else if(triggerView.getId() == R.id.ccw_time_value){
+                    clauseDateTimeDialog.getTimeDialog();
+                }else{
+                    Toast.makeText(getActivity(), "PROCESS NO FOUNT", Toast.LENGTH_LONG).show();
+                }
+
+                newValue = clauseDateTimeDialog.getSelectedValue();
+                if(newValue != 0){
+                    Toast.makeText(getActivity(), afterDateTime + " | " +String.valueOf(newValue), Toast.LENGTH_LONG).show();
+                    putClause(clause,String.valueOf(newValue));
+                    adapter.changeDataSet(negotiationInfo);
+                }else{
+                    Toast.makeText(getActivity(), "VALUE IS ZERO", Toast.LENGTH_LONG).show();
+                }*/
+
                 break;
 
             case BROKER_DATE_TIME_TO_DELIVER:
-                ClauseDateTimeDialog = new ClauseDateTimeDialog(getActivity(), appSession, appResourcesProviderManager);
 
-                ClauseDateTimeDialog.setAcceptBtnListener(new ClauseDateTimeDialog.OnClickAcceptListener(){
-                    @Override
-                    public void onClick(String newValue) { putClause(clause, newValue); }
-                });
-
-                ClauseDateTimeDialog.setEditTextValue(clause.getValue());
-                ClauseDateTimeDialog.configure(
-                        type.equals(ClauseType.EXCHANGE_RATE) ? R.string.ccw_your_exchange_rate : R.string.ccw_amount_to_buy,
-                        type.equals(ClauseType.EXCHANGE_RATE) ? R.string.amount : R.string.ccw_value);
-
-                ClauseDateTimeDialog.show();
                 break;
 
             default:
