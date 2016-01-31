@@ -5071,17 +5071,17 @@
                         <step id="3" type="direct call" name="Bank Money Restock"></step>
                     </next>
                 </step>
-                <step id="4" title="CBP-Business Transaction-Bank Money Restock" description="The transactional agent start to review the records according to the transaction status to proceed with the flow." type="activity" platform="CBP" name="Bank Money Restock" layer="Stock Transactions" component="Plugin">
+                <step id="3" title="CBP-Business Transaction-Bank Money Restock" description="The transactional agent start to review the records according to the transaction status to proceed with the flow." type="activity" platform="CBP" name="Bank Money Restock" layer="Stock Transactions" component="Plugin">
                     <next>
-                        <step id="5" type="direct call" name="Hold"></step>
+                        <step id="4" type="direct call" name="Hold"></step>
                     </next>
                 </step>
-                <step id="5" title="BNK-Bank Hold Transaction" description="Records the transaction and generates a debit to the Available Balance." type="activity" platform="BNK" name="Hold" layer="Bank Money Transaction" component="Plugin">
+                <step id="4" title="BNK-Bank Hold Transaction" description="Records the transaction and generates a debit to the Available Balance." type="activity" platform="BNK" name="Hold" layer="Bank Money Transaction" component="Plugin">
                     <next>
-                        <step id="6" type="direct call" name="Crypto Broker"></step>
+                        <step id="5" type="direct call" name="Crypto Broker"></step>
                     </next>
                 </step>
-                <step id="6" title="CBP-Wallet-Crypto Broker" description="Booked and credit records Available" type="activity" platform="CBP" name="Crypto Broker" layer="Wallet" component="Plugin"> </step>
+                <step id="5" title="CBP-Wallet-Crypto Broker" description="Booked and credit records Available" type="activity" platform="CBP" name="Crypto Broker" layer="Wallet" component="Plugin"> </step>
             </steps>
         </process>
         <process platform="CBP" name="Bank Account Destock">
@@ -6925,7 +6925,7 @@
          component="Plugin"
          >
          <next>
-             <step id="3" type="direct call"></step>
+             <step id="4" type="direct call"></step>
          </next>
      </step>
      <step id="4"	title="Creates the Intra User Identity"
