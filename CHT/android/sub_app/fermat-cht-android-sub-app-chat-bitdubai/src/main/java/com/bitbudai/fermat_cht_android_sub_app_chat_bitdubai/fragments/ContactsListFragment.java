@@ -314,7 +314,8 @@ public class ContactsListFragment extends AbstractFermatFragment {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == R.id.menu_add_contact) {
-            changeActivity(Activities.CHT_CHAT_OPEN_CONTACTLIST, appSession.getAppPublicKey());
+            System.out.println("\n\ngetAppPublicKey:\n\n" + appSession.getAppPublicKey().toString());
+            changeActivity(Activities.CHT_CHAT_EDIT_CONTACT, appSession.getAppPublicKey());
         }
 
         return true;
