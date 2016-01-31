@@ -200,7 +200,7 @@ public class OpenNegotiationDetailsFragment extends AbstractFermatFragment<Crypt
 
             case CUSTOMER_DATE_TIME_TO_DELIVER:
 
-                clauseDateTimeDialog = new ClauseDateTimeDialog(getActivity());
+                clauseDateTimeDialog = new ClauseDateTimeDialog(getActivity(), Long.valueOf(clause.getValue()));
 
                 if(triggerView.getId() == R.id.ccw_date_value){
                     clauseDateTimeDialog.getDateDialog();
@@ -235,7 +235,8 @@ public class OpenNegotiationDetailsFragment extends AbstractFermatFragment<Crypt
                 break;
 
             case BROKER_DATE_TIME_TO_DELIVER:
-                clauseDateTimeDialog = new ClauseDateTimeDialog(getActivity());
+
+                clauseDateTimeDialog = new ClauseDateTimeDialog(getActivity(),Long.valueOf(clause.getValue()));
 
                 if(triggerView.getId() == R.id.ccw_date_value){
                     clauseDateTimeDialog.getDateDialog();

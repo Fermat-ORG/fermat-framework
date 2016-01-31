@@ -2,7 +2,6 @@ package com.bitdubai.reference_wallet.crypto_customer_wallet.common.dialogs;
 
 import android.app.Activity;
 import android.app.DialogFragment;
-import android.view.View;
 
 import com.bitdubai.reference_wallet.crypto_customer_wallet.fragments.common.DatePickerFragment;
 import com.bitdubai.reference_wallet.crypto_customer_wallet.fragments.common.TimePickerFragment;
@@ -25,27 +24,12 @@ public class ClauseDateTimeDialog implements DatePickerFragment.SelectedDate, Ti
         void getDate(long selectedValue);
     }
 
-    /*private OnClickAcceptListener acceptBtnListener;
-
-    public interface OnClickAcceptListener {
-        void onClick(long selectedValue);
-    }*/
-
-
-
-    public ClauseDateTimeDialog(Activity activity){
+    public ClauseDateTimeDialog(Activity activity, long timeInMillis){
 
         this.activity = activity;
 
-        bind(System.currentTimeMillis());
+        bind(timeInMillis);
     }
-
-    /*
-    @Override
-    public void onClick(View view) {
-        if (acceptBtnListener != null)
-            acceptBtnListener.onClick(selectedValue);
-    }*/
 
     @Override
     public void getDate(int year, int monthOfYear, int dayOfMonth) {
@@ -99,22 +83,6 @@ public class ClauseDateTimeDialog implements DatePickerFragment.SelectedDate, Ti
         TimePickerFragment timePicker = TimePickerFragment.getNewInstance(hourOfDay, minute, this);
         timePicker.show(activity.getFragmentManager(), "timePicker");
     }
-
-    /*public void getDateDialog(){
-        DialogFragment datePicker = DatePickerFragment.getNewInstance(year, monthOfYear, dayOfMonth, this);
-        datePicker.show(activity.getFragmentManager(), "datePicker");
-    }
-
-    public void getTimeDialog(){
-        DialogFragment timePicker = TimePickerFragment.getNewInstance(hourOfDay, minute, this);
-        timePicker.show(activity.getFragmentManager(), "timePicker");
-    }*/
-
-    public long getSelectedValue(){ return this.selectedValue; }
-
-    /*public void setAcceptBtnListener(OnClickAcceptListener acceptBtnListener) {
-        this.acceptBtnListener = acceptBtnListener;
-    }*/
 
     public void setAcceptBtnListener(OnClickAcceptListener acceptBtnListener) {
         this.acceptBtnListener = acceptBtnListener;
