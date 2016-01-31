@@ -102,6 +102,7 @@ public class ContractDetailActivityFragment extends AbstractFermatFragment<Crypt
             errorManager = appSession.getErrorManager();
             //TODO: load contract here
             data=(ContractBasicInformation) appSession.getData("contract_data");
+            appSession.setData("ContractDetailFragment", this);
 
         } catch (Exception e) {
             Log.e(TAG, e.getMessage(), e);

@@ -17,6 +17,7 @@ import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginTextFile;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantCreateFileException;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantPersistFileException;
 import com.bitdubai.fermat_api.layer.world.interfaces.Currency;
+import com.bitdubai.fermat_cbp_api.all_definition.contract.Contract;
 import com.bitdubai.fermat_cbp_api.all_definition.contract.ContractClause;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.ClauseType;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.ContractDetailType;
@@ -33,6 +34,7 @@ import com.bitdubai.fermat_cbp_api.layer.actor.crypto_broker.interfaces.ActorExt
 import com.bitdubai.fermat_cbp_api.layer.actor.crypto_broker.interfaces.ActorExtraDataManager;
 import com.bitdubai.fermat_cbp_api.layer.actor.crypto_broker.interfaces.QuotesExtraData;
 import com.bitdubai.fermat_cbp_api.layer.business_transaction.common.exceptions.CantSendPaymentException;
+import com.bitdubai.fermat_cbp_api.layer.business_transaction.common.mocks.CustomerBrokerContractPurchaseManagerMock;
 import com.bitdubai.fermat_cbp_api.layer.business_transaction.common.mocks.CustomerBrokerContractPurchaseMock;
 import com.bitdubai.fermat_cbp_api.layer.contract.customer_broker_purchase.exceptions.CantGetListCustomerBrokerContractPurchaseException;
 import com.bitdubai.fermat_cbp_api.layer.contract.customer_broker_purchase.interfaces.CustomerBrokerContractPurchase;
@@ -792,12 +794,32 @@ public class CryptoCustomerWalletModuleCryptoCustomerWalletManager implements Cr
 
     /**
      * This method send a payment according the contract elements.
-     * @param walletPublicKey
      * @param contractHash
      * @throws CantSendPaymentException
      */
     @Override
-    public void sendPayment(String walletPublicKey, String contractHash) throws CantSendPaymentException {
+    public void sendPayment(String contractHash) throws CantSendPaymentException {
+        try{
+            CustomerBrokerContractPurchase customerBrokerContractPurchase;
+            //TODO: This is the real implementation
+            /*customerBrokerContractPurchase =
+                    this.customerBrokerContractPurchaseManager.
+                            getCustomerBrokerContractPurchaseForContractId(contractHash);*/
+            //TODO: for testing
+            CustomerBrokerContractPurchaseManager customerBrokerContractPurchaseManagerMock=
+                    new CustomerBrokerContractPurchaseManagerMock();
+            customerBrokerContractPurchase =
+                    customerBrokerContractPurchaseManagerMock.
+                            getCustomerBrokerContractPurchaseForContractId(contractHash);
+            //End of Mock testing
+            System.out.println("From module:"+customerBrokerContractPurchase);
+
+        } catch (CantGetListCustomerBrokerContractPurchaseException e) {
+            throw new CantSendPaymentException(
+                    e,
+                    "Cannot send the payment",
+                    "Cannot get the contract");
+        }
 
     }
 
