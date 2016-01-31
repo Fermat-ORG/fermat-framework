@@ -16,6 +16,7 @@ import com.bitdubai.reference_wallet.crypto_customer_wallet.session.CryptoCustom
 
 /**
  * Created by Yordin Alayn on 30.01.16.
+ * Based in ClauseTextDialog of Open_negotiation by nelson
  */
 public class ClauseDateTimeDialog extends FermatDialog<CryptoCustomerWalletSession, ResourceProviderManager>
         implements View.OnClickListener {
