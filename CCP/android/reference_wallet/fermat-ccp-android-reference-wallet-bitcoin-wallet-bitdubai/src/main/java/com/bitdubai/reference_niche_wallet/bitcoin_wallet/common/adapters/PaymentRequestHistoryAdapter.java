@@ -150,6 +150,8 @@ public class PaymentRequestHistoryAdapter  extends FermatAdapter<PaymentRequest,
                 break;
 
         }
+
+
         if(data.getType() == 0) //SEND
         {
             if(data.getState() != null) {
@@ -164,6 +166,14 @@ public class PaymentRequestHistoryAdapter  extends FermatAdapter<PaymentRequest,
             if(data.getState().equals(CryptoPaymentState.APPROVED) || data.getState().equals(CryptoPaymentState.REFUSED)) {
                 holder.getLinear_layour_container_buttons().setVisibility(View.GONE);
                 holder.getLinear_layour_container_state().setVisibility(View.VISIBLE);
+
+                holder.getTxt_state().setText(state);
+                holder.getTxt_state().setTypeface(tf);
+            }
+            else
+            {
+                holder.getLinear_layour_container_buttons().setVisibility(View.VISIBLE);
+                holder.getLinear_layour_container_state().setVisibility(View.GONE);
 
                 holder.getTxt_state().setText(state);
                 holder.getTxt_state().setTypeface(tf);
