@@ -4,20 +4,27 @@ import android.content.res.Resources;
 import android.graphics.drawable.Drawable;
 import android.support.annotation.NonNull;
 import android.text.format.DateFormat;
+import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.bitdubai.fermat_android_api.layer.definition.wallet.utils.ImagesUtils;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatButton;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView;
 import com.bitdubai.fermat_android_api.ui.holders.FermatViewHolder;
+import com.bitdubai.fermat_api.FermatException;
+import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Wallets;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.ContractDetailType;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.ContractStatus;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.common.interfaces.ContractBasicInformation;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_customer.interfaces.CryptoCustomerWalletManager;
+import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedWalletExceptionSeverity;
+import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 import com.bitdubai.reference_wallet.crypto_customer_wallet.R;
 import com.bitdubai.reference_wallet.crypto_customer_wallet.common.models.ContractDetail;
+import com.bitdubai.reference_wallet.crypto_customer_wallet.fragments.contract_detail.ContractDetailActivityFragment;
 
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
@@ -36,6 +43,7 @@ public class ContractDetailViewHolder extends FermatViewHolder {
      */
     protected UUID contractId;
     protected CryptoCustomerWalletManager walletManager;
+    private ContractDetailActivityFragment parentFragment;
 
     public ImageView customerImage;
     public ImageView stepNumber;
@@ -48,6 +56,8 @@ public class ContractDetailViewHolder extends FermatViewHolder {
     public FermatButton textButton;
     public FermatButton confirmButton;
     protected int itemPosition;
+
+    ErrorManager errorManager;
     /**
      * Constructor
      *
@@ -77,9 +87,8 @@ public class ContractDetailViewHolder extends FermatViewHolder {
         confirmButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                //confirmButton.setText(view.getParent()+"");
-                //System.out.println("CONTRACT DETAIL ITEM: " + confirmButton.getText());
-                executeContractAction(confirmButton.getText().toString());
+                String buttonTest = confirmButton.getText().toString();
+                executeContractAction(buttonTest);
             }
         });
     }
@@ -87,10 +96,33 @@ public class ContractDetailViewHolder extends FermatViewHolder {
     protected void executeContractAction(String buttonText){
         if(buttonText.equals("SEND")){
             //TODO: Send Payment
+            //In this case, I will send the payment to Broker
+            try{
+                this.walletManager.sendPayment(this.contractId.toString());
+            } catch (FermatException ex) {
+                Toast.makeText(this.parentFragment.getActivity(), "Oops a error occurred...", Toast.LENGTH_SHORT).show();
+
+                Log.e(this.parentFragment.getTag(), ex.getMessage(), ex);
+                if (errorManager != null) {
+                    errorManager.reportUnexpectedWalletException(
+                            Wallets.CBP_CRYPTO_BROKER_WALLET,
+                            UnexpectedWalletExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT,
+                            ex);
+                }
+            }
         }
         if(buttonText.equals("CONFIRM")){
             //TODO: Ack Merchandise
+            //In this case, I will send the payment to Customer
         }
+    }
+
+    public void setErrorManager(ErrorManager errorManager){
+
+    }
+
+    public void setParentFragment(ContractDetailActivityFragment parentFragment){
+        this.parentFragment=parentFragment;
     }
 
     public void setWalletModuleManager(CryptoCustomerWalletManager walletManager){

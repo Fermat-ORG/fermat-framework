@@ -792,12 +792,11 @@ public class CryptoCustomerWalletModuleCryptoCustomerWalletManager implements Cr
 
     /**
      * This method send a payment according the contract elements.
-     * @param walletPublicKey
      * @param contractHash
      * @throws CantSendPaymentException
      */
     @Override
-    public void sendPayment(String walletPublicKey, String contractHash) throws CantSendPaymentException {
+    public void sendPayment(String contractHash) throws CantSendPaymentException {
 
     }
 

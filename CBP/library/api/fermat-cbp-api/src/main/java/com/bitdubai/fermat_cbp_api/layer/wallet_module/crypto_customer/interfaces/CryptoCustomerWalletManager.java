@@ -198,10 +198,9 @@ public interface CryptoCustomerWalletManager extends WalletManager {
 
     /**
      * This method send a payment according the contract elements.
-     * @param walletPublicKey
      * @param contractHash
      */
-    void sendPayment(String walletPublicKey, String contractHash) throws CantSendPaymentException;
+    void sendPayment(String contractHash) throws CantSendPaymentException;
 
     /**
      * This method returns a string with the currency code.
