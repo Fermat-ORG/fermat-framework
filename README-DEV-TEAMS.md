@@ -215,6 +215,7 @@ We would be grateful for any help received, and anyone interested in joining the
 <br/>
 ### Mordor Team:
 -----------------------------------
+### ![alt text](https://raw.githubusercontent.com/bitDubai/media-kit/1479ec1f2e93a1b11f0f1ac9e312099f08aa7aec/Logotype/FermatTeams/logo_mordor_team.jpg "Logo Mordor Team")
 We are putting together a team of talented developers, especially passionate about the implementation of major challenges, in order to carry out our goals and collaborate with other teams on their goals.
 
 In the Crypto Broker Platform we are responsible for a large part of business transactions, while in the Chat Platform we are developing the back end. In each platform mentioned, we are involved in the development of Network Services and transactional plugins.
@@ -258,6 +259,7 @@ This is a team full of manga, anime, comics, sci-fi and Tolkien fans, also we re
 <br/>
 ### Kabuto Team:
 -----------------------------------
+### ![alt text](https://raw.githubusercontent.com/bitDubai/media-kit/1479ec1f2e93a1b11f0f1ac9e312099f08aa7aec/Logotype/FermatTeams/logo_kabuto_team.jpg "Logo Kabuto Team")
 Passionate about technologies, programming for us is part of our life and virtues, using as always ethical management best practices for writing our code.
 
 In the Crypto Broker Platform we are responsible for a large part of user level business transactions, wallet and module, while in the Chat Platform we are developing the back end.
