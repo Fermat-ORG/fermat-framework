@@ -142,6 +142,7 @@ public class OpenNegotiationDetailsFragment extends AbstractFermatFragment<Crypt
         SimpleListDialogFragment dialogFragment;
         final ClauseType type = clause.getType();
         ClauseTextDialog clauseTextDialog = null;
+        ClauseDateTimeDialog clauseDateTimeDialog = null;
         switch (type) {
             case BROKER_CURRENCY:
                 dialogFragment = new SimpleListDialogFragment<>();
@@ -199,7 +200,7 @@ public class OpenNegotiationDetailsFragment extends AbstractFermatFragment<Crypt
 
             case CUSTOMER_DATE_TIME_TO_DELIVER:
 
-                ClauseDateTimeDialog clauseDateTimeDialog = new ClauseDateTimeDialog(getActivity());
+                clauseDateTimeDialog = new ClauseDateTimeDialog(getActivity());
 
                 if(triggerView.getId() == R.id.ccw_date_value){
                     clauseDateTimeDialog.getDateDialog();
@@ -228,12 +229,43 @@ public class OpenNegotiationDetailsFragment extends AbstractFermatFragment<Crypt
 
                     });
                 }else{
-                    Toast.makeText(getActivity(), "PROCESS NO FOUNT", Toast.LENGTH_LONG).show();
+                    Toast.makeText(getActivity(), "DATETIME DIALOG NO FOUNT", Toast.LENGTH_LONG).show();
                 }
 
                 break;
 
             case BROKER_DATE_TIME_TO_DELIVER:
+                clauseDateTimeDialog = new ClauseDateTimeDialog(getActivity());
+
+                if(triggerView.getId() == R.id.ccw_date_value){
+                    clauseDateTimeDialog.getDateDialog();
+
+                    clauseDateTimeDialog.setAcceptBtnListener(new ClauseDateTimeDialog.OnClickAcceptListener() {
+                        @Override
+                        public void getDate(long newValue) {
+
+                            putClause(clause, String.valueOf(newValue));
+                            adapter.changeDataSet(negotiationInfo);
+
+                        }
+
+                    });
+                }else if(triggerView.getId() == R.id.ccw_time_value){
+                    clauseDateTimeDialog.getTimeDialog();
+
+                    clauseDateTimeDialog.setAcceptBtnListener(new ClauseDateTimeDialog.OnClickAcceptListener() {
+                        @Override
+                        public void getDate(long newValue) {
+
+                            putClause(clause, String.valueOf(newValue));
+                            adapter.changeDataSet(negotiationInfo);
+
+                        }
+
+                    });
+                }else{
+                    Toast.makeText(getActivity(), "DATETIME DIALOG NO FOUNT", Toast.LENGTH_LONG).show();
+                }
 
                 break;
 
