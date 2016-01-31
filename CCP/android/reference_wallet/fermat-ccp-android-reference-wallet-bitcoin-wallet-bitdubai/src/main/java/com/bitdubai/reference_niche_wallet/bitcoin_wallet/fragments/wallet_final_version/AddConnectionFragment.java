@@ -316,13 +316,14 @@ public class AddConnectionFragment extends FermatWalletListFragment<CryptoWallet
                         offset);
             }
             if(data.isEmpty()){
-
-                hnadler.post(new Runnable() {
-                    @Override
-                    public void run() {
-                        new ConnectionWithCommunityDialog(getActivity(),referenceWalletSession,null).show();
-                    }
-                });
+                if(hnadler!=null) {
+                    hnadler.post(new Runnable() {
+                        @Override
+                        public void run() {
+                            new ConnectionWithCommunityDialog(getActivity(), referenceWalletSession, null).show();
+                        }
+                    });
+                }
             }
         }
         catch(Exception e){
