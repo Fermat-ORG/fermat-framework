@@ -118,7 +118,7 @@ public class ContractDetailViewHolder extends FermatViewHolder {
     }
 
     public void setErrorManager(ErrorManager errorManager){
-
+        this.errorManager=errorManager;
     }
 
     public void setParentFragment(ContractDetailActivityFragment parentFragment){
