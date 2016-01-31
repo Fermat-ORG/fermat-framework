@@ -12,7 +12,7 @@ import java.util.Calendar;
 /**
  * Created by Yordin Alayn on 30/01/16.
  */
-public class ClauseDateTimeDialog implements DatePickerFragment.SelectedDate, TimePickerFragment.SelectedTime, View.OnClickListener{
+public class ClauseDateTimeDialog implements DatePickerFragment.SelectedDate, TimePickerFragment.SelectedTime/*, View.OnClickListener*/{
 
     private Activity activity;
     private Calendar calendar;
@@ -22,8 +22,16 @@ public class ClauseDateTimeDialog implements DatePickerFragment.SelectedDate, Ti
     private OnClickAcceptListener acceptBtnListener;
 
     public interface OnClickAcceptListener {
-        void onClick(long selectedValue);
+        void getDate(long selectedValue);
     }
+
+    /*private OnClickAcceptListener acceptBtnListener;
+
+    public interface OnClickAcceptListener {
+        void onClick(long selectedValue);
+    }*/
+
+
 
     public ClauseDateTimeDialog(Activity activity){
 
@@ -32,11 +40,12 @@ public class ClauseDateTimeDialog implements DatePickerFragment.SelectedDate, Ti
         bind(System.currentTimeMillis());
     }
 
+    /*
     @Override
     public void onClick(View view) {
         if (acceptBtnListener != null)
             acceptBtnListener.onClick(selectedValue);
-    }
+    }*/
 
     @Override
     public void getDate(int year, int monthOfYear, int dayOfMonth) {
@@ -50,6 +59,7 @@ public class ClauseDateTimeDialog implements DatePickerFragment.SelectedDate, Ti
 
         calendar.set(year, monthOfYear, dayOfMonth, hourOfDay, minute);
         selectedValue = calendar.getTimeInMillis();
+        acceptBtnListener.getDate(selectedValue);
     }
 
     @Override
@@ -62,6 +72,7 @@ public class ClauseDateTimeDialog implements DatePickerFragment.SelectedDate, Ti
 
         calendar.set(year, monthOfYear, dayOfMonth, hourOfDay, minute);
         selectedValue = calendar.getTimeInMillis();
+        acceptBtnListener.getDate(selectedValue);
     }
 
     public void bind(long timeInMillis) {
@@ -80,6 +91,16 @@ public class ClauseDateTimeDialog implements DatePickerFragment.SelectedDate, Ti
     }
 
     public void getDateDialog(){
+        DatePickerFragment datePicker = DatePickerFragment.getNewInstance(year, monthOfYear, dayOfMonth, this);
+        datePicker.show(activity.getFragmentManager(), "datePicker");
+    }
+
+    public void getTimeDialog(){
+        TimePickerFragment timePicker = TimePickerFragment.getNewInstance(hourOfDay, minute, this);
+        timePicker.show(activity.getFragmentManager(), "timePicker");
+    }
+
+    /*public void getDateDialog(){
         DialogFragment datePicker = DatePickerFragment.getNewInstance(year, monthOfYear, dayOfMonth, this);
         datePicker.show(activity.getFragmentManager(), "datePicker");
     }
@@ -87,9 +108,13 @@ public class ClauseDateTimeDialog implements DatePickerFragment.SelectedDate, Ti
     public void getTimeDialog(){
         DialogFragment timePicker = TimePickerFragment.getNewInstance(hourOfDay, minute, this);
         timePicker.show(activity.getFragmentManager(), "timePicker");
-    }
+    }*/
 
     public long getSelectedValue(){ return this.selectedValue; }
+
+    /*public void setAcceptBtnListener(OnClickAcceptListener acceptBtnListener) {
+        this.acceptBtnListener = acceptBtnListener;
+    }*/
 
     public void setAcceptBtnListener(OnClickAcceptListener acceptBtnListener) {
         this.acceptBtnListener = acceptBtnListener;

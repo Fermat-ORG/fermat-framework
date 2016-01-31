@@ -199,8 +199,39 @@ public class OpenNegotiationDetailsFragment extends AbstractFermatFragment<Crypt
 
             case CUSTOMER_DATE_TIME_TO_DELIVER:
 
-
                 ClauseDateTimeDialog clauseDateTimeDialog = new ClauseDateTimeDialog(getActivity());
+
+                if(triggerView.getId() == R.id.ccw_date_value){
+                    clauseDateTimeDialog.getDateDialog();
+
+                    clauseDateTimeDialog.setAcceptBtnListener(new ClauseDateTimeDialog.OnClickAcceptListener() {
+                        @Override
+                        public void getDate(long newValue) {
+
+                            putClause(clause, String.valueOf(newValue));
+                            adapter.changeDataSet(negotiationInfo);
+
+                        }
+
+                    });
+                }else if(triggerView.getId() == R.id.ccw_time_value){
+                    clauseDateTimeDialog.getDateDialog();
+
+                    clauseDateTimeDialog.setAcceptBtnListener(new ClauseDateTimeDialog.OnClickAcceptListener() {
+                        @Override
+                        public void getDate(long newValue) {
+
+                            putClause(clause, String.valueOf(newValue));
+                            adapter.changeDataSet(negotiationInfo);
+
+                        }
+
+                    });
+                }else{
+                    Toast.makeText(getActivity(), "PROCESS NO FOUNT", Toast.LENGTH_LONG).show();
+                }
+
+                /*ClauseDateTimeDialog clauseDateTimeDialog = new ClauseDateTimeDialog(getActivity());
                 String afterDateTime = clause.getValue();
 
                 Toast.makeText(getActivity(), afterDateTime, Toast.LENGTH_LONG).show();
@@ -232,7 +263,7 @@ public class OpenNegotiationDetailsFragment extends AbstractFermatFragment<Crypt
                     });
                 }else{
                     Toast.makeText(getActivity(), "PROCESS NO FOUNT", Toast.LENGTH_LONG).show();
-                }
+                }*/
 
                 /*ClauseDateTimeDialog clauseDateTimeDialog = new ClauseDateTimeDialog(getActivity());
                 String afterDateTime = clause.getValue();
