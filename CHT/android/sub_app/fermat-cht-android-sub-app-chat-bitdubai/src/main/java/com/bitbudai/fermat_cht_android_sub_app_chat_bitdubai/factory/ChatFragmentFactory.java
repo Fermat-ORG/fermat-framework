@@ -26,7 +26,7 @@ public class ChatFragmentFactory extends FermatFragmentFactory<ChatSession, SubA
             throw createFragmentNotFoundException(null);
         }
         if (fragments.equals(ChatFragmentsEnumType.CHT_CHAT_OPEN_CHATLIST_TAB_FRAGMENT))
-            return ChatListFragment.newInstance();
+            return ContactsListFragment.newInstance();
         if (fragments.equals(ChatFragmentsEnumType.CHT_CHAT_OPEN_CONTACTLIST_TAB_FRAGMENT))
             return ContactsListFragment.newInstance();
         if (fragments.equals(ChatFragmentsEnumType.CHT_CHAT_OPEM_MESSAGE_LIST_FRAGMENT))

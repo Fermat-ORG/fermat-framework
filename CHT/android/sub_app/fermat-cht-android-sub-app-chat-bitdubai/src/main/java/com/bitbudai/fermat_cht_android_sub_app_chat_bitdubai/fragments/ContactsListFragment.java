@@ -10,10 +10,12 @@ import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
 import android.provider.ContactsContract;
 /*import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
 import android.support.v4.widget.CursorAdapter;*/
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.text.SpannableString;
 import android.text.TextUtils;
 import android.widget.CursorAdapter;
@@ -31,7 +33,9 @@ import com.bitdubai.fermat_api.layer.all_definition.components.enums.PlatformCom
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantGetChatException;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantGetContactException;
+import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantGetMessageException;
 import com.bitdubai.fermat_cht_api.layer.middleware.interfaces.Contact;
+import com.bitdubai.fermat_cht_api.layer.middleware.utils.ContactImpl;
 import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.ChatManager;
 import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.ChatModuleManager;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedSubAppExceptionSeverity;
@@ -74,6 +78,7 @@ import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfac
 import java.io.FileDescriptor;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -111,7 +116,7 @@ public class ContactsListFragment extends AbstractFermatFragment {
 // public ArrayList<ContactList> contactList;
     public List<Contact> contacts;
 //    private ListView contactsContainer;
-     private Contact contactl;
+     private Contact contactl;//= new Contact();
 //
 //    // Whether or not the search query has changed since the last time the loader was refreshed
 //    private boolean mSearchQueryChanged;
@@ -127,30 +132,11 @@ public class ContactsListFragment extends AbstractFermatFragment {
     private ErrorManager errorManager;
     private SettingsManager<ChatSettings> settingsManager;
     private ChatSession chatSession;
-
-;
     ListView list;
-    /*String[] contactname= new String[1];
-    Integer[] contacticon= new Integer[1];*/
     ArrayList<String> contactname=new ArrayList<String>();
     ArrayList<Integer> contacticon=new ArrayList<Integer>();
-    /*String[] contactname= new String[1];
-    Integer[] contacticon= new Integer[1];*/
-
-   /* String[] contactname={"GABRIEL",
-            "MIGUEL",
-            "FRANKLIN",
-            "MANUEL",
-            "JOSE",
-            "LUIS"};
-    Integer[] contacticon={R.drawable.ken,
-            R.drawable.sas,
-            R.drawable.koj,
-            R.drawable.veg,
-            R.drawable.ren,
-            R.drawable.pat
-    };
-*/
+    ArrayList<UUID> contactid=new ArrayList<UUID>();
+    SwipeRefreshLayout mSwipeRefreshLayout;
     //public ContactsListFragment() {}
     static void initchatinfo(){
         //   chatinfo.put(0, Arrays.asList("Miguel", "Que paso?", "12/09/2007"));
@@ -160,15 +146,6 @@ public class ContactsListFragment extends AbstractFermatFragment {
     public static ContactsListFragment newInstance() {
         initchatinfo();
         return new ContactsListFragment();}
-
-//    public void setSearchQuery(String query) {
-//        if (TextUtils.isEmpty(query)) {
-//            mIsSearchResultView = false;
-//        } else {
-//            mSearchTerm = query;
-//            mIsSearchResultView = true;
-//        }
-//    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -237,26 +214,41 @@ public class ContactsListFragment extends AbstractFermatFragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         View layout = inflater.inflate(R.layout.contact_list_fragment, container, false);
+        TextView text=(TextView) layout.findViewById(R.id.text);
+        mSwipeRefreshLayout = (SwipeRefreshLayout) layout.findViewById(R.id.swipe_container);
         try {
-            int size = chatManager.getContacts().size();
-            System.out.println("\n\nCONTACTsize:\n\n" + size);
+            ContactImpl cadded=new ContactImpl();
+            cadded.setContactId(UUID.randomUUID());
+            cadded.setAlias("joseremoto");
+            cadded.setRemoteActorPublicKey("joseremoto");
+            cadded.setRemoteActorType(PlatformComponentType.ACTOR_ASSET_USER);
+            String dateString = "30/09/2014";
+            SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
+            Date date = sdf.parse(dateString);
+            long startDate = date.getTime();
+            cadded.setCreationDate(startDate);
+            cadded.setRemoteName("joseremoto");
+            chatManager.saveContact(cadded);
             List <Contact> con=  chatManager.getContacts();
-            for(int i=0;i<=size-1;i++)
-            {
-                contactl.setAlias(con.get(i).getAlias());
-                contactl.setRemoteName(con.get(i).getRemoteName());
-                contactl.setContactId(con.get(i).getContactId());
-                contactl.setRemoteActorPublicKey(con.get(i).getRemoteActorPublicKey());
-                contactl.setRemoteActorType(con.get(i).getRemoteActorType());
-                contacticon.add(R.drawable.ic_contact_picture_holo_light);
-                contactname.add(con.get(i).getAlias());
+            int size = con.size();
+            //System.out.println("\n\nCONTACTsize:\n\n" + size);
+            if (size > 0) {
+                for (int i=0;i<size;i++){
+                    contactname.add(con.get(i).getAlias());
+                    contactid.add(con.get(i).getContactId());
+                    contacticon.add(R.drawable.ic_contact_picture_holo_light);
+                }
+                text.setVisibility(View.GONE);
+            }else{
+                text.setVisibility(View.VISIBLE);
+                text.setText("No Contacts");//Toast.makeText(getActivity(), "No Contacts", Toast.LENGTH_SHORT).show();
             }
         }catch (Exception e){
             if (errorManager != null)
                 errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
 
         }
-        ContactListAdapter adapter=new ContactListAdapter(getActivity(), contactname, contacticon);
+        ContactListAdapter adapter=new ContactListAdapter(getActivity(), contactname, contacticon, contactid);
         list=(ListView)layout.findViewById(R.id.list);
         list.setAdapter(adapter);
 
@@ -282,6 +274,43 @@ public class ContactsListFragment extends AbstractFermatFragment {
                 appSession.setData(ChatSession.CONTACT_DATA, contactl);
                 changeActivity(Activities.CHT_CHAT_OPEN_CONTACT_DETAIL, appSession.getAppPublicKey());
                 return true;
+            }
+        });
+
+        mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                new Handler().postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        System.out.println("Updated");
+                        Toast.makeText(getActivity(), "Updated", Toast.LENGTH_SHORT).show();
+
+                        try {
+                            List <Contact> con=  chatManager.getContacts();
+                            if (con.size() > 0) {
+                                for (int i=0;i<con.size();i++){
+                                    contactname.add(con.get(i).getAlias());
+                                    contactid.add(con.get(i).getContactId());
+                                    contacticon.add(R.drawable.ic_contact_picture_holo_light);
+                                }
+                                final ContactListAdapter adaptador =
+                                        new ContactListAdapter(getActivity(), contactname, contacticon, contactid);
+                               // ListView contactlist;
+                                //contactlist=(ListView) layout.findViewById(R.id.list);
+                                adaptador.refreshEvents(contactname, contacticon, contactid);
+                            }else{
+                                Toast.makeText(getActivity(), "No Contacts", Toast.LENGTH_SHORT).show();
+                            }
+                        } catch (CantGetContactException e) {
+                            e.printStackTrace();
+                        } catch (Exception e) {
+                            //TODO: fix this
+                            e.printStackTrace();
+                        }
+                        mSwipeRefreshLayout.setRefreshing(false);
+                    }
+                }, 2500);
             }
         });
 
@@ -320,6 +349,15 @@ public class ContactsListFragment extends AbstractFermatFragment {
 
         return true;
     }
+
+//    public void setSearchQuery(String query) {
+//        if (TextUtils.isEmpty(query)) {
+//            mIsSearchResultView = false;
+//        } else {
+//            mSearchTerm = query;
+//            mIsSearchResultView = true;
+//        }
+//    }
 
     /*@Override
     public void onItemClickListener(ChatManager data, int position) {

@@ -14,6 +14,7 @@ import com.bitdubai.fermat_cht_android_sub_app_chat_bitdubai.R;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 //import com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.holders.ChatsListHolder;
 
@@ -28,14 +29,17 @@ import java.util.List;
 //public class ChatListAdapter extends FermatAdapter<ChatsList, ChatHolder> {//ChatFactory
 public class ContactListAdapter extends ArrayAdapter<String> {
 
-    List<ContactList> contactsList = new ArrayList<>();
-    private final ArrayList<String> contactinfo;
-    private final ArrayList<Integer> contacticon;
 
-    public ContactListAdapter(Context context, ArrayList<String> contactinfo, ArrayList<Integer> contacticon) {
+    List<ContactList> contactsList = new ArrayList<>();
+    ArrayList<String> contactinfo=new ArrayList<String>();
+    ArrayList<Integer> contacticon=new ArrayList<Integer>();
+    ArrayList<UUID> contactid=new ArrayList<UUID>();
+
+    public ContactListAdapter(Context context, ArrayList contactinfo, ArrayList contacticon, ArrayList contactid) {
         super(context, R.layout.contact_list_item, contactinfo);
         this.contactinfo = contactinfo;
         this.contacticon = contacticon;
+        this.contactid = contactid;
     }
 
     public View getView(int position, View convertView, ViewGroup parent) {
@@ -49,6 +53,13 @@ public class ContactListAdapter extends ArrayAdapter<String> {
         contactname.setText(contactinfo.get(position));
 
         return item;
+    }
+
+    public void refreshEvents(ArrayList contactinfo, ArrayList contacticon, ArrayList contactid) {
+        this.contactinfo=contactinfo;
+        this.contacticon=contacticon;
+        this.contacticon=contacticon;
+        notifyDataSetChanged();
     }
      /*public void refreshEvents(Parameters[] datos) {
 
