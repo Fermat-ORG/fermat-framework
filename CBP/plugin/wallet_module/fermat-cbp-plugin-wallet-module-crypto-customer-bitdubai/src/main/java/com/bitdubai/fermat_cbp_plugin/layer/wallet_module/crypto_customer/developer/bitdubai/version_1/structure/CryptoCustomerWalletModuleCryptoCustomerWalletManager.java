@@ -32,6 +32,7 @@ import com.bitdubai.fermat_cbp_api.layer.actor.crypto_broker.exceptions.CantGetL
 import com.bitdubai.fermat_cbp_api.layer.actor.crypto_broker.interfaces.ActorExtraData;
 import com.bitdubai.fermat_cbp_api.layer.actor.crypto_broker.interfaces.ActorExtraDataManager;
 import com.bitdubai.fermat_cbp_api.layer.actor.crypto_broker.interfaces.QuotesExtraData;
+import com.bitdubai.fermat_cbp_api.layer.business_transaction.common.exceptions.CantSendPaymentException;
 import com.bitdubai.fermat_cbp_api.layer.business_transaction.common.mocks.CustomerBrokerContractPurchaseMock;
 import com.bitdubai.fermat_cbp_api.layer.contract.customer_broker_purchase.exceptions.CantGetListCustomerBrokerContractPurchaseException;
 import com.bitdubai.fermat_cbp_api.layer.contract.customer_broker_purchase.interfaces.CustomerBrokerContractPurchase;
@@ -786,6 +787,17 @@ public class CryptoCustomerWalletModuleCryptoCustomerWalletManager implements Cr
         } catch (CantGetListClauseException e) {
             throw new CantGetListPurchaseNegotiationsException("Cannot find clauses list");
         }
+
+    }
+
+    /**
+     * This method send a payment according the contract elements.
+     * @param walletPublicKey
+     * @param contractHash
+     * @throws CantSendPaymentException
+     */
+    @Override
+    public void sendPayment(String walletPublicKey, String contractHash) throws CantSendPaymentException {
 
     }
 

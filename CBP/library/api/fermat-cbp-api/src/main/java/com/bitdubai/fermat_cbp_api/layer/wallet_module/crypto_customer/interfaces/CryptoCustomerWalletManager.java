@@ -9,6 +9,7 @@ import com.bitdubai.fermat_cbp_api.all_definition.enums.ContractDetailType;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.CurrencyType;
 import com.bitdubai.fermat_cbp_api.all_definition.negotiation.NegotiationBankAccount;
 import com.bitdubai.fermat_cbp_api.layer.actor.crypto_broker.exceptions.CantGetListActorExtraDataException;
+import com.bitdubai.fermat_cbp_api.layer.business_transaction.common.exceptions.CantSendPaymentException;
 import com.bitdubai.fermat_cbp_api.layer.contract.customer_broker_purchase.exceptions.CantGetListCustomerBrokerContractPurchaseException;
 import com.bitdubai.fermat_cbp_api.layer.contract.customer_broker_purchase.interfaces.CustomerBrokerContractPurchase;
 import com.bitdubai.fermat_cbp_api.layer.identity.crypto_customer.exceptions.CantGetCryptoCustomerIdentityException;
@@ -194,6 +195,13 @@ public interface CryptoCustomerWalletManager extends WalletManager {
             CustomerBrokerContractPurchase customerBrokerContractPurchase,
             ContractDetailType contractDetailType) throws
             CantGetListPurchaseNegotiationsException;
+
+    /**
+     * This method send a payment according the contract elements.
+     * @param walletPublicKey
+     * @param contractHash
+     */
+    void sendPayment(String walletPublicKey, String contractHash) throws CantSendPaymentException;
 
     /**
      * This method returns a string with the currency code.

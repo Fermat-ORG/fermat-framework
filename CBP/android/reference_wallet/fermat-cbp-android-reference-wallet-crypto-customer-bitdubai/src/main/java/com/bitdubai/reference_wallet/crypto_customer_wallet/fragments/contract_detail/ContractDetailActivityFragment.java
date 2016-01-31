@@ -59,6 +59,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 
 /**
  * Created by Manuel Perez (darkpriestrelative@gmail.com) on 18/01/16.
@@ -215,7 +216,8 @@ public class ContractDetailActivityFragment extends AbstractFermatFragment<Crypt
                 "BTC Customer",
                 getByteArrayFromImageView(brokerImage),
                 1961,
-                2016);
+                2016,
+                UUID.randomUUID());
         //contractDetails.add(contractDetail);
         //Testing Broker
         contractDetail=new ContractDetail(
@@ -227,7 +229,8 @@ public class ContractDetailActivityFragment extends AbstractFermatFragment<Crypt
                 "BTC Broker",
                 getByteArrayFromImageView(brokerImage),
                 1961,
-                2016);
+                2016,
+                UUID.randomUUID());
         //contractDetails.add(contractDetail);
         /**
          * Get the wallet module manager
@@ -257,7 +260,8 @@ public class ContractDetailActivityFragment extends AbstractFermatFragment<Crypt
                         data.getCryptoCustomerAlias(),
                         data.getCryptoCustomerImage(),
                         data.getLastUpdate(),
-                        data.getExchangeRateAmount());
+                        data.getExchangeRateAmount(),
+                        data.getContractId());
                 contractDetails.add(contractDetail);
                 //Broker
                 contractDetail=new ContractDetail(
@@ -269,7 +273,8 @@ public class ContractDetailActivityFragment extends AbstractFermatFragment<Crypt
                         data.getCryptoCustomerAlias(),
                         data.getCryptoCustomerImage(),
                         data.getLastUpdate(),
-                        data.getExchangeRateAmount());
+                        data.getExchangeRateAmount(),
+                        data.getContractId());
                 contractDetails.add(contractDetail);
             } catch (Exception ex) {
                 CommonLogger.exception(TAG, ex.getMessage(), ex);
