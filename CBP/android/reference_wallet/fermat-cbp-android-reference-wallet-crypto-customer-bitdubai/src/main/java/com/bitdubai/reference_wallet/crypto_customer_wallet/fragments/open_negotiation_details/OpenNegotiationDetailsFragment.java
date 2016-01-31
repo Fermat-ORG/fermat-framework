@@ -215,7 +215,7 @@ public class OpenNegotiationDetailsFragment extends AbstractFermatFragment<Crypt
 
                     });
                 }else if(triggerView.getId() == R.id.ccw_time_value){
-                    clauseDateTimeDialog.getDateDialog();
+                    clauseDateTimeDialog.getTimeDialog();
 
                     clauseDateTimeDialog.setAcceptBtnListener(new ClauseDateTimeDialog.OnClickAcceptListener() {
                         @Override
@@ -230,61 +230,6 @@ public class OpenNegotiationDetailsFragment extends AbstractFermatFragment<Crypt
                 }else{
                     Toast.makeText(getActivity(), "PROCESS NO FOUNT", Toast.LENGTH_LONG).show();
                 }
-
-                /*ClauseDateTimeDialog clauseDateTimeDialog = new ClauseDateTimeDialog(getActivity());
-                String afterDateTime = clause.getValue();
-
-                Toast.makeText(getActivity(), afterDateTime, Toast.LENGTH_LONG).show();
-                if(triggerView.getId() == R.id.ccw_date_value){
-                    clauseDateTimeDialog.getDateDialog();
-
-                    clauseDateTimeDialog.setAcceptBtnListener(new ClauseDateTimeDialog.OnClickAcceptListener() {
-                        @Override
-                        public void onClick(long newValue) {
-
-                            Toast.makeText(getActivity(), " Date: " + String.valueOf(newValue), Toast.LENGTH_LONG).show();
-                            putClause(clause, String.valueOf(newValue));
-                            adapter.changeDataSet(negotiationInfo);
-
-                        }
-                    });
-                }else if(triggerView.getId() == R.id.ccw_time_value){
-                    clauseDateTimeDialog.getTimeDialog();
-
-                    clauseDateTimeDialog.setAcceptBtnListener(new ClauseDateTimeDialog.OnClickAcceptListener() {
-                        @Override
-                        public void onClick(long newValue) {
-
-                            Toast.makeText(getActivity(), " Time: " + String.valueOf(newValue), Toast.LENGTH_LONG).show();
-                            putClause(clause, String.valueOf(newValue));
-                            adapter.changeDataSet(negotiationInfo);
-
-                        }
-                    });
-                }else{
-                    Toast.makeText(getActivity(), "PROCESS NO FOUNT", Toast.LENGTH_LONG).show();
-                }*/
-
-                /*ClauseDateTimeDialog clauseDateTimeDialog = new ClauseDateTimeDialog(getActivity());
-                String afterDateTime = clause.getValue();
-                long newValue = 0;
-
-                if(triggerView.getId() == R.id.ccw_date_value){
-                    clauseDateTimeDialog.getDateDialog();
-                }else if(triggerView.getId() == R.id.ccw_time_value){
-                    clauseDateTimeDialog.getTimeDialog();
-                }else{
-                    Toast.makeText(getActivity(), "PROCESS NO FOUNT", Toast.LENGTH_LONG).show();
-                }
-
-                newValue = clauseDateTimeDialog.getSelectedValue();
-                if(newValue != 0){
-                    Toast.makeText(getActivity(), afterDateTime + " | " +String.valueOf(newValue), Toast.LENGTH_LONG).show();
-                    putClause(clause,String.valueOf(newValue));
-                    adapter.changeDataSet(negotiationInfo);
-                }else{
-                    Toast.makeText(getActivity(), "VALUE IS ZERO", Toast.LENGTH_LONG).show();
-                }*/
 
                 break;
 
