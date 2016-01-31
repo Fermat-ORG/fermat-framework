@@ -88,6 +88,7 @@ public class UserMainActivityFragment extends FermatWalletListFragment<DigitalAs
             settingsManager = appSession.getModuleManager().getSettingsManager();
 
             digitalAssets = (List) getMoreDataAsync(FermatRefreshTypes.NEW, 0);
+            appSession.setData("redeem_points", null);
         } catch (Exception ex) {
             CommonLogger.exception(TAG, ex.getMessage(), ex);
             if (errorManager != null)
@@ -146,10 +147,10 @@ public class UserMainActivityFragment extends FermatWalletListFragment<DigitalAs
                     .setImageLeft(R.drawable.asset_user_identity)
                     .setVIewColor(R.color.dap_user_view_color)
                     .setTitleTextColor(R.color.dap_user_view_color)
-                    .setTextNameLeft("Asset User")
-                    .setSubTitle("Welcome to the Asset User Wallet.")
-                    .setBody("From this wallet you will be able to redeem your assets or even get the monetary value associated with them.")
-                    .setTextFooter("We will be creating an avatar for you in order to identify you in the system as an Asset User. You will be able to edit this information at the Asset User Identity sub app.")
+                    .setTextNameLeft(R.string.dap_user_wallet_welcome_name_left)
+                    .setSubTitle(R.string.dap_user_wallet_welcome_subTitle)
+                    .setBody(R.string.dap_user_wallet_welcome_body)
+                    .setTextFooter(R.string.dap_user_wallet_welcome_Footer)
                     .setTemplateType((moduleManager.getActiveAssetUserIdentity() == null) ? PresentationDialog.TemplateType.DAP_TYPE_PRESENTATION : PresentationDialog.TemplateType.TYPE_PRESENTATION_WITHOUT_IDENTITIES)
                     .setIsCheckEnabled(checkButton)
                     .build();

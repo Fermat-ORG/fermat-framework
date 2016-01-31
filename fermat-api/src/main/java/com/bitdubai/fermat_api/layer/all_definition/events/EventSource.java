@@ -43,6 +43,7 @@ public enum EventSource implements FermatEnum {
     OUTGOING_INTRA_USER                     ("OIU"),
     INCOMING_INTRA_USER                     ("IIU"),
     MIDDLEWARE_APP_RUNTIME_PLUGIN           ("MAR"),
+    MIDDLEWARE_CHAT_MANAGER                 ("MWCM"),
     MIDDLEWARE_MONEY_REQUEST_PLUGIN         ("MMR"),
     MIDDLEWARE_WALLET_CONTACTS_PLUGIN       ("MWC"),
     MIDDLEWARE_WALLET_PLUGIN                ("MW0"),
@@ -107,6 +108,7 @@ public enum EventSource implements FermatEnum {
             case "IEU":    return INCOMING_EXTRA_USER;
             case "IIU":    return INCOMING_INTRA_USER;
             case "MAR":    return MIDDLEWARE_APP_RUNTIME_PLUGIN;
+            case "MWCM":   return MIDDLEWARE_CHAT_MANAGER;
             case "MMR":    return MIDDLEWARE_MONEY_REQUEST_PLUGIN;
             case "MWC":    return MIDDLEWARE_WALLET_CONTACTS_PLUGIN;
             case "MW0":    return MIDDLEWARE_WALLET_PLUGIN;

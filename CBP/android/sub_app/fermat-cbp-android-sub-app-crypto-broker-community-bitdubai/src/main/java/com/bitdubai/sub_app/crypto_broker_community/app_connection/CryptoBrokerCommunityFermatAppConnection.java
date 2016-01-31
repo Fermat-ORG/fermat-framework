@@ -52,6 +52,7 @@ public class CryptoBrokerCommunityFermatAppConnection extends AppConnections{
 
     @Override
     public AbstractFermatSession getSession() {
+
         return new CryptoBrokerCommunitySubAppSession();
     }
 

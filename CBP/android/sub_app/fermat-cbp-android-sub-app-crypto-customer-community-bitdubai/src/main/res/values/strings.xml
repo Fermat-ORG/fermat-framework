@@ -1,7 +1,16 @@
 <resources>
-    <string name="app_name">Crypto Broker Community</string>
+    <string name="app_name">fermat-dmp-android-intra-user-bitdubai</string>
 
-<!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="hello_world">Hello world!</string>
     <string name="action_settings">Settings</string>
+    <string name="description_search">Search</string>
+    <string name="wallet_icon">wallet icon</string>
+    <string name="wallet_installs">Installed</string>
+    <string name="wallet_status_install">INSTALL</string>
+    <string name="wallet_status_installed">INSTALLED</string>
+    <string name="wallet_status_uninstall">UNINSTALL</string>
+    <string name="wallet_status_upgrade">UPGRADE</string>
+    <string name="wallet_status_open">UPGRADE</string>
+    <string name="wallet_more_details_button">READ MORE</string>
+    <string name="no_preview_images">No Preview Images</string>
 </resources>

@@ -144,6 +144,7 @@ public class AccountDetailFragment extends FermatWalletListFragment<BankMoneyTra
 
     private void configureToolbar() {
         getToolbar().setBackgroundColor(getResources().getColor(R.color.background_header_navy));
+        getToolbar().getMenu().clear();
     }
 
     @Override

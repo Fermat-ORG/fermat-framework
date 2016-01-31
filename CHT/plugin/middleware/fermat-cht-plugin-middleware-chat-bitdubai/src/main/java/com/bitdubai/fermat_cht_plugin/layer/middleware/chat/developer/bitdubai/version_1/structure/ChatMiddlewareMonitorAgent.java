@@ -30,13 +30,14 @@ import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantSetObjectExcept
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.UnexpectedResultReturnedFromDatabaseException;
 import com.bitdubai.fermat_cht_api.layer.middleware.interfaces.Chat;
 import com.bitdubai.fermat_cht_api.layer.middleware.interfaces.Message;
+import com.bitdubai.fermat_cht_api.layer.middleware.interfaces.MiddlewareChatManager;
 import com.bitdubai.fermat_cht_api.layer.middleware.utils.EventRecord;
 import com.bitdubai.fermat_cht_api.layer.middleware.utils.MessageImpl;
 import com.bitdubai.fermat_cht_api.layer.network_service.chat.enums.ChatMessageStatus;
 import com.bitdubai.fermat_cht_api.layer.network_service.chat.enums.DistributionStatus;
 import com.bitdubai.fermat_cht_api.layer.network_service.chat.exceptions.CantSendChatMessageMetadataException;
 import com.bitdubai.fermat_cht_api.layer.network_service.chat.exceptions.CantSendChatMessageNewStatusNotificationException;
-import com.bitdubai.fermat_cht_api.layer.network_service.chat.interfaces.ChatManager;
+import com.bitdubai.fermat_cht_api.layer.network_service.chat.interfaces.NetworkServiceChatManager;
 import com.bitdubai.fermat_cht_api.layer.network_service.chat.interfaces.ChatMetadata;
 import com.bitdubai.fermat_cht_plugin.layer.middleware.chat.developer.bitdubai.version_1.ChatMiddlewarePluginRoot;
 import com.bitdubai.fermat_cht_plugin.layer.middleware.chat.developer.bitdubai.version_1.database.ChatMiddlewareDatabaseConstants;
@@ -74,20 +75,23 @@ public class ChatMiddlewareMonitorAgent implements
     ErrorManager errorManager;
     PluginDatabaseSystem pluginDatabaseSystem;
     UUID pluginId;
-    ChatManager chatNetworkServiceManager;
+    NetworkServiceChatManager chatNetworkServiceManager;
+    MiddlewareChatManager chatMiddlewareManager;
 
     public ChatMiddlewareMonitorAgent(PluginDatabaseSystem pluginDatabaseSystem,
                                     LogManager logManager,
                                     ErrorManager errorManager,
                                     EventManager eventManager,
                                     UUID pluginId,
-                                    ChatManager chatNetworkServiceManager) throws CantSetObjectException {
+                                    NetworkServiceChatManager chatNetworkServiceManager,
+                                      MiddlewareChatManager chatMiddlewareManager) throws CantSetObjectException {
         this.eventManager = eventManager;
         this.pluginDatabaseSystem = pluginDatabaseSystem;
         this.errorManager = errorManager;
         this.pluginId = pluginId;
         this.logManager=logManager;
         this.chatNetworkServiceManager=chatNetworkServiceManager;
+        this.chatMiddlewareManager = chatMiddlewareManager;
     }
 
     @Override
@@ -346,6 +350,8 @@ public class ChatMiddlewareMonitorAgent implements
                         //If message exists in database, this message will be update
                         saveMessage(incomingChatMetadata);
                         chatNetworkServiceManager.confirmReception(pendingTransaction.getTransactionID());
+                        //TODO TEST NOTIFICATION TO PIP
+                      //  chatMiddlewareManager.notificationNewIncomingMessage(chatNetworkServiceManager.getNetWorkServicePublicKey(),"New Message",incomingChatMetadata.getMessage());
                         chatNetworkServiceManager.sendChatMessageNewStatusNotification(
                                 chatNetworkServiceManager.getNetWorkServicePublicKey(),
                                 PlatformComponentType.NETWORK_SERVICE,
@@ -396,6 +402,12 @@ public class ChatMiddlewareMonitorAgent implements
                         "Checking the incoming chat pending transactions",
                         "Cannot get confirm the reception to local NS"
                 );
+//            } catch (CantSendNotificationNewIncomingMessageException e) {
+//                throw new CantGetPendingTransactionException(
+//                        e,
+//                        "Checking the incoming chat pending transactions",
+//                        "Cannot send Notification to PIP"
+//                );
             }
 
         }

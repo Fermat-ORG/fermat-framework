@@ -473,7 +473,7 @@ public class AssetUserActorPluginRoot extends AbstractPlugin implements
                 if (request.getCryptoAddressDealer().equals(CryptoAddressDealers.DAP_ASSET)) {
 
                     if (request.getCryptoAddress().getAddress() != null)
-                        if (request.getAction().equals(RequestAction.ACCEPT) || request.getAction().equals(RequestAction.NONE)){
+                        if (request.getAction().equals(RequestAction.ACCEPT) || request.getAction().equals(RequestAction.NONE)  || request.getAction().equals(RequestAction.RECEIVED)){
                             this.handleCryptoAddressReceivedEvent(request);
                             cryptoAddressesNetworkServiceManager.markReceivedRequest(request.getRequestId());
                         }

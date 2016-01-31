@@ -7,6 +7,7 @@ import com.bitdubai.fermat_dap_api.layer.dap_actor.redeem_point.interfaces.Actor
 import com.bitdubai.fermat_dap_api.layer.dap_wallet.asset_issuer_wallet.interfaces.AssetStatistic;
 
 import java.util.Date;
+import java.util.UUID;
 
 /**
  * Created by Víctor A. Mars M. (marsvicam@gmail.com) on 02/12/15.
@@ -14,6 +15,15 @@ import java.util.Date;
 public class AssetStatisticImpl implements AssetStatistic {
 
     //VARIABLE DECLARATION
+
+    private UUID transactionId;
+
+    private String genesisTransaction;
+
+    {
+        genesisTransaction = Validate.DEFAULT_STRING;
+    }
+
     private String assetPublicKey;
 
     {
@@ -44,7 +54,9 @@ public class AssetStatisticImpl implements AssetStatistic {
     public AssetStatisticImpl() {
     }
 
-    public AssetStatisticImpl(String assetPublicKey, AssetCurrentStatus status, Date distributionDate, Date usageDate, ActorAssetRedeemPoint redeemPoint, String assetName, ActorAssetUser owner) {
+    public AssetStatisticImpl(UUID transactionId, String genesisTransaction, String assetPublicKey, AssetCurrentStatus status, Date distributionDate, Date usageDate, ActorAssetRedeemPoint redeemPoint, String assetName, ActorAssetUser owner) {
+        this.transactionId = transactionId;
+        this.genesisTransaction = genesisTransaction;
         this.assetPublicKey = assetPublicKey;
         this.status = status;
         this.distributionDate = distributionDate;
@@ -59,6 +71,28 @@ public class AssetStatisticImpl implements AssetStatistic {
     //PRIVATE METHODS
 
     //GETTER AND SETTERS
+
+    /**
+     * The unique ID that identifies this statistic.
+     *
+     * @return an {@link UUID} instance.
+     */
+    @Override
+    public UUID transactionId() {
+        return null;
+    }
+
+    /**
+     * Even when this is not a value that is going to be shown to the user, this is needed
+     * to retrieve the DigitalAssetMetadata from the wallet.
+     *
+     * @return {@link String} instance representing the transaction hash of the genesis tx
+     * associated with the DigitalAssetMetadata.
+     */
+    @Override
+    public String genesisTransaction() {
+        return genesisTransaction;
+    }
 
     /**
      * This method returns the public key associated with the asset for this statistic, even
@@ -165,5 +199,14 @@ public class AssetStatisticImpl implements AssetStatistic {
     public void setAssetName(String assetName) {
         this.assetName = assetName;
     }
+
+    public void setTransactionId(UUID transactionId) {
+        this.transactionId = transactionId;
+    }
+
+    public void setGenesisTransaction(String genesisTransaction) {
+        this.genesisTransaction = genesisTransaction;
+    }
+
     //INNER CLASSES
 }

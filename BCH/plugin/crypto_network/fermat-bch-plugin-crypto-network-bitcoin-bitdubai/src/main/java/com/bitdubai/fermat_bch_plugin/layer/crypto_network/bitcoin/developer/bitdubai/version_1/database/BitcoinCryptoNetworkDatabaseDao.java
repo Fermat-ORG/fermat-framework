@@ -27,8 +27,8 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.Cant
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantUpdateRecordException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.DatabaseNotFoundException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.DatabaseTransactionFailedException;
-import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.BroadcastStatus;
 import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.BitcoinNetworkSelector;
+import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.BroadcastStatus;
 import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.exceptions.CantGetTransactionCryptoStatusException;
 import com.bitdubai.fermat_bch_api.layer.crypto_network.enums.Status;
 import com.bitdubai.fermat_bch_api.layer.crypto_network.enums.TransactionTypes;
@@ -37,7 +37,6 @@ import com.bitdubai.fermat_bch_api.layer.crypto_vault.interfaces.VaultKeyMainten
 import com.bitdubai.fermat_bch_plugin.layer.crypto_network.bitcoin.developer.bitdubai.version_1.exceptions.CantExecuteDatabaseOperationException;
 import com.bitdubai.fermat_bch_plugin.layer.crypto_network.bitcoin.developer.bitdubai.version_1.exceptions.CantInitializeBitcoinCryptoNetworkDatabaseException;
 import com.bitdubai.fermat_bch_plugin.layer.crypto_network.bitcoin.developer.bitdubai.version_1.util.TransactionProtocolData;
-import static com.bitdubai.fermat_dap_api.layer.all_definition.util.Validate.isValidString;
 
 import org.bitcoinj.core.Address;
 import org.bitcoinj.core.AddressFormatException;
@@ -51,6 +50,8 @@ import java.util.Set;
 import java.util.UUID;
 
 import javax.annotation.Nullable;
+
+import static com.bitdubai.fermat_dap_api.layer.all_definition.util.Validate.isValidString;
 
 /**
  * Created by rodrigo on 10/9/15.
@@ -790,8 +791,8 @@ public class BitcoinCryptoNetworkDatabaseDao {
             addressFrom.setCryptoCurrency(CryptoCurrency.BITCOIN);
 
             CryptoAddress addressTo = new CryptoAddress();
-            addressFrom.setAddress(record.getStringValue(BitcoinCryptoNetworkDatabaseConstants.TRANSACTIONS_ADDRESS_TO_COLUMN_NAME));
-            addressFrom.setCryptoCurrency(CryptoCurrency.BITCOIN);
+            addressTo.setAddress(record.getStringValue(BitcoinCryptoNetworkDatabaseConstants.TRANSACTIONS_ADDRESS_TO_COLUMN_NAME));
+            addressTo.setCryptoCurrency(CryptoCurrency.BITCOIN);
 
             long amount = record.getLongValue(BitcoinCryptoNetworkDatabaseConstants.TRANSACTIONS_VALUE_COLUMN_NAME);
 
@@ -1123,7 +1124,7 @@ public class BitcoinCryptoNetworkDatabaseDao {
 
 
     /**
-     * Gets the current Broadcast Status for the given Transactin
+     * Gets the current Broadcast Status for the given Transaction
      * @param txHash
      * @return
      */
@@ -1144,7 +1145,16 @@ public class BitcoinCryptoNetworkDatabaseDao {
             throwLoadToMemoryException(e, databaseTable.getTableName());
         }
 
-        DatabaseTableRecord record = databaseTable.getRecords().get(0);
+        /**
+         * If I have multiple status for this transaction, I will return the last.
+         */
+        DatabaseTableRecord record = null;
+        if (databaseTable.getRecords().size() != 1){
+            for (DatabaseTableRecord broadcastRecord : databaseTable.getRecords()){
+                record = broadcastRecord;
+            }
+        } else
+            record = databaseTable.getRecords().get(0);
 
         /**
          * Forms the Broadcast Status and return it.
@@ -1179,7 +1189,7 @@ public class BitcoinCryptoNetworkDatabaseDao {
      * @param txHash
      * @throws CantExecuteDatabaseOperationException
      */
-    public void setBroadcastStatus(Status status, int connectedPeers, Exception lastException, String txHash) throws CantExecuteDatabaseOperationException {
+    public void setBroadcastStatus(Status status, @Nullable int connectedPeers, @Nullable Exception lastException, String txHash) throws CantExecuteDatabaseOperationException {
         DatabaseTable databaseTable = database.getTable(BitcoinCryptoNetworkDatabaseConstants.BROADCAST_TABLE_NAME);
         databaseTable.addStringFilter(BitcoinCryptoNetworkDatabaseConstants.BROADCAST_TX_HASH, txHash, DatabaseFilterType.EQUAL);
 
@@ -1190,12 +1200,15 @@ public class BitcoinCryptoNetworkDatabaseDao {
         }
 
         /**
-         * I can't have anything different than a single record as a result.
+         * If I have multiple records, then I will update the last
          */
-        if (databaseTable.getRecords().size() != 1)
-            throw new CantExecuteDatabaseOperationException(CantExecuteDatabaseOperationException.DEFAULT_MESSAGE, null, "the amount of data returned by the query is not correct.", null);
-
-        DatabaseTableRecord record = databaseTable.getRecords().get(0);
+        DatabaseTableRecord record = null;
+        if (databaseTable.getRecords().size() != 1){
+            for (DatabaseTableRecord broadcastRecord : databaseTable.getRecords()){
+                record = broadcastRecord;
+            }
+        } else
+            record = databaseTable.getRecords().get(0);
 
         /**
          * I will get the current amount of retries.
@@ -1216,8 +1229,8 @@ public class BitcoinCryptoNetworkDatabaseDao {
         else
             broadcastStatus.setRetriesCount(retriesAmount);
 
-        broadcastStatus.setConnectedPeers(connectedPeers);
-        broadcastStatus.setLastException(lastException);
+            broadcastStatus.setConnectedPeers(connectedPeers);
+            broadcastStatus.setLastException(lastException);
 
         /**
          * I will set the new values and execute

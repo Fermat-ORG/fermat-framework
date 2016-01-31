@@ -27,7 +27,6 @@ import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.enums.UISource;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Wallets;
 import com.bitdubai.fermat_api.layer.all_definition.settings.structure.SettingsManager;
-import com.bitdubai.fermat_api.layer.modules.common_classes.ActiveActorIdentityInformation;
 import com.bitdubai.fermat_dap_android_wallet_redeem_point_bitdubai.R;
 import com.bitdubai.fermat_dap_android_wallet_redeem_point_bitdubai.adapters.MyAssetsAdapter;
 import com.bitdubai.fermat_dap_android_wallet_redeem_point_bitdubai.models.Data;
@@ -45,7 +44,6 @@ import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.List;
 
-import static android.widget.Toast.LENGTH_SHORT;
 import static android.widget.Toast.makeText;
 
 /**
@@ -125,8 +123,8 @@ public class RedeemPointHistoryActivityFragment extends FermatWalletListFragment
                     .setIconRes(R.drawable.redeem_point)
                     .setVIewColor(R.color.dap_redeem_point_view_color)
                     .setTitleTextColor(R.color.dap_redeem_point_view_color)
-                    .setSubTitle("Asset User Redeem Point History.")
-                    .setBody("*GIVE ME A TEXT")
+//                    .setSubTitle("Asset User Redeem Point History.")
+//                    .setBody("*GIVE ME A TEXT")
                     .setTemplateType(PresentationDialog.TemplateType.TYPE_PRESENTATION_WITHOUT_IDENTITIES)
                     .setIsCheckEnabled(checkButton)
                     .build();

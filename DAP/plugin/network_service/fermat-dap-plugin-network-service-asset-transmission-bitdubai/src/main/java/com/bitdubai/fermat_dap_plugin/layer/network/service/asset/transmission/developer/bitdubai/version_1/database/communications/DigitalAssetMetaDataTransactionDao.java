@@ -376,6 +376,9 @@ public class DigitalAssetMetaDataTransactionDao {
 
         try {
 
+            if (findById(entity.getTransactionId().toString()) != null) {
+                return;
+            }
             /*
              * 1- Create the record to the entity
              */
@@ -388,7 +391,7 @@ public class DigitalAssetMetaDataTransactionDao {
             transaction.addRecordToInsert(getDatabaseTable(), entityRecord);
             getDataBase().executeTransaction(transaction);
 
-        } catch (DatabaseTransactionFailedException databaseTransactionFailedException) {
+        } catch (DatabaseTransactionFailedException | CantReadRecordDataBaseException databaseTransactionFailedException) {
 
 
             StringBuffer contextBuffer = new StringBuffer();
@@ -400,7 +403,6 @@ public class DigitalAssetMetaDataTransactionDao {
             throw cantInsertRecordDataBaseException;
 
         }
-
     }
 
     /**
@@ -426,7 +428,9 @@ public class DigitalAssetMetaDataTransactionDao {
              * 2.- Create a new transaction and execute
              */
             DatabaseTransaction transaction = getDataBase().newTransaction();
-            transaction.addRecordToUpdate(getDatabaseTable(), entityRecord);
+            DatabaseTable metadataTable = getDatabaseTable();
+            metadataTable.addStringFilter(CommunicationNetworkServiceDatabaseConstants.DIGITAL_ASSET_METADATA_TRANSACTION_TRANSACTION_ID_COLUMN_NAME, entity.getTransactionId().toString(), DatabaseFilterType.EQUAL);
+            transaction.addRecordToUpdate(metadataTable, entityRecord);
             getDataBase().executeTransaction(transaction);
 
         } catch (DatabaseTransactionFailedException databaseTransactionFailedException) {

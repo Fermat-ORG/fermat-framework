@@ -6,19 +6,15 @@
  */
 package com.bitdubai.fermat_cht_plugin.layer.network_service.chat.developer.bitdubai.version_1.structure.processors;
 
-import com.bitdubai.fermat_api.layer.all_definition.components.enums.PlatformComponentType;
 import com.bitdubai.fermat_api.layer.all_definition.crypto.util.CryptoHasher;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
-import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEvent;
 import com.bitdubai.fermat_cht_api.all_definition.enums.MessageStatus;
 import com.bitdubai.fermat_cht_api.all_definition.events.enums.EventType;
-import com.bitdubai.fermat_cht_api.layer.network_service.chat.enums.ChatMessageStatus;
 import com.bitdubai.fermat_cht_api.layer.network_service.chat.enums.ChatMessageTransactionType;
 import com.bitdubai.fermat_cht_api.layer.network_service.chat.enums.DistributionStatus;
 import com.bitdubai.fermat_cht_api.layer.network_service.chat.events.IncomingNewChatStatusUpdate;
-import com.bitdubai.fermat_cht_plugin.layer.network_service.chat.developer.bitdubai.version_1.ChatPluginRoot;
+import com.bitdubai.fermat_cht_plugin.layer.network_service.chat.developer.bitdubai.version_1.NetworkServiceChatNetworkServicePluginRoot;
 import com.bitdubai.fermat_cht_plugin.layer.network_service.chat.developer.bitdubai.version_1.communications.CommunicationNetworkServiceConnectionManager;
-import com.bitdubai.fermat_cht_plugin.layer.network_service.chat.developer.bitdubai.version_1.database.NetworkServiceChatNetworkServiceDatabaseConstants;
 import com.bitdubai.fermat_cht_plugin.layer.network_service.chat.developer.bitdubai.version_1.structure.ChatMetadataTransactionRecord;
 import com.bitdubai.fermat_cht_plugin.layer.network_service.chat.developer.bitdubai.version_1.structure.ChatTransmissionJsonAttNames;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.contents.FermatMessageCommunication;
@@ -26,10 +22,8 @@ import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.contents.Ferm
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.enums.FermatMessagesStatus;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedPluginExceptionSeverity;
 
-import com.google.gson.JsonNull;
 import com.google.gson.JsonObject;
 
-import java.util.List;
 import java.util.UUID;
 
 /**
@@ -44,10 +38,10 @@ public class NewTransactionStatusNotificationMessageReceiverProcessor extends Fe
 
     /**
      * Constructor with parameters
-     * @param chatPluginRoot
+     * @param chatNetworkServicePluginRoot
      */
-    public NewTransactionStatusNotificationMessageReceiverProcessor(ChatPluginRoot chatPluginRoot) {
-        super(chatPluginRoot);
+    public NewTransactionStatusNotificationMessageReceiverProcessor(NetworkServiceChatNetworkServicePluginRoot chatNetworkServicePluginRoot) {
+        super(chatNetworkServicePluginRoot);
     }
 
     /**
@@ -78,7 +72,7 @@ public class NewTransactionStatusNotificationMessageReceiverProcessor extends Fe
              */
 
             String transactionHash = CryptoHasher.performSha256(chatID.toString() + messageID.toString());
-            ChatMetadataTransactionRecord chatMetadataTransactionRecord =  getChatPluginRoot().getChatMetaDataDao().findByTransactionHash(transactionHash);
+            ChatMetadataTransactionRecord chatMetadataTransactionRecord =  getChatNetworkServicePluginRoot().getChatMetaDataDao().findByTransactionHash(transactionHash);
 
             if(chatMetadataTransactionRecord != null){
 
@@ -87,7 +81,7 @@ public class NewTransactionStatusNotificationMessageReceiverProcessor extends Fe
                 if(messageStatus != null)
                     chatMetadataTransactionRecord.setMessageStatus(messageStatus);
                 chatMetadataTransactionRecord.setProcessed(ChatMetadataTransactionRecord.NO_PROCESSED);
-                getChatPluginRoot().getChatMetaDataDao().update(chatMetadataTransactionRecord);
+                getChatNetworkServicePluginRoot().getChatMetaDataDao().update(chatMetadataTransactionRecord);
 
 
                 /*
@@ -95,22 +89,22 @@ public class NewTransactionStatusNotificationMessageReceiverProcessor extends Fe
                 */
 
                 ((FermatMessageCommunication)fermatMessage).setFermatMessagesStatus(FermatMessagesStatus.READ);
-                ((CommunicationNetworkServiceConnectionManager) getChatPluginRoot().getNetworkServiceConnectionManager()).getIncomingMessageDao().update(fermatMessage);
+                ((CommunicationNetworkServiceConnectionManager) getChatNetworkServicePluginRoot().getNetworkServiceConnectionManager()).getIncomingMessageDao().update(fermatMessage);
 
                 /*
                 * Notify to the interested
                 */
 
-                IncomingNewChatStatusUpdate event = (IncomingNewChatStatusUpdate) getChatPluginRoot().getEventManager().getNewEvent(EventType.INCOMING_STATUS);
+                IncomingNewChatStatusUpdate event = (IncomingNewChatStatusUpdate) getChatNetworkServicePluginRoot().getEventManager().getNewEvent(EventType.INCOMING_STATUS);
                 event.setChatId(chatMetadataTransactionRecord.getChatId());
-                event.setSource(ChatPluginRoot.EVENT_SOURCE);
-                getChatPluginRoot().getEventManager().raiseEvent(event);
-                System.out.println("ChatPluginRoot - Incoming Status fired!");
+                event.setSource(NetworkServiceChatNetworkServicePluginRoot.EVENT_SOURCE);
+                getChatNetworkServicePluginRoot().getEventManager().raiseEvent(event);
+                System.out.println("NetworkServiceChatNetworkServicePluginRoot - Incoming Status fired!");
 
             }
 
         } catch (Exception e) {
-            getChatPluginRoot().getErrorManager().reportUnexpectedPluginException(Plugins.CHAT_NETWORK_SERVICE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+            getChatNetworkServicePluginRoot().getErrorManager().reportUnexpectedPluginException(Plugins.CHAT_NETWORK_SERVICE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
         }
 
 
