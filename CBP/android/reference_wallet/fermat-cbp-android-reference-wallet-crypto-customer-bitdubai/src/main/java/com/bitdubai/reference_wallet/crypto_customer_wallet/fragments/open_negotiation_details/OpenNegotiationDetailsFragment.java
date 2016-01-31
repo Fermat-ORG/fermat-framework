@@ -203,6 +203,14 @@ public class OpenNegotiationDetailsFragment extends AbstractFermatFragment<Crypt
                 dialogFragment.show(getFragmentManager(), "paymentMethodsDialog");
                 break;
 
+            case CUSTOMER_DATE_TIME_TO_DELIVER:
+
+                break;
+
+            case BROKER_DATE_TIME_TO_DELIVER:
+
+                break;
+
             default:
                 clauseTextDialog = new ClauseTextDialog(getActivity(), appSession, appResourcesProviderManager);
                 clauseTextDialog.setAcceptBtnListener(new ClauseTextDialog.OnClickAcceptListener() {
