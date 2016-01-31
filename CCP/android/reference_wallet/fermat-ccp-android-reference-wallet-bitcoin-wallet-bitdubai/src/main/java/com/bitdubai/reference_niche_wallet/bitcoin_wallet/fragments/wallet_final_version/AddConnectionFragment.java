@@ -3,6 +3,7 @@ package com.bitdubai.reference_niche_wallet.bitcoin_wallet.fragments.wallet_fina
 
 import android.content.DialogInterface;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.Menu;
@@ -63,6 +64,7 @@ public class AddConnectionFragment extends FermatWalletListFragment<CryptoWallet
     private int connectionPickCounter;
     private LinearLayout empty_view;
     private boolean connectionDialogIsShow=false;
+    Handler hnadler;
 
 
     public static AddConnectionFragment newInstance() {
@@ -81,6 +83,7 @@ public class AddConnectionFragment extends FermatWalletListFragment<CryptoWallet
             intraUserInformationList = (ArrayList) getMoreDataAsync(FermatRefreshTypes.NEW, 0);
             isMenuVisible=false;
             connectionPickCounter = 0;
+            hnadler = new Handler();
         } catch (Exception ex) {
             ex.printStackTrace();
         }
@@ -313,7 +316,13 @@ public class AddConnectionFragment extends FermatWalletListFragment<CryptoWallet
                         offset);
             }
             if(data.isEmpty()){
-                new ConnectionWithCommunityDialog(getActivity(),referenceWalletSession,null).show();
+
+                hnadler.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        new ConnectionWithCommunityDialog(getActivity(),referenceWalletSession,null).show();
+                    }
+                });
             }
         }
         catch(Exception e){
