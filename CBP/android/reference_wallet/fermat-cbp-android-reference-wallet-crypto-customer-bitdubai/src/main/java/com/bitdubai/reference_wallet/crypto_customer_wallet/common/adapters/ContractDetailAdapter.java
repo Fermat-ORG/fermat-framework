@@ -86,10 +86,12 @@ public class ContractDetailAdapter extends RecyclerView.Adapter<ContractDetailVi
         switch (holderType){
             case TYPE_BROKER:
                 ContractDetail brokerViewHolder= dataSet.get(position);
+                holder.setWalletModuleManager(this.walletManager);
                 holder.bind(brokerViewHolder);
                 break;
             case TYPE_CUSTOMER:
                 ContractDetail customerHolder= dataSet.get(position);
+                holder.setWalletModuleManager(this.walletManager);
                 holder.bind(customerHolder);
                 break;
         }

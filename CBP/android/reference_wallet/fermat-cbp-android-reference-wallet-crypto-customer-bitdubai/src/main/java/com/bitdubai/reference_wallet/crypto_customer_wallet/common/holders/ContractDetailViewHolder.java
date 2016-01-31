@@ -15,11 +15,13 @@ import com.bitdubai.fermat_android_api.ui.holders.FermatViewHolder;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.ContractDetailType;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.ContractStatus;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.common.interfaces.ContractBasicInformation;
+import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_customer.interfaces.CryptoCustomerWalletManager;
 import com.bitdubai.reference_wallet.crypto_customer_wallet.R;
 import com.bitdubai.reference_wallet.crypto_customer_wallet.common.models.ContractDetail;
 
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
+import java.util.UUID;
 
 /**
  * Created by Manuel Perez (darkpriestrelative@gmail.com) on 21/01/16.
@@ -29,6 +31,11 @@ public class ContractDetailViewHolder extends FermatViewHolder {
     private static final DecimalFormat decimalFormat = (DecimalFormat) NumberFormat.getInstance();
     private Resources res;
     private View itemView;
+    /**
+     * Contract item
+     */
+    protected UUID contractId;
+    protected CryptoCustomerWalletManager walletManager;
 
     public ImageView customerImage;
     public ImageView stepNumber;
@@ -57,6 +64,7 @@ public class ContractDetailViewHolder extends FermatViewHolder {
         textDescription = (FermatTextView) itemView.findViewById(R.id.ccw_contract_detail_description_text);
         textButton = (FermatButton) itemView.findViewById(R.id.ccw_contract_detail_text_button);
         confirmButton = (FermatButton) itemView.findViewById(R.id.ccw_contract_detail_confirm_button);
+        configButton();
         /*customerImage = (ImageView) itemView.findViewById(R.id.ccw_customer_image);
         customerName = (FermatTextView) itemView.findViewById(R.id.ccw_customer_name);
         soldQuantityAndCurrency = (FermatTextView) itemView.findViewById(R.id.ccw_sold_quantity_and_currency);
@@ -65,7 +73,32 @@ public class ContractDetailViewHolder extends FermatViewHolder {
 
     }
 
+    private void configButton(){
+        confirmButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                //confirmButton.setText(view.getParent()+"");
+                //System.out.println("CONTRACT DETAIL ITEM: " + confirmButton.getText());
+                executeContractAction(confirmButton.getText().toString());
+            }
+        });
+    }
+
+    protected void executeContractAction(String buttonText){
+        if(buttonText.equals("SEND")){
+            //TODO: Send Payment
+        }
+        if(buttonText.equals("CONFIRM")){
+            //TODO: Ack Merchandise
+        }
+    }
+
+    public void setWalletModuleManager(CryptoCustomerWalletManager walletManager){
+        this.walletManager=walletManager;
+    }
+
     public void bind(ContractDetail itemInfo) {
+        this.contractId=itemInfo.getContractId();
         ContractStatus contractStatus = itemInfo.getContractStatus();
         ContractDetailType contractDetailType=itemInfo.getContractDetailType();
         ContractStatus visualContractStatus=getContractStatusByContractDetailType(
@@ -77,10 +110,12 @@ public class ContractDetailViewHolder extends FermatViewHolder {
             case CUSTOMER_DETAIL:
                 stepNumber.setImageResource(R.drawable.bg_detail_number_01);
                 textDescription.setText("Customer");
+                confirmButton.setText("SEND");
                 break;
             case BROKER_DETAIL:
                 stepNumber.setImageResource(R.drawable.bg_detail_number_02);
                 textDescription.setText("Broker");
+                confirmButton.setText("CONFIRM");
                 break;
 
         }
