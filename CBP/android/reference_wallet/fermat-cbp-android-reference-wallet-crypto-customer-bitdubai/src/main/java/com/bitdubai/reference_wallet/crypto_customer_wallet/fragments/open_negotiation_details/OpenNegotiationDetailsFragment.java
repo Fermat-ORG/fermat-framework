@@ -77,7 +77,8 @@ public class OpenNegotiationDetailsFragment extends AbstractFermatFragment<Crypt
     private CustomerBrokerNegotiationInformation negotiationInfo;
     private BrokerCurrencyQuotation brokerCurrencyQuotation;
 
-    private ArrayList<String> paymentMethods; // test data
+    private ArrayList<String> paymentMethodsCustomer;
+    private ArrayList<String> paymentMethodsBroker;
     private ArrayList<Currency> currencies; // test data
     private List<BrokerCurrencyQuotationImpl> brokerCurrencyQuotationlist;
 
@@ -92,7 +93,7 @@ public class OpenNegotiationDetailsFragment extends AbstractFermatFragment<Crypt
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
+        
         currencies = new ArrayList<>();
         currencies.add(FiatCurrency.VENEZUELAN_BOLIVAR);
         currencies.add(FiatCurrency.US_DOLLAR);
@@ -170,19 +171,19 @@ public class OpenNegotiationDetailsFragment extends AbstractFermatFragment<Crypt
 
             case CUSTOMER_PAYMENT_METHOD:
                 dialogFragment = new SimpleListDialogFragment<>();
-                dialogFragment.configure("Payment Methods", paymentMethods);
+                dialogFragment.configure("Payment Methods", paymentMethodsCustomer);
                 dialogFragment.setListener(new SimpleListDialogFragment.ItemSelectedListener<String>() {
                     @Override
                     public void onItemSelected(String selectedItem) { actionListenerCustomerPaymentMethod(clause, selectedItem);     }
                 });
 
-                dialogFragment.show(getFragmentManager(), "paymentMethodsDialog");
+                dialogFragment.show(getFragmentManager(), "paymentMethodsCustomerDialog");
                 break;
 
             case BROKER_PAYMENT_METHOD:
                 dialogFragment = new SimpleListDialogFragment<>();
 
-                dialogFragment.configure("Reception Methods", paymentMethods);
+                dialogFragment.configure("Reception Methods", paymentMethodsBroker);
                 dialogFragment.setListener(new SimpleListDialogFragment.ItemSelectedListener<String>() {
                     @Override
                     public void onItemSelected(String selectedItem) {
@@ -191,7 +192,7 @@ public class OpenNegotiationDetailsFragment extends AbstractFermatFragment<Crypt
                     }
                 });
 
-                dialogFragment.show(getFragmentManager(), "paymentMethodsDialog");
+                dialogFragment.show(getFragmentManager(), "paymentMethodsBrokerDialog");
                 break;
 
             case CUSTOMER_DATE_TIME_TO_DELIVER:
@@ -425,11 +426,15 @@ public class OpenNegotiationDetailsFragment extends AbstractFermatFragment<Crypt
         String amount = clauses.get(ClauseType.CUSTOMER_CURRENCY_QUANTITY).getValue();
         Drawable brokerImg = getImgDrawable(broker.getProfileImage());
 
+        paymentMethodsCustomer = getPaymentMethod(merchandise);
+        
+        paymentMethodsBroker = getPaymentMethod(paymentCurrency);
+
         if(clauses.get(ClauseType.CUSTOMER_PAYMENT_METHOD) == null)
-            putClause(ClauseType.CUSTOMER_PAYMENT_METHOD,paymentMethods.get(0));
+            putClause(ClauseType.CUSTOMER_PAYMENT_METHOD,paymentMethodsCustomer.get(0));
 
         if(clauses.get(ClauseType.BROKER_PAYMENT_METHOD) == null)
-            putClause(ClauseType.BROKER_PAYMENT_METHOD,paymentMethods.get(0));
+            putClause(ClauseType.BROKER_PAYMENT_METHOD,paymentMethodsBroker.get(0));
 
         if(clauses.get(ClauseType.CUSTOMER_DATE_TIME_TO_DELIVER) == null)
             putClause(ClauseType.CUSTOMER_DATE_TIME_TO_DELIVER,timeInMillisStr);
@@ -646,7 +651,7 @@ public class OpenNegotiationDetailsFragment extends AbstractFermatFragment<Crypt
     //ARRAY PAYMENT
     private ArrayList<String> getPaymentMethod(String currency){
 
-        paymentMethods = new ArrayList<>();
+        ArrayList<String> paymentMethods = new ArrayList<>();
 
         Boolean isFiatCurrency = Boolean.FALSE;
         Boolean isCryptoCurrency = Boolean.FALSE;
@@ -659,12 +664,14 @@ public class OpenNegotiationDetailsFragment extends AbstractFermatFragment<Crypt
 
         if(isFiatCurrency){
             paymentMethods.add(CurrencyType.BANK_MONEY.getFriendlyname());
+            paymentMethods.add(CurrencyType.CASH_DELIVERY_MONEY.getFriendlyname());
+            paymentMethods.add(CurrencyType.CASH_ON_HAND_MONEY.getFriendlyname());
         }
-
-        paymentMethods.add("Cash");
-        paymentMethods.add("Bank");
-        paymentMethods.add("Crypto");
-
+        
+        if(isCryptoCurrency){
+            paymentMethods.add(CurrencyType.CRYPTO_MONEY.getFriendlyname());
+        }
+        
         return paymentMethods;
     }
     //REMOVE CURRENCY TO PAY
