@@ -174,7 +174,7 @@ public class OpenNegotiationDetailsFragment extends AbstractFermatFragment<Crypt
                 dialogFragment.configure("Payment Methods", paymentMethods);
                 dialogFragment.setListener(new SimpleListDialogFragment.ItemSelectedListener<String>() {
                     @Override
-                    public void onItemSelected(String selectedItem) { actionListenerCustomerPaymentMethod(clause, selectedItem);     }
+                    public void onItemSelected(String selectedItem) { actionListenerCustomerPaymentMethod(clause, selectedItem); }
                 });
 
                 dialogFragment.show(getFragmentManager(), "paymentMethodsDialog");
@@ -186,10 +186,7 @@ public class OpenNegotiationDetailsFragment extends AbstractFermatFragment<Crypt
                 dialogFragment.configure("Reception Methods", receptionMethods);
                 dialogFragment.setListener(new SimpleListDialogFragment.ItemSelectedListener<String>() {
                     @Override
-                    public void onItemSelected(String selectedItem) {
-                        putClause(clause, selectedItem);
-                        adapter.changeDataSet(negotiationInfo);
-                    }
+                    public void onItemSelected(String selectedItem) { actionListenerBrokerPaymentMethod(clause, selectedItem); }
                 });
 
                 dialogFragment.show(getFragmentManager(), "receptionMethodsDialog");
