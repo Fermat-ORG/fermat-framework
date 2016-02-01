@@ -614,16 +614,20 @@ public class OpenNegotiationDetailsFragment extends AbstractFermatFragment<Crypt
     private void putPaymentInfo(Map<ClauseType, ClauseInformation> clauses){
 
         String currencyType = clauses.get(ClauseType.CUSTOMER_PAYMENT_METHOD).getValue();
-
+//        Toast.makeText(getActivity(), "PutPaymentInfo.", Toast.LENGTH_LONG).show();
         if(currencyType != null) {
-            if (currencyType.equals(CurrencyType.CRYPTO_MONEY.getFriendlyname()))
-                if (clauses.get(ClauseType.BROKER_CRYPTO_ADDRESS) == null) putClause(ClauseType.BROKER_CRYPTO_ADDRESS, "Crypto Address is Generate Automatic");
+            if (currencyType.equals(CurrencyType.CRYPTO_MONEY.getFriendlyname())) {
+                if (clauses.get(ClauseType.BROKER_CRYPTO_ADDRESS) == null)
+                    putClause(ClauseType.BROKER_CRYPTO_ADDRESS, "Crypto Address is Generate Automatic");
 
-            else if (currencyType.equals(CurrencyType.BANK_MONEY.getFriendlyname()))
-                if (clauses.get(ClauseType.BROKER_BANK_ACCOUNT) == null) putClause(ClauseType.BROKER_BANK_ACCOUNT, "Insert Info Bank");
+            } else if (currencyType.equals(CurrencyType.BANK_MONEY.getFriendlyname())) {
+                if (clauses.get(ClauseType.BROKER_BANK_ACCOUNT) == null)
+                    putClause(ClauseType.BROKER_BANK_ACCOUNT, "Insert Info Bank");
 
-            else if (currencyType.equals(CurrencyType.CASH_DELIVERY_MONEY.getFriendlyname()) || (currencyType.equals(CurrencyType.CASH_ON_HAND_MONEY.getFriendlyname())))
-                if (clauses.get(ClauseType.BROKER_PLACE_TO_DELIVER) == null) putClause(ClauseType.BROKER_PLACE_TO_DELIVER, "Insert Place To Delivery");
+            } else if (currencyType.equals(CurrencyType.CASH_DELIVERY_MONEY.getFriendlyname()) || (currencyType.equals(CurrencyType.CASH_ON_HAND_MONEY.getFriendlyname()))) {
+                if (clauses.get(ClauseType.BROKER_PLACE_TO_DELIVER) == null)
+                    putClause(ClauseType.BROKER_PLACE_TO_DELIVER, "Insert Place To Delivery");
+            }
         }
 
     }
@@ -634,14 +638,18 @@ public class OpenNegotiationDetailsFragment extends AbstractFermatFragment<Crypt
         String currencyType = clauses.get(ClauseType.BROKER_PAYMENT_METHOD).getValue();
 
         if(currencyType != null) {
-            if (currencyType.equals(CurrencyType.CRYPTO_MONEY.getFriendlyname()))
-                if (clauses.get(ClauseType.CUSTOMER_CRYPTO_ADDRESS) == null) putClause(ClauseType.CUSTOMER_CRYPTO_ADDRESS, "Crypto Address is Generate Automatic");
+            if (currencyType.equals(CurrencyType.CRYPTO_MONEY.getFriendlyname())) {
+                if (clauses.get(ClauseType.CUSTOMER_CRYPTO_ADDRESS) == null)
+                    putClause(ClauseType.CUSTOMER_CRYPTO_ADDRESS, "Crypto Address is Generate Automatic");
 
-            else if (currencyType.equals(CurrencyType.BANK_MONEY.getFriendlyname()))
-                if (clauses.get(ClauseType.CUSTOMER_BANK_ACCOUNT) == null) putClause(ClauseType.CUSTOMER_BANK_ACCOUNT,"Insert Info Bank");
+            } else if (currencyType.equals(CurrencyType.BANK_MONEY.getFriendlyname())) {
+                if (clauses.get(ClauseType.CUSTOMER_BANK_ACCOUNT) == null)
+                    putClause(ClauseType.CUSTOMER_BANK_ACCOUNT, "Insert Info Bank");
 
-            else if (currencyType.equals(CurrencyType.CASH_DELIVERY_MONEY.getFriendlyname()) || (currencyType.equals(CurrencyType.CASH_ON_HAND_MONEY.getFriendlyname())))
-                if (clauses.get(ClauseType.CUSTOMER_PLACE_TO_DELIVER) == null) putClause(ClauseType.CUSTOMER_PLACE_TO_DELIVER,"Insert Place To Delivery");
+            } else if (currencyType.equals(CurrencyType.CASH_DELIVERY_MONEY.getFriendlyname()) || (currencyType.equals(CurrencyType.CASH_ON_HAND_MONEY.getFriendlyname()))) {
+                if (clauses.get(ClauseType.CUSTOMER_PLACE_TO_DELIVER) == null)
+                    putClause(ClauseType.CUSTOMER_PLACE_TO_DELIVER, "Insert Place To Delivery");
+            }
         }
 
     }
