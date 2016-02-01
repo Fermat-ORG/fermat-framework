@@ -1124,7 +1124,7 @@ public class BitcoinCryptoNetworkDatabaseDao {
 
 
     /**
-     * Gets the current Broadcast Status for the given Transactin
+     * Gets the current Broadcast Status for the given Transaction
      * @param txHash
      * @return
      */
@@ -1145,7 +1145,16 @@ public class BitcoinCryptoNetworkDatabaseDao {
             throwLoadToMemoryException(e, databaseTable.getTableName());
         }
 
-        DatabaseTableRecord record = databaseTable.getRecords().get(0);
+        /**
+         * If I have multiple status for this transaction, I will return the last.
+         */
+        DatabaseTableRecord record = null;
+        if (databaseTable.getRecords().size() != 1){
+            for (DatabaseTableRecord broadcastRecord : databaseTable.getRecords()){
+                record = broadcastRecord;
+            }
+        } else
+            record = databaseTable.getRecords().get(0);
 
         /**
          * Forms the Broadcast Status and return it.
@@ -1191,12 +1200,15 @@ public class BitcoinCryptoNetworkDatabaseDao {
         }
 
         /**
-         * I can't have anything different than a single record as a result.
+         * If I have multiple records, then I will update the last
          */
-        if (databaseTable.getRecords().size() != 1)
-            throw new CantExecuteDatabaseOperationException(CantExecuteDatabaseOperationException.DEFAULT_MESSAGE, null, "the amount of data returned by the query is not correct.", null);
-
-        DatabaseTableRecord record = databaseTable.getRecords().get(0);
+        DatabaseTableRecord record = null;
+        if (databaseTable.getRecords().size() != 1){
+            for (DatabaseTableRecord broadcastRecord : databaseTable.getRecords()){
+                record = broadcastRecord;
+            }
+        } else
+            record = databaseTable.getRecords().get(0);
 
         /**
          * I will get the current amount of retries.

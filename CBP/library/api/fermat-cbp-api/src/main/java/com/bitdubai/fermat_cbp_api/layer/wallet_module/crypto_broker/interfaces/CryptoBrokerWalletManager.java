@@ -70,6 +70,7 @@ import com.bitdubai.fermat_wpd_api.layer.wpd_middleware.wallet_manager.exception
 import java.math.BigDecimal;
 import java.util.Collection;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
 /**
@@ -94,7 +95,7 @@ public interface CryptoBrokerWalletManager extends WalletManager {
      */
     List<CryptoBrokerIdentity> getListOfIdentities() throws CantGetCryptoBrokerIdentityListException, CantListCryptoBrokerIdentitiesException;
 
-    List<String> getPaymentMethods(String currencyToSell);
+    List<String> getPaymentMethods(String currencyToSell, String brokerWalletPublicKey) throws CryptoBrokerWalletNotFoundException, CantGetCryptoBrokerWalletSettingException;
 
     List<NegotiationStep> getSteps(CustomerBrokerNegotiationInformation negotiationInfo);
 
@@ -368,6 +369,13 @@ public interface CryptoBrokerWalletManager extends WalletManager {
      * @exception CantGetCryptoBrokerWalletSettingException
      */
     List<CryptoBrokerWalletProviderSetting> getCryptoBrokerWalletProviderSettings(String walletPublicKey) throws CantGetCryptoBrokerWalletSettingException, CryptoBrokerWalletNotFoundException;
+
+    /**
+     * Returns a list of Providers able to obtain the  CurrencyPair for providers wallet associated
+     *
+     * @return a map containing both the ProviderID and the CurrencyPair for providers wallet associated
+     */
+    Map<String, CurrencyPair> getWalletProviderAssociatedCurrencyPairs(CurrencyPair currencyPair, String walletPublicKey) throws CryptoBrokerWalletNotFoundException, CantGetCryptoBrokerWalletSettingException;
 
     /**
      * This method load the list CryptoBrokerWalletProviderSetting

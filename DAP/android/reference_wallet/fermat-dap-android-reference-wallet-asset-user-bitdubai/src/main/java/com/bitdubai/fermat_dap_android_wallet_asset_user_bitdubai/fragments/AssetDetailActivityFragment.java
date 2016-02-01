@@ -23,6 +23,7 @@ import android.widget.Toast;
 
 import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractFermatFragment;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView;
+import com.bitdubai.fermat_android_api.ui.Views.ConfirmDialog;
 import com.bitdubai.fermat_android_api.ui.Views.PresentationDialog;
 import com.bitdubai.fermat_android_api.ui.interfaces.FermatWorkerCallBack;
 import com.bitdubai.fermat_android_api.ui.util.BitmapWorkerTask;
@@ -114,11 +115,8 @@ public class AssetDetailActivityFragment extends AbstractFermatFragment {
                     .setIconRes(R.drawable.asset_user_wallet)
                     .setVIewColor(R.color.dap_user_view_color)
                     .setTitleTextColor(R.color.dap_user_view_color)
-                    .setSubTitle("Asset Detail.")
-                    .setBody("You can review detailed information about the selected asset.\n\n" +
-                            "You can also decide to redeem your asset in a connected Redeem Point. If you are not connected to any Redeem Point, " +
-                            "use the Redeem Point Community application to search for Redeem Points.\n\n" +
-                            "You can also appropriate the asset in order to get the Bitcoins associated with it. They will be sent to your Bitcoin wallet.")
+                    .setSubTitle(R.string.dap_user_wallet_detail_subTitle)
+                    .setBody(R.string.dap_user_wallet_detail_body)
                     .setTemplateType(PresentationDialog.TemplateType.TYPE_PRESENTATION_WITHOUT_IDENTITIES)
                     .setIsCheckEnabled(checkButton)
                     .build();
@@ -170,7 +168,16 @@ public class AssetDetailActivityFragment extends AbstractFermatFragment {
         assetDetailAppropriateLayout = rootView.findViewById(R.id.assetDetailAppropriateLayout);
         assetDetailAppropriateLayout.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                doAppropriate(digitalAsset.getAssetPublicKey());
+                new ConfirmDialog.Builder(getActivity(), appSession)
+                        .setTitle("Confirm")
+                        .setMessage("Are you sure you want to do this? This action is irreversible")
+                        .setColorStyle(Color.parseColor("#381a5e"))
+                        .setYesBtnListener(new ConfirmDialog.OnClickAcceptListener() {
+                            @Override
+                            public void onClick() {
+                                doAppropriate(digitalAsset.getAssetPublicKey());
+                            }
+                        }).build().show();
             }
         });
 

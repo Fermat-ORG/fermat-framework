@@ -9,14 +9,14 @@
         <item name="android:windowNoTitle">true</item>
         <item name="colorAccent">@color/background_action_bar</item>
         <item name="drawerArrowStyle">@style/MyDrawerArrowToggle</item>
-        <item name="color">#fff</item>
+        <item name="color">#000</item>
         <item name="android:actionMenuTextColor">#fff</item>
         <item name="searchViewStyle">@style/AppTheme.SearchView</item>
         <item name="android:autoCompleteTextViewStyle">@style/cursorColor</item>
     </style>
 
     <style name="MyDrawerArrowToggle" parent="Widget.AppCompat.DrawerArrowToggle">
-        <item name="color">#fff</item>
+        <item name="color">#000</item>
     </style>
 
     <style name="AppTheme.SearchView" parent="Widget.AppCompat.SearchView">
@@ -33,19 +33,19 @@
         <item name="android:windowAnimationStyle">@android:style/Animation</item>
         <item name="android:textColorPrimary">#fff</item>
         <item name="searchViewStyle">@style/AppTheme.SearchView</item>
-        <item name="color">#fff</item>
+        <item name="color">#000</item>
     </style>
 
     <style name="ToolbarStyle" parent="customAppTheme">
         <item name="drawerArrowStyle">@style/MyDrawerArrowToggle</item>
         <item name="android:textColorPrimary">#fff</item>
-        <item name="colorAccent">#fff</item>
+        <item name="colorAccent">#000</item>
         <item name="colorControlNormal">?android:attr/textColorPrimary</item>
     </style>
 
     <style name="cursorColor" parent="Widget.AppCompat.AutoCompleteTextView">
         <item name="android:textCursorDrawable">@drawable/cht_cursor</item>
-        <item name="android:textColor">#fff</item>
+        <item name="android:textColor">#000</item>
     </style>
 
 
