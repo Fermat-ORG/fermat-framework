@@ -505,7 +505,7 @@ public class EditableAssetsFragment extends AbstractFermatFragment implements
                             selectedAsset.setWalletPublicKey(wallet.getWalletPublicKey());
                             break;
                         }
-                        manager.publishAsset(getAssetForEdit(), BlockchainNetworkType.TEST);
+                        manager.publishAsset(getAssetForEdit(), BlockchainNetworkType.DEFAULT);
                         selectedAsset = null;
                         return true;
                     }
