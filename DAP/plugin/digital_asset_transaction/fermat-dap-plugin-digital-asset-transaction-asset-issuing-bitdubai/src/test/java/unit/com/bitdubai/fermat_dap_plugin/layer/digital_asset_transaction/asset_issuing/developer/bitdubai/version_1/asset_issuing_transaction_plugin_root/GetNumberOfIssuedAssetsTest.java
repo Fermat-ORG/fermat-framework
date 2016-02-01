@@ -161,7 +161,7 @@ public class GetNumberOfIssuedAssetsTest {
     @Mock
     PluginTextFile pluginTextFile;
 
-    BlockchainNetworkType blockchainNetworkType = BlockchainNetworkType.REG_TEST;
+    BlockchainNetworkType blockchainNetworkType = BlockchainNetworkType.DEFAULT;
 
     @Before
     public void setUp() throws Exception {

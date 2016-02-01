@@ -313,7 +313,7 @@ public class RequestFormFragment extends AbstractFermatFragment<ReferenceWalletS
                                 appSession.getIntraUserModuleManager().getPublicKey(),
                                 appSession.getAppPublicKey(),
                                 CryptoCurrency.BITCOIN,
-                                BlockchainNetworkType.TEST);
+                                BlockchainNetworkType.DEFAULT);
 
                     } else {
                         try {
