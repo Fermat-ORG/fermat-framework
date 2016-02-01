@@ -14,39 +14,40 @@ import java.util.UUID;
  * Created by franklin on 04/12/15.
  */
 public class CryptoBrokerStockTransactionImpl implements CryptoBrokerStockTransaction {
-    BigDecimal              runningBookBalance;
-    BigDecimal              runningAvailableBalance;
-    BigDecimal              previousBookBalance;
-    BigDecimal              previousAvailableBalance;
-    UUID               transactionId;
-    BalanceType        balanceType;
-    TransactionType    transactionType;
-    CurrencyType       currencyType;
-    FermatEnum         merchandise;
-    String             walletPublicKey;
-    String             brokerPublicKey;
-    BigDecimal         amount;
-    long               timestamp;
-    String             memo;
-    BigDecimal         priceReference;
-    OriginTransaction originTransaction;
 
-    public CryptoBrokerStockTransactionImpl(BigDecimal         runningBookBalance,
-                                            BigDecimal         runningAvailableBalance,
-                                            BigDecimal         previousBookBalance,
-                                            BigDecimal         previousAvailableBalance,
-                                            UUID               transactionId,
-                                            BalanceType        balanceType,
-                                            TransactionType    transactionType,
-                                            CurrencyType       currencyType,
-                                            FermatEnum         merchandise,
-                                            String             walletPublicKey,
-                                            String             brokerPublicKey,
-                                            BigDecimal              amount,
-                                            long               timestamp,
-                                            String             memo,
-                                            BigDecimal              priceReference,
-                                            OriginTransaction originTransaction)
+    private final BigDecimal         runningBookBalance;
+    private final BigDecimal         runningAvailableBalance;
+    private final BigDecimal         previousBookBalance;
+    private final BigDecimal         previousAvailableBalance;
+    private final UUID               transactionId;
+    private final BalanceType        balanceType;
+    private final TransactionType    transactionType;
+    private final CurrencyType       currencyType;
+    private final FermatEnum         merchandise;
+    private final String             walletPublicKey;
+    private final String             brokerPublicKey;
+    private final BigDecimal         amount;
+    private final long               timestamp;
+    private final String             memo;
+    private final BigDecimal         priceReference;
+    private final OriginTransaction  originTransaction;
+
+    public CryptoBrokerStockTransactionImpl(final BigDecimal         runningBookBalance,
+                                            final BigDecimal         runningAvailableBalance,
+                                            final BigDecimal         previousBookBalance,
+                                            final BigDecimal         previousAvailableBalance,
+                                            final UUID               transactionId,
+                                            final BalanceType        balanceType,
+                                            final TransactionType    transactionType,
+                                            final CurrencyType       currencyType,
+                                            final FermatEnum         merchandise,
+                                            final String             walletPublicKey,
+                                            final String             brokerPublicKey,
+                                            final BigDecimal         amount,
+                                            final long               timestamp,
+                                            final String             memo,
+                                            final BigDecimal         priceReference,
+                                            final OriginTransaction  originTransaction)
     {
         this.runningBookBalance       = runningBookBalance;
         this.runningAvailableBalance  = runningAvailableBalance;
@@ -63,6 +64,7 @@ public class CryptoBrokerStockTransactionImpl implements CryptoBrokerStockTransa
         this.timestamp                = timestamp;
         this.memo                     = memo;
         this.priceReference           = priceReference;
+        this.originTransaction        = originTransaction;
     }
     @Override
     public BigDecimal getRunningBookBalance() {
