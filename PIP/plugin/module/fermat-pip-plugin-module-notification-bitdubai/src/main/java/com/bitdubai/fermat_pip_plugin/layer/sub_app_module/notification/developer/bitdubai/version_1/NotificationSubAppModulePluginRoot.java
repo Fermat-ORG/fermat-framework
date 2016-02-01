@@ -384,7 +384,7 @@ public class NotificationSubAppModulePluginRoot extends AbstractPlugin implement
 
             notification.setAlertTitle(getSourceString(source));
             notification.setTextTitle("");
-            notification.setTextBody("A Payment Request was received for " + WalletUtils.formatBalanceString(amount)  + " " + cryptoCurrency.getCode());
+            notification.setTextBody("You have received a Payment Request, for " + WalletUtils.formatBalanceString(amount)  + " " + cryptoCurrency.getCode());
             notification.setNotificationType(NotificationType.RECEIVE_REQUEST_PAYMENT_NOTIFICATION.getCode());
 
             poolNotification.add(notification);
@@ -407,7 +407,7 @@ public class NotificationSubAppModulePluginRoot extends AbstractPlugin implement
 
             notification.setAlertTitle(getSourceString(source));
             notification.setTextTitle("");
-            notification.setTextBody("Your Payment Request for " + WalletUtils.formatBalanceString(amount)  + " " + cryptoCurrency.getCode() + " was denied.");
+            notification.setTextBody("Your Payment Request, for " + WalletUtils.formatBalanceString(amount)  + " " + cryptoCurrency.getCode() + ", was deny.");
             notification.setNotificationType(NotificationType.DENIED_REQUEST_PAYMENT_NOTIFICATION.getCode());
 
             poolNotification.add(notification);

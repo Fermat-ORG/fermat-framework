@@ -98,7 +98,7 @@ public class WsCommunicationTyrusVPNClient extends Endpoint implements Communica
     public void onOpen(Session session, EndpointConfig config) {
         System.out.println(" --------------------------------------------------------------------- ");
         System.out.println(" WsCommunicationVPNClient - Starting method onOpen");
-        System.out.println(" WsCommunicationVPNClient - VPN Server id = " + session.getId());
+        System.out.println(" WsCommunicationVPNClient - Session id = " + session.getId());
         this.vpnClientConnection = session;
 
         /*
@@ -176,7 +176,6 @@ public class WsCommunicationTyrusVPNClient extends Endpoint implements Communica
         System.out.println(" WsCommunicationVPNClient - Starting method onClose");
         System.out.println("Socket " + session.getId() + " is disconnect! code = " + reason.getCloseCode() + "[" + reason.getCloseCode().getCode() + "] reason = " + reason.getReasonPhrase());
 
-
         switch (reason.getCloseCode().getCode()) {
 
             case 1000:
@@ -190,7 +189,6 @@ public class WsCommunicationTyrusVPNClient extends Endpoint implements Communica
             case 1006:
                     try {
                         wsCommunicationTyrusVPNClientManagerAgent.riseVpnConnectionCloseNotificationEvent(remoteParticipantNetworkService.getNetworkServiceType(), remoteParticipant,false);
-                        System.out.println(" WsCommunicationVPNClient - Connection loose,  trying to reconnect");
                     }catch (Exception e){
                         e.printStackTrace();
                     }
@@ -232,7 +230,9 @@ public class WsCommunicationTyrusVPNClient extends Endpoint implements Communica
         try {
 
             System.out.println(" WsCommunicationVPNClient - close connection");
-            vpnClientConnection.close(new CloseReason(CloseReason.CloseCodes.NORMAL_CLOSURE, "The cloud client close the connection, intentionally."));
+            if(vpnClientConnection.isOpen()) {
+                vpnClientConnection.close(new CloseReason(CloseReason.CloseCodes.NORMAL_CLOSURE, "The cloud client close the connection, intentionally."));
+            }
             wsCommunicationTyrusVPNClientManagerAgent.riseVpnConnectionCloseNotificationEvent(remoteParticipantNetworkService.getNetworkServiceType(), remoteParticipant,true);
 
         } catch (IOException e) {
@@ -290,10 +290,18 @@ public class WsCommunicationTyrusVPNClient extends Endpoint implements Communica
                                                                                                                     fermatMessage.toJson(),             //Message Content
                                                                                                                     FermatPacketType.MESSAGE_TRANSMIT,  //Packet type
                                                                                                                     vpnClientIdentity.getPrivateKey()); //Sender private key
-        /*
-         * Send the encode packet to the server
-         */
-        vpnClientConnection.getAsyncRemote().sendText(FermatPacketEncoder.encode(fermatPacketRequest));
+
+
+        if (vpnClientConnection.isOpen()){
+
+             /*
+             * Send the encode packet to the server
+             */
+            vpnClientConnection.getAsyncRemote().sendText(FermatPacketEncoder.encode(fermatPacketRequest));
+
+        }else{
+            throw new RuntimeException("Client Connection is Close");
+        }
 
     }
 
