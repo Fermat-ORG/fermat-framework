@@ -509,7 +509,7 @@ public class CryptoBrokerCommunityManager implements CryptoBrokerCommunitySubApp
 //
 //        try {
 //
-//            CryptoBrokerCommunitySelectableIdentity lastSelectedIdentity = getSettingsManager().loadAndGetSettings(this.subAppPublicKey).getLastSelectedIdentity();
+//            CryptoCustomerCommunitySelectableIdentity lastSelectedIdentity = getSettingsManager().loadAndGetSettings(this.subAppPublicKey).getLastSelectedIdentity();
 //
 //            if (lastSelectedIdentity != null)
 //                return lastSelectedIdentity;
@@ -522,7 +522,7 @@ public class CryptoBrokerCommunityManager implements CryptoBrokerCommunitySubApp
 //
 //                getSettingsManager().persistSettings(this.subAppPublicKey, new CryptoBrokerCommunitySettings());
 //
-//                CryptoBrokerCommunitySelectableIdentity lastSelectedIdentity = getSettingsManager().loadAndGetSettings(this.subAppPublicKey).getLastSelectedIdentity();
+//                CryptoCustomerCommunitySelectableIdentity lastSelectedIdentity = getSettingsManager().loadAndGetSettings(this.subAppPublicKey).getLastSelectedIdentity();
 //
 //                if (lastSelectedIdentity != null)
 //                    return lastSelectedIdentity;
