@@ -84,6 +84,7 @@ public class CryptoBrokerCommunityManager implements CryptoBrokerCommunitySubApp
                                         final PluginFileSystem                   pluginFileSystem                      ,
                                         final UUID                               pluginId                              ,
                                         final PluginVersionReference             pluginVersionReference                ) {
+        System.out.println("CBC CryptoBrokerCommunityManager initttttt!!!!!");
 
         this.cryptoBrokerIdentityManager            = cryptoBrokerIdentityManager           ;
         this.cryptoBrokerActorConnectionManager     = cryptoBrokerActorConnectionManager    ;
@@ -429,6 +430,7 @@ public class CryptoBrokerCommunityManager implements CryptoBrokerCommunitySubApp
 
     @Override
     public CryptoBrokerCommunitySelectableIdentity getSelectedActorIdentity() throws CantGetSelectedActorIdentityException, ActorIdentityNotSelectedException {
+        System.out.print("CBC getSelectedActorIdentity.. (PK=" + this.subAppPublicKey + ") ");
 
         //Try to get appSettings
         CryptoBrokerCommunitySettings appSettings = null;
@@ -448,14 +450,45 @@ public class CryptoBrokerCommunityManager implements CryptoBrokerCommunitySubApp
                 try{
                     brokerIdentity = cryptoBrokerIdentityManager.getCryptoBrokerIdentity(lastSelectedIdentityPublicKey);
                 } catch(IdentityNotFoundException | CantGetCryptoBrokerIdentityException e) {
-                    return null;
-                }
+                    System.out.println("Nope.. ");
 
+                    return null;
+
+                }
+                System.out.println("Good");
                 return new CryptoBrokerCommunitySelectableIdentityImpl(brokerIdentity.getPublicKey(), Actors.CBP_CRYPTO_BROKER,
                                                                        brokerIdentity.getAlias(), brokerIdentity.getProfileImage());
             }
+            //Check if at least one local broker identity has been created
+            else
+            {
+                List<CryptoBrokerIdentity> identitiesInDevice;
+                try{
+                    identitiesInDevice = cryptoBrokerIdentityManager.listIdentitiesFromCurrentDeviceUser();
+                    if(identitiesInDevice.size() > 0)
+                    {
+                        CryptoBrokerIdentity firstIdentity = identitiesInDevice.get(0);
+                        appSettings.setLastSelectedIdentityPublicKey(firstIdentity.getPublicKey());
+
+                        try {
+                            this.settingsManager.persistSettings(this.subAppPublicKey, appSettings);
+                        }catch (CantPersistSettingsException e){
+                            this.errorManager.reportUnexpectedPluginException(pluginVersionReference, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+                        }
+
+                        System.out.println("Good");
+                        return new CryptoBrokerCommunitySelectableIdentityImpl(firstIdentity.getPublicKey(), Actors.CBP_CRYPTO_BROKER,
+                                firstIdentity.getAlias(), firstIdentity.getProfileImage());
+                    }
+
+
+                }catch (CantListCryptoBrokerIdentitiesException e){
+                    //Do nothing
+                }
+            }
 
         }
+        System.out.println("Nope.. ");
 
         return null;
 
@@ -550,6 +583,8 @@ public class CryptoBrokerCommunityManager implements CryptoBrokerCommunitySubApp
 
     @Override
     public void setAppPublicKey(final String publicKey) {
+        System.out.println("CBC setAppPublicKey a....." + publicKey);
+
         this.subAppPublicKey = publicKey;
     }
 
