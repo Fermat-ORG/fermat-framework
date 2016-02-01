@@ -11,8 +11,6 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
@@ -22,9 +20,6 @@ import android.widget.Toast;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractFermatFragment;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.utils.ImagesUtils;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView;
-import com.bitdubai.fermat_android_api.ui.enums.FermatRefreshTypes;
-import com.bitdubai.fermat_android_api.ui.expandableRecicler.ExpandableRecyclerAdapter;
-import com.bitdubai.fermat_android_api.ui.fragments.FermatWalletExpandableListFragment;
 import com.bitdubai.fermat_api.layer.all_definition.enums.CryptoCurrency;
 import com.bitdubai.fermat_api.layer.all_definition.enums.FiatCurrency;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
@@ -32,6 +27,7 @@ import com.bitdubai.fermat_api.layer.pip_engine.interfaces.ResourceProviderManag
 import com.bitdubai.fermat_api.layer.world.interfaces.Currency;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.ClauseStatus;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.ClauseType;
+import com.bitdubai.fermat_cbp_api.all_definition.enums.CurrencyType;
 import com.bitdubai.fermat_cbp_api.all_definition.identity.ActorIdentity;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.common.interfaces.ClauseInformation;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.common.interfaces.CustomerBrokerNegotiationInformation;
@@ -40,17 +36,15 @@ import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_customer.interface
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 import com.bitdubai.reference_wallet.crypto_customer_wallet.R;
 import com.bitdubai.reference_wallet.crypto_customer_wallet.common.adapters.OpenNegotiationAdapter;
-import com.bitdubai.reference_wallet.crypto_customer_wallet.common.adapters.OpenNegotiationsExpandableAdapter;
+import com.bitdubai.reference_wallet.crypto_customer_wallet.common.dialogs.ClauseDateTimeDialog;
 import com.bitdubai.reference_wallet.crypto_customer_wallet.common.dialogs.ClauseTextDialog;
 import com.bitdubai.reference_wallet.crypto_customer_wallet.common.holders.open_negotiation.ClauseViewHolder;
 import com.bitdubai.reference_wallet.crypto_customer_wallet.common.holders.open_negotiation.FooterViewHolder;
 import com.bitdubai.reference_wallet.crypto_customer_wallet.common.models.BrokerCurrencyQuotation;
 import com.bitdubai.reference_wallet.crypto_customer_wallet.common.models.BrokerCurrencyQuotationImpl;
-import com.bitdubai.reference_wallet.crypto_customer_wallet.common.models.GrouperItem;
 import com.bitdubai.reference_wallet.crypto_customer_wallet.common.models.TestData;
 import com.bitdubai.reference_wallet.crypto_customer_wallet.fragments.common.SimpleListDialogFragment;
 import com.bitdubai.reference_wallet.crypto_customer_wallet.session.CryptoCustomerWalletSession;
-import com.bitdubai.reference_wallet.crypto_customer_wallet.util.CommonLogger;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
@@ -83,7 +77,8 @@ public class OpenNegotiationDetailsFragment extends AbstractFermatFragment<Crypt
     private CustomerBrokerNegotiationInformation negotiationInfo;
     private BrokerCurrencyQuotation brokerCurrencyQuotation;
 
-    private ArrayList<String> paymentMethods; // test data
+    private ArrayList<String> paymentMethods;
+    private ArrayList<String> receptionMethods;
     private ArrayList<Currency> currencies; // test data
     private List<BrokerCurrencyQuotationImpl> brokerCurrencyQuotationlist;
 
@@ -98,12 +93,7 @@ public class OpenNegotiationDetailsFragment extends AbstractFermatFragment<Crypt
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-        paymentMethods = new ArrayList<>();
-        paymentMethods.add("Cash");
-        paymentMethods.add("Bank");
-        paymentMethods.add("Crypto");
-
+        
         currencies = new ArrayList<>();
         currencies.add(FiatCurrency.VENEZUELAN_BOLIVAR);
         currencies.add(FiatCurrency.US_DOLLAR);
@@ -149,6 +139,7 @@ public class OpenNegotiationDetailsFragment extends AbstractFermatFragment<Crypt
         SimpleListDialogFragment dialogFragment;
         final ClauseType type = clause.getType();
         ClauseTextDialog clauseTextDialog = null;
+        ClauseDateTimeDialog clauseDateTimeDialog = null;
         switch (type) {
             case BROKER_CURRENCY:
                 dialogFragment = new SimpleListDialogFragment<>();
@@ -170,6 +161,7 @@ public class OpenNegotiationDetailsFragment extends AbstractFermatFragment<Crypt
                 });
 
                 clauseTextDialog.setEditTextValue(clause.getValue());
+
                 clauseTextDialog.configure(
                         type.equals(ClauseType.EXCHANGE_RATE) ? R.string.ccw_your_exchange_rate : R.string.ccw_amount_to_buy,
                         type.equals(ClauseType.EXCHANGE_RATE) ? R.string.amount : R.string.ccw_value);
@@ -182,7 +174,7 @@ public class OpenNegotiationDetailsFragment extends AbstractFermatFragment<Crypt
                 dialogFragment.configure("Payment Methods", paymentMethods);
                 dialogFragment.setListener(new SimpleListDialogFragment.ItemSelectedListener<String>() {
                     @Override
-                    public void onItemSelected(String selectedItem) { actionListenerCustomerPaymentMethod(clause, selectedItem);     }
+                    public void onItemSelected(String selectedItem) { actionListenerCustomerPaymentMethod(clause, selectedItem); }
                 });
 
                 dialogFragment.show(getFragmentManager(), "paymentMethodsDialog");
@@ -191,16 +183,85 @@ public class OpenNegotiationDetailsFragment extends AbstractFermatFragment<Crypt
             case BROKER_PAYMENT_METHOD:
                 dialogFragment = new SimpleListDialogFragment<>();
 
-                dialogFragment.configure("Reception Methods", paymentMethods);
+                dialogFragment.configure("Reception Methods", receptionMethods);
                 dialogFragment.setListener(new SimpleListDialogFragment.ItemSelectedListener<String>() {
                     @Override
-                    public void onItemSelected(String selectedItem) {
-                        putClause(clause, selectedItem);
-                        adapter.changeDataSet(negotiationInfo);
-                    }
+                    public void onItemSelected(String selectedItem) { actionListenerBrokerPaymentMethod(clause, selectedItem); }
                 });
 
-                dialogFragment.show(getFragmentManager(), "paymentMethodsDialog");
+                dialogFragment.show(getFragmentManager(), "receptionMethodsDialog");
+                break;
+
+            case CUSTOMER_DATE_TIME_TO_DELIVER:
+
+                clauseDateTimeDialog = new ClauseDateTimeDialog(getActivity(), Long.valueOf(clause.getValue()));
+
+                if(triggerView.getId() == R.id.ccw_date_value){
+                    clauseDateTimeDialog.getDateDialog();
+
+                    clauseDateTimeDialog.setAcceptBtnListener(new ClauseDateTimeDialog.OnClickAcceptListener() {
+                        @Override
+                        public void getDate(long newValue) {
+
+                            putClause(clause, String.valueOf(newValue));
+                            adapter.changeDataSet(negotiationInfo);
+
+                        }
+
+                    });
+                }else if(triggerView.getId() == R.id.ccw_time_value){
+                    clauseDateTimeDialog.getTimeDialog();
+
+                    clauseDateTimeDialog.setAcceptBtnListener(new ClauseDateTimeDialog.OnClickAcceptListener() {
+                        @Override
+                        public void getDate(long newValue) {
+
+                            putClause(clause, String.valueOf(newValue));
+                            adapter.changeDataSet(negotiationInfo);
+
+                        }
+
+                    });
+                }else{
+                    Toast.makeText(getActivity(), "DATETIME DIALOG NO FOUNT", Toast.LENGTH_LONG).show();
+                }
+
+                break;
+
+            case BROKER_DATE_TIME_TO_DELIVER:
+
+                clauseDateTimeDialog = new ClauseDateTimeDialog(getActivity(),Long.valueOf(clause.getValue()));
+
+                if(triggerView.getId() == R.id.ccw_date_value){
+                    clauseDateTimeDialog.getDateDialog();
+
+                    clauseDateTimeDialog.setAcceptBtnListener(new ClauseDateTimeDialog.OnClickAcceptListener() {
+                        @Override
+                        public void getDate(long newValue) {
+
+                            putClause(clause, String.valueOf(newValue));
+                            adapter.changeDataSet(negotiationInfo);
+
+                        }
+
+                    });
+                }else if(triggerView.getId() == R.id.ccw_time_value){
+                    clauseDateTimeDialog.getTimeDialog();
+
+                    clauseDateTimeDialog.setAcceptBtnListener(new ClauseDateTimeDialog.OnClickAcceptListener() {
+                        @Override
+                        public void getDate(long newValue) {
+
+                            putClause(clause, String.valueOf(newValue));
+                            adapter.changeDataSet(negotiationInfo);
+
+                        }
+
+                    });
+                }else{
+                    Toast.makeText(getActivity(), "DATETIME DIALOG NO FOUNT", Toast.LENGTH_LONG).show();
+                }
+
                 break;
 
             default:
@@ -233,91 +294,6 @@ public class OpenNegotiationDetailsFragment extends AbstractFermatFragment<Crypt
         changeActivity(Activities.CBP_CRYPTO_CUSTOMER_WALLET_OPEN_NEGOTIATION_ADD_NOTE, this.appSession.getAppPublicKey());
     }
 
-    /*MENU*/
-/*
-    @Override
-    protected boolean hasMenu() {
-        return true;
-    }
-
-    @Override
-    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        menu.clear();
-        inflater.inflate(R.menu.ccw_menu_home, menu);
-    }
-
-    @Override
-    protected boolean recyclerHasFixedSize() {
-        return true;
-    }
-
-    @Override
-    protected int getLayoutResource() {
-        return R.layout.ccw_fragment_open_negotiations_tab;
-    }
-
-    @Override
-    protected int getRecyclerLayoutId() {
-        return R.id.ccw_open_negotiations_recycler_view;
-    }
-
-    @Override
-    protected int getSwipeRefreshLayoutId() {
-        return R.id.swipe_refresh;
-    }
-
-    @Override
-    public List<GrouperItem> getMoreDataAsync(FermatRefreshTypes refreshType, int pos) {
-        return null;
-    }
-
-    //IMPLEMENT RecycleExpandibleListFrament
-    @Override
-    public ExpandableRecyclerAdapter getAdapter() {
-        if (adapter == null) {
-            adapter = new OpenNegotiationsExpandableAdapter(getActivity(), openNegotiationList);
-            // setting up event listeners
-            adapter.setChildItemFermatEventListeners(this);
-        }
-        return adapter;
-        return null;
-    }
-
-    @Override
-    public RecyclerView.LayoutManager getLayoutManager() {
-        if (layoutManager == null)
-            layoutManager = new LinearLayoutManager(getActivity());
-
-        return layoutManager;
-    }
-    //END IMPLEMENT RecycleExpandibleListFrament
-
-    //IMPLEMENT FermatWorkerCallBack
-    @Override
-    public void onPostExecute(Object... result) {
-        isRefreshing = false;
-        if (isAttached) {
-            swipeRefreshLayout.setRefreshing(false);
-            if (result != null && result.length > 0) {
-                openNegotiationList = (ArrayList) result[0];
-                if (adapter != null)
-                    adapter.changeDataSet(openNegotiationList);
-            }
-        }
-    }
-
-    @Override
-    public void onErrorOccurred(Exception ex) {
-        isRefreshing = false;
-        if (isAttached) {
-            swipeRefreshLayout.setRefreshing(false);
-            CommonLogger.exception(TAG, ex.getMessage(), ex);
-        }
-    }
-    //END IMPLEMENT FermatWorkerCallBack
-*/
-    /*END MENU*/
-    
     /*PRIVATE METHOD*/
     //VIEW TOOLBAR
     private void configureToolbar() {
@@ -356,17 +332,32 @@ public class OpenNegotiationDetailsFragment extends AbstractFermatFragment<Crypt
         ActorIdentity broker = negotiationInfo.getBroker();
         Map<ClauseType, ClauseInformation> clauses = negotiationInfo.getClauses();
 
+        //CLAUSES DATE
         String merchandise = clauses.get(ClauseType.CUSTOMER_CURRENCY).getValue();
         String exchangeAmount = clauses.get(ClauseType.EXCHANGE_RATE).getValue();
-        String paymentCurrency = clauses.get(ClauseType.BROKER_CURRENCY).getValue();
+        String payment = clauses.get(ClauseType.BROKER_CURRENCY).getValue();
         String amount = clauses.get(ClauseType.CUSTOMER_CURRENCY_QUANTITY).getValue();
         Drawable brokerImg = getImgDrawable(broker.getProfileImage());
 
+        //LIST MERCHANDISE TYPE
+        paymentMethods = getPaymentMethod(payment);
+
+        //LIST PAYMENT METHOD TYPE
+        receptionMethods = getPaymentMethod(merchandise);
+
+        //VALUE DEFAULT CUSTOMER PAYMENT METHOD
         if(clauses.get(ClauseType.CUSTOMER_PAYMENT_METHOD) == null)
             putClause(ClauseType.CUSTOMER_PAYMENT_METHOD,paymentMethods.get(0));
 
+        //VALUE DEFAULT BROKER PAYMENT METHOD
         if(clauses.get(ClauseType.BROKER_PAYMENT_METHOD) == null)
-            putClause(ClauseType.BROKER_PAYMENT_METHOD,paymentMethods.get(0));
+            putClause(ClauseType.BROKER_PAYMENT_METHOD,receptionMethods.get(0));
+
+        //VALUE DEFAULT INFO PAYMENT
+        putPaymentInfo(clauses);
+
+        //VALUE DEFAULT INFO RECEPTION
+        putReceptionInfo(clauses);
 
         if(clauses.get(ClauseType.CUSTOMER_DATE_TIME_TO_DELIVER) == null)
             putClause(ClauseType.CUSTOMER_DATE_TIME_TO_DELIVER,timeInMillisStr);
@@ -378,7 +369,7 @@ public class OpenNegotiationDetailsFragment extends AbstractFermatFragment<Crypt
         brokerImage.setImageDrawable(brokerImg);
         brokerName.setText(broker.getAlias());
         sellingDetails.setText(getResources().getString(R.string.ccw_selling_details, amount, merchandise));
-        exchangeRateSummary.setText(getResources().getString(R.string.ccw_exchange_rate_summary, merchandise, exchangeAmount, paymentCurrency));
+        exchangeRateSummary.setText(getResources().getString(R.string.ccw_exchange_rate_summary, merchandise, exchangeAmount, payment));
         
         adapter = new OpenNegotiationAdapter(getActivity(), negotiationInfo);
         adapter.setClauseListener(this);
@@ -418,10 +409,21 @@ public class OpenNegotiationDetailsFragment extends AbstractFermatFragment<Crypt
         putClause(clause, selectedItem);
 
         //ADD CLAUSE OF THE INFO THE PAYMENT
-        putCustomerPaymentInfo(clauses);
+        putPaymentInfo(clauses);
+
+        adapter.changeDataSet(negotiationInfo);
+    }
+
+    //ACTION LISTENER FOR CUSTOMER PAYMENT METHOD
+    private void actionListenerBrokerPaymentMethod(ClauseInformation clause, String selectedItem){
+
+        final Map<ClauseType, ClauseInformation> clauses = negotiationInfo.getClauses();
+
+        //ADD SELECTED ITEN
+        putClause(clause, selectedItem);
 
         //ADD CLAUSE OF THE INFO THE PAYMENT
-        putBrokerPaymentInfo(clauses);
+        putReceptionInfo(clauses);
 
         adapter.changeDataSet(negotiationInfo);
     }
@@ -479,17 +481,26 @@ public class OpenNegotiationDetailsFragment extends AbstractFermatFragment<Crypt
     private void actionListenerBrokerCurrency(ClauseInformation clause, Currency selectedItem){
 
         final Map<ClauseType, ClauseInformation> clauses = negotiationInfo.getClauses();
+//        String payment = clauses.get(ClauseType.BROKER_CURRENCY).getValue();
+        String payment = selectedItem.getCode();
+        String merchandise = clauses.get(ClauseType.CUSTOMER_CURRENCY).getValue();
 
-        if ((clauses.get(ClauseType.CUSTOMER_CURRENCY).getValue()) != (clauses.get(ClauseType.BROKER_CURRENCY).getValue())) {
+        if (merchandise != payment) {
 
             //ASIGNAMENT NEW VALUE
-            putClause(clause, selectedItem.getCode());
+            putClause(clause, payment);
+
+            //UPDATE LIST OF PAYMENT
+            paymentMethods = getPaymentMethod(payment);
+
+            //UPDATE CLAUSE PAYMENT METHOD
+            putClause(ClauseType.CUSTOMER_PAYMENT_METHOD,paymentMethods.get(0));
+
+            //UPDATE CLAUSE OF THE INFO THE PAYMENT
+            putPaymentInfo(clauses);
 
             //GET MARKET RATE
-            String brokerMarketRate = brokerCurrencyQuotation.getExchangeRate(
-                    clauses.get(ClauseType.CUSTOMER_CURRENCY).getValue(),
-                    clauses.get(ClauseType.BROKER_CURRENCY).getValue()
-            );
+            String brokerMarketRate = brokerCurrencyQuotation.getExchangeRate(merchandise,payment);
 
             if (brokerMarketRate != null) {
 
@@ -508,12 +519,6 @@ public class OpenNegotiationDetailsFragment extends AbstractFermatFragment<Crypt
                 final String amountToPayStr = getDecimalFormat(amountToPay);
                 final ClauseInformation brokerCurrencyQuantityClause = clauses.get(ClauseType.BROKER_CURRENCY_QUANTITY);
                 putClause(brokerCurrencyQuantityClause, amountToPayStr);
-
-                //            Toast.makeText(getActivity(), "The exchange rate:" +
-                //                    "BROKER CURRENCY: " +clauses.get(ClauseType.BROKER_CURRENCY).getValue()+
-                //                    ", CUSTOMER CURRENCY: "+clauses.get(ClauseType.CUSTOMER_CURRENCY).getValue()+
-                //                    ", EXCHANGE RATE: "+brokerMarketRate
-                //                    , Toast.LENGTH_LONG).show();
 
             } else {
                 Toast.makeText(getActivity(), "The exchange rate not fount for the currency to pay selected.", Toast.LENGTH_LONG).show();
@@ -580,6 +585,25 @@ public class OpenNegotiationDetailsFragment extends AbstractFermatFragment<Crypt
 
     }
 
+    //ARRAY PAYMENT
+    private ArrayList<String> getPaymentMethod(String currency){
+
+        ArrayList<String> paymentMethods = new ArrayList<>();
+
+        //ADD FIAT CURRENCY IF IS FIAT
+        if(FiatCurrency.codeExists(currency)){
+            paymentMethods.add(CurrencyType.BANK_MONEY.getFriendlyname());
+            paymentMethods.add(CurrencyType.CASH_DELIVERY_MONEY.getFriendlyname());
+            paymentMethods.add(CurrencyType.CASH_ON_HAND_MONEY.getFriendlyname());
+        }
+
+        //ADD CRYPTO CURRENCY IF IS CRYPTO
+        if(CryptoCurrency.codeExists(currency)){
+            paymentMethods.add(CurrencyType.CRYPTO_MONEY.getFriendlyname());
+        }
+
+        return paymentMethods;
+    }
     //REMOVE CURRENCY TO PAY
     private void removeCurrency(){
 
@@ -593,38 +617,45 @@ public class OpenNegotiationDetailsFragment extends AbstractFermatFragment<Crypt
     }
 
     //GET CLAUSE OF INFO OF RECEIVED
-    private void putCustomerPaymentInfo(Map<ClauseType, ClauseInformation> clauses){
+    private void putPaymentInfo(Map<ClauseType, ClauseInformation> clauses){
 
-        String currencyEquals = clauses.get(ClauseType.CUSTOMER_PAYMENT_METHOD).getValue();
+        String currencyType = clauses.get(ClauseType.CUSTOMER_PAYMENT_METHOD).getValue();
+//        Toast.makeText(getActivity(), "PutPaymentInfo.", Toast.LENGTH_LONG).show();
+        if(currencyType != null) {
+            if (currencyType.equals(CurrencyType.CRYPTO_MONEY.getFriendlyname())) {
+                if (clauses.get(ClauseType.BROKER_CRYPTO_ADDRESS) == null)
+                    putClause(ClauseType.BROKER_CRYPTO_ADDRESS, "Crypto Address is Generate Automatic");
 
-        if(currencyEquals != null) {
-            if (currencyEquals.equals(TestData.CRYPTO_TRANSFER))
-                Toast.makeText(getActivity(), "CRYPTO CUS PAY.", Toast.LENGTH_LONG).show(); if(clauses.get(ClauseType.BROKER_CRYPTO_ADDRESS) == null) putClause(ClauseType.BROKER_CRYPTO_ADDRESS, "Crypto Address is Generate Automatic");
+            } else if (currencyType.equals(CurrencyType.BANK_MONEY.getFriendlyname())) {
+                if (clauses.get(ClauseType.BROKER_BANK_ACCOUNT) == null)
+                    putClause(ClauseType.BROKER_BANK_ACCOUNT, "Insert Info Bank");
 
-            else if (currencyEquals.equals(TestData.BANK_TRANSFER))
-                Toast.makeText(getActivity(), "BANK CUS PAY.", Toast.LENGTH_LONG).show();if(clauses.get(ClauseType.BROKER_BANK_ACCOUNT) == null) putClause(ClauseType.BROKER_BANK_ACCOUNT, "Info Bank");
-
-            else if (currencyEquals.equals(TestData.CASH_DELIVERY) || (currencyEquals.equals(TestData.CASH_IN_HAND)))
-                Toast.makeText(getActivity(), "CASH CUS PAY.", Toast.LENGTH_LONG).show();if(clauses.get(ClauseType.BROKER_PLACE_TO_DELIVER) == null) putClause(ClauseType.BROKER_PLACE_TO_DELIVER, "Insert Place To Delivery");
+            } else if (currencyType.equals(CurrencyType.CASH_DELIVERY_MONEY.getFriendlyname()) || (currencyType.equals(CurrencyType.CASH_ON_HAND_MONEY.getFriendlyname()))) {
+                if (clauses.get(ClauseType.BROKER_PLACE_TO_DELIVER) == null)
+                    putClause(ClauseType.BROKER_PLACE_TO_DELIVER, "Insert Place To Delivery");
+            }
         }
 
     }
 
     //GET CLAUSE OF INFO OF PAYMENT
-    private void putBrokerPaymentInfo(Map<ClauseType, ClauseInformation> clauses){
+    private void putReceptionInfo(Map<ClauseType, ClauseInformation> clauses){
 
-        String currencyEquals = clauses.get(ClauseType.BROKER_PAYMENT_METHOD).getValue();
+        String currencyType = clauses.get(ClauseType.BROKER_PAYMENT_METHOD).getValue();
 
-        if(currencyEquals != null) {
+        if(currencyType != null) {
+            if (currencyType.equals(CurrencyType.CRYPTO_MONEY.getFriendlyname())) {
+                if (clauses.get(ClauseType.CUSTOMER_CRYPTO_ADDRESS) == null)
+                    putClause(ClauseType.CUSTOMER_CRYPTO_ADDRESS, "Crypto Address is Generate Automatic");
 
-            if (currencyEquals.equals(TestData.CRYPTO_TRANSFER))
-                Toast.makeText(getActivity(), "CRYPTO BRO PAY.", Toast.LENGTH_LONG).show();if (clauses.get(ClauseType.CUSTOMER_CRYPTO_ADDRESS) == null) putClause(ClauseType.CUSTOMER_CRYPTO_ADDRESS, "Crypto Address is Generate Automatic");
+            } else if (currencyType.equals(CurrencyType.BANK_MONEY.getFriendlyname())) {
+                if (clauses.get(ClauseType.CUSTOMER_BANK_ACCOUNT) == null)
+                    putClause(ClauseType.CUSTOMER_BANK_ACCOUNT, "Insert Info Bank");
 
-            else if (currencyEquals.equals(TestData.BANK_TRANSFER))
-                Toast.makeText(getActivity(), "BANK BRO PAY.", Toast.LENGTH_LONG).show();if (clauses.get(ClauseType.CUSTOMER_BANK_ACCOUNT) == null) putClause(ClauseType.CUSTOMER_BANK_ACCOUNT,"Info Bank");
-
-            else if (currencyEquals.equals(TestData.CASH_DELIVERY) || (currencyEquals.equals(TestData.CASH_IN_HAND)))
-                Toast.makeText(getActivity(), "CASH BRO PAY.", Toast.LENGTH_LONG).show();if (clauses.get(ClauseType.CUSTOMER_PLACE_TO_DELIVER) == null) putClause(ClauseType.CUSTOMER_PLACE_TO_DELIVER,"Insert Place To Delivery");
+            } else if (currencyType.equals(CurrencyType.CASH_DELIVERY_MONEY.getFriendlyname()) || (currencyType.equals(CurrencyType.CASH_ON_HAND_MONEY.getFriendlyname()))) {
+                if (clauses.get(ClauseType.CUSTOMER_PLACE_TO_DELIVER) == null)
+                    putClause(ClauseType.CUSTOMER_PLACE_TO_DELIVER, "Insert Place To Delivery");
+            }
         }
 
     }

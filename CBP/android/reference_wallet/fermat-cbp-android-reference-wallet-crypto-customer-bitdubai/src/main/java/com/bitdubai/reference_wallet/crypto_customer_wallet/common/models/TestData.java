@@ -5,6 +5,7 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.FiatCurrency;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.ClauseStatus;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.ClauseType;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.ContractStatus;
+import com.bitdubai.fermat_cbp_api.all_definition.enums.CurrencyType;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.NegotiationStatus;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.common.interfaces.ContractBasicInformation;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.common.interfaces.CustomerBrokerNegotiationInformation;
@@ -24,10 +25,10 @@ import java.util.Random;
  * Created by nelson on 07/01/16.
  */
 public class TestData {
-    public static final String CASH_IN_HAND = "Cash on Hand";
-    public static final String CASH_DELIVERY = "Cash Delivery";
-    public static final String BANK_TRANSFER = "Bank Transfer";
-    public static final String CRYPTO_TRANSFER = "Crypto Transfer";
+    public static final String CASH_IN_HAND = CurrencyType.CASH_ON_HAND_MONEY.getFriendlyname();
+    public static final String CASH_DELIVERY = CurrencyType.CASH_DELIVERY_MONEY.getFriendlyname();
+    public static final String BANK_TRANSFER = CurrencyType.BANK_MONEY.getFriendlyname();
+    public static final String CRYPTO_TRANSFER = CurrencyType.CRYPTO_MONEY.getFriendlyname();
 
     private static final List<String> BROKER_BANK_ACCOUNTS = new ArrayList<>();
     public static final String BROKER_BANK_ACCOUNT_1 = "Banco: BOD\nTipo de cuenta: Corriente\nNro: 0105-2255-2221548739\nCliente: Brokers Asociados";
@@ -244,7 +245,7 @@ public class TestData {
         item.addClause(new CryptoBrokerWalletModuleClauseInformation(ClauseType.CUSTOMER_PAYMENT_METHOD, CRYPTO_TRANSFER, ClauseStatus.DRAFT));
         item.addClause(new CryptoBrokerWalletModuleClauseInformation(ClauseType.BROKER_CRYPTO_ADDRESS, BROKER_CRYPTO_ADDRESS, ClauseStatus.DRAFT));
         item.addClause(new CryptoBrokerWalletModuleClauseInformation(ClauseType.BROKER_PAYMENT_METHOD, CASH_DELIVERY, ClauseStatus.DRAFT));
-        item.addClause(new CryptoBrokerWalletModuleClauseInformation(ClauseType.CUSTOMER_BANK_ACCOUNT, CUSTOMER_LOCATION_1, ClauseStatus.DRAFT));
+        item.addClause(new CryptoBrokerWalletModuleClauseInformation(ClauseType.CUSTOMER_PLACE_TO_DELIVER, CUSTOMER_LOCATION_1, ClauseStatus.DRAFT));
         item.addClause(new CryptoBrokerWalletModuleClauseInformation(ClauseType.BROKER_DATE_TIME_TO_DELIVER, timeInMillisStr, ClauseStatus.DRAFT));
         item.addClause(new CryptoBrokerWalletModuleClauseInformation(ClauseType.CUSTOMER_DATE_TIME_TO_DELIVER, timeInMillisStr, ClauseStatus.DRAFT));
         openNegotiations.add(item);
