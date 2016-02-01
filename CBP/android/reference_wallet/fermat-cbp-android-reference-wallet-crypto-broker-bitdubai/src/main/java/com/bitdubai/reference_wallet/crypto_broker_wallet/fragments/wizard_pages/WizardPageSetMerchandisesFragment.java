@@ -1,5 +1,4 @@
 package com.bitdubai.reference_wallet.crypto_broker_wallet.fragments.wizard_pages;
-
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.os.Bundle;
@@ -38,6 +37,8 @@ import com.bitdubai.fermat_cbp_api.layer.wallet.crypto_broker.interfaces.setting
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_broker.interfaces.CryptoBrokerWalletManager;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_broker.interfaces.CryptoBrokerWalletModuleManager;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_broker.interfaces.CryptoBrokerWalletPreferenceSettings;
+import com.bitdubai.fermat_csh_api.layer.csh_wallet.exceptions.CantGetCashMoneyWalletCurrencyException;
+import com.bitdubai.fermat_csh_api.layer.csh_wallet.exceptions.CantLoadCashMoneyWalletException;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedWalletExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 import com.bitdubai.fermat_wpd_api.layer.wpd_middleware.wallet_manager.exceptions.CantListWalletsException;
@@ -64,6 +65,7 @@ public class WizardPageSetMerchandisesFragment extends AbstractFermatFragment
         implements SingleDeletableItemAdapter.OnDeleteButtonClickedListener<InstalledWallet>, DialogInterface.OnDismissListener {
 
     // Constants
+
     private static final String TAG = "WizardPageSetMerchand";
 
     private List<InstalledWallet> stockWallets;
@@ -82,7 +84,7 @@ public class WizardPageSetMerchandisesFragment extends AbstractFermatFragment
     private LinearLayout container;
 
     private CryptoBrokerWalletManager cryptoBrokerWalletManager;
-
+    String walletPublicKey = "walletPublicKeyTest";
 
     public static WizardPageSetMerchandisesFragment newInstance() {
         return new WizardPageSetMerchandisesFragment();
@@ -127,7 +129,7 @@ public class WizardPageSetMerchandisesFragment extends AbstractFermatFragment
                         .setBannerRes(R.drawable.banner_crypto_broker)
                         .setIconRes(R.drawable.crypto_broker)
                         .setBody(R.string.cbw_wizard_merchandise_dialog_body)
-.setSubTitle(R.string.cbw_wizard_merchandise_dialog_sub_title) // TODO para franklin (revisar esto, esta es la linea que venia en tu commit): .setSubTitle("This is a simple wallet for exchange Merchandise. " + identities)
+                        .setSubTitle(R.string.cbw_wizard_merchandise_dialog_sub_title) // TODO para franklin (revisar esto, esta es la linea que venia en tu commit): .setSubTitle("This is a simple wallet for exchange Merchandise. " + identities)
                         .setTextFooter(R.string.cbw_wizard_merchandise_dialog_footer)
                         .build();
                 presentationDialog.setOnDismissListener(this);
@@ -253,7 +255,17 @@ public class WizardPageSetMerchandisesFragment extends AbstractFermatFragment
                 @Override
                 public void onItemSelected(InstalledWallet selectedItem) {
                     if (!platform.equals(Platforms.BANKING_PLATFORM)) {
-
+                        try {
+                            if(walletManager.getCashCurrency(walletPublicKey) == null) {
+                                InputDialogCBP inputDialogCBP = new InputDialogCBP(getActivity(),appSession,null, walletManager);
+                                inputDialogCBP.DialogType(2);
+                                inputDialogCBP.show();
+                            }
+                        } catch (CantGetCashMoneyWalletCurrencyException e) {
+                            e.printStackTrace();
+                        } catch (CantLoadCashMoneyWalletException e) {
+                            e.printStackTrace();
+                        }
                         if (!containWallet(selectedItem)) {
                             stockWallets.add(selectedItem);
                             adapter.changeDataSet(stockWallets);
@@ -310,7 +322,7 @@ public class WizardPageSetMerchandisesFragment extends AbstractFermatFragment
 
     private void showBankAccountsDialog(final InstalledWallet selectedWallet) {
         try {
-            List<BankAccountNumber> accounts = walletManager.getAccounts(selectedWallet.getWalletPublicKey());
+            List<BankAccountNumber> accounts = walletManager.getAccounts("banking_wallet");
             if (!accounts.isEmpty()) {
 
                 SimpleListDialogFragment<BankAccountNumber> accountsDialog = new SimpleListDialogFragment<>();
@@ -321,8 +333,8 @@ public class WizardPageSetMerchandisesFragment extends AbstractFermatFragment
                     public void onItemSelected(BankAccountNumber selectedAccount) {
                         FiatCurrency currency = selectedAccount.getCurrencyType();
                         if (currency == null) {
-                            InputDialogCBP inputDialogCBP = new InputDialogCBP(getActivity(), appSession, null);
-                            inputDialogCBP.DialogType(2);
+                            InputDialogCBP inputDialogCBP = new InputDialogCBP(getActivity(), appSession, null, walletManager);
+                            inputDialogCBP.DialogType(1);
                             inputDialogCBP.show();
 
                         }
@@ -347,7 +359,7 @@ public class WizardPageSetMerchandisesFragment extends AbstractFermatFragment
                 accountsDialog.show(getFragmentManager(), "accountsDialog");
             } else {
 
-                InputDialogCBP inputDialogCBP = new InputDialogCBP(getActivity(), appSession, null);
+                InputDialogCBP inputDialogCBP = new InputDialogCBP(getActivity(), appSession, null, walletManager);
                 inputDialogCBP.DialogType(1);
                 inputDialogCBP.show();
             }

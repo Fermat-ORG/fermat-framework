@@ -1,4 +1,5 @@
 package com.bitdubai.reference_wallet.crypto_broker_wallet.util;
+
 import android.app.Activity;
 import android.os.Bundle;
 import android.util.Log;
@@ -15,9 +16,12 @@ import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.Fermat
 import com.bitdubai.fermat_android_api.ui.dialogs.FermatDialog;
 import com.bitdubai.fermat_api.layer.all_definition.enums.FiatCurrency;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Wallets;
+import com.bitdubai.fermat_api.layer.all_definition.settings.structure.SettingsManager;
 import com.bitdubai.fermat_bnk_api.all_definition.enums.BankAccountType;
 import com.bitdubai.fermat_bnk_api.layer.bnk_wallet.bank_money.interfaces.BankAccountNumber;
+import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_broker.interfaces.CryptoBrokerWalletManager;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_broker.interfaces.CryptoBrokerWalletModuleManager;
+import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_broker.interfaces.CryptoBrokerWalletPreferenceSettings;
 import com.bitdubai.fermat_pip_api.layer.network_service.subapp_resources.SubAppResourcesProviderManager;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedWalletExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
@@ -28,42 +32,49 @@ import com.bitdubai.reference_wallet.crypto_broker_wallet.session.CryptoBrokerWa
 /**
  * Created by Lozadaa on 26/01/16.
  */
+
 public class InputDialogCBP extends FermatDialog<FermatSession, SubAppResourcesProviderManager> implements View.OnClickListener{
 
     private final Activity activity;
     private static final String TAG = "InputDialogCBP";
     int DialogType;
-    Button btn ;
+    Button btn,btn2;
     EditText Account,Alias,BankName;
     Spinner Tipo,CurrencySpinner,Cash;
-    private String AccountV,AliasV,BankNameV;
+    String AccountV,AliasV,BankNameV;
     BankAccountType TipoV;
     FiatCurrency CurrencyV,CurrencyCash;
-    private com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_broker.interfaces.CryptoBrokerWalletManager cryptoBrokerWalletManager;
-    private com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_broker.interfaces.CryptoBrokerWalletManager walletManager;
+    private CryptoBrokerWalletSession walletSession;
+    private CryptoBrokerWalletModuleManager moduleManager;
+    private SettingsManager<CryptoBrokerWalletPreferenceSettings> settingsManager;
     private ErrorManager errorManager;
+    CryptoBrokerWalletManager WalletManager;
 
-    public InputDialogCBP(Activity activity, FermatSession fermatSession, SubAppResourcesProviderManager resources) {
+
+
+    public InputDialogCBP(Activity activity, FermatSession fermatSession, SubAppResourcesProviderManager resources, CryptoBrokerWalletManager WalletManager) {
         super(activity, fermatSession, resources);
         this.activity = activity;
-
+        this.WalletManager = WalletManager;
     }
 
 
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-         try {
-             CryptoBrokerWalletModuleManager moduleManager = ((CryptoBrokerWalletSession) getSession()).getModuleManager();
-             walletManager = moduleManager.getCryptoBrokerWallet(getSession().getAppPublicKey());
+        try {
+            walletSession = ((CryptoBrokerWalletSession) getSession());
+            moduleManager = walletSession.getModuleManager();
+            settingsManager = moduleManager.getSettingsManager();
             errorManager = getSession().getErrorManager();
 
-        } catch (Exception ex) {
-             Log.e(TAG, ex.getMessage(), ex);
-             if (errorManager != null)
-                 errorManager.reportUnexpectedWalletException(Wallets.CBP_CRYPTO_BROKER_WALLET,
-                         UnexpectedWalletExceptionSeverity.DISABLES_THIS_FRAGMENT, ex);
-         }
+
+
+        } catch (Exception e) {
+            if (errorManager != null)
+                errorManager.reportUnexpectedWalletException(Wallets.CSH_CASH_WALLET, UnexpectedWalletExceptionSeverity.DISABLES_THIS_FRAGMENT, e);
+        }
+
 
         if(DialogType == 1) {
             btn = (Button) findViewById(R.id.btn_action_bank);
@@ -74,12 +85,25 @@ public class InputDialogCBP extends FermatDialog<FermatSession, SubAppResourcesP
             BankAccountType[] bankType = BankAccountType.values();
             ArrayAdapter<BankAccountType> Tipos = new ArrayAdapter<BankAccountType>(getActivity(),android.R.layout.simple_spinner_item,bankType);
             Tipo.setAdapter(Tipos);
+            setUpListeners();
+            Tipo.setBackgroundColor(0);
+            Tipo.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+                public void onItemSelected(AdapterView<?> parentView, View selectedItemView, int position, long id) {
+                    TipoV = (BankAccountType) Tipo.getSelectedItem();
+                }
+
+                @Override
+                public void onNothingSelected(AdapterView<?> parent) {
+
+                }
+            });
             CurrencySpinner = (Spinner) findViewById(R.id.spinner2Currency);
 
             FiatCurrency[] Currency = FiatCurrency.values();
             ArrayAdapter<FiatCurrency> currency = new ArrayAdapter<FiatCurrency>(getActivity(),android.R.layout.simple_spinner_item,Currency);
             currency.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
             CurrencySpinner.setAdapter(currency);
+            CurrencySpinner.setBackgroundColor(0);
             CurrencySpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
                 public void onItemSelected(AdapterView<?> parentView, View selectedItemView, int position, long id) {
                     CurrencyV = (FiatCurrency) CurrencySpinner.getSelectedItem();
@@ -90,14 +114,10 @@ public class InputDialogCBP extends FermatDialog<FermatSession, SubAppResourcesP
 
                 }
             });
-            try {
-
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
 
 
         }else {
+            btn2 = (Button) findViewById(R.id.btn_action_cash);
             Cash = (Spinner) findViewById(R.id.spinner2Cash);
             Cash.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
                                                public void onItemSelected(AdapterView<?> parentView, View selectedItemView, int position, long id) {
@@ -111,24 +131,23 @@ public class InputDialogCBP extends FermatDialog<FermatSession, SubAppResourcesP
                     FiatCurrency[] Currency = FiatCurrency.values();
             ArrayAdapter<FiatCurrency> currency = new ArrayAdapter<FiatCurrency>(getContext(),android.R.layout.simple_spinner_item,Currency);
             currency.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+             Cash.setBackgroundColor(0);
             Cash.setAdapter(currency);
+            setUpListeners2();
+
         }
-        CustomInfo();
+
     }
+
     public void DialogType(int DialogTypeset){DialogType = DialogTypeset;}
 
     public String getName(){ return BankNameV; }
     public String getAlias(){ return AliasV; }
     public String getAccount(){ return AccountV; }
-    public BankAccountType getType(){ return TipoV; }
-  /*  public FiatCurrency getCurrency(){ return CurrencyV; }
-    public FiatCurrency getCashCurrency(){ return CurrencyCash; } */
-
     private void CustomInfo(){
        BankNameV = BankName.getText().toString();
         AliasV = Alias.getText().toString();
         AccountV = Account.getText().toString();
-        setUpListen();
     }
     protected int setLayoutId() {
         if(DialogType == 1) {
@@ -137,34 +156,43 @@ public class InputDialogCBP extends FermatDialog<FermatSession, SubAppResourcesP
             return R.layout.inputdialogcbp_cash;
         }
     }
-
-    private void setUpListen() {
+    private void setUpListeners() {
         btn.setOnClickListener(this);
     }
 
+    private void setUpListeners2() {
+        btn2.setOnClickListener(this);
+    }
     public void onClick(View v) {
         int id = v.getId();
+
         if (id == R.id.btn_action_bank) {
-            try{
-              BankAccountNumber accountnumber = cryptoBrokerWalletManager.newEmptyBankAccountNumber(getName(), getType(), getAlias(), getAccount(), CurrencyV);
-                cryptoBrokerWalletManager.addNewAccount(accountnumber,getSession().getAppPublicKey());
-                dismiss();
-            } catch (Exception e) {
-                Toast.makeText(getActivity(), "Error on:"+e, Toast.LENGTH_SHORT).show();
-            }
-        }
-        if (id == R.id.btn_action_cash) {
+            CustomInfo();
             try {
-                cryptoBrokerWalletManager.createCashMoneyWallet(getSession().getAppPublicKey(), CurrencyCash);
-                        dismiss();
-            }  catch (Exception e) {
-                Toast.makeText(getActivity(), "Error on:"+e, Toast.LENGTH_SHORT).show();
+
+                    BankAccountNumber accountnumber =   WalletManager.newEmptyBankAccountNumber(BankNameV, TipoV, AliasV, AccountV, CurrencyV);
+                   WalletManager.addNewAccount(accountnumber, getSession().getAppPublicKey());
+
+                    dismiss();
+                }catch(Exception e){
+                  Log.e(TAG,"Error on:"+ e +" ------------VALORES DE VARIABLES----------->" +BankNameV+"->"+TipoV+"->"+AliasV+"->"+AccountV+"->"+CurrencyV);
+                }
             }
 
 
-        }
+            if (id == R.id.btn_action_cash) {
+                try {
+                    WalletManager.createCashMoneyWallet(getSession().getAppPublicKey(), CurrencyCash);
+                    dismiss();
+                } catch (Exception e) {
+                    Log.e(TAG, "Error on:" + e + " ------------VALORES DE VARIABLES----------->" + CurrencyCash);
+                }
+
+
+            }
 
     }
+
     @Override
     protected int setWindowFeature() {
         return Window.FEATURE_NO_TITLE;
