@@ -294,7 +294,9 @@ public class OpenNegotiationDetailsFragment extends AbstractFermatFragment<Crypt
         changeActivity(Activities.CBP_CRYPTO_CUSTOMER_WALLET_OPEN_NEGOTIATION_ADD_NOTE, this.appSession.getAppPublicKey());
     }
 
-    /*PRIVATE METHOD*/
+    /*------------------------------------- PRIVATE METHOD  -------------------------------------*/
+
+    /*------------------------------------- VIEW METHODS  -------------------------------------*/
     //VIEW TOOLBAR
     private void configureToolbar() {
 
@@ -399,7 +401,9 @@ public class OpenNegotiationDetailsFragment extends AbstractFermatFragment<Crypt
         return cont;
 
     }
+    /*------------------------------------- END VIEW METHODS  -------------------------------------*/
 
+    /* ------------------------------------- ACTION LISTENER  -------------------------------------*/
     //ACTION LISTENER FOR CUSTOMER PAYMENT METHOD
     private void actionListenerCustomerPaymentMethod(ClauseInformation clause, String selectedItem){
 
@@ -531,7 +535,9 @@ public class OpenNegotiationDetailsFragment extends AbstractFermatFragment<Crypt
         }
 
     }
+    /*------------------------------------------ END ACTION LISTENER -------------------------------------*/
 
+    /*------------------------------------------ VALIDATE OF DATE -------------------------------------*/
     //VALIDATE CLAUSE
     private Boolean validateClauses(Map<ClauseType, ClauseInformation> clauses){
 
@@ -541,6 +547,11 @@ public class OpenNegotiationDetailsFragment extends AbstractFermatFragment<Crypt
             final BigDecimal amountToBuy    = getBigDecimal(clauses.get(ClauseType.CUSTOMER_CURRENCY_QUANTITY).getValue());
             final BigDecimal amountToPay    = getBigDecimal(clauses.get(ClauseType.BROKER_CURRENCY_QUANTITY).getValue());
 
+            //VALIDATE STATUS CLAUSE
+
+            //VALIDATE CLAUSE PAYMENT-INFO
+
+            //VALIDATE QUANTITY
             if(exchangeRate.compareTo(BigDecimal.ZERO) <= 0){
                 Toast.makeText(getActivity(), "The exchange must be greater than zero.", Toast.LENGTH_LONG).show();
                 return false;
@@ -584,7 +595,9 @@ public class OpenNegotiationDetailsFragment extends AbstractFermatFragment<Crypt
         return true;
 
     }
+    /*------------------------------------------ END VALIDATE OF DATE -------------------------------------*/
 
+    /*------------------------------------------ OTHER METHODS -------------------------------------*/
     //ARRAY PAYMENT
     private ArrayList<String> getPaymentMethod(String currency){
 
@@ -604,6 +617,7 @@ public class OpenNegotiationDetailsFragment extends AbstractFermatFragment<Crypt
 
         return paymentMethods;
     }
+
     //REMOVE CURRENCY TO PAY
     private void removeCurrency(){
 
@@ -657,15 +671,6 @@ public class OpenNegotiationDetailsFragment extends AbstractFermatFragment<Crypt
                     putClause(ClauseType.CUSTOMER_PLACE_TO_DELIVER, "Insert Place To Delivery");
             }
         }
-
-    }
-
-    private void addClause(Map<ClauseType, ClauseInformation> clauses, ClauseType clauseType, String value) {
-
-        ClauseInformation clauseInformation = clauses.get(clauseType);
-
-        if (clauseInformation == null) putClause(clauseType, value);
-        else putClause(clauseInformation,value);
 
     }
 
@@ -725,6 +730,7 @@ public class OpenNegotiationDetailsFragment extends AbstractFermatFragment<Crypt
     private String getDecimalFormat(BigDecimal value){
         return DecimalFormat.getInstance().format(value.doubleValue());
     }
+    /*------------------------------------------ END OTHER METHODS -------------------------------------*/
     /*END PRIVATE METHOD*/
 
 
