@@ -7,9 +7,11 @@ Readme
 
 Fermat's  official book has been moved here:
 
-------------------------------------
-[Fermat Book](https://github.com/bitDubai/fermat-book/blob/master)
 
+[Fermat Book](https://github.com/bitDubai/fermat-book)
+
+
+------------------------------------
 
 THIS FOLDER (https://github.com/bitDubai/fermat/fermat-book/) IS NOT BEING UPDATED AND WILL SOON BE DELETED.
 
