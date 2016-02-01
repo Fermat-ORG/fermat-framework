@@ -312,7 +312,7 @@ public class IncomingMessageDao {
             /*
              * 2 - load the data base to memory with filters
              */
-            networkIntraUserTable.setFilterGroup(filtersTable, null, DatabaseFilterOperator.OR);
+            networkIntraUserTable.setFilterGroup(filtersTable, null, DatabaseFilterOperator.AND);
             networkIntraUserTable.loadToMemory();
 
             /*

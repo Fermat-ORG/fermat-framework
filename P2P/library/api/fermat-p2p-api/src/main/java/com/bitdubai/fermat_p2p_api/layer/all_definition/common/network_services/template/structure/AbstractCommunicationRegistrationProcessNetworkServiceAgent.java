@@ -6,6 +6,9 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.AgentStatus;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.common.network_services.abstract_classes.AbstractNetworkService;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.WsCommunicationsCloudClientManager;
 
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+
 /**
  * The Class <code>com.bitdubai.fermat_p2p_api.layer.all_definition.common.network_services.template.structure.AbstractCommunicationRegistrationProcessNetworkServiceAgent</code>
  * contains all the basic functionality of a CommunicationRegistrationProcessNetworkServiceAgent.
@@ -26,10 +29,18 @@ public abstract class AbstractCommunicationRegistrationProcessNetworkServiceAgen
     private static final long SLEEP_TIME     =  5000;
     private static final long MAX_SLEEP_TIME = 20000;
 
-    private final Thread agentThread;
-
     private final AbstractNetworkService networkServicePluginRoot      ;
     private final WsCommunicationsCloudClientManager communicationsClientConnection;
+
+    private ExecutorService executorService;
+
+    private final Thread agentThread = new Thread(new Runnable() {
+        @Override
+        public void run() {
+            while (isRunning())
+                registrationProcess();
+        }
+    });
 
     /**
      * Constructor with parameters.
@@ -42,34 +53,21 @@ public abstract class AbstractCommunicationRegistrationProcessNetworkServiceAgen
 
         this.networkServicePluginRoot       = networkServicePluginRoot      ;
         this.communicationsClientConnection = communicationsClientConnection;
-
         this.status = AgentStatus.CREATED;
+        executorService = Executors.newSingleThreadExecutor();
 
-        this.agentThread = new Thread(new Runnable() {
-            @Override
-            public void run() {
-                while (isRunning())
-                    registrationProcess();
-            }
-        });
     }
 
     @Override
-    public final synchronized void start() {
-
-        this.agentThread.start();
-
+    public void start() {
         this.status = AgentStatus.STARTED;
-
+        executorService.execute(agentThread);
     }
 
     @Override
-    public final void stop() {
-
-        this.agentThread.interrupt();
-
+    public void stop() {
         this.status = AgentStatus.STOPPED;
-
+        executorService.shutdown();
     }
 
     protected void registrationProcess() {
@@ -98,30 +96,34 @@ public abstract class AbstractCommunicationRegistrationProcessNetworkServiceAgen
                 networkServicePluginRoot.initializeCommunicationNetworkServiceConnectionManager();
 
                 // Stop the agent
-                this.status = AgentStatus.STOPPED;
+                stop();
 
             } else if (!networkServicePluginRoot.isRegister()){
 
                 try {
-                    Thread.sleep(AbstractCommunicationRegistrationProcessNetworkServiceAgent.SLEEP_TIME);
+                    if(Thread.currentThread().isInterrupted() == Boolean.FALSE)
+                        Thread.sleep(AbstractCommunicationRegistrationProcessNetworkServiceAgent.SLEEP_TIME);
                 } catch (InterruptedException e) {
                     System.out.println(e.getMessage());
                     this.status = AgentStatus.STOPPED;
                 }
 
+            }else if(networkServicePluginRoot.isRegister()){
+                /*
+                 * Stop the internal threads
+                 */
+                 stop();
             }
-
-            // TODO add better exception control here.
 
         } catch (Exception e) {
             try {
-                //TODO lo comente por que me genera un null pointer
-//                System.out.println(e.getMessage());
-                Thread.sleep(AbstractCommunicationRegistrationProcessNetworkServiceAgent.MAX_SLEEP_TIME);
+                if(Thread.currentThread().isInterrupted() == Boolean.FALSE)
+                    Thread.sleep(AbstractCommunicationRegistrationProcessNetworkServiceAgent.MAX_SLEEP_TIME);
             } catch (InterruptedException e1) {
                 System.out.println(e1.getMessage());
                 this.status = AgentStatus.STOPPED;
             }
         }
+
     }
 }

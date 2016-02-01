@@ -20,6 +20,7 @@ import android.widget.Toast;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractFermatFragment;
 import com.bitdubai.fermat_android_api.ui.interfaces.FermatWorkerCallBack;
 import com.bitdubai.fermat_android_api.ui.util.FermatWorker;
+import com.bitdubai.fermat_api.AndroidCoreManager;
 import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.enums.UISource;
 import com.bitdubai.fermat_api.layer.all_definition.enums.WalletCategory;
@@ -438,6 +439,7 @@ public class DesktopFragment extends AbstractFermatFragment implements SearchVie
             item.setPosition(7);
             lstItemsWithIcon.add(item);
 
+
             //subApps
 //            InstalledSubApp installedSubApp = new InstalledSubApp(SubApps.CWP_INTRA_USER_IDENTITY,null,null,"intra_user_identity_sub_app","Identity","public_key_ccp_intra_user_identity","intra_user_identity_sub_app",new Version(1,0,0));
 //            Item item2 = new Item(installedSubApp);
@@ -498,10 +500,21 @@ public class DesktopFragment extends AbstractFermatFragment implements SearchVie
                 case SUB_APP:
                     if(((InstalledSubApp)data.getInterfaceObject()).getSubAppType().equals(SubApps.Scanner)){
                         Toast.makeText(getActivity(),"Coming soon",Toast.LENGTH_SHORT).show();
-                    }else selectSubApp((InstalledSubApp) data.getInterfaceObject());
+                    }else if(((InstalledSubApp)data.getInterfaceObject()).getAppPublicKey().equals("public_key_ccp_intra_user_identity")){
+                        selectSubApp((InstalledSubApp) data.getInterfaceObject());
+                    } else if(((InstalledSubApp)data.getInterfaceObject()).getAppPublicKey().equals("public_key_intra_user_commmunity")){
+                        selectSubApp((InstalledSubApp) data.getInterfaceObject());
+                    }else{
+                        Toast.makeText(getActivity(),"Sorry, SubApp is not on platform",Toast.LENGTH_SHORT).show();
+                    }
                     break;
                 case WALLET:
-                    selectWallet((InstalledWallet) data.getInterfaceObject());
+                    if(((InstalledWallet)data.getInterfaceObject()).getWalletPublicKey().equals("reference_wallet")){
+                        selectWallet((InstalledWallet) data.getInterfaceObject());
+                    }else{
+                        Toast.makeText(getActivity(),"Sorry, Wallet is not on platform",Toast.LENGTH_SHORT).show();
+                    }
+
                     break;
                 case EMPTY:
                     break;

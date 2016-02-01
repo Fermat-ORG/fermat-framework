@@ -319,7 +319,7 @@ public class OutgoingMessageDao {
             /*
              * 2 - load the data base to memory with filters
              */
-            templateTable.setFilterGroup(filtersTable, null, DatabaseFilterOperator.OR);
+            templateTable.setFilterGroup(filtersTable, null, DatabaseFilterOperator.AND);
             templateTable.loadToMemory();
 
             /*
@@ -483,6 +483,7 @@ public class OutgoingMessageDao {
             DatabaseTransaction transaction = getDataBase().newTransaction();
 
             //falta configurar la llamada para borrar la entidad
+            //Y setaer el filtro por ID
 
             getDataBase().executeTransaction(transaction);
 

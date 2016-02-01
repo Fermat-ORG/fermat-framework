@@ -98,48 +98,9 @@ public abstract class AbstractPlugin implements Plugin, Service {
     }
 
     public synchronized final void startPlugin() throws CantStartPluginException {
+        this.start();
+        this.serviceStatus = ServiceStatus.STARTED;
 
-        switch (serviceStatus) {
-
-            case STARTED:
-                break;
-
-            case STARTING:
-
-                while (serviceStatus == ServiceStatus.STARTING) {
-
-                    try {
-
-                        wait(1);
-
-                    } catch (final InterruptedException e) {
-
-
-                    }
-
-                }
-
-                if(serviceStatus == ServiceStatus.ERROR) {
-
-                    throw new CantStartPluginException(
-                        "There was an error in the Start of the plug-in."
-                    );
-                }
-
-                break;
-            case ERROR:
-
-                throw new CantStartPluginException(
-                        "There was an error in the Start of the plug-in."
-                );
-
-            default:
-
-                this.start();
-                this.serviceStatus = ServiceStatus.STARTED;
-
-                break;
-        }
     }
 
     @Override
