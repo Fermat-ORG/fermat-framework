@@ -85,6 +85,7 @@ public class DigitalAssetReceptor extends AbstractDigitalAssetSwap {
             this.assetReceptionDao.updateReceptionStatusByGenesisTransaction(ReceptionStatus.HASH_CHECKED, genesisTransaction);
             this.assetReceptionDao.updateReceptionStatusByGenesisTransaction(ReceptionStatus.ASSET_ACCEPTED, genesisTransaction);
             this.assetReceptionDao.updateDigitalAssetCryptoStatusByGenesisTransaction(genesisTransaction, CryptoStatus.PENDING_SUBMIT);
+            persistInLocalStorage(digitalAssetMetadata);
         } catch (Exception e) {
             throw new CantReceiveDigitalAssetException(e, "Receiving Digital Asset Metadata", "Unexpected exception while verifying the asset");
         }
@@ -97,7 +98,6 @@ public class DigitalAssetReceptor extends AbstractDigitalAssetSwap {
                 this.digitalAssetFileStoragePath,
                 digitalAssetMetadata.getDigitalAssetHash(),
                 senderId);
-        persistInLocalStorage(digitalAssetMetadata);
     }
 
     /**

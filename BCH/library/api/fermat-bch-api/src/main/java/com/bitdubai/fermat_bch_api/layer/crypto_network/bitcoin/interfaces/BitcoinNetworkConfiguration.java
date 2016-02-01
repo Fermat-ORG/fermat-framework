@@ -3,6 +3,7 @@ package com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.interfaces;
 import org.bitcoinj.core.NetworkParameters;
 import org.bitcoinj.params.RegTestParams;
 import org.bitcoinj.params.TestNet3Params;
+import org.bouncycastle.util.test.Test;
 
 /**
  * Created by rodrigo on 9/19/15.
@@ -11,7 +12,7 @@ public interface BitcoinNetworkConfiguration {
     /**
      * Network that we are using as Default in the platform
      */
-    public static final NetworkParameters DEFAULT_NETWORK_PARAMETERS = RegTestParams.get();
+    public static final NetworkParameters DEFAULT_NETWORK_PARAMETERS = TestNet3Params.get();
 
     /**
      * Agent name and version
