@@ -14,7 +14,7 @@ import java.util.List;
  * Created by nelson on 27/01/16.
  */
 public class EarningsOverviewAdapter extends FermatAdapter<EarningTestData, EarningsOverviewViewHolder> {
-
+    private int timeField;
 
     public EarningsOverviewAdapter(Context context, List<EarningTestData> dataSet) {
         super(context, dataSet);
@@ -32,6 +32,10 @@ public class EarningsOverviewAdapter extends FermatAdapter<EarningTestData, Earn
 
     @Override
     protected void bindHolder(EarningsOverviewViewHolder holder, EarningTestData data, int position) {
-        holder.bind(data);
+        holder.bind(data, timeField);
+    }
+
+    public void setTimeField(int timeField){
+        this.timeField = timeField;
     }
 }
