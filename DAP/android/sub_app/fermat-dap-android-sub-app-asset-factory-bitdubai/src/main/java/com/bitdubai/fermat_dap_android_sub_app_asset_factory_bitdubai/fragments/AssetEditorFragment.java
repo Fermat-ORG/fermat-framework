@@ -70,7 +70,9 @@ import com.bitdubai.fermat_wpd_api.layer.wpd_middleware.wallet_manager.exception
 import com.bitdubai.fermat_wpd_api.layer.wpd_middleware.wallet_manager.interfaces.InstalledWallet;
 
 import java.io.ByteArrayOutputStream;
+import java.sql.Timestamp;
 import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -117,6 +119,7 @@ public class AssetEditorFragment extends AbstractFermatFragment implements View.
     private Calendar expirationTimeCalendar;
     private DateFormat dateFormat = DAPStandardFormats.DATE_FORMAT;
     private DateFormat timeFormat = DAPStandardFormats.TIME_FORMAT;
+    private SimpleDateFormat dateTimeFormat = DAPStandardFormats.SIMPLE_DATETIME_FORMAT;
     private boolean isEdit;
     private boolean hasResource;
 
@@ -564,7 +567,9 @@ public class AssetEditorFragment extends AbstractFermatFragment implements View.
         if (hasExpirationDate.isActivated()) {
             if (!expirationDate.getText().toString().trim().isEmpty()) {
                 try {
-                    asset.setExpirationDate(new java.sql.Timestamp(expirationTimeCalendar.getTime().getTime()));
+//                    asset.setExpirationDate(new Timestamp(dateFormat.parse(expirationDate.getText().toString()).getTime()));
+                    Date date = dateTimeFormat.parse(expirationDate.getText().toString() + " " + expirationTime.getText().toString());
+                    asset.setExpirationDate(new Timestamp(date.getTime()));
                     asset.setCreationTimestamp(new java.sql.Timestamp(System.currentTimeMillis()));
                 } catch (Exception ex) {
                     CommonLogger.exception(TAG, ex.getMessage(), ex);

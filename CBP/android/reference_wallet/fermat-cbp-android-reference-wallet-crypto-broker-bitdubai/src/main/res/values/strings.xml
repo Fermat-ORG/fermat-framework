@@ -107,7 +107,7 @@
     <string name="cbw_wizard_bank_account_description">You must select the Bank Account from the Bank Wallet you selected as Earning</string>
     <string name="cbw_wizard_bank_account_title">Bank Accounts</string>
     <string name="cbw_wizard_exchange_rate_providers_title">Exchange Rate Providers</string>
-    <string name="cbw_wizard_exchange_rate_providers_description">You must select a Exchange Provider for your Merchandises</string>
+    <string name="cbw_wizard_exchange_rate_providers_description">You must select the providers according to the wallet of merchandise, chosen in the previous step</string>
     <string name="cbw_choose_provider">Choose Provider</string>
     <string name="cbw_wizard_locations_description">You must add at least one location to make your transactions</string>
     <string name="cbw_add_location">Add a Location</string>
@@ -115,13 +115,13 @@
     <string name="cbw_no_locations_added">No Locations Added</string>
     <string name="cbw_add_bank_account">Add Bank Account</string>
     <string name="cbw_wizard_earning_merchandise_title">Choose Earning Merchandises</string>
-    <string name="cbw_wizard_earning_merchandise_description">You must select a Wallet or Wallets that will work as Merchandise</string>
+    <string name="cbw_wizard_earning_merchandise_description">You must select the wallets will work depending on the merchandise</string>
     <string name="cbw_select_earnings_merchandise">Select a Earning Merchandise</string>
     <string name="cbw_crypto">Crypto</string>
     <string name="cbw_cash">Cash</string>
     <string name="cbw_bank">Bank</string>
-    <string name="cbw_wizard_stock_merchandise_title">Choose Stock Merchandises</string>
-    <string name="cbw_wizard_stock_merchandise_description">You must select a Wallet that work as Merchandise and the spread applied to them</string>
+    <string name="cbw_wizard_stock_merchandise_title">Select Stock Merchandises</string>
+    <string name="cbw_wizard_stock_merchandise_description">You must select the wallets will work depending on the merchandise</string>
     <string name="cbw_select_stock_merchandise">Select a Stock Merchandise</string>
     <string name="cbw_settings_locations_description">You must have at least one location to make your transactions</string>
     <string name="cbw_settings_locations_title">Manage Your Locations</string>
@@ -134,7 +134,7 @@
     <string name="cbw_contract_details_contract_title">SELLING BTC</string>
     <string name="cbw_contract_details_negotiation_details">NEGOTIATION DETAILS</string>
     <string name="cbw_wizard_other_settings_title">Other settings</string>
-    <string name="cbw_wizard_other_settings_description">Other settings description step other settings description</string>
+    <string name="cbw_wizard_other_settings_description">You must set the spread value applied, and Restock automatic for transactions in the wallet </string>
 
 
     <!--Dialog Help - Init-->
@@ -159,5 +159,9 @@
     <string name="cbw_crypto_broker_wallet_merchandises_subTitle">Subtitle text of Merchandises dialog help</string>
     <string name="cbw_crypto_broker_wallet_merchandises_body">Custom text support for dialog in the wizard Merchandises help.</string>
     <string name="cbw_crypto_broker_wallet_merchandises_footer">Text footer Merchandises dialog help.</string>
+    <string name="cbw_wizard_merchandise_dialog_body">Custom text support for dialog in the wizard identities help 2</string>
+    <string name="cbw_wizard_merchandise_dialog_footer">To begin, choose an avatar below. You might change it later with any picture and your alias</string>
+    <string name="cbw_wizard_merchandise_dialog_sub_title">This is a simple wallet for exchange Merchandise.</string>
+    <string name="cbw_current_earings_title">Current Earnings:</string>
     <!--Dialog Help - End-->
 </resources>

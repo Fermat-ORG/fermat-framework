@@ -75,31 +75,6 @@
                 android:layout_height="wrap_content"
                 android:drawSelectorOnTop="true"
                 />
-            <Button
-                android:id="@+id/bnk_add_account_ok_btn"
-                android:layout_width="match_parent"
-                android:layout_height="40dp"
-                android:layout_marginTop="20dip"
-                android:layout_marginRight="1dip"
-                android:layout_marginLeft="1dip"
-                android:layout_weight="1"
-                android:background="#FFF"
-                android:text="OK"
-                android:textColor="#2c648f"
-                android:textSize="14sp" />
-
-            <Button
-                android:id="@+id/bnk_add_account_cancel_btn"
-                android:layout_width="match_parent"
-                android:layout_height="40dp"
-                android:layout_marginTop="20dip"
-                android:layout_marginRight="1dip"
-                android:layout_marginLeft="1dip"
-                android:layout_weight="1"
-                android:background="#FFF"
-                android:text="Cancel"
-                android:textColor="#2c648f"
-                android:textSize="14sp" />
         </LinearLayout>
     </LinearLayout>
 </LinearLayout>

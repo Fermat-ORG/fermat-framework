@@ -1,0 +1,96 @@
+package com.bitdubai.fermat_csh_plugin.layer.wallet_module.cash_money.developer.bitdubai.version_1.structure;
+
+import com.bitdubai.fermat_api.layer.all_definition.enums.FiatCurrency;
+import com.bitdubai.fermat_csh_api.all_definition.enums.BalanceType;
+import com.bitdubai.fermat_csh_api.all_definition.enums.TransactionType;
+import com.bitdubai.fermat_csh_api.layer.csh_wallet.interfaces.CashMoneyWalletTransaction;
+
+import java.math.BigDecimal;
+import java.util.UUID;
+
+/**
+ * Created by Alejandro Bicelis on 11/24/2015.
+ */
+public class CashMoneyWalletTransactionImpl implements CashMoneyWalletTransaction {
+
+    UUID transactionId;
+    String publicKeyWallet;
+    String publicKeyActor;
+    String publicKeyPlugin;
+    TransactionType transactionType;
+    BalanceType balanceType;
+    BigDecimal amount;
+    String memo;
+    long timestamp;
+    boolean isPending;
+
+
+    public CashMoneyWalletTransactionImpl(UUID transactionId, String publicKeyWallet, String publicKeyActor, String publicKeyPlugin, TransactionType transactionType,
+                                          BalanceType balanceType, BigDecimal amount, String memo, long timestamp, boolean isPending) {
+        this.transactionId = transactionId;
+        this.publicKeyWallet = publicKeyWallet;
+        this.publicKeyActor = publicKeyActor;
+        this.publicKeyPlugin = publicKeyPlugin;
+        this.transactionType = transactionType;
+        this.balanceType = balanceType;
+        this.amount = amount;
+        this.memo = memo;
+        this.timestamp = timestamp;
+        this.isPending = isPending;
+    }
+
+
+    @Override
+    public TransactionType getTransactionType() {
+        return transactionType;
+    }
+
+    @Override
+    public BalanceType getBalanceType() { return this.balanceType; }
+
+    @Override
+    public long getTimestamp() {
+        return timestamp;
+    }
+
+    @Override
+    public UUID getTransactionId() {
+        return transactionId;
+    }
+
+    @Override
+    public String getPublicKeyWallet() {
+        return publicKeyWallet;
+    }
+
+    @Override
+    public String getPublicKeyActor() {
+        return publicKeyActor;
+    }
+
+    @Override
+    public String getPublicKeyPlugin() {
+        return publicKeyPlugin;
+    }
+
+    @Override
+    public BigDecimal getAmount() {
+        return amount;
+    }
+
+    @Override
+    public FiatCurrency getCurrency() {
+        return null;
+    }
+
+    @Override
+    public String getMemo() {
+        return memo;
+    }
+
+    @Override
+    public boolean isPending() {
+        return isPending;
+    }
+}
+
