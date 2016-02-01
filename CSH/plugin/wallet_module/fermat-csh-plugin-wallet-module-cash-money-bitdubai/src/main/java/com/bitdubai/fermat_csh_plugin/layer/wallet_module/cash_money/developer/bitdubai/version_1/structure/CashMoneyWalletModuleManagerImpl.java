@@ -3,6 +3,7 @@ package com.bitdubai.fermat_csh_plugin.layer.wallet_module.cash_money.developer.
 import com.bitdubai.fermat_api.AsyncTransactionAgent;
 import com.bitdubai.fermat_api.layer.all_definition.enums.FiatCurrency;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
+import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterException;
 import com.bitdubai.fermat_api.layer.all_definition.settings.structure.SettingsManager;
 import com.bitdubai.fermat_api.layer.modules.common_classes.ActiveActorIdentityInformation;
 import com.bitdubai.fermat_api.layer.modules.exceptions.CantGetSelectedActorIdentityException;
@@ -33,7 +34,10 @@ import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.Un
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
 /**
@@ -60,7 +64,7 @@ public class CashMoneyWalletModuleManagerImpl extends AsyncTransactionAgent<Cash
         this.cashDepositTransactionManager = cashDepositTransactionManager;
         this.cashWithdrawalTransactionManager = cashWithdrawalTransactionManager;
 
-        this.setTransactionDelayMillis(15);
+        this.setTransactionDelayMillis(30000);
 
         //CashTransactionParameters params = new CashTransactionParametersImpl(UUID.randomUUID(), "cash_wallet", "pkeyActor", "pkeyPlugin", new BigDecimal(200.3), FiatCurrency.US_DOLLAR, "testDeposit AVAIL/BOOK 200.3USD", TransactionType.CREDIT);
         //CashTransactionParameters params2 = new CashTransactionParametersImpl(UUID.randomUUID(), "cash_wallet", "pkeyActor", "pkeyPlugin", new BigDecimal(200.3), FiatCurrency.US_DOLLAR, "testDeposit AVAIL/BOOK 200.3USD", TransactionType.DEBIT);
@@ -144,13 +148,14 @@ public class CashMoneyWalletModuleManagerImpl extends AsyncTransactionAgent<Cash
     }
 
     @Override
-    public void createAsyncCashDepositTransaction(CashTransactionParameters depositParameters) {
+    public void createAsyncCashTransaction(CashTransactionParameters depositParameters) {
         this.queueNewTransaction(depositParameters);
     }
 
     @Override
-    public void createAsyncCashWithdrawalTransaction(CashTransactionParameters withdrawalParameters) {
-        this.queueNewTransaction(withdrawalParameters);
+    public void cancelAsyncCashTransaction(CashMoneyWalletTransaction t)  throws Exception {
+        CashTransactionParameters tp = new CashTransactionParametersImpl(t.getTransactionId(), t.getPublicKeyWallet(), t.getPublicKeyActor(), t.getPublicKeyPlugin(), t.getAmount(), t.getCurrency(), t.getMemo(), t.getTransactionType());
+        this.cancelTransaction(tp);
     }
 
     @Override
@@ -161,6 +166,17 @@ public class CashMoneyWalletModuleManagerImpl extends AsyncTransactionAgent<Cash
     @Override
     public CashWithdrawalTransaction doCreateCashWithdrawalTransaction(CashTransactionParameters withdrawalParameters) throws CantCreateWithdrawalTransactionException, CashMoneyWalletInsufficientFundsException {
         return cashWithdrawalTransactionManager.createCashWithdrawalTransaction(withdrawalParameters);
+    }
+
+    @Override
+    public List<CashMoneyWalletTransaction> getPendingTransactions() {
+
+        List<CashMoneyWalletTransaction> transactionList = new ArrayList<>();
+        for(CashTransactionParameters tp : getQueuedTransactions()) {
+            transactionList.add(new CashMoneyWalletTransactionImpl(tp.getTransactionId(), tp.getPublicKeyWallet(), tp.getPublicKeyActor(), tp.getPublicKeyPlugin(),
+                    tp.getTransactionType(), null, tp.getAmount(), tp.getMemo(), System.currentTimeMillis()/1000L, true));
+        }
+        return transactionList;
     }
 
     @Override
@@ -180,6 +196,20 @@ public class CashMoneyWalletModuleManagerImpl extends AsyncTransactionAgent<Cash
             throw new CantGetCashMoneyWalletTransactionsException(CantGetCashMoneyWalletTransactionsException.DEFAULT_MESSAGE, e, "CashMoneyWalletModulePluginRoot", "Cannot get cash money wallet currency");
 
         }
+    }
+
+    @Override
+    public CashMoneyWalletTransaction getTransaction(String walletPublicKey, UUID transactionId) throws CantGetCashMoneyWalletTransactionsException {
+        CashMoneyWallet wallet;
+        try{
+            wallet = cashMoneyWalletManager.loadCashMoneyWallet(walletPublicKey);
+        } catch (CantLoadCashMoneyWalletException e) {
+            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_CSH_WALLET_CASH_MONEY, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
+            throw new CantGetCashMoneyWalletTransactionsException(CantGetCashMoneyWalletTransactionsException.DEFAULT_MESSAGE, e, "CashMoneyWalletModulePluginRoot", "Cannot load cash money wallet");
+        }
+
+        return wallet.getTransaction(transactionId);
+
     }
 
     @Override

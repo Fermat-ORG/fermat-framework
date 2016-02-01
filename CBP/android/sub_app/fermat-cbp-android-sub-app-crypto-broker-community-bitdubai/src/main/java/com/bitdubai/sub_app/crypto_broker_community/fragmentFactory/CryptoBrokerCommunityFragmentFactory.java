@@ -10,7 +10,6 @@ import com.bitdubai.sub_app.crypto_broker_community.fragments.ConnectionOtherPro
 import com.bitdubai.sub_app.crypto_broker_community.fragments.ConnectionsFragment;
 import com.bitdubai.sub_app.crypto_broker_community.fragments.ConnectionsListFragment;
 import com.bitdubai.sub_app.crypto_broker_community.fragments.ConnectionsWorldFragment;
-import com.bitdubai.sub_app.crypto_broker_community.preference_settings.CryptoBrokerCommunityPreferenceSettings;
 import com.bitdubai.sub_app.crypto_broker_community.session.CryptoBrokerCommunitySubAppSession;
 
 /**

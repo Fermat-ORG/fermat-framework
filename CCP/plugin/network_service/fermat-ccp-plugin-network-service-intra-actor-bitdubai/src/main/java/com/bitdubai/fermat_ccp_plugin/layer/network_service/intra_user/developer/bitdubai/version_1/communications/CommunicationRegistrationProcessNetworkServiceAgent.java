@@ -10,6 +10,9 @@ import com.bitdubai.fermat_api.layer.all_definition.components.interfaces.Platfo
 import com.bitdubai.fermat_ccp_plugin.layer.network_service.intra_user.developer.bitdubai.version_1.IntraActorNetworkServicePluginRoot;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.WsCommunicationsCloudClientManager;
 
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+
 
 /**
  * The Class <code>com.bitdubai.fermat_dmp_plugin.layer.network_service.template.developer.bitdubai.version_1.communications.CommunicationRegistrationProcessNetworkServiceAgent</code>
@@ -19,7 +22,7 @@ import com.bitdubai.fermat_p2p_api.layer.p2p_communication.WsCommunicationsCloud
  * @version 1.0
  * @since Java JDK 1.7
  */
-public class CommunicationRegistrationProcessNetworkServiceAgent extends Thread {
+public class CommunicationRegistrationProcessNetworkServiceAgent {
 
     /*
      * Represent the sleep time for the read or send (5000 milliseconds)
@@ -43,6 +46,22 @@ public class CommunicationRegistrationProcessNetworkServiceAgent extends Thread 
     private boolean active;
 
     /**
+     * Represent the executorService
+     */
+    private ExecutorService executorService;
+
+    /**
+     * Represent the main task
+     */
+    private Runnable toRegistration = new Runnable() {
+        @Override
+        public void run() {
+            while (active)
+                processRegistration();
+        }
+    };
+
+    /**
      * Constructor with parameters
      * @param networkService
      * @param communicationsClientConnection
@@ -53,82 +72,64 @@ public class CommunicationRegistrationProcessNetworkServiceAgent extends Thread 
         this.active = Boolean.FALSE;
     }
 
-    /**
-     * (non-javadoc)
-     * @see Thread#run()
-     */
-    @Override
-    public void run() {
+    private void processRegistration() {
 
-        while (active){
             try{
-               System.out.println("IntraActorNetworkServicePluginRoot "+networkService.isRegister()+" communicationsClientConnection.isRegister() "+communicationsClientConnection.getCommunicationsCloudClientConnection().isRegister());
+
+                System.out.println(networkService.getName()+" isRegister "+networkService.isRegister()+" communicationsClientConnection.isRegister() "+communicationsClientConnection.getCommunicationsCloudClientConnection().isRegister());
 
                 if (communicationsClientConnection.getCommunicationsCloudClientConnection().isRegister() && !networkService.isRegister()){
 
                     /*
-                     * Construct my profile and register me
-                     */
-                    PlatformComponentProfile platformComponentProfile =  communicationsClientConnection.getCommunicationsCloudClientConnection().constructPlatformComponentProfileFactory(networkService.getIdentityPublicKey(),
-                            networkService.getAlias().toLowerCase(),
-                            networkService.getName(),
-                            networkService.getNetworkServiceType(),
-                            networkService.getPlatformComponentType(),
-                            networkService.getExtraData());
-
-                    /*
                      * Register me
                      */
-                    communicationsClientConnection.getCommunicationsCloudClientConnection().registerComponentForCommunication(networkService.getNetworkServiceType(), platformComponentProfile);
+                    communicationsClientConnection.getCommunicationsCloudClientConnection().registerComponentForCommunication(networkService.getNetworkServiceType(), networkService.getPlatformComponentProfilePluginRoot());
 
                     /*
-                     * Configure my new profile
+                     * Stop the internal threads
                      */
-                    networkService.setPlatformComponentProfilePluginRoot(platformComponentProfile);
-
-                    /*
-                     * Initialize the connection manager
-                     */
-                    networkService.initializeCommunicationNetworkServiceConnectionManager();
-
-                    /*
-                     * Stop the agent
-                     */
-                    active = Boolean.FALSE;
+                    stop();
 
                 }else if (!networkService.isRegister()){
+                   try {
 
-                    try {
-                        sleep(CommunicationRegistrationProcessNetworkServiceAgent.SLEEP_TIME);
+                        if(Thread.currentThread().isInterrupted() == Boolean.FALSE)
+                            Thread.sleep(CommunicationRegistrationProcessNetworkServiceAgent.SLEEP_TIME);
+
                     } catch (InterruptedException e) {
-                        System.out.println(e.getMessage());
                         active = Boolean.FALSE;
                     }
 
-                }else if (!networkService.isRegister()){
-                    active = Boolean.FALSE;
+                }else {
+                    /*
+                     * Stop the internal threads
+                     */
+                    stop();
                 }
 
             }catch (Exception e){
-                try { //TODO null pointer exc
-//                    System.out.println(e.getMessage());
-                    sleep(CommunicationRegistrationProcessNetworkServiceAgent.MAX_SLEEP_TIME);
+                try {
+                    if(Thread.currentThread().isInterrupted() == Boolean.FALSE)
+                        Thread.sleep(CommunicationRegistrationProcessNetworkServiceAgent.MAX_SLEEP_TIME);
                 } catch (InterruptedException e1) {
-//                    System.out.println(e1.getMessage());
                     active = Boolean.FALSE;
                 }
             }
-        }
+
     }
 
-    /**
-     * (non-javadoc)
-     * @see Thread#start()
-     */
-    @Override
-    public synchronized void start() {
+    public void start() {
         this.active = Boolean.TRUE;
-        super.start();
+        executorService = Executors.newSingleThreadExecutor();
+        executorService.execute(toRegistration);
+    }
+
+    /*
+     * Stop the internal threads
+     */
+    public void stop(){
+        this.active = Boolean.FALSE;
+        executorService.shutdown();
     }
 
     /**
@@ -138,4 +139,5 @@ public class CommunicationRegistrationProcessNetworkServiceAgent extends Thread 
     public boolean getActive() {
         return active;
     }
+
 }

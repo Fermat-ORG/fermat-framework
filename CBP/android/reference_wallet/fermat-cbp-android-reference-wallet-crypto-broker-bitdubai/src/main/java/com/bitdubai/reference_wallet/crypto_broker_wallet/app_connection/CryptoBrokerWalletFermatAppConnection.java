@@ -8,6 +8,7 @@ import com.bitdubai.fermat_android_api.engine.HeaderViewPainter;
 import com.bitdubai.fermat_android_api.engine.NavigationViewPainter;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.abstracts.AbstractFermatSession;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.AppConnections;
+import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.FermatSession;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.PluginVersionReference;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Developers;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Layers;
@@ -26,7 +27,7 @@ import com.bitdubai.reference_wallet.crypto_broker_wallet.session.CryptoBrokerWa
  *
  * @since 2015.12.17
  */
-public class CryptoBrokerWalletFermatAppConnection extends AppConnections {
+public class CryptoBrokerWalletFermatAppConnection extends AppConnections<CryptoBrokerWalletSession> {
 
     ActorIdentity identity;
 
@@ -52,10 +53,9 @@ public class CryptoBrokerWalletFermatAppConnection extends AppConnections {
 
     }
     @Override
-    protected AbstractFermatSession getSession() {
+    protected CryptoBrokerWalletSession getSession() {
         return new CryptoBrokerWalletSession();
     }
-
 
     @Override
     public NavigationViewPainter getNavigationViewPainter() {
@@ -69,6 +69,6 @@ public class CryptoBrokerWalletFermatAppConnection extends AppConnections {
 
     @Override
     public FooterViewPainter getFooterViewPainter() {
-        return new CryptoBrokerWalletFooterPainter();
+        return new CryptoBrokerWalletFooterPainter(getActivity(), getFullyLoadedSession());
     }
 }
