@@ -1,6 +1,6 @@
 package com.bitdubai.fermat_cbp_plugin.layer.wallet.crypto_broker.developer.bitdubai.version_1.structure.util;
 
-import com.bitdubai.fermat_api.layer.all_definition.enums.interfaces.FermatEnum;
+import com.bitdubai.fermat_api.layer.world.interfaces.Currency;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.BalanceType;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.CurrencyType;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.OriginTransaction;
@@ -23,7 +23,7 @@ public class CryptoBrokerStockTransactionImpl implements CryptoBrokerStockTransa
     private final BalanceType        balanceType;
     private final TransactionType    transactionType;
     private final CurrencyType       currencyType;
-    private final FermatEnum         merchandise;
+    private final Currency           merchandise;
     private final String             walletPublicKey;
     private final String             brokerPublicKey;
     private final BigDecimal         amount;
@@ -40,7 +40,7 @@ public class CryptoBrokerStockTransactionImpl implements CryptoBrokerStockTransa
                                             final BalanceType        balanceType,
                                             final TransactionType    transactionType,
                                             final CurrencyType       currencyType,
-                                            final FermatEnum         merchandise,
+                                            final Currency           merchandise,
                                             final String             walletPublicKey,
                                             final String             brokerPublicKey,
                                             final BigDecimal         amount,
@@ -107,7 +107,7 @@ public class CryptoBrokerStockTransactionImpl implements CryptoBrokerStockTransa
     }
 
     @Override
-    public FermatEnum getMerchandise() {
+    public Currency getMerchandise() {
         return merchandise;
     }
 

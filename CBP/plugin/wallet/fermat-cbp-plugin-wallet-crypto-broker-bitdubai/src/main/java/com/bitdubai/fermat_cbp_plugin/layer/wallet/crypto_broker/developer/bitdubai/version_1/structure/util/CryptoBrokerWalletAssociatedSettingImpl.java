@@ -1,7 +1,7 @@
 package com.bitdubai.fermat_cbp_plugin.layer.wallet.crypto_broker.developer.bitdubai.version_1.structure.util;
 
 import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
-import com.bitdubai.fermat_api.layer.all_definition.enums.interfaces.FermatEnum;
+import com.bitdubai.fermat_api.layer.world.interfaces.Currency;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.CurrencyType;
 import com.bitdubai.fermat_cbp_api.layer.wallet.crypto_broker.interfaces.setting.CryptoBrokerWalletAssociatedSetting;
 
@@ -16,7 +16,7 @@ public class CryptoBrokerWalletAssociatedSettingImpl implements CryptoBrokerWall
     String       brokerPublicKey;
     Platforms    platforms;
     String       walletPublicKey;
-    FermatEnum   merchandise;
+    Currency     merchandise;
     String       bankAccount;
     CurrencyType currencyType;
 
@@ -63,12 +63,12 @@ public class CryptoBrokerWalletAssociatedSettingImpl implements CryptoBrokerWall
     }
 
     @Override
-    public FermatEnum getMerchandise() {
+    public Currency getMerchandise() {
         return merchandise;
     }
 
     @Override
-    public void setMerchandise(FermatEnum merchandise) {
+    public void setMerchandise(Currency merchandise) {
         this.merchandise = merchandise;
     }
 
