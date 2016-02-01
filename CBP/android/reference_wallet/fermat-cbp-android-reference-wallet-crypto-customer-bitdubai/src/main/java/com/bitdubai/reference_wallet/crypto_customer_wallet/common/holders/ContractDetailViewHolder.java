@@ -18,6 +18,7 @@ import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Wallets;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.ContractDetailType;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.ContractStatus;
+import com.bitdubai.fermat_cbp_api.layer.contract.customer_broker_purchase.exceptions.CantGetListCustomerBrokerContractPurchaseException;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.common.interfaces.ContractBasicInformation;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_customer.interfaces.CryptoCustomerWalletManager;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedWalletExceptionSeverity;
@@ -94,26 +95,54 @@ public class ContractDetailViewHolder extends FermatViewHolder {
     }
 
     protected void executeContractAction(String buttonText){
-        if(buttonText.equals("SEND")){
-            //TODO: Send Payment
-            //In this case, I will send the payment to Broker
-            try{
+        try{
+            if(buttonText.equals("SEND")){
+                //TODO: Send Payment
+                //In this case, I will send the payment to Broker
                 this.walletManager.sendPayment(this.contractId.toString());
-            } catch (FermatException ex) {
-                Toast.makeText(this.parentFragment.getActivity(), "Oops a error occurred...", Toast.LENGTH_SHORT).show();
+                updateBackground(
+                        this.contractId.toString(),
+                        ContractDetailType.CUSTOMER_DETAIL);
+            }
+            if(buttonText.equals("CONFIRM")){
+                //TODO: Ack Merchandise
+                //In this case, I will ack the broker merchandise
+                this.walletManager.ackMerchandise(this.contractId.toString());
+                updateBackground(
+                        this.contractId.toString(),
+                        ContractDetailType.BROKER_DETAIL);
+            }
+        } catch (FermatException ex) {
+            Toast.makeText(this.parentFragment.getActivity(), "Oops a error occurred...", Toast.LENGTH_SHORT).show();
 
-                Log.e(this.parentFragment.getTag(), ex.getMessage(), ex);
-                if (errorManager != null) {
-                    errorManager.reportUnexpectedWalletException(
-                            Wallets.CBP_CRYPTO_BROKER_WALLET,
-                            UnexpectedWalletExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT,
-                            ex);
-                }
+            Log.e(this.parentFragment.getTag(), ex.getMessage(), ex);
+            if (errorManager != null) {
+                errorManager.reportUnexpectedWalletException(
+                        Wallets.CBP_CRYPTO_BROKER_WALLET,
+                        UnexpectedWalletExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT,
+                        ex);
             }
         }
-        if(buttonText.equals("CONFIRM")){
-            //TODO: Ack Merchandise
-            //In this case, I will send the payment to Customer
+
+    }
+
+    private void updateBackground(String contractHash, ContractDetailType contractDetailType){
+        try{
+            ContractStatus contractStatus=this.walletManager.getContractStatus(contractHash);
+            ContractStatus backgroundContractStatus=getContractStatusByContractDetailType(
+                    contractStatus,
+                    contractDetailType);
+            itemView.setBackgroundColor(getStatusBackgroundColor(backgroundContractStatus));
+        } catch (CantGetListCustomerBrokerContractPurchaseException ex) {
+            Toast.makeText(this.parentFragment.getActivity(), "Oops a error occurred...", Toast.LENGTH_SHORT).show();
+
+            Log.e(this.parentFragment.getTag(), ex.getMessage(), ex);
+            if (errorManager != null) {
+                errorManager.reportUnexpectedWalletException(
+                        Wallets.CBP_CRYPTO_BROKER_WALLET,
+                        UnexpectedWalletExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT,
+                        ex);
+            }
         }
     }
 
