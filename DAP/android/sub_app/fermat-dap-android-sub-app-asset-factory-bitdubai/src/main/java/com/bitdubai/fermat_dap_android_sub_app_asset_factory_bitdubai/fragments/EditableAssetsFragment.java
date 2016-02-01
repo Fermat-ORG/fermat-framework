@@ -36,6 +36,7 @@ import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.A
 import com.bitdubai.fermat_api.layer.all_definition.resources_structure.Resource;
 import com.bitdubai.fermat_api.layer.all_definition.settings.exceptions.CantPersistSettingsException;
 import com.bitdubai.fermat_api.layer.all_definition.settings.structure.SettingsManager;
+import com.bitdubai.fermat_api.layer.all_definition.util.BitcoinConverter;
 import com.bitdubai.fermat_api.layer.modules.common_classes.ActiveActorIdentityInformation;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantCreateFileException;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.FileNotFoundException;
@@ -45,6 +46,7 @@ import com.bitdubai.fermat_dap_android_sub_app_asset_factory_bitdubai.interfaces
 import com.bitdubai.fermat_dap_android_sub_app_asset_factory_bitdubai.sessions.AssetFactorySession;
 import com.bitdubai.fermat_dap_android_sub_app_asset_factory_bitdubai.sessions.SessionConstantsAssetFactory;
 import com.bitdubai.fermat_dap_android_sub_app_asset_factory_bitdubai.util.CommonLogger;
+import com.bitdubai.fermat_dap_android_sub_app_asset_factory_bitdubai.util.Utils;
 import com.bitdubai.fermat_dap_api.layer.all_definition.enums.State;
 import com.bitdubai.fermat_dap_api.layer.dap_identity.asset_issuer.interfaces.IdentityAssetIssuer;
 import com.bitdubai.fermat_dap_api.layer.dap_middleware.dap_asset_factory.exceptions.CantGetAssetFactoryException;
@@ -56,6 +58,10 @@ import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.Un
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 import com.bitdubai.fermat_wpd_api.layer.wpd_middleware.wallet_manager.interfaces.InstalledWallet;
 import com.software.shell.fab.ActionButton;
+
+import static com.bitdubai.fermat_api.layer.all_definition.util.BitcoinConverter.Currency.BITCOIN;
+import static com.bitdubai.fermat_api.layer.all_definition.util.BitcoinConverter.Currency.SATOSHI;
+import static com.bitdubai.fermat_dap_api.layer.all_definition.util.DAPStandardFormats.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -91,9 +97,8 @@ public class EditableAssetsFragment extends AbstractFermatFragment implements
 
     SettingsManager<AssetFactorySettings> settingsManager;
 
-
     private boolean isRefreshing = false;
-
+    private long satoshisWalletBalance;
 
     public static EditableAssetsFragment newInstance() {
         return new EditableAssetsFragment();
@@ -115,6 +120,8 @@ public class EditableAssetsFragment extends AbstractFermatFragment implements
 
             settingsManager = appSession.getModuleManager().getSettingsManager();
             //viewInflater = new ViewInflater(getActivity(), appResourcesProviderManager);
+
+            satoshisWalletBalance = manager.getBitcoinWalletBalance(Utils.getBitcoinWalletPublicKey(manager));
         } catch (Exception ex) {
             CommonLogger.exception(TAG, ex.getMessage(), ex);
         }
@@ -277,12 +284,10 @@ public class EditableAssetsFragment extends AbstractFermatFragment implements
                     .setImageLeft(R.drawable.asset_issuer_identity)
                     .setVIewColor(R.color.dap_asset_factory_view_color)
                     .setTitleTextColor(R.color.dap_asset_factory_view_color)
-                    .setTextNameLeft("Asset Issuer")
-                    .setSubTitle("Welcome to the Asset Factory application.")
-                    .setBody("From here you will be able to create, define and publish all your assets. \n\n" +
-                            "In order to start, tap over the + button below where you will be able to \n" +
-                            "define all the properties of your asset.")
-//                    .setTextFooter("We will be creating an avatar for you in order to identify you in the system as an Asset Issuer, name and more details later in the Asset Issuer Identity sub app.")
+                    .setTextNameLeft(R.string.dap_asset_factory_welcome_name_left)
+                    .setSubTitle(R.string.dap_asset_factory_welcome_subTitle)
+                    .setBody(R.string.dap_asset_factory_welcome_body)
+                    .setTextFooter(R.string.dap_asset_factory_welcome_Footer)
                     .setTemplateType((manager.getLoggedIdentityAssetIssuer() == null) ? PresentationDialog.TemplateType.DAP_TYPE_PRESENTATION : PresentationDialog.TemplateType.TYPE_PRESENTATION_WITHOUT_IDENTITIES)
                     .setIsCheckEnabled(checkButton)
                     .build();
@@ -406,16 +411,18 @@ public class EditableAssetsFragment extends AbstractFermatFragment implements
         if (menuItem.getItemId() == R.id.action_edit) {
             editAsset();
         } else if (menuItem.getItemId() == R.id.action_publish) {
-            new ConfirmDialog.Builder(getActivity(), appSession)
-                    .setTitle("Confirm")
-                    .setMessage("Are you sure you are ready to publish your Asset? Once published you won't be able to perform any changes to it.")
-                    .setColorStyle(getResources().getColor(R.color.bg_asset_factory))
-                    .setYesBtnListener(new ConfirmDialog.OnClickAcceptListener() {
-                        @Override
-                        public void onClick() {
-                            publishAsset();
-                        }
-                    }).build().show();
+            if (validate()) {
+                new ConfirmDialog.Builder(getActivity(), appSession)
+                        .setTitle("Confirm")
+                        .setMessage("Are you sure you are ready to publish your Asset? Once published you won't be able to perform any changes to it.")
+                        .setColorStyle(getResources().getColor(R.color.bg_asset_factory))
+                        .setYesBtnListener(new ConfirmDialog.OnClickAcceptListener() {
+                            @Override
+                            public void onClick() {
+                                publishAsset();
+                            }
+                        }).build().show();
+            }
         } else if (menuItem.getItemId() == R.id.action_delete) {
 //            new ConfirmDialog.Builder(getActivity(), appSession)
 //                    .setTitle("Confirm")
@@ -437,6 +444,40 @@ public class EditableAssetsFragment extends AbstractFermatFragment implements
             changeActivity(Activities.DAP_ASSET_EDITOR_ACTIVITY.getCode(), appSession.getAppPublicKey(), getAssetForEdit());
         else
             selectedAsset = null;
+    }
+
+    private boolean validate() {
+        try {
+            AssetFactory assetFactory = getAssetForEdit();
+            long satoshis = assetFactory.getAmount();
+            if (satoshis < MINIMUN_SATOSHI_AMOUNT) {
+                Toast.makeText(getActivity(), "The minimum monetary amount for any Asset is " + MINIMUN_SATOSHI_AMOUNT + " satoshis.\n" +
+                        " \n This is needed to pay the fee of bitcoin transactions during delivery of the assets.", Toast.LENGTH_LONG).show();
+                return false;
+            }
+            long quantity = assetFactory.getQuantity();
+            if (satoshis * quantity > satoshisWalletBalance) {
+                double bitcoinWalletBalance = BitcoinConverter.convert(satoshisWalletBalance, SATOSHI, BITCOIN);
+                Toast.makeText(getActivity(), String.format("There are insufficient available funds to perform the transaction. The bitcoin wallet balance is %.2f BTC", bitcoinWalletBalance), Toast.LENGTH_SHORT).show();
+                return false;
+            }
+            String description = assetFactory.getDescription();
+            if (description.length() == 0)
+            {
+                Toast.makeText(getActivity(), "Invalid Asset Description.", Toast.LENGTH_SHORT).show();
+                return false;
+            }
+            if (quantity == 0)
+            {
+                Toast.makeText(getActivity(), "Invalid Quantity of Assets", Toast.LENGTH_SHORT).show();
+                return false;
+            }
+            return true;
+        } catch (NumberFormatException ex) {
+            CommonLogger.exception(TAG, ex.getMessage(), ex);
+            Toast.makeText(getActivity(), "Invalid monetary amount.", Toast.LENGTH_SHORT).show();
+        }
+        return false;
     }
 
     private void publishAsset() {

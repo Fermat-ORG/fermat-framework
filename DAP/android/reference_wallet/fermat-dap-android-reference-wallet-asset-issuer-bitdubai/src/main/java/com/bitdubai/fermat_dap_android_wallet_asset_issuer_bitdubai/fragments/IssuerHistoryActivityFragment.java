@@ -169,8 +169,8 @@ public class IssuerHistoryActivityFragment extends FermatWalletListFragment<Digi
                     .setIconRes(R.drawable.asset_issuer)
                     .setVIewColor(R.color.dap_issuer_view_color)
                     .setTitleTextColor(R.color.dap_issuer_view_color)
-                    .setSubTitle("Asset Issuer History.")
-                    .setBody("*GIVE ME A TEXT")
+//                    .setSubTitle("Asset Issuer History.")
+//                    .setBody("*GIVE ME A TEXT")
                     .setTemplateType(PresentationDialog.TemplateType.TYPE_PRESENTATION_WITHOUT_IDENTITIES)
                     .setIsCheckEnabled(checkButton)
                     .build();

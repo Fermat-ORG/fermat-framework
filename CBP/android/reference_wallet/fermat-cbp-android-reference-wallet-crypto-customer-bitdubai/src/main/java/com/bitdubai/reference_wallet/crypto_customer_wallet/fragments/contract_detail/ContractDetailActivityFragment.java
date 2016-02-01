@@ -16,6 +16,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.Toast;
 
 import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractFermatFragment;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.utils.ImagesUtils;
@@ -26,13 +27,18 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.FiatCurrency;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Wallets;
 import com.bitdubai.fermat_api.layer.pip_engine.interfaces.ResourceProviderManager;
 import com.bitdubai.fermat_api.layer.world.interfaces.Currency;
+import com.bitdubai.fermat_cbp_api.all_definition.contract.Contract;
+import com.bitdubai.fermat_cbp_api.all_definition.contract.ContractClause;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.ContractDetailType;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.ContractStatus;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.CurrencyType;
 import com.bitdubai.fermat_cbp_api.all_definition.identity.ActorIdentity;
+import com.bitdubai.fermat_cbp_api.layer.contract.customer_broker_purchase.interfaces.CustomerBrokerContractPurchase;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.common.interfaces.ClauseInformation;
+import com.bitdubai.fermat_cbp_api.layer.wallet_module.common.interfaces.ContractBasicInformation;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_customer.interfaces.CryptoCustomerWalletManager;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_customer.interfaces.CryptoCustomerWalletModuleManager;
+import com.bitdubai.fermat_cbp_plugin.layer.wallet_module.crypto_customer.developer.bitdubai.version_1.structure.CryptoBrokerWalletModuleContractBasicInformation;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedWalletExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 import com.bitdubai.reference_wallet.crypto_customer_wallet.common.adapters.ContractDetailAdapter;
@@ -45,10 +51,14 @@ import com.bitdubai.reference_wallet.crypto_customer_wallet.session.CryptoCustom
 
 
 import com.bitdubai.reference_wallet.crypto_customer_wallet.R;
+import com.bitdubai.reference_wallet.crypto_customer_wallet.util.CommonLogger;
 
 import java.io.ByteArrayOutputStream;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by Manuel Perez (darkpriestrelative@gmail.com) on 18/01/16.
@@ -60,6 +70,7 @@ public class ContractDetailActivityFragment extends AbstractFermatFragment<Crypt
     private CryptoCustomerWalletManager walletManager;
     private ErrorManager errorManager;
     private List<ContractDetail> contractInformation;
+    private ContractBasicInformation data;
     private ArrayList<String> paymentMethods; // test data
     private ArrayList<Currency> currencies; // test data
 
@@ -89,6 +100,7 @@ public class ContractDetailActivityFragment extends AbstractFermatFragment<Crypt
             walletManager = moduleManager.getCryptoCustomerWallet(appSession.getAppPublicKey());
             errorManager = appSession.getErrorManager();
             //TODO: load contract here
+            data=(ContractBasicInformation) appSession.getData("contract_data");
 
         } catch (Exception e) {
             Log.e(TAG, e.getMessage(), e);
@@ -159,12 +171,20 @@ public class ContractDetailActivityFragment extends AbstractFermatFragment<Crypt
         //Drawable brokerImg = getImgDrawable(broker.getProfileImage());
         //brokerImage.setImageDrawable(brokerImg);
         //brokerName.setText(broker.getAlias());
-        brokerName.setText("Broker Name");
-        sellingSummary.setText(getResources().getString(
-                R.string.ccw_start_selling_details,
-                currencyToBuy.getFriendlyName()));
-        detailDate.setText("Date");
-        detailRate.setText("1 BTC @ 254 USD");
+        //brokerName.setText("Broker Name");
+
+
+        String paymentCurrency=data.getPaymentCurrency();
+        brokerName.setText(data.getCryptoCustomerAlias());
+        sellingSummary.setText("SELLING "+paymentCurrency);
+        Date date=new Date(data.getLastUpdate());
+        //TODO: we can introduce locale for date format
+        SimpleDateFormat formatter = new SimpleDateFormat("EEE, d MMM yy");
+        detailDate.setText("Date:\n"+formatter.format(date));
+        //detailRate.setText("1 BTC @ 254 USD");
+        detailRate.setText(
+                data.getExchangeRateAmount()+" "+paymentCurrency+" @ "+data.getAmount()+" "+data.getMerchandise()
+        );
 
 
         //Create adapter
@@ -181,14 +201,14 @@ public class ContractDetailActivityFragment extends AbstractFermatFragment<Crypt
 
     private List<ContractDetail> createContractDetails(){
         List<ContractDetail> contractDetails=new ArrayList<>();
-        ContractDetail contractDetail;
         /**
          * TODO: this contract details is only for testing, please, implement this date from database.
          */
+        ContractDetail contractDetail;
         //Customer Broker
         contractDetail=new ContractDetail(
                 ContractDetailType.CUSTOMER_DETAIL,
-                CurrencyType.BANK_MONEY,
+                CurrencyType.BANK_MONEY.getCode(),
                 FiatCurrency.CHINESE_YUAN.getFriendlyName(),
                 12,
                 ContractStatus.PAYMENT_SUBMIT,
@@ -196,11 +216,11 @@ public class ContractDetailActivityFragment extends AbstractFermatFragment<Crypt
                 getByteArrayFromImageView(brokerImage),
                 1961,
                 2016);
-        contractDetails.add(contractDetail);
+        //contractDetails.add(contractDetail);
         //Testing Broker
         contractDetail=new ContractDetail(
                 ContractDetailType.BROKER_DETAIL,
-                CurrencyType.CRYPTO_MONEY,
+                CurrencyType.CRYPTO_MONEY.getCode(),
                 CryptoCurrency.BITCOIN.getFriendlyName(),
                 12,
                 ContractStatus.PENDING_MERCHANDISE,
@@ -208,9 +228,70 @@ public class ContractDetailActivityFragment extends AbstractFermatFragment<Crypt
                 getByteArrayFromImageView(brokerImage),
                 1961,
                 2016);
-        contractDetails.add(contractDetail);
+        //contractDetails.add(contractDetail);
+        /**
+         * Get the wallet module manager
+         */
+        //TODO: when the module is finished, use the followings lines to create contract details.
+        CryptoCustomerWalletModuleManager cryptoCustomerWalletModuleManager=
+                appSession.getModuleManager();
+        if(cryptoCustomerWalletModuleManager!=null){
+
+            try{
+                CryptoCustomerWalletManager cryptoCustomerWalletManager=
+                        cryptoCustomerWalletModuleManager.getCryptoCustomerWallet(
+                                appSession.getAppPublicKey()
+                        );
+                //ContractDetail contractDetail;
+                CustomerBrokerContractPurchase customerBrokerContractPurchase=
+                        cryptoCustomerWalletManager.
+                                getCustomerBrokerContractPurchaseByNegotiationId(
+                                        data.getNegotiationId().toString());
+                //Customer
+                contractDetail=new ContractDetail(
+                        ContractDetailType.CUSTOMER_DETAIL,
+                        data.getTypeOfPayment(),
+                        data.getPaymentCurrency(),
+                        data.getAmount(),
+                        customerBrokerContractPurchase.getStatus(),
+                        data.getCryptoCustomerAlias(),
+                        data.getCryptoCustomerImage(),
+                        data.getLastUpdate(),
+                        data.getExchangeRateAmount());
+                contractDetails.add(contractDetail);
+                //Broker
+                contractDetail=new ContractDetail(
+                        ContractDetailType.BROKER_DETAIL,
+                        data.getTypeOfPayment(),
+                        data.getMerchandise(),
+                        data.getAmount(),
+                        customerBrokerContractPurchase.getStatus(),
+                        data.getCryptoCustomerAlias(),
+                        data.getCryptoCustomerImage(),
+                        data.getLastUpdate(),
+                        data.getExchangeRateAmount());
+                contractDetails.add(contractDetail);
+            } catch (Exception ex) {
+                CommonLogger.exception(TAG, ex.getMessage(), ex);
+                if (errorManager != null) {
+                    errorManager.reportUnexpectedWalletException(Wallets.CBP_CRYPTO_CUSTOMER_WALLET,
+                            UnexpectedWalletExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT,
+                            ex);
+                }
+            }
+
+        } else{
+            //If module is null, I cannot handle with this.
+            Toast.makeText(
+                    getActivity(),
+                    "Sorry, an error happened in ContractDetailActivityFragment (CryptoCustomerWalletModuleManager == null)",
+                    Toast.LENGTH_SHORT)
+                    .show();
+        }
+
         return contractDetails;
     }
+
 
     private EmptyCustomerBrokerNegotiationInformation createNewEmptyNegotiationInfo() {
         try {

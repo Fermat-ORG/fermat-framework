@@ -380,7 +380,7 @@ public final class CryptoBrokerExecutorAgent extends FermatAgent {
                 aer.getSenderPublicKey(),
                 aer.getSenderActorType(),
                 aer.getSenderAlias(),
-                null,// aer.getSenderImage(),
+                aer.getSenderImage(),
                 aer.getDestinationPublicKey(),
                 aer.getRequestAction(),
                 aer.getSentTime()

@@ -1,5 +1,6 @@
 package com.bitdubai.reference_wallet.crypto_broker_wallet.fragments.wizard_pages;
 
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v7.widget.LinearLayoutManager;
@@ -12,6 +13,7 @@ import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractFermatFragment;
+import com.bitdubai.fermat_android_api.ui.Views.PresentationDialog;
 import com.bitdubai.fermat_android_api.ui.adapters.FermatAdapter;
 import com.bitdubai.fermat_android_api.ui.enums.FermatRefreshTypes;
 import com.bitdubai.fermat_android_api.ui.fragments.FermatWalletListFragment;
@@ -19,11 +21,14 @@ import com.bitdubai.fermat_android_api.ui.interfaces.FermatListItemListeners;
 import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Wallets;
+import com.bitdubai.fermat_cbp_api.layer.identity.crypto_broker.exceptions.CantListCryptoBrokerIdentitiesException;
 import com.bitdubai.fermat_cbp_api.layer.identity.crypto_broker.interfaces.CryptoBrokerIdentity;
 import com.bitdubai.fermat_cbp_api.layer.wallet.crypto_broker.exceptions.CantGetCryptoBrokerWalletSettingException;
 import com.bitdubai.fermat_cbp_api.layer.wallet.crypto_broker.exceptions.CryptoBrokerWalletNotFoundException;
+import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_broker.exceptions.CantGetCryptoBrokerIdentityListException;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_broker.interfaces.CryptoBrokerWalletManager;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_broker.interfaces.CryptoBrokerWalletModuleManager;
+import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_broker.interfaces.CryptoBrokerWalletPreferenceSettings;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedWalletExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 import com.bitdubai.reference_wallet.crypto_broker_wallet.R;
@@ -33,14 +38,17 @@ import com.bitdubai.reference_wallet.crypto_broker_wallet.session.CryptoBrokerWa
 import java.util.ArrayList;
 import java.util.List;
 
+import static android.widget.Toast.makeText;
+
 /**
  * Created by nelson on 22/12/15.
  */
 public class WizardPageSetIdentityFragment extends FermatWalletListFragment<CryptoBrokerIdentity>
-        implements FermatListItemListeners<CryptoBrokerIdentity> {
+        implements FermatListItemListeners<CryptoBrokerIdentity>, DialogInterface.OnDismissListener {
 
     private List<CryptoBrokerIdentity> identities;
     private CryptoBrokerIdentity selectedIdentity;
+    private CryptoBrokerWalletPreferenceSettings walletSettings;
 
     private LinearLayout container;
 
@@ -57,7 +65,24 @@ public class WizardPageSetIdentityFragment extends FermatWalletListFragment<Cryp
             walletManager = moduleManager.getCryptoBrokerWallet(appSession.getAppPublicKey());
             errorManager = appSession.getErrorManager();
 
+            //Obtain walletSettings or create new wallet settings if first time opening wallet
+            walletSettings = null;
+            try {
+                walletSettings = moduleManager.getSettingsManager().loadAndGetSettings(appSession.getAppPublicKey());
+            }catch (Exception e){ walletSettings = null; }
+
+            if(walletSettings == null){
+                walletSettings = new CryptoBrokerWalletPreferenceSettings();
+                walletSettings.setIsPresentationHelpEnabled(true);
+                try {
+                    moduleManager.getSettingsManager().persistSettings(appSession.getAppPublicKey(), walletSettings);
+                }catch (Exception e){
+                    Log.e(TAG, e.getMessage(), e);
+                }
+            }
+
             identities = getMoreDataAsync(FermatRefreshTypes.NEW, 0);
+
         } catch (FermatException ex) {
             Log.e(TAG, ex.getMessage(), ex);
         }
@@ -79,10 +104,10 @@ public class WizardPageSetIdentityFragment extends FermatWalletListFragment<Cryp
             public void onClick(View view) {
                 if (selectedIdentity != null) {
                     walletManager.associateIdentity(selectedIdentity.getPublicKey());
-
                     changeActivity(Activities.CBP_CRYPTO_BROKER_WALLET_SET_MERCHANDISES, appSession.getAppPublicKey());
-                } else {
-                    Toast.makeText(getActivity(), R.string.cbw_select_identity_warning_msg, Toast.LENGTH_LONG).show();
+                } else{
+                    Toast.makeText(WizardPageSetIdentityFragment.this.getActivity(), R.string.cbw_select_identity_warning_msg, Toast.LENGTH_LONG).show();
+
                 }
             }
         });
@@ -107,14 +132,36 @@ public class WizardPageSetIdentityFragment extends FermatWalletListFragment<Cryp
                     if (errorManager != null)
                         errorManager.reportUnexpectedWalletException(Wallets.CBP_CRYPTO_BROKER_WALLET,
                                 UnexpectedWalletExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, ex);
+
                 }
 
                 if (walletConfigured) {
                     changeActivity(Activities.CBP_CRYPTO_BROKER_WALLET_HOME, appSession.getAppPublicKey());
+
                 } else {
                     Animation fadeInAnimation = AnimationUtils.loadAnimation(getActivity(), R.anim.fade_in);
                     container.setVisibility(View.VISIBLE);
                     container.startAnimation(fadeInAnimation);
+                    PresentationDialog presentationDialog = new PresentationDialog.Builder(getActivity(), appSession)
+                            .setTemplateType(PresentationDialog.TemplateType.TYPE_PRESENTATION_WITHOUT_IDENTITIES)
+                            .setBannerRes(R.drawable.banner_crypto_broker)
+                            .setIconRes(R.drawable.crypto_broker)
+                            .setSubTitle(R.string.cbw_crypto_broker_wallet_merchandises_subTitle)
+                            .setBody(R.string.cbw_crypto_broker_wallet_identity_body)
+                            .setTextFooter(R.string.cbw_crypto_broker_wallet_identity_footer)
+                            .build();
+
+                    boolean showDialog;
+                    try{
+                        CryptoBrokerWalletModuleManager moduleManager = ((CryptoBrokerWalletSession) appSession).getModuleManager();
+                        showDialog = moduleManager.getSettingsManager().loadAndGetSettings(appSession.getAppPublicKey()).isHomeTutorialDialogEnabled();
+                        if(showDialog){
+                            presentationDialog.show();
+                        }
+                    }catch (FermatException e){
+                        makeText(getActivity(), "Oops! recovering from system error", Toast.LENGTH_SHORT).show();
+                    }
+                    //presentationDialog.show();
                 }
 
             }
@@ -153,6 +200,30 @@ public class WizardPageSetIdentityFragment extends FermatWalletListFragment<Cryp
 
         try {
             data.addAll(walletManager.getListOfIdentities());
+            if(walletManager.getListOfIdentities().isEmpty()) {
+                PresentationDialog presentationDialog = new PresentationDialog.Builder(getActivity(), appSession)
+                        .setTemplateType(PresentationDialog.TemplateType.TYPE_PRESENTATION)
+                        .setBannerRes(R.drawable.banner_crypto_broker)
+                        .setIconRes(R.drawable.crypto_broker)
+                        .setSubTitle(R.string.cbw_crypto_broker_wallet_identity_2_subTitle)// + identities)
+                        .setBody(R.string.cbw_crypto_broker_wallet_identity_2_body)
+                        .setTextFooter(R.string.cbw_crypto_broker_wallet_identity_2_footer)
+                        .build();
+                presentationDialog.setOnDismissListener(this);
+
+                boolean showDialog;
+                try{
+                    CryptoBrokerWalletModuleManager moduleManager = ((CryptoBrokerWalletSession) appSession).getModuleManager();
+                    showDialog = moduleManager.getSettingsManager().loadAndGetSettings(appSession.getAppPublicKey()).isHomeTutorialDialogEnabled();
+                    if(showDialog){
+                        presentationDialog.show();
+                    }
+                }catch (FermatException e){
+                    makeText(getActivity(), "Oops! recovering from system error", Toast.LENGTH_SHORT).show();
+                }
+                //presentationDialog.show();
+            }
+
 
         } catch (FermatException ex) {
 
@@ -177,6 +248,10 @@ public class WizardPageSetIdentityFragment extends FermatWalletListFragment<Cryp
                 identities = (ArrayList) result[0];
                 if (adapter != null)
                     adapter.changeDataSet(identities);
+
+
+            }else{
+
             }
         }
     }
@@ -219,5 +294,28 @@ public class WizardPageSetIdentityFragment extends FermatWalletListFragment<Cryp
     public void onDetach() {
         layoutManager = null;
         super.onDetach();
+    }
+
+    /**
+     * This method will be invoked when the dialog is dismissed.
+     *
+     * @param dialog The dialog that was dismissed will be passed into the
+     *               method.
+     */
+    @Override
+    public void onDismiss(DialogInterface dialog) {
+        try {
+            adapter.changeDataSet(walletManager.getListOfIdentities());
+        } catch (CantGetCryptoBrokerIdentityListException e) {
+            errorManager.reportUnexpectedWalletException(
+                    Wallets.CBP_CRYPTO_BROKER_WALLET,
+                    UnexpectedWalletExceptionSeverity.DISABLES_THIS_FRAGMENT,
+                    e);
+        } catch (CantListCryptoBrokerIdentitiesException e) {
+            errorManager.reportUnexpectedWalletException(
+                    Wallets.CBP_CRYPTO_BROKER_WALLET,
+                    UnexpectedWalletExceptionSeverity.DISABLES_THIS_FRAGMENT,
+                    e);
+        }
     }
 }

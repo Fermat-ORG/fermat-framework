@@ -8,6 +8,8 @@ import com.bitdubai.fermat_csh_api.all_definition.interfaces.CashTransaction;
 
 import java.util.UUID;
 
+import javax.annotation.Nullable;
+
 /**
  * Created by Yordin Alayn on 26.09.15.
  * Modified by Alejandro Bicelis on 23/11/2015
@@ -31,5 +33,11 @@ public interface CashMoneyWalletTransaction extends CashTransaction {
      * @return      Transaction's timestamp
      */
     long getTimestamp();
+
+    /**
+     * Returns true if the transaction hasn't been applied to the wallet, false if otherwise
+     * @return      Transaction's pending status
+     */
+    boolean isPending();
 
 }

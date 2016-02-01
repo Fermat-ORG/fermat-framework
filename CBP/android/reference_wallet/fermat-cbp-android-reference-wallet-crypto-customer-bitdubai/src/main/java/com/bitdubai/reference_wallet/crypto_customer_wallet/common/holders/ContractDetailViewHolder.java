@@ -12,6 +12,7 @@ import com.bitdubai.fermat_android_api.layer.definition.wallet.utils.ImagesUtils
 import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatButton;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView;
 import com.bitdubai.fermat_android_api.ui.holders.FermatViewHolder;
+import com.bitdubai.fermat_cbp_api.all_definition.enums.ContractDetailType;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.ContractStatus;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.common.interfaces.ContractBasicInformation;
 import com.bitdubai.reference_wallet.crypto_customer_wallet.R;
@@ -66,9 +67,13 @@ public class ContractDetailViewHolder extends FermatViewHolder {
 
     public void bind(ContractDetail itemInfo) {
         ContractStatus contractStatus = itemInfo.getContractStatus();
-
-        itemView.setBackgroundColor(getStatusBackgroundColor(contractStatus));
-        switch (itemInfo.getContractDetailType()){
+        ContractDetailType contractDetailType=itemInfo.getContractDetailType();
+        ContractStatus visualContractStatus=getContractStatusByContractDetailType(
+                contractStatus,
+                contractDetailType
+        );
+        itemView.setBackgroundColor(getStatusBackgroundColor(visualContractStatus));
+        switch (contractDetailType){
             case CUSTOMER_DETAIL:
                 stepNumber.setImageResource(R.drawable.bg_detail_number_01);
                 textDescription.setText("Customer");
@@ -79,7 +84,8 @@ public class ContractDetailViewHolder extends FermatViewHolder {
                 break;
 
         }
-        textButton.setText(itemInfo.getCurrencyType().getCode());
+        //TODO: here we can see the contract status
+        textButton.setText(visualContractStatus.getFriendlyName());
         /*customerName.setText(itemInfo.getCryptoCustomerAlias());
         customerImage.setImageDrawable(getImgDrawable(itemInfo.getCryptoCustomerImage()));
 
@@ -92,6 +98,58 @@ public class ContractDetailViewHolder extends FermatViewHolder {
         CharSequence date = DateFormat.format("dd MMM yyyy", itemInfo.getLastUpdate());
         lastUpdateDate.setText(date);*/
     }
+
+    /**
+     * This method returns the friendly name from a contract status by contract detail type.
+     * @param contractStatus
+     * @param contractDetailType
+     * @return
+     */
+    private ContractStatus getContractStatusByContractDetailType(
+            ContractStatus contractStatus,
+            ContractDetailType contractDetailType){
+        switch (contractStatus){
+            case CANCELLED:
+                return ContractStatus.CANCELLED;
+            case COMPLETED:
+                return ContractStatus.COMPLETED;
+            case MERCHANDISE_SUBMIT:
+                switch (contractDetailType){
+                    case BROKER_DETAIL:
+                        return ContractStatus.MERCHANDISE_SUBMIT;
+                    case CUSTOMER_DETAIL:
+                        return ContractStatus.PAYMENT_SUBMIT;
+                }
+            case PAUSED:
+                return ContractStatus.PAUSED;
+            case PENDING_MERCHANDISE:
+                switch (contractDetailType){
+                    case BROKER_DETAIL:
+                        return ContractStatus.PENDING_MERCHANDISE;
+                    case CUSTOMER_DETAIL:
+                        return ContractStatus.PAYMENT_SUBMIT;
+                }
+            case PENDING_PAYMENT:
+                switch (contractDetailType){
+                    case BROKER_DETAIL:
+                        return ContractStatus.PENDING_MERCHANDISE;
+                    case CUSTOMER_DETAIL:
+                        return ContractStatus.PENDING_PAYMENT;
+                }
+            case PAYMENT_SUBMIT:
+                switch (contractDetailType){
+                    case BROKER_DETAIL:
+                        return ContractStatus.PENDING_MERCHANDISE;
+                    case CUSTOMER_DETAIL:
+                        return ContractStatus.PAYMENT_SUBMIT;
+                }
+            case READY_TO_CLOSE:
+                return ContractStatus.READY_TO_CLOSE;
+            default:
+                return ContractStatus.PAUSED;
+        }
+    }
+
     @NonNull
     private String getSoldQuantityAndCurrencyText(ContractDetail itemInfo, ContractStatus contractStatus) {
         String sellingOrSoldText = getSellingOrSoldText(contractStatus);
@@ -111,7 +169,29 @@ public class ContractDetailViewHolder extends FermatViewHolder {
     }
 
     private int getStatusBackgroundColor(ContractStatus status) {
-        if (status == ContractStatus.PENDING_PAYMENT)
+
+        switch (status){
+            case COMPLETED:
+                return res.getColor(R.color.contract_completed_list_item_background);
+            case CANCELLED:
+                return res.getColor(R.color.contract_cancelled_list_item_background);
+            case READY_TO_CLOSE:
+                return res.getColor(R.color.contract_completed_list_item_background);
+            case PAUSED:
+                return res.getColor(R.color.contract_paused_list_item_background);
+            case PENDING_PAYMENT:
+                return res.getColor(R.color.waiting_for_customer_list_item_background);
+            case PAYMENT_SUBMIT:
+                return res.getColor(R.color.contract_completed_list_item_background);
+            case PENDING_MERCHANDISE:
+                return res.getColor(R.color.waiting_for_broker_list_item_background);
+            case MERCHANDISE_SUBMIT:
+                return res.getColor(R.color.contract_completed_list_item_background);
+            default:
+                return res.getColor(R.color.waiting_for_broker_list_item_background);
+
+        }
+        /*if (status == ContractStatus.PENDING_PAYMENT)
             return res.getColor(R.color.waiting_for_customer_list_item_background);
 
         if (status == ContractStatus.CANCELLED)
@@ -120,7 +200,7 @@ public class ContractDetailViewHolder extends FermatViewHolder {
         if (status == ContractStatus.COMPLETED)
             return res.getColor(R.color.contract_completed_list_item_background);
 
-        return res.getColor(R.color.waiting_for_broker_list_item_background);
+        return res.getColor(R.color.waiting_for_broker_list_item_background);*/
     }
 
     private String getSellingOrSoldText(ContractStatus status) {

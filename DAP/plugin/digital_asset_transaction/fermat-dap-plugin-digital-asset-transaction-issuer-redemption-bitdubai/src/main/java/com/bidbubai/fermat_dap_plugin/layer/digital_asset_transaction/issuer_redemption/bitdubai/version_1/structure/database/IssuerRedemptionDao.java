@@ -1,9 +1,12 @@
 package com.bidbubai.fermat_dap_plugin.layer.digital_asset_transaction.issuer_redemption.bitdubai.version_1.structure.database;
 
+import com.bidbubai.fermat_dap_plugin.layer.digital_asset_transaction.issuer_redemption.bitdubai.version_1.exceptions.CantCheckAssetIssuerRedemptionProgressException;
 import com.bidbubai.fermat_dap_plugin.layer.digital_asset_transaction.issuer_redemption.bitdubai.version_1.exceptions.CantLoadIssuerRedemptionEventListException;
 import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.events.EventSource;
 import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterException;
+import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.ProtocolStatus;
+import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.crypto_transactions.CryptoStatus;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseFilterOrder;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseFilterType;
@@ -15,6 +18,7 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.Cant
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantOpenDatabaseException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantUpdateRecordException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.DatabaseNotFoundException;
+import com.bitdubai.fermat_dap_api.layer.all_definition.digital_asset.DigitalAssetMetadata;
 import com.bitdubai.fermat_dap_api.layer.all_definition.enums.EventStatus;
 import com.bitdubai.fermat_dap_api.layer.all_definition.enums.EventType;
 import com.bitdubai.fermat_dap_api.layer.dap_transaction.common.exceptions.CantExecuteDatabaseOperationException;
@@ -71,6 +75,19 @@ public class IssuerRedemptionDao {
         } catch (Exception exception) {
             throw new CantSaveEventException(FermatException.wrapException(exception), "Saving new event.", "Unexpected exception");
         }
+    }
+
+    public void assetReceived(DigitalAssetMetadata digitalAssetMetadata) throws CantInsertRecordException {
+        DatabaseTable databaseTable = this.database.getTable(IssuerRedemptionDatabaseConstants.ASSET_ISSUER_REDEMPTION_TABLE_NAME);
+        DatabaseTableRecord redemptionRecord = databaseTable.getEmptyRecord();
+        redemptionRecord.setStringValue(IssuerRedemptionDatabaseConstants.ASSET_ISSUER_REDEMPTION_GENESIS_TRANSACTION_COLUMN_NAME, digitalAssetMetadata.getGenesisTransaction());
+        redemptionRecord.setStringValue(IssuerRedemptionDatabaseConstants.ASSET_ISSUER_REDEMPTION_DIGITAL_ASSET_HASH_COLUMN_NAME, digitalAssetMetadata.getDigitalAssetHash());
+        redemptionRecord.setStringValue(IssuerRedemptionDatabaseConstants.ASSET_ISSUER_REDEMPTION_PROTOCOL_STATUS_COLUMN_NAME, ProtocolStatus.TO_BE_APPLIED.getCode());
+        databaseTable.insertRecord(redemptionRecord);
+    }
+
+    public void redemptionFinished(DigitalAssetMetadata digitalAssetMetadata) throws RecordsNotFoundException, CantLoadTableToMemoryException, CantUpdateRecordException {
+        updateStringFieldByGenesisTx(IssuerRedemptionDatabaseConstants.ASSET_ISSUER_REDEMPTION_PROTOCOL_STATUS_COLUMN_NAME, ProtocolStatus.APPLIED.getCode(), digitalAssetMetadata.getGenesisTransaction());
     }
 
     //PRIVATE METHODS
@@ -144,6 +161,21 @@ public class IssuerRedemptionDao {
     }
 
 
+    private void updateStringFieldByGenesisTx(String columnName, String value, String genesisTx) throws RecordsNotFoundException, CantLoadTableToMemoryException, CantUpdateRecordException {
+        String context = "Column Name: " + columnName + " - Genesis Transaction: " + genesisTx;
+        DatabaseTable issuerRedemptionTable;
+        issuerRedemptionTable = database.getTable(IssuerRedemptionDatabaseConstants.ASSET_ISSUER_REDEMPTION_TABLE_NAME);
+        issuerRedemptionTable.addStringFilter(IssuerRedemptionDatabaseConstants.ASSET_ISSUER_REDEMPTION_GENESIS_TRANSACTION_COLUMN_NAME, genesisTx, DatabaseFilterType.EQUAL);
+        issuerRedemptionTable.loadToMemory();
+        if (issuerRedemptionTable.getRecords().isEmpty()) {
+            throw new RecordsNotFoundException(null, context, "");
+        }
+        for (DatabaseTableRecord record : issuerRedemptionTable.getRecords()) {
+            record.setStringValue(columnName, value);
+            issuerRedemptionTable.updateRecord(record);
+        }
+    }
+
     private void updateStringFieldByEventId(String columnName, String value, String id) throws RecordsNotFoundException, CantLoadTableToMemoryException, CantUpdateRecordException {
         String context = "Column Name: " + columnName + " - Id: " + id;
         DatabaseTable eventRecordedTable;
@@ -160,6 +192,25 @@ public class IssuerRedemptionDao {
     }
 
     //GETTER AND SETTERS
+
+    public List<String> getToBeAppliedGenesisTransaction() throws CantCheckAssetIssuerRedemptionProgressException {
+        try {
+            DatabaseTable issuerRedemptionTable;
+            issuerRedemptionTable = database.getTable(IssuerRedemptionDatabaseConstants.ASSET_ISSUER_REDEMPTION_TABLE_NAME);
+            issuerRedemptionTable.addStringFilter(IssuerRedemptionDatabaseConstants.ASSET_ISSUER_REDEMPTION_PROTOCOL_STATUS_COLUMN_NAME, ProtocolStatus.TO_BE_APPLIED.getCode(), DatabaseFilterType.EQUAL);
+
+            issuerRedemptionTable.loadToMemory();
+            List<String> eventIdList = new ArrayList<>();
+            for (DatabaseTableRecord record : issuerRedemptionTable.getRecords()) {
+                eventIdList.add(record.getStringValue(IssuerRedemptionDatabaseConstants.ASSET_ISSUER_REDEMPTION_GENESIS_TRANSACTION_COLUMN_NAME));
+            }
+            return eventIdList;
+        } catch (CantLoadTableToMemoryException exception) {
+            throw new CantCheckAssetIssuerRedemptionProgressException(exception, "Getting pending events.", "Cannot load table to memory.");
+        } catch (Exception exception) {
+            throw new CantCheckAssetIssuerRedemptionProgressException(FermatException.wrapException(exception), "Getting pending events.", "Unexpected exception");
+        }
+    }
 
     public List<String> getPendingCryptoRouterEvents() throws CantLoadIssuerRedemptionEventListException {
         return getPendingEventsBySource(EventSource.CRYPTO_ROUTER);

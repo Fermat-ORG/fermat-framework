@@ -120,13 +120,13 @@ public class AssetIssuerWalletModuleManager {
         HashMap<DigitalAssetMetadata, ActorAssetUser> hashMap = new HashMap<>();
         AssetIssuerWallet wallet = assetIssuerWalletManager.loadAssetIssuerWallet(walletPublicKey);
         List<AssetIssuerWalletTransaction> transactions = wallet.getAvailableTransactions(assetPublicKey);
-        if (actorAssetUsers.size() > transactions.size())
+        if (assetsAmount > transactions.size())
             throw new IllegalStateException("WE DON'T HAVE ENOUGH ASSETS!!");
-        int j = 0;
-        while (j < assetsAmount) {
-            for (int i = 0; i < actorAssetUsers.size() && j < assetsAmount; i++) {
-                hashMap.put(wallet.getDigitalAssetMetadata(transactions.get(i).getTransactionHash()), actorAssetUsers.get(i));
-                j++;
+
+        int assetsPerUser = assetsAmount / actorAssetUsers.size();
+        for (int j = 0, i = 0; j < actorAssetUsers.size(); j++) {
+            for (int k = 0; k < assetsPerUser; i++, k++) {
+                hashMap.put(wallet.getDigitalAssetMetadata(transactions.get(i).getTransactionHash()), actorAssetUsers.get(j));
             }
         }
         return hashMap;

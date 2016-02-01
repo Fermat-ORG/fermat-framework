@@ -157,10 +157,8 @@ public class RedeemPointCommunityHomeFragment extends AbstractFermatFragment imp
                 .setIconRes(R.drawable.reddem_point_community)
                 .setVIewColor(R.color.dap_community_redeem_view_color)
                 .setTitleTextColor(R.color.dap_community_redeem_view_color)
-                .setSubTitle("Welcome to the Redeem Point Community.")
-                .setBody("This application will help you discover and connect to Redeem Points registered in our network.!\n\n" +
-                        "If you are identified as an Asset User, you will need to connect to Redeem Points in order to be able to redeem your assets with them." +
-                        "\n\nSelect any available Redeem Point and click connect to start the process. If your network speed is low, you may have to retry several times.")
+                .setSubTitle(R.string.dap_redeem_community_welcome_subTitle)
+                .setBody(R.string.dap_redeem_community_welcome_body)
                 .setTemplateType(PresentationDialog.TemplateType.TYPE_PRESENTATION_WITHOUT_IDENTITIES)
                 .setIsCheckEnabled(checkButton)
                 .build();
@@ -236,7 +234,7 @@ public class RedeemPointCommunityHomeFragment extends AbstractFermatFragment imp
                     @Override
                     public void onErrorOccurred(Exception ex) {
                         dialog.dismiss();
-                        Toast.makeText(getActivity(), String.format("We have detected an error. Make sure you have created an Asset User or Redeem Point identities using the corresponding Identity sub app."), Toast.LENGTH_LONG).show();
+                        Toast.makeText(getActivity(), String.format("We have detected an error. Make sure you have created an Asset User or Redeem Point identities using the corresponding Identity application."), Toast.LENGTH_LONG).show();
                         ex.printStackTrace();
                     }
                 });

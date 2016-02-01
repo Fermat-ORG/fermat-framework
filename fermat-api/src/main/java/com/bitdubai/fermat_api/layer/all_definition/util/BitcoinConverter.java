@@ -1,5 +1,7 @@
 package com.bitdubai.fermat_api.layer.all_definition.util;
 
+import java.math.BigDecimal;
+
 /**
  * Created by Frank Contreras (contrerasfrank@gmail.com) on 1/15/16.
  */
@@ -10,23 +12,26 @@ public class BitcoinConverter {
         BIT(1000000),
         SATOSHI(100000000);
 
-        private double rate;
-        Currency(double rate) {
+        private long rate;
+        Currency(long rate) {
             this.rate = rate;
         }
-        double getRate() {
+        long getRate() {
             return rate;
         }
     }
 
     public static double convert(double amount, Currency from, Currency to) {
-        double convertAmount;
+        BigDecimal convertAmount;
+        BigDecimal amountInternal = new BigDecimal(amount);
+        BigDecimal rateToInternal = new BigDecimal(to.getRate());
+        BigDecimal rateFromInternal = new BigDecimal(from.getRate());
         if (from.equals(Currency.BITCOIN)) {
-            convertAmount = amount * to.getRate();
+            convertAmount = amountInternal.multiply(rateToInternal);
         } else {
-            double btcAmount = amount / from.getRate();
-            convertAmount = btcAmount * to.getRate();
+            BigDecimal btcAmount = amountInternal.divide(rateFromInternal);
+            convertAmount = btcAmount.multiply(rateToInternal);
         }
-        return convertAmount;
+        return convertAmount.doubleValue();
     }
 }
