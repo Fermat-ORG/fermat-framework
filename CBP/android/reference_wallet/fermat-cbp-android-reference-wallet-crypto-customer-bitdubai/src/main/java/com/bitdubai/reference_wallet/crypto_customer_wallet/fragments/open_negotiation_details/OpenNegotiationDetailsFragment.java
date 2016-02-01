@@ -485,7 +485,6 @@ public class OpenNegotiationDetailsFragment extends AbstractFermatFragment<Crypt
     private void actionListenerBrokerCurrency(ClauseInformation clause, Currency selectedItem){
 
         final Map<ClauseType, ClauseInformation> clauses = negotiationInfo.getClauses();
-//        String payment = clauses.get(ClauseType.BROKER_CURRENCY).getValue();
         String payment = selectedItem.getCode();
         String merchandise = clauses.get(ClauseType.CUSTOMER_CURRENCY).getValue();
 
