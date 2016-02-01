@@ -81,12 +81,16 @@ public class AccountsListFragment extends FermatWalletListFragment<BankAccountNu
         this.emtyView =  layout.findViewById(R.id.bw_empty_accounts_view);
         header = (FermatTextView)layout.findViewById(R.id.textView_header_text);
         header.setText("Accounts:   "+moduleManager.getBankingWallet().getBankName());
+
+        // todo SE COMENTA PORQ YA NO EXISTEN LOS MÉTODOS
+
         presentationDialog = new PresentationDialog.Builder(getActivity(),appSession)
                 .setBannerRes(R.drawable.bw_banner)
-                .setBody("prueba Body")
+                //.setBody("prueba Body")
                 .setTitle("prueba Title")
-                .setSubTitle("prueba subtitle")
-                .setTextFooter("prueba footer").setTemplateType(PresentationDialog.TemplateType.TYPE_PRESENTATION_WITHOUT_IDENTITIES).build();
+               // .setSubTitle("prueba subtitle")
+               // .setTextFooter("prueba footer").setTemplateType(PresentationDialog.TemplateType.TYPE_PRESENTATION_WITHOUT_IDENTITIES)
+               .build();
         showOrHideNoAccountListView(accountsList.isEmpty());
         /*presentationDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
             @Override

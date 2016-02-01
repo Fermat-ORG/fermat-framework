@@ -199,13 +199,13 @@ public class AssetDistributionDeveloperDatabaseFactory implements DealsWithPlugi
             /**
              * if there was an error, I will returned an empty list.
              */
-            database.closeDatabase();
+
             return returnedRecords;
         } catch (Exception e){
-            database.closeDatabase();
+
             return returnedRecords;
         }
-        database.closeDatabase();
+
         return returnedRecords;
     }
 

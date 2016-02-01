@@ -113,7 +113,9 @@ public class AssetIssuerWalletDatabaseFactory implements DealsWithPluginDatabase
 
     private DatabaseTableFactory createAssetStatisticTableFactory(final UUID ownerId, final DatabaseFactory databaseFactory) throws InvalidOwnerIdException {
         DatabaseTableFactory table = databaseFactory.newTableFactory(ownerId, AssetWalletIssuerDatabaseConstant.ASSET_STATISTIC_TABLE_NAME);
-        table.addColumn(AssetWalletIssuerDatabaseConstant.ASSET_STATISTIC_ASSET_PUBLIC_KEY_COLUMN_NAME, DatabaseDataType.STRING, 255, true);
+        table.addColumn(AssetWalletIssuerDatabaseConstant.ASSET_STATISTIC_TRANSACTION_ID_COLUMN_NAME, DatabaseDataType.STRING, 255, true);
+        table.addColumn(AssetWalletIssuerDatabaseConstant.ASSET_STATISTIC_TRANSACTION_HASH_COLUMN_NAME, DatabaseDataType.STRING, 255, false);
+        table.addColumn(AssetWalletIssuerDatabaseConstant.ASSET_STATISTIC_ASSET_PUBLIC_KEY_COLUMN_NAME, DatabaseDataType.STRING, 255, false);
         table.addColumn(AssetWalletIssuerDatabaseConstant.ASSET_STATISTIC_ACTOR_USER_PUBLIC_KEY_COLUMN_NAME, DatabaseDataType.STRING, 150, false);
         table.addColumn(AssetWalletIssuerDatabaseConstant.ASSET_STATISTIC_REDEEM_POINT_PUBLIC_KEY_COLUMN_NAME, DatabaseDataType.STRING, 100, false);
         table.addColumn(AssetWalletIssuerDatabaseConstant.ASSET_STATISTIC_DISTRIBUTION_DATE_COLUMN_NAME, DatabaseDataType.LONG_INTEGER, 0, false);

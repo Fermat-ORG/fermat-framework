@@ -20,6 +20,7 @@ public class UserRedeemedListHolder extends FermatViewHolder {
     private final FermatTextView redeemedListUserName;
     private final FermatTextView redeemedListRedeemedDate;
     private final FermatTextView redeemedListRedeemedStatus;
+    private final FermatTextView redeemedListRedeemedRP;
 
     /**
      * Constructor
@@ -34,12 +35,14 @@ public class UserRedeemedListHolder extends FermatViewHolder {
         redeemedListUserName = (FermatTextView) itemView.findViewById(R.id.redeemedListUserName);
         redeemedListRedeemedDate = (FermatTextView) itemView.findViewById(R.id.redeemedListRedeemedDate);
         redeemedListRedeemedStatus = (FermatTextView) itemView.findViewById(R.id.redeemedListRedeemedStatus);
+        redeemedListRedeemedRP = (FermatTextView) itemView.findViewById(R.id.redeemedListRedeemedRP);
     }
 
     public void bind(final UserRedeemed userRedeemed) {
         redeemedListUserName.setText(userRedeemed.getUserName());
         redeemedListRedeemedDate.setText(userRedeemed.getFormattedRedeemedDate());
         redeemedListRedeemedStatus.setText(userRedeemed.getRedeemedStatus());
+        redeemedListRedeemedRP.setText("at " + userRedeemed.getRedeemPoint());
 
         setupColor(userRedeemed);
     }

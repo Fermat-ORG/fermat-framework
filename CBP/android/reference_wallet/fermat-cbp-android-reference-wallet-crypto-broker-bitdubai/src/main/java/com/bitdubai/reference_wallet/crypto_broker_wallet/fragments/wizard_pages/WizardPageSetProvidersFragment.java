@@ -114,13 +114,13 @@ public class WizardPageSetProvidersFragment extends AbstractFermatFragment
         ArrayAdapter<String> adapter = new ArrayAdapter<>(getActivity(), R.layout.cbw_spinner_item, getFormattedCurrencies(currencies));
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 
-        final Spinner currencyFromSpinner = (Spinner) layout.findViewById(R.id.currency_from_spinner);
-        currencyFromSpinner.setOnItemSelectedListener(this);
-        currencyFromSpinner.setAdapter(adapter);
+//        final Spinner currencyFromSpinner = (Spinner) layout.findViewById(R.id.currency_from_spinner);
+//        currencyFromSpinner.setOnItemSelectedListener(this);
+//        currencyFromSpinner.setAdapter(adapter);
 
-        final Spinner currencyToSpinner = (Spinner) layout.findViewById(R.id.currency_to_spinner);
-        currencyToSpinner.setOnItemSelectedListener(this);
-        currencyToSpinner.setAdapter(adapter);
+//        final Spinner currencyToSpinner = (Spinner) layout.findViewById(R.id.currency_to_spinner);
+//        currencyToSpinner.setOnItemSelectedListener(this);
+//        currencyToSpinner.setAdapter(adapter);
 
         final View selectProvidersButton = layout.findViewById(R.id.cbw_select_providers_button);
         selectProvidersButton.setOnClickListener(new View.OnClickListener() {
@@ -137,10 +137,11 @@ public class WizardPageSetProvidersFragment extends AbstractFermatFragment
                 saveSettingAndGoNextStep();
             }
         });
+
         PresentationDialog presentationDialog = new PresentationDialog.Builder(getActivity(), appSession)
-                .setBody("Custom text support for dialog in the wizard Providers help")
-                .setSubTitle("Subtitle text of Merchandises dialog help")
-                .setTextFooter("Text footer Merchandises dialog help")
+                .setBody(R.string.cbw_wizard_providers_dialog_body)
+                .setSubTitle(R.string.cbw_wizard_providers_dialog_sub_title)
+                .setTextFooter(R.string.cbw_wizard_merchandise_dialog_footer)
                 .setTemplateType(PresentationDialog.TemplateType.TYPE_PRESENTATION_WITHOUT_IDENTITIES)
                 .setBannerRes(R.drawable.banner_crypto_broker)
                 .setIconRes(R.drawable.crypto_broker)
@@ -153,12 +154,12 @@ public class WizardPageSetProvidersFragment extends AbstractFermatFragment
 
     @Override
     public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-        if (parent.getId() == R.id.currency_from_spinner) {
-            currencyFrom = currencies.get(position);
-
-        } else if (parent.getId() == R.id.currency_to_spinner) {
-            currencyTo = currencies.get(position);
-        }
+//        if (parent.getId() == R.id.currency_from_spinner) {
+//            currencyFrom = currencies.get(position);
+//
+//        } else if (parent.getId() == R.id.currency_to_spinner) {
+//            currencyTo = currencies.get(position);
+//        }
     }
 
     @Override

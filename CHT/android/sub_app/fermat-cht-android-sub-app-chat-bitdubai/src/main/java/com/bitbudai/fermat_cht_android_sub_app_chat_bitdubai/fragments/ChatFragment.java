@@ -14,7 +14,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.adapters.ChatAdapter;
+//import com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.adapters.ChatAdapter;
 import com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.adapters.ChatAdapterView;
 import com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.models.ChatMessage;
 import com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.sessions.ChatSession;
@@ -35,6 +35,7 @@ import com.bitdubai.fermat_cht_api.layer.middleware.interfaces.Chat;
 import com.bitdubai.fermat_cht_api.layer.middleware.interfaces.Message;
 import com.bitdubai.fermat_cht_api.layer.middleware.mocks.ChatMock;
 import com.bitdubai.fermat_cht_api.layer.middleware.mocks.MessageMock;
+import com.bitdubai.fermat_cht_api.layer.network_service.chat.interfaces.NetworkServiceChatManager;
 import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.ChatManager;
 import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.ChatModuleManager;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.exceptions.CantRequestListException;
@@ -77,7 +78,7 @@ public class ChatFragment extends AbstractFermatFragment {//ActionBarActivity
     @NeededAddonReference(platform = Platforms.PLUG_INS_PLATFORM, layer = Layers.PLATFORM_SERVICE, addon = Addons.EVENT_MANAGER)
     private EventManager eventManager2;*/
     @NeededPluginReference(platform = Platforms.CHAT_PLATFORM, layer = Layers.NETWORK_SERVICE, plugin = Plugins.CHAT_NETWORK_SERVICE)
-    private com.bitdubai.fermat_cht_api.layer.network_service.chat.interfaces.ChatManager networkservicechatmanager;
+    private NetworkServiceChatManager networkservicechatmanager;
     int i = 4;
     boolean me;
     Integer newmessage = 0;
@@ -92,10 +93,8 @@ public class ChatFragment extends AbstractFermatFragment {//ActionBarActivity
     private EditText messageET;
     private ListView messagesContainer;
     public Button sendBtn;
-    private ChatAdapter adapter;
+    //private ChatAdapter adapter;
     public ArrayList<ChatMessage> chatHistory;
-
-
     TextView linear_layout_send_form;
 
 
@@ -112,17 +111,11 @@ public class ChatFragment extends AbstractFermatFragment {//ActionBarActivity
             chatManager = moduleManager.getChatManager();
             //settingsManager = moduleManager.getSettingsManager();
             errorManager = appSession.getErrorManager();
-
-
         } catch (Exception e) {
             if (errorManager != null)
                 errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
         }
-
-
     }
-
-
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {//private void initControls() {}
@@ -251,23 +244,8 @@ public class ChatFragment extends AbstractFermatFragment {//ActionBarActivity
                 }, 2500);
             }
         });
-
-
-
         return layout;
-
-
     }
-
-    /*public void displayMessage(ChatMessage message) {
-        adapter.add(message);
-        //adapter.notifyDataSetChanged();
-        scroll();
-    }*/
-
-
-
-
 
     private void scroll() {
         messagesContainer.setSelection(messagesContainer.getCount() - 1);
@@ -275,7 +253,7 @@ public class ChatFragment extends AbstractFermatFragment {//ActionBarActivity
 
     private void loadDummyHistory(){// Hard Coded
 
-        chatHistory = new ArrayList<ChatMessage>();
+       /* chatHistory = new ArrayList<ChatMessage>();
 
         ChatMessage msg = new ChatMessage();
         msg.setId(1);
@@ -298,6 +276,6 @@ public class ChatFragment extends AbstractFermatFragment {//ActionBarActivity
         for(int i=0; i<chatHistory.size(); i++) {
             ChatMessage message = chatHistory.get(i);
             //displayMessage(message);
-        }
+        }*/
     }
 }

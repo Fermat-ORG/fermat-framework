@@ -77,9 +77,9 @@ import com.bitdubai.reference_wallet.crypto_broker_wallet.session.CryptoBrokerWa
         spreadTextView.setText(String.format("%1$s %%", spreadValue));
 
          PresentationDialog presentationDialog = new PresentationDialog.Builder(getActivity(), appSession)
-                 .setBody("Custom text support for dialog in the wizard Merchandises help")
-                 .setSubTitle("Subtitle text of Merchandises dialog help")
-                 .setTextFooter("Text footer Merchandises dialog help")
+                  .setBody(R.string.cbw_wizard_other_settings_dialog_body)
+                  .setSubTitle(R.string.cbw_wizard_other_settings_dialog_sub_title)
+                  .setTextFooter(R.string.cbw_wizard_other_settings_dialog_footer)
                  .setTemplateType(PresentationDialog.TemplateType.TYPE_PRESENTATION_WITHOUT_IDENTITIES)
                  .setBannerRes(R.drawable.banner_crypto_broker)
                  .setIconRes(R.drawable.crypto_broker)

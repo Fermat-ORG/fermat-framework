@@ -23,6 +23,7 @@ import com.bitdubai.fermat_dap_api.layer.all_definition.enums.DistributionStatus
 import com.bitdubai.fermat_dap_api.layer.all_definition.enums.EventStatus;
 import com.bitdubai.fermat_dap_api.layer.dap_transaction.common.exceptions.CantSaveEventException;
 import com.bitdubai.fermat_dap_api.layer.dap_transaction.common.exceptions.RecordsNotFoundException;
+import com.bitdubai.fermat_dap_api.layer.dap_transaction.common.exceptions.TransactionAlreadyStartedException;
 import com.bitdubai.fermat_dap_plugin.digital_asset_transaction.redeem_point_redemption.bitdubai.version_1.structure.exceptions.CantLoadAssetRedemptionEventListException;
 import com.bitdubai.fermat_dap_plugin.digital_asset_transaction.redeem_point_redemption.bitdubai.version_1.structure.exceptions.CantLoadAssetRedemptionMetadataListException;
 import com.bitdubai.fermat_dap_plugin.digital_asset_transaction.redeem_point_redemption.bitdubai.version_1.structure.exceptions.CantPersistTransactionMetadataException;
@@ -36,7 +37,7 @@ import java.util.UUID;
 /**
  * Created by Víctor A. Mars M. (marsvicam@gmail.com) on 23/10/15.
  */
-public class AssetRedeemPointRedemptionDAO implements AutoCloseable {
+public class AssetRedeemPointRedemptionDAO {
 
     //VARIABLE DECLARATION
     private Database database;
@@ -112,7 +113,7 @@ public class AssetRedeemPointRedemptionDAO implements AutoCloseable {
     * Metadata Table's Actions.
     *
     */
-    public void persistTransaction(String transactionId, String senderId, String receiverId, DistributionStatus transactionStatus, CryptoStatus cryptoStatus) throws CantPersistTransactionMetadataException {
+    public void persistTransaction(String transactionId, String senderId, String receiverId, DistributionStatus transactionStatus, CryptoStatus cryptoStatus) throws CantPersistTransactionMetadataException, TransactionAlreadyStartedException {
         String context = null;
         try {
             context = "Transaction Genesis Address: " + transactionId
@@ -120,6 +121,9 @@ public class AssetRedeemPointRedemptionDAO implements AutoCloseable {
                     + "Sender Public Key: " + senderId
                     + "Receiver Public Key: " + receiverId
                     + "CryptoStatus: " + cryptoStatus.getCode();
+
+            if (isTransactionRegistered(transactionId))
+                return;
 
             DatabaseTable databaseTable = this.database.getTable(AssetRedeemPointRedemptionDatabaseConstants.ASSET_RPR_METADATA_TABLE_NAME);
             DatabaseTableRecord metadataRecord = databaseTable.getEmptyRecord();
@@ -134,11 +138,6 @@ public class AssetRedeemPointRedemptionDAO implements AutoCloseable {
             databaseTable.insertRecord(metadataRecord);
         } catch (CantInsertRecordException e) {
             throw new CantPersistTransactionMetadataException(context, e);
-        } catch (Exception e) {
-            if (context == null) {
-                throw new CantPersistTransactionMetadataException(context, FermatException.wrapException(e), "There was an error retrieving the values from the metadataTransaction.");
-            }
-            throw new CantPersistTransactionMetadataException(context, FermatException.wrapException(e));
         }
     }
 
@@ -148,47 +147,6 @@ public class AssetRedeemPointRedemptionDAO implements AutoCloseable {
 
     public void updateTransactionCryptoStatusById(CryptoStatus status, String transactionId) throws RecordsNotFoundException, CantLoadAssetRedemptionMetadataListException {
         updateStringFieldByTransactionId(AssetRedeemPointRedemptionDatabaseConstants.ASSET_RPR_METADATA_TRANSACTION_CRYPTO_STATUS_COLUMN_NAME, status.getCode(), transactionId);
-    }
-
-    /**
-     * Closes this resource, relinquishing any underlying resources.
-     * This method is invoked automatically on objects managed by the
-     * {@code try}-with-resources statement.
-     * <p/>
-     * <p>While this interface method is declared to throw {@code
-     * Exception}, implementers are <em>strongly</em> encouraged to
-     * declare concrete implementations of the {@code close} method to
-     * throw more specific exceptions, or to throw no exception at all
-     * if the close operation cannot fail.
-     * <p/>
-     * <p><em>Implementers of this interface are also strongly advised
-     * to not have the {@code close} method throw {@link
-     * InterruptedException}.</em>
-     * <p/>
-     * This exception interacts with a thread's interrupted status,
-     * and runtime misbehavior is likely to occur if an {@code
-     * InterruptedException} is {@linkplain Throwable#addSuppressed
-     * suppressed}.
-     * <p/>
-     * More generally, if it would cause problems for an
-     * exception to be suppressed, the {@code AutoCloseable.close}
-     * method should not throw it.
-     * <p/>
-     * <p>Note that unlike the {@link Closeable#close close}
-     * method of {@link Closeable}, this {@code close} method
-     * is <em>not</em> required to be idempotent.  In other words,
-     * calling this {@code close} method more than once may have some
-     * visible side effect, unlike {@code Closeable.close} which is
-     * required to have no effect if called more than once.
-     * <p/>
-     * However, implementers of this interface are strongly encouraged
-     * to make their {@code close} methods idempotent.
-     *
-     * @throws Exception if this resource cannot be closed
-     */
-    @Override
-    public void close() throws Exception {
-        database.closeDatabase();
     }
 
     //PRIVATE METHODS
@@ -318,6 +276,15 @@ public class AssetRedeemPointRedemptionDAO implements AutoCloseable {
 
     private boolean isPendingTransactionByCryptoStatus(CryptoStatus status) throws CantLoadAssetRedemptionMetadataListException {
         return getGenesisTransactionByCryptoStatus(status).isEmpty();
+    }
+
+    private boolean isTransactionRegistered(String transactionId) {
+        try {
+            getStringFieldByTransactionId(AssetRedeemPointRedemptionDatabaseConstants.ASSET_RPR_METADATA_TRANSACTION_STATUS_COLUMN_NAME, transactionId);
+        } catch (CantLoadAssetRedemptionMetadataListException | RecordsNotFoundException e) {
+            return false;
+        }
+        return true;
     }
 
     private List<String> getGenesisTransactionByCryptoStatus(CryptoStatus status) throws CantLoadAssetRedemptionMetadataListException {
