@@ -11,6 +11,14 @@ public interface AssetRedeemPointWalletList {
 
     void setDigitalAsset(DigitalAsset digitalAsset);
 
+    long getAvailableBalance();
+
+    void setAvailableBalance(long availableBalance);
+
+    long getBookBalance();
+
+    void setBookBalance(long bookBalance);
+
     long getQuantityBookBalance();
 
     void setQuantityBookBalance(long quantityBookBalance);
