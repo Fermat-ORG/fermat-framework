@@ -3,7 +3,7 @@
               android:layout_width="match_parent"
               android:layout_height="match_parent"
               android:orientation="vertical"
-              android:background="@color/background_header_navy">
+              android:background="@drawable/bw_body_gradient_background">
 
 
     <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
@@ -11,15 +11,15 @@
                   android:orientation="vertical"
                   android:layout_height="match_parent"
                   android:layout_width="match_parent"
-                  android:background="@color/background_header_navy"
-                  android:visibility="invisible"
+                  android:background="@drawable/bw_reflex_image"
+                  android:visibility="visible"
+        android:layout_marginTop="-70dp"
             >
 
         <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-
                       android:layout_width="match_parent"
                       android:layout_height="140dp"
-                      android:background="@color/background_header_navy"
+            android:layout_marginTop="70dp"
                       android:orientation="vertical">
 
             <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
@@ -49,7 +49,6 @@
         <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
                       android:layout_width="match_parent"
                       android:layout_height="fill_parent"
-                      android:background="@drawable/bg_setup"
                       android:orientation="vertical">
 
             <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
