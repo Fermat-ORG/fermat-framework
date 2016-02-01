@@ -182,11 +182,12 @@ public class ComponentRegistrationRequestJettyPacketProcessor extends FermatJett
              * socket are closed and the profile don't pass ot the stand by cache or
              * remove
              */
-            if (MemoryCache.getInstance().getRegisteredCommunicationsCloudClientCache().containsKey(platformComponentProfileToRegister.getIdentityPublicKey())) {
+            if (MemoryCache.getInstance().getRegisteredCommunicationsCloudClientCache().containsKey(platformComponentProfileToRegister.getIdentityPublicKey()) &&
+                    !MemoryCache.getInstance().getStandByProfileByClientIdentity().containsKey(platformComponentProfileToRegister.getIdentityPublicKey())) {
 
+                LOG.info("Cloud client already register! clean old references and close old connection");
                 ClientConnection clientConnectionOld = MemoryCache.getInstance().getRegisteredClientConnectionsCache().remove(platformComponentProfileToRegister.getIdentityPublicKey());
-                clientConnectionOld.getSession().close(new CloseReason(CloseReason.CloseCodes.NORMAL_CLOSURE, "Connection is no more active"));
-
+                clientConnectionOld.getSession().close();
             }
 
              /*
@@ -216,22 +217,22 @@ public class ComponentRegistrationRequestJettyPacketProcessor extends FermatJett
 
                 LOG.info("New registration");
 
-            /*
-             * Construct the respond
-             */
-            Gson gson = new Gson();
-            JsonObject jsonObject = new JsonObject();
-            jsonObject.addProperty(JsonAttNamesConstants.NETWORK_SERVICE_TYPE, networkServiceTypeApplicant.toString());
-            jsonObject.addProperty(JsonAttNamesConstants.PROFILE_TO_REGISTER, platformComponentProfileToRegister.toJson());
+                /*
+                 * Construct the respond
+                 */
+                Gson gson = new Gson();
+                JsonObject jsonObject = new JsonObject();
+                jsonObject.addProperty(JsonAttNamesConstants.NETWORK_SERVICE_TYPE, networkServiceTypeApplicant.toString());
+                jsonObject.addProperty(JsonAttNamesConstants.PROFILE_TO_REGISTER, platformComponentProfileToRegister.toJson());
 
-            /*
-             * Construct a fermat packet whit the same platform component profile and different FermatPacketType
-             */
-            fermatPacketRespond = FermatPacketCommunicationFactory.constructFermatPacketEncryptedAndSinged(receiveFermatPacket.getSender(),                  //Destination
-                                                                                                            clientConnection.getServerIdentity().getPublicKey(),                    //Sender
-                                                                                                            gson.toJson(jsonObject),                          //Message Content
-                                                                                                            FermatPacketType.COMPLETE_COMPONENT_REGISTRATION, //Packet type
-                                                                                                            clientConnection.getServerIdentity().getPrivateKey());  //Sender private key
+                /*
+                 * Construct a fermat packet whit the same platform component profile and different FermatPacketType
+                 */
+                fermatPacketRespond = FermatPacketCommunicationFactory.constructFermatPacketEncryptedAndSinged(receiveFermatPacket.getSender(),                        //Destination
+                                                                                                                clientConnection.getServerIdentity().getPublicKey(),   //Sender
+                                                                                                                gson.toJson(jsonObject),                               //Message Content
+                                                                                                                FermatPacketType.COMPLETE_COMPONENT_REGISTRATION,      //Packet type
+                                                                                                                clientConnection.getServerIdentity().getPrivateKey()); //Sender private key
 
             }else{
 
@@ -239,7 +240,7 @@ public class ComponentRegistrationRequestJettyPacketProcessor extends FermatJett
 
                 if (MemoryCache.getInstance().getTimersByClientIdentity().containsKey(platformComponentProfileToRegister.getIdentityPublicKey())){
                     LOG.info("Cancel timer task to clean references");
-                    Timer timer = MemoryCache.getInstance().getTimersByClientIdentity().get(platformComponentProfileToRegister.getIdentityPublicKey());
+                    Timer timer = MemoryCache.getInstance().getTimersByClientIdentity().remove(platformComponentProfileToRegister.getIdentityPublicKey());
                     timer.cancel();
                 }
 

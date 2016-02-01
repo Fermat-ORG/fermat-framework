@@ -591,7 +591,7 @@ public class OutgoingNotificationDao implements com.bitdubai.fermat_ccp_plugin.l
 
             outgoingNotificationTable.addUUIDFilter(CommunicationNetworkServiceDatabaseConstants.OUTGOING_NOTIFICATION_ID_COLUMN_NAME,entity.getId(),DatabaseFilterType.EQUAL);
 
-            transaction.addRecordToUpdate(getDatabaseTable(), entityRecord);
+            transaction.addRecordToUpdate(outgoingNotificationTable, entityRecord);
             database.executeTransaction(transaction);
 
         } catch (DatabaseTransactionFailedException databaseTransactionFailedException) {
