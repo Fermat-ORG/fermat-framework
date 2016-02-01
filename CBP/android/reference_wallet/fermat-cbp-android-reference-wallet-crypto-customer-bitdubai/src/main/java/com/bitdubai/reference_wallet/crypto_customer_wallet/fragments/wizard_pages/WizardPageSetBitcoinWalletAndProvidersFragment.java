@@ -31,6 +31,7 @@ import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_customer.exception
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_customer.interfaces.CryptoCustomerWalletManager;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_customer.interfaces.CryptoCustomerWalletModuleManager;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_customer.interfaces.settings.CryptoCustomerWalletAssociatedSetting;
+import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_customer.interfaces.settings.CryptoCustomerWalletPreferenceSettings;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_customer.interfaces.settings.CryptoCustomerWalletProviderSetting;
 import com.bitdubai.fermat_cer_api.layer.provider.exceptions.CantGetProviderInfoException;
 import com.bitdubai.fermat_cer_api.layer.provider.interfaces.CurrencyExchangeRateProviderManager;
@@ -69,6 +70,7 @@ public class WizardPageSetBitcoinWalletAndProvidersFragment extends AbstractFerm
     private InstalledWallet selectedBitcoinWallet;
     private List<CryptoCustomerIdentity> identies;
     private CryptoCustomerIdentity selectedIdentity;
+    private CryptoCustomerWalletPreferenceSettings walletSettings;
 
     // UI
     private RecyclerView recyclerView;
@@ -88,8 +90,28 @@ public class WizardPageSetBitcoinWalletAndProvidersFragment extends AbstractFerm
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        CryptoCustomerWalletModuleManager moduleManager = ((CryptoCustomerWalletSession) appSession).getModuleManager();
+
         try {
-            CryptoCustomerWalletModuleManager moduleManager = ((CryptoCustomerWalletSession) appSession).getModuleManager();
+
+            //Obtain walletSettings or create new wallet settings if first time opening wallet
+            walletSettings = null;
+            try {
+                walletSettings = moduleManager.getSettingsManager().loadAndGetSettings(appSession.getAppPublicKey());
+            } catch (Exception e) {
+                walletSettings = null;
+            }
+
+            if (walletSettings == null) {
+                walletSettings = new CryptoCustomerWalletPreferenceSettings();
+                walletSettings.setIsPresentationHelpEnabled(true);
+                try {
+                    moduleManager.getSettingsManager().persistSettings(appSession.getAppPublicKey(), walletSettings);
+                } catch (Exception e) {
+                    Log.e(TAG, e.getMessage(), e);
+                }
+            }
+
             walletManager = moduleManager.getCryptoCustomerWallet(appSession.getAppPublicKey());
             errorManager = appSession.getErrorManager();
 
@@ -116,17 +138,16 @@ public class WizardPageSetBitcoinWalletAndProvidersFragment extends AbstractFerm
                         .build();
 
                 boolean showDialog;
-//                try{
-//                    //CryptoBrokerWalletModuleManager moduleManager = ((CryptoBrokerWalletSession) appSession).getModuleManager();
-//                    showDialog = moduleManager.getSettingsManager().loadAndGetSettings(appSession.getAppPublicKey()).isHomeTutorialDialogEnabled();
-//                    if(showDialog){
-//                        presentationDialog.show();
-//                    }
-//                }catch (FermatException e){
-//                    makeText(getActivity(), "Oops! recovering from system error", Toast.LENGTH_SHORT).show();
-//                }
+                try{
+                    showDialog = moduleManager.getSettingsManager().loadAndGetSettings(appSession.getAppPublicKey()).isHomeTutorialDialogEnabled();
+                    if(showDialog){
+                        presentationDialog.show();
+                    }
+                }catch (FermatException e){
+                    Toast.makeText(getActivity(), "Oops! recovering from system error", Toast.LENGTH_SHORT).show();
+                }
 
-                presentationDialog.show();
+                //presentationDialog.show();
             }
             else {
                 //Buscar la identidad y asociarla
