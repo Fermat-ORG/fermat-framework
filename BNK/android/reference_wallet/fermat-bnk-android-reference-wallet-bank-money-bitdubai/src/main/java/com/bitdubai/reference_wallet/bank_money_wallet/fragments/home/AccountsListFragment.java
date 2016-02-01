@@ -130,8 +130,10 @@ public class AccountsListFragment extends FermatWalletListFragment<BankAccountNu
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         super.onCreateOptionsMenu(menu,inflater);
-        menu.add(0, ReferenceWalletConstants.ADD_ACCOUNT_ACTION, 0, "Add Account")
-                .setShowAsAction(MenuItem.SHOW_AS_ACTION_NEVER);
+        menu.add(0, ReferenceWalletConstants.ADD_ACCOUNT_ACTION, 0, "Add Account").setIcon(R.drawable.bw_add_icon_action_bar)
+                .setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
+        menu.add(1, ReferenceWalletConstants.HELP_ACTION, 1, "help").setIcon(R.drawable.bw_help_icon_action_bar)
+                .setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
     }
 
     @Override

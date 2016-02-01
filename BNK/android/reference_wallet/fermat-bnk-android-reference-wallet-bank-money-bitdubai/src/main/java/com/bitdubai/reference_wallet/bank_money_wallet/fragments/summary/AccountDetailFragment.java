@@ -4,6 +4,9 @@ import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.Toast;
@@ -26,6 +29,7 @@ import com.bitdubai.reference_wallet.bank_money_wallet.common.adapters.Transacti
 import com.bitdubai.reference_wallet.bank_money_wallet.common.dialogs.CreateTransactionFragmentDialog;
 import com.bitdubai.reference_wallet.bank_money_wallet.session.BankMoneyWalletSession;
 import com.bitdubai.reference_wallet.bank_money_wallet.util.CommonLogger;
+import com.bitdubai.reference_wallet.bank_money_wallet.util.ReferenceWalletConstants;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -69,6 +73,7 @@ public class AccountDetailFragment extends FermatWalletListFragment<BankMoneyTra
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setHasOptionsMenu(true);
         BankAccountNumber data = (BankAccountNumber)appSession.getData("account_data");
         imageAccount = (int) appSession.getData("account_image");
         try {
@@ -144,7 +149,7 @@ public class AccountDetailFragment extends FermatWalletListFragment<BankMoneyTra
 
     private void configureToolbar() {
         getToolbar().setBackgroundColor(getResources().getColor(R.color.background_header_navy));
-        getToolbar().getMenu().clear();
+        getToolbar().setNavigationIcon(R.drawable.bw_back_icon_action_bar);
     }
 
     @Override
@@ -256,5 +261,19 @@ public class AccountDetailFragment extends FermatWalletListFragment<BankMoneyTra
         }
         return data;
 
+    }
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        super.onCreateOptionsMenu(menu,inflater);
+        menu.add(0, ReferenceWalletConstants.HELP_ACTION, 0, "help").setIcon(R.drawable.bw_help_icon_action_bar)
+                .setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
+    }
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        /*if (item.getItemId() == ReferenceWalletConstants.ADD_ACCOUNT_ACTION) {
+            changeActivity(Activities.BNK_BANK_MONEY_WALLET_ADD_ACCOUNT, appSession.getAppPublicKey());
+            return true;
+        }*/
+        return super.onOptionsItemSelected(item);
     }
 }
