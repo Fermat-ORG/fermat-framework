@@ -213,7 +213,6 @@ public class OpenNegotiationAdapter extends FermatAdapter<ClauseInformation, Fer
                 break;
             //PAYMENT METHOD CLAUSES
             case CUSTOMER_PAYMENT_METHOD:
-                //TODO ACA DIO EXCEPTION REVISAR
                 clauseViewHolder.setViewResources(R.string.payment_methods_title, clauseNumberImageRes, R.string.payment_method);
                 break;
             case BROKER_PAYMENT_METHOD:
@@ -317,10 +316,7 @@ public class OpenNegotiationAdapter extends FermatAdapter<ClauseInformation, Fer
             else if (currencyEquals.equals(CurrencyType.BANK_MONEY.getFriendlyname()))
                 clause = clauses.get(ClauseType.BROKER_BANK_ACCOUNT);
 
-            else if (currencyEquals.equals(CurrencyType.CASH_DELIVERY_MONEY.getFriendlyname()))
-                clause = clauses.get(ClauseType.BROKER_PLACE_TO_DELIVER);
-
-            else if (currencyEquals.equals(CurrencyType.CASH_ON_HAND_MONEY.getFriendlyname()))
+            else if (currencyEquals.equals(CurrencyType.CASH_DELIVERY_MONEY.getFriendlyname()) || (currencyEquals.equals(CurrencyType.CASH_ON_HAND_MONEY.getFriendlyname())))
                 clause = clauses.get(ClauseType.BROKER_PLACE_TO_DELIVER);
         }
 
@@ -339,10 +335,7 @@ public class OpenNegotiationAdapter extends FermatAdapter<ClauseInformation, Fer
             else if (currencyEquals.equals(CurrencyType.BANK_MONEY.getFriendlyname()))
                 clause = clauses.get(ClauseType.CUSTOMER_BANK_ACCOUNT);
 
-            else if (currencyEquals.equals(CurrencyType.CASH_DELIVERY_MONEY.getFriendlyname()))
-                clause = clauses.get(ClauseType.CUSTOMER_PLACE_TO_DELIVER);
-
-            else if (currencyEquals.equals(CurrencyType.CASH_ON_HAND_MONEY.getFriendlyname()))
+            else if (currencyEquals.equals(CurrencyType.CASH_DELIVERY_MONEY.getFriendlyname()) || (currencyEquals.equals(CurrencyType.CASH_ON_HAND_MONEY.getFriendlyname())))
                 clause = clauses.get(ClauseType.CUSTOMER_PLACE_TO_DELIVER);
         }
 

@@ -558,17 +558,19 @@ public class OpenNegotiationDetailsFragment extends AbstractFermatFragment<Crypt
     private void actionListenerBrokerCurrency(ClauseInformation clause, Currency selectedItem){
 
         final Map<ClauseType, ClauseInformation> clauses = negotiationInfo.getClauses();
+        String payment = clauses.get(ClauseType.BROKER_CURRENCY).getValue();
+        String merchandise = clauses.get(ClauseType.CUSTOMER_CURRENCY).getValue();
 
-        if ((clauses.get(ClauseType.CUSTOMER_CURRENCY).getValue()) != (clauses.get(ClauseType.BROKER_CURRENCY).getValue())) {
+        if (merchandise != payment) {
+
+            //UPDATE LIST OF PAYMENT
+            getPaymentMethod(payment);
 
             //ASIGNAMENT NEW VALUE
             putClause(clause, selectedItem.getCode());
 
             //GET MARKET RATE
-            String brokerMarketRate = brokerCurrencyQuotation.getExchangeRate(
-                    clauses.get(ClauseType.CUSTOMER_CURRENCY).getValue(),
-                    clauses.get(ClauseType.BROKER_CURRENCY).getValue()
-            );
+            String brokerMarketRate = brokerCurrencyQuotation.getExchangeRate(merchandise,payment);
 
             if (brokerMarketRate != null) {
 
@@ -587,12 +589,6 @@ public class OpenNegotiationDetailsFragment extends AbstractFermatFragment<Crypt
                 final String amountToPayStr = getDecimalFormat(amountToPay);
                 final ClauseInformation brokerCurrencyQuantityClause = clauses.get(ClauseType.BROKER_CURRENCY_QUANTITY);
                 putClause(brokerCurrencyQuantityClause, amountToPayStr);
-
-                //            Toast.makeText(getActivity(), "The exchange rate:" +
-                //                    "BROKER CURRENCY: " +clauses.get(ClauseType.BROKER_CURRENCY).getValue()+
-                //                    ", CUSTOMER CURRENCY: "+clauses.get(ClauseType.CUSTOMER_CURRENCY).getValue()+
-                //                    ", EXCHANGE RATE: "+brokerMarketRate
-                //                    , Toast.LENGTH_LONG).show();
 
             } else {
                 Toast.makeText(getActivity(), "The exchange rate not fount for the currency to pay selected.", Toast.LENGTH_LONG).show();
@@ -664,12 +660,14 @@ public class OpenNegotiationDetailsFragment extends AbstractFermatFragment<Crypt
 
         ArrayList<String> paymentMethods = new ArrayList<>();
 
+        //ADD FIAT CURRENCY IF IS FIAT
         if(FiatCurrency.codeExists(currency)){
             paymentMethods.add(CurrencyType.BANK_MONEY.getFriendlyname());
             paymentMethods.add(CurrencyType.CASH_DELIVERY_MONEY.getFriendlyname());
             paymentMethods.add(CurrencyType.CASH_ON_HAND_MONEY.getFriendlyname());
         }
 
+        //ADD CRYPTO CURRENCY IF IS CRYPTO
         if(CryptoCurrency.codeExists(currency)){
             paymentMethods.add(CurrencyType.CRYPTO_MONEY.getFriendlyname());
         }
