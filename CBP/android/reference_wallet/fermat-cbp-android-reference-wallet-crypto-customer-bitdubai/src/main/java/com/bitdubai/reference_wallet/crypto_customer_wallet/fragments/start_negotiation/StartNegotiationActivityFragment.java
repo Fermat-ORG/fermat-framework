@@ -408,16 +408,16 @@ public class StartNegotiationActivityFragment extends AbstractFermatFragment<Cry
 
         final Map<ClauseType, ClauseInformation> clauses = negotiationInfo.getClauses();
 
-        if ((clauses.get(ClauseType.CUSTOMER_CURRENCY).getValue()) != (clauses.get(ClauseType.BROKER_CURRENCY).getValue())) {
+        String payment = selectedItem.getCode();
+        String merchandise = clauses.get(ClauseType.CUSTOMER_CURRENCY).getValue();
+
+        if (merchandise != payment) {
 
             //ASIGNAMENT NEW VALUE
-            negotiationInfo.putClause(clause, selectedItem.getCode());
+            negotiationInfo.putClause(clause, payment);
 
             //GET MARKET RATE
-            String brokerMarketRate = brokerCurrencyQuotation.getExchangeRate(
-                    clauses.get(ClauseType.CUSTOMER_CURRENCY).getValue(),
-                    clauses.get(ClauseType.BROKER_CURRENCY).getValue()
-            );
+            String brokerMarketRate = brokerCurrencyQuotation.getExchangeRate(merchandise,payment);
 
             if (brokerMarketRate != null) {
 

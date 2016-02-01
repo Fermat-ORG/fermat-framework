@@ -67,6 +67,9 @@ public class OpenNegotiationAdapter extends FermatAdapter<ClauseInformation, Fer
 
         this.negotiationInformation = negotiationInfo;
 
+        dataSet = new ArrayList<>();
+        dataSet.addAll(buildListOfItems());
+
         final List<ClauseInformation> items = buildListOfItems();
         super.changeDataSet(items);
 
@@ -306,17 +309,17 @@ public class OpenNegotiationAdapter extends FermatAdapter<ClauseInformation, Fer
 
     private ClauseInformation getCustomerPaymentInfo(Map<ClauseType, ClauseInformation> clauses){
 
-        String currencyEquals = clauses.get(ClauseType.CUSTOMER_PAYMENT_METHOD).getValue();
+        String currencyType = clauses.get(ClauseType.CUSTOMER_PAYMENT_METHOD).getValue();
         ClauseInformation clause = null;
 
-        if(currencyEquals != null) {
-            if (currencyEquals.equals(CurrencyType.CRYPTO_MONEY.getFriendlyname()))
+        if(currencyType != null) {
+            if (currencyType.equals(CurrencyType.CRYPTO_MONEY.getFriendlyname()))
                 clause = clauses.get(ClauseType.BROKER_CRYPTO_ADDRESS);
 
-            else if (currencyEquals.equals(CurrencyType.BANK_MONEY.getFriendlyname()))
+            else if (currencyType.equals(CurrencyType.BANK_MONEY.getFriendlyname()))
                 clause = clauses.get(ClauseType.BROKER_BANK_ACCOUNT);
 
-            else if (currencyEquals.equals(CurrencyType.CASH_DELIVERY_MONEY.getFriendlyname()) || (currencyEquals.equals(CurrencyType.CASH_ON_HAND_MONEY.getFriendlyname())))
+            else if (currencyType.equals(CurrencyType.CASH_DELIVERY_MONEY.getFriendlyname()) || (currencyType.equals(CurrencyType.CASH_ON_HAND_MONEY.getFriendlyname())))
                 clause = clauses.get(ClauseType.BROKER_PLACE_TO_DELIVER);
         }
 
@@ -325,17 +328,17 @@ public class OpenNegotiationAdapter extends FermatAdapter<ClauseInformation, Fer
 
     private ClauseInformation getBrokerPaymentInfo(Map<ClauseType, ClauseInformation> clauses){
 
-        String currencyEquals = clauses.get(ClauseType.BROKER_PAYMENT_METHOD).getValue();
+        String currencyType = clauses.get(ClauseType.BROKER_PAYMENT_METHOD).getValue();
         ClauseInformation clause = null;
 
-        if(currencyEquals != null) {
-            if (currencyEquals.equals(CurrencyType.CRYPTO_MONEY.getFriendlyname()))
+        if(currencyType != null) {
+            if (currencyType.equals(CurrencyType.CRYPTO_MONEY.getFriendlyname()))
                 clause = clauses.get(ClauseType.CUSTOMER_CRYPTO_ADDRESS);
 
-            else if (currencyEquals.equals(CurrencyType.BANK_MONEY.getFriendlyname()))
+            else if (currencyType.equals(CurrencyType.BANK_MONEY.getFriendlyname()))
                 clause = clauses.get(ClauseType.CUSTOMER_BANK_ACCOUNT);
 
-            else if (currencyEquals.equals(CurrencyType.CASH_DELIVERY_MONEY.getFriendlyname()) || (currencyEquals.equals(CurrencyType.CASH_ON_HAND_MONEY.getFriendlyname())))
+            else if (currencyType.equals(CurrencyType.CASH_DELIVERY_MONEY.getFriendlyname()) || (currencyType.equals(CurrencyType.CASH_ON_HAND_MONEY.getFriendlyname())))
                 clause = clauses.get(ClauseType.CUSTOMER_PLACE_TO_DELIVER);
         }
 
