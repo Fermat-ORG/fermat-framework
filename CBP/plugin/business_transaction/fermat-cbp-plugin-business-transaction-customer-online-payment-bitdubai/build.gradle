@@ -10,5 +10,7 @@ dependencies {
     compile project(':fermat-api')
     compile project(':fermat-cbp-api')
     compile project(':fermat-ccp-api')
+    testCompile 'junit:junit:4.12'
+    testCompile 'org.mockito:mockito-all:2.0.2-beta'
 }
 
