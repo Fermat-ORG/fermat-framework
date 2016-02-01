@@ -1157,8 +1157,8 @@ public class WalletRuntimeEnginePluginRoot extends AbstractPlugin implements
         runtimeWalletNavigationStructure.setPublicKey(publicKey);
 
         // Side Menu
-        runtimeSideMenu = new SideMenu();
-        runtimeSideMenu.setBackgroundColor("#5C6E81");
+//        runtimeSideMenu = new SideMenu();
+//        runtimeSideMenu.setBackgroundColor("#5C6E81");
 //TODO en Deshuso por ahora
 //        runtimeMenuItem = new MenuItem();
 //        runtimeMenuItem.setLabel("My Assets");
@@ -1183,7 +1183,7 @@ public class WalletRuntimeEnginePluginRoot extends AbstractPlugin implements
         runtimeActivity.setType(Activities.DAP_WALLET_ASSET_ISSUER_MAIN_ACTIVITY);
         runtimeActivity.setActivityType(Activities.DAP_WALLET_ASSET_ISSUER_MAIN_ACTIVITY.getCode());
 //        runtimeActivity.setColor("#627284");
-        runtimeActivity.setSideMenu(runtimeSideMenu);
+        runtimeActivity.setSideMenu(loadSideMenuAssetIssuerWallet(publicKey));
         runtimeWalletNavigationStructure.addActivity(runtimeActivity);
         runtimeWalletNavigationStructure.addPosibleStartActivity(Activities.DAP_WALLET_ASSET_ISSUER_MAIN_ACTIVITY);
 
@@ -1488,6 +1488,43 @@ public class WalletRuntimeEnginePluginRoot extends AbstractPlugin implements
 
         return runtimeWalletNavigationStructure;
     }
+
+    private SideMenu loadSideMenuAssetIssuerWallet(String publicKey) {
+
+        SideMenu runtimeSideMenu = new SideMenu();
+        runtimeSideMenu.setBackgroundColor("#5C6E81");
+//        runtimeSideMenu.setNavigationIconColor("#ffffff");
+        runtimeSideMenu.setHasFooter(true);
+
+        MenuItem runtimeMenuItem = new MenuItem();
+
+        runtimeMenuItem.setLabel("Home");
+        runtimeMenuItem.setSelected(true);
+        runtimeMenuItem.setLinkToActivity(Activities.DAP_WALLET_ASSET_ISSUER_MAIN_ACTIVITY);
+        runtimeMenuItem.setAppLinkPublicKey(publicKey);
+        runtimeSideMenu.addMenuItem(runtimeMenuItem);
+
+        runtimeMenuItem = new MenuItem();
+        runtimeMenuItem.setLabel("Settings");
+        runtimeMenuItem.setLinkToActivity(Activities.DAP_WALLET_ASSET_ISSUER_HISTORY_ACTIVITY);
+        runtimeMenuItem.setAppLinkPublicKey(publicKey);
+        runtimeSideMenu.addMenuItem(runtimeMenuItem);
+
+//        runtimeMenuItem = new MenuItem();
+//        runtimeMenuItem.setLabel("History");
+//        runtimeMenuItem.setLinkToActivity(Activities.DAP_WALLET_ASSET_ISSUER_HISTORY_ACTIVITY);
+//        runtimeMenuItem.setAppLinkPublicKey(publicKey);
+//        runtimeSideMenu.addMenuItem(runtimeMenuItem);
+//
+//        runtimeMenuItem = new MenuItem();
+//        runtimeMenuItem.setLabel("Statistics");
+//        runtimeMenuItem.setLinkToActivity(Activities.DAP_WALLET_ASSET_ISSUER_STADISTICS_ACTIVITY);
+//        runtimeMenuItem.setAppLinkPublicKey(publicKey);
+//        runtimeSideMenu.addMenuItem(runtimeMenuItem);
+
+        return runtimeSideMenu;
+    }
+
 
     private WalletNavigationStructure createAssetUserWalletNavigationStructure() {
         WalletNavigationStructure runtimeWalletNavigationStructure;
@@ -3123,7 +3160,6 @@ public class WalletRuntimeEnginePluginRoot extends AbstractPlugin implements
         runtimeWalletNavigationStructure.setPublicKey(publicKey);
 
 
-
         //Setup Activity
         runtimeActivity = new Activity();
         runtimeActivity.setType(Activities.CSH_CASH_MONEY_WALLET_SETUP);
@@ -3141,7 +3177,6 @@ public class WalletRuntimeEnginePluginRoot extends AbstractPlugin implements
         runtimeActivity.setStartFragment(Fragments.CSH_CASH_MONEY_WALLET_SETUP.getKey());
 
 
-
         //Home Activity
         runtimeActivity = new Activity();
         runtimeActivity.setType(Activities.CSH_CASH_MONEY_WALLET_HOME);
@@ -3156,7 +3191,6 @@ public class WalletRuntimeEnginePluginRoot extends AbstractPlugin implements
         runtimeFragment.setType(Fragments.CSH_CASH_MONEY_WALLET_BALANCE_SUMMARY.getKey());
         runtimeActivity.addFragment(Fragments.CSH_CASH_MONEY_WALLET_BALANCE_SUMMARY.getKey(), runtimeFragment);
         runtimeActivity.setStartFragment(Fragments.CSH_CASH_MONEY_WALLET_BALANCE_SUMMARY.getKey());
-
 
 
         //Transaction detail Activity
