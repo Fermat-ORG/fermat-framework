@@ -653,25 +653,16 @@ public class OpenNegotiationDetailsFragment extends AbstractFermatFragment<Crypt
 
         ArrayList<String> paymentMethods = new ArrayList<>();
 
-        Boolean isFiatCurrency = Boolean.FALSE;
-        Boolean isCryptoCurrency = Boolean.FALSE;
-
-        for (FiatCurrency fiatCurrency: FiatCurrency.values())
-            if(currency.equals(fiatCurrency)) isFiatCurrency = Boolean.TRUE;
-
-        for (CryptoCurrency cryptoCurrency: CryptoCurrency.values())
-            if(currency.equals(cryptoCurrency)) isCryptoCurrency = Boolean.TRUE;
-
-        if(isFiatCurrency){
+        if(FiatCurrency.codeExists(currency)){
             paymentMethods.add(CurrencyType.BANK_MONEY.getFriendlyname());
             paymentMethods.add(CurrencyType.CASH_DELIVERY_MONEY.getFriendlyname());
             paymentMethods.add(CurrencyType.CASH_ON_HAND_MONEY.getFriendlyname());
         }
-        
-        if(isCryptoCurrency){
+
+        if(CryptoCurrency.codeExists(currency)){
             paymentMethods.add(CurrencyType.CRYPTO_MONEY.getFriendlyname());
         }
-        
+
         return paymentMethods;
     }
     //REMOVE CURRENCY TO PAY
