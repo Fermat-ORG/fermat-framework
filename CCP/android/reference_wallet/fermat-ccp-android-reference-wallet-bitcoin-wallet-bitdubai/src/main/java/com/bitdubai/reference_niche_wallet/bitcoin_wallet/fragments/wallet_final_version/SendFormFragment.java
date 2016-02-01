@@ -31,6 +31,7 @@ import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextV
 import com.bitdubai.fermat_android_api.ui.transformation.CircleTransform;
 import com.bitdubai.fermat_api.AndroidCoreManager;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.enums.NetworkStatus;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.exceptions.CantGetCommunicationNetworkStatusException;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
 import com.bitdubai.fermat_api.layer.all_definition.enums.BlockchainNetworkType;
 import com.bitdubai.fermat_api.layer.all_definition.enums.CryptoCurrency;
@@ -141,8 +142,9 @@ public class SendFormFragment extends AbstractFermatFragment<ReferenceWalletSess
         super.onCreateView(inflater, container, savedInstanceState);
         try {
             rootView = inflater.inflate(R.layout.send_form_base, container, false);
-           /* if (getFermatState().getFermatNetworkStatus() != null) {
-                switch (getFermatState().getFermatNetworkStatus()) {
+            NetworkStatus networkStatus =getFermatState().getFermatNetworkStatus();
+            if (networkStatus!= null) {
+                switch (networkStatus) {
                     case CONNECTED:
                         setUpUI();
                         contactName.setText("");
@@ -152,14 +154,20 @@ public class SendFormFragment extends AbstractFermatFragment<ReferenceWalletSess
                         break;
                     case DISCONNECTED:
                         showErrorConnectionDialog();
+                        setUpUI();
+                        contactName.setText("");
+                        setUpActions();
+                        setUpUIData();
+                        setUpContactAddapter();
                         break;
                 }
-            } else {*/
-            setUpUI();
-            contactName.setText("");
-            setUpActions();
-            setUpUIData();
-            setUpContactAddapter();
+            }else {
+                setUpUI();
+                contactName.setText("");
+                setUpActions();
+                setUpUIData();
+                setUpContactAddapter();
+            }
 
             return rootView;
         } catch (Exception e) {
@@ -176,13 +184,24 @@ public class SendFormFragment extends AbstractFermatFragment<ReferenceWalletSess
             @Override
             public void onClick(View v) {
                 errorConnectingFermatNetworkDialog.dismiss();
+                getActivity().onBackPressed();
             }
         });
         errorConnectingFermatNetworkDialog.setRightButton("CONNECT", new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 errorConnectingFermatNetworkDialog.dismiss();
-                changeActivity(Activities.CCP_BITCOIN_WALLET_SETTINGS_ACTIVITY, appSession.getAppPublicKey());
+                try {
+                    if (getFermatState().getFermatNetworkStatus() == NetworkStatus.DISCONNECTED) {
+                        Toast.makeText(getActivity(), "Wait a minute please, trying to reconnect...", Toast.LENGTH_SHORT).show();
+                        getActivity().onBackPressed();
+                    }
+                } catch (CantGetCommunicationNetworkStatusException e) {
+                    e.printStackTrace();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+                // changeActivity(Activities.CCP_BITCOIN_WALLET_SETTINGS_ACTIVITY, appSession.getAppPublicKey());
             }
         });
         errorConnectingFermatNetworkDialog.show();

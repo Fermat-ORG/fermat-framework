@@ -33,6 +33,8 @@ import com.bitdubai.fermat_android_api.ui.interfaces.FermatListItemListeners;
 import com.bitdubai.fermat_android_api.ui.interfaces.FermatWorkerCallBack;
 import com.bitdubai.fermat_android_api.ui.util.FermatWorker;
 import com.bitdubai.fermat_api.FermatException;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.enums.NetworkStatus;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.exceptions.CantGetCommunicationNetworkStatusException;
 import com.bitdubai.fermat_api.layer.all_definition.enums.UISource;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
 import com.bitdubai.fermat_api.layer.all_definition.settings.structure.SettingsManager;
@@ -169,14 +171,14 @@ public class ConnectionsWorldFragment extends AbstractFermatFragment implements
             setUpScreen(inflater);
             searchView = inflater.inflate(R.layout.search_edit_text, null);
             setUpReferences();
-           /* switch (getFermatState().getFermatNetworkStatus()) {
+            switch (getFermatState().getFermatNetworkStatus()) {
                 case CONNECTED:
-                    setUpReferences();
+                   // setUpReferences();
                     break;
                 case DISCONNECTED:
                     showErrorFermatNetworkDialog();
                     break;
-            }*/
+            }
 
         } catch (Exception ex) {
             errorManager.reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.CRASH, FermatException.wrapException(ex));
@@ -244,18 +246,28 @@ public class ConnectionsWorldFragment extends AbstractFermatFragment implements
     }
 
     public void showErrorFermatNetworkDialog() {
-        ErrorConnectingFermatNetworkDialog errorConnectingFermatNetworkDialog = new ErrorConnectingFermatNetworkDialog(getActivity(), intraUserSubAppSession, null);
+        final ErrorConnectingFermatNetworkDialog errorConnectingFermatNetworkDialog = new ErrorConnectingFermatNetworkDialog(getActivity(), intraUserSubAppSession, null);
         errorConnectingFermatNetworkDialog.setDescription("The access to the /n Fermat Network is disabled.");
         errorConnectingFermatNetworkDialog.setRightButton("Enable", new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                errorConnectingFermatNetworkDialog.dismiss();
+                try {
+                    if (getFermatState().getFermatNetworkStatus() == NetworkStatus.DISCONNECTED) {
+                        Toast.makeText(getActivity(), "Wait a minute please, trying to reconnect...", Toast.LENGTH_SHORT).show();
+                        //getActivity().onBackPressed();
+                    }
+                } catch (CantGetCommunicationNetworkStatusException e) {
+                    e.printStackTrace();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
             }
         });
         errorConnectingFermatNetworkDialog.setLeftButton("Cancel", new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                errorConnectingFermatNetworkDialog.dismiss();
             }
         });
         errorConnectingFermatNetworkDialog.show();
