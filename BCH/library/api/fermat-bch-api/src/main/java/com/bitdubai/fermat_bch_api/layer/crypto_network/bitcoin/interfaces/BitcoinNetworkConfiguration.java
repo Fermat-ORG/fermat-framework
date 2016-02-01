@@ -12,7 +12,7 @@ public interface BitcoinNetworkConfiguration {
     /**
      * Network that we are using as Default in the platform
      */
-    public static final NetworkParameters DEFAULT_NETWORK_PARAMETERS = TestNet3Params.get();
+    public static final NetworkParameters DEFAULT_NETWORK_PARAMETERS = RegTestParams.get();
 
     /**
      * Agent name and version
