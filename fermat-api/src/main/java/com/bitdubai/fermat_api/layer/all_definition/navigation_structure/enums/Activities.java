@@ -233,12 +233,11 @@ public enum Activities implements FermatEnum {
     CHT_CHAT_OPEN_CHATLIST("CHTOCHL"),
     CHT_CHAT_OPEN_CONTACTLIST("CHTOCONTL"),
     CHT_CHAT_OPEN_MESSAGE_LIST("CHTOML"),
-    /**
-     * CHT_CHAT_OPEN_CHAT_DETAIL_FRAGMENT("CHTOCHDF"),
-     CHT_CHAT_OPEN_CONTACT_DETAIL_FRAGMENT("CHTOCODF"),
-     CHT_CHAT_EDIT_CONTACT_FRAGMENT("CHTEDCOF"),
-     CHT_CHAT_OPEN_CONNECTIONLIST_FRAGMENT("CHTOCONNLTF"),
-     */
+   //  CHT_CHAT_OPEN_CHAT_DETAIL("CHTOCHDF"),
+     CHT_CHAT_OPEN_CONTACT_DETAIL("CHTOCODF"),
+     CHT_CHAT_EDIT_CONTACT("CHTEDCOF"),
+     CHT_CHAT_OPEN_CONNECTIONLIST("CHTOCONNLTF"),
+
 
     WPD_DESKTOP("WPD"),;
 
@@ -592,9 +591,9 @@ public enum Activities implements FermatEnum {
                 return Activities.CHT_CHAT_OPEN_MESSAGE_LIST;
            /* case "CHTOCHDF":
                 return CHT_CHAT_OPEN_CHAT_DETAIL_FRAGMENT;
-            case "CHTOCODF":
-                return CHT_CHAT_OPEN_CONTACT_DETAIL_FRAGMENT;
-            case "CHTEDCOF":
+           */ case "CHTOCODF":
+                return Activities.CHT_CHAT_OPEN_CONTACT_DETAIL;
+           /* case "CHTEDCOF":
                 return CHT_CHAT_EDIT_CONTACT_FRAGMENT;
             case "CHTOCONNLTF":
                 return CHT_CHAT_OPEN_CONNECTIONLIST_FRAGMENT;*/
