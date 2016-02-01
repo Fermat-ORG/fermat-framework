@@ -490,10 +490,30 @@ public class BitcoinCryptoNetworkMonitor implements Agent {
              */
             for (TransactionInput input : transaction.getInputs()){
                 input.disconnect();
+
+                /**
+                 * Will mark the outpoints as unspent to be able to set the parent transaction reusable.
+                 */
+                Transaction parentTransaction = null;
+                try{
+                    // Will get the parent transaction, only if it is local.
+                    parentTransaction = this.getTransactionFromBlockChain(input.getOutpoint().getHash().toString(), null);
+                } catch (CantGetTransactionException e){
+                    //if I couldn't get it locally, then I don't need it.
+                }
+
+                if (parentTransaction != null){
+                    for (TransactionOutput output : parentTransaction.getOutputs()){
+                        // If the output is mine, then I will make it as unspent.
+                        if (output.isMine(wallet))
+                            output.markAsUnspent();
+                    }
+                }
+
             }
 
             /**
-             * I will change all outputs values to zero
+             * I will invalidate the outputs of the current cancelled transaction.
              */
             for (TransactionOutput output : transaction.getOutputs()){
                 output.setValue(Coin.ZERO);
@@ -502,9 +522,11 @@ public class BitcoinCryptoNetworkMonitor implements Agent {
             /**
              * do wallet maintenance
              */
-            //wallet.maybeCommitTx(transaction);
             wallet.cleanup();
 
+            /**
+             * save all changes.
+             */
             wallet.saveToFile(walletFileName);
 
             /**
@@ -512,7 +534,7 @@ public class BitcoinCryptoNetworkMonitor implements Agent {
              */
             this.getDao().setBroadcastStatus(Status.CANCELLED, peerGroup.getConnectedPeers().size(), null, txHash);
         } catch (Exception e) {
-            throw new CantCancellBroadcastTransactionException(CantCancellBroadcastTransactionException.DEFAULT_MESSAGE, e, "Change in transaction could not be saved in wallet.", null);
+            throw new CantCancellBroadcastTransactionException(CantCancellBroadcastTransactionException.DEFAULT_MESSAGE, e, "Transaction couldn't rollback properly.", "Crypto Network error");
         }
     }
 

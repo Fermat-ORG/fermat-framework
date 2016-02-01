@@ -5,6 +5,7 @@ import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
 //import android.support.v4.content.ContextCompat;
 //import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.LinearLayoutManager;
 import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,6 +18,7 @@ import com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.fragments.ChatFragm
 import com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.models.ChatMessage;
 //import com.bitdubai.fermat_cht_api.layer.cht_middleware.cht_chat_factory.interfaces.ChatFactory; //data del middleware
 import com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.holders.ChatHolder;
+import com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.util.Parameters;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView;
 import com.bitdubai.fermat_android_api.ui.adapters.FermatAdapter;
 import com.bitdubai.fermat_cht_android_sub_app_chat_bitdubai.R;
@@ -45,6 +47,8 @@ public class ChatAdapter extends FermatAdapter<ChatMessage, ChatHolder> {//ChatF
 
     public ChatAdapter(Context context, List<ChatMessage> chatMessages) {//ChatFactory
         super(context, chatMessages);
+        //super(context, R.layout.chat_list_item);
+        this.chatMessages=chatMessages;
         //this.chatMessages = chatMessages;
     }
 
@@ -64,7 +68,13 @@ public class ChatAdapter extends FermatAdapter<ChatMessage, ChatHolder> {//ChatF
     @Override
     protected void bindHolder(ChatHolder holder, ChatMessage data, int position) {
         View convertView = getView();
-        LayoutInflater vi = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        //LayoutInflater vi = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        LayoutInflater vi = LayoutInflater.from(context) ;
+        FermatTextView lblTitulo = (FermatTextView)convertView.findViewById(R.id.txtInfo);
+        lblTitulo.setText(data.getMessage());
+
+        FermatTextView lblSubtitulo = (FermatTextView)convertView.findViewById(R.id.txtMessage);
+        lblSubtitulo.setText(data.getMessage());
 
         if (data == null) {
             convertView = vi.inflate(R.layout.chat_list_item, null);
@@ -78,6 +88,12 @@ public class ChatAdapter extends FermatAdapter<ChatMessage, ChatHolder> {//ChatF
         setAlignment(holder, myMsg);
         holder.txtMessage.setText(data.getMessage());
         holder.txtInfo.setText(data.getDate());
+
+        lblTitulo = (FermatTextView)convertView.findViewById(R.id.txtInfo);
+        lblTitulo.setText(data.getMessage());
+
+        lblSubtitulo = (FermatTextView)convertView.findViewById(R.id.txtMessage);
+        lblSubtitulo.setText(data.getMessage());
 
     }
 
@@ -104,10 +120,57 @@ public class ChatAdapter extends FermatAdapter<ChatMessage, ChatHolder> {//ChatF
     }
 
     public View getView() {
-        View convertView;
-        LayoutInflater vi = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        convertView = vi.inflate(R.layout.chat_list_item, null);
+        //View convertView = getView();
+        //LayoutInflater vi = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+       // LayoutInflater vi = LayoutInflater.from(context);
+        LayoutInflater vi = LayoutInflater.from(context) ;
+
+        View convertView = vi.inflate(R.layout.chat_list_item, null);
+
+       // LayoutInflater vi = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+
+        /*if (data == null) {
+            convertView = vi.inflate(R.layout.chat_list_item, null);
+            holder = createHolder(convertView, position);
+            convertView.setTag(holder);
+        } else {
+            holder = (ChatHolder) convertView.getTag();
+        }
+
+        boolean myMsg = data.getIsme() ;//test to simulate whether it me or other sender
+        setAlignment(holder, myMsg);
+        holder.txtMessage.setText(data.getMessage());
+        holder.txtInfo.setText(data.getDate());
+
+
+        setAlignment(holder, data.getIsme());*/
         return convertView;
+
+
+        /*LayoutInflater inflater = LayoutInflater.from(getContext());
+        View item = inflater.inflate(R.layout.chat_list_item, null);*/
+       /* LayoutInflater vi = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        View convertView = vi.inflate(R.layout.chat_list_item, null);
+
+
+        FermatTextView lblTitulo = (FermatTextView)convertView.findViewById(R.id.txtInfo);
+        lblTitulo.setText(datos[position].getTitulo());
+
+        FermatTextView lblSubtitulo = (FermatTextView)convertView.findViewById(R.id.txtMessage);
+        lblSubtitulo.setText(datos[position].getSubtitulo());
+
+        return(convertView);//return(item);*/
+    }
+
+    public void refreshEvents(ArrayList<ChatMessage> chatHistory) {
+
+        for (int i = 0; i < chatHistory.size(); i++) {
+            ChatMessage message = chatHistory.get(i);
+            add(message);
+            changeDataSet(chatHistory);
+            notifyDataSetChanged();
+
+        }
     }
 
     public void add(ChatMessage message) {

@@ -18,6 +18,7 @@ import com.bitdubai.reference_wallet.crypto_customer_wallet.common.holders.open_
 import com.bitdubai.reference_wallet.crypto_customer_wallet.common.holders.open_negotiation.FooterViewHolder;
 import com.bitdubai.reference_wallet.crypto_customer_wallet.common.holders.open_negotiation.NoteViewHolder;
 import com.bitdubai.reference_wallet.crypto_customer_wallet.common.holders.open_negotiation.SingleChoiceViewHolder;
+import com.bitdubai.reference_wallet.crypto_customer_wallet.common.models.BrokerCurrencyQuotationImpl;
 import com.bitdubai.reference_wallet.crypto_customer_wallet.fragments.open_negotiation_details.OpenNegotiationDetailsFragment;
 import com.bitdubai.reference_wallet.crypto_customer_wallet.util.FragmentsCommons;
 
@@ -38,6 +39,7 @@ public class OpenNegotiationAdapter extends FermatAdapter<ClauseInformation, Fer
     private static final int TYPE_ITEM_DATE_TIME = 2;
     private static final int TYPE_ITEM_EXCHANGE_RATE = 3;
     private static final int TYPE_ITEM_AMOUNT_TO_BUY = 4;
+    private static final int TYPE_ITEM_AMOUNT_TO_PAY = 6;
     private static final int TYPE_FOOTER = 5;
 
 
@@ -49,6 +51,7 @@ public class OpenNegotiationAdapter extends FermatAdapter<ClauseInformation, Fer
     private CustomerBrokerNegotiationInformation negotiationInformation;
     private OpenNegotiationDetailsFragment footerListener;
     private ClauseViewHolder.Listener clauseListener;
+    private List <BrokerCurrencyQuotationImpl> marketRateList;
 
     private boolean haveNote;
 
@@ -97,10 +100,17 @@ public class OpenNegotiationAdapter extends FermatAdapter<ClauseInformation, Fer
                 return new SingleChoiceViewHolder(itemView);
 
             case TYPE_ITEM_EXCHANGE_RATE:
-                return new ExchangeRateViewHolder(itemView);
+                    final ExchangeRateViewHolder exchangeRateViewHolder = new ExchangeRateViewHolder(itemView);
+                exchangeRateViewHolder.setMarketRateList(marketRateList);
+                return exchangeRateViewHolder;
 
             case TYPE_ITEM_AMOUNT_TO_BUY:
                 return new AmountToBuyViewHolder(itemView);
+
+            case TYPE_ITEM_AMOUNT_TO_PAY:
+                AmountToBuyViewHolder amountToPayViewHolder  = new AmountToBuyViewHolder(itemView);
+                amountToPayViewHolder.setPaymentBuy(Boolean.FALSE);
+                return amountToPayViewHolder;
 
             case TYPE_FOOTER:
                 final FooterViewHolder footerViewHolder = new FooterViewHolder(itemView);
@@ -125,7 +135,9 @@ public class OpenNegotiationAdapter extends FermatAdapter<ClauseInformation, Fer
             case TYPE_ITEM_EXCHANGE_RATE:
                 return R.layout.ccw_exchange_rate_item;
             case TYPE_ITEM_AMOUNT_TO_BUY:
-                return R.layout.ccw_amount_to_buy_item;
+                return R.layout.ccw_amount_to_buy_item_single;
+            case TYPE_ITEM_AMOUNT_TO_PAY:
+                return R.layout.ccw_amount_to_buy_item_single;
             case TYPE_FOOTER:
                 return R.layout.ccw_footer_item;
             default:
@@ -155,10 +167,12 @@ public class OpenNegotiationAdapter extends FermatAdapter<ClauseInformation, Fer
 
         ClauseType type = dataSet.get(position).getType();
         switch (type) {
-            case CUSTOMER_CURRENCY_QUANTITY:
-                return TYPE_ITEM_AMOUNT_TO_BUY;
             case EXCHANGE_RATE:
                 return TYPE_ITEM_EXCHANGE_RATE;
+            case CUSTOMER_CURRENCY_QUANTITY:
+                return TYPE_ITEM_AMOUNT_TO_BUY;
+            case BROKER_CURRENCY_QUANTITY:
+                return TYPE_ITEM_AMOUNT_TO_PAY;
             case CUSTOMER_DATE_TIME_TO_DELIVER:
                 return TYPE_ITEM_DATE_TIME;
             case BROKER_DATE_TIME_TO_DELIVER:
@@ -190,28 +204,25 @@ public class OpenNegotiationAdapter extends FermatAdapter<ClauseInformation, Fer
 
         switch (clause.getType()) {
             //BASIC CLAUSES
-            case CUSTOMER_CURRENCY_QUANTITY:
-                clauseViewHolder.setViewResources(R.string.ccw_amount_to_buy, clauseNumberImageRes);
+            case BROKER_CURRENCY:
+                clauseViewHolder.setViewResources(R.string.ccw_currency_to_pay, clauseNumberImageRes, R.string.ccw_currency_description);
                 break;
             case EXCHANGE_RATE:
                 clauseViewHolder.setViewResources(R.string.exchange_rate_reference, clauseNumberImageRes);
                 break;
-            case BROKER_CURRENCY:
-                clauseViewHolder.setViewResources(R.string.ccw_currency_to_pay, clauseNumberImageRes, R.string.ccw_currency_description);
+            case CUSTOMER_CURRENCY_QUANTITY:
+                clauseViewHolder.setViewResources(R.string.ccw_amount_to_buy, clauseNumberImageRes, R.string.ccw_amount_title);
                 break;
+            case BROKER_CURRENCY_QUANTITY:
+                clauseViewHolder.setViewResources(R.string.ccw_amount_to_pay, clauseNumberImageRes, R.string.ccw_amount_title);
+                break;
+            //PAYMENT METHOD CLAUSES
             case CUSTOMER_PAYMENT_METHOD:
                 //TODO ACA DIO EXCEPTION REVISAR
                 clauseViewHolder.setViewResources(R.string.payment_methods_title, clauseNumberImageRes, R.string.payment_method);
                 break;
             case BROKER_PAYMENT_METHOD:
                 clauseViewHolder.setViewResources(R.string.reception_methods_title, clauseNumberImageRes, R.string.payment_method);
-                break;
-            //BASIC CLAUSES (NOT USER)
-            case BROKER_CURRENCY_QUANTITY:
-                clauseViewHolder.setViewResources(R.string.ccw_amount_to_pay, clauseNumberImageRes, R.string.payment_method);
-                break;
-            case CUSTOMER_CURRENCY:
-                clauseViewHolder.setViewResources(R.string.ccw_currency_to_buy, clauseNumberImageRes, R.string.payment_method);
                 break;
             //CRYPTO CLAUSES
             case CUSTOMER_CRYPTO_ADDRESS:
@@ -241,6 +252,10 @@ public class OpenNegotiationAdapter extends FermatAdapter<ClauseInformation, Fer
             case BROKER_DATE_TIME_TO_DELIVER:
                 clauseViewHolder.setViewResources(R.string.ccw_date_to_delivery_broker, clauseNumberImageRes, R.string.delivery_date_title);
                 break;
+            //OTHER
+            case CUSTOMER_CURRENCY:
+                clauseViewHolder.setViewResources(R.string.ccw_currency_to_buy, clauseNumberImageRes, R.string.payment_method);
+                break;
         }
 
     }
@@ -253,23 +268,28 @@ public class OpenNegotiationAdapter extends FermatAdapter<ClauseInformation, Fer
         this.clauseListener = clauseListener;
     }
 
+    public void setMarketRateList(List <BrokerCurrencyQuotationImpl> marketRateList){
+        this.marketRateList = marketRateList;
+    }
+
     private List<ClauseInformation> buildListOfItems() {
 
         Map<ClauseType, ClauseInformation> clauses = negotiationInformation.getClauses();
 
-        final int TOTAL_STEPS = 9;
+        final int TOTAL_STEPS = 8;
 
         final ClauseInformation[] data = new ClauseInformation[TOTAL_STEPS];
 
-        data[0] = clauses.get(ClauseType.CUSTOMER_CURRENCY_QUANTITY);
+        data[0] = clauses.get(ClauseType.BROKER_CURRENCY);
         data[1] = clauses.get(ClauseType.EXCHANGE_RATE);
-        data[2] = clauses.get(ClauseType.BROKER_CURRENCY);
-        data[3] = clauses.get(ClauseType.CUSTOMER_PAYMENT_METHOD);
-        data[4] = clauses.get(ClauseType.BROKER_PAYMENT_METHOD);
-        data[5] = getCustomerPaymentInfo(clauses);
-        data[6] = getBrokerPaymentInfo(clauses);
+        data[2] = clauses.get(ClauseType.CUSTOMER_CURRENCY_QUANTITY);
+        data[3] = clauses.get(ClauseType.BROKER_CURRENCY_QUANTITY);
+        data[4] = clauses.get(ClauseType.CUSTOMER_PAYMENT_METHOD);
+        data[5] = clauses.get(ClauseType.BROKER_PAYMENT_METHOD);
+//        data[6] = getCustomerPaymentInfo(clauses);
+//        data[7] = getBrokerPaymentInfo(clauses);
+        data[6] = clauses.get(ClauseType.CUSTOMER_DATE_TIME_TO_DELIVER);
         data[7] = clauses.get(ClauseType.CUSTOMER_DATE_TIME_TO_DELIVER);
-        data[8] = clauses.get(ClauseType.CUSTOMER_DATE_TIME_TO_DELIVER);
 
         return Arrays.asList(data);
     }

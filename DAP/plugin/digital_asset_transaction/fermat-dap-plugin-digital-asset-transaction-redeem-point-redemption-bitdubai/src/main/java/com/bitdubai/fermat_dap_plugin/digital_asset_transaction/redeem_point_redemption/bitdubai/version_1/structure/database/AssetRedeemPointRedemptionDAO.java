@@ -123,7 +123,7 @@ public class AssetRedeemPointRedemptionDAO {
                     + "CryptoStatus: " + cryptoStatus.getCode();
 
             if (isTransactionRegistered(transactionId))
-                throw new TransactionAlreadyStartedException(null, context, null);
+                return;
 
             DatabaseTable databaseTable = this.database.getTable(AssetRedeemPointRedemptionDatabaseConstants.ASSET_RPR_METADATA_TABLE_NAME);
             DatabaseTableRecord metadataRecord = databaseTable.getEmptyRecord();
