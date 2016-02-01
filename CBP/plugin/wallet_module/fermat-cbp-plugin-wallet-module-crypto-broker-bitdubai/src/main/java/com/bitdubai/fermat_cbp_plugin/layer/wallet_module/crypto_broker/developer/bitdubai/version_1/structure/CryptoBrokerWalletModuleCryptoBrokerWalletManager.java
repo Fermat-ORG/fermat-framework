@@ -775,6 +775,7 @@ public class CryptoBrokerWalletModuleCryptoBrokerWalletManager implements Crypto
 
     @Override
     public void addNewAccount(BankAccountNumber bankAccountNumber, String walletPublicKey) throws CantAddNewAccountException, CantLoadBankMoneyWalletException {
+        bankMoneyWalletManager.loadBankMoneyWallet(walletPublicKey).createBankName(bankAccountNumber.getBankName());
         bankMoneyWalletManager.loadBankMoneyWallet(walletPublicKey).addNewAccount(bankAccountNumber);
     }
 
