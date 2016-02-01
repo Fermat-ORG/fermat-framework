@@ -4,50 +4,42 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:orientation="vertical">
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
-        android:orientation="horizontal">
-
-        <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
-            android:id="@+id/cbw_earning_value_item"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:layout_marginEnd="8dp"
-            android:layout_marginRight="8dp"
-            android:gravity="bottom"
-            android:textColor="@color/card_title_color_status_confirm"
-            android:textSize="20sp"
-            tools:text="1.501,30 BTC"
-            />
-
-        <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
-            android:id="@+id/cbw_earning_value_difference_item"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:gravity="start|bottom"
-            android:textColor="#39ab89"
-            android:textSize="14sp"
-            tools:text="- 10.0 VEF (0 %)"/>
-    </LinearLayout>
+    android:orientation="horizontal"
+    android:paddingBottom="16dp"
+    android:paddingTop="16dp">
 
     <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
         android:id="@+id/cbw_earning_value_date_item"
-        android:layout_width="match_parent"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:textSize="12sp"
-        android:textColor="#999"
-        android:layout_marginTop="4dp"
-        android:textStyle="bold"
-        android:layout_marginBottom="8dp"
-        tools:text="January 15, 2015"/>
+        android:layout_weight="1"
+        android:gravity="center_vertical"
+        android:textColor="@color/card_title_color_status_confirm"
+        android:textSize="14sp"
+        tools:text="Jan 2015"/>
 
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="0.5dp"
-        android:background="#AAA"/>
+    <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
+        android:id="@+id/cbw_earning_value_item"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="2"
+        android:ellipsize="end"
+        android:gravity="center"
+        android:maxLines="1"
+        android:textColor="@color/card_title_color_status_confirm"
+        android:textSize="14sp"
+        tools:text="132.501.623,30 BTC"
+        />
+
+    <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
+        android:id="@+id/cbw_earning_value_difference_item"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight="1"
+        android:ellipsize="end"
+        android:gravity="center_vertical|right"
+        android:maxLines="1"
+        android:textColor="#39ab89"
+        android:textSize="14sp"
+        tools:text="+ 369.325,650 VEF"/>
 </LinearLayout>

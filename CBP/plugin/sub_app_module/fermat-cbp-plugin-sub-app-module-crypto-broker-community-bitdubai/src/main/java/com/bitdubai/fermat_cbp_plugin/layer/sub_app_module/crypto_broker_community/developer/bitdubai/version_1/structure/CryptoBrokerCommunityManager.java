@@ -24,8 +24,11 @@ import com.bitdubai.fermat_cbp_api.layer.actor_connection.crypto_broker.interfac
 import com.bitdubai.fermat_cbp_api.layer.actor_connection.crypto_broker.utils.CryptoBrokerActorConnection;
 import com.bitdubai.fermat_cbp_api.layer.actor_connection.crypto_broker.utils.CryptoBrokerLinkedActorIdentity;
 import com.bitdubai.fermat_cbp_api.layer.actor_network_service.crypto_broker.interfaces.CryptoBrokerManager;
+import com.bitdubai.fermat_cbp_api.layer.identity.crypto_broker.exceptions.CantCreateCryptoBrokerIdentityException;
 import com.bitdubai.fermat_cbp_api.layer.identity.crypto_broker.exceptions.CantGetCryptoBrokerIdentityException;
 import com.bitdubai.fermat_cbp_api.layer.identity.crypto_broker.exceptions.CantListCryptoBrokerIdentitiesException;
+import com.bitdubai.fermat_cbp_api.layer.identity.crypto_broker.exceptions.CantPublishIdentityException;
+import com.bitdubai.fermat_cbp_api.layer.identity.crypto_broker.exceptions.CryptoBrokerIdentityAlreadyExistsException;
 import com.bitdubai.fermat_cbp_api.layer.identity.crypto_broker.exceptions.IdentityNotFoundException;
 import com.bitdubai.fermat_cbp_api.layer.identity.crypto_broker.interfaces.CryptoBrokerIdentity;
 import com.bitdubai.fermat_cbp_api.layer.identity.crypto_broker.interfaces.CryptoBrokerIdentityManager;
@@ -513,7 +516,18 @@ public class CryptoBrokerCommunityManager implements CryptoBrokerCommunitySubApp
 
     @Override
     public void createIdentity(String name, String phrase, byte[] profile_img) throws Exception {
-        CryptoBrokerIdentity createdIdentity = cryptoBrokerIdentityManager.createCryptoBrokerIdentity(name, profile_img);
+        CryptoBrokerIdentity createdIdentity = null;
+        try{
+            createdIdentity = cryptoBrokerIdentityManager.createCryptoBrokerIdentity(name, profile_img);
+            cryptoBrokerIdentityManager.publishIdentity(createdIdentity.getPublicKey());
+        }catch(CantCreateCryptoBrokerIdentityException | CryptoBrokerIdentityAlreadyExistsException e ) {
+            this.errorManager.reportUnexpectedPluginException(pluginVersionReference, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
+            return;
+        }catch(CantPublishIdentityException | IdentityNotFoundException e) {
+            this.errorManager.reportUnexpectedPluginException(pluginVersionReference, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
+            return;
+        }
+
 
         //Try to get appSettings
         CryptoBrokerCommunitySettings appSettings = null;

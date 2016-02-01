@@ -64,6 +64,7 @@ public class CryptoBrokerActorConnectionPluginRoot extends AbstractPlugin {
 
             final CryptoBrokerActorConnectionDao dao = new CryptoBrokerActorConnectionDao(
                     pluginDatabaseSystem,
+                    pluginFileSystem    ,
                     pluginId
             );
 
