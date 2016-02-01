@@ -16,6 +16,7 @@ import android.widget.Toast;
 
 import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractFermatFragment;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView;
+import com.bitdubai.fermat_android_api.ui.Views.PresentationDialog;
 import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.enums.CryptoCurrency;
 import com.bitdubai.fermat_api.layer.all_definition.enums.FiatCurrency;
@@ -24,6 +25,9 @@ import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.A
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Wallets;
 import com.bitdubai.fermat_api.layer.world.interfaces.Currency;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.CurrencyType;
+import com.bitdubai.fermat_cbp_api.layer.identity.crypto_customer.exceptions.CantGetCryptoCustomerIdentityException;
+import com.bitdubai.fermat_cbp_api.layer.identity.crypto_customer.interfaces.CryptoCustomerIdentity;
+import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_customer.exceptions.CantGetCryptoCustomerIdentityListException;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_customer.interfaces.CryptoCustomerWalletManager;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_customer.interfaces.CryptoCustomerWalletModuleManager;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_customer.interfaces.settings.CryptoCustomerWalletAssociatedSetting;
@@ -63,6 +67,8 @@ public class WizardPageSetBitcoinWalletAndProvidersFragment extends AbstractFerm
     private Currency currencyTo;
     private List<InstalledWallet> bitcoinWallets;
     private InstalledWallet selectedBitcoinWallet;
+    private List<CryptoCustomerIdentity> identies;
+    private CryptoCustomerIdentity selectedIdentity;
 
     // UI
     private RecyclerView recyclerView;
@@ -97,6 +103,54 @@ public class WizardPageSetBitcoinWalletAndProvidersFragment extends AbstractFerm
                 errorManager.reportUnexpectedWalletException(Wallets.CBP_CRYPTO_CUSTOMER_WALLET,
                         UnexpectedWalletExceptionSeverity.DISABLES_THIS_FRAGMENT, ex);
         }
+
+        try {
+            if(walletManager.getListOfIdentities().isEmpty()) {
+                PresentationDialog presentationDialog = new PresentationDialog.Builder(getActivity(), appSession)
+                        .setTemplateType(PresentationDialog.TemplateType.TYPE_PRESENTATION)
+                        .setBannerRes(R.drawable.cbp_banner_crypto_customer_wallet)
+                        .setIconRes(R.drawable.cbp_crypto_customer)
+                        .setBody(R.string.cbw_wizard_providers_dialog_body)
+                        .setSubTitle(R.string.cbw_wizard_providers_dialog_sub_title)
+                        .setTextFooter(R.string.cbw_wizard_providers_dialog_footer)
+                        .build();
+
+                boolean showDialog;
+//                try{
+//                    //CryptoBrokerWalletModuleManager moduleManager = ((CryptoBrokerWalletSession) appSession).getModuleManager();
+//                    showDialog = moduleManager.getSettingsManager().loadAndGetSettings(appSession.getAppPublicKey()).isHomeTutorialDialogEnabled();
+//                    if(showDialog){
+//                        presentationDialog.show();
+//                    }
+//                }catch (FermatException e){
+//                    makeText(getActivity(), "Oops! recovering from system error", Toast.LENGTH_SHORT).show();
+//                }
+
+                presentationDialog.show();
+            }
+            else {
+                //Buscar la identidad y asociarla
+                selectedIdentity = walletManager.getListOfIdentities().get(0);
+                //Llamar a este metodo getListOfIdentities y trarse el valor de la posicion 0 y asiganrlo a selectedIdentity
+                if (selectedIdentity != null) {
+                    walletManager.associateIdentity(selectedIdentity.getPublicKey());
+                    changeActivity(Activities.CBP_CRYPTO_BROKER_WALLET_SET_MERCHANDISES, appSession.getAppPublicKey());
+                } else{
+                    Toast.makeText(WizardPageSetBitcoinWalletAndProvidersFragment.this.getActivity(), R.string.cbw_select_identity_warning_msg, Toast.LENGTH_LONG).show();
+                }
+            }
+        } catch (CantGetCryptoCustomerIdentityListException e) {
+            Log.e(TAG, e.getMessage(), e);
+            if (errorManager != null)
+                errorManager.reportUnexpectedWalletException(Wallets.CBP_CRYPTO_CUSTOMER_WALLET,
+                        UnexpectedWalletExceptionSeverity.DISABLES_THIS_FRAGMENT, e);
+        } catch (CantGetCryptoCustomerIdentityException e) {
+            Log.e(TAG, e.getMessage(), e);
+            if (errorManager != null)
+                errorManager.reportUnexpectedWalletException(Wallets.CBP_CRYPTO_CUSTOMER_WALLET,
+                        UnexpectedWalletExceptionSeverity.DISABLES_THIS_FRAGMENT, e);
+        }
+
     }
 
     @Override
