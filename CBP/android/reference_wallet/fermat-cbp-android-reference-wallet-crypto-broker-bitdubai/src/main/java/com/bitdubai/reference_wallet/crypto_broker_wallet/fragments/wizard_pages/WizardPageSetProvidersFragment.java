@@ -114,13 +114,13 @@ public class WizardPageSetProvidersFragment extends AbstractFermatFragment
         ArrayAdapter<String> adapter = new ArrayAdapter<>(getActivity(), R.layout.cbw_spinner_item, getFormattedCurrencies(currencies));
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 
-        final Spinner currencyFromSpinner = (Spinner) layout.findViewById(R.id.currency_from_spinner);
-        currencyFromSpinner.setOnItemSelectedListener(this);
-        currencyFromSpinner.setAdapter(adapter);
+//        final Spinner currencyFromSpinner = (Spinner) layout.findViewById(R.id.currency_from_spinner);
+//        currencyFromSpinner.setOnItemSelectedListener(this);
+//        currencyFromSpinner.setAdapter(adapter);
 
-        final Spinner currencyToSpinner = (Spinner) layout.findViewById(R.id.currency_to_spinner);
-        currencyToSpinner.setOnItemSelectedListener(this);
-        currencyToSpinner.setAdapter(adapter);
+//        final Spinner currencyToSpinner = (Spinner) layout.findViewById(R.id.currency_to_spinner);
+//        currencyToSpinner.setOnItemSelectedListener(this);
+//        currencyToSpinner.setAdapter(adapter);
 
         final View selectProvidersButton = layout.findViewById(R.id.cbw_select_providers_button);
         selectProvidersButton.setOnClickListener(new View.OnClickListener() {
@@ -154,12 +154,12 @@ public class WizardPageSetProvidersFragment extends AbstractFermatFragment
 
     @Override
     public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-        if (parent.getId() == R.id.currency_from_spinner) {
-            currencyFrom = currencies.get(position);
-
-        } else if (parent.getId() == R.id.currency_to_spinner) {
-            currencyTo = currencies.get(position);
-        }
+//        if (parent.getId() == R.id.currency_from_spinner) {
+//            currencyFrom = currencies.get(position);
+//
+//        } else if (parent.getId() == R.id.currency_to_spinner) {
+//            currencyTo = currencies.get(position);
+//        }
     }
 
     @Override
