@@ -487,11 +487,17 @@ public class OpenNegotiationDetailsFragment extends AbstractFermatFragment<Crypt
 
         if (merchandise != payment) {
 
+            //ASIGNAMENT NEW VALUE
+            putClause(clause, payment);
+
             //UPDATE LIST OF PAYMENT
             paymentMethods = getPaymentMethod(payment);
 
-            //ASIGNAMENT NEW VALUE
-            putClause(clause, payment);
+            //UPDATE CLAUSE PAYMENT METHOD
+            putClause(ClauseType.CUSTOMER_PAYMENT_METHOD,paymentMethods.get(0));
+
+            //UPDATE CLAUSE OF THE INFO THE PAYMENT
+            putPaymentInfo(clauses);
 
             //GET MARKET RATE
             String brokerMarketRate = brokerCurrencyQuotation.getExchangeRate(merchandise,payment);
