@@ -28,7 +28,7 @@ public class ConstructionTest {
 
     private final CryptoCurrency        cryptoCurrency                  = CryptoCurrency.BITCOIN;
 
-    private final BlockchainNetworkType blockchainNetworkType           = BlockchainNetworkType.TEST;
+    private final BlockchainNetworkType blockchainNetworkType           = BlockchainNetworkType.DEFAULT;
 
     private CustomerBrokerCloseCryptoAddressRequestImpl testObj1;
     @Before
