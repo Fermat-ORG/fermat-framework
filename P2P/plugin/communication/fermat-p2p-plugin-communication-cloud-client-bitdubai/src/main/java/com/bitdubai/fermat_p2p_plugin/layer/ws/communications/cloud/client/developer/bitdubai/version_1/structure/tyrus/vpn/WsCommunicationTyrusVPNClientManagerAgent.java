@@ -134,7 +134,7 @@ public class WsCommunicationTyrusVPNClientManagerAgent{
         };
 
         /*
-         *  Add Property RECONNECT_HANDLER to reconect automatically
+         *  Add Property RECONNECT_HANDLER to reconnect automatically
          */
        /* clientManager.getProperties().put(ClientProperties.RECONNECT_HANDLER, reconnectHandler);
         */

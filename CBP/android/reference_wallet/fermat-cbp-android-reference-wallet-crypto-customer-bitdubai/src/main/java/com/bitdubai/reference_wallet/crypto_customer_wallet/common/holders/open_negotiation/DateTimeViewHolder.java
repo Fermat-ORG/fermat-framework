@@ -5,6 +5,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
+import com.bitdubai.fermat_cbp_api.all_definition.enums.NegotiationStepStatus;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.common.interfaces.ClauseInformation;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.common.interfaces.CustomerBrokerNegotiationInformation;
 import com.bitdubai.reference_wallet.crypto_customer_wallet.R;
@@ -69,5 +70,22 @@ public class DateTimeViewHolder extends ClauseViewHolder implements View.OnClick
     @Override
     protected int getTitleTextViewRes() {
         return R.id.ccw_card_view_title;
+    }
+
+    @Override
+    public void setStatus(NegotiationStepStatus stepStatus) {
+        super.setStatus(stepStatus);
+
+        switch (stepStatus) {
+            case ACCEPTED:
+                descriptionTextView.setTextColor(getColor(R.color.card_title_color_status_accepted));
+                break;
+            case CHANGED:
+                descriptionTextView.setTextColor(getColor(R.color.card_title_color_status_changed));
+                break;
+            case CONFIRM:
+                descriptionTextView.setTextColor(getColor(R.color.card_title_color_status_confirm));
+                break;
+        }
     }
 }

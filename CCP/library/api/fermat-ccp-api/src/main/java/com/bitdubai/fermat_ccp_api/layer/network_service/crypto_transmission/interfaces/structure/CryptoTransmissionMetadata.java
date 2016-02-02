@@ -49,7 +49,4 @@ public interface CryptoTransmissionMetadata {
 
     void setPendingToRead(boolean pending);
 
-    void setDestinationPublickKey(String senderPublicKey);
-
-    void setSenderPublicKey(String senderPublicKey);
 }

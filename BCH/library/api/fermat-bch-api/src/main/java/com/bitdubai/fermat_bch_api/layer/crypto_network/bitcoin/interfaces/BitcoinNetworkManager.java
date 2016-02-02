@@ -74,9 +74,10 @@ public interface BitcoinNetworkManager extends TransactionSender<CryptoTransacti
      * @param blockchainNetworkType
      * @param tx
      * @param transactionId
+     * @param commit specifies if we commit this transaction or there is a chance of rolling back.
      * @throws CantStoreBitcoinTransactionException
      */
-    void storeBitcoinTransaction(BlockchainNetworkType blockchainNetworkType, Transaction tx, UUID transactionId) throws CantStoreBitcoinTransactionException;
+    void storeBitcoinTransaction(BlockchainNetworkType blockchainNetworkType, Transaction tx, UUID transactionId, boolean commit) throws CantStoreBitcoinTransactionException;
 
     /**
      * Broadcast a well formed, commited and signed transaction into the network.

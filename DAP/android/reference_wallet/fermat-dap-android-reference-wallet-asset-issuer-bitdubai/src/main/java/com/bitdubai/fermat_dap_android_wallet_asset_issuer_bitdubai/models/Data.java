@@ -129,14 +129,20 @@ public class Data {
         return users;
     }
 
-    public static List<Group> getGroups(AssetIssuerWalletSupAppModuleManager moduleManager, List<Group> groupsSelected) throws CantGetAssetUserGroupException {
+    public static List<Group> getGroups(AssetIssuerWalletSupAppModuleManager moduleManager, List<Group> groupsSelected) throws CantGetAssetUserGroupException, CantGetAssetUserActorsException {
         List<Group> groups = new ArrayList<>();
         List<ActorAssetUserGroup> actorAssetUserGroups = moduleManager.getAssetUserGroupsList();
         for (ActorAssetUserGroup actorAssetUserGroup:actorAssetUserGroups) {
-            Group newUser = new Group(actorAssetUserGroup.getGroupName(), actorAssetUserGroup);
+            Group newGroup = new Group(actorAssetUserGroup.getGroupName(), actorAssetUserGroup);
+            List<ActorAssetUser> actorAssetUsers = moduleManager.getListActorAssetUserByGroups(newGroup.getName());
+            List<User> users = new ArrayList<>();
+            for (ActorAssetUser actorAssetUser : actorAssetUsers) {
+                users.add(new User(actorAssetUser.getName(), actorAssetUser));
+            }
+            newGroup.setUsers(users);
 //            int index = usersSelected.indexOf(newUser);
 //            if (index > 0) newUser.setSelected(usersSelected.get(index).isSelected());
-            groups.add(newUser);
+            groups.add(newGroup);
         }
         return groups;
     }
