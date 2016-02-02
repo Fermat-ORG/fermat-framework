@@ -31,7 +31,17 @@
                 android:paddingRight="@dimen/padding"
                 android:paddingTop="@dimen/padding"
                 android:visibility="gone"
+                android:textColor="@color/black"
                 style="@style/contactNameTitle"/>
+
+            <TextView
+                android:id="@+id/uuid"
+                android:layout_height="wrap_content"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:paddingRight="@dimen/padding"
+                android:layout_gravity="center"
+                android:textColor="@color/color_white"/>
 
             <ScrollView
                 android:layout_width="match_parent"
@@ -42,6 +52,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:paddingBottom="@dimen/padding"
+                    android:textColor="@color/black"
                     android:orientation="vertical">
                 </LinearLayout>
 

@@ -62,16 +62,14 @@ public class NewReceiveMessagesNotificationEventHandler implements FermatEventHa
     }
 
     /**
-     * Constructor with parameter
      *
-     * @param
+     * @param networkServiceChatNetworkServicePluginRoot
      */
-
-    public NewReceiveMessagesNotificationEventHandler(NetworkServiceChatNetworkServicePluginRoot chatNetworkServicePluginRoot) {
+    public NewReceiveMessagesNotificationEventHandler(NetworkServiceChatNetworkServicePluginRoot networkServiceChatNetworkServicePluginRoot) {
         this.messagesProcessorsRegistered = new HashMap<>();
-        this.messagesProcessorsRegistered.put(ChatMessageTransactionType.CHAT_METADATA_TRASMIT, new ChatMetadataTransmitMessageReceiverProcessor(chatNetworkServicePluginRoot));
+        this.messagesProcessorsRegistered.put(ChatMessageTransactionType.CHAT_METADATA_TRASMIT, new ChatMetadataTransmitMessageReceiverProcessor(networkServiceChatNetworkServicePluginRoot));
         //TODO TO IMPLEMENT MESSAGE PROCESSOR
-        this.messagesProcessorsRegistered.put(ChatMessageTransactionType.TRANSACTION_STATUS_UPDATE, new NewTransactionStatusNotificationMessageReceiverProcessor(chatNetworkServicePluginRoot));
+        this.messagesProcessorsRegistered.put(ChatMessageTransactionType.TRANSACTION_STATUS_UPDATE, new NewTransactionStatusNotificationMessageReceiverProcessor(networkServiceChatNetworkServicePluginRoot));
         gson = new Gson();
         parser = new JsonParser();
     }
@@ -89,8 +87,8 @@ public class NewReceiveMessagesNotificationEventHandler implements FermatEventHa
 
         if (platformEvent.getSource() == NetworkServiceChatNetworkServicePluginRoot.EVENT_SOURCE) {
 
-            System.out.println("CompleteComponentConnectionRequestNotificationEventHandler - handleEvent platformEvent =" + platformEvent.toString());
-            System.out.println("NetworkServiceChatNetworkServicePluginRoot  - NOTIFICACION EVENTO MENSAJE RECIBIDO!!!!");
+           // System.out.println("CompleteComponentConnectionRequestNotificationEventHandler - handleEvent platformEvent =" + platformEvent.toString());
+          //  System.out.println("NetworkServiceChatNetworkServicePluginRoot  - NOTIFICACION EVENTO MENSAJE RECIBIDO!!!!");
 
             /*
              * Get the message receive
