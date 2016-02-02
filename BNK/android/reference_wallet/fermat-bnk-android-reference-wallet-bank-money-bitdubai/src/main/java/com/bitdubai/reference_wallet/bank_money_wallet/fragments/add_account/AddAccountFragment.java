@@ -92,6 +92,7 @@ public class AddAccountFragment extends AbstractFermatFragment implements View.O
 
     private void configureToolbar() {
         getToolbar().setBackgroundColor(getResources().getColor(R.color.background_header_navy));
+        getToolbar().setNavigationIcon(R.drawable.bw_back_icon_action_bar);
     }
 
     @Override
