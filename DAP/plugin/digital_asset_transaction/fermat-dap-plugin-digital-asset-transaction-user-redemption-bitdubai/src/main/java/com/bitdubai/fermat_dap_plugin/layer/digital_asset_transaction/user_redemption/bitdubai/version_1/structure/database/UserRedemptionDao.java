@@ -2,6 +2,7 @@ package com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.user_rede
 
 import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.events.EventSource;
+import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterException;
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.ProtocolStatus;
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.crypto_transactions.CryptoStatus;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
@@ -19,7 +20,6 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.Data
 import com.bitdubai.fermat_dap_api.layer.all_definition.enums.DistributionStatus;
 import com.bitdubai.fermat_dap_api.layer.all_definition.enums.EventStatus;
 import com.bitdubai.fermat_dap_api.layer.all_definition.enums.TransactionStatus;
-import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.interfaces.ActorAssetUser;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.redeem_point.interfaces.ActorAssetRedeemPoint;
 import com.bitdubai.fermat_dap_api.layer.dap_transaction.common.exceptions.CantExecuteDatabaseOperationException;
 import com.bitdubai.fermat_dap_api.layer.dap_transaction.common.exceptions.CantPersistDigitalAssetException;
@@ -318,6 +318,10 @@ public class UserRedemptionDao {
     public DeliverRecord getLastDelivering(String genesisTx) throws CantCheckAssetUserRedemptionProgressException {
         List<DeliverRecord> records = getDeliverRecordsForGenesisTransaction(genesisTx);
         return records.get(records.size() - 1);
+    }
+
+    public DistributionStatus getDistributionStatusForGenesisTx(String genesisTx) throws UnexpectedResultReturnedFromDatabaseException, InvalidParameterException, RecordsNotFoundException, CantCheckAssetUserRedemptionProgressException {
+        return DistributionStatus.getByCode(getStringValueFromSelectedTableTableByFieldCode(UserRedemptionDatabaseConstants.USER_REDEMPTION_TABLE_NAME, genesisTx, UserRedemptionDatabaseConstants.USER_REDEMPTION_REDEMPTION_STATUS_COLUMN_NAME, UserRedemptionDatabaseConstants.USER_REDEMPTION_GENESIS_TRANSACTION_COLUMN_NAME));
     }
 
     public List<DeliverRecord> getSendingCryptoRecords() throws CantCheckAssetUserRedemptionProgressException {

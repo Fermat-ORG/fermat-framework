@@ -1,11 +1,10 @@
 package com.bitdubai.fermat_cbp_plugin.layer.stock_transactions.crypto_money_destock.developer.bitdubai.version_1.utils;
 
-import com.bitdubai.fermat_api.layer.all_definition.enums.interfaces.FermatEnum;
+import com.bitdubai.fermat_api.layer.world.interfaces.Currency;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.BalanceType;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.CurrencyType;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.OriginTransaction;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.TransactionType;
-import com.bitdubai.fermat_cbp_api.all_definition.wallet.StockTransaction;
 import com.bitdubai.fermat_cbp_api.layer.wallet.crypto_broker.interfaces.CryptoBrokerStockTransactionRecord;
 
 import java.math.BigDecimal;
@@ -19,7 +18,7 @@ import java.util.UUID;
  */
 public class WalletTransactionWrapper implements CryptoBrokerStockTransactionRecord {
     private final UUID transactionId;
-    private final FermatEnum merchandise;
+    private final Currency merchandise;
     private final BalanceType balanceType;
     private final TransactionType transactionType;
     private final CurrencyType currencyType;
@@ -32,7 +31,7 @@ public class WalletTransactionWrapper implements CryptoBrokerStockTransactionRec
     private final OriginTransaction originTransaction;
 
     public WalletTransactionWrapper(UUID transactionId,
-                                    FermatEnum merchandise,
+                                    Currency merchandise,
                                     BalanceType balanceType,
                                     TransactionType transactionType,
                                     CurrencyType currencyType,
@@ -79,7 +78,7 @@ public class WalletTransactionWrapper implements CryptoBrokerStockTransactionRec
     }
 
     @Override
-    public FermatEnum getMerchandise() {
+    public Currency getMerchandise() {
         return merchandise;
     }
 

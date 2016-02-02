@@ -16,32 +16,6 @@ public class BrokerCurrencyQuotation {
         this.brokerCurrencyQuotationlist = brokerCurrencyQuotationlist;
     }
 
-    /*public BrokerCurrencyQuotationImpl getBrokerCurrencyQuotation(String currencyOver, String currencyUnder){
-
-        BrokerCurrencyQuotationImpl currencyQuotation = getQuotation(currencyOver,currencyUnder);
-
-        if(currencyQuotation == null) {
-
-            currencyQuotation = getQuotation(currencyUnder, currencyOver);
-            if (currencyQuotation != null) {
-
-                BigDecimal exchangeRate = new BigDecimal(currencyQuotation.getExchangeRate().replace(",",""));
-                exchangeRate = (new BigDecimal(1)).divide(exchangeRate, 8, RoundingMode.HALF_UP);
-                final String exchangeRateStr = DecimalFormat.getInstance().format(exchangeRate.doubleValue());
-                currencyQuotation.setExchangeRate(exchangeRateStr);
-
-            }
-        }
-
-        return currencyQuotation;
-    }
-
-    public String getExchangeRate(String currencyOver, String currencyUnder){
-        BrokerCurrencyQuotationImpl currencyQuotation = getBrokerCurrencyQuotation(currencyOver, currencyUnder);
-        if(currencyQuotation != null) return currencyQuotation.getExchangeRate();
-        return null;
-    }*/
-
     public String getExchangeRate(String currencyOver, String currencyUnder){
 
         BrokerCurrencyQuotationImpl currencyQuotation = getQuotation(currencyOver,currencyUnder);

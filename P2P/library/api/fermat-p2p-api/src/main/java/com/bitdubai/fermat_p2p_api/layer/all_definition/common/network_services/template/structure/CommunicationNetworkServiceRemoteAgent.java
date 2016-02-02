@@ -28,6 +28,7 @@ import java.util.Observable;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
+import java.util.concurrent.TimeUnit;
 
 /**
  * The Class <code>com.bitdubai.fermat_dmp_plugin.layer.network_service.template.developer.bitdubai.version_1.communications.IntraCommunicationNetworkServiceRemoteAgent</code>
@@ -149,14 +150,24 @@ public class CommunicationNetworkServiceRemoteAgent extends Observable {
      */
     public void start(){
 
-        //Set to running
-        this.running  = Boolean.TRUE;
+        try{
+            //Set to running
+            this.running  = Boolean.TRUE;
 
-        //Start the Threads
-        futures[SEND_TASK] = executorService.submit(toSend);
-        futures[RECEIVE_TASK] = executorService.submit(toReceive);
+            if(futures!=null){
+                if(futures[SEND_TASK]!=null)futures[SEND_TASK].cancel(true);
+                if(futures[RECEIVE_TASK]!=null)futures[RECEIVE_TASK].cancel(true);
+            }
+            //Start the Threads
+            assert futures != null;
+            futures[SEND_TASK] = executorService.submit(toSend);
+            futures[RECEIVE_TASK] = executorService.submit(toReceive);
 
-        System.out.println("IntraCommunicationNetworkServiceRemoteAgent - started ");
+            System.out.println("IntraCommunicationNetworkServiceRemoteAgent - started ");
+
+        }catch (Exception e){
+            e.printStackTrace();
+        }
 
     }
 
@@ -178,16 +189,22 @@ public class CommunicationNetworkServiceRemoteAgent extends Observable {
      * Stop the internal threads
      */
     public void stop(){
+        try {
 
-        //Stop the Threads
-        futures[SEND_TASK].cancel(true);
-        futures[RECEIVE_TASK].cancel(true);
+            //Stop the Threads
+            futures[SEND_TASK].cancel(true);
+            futures[RECEIVE_TASK].cancel(true);
 
-        //Disconnect from the service
-        if(communicationsVPNConnection.isConnected())
-            communicationsVPNConnection.close();
+            executorService.shutdownNow();
 
-        System.out.println("IntraCommunicationNetworkServiceRemoteAgent - stopped ");
+            //Disconnect from the service
+            if (communicationsVPNConnection.isConnected())
+                communicationsVPNConnection.close();
+
+            System.out.println("IntraCommunicationNetworkServiceRemoteAgent - stopped ");
+        }catch (Exception e){
+            e.printStackTrace();
+        }
     }
 
     /**
@@ -199,7 +216,8 @@ public class CommunicationNetworkServiceRemoteAgent extends Observable {
 
         try {
 
-           System.out.println("CommunicationNetworkServiceRemoteAgent - processMessageReceived "+communicationsVPNConnection.isActive());
+           System.out.println("CommunicationNetworkServiceRemoteAgent - processMessageReceived "+communicationsVPNConnection.isActive()+"---" +
+                   "Thread: "+ Thread.currentThread().getId()+"----------------");
 
             /**
              * Verified the status of the connection
@@ -257,14 +275,17 @@ public class CommunicationNetworkServiceRemoteAgent extends Observable {
 
             if(Thread.currentThread().isInterrupted() == Boolean.FALSE) {
                 //Sleep for a time
-                Thread.sleep(CommunicationNetworkServiceRemoteAgent.SLEEP_TIME);
+//                Thread.sleep(CommunicationNetworkServiceRemoteAgent.SLEEP_TIME);
+                TimeUnit.SECONDS.sleep(2);
             }
         } catch (InterruptedException e) {
             running = false;
             Thread.currentThread().interrupt();
             System.out.println("CommunicationNetworkServiceRemoteAgent - Thread Interrupted stopped ...  ");
         } catch (CantInsertRecordDataBaseException e) {
-            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_TEMPLATE_NETWORK_SERVICE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, new Exception("Can not process message received. Error reason: "+e.getMessage()));
+            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_TEMPLATE_NETWORK_SERVICE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, new Exception("Can not process message received. Error reason: " + e.getMessage()));
+        } catch (Exception e){
+            e.printStackTrace();
         }
 
     }
@@ -314,6 +335,8 @@ public class CommunicationNetworkServiceRemoteAgent extends Observable {
                             String signature = AsymmetricCryptography.createMessageSignature(message.getContent(), eccKeyPair.getPrivateKey());
                             ((FermatMessageCommunication) message).setSignature(signature);
 
+                            System.out.println("CommunicationNetworkServiceRemoteAgent - communicationsVPNConnection = "+communicationsVPNConnection);
+
                             /*
                              * Send the message
                              */
@@ -345,6 +368,7 @@ public class CommunicationNetworkServiceRemoteAgent extends Observable {
 
                 }catch (Exception e){
                     System.out.println("IntraCommunicationNetworkServiceRemoteAgent - Error sending message: " + e.getMessage());
+                    e.printStackTrace();
                 }
 
 
@@ -355,13 +379,16 @@ public class CommunicationNetworkServiceRemoteAgent extends Observable {
 
             if(Thread.currentThread().isInterrupted() == Boolean.FALSE){
                 //Sleep for a time
-                Thread.sleep(CommunicationNetworkServiceRemoteAgent.SLEEP_TIME);
+//                Thread.sleep(CommunicationNetworkServiceRemoteAgent.SLEEP_TIME);
+                TimeUnit.SECONDS.sleep(2);
             }
 
         } catch (InterruptedException e) {
             running = false;
             Thread.currentThread().interrupt();
             System.out.println("CommunicationNetworkServiceRemoteAgent - Thread Interrupted stopped ...  ");
+        } catch (Exception e){
+            e.printStackTrace();
         }
     }
 }

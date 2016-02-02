@@ -54,14 +54,14 @@ public class AssetUserWalletModule {
     }
 
 
-    public void redeemAssetToRedeemPoint(String digitalAssetPublicKey, String walletPublicKey, List<ActorAssetRedeemPoint> actorAssetRedeemPoint) throws CantRedeemDigitalAssetException, NotEnoughAcceptsException {
+    public void redeemAssetToRedeemPoint(String digitalAssetPublicKey, String walletPublicKey, List<ActorAssetRedeemPoint> actorAssetRedeemPoint, int assetsAmount) throws CantRedeemDigitalAssetException, NotEnoughAcceptsException {
         String context = "Asset Public Key: " + digitalAssetPublicKey + " - ActorAssetRedeemPoint: " + actorAssetRedeemPoint;
         try {
             if (actorAssetRedeemPoint.isEmpty()) {
                 throw new CantRedeemDigitalAssetException(null, context, "THE REDEEM POINT LIST IS EMPTY.");
             }
             walletPublicKey = "walletPublicKeyTest"; //TODO: Solo para la prueba del Redemption
-            HashMap<DigitalAssetMetadata, ActorAssetRedeemPoint> hashMap = createRedemptionMap(walletPublicKey, digitalAssetPublicKey, actorAssetRedeemPoint);
+            HashMap<DigitalAssetMetadata, ActorAssetRedeemPoint> hashMap = createRedemptionMap(walletPublicKey, digitalAssetPublicKey, actorAssetRedeemPoint, assetsAmount);
             userRedemptionManager.redeemAssetToRedeemPoint(hashMap, walletPublicKey);
         } catch (CantGetDigitalAssetFromLocalStorageException | CantLoadWalletException | CantGetTransactionsException | FileNotFoundException | CantCreateFileException e) {
             throw new CantRedeemDigitalAssetException(e, context, null);
@@ -69,17 +69,18 @@ public class AssetUserWalletModule {
     }
 
 
-    private HashMap<DigitalAssetMetadata, ActorAssetRedeemPoint> createRedemptionMap(String walletPublicKey, String assetPublicKey, List<ActorAssetRedeemPoint> redeemPoints) throws CantGetTransactionsException, FileNotFoundException, CantCreateFileException, CantLoadWalletException, CantGetDigitalAssetFromLocalStorageException, NotEnoughAcceptsException {
+    private HashMap<DigitalAssetMetadata, ActorAssetRedeemPoint> createRedemptionMap(String walletPublicKey, String assetPublicKey, List<ActorAssetRedeemPoint> redeemPoints, int assetsAmount) throws CantGetTransactionsException, FileNotFoundException, CantCreateFileException, CantLoadWalletException, CantGetDigitalAssetFromLocalStorageException, NotEnoughAcceptsException {
         String context = "Asset Public Key: " + assetPublicKey + " - BTC Wallet Public Key: " + walletPublicKey + " - RedeemPoints: " + redeemPoints;
-
         HashMap<DigitalAssetMetadata, ActorAssetRedeemPoint> hashMap = new HashMap<>();
         AssetUserWallet wallet = assetUserWalletManager.loadAssetUserWallet(walletPublicKey);
         List<AssetUserWalletTransaction> availableTransactions = wallet.getAllAvailableTransactions(assetPublicKey);
         if (redeemPoints.size() > availableTransactions.size())
             throw new NotEnoughAcceptsException(null, context, "WE DON'T HAVE ENOUGH ASSETS!!");
-        for (int i = 0; i < redeemPoints.size(); i++) {
-            DigitalAssetMetadata digitalAssetMetadata = wallet.getDigitalAssetMetadata(availableTransactions.get(i).getGenesisTransaction());
-            hashMap.put(digitalAssetMetadata, redeemPoints.get(i));
+        int assetsPerUser = assetsAmount / redeemPoints.size();
+        for (int j = 0, i = 0; j < redeemPoints.size(); j++) {
+            for (int k = 0; k < assetsPerUser; i++, k++) {
+                hashMap.put(wallet.getDigitalAssetMetadata(availableTransactions.get(i).getGenesisTransaction()), redeemPoints.get(j));
+            }
         }
         return hashMap;
     }

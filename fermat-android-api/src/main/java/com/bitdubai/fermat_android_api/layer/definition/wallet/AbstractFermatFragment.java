@@ -23,6 +23,8 @@ import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.SubApp
 import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.WizardConfiguration;
 import com.bitdubai.fermat_android_api.ui.inflater.ViewInflater;
 import com.bitdubai.fermat_android_api.ui.interfaces.FermatWizardActivity;
+import com.bitdubai.fermat_api.AndroidCoreManager;
+import com.bitdubai.fermat_api.FermatStates;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Engine;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.interfaces.FermatRuntime;
@@ -234,5 +236,10 @@ public abstract class AbstractFermatFragment<S extends FermatSession,R extends R
     protected final FermatRuntime getRuntimeManager(){
         return (FermatRuntime)getActivity();
     }
+
+    protected final AndroidCoreManager getFermatState(){
+        return ((FermatStates)getActivity()).getFermatStates();
+    }
+
 
 }

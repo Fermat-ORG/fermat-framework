@@ -8,6 +8,7 @@ import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.enums.CryptoCurrency;
 import com.bitdubai.fermat_api.layer.all_definition.enums.FiatCurrency;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.ClauseType;
+import com.bitdubai.fermat_cbp_api.all_definition.enums.NegotiationStepStatus;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.common.interfaces.ClauseInformation;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.common.interfaces.CustomerBrokerNegotiationInformation;
 import com.bitdubai.reference_wallet.crypto_customer_wallet.R;
@@ -39,6 +40,7 @@ public class SingleChoiceViewHolder extends ClauseViewHolder implements View.OnC
     @Override
     public void setViewResources(int titleRes, int positionImgRes, int... stringResources) {
         titleTextView.setText(titleRes);
+        //TODO ACA DA EXCEPTION: Process: com.bitdubai.fermat, PID: 3128 java.lang.OutOfMemoryError: Failed to allocate a 1849612 byte allocation with 1595744 free bytes and 1558KB until OOM
         clauseNumberImageView.setImageResource(positionImgRes);
         descriptionTextView.setText(stringResources[0]);
     }
@@ -62,6 +64,23 @@ public class SingleChoiceViewHolder extends ClauseViewHolder implements View.OnC
     @Override
     protected int getTitleTextViewRes() {
         return R.id.ccw_card_view_title;
+    }
+
+    @Override
+    public void setStatus(NegotiationStepStatus clauseStatus) {
+        super.setStatus(clauseStatus);
+
+        switch (clauseStatus) {
+            case ACCEPTED:
+                descriptionTextView.setTextColor(getColor(R.color.card_title_color_status_accepted));
+                break;
+            case CHANGED:
+                descriptionTextView.setTextColor(getColor(R.color.card_title_color_status_changed));
+                break;
+            case CONFIRM:
+                descriptionTextView.setTextColor(getColor(R.color.card_title_color_status_confirm));
+                break;
+        }
     }
 
     /**
