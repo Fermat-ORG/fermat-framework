@@ -10,6 +10,8 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.TimeFrequency;
  */
 public interface EarningsPairDetail {
 
+    EarningsPair getEarningsPair();
+
     double getAmount();
 
     long getFromTimestamp();
