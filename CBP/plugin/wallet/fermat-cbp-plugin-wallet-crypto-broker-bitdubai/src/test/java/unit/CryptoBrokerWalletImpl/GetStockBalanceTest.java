@@ -1,6 +1,6 @@
 package unit.CryptoBrokerWalletImpl;
 
-import com.bitdubai.fermat_api.layer.all_definition.enums.interfaces.FermatEnum;
+import com.bitdubai.fermat_api.layer.world.interfaces.Currency;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.BalanceType;
 import com.bitdubai.fermat_cbp_api.all_definition.wallet.StockBalance;
 import com.bitdubai.fermat_cbp_api.layer.wallet.crypto_broker.exceptions.CantAddCreditCryptoBrokerWalletException;
@@ -33,17 +33,17 @@ public class GetStockBalanceTest {
         CryptoBrokerWalletImpl cryptoBrokerWallet = mock(CryptoBrokerWalletImpl.class);
         when(cryptoBrokerWallet.getStockBalance()).thenReturn(new StockBalance() {
             @Override
-            public float getBookedBalance(FermatEnum merchandise) throws CantGetBookedBalanceCryptoBrokerWalletException {
+            public float getBookedBalance(Currency merchandise) throws CantGetBookedBalanceCryptoBrokerWalletException {
                 return 0;
             }
 
             @Override
-            public float getAvailableBalance(FermatEnum merchandise) throws CantGetAvailableBalanceCryptoBrokerWalletException {
+            public float getAvailableBalance(Currency merchandise) throws CantGetAvailableBalanceCryptoBrokerWalletException {
                 return 0;
             }
 
             @Override
-            public float getAvailableBalanceFrozen(FermatEnum merchandise) throws CantGetAvailableBalanceCryptoBrokerWalletException {
+            public float getAvailableBalanceFrozen(Currency merchandise) throws CantGetAvailableBalanceCryptoBrokerWalletException {
                 return 0;
             }
 

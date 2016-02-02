@@ -246,7 +246,7 @@ public class CryptoWalletCryptoModulePluginRoot extends AbstractPlugin implement
 
     @Override
     public int[] getMenuNotifications() {
-        int[] notifications = new int[4];
+        int[] notifications = new int[5];
         try {
             notifications[2] = cryptoPaymentManager.getCryptoPaymentRegistry().listCryptoPaymentRequestsByTypeAndState(appPublicKey, CryptoPaymentState.PENDING_RESPONSE, CryptoPaymentType.RECEIVED,99,0).size();
         } catch (CantListCryptoPaymentRequestsException e) {

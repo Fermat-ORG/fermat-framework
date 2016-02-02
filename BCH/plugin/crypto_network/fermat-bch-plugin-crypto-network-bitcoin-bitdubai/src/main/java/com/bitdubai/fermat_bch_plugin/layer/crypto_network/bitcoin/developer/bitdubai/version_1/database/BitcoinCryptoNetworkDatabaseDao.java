@@ -29,6 +29,7 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.Data
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.DatabaseTransactionFailedException;
 import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.BitcoinNetworkSelector;
 import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.BroadcastStatus;
+import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.exceptions.CantBroadcastTransactionException;
 import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.exceptions.CantGetTransactionCryptoStatusException;
 import com.bitdubai.fermat_bch_api.layer.crypto_network.enums.Status;
 import com.bitdubai.fermat_bch_api.layer.crypto_network.enums.TransactionTypes;
@@ -51,6 +52,7 @@ import java.util.UUID;
 
 import javax.annotation.Nullable;
 
+import static com.bitdubai.fermat_dap_api.layer.all_definition.util.Validate.isObjectNull;
 import static com.bitdubai.fermat_dap_api.layer.all_definition.util.Validate.isValidString;
 
 /**
@@ -483,7 +485,7 @@ public class BitcoinCryptoNetworkDatabaseDao {
      * @param pendingIncoming
      * @param pendingOutgoing
      */
-    public void updateEventAgentStats(int pendingIncoming, int pendingOutgoing) throws CantExecuteDatabaseOperationException{
+    public synchronized void updateEventAgentStats(int pendingIncoming, int pendingOutgoing) throws CantExecuteDatabaseOperationException{
         DatabaseTable databaseTable = database.getTable(BitcoinCryptoNetworkDatabaseConstants.EVENTAGENT_STATS_TABLE_NAME);
 
         /**
@@ -1170,11 +1172,19 @@ public class BitcoinCryptoNetworkDatabaseDao {
         /**
          * I will get the stored exception, if any.
          */
-        String xmlException = record.getStringValue(BitcoinCryptoNetworkDatabaseConstants.BROADCAST_EXCEPTION);
-        if (isValidString(xmlException)){
-            Exception broadcastException = null;
-            broadcastException = (Exception) XMLParser.parseXML(xmlException, new Exception());
-            broadcastStatus.setLastException(broadcastException);
+        try{
+            String xmlException = record.getStringValue(BitcoinCryptoNetworkDatabaseConstants.BROADCAST_EXCEPTION);
+            if (isValidString(xmlException)){
+                Exception broadcastException = null;
+                broadcastException = (Exception) XMLParser.parseXML(xmlException, new Exception());
+                broadcastStatus.setLastException(broadcastException);
+            }
+        } catch (Exception e){
+            /**
+             * If there was an error parsing the exception, I will create my own exception.
+             */
+            CantBroadcastTransactionException cantBroadcastTransactionException = new CantBroadcastTransactionException(CantBroadcastTransactionException.DEFAULT_MESSAGE, null, "Couln't parse the correct exception", null);
+            broadcastStatus.setLastException(cantBroadcastTransactionException);
         }
 
         broadcastStatus.setConnectedPeers(record.getIntegerValue(BitcoinCryptoNetworkDatabaseConstants.BROADCAST_PEER_COUNT));
@@ -1244,8 +1254,16 @@ public class BitcoinCryptoNetworkDatabaseDao {
          * I will set the exception column if any.
          */
         if (broadcastStatus.getLastException() != null){
-            String xmlException = XMLParser.parseObject(broadcastStatus.getLastException());
-            record.setStringValue(BitcoinCryptoNetworkDatabaseConstants.BROADCAST_EXCEPTION, xmlException);
+            try{
+                String xmlException = XMLParser.parseObject(broadcastStatus.getLastException());
+                record.setStringValue(BitcoinCryptoNetworkDatabaseConstants.BROADCAST_EXCEPTION, xmlException);
+            } catch (Exception e){
+                /**
+                 * If there was an error parsing the exception, I will create a new exception
+                 */
+                CantBroadcastTransactionException cantBroadcastTransactionException = new CantBroadcastTransactionException(CantBroadcastTransactionException.DEFAULT_MESSAGE, null, "Couln't parse the correct exception", null);
+                record.setStringValue(BitcoinCryptoNetworkDatabaseConstants.BROADCAST_EXCEPTION, XMLParser.parseObject(cantBroadcastTransactionException));
+            }
         }
 
         /**
@@ -1306,10 +1324,15 @@ public class BitcoinCryptoNetworkDatabaseDao {
             throwLoadToMemoryException(e, databaseTable.getTableName());
         }
 
-        if (databaseTable.getRecords().size() != 1)
-            throw new CantExecuteDatabaseOperationException(CantExecuteDatabaseOperationException.DEFAULT_MESSAGE, null, "Unexpected result returned from query.", null);
+        /**
+         * I might have multiple txHash, so I will get the last one.
+         * This may need to be corrected at some point
+         */
+        DatabaseTableRecord record = null;
+        for (DatabaseTableRecord uuidRecord : databaseTable.getRecords()){
+            record = uuidRecord;
+        }
 
-        DatabaseTableRecord record = databaseTable.getRecords().get(0);
 
         return record.getUUIDValue(BitcoinCryptoNetworkDatabaseConstants.TRANSACTIONS_TRX_ID_COLUMN_NAME);
     }

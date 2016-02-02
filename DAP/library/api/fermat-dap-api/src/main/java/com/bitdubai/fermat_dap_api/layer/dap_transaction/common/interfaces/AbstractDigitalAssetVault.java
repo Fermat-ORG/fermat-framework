@@ -259,9 +259,8 @@ public abstract class AbstractDigitalAssetVault implements DigitalAssetVault {
         this.bitcoinNetworkManager = bitcoinNetworkManager;
     }
 
-    public void setDigitalAssetMetadataAssetIssuerWalletTransaction(CryptoTransaction genesisTransaction, String internalId, AssetBalanceType assetBalanceType, TransactionType transactionType, DAPTransactionType dapTransactionType, String externalActorPublicKey) throws CantDeliverDigitalAssetToAssetWalletException {
+    public void setDigitalAssetMetadataAssetIssuerWalletTransaction(CryptoTransaction genesisTransaction, DigitalAssetMetadata digitalAssetMetadataToDeliver, AssetBalanceType assetBalanceType, TransactionType transactionType, DAPTransactionType dapTransactionType, String externalActorPublicKey) throws CantDeliverDigitalAssetToAssetWalletException {
         try {
-            DigitalAssetMetadata digitalAssetMetadataToDeliver = getDigitalAssetMetadataFromLocalStorage(internalId);
             BalanceType balanceType = BalanceType.BOOK;
             if (assetBalanceType.getCode().equals(AssetBalanceType.BOOK.getCode())) {
                 balanceType = BalanceType.BOOK;
@@ -271,8 +270,6 @@ public abstract class AbstractDigitalAssetVault implements DigitalAssetVault {
             }
             System.out.println("ASSET Distribution OR RECEPTION - DELIVER TO WALLET TEST - " + balanceType + "\nHash: " + genesisTransaction.getTransactionHash());
             updateWalletBalance(digitalAssetMetadataToDeliver, genesisTransaction, balanceType, transactionType, dapTransactionType, externalActorPublicKey);
-        } catch (CantGetDigitalAssetFromLocalStorageException exception) {
-            throw new CantDeliverDigitalAssetToAssetWalletException(exception, "Delivering DigitalAssetMetadata to Asset Wallet", "Cannot get the DigitalAssetMetadata from storage");
         } catch (CantGetTransactionsException exception) {
             throw new CantDeliverDigitalAssetToAssetWalletException(exception, "Delivering DigitalAssetMetadata to Asset Wallet", "Cannot get the Asset Transaction");
         } catch (CantLoadWalletException exception) {

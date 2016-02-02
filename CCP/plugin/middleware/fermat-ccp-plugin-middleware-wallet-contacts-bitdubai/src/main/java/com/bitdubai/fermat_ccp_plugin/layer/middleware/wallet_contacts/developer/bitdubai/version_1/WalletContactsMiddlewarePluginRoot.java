@@ -162,6 +162,9 @@ public class WalletContactsMiddlewarePluginRoot extends AbstractPlugin implement
 
                 if (request.getAction().equals(RequestAction.DENY))
                     walletContactsRegistry.handleCryptoAddressDeniedEvent(request);
+//
+//                if(request.getAction().equals(RequestAction.NONE))
+//                    walletContactsRegistry.handleCryptoAddressReceivedEvent(request);
 
             }
 
