@@ -1134,8 +1134,6 @@ public class WalletRuntimeEnginePluginRoot extends AbstractPlugin implements
 
     private WalletNavigationStructure createAssetIssuerWalletNavigationStructure() {
         WalletNavigationStructure runtimeWalletNavigationStructure;
-        SideMenu runtimeSideMenu;
-        MenuItem runtimeMenuItem;
         Activity runtimeActivity;
         TitleBar runtimeTitleBar;
         TabStrip runtimeTabStrip;
@@ -1156,34 +1154,13 @@ public class WalletRuntimeEnginePluginRoot extends AbstractPlugin implements
         runtimeWalletNavigationStructure.setWalletType(WalletType.REFERENCE.getCode());
         runtimeWalletNavigationStructure.setPublicKey(publicKey);
 
-        // Side Menu
-//        runtimeSideMenu = new SideMenu();
-//        runtimeSideMenu.setBackgroundColor("#5C6E81");
-//TODO en Deshuso por ahora
-//        runtimeMenuItem = new MenuItem();
-//        runtimeMenuItem.setLabel("My Assets");
-//        runtimeMenuItem.setAppLinkPublicKey(publicKey);
-//        runtimeMenuItem.setLinkToActivity(Activities.DAP_WALLET_ASSET_ISSUER_MAIN_ACTIVITY);
-//        runtimeSideMenu.addMenuItem(runtimeMenuItem);
-//
-//        runtimeMenuItem = new MenuItem();
-//        runtimeMenuItem.setLabel("History");
-//        runtimeMenuItem.setLinkToActivity(Activities.DAP_WALLET_ASSET_ISSUER_HISTORY_ACTIVITY);
-//        runtimeMenuItem.setAppLinkPublicKey(publicKey);
-//        runtimeSideMenu.addMenuItem(runtimeMenuItem);
-//
-//        runtimeMenuItem = new MenuItem();
-//        runtimeMenuItem.setLabel("Statistics");
-//        runtimeMenuItem.setAppLinkPublicKey(publicKey);
-//        runtimeMenuItem.setLinkToActivity(Activities.DAP_WALLET_ASSET_ISSUER_STADISTICS_ACTIVITY);
-//        runtimeSideMenu.addMenuItem(runtimeMenuItem);
-
         // Activity: Home
         runtimeActivity = new Activity();
         runtimeActivity.setType(Activities.DAP_WALLET_ASSET_ISSUER_MAIN_ACTIVITY);
         runtimeActivity.setActivityType(Activities.DAP_WALLET_ASSET_ISSUER_MAIN_ACTIVITY.getCode());
 //        runtimeActivity.setColor("#627284");
         runtimeActivity.setSideMenu(loadSideMenuAssetIssuerWallet(publicKey));
+
         runtimeWalletNavigationStructure.addActivity(runtimeActivity);
         runtimeWalletNavigationStructure.addPosibleStartActivity(Activities.DAP_WALLET_ASSET_ISSUER_MAIN_ACTIVITY);
 
@@ -1208,9 +1185,6 @@ public class WalletRuntimeEnginePluginRoot extends AbstractPlugin implements
         runtimeActivity = new Activity();
         runtimeActivity.setType(Activities.DAP_WALLET_ASSET_ISSUER_MAIN_SETTINGS_ACTIVITY);
         runtimeActivity.setActivityType(Activities.DAP_WALLET_ASSET_ISSUER_MAIN_SETTINGS_ACTIVITY.getCode());
-//        runtimeActivity.setColor("#627284");
-//        runtimeActivity.setBackActivity(Activities.DAP_WALLET_ASSET_ISSUER_MAIN_ACTIVITY);
-//        runtimeActivity.setBackPublicKey(publicKey);
         runtimeActivity.setSideMenu(loadSideMenuAssetIssuerWallet(publicKey));
         runtimeWalletNavigationStructure.addActivity(runtimeActivity);
 
@@ -1238,11 +1212,11 @@ public class WalletRuntimeEnginePluginRoot extends AbstractPlugin implements
 //        runtimeActivity.setColor("#627284");
         runtimeActivity.setBackActivity(Activities.DAP_WALLET_ASSET_ISSUER_MAIN_SETTINGS_ACTIVITY);
         runtimeActivity.setBackPublicKey(publicKey);
-//        runtimeActivity.setSideMenu(loadSideMenuAssetIssuerWallet(publicKey));
+
         runtimeWalletNavigationStructure.addActivity(runtimeActivity);
 
         runtimeTitleBar = new TitleBar();
-        runtimeTitleBar.setLabel("Settings");
+        runtimeTitleBar.setLabel("Network");
         runtimeTitleBar.setLabelSize(titleBarLabelSize);
         runtimeTitleBar.setTitleColor("#ffffff");
         runtimeTitleBar.setIconName("back");
@@ -1266,11 +1240,11 @@ public class WalletRuntimeEnginePluginRoot extends AbstractPlugin implements
 //        runtimeActivity.setColor("#627284");
         runtimeActivity.setBackActivity(Activities.DAP_WALLET_ASSET_ISSUER_MAIN_SETTINGS_ACTIVITY);
         runtimeActivity.setBackPublicKey(publicKey);
-//        runtimeActivity.setSideMenu(loadSideMenuAssetIssuerWallet(publicKey));
+
         runtimeWalletNavigationStructure.addActivity(runtimeActivity);
 
         runtimeTitleBar = new TitleBar();
-        runtimeTitleBar.setLabel("Settings");
+        runtimeTitleBar.setLabel("Notifications");
         runtimeTitleBar.setLabelSize(titleBarLabelSize);
         runtimeTitleBar.setTitleColor("#ffffff");
         runtimeTitleBar.setIconName("back");
@@ -1430,10 +1404,6 @@ public class WalletRuntimeEnginePluginRoot extends AbstractPlugin implements
         runtimeActivity.addFragment(Fragments.DAP_WALLET_ASSET_ISSUER_USER_DELIVERY_LIST.getKey(), runtimeFragment);
         runtimeActivity.setStartFragment(Fragments.DAP_WALLET_ASSET_ISSUER_USER_DELIVERY_LIST.getKey());
 
-//        runtimeFragment = new Fragment();
-//        runtimeFragment.setType(Fragments.DAP_WALLET_ASSET_ISSUER_USER_DELIVERY_LIST.getKey());
-//        runtimeActivity.addFragment(Fragments.DAP_WALLET_ASSET_ISSUER_USER_DELIVERY_LIST.getKey(), runtimeFragment);
-//        runtimeActivity.setStartFragment(Fragments.DAP_WALLET_ASSET_ISSUER_USER_DELIVERY_LIST.getKey());
 
         runtimeActivity = new Activity();
         runtimeActivity.setType(Activities.DAP_WALLET_ASSET_ISSUER_ASSET_DELIVERY);
@@ -1516,8 +1486,7 @@ public class WalletRuntimeEnginePluginRoot extends AbstractPlugin implements
         runtimeActivity.setStartFragment(Fragments.DAP_WALLET_ASSET_ISSUER_ASSET_DELIVERY_TABS.getKey());
 
 
-        //Assets Details Appropiate
-
+        //Assets Details Appropriate
         runtimeActivity = new Activity();
         runtimeActivity.setType(Activities.DAP_WALLET_ASSET_ISSUER_USER_APPROPIATE_LIST);
         runtimeActivity.setActivityType(Activities.DAP_WALLET_ASSET_ISSUER_USER_APPROPIATE_LIST.getCode());
@@ -1590,18 +1559,6 @@ public class WalletRuntimeEnginePluginRoot extends AbstractPlugin implements
         runtimeMenuItem.setAppLinkPublicKey(publicKey);
         runtimeSideMenu.addMenuItem(runtimeMenuItem);
 
-//        runtimeMenuItem = new MenuItem();
-//        runtimeMenuItem.setLabel("History");
-//        runtimeMenuItem.setLinkToActivity(Activities.DAP_WALLET_ASSET_ISSUER_HISTORY_ACTIVITY);
-//        runtimeMenuItem.setAppLinkPublicKey(publicKey);
-//        runtimeSideMenu.addMenuItem(runtimeMenuItem);
-//
-//        runtimeMenuItem = new MenuItem();
-//        runtimeMenuItem.setLabel("Statistics");
-//        runtimeMenuItem.setLinkToActivity(Activities.DAP_WALLET_ASSET_ISSUER_STADISTICS_ACTIVITY);
-//        runtimeMenuItem.setAppLinkPublicKey(publicKey);
-//        runtimeSideMenu.addMenuItem(runtimeMenuItem);
-
         return runtimeSideMenu;
     }
 
@@ -1630,11 +1587,8 @@ public class WalletRuntimeEnginePluginRoot extends AbstractPlugin implements
     }
 
 
-
     private WalletNavigationStructure createAssetUserWalletNavigationStructure() {
         WalletNavigationStructure runtimeWalletNavigationStructure;
-        SideMenu runtimeSideMenu;
-        MenuItem runtimeMenuItem;
         Activity runtimeActivity;
         TitleBar runtimeTitleBar;
         StatusBar runtimeStatusBar;
@@ -1653,28 +1607,13 @@ public class WalletRuntimeEnginePluginRoot extends AbstractPlugin implements
         runtimeWalletNavigationStructure.setWalletType(WalletType.REFERENCE.getCode());
         runtimeWalletNavigationStructure.setPublicKey(publicKey);
 
-        // Side Menu
-        runtimeSideMenu = new SideMenu();
-        runtimeSideMenu.setBackgroundColor("#381a5e");
-//TODO en Deshuso por ahora
-//        runtimeMenuItem = new MenuItem();
-//        runtimeMenuItem.setLabel("My Assets");
-//        runtimeMenuItem.setAppLinkPublicKey(publicKey);
-//        runtimeMenuItem.setLinkToActivity(Activities.DAP_WALLET_ASSET_USER_MAIN_ACTIVITY);
-//        runtimeSideMenu.addMenuItem(runtimeMenuItem);
-//
-//        runtimeMenuItem = new MenuItem();
-//        runtimeMenuItem.setLabel("History");
-//        runtimeMenuItem.setLinkToActivity(Activities.DAP_WALLET_ASSET_USER_HISTORY_ACTIVITY);
-//        runtimeMenuItem.setAppLinkPublicKey(publicKey);
-//        runtimeSideMenu.addMenuItem(runtimeMenuItem);
-
         // Activity: Home
         runtimeActivity = new Activity();
         runtimeActivity.setType(Activities.DAP_WALLET_ASSET_USER_MAIN_ACTIVITY);
         runtimeActivity.setActivityType(Activities.DAP_WALLET_ASSET_USER_MAIN_ACTIVITY.getCode());
 //        runtimeActivity.setColor("#627284");
         runtimeActivity.setSideMenu(loadSideMenuAssetUserWallet(publicKey));
+
         runtimeWalletNavigationStructure.addActivity(runtimeActivity);
         runtimeWalletNavigationStructure.addPosibleStartActivity(Activities.DAP_WALLET_ASSET_USER_MAIN_ACTIVITY);
 
@@ -1745,6 +1684,7 @@ public class WalletRuntimeEnginePluginRoot extends AbstractPlugin implements
         runtimeActivity.setBackActivity(Activities.DAP_WALLET_ASSET_USER_MAIN_ACTIVITY);
         runtimeActivity.setBackPublicKey(publicKey);
 //        runtimeActivity.setColor("#1189a5");
+
         runtimeWalletNavigationStructure.addActivity(runtimeActivity);
 
         runtimeTitleBar = new TitleBar();
@@ -1771,6 +1711,7 @@ public class WalletRuntimeEnginePluginRoot extends AbstractPlugin implements
         runtimeActivity.setBackActivity(Activities.DAP_WALLET_ASSET_USER_MAIN_ACTIVITY);
         runtimeActivity.setBackPublicKey(publicKey);
         runtimeActivity.setSideMenu(loadSideMenuAssetUserWallet(publicKey));
+
         runtimeWalletNavigationStructure.addActivity(runtimeActivity);
 
         runtimeTitleBar = new TitleBar();
@@ -1825,6 +1766,7 @@ public class WalletRuntimeEnginePluginRoot extends AbstractPlugin implements
         runtimeActivity.setActivityType(Activities.DAP_WALLET_ASSET_USER_SETTINGS_NOTIFICATIONS.getCode());
         runtimeActivity.setBackActivity(Activities.DAP_WALLET_ASSET_USER_SETTINGS_ACTIVITY);
         runtimeActivity.setBackPublicKey(publicKey);
+
         runtimeWalletNavigationStructure.addActivity(runtimeActivity);
 
         runtimeTitleBar = new TitleBar();
