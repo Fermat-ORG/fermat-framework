@@ -1,4 +1,4 @@
-package com.bitdubai.sub_app.crypto_broker_community.fragments;
+package com.bitdubai.sub_app.crypto_customer_community.fragments;
 
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
@@ -27,23 +27,21 @@ import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.A
 import com.bitdubai.fermat_api.layer.all_definition.settings.structure.SettingsManager;
 import com.bitdubai.fermat_api.layer.modules.exceptions.ActorIdentityNotSelectedException;
 import com.bitdubai.fermat_api.layer.modules.exceptions.CantGetSelectedActorIdentityException;
-import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_broker_community.interfaces.CryptoBrokerCommunityInformation;
-import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_broker_community.interfaces.CryptoBrokerCommunitySearch;
-import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_broker_community.interfaces.CryptoBrokerCommunitySelectableIdentity;
-import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_broker_community.interfaces.CryptoBrokerCommunitySubAppModuleManager;
-import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_broker_community.settings.CryptoBrokerCommunitySettings;
+import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_customer_community.interfaces.CryptoCustomerCommunityInformation;
+import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_customer_community.interfaces.CryptoCustomerCommunitySearch;
+import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_customer_community.interfaces.CryptoCustomerCommunitySelectableIdentity;
+import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_customer_community.interfaces.CryptoCustomerCommunitySubAppModuleManager;
+import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_customer_community.settings.CryptoCustomerCommunitySettings;
 import com.bitdubai.fermat_pip_api.layer.network_service.subapp_resources.SubAppResourcesProviderManager;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedUIExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
-import com.bitdubai.sub_app.crypto_broker_community.R;
-import com.bitdubai.sub_app.crypto_broker_community.adapters.AppListAdapter;
-import com.bitdubai.sub_app.crypto_broker_community.session.CryptoBrokerCommunitySubAppSession;
-import com.bitdubai.sub_app.crypto_broker_community.util.CommonLogger;
+import com.bitdubai.sub_app.crypto_customer_community.R;
+import com.bitdubai.sub_app.crypto_customer_community.adapters.AppListAdapter;
+import com.bitdubai.sub_app.crypto_customer_community.session.CryptoCustomerCommunitySubAppSession;
+import com.bitdubai.sub_app.crypto_customer_community.util.CommonLogger;
 
 import java.util.ArrayList;
 import java.util.List;
-
-import static android.widget.Toast.makeText;
 
 /**
  * Created by Leon Acosta - (laion.cj91@gmail.com) on 16/12/2015.
@@ -51,8 +49,8 @@ import static android.widget.Toast.makeText;
  * @author lnacosta
  * @version 1.0.0
  */
-public class ConnectionsWorldFragment extends AbstractFermatFragment<CryptoBrokerCommunitySubAppSession, SubAppResourcesProviderManager> implements
-        SwipeRefreshLayout.OnRefreshListener, FermatListItemListeners<CryptoBrokerCommunityInformation> {
+public class ConnectionsWorldFragment extends AbstractFermatFragment<CryptoCustomerCommunitySubAppSession, SubAppResourcesProviderManager> implements
+        SwipeRefreshLayout.OnRefreshListener, FermatListItemListeners<CryptoCustomerCommunityInformation> {
 
     //Constants
     public static final String ACTOR_SELECTED = "actor_selected";
@@ -60,15 +58,15 @@ public class ConnectionsWorldFragment extends AbstractFermatFragment<CryptoBroke
     protected final String TAG = "Recycler Base";
 
     //Managers
-    private CryptoBrokerCommunitySubAppModuleManager moduleManager;
+    private CryptoCustomerCommunitySubAppModuleManager moduleManager;
     private ErrorManager errorManager;
-    private SettingsManager<CryptoBrokerCommunitySettings> settingsManager;
+    private SettingsManager<CryptoCustomerCommunitySettings> settingsManager;
 
     //Data
-    private CryptoBrokerCommunitySettings appSettings;
+    private CryptoCustomerCommunitySettings appSettings;
     private int offset = 0;
     private int mNotificationsCount = 0;
-    private ArrayList<CryptoBrokerCommunityInformation> cryptoBrokerCommunityInformationList;
+    private ArrayList<CryptoCustomerCommunityInformation> cryptoCustomerCommunityInformationList;
 
 
     //Flags
@@ -116,7 +114,7 @@ public class ConnectionsWorldFragment extends AbstractFermatFragment<CryptoBroke
             }catch (Exception e){ appSettings = null; }
 
             if(appSettings == null){
-                appSettings = new CryptoBrokerCommunitySettings();
+                appSettings = new CryptoCustomerCommunitySettings();
                 appSettings.setIsPresentationHelpEnabled(true);
                 try {
                     settingsManager.persistSettings(appSession.getAppPublicKey(), appSettings);
@@ -128,7 +126,7 @@ public class ConnectionsWorldFragment extends AbstractFermatFragment<CryptoBroke
 
 
             try{
-                CryptoBrokerCommunitySelectableIdentity i = moduleManager.getSelectedActorIdentity();
+                CryptoCustomerCommunitySelectableIdentity i = moduleManager.getSelectedActorIdentity();
                 if(i == null)
                     launchActorCreationDialog = true;
             }catch (CantGetSelectedActorIdentityException | ActorIdentityNotSelectedException e){
@@ -136,7 +134,7 @@ public class ConnectionsWorldFragment extends AbstractFermatFragment<CryptoBroke
             }
 
             //Get notification requests count
-            //mNotificationsCount = moduleManager.listCryptoBrokersPendingLocalAction(moduleManager.getSelectedActorIdentity(), MAX, offset).size();
+            //mNotificationsCount = moduleManager.listCryptoCustomersPendingLocalAction(moduleManager.getSelectedActorIdentity(), MAX, offset).size();
             //mNotificationsCount = 4;
             //new FetchCountTask().execute();
 
@@ -158,7 +156,7 @@ public class ConnectionsWorldFragment extends AbstractFermatFragment<CryptoBroke
 
             //Set up RecyclerView
             layoutManager = new GridLayoutManager(getActivity(), 3, LinearLayoutManager.VERTICAL, false);
-            adapter = new AppListAdapter(getActivity(), cryptoBrokerCommunityInformationList);
+            adapter = new AppListAdapter(getActivity(), cryptoCustomerCommunityInformationList);
             adapter.setFermatListEventListener(this);
             recyclerView = (RecyclerView) rootView.findViewById(R.id.gridView);
             recyclerView.setHasFixedSize(true);
@@ -179,11 +177,11 @@ public class ConnectionsWorldFragment extends AbstractFermatFragment<CryptoBroke
             if(launchActorCreationDialog) {
                 PresentationDialog presentationDialog = new PresentationDialog.Builder(getActivity(), appSession)
                         .setTemplateType(PresentationDialog.TemplateType.TYPE_PRESENTATION)
-                        .setBannerRes(R.drawable.banner_crypto_broker)
-                        .setIconRes(R.drawable.crypto_broker)
-                        .setSubTitle(R.string.cbp_cbc_launch_action_creation_dialog_sub_title)
-                        .setBody(R.string.cbp_cbc_launch_action_creation_dialog_body)
-                        .setTextFooter(R.string.cbp_cbc_launch_action_creation_dialog_footer)
+                        .setBannerRes(R.drawable.banner_crypto_customer_wallet)
+                        .setIconRes(R.drawable.crypto_customer)
+                        .setSubTitle(R.string.cbp_ccc_launch_action_creation_dialog_sub_title)
+                        .setBody(R.string.cbp_ccc_launch_action_creation_dialog_body)
+                        .setTextFooter(R.string.cbp_ccc_launch_action_creation_dialog_footer)
                         .build();
                 presentationDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
                             @Override
@@ -243,9 +241,9 @@ public class ConnectionsWorldFragment extends AbstractFermatFragment<CryptoBroke
                             result.length > 0) {
                         progressDialog.dismiss();
                         if (getActivity() != null && adapter != null) {
-                            cryptoBrokerCommunityInformationList = (ArrayList<CryptoBrokerCommunityInformation>) result[0];
-                            adapter.changeDataSet(cryptoBrokerCommunityInformationList);
-                            if (cryptoBrokerCommunityInformationList.isEmpty()) {
+                            cryptoCustomerCommunityInformationList = (ArrayList<CryptoCustomerCommunityInformation>) result[0];
+                            adapter.changeDataSet(cryptoCustomerCommunityInformationList);
+                            if (cryptoCustomerCommunityInformationList.isEmpty()) {
                                 showEmpty(true, emptyView);
                             } else {
                                 showEmpty(false, emptyView);
@@ -286,19 +284,19 @@ public class ConnectionsWorldFragment extends AbstractFermatFragment<CryptoBroke
         }
     }
 
-    private synchronized List<CryptoBrokerCommunityInformation> getMoreData() {
-        List<CryptoBrokerCommunityInformation> dataSet = new ArrayList<>();
+    private synchronized List<CryptoCustomerCommunityInformation> getMoreData() {
+        List<CryptoCustomerCommunityInformation> dataSet = new ArrayList<>();
 
         try {
-            CryptoBrokerCommunitySearch cryptoBrokerCommunitySearch = moduleManager.searchNewCryptoBroker(moduleManager.getSelectedActorIdentity());
+            CryptoCustomerCommunitySearch cryptoCustomerCommunitySearch = moduleManager.searchNewCryptoCustomer(moduleManager.getSelectedActorIdentity());
 
-            List<CryptoBrokerCommunityInformation> result = cryptoBrokerCommunitySearch.getResult();
+            List<CryptoCustomerCommunityInformation> result = cryptoCustomerCommunitySearch.getResult();
 
             /*//TODO: "FIXING" los images en null pues en el ConnectionOtherProfileFragment explota.
             //Eventualmente este result traera las imagenes correctas. Quitar este for cuando eso ocurra.
-            List<CryptoBrokerCommunityInformation> fixedResult = new ArrayList<>();
-            for(CryptoBrokerCommunityInformation i : result){
-                fixedResult.add(new CryptoBrokerCommunityInformationImpl(i.getPublicKey(), i.getAlias(), new byte[0]));
+            List<CryptoCustomerCommunityInformation> fixedResult = new ArrayList<>();
+            for(CryptoCustomerCommunityInformation i : result){
+                fixedResult.add(new CryptoCustomerCommunityInformationImpl(i.getPublicKey(), i.getAlias(), new byte[0]));
             }*/
 
             dataSet.addAll(result);
@@ -366,15 +364,15 @@ public class ConnectionsWorldFragment extends AbstractFermatFragment<CryptoBroke
 
 
     @Override
-    public void onItemClickListener(CryptoBrokerCommunityInformation data, int position) {
+    public void onItemClickListener(CryptoCustomerCommunityInformation data, int position) {
 
         appSession.setData(ACTOR_SELECTED, data);
-        changeActivity(Activities.CBP_SUB_APP_CRYPTO_BROKER_COMMUNITY_CONNECTION_OTHER_PROFILE.getCode(), appSession.getAppPublicKey());
+        changeActivity(Activities.CBP_SUB_APP_CRYPTO_CUSTOMER_COMMUNITY_CONNECTION_OTHER_PROFILE.getCode(), appSession.getAppPublicKey());
 
     }
 
     @Override
-    public void onLongItemClickListener(CryptoBrokerCommunityInformation data, int position) {}
+    public void onLongItemClickListener(CryptoCustomerCommunityInformation data, int position) {}
 
 
 
@@ -391,8 +389,8 @@ public class ConnectionsWorldFragment extends AbstractFermatFragment<CryptoBroke
 //
 //            try {
 //                CryptoCustomerCommunitySelectableIdentity selectedIdentity = moduleManager.getSelectedActorIdentity();
-//                notificationCount = moduleManager.listCryptoBrokersPendingLocalAction(selectedIdentity, MAX, offset).size();
-//            } catch(CantListCryptoBrokersException | ActorIdentityNotSelectedException | CantGetSelectedActorIdentityException e){
+//                notificationCount = moduleManager.listCryptoCustomersPendingLocalAction(selectedIdentity, MAX, offset).size();
+//            } catch(CantListCryptoCustomersException | ActorIdentityNotSelectedException | CantGetSelectedActorIdentityException e){
 //                errorManager.reportUnexpectedUIException(UISource.TASK, UnexpectedUIExceptionSeverity.NOT_IMPORTANT, e);
 //            }
 //            notificationCount = 80;
