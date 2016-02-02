@@ -123,7 +123,7 @@ The Fermat Foundation issues _d-fermats_ to incentivice the development of Ferma
 
 The Fermat Protocol issues _b-fermats_, with a predetermined algorithm that cannot be changed, and those tokens are necessary for The Fermat Network to function. Fermat miners are rewarded with _b-fermats_ for their contributions in running the Fermat network. End Users must aquire these tokens from miners and holders in order to pay for bandwith on the Fermat Network. 
 
-These application tokens are native to the Fermat system and are necessary to access to the application. Contribution of value from miners are rewarded in the application’s tokens called _b-fermats_ as well as developers which are rewarded with tokens called _d-fermats_ for the components they build for the system. Fermat's blockchain only records the issuing of new _b-fermats_ and outsources the transaction processing from the bitcoin network. In this sense Fermat is a type II Dapp.[2]. Developer tokens _d-fermats_ are issued by the Fermat Foundations as digital assets.
+These application tokens are native to the Fermat system and are necessary to have access to the application. Contribution of value from miners are rewarded in the application’s tokens called _b-fermats_. Developers are rewarded with tokens called _d-fermats_ for the components they build for the system. Fermat's blockchain only records the issuing of new _b-fermats_ and outsources the transaction processing from the bitcoin network. In this sense Fermat is a type II Dapp.[2]. Developer tokens _d-fermats_ are issued by the Fermat Foundation as digital assets.
 
 ![alt text](https://github.com/bitDubai/media-kit/blob/master/MediaKit/Tokens/Fermat%20App%20Token/PerspView/HQ_1920x1080.jpg "Fermat Application Token")
 
