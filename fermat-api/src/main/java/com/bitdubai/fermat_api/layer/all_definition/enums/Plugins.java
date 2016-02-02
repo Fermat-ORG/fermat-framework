@@ -228,6 +228,7 @@ public enum Plugins implements FermatPluginsEnum {
     ISSUER_REDEMPTION           ("IR"),
     ISSUER_APPROPRIATION("ISAP"),
     NOTIFICATION                ("NOT"),
+    ANDROID_CORE                ("AND"),
     OUTGOING_EXTRA_USER         ("OEU"),
     OUTGOING_INTRA_ACTOR        ("OIA"),
     PUBLISHER                   ("PBL"),
