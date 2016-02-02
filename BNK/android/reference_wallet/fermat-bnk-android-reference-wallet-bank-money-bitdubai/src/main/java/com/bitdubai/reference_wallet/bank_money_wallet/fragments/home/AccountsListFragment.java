@@ -81,7 +81,7 @@ public class AccountsListFragment extends FermatWalletListFragment<BankAccountNu
         configureToolbar();
         this.emtyView =  layout.findViewById(R.id.bw_empty_accounts_view);
         header = (FermatTextView)layout.findViewById(R.id.textView_header_text);
-        header.setText("Accounts:   "+moduleManager.getBankingWallet().getBankName());
+        header.setText(moduleManager.getBankingWallet().getBankName());
         presentationDialog = new PresentationDialog.Builder(getActivity(),appSession)
                 .setBannerRes(R.drawable.bw_banner)
                 .setBody(R.string.bnk_bank_money_wallet_account_body)
