@@ -75,7 +75,7 @@ public class AssetUserCommunitySubAppModulePluginRoot extends AbstractPlugin imp
     @NeededAddonReference(platform = Platforms.PLUG_INS_PLATFORM, layer = Layers.PLATFORM_SERVICE, addon = Addons.ERROR_MANAGER)
     ErrorManager errorManager;
 
-    @NeededPluginReference(platform = Platforms.DIGITAL_ASSET_PLATFORM, layer = Layers.IDENTITY       , plugin = Plugins.ASSET_USER  )
+    @NeededPluginReference(platform = Platforms.DIGITAL_ASSET_PLATFORM, layer = Layers.IDENTITY, plugin = Plugins.ASSET_USER)
     IdentityAssetUserManager identityAssetUserManager;
 
     private SettingsManager<AssetUserSettings> settingsManager;
@@ -123,7 +123,10 @@ public class AssetUserCommunitySubAppModulePluginRoot extends AbstractPlugin imp
         try {
             actorAssetIssuer = actorAssetIssuerManager.getActorAssetIssuer();
 
-            actorAssetUserManager.connectToActorAssetUser(actorAssetIssuer, actorAssetUsers);
+            if (actorAssetIssuer != null)
+                actorAssetUserManager.connectToActorAssetUser(actorAssetIssuer, actorAssetUsers);
+            else
+                throw new CantConnectToActorAssetUserException(CantConnectToActorAssetUserException.DEFAULT_MESSAGE, null, "There was an error connecting to users.", null);
 
         } catch (CantGetAssetIssuerActorsException e) {
             errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_DAP_ASSET_USER_COMMUNITY_SUB_APP_MODULE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);

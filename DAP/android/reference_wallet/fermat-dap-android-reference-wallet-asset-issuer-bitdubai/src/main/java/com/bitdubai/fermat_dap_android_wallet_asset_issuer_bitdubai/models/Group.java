@@ -2,6 +2,8 @@ package com.bitdubai.fermat_dap_android_wallet_asset_issuer_bitdubai.models;
 
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.interfaces.ActorAssetUserGroup;
 
+import java.util.List;
+
 /**
  * Created by frank on 12/30/15.
  */
@@ -10,6 +12,8 @@ public class Group {
     private boolean selected;
 
     private ActorAssetUserGroup actorAssetUserGroup;
+
+    private List<User> users;
 
     public Group() {
     }
@@ -41,6 +45,14 @@ public class Group {
 
     public void setActorAssetUserGroup(ActorAssetUserGroup actorAssetUserGroup) {
         this.actorAssetUserGroup = actorAssetUserGroup;
+    }
+
+    public List<User> getUsers() {
+        return users;
+    }
+
+    public void setUsers(List<User> users) {
+        this.users = users;
     }
 
     @Override
