@@ -241,12 +241,35 @@ public abstract class AbstractFermatFragment<S extends FermatSession,R extends R
         return ((FermatStates)getActivity()).getFermatStates();
     }
 
+
+
+    public final void onUpdateViewUIThred(final String code){
+        getActivity().runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                onUpdateViewOnUIThread(code);
+            }
+        });
+    }
+
     /**
      * This class have to be ovverride if someone wants to get broadcast
      *
      * @param code is a code for update some part of the fragment or everything
      */
     public void onUpdateView(String code) {
+        return;
+    }
+
+    /**
+     * This class have to be ovverride if someone wants to get broadcast on UI Thread
+     * ONLY FOR VIEW UPDATE
+     *
+     * @param code is a code for update some part of the fragment or everything
+     */
+
+
+    public void onUpdateViewOnUIThread(String code) {
         return;
     }
 }
