@@ -116,6 +116,7 @@ Underneath the sight of end users all these components collaborate between each 
 End Users requires to different types of tokens to use Fermat:
 
 **d-fermats tokens [DFT]** : Are required to pay micro use licenses to component developers.
+
 **b-fermats tokens [BFT]** : Are required to pay Fermat Miners for bandwidth.
 
 The Fermat Foundation issues _d-fermats_ to incentivice the development of Fermat Intraestructure and Fermat APPs according to a road map and master plan. End Users must aquire these tokens from developers and holders in order to run Fermat APPs that require the payment of micro use licenses.
