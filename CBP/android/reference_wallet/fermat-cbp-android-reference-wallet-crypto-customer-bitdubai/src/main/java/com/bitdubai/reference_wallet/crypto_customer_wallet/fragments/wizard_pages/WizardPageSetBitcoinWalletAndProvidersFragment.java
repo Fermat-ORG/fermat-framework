@@ -178,6 +178,17 @@ public class WizardPageSetBitcoinWalletAndProvidersFragment extends AbstractFerm
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         super.onCreateView(inflater, container, savedInstanceState);
 
+        PresentationDialog presentationDialog = new PresentationDialog.Builder(getActivity(), appSession)
+                .setBannerRes(R.drawable.cbp_banner_crypto_customer_wallet)
+                .setIconRes(R.drawable.cbp_crypto_customer)
+                .setBody(R.string.cbw_wizard_providers_dialog_body)
+                .setSubTitle(R.string.cbw_wizard_providers_dialog_sub_title)
+                .setTextFooter(R.string.cbw_wizard_providers_dialog_footer)
+                .setTemplateType(PresentationDialog.TemplateType.TYPE_PRESENTATION_WITHOUT_IDENTITIES)
+                .build();
+
+        presentationDialog.show();
+
         final View layout = inflater.inflate(R.layout.ccw_wizard_step_set_bitcoin_wallet_and_providers, container, false);
 
         recyclerView = (RecyclerView) layout.findViewById(R.id.ccw_selected_providers_recycler_view);
