@@ -441,18 +441,19 @@ public class SubAppActivity extends FermatActivity implements FermatScreenSwappe
 
     protected void loadUI(FermatSession<InstalledSubApp,?> subAppSession) {
         try {
-            AppConnections fermatAppConnection = FermatAppConnectionManager.getFermatAppConnection(subAppSession.getAppPublicKey(),this,subAppSession);
+            AppConnections fermatAppConnection = FermatAppConnectionManager.getFermatAppConnection(subAppSession.getAppPublicKey(), this, subAppSession);
             Activity activity = getActivityUsedType();
-            loadBasicUI(activity,fermatAppConnection);
+            loadBasicUI(activity, fermatAppConnection);
+            FermatFragmentFactory fermatFragmentFactory = fermatAppConnection.getFragmentFactory();
             hideBottonIcons();
             if (activity.getTabStrip() == null && activity.getFragments().size() > 1) {
                 initialisePaging();
             }
             if (activity.getTabStrip() != null) {
-                setPagerTabs(activity.getTabStrip(), subAppSession,fermatAppConnection.getFragmentFactory());
+                setPagerTabs(activity.getTabStrip(), subAppSession,fermatFragmentFactory);
             }
             if (activity.getFragments().size() == 1) {
-                setOneFragmentInScreen();
+                setOneFragmentInScreen(fermatFragmentFactory);
             }
         }catch (NullPointerException e){
             getErrorManager().reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.UNSTABLE, FermatException.wrapException(e));
@@ -465,40 +466,6 @@ public class SubAppActivity extends FermatActivity implements FermatScreenSwappe
         }
     }
 
-    private void setOneFragmentInScreen() throws InvalidParameterException {
-
-        SubAppRuntimeManager subAppRuntimeManager= getSubAppRuntimeMiddleware();
-        SubApp subApp = subAppRuntimeManager.getLastSubApp();
-        String fragment = subAppRuntimeManager.getLastSubApp().getLastActivity().getLastFragment().getType();
-        FermatSession subAppsSession = getSubAppSessionManager().getSubAppsSession(subApp.getAppPublicKey());
-        FermatAppConnection fermatAppConnection = FermatAppConnectionManager.getFermatAppConnection(getSubAppRuntimeMiddleware().getLastSubApp().getAppPublicKey(), this,subAppsSession);
-        com.bitdubai.fermat_android_api.engine.FermatFragmentFactory fermatFragmentFactory = fermatAppConnection.getFragmentFactory();
-        try {
-            if(fermatFragmentFactory !=null){
-                    TabLayout tabLayout = (TabLayout) findViewById(R.id.tab_layout);
-                    if(tabLayout!=null) tabLayout.setVisibility(View.GONE);
-                    ViewPager pagertabs = (ViewPager) findViewById(R.id.pager);
-                    if(pagertabs!=null) {
-                        pagertabs.setVisibility(View.VISIBLE);
-                        adapter = new TabsPagerAdapter(getFragmentManager(),
-                                getApplicationContext(),
-                                fermatFragmentFactory,
-                                fragment,
-                                subAppsSession,
-                                getSubAppResourcesProviderManager());
-                        pagertabs.setAdapter(adapter);
-
-                        final int pageMargin = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 4, getResources()
-                                .getDisplayMetrics());
-                        pagertabs.setPageMargin(pageMargin);
-                    }
-                }
-            }catch (Exception e){
-                e.printStackTrace();
-            }
-
-
-        }
     private FermatSession<InstalledSubApp,?> createOrCallSubAppSession(){
         FermatSession<InstalledSubApp,?> subAppSession = null;
         try {

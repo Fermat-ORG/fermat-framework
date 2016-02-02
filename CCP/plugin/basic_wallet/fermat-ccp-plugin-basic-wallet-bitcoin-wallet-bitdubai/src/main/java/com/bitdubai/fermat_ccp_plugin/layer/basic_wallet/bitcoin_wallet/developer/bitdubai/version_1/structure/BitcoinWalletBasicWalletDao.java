@@ -207,34 +207,65 @@ public class BitcoinWalletBasicWalletDao {
                                                                                      int             offset) throws CantListTransactionsException {
         try {
 
+//            DatabaseTable bitcoinWalletTable = getBitcoinWalletTable();
+//
+//            String query = "SELECT * FROM " +
+//                    BitcoinWalletDatabaseConstants.BITCOIN_WALLET_TABLE_NAME +
+//                    " WHERE " +
+//                    BitcoinWalletDatabaseConstants.BITCOIN_WALLET_TABLE_BALANCE_TYPE_COLUMN_NAME +
+//                    " = '" +
+//                    balanceType.getCode() +
+//                    "' AND " +
+//                    BitcoinWalletDatabaseConstants.BITCOIN_WALLET_TABLE_TYPE_COLUMN_NAME +
+//                    " = '" +
+//                    transactionType.getCode() +
+//                    "' GROUP BY ";
+//
+//            if (transactionType == TransactionType.CREDIT)
+//                query += BitcoinWalletDatabaseConstants.BITCOIN_WALLET_TABLE_ACTOR_FROM_COLUMN_NAME;
+//            else if (transactionType == TransactionType.DEBIT)
+//                query += BitcoinWalletDatabaseConstants.BITCOIN_WALLET_TABLE_ACTOR_TO_COLUMN_NAME;
+//
+//            query += " HAVING MAX(" +
+//                    BitcoinWalletDatabaseConstants.BITCOIN_WALLET_TABLE_TIME_STAMP_COLUMN_NAME +
+//                    ") = " +
+//                    BitcoinWalletDatabaseConstants.BITCOIN_WALLET_TABLE_TIME_STAMP_COLUMN_NAME +
+//                    " LIMIT " + max +
+//                    " OFFSET " + offset;
+//
+
+
             DatabaseTable bitcoinWalletTable = getBitcoinWalletTable();
 
-            String query = "SELECT * FROM " +
-                    BitcoinWalletDatabaseConstants.BITCOIN_WALLET_TABLE_NAME +
-                    " WHERE " +
-                    BitcoinWalletDatabaseConstants.BITCOIN_WALLET_TABLE_BALANCE_TYPE_COLUMN_NAME +
-                    " = '" +
-                    balanceType.getCode() +
-                    "' AND " +
-                    BitcoinWalletDatabaseConstants.BITCOIN_WALLET_TABLE_TYPE_COLUMN_NAME +
-                    " = '" +
-                    transactionType.getCode() +
-                    "' GROUP BY ";
-
-            if (transactionType == TransactionType.CREDIT)
-                query += BitcoinWalletDatabaseConstants.BITCOIN_WALLET_TABLE_ACTOR_FROM_COLUMN_NAME;
-            else if (transactionType == TransactionType.DEBIT)
-                query += BitcoinWalletDatabaseConstants.BITCOIN_WALLET_TABLE_ACTOR_TO_COLUMN_NAME;
-
-            query += " HAVING MAX(" +
-                    BitcoinWalletDatabaseConstants.BITCOIN_WALLET_TABLE_TIME_STAMP_COLUMN_NAME +
-                    ") = " +
-                    BitcoinWalletDatabaseConstants.BITCOIN_WALLET_TABLE_TIME_STAMP_COLUMN_NAME +
-                    " LIMIT " + max +
-                    " OFFSET " + offset;
+            bitcoinWalletTable.setFilterTop   (String.valueOf(max)   );
+            bitcoinWalletTable.setFilterOffSet(String.valueOf(offset));
 
 
-            return createTransactionList(bitcoinWalletTable.customQuery(query, false));
+
+            if ( transactionType == TransactionType.CREDIT){
+                bitcoinWalletTable.clearAllFilters();
+                bitcoinWalletTable.addFilterOrder(BitcoinWalletDatabaseConstants.BITCOIN_WALLET_TABLE_TIME_STAMP_COLUMN_NAME, DatabaseFilterOrder.DESCENDING);
+
+                bitcoinWalletTable.addStringFilter(BitcoinWalletDatabaseConstants.BITCOIN_WALLET_TABLE_BALANCE_TYPE_COLUMN_NAME, balanceType.getCode(), DatabaseFilterType.EQUAL);
+
+                bitcoinWalletTable.addStringFilter(BitcoinWalletDatabaseConstants.BITCOIN_WALLET_TABLE_TYPE_COLUMN_NAME, transactionType.getCode(), DatabaseFilterType.EQUAL);
+
+                bitcoinWalletTable.loadToMemory();
+                return createTransactionList(bitcoinWalletTable.getRecords());
+            }
+            if ( transactionType == TransactionType.DEBIT){
+                bitcoinWalletTable.clearAllFilters();
+                bitcoinWalletTable.addFilterOrder(BitcoinWalletDatabaseConstants.BITCOIN_WALLET_TABLE_TIME_STAMP_COLUMN_NAME, DatabaseFilterOrder.DESCENDING);
+
+                bitcoinWalletTable.addStringFilter(BitcoinWalletDatabaseConstants.BITCOIN_WALLET_TABLE_BALANCE_TYPE_COLUMN_NAME, balanceType.getCode(), DatabaseFilterType.EQUAL);
+
+                bitcoinWalletTable.addStringFilter(BitcoinWalletDatabaseConstants.BITCOIN_WALLET_TABLE_TYPE_COLUMN_NAME, transactionType.getCode(), DatabaseFilterType.EQUAL);
+
+
+                bitcoinWalletTable.loadToMemory();
+                return createTransactionList(bitcoinWalletTable.getRecords());
+            }
+            return createTransactionList(bitcoinWalletTable.getRecords());
 
         } catch (CantLoadTableToMemoryException cantLoadTableToMemory) {
             throw new CantListTransactionsException(CantListTransactionsException.DEFAULT_MESSAGE, cantLoadTableToMemory, "Error loading wallet table ", "");
