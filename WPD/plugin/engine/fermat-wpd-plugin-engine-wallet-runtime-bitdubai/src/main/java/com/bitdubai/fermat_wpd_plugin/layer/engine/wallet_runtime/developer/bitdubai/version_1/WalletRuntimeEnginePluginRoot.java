@@ -1538,90 +1538,6 @@ public class WalletRuntimeEnginePluginRoot extends AbstractPlugin implements
         return runtimeWalletNavigationStructure;
     }
 
-    private SideMenu loadSideMenuAssetIssuerWallet(String publicKey) {
-
-        SideMenu runtimeSideMenu = new SideMenu();
-        runtimeSideMenu.setBackgroundColor("#5C6E81");
-//        runtimeSideMenu.setNavigationIconColor("#ffffff");
-        runtimeSideMenu.setHasFooter(true);
-
-        MenuItem runtimeMenuItem = new MenuItem();
-
-        runtimeMenuItem.setLabel("Home");
-        runtimeMenuItem.setSelected(true);
-        runtimeMenuItem.setLinkToActivity(Activities.DAP_WALLET_ASSET_ISSUER_MAIN_ACTIVITY);
-        runtimeMenuItem.setAppLinkPublicKey(publicKey);
-        runtimeSideMenu.addMenuItem(runtimeMenuItem);
-
-        runtimeMenuItem = new MenuItem();
-        runtimeMenuItem.setLabel("Settings");
-        runtimeMenuItem.setLinkToActivity(Activities.DAP_WALLET_ASSET_ISSUER_MAIN_SETTINGS_ACTIVITY);
-        runtimeMenuItem.setAppLinkPublicKey(publicKey);
-        runtimeSideMenu.addMenuItem(runtimeMenuItem);
-
-        return runtimeSideMenu;
-    }
-    private SideMenu loadSideMenuAssetRedeemPoint(String publicKey) {
-
-        SideMenu runtimeSideMenu = new SideMenu();
-        runtimeSideMenu.setBackgroundColor("#5C6E81");
-//        runtimeSideMenu.setNavigationIconColor("#ffffff");
-        runtimeSideMenu.setHasFooter(true);
-
-        MenuItem runtimeMenuItem = new MenuItem();
-
-        runtimeMenuItem.setLabel("Home");
-        runtimeMenuItem.setSelected(true);
-        runtimeMenuItem.setLinkToActivity(Activities.DAP_WALLET_REDEEM_POINT_MAIN_ACTIVITY);
-        runtimeMenuItem.setAppLinkPublicKey(publicKey);
-        runtimeSideMenu.addMenuItem(runtimeMenuItem);
-
-        runtimeMenuItem = new MenuItem();
-        runtimeMenuItem.setLabel("Settings");
-        runtimeMenuItem.setLinkToActivity(Activities.DAP_WALLET_REDEEM_POINT_ASSET_SETTINGS_ACTIVITY);
-        runtimeMenuItem.setAppLinkPublicKey(publicKey);
-        runtimeSideMenu.addMenuItem(runtimeMenuItem);
-
-//        runtimeMenuItem = new MenuItem();
-//        runtimeMenuItem.setLabel("History");
-//        runtimeMenuItem.setLinkToActivity(Activities.DAP_WALLET_ASSET_ISSUER_HISTORY_ACTIVITY);
-//        runtimeMenuItem.setAppLinkPublicKey(publicKey);
-//        runtimeSideMenu.addMenuItem(runtimeMenuItem);
-//
-//        runtimeMenuItem = new MenuItem();
-//        runtimeMenuItem.setLabel("Statistics");
-//        runtimeMenuItem.setLinkToActivity(Activities.DAP_WALLET_ASSET_ISSUER_STADISTICS_ACTIVITY);
-//        runtimeMenuItem.setAppLinkPublicKey(publicKey);
-//        runtimeSideMenu.addMenuItem(runtimeMenuItem);
-
-        return runtimeSideMenu;
-    }
-
-    private SideMenu loadSideMenuAssetUserWallet(String publicKey) {
-
-        SideMenu runtimeSideMenu = new SideMenu();
-        runtimeSideMenu.setBackgroundColor("#381a5e");
-//        runtimeSideMenu.setNavigationIconColor("#ffffff");
-        runtimeSideMenu.setHasFooter(true);
-
-        MenuItem runtimeMenuItem = new MenuItem();
-
-        runtimeMenuItem.setLabel("Home");
-        runtimeMenuItem.setSelected(true);
-        runtimeMenuItem.setLinkToActivity(Activities.DAP_WALLET_ASSET_USER_MAIN_ACTIVITY);
-        runtimeMenuItem.setAppLinkPublicKey(publicKey);
-        runtimeSideMenu.addMenuItem(runtimeMenuItem);
-
-        runtimeMenuItem = new MenuItem();
-        runtimeMenuItem.setLabel("Settings");
-        runtimeMenuItem.setLinkToActivity(Activities.DAP_WALLET_ASSET_USER_SETTINGS_ACTIVITY);
-        runtimeMenuItem.setAppLinkPublicKey(publicKey);
-        runtimeSideMenu.addMenuItem(runtimeMenuItem);
-
-        return runtimeSideMenu;
-    }
-
-
     private WalletNavigationStructure createAssetUserWalletNavigationStructure() {
         WalletNavigationStructure runtimeWalletNavigationStructure;
         Activity runtimeActivity;
@@ -1898,28 +1814,6 @@ public class WalletRuntimeEnginePluginRoot extends AbstractPlugin implements
         runtimeWalletNavigationStructure.setWalletType(WalletType.REFERENCE.getCode());
         runtimeWalletNavigationStructure.setPublicKey(publicKey);
 
-        // Side Menu
-        runtimeSideMenu = new SideMenu();
-        runtimeSideMenu.setBackgroundColor("#005580");
-//TODO en Deshuso por ahora
-//        runtimeMenuItem = new MenuItem();
-//        runtimeMenuItem.setLabel("My Assets");
-//        runtimeMenuItem.setAppLinkPublicKey(publicKey);
-//        runtimeMenuItem.setLinkToActivity(Activities.DAP_WALLET_REDEEM_POINT_MAIN_ACTIVITY);
-//        runtimeSideMenu.addMenuItem(runtimeMenuItem);
-//
-//        runtimeMenuItem = new MenuItem();
-//        runtimeMenuItem.setLabel("History");
-//        runtimeMenuItem.setAppLinkPublicKey(publicKey);
-//        runtimeMenuItem.setLinkToActivity(Activities.DAP_WALLET_REDEEM_POINT_HISTORY_ACTIVITY);
-//        runtimeSideMenu.addMenuItem(runtimeMenuItem);
-//
-//        runtimeMenuItem = new MenuItem();
-//        runtimeMenuItem.setLabel("Statistics");
-//        runtimeMenuItem.setAppLinkPublicKey(publicKey);
-//        runtimeMenuItem.setLinkToActivity(Activities.DAP_WALLET_REDEEM_POINT_STADISTICS_ACTIVITY);
-//        runtimeSideMenu.addMenuItem(runtimeMenuItem);
-
         // Activity: Home
         runtimeActivity = new Activity();
         runtimeActivity.setType(Activities.DAP_WALLET_REDEEM_POINT_MAIN_ACTIVITY);
@@ -2148,6 +2042,78 @@ public class WalletRuntimeEnginePluginRoot extends AbstractPlugin implements
         // -- Redeem Point Detail Activity END
 
         return runtimeWalletNavigationStructure;
+    }
+
+    private SideMenu loadSideMenuAssetIssuerWallet(String publicKey) {
+
+        SideMenu runtimeSideMenu = new SideMenu();
+        runtimeSideMenu.setBackgroundColor("#5C6E81");
+//        runtimeSideMenu.setNavigationIconColor("#ffffff");
+        runtimeSideMenu.setHasFooter(true);
+
+        MenuItem runtimeMenuItem = new MenuItem();
+
+        runtimeMenuItem.setLabel("Home");
+        runtimeMenuItem.setSelected(true);
+        runtimeMenuItem.setLinkToActivity(Activities.DAP_WALLET_ASSET_ISSUER_MAIN_ACTIVITY);
+        runtimeMenuItem.setAppLinkPublicKey(publicKey);
+        runtimeSideMenu.addMenuItem(runtimeMenuItem);
+
+        runtimeMenuItem = new MenuItem();
+        runtimeMenuItem.setLabel("Settings");
+        runtimeMenuItem.setLinkToActivity(Activities.DAP_WALLET_ASSET_ISSUER_MAIN_SETTINGS_ACTIVITY);
+        runtimeMenuItem.setAppLinkPublicKey(publicKey);
+        runtimeSideMenu.addMenuItem(runtimeMenuItem);
+
+        return runtimeSideMenu;
+    }
+
+    private SideMenu loadSideMenuAssetUserWallet(String publicKey) {
+
+        SideMenu runtimeSideMenu = new SideMenu();
+        runtimeSideMenu.setBackgroundColor("#381a5e");
+//        runtimeSideMenu.setNavigationIconColor("#ffffff");
+        runtimeSideMenu.setHasFooter(true);
+
+        MenuItem runtimeMenuItem = new MenuItem();
+
+        runtimeMenuItem.setLabel("Home");
+        runtimeMenuItem.setSelected(true);
+        runtimeMenuItem.setLinkToActivity(Activities.DAP_WALLET_ASSET_USER_MAIN_ACTIVITY);
+        runtimeMenuItem.setAppLinkPublicKey(publicKey);
+        runtimeSideMenu.addMenuItem(runtimeMenuItem);
+
+        runtimeMenuItem = new MenuItem();
+        runtimeMenuItem.setLabel("Settings");
+        runtimeMenuItem.setLinkToActivity(Activities.DAP_WALLET_ASSET_USER_SETTINGS_ACTIVITY);
+        runtimeMenuItem.setAppLinkPublicKey(publicKey);
+        runtimeSideMenu.addMenuItem(runtimeMenuItem);
+
+        return runtimeSideMenu;
+    }
+
+    private SideMenu loadSideMenuAssetRedeemPoint(String publicKey) {
+
+        SideMenu runtimeSideMenu = new SideMenu();
+        runtimeSideMenu.setBackgroundColor("#005580");
+//        runtimeSideMenu.setNavigationIconColor("#ffffff");
+        runtimeSideMenu.setHasFooter(true);
+
+        MenuItem runtimeMenuItem = new MenuItem();
+
+        runtimeMenuItem.setLabel("Home");
+        runtimeMenuItem.setSelected(true);
+        runtimeMenuItem.setLinkToActivity(Activities.DAP_WALLET_REDEEM_POINT_MAIN_ACTIVITY);
+        runtimeMenuItem.setAppLinkPublicKey(publicKey);
+        runtimeSideMenu.addMenuItem(runtimeMenuItem);
+
+        runtimeMenuItem = new MenuItem();
+        runtimeMenuItem.setLabel("Settings");
+        runtimeMenuItem.setLinkToActivity(Activities.DAP_WALLET_REDEEM_POINT_ASSET_SETTINGS_ACTIVITY);
+        runtimeMenuItem.setAppLinkPublicKey(publicKey);
+        runtimeSideMenu.addMenuItem(runtimeMenuItem);
+
+        return runtimeSideMenu;
     }
 
     private WalletNavigationStructure createCryptoBrokerWalletNavigationStructure() {
