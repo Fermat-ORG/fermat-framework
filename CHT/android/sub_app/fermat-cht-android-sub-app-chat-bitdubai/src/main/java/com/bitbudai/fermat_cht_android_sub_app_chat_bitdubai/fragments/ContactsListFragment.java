@@ -10,10 +10,12 @@ import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
 import android.provider.ContactsContract;
 /*import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
 import android.support.v4.widget.CursorAdapter;*/
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.text.SpannableString;
 import android.text.TextUtils;
 import android.widget.CursorAdapter;
@@ -22,11 +24,22 @@ import com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.adapters.ChatListAd
 import com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.adapters.ContactListAdapter;
 import com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.models.ChatMessage;
 import com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.models.ContactList;
+import com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.sessions.ChatSession;
+import com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.settings.ChatSettings;
 import com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.util.ImageLoader;
 import com.bitdubai.android_api.BuildConfig;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractFermatFragment;
+import com.bitdubai.fermat_api.layer.all_definition.components.enums.PlatformComponentType;
+import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
+import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantGetChatException;
+import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantGetContactException;
+import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantGetMessageException;
+import com.bitdubai.fermat_cht_api.layer.middleware.interfaces.Contact;
+import com.bitdubai.fermat_cht_api.layer.middleware.utils.ContactImpl;
+import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.ChatManager;
+import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.ChatModuleManager;
+import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedSubAppExceptionSeverity;
 
-//import android.os.Bundle;
 //import android.text.TextUtils;
 import android.text.style.TextAppearanceSpan;
 import android.util.DisplayMetrics;
@@ -53,7 +66,10 @@ import android.widget.TextView;
 import android.widget.Toast;
 //import android.widget.LinearLayout;
 //import android.widget.ListView;
+import com.bitdubai.fermat_api.layer.all_definition.settings.structure.SettingsManager;
+import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.enums.SubApps;
 import com.bitdubai.fermat_cht_android_sub_app_chat_bitdubai.R;
+import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 //import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
 //import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedWalletExceptionSeverity;
 //import com.bitdubai.fermat_cht_api.layer.chat_module.interfaces.ChatModuleManager;
@@ -62,12 +78,16 @@ import com.bitdubai.fermat_cht_android_sub_app_chat_bitdubai.R;
 import java.io.FileDescriptor;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.lang.String;
 import java.util.Date;
 import java.text.DateFormat;
 import java.util.Locale;
+import java.util.Map;
+import java.util.UUID;
 
 
 /**
@@ -93,9 +113,10 @@ public class ContactsListFragment extends AbstractFermatFragment {
 //    // Stores the previously selected search item so that on a configuration change the same item
 //    // can be reselected again
 //    private int mPreviouslySelectedSearchItem = 0;
-//    public ArrayList<ContactList> contactList;
+// public ArrayList<ContactList> contactList;
+    public List<Contact> contacts;
 //    private ListView contactsContainer;
-//    //private ContactsAdapter adapter;
+     private Contact contactl;//= new Contact();
 //
 //    // Whether or not the search query has changed since the last time the loader was refreshed
 //    private boolean mSearchQueryChanged;
@@ -106,23 +127,16 @@ public class ContactsListFragment extends AbstractFermatFragment {
     // Whether or not this is a search result view of this fragment, only used on pre-honeycomb
     // OS versions as search results are shown in-line via Action Bar search from honeycomb onward
     private boolean mIsSearchResultView = false;
-
+    private ChatManager chatManager;
+    private ChatModuleManager moduleManager;
+    private ErrorManager errorManager;
+    private SettingsManager<ChatSettings> settingsManager;
+    private ChatSession chatSession;
     ListView list;
-
-    String[] contactname={"GABRIEL",
-            "MIGUEL",
-            "FRANKLIN",
-            "MANUEL",
-            "JOSE",
-            "LUIS"};
-    Integer[] contacticon={R.drawable.ken,
-            R.drawable.sas,
-            R.drawable.koj,
-            R.drawable.veg,
-            R.drawable.ren,
-            R.drawable.pat
-    };
-
+    ArrayList<String> contactname=new ArrayList<String>();
+    ArrayList<Integer> contacticon=new ArrayList<Integer>();
+    ArrayList<UUID> contactid=new ArrayList<UUID>();
+    SwipeRefreshLayout mSwipeRefreshLayout;
     //public ContactsListFragment() {}
     static void initchatinfo(){
         //   chatinfo.put(0, Arrays.asList("Miguel", "Que paso?", "12/09/2007"));
@@ -133,19 +147,20 @@ public class ContactsListFragment extends AbstractFermatFragment {
         initchatinfo();
         return new ContactsListFragment();}
 
-//    public void setSearchQuery(String query) {
-//        if (TextUtils.isEmpty(query)) {
-//            mIsSearchResultView = false;
-//        } else {
-//            mSearchTerm = query;
-//            mIsSearchResultView = true;
-//        }
-//    }
-
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        try{
+            chatSession=((ChatSession) appSession);
+            moduleManager= chatSession.getModuleManager();
+            chatManager=moduleManager.getChatManager();
+            errorManager=appSession.getErrorManager();
+        }catch (Exception e)
+        {
+            //if(errorManager!=null)
+                //errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT,UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT);
+        }
         // Check if this fragment is part of a two-pane set up or a single pane by reading a
         // boolean from the application resource directories. This lets allows us to easily specify
         // which screen sizes should use a two-pane layout by setting this boolean in the
@@ -199,19 +214,103 @@ public class ContactsListFragment extends AbstractFermatFragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         View layout = inflater.inflate(R.layout.contact_list_fragment, container, false);
+        TextView text=(TextView) layout.findViewById(R.id.text);
+        mSwipeRefreshLayout = (SwipeRefreshLayout) layout.findViewById(R.id.swipe_container);
+        try {
+            ContactImpl cadded=new ContactImpl();
+            cadded.setContactId(UUID.randomUUID());
+            cadded.setAlias("joseremoto");
+            cadded.setRemoteActorPublicKey("joseremoto");
+            cadded.setRemoteActorType(PlatformComponentType.ACTOR_ASSET_USER);
+            String dateString = "30/09/2014";
+            SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
+            Date date = sdf.parse(dateString);
+            long startDate = date.getTime();
+            cadded.setCreationDate(startDate);
+            cadded.setRemoteName("joseremoto");
+            chatManager.saveContact(cadded);
+            List <Contact> con=  chatManager.getContacts();
+            int size = con.size();
+            //System.out.println("\n\nCONTACTsize:\n\n" + size);
+            if (size > 0) {
+                for (int i=0;i<size;i++){
+                    contactname.add(con.get(i).getAlias());
+                    contactid.add(con.get(i).getContactId());
+                    contacticon.add(R.drawable.ic_contact_picture_holo_light);
+                }
+                text.setVisibility(View.GONE);
+            }else{
+                text.setVisibility(View.VISIBLE);
+                text.setText("No Contacts");//Toast.makeText(getActivity(), "No Contacts", Toast.LENGTH_SHORT).show();
+            }
+        }catch (Exception e){
+            if (errorManager != null)
+                errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
 
-        ContactListAdapter adapter=new ContactListAdapter(getActivity(), contactname, contacticon);
+        }
+        ContactListAdapter adapter=new ContactListAdapter(getActivity(), contactname, contacticon, contactid);
         list=(ListView)layout.findViewById(R.id.list);
         list.setAdapter(adapter);
 
         list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 
             @Override
-            public void onItemClick(AdapterView<?> parent, View view,int position, long id) {
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 // TODO Auto-generated method stub
-                String Slecteditem= contactname[position];
-                Toast.makeText(getActivity(), Slecteditem, Toast.LENGTH_SHORT).show();
+                //String Slecteditem= contactname[position];
+                //Toast.makeText(getActivity(), Slecteditem, Toast.LENGTH_SHORT).show();
+                appSession.setData(ChatSession.CONTACT_DATA, contactl);
+                changeActivity(Activities.CHT_CHAT_OPEN_MESSAGE_LIST, appSession.getAppPublicKey());
 
+            }
+        });
+
+        list.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+
+            @Override
+            public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
+                // TODO Auto-generated method stub
+
+                appSession.setData(ChatSession.CONTACT_DATA, contactl);
+                changeActivity(Activities.CHT_CHAT_OPEN_CONTACT_DETAIL, appSession.getAppPublicKey());
+                return true;
+            }
+        });
+
+        mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                new Handler().postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        System.out.println("Updated");
+                        Toast.makeText(getActivity(), "Updated", Toast.LENGTH_SHORT).show();
+
+                        try {
+                            List <Contact> con=  chatManager.getContacts();
+                            if (con.size() > 0) {
+                                for (int i=0;i<con.size();i++){
+                                    contactname.add(con.get(i).getAlias());
+                                    contactid.add(con.get(i).getContactId());
+                                    contacticon.add(R.drawable.ic_contact_picture_holo_light);
+                                }
+                                final ContactListAdapter adaptador =
+                                        new ContactListAdapter(getActivity(), contactname, contacticon, contactid);
+                               // ListView contactlist;
+                                //contactlist=(ListView) layout.findViewById(R.id.list);
+                                adaptador.refreshEvents(contactname, contacticon, contactid);
+                            }else{
+                                Toast.makeText(getActivity(), "No Contacts", Toast.LENGTH_SHORT).show();
+                            }
+                        } catch (CantGetContactException e) {
+                            e.printStackTrace();
+                        } catch (Exception e) {
+                            //TODO: fix this
+                            e.printStackTrace();
+                        }
+                        mSwipeRefreshLayout.setRefreshing(false);
+                    }
+                }, 2500);
             }
         });
 
@@ -220,6 +319,51 @@ public class ContactsListFragment extends AbstractFermatFragment {
         // Inflate the list fragment layout
         //return inflater.inflate(R.layout.contact_list_fragment, container, false);
     }
+
+    public Map<UUID,Contact> listContactcreated() {
+
+        Map<UUID, Contact> cntcreated = new HashMap<UUID, Contact>();
+
+        try {
+
+            if (!(chatManager.getContacts().size() > 0)) {
+                System.out.println("/n/nNO contact here /n/n");
+            } else {
+                for (int i = 0; i < chatManager.getContacts().size(); i++) {
+                    cntcreated.put(chatManager.getContacts().get(i).getContactId(), chatManager.getContacts().get(i));
+                }
+            }
+        } catch (CantGetContactException e) {
+            e.printStackTrace();
+        }
+        return cntcreated;
+
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if (item.getItemId() == R.id.menu_add_contact) {
+            System.out.println("\n\ngetAppPublicKey:\n\n" + appSession.getAppPublicKey().toString());
+            changeActivity(Activities.CHT_CHAT_EDIT_CONTACT, appSession.getAppPublicKey());
+        }
+
+        return true;
+    }
+
+//    public void setSearchQuery(String query) {
+//        if (TextUtils.isEmpty(query)) {
+//            mIsSearchResultView = false;
+//        } else {
+//            mSearchTerm = query;
+//            mIsSearchResultView = true;
+//        }
+//    }
+
+    /*@Override
+    public void onItemClickListener(ChatManager data, int position) {
+        appSession.setData(ChatSession.CONTACT_DATA, data);
+        changeActivity(Activities.CHT_CHAT_OPEN_MESSAGE_LIST, appSession.getAppPublicKey());
+    }*/
 
 //    private void loadDummyHistory(){// Hard Coded
 //

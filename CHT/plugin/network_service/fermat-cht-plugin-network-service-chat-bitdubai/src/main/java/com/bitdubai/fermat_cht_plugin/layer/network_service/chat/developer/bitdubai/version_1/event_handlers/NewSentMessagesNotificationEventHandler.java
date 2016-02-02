@@ -22,7 +22,7 @@ import com.google.gson.JsonParser;
 import java.util.UUID;
 
 /**
- * The class <code>com.bitdubai.fermat_dap_plugin.layer.network.service.asset.transmission.developer.bitdubai.version_1.event_handlers.NewSentMessagesNotificationEventHandler</code> listen
+ * The class <code>com.bitdubai.fermat_cht_plugin.layer.network_service.chat.developer.bitdubai.version_1.event_handlers</code> listen
  * and handle the event <code>NewNetworkServiceMessageSentNotificationEvent</code>
  * <p/>
  *
@@ -103,19 +103,19 @@ public class NewSentMessagesNotificationEventHandler implements FermatEventHandl
 
         if (platformEvent.getSource() == NetworkServiceChatNetworkServicePluginRoot.EVENT_SOURCE){
 
-            System.out.println("CompleteComponentConnectionRequestNotificationEventHandler - handleEvent platformEvent =" + platformEvent.toString());
-            System.out.println("NetworkServiceChatNetworkServicePluginRoot - NOTIFICACION EVENTO MENSAJE ENVIADO!!!!");
+           // System.out.println("CompleteComponentConnectionRequestNotificationEventHandler - handleEvent platformEvent =" + platformEvent.toString());
+          //  System.out.println("NetworkServiceChatNetworkServicePluginRoot - NOTIFICACION EVENTO MENSAJE ENVIADO!!!!");
 
             NewNetworkServiceMessageSentNotificationEvent newNetworkServiceMessageSentNotificationEvent = (NewNetworkServiceMessageSentNotificationEvent) platformEvent;
             FermatMessage fermatMessage = (FermatMessage) newNetworkServiceMessageSentNotificationEvent.getData();
             JsonObject jsonMsjContent = parser.parse(fermatMessage.getContent()).getAsJsonObject();
             UUID chatId = gson.fromJson(jsonMsjContent.get(ChatTransmissionJsonAttNames.ID_CHAT), UUID.class);
-            System.out.println("NetworkServiceChatNetworkServicePluginRoot - ChatId"+chatId.toString());
+          //  System.out.println("NetworkServiceChatNetworkServicePluginRoot - ChatId"+chatId.toString());
             OutgoingChat event = (OutgoingChat) networkServiceChatNetworkServicePluginRoot.getEventManager().getNewEvent(EventType.OUTGOING_CHAT);
             event.setChatId(chatId);
             event.setSource(NetworkServiceChatNetworkServicePluginRoot.EVENT_SOURCE);
             networkServiceChatNetworkServicePluginRoot.getEventManager().raiseEvent(event);
-            System.out.println("NetworkServiceChatNetworkServicePluginRoot - OUTGOING_CHAT EVENT FIRED!:"+event);
+           // System.out.println("NetworkServiceChatNetworkServicePluginRoot - OUTGOING_CHAT EVENT FIRED!:"+event);
 
         }
 

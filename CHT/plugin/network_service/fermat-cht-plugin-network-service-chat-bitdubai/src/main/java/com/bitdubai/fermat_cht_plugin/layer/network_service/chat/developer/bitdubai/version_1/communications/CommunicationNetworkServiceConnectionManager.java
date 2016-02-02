@@ -24,12 +24,22 @@ public class CommunicationNetworkServiceConnectionManager implements NetworkServ
 
     @Override
     public void stop() {
-        // TODO COMPLETE -.
+        for (String key : communicationNetworkServiceRemoteAgentsCache.keySet()) {
+
+            //stop his threads
+            communicationNetworkServiceRemoteAgentsCache.get(key).stop();
+
+        }
     }
 
     @Override
     public void restart() {
-        // TODO COMPLETE -.
+        for (String key : communicationNetworkServiceRemoteAgentsCache.keySet()) {
+
+            //Restart threads
+            communicationNetworkServiceRemoteAgentsCache.get(key).start();
+
+        }
     }
 
     /**

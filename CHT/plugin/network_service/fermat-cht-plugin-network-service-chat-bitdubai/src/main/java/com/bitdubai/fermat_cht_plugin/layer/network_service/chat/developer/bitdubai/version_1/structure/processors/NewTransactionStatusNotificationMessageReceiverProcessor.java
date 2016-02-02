@@ -27,7 +27,7 @@ import com.google.gson.JsonObject;
 import java.util.UUID;
 
 /**
- * The Class <code>com.bitdubai.fermat_dap_plugin.layer.network.service.asset.transmission.developer.bitdubai.version_1.structure.processor.NewTransactionStatusNotificationMessageReceiverProcessor</code> is
+ * The Class <code>com.bitdubai.fermat_cht_plugin.layer.network_service.chat.developer.bitdubai.version_1.structure.processors.NewTransactionStatusNotificationMessageReceiverProcessor</code> is
  * that implement the logic when a Transaction New Status Notification Message is Receiver<p/>
  * Created by Roberto Requena - (rart3001@gmail.com) on 12/10/15.
  *
@@ -72,7 +72,7 @@ public class NewTransactionStatusNotificationMessageReceiverProcessor extends Fe
              */
 
             String transactionHash = CryptoHasher.performSha256(chatID.toString() + messageID.toString());
-            ChatMetadataTransactionRecord chatMetadataTransactionRecord =  getChatNetworkServicePluginRoot().getChatMetaDataDao().findByTransactionHash(transactionHash);
+            ChatMetadataTransactionRecord chatMetadataTransactionRecord =  getNetworkServiceChatNetworkServicePluginRoot().getChatMetaDataDao().findByTransactionHash(transactionHash);
 
             if(chatMetadataTransactionRecord != null){
 
@@ -81,7 +81,7 @@ public class NewTransactionStatusNotificationMessageReceiverProcessor extends Fe
                 if(messageStatus != null)
                     chatMetadataTransactionRecord.setMessageStatus(messageStatus);
                 chatMetadataTransactionRecord.setProcessed(ChatMetadataTransactionRecord.NO_PROCESSED);
-                getChatNetworkServicePluginRoot().getChatMetaDataDao().update(chatMetadataTransactionRecord);
+                getNetworkServiceChatNetworkServicePluginRoot().getChatMetaDataDao().update(chatMetadataTransactionRecord);
 
 
                 /*
@@ -89,22 +89,22 @@ public class NewTransactionStatusNotificationMessageReceiverProcessor extends Fe
                 */
 
                 ((FermatMessageCommunication)fermatMessage).setFermatMessagesStatus(FermatMessagesStatus.READ);
-                ((CommunicationNetworkServiceConnectionManager) getChatNetworkServicePluginRoot().getNetworkServiceConnectionManager()).getIncomingMessageDao().update(fermatMessage);
+                ((CommunicationNetworkServiceConnectionManager) getNetworkServiceChatNetworkServicePluginRoot().getNetworkServiceConnectionManager()).getIncomingMessageDao().update(fermatMessage);
 
                 /*
                 * Notify to the interested
                 */
 
-                IncomingNewChatStatusUpdate event = (IncomingNewChatStatusUpdate) getChatNetworkServicePluginRoot().getEventManager().getNewEvent(EventType.INCOMING_STATUS);
+                IncomingNewChatStatusUpdate event = (IncomingNewChatStatusUpdate) getNetworkServiceChatNetworkServicePluginRoot().getEventManager().getNewEvent(EventType.INCOMING_STATUS);
                 event.setChatId(chatMetadataTransactionRecord.getChatId());
                 event.setSource(NetworkServiceChatNetworkServicePluginRoot.EVENT_SOURCE);
-                getChatNetworkServicePluginRoot().getEventManager().raiseEvent(event);
-                System.out.println("NetworkServiceChatNetworkServicePluginRoot - Incoming Status fired!");
+                getNetworkServiceChatNetworkServicePluginRoot().getEventManager().raiseEvent(event);
+             //   System.out.println("NetworkServiceChatNetworkServicePluginRoot - Incoming Status fired!");
 
             }
 
         } catch (Exception e) {
-            getChatNetworkServicePluginRoot().getErrorManager().reportUnexpectedPluginException(Plugins.CHAT_NETWORK_SERVICE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+            getNetworkServiceChatNetworkServicePluginRoot().getErrorManager().reportUnexpectedPluginException(Plugins.CHAT_NETWORK_SERVICE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
         }
 
 
@@ -114,11 +114,5 @@ public class NewTransactionStatusNotificationMessageReceiverProcessor extends Fe
     public ChatMessageTransactionType getChatMessageTransactionType() {
         return ChatMessageTransactionType.TRANSACTION_STATUS_UPDATE;
     }
-
-    /**
-     * (non-javadoc)
-     *
-     * @see FermatMessageProcessor#getDigitalAssetMetadataTransactionType()
-     */
 
 }
