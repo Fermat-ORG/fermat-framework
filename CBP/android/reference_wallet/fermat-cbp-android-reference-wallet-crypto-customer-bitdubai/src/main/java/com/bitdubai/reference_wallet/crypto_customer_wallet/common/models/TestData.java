@@ -25,10 +25,10 @@ import java.util.Random;
  * Created by nelson on 07/01/16.
  */
 public class TestData {
-    public static final String CASH_IN_HAND = CurrencyType.CASH_ON_HAND_MONEY.getFriendlyname();
-    public static final String CASH_DELIVERY = CurrencyType.CASH_DELIVERY_MONEY.getFriendlyname();
-    public static final String BANK_TRANSFER = CurrencyType.BANK_MONEY.getFriendlyname();
-    public static final String CRYPTO_TRANSFER = CurrencyType.CRYPTO_MONEY.getFriendlyname();
+    public static final String CASH_IN_HAND = CurrencyType.CASH_ON_HAND_MONEY.getFriendlyName();
+    public static final String CASH_DELIVERY = CurrencyType.CASH_DELIVERY_MONEY.getFriendlyName();
+    public static final String BANK_TRANSFER = CurrencyType.BANK_MONEY.getFriendlyName();
+    public static final String CRYPTO_TRANSFER = CurrencyType.CRYPTO_MONEY.getFriendlyName();
 
     private static final List<String> BROKER_BANK_ACCOUNTS = new ArrayList<>();
     public static final String BROKER_BANK_ACCOUNT_1 = "Banco: BOD\nTipo de cuenta: Corriente\nNro: 0105-2255-2221548739\nCliente: Brokers Asociados";
