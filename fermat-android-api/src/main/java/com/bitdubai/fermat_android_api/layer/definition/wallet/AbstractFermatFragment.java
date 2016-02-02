@@ -241,5 +241,12 @@ public abstract class AbstractFermatFragment<S extends FermatSession,R extends R
         return ((FermatStates)getActivity()).getFermatStates();
     }
 
-
+    /**
+     * This class have to be ovverride if someone wants to get broadcast
+     *
+     * @param code is a code for update some part of the fragment or everything
+     */
+    public void onUpdateView(String code) {
+        return;
+    }
 }
