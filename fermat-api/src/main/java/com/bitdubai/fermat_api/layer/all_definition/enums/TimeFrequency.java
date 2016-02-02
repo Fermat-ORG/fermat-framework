@@ -12,6 +12,7 @@ public enum TimeFrequency implements FermatEnum {
 
     DAILY   ("DY"),
     MONTHLY ("MN"),
+    NONE    ("NN"),
     WEEKLY  ("WK"),
     YEARLY  ("YR"),
 
@@ -30,13 +31,14 @@ public enum TimeFrequency implements FermatEnum {
 
             case "DY": return DAILY  ;
             case "MN": return MONTHLY;
+            case "NN": return NONE   ;
             case "WK": return WEEKLY ;
             case "YR": return YEARLY ;
 
             default:
                 throw new InvalidParameterException(
                         "Code Received: " + code,
-                        "The coide is not valid for the TimeFrequency enum."
+                        "The code is not valid for the TimeFrequency enum."
                 );
         }
     }

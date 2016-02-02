@@ -69,11 +69,4 @@ public interface EarningsSettings {
 
     ) throws CantListEarningsPairsException;
 
-    /**
-     * Through the method <code>getSearch</code> you can get a search object with the search functionality encapsulated.
-     *
-     * @return an instance of earning search for the selected wallet.
-     */
-    EarningsSearch getSearch();
-
 }
