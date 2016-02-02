@@ -1,12 +1,16 @@
 package com.bitdubai.android_core.app;
 
 
+import android.content.Context;
+import android.support.multidex.MultiDex;
 import android.support.multidex.MultiDexApplication;
 
 import com.bitdubai.android_core.app.common.version_1.sessions.SubAppSessionManager;
 import com.bitdubai.android_core.app.common.version_1.sessions.WalletSessionManager;
 import com.bitdubai.fermat_android_api.engine.FermatApplicationSession;
 import com.bitdubai.fermat_android_api.engine.FermatFragmentFactory;
+import com.bitdubai.fermat_api.AndroidCoreManager;
+import com.bitdubai.fermat_api.layer.osa_android.broadcaster.AndroidCoreUtils;
 import com.bitdubai.fermat_core.FermatSystem;
 import java.io.Serializable;
 import java.util.HashMap;
@@ -59,6 +63,7 @@ public class ApplicationSession extends MultiDexApplication implements Serializa
      *  SubApps fragment factories
      */
     private HashMap<String,FermatFragmentFactory> subAppsFragmentfFactories;
+
 
 
 
@@ -134,7 +139,17 @@ public class ApplicationSession extends MultiDexApplication implements Serializa
         super.onTerminate();
     }
 
+    @Override
+    protected void attachBaseContext(Context base) {
+        super.attachBaseContext(base);
+        MultiDex.install(this);
+    }
 
+    @Override
+    public void onCreate() {
+        super.onCreate();
+        MultiDex.install(this);
+    }
 
 
 }

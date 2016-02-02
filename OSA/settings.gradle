@@ -31,6 +31,9 @@ project(':fermat-osa-addon-android-logger-bitdubai').projectDir = new File('OSA/
 include ':fermat-osa-addon-android-device-location-bitdubai'
 project(':fermat-osa-addon-android-device-location-bitdubai').projectDir = new File('OSA/addon/android/fermat-osa-addon-android-device-location-bitdubai')
 
+include ':fermat-osa-addon-android-broadcaster-system-bitdubai'
+project(':fermat-osa-addon-android-broadcaster-system-bitdubai').projectDir = new File('OSA/addon/android/fermat-osa-addon-android-broadcaster-system-bitdubai')
+
 // OSA Projects (Linux)
 /*
 include ':fermat-osa-linux-core'
