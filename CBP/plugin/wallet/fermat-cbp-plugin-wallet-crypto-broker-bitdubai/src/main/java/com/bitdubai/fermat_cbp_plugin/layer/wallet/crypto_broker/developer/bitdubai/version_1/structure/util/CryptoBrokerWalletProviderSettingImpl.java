@@ -13,43 +13,70 @@ public class CryptoBrokerWalletProviderSettingImpl implements CryptoBrokerWallet
     private UUID plugin;
     private String description;
 
-    public CryptoBrokerWalletProviderSettingImpl(){};
+    public CryptoBrokerWalletProviderSettingImpl() {
+    }
 
+    ;
+
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public UUID getId() {
         return id;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void setId(UUID id) {
         this.id = id;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public String getBrokerPublicKey() {
         return brokerPublicKey;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void setBrokerPublicKey(String brokerPublicKey) {
         this.brokerPublicKey = brokerPublicKey;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public UUID getPlugin() {
         return plugin;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void setPlugin(UUID plugin) {
         this.plugin = plugin;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public String getDescription() {
         return description;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void setDescription(String description) {
         this.description = description;

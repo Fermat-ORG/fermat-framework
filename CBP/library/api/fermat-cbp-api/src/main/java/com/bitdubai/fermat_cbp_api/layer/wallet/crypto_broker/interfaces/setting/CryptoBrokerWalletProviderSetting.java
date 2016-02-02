@@ -7,15 +7,60 @@ import java.util.UUID;
  */
 public interface CryptoBrokerWalletProviderSetting {
     //TODO: Documentar y manejo de excepciones
+
+    /**
+     * The method <code>getId</code> returns the id of the CryptoBrokerWalletProviderSetting
+     *
+     * @return an UUID of the id of CryptoBrokerWalletProviderSetting
+     */
     UUID getId();
+
+    /**
+     * The method <code>setId</code> sets the id of the CryptoBrokerWalletProviderSetting
+     *
+     * @param id
+     */
     void setId(UUID id);
 
+    /**
+     * The method <code>getBrokerPublicKey</code> returns the public key of the CryptoBrokerWalletProviderSetting
+     *
+     * @return an String of the broker public key
+     */
     String getBrokerPublicKey();
-    void   setBrokerPublicKey(String brokerPublicKey);
 
+    /**
+     * The method <code>setBrokerPublicKey</code> sets the broker public key of the CryptoBrokerWalletProviderSetting
+     *
+     * @param brokerPublicKey
+     */
+    void setBrokerPublicKey(String brokerPublicKey);
+
+    /**
+     * The method <code>getPlugin</code> returns the plugin of the CryptoBrokerWalletProviderSetting
+     *
+     * @return an UUID of the plugin
+     */
     UUID getPlugin();
+
+    /**
+     * The method <code>setPlugin</code> sets the plugin of the CryptoBrokerWalletProviderSetting
+     *
+     * @param plugin
+     */
     void setPlugin(UUID plugin);
 
+    /**
+     * The method <code>getDescription</code> returns description of the CryptoBrokerWalletProviderSetting
+     *
+     * @return an String of the description of the CryptoBrokerWalletProviderSetting
+     */
     String getDescription();
+
+    /**
+     * The method <code>setDescription</code> sets the description of the CryptoBrokerWalletProviderSetting
+     *
+     * @param description
+     */
     void setDescription(String description);
 }
