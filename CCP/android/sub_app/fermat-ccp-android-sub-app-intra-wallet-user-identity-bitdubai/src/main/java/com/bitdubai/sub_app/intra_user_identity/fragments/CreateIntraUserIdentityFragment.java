@@ -322,7 +322,13 @@ public class CreateIntraUserIdentityFragment extends AbstractFermatFragment {
     private int createNewIdentity() {
 
         String brokerNameText = mBrokerName.getText().toString();
-        String brokerPhraseText = mBrokerPhrase.getText().toString();
+        String brokerPhraseText = "";
+
+        if (!mBrokerPhrase.getText().toString().isEmpty()){
+             brokerPhraseText = mBrokerPhrase.getText().toString();
+        }else{
+            brokerPhraseText = "Available";
+        }
 
         boolean dataIsValid = validateIdentityData(brokerNameText, brokerPhraseText, brokerImageByteArray);
 

@@ -432,7 +432,7 @@ public class SendFormFragment extends AbstractFermatFragment<ReferenceWalletSess
                                 appSession.getIntraUserModuleManager().getPublicKey(),
                                 appSession.getAppPublicKey(),
                                 CryptoCurrency.BITCOIN,
-                                BlockchainNetworkType.DEFAULT);
+                                BlockchainNetworkType.getDefaultBlockchainNetworkType());
                     }else {
                         try {
                             cryptoWalletWalletContact = appSession.getModuleManager().getCryptoWallet().findWalletContactById(walletContact.contactId,appSession.getIntraUserModuleManager().getPublicKey());

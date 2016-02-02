@@ -110,7 +110,7 @@ public final class AssetFactorySubAppModulePluginRoot extends AbstractPlugin imp
 
     @Override
     public void publishAsset(AssetFactory assetFactory, BlockchainNetworkType blockchainNetworkType) throws CantSaveAssetFactoryException {
-        assetFactorySupAppModuleManager.publishAssetFactory(assetFactory, BlockchainNetworkType.DEFAULT);
+        assetFactorySupAppModuleManager.publishAssetFactory(assetFactory, BlockchainNetworkType.getDefaultBlockchainNetworkType());
     }
 
     @Override
