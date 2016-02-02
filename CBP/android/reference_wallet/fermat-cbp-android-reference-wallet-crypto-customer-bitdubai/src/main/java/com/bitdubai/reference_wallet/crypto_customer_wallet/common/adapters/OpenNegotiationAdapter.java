@@ -151,7 +151,9 @@ public class OpenNegotiationAdapter extends FermatAdapter<ClauseInformation, Fer
 
     @Override
     public int getItemCount() {
-        return super.getItemCount() + 1;
+        final int size = dataSet.size();
+        return haveNote ? size + 2 : size + 1;
+//        return super.getItemCount() + 1;
     }
 
     @Override
@@ -163,6 +165,7 @@ public class OpenNegotiationAdapter extends FermatAdapter<ClauseInformation, Fer
         if (isFooterPosition(position))
             return TYPE_FOOTER;
 
+        position = getItemPosition(position);
         ClauseType type = dataSet.get(position).getType();
         switch (type) {
             case EXCHANGE_RATE:
@@ -184,8 +187,10 @@ public class OpenNegotiationAdapter extends FermatAdapter<ClauseInformation, Fer
     @Override
     public void onBindViewHolder(FermatViewHolder holder, int position) {
 
-        if (!isFooterPosition(position))
+        if (!isFooterPosition(position)) {
+            position = getItemPosition(position);
             super.onBindViewHolder(holder, position);
+        }
 
     }
 
@@ -343,6 +348,10 @@ public class OpenNegotiationAdapter extends FermatAdapter<ClauseInformation, Fer
         }
 
         return clause;
+    }
+
+    private int getItemPosition(int position) {
+        return haveNote ? position - 1 : position;
     }
 
     private boolean idHeaderPosition(int position){
