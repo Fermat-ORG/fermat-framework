@@ -21,5 +21,8 @@ public class SessionConstantsAssetIssuer {
     public static final int IC_ACTION_ISSUER_HELP_REDEEMED = 107;
     public static final int IC_ACTION_ISSUER_HELP_USER = 108;
     public static final int IC_ACTION_ISSUER_HELP_GROUP = 109;
+    public static final int IC_ACTION_ISSUER_HELP_SETTINGS = 110;
+    public static final int IC_ACTION_ISSUER_HELP_SETTINGS_NETWORK = 111;
+    public static final int IC_ACTION_ISSUER_HELP_SETTINGS_NOTIFICATION = 112;
 
 }

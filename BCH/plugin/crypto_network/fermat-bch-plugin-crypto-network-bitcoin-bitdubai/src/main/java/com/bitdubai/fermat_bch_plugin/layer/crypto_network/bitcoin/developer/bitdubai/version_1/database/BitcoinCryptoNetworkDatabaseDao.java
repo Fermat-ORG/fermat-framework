@@ -183,6 +183,7 @@ public class BitcoinCryptoNetworkDatabaseDao {
      * Saves a new incoming transaction into the database
      * @param hash
      * @param cryptoStatus
+     * @param blockchainNetworkType
      * @param blockDepth
      * @param addressTo
      * @param addressFrom
@@ -193,6 +194,7 @@ public class BitcoinCryptoNetworkDatabaseDao {
      */
     public void saveNewIncomingTransaction  (String hash,
                                              String blockHash,
+                                             BlockchainNetworkType blockchainNetworkType,
                                              CryptoStatus cryptoStatus,
                                             int blockDepth,
                                             CryptoAddress addressTo,
@@ -201,13 +203,14 @@ public class BitcoinCryptoNetworkDatabaseDao {
                                             String op_Return,
                                             ProtocolStatus protocolStatus)
             throws CantExecuteDatabaseOperationException{
-        this.saveNewTransaction(null, hash, blockHash, cryptoStatus, blockDepth, addressTo, addressFrom, value, op_Return, protocolStatus, TransactionTypes.INCOMING);
+        this.saveNewTransaction(null, hash, blockHash, blockchainNetworkType, cryptoStatus, blockDepth, addressTo, addressFrom, value, op_Return, protocolStatus, TransactionTypes.INCOMING);
     }
 
     /**
      * saves a new Crypto transaction into database
      * @param hash
      * @param blockHash
+     * @param blockchainNetworkType
      * @param cryptoStatus
      * @param blockDepth
      * @param addressTo
@@ -220,6 +223,7 @@ public class BitcoinCryptoNetworkDatabaseDao {
     private void saveNewTransaction(@Nullable UUID transactionId,
                                     String hash,
                                      String blockHash,
+                                    BlockchainNetworkType blockchainNetworkType,
                                     CryptoStatus cryptoStatus,
                                     int blockDepth,
                                     CryptoAddress addressTo,
@@ -276,6 +280,7 @@ public class BitcoinCryptoNetworkDatabaseDao {
 
         record.setStringValue(BitcoinCryptoNetworkDatabaseConstants.TRANSACTIONS_CRYPTO_STATUS_COLUMN_NAME, cryptoStatus.getCode());
         record.setIntegerValue(BitcoinCryptoNetworkDatabaseConstants.TRANSACTIONS_BLOCK_DEPTH_COLUMN_NAME, blockDepth);
+        record.setStringValue(BitcoinCryptoNetworkDatabaseConstants.TRANSACTIONS_BLOCKCHAIN_NETWORK_TYPE, blockchainNetworkType.getCode());
         record.setStringValue(BitcoinCryptoNetworkDatabaseConstants.TRANSACTIONS_ADDRESS_TO_COLUMN_NAME, addressTo.getAddress());
         record.setStringValue(BitcoinCryptoNetworkDatabaseConstants.TRANSACTIONS_ADDRESS_FROM_COLUMN_NAME, addressFrom.getAddress());
         record.setDoubleValue(BitcoinCryptoNetworkDatabaseConstants.TRANSACTIONS_VALUE_COLUMN_NAME, value);
@@ -362,6 +367,7 @@ public class BitcoinCryptoNetworkDatabaseDao {
      * Saves and outgoing transaction into the database
      * @param transactionId
      * @param hash
+     * @param blockchainNetworkType
      * @param cryptoStatus
      * @param blockDepth
      * @param addressTo
@@ -374,6 +380,7 @@ public class BitcoinCryptoNetworkDatabaseDao {
     public void saveNewOutgoingTransaction(UUID transactionId,
                                            String hash,
                                            String blockHash,
+                                           BlockchainNetworkType blockchainNetworkType,
                                            CryptoStatus cryptoStatus,
                                            int blockDepth,
                                            CryptoAddress addressTo,
@@ -382,7 +389,7 @@ public class BitcoinCryptoNetworkDatabaseDao {
                                            String op_Return,
                                            ProtocolStatus protocolStatus)
             throws CantExecuteDatabaseOperationException{
-        this.saveNewTransaction(transactionId, hash, blockHash, cryptoStatus, blockDepth, addressTo, addressFrom, value, op_Return, protocolStatus, TransactionTypes.OUTGOING);
+        this.saveNewTransaction(transactionId, hash, blockHash, blockchainNetworkType, cryptoStatus, blockDepth, addressTo, addressFrom, value, op_Return, protocolStatus, TransactionTypes.OUTGOING);
     }
 
     /**
@@ -729,6 +736,9 @@ public class BitcoinCryptoNetworkDatabaseDao {
         cryptoTransaction.setTransactionHash(record.getStringValue(BitcoinCryptoNetworkDatabaseConstants.TRANSACTIONS_HASH_COLUMN_NAME));
         if (record.getStringValue(BitcoinCryptoNetworkDatabaseConstants.TRANSACTIONS_BLOCK_HASH_COLUMN_NAME) != null)
             cryptoTransaction.setBlockHash(record.getStringValue(BitcoinCryptoNetworkDatabaseConstants.TRANSACTIONS_BLOCK_HASH_COLUMN_NAME));
+
+        cryptoTransaction.setBlockchainNetworkType(BlockchainNetworkType.getByCode(record.getStringValue(BitcoinCryptoNetworkDatabaseConstants.TRANSACTIONS_BLOCKCHAIN_NETWORK_TYPE)));
+
         cryptoTransaction.setCryptoCurrency(CryptoCurrency.BITCOIN);
         try {
             cryptoTransaction.setCryptoStatus(CryptoStatus.getByCode(record.getStringValue(BitcoinCryptoNetworkDatabaseConstants.TRANSACTIONS_CRYPTO_STATUS_COLUMN_NAME)));
@@ -813,6 +823,9 @@ public class BitcoinCryptoNetworkDatabaseDao {
             CryptoTransaction cryptoTransaction = new CryptoTransaction();
             cryptoTransaction.setTransactionHash(txHash);
             cryptoTransaction.setBlockHash((record.getStringValue(BitcoinCryptoNetworkDatabaseConstants.TRANSACTIONS_BLOCK_HASH_COLUMN_NAME)));
+
+            cryptoTransaction.setBlockchainNetworkType(BlockchainNetworkType.getByCode(record.getStringValue(BitcoinCryptoNetworkDatabaseConstants.TRANSACTIONS_BLOCKCHAIN_NETWORK_TYPE)));
+
             cryptoTransaction.setAddressTo(addressTo);
             cryptoTransaction.setAddressFrom(addressFrom);
             cryptoTransaction.setCryptoAmount(amount);
