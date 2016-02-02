@@ -91,9 +91,6 @@ public class UserLevelBusinessTransactionCustomerBrokerPurchasePluginRoot extend
     @NeededPluginReference(platform = Platforms.PLUG_INS_PLATFORM, layer = Layers.SUB_APP_MODULE, plugin = Plugins.NOTIFICATION)
     NotificationManagerMiddleware notificationManagerMiddleware;
 
-
-    UserLevelBusinessTransactionCustomerBrokerPurchaseManager userLevelBusinessTransactionCustomerBrokerPurchaseManager = new UserLevelBusinessTransactionCustomerBrokerPurchaseManager();
-
     public static EventSource EVENT_SOURCE = EventSource.USER_LEVEL_CUSTOMER_BROKER_PURCHASE_MANAGER;
 
     UserLevelBusinessTransactionCustomerBrokerPurchaseDatabaseDao userLevelBusinessTransactionCustomerBrokerPurchaseDatabaseDao;
@@ -160,10 +157,10 @@ public class UserLevelBusinessTransactionCustomerBrokerPurchasePluginRoot extend
         this.serviceStatus = ServiceStatus.STOPPED;
     }
 
-    @Override
-    public FermatManager getManager() {
-        return customerBrokerPurchaseManager;
-    }
+//    @Override
+//    public FermatManager getManager() {
+//        return customerBrokerPurchaseManager;
+//    }
 
     public static LogLevel getLogLevelByClass(String className) {
         try {
@@ -225,7 +222,7 @@ public class UserLevelBusinessTransactionCustomerBrokerPurchasePluginRoot extend
                     customerBrokerContractPurchaseManager,
                     fiatIndexManager,
                     notificationManagerMiddleware,
-                    userLevelBusinessTransactionCustomerBrokerPurchaseManager
+                    customerBrokerPurchaseManager
                     );
             userLevelBusinessTransactionCustomerBrokerPurchaseMonitorAgent.start();
         } else userLevelBusinessTransactionCustomerBrokerPurchaseMonitorAgent.start();
