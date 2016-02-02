@@ -1,11 +1,9 @@
 package com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user;
 
-import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Genders;
 import com.bitdubai.fermat_api.layer.all_definition.money.CryptoAddress;
 import com.bitdubai.fermat_api.layer.osa_android.location_system.Location;
 import com.bitdubai.fermat_dap_api.layer.all_definition.enums.DAPConnectionState;
-import com.bitdubai.fermat_dap_api.layer.dap_actor.DAPActor;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.interfaces.ActorAssetUser;
 
 import java.util.Arrays;
@@ -92,6 +90,25 @@ public class AssetUserActorRecord implements ActorAssetUser {
         this.lastConnectionDate     =       lastConnectionDate      ;
         this.profileImage           =       profileImage.clone()    ;
 
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        AssetUserActorRecord that = (AssetUserActorRecord) o;
+
+        if (!getActorPublicKey().equals(that.getActorPublicKey())) return false;
+        return getName().equals(that.getName());
+
+    }
+
+    @Override
+    public int hashCode() {
+        int result = getActorPublicKey().hashCode();
+        result = 31 * result + getName().hashCode();
+        return result;
     }
 
     /**

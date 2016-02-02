@@ -39,7 +39,8 @@ public class AssetDeliverySelectGroupsHolder extends FermatViewHolder {
     }
 
     public void bind(final Group group) {
-        nameText.setText(group.getName());
+        int users = group.getUsers().size();
+        nameText.setText(group.getName() + " (" + users + " " + (users == 1 ? "user" : "users") + ")");
         if (group.isSelected()) {
             selectUserButton.setImageDrawable(res.getDrawable(R.drawable.ic_deliver_user_remove));
         } else {

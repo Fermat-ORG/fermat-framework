@@ -52,7 +52,7 @@ public class ClientSuccessfullyReconnectTyrusPacketProcessor extends FermatTyrus
     @Override
     public void processingPackage(FermatPacket receiveFermatPacket) {
 
-        //System.out.println(" --------------------------------------------------------------------- ");
+        System.out.println(" --------------------------------------------------------------------- ");
         System.out.println("ClientSuccessfullyReconnectTyrusPacketProcessor - processingPackage");
 
        /*

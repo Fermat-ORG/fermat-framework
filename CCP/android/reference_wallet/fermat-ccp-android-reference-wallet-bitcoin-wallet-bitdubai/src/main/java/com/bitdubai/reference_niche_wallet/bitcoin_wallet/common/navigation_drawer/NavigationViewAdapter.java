@@ -1,9 +1,7 @@
 package com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.navigation_drawer;
 
 import android.content.Context;
-import android.graphics.Color;
 import android.graphics.Typeface;
-import android.support.annotation.Nullable;
 import android.view.View;
 
 import com.bitdubai.android_fermat_ccp_wallet_bitcoin.R;
@@ -83,15 +81,15 @@ public class NavigationViewAdapter extends FermatAdapter<MenuItem, NavigationIte
                         }
                         break;
                     case 3:
+                        Picasso.with(context).load((data.isSelected()) ? R.drawable.icon_settings : R.drawable.btn_drawer_settings_normal).into(holder.getIcon());
+                        break;
+                    case 4:
                         Picasso.with(context).load((data.isSelected()) ? R.drawable.btn_drawer_icon_logout_fluor : R.drawable.btn_drawer_logout_normal).into(holder.getIcon());
                         break;
                     default:
                         break;
                 }
 
-            if(position==4){
-                holder.getNavigation_row_divider().setVisibility(View.GONE);
-            }
         }catch (Exception e){
             e.printStackTrace();
         }

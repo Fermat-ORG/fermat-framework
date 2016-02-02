@@ -382,6 +382,7 @@ public class AssetReceptionDao {
                 AssetReceptionDatabaseConstants.ASSET_RECEPTION_GENESIS_TRANSACTION_COLUMN_NAME);
     }
 
+
     private void updateStringValueByStringField(String value, String columnName, String filterValue, String filterColumn) throws CantExecuteQueryException, UnexpectedResultReturnedFromDatabaseException {
         try {
             this.database = openDatabase();

@@ -44,7 +44,6 @@ public class CryptoAddressRequestedEventHandler implements FermatEventHandler {
                         if(request.getCryptoAddress()!=null) {
                             if (request.getCryptoAddress().getAddress() != null) {
                                 assetActorUserPluginRoot.handleCryptoAddressesNewsEvent();
-                                cryptoAddressesNetworkServiceManager.markReceivedRequest(request.getRequestId());
                             }
                         }
                     }

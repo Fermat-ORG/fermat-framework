@@ -568,7 +568,11 @@ public class IntraWalletUserModulePluginRoot extends AbstractPlugin implements
     public int getIntraUsersWaitingYourAcceptanceCount() {
         //TODO: falta que este metodo que devuelva la cantidad de request de conexion que tenes
         try {
-            return getIntraUsersWaitingYourAcceptance(getActiveIntraUserIdentity().getPublicKey(), 100, 0).size();
+
+            if (getActiveIntraUserIdentity() != null){
+                return getIntraUsersWaitingYourAcceptance(getActiveIntraUserIdentity().getPublicKey(), 100, 0).size();
+            }
+
         } catch (CantGetIntraUsersListException e) {
             e.printStackTrace();
         } catch (CantGetActiveLoginIdentityException e) {

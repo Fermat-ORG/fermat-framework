@@ -11,7 +11,7 @@ import com.bitdubai.fermat_api.layer.all_definition.crypto.asymmetric.Asymmetric
 import com.bitdubai.fermat_api.layer.all_definition.crypto.asymmetric.ECCKeyPair;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEvent;
-import com.bitdubai.fermat_cht_plugin.layer.network_service.chat.developer.bitdubai.version_1.ChatPluginRoot;
+import com.bitdubai.fermat_cht_plugin.layer.network_service.chat.developer.bitdubai.version_1.NetworkServiceChatNetworkServicePluginRoot;
 import com.bitdubai.fermat_cht_plugin.layer.network_service.chat.developer.bitdubai.version_1.database.IncomingMessageDao;
 import com.bitdubai.fermat_cht_plugin.layer.network_service.chat.developer.bitdubai.version_1.database.NetworkServiceChatNetworkServiceDatabaseConstants;
 import com.bitdubai.fermat_cht_plugin.layer.network_service.chat.developer.bitdubai.version_1.database.OutgoingMessageDao;
@@ -153,9 +153,6 @@ public class CommunicationNetworkServiceRemoteAgent extends Observable {
         //Start the Threads
         toReceive.start();
         toSend.start();
-
-        System.out.println("ChatPluginRoot - CommunicationNetworkServiceRemoteAgent - started ");
-
     }
 
     /**
@@ -194,7 +191,7 @@ public class CommunicationNetworkServiceRemoteAgent extends Observable {
 
         try {
 
-             System.out.println("ChatPluginRoot - CommunicationNetworkServiceRemoteAgent - "+communicationsVPNConnection.isActive());
+             //System.out.println("NetworkServiceChatNetworkServicePluginRoot - CommunicationNetworkServiceRemoteAgent - "+communicationsVPNConnection.isActive());
 
             /**
              * Verified the status of the connection
@@ -313,7 +310,7 @@ public class CommunicationNetworkServiceRemoteAgent extends Observable {
                              * Put the message on a event and fire new event
                              */
                         FermatEvent fermatEvent = eventManager.getNewEvent(P2pEventType.NEW_NETWORK_SERVICE_MESSAGE_SENT_NOTIFICATION);
-                        fermatEvent.setSource(ChatPluginRoot.EVENT_SOURCE);
+                        fermatEvent.setSource(NetworkServiceChatNetworkServicePluginRoot.EVENT_SOURCE);
                         ((NewNetworkServiceMessageSentNotificationEvent) fermatEvent).setData(message);
                         eventManager.raiseEvent(fermatEvent);
                     }

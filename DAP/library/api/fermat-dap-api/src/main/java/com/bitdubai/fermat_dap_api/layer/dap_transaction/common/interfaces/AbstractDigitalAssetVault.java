@@ -50,20 +50,20 @@ import java.util.UUID;
 public abstract class AbstractDigitalAssetVault implements DigitalAssetVault {
 
     //public String LOCAL_STORAGE_PATH="digital-asset-metadata/";
-    public AssetUserWalletManager assetUserWalletManager;
-    public final String digitalAssetFileName = "digital-asset";
-    public final String digitalAssetMetadataFileName = "digital-asset-metadata";
-    public String LOCAL_STORAGE_PATH = "digital-asset-swap";
-    public FileLifeSpan FILE_LIFE_SPAN = FileLifeSpan.PERMANENT;
-    public FilePrivacy FILE_PRIVACY = FilePrivacy.PRIVATE;
-    public UUID pluginId;
-    public PluginFileSystem pluginFileSystem;
-    public String digitalAssetFileStoragePath;
-    public AssetIssuerWalletManager assetIssuerWalletManager;
-    public String walletPublicKey = "walletPublicKeyTest";
-    public ActorAssetIssuerManager actorAssetIssuerManager;
-    public ActorAssetUserManager actorAssetUserManager;
-    BitcoinNetworkManager bitcoinNetworkManager;
+    protected AssetUserWalletManager assetUserWalletManager;
+    protected final String digitalAssetFileName = "digital-asset";
+    protected final String digitalAssetMetadataFileName = "digital-asset-metadata";
+    protected String LOCAL_STORAGE_PATH = "digital-asset-swap";
+    protected FileLifeSpan FILE_LIFE_SPAN = FileLifeSpan.PERMANENT;
+    protected FilePrivacy FILE_PRIVACY = FilePrivacy.PRIVATE;
+    protected UUID pluginId;
+    protected PluginFileSystem pluginFileSystem;
+    protected String digitalAssetFileStoragePath;
+    protected AssetIssuerWalletManager assetIssuerWalletManager;
+    protected String walletPublicKey = "walletPublicKeyTest";
+    protected ActorAssetIssuerManager actorAssetIssuerManager;
+    protected ActorAssetUserManager actorAssetUserManager;
+    protected BitcoinNetworkManager bitcoinNetworkManager;
 
     /**
      * Set the UUID from this plugin
@@ -259,9 +259,8 @@ public abstract class AbstractDigitalAssetVault implements DigitalAssetVault {
         this.bitcoinNetworkManager = bitcoinNetworkManager;
     }
 
-    public void setDigitalAssetMetadataAssetIssuerWalletTransaction(CryptoTransaction genesisTransaction, String internalId, AssetBalanceType assetBalanceType, TransactionType transactionType, DAPTransactionType dapTransactionType, String externalActorPublicKey) throws CantDeliverDigitalAssetToAssetWalletException {
+    public void setDigitalAssetMetadataAssetIssuerWalletTransaction(CryptoTransaction genesisTransaction, DigitalAssetMetadata digitalAssetMetadataToDeliver, AssetBalanceType assetBalanceType, TransactionType transactionType, DAPTransactionType dapTransactionType, String externalActorPublicKey) throws CantDeliverDigitalAssetToAssetWalletException {
         try {
-            DigitalAssetMetadata digitalAssetMetadataToDeliver = getDigitalAssetMetadataFromLocalStorage(internalId);
             BalanceType balanceType = BalanceType.BOOK;
             if (assetBalanceType.getCode().equals(AssetBalanceType.BOOK.getCode())) {
                 balanceType = BalanceType.BOOK;
@@ -271,8 +270,6 @@ public abstract class AbstractDigitalAssetVault implements DigitalAssetVault {
             }
             System.out.println("ASSET Distribution OR RECEPTION - DELIVER TO WALLET TEST - " + balanceType + "\nHash: " + genesisTransaction.getTransactionHash());
             updateWalletBalance(digitalAssetMetadataToDeliver, genesisTransaction, balanceType, transactionType, dapTransactionType, externalActorPublicKey);
-        } catch (CantGetDigitalAssetFromLocalStorageException exception) {
-            throw new CantDeliverDigitalAssetToAssetWalletException(exception, "Delivering DigitalAssetMetadata to Asset Wallet", "Cannot get the DigitalAssetMetadata from storage");
         } catch (CantGetTransactionsException exception) {
             throw new CantDeliverDigitalAssetToAssetWalletException(exception, "Delivering DigitalAssetMetadata to Asset Wallet", "Cannot get the Asset Transaction");
         } catch (CantLoadWalletException exception) {

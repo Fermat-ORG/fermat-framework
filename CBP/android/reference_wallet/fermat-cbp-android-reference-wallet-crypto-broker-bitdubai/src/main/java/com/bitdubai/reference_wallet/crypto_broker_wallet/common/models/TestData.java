@@ -2,10 +2,12 @@ package com.bitdubai.reference_wallet.crypto_broker_wallet.common.models;
 
 import com.bitdubai.fermat_api.layer.all_definition.enums.CryptoCurrency;
 import com.bitdubai.fermat_api.layer.all_definition.enums.FiatCurrency;
+import com.bitdubai.fermat_api.layer.world.interfaces.Currency;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.ClauseStatus;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.ClauseType;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.ContractStatus;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.NegotiationStatus;
+import com.bitdubai.fermat_cbp_api.layer.middleware.matching_engine.interfaces.EarningsPair;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.common.interfaces.ContractBasicInformation;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.common.interfaces.CustomerBrokerNegotiationInformation;
 import com.bitdubai.fermat_cbp_plugin.layer.wallet_module.crypto_broker.developer.bitdubai.version_1.structure.CryptoBrokerWalletModuleClauseInformation;
@@ -16,6 +18,7 @@ import com.bitdubai.reference_wallet.crypto_broker_wallet.fragments.home.StockSt
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 import java.util.Random;
 
@@ -112,7 +115,7 @@ public class TestData {
         return data;
     }
 
-    public static List<StockStatisticsData> getStockStadisticsData(){
+    public static List<StockStatisticsData> getStockStadisticsData() {
         ArrayList<StockStatisticsData> stockStatisticsData = new ArrayList<>();
         stockStatisticsData.add(new StockStatisticsData(FiatCurrency.VENEZUELAN_BOLIVAR, 14));
         stockStatisticsData.add(new StockStatisticsData(CryptoCurrency.BITCOIN, 3));
@@ -358,5 +361,113 @@ public class TestData {
         }
 
         return contractsHistory;
+    }
+
+    public static List<EarningsPair> getEarningsPairs() {
+        ArrayList<EarningsPair> earningsPairs = new ArrayList<>();
+        earningsPairs.add(new EarningsPairTestData(FiatCurrency.US_DOLLAR, FiatCurrency.VENEZUELAN_BOLIVAR));
+        earningsPairs.add(new EarningsPairTestData(FiatCurrency.US_DOLLAR, CryptoCurrency.BITCOIN));
+        earningsPairs.add(new EarningsPairTestData(CryptoCurrency.BITCOIN, FiatCurrency.VENEZUELAN_BOLIVAR));
+
+        return earningsPairs;
+    }
+
+    public static List<EarningTestData> getEarnings(Currency currency, int timeFilter) {
+        ArrayList<EarningTestData> dataArrayList = new ArrayList<>();
+        double previousValue;
+        EarningTestData earningTestData;
+
+        Calendar calendar = Calendar.getInstance();
+
+        if (currency.equals(CryptoCurrency.BITCOIN)) {
+            calendar.add(timeFilter, -1);
+            earningTestData = new EarningTestData(currency, 0.1, 0.1, calendar.getTimeInMillis());
+            previousValue = earningTestData.getEarningValue();
+            dataArrayList.add(earningTestData);
+
+            calendar.add(timeFilter, -1);
+            earningTestData = new EarningTestData(currency, 0.2, previousValue, calendar.getTimeInMillis());
+            previousValue = earningTestData.getEarningValue();
+            dataArrayList.add(earningTestData);
+
+            calendar.add(timeFilter, -1);
+            earningTestData = new EarningTestData(currency, 1.2, previousValue, calendar.getTimeInMillis());
+            previousValue = earningTestData.getEarningValue();
+            dataArrayList.add(earningTestData);
+
+            calendar.add(timeFilter, -1);
+            earningTestData = new EarningTestData(currency, 5.2, previousValue, calendar.getTimeInMillis());
+            previousValue = earningTestData.getEarningValue();
+            dataArrayList.add(earningTestData);
+
+            calendar.add(timeFilter, -1);
+            earningTestData = new EarningTestData(currency, 1.2, previousValue, calendar.getTimeInMillis());
+            previousValue = earningTestData.getEarningValue();
+            dataArrayList.add(earningTestData);
+
+            calendar.add(timeFilter, -1);
+            earningTestData = new EarningTestData(currency, 0.02, previousValue, calendar.getTimeInMillis());
+            previousValue = earningTestData.getEarningValue();
+            dataArrayList.add(earningTestData);
+
+            calendar.add(timeFilter, -1);
+            earningTestData = new EarningTestData(currency, 0.122, previousValue, calendar.getTimeInMillis());
+            previousValue = earningTestData.getEarningValue();
+            dataArrayList.add(earningTestData);
+
+            calendar.add(timeFilter, -1);
+            earningTestData = new EarningTestData(currency, 0.5465482, previousValue, calendar.getTimeInMillis());
+            dataArrayList.add(earningTestData);
+
+
+        } else if (currency.equals(FiatCurrency.US_DOLLAR)) {
+
+            calendar.add(timeFilter, -1);
+            earningTestData = new EarningTestData(currency, 12330.11, 12330.11, calendar.getTimeInMillis());
+            previousValue = earningTestData.getEarningValue();
+            dataArrayList.add(earningTestData);
+
+            calendar.add(timeFilter, -1);
+            earningTestData = new EarningTestData(currency, 2340.9552, previousValue, calendar.getTimeInMillis());
+            previousValue = earningTestData.getEarningValue();
+            dataArrayList.add(earningTestData);
+
+            calendar.add(timeFilter, -1);
+            earningTestData = new EarningTestData(currency, 1231.88002, previousValue, calendar.getTimeInMillis());
+            previousValue = earningTestData.getEarningValue();
+            dataArrayList.add(earningTestData);
+
+            calendar.add(timeFilter, -1);
+            earningTestData = new EarningTestData(currency, 51.12342, previousValue, calendar.getTimeInMillis());
+            dataArrayList.add(earningTestData);
+
+
+        } else if (currency.equals(FiatCurrency.VENEZUELAN_BOLIVAR)) {
+
+            calendar.add(timeFilter, -1);
+            earningTestData = new EarningTestData(currency, 60230.112123, 60230.112123, calendar.getTimeInMillis());
+            previousValue = earningTestData.getEarningValue();
+            dataArrayList.add(earningTestData);
+
+            calendar.add(timeFilter, -1);
+            earningTestData = new EarningTestData(currency, 160230.456456, previousValue, calendar.getTimeInMillis());
+            dataArrayList.add(earningTestData);
+        }
+
+        return dataArrayList;
+    }
+
+    public static double getCurrentEarning(Currency currency) {
+        if (currency.equals(CryptoCurrency.BITCOIN)) {
+            return 2.25;
+
+        } else if (currency.equals(FiatCurrency.US_DOLLAR)) {
+            return 6598.25;
+
+        } else if (currency.equals(FiatCurrency.VENEZUELAN_BOLIVAR)) {
+            return 6598.25;
+        }
+
+        return 0.0;
     }
 }

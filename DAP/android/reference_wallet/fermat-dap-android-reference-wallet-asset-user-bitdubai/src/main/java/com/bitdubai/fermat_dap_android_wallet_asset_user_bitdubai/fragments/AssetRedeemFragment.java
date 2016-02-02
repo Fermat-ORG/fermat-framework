@@ -24,6 +24,7 @@ import android.widget.Toast;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractFermatFragment;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatEditText;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView;
+import com.bitdubai.fermat_android_api.ui.Views.ConfirmDialog;
 import com.bitdubai.fermat_android_api.ui.Views.PresentationDialog;
 import com.bitdubai.fermat_android_api.ui.interfaces.FermatWorkerCallBack;
 import com.bitdubai.fermat_android_api.ui.util.BitmapWorkerTask;
@@ -33,7 +34,6 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.UISource;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
 import com.bitdubai.fermat_api.layer.all_definition.settings.structure.SettingsManager;
 import com.bitdubai.fermat_dap_android_wallet_asset_user_bitdubai.R;
-import com.bitdubai.fermat_dap_android_wallet_asset_user_bitdubai.dialogs.RedeemAcceptDialog;
 import com.bitdubai.fermat_dap_android_wallet_asset_user_bitdubai.models.Data;
 import com.bitdubai.fermat_dap_android_wallet_asset_user_bitdubai.models.DigitalAsset;
 import com.bitdubai.fermat_dap_android_wallet_asset_user_bitdubai.models.RedeemPoint;
@@ -121,10 +121,8 @@ public class AssetRedeemFragment extends AbstractFermatFragment {
                     .setIconRes(R.drawable.asset_user_wallet)
                     .setVIewColor(R.color.dap_user_view_color)
                     .setTitleTextColor(R.color.dap_user_view_color)
-                    .setSubTitle("Asset  Redemption.")
-                    .setBody("You can decide how many assets to redeem at your connected Redeem Points. In order to connect to Redeem Points, search them at" +
-                            "the Redeem Point Community sub app.\n\n" +
-                            "The selected Redeem Point will receive and confirm your asset so you can exchange it for what the asset represents.")
+                    .setSubTitle(R.string.dap_user_wallet_redeem_subTitle)
+                    .setBody(R.string.dap_user_wallet_redeem_body)
                     .setTemplateType(PresentationDialog.TemplateType.TYPE_PRESENTATION_WITHOUT_IDENTITIES)
                     .setIsCheckEnabled(checkButton)
                     .build();
@@ -179,14 +177,17 @@ public class AssetRedeemFragment extends AbstractFermatFragment {
                     if (x != null) {
                         final List<RedeemPoint> redeemPoints = (List<RedeemPoint>) x;
                         if (redeemPoints.size() > 0) {
-                            RedeemAcceptDialog dialog = new RedeemAcceptDialog(getActivity(), (AssetUserSession) appSession, appResourcesProviderManager);
-                            dialog.setYesBtnListener(new RedeemAcceptDialog.OnClickAcceptListener() {
-                                @Override
-                                public void onClick() {
-                                    doRedeem(digitalAsset.getAssetPublicKey(), redeemPoints);
-                                }
-                            });
-                            dialog.show();
+                            new ConfirmDialog.Builder(getActivity(), appSession)
+                                    .setTitle("Confirm")
+                                    .setMessage("Are you sure that the entered information is correct? This action is irreversible")
+                                    .setColorStyle(Color.parseColor("#381a5e"))
+                                    .setYesBtnListener(new ConfirmDialog.OnClickAcceptListener() {
+                                        @Override
+                                        public void onClick() {
+                                            int assetsAmount = Integer.parseInt(assetsToRedeemEditText.getText().toString());
+                                            doRedeem(digitalAsset.getAssetPublicKey(), redeemPoints, assetsAmount);
+                                        }
+                                    }).build().show();
                         }
                     }
                 } else {
@@ -259,7 +260,7 @@ public class AssetRedeemFragment extends AbstractFermatFragment {
         return count;
     }
 
-    private void doRedeem(final String assetPublicKey, final List<RedeemPoint> redeemPoints) {
+    private void doRedeem(final String assetPublicKey, final List<RedeemPoint> redeemPoints, final int assetAmount) {
         final ProgressDialog dialog = new ProgressDialog(activity);
         dialog.setMessage("Please wait...");
         dialog.setCancelable(false);
@@ -267,7 +268,7 @@ public class AssetRedeemFragment extends AbstractFermatFragment {
         FermatWorker task = new FermatWorker() {
             @Override
             protected Object doInBackground() throws Exception {
-                moduleManager.redeemAssetToRedeemPoint(assetPublicKey, null, Data.getRedeemPoints(redeemPoints));
+                moduleManager.redeemAssetToRedeemPoint(assetPublicKey, null, Data.getRedeemPoints(redeemPoints), assetAmount);
                 return true;
             }
         };
@@ -331,11 +332,13 @@ public class AssetRedeemFragment extends AbstractFermatFragment {
 //        }
         byte[] img = (digitalAsset.getImage() == null) ? new byte[0] : digitalAsset.getImage();
         BitmapWorkerTask bitmapWorkerTask = new BitmapWorkerTask(assetRedeemImage, res, R.drawable.img_asset_without_image, false);
-        //bitmapWorkerTask.execute(img); //todo comment to be able to compile
+        bitmapWorkerTask.execute(img); //todo comment to be able to compile
 
         assetRedeemNameText.setText(digitalAsset.getName());
-        assetsToRedeemEditText.setText(digitalAsset.getAvailableBalanceQuantity() + "");
-        assetRedeemRemainingText.setText(digitalAsset.getAvailableBalanceQuantity() + " Assets Remaining");
+//        assetsToRedeemEditText.setText(digitalAsset.getAvailableBalanceQuantity() + "");
+        assetsToRedeemEditText.setText(selectedRPCount+"");
+        long quantity = digitalAsset.getAvailableBalanceQuantity();
+        assetRedeemRemainingText.setText(quantity + ((quantity == 1) ? " Asset" : " Assets") + " Remaining");
     }
 
     private void configureToolbar() {
