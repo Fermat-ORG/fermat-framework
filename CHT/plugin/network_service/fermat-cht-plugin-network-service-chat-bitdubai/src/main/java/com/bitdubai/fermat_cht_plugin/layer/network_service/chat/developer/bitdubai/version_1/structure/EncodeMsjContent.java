@@ -28,7 +28,7 @@ import java.util.UUID;
 public class EncodeMsjContent {
 
     /**
-     *  Construct the content of the message fot the type <code>DigitalAssetMetadataTransactionType.CHAT_METADATA_TRASMIT</code>
+     *  Construct the content of the message fot the type <code>ChatMessageTransactionType.CHAT_METADATA_TRASMIT</code>
      *
      * @param chatMetadata
      * @return String message content
@@ -55,13 +55,12 @@ public class EncodeMsjContent {
     }
 
     /**
-     * Construct the content of the message fot the type <code>DigitalAssetMetadataTransactionType.TRANSACTION_STATUS_UPDATE</code>
+     * Construct the content of the message fot the type <code>ChatMessageTransactionType.TRANSACTION_STATUS_UPDATE</code>
      *
      * @param chatId
      * @param newDistributionStatus
      * @return String message content
      */
-
     public static String encodeMSjContentTransactionNewStatusNotification(UUID chatId,UUID messageID, DistributionStatus newDistributionStatus, PlatformComponentType senderType, PlatformComponentType receiverType) {
 
 
@@ -77,6 +76,15 @@ public class EncodeMsjContent {
         return gson.toJson(jsonObjectContent);
     }
 
+    /**
+     * Construct the content of the message fot the type <code>ChatMessageTransactionType.TRANSACTION_STATUS_UPDATE</code>
+     * @param chatId
+     * @param messageID
+     * @param messageStatus
+     * @param senderType
+     * @param receiverType
+     * @return
+     */
     public static String encodeMSjContentTransactionNewStatusNotification(UUID chatId,UUID messageID, MessageStatus messageStatus, PlatformComponentType senderType, PlatformComponentType receiverType) {
 
 

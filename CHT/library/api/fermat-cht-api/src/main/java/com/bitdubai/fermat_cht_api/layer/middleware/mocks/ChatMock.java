@@ -5,6 +5,7 @@ import com.bitdubai.fermat_cht_api.all_definition.enums.ChatStatus;
 import com.bitdubai.fermat_cht_api.layer.middleware.interfaces.Chat;
 
 import java.sql.Date;
+import java.sql.Timestamp;
 import java.util.UUID;
 
 /**
@@ -96,22 +97,22 @@ public class ChatMock implements Chat {
     }
 
     @Override
-    public Date getDate() {
-        return new Date(2001);
+    public Timestamp getDate() {
+        return new Timestamp(2001l);
     }
 
     @Override
-    public void setDate(Date date) {
+    public void setDate(Timestamp date) {
 
     }
 
     @Override
-    public Date getLastMessageDate() {
-        return new Date(2001);
+    public Timestamp getLastMessageDate() {
+        return new Timestamp(2001l);
     }
 
     @Override
-    public void setLastMessageDate(Date lastMessageDate) {
+    public void setLastMessageDate(Timestamp lastMessageDate) {
 
     }
 }

@@ -294,11 +294,12 @@ public class ChatMiddlewarePluginRoot extends AbstractPlugin implements
 
             this.serviceStatus = ServiceStatus.STARTED;
             //Test method
-            testPublicKeys();
+            //testPublicKeys();
             //sendMessageTest();
             //receiveMessageTest();
             //identitiesTest();
             //discoveryTest();
+            //getContactTest();
 
         } catch (CantInitializeDatabaseException exception) {
             throw new CantStartPluginException(
@@ -464,6 +465,20 @@ public class ChatMiddlewarePluginRoot extends AbstractPlugin implements
             int counter=0;
             for(Contact contact : contactList){
                 System.out.println("Discovery Test: Contact "+counter+"\n"+contact);
+                counter++;
+            }
+        } catch (Exception exception){
+            System.out.println("Exception in raise event chat middleware discovery test: "+exception.getMessage());
+            exception.printStackTrace();
+        }
+    }
+
+    private void getContactTest(){
+        try{
+            List<Contact> contactList=this.chatMiddlewareManager.getContacts();
+            int counter=0;
+            for(Contact contact : contactList){
+                System.out.println("Get Contact Test: Contact "+counter+"\n"+contact);
                 counter++;
             }
         } catch (Exception exception){
