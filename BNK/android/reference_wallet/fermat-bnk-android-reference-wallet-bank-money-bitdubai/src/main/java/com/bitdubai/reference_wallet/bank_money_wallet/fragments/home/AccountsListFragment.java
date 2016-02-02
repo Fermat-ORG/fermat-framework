@@ -1,5 +1,6 @@
 package com.bitdubai.reference_wallet.bank_money_wallet.fragments.home;
 
+import android.os.Build;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -107,7 +108,11 @@ public class AccountsListFragment extends FermatWalletListFragment<BankAccountNu
     }
 
     private void configureToolbar() {
-        getToolbar().setBackgroundColor(getResources().getColor(R.color.background_header_navy));
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP)
+            getToolbar().setBackground(getResources().getDrawable(R.drawable.bw_header_gradient_background,null));
+        else
+            getToolbar().setBackground(getResources().getDrawable(R.drawable.bw_header_gradient_background));
     }
 
     @Override
