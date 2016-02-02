@@ -56,7 +56,7 @@
                     android:layout_height="90dp"
                     android:layout_marginBottom="16dp"
                     android:scaleType="fitXY"
-                    android:src="@drawable/bw_ic_action_error_grey" />
+                    android:src="@drawable/bw_no_transaction_icon" />
 
                 <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
                     android:layout_width="wrap_content"
