@@ -737,7 +737,7 @@ public class SubAppRuntimeEnginePluginRoot extends AbstractPlugin implements Sub
             runtimeActivity.setColor("#1d1d25");
             runtimeActivity.setBackPublicKey(dapFactoryPublicKey);
 
-            statusBar = new com.bitdubai.fermat_api.layer.all_definition.navigation_structure.StatusBar();
+            statusBar = new StatusBar();
             statusBar.setColor("#1d1d25");
 
             runtimeTitleBar = new TitleBar();
@@ -770,6 +770,23 @@ public class SubAppRuntimeEnginePluginRoot extends AbstractPlugin implements Sub
             runtimeFragment.setType(Fragments.DAP_SUB_APP_ASSET_FACTORY_PUBLISHED_TAB_FRAGMENT.getKey());
             runtimeActivity.addFragment(Fragments.DAP_SUB_APP_ASSET_FACTORY_PUBLISHED_TAB_FRAGMENT.getKey(), runtimeFragment);
 
+            runtimeSideMenu = new SideMenu();
+            runtimeSideMenu.setBackgroundColor("#1d1d25");
+
+            runtimeMenuItem = new MenuItem();
+            runtimeMenuItem.setLabel("Home");
+            runtimeMenuItem.setAppLinkPublicKey(dapFactoryPublicKey);
+            runtimeMenuItem.setLinkToActivity(Activities.DAP_MAIN);
+            runtimeSideMenu.addMenuItem(runtimeMenuItem);
+
+            runtimeMenuItem = new MenuItem();
+            runtimeMenuItem.setLabel("Settings");
+            runtimeMenuItem.setAppLinkPublicKey(dapFactoryPublicKey);
+            runtimeMenuItem.setLinkToActivity(Activities.DAP_SUB_APP_ASSET_FACTORY_SETTINGS);
+            runtimeSideMenu.addMenuItem(runtimeMenuItem);
+
+            runtimeActivity.setSideMenu(runtimeSideMenu);
+
             dapFactory.addActivity(runtimeActivity);
 
             runtimeActivity = new Activity();
@@ -778,7 +795,7 @@ public class SubAppRuntimeEnginePluginRoot extends AbstractPlugin implements Sub
             runtimeActivity.setBackPublicKey(dapFactoryPublicKey);
             runtimeActivity.setColor("#1d1d25");
 
-            statusBar = new com.bitdubai.fermat_api.layer.all_definition.navigation_structure.StatusBar();
+            statusBar = new StatusBar();
             statusBar.setColor("#1d1d25");
 
             runtimeTitleBar = new TitleBar();
@@ -791,6 +808,94 @@ public class SubAppRuntimeEnginePluginRoot extends AbstractPlugin implements Sub
             runtimeFragment = new Fragment();
             runtimeFragment.setType(Fragments.DAP_SUB_APP_ASSET_EDITOR_ACTIVITY.getKey());
             runtimeActivity.addFragment(Fragments.DAP_SUB_APP_ASSET_EDITOR_ACTIVITY.getKey(), runtimeFragment);
+
+            dapFactory.addActivity(runtimeActivity);
+
+            //DAP FACTORY SETTINGS
+            runtimeActivity = new Activity();
+            runtimeActivity.setType(Activities.DAP_SUB_APP_ASSET_FACTORY_SETTINGS);
+//            runtimeActivity.setBackActivity(Activities.DAP_MAIN);
+//            runtimeActivity.setBackPublicKey(dapFactoryPublicKey);
+            runtimeActivity.setColor("#1d1d25");
+
+            statusBar = new StatusBar();
+            statusBar.setColor("#1d1d25");
+
+            runtimeTitleBar = new TitleBar();
+            runtimeTitleBar.setLabel("Settings");
+            runtimeTitleBar.setColor("#1d1d25");
+            runtimeActivity.setTitleBar(runtimeTitleBar);
+
+            runtimeActivity.setStartFragment(Fragments.DAP_SUB_APP_ASSET_FACTORY_SETTINGS.getKey());
+
+            runtimeFragment = new Fragment();
+            runtimeFragment.setType(Fragments.DAP_SUB_APP_ASSET_FACTORY_SETTINGS.getKey());
+            runtimeActivity.addFragment(Fragments.DAP_SUB_APP_ASSET_FACTORY_SETTINGS.getKey(), runtimeFragment);
+
+            runtimeSideMenu = new SideMenu();
+            runtimeSideMenu.setBackgroundColor("#1d1d25");
+
+            runtimeMenuItem = new MenuItem();
+            runtimeMenuItem.setLabel("Home");
+            runtimeMenuItem.setAppLinkPublicKey(dapFactoryPublicKey);
+            runtimeMenuItem.setLinkToActivity(Activities.DAP_MAIN);
+            runtimeSideMenu.addMenuItem(runtimeMenuItem);
+
+            runtimeMenuItem = new MenuItem();
+            runtimeMenuItem.setLabel("Settings");
+            runtimeMenuItem.setAppLinkPublicKey(dapFactoryPublicKey);
+            runtimeMenuItem.setLinkToActivity(Activities.DAP_SUB_APP_ASSET_FACTORY_SETTINGS);
+            runtimeSideMenu.addMenuItem(runtimeMenuItem);
+
+            runtimeActivity.setSideMenu(runtimeSideMenu);
+
+            dapFactory.addActivity(runtimeActivity);
+
+            //DAP FACTORY SETTINGS_NETWORK
+            runtimeActivity = new Activity();
+            runtimeActivity.setType(Activities.DAP_SUB_APP_ASSET_FACTORY_SETTINGS_NETWORK_MAIN);
+            runtimeActivity.setBackActivity(Activities.DAP_SUB_APP_ASSET_FACTORY_SETTINGS);
+            runtimeActivity.setBackPublicKey(dapFactoryPublicKey);
+            runtimeActivity.setColor("#1d1d25");
+
+            statusBar = new StatusBar();
+            statusBar.setColor("#1d1d25");
+
+            runtimeTitleBar = new TitleBar();
+            runtimeTitleBar.setLabel("Network");
+            runtimeTitleBar.setColor("#1d1d25");
+            runtimeTitleBar.setIconName("Back");
+            runtimeActivity.setTitleBar(runtimeTitleBar);
+
+            runtimeActivity.setStartFragment(Fragments.DAP_SUB_APP_ASSET_FACTORY_SETTINGS_NETWORK_MAIN.getKey());
+
+            runtimeFragment = new Fragment();
+            runtimeFragment.setType(Fragments.DAP_SUB_APP_ASSET_FACTORY_SETTINGS_NETWORK_MAIN.getKey());
+            runtimeActivity.addFragment(Fragments.DAP_SUB_APP_ASSET_FACTORY_SETTINGS_NETWORK_MAIN.getKey(), runtimeFragment);
+
+            dapFactory.addActivity(runtimeActivity);
+
+            //DAP FACTORY SETTINGS_NOTIFICATIONS
+            runtimeActivity = new Activity();
+            runtimeActivity.setType(Activities.DAP_SUB_APP_ASSET_FACTORY_SETTINGS_NOTIFICATIONS);
+            runtimeActivity.setBackActivity(Activities.DAP_SUB_APP_ASSET_FACTORY_SETTINGS);
+            runtimeActivity.setBackPublicKey(dapFactoryPublicKey);
+            runtimeActivity.setColor("#1d1d25");
+
+            statusBar = new StatusBar();
+            statusBar.setColor("#1d1d25");
+
+            runtimeTitleBar = new TitleBar();
+            runtimeTitleBar.setLabel("Notifications");
+            runtimeTitleBar.setColor("#1d1d25");
+            runtimeTitleBar.setIconName("Back");
+            runtimeActivity.setTitleBar(runtimeTitleBar);
+
+            runtimeActivity.setStartFragment(Fragments.DAP_SUB_APP_ASSET_FACTORY_SETTINGS_NOTIFICATIONS.getKey());
+
+            runtimeFragment = new Fragment();
+            runtimeFragment.setType(Fragments.DAP_SUB_APP_ASSET_FACTORY_SETTINGS_NOTIFICATIONS.getKey());
+            runtimeActivity.addFragment(Fragments.DAP_SUB_APP_ASSET_FACTORY_SETTINGS_NOTIFICATIONS.getKey(), runtimeFragment);
 
             dapFactory.addActivity(runtimeActivity);
 
