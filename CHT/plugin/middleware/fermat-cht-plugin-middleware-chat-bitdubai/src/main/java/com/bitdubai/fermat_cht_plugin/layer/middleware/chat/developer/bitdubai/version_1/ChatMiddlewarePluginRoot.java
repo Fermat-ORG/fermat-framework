@@ -294,12 +294,12 @@ public class ChatMiddlewarePluginRoot extends AbstractPlugin implements
 
             this.serviceStatus = ServiceStatus.STARTED;
             //Test method
-            testPublicKeys();
+            //testPublicKeys();
             //sendMessageTest();
             //receiveMessageTest();
             //identitiesTest();
             //discoveryTest();
-            getContactTest();
+            //getContactTest();
 
         } catch (CantInitializeDatabaseException exception) {
             throw new CantStartPluginException(

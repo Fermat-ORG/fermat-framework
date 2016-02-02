@@ -323,8 +323,9 @@ public class IssuerCommunityHomeFragment extends AbstractFermatFragment implemen
                 @Override
                 public void onErrorOccurred(Exception ex) {
                     dialog.dismiss();
-                    Toast.makeText(getActivity(), String.format("An exception has been thrown: %s", ex.getMessage()), Toast.LENGTH_LONG).show();
-                    ex.printStackTrace();
+//                    Toast.makeText(getActivity(), String.format("An exception has been thrown: %s", ex.getMessage()), Toast.LENGTH_LONG).show();
+                    Toast.makeText(getActivity(), "Redeem Point or Asset Issuer Identities must be created before using this app.", Toast.LENGTH_LONG).show();
+//                    ex.printStackTrace();
                 }
             });
             worker.execute();

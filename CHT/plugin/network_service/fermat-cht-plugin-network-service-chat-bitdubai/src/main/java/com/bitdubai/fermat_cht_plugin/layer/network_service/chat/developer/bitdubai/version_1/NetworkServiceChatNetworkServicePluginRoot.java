@@ -48,8 +48,11 @@ import com.bitdubai.fermat_api.layer.osa_android.location_system.Location;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogLevel;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogManager;
 import com.bitdubai.fermat_cht_api.all_definition.enums.MessageStatus;
+import com.bitdubai.fermat_cht_api.all_definition.events.enums.EventType;
 import com.bitdubai.fermat_cht_api.layer.network_service.chat.enums.ChatMessageStatus;
+import com.bitdubai.fermat_cht_api.layer.network_service.chat.enums.ChatMessageTransactionType;
 import com.bitdubai.fermat_cht_api.layer.network_service.chat.enums.DistributionStatus;
+import com.bitdubai.fermat_cht_api.layer.network_service.chat.events.OutgoingChat;
 import com.bitdubai.fermat_cht_api.layer.network_service.chat.exceptions.CantInitializeCommunicationNetworkServiceConnectionManagerException;
 import com.bitdubai.fermat_cht_api.layer.network_service.chat.exceptions.CantSendChatMessageMetadataException;
 import com.bitdubai.fermat_cht_api.layer.network_service.chat.exceptions.CantSendChatMessageNewStatusNotificationException;
@@ -75,7 +78,9 @@ import com.bitdubai.fermat_cht_plugin.layer.network_service.chat.developer.bitdu
 import com.bitdubai.fermat_cht_plugin.layer.network_service.chat.developer.bitdubai.version_1.exceptions.CantInitializeChatNetworkServiceDatabaseException;
 import com.bitdubai.fermat_cht_plugin.layer.network_service.chat.developer.bitdubai.version_1.exceptions.CantReadRecordDataBaseException;
 import com.bitdubai.fermat_cht_plugin.layer.network_service.chat.developer.bitdubai.version_1.structure.ChatMetadataTransactionRecord;
+import com.bitdubai.fermat_cht_plugin.layer.network_service.chat.developer.bitdubai.version_1.structure.ChatTransmissionJsonAttNames;
 import com.bitdubai.fermat_cht_plugin.layer.network_service.chat.developer.bitdubai.version_1.structure.EncodeMsjContent;
+import com.bitdubai.fermat_p2p_api.layer.all_definition.common.network_services.abstract_classes.AbstractNetworkService;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.common.network_services.interfaces.NetworkService;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.contents.FermatMessageCommunication;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.contents.FermatMessageCommunicationFactory;
@@ -91,6 +96,7 @@ import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.exceptions.Ca
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedPluginExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfaces.EventManager;
+import com.google.gson.JsonObject;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -102,8 +108,7 @@ import java.util.regex.Pattern;
 /**
  * Created by Gabriel Araujo on 05/01/16.
  */
-public class NetworkServiceChatNetworkServicePluginRoot extends AbstractPlugin implements
-        NetworkService,
+public class NetworkServiceChatNetworkServicePluginRoot extends AbstractNetworkService implements
         LogManagerForDevelopers,
         DatabaseManagerForDevelopers,
         NetworkServiceChatManager {
@@ -139,15 +144,14 @@ public class NetworkServiceChatNetworkServicePluginRoot extends AbstractPlugin i
     }
 
     public NetworkServiceChatNetworkServicePluginRoot() {
-        super(new PluginVersionReference(new Version()));
-        this.listenersAdded = new ArrayList<>();
-        this.platformComponentType = PlatformComponentType.NETWORK_SERVICE;
-        this.networkServiceType = NetworkServiceType.CHAT;
-        this.name = "Network Service Chat";
-        this.alias = "NetworkServiceChat";
-
-        this.extraData = null;
-
+        super(new PluginVersionReference(new Version()),
+                PlatformComponentType.NETWORK_SERVICE,
+                NetworkServiceType.CHAT,
+                "Network Service Chat",
+                "NetworkServiceChat",
+                null,
+                EventSource.NETWORK_SERVICE_CHAT);
+        this.listenersAdded=new ArrayList<>();
     }
 
     @Override
@@ -159,16 +163,11 @@ public class NetworkServiceChatNetworkServicePluginRoot extends AbstractPlugin i
                 ", pluginDatabaseSystem=" + pluginDatabaseSystem +
                 ", wsCommunicationsCloudClientManager=" + wsCommunicationsCloudClientManager +
                 ", register=" + register +
-                ", name='" + name + '\'' +
-                ", alias='" + alias + '\'' +
-                ", extraData='" + extraData + '\'' +
                 ", dataBase=" + dataBase +
                 ", identity=" + identity +
-                ", networkServiceType=" + networkServiceType +
                 ", platformComponentProfile=" + platformComponentProfile +
                 ", listenersAdded=" + listenersAdded +
                 ", chatMetaDataDao=" + chatMetaDataDao +
-                ", platformComponentType=" + platformComponentType +
                 ", communicationNetworkServiceConnectionManager=" + communicationNetworkServiceConnectionManager +
                 ", remoteNetworkServicesRegisteredList=" + remoteNetworkServicesRegisteredList +
                 ", communicationNetworkServiceDeveloperDatabaseFactory=" + communicationNetworkServiceDeveloperDatabaseFactory +
@@ -181,21 +180,6 @@ public class NetworkServiceChatNetworkServicePluginRoot extends AbstractPlugin i
     private boolean register;
 
     /**
-     * Represent the name
-     */
-    private String name;
-
-    /**
-     * Represent the alias
-     */
-    private String alias;
-
-    /**
-     * Represent the extraData
-     */
-    private String extraData;
-
-    /**
      * Represent the dataBase
      */
     private Database dataBase;
@@ -204,11 +188,6 @@ public class NetworkServiceChatNetworkServicePluginRoot extends AbstractPlugin i
      * Represent the identity
      */
     private ECCKeyPair identity;
-
-    /**
-     * Represent the networkServiceType
-     */
-    private NetworkServiceType networkServiceType;
 
     /**
      * Represent the platformComponentProfile
@@ -224,11 +203,6 @@ public class NetworkServiceChatNetworkServicePluginRoot extends AbstractPlugin i
     public ChatMetaDataDao getChatMetaDataDao() {
         return chatMetaDataDao;
     }
-
-    /**
-     * Represent the platformComponentType
-     */
-    private PlatformComponentType platformComponentType;
 
     /**
      * Represent the EVENT_SOURCE
@@ -308,21 +282,6 @@ public class NetworkServiceChatNetworkServicePluginRoot extends AbstractPlugin i
         return this.identity.getPublicKey();
     }
 
-    @Override
-    public String getAlias() {
-        return this.alias;
-    }
-
-    @Override
-    public String getName() {
-        return this.name;
-    }
-
-    @Override
-    public String getExtraData() {
-        return this.extraData;
-    }
-
     /**
      * Represents the NewReceiveMessagesNotificationEventHandler
      * @return
@@ -349,42 +308,28 @@ public class NetworkServiceChatNetworkServicePluginRoot extends AbstractPlugin i
 
     @Override
     public void handleNewMessages(FermatMessage incomingMessage) {
-//        JsonObject jsonMsjContent = getNewReceiveMessagesNotificationEventHandler().getParser().parse(incomingMessage.getContent()).getAsJsonObject();
-//        ChatMessageTransactionType chatMessageTransactionType = getNewReceiveMessagesNotificationEventHandler().getGson().fromJson(jsonMsjContent.get(ChatTransmissionJsonAttNames.MSJ_CONTENT_TYPE), ChatMessageTransactionType.class);
-//        if (getNewReceiveMessagesNotificationEventHandler().getMessagesProcessorsRegistered().containsKey(chatMessageTransactionType)) {
-//            getNewReceiveMessagesNotificationEventHandler().getMessagesProcessorsRegistered().get(chatMessageTransactionType).processingMessage(incomingMessage, jsonMsjContent);
-//        }else{
-//            System.out.println("NetworkServiceChatNetworkServicePluginRoot - CompleteComponentConnectionRequestNotificationEventHandler - message type no supported = "+chatMessageTransactionType);
-//        }
+        JsonObject jsonMsjContent = getNewReceiveMessagesNotificationEventHandler().getParser().parse(incomingMessage.getContent()).getAsJsonObject();
+        ChatMessageTransactionType chatMessageTransactionType = getNewReceiveMessagesNotificationEventHandler().getGson().fromJson(jsonMsjContent.get(ChatTransmissionJsonAttNames.MSJ_CONTENT_TYPE), ChatMessageTransactionType.class);
+        if (getNewReceiveMessagesNotificationEventHandler().getMessagesProcessorsRegistered().containsKey(chatMessageTransactionType)) {
+            getNewReceiveMessagesNotificationEventHandler().getMessagesProcessorsRegistered().get(chatMessageTransactionType).processingMessage(incomingMessage, jsonMsjContent);
+        }else{
+            System.out.println("NetworkServiceChatNetworkServicePluginRoot - CompleteComponentConnectionRequestNotificationEventHandler - message type no supported = "+chatMessageTransactionType);
+        }
     }
 
     @Override
     public void handleNewSentMessageNotificationEvent(FermatMessage message) {
-//        System.out.println("NetworkServiceChatNetworkServicePluginRoot - NOTIFICACION EVENTO MENSAJE ENVIADO!!!!");
-//        JsonObject jsonMsjContent = getNewSentMessagesNotificationEventHandler().getParser().parse(message.getContent()).getAsJsonObject();
-//        UUID chatId = getNewSentMessagesNotificationEventHandler().getGson().fromJson(jsonMsjContent.get(ChatTransmissionJsonAttNames.ID_CHAT), UUID.class);
-//        System.out.println("NetworkServiceChatNetworkServicePluginRoot - ChatId"+chatId.toString());
-//        OutgoingChat event = (OutgoingChat) this.getEventManager().getNewEvent(EventType.OUTGOING_CHAT);
-//        event.setChatId(chatId);
-//        event.setSource(NetworkServiceChatNetworkServicePluginRoot.EVENT_SOURCE);
-//        this.getEventManager().raiseEvent(event);
-//        System.out.println("NetworkServiceChatNetworkServicePluginRoot - OUTGOING_CHAT EVENT FIRED!:"+event);
+     //   System.out.println("NetworkServiceChatNetworkServicePluginRoot - NOTIFICACION EVENTO MENSAJE ENVIADO!!!!");
+        JsonObject jsonMsjContent = getNewSentMessagesNotificationEventHandler().getParser().parse(message.getContent()).getAsJsonObject();
+        UUID chatId = getNewSentMessagesNotificationEventHandler().getGson().fromJson(jsonMsjContent.get(ChatTransmissionJsonAttNames.ID_CHAT), UUID.class);
+     //   System.out.println("NetworkServiceChatNetworkServicePluginRoot - ChatId"+chatId.toString());
+        OutgoingChat event = (OutgoingChat) this.getEventManager().getNewEvent(EventType.OUTGOING_CHAT);
+        event.setChatId(chatId);
+        event.setSource(NetworkServiceChatNetworkServicePluginRoot.EVENT_SOURCE);
+        this.getEventManager().raiseEvent(event);
+       // System.out.println("NetworkServiceChatNetworkServicePluginRoot - OUTGOING_CHAT EVENT FIRED!:"+event);
     }
 
-    @Override
-    public PlatformComponentProfile getPlatformComponentProfilePluginRoot() {
-        return platformComponentProfile;
-    }
-
-    @Override
-    public PlatformComponentType getPlatformComponentType() {
-        return platformComponentType;
-    }
-
-    @Override
-    public NetworkServiceType getNetworkServiceType() {
-        return networkServiceType;
-    }
 
     @Override
     public List<PlatformComponentProfile> getRemoteNetworkServicesRegisteredList() {
@@ -394,7 +339,7 @@ public class NetworkServiceChatNetworkServicePluginRoot extends AbstractPlugin i
 
     @Override
     public void requestRemoteNetworkServicesRegisteredList(DiscoveryQueryParameters discoveryQueryParameters) {
-        System.out.println("NetworkServiceChatNetworkServicePluginRoot - requestRemoteNetworkServicesRegisteredList");
+      //  System.out.println("NetworkServiceChatNetworkServicePluginRoot - requestRemoteNetworkServicesRegisteredList");
 
          /*
          * Request the list of component registers
@@ -450,7 +395,7 @@ public class NetworkServiceChatNetworkServicePluginRoot extends AbstractPlugin i
                         null);                    // fromOtherNetworkServiceType,    when use this filter apply the identityPublicKey
 
         List<PlatformComponentProfile> registedPlatform = wsCommunicationsCloudClientManager.getCommunicationsCloudClientConnection().requestListComponentRegistered(discoveryQueryParameters);
-        System.out.println("-------------\nNetworkServiceChatNetworkServicePluginRoot: registedPlatform" + registedPlatform.toString());
+     //   System.out.println("-------------\nNetworkServiceChatNetworkServicePluginRoot: registedPlatform" + registedPlatform.toString());
         for (PlatformComponentProfile platformComponentProfile : registedPlatform) {
             System.out.println("Registered componet:"+platformComponentProfile.getNetworkServiceType() +" - " +platformComponentProfile.getName()+"- "+platformComponentProfile.getIdentityPublicKey());
             publicKeys.add(platformComponentProfile.getIdentityPublicKey());
@@ -470,7 +415,7 @@ public class NetworkServiceChatNetworkServicePluginRoot extends AbstractPlugin i
 
     @Override
     public DiscoveryQueryParameters constructDiscoveryQueryParamsFactory(PlatformComponentType platformComponentType, NetworkServiceType networkServiceType, String alias, String identityPublicKey, Location location, Double distance, String name, String extraData, Integer firstRecord, Integer numRegister, PlatformComponentType fromOtherPlatformComponentType, NetworkServiceType fromOtherNetworkServiceType) {
-        System.out.println("NetworkServiceChatNetworkServicePluginRoot - constructDiscoveryQueryParamsFactory");
+      //  System.out.println("NetworkServiceChatNetworkServicePluginRoot - constructDiscoveryQueryParamsFactory");
         return wsCommunicationsCloudClientManager.getCommunicationsCloudClientConnection().constructDiscoveryQueryParamsFactory(platformComponentType, networkServiceType, alias, identityPublicKey, location, distance, name, extraData, firstRecord, numRegister, fromOtherPlatformComponentType, fromOtherNetworkServiceType);
     }
 
@@ -575,12 +520,12 @@ public class NetworkServiceChatNetworkServicePluginRoot extends AbstractPlugin i
     @Override
     public void handleCompleteComponentConnectionRequestNotificationEvent(PlatformComponentProfile applicantComponentProfile, PlatformComponentProfile remoteComponentProfile) {
 
-        System.out.println(" NetworkServiceChatNetworkServicePluginRoot - Starting method handleCompleteComponentConnectionRequestNotificationEvent");
+       // System.out.println(" NetworkServiceChatNetworkServicePluginRoot - Starting method handleCompleteComponentConnectionRequestNotificationEvent");
 
         /*
          * Tell the manager to handler the new connection stablished
          */
-        initializeCommunicationNetworkServiceConnectionManager();
+
         communicationNetworkServiceConnectionManager.handleEstablishedRequestedNetworkServiceConnection(remoteComponentProfile);
     }
 
@@ -610,11 +555,6 @@ public class NetworkServiceChatNetworkServicePluginRoot extends AbstractPlugin i
             }
 
         }
-    }
-
-    @Override
-    public boolean isRegister() {
-        return this.register;
     }
 
     @Override
@@ -693,7 +633,6 @@ public class NetworkServiceChatNetworkServicePluginRoot extends AbstractPlugin i
              */
             //identity = new ECCKeyPair();
             initializeClientIdentity();
-            System.out.println("########AQUI ESTOY###########"+getIdentityPublicKey());
             /*
              * Initialize the data base
              */
@@ -729,6 +668,7 @@ public class NetworkServiceChatNetworkServicePluginRoot extends AbstractPlugin i
 
 
             System.out.print("-----------------------\n NetworkServiceChatNetworkServicePluginRoot NetworkService: Successful start.\n-----------------------\n");
+          //  System.out.println("Pk:"+getIdentityPublicKey());
 
         } catch (CantInitializeChatNetworkServiceDatabaseException exception) {
 
@@ -917,13 +857,13 @@ public class NetworkServiceChatNetworkServicePluginRoot extends AbstractPlugin i
 
             CommunicationNetworkServiceLocal communicationNetworkServiceLocal = communicationNetworkServiceConnectionManager.getNetworkServiceLocalInstance(remoteActorPubKey);
 
-            System.out.println("NetworkServiceChatNetworkServicePluginRoot - communicationNetworkServiceLocal: " + communicationNetworkServiceLocal);
+          //  System.out.println("NetworkServiceChatNetworkServicePluginRoot - communicationNetworkServiceLocal: " + communicationNetworkServiceLocal);
 
             /*
              * Construct the message content in json format
              */
             String msjContent = EncodeMsjContent.encodeMSjContentChatMetadataTransmit(chatMetadata, chatMetadata.getLocalActorType(), chatMetadata.getRemoteActorType());
-            System.out.println("NetworkServiceChatNetworkServicePluginRoot - Message encoded:\n" + msjContent);
+           // System.out.println("NetworkServiceChatNetworkServicePluginRoot - Message encoded:\n" + msjContent);
 
             String msgHash = CryptoHasher.performSha256(chatMetadata.getChatId().toString() + chatMetadata.getMessageId().toString());
             chatMetadataTransactionRecord.setTransactionId(getChatMetaDataDao().getNewUUID(UUID.randomUUID().toString()));
@@ -944,14 +884,14 @@ public class NetworkServiceChatNetworkServicePluginRoot extends AbstractPlugin i
             chatMetadataTransactionRecord.setProcessed(ChatMetadataTransactionRecord.NO_PROCESSED);
 
 
-            System.out.println("ChatPLuginRoot - Chat transaction: " + chatMetadataTransactionRecord);
+           // System.out.println("ChatPLuginRoot - Chat transaction: " + chatMetadataTransactionRecord);
 
             /*
              * Save into data base
              */
             getChatMetaDataDao().create(chatMetadataTransactionRecord);
 
-            System.out.println("ChatMetadata to send:\n" + chatMetadataTransactionRecord);
+          //  System.out.println("ChatMetadata to send:\n" + chatMetadataTransactionRecord);
 
             /*
              * If not null
@@ -1049,10 +989,6 @@ public class NetworkServiceChatNetworkServicePluginRoot extends AbstractPlugin i
             if (chatId == null) {
                 throw new IllegalArgumentException("Argument chatId can not be null");
             }
-
-
-            System.out.println("ChatPLuginRoot - Actor Sender: PK : " + localActorPubKey + " - Type: " + senderType.getCode());
-            System.out.println("ChatPLuginRoot - Actor Receiver: PK : " + remoteActorPubKey + " - Type: " + receiverType.getCode());
 
             /*
              * ask for a previous connection
@@ -1158,9 +1094,6 @@ public class NetworkServiceChatNetworkServicePluginRoot extends AbstractPlugin i
                 throw new IllegalArgumentException("Argument chatId can not be null");
             }
 
-
-            System.out.println("ChatPLuginRoot - Actor Sender: PK : " + localActorPubKey + " - Type: " + senderType.getCode());
-            System.out.println("ChatPLuginRoot - Actor Receiver: PK : " + remoteActorPubKey + " - Type: " + receiverType.getCode());
 
             /*
              * ask for a previous connection

@@ -205,8 +205,8 @@ public class DiscoveryComponentConnectionRequestJettyPacketProcessor extends Fer
     private void constructRequestConnectToVpnRespondPacketAndSend(String path, PlatformComponentProfile platformComponentProfileDestination, PlatformComponentProfile remoteParticipant, PlatformComponentProfile remoteParticipantNetworkService){
 
 
-        LOG.info("Sending vpn connection to = " + platformComponentProfileDestination.toJson());
         LOG.info("------------------------------------------------------ -----------------------------------------------------");
+        LOG.info("Sending vpn connection to = " + platformComponentProfileDestination.toJson());
         LOG.info("Sending whit remote = " + remoteParticipant.toJson());
 
         /*
@@ -226,7 +226,11 @@ public class DiscoveryComponentConnectionRequestJettyPacketProcessor extends Fer
          */
         ClientConnection clientConnectionDestination = MemoryCache.getInstance().getRegisteredClientConnectionsCache().get(platformComponentProfileDestination.getCommunicationCloudClientIdentity());
 
-
+        LOG.info("platformComponentProfileDestination.getCommunicationCloudClientIdentity() = " +platformComponentProfileDestination.getCommunicationCloudClientIdentity());
+        LOG.info("clientConnectionDestination = " +clientConnectionDestination);
+        LOG.info("clientConnectionDestination.getServerIdentity() = " +clientConnectionDestination.getServerIdentity());
+        LOG.info("clientConnectionDestination.getServerIdentity().getPublicKey() = " +clientConnectionDestination.getServerIdentity().getPublicKey());
+        LOG.info("clientConnectionDestination.getServerIdentity().getPrivateKey() = " +clientConnectionDestination.getServerIdentity().getPrivateKey());
 
         /*
          * Create the respond packet

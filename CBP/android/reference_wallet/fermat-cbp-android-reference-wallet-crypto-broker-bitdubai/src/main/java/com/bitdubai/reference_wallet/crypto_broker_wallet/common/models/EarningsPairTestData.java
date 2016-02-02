@@ -1,10 +1,8 @@
 package com.bitdubai.reference_wallet.crypto_broker_wallet.common.models;
 
 import com.bitdubai.fermat_api.layer.world.interfaces.Currency;
-import com.bitdubai.fermat_api.layer.world.interfaces.CurrencyPair;
 import com.bitdubai.fermat_cbp_api.layer.middleware.matching_engine.interfaces.EarningsPair;
 
-import java.math.BigDecimal;
 import java.util.UUID;
 
 /**
@@ -12,31 +10,18 @@ import java.util.UUID;
  */
 public class EarningsPairTestData implements EarningsPair {
 
-    private Currency selectedEarningCurrency;
-    private CurrencyPair currencyPair;
-    private UUID id;
+    private final Currency selectedCurrency;
+    private final Currency linkedCurrency  ;
+    private final UUID     id              ;
 
-    public EarningsPairTestData(Currency currency, final Currency currencyFrom, final Currency currencyTo) {
+    public EarningsPairTestData(final Currency selectedCurrency,
+                                final Currency linkedCurrency  ) {
+
         id = UUID.randomUUID();
 
-        this.selectedEarningCurrency = currency;
+        this.selectedCurrency = selectedCurrency;
+        this.linkedCurrency = linkedCurrency;
 
-        currencyPair = new CurrencyPair() {
-            @Override
-            public Currency getCurrencyFrom() {
-                return currencyFrom;
-            }
-
-            @Override
-            public Currency getCurrencyTo() {
-                return currencyTo;
-            }
-
-            @Override
-            public String getCode() {
-                return currencyFrom.getCode() + "/" + currencyTo.getCode();
-            }
-        };
     }
 
     @Override
@@ -44,18 +29,20 @@ public class EarningsPairTestData implements EarningsPair {
         return id;
     }
 
+
     @Override
-    public CurrencyPair getCurrencyPair() {
-        return currencyPair;
+    public Currency getSelectedCurrency() {
+        return selectedCurrency;
     }
 
     @Override
-    public Currency getSelectedEarningCurrency() {
-        return selectedEarningCurrency;
+    public Currency getLinkedCurrency() {
+        return linkedCurrency;
     }
 
     @Override
     public String walletPublicKey() {
         return "earningWalletPublicKey";
     }
+
 }

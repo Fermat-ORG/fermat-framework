@@ -83,24 +83,23 @@ public class IncomingIntraUserBitcoinBasicWalletTransactionExecutor implements T
             BitcoinWalletTransactionRecord record = transaction.generateBitcoinTransaction(cryptoAddressBookManager);
             bitcoinWallet.getBalance(BalanceType.BOOK).credit(record);
 
-
-        } catch (IncomingIntraUserCantGenerateTransactionException e) {
-            throw new CantRegisterCreditException("I couldn't generate the transaction",e,"","");
-        }
-    }
-
-    private void processOnBlockChainTransaction(TransactionCompleteInformation transaction) throws CantRegisterCreditException{
-        try {
-            BitcoinWalletTransactionRecord record = transaction.generateBitcoinTransaction(cryptoAddressBookManager);
-            bitcoinWallet.getBalance(BalanceType.AVAILABLE).credit(record);
-
             //notified to Transmission NS that transaction Credit in Wallet
             cryptoTransmissionNetworkServiceManager.informTransactionCreditedInWallet(transaction.getTransactionMetadata().getTransactionID());
 
         } catch (IncomingIntraUserCantGenerateTransactionException e) {
             throw new CantRegisterCreditException("I couldn't generate the transaction",e,"","");
-       } catch (CantSetToCreditedInWalletException e) {
-           throw new CantRegisterCreditException("I couldn't inform to NS that transaction credit in wallet",e,"","");
+        } catch (CantSetToCreditedInWalletException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void processOnBlockChainTransaction(TransactionCompleteInformation transaction) throws CantRegisterCreditException {
+        try {
+            BitcoinWalletTransactionRecord record = transaction.generateBitcoinTransaction(cryptoAddressBookManager);
+            bitcoinWallet.getBalance(BalanceType.AVAILABLE).credit(record);
+
+        } catch (IncomingIntraUserCantGenerateTransactionException e) {
+            throw new CantRegisterCreditException("I couldn't generate the transaction",e,"","");
        }
 
         //Esto se hiso aca hasta pensar mejor el proceso para cambiar el estado del request
