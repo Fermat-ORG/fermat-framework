@@ -1536,9 +1536,7 @@ public class IntraActorNetworkServicePluginRoot extends AbstractPlugin implement
 
     @Override
     public List<IntraUserInformation> getCacheIntraUsersSuggestions(int max, int offset) throws ErrorSearchingCacheSuggestionsException {
-        try
-        {
-            broadcaster.publish(BroadcasterType.UPDATE_VIEW,"holas");
+        try {
             return intraActorNetworkServiceDao.listIntraUserCache(max,offset);
 
         } catch (CantListIntraWalletCacheUserException e) {
