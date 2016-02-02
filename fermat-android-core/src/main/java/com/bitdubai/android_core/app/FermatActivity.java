@@ -70,6 +70,8 @@ import com.bitdubai.android_core.app.common.version_1.sessions.SubAppSessionMana
 import com.bitdubai.android_core.app.common.version_1.sessions.WalletSessionManager;
 import com.bitdubai.android_core.app.common.version_1.builders.SideMenuBuilder;
 import com.bitdubai.android_core.app.common.version_1.top_settings.TopSettings;
+import com.bitdubai.android_core.app.common.version_1.util.AndroidCoreUtils;
+import com.bitdubai.android_core.app.common.version_1.util.BroadcasterInterface;
 import com.bitdubai.android_core.app.common.version_1.util.DepthPageTransformer;
 import com.bitdubai.android_core.app.common.version_1.util.FermatSystemUtils;
 import com.bitdubai.fermat.R;
@@ -81,6 +83,7 @@ import com.bitdubai.fermat_android_api.engine.FooterViewPainter;
 import com.bitdubai.fermat_android_api.engine.HeaderViewPainter;
 import com.bitdubai.fermat_android_api.engine.NavigationViewPainter;
 import com.bitdubai.fermat_android_api.engine.PaintActivityFeatures;
+import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractFermatFragment;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.ActivityType;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.AppConnections;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.FermatAppConnection;
@@ -135,6 +138,7 @@ import com.bitdubai.fermat_api.layer.dmp_module.wallet_manager.WalletManager;
 import com.bitdubai.fermat_api.layer.modules.exceptions.ActorIdentityNotSelectedException;
 import com.bitdubai.fermat_api.layer.modules.exceptions.CantGetSelectedActorIdentityException;
 import com.bitdubai.fermat_api.layer.modules.interfaces.ModuleManager;
+import com.bitdubai.fermat_api.layer.osa_android.broadcaster.BroadcasterType;
 import com.bitdubai.fermat_api.layer.pip_engine.desktop_runtime.DesktopObject;
 import com.bitdubai.fermat_api.layer.pip_engine.desktop_runtime.DesktopRuntimeManager;
 import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.interfaces.BitcoinNetworkManager;
@@ -150,6 +154,7 @@ import com.bitdubai.fermat_wpd_api.layer.wpd_network_service.wallet_resources.in
 import com.bitdubai.sub_app.manager.fragment.DesktopSubAppFragment;
 import com.bitdubai.sub_app.wallet_manager.fragment.DesktopFragment;
 
+import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -184,7 +189,7 @@ public abstract class FermatActivity extends AppCompatActivity
         FermatRuntime,
         NetworkStateReceiver.NetworkStateReceiverListener,
         FermatStates,
-        FermatListItemListeners<com.bitdubai.fermat_api.layer.all_definition.navigation_structure.MenuItem> {
+        FermatListItemListeners<com.bitdubai.fermat_api.layer.all_definition.navigation_structure.MenuItem>,BroadcasterInterface {
 
 
     private static final String TAG = "fermat-core";
@@ -266,6 +271,8 @@ public abstract class FermatActivity extends AppCompatActivity
             // need to create any new ones here.
         }
 
+        AndroidCoreUtils androidCoreUtils = AndroidCoreUtils.getInstance();
+        androidCoreUtils.setContext(this);
 //        try {
 //            networkStateReceiver = new NetworkStateReceiver();
 //            networkStateReceiver.addListener(this);
@@ -323,6 +330,11 @@ public abstract class FermatActivity extends AppCompatActivity
     protected void onStop() {
         try {
             super.onStop();
+            try{
+                AndroidCoreUtils.getInstance().clear();
+            }catch (Exception e){
+                e.printStackTrace();
+            }
 //            if(networkStateReceiver!=null) {
 //                unregisterReceiver(networkStateReceiver);
 //                networkStateReceiver.removeListener(this);
@@ -781,6 +793,51 @@ public abstract class FermatActivity extends AppCompatActivity
         tabLayout.setupWithViewPager(pagertabs);
     }
 
+
+    protected void setOneFragmentInScreen(FermatFragmentFactory fermatFragmentFactory) {
+
+        try {
+            FermatStructure fermatStructure = getAppInUse();
+            String appPublicKey = fermatStructure.getPublicKey();
+            FermatSession walletSession = getFermatSessionInUse(appPublicKey); //getWalletSessionManager().getWalletSession(walletPublicKey);
+            String fragment = fermatStructure.getLastActivity().getLastFragment().getType();
+
+            if (fermatFragmentFactory != null) {
+
+                TabLayout tabLayout = (TabLayout) findViewById(R.id.tab_layout);
+                tabLayout.setVisibility(View.GONE);
+
+                pagertabs = (ViewPager) findViewById(R.id.pager);
+                pagertabs.setVisibility(View.VISIBLE);
+
+
+                adapter = new TabsPagerAdapter(getFragmentManager(),
+                        getApplicationContext(),
+                        fermatFragmentFactory,
+                        fragment,
+                        walletSession,
+                        getWalletResourcesProviderManager());
+                pagertabs.setAdapter(adapter);
+
+
+                //pagertabs.setCurrentItem();
+                final int pageMargin = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 4, getResources()
+                        .getDisplayMetrics());
+                pagertabs.setPageMargin(pageMargin);
+                //pagertabs.setCurrentItem(tabStrip.getStartItem(), true);
+
+
+                //tabLayout.setupWithViewPager(pagertabs);
+                //pagertabs.setOffscreenPageLimit(tabStrip.getTabs().size());
+            }
+
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+    }
+
     /**
      * Select the xml based on the activity type
      *
@@ -1003,6 +1060,7 @@ public abstract class FermatActivity extends AppCompatActivity
                 (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
         mNotificationManager.cancelAll();
 
+
 //        networkStateReceiver.removeListener(this);
         //mNotificationManager.notify(NOTIFICATION_ID, notification.build());
     }
@@ -1152,6 +1210,7 @@ public abstract class FermatActivity extends AppCompatActivity
                 e.printStackTrace();
             }
 
+            if(adapter!=null) adapter.destroyCurrentFragments();
             this.adapter = null;
             paintStatusBar(null);
             if (navigation_recycler_view != null) {
@@ -1860,4 +1919,17 @@ public abstract class FermatActivity extends AppCompatActivity
     }
 
 
+    @Override
+    public void publish(BroadcasterType broadcasterType, String code) {
+        try {
+            if (broadcasterType == BroadcasterType.UPDATE_VIEW) {
+                for(AbstractFermatFragment fragment : adapter.getLstCurrentFragments()){
+                    fragment.onUpdateView(code);
+                }
+            }
+        }catch (Exception e){
+            Log.e(TAG,"Cant broadcast excepcion");
+            e.printStackTrace();
+        }
+    }
 }
