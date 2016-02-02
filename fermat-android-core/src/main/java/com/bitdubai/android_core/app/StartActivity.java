@@ -40,7 +40,6 @@ import com.bitdubai.fermat_pip_api.layer.platform_service.platform_info.exceptio
 import com.bitdubai.fermat_pip_api.layer.platform_service.platform_info.interfaces.PlatformInfo;
 import com.bitdubai.fermat_pip_api.layer.platform_service.platform_info.interfaces.PlatformInfoManager;
 
-import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 
 
@@ -81,7 +80,7 @@ public class StartActivity extends AppCompatActivity implements FermatWorkerCall
 
         try {
             AndroidCoreUtils androidCoreUtils = AndroidCoreUtils.getInstance();
-            androidCoreUtils.setContext(this);
+            androidCoreUtils.setContextAndResume(this);
             fermatSystem.start(this.getApplicationContext(), new OSAPlatform(androidCoreUtils));
         } catch (FermatException e) {
 
