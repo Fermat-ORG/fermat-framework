@@ -17,7 +17,7 @@ public abstract class FermatFragmentFactory  <S extends FermatSession,R extends 
     protected AbstractFermatFragment<S,R> fermatFragment;
 
     @Override
-    public Fragment getFragment(String code, S AppsSession, R resourceProviderManager) throws FragmentNotFoundException {
+    public AbstractFermatFragment getFragment(String code, S AppsSession, R resourceProviderManager) throws FragmentNotFoundException {
         F fragments = getFermatFragmentEnumType(code);
         fermatFragment = getFermatFragment(fragments);
         fermatFragment.setAppSession(AppsSession);

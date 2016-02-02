@@ -15,6 +15,8 @@ import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.bitdubai.android_core.app.common.version_1.ApplicationConstants;
+import com.bitdubai.android_core.app.common.version_1.util.AndroidCoreUtils;
+import com.bitdubai.android_core.app.common.version_1.util.BroadcasterInterface;
 import com.bitdubai.fermat.R;
 import com.bitdubai.fermat_android_api.ui.interfaces.FermatWorkerCallBack;
 import com.bitdubai.fermat_android_api.ui.util.FermatWorker;
@@ -30,6 +32,7 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
 import com.bitdubai.fermat_api.layer.all_definition.resources_structure.enums.ScreenSize;
 import com.bitdubai.fermat_api.layer.all_definition.util.DeviceInfoUtils;
 import com.bitdubai.fermat_api.layer.all_definition.util.Version;
+import com.bitdubai.fermat_api.layer.osa_android.broadcaster.BroadcasterType;
 import com.bitdubai.fermat_core.FermatSystem;
 import com.bitdubai.fermat_osa_android_core.OSAPlatform;
 import com.bitdubai.fermat_pip_api.layer.platform_service.platform_info.exceptions.CantLoadPlatformInformationException;
@@ -50,7 +53,7 @@ import java.util.ArrayList;
  * -- Luis.
  */
 
-public class StartActivity extends AppCompatActivity implements FermatWorkerCallBack{
+public class StartActivity extends AppCompatActivity implements FermatWorkerCallBack, BroadcasterInterface {
 
 
 
@@ -76,7 +79,9 @@ public class StartActivity extends AppCompatActivity implements FermatWorkerCall
         final FermatSystem fermatSystem =((ApplicationSession) getApplication()).getFermatSystem();
 
         try {
-            fermatSystem.start(this.getApplicationContext(), new OSAPlatform());
+            AndroidCoreUtils androidCoreUtils = AndroidCoreUtils.getInstance();
+            androidCoreUtils.setContextAndResume(this);
+            fermatSystem.start(this.getApplicationContext(), new OSAPlatform(androidCoreUtils));
         } catch (FermatException e) {
 
             System.out.println(e.toString());
@@ -243,6 +248,11 @@ public class StartActivity extends AppCompatActivity implements FermatWorkerCall
         ex.printStackTrace();
         Toast.makeText(getApplicationContext(), "Application crash, re open the app please",
                 Toast.LENGTH_LONG).show();
+    }
+
+    @Override
+    public void publish(BroadcasterType broadcasterType, String code) {
+        Toast.makeText(this,"holas",Toast.LENGTH_SHORT).show();
     }
 
 
