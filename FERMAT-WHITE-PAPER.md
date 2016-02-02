@@ -138,7 +138,7 @@ Fermat's developer tokens (_d-fermats_) issuing data and records are cryptograph
 
 Fermat implement three different mechanisms for token generation and distribution:
 
-#### Fund-raising Mechanism
+#### Fund-Raising Mechanism
 
 With the fund-raising mechanism, developer tokens (_d-fermats_) are distributed to those who fund the initial development of the Fermat System. The funds collected are used to fund the development of the core of the Fermat System (core libraries, api libraries, add-ons and the fermat.org web site). The tokens generated during the fund-raising are recorded at the Fermat's developer tokens blockchain.
 
@@ -160,6 +160,7 @@ With the mining mechanism, tokens are distributed to those who contribute most w
 
 The Fermat Open Source Project founders started issuing Fermat development tokens (_d-fermats_) in 2014. A complete disclosure of the issued tokens and distribution can be found at a separate document called Fermat Tokens. [5]
 
+Bandwidth tokens (_b-fermats_) have not been issued yet. Their issuing will start once the Fermat Blockchain is implemented and miners start minging _b-fermats_. There will be no _b-fermats_ pre-mined.
 
 #### Fermat.org (Non-profit organization)
 
