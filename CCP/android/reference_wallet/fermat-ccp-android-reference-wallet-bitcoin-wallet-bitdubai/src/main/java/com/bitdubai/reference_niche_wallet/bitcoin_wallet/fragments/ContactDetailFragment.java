@@ -288,8 +288,12 @@ public class ContactDetailFragment extends AbstractFermatFragment implements Vie
                     //TODO: si la address es nula hay que ver porqué es
                     text_view_address.setText((address!=null)?address:"mnK7DuBQT3REr9bmfYcufTwjiAWfjwRwMf");
                     img_update.setVisibility(View.GONE);
+                    receive_button.setVisibility(View.VISIBLE);
+                    send_button.setVisibility(View.VISIBLE);
                 }else{
                     img_update.setVisibility(View.VISIBLE);
+                    receive_button.setVisibility(View.GONE);
+                    send_button.setVisibility(View.GONE);
                 }
             }else{
                 text_view_address.setText("Waiting...");
