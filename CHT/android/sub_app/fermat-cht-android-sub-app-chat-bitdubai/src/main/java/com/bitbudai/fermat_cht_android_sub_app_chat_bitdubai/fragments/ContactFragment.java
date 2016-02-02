@@ -33,6 +33,7 @@ import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.ChatModuleMan
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedSubAppExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
@@ -97,9 +98,10 @@ public List<Contact> contacts;
     private static final String TAG = "ContactFragment";
 
 
-    String[] contactname={"YO"};   //work
-    String[] contactalias={"aqui"};
-    UUID[] contactuuid;
+    ArrayList<String> contactname=new ArrayList<String>();
+    ArrayList<Integer> contacticon=new ArrayList<Integer>();
+    ArrayList<UUID> contactid=new ArrayList<UUID>();
+    ArrayList<String> contactalias =new ArrayList<String>();
     Contact cont;
     //public ContactsListFragment() {}
     static void initchatinfo(){
@@ -123,23 +125,18 @@ public List<Contact> contacts;
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-        mIsTwoPaneLayout = getResources().getBoolean(R.bool.has_two_panes);
-
-        // Let this fragment contribute menu items
-        setHasOptionsMenu(true);
-
         try {
-
             chatSession=((ChatSession) appSession);
             moduleManager= chatSession.getModuleManager();
             chatManager=moduleManager.getChatManager();
             errorManager=appSession.getErrorManager();
-
         } catch (Exception e) {
             Log.e(TAG, e.getMessage(), e);
         }
+        mIsTwoPaneLayout = getResources().getBoolean(R.bool.has_two_panes);
 
+        // Let this fragment contribute menu items
+        setHasOptionsMenu(true);
         // Check if this fragment is part of a two-pane set up or a single pane by reading a
         // boolean from the application resource directories. This lets allows us to easily specify
         // which screen sizes should use a two-pane layout by setting this boolean in the
@@ -193,23 +190,23 @@ public List<Contact> contacts;
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         View layout = inflater.inflate(R.layout.contact_list_fragment, container, false);
+
         try {
             Contact con= chatSession.getSelectedContact();
-            cont = chatManager.getContactByContactId(con.getContactId());
-            System.out.println("\n\nCONTACTuid:\n\n" + con.getContactId());
-            contactalias[0]=cont.getAlias();
-            contactname[0]=cont.getRemoteName();
-            contactuuid[0]=cont.getContactId();
+            contactname.add(con.getRemoteName());
+            contactid.add(con.getContactId());
+            contactalias.add(con.getAlias());
+            contacticon.add(R.drawable.ic_contact_picture_holo_light);
         }catch (Exception e){
             if (errorManager != null)
                 errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
-
         }
-        ContactAdapter adapter=new ContactAdapter(getActivity(), contactname,  contactalias, contactuuid, "detail");
+        ContactAdapter adapter=new ContactAdapter(getActivity(), contactname,  contactalias, contactid, "detail");
         TextView name =(TextView)layout.findViewById(R.id.contact_name);
-        name.setText(contactname[0]);
+        String ad = contactname.get(0);
+        name.setText(contactname.get(0));
         TextView id =(TextView)layout.findViewById(R.id.uuid);
-        id.setText(contactuuid[0].toString());
+        id.setText(contactid.get(0).toString());
 
         LinearLayout detalles = (LinearLayout)layout.findViewById(R.id.contact_details_layout);
 
@@ -491,11 +488,14 @@ public List<Contact> contacts;
                             dialog.cancel();
                             try {
                                 Contact con = chatSession.getSelectedContact();
-                                contactuuid[0] = con.getContactId();
-                                chatManager.deleteContact(con);
+                                contactname.add(con.getRemoteName());
+                                contactid.add(con.getContactId());
+                                contactalias.add(con.getAlias());
+                                contacticon.add(R.drawable.ic_contact_picture_holo_light);
                             }catch (Exception e)
                             {
-
+                                if (errorManager != null)
+                                    errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
                             }
                         }
                     });
@@ -507,7 +507,6 @@ public List<Contact> contacts;
                             dialog.cancel();
                         }
                     });
-
             AlertDialog alert11 = builder1.create();
             alert11.show();
         }

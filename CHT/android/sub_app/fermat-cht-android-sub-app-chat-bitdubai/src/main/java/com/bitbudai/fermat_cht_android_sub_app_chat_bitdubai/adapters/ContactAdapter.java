@@ -29,11 +29,11 @@ import java.util.UUID;
 //public class ChatListAdapter extends FermatAdapter<ChatsList, ChatHolder> {//ChatFactory
 public class ContactAdapter extends ArrayAdapter<String> {
 
-    private final String[] contactAlias;
-    private final String[] contactName;
-    private final UUID[] contactUUID;
+    private final ArrayList<String> contactAlias;
+    private final ArrayList<String> contactName;
+    private final ArrayList<UUID> contactUUID;
     private final String action;
-    public ContactAdapter(Context context, String[] contactName, String[] contactAlias,UUID[] contactUUID, String action) {
+    public ContactAdapter(Context context, ArrayList<String> contactName, ArrayList<String> contactAlias,ArrayList<UUID> contactUUID, String action) {
         super(context, R.layout.contact_list_item, contactName);
         this.contactAlias = contactAlias;
         this.contactName = contactName;
@@ -50,19 +50,19 @@ public class ContactAdapter extends ArrayAdapter<String> {
                 item = inflater.inflate(R.layout.contact_edit_item, null, true);
 
                 TextView name = (TextView) item.findViewById(R.id.contact_detail_header);
-                name.setText(contactName[0]);
+                name.setText(contactName.get(0));
 
                 EditText alias = (EditText) item.findViewById(R.id.aliasEdit);
-                alias.setText(contactAlias[0]);
+                alias.setText(contactAlias.get(0));
                 break;
             case "detail":
                 item = inflater.inflate(R.layout.contact_detail_item, null, true);
 
                 TextView name2 = (TextView) item.findViewById(R.id.contact_detail_header);
-                name2.setText(contactName[0]);
+                name2.setText(contactName.get(0));
 
                 TextView alias2 = (TextView) item.findViewById(R.id.alias);
-                alias2.setText(contactAlias[0]);
+                alias2.setText(contactAlias.get(0));
                 break;
         }
         return item;

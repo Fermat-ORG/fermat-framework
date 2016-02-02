@@ -116,7 +116,7 @@ public class ContactsListFragment extends AbstractFermatFragment {
 // public ArrayList<ContactList> contactList;
     public List<Contact> contacts;
 //    private ListView contactsContainer;
-     private Contact contactl;//= new Contact();
+    private Contact contactl;//= new Contact();
 //
 //    // Whether or not the search query has changed since the last time the loader was refreshed
 //    private boolean mSearchQueryChanged;
@@ -259,9 +259,12 @@ public class ContactsListFragment extends AbstractFermatFragment {
                 // TODO Auto-generated method stub
                 //String Slecteditem= contactname[position];
                 //Toast.makeText(getActivity(), Slecteditem, Toast.LENGTH_SHORT).show();
-                appSession.setData(ChatSession.CONTACT_DATA, contactl);
+               try{
+                appSession.setData(ChatSession.CONTACT_DATA, chatManager.getContactByContactId(contactid.get(position)));
                 changeActivity(Activities.CHT_CHAT_OPEN_MESSAGE_LIST, appSession.getAppPublicKey());
-
+               }catch(CantGetContactException e) {
+                   e.printStackTrace();
+               }
             }
         });
 
@@ -270,9 +273,12 @@ public class ContactsListFragment extends AbstractFermatFragment {
             @Override
             public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
                 // TODO Auto-generated method stub
-
-                appSession.setData(ChatSession.CONTACT_DATA, contactl);
-                changeActivity(Activities.CHT_CHAT_OPEN_CONTACT_DETAIL, appSession.getAppPublicKey());
+                try{
+                    appSession.setData(ChatSession.CONTACT_DATA, chatManager.getContactByContactId(contactid.get(position)));
+                    changeActivity(Activities.CHT_CHAT_OPEN_CONTACT_DETAIL, appSession.getAppPublicKey());
+                }catch(CantGetContactException e) {
+                    e.printStackTrace();
+                }
                 return true;
             }
         });
@@ -296,8 +302,6 @@ public class ContactsListFragment extends AbstractFermatFragment {
                                 }
                                 final ContactListAdapter adaptador =
                                         new ContactListAdapter(getActivity(), contactname, contacticon, contactid);
-                               // ListView contactlist;
-                                //contactlist=(ListView) layout.findViewById(R.id.list);
                                 adaptador.refreshEvents(contactname, contacticon, contactid);
                             }else{
                                 Toast.makeText(getActivity(), "No Contacts", Toast.LENGTH_SHORT).show();

@@ -36,6 +36,7 @@ import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.ChatModuleMan
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedSubAppExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
@@ -100,9 +101,10 @@ public List<Contact> contacts;
     private static final String TAG = "ContactEditFragment";
 
 
-    String[] contactname={"YO"};   //work
-    String[] contactalias={"aqui"};
-    UUID[] contactuuid;
+    ArrayList<String> contactname=new ArrayList<String>();
+    ArrayList<Integer> contacticon=new ArrayList<Integer>();
+    ArrayList<UUID> contactid=new ArrayList<UUID>();
+    ArrayList<String> contactalias =new ArrayList<String>();
     Contact cont;
     EditText aliasET ;
     Button saveBtn ;
@@ -202,22 +204,21 @@ public List<Contact> contacts;
 
         try {
             Contact con= chatSession.getSelectedContact();
-            cont = chatManager.getContactByContactId(con.getContactId());
-            System.out.println("\n\nCONTACTuid:\n\n" + con.getContactId());
-            contactalias[0]=cont.getAlias();
-            contactname[0]=cont.getRemoteName();
-            contactuuid[0]=cont.getContactId();
+            contactname.add(con.getRemoteName());
+            contactid.add(con.getContactId());
+            contactalias.add(con.getAlias());
+            contacticon.add(R.drawable.ic_contact_picture_holo_light);
         }catch (Exception e){
             if (errorManager != null)
                 errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
 
         }
-        ContactAdapter adapter=new ContactAdapter(getActivity(), contactname,  contactalias, contactuuid, "detail");
+        ContactAdapter adapter=new ContactAdapter(getActivity(), contactname,  contactalias, contactid, "detail");
         saveBtn = (Button) layout.findViewById(R.id.saveContactButton);
         aliasET =(EditText)layout.findViewById(R.id.aliasEdit);
-        aliasET.setText(contactalias[0]);
+        aliasET.setText(contactalias.get(0));
         TextView id =(TextView)layout.findViewById(R.id.uuid);
-        id.setText(contactuuid[0].toString());
+        id.setText(contactid.get(0).toString());
 
         LinearLayout detalles = (LinearLayout)layout.findViewById(R.id.contact_details_layout);
 
@@ -504,7 +505,7 @@ public List<Contact> contacts;
             changeActivity(Activities.CHT_CHAT_EDIT_CONTACT, appSession.getAppPublicKey());
         }
         if (item.getItemId() == R.id.menu_del_contact) {
-            AlertDialog.Builder builder1 = new AlertDialog.Builder(getContext());
+            AlertDialog.Builder builder1 = new AlertDialog.Builder(getActivity());
             builder1.setMessage("Do you want to delete this contact?");
             builder1.setCancelable(true);
 
@@ -515,11 +516,11 @@ public List<Contact> contacts;
                             dialog.cancel();
                             try {
                                 Contact con = chatSession.getSelectedContact();
-                                contactuuid[0] = con.getContactId();
+                                contactid.add(con.getContactId());
                                 chatManager.deleteContact(con);
-                            }catch (Exception e)
-                            {
-
+                            }catch (Exception e) {
+                                if (errorManager != null)
+                                    errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
                             }
                         }
                     });
