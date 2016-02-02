@@ -29,7 +29,6 @@ import com.bitdubai.fermat_dap_plugin.digital_asset_transaction.redeem_point_red
 import com.bitdubai.fermat_dap_plugin.digital_asset_transaction.redeem_point_redemption.bitdubai.version_1.structure.exceptions.CantPersistTransactionMetadataException;
 import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.enums.EventType;
 
-import java.io.Closeable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -113,32 +112,54 @@ public class AssetRedeemPointRedemptionDAO {
     * Metadata Table's Actions.
     *
     */
-    public void persistTransaction(String transactionId, String senderId, String receiverId, DistributionStatus transactionStatus, CryptoStatus cryptoStatus) throws CantPersistTransactionMetadataException, TransactionAlreadyStartedException {
-        String context = null;
+    public void newTransaction(String transactionId, String senderId, String receiverId, DistributionStatus transactionStatus, CryptoStatus cryptoStatus) throws CantPersistTransactionMetadataException {
+        String context = "Transaction Genesis Address: " + transactionId
+                + "Distribution Status: " + transactionStatus.getCode()
+                + "Sender Public Key: " + senderId
+                + "Receiver Public Key: " + receiverId
+                + "CryptoStatus: " + cryptoStatus.getCode();
         try {
-            context = "Transaction Genesis Address: " + transactionId
-                    + "Distribution Status: " + transactionStatus.getCode()
-                    + "Sender Public Key: " + senderId
-                    + "Receiver Public Key: " + receiverId
-                    + "CryptoStatus: " + cryptoStatus.getCode();
-
-            if (isTransactionRegistered(transactionId))
-                return;
-
-            DatabaseTable databaseTable = this.database.getTable(AssetRedeemPointRedemptionDatabaseConstants.ASSET_RPR_METADATA_TABLE_NAME);
-            DatabaseTableRecord metadataRecord = databaseTable.getEmptyRecord();
-
-            metadataRecord.setStringValue(AssetRedeemPointRedemptionDatabaseConstants.ASSET_RPR_METADATA_TRANSACTION_ID_COLUMN_NAME, transactionId);
-            metadataRecord.setStringValue(AssetRedeemPointRedemptionDatabaseConstants.ASSET_RPR_METADATA_TRANSACTION_STATUS_COLUMN_NAME, transactionStatus.getCode());
-            metadataRecord.setStringValue(AssetRedeemPointRedemptionDatabaseConstants.ASSET_RPR_METADATA_TRANSACTION_CRYPTO_STATUS_COLUMN_NAME, cryptoStatus.getCode());
-            metadataRecord.setStringValue(AssetRedeemPointRedemptionDatabaseConstants.ASSET_RPR_METADATA_SENDER_KEY_COLUMN_NAME, senderId);
-            metadataRecord.setStringValue(AssetRedeemPointRedemptionDatabaseConstants.ASSET_RPR_METADATA_RECEIVER_KEY_COLUMN_NAME, receiverId);
-            metadataRecord.setLongValue(AssetRedeemPointRedemptionDatabaseConstants.ASSET_RPR_METADATA_TIMESTAMP_COLUMN_NAME, System.currentTimeMillis());
-
-            databaseTable.insertRecord(metadataRecord);
-        } catch (CantInsertRecordException e) {
-            throw new CantPersistTransactionMetadataException(context, e);
+            if (isTransactionRegistered(transactionId)) {
+                updateTransaction(transactionId, senderId, receiverId, transactionStatus, cryptoStatus);
+            } else {
+                persistTransaction(transactionId, senderId, receiverId, transactionStatus, cryptoStatus);
+            }
+        } catch (Exception e) {
+            throw new CantPersistTransactionMetadataException(FermatException.wrapException(e), context, "Database Error.");
         }
+    }
+
+    /*
+    * Metadata Table's Actions.
+    *
+    */
+
+    public void updateTransaction(String transactionId, String senderId, String receiverId, DistributionStatus transactionStatus, CryptoStatus cryptoStatus) throws CantLoadTableToMemoryException, CantUpdateRecordException {
+        DatabaseTable databaseTable = this.database.getTable(AssetRedeemPointRedemptionDatabaseConstants.ASSET_RPR_METADATA_TABLE_NAME);
+        databaseTable.addStringFilter(AssetRedeemPointRedemptionDatabaseConstants.ASSET_RPR_METADATA_TRANSACTION_ID_COLUMN_NAME, transactionId, DatabaseFilterType.EQUAL);
+        databaseTable.loadToMemory();
+        DatabaseTableRecord metadataRecord = databaseTable.getRecords().get(0);
+
+        metadataRecord.setStringValue(AssetRedeemPointRedemptionDatabaseConstants.ASSET_RPR_METADATA_TRANSACTION_STATUS_COLUMN_NAME, transactionStatus.getCode());
+        metadataRecord.setStringValue(AssetRedeemPointRedemptionDatabaseConstants.ASSET_RPR_METADATA_TRANSACTION_CRYPTO_STATUS_COLUMN_NAME, cryptoStatus.getCode());
+        metadataRecord.setStringValue(AssetRedeemPointRedemptionDatabaseConstants.ASSET_RPR_METADATA_SENDER_KEY_COLUMN_NAME, senderId);
+        metadataRecord.setStringValue(AssetRedeemPointRedemptionDatabaseConstants.ASSET_RPR_METADATA_RECEIVER_KEY_COLUMN_NAME, receiverId);
+        metadataRecord.setLongValue(AssetRedeemPointRedemptionDatabaseConstants.ASSET_RPR_METADATA_TIMESTAMP_COLUMN_NAME, System.currentTimeMillis());
+        databaseTable.updateRecord(metadataRecord);
+    }
+
+    public void persistTransaction(String transactionId, String senderId, String receiverId, DistributionStatus transactionStatus, CryptoStatus cryptoStatus) throws CantPersistTransactionMetadataException, TransactionAlreadyStartedException, CantInsertRecordException {
+        DatabaseTable databaseTable = this.database.getTable(AssetRedeemPointRedemptionDatabaseConstants.ASSET_RPR_METADATA_TABLE_NAME);
+        DatabaseTableRecord metadataRecord = databaseTable.getEmptyRecord();
+
+        metadataRecord.setStringValue(AssetRedeemPointRedemptionDatabaseConstants.ASSET_RPR_METADATA_TRANSACTION_ID_COLUMN_NAME, transactionId);
+        metadataRecord.setStringValue(AssetRedeemPointRedemptionDatabaseConstants.ASSET_RPR_METADATA_TRANSACTION_STATUS_COLUMN_NAME, transactionStatus.getCode());
+        metadataRecord.setStringValue(AssetRedeemPointRedemptionDatabaseConstants.ASSET_RPR_METADATA_TRANSACTION_CRYPTO_STATUS_COLUMN_NAME, cryptoStatus.getCode());
+        metadataRecord.setStringValue(AssetRedeemPointRedemptionDatabaseConstants.ASSET_RPR_METADATA_SENDER_KEY_COLUMN_NAME, senderId);
+        metadataRecord.setStringValue(AssetRedeemPointRedemptionDatabaseConstants.ASSET_RPR_METADATA_RECEIVER_KEY_COLUMN_NAME, receiverId);
+        metadataRecord.setLongValue(AssetRedeemPointRedemptionDatabaseConstants.ASSET_RPR_METADATA_TIMESTAMP_COLUMN_NAME, System.currentTimeMillis());
+
+        databaseTable.insertRecord(metadataRecord);
     }
 
     public void updateTransactionStatusById(DistributionStatus status, String transactionId) throws RecordsNotFoundException, CantLoadAssetRedemptionMetadataListException {

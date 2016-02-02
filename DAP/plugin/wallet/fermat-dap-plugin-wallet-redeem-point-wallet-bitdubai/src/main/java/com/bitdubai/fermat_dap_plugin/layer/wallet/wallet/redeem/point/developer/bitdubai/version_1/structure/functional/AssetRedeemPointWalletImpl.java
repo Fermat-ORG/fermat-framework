@@ -256,13 +256,13 @@ public class AssetRedeemPointWalletImpl implements AssetRedeemPointWallet {
 
 
     @Override
-    public DigitalAssetMetadata getDigitalAssetMetadata(String digitalAssetPublicKey) throws CantGetDigitalAssetFromLocalStorageException {
-        return assetRedeemPointWalletDao.getDigitalAssetMetadata(digitalAssetPublicKey);
+    public DigitalAssetMetadata getDigitalAssetMetadata(String genesisTransaction) throws CantGetDigitalAssetFromLocalStorageException {
+        return assetRedeemPointWalletDao.getDigitalAssetMetadata(genesisTransaction);
     }
 
     @Override
-    public void newAssetRedeemed(String userPublicKey, String assetPublicKey) throws CantSaveRedeemPointStatisticException {
-        assetRedeemPointWalletDao.newAssetRedeemed(userPublicKey, assetPublicKey);
+    public void newAssetRedeemed(DigitalAssetMetadata digitalAssetMetadata, String userPublicKey) throws CantSaveRedeemPointStatisticException {
+        assetRedeemPointWalletDao.newAssetRedeemed(digitalAssetMetadata, userPublicKey);
     }
 
     @Override

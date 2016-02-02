@@ -201,7 +201,7 @@ public class RedeemPointRedemptionMonitorAgent implements Agent {
 
                                     //PERSIST METADATA
                                     debug("persisting metadata");
-                                    dao.persistTransaction(transactionId, assetMetadataTransaction.getSenderId(), assetMetadataTransaction.getReceiverId(), DistributionStatus.SENDING_CRYPTO, CryptoStatus.PENDING_SUBMIT);
+                                    dao.newTransaction(transactionId, assetMetadataTransaction.getSenderId(), assetMetadataTransaction.getReceiverId(), DistributionStatus.SENDING_CRYPTO, CryptoStatus.PENDING_SUBMIT);
                                     persistDigitalAssetMetadataInLocalStorage(metadata, transactionId);
                                     //Now I should answer the metadata, so I'll send a message to the actor that sends me this metadata.
 
@@ -316,7 +316,7 @@ public class RedeemPointRedemptionMonitorAgent implements Agent {
                                 debug("adding credit on available balance");
                                 AssetRedeemPointWalletBalance walletBalance = wallet.getBalance();
                                 walletBalance.credit(assetRedeemPointWalletTransactionRecord, BalanceType.AVAILABLE);
-                                wallet.newAssetRedeemed(userPublicKey, metadata.getDigitalAsset().getPublicKey());
+                                wallet.newAssetRedeemed(metadata, userPublicKey);
                                 //I GOT IT, EVERYTHING WENT OK!
                                 debug("update status");
                                 dao.updateTransactionCryptoStatusById(CryptoStatus.ON_BLOCKCHAIN, transactionId);
