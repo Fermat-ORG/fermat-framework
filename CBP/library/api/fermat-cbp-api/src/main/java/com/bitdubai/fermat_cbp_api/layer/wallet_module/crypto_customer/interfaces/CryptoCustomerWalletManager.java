@@ -6,9 +6,11 @@ import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantCrea
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantPersistFileException;
 import com.bitdubai.fermat_api.layer.world.interfaces.Currency;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.ContractDetailType;
+import com.bitdubai.fermat_cbp_api.all_definition.enums.ContractStatus;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.CurrencyType;
 import com.bitdubai.fermat_cbp_api.all_definition.negotiation.NegotiationBankAccount;
 import com.bitdubai.fermat_cbp_api.layer.actor.crypto_broker.exceptions.CantGetListActorExtraDataException;
+import com.bitdubai.fermat_cbp_api.layer.business_transaction.common.exceptions.CantAckMerchandiseException;
 import com.bitdubai.fermat_cbp_api.layer.business_transaction.common.exceptions.CantSendPaymentException;
 import com.bitdubai.fermat_cbp_api.layer.contract.customer_broker_purchase.exceptions.CantGetListCustomerBrokerContractPurchaseException;
 import com.bitdubai.fermat_cbp_api.layer.contract.customer_broker_purchase.interfaces.CustomerBrokerContractPurchase;
@@ -201,6 +203,20 @@ public interface CryptoCustomerWalletManager extends WalletManager {
      * @param contractHash
      */
     void sendPayment(String contractHash) throws CantSendPaymentException;
+
+    /**
+     * This method execute a Customer Ack Merchandise Business Transaction
+     * @param contractHash
+     * @throws CantAckMerchandiseException
+     */
+    void ackMerchandise(String contractHash) throws CantAckMerchandiseException;
+
+    /**
+     * This method returns the ContractStatus by contractHash/Id
+     * @param contractHash
+     * @return
+     */
+    ContractStatus getContractStatus(String contractHash) throws CantGetListCustomerBrokerContractPurchaseException;
 
     /**
      * This method returns a string with the currency code.
