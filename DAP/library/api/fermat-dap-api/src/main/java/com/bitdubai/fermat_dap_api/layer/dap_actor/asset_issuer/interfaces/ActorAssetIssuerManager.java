@@ -17,7 +17,7 @@ import java.util.List;
 public interface ActorAssetIssuerManager extends FermatManager {
 
     /**
-     * The method <code>getActorByPublicKey</code> shows the information associated with the actorPublicKey
+     * The method <code>getActorRegisteredByPublicKey</code> shows the information associated with the actorPublicKey
      *
      * @param actorPublicKey                     The public key of the Asset Actor Issuer
      * @return                                   THe information associated with the actorPublicKey.

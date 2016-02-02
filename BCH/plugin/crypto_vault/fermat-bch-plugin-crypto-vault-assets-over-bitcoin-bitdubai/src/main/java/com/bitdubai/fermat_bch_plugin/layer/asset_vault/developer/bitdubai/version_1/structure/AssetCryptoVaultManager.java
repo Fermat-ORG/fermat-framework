@@ -783,10 +783,20 @@ public class AssetCryptoVaultManager  {
         }
 
         /**
-         * Create the bitcoinj wallet from the keys of this account
+         * Create the bitcoinj wallet from the keys of all accounts
          */
-        com.bitdubai.fermat_bch_api.layer.crypto_vault.classes.HierarchyAccount.HierarchyAccount vaultAccount = new com.bitdubai.fermat_bch_api.layer.crypto_vault.classes.HierarchyAccount.HierarchyAccount(0, "Asset Vault account", HierarchyAccountType.MASTER_ACCOUNT);
-        final Wallet wallet = getWalletForAccount(vaultAccount, networkParameters);
+        final Wallet wallet;
+        try {
+            wallet = Wallet.fromSeed(networkParameters, getAssetVaultSeed());
+        } catch (InvalidSeedException e) {
+            throw new CantCreateBitcoinTransactionException(CantCreateBitcoinTransactionException.DEFAULT_MESSAGE, e, "Unable to create wallet from seed.", "seed issue");
+        }
+
+        try {
+            wallet.importKeys(getKeysForAllAccounts(networkParameters));
+        } catch (CantExecuteDatabaseOperationException e) {
+            throw new CantCreateBitcoinTransactionException(CantCreateBitcoinTransactionException.DEFAULT_MESSAGE, e, "Error getting the stored accounts to get the keys", "database issue");
+        }
 
         /**
          * Adds the Genesis Transaction as a UTXO
@@ -822,6 +832,10 @@ public class AssetCryptoVaultManager  {
         sendRequest.fee = fee;
         sendRequest.feePerKb = Coin.ZERO;
 
+
+        /**
+         * I'm ready so will complete the transaction.
+         */
         try {
             wallet.completeTx(sendRequest);
         } catch (InsufficientMoneyException e) {
@@ -843,6 +857,33 @@ public class AssetCryptoVaultManager  {
         }
 
         return sendRequest.tx.getHashAsString();
+    }
+
+    /**
+     * gets the current timestamp
+     * @return
+     */
+    private long getCurrentTimeStamp() {
+        return System.currentTimeMillis();
+    }
+
+    /**
+     * Creates a BitcoinWallet from all derived keys for all accounts stored in this vault.
+     * @param networkParameters
+     * @return
+     */
+    private List<ECKey> getKeysForAllAccounts(NetworkParameters networkParameters) throws CantExecuteDatabaseOperationException {
+        List<ECKey> allAccountsKeys = new ArrayList<>();
+        List<HierarchyAccount> hierarchyAccounts = getDao().getHierarchyAccounts();
+
+        /**
+         * I will derive and collect the Keys for each stored account
+         */
+        for (HierarchyAccount hierarchyAccount : hierarchyAccounts){
+            List<ECKey> derivedKeys = vaultKeyHierarchyGenerator.getVaultKeyHierarchy().getDerivedKeys(hierarchyAccount);
+            allAccountsKeys.addAll(derivedKeys);
+        }
+        return allAccountsKeys;
     }
 
 }

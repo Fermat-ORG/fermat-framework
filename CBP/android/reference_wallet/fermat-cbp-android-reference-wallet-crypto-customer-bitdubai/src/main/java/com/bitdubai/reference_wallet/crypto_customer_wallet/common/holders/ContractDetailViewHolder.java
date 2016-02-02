@@ -4,22 +4,31 @@ import android.content.res.Resources;
 import android.graphics.drawable.Drawable;
 import android.support.annotation.NonNull;
 import android.text.format.DateFormat;
+import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.bitdubai.fermat_android_api.layer.definition.wallet.utils.ImagesUtils;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatButton;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView;
 import com.bitdubai.fermat_android_api.ui.holders.FermatViewHolder;
+import com.bitdubai.fermat_api.FermatException;
+import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Wallets;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.ContractDetailType;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.ContractStatus;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.common.interfaces.ContractBasicInformation;
+import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_customer.interfaces.CryptoCustomerWalletManager;
+import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedWalletExceptionSeverity;
+import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 import com.bitdubai.reference_wallet.crypto_customer_wallet.R;
 import com.bitdubai.reference_wallet.crypto_customer_wallet.common.models.ContractDetail;
+import com.bitdubai.reference_wallet.crypto_customer_wallet.fragments.contract_detail.ContractDetailActivityFragment;
 
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
+import java.util.UUID;
 
 /**
  * Created by Manuel Perez (darkpriestrelative@gmail.com) on 21/01/16.
@@ -29,6 +38,12 @@ public class ContractDetailViewHolder extends FermatViewHolder {
     private static final DecimalFormat decimalFormat = (DecimalFormat) NumberFormat.getInstance();
     private Resources res;
     private View itemView;
+    /**
+     * Contract item
+     */
+    protected UUID contractId;
+    protected CryptoCustomerWalletManager walletManager;
+    private ContractDetailActivityFragment parentFragment;
 
     public ImageView customerImage;
     public ImageView stepNumber;
@@ -41,6 +56,8 @@ public class ContractDetailViewHolder extends FermatViewHolder {
     public FermatButton textButton;
     public FermatButton confirmButton;
     protected int itemPosition;
+
+    ErrorManager errorManager;
     /**
      * Constructor
      *
@@ -57,6 +74,7 @@ public class ContractDetailViewHolder extends FermatViewHolder {
         textDescription = (FermatTextView) itemView.findViewById(R.id.ccw_contract_detail_description_text);
         textButton = (FermatButton) itemView.findViewById(R.id.ccw_contract_detail_text_button);
         confirmButton = (FermatButton) itemView.findViewById(R.id.ccw_contract_detail_confirm_button);
+        configButton();
         /*customerImage = (ImageView) itemView.findViewById(R.id.ccw_customer_image);
         customerName = (FermatTextView) itemView.findViewById(R.id.ccw_customer_name);
         soldQuantityAndCurrency = (FermatTextView) itemView.findViewById(R.id.ccw_sold_quantity_and_currency);
@@ -65,7 +83,54 @@ public class ContractDetailViewHolder extends FermatViewHolder {
 
     }
 
+    private void configButton(){
+        confirmButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                String buttonTest = confirmButton.getText().toString();
+                executeContractAction(buttonTest);
+            }
+        });
+    }
+
+    protected void executeContractAction(String buttonText){
+        if(buttonText.equals("SEND")){
+            //TODO: Send Payment
+            //In this case, I will send the payment to Broker
+            try{
+                this.walletManager.sendPayment(this.contractId.toString());
+            } catch (FermatException ex) {
+                Toast.makeText(this.parentFragment.getActivity(), "Oops a error occurred...", Toast.LENGTH_SHORT).show();
+
+                Log.e(this.parentFragment.getTag(), ex.getMessage(), ex);
+                if (errorManager != null) {
+                    errorManager.reportUnexpectedWalletException(
+                            Wallets.CBP_CRYPTO_BROKER_WALLET,
+                            UnexpectedWalletExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT,
+                            ex);
+                }
+            }
+        }
+        if(buttonText.equals("CONFIRM")){
+            //TODO: Ack Merchandise
+            //In this case, I will send the payment to Customer
+        }
+    }
+
+    public void setErrorManager(ErrorManager errorManager){
+        this.errorManager=errorManager;
+    }
+
+    public void setParentFragment(ContractDetailActivityFragment parentFragment){
+        this.parentFragment=parentFragment;
+    }
+
+    public void setWalletModuleManager(CryptoCustomerWalletManager walletManager){
+        this.walletManager=walletManager;
+    }
+
     public void bind(ContractDetail itemInfo) {
+        this.contractId=itemInfo.getContractId();
         ContractStatus contractStatus = itemInfo.getContractStatus();
         ContractDetailType contractDetailType=itemInfo.getContractDetailType();
         ContractStatus visualContractStatus=getContractStatusByContractDetailType(
@@ -77,10 +142,12 @@ public class ContractDetailViewHolder extends FermatViewHolder {
             case CUSTOMER_DETAIL:
                 stepNumber.setImageResource(R.drawable.bg_detail_number_01);
                 textDescription.setText("Customer");
+                confirmButton.setText("SEND");
                 break;
             case BROKER_DETAIL:
                 stepNumber.setImageResource(R.drawable.bg_detail_number_02);
                 textDescription.setText("Broker");
+                confirmButton.setText("CONFIRM");
                 break;
 
         }

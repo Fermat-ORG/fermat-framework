@@ -135,10 +135,8 @@ public class CreateRedeemPointIdentityFragment extends AbstractFermatFragment {
                     .setIconRes(R.drawable.redeem_point)
                     .setVIewColor(R.color.dap_identity_redeem_view_color)
                     .setTitleTextColor(R.color.dap_identity_redeem_view_color)
-                    .setSubTitle("Welcome to the Redeem Point Identity.")
-                    .setBody("From here you will be able to create a Redeem Point type identity.\n\n" +
-                            "This Identity will identify you in the system as a redeem point, and give you access to all tasks and applications you need.\n\n" +
-                            "Other Asset Users will be able to request connection to you by finding you with the information you provide here.")
+                    .setSubTitle(R.string.dap_redeem_identity_welcome_subTitle)
+                    .setBody(R.string.dap_redeem_identity_welcome_body)
                     .setTemplateType(PresentationDialog.TemplateType.TYPE_PRESENTATION_WITHOUT_IDENTITIES)
                     .setIsCheckEnabled(checkButton)
                     .build();

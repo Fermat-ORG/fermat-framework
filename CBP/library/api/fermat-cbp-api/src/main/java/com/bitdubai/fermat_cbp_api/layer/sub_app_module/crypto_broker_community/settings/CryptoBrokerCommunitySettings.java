@@ -21,59 +21,45 @@ import java.util.UUID;
  */
 public class CryptoBrokerCommunitySettings implements SubAppSettings {
 
-    private CryptoBrokerCommunitySelectableIdentity lastSelectedIdentity;
+    private String lastSelectedIdentityPublicKey;
+    private boolean presentationHelpEnabled;
 
-    public CryptoBrokerCommunitySettings() {
-        this.lastSelectedIdentity = new CryptoBrokerCommunitySelectableIdentity() {
-            @Override
-            public void select() throws CantSelectIdentityException {
 
-            }
+    public CryptoBrokerCommunitySettings() {}
 
-            @Override
-            public String getPublicKey() {
-                return "testingdata";
-            }
 
-            @Override
-            public Actors getActorType() {
-                return Actors.CBP_CRYPTO_BROKER;
-            }
 
-            @Override
-            public String getAlias() {
-                return "testingdata";
-            }
 
-            @Override
-            public byte[] getImage() {
-                return new byte[0];
-            }
-        };
+
+    public String getLastSelectedIdentityPublicKey() {
+        return this.lastSelectedIdentityPublicKey;
     }
 
-    public CryptoBrokerCommunitySelectableIdentity getLastSelectedIdentity() {
-        return lastSelectedIdentity;
+    public void setLastSelectedIdentityPublicKey(String identityPublicKey) {
+        this.lastSelectedIdentityPublicKey = identityPublicKey;
     }
 
-    public void setLastSelectedIdentity(CryptoBrokerCommunitySelectableIdentity lastSelectedIdentity) {
-        this.lastSelectedIdentity = lastSelectedIdentity;
-    }
 
     @Override
-    public UUID getDefaultLanguage() throws CantGetDefaultLanguageException {
-        return null;
+    public void setIsPresentationHelpEnabled(boolean b) {
+        this.presentationHelpEnabled = b;
     }
 
-    @Override
-    public UUID getDefaultSkin() throws CantGetDefaultSkinException {
-        return null;
+    public boolean isPresentationHelpEnabled() {
+        return this.presentationHelpEnabled;
     }
+
+
 
     @Override
     public void setDefaultLanguage(UUID languageId) throws CantSetDefaultLanguageException {
 
     }
+    @Override
+    public UUID getDefaultLanguage() throws CantGetDefaultLanguageException {
+        return null;
+    }
+
 
     @Override
     public void setDefaultSkin(UUID skinId) throws CantSetDefaultSkinException {
@@ -81,8 +67,15 @@ public class CryptoBrokerCommunitySettings implements SubAppSettings {
     }
 
     @Override
-    public void setPreferenceSettings(String walletPreferenceSettings, String walletPublicKey) throws CantSaveSubAppSettings {
+    public UUID getDefaultSkin() throws CantGetDefaultSkinException {
+        return null;
+    }
 
+
+
+    //TODO: Deprecated?
+    @Override
+    public void setPreferenceSettings(String walletPreferenceSettings, String walletPublicKey) throws CantSaveSubAppSettings {
     }
 
     @Override
@@ -90,8 +83,4 @@ public class CryptoBrokerCommunitySettings implements SubAppSettings {
         return null;
     }
 
-    @Override
-    public void setIsPresentationHelpEnabled(boolean b) {
-
-    }
 }

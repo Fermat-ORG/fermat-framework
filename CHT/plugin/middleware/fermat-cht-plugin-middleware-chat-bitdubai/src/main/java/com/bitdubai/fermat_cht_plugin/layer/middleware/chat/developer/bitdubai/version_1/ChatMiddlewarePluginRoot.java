@@ -29,9 +29,7 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.Cant
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.DatabaseNotFoundException;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogLevel;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogManager;
-import com.bitdubai.fermat_ccp_api.layer.actor.intra_user.interfaces.IntraWalletUserActorManager;
 import com.bitdubai.fermat_ccp_api.layer.module.intra_user.interfaces.IntraUserModuleManager;
-import com.bitdubai.fermat_ccp_api.layer.network_service.intra_actor.interfaces.IntraUserManager;
 import com.bitdubai.fermat_cht_api.all_definition.events.enums.EventType;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantGetCompatiblesActorNetworkServiceListException;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantInitializeDatabaseException;
@@ -43,7 +41,7 @@ import com.bitdubai.fermat_cht_api.layer.middleware.interfaces.Message;
 import com.bitdubai.fermat_cht_api.layer.middleware.mocks.ChatMock;
 import com.bitdubai.fermat_cht_api.layer.middleware.mocks.MessageMock;
 import com.bitdubai.fermat_cht_api.layer.network_service.chat.events.IncomingChat;
-import com.bitdubai.fermat_cht_api.layer.network_service.chat.interfaces.ChatManager;
+import com.bitdubai.fermat_cht_api.layer.network_service.chat.interfaces.NetworkServiceChatManager;
 import com.bitdubai.fermat_cht_plugin.layer.middleware.chat.developer.bitdubai.version_1.database.ChatMiddlewareDatabaseConstants;
 import com.bitdubai.fermat_cht_plugin.layer.middleware.chat.developer.bitdubai.version_1.database.ChatMiddlewareDatabaseDao;
 import com.bitdubai.fermat_cht_plugin.layer.middleware.chat.developer.bitdubai.version_1.database.ChatMiddlewareDatabaseFactory;
@@ -87,7 +85,7 @@ public class ChatMiddlewarePluginRoot extends AbstractPlugin implements
     private PluginDatabaseSystem pluginDatabaseSystem;
 
     @NeededPluginReference(platform = Platforms.CHAT_PLATFORM, layer = Layers.NETWORK_SERVICE, plugin = Plugins.CHAT_NETWORK_SERVICE)
-    private ChatManager chatManager;
+    private NetworkServiceChatManager networkServiceChatManager;
 
     @NeededPluginReference(platform = Platforms.DIGITAL_ASSET_PLATFORM, layer = Layers.ACTOR_NETWORK_SERVICE, plugin = Plugins.ASSET_USER)
     AssetUserActorNetworkServiceManager assetUserActorNetworkServiceManager;
@@ -267,7 +265,8 @@ public class ChatMiddlewarePluginRoot extends AbstractPlugin implements
             chatMiddlewareManager =new ChatMiddlewareManager(
                     chatMiddlewareDatabaseDao,
                     this.chatMiddlewareContactFactory,
-                    this
+                    this,
+                    this.networkServiceChatManager
             );
 
             /**
@@ -287,7 +286,7 @@ public class ChatMiddlewarePluginRoot extends AbstractPlugin implements
                     errorManager,
                     eventManager,
                     pluginId,
-                    chatManager,
+                    networkServiceChatManager,
                     chatMiddlewareManager);
             openContractMonitorAgent.start();
 
@@ -300,6 +299,7 @@ public class ChatMiddlewarePluginRoot extends AbstractPlugin implements
             //receiveMessageTest();
             //identitiesTest();
             //discoveryTest();
+            //getContactTest();
 
         } catch (CantInitializeDatabaseException exception) {
             throw new CantStartPluginException(
@@ -394,12 +394,12 @@ public class ChatMiddlewarePluginRoot extends AbstractPlugin implements
     private void testPublicKeys(){
         List<String> publicKey = null;
         try {
-            publicKey = chatManager.getRegisteredPubliKey();
+            publicKey = networkServiceChatManager.getRegisteredPubliKey();
         } catch (CantRequestListException e) {
             System.out.println("Exception in chat middleware test: "+e.getMessage());
             e.printStackTrace();
         }
-        System.out.println("ChatPLuginRoot MY PUBLIC KEY- "+chatManager.getNetWorkServicePublicKey());
+        System.out.println("ChatPLuginRoot MY PUBLIC KEY- "+ networkServiceChatManager.getNetWorkServicePublicKey());
         System.out.println("-------------------REGISTED CHAT NETWORK SERVICE PUBLIC KEYS------------------");
         for (String key : publicKey){
             System.out.println(key);
@@ -409,8 +409,8 @@ public class ChatMiddlewarePluginRoot extends AbstractPlugin implements
     private void sendMessageTest(){
         try{
             Chat testChat=new ChatMock();
-            testChat.setLocalActorPublicKey(chatManager.getNetWorkServicePublicKey());
-            List<String> remotePublicKey = chatManager.getRegisteredPubliKey();
+            testChat.setLocalActorPublicKey(networkServiceChatManager.getNetWorkServicePublicKey());
+            List<String> remotePublicKey = networkServiceChatManager.getRegisteredPubliKey();
             testChat.setRemoteActorPublicKey(remotePublicKey.get(0));
             Message testMessage=new MessageMock(UUID.fromString("52d7fab8-a423-458f-bcc9-49cdb3e9ba8f"));
             this.chatMiddlewareManager.saveChat(testChat);
@@ -465,6 +465,20 @@ public class ChatMiddlewarePluginRoot extends AbstractPlugin implements
             int counter=0;
             for(Contact contact : contactList){
                 System.out.println("Discovery Test: Contact "+counter+"\n"+contact);
+                counter++;
+            }
+        } catch (Exception exception){
+            System.out.println("Exception in raise event chat middleware discovery test: "+exception.getMessage());
+            exception.printStackTrace();
+        }
+    }
+
+    private void getContactTest(){
+        try{
+            List<Contact> contactList=this.chatMiddlewareManager.getContacts();
+            int counter=0;
+            for(Contact contact : contactList){
+                System.out.println("Get Contact Test: Contact "+counter+"\n"+contact);
                 counter++;
             }
         } catch (Exception exception){
