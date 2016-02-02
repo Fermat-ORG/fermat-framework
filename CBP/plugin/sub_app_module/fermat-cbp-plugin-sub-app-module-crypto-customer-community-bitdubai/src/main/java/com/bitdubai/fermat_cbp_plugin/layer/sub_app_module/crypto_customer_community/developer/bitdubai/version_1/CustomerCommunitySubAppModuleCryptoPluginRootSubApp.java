@@ -20,9 +20,11 @@ import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_customer_communit
 import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_customer_community.exceptions.CryptoCustomerCancellingFailedException;
 import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_customer_community.exceptions.CryptoCustomerConnectionRejectionFailedException;
 import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_customer_community.exceptions.CryptoCustomerDisconnectingFailedException;
-import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_customer_community.interfaces.CryptoCustomerCommunityModuleManager;
-import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_customer_community.interfaces.CryptoCustomerInformation;
-import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_customer_community.interfaces.CryptoCustomerSearch;
+import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_customer_community.interfaces.CryptoCustomerCommunitySearch;
+import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_customer_community.interfaces.CryptoCustomerCommunitySelectableIdentity;
+import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_customer_community.interfaces.CryptoCustomerCommunitySubAppModuleManager;
+import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_customer_community.interfaces.CryptoCustomerCommunityInformation;
+import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_customer_community.settings.CryptoCustomerCommunitySettings;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 
 import java.util.List;
@@ -35,7 +37,7 @@ import java.util.List;
 
  */
 
-public class CustomerCommunitySubAppModuleCryptoPluginRoot extends AbstractPlugin implements CryptoCustomerCommunityModuleManager {
+public class CustomerCommunitySubAppModuleCryptoPluginRootSubApp extends AbstractPlugin implements CryptoCustomerCommunitySubAppModuleManager {
 
     /**
      * DealsWithErrors interface member variables
@@ -44,18 +46,18 @@ public class CustomerCommunitySubAppModuleCryptoPluginRoot extends AbstractPlugi
     private ErrorManager errorManager;
 
 
-    public CustomerCommunitySubAppModuleCryptoPluginRoot() {
+    public CustomerCommunitySubAppModuleCryptoPluginRootSubApp() {
         super(new PluginVersionReference(new Version()));
     }
 
 
     @Override
-    public List<CryptoCustomerInformation> getSuggestionsToContact(int max, int offset) throws CantGetCryptoCustomerListException {
+    public List<CryptoCustomerCommunityInformation> getSuggestionsToContact(int max, int offset) throws CantGetCryptoCustomerListException {
         return null;
     }
 
     @Override
-    public CryptoCustomerSearch searchCryptoCustomer() {
+    public CryptoCustomerCommunitySearch searchNewCryptoCustomer(CryptoCustomerCommunitySelectableIdentity cryptoCustomerCommunitySelectableIdentity) {
         return null;
     }
 
@@ -85,17 +87,17 @@ public class CustomerCommunitySubAppModuleCryptoPluginRoot extends AbstractPlugi
     }
 
     @Override
-    public List<CryptoCustomerInformation> getAllCryptoCustomers(int max, int offset) throws CantGetCryptoCustomerListException {
+    public List<CryptoCustomerCommunityInformation> getAllCryptoCustomers(int max, int offset) throws CantGetCryptoCustomerListException {
         return null;
     }
 
     @Override
-    public List<CryptoCustomerInformation> getCryptoCustomersWaitingYourAcceptance(int max, int offset) throws CantGetCryptoCustomerListException {
+    public List<CryptoCustomerCommunityInformation> getCryptoCustomersWaitingYourAcceptance(int max, int offset) throws CantGetCryptoCustomerListException {
         return null;
     }
 
     @Override
-    public List<CryptoCustomerInformation> getCryptoCustomersWaitingTheirAcceptance(int max, int offset) throws CantGetCryptoCustomerListException {
+    public List<CryptoCustomerCommunityInformation> getCryptoCustomersWaitingTheirAcceptance(int max, int offset) throws CantGetCryptoCustomerListException {
         return null;
     }
 
@@ -105,12 +107,12 @@ public class CustomerCommunitySubAppModuleCryptoPluginRoot extends AbstractPlugi
     }
 
     @Override
-    public SettingsManager<FermatSettings> getSettingsManager() {
+    public SettingsManager<CryptoCustomerCommunitySettings> getSettingsManager() {
         return null;
     }
 
     @Override
-    public ActiveActorIdentityInformation getSelectedActorIdentity() throws CantGetSelectedActorIdentityException, ActorIdentityNotSelectedException {
+    public CryptoCustomerCommunitySelectableIdentity getSelectedActorIdentity() throws CantGetSelectedActorIdentityException, ActorIdentityNotSelectedException {
         return null;
     }
 

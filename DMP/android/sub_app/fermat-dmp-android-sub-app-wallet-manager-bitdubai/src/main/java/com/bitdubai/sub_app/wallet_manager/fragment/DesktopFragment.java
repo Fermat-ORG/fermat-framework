@@ -500,21 +500,12 @@ public class DesktopFragment extends AbstractFermatFragment implements SearchVie
                 case SUB_APP:
                     if(((InstalledSubApp)data.getInterfaceObject()).getSubAppType().equals(SubApps.Scanner)){
                         Toast.makeText(getActivity(),"Coming soon",Toast.LENGTH_SHORT).show();
-                    }else if(((InstalledSubApp)data.getInterfaceObject()).getAppPublicKey().equals("public_key_ccp_intra_user_identity")){
+                    } else{
                         selectSubApp((InstalledSubApp) data.getInterfaceObject());
-                    } else if(((InstalledSubApp)data.getInterfaceObject()).getAppPublicKey().equals("public_key_intra_user_commmunity")){
-                        selectSubApp((InstalledSubApp) data.getInterfaceObject());
-                    }else{
-                        Toast.makeText(getActivity(),"Sorry, SubApp is not on platform",Toast.LENGTH_SHORT).show();
                     }
                     break;
                 case WALLET:
-                    if(((InstalledWallet)data.getInterfaceObject()).getWalletPublicKey().equals("reference_wallet")){
-                        selectWallet((InstalledWallet) data.getInterfaceObject());
-                    }else{
-                        Toast.makeText(getActivity(),"Sorry, Wallet is not on platform",Toast.LENGTH_SHORT).show();
-                    }
-
+                    selectWallet((InstalledWallet) data.getInterfaceObject());
                     break;
                 case EMPTY:
                     break;

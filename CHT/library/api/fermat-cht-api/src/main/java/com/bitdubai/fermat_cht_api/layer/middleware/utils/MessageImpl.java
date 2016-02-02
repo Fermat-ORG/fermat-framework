@@ -7,6 +7,7 @@ import com.bitdubai.fermat_cht_api.layer.middleware.interfaces.Message;
 import com.bitdubai.fermat_cht_api.layer.network_service.chat.interfaces.ChatMetadata;
 
 import java.sql.Date;
+import java.sql.Timestamp;
 import java.util.UUID;
 
 /**
@@ -19,7 +20,7 @@ public class MessageImpl implements Message {
     private String message;
     private MessageStatus status;
     private TypeMessage type;
-    private Date messageDate;
+    private Timestamp messageDate;
 
     public MessageImpl(){}
 
@@ -33,7 +34,7 @@ public class MessageImpl implements Message {
         message=chatMetadata.getMessage();
         status=messageStatus;
         type=typeMessage;
-        messageDate=new Date(
+        messageDate=new Timestamp(
                 chatMetadata.getDate().getTime());
     }
 
@@ -88,12 +89,12 @@ public class MessageImpl implements Message {
     }
 
     @Override
-    public Date getMessageDate() {
+    public Timestamp getMessageDate() {
         return this.messageDate;
     }
 
     @Override
-    public void setMessageDate(Date messageDate) {
+    public void setMessageDate(Timestamp messageDate) {
         this.messageDate = messageDate;
     }
 
