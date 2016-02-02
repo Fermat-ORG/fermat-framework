@@ -318,13 +318,13 @@ public class OpenNegotiationAdapter extends FermatAdapter<ClauseInformation, Fer
         ClauseInformation clause = null;
 
         if(currencyType != null) {
-            if (currencyType.equals(CurrencyType.CRYPTO_MONEY.getFriendlyname()))
+            if (currencyType.equals(CurrencyType.CRYPTO_MONEY.getFriendlyName()))
                 clause = clauses.get(ClauseType.BROKER_CRYPTO_ADDRESS);
 
-            else if (currencyType.equals(CurrencyType.BANK_MONEY.getFriendlyname()))
+            else if (currencyType.equals(CurrencyType.BANK_MONEY.getFriendlyName()))
                 clause = clauses.get(ClauseType.BROKER_BANK_ACCOUNT);
 
-            else if (currencyType.equals(CurrencyType.CASH_DELIVERY_MONEY.getFriendlyname()) || (currencyType.equals(CurrencyType.CASH_ON_HAND_MONEY.getFriendlyname())))
+            else if (currencyType.equals(CurrencyType.CASH_DELIVERY_MONEY.getFriendlyName()) || (currencyType.equals(CurrencyType.CASH_ON_HAND_MONEY.getFriendlyName())))
                 clause = clauses.get(ClauseType.BROKER_PLACE_TO_DELIVER);
         }
 
@@ -337,13 +337,13 @@ public class OpenNegotiationAdapter extends FermatAdapter<ClauseInformation, Fer
         ClauseInformation clause = null;
 
         if(currencyType != null) {
-            if (currencyType.equals(CurrencyType.CRYPTO_MONEY.getFriendlyname()))
+            if (currencyType.equals(CurrencyType.CRYPTO_MONEY.getFriendlyName()))
                 clause = clauses.get(ClauseType.CUSTOMER_CRYPTO_ADDRESS);
 
-            else if (currencyType.equals(CurrencyType.BANK_MONEY.getFriendlyname()))
+            else if (currencyType.equals(CurrencyType.BANK_MONEY.getFriendlyName()))
                 clause = clauses.get(ClauseType.CUSTOMER_BANK_ACCOUNT);
 
-            else if (currencyType.equals(CurrencyType.CASH_DELIVERY_MONEY.getFriendlyname()) || (currencyType.equals(CurrencyType.CASH_ON_HAND_MONEY.getFriendlyname())))
+            else if (currencyType.equals(CurrencyType.CASH_DELIVERY_MONEY.getFriendlyName()) || (currencyType.equals(CurrencyType.CASH_ON_HAND_MONEY.getFriendlyName())))
                 clause = clauses.get(ClauseType.CUSTOMER_PLACE_TO_DELIVER);
         }
 

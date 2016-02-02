@@ -1,6 +1,6 @@
 package com.bitdubai.fermat_cbp_api.all_definition.wallet;
 
-import com.bitdubai.fermat_api.layer.all_definition.enums.interfaces.FermatEnum;
+import com.bitdubai.fermat_api.layer.world.interfaces.Currency;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.BalanceType;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.CurrencyType;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.OriginTransaction;
@@ -23,7 +23,7 @@ public interface StockTransaction {
 
     CurrencyType getCurrencyType();
 
-    FermatEnum getMerchandise();
+    Currency getMerchandise();
 
     String getWalletPublicKey();
 

@@ -45,11 +45,6 @@ public class CommunicationNetworkServiceLocal implements Observer, NetworkServic
     private PlatformComponentProfile remoteNetworkServiceProfile;
 
     /**
-     * Represent the profile of the local network service
-     */
-    private NetworkServiceType networkServiceTypePluginRoot;
-
-    /**
      * DealsWithErrors Interface member variables.
      */
     private ErrorManager errorManager;
@@ -79,13 +74,11 @@ public class CommunicationNetworkServiceLocal implements Observer, NetworkServic
     public CommunicationNetworkServiceLocal(PlatformComponentProfile remoteNetworkServiceProfile,
                                             ErrorManager errorManager, EventManager eventManager,
                                             OutgoingMessageDao outgoingMessageDao,
-                                            NetworkServiceType networkServiceTypePluginRoot,
                                             NetworkService networkService) {
         this.remoteNetworkServiceProfile = remoteNetworkServiceProfile;
         this.errorManager = errorManager;
         this.eventManager = eventManager;
         this.outgoingMessageDao = outgoingMessageDao;
-        this.networkServiceTypePluginRoot = networkServiceTypePluginRoot;
         this.networkServicePluginRoot = networkService;
     }
 

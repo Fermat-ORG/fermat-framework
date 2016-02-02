@@ -55,23 +55,15 @@ public final class CryptoAddressesExecutorAgent extends FermatAgent {
     private Map<String, String> poolConnectionsWaitingForResponse;
 
     private final CryptoAddressesNetworkServicePluginRoot cryptoAddressesNetworkServicePluginRoot;
-    private final ErrorManager                            errorManager                           ;
-    private final EventManager                            eventManager                           ;
     private final CryptoAddressesNetworkServiceDao        dao                                    ;
-    private final WsCommunicationsCloudClientManager      wsCommunicationsCloudClientManager     ;
+
     private Future<?> future;
 
     public CryptoAddressesExecutorAgent(final CryptoAddressesNetworkServicePluginRoot cryptoAddressesNetworkServicePluginRoot,
-                                        final ErrorManager                            errorManager                           ,
-                                        final EventManager                            eventManager                           ,
-                                        final CryptoAddressesNetworkServiceDao        dao                                    ,
-                                        final WsCommunicationsCloudClientManager      wsCommunicationsCloudClientManager     ) {
+                                        final CryptoAddressesNetworkServiceDao        dao                                    ) {
 
         this.cryptoAddressesNetworkServicePluginRoot      = cryptoAddressesNetworkServicePluginRoot;
-        this.errorManager                                 = errorManager                           ;
-        this.eventManager                                 = eventManager                           ;
         this.dao                                          = dao                                    ;
-        this.wsCommunicationsCloudClientManager           = wsCommunicationsCloudClientManager     ;
 
         this.status                                       = AgentStatus.CREATED                    ;
 
@@ -94,6 +86,10 @@ public final class CryptoAddressesExecutorAgent extends FermatAgent {
     public final void start() throws CantStartAgentException {
 
         try {
+            if(future!=null){
+                future.cancel(true);
+            }
+
             future = executorService.submit(agentTask);
             this.status = AgentStatus.STARTED;
 
@@ -113,6 +109,9 @@ public final class CryptoAddressesExecutorAgent extends FermatAgent {
     @Override
     public void resume() {
         this.status = AgentStatus.STARTED;
+        if(future!=null){
+            future.cancel(true);
+        }
         future = executorService.submit(agentTask);
     }
 
@@ -131,14 +130,21 @@ public final class CryptoAddressesExecutorAgent extends FermatAgent {
 
         try {
 
-            if(cryptoAddressesNetworkServicePluginRoot.isRegister()) {
+            if (cryptoAddressesNetworkServicePluginRoot.getWsCommunicationsCloudClientManager().getCommunicationsCloudClientConnection() != null){
 
-                // function to process and send the right message to the counterparts.
-                processSend();
+                if (!cryptoAddressesNetworkServicePluginRoot.getWsCommunicationsCloudClientManager().getCommunicationsCloudClientConnection().isConnected()){
+                    //System.out.println("CryptoAddressesExecutorAgent - sendCycle() no connection available ... ");
+                    return;
+                }else {
+
+                    // function to process and send the right message to the counterparts.
+                    processSend();
+
+                    //Sleep for a while
+                    Thread.sleep(SLEEP_TIME);
+
+                }
             }
-
-            //Sleep for a time
-            Thread.sleep(SLEEP_TIME);
 
         } catch (InterruptedException e) {
 
@@ -240,14 +246,21 @@ public final class CryptoAddressesExecutorAgent extends FermatAgent {
 
         try {
 
-            if(cryptoAddressesNetworkServicePluginRoot.isRegister()) {
+            if (cryptoAddressesNetworkServicePluginRoot.getWsCommunicationsCloudClientManager().getCommunicationsCloudClientConnection() != null){
 
-                // function to process and send the right message to the counterparts.
-                processReceive();
+                if (!cryptoAddressesNetworkServicePluginRoot.getWsCommunicationsCloudClientManager().getCommunicationsCloudClientConnection().isConnected()){
+                    //System.out.println("CryptoAddressesExecutorAgent - receiveCycle() no connection available ... ");
+                    return;
+                }else {
+
+                    // function to process and send the right message to the counterparts.
+                    processReceive();
+
+                    //Sleep for a while
+                    Thread.sleep(SLEEP_TIME);
+
+                }
             }
-
-            //Sleep for a while
-            Thread.sleep(SLEEP_TIME);
 
         } catch (InterruptedException e) {
             Thread.currentThread().interrupt();
@@ -264,21 +277,23 @@ public final class CryptoAddressesExecutorAgent extends FermatAgent {
         try {
 
             // if there is pending actions i raise a crypto address news event.
-            if(dao.isPendingRequestByProtocolStateAndNotReadAndReceived(ProtocolState.PENDING_ACTION)){
-                FermatEvent eventToRaise = eventManager.getNewEvent(EventType.CRYPTO_ADDRESSES_NEWS);
-                eventToRaise.setSource(cryptoAddressesNetworkServicePluginRoot.getEventSource());
-                eventManager.raiseEvent(eventToRaise);
-                System.out.println("CRYPTO ADDRESS NEWS");
-            }
+//            if(dao.isPendingRequestByProtocolStateAndNotReadAndReceived(ProtocolState.PENDING_ACTION)){
+//                FermatEvent eventToRaise = eventManager.getNewEvent(EventType.CRYPTO_ADDRESSES_NEWS);
+//                eventToRaise.setSource(cryptoAddressesNetworkServicePluginRoot.getEventSource());
+//                eventManager.raiseEvent(eventToRaise);
+//                System.out.println("CRYPTO ADDRESS NEWS");
+//            }
 
+            //TODO:aca dispara este evento que va a tratar de actualizar el address del contacto cuando en realidad solo tiene que generarla
+            //hay que separar los evento para que el wallet contact escuche otro evento de actualizar el address
             List<CryptoAddressRequest> list = dao.listPendingRequestsByProtocolState(ProtocolState.PENDING_ACTION);
             for(CryptoAddressRequest cryptoAddressRequest : list){
                 if(!cryptoAddressRequest.isReadMark() ) {
                     if (cryptoAddressRequest.getMessageType().equals(AddressesConstants.INCOMING_MESSAGE)) {
-                        System.out.println("CRYPTO ADDRESS NEWS LA CONCHA DE TU MADRE");
-                        FermatEvent eventToRaise = eventManager.getNewEvent(EventType.CRYPTO_ADDRESSES_NEWS);
+                        System.out.println("CRYPTO ADDRESS NEWS - INCOMING MESSAGE");
+                        FermatEvent eventToRaise = cryptoAddressesNetworkServicePluginRoot.getEventManager().getNewEvent(EventType.CRYPTO_ADDRESSES_NEWS);
                         eventToRaise.setSource(cryptoAddressesNetworkServicePluginRoot.getEventSource());
-                        eventManager.raiseEvent(eventToRaise);
+                        cryptoAddressesNetworkServicePluginRoot.getEventManager().raiseEvent(eventToRaise);
                     }
 
                 }
@@ -288,9 +303,9 @@ public final class CryptoAddressesExecutorAgent extends FermatAgent {
             for(CryptoAddressRequest cryptoAddressRequest : list1){
                 if(!cryptoAddressRequest.isReadMark()){
                     if(cryptoAddressRequest.getMessageType().equals(AddressesConstants.OUTGOING_MESSAGE)){
-                         FermatEvent eventToRaise = eventManager.getNewEvent(EventType.CRYPTO_ADDRESSES_NEWS);
+                         FermatEvent eventToRaise = cryptoAddressesNetworkServicePluginRoot.getEventManager().getNewEvent(EventType.CRYPTO_ADDRESSES_NEWS);
                         eventToRaise.setSource(cryptoAddressesNetworkServicePluginRoot.getEventSource());
-                        eventManager.raiseEvent(eventToRaise);
+                        cryptoAddressesNetworkServicePluginRoot.getEventManager().raiseEvent(eventToRaise);
                         System.out.println("CRYPTO ADDRESS NEWS PROTOCOL DONE");
 
                     }
@@ -320,12 +335,12 @@ public final class CryptoAddressesExecutorAgent extends FermatAgent {
 
                 if (cryptoAddressesNetworkServicePluginRoot.getNetworkServiceConnectionManager().getNetworkServiceLocalInstance(actorPublicKey) == null) {
 
-                    PlatformComponentProfile applicantParticipant = wsCommunicationsCloudClientManager.getCommunicationsCloudClientConnection()
+                    PlatformComponentProfile applicantParticipant = cryptoAddressesNetworkServicePluginRoot.getWsCommunicationsCloudClientManager().getCommunicationsCloudClientConnection()
                             .constructBasicPlatformComponentProfileFactory(
                                     identityPublicKey,
                                     NetworkServiceType.UNDEFINED,
                                     platformComponentTypeSelectorByActorType(identityType));
-                    PlatformComponentProfile remoteParticipant = wsCommunicationsCloudClientManager.getCommunicationsCloudClientConnection()
+                    PlatformComponentProfile remoteParticipant = cryptoAddressesNetworkServicePluginRoot.getWsCommunicationsCloudClientManager().getCommunicationsCloudClientConnection()
                             .constructBasicPlatformComponentProfileFactory(
                                     actorPublicKey,
                                     NetworkServiceType.UNDEFINED,
@@ -470,7 +485,7 @@ public final class CryptoAddressesExecutorAgent extends FermatAgent {
     }
 
     private void reportUnexpectedError(final Exception e) {
-        errorManager.reportUnexpectedPluginException(cryptoAddressesNetworkServicePluginRoot.getPluginVersionReference(), UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+        cryptoAddressesNetworkServicePluginRoot.getErrorManager().reportUnexpectedPluginException(cryptoAddressesNetworkServicePluginRoot.getPluginVersionReference(), UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
     }
 
     public void connectionFailure(final String destinationPublicKey){
@@ -479,5 +494,9 @@ public final class CryptoAddressesExecutorAgent extends FermatAgent {
 
     public boolean isConnectionOpen(String destinationPublicKey) {
         return poolConnectionsWaitingForResponse.containsKey(destinationPublicKey);
+    }
+
+    public Map<String, String> getPoolConnectionsWaitingForResponse() {
+        return poolConnectionsWaitingForResponse;
     }
 }
