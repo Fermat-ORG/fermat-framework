@@ -12,6 +12,7 @@ import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView;
+import com.bitdubai.fermat_android_api.ui.Views.PresentationDialog;
 import com.bitdubai.fermat_android_api.ui.adapters.FermatAdapter;
 import com.bitdubai.fermat_android_api.ui.enums.FermatRefreshTypes;
 import com.bitdubai.fermat_android_api.ui.fragments.FermatWalletListFragment;
@@ -61,6 +62,8 @@ public class AccountDetailFragment extends FermatWalletListFragment<BankMoneyTra
     private ImageView imageView;
     private  int imageAccount;
 
+    private PresentationDialog presentationDialog;
+
     private static final String TAG = "AccountListActivityFragment";
     public AccountDetailFragment() {
     }
@@ -101,7 +104,13 @@ public class AccountDetailFragment extends FermatWalletListFragment<BankMoneyTra
         this.fab = (com.getbase.floatingactionbutton.FloatingActionsMenu) layout.findViewById(R.id.bw_fab_multiple_actions);
         this.availableTextView = (FermatTextView) layout.findViewById(R.id.available_balance);
         this.bookTextView = (FermatTextView) layout.findViewById(R.id.book_balance);
-
+        presentationDialog = new PresentationDialog.Builder(getActivity(),appSession)
+                .setBannerRes(R.drawable.bw_banner)
+                .setBody(R.string.bnk_bank_money_wallet_account_body)
+                .setTitle("prueba Title")
+                .setSubTitle(R.string.bnk_bank_money_wallet_account_subTitle)
+                .setTextFooter(R.string.bnk_bank_money_wallet_account_footer).setTemplateType(PresentationDialog.TemplateType.TYPE_PRESENTATION_WITHOUT_IDENTITIES)
+                .build();
         List<BankAccountNumber> tempList= new ArrayList<>();
         tempList.add(bankAccountNumber);
 
@@ -270,10 +279,10 @@ public class AccountDetailFragment extends FermatWalletListFragment<BankMoneyTra
     }
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        /*if (item.getItemId() == ReferenceWalletConstants.ADD_ACCOUNT_ACTION) {
-            changeActivity(Activities.BNK_BANK_MONEY_WALLET_ADD_ACCOUNT, appSession.getAppPublicKey());
+        if (item.getItemId() == ReferenceWalletConstants.HELP_ACTION) {
+            presentationDialog.show();
             return true;
-        }*/
+        }
         return super.onOptionsItemSelected(item);
     }
 }

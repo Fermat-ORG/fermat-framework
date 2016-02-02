@@ -142,6 +142,10 @@ public class AccountsListFragment extends FermatWalletListFragment<BankAccountNu
             changeActivity(Activities.BNK_BANK_MONEY_WALLET_ADD_ACCOUNT, appSession.getAppPublicKey());
             return true;
         }
+        if (item.getItemId() == ReferenceWalletConstants.HELP_ACTION) {
+            presentationDialog.show();
+            return true;
+        }
         return super.onOptionsItemSelected(item);
     }
 
