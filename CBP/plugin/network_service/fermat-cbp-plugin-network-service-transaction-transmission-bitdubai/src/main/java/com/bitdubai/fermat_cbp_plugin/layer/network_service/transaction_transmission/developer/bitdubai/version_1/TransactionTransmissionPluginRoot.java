@@ -32,6 +32,7 @@ import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginTextFile;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantCreateFileException;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.FileNotFoundException;
+import com.bitdubai.fermat_cbp_plugin.layer.network_service.transaction_transmission.developer.bitdubai.version_1.event_handlers.CompleteRequestListComponentRegisteredNotificationEventHandler;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.common.network_services.interfaces.NetworkService;
 import com.bitdubai.fermat_api.layer.all_definition.network_service.interfaces.NetworkServiceConnectionManager;
 import com.bitdubai.fermat_api.layer.all_definition.util.Version;
@@ -242,17 +243,7 @@ public class TransactionTransmissionPluginRoot extends AbstractNetworkService im
 
         try{
 
-            this.communicationNetworkServiceConnectionManager = new CommunicationNetworkServiceConnectionManager(
-                    platformComponentProfilePluginRoot,
-                    identity,
-                    wsCommunicationsCloudClientManager.getCommunicationsCloudClientConnection(),
-                    database,
-                    errorManager,
-                    eventManager,
-                    EVENT_SOURCE,
-                    getPluginVersionReference(),
-                    this
-            );
+            this.communicationNetworkServiceConnectionManager = new CommunicationNetworkServiceConnectionManager(getPlatformComponentProfilePluginRoot(), identity, wsCommunicationsCloudClientManager.getCommunicationsCloudClientConnection(), database, errorManager, eventManager);
 
         }catch(Exception ex){
             StringBuffer contextBuffer = new StringBuffer();
@@ -340,6 +331,14 @@ public class TransactionTransmissionPluginRoot extends AbstractNetworkService im
          */
         FermatEventListener fermatEventListener = eventManager.getNewListener(P2pEventType.COMPLETE_COMPONENT_REGISTRATION_NOTIFICATION);
         fermatEventListener.setEventHandler(new CompleteComponentRegistrationNotificationEventHandler(this));
+        eventManager.addListener(fermatEventListener);
+        listenersAdded.add(fermatEventListener);
+
+        /**
+         * Listen and handle Complete Request List Component Registered Notification Event
+         */
+        fermatEventListener = eventManager.getNewListener(P2pEventType.COMPLETE_REQUEST_LIST_COMPONENT_REGISTERED_NOTIFICATION);
+        fermatEventListener.setEventHandler(new CompleteRequestListComponentRegisteredNotificationEventHandler(this));
         eventManager.addListener(fermatEventListener);
         listenersAdded.add(fermatEventListener);
 
@@ -910,7 +909,8 @@ public class TransactionTransmissionPluginRoot extends AbstractNetworkService im
              * Its all ok, set the new status
             */
             this.serviceStatus = ServiceStatus.STARTED;
-            //System.out.println("Transaction Transmission started");
+            System.out.println("--------------------------------------\nTransactionTransmissionPluginRoot - Transaction Transmission started\n--------------------------------------------");
+            //System.out.println("TransactionTransmissionPluginRoot - Public Key:"+getIdentityPublicKey());
             //launchNotificationTest();
             //sendMetadataTest();
         } catch (CantInitializeDatabaseException exception) {
@@ -1192,9 +1192,9 @@ public class TransactionTransmissionPluginRoot extends AbstractNetworkService im
         try{
             String contractHash="888052D7D718420BD197B647F3BB04128C9B71BC99DBB7BC60E78BDAC4DFC6E2";
             ContractTransactionStatus contractTransactionStatus=ContractTransactionStatus.CONTRACT_OPENED;
-            String receiverId="04B8F71BC0272800024360F887A409FF1ADE489BE88820B8AD542D749771B58037DE7773F0461CF8027B784794A9DB3490CBC60EC8500D14DEB8388200F575B536";
+            String receiverId="047B6EC24563A5E8BFDFBDB70CC36DE73C42E95E90EE6E8D2A52347A59D38AF5D13BCBBE7C8BBE643A463F8F2F1F0BFF384F56B15F95A292AEAEF7F8F55A5C787E";
             PlatformComponentType receiverType=PlatformComponentType.NETWORK_SERVICE;
-            String senderId="senderId";
+            String senderId=getIdentityPublicKey();
             PlatformComponentType senderType=PlatformComponentType.NETWORK_SERVICE;
             String contractId="888052D7D718420BD197B647F3BB04128C9B71BC99DBB7BC60E78BDAC4DFC6E2";
             String negotiationId="550e8400-e29b-41d4-a716-446655440000";

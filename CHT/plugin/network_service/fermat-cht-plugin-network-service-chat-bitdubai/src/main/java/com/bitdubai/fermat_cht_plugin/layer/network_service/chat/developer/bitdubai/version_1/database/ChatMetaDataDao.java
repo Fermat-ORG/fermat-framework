@@ -39,10 +39,8 @@ import java.util.UUID;
 
 
 /**
- * The Class <code>com.bitdubai.fermat_dap_plugin.layer.actor.network.service.asset.user.developer.bitdubai.version_1.database.communications.OutgoingMessageDao</code> is
- * throw when error occurred updating new record in a table of the data base
- * <p/>
- * Created by Roberto Requena - (rart3001@gn¡mail.com) on 15/10/2015
+ *
+ * Created by Gabriel Araujo (gabe_512@hotmail.com)
  *
  * @version 1.0
  * @since Java JDK 1.7
@@ -56,10 +54,12 @@ public class ChatMetaDataDao {
 
     private PluginDatabaseSystem pluginDatabaseSystem;
     private UUID pluginId;
+
     /**
-     * Constructor with parameters
-     *
+     * Constructor
      * @param dataBase
+     * @param pluginDatabaseSystem
+     * @param pluginId
      */
     public ChatMetaDataDao(Database dataBase, PluginDatabaseSystem pluginDatabaseSystem, UUID pluginId) {
         super();
@@ -89,7 +89,7 @@ public class ChatMetaDataDao {
     /**
      * Method that find an ChatMetadataTransactionRecord by id in the data base.
      *
-     * @param hash Long id.
+     * @param hash String id.
      * @return ChatMetadataTransactionRecord found.
      * @throws CantReadRecordDataBaseException
      */
@@ -140,6 +140,13 @@ public class ChatMetaDataDao {
 
         return chatMetadaTransactionRecord;
     }
+
+    /**
+     *
+     * @param id
+     * @return
+     * @throws CantReadRecordDataBaseException
+     */
     public ChatMetadataTransactionRecord findById(String id) throws CantReadRecordDataBaseException {
 
         if (id == null) {
@@ -188,13 +195,17 @@ public class ChatMetaDataDao {
         return chatMetadaTransactionRecord;
     }
 
+    /**
+     * Returns a unique UUID to the transaction ID
+     * @param id
+     * @return
+     * @throws CantReadRecordDataBaseException
+     */
     public UUID getNewUUID(String id) throws CantReadRecordDataBaseException {
 
         if (id == null) {
             throw new IllegalArgumentException("The id is required, can not be null");
         }
-
-        ChatMetadataTransactionRecord chatMetadaTransactionRecord = null;
 
         //transforma string to UUID
         UUID newUUID = UUID.fromString(id);
@@ -470,28 +481,6 @@ public class ChatMetaDataDao {
          * return the list
          */
         return list;
-    }
-    private Database openDatabase() throws CantOpenDatabaseException, CantCreateDatabaseException {
-        try {
-            dataBase = pluginDatabaseSystem.openDatabase(this.pluginId, NetworkServiceChatNetworkServiceDatabaseConstants.DATA_BASE_NAME);
-
-        } catch (DatabaseNotFoundException e) {
-            NetworkServiceChatNetworkServiceDatabaseFactory networkServiceChatNetworkServiceDatabaseFactory = new NetworkServiceChatNetworkServiceDatabaseFactory(pluginDatabaseSystem);
-            dataBase = networkServiceChatNetworkServiceDatabaseFactory.createDatabase(this.pluginId, NetworkServiceChatNetworkServiceDatabaseConstants.DATA_BASE_NAME);
-        }
-        return dataBase;
-    }
-    private DatabaseTable getDatabaseTable(String tableName) {
-        return dataBase.getTable(tableName);
-    }
-
-    private boolean isNewRecord(DatabaseTable table, DatabaseTableFilter filter) throws CantLoadTableToMemoryException {
-        table.addStringFilter(filter.getColumn(), filter.getValue(), filter.getType());
-        table.loadToMemory();
-        if (table.getRecords().isEmpty())
-            return true;
-        else
-            return false;
     }
 
     /**

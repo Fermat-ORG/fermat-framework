@@ -20,6 +20,6 @@ public interface Contact {
     void setRemoteActorType(PlatformComponentType remoteActorType);
     String getRemoteActorPublicKey();
     void setRemoteActorPublicKey(String remoteActorPublicKey);
-    Date getCreationDate();
-    void setCreationDate(Date creationDate);
+    long getCreationDate();
+    void setCreationDate(long creationDate);
 }
