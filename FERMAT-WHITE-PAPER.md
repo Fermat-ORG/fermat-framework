@@ -113,15 +113,25 @@ Underneath the sight of end users all these components collaborate between each 
 <br>
 ## Fermat Application Tokens
 
-Fermat generates its tokens, the _fermats_, with a predetermined algorithm that cannot be changed, and those tokens are necessary for Fermat to function. Fermat miners are rewarded with _fermats_ for their contributions in running the Fermat network.
+End Users requires to different types of tokens to use Fermat:
 
-These application tokens are native to the Fermat system and are necessary to access to the application. Contribution of value from miners are rewarded in the application’s tokens as well as developers which are rewarded with tokens for the plug-ins they build for the system. Fermat's blockchain only records the issuing of new fermats and outsources the transaction processing from the bitcoin network. In this sense Fermat is a type II Dapp.[2]
+**d-fermats tokens [DFT]** : Are required to pay micro use licenses to component developers.
+**b-fermats tokens [BFT]** : Are required to pay Fermat Miners for bandwidth.
+
+The Fermat Foundation issues _d-fermats_ to incentivice the development of Fermat Intraestructure and Fermat APPs according to a road map and master plan. End Users must aquire these tokens from developers and holders in order to run Fermat APPs that require the payment of micro use licenses.
+
+The Fermat Protocol issues _b-fermats_, with a predetermined algorithm that cannot be changed, and those tokens are necessary for The Fermat Network to function. Fermat miners are rewarded with _b-fermats_ for their contributions in running the Fermat network. End Users must aquire these tokens from miners and holders in order to pay for bandwith on the Fermat Network. 
+
+These application tokens are native to the Fermat system and are necessary to access to the application. Contribution of value from miners are rewarded in the application’s tokens called _b-fermats_ as well as developers which are rewarded with tokens called _d-fermats_ for the components they build for the system. Fermat's blockchain only records the issuing of new _b-fermats_ and outsources the transaction processing from the bitcoin network. In this sense Fermat is a type II Dapp.[2]. Developer tokens _d-fermats_ are issued by the Fermat Foundations as digital assets.
 
 ![alt text](https://github.com/bitDubai/media-kit/blob/master/MediaKit/Tokens/Fermat%20App%20Token/PerspView/HQ_1920x1080.jpg "Fermat Application Token")
 
 ### Token Records
 
-Fermat's tokens data and records are cryptographically stored in a public, decentralized blockchain in order to avoid any central points of failure. This blockchain is stored at Fermat Nodes.
+Fermat's bandwith tokens (_b-fermats_) issuing data and records are cryptographically stored in a public, decentralized blockchain in order to avoid any central points of failure. This blockchain is stored at Fermat Nodes.
+
+Fermat's developer tokens (_d-fermats_) issuing data and records are cryptographically stored in a public, decentralized blockchain in order to avoid any central points of failure. This blockchain is stored at a Device Private Network owend by the Fermat Foundation.
+
 
 ### Token Generation & Distribution
 
@@ -129,11 +139,11 @@ Fermat implement three different mechanisms for token generation and distributio
 
 #### Fund-raising Mechanism
 
-With the fund-raising mechanism, tokens are distributed to those who fund the initial development of the Fermat System. The funds collected are used to fund the development of the core of the Fermat System (core libraries, api libraries, add-ons and the fermat.org web site). The tokens generated during the fund-raising are recorded as the genesis transaction of the Fermat's blockchain.
+With the fund-raising mechanism, developer tokens (_d-fermats_) are distributed to those who fund the initial development of the Fermat System. The funds collected are used to fund the development of the core of the Fermat System (core libraries, api libraries, add-ons and the fermat.org web site). The tokens generated during the fund-raising are recorded at the Fermat's developer tokens blockchain.
 
 #### Development Mechanism
 
-With the development mechanism, tokens are generated using a predefined mechanism and are only available for the development of Fermat components (plug-ins, GUI components, skins, language packages, and analisys of future development). These fermats become available through a pre-determined schedule and are distributed in two ways:
+With the development mechanism, development tokens are generated using a predefined mechanism and are only available for the development of Fermat components (plug-ins, GUI components, skins, language packages, and analisys of future development). These fermats become available through a pre-determined schedule and are distributed in two ways:
 
 1. Via a community-driven contribution program [3] where different teams of developers and designers work either part-time or full-time on the project.
 
@@ -141,23 +151,23 @@ With the development mechanism, tokens are generated using a predefined mechanis
 
 #### Mining Mechanism
 
-The Fermat Protocol generates tokens according to a standard crytptographic algorithm acting as a proof of the value nodes are contributing to the application (Fermat uses a kind of Proof of Work Algorithm designed for the particular services Fermat nodes are providing).
+The Fermat Protocol generates bandwith tokens (_b-fermats_) according to a standard crytptographic algorithm acting as a proof of the value nodes are contributing to the application (Fermat uses a kind of Proof of Work Algorithm designed for the particular services Fermat nodes are providing).
 
-With the mining mechanism, tokens are distributed to those who contribute most work to the operation of the Fermat Network. In this case, _fermats_ are distributed through a predetermined algorithm to the miners that connect clients between each other and allow clients to talk through them.
+With the mining mechanism, tokens are distributed to those who contribute most work to the operation of the Fermat Network. In this case, _b-fermats_ are distributed through a predetermined algorithm to the miners that connect clients between each other and allow clients to talk through them.
 
 ### Token Issuing
 
 #### Fermat.org (Non-profit organization)
 
-Fund-raising Fermat tokens are issued by a non-profit organization called Fermat.org that will never receive financial benefits from the Fermat system. This organization have the following responsibilities:
+Fund-raising Fermat developers tokens (_d-fermats_) are issued by a non-profit organization called Fermat.org that will never receive financial benefits from the Fermat system. This organization have the following responsibilities:
 
-* Issuance of initial tokens
-* Holding of developer tokens
+* Issuance of initial  _d-fermats_ tokens
+* Holding of developer tokens _d-fermats_
 * Management of bounty payments
 * Determining the Fermat System direction
-* Collecting and distributing statistical information from the Fermat System.
+* Collecting and distributing statistical information from the Fermat System
 
-Fermat.org makes decisions in a decentralized manner, using a “proof of stake” voting mechanism for any decision.
+Fermat.org will make decisions in a decentralized manner, using a “proof of stake” voting mechanism for any decision once the project is mature enought. Meanwhile the direction of the project is determined by its founders.
 
 #### Fermat Protocol
 
