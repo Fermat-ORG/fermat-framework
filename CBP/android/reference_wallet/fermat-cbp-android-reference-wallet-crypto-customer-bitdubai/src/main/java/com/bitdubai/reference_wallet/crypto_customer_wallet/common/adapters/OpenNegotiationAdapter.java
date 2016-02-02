@@ -8,6 +8,7 @@ import android.view.ViewGroup;
 import com.bitdubai.fermat_android_api.ui.adapters.FermatAdapter;
 import com.bitdubai.fermat_android_api.ui.holders.FermatViewHolder;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.ClauseType;
+import com.bitdubai.fermat_cbp_api.all_definition.enums.CurrencyType;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.common.interfaces.ClauseInformation;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.common.interfaces.CustomerBrokerNegotiationInformation;
 import com.bitdubai.reference_wallet.crypto_customer_wallet.R;
@@ -42,12 +43,6 @@ public class OpenNegotiationAdapter extends FermatAdapter<ClauseInformation, Fer
     private static final int TYPE_ITEM_AMOUNT_TO_PAY = 6;
     private static final int TYPE_FOOTER = 5;
 
-
-    public static final String CASH_IN_HAND = "Cash on Hand";
-    public static final String CASH_DELIVERY = "Cash Delivery";
-    public static final String BANK_TRANSFER = "Bank Transfer";
-    public static final String CRYPTO_TRANSFER = "Crypto Transfer";
-
     private CustomerBrokerNegotiationInformation negotiationInformation;
     private OpenNegotiationDetailsFragment footerListener;
     private ClauseViewHolder.Listener clauseListener;
@@ -71,6 +66,9 @@ public class OpenNegotiationAdapter extends FermatAdapter<ClauseInformation, Fer
     public void changeDataSet(CustomerBrokerNegotiationInformation negotiationInfo) {
 
         this.negotiationInformation = negotiationInfo;
+
+        dataSet = new ArrayList<>();
+        dataSet.addAll(buildListOfItems());
 
         final List<ClauseInformation> items = buildListOfItems();
         super.changeDataSet(items);
@@ -100,7 +98,7 @@ public class OpenNegotiationAdapter extends FermatAdapter<ClauseInformation, Fer
                 return new SingleChoiceViewHolder(itemView);
 
             case TYPE_ITEM_EXCHANGE_RATE:
-                    final ExchangeRateViewHolder exchangeRateViewHolder = new ExchangeRateViewHolder(itemView);
+                final ExchangeRateViewHolder exchangeRateViewHolder = new ExchangeRateViewHolder(itemView);
                 exchangeRateViewHolder.setMarketRateList(marketRateList);
                 return exchangeRateViewHolder;
 
@@ -218,7 +216,6 @@ public class OpenNegotiationAdapter extends FermatAdapter<ClauseInformation, Fer
                 break;
             //PAYMENT METHOD CLAUSES
             case CUSTOMER_PAYMENT_METHOD:
-                //TODO ACA DIO EXCEPTION REVISAR
                 clauseViewHolder.setViewResources(R.string.payment_methods_title, clauseNumberImageRes, R.string.payment_method);
                 break;
             case BROKER_PAYMENT_METHOD:
@@ -276,7 +273,15 @@ public class OpenNegotiationAdapter extends FermatAdapter<ClauseInformation, Fer
 
         Map<ClauseType, ClauseInformation> clauses = negotiationInformation.getClauses();
 
-        final int TOTAL_STEPS = 8;
+//        final int TOTAL_STEPS = getTotalSteps(clauses);
+        int TOTAL_STEPS = 8;
+        int contInd = TOTAL_STEPS - 1;
+        ClauseInformation brokerPaymentMethod = getCustomerPaymentInfo(clauses);
+        ClauseInformation customerReceivedMethod = getBrokerPaymentInfo(clauses);
+
+        if(brokerPaymentMethod != null)     TOTAL_STEPS = TOTAL_STEPS + 1;
+        if(customerReceivedMethod != null)  TOTAL_STEPS = TOTAL_STEPS + 1;
+
 
         final ClauseInformation[] data = new ClauseInformation[TOTAL_STEPS];
 
@@ -286,54 +291,59 @@ public class OpenNegotiationAdapter extends FermatAdapter<ClauseInformation, Fer
         data[3] = clauses.get(ClauseType.BROKER_CURRENCY_QUANTITY);
         data[4] = clauses.get(ClauseType.CUSTOMER_PAYMENT_METHOD);
         data[5] = clauses.get(ClauseType.BROKER_PAYMENT_METHOD);
-//        data[6] = getCustomerPaymentInfo(clauses);
-//        data[7] = getBrokerPaymentInfo(clauses);
         data[6] = clauses.get(ClauseType.CUSTOMER_DATE_TIME_TO_DELIVER);
-        data[7] = clauses.get(ClauseType.CUSTOMER_DATE_TIME_TO_DELIVER);
+        data[7] = clauses.get(ClauseType.BROKER_DATE_TIME_TO_DELIVER);
 
+        if(brokerPaymentMethod != null){
+            contInd = contInd + 1;
+            data[contInd] = brokerPaymentMethod;
+        }
+
+        if(customerReceivedMethod != null){
+            contInd = contInd + 1;
+            data[contInd] = customerReceivedMethod;
+        }
+//
         return Arrays.asList(data);
     }
 
     private ClauseInformation getCustomerPaymentInfo(Map<ClauseType, ClauseInformation> clauses){
 
-        ClauseInformation currencyEquals = clauses.get(ClauseType.CUSTOMER_PAYMENT_METHOD);
+        String currencyType = clauses.get(ClauseType.CUSTOMER_PAYMENT_METHOD).getValue();
         ClauseInformation clause = null;
 
-        if(currencyEquals.getValue().equals(CRYPTO_TRANSFER))
-            clause = clauses.get(ClauseType.BROKER_CRYPTO_ADDRESS);
+        if(currencyType != null) {
+            if (currencyType.equals(CurrencyType.CRYPTO_MONEY.getFriendlyName()))
+                clause = clauses.get(ClauseType.BROKER_CRYPTO_ADDRESS);
 
-        else if(currencyEquals.getValue().equals(BANK_TRANSFER))
-            clause = clauses.get(ClauseType.BROKER_BANK_ACCOUNT);
+            else if (currencyType.equals(CurrencyType.BANK_MONEY.getFriendlyName()))
+                clause = clauses.get(ClauseType.BROKER_BANK_ACCOUNT);
 
-        else if(currencyEquals.getValue().equals(CASH_DELIVERY))
-            clause = clauses.get(ClauseType.BROKER_PLACE_TO_DELIVER);
-
-        else if(currencyEquals.getValue().equals(CASH_IN_HAND))
-            clause = clauses.get(ClauseType.BROKER_PLACE_TO_DELIVER);
+            else if (currencyType.equals(CurrencyType.CASH_DELIVERY_MONEY.getFriendlyName()) || (currencyType.equals(CurrencyType.CASH_ON_HAND_MONEY.getFriendlyName())))
+                clause = clauses.get(ClauseType.BROKER_PLACE_TO_DELIVER);
+        }
 
         return clause;
     }
 
     private ClauseInformation getBrokerPaymentInfo(Map<ClauseType, ClauseInformation> clauses){
 
-        ClauseInformation currencyEquals = clauses.get(ClauseType.BROKER_PAYMENT_METHOD);
+        String currencyType = clauses.get(ClauseType.BROKER_PAYMENT_METHOD).getValue();
         ClauseInformation clause = null;
 
-        if(currencyEquals.getValue().equals(CRYPTO_TRANSFER))
-            clause = clauses.get(ClauseType.CUSTOMER_CRYPTO_ADDRESS);
+        if(currencyType != null) {
+            if (currencyType.equals(CurrencyType.CRYPTO_MONEY.getFriendlyName()))
+                clause = clauses.get(ClauseType.CUSTOMER_CRYPTO_ADDRESS);
 
-        else if(currencyEquals.getValue().equals(BANK_TRANSFER))
-            clause = clauses.get(ClauseType.CUSTOMER_BANK_ACCOUNT);
+            else if (currencyType.equals(CurrencyType.BANK_MONEY.getFriendlyName()))
+                clause = clauses.get(ClauseType.CUSTOMER_BANK_ACCOUNT);
 
-        else if(currencyEquals.getValue().equals(CASH_DELIVERY))
-            clause = clauses.get(ClauseType.CUSTOMER_PLACE_TO_DELIVER);
-
-        else if(currencyEquals.getValue().equals(CASH_IN_HAND))
-            clause = clauses.get(ClauseType.CUSTOMER_PLACE_TO_DELIVER);
+            else if (currencyType.equals(CurrencyType.CASH_DELIVERY_MONEY.getFriendlyName()) || (currencyType.equals(CurrencyType.CASH_ON_HAND_MONEY.getFriendlyName())))
+                clause = clauses.get(ClauseType.CUSTOMER_PLACE_TO_DELIVER);
+        }
 
         return clause;
     }
-
 
     private boolean idHeaderPosition(int position){
         return (position == 0) && (haveNote);

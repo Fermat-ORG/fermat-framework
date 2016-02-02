@@ -6,7 +6,6 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.Cant
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantLoadTableToMemoryException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantUpdateRecordException;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
-import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.exceptions.CantCancellBroadcastTransactionException;
 import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.exceptions.CantGetCryptoTransactionException;
 import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.interfaces.BitcoinNetworkManager;
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.asset_vault.exceptions.CantCreateBitcoinTransactionException;
@@ -146,11 +145,6 @@ public class UserRedemptionRedeemer extends AbstractDigitalAssetSwap {
                     persistDigitalAsset(digitalAssetMetadata, actorAssetRedeemPoint);
                 } else {
                     System.out.println("ASSET REDEMPTION IS NOT FIRST TRANSACTION");
-                    try {
-                        bitcoinNetworkManager.cancelBroadcast(digitalAssetMetadata.getLastTransactionHash());
-                    } catch (CantCancellBroadcastTransactionException e) {
-                        //Ok, maybe I don't have it.
-                    }
                     userRedemptionDao.updateActorAssetRedeemPoint(actorAssetRedeemPoint, digitalAssetMetadata.getGenesisTransaction());
                 }
                 //First, I going to persist in database the basic information about digitalAssetMetadata

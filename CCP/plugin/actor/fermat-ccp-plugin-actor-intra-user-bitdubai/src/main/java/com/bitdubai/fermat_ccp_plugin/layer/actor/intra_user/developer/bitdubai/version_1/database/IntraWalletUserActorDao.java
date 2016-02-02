@@ -134,7 +134,10 @@ public class IntraWalletUserActorDao {
 
 
             }else {
-                System.out.println("THE INTRA WALLET USER IS ALREADY CREATED IN THE DB");
+                System.out.println("THE INTRA WALLET USER IS ALREADY CREATED IN THE DB, I have to update it");
+
+                updateConnectionState(intraUserLoggedInPublicKey,intraUserToAddPublicKey,contactState);
+
             }
 
 
