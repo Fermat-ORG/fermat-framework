@@ -301,6 +301,7 @@ We are also amateur philosophers, passionate about esoteric topics and video gam
 <br>
 ### Skynet Team:
 -----------------------------------
+### ![alt text](https://raw.githubusercontent.com/bitDubai/media-kit/b3d2a45ba6cff999accae76ae30fdd41f160b90d/Logotype/FermatTeams/logo_skynet_team.jpg "Logo Skynet Team")
 From the most hidden and beautiful corner, in an unknown place of the universe, a network that gathers a group of polymaths is born. Such network combines their knowledge and artificial intelligence in order to overcome any obstacle that might try to avoid giving life to a limitless project.. that network is Team Skynet, a group of workaholics that enjoys turning challenges into fun, having a great will to help the needed and learn continuously.
 We are a team with diverse tastes and full of color making it an explosive integration. We love video games, anime, movie theaters, music and many other things. If you want to be part of our team, you will be always welcome at Skynet
 
