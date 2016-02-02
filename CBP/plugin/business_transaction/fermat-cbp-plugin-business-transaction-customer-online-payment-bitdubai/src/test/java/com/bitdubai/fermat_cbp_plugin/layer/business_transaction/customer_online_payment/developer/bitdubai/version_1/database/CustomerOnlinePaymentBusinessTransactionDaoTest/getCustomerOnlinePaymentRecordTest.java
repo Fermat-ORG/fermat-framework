@@ -13,7 +13,7 @@ import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.verify;
 
 /**
- * Created by alexander jimenez (alex_jimenez76@hotmail.com) on 31/01/16.
+ * Created by alexander jimenez (alex_jimenez76@hotmail.com) on 01/02/16.
  */
 public class getCustomerOnlinePaymentRecordTest {
     @Mock
