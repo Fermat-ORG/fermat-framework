@@ -313,7 +313,7 @@ public class RequestFormFragment extends AbstractFermatFragment<ReferenceWalletS
                                 appSession.getIntraUserModuleManager().getPublicKey(),
                                 appSession.getAppPublicKey(),
                                 CryptoCurrency.BITCOIN,
-                                BlockchainNetworkType.DEFAULT);
+                                BlockchainNetworkType.getDefaultBlockchainNetworkType());
 
                     } else {
                         try {
@@ -596,7 +596,7 @@ public class RequestFormFragment extends AbstractFermatFragment<ReferenceWalletS
                             cryptoAddress,
                             txt_notes.getText().toString(),
                             operator.longValueExact(),
-                            BlockchainNetworkType.DEFAULT,
+                            BlockchainNetworkType.getDefaultBlockchainNetworkType(),
                             ReferenceWallet.BASIC_WALLET_BITCOIN_WALLET
 
                     );

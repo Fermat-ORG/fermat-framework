@@ -306,7 +306,7 @@ public class AssetUserActorPluginRoot extends AbstractPlugin implements
                             requester.getActorPublicKey(),
                             actorAssetUser.getActorPublicKey(),
                             CryptoAddressDealers.DAP_ASSET,
-                            BlockchainNetworkType.DEFAULT);
+                            BlockchainNetworkType.getDefaultBlockchainNetworkType());
 
                     this.assetUserActorDao.updateAssetUserDAPConnectionStateActorNetworkService(actorAssetUser, DAPConnectionState.CONNECTING, actorAssetUser.getCryptoAddress());
                 } catch (CantUpdateAssetUserConnectionException e) {
@@ -331,7 +331,7 @@ public class AssetUserActorPluginRoot extends AbstractPlugin implements
                         requester.getActorPublicKey(),
                         actorAssetRedeemPoint.getActorPublicKey(),
                         CryptoAddressDealers.DAP_WATCH_ONLY,
-                        BlockchainNetworkType.DEFAULT);
+                        BlockchainNetworkType.getDefaultBlockchainNetworkType());
 
 //                    this.assetUserActorDao.updateAssetUserDAPConnectionStateActorNetworService(actorAssetUser.getActorPublicKey(), DAPConnectionState.CONNECTING, actorAssetUser.getCryptoAddress());
 //                } catch (CantUpdateAssetUserConnectionException e) {
