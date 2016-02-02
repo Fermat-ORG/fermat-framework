@@ -302,7 +302,7 @@ public abstract class AbstractDigitalAssetVault implements DigitalAssetVault {
                 }
                 break;
             case RECEPTION:
-                AssetUserWallet userWallet = this.assetUserWalletManager.loadAssetUserWallet(this.walletPublicKey);
+                AssetUserWallet userWallet = this.assetUserWalletManager.loadAssetUserWallet(this.walletPublicKey, networkType);
                 AssetUserWalletBalance assetUserWalletBalance = userWallet.getBalance();
                 actorToPublicKey = this.actorAssetUserManager.getActorAssetUser().getActorPublicKey();
                 AssetUserWalletTransactionRecordWrapper assetUserWalletTransactionRecordWrapper = new AssetUserWalletTransactionRecordWrapper(
