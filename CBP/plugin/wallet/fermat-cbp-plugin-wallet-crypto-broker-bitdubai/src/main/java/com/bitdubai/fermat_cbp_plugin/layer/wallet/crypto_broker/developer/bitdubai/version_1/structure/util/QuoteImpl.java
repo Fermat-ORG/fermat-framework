@@ -9,39 +9,57 @@ import com.bitdubai.fermat_cbp_api.layer.wallet.crypto_broker.interfaces.Quote;
  */
 public class QuoteImpl implements Quote {
     //Documentar
-    FermatEnum   merchandise;
+    FermatEnum merchandise;
     FiatCurrency fiatCurrency;
-    float        priceReference;
-    float        quantity;
+    float priceReference;
+    float quantity;
 
+    /**
+     * Constructor for QuoteImpl
+     * @param merchandise
+     * @param fiatCurrency
+     * @param priceReference
+     * @param quantity
+     */
     public QuoteImpl(
-            FermatEnum   merchandise,
+            FermatEnum merchandise,
             FiatCurrency fiatCurrency,
-            float        priceReference,
-            float        quantity
-    )
-    {
-        this.merchandise    = merchandise;
-        this.fiatCurrency   = fiatCurrency;
+            float priceReference,
+            float quantity
+    ) {
+        this.merchandise = merchandise;
+        this.fiatCurrency = fiatCurrency;
         this.priceReference = priceReference;
-        this.quantity       = quantity;
+        this.quantity = quantity;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public FermatEnum getMerchandise() {
         return merchandise;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public FiatCurrency getFiatCurrency() {
         return fiatCurrency;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public float getPriceReference() {
         return priceReference;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public float getQuantity() {
         return quantity;
