@@ -33,6 +33,7 @@ import com.bitdubai.fermat_cbp_api.layer.actor.crypto_broker.exceptions.CantGetL
 import com.bitdubai.fermat_cbp_api.layer.actor.crypto_broker.interfaces.ActorExtraData;
 import com.bitdubai.fermat_cbp_api.layer.actor.crypto_broker.interfaces.ActorExtraDataManager;
 import com.bitdubai.fermat_cbp_api.layer.actor.crypto_broker.interfaces.QuotesExtraData;
+import com.bitdubai.fermat_cbp_api.layer.business_transaction.common.exceptions.CantAckMerchandiseException;
 import com.bitdubai.fermat_cbp_api.layer.business_transaction.common.exceptions.CantSendPaymentException;
 import com.bitdubai.fermat_cbp_api.layer.business_transaction.common.mocks.CustomerBrokerContractPurchaseManagerMock;
 import com.bitdubai.fermat_cbp_api.layer.business_transaction.common.mocks.CustomerBrokerContractPurchaseMock;
@@ -820,6 +821,59 @@ public class CryptoCustomerWalletModuleCryptoCustomerWalletManager implements Cr
                     "Cannot send the payment",
                     "Cannot get the contract");
         }
+
+    }
+
+    /**
+     * This method execute a Customer Ack Merchandise Business Transaction
+     * @param contractHash
+     * @throws CantAckMerchandiseException
+     */
+    public void ackMerchandise(String contractHash) throws CantAckMerchandiseException {
+        try{
+            CustomerBrokerContractPurchase customerBrokerContractPurchase;
+            //TODO: This is the real implementation
+            /*customerBrokerContractPurchase =
+                    this.customerBrokerContractPurchaseManager.
+                            getCustomerBrokerContractPurchaseForContractId(contractHash);*/
+            //TODO: for testing
+            CustomerBrokerContractPurchaseManager customerBrokerContractPurchaseManagerMock=
+                    new CustomerBrokerContractPurchaseManagerMock();
+            customerBrokerContractPurchase =
+                    customerBrokerContractPurchaseManagerMock.
+                            getCustomerBrokerContractPurchaseForContractId(contractHash);
+            //End of Mock testing
+            System.out.println("From module:"+customerBrokerContractPurchase);
+
+        } catch (CantGetListCustomerBrokerContractPurchaseException e) {
+            throw new CantAckMerchandiseException(
+                    e,
+                    "Cannot ack the merchandise",
+                    "Cannot get the contract");
+        }
+    }
+
+    /**
+     * This method returns the ContractStatus by contractHash/Id
+     * @param contractHash
+     * @return
+     */
+    @Override
+    public ContractStatus getContractStatus(String contractHash) throws
+            CantGetListCustomerBrokerContractPurchaseException {
+
+        CustomerBrokerContractPurchase customerBrokerContractPurchase;
+        //TODO: This is the real implementation
+        /*customerBrokerContractPurchase =
+                this.customerBrokerContractPurchaseManager.getCustomerBrokerContractPurchaseForContractId(contractHash);*/
+        //TODO: for testing
+        CustomerBrokerContractPurchaseManager customerBrokerContractPurchaseManagerMock=
+                new CustomerBrokerContractPurchaseManagerMock();
+        customerBrokerContractPurchase =
+                customerBrokerContractPurchaseManagerMock.
+                        getCustomerBrokerContractPurchaseForContractId(contractHash);
+        //End of testing
+        return customerBrokerContractPurchase.getStatus();
 
     }
 

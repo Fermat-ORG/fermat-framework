@@ -27,11 +27,8 @@ import com.bitdubai.sub_app.crypto_customer_community.session.CryptoCustomerComm
  */
 public class CryptoCustomerCommunityFermatAppConnection extends AppConnections{
 
-    ActorIdentity identity;
-
     public CryptoCustomerCommunityFermatAppConnection(Activity activity) {
         super(activity);
-        this.identity = identity;
     }
 
     @Override
@@ -52,9 +49,7 @@ public class CryptoCustomerCommunityFermatAppConnection extends AppConnections{
 
     @Override
     public AbstractFermatSession getSession() {
-        //TODO:
-        return null;
-        //return new CryptoCustomerCommunitySubAppSession();
+        return new CryptoCustomerCommunitySubAppSession();
     }
 
 

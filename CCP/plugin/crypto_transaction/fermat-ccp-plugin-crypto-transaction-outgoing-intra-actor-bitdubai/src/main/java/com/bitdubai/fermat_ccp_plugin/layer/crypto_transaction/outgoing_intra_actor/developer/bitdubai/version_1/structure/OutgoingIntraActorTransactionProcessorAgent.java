@@ -258,6 +258,7 @@ public class OutgoingIntraActorTransactionProcessorAgent extends FermatAgent {
                             roolback(transaction,false);
                             // TODO: Lanzar un evento de fondos insuficientes
                             System.out.print("fondos insuficientes");
+                            System.out.print("ROLLBACK 1");
                         }
                     } catch (OutgoingIntraActorWalletNotSupportedException | CantCalculateBalanceException
                             | CantRegisterDebitException | OutgoingIntraActorCantCancelTransactionException
@@ -326,7 +327,8 @@ public class OutgoingIntraActorTransactionProcessorAgent extends FermatAgent {
                         // TODO: Raise informative event
                         try {
                             dao.cancelTransaction(transaction);
-                            roolback(transaction,false);
+                            roolback(transaction, false);
+                            System.out.print("ROLLBACK 2");
                             Exception inconsistentFundsException = new OutgoingIntraActorInconsistentFundsException("Basic wallet balance and crypto vault funds are inconsistent", e, "", "");
                             reportUnexpectedException(inconsistentFundsException);
                         } catch (OutgoingIntraActorCantCancelTransactionException e1) {
@@ -337,7 +339,8 @@ public class OutgoingIntraActorTransactionProcessorAgent extends FermatAgent {
                     } catch (InvalidSendToAddressException e) {
                         try {
                             dao.cancelTransaction(transaction);
-                            roolback(transaction,true);
+                            roolback(transaction, true);
+                            System.out.print("ROLLBACK 3");
                             reportUnexpectedException(e);
                         } catch (OutgoingIntraActorCantCancelTransactionException e1) {
                             reportUnexpectedException(e1);
@@ -359,7 +362,8 @@ public class OutgoingIntraActorTransactionProcessorAgent extends FermatAgent {
                         if(dif >= 180000)
                         {
                             dao.cancelTransaction(transaction);
-                            roolback(transaction,true);
+                            roolback(transaction, true);
+                            System.out.print("ROLLBACK 4");
                         }
 
                     }

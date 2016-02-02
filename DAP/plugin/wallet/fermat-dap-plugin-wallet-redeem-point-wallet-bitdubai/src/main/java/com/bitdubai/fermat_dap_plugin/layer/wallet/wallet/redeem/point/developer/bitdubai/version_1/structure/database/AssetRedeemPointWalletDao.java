@@ -2,7 +2,6 @@ package com.bitdubai.fermat_dap_plugin.layer.wallet.wallet.redeem.point.develope
 
 import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
-import com.bitdubai.fermat_api.layer.all_definition.enums.Genders;
 import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterException;
 import com.bitdubai.fermat_api.layer.all_definition.money.CryptoAddress;
 import com.bitdubai.fermat_api.layer.all_definition.util.XMLParser;
@@ -142,13 +141,15 @@ public class AssetRedeemPointWalletDao implements DealsWithPluginFileSystem {
         for (DatabaseTableRecord record : getBalancesRecord()) {
             AssetRedeemPointWalletList redeemPointIssuerWalletBalance = new AssetRedeemPointWalletBalance();
             String assetPublicKey = record.getStringValue(AssetWalletRedeemPointDatabaseConstant.ASSET_WALLET_REDEEM_POINT_ASSET_PUBLIC_KEY_COLUMN_NAME);
+            redeemPointIssuerWalletBalance.setAvailableBalance(record.getLongValue(AssetWalletRedeemPointDatabaseConstant.ASSET_WALLET_REDEEM_POINT_BALANCE_TABLE_AVAILABLE_BALANCE_COLUMN_NAME));
+            redeemPointIssuerWalletBalance.setBookBalance(record.getLongValue(AssetWalletRedeemPointDatabaseConstant.ASSET_WALLET_REDEEM_POINT_BALANCE_TABLE_BOOK_BALANCE_COLUMN_NAME));
             redeemPointIssuerWalletBalance.setQuantityBookBalance(record.getLongValue(AssetWalletRedeemPointDatabaseConstant.ASSET_WALLET_REDEEM_POINT_BALANCE_TABLE_QUANTITY_BOOK_BALANCE_COLUMN_NAME));
             redeemPointIssuerWalletBalance.setQuantityAvailableBalance(record.getLongValue(AssetWalletRedeemPointDatabaseConstant.ASSET_WALLET_REDEEM_POINT_BALANCE_TABLE_QUANTITY_AVAILABLE_BALANCE_COLUMN_NAME));
 
             try {
                 PluginTextFile pluginTextFile = pluginFileSystem.getTextFile(plugin, AssetRedeemPointWalletPluginRoot.PATH_DIRECTORY, assetPublicKey, FilePrivacy.PRIVATE, FileLifeSpan.PERMANENT);
-                DigitalAssetMetadata metadata = (DigitalAssetMetadata) XMLParser.parseXML(pluginTextFile.getContent(), new DigitalAssetMetadata());
-                redeemPointIssuerWalletBalance.setDigitalAsset(metadata.getDigitalAsset());
+                DigitalAsset asset = (DigitalAsset) XMLParser.parseXML(pluginTextFile.getContent(), new DigitalAsset());
+                redeemPointIssuerWalletBalance.setDigitalAsset(asset);
             } catch (FileNotFoundException | CantCreateFileException e) {
                 e.printStackTrace();
             }
@@ -230,10 +231,16 @@ public class AssetRedeemPointWalletDao implements DealsWithPluginFileSystem {
                 transaction.addRecordToUpdate(databaseTable, assetBalanceRecord);
             }
 
+
+            String digitalAssetInnerXML = assetRedeemPointWalletTransactionRecord.getDigitalAsset().toString();
+            PluginTextFile assetTextFile = pluginFileSystem.createTextFile(plugin, AssetRedeemPointWalletPluginRoot.PATH_DIRECTORY, assetRedeemPointWalletTransactionRecord.getDigitalAsset().getPublicKey(), FilePrivacy.PRIVATE, FileLifeSpan.PERMANENT);
+            assetTextFile.setContent(digitalAssetInnerXML);
+            assetTextFile.persistToMedia();
+
             String assetMetadataXML = XMLParser.parseObject(assetRedeemPointWalletTransactionRecord.getDigitalAssetMetadata());
-            PluginTextFile pluginTextFile = pluginFileSystem.createTextFile(plugin, AssetRedeemPointWalletPluginRoot.PATH_DIRECTORY, assetRedeemPointWalletTransactionRecord.getDigitalAsset().getPublicKey(), FilePrivacy.PRIVATE, FileLifeSpan.PERMANENT);
-            pluginTextFile.setContent(assetMetadataXML);
-            pluginTextFile.persistToMedia();
+            PluginTextFile metadataTextFile = pluginFileSystem.createTextFile(plugin, AssetRedeemPointWalletPluginRoot.PATH_DIRECTORY, assetRedeemPointWalletTransactionRecord.getDigitalAssetMetadata().getGenesisTransaction(), FilePrivacy.PRIVATE, FileLifeSpan.PERMANENT);
+            metadataTextFile.setContent(assetMetadataXML);
+            metadataTextFile.persistToMedia();
 
             database.executeTransaction(transaction);
 
@@ -545,13 +552,14 @@ public class AssetRedeemPointWalletDao implements DealsWithPluginFileSystem {
         return getQuantityCurrentBalanceByAsset(BalanceType.BOOK, assetPublicKey);
     }
 
-    public void newAssetRedeemed(String userPublicKey, String assetPublicKey) throws CantSaveRedeemPointStatisticException {
-        String context = "User Pk: " + userPublicKey + " - Asset Pk: " + assetPublicKey;
+    public void newAssetRedeemed(DigitalAssetMetadata digitalAssetMetadata, String userPublicKey) throws CantSaveRedeemPointStatisticException {
+        String context = "User Pk: " + userPublicKey + " - Genesis Tx: " + digitalAssetMetadata.getGenesisTransaction();
         try {
             DatabaseTable statisticTable = getStatisticTable();
             DatabaseTableRecord recordToInsert = statisticTable.getEmptyRecord();
-            recordToInsert.setStringValue(AssetWalletRedeemPointDatabaseConstant.ASSET_WALLET_REDEEM_POINT_POINT_STATISTIC_ID_COLUMN_NAME, UUID.randomUUID().toString());
-            recordToInsert.setStringValue(AssetWalletRedeemPointDatabaseConstant.ASSET_WALLET_REDEEM_POINT_POINT_STATISTIC_ASSET_PUBLIC_KEY_COLUMN_NAME, assetPublicKey);
+            recordToInsert.setStringValue(AssetWalletRedeemPointDatabaseConstant.ASSET_WALLET_REDEEM_POINT_POINT_STATISTIC_ID_COLUMN_NAME, digitalAssetMetadata.getMetadataId().toString());
+            recordToInsert.setStringValue(AssetWalletRedeemPointDatabaseConstant.ASSET_WALLET_REDEEM_POINT_POINT_STATISTIC_GENESIS_TRANSACTION_KEY_COLUMN_NAME, digitalAssetMetadata.getGenesisTransaction());
+            recordToInsert.setStringValue(AssetWalletRedeemPointDatabaseConstant.ASSET_WALLET_REDEEM_POINT_POINT_STATISTIC_ASSET_PUBLIC_KEY_COLUMN_NAME, digitalAssetMetadata.getDigitalAsset().getPublicKey());
             recordToInsert.setStringValue(AssetWalletRedeemPointDatabaseConstant.ASSET_WALLET_REDEEM_POINT_STATISTIC_USER_PUBLICKEY_COLUMN_NAME, userPublicKey);
             recordToInsert.setLongValue(AssetWalletRedeemPointDatabaseConstant.ASSET_WALLET_REDEEM_POINT_STATISTIC_REDEMPTION_TIMESTAMP_COLUMN_NAME, System.currentTimeMillis());
             statisticTable.insertRecord(recordToInsert);
@@ -625,7 +633,7 @@ public class AssetRedeemPointWalletDao implements DealsWithPluginFileSystem {
 
             RedeemPointStatisticImpl statistic = new RedeemPointStatisticImpl();
             statistic.setStatisticId(uuid);
-            statistic.setAssetMetadata(getDigitalAssetMetadata(record.getStringValue(AssetWalletRedeemPointDatabaseConstant.ASSET_WALLET_REDEEM_POINT_POINT_STATISTIC_ASSET_PUBLIC_KEY_COLUMN_NAME)));
+            statistic.setAssetMetadata(getDigitalAssetMetadata(record.getStringValue(AssetWalletRedeemPointDatabaseConstant.ASSET_WALLET_REDEEM_POINT_POINT_STATISTIC_GENESIS_TRANSACTION_KEY_COLUMN_NAME)));
             statistic.setActorAssetUser(getActorAssetUser(record.getStringValue(AssetWalletRedeemPointDatabaseConstant.ASSET_WALLET_REDEEM_POINT_STATISTIC_USER_PUBLICKEY_COLUMN_NAME)));
             statistic.setRedemptionDate(record.getLongValue(AssetWalletRedeemPointDatabaseConstant.ASSET_WALLET_REDEEM_POINT_STATISTIC_REDEMPTION_TIMESTAMP_COLUMN_NAME));
             return statistic;
@@ -634,10 +642,10 @@ public class AssetRedeemPointWalletDao implements DealsWithPluginFileSystem {
         }
     }
 
-    public DigitalAssetMetadata getDigitalAssetMetadata(String assetPublicKey) throws CantGetDigitalAssetFromLocalStorageException {
-        String context = "Path: " + AssetRedeemPointWalletPluginRoot.PATH_DIRECTORY + " - Asset Public Key: " + assetPublicKey;
+    public DigitalAssetMetadata getDigitalAssetMetadata(String genesisTransaction) throws CantGetDigitalAssetFromLocalStorageException {
+        String context = "Path: " + AssetRedeemPointWalletPluginRoot.PATH_DIRECTORY + " - Genesis Transaction: " + genesisTransaction;
         try {
-            PluginTextFile pluginTextFile = pluginFileSystem.getTextFile(plugin, AssetRedeemPointWalletPluginRoot.PATH_DIRECTORY, assetPublicKey, FilePrivacy.PRIVATE, FileLifeSpan.PERMANENT);
+            PluginTextFile pluginTextFile = pluginFileSystem.getTextFile(plugin, AssetRedeemPointWalletPluginRoot.PATH_DIRECTORY, genesisTransaction, FilePrivacy.PRIVATE, FileLifeSpan.PERMANENT);
             return (DigitalAssetMetadata) XMLParser.parseXML(pluginTextFile.getContent(), new DigitalAssetMetadata());
         } catch (FileNotFoundException | CantCreateFileException e) {
             throw new CantGetDigitalAssetFromLocalStorageException(e, context, "The path could be wrong or there was an error creating the file.");

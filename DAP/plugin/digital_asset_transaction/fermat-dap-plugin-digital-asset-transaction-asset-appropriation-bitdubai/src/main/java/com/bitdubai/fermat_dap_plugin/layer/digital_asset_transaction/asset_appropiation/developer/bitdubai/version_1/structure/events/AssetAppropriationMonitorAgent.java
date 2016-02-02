@@ -20,6 +20,11 @@ import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.exceptions.CantG
 import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.interfaces.BitcoinNetworkManager;
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.asset_vault.interfaces.AssetVaultManager;
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.bitcoin_vault.CryptoVaultManager;
+import com.bitdubai.fermat_ccp_api.layer.actor.Actor;
+import com.bitdubai.fermat_ccp_api.layer.actor.extra_user.exceptions.CantCreateExtraUserException;
+import com.bitdubai.fermat_ccp_api.layer.actor.extra_user.exceptions.CantGetExtraUserException;
+import com.bitdubai.fermat_ccp_api.layer.actor.extra_user.exceptions.ExtraUserNotFoundException;
+import com.bitdubai.fermat_ccp_api.layer.actor.extra_user.interfaces.ExtraUserManager;
 import com.bitdubai.fermat_ccp_api.layer.identity.intra_user.exceptions.CantCreateNewIntraWalletUserException;
 import com.bitdubai.fermat_ccp_api.layer.identity.intra_user.exceptions.CantListIntraWalletUsersException;
 import com.bitdubai.fermat_ccp_api.layer.identity.intra_user.interfaces.IntraWalletUserIdentity;
@@ -89,6 +94,7 @@ public class AssetAppropriationMonitorAgent implements Agent {
     private final AssetIssuerActorNetworkServiceManager assetIssuerActorNetworkServiceManager;
     private final AssetIssuerWalletManager assetIssuerWalletManager;
     private final ActorAssetUserManager actorAssetUserManager;
+    private final ExtraUserManager extraUserManager;
 
     private AppropriationAgent appropriationAgent;
     //VARIABLES ACCESSED BY AGENT INNER CLASS.
@@ -112,7 +118,8 @@ public class AssetAppropriationMonitorAgent implements Agent {
                                           IntraWalletUserIdentityManager intraWalletUserIdentityManager,
                                           AssetIssuerActorNetworkServiceManager assetIssuerActorNetworkServiceManager,
                                           AssetIssuerWalletManager assetIssuerWalletManager,
-                                          ActorAssetUserManager actorAssetUserManager) throws CantSetObjectException {
+                                          ActorAssetUserManager actorAssetUserManager,
+                                          ExtraUserManager extraUserManager) throws CantSetObjectException {
         this.assetVault = assetVault;
         this.pluginDatabaseSystem = Validate.verifySetter(pluginDatabaseSystem, "pluginDatabaseSystem is null");
         this.logManager = Validate.verifySetter(logManager, "logManager is null");
@@ -127,6 +134,7 @@ public class AssetAppropriationMonitorAgent implements Agent {
         this.assetIssuerActorNetworkServiceManager = Validate.verifySetter(assetIssuerActorNetworkServiceManager, "assetIssuerActorNetworkServiceManager is null");
         this.assetIssuerWalletManager = Validate.verifySetter(assetIssuerWalletManager, "assetIssuerWalletManager is null");
         this.actorAssetUserManager = Validate.verifySetter(actorAssetUserManager, "actorAssetUserManager is null");
+        this.extraUserManager = Validate.verifySetter(extraUserManager, "extraUserManager is null");
     }
 
     //PUBLIC METHODS
@@ -252,10 +260,11 @@ public class AssetAppropriationMonitorAgent implements Agent {
                     case CRYPTOADDRESS_OBTAINED:
                         AssetAppropriationDigitalAssetTransactionPluginRoot.debugAssetAppropriation("registering crypto address in crypto book. : " + record.transactionRecordId());
                         IntraWalletUserIdentity assetIdentity = getIntraUserIdentity(record);
+                        Actor actor = getExtraUser(record.assetMetadata());
                         cryptoAddressBookManager.registerCryptoAddress(record.addressTo(),
                                 assetIdentity.getPublicKey(),
                                 Actors.INTRA_USER,
-                                intraWalletUserIdentityManager.getAllIntraWalletUsersFromCurrentDeviceUser().get(0).getPublicKey(),
+                                actor.getActorPublicKey(),
                                 Actors.EXTRA_USER,
                                 Platforms.CRYPTO_CURRENCY_PLATFORM,
                                 VaultType.CRYPTO_CURRENCY_VAULT,
@@ -271,8 +280,8 @@ public class AssetAppropriationMonitorAgent implements Agent {
                             AssetAppropriationDigitalAssetTransactionPluginRoot.debugAssetAppropriation("This transaction failed to have a crypto address... Returning to previous state");
                             dao.updateTransactionStatusAppropriationStarted(record.transactionRecordId());
                         } else {
-                            String genesisTransaction = assetVaultManager.sendAssetBitcoins(record.assetMetadata().getGenesisTransaction(), record.assetMetadata().getGenesisBlock(), record.addressTo());
-                            assetVault.updateMetadataTransactionChain(record.transactionRecordId(), genesisTransaction, null);
+                            String newTx = assetVaultManager.sendAssetBitcoins(record.assetMetadata().getLastTransactionHash(), record.assetMetadata().getLastTransactionBlock(), record.addressTo());
+                            assetVault.updateMetadataTransactionChain(record.transactionRecordId(), newTx, null);
                             dao.updateTransactionStatusBitcoinsSent(record.transactionRecordId());
                             AssetAppropriationDigitalAssetTransactionPluginRoot.debugAssetAppropriation("Bitcoins sent!");
                         }
@@ -344,6 +353,15 @@ public class AssetAppropriationMonitorAgent implements Agent {
             return assetIdentity;
         }
 
+        private Actor getExtraUser(DigitalAssetMetadata digitalAssetMetadata) throws CantCreateExtraUserException {
+            try {
+                return extraUserManager.getActorByPublicKey(digitalAssetMetadata.getDigitalAsset().getPublicKey());
+            } catch (CantGetExtraUserException | ExtraUserNotFoundException e) {
+                byte[] image = digitalAssetMetadata.getDigitalAsset().getResources().isEmpty() ? new byte[0] : digitalAssetMetadata.getDigitalAsset().getResources().get(0).getResourceBinayData();
+                return extraUserManager.createActor(digitalAssetMetadata.getDigitalAsset().getName(), image);
+            }
+        }
+
         public boolean isAgentRunning() {
             return agentRunning;
         }
@@ -355,7 +373,6 @@ public class AssetAppropriationMonitorAgent implements Agent {
         public void startAgent() {
             agentRunning = true;
         }
-
 
     }
 }

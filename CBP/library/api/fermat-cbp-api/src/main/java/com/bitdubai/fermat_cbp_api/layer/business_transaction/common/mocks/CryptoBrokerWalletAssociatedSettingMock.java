@@ -1,7 +1,7 @@
 package com.bitdubai.fermat_cbp_api.layer.business_transaction.common.mocks;
 
 import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
-import com.bitdubai.fermat_api.layer.all_definition.enums.interfaces.FermatEnum;
+import com.bitdubai.fermat_api.layer.world.interfaces.Currency;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.CurrencyType;
 import com.bitdubai.fermat_cbp_api.layer.wallet.crypto_broker.interfaces.setting.CryptoBrokerWalletAssociatedSetting;
 
@@ -61,12 +61,12 @@ public class CryptoBrokerWalletAssociatedSettingMock implements CryptoBrokerWall
     }
 
     @Override
-    public FermatEnum getMerchandise() {
+    public Currency getMerchandise() {
         return null;
     }
 
     @Override
-    public void setMerchandise(FermatEnum merchandise) {
+    public void setMerchandise(Currency merchandise) {
 
     }
 
