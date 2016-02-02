@@ -84,7 +84,7 @@ public class WizardPageSetMerchandisesFragment extends AbstractFermatFragment
     private LinearLayout container;
 
     private CryptoBrokerWalletManager cryptoBrokerWalletManager;
-    String walletPublicKey = "walletPublicKeyTest";
+    String walletPublicKey = "banking_wallet";
 
     public static WizardPageSetMerchandisesFragment newInstance() {
         return new WizardPageSetMerchandisesFragment();
@@ -254,17 +254,26 @@ public class WizardPageSetMerchandisesFragment extends AbstractFermatFragment
             dialogFragment.setListener(new SimpleListDialogFragment.ItemSelectedListener<InstalledWallet>() {
                 @Override
                 public void onItemSelected(InstalledWallet selectedItem) {
-                    if (!platform.equals(Platforms.BANKING_PLATFORM)) {
-                        try {
-                            if(walletManager.getCashCurrency(walletPublicKey) == null) {
-                                InputDialogCBP inputDialogCBP = new InputDialogCBP(getActivity(),appSession,null, walletManager);
-                                inputDialogCBP.DialogType(2);
-                                inputDialogCBP.show();
+                    if (!platform.equals(Platforms.BANKING_PLATFORM) ) {
+                        if(Platforms.CRYPTO_BROKER_PLATFORM.getCode() != platform.getCode()) {
+                            try {
+                                walletPublicKey = "cash_wallet";
+                                if (walletManager.getCashCurrency(walletPublicKey) == null) {
+                                    InputDialogCBP inputDialogCBP = new InputDialogCBP(getActivity(), appSession, null, walletManager);
+                                    inputDialogCBP.DialogType(2);
+                                    inputDialogCBP.show();
+                                }
+                            } catch (CantGetCashMoneyWalletCurrencyException e) {
+                                Log.e(TAG, e.getMessage(), e);
+                                if (errorManager != null)
+                                    errorManager.reportUnexpectedWalletException(Wallets.CBP_CRYPTO_BROKER_WALLET,
+                                            UnexpectedWalletExceptionSeverity.DISABLES_THIS_FRAGMENT, e);
+                            } catch (CantLoadCashMoneyWalletException e) {
+                                Log.e(TAG, e.getMessage(), e);
+                                if (errorManager != null)
+                                    errorManager.reportUnexpectedWalletException(Wallets.CBP_CRYPTO_BROKER_WALLET,
+                                            UnexpectedWalletExceptionSeverity.DISABLES_THIS_FRAGMENT, e);
                             }
-                        } catch (CantGetCashMoneyWalletCurrencyException e) {
-                            e.printStackTrace();
-                        } catch (CantLoadCashMoneyWalletException e) {
-                            e.printStackTrace();
                         }
                         if (!containWallet(selectedItem)) {
                             stockWallets.add(selectedItem);

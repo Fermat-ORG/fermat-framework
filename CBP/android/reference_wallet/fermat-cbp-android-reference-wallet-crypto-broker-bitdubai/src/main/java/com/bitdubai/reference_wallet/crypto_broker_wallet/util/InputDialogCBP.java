@@ -171,7 +171,8 @@ public class InputDialogCBP extends FermatDialog<FermatSession, SubAppResourcesP
             try {
 
                     BankAccountNumber accountnumber =   WalletManager.newEmptyBankAccountNumber(BankNameV, TipoV, AliasV, AccountV, CurrencyV);
-                   WalletManager.addNewAccount(accountnumber, getSession().getAppPublicKey());
+                    String bankWalletPublicKey = "banking_wallet"; //TODO:Revisar como podemos obtener el public key de la wallet Bank
+                    WalletManager.addNewAccount(accountnumber, bankWalletPublicKey);
 
                     dismiss();
                 }catch(Exception e){
@@ -182,7 +183,8 @@ public class InputDialogCBP extends FermatDialog<FermatSession, SubAppResourcesP
 
             if (id == R.id.btn_action_cash) {
                 try {
-                    WalletManager.createCashMoneyWallet(getSession().getAppPublicKey(), CurrencyCash);
+                    String cashWalletPublicKey = "cash_wallet"; //TODO:Revisar como podemos obtener el public key de la wallet Cash
+                    WalletManager.createCashMoneyWallet(cashWalletPublicKey, CurrencyCash);
                     dismiss();
                 } catch (Exception e) {
                     Log.e(TAG, "Error on:" + e + " ------------VALORES DE VARIABLES----------->" + CurrencyCash);
