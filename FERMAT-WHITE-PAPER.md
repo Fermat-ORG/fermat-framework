@@ -113,7 +113,7 @@ Underneath the sight of end users all these components collaborate between each 
 <br>
 ## Fermat Application Tokens
 
-End Users requires to different types of tokens to use Fermat:
+End Users requires two different types of tokens to use Fermat:
 
 **d-fermats tokens [DFT]** : Are required to pay micro use licenses to component developers.
 
