@@ -43,7 +43,10 @@ public class FooterViewHolder extends FermatViewHolder implements View.OnClickLi
     @Override
     public void onClick(View view) {
         if (view.getId() == R.id.add_a_note_card_view) {
-            listener.onAddNoteButtonClicked();
+            //listener.onAddNoteButtonClicked();
+
+            //:REMOVE THE BUTTOM
+            addNoteButton.setVisibility(View.GONE);
 
 
         } else if (view.getId() == R.id.send_button) {
@@ -59,5 +62,7 @@ public class FooterViewHolder extends FermatViewHolder implements View.OnClickLi
         void onAddNoteButtonClicked();
 
         void onSendButtonClicked();
+
+
     }
 }

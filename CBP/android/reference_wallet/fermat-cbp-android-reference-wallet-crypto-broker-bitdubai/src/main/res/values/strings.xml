@@ -18,6 +18,7 @@
     <string name="waiting_for_the_customer">Waiting for the customer</string>
     <string name="negotiation_closed">Close</string>
     <string name="negotiation_cancelled">Cancelled</string>
+    <string name="negotiation_cancel">CANCEL</string>
     <string name="contract_closed">Close</string>
     <string name="contract_cancelled">Cancelled</string>
     <string name="receiving">Receiving</string>
@@ -42,6 +43,8 @@
     <string name="market_text">Market: </string>
     <string name="status_changed">CHANGED</string>
     <string name="cbw_amount_to_sell">Amount to Sell</string>
+    <string name="cbw_negotiation_note">Negotiation Note</string>
+    <string name="cbw_negotiation_note_hint">Add A Note Here </string>
     <string name="selling_text">Selling: </string>
     <string name="amount">Amount</string>
     <string name="you_will_receive_amount">You will receive: </string>
@@ -58,8 +61,8 @@
     <string name="payment_date_title">PAYMENT DATE</string>
     <string name="payment_date">Payment Date: </string>
     <string name="add_a_note_button">ADD A NOTE</string>
-    <string name="payment_methods_title">Payment Methods</string>
-    <string name="payment_method">Method: </string>
+    <string name="payment_methods_title">Payment Methods Juanaso title </string>
+    <string name="payment_method">juanaso Method: </string>
     <string name="payment_date_text">Payment Date: </string>
     <string name="yours">Yours:</string>
     <string name="expiration_date_text">Expiration Date:</string>

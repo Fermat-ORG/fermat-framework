@@ -6,6 +6,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.FermatSession;
 import com.bitdubai.fermat_android_api.ui.holders.FermatViewHolder;
@@ -254,6 +255,9 @@ public class NegotiationDetailsAdapter extends RecyclerView.Adapter<FermatViewHo
                     viewHolder.bind(stepNumber, R.string.payment_methods_title,
                             R.string.payment_method, step.getValue(), paymentMethods);
 
+
+                    System.out.println("juanasoPrueba");
+
                 } catch (FermatException ignored) {
                 }
 
@@ -351,4 +355,9 @@ public class NegotiationDetailsAdapter extends RecyclerView.Adapter<FermatViewHo
 
         return data;
     }
+
+
+
+
+
 }
