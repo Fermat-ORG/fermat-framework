@@ -36,7 +36,7 @@ public class BitcoinNetworkSelector {
          * if this is the default network type, I will return it.
          */
         if (BitcoinNetworkConfiguration.DEFAULT_NETWORK_PARAMETERS == networkParameters){
-            return BlockchainNetworkType.DEFAULT;
+            return BlockchainNetworkType.getDefaultBlockchainNetworkType();
         }
 
         /**

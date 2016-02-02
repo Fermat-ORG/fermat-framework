@@ -1088,7 +1088,7 @@ public class CryptoWalletWalletModuleManager implements CryptoWallet {
                             intraUserLoggedInPublicKey,
                             paymentRequest.getWalletPublicKey() ,
                             CryptoCurrency.BITCOIN,
-                            BlockchainNetworkType.DEFAULT);
+                            BlockchainNetworkType.getDefaultBlockchainNetworkType());
                 }
                 catch (Exception e1)
                 {

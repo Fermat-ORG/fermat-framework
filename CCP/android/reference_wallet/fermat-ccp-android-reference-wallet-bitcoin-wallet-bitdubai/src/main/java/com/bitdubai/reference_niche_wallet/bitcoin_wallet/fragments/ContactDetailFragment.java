@@ -242,7 +242,7 @@ public class ContactDetailFragment extends AbstractFermatFragment implements Vie
                                     referenceWalletSession.getIntraUserModuleManager().getPublicKey()
                                     , appSession.getAppPublicKey(),
                                     CryptoCurrency.BITCOIN,
-                                    BlockchainNetworkType.DEFAULT
+                                    BlockchainNetworkType.getDefaultBlockchainNetworkType()
                             );
 
                             delayHandler.postDelayed(delay, TimeUnit.MINUTES.toMillis(DELAY_TIME));

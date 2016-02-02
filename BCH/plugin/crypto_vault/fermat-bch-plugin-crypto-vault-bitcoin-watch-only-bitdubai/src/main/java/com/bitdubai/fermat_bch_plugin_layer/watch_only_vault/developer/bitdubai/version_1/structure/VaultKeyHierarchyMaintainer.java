@@ -248,7 +248,7 @@ class VaultKeyHierarchyMaintainer implements Agent {
                 /**
                  * the default network is always active, so I will add this.
                  */
-                blockchainNetworkTypes.add(BlockchainNetworkType.DEFAULT);
+                blockchainNetworkTypes.add(BlockchainNetworkType.getDefaultBlockchainNetworkType());
             }
 
             return blockchainNetworkTypes;

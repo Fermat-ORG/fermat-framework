@@ -208,7 +208,7 @@ public class BitcoinCurrencyCryptoVaultManager  {
              * If I can't validate this. I will continue because I may be listening to this network already.
              */
             e.printStackTrace();
-            return BlockchainNetworkType.DEFAULT;
+            return BlockchainNetworkType.getDefaultBlockchainNetworkType();
         } catch (AddressFormatException e) {
             /**
              * If the passed address doesn't have the correct format, I can't go on.
@@ -229,8 +229,8 @@ public class BitcoinCurrencyCryptoVaultManager  {
         /**
          * if the network parameters calculated is different that the Default network I will double check
          */
-        if (BitcoinNetworkSelector.getBlockchainNetworkType(networkParameters) != BlockchainNetworkType.DEFAULT){
-            return BitcoinNetworkSelector.getNetworkParameter(BlockchainNetworkType.DEFAULT);
+        if (BitcoinNetworkSelector.getBlockchainNetworkType(networkParameters) != BlockchainNetworkType.getDefaultBlockchainNetworkType()){
+            return BitcoinNetworkSelector.getNetworkParameter(BlockchainNetworkType.getDefaultBlockchainNetworkType());
         } else
             return networkParameters;
     }
@@ -267,7 +267,7 @@ public class BitcoinCurrencyCryptoVaultManager  {
             /**
              * If there is an error, I will use the default parameters.
              */
-            networkParameters = BitcoinNetworkSelector.getNetworkParameter(BlockchainNetworkType.DEFAULT);
+            networkParameters = BitcoinNetworkSelector.getNetworkParameter(BlockchainNetworkType.getDefaultBlockchainNetworkType());
         }
 
         /**
@@ -286,7 +286,7 @@ public class BitcoinCurrencyCryptoVaultManager  {
      */
     public CryptoAddress getAddress() {
         try {
-            return this.getNewBitcoinVaultCryptoAddress(BlockchainNetworkType.DEFAULT);
+            return this.getNewBitcoinVaultCryptoAddress(BlockchainNetworkType.getDefaultBlockchainNetworkType());
         } catch (GetNewCryptoAddressException e) {
             e.printStackTrace();
             return null;

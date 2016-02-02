@@ -377,7 +377,7 @@ public class BitcoinNetworkEvents implements WalletEventListener, PeerEventListe
         try{
             for (TransactionOutput output : tx.getOutputs()){
                 if (output.getScriptPubKey().isSentToAddress()){
-                    address = output.getScriptPubKey().getToAddress(BitcoinNetworkSelector.getNetworkParameter(BlockchainNetworkType.DEFAULT));
+                    address = output.getScriptPubKey().getToAddress(BitcoinNetworkSelector.getNetworkParameter(BlockchainNetworkType.getDefaultBlockchainNetworkType()));
                     cryptoAddress = new CryptoAddress(address.toString(), CryptoCurrency.BITCOIN);
                     return cryptoAddress;
                 }
