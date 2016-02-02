@@ -1,6 +1,8 @@
 package com.bitdubai.android_core.app;
 
 
+import android.content.Context;
+import android.support.multidex.MultiDex;
 import android.support.multidex.MultiDexApplication;
 
 import com.bitdubai.android_core.app.common.version_1.sessions.SubAppSessionManager;
@@ -134,7 +136,17 @@ public class ApplicationSession extends MultiDexApplication implements Serializa
         super.onTerminate();
     }
 
+    @Override
+    protected void attachBaseContext(Context base) {
+        super.attachBaseContext(base);
+        MultiDex.install(this);
+    }
 
+    @Override
+    public void onCreate() {
+        super.onCreate();
+        MultiDex.install(this);
+    }
 
 
 }
