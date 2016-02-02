@@ -1,7 +1,5 @@
 package com.bitdubai.reference_wallet.crypto_broker_wallet.common.models;
 
-import android.util.TimeUtils;
-
 import com.bitdubai.fermat_api.layer.all_definition.enums.CryptoCurrency;
 import com.bitdubai.fermat_api.layer.all_definition.enums.FiatCurrency;
 import com.bitdubai.fermat_api.layer.world.interfaces.Currency;
@@ -367,9 +365,9 @@ public class TestData {
 
     public static List<EarningsPair> getEarningsPairs() {
         ArrayList<EarningsPair> earningsPairs = new ArrayList<>();
-        earningsPairs.add(new EarningsPairTestData(CryptoCurrency.BITCOIN, FiatCurrency.US_DOLLAR, FiatCurrency.VENEZUELAN_BOLIVAR));
-        earningsPairs.add(new EarningsPairTestData(FiatCurrency.US_DOLLAR, FiatCurrency.US_DOLLAR, CryptoCurrency.BITCOIN));
-        earningsPairs.add(new EarningsPairTestData(FiatCurrency.VENEZUELAN_BOLIVAR, CryptoCurrency.BITCOIN, FiatCurrency.VENEZUELAN_BOLIVAR));
+        earningsPairs.add(new EarningsPairTestData(FiatCurrency.US_DOLLAR, FiatCurrency.VENEZUELAN_BOLIVAR));
+        earningsPairs.add(new EarningsPairTestData(FiatCurrency.US_DOLLAR, CryptoCurrency.BITCOIN));
+        earningsPairs.add(new EarningsPairTestData(CryptoCurrency.BITCOIN, FiatCurrency.VENEZUELAN_BOLIVAR));
 
         return earningsPairs;
     }

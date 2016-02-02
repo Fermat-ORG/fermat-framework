@@ -272,13 +272,9 @@ public class IntraWalletUserIdentityPluginRoot extends AbstractPlugin
             this.intraWalletUserIdentityDao = new IntraWalletUserIdentityDao(pluginDatabaseSystem, this.pluginFileSystem, this.pluginId);
             this.intraWalletUserIdentityDao.initializeDatabase();
 
-        } catch (CantInitializeIntraWalletUserIdentityDatabaseException e) {
-            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_CCP_INTRA_USER_IDENTITY, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
-            throw new CantStartPluginException(e, Plugins.BITDUBAI_CCP_INTRA_USER_IDENTITY);
-        }
-
-        try {
+            // Register identities
             registerIdentities();
+
         } catch (Exception e) {
             errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_CCP_INTRA_USER_IDENTITY, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
         }

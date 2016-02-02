@@ -165,8 +165,8 @@ public class AssetUserWalletModulePluginRoot extends AbstractPlugin implements
     }
 
     @Override
-    public void redeemAssetToRedeemPoint(String digitalAssetPublicKey, String walletPublicKey, List<ActorAssetRedeemPoint> actorAssetRedeemPoints) throws CantRedeemDigitalAssetException, NotEnoughAcceptsException {
-        assetUserWalletModule.redeemAssetToRedeemPoint(digitalAssetPublicKey, walletPublicKey, actorAssetRedeemPoints);
+    public void redeemAssetToRedeemPoint(String digitalAssetPublicKey, String walletPublicKey, List<ActorAssetRedeemPoint> actorAssetRedeemPoints, int assetAmount) throws CantRedeemDigitalAssetException, NotEnoughAcceptsException {
+        assetUserWalletModule.redeemAssetToRedeemPoint(digitalAssetPublicKey, walletPublicKey, actorAssetRedeemPoints, assetAmount);
     }
 
     @Override

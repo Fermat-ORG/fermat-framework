@@ -1,5 +1,6 @@
 package com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.asset_reception.developer.bitdubai.version_1.structure;
 
+import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.crypto_transactions.CryptoStatus;
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.crypto_transactions.CryptoTransaction;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantExecuteQueryException;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
@@ -83,7 +84,8 @@ public class DigitalAssetReceptor extends AbstractDigitalAssetSwap {
             }
             this.assetReceptionDao.updateReceptionStatusByGenesisTransaction(ReceptionStatus.HASH_CHECKED, genesisTransaction);
             this.assetReceptionDao.updateReceptionStatusByGenesisTransaction(ReceptionStatus.ASSET_ACCEPTED, genesisTransaction);
-
+            this.assetReceptionDao.updateDigitalAssetCryptoStatusByGenesisTransaction(genesisTransaction, CryptoStatus.PENDING_SUBMIT);
+            persistInLocalStorage(digitalAssetMetadata);
         } catch (Exception e) {
             throw new CantReceiveDigitalAssetException(e, "Receiving Digital Asset Metadata", "Unexpected exception while verifying the asset");
         }
@@ -96,7 +98,6 @@ public class DigitalAssetReceptor extends AbstractDigitalAssetSwap {
                 this.digitalAssetFileStoragePath,
                 digitalAssetMetadata.getDigitalAssetHash(),
                 senderId);
-        persistInLocalStorage(digitalAssetMetadata);
     }
 
     /**

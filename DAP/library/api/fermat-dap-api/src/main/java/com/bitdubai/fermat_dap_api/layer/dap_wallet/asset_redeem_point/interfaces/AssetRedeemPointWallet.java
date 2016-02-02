@@ -47,7 +47,7 @@ public interface AssetRedeemPointWallet {
 
     DigitalAssetMetadata getDigitalAssetMetadata(String assetPublicKey) throws CantGetDigitalAssetFromLocalStorageException;
 
-    void newAssetRedeemed(String userPublicKey, String assetPublicKey) throws CantSaveRedeemPointStatisticException;
+    void newAssetRedeemed(DigitalAssetMetadata digitalAssetMetadata, String userPublicKey) throws CantSaveRedeemPointStatisticException;
 
     List<RedeemPointStatistic> getAllStatistics() throws CantGetRedeemPointStatisticsException, RecordsNotFoundException;
 

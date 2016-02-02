@@ -7,5 +7,5 @@ import com.bitdubai.fermat_api.layer.modules.interfaces.ModuleManager;
  */
 public interface AndroidCoreModule  extends ModuleManager {
 
-    AndroidCoreManager getAndroidCoreManager();
+    com.bitdubai.fermat_api.AndroidCoreManager getAndroidCoreManager();
 }

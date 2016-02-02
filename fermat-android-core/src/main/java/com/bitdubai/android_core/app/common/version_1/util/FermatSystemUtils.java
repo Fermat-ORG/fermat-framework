@@ -1,9 +1,11 @@
 package com.bitdubai.android_core.app.common.version_1.util;
 
 import android.app.Application;
+import android.support.annotation.NonNull;
 
 import com.bitdubai.android_core.app.ApplicationSession;
 import com.bitdubai.android_core.app.common.version_1.provisory.SubAppManagerProvisory;
+import com.bitdubai.fermat_api.AndroidCoreManager;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.exceptions.CantGetErrorManagerException;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.exceptions.CantGetModuleManagerException;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.exceptions.CantGetResourcesManagerException;
@@ -28,6 +30,7 @@ import com.bitdubai.fermat_api.layer.dmp_module.wallet_manager.WalletManager;
 import com.bitdubai.fermat_api.layer.pip_engine.desktop_runtime.DesktopRuntimeManager;
 import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.interfaces.BitcoinNetworkManager;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.WsCommunicationsCloudClientManager;
+import com.bitdubai.fermat_pip_api.layer.module.android_core.interfaces.AndroidCoreModule;
 import com.bitdubai.fermat_pip_api.layer.module.notification.interfaces.NotificationManagerMiddleware;
 import com.bitdubai.fermat_pip_api.layer.network_service.subapp_resources.SubAppResourcesProviderManager;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
@@ -362,5 +365,37 @@ public class FermatSystemUtils {
         return null;
     }
 
+
+    /**
+     * Get Android core module from the fermat platform
+     *
+     * @return reference of AndroidCoreModule
+     */
+
+    public static AndroidCoreModule getAndroidCoreModule(@NonNull Application application) {
+
+        try {
+            return (AndroidCoreModule) ((ApplicationSession) application).getFermatSystem().getModuleManager(
+                    new PluginVersionReference(
+                            Platforms.PLUG_INS_PLATFORM,
+                            Layers.SUB_APP_MODULE,
+                            Plugins.ANDROID_CORE,
+                            Developers.BITDUBAI,
+                            new Version()
+                    )
+            );
+        } catch (CantGetModuleManagerException e) {
+
+            System.out.println(e.getMessage());
+            System.out.println(e.toString());
+
+            return null;
+        } catch (Exception e) {
+
+            System.out.println(e.toString());
+
+            return null;
+        }
+    }
 
 }
