@@ -75,10 +75,14 @@ import com.bitdubai.fermat_cht_plugin.layer.network_service.chat.developer.bitdu
 import com.bitdubai.fermat_cht_plugin.layer.network_service.chat.developer.bitdubai.version_1.event_handlers.NewSentMessagesNotificationEventHandler;
 import com.bitdubai.fermat_cht_plugin.layer.network_service.chat.developer.bitdubai.version_1.event_handlers.VPNConnectionCloseNotificationEventHandler;
 import com.bitdubai.fermat_cht_plugin.layer.network_service.chat.developer.bitdubai.version_1.exceptions.CantInitializeChatNetworkServiceDatabaseException;
+import com.bitdubai.fermat_cht_plugin.layer.network_service.chat.developer.bitdubai.version_1.exceptions.CantInsertRecordDataBaseException;
 import com.bitdubai.fermat_cht_plugin.layer.network_service.chat.developer.bitdubai.version_1.exceptions.CantReadRecordDataBaseException;
+import com.bitdubai.fermat_cht_plugin.layer.network_service.chat.developer.bitdubai.version_1.exceptions.CantUpdateRecordDataBaseException;
 import com.bitdubai.fermat_cht_plugin.layer.network_service.chat.developer.bitdubai.version_1.structure.ChatMetadataTransactionRecord;
+import com.bitdubai.fermat_cht_plugin.layer.network_service.chat.developer.bitdubai.version_1.structure.ChatNetworkServiceAgent;
 import com.bitdubai.fermat_cht_plugin.layer.network_service.chat.developer.bitdubai.version_1.structure.ChatTransmissionJsonAttNames;
 import com.bitdubai.fermat_cht_plugin.layer.network_service.chat.developer.bitdubai.version_1.structure.EncodeMsjContent;
+import com.bitdubai.fermat_dap_api.layer.all_definition.util.Validate;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.common.network_services.abstract_classes.AbstractNetworkService;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.common.network_services.interfaces.NetworkService;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.contents.FermatMessageCommunication;
@@ -217,6 +221,10 @@ public class ChatNetworkServicePluginRoot extends AbstractNetworkService impleme
      */
     private CommunicationNetworkServiceConnectionManager communicationNetworkServiceConnectionManager;
 
+    /**
+     * Represents chatNetworkServiceAgent
+     */
+    private ChatNetworkServiceAgent chatNetworkServiceAgent;
 
     /**
      * Represent the remoteNetworkServicesRegisteredList
@@ -495,8 +503,21 @@ public class ChatNetworkServicePluginRoot extends AbstractNetworkService impleme
              * Request the list of component registers
              */
             requestRemoteNetworkServicesRegisteredList(discoveryQueryParameters);
+            chatNetworkServiceAgent = new ChatNetworkServiceAgent(
+                    this,
+                    getChatMetaDataDao(),
+                    communicationNetworkServiceConnectionManager,
+                    wsCommunicationsCloudClientManager,
+                    platformComponentProfile,
+                    errorManager,
+                    new ArrayList<PlatformComponentProfile>(),
+                    identity,
+                    eventManager
+            );
 
+            chatNetworkServiceAgent.start();
         }
+
     }
 
     @Override
@@ -879,8 +900,12 @@ public class ChatNetworkServicePluginRoot extends AbstractNetworkService impleme
             chatMetadataTransactionRecord.setDate(chatMetadata.getDate());
             chatMetadataTransactionRecord.setMessageId(chatMetadata.getMessageId());
             chatMetadataTransactionRecord.setMessage(chatMetadata.getMessage());
-            chatMetadataTransactionRecord.setDistributionStatus(DistributionStatus.DELIVERING);
+            chatMetadataTransactionRecord.setDistributionStatus(DistributionStatus.SENT);
             chatMetadataTransactionRecord.setProcessed(ChatMetadataTransactionRecord.NO_PROCESSED);
+
+            if(!chatMetadataTransactionRecord.isFilled()){
+                throw new CantSendChatMessageMetadataException("Some value of ChatMetadata Is passed NULL");
+            }
 
 
            // System.out.println("ChatPLuginRoot - Chat transaction: " + chatMetadataTransactionRecord);
@@ -937,12 +962,28 @@ public class ChatNetworkServicePluginRoot extends AbstractNetworkService impleme
                 communicationNetworkServiceConnectionManager.connectTo(sender, platformComponentProfile, receiver);
             }
             System.out.println("ChatNetworkServicePluginRoot - Message sent.");
-        } catch (IllegalArgumentException e) {
+        }catch(CantSendChatMessageMetadataException e){
+            StringBuilder contextBuffer = new StringBuilder();
+            contextBuffer.append("Plugin ID: " + pluginId);
+            contextBuffer.append(CantStartPluginException.CONTEXT_CONTENT_SEPARATOR);
+            contextBuffer.append("wsCommunicationsCloudClientManager: " + wsCommunicationsCloudClientManager);
+            contextBuffer.append(CantStartPluginException.CONTEXT_CONTENT_SEPARATOR);
+            contextBuffer.append("pluginDatabaseSystem: " + pluginDatabaseSystem);
+            contextBuffer.append(CantStartPluginException.CONTEXT_CONTENT_SEPARATOR);
+            contextBuffer.append("errorManager: " + errorManager);
+            contextBuffer.append(CantStartPluginException.CONTEXT_CONTENT_SEPARATOR);
+            contextBuffer.append("eventManager: " + eventManager);
 
-            throw e;
+            String context = contextBuffer.toString();
+            String possibleCause = "Missing Fields.";
 
 
-        } catch (Exception e) {
+            CantSendChatMessageMetadataException pluginStartException = new CantSendChatMessageMetadataException(CantSendChatMessageMetadataException.DEFAULT_MESSAGE, e, context, possibleCause);
+
+            errorManager.reportUnexpectedPluginException(Plugins.CHAT_NETWORK_SERVICE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, pluginStartException);
+
+            throw pluginStartException;
+        }catch (Exception e) {
 
             StringBuilder contextBuffer = new StringBuilder();
             contextBuffer.append("Plugin ID: " + pluginId);
@@ -958,6 +999,20 @@ public class ChatNetworkServicePluginRoot extends AbstractNetworkService impleme
             String context = contextBuffer.toString();
             String possibleCause = "Plugin was not registered";
 
+            if(chatMetadataTransactionRecord.isFilled()){
+                try {
+                    ChatMetadataTransactionRecord chatMetadataTransactionRecord1 = getChatMetaDataDao().findById(chatMetadataTransactionRecord.getTransactionId().toString());
+                    if(chatMetadataTransactionRecord.equals(chatMetadataTransactionRecord1)){
+                            chatMetadataTransactionRecord.setDistributionStatus(DistributionStatus.DELIVERING);
+                            getChatMetaDataDao().update(chatMetadataTransactionRecord);
+                    }else{
+                        chatMetadataTransactionRecord.setDistributionStatus(DistributionStatus.DELIVERING);
+                        getChatMetaDataDao().create(chatMetadataTransactionRecord);
+                    }
+                } catch (Exception e1) {
+
+                }
+            }
             CantSendChatMessageMetadataException pluginStartException = new CantSendChatMessageMetadataException(CantSendChatMessageMetadataException.DEFAULT_MESSAGE, e, context, possibleCause);
 
             errorManager.reportUnexpectedPluginException(Plugins.CHAT_NETWORK_SERVICE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, pluginStartException);
