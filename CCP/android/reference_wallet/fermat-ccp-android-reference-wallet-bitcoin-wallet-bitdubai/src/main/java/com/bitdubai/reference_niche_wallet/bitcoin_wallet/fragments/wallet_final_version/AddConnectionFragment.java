@@ -61,6 +61,7 @@ public class AddConnectionFragment extends FermatWalletListFragment<CryptoWallet
     private ReferenceWalletSession referenceWalletSession;
     private Menu menu;
     private boolean isMenuVisible;
+    private boolean isContactAddPopUp = false;
     private int connectionPickCounter;
     private LinearLayout empty_view;
     private boolean connectionDialogIsShow=false;
@@ -100,8 +101,10 @@ public class AddConnectionFragment extends FermatWalletListFragment<CryptoWallet
             onRefresh();
             if(intraUserInformationList.isEmpty()){
                 FermatAnimationsUtils.showEmpty(getActivity(), true, empty_view);
+                isContactAddPopUp = false;
             }else {
                 FermatAnimationsUtils.showEmpty(getActivity(),false,empty_view);
+                isContactAddPopUp = true;
             }
 
         } catch (Exception e){
@@ -158,8 +161,9 @@ public class AddConnectionFragment extends FermatWalletListFragment<CryptoWallet
                         getActivity(),
                         referenceWalletSession,
                         null);
-
-                connectionWithCommunityDialog.show();
+                if (isContactAddPopUp){
+                    connectionWithCommunityDialog.show();
+                }
                 connectionWithCommunityDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
                     @Override
                     public void onDismiss(DialogInterface dialog) {
@@ -282,7 +286,7 @@ public class AddConnectionFragment extends FermatWalletListFragment<CryptoWallet
                                     referenceWalletSession.getIntraUserModuleManager().getPublicKey()
                                     , appSession.getAppPublicKey(),
                                     CryptoCurrency.BITCOIN,
-                                    BlockchainNetworkType.DEFAULT);
+                                    BlockchainNetworkType.getDefaultBlockchainNetworkType());
                             Toast.makeText(getActivity(),"Contact Created",Toast.LENGTH_SHORT).show();
                         }
                     }catch (Exception e){
@@ -315,16 +319,16 @@ public class AddConnectionFragment extends FermatWalletListFragment<CryptoWallet
                         MAX_USER_SHOW,
                         offset);
             }
-            if(data.isEmpty()){
-                if(hnadler!=null) {
-                    hnadler.post(new Runnable() {
-                        @Override
-                        public void run() {
-                            new ConnectionWithCommunityDialog(getActivity(), referenceWalletSession, null).show();
-                        }
-                    });
-                }
-            }
+//            if(data.isEmpty()){
+//                if(hnadler!=null) {
+//                    hnadler.post(new Runnable() {
+//                        @Override
+//                        public void run() {
+//                            new ConnectionWithCommunityDialog(getActivity(), referenceWalletSession, null).show();
+//                        }
+//                    });
+//                }
+//            }
         }
         catch(Exception e){
             Toast.makeText(getActivity().getApplicationContext(), "Oooops! recovering from system error. Get Intra User List", Toast.LENGTH_SHORT).show();
