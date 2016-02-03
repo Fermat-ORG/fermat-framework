@@ -10,6 +10,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.models.ContactList;
+import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView;
 import com.bitdubai.fermat_cht_android_sub_app_chat_bitdubai.R;
 
 import java.util.ArrayList;
@@ -34,7 +35,16 @@ public class ContactAdapter extends ArrayAdapter<String> {
     private final ArrayList<UUID> contactUUID;
     private final String action;
     public ContactAdapter(Context context, ArrayList<String> contactName, ArrayList<String> contactAlias,ArrayList<UUID> contactUUID, String action) {
-        super(context, R.layout.contact_list_item, contactName);
+        super(context, R.layout.contact_detail_item, contactName);
+//        switch (action)
+//        {
+//            case "detail":
+//                super(context, R.layout.contact_detail_item, contactName);
+//                break;
+//            case "edit":
+//                super(context, R.layout.contact_edit_item, contactName);
+//                break;
+//        }
         this.contactAlias = contactAlias;
         this.contactName = contactName;
         this.contactUUID = contactUUID;
@@ -43,13 +53,13 @@ public class ContactAdapter extends ArrayAdapter<String> {
 
     public View getView(int position, View convertView, ViewGroup parent) {
         LayoutInflater inflater = LayoutInflater.from(getContext());
-        View item = inflater.inflate(R.layout.contact_edit_item, null, true);
+        View item = inflater.inflate(R.layout.contact_detail_item, null, true);
         switch (action)
         {
             case "edit":
                 item = inflater.inflate(R.layout.contact_edit_item, null, true);
 
-                TextView name = (TextView) item.findViewById(R.id.contact_detail_header);
+                FermatTextView name = (FermatTextView) item.findViewById(R.id.contact_detail_header);
                 name.setText(contactName.get(0));
 
                 EditText alias = (EditText) item.findViewById(R.id.aliasEdit);
@@ -58,10 +68,10 @@ public class ContactAdapter extends ArrayAdapter<String> {
             case "detail":
                 item = inflater.inflate(R.layout.contact_detail_item, null, true);
 
-                TextView name2 = (TextView) item.findViewById(R.id.contact_detail_header);
+                FermatTextView name2 = (FermatTextView) item.findViewById(R.id.contact_detail_header);
                 name2.setText(contactName.get(0));
 
-                TextView alias2 = (TextView) item.findViewById(R.id.alias);
+                FermatTextView alias2 = (FermatTextView) item.findViewById(R.id.alias);
                 alias2.setText(contactAlias.get(0));
                 break;
         }

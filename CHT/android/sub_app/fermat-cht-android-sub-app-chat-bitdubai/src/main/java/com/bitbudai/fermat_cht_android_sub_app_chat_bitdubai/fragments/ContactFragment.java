@@ -23,10 +23,12 @@ import com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.adapters.ContactLis
 import com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.sessions.ChatSession;
 import com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.settings.ChatSettings;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractFermatFragment;
+import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
 import com.bitdubai.fermat_api.layer.all_definition.settings.structure.SettingsManager;
 import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.enums.SubApps;
 import com.bitdubai.fermat_cht_android_sub_app_chat_bitdubai.R;
+import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantGetContactException;
 import com.bitdubai.fermat_cht_api.layer.middleware.interfaces.Contact;
 import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.ChatManager;
 import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.ChatModuleManager;
@@ -189,7 +191,7 @@ public List<Contact> contacts;
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        View layout = inflater.inflate(R.layout.contact_list_fragment, container, false);
+        View layout = inflater.inflate(R.layout.contact_detail_fragment, container, false);
 
         try {
             Contact con= chatSession.getSelectedContact();
@@ -202,10 +204,9 @@ public List<Contact> contacts;
                 errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
         }
         ContactAdapter adapter=new ContactAdapter(getActivity(), contactname,  contactalias, contactid, "detail");
-        TextView name =(TextView)layout.findViewById(R.id.contact_name);
-        String ad = contactname.get(0);
+        FermatTextView name =(FermatTextView)layout.findViewById(R.id.contact_name);
         name.setText(contactname.get(0));
-        TextView id =(TextView)layout.findViewById(R.id.uuid);
+        FermatTextView id =(FermatTextView)layout.findViewById(R.id.uuid);
         id.setText(contactid.get(0).toString());
 
         LinearLayout detalles = (LinearLayout)layout.findViewById(R.id.contact_details_layout);
@@ -378,7 +379,7 @@ public List<Contact> contacts;
 
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-
+        menu.clear();
         // Inflate the menu items
         inflater.inflate(R.menu.contact_detail_menu, menu);
         // Locate the search item
@@ -474,7 +475,13 @@ public List<Contact> contacts;
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == R.id.menu_edit_contact) {
-            changeActivity(Activities.CHT_CHAT_EDIT_CONTACT, appSession.getAppPublicKey());
+            Contact con = chatSession.getSelectedContact();
+          try {
+              appSession.setData(ChatSession.CONTACT_DATA, chatManager.getContactByContactId(con.getContactId()));
+              changeActivity(Activities.CHT_CHAT_EDIT_CONTACT, appSession.getAppPublicKey());
+            } catch (CantGetContactException e) {
+              e.printStackTrace();
+          }
         }
         if (item.getItemId() == R.id.menu_del_contact) {
             AlertDialog.Builder builder1 = new AlertDialog.Builder(getContext());

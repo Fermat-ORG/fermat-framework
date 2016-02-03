@@ -219,8 +219,8 @@ public class ContactsListFragment extends AbstractFermatFragment {
         try {
             ContactImpl cadded=new ContactImpl();
             cadded.setContactId(UUID.randomUUID());
-            cadded.setAlias("joseremoto");
-            cadded.setRemoteActorPublicKey("joseremoto");
+            cadded.setAlias("josejcb");
+            cadded.setRemoteActorPublicKey("jose");
             cadded.setRemoteActorType(PlatformComponentType.ACTOR_ASSET_USER);
             String dateString = "30/09/2014";
             SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
@@ -347,7 +347,7 @@ public class ContactsListFragment extends AbstractFermatFragment {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == R.id.menu_add_contact) {
-            System.out.println("\n\ngetAppPublicKey:\n\n" + appSession.getAppPublicKey().toString());
+            //System.out.println("\n\ngetAppPublicKey:\n\n" + appSession.getAppPublicKey().toString());
             changeActivity(Activities.CHT_CHAT_EDIT_CONTACT, appSession.getAppPublicKey());
         }
 
@@ -512,7 +512,7 @@ public class ContactsListFragment extends AbstractFermatFragment {
 
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-
+        menu.clear();
         // Inflate the menu items
         inflater.inflate(R.menu.contact_list_menu, menu);
         // Locate the search item
