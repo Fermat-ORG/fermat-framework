@@ -38,7 +38,7 @@
             <FrameLayout
                 android:layout_width="match_parent"
                 android:layout_height="fill_parent"
-                android:layout_marginTop="-70dp"
+                android:layout_marginTop="-60dp"
                 android:background="@drawable/bw_reflex_image"
                 android:orientation="vertical">
 
@@ -46,7 +46,7 @@
                     android:id="@+id/bw_swipe_refresh"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:layout_marginTop="70dp"
+                    android:layout_marginTop="60dp"
 
                     android:visibility="visible">
 

@@ -61,6 +61,7 @@ public class AccountDetailFragment extends FermatWalletListFragment<BankMoneyTra
     private FermatTextView aliasText;
     private FermatTextView accountText;
     private ImageView imageView;
+    private FermatTextView header;
     private  int imageAccount;
 
     private PresentationDialog presentationDialog;
@@ -102,6 +103,9 @@ public class AccountDetailFragment extends FermatWalletListFragment<BankMoneyTra
         imageView = (ImageView) layout.findViewById(R.id.bw_account_image);
         imageView.setImageResource(imageAccount);
         imageView.setVisibility(View.VISIBLE);
+
+        header = (FermatTextView)layout.findViewById(R.id.textView_header_text);
+        header.setText(moduleManager.getBankingWallet().getBankName());
         this.fab = (com.getbase.floatingactionbutton.FloatingActionsMenu) layout.findViewById(R.id.bw_fab_multiple_actions);
         this.availableTextView = (FermatTextView) layout.findViewById(R.id.available_balance);
         this.bookTextView = (FermatTextView) layout.findViewById(R.id.book_balance);
