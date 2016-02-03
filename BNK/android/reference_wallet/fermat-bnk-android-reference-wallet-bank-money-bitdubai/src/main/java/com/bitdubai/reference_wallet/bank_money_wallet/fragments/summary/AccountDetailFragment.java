@@ -204,6 +204,7 @@ public class AccountDetailFragment extends FermatWalletListFragment<BankMoneyTra
                 if (adapter != null)
                     adapter.changeDataSet(transactionList);
                 showOrHideNoTransactionsView(transactionList.isEmpty());
+                updateBalance();
             }
         }
     }
@@ -293,4 +294,6 @@ public class AccountDetailFragment extends FermatWalletListFragment<BankMoneyTra
         }
         return super.onOptionsItemSelected(item);
     }
+
+
 }
