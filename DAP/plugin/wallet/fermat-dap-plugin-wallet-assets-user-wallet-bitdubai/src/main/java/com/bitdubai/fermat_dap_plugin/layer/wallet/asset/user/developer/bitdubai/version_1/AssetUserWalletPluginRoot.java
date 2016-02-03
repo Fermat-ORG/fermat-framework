@@ -81,7 +81,7 @@ public class AssetUserWalletPluginRoot extends AbstractPlugin implements
                 createAssetUserWallet(walletPublicKey, BlockchainNetworkType.TEST_NET);
                 createAssetUserWallet(walletPublicKey, BlockchainNetworkType.PRODUCTION);
             }
-            assetUserWallet = loadAssetUserWallet(walletPublicKey, BlockchainNetworkType.DEFAULT);
+            assetUserWallet = loadAssetUserWallet(walletPublicKey, BlockchainNetworkType.getDefaultBlockchainNetworkType());
             System.out.println("Star Plugin AssetWalletUser");
             this.serviceStatus = ServiceStatus.STARTED;
         } catch (Exception exception) {

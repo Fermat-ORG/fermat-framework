@@ -130,7 +130,7 @@ public class AssetRedeemPointWalletPluginRoot extends AbstractPlugin implements
                 createWalletAssetRedeemPoint(walletPublicKey, BlockchainNetworkType.TEST_NET);
                 createWalletAssetRedeemPoint(walletPublicKey, BlockchainNetworkType.PRODUCTION);
             }
-            redeemPointWallet = loadAssetRedeemPointWallet(walletPublicKey, BlockchainNetworkType.DEFAULT);
+            redeemPointWallet = loadAssetRedeemPointWallet(walletPublicKey, BlockchainNetworkType.getDefaultBlockchainNetworkType());
             System.out.println("Star Plugin AssetWalletUser");
             this.serviceStatus = ServiceStatus.STARTED;
         } catch (CantStartPluginException exception) {
