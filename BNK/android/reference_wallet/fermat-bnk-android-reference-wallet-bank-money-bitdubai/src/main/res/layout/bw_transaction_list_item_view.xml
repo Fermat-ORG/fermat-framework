@@ -12,6 +12,7 @@
     android:paddingRight="16dp"
     android:paddingStart="16dp"
     android:paddingTop="8dp"
+    android:layout_marginBottom="5dp"
     android:visibility="visible">
 
     <ProgressBar
@@ -158,5 +159,4 @@
         android:textSize="@dimen/small_text_size"
         android:visibility="visible"
         android:text="Memo for withdrawal"/>
-
 </RelativeLayout>
