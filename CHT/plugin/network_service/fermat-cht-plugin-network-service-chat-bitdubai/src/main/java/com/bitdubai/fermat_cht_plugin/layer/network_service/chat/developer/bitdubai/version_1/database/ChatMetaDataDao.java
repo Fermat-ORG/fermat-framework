@@ -24,15 +24,18 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.Data
 import com.bitdubai.fermat_cht_api.all_definition.enums.MessageStatus;
 import com.bitdubai.fermat_cht_api.layer.network_service.chat.enums.ChatMessageStatus;
 import com.bitdubai.fermat_cht_api.layer.network_service.chat.enums.DistributionStatus;
+import com.bitdubai.fermat_cht_plugin.layer.network_service.chat.developer.bitdubai.version_1.exceptions.CantInitializeChatNetworkServiceDatabaseException;
 import com.bitdubai.fermat_cht_plugin.layer.network_service.chat.developer.bitdubai.version_1.structure.ChatMetadataTransactionRecord;
 import com.bitdubai.fermat_cht_plugin.layer.network_service.chat.developer.bitdubai.version_1.exceptions.CantDeleteRecordDataBaseException;
 import com.bitdubai.fermat_cht_plugin.layer.network_service.chat.developer.bitdubai.version_1.exceptions.CantInsertRecordDataBaseException;
 import com.bitdubai.fermat_cht_plugin.layer.network_service.chat.developer.bitdubai.version_1.exceptions.CantReadRecordDataBaseException;
 import com.bitdubai.fermat_cht_plugin.layer.network_service.chat.developer.bitdubai.version_1.exceptions.CantUpdateRecordDataBaseException;
+import com.bitdubai.fermat_p2p_api.layer.all_definition.common.network_services.template.exceptions.CantInitializeNetworkServiceDatabaseException;
 
 import java.sql.Timestamp;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
@@ -48,22 +51,22 @@ import java.util.UUID;
 public class ChatMetaDataDao {
 
     /**
-     * Represent the dataBase
+     * Represent the database
      */
-    private Database dataBase;
+    private Database database;
 
     private PluginDatabaseSystem pluginDatabaseSystem;
     private UUID pluginId;
 
     /**
      * Constructor
-     * @param dataBase
+     * @param database
      * @param pluginDatabaseSystem
      * @param pluginId
      */
-    public ChatMetaDataDao(Database dataBase, PluginDatabaseSystem pluginDatabaseSystem, UUID pluginId) {
+    public ChatMetaDataDao(Database database, PluginDatabaseSystem pluginDatabaseSystem, UUID pluginId) {
         super();
-        this.dataBase = dataBase;
+        this.database = database;
         this.pluginDatabaseSystem = pluginDatabaseSystem;
         this.pluginId = pluginId;
     }
@@ -73,8 +76,8 @@ public class ChatMetaDataDao {
      *
      * @return Database
      */
-    Database getDataBase() {
-        return dataBase;
+    Database getDatabase() {
+        return database;
     }
 
     /**
@@ -83,7 +86,7 @@ public class ChatMetaDataDao {
      * @return DatabaseTable
      */
     DatabaseTable getDatabaseTable() {
-        return getDataBase().getTable(NetworkServiceChatNetworkServiceDatabaseConstants.CHAT_TABLE_NAME);
+        return getDatabase().getTable(NetworkServiceChatNetworkServiceDatabaseConstants.CHAT_TABLE_NAME);
     }
 
     /**
@@ -139,6 +142,72 @@ public class ChatMetaDataDao {
         }
 
         return chatMetadaTransactionRecord;
+    }
+    /**
+     * Method that list the all entities on the data base. The valid value of
+     * the key are the att of the <code>TemplateNetworkServiceDatabaseConstants</code>
+     *
+     * @return List<ChatMetadataTransactionRecord>
+     * @throws CantReadRecordDataBaseException
+     */
+    public List<ChatMetadataTransactionRecord> findAllToSend() throws CantReadRecordDataBaseException, CantLoadTableToMemoryException {
+
+        DatabaseTable databaseTable = getDatabaseTable();
+        databaseTable.addStringFilter(NetworkServiceChatNetworkServiceDatabaseConstants.CHAT_DISTRIBUTIONSTATUS_COLUMN_NAME, DistributionStatus.DELIVERING.getCode(), DatabaseFilterType.EQUAL);
+        databaseTable.loadToMemory();
+
+            /*
+             * 2 - read all records
+             */
+        List<DatabaseTableRecord> records = databaseTable.getRecords();
+
+        List<ChatMetadataTransactionRecord> list = new ArrayList<>();
+        try{
+            if(!records.isEmpty() && records.size()>0){
+                for (DatabaseTableRecord record : records) {
+                    list.add(constructFrom(record));
+                }
+            }
+
+        } catch (Exception e){
+            throw new CantReadRecordDataBaseException(CantReadRecordDataBaseException.DEFAULT_MESSAGE,e, "Exception not handled by the plugin, there is a problem in database and i cannot load the table.","");
+        }
+
+        return list;
+    }
+    public void initialize() throws CantInitializeChatNetworkServiceDatabaseException {
+        try {
+
+            database = this.pluginDatabaseSystem.openDatabase(
+                    this.pluginId,
+                    NetworkServiceChatNetworkServiceDatabaseConstants.DATA_BASE_NAME
+            );
+
+        } catch (DatabaseNotFoundException e) {
+
+            try {
+
+                NetworkServiceChatNetworkServiceDatabaseFactory databaseFactory = new NetworkServiceChatNetworkServiceDatabaseFactory(pluginDatabaseSystem);
+                database = databaseFactory.createDatabase(
+                        pluginId,
+                        NetworkServiceChatNetworkServiceDatabaseConstants.DATA_BASE_NAME
+                );
+
+            } catch (CantCreateDatabaseException f) {
+
+                throw new CantInitializeChatNetworkServiceDatabaseException(CantCreateDatabaseException.DEFAULT_MESSAGE, f, "", "There is a problem and i cannot create the database.");
+            } catch (Exception z) {
+
+                throw new CantInitializeChatNetworkServiceDatabaseException(CantInitializeChatNetworkServiceDatabaseException.DEFAULT_MESSAGE, z, "", "Generic Exception.");
+            }
+
+        } catch (CantOpenDatabaseException e) {
+
+            throw new CantInitializeChatNetworkServiceDatabaseException(CantOpenDatabaseException.DEFAULT_MESSAGE, e, "", "Exception not handled by the plugin, there is a problem and i cannot open the database.");
+        } catch (Exception e) {
+
+            throw new CantInitializeChatNetworkServiceDatabaseException(CantInitializeChatNetworkServiceDatabaseException.DEFAULT_MESSAGE, e, "", "Generic Exception.");
+        }
     }
 
     /**
@@ -506,9 +575,9 @@ public class ChatMetaDataDao {
             /*
              * 2.- Create a new transaction and execute
              */
-            DatabaseTransaction transaction = getDataBase().newTransaction();
+            DatabaseTransaction transaction = getDatabase().newTransaction();
             transaction.addRecordToInsert(getDatabaseTable(), entityRecord);
-            getDataBase().executeTransaction(transaction);
+            getDatabase().executeTransaction(transaction);
 
         } catch (DatabaseTransactionFailedException databaseTransactionFailedException) {
 
@@ -559,10 +628,10 @@ public class ChatMetaDataDao {
             /*
              * 2.- Create a new transaction and execute
              */
-            DatabaseTransaction transaction = getDataBase().newTransaction();
+            DatabaseTransaction transaction = getDatabase().newTransaction();
             getDatabaseTable().addStringFilter(filter.getColumn(), filter.getValue(), filter.getType());
             transaction.addRecordToUpdate(getDatabaseTable(), entityRecord);
-            getDataBase().executeTransaction(transaction);
+            getDatabase().executeTransaction(transaction);
 
         } catch (DatabaseTransactionFailedException databaseTransactionFailedException) {
 
@@ -595,11 +664,11 @@ public class ChatMetaDataDao {
             /*
              * Create a new transaction and execute
              */
-            DatabaseTransaction transaction = getDataBase().newTransaction();
+            DatabaseTransaction transaction = getDatabase().newTransaction();
 
             //falta configurar la llamada para borrar la entidad
 
-            getDataBase().executeTransaction(transaction);
+            getDatabase().executeTransaction(transaction);
 
         } catch (DatabaseTransactionFailedException databaseTransactionFailedException) {
 
