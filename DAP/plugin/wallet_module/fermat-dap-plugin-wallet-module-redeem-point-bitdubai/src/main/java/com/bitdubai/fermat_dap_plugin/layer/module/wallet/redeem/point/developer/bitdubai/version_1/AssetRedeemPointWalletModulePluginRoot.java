@@ -124,6 +124,11 @@ public class AssetRedeemPointWalletModulePluginRoot extends AbstractPlugin imple
     }
 
     @Override
+    public BlockchainNetworkType getSelectedNetwork() {
+        return selectedNetwork;
+    }
+
+    @Override
     public SettingsManager getSettingsManager() {
         if (this.settingsManager != null)
             return this.settingsManager;

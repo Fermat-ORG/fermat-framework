@@ -55,4 +55,6 @@ public interface AssetUserWalletSubAppModuleManager extends ModuleManager<Fermat
     PluginBinaryFile getAssetFactoryResource(Resource resource) throws FileNotFoundException, CantCreateFileException;
 
     void changeNetworkType(BlockchainNetworkType networkType);
+
+    BlockchainNetworkType getSelectedNetwork();
 }

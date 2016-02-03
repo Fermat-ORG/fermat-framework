@@ -30,4 +30,6 @@ public interface AssetRedeemPointWalletSubAppModule extends ModuleManager<Fermat
     RedeemPointIdentity getActiveAssetRedeemPointIdentity() throws CantGetIdentityRedeemPointException;
 
     void changeNetworkType(BlockchainNetworkType networkType);
+
+    BlockchainNetworkType getSelectedNetwork();
 }
