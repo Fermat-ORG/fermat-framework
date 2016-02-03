@@ -8,28 +8,28 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 
-
 import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.verify;
 
 /**
  * Created by alexander jimenez (alex_jimenez76@hotmail.com) on 01/02/16.
  */
-public class getCustomerOnlinePaymentRecordTest {
+public class getContractTransactionStatusTest {
     @Mock
     private CustomerOnlinePaymentBusinessTransactionDao customerOnlinePaymentBusinessTransactionDao;
     @Before
     public void setup(){
         MockitoAnnotations.initMocks(this);
     }
+
     @Test
-    public void getCustomerOnlinePaymentRecord_Should_Run_Once() throws Exception{
-        customerOnlinePaymentBusinessTransactionDao.getCustomerOnlinePaymentRecord(anyString());
-        verify(customerOnlinePaymentBusinessTransactionDao,Mockito.times(1)).getCustomerOnlinePaymentRecord(anyString());
+    public void getContractTransactionStatusTest_Should_Run_Once() throws Exception{
+        customerOnlinePaymentBusinessTransactionDao.getContractTransactionStatus(anyString());
+        verify(customerOnlinePaymentBusinessTransactionDao, Mockito.times(1)).getContractTransactionStatus(anyString());
     }
 
     @Test(expected = Exception.class)
-    public void getCustomerOnlinePaymentRecord_Should_Return_Exception() throws Exception{
+    public void getContractTransactionStatusTest_Should_Return_Exception() throws Exception{
         customerOnlinePaymentBusinessTransactionDao = new CustomerOnlinePaymentBusinessTransactionDao(null,null,null);
         customerOnlinePaymentBusinessTransactionDao.getCustomerOnlinePaymentRecord(null);
     }
