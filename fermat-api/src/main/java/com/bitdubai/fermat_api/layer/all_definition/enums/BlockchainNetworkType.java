@@ -9,7 +9,6 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.interfaces.FermatEnum;
  * Created by rodrigo on 9/21/15.
  */
 public enum BlockchainNetworkType implements FermatEnum {
-
     /**
      * To make the code more readable, please keep the elements in the Enum sorted alphabetically.
      */
@@ -19,6 +18,11 @@ public enum BlockchainNetworkType implements FermatEnum {
     TEST_NET    ("TESTN"),
 
     ;
+
+    /**
+     * sets the default network type for the platform
+     */
+    private static final BlockchainNetworkType DEFAULT_BLOCKCHAIN_NETWORK_TYPE = BlockchainNetworkType.REG_TEST;
 
     private final String code;
 
@@ -41,4 +45,11 @@ public enum BlockchainNetworkType implements FermatEnum {
         return this.code;
     }
 
+    /**
+     * Gets the default network type selected for this platform.
+     * @return the default BlockchainNetworkType
+     */
+    public static BlockchainNetworkType getDefaultBlockchainNetworkType(){
+        return DEFAULT_BLOCKCHAIN_NETWORK_TYPE;
+    }
 }
