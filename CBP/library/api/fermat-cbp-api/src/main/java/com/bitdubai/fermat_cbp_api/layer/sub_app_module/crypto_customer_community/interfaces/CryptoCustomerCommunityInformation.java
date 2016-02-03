@@ -32,10 +32,10 @@ public interface CryptoCustomerCommunityInformation {
     byte[] getImage();
 
     /**
-     * The method <code>listCryptoBrokerWallets</code> returns the list of the public crypto broker wallets
+     * The method <code>listCryptoBrokerWallets</code> returns the list of the public crypto customer wallets
      * @return
      */
-    List listCryptoBrokerWallets();
+    List listCryptoCustomerWallets();
 
 }
 
