@@ -18,6 +18,7 @@ import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantCrea
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantPersistFileException;
 import com.bitdubai.fermat_api.layer.world.interfaces.Currency;
 import com.bitdubai.fermat_cbp_api.all_definition.contract.ContractClause;
+import com.bitdubai.fermat_cbp_api.all_definition.enums.ClauseStatus;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.ClauseType;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.ContractDetailType;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.ContractStatus;
@@ -88,6 +89,8 @@ import com.bitdubai.fermat_wpd_api.layer.wpd_middleware.wallet_manager.exception
 import com.bitdubai.fermat_wpd_api.layer.wpd_middleware.wallet_manager.interfaces.InstalledWallet;
 import com.bitdubai.fermat_wpd_api.layer.wpd_middleware.wallet_manager.interfaces.WalletManagerManager;
 
+import java.text.DecimalFormat;
+import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
@@ -359,7 +362,7 @@ public class CryptoCustomerWalletModuleCryptoCustomerWalletManager implements Cr
         }
     }
 
-    @Override
+    /*@Override
     public Collection<CustomerBrokerNegotiationInformation> getNegotiationsWaitingForBroker(int max, int offset) throws CantGetNegotiationsWaitingForBrokerException {
         try {
             CryptoCustomerWalletModuleCustomerBrokerNegotiationInformation cryptoCustomerWalletModuleCustomerBrokerNegotiationInformation = null;
@@ -381,7 +384,47 @@ public class CryptoCustomerWalletModuleCryptoCustomerWalletManager implements Cr
         } catch (Exception ex) {
             throw new CantGetNegotiationsWaitingForBrokerException("Cant get negotiations waiting for the broker", ex, "", "");
         }
-    }
+    }*/
+
+    @Override
+    public Collection<CustomerBrokerNegotiationInformation> getNegotiationsWaitingForBroker(int max, int offset) throws CantGetNegotiationsWaitingForBrokerException {
+        try {
+
+            CryptoCustomerWalletModuleCustomerBrokerNegotiationInformation cryptoCustomerWalletModuleCustomerBrokerNegotiationInformation = null;
+
+            Collection<CustomerBrokerNegotiationInformation> waitingForBroker = new ArrayList<>();
+            for (CustomerBrokerPurchaseNegotiation customerBrokerSaleNegotiation : customerBrokerPurchaseNegotiationManager.getNegotiationsByStatus(NegotiationStatus.SENT_TO_BROKER))
+            {
+
+                Collection<Clause> negotiationClause = customerBrokerSaleNegotiation.getClauses();
+
+                String customerAlias        = customerBrokerSaleNegotiation.getCustomerPublicKey();
+                String brokerAlias          = customerBrokerSaleNegotiation.getBrokerPublicKey();
+                NegotiationStatus status    = customerBrokerSaleNegotiation.getStatus();
+                Map<ClauseType, ClauseInformation> clauses = getNegotiationClause(negotiationClause);
+                String merchandise = clauses.get(ClauseType.CUSTOMER_CURRENCY).getValue();
+
+                System.out.print(" - NEGOTIATION: " +
+                                " \nCUSTOMER: " +customerAlias+
+                                " \nBROKER: " +brokerAlias+
+                                " \nSTATUS: "+status.getCode()+
+                                " \nMERCHANDISE: "+merchandise);
+
+                cryptoCustomerWalletModuleCustomerBrokerNegotiationInformation = new CryptoCustomerWalletModuleCustomerBrokerNegotiationInformation(
+                        customerAlias,
+                        brokerAlias,
+                        NegotiationStatus.WAITING_FOR_BROKER,
+                        clauses
+                );
+
+                waitingForBroker.add(cryptoCustomerWalletModuleCustomerBrokerNegotiationInformation);
+            }
+            return waitingForBroker;
+
+        } catch (Exception ex) {
+            throw new CantGetNegotiationsWaitingForBrokerException("Cant get negotiations waiting for the broker", ex, "", "");
+        }
+}
 
     @Override
     public Collection<CustomerBrokerNegotiationInformation> getNegotiationsWaitingForCustomer(int max, int offset) throws CantGetNegotiationsWaitingForCustomerException {
@@ -389,10 +432,51 @@ public class CryptoCustomerWalletModuleCryptoCustomerWalletManager implements Cr
             CryptoCustomerWalletModuleCustomerBrokerNegotiationInformation cryptoCustomerWalletModuleCustomerBrokerNegotiationInformation = null;
 
             Collection<CustomerBrokerNegotiationInformation> waitingForBroker = new ArrayList<>();
-            for (CustomerBrokerPurchaseNegotiation customerBrokerSaleNegotiation : customerBrokerPurchaseNegotiationManager.getNegotiationsByStatus(NegotiationStatus.WAITING_FOR_CUSTOMER))
+            for (CustomerBrokerPurchaseNegotiation customerBrokerSaleNegotiation : customerBrokerPurchaseNegotiationManager.getNegotiationsByStatus(NegotiationStatus.SENT_TO_BROKER))
             {
+
+                Collection<Clause> negotiationClause = customerBrokerSaleNegotiation.getClauses();
+
+                String customerAlias        = customerBrokerSaleNegotiation.getCustomerPublicKey();
+                String brokerAlias          = customerBrokerSaleNegotiation.getBrokerPublicKey();
+                NegotiationStatus status    = customerBrokerSaleNegotiation.getStatus();
+                Map<ClauseType, ClauseInformation> clauses = getNegotiationClause(negotiationClause);
+                String merchandise = clauses.get(ClauseType.CUSTOMER_CURRENCY).getValue();
+//                String paymentMethod = clauses.get(ClauseType.BROKER_PAYMENT_METHOD).getValue();
+//                String paymentCurrency = clauses.get(ClauseType.BROKER_CURRENCY).getValue();
+
+                String paymentMethod = "PPP";
+                String paymentCurrency = "CCC";
+
+                System.out.print(" - NEGOTIATION: " +
+                        " \nCUSTOMER: " +customerAlias+
+                        " \nBROKER: " +brokerAlias+
+                        " \nSTATUS: "+status.getCode()+
+                        " \nMERCHANDISE: "+merchandise
+                );
+
+
+//            getNegotiationClauses();
 //                cryptoCustomerWalletModuleCustomerBrokerNegotiationInformation = new CryptoCustomerWalletModuleCustomerBrokerNegotiationInformation(customerBrokerSaleNegotiation.getCustomerPublicKey(), "merchandise", "paymentMethod", "paymentCurrency", NegotiationStatus.WAITING_FOR_BROKER);
                 cryptoCustomerWalletModuleCustomerBrokerNegotiationInformation = new CryptoCustomerWalletModuleCustomerBrokerNegotiationInformation(customerBrokerSaleNegotiation);
+                /*cryptoCustomerWalletModuleCustomerBrokerNegotiationInformation = new CryptoCustomerWalletModuleCustomerBrokerNegotiationInformation(
+                        customerAlias,
+                        merchandise,
+                        paymentMethod,
+                        paymentCurrency,
+                        NegotiationStatus.WAITING_FOR_BROKER,
+                        clauses
+                );*/
+//                cryptoCustomerWalletModuleCustomerBrokerNegotiationInformation = new CryptoCustomerWalletModuleCustomerBrokerNegotiationInformation(
+//                        customerAlias,
+//                        brokerAlias,
+//                        merchandise,
+//                        paymentMethod,
+//                        paymentCurrency,
+//                        NegotiationStatus.WAITING_FOR_BROKER,
+//                        clauses
+//                );
+
                 waitingForBroker.add(cryptoCustomerWalletModuleCustomerBrokerNegotiationInformation);
             }
             //TODO:Eliminar solo para que se terminen las pantallas
@@ -405,6 +489,38 @@ public class CryptoCustomerWalletModuleCryptoCustomerWalletManager implements Cr
         } catch (Exception ex) {
             throw new CantGetNegotiationsWaitingForCustomerException("Cant get negotiations waiting for the broker", ex, "", "");
         }
+    }
+
+    private Map<ClauseType, ClauseInformation> getNegotiationClause(Collection<Clause> negotiationClause){
+
+        Map<ClauseType, ClauseInformation> clauses = new HashMap<>();
+        for (Clause item : negotiationClause) {
+            clauses.put(
+                item.getType(),
+                putClause(item.getType(),item.getValue())
+            );
+        }
+
+        return clauses;
+    }
+
+    private ClauseInformation putClause(final ClauseType clauseType, final String value) {
+
+        ClauseInformation clauseInformation = new ClauseInformation() {
+            @Override
+            public UUID getClauseID() { return UUID.randomUUID(); }
+
+            @Override
+            public ClauseType getType() { return clauseType; }
+
+            @Override
+            public String getValue() { return (value != null) ? value : ""; }
+
+            @Override
+            public ClauseStatus getStatus() { return ClauseStatus.DRAFT; }
+        };
+
+        return clauseInformation;
     }
 
     @Override
