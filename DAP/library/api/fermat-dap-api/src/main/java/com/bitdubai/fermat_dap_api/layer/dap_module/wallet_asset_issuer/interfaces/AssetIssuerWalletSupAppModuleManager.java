@@ -89,4 +89,6 @@ public interface AssetIssuerWalletSupAppModuleManager extends ModuleManager<Ferm
     List<com.bitdubai.fermat_dap_api.layer.dap_wallet.asset_issuer_wallet.interfaces.AssetStatistic> getWalletStatisticsByAsset(String walletPublicKey, String assetName) throws CantLoadWalletException, CantGetAssetStatisticException;
 
     void changeNetworkType(BlockchainNetworkType networkType);
+
+    BlockchainNetworkType getSelectedNetwork();
 }

@@ -355,6 +355,11 @@ public class AssetIssuerWalletModulePluginRoot extends AbstractPlugin implements
     }
 
     @Override
+    public BlockchainNetworkType getSelectedNetwork() {
+        return selectedNetwork;
+    }
+
+    @Override
     public void setAppPublicKey(String publicKey) {
 
     }
