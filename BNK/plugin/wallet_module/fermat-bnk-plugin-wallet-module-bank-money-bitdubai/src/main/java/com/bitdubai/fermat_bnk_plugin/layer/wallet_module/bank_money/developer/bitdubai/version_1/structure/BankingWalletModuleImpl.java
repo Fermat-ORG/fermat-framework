@@ -20,6 +20,7 @@ import com.bitdubai.fermat_bnk_api.layer.bnk_wallet.bank_money.interfaces.BankMo
 import com.bitdubai.fermat_bnk_api.layer.bnk_wallet_module.interfaces.BankingWallet;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 
@@ -156,5 +157,14 @@ public class BankingWalletModuleImpl extends AsyncTransactionAgent<BankTransacti
     public void makeAsyncWithdraw(BankTransactionParameters bankTransactionParameters) {
         BankTransactionParametersImpl parameters= new BankTransactionParametersImpl(bankTransactionParameters.getTransactionId(),bankTransactionParameters.getPublicKeyPlugin(),bankTransactionParameters.getPublicKeyWallet(),bankTransactionParameters.getPublicKeyActor(),bankTransactionParameters.getAmount(),bankTransactionParameters.getAccount(),bankTransactionParameters.getCurrency(),bankTransactionParameters.getMemo(),TransactionType.DEBIT);
         this.queueNewTransaction(parameters);
+    }
+
+    @Override
+    public List<BankMoneyTransactionRecord> getPendingTransactions() {
+        List<BankMoneyTransactionRecord> list = new ArrayList<>();
+        for(BankTransactionParametersImpl data:getQueuedTransactions()){
+            list.add(new BankTransactionRecordImpl(data.getAmount().floatValue(),data.getMemo(),new Date().getTime(),data.getTransactionType()));
+        }
+        return list;
     }
 }

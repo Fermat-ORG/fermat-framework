@@ -268,6 +268,7 @@ public class AccountDetailFragment extends FermatWalletListFragment<BankMoneyTra
         List<BankMoneyTransactionRecord> data = new ArrayList<>();
         if (moduleManager != null) {
             try {
+                data.addAll(moduleManager.getBankingWallet().getPendingTransactions());
                 data.addAll(moduleManager.getBankingWallet().getTransactions(bankAccountNumber.getAccount()));
 
             } catch (Exception ex) {
