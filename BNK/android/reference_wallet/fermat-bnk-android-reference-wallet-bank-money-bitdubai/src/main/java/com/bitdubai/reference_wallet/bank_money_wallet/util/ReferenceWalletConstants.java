@@ -7,4 +7,5 @@ public class ReferenceWalletConstants {
     public static final int ADD_ACCOUNT_ACTION =300;
     public static final int SAVE_ACTION =301;
     public static final int UPDATE_RECORD_ACTION =302;
+    public static final int HELP_ACTION =303;
 }
