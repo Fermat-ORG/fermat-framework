@@ -64,8 +64,6 @@ public class EarningsActivityFragment extends AbstractFermatFragment<CryptoBroke
     private FermatTextView currentValue;
     private FermatTextView previousValue;
     private ImageView sortByButton;
-    private MenuItem monthMenuItem;
-    private MenuItem dayMenuItem;
     private PopupMenu popupMenu;
     private FermatTextView timeFieldTextView;
 
