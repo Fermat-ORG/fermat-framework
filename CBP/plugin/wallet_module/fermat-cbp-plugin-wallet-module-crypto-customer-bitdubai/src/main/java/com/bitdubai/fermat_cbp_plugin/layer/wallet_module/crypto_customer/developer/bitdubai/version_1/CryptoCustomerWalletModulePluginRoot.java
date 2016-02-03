@@ -20,6 +20,10 @@ import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogLevel;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogManager;
 import com.bitdubai.fermat_cbp_api.layer.actor.crypto_broker.interfaces.ActorExtraDataManager;
+import com.bitdubai.fermat_cbp_api.layer.business_transaction.customer_ack_offline_merchandise.interfaces.CustomerAckOfflineMerchandiseManager;
+import com.bitdubai.fermat_cbp_api.layer.business_transaction.customer_ack_online_merchandise.interfaces.CustomerAckOnlineMerchandiseManager;
+import com.bitdubai.fermat_cbp_api.layer.business_transaction.customer_offline_payment.interfaces.CustomerOfflinePaymentManager;
+import com.bitdubai.fermat_cbp_api.layer.business_transaction.customer_online_payment.interfaces.CustomerOnlinePaymentManager;
 import com.bitdubai.fermat_cbp_api.layer.contract.customer_broker_purchase.interfaces.CustomerBrokerContractPurchaseManager;
 import com.bitdubai.fermat_cbp_api.layer.identity.crypto_customer.interfaces.CryptoCustomerIdentityManager;
 import com.bitdubai.fermat_cbp_api.layer.negotiation.customer_broker_purchase.interfaces.CustomerBrokerPurchaseNegotiationManager;
@@ -80,6 +84,18 @@ public class CryptoCustomerWalletModulePluginRoot extends AbstractPlugin impleme
     //@NeededPluginReference(platform = Platforms.CRYPTO_BROKER_PLATFORM, layer = Layers.ACTOR, plugin = Plugins.CRYPTO_BROKER_ACTOR)
     ActorExtraDataManager actorExtraDataManager;
 
+    @NeededPluginReference(platform = Platforms.CRYPTO_BROKER_PLATFORM, layer = Layers.BUSINESS_TRANSACTION, plugin = Plugins.CUSTOMER_ONLINE_PAYMENT)
+    CustomerOnlinePaymentManager customerOnlinePaymentManager;
+
+    @NeededPluginReference(platform = Platforms.CRYPTO_BROKER_PLATFORM, layer = Layers.BUSINESS_TRANSACTION, plugin = Plugins.CUSTOMER_OFFLINE_PAYMENT)
+    CustomerOfflinePaymentManager customerOfflinePaymentManager;
+
+    @NeededPluginReference(platform = Platforms.CRYPTO_BROKER_PLATFORM, layer = Layers.BUSINESS_TRANSACTION, plugin = Plugins.CUSTOMER_ACK_ONLINE_MERCHANDISE)
+    CustomerAckOnlineMerchandiseManager customerAckOnlineMerchandiseManager;
+
+    @NeededPluginReference(platform = Platforms.CRYPTO_BROKER_PLATFORM, layer = Layers.BUSINESS_TRANSACTION, plugin = Plugins.CUSTOMER_ACK_OFFLINE_MERCHANDISE)
+    CustomerAckOfflineMerchandiseManager customerAckOfflineMerchandiseManager;
+
     private CryptoCustomerWalletModuleCryptoCustomerWalletManager walletManager;
 
     public CryptoCustomerWalletModulePluginRoot() {
@@ -105,7 +121,11 @@ public class CryptoCustomerWalletModulePluginRoot extends AbstractPlugin impleme
                         customerBrokerContractPurchaseManager,
                         customerBrokerNewManager,
                         currencyExchangeProviderFilterManager,
-                        actorExtraDataManager);
+                        actorExtraDataManager,
+                        customerOnlinePaymentManager,
+                        customerOfflinePaymentManager,
+                        customerAckOnlineMerchandiseManager,
+                        customerAckOfflineMerchandiseManager);
             return walletManager;
 
         } catch (Exception e) {
