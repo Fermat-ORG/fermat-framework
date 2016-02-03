@@ -113,27 +113,38 @@ Underneath the sight of end users all these components collaborate between each 
 <br>
 ## Fermat Application Tokens
 
-Fermat generates its tokens, the _fermats_, with a predetermined algorithm that cannot be changed, and those tokens are necessary for Fermat to function. Fermat miners are rewarded with _fermats_ for their contributions in running the Fermat network.
+End Users requires two different types of tokens to use Fermat:
 
-These application tokens are native to the Fermat system and are necessary to access to the application. Contribution of value from miners are rewarded in the application’s tokens as well as developers which are rewarded with tokens for the plug-ins they build for the system. Fermat's blockchain only records the issuing of new fermats and outsources the transaction processing from the bitcoin network. In this sense Fermat is a type II Dapp.[2]
+**d-fermats tokens [DFT]** : Are required to pay micro use licenses to component developers.
+
+**b-fermats tokens [BFT]** : Are required to pay Fermat Miners for bandwidth.
+
+The Fermat Foundation issues _d-fermats_ to incentivice the development of Fermat Intraestructure and Fermat APPs according to a road map and master plan. End Users must aquire these tokens from developers and holders in order to run Fermat APPs that require the payment of micro use licenses.
+
+The Fermat Protocol issues _b-fermats_, with a predetermined algorithm that cannot be changed, and those tokens are necessary for The Fermat Network to function. Fermat miners are rewarded with _b-fermats_ for their contributions in running the Fermat network. End Users must aquire these tokens from miners and holders in order to pay for bandwidth on the Fermat Network. 
+
+These application tokens are native to the Fermat system and are necessary to have access to the application. Contribution of value from miners are rewarded in the application’s tokens called _b-fermats_. Developers are rewarded with tokens called _d-fermats_ for the components they build for the system. Fermat's blockchain only records the issuing of new _b-fermats_ and outsources the transaction processing from the bitcoin network. In this sense Fermat is a type II Dapp.[2]. Developer tokens _d-fermats_ are issued by the Fermat Foundation as digital assets.
 
 ![alt text](https://github.com/bitDubai/media-kit/blob/master/MediaKit/Tokens/Fermat%20App%20Token/PerspView/HQ_1920x1080.jpg "Fermat Application Token")
 
 ### Token Records
 
-Fermat's tokens data and records are cryptographically stored in a public, decentralized blockchain in order to avoid any central points of failure. This blockchain is stored at Fermat Nodes.
+Fermat's bandwidth tokens (_b-fermats_) issuing data and records are cryptographically stored in a public, decentralized blockchain in order to avoid any central points of failure. This blockchain is stored at Fermat Nodes.
+
+Fermat's developer tokens (_d-fermats_) issuing data and records are cryptographically stored in a public, decentralized blockchain of digital assets in order to avoid any central points of failure. This blockchain is stored at a Device Public Network owend by the Fermat Foundation and runs on top of the Fermat Network.
+
 
 ### Token Generation & Distribution
 
 Fermat implement three different mechanisms for token generation and distribution:
 
-#### Fund-raising Mechanism
+#### Fund-Raising Mechanism
 
-With the fund-raising mechanism, tokens are distributed to those who fund the initial development of the Fermat System. The funds collected are used to fund the development of the core of the Fermat System (core libraries, api libraries, add-ons and the fermat.org web site). The tokens generated during the fund-raising are recorded as the genesis transaction of the Fermat's blockchain.
+With the fund-raising mechanism, developer tokens (_d-fermats_) are distributed to those who fund the initial development of the Fermat System. The funds collected are used to fund the development of the core of the Fermat System (core libraries, api libraries, add-ons and the fermat.org web site). The tokens generated during the fund-raising are recorded at the Fermat's developer tokens blockchain.
 
 #### Development Mechanism
 
-With the development mechanism, tokens are generated using a predefined mechanism and are only available for the development of Fermat components (plug-ins, GUI components, skins, language packages, and analisys of future development). These fermats become available through a pre-determined schedule and are distributed in two ways:
+With the development mechanism, development tokens are generated using a predefined mechanism and are only available for the development of Fermat components (plug-ins, GUI components, skins, language packages, and analisys of future development). These fermats become available through a pre-determined schedule and are distributed in two ways:
 
 1. Via a community-driven contribution program [3] where different teams of developers and designers work either part-time or full-time on the project.
 
@@ -141,50 +152,56 @@ With the development mechanism, tokens are generated using a predefined mechanis
 
 #### Mining Mechanism
 
-The Fermat Protocol generates tokens according to a standard crytptographic algorithm acting as a proof of the value nodes are contributing to the application (Fermat uses a kind of Proof of Work Algorithm designed for the particular services Fermat nodes are providing).
+The Fermat Protocol generates bandwidth tokens (_b-fermats_) according to a standard crytptographic algorithm acting as a proof of the value nodes are contributing to the application (Fermat uses a kind of Proof of Work Algorithm designed for the particular services Fermat nodes are providing).
 
-With the mining mechanism, tokens are distributed to those who contribute most work to the operation of the Fermat Network. In this case, _fermats_ are distributed through a predetermined algorithm to the miners that connect clients between each other and allow clients to talk through them.
+With the mining mechanism, tokens are distributed to those who contribute most work to the operation of the Fermat Network. In this case, _b-fermats_ are distributed through a predetermined algorithm to the miners that connect clients between each other and allow clients to talk through them.
 
 ### Token Issuing
 
+The Fermat Open Source Project founders started issuing Fermat development tokens (_d-fermats_) in 2014. A complete disclosure of the issued tokens and distribution can be found at a separate document called Fermat Tokens. [5]
+
+Bandwidth tokens (_b-fermats_) have not been issued yet. Their issuing will start once the Fermat Blockchain is implemented and miners start minging _b-fermats_. There will be no _b-fermats_ pre-mined.
+
 #### Fermat.org (Non-profit organization)
 
-Fund-raising Fermat tokens are issued by a non-profit organization called Fermat.org that will never receive financial benefits from the Fermat system. This organization have the following responsibilities:
+Fund-raising Fermat developers tokens (_d-fermats_) are issued by a non-profit organization called Fermat.org that will never receive financial benefits from the Fermat system. This organization have the following responsibilities:
 
-* Issuance of initial tokens
-* Holding of developer tokens
+* Issuance of initial  _d-fermats_ tokens
+* Holding of developer tokens _d-fermats_
 * Management of bounty payments
 * Determining the Fermat System direction
-* Collecting and distributing statistical information from the Fermat System.
+* Collecting and distributing statistical information from the Fermat System
 
-Fermat.org makes decisions in a decentralized manner, using a “proof of stake” voting mechanism for any decision.
+Fermat.org will make decisions in a decentralized manner, using a “proof of stake” voting mechanism for any decision once the project is mature enought. Meanwhile the direction of the project is determined by its founders.
 
 #### Fermat Protocol
 
-The protocol itself issues tokens for miners and for development. In the last case, they are deposited on accounts of the Non-profit Fermat.org until awarded as bounty or contribution payments for developers.
+The protocol itself issues bandwidth tokens for miners. In the case od developers tokens, they are generated by the Non-profit Fermat.org until awarded as bounty or contribution payments for developers.
 
 ### Token Usage
 
-End users automatically acquire fermats by receiving bitcoins into a Fermat wallet of their own. They can go back to bitcoins by transfering fermats into a Bitcoin wallet.
+End users automatically acquire b-fermats by receiving bitcoins into a b-fermat wallet of their own. They can go back to bitcoins by transfering b-fermats into a Bitcoin wallet.
+
+Development tokens can be aquiered from the d-fermat wallet from holders willing to sell them. From this same wallet the Fermat Framework debits the fees corresponding to the micro-use-licenses that End Users need to pay,
 
 Fermat tokens are necessary for users to pay for three things:
 
 #### Communication
 
-End users pay Fermat Nodes with fermats to be able to receive calls from other devices.
+End users pay Fermat Nodes with _b-fermats_ to be able to receive calls from other devices.
 
 #### Use of Fermat Components
 
-End users pay Fermat Component's developers with fermats to be able to use their plug-ins, GUI components, skins, language packages, etc. Developers defines a Micro-Use-License for each components. Products like Wallets or Financial APPs use these components, so the cost for using these products is the sum of the cost of the Micro Use Licenses defined by each developer involved. This is the way how developers are paid for developing and mantaining their components.
+End users pay Fermat Component's developers with _d-fermats_ to be able to use their plug-ins, GUI components, skins, language packages, etc. Developers defines a Micro-Use-License for each components. Products like Wallets or Financial APPs use these components, so the cost for using these products is the sum of the cost of the Micro Use Licenses defined by each developer involved. This is the way how developers are paid for developing and mantaining their components.
 
 #### Technical Support
 
-End users pay with fermats to receive personalized technical support from Fermat APPs's developers.
+End users pay with _d-fermats_ to receive personalized technical support from Fermat APPs's developers.
 
 <br>
 ## Fermat Blockchain
 
-Fermat's blockchain keeps track of all Fermat Tokens issued. Fermat outsources the transaction procesing of Fermat Tokens to one ore more crypto networks. This means that Fermat newly issued tokens are registered at some crypto network with a technique similar to a _digital asset_ or _colored coin_, and the transactions representing the transfers of ownership are handled directly by these crypto networks with no intervention of the Fermat Blockchain or Fermat Network whatsoever. The first implementation of Fermat Tokens is using only the bitcoin network as it is the most reliable at present time. Later, however, the decision where to register new fermats will be taken by the miners winning the block reward. They will be able to choose between all the crypto networks integrated into the Fermat system at the moment of that event happening. During the rest of this document all further explanations will be refering to the bitcoin network as it is the first of one of multiple possible future implementations.  
+Fermat's blockchain keeps track of all Fermat Bandwidth Tokens issued. Fermat outsources the transaction procesing of Fermat Tokens to one ore more crypto networks. This means that Fermat newly issued _b-fermat_ tokens are registered at some crypto network with a technique similar to a _digital asset_ or _colored coin_, and the transactions representing the transfers of ownership are handled directly by these crypto networks with no intervention of the Fermat Blockchain or Fermat Network whatsoever. The first implementation of Fermat Tokens is using only the bitcoin network as it is the most reliable at present time. Later, however, the decision where to register new fermats will be taken by the miners winning the block reward. They will be able to choose between all the crypto networks integrated into the Fermat system at the moment of that event happening. During the rest of this document all further explanations will be refering to the bitcoin network as it is the first of one of multiple possible future implementations.  
 
 The data structure is an ordered, back-linked list of blocks of transactions. In our case all the transactions are _coinbase_ transactions, meaning that they are transactions where new fermats are issued by the protocol. Blocks are linked "back" each referring to the previous block in the chain.
 
@@ -196,21 +213,21 @@ Each block within the blockchain:
 <br>
 ## Mining
 
-Mining is the process by which new _fermats_ are added to the token supply. Mining also serves to the main purpose of the Fermat Network: to enable devices to communicate between each other without going through trusted third parties. Miners provide bandwidth to the Extended Fermat Network in exchange for the opportunity to be rewarded with fermats.
+Mining is the process by which new _b-fermats_ are added to the token supply. Mining also serves to the main purpose of the Fermat Network: to enable devices to communicate between each other without going through trusted third parties. Miners provide bandwidth to the Extended Fermat Network in exchange for the opportunity to be rewarded with fermats.
 
-Miners inter-connect devices and act as a bridge relaying data from one device to the other. A new block, containing transactions that occurred since the last block, is "mined" every approximately 10 minutes, thereby adding those transactions to the blockchain. Transactions that become part of a block and added to the blockchain are considered "confirmed," which allows the new owners of fermats to spend the fermats they received in those transactions.
+Miners inter-connect devices and act as a bridge relaying data from one device to the other. A new block, containing transactions that occurred since the last block, is "mined" every approximately 10 minutes, thereby adding those transactions to the blockchain. Transactions that become part of a block and added to the blockchain are considered "confirmed," which allows the new owners of _b-fermats_ to spend the _b-fermats_ they received in those transactions.
 
 A transaction at the Fermat Blockchain is considered "irreversible" as soon as it is added to a block. This is true because it is based on information read from the bitcoin blockchain that it is already on an irreversible state. The Fermat Blockchain is synchronize with the bitcoin blockchain but 6 blocks behind the bitcoin blockchain's head.
 
 ### Rewards
 
-Miners receive two types of rewards for mining: new tokens created with each new block, and subscription fees from all the network clients that use that node as a home.
+Miners receive two types of rewards for mining: new _b-fermats_ tokens created with each new block, and subscription fees from all the network clients that use that node as a home.
 
-#### New Minted fermats
+#### New Minted _b-fermats_
 
-To earn this reward, the miners compete to sell incoming bandwith to network clients, i.e. being their home node. Network Clients are free to choose which node to use as their home and at some point they pay in fermats to these nodes for their services. Fermat "proof of work" consist on nodes proving that they have received payments for being a home node.
+To earn this reward, the miners compete to sell incoming bandwidth to network clients, i.e. being their home node. Network Clients are free to choose which node to use as their home and at some point they pay in _b-fermats_ to these nodes for their services. Fermat "proof of work" consist on nodes proving that they have received payments for being a home node.
 
-The amount of newly created fermats that can be added to a block decreases approximately every four years. It starts at 50 fermats per block and halves by 2 every 4 years. Based on this formula, fermat mining rewards decrease exponentially until all fermats (21,000,000 million) have been issued. After that, no new fermats will be issued.
+The amount of newly created _b-fermats_ that can be added to a block decreases approximately every four years. It starts at 50 fermats per block and halves by 2 every 4 years. Based on this formula, fermat mining rewards decrease exponentially until all fermats (21,000,000 million) have been issued. After that, no new fermats will be issued.
 
 #### Home Node Fees
 
@@ -249,7 +266,7 @@ Immediately when a new block is mined at the bitcoin network, the following acti
 
 They create a _coinbase_ transaction racing between each other to be incorporated first by a bitcoin miner into the bitcoin blockchain at the next block mined. The first 10 % of valid transactions to be incorporated at the bitcoin blockchain will be the ones recorded by every Fermat Node on the Fermat blockchain by adding them on a new block. The recording will happen when that block has 6 more blocks on top of it.
 
-As every node is reading confirmed bitcoin transactions and they all share a syncronized copy of the node catalogue, the Proof of Work algorithm should give exactly the same result to every node in the network. This means every node knows how many nodes should be part of the race, and how many fermats they should add on their own _coinbase_ transaction in order for the 10% of all these nodes not to exceed the amount of fermats per block.
+As every node is reading confirmed bitcoin transactions and they all share a syncronized copy of the node catalogue, the Proof of Work algorithm should give exactly the same result to every node in the network. This means every node knows how many nodes should be part of the race, and how many _b-fermats_ they should add on their own _coinbase_ transaction in order for the 10% of all these nodes not to exceed the amount of fermats per block.
 
 The sum of the amounts of all these transactions must not exceed the amount of fermats per block allowed by the Fermat Protocol.
 
@@ -261,7 +278,7 @@ By using the fees payed by network clients as "proof of work" we discourage dish
 <br>
 ## Independent Verification of Transactions
 
-In Fermat, _coinbase_ transactions are recorded on the Fermat Blockchain. Previously, nodes recorded the candidate _coinbase_ transactions on the bitcoin network. Those transactions include the transaction hash on the OP_RETURN field that later is going to be critical to recognize the satoshis present on the other outputs as fermats by Fermat wallets.
+In Fermat, _coinbase_ transactions are recorded on the Fermat Blockchain. Previously, nodes recorded the candidate _coinbase_ transactions on the bitcoin network. Those transactions include the transaction hash on the OP_RETURN field that later is going to be critical to recognize the satoshis present on the other outputs as b-fermats by Fermat wallets.
 
 ### Fermat Genesis Transactions
 
@@ -277,7 +294,7 @@ We call a _Fermat Genesis Transaction_ to each _coinbase_ transaction recorded o
 | n | bitcoins | m - 1 | bitcoins |
 |   |  | m | OP_RETURN |
 
-Note that the _Genesis Transaction_ can have _n_ number of UTXO as INPUTS, all of them, bitcoins (or satoshis to be precise). It can also have _m_ number of OUTPUTS where all of them will represent fermats except _m - 1_ which is reserved for bitcoin change and the _m_ which is used to place the Fermat _Coinbase_ Transaction hash on the OP_RETURN field.
+Note that the _Genesis Transaction_ can have _n_ number of UTXO as INPUTS, all of them, bitcoins (or satoshis to be precise). It can also have _m_ number of OUTPUTS where all of them will represent _b-fermats_ except _m - 1_ which is reserved for bitcoin change and the _m_ which is used to place the Fermat _Coinbase_ Transaction hash on the OP_RETURN field.
 
 As usual any difference between the sum of all OUTPUTS and the sum of all INPUTS are the bitcoin miner's fees.
 
@@ -435,6 +452,10 @@ We have created an environment where the user base of the system is a shared ass
 * [3] Fermat Contribution Program, [https://github.com/bitDubai/contribution-program](https://github.com/bitDubai/contribution-program)
 
 * [4] Fermat Bounty Program, [https://github.com/bitDubai/bounty-program](https://github.com/bitDubai/bounty-program)
+
+* [5] Fermat Tokens, [https://github.com/bitDubai/fermat-tokens](https://github.com/bitDubai/fermat-tokens)
+
+
 
 
 <br>
